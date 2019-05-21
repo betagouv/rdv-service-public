@@ -3,6 +3,14 @@ class AgendasController < DashboardAuthController
 
   def index
     skip_policy_scope
+
+    @events = [
+      {
+        title: "Vaccination",
+        start: 1.hour.ago,
+        allDay: false
+      }
+    ]
   end
 
   private
