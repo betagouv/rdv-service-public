@@ -31,7 +31,7 @@
   },
   "name": "lapin-beta-gouv",
   "scripts": {
-    "test": "bin/rails test"
+    "test": "bin/rake ci"
   },
   "environments": {
     "test": {

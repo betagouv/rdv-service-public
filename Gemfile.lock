@@ -80,6 +80,7 @@ GEM
     bootstrap4-kaminari-views (1.0.1)
       kaminari (>= 0.13)
       rails (>= 3.1)
+    brakeman (4.5.1)
     builder (3.2.3)
     byebug (11.0.1)
     capybara (3.19.1)
@@ -321,6 +322,7 @@ DEPENDENCIES
   bootsnap (>= 1.1.0)
   bootstrap (~> 4.3)
   bootstrap4-kaminari-views
+  brakeman
   byebug
   capybara (>= 2.15)
   chartkick
