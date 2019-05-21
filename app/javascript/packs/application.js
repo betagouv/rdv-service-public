@@ -6,14 +6,45 @@
 //
 // To reference this file, add <%= javascript_pack_tag 'application' %> to the appropriate
 // layout file, like app/views/layouts/application.html.erb
+import 'jquery-slimscroll/jquery.slimscroll';
+import { Avatar } from 'packs/components/avatar';
+import { Menu } from 'packs/components/menu';
+import { Layout } from 'packs/components/layout';
+import { Modal } from 'packs/components/modal';
+import { Rightbar } from 'packs/components/rightbar';
+import { Analytic } from 'packs/components/analytic';
+import "actiontext";
 
+new Modal();
+new Rightbar();
+var analytic = new Analytic();
 
-// Uncomment to copy all static images under ../images to the output folder and reference
-// them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
-// or the `imagePath` JavaScript helper below.
-//
-// const images = require.context('../images', true)
-// const imagePath = (name) => images(name, true)
+$(document).on('shown.bs.modal', '.modal', function(e) {
+  analytic.trackModalView(e);
+});
 
-console.log('Hello World from Webpacker')
-import "actiontext"
+$(document).on('shown.rightbar', '.right-bar', function(e) {
+  analytic.trackRightbarView(e);
+});
+
+$(document).on('hide.bs.modal', '.modal', function(e) {
+  $('.modal-backdrop').remove();
+});
+
+$(document).on('turbolinks:load', function() {
+  analytic.trackPageView();
+
+  let menu = new Menu();
+  let layout = new Layout();
+  
+  layout.init();
+  menu.init();
+  new Avatar().init();
+ 
+  $(window).on('resize', function(e) {
+    e.preventDefault();
+    layout.init();
+    menu.resetSidebarScroll();
+  });
+
+});
