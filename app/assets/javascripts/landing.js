@@ -22,3 +22,8 @@ $(function() {
     $(this).toggleClass('active');
   });
 });
+
+
+$(document).on('turbolinks:load', function() {
+  Holder.run();
+});

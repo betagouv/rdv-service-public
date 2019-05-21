@@ -33,6 +33,7 @@ $(document).on('hide.bs.modal', '.modal', function(e) {
 
 $(document).on('turbolinks:load', function() {
   analytic.trackPageView();
+  Holder.run();
 
   let menu = new Menu();
   let layout = new Layout();
