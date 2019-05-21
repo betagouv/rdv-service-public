@@ -1,0 +1,58 @@
+section#hero.hero.hero-home.pb-0.pt-5
+  .container
+    .row
+      .col-md-12
+        h1.mb-3 Prenez RDV avec votre Maison des Solidarités
+        p.hero-text Lapin c'est trop bien
+    .row
+      .col-md-12.text-center
+        p.m-5.h2 
+          | Formulaire de search 
+          br
+          | Spécialité | Où
+    .row
+      .col-md-12.text-center
+        = link_to "Découvrir", "#discover", class: 'btn btn-link link-scroll mb-5'
+
+section#discover.bg-light.p-4
+  .container
+    header
+      .text-center.w-75.m-auto  
+        h2.mb-2 A quoi servent les Maisons des Solidarités (MDS) ?
+      .divider
+    .row
+      .col-md-3
+        h4.font-16 L'insertion sociale
+      .col-md-3
+        h4.font-16 L'accompagnement des futures et jeunes mères
+      .col-md-3
+        h4.font-16 La prévention et la protection de l'enfance
+      .col-md-3
+        h4.font-16 La prise en charge des personnes âgées et handicapées
+
+
+
+section.bg-white
+  .container
+    header
+      .text-center.w-75.m-auto  
+        h2.mb-2 
+          |Vous êtes une Maison des Solidarités ? 
+          br Découvrez la prise de rendez-vous en ligne !
+      .divider
+    .row
+      .col-lg-4.text-center
+        = image_tag 'welcome/bill.svg', class: 'img-fluid mb-2', style: 'max-height: 300px;'
+        h4 XXXX
+        p
+          | XXX
+      .col-lg-4.text-center
+        = image_tag 'welcome/dashboard.svg', class: 'img-fluid mb-2', style: 'max-height: 300px;'
+        h4 XXX
+        p 
+          | XXX
+      .col-lg-4.text-center
+        = image_tag 'welcome/money.svg', class: 'img-fluid mb-2', style: 'max-height: 300px;'
+        h4 XXX
+        p 
+          | XXX

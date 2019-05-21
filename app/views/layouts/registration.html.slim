@@ -1,0 +1,43 @@
+doctype html
+html
+  head
+    meta content=("text/html; charset=UTF-8") http-equiv="Content-Type"
+    meta name="viewport" content="width=device-width, initial-scale=1.0"
+    title Lapin
+    = csrf_meta_tags
+    = csp_meta_tag
+    = stylesheet_link_tag 'application', 'https://fonts.googleapis.com/css?family=Open+Sans:400&subset=latin', media: 'all', 'data-turbolinks-track' => true
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+    = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
+  body.auth-fluid-pages.pb-0
+    .auth-fluid
+      .auth-fluid-left.text-center
+        = link_logo_landing
+        .align-items-center.d-flex.h-100
+          .card-body
+            - if content_for :left_part
+              = yield :left_part
+            - else
+              = image_tag random_auth_img, class: 'img-fluid mb-4', style: 'max-height: 250px;'
+              h4.mb-3 Terminé l'agenda papier, moins de temps perdu.
+              p.lead
+                | Digitalisez votre prise de RDV !
+
+      .auth-fluid-form-box
+        .align-items-center.d-flex.h-100
+          .card-body
+            .auth-brand.text-center.text-lg-left
+              = link_logo_colored
+            = render 'layouts/flash'
+            .row
+              .col-md-6.offset-md-3
+                = yield
+                - if content_for :footer
+                .mt-3.text-center
+                  = yield :footer
+          footer.footer.footer-alt
+            | © Lapin #{Time.zone.today.year}
+
+
+

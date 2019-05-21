@@ -8,17 +8,36 @@ gem 'rails', '~> 5.2.3'
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
 
-
 #DB
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'kaminari', '~> 1.1'
 gem 'bootstrap4-kaminari-views'
 gem 'administrate', '~> 0.11'
 
+# Devise / auth
+gem 'devise', '~> 4.6'
+gem 'devise_invitable', '~> 2.0'
+gem 'devise-async', '~> 1.0'
+gem 'pundit', '~> 2.0'
 
-# Use SCSS for stylesheets
+# Sidekiq
+gem 'sidekiq', '~> 5.2'
+gem 'sidekiq-cron', '~> 1.1'
+
+# Form
+gem 'simple_form', '~> 4.1'
+gem 'actiontext', github: 'kobaltz/actiontext', branch: 'archive', require: 'action_text'
+gem 'image_processing', '~> 1.8'
+
+# Front
 gem 'sass-rails', '~> 5.0'
-
+gem 'bootstrap', '~> 4.3'
+gem 'autoprefixer-rails', '~> 9.5'
+gem 'font-awesome-rails', '~> 4.7'
+gem 'chartkick'
+gem 'uglifier', '>= 1.3.0'
+gem 'slim', '~> 4.0'
+gem 'jquery-rails', '~> 4.3'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
@@ -58,6 +77,7 @@ group :development do
   gem 'listen', '>= 3.0.5', '< 3.2'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
+  gem 'xray-rails'
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
 

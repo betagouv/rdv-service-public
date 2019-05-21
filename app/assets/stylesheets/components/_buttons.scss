@@ -1,0 +1,10 @@
+.btn-rounded {
+  border-radius: 2em;
+}
+
+@each $color, $value in $theme-colors {
+  .btn-#{$color} {
+    @include button-shadow($value);
+    border: none !important;
+  }
+}

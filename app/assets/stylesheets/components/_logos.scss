@@ -1,0 +1,7 @@
+.white-logo {
+  transition: all 0.3s;
+  max-height: 25px;
+}
+body.enlarged .white-logo{
+  content:url(asset_path("logo/logo_evercount_white_square.svg"));
+}

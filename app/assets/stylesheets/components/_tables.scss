@@ -1,0 +1,47 @@
+.table-centered {
+  td {
+    vertical-align: middle !important;
+  }
+}
+
+// Custom table components (Custom)
+.table {
+  .table-user {
+    img {
+      height: 30px;
+      width: 30px;
+    }
+  }
+  .table-action {
+    .action-icon {
+      color: $gray-600;
+      font-size: 1.2rem;
+      display: inline-block;
+      padding: 0 3px;
+
+      &:hover {
+          color: $gray-700;
+      }
+    }
+  }
+}
+
+tr.tr-warning {
+  border-left: 2px solid $warning;
+}
+
+tr.tr-danger {
+  border-left: 2px solid $danger;
+}
+
+.w-70 {
+  width: 70% !important;
+}
+
+.w-60 {
+  width: 60% !important;
+}
+
+.w-10 {
+  width: 10% !important;
+}

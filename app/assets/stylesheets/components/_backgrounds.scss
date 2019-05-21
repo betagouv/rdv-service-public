@@ -1,0 +1,48 @@
+@each $color, $value in $theme-colors {
+  .bg-#{$color}-lighten {
+      @include bg-variant-light($value);
+  }
+}
+
+.bg-gray {
+  background-color: #f5f5f5;
+}
+
+.bg-light {
+  background-color: darken(#F6F7FA, 2%) !important;
+}
+
+.bg-dark {
+  color: white;
+  button {
+    color: white;
+  }
+}
+
+.bg-primary, .bg-gradient {
+  color: white;
+  background-color: $primary !important;
+  p.hero-text { color: white;}
+  h1, h2, h3, h4, h5 { color: white; }
+}
+
+
+a.bg-primary, a.bg-gradient {
+  &:focus, &:hover {
+    background-color: #2d6ade !important;
+  }
+}
+
+.bg-gradient {
+  background-image: linear-gradient(to bottom right, $primary, $secondary) !important;
+}
+
+.bg-negative {
+  margin-top: -80px;
+}
+
+a.bg-success {
+  &:focus, &:hover {
+    background-color: #1e7e34 !important;
+  }
+}

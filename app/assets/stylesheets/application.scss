@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css?family=Hind+Vadodara|Montserrat');
+@import 'bootstrap/functions'; 
+@import 'bootstrap/variables'; 
+@import "variables";
+@import "font-awesome";
+@import "bootstrap";
+@import "mixins/buttons";
+@import "mixins/background-variant";
+
+// Structure 
+@import "structure/general";
+@import "structure/left-menu";
+@import "structure/topbar";
+@import "structure/footer";
+@import "structure/page-head";
+@import "structure/authentication";
+@import "structure/right_sidebar";
+
+// Components
+@import "components/buttons";
+@import "components/backgrounds";
+@import "components/forms";
+@import "components/breadcrumb";
+@import "components/dropdown";
+@import "components/nav";
+@import "components/switches";
+@import "components/tables";
+@import "components/types";
+@import "components/cards";
+@import "components/logos";
+@import "components/timeline";
+@import "components/progress_bars";
+
+// Plugins
+@import "actiontext";
+

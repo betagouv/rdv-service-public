@@ -1,0 +1,72 @@
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6{
+  font-family: 'Montserrat';
+  margin: 10px 0;
+  font-weight: $font-weight-bold;
+}
+
+.fa-5x {
+  font-size: 5rem;
+}
+
+.fa-6x {
+  font-size: 6rem;
+}
+
+// Font sizes (Custom)
+.font-13 {
+  font-size: 13px !important;
+}
+
+.font-14 {
+  font-size: 14px !important;
+}
+
+.font-15 {
+  font-size: 15px !important;
+}
+
+.font-16 {
+  font-size: 16px !important;
+}
+
+.font-18 {
+  font-size: 18px !important;
+}
+
+.lead {
+  font-size: 1.2rem;
+  font-weight: 300;
+  line-height: 1.8em;
+}
+
+.badge {
+  margin-left: 0.2rem;
+}
+
+hr {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+small, .small {
+  font-size: 80%;
+  font-weight: normal;
+}
+
+mark, .mark {
+  padding: 0.2em;
+  background-color: #fcf8e3;
+}
+
+.blockquote {
+  padding: 3rem 2rem;
+  margin-bottom: 1rem;
+  font-size: 1.05rem;
+  border-left: 4px solid $primary;
+}
+
+.blockquote-footer {
+  color: #868e96;
+  &::before {
+    content: "\2014 \00A0";
+  }
+}

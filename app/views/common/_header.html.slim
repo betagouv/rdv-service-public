@@ -1,0 +1,18 @@
+header.header
+  nav.navbar.navbar-expand-lg
+    = link_to root_path, class: 'navbar-brand mr-0 mr-md-2 py-0' do
+      = image_tag 'logo/logo_evercount_colored.svg', height: 25, alt:'Evercount', class: 'd-block'
+    button.navbar-toggler.navbar-toggler-right aria-controls="navbarSupportedContent" aria-expanded="false" aria-label=("Toggle navigation") data-target="#navbarSupportedContent" data-toggle="collapse" type="button" 
+      span
+      span
+      span
+    #navbarSupportedContent.collapse.navbar-collapse
+      ul.navbar-nav.ml-auto.align-items-start.align-items-lg-center
+        - if root_path?
+          - {'discover' => 'Découvrir' }.each do |k,v|
+            li.nav-item
+              = link_to "#{v}", "##{k}", class: 'nav-link link-scroll'
+      .navbar-text.ml-4
+        ul.list-inline.m-0
+          li.list-inline-item
+            = link_to 'Je suis pro', accueil_mds_path, class: 'btn btn-outline-primary'

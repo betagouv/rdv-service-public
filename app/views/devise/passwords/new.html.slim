@@ -1,0 +1,12 @@
+= form_for resource, as: resource_name, url: password_path(resource_name) do |f|
+  .text-center.w-75.m-auto
+    h4.text-dark-50.text-center.mt-0.font-weight-bold Mot de passe oublié ? 
+    p.text-muted.mb-4 Entrez votre email pour recevoir un lien de réinitialisation de mot de passe
+  = devise_error_messages!
+  .form-group
+    = f.email_field :email, autofocus: true, required: true, placeholder: "nom.prenom@email.com", class: 'form-control'
+  .form-group.mb-0.text-center
+    = f.submit 'Envoyer', class: 'btn btn btn-primary'
+
+- content_for :footer do
+  = render "devise/shared/links"

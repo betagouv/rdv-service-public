@@ -1,0 +1,32 @@
+doctype html
+html
+  head
+    = render 'common/head'
+  body
+    .wrapper
+      = render "layouts/left_menu"
+      .content-page
+        .content
+          - if current_user
+            = render "layouts/navbar_dashboard"
+          .container-fluid
+            - if content_for :title 
+              .row.bg-dark.pb-5
+                .col-md-12
+                  .page-title-box
+                    - if content_for :breadcrumb 
+                      .page-title-right
+                        = yield :breadcrumb
+                    h4.page-title= yield :title
+                - if content_for :subtitle
+                  .col-md-12= yield :subtitle
+            .bg-negative 
+              = render 'layouts/incomplete_clients'
+              = render 'layouts/flash'
+              = yield 
+
+    #modal-holder
+    #right-bar-holder
+    - if content_for :popin
+      = yield :popin
+    = render "layouts/footer_dashboard"

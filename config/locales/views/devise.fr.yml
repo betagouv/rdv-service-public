@@ -1,0 +1,9 @@
+fr:
+  devise:
+    registrations:
+      new:
+        email: Email
+        password: Mot de passe
+    sessions:
+      new:
+        remember_me: Se souvenir de moi

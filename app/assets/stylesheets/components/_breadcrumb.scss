@@ -1,0 +1,8 @@
+.breadcrumb-item {
+  +.breadcrumb-item {
+    &::before {
+      font-family: "FontAwesome"; font-weight: 900; content: "\f105";
+    }
+  }
+}
+  

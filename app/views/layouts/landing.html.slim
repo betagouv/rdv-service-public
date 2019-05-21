@@ -1,0 +1,14 @@
+doctype html
+html
+  head
+    = render 'common/head_landing'
+  body
+    = render 'common/header'
+    - if content_for :title
+      .container.mt-5
+        .row
+          .col-md-12
+            .my-5= yield :title
+    
+    = yield
+    = render 'common/footer'
