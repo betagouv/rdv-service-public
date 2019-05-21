@@ -1,0 +1,49 @@
+{
+  "addons": [
+    "heroku-postgresql"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/ruby"
+    }
+  ],
+  "env": {
+    "LANG": {
+      "required": true
+    },
+    "RACK_ENV": {
+      "required": true
+    },
+    "RAILS_ENV": {
+      "required": true
+    },
+    "RAILS_LOG_TO_STDOUT": {
+      "required": true
+    },
+    "RAILS_SERVE_STATIC_FILES": {
+      "required": true
+    },
+    "SECRET_KEY_BASE": {
+      "required": true
+    }
+  },
+  "formation": {
+  },
+  "name": "lapin-beta-gouv",
+  "scripts": {
+    "test": "bin/rails test"
+  },
+  "environments": {
+    "test": {
+      "env": {
+        "LANG": "en_US.UTF-8",
+        "RACK_ENV": "test",
+        "RAILS_ENV": "test",
+        "RAILS_LOG_TO_STDOUT": "enabled",
+        "RAILS_SERVE_STATIC_FILES": "enabled",
+        "SECRET_KEY_BASE": "bibop"
+      }
+    }
+  },
+  "stack": "heroku-18"
+}
