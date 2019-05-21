@@ -7,7 +7,7 @@ fr:
       send_instructions: "Vous allez recevoir les instructions nécessaires à la confirmation de votre compte dans quelques minutes."
       send_paranoid_instructions: "Si votre e-mail existe dans notre base de données, vous allez bientôt recevoir un e-mail contenant les instructions de confirmation de votre compte."
     failure:
-      deleted_account: "Votre compte a été supprimé !"  
+      deleted_account: "Votre compte a été supprimé !"
       invited: "Vous avez une invitation en attente. Acceptez-là pour terminer votre inscription."
       already_authenticated: "Vous êtes déjà connecté"
       inactive: "Votre compte n'est pas encore activé."
@@ -33,9 +33,9 @@ fr:
         submit_button: "Enregistrer"
     mailer:
       invitation_instructions:
-        subject: "Vous avez été invité sur Evercount."
+        subject: "Vous avez été invité sur Lapin."
         hello: "Bonjour %{email}"
-        someone_invited_you: "Vous avez été invité sur Evercount.fr. Vous pouvez acceptez cette invitation grâce au lien ci-dessous."
+        someone_invited_you: "Vous avez été invité sur Lapin. Vous pouvez acceptez cette invitation grâce au lien ci-dessous."
         accept: "Accepter l'invitation"
         accept_until: "Cette invitation est valable jusqu'au %{due_date}."
         ignore: "Si vous n'acceptez pas cette invitation, ignorez cet email. Aucun compte ne sera créé sans votre autorisation."
