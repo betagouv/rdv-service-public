@@ -1,0 +1,11 @@
+.left-side-menu
+  .slimscroll-menu
+    .text-center.m-2
+      .collapse-menu.float-right.font-18.ml-1
+        i.fa.fa-angle-left
+      = link_logo_landing
+    ul.metismenu.side-nav.mt-5
+      li.side-nav-item
+        = link_to authenticated_root_path, class: 'side-nav-link' do
+          i.fa.fa-calendar-o
+          span Vos agendas

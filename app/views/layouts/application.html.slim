@@ -7,7 +7,7 @@ html
       = render "layouts/left_menu"
       .content-page
         .content
-          - if current_user
+          - if current_pro
             = render "layouts/navbar_dashboard"
           .container-fluid
             - if content_for :title 
@@ -21,7 +21,6 @@ html
                 - if content_for :subtitle
                   .col-md-12= yield :subtitle
             .bg-negative 
-              = render 'layouts/incomplete_clients'
               = render 'layouts/flash'
               = yield 
 

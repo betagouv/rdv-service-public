@@ -1,0 +1,9 @@
+footer.footer
+  .container-fluid
+    .row
+      .col-md-6
+        | © Lapin #{Time.zone.today.year}
+      .col-md-6
+        .text-md-right.footer-links.d-none.d-md-block
+          = link_to 'Mentions légales', mentions_legales_path
+          = mail_to "lapin@beta.gouv.fr", 'Contact'
