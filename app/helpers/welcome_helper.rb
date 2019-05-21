@@ -11,19 +11,15 @@ module WelcomeHelper
     link_to 'Se connecter', new_pro_session_path ,class: 'btn btn-outline-primary'
   end
 
-  def random_auth_img
-    "welcome/#{%w(more-money more-time pilot).sample}.svg"
-  end
-
-  def link_logo_landing 
+  def link_logo 
     link_to root_path do 
-      image_tag 'logo/logo_evercount_white.svg', alt:'Evercount', class:'img-fluid white-logo'
+      holder_tag '200x50', 'Lapin Logo',class: 'img-fluid white-logo'
     end
   end
 
   def link_logo_colored 
     link_to root_path do 
-      image_tag 'logo/logo_evercount_colored.svg', alt:'Evercount', class:'img-fluid white-logo'
+      holder_tag '200x50', 'Lapin Logo Colored',class: 'img-fluid white-logo'
     end
   end
 end

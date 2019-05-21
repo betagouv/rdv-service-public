@@ -13,13 +13,14 @@ html
   body.auth-fluid-pages.pb-0
     .auth-fluid
       .auth-fluid-left.text-center
-        = link_logo_landing
+        = link_logo
         .align-items-center.d-flex.h-100
           .card-body
             - if content_for :left_part
               = yield :left_part
             - else
-              = image_tag random_auth_img, class: 'img-fluid mb-4', style: 'max-height: 250px;'
+              = holder_tag 250, 'Image d\'illustration', 'gray', class: 'img-fluid mb-4'
+
               h4.mb-3 Terminé l'agenda papier, moins de temps perdu.
               p.lead
                 | Digitalisez votre prise de RDV !

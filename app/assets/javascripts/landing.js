@@ -3,6 +3,7 @@
 //= require popper
 //= require bootstrap-sprockets
 //= require turbolinks
+//= require holder
 //= require_tree ./async
 
 $(function() {

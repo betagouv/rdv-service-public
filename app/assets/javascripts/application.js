@@ -5,4 +5,5 @@
 //= require activestorage
 //= require turbolinks
 //= require metismenu/dist/metisMenu
+//= require holder
 //= require_tree ./async

@@ -38,6 +38,7 @@ gem 'chartkick'
 gem 'uglifier', '>= 1.3.0'
 gem 'slim', '~> 4.0'
 gem 'jquery-rails', '~> 4.3'
+gem 'holder_rails'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
