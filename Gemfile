@@ -81,6 +81,8 @@ group :development do
   gem 'spring'
   gem 'xray-rails'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'letter_opener', '~> 1.7'
+  gem 'fuubar'
 end
 
 group :test do

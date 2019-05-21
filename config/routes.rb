@@ -5,9 +5,7 @@ Rails.application.routes.draw do
     resources :pros
     require 'sidekiq/web'
     require 'sidekiq/cron/web'
-    authenticate :user, lambda { |u| u.zeus? } do
-      mount Sidekiq::Web => '/sidekiq'
-    end
+    mount Sidekiq::Web => '/sidekiq'
     root to: "pros#index"
   end
 
