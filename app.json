@@ -42,7 +42,10 @@
         "RAILS_LOG_TO_STDOUT": "enabled",
         "RAILS_SERVE_STATIC_FILES": "enabled",
         "SECRET_KEY_BASE": "bibop"
-      }
+      },
+      "addons": [
+        "heroku-postgresql:in-dyno"
+      ]
     }
   },
   "stack": "heroku-18"
