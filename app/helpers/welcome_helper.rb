@@ -11,17 +11,15 @@ module WelcomeHelper
     link_to 'Se connecter', new_pro_session_path ,class: 'btn btn-outline-primary'
   end
 
-  def link_logo 
-    link_to root_path do 
+  def link_logo
+    link_to root_path do
       holder_tag '200x50', 'Lapin Logo',class: 'img-fluid white-logo'
     end
   end
 
-  def link_logo_colored 
-    link_to root_path do 
+  def link_logo_colored
+    link_to root_path do
       holder_tag '200x50', 'Lapin Logo Colored',class: 'img-fluid white-logo'
     end
   end
 end
-
-
