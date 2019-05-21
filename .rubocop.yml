@@ -1,1 +1,5 @@
 inherit_from: .rubocop_todo.yml
+
+Lint/UnneededCopDisableDirective:
+  Exclude:
+    - 'lib/tasks/heroku_clear_tasks.rake'
