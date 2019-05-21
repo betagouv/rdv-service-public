@@ -13,13 +13,8 @@ module WelcomeHelper
 
   def link_logo
     link_to root_path do
-      holder_tag '200x50', 'Lapin Logo',class: 'img-fluid white-logo'
+      holder_tag '200x50', 'Lapin Logo',class: 'img-fluid'
     end
   end
 
-  def link_logo_colored
-    link_to root_path do
-      holder_tag '200x50', 'Lapin Logo Colored',class: 'img-fluid white-logo'
-    end
-  end
 end
