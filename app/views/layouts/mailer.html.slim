@@ -1,0 +1,52 @@
+doctype html
+html
+  head
+    meta content="text/html; charset=utf-8" http-equiv="Content-Type"
+    = stylesheet_link_tag 'mail'
+  body
+    table.body
+      tr
+        td.center align="center" valign="top" 
+          center
+            table.wrapper.header.float-center align="center" 
+              tr
+                td.wrapper-inner align='center'
+                  = link_to 'Lapin logo img', root_url          
+            table.container.float-center.content align="center" 
+              tbody
+                tr
+                  td
+                    table.spacer
+                      tbody
+                        tr
+                          td height="30px" style="font-size:30px;line-height:30px;"   
+                    table.row
+                      tbody
+                        tr
+                          td.small-12.large-12.columns.first.last
+                            = yield
+                            - if content_for :action 
+                              center
+                                table.button.large.secondary
+                                  tr
+                                    td
+                                      table
+                                        tr
+                                          td= yield :action
+                          th.expander
+                        tr
+                          td
+                            p 
+                              | -- <br>
+                              | L'équipe Lapin
+
+
+            table.menu.float-center align="center" 
+              tr
+                td
+                  table
+                    tr
+                      th.menu-item.float-center.text-muted.font-13
+                        = "© Lapin #{Time.zone.today.year}"
+                      th.menu-item.float-center.font-13
+                        = link_to 'Mentions légales', mentions_legales_url

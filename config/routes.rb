@@ -10,7 +10,8 @@ Rails.application.routes.draw do
   end
 
   ## APP ##
-  devise_for :pros
+  devise_for :pros, controllers: { registrations: 'pros/registrations' }
+
   authenticated :pro do
     root to: 'agendas#index', as: :authenticated_root
   end
