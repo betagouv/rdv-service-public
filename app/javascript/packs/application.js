@@ -14,6 +14,7 @@ import { Modal } from 'packs/components/modal';
 import { Rightbar } from 'packs/components/rightbar';
 import { Analytic } from 'packs/components/analytic';
 import { PlacesInput } from 'packs/components/places-input';
+import 'packs/components/calendar';
 import "actiontext";
 
 new Modal();
