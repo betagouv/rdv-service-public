@@ -61,7 +61,7 @@ Rails.application.configure do
   # config.cache_store = :mem_cache_store
 
   # Use a real queuing backend for Active Job (and separate queues per environment)
-  config.active_job.queue_adapter     = :sidekiq
+  config.active_job.queue_adapter = :sidekiq
   # config.active_job.queue_name_prefix = "lapin_#{Rails.env}"
 
   config.default_url_options = { host: "lapin-beta-gouv.herokuapp.com" }
@@ -72,12 +72,12 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default_url_options = { protocol: 'https', host: "lapin-beta-gouv.herokuapp.com", utm_source: "lapin", utm_medium: "email", utm_campaign: "auto" }
   ActionMailer::Base.smtp_settings = {
-    :address        => 'smtp.sendgrid.net',
-    :port           => '587',
-    :authentication => :plain,
-    :user_name      => ENV["SENDGRID_USERNAME"],
-    :password       => ENV["SENDGRID_PASSWORD"],
-    :domain         => 'heroku.com'
+    address:        'smtp.sendgrid.net',
+    port:           '587',
+    authentication: :plain,
+    user_name:      ENV["SENDGRID_USERNAME"],
+    password:       ENV["SENDGRID_PASSWORD"],
+    domain:         'heroku.com'
   }
   ActionMailer::Base.delivery_method = :smtp
   config.action_mailer.asset_host = "https://lapin-beta-gouv.herokuapp.com"

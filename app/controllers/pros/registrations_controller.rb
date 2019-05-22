@@ -1,8 +1,9 @@
-class Pros::RegistrationsController < Devise::RegistrationsController
+module Pros
+  class RegistrationsController < Devise::RegistrationsController
+    private
 
-  private
-  def after_inactive_sign_up_path_for(resource)
-    new_pro_session_path
+    def after_inactive_sign_up_path_for(_)
+      new_pro_session_path
+    end
   end
-
 end

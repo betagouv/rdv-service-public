@@ -1,5 +1,4 @@
 class AddConfirmableToDevise < ActiveRecord::Migration[5.2]
-
   def up
     add_column :pros, :confirmation_token, :string
     add_column :pros, :confirmed_at, :datetime
@@ -12,5 +11,4 @@ class AddConfirmableToDevise < ActiveRecord::Migration[5.2]
   def down
     remove_columns :pros, :confirmation_token, :confirmed_at, :confirmation_sent_at, :unconfirmed_email
   end
-
 end

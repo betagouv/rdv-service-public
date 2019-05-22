@@ -3,3 +3,18 @@ inherit_from: .rubocop_todo.yml
 Lint/UnneededCopDisableDirective:
   Exclude:
     - 'lib/tasks/heroku_clear_tasks.rake' # File loaded by heroku when running ci
+
+Layout/AlignHash:
+  Enabled: false
+
+Layout/ExtraSpacing:
+  AllowForAlignment: true
+
+Metrics/BlockLength:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/DocumentationMethod:
+  Enabled: false

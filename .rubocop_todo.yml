@@ -169,12 +169,6 @@ Lint/UnusedMethodArgument:
 Metrics/AbcSize:
   Max: 16
 
-# Offense count: 1
-# Configuration parameters: CountComments, ExcludedMethods.
-# ExcludedMethods: refine
-Metrics/BlockLength:
-  Max: 41
-
 # Offense count: 2
 # Configuration parameters: CountComments, ExcludedMethods.
 Metrics/MethodLength:
@@ -195,25 +189,6 @@ Style/ClassAndModuleChildren:
 Style/CommentAnnotation:
   Exclude:
     - 'app/controllers/admin/application_controller.rb'
-
-# Offense count: 13
-Style/Documentation:
-  Exclude:
-    - 'spec/**/*'
-    - 'test/**/*'
-    - 'app/controllers/admin/application_controller.rb'
-    - 'app/controllers/agendas_controller.rb'
-    - 'app/controllers/application_controller.rb'
-    - 'app/controllers/dashboard_auth_controller.rb'
-    - 'app/controllers/static_pages_controller.rb'
-    - 'app/controllers/welcome_controller.rb'
-    - 'app/helpers/application_helper.rb'
-    - 'app/helpers/welcome_helper.rb'
-    - 'app/mailers/application_mailer.rb'
-    - 'app/models/application_record.rb'
-    - 'app/models/pro.rb'
-    - 'config/application.rb'
-    - 'db/migrate/20190520153400_devise_create_pros.rb'
 
 # Offense count: 2
 # Cop supports --auto-correct.
