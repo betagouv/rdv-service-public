@@ -128,6 +128,10 @@ GEM
     devise_invitable (2.0.1)
       actionmailer (>= 5.0)
       devise (>= 4.6)
+    dotenv (2.7.2)
+    dotenv-rails (2.7.2)
+      dotenv (= 2.7.2)
+      railties (>= 3.2, < 6.1)
     erubi (1.8.0)
     et-orbi (1.2.1)
       tzinfo
@@ -399,6 +403,7 @@ DEPENDENCIES
   devise (~> 4.6)
   devise-async (~> 1.0)
   devise_invitable (~> 2.0)
+  dotenv-rails (~> 2.7.2)
   font-awesome-rails (~> 4.7)
   fuubar
   holder_rails
