@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  devise_for :super_admins
   ## ADMIN ##
   namespace :admin do
     resources :pros
