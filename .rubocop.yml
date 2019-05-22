@@ -2,4 +2,4 @@ inherit_from: .rubocop_todo.yml
 
 Lint/UnneededCopDisableDirective:
   Exclude:
-    - 'lib/tasks/heroku_clear_tasks.rake'
+    - 'lib/tasks/heroku_clear_tasks.rake' # File loaded by heroku when running ci
