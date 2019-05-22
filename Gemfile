@@ -18,6 +18,7 @@ gem 'administrate', '~> 0.11'
 gem 'devise', '~> 4.6'
 gem 'devise_invitable', '~> 2.0'
 gem 'devise-async', '~> 1.0'
+gem 'omniauth-github'
 gem 'pundit', '~> 2.0'
 
 # Sidekiq
