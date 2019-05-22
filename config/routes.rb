@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
 
-  devise_for :super_admins
   ## ADMIN ##
+  devise_for :super_admins, controllers: { omniauth_callbacks: 'super_admins/omniauth_callbacks' }
+
   namespace :admin do
     resources :pros
     require 'sidekiq/web'
