@@ -16,5 +16,4 @@ module WelcomeHelper
       holder_tag '200x50', 'Lapin Logo',class: 'img-fluid'
     end
   end
-
 end
