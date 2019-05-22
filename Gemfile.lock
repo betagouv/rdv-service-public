@@ -64,6 +64,10 @@ GEM
       momentjs-rails (~> 2.8)
       sass-rails (~> 5.0)
       selectize-rails (~> 0.6)
+    airbrake (9.2.2)
+      airbrake-ruby (~> 4.4)
+    airbrake-ruby (4.4.0)
+      rbtree3 (~> 0.5)
     archive-zip (0.12.0)
       io-like (~> 0.3.0)
     arel (9.0.0)
@@ -249,6 +253,7 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
+    rbtree3 (0.5.0)
     redis (4.1.1)
     regexp_parser (1.4.0)
     responders (2.4.1)
@@ -358,6 +363,7 @@ PLATFORMS
 DEPENDENCIES
   actiontext!
   administrate (~> 0.11)
+  airbrake (~> 9.2)
   autoprefixer-rails (~> 9.5)
   bootsnap (>= 1.1.0)
   bootstrap (~> 4.3)
