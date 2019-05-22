@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   ## ADMIN ##
   devise_for :super_admins, controllers: { omniauth_callbacks: 'super_admins/omniauth_callbacks' }
 
+  delete 'admin/sign_out' => 'super_admins/sessions#destroy'
+
   namespace :admin do
     resources :pros
     require 'sidekiq/web'
