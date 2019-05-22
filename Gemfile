@@ -40,6 +40,10 @@ gem 'slim', '~> 4.0'
 gem 'jquery-rails', '~> 4.3'
 gem 'holder_rails'
 
+# Mailing
+gem 'sendgrid', '~> 1.2.4'
+gem 'premailer-rails', '~> 1.10'
+
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
@@ -82,6 +86,8 @@ group :development do
   gem 'spring'
   gem 'xray-rails'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'letter_opener', '~> 1.7'
+  gem 'fuubar'
 end
 
 group :test do
