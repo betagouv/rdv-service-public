@@ -37,13 +37,6 @@ Layout/EmptyLinesAroundClassBody:
     - 'app/models/pro.rb'
     - 'config/application.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Layout/LeadingCommentSpace:
-  Exclude:
-    - 'Gemfile'
-    - 'config/application.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 Layout/SpaceAfterColon:
