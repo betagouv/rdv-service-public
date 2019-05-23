@@ -15,11 +15,6 @@ Lint/AmbiguousOperator:
 Metrics/AbcSize:
   Max: 16
 
-# Offense count: 2
-# Configuration parameters: CountComments, ExcludedMethods.
-Metrics/MethodLength:
-  Max: 18
-
 # Offense count: 54
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.
@@ -56,10 +51,3 @@ Style/StringLiterals:
 Style/WordArray:
   EnforcedStyle: percent
   MinSize: 5
-
-# Offense count: 77
-# Cop supports --auto-correct.
-# Configuration parameters: AutoCorrect, AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
-# URISchemes: http, https
-Metrics/LineLength:
-  Max: 181
