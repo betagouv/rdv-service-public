@@ -2,7 +2,7 @@ module ApplicationHelper
   # Usage: class_names('my-class', 'my-other-class': condition)
   def class_names(*args)
     optional = args.last.is_a?(Hash) ? args.last : {}
-    mandatory = optional.length > 0 ? args[0..-2] : args
+    mandatory = !optional.empty? ? args[0..-2] : args
 
     optional = optional.map do |class_name, condition|
       class_name if condition
