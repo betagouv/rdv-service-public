@@ -8,6 +8,7 @@ class DashboardAuthController < ApplicationController
   after_action :verify_policy_scoped, only: :index
 
   private
+
   def user_not_authorized(exception)
     policy_name = exception.policy.class.to_s.underscore
 
