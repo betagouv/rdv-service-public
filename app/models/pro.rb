@@ -7,5 +7,4 @@ class Pro < ApplicationRecord
   def initials
     "MM"
   end
-
 end

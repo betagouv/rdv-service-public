@@ -32,6 +32,5 @@ module Lapin
       end
       Devise::Mailer.layout 'mailer'
     end
-
   end
 end

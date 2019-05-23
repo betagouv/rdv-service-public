@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::Base
-
   include Pundit
   protect_from_forgery
 
@@ -18,5 +17,4 @@ class ApplicationController < ActionController::Base
     options[:responder] = RightBarResponder
     respond_with *args, options, &blk
   end
-
 end

@@ -15,19 +15,6 @@ Layout/AlignArguments:
     - 'bin/webpack'
     - 'bin/webpack-dev-server'
 
-# Offense count: 8
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines, beginning_only, ending_only
-Layout/EmptyLinesAroundClassBody:
-  Exclude:
-    - 'app/controllers/agendas_controller.rb'
-    - 'app/controllers/application_controller.rb'
-    - 'app/controllers/dashboard_auth_controller.rb'
-    - 'app/controllers/static_pages_controller.rb'
-    - 'app/models/pro.rb'
-    - 'config/application.rb'
-
 # Offense count: 2
 # Cop supports --auto-correct.
 Layout/SpaceBeforeComma:
