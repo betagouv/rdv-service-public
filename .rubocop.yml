@@ -1,5 +1,7 @@
 inherit_from: .rubocop_todo.yml
 
+Bundler/OrderedGems:
+  Enabled: false
 
 Layout/AlignHash:
   Enabled: false
