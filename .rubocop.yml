@@ -20,6 +20,15 @@ Layout/ExtraSpacing:
 Metrics/BlockLength:
   Enabled: false
 
+Metrics/LineLength:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
 Style/Documentation:
   Enabled: false
 
