@@ -21,15 +21,6 @@ Layout/SpaceInsidePercentLiteralDelimiters:
   Exclude:
     - 'config/initializers/assets.rb'
 
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: AllowInHeredoc.
-Layout/TrailingWhitespace:
-  Exclude:
-    - 'app/controllers/agendas_controller.rb'
-    - 'app/helpers/application_helper.rb'
-    - 'config/application.rb'
-
 # Offense count: 2
 Lint/AmbiguousOperator:
   Exclude:

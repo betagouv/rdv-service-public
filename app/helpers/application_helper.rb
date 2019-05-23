@@ -24,5 +24,4 @@ module ApplicationHelper
       alert.to_s
     end
   end
-  
 end
