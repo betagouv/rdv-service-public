@@ -1,13 +1,12 @@
-@import url('https://fonts.googleapis.com/css?family=Hind+Vadodara|Montserrat');
 @import 'bootstrap/functions'; 
-@import 'bootstrap/variables'; 
+@import 'bootstrap/variables';
 @import "variables";
 @import "font-awesome";
 @import "bootstrap";
 @import "mixins/buttons";
 @import "mixins/background-variant";
 
-// Structure 
+// Structure
 @import "structure/general";
 @import "structure/left-menu";
 @import "structure/topbar";
@@ -31,4 +30,3 @@
 
 // Plugins
 @import "actiontext";
-
