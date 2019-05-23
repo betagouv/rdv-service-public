@@ -9,7 +9,7 @@ gem 'rails', '~> 5.2.3'
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
 
-#DB
+# DB
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'kaminari', '~> 1.1'
 gem 'bootstrap4-kaminari-views'

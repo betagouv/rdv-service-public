@@ -55,7 +55,7 @@ Rails.application.configure do
   config.log_level = :debug
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id ]
+  config.log_tags = [:request_id]
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
@@ -77,7 +77,7 @@ Rails.application.configure do
     authentication: :plain,
     user_name:      ENV["SENDGRID_USERNAME"],
     password:       ENV["SENDGRID_PASSWORD"],
-    domain:         'heroku.com'
+    domain:         'heroku.com',
   }
   ActionMailer::Base.delivery_method = :smtp
   config.action_mailer.asset_host = "https://lapin-beta-gouv.herokuapp.com"

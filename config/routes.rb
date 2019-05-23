@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-
   ## ADMIN ##
   devise_for :super_admins, controllers: { omniauth_callbacks: 'super_admins/omniauth_callbacks' }
 
@@ -21,10 +20,9 @@ Rails.application.routes.draw do
     root to: 'agendas#index', as: :authenticated_root
   end
 
-  {disclaimer: 'mentions_legales', terms: 'cgv' }.each do |k,v|
+  { disclaimer: 'mentions_legales', terms: 'cgv' }.each do |k, v|
     get v => "static_pages##{k}"
   end
   get 'accueil_mds' => "welcome#welcome_pro"
   root 'welcome#index'
-
 end
