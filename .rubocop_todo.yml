@@ -23,16 +23,6 @@ Layout/SpaceInsidePercentLiteralDelimiters:
 
 # Offense count: 3
 # Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: final_newline, final_blank_line
-Layout/TrailingBlankLines:
-  Exclude:
-    - 'app/controllers/agendas_controller.rb'
-    - 'app/controllers/dashboard_auth_controller.rb'
-    - 'config/initializers/assets.rb'
-
-# Offense count: 3
-# Cop supports --auto-correct.
 # Configuration parameters: AllowInHeredoc.
 Layout/TrailingWhitespace:
   Exclude:
