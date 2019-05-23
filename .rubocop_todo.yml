@@ -21,13 +21,6 @@ Lint/AmbiguousOperator:
     - 'app/controllers/application_controller.rb'
 
 # Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AllowUnusedKeywordArguments, IgnoreEmptyMethods.
-Lint/UnusedMethodArgument:
-  Exclude:
-    - 'app/controllers/application_controller.rb'
-
-# Offense count: 1
 Metrics/AbcSize:
   Max: 16
 
