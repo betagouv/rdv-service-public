@@ -7,10 +7,11 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :pros
-    require 'sidekiq/web'
-    require 'sidekiq/cron/web'
-    mount Sidekiq::Web => '/sidekiq'
     root to: "pros#index"
+
+    authenticate :super_admin do
+      match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
+    end
   end
 
   ## APP ##
