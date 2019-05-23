@@ -28,13 +28,6 @@ Layout/EmptyLinesAroundClassBody:
     - 'app/models/pro.rb'
     - 'config/application.rb'
 
-# Offense count: 5
-# Cop supports --auto-correct.
-Layout/SpaceAfterComma:
-  Exclude:
-    - 'app/helpers/welcome_helper.rb'
-    - 'config/routes.rb'
-
 # Offense count: 2
 # Cop supports --auto-correct.
 Layout/SpaceBeforeComma:
