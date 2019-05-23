@@ -29,5 +29,8 @@ Style/DocumentationMethod:
 Style/IfUnlessModifier:
   Enabled: false
 
+Style/SymbolArray:
+  EnforcedStyle: brackets
+
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: comma
