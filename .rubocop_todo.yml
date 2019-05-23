@@ -15,15 +15,6 @@ Layout/AlignArguments:
     - 'bin/webpack'
     - 'bin/webpack-dev-server'
 
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, no_empty_lines
-Layout/EmptyLinesAroundBlockBody:
-  Exclude:
-    - 'config/routes.rb'
-    - 'db/schema.rb'
-
 # Offense count: 8
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.

@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-
   ## ADMIN ##
   devise_for :super_admins, controllers: { omniauth_callbacks: 'super_admins/omniauth_callbacks' }
 
@@ -26,5 +25,4 @@ Rails.application.routes.draw do
   end
   get 'accueil_mds' => "welcome#welcome_pro"
   root 'welcome#index'
-
 end
