@@ -20,7 +20,7 @@ Rails.application.routes.draw do
     root to: 'agendas#index', as: :authenticated_root
   end
 
-  {disclaimer: 'mentions_legales', terms: 'cgv' }.each do |k, v|
+  { disclaimer: 'mentions_legales', terms: 'cgv' }.each do |k, v|
     get v => "static_pages##{k}"
   end
   get 'accueil_mds' => "welcome#welcome_pro"
