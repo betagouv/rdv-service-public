@@ -15,20 +15,6 @@ Layout/AlignArguments:
     - 'bin/webpack'
     - 'bin/webpack-dev-server'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: AllowAdjacentOneLineDefs, NumberOfEmptyLines.
-Layout/EmptyLineBetweenDefs:
-  Exclude:
-    - 'app/controllers/static_pages_controller.rb'
-    - 'app/controllers/welcome_controller.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Layout/EmptyLines:
-  Exclude:
-    - 'db/migrate/20190520153400_devise_create_pros.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.
