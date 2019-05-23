@@ -10,7 +10,7 @@ module ApplicationHelper
     (Array(mandatory) + optional).flatten.compact.map(&:to_s).uniq
   end
 
-  def alert_class_for alert
+  def alert_class_for(alert)
     case alert
     when :success
       'alert-success'
