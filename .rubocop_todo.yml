@@ -28,12 +28,6 @@ Layout/EmptyLinesAroundClassBody:
     - 'app/models/pro.rb'
     - 'config/application.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Layout/SpaceAfterColon:
-  Exclude:
-    - 'config/environments/development.rb'
-
 # Offense count: 5
 # Cop supports --auto-correct.
 Layout/SpaceAfterComma:
