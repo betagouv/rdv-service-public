@@ -15,12 +15,6 @@ Layout/AlignArguments:
     - 'bin/webpack'
     - 'bin/webpack-dev-server'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Layout/SpaceInsidePercentLiteralDelimiters:
-  Exclude:
-    - 'config/initializers/assets.rb'
-
 # Offense count: 2
 Lint/AmbiguousOperator:
   Exclude:
