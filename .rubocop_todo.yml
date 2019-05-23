@@ -7,15 +7,6 @@
 # versions of RuboCop, may require this file to be generated again.
 
 # Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, IndentationWidth.
-# SupportedStyles: with_first_argument, with_fixed_indentation
-Layout/AlignArguments:
-  Exclude:
-    - 'bin/webpack'
-    - 'bin/webpack-dev-server'
-
-# Offense count: 2
 Lint/AmbiguousOperator:
   Exclude:
     - 'app/controllers/application_controller.rb'
@@ -29,13 +20,6 @@ Metrics/AbcSize:
 Metrics/MethodLength:
   Max: 18
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/ExpandPathArguments:
-  Exclude:
-    - 'bin/rails'
-    - 'bin/rake'
-
 # Offense count: 54
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.
@@ -44,18 +28,10 @@ Style/FrozenStringLiteralComment:
   Enabled: false
 
 # Offense count: 2
-Style/MixinUsage:
-  Exclude:
-    - 'bin/setup'
-    - 'bin/update'
-
-# Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: Strict.
 Style/NumericLiterals:
   MinDigits: 9
-  Exclude:
-    - 'db/schema.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.
@@ -65,18 +41,6 @@ Style/NumericPredicate:
   Exclude:
     - 'spec/**/*'
     - 'app/helpers/application_helper.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/RedundantBegin:
-  Exclude:
-    - 'bin/yarn'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/StderrPuts:
-  Exclude:
-    - 'bin/yarn'
 
 # Offense count: 99
 # Cop supports --auto-correct.

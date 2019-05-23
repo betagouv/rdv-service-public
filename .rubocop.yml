@@ -3,6 +3,8 @@ inherit_from: .rubocop_todo.yml
 AllCops:
   Exclude:
     - "db/schema.rb"
+    - "bin/*"
+    - "node_modules/**/*"
 
 Bundler/OrderedGems:
   Enabled: false
@@ -34,6 +36,6 @@ Style/SymbolArray:
 
 Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: comma
-  
+
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: comma
