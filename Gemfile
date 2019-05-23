@@ -22,9 +22,9 @@ gem 'devise-async', '~> 1.0'
 gem 'omniauth-github'
 gem 'pundit', '~> 2.0'
 
-# Sidekiq
-gem 'sidekiq', '~> 5.2'
-gem 'sidekiq-cron', '~> 1.1'
+# Jobs
+gem 'delayed_job_active_record'
+gem 'delayed_job_web'
 
 # Form
 gem 'simple_form', '~> 4.1'
