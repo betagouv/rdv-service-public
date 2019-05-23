@@ -37,14 +37,6 @@ Layout/EmptyLinesAroundClassBody:
     - 'app/models/pro.rb'
     - 'config/application.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines
-Layout/EmptyLinesAroundModuleBody:
-  Exclude:
-    - 'app/helpers/application_helper.rb'
-
 # Offense count: 2
 # Cop supports --auto-correct.
 Layout/LeadingCommentSpace:

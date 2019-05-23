@@ -1,5 +1,4 @@
 module ApplicationHelper
-
   # Usage: class_names('my-class', 'my-other-class': condition)
   def class_names(*args)
     optional = args.last.is_a?(Hash) ? args.last : {}
