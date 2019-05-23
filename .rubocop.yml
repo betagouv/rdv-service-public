@@ -28,3 +28,6 @@ Style/DocumentationMethod:
 
 Style/IfUnlessModifier:
   Enabled: false
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma

@@ -77,7 +77,7 @@ Rails.application.configure do
     authentication: :plain,
     user_name:      ENV["SENDGRID_USERNAME"],
     password:       ENV["SENDGRID_PASSWORD"],
-    domain:         'heroku.com'
+    domain:         'heroku.com',
   }
   ActionMailer::Base.delivery_method = :smtp
   config.action_mailer.asset_host = "https://lapin-beta-gouv.herokuapp.com"

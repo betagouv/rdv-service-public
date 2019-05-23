@@ -100,14 +100,6 @@ Style/TrailingCommaInArrayLiteral:
   Exclude:
     - 'app/dashboards/pro_dashboard.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, no_comma
-Style/TrailingCommaInHashLiteral:
-  Exclude:
-    - 'app/dashboards/pro_dashboard.rb'
-
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: WordRegex.
