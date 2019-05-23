@@ -6,6 +6,7 @@ AllCops:
     - "bin/*"
     - "node_modules/**/*"
     - "vendor/**/*"
+    - "lib/tasks/heroku_clear_tasks.rake" # File loaded by heroku when running ci
 
 Bundler/OrderedGems:
   Enabled: false
@@ -15,10 +16,6 @@ Layout/AlignHash:
 
 Layout/ExtraSpacing:
   AllowForAlignment: true
-
-Lint/UnneededCopDisableDirective:
-  Exclude:
-    - 'lib/tasks/heroku_clear_tasks.rake' # File loaded by heroku when running ci
 
 Metrics/BlockLength:
   Enabled: false
