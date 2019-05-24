@@ -19,4 +19,8 @@ as defined by the routes in the `admin/` namespace
       class: "navigation__link navigation__link--#{nav_link_state(resource)}"
     ) %>
   <% end %>
+
+  <hr />
+
+  <%= link_to "Delayed Jobs", admin_delayed_job_path, class: "navigation__link" %>
 </nav>
