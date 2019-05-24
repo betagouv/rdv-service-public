@@ -23,7 +23,7 @@ module Lapin
     config.i18n.default_locale = :fr
     config.action_view.raise_on_missing_translations = true
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
-    config.action_mailer.preview_path = "#{Rails.root}/test/mailers/previews"
+    config.action_mailer.preview_path = "#{Rails.root}/spec/mailers/previews"
 
     # Devise layout
     config.to_prepare do
