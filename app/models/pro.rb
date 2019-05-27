@@ -4,10 +4,10 @@ class Pro < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
 
-  enum role: {user: 0, admin: 1}
+  enum role: { user: 0, admin: 1 }
 
   validates :email, :role, presence: true
-  
+
   def initials
     "MM"
   end
