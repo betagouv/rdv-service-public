@@ -10,6 +10,7 @@ class ProDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
     email: Field::String,
+    role: EnumField,
     encrypted_password: Field::String,
     reset_password_token: Field::String,
     reset_password_sent_at: Field::DateTime,
@@ -26,8 +27,7 @@ class ProDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = [
     :id,
     :email,
-    :encrypted_password,
-    :reset_password_token,
+    :role,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -35,8 +35,7 @@ class ProDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = [
     :id,
     :email,
-    :encrypted_password,
-    :reset_password_token,
+    :role,
     :reset_password_sent_at,
     :remember_created_at,
     :created_at,
@@ -48,10 +47,7 @@ class ProDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
     :email,
-    :encrypted_password,
-    :reset_password_token,
-    :reset_password_sent_at,
-    :remember_created_at,
+    :role,
   ].freeze
 
   # Overwrite this method to customize how pros are displayed

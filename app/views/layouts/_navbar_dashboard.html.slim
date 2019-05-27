@@ -7,7 +7,7 @@
           | #{current_pro.initials}
         span
           span.account-user-name Mathieu Magnin
-          span.account-position Admin
+          span.account-position= Pro.human_enum_name(:role, current_pro.role)
       .dropdown-menu.dropdown-menu-right.dropdown-menu-animated.profile-dropdown
         .dropdown-header.noti-title
           h6.text-overflow.m-0 Bienvenue !
