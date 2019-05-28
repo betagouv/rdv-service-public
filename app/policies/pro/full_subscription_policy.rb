@@ -1,7 +1,5 @@
 class Pro::FullSubscriptionPolicy < ApplicationPolicy
-
-  def create? 
+  def create?
     true
   end
-
 end

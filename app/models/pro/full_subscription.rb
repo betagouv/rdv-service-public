@@ -10,9 +10,9 @@ class Pro::FullSubscription
   end
 
   private
+
   def build_pro
     pro.first_name = first_name
     pro.last_name = last_name
   end
-
 end

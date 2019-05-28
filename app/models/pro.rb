@@ -19,5 +19,4 @@ class Pro < ApplicationRecord
   def complete?
     first_name.present? && last_name.present?
   end
-
 end

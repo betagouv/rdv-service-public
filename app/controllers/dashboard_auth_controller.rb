@@ -7,6 +7,7 @@ class DashboardAuthController < ApplicationController
   after_action :verify_policy_scoped, only: :index
 
   private
+
   def pundit_user
     current_pro
   end

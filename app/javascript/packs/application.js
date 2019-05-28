@@ -25,6 +25,14 @@ $(document).on('shown.bs.modal', '.modal', function(e) {
 
 $(document).on('shown.rightbar', '.right-bar', function(e) {
   analytic.trackRightbarView(e);
+  $('.right-bar .slimscroll-menu').slimscroll({
+    height: 'auto',
+    position: 'right',
+    size: "8px",
+    color: '#9ea5ab',
+    wheelStep: 5,
+    touchScrollStep: 20
+  });
 });
 
 $(document).on('hide.bs.modal', '.modal', function(e) {
