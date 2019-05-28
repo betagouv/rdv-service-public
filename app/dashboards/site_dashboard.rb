@@ -47,7 +47,7 @@ class SiteDashboard < Administrate::BaseDashboard
   # Overwrite this method to customize how super admins are displayed
   # across all pages of the admin dashboard.
   #
-  # def display_resource(super_admin)
-  #   "SuperAdmin ##{super_admin.id}"
-  # end
+  def display_resource(site)
+    "#{site.name} (#{site.organisation.name})"
+  end
 end
