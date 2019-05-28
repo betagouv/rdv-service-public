@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :pros
     resources :super_admins
+    resources :organisations
     root to: "pros#index"
 
     authenticate :super_admin do
