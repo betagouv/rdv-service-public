@@ -145,6 +145,8 @@ GEM
       railties (>= 3.2, < 6.1)
     erubi (1.8.0)
     execjs (2.7.0)
+    factory_bot (5.0.2)
+      activesupport (>= 4.2.0)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     ffi (1.10.0)
@@ -428,6 +430,7 @@ DEPENDENCIES
   devise-async (~> 1.0)
   devise_invitable (~> 2.0)
   dotenv-rails (~> 2.7.2)
+  factory_bot
   font-awesome-rails (~> 4.7)
   fuubar
   holder_rails
