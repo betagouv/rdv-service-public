@@ -24,6 +24,7 @@ class Pros::RegistrationsController < Devise::RegistrationsController
   end
 
   private
+
   def after_inactive_sign_up_path_for(_)
     new_pro_session_path
   end

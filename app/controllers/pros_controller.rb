@@ -6,5 +6,4 @@ class ProsController < DashboardAuthController
     authorize(@pro)
     respond_right_bar_with @pro
   end
-  
 end
