@@ -1,0 +1,3 @@
+fr:
+ pundit:
+   default: 'Vous ne pouvez pas effectuer cette action.'

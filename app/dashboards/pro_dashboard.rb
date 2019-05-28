@@ -11,6 +11,8 @@ class ProDashboard < Administrate::BaseDashboard
     id: Field::Number,
     email: Field::String,
     role: EnumField,
+    first_name: Field::String,
+    last_name: Field::String,
     encrypted_password: Field::String,
     reset_password_token: Field::String,
     reset_password_sent_at: Field::DateTime,
@@ -27,6 +29,8 @@ class ProDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = [
     :id,
     :email,
+    :first_name,
+    :last_name,
     :role,
   ].freeze
 
@@ -35,6 +39,8 @@ class ProDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = [
     :id,
     :email,
+    :first_name,
+    :last_name,
     :role,
     :reset_password_sent_at,
     :remember_created_at,
@@ -47,6 +53,8 @@ class ProDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
     :email,
+    :first_name,
+    :last_name,
     :role,
   ].freeze
 

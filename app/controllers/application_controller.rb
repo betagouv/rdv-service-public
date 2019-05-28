@@ -3,7 +3,13 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   def after_sign_in_path_for(_resource)
-    authenticated_root_path
+    path = 
+      if !current_pro.complete?
+        new_pros_full_subscription_path
+      else
+        authenticated_root_path
+      end
+    path
   end
 
   def respond_modal_with(*args, &blk)

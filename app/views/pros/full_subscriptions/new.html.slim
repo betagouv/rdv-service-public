@@ -1,0 +1,7 @@
+.text-center.w-75.m-auto  
+  h4.text-dark-50.text-center.mt-0.font-weight-bold.mb-4 Vos informations
+
+= simple_form_for @subscription, url: pros_full_subscriptions_path do |f|
+  = f.input :first_name, placeholder: 'Prénom', label: false
+  = f.input :last_name, placeholder: 'Nom', label: false
+  = f.button :submit, 'Valider'
