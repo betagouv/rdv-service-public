@@ -1,0 +1,7 @@
+fr:
+  activerecord:
+    models:
+      organisation: Organisation
+    attributes:
+      organisation:
+        name: Nom
