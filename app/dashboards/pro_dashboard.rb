@@ -43,6 +43,7 @@ class ProDashboard < Administrate::BaseDashboard
     :first_name,
     :last_name,
     :role,
+    :organisation,
     :reset_password_sent_at,
     :remember_created_at,
     :created_at,
@@ -62,7 +63,7 @@ class ProDashboard < Administrate::BaseDashboard
   # Overwrite this method to customize how pros are displayed
   # across all pages of the admin dashboard.
   #
-  # def display_resource(pro)
-  #   "Pro ##{pro.id}"
-  # end
+  def display_resource(pro)
+    pro.email
+  end
 end
