@@ -80,6 +80,8 @@ ActiveRecord::Schema.define(version: 2019_05_28_143753) do
     t.datetime "confirmation_sent_at"
     t.string "unconfirmed_email"
     t.integer "role", default: 0
+    t.string "first_name"
+    t.string "last_name"
     t.bigint "organisation_id"
     t.index ["confirmation_token"], name: "index_pros_on_confirmation_token", unique: true
     t.index ["email"], name: "index_pros_on_email", unique: true

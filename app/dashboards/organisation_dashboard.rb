@@ -24,8 +24,6 @@ class OrganisationDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = [
     :id,
     :name,
-    :created_at,
-    :updated_at,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES

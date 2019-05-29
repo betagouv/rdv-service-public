@@ -4,7 +4,7 @@ class Pro < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
 
-  belongs_to :organisation
+  belongs_to :organisation, optional: true
 
   enum role: { user: 0, admin: 1 }
 

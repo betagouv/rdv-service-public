@@ -24,8 +24,6 @@ class SiteDashboard < Administrate::BaseDashboard
     :id,
     :name,
     :organisation,
-    :created_at,
-    :updated_at,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
