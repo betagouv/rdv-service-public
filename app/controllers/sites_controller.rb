@@ -41,6 +41,6 @@ class SitesController < DashboardAuthController
   end
 
   def site_params
-    params.require(:site).permit(:name)
+    params.require(:site).permit(:name, :address)
   end
 end
