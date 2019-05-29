@@ -46,3 +46,9 @@ Style/TrailingCommaInArrayLiteral:
 
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: comma
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false

@@ -1,0 +1,14 @@
+- content_for :title do
+  | Votre compte
+
+.p-3
+  - unless @pro.full_name.blank?
+    h5.card-title.mb-0
+      = @pro.full_name 
+      = admin_tag(@pro)
+      = me_tag(@pro)
+  p.card-text
+    = @pro.email
+  - if policy(@pro).edit? 
+    = link_to 'Modifier', edit_pro_registration_path, class: 'btn btn-primary', data: { rightbar: true }
+

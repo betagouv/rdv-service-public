@@ -18,6 +18,10 @@ Rails.application.routes.draw do
 
   ## APP ##
   devise_for :pros, controllers: { registrations: 'pros/registrations' }
+  resources :pros, only: [:show]
+  namespace :pros do
+    resources :full_subscriptions, only: [:new, :create]
+  end
 
   authenticated :pro do
     root to: 'agendas#index', as: :authenticated_root

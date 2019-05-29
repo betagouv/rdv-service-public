@@ -1,5 +1,5 @@
 class DashboardAuthController < ApplicationController
-  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+  rescue_from Pundit::NotAuthorizedError, with: :pro_not_authorized
 
   before_action :authenticate_pro!
 
@@ -8,9 +8,12 @@ class DashboardAuthController < ApplicationController
 
   private
 
-  def user_not_authorized(exception)
-    policy_name = exception.policy.class.to_s.underscore
+  def pundit_user
+    current_pro
+  end
 
+  def pro_not_authorized(exception)
+    policy_name = exception.policy.class.to_s.underscore
     flash[:error] = t "#{policy_name}.#{exception.query}", scope: "pundit", default: :default
     redirect_to(request.referrer || authenticated_root_path)
   end
