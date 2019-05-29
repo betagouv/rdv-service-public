@@ -13,6 +13,7 @@ class ProDashboard < Administrate::BaseDashboard
     role: EnumField,
     first_name: Field::String,
     last_name: Field::String,
+    organisation: Field::BelongsTo,
     encrypted_password: Field::String,
     reset_password_token: Field::String,
     reset_password_sent_at: Field::DateTime,
