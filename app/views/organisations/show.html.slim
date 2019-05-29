@@ -1,0 +1,21 @@
+- content_for :title do
+  | Votre organisation
+
+.card
+  .card-body
+    p= @organisation.name
+
+    - if policy(@organisation).update?
+      p= link_to "Modifier", edit_organisation_path(@organisation)
+
+    p Sites
+    - if @organisation.sites.any?
+      ul
+        - @organisation.sites.each do |s|
+          li
+            = s.name
+            | &nbsp;
+            = link_to "Modifier", edit_organisation_site_path(@organisation, s)
+    - else
+      | Il n'y a pour l'instant aucun site lié à cette organisation.
+    = link_to "Ajouter un site", new_organisation_site_path(@organisation)
