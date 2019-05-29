@@ -6,10 +6,6 @@ class ApplicationPolicy
     @record = record
   end
 
-  def pro
-    @pro
-  end
-
   def index?
     false
   end
