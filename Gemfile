@@ -80,6 +80,8 @@ group :development, :test do
   gem 'brakeman', require: false
   gem 'rubocop', require: false
   gem 'rspec-rails', '~> 3.8'
+  gem 'factory_bot'
+  gem 'meta_request', '~> 0.7'
 end
 
 group :development do
