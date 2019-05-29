@@ -10,7 +10,6 @@ class ProPolicy < ApplicationPolicy
   private
 
   def same_pro
-    # why @user???
     @current_pro == @user
   end
 end

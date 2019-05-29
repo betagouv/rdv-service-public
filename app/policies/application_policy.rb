@@ -6,7 +6,7 @@ class ApplicationPolicy
     @record = record
   end
 
-  def user
+  def pro
     @pro
   end
 
