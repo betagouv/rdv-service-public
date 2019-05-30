@@ -3,6 +3,10 @@ class OrganisationPolicy < ApplicationPolicy
     true
   end
 
+  def create?
+    true
+  end
+
   def edit?
     admin_belongs_to_organisation?
   end

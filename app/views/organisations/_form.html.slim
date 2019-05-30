@@ -1,6 +1,4 @@
-= simple_form_for(organisation) do |f|
-  .row
-    .col-md-6
-      = f.input :name
-
+= simple_form_for organisation do |f|
+  = render partial: 'layouts/model_errors', locals: { model: organisation }
+  = f.input :name
   = f.button :submit

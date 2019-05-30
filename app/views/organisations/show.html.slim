@@ -3,8 +3,7 @@
 
 .card
   .card-body
-    p= @organisation.name
-
+    h5.card-title= @organisation.name
     - if policy(@organisation).update?
       p= link_to "Modifier", edit_organisation_path(@organisation)
 
