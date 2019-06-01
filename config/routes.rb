@@ -26,7 +26,7 @@ Rails.application.routes.draw do
   authenticated :pro do
     root to: 'agendas#index', as: :authenticated_root
     resources :organisations, only: [:show, :edit, :update] do
-      resources :sites, only: [:new, :create, :edit, :update, :destroy]
+      resources :sites, except: :index
     end
   end
 

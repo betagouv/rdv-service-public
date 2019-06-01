@@ -38,8 +38,7 @@ class SitesController < DashboardAuthController
     @site = Site.find(params[:id])
     authorize(@site)
     if @site.destroy
-      flash.notice = "Site supprimé"
-      redirect_to @site.organisation
+      redirect_to @site.organisation, notice: 'Site supprimé'
     else
       render :edit
     end
