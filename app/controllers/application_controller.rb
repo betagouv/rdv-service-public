@@ -13,6 +13,10 @@ class ApplicationController < ActionController::Base
     path
   end
 
+  def after_invite_path_for(inviter, _invitee)
+    organisation_pros_path(inviter.organisation)
+  end
+
   def respond_modal_with(*args, &blk)
     options = args.extract_options!
     options[:responder] = ModalResponder
@@ -28,6 +32,8 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:invite, keys: [:email, :role])
+    devise_parameter_sanitizer.permit(:accept_invitation, keys: [:first_name, :last_name])
     devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name])
   end
 end

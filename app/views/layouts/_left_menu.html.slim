@@ -9,6 +9,13 @@
         = link_to authenticated_root_path, class: 'side-nav-link' do
           i.fa.fa-calendar-o
           span Vos agendas
-        = link_to organisation_path(current_pro.organisation), class: 'side-nav-link' do
-          i.fa.fa-building-o
-          span Votre organisation
+
+        - if current_pro.admin?
+          li.side-nav-item
+            = link_to '#', class: 'side-nav-link' do 
+              i.fa.fa-cog
+              span Paramètres
+              span.menu-arrow
+            ul.side-nav-second-level aria-expanded="false"
+              li=link_to 'Votre organisation', organisation_path(current_pro.organisation)
+              li=link_to 'Vos utilisateurs', organisation_pros_path(current_pro.organisation)

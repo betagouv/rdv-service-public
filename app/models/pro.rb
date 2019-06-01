@@ -1,7 +1,7 @@
 class Pro < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable,
+  devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
 
   belongs_to :organisation, optional: true
@@ -11,6 +11,10 @@ class Pro < ApplicationRecord
 
   validates :email, :role, presence: true
   validates :last_name, :first_name, presence: true, on: :update
+
+  scope :complete, -> { where.not(first_name: nil, last_name: nil) }
+
+  before_invitation_created :set_organisation
 
   def full_name
     "#{first_name} #{last_name}"
@@ -22,5 +26,11 @@ class Pro < ApplicationRecord
 
   def complete?
     first_name.present? && last_name.present?
+  end
+
+  private
+
+  def set_organisation
+    self.organisation = invited_by.organisation
   end
 end

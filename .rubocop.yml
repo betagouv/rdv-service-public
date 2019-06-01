@@ -7,6 +7,9 @@ AllCops:
     - "node_modules/**/*"
     - "vendor/**/*"
     - "lib/tasks/heroku_clear_tasks.rake" # File loaded by heroku when running ci
+    # Overload of Devis invite and register
+    - "app/controllers/pros/registrations_controller.rb"
+    - "app/controllers/pros/invitations_controller.rb"
 
 Bundler/OrderedGems:
   Enabled: false

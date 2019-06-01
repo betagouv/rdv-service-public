@@ -17,16 +17,20 @@ Rails.application.routes.draw do
   end
 
   ## APP ##
-  devise_for :pros, controllers: { registrations: 'pros/registrations' }
-  resources :pros, only: [:show]
+  devise_for :pros, controllers: { registrations: 'pros/registrations', invitations: 'pros/invitations' }
+  resources :pros, only: [:show] do
+    post :reinvite, on: :member
+  end
   namespace :pros do
     resources :full_subscriptions, only: [:new, :create]
+    resources :permissions, only: [:edit, :update]
   end
 
   authenticated :pro do
     root to: 'agendas#index', as: :authenticated_root
-    resources :organisations, only: [:show, :edit, :update] do
+    resources :organisations, except: :destroy do
       resources :sites, except: :index
+      resources :pros
     end
   end
 
