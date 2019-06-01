@@ -2,7 +2,12 @@
   .row
     .col-md-6
       = f.input :name
-
       = f.input :address, input_html: { class: "places-js-container" }
-
-  = f.button :submit
+  .row
+    .col-md-6
+      - if site.persisted?
+        |&nbsp;
+        = link_to "Supprimer", organisation_site_path(site.organisation, site), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce site ?"}
+    .col-md-6.text-right
+      = link_to "Annuler", organisation_path(site.organisation), class: "btn btn-link"
+      = f.button :submit

@@ -34,6 +34,16 @@ class SitesController < DashboardAuthController
     end
   end
 
+  def destroy
+    @site = Site.find(params[:id])
+    authorize(@site)
+    if @site.destroy
+      redirect_to @site.organisation, notice: 'Site supprimé'
+    else
+      render :edit
+    end
+  end
+
   private
 
   def set_organisation
