@@ -3,4 +3,6 @@
     .col-md-6
       = f.input :name
 
-  = f.submit "Enregister"
+      = f.input :address, input_html: { class: "places-js-container" }
+
+  = f.button :submit
