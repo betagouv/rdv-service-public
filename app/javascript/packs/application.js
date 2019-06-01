@@ -13,6 +13,7 @@ import { Layout } from 'packs/components/layout';
 import { Modal } from 'packs/components/modal';
 import { Rightbar } from 'packs/components/rightbar';
 import { Analytic } from 'packs/components/analytic';
+import { PlacesInput } from 'packs/components/places-input';
 import "actiontext";
 
 new Modal();
@@ -45,15 +46,16 @@ $(document).on('turbolinks:load', function() {
 
   let menu = new Menu();
   let layout = new Layout();
-  
+
   layout.init();
   menu.init();
   new Avatar().init();
- 
+
   $(window).on('resize', function(e) {
     e.preventDefault();
     layout.init();
     menu.resetSidebarScroll();
   });
 
+  new PlacesInput(document.querySelector('.places-js-container'));
 });

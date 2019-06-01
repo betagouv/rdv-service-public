@@ -5,3 +5,4 @@ fr:
     attributes:
       site:
         name: Nom
+        address: Adresse
