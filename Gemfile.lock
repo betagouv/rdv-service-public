@@ -87,6 +87,9 @@ GEM
       rails (>= 3.1)
     brakeman (4.5.1)
     builder (3.2.3)
+    bullet (6.0.0)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.11)
     byebug (11.0.1)
     callsite (0.0.11)
     capybara (3.19.1)
@@ -388,6 +391,7 @@ GEM
     uglifier (4.1.20)
       execjs (>= 0.3.0, < 3)
     unicode-display_width (1.6.0)
+    uniform_notifier (1.12.1)
     warden (1.2.8)
       rack (>= 2.0.6)
     web-console (3.7.0)
@@ -419,6 +423,7 @@ DEPENDENCIES
   bootstrap (~> 4.3)
   bootstrap4-kaminari-views
   brakeman
+  bullet
   byebug
   capybara (>= 2.15)
   chartkick
