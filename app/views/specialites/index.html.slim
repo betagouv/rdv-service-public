@@ -1,0 +1,23 @@
+- content_for :title do
+  | Spécialités
+
+- content_for :breadcrumb do
+  = link_to 'Ajouter une spécialité', new_organisation_specialite_path(@organisation), class: "btn btn-outline-white"
+
+.row
+  .col-md-12
+    .card
+      .card-body
+        - if @specialites.any?
+          table.table
+            thead
+              tr
+                th Nom
+            tbody
+              - @specialites.each do |s|
+                tr
+                  td= link_to s.name, organisation_specialite_path(s.organisation, s)
+        - else
+          | Il n'y a pour l'instant aucune spécialité.
+          br
+          = link_to 'Ajouter une spécialité', new_organisation_specialite_path(@organisation), class: "btn btn-primary mt-2"
