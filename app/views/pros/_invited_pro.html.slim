@@ -1,0 +1,15 @@
+tr id="pro_#{pro.id}"
+  td
+    = pro.email
+    = admin_tag(pro)
+  td.invitation-text
+   | il y a #{distance_of_time_in_words_to_now(pro.invitation_sent_at)}
+  td.text-right
+    .dropdown
+      a.dropdown-toggle.arrow-none.text-primary aria-expanded="false" data-toggle="dropdown" href="#"
+        i.fa.fa-ellipsis-v.fa-fw
+      .dropdown-menu.dropdown-menu-right
+        - if policy(pro).reinvite?
+          = link_to 'Renvoyer', reinvite_pro_path(pro), method: :post, class: 'btn btn-outline-primary', remote: true, class: 'dropdown-item'
+        - if policy(pro).destroy?
+          = link_to 'Supprimer', pro_path(pro), data:{confirm: "Êtes-vous sûr de vouloir supprimer cet utilisateur ?"}, method: :delete, class: 'dropdown-item'

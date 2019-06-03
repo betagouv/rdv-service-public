@@ -13,3 +13,5 @@ fr:
         roles: 
           user: Utilisateur
           admin: Admin
+          user_html: <i class='fa fa-user-o'></i> Utilisateur<br>Peut lire, créer, modifier son agenda.
+          admin_html: <i class='fa fa-user-plus'></i> Admin<br>Peut lire, créer, modifier et <strong>supprimer</strong> des agendas et <strong>des utilisateurs</strong>.

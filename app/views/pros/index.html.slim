@@ -1,0 +1,40 @@
+- content_for :title do
+  | Utilisateurs
+
+- content_for :breadcrumb do
+  = invite_button 'btn-outline-white'
+
+.row
+  .col-md-12
+    .card
+      .card-body
+        table.table
+          thead
+            tr
+              th.w-50 Nom
+              th Email
+              th
+          tbody
+            = render partial: 'pro', collection: @complete_pros
+        .d-flex.justify-content-center
+          = paginate @complete_pros, theme: 'twitter-bootstrap-4'
+
+h5.my-4 Vos invitations en cours
+.row
+  .col-md-12
+
+    - if !@invited_pros.exists?
+        p Vous n'avez pas d'invitation en cours.
+    - else
+      .card
+        .card-body
+          table.table
+            thead
+              tr
+                th.w-50 Email
+                th Envoyée
+                th
+            tbody
+              = render partial: 'invited_pro', collection: @invited_pros, as: :pro
+
+= invite_button
