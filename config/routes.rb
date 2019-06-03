@@ -18,7 +18,7 @@ Rails.application.routes.draw do
 
   ## APP ##
   devise_for :pros, controllers: { registrations: 'pros/registrations', invitations: 'pros/invitations' }
-  resources :pros, only: [:show] do
+  resources :pros, only: [:show, :destroy] do
     post :reinvite, on: :member
   end
   namespace :pros do

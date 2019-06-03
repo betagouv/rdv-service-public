@@ -15,3 +15,4 @@ tr id="pro_#{pro.id}"
           = link_to 'Voir', pro_path(pro), class: 'dropdown-item', data: {rightbar: true}
         - if policy(Pro::Permission.new(pro: pro)).edit?
           = link_to 'Permissions', edit_pros_permission_path(pro), class: 'dropdown-item', data: { rightbar: true }
+        = delete_pro_dropdown_link pro
