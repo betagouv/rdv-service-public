@@ -15,11 +15,11 @@
               th Email
               th
           tbody
-            = render @complete_pros
+            = render partial: 'pro', collection: @complete_pros
         .d-flex.justify-content-center
           = paginate @complete_pros, theme: 'twitter-bootstrap-4'
 
-h5.my-4 Vos invitations en cours 
+h5.my-4 Vos invitations en cours
 .row
   .col-md-12
 
