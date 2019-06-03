@@ -19,7 +19,10 @@
     | Renseignez votre mot de passe actuel pour tout changement.
   .text-center= f.submit "Modifier", class: 'btn btn-primary'
 
-- content_for :footer do
-  = link_to 'Retour', :back
+- if policy(resource).destroy?
+  .mt-5.text-center
+    p.font-13 Vous souhaitez supprimer votre compte ? 
+    = link_to 'Supprimer', pro_registration_path(resource), data:{confirm: "Êtes-vous sûr de vouloir supprimer votre compte ?"}, method: :delete, remote: true, class: 'btn btn-outline-danger btn-sm'
+
 
 
