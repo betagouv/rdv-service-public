@@ -1,7 +1,7 @@
 class ProPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      scope.where(organisation: pro.organisation)
+      scope.where(organisation_id: pro.organisation_id)
     end
   end
 
