@@ -28,6 +28,6 @@ class ProPolicy < ApplicationPolicy
   private
 
   def same_pro
-    @pro == @record
+    @pro == @record || @pro.admin?
   end
 end
