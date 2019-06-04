@@ -13,7 +13,7 @@ class Pro < ApplicationRecord
   validates :last_name, :first_name, presence: true, on: :update
 
   scope :complete, -> { where.not(first_name: nil, last_name: nil) }
-  scope :active, -> { where(deleted_at: nil)}
+  scope :active, -> { where(deleted_at: nil) }
 
   before_invitation_created :set_organisation
 
@@ -30,17 +30,17 @@ class Pro < ApplicationRecord
   end
 
   ## Soft Delete for Devise
-  def soft_delete  
-    update_attribute(:deleted_at, Time.zone.now)  
-  end 
+  def soft_delete
+    update_attribute(:deleted_at, Time.zone.now)
+  end
 
   def active_for_authentication?
-    super && !deleted_at  
-  end 
+    super && !deleted_at
+  end
 
-  def inactive_message   
-    !deleted_at ? super : :deleted_account  
-  end 
+  def inactive_message
+    !deleted_at ? super : :deleted_account
+  end
 
   private
 
