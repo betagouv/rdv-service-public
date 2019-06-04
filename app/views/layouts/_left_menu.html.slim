@@ -12,10 +12,11 @@
 
         - if current_pro.admin?
           li.side-nav-item
-            = link_to '#', class: 'side-nav-link' do 
+            = link_to '#', class: 'side-nav-link' do
               i.fa.fa-cog
               span Paramètres
               span.menu-arrow
             ul.side-nav-second-level aria-expanded="false"
               li=link_to 'Votre organisation', organisation_path(current_pro.organisation)
               li=link_to 'Vos utilisateurs', organisation_pros_path(current_pro.organisation)
+              li=link_to 'Vos spécialités', organisation_specialites_path(current_pro.organisation)
