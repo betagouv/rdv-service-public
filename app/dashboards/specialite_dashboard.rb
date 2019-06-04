@@ -1,6 +1,6 @@
 require "administrate/base_dashboard"
 
-class ProDashboard < Administrate::BaseDashboard
+class SpecialiteDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
   # a hash that describes the type of each of the model's fields.
   #
@@ -9,16 +9,9 @@ class ProDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     id: Field::Number,
-    email: Field::String,
-    role: EnumField,
-    first_name: Field::String,
-    last_name: Field::String,
+    name: Field::String,
     organisation: Field::BelongsTo,
-    specialite: Field::BelongsTo,
-    encrypted_password: Field::String,
-    reset_password_token: Field::String,
-    reset_password_sent_at: Field::DateTime,
-    remember_created_at: Field::DateTime,
+    pros: Field::HasMany,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -30,24 +23,17 @@ class ProDashboard < Administrate::BaseDashboard
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = [
     :id,
-    :email,
-    :first_name,
-    :last_name,
-    :role,
+    :name,
+    :organisation,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = [
     :id,
-    :email,
-    :first_name,
-    :last_name,
-    :role,
+    :name,
     :organisation,
-    :specialite,
-    :reset_password_sent_at,
-    :remember_created_at,
+    :pros,
     :created_at,
     :updated_at,
   ].freeze
@@ -56,16 +42,14 @@ class ProDashboard < Administrate::BaseDashboard
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
-    :email,
-    :first_name,
-    :last_name,
-    :role,
+    :name,
+    :organisation,
   ].freeze
 
-  # Overwrite this method to customize how pros are displayed
+  # Overwrite this method to customize how super admins are displayed
   # across all pages of the admin dashboard.
   #
-  def display_resource(pro)
-    pro.email
+  def display_resource(specialite)
+    "#{specialite.name} (#{specialite.organisation.name})"
   end
 end
