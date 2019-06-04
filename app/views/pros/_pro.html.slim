@@ -16,4 +16,4 @@ tr id="pro_#{pro.id}"
         - if policy(Pro::Permission.new(pro: pro)).edit?
           = link_to 'Permissions', edit_pros_permission_path(pro), class: 'dropdown-item', data: { rightbar: true }
         - if policy(pro).destroy?
-          = link_to 'Supprimer', pro_path(pro), data:{confirm: "Êtes-vous sûr de vouloir supprimer cet utilisateur ?"}, method: :delete, remote: true, class: 'dropdown-item'
+          = link_to 'Supprimer', pro_path(pro), data:{confirm: "Êtes-vous sûr de vouloir supprimer ce professionnel ?"}, method: :delete, remote: true, class: 'dropdown-item'

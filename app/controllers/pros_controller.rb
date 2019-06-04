@@ -19,7 +19,7 @@ class ProsController < DashboardAuthController
     authorize(@pro)
     @pro.invite!
     respond_to do |f|
-      f.html { redirect_to organisation_pros_path(company), notice: 'L\'utilisateur a été réinvité' }
+      f.html { redirect_to organisation_pros_path(company), notice: 'Le professionnel a été réinvité' }
       f.js
     end
   end
