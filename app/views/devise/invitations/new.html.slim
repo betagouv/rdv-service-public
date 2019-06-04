@@ -1,9 +1,8 @@
 - content_for :title do
   = t "devise.invitations.new.header"
 
-.my-5
-  = simple_form_for resource.class.new(invited_by_id: current_pro.id), as: resource_name, url: invitation_path(resource_name), remote: request.xhr?, html: { method: :post, data: { rightbar: true } } do |f|
-    = devise_error_messages!
-    = f.input :email, placeholder: 'votre_nom@votre_entreprise.com'
-    = f.input :role, collection: Pro.human_enum_collection_html(:role), as: :radio_buttons
-    = f.button :submit, t("devise.invitations.new.submit_button")
+= simple_form_for resource.class.new(invited_by_id: current_pro.id), as: resource_name, url: invitation_path(resource_name), remote: request.xhr?, html: { method: :post, data: { rightbar: true } } do |f|
+  = devise_error_messages!
+  = f.input :email, placeholder: 'votre_nom@votre_entreprise.com'
+  = f.input :role, collection: Pro.human_enum_collection_html(:role), as: :radio_buttons
+  = f.button :submit, t("devise.invitations.new.submit_button")
