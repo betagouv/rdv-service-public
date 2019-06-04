@@ -1,16 +1,16 @@
-= simple_form_for([@specialite.organisation, @specialite]) do |f|
-  = render partial: 'layouts/model_errors', locals: { model: @specialite }
+= simple_form_for([specialite.organisation, specialite]) do |f|
+  = render partial: 'layouts/model_errors', locals: { model: specialite }
 
   = f.input :name
 
   .row
-    - if @specialite.persisted?
+    - if specialite.persisted?
       .col.text-left
-        = link_to "Supprimer", organisation_specialite_path(@specialite.organisation, @specialite), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cette spécialité ?"}
+        = link_to "Supprimer", organisation_specialite_path(specialite.organisation, specialite), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cette spécialité ?"}
     .col.text-right
-      - if @specialite.persisted?
-        = link_to 'Annuler', organisation_specialite_path(@specialite.organisation, @specialite), class: "btn btn-link"
+      - if specialite.persisted?
+        = link_to 'Annuler', organisation_specialite_path(specialite.organisation, specialite), class: "btn btn-link"
       - else
-        = link_to 'Annuler', organisation_specialites_path(@specialite.organisation), class: "btn btn-link"
+        = link_to 'Annuler', organisation_specialites_path(specialite.organisation), class: "btn btn-link"
       | &nbsp;
       = f.button :submit
