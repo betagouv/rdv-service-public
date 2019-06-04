@@ -1,7 +1,7 @@
 tr id="pro_#{pro.id}"
   td
-    - unless pro.full_name.blank?
-      = link_to pro.full_name, pro_path(pro)
+    - if pro.complete?
+      = link_to_if policy(pro).show?, pro.full_name, pro_path(pro), data: {rightbar: true}
       = admin_tag(pro)
       = me_tag(pro)
   td
