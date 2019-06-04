@@ -28,4 +28,23 @@
           .text-center
             = link_to "Aller à la liste des professionnels", organisation_pros_path(@specialite.organisation), class: "card-link"
 
+    .card
+      .card-body.pb-1
+        h5.card-title Motifs
+      - if @specialite.motifs.any?
+        table.table.mb-0
+          thead
+            tr
+              th Nom
+              th
+          tbody
+            = render partial: "specialites/motif", collection: @specialite.motifs
+      - else
+        .card-body
+          p.card-text
+            | Il n'y a pour l'instant aucun motif lié à cette spécialité.
+      .card-body
+        .text-center
+          = link_to 'Ajouter un motif', new_organisation_specialite_motif_path(@organisation, @specialite), class: "card-link", data: { rightbar: true }
+
 = link_to 'Retour aux spécialités', organisation_specialites_path(@specialite.organisation)

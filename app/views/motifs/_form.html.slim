@@ -1,0 +1,14 @@
+= simple_form_for([motif.specialite.organisation, motif.specialite, motif], remote: request.xhr?, data: { rightbar: true }) do |f|
+  = render partial: 'layouts/model_errors', locals: { model: motif }
+
+  = f.input :name
+  = f.association :specialite, collection: motif.specialite.organisation.specialites
+
+  .row
+    - if motif.persisted?
+      .col.text-left
+        = link_to "Supprimer", organisation_specialite_motif_path(motif.specialite.organisation, motif.specialite, motif), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cette spécialité ?"}
+    .col.text-right
+      = link_to 'Annuler', organisation_specialite_path(motif.specialite.organisation, motif.specialite), class: "btn btn-link"
+      | &nbsp;
+      = f.button :submit
