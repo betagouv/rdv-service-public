@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_03_162518) do
+ActiveRecord::Schema.define(version: 2019_06_04_123756) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,6 +59,14 @@ ActiveRecord::Schema.define(version: 2019_06_03_162518) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+  end
+
+  create_table "motifs", force: :cascade do |t|
+    t.bigint "specialite_id"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["specialite_id"], name: "index_motifs_on_specialite_id"
   end
 
   create_table "organisations", force: :cascade do |t|
@@ -130,6 +138,7 @@ ActiveRecord::Schema.define(version: 2019_06_03_162518) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "motifs", "specialites"
   add_foreign_key "sites", "organisations"
   add_foreign_key "specialites", "organisations"
 end

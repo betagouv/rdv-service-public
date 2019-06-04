@@ -1,0 +1,8 @@
+fr:
+  activerecord:
+    models:
+      motif: Motif
+    attributes:
+      motif:
+        name: Nom
+        specialite: Spécialité
