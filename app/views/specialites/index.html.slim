@@ -2,7 +2,7 @@
   | Spécialités
 
 - content_for :breadcrumb do
-  = link_to 'Ajouter une spécialité', new_organisation_specialite_path(@organisation), class: "btn btn-outline-white"
+  = link_to 'Ajouter une spécialité', new_organisation_specialite_path(@organisation), class: "btn btn-outline-white", data: { rightbar: true }
 
 .row
   .col-md-12

@@ -1,4 +1,4 @@
-= simple_form_for([specialite.organisation, specialite]) do |f|
+= simple_form_for([specialite.organisation, specialite], remote: request.xhr?, data: { rightbar: true }) do |f|
   = render partial: 'layouts/model_errors', locals: { model: specialite }
 
   = f.input :name

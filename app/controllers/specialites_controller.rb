@@ -1,4 +1,6 @@
 class SpecialitesController < DashboardAuthController
+  respond_to :html, :json
+
   before_action :set_organisation
   before_action :set_specialite, only: [:show, :edit, :update, :destroy]
 
@@ -14,6 +16,7 @@ class SpecialitesController < DashboardAuthController
   def new
     @specialite = Specialite.new(organisation: @organisation)
     authorize(@specialite)
+    respond_right_bar_with @specialite
   end
 
   def edit
