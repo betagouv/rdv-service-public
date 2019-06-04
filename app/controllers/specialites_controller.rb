@@ -53,11 +53,11 @@ class SpecialitesController < DashboardAuthController
   private
 
   def set_organisation
-    @organisation = Organisation.find(params[:organisation_id])
+    @organisation = policy_scope(Organisation).find(params[:organisation_id])
   end
 
   def set_specialite
-    @specialite = Specialite.find(params[:id])
+    @specialite = policy_scope(Specialite).find(params[:id])
   end
 
   def specialite_params
