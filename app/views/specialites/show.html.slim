@@ -8,6 +8,7 @@
   .col-md-12
     .card
       .card-body
+        h5.card-title Professionnels associés
         - if @specialite.pros.any?
           table.table
             thead
@@ -20,10 +21,11 @@
                   td= link_to s.full_name, organisation_specialite_path(s.organisation, s)
                   td= s.email
         - else
-          | Il n'y a pour l'instant aucun professionnel associé à cette spécialité.
-          br
-          | Vous pouvez associer un professionnel à une spécialité sur la page d'édition de son compte.
-          br
-          = link_to "Aller à la liste des professionnels", organisation_pros_path(@specialite.organisation)
+          p.card-text
+            | Il n'y a pour l'instant aucun professionnel associé à cette spécialité.
+          p.card-text
+            | Vous pouvez associer un professionnel à une spécialité sur la page d'édition de son compte.
+          .text-center
+            = link_to "Aller à la liste des professionnels", organisation_pros_path(@specialite.organisation), class: "card-link"
 
-= link_to 'Retour', organisation_specialites_path(@specialite.organisation)
+= link_to 'Retour aux spécialités', organisation_specialites_path(@specialite.organisation)
