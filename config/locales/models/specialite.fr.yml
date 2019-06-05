@@ -1,0 +1,7 @@
+fr:
+  activerecord:
+    models:
+      specialite: Spécialité
+    attributes:
+      specialite:
+        name: Nom

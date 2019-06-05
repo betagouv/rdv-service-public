@@ -1,0 +1,7 @@
+tr id="site_#{site.id}"
+  td
+    = site.name
+  td
+    = site.address
+  td
+    = link_to "Modifier", edit_organisation_site_path(site.organisation, site)

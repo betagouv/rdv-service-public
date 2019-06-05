@@ -92,6 +92,7 @@ ActiveRecord::Schema.define(version: 2019_06_03_162518) do
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.datetime "deleted_at"
+    t.bigint "specialite_id"
     t.index ["confirmation_token"], name: "index_pros_on_confirmation_token", unique: true
     t.index ["email"], name: "index_pros_on_email", unique: true
     t.index ["invitation_token"], name: "index_pros_on_invitation_token", unique: true
@@ -100,6 +101,7 @@ ActiveRecord::Schema.define(version: 2019_06_03_162518) do
     t.index ["invited_by_type", "invited_by_id"], name: "index_pros_on_invited_by_type_and_invited_by_id"
     t.index ["organisation_id"], name: "index_pros_on_organisation_id"
     t.index ["reset_password_token"], name: "index_pros_on_reset_password_token", unique: true
+    t.index ["specialite_id"], name: "index_pros_on_specialite_id"
   end
 
   create_table "sites", force: :cascade do |t|
@@ -109,7 +111,16 @@ ActiveRecord::Schema.define(version: 2019_06_03_162518) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "address"
+    t.text "horaires"
     t.index ["organisation_id"], name: "index_sites_on_organisation_id"
+  end
+
+  create_table "specialites", force: :cascade do |t|
+    t.string "name"
+    t.bigint "organisation_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organisation_id"], name: "index_specialites_on_organisation_id"
   end
 
   create_table "super_admins", force: :cascade do |t|
@@ -120,4 +131,5 @@ ActiveRecord::Schema.define(version: 2019_06_03_162518) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "sites", "organisations"
+  add_foreign_key "specialites", "organisations"
 end

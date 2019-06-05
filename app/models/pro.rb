@@ -5,6 +5,7 @@ class Pro < ApplicationRecord
          :recoverable, :rememberable, :validatable, :confirmable, :async
 
   belongs_to :organisation, optional: true
+  belongs_to :specialite, optional: true
   has_many :sites, through: :organisation
 
   enum role: { user: 0, admin: 1 }

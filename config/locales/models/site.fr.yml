@@ -6,3 +6,5 @@ fr:
       site:
         name: Nom
         address: Adresse
+        telephone: Téléphone
+        horaires: Horaires
