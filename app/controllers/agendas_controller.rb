@@ -8,8 +8,8 @@ class AgendasController < DashboardAuthController
       {
         title: "Vaccination",
         start: 1.hour.ago,
-        allDay: false
-      }
+        allDay: false,
+      },
     ]
   end
 
