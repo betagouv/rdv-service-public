@@ -1,13 +1,13 @@
 - content_for :title do
-  | Votre organisation
+  = @organisation.name
+
+- content_for :breadcrumb do
+  - if policy(@organisation).update?
+    = link_to "Modifier", edit_organisation_path(@organisation), class: "btn btn-outline-white"
 
 .card
   .card-body
-    h5.card-title= @organisation.name
-    - if policy(@organisation).update?
-      p= link_to "Modifier", edit_organisation_path(@organisation)
-
-    p Sites
+    h5.card-title Sites
     - if @organisation.sites.any?
       table.table
         thead
@@ -18,6 +18,7 @@
         tbody
           = render partial: "organisations/site", collection: @organisation.sites
     - else
+      .card-text
       | Il n'y a pour l'instant aucun site lié à cette organisation.
-      br
-    = link_to "Ajouter un site", new_organisation_site_path(@organisation)
+    .text-center
+      = link_to "Ajouter un site", new_organisation_site_path(@organisation), class: "card-link"

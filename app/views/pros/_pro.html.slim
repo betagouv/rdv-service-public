@@ -1,7 +1,7 @@
 tr id="pro_#{pro.id}"
   td
     - if pro.complete?
-      = link_to_if policy(pro).show?, pro.full_name, pro_path(pro), data: {rightbar: true}
+      = link_to_if policy(pro).show?, pro.full_name, pro_path(pro), class: "mr-2", data: { rightbar: true }
       = admin_tag(pro)
       = me_tag(pro)
   td
@@ -14,5 +14,5 @@ tr id="pro_#{pro.id}"
         - if policy(pro).show?
           = link_to 'Voir', pro_path(pro), class: 'dropdown-item', data: {rightbar: true}
         - if policy(Pro::Permission.new(pro: pro)).edit?
-          = link_to 'Permissions', edit_pros_permission_path(pro), class: 'dropdown-item', data: { rightbar: true }
+          = link_to 'Modifier les permissions', edit_pros_permission_path(pro), class: 'dropdown-item', data: { rightbar: true }
         = delete_pro_dropdown_link pro
