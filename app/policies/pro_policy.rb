@@ -17,6 +17,10 @@ class ProPolicy < ApplicationPolicy
     same_pro
   end
 
+  def destroy?
+    same_pro || @pro.admin?
+  end
+
   def invite?
     @pro.admin?
   end

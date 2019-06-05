@@ -18,6 +18,7 @@ class ProDashboard < Administrate::BaseDashboard
     reset_password_token: Field::String,
     reset_password_sent_at: Field::DateTime,
     remember_created_at: Field::DateTime,
+    deleted_at: Field::DateTime,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -47,6 +48,7 @@ class ProDashboard < Administrate::BaseDashboard
     :reset_password_sent_at,
     :remember_created_at,
     :created_at,
+    :deleted_at,
     :updated_at,
   ].freeze
 
@@ -58,6 +60,7 @@ class ProDashboard < Administrate::BaseDashboard
     :first_name,
     :last_name,
     :role,
+    :deleted_at,
   ].freeze
 
   # Overwrite this method to customize how pros are displayed
