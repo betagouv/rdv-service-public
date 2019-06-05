@@ -44,9 +44,6 @@ class OrganisationDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
     :name,
-    :pros,
-    :sites,
-    :specialites,
   ].freeze
 
   # Overwrite this method to customize how super admins are displayed
