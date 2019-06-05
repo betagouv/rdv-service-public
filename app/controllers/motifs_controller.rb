@@ -23,7 +23,7 @@ class MotifsController < DashboardAuthController
     if @motif.save
       redirect_to organisation_specialite_path(@organisation, @specialite), notice: 'Motif ajouté.'
     else
-      render :new
+      respond_right_bar_with @motif, template: :new
     end
   end
 
@@ -32,7 +32,7 @@ class MotifsController < DashboardAuthController
     if @motif.update(motif_params)
       redirect_to organisation_specialite_path(@organisation, @specialite), notice: 'Le motif a été modifié.'
     else
-      render :edit
+      respond_right_bar_with @motif, template: :edit
     end
   end
 

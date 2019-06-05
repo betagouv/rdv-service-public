@@ -31,7 +31,7 @@ class SpecialitesController < DashboardAuthController
     if @specialite.save
       redirect_to organisation_specialite_path(@organisation, @specialite), notice: 'Spécialité ajoutée.'
     else
-      render :new
+      respond_right_bar_with @specialite, template: :new
     end
   end
 
@@ -40,7 +40,7 @@ class SpecialitesController < DashboardAuthController
     if @specialite.update(specialite_params)
       redirect_to organisation_specialite_path(@organisation, @specialite), notice: 'La spécialité a été modifiée.'
     else
-      render :edit
+      respond_right_bar_with @specialite, template: :edit
     end
   end
 
