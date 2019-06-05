@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     resources :super_admins
     resources :organisations
     resources :sites
+    resources :specialites
     root to: "pros#index"
 
     authenticate :super_admin do
