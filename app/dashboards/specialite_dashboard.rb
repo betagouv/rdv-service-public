@@ -12,6 +12,7 @@ class SpecialiteDashboard < Administrate::BaseDashboard
     name: Field::String,
     organisation: Field::BelongsTo,
     pros: Field::HasMany,
+    motifs: Field::HasMany,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -34,6 +35,7 @@ class SpecialiteDashboard < Administrate::BaseDashboard
     :name,
     :organisation,
     :pros,
+    :motifs,
     :created_at,
     :updated_at,
   ].freeze
