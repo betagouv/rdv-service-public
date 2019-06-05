@@ -14,4 +14,8 @@ module ProsHelper
   def invite_button(btn_style = 'btn-primary mb-5')
     link_to 'Inviter un professionnel', new_pro_invitation_path, class: "btn #{btn_style}", data: { rightbar: true } if policy(current_pro).invite?
   end
+
+  def delete_pro_dropdown_link(pro)
+    link_to 'Supprimer', pro_path(pro), data: { confirm: "Êtes-vous sûr de vouloir supprimer cet utilisateur ?" }, method: :delete, class: 'dropdown-item' if policy(pro).destroy?
+  end
 end
