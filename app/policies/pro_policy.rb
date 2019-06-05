@@ -10,11 +10,15 @@ class ProPolicy < ApplicationPolicy
   end
 
   def show?
-    same_pro
+    same_pro_or_admin?
   end
 
   def edit?
-    same_pro
+    same_pro_or_admin?
+  end
+
+  def destroy?
+    same_pro || @pro.admin?
   end
 
   def invite?
@@ -27,7 +31,7 @@ class ProPolicy < ApplicationPolicy
 
   private
 
-  def same_pro
+  def same_pro_or_admin?
     @pro == @record || @pro.admin?
   end
 end
