@@ -6,6 +6,8 @@ tr id="pro_#{pro.id}"
       = me_tag(pro)
   td
     = pro.email
+  td 
+    = pro.specialite&.name
   td.text-right
     .dropdown
       a.dropdown-toggle.arrow-none.text-primary aria-expanded="false" data-toggle="dropdown" href="#"
