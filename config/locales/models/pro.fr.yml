@@ -10,6 +10,7 @@ fr:
         first_name: Prénom
         last_name: Nom
         role: Rôle
+        specialite: Spécialité
         roles: 
           user: Utilisateur
           admin: Admin
