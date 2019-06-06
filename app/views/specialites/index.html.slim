@@ -1,0 +1,18 @@
+- content_for :title do 
+  | Spécialités 
+
+.row 
+  .col-md-12  
+    .card 
+      .card-body  
+        - if @specialites.any?  
+          table.table 
+            thead 
+              tr  
+                th Nom  
+            tbody 
+              - @specialites.each do |s|  
+                tr  
+                  td= link_to s.name, organisation_specialite_path(current_pro.organisation, s) 
+        - else  
+          p Il n'y a pour l'instant aucune spécialité.
