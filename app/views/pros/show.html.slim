@@ -6,10 +6,13 @@
     .card
       .card-body
         - unless @pro.full_name.blank?
-          h5.card-title.mb-0
+          h5.card-title
             = @pro.full_name
             = admin_tag(@pro)
             = me_tag(@pro)
+        - if @pro.specialite
+          h4.card-title.font-16
+            = @pro.specialite.name
         p.card-text
           = @pro.email
         - if policy(@pro).edit?

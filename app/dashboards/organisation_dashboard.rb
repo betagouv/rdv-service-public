@@ -12,7 +12,6 @@ class OrganisationDashboard < Administrate::BaseDashboard
     name: Field::String,
     pros: Field::HasMany,
     sites: Field::HasMany,
-    specialites: Field::HasMany,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -34,7 +33,6 @@ class OrganisationDashboard < Administrate::BaseDashboard
     :name,
     :pros,
     :sites,
-    :specialites,
     :created_at,
     :updated_at,
   ].freeze
@@ -46,7 +44,6 @@ class OrganisationDashboard < Administrate::BaseDashboard
     :name,
     :pros,
     :sites,
-    :specialites,
   ].freeze
 
   # Overwrite this method to customize how super admins are displayed
