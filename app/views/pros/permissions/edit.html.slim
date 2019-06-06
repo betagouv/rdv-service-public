@@ -1,8 +1,8 @@
 - content_for :title do
-  | Modifier les permissions
+  | Modifier le professionnel
 .my-4
   = render partial: 'layouts/model_errors', locals: { model: @permission }
   = simple_form_for @permission, url: pros_permission_path(@permission), remote: request.xhr?, html: { data: { rightbar: true } } do |f|
-    = f.input :specialite_id, collection: Specialite.all, as: :select
+    = f.input :specialite_id, collection: Specialite.all, as: :select, label: 'Spécialité'
     = f.input :role, collection: Pro.human_enum_collection_html(:role), as: :radio_buttons, label: "Rôle de #{@permission.pro.full_name}"
     = f.button :submit
