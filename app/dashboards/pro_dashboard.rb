@@ -62,6 +62,7 @@ class ProDashboard < Administrate::BaseDashboard
     :first_name,
     :last_name,
     :role,
+    :specialite,
     :deleted_at,
   ].freeze
 
