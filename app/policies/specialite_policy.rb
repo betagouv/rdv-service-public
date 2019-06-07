@@ -12,5 +12,4 @@ class SpecialitePolicy < ApplicationPolicy
   def show?
     @pro.admin?
   end
-
 end

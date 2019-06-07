@@ -44,7 +44,7 @@
             tbody
               - @motifs.each do |motif|  
                 tr  
-                  td= link_to motif.name, edit_motif_path(motif)
+                  td= link_to motif.name, edit_motif_path(motif), data: {rightbar: true}
         - else
           p.card-text 
             | Il n'y a pour l'instant aucun motif de consultation.
