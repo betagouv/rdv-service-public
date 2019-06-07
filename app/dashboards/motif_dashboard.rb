@@ -10,6 +10,7 @@ class MotifDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
     name: Field::String,
+    organisation: Field::BelongsTo,
     specialite: Field::BelongsTo,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
@@ -23,6 +24,7 @@ class MotifDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = [
     :id,
     :name,
+    :organisation,
     :specialite,
   ].freeze
 
@@ -31,6 +33,7 @@ class MotifDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = [
     :id,
     :name,
+    :organisation,
     :specialite,
     :created_at,
     :updated_at,
@@ -41,6 +44,7 @@ class MotifDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
     :name,
+    :organisation,
     :specialite,
   ].freeze
 
@@ -48,6 +52,6 @@ class MotifDashboard < Administrate::BaseDashboard
   # across all pages of the admin dashboard.
   #
   def display_resource(motif)
-    "#{motif.name} (#{motif.specialite.name})"
+    "#{motif.name} (#{motif.organisation&.name})"
   end
 end

@@ -33,8 +33,8 @@ Rails.application.routes.draw do
     resources :organisations, except: :destroy do
       resources :sites, except: :index
       resources :pros
-      resources :specialites do
-        resources :motifs, except: [:index, :show]
+      resources :specialites, only: [:index, :show] do
+        resources :motifs, shallow: true
       end
     end
   end

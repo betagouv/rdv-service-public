@@ -10,7 +10,6 @@ class SpecialiteDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
     name: Field::String,
-    organisation: Field::BelongsTo,
     pros: Field::HasMany,
     motifs: Field::HasMany,
     created_at: Field::DateTime,
@@ -25,7 +24,6 @@ class SpecialiteDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = [
     :id,
     :name,
-    :organisation,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -33,7 +31,6 @@ class SpecialiteDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = [
     :id,
     :name,
-    :organisation,
     :pros,
     :motifs,
     :created_at,
@@ -52,6 +49,6 @@ class SpecialiteDashboard < Administrate::BaseDashboard
   # across all pages of the admin dashboard.
   #
   def display_resource(specialite)
-    "#{specialite.name} (#{specialite.organisation.name})"
+    specialite.name
   end
 end

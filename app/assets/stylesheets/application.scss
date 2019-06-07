@@ -1,4 +1,4 @@
-@import 'bootstrap/functions'; 
+@import 'bootstrap/functions';
 @import 'bootstrap/variables';
 @import "variables";
 @import "font-awesome";
@@ -18,6 +18,7 @@
 // Components
 @import "components/buttons";
 @import "components/backgrounds";
+@import "components/calendar";
 @import "components/forms";
 @import "components/breadcrumb";
 @import "components/dropdown";
@@ -30,3 +31,8 @@
 
 // Plugins
 @import "actiontext";
+
+@import '@fullcalendar/core/main.css';
+@import '@fullcalendar/daygrid/main.css';
+@import '@fullcalendar/timegrid/main.css';
+@import '@fullcalendar/list/main.css';

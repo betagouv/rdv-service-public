@@ -1,8 +1,4 @@
 - content_for :title do
   | Nouveau motif
 
-.row
-  .col-md-12
-    .card
-      .card-body
-        = render 'form', motif: @motif
+= render 'form', motif: @motif

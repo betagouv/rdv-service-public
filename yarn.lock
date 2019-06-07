@@ -599,6 +599,28 @@
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
 
+"@fullcalendar/core@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-4.1.0.tgz#9f09c4c35e308a81a97e4d62c05f64548d0e5666"
+  integrity sha512-pyBRbNnppQH5iPnhENrNIkvOxjPdR46o7HMuSx3M+OlGVZLygbb97sKg5XuJx6Bn3hFP0EJXKmA9/GCfeP9PPQ==
+
+"@fullcalendar/daygrid@^4.1.0", "@fullcalendar/daygrid@~4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-4.1.0.tgz#058b02585d17a63f448e2ab42f65db7bacca2296"
+  integrity sha512-y2w+js+cr0SFC3f88QIS91V8LeZ5TEG/W6hX+CcokP+KTZdepW0uCjPzf9QwVE0LM904tZ2kjCe209hZGfSNGg==
+
+"@fullcalendar/list@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/list/-/list-4.1.0.tgz#290274fc4e4616bea9238a31f49f53e295d11d3f"
+  integrity sha512-NSCiD3I8HVioq7M1jzyovZDTjBq1L8QRqUZDiYZXq14lAKYwYUdZL3MUlH7MNjL/xU/dKJWD+rTKGno7FXmT9g==
+
+"@fullcalendar/timegrid@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/timegrid/-/timegrid-4.1.0.tgz#6e825f0cab79d81875a73fbb563cc69844ff0ecf"
+  integrity sha512-UGAXN5qHnL8mDMr/+Zfrn7jh4GMO2WpOCLTUB8GmiSTbewVD+iHjhJuJKhkdrL8CEinEjHidsux3qXKSrFreYQ==
+  dependencies:
+    "@fullcalendar/daygrid" "~4.1.0"
+
 "@rails/webpacker@^4.0.2":
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@rails/webpacker/-/webpacker-4.0.2.tgz#2c2e96527500b060a84159098449ddb1615c65e8"
