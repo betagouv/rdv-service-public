@@ -1,0 +1,8 @@
+= simple_form_for([organisation, evenement_type], remote: request.xhr?, data: { rightbar: true }) do |f|
+  = render partial: 'layouts/model_errors', locals: { model: evenement_type }
+
+  = f.input :name
+  = f.association :motif, collection: policy_scope(Motif)
+  = f.input :color, as: "color"
+
+  = f.button :submit

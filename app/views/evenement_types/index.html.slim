@@ -1,0 +1,33 @@
+- content_for :title do
+  | Types d'événements
+
+- content_for :breadcrumb do
+  = link_to "Créer un type d'événement", new_organisation_evenement_type_path(@organisation.id), class: 'btn btn-outline-white', data: { rightbar: true }
+
+.row
+  .col-md-12
+    .card
+      .card-body
+        - if @evenement_types_grouped_by_motif.any?
+          - @evenement_types_grouped_by_motif.each do |motif, ets|
+            h3= ets.first.motif.name
+            table.table
+              thead
+                tr
+                  th
+                  th Nom
+                  th
+              tbody
+                - ets.each do |et|
+                  tr
+                    td
+                      .evenement-type-row-color style="background: #{et.color};"
+                    td= link_to et.name, edit_evenement_type_path(et), data: { rightbar: true }
+                    td.text-right
+                      .dropdown
+                        a.dropdown-toggle.arrow-none.text-primary aria-expanded="false" data-toggle="dropdown" href="#"
+                          i.fa.fa-ellipsis-v.fa-fw
+                        .dropdown-menu.dropdown-menu-right
+                          = link_to 'Supprimer', evenement_type_path(et), method: :delete, class: 'dropdown-item', data: { rightbar: true, confirm: "Confirmez-vous la suppression de ce type d'événement ?" }
+        - else
+          p Il n'y a pour l'instant aucune type d'événement.

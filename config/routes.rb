@@ -36,6 +36,7 @@ Rails.application.routes.draw do
       resources :specialites, only: [:index, :show] do
         resources :motifs, shallow: true
       end
+      resources :evenement_types, except: :show, shallow: true
     end
   end
 

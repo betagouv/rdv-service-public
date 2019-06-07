@@ -61,6 +61,15 @@ ActiveRecord::Schema.define(version: 2019_06_06_113052) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
+  create_table "evenement_types", force: :cascade do |t|
+    t.string "name"
+    t.bigint "motif_id"
+    t.string "color"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["motif_id"], name: "index_evenement_types_on_motif_id"
+  end
+
   create_table "motifs", force: :cascade do |t|
     t.bigint "specialite_id"
     t.bigint "organisation_id"
@@ -90,9 +99,9 @@ ActiveRecord::Schema.define(version: 2019_06_06_113052) do
     t.datetime "confirmation_sent_at"
     t.string "unconfirmed_email"
     t.integer "role", default: 0
+    t.bigint "organisation_id"
     t.string "first_name"
     t.string "last_name"
-    t.bigint "organisation_id"
     t.string "invitation_token"
     t.datetime "invitation_created_at"
     t.datetime "invitation_sent_at"
@@ -101,8 +110,8 @@ ActiveRecord::Schema.define(version: 2019_06_06_113052) do
     t.string "invited_by_type"
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
-    t.datetime "deleted_at"
     t.bigint "specialite_id"
+    t.datetime "deleted_at"
     t.index ["confirmation_token"], name: "index_pros_on_confirmation_token", unique: true
     t.index ["email"], name: "index_pros_on_email", unique: true
     t.index ["invitation_token"], name: "index_pros_on_invitation_token", unique: true
@@ -138,6 +147,7 @@ ActiveRecord::Schema.define(version: 2019_06_06_113052) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "evenement_types", "motifs"
   add_foreign_key "motifs", "organisations"
   add_foreign_key "motifs", "specialites"
   add_foreign_key "sites", "organisations"

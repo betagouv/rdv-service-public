@@ -1,0 +1,6 @@
+- content_for :title do
+  | Nouveau type d'événement
+
+.card
+  .card-body
+    = render 'form', evenement_type: @evenement_type, organisation: @organisation

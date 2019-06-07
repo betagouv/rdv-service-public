@@ -1,0 +1,9 @@
+fr:
+  activerecord:
+    models:
+      evenement_type: Type d'événement
+    attributes:
+      evenement_type:
+        name: Nom
+        color: Couleur
+        motif: Motif
