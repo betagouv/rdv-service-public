@@ -1,0 +1,54 @@
+- content_for :title do 
+  = @specialite.name  
+
+- content_for :breadcrumb do 
+  ol.breadcrumb.m-0
+    li.breadcrumb-item
+      = link_to 'Vos spécialités', organisation_specialites_path(current_pro.organisation)
+    li.breadcrumb-item.active= @specialite.name
+
+
+.row 
+  .col-md-12  
+    .card 
+      .card-body  
+        h5.card-title Professionnels associés 
+        - if @specialite.pros.any?  
+          table.table 
+            thead 
+              tr  
+                th Nom  
+                th Email  
+            tbody 
+              - @specialite.pros.each do |p|  
+                tr  
+                  td= link_to s.full_name, organisation_specialite_path(s.organisation, s)  
+                  td= s.email 
+        - else  
+          p.card-text 
+            | Il n'y a pour l'instant aucun professionnel associé à cette spécialité. 
+          p.card-text 
+            | Vous pouvez associer un professionnel à une spécialité sur la page d'édition de son compte. 
+          .text-center  
+            = link_to "Aller à la liste des professionnels", organisation_pros_path(current_pro.organisation), class: "card-link"
+.row
+  .col-md-12
+    .card 
+      .card-body  
+        h5.card-title Motifs de consultation
+        - if @motifs.any?
+          table.table 
+            thead 
+              tr  
+                th Nom  
+            tbody
+              - @motifs.each do |motif|  
+                tr  
+                  td= link_to motif.name, edit_motif_path(motif), data: {rightbar: true}
+        - else
+          p.card-text 
+            | Il n'y a pour l'instant aucun motif de consultation.
+        = link_to "Créer un motif", new_organisation_specialite_motif_path(current_pro.organisation, @specialite), class: "btn btn-primary", data: {rightbar: true}
+
+ 
+

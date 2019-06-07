@@ -1,6 +1,6 @@
 require "administrate/base_dashboard"
 
-class SpecialiteDashboard < Administrate::BaseDashboard
+class MotifDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
   # a hash that describes the type of each of the model's fields.
   #
@@ -10,8 +10,8 @@ class SpecialiteDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
     name: Field::String,
-    pros: Field::HasMany,
-    motifs: Field::HasMany,
+    organisation: Field::BelongsTo,
+    specialite: Field::BelongsTo,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -24,6 +24,8 @@ class SpecialiteDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = [
     :id,
     :name,
+    :organisation,
+    :specialite,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -31,8 +33,8 @@ class SpecialiteDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = [
     :id,
     :name,
-    :pros,
-    :motifs,
+    :organisation,
+    :specialite,
     :created_at,
     :updated_at,
   ].freeze
@@ -42,12 +44,14 @@ class SpecialiteDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
     :name,
+    :organisation,
+    :specialite,
   ].freeze
 
   # Overwrite this method to customize how super admins are displayed
   # across all pages of the admin dashboard.
   #
-  def display_resource(specialite)
-    specialite.name
+  def display_resource(motif)
+    "#{motif.name} (#{motif.organisation&.name})"
   end
 end

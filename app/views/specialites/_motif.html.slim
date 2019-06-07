@@ -1,0 +1,11 @@
+tr
+  td= motif.name
+  td.text-right
+    .dropdown
+      a.dropdown-toggle.arrow-none.text-primary aria-expanded="false" data-toggle="dropdown" href="#"
+        i.fa.fa-ellipsis-v.fa-fw
+      .dropdown-menu.dropdown-menu-right
+        - if policy(motif).edit?
+          = link_to 'Modifier', edit_organisation_specialite_motif_path(@organisation, @specialite, motif), class: 'dropdown-item', data: { rightbar: true }
+        - if policy(motif).destroy?
+          = link_to 'Supprimer', organisation_specialite_motif_path(@organisation, @specialite, motif), data: { confirm: "Êtes-vous sûr de vouloir supprimer ce motif ?" }, method: :delete, remote: true, class: 'dropdown-item'
