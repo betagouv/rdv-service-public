@@ -18,7 +18,12 @@
         tbody
           = render partial: "organisations/site", collection: @organisation.sites
     - else
-      .card-text
-      | Il n'y a pour l'instant aucun site lié à cette organisation.
+      .row.justify-content-md-center
+        .col-md-6.text-center.my-5
+          p.mb-2.lead Vous n'avez pas encore ajouté de site à votre organisation.
+          span.fa-stack.fa-4x
+            i.fa.fa-circle.fa-stack-2x.text-primary
+            i.fa.fa-building.fa-stack-1x.text-white
+
     .text-center
-      = link_to "Ajouter un site", new_organisation_site_path(@organisation), class: "card-link"
+      = link_to "Ajouter un site", new_organisation_site_path(@organisation), class: "btn btn-primary"
