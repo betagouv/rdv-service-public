@@ -28,7 +28,7 @@ class MotifsController < DashboardAuthController
   def update
     authorize(@motif)
     flash[:notice] = 'Le motif a été modifié.' if @motif.update(motif_params)
-    respond_right_bar_with @motif, location: organisation_specialite_path(@organisation, @specialite)
+    respond_right_bar_with @motif, location: organisation_specialite_path(@motif.organisation, @motif.specialite)
   end
 
   def destroy
