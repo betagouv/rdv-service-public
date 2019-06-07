@@ -20,7 +20,7 @@
                 th Nom  
                 th Email  
             tbody 
-              - @specialite.pros.each do |p|  
+              - @specialite.pros.includes(:organisation).each do |s|  
                 tr  
                   td= link_to s.full_name, organisation_specialite_path(s.organisation, s)  
                   td= s.email 

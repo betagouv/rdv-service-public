@@ -27,15 +27,13 @@
         - if !@invited_pros.exists?
             p Vous n'avez pas d'invitation en cours.
         - else
-          .card
-            .card-body
-              table.table
-                thead
-                  tr
-                    th.w-50 Email
-                    th Envoyée
-                    th
-                tbody
-                  = render partial: 'invited_pro', collection: @invited_pros, as: :pro
+          table.table
+            thead
+              tr
+                th.w-50 Email
+                th Envoyée
+                th
+            tbody
+              = render partial: 'invited_pro', collection: @invited_pros, as: :pro
         .text-center
           = invite_button
