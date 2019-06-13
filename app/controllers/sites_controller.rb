@@ -45,10 +45,6 @@ class SitesController < DashboardAuthController
 
   private
 
-  def set_organisation
-    @organisation = Organisation.find(params[:organisation_id])
-  end
-
   def site_params
     params.require(:site).permit(:name, :address)
   end

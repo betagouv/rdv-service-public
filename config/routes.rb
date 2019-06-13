@@ -35,6 +35,7 @@ Rails.application.routes.draw do
     resources :organisations, except: :destroy do
       resources :sites, except: :index
       resources :pros
+      resources :users, shallow: true
       resources :specialites, only: [:index, :show] do
         resources :motifs, except: :show, shallow: true
       end
@@ -45,6 +46,7 @@ Rails.application.routes.draw do
   { disclaimer: 'mentions_legales', terms: 'cgv' }.each do |k, v|
     get v => "static_pages##{k}"
   end
+
   get 'accueil_mds' => "welcome#welcome_pro"
   root 'welcome#index'
 end

@@ -17,4 +17,8 @@ class DashboardAuthController < ApplicationController
     flash[:error] = t "#{policy_name}.#{exception.query}", scope: "pundit", default: :default
     redirect_to(request.referrer || authenticated_root_path)
   end
+
+  def set_organisation
+    @organisation = policy_scope(Organisation).find(params[:organisation_id])
+  end
 end
