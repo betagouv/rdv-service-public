@@ -1,7 +1,7 @@
 class MotifsController < DashboardAuthController
   respond_to :html, :json
 
-  before_action :set_motif, only: [:show, :edit, :update, :destroy]
+  before_action :set_motif, only: [:edit, :update, :destroy]
 
   def new
     @specialite = policy_scope(Specialite).find(params[:specialite_id])
