@@ -3,6 +3,10 @@
 
   = f.input :name
   = f.association :motif, collection: policy_scope(Motif)
+  = f.input :accept_multiple_pros
+  = f.input :accept_multiple_users
+  = f.input :at_home
+  = f.input :default_duration_in_min
   = f.input :color, as: "color"
 
   = f.button :submit

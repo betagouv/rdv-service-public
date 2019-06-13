@@ -50,6 +50,6 @@ class EvenementTypesController < DashboardAuthController
   end
 
   def evenement_type_params
-    params.require(:evenement_type).permit(:name, :motif_id, :color)
+    params.require(:evenement_type).permit(:name, :motif_id, :color, :accept_multiple_pros, :accept_multiple_users, :at_home, :default_duration_in_min)
   end
 end

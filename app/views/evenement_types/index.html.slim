@@ -14,15 +14,17 @@
             table.table
               thead
                 tr
-                  th
+                  th.col-1
                   th Nom
-                  th
+                  th.col-2 Durée par défaut
+                  th.col-1
               tbody
                 - ets.each do |et|
                   tr
                     td
                       .evenement-type-row-color style="background: #{et.color};"
                     td= link_to et.name, edit_evenement_type_path(et), data: { rightbar: true }
+                    td= "#{et.default_duration_in_min} min."
                     td.text-right
                       .dropdown
                         a.dropdown-toggle.arrow-none.text-primary aria-expanded="false" data-toggle="dropdown" href="#"

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_06_113052) do
+ActiveRecord::Schema.define(version: 2019_06_13_123854) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,6 +67,10 @@ ActiveRecord::Schema.define(version: 2019_06_06_113052) do
     t.string "color"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "accept_multiple_pros", default: false, null: false
+    t.boolean "accept_multiple_users", default: false, null: false
+    t.boolean "at_home", default: false, null: false
+    t.integer "default_duration_in_min", default: 30, null: false
     t.index ["motif_id"], name: "index_evenement_types_on_motif_id"
   end
 
