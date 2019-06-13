@@ -1,0 +1,13 @@
+fr:
+  activerecord:
+    models:
+      user: Usager
+    attributes:
+      user:    
+        email: Email
+        first_name: Prénom
+        last_name: Nom
+        birth_date: Date de naissance
+        phone_number: Numéro de téléphone
+        address: Adresse
+        organisation: Organisation
