@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     resources :specialites
     resources :motifs
     resources :users
+    resources :evenement_types
     root to: "pros#index"
 
     authenticate :super_admin do
