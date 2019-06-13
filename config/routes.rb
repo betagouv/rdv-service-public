@@ -34,8 +34,9 @@ Rails.application.routes.draw do
       resources :sites, except: :index
       resources :pros
       resources :specialites, only: [:index, :show] do
-        resources :motifs, shallow: true
+        resources :motifs, except: :show, shallow: true
       end
+      resources :evenement_types, except: :show, shallow: true
     end
   end
 
