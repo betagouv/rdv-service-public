@@ -6,7 +6,7 @@ class EvenementTypesController < DashboardAuthController
 
   def index
     evenement_types = policy_scope(EvenementType).includes(:motif)
-    @evenement_types_grouped_by_motif = evenement_types.group_by(&:motif).sort_by{ |k, v| k.name }.to_h
+    @evenement_types_grouped_by_motif = evenement_types.group_by(&:motif).sort_by { |k, _| k.name }.to_h
   end
 
   def new
