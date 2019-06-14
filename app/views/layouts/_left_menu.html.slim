@@ -9,7 +9,9 @@
         = link_to authenticated_root_path, class: 'side-nav-link' do
           i.fa.fa-calendar-o
           span Vos agendas
-
+        = link_to organisation_users_path(current_pro.organisation), class: 'side-nav-link' do
+          i.fa.fa-user
+          span Vos usagers
         - if current_pro.admin?
           li.side-nav-item
             = link_to '#', class: 'side-nav-link' do

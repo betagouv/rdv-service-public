@@ -41,10 +41,6 @@ class EvenementTypesController < DashboardAuthController
 
   private
 
-  def set_organisation
-    @organisation = policy_scope(Organisation).find(params[:organisation_id])
-  end
-
   def set_evenement_type
     @evenement_type = policy_scope(EvenementType).find(params[:id])
   end

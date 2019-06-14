@@ -35,6 +35,7 @@ $(document).on('shown.rightbar', '.right-bar', function(e) {
     wheelStep: 5,
     touchScrollStep: 20
   });
+  new PlacesInput(document.querySelector('.places-js-container'));
 });
 
 $(document).on('hide.bs.modal', '.modal', function(e) {
