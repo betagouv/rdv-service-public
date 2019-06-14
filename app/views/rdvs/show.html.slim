@@ -1,0 +1,28 @@
+- content_for :title do
+  .row
+    .col-md-8.offset-md-2
+      | Détails du rendez-vous
+
+.row
+  .col-md-8.offset-md-2
+    .card
+      .card-body
+        p.card-text
+          strong Nom :&nbsp;
+          = @rdv.name
+          - if @rdv.cancelled?
+            span.badge.badge-danger
+              | Annulé
+        p.card-text
+          strong Commence à :&nbsp;
+          = l(@rdv.start_at)
+        p.card-text
+          strong Durée :&nbsp;
+          = "#{@rdv.duration_in_min} minutes"
+        .row
+          .col
+            = link_to "Retour à l'agenda", root_path, class: "card-link"
+          .col.text-right
+            - unless @rdv.cancelled?
+              = link_to "Annuler le rendez-vous", cancel_rdv_path(@rdv), method: :post, class: "card-link", data: { confirm: "Êtes-vous sûr de vouloir annuler ce rendez-vous ?"}
+            = link_to "Modifier", edit_rdv_path(@rdv), class: "card-link"

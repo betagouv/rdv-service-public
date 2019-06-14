@@ -1,6 +1,9 @@
 - content_for :title do
   | Agendas
 
+- content_for :breadcrumb do
+  = link_to "Créer un rendez-vous", new_organisation_rdv_path(@organisation), class: "btn btn-outline-white", data: { rightbar: true }
+
 javascript:
   window.events = #{{@events.to_json}};
 

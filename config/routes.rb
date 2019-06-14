@@ -40,6 +40,9 @@ Rails.application.routes.draw do
         resources :motifs, except: :show, shallow: true
       end
       resources :evenement_types, except: :show, shallow: true
+      resources :rdvs, except: [:index, :destroy], shallow: true do
+        post 'cancel', on: :member
+      end
     end
   end
 

@@ -1,0 +1,11 @@
+= simple_form_for([organisation, rdv], data: { rightbar: true }) do |f|
+
+  = render partial: 'layouts/model_errors', locals: { model: rdv }
+
+  .form-inputs
+    = f.input :name
+    = f.input :duration_in_min
+    = f.input :start_at
+
+  .form-actions
+    = f.button :submit
