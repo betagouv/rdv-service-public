@@ -3,7 +3,7 @@
 
 - content_for :breadcrumb do
   - if policy(@organisation).update?
-    = link_to "Modifier", edit_organisation_path(@organisation), class: "btn btn-outline-white"
+    = link_to "Modifier votre organisation", edit_organisation_path(@organisation), class: "btn btn-outline-white", data: { rightbar: true }
 
 .card
   .card-body
@@ -16,7 +16,7 @@
             th Adresse
             th
         tbody
-          = render partial: "organisations/site", collection: @organisation.sites
+          = render @organisation.sites
     - else
       .row.justify-content-md-center
         .col-md-6.text-center.my-5

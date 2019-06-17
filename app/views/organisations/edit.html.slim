@@ -1,6 +1,4 @@
 - content_for :title do
   | Modifier votre organisation
 
-.card
-  .card-body
-    = render partial: 'form', locals: { organisation: @organisation }
+= render partial: 'form', locals: { organisation: @organisation }

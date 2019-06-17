@@ -1,4 +1,6 @@
 class OrganisationsController < DashboardAuthController
+  respond_to :html, :json
+
   before_action :set_organisation, except: [:new, :create]
 
   def show
@@ -13,6 +15,7 @@ class OrganisationsController < DashboardAuthController
 
   def edit
     authorize(@organisation)
+    respond_right_bar_with @organisation
   end
 
   def create
@@ -29,12 +32,8 @@ class OrganisationsController < DashboardAuthController
 
   def update
     authorize(@organisation)
-    if @organisation.update(organisation_params)
-      flash.notice = "Organisation mise à jour"
-      redirect_to organisation_path(@organisation)
-    else
-      render :edit
-    end
+    flash[:notice] = "Organisation mise à jour" if @organisation.update(organisation_params)
+    respond_right_bar_with @organisation, location: organisation_path(@organisation)
   end
 
   private
