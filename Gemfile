@@ -34,7 +34,7 @@ gem 'image_processing', '~> 1.8'
 # Front
 gem 'sass-rails', '~> 5.0'
 gem 'bootstrap', '~> 4.3'
-gem 'autoprefixer-rails', '~> 9.5'
+gem 'autoprefixer-rails', '~> 9.6'
 gem 'font-awesome-rails', '~> 4.7'
 gem "chartkick", '~> 3.2.0'
 gem 'uglifier', '>= 1.3.0'
