@@ -1,26 +1,27 @@
 class SitesController < DashboardAuthController
+  respond_to :html, :json
+
+
   before_action :set_organisation
 
   def new
     @site = Site.new(organisation: @organisation)
     authorize(@site)
+    respond_right_bar_with @site
   end
 
   def create
     @site = Site.new(organisation: @organisation)
     @site.assign_attributes(site_params)
     authorize(@site)
-    if @site.save
-      flash.notice = "Site créé"
-      redirect_to @site.organisation
-    else
-      render :edit
-    end
+    flash.notice = "Site créé" if @site.save
+    respond_right_bar_with @site, location: @site.organisation
   end
 
   def edit
-    @site = Site.find(params[:id])
+    @site = policy_scope(Site).find(params[:id])
     authorize(@site)
+    respond_right_bar_with @site
   end
 
   def update
@@ -46,6 +47,6 @@ class SitesController < DashboardAuthController
   private
 
   def site_params
-    params.require(:site).permit(:name, :address)
+    params.require(:site).permit(:name, :address, :horaires, :telephone)
   end
 end

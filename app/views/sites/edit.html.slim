@@ -1,7 +1,4 @@
 - content_for :title do
   | Modifier le site
 
-.card
-  .card-body
-    = render partial: 'layouts/model_errors', locals: { model: @site }
-    = render partial: "form", locals: { site: @site }
+= render 'form', site: @site

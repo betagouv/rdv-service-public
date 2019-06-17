@@ -1,14 +1,4 @@
 tr id="site_#{site.id}"
   td
-    = site.name
-  td
-    = site.address
-  td.text-right
-    .dropdown
-      a.dropdown-toggle.arrow-none.text-primary aria-expanded="false" data-toggle="dropdown" href="#"
-        i.fa.fa-ellipsis-v.fa-fw
-      .dropdown-menu.dropdown-menu-right
-        - if policy(site).edit?
-          = link_to 'Modifier', edit_organisation_site_path(site.organisation, site), class: 'dropdown-item'
-        - if policy(site).destroy?
-          = link_to "Supprimer", organisation_site_path(site.organisation, site), method: :delete, class: "dropdown-item", data: { confirm: "Confirmez-vous la suppression de ce site ?" }
+    = link_to_if policy(site).edit?, site.name, edit_organisation_site_path(site.organisation, site), data: { rightbar: true }
+  td= site.address

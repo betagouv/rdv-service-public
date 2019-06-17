@@ -1,10 +1,4 @@
 - content_for :title do
-  .row
-    .col-md-6.offset-md-3
-      | Nouveau site
+  | Nouveau site
 
-.row
-  .col-md-6.offset-md-3
-    .card
-      .card-body
-        = render partial: "form", locals: { site: @site }
+= render 'form', site: @site
