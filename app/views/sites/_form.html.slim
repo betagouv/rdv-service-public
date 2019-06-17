@@ -5,10 +5,9 @@
   = f.input :telephone, placeholder: "ex: 0412345667"
   = f.input :horaires, placeholder: "ex : du lundi au vendredi de 9h à 17h, le samedi de 9h à 12h"
   .row
-    .col-md-6
-      - if site.persisted?
-        |&nbsp;
-        = link_to "Supprimer", organisation_site_path(site.organisation, site), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce site ?"}
-    .col-md-6.text-right
-      = link_to "Annuler", organisation_path(site.organisation), class: "btn btn-link"
+    - if site.persisted?
+      .col.text-left
+        
+          = link_to "Supprimer", organisation_site_path(site.organisation, site), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce site ?"}
+    .col.text-right
       = f.button :submit

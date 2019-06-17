@@ -5,7 +5,7 @@ module UsersHelper
     age
   end
 
-  def add_user_button(btn_style = 'btn-primary mb-5')
+  def add_user_button(btn_style = 'btn-primary')
     link_to 'Ajouter un usager', new_organisation_user_path, class: "btn #{btn_style}", data: { rightbar: true } if policy(User).create?
   end
 end
