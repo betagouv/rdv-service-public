@@ -1,7 +1,6 @@
 class SitesController < DashboardAuthController
   respond_to :html, :json
 
-
   before_action :set_organisation
 
   def new
