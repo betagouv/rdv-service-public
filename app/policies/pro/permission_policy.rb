@@ -1,6 +1,6 @@
 class Pro::PermissionPolicy < ApplicationPolicy
   def update?
-    admin_belongs_to_same_organisation && !same_pro
+    admin_belongs_to_same_organisation
   end
 
   private

@@ -7,7 +7,6 @@
   .row
     - if site.persisted?
       .col.text-left
-        
           = link_to "Supprimer", organisation_site_path(site.organisation, site), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce site ?"}
     .col.text-right
       = f.button :submit
