@@ -26,11 +26,8 @@ class SitesController < DashboardAuthController
   def update
     @site = Site.find(params[:id])
     authorize(@site)
-    if @site.update(site_params)
-      redirect_to @site.organisation, notice: "Site modifié"
-    else
-      render :edit
-    end
+    flash[:notice] = 'Site modifié' if @site.update(site_params)
+    respond_right_bar_with @site, location: @site.organisation
   end
 
   def destroy
