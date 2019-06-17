@@ -1,19 +1,16 @@
 - content_for :title do
   | Votre compte
 
-.row
-  .col-md-12
-    .card
-      .card-body
-        - unless @pro.full_name.blank?
-          h5.card-title
-            = @pro.full_name
-            = admin_tag(@pro)
-            = me_tag(@pro)
-        - if @pro.specialite
-          h4.card-title.font-16
-            = @pro.specialite.name
-        p.card-text
-          = @pro.email
-        - if policy(@pro).edit?
-          = link_to 'Modifier', edit_pro_registration_path, class: 'btn btn-primary', data: { rightbar: true }
+- unless @pro.full_name.blank?
+  h5.card-title
+    = @pro.full_name
+    = admin_tag(@pro)
+    = me_tag(@pro)
+- if @pro.specialite
+  h4.card-title.font-16
+    = @pro.specialite.name
+p.card-text
+  = @pro.email
+- if policy(@pro).edit?
+  .text-right
+    = link_to 'Modifier', edit_pro_registration_path, class: 'btn btn-primary', data: { rightbar: true }
