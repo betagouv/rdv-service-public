@@ -19,6 +19,9 @@
         p.card-text
           strong Durée :&nbsp;
           = "#{@rdv.duration_in_min} minutes"
+        p.card-text
+          strong Usager :&nbsp;
+          = @rdv.user.full_name
         .row
           .col
             = link_to "Retour à l'agenda", root_path, class: "card-link"

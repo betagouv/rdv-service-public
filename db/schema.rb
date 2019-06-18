@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_14_152129) do
+ActiveRecord::Schema.define(version: 2019_06_18_142915) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -129,13 +129,17 @@ ActiveRecord::Schema.define(version: 2019_06_14_152129) do
 
   create_table "rdvs", force: :cascade do |t|
     t.string "name"
-    t.integer "duration_in_min", default: 30, null: false
+    t.integer "duration_in_min", null: false
     t.datetime "start_at", null: false
     t.bigint "organisation_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "cancelled_at"
+    t.bigint "evenement_type_id"
+    t.bigint "user_id"
+    t.index ["evenement_type_id"], name: "index_rdvs_on_evenement_type_id"
     t.index ["organisation_id"], name: "index_rdvs_on_organisation_id"
+    t.index ["user_id"], name: "index_rdvs_on_user_id"
   end
 
   create_table "sites", force: :cascade do |t|
@@ -178,7 +182,9 @@ ActiveRecord::Schema.define(version: 2019_06_14_152129) do
   add_foreign_key "evenement_types", "motifs"
   add_foreign_key "motifs", "organisations"
   add_foreign_key "motifs", "specialites"
+  add_foreign_key "rdvs", "evenement_types"
   add_foreign_key "rdvs", "organisations"
+  add_foreign_key "rdvs", "users"
   add_foreign_key "sites", "organisations"
   add_foreign_key "users", "organisations"
 end

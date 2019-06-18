@@ -5,7 +5,7 @@ class AgendasController < DashboardAuthController
     skip_policy_scope
     @organisation = current_pro.organisation
 
-    rdvs = policy_scope(Rdv)
+    rdvs = policy_scope(Rdv).includes(:evenement_type)
     @events = rdvs.map do |rdv|
       {
         title: rdv.name,
@@ -13,6 +13,7 @@ class AgendasController < DashboardAuthController
         end: rdv.end_at,
         allDay: false,
         url: rdv_path(rdv),
+        backgroundColor: rdv.evenement_type&.color,
       }
     end
   end

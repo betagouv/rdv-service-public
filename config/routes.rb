@@ -43,6 +43,9 @@ Rails.application.routes.draw do
       resources :rdvs, except: [:index, :destroy], shallow: true do
         post 'cancel', on: :member
       end
+      resources :first_steps, only: [:new, :create], module: "rdvs"
+      resources :second_steps, only: [:new, :create], module: "rdvs"
+      resources :third_steps, only: [:new, :create], module: "rdvs"
     end
   end
 
