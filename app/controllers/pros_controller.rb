@@ -17,11 +17,8 @@ class ProsController < DashboardAuthController
   def destroy
     @pro = policy_scope(Pro).find(params[:id])
     authorize(@pro)
-    @pro.soft_delete
-    respond_to do |f|
-      f.html { redirect_to organisation_pros_path(@pro.organisation), notice: 'L\'utilisateur a été supprimé' }
-      f.js
-    end
+    flash[:notice] = "L'utilisateur a été supprimé" if @pro.soft_delete
+    respond_right_bar_with @pro, location: organisation_pros_path(@pro.organisation)
   end
 
   def reinvite

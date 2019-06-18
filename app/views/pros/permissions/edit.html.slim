@@ -1,8 +1,14 @@
 - content_for :title do
   | Modifier le professionnel
-.my-4
+
+= simple_form_for @permission, url: pros_permission_path(@permission), remote: request.xhr?, html: { data: { rightbar: true } } do |f|
   = render partial: 'layouts/model_errors', locals: { model: @permission }
-  = simple_form_for @permission, url: pros_permission_path(@permission), remote: request.xhr?, html: { data: { rightbar: true } } do |f|
-    = f.input :specialite_id, collection: Specialite.all, as: :select, label: 'Spécialité'
-    = f.input :role, collection: Pro.human_enum_collection_html(:role), as: :radio_buttons, label: "Rôle de #{@permission.pro.full_name}"
-    = f.button :submit
+  = f.input :specialite_id, collection: Specialite.all, as: :select, label: 'Spécialité'
+  = f.input :role, collection: Pro.human_enum_collection_html(:role), as: :radio_buttons, label: "Rôle de #{@permission.pro.full_name}"
+  
+  .row
+    - if policy(@permission.pro).destroy?
+      .col.text-left
+        = link_to 'Supprimer', pro_path(@permission.pro), data: { confirm: "Êtes-vous sûr de vouloir supprimer cet utilisateur ?" }, method: :delete, class: 'btn btn-outline-danger'
+    .col.text-right
+      = f.button :submit

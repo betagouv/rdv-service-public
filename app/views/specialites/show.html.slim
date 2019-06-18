@@ -16,14 +16,13 @@
         - if @specialite.pros.any?  
           table.table 
             thead 
-              tr  
-                th Nom  
-                th Email  
+              tr
+                th.w-50 Nom
+                th Email
+                th Spécialité
+                th
             tbody 
-              - @specialite.pros.includes(:organisation).each do |s|  
-                tr  
-                  td= link_to s.full_name, organisation_specialite_path(s.organisation, s)  
-                  td= s.email 
+              = render @specialite.pros
         - else  
           p.card-text 
             | Il n'y a pour l'instant aucun professionnel associé à cette spécialité. 

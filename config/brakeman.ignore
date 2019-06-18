@@ -1,6 +1,37 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "a873124be79990dd6cef94ca0b982ef2405a5518d45af5b330cb4c1e0df5e3df",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/specialites/show.html.slim",
+      "line": 25,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => policy_scope(Specialite).find(params[:id]).pros, {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "SpecialitesController",
+          "method": "show",
+          "line": 11,
+          "file": "app/controllers/specialites_controller.rb",
+          "rendered": {
+            "name": "specialites/show",
+            "file": "app/views/specialites/show.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "specialites/show"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
       "warning_type": "Mass Assignment",
       "warning_code": 105,
       "fingerprint": "b7c8e551359b81194d9752ceab35814ab688204743993052ec5b9514d7e25b55",
@@ -21,6 +52,6 @@
       "note": ""
     }
   ],
-  "updated": "2019-06-06 15:19:22 +0200",
+  "updated": "2019-06-17 20:03:02 +0200",
   "brakeman_version": "4.5.1"
 }

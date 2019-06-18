@@ -1,0 +1,4 @@
+tr id="site_#{site.id}"
+  td
+    = link_to_if policy(site).edit?, site.name, edit_organisation_site_path(site.organisation, site), data: { rightbar: true }
+  td= site.address

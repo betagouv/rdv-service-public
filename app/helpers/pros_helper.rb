@@ -11,7 +11,7 @@ module ProsHelper
     content_tag(:span, 'Admin', class: 'badge badge-danger') if pro.admin?
   end
 
-  def invite_button(btn_style = 'btn-primary mb-5')
+  def invite_button(btn_style = 'btn-primary')
     link_to 'Inviter un professionnel', new_pro_invitation_path, class: "btn #{btn_style}", data: { rightbar: true } if policy(current_pro).invite?
   end
 
