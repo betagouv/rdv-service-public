@@ -4,5 +4,5 @@ class EvenementType < ApplicationRecord
   has_many :rdvs
 
   validates :name, presence: true, uniqueness: { scope: :organisation }
-  validates :motif, :color, :default_duration_in_min, :evenement_type, presence: true
+  validates :motif, :color, :default_duration_in_min, presence: true
 end
