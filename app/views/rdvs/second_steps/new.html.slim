@@ -1,0 +1,26 @@
+- content_for :title do
+  .row.justify-content-md-center
+    .col-md-6
+      | Choisissez la durée et la date
+
+.row.justify-content-md-center
+  .col-md-6
+    .card
+      ul.list-group.list-group-flush
+        li.list-group-item
+          i.fa.fa-check.fa-fw.mr-1.text-success
+          = @second_step.rdv.evenement_type.name
+
+      .card-body
+        = render partial: 'layouts/model_errors', locals: { model: @second_step }
+
+        = simple_form_for(@second_step.rdv, url: organisation_second_steps_path(@second_step.organisation)) do |f|
+          = f.association :evenement_type, as: :hidden
+          = f.input :duration_in_min, as: :integer, label: "Durée en minutes"
+          = f.input :start_at, as: :datetime, label: "Commence à"
+
+          .row
+            .col.text-left
+              = link_to 'Revenir en arrière', new_organisation_first_step_path(@second_step.to_query), class: 'btn btn-link'
+            .col.text-right
+              = f.button :submit, 'Continuer'

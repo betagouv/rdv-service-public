@@ -3,14 +3,19 @@ class AgendasController < DashboardAuthController
 
   def index
     skip_policy_scope
+    @organisation = current_pro.organisation
 
-    @events = [
+    rdvs = policy_scope(Rdv).includes(:evenement_type)
+    @events = rdvs.map do |rdv|
       {
-        title: "Vaccination",
-        start: 1.hour.ago,
+        title: rdv.name,
+        start: rdv.start_at,
+        end: rdv.end_at,
         allDay: false,
-      },
-    ]
+        url: rdv_path(rdv),
+        backgroundColor: rdv.evenement_type&.color,
+      }
+    end
   end
 
   private
