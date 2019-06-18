@@ -31,7 +31,8 @@
   },
   "name": "lapin-beta-gouv",
   "scripts": {
-    "test": "bin/rake ci"
+    "test-setup": "yarn install",
+    "test": "bundle exec rake ci"
   },
   "environments": {
     "test": {
