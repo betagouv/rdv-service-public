@@ -17,6 +17,7 @@ class Pro < ApplicationRecord
   scope :active, -> { where(deleted_at: nil) }
 
   before_invitation_created :set_organisation
+  before_create :set_role
 
   def full_name
     "#{first_name} #{last_name}"
@@ -48,4 +49,9 @@ class Pro < ApplicationRecord
   def set_organisation
     self.organisation = invited_by.organisation
   end
+
+  def set_role
+    self.role = :admin if invited_by_id.nil?
+  end
+  
 end
