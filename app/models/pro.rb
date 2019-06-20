@@ -53,5 +53,4 @@ class Pro < ApplicationRecord
   def set_role
     self.role = :admin if invited_by_id.nil?
   end
-  
 end
