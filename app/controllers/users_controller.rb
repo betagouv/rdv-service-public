@@ -6,6 +6,7 @@ class UsersController < DashboardAuthController
 
   def index
     @users = policy_scope(User).includes(:organisation).order(Arel.sql('LOWER(last_name)')).page(params[:page])
+    @users = @users.search_by_name(params[:user][:search]) if params[:user] && params[:user][:search]
     authorize(@users)
   end
 

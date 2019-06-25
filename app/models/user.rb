@@ -4,6 +4,9 @@ class User < ApplicationRecord
 
   validates :last_name, :first_name, presence: true
   validates :email, format: { with: Devise.email_regexp }, uniqueness: { case_sensitive: false, scope: :organisation }
+  include PgSearch
+  pg_search_scope :search_by_name, against: [:first_name, :last_name],
+                  using: { tsearch: {prefix: true} }
 
   def full_name
     "#{first_name} #{last_name}"

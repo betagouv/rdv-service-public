@@ -6,7 +6,8 @@
 
 .card
   .card-body
-    - if @users.any?
+    - if @users.any? || params[:user].present?
+      = render 'search'
       table.table
         thead
           tr
@@ -15,7 +16,12 @@
             th Téléphone
             th Email
         tbody
-          = render @users
+          - if @users.any?
+            = render @users
+          - else
+            tr
+              td.text-center colspan=4
+                p.lead.m-5 Aucun usager ne correspond à votre recherche
       .d-flex.justify-content-center
         = paginate @users, theme: 'twitter-bootstrap-4'
     - else
