@@ -1,3 +1,5 @@
-= simple_form_for :user, url: organisation_users_path(current_pro.organisation), html: { method: :get, class: 'form-inline mb-2' }, wrapper: :inline_form  do |f|
-  = f.input :search, placeholder: 'Prénom, Nom', label: false
-  = f.button :submit, 'Rechercher'
+.float-right.mb-2
+  = simple_form_for :user, url: organisation_users_path(current_pro.organisation), html: { method: :get, class: 'form-inline' }, wrapper: :inline_form  do |f|
+    = f.input :search, placeholder: 'Prénom, Nom', label: false
+    = f.button :submit, 'Rechercher'
+= link_to 'Réinitialiser', organisation_users_path(current_pro.organisation), class: 'btn btn-link float-right'if params[:user]
