@@ -110,6 +110,7 @@ GEM
     crass (1.0.4)
     css_parser (1.7.0)
       addressable
+    database_cleaner (1.7.0)
     datetime_picker_rails (0.0.7)
       momentjs-rails (>= 2.8.1)
     delayed_job (4.1.5)
@@ -361,6 +362,8 @@ GEM
       temple (>= 0.7.6, < 0.9)
       tilt (>= 2.0.6, < 2.1)
     spring (2.1.0)
+    spring-commands-rspec (1.0.4)
+      spring (>= 0.9.1)
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
       spring (>= 1.2, < 3.0)
@@ -420,6 +423,7 @@ DEPENDENCIES
   capybara (>= 2.15)
   chartkick (~> 3.2.0)
   chromedriver-helper
+  database_cleaner
   delayed_job_active_record
   delayed_job_web
   devise (~> 4.6)
@@ -451,6 +455,7 @@ DEPENDENCIES
   simple_form (~> 4.1)
   slim (~> 4.0)
   spring
+  spring-commands-rspec
   spring-watcher-listen (~> 2.0.0)
   turbolinks (~> 5)
   tzinfo-data
