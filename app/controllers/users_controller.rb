@@ -5,7 +5,7 @@ class UsersController < DashboardAuthController
   before_action :set_user, only: [:edit, :update, :destroy]
 
   def index
-    @users = policy_scope(User).includes(:organisation)
+    @users = policy_scope(User).includes(:organisation).order(Arel.sql('LOWER(last_name)')).page(params[:page])
     authorize(@users)
   end
 
