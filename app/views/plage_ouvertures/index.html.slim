@@ -1,0 +1,34 @@
+- content_for :title do
+  | Vos plages d'ouverture
+
+- content_for :breadcrumb do
+  = link_to "Créer une plage d'ouverture", new_organisation_plage_ouverture_path, class: "btn btn-outline-white"
+
+.row
+  .col-md-12
+    .card
+      .card-body
+
+        table.table
+          thead
+            tr
+              th Titre
+              th Motifs
+              th
+
+          tbody
+            - @plage_ouvertures.sort_by{ |po| po.first_day.wday }.each do |plage_ouverture|
+              tr
+                td
+                  = link_to plage_ouverture.title, edit_plage_ouverture_path(plage_ouverture)
+                td
+                  = plage_ouverture.motifs.pluck(:name).to_sentence
+                td
+                  = l(plage_ouverture.first_day, format: "%A")
+                  | &nbsp;de&nbsp;
+                  = l(plage_ouverture.start_time, format: "%H:%M")
+                  | &nbsp;à&nbsp;
+                  = l(plage_ouverture.end_time, format: "%H:%M")
+
+
+        = link_to "Créer une plage d'ouverture", new_organisation_plage_ouverture_path

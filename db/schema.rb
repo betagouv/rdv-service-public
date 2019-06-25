@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_18_142915) do
+ActiveRecord::Schema.define(version: 2019_06_25_093648) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,10 +84,30 @@ ActiveRecord::Schema.define(version: 2019_06_18_142915) do
     t.index ["specialite_id"], name: "index_motifs_on_specialite_id"
   end
 
+  create_table "motifs_plage_ouvertures", id: false, force: :cascade do |t|
+    t.bigint "motif_id"
+    t.bigint "plage_ouverture_id"
+    t.index ["motif_id"], name: "index_motifs_plage_ouvertures_on_motif_id"
+    t.index ["plage_ouverture_id"], name: "index_motifs_plage_ouvertures_on_plage_ouverture_id"
+  end
+
   create_table "organisations", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "plage_ouvertures", force: :cascade do |t|
+    t.bigint "pro_id"
+    t.string "title"
+    t.bigint "organisation_id"
+    t.date "first_day", null: false
+    t.time "start_time", null: false
+    t.time "end_time", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organisation_id"], name: "index_plage_ouvertures_on_organisation_id"
+    t.index ["pro_id"], name: "index_plage_ouvertures_on_pro_id"
   end
 
   create_table "pros", force: :cascade do |t|
@@ -182,6 +202,8 @@ ActiveRecord::Schema.define(version: 2019_06_18_142915) do
   add_foreign_key "evenement_types", "motifs"
   add_foreign_key "motifs", "organisations"
   add_foreign_key "motifs", "specialites"
+  add_foreign_key "plage_ouvertures", "organisations"
+  add_foreign_key "plage_ouvertures", "pros"
   add_foreign_key "rdvs", "evenement_types"
   add_foreign_key "rdvs", "organisations"
   add_foreign_key "rdvs", "users"
