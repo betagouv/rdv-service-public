@@ -50,8 +50,39 @@
       "user_input": ":role",
       "confidence": "Medium",
       "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "b8de7c6eaccd8f75f71f6f6d54e5fb44a4da0833c1d063259d3251dbbc7b9260",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/users/index.html.slim",
+      "line": 20,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => policy_scope(User).includes(:organisation).order(Arel.sql(\"LOWER(last_name)\")).page(params[:page]).search_by_name(params[:user][:search]), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "UsersController",
+          "method": "index",
+          "line": 11,
+          "file": "app/controllers/users_controller.rb",
+          "rendered": {
+            "name": "users/index",
+            "file": "app/views/users/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "users/index"
+      },
+      "user_input": "params[:user][:search]",
+      "confidence": "Weak",
+      "note": ""
     }
   ],
-  "updated": "2019-06-17 20:03:02 +0200",
+  "updated": "2019-06-26 16:28:52 +0200",
   "brakeman_version": "4.5.1"
 }
