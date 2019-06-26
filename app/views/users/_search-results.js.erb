@@ -1,0 +1,3 @@
+$("#users-pagination").remove();
+$("a#clear-search-link").removeClass('d-none');
+$("#users-list").html("<%= escape_javascript(render :partial => 'results') %>");

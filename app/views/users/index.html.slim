@@ -15,14 +15,9 @@
             th Date de naissance
             th Téléphone
             th Email
-        tbody
-          - if @users.any?
-            = render @users
-          - else
-            tr
-              td.text-center colspan=4
-                p.lead.m-5 Aucun usager ne correspond à votre recherche
-      .d-flex.justify-content-center
+        tbody id="users-list"
+          = render 'results'
+      .d-flex.justify-content-center id="users-pagination"
         = paginate @users, theme: 'twitter-bootstrap-4'
     - else
       .row.justify-content-md-center
