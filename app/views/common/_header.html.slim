@@ -8,11 +8,13 @@ header.header
       span
     #navbarSupportedContent.collapse.navbar-collapse
       ul.navbar-nav.ml-auto.align-items-start.align-items-lg-center
-        - if root_path?
-          - {'discover' => 'Découvrir' }.each do |k,v|
-            li.nav-item
-              = link_to "#{v}", "##{k}", class: 'nav-link link-scroll'
-      .navbar-text.ml-4
-        ul.list-inline.m-0
-          li.list-inline-item
-            = link_to 'Je suis pro', accueil_mds_path, class: 'btn btn-outline-primary'
+        li.list-inline-item
+          = link_to accueil_mds_path, class: 'btn btn-outline-primary' do 
+            i.fa.fa-user-md
+            |  Vous êtes un professionel ?
+        li.list-inline-item
+          = link_to root_path, class: 'btn btn-primary' do 
+            i.fa.fa-user
+            |  Se connecter
+
+
