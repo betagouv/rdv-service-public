@@ -25,7 +25,7 @@ module ApplicationHelper
     end
   end
 
-  def root_path? 
+  def root_path?
     request.path == root_path
   end
 end
