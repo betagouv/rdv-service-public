@@ -1,5 +1,5 @@
 tr
   td= link_to_if policy(user).edit?, user.full_name, edit_user_path(user), data: { rightbar: true }
   td= birth_date_and_age(user)
-  td= number_to_phone(user.phone_number)
+  td= formatted_phone_number(user)
   td= user.email

@@ -1,7 +1,7 @@
 class UsersController < DashboardAuthController
   respond_to :html, :json
 
-  before_action :set_organisation, only: [:index, :new]
+  before_action :set_organisation, only: [:new, :create]
   before_action :set_user, only: [:edit, :update, :destroy]
 
   def index
