@@ -3,4 +3,4 @@
     .col-5= f.input :what, prepend: "<i class='fa fa-search'></i>".html_safe, label: false, placeholder: 'Assistante sociale, Médecin, Puéricultrice, ...', input_html: { class: "form-control-lg" }, wrapper_html: {class: 'mb-0'}
     .col-5= f.input :where, prepend: "<i class='fa fa-map-marker'></i>".html_safe, label: false, placeholder: 'Où ?', input_html: { class: "form-control-lg" }, wrapper_html: {class: 'mb-0'}
     .col-2
-      = f.button :submit, 'Rechercher', class: 'btn-lg'
+      = f.button :submit, 'Rechercher', class: 'btn-danger btn-lg'
