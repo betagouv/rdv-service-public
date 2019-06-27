@@ -1,6 +1,6 @@
-= simple_form_for :search, url: root_path, wrapper: :input_group do |f| 
+= simple_form_for :search, url: root_path do |f| 
   .form-row.d-flex.align-items-center
-    .col-5= f.input :what, prepend: "<i class='fa fa-search'></i>".html_safe, label: false, placeholder: 'Assistante sociale, Médecin, Puéricultrice, ...', input_html: { class: "form-control-lg" }, wrapper_html: {class: 'mb-0'}
-    .col-5= f.input :where, prepend: "<i class='fa fa-map-marker'></i>".html_safe, label: false, placeholder: 'Où ?', input_html: { class: "form-control-lg" }, wrapper_html: {class: 'mb-0'}
+    .col-5= f.input :what, label: false, input_html: { class: "form-control-lg" }, wrapper_html: {class: 'mb-0'}, collection: Specialite.all, as: :select, prompt: 'Choisissez une spécialité'
+    .col-5= f.input :where, label: false, placeholder: 'Où ?', input_html: { class: "form-control-lg places-js-container" }, wrapper_html: {class: 'mb-0'}
     .col-2
       = f.button :submit, 'Rechercher', class: 'btn-danger btn-lg'

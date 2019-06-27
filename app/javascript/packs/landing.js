@@ -1,10 +1,4 @@
-//= require rails-ujs
-//= require jquery3
-//= require popper
-//= require bootstrap-sprockets
-//= require turbolinks
-//= require holder
-//= require_tree ./async
+import { PlacesInput } from 'packs/components/places-input';
 
 $(function() {
   $('.link-scroll').on('click', function(e) {
@@ -26,4 +20,5 @@ $(function() {
 
 $(document).on('turbolinks:load', function() {
   Holder.run();
+  new PlacesInput(document.querySelector('.places-js-container'));
 });

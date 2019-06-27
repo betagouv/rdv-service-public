@@ -19,7 +19,7 @@
   }
 }
 
-.bg-primary, .bg-gradient {
+.bg-primary {
   color: white;
   background-color: $primary !important;
   p.hero-text { color: white;}
@@ -27,7 +27,7 @@
 }
 
 
-a.bg-primary, a.bg-gradient {
+a.bg-primary {
   &:focus, &:hover {
     background-color: #2d6ade !important;
   }
