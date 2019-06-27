@@ -5,8 +5,9 @@ class UsersController < DashboardAuthController
   before_action :set_user, only: [:edit, :update, :destroy]
 
   def index
-    @users = policy_scope(User).includes(:organisation)
+    @users = policy_scope(User).includes(:organisation).order(Arel.sql('LOWER(last_name)')).page(params[:page])
     authorize(@users)
+    filter_users if params[:user] && params[:user][:search]
   end
 
   def show
@@ -46,6 +47,13 @@ class UsersController < DashboardAuthController
   end
 
   private
+
+  def filter_users
+    @users = @users.search_by_name(params[:user][:search])
+    respond_to do |format|
+      format.js { render partial: 'search-results' }
+    end
+  end
 
   def user_params
     params.require(:user).permit(:first_name, :last_name, :email, :phone_number, :birth_date, :address)

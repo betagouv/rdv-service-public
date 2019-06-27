@@ -2,11 +2,12 @@
   | Vos usagers
 
 - content_for :breadcrumb do 
-    = add_user_button('btn-outline-white')
+  = add_user_button('btn-outline-white')
 
 .card
   .card-body
-    - if @users.any?
+    - if @users.any? || params[:user].present?
+      = render 'search'
       table.table
         thead
           tr
@@ -14,8 +15,10 @@
             th Date de naissance
             th Téléphone
             th Email
-        tbody
-          = render @users
+        tbody id="users-list"
+          = render 'results'
+      .d-flex.justify-content-center id="users-pagination"
+        = paginate @users, theme: 'twitter-bootstrap-4'
     - else
       .row.justify-content-md-center
         .col-md-6.text-center.my-5

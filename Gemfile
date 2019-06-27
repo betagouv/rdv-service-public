@@ -11,6 +11,7 @@ gem 'puma', '~> 3.11'
 
 # DB
 gem 'pg', '>= 0.18', '< 2.0'
+gem 'pg_search', '~> 2.2'
 gem 'kaminari', '~> 1.1'
 gem 'bootstrap4-kaminari-views'
 gem 'administrate', '~> 0.11'
@@ -81,6 +82,7 @@ group :development, :test do
   gem 'factory_bot'
   gem 'meta_request', '~> 0.7'
   gem 'bullet'
+  gem 'faker'
 end
 
 group :development do

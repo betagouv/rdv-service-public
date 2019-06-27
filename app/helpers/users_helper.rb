@@ -1,7 +1,9 @@
 module UsersHelper
   def birth_date_and_age(user)
+    return unless user.birth_date
+
     age = l(user.birth_date)
-    age += " - #{user.age} ans" if user.birth_date
+    age += " - #{user.age} ans"
     age
   end
 
