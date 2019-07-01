@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   delete 'admin/sign_out' => 'super_admins/sessions#destroy'
 
   namespace :admin do
-    resources :pros do 
+    resources :pros do
       get 'sign_in_as', on: :member
     end
     resources :super_admins
