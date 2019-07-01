@@ -35,7 +35,7 @@ fr:
       invitation_instructions:
         subject: "Vous avez été invité sur Lapin."
         hello: "Bonjour %{email}"
-        someone_invited_you: "Vous avez été invité sur Lapin. Vous pouvez acceptez cette invitation grâce au lien ci-dessous."
+        someone_invited_you: "Vous avez été invité sur Lapin. Vous pouvez accepter cette invitation grâce au lien ci-dessous."
         accept: "Accepter l'invitation"
         accept_until: "Cette invitation est valable jusqu'au %{due_date}."
         ignore: "Si vous n'acceptez pas cette invitation, ignorez cet email. Aucun compte ne sera créé sans votre autorisation."
