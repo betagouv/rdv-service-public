@@ -37,6 +37,12 @@ a.bg-primary {
   background-image: linear-gradient(to bottom right, $primary, $blue) !important;
 }
 
+.bg-gradient-pink {
+  background-image: linear-gradient(to bottom right, $pink, $danger) !important;
+}
+
+
+
 .bg-negative {
   margin-top: -80px;
 }

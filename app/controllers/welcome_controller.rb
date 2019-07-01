@@ -1,9 +1,7 @@
 class WelcomeController < ApplicationController
-  layout 'landing'
+  layout 'welcome'
 
-  def index
-    render layout: 'welcome'
-  end
+  def index; end
 
   def welcome_pro; end
 end
