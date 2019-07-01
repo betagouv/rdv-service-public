@@ -1,0 +1,8 @@
+- content_for :title do
+  | Modifier la plage d'ouverture
+
+.row
+  .col-md-12
+    .card
+      .card-body
+        = render 'form', organisation: nil, plage_ouverture: @plage_ouverture

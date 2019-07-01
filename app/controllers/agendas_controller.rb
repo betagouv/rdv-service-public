@@ -16,6 +16,16 @@ class AgendasController < DashboardAuthController
         backgroundColor: rdv.evenement_type&.color,
       }
     end
+
+    policy_scope(PlageOuverture).where(pro: current_pro).each do |po|
+      @events << {
+        title: po.title,
+        start: po.start_at,
+        end: po.end_at,
+        backgroundColor: "#F00",
+        rendering: "background",
+      }
+    end
   end
 
   private
