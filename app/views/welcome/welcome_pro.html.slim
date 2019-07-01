@@ -2,8 +2,34 @@ section#hero.hero.hero-home.pb-0.pt-5
   .container
     .row
       .col-md-12
-        h1.mb-3 Gérez les RDV de votre Maison des Solidarités
-        p.hero-text Lapin c'est trop bien
-        ul.list-inline
-          li.list-inline-item= sign_up_pro_button
-          li.list-inline-item= sign_in_pro_button
+        h1.mb-3 Gérez les rendez-vous de votre MDS
+        p.hero-text Cet espace est reservés au professionnels des Maisons Départementales des Solidarités
+        .mb-5= sign_in_pro_button
+    .row
+      .col-md-12.text-center
+        = link_to "Découvrir", "#discover", class: 'btn btn-link link-scroll mb-5'
+
+section#discover.bg-white
+  .container
+    header
+      .text-center.w-75.m-auto
+        h2.mb-2
+          |Vous êtes une Maison des Solidarités ?
+          br Découvrez la prise de rendez-vous en ligne !
+      .divider
+    .row
+      .col-lg-4.text-center
+        = holder_tag 300, 'Illustration', 'gray', class: 'img-fluid mb-2'
+        h4 XXXX
+        p
+          | XXX
+      .col-lg-4.text-center
+        = holder_tag 300, 'Illustration', 'gray', class: 'img-fluid mb-2'
+        h4 XXX
+        p
+          | XXX
+      .col-lg-4.text-center
+        = holder_tag 300, 'Illustration', 'gray', class: 'img-fluid mb-2'
+        h4 XXX
+        p
+          | XXX

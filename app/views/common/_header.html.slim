@@ -1,18 +1,22 @@
 header.header
-  nav.navbar.navbar-expand-lg
+  nav.navbar.navbar-expand-lg.bg-transparent
     = link_to root_path, class: 'navbar-brand mr-0 mr-md-2 py-0' do
       = holder_tag '200x50', 'Lapin Logo',class: 'd-block'
-    button.navbar-toggler.navbar-toggler-right aria-controls="navbarSupportedContent" aria-expanded="false" aria-label=("Toggle navigation") data-target="#navbarSupportedContent" data-toggle="collapse" type="button"
-      span
-      span
-      span
-    #navbarSupportedContent.collapse.navbar-collapse
-      ul.navbar-nav.ml-auto.align-items-start.align-items-lg-center
-        - if root_path?
-          - {'discover' => 'Découvrir' }.each do |k,v|
-            li.nav-item
-              = link_to "#{v}", "##{k}", class: 'nav-link link-scroll'
-      .navbar-text.ml-4
-        ul.list-inline.m-0
+    - if root_path?
+      button.navbar-toggler.navbar-toggler-right aria-controls="navbarSupportedContent" aria-expanded="false" aria-label=("Toggle navigation") data-target="#navbarSupportedContent" data-toggle="collapse" type="button"
+        span
+        span
+        span
+
+      #navbarSupportedContent.collapse.navbar-collapse
+        ul.navbar-nav.ml-auto.align-items-start.align-items-lg-center
           li.list-inline-item
-            = link_to 'Je suis pro', accueil_mds_path, class: 'btn btn-outline-primary'
+            = link_to accueil_mds_path, class: 'btn btn-outline-white' do 
+              i.fa.fa-user-md
+              |  Vous êtes un professionel ?
+          li.list-inline-item
+            = link_to root_path, class: 'btn btn-danger' do 
+              i.fa.fa-user
+              |  Se connecter
+
+

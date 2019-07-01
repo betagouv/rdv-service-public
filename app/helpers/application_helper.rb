@@ -24,4 +24,8 @@ module ApplicationHelper
       alert.to_s
     end
   end
+
+  def root_path?
+    request.path == root_path
+  end
 end

@@ -6,7 +6,9 @@ meta name="google-site-verification" content="lSinhqmLj__y4WD8X9Ye6g8YjYKy3wm8Xt
 title Lapin.beta.gouv
 = csrf_meta_tags
 = csp_meta_tag
+= render 'common/js_variables'
 = stylesheet_link_tag    'landing', media: 'all', 'data-turbolinks-track': 'reload'
-= javascript_include_tag 'landing', 'data-turbolinks-track': 'reload'
+= javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+= javascript_pack_tag 'landing', 'data-turbolinks-track': 'reload'
 = stylesheet_link_tag 'print', media: 'print', data: { turbolinks_track: true }
 = favicon_link_tag asset_path('favicon.png'), rel: 'icon', type:  'image/png'

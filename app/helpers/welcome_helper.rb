@@ -8,7 +8,9 @@ module WelcomeHelper
   end
 
   def sign_in_pro_button
-    link_to 'Se connecter', new_pro_session_path, class: 'btn btn-outline-primary'
+    link_to new_pro_session_path, class: 'btn btn-primary' do
+      content_tag(:i, '', class: 'fa fa-user-md').html_safe + ' Se connecter'
+    end
   end
 
   def link_logo
