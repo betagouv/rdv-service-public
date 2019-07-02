@@ -24,9 +24,10 @@ class UsersController < DashboardAuthController
   def create
     @user = User.new(user_params)
     @user.organisation = current_pro.organisation
+    @organisation = current_pro.organisation
     authorize(@user)
     flash[:notice] = "L'usager a été créé." if @user.save
-    respond_right_bar_with @user, location: organisation_users_path(@user)
+    respond_right_bar_with @user, location: organisation_users_path(@organisation)
   end
 
   def edit
