@@ -13,12 +13,31 @@ class User < ApplicationRecord
   end
 
   def age
-    now = Time.zone.now.to_date
-    age = now.year - birth_date.year
-    if now.month > birth_date.month || (now.month == birth_date.month && now.day >= birth_date.day)
-      age
+    years = age_in_years
+    return "#{years} ans" if years >= 2
+
+    months = age_in_months
+    return "#{months} mois" if months.positive?
+
+    "#{age_in_days.to_i} jours"
+  end
+
+  def age_in_years
+    today = Time.zone.now.to_date
+    years = today.year - birth_date.year
+    if today.month > birth_date.month || (today.month == birth_date.month && today.day >= birth_date.day)
+      years
     else
-      age - 1
+      years - 1
     end
+  end
+
+  def age_in_months
+    today = Time.zone.now.to_date
+    (today.year - birth_date.year) * 12 + today.month - birth_date.month - (today.day >= birth_date.day ? 0 : 1)
+  end
+
+  def age_in_days
+    Time.zone.now.to_date - birth_date
   end
 end
