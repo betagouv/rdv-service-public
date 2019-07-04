@@ -25,10 +25,10 @@ class Rdvs::FirstStepsController < DashboardAuthController
   end
 
   def first_step_params
-    params.require(:rdv).permit(:evenement_type_id)
+    params.require(:rdv).permit(:motif_id)
   end
 
   def query_params
-    params.permit(:evenement_type_id)
+    params.permit(:motif_id)
   end
 end

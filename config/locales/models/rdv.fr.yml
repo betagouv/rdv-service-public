@@ -5,7 +5,7 @@ fr:
     attributes:
       rdv:
         name: Nom
-        evenement_type: Type d'événement
+        motif: Motif
         user: Usager
         start_at: Commence à
         duration_in_min: Durée en minutes

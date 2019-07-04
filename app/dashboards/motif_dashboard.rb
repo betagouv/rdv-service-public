@@ -11,6 +11,7 @@ class MotifDashboard < Administrate::BaseDashboard
     id: Field::Number,
     name: Field::String,
     organisation: Field::BelongsTo,
+    specialite: Field::BelongsTo,
     color: Field::String,
     accept_multiple_pros: Field::Boolean,
     accept_multiple_users: Field::Boolean,
@@ -29,6 +30,7 @@ class MotifDashboard < Administrate::BaseDashboard
     :id,
     :name,
     :organisation,
+    :specialite,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -37,6 +39,7 @@ class MotifDashboard < Administrate::BaseDashboard
     :id,
     :name,
     :organisation,
+    :specialite,
     :color,
     :accept_multiple_pros,
     :accept_multiple_users,
@@ -57,12 +60,13 @@ class MotifDashboard < Administrate::BaseDashboard
     :at_home,
     :default_duration_in_min,
     :organisation,
+    :specialite,
   ].freeze
 
   # Overwrite this method to customize how super admins are displayed
   # across all pages of the admin dashboard.
   #
-  def display_resource(site)
-    "#{site.name} (#{site.organisation.name})"
+  def display_resource(motif)
+    "#{motif.name} (#{motif.organisation})"
   end
 end

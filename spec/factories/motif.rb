@@ -5,5 +5,6 @@ FactoryBot.define do
     name { generate(:motif_name) }
     default_duration_in_min { 45 }
     color { "##{SecureRandom.hex(3)}" }
+    specialite
   end
 end
