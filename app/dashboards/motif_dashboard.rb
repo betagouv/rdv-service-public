@@ -11,8 +11,11 @@ class MotifDashboard < Administrate::BaseDashboard
     id: Field::Number,
     name: Field::String,
     organisation: Field::BelongsTo,
-    specialite: Field::BelongsTo,
-    evenement_types: Field::HasMany,
+    color: Field::String,
+    accept_multiple_pros: Field::Boolean,
+    accept_multiple_users: Field::Boolean,
+    at_home: Field::Boolean,
+    default_duration_in_min: Field::Number,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -26,7 +29,6 @@ class MotifDashboard < Administrate::BaseDashboard
     :id,
     :name,
     :organisation,
-    :specialite,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -35,8 +37,11 @@ class MotifDashboard < Administrate::BaseDashboard
     :id,
     :name,
     :organisation,
-    :specialite,
-    :evenement_types,
+    :color,
+    :accept_multiple_pros,
+    :accept_multiple_users,
+    :at_home,
+    :default_duration_in_min,
     :created_at,
     :updated_at,
   ].freeze
@@ -46,14 +51,18 @@ class MotifDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
     :name,
+    :color,
+    :accept_multiple_pros,
+    :accept_multiple_users,
+    :at_home,
+    :default_duration_in_min,
     :organisation,
-    :specialite,
   ].freeze
 
   # Overwrite this method to customize how super admins are displayed
   # across all pages of the admin dashboard.
   #
-  def display_resource(motif)
-    "#{motif.name} (#{motif.organisation&.name})"
+  def display_resource(site)
+    "#{site.name} (#{site.organisation.name})"
   end
 end

@@ -3,6 +3,7 @@ FactoryBot.define do
 
   factory :motif do
     name { generate(:motif_name) }
-    specialite { build(:specialite) }
+    default_duration_in_min { 45 }
+    color { "##{SecureRandom.hex(3)}" }
   end
 end

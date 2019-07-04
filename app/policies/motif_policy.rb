@@ -5,25 +5,33 @@ class MotifPolicy < ApplicationPolicy
     end
   end
 
+  def index?
+    @pro.admin?
+  end
+
+  def new?
+    @pro.admin?
+  end
+
   def create?
     @pro.admin?
   end
 
   def edit?
-    admin_and_belongs_to_specialite_organisation?
+    admin_and_same_organisation?
   end
 
   def update?
-    admin_and_belongs_to_specialite_organisation?
+    admin_and_same_organisation?
   end
 
   def destroy?
-    admin_and_belongs_to_specialite_organisation?
+    admin_and_same_organisation?
   end
 
   private
 
-  def admin_and_belongs_to_specialite_organisation?
-    @pro.admin? && @pro.organisation_id == @record.organisation_id
+  def admin_and_same_organisation?
+    @pro.admin? && @record.organisation_id == @pro.organisation_id
   end
 end

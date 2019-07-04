@@ -4,5 +4,12 @@ fr:
       motif: Motif
     attributes:
       motif:
-        name: Nom
+        organisation: Organisation
         specialite: Spécialité
+        name: Nom
+        color: Couleur
+        motif: Motif
+        accept_multiple_pros: Peut concerner plusieurs professionels
+        accept_multiple_users: Peut concerner plusieurs usagers
+        at_home: À domicile
+        default_duration_in_min: Durée par défaut en minutes

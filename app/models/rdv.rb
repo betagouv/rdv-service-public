@@ -1,9 +1,9 @@
 class Rdv < ApplicationRecord
   belongs_to :organisation
-  belongs_to :evenement_type
+  belongs_to :motif
   belongs_to :user
 
-  validates :user, :organisation, :evenement_type, :start_at, :duration_in_min, presence: true
+  validates :user, :organisation, :motif, :start_at, :duration_in_min, presence: true
 
   def end_at
     start_at + duration_in_min.minutes
@@ -16,7 +16,7 @@ class Rdv < ApplicationRecord
   def to_step_params
     {
       organisation: organisation,
-      evenement_type: evenement_type,
+      motif: motif,
       duration_in_min: duration_in_min,
       start_at: start_at,
       user: user,
