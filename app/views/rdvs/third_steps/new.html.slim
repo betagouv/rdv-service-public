@@ -11,7 +11,7 @@
       ul.list-group.list-group-flush
         li.list-group-item
           i.fa.fa-check.fa-fw.mr-1.text-success
-          = @third_step.rdv.evenement_type.name
+          = @third_step.rdv.motif.name
         li.list-group-item
           i.fa.fa-check.fa-fw.mr-1.text-success
           = "Durée : #{@third_step.rdv.duration_in_min} minutes"
@@ -23,7 +23,7 @@
         = render partial: 'layouts/model_errors', locals: { model: @third_step }
 
         = simple_form_for(@third_step.rdv, url: organisation_third_steps_path(@third_step.organisation)) do |f|
-          = f.association :evenement_type, as: :hidden
+          = f.association :motif, as: :hidden
           = f.input :duration_in_min, as: :hidden
           = f.input :start_at, as: :hidden
 

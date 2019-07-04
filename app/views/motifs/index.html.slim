@@ -1,0 +1,33 @@
+- content_for :title do
+  | Vos motifs
+
+- content_for :breadcrumb do
+  = create_motif_button('btn-outline-white')
+
+.row
+  .col-md-12
+    .card
+      .card-body
+        - if @motifs.any?
+          table.table
+            thead
+              tr
+                th 
+                  span.badge.badge-pill.ml-0.mr-2
+                    | &nbsp;
+                  | Nom
+                th Spécialité
+                th Durée par défaut
+            tbody
+              = render @motifs
+          .d-flex.justify-content-center id="users-pagination"
+            = paginate @motifs, theme: 'twitter-bootstrap-4'
+        - else
+          .row.justify-content-md-center
+            .col-md-6.text-center.my-5
+              p.mb-2.lead Vous n'avez pas encore créé de motif.
+              span.fa-stack.fa-4x
+                i.fa.fa-circle.fa-stack-2x.text-primary
+                i.fa.fa-calendar.fa-stack-1x.text-white
+        .text-center
+          = create_motif_button

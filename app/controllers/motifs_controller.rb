@@ -1,12 +1,15 @@
 class MotifsController < DashboardAuthController
   respond_to :html, :json
 
+  before_action :set_organisation, only: [:index, :new, :create]
   before_action :set_motif, only: [:edit, :update, :destroy]
 
+  def index
+    @motifs = policy_scope(Motif).includes(:specialite).page(params[:page])
+  end
+
   def new
-    @specialite = policy_scope(Specialite).find(params[:specialite_id])
-    @organisation = current_pro.organisation
-    @motif = Motif.new(specialite: @specialite)
+    @motif = Motif.new
     authorize(@motif)
     respond_right_bar_with @motif
   end
@@ -18,23 +21,22 @@ class MotifsController < DashboardAuthController
 
   def create
     @motif = Motif.new(motif_params)
-    @motif.specialite = policy_scope(Specialite).find(params[:specialite_id])
-    @motif.organisation = current_pro.organisation
+    @motif.organisation = @organisation
     authorize(@motif)
     flash[:notice] = "Motif créé." if @motif.save
-    respond_right_bar_with @motif, location: organisation_specialite_path(current_pro.organisation, @motif.specialite)
+    respond_right_bar_with @motif, location: organisation_motifs_path(@organisation)
   end
 
   def update
     authorize(@motif)
-    flash[:notice] = 'Le motif a été modifié.' if @motif.update(motif_params)
-    respond_right_bar_with @motif, location: organisation_specialite_path(@motif.organisation, @motif.specialite)
+    flash[:notice] = "Le motif a été modifié." if @motif.update(motif_params)
+    respond_right_bar_with @motif, location: organisation_motifs_path(@motif.organisation)
   end
 
   def destroy
     authorize(@motif)
     @motif.destroy
-    redirect_to organisation_specialite_path(@motif.organisation, @motif.specialite), notice: 'Le motif a été supprimé.'
+    redirect_to organisation_motifs_path(@motif.organisation), notice: "Le motif a été supprimé."
   end
 
   private
@@ -44,6 +46,6 @@ class MotifsController < DashboardAuthController
   end
 
   def motif_params
-    params.require(:motif).permit(:name)
+    params.require(:motif).permit(:name, :specialite_id, :color, :accept_multiple_pros, :accept_multiple_users, :at_home, :default_duration_in_min)
   end
 end

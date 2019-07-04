@@ -14,7 +14,6 @@ Rails.application.routes.draw do
     resources :specialites
     resources :motifs
     resources :users
-    resources :evenement_types
     root to: "pros#index"
 
     authenticate :super_admin do
@@ -38,10 +37,7 @@ Rails.application.routes.draw do
       resources :sites, except: :index
       resources :pros
       resources :users, shallow: true
-      resources :specialites, only: [:index, :show] do
-        resources :motifs, except: :show, shallow: true
-      end
-      resources :evenement_types, except: :show, shallow: true
+      resources :motifs, shallow: true
       resources :plage_ouvertures, except: :show, shallow: true
 
       # Rdv

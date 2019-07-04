@@ -1,8 +1,12 @@
-= simple_form_for([@organisation, @specialite, motif], remote: request.xhr?, data: { rightbar: true }) do |f|
+= simple_form_for([organisation, motif], remote: request.xhr?, data: { rightbar: true }) do |f|
   = render partial: 'layouts/model_errors', locals: { model: motif }
-
   = f.input :name
-
+  = f.association :specialite, collection: Specialite.all
+  = f.input :accept_multiple_pros
+  = f.input :accept_multiple_users
+  = f.input :at_home
+  = f.input :default_duration_in_min
+  = f.input :color, as: "color"
   .row
     - if motif.persisted?
       .col.text-left
