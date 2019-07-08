@@ -4,13 +4,13 @@ describe "Pro can create a Rdv with wizard" do
   let!(:motif_with_limit) { create(:motif, organisation: pro.organisation, max_users_limit: 2) }
   let!(:user) { create(:user, organisation: pro.organisation) }
 
-  before do 
+  before do
     login_as(pro, scope: :pro)
     visit authenticated_root_path
 
     expect(user.rdvs.count).to eq(0)
     click_link('Créer un rendez-vous')
-  end 
+  end
 
   scenario "default" do
     # Step 1
