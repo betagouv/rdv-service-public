@@ -16,6 +16,7 @@ class RdvsController < DashboardAuthController
 
   def edit
     authorize(@rdv)
+    respond_right_bar_with(@rdv)
   end
 
   def create
@@ -52,6 +53,6 @@ class RdvsController < DashboardAuthController
   end
 
   def rdv_params
-    params.require(:rdv).permit(:name, :duration_in_min, :start_at)
+    params.require(:rdv).permit(:name, :duration_in_min, :start_at, :max_users_limit)
   end
 end

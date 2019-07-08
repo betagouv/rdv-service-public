@@ -19,6 +19,7 @@ class Rdv < ApplicationRecord
       motif: motif,
       duration_in_min: duration_in_min,
       start_at: start_at,
+      max_users_limit: max_users_limit,
       user: user,
     }
   end

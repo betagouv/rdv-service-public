@@ -10,6 +10,7 @@ class Rdv::FirstStep
       user: user,
       duration_in_min: duration_in_min,
       start_at: start_at,
+      max_users_limit: max_users_limit,
       name: "#{user&.full_name} <> #{motif&.name}")
   end
 
@@ -20,6 +21,7 @@ class Rdv::FirstStep
       duration_in_min: duration_in_min,
       start_at: start_at&.to_s,
       user_id: user&.id,
+      max_users_limit: max_users_limit,
     }
   end
 end
