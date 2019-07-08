@@ -6,6 +6,7 @@ class RdvsController < DashboardAuthController
 
   def show
     authorize(@rdv)
+    respond_right_bar_with(@rdv)
   end
 
   def new
@@ -19,31 +20,31 @@ class RdvsController < DashboardAuthController
     respond_right_bar_with(@rdv)
   end
 
-  def create
-    @rdv = Rdv.new(rdv_params)
-    @rdv.organisation = @organisation
-    authorize(@rdv)
+  # def create
+  #   @rdv = Rdv.new(rdv_params)
+  #   @rdv.organisation = @organisation
+  #   authorize(@rdv)
 
-    flash[:notice] = "Rendez-vous créé." if @rdv.save
-    respond_right_bar_with @rdv, location: rdv_path(@rdv)
-  end
+  #   flash[:notice] = "Rendez-vous créé." if @rdv.save
+  #   respond_right_bar_with @rdv, location: rdv_path(@rdv)
+  # end
 
   def update
     authorize(@rdv)
     flash[:notice] = 'Le rendez-vous a été modifié.' if @rdv.update(rdv_params)
-    respond_right_bar_with @rdv, location: rdv_path(@rdv)
+    respond_right_bar_with @rdv, location: authenticated_root_path
   end
 
   def cancel
     authorize(@rdv)
     @rdv.update(cancelled_at: Time.zone.now)
-    redirect_to root_path, notice: 'Le rendez-vous a été annulé.'
+    redirect_to authenticated_root_path, notice: 'Le rendez-vous a été annulé.'
   end
 
   def destroy
     authorize(@rdv)
     @rdv.destroy
-    redirect_to root_path, notice: 'Le rendez-vous a été supprimé.'
+    redirect_to authenticated_root_path, notice: 'Le rendez-vous a été supprimé.'
   end
 
   private
