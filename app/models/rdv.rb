@@ -28,7 +28,8 @@ class Rdv < ApplicationRecord
 
   def update_ics_to_participants
     increment!(:sequence)
-    RdvMailer.send_ics_to_user(self).deliver_later
+    serialized_previous_start_at = saved_changes&.[]("start_at")&.[](0).to_s
+    RdvMailer.send_ics_to_user(self, serialized_previous_start_at).deliver_later
   end
 
   def to_ical
