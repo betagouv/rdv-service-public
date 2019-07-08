@@ -3,6 +3,37 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
+      "fingerprint": "2225aefbfa863b1bb130ba9a096f56895b98a587970e29046fdb0e5eab7c3eb8",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/motifs/index.html.slim",
+      "line": 22,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => policy_scope(Motif).includes(:specialite).order(Arel.sql(\"LOWER(name)\")).page(params[:page]), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "MotifsController",
+          "method": "index",
+          "line": 9,
+          "file": "app/controllers/motifs_controller.rb",
+          "rendered": {
+            "name": "motifs/index",
+            "file": "app/views/motifs/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "motifs/index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
       "fingerprint": "5f91bc5e7392200182ff8c604a973e2a3ebe32c06a2ec7643d26b3c192e939e7",
       "check_name": "Render",
       "message": "Render path contains parameter value",
@@ -114,6 +145,6 @@
       "note": ""
     }
   ],
-  "updated": "2019-07-04 11:52:42 +0200",
+  "updated": "2019-07-08 14:20:50 +0200",
   "brakeman_version": "4.5.1"
 }
