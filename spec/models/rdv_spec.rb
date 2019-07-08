@@ -56,6 +56,7 @@ describe Rdv, type: :model do
       end
 
       context "and start_at changed" do
+        let!(:old_start_at) { rdv.start_at }
         before { rdv.start_at = 2.days.from_now }
 
         it "should be called if start_at changed" do
@@ -68,7 +69,7 @@ describe Rdv, type: :model do
         end
 
         it "Send email to user" do
-          expect(RdvMailer).to receive(:send_ics_to_user).with(rdv).and_return(double(deliver_later: nil))
+          expect(RdvMailer).to receive(:send_ics_to_user).with(rdv, old_start_at.to_s).and_return(double(deliver_later: nil))
           rdv.save!
         end
       end
@@ -93,7 +94,7 @@ describe Rdv, type: :model do
     end
 
     it "Send email to user" do
-      expect(RdvMailer).to receive(:send_ics_to_user).with(rdv).and_return(double(deliver_later: nil))
+      expect(RdvMailer).to receive(:send_ics_to_user).with(rdv, nil).and_return(double(deliver_later: nil))
       subject
     end
   end
