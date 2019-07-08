@@ -12,7 +12,7 @@ class Rdvs::ThirdStepsController < DashboardAuthController
     if @third_step.valid?
       @rdv = @third_step.rdv
       @rdv.save
-      redirect_to rdv_path(@rdv), notice: "Le rendez-vous a été créé."
+      redirect_to authenticated_root_path, notice: "Le rendez-vous a été créé."
     else
       render 'new'
     end
