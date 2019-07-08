@@ -5,5 +5,5 @@ class Motif < ApplicationRecord
   has_and_belongs_to_many :plage_ouvertures
 
   validates :name, presence: true, uniqueness: { scope: :organisation }
-  validates :color, :default_duration_in_min, :online,presence: true
+  validates :color, :default_duration_in_min, presence: true
 end
