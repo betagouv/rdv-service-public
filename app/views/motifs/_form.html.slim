@@ -2,8 +2,7 @@
   = render partial: 'layouts/model_errors', locals: { model: motif }
   = f.input :name
   = f.association :specialite, collection: Specialite.all
-  = f.input :accept_multiple_pros
-  = f.input :accept_multiple_users
+  = f.input :max_users_limit, hint: 'Laisser vide pour ne pas limiter le nombre d\'usagers'
   = f.input :at_home
   = f.input :default_duration_in_min
   = f.input :color, as: "color"
