@@ -5,7 +5,10 @@ class Rdv < ApplicationRecord
 
   validates :user, :organisation, :motif, :start_at, :duration_in_min, presence: true
 
+  after_commit :reload_uuid, on: :create
+
   after_create :send_ics_to_participants
+  after_update :update_ics_to_participants, if: -> { saved_change_to_start_at? }
 
   def end_at
     start_at + duration_in_min.minutes
@@ -19,6 +22,11 @@ class Rdv < ApplicationRecord
     RdvMailer.send_ics_to_user(self).deliver_later
   end
 
+  def update_ics_to_participants
+    increment!(:sequence)
+    RdvMailer.send_ics_to_user(self).deliver_later
+  end
+
   def to_ical
     require 'icalendar'
 
@@ -28,7 +36,8 @@ class Rdv < ApplicationRecord
       e.dtend       = end_at
       e.summary     = "RDV #{name}"
       e.description = ""
-      e.sequence    = 1
+      e.uid         = uuid
+      e.sequence    = sequence
     end
 
     cal.to_ical
@@ -46,5 +55,12 @@ class Rdv < ApplicationRecord
       start_at: start_at,
       user: user,
     }
+  end
+
+  private
+
+  def reload_uuid
+    # https://github.com/rails/rails/issues/17605
+    self[:uuid] = self.class.where(id: id).pluck(:uuid).first if attributes.key? 'uuid'
   end
 end

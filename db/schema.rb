@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_04_085856) do
+ActiveRecord::Schema.define(version: 2019_07_08_090522) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "uuid-ossp"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
@@ -149,6 +150,8 @@ ActiveRecord::Schema.define(version: 2019_07_04_085856) do
     t.datetime "cancelled_at"
     t.bigint "motif_id"
     t.bigint "user_id"
+    t.integer "sequence", default: 0, null: false
+    t.uuid "uuid", default: -> { "uuid_generate_v4()" }, null: false
     t.index ["motif_id"], name: "index_rdvs_on_motif_id"
     t.index ["organisation_id"], name: "index_rdvs_on_organisation_id"
     t.index ["user_id"], name: "index_rdvs_on_user_id"
