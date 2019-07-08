@@ -1,7 +1,7 @@
 class Rdv::FirstStep
   include ActiveModel::Model
 
-  attr_accessor :motif, :organisation, :duration_in_min, :start_at, :user
+  attr_accessor :motif, :organisation, :duration_in_min, :start_at, :max_users_limit, :user
   validates :motif, :organisation, presence: true
 
   def rdv

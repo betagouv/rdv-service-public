@@ -18,7 +18,7 @@
           = f.association :motif, as: :hidden
           = f.input :duration_in_min, as: :integer, label: "Durée en minutes"
           = f.input :start_at, as: :datetime, label: "Commence à"
-
+          = f.input :max_users_limit
           .row
             .col.text-left
               = link_to 'Revenir en arrière', new_organisation_first_step_path(@second_step.to_query), class: 'btn btn-link'

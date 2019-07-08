@@ -1,6 +1,6 @@
 require "administrate/base_dashboard"
 
-class MotifDashboard < Administrate::BaseDashboard
+class RdvDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
   # a hash that describes the type of each of the model's fields.
   #
@@ -8,16 +8,17 @@ class MotifDashboard < Administrate::BaseDashboard
   # which determines how the attribute is displayed
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
+    organisation: Field::BelongsTo,
+    motif: Field::BelongsTo,
+    user: Field::BelongsTo,
     id: Field::Number,
     name: Field::String,
-    organisation: Field::BelongsTo,
-    specialite: Field::BelongsTo,
-    color: Field::String,
-    max_users_limit: Field::Number,
-    at_home: Field::Boolean,
-    default_duration_in_min: Field::Number,
+    duration_in_min: Field::Number,
+    start_at: Field::DateTime,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
+    cancelled_at: Field::DateTime,
+    max_users_limit: Field::Number,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -27,43 +28,45 @@ class MotifDashboard < Administrate::BaseDashboard
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = [
     :id,
-    :name,
     :organisation,
-    :specialite,
+    :motif,
+    :user,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = [
+    :organisation,
+    :motif,
+    :user,
     :id,
     :name,
-    :organisation,
-    :specialite,
-    :color,
-    :max_users_limit,
-    :at_home,
-    :default_duration_in_min,
+    :duration_in_min,
+    :start_at,
     :created_at,
     :updated_at,
+    :cancelled_at,
+    :max_users_limit,
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
-    :name,
-    :color,
-    :max_users_limit,
-    :at_home,
-    :default_duration_in_min,
     :organisation,
-    :specialite,
+    :motif,
+    :user,
+    :name,
+    :duration_in_min,
+    :start_at,
+    :cancelled_at,
+    :max_users_limit,
   ].freeze
 
-  # Overwrite this method to customize how super admins are displayed
+  # Overwrite this method to customize how rdvs are displayed
   # across all pages of the admin dashboard.
   #
-  def display_resource(motif)
-    "#{motif.name} (#{motif.organisation&.name})"
-  end
+  # def display_resource(rdv)
+  #   "Rdv ##{rdv.id}"
+  # end
 end
