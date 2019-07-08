@@ -1,1 +1,6 @@
-h1 RDV confirmé le #{l(@rdv.start_at, format: :human)}
+- if @rdv.cancelled?
+  h1 ANNULÉ : RDV du #{l(@rdv.start_at, format: :human)}
+
+  | Nous allons vous recontacter rapidement pour vous proposer un nouveau rendez-vous.
+- else
+  h1 RDV confirmé le #{l(@rdv.start_at, format: :human)}

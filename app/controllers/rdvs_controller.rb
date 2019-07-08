@@ -35,7 +35,7 @@ class RdvsController < DashboardAuthController
 
   def cancel
     authorize(@rdv)
-    @rdv.update(cancelled_at: Time.zone.now)
+    @rdv.cancel!
     redirect_to root_path, notice: 'Le rendez-vous a été annulé.'
   end
 

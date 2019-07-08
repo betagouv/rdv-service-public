@@ -8,7 +8,7 @@ class Rdv < ApplicationRecord
   after_commit :reload_uuid, on: :create
 
   after_create :send_ics_to_participants
-  after_update :update_ics_to_participants, if: -> { saved_change_to_start_at? }
+  after_update :update_ics_to_participants, if: -> { saved_change_to_start_at? || saved_change_to_cancelled_at? }
 
   def end_at
     start_at + duration_in_min.minutes
@@ -16,6 +16,10 @@ class Rdv < ApplicationRecord
 
   def cancelled?
     cancelled_at.present?
+  end
+
+  def cancel!
+    update(cancelled_at: Time.zone.now)
   end
 
   def send_ics_to_participants
@@ -38,6 +42,7 @@ class Rdv < ApplicationRecord
       e.description = ""
       e.uid         = uuid
       e.sequence    = sequence
+      e.status      = "CANCELLED" if cancelled?
     end
 
     cal.to_ical

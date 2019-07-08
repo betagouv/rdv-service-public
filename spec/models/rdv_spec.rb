@@ -9,6 +9,11 @@ describe Rdv, type: :model do
     it { is_expected.to include("DTEND:20190704T154500") }
     it { is_expected.to include("SEQUENCE:0") }
     it { is_expected.to include("UID:") }
+
+    context 'when rdv is cancelled' do
+      let(:rdv) { create(:rdv, cancelled_at: Time.zone.now) }
+      it { is_expected.to include("STATUS:CANCELLED") }
+    end
   end
 
   describe "#send_ics_to_participants" do
@@ -67,6 +72,29 @@ describe Rdv, type: :model do
           rdv.save!
         end
       end
+    end
+  end
+
+  describe "#cancel!" do
+    let(:rdv) { create(:rdv) }
+    let(:now) { Time.zone.now }
+
+    subject { rdv.cancel! }
+
+    before { Timecop.freeze(now) }
+    after { Timecop.return }
+
+    it "should set cancelled_at" do
+      expect { subject }.to change { rdv.cancelled_at }.from(nil).to(now)
+    end
+
+    it "should increment sequence" do
+      expect { subject }.to change { rdv.sequence }.from(0).to(1)
+    end
+
+    it "Send email to user" do
+      expect(RdvMailer).to receive(:send_ics_to_user).with(rdv).and_return(double(deliver_later: nil))
+      subject
     end
   end
 end
