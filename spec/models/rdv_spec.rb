@@ -76,11 +76,11 @@ describe Rdv, type: :model do
     end
   end
 
-  describe "#cancel!" do
+  describe "#cancel" do
     let(:rdv) { create(:rdv) }
     let(:now) { Time.zone.now }
 
-    subject { rdv.cancel! }
+    subject { rdv.cancel }
 
     before { Timecop.freeze(now) }
     after { Timecop.return }
