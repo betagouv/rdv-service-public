@@ -11,7 +11,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     id: Field::Number,
     name: Field::String,
     pros: Field::HasMany,
-    sites: Field::HasMany,
+    lieux: Field::HasMany,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -32,7 +32,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     :id,
     :name,
     :pros,
-    :sites,
+    :lieux,
     :created_at,
     :updated_at,
   ].freeze
@@ -43,7 +43,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = [
     :name,
     :pros,
-    :sites,
+    :lieux,
   ].freeze
 
   # Overwrite this method to customize how super admins are displayed

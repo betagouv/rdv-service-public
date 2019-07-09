@@ -1,40 +1,40 @@
-class SitesController < DashboardAuthController
+class LieuxController < DashboardAuthController
   respond_to :html, :json
 
   before_action :set_organisation
 
   def new
-    @site = Site.new(organisation: @organisation)
-    authorize(@site)
-    respond_right_bar_with @site
+    @lieu = Lieu.new(organisation: @organisation)
+    authorize(@lieu)
+    respond_right_bar_with @lieu
   end
 
   def create
-    @site = Site.new(organisation: @organisation)
-    @site.assign_attributes(site_params)
-    authorize(@site)
-    flash.notice = "Site créé" if @site.save
-    respond_right_bar_with @site, location: @site.organisation
+    @lieu = Lieu.new(organisation: @organisation)
+    @lieu.assign_attributes(lieu_params)
+    authorize(@lieu)
+    flash.notice = "Lieu créé" if @lieu.save
+    respond_right_bar_with @lieu, location: @lieu.organisation
   end
 
   def edit
-    @site = policy_scope(Site).find(params[:id])
-    authorize(@site)
-    respond_right_bar_with @site
+    @lieu = policy_scope(Lieu).find(params[:id])
+    authorize(@lieu)
+    respond_right_bar_with @lieu
   end
 
   def update
-    @site = Site.find(params[:id])
-    authorize(@site)
-    flash[:notice] = 'Site modifié' if @site.update(site_params)
-    respond_right_bar_with @site, location: @site.organisation
+    @lieu = Lieu.find(params[:id])
+    authorize(@lieu)
+    flash[:notice] = 'Lieu modifié' if @lieu.update(lieu_params)
+    respond_right_bar_with @lieu, location: @lieu.organisation
   end
 
   def destroy
-    @site = Site.find(params[:id])
-    authorize(@site)
-    if @site.destroy
-      redirect_to @site.organisation, notice: 'Site supprimé'
+    @lieu = Lieu.find(params[:id])
+    authorize(@lieu)
+    if @lieu.destroy
+      redirect_to @lieu.organisation, notice: 'Lieu supprimé'
     else
       render :edit
     end
@@ -42,7 +42,7 @@ class SitesController < DashboardAuthController
 
   private
 
-  def site_params
-    params.require(:site).permit(:name, :address, :horaires, :telephone)
+  def lieu_params
+    params.require(:lieu).permit(:name, :address, :horaires, :telephone)
   end
 end

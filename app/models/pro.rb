@@ -6,7 +6,7 @@ class Pro < ApplicationRecord
 
   belongs_to :organisation, optional: true
   belongs_to :specialite, optional: true
-  has_many :sites, through: :organisation
+  has_many :lieux, through: :organisation
 
   enum role: { user: 0, admin: 1 }
 

@@ -7,8 +7,8 @@
 
 .card
   .card-body
-    h5.card-title Sites
-    - if @organisation.sites.any?
+    h5.card-title Lieux
+    - if @organisation.lieux.any?
       table.table
         thead
           tr
@@ -16,14 +16,14 @@
             th Adresse
             th
         tbody
-          = render @organisation.sites
+          = render @organisation.lieux
     - else
       .row.justify-content-md-center
         .col-md-6.text-center.my-5
-          p.mb-2.lead Vous n'avez pas encore ajouté de site à votre organisation.
+          p.mb-2.lead Vous n'avez pas encore ajouté de lieu à votre organisation.
           span.fa-stack.fa-4x
             i.fa.fa-circle.fa-stack-2x.text-primary
             i.fa.fa-building.fa-stack-1x.text-white
 
     .text-center
-      = link_to "Ajouter un site", new_organisation_site_path(@organisation), class: "btn btn-primary", data: { rightbar: true }
+      = link_to "Ajouter un lieu", new_organisation_lieu_path(@organisation), class: "btn btn-primary", data: { rightbar: true }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_08_101803) do
+ActiveRecord::Schema.define(version: 2019_07_09_124843) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,6 +60,17 @@ ActiveRecord::Schema.define(version: 2019_07_08_101803) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+  end
+
+  create_table "lieux", force: :cascade do |t|
+    t.string "name"
+    t.string "telephone"
+    t.bigint "organisation_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "address"
+    t.text "horaires"
+    t.index ["organisation_id"], name: "index_lieux_on_organisation_id"
   end
 
   create_table "motifs", force: :cascade do |t|
@@ -150,23 +161,12 @@ ActiveRecord::Schema.define(version: 2019_07_08_101803) do
     t.datetime "cancelled_at"
     t.bigint "motif_id"
     t.bigint "user_id"
-    t.integer "max_users_limit"
     t.integer "sequence", default: 0, null: false
     t.uuid "uuid", default: -> { "uuid_generate_v4()" }, null: false
+    t.integer "max_users_limit"
     t.index ["motif_id"], name: "index_rdvs_on_motif_id"
     t.index ["organisation_id"], name: "index_rdvs_on_organisation_id"
     t.index ["user_id"], name: "index_rdvs_on_user_id"
-  end
-
-  create_table "sites", force: :cascade do |t|
-    t.string "name"
-    t.string "telephone"
-    t.bigint "organisation_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "address"
-    t.text "horaires"
-    t.index ["organisation_id"], name: "index_sites_on_organisation_id"
   end
 
   create_table "specialites", force: :cascade do |t|
@@ -195,6 +195,7 @@ ActiveRecord::Schema.define(version: 2019_07_08_101803) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "lieux", "organisations"
   add_foreign_key "motifs", "organisations"
   add_foreign_key "motifs", "specialites"
   add_foreign_key "plage_ouvertures", "organisations"
@@ -202,6 +203,5 @@ ActiveRecord::Schema.define(version: 2019_07_08_101803) do
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"
   add_foreign_key "rdvs", "users"
-  add_foreign_key "sites", "organisations"
   add_foreign_key "users", "organisations"
 end

@@ -1,6 +1,6 @@
 require "administrate/base_dashboard"
 
-class SiteDashboard < Administrate::BaseDashboard
+class LieuDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
   # a hash that describes the type of each of the model's fields.
   #
@@ -46,7 +46,7 @@ class SiteDashboard < Administrate::BaseDashboard
   # Overwrite this method to customize how super admins are displayed
   # across all pages of the admin dashboard.
   #
-  def display_resource(site)
-    "#{site.name} (#{site.organisation.name})"
+  def display_resource(lieu)
+    "#{lieu.name} (#{lieu.organisation.name})"
   end
 end
