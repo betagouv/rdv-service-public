@@ -1,7 +1,7 @@
 class RdvsController < DashboardAuthController
   respond_to :html, :json
 
-  before_action :set_rdv, only: [:show, :edit, :update, :cancel, :destroy]
+  before_action :set_rdv, only: [:show, :edit, :update, :destroy]
 
   def show
     authorize(@rdv)
@@ -19,16 +19,10 @@ class RdvsController < DashboardAuthController
     respond_right_bar_with @rdv, location: authenticated_root_path
   end
 
-  def cancel
-    authorize(@rdv)
-    @rdv.update(cancelled_at: Time.zone.now)
-    redirect_to authenticated_root_path, notice: 'Le rendez-vous a été annulé.'
-  end
-
   def destroy
     authorize(@rdv)
-    @rdv.destroy
-    redirect_to authenticated_root_path, notice: 'Le rendez-vous a été supprimé.'
+    flash[:notice] = 'Le rendez-vous a été annulé.' if @rdv.update(cancelled_at: Time.zone.now)
+    redirect_to authenticated_root_path
   end
 
   private
