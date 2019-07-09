@@ -24,6 +24,14 @@ class Pro < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def full_name_and_specialite
+    if specialite.present?
+      "#{full_name} (#{specialite.name})"
+    else
+      full_name
+    end
+  end
+
   def initials
     full_name.split.first(2).map(&:first).join.upcase
   end

@@ -1,6 +1,8 @@
-= simple_form_for([organisation, rdv], data: { rightbar: true }) do |f|
+= simple_form_for([organisation, rdv], remote: request.xhr?, data: { rightbar: true }) do |f|
   = render partial: 'layouts/model_errors', locals: { model: rdv }
   = f.input :name
+  = f.association :motif, disabled: true
+  = f.association :pros, collection: rdv.motif.specialite.pros, label_method: :full_name_and_specialite, input_html: { multiple: true }
   = f.input :duration_in_min
   = f.input :start_at
   = f.input :max_users_limit, input_html: { min: 1 } if rdv.max_users_limit
