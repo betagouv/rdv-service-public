@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_08_090522) do
+ActiveRecord::Schema.define(version: 2019_07_08_094605) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(version: 2019_07_08_090522) do
     t.integer "default_duration_in_min", default: 30, null: false
     t.bigint "organisation_id"
     t.bigint "specialite_id"
+    t.boolean "online", default: false, null: false
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
     t.index ["specialite_id"], name: "index_motifs_on_specialite_id"
   end

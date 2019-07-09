@@ -13,6 +13,7 @@ class MotifDashboard < Administrate::BaseDashboard
     organisation: Field::BelongsTo,
     specialite: Field::BelongsTo,
     color: Field::String,
+    online: Field::Boolean,
     accept_multiple_pros: Field::Boolean,
     accept_multiple_users: Field::Boolean,
     at_home: Field::Boolean,
@@ -41,6 +42,7 @@ class MotifDashboard < Administrate::BaseDashboard
     :organisation,
     :specialite,
     :color,
+    :online,
     :accept_multiple_pros,
     :accept_multiple_users,
     :at_home,
@@ -55,6 +57,7 @@ class MotifDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = [
     :name,
     :color,
+    :online,
     :accept_multiple_pros,
     :accept_multiple_users,
     :at_home,
