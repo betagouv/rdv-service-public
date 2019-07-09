@@ -3,6 +3,7 @@ class Rdvs::SecondStepsController < DashboardAuthController
     rdv = Rdv.new(query_params)
     @second_step = Rdv::SecondStep.new(rdv.to_step_params)
     @second_step.duration_in_min ||= @second_step.motif.default_duration_in_min
+    @second_step.max_users_limit ||= @second_step.motif.max_users_limit
     @second_step.organisation = current_pro.organisation
     authorize(@second_step)
   end
@@ -26,10 +27,10 @@ class Rdvs::SecondStepsController < DashboardAuthController
   end
 
   def second_step_params
-    params.require(:rdv).permit(:motif_id, :duration_in_min, :start_at)
+    params.require(:rdv).permit(:motif_id, :duration_in_min, :start_at, :max_users_limit)
   end
 
   def query_params
-    params.permit(:motif_id, :duration_in_min, :start_at)
+    params.permit(:motif_id, :duration_in_min, :start_at, :max_users_limit)
   end
 end

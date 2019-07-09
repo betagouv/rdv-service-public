@@ -1,48 +1,28 @@
 class RdvsController < DashboardAuthController
   respond_to :html, :json
 
-  before_action :set_rdv, only: [:show, :edit, :update, :cancel, :destroy]
-  before_action :set_organisation, only: [:new, :create]
+  before_action :set_rdv, only: [:show, :edit, :update, :destroy]
 
   def show
-    authorize(@rdv)
-  end
-
-  def new
-    @rdv = Rdv.new(organisation: @organisation)
     authorize(@rdv)
     respond_right_bar_with(@rdv)
   end
 
   def edit
     authorize(@rdv)
-  end
-
-  def create
-    @rdv = Rdv.new(rdv_params)
-    @rdv.organisation = @organisation
-    authorize(@rdv)
-
-    flash[:notice] = "Rendez-vous créé." if @rdv.save
-    respond_right_bar_with @rdv, location: rdv_path(@rdv)
+    respond_right_bar_with(@rdv)
   end
 
   def update
     authorize(@rdv)
     flash[:notice] = 'Le rendez-vous a été modifié.' if @rdv.update(rdv_params)
-    respond_right_bar_with @rdv, location: rdv_path(@rdv)
-  end
-
-  def cancel
-    authorize(@rdv)
-    @rdv.cancel!
-    redirect_to root_path, notice: 'Le rendez-vous a été annulé.'
+    respond_right_bar_with @rdv, location: authenticated_root_path
   end
 
   def destroy
     authorize(@rdv)
-    @rdv.destroy
-    redirect_to root_path, notice: 'Le rendez-vous a été supprimé.'
+    flash[:notice] = 'Le rendez-vous a été annulé.' if @rdv.cancel!
+    redirect_to authenticated_root_path
   end
 
   private
@@ -52,6 +32,6 @@ class RdvsController < DashboardAuthController
   end
 
   def rdv_params
-    params.require(:rdv).permit(:name, :duration_in_min, :start_at)
+    params.require(:rdv).permit(:name, :duration_in_min, :start_at, :max_users_limit)
   end
 end

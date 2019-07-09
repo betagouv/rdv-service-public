@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_08_094605) do
+ActiveRecord::Schema.define(version: 2019_07_08_101803) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,13 +67,12 @@ ActiveRecord::Schema.define(version: 2019_07_08_094605) do
     t.string "color"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "accept_multiple_pros", default: false, null: false
-    t.boolean "accept_multiple_users", default: false, null: false
     t.boolean "at_home", default: false, null: false
     t.integer "default_duration_in_min", default: 30, null: false
     t.bigint "organisation_id"
     t.bigint "specialite_id"
     t.boolean "online", default: false, null: false
+    t.integer "max_users_limit"
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
     t.index ["specialite_id"], name: "index_motifs_on_specialite_id"
   end
@@ -151,6 +150,7 @@ ActiveRecord::Schema.define(version: 2019_07_08_094605) do
     t.datetime "cancelled_at"
     t.bigint "motif_id"
     t.bigint "user_id"
+    t.integer "max_users_limit"
     t.integer "sequence", default: 0, null: false
     t.uuid "uuid", default: -> { "uuid_generate_v4()" }, null: false
     t.index ["motif_id"], name: "index_rdvs_on_motif_id"

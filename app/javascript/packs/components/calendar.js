@@ -21,6 +21,9 @@ document.addEventListener('turbolinks:load', function() {
       },
       minTime: '06:00:00',
       maxTime: '20:00:00',
+      eventRender: function (info) {
+        $(info.el).attr("data-rightbar", "true");
+      }
     });
 
     calendar.render();

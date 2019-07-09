@@ -8,8 +8,7 @@ fr:
         specialite: Spécialité
         name: Nom
         color: Couleur
+        max_users_limit: Limite du nombre d'usagers
         online: RDV en ligne
-        accept_multiple_pros: Peut concerner plusieurs professionels
-        accept_multiple_users: Peut concerner plusieurs usagers
         at_home: À domicile
         default_duration_in_min: Durée par défaut en minutes

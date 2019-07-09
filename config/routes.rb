@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     resources :specialites
     resources :motifs
     resources :users
+    resources :rdvs
     root to: "pros#index"
 
     authenticate :super_admin do
@@ -41,9 +42,7 @@ Rails.application.routes.draw do
       resources :plage_ouvertures, except: :show, shallow: true
 
       # Rdv
-      resources :rdvs, except: [:index, :destroy], shallow: true do
-        post 'cancel', on: :member
-      end
+      resources :rdvs, except: [:index, :create, :new], shallow: true
       resources :first_steps, only: [:new, :create], module: "rdvs"
       resources :second_steps, only: [:new, :create], module: "rdvs"
       resources :third_steps, only: [:new, :create], module: "rdvs"

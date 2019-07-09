@@ -2,12 +2,9 @@
   .row.justify-content-md-center
     .col-md-6
       | Choisir l'usager
-
-
 .row.justify-content-md-center
   .col-md-6
     .card
-
       ul.list-group.list-group-flush
         li.list-group-item
           i.fa.fa-check.fa-fw.mr-1.text-success
@@ -18,6 +15,11 @@
         li.list-group-item
           i.fa.fa-check.fa-fw.mr-1.text-success
           = "Commence à : #{l(@third_step.rdv.start_at)}"
+        - if @third_step.max_users_limit
+          li.list-group-item
+            i.fa.fa-check.fa-fw.mr-1.text-success
+            i.fa.fa-users.fa-fw
+            |  #{@third_step.max_users_limit} usagers maximum
 
       .card-body
         = render partial: 'layouts/model_errors', locals: { model: @third_step }
@@ -26,7 +28,7 @@
           = f.association :motif, as: :hidden
           = f.input :duration_in_min, as: :hidden
           = f.input :start_at, as: :hidden
-
+          = f.input :max_users_limit, as: :hidden
           = f.association :user, collection: policy_scope(User), label_method: :full_name
 
           .row
