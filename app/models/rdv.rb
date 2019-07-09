@@ -65,6 +65,7 @@ class Rdv < ApplicationRecord
       start_at: start_at,
       max_users_limit: max_users_limit,
       user: user,
+      pros: pros,
     }
   end
 

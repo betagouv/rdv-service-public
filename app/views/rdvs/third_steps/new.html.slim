@@ -8,13 +8,18 @@
       ul.list-group.list-group-flush
         li.list-group-item
           i.fa.fa-check.fa-fw.mr-1.text-success
+          | Motif :&nbsp;
           = @third_step.rdv.motif.name
+        li.list-group-item
+          i.fa.fa-check.fa-fw.mr-1.text-success
+          | Professionnels :&nbsp;
+          = @third_step.rdv.pros.map(&:full_name).to_sentence
         li.list-group-item
           i.fa.fa-check.fa-fw.mr-1.text-success
           = "Durée : #{@third_step.rdv.duration_in_min} minutes"
         li.list-group-item
           i.fa.fa-check.fa-fw.mr-1.text-success
-          = "Commence à : #{l(@third_step.rdv.start_at)}"
+          = "Commence le : #{l(@third_step.rdv.start_at, format: :human)}"
         - if @third_step.max_users_limit
           li.list-group-item
             i.fa.fa-check.fa-fw.mr-1.text-success
@@ -26,6 +31,8 @@
 
         = simple_form_for(@third_step.rdv, url: organisation_third_steps_path(@third_step.organisation)) do |f|
           = f.association :motif, as: :hidden
+          - @third_step.rdv.pros.each do |p| 
+            = f.hidden_field "pro_ids][", value: p.id # https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
           = f.input :duration_in_min, as: :hidden
           = f.input :start_at, as: :hidden
           = f.input :max_users_limit, as: :hidden

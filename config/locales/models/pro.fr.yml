@@ -3,15 +3,16 @@ fr:
     models:
       pro: Pro
     attributes:
-      pro:    
+      pro:
         email: Email
         password: Mot de passe
         current_password: Mot de passe actuel
         first_name: Prénom
         last_name: Nom
         role: Rôle
+        rdvs: Rendez-vous
         specialite: Spécialité
-        roles: 
+        roles:
           user: Utilisateur
           admin: Admin
           user_html: <i class='fa fa-user-o'></i> Utilisateur<br>Peut lire, créer, modifier son agenda.
