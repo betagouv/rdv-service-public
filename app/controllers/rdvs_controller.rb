@@ -2,15 +2,8 @@ class RdvsController < DashboardAuthController
   respond_to :html, :json
 
   before_action :set_rdv, only: [:show, :edit, :update, :cancel, :destroy]
-  before_action :set_organisation, only: [:new, :create]
 
   def show
-    authorize(@rdv)
-    respond_right_bar_with(@rdv)
-  end
-
-  def new
-    @rdv = Rdv.new(organisation: @organisation)
     authorize(@rdv)
     respond_right_bar_with(@rdv)
   end
@@ -19,15 +12,6 @@ class RdvsController < DashboardAuthController
     authorize(@rdv)
     respond_right_bar_with(@rdv)
   end
-
-  # def create
-  #   @rdv = Rdv.new(rdv_params)
-  #   @rdv.organisation = @organisation
-  #   authorize(@rdv)
-
-  #   flash[:notice] = "Rendez-vous créé." if @rdv.save
-  #   respond_right_bar_with @rdv, location: rdv_path(@rdv)
-  # end
 
   def update
     authorize(@rdv)

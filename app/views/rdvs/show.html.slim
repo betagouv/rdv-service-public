@@ -21,9 +21,6 @@ p.card-text
   strong Usager :&nbsp;
   = @rdv.user.full_name
 .row.text-right
-  / .col
-  /   = link_to "Retour à l'agenda", root_path, class: "btn btn-primary"
-  / .col
   .col.text-right
     ul.list-inline.m-0
       - unless @rdv.cancelled?
