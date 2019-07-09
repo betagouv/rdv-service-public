@@ -12,14 +12,14 @@
           table.table
             thead
               tr
-                th 
+                th
                   span.badge.badge-pill.ml-0.mr-2
                     | &nbsp;
                   | Nom
                 th Spécialité
                 th Durée par défaut
             tbody
-              = render @motifs
+              = render partial: 'motif', collection: @motifs
           .d-flex.justify-content-center id="users-pagination"
             = paginate @motifs, theme: 'twitter-bootstrap-4'
         - else

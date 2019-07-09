@@ -1,99 +1,6 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "2225aefbfa863b1bb130ba9a096f56895b98a587970e29046fdb0e5eab7c3eb8",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/motifs/index.html.slim",
-      "line": 22,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(Motif).includes(:specialite).order(Arel.sql(\"LOWER(name)\")).page(params[:page]), {})",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "MotifsController",
-          "method": "index",
-          "line": 9,
-          "file": "app/controllers/motifs_controller.rb",
-          "rendered": {
-            "name": "motifs/index",
-            "file": "app/views/motifs/index.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "motifs/index"
-      },
-      "user_input": "params[:page]",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "5f91bc5e7392200182ff8c604a973e2a3ebe32c06a2ec7643d26b3c192e939e7",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/motifs/index.html.slim",
-      "line": 22,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(Motif).includes(:specialite).page(params[:page]), {})",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "MotifsController",
-          "method": "index",
-          "line": 9,
-          "file": "app/controllers/motifs_controller.rb",
-          "rendered": {
-            "name": "motifs/index",
-            "file": "app/views/motifs/index.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "motifs/index"
-      },
-      "user_input": "params[:page]",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "a873124be79990dd6cef94ca0b982ef2405a5518d45af5b330cb4c1e0df5e3df",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/specialites/show.html.slim",
-      "line": 25,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(Specialite).find(params[:id]).pros, {})",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "SpecialitesController",
-          "method": "show",
-          "line": 11,
-          "file": "app/controllers/specialites_controller.rb",
-          "rendered": {
-            "name": "specialites/show",
-            "file": "app/views/specialites/show.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "specialites/show"
-      },
-      "user_input": "params[:id]",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
       "warning_type": "Mass Assignment",
       "warning_code": 105,
       "fingerprint": "b7c8e551359b81194d9752ceab35814ab688204743993052ec5b9514d7e25b55",
@@ -111,37 +18,6 @@
       },
       "user_input": ":role",
       "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "b8de7c6eaccd8f75f71f6f6d54e5fb44a4da0833c1d063259d3251dbbc7b9260",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/users/index.html.slim",
-      "line": 20,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(User).includes(:organisation).order(Arel.sql(\"LOWER(last_name)\")).page(params[:page]).search_by_name(params[:user][:search]), {})",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "UsersController",
-          "method": "index",
-          "line": 11,
-          "file": "app/controllers/users_controller.rb",
-          "rendered": {
-            "name": "users/index",
-            "file": "app/views/users/index.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "users/index"
-      },
-      "user_input": "params[:user][:search]",
-      "confidence": "Weak",
       "note": ""
     }
   ],
