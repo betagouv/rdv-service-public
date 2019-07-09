@@ -28,4 +28,4 @@
           .col.text-right
             - unless @rdv.cancelled?
               = link_to "Annuler le rendez-vous", cancel_rdv_path(@rdv), method: :post, class: "card-link", data: { confirm: "Êtes-vous sûr de vouloir annuler ce rendez-vous ?"}
-            = link_to "Modifier", edit_rdv_path(@rdv), class: "card-link"
+              = link_to "Modifier", edit_rdv_path(@rdv), class: "card-link"
