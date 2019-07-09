@@ -21,8 +21,8 @@ class Rdv < ApplicationRecord
     cancelled_at.present?
   end
 
-  def cancel!
-    update(cancelled_at: Time.zone.now)
+  def cancel
+    update!(cancelled_at: Time.zone.now)
   end
 
   def send_ics_to_participants

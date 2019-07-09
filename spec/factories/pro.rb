@@ -6,7 +6,7 @@ FactoryBot.define do
     first_name { "Michel" }
     last_name { "Lapin" }
     password { 'password' }
-    organisation { build(:organisation) }
+    organisation { Organisation.first || build(:organisation) }
     confirmed_at { 1.day.ago }
   end
 end

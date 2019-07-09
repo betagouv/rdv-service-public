@@ -15,7 +15,7 @@ describe "Pro can create a Rdv with wizard" do
   scenario "default" do
     # Step 1
     expect_page_title("Choisir le motif")
-    select(motif.id, from: "rdv_motif_id")
+    select(motif.id.to_s, from: "rdv_motif_id")
     click_button('Continuer')
 
     # Step 2
@@ -53,7 +53,7 @@ describe "Pro can create a Rdv with wizard" do
 
   scenario "with a users limit" do
     expect_page_title("Choisir le motif")
-    select(motif_with_limit.id, from: "rdv_motif_id")
+    select(motif_with_limit.id.to_s, from: "rdv_motif_id")
     click_button('Continuer')
 
     # Step 2

@@ -25,11 +25,7 @@ class RdvPolicy < ApplicationPolicy
     true
   end
 
-  def cancel?
-    true
-  end
-
   def destroy?
-    pro.admin?
+    true
   end
 end
