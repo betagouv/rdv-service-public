@@ -8,7 +8,7 @@ fr:
         specialite: Spécialité
         name: Nom
         color: Couleur
-        motif: Motif
         max_users_limit: Limite du nombre d'usagers
+        online: RDV en ligne
         at_home: À domicile
         default_duration_in_min: Durée par défaut en minutes

@@ -21,7 +21,7 @@ class RdvsController < DashboardAuthController
 
   def destroy
     authorize(@rdv)
-    flash[:notice] = 'Le rendez-vous a été annulé.' if @rdv.update(cancelled_at: Time.zone.now)
+    flash[:notice] = 'Le rendez-vous a été annulé.' if @rdv.cancel!
     redirect_to authenticated_root_path
   end
 

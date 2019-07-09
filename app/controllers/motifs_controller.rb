@@ -5,7 +5,7 @@ class MotifsController < DashboardAuthController
   before_action :set_motif, only: [:edit, :update, :destroy]
 
   def index
-    @motifs = policy_scope(Motif).includes(:specialite).page(params[:page])
+    @motifs = policy_scope(Motif).includes(:specialite).order(Arel.sql('LOWER(name)')).page(params[:page])
   end
 
   def new
@@ -46,6 +46,6 @@ class MotifsController < DashboardAuthController
   end
 
   def motif_params
-    params.require(:motif).permit(:name, :specialite_id, :color, :max_users_limit, :at_home, :default_duration_in_min)
+    params.require(:motif).permit(:name, :specialite_id, :color, :max_users_limit, :at_home, :default_duration_in_min, :online)
   end
 end

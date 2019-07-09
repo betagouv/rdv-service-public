@@ -1,0 +1,16 @@
+h1 RDV confirmé le #{l(@rdv.start_at, format: :human)}
+
+h2
+  = "Motif : #{@rdv.motif.name}"
+
+p
+  | Nom :&nbsp;
+  strong= @user.full_name
+p= "Date de naissance : #{birth_date_and_age(@user)}"
+p= "Adresse : #{@user.address}"
+p
+  |Téléphone :&nbsp;
+  = link_to @user.phone_number, "tel:#{@user.phone_number}"
+p
+  |Email :&nbsp;
+  = mail_to(@user.email, @user.email)
