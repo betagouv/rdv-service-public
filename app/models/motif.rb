@@ -6,5 +6,5 @@ class Motif < ApplicationRecord
 
   validates :name, presence: true, uniqueness: { scope: :organisation }
   validates :color, :default_duration_in_min, presence: true
-  validates :max_users_limit, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
+  validates :max_users_limit, numericality: { greater_than_or_equal_to: 1 }, allow_nil: true
 end

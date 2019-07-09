@@ -3,7 +3,6 @@
   = f.input :name
   = f.input :duration_in_min
   = f.input :start_at
-  = f.input :max_users_limit if rdv.max_users_limit
-
+  = f.input :max_users_limit, input_html: { min: 1 } if rdv.max_users_limit
   .text-right
     = f.button :submit
