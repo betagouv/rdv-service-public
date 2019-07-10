@@ -10,7 +10,7 @@ Rails.application.routes.draw do
     end
     resources :super_admins
     resources :organisations
-    resources :sites
+    resources :lieux
     resources :specialites
     resources :motifs
     resources :users
@@ -35,7 +35,7 @@ Rails.application.routes.draw do
   authenticated :pro do
     root to: 'agendas#index', as: :authenticated_root
     resources :organisations, except: :destroy do
-      resources :sites, except: :index
+      resources :lieux, except: :index
       resources :pros
       resources :users, shallow: true
       resources :motifs, shallow: true

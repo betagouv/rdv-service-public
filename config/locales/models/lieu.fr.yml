@@ -1,9 +1,9 @@
 fr:
   activerecord:
     models:
-      site: Site
+      lieu: Lieu
     attributes:
-      site:
+      lieu:
         name: Nom
         address: Adresse
         telephone: Téléphone
