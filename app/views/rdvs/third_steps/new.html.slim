@@ -13,7 +13,7 @@
         li.list-group-item
           i.fa.fa-check.fa-fw.mr-1.text-success
           | Professionnels :&nbsp;
-          = @third_step.rdv.pros.map(&:full_name_and_specialite).to_sentence
+          = pros_to_sentence(@third_step.rdv)
         li.list-group-item
           i.fa.fa-check.fa-fw.mr-1.text-success
           = "Durée : #{@third_step.rdv.duration_in_min} minutes"

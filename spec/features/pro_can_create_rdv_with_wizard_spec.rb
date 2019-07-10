@@ -1,6 +1,6 @@
 describe "Pro can create a Rdv with wizard" do
-  let!(:pro) { create(:pro) }
-  let!(:pro2) { create(:pro) }
+  let!(:pro) { create(:pro, first_name: "Alain") }
+  let!(:pro2) { create(:pro, first_name: "Robert") }
   let!(:motif) { create(:motif) }
   let!(:motif_with_limit) { create(:motif, max_users_limit: 2) }
   let!(:user) { create(:user) }

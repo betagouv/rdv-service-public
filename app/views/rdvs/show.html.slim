@@ -9,7 +9,7 @@ p.card-text
       | Annulé
 p.card-text
   strong Professionnels :&nbsp;
-  = @rdv.pros.map(&:full_name_and_specialite).to_sentence
+  = pros_to_sentence(@rdv)
 p.card-text
   strong Commence à :&nbsp;
   = l(@rdv.start_at)
