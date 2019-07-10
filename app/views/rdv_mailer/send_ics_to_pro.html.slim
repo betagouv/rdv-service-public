@@ -1,8 +1,11 @@
-h1 RDV confirmé le #{l(@rdv.start_at, format: :human)}
+= render "title", rdv: @rdv, previous_start_at: @previous_start_at
 
 h2
   = "Motif : #{@rdv.motif.name}"
 
+p
+  | Professionnels :&nbsp;
+  = pros_to_sentence(@rdv)
 p
   | Nom :&nbsp;
   strong= @user.full_name

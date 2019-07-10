@@ -1,4 +1,7 @@
 describe Rdv, type: :model do
+  let(:pro1) { create(:pro) }
+  let(:pro2) { create(:pro) }
+
   describe '#to_ical' do
     let(:rdv) { create(:rdv) }
 
@@ -16,11 +19,11 @@ describe Rdv, type: :model do
     end
   end
 
-  describe "#send_ics_to_participants" do
-    let(:rdv) { build(:rdv) }
+  describe "#send_ics_to_user_and_pros" do
+    let(:rdv) { build(:rdv, pros: [pro1, pro2]) }
 
     it "should be called after create" do
-      expect(rdv).to receive(:send_ics_to_participants)
+      expect(rdv).to receive(:send_ics_to_user_and_pros)
       rdv.save!
     end
 
@@ -28,7 +31,7 @@ describe Rdv, type: :model do
       let(:rdv) { create(:rdv) }
 
       it "should not be called" do
-        expect(rdv).not_to receive(:send_ics_to_participants)
+        expect(rdv).not_to receive(:send_ics_to_user_and_pros)
         rdv.save!
       end
     end
@@ -37,13 +40,20 @@ describe Rdv, type: :model do
       expect(RdvMailer).to receive(:send_ics_to_user).with(rdv).and_return(double(deliver_later: nil))
       rdv.save!
     end
+
+    it "calls RdvMailer to send email to pros" do
+      expect(RdvMailer).to receive(:send_ics_to_pro).with(rdv, pro1).and_return(double(deliver_later: nil))
+      expect(RdvMailer).to receive(:send_ics_to_pro).with(rdv, pro2).and_return(double(deliver_later: nil))
+
+      rdv.save!
+    end
   end
 
-  describe "#update_ics_to_participants" do
-    let(:rdv) { build(:rdv) }
+  describe "#update_ics_to_user_and_pros" do
+    let(:rdv) { build(:rdv, pros: [pro1, pro2]) }
 
     it "should not be called after create" do
-      expect(rdv).not_to receive(:update_ics_to_participants)
+      expect(rdv).not_to receive(:update_ics_to_user_and_pros)
       rdv.save!
     end
 
@@ -51,7 +61,7 @@ describe Rdv, type: :model do
       let(:rdv) { create(:rdv) }
 
       it "should not be called if there is no change" do
-        expect(rdv).not_to receive(:update_ics_to_participants)
+        expect(rdv).not_to receive(:update_ics_to_user_and_pros)
         rdv.save!
       end
 
@@ -60,7 +70,7 @@ describe Rdv, type: :model do
         before { rdv.start_at = 2.days.from_now }
 
         it "should be called if start_at changed" do
-          expect(rdv).to receive(:update_ics_to_participants)
+          expect(rdv).to receive(:update_ics_to_user_and_pros)
           rdv.save!
         end
 

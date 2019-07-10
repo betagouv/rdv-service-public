@@ -11,8 +11,8 @@ class Rdv < ApplicationRecord
 
   after_commit :reload_uuid, on: :create
 
-  after_create :send_ics_to_participants
-  after_update :update_ics_to_participants, if: -> { saved_change_to_start_at? || saved_change_to_cancelled_at? }
+  after_create :send_ics_to_user_and_pros
+  after_update :update_ics_to_user_and_pros, if: -> { saved_change_to_start_at? || saved_change_to_cancelled_at? }
 
   def end_at
     start_at + duration_in_min.minutes
@@ -26,14 +26,16 @@ class Rdv < ApplicationRecord
     update!(cancelled_at: Time.zone.now)
   end
 
-  def send_ics_to_participants
+  def send_ics_to_user_and_pros
     RdvMailer.send_ics_to_user(self).deliver_later
+    pros.each { |pro| RdvMailer.send_ics_to_pro(self, pro).deliver_later }
   end
 
-  def update_ics_to_participants
+  def update_ics_to_user_and_pros
     increment!(:sequence)
     serialized_previous_start_at = saved_changes&.[]("start_at")&.[](0)&.to_s
     RdvMailer.send_ics_to_user(self, serialized_previous_start_at).deliver_later
+    pros.each { |pro| RdvMailer.send_ics_to_pro(self, pro, serialized_previous_start_at).deliver_later }
   end
 
   def to_ical
