@@ -3,11 +3,5 @@ FactoryBot.define do
 
   factory :organisation do
     name { generate(:orga_name) }
-
-    before(:create) do |organisation, _evaluator|
-      if organisation.pros.empty?
-        organisation.pros << create(:pro)
-      end
-    end
   end
 end

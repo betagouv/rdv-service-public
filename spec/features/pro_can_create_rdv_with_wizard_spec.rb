@@ -1,8 +1,9 @@
 describe "Pro can create a Rdv with wizard" do
-  let(:pro) { create(:pro) }
-  let!(:motif) { create(:motif, organisation: pro.organisation) }
-  let!(:motif_with_limit) { create(:motif, organisation: pro.organisation, max_users_limit: 2) }
-  let!(:user) { create(:user, organisation: pro.organisation) }
+  let!(:pro) { create(:pro) }
+  let!(:pro2) { create(:pro) }
+  let!(:motif) { create(:motif) }
+  let!(:motif_with_limit) { create(:motif, max_users_limit: 2) }
+  let!(:user) { create(:user) }
 
   before do
     login_as(pro, scope: :pro)
@@ -31,13 +32,16 @@ describe "Pro can create a Rdv with wizard" do
     select('14', from: 'rdv_start_at_4i')
     select('15', from: 'rdv_start_at_5i')
 
+    select_pro(pro)
+    select_pro(pro2)
     click_button('Continuer')
 
     # Step 3
     expect_page_title("Choisir l'usager")
-    expect_checked(motif.name)
+    expect_checked("Motif : #{motif.name}")
     expect_checked("Durée : 35 minutes")
-    expect_checked("Commence à : 12 octobre 2019 14h 15min 00s")
+    expect_checked("Professionnels : #{pro.full_name_and_specialite} et #{pro2.full_name_and_specialite}")
+    expect_checked("Commence le : samedi 12 octobre 2019 à 14h15")
 
     select(user.full_name, from: 'rdv_user_id')
 
@@ -58,7 +62,8 @@ describe "Pro can create a Rdv with wizard" do
 
     # Step 2
     expect_page_title("Choisir la durée et la date")
-    expect_checked(motif_with_limit.name)
+    expect_checked("Motif : #{motif_with_limit.name}")
+    select_pro(pro)
     fill_in "Limite du nombre d'usagers", with: '4'
 
     click_button('Continuer')
@@ -72,6 +77,10 @@ describe "Pro can create a Rdv with wizard" do
     click_button('Continuer')
 
     expect(user.rdvs.last.max_users_limit).to eq(4)
+  end
+
+  def select_pro(pro)
+    select(pro.full_name_and_specialite, from: 'rdv_pro_ids')
   end
 
   def expect_page_title(title)

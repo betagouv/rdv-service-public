@@ -32,11 +32,12 @@
         = simple_form_for(@third_step.rdv, url: organisation_third_steps_path(@third_step.organisation)) do |f|
           = f.association :motif, as: :hidden
           - @third_step.rdv.pros.each do |p|
-            = f.hidden_field "pro_ids][", value: p.id # https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
+            / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
+            = f.hidden_field "pro_ids][", value: p.id
           = f.input :duration_in_min, as: :hidden
           = f.input :start_at, as: :hidden
           = f.input :max_users_limit, as: :hidden
-          = f.association :user, collection: policy_scope(User), label_method: :full_name_and_specialite
+          = f.association :user, collection: policy_scope(User), label_method: :full_name
 
           .row
             .col.text-left
