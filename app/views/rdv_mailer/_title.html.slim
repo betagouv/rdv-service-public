@@ -2,7 +2,7 @@
   h1 ANNULÉ : RDV du #{l(rdv.start_at, format: :human)}
 
 - elsif previous_start_at.present?
-  h1 Modification de votre RDV du #{l(rdv.start_at, format: :human)}
+  h1 Modification de votre RDV
   p
     | Votre rendez-vous initialement prévu le #{l(previous_start_at, format: :human)} a été déplacé au&nbsp;
     strong #{l(rdv.start_at, format: :human)}

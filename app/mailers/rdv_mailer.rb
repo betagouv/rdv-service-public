@@ -33,7 +33,7 @@ class RdvMailer < ApplicationMailer
     if rdv.cancelled?
       "ANNULÉ : RDV du #{l(rdv.start_at, format: :human)}"
     elsif previous_start_at.present?
-      "Modification de votre RDV le #{l(rdv.start_at, format: :human)}"
+      "Modification de la date de votre RDV"
     else
       "RDV confirmé le #{l(rdv.start_at, format: :human)}"
     end
