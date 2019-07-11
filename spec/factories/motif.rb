@@ -3,9 +3,9 @@ FactoryBot.define do
 
   factory :motif do
     name { generate(:motif_name) }
-    organisation { Organisation.first || build(:organisation) }
+    organisation { Organisation.first || create(:organisation) }
     default_duration_in_min { 45 }
     color { "##{SecureRandom.hex(3)}" }
-    specialite
+    specialite { Specialite.first || create(:specialite) }
   end
 end

@@ -5,7 +5,7 @@ class AgendasController < DashboardAuthController
     skip_policy_scope
     @organisation = current_pro.organisation
 
-    rdvs = policy_scope(Rdv).active.includes(:motif)
+    rdvs = current_pro.rdvs.active.includes(:motif)
     @events = rdvs.map do |rdv|
       {
         title: rdv.name,

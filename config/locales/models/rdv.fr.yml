@@ -7,6 +7,7 @@ fr:
         name: Nom
         motif: Motif
         user: Usager
+        pros: Professionels
         max_users_limit: Limite du nombre d'usagers
         start_at: Commence à
         duration_in_min: Durée en minutes

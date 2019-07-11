@@ -7,6 +7,7 @@ class Pro < ApplicationRecord
   belongs_to :organisation, optional: true
   belongs_to :specialite, optional: true
   has_many :lieux, through: :organisation
+  has_and_belongs_to_many :rdvs
 
   enum role: { user: 0, admin: 1 }
 
@@ -21,6 +22,14 @@ class Pro < ApplicationRecord
 
   def full_name
     "#{first_name} #{last_name}"
+  end
+
+  def full_name_and_specialite
+    if specialite.present?
+      "#{full_name} (#{specialite.name})"
+    else
+      full_name
+    end
   end
 
   def initials

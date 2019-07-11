@@ -3,10 +3,11 @@ FactoryBot.define do
 
   factory :pro do
     email { generate(:pro_email) }
-    first_name { "Michel" }
-    last_name { "Lapin" }
+    first_name { Faker::Name.first_name }
+    last_name { Faker::Name.unique.last_name }
     password { 'password' }
-    organisation { Organisation.first || build(:organisation) }
+    organisation { Organisation.first || create(:organisation) }
     confirmed_at { 1.day.ago }
+    specialite { Specialite.first || create(:specialite) }
   end
 end

@@ -8,6 +8,9 @@ p.card-text
     span.badge.badge-danger
       | Annulé
 p.card-text
+  strong Professionnels :&nbsp;
+  = pros_to_sentence(@rdv)
+p.card-text
   strong Commence à :&nbsp;
   = l(@rdv.start_at)
 p.card-text

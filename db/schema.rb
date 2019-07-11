@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_09_124843) do
+ActiveRecord::Schema.define(version: 2019_07_09_140704) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -149,6 +149,13 @@ ActiveRecord::Schema.define(version: 2019_07_09_124843) do
     t.index ["organisation_id"], name: "index_pros_on_organisation_id"
     t.index ["reset_password_token"], name: "index_pros_on_reset_password_token", unique: true
     t.index ["specialite_id"], name: "index_pros_on_specialite_id"
+  end
+
+  create_table "pros_rdvs", id: false, force: :cascade do |t|
+    t.bigint "pro_id"
+    t.bigint "rdv_id"
+    t.index ["pro_id"], name: "index_pros_rdvs_on_pro_id"
+    t.index ["rdv_id"], name: "index_pros_rdvs_on_rdv_id"
   end
 
   create_table "rdvs", force: :cascade do |t|
