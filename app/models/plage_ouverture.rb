@@ -1,6 +1,9 @@
 class PlageOuverture < ApplicationRecord
   require "montrose"
 
+  serialize :start_time, Tod::TimeOfDay
+  serialize :end_time, Tod::TimeOfDay
+
   belongs_to :organisation
   belongs_to :pro
   has_and_belongs_to_many :motifs

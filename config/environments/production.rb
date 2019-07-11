@@ -104,4 +104,7 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # https://github.com/JackC/tod/#activemodel-serializable-attribute-support
+  config.active_record.time_zone_aware_types = [:datetime]
 end

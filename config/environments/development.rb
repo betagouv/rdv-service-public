@@ -70,4 +70,7 @@ Rails.application.configure do
     Bullet.alert = true
     Bullet.rails_logger = true
   end
+
+  # https://github.com/JackC/tod/#activemodel-serializable-attribute-support
+  config.active_record.time_zone_aware_types = [:datetime]
 end
