@@ -6,4 +6,5 @@
 //= require turbolinks
 //= require metismenu/dist/metisMenu
 //= require holder
+//= require select2
 //= require_tree ./async

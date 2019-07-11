@@ -60,4 +60,8 @@ $(document).on('turbolinks:load', function() {
   });
 
   new PlacesInput(document.querySelector('.places-js-container'));
+
+  $( ".select2-input").select2({
+    theme: "bootstrap"
+  });
 });
