@@ -1,4 +1,6 @@
 class PlageOuverture < ApplicationRecord
+  require "montrose"
+
   belongs_to :organisation
   belongs_to :pro
   has_and_belongs_to_many :motifs
@@ -12,6 +14,10 @@ class PlageOuverture < ApplicationRecord
 
   def end_at
     first_day + end_time.hour.hours + end_time.min.minutes
+  end
+
+  def occurences
+    Montrose.weekly.starting(start_at)
   end
 
   private
