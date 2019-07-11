@@ -246,6 +246,8 @@ GEM
     minitest (5.11.3)
     momentjs-rails (2.20.1)
       railties (>= 3.1)
+    montrose (0.9.0)
+      activesupport (>= 4.1, < 6.0)
     msgpack (1.2.10)
     multi_json (1.13.1)
     multi_xml (0.6.0)
@@ -516,6 +518,7 @@ DEPENDENCIES
   listen (>= 3.0.5, < 3.2)
   meta_request (~> 0.7)
   momentjs-rails (~> 2.8)
+  montrose (~> 0.9)
   omniauth-github
   pg (>= 0.18, < 2.0)
   pg_search (~> 2.2)
