@@ -11,7 +11,7 @@ document.addEventListener('turbolinks:load', function() {
     var calendar = new Calendar(calendarEl, {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
       locale: frLocale,
-      events: window.events,
+      eventSources: ['/events', '/background-events'],
       defaultView: 'timeGridFourDay',
       header: {
          center: 'dayGridMonth,timeGridWeek,timeGridFourDay'

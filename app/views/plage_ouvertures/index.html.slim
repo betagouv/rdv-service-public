@@ -23,9 +23,9 @@
               td
                 = l(plage_ouverture.first_day, format: "%A").capitalize
                 | &nbsp;de&nbsp;
-                = l(plage_ouverture.start_time, format: "%H:%M")
+                = l(plage_ouverture.start_at, format: "%H:%M")
                 | &nbsp;à&nbsp;
-                = l(plage_ouverture.end_time, format: "%H:%M")
+                = l(plage_ouverture.end_at, format: "%H:%M")
     - else
       .row.justify-content-md-center
         .col-md-6.text-center.my-5
@@ -35,4 +35,3 @@
             i.fa.fa-calendar-o.fa-stack-1x.text-white
     .text-center
       = link_to "Créer une plage d'ouverture", new_organisation_plage_ouverture_path, class: 'btn btn-primary', data: { rightbar: true }
-
