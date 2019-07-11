@@ -12,7 +12,17 @@ document.addEventListener('turbolinks:load', function() {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
       locale: frLocale,
       events: window.events,
-      defaultView: 'timeGridWeek',
+      defaultView: 'timeGridFourDay',
+      header: {
+         center: 'dayGridMonth,timeGridWeek,timeGridFourDay'
+      },
+      views: {
+        timeGridFourDay: {
+          type: 'timeGrid',
+          duration: { days: 4 },
+          buttonText: '4 jours'
+        }
+      },
       businessHours: {
         // days of week. an array of zero-based day of week integers (0=Sunday)
         daysOfWeek: [1, 2, 3, 4, 5],
