@@ -37,7 +37,7 @@
           = f.input :duration_in_min, as: :hidden
           = f.input :start_at, as: :hidden
           = f.input :max_users_limit, as: :hidden
-          = f.association :user, collection: policy_scope(User), label_method: :full_name
+          = f.association :user, collection: policy_scope(User), label_method: :full_name, input_html: {class: 'select2-input'}
 
           .row
             .col.text-left
