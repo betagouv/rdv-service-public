@@ -19,7 +19,7 @@
           = f.association :motif, as: :hidden,  wrapper_html: { class: 'm-0' }
           = f.association :pros, collection: @second_step.rdv.motif.specialite.pros, label_method: :full_name_and_specialite, input_html: { multiple: true, class: 'select2-input' }
           = f.input :duration_in_min, as: :integer, label: "Durée en minutes"
-          = f.input :start_at, as: :datetime, label: "Commence à"
+          = f.input :start_at, as: :string, input_html: { autocomplete: "off", data: { behavior: 'datetimepicker' } }, label: "Commence à"
           = f.input :max_users_limit, input_html: { min: 1 } if @second_step.rdv.motif.max_users_limit
           .row
             .col.text-left

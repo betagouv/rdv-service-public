@@ -14,6 +14,7 @@ import { Modal } from 'packs/components/modal';
 import { Rightbar } from 'packs/components/rightbar';
 import { Analytic } from 'packs/components/analytic';
 import { PlacesInput } from 'packs/components/places-input';
+import { Datetimepicker } from 'packs/components/datetimepicker';
 import 'packs/components/calendar';
 import "actiontext";
 
@@ -36,6 +37,10 @@ $(document).on('shown.rightbar', '.right-bar', function(e) {
     touchScrollStep: 20
   });
   new PlacesInput(document.querySelector('.places-js-container'));
+  new Datetimepicker();
+  $( ".select2-input").select2({
+    theme: "bootstrap"
+  });
 });
 
 $(document).on('hide.bs.modal', '.modal', function(e) {
@@ -52,6 +57,8 @@ $(document).on('turbolinks:load', function() {
   layout.init();
   menu.init();
   new Avatar().init();
+
+  new Datetimepicker();
 
   $(window).on('resize', function(e) {
     e.preventDefault();
