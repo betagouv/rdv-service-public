@@ -46,6 +46,6 @@ class MotifsController < DashboardAuthController
   end
 
   def motif_params
-    params.require(:motif).permit(:name, :specialite_id, :color, :max_users_limit, :at_home, :default_duration_in_min, :online)
+    params.require(:motif).permit(:name, :specialite_id, :color, :max_users_limit, :at_home, :default_duration_in_min, :online , :max_booking_delay, :min_booking_delay)
   end
 end
