@@ -7,4 +7,6 @@
 //= require metismenu/dist/metisMenu
 //= require holder
 //= require select2
+//= require moment
+//= require daterangepicker
 //= require_tree ./async

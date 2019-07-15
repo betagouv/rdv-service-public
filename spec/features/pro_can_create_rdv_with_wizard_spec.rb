@@ -25,12 +25,7 @@ describe "Pro can create a Rdv with wizard" do
 
     expect(page).to have_selector("input#rdv_duration_in_min[value='#{motif.default_duration_in_min}']")
     fill_in 'Durée en minutes', with: '35'
-
-    select('12', from: 'rdv_start_at_3i')
-    select('octobre', from: 'rdv_start_at_2i')
-    select('2019', from: 'rdv_start_at_1i')
-    select('14', from: 'rdv_start_at_4i')
-    select('15', from: 'rdv_start_at_5i')
+    fill_in 'Commence à', with: '12/10/2019 à 14h15'
 
     select_pro(pro)
     select_pro(pro2)
