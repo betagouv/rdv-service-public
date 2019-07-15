@@ -1,9 +1,4 @@
 - content_for :title do
   | Nouvelle plage d'ouverture
 
-.row
-  .col-md-12
-    .card
-      .card-body
-
-        = render 'form', organisation: @plage_ouverture.organisation, plage_ouverture: @plage_ouverture
+= render 'form', organisation: @plage_ouverture.organisation, plage_ouverture: @plage_ouverture
