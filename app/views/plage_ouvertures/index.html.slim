@@ -21,11 +21,7 @@
               td
                 = plage_ouverture.motifs.pluck(:name).to_sentence
               td
-                = l(plage_ouverture.first_day, format: "%A").capitalize
-                | &nbsp;de&nbsp;
-                = l(plage_ouverture.start_at, format: "%H:%M")
-                | &nbsp;à&nbsp;
-                = l(plage_ouverture.end_at, format: "%H:%M")
+                = recurrence_to_human(plage_ouverture)
     - else
       .row.justify-content-md-center
         .col-md-6.text-center.my-5

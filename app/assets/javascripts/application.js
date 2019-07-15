@@ -8,5 +8,6 @@
 //= require holder
 //= require select2
 //= require moment
+//= require moment/fr.js
 //= require daterangepicker
 //= require_tree ./async
