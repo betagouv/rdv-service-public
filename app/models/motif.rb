@@ -18,4 +18,11 @@ class Motif < ApplicationRecord
 
     errors.add(:max_booking_delay, "doit être supérieur au délai de réservation minimum") if max_booking_delay <= min_booking_delay
   end
+
+  def name_with_badge
+    label = name
+    label = "#{label} <span class='badge badge-danger'>En ligne</span>" if online
+    label = "#{label} <span class='badge badge-info'>À domicile</span>" if at_home
+    label.html_safe
+  end
 end

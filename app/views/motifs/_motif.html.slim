@@ -4,5 +4,6 @@ tr
       | &nbsp;
     = link_to motif.name, edit_motif_path(motif), data: { rightbar: true }
     = online_badge(motif)
+    = at_home_badge(motif)
   td= motif.specialite.name
   td= "#{motif.default_duration_in_min} min."
