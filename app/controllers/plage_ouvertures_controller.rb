@@ -1,5 +1,4 @@
 class PlageOuverturesController < DashboardAuthController
-
   respond_to :html, :json
 
   before_action :set_plage_ouverture, only: [:edit, :update, :destroy]
