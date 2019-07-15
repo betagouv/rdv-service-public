@@ -1,7 +1,7 @@
 class PlageOuverturePolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      scope.where(organisation_id: pro.organisation_id)
+      scope.where(pro_id: pro.id)
     end
   end
 
