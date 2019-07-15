@@ -3,6 +3,7 @@ class PlageOuverture < ApplicationRecord
 
   serialize :start_time, Tod::TimeOfDay
   serialize :end_time, Tod::TimeOfDay
+  serialize :recurrence, Montrose::Recurrence
 
   belongs_to :organisation
   belongs_to :pro
@@ -20,7 +21,11 @@ class PlageOuverture < ApplicationRecord
   end
 
   def occurences
-    Montrose.weekly.starting(start_at)
+    if recurrence.present?
+      recurrence.starting(start_at)
+    else
+      [start_at] # Test ?? same class ?
+    end
   end
 
   private
