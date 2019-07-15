@@ -1,4 +1,7 @@
 class PlageOuverturesController < DashboardAuthController
+
+  respond_to :html, :json
+
   before_action :set_plage_ouverture, only: [:edit, :update, :destroy]
 
   def index
@@ -8,34 +11,27 @@ class PlageOuverturesController < DashboardAuthController
   def new
     @plage_ouverture = PlageOuverture.new(organisation: current_pro.organisation, pro: current_pro)
     authorize(@plage_ouverture)
+    respond_right_bar_with @plage_ouverture
   end
 
   def edit
     authorize(@plage_ouverture)
+    respond_right_bar_with @plage_ouverture
   end
 
   def create
     @plage_ouverture = PlageOuverture.new(plage_ouverture_params)
     @plage_ouverture.organisation = current_pro.organisation
     @plage_ouverture.pro = current_pro
-
     authorize(@plage_ouverture)
-    if @plage_ouverture.save
-      flash[:notice] = "Plage d'ouverture créé."
-      redirect_to organisation_plage_ouvertures_path(current_pro.organisation)
-    else
-      render :new
-    end
+    flash[:notice] = "Plage d'ouverture créé." if @plage_ouverture.save
+    respond_right_bar_with @plage_ouverture, location: organisation_plage_ouvertures_path(current_pro.organisation)
   end
 
   def update
     authorize(@plage_ouverture)
-    if @plage_ouverture.update(plage_ouverture_params)
-      flash[:notice] = "La plage d'ouverture a été modifiée."
-      redirect_to organisation_plage_ouvertures_path(current_pro.organisation)
-    else
-      render :edit
-    end
+    flash[:notice] = "La plage d'ouverture a été modifiée." if @plage_ouverture.update(plage_ouverture_params)
+    respond_right_bar_with @plage_ouverture, location: organisation_plage_ouvertures_path(current_pro.organisation)
   end
 
   def destroy
