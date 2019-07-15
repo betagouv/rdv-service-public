@@ -4,31 +4,53 @@ class AgendasController < DashboardAuthController
   def index
     skip_policy_scope
     @organisation = current_pro.organisation
+  end
 
-    rdvs = current_pro.rdvs.active.includes(:motif)
+  def events
+    skip_authorization
+
+    rdvs = current_pro.rdvs.active.where(start_at: date_range_params).includes(:motif)
     @events = rdvs.map do |rdv|
       {
         title: rdv.name,
         start: rdv.start_at,
         end: rdv.end_at,
-        allDay: false,
         url: rdv_path(rdv),
         backgroundColor: rdv.motif&.color,
       }
     end
 
-    policy_scope(PlageOuverture).where(pro: current_pro).each do |po|
-      @events << {
-        title: po.title,
-        start: po.start_at,
-        end: po.end_at,
-        backgroundColor: "#F00",
-        rendering: "background",
-      }
+    render json: @events
+  end
+
+  def background_events
+    skip_authorization
+
+    @events = []
+    current_pro.plage_ouvertures.each do |po|
+      po.occurences.between(date_range_params).each do |occurence|
+        @events << {
+          title: po.title,
+          start: occurence,
+          end: po.end_time.on(occurence),
+          backgroundColor: "#F00",
+          rendering: "background",
+        }
+      end
     end
+
+    render json: @events
   end
 
   private
+
+  def date_range_params
+    filter_params[:start]..filter_params[:end]
+  end
+
+  def filter_params
+    params.permit(:start, :end)
+  end
 
   def redirect_if_pro_incomplete
     return unless pro_signed_in?

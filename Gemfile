@@ -46,6 +46,8 @@ gem 'icalendar', '~> 2.5'
 gem 'select2-rails', '~> 4.0'
 gem 'momentjs-rails', '~> 2.8'
 gem 'bootstrap-daterangepicker-rails', '~> 3.0'
+gem "montrose", '~> 0.9'
+gem 'tod', '~> 2.2'
 
 # Mailing
 gem 'sendgrid', '~> 1.2.4'

@@ -4,9 +4,9 @@
   = f.input :first_day, as: :date, html5: true
   .row
     .col
-      = f.input :start_time, as: :time, html5: true
+      = f.input :start_time, as: :select, collection: time_collections, selected: plage_ouverture.start_time.strftime("%H:%M"), include_blank: false
     .col
-      = f.input :end_time, as: :time, html5: true
+      = f.input :end_time, as: :select, collection: time_collections, selected: plage_ouverture.end_time.strftime("%H:%M"), include_blank: false
   = f.association :motifs, collection: policy_scope(Motif), as: :check_boxes
   .row
     - if plage_ouverture.persisted?

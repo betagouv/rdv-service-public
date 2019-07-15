@@ -7,6 +7,7 @@ class Pro < ApplicationRecord
   belongs_to :organisation, optional: true
   belongs_to :specialite, optional: true
   has_many :lieux, through: :organisation
+  has_many :plage_ouvertures
   has_and_belongs_to_many :rdvs
 
   enum role: { user: 0, admin: 1 }

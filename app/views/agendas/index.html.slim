@@ -4,9 +4,6 @@
 - content_for :breadcrumb do
   = link_to "Créer un rendez-vous", new_organisation_first_step_path(@organisation), class: "btn btn-outline-white"
 
-javascript:
-  window.events = #{{@events.to_json}};
-
 .card
   .card-body
     #calendar
