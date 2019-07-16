@@ -173,7 +173,6 @@ ActiveRecord::Schema.define(version: 2019_07_16_093523) do
     t.integer "max_users_limit"
     t.integer "sequence", default: 0, null: false
     t.uuid "uuid", default: -> { "uuid_generate_v4()" }, null: false
-    t.integer "max_users_limit"
     t.integer "status", default: 0
     t.index ["motif_id"], name: "index_rdvs_on_motif_id"
     t.index ["organisation_id"], name: "index_rdvs_on_organisation_id"
