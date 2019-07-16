@@ -7,7 +7,7 @@
       = f.input :start_time, as: :select, collection: time_collections, selected: plage_ouverture.start_time&.strftime("%H:%M"), include_blank: false
     .col
       = f.input :end_time, as: :select, collection: time_collections, selected: plage_ouverture.end_time&.strftime("%H:%M"), include_blank: false
-  = f.association :motifs, collection: policy_scope(Motif), as: :check_boxes
+  = f.association :motifs, collection: policy_scope(Motif), label_method: :name_with_badge, as: :check_boxes
   .row
     - if plage_ouverture.persisted?
       .col.text-left
