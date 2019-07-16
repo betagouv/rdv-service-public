@@ -51,5 +51,4 @@ class RdvsController < DashboardAuthController
   def status_params
     params.require(:rdv).permit(:status)
   end
-
 end

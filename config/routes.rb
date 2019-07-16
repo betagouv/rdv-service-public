@@ -44,7 +44,7 @@ Rails.application.routes.draw do
       resources :plage_ouvertures, except: :show, shallow: true
 
       # Rdv
-      resources :rdvs, except: [:index, :create, :new], shallow: true do 
+      resources :rdvs, except: [:index, :create, :new], shallow: true do
         patch :status, on: :member
       end
       resources :first_steps, only: [:new, :create], module: "rdvs"

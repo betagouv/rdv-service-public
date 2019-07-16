@@ -4,7 +4,7 @@ class Rdv < ApplicationRecord
   belongs_to :user
   has_and_belongs_to_many :pros
 
-  enum status: { to_be: 0, seen: 1, excused: 2, not_excused: 3}
+  enum status: { to_be: 0, seen: 1, excused: 2, not_excused: 3 }
 
   validates :user, :organisation, :motif, :start_at, :duration_in_min, :pros, presence: true
   validates :max_users_limit, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
