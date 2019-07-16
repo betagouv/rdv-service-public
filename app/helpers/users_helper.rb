@@ -16,5 +16,4 @@ module UsersHelper
   def new_user_tag(user)
     content_tag(:span, 'Nouveau', class: 'badge badge-info') unless user.rdvs.any?
   end
-
 end
