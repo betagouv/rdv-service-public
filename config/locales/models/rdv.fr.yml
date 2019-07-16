@@ -11,3 +11,9 @@ fr:
         max_users_limit: Limite du nombre d'usagers
         start_at: Commence à
         duration_in_min: Durée en minutes
+        status: Statut
+        statuses:
+          to_be: À venir
+          seen: Vu
+          excused: Absent excusé
+          not_excused: Absent non excusé

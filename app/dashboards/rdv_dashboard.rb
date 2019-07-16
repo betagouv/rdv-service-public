@@ -8,6 +8,7 @@ class RdvDashboard < Administrate::BaseDashboard
   # which determines how the attribute is displayed
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
+    status: EnumField,
     organisation: Field::BelongsTo,
     motif: Field::BelongsTo,
     user: Field::BelongsTo,
@@ -36,6 +37,7 @@ class RdvDashboard < Administrate::BaseDashboard
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = [
+    :status,
     :organisation,
     :motif,
     :user,
@@ -53,6 +55,7 @@ class RdvDashboard < Administrate::BaseDashboard
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
+    :status,
     :organisation,
     :motif,
     :user,

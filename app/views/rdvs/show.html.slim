@@ -29,3 +29,11 @@ p.card-text
       - unless @rdv.cancelled?
         li.list-inline-item= link_to "Annuler le rendez-vous", rdv_path(@rdv), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Un email va être envoyé à l'usager pour le notifier de l'annulation. Êtes-vous sûr de vouloir annuler ce rendez-vous ?"}
         li.list-inline-item= link_to "Modifier", edit_rdv_path(@rdv), class: "btn btn-outline-primary", data: { rightbar: true }
+hr
+.row
+  .col
+    = simple_form_for(@rdv, url: status_rdv_path, remote: true) do |f|
+      = f.input :status, collection: Rdv.human_enum_collection(:status), as: :radio_buttons, input_html: { onchange: 'Rails.fire(this.form, "submit")' }
+
+
+

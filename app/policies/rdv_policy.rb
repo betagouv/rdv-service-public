@@ -9,6 +9,10 @@ class RdvPolicy < ApplicationPolicy
     true
   end
 
+  def status?
+    true
+  end
+
   def create?
     true
   end
