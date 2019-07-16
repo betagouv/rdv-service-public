@@ -2,10 +2,12 @@ require "administrate/field/base"
 
 class EnumField < Administrate::Field::Base
   def to_s
-    resource.class.human_enum_name(:role, data)
+    data.to_s
   end
 
   def select_field_values(form_builder)
-    form_builder.object.class.human_enum_collection(:role)
+    form_builder.object.class.public_send(attribute.to_s.pluralize).keys.map do |v|
+      [v.titleize, v]
+    end
   end
 end
