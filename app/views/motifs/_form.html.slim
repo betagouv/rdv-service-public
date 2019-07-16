@@ -1,3 +1,6 @@
+- options = [["3 ans", 1230]]
+
+
 = simple_form_for([organisation, motif], remote: request.xhr?, data: { rightbar: true }) do |f|
   = render partial: 'layouts/model_errors', locals: { model: motif }
   = f.input :name
@@ -7,6 +10,11 @@
   = f.input :online
   = f.input :default_duration_in_min
   = f.input :color, as: "color"
+  = f.input :min_booking_delay, collection: min_max_delay_options
+  = f.input :max_booking_delay, collection: min_max_delay_options
+
+
+
   .row
     - if motif.persisted?
       .col.text-left
