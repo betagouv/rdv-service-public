@@ -9,10 +9,11 @@ class AgendasController < DashboardAuthController
   def events
     skip_authorization
 
-    rdvs = current_pro.rdvs.active.where(start_at: date_range_params).includes(:motif)
+    rdvs = current_pro.rdvs.where(start_at: date_range_params).includes(:motif)
     @events = rdvs.map do |rdv|
       {
         title: rdv.name,
+        extendedProps: { status: rdv.status, cancelled: rdv.cancelled?, past: rdv.past? },
         start: rdv.start_at,
         end: rdv.end_at,
         url: rdv_path(rdv),

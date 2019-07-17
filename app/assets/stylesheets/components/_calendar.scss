@@ -1,163 +1,172 @@
 .fc-view {
-    margin-top: 30px;
+  margin-top: 30px;
 }
 
 .none-border {
-    .modal-footer {
-        border-top: none;
-    }
+  .modal-footer {
+    border-top: none;
+  }
 }
 
 .fc-toolbar {
-    margin: 15px 0 5px 0;
-    h2 {
-        font-size: 1.25rem;
-        line-height: 1.875rem;
-        text-transform: uppercase;
-    }
+  margin: 15px 0 5px 0;
+  h2 {
+    font-size: 1.25rem;
+    line-height: 1.875rem;
+    text-transform: uppercase;
+  }
 }
 
 .fc-day-grid-event {
-    .fc-time {
-        font-weight: $font-weight-bold;
-    }
+  .fc-time {
+    font-weight: $font-weight-bold;
+  }
 }
 
 .fc-day {
-    background: $white;
+  background: $white;
 }
 
 .fc-toolbar {
-    .fc-state-active,
-    .ui-state-active,
-    button:focus,
-    button:hover,
-    .ui-state-hover {
-        z-index: 0;
-    }
+  .fc-state-active,
+  .ui-state-active,
+  button:focus,
+  button:hover,
+  .ui-state-hover {
+    z-index: 0;
+  }
 }
 
 .fc {
-    th.fc-widget-header {
-        background: $gray-200;
-        font-size: 13px;
-        line-height: 20px;
-        padding: 10px 0;
-        text-transform: uppercase;
-    }
+  th.fc-widget-header {
+    background: $gray-200;
+    font-size: 13px;
+    line-height: 20px;
+    padding: 10px 0;
+    text-transform: uppercase;
+  }
 }
 
 .fc-unthemed {
-    th,
-    td,
-    thead,
-    tbody,
-    .fc-divider,
-    .fc-row,
-    .fc-popover {
-        border-color: $gray-200;
-    }
+  th,
+  td,
+  thead,
+  tbody,
+  .fc-divider,
+  .fc-row,
+  .fc-popover {
+    border-color: $gray-200;
+  }
 }
 
 .fc-button {
-    background: $gray-200;
-    border: none;
-    color: $gray-700;
-    text-transform: capitalize;
-    box-shadow: none;
-    border-radius: 3px;
-    margin: 0 3px;
-    padding: 6px 12px;
-    height: auto;
+  background: $gray-200;
+  border: none;
+  color: $gray-700;
+  text-transform: capitalize;
+  box-shadow: none;
+  border-radius: 3px;
+  margin: 0 3px;
+  padding: 6px 12px;
+  height: auto;
 }
 
 .fc-text-arrow {
-    font-family: inherit;
-    font-size: 1rem;
+  font-family: inherit;
+  font-size: 1rem;
 }
 
 .fc-state-hover {
-    background: $gray-200;
+  background: $gray-200;
 }
 
 .fc-state-highlight {
-    background: $gray-300;
+  background: $gray-300;
 }
 
 .fc-state-down,
 .fc-state-active,
 .fc-state-disabled {
-    background-color: $primary;
-    color: $white;
-    text-shadow: none;
+  background-color: $primary;
+  color: $white;
+  text-shadow: none;
 }
 
 .fc-cell-overlay {
-    background: $gray-300;
+  background: $gray-300;
 }
 
 .fc-unthemed {
-    .fc-today {
-        background: $white;
-    }
+  .fc-today {
+    background: $white;
+  }
 }
 
 .fc-event {
-    border-radius: 2px;
-    border: none;
-    cursor: move;
-    font-size: 0.8125rem;
-    margin: 2px;
-    padding: 2px;
-    text-align: center;
+  border-radius: 2px;
+  border: none;
+  cursor: move;
+  font-size: 0.8125rem;
+  margin: 2px;
+  padding: 2px;
+  text-align: center;
 }
 
+.fc-event-past, .fc-event-cancelled, .fc-event-excused, .fc-event-not_excused {
+  filter: opacity(30%);
+}
+
+.fc-event-cancelled, .fc-event-excused, .fc-event-not_excused {
+  .fc-content .fc-title {
+    text-decoration: line-through;
+  } 
+}
 .external-event {
-    cursor: move;
-    margin: 10px 0;
-    padding: 8px 10px;
-    color: $white;
+  cursor: move;
+  margin: 10px 0;
+  padding: 8px 10px;
+  color: $white;
 }
 
 .fc-basic-view {
-    td.fc-week-number {
-        span {
-            padding-right: 8px;
-        }
+  td.fc-week-number {
+    span {
+      padding-right: 8px;
     }
-    td.fc-day-number {
-        padding-right: 8px;
-    }
-    .fc-content {
-        color: $white;
-    }
+  }
+  td.fc-day-number {
+    padding-right: 8px;
+  }
+  .fc-content {
+    color: $white;
+  }
 }
 
 .fc-time-grid-event {
-    .fc-content {
-        color: $white;
-    }
+  .fc-content {
+    color: $white;
+  }
 }
 
 @include media-breakpoint-down(sm) {
-    .fc-toolbar {
-        .fc-left,.fc-right,.fc-center {
-            float: none;
-            display: block;
-            clear: both;
-            margin: 10px 0;
+  .fc-toolbar {
+    .fc-left,.fc-right,.fc-center {
+      float: none;
+      display: block;
+      clear: both;
+      margin: 10px 0;
+    }
+  }
+  .fc {
+    .fc-toolbar{
+      >* {
+        >* {
+          float: none;
         }
+      }
     }
-    .fc {
-        .fc-toolbar{
-            >* {
-                >* {
-                    float: none;
-                }
-            }
-        }
-    }
-    .fc-today-button {
-        display: none;
-    }
+  }
+  .fc-today-button {
+    display: none;
+  }
 }

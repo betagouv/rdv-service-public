@@ -20,12 +20,16 @@ class Rdv < ApplicationRecord
     start_at + duration_in_min.minutes
   end
 
+  def past?
+    end_at < Time.zone.now
+  end
+
   def cancelled?
     cancelled_at.present?
   end
 
   def cancel
-    update!(cancelled_at: Time.zone.now)
+    update(cancelled_at: Time.zone.now)
   end
 
   def send_ics_to_user_and_pros
