@@ -5,3 +5,18 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+Organisation.create!(name: "MDS du 75")
+
+Lieu.create!(name: "Maison Gare du Nord", telephone: "0123456789", organisation_id: 1, address: "1 rue de Maubeuge, 75009 Paris", horaires: "Du lundi au vendredi de 9h à 18h")
+
+100.times do |_u|
+  User.create!(first_name: Faker::Name.first_name, last_name: Faker::Name.last_name, email: Faker::Internet.email, organisation_id: 1, birth_date: Faker::Date.birthday)
+end
+
+Specialite.create!(name: "Médecin")
+Specialite.create!(name: "Infirmière")
+Specialite.create!(name: "Puéricultrice")
+Specialite.create!(name: "Sage-femme")
+Specialite.create!(name: "Psychologue")
+Specialite.create!(name: "Assistante Sociale ")
