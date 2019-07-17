@@ -20,16 +20,19 @@ class AgendasController < DashboardAuthController
       }
     end
 
+    @events = @events.sort_by { |e| e[:start] }
+
     render json: @events
   end
 
   def background_events
     skip_authorization
 
-    @events = []
-    current_pro.plage_ouvertures.each do |po|
-      po.occurences.between(date_range_params).each do |occurence|
-        @events << {
+    @events = current_pro.plage_ouvertures.flat_map do |po|
+      # po.occurences.between(date_range_params).each do |occurence|
+      # temp fix https://github.com/rossta/montrose/issues/118
+      po.occurences.until(end_param).select { |o| date_range_params.cover?(o) }.map do |occurence|
+        {
           title: po.title,
           start: occurence,
           end: po.end_time.on(occurence),
@@ -39,13 +42,23 @@ class AgendasController < DashboardAuthController
       end
     end
 
+    @events = @events.sort_by { |e| e[:start] }
+
     render json: @events
   end
 
   private
 
   def date_range_params
-    filter_params[:start]..filter_params[:end]
+    start_param..end_param
+  end
+
+  def start_param
+    Date.parse(filter_params[:start])
+  end
+
+  def end_param
+    Date.parse(filter_params[:end])
   end
 
   def filter_params
