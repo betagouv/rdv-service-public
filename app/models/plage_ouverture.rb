@@ -9,8 +9,17 @@ class PlageOuverture < ApplicationRecord
   belongs_to :pro
   has_and_belongs_to_many :motifs
 
-  validates :title, :first_day, :start_time, :end_time, :motifs, :pro, :organisation, presence: true
+  validates :title, :first_day, :start_time, :end_time, :motifs, :pro, :organisation, :recurrence, presence: true
   validate :end_after_start
+
+  RECURRENCES = {
+    never: Montrose.daily(total: 1).to_json,
+    weekly: Montrose.weekly.to_json,
+    weekly_by_2: Montrose.every(2.weeks).to_json,
+  }.freeze
+
+  scope :exceptionnelles, -> { where(recurrence: RECURRENCES[:never]) }
+  scope :regulieres, -> { where.not(recurrence: RECURRENCES[:never]) }
 
   def start_at
     first_day + start_time.hour.hours + start_time.min.minutes
@@ -21,11 +30,7 @@ class PlageOuverture < ApplicationRecord
   end
 
   def occurences
-    if recurrence.present?
-      recurrence.starting(start_at)
-    else
-      [start_at] # Test ?? same class ?
-    end
+    recurrence.starting(start_at)
   end
 
   private
