@@ -2,6 +2,7 @@
   = render partial: 'layouts/model_errors', locals: { model: plage_ouverture }
   = f.input :title
   = f.input :first_day, as: :date, html5: true
+  = f.input :location, input_html: { class: "places-js-container" } 
   .row
     .col
       = f.input :start_time, as: :select, collection: time_collections, selected: plage_ouverture.start_time&.strftime("%H:%M"), include_blank: false
