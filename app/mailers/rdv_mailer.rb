@@ -9,7 +9,7 @@ class RdvMailer < ApplicationMailer
     subject = subject(@rdv, @previous_start_at)
 
     email = @rdv.user.email
-    attachments[@rdv.ics_name] = { mime_type: 'text/calendar', content: @rdv.to_ical }
+    attachments[@rdv.ics_name] = { mime_type: 'text/calendar', content: @rdv.to_ical_for(@rdv.user) }
 
     mail(to: email, subject: subject)
   end
@@ -22,7 +22,7 @@ class RdvMailer < ApplicationMailer
 
     subject = subject(@rdv, @previous_start_at)
     email = @pro.email
-    attachments[@rdv.ics_name] = { mime_type: 'text/calendar', content: @rdv.to_ical }
+    attachments[@rdv.ics_name] = { mime_type: 'text/calendar', content: @rdv.to_ical_for(@pro) }
 
     mail(to: email, subject: subject)
   end

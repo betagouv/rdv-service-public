@@ -2,20 +2,33 @@ describe Rdv, type: :model do
   let(:pro1) { create(:pro) }
   let(:pro2) { create(:pro) }
 
-  describe '#to_ical' do
+  describe '#to_ical_for' do
     let(:rdv) { create(:rdv) }
+    let(:user_or_pro) { rdv.user }
 
-    subject { rdv.to_ical }
+    subject { rdv.to_ical_for(user_or_pro) }
 
     it { is_expected.to include("SUMMARY:RDV Michel Lapin <> Vaccination") }
-    it { is_expected.to include("DTSTART:20190704T150000") }
-    it { is_expected.to include("DTEND:20190704T154500") }
+    it { is_expected.to match("DTSTART;TZID=Europe/Paris:20190704T150000") }
+    it { is_expected.to include("DTEND;TZID=Europe/Paris:20190704T154500") }
     it { is_expected.to include("SEQUENCE:0") }
     it { is_expected.to include("UID:") }
+    it { is_expected.to include("ORGANIZER:noreply@lapins.beta.gouv.fr") }
+    it { is_expected.to include("ATTENDEE:#{user_or_pro.email}") }
+    it { is_expected.to include("CLASS:PRIVATE") }
+    it { is_expected.to include("METHOD:REQUEST") }
 
     context 'when rdv is cancelled' do
       let(:rdv) { create(:rdv, cancelled_at: Time.zone.now) }
       it { is_expected.to include("STATUS:CANCELLED") }
+      it { is_expected.to include("METHOD:CANCEL") }
+    end
+
+    context 'when ical is for pro' do
+      let(:user_or_pro) { rdv.pros.first }
+
+      it { is_expected.to include("ORGANIZER:noreply@lapins.beta.gouv.fr") }
+      it { is_expected.to include("CLASS:PUBLIC") }
     end
   end
 
