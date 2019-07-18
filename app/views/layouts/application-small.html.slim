@@ -1,0 +1,22 @@
+doctype html
+html
+  head
+    = render 'common/head'
+  body
+    .wrapper
+      = render "layouts/left_menu"
+      .content-page
+        .content
+          = render "layouts/navbar_dashboard"
+          .container-fluid
+            - if content_for :title
+              .row.justify-content-md-center.bg-dark.pb-5
+                .col-md-6 
+                  .page-title-box
+                    h4.page-title= yield :title
+            .bg-negative
+              .row.justify-content-md-center
+                .col-md-6
+                  = render 'layouts/flash'
+                  = yield
+    = render "layouts/footer_dashboard"

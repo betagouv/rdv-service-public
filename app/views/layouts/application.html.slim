@@ -7,8 +7,7 @@ html
       = render "layouts/left_menu"
       .content-page
         .content
-          - if current_pro
-            = render "layouts/navbar_dashboard"
+          = render "layouts/navbar_dashboard"
           .container-fluid
             - if content_for :title 
               .row.bg-dark.pb-5
@@ -18,8 +17,6 @@ html
                       .page-title-right
                         = yield :breadcrumb
                     h4.page-title= yield :title
-                - if content_for :subtitle
-                  .col-md-12= yield :subtitle
             .bg-negative 
               = render 'layouts/flash'
               = yield 

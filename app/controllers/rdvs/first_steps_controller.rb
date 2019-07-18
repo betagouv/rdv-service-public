@@ -1,4 +1,6 @@
 class Rdvs::FirstStepsController < DashboardAuthController
+  layout 'application-small'
+
   def new
     rdv = Rdv.new(query_params)
     @first_step = Rdv::FirstStep.new(rdv.to_step_params)

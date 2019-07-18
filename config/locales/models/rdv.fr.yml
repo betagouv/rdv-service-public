@@ -8,6 +8,7 @@ fr:
         motif: Motif
         user: Usager
         pros: Professionnels
+        location: Lieu
         max_users_limit: Limite du nombre d'usagers
         start_at: Commence à
         duration_in_min: Durée en minutes
