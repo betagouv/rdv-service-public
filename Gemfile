@@ -51,7 +51,6 @@ gem "montrose", '~> 0.9'
 gem 'tod', '~> 2.2'
 gem 'icalendar', '~> 2.5'
 
-
 # Mailing
 gem 'sendgrid', '~> 1.2.4'
 gem 'premailer-rails', '~> 1.10'
