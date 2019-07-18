@@ -112,6 +112,7 @@ ActiveRecord::Schema.define(version: 2019_07_16_093523) do
     t.time "end_time", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "recurrence"
     t.index ["organisation_id"], name: "index_plage_ouvertures_on_organisation_id"
     t.index ["pro_id"], name: "index_plage_ouvertures_on_pro_id"
   end

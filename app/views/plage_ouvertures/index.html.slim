@@ -6,7 +6,8 @@
 
 .card
   .card-body
-    - if @plage_ouvertures.any?
+    - if @plage_ouvertures.exceptionnelles.any?
+      h5.card-title Ouvertures exceptionnelles
       table.table
         thead
           tr
@@ -14,19 +15,20 @@
             th Motifs
             th
         tbody
-          - @plage_ouvertures.sort_by{ |po| po.first_day.wday }.each do |plage_ouverture|
-            tr
-              td
-                = link_to plage_ouverture.title, edit_plage_ouverture_path(plage_ouverture), data: { rightbar: true }
-              td
-                = plage_ouverture.motifs.pluck(:name).to_sentence
-              td
-                = l(plage_ouverture.first_day, format: "%A").capitalize
-                | &nbsp;de&nbsp;
-                = l(plage_ouverture.start_at, format: "%H:%M")
-                | &nbsp;à&nbsp;
-                = l(plage_ouverture.end_at, format: "%H:%M")
-    - else
+          = render partial: "plage_ouverture", collection: @plage_ouvertures.exceptionnelles.sort_by{ |po| po.first_day }
+
+    - if @plage_ouvertures.regulieres.any?
+      h5.card-title Ouvertures régulières
+      table.table
+        thead
+          tr
+            th Titre
+            th Motifs
+            th
+        tbody
+          = render partial: "plage_ouverture", collection: @plage_ouvertures.regulieres.sort_by{ |po| po.first_day.wday }
+
+    - if @plage_ouvertures.empty?
       .row.justify-content-md-center
         .col-md-6.text-center.my-5
           p.mb-2.lead Vous n'avez pas encore créé de plage d'ouverture.
