@@ -28,4 +28,9 @@ module ApplicationHelper
   def root_path?
     request.path == root_path
   end
+
+  def datetime_input(f, field)
+    f.input(field, as: :string, input_html: {value: f.object.start_at.strftime("%d/%m/%Y %H:%M"), data: { toggle: "datetimepicker", target: "##{f.object_name}_#{field}" }, date: {format:"DD/MM/YYYY HH:mm"}})
+  end
+
 end

@@ -53,6 +53,7 @@ class Rdv < ApplicationRecord
       e.dtend       = end_at
       e.summary     = "RDV #{name}"
       e.description = ""
+      e.location = location
       e.uid         = uuid
       e.sequence    = sequence
       e.status      = "CANCELLED" if cancelled?
