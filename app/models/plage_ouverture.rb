@@ -29,8 +29,10 @@ class PlageOuverture < ApplicationRecord
     first_day + end_time.hour.hours + end_time.min.minutes
   end
 
-  def occurences
-    recurrence.starting(start_at)
+  def occurences_until(until_date)
+    return nil if until_date.nil?
+
+    recurrence.starting(start_at).until(until_date).to_a
   end
 
   private

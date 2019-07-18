@@ -31,7 +31,7 @@ class AgendasController < DashboardAuthController
     @events = current_pro.plage_ouvertures.flat_map do |po|
       # po.occurences.between(date_range_params).each do |occurence|
       # temp fix https://github.com/rossta/montrose/issues/118
-      po.occurences.until(end_param).select { |o| date_range_params.cover?(o) }.map do |occurence|
+      po.occurences_until(end_param).select { |o| date_range_params.cover?(o) }.map do |occurence|
         {
           title: po.title,
           start: occurence,
