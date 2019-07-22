@@ -10,6 +10,7 @@ class Rdv < ApplicationRecord
   validates :max_users_limit, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
   scope :active, -> { where(cancelled_at: nil) }
+  scope :past, -> { where('start_at < ?', Time.zone.now) }
 
   after_commit :reload_uuid, on: :create
 
