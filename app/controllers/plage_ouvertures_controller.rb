@@ -8,7 +8,7 @@ class PlageOuverturesController < DashboardAuthController
   end
 
   def new
-    @plage_ouverture = PlageOuverture.new(organisation: current_pro.organisation, pro: current_pro)
+    @plage_ouverture = PlageOuverture.new(organisation: current_pro.organisation, pro: current_pro, first_day: Time.zone.now)
     authorize(@plage_ouverture)
     respond_right_bar_with @plage_ouverture
   end
@@ -46,6 +46,6 @@ class PlageOuverturesController < DashboardAuthController
   end
 
   def plage_ouverture_params
-    params.require(:plage_ouverture).permit(:title, :first_day, :start_time, :end_time, :location, motif_ids: [])
+    params.require(:plage_ouverture).permit(:title, :first_day, :start_time, :end_time, :location, :recurrence, motif_ids: [])
   end
 end

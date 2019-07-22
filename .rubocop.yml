@@ -41,6 +41,9 @@ Style/DocumentationMethod:
 Style/IfUnlessModifier:
   Enabled: false
 
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
 Style/SymbolArray:
   EnforcedStyle: brackets
 

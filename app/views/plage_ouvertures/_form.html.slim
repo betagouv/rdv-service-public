@@ -1,14 +1,18 @@
 = simple_form_for([organisation, plage_ouverture], remote: request.xhr?, data: { rightbar: true }) do |f|
   = render partial: 'layouts/model_errors', locals: { model: plage_ouverture }
+
   = f.input :title
-  = f.input :first_day, as: :date, html5: true
   = f.input :location, input_html: { class: "places-js-container" } 
+  = f.input :first_day, as: :date, html5: true, input_html: { id: "recurrence-source" }
   .row
     .col
       = f.input :start_time, as: :select, collection: time_collections, selected: plage_ouverture.start_time&.strftime("%H:%M"), include_blank: false
     .col
       = f.input :end_time, as: :select, collection: time_collections, selected: plage_ouverture.end_time&.strftime("%H:%M"), include_blank: false
   = f.association :motifs, collection: policy_scope(Motif), label_method: :name_with_badge, as: :check_boxes
+
+  = f.input :recurrence, collection: recurrence_collection(plage_ouverture.first_day), selected: plage_ouverture.recurrence.to_json, input_html: { id: "recurrence-target" }
+
   .row
     - if plage_ouverture.persisted?
       .col.text-left

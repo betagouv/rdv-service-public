@@ -1,5 +1,5 @@
 - if @users.any?
-  = render @users
+  = render @users.includes(:rdvs)
 - else
   tr
     td.text-center colspan=4
