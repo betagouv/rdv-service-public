@@ -45,20 +45,32 @@ class Rdv < ApplicationRecord
     pros.each { |pro| RdvMailer.send_ics_to_pro(self, pro, serialized_previous_start_at).deliver_later }
   end
 
-  def to_ical
+  def to_ical_for(user_or_pro)
     require 'icalendar'
+    require 'icalendar/tzinfo'
 
     cal = Icalendar::Calendar.new
+
+    tzid = "Europe/Paris"
+    tz = TZInfo::Timezone.get tzid
+    timezone = tz.ical_timezone start_at
+    cal.add_timezone timezone
+
     cal.event do |e|
-      e.dtstart     = start_at
-      e.dtend       = end_at
+      e.dtstart     = Icalendar::Values::DateTime.new(start_at, 'tzid' => tzid)
+      e.dtend       = Icalendar::Values::DateTime.new(end_at, 'tzid' => tzid)
       e.summary     = "RDV #{name}"
       e.description = ""
       e.location = location
       e.uid         = uuid
       e.sequence    = sequence
       e.status      = "CANCELLED" if cancelled?
+      e.ip_class    = user_or_pro.is_a?(User) ? "PRIVATE" : "PUBLIC"
+      e.organizer   = "noreply@lapins.beta.gouv.fr"
+      e.attendee    = user_or_pro.email
     end
+
+    cal.ip_method = cancelled? ? "CANCEL" : "REQUEST"
 
     cal.to_ical
   end
