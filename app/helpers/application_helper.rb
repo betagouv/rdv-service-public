@@ -32,4 +32,8 @@ module ApplicationHelper
   def datetime_input(form, field)
     form.input(field, as: :string, input_html: { value: form.object.start_at.strftime("%d/%m/%Y %H:%M"), data: { toggle: "datetimepicker", target: "##{form.object_name}_#{field}" }, date: { format: "DD/MM/YYYY HH:mm" } })
   end
+
+  def add_button(label, path, header: false, condition: true)
+    link_to label, path, class: "btn #{header ? "btn-outline-white" : "btn-primary"}", data: { rightbar: true } if condition
+  end
 end

@@ -2,12 +2,11 @@
   | Vos plages d'ouverture
 
 - content_for :breadcrumb do
-  = link_to "Créer une plage d'ouverture", new_organisation_plage_ouverture_path, class: "btn btn-outline-white", data: { rightbar: true }
+  = add_button 'Créer une plage d\'ouverture', new_organisation_plage_ouverture_path, header: true, condition: policy(PlageOuverture).new?
 
 .card
   .card-body
-    - if @plage_ouvertures.exceptionnelles.any?
-      h5.card-title Ouvertures exceptionnelles
+    - if @plage_ouvertures.any?
       table.table
         thead
           tr
@@ -15,20 +14,9 @@
             th Motifs
             th
         tbody
-          = render partial: "plage_ouverture", collection: @plage_ouvertures.exceptionnelles.sort_by{ |po| po.first_day }
+          = render @plage_ouvertures
 
-    - if @plage_ouvertures.regulieres.any?
-      h5.card-title Ouvertures régulières
-      table.table
-        thead
-          tr
-            th Titre
-            th Motifs
-            th
-        tbody
-          = render partial: "plage_ouverture", collection: @plage_ouvertures.regulieres.sort_by{ |po| po.first_day.wday }
-
-    - if @plage_ouvertures.empty?
+    - else
       .row.justify-content-md-center
         .col-md-6.text-center.my-5
           p.mb-2.lead Vous n'avez pas encore créé de plage d'ouverture.
@@ -36,4 +24,4 @@
             i.fa.fa-circle.fa-stack-2x.text-primary
             i.fa.fa-calendar-o.fa-stack-1x.text-white
     .text-center
-      = link_to "Créer une plage d'ouverture", new_organisation_plage_ouverture_path, class: 'btn btn-primary', data: { rightbar: true }
+      = add_button 'Créer une plage d\'ouverture', new_organisation_plage_ouverture_path, condition: policy(PlageOuverture).new?

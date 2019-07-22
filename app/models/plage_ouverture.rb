@@ -35,6 +35,10 @@ class PlageOuverture < ApplicationRecord
     recurrence.starting(start_at).until(until_date).to_a
   end
 
+  def exceptionnelle?
+    recurrence.to_json == RECURRENCES[:never]
+  end
+
   private
 
   def end_after_start
