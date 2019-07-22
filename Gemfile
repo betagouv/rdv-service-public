@@ -42,12 +42,14 @@ gem 'uglifier', '>= 1.3.0'
 gem 'slim', '~> 4.0'
 gem 'jquery-rails', '~> 4.3'
 gem 'holder_rails'
-gem 'icalendar', '~> 2.5'
 gem 'select2-rails', '~> 4.0'
 gem 'momentjs-rails', '~> 2.8'
-gem 'bootstrap-daterangepicker-rails', '~> 3.0'
+gem 'bootstrap4-datetime-picker-rails'
+
+## Time Management
 gem "montrose", '~> 0.9'
 gem 'tod', '~> 2.2'
+gem 'icalendar', '~> 2.5'
 
 # Mailing
 gem 'sendgrid', '~> 1.2.4'

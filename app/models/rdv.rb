@@ -53,6 +53,7 @@ class Rdv < ApplicationRecord
       e.dtend       = end_at
       e.summary     = "RDV #{name}"
       e.description = ""
+      e.location = location
       e.uid         = uuid
       e.sequence    = sequence
       e.status      = "CANCELLED" if cancelled?
@@ -68,6 +69,7 @@ class Rdv < ApplicationRecord
   def to_step_params
     {
       organisation: organisation,
+      location: location,
       motif: motif,
       duration_in_min: duration_in_min,
       start_at: start_at,

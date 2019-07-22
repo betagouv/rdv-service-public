@@ -11,6 +11,9 @@ class LieuDashboard < Administrate::BaseDashboard
     id: Field::Number,
     name: Field::String,
     organisation: Field::BelongsTo,
+    address: PlacesField,
+    horaires: Field::Text,
+    telephone: Field::String,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -32,6 +35,9 @@ class LieuDashboard < Administrate::BaseDashboard
     :id,
     :name,
     :organisation,
+    :telephone,
+    :horaires,
+    :address,
     :created_at,
     :updated_at,
   ].freeze
@@ -41,6 +47,10 @@ class LieuDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
     :name,
+    :organisation,
+    :telephone,
+    :horaires,
+    :address,
   ].freeze
 
   # Overwrite this method to customize how super admins are displayed

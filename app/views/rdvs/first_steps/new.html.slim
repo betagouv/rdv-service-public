@@ -1,16 +1,10 @@
 - content_for :title do
-  .row.justify-content-md-center
-    .col-md-6
-      | Choisir le motif
+  | Choisir le motif
 
-.row.justify-content-md-center
-  .col-md-6
-    .card
-      .card-body
-        = render partial: 'layouts/model_errors', locals: { model: @first_step }
-
-        = simple_form_for(@first_step.rdv, url: organisation_first_steps_path(@first_step.organisation)) do |f|
-          = f.association :motif, collection: policy_scope(Motif)
-
-          .text-right
-            = f.button :submit, 'Continuer'
+.card
+  .card-body
+    = render partial: 'layouts/model_errors', locals: { model: @first_step }
+    = simple_form_for(@first_step.rdv, url: organisation_first_steps_path(@first_step.organisation)) do |f|
+      = f.association :motif, collection: policy_scope(Motif)
+      .text-right
+        = f.button :submit, 'Continuer'

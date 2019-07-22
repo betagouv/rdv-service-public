@@ -22,8 +22,8 @@ describe "Pro can create a Rdv with wizard" do
     # Step 2
     expect_page_title("Choisir la durée et la date")
     expect_checked(motif.name)
-
     expect(page).to have_selector("input#rdv_duration_in_min[value='#{motif.default_duration_in_min}']")
+    fill_in 'Lieu', with: "79 Rue de Plaisance, 92250 La Garenne-Colombes"
     fill_in 'Durée en minutes', with: '35'
     fill_in 'Commence à', with: '12/10/2019 à 14h15'
 
@@ -34,6 +34,7 @@ describe "Pro can create a Rdv with wizard" do
     # Step 3
     expect_page_title("Choisir l'usager")
     expect_checked("Motif : #{motif.name}")
+    expect_checked("Lieu : 79 Rue de Plaisance, 92250 La Garenne-Colombes")
     expect_checked("Durée : 35 minutes")
     expect_checked("Professionnels : #{pro.full_name_and_specialite} et #{pro2.full_name_and_specialite}")
     expect_checked("Commence le : samedi 12 octobre 2019 à 14h15")

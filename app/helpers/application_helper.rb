@@ -28,4 +28,8 @@ module ApplicationHelper
   def root_path?
     request.path == root_path
   end
+
+  def datetime_input(form, field)
+    form.input(field, as: :string, input_html: { value: form.object.start_at.strftime("%d/%m/%Y %H:%M"), data: { toggle: "datetimepicker", target: "##{form.object_name}_#{field}" }, date: { format: "DD/MM/YYYY HH:mm" } })
+  end
 end
