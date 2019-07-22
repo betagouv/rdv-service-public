@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_17_125505) do
+ActiveRecord::Schema.define(version: 2019_07_22_091731) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -113,7 +113,7 @@ ActiveRecord::Schema.define(version: 2019_07_17_125505) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "location"
-    t.text "recurrence"
+    t.text "recurrence", default: "{\"every\":\"day\",\"total\":1}"
     t.index ["organisation_id"], name: "index_plage_ouvertures_on_organisation_id"
     t.index ["pro_id"], name: "index_plage_ouvertures_on_pro_id"
   end

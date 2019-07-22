@@ -4,7 +4,6 @@
 - content_for :breadcrumb do
   - if policy(@organisation).update?
     = link_to "Modifier votre organisation", edit_organisation_path(@organisation), class: "btn btn-outline-white", data: { rightbar: true }
-
 .card
   .card-body
     h5.card-title Lieux
@@ -26,4 +25,4 @@
             i.fa.fa-building.fa-stack-1x.text-white
 
     .text-center
-      = link_to "Ajouter un lieu", new_organisation_lieu_path(@organisation), class: "btn btn-primary", data: { rightbar: true }
+      = add_button 'Ajouter un lieu', new_organisation_lieu_path(@organisation), condition: policy(Lieu).new?

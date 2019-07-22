@@ -1,6 +1,7 @@
 tr
   td
     = link_to plage_ouverture.title, edit_plage_ouverture_path(plage_ouverture), data: { rightbar: true }
+    = po_exceptionnelle_tag(plage_ouverture)
   td
     = plage_ouverture.motifs.pluck(:name).to_sentence
   td

@@ -2,7 +2,7 @@
   | Professionnels
 
 - content_for :breadcrumb do
-  = invite_button 'btn-outline-white'
+  = add_button 'Inviter un professionnel', new_pro_invitation_path, condition: policy(current_pro).invite?, header: true
 
 .row
   .col-md-12
@@ -40,4 +40,4 @@
                 i.fa.fa-envelope-o.fa-stack-1x.text-white
 
         .text-center
-          = invite_button
+          = add_button 'Inviter un professionnel', new_pro_invitation_path, condition: policy(current_pro).invite?

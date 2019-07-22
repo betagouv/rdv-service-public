@@ -29,4 +29,8 @@ module PlageOuverturesHelper
       "Toutes les 2 semaines le #{l(plage_ouverture.first_day, format: "%A")} #{hours_range}"
     end
   end
+
+  def po_exceptionnelle_tag(plage_ouverture)
+    content_tag(:span, 'Exceptionnelle', class: 'badge badge-info') if plage_ouverture.exceptionnelle?
+  end
 end
