@@ -9,7 +9,7 @@
 require("@rails/ujs").start()
 require("turbolinks").start()
 
-import "bootstrap";
+import 'bootstrap';
 import 'moment/moment.js';
 import 'moment/locale/fr.js';
 import 'holderjs/holder.min';

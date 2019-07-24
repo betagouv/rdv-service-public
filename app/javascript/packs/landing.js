@@ -1,4 +1,5 @@
-import { PlacesInput } from 'packs/components/places-input';
+import { PlacesInput } from 'packs/components/places-input.js.erb';
+import 'bootstrap';
 
 $(function() {
   $('.link-scroll').on('click', function(e) {

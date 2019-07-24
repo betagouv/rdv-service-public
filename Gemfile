@@ -6,6 +6,8 @@ ruby '2.6.2'
 gem 'dotenv-rails', '~> 2.7.2' # dotenv should always be loaded before rails
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.3'
+gem 'sprockets-rails'
+
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
 
@@ -99,6 +101,7 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'letter_opener', '~> 1.7'
   gem 'fuubar'
+  gem 'xray-rails'
 end
 
 group :test do
