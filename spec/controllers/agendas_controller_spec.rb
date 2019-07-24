@@ -42,8 +42,8 @@ RSpec.describe AgendasController, type: :controller do
         second = @parsed_response[1]
         expect(second.size).to eq(5)
         expect(second["title"]).to eq(plage_ouverture3.title)
-        expect(second["start"]).to eq("2019-07-24T10:00:00.000+02:00")
-        expect(second["end"]).to eq("2019-07-24T14:00:00.000+02:00")
+        expect(second["start"]).to eq("2019-07-24T08:00:00.000+02:00")
+        expect(second["end"]).to eq("2019-07-24T12:00:00.000+02:00")
         expect(second["backgroundColor"]).to eq("#F00")
         expect(second["rendering"]).to eq("background")
       end
@@ -59,16 +59,16 @@ RSpec.describe AgendasController, type: :controller do
         first = @parsed_response[0]
         expect(first.size).to eq(5)
         expect(first["title"]).to eq(plage_ouverture2.title)
-        expect(first["start"]).to eq("2019-07-29T10:00:00.000+02:00")
-        expect(first["end"]).to eq("2019-07-29T14:00:00.000+02:00")
+        expect(first["start"]).to eq("2019-07-29T08:00:00.000+02:00")
+        expect(first["end"]).to eq("2019-07-29T12:00:00.000+02:00")
         expect(first["backgroundColor"]).to eq("#F00")
         expect(first["rendering"]).to eq("background")
 
         second = @parsed_response[1]
         expect(second.size).to eq(5)
         expect(second["title"]).to eq(plage_ouverture.title)
-        expect(second["start"]).to eq("2019-07-31T10:00:00.000+02:00")
-        expect(second["end"]).to eq("2019-07-31T14:00:00.000+02:00")
+        expect(second["start"]).to eq("2019-07-31T08:00:00.000+02:00")
+        expect(second["end"]).to eq("2019-07-31T12:00:00.000+02:00")
         expect(second["backgroundColor"]).to eq("#F00")
         expect(second["rendering"]).to eq("background")
       end
