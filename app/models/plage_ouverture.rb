@@ -22,11 +22,11 @@ class PlageOuverture < ApplicationRecord
   scope :regulieres, -> { where.not(recurrence: nil) }
 
   def start_at
-    first_day + start_time.hour.hours + start_time.min.minutes
+    start_time.on(first_day)
   end
 
   def end_at
-    first_day + end_time.hour.hours + end_time.min.minutes
+    end_time.on(first_day)
   end
 
   def occurences_for(date_range)

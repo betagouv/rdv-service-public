@@ -32,9 +32,26 @@ describe PlageOuverture, type: :model do
     it { expect(PlageOuverture::RECURRENCES[:weekly_by_2]).to eq("{\"every\":\"week\",\"interval\":2}") } # if you change this line, you may migrate some data in db
   end
 
+  describe "#start_at" do
+    subject { plage_ouverture.start_at }
 
+    context "for a plage" do
+      let(:plage_ouverture) { create(:plage_ouverture, first_day: Date.new(2019, 7, 22), start_time: Tod::TimeOfDay.new(9)) }
 
+      it { is_expected.to eq(Time.zone.local(2019, 7, 22, 9)) }
     end
+  end
+
+  describe "#end_at" do
+    subject { plage_ouverture.end_at }
+
+    context "for a plage" do
+      let(:plage_ouverture) { create(:plage_ouverture, first_day: Date.new(2019, 7, 22), end_time: Tod::TimeOfDay.new(12)) }
+
+      it { is_expected.to eq(Time.zone.local(2019, 7, 22, 12)) }
+    end
+  end
+
   describe "#occurences_for" do
     subject { plage_ouverture.occurences_for(date_range) }
 
