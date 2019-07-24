@@ -6,14 +6,24 @@
 //
 // To reference this file, add <%= javascript_pack_tag 'application' %> to the appropriate
 // layout file, like app/views/layouts/application.html.erb
+require("@rails/ujs").start()
+require("turbolinks").start()
+
+import "bootstrap";
+import 'moment/moment.js';
+import 'moment/locale/fr.js';
+import 'holderjs/holder.min';
 import 'jquery-slimscroll/jquery.slimscroll';
+import 'metismenu/dist/metisMenu.min';
+import 'select2/dist/js/select2.min.js';
+import { Datetimepicker } from 'packs/components/datetimepicker';
 import { Avatar } from 'packs/components/avatar';
 import { Menu } from 'packs/components/menu';
 import { Layout } from 'packs/components/layout';
 import { Modal } from 'packs/components/modal';
 import { Rightbar } from 'packs/components/rightbar';
-import { Analytic } from 'packs/components/analytic';
-import { PlacesInput } from 'packs/components/places-input';
+import { Analytic } from 'packs/components/analytic.js.erb';
+import { PlacesInput } from 'packs/components/places-input.js.erb';
 import 'packs/components/calendar';
 import 'packs/components/recurrence';
 import "actiontext";
@@ -40,10 +50,12 @@ $(document).on('shown.rightbar', '.right-bar', function(e) {
   $( ".select2-input").select2({
     theme: "bootstrap"
   });
+  new Datetimepicker();
 });
 
 $(document).on('hide.bs.modal', '.modal', function(e) {
   $('.modal-backdrop').remove();
+  $("[data-behaviour='datepicker'], [data-behaviour='datetimepicker'], [data-behaviour='timepicker']").datetimepicker('destroy');
 });
 
 $(document).on('turbolinks:load', function() {
@@ -68,4 +80,6 @@ $(document).on('turbolinks:load', function() {
   $( ".select2-input").select2({
     theme: "bootstrap"
   });
+
+  new Datetimepicker();
 });

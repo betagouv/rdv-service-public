@@ -5,7 +5,7 @@
   = f.input :address, input_html: { class: "places-js-container" }
   = f.input :email, as: :email
   = f.input :phone_number, as: :tel
-  = f.input :birth_date, as: :date, start_year: Date.today.year - 100, end_year: Date.today.year
+  = date_input(f, :birth_date)
   .row
     - if user.persisted?
       .col.text-left

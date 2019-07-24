@@ -34,17 +34,11 @@ gem 'image_processing', '~> 1.8'
 
 # Front
 gem 'sass-rails', '~> 5.0'
-gem 'bootstrap', '~> 4.3'
 gem 'autoprefixer-rails', '~> 9.6'
 gem 'font-awesome-rails', '~> 4.7'
 gem "chartkick", '~> 3.2.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'slim', '~> 4.0'
-gem 'jquery-rails', '~> 4.3'
-gem 'holder_rails'
-gem 'select2-rails', '~> 4.0'
-gem 'momentjs-rails', '~> 2.8'
-gem 'bootstrap4-datetime-picker-rails'
 
 ## Time Management
 gem "montrose", '~> 0.9'
@@ -102,7 +96,6 @@ group :development do
   gem 'spring-commands-rspec'
   gem 'guard-rspec', require: false
   gem 'guard-spring'
-  gem 'xray-rails'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'letter_opener', '~> 1.7'
   gem 'fuubar'

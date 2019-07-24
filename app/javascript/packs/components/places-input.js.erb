@@ -7,8 +7,8 @@ class PlacesInput {
     if (container !== null) {
       places({
         type: 'address',
-        appId: env.placesAppId,
-        apiKey: env.placesApiKey,
+        appId: "<%= ENV['PLACES_APP_ID'] %>",
+        apiKey: "<%= ENV['PLACES_API_KEY'] %>",
         countries: ['FR'],
         templates: {
           value: function(suggestion) {
