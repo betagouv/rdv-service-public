@@ -41,7 +41,3 @@
           | Date de fin (si aucune laisser vide)
         .d-flex.flex-row.justify-content-between.align-items-center
           input#recurrence-until.form-control.mx-1 type="date" data-target="recurrence.until" data-action="recurrence#updateRecurrence" value="..."
-
-
-
-    / = f.input :recurrence, collection: recurrence_collection(plage_ouverture.first_day), selected: plage_ouverture.recurrence.to_json, input_html: { id: "recurrence-target" }

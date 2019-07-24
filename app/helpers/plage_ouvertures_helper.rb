@@ -9,14 +9,6 @@ module PlageOuverturesHelper
     end
   end
 
-  def recurrence_collection(day)
-    [
-      ["Jamais", PlageOuverture::RECURRENCES[:never]],
-      ["Toutes les semaines le #{l(day, format: "%A")}", PlageOuverture::RECURRENCES[:weekly], { id: "weekly" }],
-      ["Toutes les 2 semaines le #{l(day, format: "%A")}", PlageOuverture::RECURRENCES[:weekly_by_2], { id: "weekly_by_2" }],
-    ]
-  end
-
   def display_recurrence(plage_ouverture)
     every_part = display_every(plage_ouverture)
 

@@ -12,12 +12,6 @@ class PlageOuverture < ApplicationRecord
   validates :title, :first_day, :start_time, :end_time, :motifs, :pro, :organisation, presence: true
   validate :end_after_start
 
-  RECURRENCES = {
-    never: Montrose.daily(total: 1).to_json,
-    weekly: Montrose.weekly.to_json,
-    weekly_by_2: Montrose.every(2.weeks).to_json,
-  }.freeze
-
   scope :exceptionnelles, -> { where(recurrence: nil) }
   scope :regulieres, -> { where.not(recurrence: nil) }
 
@@ -41,7 +35,7 @@ class PlageOuverture < ApplicationRecord
   end
 
   def exceptionnelle?
-    recurrence.to_json == RECURRENCES[:never]
+    recurrence.nil?
   end
 
   private

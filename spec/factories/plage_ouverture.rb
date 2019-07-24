@@ -19,11 +19,11 @@ FactoryBot.define do
     end
 
     trait :weekly do
-      recurrence { PlageOuverture::RECURRENCES[:weekly] }
+      recurrence { Montrose.weekly.to_json }
     end
 
     trait :weekly_by_2 do
-      recurrence { PlageOuverture::RECURRENCES[:weekly_by_2] }
+      recurrence { Montrose.every(2.weeks).to_json }
     end
 
     after(:build) do |plage_ouverture|

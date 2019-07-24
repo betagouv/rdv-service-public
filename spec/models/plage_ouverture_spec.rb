@@ -24,14 +24,6 @@ describe PlageOuverture, type: :model do
     end
   end
 
-  describe "::RECURRENCES" do
-    it { expect(PlageOuverture::RECURRENCES.size).to eq(3) }
-
-    it { expect(PlageOuverture::RECURRENCES[:never]).to eq("{\"every\":\"day\",\"total\":1}") } # if you change this line, you may migrate some data in db
-    it { expect(PlageOuverture::RECURRENCES[:weekly]).to eq("{\"every\":\"week\"}") } # if you change this line, you may migrate some data in db
-    it { expect(PlageOuverture::RECURRENCES[:weekly_by_2]).to eq("{\"every\":\"week\",\"interval\":2}") } # if you change this line, you may migrate some data in db
-  end
-
   describe "#start_at" do
     subject { plage_ouverture.start_at }
 
