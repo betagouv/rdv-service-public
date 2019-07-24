@@ -9,7 +9,7 @@ class PlageOuverture < ApplicationRecord
   belongs_to :pro
   has_and_belongs_to_many :motifs
 
-  validates :title, :first_day, :start_time, :end_time, :motifs, :pro, :organisation, :recurrence, presence: true
+  validates :title, :first_day, :start_time, :end_time, :motifs, :pro, :organisation, presence: true
   validate :end_after_start
 
   RECURRENCES = {
@@ -18,8 +18,8 @@ class PlageOuverture < ApplicationRecord
     weekly_by_2: Montrose.every(2.weeks).to_json,
   }.freeze
 
-  scope :exceptionnelles, -> { where(recurrence: RECURRENCES[:never]) }
-  scope :regulieres, -> { where.not(recurrence: RECURRENCES[:never]) }
+  scope :exceptionnelles, -> { where(recurrence: nil) }
+  scope :regulieres, -> { where.not(recurrence: nil) }
 
   def start_at
     first_day + start_time.hour.hours + start_time.min.minutes
@@ -29,10 +29,15 @@ class PlageOuverture < ApplicationRecord
     first_day + end_time.hour.hours + end_time.min.minutes
   end
 
-  def occurences_until(until_date)
-    return nil if until_date.nil?
+  def occurences_for(date_range)
+    recurrence_until = recurrence&.to_hash&.[](:until)
+    min_until = [date_range.end, recurrence_until].compact.min.to_time.end_of_day
 
-    recurrence.starting(start_at).until(until_date).to_a
+    if recurrence.present?
+      recurrence.starting(start_at).until(min_until).lazy.select { |o| o >= date_range.begin.to_time }.to_a
+    else
+      [start_at].select { |t| date_range.cover?(t) }
+    end
   end
 
   def exceptionnelle?
