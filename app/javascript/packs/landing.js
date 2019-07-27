@@ -1,4 +1,8 @@
-import { PlacesInput } from 'packs/components/places-input';
+require("@rails/ujs").start()
+require("turbolinks").start()
+
+import { PlacesInput } from 'packs/components/places-input.js.erb';
+import 'bootstrap';
 
 $(function() {
   $('.link-scroll').on('click', function(e) {
@@ -16,7 +20,6 @@ $(function() {
     $(this).toggleClass('active');
   });
 });
-
 
 $(document).on('turbolinks:load', function() {
   Holder.run();

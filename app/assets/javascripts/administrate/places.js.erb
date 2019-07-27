@@ -1,0 +1,12 @@
+places({
+  type: 'address',
+  appId: "<%= ENV['PLACES_APP_ID'] %>",
+  apiKey: "<%= ENV['PLACES_API_KEY'] %>",
+  countries: ['FR'],
+  templates: {
+    value: function(suggestion) {
+      return suggestion.name + ', ' + suggestion.postcode + ' ' + suggestion.city ;
+    },
+  },
+  container: document.querySelector('.places-js-container')
+});

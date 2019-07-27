@@ -1,8 +1,9 @@
-@import 'bootstrap/functions';
-@import 'bootstrap/variables';
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
 @import "variables";
-@import "font-awesome";
-@import "bootstrap";
+$fa-font-path: "font-awesome/fonts";
+@import 'font-awesome/scss/font-awesome';
+@import "bootstrap/scss/bootstrap";
 @import "mixins/buttons";
 @import "mixins/background-variant";
 

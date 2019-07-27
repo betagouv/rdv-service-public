@@ -78,14 +78,6 @@ GEM
     bindex (0.7.0)
     bootsnap (1.4.4)
       msgpack (~> 1.0)
-    bootstrap (4.3.1)
-      autoprefixer-rails (>= 9.1.0)
-      popper_js (>= 1.14.3, < 2)
-      sassc-rails (>= 2.0.0)
-    bootstrap4-datetime-picker-rails (0.3.1)
-      jquery-rails (~> 4.2, >= 4.2.0)
-      moment-timezone-rails (~> 1.0)
-      momentjs-rails (>= 2.10.5, <= 3.0.0)
     bootstrap4-kaminari-views (1.0.1)
       kaminari (>= 0.13)
       rails (>= 3.1)
@@ -160,8 +152,6 @@ GEM
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     ffi (1.10.0)
-    font-awesome-rails (4.7.0.5)
-      railties (>= 3.2, < 6.1)
     formatador (0.2.5)
     fuubar (2.4.0)
       rspec-core (~> 3.0)
@@ -187,8 +177,6 @@ GEM
       guard-compat (~> 1.1)
       spring
     hashie (3.6.0)
-    holder_rails (2.9.3)
-      railties (>= 3.1.0)
     htmlentities (4.3.4)
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
@@ -246,8 +234,6 @@ GEM
     mini_mime (1.0.1)
     mini_portile2 (2.4.0)
     minitest (5.11.3)
-    moment-timezone-rails (1.0.0)
-      momentjs-rails (>= 2.10.5, <= 3.0.0)
     momentjs-rails (2.20.1)
       railties (>= 3.1)
     montrose (0.9.0)
@@ -290,7 +276,6 @@ GEM
     pg_search (2.2.0)
       activerecord (>= 4.2)
       activesupport (>= 4.2)
-    popper_js (1.14.5)
     premailer (1.11.1)
       addressable
       css_parser (>= 1.6.0)
@@ -392,17 +377,6 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
-    sassc (2.0.1)
-      ffi (~> 1.9)
-      rake
-    sassc-rails (2.1.1)
-      railties (>= 4.0.0)
-      sassc (>= 2.0)
-      sprockets (> 3.0)
-      sprockets-rails
-      tilt
-    select2-rails (4.0.3)
-      thor (~> 0.14)
     selectize-rails (0.12.5)
     selenium-webdriver (3.142.2)
       childprocess (>= 0.5, < 2.0)
@@ -491,8 +465,6 @@ DEPENDENCIES
   airbrake (~> 9.2)
   autoprefixer-rails (~> 9.6)
   bootsnap (>= 1.1.0)
-  bootstrap (~> 4.3)
-  bootstrap4-datetime-picker-rails
   bootstrap4-kaminari-views
   brakeman
   bullet
@@ -509,20 +481,16 @@ DEPENDENCIES
   dotenv-rails (~> 2.7.2)
   factory_bot
   faker
-  font-awesome-rails (~> 4.7)
   fuubar
   guard-rspec
   guard-spring
-  holder_rails
   icalendar (~> 2.5)
   image_processing (~> 1.8)
   jbuilder (~> 2.5)
-  jquery-rails (~> 4.3)
   kaminari (~> 1.1)
   letter_opener (~> 1.7)
   listen (>= 3.0.5, < 3.2)
   meta_request (~> 0.7)
-  momentjs-rails (~> 2.8)
   montrose (~> 0.9)
   omniauth-github
   pg (>= 0.18, < 2.0)
@@ -534,7 +502,6 @@ DEPENDENCIES
   rspec-rails (~> 3.8)
   rubocop
   sass-rails (~> 5.0)
-  select2-rails (~> 4.0)
   selenium-webdriver
   sendgrid (~> 1.2.4)
   simple_form (~> 4.1)
@@ -542,6 +509,7 @@ DEPENDENCIES
   spring
   spring-commands-rspec
   spring-watcher-listen (~> 2.0.0)
+  sprockets-rails
   timecop
   tod (~> 2.2)
   turbolinks (~> 5)

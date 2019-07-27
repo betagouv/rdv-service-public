@@ -30,10 +30,31 @@ module ApplicationHelper
   end
 
   def datetime_input(form, field)
-    form.input(field, as: :string, input_html: { value: form.object.start_at.strftime("%d/%m/%Y %H:%M"), data: { toggle: "datetimepicker", target: "##{form.object_name}_#{field}" }, date: { format: "DD/MM/YYYY HH:mm" } })
+    form.input(field, as: :string, input_html: { value: form.object.send(field)&.strftime("%d/%m/%Y %H:%M"), data: { behaviour: 'datetimepicker' } })
+  end
+
+  def date_input(form, field)
+    form.input(field, as: :string, input_html: { value: form.object.send(field)&.strftime("%d/%m/%Y"), data: { behaviour: 'datepicker' } })
+  end
+
+  def time_input(form, field)
+    form.input(field, as: :string, input_html: { value: form.object.send(field)&.strftime("%H:%M"), data: { behaviour: 'timepicker' } })
   end
 
   def add_button(label, path, header: false, condition: true)
     link_to label, path, class: "btn #{header ? "btn-outline-white" : "btn-primary"}", data: { rightbar: true } if condition
+  end
+
+  def holder_tag(size, text = '', theme = nil, html_options = {}, holder_options = {})
+    size = "#{size}x#{size}" unless size =~ /\A\d+p?x\d+\z/
+
+    holder_options[:text] = text unless text.to_s.empty?
+    holder_options[:theme] = theme unless theme.nil?
+    holder_options = holder_options.map { |e| e.join('=') }.join('&')
+
+    options = { src: '', data: { src: "holder.js/#{size}?#{holder_options}" } }
+    options = options.merge(html_options)
+
+    tag :img, options
   end
 end

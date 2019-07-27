@@ -1,10 +1,11 @@
-@import 'bootstrap/functions';
-@import 'bootstrap/variables';
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
 @import "variables";
-@import "font-awesome";
-@import "bootstrap";
+$fa-font-path: "font-awesome/fonts";
+@import 'font-awesome/scss/font-awesome';
 @import "mixins/buttons";
 @import "mixins/background-variant";
+@import "bootstrap/scss/bootstrap";
 
 // Structure
 @import "structure/general";
@@ -35,8 +36,6 @@
 @import '@fullcalendar/daygrid/main';
 @import '@fullcalendar/timegrid/main';
 @import '@fullcalendar/list/main';
-@import "select2";
-@import "select2-bootstrap";
-@import "tempusdominus-bootstrap-4";
-@import "components/datetimepicker";
-
+@import "select2/dist/css/select2";
+@import "select2-bootstrap-theme/dist/select2-bootstrap.css";
+@import "jquery-datetimepicker/build/jquery.datetimepicker.min";
