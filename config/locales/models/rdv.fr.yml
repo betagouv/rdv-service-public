@@ -15,6 +15,7 @@ fr:
         status: Statut
         statuses:
           to_be: À venir
+          waiting: En salle d'attente
           seen: Vu
           excused: Absent excusé
           not_excused: Absent non excusé
