@@ -12,4 +12,3 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 # application.js, application.css, and all non-JS/CSS in the app/assets
 # folder are already added.
 Rails.application.config.assets.precompile += %w[print.css mail.css landing.js landing.css]
-Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf)\z/
