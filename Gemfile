@@ -102,6 +102,7 @@ group :development do
   gem 'letter_opener', '~> 1.7'
   gem 'fuubar'
   gem 'xray-rails'
+  gem 'better_errors'
 end
 
 group :test do
@@ -113,6 +114,3 @@ group :test do
   gem 'database_cleaner'
   gem 'timecop'
 end
-
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
