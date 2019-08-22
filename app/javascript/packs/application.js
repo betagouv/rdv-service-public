@@ -26,12 +26,12 @@ import { Analytic } from 'packs/components/analytic.js.erb';
 import { PlacesInput } from 'packs/components/places-input.js.erb';
 import 'packs/components/calendar';
 import "actiontext";
-import { Application } from "stimulus"
-import { definitionsFromContext } from "stimulus/webpack-helpers"
+import { Application } from "stimulus";
+import { definitionsFromContext } from "stimulus/webpack-helpers";
 
-const application = Application.start()
-const context = require.context("./controllers", true, /\.js$/)
-application.load(definitionsFromContext(context))
+const application = Application.start();
+const context = require.context("./controllers", true, /\.js$/);
+application.load(definitionsFromContext(context));
 
 new Modal();
 new Rightbar();
