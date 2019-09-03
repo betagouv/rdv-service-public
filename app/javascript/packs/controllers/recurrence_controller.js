@@ -4,7 +4,7 @@ export default class extends Controller {
   static targets = [ "hasRecurrence", "recurrenceComputed", "interval", "every", "on", "until", "firstDay", "monthly" ]
 
   setOn (model) {
-    this.onTargets.forEach(elt => elt.checked = model.on.includes(elt.id));
+    this.onTargets.forEach(elt => elt.checked = model.on.includes(elt.value));
   }
 
   getOn () {
@@ -37,6 +37,7 @@ export default class extends Controller {
       this.everyTarget.value = model.every;
       this.intervalTarget.value = model.interval;
       if (model.until) {
+        console.log(model.until);
         this.untilTarget.value = moment(model.until).format("YYYY-MM-DD");
       }
     }
@@ -62,13 +63,8 @@ export default class extends Controller {
           model.on = on;
         }
       } else if (model.every == "month") {
-        // if (this.monthlyTarget.value == "mday") {
-        //   model.mday = this.getFirstDay().date();
-        // }
-        if (this.monthlyTarget.value == "day") {
-          model.day = {};
-          model.day[this.getWeekday(this.getFirstDay())] = this.getWeekdayPositionInMonth(this.getFirstDay());
-        }
+        model.day = {};
+        model.day[this.getWeekday(this.getFirstDay())] = this.getWeekdayPositionInMonth(this.getFirstDay());
       }
 
       if (this.untilTarget.value) {
@@ -88,17 +84,12 @@ export default class extends Controller {
     if (model.every == "week") {
       this.element.classList.add("recurrence-select--weekly");
     } else if (model.every == "month") {
-      // this.monthlyTarget.querySelector("#mday").innerHTML = this.getMDayText(this.getFirstDay());
-      this.monthlyTarget.querySelector("#day").innerHTML = this.getDayText(this.getFirstDay());
+      this.monthlyTarget.innerHTML = this.getDayText(this.getFirstDay());
       this.element.classList.add("recurrence-select--monthly");
     } else {
       this.element.classList.add("recurrence-select--never");
     }
   }
-
-  // getMDayText (momentDate) {
-  //   return `Tous les mois le ${momentDate.format("D")}`;
-  // }
 
   getWeekday (momentDate) {
     return momentDate.locale("en").format("dddd").toLowerCase();
