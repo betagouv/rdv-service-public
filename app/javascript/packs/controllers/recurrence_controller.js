@@ -37,7 +37,6 @@ export default class extends Controller {
       this.everyTarget.value = model.every;
       this.intervalTarget.value = model.interval;
       if (model.until) {
-        console.log(model.until);
         this.untilTarget.value = moment(model.until).format("YYYY-MM-DD");
       }
     }
