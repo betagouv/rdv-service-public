@@ -15,7 +15,7 @@ class Rdvs::SecondStepsController < DashboardAuthController
     build_second_step
     authorize(@second_step)
     if @second_step.valid?
-      redirect_to new_organisation_third_step_path(@second_step.to_query)
+      redirect_to new_third_step_path(@second_step.to_query)
     else
       render 'new'
     end

@@ -1,0 +1,3 @@
+web: bundle exec puma
+worker: rake jobs:work
+webpack: bin/webpack-dev-server
