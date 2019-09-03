@@ -3,6 +3,7 @@ class Rdvs::SecondStepsController < DashboardAuthController
 
   def new
     rdv = Rdv.new(query_params)
+    rdv.pros << current_pro unless query_params[:pro_ids].present?
     @second_step = Rdv::SecondStep.new(rdv.to_step_params)
     @second_step.start_at ||= Time.zone.now
     @second_step.duration_in_min ||= @second_step.motif.default_duration_in_min
