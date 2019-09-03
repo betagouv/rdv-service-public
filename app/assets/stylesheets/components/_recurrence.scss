@@ -1,0 +1,20 @@
+.recurrence-select {
+
+  &.recurrence-select--never {
+    .all-select {
+      display: none;
+    }
+  }
+
+  &.recurrence-select--monthly {
+    .weekly-select {
+      display: none;
+    }
+  }
+
+  &.recurrence-select--weekly {
+    .monthly-select {
+      display: none;
+    }
+  }
+}

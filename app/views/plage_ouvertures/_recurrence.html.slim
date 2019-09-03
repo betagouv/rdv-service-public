@@ -1,0 +1,20 @@
+= f.input :recurrence, as: :hidden, input_html: { value: plage_ouverture.recurrence.as_json.to_json, "data-target": "recurrence.recurrenceComputed" }
+
+= simple_fields_for :recurrence do |n|
+  = n.input :has_recurrence, as: :boolean, label: "Répéter la plage d'ouverture...", input_html: { data: { target: "recurrence.hasRecurrence", action: "recurrence#updateRecurrence" } }
+
+  .all-select
+    .form-group
+      .form-inline
+        = n.label :interval, "Répéter tou(te)s les", class: "form-control-label mr-2"
+        = n.input_field :interval, as: :select, collection: 1..5, include_blank: false, class: "custom-select", data: { target: "recurrence.interval", action: "recurrence#updateRecurrence" }
+        = n.input_field :every, as: :select, collection: { semaine: "week", mois: "month" }, include_blank: false, class: "custom-select", data: { target: "recurrence.every", action: "recurrence#updateRecurrence" }
+
+    .weekly-select
+      = n.input :on, as: :check_boxes, label: "Répéter les", collection: { Lundi: "monday", Mardi: "tuesday", Mercredi: "wednesday", Jeudi: "thursday", Vendredi: "friday", Samedi: "saturday" }, include_blank: false, input_html: { data: { target: "recurrence.on", action: "recurrence#updateRecurrence" } }
+
+    .monthly-select.form-group
+      span data-target="recurrence.monthly" Tous les X du mois
+
+    .until-select
+      = n.input :until, as: :date, html5: true, required: false, label: "Date de fin (si aucune laisser vide)", input_html: { id: "recurrence-source", data: { target: "recurrence.until", action: "recurrence#updateRecurrence" } }

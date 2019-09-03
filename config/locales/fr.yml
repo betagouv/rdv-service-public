@@ -44,6 +44,7 @@ fr:
       default: "%d/%m/%Y"
       long: "%e %B %Y"
       short: "%e %b"
+      human: "%A %d %B %Y"
     month_names:
     -
     - janvier

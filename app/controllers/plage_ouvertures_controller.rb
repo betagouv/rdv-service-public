@@ -8,7 +8,7 @@ class PlageOuverturesController < DashboardAuthController
   end
 
   def new
-    @plage_ouverture = PlageOuverture.new(organisation: current_pro.organisation, pro: current_pro, first_day: Time.zone.now)
+    @plage_ouverture = PlageOuverture.new(organisation: current_pro.organisation, pro: current_pro, first_day: Time.zone.now, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(12))
     authorize(@plage_ouverture)
     respond_right_bar_with @plage_ouverture
   end
