@@ -26,7 +26,8 @@ document.addEventListener('turbolinks:load', function() {
         timeGridFourDay: {
           type: 'timeGrid',
           duration: { days: 4 },
-          buttonText: '4 jours'
+          buttonText: '4 jours',
+          slotDuration: '00:15:00'
         }
       },
       businessHours: {

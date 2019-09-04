@@ -10,7 +10,7 @@
   .card-body
     = render partial: 'layouts/model_errors', locals: { model: @first_step }
     = simple_form_for(@first_step.rdv, url: first_steps_path) do |f|
-      = f.association :motif, collection: policy_scope(Motif)
+      = f.association :motif, collection: policy_scope(Motif), include_blank: "Sélectionnez un motif"
       = f.input :start_at, as: :hidden
       .text-right
         = f.button :submit, 'Continuer'
