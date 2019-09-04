@@ -8,7 +8,8 @@ environment.plugins.append("Provide", new webpack.ProvidePlugin({
   jQuery: 'jquery',
   moment: 'moment',
   Holder: 'holderjs',
-  Popper: ['popper.js', 'default']
+  Popper: ['popper.js', 'default'],
+  Rails: ['@rails/ujs']
 }))
 
 environment.loaders.prepend('erb', erb)

@@ -41,9 +41,6 @@ document.addEventListener('turbolinks:load', function() {
         if(info.event.extendedProps.past == true) {
           $(info.el).addClass("fc-event-past");
         };
-        if(info.event.extendedProps.cancelled == true) {
-          $(info.el).addClass("fc-event-cancelled");
-        };
         $(info.el).addClass("fc-event-"+ info.event.extendedProps.status);
         $(info.el).attr("data-rightbar", "true");
       }

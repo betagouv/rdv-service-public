@@ -8,7 +8,6 @@
 // layout file, like app/views/layouts/application.html.erb
 require("@rails/ujs").start()
 require("turbolinks").start()
-
 import 'bootstrap';
 import 'moment/moment.js';
 import 'moment/locale/fr.js';
@@ -22,6 +21,7 @@ import { Menu } from 'packs/components/menu';
 import { Layout } from 'packs/components/layout';
 import { Modal } from 'packs/components/modal';
 import { Rightbar } from 'packs/components/rightbar';
+import { Rdvstatus } from 'packs/components/rdvstatus';
 import { Analytic } from 'packs/components/analytic.js.erb';
 import { PlacesInput } from 'packs/components/places-input.js.erb';
 import 'packs/components/calendar';
@@ -41,6 +41,7 @@ $(document).on('shown.bs.modal', '.modal', function(e) {
   analytic.trackModalView(e);
 });
 
+
 $(document).on('shown.rightbar', '.right-bar', function(e) {
   analytic.trackRightbarView(e);
   $('.right-bar .slimscroll-menu').slimscroll({
@@ -56,12 +57,14 @@ $(document).on('shown.rightbar', '.right-bar', function(e) {
     theme: "bootstrap"
   });
   new Datetimepicker();
+  new Rdvstatus();
 });
 
 $(document).on('hide.bs.modal', '.modal', function(e) {
   $('.modal-backdrop').remove();
   $("[data-behaviour='datepicker'], [data-behaviour='datetimepicker'], [data-behaviour='timepicker']").datetimepicker('destroy');
 });
+
 
 $(document).on('turbolinks:load', function() {
   analytic.trackPageView();
