@@ -30,7 +30,7 @@
   .card-body
     = render partial: 'layouts/model_errors', locals: { model: @third_step }
 
-    = simple_form_for(@third_step.rdv, url: organisation_third_steps_path(@third_step.organisation)) do |f|
+    = simple_form_for(@third_step.rdv, url: third_steps_path) do |f|
       = f.association :motif, as: :hidden
       = f.input :location, as: :hidden
       - @third_step.rdv.pros.each do |p|
@@ -42,6 +42,6 @@
       = f.association :user, collection: policy_scope(User), label_method: :full_name, input_html: {class: 'select2-input'}
       .row
         .col.text-left
-          = link_to 'Revenir en arrière', new_organisation_second_step_path(@third_step.to_query), class: 'btn btn-link'
+          = link_to 'Revenir en arrière', new_second_step_path(@third_step.to_query), class: 'btn btn-link'
         .col.text-right
           = f.button :submit, 'Continuer'

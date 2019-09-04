@@ -12,7 +12,7 @@ class Rdvs::FirstStepsController < DashboardAuthController
     build_first_step
     authorize(@first_step)
     if @first_step.valid?
-      redirect_to new_organisation_second_step_path(@first_step.to_query)
+      redirect_to new_second_step_path(@first_step.to_query)
     else
       render 'new'
     end
@@ -27,10 +27,10 @@ class Rdvs::FirstStepsController < DashboardAuthController
   end
 
   def first_step_params
-    params.require(:rdv).permit(:motif_id)
+    params.require(:rdv).permit(:motif_id, :start_at)
   end
 
   def query_params
-    params.permit(:motif_id)
+    params.permit(:motif_id, :start_at)
   end
 end

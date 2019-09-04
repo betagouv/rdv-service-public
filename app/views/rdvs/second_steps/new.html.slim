@@ -10,7 +10,7 @@
 
   .card-body
     = render partial: 'layouts/model_errors', locals: { model: @second_step }
-    = simple_form_for(@second_step.rdv, url: organisation_second_steps_path(@second_step.organisation)) do |f|
+    = simple_form_for(@second_step.rdv, url: second_steps_path) do |f|
       = f.association :motif, as: :hidden,  wrapper_html: { class: 'm-0' }
       = f.input :location, input_html: { class: "places-js-container" }
       = f.association :pros, collection: @second_step.rdv.motif.specialite.pros, label_method: :full_name_and_specialite, input_html: { multiple: true, class: 'select2-input' }
@@ -19,6 +19,6 @@
       = f.input :max_users_limit, input_html: { min: 1 } if @second_step.rdv.motif.max_users_limit
       .row
         .col.text-left
-          = link_to 'Revenir en arrière', new_organisation_first_step_path(@second_step.to_query), class: 'btn btn-link'
+          = link_to 'Revenir en arrière', new_first_step_path(@second_step.to_query), class: 'btn btn-link'
         .col.text-right
           = f.button :submit, 'Continuer'

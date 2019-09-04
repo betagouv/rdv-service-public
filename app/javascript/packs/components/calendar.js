@@ -3,16 +3,22 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import frLocale from '@fullcalendar/core/locales/fr';
+import interactionPlugin from '@fullcalendar/interaction';
+import Routes from '../../routes.js.erb';
 
 document.addEventListener('turbolinks:load', function() {
   var calendarEl = document.getElementById('calendar');
 
   if (calendarEl !== null ) {
     var calendar = new Calendar(calendarEl, {
-      plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
+      plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       locale: frLocale,
       eventSources: ['/events', '/background-events'],
       defaultView: 'timeGridFourDay',
+      selectable: true,
+      select: function(info) {
+        window.location = Routes.new_first_step_path({ start_at: info.startStr });
+      },
       header: {
          center: 'dayGridMonth,timeGridWeek,timeGridFourDay'
       },

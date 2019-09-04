@@ -48,10 +48,10 @@ Rails.application.routes.draw do
       resources :rdvs, except: [:index, :create, :new], shallow: true do
         patch :status, on: :member
       end
-      resources :first_steps, only: [:new, :create], module: "rdvs"
-      resources :second_steps, only: [:new, :create], module: "rdvs"
-      resources :third_steps, only: [:new, :create], module: "rdvs"
     end
+    resources :first_steps, only: [:new, :create], module: "rdvs"
+    resources :second_steps, only: [:new, :create], module: "rdvs"
+    resources :third_steps, only: [:new, :create], module: "rdvs"
   end
 
   { disclaimer: 'mentions_legales', terms: 'cgv' }.each do |k, v|
