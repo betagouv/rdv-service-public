@@ -112,11 +112,11 @@
   text-align: center;
 }
 
-.fc-event-past, .fc-event-cancelled, .fc-event-excused, .fc-event-not_excused {
+.fc-event-past, .fc-event-excused, .fc-event-not_excused {
   filter: opacity(30%);
 }
 
-.fc-event-cancelled, .fc-event-excused, .fc-event-not_excused {
+.fc-event-excused, .fc-event-not_excused {
   .fc-content .fc-title {
     text-decoration: line-through;
   } 
