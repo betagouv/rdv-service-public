@@ -8,7 +8,6 @@
 // layout file, like app/views/layouts/application.html.erb
 require("@rails/ujs").start()
 require("turbolinks").start()
-
 import 'bootstrap';
 import 'moment/moment.js';
 import 'moment/locale/fr.js';
