@@ -2,7 +2,7 @@
   = render partial: 'layouts/model_errors', locals: { model: plage_ouverture }
   = f.input :title
 
-  = f.input :location, input_html: { class: "places-js-container" }
+  = f.association :lieu, collection: policy_scope(Lieu), label_method: :full_name, include_blank: false
 
   div.recurrence-select.recurrence-select--weekly data-controller="recurrence"
 
