@@ -37,6 +37,9 @@ class AgendasController < DashboardAuthController
           end: po.end_time.on(occurence),
           backgroundColor: "#F00",
           rendering: "background",
+          extendedProps: {
+            location: po.lieu.address
+          }
         }
       end
     end
