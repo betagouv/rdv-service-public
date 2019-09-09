@@ -38,8 +38,8 @@ class AgendasController < DashboardAuthController
           backgroundColor: "#F00",
           rendering: "background",
           extendedProps: {
-            location: po.lieu.address
-          }
+            location: po.lieu.address,
+          },
         }
       end
     end
