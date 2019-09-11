@@ -9,6 +9,8 @@ class PlageOuverture < ApplicationRecord
   belongs_to :pro
   has_and_belongs_to_many :motifs
 
+  before_save :clear_empty_recurrence
+
   validates :title, :first_day, :start_time, :end_time, :motifs, :pro, :organisation, presence: true
   validate :end_after_start
 
@@ -39,6 +41,10 @@ class PlageOuverture < ApplicationRecord
   end
 
   private
+
+  def clear_empty_recurrence
+    self.recurrence = nil if recurrence.present? && recurrence.to_hash == {}
+  end
 
   def end_after_start
     return if end_time.blank? || start_time.blank?

@@ -4,6 +4,7 @@ RSpec.describe AgendasController, type: :controller do
     let!(:plage_ouverture) { create(:plage_ouverture, :weekly_by_2, title: "Une semaine sur deux les mercredis à partir du 17/07", first_day: Date.new(2019, 7, 17), pro: pro) }
     let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, title: "Tous les lundis à partir du 22/07", first_day: Date.new(2019, 7, 22), pro: pro) }
     let!(:plage_ouverture3) { create(:plage_ouverture, title: "Une seule fois le 24/07", first_day: Date.new(2019, 7, 24), pro: pro) }
+    let!(:plage_ouverture4) { create(:plage_ouverture, title: "Une seule fois le 24/07", first_day: Date.new(2019, 7, 24), pro: pro, recurrence: Montrose::Recurrence.new) }
 
     before do
       sign_in pro
@@ -28,8 +29,8 @@ RSpec.describe AgendasController, type: :controller do
       let(:start_date) { Date.new(2019, 7, 22) }
       let(:end_date) { Date.new(2019, 7, 28) }
 
-      it "should return a single occurence from plage_ouverture2" do
-        expect(@parsed_response.size).to eq(2)
+      it "should return 3 occurences from plage_ouverture2 3 and 4" do
+        expect(@parsed_response.size).to eq(3)
 
         first = @parsed_response[0]
         expect(first.size).to eq(5)
@@ -46,6 +47,14 @@ RSpec.describe AgendasController, type: :controller do
         expect(second["end"]).to eq("2019-07-24T12:00:00.000+02:00")
         expect(second["backgroundColor"]).to eq("#F00")
         expect(second["rendering"]).to eq("background")
+
+        third = @parsed_response[2]
+        expect(third.size).to eq(5)
+        expect(third["title"]).to eq(plage_ouverture4.title)
+        expect(third["start"]).to eq("2019-07-24T08:00:00.000+02:00")
+        expect(third["end"]).to eq("2019-07-24T12:00:00.000+02:00")
+        expect(third["backgroundColor"]).to eq("#F00")
+        expect(third["rendering"]).to eq("background")
       end
     end
 
