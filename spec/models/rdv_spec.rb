@@ -4,7 +4,7 @@ describe Rdv, type: :model do
 
   describe '#to_ical_for' do
     let(:rdv) { create(:rdv) }
-    let(:user_or_pro) { rdv.user }
+    let(:user_or_pro) { rdv.users.first }
 
     subject { rdv.to_ical_for(user_or_pro) }
 

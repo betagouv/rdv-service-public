@@ -2,11 +2,11 @@
   = render partial: 'layouts/model_errors', locals: { model: rdv }
   = f.input :name
   = f.association :motif, disabled: true
-  = f.input :location, input_html: { class: "places-js-container" } 
+  = f.input :location, input_html: { class: "places-js-container" }
   = f.association :pros, collection: rdv.motif.specialite.pros, label_method: :full_name_and_specialite, input_html: { multiple: true, class: 'select2-input' }
   = f.input :duration_in_min
   = datetime_input(f, :start_at)
   = f.input :max_users_limit, input_html: { min: 1 } if rdv.max_users_limit
-  = f.association :user, collection: policy_scope(User), label_method: :full_name, input_html: {class: 'select2-input'}
+  = f.association :users, collection: policy_scope(User), label_method: :full_name, input_html: { multiple: true, class: 'select2-input' }
   .text-right
     = f.button :submit

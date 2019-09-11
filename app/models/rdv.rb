@@ -3,6 +3,7 @@ class Rdv < ApplicationRecord
   belongs_to :motif
   belongs_to :user
   has_and_belongs_to_many :pros
+  has_and_belongs_to_many :users
 
   enum status: { to_be: 0, waiting: 1, seen: 2, excused: 3, not_excused: 4 }
 
@@ -87,7 +88,7 @@ class Rdv < ApplicationRecord
       duration_in_min: duration_in_min,
       start_at: start_at,
       max_users_limit: max_users_limit,
-      user: user,
+      users: users,
       pros: pros,
     }
   end
