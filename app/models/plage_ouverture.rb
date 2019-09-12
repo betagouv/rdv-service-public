@@ -7,11 +7,11 @@ class PlageOuverture < ApplicationRecord
 
   belongs_to :organisation
   belongs_to :pro
+  belongs_to :lieu
   has_and_belongs_to_many :motifs
 
   before_save :clear_empty_recurrence
 
-  validates :title, :first_day, :start_time, :end_time, :motifs, :pro, :organisation, presence: true
   validate :end_after_start
 
   scope :exceptionnelles, -> { where(recurrence: nil) }

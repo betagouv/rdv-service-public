@@ -33,28 +33,31 @@ RSpec.describe AgendasController, type: :controller do
         expect(@parsed_response.size).to eq(3)
 
         first = @parsed_response[0]
-        expect(first.size).to eq(5)
+        expect(first.size).to eq(6)
         expect(first["title"]).to eq(plage_ouverture2.title)
         expect(first["start"]).to eq(plage_ouverture2.start_at.as_json)
         expect(first["end"]).to eq(plage_ouverture2.end_at.as_json)
         expect(first["backgroundColor"]).to eq("#F00")
         expect(first["rendering"]).to eq("background")
+        expect(first["extendedProps"]).to eq({ location: plage_ouverture2.lieu.address }.as_json)
 
         second = @parsed_response[1]
-        expect(second.size).to eq(5)
+        expect(second.size).to eq(6)
         expect(second["title"]).to eq(plage_ouverture3.title)
         expect(second["start"]).to eq("2019-07-24T08:00:00.000+02:00")
         expect(second["end"]).to eq("2019-07-24T12:00:00.000+02:00")
         expect(second["backgroundColor"]).to eq("#F00")
         expect(second["rendering"]).to eq("background")
+        expect(second["extendedProps"]).to eq({ location: plage_ouverture3.lieu.address }.as_json)
 
         third = @parsed_response[2]
-        expect(third.size).to eq(5)
+        expect(third.size).to eq(6)
         expect(third["title"]).to eq(plage_ouverture4.title)
         expect(third["start"]).to eq("2019-07-24T08:00:00.000+02:00")
         expect(third["end"]).to eq("2019-07-24T12:00:00.000+02:00")
         expect(third["backgroundColor"]).to eq("#F00")
         expect(third["rendering"]).to eq("background")
+        expect(third["extendedProps"]).to eq({ location: plage_ouverture4.lieu.address }.as_json)
       end
     end
 
@@ -66,20 +69,22 @@ RSpec.describe AgendasController, type: :controller do
         expect(@parsed_response.size).to eq(2)
 
         first = @parsed_response[0]
-        expect(first.size).to eq(5)
+        expect(first.size).to eq(6)
         expect(first["title"]).to eq(plage_ouverture2.title)
         expect(first["start"]).to eq("2019-07-29T08:00:00.000+02:00")
         expect(first["end"]).to eq("2019-07-29T12:00:00.000+02:00")
         expect(first["backgroundColor"]).to eq("#F00")
         expect(first["rendering"]).to eq("background")
+        expect(first["extendedProps"]).to eq({ location: plage_ouverture2.lieu.address }.as_json)
 
         second = @parsed_response[1]
-        expect(second.size).to eq(5)
+        expect(second.size).to eq(6)
         expect(second["title"]).to eq(plage_ouverture.title)
         expect(second["start"]).to eq("2019-07-31T08:00:00.000+02:00")
         expect(second["end"]).to eq("2019-07-31T12:00:00.000+02:00")
         expect(second["backgroundColor"]).to eq("#F00")
         expect(second["rendering"]).to eq("background")
+        expect(second["extendedProps"]).to eq({ location: plage_ouverture.lieu.address }.as_json)
       end
     end
   end

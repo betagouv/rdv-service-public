@@ -2,15 +2,22 @@
   | Choisir le motif
 
 .card
-  - if @first_step.rdv.start_at.present?
+  - if @first_step.rdv.start_at.present? || @first_step.rdv.location.present?
     ul.list-group.list-group-flush
-      li.list-group-item
-        i.fa.fa-check.fa-fw.mr-1.text-success
-        = "Commence le : #{l(@first_step.rdv.start_at, format: :human)}"
+      - if @first_step.rdv.start_at.present?
+        li.list-group-item
+          i.fa.fa-check.fa-fw.mr-1.text-success
+          = "Commence le : #{l(@first_step.rdv.start_at, format: :human)}"
+      - if @first_step.rdv.location.present?
+        li.list-group-item
+          i.fa.fa-check.fa-fw.mr-1.text-success
+          | Lieu :&nbsp;
+          = human_location(@first_step.rdv)
   .card-body
     = render partial: 'layouts/model_errors', locals: { model: @first_step }
     = simple_form_for(@first_step.rdv, url: first_steps_path) do |f|
-      = f.association :motif, collection: policy_scope(Motif)
+      = f.association :motif, collection: policy_scope(Motif), include_blank: "Sélectionnez un motif"
       = f.input :start_at, as: :hidden
+      = f.input :location, as: :hidden
       .text-right
         = f.button :submit, 'Continuer'

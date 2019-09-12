@@ -46,6 +46,6 @@ class PlageOuverturesController < DashboardAuthController
   end
 
   def plage_ouverture_params
-    params.require(:plage_ouverture).permit(:title, :first_day, :start_time, :end_time, :location, :recurrence, motif_ids: [])
+    params.require(:plage_ouverture).permit(:title, :first_day, :start_time, :end_time, :lieu_id, :recurrence, motif_ids: [])
   end
 end

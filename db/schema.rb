@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_24_184003) do
+ActiveRecord::Schema.define(version: 2019_09_04_095239) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -112,8 +112,9 @@ ActiveRecord::Schema.define(version: 2019_07_24_184003) do
     t.time "end_time", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "location"
     t.text "recurrence"
+    t.bigint "lieu_id"
+    t.index ["lieu_id"], name: "index_plage_ouvertures_on_lieu_id"
     t.index ["organisation_id"], name: "index_plage_ouvertures_on_organisation_id"
     t.index ["pro_id"], name: "index_plage_ouvertures_on_pro_id"
   end
@@ -211,6 +212,7 @@ ActiveRecord::Schema.define(version: 2019_07_24_184003) do
   add_foreign_key "lieux", "organisations"
   add_foreign_key "motifs", "organisations"
   add_foreign_key "motifs", "specialites"
+  add_foreign_key "plage_ouvertures", "lieux"
   add_foreign_key "plage_ouvertures", "organisations"
   add_foreign_key "plage_ouvertures", "pros"
   add_foreign_key "rdvs", "motifs"
