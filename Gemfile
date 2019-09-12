@@ -19,7 +19,7 @@ gem 'bootstrap4-kaminari-views'
 gem 'administrate', '~> 0.11'
 
 # Devise / auth
-gem 'devise', '~> 4.6'
+gem 'devise', '~> 4.7'
 gem 'devise_invitable', '~> 2.0'
 gem 'devise-async', '~> 1.0'
 gem 'omniauth-github'
