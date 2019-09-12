@@ -7,7 +7,7 @@
     "@fullcalendar/interaction": "^4.3.0",
     "@fullcalendar/list": "^4.1.0",
     "@fullcalendar/timegrid": "^4.1.0",
-    "@rails/ujs": "^6.0.0-alpha",
+    "@rails/ujs": "^6.0.0",
     "@rails/webpacker": "^4.0.2",
     "actiontext": "https://github.com/kobaltz/actiontext",
     "bootstrap": "^4.3.1",
