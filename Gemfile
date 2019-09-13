@@ -5,7 +5,7 @@ ruby '2.6.2'
 
 gem 'dotenv-rails', '~> 2.7.2' # dotenv should always be loaded before rails
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.3'
+gem 'rails', '~> 6.0'
 gem 'sprockets-rails'
 
 # Use Puma as the app server
@@ -13,10 +13,10 @@ gem 'puma', '~> 3.11'
 
 # DB
 gem 'pg', '>= 0.18', '< 2.0'
-gem 'pg_search', '~> 2.2'
+gem 'pg_search', '~> 2.3'
 gem 'kaminari', '~> 1.1'
-gem 'bootstrap4-kaminari-views'
-gem 'administrate', '~> 0.11'
+gem 'bootstrap4-kaminari-views', '~> 1.0'
+gem 'administrate', '~> 0.12'
 
 # Devise / auth
 gem 'devise', '~> 4.7'
@@ -26,30 +26,29 @@ gem 'omniauth-github'
 gem 'pundit', '~> 2.0'
 
 # Jobs
-gem 'delayed_job_active_record'
+gem 'delayed_job_active_record', '~> 4.1.4'
 gem 'delayed_job_web'
 
 # Form
 gem 'simple_form', '~> 4.1'
-gem 'actiontext', github: 'kobaltz/actiontext', branch: 'archive', require: 'action_text'
 gem 'image_processing', '~> 1.8'
 
 # Front
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails', '~> 6.0'
 gem 'autoprefixer-rails', '~> 9.6'
-gem 'font-awesome-rails', '~> 4.7'
+gem 'font-awesome-rails', '~> 4.7'  
 gem "chartkick", '~> 3.2.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'slim', '~> 4.0'
 
 ## Time Management
-gem "montrose", '~> 0.9'
+gem 'montrose', github: 'beg/montrose'
 gem 'tod', '~> 2.2'
 gem 'icalendar', '~> 2.5'
 
 # Mailing
 gem 'sendgrid', '~> 1.2.4'
-gem 'premailer-rails', '~> 1.10'
+gem 'premailer-rails'
 
 # Ops
 gem 'airbrake', '~> 9.2'
