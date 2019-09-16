@@ -8,6 +8,7 @@ FactoryBot.define do
     pro { Pro.first || create(:pro) }
     start_time { Tod::TimeOfDay.new(8) }
     end_time { Tod::TimeOfDay.new(12) }
+    lieu { Lieu.first || create(:lieu) }
     no_recurrence
 
     trait :no_recurrence do
