@@ -30,15 +30,15 @@ module ApplicationHelper
   end
 
   def datetime_input(form, field)
-    form.input(field, as: :string, input_html: { value: form.object.send(field)&.strftime("%d/%m/%Y %H:%M"), data: { behaviour: 'datetimepicker' } })
+    form.input(field, as: :string, input_html: { value: form.object.send(field)&.strftime("%d/%m/%Y %H:%M"), data: { behaviour: 'datetimepicker' }, autocomplete: "off" })
   end
 
   def date_input(form, field, input_html: {})
-    form.input(field, as: :string, input_html: { value: form.object.send(field)&.strftime("%d/%m/%Y"), data: { behaviour: 'datepicker' } }.deep_merge(input_html))
+    form.input(field, as: :string, input_html: { value: form.object.send(field)&.strftime("%d/%m/%Y"), data: { behaviour: 'datepicker' }, autocomplete: "off" }.deep_merge(input_html))
   end
 
   def time_input(form, field)
-    form.input(field, as: :string, input_html: { value: form.object.send(field)&.strftime("%H:%M"), data: { behaviour: 'timepicker' } })
+    form.input(field, as: :string, input_html: { value: form.object.send(field)&.strftime("%H:%M"), data: { behaviour: 'timepicker' }, autocomplete: "off" })
   end
 
   def add_button(label, path, header: false, condition: true)
