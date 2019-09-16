@@ -10,11 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_04_095239) do
+ActiveRecord::Schema.define(version: 2019_09_11_102401) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
+
+  create_table "absences", force: :cascade do |t|
+    t.bigint "pro_id"
+    t.string "title"
+    t.bigint "organisation_id"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organisation_id"], name: "index_absences_on_organisation_id"
+    t.index ["pro_id"], name: "index_absences_on_pro_id"
+  end
 
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
@@ -183,6 +195,13 @@ ActiveRecord::Schema.define(version: 2019_09_04_095239) do
     t.index ["user_id"], name: "index_rdvs_on_user_id"
   end
 
+  create_table "rdvs_users", id: false, force: :cascade do |t|
+    t.bigint "rdv_id"
+    t.bigint "user_id"
+    t.index ["rdv_id"], name: "index_rdvs_users_on_rdv_id"
+    t.index ["user_id"], name: "index_rdvs_users_on_user_id"
+  end
+
   create_table "specialites", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -208,6 +227,8 @@ ActiveRecord::Schema.define(version: 2019_09_04_095239) do
     t.index ["organisation_id"], name: "index_users_on_organisation_id"
   end
 
+  add_foreign_key "absences", "organisations"
+  add_foreign_key "absences", "pros"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "lieux", "organisations"
   add_foreign_key "motifs", "organisations"

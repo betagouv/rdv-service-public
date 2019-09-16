@@ -1,12 +1,13 @@
 class Rdv < ApplicationRecord
   belongs_to :organisation
   belongs_to :motif
-  belongs_to :user
+  belongs_to :user, optional: true
   has_and_belongs_to_many :pros
+  has_and_belongs_to_many :users
 
   enum status: { to_be: 0, waiting: 1, seen: 2, excused: 3, not_excused: 4 }
 
-  validates :user, :organisation, :motif, :start_at, :duration_in_min, :pros, presence: true
+  validates :users, :organisation, :motif, :start_at, :duration_in_min, :pros, presence: true
   validates :max_users_limit, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
   scope :active, -> { where(cancelled_at: nil) }
@@ -14,7 +15,7 @@ class Rdv < ApplicationRecord
 
   after_commit :reload_uuid, on: :create
 
-  after_create :send_ics_to_user_and_pros
+  after_create :send_ics_to_users_and_pros
   after_update :update_ics_to_user_and_pros, if: -> { saved_change_to_start_at? || saved_change_to_cancelled_at? }
 
   def end_at
@@ -33,8 +34,8 @@ class Rdv < ApplicationRecord
     update(cancelled_at: Time.zone.now)
   end
 
-  def send_ics_to_user_and_pros
-    RdvMailer.send_ics_to_user(self).deliver_later
+  def send_ics_to_users_and_pros
+    users.each { |user| RdvMailer.send_ics_to_user(self, user).deliver_later }
     pros.each { |pro| RdvMailer.send_ics_to_pro(self, pro).deliver_later }
   end
 
@@ -87,7 +88,7 @@ class Rdv < ApplicationRecord
       duration_in_min: duration_in_min,
       start_at: start_at,
       max_users_limit: max_users_limit,
-      user: user,
+      users: users,
       pros: pros,
     }
   end

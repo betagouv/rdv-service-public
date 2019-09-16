@@ -1,18 +1,18 @@
 class RdvMailerPreview < ActionMailer::Preview
   def send_ics_to_user
     rdv = Rdv.active.last
-    RdvMailer.send_ics_to_user(rdv)
+    RdvMailer.send_ics_to_user(rdv, rdv.users.first)
   end
 
   def send_updated_ics_to_user
     rdv = Rdv.active.last
-    RdvMailer.send_ics_to_user(rdv, rdv.start_at.-(2.days).to_s)
+    RdvMailer.send_ics_to_user(rdv, rdv.users.first, rdv.start_at.-(2.days).to_s)
   end
 
   def send_cancelled_ics_to_user
     rdv = Rdv.last
     rdv.cancelled_at = Time.zone.now
-    RdvMailer.send_ics_to_user(rdv)
+    RdvMailer.send_ics_to_user(rdv, rdv.users.first)
   end
 
   def send_ics_to_pro
