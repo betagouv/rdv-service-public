@@ -52,6 +52,7 @@ Rails.application.routes.draw do
     resources :first_steps, only: [:new, :create], module: "rdvs"
     resources :second_steps, only: [:new, :create], module: "rdvs"
     resources :third_steps, only: [:new, :create], module: "rdvs"
+    resources :absences, except: :show
   end
 
   { disclaimer: 'mentions_legales', terms: 'cgv' }.each do |k, v|

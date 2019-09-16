@@ -6,7 +6,7 @@ fr:
       rdv:
         name: Nom
         motif: Motif
-        user: Usager
+        users: Usagers
         pros: Professionnels
         location: Lieu
         max_users_limit: Limite du nombre d'usagers

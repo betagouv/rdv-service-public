@@ -39,13 +39,13 @@ describe "Pro can create a Rdv with wizard" do
     expect_checked("Professionnels : #{pro.full_name_and_specialite} et #{pro2.full_name_and_specialite}")
     expect_checked("Commence le : samedi 12 octobre 2019 à 14h15")
 
-    select(user.full_name, from: 'rdv_user_id')
+    select_user(user)
 
     click_button('Continuer')
 
     expect(user.rdvs.count).to eq(1)
     rdv = user.rdvs.first
-    expect(rdv.user).to eq(user)
+    expect(rdv.users).to contain_exactly(user)
     expect(rdv.motif).to eq(motif)
     expect(rdv.duration_in_min).to eq(35)
     expect(rdv.start_at).to eq(Time.zone.local(2019, 10, 12, 14, 15))
@@ -68,7 +68,7 @@ describe "Pro can create a Rdv with wizard" do
     expect_page_title("Choisir l'usager")
     expect_checked("4 usagers maximum")
 
-    select(user.full_name, from: 'rdv_user_id')
+    select_user(user)
 
     click_button('Continuer')
 
@@ -77,6 +77,10 @@ describe "Pro can create a Rdv with wizard" do
 
   def select_pro(pro)
     select(pro.full_name_and_specialite, from: 'rdv_pro_ids')
+  end
+
+  def select_user(user)
+    select(user.full_name, from: 'rdv_user_ids')
   end
 
   def expect_page_title(title)

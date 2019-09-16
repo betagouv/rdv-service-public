@@ -454,7 +454,7 @@ PLATFORMS
 
 DEPENDENCIES
   administrate (~> 0.12)
-  airbrake (~> 9.2)
+  airbrake (~> 9.4)
   autoprefixer-rails (~> 9.6)
   better_errors
   bootsnap (>= 1.1.0)

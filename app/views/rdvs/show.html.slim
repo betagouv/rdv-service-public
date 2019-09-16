@@ -24,8 +24,8 @@ p.card-text
     strong Nombre d'usagers maximum :&nbsp;
     = @rdv.max_users_limit
 p.card-text
-  strong Usager :&nbsp;
-  = @rdv.user.full_name
+  strong Usagers :&nbsp;
+  = users_to_sentence(@rdv)
 .row.text-right
   .col.text-right
     ul.list-inline.m-0
@@ -37,6 +37,3 @@ hr
   .col
     = simple_form_for(@rdv, url: status_rdv_path, remote: true) do |f|
       = f.input :status, collection: Rdv.human_enum_collection(:status), as: :radio_buttons
-
-
-
