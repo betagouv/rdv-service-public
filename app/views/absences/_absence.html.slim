@@ -1,0 +1,5 @@
+tr
+  td
+    = link_to absence.title_or_default, edit_absence_path(absence), data: { rightbar: true }
+  td
+    | Du #{l(absence.starts_at, format: :human)} au #{l(absence.ends_at, format: :human)}

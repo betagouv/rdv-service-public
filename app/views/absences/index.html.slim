@@ -1,0 +1,47 @@
+- content_for :title do
+  | Vos absences
+
+- content_for :breadcrumb do
+  = add_button 'Créer une absence', new_absence_path, header: true, condition: policy(Absence).new?
+
+.card
+  .card-body
+    - if @absences.a_venir.any?
+      h5.card-title À venir
+      table.table
+        thead
+          tr
+            th Titre
+            th
+        tbody
+          = render @absences.a_venir
+
+    - if @absences.en_cours.any?
+      h5.card-title En cours
+      table.table
+        thead
+          tr
+            th Titre
+            th
+        tbody
+          = render @absences.en_cours
+
+    - if @absences.passees.any?
+      h5.card-title Passées
+      table.table
+        thead
+          tr
+            th Titre
+            th
+        tbody
+          = render @absences.passees
+
+    - if @absences.empty?
+      .row.justify-content-md-center
+        .col-md-6.text-center.my-5
+          p.mb-2.lead Vous n'avez pas encore créé d'absence.
+          span.fa-stack.fa-4x
+            i.fa.fa-circle.fa-stack-2x.text-primary
+            i.fa.fa-calendar-o.fa-stack-1x.text-white
+    .text-center
+      = add_button 'Créer une absence', new_absence_path, condition: policy(Absence).new?

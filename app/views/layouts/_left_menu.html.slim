@@ -18,6 +18,10 @@
           i.fa.fa-clock-o
           span Vos plages d'ouverture
 
+        = link_to absences_path, class: 'side-nav-link' do
+          i.fa.fa-calendar-times-o
+          span Vos absences
+
         - if current_pro.admin?
           li.side-nav-item
             = link_to '#', class: 'side-nav-link' do

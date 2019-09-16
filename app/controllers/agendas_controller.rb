@@ -21,6 +21,17 @@ class AgendasController < DashboardAuthController
       }
     end
 
+    absences = current_pro.absences
+    @events += absences.map do |abs|
+      {
+        title: abs.title_or_default,
+        start: abs.starts_at,
+        end: abs.ends_at,
+        backgroundColor: "#7f8c8d",
+        url: absences_path,
+      }
+    end
+
     @events = @events.sort_by { |e| e[:start] }
 
     render json: @events
