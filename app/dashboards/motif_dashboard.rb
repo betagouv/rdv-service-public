@@ -11,7 +11,7 @@ class MotifDashboard < Administrate::BaseDashboard
     id: Field::Number,
     name: Field::String,
     organisation: Field::BelongsTo,
-    specialite: Field::BelongsTo,
+    service: Field::BelongsTo,
     color: Field::String,
     max_users_limit: Field::Number,
     online: Field::Boolean,
@@ -33,7 +33,7 @@ class MotifDashboard < Administrate::BaseDashboard
     :id,
     :name,
     :organisation,
-    :specialite,
+    :service,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -42,7 +42,7 @@ class MotifDashboard < Administrate::BaseDashboard
     :id,
     :name,
     :organisation,
-    :specialite,
+    :service,
     :color,
     :max_users_limit,
     :online,
@@ -66,7 +66,7 @@ class MotifDashboard < Administrate::BaseDashboard
     :at_home,
     :default_duration_in_min,
     :organisation,
-    :specialite,
+    :service,
     :min_booking_delay,
     :max_booking_delay,
     :deleted_at,

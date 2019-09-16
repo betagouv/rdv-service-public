@@ -2,7 +2,7 @@ class Pros::FullSubscriptionsController < DashboardAuthController
   layout 'registration'
 
   def new
-    @subscription = Pro::FullSubscription.new(pro: current_pro, first_name: current_pro.first_name, last_name: current_pro.last_name, specialite_id: current_pro.specialite_id)
+    @subscription = Pro::FullSubscription.new(pro: current_pro, first_name: current_pro.first_name, last_name: current_pro.last_name, service_id: current_pro.service_id)
     authorize(@subscription)
   end
 
@@ -28,6 +28,6 @@ class Pros::FullSubscriptionsController < DashboardAuthController
   end
 
   def full_subscription_params
-    params.require(:pro_full_subscription).permit(:first_name, :last_name, :specialite_id)
+    params.require(:pro_full_subscription).permit(:first_name, :last_name, :service_id)
   end
 end

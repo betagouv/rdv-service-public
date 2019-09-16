@@ -11,7 +11,7 @@ Rails.application.routes.draw do
     resources :super_admins
     resources :organisations
     resources :lieux
-    resources :specialites
+    resources :services
     resources :motifs
     resources :users
     resources :rdvs
@@ -40,7 +40,7 @@ Rails.application.routes.draw do
     resources :organisations, except: :destroy do
       resources :lieux, except: :index
       resources :pros
-      resources :users, shallow: true
+      resources :users, except: :show, shallow: true
       resources :motifs, shallow: true
       resources :plage_ouvertures, except: :show, shallow: true
 

@@ -4,7 +4,7 @@
 = simple_form_for([organisation, motif], remote: request.xhr?, data: { rightbar: true }) do |f|
   = render partial: 'layouts/model_errors', locals: { model: motif }
   = f.input :name
-  = f.association :specialite, collection: Specialite.all
+  = f.association :service, collection: Service.all
   = f.input :max_users_limit, hint: 'Laisser vide pour ne pas limiter le nombre d\'usagers', input_html: { min: 1 }
   = f.input :at_home
   = f.input :online

@@ -14,9 +14,5 @@ Lieu.create!(name: "Maison Gare du Nord", telephone: "0123456789", organisation_
   User.create!(first_name: Faker::Name.first_name, last_name: Faker::Name.last_name, email: Faker::Internet.email, organisation_id: 1, birth_date: Faker::Date.birthday)
 end
 
-Specialite.create!(name: "Médecin")
-Specialite.create!(name: "Infirmière")
-Specialite.create!(name: "Puéricultrice")
-Specialite.create!(name: "Sage-femme")
-Specialite.create!(name: "Psychologue")
-Specialite.create!(name: "Assistante Sociale ")
+Service.create!(name: "Protection Maternelle Infantile")
+Service.create!(name: "Service Social")

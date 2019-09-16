@@ -1,6 +1,6 @@
 = simple_form_for :search, url: root_path do |f| 
   .form-row.d-flex.align-items-center
-    .col-5= f.input :what, label: false, input_html: { class: "form-control-lg" }, wrapper_html: {class: 'mb-0'}, collection: Specialite.all, as: :select, prompt: 'Choisissez une spécialité'
+    .col-5= f.input :what, label: false, input_html: { class: "form-control-lg" }, wrapper_html: {class: 'mb-0'}, collection: Service.all, as: :select, prompt: 'Choisissez un service'
     .col-5= f.input :where, label: false, placeholder: 'Où ?', input_html: { class: "form-control-lg places-js-container" }, wrapper_html: {class: 'mb-0'}
     .col-2
       = f.button :submit, 'Rechercher', class: 'btn-danger btn-lg'

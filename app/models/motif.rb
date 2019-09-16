@@ -1,6 +1,6 @@
 class Motif < ApplicationRecord
   belongs_to :organisation
-  belongs_to :specialite
+  belongs_to :service
   has_many :rdvs, dependent: :restrict_with_exception
   has_and_belongs_to_many :plage_ouvertures
 

@@ -11,7 +11,7 @@ fr:
         last_name: Nom
         role: Rôle
         rdvs: Rendez-vous
-        specialite: Spécialité
+        service: Service
         roles:
           user: Utilisateur
           admin: Admin

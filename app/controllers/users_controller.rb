@@ -10,11 +10,6 @@ class UsersController < DashboardAuthController
     filter_users if params[:user] && params[:user][:search]
   end
 
-  def show
-    @user = policy_scope(Specialite).find(params[:id])
-    authorize(@user)
-  end
-
   def new
     @user = User.new
     authorize(@user)

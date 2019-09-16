@@ -5,7 +5,7 @@ fr:
     attributes:
       motif:
         organisation: Organisation
-        specialite: Spécialité
+        service: Service
         name: Nom
         color: Couleur
         max_users_limit: Limite du nombre d'usagers

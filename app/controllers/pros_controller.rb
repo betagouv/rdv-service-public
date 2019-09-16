@@ -4,7 +4,7 @@ class ProsController < DashboardAuthController
   def index
     pros = policy_scope(Pro).active
     authorize(pros)
-    @complete_pros = pros.complete.includes(:specialite).page(params[:page])
+    @complete_pros = pros.complete.includes(:service).page(params[:page])
     @invited_pros = pros.invitation_not_accepted.created_by_invite
   end
 

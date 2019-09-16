@@ -1,6 +1,6 @@
 require "administrate/base_dashboard"
 
-class SpecialiteDashboard < Administrate::BaseDashboard
+class ServiceDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
   # a hash that describes the type of each of the model's fields.
   #
@@ -43,12 +43,13 @@ class SpecialiteDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = [
     :name,
     :motifs,
+    :pros,
   ].freeze
 
   # Overwrite this method to customize how super admins are displayed
   # across all pages of the admin dashboard.
   #
-  def display_resource(specialite)
-    specialite.name
+  def display_resource(service)
+    service.name
   end
 end

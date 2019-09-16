@@ -14,7 +14,7 @@ class ProDashboard < Administrate::BaseDashboard
     first_name: Field::String,
     last_name: Field::String,
     organisation: Field::BelongsTo,
-    specialite: Field::BelongsTo,
+    service: Field::BelongsTo,
     encrypted_password: Field::String,
     reset_password_token: Field::String,
     reset_password_sent_at: Field::DateTime,
@@ -46,7 +46,7 @@ class ProDashboard < Administrate::BaseDashboard
     :last_name,
     :role,
     :organisation,
-    :specialite,
+    :service,
     :reset_password_sent_at,
     :remember_created_at,
     :created_at,
@@ -62,7 +62,7 @@ class ProDashboard < Administrate::BaseDashboard
     :first_name,
     :last_name,
     :role,
-    :specialite,
+    :service,
     :deleted_at,
   ].freeze
 
