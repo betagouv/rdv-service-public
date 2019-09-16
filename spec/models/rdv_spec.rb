@@ -4,7 +4,7 @@ describe Rdv, type: :model do
 
   describe '#to_ical_for' do
     let(:rdv) { create(:rdv) }
-    let(:user_or_pro) { rdv.user }
+    let(:user_or_pro) { rdv.users.first }
 
     subject { rdv.to_ical_for(user_or_pro) }
 
@@ -32,11 +32,11 @@ describe Rdv, type: :model do
     end
   end
 
-  describe "#send_ics_to_user_and_pros" do
+  describe "#send_ics_to_users_and_pros" do
     let(:rdv) { build(:rdv, pros: [pro1, pro2]) }
 
     it "should be called after create" do
-      expect(rdv).to receive(:send_ics_to_user_and_pros)
+      expect(rdv).to receive(:send_ics_to_users_and_pros)
       rdv.save!
     end
 
@@ -44,13 +44,13 @@ describe Rdv, type: :model do
       let(:rdv) { create(:rdv) }
 
       it "should not be called" do
-        expect(rdv).not_to receive(:send_ics_to_user_and_pros)
+        expect(rdv).not_to receive(:send_ics_to_users_and_pros)
         rdv.save!
       end
     end
 
     it "calls RdvMailer to send email to user" do
-      expect(RdvMailer).to receive(:send_ics_to_user).with(rdv).and_return(double(deliver_later: nil))
+      expect(RdvMailer).to receive(:send_ics_to_user).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
       rdv.save!
     end
 

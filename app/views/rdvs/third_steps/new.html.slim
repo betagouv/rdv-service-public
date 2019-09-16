@@ -39,7 +39,7 @@
       = f.input :duration_in_min, as: :hidden
       = f.input :start_at, as: :hidden
       = f.input :max_users_limit, as: :hidden
-      = f.association :user, collection: policy_scope(User), label_method: :full_name, input_html: {class: 'select2-input'}
+      = f.association :users, collection: policy_scope(User), label_method: :full_name, input_html: { multiple: true, class: 'select2-input' }
       .row
         .col.text-left
           = link_to 'Revenir en arrière', new_second_step_path(@third_step.to_query), class: 'btn btn-link'

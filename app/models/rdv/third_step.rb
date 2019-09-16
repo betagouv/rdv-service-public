@@ -1,3 +1,3 @@
 class Rdv::ThirdStep < Rdv::SecondStep
-  validates :user, presence: true
+  validates :users, presence: true
 end

@@ -45,7 +45,7 @@ class RdvsController < DashboardAuthController
   end
 
   def rdv_params
-    params.require(:rdv).permit(:name, :duration_in_min, :start_at, :max_users_limit, pro_ids: [])
+    params.require(:rdv).permit(:name, :duration_in_min, :start_at, :max_users_limit, pro_ids: [], user_ids: [])
   end
 
   def status_params
