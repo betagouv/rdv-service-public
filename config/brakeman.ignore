@@ -19,8 +19,39 @@
       "user_input": ":role",
       "confidence": "Medium",
       "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "c337f7231e73f571019fbdee7b20be2ef5b745dc5dd33a95bb80222b30ccad2a",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/absences/index.html.slim",
+      "line": 16,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => policy_scope(Absence).all.page(params[:page]), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "AbsencesController",
+          "method": "index",
+          "line": 9,
+          "file": "app/controllers/absences_controller.rb",
+          "rendered": {
+            "name": "absences/index",
+            "file": "app/views/absences/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "absences/index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "note": ""
     }
   ],
-  "updated": "2019-07-08 14:20:50 +0200",
-  "brakeman_version": "4.5.1"
+  "updated": "2019-09-16 11:30:43 +0200",
+  "brakeman_version": "4.6.1"
 }

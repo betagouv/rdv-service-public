@@ -4,7 +4,7 @@ class AbsencesController < DashboardAuthController
   before_action :set_absence, only: [:edit, :update, :destroy]
 
   def index
-    @absences = policy_scope(Absence).all
+    @absences = policy_scope(Absence).all.page(params[:page])
     respond_right_bar_with @absences
   end
 

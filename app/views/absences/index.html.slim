@@ -6,37 +6,18 @@
 
 .card
   .card-body
-    - if @absences.a_venir.any?
-      h5.card-title À venir
+    - if @absences.any?
       table.table
         thead
           tr
             th Titre
             th
         tbody
-          = render @absences.a_venir
+          = render @absences
+      .d-flex.justify-content-center
+        = paginate @absences, theme: 'twitter-bootstrap-4'
 
-    - if @absences.en_cours.any?
-      h5.card-title En cours
-      table.table
-        thead
-          tr
-            th Titre
-            th
-        tbody
-          = render @absences.en_cours
-
-    - if @absences.passees.any?
-      h5.card-title Passées
-      table.table
-        thead
-          tr
-            th Titre
-            th
-        tbody
-          = render @absences.passees
-
-    - if @absences.empty?
+    - else
       .row.justify-content-md-center
         .col-md-6.text-center.my-5
           p.mb-2.lead Vous n'avez pas encore créé d'absence.
