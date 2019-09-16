@@ -101,12 +101,12 @@ describe Rdv, type: :model do
 
   describe "#cancel" do
     let(:rdv) { create(:rdv) }
-    let(:now) { Time.zone.now }
+    let(:now) { Time.current }
 
     subject { rdv.cancel }
 
-    before { Timecop.freeze(now) }
-    after { Timecop.return }
+    before { freeze_time }
+    after { travel_back }
 
     it "should set cancelled_at" do
       expect { subject }.to change { rdv.cancelled_at }.from(nil).to(now)
