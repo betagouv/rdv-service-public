@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_11_102401) do
+ActiveRecord::Schema.define(version: 2019_09_16_114034) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -98,6 +98,7 @@ ActiveRecord::Schema.define(version: 2019_09_11_102401) do
     t.integer "max_users_limit"
     t.integer "min_booking_delay", default: 1800
     t.integer "max_booking_delay", default: 7889238
+    t.datetime "deleted_at"
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
     t.index ["specialite_id"], name: "index_motifs_on_specialite_id"
   end

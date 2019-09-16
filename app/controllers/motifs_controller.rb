@@ -5,7 +5,7 @@ class MotifsController < DashboardAuthController
   before_action :set_motif, only: [:edit, :update, :destroy]
 
   def index
-    @motifs = policy_scope(Motif).includes(:specialite).order(Arel.sql('LOWER(name)')).page(params[:page])
+    @motifs = policy_scope(Motif).active.includes(:specialite).order(Arel.sql('LOWER(name)')).page(params[:page])
   end
 
   def new
@@ -35,8 +35,8 @@ class MotifsController < DashboardAuthController
 
   def destroy
     authorize(@motif)
-    @motif.destroy
-    redirect_to organisation_motifs_path(@motif.organisation), notice: "Le motif a été supprimé."
+    flash[:notice] = "Le motif a été supprimé." if @motif.soft_delete
+    respond_right_bar_with @motif, location: organisation_motifs_path(@motif.organisation)
   end
 
   private

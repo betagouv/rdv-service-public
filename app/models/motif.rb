@@ -11,6 +11,12 @@ class Motif < ApplicationRecord
   validates :max_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
   validate :booking_delay_validation
 
+  scope :active, -> { where(deleted_at: nil) }
+
+  def soft_delete
+    rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
+  end
+
   private
 
   def booking_delay_validation
