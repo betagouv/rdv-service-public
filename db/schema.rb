@@ -2,15 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `rails
+# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_16_114034) do
+ActiveRecord::Schema.define(version: 2019_09_17_073101) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -99,6 +99,7 @@ ActiveRecord::Schema.define(version: 2019_09_16_114034) do
     t.integer "min_booking_delay", default: 1800
     t.integer "max_booking_delay", default: 7889238
     t.datetime "deleted_at"
+    t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
     t.index ["specialite_id"], name: "index_motifs_on_specialite_id"
   end
