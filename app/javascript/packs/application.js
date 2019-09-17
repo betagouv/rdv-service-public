@@ -36,6 +36,7 @@ application.load(definitionsFromContext(context));
 new Modal();
 new Rightbar();
 var analytic = new Analytic();
+global.$ = require('jquery');
 
 $(document).on('shown.bs.modal', '.modal', function(e) {
   analytic.trackModalView(e);
