@@ -3,7 +3,7 @@
 
 = simple_form_for @permission, url: pros_permission_path(@permission), remote: request.xhr?, html: { data: { rightbar: true } } do |f|
   = render partial: 'layouts/model_errors', locals: { model: @permission }
-  = f.input :specialite_id, collection: Specialite.all, as: :select, label: 'Spécialité'
+  = f.input :service_id, collection: Service.all, as: :select, label: 'Service'
   = f.input :role, collection: Pro.human_enum_collection_html(:role), as: :radio_buttons, label: "Rôle de #{@permission.pro.full_name}"
   
   .row

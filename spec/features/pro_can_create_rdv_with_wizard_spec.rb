@@ -36,7 +36,7 @@ describe "Pro can create a Rdv with wizard" do
     expect_checked("Motif : #{motif.name}")
     expect_checked("Lieu : 79 Rue de Plaisance, 92250 La Garenne-Colombes")
     expect_checked("Durée : 35 minutes")
-    expect_checked("Professionnels : #{pro.full_name_and_specialite} et #{pro2.full_name_and_specialite}")
+    expect_checked("Professionnels : #{pro.full_name_and_service} et #{pro2.full_name_and_service}")
     expect_checked("Commence le : samedi 12 octobre 2019 à 14h15")
 
     select_user(user)
@@ -76,7 +76,7 @@ describe "Pro can create a Rdv with wizard" do
   end
 
   def select_pro(pro)
-    select(pro.full_name_and_specialite, from: 'rdv_pro_ids')
+    select(pro.full_name_and_service, from: 'rdv_pro_ids')
   end
 
   def select_user(user)

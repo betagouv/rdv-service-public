@@ -1,8 +1,8 @@
 class Pro::FullSubscription
   include ActiveModel::Model
 
-  attr_accessor :pro, :first_name, :last_name, :specialite_id
-  validates :first_name, :last_name, :specialite_id, presence: true
+  attr_accessor :pro, :first_name, :last_name, :service_id
+  validates :first_name, :last_name, :service_id, presence: true
 
   def save
     build_pro
@@ -14,6 +14,6 @@ class Pro::FullSubscription
   def build_pro
     pro.first_name = first_name
     pro.last_name = last_name
-    pro.specialite_id = specialite_id
+    pro.service_id = service_id
   end
 end

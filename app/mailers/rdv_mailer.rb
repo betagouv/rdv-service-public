@@ -15,7 +15,7 @@ class RdvMailer < ApplicationMailer
   end
 
   def send_ics_to_pro(rdv, pro, serialized_previous_start_at = nil)
-    @rdv = Rdv.includes(pros: :specialite).find(rdv.id)
+    @rdv = Rdv.includes(pros: :service).find(rdv.id)
     @pro = pro
     @previous_start_at = parse_time(serialized_previous_start_at)
     @users = @rdv.users

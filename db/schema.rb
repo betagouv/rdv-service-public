@@ -93,15 +93,15 @@ ActiveRecord::Schema.define(version: 2019_09_17_073101) do
     t.boolean "at_home", default: false, null: false
     t.integer "default_duration_in_min", default: 30, null: false
     t.bigint "organisation_id"
-    t.bigint "specialite_id"
     t.boolean "online", default: false, null: false
     t.integer "max_users_limit"
     t.integer "min_booking_delay", default: 1800
     t.integer "max_booking_delay", default: 7889238
     t.datetime "deleted_at"
+    t.bigint "service_id"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
-    t.index ["specialite_id"], name: "index_motifs_on_specialite_id"
+    t.index ["service_id"], name: "index_motifs_on_service_id"
   end
 
   create_table "motifs_plage_ouvertures", id: false, force: :cascade do |t|
@@ -157,8 +157,8 @@ ActiveRecord::Schema.define(version: 2019_09_17_073101) do
     t.string "invited_by_type"
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
-    t.bigint "specialite_id"
     t.datetime "deleted_at"
+    t.bigint "service_id"
     t.index ["confirmation_token"], name: "index_pros_on_confirmation_token", unique: true
     t.index ["email"], name: "index_pros_on_email", unique: true
     t.index ["invitation_token"], name: "index_pros_on_invitation_token", unique: true
@@ -167,7 +167,7 @@ ActiveRecord::Schema.define(version: 2019_09_17_073101) do
     t.index ["invited_by_type", "invited_by_id"], name: "index_pros_on_invited_by_type_and_invited_by_id"
     t.index ["organisation_id"], name: "index_pros_on_organisation_id"
     t.index ["reset_password_token"], name: "index_pros_on_reset_password_token", unique: true
-    t.index ["specialite_id"], name: "index_pros_on_specialite_id"
+    t.index ["service_id"], name: "index_pros_on_service_id"
   end
 
   create_table "pros_rdvs", id: false, force: :cascade do |t|
@@ -204,10 +204,12 @@ ActiveRecord::Schema.define(version: 2019_09_17_073101) do
     t.index ["user_id"], name: "index_rdvs_users_on_user_id"
   end
 
-  create_table "specialites", force: :cascade do |t|
+  create_table "services", force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.bigint "organisation_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["organisation_id"], name: "index_services_on_organisation_id"
   end
 
   create_table "super_admins", force: :cascade do |t|
@@ -234,12 +236,14 @@ ActiveRecord::Schema.define(version: 2019_09_17_073101) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "lieux", "organisations"
   add_foreign_key "motifs", "organisations"
-  add_foreign_key "motifs", "specialites"
+  add_foreign_key "motifs", "services"
   add_foreign_key "plage_ouvertures", "lieux"
   add_foreign_key "plage_ouvertures", "organisations"
   add_foreign_key "plage_ouvertures", "pros"
+  add_foreign_key "pros", "services"
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"
   add_foreign_key "rdvs", "users"
+  add_foreign_key "services", "organisations"
   add_foreign_key "users", "organisations"
 end

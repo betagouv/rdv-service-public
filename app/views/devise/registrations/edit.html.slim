@@ -10,7 +10,7 @@
   
   = f.input :first_name, placeholder: 'Prénom'
   = f.input :last_name, placeholder: 'Nom'
-  = f.association :specialite, collection: Specialite.all
+  = f.association :service, collection: Service.all
 
   = f.input :password, placeholder: 'Votre mot de passe (au moins 6 caractères)'
   .form-text.text-muted.mb-2

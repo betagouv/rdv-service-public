@@ -32,8 +32,8 @@ class ApplicationController < ActionController::Base
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:invite, keys: [:email, :role, :specialite_id])
+    devise_parameter_sanitizer.permit(:invite, keys: [:email, :role, :service_id])
     devise_parameter_sanitizer.permit(:accept_invitation, keys: [:first_name, :last_name])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :specialite_id])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :service_id])
   end
 end

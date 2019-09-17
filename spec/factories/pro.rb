@@ -8,6 +8,6 @@ FactoryBot.define do
     password { 'password' }
     organisation { Organisation.first || create(:organisation) }
     confirmed_at { 1.day.ago }
-    specialite { Specialite.first || create(:specialite) }
+    service { Service.first || create(:service) }
   end
 end

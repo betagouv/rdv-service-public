@@ -5,7 +5,7 @@ class Pro < ApplicationRecord
          :recoverable, :rememberable, :validatable, :confirmable, :async
 
   belongs_to :organisation, optional: true
-  belongs_to :specialite, optional: true
+  belongs_to :service, optional: true
   has_many :lieux, through: :organisation
   has_many :plage_ouvertures
   has_many :absences
@@ -26,12 +26,8 @@ class Pro < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
-  def full_name_and_specialite
-    if specialite.present?
-      "#{full_name} (#{specialite.name})"
-    else
-      full_name
-    end
+  def full_name_and_service
+    service.present? ? "#{full_name} (#{service.name})" : full_name
   end
 
   def initials

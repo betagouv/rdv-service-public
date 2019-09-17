@@ -17,6 +17,6 @@ class Pros::PermissionsController < DashboardAuthController
   private
 
   def permission_params
-    params.require(:pro_permission).permit(:role, :specialite_id)
+    params.require(:pro_permission).permit(:role, :service_id)
   end
 end
