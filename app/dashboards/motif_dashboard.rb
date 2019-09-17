@@ -19,6 +19,7 @@ class MotifDashboard < Administrate::BaseDashboard
     default_duration_in_min: Field::Number,
     min_booking_delay: Field::Number,
     max_booking_delay: Field::Number,
+    deleted_at: Field::DateTime,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -49,6 +50,7 @@ class MotifDashboard < Administrate::BaseDashboard
     :default_duration_in_min,
     :min_booking_delay,
     :max_booking_delay,
+    :deleted_at,
     :created_at,
     :updated_at,
   ].freeze
@@ -67,6 +69,7 @@ class MotifDashboard < Administrate::BaseDashboard
     :specialite,
     :min_booking_delay,
     :max_booking_delay,
+    :deleted_at,
   ].freeze
 
   # Overwrite this method to customize how super admins are displayed

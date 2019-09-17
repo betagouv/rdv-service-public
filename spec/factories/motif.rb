@@ -7,5 +7,10 @@ FactoryBot.define do
     default_duration_in_min { 45 }
     color { "##{SecureRandom.hex(3)}" }
     specialite { Specialite.first || create(:specialite) }
+    trait :with_rdvs do
+      after(:create) do |motif|
+        create_list(:rdv, 5, motif: motif)
+      end
+    end
   end
 end
