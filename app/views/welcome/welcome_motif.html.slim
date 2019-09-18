@@ -1,6 +1,6 @@
 .bg-gradient
   = render 'common/header'
-  section#hero.hero.hero-home.p-5
+  section#hero.hero.hero-home.p-2
     .container
       / .row.text-center.text-white
       /   .col-md-12
@@ -9,6 +9,14 @@
       /       br
       /       | votre Maison Départementale des Solidarités du #{@departement}
       /     p.hero-text Protection Maternelle Infantile (PMI), prévention éducative, cohésion sociale et protection de l'enfance
-      .row.justify-content-md-center.mb-5
+      .row.justify-content-md-center
         .col-md-10
           = render 'search_form'
+
+  section.bg-light.p-4
+    .container
+      - @lieux.each do |lieu|
+        .card.mb-3
+          .card-body
+            h5.card-title= lieu.name
+            h6.card-subtitle= lieu.address

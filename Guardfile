@@ -67,11 +67,16 @@ guard :rspec, cmd: "bin/rspec" do
   watch(%r{^spec/acceptance/steps/(.+)_steps\.rb$}) do |m|
     Dir[File.join("**/#{m[1]}.feature")][0] || "spec/acceptance"
   end
-end
 
-guard 'spring', bundler: true do
   watch('Gemfile.lock')
   watch(%r{^config/})
   watch(%r{^spec/(support|factories)/})
   watch(%r{^spec/factory.rb})
 end
+#
+# guard 'spring', bundler: true do
+#   watch('Gemfile.lock')
+#   watch(%r{^config/})
+#   watch(%r{^spec/(support|factories)/})
+#   watch(%r{^spec/factory.rb})
+# end

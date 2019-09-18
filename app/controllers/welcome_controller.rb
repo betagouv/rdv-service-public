@@ -31,8 +31,6 @@ class WelcomeController < ApplicationController
     @where = departement_params[:where]
     @motif = departement_params[:motif]
 
-    organisations_ids_from_departement = Organisation.where(departement: @departement).pluck(:id)
-    services_ids_with_at_least_one_motif = Motif.where(organisation_id: organisations_ids_from_departement).pluck(:service_id).uniq
-    @services = Service.where(id: services_ids_with_at_least_one_motif).includes(:motifs)
+    @lieux = Lieu.for_motif_and_departement_from_time(@motif, @departement, Time.now)
   end
 end
