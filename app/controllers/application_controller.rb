@@ -4,9 +4,9 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   def after_sign_in_path_for(resource)
-    path = if resource == Pro
+    path = if resource.class == Pro
             current_pro.complete? ? authenticated_pro_root_path : new_pros_full_subscription_path
-          elsif resource == User
+          elsif resource.class == User
             authenticated_user_root_path
           end
     path
