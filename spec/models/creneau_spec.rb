@@ -1,24 +1,21 @@
 describe Creneau, type: :model do
-  let!(:pro) { create(:pro, first_name: "Alain") }
-  let!(:pro2) { create(:pro, first_name: "Robert") }
   let!(:motif) { create(:motif, name: "Vaccination") }
-  let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif]) }
+  let!(:lieu) { create(:lieu) }
+  let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu) }
+  let!(:lieu2) { create(:lieu) }
+  let!(:plage_ouverture2) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu2) }
   let!(:user) { create(:user) }
-  let(:organisation) { pro.organisation }
+  let(:organisation) { plage_ouverture.organisation }
 
-  describe ".for_motif_and_departement_from_time" do
+  describe ".for_motif_and_lieu_from_time_range" do
     let(:motif_name) { motif.name }
-    let(:departement) { organisation.departement }
-    let(:now) { Time.current }
+    let(:next_7_days_range) { Time.current..(7.days.from_now) }
 
-    subject { Creneau.for_motif_and_departement_from_time(motif_name, departement, now) }
+    subject { Creneau.for_motif_and_lieu_from_time_range(motif_name, lieu, next_7_days_range) }
 
     before { freeze_time }
     after { travel_back }
 
-    it "should work" do
-      expect(subject).to eq([])
-
-    end
+    it { expect(subject).to eq([]) }
   end
 end
