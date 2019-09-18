@@ -57,4 +57,12 @@ module ApplicationHelper
 
     tag :img, options
   end
+
+  def pro_path?
+    request.path =~ /(pros)/
+  end
+
+  def pros_or_users_body_class
+    pro_path? ? 'pros' : 'users'
+  end
 end

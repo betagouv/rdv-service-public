@@ -21,10 +21,9 @@ class OrganisationsController < DashboardAuthController
   def create
     @organisation = Organisation.new(organisation_params)
     authorize(@organisation)
-    # redirect_to authenticated_root_path and return if current_pro.organisation
     if @organisation.save
       current_pro.update_attribute :organisation_id, @organisation.id
-      redirect_to authenticated_root_path(_conversion: 'organisation-created'), notice: 'Merci de votre inscription'
+      redirect_to authenticated_pro_root_path(_conversion: 'organisation-created'), notice: 'Merci de votre inscription'
     else
       render new_organisation_path, layout: "registration"
     end

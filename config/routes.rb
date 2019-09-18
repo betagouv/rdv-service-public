@@ -24,6 +24,13 @@ Rails.application.routes.draw do
   end
 
   ## APP ##
+  devise_for :users
+  namespace :users do 
+    resources :rdvs, only: [:index]
+  end
+  authenticated :user do
+    root to: 'users/rdvs#index', as: :authenticated_user_root
+  end
   devise_for :pros, controllers: { registrations: 'pros/registrations', invitations: 'pros/invitations' }
   resources :pros, only: [:show, :destroy] do
     post :reinvite, on: :member
@@ -32,9 +39,8 @@ Rails.application.routes.draw do
     resources :full_subscriptions, only: [:new, :create]
     resources :permissions, only: [:edit, :update]
   end
-
   authenticated :pro do
-    root to: 'agendas#index', as: :authenticated_root
+    root to: 'agendas#index', as: :authenticated_pro_root
     get "events", to: "agendas#events"
     get "background-events", to: "agendas#background_events"
     resources :organisations, except: :destroy do

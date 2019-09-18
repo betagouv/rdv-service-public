@@ -13,6 +13,12 @@ module WelcomeHelper
     end
   end
 
+  def sign_in_user_button
+    link_to new_user_session_path, class: 'btn btn-danger' do
+      content_tag(:i, '', class: 'fa fa-user').html_safe + ' Se connecter'
+    end
+  end
+
   def link_logo
     link_to root_path do
       holder_tag '200x50', 'Lapin Logo', class: 'img-fluid'

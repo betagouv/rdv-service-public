@@ -11,7 +11,7 @@ class Pros::FullSubscriptionsController < DashboardAuthController
     authorize(@subscription)
     if @subscription.save
       if current_pro.organisation
-        redirect_to authenticated_root_path(_conversion: 'pro-created'), notice: 'Merci de votre inscription'
+        redirect_to authenticated_pro_root_path(_conversion: 'pro-created'), notice: 'Merci de votre inscription'
       else
         redirect_to new_organisation_path(_conversion: 'pro-created')
       end
