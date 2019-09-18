@@ -1,6 +1,18 @@
-= simple_form_for :search, url: root_path do |f| 
-  .form-row.d-flex.align-items-center
-    .col-5= f.input :what, label: false, input_html: { class: "form-control-lg" }, wrapper_html: {class: 'mb-0'}, collection: Service.all, as: :select, prompt: 'Choisissez un service'
-    .col-5= f.input :where, label: false, placeholder: 'Où ?', input_html: { class: "form-control-lg places-js-container" }, wrapper_html: {class: 'mb-0'}
-    .col-2
-      = f.button :submit, 'Rechercher', class: 'btn-danger btn-lg'
+= simple_form_for :search, url: root_path do |f|
+  = f.hidden_field :where_zip
+  - if @where.present?
+    .form-row.d-flex.justify-content-md-center
+      .col-lg-5= f.input :where, label: false, disabled: true, placeholder: 'Où ?', input_html: { value: @where, class: "form-control-lg" }, wrapper_html: { class: 'mb-0' }
+      .col-lg-3= link_to 'Modifier la localité', root_path, class: 'btn-light btn-lg'
+
+    - if @services.any?
+      .form-row.d-flex.justify-content-md-center.mt-2
+        .col-lg-5= f.input :motif, collection: @services, as: :grouped_select, group_method: :motifs, group_label_method: :name, label: false, required: true, include_blank: "Choisissez un motif", input_html: { class: 'select2-input' }
+        .col-lg-3= f.button :submit, "Choix d'un motif", class: 'btn-danger btn-lg'
+    - else
+      h2.text-white.text-center.my-3 La prise de RDV n'est pas encore disponible dans ce département.
+
+  - else
+    .form-row.d-flex.justify-content-md-center
+      .col-md-5= f.input :where, label: false, placeholder: 'Où ?', input_html: { value: @where, class: "form-control-lg places-js-container" }, wrapper_html: { class: 'mb-0' }
+      .col-md-2= f.button :submit, "Choix d'une localité", class: 'btn-danger btn-lg'

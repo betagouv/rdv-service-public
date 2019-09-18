@@ -115,6 +115,7 @@ ActiveRecord::Schema.define(version: 2019_09_17_073101) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "departement"
   end
 
   create_table "plage_ouvertures", force: :cascade do |t|

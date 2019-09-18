@@ -6,7 +6,7 @@ class PlacesInput {
   constructor(container) {
 
     if (container !== null) {
-      places({
+      return places({
         type: 'address',
         appId: "<%= ENV['PLACES_APP_ID'] %>",
         apiKey: "<%= ENV['PLACES_API_KEY'] %>",

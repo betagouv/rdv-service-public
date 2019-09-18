@@ -5,7 +5,7 @@ class Motif < ApplicationRecord
   has_and_belongs_to_many :plage_ouvertures
 
   validates :name, presence: true, uniqueness: { scope: :organisation }
-  validates :color, :default_duration_in_min, :min_booking_delay, :max_booking_delay, presence: true
+  validates :color, :service, :default_duration_in_min, :min_booking_delay, :max_booking_delay, presence: true
   validates :max_users_limit, numericality: { greater_than_or_equal_to: 1 }, allow_nil: true
   validates :min_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
   validates :max_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
@@ -15,6 +15,10 @@ class Motif < ApplicationRecord
 
   def soft_delete
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
+  end
+
+  def service_name
+    service.name
   end
 
   private
