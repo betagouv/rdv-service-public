@@ -12,9 +12,9 @@ $(document).on('turbolinks:load', function() {
   let placeJsContainer = document.querySelector('.places-js-container');
   if (placeJsContainer !== null) {
     let placesInput = new PlacesInput(placeJsContainer);
-    if (document.querySelector('#search_where_zip') !== null) {
+    if (document.querySelector('#search_departement') !== null) {
       placesInput.on('change', function resultSelected(e) {
-        document.querySelector('#search_where_zip').value = e.suggestion.postcode || '';
+        document.querySelector('#search_departement').value = (e.suggestion.postcode || '').substring(0, 2);
       });
     }
 
