@@ -106,4 +106,17 @@ describe PlageOuverture, type: :model do
       end
     end
   end
+
+  describe ".for_motif_and_lieu_from_date_range" do
+    let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30) }
+    let!(:lieu) { create(:lieu) }
+    let(:today) { Date.new(2019, 9, 19)  }
+    let(:six_days_later) { Date.new(2019, 9, 25) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
+
+    subject { PlageOuverture.for_motif_and_lieu_from_date_range(motif.name, lieu, today..six_days_later) }
+
+    it { expect(PlageOuverture.count).to eq(1) }
+    it { expect(subject).to contain_exactly(plage_ouverture) }
+  end
 end

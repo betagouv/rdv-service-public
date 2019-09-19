@@ -8,7 +8,7 @@ class PlageOuverture < ApplicationRecord
   belongs_to :organisation
   belongs_to :pro
   belongs_to :lieu
-  has_and_belongs_to_many :motifs
+  has_and_belongs_to_many :motifs, -> { distinct }
 
   before_save :clear_empty_recurrence
 
@@ -25,19 +25,32 @@ class PlageOuverture < ApplicationRecord
     end_time.on(first_day)
   end
 
-  def occurences_for(date_range)
+  def time_shift
+    Tod::Shift.new(start_time, end_time)
+  end
+
+  def time_shift_duration_in_min
+    time_shift.duration / 60
+  end
+
+  def occurences_for(inclusive_date_range)
     recurrence_until = recurrence&.to_hash&.[](:until)
-    min_until = [date_range.end, recurrence_until].compact.min.to_time.end_of_day
+    min_until = [inclusive_date_range.end, recurrence_until].compact.min.to_time.end_of_day
 
     if recurrence.present?
-      recurrence.starting(start_at).until(min_until).lazy.select { |o| o >= date_range.begin.to_time }.to_a
+      recurrence.starting(start_at).until(min_until).lazy.select { |o| o >= inclusive_date_range.begin.to_time }.to_a
     else
-      [start_at].select { |t| date_range.cover?(t) }
+      [start_at].select { |t| inclusive_date_range.cover?(t) }
     end
   end
 
   def exceptionnelle?
     recurrence.nil?
+  end
+
+  def self.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range)
+    motifs_ids = Motif.where(name: motif_name, organisation_id: lieu.organisation_id)
+    PlageOuverture.includes(:motifs_plageouvertures).where(lieu: lieu).where("first_day <= ?", inclusive_date_range.begin).joins(:motifs).where(motifs: { id: motifs_ids }).includes(:motifs).uniq
   end
 
   private
