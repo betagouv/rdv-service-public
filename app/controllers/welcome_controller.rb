@@ -32,5 +32,12 @@ class WelcomeController < ApplicationController
     @motif = departement_params[:motif]
 
     @lieux = Lieu.for_motif_and_departement_from_time(@motif, @departement, Time.now)
+
+    @date_range =  Time.now.to_date..((Time.now + 6.days).to_date)
+
+    @creneaux_by_lieux = {}
+    @lieux.each do |lieu|
+      @creneaux_by_lieux[lieu.id] = Creneau.for_motif_and_lieu_from_date_range(@motif, lieu, @date_range)
+    end
   end
 end
