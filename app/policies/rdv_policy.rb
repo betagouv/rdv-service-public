@@ -1,7 +1,11 @@
 class RdvPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      scope.where(organisation_id: pro.organisation_id)
+      if pro.pro?
+        scope.where(organisation_id: pro.organisation_id) 
+      elsif pro.user?
+        pro.rdvs
+      end
     end
   end
 

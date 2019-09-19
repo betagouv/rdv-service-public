@@ -1,268 +1,181 @@
 .navbar-custom {
-    padding: 0 30px;
-    background-color: $bg-topbar;
-    box-shadow: $shadow;
-    margin: -5px -20px 0;
-    min-height: 70px;
+  padding: 0 30px;
+  background-color: $bg-topbar;
+  box-shadow: $shadow;
+  margin: -5px -20px 0;
+  min-height: 70px;
 
-    .topbar-left {
-        background-color: $bg-topbar;
-        height: 70px;
-        position: fixed;
-        z-index: 1;
-        width: $leftbar-width;
-        text-align: center;
-        top: 0;
-        left: 0;
-        .logo {
-            line-height: 70px;
-            i {
-                display: none;
-            }
-        }
+  .topbar-left {
+    background-color: $bg-topbar;
+    height: 70px;
+    position: fixed;
+    z-index: 1;
+    width: $leftbar-width;
+    text-align: center;
+    top: 0;
+    left: 0;
+    .logo {
+      line-height: 70px;
+      i {
+        display: none;
+      }
     }
-    .topbar-right-menu {
-        li {
-            float: left;
-        }
-        .nav-link {
-            padding: 0;
-            color: $gray-600;
-            min-width: 32px;
-            display: block;
-            text-align: center;
-            margin: 0 8px;
-        }
+  }
+  .topbar-right-menu {
+    li {
+      float: left;
     }
+    .nav-link {
+      padding: 0;
+      color: $gray-600;
+      min-width: 32px;
+      display: block;
+      text-align: center;
+      margin: 0 8px;
+    }
+  }
 }
 
 /* Search */
 
 .app-search {
-    padding: 16px 0;
-    overflow: hidden;
-    form {
-        max-width: 320px;
-    }
-    .form-control {
-        border: none;
-        height: 38px;
-        padding-left: 40px;
-        padding-right: 20px;
-        background-color: $gray-100;
-        box-shadow: none;
-    }
-    span {
-        position: absolute;
-        z-index: 10;
-        font-size: 20px;
-        line-height: 38px;
-        left: 10px;
-    }
-    .input-group-append {
-        margin-left: 0;
-        z-index: 4;
-    }
-}
-
-
-/* Notification */
-.notification-list {
+  padding: 16px 0;
+  overflow: hidden;
+  form {
+    max-width: 320px;
+  }
+  .form-control {
+    border: none;
+    height: 38px;
+    padding-left: 40px;
+    padding-right: 20px;
+    background-color: $gray-100;
+    box-shadow: none;
+  }
+  span {
+    position: absolute;
+    z-index: 10;
+    font-size: 20px;
+    line-height: 38px;
+    left: 10px;
+  }
+  .input-group-append {
     margin-left: 0;
-
-    .dropdown-menu.dropdown-menu-right {
-        transform: none !important;
-        top: 100% !important;
-        right: 0 !important;
-        left: auto !important;
-    }
-
-    .noti-title {
-        background-color: $white;
-        padding: 15px 20px;
-    }
-
-    .noti-icon {
-        font-size: 22px;
-        vertical-align: middle;
-        line-height: 70px;
-    }
-
-    .noti-icon-badge {
-        display: inline-block;
-        position: absolute;
-        top: 16px;
-        right: 5px;
-        display: inline-block;
-        position: absolute;
-        top: 22px;
-        right: 15px;
-        border-radius: 50%;
-        height: 7px;
-        width: 7px;
-        background-color: $danger;
-    }
-
-    .notify-item {
-        padding: 10px 20px;
-
-        .notify-icon {
-            float: left;
-            height: 36px;
-            width: 36px;
-            line-height: 36px;
-            text-align: center;
-            margin-right: 10px;
-            border-radius: 50%;
-            color: $white;
-        }
-
-        .notify-details {
-            margin-bottom: 0;
-            overflow: hidden;
-            margin-left: 45px;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            b {
-                font-weight: 500;
-            }
-            small {
-                display: block;
-            }
-            span {
-                display: block;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                font-size: 13px;
-            }
-        }
-        
-        .user-msg {
-            margin-left: 45px;
-            white-space: normal;
-            line-height: 16px;
-        }
-    }
-    .profile-dropdown {
-        .notify-item {
-            padding: 7px 20px;
-        }
-    }
+    z-index: 4;
+  }
 }
 
 .profile-dropdown {
-    width: 170px;
-    i {
-        vertical-align: middle;
-        margin-right: 5px;
-    }
-    span {
-        vertical-align: middle;
-    }
+  width: 170px;
+  i {
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+  span {
+    vertical-align: middle;
+  }
 }
 
 .nav-user {
-    padding: 12px 20px 12px 57px !important;
-    text-align: left !important;
-    position: relative;
-    background-color: lighten($gray-100, 2.5%);
-    border: 1px solid $gray-100;
-    border-width: 0 1px;
-    min-height: 70px;
+  padding: 12px 20px 12px 57px !important;
+  text-align: left !important;
+  position: relative;
+  background-color: $primary;
+  color: $white;
+  min-height: 70px;
 
-    .account-position {
-        display: block;
-        font-size: 12px;
-        margin-top: -3px;
-    }
-    .account-user-name {
-        display: block;
-        font-weight: $font-weight-semibold;
-    }
-    .account-user-avatar {
-        position: absolute;
-        top: 18px;
-        left: 10px;
-    }
+  .account-position {
+    display: block;
+    font-size: 12px;
+    margin-top: -3px;
+  }
+  .account-user-name {
+    display: block;
+    font-weight: $font-weight-semibold;
+  }
+  .account-user-avatar {
+    position: absolute;
+    top: 18px;
+    left: 10px;
+  }
 }
 
 .account-user-avatar {
-    text-align: center;
-    color: white;
-    font-weight: bold;
-    $avatar-width: 2.6em;
-    width: $avatar-width;
-    line-height: $avatar-width;
-    border-radius: 2px;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  $avatar-width: 2.6em;
+  width: $avatar-width;
+  line-height: $avatar-width;
+  border-radius: 2px;
 }
 
 .account-user-avatar.avatar-xl {
-    $avatar-width: 7em;
-    width: $avatar-width;
-    line-height: $avatar-width;
+  $avatar-width: 7em;
+  width: $avatar-width;
+  line-height: $avatar-width;
 }
 
 .account-user-avatar.avatar-md {
-    $avatar-width: 4em;
-    width: $avatar-width;
-    line-height: $avatar-width;
+  $avatar-width: 4em;
+  width: $avatar-width;
+  line-height: $avatar-width;
 }
 
 .button-menu-mobile {
-    border: none;
-    color: $dark;
-    height: 70px;
-    line-height: 70px;
-    width: 60px;
-    background-color: transparent;
-    font-size: 24px;
-    cursor: pointer;
-    float: left;
+  border: none;
+  color: $dark;
+  height: 70px;
+  line-height: 70px;
+  width: 60px;
+  background-color: transparent;
+  font-size: 24px;
+  cursor: pointer;
+  float: left;
 
-    &.disable-btn {
-        display: none;
-    }
+  &.disable-btn {
+    display: none;
+  }
 }
 
 [data-keep-enlarged="true"] {
-    .navbar-custom {
-        padding-left: 0;
+  .navbar-custom {
+    padding-left: 0;
+  }
+  
+  .button-menu-mobile {
+    &.disable-btn {
+      display: inline-block;
     }
-    
-    .button-menu-mobile {
-        &.disable-btn {
-            display: inline-block;
-        }
-    }
+  }
 }
 
 @media (max-width: 1024px) {
-    .navbar-custom {
-        left: 70px;
-        right: 0;
-    }
-    .app-search {
-        display: none;
-    }
+  .navbar-custom {
+    left: 70px;
+    right: 0;
+  }
+  .app-search {
+    display: none;
+  }
 }
 
 @include media-breakpoint-down(sm) {
-    .navbar-custom {
-        left: 0;
-        padding: 0 10px;
-        margin: -5px -10px 0;
+  .navbar-custom {
+    left: 0;
+    padding: 0 10px;
+    margin: -5px -10px 0;
+  }
+  .button-menu-mobile {
+    &.disable-btn {
+      display: inline-block;
     }
-    .button-menu-mobile {
-        &.disable-btn {
-            display: inline-block;
-        }
+  }
+  .nav-user {
+    padding: 17px 5px 17px 57px !important;
+    .account-position,
+    .account-user-name {
+      display: none;
     }
-    .nav-user {
-        padding: 17px 5px 17px 57px !important;
-        .account-position,
-        .account-user-name {
-            display: none;
-        }
-    }
+  }
 }

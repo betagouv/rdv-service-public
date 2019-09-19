@@ -12,3 +12,4 @@ fr:
         address: Adresse
         organisation: Organisation
         password: Mot de passe
+        current_password: Mot de passe actuel

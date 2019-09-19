@@ -24,7 +24,7 @@ Rails.application.routes.draw do
   end
 
   ## APP ##
-  devise_for :users
+  devise_for :users, controllers: { registrations: 'users/registrations' }
   namespace :users do 
     resources :rdvs, only: [:index]
   end
