@@ -5,10 +5,10 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(resource)
     path = if resource.class == Pro
-            current_pro.complete? ? authenticated_pro_root_path : new_pros_full_subscription_path
-          elsif resource.class == User
-            authenticated_user_root_path
-          end
+             current_pro.complete? ? authenticated_pro_root_path : new_pros_full_subscription_path
+           elsif resource.class == User
+             authenticated_user_root_path
+           end
     path
   end
 
@@ -29,6 +29,7 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
   def configure_permitted_parameters
     if resource_class == Pro
       devise_parameter_sanitizer.permit(:invite, keys: [:email, :role, :service_id])

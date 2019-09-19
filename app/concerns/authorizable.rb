@@ -6,5 +6,4 @@ module Authorizable
       define_method("#{klass.name.underscore}?") { is_a?(klass) }
     end
   end
-
 end

@@ -2,7 +2,7 @@ class RdvPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       if pro.pro?
-        scope.where(organisation_id: pro.organisation_id) 
+        scope.where(organisation_id: pro.organisation_id)
       elsif pro.user?
         pro.rdvs
       end

@@ -25,7 +25,7 @@ Rails.application.routes.draw do
 
   ## APP ##
   devise_for :users, controllers: { registrations: 'users/registrations' }
-  namespace :users do 
+  namespace :users do
     resources :rdvs, only: [:index]
   end
   authenticated :user do

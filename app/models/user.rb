@@ -4,7 +4,7 @@ class User < ApplicationRecord
   include Authorizable
 
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :confirmable,  :async
+         :recoverable, :rememberable, :validatable, :confirmable, :async
 
   belongs_to :organisation, optional: true
   has_many :rdvs, dependent: :destroy
