@@ -1,0 +1,14 @@
+= simple_form_for([organisation, user], remote: request.xhr?, data: { rightbar: true }) do |f|
+  = render partial: 'layouts/model_errors', locals: { model: user }
+  = f.input :first_name
+  = f.input :last_name
+  = f.input :address, input_html: { class: "places-js-container" }
+  = f.input :email, as: :email
+  = f.input :phone_number, as: :tel
+  = date_input(f, :birth_date)
+  .row
+    - if user.persisted?
+      .col.text-left
+        = link_to "Supprimer", user_path(user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cet usager ?"}
+    .col.text-right
+      = f.button :submit

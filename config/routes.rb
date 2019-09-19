@@ -19,7 +19,7 @@ Rails.application.routes.draw do
     root to: "pros#index"
 
     authenticate :super_admin do
-      match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
+      match "/delayed_job" => DelayedJobWeb, anchor: false, via: [:get, :post]
     end
   end
 
@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   authenticated :user do
     root to: 'users/rdvs#index', as: :authenticated_user_root
   end
+
   devise_for :pros, controllers: { registrations: 'pros/registrations', invitations: 'pros/invitations' }
   resources :pros, only: [:show, :destroy] do
     post :reinvite, on: :member
@@ -46,7 +47,7 @@ Rails.application.routes.draw do
     resources :organisations, except: :destroy do
       resources :lieux, except: :index
       resources :pros
-      resources :users, except: :show, shallow: true
+      resources :users, except: :show, shallow: true, controller: 'organisations/users'
       resources :motifs, shallow: true
       resources :plage_ouvertures, except: :show, shallow: true
 
