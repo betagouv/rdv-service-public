@@ -103,6 +103,7 @@ group :development do
   gem 'letter_opener', '~> 1.7'
   gem 'fuubar'
   gem 'better_errors'
+  gem 'binding_of_caller'
 end
 
 group :test do
