@@ -14,29 +14,71 @@ describe Creneau, type: :model do
     it do
       expect(subject.size).to eq(4)
 
-      expect(subject[0].starts_at).to eq(Time.zone.local(2019, 9, 19, 9, 0))
-      expect(subject[0].duration_in_min).to eq(30)
-      expect(subject[0].lieu_id).to eq(lieu.id)
-      expect(subject[0].motif_id).to eq(motif.id)
-      expect(subject[0].plage_ouverture_id).to eq(plage_ouverture.id)
+      expect_creneau_to_eq(subject[0], Time.zone.local(2019, 9, 19, 9, 0), 30, lieu.id, motif.id, plage_ouverture.id)
+      expect_creneau_to_eq(subject[1], Time.zone.local(2019, 9, 19, 9, 30), 30, lieu.id, motif.id, plage_ouverture.id)
+      expect_creneau_to_eq(subject[2], Time.zone.local(2019, 9, 19, 10, 0), 30, lieu.id, motif.id, plage_ouverture.id)
+      expect_creneau_to_eq(subject[3], Time.zone.local(2019, 9, 19, 10, 30), 30, lieu.id, motif.id, plage_ouverture.id)
+    end
 
-      expect(subject[1].starts_at).to eq(Time.zone.local(2019, 9, 19, 9, 30))
-      expect(subject[1].duration_in_min).to eq(30)
-      expect(subject[1].lieu_id).to eq(lieu.id)
-      expect(subject[1].motif_id).to eq(motif.id)
-      expect(subject[1].plage_ouverture_id).to eq(plage_ouverture.id)
+    describe "with absence" do
+      let!(:absence) { create(:absence, pro: plage_ouverture.pro, starts_at: Time.zone.local(2019, 9, 19, 9, 45), ends_at: Time.zone.local(2019, 9, 19, 10, 15)) }
 
-      expect(subject[2].starts_at).to eq(Time.zone.local(2019, 9, 19, 10, 0))
-      expect(subject[2].duration_in_min).to eq(30)
-      expect(subject[2].lieu_id).to eq(lieu.id)
-      expect(subject[2].motif_id).to eq(motif.id)
-      expect(subject[2].plage_ouverture_id).to eq(plage_ouverture.id)
+      it do
+        expect(subject.size).to eq(2)
 
-      expect(subject[3].starts_at).to eq(Time.zone.local(2019, 9, 19, 10, 30))
-      expect(subject[3].duration_in_min).to eq(30)
-      expect(subject[3].lieu_id).to eq(lieu.id)
-      expect(subject[3].motif_id).to eq(motif.id)
-      expect(subject[3].plage_ouverture_id).to eq(plage_ouverture.id)
+        expect_creneau_to_eq(subject[0], Time.zone.local(2019, 9, 19, 9, 0), 30, lieu.id, motif.id, plage_ouverture.id)
+        expect_creneau_to_eq(subject[1], Time.zone.local(2019, 9, 19, 10, 30), 30, lieu.id, motif.id, plage_ouverture.id)
+      end
+    end
+
+    def expect_creneau_to_eq(creneau, starts_at, duration_in_min, lieu_id, motif_id, plage_ouverture_id)
+      expect(creneau.starts_at).to eq(starts_at)
+      expect(creneau.duration_in_min).to eq(duration_in_min)
+      expect(creneau.lieu.id).to eq(lieu_id)
+      expect(creneau.motif.id).to eq(motif_id)
+      expect(creneau.plage_ouverture.id).to eq(plage_ouverture_id)
+    end
+  end
+
+  describe "#available?" do
+    # available?
+    let(:creneau) { Creneau.new(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 60,lieu_id: lieu.id, motif_id: motif.id, plage_ouverture_id: plage_ouverture.id) }
+
+    subject { creneau.available? }
+
+    describe "absence overlap beginning of creneau" do
+      let!(:absence) { create(:absence, starts_at: Time.zone.local(2019, 9, 19, 8, 30), ends_at: Time.zone.local(2019, 9, 19, 9, 30), pro: plage_ouverture.pro) }
+      it { is_expected.to eq(false) }
+    end
+
+    describe "absence overlap end of creneau" do
+      let!(:absence) { create(:absence, starts_at: Time.zone.local(2019, 9, 19, 9, 30), ends_at: Time.zone.local(2019, 9, 19, 10, 30), pro: plage_ouverture.pro) }
+      it { is_expected.to eq(false) }
+    end
+
+    describe "absence is inside creneau" do
+      let!(:absence) { create(:absence, starts_at: Time.zone.local(2019, 9, 19, 9, 15), ends_at: Time.zone.local(2019, 9, 19, 9, 30), pro: plage_ouverture.pro) }
+      it { is_expected.to eq(false) }
+    end
+
+    describe "absence is before creneau" do
+      let!(:absence) { create(:absence, starts_at: Time.zone.local(2019, 9, 19, 8, 0), ends_at: Time.zone.local(2019, 9, 19, 9, 00), pro: plage_ouverture.pro) }
+      it { is_expected.to eq(true) }
+    end
+
+    describe "absence is after creneau" do
+      let!(:absence) { create(:absence, starts_at: Time.zone.local(2019, 9, 19, 10, 00), ends_at: Time.zone.local(2019, 9, 19, 10, 30), pro: plage_ouverture.pro) }
+      it { is_expected.to eq(true) }
+    end
+
+    describe "absence is around creneau" do
+      let!(:absence) { create(:absence, starts_at: Time.zone.local(2019, 9, 19, 8, 00), ends_at: Time.zone.local(2019, 9, 19, 10, 30), pro: plage_ouverture.pro) }
+      it { is_expected.to eq(false) }
+    end
+
+    describe "absence is like creneau" do
+      let!(:absence) { create(:absence, starts_at: Time.zone.local(2019, 9, 19, 9, 00), ends_at: Time.zone.local(2019, 9, 19, 10, 00), pro: plage_ouverture.pro) }
+      it { is_expected.to eq(false) }
     end
   end
 end
