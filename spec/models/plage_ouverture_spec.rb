@@ -34,8 +34,8 @@ describe PlageOuverture, type: :model do
     end
   end
 
-  describe "#end_at" do
-    subject { plage_ouverture.end_at }
+  describe "#ends_at" do
+    subject { plage_ouverture.ends_at }
 
     context "for a plage" do
       let(:plage_ouverture) { create(:plage_ouverture, first_day: Date.new(2019, 7, 22), end_time: Tod::TimeOfDay.new(12)) }

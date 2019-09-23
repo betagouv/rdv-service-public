@@ -18,12 +18,12 @@ class Rdv < ApplicationRecord
   after_create :send_ics_to_users_and_pros
   after_update :update_ics_to_user_and_pros, if: -> { saved_change_to_starts_at? || saved_change_to_cancelled_at? }
 
-  def end_at
+  def ends_at
     starts_at + duration_in_min.minutes
   end
 
   def past?
-    end_at < Time.zone.now
+    ends_at < Time.zone.now
   end
 
   def cancelled?
@@ -59,7 +59,7 @@ class Rdv < ApplicationRecord
 
     cal.event do |e|
       e.dtstart     = Icalendar::Values::DateTime.new(starts_at, 'tzid' => tzid)
-      e.dtend       = Icalendar::Values::DateTime.new(end_at, 'tzid' => tzid)
+      e.dtend       = Icalendar::Values::DateTime.new(ends_at, 'tzid' => tzid)
       e.summary     = "RDV #{name}"
       e.description = ""
       e.location = location

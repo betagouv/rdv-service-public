@@ -21,7 +21,7 @@ class PlageOuverture < ApplicationRecord
     start_time.on(first_day)
   end
 
-  def end_at
+  def ends_at
     end_time.on(first_day)
   end
 

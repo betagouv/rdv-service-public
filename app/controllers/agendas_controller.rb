@@ -15,7 +15,7 @@ class AgendasController < DashboardAuthController
         title: rdv.name,
         extendedProps: { status: rdv.status, past: rdv.past? },
         start: rdv.starts_at,
-        end: rdv.end_at,
+        end: rdv.ends_at,
         url: rdv_path(rdv),
         backgroundColor: rdv.motif&.color,
       }
