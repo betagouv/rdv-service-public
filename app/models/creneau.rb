@@ -50,6 +50,6 @@ class Creneau
           end.compact
         end
       end
-    end.uniq { |creneau| creneau.starts_at }.sort_by(&:starts_at)
+    end.uniq(&:starts_at).sort_by(&:starts_at)
   end
 end
