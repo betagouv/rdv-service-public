@@ -2,6 +2,7 @@
   | Vos rendez-vous
 - if @rdvs.any?
   = render @rdvs
+  .d-flex.justify-content-center= paginate @rdvs, theme: 'twitter-bootstrap-4'
 - else
   .card
     .card-body

@@ -2,16 +2,15 @@
   .card-body
     ul.list-group.list-group-flush
       li.list-group-item
-        i.fa.fa-check.fa-fw.mr-1.text-success
-        | Motif :&nbsp;
-        = rdv.motif.name
+        .fa.fa-calendar>
+        | Le #{l(rdv.start_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)
+        = future_tag(rdv)
       li.list-group-item
-        i.fa.fa-check.fa-fw.mr-1.text-success
-        | Lieu :&nbsp;
+        .fa.fa-map-marker>
         = human_location(rdv)
       li.list-group-item
-        i.fa.fa-check.fa-fw.mr-1.text-success
-        = "Durée : #{rdv.duration_in_min} minutes"
+        .fa.fa-user>
+        = current_user.full_name
       li.list-group-item
-        i.fa.fa-check.fa-fw.mr-1.text-success
-        = "Commence le : #{l(rdv.start_at, format: :human)}"
+        i.fa.fa-info-circle>
+        = rdv.motif.name
