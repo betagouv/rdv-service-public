@@ -1,6 +1,6 @@
 RSpec.describe RdvMailer, type: :mailer do
   let(:rdv) { create(:rdv) }
-  let(:previous_start_at) { nil }
+  let(:previous_starts_at) { nil }
 
   shared_examples "mail with ICS" do
     it "contains the ics" do
@@ -11,11 +11,11 @@ RSpec.describe RdvMailer, type: :mailer do
 
   shared_examples "mail for rdv confirmation" do
     it "renders the subject" do
-      expect(mail.subject).to eq("RDV confirmé le #{I18n.l(rdv.start_at, format: :human)}")
+      expect(mail.subject).to eq("RDV confirmé le #{I18n.l(rdv.starts_at, format: :human)}")
     end
 
     it "renders the body" do
-      expect(mail.html_part.body.encoded).to match("RDV confirmé le #{I18n.l(rdv.start_at, format: :human)}")
+      expect(mail.html_part.body.encoded).to match("RDV confirmé le #{I18n.l(rdv.starts_at, format: :human)}")
     end
   end
 
@@ -26,24 +26,24 @@ RSpec.describe RdvMailer, type: :mailer do
 
     it "renders the body" do
       expect(mail.html_part.body.encoded).to match("Modification de votre RDV")
-      expect(mail.html_part.body.encoded).to match("Votre rendez-vous initialement prévu le #{I18n.l(previous_start_at, format: :human)}")
-      expect(mail.html_part.body.encoded).to match("a été déplacé au&nbsp;<strong>#{I18n.l(rdv.start_at, format: :human)}</strong>")
+      expect(mail.html_part.body.encoded).to match("Votre rendez-vous initialement prévu le #{I18n.l(previous_starts_at, format: :human)}")
+      expect(mail.html_part.body.encoded).to match("a été déplacé au&nbsp;<strong>#{I18n.l(rdv.starts_at, format: :human)}</strong>")
     end
   end
 
   shared_examples "mail for cancelled rdv" do
     it "renders the subject" do
-      expect(mail.subject).to eq("ANNULÉ : RDV du #{I18n.l(rdv.start_at, format: :human)}")
+      expect(mail.subject).to eq("ANNULÉ : RDV du #{I18n.l(rdv.starts_at, format: :human)}")
     end
 
     it "renders the body" do
-      expect(mail.html_part.body.encoded).to match("ANNULÉ : RDV du #{I18n.l(rdv.start_at, format: :human)}")
+      expect(mail.html_part.body.encoded).to match("ANNULÉ : RDV du #{I18n.l(rdv.starts_at, format: :human)}")
     end
   end
 
   describe "#send_ics_to_user" do
     let(:user) { rdv.users.first }
-    let(:mail) { RdvMailer.send_ics_to_user(rdv, user, previous_start_at.to_s) }
+    let(:mail) { RdvMailer.send_ics_to_user(rdv, user, previous_starts_at.to_s) }
 
     it "renders the headers" do
       expect(mail.to).to eq([user.email])
@@ -54,7 +54,7 @@ RSpec.describe RdvMailer, type: :mailer do
     it_behaves_like "mail with ICS"
 
     context "when rdv was updated" do
-      let(:previous_start_at) { 2.days.ago }
+      let(:previous_starts_at) { 2.days.ago }
 
       it_behaves_like "mail for updated rdv"
 
@@ -72,7 +72,7 @@ RSpec.describe RdvMailer, type: :mailer do
 
   describe "#send_ics_to_pro" do
     let(:pro) { create(:pro) }
-    let(:mail) { RdvMailer.send_ics_to_pro(rdv, pro, previous_start_at.to_s) }
+    let(:mail) { RdvMailer.send_ics_to_pro(rdv, pro, previous_starts_at.to_s) }
 
     it "renders the headers" do
       expect(mail.to).to eq([pro.email])
@@ -83,7 +83,7 @@ RSpec.describe RdvMailer, type: :mailer do
     it_behaves_like "mail with ICS"
 
     context "when rdv was updated" do
-      let(:previous_start_at) { 2.days.ago }
+      let(:previous_starts_at) { 2.days.ago }
 
       it_behaves_like "mail for updated rdv"
 

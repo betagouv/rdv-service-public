@@ -24,8 +24,8 @@ describe PlageOuverture, type: :model do
     end
   end
 
-  describe "#start_at" do
-    subject { plage_ouverture.start_at }
+  describe "#starts_at" do
+    subject { plage_ouverture.starts_at }
 
     context "for a plage" do
       let(:plage_ouverture) { create(:plage_ouverture, first_day: Date.new(2019, 7, 22), start_time: Tod::TimeOfDay.new(9)) }
@@ -34,8 +34,8 @@ describe PlageOuverture, type: :model do
     end
   end
 
-  describe "#end_at" do
-    subject { plage_ouverture.end_at }
+  describe "#ends_at" do
+    subject { plage_ouverture.ends_at }
 
     context "for a plage" do
       let(:plage_ouverture) { create(:plage_ouverture, first_day: Date.new(2019, 7, 22), end_time: Tod::TimeOfDay.new(12)) }
@@ -53,7 +53,7 @@ describe PlageOuverture, type: :model do
 
       it do
         expect(subject.size).to eq 1
-        expect(subject.first).to eq plage_ouverture.start_at
+        expect(subject.first).to eq plage_ouverture.starts_at
       end
     end
 
@@ -63,13 +63,13 @@ describe PlageOuverture, type: :model do
 
       it do
         expect(subject.size).to eq 7
-        expect(subject[0]).to eq plage_ouverture.start_at
-        expect(subject[1]).to eq(plage_ouverture.start_at + 1.day)
-        expect(subject[2]).to eq(plage_ouverture.start_at + 2.day)
-        expect(subject[3]).to eq(plage_ouverture.start_at + 3.day)
-        expect(subject[4]).to eq(plage_ouverture.start_at + 4.day)
-        expect(subject[5]).to eq(plage_ouverture.start_at + 5.day)
-        expect(subject[6]).to eq(plage_ouverture.start_at + 6.day)
+        expect(subject[0]).to eq plage_ouverture.starts_at
+        expect(subject[1]).to eq(plage_ouverture.starts_at + 1.day)
+        expect(subject[2]).to eq(plage_ouverture.starts_at + 2.day)
+        expect(subject[3]).to eq(plage_ouverture.starts_at + 3.day)
+        expect(subject[4]).to eq(plage_ouverture.starts_at + 4.day)
+        expect(subject[5]).to eq(plage_ouverture.starts_at + 5.day)
+        expect(subject[6]).to eq(plage_ouverture.starts_at + 6.day)
       end
     end
 
@@ -79,9 +79,9 @@ describe PlageOuverture, type: :model do
 
       it do
         expect(subject.size).to eq 3
-        expect(subject[0]).to eq plage_ouverture.start_at
-        expect(subject[1]).to eq(plage_ouverture.start_at + 1.week)
-        expect(subject[2]).to eq(plage_ouverture.start_at + 2.weeks)
+        expect(subject[0]).to eq plage_ouverture.starts_at
+        expect(subject[1]).to eq(plage_ouverture.starts_at + 1.week)
+        expect(subject[2]).to eq(plage_ouverture.starts_at + 2.weeks)
       end
     end
 
@@ -91,8 +91,8 @@ describe PlageOuverture, type: :model do
 
       it do
         expect(subject.size).to eq 2
-        expect(subject[0]).to eq plage_ouverture.start_at
-        expect(subject[1]).to eq(plage_ouverture.start_at + 2.weeks)
+        expect(subject[0]).to eq plage_ouverture.starts_at
+        expect(subject[1]).to eq(plage_ouverture.starts_at + 2.weeks)
       end
     end
 
@@ -105,5 +105,18 @@ describe PlageOuverture, type: :model do
         expect(subject[0]).to eq(Time.zone.local(2019, 8, 5, 8))
       end
     end
+  end
+
+  describe ".for_motif_and_lieu_from_date_range" do
+    let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30) }
+    let!(:lieu) { create(:lieu) }
+    let(:today) { Date.new(2019, 9, 19) }
+    let(:six_days_later) { Date.new(2019, 9, 25) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
+
+    subject { PlageOuverture.for_motif_and_lieu_from_date_range(motif.name, lieu, today..six_days_later) }
+
+    it { expect(PlageOuverture.count).to eq(1) }
+    it { expect(subject).to contain_exactly(plage_ouverture) }
   end
 end

@@ -15,7 +15,7 @@ p.card-text
   = pros_to_sentence(@rdv)
 p.card-text
   strong Commence à :&nbsp;
-  = l(@rdv.start_at, format: :human)
+  = l(@rdv.starts_at, format: :human)
 p.card-text
   strong Durée :&nbsp;
   = "#{@rdv.duration_in_min} minutes"

@@ -18,7 +18,7 @@ document.addEventListener('turbolinks:load', function() {
       selectable: true,
       select: function(info) {
         let startDate = moment(info.start);
-        let params = { start_at: info.startStr };
+        let params = { starts_at: info.startStr };
         let plage_ouvertures = calendar.getEvents()
           .filter(e => e.rendering == "background")
           .filter(e => startDate.isBetween(e.start, e.end, null, "[]"));
