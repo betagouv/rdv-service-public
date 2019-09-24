@@ -2,7 +2,6 @@ header.header
   nav.navbar.navbar-expand-lg.bg-primary
     = link_to root_path, class: 'navbar-brand mr-0 mr-md-2 py-0' do
       = holder_tag '200x50', 'Lapin Logo',class: 'd-block'
-
     button.navbar-toggler.navbar-toggler-right aria-controls="navbarSupportedContent" aria-expanded="false" aria-label=("Toggle navigation") data-target="#navbarSupportedContent" data-toggle="collapse" type="button"
       i.fa.fa-bars
     #navbarSupportedContent.collapse.navbar-collapse
@@ -11,12 +10,10 @@ header.header
           = link_to users_rdvs_path, class: 'btn btn-link text-white' do 
             i.fa.fa-calendar
             |  Vos rendez-vous
-        li.dropdown
-          a.nav-link.dropdown-toggle.nav-user.arrow-none.mr-0 aria-expanded="false" aria-haspopup="false" data-toggle="dropdown" href="#" role="button" 
-            span.account-user-avatar
-              | #{current_user.initials}
-            span
-              span.account-user-name #{current_user.first_name.capitalize}
+        li.dropdown.topbar-right-menu
+          a.nav-link.text-white.dropdown-toggle.arrow-none.mr-0 aria-expanded="false" aria-haspopup="false" data-toggle="dropdown" href="#" role="button" 
+            | #{current_user.first_name}  
+            .i.fa.fa-chevron-down
           .dropdown-menu.dropdown-menu-right.dropdown-menu-animated.profile-dropdown
             .dropdown-header.noti-title
               h6.text-overflow.m-0 Bienvenue !
