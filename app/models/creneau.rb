@@ -1,7 +1,7 @@
 class Creneau
   include ActiveModel::Model
 
-  attr_accessor :starts_at, :duration_in_min, :lieu_id, :motif_id, :plage_ouverture_id
+  attr_accessor :starts_at, :duration_in_min, :lieu_id, :motif_id
 
   def ends_at
     starts_at + duration_in_min.minutes
@@ -13,10 +13,6 @@ class Creneau
 
   def lieu
     Lieu.find(lieu_id)
-  end
-
-  def plage_ouverture
-    PlageOuverture.find(plage_ouverture_id)
   end
 
   def available?(rdvs, absences)
@@ -46,13 +42,12 @@ class Creneau
               starts_at: (po.start_time + (n * motif.default_duration_in_min * 60)).on(occurence_time),
               duration_in_min: motif.default_duration_in_min,
               lieu_id: lieu.id,
-              motif_id: motif.id,
-              plage_ouverture_id: po.id
+              motif_id: motif.id
             )
             creneau.available?(rdvs, absences) ? creneau : nil
           end.compact
         end
       end
-    end
+    end.uniq { |creneau| creneau.starts_at }.sort_by(&:starts_at)
   end
 end
