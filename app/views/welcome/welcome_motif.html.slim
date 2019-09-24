@@ -28,7 +28,6 @@
 
                   - if creneaux_for_date.any?
                     - creneaux_for_date.each do |date, creneaux|
-                      / - creneaux.uniq { |c| c.starts_at }.sort_by(&:starts_at).each do |creneau|
                       - creneaux.sort_by(&:starts_at).each do |creneau|
                         = link_to l(creneau.starts_at, format: "%H:%M"), root_path, class: "btn btn-light mr-1 mb-1 w-100"
                   - else
