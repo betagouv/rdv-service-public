@@ -1,4 +1,4 @@
-class Pros::InvitationsController < Devise::InvitationsController
+class Common::InvitationsController < Devise::InvitationsController
   respond_to :html, :json
 
   def new

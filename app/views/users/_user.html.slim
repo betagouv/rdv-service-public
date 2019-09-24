@@ -1,7 +1,0 @@
-tr
-  td
-    = link_to_if policy(user).edit?, user.full_name, edit_user_path(user), data: { rightbar: true }
-    = new_user_tag(user)
-  td= birth_date_and_age(user)
-  td= formatted_phone_number(user)
-  td= user.email

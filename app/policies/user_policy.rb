@@ -4,7 +4,11 @@ class UserPolicy < ApplicationPolicy
   end
 
   def create?
-    true
+    pro_and_belongs_to_record_organisation?
+  end
+
+  def invite?
+    @user_or_pro.pro?
   end
 
   def edit?

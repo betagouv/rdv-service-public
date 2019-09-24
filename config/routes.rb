@@ -24,7 +24,7 @@ Rails.application.routes.draw do
   end
 
   ## APP ##
-  devise_for :users, controllers: { registrations: 'users/registrations' }
+  devise_for :users, controllers: { registrations: 'users/registrations', invitations: 'common/invitations' }
   namespace :users do
     resources :rdvs, only: [:index]
   end
@@ -32,7 +32,7 @@ Rails.application.routes.draw do
     root to: 'users/rdvs#index', as: :authenticated_user_root
   end
 
-  devise_for :pros, controllers: { registrations: 'pros/registrations', invitations: 'pros/invitations' }
+  devise_for :pros, controllers: { registrations: 'pros/registrations', invitations: 'common/invitations' }
   resources :pros, only: [:show, :destroy] do
     post :reinvite, on: :member
   end
@@ -56,7 +56,7 @@ Rails.application.routes.draw do
         patch :status, on: :member
       end
     end
-    [:first_steps, :second_steps, :third_steps ].each do |step|
+    [:first_steps, :second_steps, :third_steps].each do |step|
       resources step, only: [:new, :create], module: "pros/rdvs"
     end
     resources :absences, except: :show

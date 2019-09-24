@@ -12,8 +12,12 @@ class ApplicationController < ActionController::Base
     path
   end
 
-  def after_invite_path_for(inviter, _invitee)
-    organisation_pros_path(inviter.organisation)
+  def after_invite_path_for(inviter, invitee)
+    if invitee.is_a? Pro
+      organisation_pros_path(inviter.organisation)
+    elsif invitee.is_a? User
+      organisation_users_path(inviter.organisation)
+    end
   end
 
   def respond_modal_with(*args, &blk)
@@ -30,12 +34,17 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def authenticate_inviter!
+    authenticate_pro!(force: true)
+  end
+
   def configure_permitted_parameters
     if resource_class == Pro
       devise_parameter_sanitizer.permit(:invite, keys: [:email, :role, :service_id])
       devise_parameter_sanitizer.permit(:accept_invitation, keys: [:first_name, :last_name])
       devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :service_id])
     elsif resource_class == User
+      devise_parameter_sanitizer.permit(:invite, keys: [:email, :first_name, :last_name, :address, :phone_number, :birth_date])
       devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :email, :password])
       devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :birth_date])
     end

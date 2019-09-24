@@ -1,4 +1,4 @@
-RSpec.describe RdvsController, type: :controller do
+RSpec.describe Pros::RdvsController, type: :controller do
   describe "DELETE destroy" do
     let(:pro) { create(:pro) }
     let(:rdv) { create(:rdv) }

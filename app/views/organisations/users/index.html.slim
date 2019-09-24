@@ -2,7 +2,6 @@
   | Vos usagers
 
 - content_for :breadcrumb do 
-  = add_button 'Ajouter un usager', new_organisation_user_path, header: true, condition: policy(User).new?
 
 .card
   .card-body
@@ -27,4 +26,4 @@
             i.fa.fa-circle.fa-stack-2x.text-primary
             i.fa.fa-users.fa-stack-1x.text-white
     .text-center
-      = add_button 'Ajouter un usager', new_organisation_user_path, condition: policy(User).new?
+      = add_button 'Inviter un usager', new_user_invitation_path, condition: policy(User).invite?

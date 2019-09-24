@@ -11,13 +11,15 @@ class Organisations::UsersController < DashboardAuthController
 
   def new
     @user = User.new
+    @user.organisation_id = current_pro.organisation_id
+    @organisation = current_pro.organisation
     authorize(@user)
     respond_right_bar_with @user
   end
 
   def create
     @user = User.new(user_params)
-    @user.organisation = current_pro.organisation
+    @user.organisation_id = current_pro.organisation_id
     @organisation = current_pro.organisation
     authorize(@user)
     flash[:notice] = "L'usager a été créé." if @user.save

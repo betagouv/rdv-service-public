@@ -3,7 +3,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   include Authorizable
 
-  devise :database_authenticatable, :registerable,
+  devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
 
   belongs_to :organisation, optional: true
@@ -16,6 +16,8 @@ class User < ApplicationRecord
   include PgSearch::Model
   pg_search_scope :search_by_name, against: [:first_name, :last_name],
                   using: { tsearch: { prefix: true } }
+
+  before_invitation_created :set_organisation
 
   def full_name
     "#{first_name} #{last_name}"
@@ -52,5 +54,11 @@ class User < ApplicationRecord
 
   def age_in_days
     Time.zone.now.to_date - birth_date
+  end
+
+  private
+
+  def set_organisation
+    self.organisation = invited_by.organisation
   end
 end
