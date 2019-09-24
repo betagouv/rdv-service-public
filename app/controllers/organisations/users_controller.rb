@@ -5,8 +5,7 @@ class Organisations::UsersController < DashboardAuthController
   before_action :set_user, only: [:edit, :update, :destroy]
 
   def index
-    @users = policy_scope(User).includes(:organisation).order(Arel.sql('LOWER(last_name)')).page(params[:page])
-    authorize(@users)
+    @users = policy_scope(User).order(Arel.sql('LOWER(last_name)')).page(params[:page])
     filter_users if params[:user] && params[:user][:search]
   end
 

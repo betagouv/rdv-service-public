@@ -1,16 +1,6 @@
 class UserPolicy < ApplicationPolicy
-  class Scope < Scope
-    def resolve
-      scope.where(organisation: pro.organisation)
-    end
-  end
-
-  def index?
-    true
-  end
-
   def show?
-    true
+    pro_and_belongs_to_record_organisation?
   end
 
   def create?
@@ -18,20 +8,14 @@ class UserPolicy < ApplicationPolicy
   end
 
   def edit?
-    same_organisation
+    pro_and_belongs_to_record_organisation?
   end
 
   def update?
-    same_organisation
+    pro_and_belongs_to_record_organisation?
   end
 
   def destroy?
-    same_organisation && @pro.admin?
-  end
-
-  private
-
-  def same_organisation
-    @record.organisation == @pro.organisation
+    pro_and_belongs_to_record_organisation?
   end
 end

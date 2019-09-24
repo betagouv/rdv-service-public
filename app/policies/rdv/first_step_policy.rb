@@ -1,15 +1,5 @@
 class Rdv::FirstStepPolicy < ApplicationPolicy
-  def new?
-    true
-  end
-
   def create?
-    belongs_to_organisation?
-  end
-
-  private
-
-  def belongs_to_organisation?
-    @pro.organisation_id == @record.organisation.id
+    pro_and_belongs_to_record_organisation?
   end
 end

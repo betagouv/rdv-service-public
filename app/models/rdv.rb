@@ -82,7 +82,7 @@ class Rdv < ApplicationRecord
 
   def to_step_params
     {
-      organisation: organisation,
+      organisation_id: organisation_id,
       location: location,
       motif: motif,
       duration_in_min: duration_in_min,

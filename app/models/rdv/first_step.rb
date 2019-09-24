@@ -1,11 +1,11 @@
 class Rdv::FirstStep
   include ActiveModel::Model
 
-  attr_accessor :motif, :organisation, :duration_in_min, :start_at, :max_users_limit, :location, :users, :pros
-  validates :motif, :organisation, presence: true
+  attr_accessor :motif, :organisation_id, :duration_in_min, :start_at, :max_users_limit, :location, :users, :pros
+  validates :motif, :organisation_id, presence: true
 
   def rdv
-    Rdv.new(organisation: organisation,
+    Rdv.new(organisation_id: organisation_id,
       motif: motif,
       users: users || [],
       location: location,
@@ -20,7 +20,7 @@ class Rdv::FirstStep
     {
       motif_id: motif&.id,
       location: location,
-      organisation_id: organisation&.id,
+      organisation_id: organisation_id,
       duration_in_min: duration_in_min,
       start_at: start_at&.to_s,
       user_ids: users&.map(&:id),

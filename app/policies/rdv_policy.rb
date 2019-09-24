@@ -1,10 +1,10 @@
 class RdvPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      if pro.pro?
-        scope.where(organisation_id: pro.organisation_id)
-      elsif pro.user?
-        pro.rdvs
+      if user_or_pro.pro?
+        scope.where(organisation_id: user_or_pro.organisation_id)
+      elsif user_or_pro.user?
+        user_or_pro.rdvs
       end
     end
   end

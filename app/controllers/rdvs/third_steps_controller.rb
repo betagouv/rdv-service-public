@@ -4,7 +4,7 @@ class Rdvs::ThirdStepsController < DashboardAuthController
   def new
     rdv = Rdv.new(query_params)
     @third_step = Rdv::ThirdStep.new(rdv.to_step_params)
-    @third_step.organisation = current_pro.organisation
+    @third_step.organisation_id = current_pro.organisation_id
     authorize(@third_step)
   end
 
@@ -25,7 +25,7 @@ class Rdvs::ThirdStepsController < DashboardAuthController
   def build_third_step
     rdv = Rdv.new(third_step_params)
     @third_step = Rdv::ThirdStep.new(rdv.to_step_params)
-    @third_step.organisation = current_pro.organisation
+    @third_step.organisation_id = current_pro.organisation_id
   end
 
   def third_step_params

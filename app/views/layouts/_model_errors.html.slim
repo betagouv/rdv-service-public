@@ -2,6 +2,6 @@
   .alert.alert-danger.alert-dismissible.fade.show
     a.close(href="#" data-dismiss="alert")
       i.fa.fa-times
-    ul
+    ul.m-0
       - model.errors.full_messages.each do |msg|
         li=msg
