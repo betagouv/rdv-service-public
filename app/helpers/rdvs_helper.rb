@@ -12,6 +12,6 @@ module RdvsHelper
   end
 
   def future_tag(rdv)
-    content_tag(:span, 'À venir', class: 'badge badge-info') if srdv.start_at.future?
+    content_tag(:span, 'À venir', class: 'badge badge-info') if rdv.start_at.future?
   end
 end
