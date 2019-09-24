@@ -23,6 +23,37 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
+      "fingerprint": "bc8aacd31d0cacb8a0edb038480866ee5d1043ee91d2de340f5f320eadf93c7a",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/users/rdvs/index.html.slim",
+      "line": 4,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => policy_scope(Rdv).page(params[:page]), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Users::RdvsController",
+          "method": "index",
+          "line": 4,
+          "file": "app/controllers/users/rdvs_controller.rb",
+          "rendered": {
+            "name": "users/rdvs/index",
+            "file": "app/views/users/rdvs/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "users/rdvs/index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
       "fingerprint": "c337f7231e73f571019fbdee7b20be2ef5b745dc5dd33a95bb80222b30ccad2a",
       "check_name": "Render",
       "message": "Render path contains parameter value",
@@ -52,6 +83,6 @@
       "note": ""
     }
   ],
-  "updated": "2019-09-16 16:53:23 +0200",
+  "updated": "2019-09-24 16:33:43 +0200",
   "brakeman_version": "4.6.1"
 }
