@@ -3,7 +3,7 @@ describe Creneau, type: :model do
   let!(:lieu) { create(:lieu) }
   let(:today) { Date.new(2019, 9, 19) }
   let(:six_days_later) { Date.new(2019, 9, 25) }
-  let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
+  let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
 
   describe ".for_motif_and_lieu_from_date_range" do
     let(:motif_name) { motif.name }
