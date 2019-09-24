@@ -1,5 +1,6 @@
 describe Creneau, type: :model do
-  let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30) }
+  let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, online: online) }
+  let(:online) { true }
   let!(:lieu) { create(:lieu) }
   let(:today) { Date.new(2019, 9, 19) }
   let(:six_days_later) { Date.new(2019, 9, 25) }
@@ -22,6 +23,12 @@ describe Creneau, type: :model do
       expect_creneau_to_eq(subject[1], starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, lieu_id: lieu.id, motif: motif)
       expect_creneau_to_eq(subject[2], starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif: motif)
       expect_creneau_to_eq(subject[3], starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif: motif)
+    end
+
+    describe "with not online motif" do
+      let(:online) { false }
+
+      it { expect(subject.size).to eq(0) }
     end
 
     describe "with absence" do
@@ -64,7 +71,7 @@ describe Creneau, type: :model do
     end
 
     describe "when motif has min_booking_delay" do
-      let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, min_booking_delay: 30.minutes) }
+      let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, min_booking_delay: 30.minutes, online: true) }
       let(:now) { Time.zone.local(2019, 9, 19, 9, 15) }
 
       it do
