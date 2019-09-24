@@ -13,7 +13,7 @@
           .card-body
 
             h5.card-title= lieu.name
-            h6.card-subtitle= lieu.address
+            h6.card-subtitle.mb-3= lieu.address
 
             - @creneaux_grouped = @creneaux_by_lieux[lieu.id].group_by { |c| c.starts_at.to_date }
 
@@ -33,4 +33,3 @@
                   - else
                     p.text-center
                       small aucune disponibilité
-

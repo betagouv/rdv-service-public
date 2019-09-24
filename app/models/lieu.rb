@@ -7,7 +7,7 @@ class Lieu < ApplicationRecord
     "#{name} (#{address})"
   end
 
-  def self.for_motif_and_departement_from_time(motif_name, departement, time)
+  def self.for_motif_and_departement_from_time(_motif_name, departement, time)
     organisations_ids = Organisation.where(departement: departement)
     Lieu.where(organisation: organisations_ids)
 

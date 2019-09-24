@@ -16,7 +16,6 @@ describe "User can search for rdvs" do
     expect_page_title("Prenez rendez-vous en ligne avecvotre Maison Départementale des Solidarités")
     fill_in('search_where', with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
     # Improve with click on suggestion instead of filling an hidden input
-    # fill_in('search_departement', with: "92")
     find(:xpath, "//input[@id='search_departement']", visible: false).set("92")
     # click_first_suggestion
     click_button("Choix d'une localité")

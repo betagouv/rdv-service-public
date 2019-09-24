@@ -19,18 +19,25 @@ class Creneau
     PlageOuverture.find(plage_ouverture_id)
   end
 
-  def available?
-    pro = plage_ouverture.pro
-    pro.absences.where("? < ends_at AND ends_at < ?", starts_at, ends_at)
-      .or(Absence.where("? < starts_at AND starts_at < ?", starts_at, ends_at))
-      .or(Absence.where("starts_at <= ? AND ? <= ends_at", starts_at, ends_at))
-      .empty?
+  def available?(rdvs, absences)
+    !overlaps_rdv_or_absence?(rdvs) && !overlaps_rdv_or_absence?(absences)
+  end
+
+  def overlaps_rdv_or_absence?(rdvs_or_absences)
+    rdvs_or_absences.select do |r_o_a|
+      (starts_at < r_o_a.ends_at && r_o_a.ends_at < ends_at) ||
+        (starts_at < r_o_a.starts_at && r_o_a.starts_at < ends_at) ||
+        (r_o_a.starts_at <= starts_at && ends_at <= r_o_a.ends_at)
+    end.any?
   end
 
   def self.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range)
     plages_ouverture = PlageOuverture.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range)
 
     plages_ouverture.flat_map do |po|
+      rdvs = po.pro.rdvs.where(starts_at: inclusive_date_range)
+      absences = po.pro.absences
+
       po.motifs.flat_map do |motif|
         creneaux_nb = po.time_shift_duration_in_min / motif.default_duration_in_min
         po.occurences_for(inclusive_date_range).flat_map do |occurence_time|
@@ -40,9 +47,9 @@ class Creneau
               duration_in_min: motif.default_duration_in_min,
               lieu_id: lieu.id,
               motif_id: motif.id,
-              plage_ouverture_id: po.id,
+              plage_ouverture_id: po.id
             )
-            creneau.available? ? creneau : nil
+            creneau.available?(rdvs, absences) ? creneau : nil
           end.compact
         end
       end

@@ -33,7 +33,7 @@ class WelcomeController < ApplicationController
 
     @lieux = Lieu.for_motif_and_departement_from_time(@motif, @departement, Time.now)
 
-    @date_range =  Time.now.to_date..((Time.now + 6.days).to_date)
+    @date_range = Time.now.to_date..((Time.now + 6.days).to_date)
 
     @creneaux_by_lieux = {}
     @lieux.each do |lieu|
