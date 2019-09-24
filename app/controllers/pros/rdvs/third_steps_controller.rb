@@ -1,4 +1,4 @@
-class Rdvs::ThirdStepsController < DashboardAuthController
+class Pros::Rdvs::ThirdStepsController < DashboardAuthController
   layout 'application-small'
 
   def new

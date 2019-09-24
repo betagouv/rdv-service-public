@@ -52,13 +52,13 @@ Rails.application.routes.draw do
       resources :plage_ouvertures, except: :show, shallow: true
 
       # Rdv
-      resources :rdvs, except: [:index, :create, :new], shallow: true do
+      resources :rdvs, except: [:index, :create, :new], shallow: true, controller: 'pros/rdvs' do
         patch :status, on: :member
       end
     end
-    resources :first_steps, only: [:new, :create], module: "rdvs"
-    resources :second_steps, only: [:new, :create], module: "rdvs"
-    resources :third_steps, only: [:new, :create], module: "rdvs"
+    [:first_steps, :second_steps, :third_steps ].each do |step|
+      resources step, only: [:new, :create], module: "pros/rdvs"
+    end
     resources :absences, except: :show
   end
 
