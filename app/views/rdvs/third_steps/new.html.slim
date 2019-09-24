@@ -20,7 +20,7 @@
       = "Durée : #{@third_step.rdv.duration_in_min} minutes"
     li.list-group-item
       i.fa.fa-check.fa-fw.mr-1.text-success
-      = "Commence le : #{l(@third_step.rdv.start_at, format: :human)}"
+      = "Commence le : #{l(@third_step.rdv.starts_at, format: :human)}"
     - if @third_step.max_users_limit
       li.list-group-item
         i.fa.fa-check.fa-fw.mr-1.text-success
@@ -37,7 +37,7 @@
         / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
         = f.hidden_field "pro_ids][", value: p.id
       = f.input :duration_in_min, as: :hidden
-      = f.input :start_at, as: :hidden
+      = f.input :starts_at, as: :hidden
       = f.input :max_users_limit, as: :hidden
       = f.association :users, collection: policy_scope(User), label_method: :full_name, input_html: { multiple: true, class: 'select2-input' }
       .row

@@ -24,8 +24,8 @@ describe PlageOuverture, type: :model do
     end
   end
 
-  describe "#start_at" do
-    subject { plage_ouverture.start_at }
+  describe "#starts_at" do
+    subject { plage_ouverture.starts_at }
 
     context "for a plage" do
       let(:plage_ouverture) { create(:plage_ouverture, first_day: Date.new(2019, 7, 22), start_time: Tod::TimeOfDay.new(9)) }
@@ -53,7 +53,7 @@ describe PlageOuverture, type: :model do
 
       it do
         expect(subject.size).to eq 1
-        expect(subject.first).to eq plage_ouverture.start_at
+        expect(subject.first).to eq plage_ouverture.starts_at
       end
     end
 
@@ -63,13 +63,13 @@ describe PlageOuverture, type: :model do
 
       it do
         expect(subject.size).to eq 7
-        expect(subject[0]).to eq plage_ouverture.start_at
-        expect(subject[1]).to eq(plage_ouverture.start_at + 1.day)
-        expect(subject[2]).to eq(plage_ouverture.start_at + 2.day)
-        expect(subject[3]).to eq(plage_ouverture.start_at + 3.day)
-        expect(subject[4]).to eq(plage_ouverture.start_at + 4.day)
-        expect(subject[5]).to eq(plage_ouverture.start_at + 5.day)
-        expect(subject[6]).to eq(plage_ouverture.start_at + 6.day)
+        expect(subject[0]).to eq plage_ouverture.starts_at
+        expect(subject[1]).to eq(plage_ouverture.starts_at + 1.day)
+        expect(subject[2]).to eq(plage_ouverture.starts_at + 2.day)
+        expect(subject[3]).to eq(plage_ouverture.starts_at + 3.day)
+        expect(subject[4]).to eq(plage_ouverture.starts_at + 4.day)
+        expect(subject[5]).to eq(plage_ouverture.starts_at + 5.day)
+        expect(subject[6]).to eq(plage_ouverture.starts_at + 6.day)
       end
     end
 
@@ -79,9 +79,9 @@ describe PlageOuverture, type: :model do
 
       it do
         expect(subject.size).to eq 3
-        expect(subject[0]).to eq plage_ouverture.start_at
-        expect(subject[1]).to eq(plage_ouverture.start_at + 1.week)
-        expect(subject[2]).to eq(plage_ouverture.start_at + 2.weeks)
+        expect(subject[0]).to eq plage_ouverture.starts_at
+        expect(subject[1]).to eq(plage_ouverture.starts_at + 1.week)
+        expect(subject[2]).to eq(plage_ouverture.starts_at + 2.weeks)
       end
     end
 
@@ -91,8 +91,8 @@ describe PlageOuverture, type: :model do
 
       it do
         expect(subject.size).to eq 2
-        expect(subject[0]).to eq plage_ouverture.start_at
-        expect(subject[1]).to eq(plage_ouverture.start_at + 2.weeks)
+        expect(subject[0]).to eq plage_ouverture.starts_at
+        expect(subject[1]).to eq(plage_ouverture.starts_at + 2.weeks)
       end
     end
 

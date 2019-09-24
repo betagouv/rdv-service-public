@@ -29,10 +29,10 @@ class Rdvs::ThirdStepsController < DashboardAuthController
   end
 
   def third_step_params
-    params.require(:rdv).permit(:motif_id, :duration_in_min, :start_at, :max_users_limit, :location, pro_ids: [], user_ids: [])
+    params.require(:rdv).permit(:motif_id, :duration_in_min, :starts_at, :max_users_limit, :location, pro_ids: [], user_ids: [])
   end
 
   def query_params
-    params.permit(:motif_id, :duration_in_min, :start_at, :max_users_limit, :location, pro_ids: [], user_ids: [])
+    params.permit(:motif_id, :duration_in_min, :starts_at, :max_users_limit, :location, pro_ids: [], user_ids: [])
   end
 end

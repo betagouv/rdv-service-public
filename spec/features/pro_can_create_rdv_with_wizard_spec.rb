@@ -48,7 +48,7 @@ describe "Pro can create a Rdv with wizard" do
     expect(rdv.users).to contain_exactly(user)
     expect(rdv.motif).to eq(motif)
     expect(rdv.duration_in_min).to eq(35)
-    expect(rdv.start_at).to eq(Time.zone.local(2019, 10, 12, 14, 15))
+    expect(rdv.starts_at).to eq(Time.zone.local(2019, 10, 12, 14, 15))
   end
 
   scenario "with a users limit" do

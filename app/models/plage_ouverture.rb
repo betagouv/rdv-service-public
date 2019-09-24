@@ -17,7 +17,7 @@ class PlageOuverture < ApplicationRecord
   scope :exceptionnelles, -> { where(recurrence: nil) }
   scope :regulieres, -> { where.not(recurrence: nil) }
 
-  def start_at
+  def starts_at
     start_time.on(first_day)
   end
 
@@ -38,9 +38,9 @@ class PlageOuverture < ApplicationRecord
     min_until = [inclusive_date_range.end, recurrence_until].compact.min.to_time.end_of_day
 
     if recurrence.present?
-      recurrence.starting(start_at).until(min_until).lazy.select { |o| o >= inclusive_date_range.begin.to_time }.to_a
+      recurrence.starting(starts_at).until(min_until).lazy.select { |o| o >= inclusive_date_range.begin.to_time }.to_a
     else
-      [start_at].select { |t| inclusive_date_range.cover?(t) }
+      [starts_at].select { |t| inclusive_date_range.cover?(t) }
     end
   end
 

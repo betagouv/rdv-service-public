@@ -7,19 +7,19 @@ class Rdv < ApplicationRecord
 
   enum status: { to_be: 0, waiting: 1, seen: 2, excused: 3, not_excused: 4 }
 
-  validates :users, :organisation, :motif, :start_at, :duration_in_min, :pros, presence: true
+  validates :users, :organisation, :motif, :starts_at, :duration_in_min, :pros, presence: true
   validates :max_users_limit, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
   scope :active, -> { where(cancelled_at: nil) }
-  scope :past, -> { where('start_at < ?', Time.zone.now) }
+  scope :past, -> { where('starts_at < ?', Time.zone.now) }
 
   after_commit :reload_uuid, on: :create
 
   after_create :send_ics_to_users_and_pros
-  after_update :update_ics_to_user_and_pros, if: -> { saved_change_to_start_at? || saved_change_to_cancelled_at? }
+  after_update :update_ics_to_user_and_pros, if: -> { saved_change_to_starts_at? || saved_change_to_cancelled_at? }
 
   def end_at
-    start_at + duration_in_min.minutes
+    starts_at + duration_in_min.minutes
   end
 
   def past?
@@ -41,9 +41,9 @@ class Rdv < ApplicationRecord
 
   def update_ics_to_user_and_pros
     increment!(:sequence)
-    serialized_previous_start_at = saved_changes&.[]("start_at")&.[](0)&.to_s
-    RdvMailer.send_ics_to_user(self, serialized_previous_start_at).deliver_later
-    pros.each { |pro| RdvMailer.send_ics_to_pro(self, pro, serialized_previous_start_at).deliver_later }
+    serialized_previous_starts_at = saved_changes&.[]("starts_at")&.[](0)&.to_s
+    RdvMailer.send_ics_to_user(self, serialized_previous_starts_at).deliver_later
+    pros.each { |pro| RdvMailer.send_ics_to_pro(self, pro, serialized_previous_starts_at).deliver_later }
   end
 
   def to_ical_for(user_or_pro)
@@ -54,11 +54,11 @@ class Rdv < ApplicationRecord
 
     tzid = "Europe/Paris"
     tz = TZInfo::Timezone.get tzid
-    timezone = tz.ical_timezone start_at
+    timezone = tz.ical_timezone starts_at
     cal.add_timezone timezone
 
     cal.event do |e|
-      e.dtstart     = Icalendar::Values::DateTime.new(start_at, 'tzid' => tzid)
+      e.dtstart     = Icalendar::Values::DateTime.new(starts_at, 'tzid' => tzid)
       e.dtend       = Icalendar::Values::DateTime.new(end_at, 'tzid' => tzid)
       e.summary     = "RDV #{name}"
       e.description = ""
@@ -77,7 +77,7 @@ class Rdv < ApplicationRecord
   end
 
   def ics_name
-    "rdv-#{name.parameterize}-#{start_at.to_s.parameterize}.ics"
+    "rdv-#{name.parameterize}-#{starts_at.to_s.parameterize}.ics"
   end
 
   def to_step_params
@@ -86,7 +86,7 @@ class Rdv < ApplicationRecord
       location: location,
       motif: motif,
       duration_in_min: duration_in_min,
-      start_at: start_at,
+      starts_at: starts_at,
       max_users_limit: max_users_limit,
       users: users,
       pros: pros,
