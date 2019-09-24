@@ -1,11 +1,4 @@
-meta content="text/html; charset=UTF-8" http-equiv="Content-Type"
-meta name="viewport" content="width=device-width, initial-scale=1.0"
-meta name="turbolinks-cache-control" content="no-cache"
-title Lapin.beta.gouv
-= csrf_meta_tags
-= csp_meta_tag
+= render 'common/meta'
 = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
-= stylesheet_link_tag 'print', media: 'print', data: { turbolinks_track: true }
 = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
 
-= favicon_link_tag asset_path('favicon.png'), rel: 'icon', type:  'image/png'
