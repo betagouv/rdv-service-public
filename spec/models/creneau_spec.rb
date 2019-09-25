@@ -3,7 +3,11 @@ describe Creneau, type: :model do
   let!(:lieu) { create(:lieu) }
   let(:today) { Date.new(2019, 9, 19) }
   let(:six_days_later) { Date.new(2019, 9, 25) }
-  let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
+  let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
+  let(:now) { today.to_time }
+
+  before { travel_to(now) }
+  after { travel_back }
 
   describe ".for_motif_and_lieu_from_date_range" do
     let(:motif_name) { motif.name }
@@ -14,10 +18,10 @@ describe Creneau, type: :model do
     it do
       expect(subject.size).to eq(4)
 
-      expect_creneau_to_eq(subject[0], starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, plage_ouverture_id: plage_ouverture.id)
-      expect_creneau_to_eq(subject[1], starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, plage_ouverture_id: plage_ouverture.id)
-      expect_creneau_to_eq(subject[2], starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, plage_ouverture_id: plage_ouverture.id)
-      expect_creneau_to_eq(subject[3], starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, plage_ouverture_id: plage_ouverture.id)
+      expect_creneau_to_eq(subject[0], starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif: motif)
+      expect_creneau_to_eq(subject[1], starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, lieu_id: lieu.id, motif: motif)
+      expect_creneau_to_eq(subject[2], starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif: motif)
+      expect_creneau_to_eq(subject[3], starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif: motif)
     end
 
     describe "with absence" do
@@ -26,8 +30,8 @@ describe Creneau, type: :model do
       it do
         expect(subject.size).to eq(2)
 
-        expect_creneau_to_eq(subject[0], starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, plage_ouverture_id: plage_ouverture.id)
-        expect_creneau_to_eq(subject[1], starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, plage_ouverture_id: plage_ouverture.id)
+        expect_creneau_to_eq(subject[0], starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif: motif)
+        expect_creneau_to_eq(subject[1], starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif: motif)
       end
     end
 
@@ -37,9 +41,37 @@ describe Creneau, type: :model do
       it do
         expect(subject.size).to eq(3)
 
-        expect_creneau_to_eq(subject[0], starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, plage_ouverture_id: plage_ouverture.id)
-        expect_creneau_to_eq(subject[1], starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, plage_ouverture_id: plage_ouverture.id)
-        expect_creneau_to_eq(subject[2], starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, plage_ouverture_id: plage_ouverture.id)
+        expect_creneau_to_eq(subject[0], starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif: motif)
+        expect_creneau_to_eq(subject[1], starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif: motif)
+        expect_creneau_to_eq(subject[2], starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif: motif)
+      end
+    end
+
+    describe "when there is two pro" do
+      let(:pro2) { create(:pro) }
+      let!(:plage_ouverture2) { create(:plage_ouverture, pro: pro2, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(10), end_time: Tod::TimeOfDay.new(12)) }
+
+      it do
+        expect(subject.size).to eq(6)
+
+        expect_creneau_to_eq(subject[0], starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif: motif)
+        expect_creneau_to_eq(subject[1], starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, lieu_id: lieu.id, motif: motif)
+        expect_creneau_to_eq(subject[2], starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif: motif)
+        expect_creneau_to_eq(subject[3], starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif: motif)
+        expect_creneau_to_eq(subject[4], starts_at: Time.zone.local(2019, 9, 19, 11, 0), duration_in_min: 30, lieu_id: lieu.id, motif: motif)
+        expect_creneau_to_eq(subject[5], starts_at: Time.zone.local(2019, 9, 19, 11, 30), duration_in_min: 30, lieu_id: lieu.id, motif: motif)
+      end
+    end
+
+    describe "when motif has min_booking_delay" do
+      let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, min_booking_delay: 30.minutes) }
+      let(:now) { Time.zone.local(2019, 9, 19, 9, 15) }
+
+      it do
+        expect(subject.size).to eq(2)
+
+        expect_creneau_to_eq(subject[0], starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif: motif)
+        expect_creneau_to_eq(subject[1], starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif: motif)
       end
     end
 
@@ -47,13 +79,12 @@ describe Creneau, type: :model do
       expect(creneau.starts_at).to eq(attr[:starts_at])
       expect(creneau.duration_in_min).to eq(attr[:duration_in_min])
       expect(creneau.lieu.id).to eq(attr[:lieu_id])
-      expect(creneau.motif.id).to eq(attr[:motif_id])
-      expect(creneau.plage_ouverture.id).to eq(attr[:plage_ouverture_id])
+      expect(creneau.motif.id).to eq(attr[:motif].id)
     end
   end
 
   describe "#overlaps_rdv_or_absence?" do
-    let(:creneau) { Creneau.new(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 60, lieu_id: lieu.id, motif_id: motif.id, plage_ouverture_id: plage_ouverture.id) }
+    let(:creneau) { Creneau.new(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 60, lieu_id: lieu.id, motif: motif) }
 
     describe "for absences" do
       subject { creneau.overlaps_rdv_or_absence?([absence]) }

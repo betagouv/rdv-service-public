@@ -50,7 +50,7 @@ class PlageOuverture < ApplicationRecord
 
   def self.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range)
     motifs_ids = Motif.where(name: motif_name, organisation_id: lieu.organisation_id)
-    PlageOuverture.includes(:motifs_plageouvertures).where(lieu: lieu).where("first_day <= ?", inclusive_date_range.begin).joins(:motifs).where(motifs: { id: motifs_ids }).includes(:motifs, pro: :absences).uniq
+    PlageOuverture.includes(:motifs_plageouvertures).where(lieu: lieu).where("first_day <= ?", inclusive_date_range.end).joins(:motifs).where(motifs: { id: motifs_ids }).includes(:motifs, pro: :absences).uniq
   end
 
   private

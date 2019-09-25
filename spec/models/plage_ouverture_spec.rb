@@ -116,7 +116,30 @@ describe PlageOuverture, type: :model do
 
     subject { PlageOuverture.for_motif_and_lieu_from_date_range(motif.name, lieu, today..six_days_later) }
 
-    it { expect(PlageOuverture.count).to eq(1) }
     it { expect(subject).to contain_exactly(plage_ouverture) }
+
+    describe "when first_day is the last day of time range" do
+      let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: six_days_later, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
+
+      subject { PlageOuverture.for_motif_and_lieu_from_date_range(motif.name, lieu, today..six_days_later) }
+
+      it { expect(subject).to contain_exactly(plage_ouverture) }
+    end
+
+    describe "when first_day is before time range" do
+      let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today - 2.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
+
+      subject { PlageOuverture.for_motif_and_lieu_from_date_range(motif.name, lieu, today..six_days_later) }
+
+      it { expect(subject).to contain_exactly(plage_ouverture) }
+    end
+
+    describe "when first_day is after time range" do
+      let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today + 8.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
+
+      subject { PlageOuverture.for_motif_and_lieu_from_date_range(motif.name, lieu, today..six_days_later) }
+
+      it { expect(subject.count).to eq(0) }
+    end
   end
 end
