@@ -23,36 +23,16 @@ class AbsenceDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = %i[
-  pro
-  organisation
-  id
-  title
-  ].freeze
+  COLLECTION_ATTRIBUTES = [:pro, :organisation, :id, :title].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = %i[
-  pro
-  organisation
-  id
-  title
-  starts_at
-  ends_at
-  created_at
-  updated_at
-  ].freeze
+  SHOW_PAGE_ATTRIBUTES = [:pro, :organisation, :id, :title, :starts_at, :ends_at, :created_at, :updated_at].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = %i[
-  pro
-  organisation
-  title
-  starts_at
-  ends_at
-  ].freeze
+  FORM_ATTRIBUTES = [:pro, :organisation, :title, :starts_at, :ends_at].freeze
 
   # COLLECTION_FILTERS
   # a hash that defines filters that can be used while searching via the search
