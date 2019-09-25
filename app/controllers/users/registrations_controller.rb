@@ -1,5 +1,5 @@
 class Users::RegistrationsController < Devise::RegistrationsController
-  layout 'registration'
+  layout :user_devise_layout
 
   def destroy
     resource.soft_delete
@@ -10,6 +10,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   private
+  def user_devise_layout
+    user_signed_in? ? 'application_user' : 'registration'
+  end
 
   def after_inactive_sign_up_path_for(_)
     new_user_session_path
