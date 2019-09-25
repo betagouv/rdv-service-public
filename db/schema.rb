@@ -181,7 +181,7 @@ ActiveRecord::Schema.define(version: 2019_09_25_115331) do
   create_table "rdvs", force: :cascade do |t|
     t.string "name"
     t.integer "duration_in_min", null: false
-    t.datetime "start_at", null: false
+    t.datetime "starts_at", null: false
     t.bigint "organisation_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

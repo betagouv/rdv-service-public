@@ -2,7 +2,7 @@ class Motif < ApplicationRecord
   belongs_to :organisation
   belongs_to :service
   has_many :rdvs, dependent: :restrict_with_exception
-  has_and_belongs_to_many :plage_ouvertures
+  has_and_belongs_to_many :plage_ouvertures, -> { distinct }
 
   validates :name, presence: true, uniqueness: { scope: :organisation }
   validates :color, :service, :default_duration_in_min, :min_booking_delay, :max_booking_delay, presence: true
@@ -12,6 +12,7 @@ class Motif < ApplicationRecord
   validate :booking_delay_validation
 
   scope :active, -> { where(deleted_at: nil) }
+  scope :online, -> { where(online: true) }
 
   def soft_delete
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy

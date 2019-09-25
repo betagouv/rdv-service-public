@@ -1,0 +1,35 @@
+.bg-gradient
+  = render 'common/header'
+  section#hero.hero.hero-home.p-2
+    .container
+      .row.justify-content-md-center
+        .col-md-10
+          = render 'search_form'
+
+  section.bg-light.p-4
+    .container
+      - @lieux.each do |lieu|
+        .card.mb-3
+          .card-body
+
+            h5.card-title= lieu.name
+            h6.card-subtitle.mb-3= lieu.address
+
+            - @creneaux_grouped = @creneaux_by_lieux[lieu.id].group_by { |c| c.starts_at.to_date }
+
+            .row
+              - @date_range.each do |date|
+                .col
+                  p.text-center
+                    strong= l(date, format: "%A")
+                    br
+                    = l(date, format: "%d %b")
+                  - creneaux_for_date = @creneaux_grouped.select { |k, v| k == date }
+
+                  - if creneaux_for_date.any?
+                    - creneaux_for_date.each do |date, creneaux|
+                      - creneaux.sort_by(&:starts_at).each do |creneau|
+                        = link_to l(creneau.starts_at, format: "%H:%M"), root_path, class: "btn btn-light mr-1 mb-1 w-100"
+                  - else
+                    p.text-center
+                      small aucune disponibilité

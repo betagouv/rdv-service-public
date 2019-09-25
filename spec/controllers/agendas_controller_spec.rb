@@ -35,8 +35,8 @@ RSpec.describe AgendasController, type: :controller do
         first = @parsed_response[0]
         expect(first.size).to eq(6)
         expect(first["title"]).to eq(plage_ouverture2.title)
-        expect(first["start"]).to eq(plage_ouverture2.start_at.as_json)
-        expect(first["end"]).to eq(plage_ouverture2.end_at.as_json)
+        expect(first["start"]).to eq(plage_ouverture2.starts_at.as_json)
+        expect(first["end"]).to eq(plage_ouverture2.ends_at.as_json)
         expect(first["backgroundColor"]).to eq("#F00")
         expect(first["rendering"]).to eq("background")
         expect(first["extendedProps"]).to eq({ location: plage_ouverture2.lieu.address }.as_json)

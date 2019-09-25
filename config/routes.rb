@@ -69,5 +69,7 @@ Rails.application.routes.draw do
   get 'accueil_mds' => "welcome#welcome_pro"
   post '/' => "welcome#search"
   get 'departement/:departement', to: "welcome#welcome_departement", as: "welcome_departement"
+  post 'departement/:departement' => "welcome#search_departement"
+  get 'departement/:departement/:motif', to: "welcome#welcome_motif", as: "welcome_motif"
   root 'welcome#index'
 end
