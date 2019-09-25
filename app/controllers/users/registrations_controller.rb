@@ -10,6 +10,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   private
+
   def user_devise_layout
     user_signed_in? ? 'application_user' : 'registration'
   end
