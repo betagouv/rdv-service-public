@@ -6,7 +6,7 @@ feature 'User signs up and signs in' do
   context 'through home page' do
     before { visit root_path }
 
-    scenario '.sign_up, .confirm and then .sign_in' do
+    scenario '.sign_up, .confirm, .sign_in and then signs out' do
       click_link 'Se connecter'
       click_link 'Je m\'inscris'
       sign_up(user)
@@ -18,6 +18,9 @@ feature 'User signs up and signs in' do
       sign_in(user)
       expect(current_path).to eq(authenticated_user_root_path)
       expect_flash_info(I18n.t("devise.sessions.signed_in"))
+      click_link user.first_name
+      click_link 'Se déconnecter'
+      expect(current_path).to eq(root_path)
     end
   end
 
