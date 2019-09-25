@@ -1,6 +1,6 @@
 require "administrate/base_dashboard"
 
-class ProDashboard < Administrate::BaseDashboard
+class AbsenceDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
   # a hash that describes the type of each of the model's fields.
   #
@@ -8,17 +8,12 @@ class ProDashboard < Administrate::BaseDashboard
   # which determines how the attribute is displayed
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
-    id: Field::Number,
-    email: Field::String,
-    role: EnumField,
-    first_name: Field::String,
-    last_name: Field::String,
+    pro: Field::BelongsTo,
     organisation: Field::BelongsTo,
-    plage_ouvertures: Field::HasMany,
-    absences: Field::HasMany,
-    service: Field::BelongsTo,
-    remember_created_at: Field::DateTime,
-    deleted_at: Field::DateTime,
+    id: Field::Number,
+    title: Field::String,
+    starts_at: Field::DateTime,
+    ends_at: Field::DateTime,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -28,50 +23,53 @@ class ProDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = [
-    :id,
-    :email,
-    :first_name,
-    :last_name,
-    :role,
+  COLLECTION_ATTRIBUTES = %i[
+  pro
+  organisation
+  id
+  title
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = [
-    :id,
-    :email,
-    :first_name,
-    :last_name,
-    :role,
-    :organisation,
-    :service,
-    :plage_ouvertures,
-    :absences,
-    :remember_created_at,
-    :created_at,
-    :deleted_at,
-    :updated_at,
+  SHOW_PAGE_ATTRIBUTES = %i[
+  pro
+  organisation
+  id
+  title
+  starts_at
+  ends_at
+  created_at
+  updated_at
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [
-    :email,
-    :first_name,
-    :last_name,
-    :role,
-    :service,
-    :plage_ouvertures,
-    :absences,
-    :deleted_at,
+  FORM_ATTRIBUTES = %i[
+  pro
+  organisation
+  title
+  starts_at
+  ends_at
   ].freeze
 
-  # Overwrite this method to customize how pros are displayed
+  # COLLECTION_FILTERS
+  # a hash that defines filters that can be used while searching via the search
+  # field of the dashboard.
+  #
+  # For example to add an option to search for open resources by typing "open:"
+  # in the search field:
+  #
+  #   COLLECTION_FILTERS = {
+  #     open: ->(resources) { where(open: true) }
+  #   }.freeze
+  COLLECTION_FILTERS = {}.freeze
+
+  # Overwrite this method to customize how absences are displayed
   # across all pages of the admin dashboard.
   #
-  def display_resource(pro)
-    pro.email
-  end
+  # def display_resource(absence)
+  #   "Absence ##{absence.id}"
+  # end
 end
