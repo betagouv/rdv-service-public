@@ -52,7 +52,7 @@ class ApplicationPolicy
     end
 
     def resolve
-      @user_or_pro.pro? ? scope.where(organisation_id: @user_or_pro.organisation_id) : []
+      @user_or_pro.pro? ? scope.where(pro_id: @user_or_pro.id) : []
     end
   end
 end
