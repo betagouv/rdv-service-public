@@ -5,13 +5,12 @@ describe Lieu, type: :model do
   let!(:user) { create(:user) }
   let(:organisation) { plage_ouverture.organisation }
 
-  describe ".for_motif_and_departement_in_date_range" do
+  describe ".for_motif_and_departement" do
     let(:motif_name) { motif.name }
     let(:departement) { organisation.departement }
-    let(:date_range) { Time.current.to_date..(Time.current.to_date + 6.days) }
     let(:online) { true }
 
-    subject { Lieu.for_motif_and_departement_in_date_range(motif_name, departement, date_range) }
+    subject { Lieu.for_motif_and_departement(motif_name, departement) }
 
     before { freeze_time }
     after { travel_back }
