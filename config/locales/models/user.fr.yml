@@ -11,3 +11,5 @@ fr:
         phone_number: Numéro de téléphone
         address: Adresse
         organisation: Organisation
+        password: Mot de passe
+        current_password: Mot de passe actuel

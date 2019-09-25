@@ -89,6 +89,8 @@ GEM
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
     bindex (0.8.1)
+    binding_of_caller (0.8.0)
+      debug_inspector (>= 0.0.1)
     bootsnap (1.4.5)
       msgpack (~> 1.0)
     bootstrap4-kaminari-views (1.0.1)
@@ -108,6 +110,9 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (~> 1.5)
       xpath (~> 3.2)
+    capybara-email (3.0.1)
+      capybara (>= 2.4, < 4.0)
+      mail
     chartkick (3.2.1)
     childprocess (2.0.0)
       rake (< 13.0)
@@ -119,6 +124,7 @@ GEM
     database_cleaner (1.7.0)
     datetime_picker_rails (0.0.7)
       momentjs-rails (>= 2.8.1)
+    debug_inspector (0.0.3)
     delayed_job (4.1.8)
       activesupport (>= 3.0, < 6.1)
     delayed_job_active_record (4.1.4)
@@ -454,12 +460,14 @@ DEPENDENCIES
   airbrake (~> 9.4)
   autoprefixer-rails (~> 9.6)
   better_errors
+  binding_of_caller
   bootsnap (>= 1.1.0)
   bootstrap4-kaminari-views (~> 1.0)
   brakeman
   bullet
   byebug
   capybara (>= 2.15)
+  capybara-email
   chartkick (~> 3.2.0)
   database_cleaner
   delayed_job_active_record (~> 4.1.4)

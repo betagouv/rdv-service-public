@@ -1,14 +1,4 @@
-class ProPolicy < ApplicationPolicy
-  class Scope < Scope
-    def resolve
-      scope.where(organisation_id: pro.organisation_id)
-    end
-  end
-
-  def index?
-    @pro.admin?
-  end
-
+class ProPolicy < AdminPolicy
   def show?
     same_pro_or_admin?
   end
@@ -22,7 +12,7 @@ class ProPolicy < ApplicationPolicy
   end
 
   def invite?
-    @pro.admin?
+    admin_and_belongs_to_record_organisation?
   end
 
   def reinvite?
@@ -32,6 +22,6 @@ class ProPolicy < ApplicationPolicy
   private
 
   def same_pro_or_admin?
-    @pro == @record || @pro.admin?
+    @pro == @record || admin_and_belongs_to_record_organisation?
   end
 end

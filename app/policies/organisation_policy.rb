@@ -1,23 +1,18 @@
-class OrganisationPolicy < ApplicationPolicy
-  def show?
-    true
+class OrganisationPolicy < AdminPolicy
+  def destroy?
+    false
   end
 
-  def create?
-    true
-  end
+  class Scope
+    attr_reader :user_or_pro, :scope
 
-  def edit?
-    admin_belongs_to_organisation?
-  end
+    def initialize(user_or_pro, scope)
+      @user_or_pro = user_or_pro
+      @scope = scope
+    end
 
-  def update?
-    admin_belongs_to_organisation?
-  end
-
-  private
-
-  def admin_belongs_to_organisation?
-    @pro.admin? && @pro.organisation_id == @record.id
+    def resolve
+      @user_or_pro.pro? && @user_or_pro.admin? ? scope.where(id: @user_or_pro.organisation_id) : []
+    end
   end
 end

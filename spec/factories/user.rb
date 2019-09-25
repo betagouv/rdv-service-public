@@ -11,5 +11,6 @@ FactoryBot.define do
     birth_date { Date.new(1990, 10, 12) }
     address { "20 avenue de Ségur, Paris" }
     organisation { Organisation.first || create(:organisation) }
+    password { "12345678" }
   end
 end

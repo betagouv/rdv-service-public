@@ -2,8 +2,7 @@ class ProsController < DashboardAuthController
   respond_to :html, :json
 
   def index
-    pros = policy_scope(Pro).active
-    authorize(pros)
+    pros = policy_scope(Pro).order(Arel.sql('LOWER(last_name)')).active
     @complete_pros = pros.complete.includes(:service).page(params[:page])
     @invited_pros = pros.invitation_not_accepted.created_by_invite
   end

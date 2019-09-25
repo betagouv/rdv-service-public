@@ -21,7 +21,7 @@ class PlageOuverturesController < DashboardAuthController
   def create
     @plage_ouverture = PlageOuverture.new(plage_ouverture_params)
     @plage_ouverture.organisation = current_pro.organisation
-    @plage_ouverture.pro = current_pro
+    @plage_ouverture.pro_id = current_pro.id
     authorize(@plage_ouverture)
     flash[:notice] = "Plage d'ouverture créé." if @plage_ouverture.save
     respond_right_bar_with @plage_ouverture, location: organisation_plage_ouvertures_path(current_pro.organisation)

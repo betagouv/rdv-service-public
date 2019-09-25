@@ -2,7 +2,7 @@
   | Vos absences
 
 - content_for :breadcrumb do
-  = add_button 'Créer une absence', new_absence_path, header: true, condition: policy(Absence).new?
+  = add_button 'Créer une absence', new_absence_path, header: true
 
 .card
   .card-body
@@ -25,4 +25,4 @@
             i.fa.fa-circle.fa-stack-2x.text-primary
             i.fa.fa-calendar-o.fa-stack-1x.text-white
     .text-center
-      = add_button 'Créer une absence', new_absence_path, condition: policy(Absence).new?
+      = add_button 'Créer une absence', new_absence_path

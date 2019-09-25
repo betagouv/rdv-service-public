@@ -1,4 +1,4 @@
-class RdvsController < DashboardAuthController
+class Pros::RdvsController < DashboardAuthController
   respond_to :html, :json
 
   before_action :set_rdv, only: [:show, :edit, :update, :destroy, :status]
@@ -16,7 +16,7 @@ class RdvsController < DashboardAuthController
   def update
     authorize(@rdv)
     flash[:notice] = 'Le rendez-vous a été modifié.' if @rdv.update(rdv_params)
-    respond_right_bar_with @rdv, location: authenticated_root_path
+    respond_right_bar_with @rdv, location: authenticated_pro_root_path
   end
 
   def status
@@ -35,7 +35,7 @@ class RdvsController < DashboardAuthController
       flash[:error] = "Une erreur s’est produite, le rendez-vous n’a pas pu être annulé."
       Airbrake.notify("Deletion failed for rdv : #{@rdv.id}")
     end
-    redirect_to authenticated_root_path
+    redirect_to authenticated_pro_root_path
   end
 
   private

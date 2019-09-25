@@ -30,6 +30,7 @@ Rails.application.configure do
 
   # Store uploaded files on the local file system in a temporary directory
   config.active_storage.service = :test
+  config.active_job.queue_adapter = :inline
 
   config.action_mailer.default_url_options = { host: 'lapin.test', utm_source: 'test', utm_medium: 'email', utm_campaign: 'default' }
   config.action_mailer.perform_caching = false
@@ -38,6 +39,7 @@ Rails.application.configure do
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
+  config.active_job.queue_adapter = :inline
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr

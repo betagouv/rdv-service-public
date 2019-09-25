@@ -10,4 +10,8 @@ module RdvsHelper
   def human_location(rdv)
     rdv.location.blank? ? 'Non précisé' : rdv.location
   end
+
+  def future_tag(rdv)
+    content_tag(:span, 'À venir', class: 'badge badge-info') if rdv.start_at.future?
+  end
 end

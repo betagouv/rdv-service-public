@@ -27,19 +27,6 @@ h1 {
   font-size: 3rem;
 }
 
-.number-circle {
-  $radius: 70px;
-  width: $radius;
-  line-height: $radius;
-  border-radius: 50%;
-  text-align: center;
-  font-size: 2rem;
-  margin-top: -70px;
-  font-weight: bold;
-  background-color: $primary;
-  color: $white;
-}
-
 a {
   transition: all 0.3s;
   display: inline-block;

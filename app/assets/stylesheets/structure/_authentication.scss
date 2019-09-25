@@ -47,15 +47,13 @@ body.authentication-bg {
   }
 }
 
-.auth-brand {
-  margin-bottom: 2rem;
+.pros .auth-fluid .auth-fluid-left {
+  background-color: $danger;
 }
 
-@include media-breakpoint-up(lg) {
-  .auth-brand {
-    position: absolute;
-    top: 3rem;
-  }
+.auth-brand {
+  margin-bottom: 2rem;
+  display: none;
 }
 
 @include media-breakpoint-down(md) {
@@ -69,6 +67,10 @@ body.authentication-bg {
     
     .auth-fluid-left {
       display: none;
+    }
+    .auth-brand {
+      display: block;
+      top: 3rem;
     }
   }
 }

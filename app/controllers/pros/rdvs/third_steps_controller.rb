@@ -1,10 +1,10 @@
-class Rdvs::ThirdStepsController < DashboardAuthController
+class Pros::Rdvs::ThirdStepsController < DashboardAuthController
   layout 'application-small'
 
   def new
     rdv = Rdv.new(query_params)
     @third_step = Rdv::ThirdStep.new(rdv.to_step_params)
-    @third_step.organisation = current_pro.organisation
+    @third_step.organisation_id = current_pro.organisation_id
     authorize(@third_step)
   end
 
@@ -14,7 +14,7 @@ class Rdvs::ThirdStepsController < DashboardAuthController
     if @third_step.valid?
       @rdv = @third_step.rdv
       @rdv.save
-      redirect_to authenticated_root_path, notice: "Le rendez-vous a été créé."
+      redirect_to authenticated_pro_root_path, notice: "Le rendez-vous a été créé."
     else
       render 'new'
     end
@@ -25,7 +25,7 @@ class Rdvs::ThirdStepsController < DashboardAuthController
   def build_third_step
     rdv = Rdv.new(third_step_params)
     @third_step = Rdv::ThirdStep.new(rdv.to_step_params)
-    @third_step.organisation = current_pro.organisation
+    @third_step.organisation_id = current_pro.organisation_id
   end
 
   def third_step_params

@@ -1,24 +1,25 @@
-class UsersController < DashboardAuthController
+class Organisations::UsersController < DashboardAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: [:new, :create]
   before_action :set_user, only: [:edit, :update, :destroy]
 
   def index
-    @users = policy_scope(User).includes(:organisation).order(Arel.sql('LOWER(last_name)')).page(params[:page])
-    authorize(@users)
+    @users = policy_scope(User).order(Arel.sql('LOWER(last_name)')).page(params[:page])
     filter_users if params[:user] && params[:user][:search]
   end
 
   def new
     @user = User.new
+    @user.organisation_id = current_pro.organisation_id
+    @organisation = current_pro.organisation
     authorize(@user)
     respond_right_bar_with @user
   end
 
   def create
     @user = User.new(user_params)
-    @user.organisation = current_pro.organisation
+    @user.organisation_id = current_pro.organisation_id
     @organisation = current_pro.organisation
     authorize(@user)
     flash[:notice] = "L'usager a été créé." if @user.save

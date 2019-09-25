@@ -19,12 +19,20 @@ Rails.application.routes.draw do
     root to: "pros#index"
 
     authenticate :super_admin do
-      match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
+      match "/delayed_job" => DelayedJobWeb, anchor: false, via: [:get, :post]
     end
   end
 
   ## APP ##
-  devise_for :pros, controllers: { registrations: 'pros/registrations', invitations: 'pros/invitations' }
+  devise_for :users, controllers: { registrations: 'users/registrations', invitations: 'common/invitations' }
+  namespace :users do
+    resources :rdvs, only: [:index]
+  end
+  authenticated :user do
+    root to: 'users/rdvs#index', as: :authenticated_user_root
+  end
+
+  devise_for :pros, controllers: { registrations: 'pros/registrations', invitations: 'common/invitations' }
   resources :pros, only: [:show, :destroy] do
     post :reinvite, on: :member
   end
@@ -32,26 +40,25 @@ Rails.application.routes.draw do
     resources :full_subscriptions, only: [:new, :create]
     resources :permissions, only: [:edit, :update]
   end
-
   authenticated :pro do
-    root to: 'agendas#index', as: :authenticated_root
+    root to: 'agendas#index', as: :authenticated_pro_root
     get "events", to: "agendas#events"
     get "background-events", to: "agendas#background_events"
     resources :organisations, except: :destroy do
       resources :lieux, except: :index
       resources :pros
-      resources :users, except: :show, shallow: true
+      resources :users, except: :show, shallow: true, controller: 'organisations/users'
       resources :motifs, shallow: true
       resources :plage_ouvertures, except: :show, shallow: true
 
       # Rdv
-      resources :rdvs, except: [:index, :create, :new], shallow: true do
+      resources :rdvs, except: [:index, :create, :new], shallow: true, controller: 'pros/rdvs' do
         patch :status, on: :member
       end
     end
-    resources :first_steps, only: [:new, :create], module: "rdvs"
-    resources :second_steps, only: [:new, :create], module: "rdvs"
-    resources :third_steps, only: [:new, :create], module: "rdvs"
+    [:first_steps, :second_steps, :third_steps].each do |step|
+      resources step, only: [:new, :create], module: "pros/rdvs"
+    end
     resources :absences, except: :show
   end
 

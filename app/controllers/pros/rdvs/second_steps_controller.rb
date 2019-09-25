@@ -1,4 +1,4 @@
-class Rdvs::SecondStepsController < DashboardAuthController
+class Pros::Rdvs::SecondStepsController < DashboardAuthController
   layout 'application-small'
 
   def new
@@ -8,7 +8,7 @@ class Rdvs::SecondStepsController < DashboardAuthController
     @second_step.starts_at ||= Time.zone.now
     @second_step.duration_in_min ||= @second_step.motif.default_duration_in_min
     @second_step.max_users_limit ||= @second_step.motif.max_users_limit
-    @second_step.organisation = current_pro.organisation
+    @second_step.organisation_id = current_pro.organisation_id
     authorize(@second_step)
   end
 
@@ -27,7 +27,7 @@ class Rdvs::SecondStepsController < DashboardAuthController
   def build_second_step
     rdv = Rdv.new(second_step_params)
     @second_step = Rdv::SecondStep.new(rdv.to_step_params)
-    @second_step.organisation = current_pro.organisation
+    @second_step.organisation_id = current_pro.organisation_id
   end
 
   def second_step_params

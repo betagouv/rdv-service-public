@@ -1,0 +1,16 @@
+- content_for :title
+  | Vos rendez-vous
+- if @rdvs.any?
+  = render @rdvs
+  .d-flex.justify-content-center= paginate @rdvs, theme: 'twitter-bootstrap-4'
+- else
+  .card
+    .card-body
+      .row.justify-content-md-center
+        .col-md-6.text-center.my-5
+          p.mb-2.lead Vous n'avez pas encore pris de RDV.
+          span.fa-stack.fa-4x
+            i.fa.fa-circle.fa-stack-2x.text-primary
+            i.fa.fa-calendar-o.fa-stack-1x.text-white
+          .text-center.mt-2
+            = add_button 'Prendre un RDV', root_path

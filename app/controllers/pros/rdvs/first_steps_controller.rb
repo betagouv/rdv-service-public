@@ -1,10 +1,10 @@
-class Rdvs::FirstStepsController < DashboardAuthController
+class Pros::Rdvs::FirstStepsController < DashboardAuthController
   layout 'application-small'
 
   def new
     rdv = Rdv.new(query_params)
     @first_step = Rdv::FirstStep.new(rdv.to_step_params)
-    @first_step.organisation = current_pro.organisation
+    @first_step.organisation_id = current_pro.organisation_id
     authorize(@first_step)
   end
 
@@ -23,7 +23,7 @@ class Rdvs::FirstStepsController < DashboardAuthController
   def build_first_step
     rdv = Rdv.new(first_step_params)
     @first_step = Rdv::FirstStep.new(rdv.to_step_params)
-    @first_step.organisation = current_pro.organisation
+    @first_step.organisation_id = current_pro.organisation_id
   end
 
   def first_step_params

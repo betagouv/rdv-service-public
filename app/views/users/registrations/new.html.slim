@@ -1,0 +1,21 @@
+= simple_form_for resource, as: resource_name, url: registration_path(resource_name) do |f|
+  .text-center.w-75.m-auto
+    h4.text-dark-50.text-center.mt-0.font-weight-bold Inscription
+    p.text-muted.mb-4 
+      | Inscrivez-vous en moins de 2 minutes.
+  = devise_error_messages!
+  .form-row
+    .col-6= f.input :first_name
+    .col-6= f.input :last_name
+  = f.input :email, as: :email, placeholder: 'nom.prenom@email.com'
+  = f.input :password, as: :password, placeholder: 'Votre mot de passe (au moins 6 caractères)'
+  .form-group
+    small
+     | En vous inscrivant, vous acceptez les 
+     = link_to 'conditions générales d\'utilisation', cgv_path
+
+  .form-group.mb-0.text-center
+    = f.button :submit, 'Je m\'inscris'
+
+- content_for :footer do
+  = render "devise/shared/links"

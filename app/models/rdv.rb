@@ -1,7 +1,6 @@
 class Rdv < ApplicationRecord
   belongs_to :organisation
   belongs_to :motif
-  belongs_to :user, optional: true
   has_and_belongs_to_many :pros
   has_and_belongs_to_many :users
 
@@ -42,7 +41,7 @@ class Rdv < ApplicationRecord
   def update_ics_to_user_and_pros
     increment!(:sequence)
     serialized_previous_starts_at = saved_changes&.[]("starts_at")&.[](0)&.to_s
-    RdvMailer.send_ics_to_user(self, serialized_previous_starts_at).deliver_later
+    users.each { |user| RdvMailer.send_ics_to_user(self, user, serialized_previous_starts_at).deliver_later }
     pros.each { |pro| RdvMailer.send_ics_to_pro(self, pro, serialized_previous_starts_at).deliver_later }
   end
 
@@ -82,7 +81,7 @@ class Rdv < ApplicationRecord
 
   def to_step_params
     {
-      organisation: organisation,
+      organisation_id: organisation_id,
       location: location,
       motif: motif,
       duration_in_min: duration_in_min,

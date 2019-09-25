@@ -7,7 +7,7 @@ describe "Pro can create a Rdv with wizard" do
 
   before do
     login_as(pro, scope: :pro)
-    visit authenticated_root_path
+    visit authenticated_pro_root_path
 
     expect(user.rdvs.count).to eq(0)
     click_link('Créer un rendez-vous')
