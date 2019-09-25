@@ -29,7 +29,7 @@ describe Lieu, type: :model do
       let!(:lieu2) { create(:lieu) }
       let!(:plage_ouverture2) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu2, first_day: 8.days.from_now) }
 
-      it { expect(subject).to contain_exactly(lieu) }
+      it { expect(subject).to contain_exactly(lieu, lieu2) }
     end
 
     context "with a motif not online" do
