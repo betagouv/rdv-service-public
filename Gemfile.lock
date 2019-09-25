@@ -110,6 +110,9 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (~> 1.5)
       xpath (~> 3.2)
+    capybara-email (3.0.1)
+      capybara (>= 2.4, < 4.0)
+      mail
     chartkick (3.2.1)
     childprocess (2.0.0)
       rake (< 13.0)
@@ -464,6 +467,7 @@ DEPENDENCIES
   bullet
   byebug
   capybara (>= 2.15)
+  capybara-email
   chartkick (~> 3.2.0)
   database_cleaner
   delayed_job_active_record (~> 4.1.4)
