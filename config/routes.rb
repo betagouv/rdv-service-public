@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     resources :users
     resources :rdvs
     resources :plage_ouvertures
+    resources :absences
     root to: "pros#index"
 
     authenticate :super_admin do

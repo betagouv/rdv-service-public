@@ -9,6 +9,7 @@ class PlageOuvertureDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     organisation: Field::BelongsTo,
+    lieu: Field::BelongsTo,
     pro: Field::BelongsTo,
     motifs: Field::HasMany,
     id: Field::Number,
@@ -18,7 +19,6 @@ class PlageOuvertureDashboard < Administrate::BaseDashboard
     end_time: Field::Time,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
-    location: PlacesField,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -27,24 +27,23 @@ class PlageOuvertureDashboard < Administrate::BaseDashboard
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = [
+    :id,
     :organisation,
     :pro,
-    :motifs,
-    :id,
+    :lieu,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = [
+    :title,
     :organisation,
     :pro,
     :motifs,
-    :id,
-    :title,
+    :lieu,
     :first_day,
     :start_time,
     :end_time,
-    :location,
     :created_at,
     :updated_at,
   ].freeze
@@ -53,20 +52,14 @@ class PlageOuvertureDashboard < Administrate::BaseDashboard
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
+    :title,
     :organisation,
     :pro,
+    :lieu,
     :motifs,
-    :title,
+    :lieu,
     :first_day,
     :start_time,
     :end_time,
-    :location,
   ].freeze
-
-  # Overwrite this method to customize how plage ouvertures are displayed
-  # across all pages of the admin dashboard.
-  #
-  # def display_resource(plage_ouverture)
-  #   "PlageOuverture ##{plage_ouverture.id}"
-  # end
 end
