@@ -7,7 +7,6 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :confirmable, :async
 
   belongs_to :organisation, optional: true
-  has_many :rdvs, dependent: :destroy
   has_and_belongs_to_many :rdvs
 
   validates :last_name, :first_name, :email, presence: true

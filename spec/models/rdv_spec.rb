@@ -92,7 +92,7 @@ describe Rdv, type: :model do
         end
 
         it "Send email to user" do
-          expect(RdvMailer).to receive(:send_ics_to_user).with(rdv, old_start_at.to_s).and_return(double(deliver_later: nil))
+          expect(RdvMailer).to receive(:send_ics_to_user).with(rdv, rdv.users.first, old_start_at.to_s).and_return(double(deliver_later: nil))
           rdv.save!
         end
       end
@@ -117,7 +117,7 @@ describe Rdv, type: :model do
     end
 
     it "Send email to user" do
-      expect(RdvMailer).to receive(:send_ics_to_user).with(rdv, nil).and_return(double(deliver_later: nil))
+      expect(RdvMailer).to receive(:send_ics_to_user).with(rdv, rdv.users.first, nil).and_return(double(deliver_later: nil))
       subject
     end
   end

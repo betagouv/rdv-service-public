@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 feature 'User signs up and signs in' do
   let(:user) { build(:user) }
 
