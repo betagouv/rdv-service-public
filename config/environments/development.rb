@@ -70,7 +70,7 @@ Rails.application.configure do
     Bullet.enable = true
     Bullet.alert = true
     Bullet.rails_logger = true
-    Bullet.stacktrace_excludes = [ 'dashboards' ]
+    Bullet.stacktrace_excludes = ['dashboards']
   end
 
   # https://github.com/JackC/tod/#activemodel-serializable-attribute-support
