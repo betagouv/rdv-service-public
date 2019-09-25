@@ -1,0 +1,23 @@
+div id="creneaux-lieu-#{lieu.id}"
+  .row
+    - previous_from = date_range.begin - 7.days
+    - if previous_from >= Date.today
+      .col.d-flex.align-items-center
+        = link_to "<<", creneaux_index_path(from: previous_from, lieu_id: lieu.id, motif: motif), remote: true, class: 'btn btn-primary'
+    - date_range.each do |date|
+      .col
+        p.text-center
+          strong= l(date, format: "%A")
+          br
+          = l(date, format: "%d %b")
+        - creneaux_for_date = creneaux.group_by { |c| c.starts_at.to_date }.select { |k, v| k == date }
+
+        - if creneaux_for_date.any?
+          - creneaux_for_date.each do |date, creneaux|
+            - creneaux.sort_by(&:starts_at).each do |creneau|
+              = link_to l(creneau.starts_at, format: "%H:%M"), root_path, class: "btn btn-light mr-1 mb-1 w-100"
+        - else
+          p.text-center
+            small aucune disponibilité
+    .col.d-flex.align-items-center
+      = link_to ">>", creneaux_index_path(from: date_range.end + 1.day, lieu_id: lieu.id, motif: motif), remote: true, class: 'btn btn-primary'

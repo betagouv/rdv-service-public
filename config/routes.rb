@@ -71,5 +71,6 @@ Rails.application.routes.draw do
   get 'departement/:departement', to: "welcome#welcome_departement", as: "welcome_departement"
   post 'departement/:departement' => "welcome#search_departement"
   get 'departement/:departement/:motif', to: "welcome#welcome_motif", as: "welcome_motif"
+  resources :creneaux, only: [:index]
   root 'welcome#index'
 end

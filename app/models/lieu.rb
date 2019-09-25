@@ -7,10 +7,10 @@ class Lieu < ApplicationRecord
     "#{name} (#{address})"
   end
 
-  def self.for_motif_and_departement_in_date_range(motif_name, departement, date_range)
+  def self.for_motif_and_departement(motif_name, departement)
     organisations_ids = Organisation.where(departement: departement)
     motifs_ids = Motif.online.where(organisation_id: organisations_ids, name: motif_name)
-    lieux_ids = PlageOuverture.where("first_day <= ?", date_range.end).joins(:motifs).where(motifs: { id: motifs_ids }).pluck(:lieu_id).uniq
+    lieux_ids = PlageOuverture.joins(:motifs).where(motifs: { id: motifs_ids }).pluck(:lieu_id).uniq
     Lieu.where(id: lieux_ids)
   end
 end
