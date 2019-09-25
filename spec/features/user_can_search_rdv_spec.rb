@@ -1,5 +1,5 @@
 describe "User can search for rdvs" do
-  let!(:motif) { create(:motif, name: "Vaccination") }
+  let!(:motif) { create(:motif, name: "Vaccination", online: true) }
   let!(:lieu) { create(:lieu) }
   let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu) }
   let!(:lieu2) { create(:lieu) }
@@ -13,6 +13,7 @@ describe "User can search for rdvs" do
 
   scenario "default" do
     # Step 1
+    expect(page.status_code).to be(200)
     expect_page_title("Prenez rendez-vous en ligne avecvotre Maison Départementale des Solidarités")
     fill_in('search_where', with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
     # Improve with click on suggestion instead of filling an hidden input
@@ -21,6 +22,7 @@ describe "User can search for rdvs" do
     click_button("Choix d'une localité")
 
     # Step 2
+    expect(page.status_code).to be(200)
     expect_page_title("Prenez rendez-vous en ligne avecvotre Maison Départementale des Solidarités du 92")
     select(motif.name, from: 'search_motif')
     click_button("Choix d'un motif")

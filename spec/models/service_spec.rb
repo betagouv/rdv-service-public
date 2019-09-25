@@ -2,8 +2,8 @@ describe Service, type: :model do
   let(:service) { create(:service) }
   let!(:service2) { create(:service) }
 
-  describe '#with_online_motif_in_departement' do
-    subject { service.with_online_motif_in_departement(service.organisation.departement) }
+  describe '.with_online_motif_in_departement' do
+    subject { Service.with_online_motif_in_departement(service.organisation.departement) }
 
     describe "when motif is online" do
       let!(:motif) { create(:motif, service: service, online: true) }
