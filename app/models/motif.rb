@@ -12,6 +12,7 @@ class Motif < ApplicationRecord
   validate :booking_delay_validation
 
   scope :active, -> { where(deleted_at: nil) }
+  scope :online, -> { where(online: true) }
 
   def soft_delete
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy

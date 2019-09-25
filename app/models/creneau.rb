@@ -36,7 +36,7 @@ class Creneau
       rdvs = po.pro.rdvs.where(starts_at: inclusive_date_range)
       absences = po.pro.absences
 
-      po.motifs.flat_map do |motif|
+      po.motifs.online.flat_map do |motif|
         creneaux_nb = po.time_shift_duration_in_min / motif.default_duration_in_min
         po.occurences_for(inclusive_date_range).flat_map do |occurence_time|
           (0...creneaux_nb).map do |n|
