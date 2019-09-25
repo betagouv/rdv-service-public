@@ -3,22 +3,22 @@
   - if @where.present?
     .form-row.d-flex.justify-content-md-center.mb-2
       .col-lg-5= f.input :where, label: false, readonly: true, input_html: { value: @where, class: "form-control-lg" }, wrapper_html: { class: 'mb-0' }
-      .col-lg-3= link_to 'Modifier la localité', root_path, class: 'btn-light btn-lg w-100 text-center'
+      .col-lg-3= link_to "Modifier l'adresse", root_path, class: 'btn-light btn-lg w-100 text-center'
 
     - if @motif.present?
       .form-row.d-flex.justify-content-md-center
         .col-lg-5= f.input :motif, label: false, readonly: true, input_html: { value: @motif, class: "form-control-lg" }, wrapper_html: { class: 'mb-0' }
-        .col-lg-3= link_to 'Modifier le motif', root_path, class: 'btn-light btn-lg w-100 text-center'
+        .col-lg-3= link_to 'Modifier le motif', welcome_departement_path(@departement, where: @where), class: 'btn-light btn-lg w-100 text-center'
 
     - else
       - if @services.any?
         .form-row.d-flex.justify-content-md-center
           .col-lg-5= f.input :motif, collection: @services, as: :grouped_select, value_method: :name, group_method: :motifs, group_label_method: :name, label: false, required: true, include_blank: "Choisissez un motif", input_html: { class: 'select2-input' }
-          .col-lg-3= f.button :submit, "Choix d'un motif", class: 'btn-danger btn-lg w-100 text-center'
+          .col-lg-3= f.button :submit, "Choisir ce motif", class: 'btn-danger btn-lg w-100 text-center'
       - else
         h2.text-white.text-center.my-3 La prise de RDV n'est pas encore disponible dans ce département.
 
   - else
     .form-row.d-flex.justify-content-md-center
-      .col-lg-5= f.input :where, label: false, placeholder: 'Où ?', input_html: { value: @where, class: "form-control-lg places-js-container" }, wrapper_html: { class: 'mb-0' }
-      .col-lg-3= f.button :submit, "Choix d'une localité", class: 'btn-danger btn-lg w-100 text-center'
+      .col-lg-5= f.input :where, label: false, placeholder: 'Quelle est votre adresse ?', input_html: { value: @where, class: "form-control-lg places-js-container" }, wrapper_html: { class: 'mb-0' }
+      .col-lg-3= f.button :submit, "Choisir cette adresse", class: 'btn-danger btn-lg w-100 text-center'

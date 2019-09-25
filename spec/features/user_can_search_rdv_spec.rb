@@ -19,13 +19,13 @@ describe "User can search for rdvs" do
     # Improve with click on suggestion instead of filling an hidden input
     find(:xpath, "//input[@id='search_departement']", visible: false).set("92")
     # click_first_suggestion
-    click_button("Choix d'une localité")
+    click_button("Choisir cette adresse")
 
     # Step 2
     expect(page.status_code).to be(200)
     expect_page_title("Prenez rendez-vous en ligne avecvotre Maison Départementale des Solidarités du 92")
     select(motif.name, from: 'search_motif')
-    click_button("Choix d'un motif")
+    click_button("Choisir ce motif")
 
     # Step 3
     expect(page).to have_content("Modifier le motif")
