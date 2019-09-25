@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'User signs up' do
+feature 'User signs up and signs in' do
   let(:user) { build(:user) }
 
   context 'through home page' do
