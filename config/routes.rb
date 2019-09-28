@@ -34,9 +34,6 @@ Rails.application.routes.draw do
   end
 
   devise_for :pros, controllers: { registrations: 'pros/registrations', invitations: 'common/invitations' }
-  resources :pros, only: [:show, :destroy] do
-    post :reinvite, on: :member
-  end
   namespace :pros do
     resources :full_subscriptions, only: [:new, :create]
     resources :permissions, only: [:edit, :update]
@@ -46,10 +43,12 @@ Rails.application.routes.draw do
     get "events", to: "agendas#events"
     get "background-events", to: "agendas#background_events"
     resources :lieux, except: :show
-    resources :pros
+    resources :pros, only: [:index, :destroy] do
+      post :reinvite, on: :member
+    end
+    resources :motifs, except: :show
     resources :organisations, except: [:create] do
       resources :users, except: :show, shallow: true, controller: 'organisations/users'
-      resources :motifs, shallow: true
       resources :plage_ouvertures, except: :show, shallow: true
 
       # Rdv

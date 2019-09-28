@@ -12,7 +12,7 @@ class ProPolicy < AdminPolicy
   end
 
   def invite?
-    admin_and_belongs_to_record_organisation?
+    create?
   end
 
   def reinvite?
