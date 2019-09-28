@@ -23,6 +23,68 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
+      "fingerprint": "73fbc22d9c3d784780cc00d147da6c542801fd8419a76183f17ec930fb29fec7",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/lieux/index.html.slim",
+      "line": 17,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => policy_scope(Lieu).order(Arel.sql(\"LOWER(name)\")).page(params[:page]), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "LieuxController",
+          "method": "index",
+          "line": 6,
+          "file": "app/controllers/lieux_controller.rb",
+          "rendered": {
+            "name": "lieux/index",
+            "file": "app/views/lieux/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "lieux/index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "7f33a09045cf75ac5a0816c80c5bab6fb7440a9d813992f5165c0ef8fc3f993a",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/plage_ouvertures/index.html.slim",
+      "line": 18,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => policy_scope(PlageOuverture).includes(:lieu).all.page(params[:page]).per(1), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "PlageOuverturesController",
+          "method": "index",
+          "line": 8,
+          "file": "app/controllers/plage_ouvertures_controller.rb",
+          "rendered": {
+            "name": "plage_ouvertures/index",
+            "file": "app/views/plage_ouvertures/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "plage_ouvertures/index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
       "fingerprint": "bc8aacd31d0cacb8a0edb038480866ee5d1043ee91d2de340f5f320eadf93c7a",
       "check_name": "Render",
       "message": "Render path contains parameter value",
@@ -83,6 +145,6 @@
       "note": ""
     }
   ],
-  "updated": "2019-09-24 16:33:43 +0200",
+  "updated": "2019-09-28 17:56:44 +0200",
   "brakeman_version": "4.6.1"
 }
