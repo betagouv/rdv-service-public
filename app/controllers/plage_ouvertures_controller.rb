@@ -4,7 +4,7 @@ class PlageOuverturesController < DashboardAuthController
   before_action :set_plage_ouverture, only: [:edit, :update, :destroy]
 
   def index
-    @plage_ouvertures = policy_scope(PlageOuverture).includes(:lieu).all
+    @plage_ouvertures = policy_scope(PlageOuverture).includes(:lieu).all.page(params[:page]).per(1)
   end
 
   def new
@@ -24,19 +24,19 @@ class PlageOuverturesController < DashboardAuthController
     @plage_ouverture.pro_id = current_pro.id
     authorize(@plage_ouverture)
     flash[:notice] = "Plage d'ouverture créé." if @plage_ouverture.save
-    respond_right_bar_with @plage_ouverture, location: organisation_plage_ouvertures_path(current_pro.organisation)
+    respond_right_bar_with @plage_ouverture, location: plage_ouvertures_path
   end
 
   def update
     authorize(@plage_ouverture)
     flash[:notice] = "La plage d'ouverture a été modifiée." if @plage_ouverture.update(plage_ouverture_params)
-    respond_right_bar_with @plage_ouverture, location: organisation_plage_ouvertures_path(current_pro.organisation)
+    respond_right_bar_with @plage_ouverture, location: plage_ouvertures_path
   end
 
   def destroy
     authorize(@plage_ouverture)
     @plage_ouverture.destroy
-    redirect_to organisation_plage_ouvertures_path(@plage_ouverture.organisation), notice: "La plage d'ouverture a été supprimée."
+    redirect_to plage_ouvertures_path(@plage_ouverture.organisation), notice: "La plage d'ouverture a été supprimée."
   end
 
   private

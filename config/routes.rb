@@ -47,9 +47,9 @@ Rails.application.routes.draw do
       post :reinvite, on: :member
     end
     resources :motifs, except: :show
+    resources :plage_ouvertures, except: :show
     resources :organisations, except: [:create] do
       resources :users, except: :show, shallow: true, controller: 'organisations/users'
-      resources :plage_ouvertures, except: :show, shallow: true
 
       # Rdv
       resources :rdvs, except: [:index, :create, :new], shallow: true, controller: 'pros/rdvs' do

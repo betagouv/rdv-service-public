@@ -2,7 +2,7 @@
   | Vos plages d'ouverture
 
 - content_for :breadcrumb do
-  = add_button 'Créer une plage d\'ouverture', new_organisation_plage_ouverture_path, header: true
+  = add_button 'Créer une plage d\'ouverture', new_plage_ouverture_path, header: true
 
 .card
   .card-body
@@ -16,7 +16,8 @@
             th
         tbody
           = render @plage_ouvertures
-
+      .d-flex.justify-content-center
+        = paginate @plage_ouvertures, theme: 'twitter-bootstrap-4'
     - else
       .row.justify-content-md-center
         .col-md-6.text-center.my-5
@@ -25,4 +26,4 @@
             i.fa.fa-circle.fa-stack-2x.text-primary
             i.fa.fa-calendar-o.fa-stack-1x.text-white
     .text-center
-      = add_button 'Créer une plage d\'ouverture', new_organisation_plage_ouverture_path
+      = add_button 'Créer une plage d\'ouverture', new_plage_ouverture_path
