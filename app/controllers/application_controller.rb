@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
 
   def after_invite_path_for(inviter, invitee)
     if invitee.is_a? Pro
-      organisation_pros_path(inviter.organisation)
+      pros_path(inviter.organisation)
     elsif invitee.is_a? User
       organisation_users_path(inviter.organisation)
     end

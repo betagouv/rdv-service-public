@@ -46,8 +46,8 @@ Rails.application.routes.draw do
     get "events", to: "agendas#events"
     get "background-events", to: "agendas#background_events"
     resources :lieux, except: :show
+    resources :pros
     resources :organisations, except: [:create] do
-      resources :pros
       resources :users, except: :show, shallow: true, controller: 'organisations/users'
       resources :motifs, shallow: true
       resources :plage_ouvertures, except: :show, shallow: true

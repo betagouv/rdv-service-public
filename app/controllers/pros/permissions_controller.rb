@@ -11,7 +11,7 @@ class Pros::PermissionsController < DashboardAuthController
     @permission = Pro::Permission.new(pro: Pro.find(params[:id]))
     authorize(@permission)
     @permission.update(permission_params)
-    respond_right_bar_with @permission, location: organisation_pros_path(current_pro.organisation)
+    respond_right_bar_with @permission, location: pros_path
   end
 
   private
