@@ -45,8 +45,8 @@ Rails.application.routes.draw do
     root to: 'agendas#index', as: :authenticated_pro_root
     get "events", to: "agendas#events"
     get "background-events", to: "agendas#background_events"
-    resources :organisations, except: :destroy do
-      resources :lieux, except: :index
+    resources :lieux, except: :show
+    resources :organisations, except: [:create] do
       resources :pros
       resources :users, except: :show, shallow: true, controller: 'organisations/users'
       resources :motifs, shallow: true
