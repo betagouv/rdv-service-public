@@ -48,7 +48,7 @@ Rails.application.routes.draw do
     end
     resources :motifs, except: :show
     resources :plage_ouvertures, except: :show
-    resources :organisations, except: [:create] do
+    resources :organisations do
       resources :users, except: :show, shallow: true, controller: 'organisations/users'
 
       # Rdv
