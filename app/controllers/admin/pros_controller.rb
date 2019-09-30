@@ -17,7 +17,7 @@ module Admin
 
       redirect_to(
         [namespace, resource],
-        notice: translate_with_resource("create.success"),
+        notice: translate_with_resource("create.success")
       )
     end
 
@@ -25,7 +25,7 @@ module Admin
       requested_resource.deliver_invitation
       redirect_to(
         [namespace, requested_resource],
-        notice: 'Invitation envoyée',
+        notice: 'Invitation envoyée'
       )
     end
   end
