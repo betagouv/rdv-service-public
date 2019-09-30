@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :pros do
       get 'sign_in_as', on: :member
+      post :invite, on: :member
     end
     resources :super_admins
     resources :organisations

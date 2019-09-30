@@ -57,7 +57,7 @@ class Pro < ApplicationRecord
   private
 
   def set_organisation
-    self.organisation = invited_by.organisation
+    self.organisation_id = invited_by.organisation_id if invited_by
   end
 
   def set_role

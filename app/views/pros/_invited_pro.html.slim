@@ -3,7 +3,11 @@ tr id="pro_#{pro.id}"
     = pro.email
     = admin_tag(pro)
     br
-    small.invitation-text il y a #{distance_of_time_in_words_to_now(pro.invitation_sent_at)}   
+      small.invitation-text
+        - if pro.invitation_sent_at
+         | il y a #{distance_of_time_in_words_to_now(pro.invitation_sent_at)}
+        - else  
+          small Aucune invitation envoyée
   td.text-right
     .dropdown
       a.dropdown-toggle.arrow-none.text-primary aria-expanded="false" data-toggle="dropdown" href="#"
