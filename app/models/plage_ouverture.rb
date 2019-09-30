@@ -44,6 +44,12 @@ class PlageOuverture < ApplicationRecord
     end
   end
 
+  def occurences_ranges_for(inclusive_date_range)
+    occurences_for(inclusive_date_range).map do |occurence|
+      occurence..(end_time.on(occurence.to_date))
+    end
+  end
+
   def exceptionnelle?
     recurrence.nil?
   end

@@ -1,0 +1,48 @@
+.row.justify-content-center
+  .col-lg-7.col-md-10.col-sm-11
+    .horizontal-steps.mt-4.mb-4.pb-5
+      .horizontal-steps-content
+        .step-item
+          span Identification
+        .step-item.current
+          span Vérification
+        .step-item
+          span Confirmation
+      .process-line style=("width: 50%;")
+
+.row.justify-content-center
+  .col-lg-7.col-md-10.col-sm-11
+    .card
+      ul.list-group.list-group-flush
+        li.list-group-item
+          i.fa.fa-check.fa-fw.mr-1.text-success
+          | Motif :&nbsp;
+          = @motif_name
+        li.list-group-item
+          i.fa.fa-check.fa-fw.mr-1.text-success
+          | Lieu :&nbsp;
+          = @lieu.full_name
+        li.list-group-item
+          .row
+            .col
+              i.fa.fa-check.fa-fw.mr-1.text-success
+              | Date du rendez-vous :&nbsp;
+              = l(@starts_at, format: :human)
+            .col-auto
+              = link_to "modifier", welcome_motif_path(@departement, @motif_name, where: @where)
+
+
+      .card-body
+        = simple_form_for(@rdv, url: users_rdvs_path) do |f|
+
+          = f.association :motif, as: :hidden
+          = f.input :lieu_id, as: :hidden, input_html: { value: @lieu.id }
+          = f.input :starts_at, as: :hidden
+          = f.input :where, as: :hidden, input_html: { value: @where }
+          = f.input :departement, as: :hidden, input_html: { value: @departement }
+
+          .row
+            .col
+              = link_to "Revenir en arrière", welcome_motif_path(@departement, @motif_name, where: @where), class: "btn btn-link"
+            .col.text-right
+              = f.button :submit, 'Continuer'

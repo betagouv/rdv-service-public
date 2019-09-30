@@ -6,7 +6,11 @@ class RdvPolicy < ApplicationPolicy
   end
 
   def new?
-    true
+    if @user_or_pro.pro?
+      true
+    elsif @user_or_pro.user?
+      @record.users.include?(@user_or_pro)
+    end
   end
 
   def status?
@@ -14,7 +18,11 @@ class RdvPolicy < ApplicationPolicy
   end
 
   def create?
-    true
+    if @user_or_pro.pro?
+      true
+    elsif @user_or_pro.user?
+      @record.users.include?(@user_or_pro)
+    end
   end
 
   def show?
@@ -31,5 +39,9 @@ class RdvPolicy < ApplicationPolicy
 
   def destroy?
     true
+  end
+
+  def confirmation?
+    @user_or_pro.user? && @record.users.include?(@user_or_pro)
   end
 end

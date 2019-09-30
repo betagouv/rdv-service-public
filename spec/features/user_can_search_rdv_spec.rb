@@ -31,6 +31,25 @@ describe "User can search for rdvs" do
     expect(page).to have_content("Modifier le motif")
     expect(page).to have_content(lieu.name)
     expect(page).to have_content(lieu2.name)
+
+    expect(page).to have_content(lieu.name)
+
+    login_as(user, scope: :user)
+    first(:link, "11:00").click
+
+    # Step 4
+    expect(page).to have_content(motif.name)
+
+    click_button('Continuer')
+
+    # Step 5
+    click_link('Aller à la liste de vos rendez-vous')
+
+    # Step 6
+    expect(page).to have_content("Vos rendez-vous")
+    expect(page).to have_content(motif.name)
+    expect(page).to have_content(lieu.address)
+    expect(page).to have_content("11h00")
   end
 
   def click_first_suggestion
