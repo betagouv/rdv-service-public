@@ -4,7 +4,7 @@ class PlageOuverturesController < DashboardAuthController
   before_action :set_plage_ouverture, only: [:edit, :update, :destroy]
 
   def index
-    @plage_ouvertures = policy_scope(PlageOuverture).includes(:lieu).all.page(params[:page]).per(1)
+    @plage_ouvertures = policy_scope(PlageOuverture).includes(:lieu).all.page(params[:page])
   end
 
   def new
