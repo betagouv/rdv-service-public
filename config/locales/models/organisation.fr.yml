@@ -5,3 +5,4 @@ fr:
     attributes:
       organisation:
         name: Nom
+        departement: Département

@@ -9,7 +9,7 @@ FactoryBot.define do
     organisation { Organisation.first || create(:organisation) }
     confirmed_at { 1.day.ago }
     service { Service.first || create(:service) }
-    trait :admin do 
+    trait :admin do
       role { "admin" }
     end
   end

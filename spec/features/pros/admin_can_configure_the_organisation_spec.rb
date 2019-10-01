@@ -58,7 +58,7 @@ describe "Admin can configure the organisation" do
     expect(current_email.subject).to eq I18n.t("devise.mailer.invitation_instructions.subject")
   end
 
-  scenario "CRUD on motifs" do 
+  scenario "CRUD on motifs" do
     click_link "Vos motifs"
     expect_page_title("Vos motifs")
 

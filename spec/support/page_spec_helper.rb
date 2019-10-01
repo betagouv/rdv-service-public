@@ -1,5 +1,5 @@
 module PageSpecHelper
-   def expect_page_title(title)
+  def expect_page_title(title)
     expect(page).to have_selector('h4.page-title', text: title)
   end
 
