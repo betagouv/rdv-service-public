@@ -1,5 +1,5 @@
 - content_for :title do
-  | Professionnels
+  | Vos professionnels
 
 - content_for :breadcrumb do
   = add_button 'Inviter un professionnel', new_pro_invitation_path, condition: policy(Pro).invite?, header: true

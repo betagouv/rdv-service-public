@@ -83,10 +83,6 @@ describe "Pro can create a Rdv with wizard" do
     select(user.full_name, from: 'rdv_user_ids')
   end
 
-  def expect_page_title(title)
-    expect(page).to have_selector('h4.page-title', text: title)
-  end
-
   def expect_checked(text)
     expect(page).to have_selector(".card .list-group-item", text: text)
   end

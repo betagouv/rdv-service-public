@@ -14,5 +14,5 @@ tr id="pro_#{pro.id}"
         i.fa.fa-ellipsis-v.fa-fw
       .dropdown-menu.dropdown-menu-right
         - if policy(pro).reinvite?
-          = link_to 'Renvoyer', reinvite_pro_path(pro), method: :post, class: 'btn btn-outline-primary', remote: true, class: 'dropdown-item'
+          = link_to 'Renvoyer', reinvite_pro_path(pro), method: :post, remote: true, class: 'dropdown-item'
         = delete_pro_dropdown_link pro
