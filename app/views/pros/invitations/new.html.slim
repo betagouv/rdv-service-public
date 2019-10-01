@@ -3,7 +3,7 @@
 
 = simple_form_for resource.class.new(invited_by_id: current_pro.id), as: resource_name, url: invitation_path(resource_name), remote: request.xhr?, html: { method: :post, data: { rightbar: true } } do |f|
   = devise_error_messages!
-  = f.input :email, placeholder: 'votre_nom@votre_entreprise.com'
+  = f.input :email, placeholder: 'votre_nom@votre_entreprise.com', input_html: { autocomplete: 'off'}
   = f.association :service, collection: Service.all, include_blank: false
   = f.input :role, collection: Pro.human_enum_collection_html(:role), as: :radio_buttons
   .text-right

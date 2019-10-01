@@ -1,4 +1,4 @@
-= simple_form_for [lieu.organisation, lieu], remote: request.xhr?, data: { rightbar: true } do |f|
+= simple_form_for lieu, remote: request.xhr?, data: { rightbar: true } do |f|
   = render partial: 'layouts/model_errors', locals: { model: lieu }
   = f.input :name
   = f.input :address, input_html: { class: "places-js-container" }
@@ -7,6 +7,6 @@
   .row
     - if lieu.persisted?
       .col.text-left
-          = link_to "Supprimer", organisation_lieu_path(lieu.organisation, lieu), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce lieu ?"}
+          = link_to "Supprimer", lieu_path(lieu), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce lieu ?"}
     .col.text-right
       = f.button :submit

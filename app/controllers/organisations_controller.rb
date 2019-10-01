@@ -42,6 +42,6 @@ class OrganisationsController < DashboardAuthController
   end
 
   def organisation_params
-    params.require(:organisation).permit(:name)
+    params.require(:organisation).permit(:name, :departement)
   end
 end

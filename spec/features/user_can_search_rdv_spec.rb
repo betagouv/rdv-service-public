@@ -14,7 +14,7 @@ describe "User can search for rdvs" do
   scenario "default" do
     # Step 1
     expect(page.status_code).to be(200)
-    expect_page_title("Prenez rendez-vous en ligne avecvotre Maison Départementale des Solidarités")
+    expect_page_h1("Prenez rendez-vous en ligne avecvotre Maison Départementale des Solidarités")
     fill_in('search_where', with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
     # Improve with click on suggestion instead of filling an hidden input
     find(:xpath, "//input[@id='search_departement']", visible: false).set("92")
@@ -23,7 +23,7 @@ describe "User can search for rdvs" do
 
     # Step 2
     expect(page.status_code).to be(200)
-    expect_page_title("Prenez rendez-vous en ligne avecvotre Maison Départementale des Solidarités du 92")
+    expect_page_h1("Prenez rendez-vous en ligne avecvotre Maison Départementale des Solidarités du 92")
     select(motif.name, from: 'search_motif')
     click_button("Choisir ce motif")
 
@@ -45,7 +45,7 @@ describe "User can search for rdvs" do
     select(user.full_name, from: 'rdv_user_ids')
   end
 
-  def expect_page_title(title)
+  def expect_page_h1(title)
     expect(page).to have_selector('h1', text: title)
   end
 

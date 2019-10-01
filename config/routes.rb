@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :pros do
       get 'sign_in_as', on: :member
+      post :invite, on: :member
     end
     resources :super_admins
     resources :organisations
@@ -34,9 +35,6 @@ Rails.application.routes.draw do
   end
 
   devise_for :pros, controllers: { registrations: 'pros/registrations', invitations: 'common/invitations' }
-  resources :pros, only: [:show, :destroy] do
-    post :reinvite, on: :member
-  end
   namespace :pros do
     resources :full_subscriptions, only: [:new, :create]
     resources :permissions, only: [:edit, :update]
@@ -45,12 +43,14 @@ Rails.application.routes.draw do
     root to: 'agendas#index', as: :authenticated_pro_root
     get "events", to: "agendas#events"
     get "background-events", to: "agendas#background_events"
-    resources :organisations, except: :destroy do
-      resources :lieux, except: :index
-      resources :pros
+    resources :lieux, except: :show
+    resources :pros, only: [:index, :destroy] do
+      post :reinvite, on: :member
+    end
+    resources :motifs, except: :show
+    resources :plage_ouvertures, except: :show
+    resources :organisations do
       resources :users, except: :show, shallow: true, controller: 'organisations/users'
-      resources :motifs, shallow: true
-      resources :plage_ouvertures, except: :show, shallow: true
 
       # Rdv
       resources :rdvs, except: [:index, :create, :new], shallow: true, controller: 'pros/rdvs' do

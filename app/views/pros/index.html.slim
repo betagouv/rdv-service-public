@@ -1,11 +1,11 @@
 - content_for :title do
-  | Professionnels
+  | Vos professionnels
 
 - content_for :breadcrumb do
-  = add_button 'Inviter un professionnel', new_pro_invitation_path, condition: policy(current_pro).invite?, header: true
+  = add_button 'Inviter un professionnel', new_pro_invitation_path, condition: policy(Pro).invite?, header: true
 
 .row
-  .col-md-12
+  .col-md-8
     .card
       .card-body
         table.table
@@ -18,26 +18,24 @@
             = render partial: 'pro', collection: @complete_pros
         .d-flex.justify-content-center
           = paginate @complete_pros, theme: 'twitter-bootstrap-4'
-
+  .col-md-4
     .card
       .card-body
         - if @invited_pros.any?
-          h5.card-title Vos invitations en cours
           table.table
             thead
               tr
-                th.w-50 Email
-                th Envoyée
+                th.w-50 Vos invitations
                 th
             tbody
               = render partial: 'invited_pro', collection: @invited_pros, as: :pro
         - else
           .row.justify-content-md-center
-            .col-md-6.text-center.my-5
+            .text-center.mb-3
               p.mb-2.lead Vous n'avez pas d'invitation en cours.
               span.fa-stack.fa-4x
                 i.fa.fa-circle.fa-stack-2x.text-primary
                 i.fa.fa-envelope-o.fa-stack-1x.text-white
 
         .text-center
-          = add_button 'Inviter un professionnel', new_pro_invitation_path, condition: policy(current_pro).invite?
+          = add_button 'Inviter un professionnel', new_pro_invitation_path, condition: policy(Pro).invite?

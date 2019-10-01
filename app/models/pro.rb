@@ -19,7 +19,7 @@ class Pro < ApplicationRecord
   validates :email, :role, presence: true
   validates :last_name, :first_name, presence: true, on: :update
 
-  scope :complete, -> { where.not(first_name: nil, last_name: nil) }
+  scope :complete, -> { where.not(first_name: nil).where.not(last_name: nil) }
   scope :active, -> { where(deleted_at: nil) }
 
   before_invitation_created :set_organisation
@@ -57,7 +57,7 @@ class Pro < ApplicationRecord
   private
 
   def set_organisation
-    self.organisation = invited_by.organisation
+    self.organisation_id = invited_by.organisation_id if invited_by
   end
 
   def set_role
