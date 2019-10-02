@@ -9,7 +9,7 @@
   .form-group
     - if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations'
       = link_to new_password_path(resource_name), class: 'text-muted float-right' do 
-      small Mot de passe oublié ? 
+        small Mot de passe oublié ? 
     = f.label :password
     = f.password_field :password, autocomplete: "off", required: true, class: 'form-control', placeholder: 'Votre mot de passe'
   .form-group.mb-3
