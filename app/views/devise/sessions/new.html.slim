@@ -6,10 +6,10 @@
   .form-group
     = f.label :email
     = f.email_field :email, autofocus: true, class: 'form-control', placeholder: 'nom.prenom@email.com'
- 
   .form-group
-    = link_to new_password_path(resource_name), class: 'text-muted float-right' do 
-      small Mot de passe oublié ? 
+    - if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations'
+      = link_to new_password_path(resource_name), class: 'text-muted float-right' do 
+        small Mot de passe oublié ? 
     = f.label :password
     = f.password_field :password, autocomplete: "off", required: true, class: 'form-control', placeholder: 'Votre mot de passe'
   .form-group.mb-3

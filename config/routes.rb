@@ -35,6 +35,10 @@ Rails.application.routes.draw do
   end
 
   devise_for :pros, controllers: { registrations: 'pros/registrations', invitations: 'common/invitations' }
+  as :pro do
+    get 'pros/edit' => 'pros/registrations#edit', as: 'edit_pro_registration'
+    put 'pros' => 'pros/registrations#update', :as => 'pro_registration'
+  end
   namespace :pros do
     resources :full_subscriptions, only: [:new, :create]
     resources :permissions, only: [:edit, :update]

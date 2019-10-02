@@ -4,7 +4,7 @@ class Pro < ApplicationRecord
   include Authorizable
   include DeviseInvitable::Inviter
 
-  devise :invitable, :database_authenticatable, :registerable,
+  devise :invitable, :database_authenticatable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
 
   belongs_to :organisation, optional: true
