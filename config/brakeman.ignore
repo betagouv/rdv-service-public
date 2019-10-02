@@ -143,8 +143,39 @@
       "user_input": "params[:page]",
       "confidence": "Weak",
       "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "f4f85debfc74eb17e01e44903da5a67f947363dcf507e2d0e7c404c02ae7c9d7",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/plage_ouvertures/index.html.slim",
+      "line": 18,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => policy_scope(PlageOuverture).includes(:lieu).all.page(params[:page]), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "PlageOuverturesController",
+          "method": "index",
+          "line": 8,
+          "file": "app/controllers/plage_ouvertures_controller.rb",
+          "rendered": {
+            "name": "plage_ouvertures/index",
+            "file": "app/views/plage_ouvertures/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "plage_ouvertures/index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "note": ""
     }
   ],
-  "updated": "2019-09-28 17:56:44 +0200",
+  "updated": "2019-10-02 14:43:54 +0200",
   "brakeman_version": "4.6.1"
 }
