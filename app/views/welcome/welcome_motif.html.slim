@@ -16,4 +16,4 @@
             h6.card-subtitle.mb-3= lieu.address
 
             - creneaux = @creneaux_by_lieux[lieu.id]
-            = render 'creneaux', lieu: lieu, creneaux: creneaux, date_range: @date_range, motif: @motif
+            = render 'creneaux', lieu: lieu, creneaux: creneaux, date_range: @date_range, motif: @motif, departement: @departement, where: @where

@@ -1,9 +1,9 @@
 div id="creneaux-lieu-#{lieu.id}"
   .row
-    - previous_from = date_range.begin - 7.days
-    - if previous_from >= Date.today
+    - previous_from_date = date_range.begin - 7.days
+    - if previous_from_date >= Date.today
       .col.d-flex.align-items-center
-        = link_to "<<", creneaux_index_path(from: previous_from, lieu_id: lieu.id, motif: motif), remote: true, class: 'btn btn-primary'
+        = link_to "<<", creneaux_index_path(from: previous_from_date, lieu_id: lieu.id, motif: motif, departement: departement, where: where), remote: true, class: 'btn btn-primary', data: { disable_with: "..." }
     - date_range.each do |date|
       .col
         p.text-center
@@ -15,9 +15,9 @@ div id="creneaux-lieu-#{lieu.id}"
         - if creneaux_for_date.any?
           - creneaux_for_date.each do |date, creneaux|
             - creneaux.sort_by(&:starts_at).each do |creneau|
-              = link_to l(creneau.starts_at, format: "%H:%M"), root_path, class: "btn btn-light mr-1 mb-1 w-100"
+              = link_to l(creneau.starts_at, format: "%H:%M"), new_users_rdv_path(starts_at: creneau.starts_at, motif_name: motif, lieu_id: lieu.id, departement: departement, where: where), class: "btn btn-light mr-1 mb-1 w-100"
         - else
           p.text-center
             small aucune disponibilité
     .col.d-flex.align-items-center
-      = link_to ">>", creneaux_index_path(from: date_range.end + 1.day, lieu_id: lieu.id, motif: motif), remote: true, class: 'btn btn-primary'
+      = link_to ">>", creneaux_index_path(from: date_range.end + 1.day, lieu_id: lieu.id, motif: motif, departement: departement, where: where), remote: true, class: 'btn btn-primary', data: { disable_with: "..." }

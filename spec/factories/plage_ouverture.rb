@@ -28,7 +28,9 @@ FactoryBot.define do
     end
 
     after(:build) do |plage_ouverture|
-      plage_ouverture.motifs << (Motif.first || create(:motif))
+      if plage_ouverture.motifs.empty?
+        plage_ouverture.motifs << (Motif.first || create(:motif))
+      end
     end
   end
 end
