@@ -4,6 +4,8 @@ describe "Admin can configure the organisation" do
   let!(:motif) { create(:motif) }
   let!(:user) { create(:user) }
   let!(:lieu) { create(:lieu) }
+  let(:le_nouveau_lieu) { build(:lieu) }
+  let(:le_nouveau_motif) { build(:motif) }
 
   before do
     login_as(pro_admin, scope: :pro)
@@ -27,6 +29,17 @@ describe "Admin can configure the organisation" do
 
     expect_page_title("Vos lieux de consultation")
     expect_page_with_no_record_text("Vous n'avez pas encore ajouté de lieu de consultation.")
+
+    click_link 'Ajouter un lieu', match: :first
+
+    expect_page_title("Nouveau lieu")
+    fill_in 'Nom', with: le_nouveau_lieu.name
+    fill_in 'Adresse', with: le_nouveau_lieu.address
+    fill_in 'Téléphone', with: le_nouveau_lieu.telephone
+    fill_in 'Horaires', with: le_nouveau_lieu.horaires
+    click_button 'Créer'
+    expect_page_title("Vos lieux de consultation")
+    click_link le_nouveau_lieu.name
   end
 
   scenario "CRUD on pros" do
@@ -73,5 +86,15 @@ describe "Admin can configure the organisation" do
     click_link('Supprimer')
     expect_page_title("Vos motifs")
     expect_page_with_no_record_text("Vous n'avez pas encore créé de motif.")
+
+    click_link 'Créer un motif', match: :first
+    expect_page_title("Nouveau motif")
+    fill_in 'Nom', with: le_nouveau_motif.name
+    select(pro_admin.service.id, from: :motif_service_id)
+    fill_in 'Couleur', with: le_nouveau_motif.color
+    click_button 'Créer'
+
+    expect_page_title("Vos motifs")
+    click_link le_nouveau_motif.name
   end
 end
