@@ -1,5 +1,8 @@
 .bg-gradient
-  = render 'common/header'
+  - if current_user.present?
+    = render "common/header_user_logged"
+  - else
+    = render 'common/header'
   section#hero.hero.hero-home.p-5
     .container
       .row.text-center.text-white
