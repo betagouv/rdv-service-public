@@ -8,9 +8,11 @@ class Lieu < ApplicationRecord
   end
 
   def self.for_motif_and_departement(motif_name, departement)
-    organisations_ids = Organisation.where(departement: departement)
-    motifs_ids = Motif.online.where(organisation_id: organisations_ids, name: motif_name)
-    lieux_ids = PlageOuverture.joins(:motifs).where(motifs: { id: motifs_ids }).pluck(:lieu_id).uniq
+    motifs_ids = Motif.active.online.joins(:organisation).where(organisations: { departement: departement }, name: motif_name)
+    lieux_ids = PlageOuverture
+                .where.not("recurrence IS ? AND first_day < ?", nil, Time.zone.today)
+                .joins(:motifs).where(motifs: { id: motifs_ids })
+                .map(&:lieu_id).uniq
     Lieu.where(id: lieux_ids)
   end
 end
