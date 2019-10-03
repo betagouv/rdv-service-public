@@ -33,7 +33,7 @@ Rails.application.routes.draw do
     end
   end
   authenticated :user do
-    root to: 'users/rdvs#index', as: :authenticated_user_root
+    get "/users/rdvs", to: 'users/rdvs#index', as: :authenticated_user_root
   end
 
   devise_for :pros, controllers: { registrations: 'pros/registrations', invitations: 'common/invitations' }
