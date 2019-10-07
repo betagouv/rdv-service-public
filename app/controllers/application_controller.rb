@@ -2,12 +2,13 @@ class ApplicationController < ActionController::Base
   include Pundit
   protect_from_forgery
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :store_user_location!, if: :storable_location?
 
   def after_sign_in_path_for(resource)
     path = if resource.class == Pro
              current_pro.complete? ? authenticated_pro_root_path : new_pros_full_subscription_path
            elsif resource.class == User
-             authenticated_user_root_path
+             stored_location_for(resource) || authenticated_user_root_path
            end
     path
   end
@@ -48,5 +49,14 @@ class ApplicationController < ActionController::Base
       devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :email, :password])
       devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :birth_date])
     end
+  end
+
+  def storable_location?
+    request.get? && is_navigational_format? && !devise_controller? && !request.xhr?
+  end
+
+  def store_user_location!
+    # :user is the scope we are authenticating
+    store_location_for(:user, request.fullpath)
   end
 end
