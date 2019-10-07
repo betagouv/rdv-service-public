@@ -39,14 +39,15 @@ describe Service, type: :model do
     end
 
     describe "when motif is not online" do
-      let!(:motif) { create(:motif, service: service, online: false) }
+      let!(:motif_offline) { create(:motif, service: service, online: false) }
+      let!(:motif_online) { create(:motif, service: service, online: true) }
 
       it { is_expected.to eq([]) }
 
       describe "with a plage_ouverture" do
-        let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif]) }
+        let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif_offline, motif_online]) }
 
-        it { is_expected.to eq([]) }
+        it { expect(subject.first.motifs).to contain_exactly(motif_online) }
       end
     end
   end
