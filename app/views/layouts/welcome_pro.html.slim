@@ -10,11 +10,8 @@ html
             .my-5= yield :title
 
 
-    .bg-gradient
-      - if current_user.present?
-        = render "common/header_user_logged"
-      - else
-        = render 'common/header'
+    .bg-gradient-pink
+      = render 'common/header'
       .container
         = render 'layouts/flash'
       = yield :header
