@@ -56,7 +56,9 @@ Rails.application.routes.draw do
     resources :motifs, except: :show
     resources :plage_ouvertures, except: :show
     resources :organisations do
-      resources :users, except: :show, shallow: true, controller: 'organisations/users'
+      resources :users, except: :show, shallow: true, controller: 'organisations/users' do 
+        post :invite, on: :member
+      end
 
       # Rdv
       resources :rdvs, except: [:index, :create, :new], shallow: true, controller: 'pros/rdvs' do

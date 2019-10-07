@@ -1,4 +1,4 @@
-tr
+tr class="#{'bg-light' if user.id == params[:to_user].to_i}"
   td
     = link_to_if policy(user).edit?, user.full_name, edit_user_path(user), data: { rightbar: true }
     = new_user_tag(user)
