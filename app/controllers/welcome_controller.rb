@@ -3,7 +3,9 @@ class WelcomeController < ApplicationController
 
   def index; end
 
-  def welcome_pro; end
+  def welcome_pro
+    render layout: 'welcome_pro'
+  end
 
   def search
     search_params = params.require(:search).permit(:departement, :where, :motif)

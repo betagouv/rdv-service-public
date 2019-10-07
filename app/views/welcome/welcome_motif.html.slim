@@ -1,8 +1,4 @@
-.bg-gradient
-  - if current_user.present?
-    = render "common/header_user_logged"
-  - else
-    = render 'common/header'
+- content_for :header
   section#hero.hero.hero-home.p-2
     .container
       .row.justify-content-md-center
