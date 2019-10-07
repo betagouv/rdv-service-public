@@ -17,7 +17,7 @@
 
       .mb-1
         - current_pro.organisation.lieux.each do |l|
-          = button_tag type: "button", onclick: "document.querySelector('#rdv_location').value = '#{l.address}'", class: "btn btn-rounded btn-outline-secondary btn-sm" do
+          = button_tag type: "button", onclick: "document.querySelector('#rdv_location').value = '#{escape_javascript(l.address)}'", class: "btn btn-rounded btn-outline-secondary btn-sm" do
             i.fa.fa-map-marker.mr-1
             = l.full_name
 
