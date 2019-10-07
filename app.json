@@ -3,10 +3,9 @@
     "heroku-postgresql"
   ],
   "buildpacks": [
-    {
-      "url": "heroku/nodejs",
-      "url": "heroku/ruby"
-    }
+    { "url": "https://github.com/heroku/heroku-buildpack-google-chrome" },
+    { "url": "heroku/nodejs" },
+    { "url": "heroku/ruby" }
   ],
   "env": {
     "LANG": {
@@ -43,7 +42,8 @@
         "RAILS_ENV": "test",
         "RAILS_LOG_TO_STDOUT": "enabled",
         "RAILS_SERVE_STATIC_FILES": "enabled",
-        "SECRET_KEY_BASE": "bibop"
+        "SECRET_KEY_BASE": "bibop",
+        "WD_CHROME_PATH": "/app/.apt/usr/bin/google-chrome-stable"
       },
       "addons": [
         "heroku-postgresql:in-dyno"

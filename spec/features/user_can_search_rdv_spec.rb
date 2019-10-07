@@ -5,25 +5,21 @@ describe "User can search for rdvs" do
   let!(:lieu2) { create(:lieu) }
   let!(:plage_ouverture2) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu2) }
   let!(:user) { create(:user) }
-  let(:organisation) { plage_ouverture.organisation }
+  let!(:organisation) { plage_ouverture.organisation }
 
   before do
     visit root_path
   end
 
-  scenario "default" do
+  scenario "default", js: true do
     # Step 1
-    expect(page.status_code).to be(200)
-    expect_page_h1("Prenez rendez-vous en ligne avecvotre Maison Départementale des Solidarités")
+    expect_page_h1("Prenez rendez-vous en ligne avec\nvotre Maison Départementale des Solidarités")
     fill_in('search_where', with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
-    # Improve with click on suggestion instead of filling an hidden input
-    find(:xpath, "//input[@id='search_departement']", visible: false).set("92")
-    # click_first_suggestion
+    page.execute_script("document.querySelector('#search_departement').value = '92'")
     click_button("Choisir cette adresse")
 
     # Step 2
-    expect(page.status_code).to be(200)
-    expect_page_h1("Prenez rendez-vous en ligne avecvotre Maison Départementale des Solidarités du 92")
+    expect_page_h1("Prenez rendez-vous en ligne avec\nvotre Maison Départementale des Solidarités du 92")
     select(motif.name, from: 'search_motif')
     click_button("Choisir ce motif")
 
@@ -31,11 +27,31 @@ describe "User can search for rdvs" do
     expect(page).to have_content("Modifier le motif")
     expect(page).to have_content(lieu.name)
     expect(page).to have_content(lieu2.name)
-
     expect(page).to have_content(lieu.name)
-
-    login_as(user, scope: :user)
     first(:link, "11:00").click
+
+    # Login page
+    expect(page).to have_content("Se connecter")
+    click_link("Je m'inscris")
+
+    # Sign up page
+    expect(page).to have_content("Inscription")
+    fill_in('Prénom', with: "Michel")
+    fill_in('Nom', with: "Lapin")
+    fill_in('Email', with: "michel@lapin.fr")
+    fill_in('Mot de passe', with: "12345678")
+    click_button("Je m'inscris")
+
+    # Confirmation email
+    open_email('michel@lapin.fr')
+    expect(current_email).to have_content("Merci pour votre inscription")
+    current_email.click_link("Confirmer mon compte")
+
+    # Login page
+    expect(page).to have_content("Se connecter")
+    fill_in('Email', with: "michel@lapin.fr")
+    fill_in('Mot de passe', with: "12345678")
+    click_button("Se connecter")
 
     # Step 4
     expect(page).to have_content(motif.name)

@@ -32,7 +32,7 @@ Rails.application.configure do
   config.active_storage.service = :test
   config.active_job.queue_adapter = :inline
 
-  config.action_mailer.default_url_options = { host: 'localhost:3000', utm_source: 'test', utm_medium: 'email', utm_campaign: 'default' }
+  config.action_mailer.default_url_options = { host: 'localhost:3001', utm_source: 'test', utm_medium: 'email', utm_campaign: 'default' }
   config.action_mailer.perform_caching = false
 
   # Tell Action Mailer not to deliver emails to the real world.
