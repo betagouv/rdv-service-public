@@ -1,4 +1,5 @@
 describe Rdv, type: :model do
+  let!(:organisation) { Organisation.last || create(:organisation) }
   let(:motif) { create(:motif) }
   let(:motif_with_rdv) { create(:motif, :with_rdvs) }
 
@@ -20,7 +21,7 @@ describe Rdv, type: :model do
     let(:service) { create(:service) }
     let!(:service2) { create(:service) }
 
-    subject { Motif.grouped_by_service_for_departement(service.organisation.departement) }
+    subject { Motif.grouped_by_service_for_departement(organisation.departement) }
 
     describe "when motif is online" do
       let!(:motif) { create(:motif, service: service, online: true, deleted_at: deleted_at) }
