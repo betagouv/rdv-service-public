@@ -12,6 +12,7 @@ FactoryBot.define do
     address { "20 avenue de Ségur, Paris" }
     organisation { Organisation.first || create(:organisation) }
     password { "12345678" }
+    password_confirmation { "12345678" }
     confirmed_at { Time.zone.now }
   end
 end

@@ -2,7 +2,7 @@ class Organisations::UsersController < DashboardAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: [:new, :create]
-  before_action :set_user, except: [:index]
+  before_action :set_user, except: [:index, :new, :create]
 
   def index
     page = 1
