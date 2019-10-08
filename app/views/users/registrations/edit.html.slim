@@ -16,13 +16,11 @@
             .col-6= f.input :last_name, placeholder: 'Nom'
 
           = f.input :email, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), placeholder: 'nom.prenom@email.com'
-
-          = date_input(f, :birth_date)
-
           - if devise_mapping.confirmable? && resource.pending_reconfirmation? 
-            .form-text.text-muted
+            .form-text.text-muted.mb-2
               | En attente de confirmation pour #{resource.unconfirmed_email}
 
+          = date_input(f, :birth_date)
           = f.input :password, placeholder: 'Votre mot de passe (au moins 6 caractères)'
           .form-text.text-muted.mb-2
             | Laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.

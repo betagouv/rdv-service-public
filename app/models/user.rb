@@ -1,5 +1,4 @@
 class User < ApplicationRecord
-
   include Authorizable
   include PgSearch::Model
 
@@ -12,7 +11,7 @@ class User < ApplicationRecord
   has_and_belongs_to_many :rdvs
 
   validates :last_name, :first_name, presence: true
-  
+
   pg_search_scope :search_by_name, against: [:first_name, :last_name],
                   using: { tsearch: { prefix: true } }
 
@@ -55,20 +54,23 @@ class User < ApplicationRecord
   def age_in_days
     Time.zone.now.to_date - birth_date
   end
+
   protected
 
   def password_required?
     return false if created_or_updated_by_pro
+
     super
   end
 
   def email_required?
     return false if created_or_updated_by_pro
+
     super
   end
 
   private
-  
+
   def set_email_to_null_if_blank
     self.email = nil if email.blank?
   end

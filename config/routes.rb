@@ -56,7 +56,7 @@ Rails.application.routes.draw do
     resources :motifs, except: :show
     resources :plage_ouvertures, except: :show
     resources :organisations do
-      resources :users, except: :show, shallow: true, controller: 'organisations/users' do 
+      resources :users, except: :show, shallow: true, controller: 'organisations/users' do
         post :invite, on: :member
       end
 

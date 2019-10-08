@@ -4,8 +4,8 @@
     .col-6= f.input :first_name
     .col-6= f.input :last_name
   = f.input :email, as: :email
-  - if devise_mapping.confirmable? && user.pending_reconfirmation? 
-    .form-text.text-muted
+  - if user.pending_reconfirmation? 
+    .form-text.text-muted.mb-2
       | En attente de confirmation pour #{user.unconfirmed_email}
   = f.input :phone_number, as: :tel
   = f.input :address, input_html: { class: "places-js-container" }

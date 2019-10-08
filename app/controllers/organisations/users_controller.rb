@@ -2,16 +2,15 @@ class Organisations::UsersController < DashboardAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: [:new, :create]
-  before_action :set_user, only: [:edit, :update, :destroy]
+  before_action :set_user, except: [:index]
 
   def index
     page = 1
-    page = params[:page]
-    if (params[:page])
+    if params[:page]
       page = params[:page]
-    elsif (params[:to_user])
+    elsif params[:to_user]
       index = policy_scope(User).order(Arel.sql('LOWER(last_name)')).pluck(:id).index(params[:to_user].to_i)
-      page = index/ Kaminari.config.default_per_page + 1
+      page = index / Kaminari.config.default_per_page + 1
     end
     @users = policy_scope(User).order(Arel.sql('LOWER(last_name)')).page(page)
     filter_users if params[:user] && params[:user][:search]
@@ -44,12 +43,16 @@ class Organisations::UsersController < DashboardAuthController
   def update
     authorize(@user)
     @user.created_or_updated_by_pro = true
+    @user.skip_reconfirmation! if @user.encrypted_password.blank?
     flash[:notice] = "L'usager a été modifié." if @user.update(user_params)
     respond_right_bar_with @user, location: organisation_users_path(@user, to_user: @user.id)
   end
 
   def invite
-    
+    authorize(@user)
+    @user.deliver_invitation
+    flash[:notice] = "L'usager a été invité."
+    respond_right_bar_with @user, location: organisation_users_path(@user, to_user: @user.id)
   end
 
   def destroy
