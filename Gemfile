@@ -30,7 +30,7 @@ gem 'delayed_job_active_record', '~> 4.1.4'
 gem 'delayed_job_web'
 
 # Form
-gem 'simple_form', '~> 4.1'
+gem 'simple_form', '~> 5.0'
 gem 'image_processing', '~> 1.8'
 
 # Front
