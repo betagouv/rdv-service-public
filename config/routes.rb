@@ -69,6 +69,9 @@ Rails.application.routes.draw do
       resources step, only: [:new, :create], module: "pros/rdvs"
     end
     resources :absences, except: :show
+    resources :pro_searches, only: :index, module: "pros/creneaux" do
+      get :by_lieu, on: :collection
+    end
   end
 
   { disclaimer: 'mentions_legales', terms: 'cgv' }.each do |k, v|

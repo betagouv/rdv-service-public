@@ -54,9 +54,21 @@ class PlageOuverture < ApplicationRecord
     recurrence.nil?
   end
 
-  def self.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range)
+  def self.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range, pro_ids = nil)
     motifs_ids = Motif.where(name: motif_name, organisation_id: lieu.organisation_id)
-    PlageOuverture.includes(:motifs_plageouvertures).where(lieu: lieu).where("first_day <= ?", inclusive_date_range.end).joins(:motifs).where(motifs: { id: motifs_ids }).includes(:motifs, pro: :absences).uniq
+    results = PlageOuverture
+              .includes(:motifs_plageouvertures)
+              .where(lieu: lieu)
+              .where("first_day <= ?", inclusive_date_range.end)
+              .joins(:motifs)
+              .where(motifs: { id: motifs_ids })
+              .includes(:motifs, pro: :absences)
+
+    if pro_ids.present?
+      results = results.where(pro_id: pro_ids)
+    end
+
+    results.uniq
   end
 
   private

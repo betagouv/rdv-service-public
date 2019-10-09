@@ -10,13 +10,15 @@ describe "Pro can create a Rdv with wizard" do
     visit authenticated_pro_root_path
 
     expect(user.rdvs.count).to eq(0)
+    expect(Motif.count).to eq(2)
     click_link('Créer un rendez-vous')
   end
 
   scenario "default" do
     # Step 1
     expect_page_title("Choisir le motif")
-    select(motif.id.to_s, from: "rdv_motif_id")
+
+    select(motif.name, from: "rdv_motif_id")
     click_button('Continuer')
 
     # Step 2
@@ -53,7 +55,8 @@ describe "Pro can create a Rdv with wizard" do
 
   scenario "with a users limit" do
     expect_page_title("Choisir le motif")
-    select(motif_with_limit.id.to_s, from: "rdv_motif_id")
+
+    select(motif_with_limit.name, from: "rdv_motif_id")
     click_button('Continuer')
 
     # Step 2

@@ -1,7 +1,7 @@
 class Creneau
   include ActiveModel::Model
 
-  attr_accessor :starts_at, :lieu_id, :motif
+  attr_accessor :starts_at, :lieu_id, :motif, :pro_id, :pro_name
 
   def ends_at
     starts_at + duration_in_min.minutes
@@ -67,14 +67,19 @@ class Creneau
     end.any?
   end
 
-  def self.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range)
-    plages_ouverture = PlageOuverture.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range)
+  def self.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range, for_pros = false, pro_ids = nil)
+    plages_ouverture = PlageOuverture.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range, pro_ids)
 
-    plages_ouverture.flat_map do |po|
+    results = plages_ouverture.flat_map do |po|
       rdvs = po.pro.rdvs.where(starts_at: inclusive_date_range)
       absences = po.pro.absences
+      motifs = if for_pros
+                 po.motifs
+               else
+                 po.motifs.online
+               end
 
-      po.motifs.online.flat_map do |motif|
+      motifs.flat_map do |motif|
         creneaux_nb = po.time_shift_duration_in_min / motif.default_duration_in_min
         po.occurences_for(inclusive_date_range).flat_map do |occurence_time|
           (0...creneaux_nb).map do |n|
@@ -83,11 +88,21 @@ class Creneau
               lieu_id: lieu.id,
               motif: motif
             )
+            if for_pros
+              creneau.pro_id = po.pro_id
+              creneau.pro_name = po.pro.short_name
+            end
             creneau.available_with_rdvs_and_absences?(rdvs, absences) ? creneau : nil
           end.compact
         end
       end
-    end.uniq(&:starts_at).sort_by(&:starts_at)
+    end
+
+    if for_pros
+      results.uniq { |c| [c.starts_at, c.pro_id] }.sort_by(&:starts_at)
+    else
+      results.uniq(&:starts_at).sort_by(&:starts_at)
+    end
   end
 
   private

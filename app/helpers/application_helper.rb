@@ -33,8 +33,8 @@ module ApplicationHelper
     form.input(field, as: :string, input_html: { value: form.object.send(field)&.strftime("%d/%m/%Y %H:%M"), data: { behaviour: 'datetimepicker' }, autocomplete: "off" })
   end
 
-  def date_input(form, field, input_html: {})
-    form.input(field, as: :string, input_html: { value: form.object.send(field)&.strftime("%d/%m/%Y"), data: { behaviour: 'datepicker' }, autocomplete: "off" }.deep_merge(input_html))
+  def date_input(form, field, label = nil, input_html: {})
+    form.input(field, as: :string, label: label, input_html: { value: form.object.send(field)&.strftime("%d/%m/%Y"), data: { behaviour: 'datepicker' }, autocomplete: "off" }.deep_merge(input_html))
   end
 
   def time_input(form, field)
