@@ -2,10 +2,18 @@ class Organisations::UsersController < DashboardAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: [:new, :create]
-  before_action :set_user, only: [:edit, :update, :destroy]
+  before_action :set_user, except: [:index, :new, :create]
 
   def index
-    @users = policy_scope(User).order(Arel.sql('LOWER(last_name)')).page(params[:page])
+    page = 1
+    @users = policy_scope(User).order(Arel.sql('LOWER(last_name)'))
+    if params[:page]
+      page = params[:page]
+    elsif params[:to_user]
+      index = @users.pluck(:id).index(params[:to_user].to_i)
+      page = index / Kaminari.config.default_per_page + 1
+    end
+    @users = @users.page(page)
     filter_users if params[:user] && params[:user][:search]
   end
 
@@ -20,10 +28,12 @@ class Organisations::UsersController < DashboardAuthController
   def create
     @user = User.new(user_params)
     @user.organisation_id = current_pro.organisation_id
-    @organisation = current_pro.organisation
+    @user.invited_by = current_pro
+    @user.created_or_updated_by_pro = true
     authorize(@user)
+    @organisation = current_pro.organisation
     flash[:notice] = "L'usager a été créé." if @user.save
-    respond_right_bar_with @user, location: organisation_users_path(@organisation)
+    respond_right_bar_with @user, location: organisation_users_path(@organisation, to_user: @user.id)
   end
 
   def edit
@@ -33,8 +43,17 @@ class Organisations::UsersController < DashboardAuthController
 
   def update
     authorize(@user)
+    @user.created_or_updated_by_pro = true
+    @user.skip_reconfirmation! if @user.encrypted_password.blank?
     flash[:notice] = "L'usager a été modifié." if @user.update(user_params)
-    respond_right_bar_with @user, location: organisation_users_path(@user)
+    respond_right_bar_with @user, location: organisation_users_path(@user, to_user: @user.id)
+  end
+
+  def invite
+    authorize(@user)
+    @user.deliver_invitation
+    flash[:notice] = "L'usager a été invité."
+    respond_right_bar_with @user, location: organisation_users_path(@user, to_user: @user.id)
   end
 
   def destroy
