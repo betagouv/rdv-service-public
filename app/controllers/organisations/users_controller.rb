@@ -6,13 +6,14 @@ class Organisations::UsersController < DashboardAuthController
 
   def index
     page = 1
+    @users = policy_scope(User).order(Arel.sql('LOWER(last_name)'))
     if params[:page]
       page = params[:page]
     elsif params[:to_user]
-      index = policy_scope(User).order(Arel.sql('LOWER(last_name)')).pluck(:id).index(params[:to_user].to_i)
+      index = @users.pluck(:id).index(params[:to_user].to_i)
       page = index / Kaminari.config.default_per_page + 1
     end
-    @users = policy_scope(User).order(Arel.sql('LOWER(last_name)')).page(page)
+    @users = @users.page(page)
     filter_users if params[:user] && params[:user][:search]
   end
 
