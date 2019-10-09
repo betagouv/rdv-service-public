@@ -113,6 +113,9 @@ GEM
     capybara-email (3.0.1)
       capybara (>= 2.4, < 4.0)
       mail
+    capybara-selenium (0.0.6)
+      capybara
+      selenium-webdriver
     chartkick (3.2.1)
     childprocess (2.0.0)
       rake (< 13.0)
@@ -468,6 +471,7 @@ DEPENDENCIES
   byebug
   capybara (>= 2.15)
   capybara-email
+  capybara-selenium
   chartkick (~> 3.2.0)
   database_cleaner
   delayed_job_active_record (~> 4.1.4)

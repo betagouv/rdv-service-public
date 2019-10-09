@@ -52,7 +52,7 @@ class ApplicationController < ActionController::Base
   end
 
   def storable_location?
-    request.get? && is_navigational_format? && !devise_controller? && !request.xhr?
+    request.get? && is_navigational_format? && !devise_controller? && !request.xhr? && request.fullpath != root_path
   end
 
   def store_user_location!
