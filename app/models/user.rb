@@ -1,7 +1,8 @@
 class User < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   include Authorizable
+  include PgSearch::Model
+
+  attr_accessor :created_or_updated_by_pro
 
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
@@ -9,14 +10,13 @@ class User < ApplicationRecord
   belongs_to :organisation, optional: true
   has_and_belongs_to_many :rdvs
 
-  validates :last_name, :first_name, :email, presence: true
-  validates :email, format: { with: Devise.email_regexp }, uniqueness: { case_sensitive: false, scope: :organisation }
+  validates :last_name, :first_name, presence: true
 
-  include PgSearch::Model
   pg_search_scope :search_by_name, against: [:first_name, :last_name],
                   using: { tsearch: { prefix: true } }
 
   before_invitation_created :set_organisation
+  before_save :set_email_to_null_if_blank
 
   def full_name
     "#{first_name} #{last_name}"
@@ -55,7 +55,25 @@ class User < ApplicationRecord
     Time.zone.now.to_date - birth_date
   end
 
+  protected
+
+  def password_required?
+    return false if created_or_updated_by_pro
+
+    super
+  end
+
+  def email_required?
+    return false if created_or_updated_by_pro
+
+    super
+  end
+
   private
+
+  def set_email_to_null_if_blank
+    self.email = nil if email.blank?
+  end
 
   def set_organisation
     self.organisation = invited_by.organisation

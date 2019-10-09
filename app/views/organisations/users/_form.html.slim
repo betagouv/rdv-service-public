@@ -1,14 +1,20 @@
 = simple_form_for([organisation, user], remote: request.xhr?, data: { rightbar: true }) do |f|
   = render partial: 'layouts/model_errors', locals: { model: user }
-  = f.input :first_name
-  = f.input :last_name
-  = f.input :address, input_html: { class: "places-js-container" }
+  .form-row
+    .col-6= f.input :first_name
+    .col-6= f.input :last_name
   = f.input :email, as: :email
+  - if user.pending_reconfirmation? 
+    .form-text.text-muted.mb-2
+      | En attente de confirmation pour #{user.unconfirmed_email}
   = f.input :phone_number, as: :tel
+  = f.input :address, input_html: { class: "places-js-container" }
   = date_input(f, :birth_date)
   .row
     - if user.persisted?
       .col.text-left
-        = link_to "Supprimer", user_path(user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cet usager ?"}
+        => link_to "Supprimer", user_path(user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cet usager ?"}
+        - if user.invitation_accepted_at.nil? && user.password.nil? && user.email
+          = link_to 'Inviter', invite_user_path(user), method: :post, class: 'btn btn-outline-primary'
     .col.text-right
       = f.button :submit
