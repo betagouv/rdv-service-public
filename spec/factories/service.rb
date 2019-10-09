@@ -3,6 +3,5 @@ FactoryBot.define do
 
   factory :service do
     name { generate(:service_name) }
-    organisation { Organisation.first || create(:organisation) }
   end
 end

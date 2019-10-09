@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_07_141315) do
+ActiveRecord::Schema.define(version: 2019_10_08_132640) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -205,10 +205,8 @@ ActiveRecord::Schema.define(version: 2019_10_07_141315) do
 
   create_table "services", force: :cascade do |t|
     t.string "name"
-    t.bigint "organisation_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["organisation_id"], name: "index_services_on_organisation_id"
   end
 
   create_table "super_admins", force: :cascade do |t|
@@ -265,6 +263,5 @@ ActiveRecord::Schema.define(version: 2019_10_07_141315) do
   add_foreign_key "pros", "services"
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"
-  add_foreign_key "services", "organisations"
   add_foreign_key "users", "organisations"
 end
