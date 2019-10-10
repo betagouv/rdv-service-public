@@ -86,9 +86,13 @@ $(document).on('turbolinks:load', function() {
 
   new PlacesInput(document.querySelector('.places-js-container'));
 
-  $( ".select2-input").select2({
+  $(".select2-input").select2({
     theme: "bootstrap"
   });
 
   new Datetimepicker();
+});
+
+$(document).on("turbolinks:before-cache", function() {
+  $('.select2-input').select2('destroy');
 });
