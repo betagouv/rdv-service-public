@@ -14,5 +14,10 @@ FactoryBot.define do
     password { "12345678" }
     password_confirmation { "12345678" }
     confirmed_at { Time.zone.now }
+    caisse_affiliation { 'caf' }
+    affiliation_number { '39012093812038' }
+    family_situation { 'divorced' }
+    logement { 'sdf' }
+    number_of_children { 12 }
   end
 end

@@ -10,7 +10,12 @@ class User < ApplicationRecord
   belongs_to :organisation, optional: true
   has_and_belongs_to_many :rdvs
 
+  enum caisse_affiliation: { aucune: 0, caf: 1, msa: 2 }
+  enum family_situation: { single: 0, in_a_relationship: 1, divorced: 2 }
+  enum logement: { sdf: 0, heberge: 1, locataire: 1, en_accession_propriete: 2, proprietaire: 3, autre: 4 }
+
   validates :last_name, :first_name, presence: true
+  validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
   pg_search_scope :search_by_name, against: [:first_name, :last_name],
                   using: { tsearch: { prefix: true } }

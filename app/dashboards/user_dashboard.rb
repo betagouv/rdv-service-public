@@ -15,6 +15,11 @@ class UserDashboard < Administrate::BaseDashboard
     email: Field::String,
     address: Field::String,
     phone_number: Field::String,
+    caisse_affiliation: EnumField,
+    family_situation: EnumField,
+    logement: EnumField,
+    affiliation_number: Field::String,
+    number_of_children: Field::Number,
     birth_date: Field::DateTime,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
@@ -43,6 +48,11 @@ class UserDashboard < Administrate::BaseDashboard
     :address,
     :phone_number,
     :birth_date,
+    :caisse_affiliation,
+    :affiliation_number,
+    :family_situation,
+    :logement,
+    :number_of_children,
     :created_at,
     :updated_at,
   ].freeze
@@ -58,12 +68,10 @@ class UserDashboard < Administrate::BaseDashboard
     :address,
     :phone_number,
     :birth_date,
+    :caisse_affiliation,
+    :affiliation_number,
+    :family_situation,
+    :logement,
+    :number_of_children,
   ].freeze
-
-  # Overwrite this method to customize how users are displayed
-  # across all pages of the admin dashboard.
-  #
-  # def display_resource(user)
-  #   "User ##{user.id}"
-  # end
 end

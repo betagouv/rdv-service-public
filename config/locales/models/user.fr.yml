@@ -13,3 +13,18 @@ fr:
         organisation: Organisation
         password: Mot de passe
         current_password: Mot de passe actuel
+        caisse_affiliations: 
+          aucune: aucune
+          caf: CAF
+          msa: MSA
+        family_situations: 
+          single: Célibataire
+          in_a_relationship: En couple
+          divorced: Divorcé
+        logements:
+          sdf: Sans domicile fixe
+          heberge: Hébergé
+          locataire: Locataire
+          en_accession_propriete: En accession à la propriété
+          proprietaire: Propriétaire
+          autre: Autre
