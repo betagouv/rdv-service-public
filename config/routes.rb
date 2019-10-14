@@ -27,6 +27,7 @@ Rails.application.routes.draw do
 
   ## APP ##
   devise_for :users, controllers: { registrations: 'users/registrations', invitations: 'common/invitations' }
+
   namespace :users do
     resources :rdvs, only: [:index, :new, :create] do
       get :confirmation
@@ -34,6 +35,8 @@ Rails.application.routes.draw do
   end
   authenticated :user do
     get "/users/rdvs", to: 'users/rdvs#index', as: :authenticated_user_root
+    get "/users/informations", to: 'users/users#edit'
+    patch "users/informations", to: 'users/users#update'
   end
 
   devise_for :pros, controllers: { registrations: 'pros/registrations', invitations: 'common/invitations' }

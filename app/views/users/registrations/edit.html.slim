@@ -10,17 +10,10 @@
 
         = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), remote: request.xhr?, html: { method: :put, data: {rightbar: true} }) do |f|
           = devise_error_messages!
-
-          .form-row
-            .col-6= f.input :first_name, placeholder: 'Prénom'
-            .col-6= f.input :last_name, placeholder: 'Nom'
-
           = f.input :email, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), placeholder: 'nom.prenom@email.com'
           - if devise_mapping.confirmable? && resource.pending_reconfirmation? 
             .form-text.text-muted.mb-2
               | En attente de confirmation pour #{resource.unconfirmed_email}
-
-          = date_input(f, :birth_date)
           = f.input :password, placeholder: 'Votre mot de passe (au moins 6 caractères)'
           .form-text.text-muted.mb-2
             | Laissez ce champ vide si vous ne souhaitez pas changer votre mot de passe.
@@ -28,7 +21,6 @@
           .form-text.text-muted.mb-2
             | Renseignez votre mot de passe actuel pour tout changement.
           .text-right= f.submit "Modifier", class: 'btn btn-primary'
-
           .mt-5.text-center
             hr
             p.font-13 Vous souhaitez supprimer votre compte ? 

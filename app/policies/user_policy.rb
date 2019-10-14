@@ -11,12 +11,12 @@ class UserPolicy < ApplicationPolicy
     @user_or_pro.pro?
   end
 
-  def edit?
-    pro_and_belongs_to_record_organisation?
-  end
-
   def update?
-    pro_and_belongs_to_record_organisation?
+    if @user_or_pro.pro?
+      pro_and_belongs_to_record_organisation?
+    elsif @user_or_pro.user?
+      @record.id == @user_or_pro.id
+    end
   end
 
   def destroy?

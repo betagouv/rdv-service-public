@@ -4,8 +4,8 @@
     p.text-muted.mb-4 Complétez vos informations.
   = devise_error_messages!
   = f.hidden_field :invitation_token
-  = f.input :first_name, placeholder: 'Prénom', label: false
-  = f.input :last_name, placeholder: 'Nom', label: false
-  = f.input :password
-
-  = f.button :submit, t("devise.invitations.edit.submit_button")
+  .form-row
+    .col-md-6= f.input :first_name, placeholder: 'Prénom', label: false
+    .col-md-6= f.input :last_name, placeholder: 'Nom', label: false
+  = f.input :password, required: true
+  .text-center= f.button :submit, t("devise.invitations.edit.submit_button")

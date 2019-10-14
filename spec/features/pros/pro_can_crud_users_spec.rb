@@ -35,8 +35,8 @@ describe "Pro can CRUD users" do
     click_link 'Créer un usager', match: :first
 
     expect_page_title("Nouvel usager")
-    fill_in 'Prénom', with: new_user.first_name
-    fill_in 'Nom', with: new_user.last_name
+    fill_in :user_first_name, with: new_user.first_name
+    fill_in :user_last_name, with: new_user.last_name
     click_button 'Créer'
 
     expect_page_title("Vos usagers")
