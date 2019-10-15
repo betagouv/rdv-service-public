@@ -32,6 +32,7 @@ class Organisations::UsersController < DashboardAuthController
     @user.created_or_updated_by_pro = true
     authorize(@user)
     @organisation = current_pro.organisation
+    @user.skip_confirmation!
     flash[:notice] = "L'usager a été créé." if @user.save
     respond_right_bar_with @user, location: organisation_users_path(@organisation, to_user: @user.id)
   end
@@ -72,7 +73,7 @@ class Organisations::UsersController < DashboardAuthController
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :phone_number, :birth_date, :address)
+    params.require(:user).permit(:first_name, :last_name, :email, :phone_number, :birth_date, :address, :caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :logement)
   end
 
   def set_user

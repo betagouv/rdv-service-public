@@ -13,3 +13,23 @@ fr:
         organisation: Organisation
         password: Mot de passe
         current_password: Mot de passe actuel
+        caisse_affiliation : Caisse d'affiliation
+        caisse_affiliations: 
+          aucune: Aucune
+          caf: CAF
+          msa: MSA
+        affiliation_number: Numéro d'affiliation
+        family_situation: Situation familiale
+        number_of_children: Nombre d'enfants
+        family_situations: 
+          single: Célibataire
+          in_a_relationship: En couple
+          divorced: Divorcé
+        logement: Logement
+        logements:
+          sdf: Sans domicile fixe
+          heberge: Hébergé
+          locataire: Locataire
+          en_accession_propriete: En accession à la propriété
+          proprietaire: Propriétaire
+          autre: Autre
