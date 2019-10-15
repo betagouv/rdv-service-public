@@ -1,7 +1,7 @@
 class Lieu < ApplicationRecord
   belongs_to :organisation
   has_many :plage_ouvertures
-  validates :name, :address, :telephone, :horaires, presence: true
+  validates :name, :address, presence: true
 
   def full_name
     "#{name} (#{address})"
