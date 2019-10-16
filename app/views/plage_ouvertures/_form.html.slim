@@ -9,7 +9,7 @@
         = f.input :start_time, as: :select, collection: time_collections, selected: plage_ouverture.start_time&.strftime("%H:%M"), include_blank: false
       .col
         = f.input :end_time, as: :select, collection: time_collections, selected: plage_ouverture.end_time&.strftime("%H:%M"), include_blank: false
-    = f.association :motifs, collection: policy_scope(Motif).active, label_method: :name_with_badge, as: :check_boxes
+    = f.association :motifs, collection: plage_ouverture.pro.motifs.active, label_method: :name_with_badge, as: :check_boxes
     hr
     = render partial: 'plage_ouvertures/recurrence', locals: { f: f, plage_ouverture: plage_ouverture }
   .row

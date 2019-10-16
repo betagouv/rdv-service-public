@@ -10,6 +10,7 @@ class Pro < ApplicationRecord
   belongs_to :organisation, optional: true
   belongs_to :service, optional: true
   has_many :lieux, through: :organisation
+  has_many :motifs, through: :service
   has_many :plage_ouvertures
   has_many :absences
   has_and_belongs_to_many :rdvs
