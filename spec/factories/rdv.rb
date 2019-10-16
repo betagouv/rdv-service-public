@@ -6,6 +6,6 @@ FactoryBot.define do
     organisation { Organisation.first || create(:organisation) }
     motif { build(:motif) }
     users { [build(:user)] }
-    pros { [build(:pro)] }
+    agents { [build(:agent)] }
   end
 end

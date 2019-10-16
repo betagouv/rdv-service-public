@@ -1,10 +1,10 @@
-RSpec.describe Pros::RdvsController, type: :controller do
+RSpec.describe Agents::RdvsController, type: :controller do
   describe "DELETE destroy" do
-    let(:pro) { create(:pro) }
+    let(:agent) { create(:agent) }
     let(:rdv) { create(:rdv) }
 
     before do
-      sign_in pro
+      sign_in agent
     end
 
     it "cancel rdv" do

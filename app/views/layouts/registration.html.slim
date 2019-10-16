@@ -8,7 +8,7 @@ html
     = csp_meta_tag
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
-  body.auth-fluid-pages.pb-0 class="#{pros_or_users_body_class}"
+  body.auth-fluid-pages.pb-0 class="#{agents_or_users_body_class}"
     .auth-fluid
       .auth-fluid-left.text-center
         = link_logo
@@ -18,7 +18,7 @@ html
               = yield :left_part
             - else
               = holder_tag 250, 'Image d\'illustration', 'gray', class: 'img-fluid mb-4'
-            - if pro_path?
+            - if agent_path?
               h4.mb-3 Terminé l'agenda papier, moins de temps perdu.
               p.lead
                 | Digitalisez votre prise de RDV !
@@ -33,7 +33,7 @@ html
             = render 'layouts/flash'
             .row
               .col-md-6.offset-md-3
-                - if pro_path?
+                - if agent_path?
                   .mb-4.text-center
                     h3 Espace reservé aux agents
                     p 

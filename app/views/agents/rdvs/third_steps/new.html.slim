@@ -1,0 +1,41 @@
+- content_for :title do
+  | Choisir l'usager
+
+.card
+  ul.list-group.list-group-flush
+    li.list-group-item
+      i.fa.fa-check.fa-fw.mr-1.text-success
+      | Motif :&nbsp;
+      = @third_step.rdv.motif.name
+    li.list-group-item
+      i.fa.fa-check.fa-fw.mr-1.text-success
+      | Lieu :&nbsp;
+      = human_location(@third_step.rdv)
+    li.list-group-item
+      i.fa.fa-check.fa-fw.mr-1.text-success
+      | Professionnels :&nbsp;
+      = agents_to_sentence(@third_step.rdv)
+    li.list-group-item
+      i.fa.fa-check.fa-fw.mr-1.text-success
+      = "Durée : #{@third_step.rdv.duration_in_min} minutes"
+    li.list-group-item
+      i.fa.fa-check.fa-fw.mr-1.text-success
+      = "Commence le : #{l(@third_step.rdv.starts_at, format: :human)}"
+
+  .card-body
+    = render partial: 'layouts/model_errors', locals: { model: @third_step }
+
+    = simple_form_for(@third_step.rdv, url: third_steps_path) do |f|
+      = f.association :motif, as: :hidden
+      = f.input :location, as: :hidden
+      - @third_step.rdv.agents.each do |p|
+        / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
+        = f.hidden_field "agent_ids][", value: p.id
+      = f.input :duration_in_min, as: :hidden
+      = f.input :starts_at, as: :hidden
+      = f.association :users, collection: policy_scope(User), label_method: :full_name, input_html: { multiple: true, class: 'select2-input' }
+      .row
+        .col.text-left
+          = link_to 'Revenir en arrière', new_second_step_path(@third_step.to_query), class: 'btn btn-link'
+        .col.text-right
+          = f.button :submit, 'Continuer'

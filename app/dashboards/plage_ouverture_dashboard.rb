@@ -10,7 +10,7 @@ class PlageOuvertureDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     organisation: Field::BelongsTo,
     lieu: Field::BelongsTo,
-    pro: Field::BelongsTo,
+    agent: Field::BelongsTo,
     motifs: Field::HasMany,
     id: Field::Number,
     title: Field::String,
@@ -29,7 +29,7 @@ class PlageOuvertureDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = [
     :id,
     :organisation,
-    :pro,
+    :agent,
     :lieu,
   ].freeze
 
@@ -38,7 +38,7 @@ class PlageOuvertureDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = [
     :title,
     :organisation,
-    :pro,
+    :agent,
     :motifs,
     :lieu,
     :first_day,
@@ -54,7 +54,7 @@ class PlageOuvertureDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = [
     :title,
     :organisation,
-    :pro,
+    :agent,
     :lieu,
     :motifs,
     :lieu,

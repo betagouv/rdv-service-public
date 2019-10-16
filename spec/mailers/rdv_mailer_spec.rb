@@ -70,12 +70,12 @@ RSpec.describe RdvMailer, type: :mailer do
     end
   end
 
-  describe "#send_ics_to_pro" do
-    let(:pro) { create(:pro) }
-    let(:mail) { RdvMailer.send_ics_to_pro(rdv, pro, previous_starts_at.to_s) }
+  describe "#send_ics_to_agent" do
+    let(:agent) { create(:agent) }
+    let(:mail) { RdvMailer.send_ics_to_agent(rdv, agent, previous_starts_at.to_s) }
 
     it "renders the headers" do
-      expect(mail.to).to eq([pro.email])
+      expect(mail.to).to eq([agent.email])
     end
 
     it_behaves_like "mail for rdv confirmation"

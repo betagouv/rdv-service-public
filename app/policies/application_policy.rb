@@ -1,8 +1,8 @@
 class ApplicationPolicy
-  attr_reader :user_or_pro, :record
+  attr_reader :user_or_agent, :record
 
-  def initialize(user_or_pro, record)
-    @user_or_pro = user_or_pro
+  def initialize(user_or_agent, record)
+    @user_or_agent = user_or_agent
     @record = record
   end
 
@@ -34,25 +34,25 @@ class ApplicationPolicy
     false
   end
 
-  ## Pro helpers method
-  def pro_and_belongs_to_record_organisation?
-    @user_or_pro.pro? && @user_or_pro.organisation_id == @record.organisation_id
+  ## Agent helpers method
+  def agent_and_belongs_to_record_organisation?
+    @user_or_agent.agent? && @user_or_agent.organisation_id == @record.organisation_id
   end
 
-  def record_belongs_to_pro?
-    @user_or_pro.pro? && @user_or_pro.id == @record.pro_id
+  def record_belongs_to_agent?
+    @user_or_agent.agent? && @user_or_agent.id == @record.agent_id
   end
 
   class Scope
-    attr_reader :user_or_pro, :scope
+    attr_reader :user_or_agent, :scope
 
-    def initialize(user_or_pro, scope)
-      @user_or_pro = user_or_pro
+    def initialize(user_or_agent, scope)
+      @user_or_agent = user_or_agent
       @scope = scope
     end
 
     def resolve
-      @user_or_pro.pro? ? scope.where(pro_id: @user_or_pro.id) : []
+      @user_or_agent.agent? ? scope.where(agent_id: @user_or_agent.id) : []
     end
   end
 end

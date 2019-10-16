@@ -1,14 +1,14 @@
 class AdminPolicy < ApplicationPolicy
   def show?
-    pro_and_admin?
+    agent_and_admin?
   end
 
   def new?
-    pro_and_admin?
+    agent_and_admin?
   end
 
   def create?
-    pro_and_admin?
+    agent_and_admin?
   end
 
   def edit?
@@ -23,32 +23,32 @@ class AdminPolicy < ApplicationPolicy
     admin_and_belongs_to_record_organisation?
   end
 
-  def pro_and_admin?
-    @user_or_pro.pro? && @user_or_pro.admin?
+  def agent_and_admin?
+    @user_or_agent.agent? && @user_or_agent.admin?
   end
 
   def admin_and_belongs_to_record_organisation?
     if @record.is_a? Organisation
-      pro_and_admin? && @user_or_pro.organisation_id == @record.id
+      agent_and_admin? && @user_or_agent.organisation_id == @record.id
     else
-      pro_and_admin? && @user_or_pro.organisation_id == @record.organisation_id
+      agent_and_admin? && @user_or_agent.organisation_id == @record.organisation_id
     end
   end
 
   class Scope
-    attr_reader :user_or_pro, :scope
+    attr_reader :user_or_agent, :scope
 
-    def initialize(user_or_pro, scope)
-      @user_or_pro = user_or_pro
+    def initialize(user_or_agent, scope)
+      @user_or_agent = user_or_agent
       @scope = scope
     end
 
-    def pro_and_admin?
-      @user_or_pro.pro? && @user_or_pro.admin?
+    def agent_and_admin?
+      @user_or_agent.agent? && @user_or_agent.admin?
     end
 
     def resolve
-      pro_and_admin? ? scope.where(organisation_id: @user_or_pro.organisation_id) : []
+      agent_and_admin? ? scope.where(organisation_id: @user_or_agent.organisation_id) : []
     end
   end
 end

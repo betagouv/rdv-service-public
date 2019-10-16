@@ -1,15 +1,15 @@
 class RdvPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      user_or_pro.rdvs
+      user_or_agent.rdvs
     end
   end
 
   def new?
-    if @user_or_pro.pro?
+    if @user_or_agent.agent?
       true
-    elsif @user_or_pro.user?
-      @record.users.include?(@user_or_pro)
+    elsif @user_or_agent.user?
+      @record.users.include?(@user_or_agent)
     end
   end
 
@@ -18,10 +18,10 @@ class RdvPolicy < ApplicationPolicy
   end
 
   def create?
-    if @user_or_pro.pro?
+    if @user_or_agent.agent?
       true
-    elsif @user_or_pro.user?
-      @record.users.include?(@user_or_pro)
+    elsif @user_or_agent.user?
+      @record.users.include?(@user_or_agent)
     end
   end
 
@@ -42,6 +42,6 @@ class RdvPolicy < ApplicationPolicy
   end
 
   def confirmation?
-    @user_or_pro.user? && @record.users.include?(@user_or_pro)
+    @user_or_agent.user? && @record.users.include?(@user_or_agent)
   end
 end

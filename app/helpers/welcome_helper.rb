@@ -3,12 +3,12 @@ module WelcomeHelper
     root_path == request.path
   end
 
-  def sign_up_pro_button
-    link_to 'Je m\'inscris', new_pro_registration_path, class: 'btn btn-primary'
+  def sign_up_agent_button
+    link_to 'Je m\'inscris', new_agent_registration_path, class: 'btn btn-primary'
   end
 
-  def sign_in_pro_button
-    link_to new_pro_session_path, class: 'btn btn-primary' do
+  def sign_in_agent_button
+    link_to new_agent_session_path, class: 'btn btn-primary' do
       content_tag(:i, '', class: 'fa fa-user-md').html_safe + ' Se connecter'
     end
   end

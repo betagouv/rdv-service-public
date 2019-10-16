@@ -1,38 +1,38 @@
 class UserPolicy < ApplicationPolicy
   def show?
-    pro_and_belongs_to_record_organisation?
+    agent_and_belongs_to_record_organisation?
   end
 
   def create?
-    pro_and_belongs_to_record_organisation?
+    agent_and_belongs_to_record_organisation?
   end
 
   def invite?
-    @user_or_pro.pro?
+    @user_or_agent.agent?
   end
 
   def update?
-    if @user_or_pro.pro?
-      pro_and_belongs_to_record_organisation?
-    elsif @user_or_pro.user?
-      @record.id == @user_or_pro.id
+    if @user_or_agent.agent?
+      agent_and_belongs_to_record_organisation?
+    elsif @user_or_agent.user?
+      @record.id == @user_or_agent.id
     end
   end
 
   def destroy?
-    pro_and_belongs_to_record_organisation?
+    agent_and_belongs_to_record_organisation?
   end
 
   class Scope
-    attr_reader :user_or_pro, :scope
+    attr_reader :user_or_agent, :scope
 
-    def initialize(user_or_pro, scope)
-      @user_or_pro = user_or_pro
+    def initialize(user_or_agent, scope)
+      @user_or_agent = user_or_agent
       @scope = scope
     end
 
     def resolve
-      @user_or_pro.pro? ? scope.where(organisation_id: @user_or_pro.organisation_id) : []
+      @user_or_agent.agent? ? scope.where(organisation_id: @user_or_agent.organisation_id) : []
     end
   end
 end

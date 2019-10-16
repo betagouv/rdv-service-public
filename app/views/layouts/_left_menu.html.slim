@@ -6,11 +6,11 @@
       = link_logo
     ul.metismenu.side-nav.mt-5
       li.side-nav-item
-        = link_to authenticated_pro_root_path, class: 'side-nav-link' do
+        = link_to authenticated_agent_root_path, class: 'side-nav-link' do
           i.fa.fa-calendar-o
           span Vos agendas
 
-        = link_to organisation_users_path(current_pro.organisation), class: 'side-nav-link' do
+        = link_to organisation_users_path(current_agent.organisation), class: 'side-nav-link' do
           i.fa.fa-user
           span Vos usagers
 
@@ -23,7 +23,7 @@
           li=link_to 'Vos plages d\'ouverture', plage_ouvertures_path
           li=link_to 'Vos absences', absences_path
 
-        - if current_pro.admin?
+        - if current_agent.admin?
           li.side-nav-item
             = link_to '#', class: 'side-nav-link' do
               i.fa.fa-cog
@@ -31,5 +31,5 @@
               span.menu-arrow
             ul.side-nav-second-level aria-expanded="false"
               li=link_to 'Vos lieux', lieux_path
-              li=link_to 'Vos professionnels', pros_path
+              li=link_to 'Vos professionnels', agents_path
               li=link_to "Vos motifs", motifs_path

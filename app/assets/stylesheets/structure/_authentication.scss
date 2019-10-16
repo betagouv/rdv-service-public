@@ -1,4 +1,4 @@
-// 
+//
 // authentication.scss
 //
 
@@ -18,7 +18,7 @@ body.authentication-bg {
   width: 140px;
 }
 
-// Authentication fluid 
+// Authentication fluid
 .auth-fluid {
   position: relative;
   display: flex;
@@ -47,7 +47,7 @@ body.authentication-bg {
   }
 }
 
-.pros .auth-fluid .auth-fluid-left {
+.agents .auth-fluid .auth-fluid-left {
   background-color: $danger;
 }
 
@@ -64,7 +64,7 @@ body.authentication-bg {
       max-width: 100%;
       min-height: 100vh
     }
-    
+
     .auth-fluid-left {
       display: none;
     }

@@ -1,6 +1,6 @@
 module RdvsHelper
-  def pros_to_sentence(rdv)
-    rdv.pros.map(&:full_name_and_service).sort.to_sentence
+  def agents_to_sentence(rdv)
+    rdv.agents.map(&:full_name_and_service).sort.to_sentence
   end
 
   def users_to_sentence(rdv)

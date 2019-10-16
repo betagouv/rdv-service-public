@@ -1,7 +1,7 @@
 class DashboardAuthController < ApplicationController
-  rescue_from Pundit::NotAuthorizedError, with: :pro_not_authorized
+  rescue_from Pundit::NotAuthorizedError, with: :agent_not_authorized
 
-  before_action :authenticate_pro!
+  before_action :authenticate_agent!
 
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
@@ -9,16 +9,16 @@ class DashboardAuthController < ApplicationController
   private
 
   def pundit_user
-    current_pro
+    current_agent
   end
 
-  def pro_not_authorized(exception)
+  def agent_not_authorized(exception)
     policy_name = exception.policy.class.to_s.underscore
     flash[:error] = t "#{policy_name}.#{exception.query}", scope: "pundit", default: :default
-    redirect_to(request.referrer || authenticated_pro_root_path)
+    redirect_to(request.referrer || authenticated_agent_root_path)
   end
 
   def set_organisation
-    @organisation = policy_scope(Organisation).find(current_pro.organisation_id)
+    @organisation = policy_scope(Organisation).find(current_agent.organisation_id)
   end
 end

@@ -1,0 +1,40 @@
+- content_for :title do
+  | Résumé du rendez-vous
+
+p.card-text
+  strong Nom :&nbsp;
+  = @rdv.name
+  - if @rdv.cancelled?
+    span.badge.badge-danger
+      | Annulé
+- if @rdv.location
+  p.card-text
+    strong Lieu :&nbsp;
+    = human_location(@rdv)
+- if @rdv.motif.by_phone
+  p.card-text
+    i.fa.fa-phone>
+    | RDV téléphonique
+p.card-text
+  strong Professionnels :&nbsp;
+  = agents_to_sentence(@rdv)
+p.card-text
+  strong Commence à :&nbsp;
+  = l(@rdv.starts_at, format: :human)
+p.card-text
+  strong Durée :&nbsp;
+  = "#{@rdv.duration_in_min} minutes"
+p.card-text
+  strong Usagers :&nbsp;
+  = users_to_sentence(@rdv)
+.row.text-right
+  .col.text-right
+    ul.list-inline.m-0
+      - unless @rdv.cancelled?
+        li.list-inline-item= link_to "Supprimer", rdv_path(@rdv), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Un email va être envoyé à l'usager pour le notifier de l'annulation. Êtes-vous sûr de vouloir supprimer ce rendez-vous ?"}
+        li.list-inline-item= link_to "Modifier", edit_rdv_path(@rdv), class: "btn btn-outline-primary", data: { rightbar: true }
+hr
+.row
+  .col
+    = simple_form_for(@rdv, url: status_rdv_path, remote: true) do |f|
+      = f.input :status, collection: Rdv.human_enum_collection(:status), as: :radio_buttons

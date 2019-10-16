@@ -1,8 +1,8 @@
 class Absence < ApplicationRecord
-  belongs_to :pro
+  belongs_to :agent
   belongs_to :organisation
 
-  validates :starts_at, :ends_at, :pro, :organisation, presence: true
+  validates :starts_at, :ends_at, :agent, :organisation, presence: true
   validate :ends_at_should_be_after_starts_at
 
   default_scope -> { order(starts_at: :desc) }

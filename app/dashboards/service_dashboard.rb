@@ -10,7 +10,7 @@ class ServiceDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
     name: Field::String,
-    pros: Field::HasMany,
+    agents: Field::HasMany,
     motifs: Field::HasMany,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
@@ -31,7 +31,7 @@ class ServiceDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = [
     :id,
     :name,
-    :pros,
+    :agents,
     :motifs,
     :created_at,
     :updated_at,
@@ -43,7 +43,7 @@ class ServiceDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = [
     :name,
     :motifs,
-    :pros,
+    :agents,
   ].freeze
 
   # Overwrite this method to customize how super admins are displayed

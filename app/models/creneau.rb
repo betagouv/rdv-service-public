@@ -1,7 +1,7 @@
 class Creneau
   include ActiveModel::Model
 
-  attr_accessor :starts_at, :lieu_id, :motif, :pro_id, :pro_name
+  attr_accessor :starts_at, :lieu_id, :motif, :agent_id, :agent_name
 
   def ends_at
     starts_at + duration_in_min.minutes
@@ -25,8 +25,8 @@ class Creneau
       occurence_match_creneau = p.occurences_ranges_for(date_range).any? do |occurences_range|
         (occurences_range.begin <= range.end) && (range.begin <= occurences_range.end)
       end
-      rdvs = p.pro.rdvs.where(starts_at: date_range)
-      absences = p.pro.absences
+      rdvs = p.agent.rdvs.where(starts_at: date_range)
+      absences = p.agent.absences
 
       occurence_match_creneau && available_with_rdvs_and_absences?(rdvs, absences)
     end
@@ -43,15 +43,15 @@ class Creneau
   end
 
   def to_rdv_for_user(user)
-    pro = available_plages_ouverture.sample&.pro
+    agent = available_plages_ouverture.sample&.agent
 
-    return unless pro.present?
+    return unless agent.present?
 
     Rdv.new(name: "Rdv en ligne",
-      pros: [pro],
+      agents: [agent],
       duration_in_min: duration_in_min,
       starts_at: starts_at,
-      organisation: pro.organisation,
+      organisation: agent.organisation,
       motif: motif,
       location: lieu.address,
       users: [user])
@@ -69,13 +69,13 @@ class Creneau
     end.any?
   end
 
-  def self.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range, for_pros = false, pro_ids = nil)
-    plages_ouverture = PlageOuverture.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range, pro_ids)
+  def self.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range, for_agents = false, agent_ids = nil)
+    plages_ouverture = PlageOuverture.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range, agent_ids)
 
     results = plages_ouverture.flat_map do |po|
-      rdvs = po.pro.rdvs.where(starts_at: inclusive_date_range)
-      absences = po.pro.absences
-      motifs = if for_pros
+      rdvs = po.agent.rdvs.where(starts_at: inclusive_date_range)
+      absences = po.agent.absences
+      motifs = if for_agents
                  po.motifs
                else
                  po.motifs.online
@@ -90,9 +90,9 @@ class Creneau
               lieu_id: lieu.id,
               motif: motif
             )
-            if for_pros
-              creneau.pro_id = po.pro_id
-              creneau.pro_name = po.pro.short_name
+            if for_agents
+              creneau.agent_id = po.agent_id
+              creneau.agent_name = po.agent.short_name
             end
             creneau.available_with_rdvs_and_absences?(rdvs, absences) ? creneau : nil
           end.compact
@@ -100,8 +100,8 @@ class Creneau
       end
     end
 
-    if for_pros
-      results.uniq { |c| [c.starts_at, c.pro_id] }.sort_by(&:starts_at)
+    if for_agents
+      results.uniq { |c| [c.starts_at, c.agent_id] }.sort_by(&:starts_at)
     else
       results.uniq(&:starts_at).sort_by(&:starts_at)
     end
