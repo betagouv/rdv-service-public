@@ -27,14 +27,19 @@ class Users::RdvsController < UserAuthController
     save_succeeded = false
     ActiveRecord::Base.transaction do
       @rdv = @creneau.to_rdv_for_user(current_user)
-      authorize(@rdv)
-      save_succeeded = @rdv.save
+      save_succeeded = if @rdv.present?
+                         authorize(@rdv)
+                         @rdv.save
+                       else
+                         skip_authorization
+                         false
+                       end
     end
     if save_succeeded
       redirect_to users_rdv_confirmation_path(@rdv.id)
     else
       flash[:error] = "Ce creneau n'est plus disponible. Veuillez en sélectionner un autre."
-      redirect_to welcome_motif_path(create_rdv_param[:departement], @motif.name, where: create_rdv_param[:where])
+      redirect_to welcome_motif_path(creneau_params[:departement], @motif.name, where: creneau_params[:where])
     end
   end
 
@@ -50,6 +55,6 @@ class Users::RdvsController < UserAuthController
   end
 
   def creneau_params
-    params.require(:rdv).permit(:motif_id, :lieu_id, :starts_at)
+    params.require(:rdv).permit(:motif_id, :lieu_id, :starts_at, :departement, :where)
   end
 end
