@@ -18,10 +18,15 @@
           i.fa.fa-check.fa-fw.mr-1.text-success
           | Motif :&nbsp;
           = @motif_name
-        li.list-group-item
-          i.fa.fa-check.fa-fw.mr-1.text-success
-          | Lieu :&nbsp;
-          = @lieu.full_name
+        - if @rdv.motif.by_phone
+          li.list-group-item
+            i.fa.fa-check.fa-fw.mr-1.text-success
+            | RDV téléphonique
+        - else
+          li.list-group-item
+            i.fa.fa-check.fa-fw.mr-1.text-success
+            | Lieu :&nbsp;
+            = @lieu.full_name
         li.list-group-item
           .row
             .col
