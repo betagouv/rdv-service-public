@@ -24,7 +24,6 @@
       = f.association :pros, collection: @second_step.rdv.motif.service.pros, label_method: :full_name_and_service, input_html: { multiple: true, class: 'select2-input' }
       = f.input :duration_in_min, as: :integer, label: "Durée en minutes"
       = datetime_input(f, :starts_at)
-      = f.input :max_users_limit, input_html: { min: 1 } if @second_step.rdv.motif.max_users_limit
       .row
         .col.text-left
           = link_to 'Revenir en arrière', new_first_step_path(@second_step.to_query), class: 'btn btn-link'

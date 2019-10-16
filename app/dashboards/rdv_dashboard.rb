@@ -21,7 +21,6 @@ class RdvDashboard < Administrate::BaseDashboard
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     cancelled_at: Field::DateTime,
-    max_users_limit: Field::Number,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -51,7 +50,6 @@ class RdvDashboard < Administrate::BaseDashboard
     :created_at,
     :updated_at,
     :cancelled_at,
-    :max_users_limit,
     :location,
   ].freeze
 
@@ -68,7 +66,6 @@ class RdvDashboard < Administrate::BaseDashboard
     :duration_in_min,
     :starts_at,
     :cancelled_at,
-    :max_users_limit,
     :location,
   ].freeze
 
