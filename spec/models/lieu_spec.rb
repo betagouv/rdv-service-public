@@ -50,4 +50,41 @@ describe Lieu, type: :model do
       it { expect(subject).to eq([]) }
     end
   end
+
+  describe ".for_motif" do
+    subject { Lieu.for_motif(motif) }
+    let(:online) { false }
+
+    before { freeze_time }
+    after { travel_back }
+
+    it { expect(subject).to contain_exactly(lieu) }
+
+    context "with an other plage_ouverture" do
+      let!(:lieu2) { create(:lieu) }
+      let!(:plage_ouverture2) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu2) }
+
+      it { expect(subject).to contain_exactly(lieu, lieu2) }
+    end
+
+    context "with a plage_ouverture not yet started" do
+      let!(:lieu2) { create(:lieu) }
+      let!(:plage_ouverture2) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu2, first_day: 8.days.from_now) }
+
+      it { expect(subject).to contain_exactly(lieu, lieu2) }
+    end
+
+    context "with a plage_ouverture with no recurrence and closed" do
+      let!(:lieu2) { create(:lieu) }
+      let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif], lieu: lieu2, first_day: 2.days.ago) }
+
+      it { expect(subject).to contain_exactly(lieu) }
+    end
+
+    context "with a motif not active" do
+      before { motif.update(deleted_at: Time.zone.now) }
+
+      it { expect(subject).to eq([]) }
+    end
+  end
 end

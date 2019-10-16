@@ -29,6 +29,10 @@ class Pro < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def short_name
+    "#{first_name.first.upcase}. #{last_name}"
+  end
+
   def full_name_and_service
     service.present? ? "#{full_name} (#{service.name})" : full_name
   end

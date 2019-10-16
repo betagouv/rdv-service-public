@@ -113,15 +113,14 @@ describe PlageOuverture, type: :model do
     let(:today) { Date.new(2019, 9, 19) }
     let(:six_days_later) { Date.new(2019, 9, 25) }
     let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
+    let(:pro_ids) { nil }
 
-    subject { PlageOuverture.for_motif_and_lieu_from_date_range(motif.name, lieu, today..six_days_later) }
+    subject { PlageOuverture.for_motif_and_lieu_from_date_range(motif.name, lieu, today..six_days_later, pro_ids) }
 
     it { expect(subject).to contain_exactly(plage_ouverture) }
 
     describe "when first_day is the last day of time range" do
       let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: six_days_later, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
-
-      subject { PlageOuverture.for_motif_and_lieu_from_date_range(motif.name, lieu, today..six_days_later) }
 
       it { expect(subject).to contain_exactly(plage_ouverture) }
     end
@@ -129,17 +128,25 @@ describe PlageOuverture, type: :model do
     describe "when first_day is before time range" do
       let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today - 2.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
 
-      subject { PlageOuverture.for_motif_and_lieu_from_date_range(motif.name, lieu, today..six_days_later) }
-
       it { expect(subject).to contain_exactly(plage_ouverture) }
     end
 
     describe "when first_day is after time range" do
       let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today + 8.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
 
-      subject { PlageOuverture.for_motif_and_lieu_from_date_range(motif.name, lieu, today..six_days_later) }
-
       it { expect(subject.count).to eq(0) }
+    end
+
+    describe "when pro_ids is passed to filter" do
+      let(:pro_ids) { [plage_ouverture.pro_id] }
+
+      it { expect(subject).to contain_exactly(plage_ouverture) }
+
+      describe "and plage_ouverture.pro_id is not passed" do
+        let(:pro_ids) { [create(:pro).id, create(:pro).id] }
+
+        it { expect(subject.count).to eq(0) }
+      end
     end
   end
 end
