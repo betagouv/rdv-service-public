@@ -33,6 +33,7 @@ Capybara.configure do |config|
   config.server_host = "localhost"
   config.server_port = "3001"
   config.javascript_driver = :chrome
+  config.server = :puma, { Silent: true }
 end
 
 RSpec.configure do |config|
