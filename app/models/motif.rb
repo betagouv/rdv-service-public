@@ -8,7 +8,6 @@ class Motif < ApplicationRecord
 
   validates :name, presence: true, uniqueness: { scope: :organisation }
   validates :color, :service, :default_duration_in_min, :min_booking_delay, :max_booking_delay, presence: true
-  validates :max_users_limit, numericality: { greater_than_or_equal_to: 1 }, allow_nil: true
   validates :min_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
   validates :max_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
   validate :booking_delay_validation
@@ -45,7 +44,6 @@ class Motif < ApplicationRecord
   def name_with_badge
     label = name
     label = "#{label} <span class='badge badge-danger'>En ligne</span>" if online
-    label = "#{label} <span class='badge badge-info'>À domicile</span>" if at_home
     label.html_safe
   end
 end

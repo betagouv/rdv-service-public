@@ -19,10 +19,6 @@ p.card-text
 p.card-text
   strong Durée :&nbsp;
   = "#{@rdv.duration_in_min} minutes"
-- if @rdv.max_users_limit
-  p.card-text
-    strong Nombre d'usagers maximum :&nbsp;
-    = @rdv.max_users_limit
 p.card-text
   strong Usagers :&nbsp;
   = users_to_sentence(@rdv)

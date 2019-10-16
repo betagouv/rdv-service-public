@@ -8,9 +8,7 @@ fr:
         service: Service
         name: Nom
         color: Couleur
-        max_users_limit: Limite du nombre d'usagers
         online: RDV en ligne
-        at_home: À domicile
         default_duration_in_min: Durée par défaut en minutes
         min_booking_delay: Délai minimum de réservation
         max_booking_delay: Délai maximum de réservation

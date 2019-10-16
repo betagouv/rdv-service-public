@@ -10,7 +10,4 @@ module MotifsHelper
      ["1 mois", 1.month], ["2 mois", 2.month], ["3 mois", 3.month], ["6 mois", 6.month], ["1 an", 1.year]]
   end
 
-  def at_home_badge(motif)
-    content_tag(:span, 'À domicile', class: 'badge badge-info') if motif.at_home
-  end
 end

@@ -7,7 +7,6 @@ class Rdv < ApplicationRecord
   enum status: { to_be: 0, waiting: 1, seen: 2, excused: 3, not_excused: 4 }
 
   validates :users, :organisation, :motif, :starts_at, :duration_in_min, :pros, presence: true
-  validates :max_users_limit, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
   scope :active, -> { where(cancelled_at: nil) }
   scope :past, -> { where('starts_at < ?', Time.zone.now) }
@@ -86,7 +85,6 @@ class Rdv < ApplicationRecord
       motif: motif,
       duration_in_min: duration_in_min,
       starts_at: starts_at,
-      max_users_limit: max_users_limit,
       users: users,
       pros: pros,
     }

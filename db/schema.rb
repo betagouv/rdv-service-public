@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_14_094725) do
+ActiveRecord::Schema.define(version: 2019_10_16_093048) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,11 +90,9 @@ ActiveRecord::Schema.define(version: 2019_10_14_094725) do
     t.string "color"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "at_home", default: false, null: false
     t.integer "default_duration_in_min", default: 30, null: false
     t.bigint "organisation_id"
     t.boolean "online", default: false, null: false
-    t.integer "max_users_limit"
     t.integer "min_booking_delay", default: 1800
     t.integer "max_booking_delay", default: 7889238
     t.datetime "deleted_at"
@@ -187,7 +185,6 @@ ActiveRecord::Schema.define(version: 2019_10_14_094725) do
     t.datetime "updated_at", null: false
     t.datetime "cancelled_at"
     t.bigint "motif_id"
-    t.integer "max_users_limit"
     t.integer "sequence", default: 0, null: false
     t.uuid "uuid", default: -> { "uuid_generate_v4()" }, null: false
     t.integer "status", default: 0
