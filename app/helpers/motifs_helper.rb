@@ -9,5 +9,4 @@ module MotifsHelper
      ["1 jour", 1.day], ["2 jours", 2.day], ["3 jours", 3.day], ["1 semaine", 1.week], ["2 semaines", 1.week],
      ["1 mois", 1.month], ["2 mois", 2.month], ["3 mois", 3.month], ["6 mois", 6.month], ["1 an", 1.year]]
   end
-
 end
