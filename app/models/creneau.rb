@@ -43,7 +43,9 @@ class Creneau
   end
 
   def to_rdv_for_user(user)
-    pro = available_plages_ouverture.sample.pro
+    pro = available_plages_ouverture.sample&.pro
+
+    return unless pro.present?
 
     Rdv.new(name: "Rdv en ligne",
       pros: [pro],
