@@ -44,6 +44,7 @@ class Motif < ApplicationRecord
   def name_with_badge
     label = name
     label = "#{label} <span class='badge badge-danger'>En ligne</span>" if online
+    label = "#{label} <span class='badge badge-info'>Par tél.</span>" if by_phone
     label.html_safe
   end
 end

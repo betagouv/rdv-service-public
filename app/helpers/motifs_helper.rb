@@ -3,6 +3,10 @@ module MotifsHelper
     content_tag(:span, 'En ligne', class: 'badge badge-danger') if motif.online
   end
 
+  def by_phone_badge(motif)
+    content_tag(:span, 'Par tél.', class: 'badge badge-info') if motif.by_phone
+  end
+
   def min_max_delay_options
     [["1/2 heure", 30.minutes], ["1 heure", 1.hour], ["2 heures", 2.hour],
      ["3 heures", 3.hour], ["6 heures", 6.hour], ["12 heures", 12.hour],

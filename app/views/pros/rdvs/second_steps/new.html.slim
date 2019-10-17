@@ -13,13 +13,15 @@
     = simple_form_for(@second_step.rdv, url: second_steps_path) do |f|
       = f.association :motif, as: :hidden,  wrapper_html: { class: 'm-0' }
 
-      = f.input :location, input_html: { class: "places-js-container" }
 
-      .mb-1
-        - current_pro.organisation.lieux.each do |l|
-          = button_tag type: "button", onclick: "document.querySelector('#rdv_location').value = '#{escape_javascript(l.address)}'", class: "btn btn-rounded btn-outline-secondary btn-sm mb-1" do
-            i.fa.fa-map-marker.mr-1
-            = l.full_name
+      - unless @second_step.rdv.motif.by_phone
+        = f.input :location, input_html: { class: "places-js-container" }
+
+        .mb-1
+          - current_pro.organisation.lieux.each do |l|
+            = button_tag type: "button", onclick: "document.querySelector('#rdv_location').value = '#{escape_javascript(l.address)}'", class: "btn btn-rounded btn-outline-secondary btn-sm mb-1" do
+              i.fa.fa-map-marker.mr-1
+              = l.full_name
 
       = f.association :pros, collection: @second_step.rdv.motif.service.pros, label_method: :full_name_and_service, input_html: { multiple: true, class: 'select2-input' }
       = f.input :duration_in_min, as: :integer, label: "Durée en minutes"

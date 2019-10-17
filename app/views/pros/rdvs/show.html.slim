@@ -7,9 +7,14 @@ p.card-text
   - if @rdv.cancelled?
     span.badge.badge-danger
       | Annulé
-p.card-text
-  strong Lieu :&nbsp;
-  = human_location(@rdv)
+- if @rdv.location
+  p.card-text
+    strong Lieu :&nbsp;
+    = human_location(@rdv)
+- if @rdv.motif.by_phone
+  p.card-text
+    i.fa.fa-phone>
+    | RDV téléphonique
 p.card-text
   strong Professionnels :&nbsp;
   = pros_to_sentence(@rdv)

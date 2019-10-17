@@ -9,6 +9,7 @@ fr:
         name: Nom
         color: Couleur
         online: RDV en ligne
+        by_phone: RDV téléphonique
         default_duration_in_min: Durée par défaut en minutes
         min_booking_delay: Délai minimum de réservation
         max_booking_delay: Délai maximum de réservation
