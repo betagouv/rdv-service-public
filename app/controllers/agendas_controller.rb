@@ -7,9 +7,7 @@ class AgendasController < DashboardAuthController
   end
 
   def events
-    skip_authorization
-
-    rdvs = current_agent.rdvs.active.where(starts_at: date_range_params).includes(:motif)
+    rdvs = policy_scope(Rdv).active.where(starts_at: date_range_params).includes(:motif)
     @events = rdvs.map do |rdv|
       {
         title: rdv.name,
@@ -21,7 +19,7 @@ class AgendasController < DashboardAuthController
       }
     end
 
-    absences = current_agent.absences
+    absences = policy_scope(Absence).where(agent_id: current_agent.id)
     @events += absences.map do |abs|
       {
         title: abs.title_or_default,
