@@ -14,6 +14,8 @@ RSpec.describe Agents::RdvsController, type: :controller do
   end
 
   describe "GET index" do
+    render_views
+
     let(:agent) { create(:agent) }
     let!(:rdv1) { create(:rdv, agents: [agent], starts_at: Time.zone.parse("21/07/2019 08:00")) }
     let!(:rdv2) { create(:rdv, agents: [agent], starts_at: Time.zone.parse("21/07/2019 09:00")) }
@@ -22,7 +24,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
       sign_in agent
     end
 
-    subject { get :index, params: { format: "json", start: start_time, end: end_time } }
+    subject { get(:index, params: { start: start_time, end: end_time }, as: :json) }
 
     before do
       subject

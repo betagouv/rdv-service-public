@@ -4,18 +4,7 @@ class Agents::RdvsController < DashboardAuthController
   before_action :set_rdv, only: [:show, :edit, :update, :destroy, :status]
 
   def index
-    rdvs = policy_scope(current_agent.rdvs).active.where(starts_at: date_range_params).includes(:motif).map do |rdv|
-      {
-        title: rdv.name,
-        extendedProps: { status: rdv.status, past: rdv.past? },
-        start: rdv.starts_at,
-        end: rdv.ends_at,
-        url: rdv_path(rdv),
-        backgroundColor: rdv.motif&.color,
-      }
-    end.sort_by { |e| e[:start] }
-
-    render json: rdvs
+    @rdvs = policy_scope(current_agent.rdvs).active.where(starts_at: date_range_params).includes(:motif).order(:starts_at)
   end
 
   def show
