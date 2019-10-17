@@ -54,7 +54,6 @@ Rails.application.routes.draw do
 
   authenticated :agent do
     root to: 'agendas#index', as: :authenticated_agent_root
-    get "events", to: "agendas#events"
     get "background-events", to: "agendas#background_events"
     resources :lieux, except: :show
     resources :agents, only: [:index, :destroy] do

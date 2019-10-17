@@ -4,8 +4,22 @@ class AbsencesController < DashboardAuthController
   before_action :set_absence, only: [:edit, :update, :destroy]
 
   def index
-    @absences = policy_scope(Absence).all.page(params[:page])
-    respond_right_bar_with @absences
+    respond_to do |f|
+      f.json do
+        absences = policy_scope(Absence).map do |abs|
+          {
+            title: abs.title_or_default,
+            start: abs.starts_at,
+            end: abs.ends_at,
+            backgroundColor: "#7f8c8d",
+            url: absence_path(abs),
+          }
+        end.sort_by { |e| e[:start] }
+
+        render json: absences
+      end
+      f.html { @absences = policy_scope(Absence).all.page(params[:page]) }
+    end
   end
 
   def new
