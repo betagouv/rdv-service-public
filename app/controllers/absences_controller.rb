@@ -6,19 +6,19 @@ class AbsencesController < DashboardAuthController
   def index
     respond_to do |f|
       f.json do
-        absences = policy_scope(Absence).map do |abs|
+        absences = policy_scope(current_agent.absences.in_time_range(date_range_params)).map do |abs|
           {
             title: abs.title_or_default,
             start: abs.starts_at,
             end: abs.ends_at,
             backgroundColor: "#7f8c8d",
-            url: absence_path(abs),
+            url: edit_absence_path(abs),
           }
         end.sort_by { |e| e[:start] }
 
         render json: absences
       end
-      f.html { @absences = policy_scope(Absence).all.page(params[:page]) }
+      f.html { @absences = policy_scope(current_agent.absences).all.page(params[:page]) }
     end
   end
 
@@ -62,5 +62,15 @@ class AbsencesController < DashboardAuthController
 
   def absence_params
     params.require(:absence).permit(:title, :starts_at, :ends_at)
+  end
+
+  def date_range_params
+    start_param = Date.parse(filter_params[:start])
+    end_param = Date.parse(filter_params[:end])
+    start_param..end_param
+  end
+
+  def filter_params
+    params.permit(:start, :end)
   end
 end

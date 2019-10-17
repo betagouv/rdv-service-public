@@ -7,6 +7,8 @@ class Absence < ApplicationRecord
 
   default_scope -> { order(starts_at: :desc) }
 
+  scope :in_time_range, lambda { |time_range| where(starts_at: time_range).or(where(ends_at: time_range)).or(where("starts_at < ? AND ends_at > ?", time_range.begin, time_range.end)) }
+
   def title_or_default
     title.present? ? title : "Absence"
   end
