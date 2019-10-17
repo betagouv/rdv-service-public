@@ -3,8 +3,8 @@ class WelcomeController < ApplicationController
 
   def index; end
 
-  def welcome_pro
-    render layout: 'welcome_pro'
+  def welcome_agent
+    render layout: 'welcome_agent'
   end
 
   def search

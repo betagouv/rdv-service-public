@@ -1,13 +1,13 @@
 RSpec.describe AgendasController, type: :controller do
   describe "GET background_events" do
-    let(:pro) { create(:pro) }
-    let!(:plage_ouverture) { create(:plage_ouverture, :weekly_by_2, title: "Une semaine sur deux les mercredis à partir du 17/07", first_day: Date.new(2019, 7, 17), pro: pro) }
-    let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, title: "Tous les lundis à partir du 22/07", first_day: Date.new(2019, 7, 22), pro: pro) }
-    let!(:plage_ouverture3) { create(:plage_ouverture, title: "Une seule fois le 24/07", first_day: Date.new(2019, 7, 24), pro: pro) }
-    let!(:plage_ouverture4) { create(:plage_ouverture, title: "Une seule fois le 24/07", first_day: Date.new(2019, 7, 24), pro: pro, recurrence: Montrose::Recurrence.new) }
+    let(:agent) { create(:agent) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :weekly_by_2, title: "Une semaine sur deux les mercredis à partir du 17/07", first_day: Date.new(2019, 7, 17), agent: agent) }
+    let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, title: "Tous les lundis à partir du 22/07", first_day: Date.new(2019, 7, 22), agent: agent) }
+    let!(:plage_ouverture3) { create(:plage_ouverture, title: "Une seule fois le 24/07", first_day: Date.new(2019, 7, 24), agent: agent) }
+    let!(:plage_ouverture4) { create(:plage_ouverture, title: "Une seule fois le 24/07", first_day: Date.new(2019, 7, 24), agent: agent, recurrence: Montrose::Recurrence.new) }
 
     before do
-      sign_in pro
+      sign_in agent
     end
 
     subject { get :background_events, params: { start: start_date, end: end_date } }

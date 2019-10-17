@@ -19,19 +19,19 @@ class Organisations::UsersController < DashboardAuthController
 
   def new
     @user = User.new
-    @user.organisation_id = current_pro.organisation_id
-    @organisation = current_pro.organisation
+    @user.organisation_id = current_agent.organisation_id
+    @organisation = current_agent.organisation
     authorize(@user)
     respond_right_bar_with @user
   end
 
   def create
     @user = User.new(user_params)
-    @user.organisation_id = current_pro.organisation_id
-    @user.invited_by = current_pro
-    @user.created_or_updated_by_pro = true
+    @user.organisation_id = current_agent.organisation_id
+    @user.invited_by = current_agent
+    @user.created_or_updated_by_agent = true
     authorize(@user)
-    @organisation = current_pro.organisation
+    @organisation = current_agent.organisation
     @user.skip_confirmation!
     flash[:notice] = "L'usager a été créé." if @user.save
     respond_right_bar_with @user, location: organisation_users_path(@organisation, to_user: @user.id)
@@ -44,7 +44,7 @@ class Organisations::UsersController < DashboardAuthController
 
   def update
     authorize(@user)
-    @user.created_or_updated_by_pro = true
+    @user.created_or_updated_by_agent = true
     @user.skip_reconfirmation! if @user.encrypted_password.blank?
     flash[:notice] = "L'usager a été modifié." if @user.update(user_params)
     respond_right_bar_with @user, location: organisation_users_path(@user, to_user: @user.id)

@@ -5,8 +5,8 @@ class ApplicationController < ActionController::Base
   before_action :store_user_location!, if: :storable_location?
 
   def after_sign_in_path_for(resource)
-    path = if resource.class == Pro
-             current_pro.complete? ? authenticated_pro_root_path : new_pros_full_subscription_path
+    path = if resource.class == Agent
+             current_agent.complete? ? authenticated_agent_root_path : new_agents_full_subscription_path
            elsif resource.class == User
              stored_location_for(resource) || authenticated_user_root_path
            end
@@ -14,8 +14,8 @@ class ApplicationController < ActionController::Base
   end
 
   def after_invite_path_for(inviter, invitee)
-    if invitee.is_a? Pro
-      pros_path
+    if invitee.is_a? Agent
+      agents_path
     elsif invitee.is_a? User
       organisation_users_path(inviter.organisation)
     end
@@ -36,11 +36,11 @@ class ApplicationController < ActionController::Base
   protected
 
   def authenticate_inviter!
-    authenticate_pro!(force: true)
+    authenticate_agent!(force: true)
   end
 
   def configure_permitted_parameters
-    if resource_class == Pro
+    if resource_class == Agent
       devise_parameter_sanitizer.permit(:invite, keys: [:email, :role, :service_id])
       devise_parameter_sanitizer.permit(:accept_invitation, keys: [:first_name, :last_name])
       devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :service_id])

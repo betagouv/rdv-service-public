@@ -72,10 +72,6 @@ describe "User can search for rdvs" do
     find('.ap-suggestion', match: :first).click
   end
 
-  def select_pro(pro)
-    select(pro.full_name_and_service, from: 'rdv_pro_ids')
-  end
-
   def select_user(user)
     select(user.full_name, from: 'rdv_user_ids')
   end

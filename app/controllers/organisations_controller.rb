@@ -22,8 +22,8 @@ class OrganisationsController < DashboardAuthController
     @organisation = Organisation.new(organisation_params)
     authorize(@organisation)
     if @organisation.save
-      current_pro.update_attribute :organisation_id, @organisation.id
-      redirect_to authenticated_pro_root_path(_conversion: 'organisation-created'), notice: 'Merci de votre inscription'
+      current_agent.update_attribute :organisation_id, @organisation.id
+      redirect_to authenticated_agent_root_path(_conversion: 'organisation-created'), notice: 'Merci de votre inscription'
     else
       render new_organisation_path, layout: "registration"
     end

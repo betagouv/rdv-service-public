@@ -1,12 +1,12 @@
 describe Rdv, type: :model do
-  let(:pro1) { create(:pro) }
-  let(:pro2) { create(:pro) }
+  let(:agent1) { create(:agent) }
+  let(:agent2) { create(:agent) }
 
   describe '#to_ical_for' do
     let(:rdv) { create(:rdv) }
-    let(:user_or_pro) { rdv.users.first }
+    let(:user_or_agent) { rdv.users.first }
 
-    subject { rdv.to_ical_for(user_or_pro) }
+    subject { rdv.to_ical_for(user_or_agent) }
 
     it { is_expected.to include("SUMMARY:RDV Michel Lapin <> Vaccination") }
     it { is_expected.to match("DTSTART;TZID=Europe/Paris:20190704T150000") }
@@ -14,7 +14,7 @@ describe Rdv, type: :model do
     it { is_expected.to include("SEQUENCE:0") }
     it { is_expected.to include("UID:") }
     it { is_expected.to include("ORGANIZER:noreply@lapins.beta.gouv.fr") }
-    it { is_expected.to include("ATTENDEE:#{user_or_pro.email}") }
+    it { is_expected.to include("ATTENDEE:#{user_or_agent.email}") }
     it { is_expected.to include("CLASS:PRIVATE") }
     it { is_expected.to include("METHOD:REQUEST") }
 
@@ -24,19 +24,19 @@ describe Rdv, type: :model do
       it { is_expected.to include("METHOD:CANCEL") }
     end
 
-    context 'when ical is for pro' do
-      let(:user_or_pro) { rdv.pros.first }
+    context 'when ical is for agent' do
+      let(:user_or_agent) { rdv.agents.first }
 
       it { is_expected.to include("ORGANIZER:noreply@lapins.beta.gouv.fr") }
       it { is_expected.to include("CLASS:PUBLIC") }
     end
   end
 
-  describe "#send_ics_to_users_and_pros" do
-    let(:rdv) { build(:rdv, pros: [pro1, pro2]) }
+  describe "#send_ics_to_users_and_agents" do
+    let(:rdv) { build(:rdv, agents: [agent1, agent2]) }
 
     it "should be called after create" do
-      expect(rdv).to receive(:send_ics_to_users_and_pros)
+      expect(rdv).to receive(:send_ics_to_users_and_agents)
       rdv.save!
     end
 
@@ -44,7 +44,7 @@ describe Rdv, type: :model do
       let(:rdv) { create(:rdv) }
 
       it "should not be called" do
-        expect(rdv).not_to receive(:send_ics_to_users_and_pros)
+        expect(rdv).not_to receive(:send_ics_to_users_and_agents)
         rdv.save!
       end
     end
@@ -54,19 +54,19 @@ describe Rdv, type: :model do
       rdv.save!
     end
 
-    it "calls RdvMailer to send email to pros" do
-      expect(RdvMailer).to receive(:send_ics_to_pro).with(rdv, pro1).and_return(double(deliver_later: nil))
-      expect(RdvMailer).to receive(:send_ics_to_pro).with(rdv, pro2).and_return(double(deliver_later: nil))
+    it "calls RdvMailer to send email to agents" do
+      expect(RdvMailer).to receive(:send_ics_to_agent).with(rdv, agent1).and_return(double(deliver_later: nil))
+      expect(RdvMailer).to receive(:send_ics_to_agent).with(rdv, agent2).and_return(double(deliver_later: nil))
 
       rdv.save!
     end
   end
 
-  describe "#update_ics_to_user_and_pros" do
-    let(:rdv) { build(:rdv, pros: [pro1, pro2]) }
+  describe "#update_ics_to_user_and_agents" do
+    let(:rdv) { build(:rdv, agents: [agent1, agent2]) }
 
     it "should not be called after create" do
-      expect(rdv).not_to receive(:update_ics_to_user_and_pros)
+      expect(rdv).not_to receive(:update_ics_to_user_and_agents)
       rdv.save!
     end
 
@@ -74,7 +74,7 @@ describe Rdv, type: :model do
       let(:rdv) { create(:rdv) }
 
       it "should not be called if there is no change" do
-        expect(rdv).not_to receive(:update_ics_to_user_and_pros)
+        expect(rdv).not_to receive(:update_ics_to_user_and_agents)
         rdv.save!
       end
 
@@ -83,7 +83,7 @@ describe Rdv, type: :model do
         before { rdv.starts_at = 2.days.from_now }
 
         it "should be called if starts_at changed" do
-          expect(rdv).to receive(:update_ics_to_user_and_pros)
+          expect(rdv).to receive(:update_ics_to_user_and_agents)
           rdv.save!
         end
 

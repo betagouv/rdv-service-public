@@ -1,20 +1,20 @@
 class Rdv < ApplicationRecord
   belongs_to :organisation
   belongs_to :motif
-  has_and_belongs_to_many :pros
+  has_and_belongs_to_many :agents
   has_and_belongs_to_many :users
 
   enum status: { to_be: 0, waiting: 1, seen: 2, excused: 3, not_excused: 4 }
 
-  validates :users, :organisation, :motif, :starts_at, :duration_in_min, :pros, presence: true
+  validates :users, :organisation, :motif, :starts_at, :duration_in_min, :agents, presence: true
 
   scope :active, -> { where(cancelled_at: nil) }
   scope :past, -> { where('starts_at < ?', Time.zone.now) }
 
   after_commit :reload_uuid, on: :create
 
-  after_create :send_ics_to_users_and_pros
-  after_update :update_ics_to_user_and_pros, if: -> { saved_change_to_starts_at? || saved_change_to_cancelled_at? }
+  after_create :send_ics_to_users_and_agents
+  after_update :update_ics_to_user_and_agents, if: -> { saved_change_to_starts_at? || saved_change_to_cancelled_at? }
 
   def ends_at
     starts_at + duration_in_min.minutes
@@ -32,19 +32,19 @@ class Rdv < ApplicationRecord
     update(cancelled_at: Time.zone.now)
   end
 
-  def send_ics_to_users_and_pros
+  def send_ics_to_users_and_agents
     users.each { |user| RdvMailer.send_ics_to_user(self, user).deliver_later }
-    pros.each { |pro| RdvMailer.send_ics_to_pro(self, pro).deliver_later }
+    agents.each { |agent| RdvMailer.send_ics_to_agent(self, agent).deliver_later }
   end
 
-  def update_ics_to_user_and_pros
+  def update_ics_to_user_and_agents
     increment!(:sequence)
     serialized_previous_starts_at = saved_changes&.[]("starts_at")&.[](0)&.to_s
     users.each { |user| RdvMailer.send_ics_to_user(self, user, serialized_previous_starts_at).deliver_later }
-    pros.each { |pro| RdvMailer.send_ics_to_pro(self, pro, serialized_previous_starts_at).deliver_later }
+    agents.each { |agent| RdvMailer.send_ics_to_agent(self, agent, serialized_previous_starts_at).deliver_later }
   end
 
-  def to_ical_for(user_or_pro)
+  def to_ical_for(user_or_agent)
     require 'icalendar'
     require 'icalendar/tzinfo'
 
@@ -64,9 +64,9 @@ class Rdv < ApplicationRecord
       e.uid         = uuid
       e.sequence    = sequence
       e.status      = "CANCELLED" if cancelled?
-      e.ip_class    = user_or_pro.is_a?(User) ? "PRIVATE" : "PUBLIC"
+      e.ip_class    = user_or_agent.is_a?(User) ? "PRIVATE" : "PUBLIC"
       e.organizer   = "noreply@lapins.beta.gouv.fr"
-      e.attendee    = user_or_pro.email
+      e.attendee    = user_or_agent.email
     end
 
     cal.ip_method = cancelled? ? "CANCEL" : "REQUEST"
@@ -86,7 +86,7 @@ class Rdv < ApplicationRecord
       duration_in_min: duration_in_min,
       starts_at: starts_at,
       users: users,
-      pros: pros,
+      agents: agents,
     }
   end
 

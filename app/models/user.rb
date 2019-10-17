@@ -2,7 +2,7 @@ class User < ApplicationRecord
   include Authorizable
   include PgSearch::Model
 
-  attr_accessor :created_or_updated_by_pro
+  attr_accessor :created_or_updated_by_agent
 
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
@@ -63,13 +63,13 @@ class User < ApplicationRecord
   protected
 
   def password_required?
-    return false if created_or_updated_by_pro
+    return false if created_or_updated_by_agent
 
     super
   end
 
   def email_required?
-    return false if created_or_updated_by_pro
+    return false if created_or_updated_by_agent
 
     super
   end

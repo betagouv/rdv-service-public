@@ -3,16 +3,16 @@
     li.dropdown
       a.nav-link.dropdown-toggle.nav-user.arrow-none.mr-0 aria-expanded="false" aria-haspopup="false" data-toggle="dropdown" href="#" role="button" 
         span.account-user-avatar
-          | #{current_pro.initials}
+          | #{current_agent.initials}
         span
-          span.account-user-name #{current_pro.first_name&.capitalize}
-          span.account-position= current_pro.service&.name
+          span.account-user-name #{current_agent.first_name&.capitalize}
+          span.account-position= current_agent.service&.name
       .dropdown-menu.dropdown-menu-right.dropdown-menu-animated.profile-dropdown
         .dropdown-header.noti-title
           h6.text-overflow.m-0 Bienvenue !
-        = link_to edit_pro_registration_path , class: 'dropdown-item notify-item', data: { rightbar: true } do
+        = link_to edit_agent_registration_path , class: 'dropdown-item notify-item', data: { rightbar: true } do
           span Mon compte
-        = link_to destroy_pro_session_path, method: :delete, class: 'dropdown-item notify-item' do
+        = link_to destroy_agent_session_path, method: :delete, class: 'dropdown-item notify-item' do
           i.fa.fa-sign-out
           span Se déconnecter
   button.button-menu-mobile.open-left.disable-btn

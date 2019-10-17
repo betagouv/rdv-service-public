@@ -6,13 +6,13 @@ class LieuxController < DashboardAuthController
   end
 
   def new
-    @lieu = Lieu.new(organisation_id: current_pro.organisation_id)
+    @lieu = Lieu.new(organisation_id: current_agent.organisation_id)
     authorize(@lieu)
     respond_right_bar_with @lieu
   end
 
   def create
-    @lieu = Lieu.new(organisation_id: current_pro.organisation_id)
+    @lieu = Lieu.new(organisation_id: current_agent.organisation_id)
     @lieu.assign_attributes(lieu_params)
     authorize(@lieu)
     flash.notice = "Lieu créé" if @lieu.save

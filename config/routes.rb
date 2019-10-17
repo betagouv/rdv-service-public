@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   delete 'admin/sign_out' => 'super_admins/sessions#destroy'
 
   namespace :admin do
-    resources :pros do
+    resources :agents do
       get 'sign_in_as', on: :member
       post :invite, on: :member
     end
@@ -18,7 +18,7 @@ Rails.application.routes.draw do
     resources :rdvs
     resources :plage_ouvertures
     resources :absences
-    root to: "pros#index"
+    root to: "agents#index"
 
     authenticate :super_admin do
       match "/delayed_job" => DelayedJobWeb, anchor: false, via: [:get, :post]
@@ -39,21 +39,21 @@ Rails.application.routes.draw do
     patch "users/informations", to: 'users/users#update'
   end
 
-  devise_for :pros, controllers: { registrations: 'pros/registrations', invitations: 'common/invitations' }
-  as :pro do
-    get 'pros/edit' => 'pros/registrations#edit', as: 'edit_pro_registration'
-    put 'pros' => 'pros/registrations#update', :as => 'pro_registration'
+  devise_for :agents, controllers: { registrations: 'agents/registrations', invitations: 'common/invitations' }
+  as :agent do
+    get 'agents/edit' => 'agents/registrations#edit', as: 'edit_agent_registration'
+    put 'agents' => 'agents/registrations#update', :as => 'agent_registration'
   end
-  namespace :pros do
+  namespace :agents do
     resources :full_subscriptions, only: [:new, :create]
     resources :permissions, only: [:edit, :update]
   end
-  authenticated :pro do
-    root to: 'agendas#index', as: :authenticated_pro_root
+  authenticated :agent do
+    root to: 'agendas#index', as: :authenticated_agent_root
     get "events", to: "agendas#events"
     get "background-events", to: "agendas#background_events"
     resources :lieux, except: :show
-    resources :pros, only: [:index, :destroy] do
+    resources :agents, only: [:index, :destroy] do
       post :reinvite, on: :member
     end
     resources :motifs, except: :show
@@ -64,15 +64,15 @@ Rails.application.routes.draw do
       end
 
       # Rdv
-      resources :rdvs, except: [:index, :create, :new], shallow: true, controller: 'pros/rdvs' do
+      resources :rdvs, except: [:index, :create, :new], shallow: true, controller: 'agents/rdvs' do
         patch :status, on: :member
       end
     end
     [:first_steps, :second_steps, :third_steps].each do |step|
-      resources step, only: [:new, :create], module: "pros/rdvs"
+      resources step, only: [:new, :create], module: "agents/rdvs"
     end
     resources :absences, except: :show
-    resources :pro_searches, only: :index, module: "pros/creneaux" do
+    resources :agent_searches, only: :index, module: "agents/creneaux" do
       get :by_lieu, on: :collection
     end
   end
@@ -81,7 +81,7 @@ Rails.application.routes.draw do
     get v => "static_pages##{k}"
   end
 
-  get 'accueil_mds' => "welcome#welcome_pro"
+  get 'accueil_mds' => "welcome#welcome_agent"
   post '/' => "welcome#search"
   get 'departement/:departement', to: "welcome#welcome_departement", as: "welcome_departement"
   post 'departement/:departement' => "welcome#search_departement"

@@ -1,15 +1,15 @@
 class AgendasController < DashboardAuthController
-  before_action :redirect_if_pro_incomplete, only: :index
+  before_action :redirect_if_agent_incomplete, only: :index
 
   def index
     skip_policy_scope
-    @organisation = current_pro.organisation
+    @organisation = current_agent.organisation
   end
 
   def events
     skip_authorization
 
-    rdvs = current_pro.rdvs.active.where(starts_at: date_range_params).includes(:motif)
+    rdvs = current_agent.rdvs.active.where(starts_at: date_range_params).includes(:motif)
     @events = rdvs.map do |rdv|
       {
         title: rdv.name,
@@ -21,7 +21,7 @@ class AgendasController < DashboardAuthController
       }
     end
 
-    absences = current_pro.absences
+    absences = current_agent.absences
     @events += absences.map do |abs|
       {
         title: abs.title_or_default,
@@ -40,7 +40,7 @@ class AgendasController < DashboardAuthController
   def background_events
     skip_authorization
 
-    @events = current_pro.plage_ouvertures.flat_map do |po|
+    @events = current_agent.plage_ouvertures.flat_map do |po|
       po.occurences_for(date_range_params).map do |occurence|
         {
           title: po.title,
@@ -78,10 +78,10 @@ class AgendasController < DashboardAuthController
     params.permit(:start, :end)
   end
 
-  def redirect_if_pro_incomplete
-    return unless pro_signed_in?
+  def redirect_if_agent_incomplete
+    return unless agent_signed_in?
 
-    redirect_to(new_pros_full_subscription_path) && return unless current_pro.complete?
-    redirect_to(new_organisation_path) && return if current_pro.organisation.nil?
+    redirect_to(new_agents_full_subscription_path) && return unless current_agent.complete?
+    redirect_to(new_organisation_path) && return if current_agent.organisation.nil?
   end
 end

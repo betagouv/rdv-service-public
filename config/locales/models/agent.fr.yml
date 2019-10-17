@@ -1,0 +1,19 @@
+fr:
+  activerecord:
+    models:
+      agent: Agent
+    attributes:
+      agent:
+        email: Email
+        password: Mot de passe
+        current_password: Mot de passe actuel
+        first_name: Prénom
+        last_name: Nom
+        role: Rôle
+        rdvs: Rendez-vous
+        service: Service
+        roles:
+          user: Utilisateur
+          admin: Admin
+          user_html: <i class='fa fa-user-o'></i> Utilisateur<br>Peut lire, créer, modifier son agenda.
+          admin_html: <i class='fa fa-user-plus'></i> Admin<br>Peut lire, créer, modifier et <strong>supprimer</strong> des agendas et <strong>des utilisateurs</strong>.

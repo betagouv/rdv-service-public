@@ -6,7 +6,7 @@ class PlageOuverture < ApplicationRecord
   serialize :recurrence, Montrose::Recurrence
 
   belongs_to :organisation
-  belongs_to :pro
+  belongs_to :agent
   belongs_to :lieu
   has_and_belongs_to_many :motifs, -> { distinct }
 
@@ -54,7 +54,7 @@ class PlageOuverture < ApplicationRecord
     recurrence.nil?
   end
 
-  def self.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range, pro_ids = nil)
+  def self.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range, agent_ids = nil)
     motifs_ids = Motif.where(name: motif_name, organisation_id: lieu.organisation_id)
     results = PlageOuverture
               .includes(:motifs_plageouvertures)
@@ -62,10 +62,10 @@ class PlageOuverture < ApplicationRecord
               .where("first_day <= ?", inclusive_date_range.end)
               .joins(:motifs)
               .where(motifs: { id: motifs_ids })
-              .includes(:motifs, pro: :absences)
+              .includes(:motifs, agent: :absences)
 
-    if pro_ids.present?
-      results = results.where(pro_id: pro_ids)
+    if agent_ids.present?
+      results = results.where(agent_id: agent_ids)
     end
 
     results.uniq

@@ -58,11 +58,11 @@ module ApplicationHelper
     tag :img, options
   end
 
-  def pro_path?
-    request.path =~ /(pros)/
+  def agent_path?
+    request.path =~ /(agents)/
   end
 
-  def pros_or_users_body_class
-    pro_path? ? 'pros' : 'users'
+  def agents_or_users_body_class
+    agent_path? ? 'agents' : 'users'
   end
 end

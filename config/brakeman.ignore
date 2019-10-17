@@ -3,17 +3,17 @@
     {
       "warning_type": "Mass Assignment",
       "warning_code": 105,
-      "fingerprint": "34c2e880a981e1bd156cf7b780fad73842180b3a8ccb3f5b012c61ca359143ef",
+      "fingerprint": "20e498d9978e98273aa5ae7cf5c653952eed1e475bb8a03d49e52393b0f425c1",
       "check_name": "PermitAttributes",
       "message": "Potentially dangerous key allowed for mass assignment",
-      "file": "app/controllers/pros/permissions_controller.rb",
+      "file": "app/controllers/agents/permissions_controller.rb",
       "line": 20,
       "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
-      "code": "params.require(:pro_permission).permit(:role, :service_id)",
+      "code": "params.require(:agent_permission).permit(:role, :service_id)",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "Pros::PermissionsController",
+        "class": "Agents::PermissionsController",
         "method": "permission_params"
       },
       "user_input": ":role",
@@ -46,68 +46,6 @@
       "location": {
         "type": "template",
         "template": "lieux/index"
-      },
-      "user_input": "params[:page]",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "7f33a09045cf75ac5a0816c80c5bab6fb7440a9d813992f5165c0ef8fc3f993a",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/plage_ouvertures/index.html.slim",
-      "line": 18,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(PlageOuverture).includes(:lieu).all.page(params[:page]).per(1), {})",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "PlageOuverturesController",
-          "method": "index",
-          "line": 8,
-          "file": "app/controllers/plage_ouvertures_controller.rb",
-          "rendered": {
-            "name": "plage_ouvertures/index",
-            "file": "app/views/plage_ouvertures/index.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "plage_ouvertures/index"
-      },
-      "user_input": "params[:page]",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "bc8aacd31d0cacb8a0edb038480866ee5d1043ee91d2de340f5f320eadf93c7a",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/users/rdvs/index.html.slim",
-      "line": 4,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(Rdv).page(params[:page]), {})",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Users::RdvsController",
-          "method": "index",
-          "line": 4,
-          "file": "app/controllers/users/rdvs_controller.rb",
-          "rendered": {
-            "name": "users/rdvs/index",
-            "file": "app/views/users/rdvs/index.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "users/rdvs/index"
       },
       "user_input": "params[:page]",
       "confidence": "Weak",
@@ -176,6 +114,6 @@
       "note": ""
     }
   ],
-  "updated": "2019-10-02 14:43:54 +0200",
+  "updated": "2019-10-17 11:10:38 +0200",
   "brakeman_version": "4.6.1"
 }

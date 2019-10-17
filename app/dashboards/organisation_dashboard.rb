@@ -10,7 +10,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
     name: Field::String,
-    pros: Field::HasMany,
+    agents: Field::HasMany,
     lieux: Field::HasMany,
     departement: Field::String,
     created_at: Field::DateTime,
@@ -33,7 +33,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = [
     :id,
     :name,
-    :pros,
+    :agents,
     :lieux,
     :departement,
     :created_at,
@@ -45,7 +45,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
     :name,
-    :pros,
+    :agents,
     :lieux,
     :departement,
   ].freeze

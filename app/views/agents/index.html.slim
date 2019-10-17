@@ -1,0 +1,41 @@
+- content_for :title do
+  | Vos professionnels
+
+- content_for :breadcrumb do
+  = add_button 'Inviter un professionnel', new_agent_invitation_path, condition: policy(Agent).invite?, header: true
+
+.row
+  .col-md-8
+    .card
+      .card-body
+        table.table
+          thead
+            tr
+              th.w-50 Nom
+              th Email
+              th Service
+          tbody
+            = render partial: 'agent', collection: @complete_agents
+        .d-flex.justify-content-center
+          = paginate @complete_agents, theme: 'twitter-bootstrap-4'
+  .col-md-4
+    .card
+      .card-body
+        - if @invited_agents.any?
+          table.table
+            thead
+              tr
+                th.w-50 Vos invitations
+                th
+            tbody
+              = render partial: 'invited_agent', collection: @invited_agents, as: :agent
+        - else
+          .row.justify-content-md-center
+            .text-center.mb-3
+              p.mb-2.lead Vous n'avez pas d'invitation en cours.
+              span.fa-stack.fa-4x
+                i.fa.fa-circle.fa-stack-2x.text-primary
+                i.fa.fa-envelope-o.fa-stack-1x.text-white
+
+        .text-center
+          = add_button 'Inviter un professionnel', new_agent_invitation_path, condition: policy(Agent).invite?
