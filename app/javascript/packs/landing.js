@@ -21,6 +21,6 @@ $(document).on('turbolinks:load', function() {
   }
   new Scroller();
   $(".select2-input").select2({
-    theme: "bootstrap"
+    theme: "bootstrap4"
   });
 });
