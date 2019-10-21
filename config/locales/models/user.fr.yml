@@ -18,7 +18,7 @@ fr:
           aucune: Aucune
           caf: CAF
           msa: MSA
-        affiliation_number: Numéro d'affiliation
+        affiliation_number: Numéro d'allocataire
         family_situation: Situation familiale
         number_of_children: Nombre d'enfants
         family_situations: 
