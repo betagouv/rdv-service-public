@@ -55,7 +55,7 @@ $(document).on('shown.rightbar', '.right-bar', function(e) {
   });
   new PlacesInput(document.querySelector('.places-js-container'));
   $( ".select2-input").select2({
-    theme: "bootstrap"
+    theme: "bootstrap4"
   });
   new Datetimepicker();
   new Rdvstatus();
@@ -87,7 +87,7 @@ $(document).on('turbolinks:load', function() {
   new PlacesInput(document.querySelector('.places-js-container'));
 
   $(".select2-input").select2({
-    theme: "bootstrap"
+    theme: "bootstrap4"
   });
 
   new Datetimepicker();
