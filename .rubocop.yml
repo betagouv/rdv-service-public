@@ -56,5 +56,8 @@ Style/TrailingCommaInHashLiteral:
 Style/ClassAndModuleChildren:
   Enabled: false
 
+Style/FormatStringToken:
+  Enabled: false
+
 Metrics/AbcSize:
   Enabled: false
