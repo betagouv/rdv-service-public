@@ -10,7 +10,9 @@ Rails.application.routes.draw do
       post :invite, on: :member
     end
     resources :super_admins
-    resources :organisations
+    resources :organisations do
+      post :default_configuration, on: :member
+    end
     resources :lieux
     resources :services
     resources :motifs

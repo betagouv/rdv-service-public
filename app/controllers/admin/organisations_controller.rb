@@ -1,21 +1,11 @@
 module Admin
   class OrganisationsController < Admin::ApplicationController
-    # To customize the behavior of this controller,
-    # you can overwrite any of the RESTful actions. For example:
-    #
-    # def index
-    #   super
-    #   @resources = Agent.
-    #     page(params[:page]).
-    #     per(10)
-    # end
-
-    # Define a custom finder by overriding the `find_resource` method:
-    # def find_resource(param)
-    #   Agent.find_by!(slug: param)
-    # end
-
-    # See https://administrate-prototype.herokuapp.com/customizing_controller_actions
-    # for more information
+    def default_configuration
+      Motif.where(organisation_id: 1).map(&:dup).each { |m| m.organisation_id = requested_resource.id }.map(&:save)
+      redirect_to(
+        [namespace, requested_resource],
+        notice: "La configuration par défaut a été appliquée."
+      )
+    end
   end
 end
