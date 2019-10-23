@@ -5,24 +5,7 @@ class PlageOuverturesController < DashboardAuthController
 
   def index
     respond_to do |f|
-      f.json do
-        plage_ouvertures = policy_scope(current_agent.plage_ouvertures).flat_map do |po|
-          po.occurences_for(date_range_params).map do |occurence|
-            {
-              title: po.title,
-              start: occurence,
-              end: po.end_time.on(occurence),
-              backgroundColor: "#F00",
-              rendering: "background",
-              extendedProps: {
-                location: po.lieu.address,
-              },
-            }
-          end
-        end
-
-        render json: plage_ouvertures.sort_by { |e| e[:start] }
-      end
+      f.json { @plage_ouverture_occurences = policy_scope(current_agent.plage_ouvertures).flat_map { |po| po.occurences_for(date_range_params).map { |occurence| [po, occurence] } }.sort_by(&:second) }
       f.html { @plage_ouvertures = policy_scope(PlageOuverture).includes(:lieu).all.page(params[:page]) }
     end
   end

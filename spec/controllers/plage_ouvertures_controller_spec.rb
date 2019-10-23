@@ -1,5 +1,7 @@
 RSpec.describe PlageOuverturesController, type: :controller do
   describe "GET index" do
+    render_views
+
     let(:agent) { create(:agent) }
     let!(:plage_ouverture) { create(:plage_ouverture, :weekly_by_2, title: "Une semaine sur deux les mercredis à partir du 17/07", first_day: Date.new(2019, 7, 17), agent: agent) }
     let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, title: "Tous les lundis à partir du 22/07", first_day: Date.new(2019, 7, 22), agent: agent) }
