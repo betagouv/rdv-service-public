@@ -5,19 +5,7 @@ class AbsencesController < DashboardAuthController
 
   def index
     respond_to do |f|
-      f.json do
-        absences = policy_scope(current_agent.absences.in_time_range(date_range_params)).map do |abs|
-          {
-            title: abs.title_or_default,
-            start: abs.starts_at,
-            end: abs.ends_at,
-            backgroundColor: "#7f8c8d",
-            url: edit_absence_path(abs),
-          }
-        end.sort_by { |e| e[:start] }
-
-        render json: absences
-      end
+      f.json { @absences = policy_scope(current_agent.absences.in_time_range(date_range_params)).order(:starts_at) }
       f.html { @absences = policy_scope(current_agent.absences).all.page(params[:page]) }
     end
   end

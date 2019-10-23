@@ -1,5 +1,7 @@
 RSpec.describe AbsencesController, type: :controller do
   describe "GET index" do
+    render_views
+
     let(:agent) { create(:agent) }
     let!(:absence1) { create(:absence, agent: agent, starts_at: Time.zone.parse("21/07/2019 08:00"), ends_at: Time.zone.parse("21/07/2019 10:00")) }
     let!(:absence2) { create(:absence, agent: agent, starts_at: Time.zone.parse("20/08/2019 08:00"), ends_at: Time.zone.parse("31/08/2019 22:00")) }

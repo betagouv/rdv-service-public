@@ -19,9 +19,9 @@ class PlageOuverturesController < DashboardAuthController
               },
             }
           end
-        end.sort_by { |e| e[:start] }
+        end
 
-        render json: plage_ouvertures
+        render json: plage_ouvertures.sort_by { |e| e[:start] }
       end
       f.html { @plage_ouvertures = policy_scope(PlageOuverture).includes(:lieu).all.page(params[:page]) }
     end
