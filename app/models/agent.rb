@@ -7,13 +7,13 @@ class Agent < ApplicationRecord
   devise :invitable, :database_authenticatable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
 
-  belongs_to :organisation, optional: true
   belongs_to :service, optional: true
   has_many :lieux, through: :organisation
   has_many :motifs, through: :service
   has_many :plage_ouvertures
   has_many :absences
   has_and_belongs_to_many :rdvs
+  has_and_belongs_to_many :organisations, -> { distinct }
 
   enum role: { user: 0, admin: 1 }
 
