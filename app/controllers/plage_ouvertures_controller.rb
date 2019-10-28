@@ -4,7 +4,10 @@ class PlageOuverturesController < DashboardAuthController
   before_action :set_plage_ouverture, only: [:edit, :update, :destroy]
 
   def index
-    @plage_ouvertures = policy_scope(PlageOuverture).includes(:lieu).all.page(params[:page])
+    respond_to do |f|
+      f.json { @plage_ouverture_occurences = policy_scope(current_agent.plage_ouvertures).flat_map { |po| po.occurences_for(date_range_params).map { |occurence| [po, occurence] } }.sort_by(&:second) }
+      f.html { @plage_ouvertures = policy_scope(PlageOuverture).includes(:lieu).all.page(params[:page]) }
+    end
   end
 
   def new
@@ -47,5 +50,15 @@ class PlageOuverturesController < DashboardAuthController
 
   def plage_ouverture_params
     params.require(:plage_ouverture).permit(:title, :first_day, :start_time, :end_time, :lieu_id, :recurrence, motif_ids: [])
+  end
+
+  def date_range_params
+    start_param = Date.parse(filter_params[:start])
+    end_param = Date.parse(filter_params[:end])
+    start_param..end_param
+  end
+
+  def filter_params
+    params.permit(:start, :end)
   end
 end

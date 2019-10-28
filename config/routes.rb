@@ -35,6 +35,7 @@ Rails.application.routes.draw do
       get :confirmation
     end
   end
+
   authenticated :user do
     get "/users/rdvs", to: 'users/rdvs#index', as: :authenticated_user_root
     get "/users/informations", to: 'users/users#edit'
@@ -42,17 +43,19 @@ Rails.application.routes.draw do
   end
 
   devise_for :agents, controllers: { registrations: 'agents/registrations', invitations: 'common/invitations' }
+
   as :agent do
     get 'agents/edit' => 'agents/registrations#edit', as: 'edit_agent_registration'
     put 'agents' => 'agents/registrations#update', :as => 'agent_registration'
   end
+
   namespace :agents do
     resources :full_subscriptions, only: [:new, :create]
     resources :permissions, only: [:edit, :update]
   end
+
   authenticated :agent do
     root to: 'agendas#index', as: :authenticated_agent_root
-    get "events", to: "agendas#events"
     get "background-events", to: "agendas#background_events"
     resources :lieux, except: :show
     resources :agents, only: [:index, :destroy] do
@@ -64,11 +67,9 @@ Rails.application.routes.draw do
       resources :users, except: :show, shallow: true, controller: 'organisations/users' do
         post :invite, on: :member
       end
-
-      # Rdv
-      resources :rdvs, except: [:index, :create, :new], shallow: true, controller: 'agents/rdvs' do
-        patch :status, on: :member
-      end
+    end
+    resources :rdvs, except: [:create, :new], shallow: true, controller: 'agents/rdvs' do
+      patch :status, on: :member
     end
     [:first_steps, :second_steps, :third_steps].each do |step|
       resources step, only: [:new, :create], module: "agents/rdvs"

@@ -4,8 +4,10 @@ class AbsencesController < DashboardAuthController
   before_action :set_absence, only: [:edit, :update, :destroy]
 
   def index
-    @absences = policy_scope(Absence).all.page(params[:page])
-    respond_right_bar_with @absences
+    respond_to do |f|
+      f.json { @absences = policy_scope(current_agent.absences.in_time_range(date_range_params)).order(:starts_at) }
+      f.html { @absences = policy_scope(current_agent.absences).all.page(params[:page]) }
+    end
   end
 
   def new
@@ -48,5 +50,15 @@ class AbsencesController < DashboardAuthController
 
   def absence_params
     params.require(:absence).permit(:title, :starts_at, :ends_at)
+  end
+
+  def date_range_params
+    start_param = Date.parse(filter_params[:start])
+    end_param = Date.parse(filter_params[:end])
+    start_param..end_param
+  end
+
+  def filter_params
+    params.permit(:start, :end)
   end
 end

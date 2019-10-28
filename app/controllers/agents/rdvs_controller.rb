@@ -3,6 +3,10 @@ class Agents::RdvsController < DashboardAuthController
 
   before_action :set_rdv, only: [:show, :edit, :update, :destroy, :status]
 
+  def index
+    @rdvs = policy_scope(current_agent.rdvs).active.where(starts_at: date_range_params).includes(:motif).order(:starts_at)
+  end
+
   def show
     authorize(@rdv)
     respond_right_bar_with(@rdv)
@@ -50,5 +54,15 @@ class Agents::RdvsController < DashboardAuthController
 
   def status_params
     params.require(:rdv).permit(:status)
+  end
+
+  def date_range_params
+    start_param = Date.parse(filter_params[:start])
+    end_param = Date.parse(filter_params[:end])
+    start_param..end_param
+  end
+
+  def filter_params
+    params.permit(:start, :end)
   end
 end

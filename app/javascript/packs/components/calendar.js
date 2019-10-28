@@ -13,7 +13,7 @@ document.addEventListener('turbolinks:load', function() {
     var calendar = new Calendar(calendarEl, {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       locale: frLocale,
-      eventSources: ['/events', '/background-events'],
+      eventSources: ['/rdvs', '/absences', '/plage_ouvertures'],
       defaultView: 'timeGridFourDay',
       selectable: true,
       select: function(info) {
