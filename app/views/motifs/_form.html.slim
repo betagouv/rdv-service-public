@@ -1,7 +1,7 @@
 = simple_form_for motif, remote: request.xhr?, data: { rightbar: true } do |f|
   = render partial: 'layouts/model_errors', locals: { model: motif }
   = f.input :name
-  = f.association :service, collection: Service.all
+  = f.association :service, collection: Service.with_motifs
   .form-row
     .col-md-6= f.input :online
     .col-md-6= f.input :by_phone
