@@ -6,6 +6,8 @@ class DashboardAuthController < ApplicationController
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
+  helper_method :current_organisation
+
   private
 
   def pundit_user
@@ -20,5 +22,9 @@ class DashboardAuthController < ApplicationController
 
   def set_organisation
     @organisation = policy_scope(Organisation).find(current_agent.organisation_id)
+  end
+
+  def current_organisation
+    policy_scope(Organisation).find(params.require(:organisation_id))
   end
 end

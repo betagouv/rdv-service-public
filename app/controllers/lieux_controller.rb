@@ -6,17 +6,17 @@ class LieuxController < DashboardAuthController
   end
 
   def new
-    @lieu = Lieu.new(organisation_id: current_agent.organisation_id)
+    @lieu = Lieu.new(organisation_id: current_organisation.id)
     authorize(@lieu)
     respond_right_bar_with @lieu
   end
 
   def create
-    @lieu = Lieu.new(organisation_id: current_agent.organisation_id)
+    @lieu = Lieu.new(organisation_id: current_organisation.id)
     @lieu.assign_attributes(lieu_params)
     authorize(@lieu)
     flash.notice = "Lieu créé" if @lieu.save
-    respond_right_bar_with @lieu, location: lieux_path
+    respond_right_bar_with @lieu, location: organisation_lieux_path(@lieu.organisation)
   end
 
   def edit
@@ -29,14 +29,14 @@ class LieuxController < DashboardAuthController
     @lieu = Lieu.find(params[:id])
     authorize(@lieu)
     flash[:notice] = 'Lieu modifié' if @lieu.update(lieu_params)
-    respond_right_bar_with @lieu, location: lieux_path
+    respond_right_bar_with @lieu, location: organisation_lieux_path(@lieu.organisation)
   end
 
   def destroy
     @lieu = Lieu.find(params[:id])
     authorize(@lieu)
     flash[:notice] = 'Lieu supprimé' if @lieu.destroy
-    respond_right_bar_with @lieu, location: lieux_path
+    respond_right_bar_with @lieu, location: organisation_lieux_path(@lieu.organisation)
   end
 
   private
