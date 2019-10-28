@@ -21,7 +21,7 @@ class DashboardAuthController < ApplicationController
   end
 
   def set_organisation
-    @organisation = policy_scope(Organisation).find(current_agent.organisation_id)
+    @organisation = current_organisation
   end
 
   def current_organisation

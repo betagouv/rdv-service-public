@@ -32,4 +32,4 @@
             ul.side-nav-second-level aria-expanded="false"
               li=link_to 'Vos lieux', organisation_lieux_path(current_agent.organisation)
               li=link_to 'Vos professionnels', agents_path
-              li=link_to "Vos motifs", motifs_path
+              li=link_to "Vos motifs", organisation_motifs_path(current_agent.organisation)
