@@ -25,6 +25,10 @@ class Agent < ApplicationRecord
 
   before_invitation_created :set_organisation
 
+  def organisation
+    organisations.first
+  end
+
   def full_name
     "#{first_name} #{last_name}"
   end

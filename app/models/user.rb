@@ -23,6 +23,11 @@ class User < ApplicationRecord
   before_invitation_created :set_organisation
   before_save :set_email_to_null_if_blank
 
+  def organisation_ids
+    # Remove this method when User has many Organisations
+    [organisation_id]
+  end
+
   def full_name
     "#{first_name} #{last_name}"
   end

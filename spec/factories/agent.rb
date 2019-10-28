@@ -6,7 +6,7 @@ FactoryBot.define do
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
     password { 'password' }
-    organisation { Organisation.first || create(:organisation) }
+    organisations { [Organisation.first || create(:organisation)] }
     confirmed_at { 1.day.ago }
     service { Service.first || create(:service) }
     trait :admin do
