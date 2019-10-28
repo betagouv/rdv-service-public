@@ -56,7 +56,6 @@ Rails.application.routes.draw do
 
   authenticated :agent do
     root to: 'agendas#index', as: :authenticated_agent_root
-    get "background-events", to: "agendas#background_events"
     resources :lieux, except: :show
     resources :agents, only: [:index, :destroy] do
       post :reinvite, on: :member
