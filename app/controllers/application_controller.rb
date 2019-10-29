@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
 
   def after_invite_path_for(inviter, invitee)
     if invitee.is_a? Agent
-      agents_path
+      organisation_agents_path(invitee.organisation)
     elsif invitee.is_a? User
       organisation_users_path(inviter.organisation)
     end
