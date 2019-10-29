@@ -4,9 +4,11 @@ class PlageOuverturesController < DashboardAuthController
   before_action :set_plage_ouverture, only: [:edit, :update, :destroy]
 
   def index
+    plage_ouvertures = policy_scope(current_agent.plage_ouvertures.where(organisation_id: current_organisation.id))
+
     respond_to do |f|
-      f.json { @plage_ouverture_occurences = policy_scope(current_agent.plage_ouvertures).flat_map { |po| po.occurences_for(date_range_params).map { |occurence| [po, occurence] } }.sort_by(&:second) }
-      f.html { @plage_ouvertures = policy_scope(PlageOuverture).includes(:lieu).all.page(params[:page]) }
+      f.json { @plage_ouverture_occurences = plage_ouvertures.flat_map { |po| po.occurences_for(date_range_params).map { |occurence| [po, occurence] } }.sort_by(&:second) }
+      f.html { @plage_ouvertures = plage_ouvertures.includes(:lieu).all.page(params[:page]) }
     end
   end
 
@@ -27,19 +29,19 @@ class PlageOuverturesController < DashboardAuthController
     @plage_ouverture.agent_id = current_agent.id
     authorize(@plage_ouverture)
     flash[:notice] = "Plage d'ouverture créé." if @plage_ouverture.save
-    respond_right_bar_with @plage_ouverture, location: plage_ouvertures_path
+    respond_right_bar_with @plage_ouverture, location: organisation_plage_ouvertures_path(@plage_ouverture.organisation)
   end
 
   def update
     authorize(@plage_ouverture)
     flash[:notice] = "La plage d'ouverture a été modifiée." if @plage_ouverture.update(plage_ouverture_params)
-    respond_right_bar_with @plage_ouverture, location: plage_ouvertures_path
+    respond_right_bar_with @plage_ouverture, location: organisation_plage_ouvertures_path(@plage_ouverture.organisation)
   end
 
   def destroy
     authorize(@plage_ouverture)
     @plage_ouverture.destroy
-    redirect_to plage_ouvertures_path, notice: "La plage d'ouverture a été supprimée."
+    redirect_to organisation_plage_ouvertures_path(@plage_ouverture.organisation), notice: "La plage d'ouverture a été supprimée."
   end
 
   private

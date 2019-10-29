@@ -13,7 +13,10 @@ document.addEventListener('turbolinks:load', function() {
     var calendar = new Calendar(calendarEl, {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       locale: frLocale,
-      eventSources: ['/rdvs', '/absences', '/plage_ouvertures'],
+      eventSources: JSON.parse(calendarEl.dataset.eventSources),
+      eventSourceFailure: function (errorObj) {
+        alert("Une erreur s'est produite lors de la récupération des données du calendrier.");
+      },
       defaultView: 'timeGridFourDay',
       selectable: true,
       select: function(info) {
