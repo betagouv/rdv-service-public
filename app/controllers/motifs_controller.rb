@@ -24,19 +24,19 @@ class MotifsController < DashboardAuthController
     @motif.organisation = @organisation
     authorize(@motif)
     flash[:notice] = "Motif créé." if @motif.save
-    respond_right_bar_with @motif, location: motifs_path
+    respond_right_bar_with @motif, location: organisation_motifs_path(@motif.organisation)
   end
 
   def update
     authorize(@motif)
     flash[:notice] = "Le motif a été modifié." if @motif.update(motif_params)
-    respond_right_bar_with @motif, location: motifs_path
+    respond_right_bar_with @motif, location: organisation_motifs_path(@motif.organisation)
   end
 
   def destroy
     authorize(@motif)
     flash[:notice] = "Le motif a été supprimé." if @motif.soft_delete
-    respond_right_bar_with @motif, location: motifs_path
+    respond_right_bar_with @motif, location: organisation_motifs_path(@motif.organisation)
   end
 
   private
