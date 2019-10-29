@@ -13,6 +13,7 @@ class PlageOuverture < ApplicationRecord
   before_save :clear_empty_recurrence
 
   validate :end_after_start
+  validates :motifs, :title, presence: true
 
   scope :exceptionnelles, -> { where(recurrence: nil) }
   scope :regulieres, -> { where.not(recurrence: nil) }
