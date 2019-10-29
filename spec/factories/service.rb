@@ -3,5 +3,8 @@ FactoryBot.define do
 
   factory :service do
     name { generate(:service_name) }
+    trait :secretariat do
+      name { 'Secrétariat' }
+    end
   end
 end

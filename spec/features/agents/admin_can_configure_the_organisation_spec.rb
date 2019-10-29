@@ -1,9 +1,11 @@
 describe "Admin can configure the organisation" do
-  let!(:agent_admin) { create(:agent, :admin) }
+  let!(:pmi) { create(:service, name: 'PMI') }
+  let!(:agent_admin) { create(:agent, :admin, service: pmi) }
   let!(:agent_user) { create(:agent) }
   let!(:motif) { create(:motif) }
   let!(:user) { create(:user) }
   let!(:lieu) { create(:lieu) }
+  let!(:secretariat) { create(:service, :secretariat) }
   let(:le_nouveau_lieu) { build(:lieu) }
   let(:le_nouveau_motif) { build(:motif) }
 
@@ -90,7 +92,10 @@ describe "Admin can configure the organisation" do
     click_link 'Créer un motif', match: :first
     expect_page_title("Nouveau motif")
     fill_in 'Nom', with: le_nouveau_motif.name
-    select(agent_admin.service.id, from: :motif_service_id)
+
+    ## Check secretariat is unavailable
+    expect(page.all('select#motif_service_id option').map(&:value)).to match_array ["", pmi.id.to_s]
+    select(agent_admin.service.name, from: :motif_service_id)
     fill_in 'Couleur', with: le_nouveau_motif.color
     click_button 'Créer'
 
