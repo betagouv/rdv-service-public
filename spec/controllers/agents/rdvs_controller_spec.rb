@@ -1,16 +1,10 @@
 RSpec.describe Agents::RdvsController, type: :controller do
-  describe "DELETE destroy" do
-    let(:agent) { create(:agent) }
-    let(:rdv) { create(:rdv) }
+  let(:agent) { create(:agent) }
+  let(:organisation_id) { agent.organisation_id }
+  let!(:rdv) { create(:rdv, agent_ids: [agent.id], organisation_id: organisation_id) }
 
-    before do
-      sign_in agent
-    end
-
-    it "cancel rdv" do
-      delete :destroy, params: { id: rdv.id }
-      expect(rdv.reload.cancelled?).to be true
-    end
+  before do
+    sign_in agent
   end
 
   describe "GET index" do
@@ -20,11 +14,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
     let!(:rdv1) { create(:rdv, agents: [agent], starts_at: Time.zone.parse("21/07/2019 08:00")) }
     let!(:rdv2) { create(:rdv, agents: [agent], starts_at: Time.zone.parse("21/07/2019 09:00")) }
 
-    before do
-      sign_in agent
-    end
-
-    subject { get(:index, params: { start: start_time, end: end_time }, as: :json) }
+    subject { get(:index, params: { organisation_id: organisation_id, start: start_time, end: end_time }, as: :json) }
 
     before do
       subject
@@ -58,6 +48,93 @@ RSpec.describe Agents::RdvsController, type: :controller do
         expect(second["url"]).to eq(rdv_path(rdv2))
         expect(first["extendedProps"]).to eq({ status: rdv1.status, past: rdv1.past? }.as_json)
       end
+    end
+  end
+
+  describe "GET #edit" do
+    it "returns a success response" do
+      get :edit, params: { id: rdv.to_param }
+      expect(response).to be_successful
+    end
+  end
+
+  describe "PUT #update" do
+    subject do
+      put :update, params: { id: rdv.to_param, rdv: new_attributes }
+      rdv.reload
+    end
+
+    context "with valid params" do
+      let(:new_attributes) do
+        {
+          name: "Le nouveau nom",
+        }
+      end
+
+      it "updates the requested rdv" do
+        expect { subject }.to change(rdv, :name).to("Le nouveau nom")
+      end
+
+      it "redirects to the agenda" do
+        subject
+        expect(response).to redirect_to(authenticated_agent_root_path)
+      end
+    end
+
+    context "with invalid params" do
+      let(:new_attributes) do
+        {
+          duration_in_min: nil,
+        }
+      end
+
+      it "returns a success response (i.e. to display the 'edit' template)" do
+        subject
+        expect(response).to be_successful
+      end
+
+      it "does not change rdv name" do
+        expect { subject }.not_to change(rdv, :duration_in_min)
+      end
+    end
+  end
+
+  describe "GET #show" do
+    it "returns a success response" do
+      get :show, params: { id: rdv.id }
+      expect(response).to be_successful
+    end
+  end
+
+  describe "POST #status" do
+    subject do
+      post :status, params: { id: rdv.id, rdv: { status: "waiting" }, format: "js" }
+      rdv.reload
+    end
+
+    it "returns a success response" do
+      subject
+      expect(response).to be_successful
+    end
+
+    it "changes status" do
+      expect { subject }.to change(rdv, :status).from("to_be").to("waiting")
+    end
+  end
+
+  describe "DELETE destroy" do
+    let(:agent) { create(:agent) }
+    let(:rdv) { create(:rdv) }
+
+    before do
+      sign_in agent
+    end
+
+    it "cancel rdv" do
+      expect do
+        delete :destroy, params: { id: rdv.id }
+        rdv.reload
+      end.to change(rdv, :cancelled?).from(false).to(true)
     end
   end
 end
