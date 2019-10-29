@@ -1,11 +1,11 @@
 describe Rdv, type: :model do
   let!(:organisation) { Organisation.last || create(:organisation) }
   let(:motif) { create(:motif) }
-  let (:secretariat) { create(:service, :secretariat)}
+  let(:secretariat) { create(:service, :secretariat) }
   let(:motif_with_rdv) { create(:motif, :with_rdvs) }
 
-  describe '.create when associated with secretariat' do 
-    let(:motif) { build(:motif, service: secretariat)}
+  describe '.create when associated with secretariat' do
+    let(:motif) { build(:motif, service: secretariat) }
     it {
       expect(motif.valid?).to be false
     }

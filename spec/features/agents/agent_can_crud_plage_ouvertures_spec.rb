@@ -1,8 +1,8 @@
 describe "Agent can CRUD users" do
   let(:agent) { create(:agent) }
-  let(:secretaire) { create(:agent, :secretaire)}
-  let!(:plage_ouverture) { create(:plage_ouverture, agent: agent)}
-  let(:new_plage_ouverture) { build(:plage_ouverture)}
+  let(:secretaire) { create(:agent, :secretaire) }
+  let!(:plage_ouverture) { create(:plage_ouverture, agent: agent) }
+  let(:new_plage_ouverture) { build(:plage_ouverture) }
 
   context 'for an agent' do
     before do
@@ -49,7 +49,7 @@ describe "Agent can CRUD users" do
       click_link 'Créer une plage d\'ouverture', match: :first
       expect(page).to have_content("Aucun motif disponible. Vous ne pouvez pas créer de plage d'ouverture.")
     end
-    context 'with one by_phone motif' do 
+    context 'with one by_phone motif' do
       let!(:motif) { create(:motif, :by_phone) }
       scenario "can create a plage_ouverture" do
         click_link 'Créer une plage d\'ouverture', match: :first
@@ -62,5 +62,4 @@ describe "Agent can CRUD users" do
       end
     end
   end
-
 end

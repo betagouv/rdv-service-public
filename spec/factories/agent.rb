@@ -12,8 +12,8 @@ FactoryBot.define do
     trait :admin do
       role { "admin" }
     end
-    trait :secretaire do 
-      service { create(:service, :secretariat)}
+    trait :secretaire do
+      service { create(:service, :secretariat) }
     end
   end
 end
