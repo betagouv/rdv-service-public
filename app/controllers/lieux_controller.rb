@@ -2,7 +2,7 @@ class LieuxController < DashboardAuthController
   respond_to :html, :json
 
   def index
-    @lieux = policy_scope(Lieu).order(Arel.sql('LOWER(name)')).page(params[:page])
+    @lieux = policy_scope(current_organisation.lieux).order(Arel.sql('LOWER(name)')).page(params[:page])
   end
 
   def new
