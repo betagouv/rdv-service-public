@@ -63,6 +63,7 @@ Rails.application.routes.draw do
       resources :lieux, except: :show, shallow: true
       resources :motifs, except: :show, shallow: true
       resources :plage_ouvertures, except: :show, shallow: true
+      resources :absences, except: :show, shallow: true
 
       resources :users, except: :show, shallow: true, controller: 'organisations/users' do
         post :invite, on: :member
@@ -74,7 +75,6 @@ Rails.application.routes.draw do
     [:first_steps, :second_steps, :third_steps].each do |step|
       resources step, only: [:new, :create], module: "agents/rdvs"
     end
-    resources :absences, except: :show
     resources :agent_searches, only: :index, module: "agents/creneaux" do
       get :by_lieu, on: :collection
     end

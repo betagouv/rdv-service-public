@@ -1,4 +1,4 @@
-= simple_form_for absence, remote: request.xhr?, data: { rightbar: true } do |f|
+= simple_form_for [organisation, absence], remote: request.xhr?, data: { rightbar: true } do |f|
   = render partial: 'layouts/model_errors', locals: { model: absence }
   = f.input :title
   = datetime_input f, :starts_at
