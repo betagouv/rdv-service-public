@@ -35,6 +35,7 @@ class Motif < ApplicationRecord
 
   def booking_delay_validation
     return if min_booking_delay.zero? && max_booking_delay.zero?
+
     errors.add(:max_booking_delay, "doit être supérieur au délai de réservation minimum") if max_booking_delay <= min_booking_delay
   end
 
