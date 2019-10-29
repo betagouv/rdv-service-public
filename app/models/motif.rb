@@ -4,8 +4,6 @@ class Motif < ApplicationRecord
   has_many :rdvs, dependent: :restrict_with_exception
   has_and_belongs_to_many :plage_ouvertures, -> { distinct }
 
-  MAX_BOOKING_DELAY = 1.year.minutes
-
   validates :name, presence: true, uniqueness: { scope: :organisation }
   validates :color, :service, :default_duration_in_min, :min_booking_delay, :max_booking_delay, presence: true
   validates :min_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
