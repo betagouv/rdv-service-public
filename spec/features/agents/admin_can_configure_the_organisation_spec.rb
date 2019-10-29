@@ -94,7 +94,7 @@ describe "Admin can configure the organisation" do
     fill_in 'Nom', with: le_nouveau_motif.name
     
     ## Check secretariat is unavailable
-    page.all('select#motif_service_id option').map(&:value).should match_array ["", "#{pmi.id}"]
+    expect(page.all('select#motif_service_id option').map(&:value)).to match_array ["", "#{pmi.id}"]
     select(agent_admin.service.name, from: :motif_service_id)
     fill_in 'Couleur', with: le_nouveau_motif.color
     click_button 'Créer'

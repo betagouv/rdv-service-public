@@ -39,7 +39,7 @@ class PlageOuverturesController < DashboardAuthController
   def destroy
     authorize(@plage_ouverture)
     @plage_ouverture.destroy
-    redirect_to plage_ouvertures_path(@plage_ouverture.organisation), notice: "La plage d'ouverture a été supprimée."
+    redirect_to plage_ouvertures_path, notice: "La plage d'ouverture a été supprimée."
   end
 
   private

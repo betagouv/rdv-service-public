@@ -13,5 +13,8 @@ FactoryBot.define do
       end
     end
     service { Service.first || create(:service) }
+    trait :by_phone do
+      by_phone { true }
+    end
   end
 end
