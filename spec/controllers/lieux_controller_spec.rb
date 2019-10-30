@@ -1,7 +1,7 @@
 RSpec.describe LieuxController, type: :controller do
   render_views
 
-  let(:agent) { create(:agent) }
+  let(:agent) { create(:agent, :admin) }
   let(:organisation_id) { agent.organisation_id }
   let!(:lieu) { create(:lieu, organisation_id: organisation_id) }
 

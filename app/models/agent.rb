@@ -24,7 +24,6 @@ class Agent < ApplicationRecord
   scope :active, -> { where(deleted_at: nil) }
 
   before_invitation_created :set_organisation
-  before_create :set_role
 
   def full_name
     "#{first_name} #{last_name}"
@@ -68,9 +67,5 @@ class Agent < ApplicationRecord
 
   def set_organisation
     self.organisation_id = invited_by.organisation_id if invited_by
-  end
-
-  def set_role
-    self.role = :admin if invited_by_id.nil?
   end
 end
