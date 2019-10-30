@@ -25,6 +25,6 @@ class DashboardAuthController < ApplicationController
   end
 
   def current_organisation
-    policy_scope(Organisation).find(params.require(:organisation_id))
+    current_agent.organisation
   end
 end
