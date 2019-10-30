@@ -21,7 +21,7 @@
           span.menu-arrow
         ul.side-nav-second-level aria-expanded="false"
           li=link_to 'Vos plages d\'ouverture', organisation_plage_ouvertures_path(current_agent.organisation)
-          li=link_to 'Vos absences', absences_path
+          li=link_to 'Vos absences', organisation_absences_path(current_agent.organisation)
 
         - if current_agent.admin?
           li.side-nav-item

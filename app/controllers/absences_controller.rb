@@ -4,9 +4,11 @@ class AbsencesController < DashboardAuthController
   before_action :set_absence, only: [:edit, :update, :destroy]
 
   def index
+    absences = policy_scope(current_organisation.absences)
+
     respond_to do |f|
-      f.json { @absences = policy_scope(current_agent.absences.in_time_range(date_range_params)).order(:starts_at) }
-      f.html { @absences = policy_scope(current_agent.absences).all.page(params[:page]) }
+      f.json { @absences = absences.in_time_range(date_range_params).order(:starts_at) }
+      f.html { @absences = absences.all.page(params[:page]) }
     end
   end
 
@@ -27,19 +29,19 @@ class AbsencesController < DashboardAuthController
     @absence.agent = current_agent
     authorize(@absence)
     flash[:notice] = "Absence créée." if @absence.save
-    respond_right_bar_with @absence, location: absences_path
+    respond_right_bar_with @absence, location: organisation_absences_path(@absence.organisation_id)
   end
 
   def update
     authorize(@absence)
     flash[:notice] = "L'absence a été modifiée." if @absence.update(absence_params)
-    respond_right_bar_with @absence, location: absences_path
+    respond_right_bar_with @absence, location: organisation_absences_path(@absence.organisation_id)
   end
 
   def destroy
     authorize(@absence)
     @absence.destroy
-    redirect_to absences_path, notice: "L'absence a été supprimée."
+    redirect_to organisation_absences_path(@absence.organisation_id), notice: "L'absence a été supprimée."
   end
 
   private
