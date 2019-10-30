@@ -3,7 +3,7 @@
 
 - content_for :breadcrumb do
   = link_to "Créer un rendez-vous", new_first_step_path, class: "btn btn-outline-white mr-1"
-  = link_to "Trouver un créneau", agent_searches_path, class: "btn btn-outline-white"
+  = link_to "Trouver un créneau", organisation_agent_searches_path(current_organisation), class: "btn btn-outline-white"
 
 .card
   .card-body

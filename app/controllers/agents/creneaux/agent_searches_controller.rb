@@ -4,7 +4,12 @@ class Agents::Creneaux::AgentSearchesController < DashboardAuthController
   def index
     skip_policy_scope
     respond_to do |format|
-      format.html
+      format.html do
+        @organisation = current_organisation
+        @motifs = @organisation.motifs.active
+        @agents = @organisation.agents
+        @lieux = @organisation.lieux
+      end
       format.js do
         @agent_search = Creneau::AgentSearch.new(filter_params)
         set_params
@@ -36,10 +41,10 @@ class Agents::Creneaux::AgentSearchesController < DashboardAuthController
   private
 
   def filter_params
-    params.require(:creneau_agent_search).permit(:lieu_id, :motif_id, :from_date, agent_ids: [])
+    params.require(:creneau_agent_search).permit(:lieu_id, :motif_id, :from_date, agent_ids: []).merge(params.permit(:organisation_id))
   end
 
   def by_lieu_params
-    params.permit(:lieu_id, :motif_id, :from_date, agent_ids: [])
+    params.permit(:organisation_id, :lieu_id, :motif_id, :from_date, agent_ids: [])
   end
 end
