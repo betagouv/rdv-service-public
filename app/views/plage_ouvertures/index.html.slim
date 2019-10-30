@@ -2,7 +2,7 @@
   | Vos plages d'ouverture
 
 - content_for :breadcrumb do
-  = add_button 'Créer une plage d\'ouverture', new_plage_ouverture_path, header: true
+  = add_button 'Créer une plage d\'ouverture', new_organisation_plage_ouverture_path(current_organisation), header: true
 
 .card
   .card-body
@@ -26,4 +26,4 @@
             i.fa.fa-circle.fa-stack-2x.text-primary
             i.fa.fa-calendar-o.fa-stack-1x.text-white
     .text-center
-      = add_button 'Créer une plage d\'ouverture', new_plage_ouverture_path
+      = add_button 'Créer une plage d\'ouverture', new_organisation_plage_ouverture_path(current_organisation)

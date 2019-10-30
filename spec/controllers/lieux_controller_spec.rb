@@ -103,7 +103,7 @@ RSpec.describe LieuxController, type: :controller do
 
       it "does not change lieu name" do
         lieu.reload
-        expect(lieu).not_to eq("")
+        expect(lieu.name).not_to eq("")
       end
     end
   end

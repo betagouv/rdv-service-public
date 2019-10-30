@@ -1,5 +1,5 @@
 - if plage_ouverture.agent.available_motifs.any?
-  = simple_form_for plage_ouverture, remote: request.xhr?, data: { rightbar: true } do |f|
+  = simple_form_for [organisation, plage_ouverture], remote: request.xhr?, data: { rightbar: true } do |f|
     = render partial: 'layouts/model_errors', locals: { model: plage_ouverture }
     = f.input :title
     = f.association :lieu, collection: policy_scope(Lieu), label_method: :full_name, include_blank: false

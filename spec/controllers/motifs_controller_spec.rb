@@ -103,7 +103,7 @@ RSpec.describe MotifsController, type: :controller do
 
       it "does not change motif name" do
         motif.reload
-        expect(motif).not_to eq("")
+        expect(motif.name).not_to eq("")
       end
     end
   end
