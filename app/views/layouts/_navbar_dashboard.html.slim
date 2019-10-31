@@ -1,7 +1,7 @@
 .navbar-custom
   ul.list-unstyled.topbar-right-menu.float-right.mb-0
     li.dropdown
-      a.nav-link.dropdown-toggle.nav-user.arrow-none.mr-0 aria-expanded="false" aria-haspopup="false" data-toggle="dropdown" href="#" role="button" 
+      a.nav-link.dropdown-toggle.nav-user.arrow-none.mr-0 aria-expanded="false" aria-haspopup="false" data-toggle="dropdown" href="#" role="button"
         span.account-user-avatar
           | #{current_agent.initials}
         span
@@ -12,6 +12,9 @@
           h6.text-overflow.m-0 Bienvenue !
         = link_to edit_agent_registration_path , class: 'dropdown-item notify-item', data: { rightbar: true } do
           span Mon compte
+        - if current_agent.organisations.count > 1
+          = link_to organisations_path , class: 'dropdown-item notify-item' do
+            span Changer d'organisation
         = link_to destroy_agent_session_path, method: :delete, class: 'dropdown-item notify-item' do
           i.fa.fa-sign-out
           span Se déconnecter

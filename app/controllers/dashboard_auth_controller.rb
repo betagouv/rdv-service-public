@@ -25,6 +25,11 @@ class DashboardAuthController < ApplicationController
   end
 
   def current_organisation
-    current_agent.organisation
+    id = if params.require(:controller) == "organisations"
+      params.require(:id)
+    else
+      params.require(:organisation_id)
+    end
+    policy_scope(Organisation).find(id)
   end
 end
