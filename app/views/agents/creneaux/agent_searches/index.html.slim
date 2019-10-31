@@ -4,16 +4,16 @@
 .card
   .card-body
     h5.card-title Configuration des filtres
-    = simple_form_for(Creneau::AgentSearch.new, remote: true, url: agent_searches_path, method: :get) do |f|
+    = simple_form_for(Creneau::AgentSearch.new, remote: true, url: organisation_agent_searches_path(@organisation), method: :get) do |f|
       .row
         .col-md-3
-          = f.input :motif_id, collection: policy_scope(Motif).active, required: true, include_blank: "Sélectionnez un motif", input_html: { class: 'select2-input' }
+          = f.input :motif_id, collection: @motifs, required: true, include_blank: "Sélectionnez un motif", input_html: { class: 'select2-input' }
         .col-md-2
           = date_input(f, :from_date, label = "À partir du")
         .col-md-3
-          = f.input :agent_ids, collection: policy_scope(Agent), label: "Agent(s)", label_method: :full_name, input_html: { multiple: true, class: 'select2-input' }
+          = f.input :agent_ids, collection: @agents, label: "Agent(s)", label_method: :full_name, input_html: { multiple: true, class: 'select2-input' }
         .col-md-4
-          = f.input :lieu_id, collection: policy_scope(Lieu), include_blank: "Sélectionnez un lieu", input_html: { class: 'select2-input' }
+          = f.input :lieu_id, collection: @lieux, include_blank: "Sélectionnez un lieu", input_html: { class: 'select2-input' }
       = f.submit "Afficher les créneaux", class: "btn btn-primary", data: { disable_with: "Récupération des créneaux..."}
 
 #creneaux

@@ -64,8 +64,6 @@ RSpec.describe Agents::RdvsController, type: :controller do
       rdv.reload
     end
 
-    before { subject }
-
     context "with valid params" do
       let(:new_attributes) do
         {
@@ -74,11 +72,11 @@ RSpec.describe Agents::RdvsController, type: :controller do
       end
 
       it "updates the requested rdv" do
-        rdv.reload
-        expect(rdv.name).to eq("Le nouveau nom")
+        expect { subject }.to change(rdv, :name).to("Le nouveau nom")
       end
 
-      it "redirects to the agendan" do
+      it "redirects to the agenda" do
+        subject
         expect(response).to redirect_to(authenticated_agent_root_path)
       end
     end
@@ -91,6 +89,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
       end
 
       it "returns a success response (i.e. to display the 'edit' template)" do
+        subject
         expect(response).to be_successful
       end
 

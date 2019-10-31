@@ -40,6 +40,9 @@ describe "Agent can create a Rdv with creneau search" do
     expect(page).to have_content(plage_ouverture.agent.short_name)
     expect(page).not_to have_content(plage_ouverture2.agent.short_name)
 
+    # Click to change to next week
+    first(:link, ">>").click
+
     # Select creneau
     first(:link, "09:30").click
 
