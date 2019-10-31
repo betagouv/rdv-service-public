@@ -21,7 +21,10 @@ document.addEventListener('turbolinks:load', function() {
       selectable: true,
       select: function(info) {
         let startDate = moment(info.start);
-        let params = { starts_at: info.startStr };
+        let params = {
+          starts_at: info.startStr,
+          organisation_id: calendarEl.dataset.organisationId,
+         };
         let plage_ouvertures = calendar.getEvents()
           .filter(e => e.rendering == "background")
           .filter(e => startDate.isBetween(e.start, e.end, null, "[]"));
@@ -29,7 +32,7 @@ document.addEventListener('turbolinks:load', function() {
         if (plage_ouvertures[0] !== undefined) {
           params.location = plage_ouvertures[0].extendedProps.location;
         }
-        window.location = Routes.new_first_step_path(params);
+        window.location = Routes.new_organisation_first_step_path(params);
       },
       header: {
          center: 'dayGridMonth,timeGridWeek,timeGridFourDay'

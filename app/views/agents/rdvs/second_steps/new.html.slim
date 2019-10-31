@@ -10,7 +10,7 @@
 
   .card-body
     = render partial: 'layouts/model_errors', locals: { model: @second_step }
-    = simple_form_for(@second_step.rdv, url: second_steps_path) do |f|
+    = simple_form_for(@second_step.rdv, url: organisation_second_steps_path(current_organisation)) do |f|
       = f.association :motif, as: :hidden,  wrapper_html: { class: 'm-0' }
 
       - unless @second_step.rdv.motif.by_phone
@@ -27,6 +27,6 @@
       = datetime_input(f, :starts_at)
       .row
         .col.text-left
-          = link_to 'Revenir en arrière', new_first_step_path(@second_step.to_query), class: 'btn btn-link'
+          = link_to 'Revenir en arrière', new_organisation_first_step_path(@second_step.to_query), class: 'btn btn-link'
         .col.text-right
           = f.button :submit, 'Continuer'

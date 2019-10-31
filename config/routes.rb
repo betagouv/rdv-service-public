@@ -75,9 +75,9 @@ Rails.application.routes.draw do
       resources :agent_searches, only: :index, module: "agents/creneaux" do
         get :by_lieu, on: :collection
       end
-    end
-    [:first_steps, :second_steps, :third_steps].each do |step|
-      resources step, only: [:new, :create], module: "agents/rdvs"
+      [:first_steps, :second_steps, :third_steps].each do |step|
+        resources step, only: [:new, :create], module: "agents/rdvs"
+      end
     end
   end
 
