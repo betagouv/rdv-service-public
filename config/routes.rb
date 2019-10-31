@@ -68,9 +68,10 @@ Rails.application.routes.draw do
       resources :users, except: :show, shallow: true, controller: 'organisations/users' do
         post :invite, on: :member
       end
-    end
-    resources :rdvs, except: [:create, :new], shallow: true, controller: 'agents/rdvs' do
-      patch :status, on: :member
+
+      resources :rdvs, except: [:create, :new], shallow: true, controller: 'agents/rdvs' do
+        patch :status, on: :member
+      end
     end
     [:first_steps, :second_steps, :third_steps].each do |step|
       resources step, only: [:new, :create], module: "agents/rdvs"

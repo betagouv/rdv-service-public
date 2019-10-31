@@ -4,7 +4,7 @@ class Agents::RdvsController < DashboardAuthController
   before_action :set_rdv, only: [:show, :edit, :update, :destroy, :status]
 
   def index
-    @rdvs = policy_scope(current_agent.rdvs).active.where(starts_at: date_range_params).includes(:motif).order(:starts_at)
+    @rdvs = policy_scope(current_agent.rdvs.where(organisation_id: current_organisation.id)).active.where(starts_at: date_range_params).includes(:motif).order(:starts_at)
   end
 
   def show
