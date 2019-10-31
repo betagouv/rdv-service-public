@@ -12,7 +12,7 @@ class Agents::Rdvs::FirstStepsController < DashboardAuthController
     build_first_step
     authorize(@first_step)
     if @first_step.valid?
-      redirect_to new_second_step_path(@first_step.to_query)
+      redirect_to new_organisation_second_step_path(@first_step.to_query)
     else
       render 'new'
     end
