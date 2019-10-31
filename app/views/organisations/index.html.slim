@@ -1,0 +1,7 @@
+.text-center.w-75.m-auto
+  h4.text-dark-50.text-center.mt-0.font-weight-bold.mb-4 Choisissez une organisation
+
+.card
+  .card-body
+    - @organisations.each do |organisation|
+      = link_to organisation.name, organisation_path(organisation)
