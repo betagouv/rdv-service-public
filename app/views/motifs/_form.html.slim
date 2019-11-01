@@ -1,4 +1,4 @@
-= simple_form_for [organisation, motif], remote: request.xhr?, data: { rightbar: true } do |f|
+= simple_form_for [motif.organisation, motif], remote: request.xhr?, data: { rightbar: true } do |f|
   = render partial: 'layouts/model_errors', locals: { model: motif }
   = f.input :name
   = f.association :service, collection: Service.with_motifs
@@ -13,6 +13,6 @@
   .row
     - if motif.persisted?
       .col.text-left
-        = link_to "Supprimer", motif_path(motif), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce motif ?"}
+        = link_to "Supprimer", organisation_motif_path(motif.organisation, motif), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce motif ?"}
     .col.text-right
       = f.button :submit

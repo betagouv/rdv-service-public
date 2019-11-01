@@ -25,7 +25,7 @@ RSpec.describe MotifsController, type: :controller do
 
   describe "GET #edit" do
     it "returns a success response" do
-      get :edit, params: { id: motif.to_param }
+      get :edit, params: { organisation_id: organisation_id, id: motif.to_param }
       expect(response).to be_successful
     end
   end
@@ -69,7 +69,7 @@ RSpec.describe MotifsController, type: :controller do
   end
 
   describe "PUT #update" do
-    subject { put :update, params: { id: motif.to_param, motif: new_attributes } }
+    subject { put :update, params: { organisation_id: organisation_id, id: motif.to_param, motif: new_attributes } }
 
     before { subject }
 
@@ -111,12 +111,12 @@ RSpec.describe MotifsController, type: :controller do
   describe "DELETE #destroy" do
     it "destroys the requested motif" do
       expect do
-        delete :destroy, params: { id: motif.to_param }
+        delete :destroy, params: { organisation_id: organisation_id, id: motif.to_param }
       end.to change(Motif, :count).by(-1)
     end
 
     it "redirects to the motifs list" do
-      delete :destroy, params: { id: motif.to_param }
+      delete :destroy, params: { organisation_id: organisation_id, id: motif.to_param }
       expect(response).to redirect_to(organisation_motifs_path(organisation_id))
     end
   end

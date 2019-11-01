@@ -53,7 +53,7 @@ Rails.application.routes.draw do
     root to: 'organisations#index', as: :authenticated_agent_root
     resources :organisations do
       resources :lieux, except: :show
-      resources :motifs, except: :show, shallow: true
+      resources :motifs, except: :show
       resources :plage_ouvertures, except: :show, shallow: true
       resources :absences, except: :show, shallow: true
 
