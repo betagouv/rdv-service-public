@@ -66,7 +66,7 @@ Rails.application.routes.draw do
         resources :permissions, only: [:edit, :update]
       end
 
-      resources :users, except: :show, shallow: true, controller: 'organisations/users' do
+      resources :users, except: :show, controller: 'organisations/users' do
         post :invite, on: :member
       end
 
