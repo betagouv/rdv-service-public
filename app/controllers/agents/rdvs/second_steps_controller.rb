@@ -7,7 +7,7 @@ class Agents::Rdvs::SecondStepsController < DashboardAuthController
     @second_step = Rdv::SecondStep.new(rdv.to_step_params)
     @second_step.starts_at ||= Time.zone.now
     @second_step.duration_in_min ||= @second_step.motif.default_duration_in_min
-    @second_step.organisation_id = current_agent.organisation_id
+    @second_step.organisation_id = current_organisation.id
     authorize(@second_step)
   end
 
@@ -26,7 +26,7 @@ class Agents::Rdvs::SecondStepsController < DashboardAuthController
   def build_second_step
     rdv = Rdv.new(second_step_params)
     @second_step = Rdv::SecondStep.new(rdv.to_step_params)
-    @second_step.organisation_id = current_agent.organisation_id
+    @second_step.organisation_id = current_organisation.id
   end
 
   def second_step_params

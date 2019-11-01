@@ -17,7 +17,7 @@
         = f.input :location, input_html: { class: "places-js-container" }
 
         .mb-1
-          - current_agent.organisation.lieux.each do |l|
+          - current_organisation.lieux.each do |l|
             = button_tag type: "button", onclick: "document.querySelector('#rdv_location').value = '#{escape_javascript(l.address)}'", class: "btn btn-rounded btn-outline-secondary btn-sm mb-1" do
               i.fa.fa-map-marker.mr-1
               = l.full_name

@@ -4,7 +4,7 @@ class Agents::Rdvs::FirstStepsController < DashboardAuthController
   def new
     rdv = Rdv.new(query_params)
     @first_step = Rdv::FirstStep.new(rdv.to_step_params)
-    @first_step.organisation_id = current_agent.organisation_id
+    @first_step.organisation_id = current_organisation.id
     authorize(@first_step)
   end
 
@@ -23,7 +23,7 @@ class Agents::Rdvs::FirstStepsController < DashboardAuthController
   def build_first_step
     rdv = Rdv.new(first_step_params)
     @first_step = Rdv::FirstStep.new(rdv.to_step_params)
-    @first_step.organisation_id = current_agent.organisation_id
+    @first_step.organisation_id = current_organisation.id
   end
 
   def first_step_params
