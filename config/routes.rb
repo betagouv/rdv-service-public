@@ -55,7 +55,7 @@ Rails.application.routes.draw do
       resources :lieux, except: :show
       resources :motifs, except: :show
       resources :plage_ouvertures, except: :show
-      resources :absences, except: :show, shallow: true
+      resources :absences, except: :show
 
       resources :agents, only: [:index, :destroy] do
         post :reinvite, on: :member

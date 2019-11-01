@@ -45,7 +45,7 @@ RSpec.describe AbsencesController, type: :controller do
           expect(first["start"]).to eq(absence1.starts_at.as_json)
           expect(first["end"]).to eq(absence1.ends_at.as_json)
           expect(first["backgroundColor"]).to eq("#7f8c8d")
-          expect(first["url"]).to eq(edit_absence_path(absence1))
+          expect(first["url"]).to eq(edit_organisation_absence_path(absence.organisation, absence1))
         end
       end
 
@@ -64,7 +64,7 @@ RSpec.describe AbsencesController, type: :controller do
           expect(first["start"]).to eq(absence2.starts_at.as_json)
           expect(first["end"]).to eq(absence2.ends_at.as_json)
           expect(first["backgroundColor"]).to eq("#7f8c8d")
-          expect(first["url"]).to eq(edit_absence_path(absence2))
+          expect(first["url"]).to eq(edit_organisation_absence_path(absence.organisation, absence2))
         end
       end
 
@@ -83,7 +83,7 @@ RSpec.describe AbsencesController, type: :controller do
           expect(first["start"]).to eq(absence2.starts_at.as_json)
           expect(first["end"]).to eq(absence2.ends_at.as_json)
           expect(first["backgroundColor"]).to eq("#7f8c8d")
-          expect(first["url"]).to eq(edit_absence_path(absence2))
+          expect(first["url"]).to eq(edit_organisation_absence_path(absence.organisation, absence2))
         end
       end
 
@@ -102,7 +102,7 @@ RSpec.describe AbsencesController, type: :controller do
           expect(first["start"]).to eq(absence2.starts_at.as_json)
           expect(first["end"]).to eq(absence2.ends_at.as_json)
           expect(first["backgroundColor"]).to eq("#7f8c8d")
-          expect(first["url"]).to eq(edit_absence_path(absence2))
+          expect(first["url"]).to eq(edit_organisation_absence_path(absence.organisation, absence2))
         end
       end
     end
@@ -117,7 +117,7 @@ RSpec.describe AbsencesController, type: :controller do
 
   describe "GET #edit" do
     it "returns a success response" do
-      get :edit, params: { id: absence.to_param }
+      get :edit, params: { organisation_id: organisation_id, id: absence.to_param }
       expect(response).to be_successful
     end
   end
@@ -162,7 +162,7 @@ RSpec.describe AbsencesController, type: :controller do
   end
 
   describe "PUT #update" do
-    subject { put :update, params: { id: absence.to_param, absence: new_attributes } }
+    subject { put :update, params: { organisation_id: organisation_id, id: absence.to_param, absence: new_attributes } }
 
     before { subject }
 
@@ -206,12 +206,12 @@ RSpec.describe AbsencesController, type: :controller do
   describe "DELETE #destroy" do
     it "destroys the requested absence" do
       expect do
-        delete :destroy, params: { id: absence.to_param }
+        delete :destroy, params: { organisation_id: organisation_id, id: absence.to_param }
       end.to change(Absence, :count).by(-1)
     end
 
     it "redirects to the absences list" do
-      delete :destroy, params: { id: absence.to_param }
+      delete :destroy, params: { organisation_id: organisation_id, id: absence.to_param }
       expect(response).to redirect_to(organisation_absences_path(organisation_id))
     end
   end
