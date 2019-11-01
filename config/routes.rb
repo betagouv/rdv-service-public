@@ -50,7 +50,7 @@ Rails.application.routes.draw do
   end
 
   authenticated :agent do
-    root to: 'agendas#index', as: :authenticated_agent_root
+    root to: 'organisations#index', as: :authenticated_agent_root
     resources :organisations do
       resources :lieux, except: :show, shallow: true
       resources :motifs, except: :show, shallow: true
