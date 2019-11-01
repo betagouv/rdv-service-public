@@ -4,7 +4,7 @@ class PlageOuverturesController < DashboardAuthController
   before_action :set_plage_ouverture, only: [:edit, :update, :destroy]
 
   def index
-    plage_ouvertures = policy_scope(current_agent.plage_ouvertures.where(organisation_id: current_organisation.id))
+    plage_ouvertures = policy_scope(current_agent.plage_ouvertures.includes(:organisation).where(organisation_id: current_organisation.id))
 
     respond_to do |f|
       f.json { @plage_ouverture_occurences = plage_ouvertures.flat_map { |po| po.occurences_for(date_range_params).map { |occurence| [po, occurence] } }.sort_by(&:second) }
