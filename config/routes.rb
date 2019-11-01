@@ -70,7 +70,7 @@ Rails.application.routes.draw do
         post :invite, on: :member
       end
 
-      resources :rdvs, except: [:create, :new], shallow: true, controller: 'agents/rdvs' do
+      resources :rdvs, except: [:create, :new], controller: 'agents/rdvs' do
         patch :status, on: :member
       end
 
