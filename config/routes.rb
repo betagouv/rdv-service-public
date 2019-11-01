@@ -54,7 +54,7 @@ Rails.application.routes.draw do
     resources :organisations do
       resources :lieux, except: :show
       resources :motifs, except: :show
-      resources :plage_ouvertures, except: :show, shallow: true
+      resources :plage_ouvertures, except: :show
       resources :absences, except: :show, shallow: true
 
       resources :agents, only: [:index, :destroy] do

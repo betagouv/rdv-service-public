@@ -1,5 +1,5 @@
 - if plage_ouverture.agent.available_motifs.any?
-  = simple_form_for [organisation, plage_ouverture], remote: request.xhr?, data: { rightbar: true } do |f|
+  = simple_form_for [plage_ouverture.organisation, plage_ouverture], remote: request.xhr?, data: { rightbar: true } do |f|
     = render partial: 'layouts/model_errors', locals: { model: plage_ouverture }
     = f.input :title
     = f.association :lieu, collection: policy_scope(Lieu), label_method: :full_name, include_blank: false
@@ -16,7 +16,7 @@
     .row
       - if plage_ouverture.persisted?
         .col.text-left
-          = link_to "Supprimer", plage_ouverture_path(plage_ouverture), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"}
+          = link_to "Supprimer", organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"}
       .col.text-right
         = f.button :submit
 - else

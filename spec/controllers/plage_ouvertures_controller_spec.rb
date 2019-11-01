@@ -115,7 +115,7 @@ RSpec.describe PlageOuverturesController, type: :controller do
 
   describe "GET #edit" do
     it "returns a success response" do
-      get :edit, params: { id: plage_ouverture.to_param }
+      get :edit, params: { organisation_id: organisation_id, id: plage_ouverture.to_param }
       expect(response).to be_successful
     end
   end
@@ -160,7 +160,7 @@ RSpec.describe PlageOuverturesController, type: :controller do
   end
 
   describe "PUT #update" do
-    subject { put :update, params: { id: plage_ouverture.to_param, plage_ouverture: new_attributes } }
+    subject { put :update, params: { organisation_id: organisation_id, id: plage_ouverture.to_param, plage_ouverture: new_attributes } }
 
     before { subject }
 
@@ -204,12 +204,12 @@ RSpec.describe PlageOuverturesController, type: :controller do
   describe "DELETE #destroy" do
     it "destroys the requested plage_ouverture" do
       expect do
-        delete :destroy, params: { id: plage_ouverture.to_param }
+        delete :destroy, params: { organisation_id: organisation_id, id: plage_ouverture.to_param }
       end.to change(PlageOuverture, :count).by(-1)
     end
 
     it "redirects to the plage_ouvertures list" do
-      delete :destroy, params: { id: plage_ouverture.to_param }
+      delete :destroy, params: { organisation_id: organisation_id, id: plage_ouverture.to_param }
       expect(response).to redirect_to(organisation_plage_ouvertures_path(organisation_id))
     end
   end
