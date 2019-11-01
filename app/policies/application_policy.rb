@@ -52,7 +52,7 @@ class ApplicationPolicy
     end
 
     def resolve
-      @user_or_agent.agent? ? scope.where(agent_id: @user_or_agent.id) : []
+      @user_or_agent.agent? ? scope.where(agent_id: @user_or_agent.id) : scope.none
     end
   end
 end

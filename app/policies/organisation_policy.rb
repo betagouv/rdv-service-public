@@ -12,7 +12,7 @@ class OrganisationPolicy < AdminPolicy
     end
 
     def resolve
-      @user_or_agent.agent? && @user_or_agent.admin? ? scope.where(id: @user_or_agent.organisation_ids) : []
+      @user_or_agent.agent? ? scope.joins(:agents).where(agents: { id: @user_or_agent.id }) : scope.none
     end
   end
 end

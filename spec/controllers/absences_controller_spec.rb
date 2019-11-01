@@ -2,7 +2,7 @@ RSpec.describe AbsencesController, type: :controller do
   render_views
 
   let(:agent) { create(:agent) }
-  let(:organisation_id) { agent.organisation_id }
+  let(:organisation_id) { agent.organisation_ids.first }
   let!(:absence) { create(:absence, agent_id: agent.id, organisation_id: organisation_id) }
 
   before do
@@ -16,9 +16,6 @@ RSpec.describe AbsencesController, type: :controller do
     end
 
     describe "for json format" do
-      render_views
-
-      let(:agent) { create(:agent) }
       let!(:absence1) { create(:absence, agent: agent, starts_at: Time.zone.parse("21/07/2019 08:00"), ends_at: Time.zone.parse("21/07/2019 10:00")) }
       let!(:absence2) { create(:absence, agent: agent, starts_at: Time.zone.parse("20/08/2019 08:00"), ends_at: Time.zone.parse("31/08/2019 22:00")) }
 

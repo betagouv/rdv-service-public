@@ -2,7 +2,7 @@ RSpec.describe PlageOuverturesController, type: :controller do
   render_views
 
   let(:agent) { create(:agent) }
-  let(:organisation_id) { agent.organisation_id }
+  let(:organisation_id) { agent.organisation_ids.first }
   let!(:plage_ouverture) { create(:plage_ouverture, organisation_id: organisation_id) }
 
   before do

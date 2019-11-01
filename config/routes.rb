@@ -57,13 +57,13 @@ Rails.application.routes.draw do
       resources :plage_ouvertures, except: :show, shallow: true
       resources :absences, except: :show, shallow: true
 
-      resources :agents, only: [:index, :destroy], shallow: true do
+      resources :agents, only: [:index, :destroy] do
         post :reinvite, on: :member
       end
 
       namespace :agents do
-        resources :full_subscriptions, only: [:new, :create], shallow: true
-        resources :permissions, only: [:edit, :update], shallow: true
+        resources :full_subscriptions, only: [:new, :create]
+        resources :permissions, only: [:edit, :update]
       end
 
       resources :users, except: :show, shallow: true, controller: 'organisations/users' do

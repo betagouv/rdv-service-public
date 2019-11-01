@@ -1,6 +1,8 @@
 RSpec.describe Agents::RdvsController, type: :controller do
+  render_views
+  
   let(:agent) { create(:agent) }
-  let(:organisation_id) { agent.organisation_id }
+  let(:organisation_id) { agent.organisation_ids.first }
   let!(:rdv) { create(:rdv, agent_ids: [agent.id], organisation_id: organisation_id) }
 
   before do
@@ -8,9 +10,6 @@ RSpec.describe Agents::RdvsController, type: :controller do
   end
 
   describe "GET index" do
-    render_views
-
-    let(:agent) { create(:agent) }
     let!(:rdv1) { create(:rdv, agents: [agent], starts_at: Time.zone.parse("21/07/2019 08:00")) }
     let!(:rdv2) { create(:rdv, agents: [agent], starts_at: Time.zone.parse("21/07/2019 09:00")) }
 
