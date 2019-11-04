@@ -58,11 +58,6 @@ class Agent < ApplicationRecord
     !deleted_at ? super : :deleted_account
   end
 
-  def available_motifs
-    available_motifs = service.secretariat? ? organisation.motifs.by_phone : motifs
-    available_motifs.active
-  end
-
   private
 
   def set_organisation
