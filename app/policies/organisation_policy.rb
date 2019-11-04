@@ -1,4 +1,8 @@
 class OrganisationPolicy < AdminPolicy
+  def show?
+    true
+  end
+
   def destroy?
     false
   end
