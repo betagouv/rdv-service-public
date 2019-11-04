@@ -11,7 +11,7 @@ class AgentHasManyOrganisations < ActiveRecord::Migration[6.0]
     end
 
     Agent.all.each do |a|
-      a.organisations << a.organisation
+      a.organisations << a.organisation if a.organisation
     end
 
     remove_column :agents, :organisation_id
