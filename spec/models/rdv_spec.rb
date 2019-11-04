@@ -121,4 +121,24 @@ describe Rdv, type: :model do
       subject
     end
   end
+
+  describe "#associate_users_with_organisation" do
+    let(:organisation) { create(:organisation) }
+    let(:user) { create(:user, organisations: [organisation]) }
+    let(:rdv) { build(:rdv, users: [user], organisation: create(:organisation)) }
+
+    subject do
+      rdv.save
+      user.reload
+    end
+
+    it "expect .save to trigger #associate_users_with_organisation" do
+      expect(rdv).to receive(:associate_users_with_organisation)
+      subject
+    end
+
+    it "expect .save link user to organisation" do
+      expect { subject }.to change(user, :organisation_ids).from([organisation.id]).to([organisation.id, rdv.organisation_id])
+    end
+  end
 end

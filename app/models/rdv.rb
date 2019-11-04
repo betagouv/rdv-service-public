@@ -15,6 +15,7 @@ class Rdv < ApplicationRecord
 
   after_create :send_ics_to_users_and_agents
   after_update :update_ics_to_user_and_agents, if: -> { saved_change_to_starts_at? || saved_change_to_cancelled_at? }
+  after_save :associate_users_with_organisation
 
   def ends_at
     starts_at + duration_in_min.minutes
@@ -91,6 +92,12 @@ class Rdv < ApplicationRecord
   end
 
   private
+
+  def associate_users_with_organisation
+    users.joins(:organisations).where.not(organisations: { id: organisation.id }).each do |u|
+      u.organisations << organisation
+    end
+  end
 
   def reload_uuid
     # https://github.com/rails/rails/issues/17605
