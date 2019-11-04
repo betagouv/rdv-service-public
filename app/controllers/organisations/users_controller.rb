@@ -6,7 +6,7 @@ class Organisations::UsersController < DashboardAuthController
 
   def index
     page = 1
-    @users = policy_scope(User).order(Arel.sql('LOWER(last_name)'))
+    @users = policy_scope(User).where(id: current_organisation.users.pluck(:id)).order(Arel.sql('LOWER(last_name)'))
     if params[:page]
       page = params[:page]
     elsif params[:to_user]
@@ -19,15 +19,14 @@ class Organisations::UsersController < DashboardAuthController
 
   def new
     @user = User.new
-    @user.organisation_id = current_organisation.id
-    @organisation = current_organisation
+    @user.organisation_ids = [current_organisation.id]
     authorize(@user)
     respond_right_bar_with @user
   end
 
   def create
     @user = User.new(user_params)
-    @user.organisation_id = current_organisation.id
+    @user.organisation_ids = [current_organisation.id]
     @user.invited_by = current_agent
     @user.created_or_updated_by_agent = true
     authorize(@user)
@@ -60,7 +59,7 @@ class Organisations::UsersController < DashboardAuthController
   def destroy
     authorize(@user)
     @user.destroy
-    redirect_to organisation_users_path(@user.organisation), notice: "L'usager a été supprimé."
+    redirect_to organisation_users_path(current_organisation), notice: "L'usager a été supprimé."
   end
 
   private

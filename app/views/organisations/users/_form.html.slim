@@ -1,4 +1,4 @@
-= simple_form_for([user.organisation, user], remote: request.xhr?, data: { rightbar: true }) do |f|
+= simple_form_for([current_organisation, user], remote: request.xhr?, data: { rightbar: true }) do |f|
   = render partial: 'layouts/model_errors', locals: { model: user }
   .form-row
     .col-md-6= f.input :first_name
@@ -22,6 +22,6 @@
       .col.text-left
         => link_to "Supprimer", organisation_user_path(current_organisation, user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cet usager ?"}
         - if user.invitation_accepted_at.nil? && user.password.nil? && user.email
-          = link_to 'Inviter', invite_organisation_user_path(user.organisation, user), method: :post, class: 'btn btn-outline-primary'
+          = link_to 'Inviter', invite_organisation_user_path(current_organisation, user), method: :post, class: 'btn btn-outline-primary'
     .col.text-right
       = f.button :submit

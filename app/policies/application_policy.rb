@@ -36,7 +36,11 @@ class ApplicationPolicy
 
   ## Agent helpers method
   def agent_and_belongs_to_record_organisation?
-    @user_or_agent.agent? && @user_or_agent.organisation_ids.include?(@record.organisation_id)
+    if @record.is_a?(User)
+      @user_or_agent.agent? && (@user_or_agent.organisation_ids & @record.organisation_ids).any?
+    else
+      @user_or_agent.agent? && @user_or_agent.organisation_ids.include?(@record.organisation_id)
+    end
   end
 
   def record_belongs_to_agent?
