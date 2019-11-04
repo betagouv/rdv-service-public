@@ -10,8 +10,8 @@ class Agents::PermissionsController < DashboardAuthController
   def update
     @permission = Agent::Permission.new(agent: Agent.find(params[:id]))
     authorize(@permission)
-    @permission.update(permission_params)
-    respond_right_bar_with @permission, location: agents_path
+    flash[:notice] = "Agent mis à jour" if @permission.update(permission_params)
+    respond_right_bar_with @permission, location: organisation_agents_path(current_organisation)
   end
 
   private

@@ -49,21 +49,22 @@ Rails.application.routes.draw do
     put 'agents' => 'agents/registrations#update', :as => 'agent_registration'
   end
 
-  namespace :agents do
-    resources :full_subscriptions, only: [:new, :create]
-    resources :permissions, only: [:edit, :update]
-  end
-
   authenticated :agent do
     root to: 'agendas#index', as: :authenticated_agent_root
-    resources :agents, only: [:index, :destroy] do
-      post :reinvite, on: :member
-    end
     resources :organisations do
       resources :lieux, except: :show, shallow: true
       resources :motifs, except: :show, shallow: true
       resources :plage_ouvertures, except: :show, shallow: true
       resources :absences, except: :show, shallow: true
+
+      resources :agents, only: [:index, :destroy], shallow: true do
+        post :reinvite, on: :member
+      end
+
+      namespace :agents do
+        resources :full_subscriptions, only: [:new, :create], shallow: true
+        resources :permissions, only: [:edit, :update], shallow: true
+      end
 
       resources :users, except: :show, shallow: true, controller: 'organisations/users' do
         post :invite, on: :member
@@ -72,9 +73,11 @@ Rails.application.routes.draw do
       resources :rdvs, except: [:create, :new], shallow: true, controller: 'agents/rdvs' do
         patch :status, on: :member
       end
+
       resources :agent_searches, only: :index, module: "agents/creneaux" do
         get :by_lieu, on: :collection
       end
+
       [:first_steps, :second_steps, :third_steps].each do |step|
         resources step, only: [:new, :create], module: "agents/rdvs"
       end
