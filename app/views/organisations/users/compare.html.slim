@@ -1,0 +1,84 @@
+- content_for :title do
+  | Nouvel usager
+
+.alert.alert-warning role="alert"
+  h4.alert-heading
+    | Un usager a été trouvé pour cet email
+    - if @user_not_in_organisation
+      |&nbsp;mais il n'est pas encore lié à votre organisation
+    |.
+  p
+    | Si vous pensez que l'usager trouvé <strong>est le bon</strong> vous pouvez
+    - if @user_not_in_organisation
+      |&nbsp;l'associer à votre organisation et poursuivre sa modification ou non.
+    - else
+      |&nbsp;vous rendre directement sur sa fiche.
+  p Si vous pensez que l'usager trouvé <strong>n'est pas le bon</strong> vous pouvez créer un nouvel usager mais vous devez changer l'email pour qu'il ne soit pas déjà utilisé.
+
+.row
+  .col-md-6
+    .card
+      .card-body
+        = render 'form', user: @user
+  .col-md-6
+    .card
+      .card-body
+        h5.card-title Usager trouvé
+        .row
+          .col-md-6
+            p.mb-1 Prénom
+            p
+              strong= @user_to_compare.first_name
+          .col-md-6
+            p.mb-1 Nom
+            p
+              strong= @user_to_compare.last_name
+
+        p.mb-1 Email
+        p
+          strong= @user_to_compare.email
+
+        p.mb-1 Date de naissance
+        p
+          - if @user_to_compare.birth_date
+            strong
+              = "#{l(@user_to_compare.birth_date)} (#{@user_to_compare.age})"
+
+        p.mb-1 Numéro de téléphone
+        p
+          strong= @user_to_compare.phone_number
+
+        p.mb-1 Adresse
+        p
+          strong= @user_to_compare.address
+        .row
+          .col-md-6
+            p.mb-1 Caisse d'affiliation
+            p
+              - if @user_to_compare.caisse_affiliation
+                strong= t("activerecord.attributes.user.caisse_affiliations.#{@user_to_compare.caisse_affiliation}")
+          .col-md-6
+            p.mb-1 Numéro d'allocataire
+            p
+              strong= @user_to_compare.affiliation_number
+        .row
+          .col-md-6
+            p.mb-1 Situation familiale
+            p
+              - if @user_to_compare.family_situation
+                strong= t("activerecord.attributes.user.family_situations.#{@user_to_compare.family_situation}")
+          .col-md-6
+            p.mb-1 Nombre d'enfants
+            p
+              strong= @user_to_compare.number_of_children
+
+        p.mb-1 Logement
+        p
+          - if @user_to_compare.logement
+            strong= t("activerecord.attributes.user.logements.#{@user_to_compare.logement}")
+
+        .text-center
+          - if @user_not_in_organisation
+            = link_to "Associer cet usager à l'organisation #{current_organisation.name}", link_to_organisation_organisation_user_path(current_organisation, @user_to_compare), class: "btn btn-warning"
+          - else
+            = link_to "Modifier l'usager", edit_organisation_user_path(current_organisation, @user_to_compare), class: "btn btn-light"

@@ -68,6 +68,7 @@ Rails.application.routes.draw do
 
       resources :users, except: :show, controller: 'organisations/users' do
         post :invite, on: :member
+        get :link_to_organisation, on: :member
       end
 
       resources :rdvs, except: [:create, :new], controller: 'agents/rdvs' do

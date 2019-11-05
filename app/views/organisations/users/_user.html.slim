@@ -1,6 +1,6 @@
 tr class="#{'bg-light' if user.id == params[:to_user].to_i}"
   td
-    = link_to_if policy(user).edit?, user.full_name, edit_organisation_user_path(current_organisation, user), data: { rightbar: true }
+    = link_to_if policy(user).edit?, user.full_name, edit_organisation_user_path(current_organisation, user)
     = new_user_tag(user)
   td= birth_date_and_age(user)
   td= formatted_phone_number(user)

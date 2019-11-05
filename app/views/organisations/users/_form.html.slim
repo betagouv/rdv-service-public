@@ -24,4 +24,6 @@
         - if user.invitation_accepted_at.nil? && user.password.nil? && user.email
           = link_to 'Inviter', invite_organisation_user_path(current_organisation, user), method: :post, class: 'btn btn-outline-primary'
     .col.text-right
+      - if user.persisted?
+        = link_to "Retour à la liste", organisation_users_path(current_organisation, to_user: user.id), class: "btn btn-link"
       = f.button :submit

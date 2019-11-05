@@ -2,7 +2,7 @@ class Organisations::UsersController < DashboardAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: [:new, :create]
-  before_action :set_user, except: [:index, :new, :create]
+  before_action :set_user, except: [:index, :new, :create, :link_to_organisation]
 
   def index
     page = 1
@@ -21,7 +21,6 @@ class Organisations::UsersController < DashboardAuthController
     @user = User.new
     @user.organisation_ids = [current_organisation.id]
     authorize(@user)
-    respond_right_bar_with @user
   end
 
   def create
@@ -30,15 +29,27 @@ class Organisations::UsersController < DashboardAuthController
     @user.invited_by = current_agent
     @user.created_or_updated_by_agent = true
     authorize(@user)
-    @organisation = current_organisation
-    @user.skip_confirmation!
-    flash[:notice] = "L'usager a été créé." if @user.save
-    respond_right_bar_with @user, location: organisation_users_path(@organisation, to_user: @user.id)
+    if @user_to_compare = User.find_by(email: @user.email)
+      @user_not_in_organisation = !@user_to_compare.organisation_ids.include?(current_organisation.id)
+      render :compare
+    else
+      @organisation = current_organisation
+      @user.skip_confirmation!
+      flash[:notice] = "L'usager a été créé." if @user.save
+      redirect_to organisation_users_path(@organisation, to_user: @user.id)
+    end
+  end
+
+  def link_to_organisation
+    @user = User.find(params.require(:id))
+    @user.organisations << current_organisation
+    authorize(@user)
+    flash[:notice] = "L'usager a été associé à l'organisation #{current_organisation.name}"
+    redirect_to edit_organisation_user_path(current_organisation.id, @user.id)
   end
 
   def edit
     authorize(@user)
-    respond_right_bar_with @user
   end
 
   def update
@@ -58,7 +69,7 @@ class Organisations::UsersController < DashboardAuthController
 
   def destroy
     authorize(@user)
-    @user.destroy
+    @user.organisations.delete(current_organisation)
     redirect_to organisation_users_path(current_organisation), notice: "L'usager a été supprimé."
   end
 

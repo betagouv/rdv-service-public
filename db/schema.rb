@@ -170,6 +170,7 @@ ActiveRecord::Schema.define(version: 2019_11_06_174342) do
   create_table "organisations_users", id: false, force: :cascade do |t|
     t.bigint "organisation_id"
     t.bigint "user_id"
+    t.index ["organisation_id", "user_id"], name: "index_organisations_users_on_organisation_id_and_user_id", unique: true
     t.index ["organisation_id"], name: "index_organisations_users_on_organisation_id"
     t.index ["user_id"], name: "index_organisations_users_on_user_id"
   end
