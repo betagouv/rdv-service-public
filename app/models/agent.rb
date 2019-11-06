@@ -44,8 +44,8 @@ class Agent < ApplicationRecord
   end
 
   ## Soft Delete for Devise
-  def soft_delete organisation = nil
-    organisations.delete organisation and return if organisation.present? && organisations.count > 1
+  def soft_delete(organisation = nil)
+    organisations.delete(organisation) && return if organisation.present? && organisations.count > 1
     update_attribute(:deleted_at, Time.zone.now)
   end
 
