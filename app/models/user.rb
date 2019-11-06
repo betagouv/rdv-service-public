@@ -9,8 +9,8 @@ class User < ApplicationRecord
 
   has_and_belongs_to_many :organisations, -> { distinct }
   has_and_belongs_to_many :rdvs
-  belongs_to :parent, class_name: "User"
-  has_many :children, class_name: "User"
+  belongs_to :parent, foreign_key: "parent_id", class_name: "User"
+  has_many :children, foreign_key: "parent_id", class_name: "User"
 
   enum caisse_affiliation: { aucune: 0, caf: 1, msa: 2 }
   enum family_situation: { single: 0, in_a_relationship: 1, divorced: 2 }

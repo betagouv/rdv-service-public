@@ -1,6 +1,6 @@
-.row.justify-content-md-center
+.row.justify-content-md-center.pt-3
   .col-md-6
-    .card.mt-3
+    .card
       .card-body
         h4.card-title.mb-4  Mes informations
         = simple_form_for @user, url: users_informations_path  do |f|
@@ -20,3 +20,21 @@
           = f.input :logement, collection: User.human_enum_collection(:logement)
           .text-right
             = f.button :submit
+  .col-md-6
+    .card
+      .card-body
+        h4.card-title.mb-4 Mes enfants
+        ul.list-group.mb-2
+          - if @user.children.empty?
+            li.list-group-item
+              em Aucun enfant
+          - @user.children.each do |child|
+            li.list-group-item
+              .row
+                .col
+                  => child.full_name
+                  = "(#{child.age})" if child.birth_date
+                .col-auto.text-right
+                  = link_to "modifier", edit_child_path(child)
+        .text-right
+          = link_to "+ Ajouter un enfant", new_child_path, class: "btn btn-light"
