@@ -9,7 +9,7 @@ class MotifsController < DashboardAuthController
   end
 
   def new
-    @motif = Motif.new
+    @motif = Motif.new(organisation_id: current_organisation.id)
     authorize(@motif)
     respond_right_bar_with @motif
   end

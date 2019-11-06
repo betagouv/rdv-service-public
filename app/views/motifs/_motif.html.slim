@@ -2,7 +2,7 @@ tr
   td
     span.badge.badge-pill.ml-0.mr-2 style="background: #{motif.color};"
       | &nbsp;
-    = link_to motif.name.capitalize, edit_motif_path(motif), data: { rightbar: true }
+    = link_to motif.name.capitalize, edit_organisation_motif_path(motif.organisation, motif), data: { rightbar: true }
     = online_badge(motif)
     = by_phone_badge(motif)
   td= motif.service.name

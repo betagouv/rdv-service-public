@@ -2,7 +2,7 @@ class RdvPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       if @user_or_agent.agent?
-        @scope.where(organisation_id: @user_or_agent.organisation_id)
+        @scope.where(organisation_id: @user_or_agent.organisation_ids)
       elsif @user_or_agent.user?
         @user_or_agent.rdvs
       end

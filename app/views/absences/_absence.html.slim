@@ -1,6 +1,6 @@
 tr
   td
-    = link_to absence.title_or_default, edit_absence_path(absence), data: { rightbar: true }
+    = link_to absence.title_or_default, edit_organisation_absence_path(absence.organisation, absence), data: { rightbar: true }
     = absence_tag(absence)
   td
     | Du #{l(absence.starts_at, format: :human)} au #{l(absence.ends_at, format: :human)}

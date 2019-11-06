@@ -1,4 +1,4 @@
-= simple_form_for [organisation, absence], remote: request.xhr?, data: { rightbar: true } do |f|
+= simple_form_for [absence.organisation, absence], remote: request.xhr?, data: { rightbar: true } do |f|
   = render partial: 'layouts/model_errors', locals: { model: absence }
   = f.input :title
   = datetime_input f, :starts_at
@@ -6,6 +6,6 @@
   .row
     - if absence.persisted?
       .col.text-left
-        = link_to "Supprimer", absence_path(absence), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"}
+        = link_to "Supprimer", organisation_absence_path(absence.organisation, absence), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"}
     .col.text-right
       = f.button :submit

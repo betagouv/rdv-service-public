@@ -28,7 +28,7 @@ Rails.application.routes.draw do
   end
 
   ## APP ##
-  devise_for :users, controllers: { registrations: 'users/registrations', invitations: 'common/invitations' }
+  devise_for :users, controllers: { registrations: 'users/registrations' }
 
   namespace :users do
     resources :rdvs, only: [:index, :new, :create] do
@@ -42,35 +42,35 @@ Rails.application.routes.draw do
     patch "users/informations", to: 'users/users#update'
   end
 
-  devise_for :agents, controllers: { registrations: 'agents/registrations', invitations: 'common/invitations' }
+  devise_for :agents, controllers: { invitations: 'agents/invitations' }
 
   as :agent do
     get 'agents/edit' => 'agents/registrations#edit', as: 'edit_agent_registration'
-    put 'agents' => 'agents/registrations#update', :as => 'agent_registration'
+    put 'agents' => 'agents/registrations#update', as: 'agent_registration'
   end
 
   authenticated :agent do
-    root to: 'agendas#index', as: :authenticated_agent_root
+    root to: 'organisations#index', as: :authenticated_agent_root
     resources :organisations do
-      resources :lieux, except: :show, shallow: true
-      resources :motifs, except: :show, shallow: true
-      resources :plage_ouvertures, except: :show, shallow: true
-      resources :absences, except: :show, shallow: true
+      resources :lieux, except: :show
+      resources :motifs, except: :show
+      resources :plage_ouvertures, except: :show
+      resources :absences, except: :show
 
-      resources :agents, only: [:index, :destroy], shallow: true do
+      resources :agents, only: [:index, :destroy] do
         post :reinvite, on: :member
       end
 
       namespace :agents do
-        resources :full_subscriptions, only: [:new, :create], shallow: true
-        resources :permissions, only: [:edit, :update], shallow: true
+        resources :full_subscriptions, only: [:new, :create]
+        resources :permissions, only: [:edit, :update]
       end
 
-      resources :users, except: :show, shallow: true, controller: 'organisations/users' do
+      resources :users, except: :show, controller: 'organisations/users' do
         post :invite, on: :member
       end
 
-      resources :rdvs, except: [:create, :new], shallow: true, controller: 'agents/rdvs' do
+      resources :rdvs, except: [:create, :new], controller: 'agents/rdvs' do
         patch :status, on: :member
       end
 

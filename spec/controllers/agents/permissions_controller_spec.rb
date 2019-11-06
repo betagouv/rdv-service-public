@@ -3,7 +3,7 @@ RSpec.describe Agents::PermissionsController, type: :controller do
 
   let(:agent) { create(:agent, :admin) }
   let(:agent_user) { create(:agent) }
-  let(:organisation_id) { agent.organisation_id }
+  let(:organisation_id) { agent.organisation_ids.first }
 
   before do
     sign_in agent
@@ -11,14 +11,14 @@ RSpec.describe Agents::PermissionsController, type: :controller do
 
   describe "GET #edit" do
     it "returns a success response" do
-      get :edit, params: { id: agent_user.id }
+      get :edit, params: { organisation_id: organisation_id, id: agent_user.id }
       expect(response).to be_successful
     end
   end
 
   describe "POST #update" do
     subject do
-      post :update, params: { id: agent_user.id, agent_permission: { role: "admin" } }
+      post :update, params: { organisation_id: organisation_id, id: agent_user.id, agent_permission: { role: "admin" } }
       agent_user.reload
     end
 

@@ -1,0 +1,7 @@
+.text-center.m-auto
+  h4.text-dark-50.text-center.mt-0.font-weight-bold.mb-4 Choisissez une organisation
+.card
+  .card-body
+    ul.list-group.list-group-flush
+      - @organisations.each do |organisation|
+        li.list-group-item= link_to organisation.name, organisation_path(organisation)

@@ -1,7 +1,7 @@
 .navbar-custom
   ul.list-unstyled.topbar-right-menu.float-right.mb-0
     li.dropdown
-      a.nav-link.dropdown-toggle.nav-user.arrow-none.mr-0 aria-expanded="false" aria-haspopup="false" data-toggle="dropdown" href="#" role="button" 
+      a.nav-link.dropdown-toggle.nav-user.arrow-none.mr-0 aria-expanded="false" aria-haspopup="false" data-toggle="dropdown" href="#" role="button"
         span.account-user-avatar
           | #{current_agent.initials}
         span
@@ -10,9 +10,13 @@
       .dropdown-menu.dropdown-menu-right.dropdown-menu-animated.profile-dropdown
         .dropdown-header.noti-title
           h6.text-overflow.m-0 Bienvenue !
-        = link_to edit_agent_registration_path , class: 'dropdown-item notify-item', data: { rightbar: true } do
+          - if current_agent.organisations.count > 1
+            span.text-muted
+              | #{current_organisation.name} 
+              = link_to '(changer)', organisations_path
+        = link_to edit_agent_registration_path , class: 'dropdown-item', data: { rightbar: true } do
           span Mon compte
-        = link_to destroy_agent_session_path, method: :delete, class: 'dropdown-item notify-item' do
+        = link_to destroy_agent_session_path, method: :delete, class: 'dropdown-item' do
           i.fa.fa-sign-out
           span Se déconnecter
   button.button-menu-mobile.open-left.disable-btn

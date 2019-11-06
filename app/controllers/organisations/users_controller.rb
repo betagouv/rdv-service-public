@@ -19,19 +19,19 @@ class Organisations::UsersController < DashboardAuthController
 
   def new
     @user = User.new
-    @user.organisation_id = current_agent.organisation_id
-    @organisation = current_agent.organisation
+    @user.organisation_id = current_organisation.id
+    @organisation = current_organisation
     authorize(@user)
     respond_right_bar_with @user
   end
 
   def create
     @user = User.new(user_params)
-    @user.organisation_id = current_agent.organisation_id
+    @user.organisation_id = current_organisation.id
     @user.invited_by = current_agent
     @user.created_or_updated_by_agent = true
     authorize(@user)
-    @organisation = current_agent.organisation
+    @organisation = current_organisation
     @user.skip_confirmation!
     flash[:notice] = "L'usager a été créé." if @user.save
     respond_right_bar_with @user, location: organisation_users_path(@organisation, to_user: @user.id)
@@ -47,14 +47,14 @@ class Organisations::UsersController < DashboardAuthController
     @user.created_or_updated_by_agent = true
     @user.skip_reconfirmation! if @user.encrypted_password.blank?
     flash[:notice] = "L'usager a été modifié." if @user.update(user_params)
-    respond_right_bar_with @user, location: organisation_users_path(@user, to_user: @user.id)
+    respond_right_bar_with @user, location: organisation_users_path(current_organisation, to_user: @user.id)
   end
 
   def invite
     authorize(@user)
     @user.deliver_invitation
     flash[:notice] = "L'usager a été invité."
-    respond_right_bar_with @user, location: organisation_users_path(@user, to_user: @user.id)
+    respond_right_bar_with @user, location: organisation_users_path(current_organisation, to_user: @user.id)
   end
 
   def destroy

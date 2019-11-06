@@ -1,5 +1,5 @@
-- if plage_ouverture.agent.available_motifs.any?
-  = simple_form_for [organisation, plage_ouverture], remote: request.xhr?, data: { rightbar: true } do |f|
+- if plage_ouverture.available_motifs.any?
+  = simple_form_for [plage_ouverture.organisation, plage_ouverture], remote: request.xhr?, data: { rightbar: true } do |f|
     = render partial: 'layouts/model_errors', locals: { model: plage_ouverture }
     = f.input :title
     = f.association :lieu, collection: policy_scope(Lieu), label_method: :full_name, include_blank: false
@@ -10,13 +10,13 @@
           = f.input :start_time, as: :select, collection: time_collections, selected: plage_ouverture.start_time&.strftime("%H:%M"), include_blank: false
         .col
           = f.input :end_time, as: :select, collection: time_collections, selected: plage_ouverture.end_time&.strftime("%H:%M"), include_blank: false
-      = f.association :motifs, collection: plage_ouverture.agent.available_motifs, label_method: :name_with_badge, as: :check_boxes
+      = f.association :motifs, collection: plage_ouverture.available_motifs, label_method: :name_with_badge, as: :check_boxes
       hr
       = render partial: 'plage_ouvertures/recurrence', locals: { f: f, plage_ouverture: plage_ouverture }
     .row
       - if plage_ouverture.persisted?
         .col.text-left
-          = link_to "Supprimer", plage_ouverture_path(plage_ouverture), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"}
+          = link_to "Supprimer", organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"}
       .col.text-right
         = f.button :submit
 - else

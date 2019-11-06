@@ -7,13 +7,13 @@ class Agent < ApplicationRecord
   devise :invitable, :database_authenticatable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
 
-  belongs_to :organisation, optional: true
   belongs_to :service, optional: true
   has_many :lieux, through: :organisation
   has_many :motifs, through: :service
   has_many :plage_ouvertures
   has_many :absences
   has_and_belongs_to_many :rdvs
+  has_and_belongs_to_many :organisations, -> { distinct }
 
   enum role: { user: 0, admin: 1 }
 
@@ -22,8 +22,6 @@ class Agent < ApplicationRecord
 
   scope :complete, -> { where.not(first_name: nil).where.not(last_name: nil) }
   scope :active, -> { where(deleted_at: nil) }
-
-  before_invitation_created :set_organisation
 
   def full_name
     "#{first_name} #{last_name}"
@@ -46,7 +44,8 @@ class Agent < ApplicationRecord
   end
 
   ## Soft Delete for Devise
-  def soft_delete
+  def soft_delete(organisation = nil)
+    organisations.delete(organisation) && return if organisation.present? && organisations.count > 1
     update_attribute(:deleted_at, Time.zone.now)
   end
 
@@ -56,16 +55,5 @@ class Agent < ApplicationRecord
 
   def inactive_message
     !deleted_at ? super : :deleted_account
-  end
-
-  def available_motifs
-    available_motifs = service.secretariat? ? organisation.motifs.by_phone : motifs
-    available_motifs.active
-  end
-
-  private
-
-  def set_organisation
-    self.organisation_id = invited_by.organisation_id if invited_by
   end
 end

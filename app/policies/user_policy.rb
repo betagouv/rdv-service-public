@@ -32,7 +32,7 @@ class UserPolicy < ApplicationPolicy
     end
 
     def resolve
-      @user_or_agent.agent? ? scope.where(organisation_id: @user_or_agent.organisation_id) : []
+      @user_or_agent.agent? ? scope.where(organisation_id: @user_or_agent.organisation_ids) : scope.none
     end
   end
 end

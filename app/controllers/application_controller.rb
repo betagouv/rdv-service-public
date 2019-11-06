@@ -13,14 +13,6 @@ class ApplicationController < ActionController::Base
     path
   end
 
-  def after_invite_path_for(inviter, invitee)
-    if invitee.is_a? Agent
-      organisation_agents_path(invitee.organisation)
-    elsif invitee.is_a? User
-      organisation_users_path(inviter.organisation)
-    end
-  end
-
   def respond_modal_with(*args, &blk)
     options = args.extract_options!
     options[:responder] = ModalResponder
@@ -41,7 +33,7 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     if resource_class == Agent
-      devise_parameter_sanitizer.permit(:invite, keys: [:email, :role, :service_id])
+      devise_parameter_sanitizer.permit(:invite, keys: [:email, :role, :service_id, :organisation_id])
       devise_parameter_sanitizer.permit(:accept_invitation, keys: [:first_name, :last_name])
       devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :service_id])
     elsif resource_class == User

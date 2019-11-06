@@ -10,7 +10,7 @@
           i.fa.fa-calendar-o
           span Vos agendas
 
-        = link_to organisation_users_path(current_agent.organisation), class: 'side-nav-link' do
+        = link_to organisation_users_path(current_organisation), class: 'side-nav-link' do
           i.fa.fa-user
           span Vos usagers
 
@@ -20,8 +20,8 @@
           span Votre planning
           span.menu-arrow
         ul.side-nav-second-level aria-expanded="false"
-          li=link_to 'Vos plages d\'ouverture', organisation_plage_ouvertures_path(current_agent.organisation)
-          li=link_to 'Vos absences', organisation_absences_path(current_agent.organisation)
+          li=link_to 'Vos plages d\'ouverture', organisation_plage_ouvertures_path(current_organisation)
+          li=link_to 'Vos absences', organisation_absences_path(current_organisation)
 
         - if current_agent.admin?
           li.side-nav-item
@@ -30,6 +30,6 @@
               span Paramètres
               span.menu-arrow
             ul.side-nav-second-level aria-expanded="false"
-              li=link_to 'Vos lieux', organisation_lieux_path(current_agent.organisation)
-              li=link_to 'Vos professionnels', organisation_agents_path(current_agent.organisation)
-              li=link_to "Vos motifs", organisation_motifs_path(current_agent.organisation)
+              li=link_to 'Vos lieux', organisation_lieux_path(current_organisation)
+              li=link_to 'Vos professionnels', organisation_agents_path(current_organisation)
+              li=link_to "Vos motifs", organisation_motifs_path(current_organisation)

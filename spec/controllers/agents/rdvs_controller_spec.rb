@@ -1,6 +1,8 @@
 RSpec.describe Agents::RdvsController, type: :controller do
+  render_views
+
   let(:agent) { create(:agent) }
-  let(:organisation_id) { agent.organisation_id }
+  let(:organisation_id) { agent.organisation_ids.first }
   let!(:rdv) { create(:rdv, agent_ids: [agent.id], organisation_id: organisation_id) }
 
   before do
@@ -8,9 +10,6 @@ RSpec.describe Agents::RdvsController, type: :controller do
   end
 
   describe "GET index" do
-    render_views
-
-    let(:agent) { create(:agent) }
     let!(:rdv1) { create(:rdv, agents: [agent], starts_at: Time.zone.parse("21/07/2019 08:00")) }
     let!(:rdv2) { create(:rdv, agents: [agent], starts_at: Time.zone.parse("21/07/2019 09:00")) }
 
@@ -36,7 +35,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
         expect(first["start"]).to eq(rdv1.starts_at.as_json)
         expect(first["end"]).to eq(rdv1.ends_at.as_json)
         expect(first["backgroundColor"]).to eq(rdv1.motif.color)
-        expect(first["url"]).to eq(rdv_path(rdv1))
+        expect(first["url"]).to eq(organisation_rdv_path(rdv1.organisation, rdv1))
         expect(first["extendedProps"]).to eq({ status: rdv1.status, past: rdv1.past? }.as_json)
 
         second = @parsed_response[1]
@@ -45,7 +44,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
         expect(second["start"]).to eq(rdv2.starts_at.as_json)
         expect(second["end"]).to eq(rdv2.ends_at.as_json)
         expect(second["backgroundColor"]).to eq(rdv2.motif.color)
-        expect(second["url"]).to eq(rdv_path(rdv2))
+        expect(second["url"]).to eq(organisation_rdv_path(rdv2.organisation, rdv2))
         expect(first["extendedProps"]).to eq({ status: rdv1.status, past: rdv1.past? }.as_json)
       end
     end
@@ -53,14 +52,14 @@ RSpec.describe Agents::RdvsController, type: :controller do
 
   describe "GET #edit" do
     it "returns a success response" do
-      get :edit, params: { id: rdv.to_param }
+      get :edit, params: { organisation_id: organisation_id, id: rdv.to_param }
       expect(response).to be_successful
     end
   end
 
   describe "PUT #update" do
     subject do
-      put :update, params: { id: rdv.to_param, rdv: new_attributes }
+      put :update, params: { organisation_id: organisation_id, id: rdv.to_param, rdv: new_attributes }
       rdv.reload
     end
 
@@ -101,14 +100,14 @@ RSpec.describe Agents::RdvsController, type: :controller do
 
   describe "GET #show" do
     it "returns a success response" do
-      get :show, params: { id: rdv.id }
+      get :show, params: { organisation_id: organisation_id, id: rdv.id }
       expect(response).to be_successful
     end
   end
 
   describe "POST #status" do
     subject do
-      post :status, params: { id: rdv.id, rdv: { status: "waiting" }, format: "js" }
+      post :status, params: { organisation_id: organisation_id, id: rdv.id, rdv: { status: "waiting" }, format: "js" }
       rdv.reload
     end
 
@@ -132,7 +131,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
 
     it "cancel rdv" do
       expect do
-        delete :destroy, params: { id: rdv.id }
+        delete :destroy, params: { organisation_id: organisation_id, id: rdv.id }
         rdv.reload
       end.to change(rdv, :cancelled?).from(false).to(true)
     end

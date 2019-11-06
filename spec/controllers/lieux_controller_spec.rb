@@ -2,7 +2,7 @@ RSpec.describe LieuxController, type: :controller do
   render_views
 
   let(:agent) { create(:agent, :admin) }
-  let(:organisation_id) { agent.organisation_id }
+  let(:organisation_id) { agent.organisation_ids.first }
   let!(:lieu) { create(:lieu, organisation_id: organisation_id) }
 
   before do
@@ -25,7 +25,7 @@ RSpec.describe LieuxController, type: :controller do
 
   describe "GET #edit" do
     it "returns a success response" do
-      get :edit, params: { id: lieu.to_param }
+      get :edit, params: { organisation_id: organisation_id, id: lieu.to_param }
       expect(response).to be_successful
     end
   end
@@ -69,7 +69,7 @@ RSpec.describe LieuxController, type: :controller do
   end
 
   describe "PUT #update" do
-    subject { put :update, params: { id: lieu.to_param, lieu: new_attributes } }
+    subject { put :update, params: { organisation_id: organisation_id, id: lieu.to_param, lieu: new_attributes } }
 
     before { subject }
 
@@ -111,12 +111,12 @@ RSpec.describe LieuxController, type: :controller do
   describe "DELETE #destroy" do
     it "destroys the requested lieu" do
       expect do
-        delete :destroy, params: { id: lieu.to_param }
+        delete :destroy, params: { organisation_id: organisation_id, id: lieu.to_param }
       end.to change(Lieu, :count).by(-1)
     end
 
     it "redirects to the lieux list" do
-      delete :destroy, params: { id: lieu.to_param }
+      delete :destroy, params: { organisation_id: organisation_id, id: lieu.to_param }
       expect(response).to redirect_to(organisation_lieux_path(organisation_id))
     end
   end

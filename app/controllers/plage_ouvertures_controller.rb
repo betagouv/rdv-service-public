@@ -4,7 +4,7 @@ class PlageOuverturesController < DashboardAuthController
   before_action :set_plage_ouverture, only: [:edit, :update, :destroy]
 
   def index
-    plage_ouvertures = policy_scope(current_agent.plage_ouvertures.where(organisation_id: current_organisation.id))
+    plage_ouvertures = policy_scope(current_agent.plage_ouvertures.includes(:organisation).where(organisation_id: current_organisation.id))
 
     respond_to do |f|
       f.json { @plage_ouverture_occurences = plage_ouvertures.flat_map { |po| po.occurences_for(date_range_params).map { |occurence| [po, occurence] } }.sort_by(&:second) }
@@ -13,7 +13,7 @@ class PlageOuverturesController < DashboardAuthController
   end
 
   def new
-    @plage_ouverture = PlageOuverture.new(organisation: current_agent.organisation, agent: current_agent, first_day: Time.zone.now, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(12))
+    @plage_ouverture = PlageOuverture.new(organisation: current_organisation, agent: current_agent, first_day: Time.zone.now, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(12))
     authorize(@plage_ouverture)
     respond_right_bar_with @plage_ouverture
   end
@@ -25,7 +25,7 @@ class PlageOuverturesController < DashboardAuthController
 
   def create
     @plage_ouverture = PlageOuverture.new(plage_ouverture_params)
-    @plage_ouverture.organisation = current_agent.organisation
+    @plage_ouverture.organisation = current_organisation
     @plage_ouverture.agent_id = current_agent.id
     authorize(@plage_ouverture)
     flash[:notice] = "Plage d'ouverture créé." if @plage_ouverture.save

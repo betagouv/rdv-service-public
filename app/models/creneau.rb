@@ -51,7 +51,7 @@ class Creneau
       agents: [agent],
       duration_in_min: duration_in_min,
       starts_at: starts_at,
-      organisation: agent.organisation,
+      organisation: motif.organisation,
       motif: motif,
       location: lieu.address,
       users: [user])

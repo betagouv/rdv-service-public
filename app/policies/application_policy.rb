@@ -36,7 +36,7 @@ class ApplicationPolicy
 
   ## Agent helpers method
   def agent_and_belongs_to_record_organisation?
-    @user_or_agent.agent? && @user_or_agent.organisation_id == @record.organisation_id
+    @user_or_agent.agent? && @user_or_agent.organisation_ids.include?(@record.organisation_id)
   end
 
   def record_belongs_to_agent?
@@ -52,7 +52,7 @@ class ApplicationPolicy
     end
 
     def resolve
-      @user_or_agent.agent? ? scope.where(agent_id: @user_or_agent.id) : []
+      @user_or_agent.agent? ? scope.where(agent_id: @user_or_agent.id) : scope.none
     end
   end
 end

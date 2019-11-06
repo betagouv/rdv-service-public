@@ -1,0 +1,29 @@
+class Agents::InvitationsController < Devise::InvitationsController
+
+  respond_to :html, :json
+
+  def new
+    self.resource = resource_class.new
+    respond_right_bar_with resource
+  end
+
+  def create
+    return unless resource_class == Agent
+    self.resource = Agent.find_by(email: invite_params[:email]) || invite_resource
+    yield resource if block_given?
+    resource.organisations << Organisation.where(id: current_inviter.organisation_ids).find(organisation_id)
+    resource.save(validate: false)
+    set_flash_message :notice, :send_instructions, email: resource.email if resource.errors.empty?
+    redirect_to organisation_agents_path(organisation_id)
+  end
+
+  protected 
+  def organisation_id
+    devise_parameter_sanitizer.sanitize(:invite)[:organisation_id]
+  end
+
+  def invite_params
+    devise_parameter_sanitizer.sanitize(:invite).except(:organisation_id)
+  end
+
+end

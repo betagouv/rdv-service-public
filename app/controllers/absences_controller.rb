@@ -13,7 +13,7 @@ class AbsencesController < DashboardAuthController
   end
 
   def new
-    @absence = Absence.new(organisation: current_agent.organisation, agent: current_agent)
+    @absence = Absence.new(organisation: current_organisation, agent: current_agent)
     authorize(@absence)
     respond_right_bar_with @absence
   end
@@ -25,7 +25,7 @@ class AbsencesController < DashboardAuthController
 
   def create
     @absence = Absence.new(absence_params)
-    @absence.organisation = current_agent.organisation
+    @absence.organisation = current_organisation
     @absence.agent = current_agent
     authorize(@absence)
     flash[:notice] = "Absence créée." if @absence.save
