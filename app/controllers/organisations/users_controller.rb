@@ -47,14 +47,14 @@ class Organisations::UsersController < DashboardAuthController
     @user.created_or_updated_by_agent = true
     @user.skip_reconfirmation! if @user.encrypted_password.blank?
     flash[:notice] = "L'usager a été modifié." if @user.update(user_params)
-    respond_right_bar_with @user, location: organisation_users_path(@user, to_user: @user.id)
+    respond_right_bar_with @user, location: organisation_users_path(current_organisation, to_user: @user.id)
   end
 
   def invite
     authorize(@user)
     @user.deliver_invitation
     flash[:notice] = "L'usager a été invité."
-    respond_right_bar_with @user, location: organisation_users_path(@user, to_user: @user.id)
+    respond_right_bar_with @user, location: organisation_users_path(current_organisation, to_user: @user.id)
   end
 
   def destroy
