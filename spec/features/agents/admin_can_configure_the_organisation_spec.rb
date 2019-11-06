@@ -45,28 +45,28 @@ describe "Admin can configure the organisation" do
   end
 
   scenario "CRUD on agents" do
-    click_link "Vos professionnels"
-    expect_page_title("Vos professionnels")
+    click_link "Vos agents"
+    expect_page_title("Vos agents")
 
     click_link agent_user.full_name
     expect_page_title("Modifier le professionnel")
     choose :agent_permission_role_admin
     click_button('Modifier')
 
-    expect_page_title("Vos professionnels")
+    expect_page_title("Vos agents")
     expect(page).to have_selector('span.badge.badge-danger', count: 2)
 
     click_link agent_user.full_name
     click_link('Supprimer')
 
-    expect_page_title("Vos professionnels")
+    expect_page_title("Vos agents")
     expect(page).to have_no_content(agent_user.full_name)
 
     click_link 'Inviter un professionnel', match: :first
     fill_in 'Email', with: 'jean@paul.com'
     click_button 'Envoyer une invitation'
 
-    expect_page_title("Vos professionnels")
+    expect_page_title("Vos agents")
     expect(page).to have_content('jean@paul.com')
 
     open_email('jean@paul.com')

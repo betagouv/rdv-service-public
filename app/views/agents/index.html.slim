@@ -1,5 +1,5 @@
 - content_for :title do
-  | Vos professionnels
+  | Vos agents
 
 - content_for :breadcrumb do
   = add_button 'Inviter un professionnel', new_agent_invitation_path(organisation_id: current_organisation), condition: policy(Agent).invite?, header: true
