@@ -28,7 +28,7 @@ Rails.application.routes.draw do
   end
 
   ## APP ##
-  devise_for :users, controllers: { registrations: 'users/registrations', invitations: 'common/invitations' }
+  devise_for :users, controllers: { registrations: 'users/registrations' }
 
   namespace :users do
     resources :rdvs, only: [:index, :new, :create] do
@@ -42,11 +42,11 @@ Rails.application.routes.draw do
     patch "users/informations", to: 'users/users#update'
   end
 
-  devise_for :agents, controllers: { registrations: 'agents/registrations', invitations: 'common/invitations' }
+  devise_for :agents, controllers: { invitations: 'agents/invitations' }
 
   as :agent do
     get 'agents/edit' => 'agents/registrations#edit', as: 'edit_agent_registration'
-    put 'agents' => 'agents/registrations#update', :as => 'agent_registration'
+    put 'agents' => 'agents/registrations#update', as: 'agent_registration'
   end
 
   authenticated :agent do

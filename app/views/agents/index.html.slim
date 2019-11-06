@@ -38,4 +38,4 @@
                 i.fa.fa-envelope-o.fa-stack-1x.text-white
 
         .text-center
-          = add_button 'Inviter un professionnel', new_agent_invitation_path, condition: policy(Agent).invite?
+          = add_button 'Inviter un professionnel', new_agent_invitation_path(organisation_id: current_organisation), condition: policy(Agent).invite?

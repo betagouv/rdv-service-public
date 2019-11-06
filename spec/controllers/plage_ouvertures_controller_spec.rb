@@ -134,7 +134,6 @@ RSpec.describe PlageOuverturesController, type: :controller do
 
       it "redirects to the created plage_ouverture" do
         post :create, params: { organisation_id: organisation_id, plage_ouverture: valid_attributes }
-        puts response.body
         expect(response).to redirect_to(organisation_plage_ouvertures_path(organisation_id))
       end
     end

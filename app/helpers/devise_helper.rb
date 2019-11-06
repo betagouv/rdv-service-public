@@ -6,8 +6,7 @@ module DeviseHelper
     html = <<-HTML
     <div class="alert alert-danger alert-block devise-bs">
       <button type="button" class="close" data-dismiss="alert">&times;</button>
-      <p>#{resource.errors.inspect}</p>
-      <ul>#{messages}</ul>
+      <ul class='mb-0'>#{messages}</ul>
     </div>
     HTML
     html.html_safe

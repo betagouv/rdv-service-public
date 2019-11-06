@@ -19,7 +19,7 @@ fr:
       unauthenticated: "Vous devez vous connecter ou vous inscrire pour continuer."
       unconfirmed: "Vous devez valider votre compte pour continuer."
     invitations:
-      send_instructions: "Une invitation par email a été envoyée à %{email}."
+      send_instructions: "L'utilisateur %{email} a été invité à rejoindre votre organisation."
       invitation_token_invalid: "Votre invitation n'est pas valide."
       updated: "Votre mot de passe a correctement été enregistré. Vous êtes maintenant connecté."
       updated_not_active: "Votre mot de passe a été enregistré."

@@ -23,8 +23,6 @@ class Agent < ApplicationRecord
   scope :complete, -> { where.not(first_name: nil).where.not(last_name: nil) }
   scope :active, -> { where(deleted_at: nil) }
 
-  before_invitation_created :set_organisation
-
   def full_name
     "#{first_name} #{last_name}"
   end
@@ -46,7 +44,8 @@ class Agent < ApplicationRecord
   end
 
   ## Soft Delete for Devise
-  def soft_delete
+  def soft_delete organisation = nil
+    organisations.delete organisation and return if organisation.present? && organisations.count > 1
     update_attribute(:deleted_at, Time.zone.now)
   end
 
@@ -56,11 +55,5 @@ class Agent < ApplicationRecord
 
   def inactive_message
     !deleted_at ? super : :deleted_account
-  end
-
-  private
-
-  def set_organisation
-    self.organisation_id = invited_by.organisation_id if invited_by
   end
 end

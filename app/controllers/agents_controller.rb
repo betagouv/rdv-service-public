@@ -10,7 +10,7 @@ class AgentsController < DashboardAuthController
   def destroy
     @agent = policy_scope(Agent).find(params[:id])
     authorize(@agent)
-    flash[:notice] = "L'utilisateur a été supprimé." if @agent.soft_delete
+    flash[:notice] = "L'utilisateur a été supprimé." if @agent.soft_delete current_organisation
     respond_right_bar_with @agent, location: organisation_agents_path(current_organisation)
   end
 
