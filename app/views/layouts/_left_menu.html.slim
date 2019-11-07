@@ -6,7 +6,7 @@
       = link_logo
     ul.metismenu.side-nav.mt-5
       li.side-nav-item
-        = link_to authenticated_agent_root_path, class: 'side-nav-link' do
+        = link_to organisation_path(current_organisation), class: 'side-nav-link' do
           i.fa.fa-calendar-o
           span Vos agendas
 
