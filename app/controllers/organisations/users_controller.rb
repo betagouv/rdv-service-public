@@ -29,7 +29,7 @@ class Organisations::UsersController < DashboardAuthController
     @user.invited_by = current_agent
     @user.created_or_updated_by_agent = true
     authorize(@user)
-    if @user_to_compare = User.find_by(email: @user.email)
+    if (@user_to_compare = User.find_by(email: @user.email))
       @user_not_in_organisation = !@user_to_compare.organisation_ids.include?(current_organisation.id)
       render :compare
     else
