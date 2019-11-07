@@ -3,8 +3,5 @@
 .card
   .card-body
     ul.list-group.list-group-flush
-
-      = Organisation.joins(:agents).where(agents: { id: @current_agent.id }).count
-      = current_agent.organisation_ids
       - @organisations.each do |organisation|
         li.list-group-item= link_to organisation.name, organisation_path(organisation)
