@@ -7,7 +7,7 @@ class Agent < ApplicationRecord
   devise :invitable, :database_authenticatable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
 
-  belongs_to :service, optional: true
+  belongs_to :service
   has_many :lieux, through: :organisation
   has_many :motifs, through: :service
   has_many :plage_ouvertures
