@@ -51,7 +51,7 @@ gem 'sendgrid', '~> 1.2.4'
 gem 'premailer-rails'
 
 # Ops
-gem 'airbrake', '~> 9.4'
+gem "sentry-raven"
 gem "skylight"
 
 gem "js-routes"

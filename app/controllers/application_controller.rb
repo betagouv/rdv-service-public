@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :store_user_location!, if: :storable_location?
+  before_action :set_raven_context
 
   def after_sign_in_path_for(resource)
     path = if resource.class == Agent
@@ -26,6 +27,20 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
+  def set_raven_context
+    Raven.user_context(sentry_user)
+    Raven.extra_context(params: params.to_unsafe_h, url: request.url)
+  end
+
+  def sentry_user
+    user = current_agent || current_user
+    {
+      id: user&.id,
+      role: user&.class&.name || 'Guest',
+      email: user&.email,
+    }.compact
+  end
 
   def authenticate_inviter!
     authenticate_agent!(force: true)

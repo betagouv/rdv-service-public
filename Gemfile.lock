@@ -76,10 +76,6 @@ GEM
       momentjs-rails (~> 2.8)
       sassc-rails (~> 2.1)
       selectize-rails (~> 0.6)
-    airbrake (9.4.3)
-      airbrake-ruby (~> 4.6)
-    airbrake-ruby (4.6.0)
-      rbtree3 (~> 0.5)
     ast (2.4.0)
     autoprefixer-rails (9.6.1.1)
       execjs
@@ -340,7 +336,6 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
-    rbtree3 (0.5.0)
     regexp_parser (1.6.0)
     responders (3.0.0)
       actionpack (>= 5.0)
@@ -394,6 +389,8 @@ GEM
       rubyzip (~> 1.2, >= 1.2.2)
     sendgrid (1.2.4)
       json
+    sentry-raven (2.12.2)
+      faraday (>= 0.7.6, < 1.0)
     shellany (0.0.1)
     simple_form (5.0.0)
       actionpack (>= 5.0)
@@ -464,7 +461,6 @@ PLATFORMS
 
 DEPENDENCIES
   administrate (~> 0.12)
-  airbrake (~> 9.4)
   autoprefixer-rails (~> 9.6)
   better_errors
   binding_of_caller
@@ -510,6 +506,7 @@ DEPENDENCIES
   rubocop
   sass-rails (~> 6.0)
   sendgrid (~> 1.2.4)
+  sentry-raven
   simple_form (~> 5.0)
   skylight
   slim (~> 4.0)
