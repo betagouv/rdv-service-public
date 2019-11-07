@@ -7,7 +7,7 @@ class Agents::Creneaux::AgentSearchesController < DashboardAuthController
       format.html do
         @organisation = current_organisation
         @motifs = @organisation.motifs.active
-        @agents = @organisation.agents
+        @agents = @organisation.agents.active
         @lieux = @organisation.lieux
       end
       format.js do
