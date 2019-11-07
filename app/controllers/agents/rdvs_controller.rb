@@ -37,7 +37,7 @@ class Agents::RdvsController < DashboardAuthController
       flash[:notice] = "Le rendez-vous a été annulé, un message a été envoyé à l'usager."
     else
       flash[:error] = "Une erreur s’est produite, le rendez-vous n’a pas pu être annulé."
-      Airbrake.notify("Deletion failed for rdv : #{@rdv.id}")
+      Raven.capture_exception(Exception.new("Deletion failed for rdv : #{@rdv.id}"))
     end
     redirect_to authenticated_agent_root_path
   end
