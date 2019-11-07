@@ -36,7 +36,7 @@ class UserPolicy < ApplicationPolicy
     end
 
     def resolve
-      @user_or_agent.agent? ? scope : scope.none
+      @user_or_agent.agent? ? scope.all : scope.none
     end
   end
 end
