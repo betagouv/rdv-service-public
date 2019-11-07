@@ -51,7 +51,7 @@ class Organisations::UsersController < DashboardAuthController
   end
 
   def invite
-    authorize(@user)
+    authorize @user
     @user.deliver_invitation
     flash[:notice] = "L'usager a été invité."
     respond_right_bar_with @user, location: organisation_users_path(current_organisation, to_user: @user.id)
