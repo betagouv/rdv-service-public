@@ -11,7 +11,8 @@ class Agents::InvitationsController < Devise::InvitationsController
     return unless resource_class == Agent
     self.resource = Agent.find_by(email: invite_params[:email]) || invite_resource
     yield resource if block_given?
-    resource.organisations << Organisation.where(id: current_inviter.organisation_ids).find(organisation_id)
+    org_to_add = Organisation.where(id: current_inviter.organisation_ids).find(organisation_id)
+    resource.organisations << org_to_add unless resource.organisations.include?(org_to_add)
     resource.save(validate: false)
     set_flash_message :notice, :send_instructions, email: resource.email if resource.errors.empty?
     redirect_to organisation_agents_path(organisation_id)

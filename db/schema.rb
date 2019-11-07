@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_28_150053) do
+ActiveRecord::Schema.define(version: 2019_11_06_174342) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -98,6 +98,7 @@ ActiveRecord::Schema.define(version: 2019_10_28_150053) do
     t.bigint "agent_id"
     t.bigint "organisation_id"
     t.index ["agent_id"], name: "index_agents_organisations_on_agent_id"
+    t.index ["organisation_id", "agent_id"], name: "index_agents_organisations_on_organisation_id_and_agent_id", unique: true
     t.index ["organisation_id"], name: "index_agents_organisations_on_organisation_id"
   end
 
