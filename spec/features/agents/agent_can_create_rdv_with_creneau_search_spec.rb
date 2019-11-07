@@ -9,12 +9,15 @@ describe "Agent can create a Rdv with creneau search" do
   let!(:plage_ouverture2) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu2, agent: agent2) }
 
   before do
+    travel_to(Time.zone.local(2019, 7, 22))
     login_as(agent, scope: :agent)
     visit authenticated_agent_root_path
 
     expect(user.rdvs.count).to eq(0)
     click_link('Trouver un créneau')
   end
+
+  after { travel_back }
 
   scenario "default", js: true do
     expect_page_title("Choisir un créneau")
@@ -64,6 +67,8 @@ describe "Agent can create a Rdv with creneau search" do
     expect(rdv.duration_in_min).to eq(motif.default_duration_in_min)
 
     expect(page).to have_content("Le rendez-vous a été créé.")
+    expect(page).to have_current_path(rdv.agenda_path)
+    expect(page).to have_content("22 – 25 JUIL. 2019")
   end
 
   def select_user(user)
