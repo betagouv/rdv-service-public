@@ -76,7 +76,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
 
       it "redirects to the agenda" do
         subject
-        expect(response).to redirect_to(authenticated_agent_root_path)
+        expect(response).to redirect_to(rdv.agenda_path)
       end
     end
 
