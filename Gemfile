@@ -52,6 +52,7 @@ gem 'premailer-rails'
 
 # Ops
 gem 'airbrake', '~> 9.4'
+gem "skylight"
 
 gem "js-routes"
 
