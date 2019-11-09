@@ -2,9 +2,9 @@
   | Agendas
 
 - content_for :breadcrumb do
-  = link_to "Créer un rendez-vous", new_organisation_first_step_path(current_organisation), class: "btn btn-outline-white mr-1"
-  = link_to "Trouver un créneau", organisation_agent_searches_path(current_organisation), class: "btn btn-outline-white"
+  = link_to "Créer un rendez-vous", new_organisation_first_step_path(@organisation), class: "btn btn-outline-white mr-1"
+  = link_to "Trouver un créneau", organisation_agent_searches_path(@organisation), class: "btn btn-outline-white"
 
 .card
   .card-body
-    #calendar data-event-sources="#{[organisation_rdvs_path(current_organisation), organisation_absences_path(current_organisation), organisation_plage_ouvertures_path(current_organisation)].to_json}" data-organisation-id="#{current_organisation.id}" data-default-date="#{@date.to_json}"
+    #calendar data-event-sources="#{[organisation_rdvs_path(@organisation), organisation_absences_path(@organisation), organisation_plage_ouvertures_path(@organisation)].to_json}" data-organisation-id="#{@organisation.id}" data-default-date="#{@date.to_json}"

@@ -13,7 +13,7 @@ class OrganisationsController < DashboardAuthController
   end
 
   def show
-    @organisation = current_organisation
+    @organisation = policy_scope(Organisation).find(params[:id])
     @date = params[:date] ? Date.parse(params[:date]) : nil
     authorize(@organisation)
   end

@@ -33,11 +33,9 @@ class DashboardAuthController < ApplicationController
   end
 
   def current_organisation
-    id = if params.require(:controller) == "organisations"
-           params.require(:id)
-         else
-           params.require(:organisation_id)
-         end
-    policy_scope(Organisation).find(id)
+    id = params[:controller] == "organisations" ? params[:id] : params[:organisation_id]
+    id ? current_agent.organisations.find(id) : current_agent.organisations.first
+  rescue ActiveRecord::RecordNotFound
+    raise Pundit::NotAuthorizedError
   end
 end
