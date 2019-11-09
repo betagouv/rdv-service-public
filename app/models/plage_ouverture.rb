@@ -72,11 +72,6 @@ class PlageOuverture < ApplicationRecord
     results.uniq
   end
 
-  def available_motifs
-    available_motifs = agent.service.secretariat? ? organisation.motifs.by_phone : agent.motifs.where(organisation_id: organisation_id)
-    available_motifs.active
-  end
-
   private
 
   def clear_empty_recurrence
