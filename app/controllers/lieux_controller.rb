@@ -2,7 +2,7 @@ class LieuxController < DashboardAuthController
   respond_to :html, :json
 
   def index
-    @lieux = policy_scope(current_organisation.lieux).order(Arel.sql('LOWER(name)')).page(params[:page])
+    @lieux = policy_scope(Lieu).includes(:organisation).order(Arel.sql('LOWER(name)')).page(params[:page])
   end
 
   def new
@@ -15,7 +15,7 @@ class LieuxController < DashboardAuthController
     @lieu = Lieu.new(organisation_id: current_organisation.id)
     @lieu.assign_attributes(lieu_params)
     authorize(@lieu)
-    flash.notice = "Lieu créé" if @lieu.save
+    flash.notice = "Le lieu a été créé." if @lieu.save
     respond_right_bar_with @lieu, location: organisation_lieux_path(@lieu.organisation)
   end
 
@@ -28,14 +28,14 @@ class LieuxController < DashboardAuthController
   def update
     @lieu = Lieu.find(params[:id])
     authorize(@lieu)
-    flash[:notice] = 'Lieu modifié' if @lieu.update(lieu_params)
+    flash[:notice] = 'Lieu a été modifié.' if @lieu.update(lieu_params)
     respond_right_bar_with @lieu, location: organisation_lieux_path(@lieu.organisation)
   end
 
   def destroy
     @lieu = Lieu.find(params[:id])
     authorize(@lieu)
-    flash[:notice] = 'Lieu supprimé' if @lieu.destroy
+    flash[:notice] = 'Le lieu a été supprimé.' if @lieu.destroy
     respond_right_bar_with @lieu, location: organisation_lieux_path(@lieu.organisation)
   end
 

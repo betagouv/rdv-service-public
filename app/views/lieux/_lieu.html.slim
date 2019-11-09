@@ -1,5 +1,5 @@
 tr id="lieu_#{lieu.id}"
   td
-    = link_to_if policy(lieu).edit?, lieu.name, edit_organisation_lieu_path(lieu.organisation, lieu), data: { rightbar: true }
+    = link_to lieu.name, edit_organisation_lieu_path(lieu.organisation, lieu), data: { rightbar: true }
   td= lieu.address
   td= lieu.horaires
