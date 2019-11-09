@@ -20,7 +20,7 @@
     | Renseignez votre mot de passe actuel pour tout changement.
   .text-right= f.submit "Modifier", class: 'btn btn-primary'
 
-- if policy(resource).destroy?
+- if policy([:agent, resource]).destroy?
   .mt-5.text-center
     hr
     p.font-13 Vous souhaitez supprimer votre compte ?
