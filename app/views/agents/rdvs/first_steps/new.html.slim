@@ -16,7 +16,7 @@
   .card-body
     = render partial: 'layouts/model_errors', locals: { model: @first_step }
     = simple_form_for(@first_step.rdv, url: organisation_first_steps_path(current_organisation)) do |f|
-      = f.association :motif, collection: policy_scope(Motif).active, include_blank: "Sélectionnez un motif", input_html: { class: 'select2-input' }
+      = f.association :motif, collection: policy_scope([:agent, Motif]).available_motifs(current_agent), include_blank: "Sélectionnez un motif", input_html: { class: 'select2-input' }
       = f.input :starts_at, as: :hidden
       = f.input :location, as: :hidden
       .text-right

@@ -22,7 +22,7 @@
               i.fa.fa-map-marker.mr-1
               = l.full_name
 
-      = f.association :agents, collection: @second_step.rdv.motif.service.agents, label_method: :full_name_and_service, input_html: { multiple: true, class: 'select2-input' }
+      = f.association :agents, collection: @second_step.rdv.motif.service.agents.complete.active.joins(:organisations).where(organisations: {id: current_organisation.id}), label_method: :full_name_and_service, input_html: { multiple: true, class: 'select2-input' }
       = f.input :duration_in_min, as: :integer, label: "Durée en minutes"
       = datetime_input(f, :starts_at)
       .row

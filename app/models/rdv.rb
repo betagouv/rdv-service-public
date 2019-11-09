@@ -4,7 +4,7 @@ class Rdv < ApplicationRecord
   has_and_belongs_to_many :agents
   has_and_belongs_to_many :users
 
-  enum status: { to_be: 0, waiting: 1, seen: 2, excused: 3, not_excused: 4 }
+  enum status: { to_be: 0, waiting: 1, seen: 2, excused: 3, notexcused: 4 }
 
   validates :users, :organisation, :motif, :starts_at, :duration_in_min, :agents, presence: true
 
@@ -85,7 +85,6 @@ class Rdv < ApplicationRecord
 
   def to_step_params
     {
-      organisation_id: organisation_id,
       location: location,
       motif: motif,
       duration_in_min: duration_in_min,

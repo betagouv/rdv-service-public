@@ -19,7 +19,6 @@ class Rdv::FirstStep
     {
       motif_id: motif&.id,
       location: location,
-      organisation_id: organisation_id,
       duration_in_min: duration_in_min,
       starts_at: starts_at&.to_s,
       user_ids: users&.map(&:id),
