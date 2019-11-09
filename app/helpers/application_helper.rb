@@ -41,8 +41,8 @@ module ApplicationHelper
     form.input(field, as: :string, input_html: { value: form.object.send(field)&.strftime("%H:%M"), data: { behaviour: 'timepicker' }, autocomplete: "off" })
   end
 
-  def add_button(label, path, header: false, condition: true)
-    link_to label, path, class: "btn #{header ? "btn-outline-white" : "btn-primary"}", data: { rightbar: true } if condition
+  def add_button(label, path, header: false)
+    link_to label, path, class: "btn #{header ? "btn-outline-white" : "btn-primary"}", data: { rightbar: true }
   end
 
   def holder_tag(size, text = '', theme = nil, html_options = {}, holder_options = {})

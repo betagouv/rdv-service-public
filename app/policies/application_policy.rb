@@ -1,8 +1,8 @@
 class ApplicationPolicy
-  attr_reader :user_or_agent, :record
+  attr_reader :user, :record
 
-  def initialize(user_or_agent, record)
-    @user_or_agent = user_or_agent
+  def initialize(user, record)
+    @user = user
     @record = record
   end
 
@@ -34,29 +34,16 @@ class ApplicationPolicy
     false
   end
 
-  ## Agent helpers method
-  def agent_and_belongs_to_record_organisation?
-    if @record.is_a?(User)
-      @user_or_agent.agent? && (@user_or_agent.organisation_ids & @record.organisation_ids).any?
-    else
-      @user_or_agent.agent? && @user_or_agent.organisation_ids.include?(@record.organisation_id)
-    end
-  end
-
-  def record_belongs_to_agent?
-    @user_or_agent.agent? && @user_or_agent.id == @record.agent_id
-  end
-
   class Scope
-    attr_reader :user_or_agent, :scope
+    attr_reader :user, :scope
 
-    def initialize(user_or_agent, scope)
-      @user_or_agent = user_or_agent
+    def initialize(user, scope)
+      @user = user
       @scope = scope
     end
 
     def resolve
-      @user_or_agent.agent? ? scope.where(agent_id: @user_or_agent.id) : scope.none
+      scope.all
     end
   end
 end

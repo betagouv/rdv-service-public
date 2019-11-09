@@ -11,7 +11,15 @@ class DashboardAuthController < ApplicationController
   private
 
   def pundit_user
-    current_agent
+    AgentContext.new(current_agent, current_organisation)
+  end
+
+  def authorize(record)
+    record.class.module_parent == Agent ? super(record) : super([:agent, record])
+  end
+
+  def policy_scope(clasz)
+    clasz.module_parent == Agent ? super(record) : super([:agent, clasz])
   end
 
   def agent_not_authorized(exception)

@@ -7,11 +7,12 @@ class Agents::Creneaux::AgentSearchesController < DashboardAuthController
       format.html do
         @organisation = current_organisation
         @motifs = @organisation.motifs.active
-        @agents = @organisation.agents.active
+        @agents = @organisation.agents.complete.active
         @lieux = @organisation.lieux
       end
       format.js do
         @agent_search = Creneau::AgentSearch.new(filter_params)
+        @agent_search.organisation_id = current_organisation.id
         set_params
         @lieux = @agent_search.lieux
 
@@ -26,6 +27,7 @@ class Agents::Creneaux::AgentSearchesController < DashboardAuthController
     skip_authorization
 
     @agent_search = Creneau::AgentSearch.new(by_lieu_params)
+    @agent_search.organisation_id = current_organisation.id
     set_params
     @lieu = @agent_search.lieu
 
@@ -41,10 +43,10 @@ class Agents::Creneaux::AgentSearchesController < DashboardAuthController
   private
 
   def filter_params
-    params.require(:creneau_agent_search).permit(:lieu_id, :motif_id, :from_date, agent_ids: []).merge(params.permit(:organisation_id))
+    params.require(:creneau_agent_search).permit(:lieu_id, :motif_id, :from_date, agent_ids: [])
   end
 
   def by_lieu_params
-    params.permit(:organisation_id, :lieu_id, :motif_id, :from_date, agent_ids: [])
+    params.permit(:lieu_id, :motif_id, :from_date, agent_ids: [])
   end
 end
