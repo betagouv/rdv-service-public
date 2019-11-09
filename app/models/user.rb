@@ -63,6 +63,10 @@ class User < ApplicationRecord
     organisations << organisation if organisation_ids.exclude?(organisation.id)
   end
 
+  def soft_delete
+    delete
+  end
+
   protected
 
   def password_required?
