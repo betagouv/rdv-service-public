@@ -6,6 +6,6 @@
   .row
     - if absence.persisted?
       .col.text-left
-        = link_to "Supprimer", organisation_absence_path(absence.organisation, absence), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"}
+        = link_to "Supprimer", organisation_absence_path(absence.organisation, absence), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cette absence ?"}
     .col.text-right
       = f.button :submit
