@@ -94,8 +94,8 @@ class Rdv < ApplicationRecord
   private
 
   def associate_users_with_organisation
-    users.joins(:organisations).where.not(organisations: { id: organisation.id }).each do |u|
-      u.organisations << organisation
+    users.each do |u|
+      u.add_organisation(organisation)
     end
   end
 

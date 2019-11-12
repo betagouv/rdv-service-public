@@ -38,4 +38,26 @@ describe User, type: :model do
       it { expect(user.age).to eq("20 jours") }
     end
   end
+
+  describe "#add_organisation" do
+    let(:user) { create(:user, organisations: organisations) }
+    let(:organisation) { create(:organisation) }
+
+    subject { user.add_organisation(organisation) }
+
+    describe "when organisation is not associated" do
+      let(:organisations) { [] }
+      it { expect { subject }.to change(user, :organisation_ids).from([]).to([organisation.id]) }
+    end
+
+    describe "when organisation is associated" do
+      let(:organisations) { [organisation] }
+      it { expect { subject }.not_to change(user, :organisation_ids) }
+
+      describe "with many organisations" do
+        let(:organisations) { [organisation, create(:organisation)] }
+        it { expect { subject }.not_to change(user, :organisation_ids) }
+      end
+    end
+  end
 end
