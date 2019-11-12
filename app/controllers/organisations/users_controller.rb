@@ -30,7 +30,7 @@ class Organisations::UsersController < DashboardAuthController
     @user.created_or_updated_by_agent = true
     authorize(@user)
     if (@user_to_compare = User.find_by(email: @user.email))
-      @user_not_in_organisation = !@user_to_compare.organisation_ids.include?(current_organisation.id)
+      @user_not_in_organisation = @user_to_compare.organisation_ids.exclude?(current_organisation.id)
       render :compare
     else
       @organisation = current_organisation
@@ -42,7 +42,7 @@ class Organisations::UsersController < DashboardAuthController
 
   def link_to_organisation
     @user = User.find(params.require(:id))
-    @user.organisations << current_organisation
+    @user.organisations << current_organisation if @user.organisation_ids.exclude?(current_organisation.id)
     authorize(@user)
     flash[:notice] = "L'usager a été associé à l'organisation #{current_organisation.name}"
     redirect_to edit_organisation_user_path(current_organisation.id, @user.id)
@@ -69,8 +69,8 @@ class Organisations::UsersController < DashboardAuthController
 
   def destroy
     authorize(@user)
-    @user.organisations.delete(current_organisation)
-    redirect_to organisation_users_path(current_organisation), notice: "L'usager a été supprimé."
+    flash[:notice] = "L'usager a été supprimé." if @user.organisations.delete(current_organisation)
+    redirect_to organisation_users_path(current_organisation)
   end
 
   private
