@@ -17,6 +17,10 @@ class Rdv < ApplicationRecord
   after_update :update_ics_to_user_and_agents, if: -> { saved_change_to_starts_at? || saved_change_to_cancelled_at? }
   after_save :associate_users_with_organisation
 
+  def agenda_path
+    Rails.application.routes.url_helpers.organisation_path(organisation, date: starts_at.to_date)
+  end
+
   def ends_at
     starts_at + duration_in_min.minutes
   end

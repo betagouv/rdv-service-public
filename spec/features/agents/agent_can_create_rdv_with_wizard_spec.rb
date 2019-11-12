@@ -47,6 +47,7 @@ describe "Agent can create a Rdv with wizard" do
     expect(rdv.motif).to eq(motif)
     expect(rdv.duration_in_min).to eq(35)
     expect(rdv.starts_at).to eq(Time.zone.local(2019, 10, 12, 14, 15))
+    expect(page).to have_current_path(rdv.agenda_path)
   end
 
   def select_agent(agent)

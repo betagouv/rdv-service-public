@@ -20,7 +20,7 @@ class Agents::RdvsController < DashboardAuthController
   def update
     authorize(@rdv)
     flash[:notice] = 'Le rendez-vous a été modifié.' if @rdv.update(rdv_params)
-    respond_right_bar_with @rdv, location: authenticated_agent_root_path
+    respond_right_bar_with @rdv, location: @rdv.agenda_path
   end
 
   def status
@@ -39,7 +39,7 @@ class Agents::RdvsController < DashboardAuthController
       flash[:error] = "Une erreur s’est produite, le rendez-vous n’a pas pu être annulé."
       Raven.capture_exception(Exception.new("Deletion failed for rdv : #{@rdv.id}"))
     end
-    redirect_to authenticated_agent_root_path
+    redirect_to @rdv.agenda_path
   end
 
   private

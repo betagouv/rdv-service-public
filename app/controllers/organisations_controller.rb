@@ -14,6 +14,7 @@ class OrganisationsController < DashboardAuthController
 
   def show
     @organisation = current_organisation
+    @date = params[:date] ? Date.parse(params[:date]) : nil
     authorize(@organisation)
   end
 

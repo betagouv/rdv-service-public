@@ -17,6 +17,7 @@ document.addEventListener('turbolinks:load', function() {
       eventSourceFailure: function (errorObj) {
         alert("Une erreur s'est produite lors de la récupération des données du calendrier.");
       },
+      defaultDate: JSON.parse(calendarEl.dataset.defaultDate),
       defaultView: 'timeGridFourDay',
       selectable: true,
       select: function(info) {
