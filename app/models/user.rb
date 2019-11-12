@@ -59,6 +59,10 @@ class User < ApplicationRecord
     Time.zone.now.to_date - birth_date
   end
 
+  def add_organisation(organisation)
+    organisations << organisation if organisation_ids.exclude?(organisation.id)
+  end
+
   protected
 
   def password_required?

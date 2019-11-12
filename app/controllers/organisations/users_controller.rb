@@ -42,7 +42,7 @@ class Organisations::UsersController < DashboardAuthController
 
   def link_to_organisation
     @user = User.find(params.require(:id))
-    @user.organisations << current_organisation if @user.organisation_ids.exclude?(current_organisation.id)
+    @user.add_organisation(current_organisation)
     authorize(@user)
     flash[:notice] = "L'usager a été associé à l'organisation #{current_organisation.name}"
     redirect_to edit_organisation_user_path(current_organisation.id, @user.id)
