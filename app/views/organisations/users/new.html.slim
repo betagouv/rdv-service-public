@@ -1,4 +1,8 @@
 - content_for :title do
   | Nouvel usager
 
-= render 'form', user: @user
+.row
+  .col-md-6
+    .card
+      .card-body
+        = render 'form', user: @user

@@ -1,0 +1,13 @@
+- content_for :title do
+  | Un usager existe déjà pour cet email
+
+.row
+  .col-md-6
+    .card
+      .card-body
+        = render 'form', user: @user
+  .col-md-6
+    .card
+      .card-body
+        | email =
+        = @new_user.email

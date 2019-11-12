@@ -2,7 +2,7 @@
   | Vos usagers
 
 - content_for :breadcrumb do
-  = add_button 'Créer un usager', new_organisation_user_path(current_organisation), header: true
+  = link_to 'Créer un usager', new_organisation_user_path(current_organisation), class: "btn btn-outline-white"
 
 .card
   .card-body
@@ -27,4 +27,4 @@
             i.fa.fa-circle.fa-stack-2x.text-primary
             i.fa.fa-users.fa-stack-1x.text-white
     .text-center
-      = add_button 'Créer un usager', new_organisation_user_path(current_organisation)
+      = link_to 'Créer un usager', new_organisation_user_path(current_organisation), class: "btn btn-primary"

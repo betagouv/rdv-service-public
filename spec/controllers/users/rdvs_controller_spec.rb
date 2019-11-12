@@ -4,7 +4,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:motif) { create(:motif) }
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], first_day: Date.new(2019, 7, 24)) }
 
-    subject { post :create, params: { organisation_id: user.organisation_id, rdv: { motif_id: motif.id, lieu_id: plage_ouverture.lieu.id, starts_at: starts_at, departement: "12", where: "1 rue de la, ville 12345" } } }
+    subject { post :create, params: { organisation_id: plage_ouverture.organisation_id, rdv: { motif_id: motif.id, lieu_id: plage_ouverture.lieu.id, starts_at: starts_at, departement: "12", where: "1 rue de la, ville 12345" } } }
 
     before do
       travel_to(Time.zone.local(2019, 7, 20))

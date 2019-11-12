@@ -2,11 +2,11 @@ class Organisations::UsersController < DashboardAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: [:new, :create]
-  before_action :set_user, except: [:index, :new, :create]
+  before_action :set_user, except: [:index, :new, :create, :link_to_organisation]
 
   def index
     page = 1
-    @users = policy_scope(User).order(Arel.sql('LOWER(last_name)'))
+    @users = policy_scope(User).where(id: current_organisation.users.pluck(:id)).order(Arel.sql('LOWER(last_name)'))
     if params[:page]
       page = params[:page]
     elsif params[:to_user]
@@ -19,27 +19,37 @@ class Organisations::UsersController < DashboardAuthController
 
   def new
     @user = User.new
-    @user.organisation_id = current_organisation.id
-    @organisation = current_organisation
+    @user.organisation_ids = [current_organisation.id]
     authorize(@user)
-    respond_right_bar_with @user
   end
 
   def create
     @user = User.new(user_params)
-    @user.organisation_id = current_organisation.id
+    @user.organisation_ids = [current_organisation.id]
     @user.invited_by = current_agent
     @user.created_or_updated_by_agent = true
     authorize(@user)
-    @organisation = current_organisation
-    @user.skip_confirmation!
-    flash[:notice] = "L'usager a été créé." if @user.save
-    respond_right_bar_with @user, location: organisation_users_path(@organisation, to_user: @user.id)
+    if (@user_to_compare = User.find_by(email: @user.email))
+      @user_not_in_organisation = @user_to_compare.organisation_ids.exclude?(current_organisation.id)
+      render :compare
+    else
+      @organisation = current_organisation
+      @user.skip_confirmation!
+      flash[:notice] = "L'usager a été créé." if @user.save
+      redirect_to organisation_users_path(@organisation, to_user: @user.id)
+    end
+  end
+
+  def link_to_organisation
+    @user = User.find(params.require(:id))
+    @user.organisations << current_organisation if @user.organisation_ids.exclude?(current_organisation.id)
+    authorize(@user)
+    flash[:notice] = "L'usager a été associé à l'organisation #{current_organisation.name}"
+    redirect_to edit_organisation_user_path(current_organisation.id, @user.id)
   end
 
   def edit
     authorize(@user)
-    respond_right_bar_with @user
   end
 
   def update
@@ -59,8 +69,8 @@ class Organisations::UsersController < DashboardAuthController
 
   def destroy
     authorize(@user)
-    @user.destroy
-    redirect_to organisation_users_path(@user.organisation), notice: "L'usager a été supprimé."
+    flash[:notice] = "L'usager a été supprimé." if @user.organisations.delete(current_organisation)
+    redirect_to organisation_users_path(current_organisation)
   end
 
   private

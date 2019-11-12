@@ -51,4 +51,25 @@ describe "Agent can CRUD users" do
     open_email(new_user.email)
     expect(current_email.subject).to eq I18n.t("devise.mailer.invitation_instructions.subject")
   end
+
+  let!(:existing_user) { create(:user, organisations: [create(:organisation)]) }
+
+  scenario "when user already exist but is not associated to organisation" do
+    click_link 'Créer un usager', match: :first
+
+    expect_page_title("Nouvel usager")
+    fill_in :user_first_name, with: existing_user.first_name
+    fill_in :user_last_name, with: existing_user.last_name
+    fill_in :user_email, with: existing_user.email
+    click_button 'Créer'
+
+    expect(page).to have_content('Un usager a été trouvé pour cet email')
+    expect(page).to have_content('Usager trouvé')
+
+    click_link "Associer cet usager à l'organisation #{agent.organisations.first.name}"
+    expect_page_title("Modifier l'usager")
+    expect(page).to have_content("L'usager a été associé à l'organisation")
+
+    expect(existing_user.reload.organisations).to include(agent.organisations.first)
+  end
 end

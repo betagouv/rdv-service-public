@@ -167,6 +167,14 @@ ActiveRecord::Schema.define(version: 2019_11_06_174342) do
     t.string "departement"
   end
 
+  create_table "organisations_users", id: false, force: :cascade do |t|
+    t.bigint "organisation_id"
+    t.bigint "user_id"
+    t.index ["organisation_id", "user_id"], name: "index_organisations_users_on_organisation_id_and_user_id", unique: true
+    t.index ["organisation_id"], name: "index_organisations_users_on_organisation_id"
+    t.index ["user_id"], name: "index_organisations_users_on_user_id"
+  end
+
   create_table "plage_ouvertures", force: :cascade do |t|
     t.bigint "agent_id"
     t.string "title"
@@ -220,7 +228,6 @@ ActiveRecord::Schema.define(version: 2019_11_06_174342) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.bigint "organisation_id"
     t.string "first_name"
     t.string "last_name"
     t.string "email"
@@ -256,7 +263,6 @@ ActiveRecord::Schema.define(version: 2019_11_06_174342) do
     t.index ["invitations_count"], name: "index_users_on_invitations_count"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_users_on_invited_by_type_and_invited_by_id"
-    t.index ["organisation_id"], name: "index_users_on_organisation_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
@@ -272,5 +278,4 @@ ActiveRecord::Schema.define(version: 2019_11_06_174342) do
   add_foreign_key "plage_ouvertures", "organisations"
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"
-  add_foreign_key "users", "organisations"
 end
