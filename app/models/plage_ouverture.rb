@@ -73,7 +73,7 @@ class PlageOuverture < ApplicationRecord
   end
 
   def available_motifs
-    available_motifs = agent.service.secretariat? ? organisation.motifs.by_phone : agent.motifs
+    available_motifs = agent.service.secretariat? ? organisation.motifs.by_phone : agent.motifs.where(organisation_id: organisation_id)
     available_motifs.active
   end
 
