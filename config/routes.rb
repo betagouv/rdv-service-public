@@ -16,7 +16,9 @@ Rails.application.routes.draw do
     resources :lieux
     resources :services
     resources :motifs
-    resources :users
+    resources :users do
+      get 'sign_in_as', on: :member
+    end
     resources :rdvs
     resources :plage_ouvertures
     resources :absences
