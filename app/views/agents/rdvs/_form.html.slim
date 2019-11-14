@@ -6,6 +6,6 @@
   = f.association :agents, collection: rdv.motif.service.agents, label_method: :full_name_and_service, input_html: { multiple: true, class: 'select2-input' }
   = f.input :duration_in_min
   = datetime_input(f, :starts_at)
-  = f.association :users, collection: policy_scope(User), label_method: :full_name, input_html: { multiple: true, class: 'select2-input' }
+  = f.association :users, collection: policy_scope([:agent, User]), label_method: :full_name, input_html: { multiple: true, class: 'select2-input' }
   .text-right
     = f.button :submit

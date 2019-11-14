@@ -14,6 +14,10 @@ class Motif < ApplicationRecord
   scope :active, -> { where(deleted_at: nil) }
   scope :online, -> { where(online: true) }
   scope :by_phone, -> { where(by_phone: true) }
+  scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
+    available_motifs = agent.service.secretariat? ? by_phone : where(service: agent.service)
+    available_motifs.where(organisation_id: organisation.id).active.order(Arel.sql('LOWER(name)'))
+  }
 
   def soft_delete
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy

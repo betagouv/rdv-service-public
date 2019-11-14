@@ -2,7 +2,7 @@
   | Vos motifs
 
 - content_for :breadcrumb do
-  = add_button 'Créer un motif', new_organisation_motif_path(current_organisation), condition: policy(Motif).create?, header: true
+  = add_button 'Créer un motif', new_organisation_motif_path(current_organisation), header: true
 
 .row
   .col-md-12
@@ -30,4 +30,4 @@
                 i.fa.fa-circle.fa-stack-2x.text-primary
                 i.fa.fa-calendar.fa-stack-1x.text-white
         .text-center
-          = add_button 'Créer un motif', new_organisation_motif_path(current_organisation), condition: policy(Motif).create?
+          = add_button 'Créer un motif', new_organisation_motif_path(current_organisation)

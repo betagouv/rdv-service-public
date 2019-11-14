@@ -12,6 +12,6 @@ module AgentsHelper
   end
 
   def delete_dropdown_link(agent)
-    link_to 'Supprimer', organisation_agent_path(current_organisation, agent), data: { confirm: "Êtes-vous sûr de vouloir supprimer cet utilisateur ?" }, method: :delete, class: 'dropdown-item' if policy(agent).destroy?
+    link_to 'Supprimer', organisation_agent_path(current_organisation, agent), data: { confirm: "Êtes-vous sûr de vouloir supprimer cet agent ?" }, method: :delete, class: 'dropdown-item' if policy([:agent, agent]).destroy?
   end
 end

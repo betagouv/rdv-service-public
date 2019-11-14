@@ -1,7 +1,7 @@
 tr id="agent_#{agent.id}"
   td
     - if agent.complete?
-      = link_to_if policy(Agent::Permission.new(agent: agent)).edit?, agent.full_name, edit_organisation_agents_permission_path(current_organisation, agent), class: "mr-2", data: { rightbar: true }
+      = link_to agent.full_name, edit_organisation_agents_permission_path(current_organisation, agent), class: "mr-2", data: { rightbar: true }
       = admin_tag(agent)
       = me_tag(agent)
   td

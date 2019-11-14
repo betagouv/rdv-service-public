@@ -23,13 +23,13 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
-      "fingerprint": "bc72024b55b1631b9274b8e00d067aee0c4ee6b178b08b3ddeb26a303d06e3b7",
+      "fingerprint": "398928846b0b6670eee071afba19f3f6f1d02b79408a541ba5179fca432f732d",
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/lieux/index.html.slim",
       "line": 17,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(current_organisation.lieux).order(Arel.sql(\"LOWER(name)\")).page(params[:page]), {})",
+      "code": "render(action => policy_scope(Lieu).includes(:organisation).order(Arel.sql(\"LOWER(name)\")).page(params[:page]), {})",
       "render_path": [
         {
           "type": "controller",
@@ -52,6 +52,6 @@
       "note": ""
     }
   ],
-  "updated": "2019-10-29 16:50:02 +0100",
+  "updated": "2019-11-09 18:17:32 +0100",
   "brakeman_version": "4.6.1"
 }

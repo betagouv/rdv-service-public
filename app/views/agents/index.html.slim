@@ -2,7 +2,7 @@
   | Vos agents
 
 - content_for :breadcrumb do
-  = add_button 'Inviter un professionnel', new_agent_invitation_path(organisation_id: current_organisation), condition: policy(Agent).invite?, header: true
+  = add_button 'Inviter un professionnel', new_agent_invitation_path(organisation_id: current_organisation), header: true
 
 .row
   .col-md-8
@@ -38,4 +38,4 @@
                 i.fa.fa-envelope-o.fa-stack-1x.text-white
 
         .text-center
-          = add_button 'Inviter un professionnel', new_agent_invitation_path(organisation_id: current_organisation), condition: policy(Agent).invite?
+          = add_button 'Inviter un professionnel', new_agent_invitation_path(organisation_id: current_organisation)

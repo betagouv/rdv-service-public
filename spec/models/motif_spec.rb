@@ -83,4 +83,26 @@ describe Rdv, type: :model do
       end
     end
   end
+
+  describe "#available_motifs_for_organisation_and_agent" do
+    let!(:motif) { create(:motif) }
+    let!(:motif2) { create(:motif) }
+    let!(:motif3) { create(:motif, :by_phone) }
+    let!(:motif4) { create(:motif, organisation: create(:organisation)) }
+    let(:plage_ouverture) { build(:plage_ouverture, agent: agent) }
+
+    subject { Motif.available_motifs_for_organisation_and_agent(motif.organisation, agent) }
+
+    describe "for secretaire" do
+      let(:agent) { create(:agent, :secretaire) }
+
+      it { is_expected.to contain_exactly(motif3) }
+    end
+
+    describe "for other service" do
+      let(:agent) { create(:agent, service: motif.service) }
+
+      it { is_expected.to contain_exactly(motif, motif2, motif3) }
+    end
+  end
 end

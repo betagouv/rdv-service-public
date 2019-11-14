@@ -5,7 +5,7 @@ class MotifsController < DashboardAuthController
   before_action :set_motif, only: [:edit, :update, :destroy]
 
   def index
-    @motifs = policy_scope(current_organisation.motifs).active.includes(:service).order(Arel.sql('LOWER(name)')).page(params[:page])
+    @motifs = policy_scope(Motif).includes(:organisation).active.includes(:service).order(Arel.sql('LOWER(name)')).page(params[:page])
   end
 
   def new

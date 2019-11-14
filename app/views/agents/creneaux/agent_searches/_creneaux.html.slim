@@ -23,4 +23,4 @@ div id="creneaux-lieu-#{lieu.id}"
           p.text-center
             small aucune disponibilité
     .col.d-flex.align-items-center
-      = link_to ">>", by_lieu_organisation_agent_searches_path(organisation_id: motif.organisation_id, from_date: date_range.end + 1.day, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent_ids), remote: true, class: 'btn btn-primary', data: { disable_with: "..." }
+      = link_to ">>", by_lieu_organisation_agent_searches_path(from_date: date_range.end + 1.day, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent_ids), remote: true, class: 'btn btn-primary', data: { disable_with: "..." }

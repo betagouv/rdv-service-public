@@ -13,6 +13,5 @@ tr id="agent_#{agent.id}"
       a.dropdown-toggle.arrow-none.text-primary aria-expanded="false" data-toggle="dropdown" href="#"
         i.fa.fa-ellipsis-v.fa-fw
       .dropdown-menu.dropdown-menu-right
-        - if policy(agent).reinvite?
-          = link_to 'Renvoyer', reinvite_organisation_agent_path(current_organisation,agent), method: :post, remote: true, class: 'dropdown-item'
+        = link_to 'Renvoyer', reinvite_organisation_agent_path(current_organisation,agent), method: :post, remote: true, class: 'dropdown-item'
         = delete_dropdown_link agent

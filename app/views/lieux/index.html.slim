@@ -2,7 +2,7 @@
   | Vos lieux de consultation
 
 - content_for :breadcrumb do
-  = add_button 'Ajouter un lieu', new_organisation_lieu_path(current_organisation), condition: policy(Lieu).create?, header: true
+  = add_button 'Ajouter un lieu', new_organisation_lieu_path(current_organisation), header: true
 
 .card
   .card-body
@@ -25,4 +25,4 @@
             i.fa.fa-building.fa-stack-1x.text-white
 
     .text-center
-      = add_button 'Ajouter un lieu', new_organisation_lieu_path(current_organisation), condition: policy(Lieu).create?
+      = add_button 'Ajouter un lieu', new_organisation_lieu_path(current_organisation)

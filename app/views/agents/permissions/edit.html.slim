@@ -7,8 +7,7 @@
   = f.input :role, collection: Agent.human_enum_collection_html(:role), as: :radio_buttons, label: "Rôle de #{@permission.agent.full_name}"
 
   .row
-    - if policy(@permission.agent).destroy?
-      .col.text-left
-        = link_to 'Supprimer', organisation_agent_path(current_organisation, @permission.agent), data: { confirm: "Êtes-vous sûr de vouloir supprimer cet utilisateur ?" }, method: :delete, class: 'btn btn-outline-danger'
+    .col.text-left
+      = link_to 'Supprimer', organisation_agent_path(current_organisation, @permission.agent), data: { confirm: "Êtes-vous sûr de vouloir supprimer cet utilisateur ?" }, method: :delete, class: 'btn btn-outline-danger'
     .col.text-right
       = f.button :submit

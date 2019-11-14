@@ -122,13 +122,6 @@ RSpec.describe Agents::RdvsController, type: :controller do
   end
 
   describe "DELETE destroy" do
-    let(:agent) { create(:agent) }
-    let(:rdv) { create(:rdv) }
-
-    before do
-      sign_in agent
-    end
-
     it "cancel rdv" do
       expect do
         delete :destroy, params: { organisation_id: organisation_id, id: rdv.id }

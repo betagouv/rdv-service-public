@@ -1,2 +1,2 @@
-class Agent::PermissionPolicy < AdminPolicy
+class Agent::PermissionPolicy < Agent::AdminPolicy
 end

@@ -1,6 +1,10 @@
 class Agents::RegistrationsController < Devise::RegistrationsController
   respond_to :html, :json
 
+  def pundit_user
+    AgentContext.new(current_agent)
+  end
+
   def edit
     respond_right_bar_with resource
   end
@@ -31,9 +35,6 @@ class Agents::RegistrationsController < Devise::RegistrationsController
     respond_with_navigational(resource){ redirect_to after_sign_out_path_for(resource_name) }
   end
 
-  def pundit_user
-    current_agent
-  end
 
   private
 

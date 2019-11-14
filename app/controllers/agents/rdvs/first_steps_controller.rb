@@ -5,12 +5,12 @@ class Agents::Rdvs::FirstStepsController < DashboardAuthController
     rdv = Rdv.new(query_params)
     @first_step = Rdv::FirstStep.new(rdv.to_step_params)
     @first_step.organisation_id = current_organisation.id
-    authorize(@first_step)
+    skip_authorization
   end
 
   def create
     build_first_step
-    authorize(@first_step)
+    skip_authorization
     if @first_step.valid?
       redirect_to new_organisation_second_step_path(@first_step.to_query)
     else
@@ -31,6 +31,6 @@ class Agents::Rdvs::FirstStepsController < DashboardAuthController
   end
 
   def query_params
-    params.permit(:motif_id, :starts_at, :location)
+    params.permit(:motif_id, :starts_at, :location, :organisation_id)
   end
 end

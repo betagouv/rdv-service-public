@@ -33,7 +33,7 @@
         = f.hidden_field "agent_ids][", value: p.id
       = f.input :duration_in_min, as: :hidden
       = f.input :starts_at, as: :hidden
-      = f.association :users, collection: policy_scope(User), label_method: :full_name, input_html: { multiple: true, class: 'select2-input' }
+      = f.association :users, collection: policy_scope([:agent, User]).order(Arel.sql('LOWER(last_name)')), label_method: :full_name, input_html: { multiple: true, class: 'select2-input' }
       .row
         .col.text-left
           = link_to 'Revenir en arrière', new_organisation_second_step_path(@third_step.to_query), class: 'btn btn-link'
