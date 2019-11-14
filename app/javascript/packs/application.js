@@ -25,6 +25,7 @@ import { Rdvstatus } from 'packs/components/rdvstatus';
 import { Analytic } from 'packs/components/analytic.js.erb';
 import { PlacesInput } from 'packs/components/places-input.js.erb';
 import 'packs/components/calendar';
+import 'packs/components/browser-detection';
 import "actiontext";
 import { Application } from "stimulus";
 import { definitionsFromContext } from "stimulus/webpack-helpers";
