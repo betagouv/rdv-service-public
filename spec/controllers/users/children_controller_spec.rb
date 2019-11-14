@@ -55,6 +55,11 @@ RSpec.describe Users::ChildrenController, type: :controller do
         end.to change(User, :count).by(1)
       end
 
+      it "set organisation_ids for child" do
+        subject
+        expect(assigns(:user).organisation_ids).to eq(user.organisation_ids)
+      end
+
       it "redirects to user informations" do
         subject
         expect(response).to redirect_to(users_informations_path)

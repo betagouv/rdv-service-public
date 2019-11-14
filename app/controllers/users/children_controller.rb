@@ -24,6 +24,7 @@ class Users::ChildrenController < UserAuthController
   def create
     @user = User.new(user_params)
     @user.parent_id = current_user.id
+    @user.organisation_ids = current_user.organisation_ids
     @user.created_or_updated_by_agent = true
     authorize(@user)
     if @user.save
