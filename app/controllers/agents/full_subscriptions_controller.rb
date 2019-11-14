@@ -1,4 +1,4 @@
-class Agents::FullSubscriptionsController < DashboardAuthController
+class Agents::FullSubscriptionsController < AgentAuthController
   layout 'registration'
 
   def new

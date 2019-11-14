@@ -1,4 +1,4 @@
-class Agents::RdvsController < DashboardAuthController
+class Agents::RdvsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_rdv, only: [:show, :edit, :update, :destroy, :status]

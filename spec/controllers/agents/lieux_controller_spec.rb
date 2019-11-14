@@ -1,4 +1,4 @@
-RSpec.describe LieuxController, type: :controller do
+RSpec.describe Agents::LieuxController, type: :controller do
   render_views
 
   let(:agent) { create(:agent, :admin) }

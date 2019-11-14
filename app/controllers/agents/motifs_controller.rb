@@ -1,4 +1,4 @@
-class MotifsController < DashboardAuthController
+class Agents::MotifsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: [:new, :create]

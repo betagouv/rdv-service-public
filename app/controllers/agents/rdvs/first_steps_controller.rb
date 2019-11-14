@@ -1,4 +1,4 @@
-class Agents::Rdvs::FirstStepsController < DashboardAuthController
+class Agents::Rdvs::FirstStepsController < AgentAuthController
   layout 'application-small'
 
   def new

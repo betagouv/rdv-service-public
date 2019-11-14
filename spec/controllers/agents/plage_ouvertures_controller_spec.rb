@@ -1,4 +1,4 @@
-RSpec.describe PlageOuverturesController, type: :controller do
+RSpec.describe Agents::PlageOuverturesController, type: :controller do
   render_views
 
   let(:agent) { create(:agent) }

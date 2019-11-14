@@ -1,4 +1,4 @@
-class Agents::PermissionsController < DashboardAuthController
+class Agents::PermissionsController < AgentAuthController
   respond_to :html, :json
 
   def edit

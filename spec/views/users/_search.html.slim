@@ -1,3 +1,0 @@
-RSpec.describe  do
-
-end

@@ -53,37 +53,41 @@ Rails.application.routes.draw do
   end
 
   authenticated :agent do
-    root to: 'organisations#index', as: :authenticated_agent_root
-    resources :organisations, only: [:show, :index] do
-      resources :lieux, except: :show
-      resources :motifs, except: :show
-      resources :plage_ouvertures, except: :show
-      resources :absences, except: :show
+    root to: 'agents/organisations#index', as: :authenticated_agent_root
+    scope module: "agents" do
+      resources :organisations, only: [:show, :index] do
+        resources :lieux, except: :show
+        resources :motifs, except: :show
+        resources :plage_ouvertures, except: :show
+        resources :absences, except: :show
 
-      resources :agents, only: [:index, :destroy] do
-        post :reinvite, on: :member
-      end
+        resources :agents, only: [:index, :destroy] do
+          post :reinvite, on: :member
+          collection do
+            resources :full_subscriptions, only: [:new, :create]
+            resources :permissions, only: [:edit, :update]
+          end
+        end
 
-      namespace :agents do
-        resources :full_subscriptions, only: [:new, :create]
-        resources :permissions, only: [:edit, :update]
-      end
+        # namespace :agents do
+        # end
 
-      resources :users, except: :show, controller: 'organisations/users' do
-        post :invite, on: :member
-        get :link_to_organisation, on: :member
-      end
+        resources :users, except: :show do
+          post :invite, on: :member
+          get :link_to_organisation, on: :member
+        end
 
-      resources :rdvs, except: [:create, :new], controller: 'agents/rdvs' do
-        patch :status, on: :member
-      end
+        resources :rdvs, except: [:create, :new] do
+          patch :status, on: :member
+        end
 
-      resources :agent_searches, only: :index, module: "agents/creneaux" do
-        get :by_lieu, on: :collection
-      end
+        resources :agent_searches, only: :index, module: "creneaux" do
+          get :by_lieu, on: :collection
+        end
 
-      [:first_steps, :second_steps, :third_steps].each do |step|
-        resources step, only: [:new, :create], module: "agents/rdvs"
+        [:first_steps, :second_steps, :third_steps].each do |step|
+          resources step, only: [:new, :create], module: "rdvs"
+        end
       end
     end
   end

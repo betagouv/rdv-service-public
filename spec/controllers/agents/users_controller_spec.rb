@@ -1,4 +1,4 @@
-RSpec.describe Organisations::UsersController, type: :controller do
+RSpec.describe Agents::UsersController, type: :controller do
   render_views
 
   let(:agent) { create(:agent) }
