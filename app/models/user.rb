@@ -7,7 +7,7 @@ class User < ApplicationRecord
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
 
-  has_and_belongs_to_many :organisations, -> { distinct }
+  has_and_belongs_to_many :organisations, -> { distinct }, after_add: :add_organisation_to_children, after_remove: :remove_organisation_to_children
   has_and_belongs_to_many :rdvs
   belongs_to :parent, foreign_key: "parent_id", class_name: "User", optional: true
   has_many :children, foreign_key: "parent_id", class_name: "User"
@@ -23,6 +23,7 @@ class User < ApplicationRecord
                   using: { tsearch: { prefix: true } }
 
   before_save :set_email_to_null_if_blank
+  before_save :set_organisation_ids_from_parent, if: :parent_id_changed?
 
   def full_name
     "#{first_name} #{last_name}"
@@ -84,6 +85,18 @@ class User < ApplicationRecord
   end
 
   private
+
+  def add_organisation_to_children(organisation)
+    children.each { |child| child.add_organisation(organisation) }
+  end
+
+  def remove_organisation_to_children(organisation)
+    children.each { |child| child.organisations.delete(organisation) }
+  end
+
+  def set_organisation_ids_from_parent
+    self.organisation_ids = parent.organisation_ids if parent
+  end
 
   def set_email_to_null_if_blank
     self.email = nil if email.blank?
