@@ -7,6 +7,10 @@ class Agent::UserPolicy < DefaultAgentPolicy
     same_org?
   end
 
+  def link_to_organisation?
+    true
+  end
+
   def invite?
     create?
   end
@@ -21,7 +25,7 @@ class Agent::UserPolicy < DefaultAgentPolicy
 
   class Scope < Scope
     def resolve
-      scope.where(organisation_id: @context.organisation.id)
+      scope.joins(:organisations).where(organisations: { id: @context.organisation.id })
     end
   end
 end

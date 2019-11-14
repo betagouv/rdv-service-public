@@ -3,7 +3,7 @@ class DefaultAgentPolicy
 
   def initialize(context, record)
     raise Pundit::NotAuthorizedError, "must be logged in" unless context.agent
-    if context.organisation && !context.agent.organisation_ids.include?(context.organisation.id)
+    if context.organisation && context.agent.organisation_ids.exclude?(context.organisation.id)
       raise Pundit::NotAuthorizedError, "must be of the same organisation"
     end
 
