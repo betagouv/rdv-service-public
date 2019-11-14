@@ -139,7 +139,7 @@ describe Rdv, type: :model do
     end
 
     it "expect .save link user to organisation" do
-      expect { subject }.to change(user, :organisation_ids).from([organisation.id]).to([organisation.id, rdv.organisation_id])
+      expect { subject }.to change { user.organisation_ids.sort }.from([organisation.id]).to([organisation.id, rdv.organisation_id].sort)
     end
 
     describe "when user is already associated to organisation" do
