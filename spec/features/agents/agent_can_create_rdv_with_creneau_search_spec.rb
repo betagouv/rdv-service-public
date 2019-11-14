@@ -36,8 +36,7 @@ describe "Agent can create a Rdv with creneau search" do
     expect(page).to have_content(plage_ouverture.lieu.address)
     expect(page).not_to have_content(plage_ouverture2.lieu.address)
 
-    # Change to a agent filter
-    select("Sélectionnez un lieu", from: "creneau_agent_search_lieu_id")
+    # Add an agent filter
     select(agent.full_name, from: "creneau_agent_search_agent_ids")
     click_button('Afficher les créneaux')
     expect(page).to have_content(plage_ouverture.agent.short_name)

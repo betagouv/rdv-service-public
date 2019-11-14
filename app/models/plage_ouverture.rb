@@ -72,6 +72,10 @@ class PlageOuverture < ApplicationRecord
     results.uniq
   end
 
+  def available_motifs
+    Motif.available_motifs_for_organisation_and_agent(organisation, agent)
+  end
+
   private
 
   def clear_empty_recurrence

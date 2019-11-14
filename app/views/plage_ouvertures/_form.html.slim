@@ -1,4 +1,4 @@
-- if policy_scope([:agent, Motif]).available_motifs_for_organisation_and_agent(plage_ouverture.organisation, current_agent).any?
+- if plage_ouverture.available_motifs.any?
   = simple_form_for [plage_ouverture.organisation, plage_ouverture], remote: request.xhr?, data: { rightbar: true } do |f|
     = render partial: 'layouts/model_errors', locals: { model: plage_ouverture }
     = f.input :title
@@ -10,7 +10,7 @@
           = f.input :start_time, as: :select, collection: time_collections, selected: plage_ouverture.start_time&.strftime("%H:%M"), include_blank: false
         .col
           = f.input :end_time, as: :select, collection: time_collections, selected: plage_ouverture.end_time&.strftime("%H:%M"), include_blank: false
-      = f.association :motifs, collection: policy_scope([:agent, Motif]).available_motifs_for_organisation_and_agent(plage_ouverture.organisation, current_agent), label_method: :name_with_badge, as: :check_boxes
+      = f.association :motifs, collection: plage_ouverture.available_motifs, label_method: :name_with_badge, as: :check_boxes
       hr
       = render partial: 'plage_ouvertures/recurrence', locals: { f: f, plage_ouverture: plage_ouverture }
     .row
