@@ -45,6 +45,7 @@ describe "Agent can create a Rdv with creneau search" do
 
     # Click to change to next week
     first(:link, ">>").click
+    expect(page).to have_content('<<', wait: 5)
 
     # Select creneau
     first(:link, "09:30").click
@@ -68,7 +69,7 @@ describe "Agent can create a Rdv with creneau search" do
 
     expect(page).to have_content("Le rendez-vous a été créé.")
     expect(page).to have_current_path(rdv.agenda_path)
-    expect(page).to have_content("22 – 25 JUIL. 2019")
+    expect(page).to have_content("29 JUIL. – 1 AOÛT 2019")
   end
 
   def select_user(user)
