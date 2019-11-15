@@ -1,0 +1,13 @@
+- form_url = user.persisted? ? child_path(user) : children_path
+= simple_form_for(user, url: form_url, remote: request.xhr?, data: { rightbar: true }) do |f|
+  = render partial: 'layouts/model_errors', locals: { model: user }
+  .form-row
+    .col-md-6= f.input :first_name
+    .col-md-6= f.input :last_name
+  = f.input :birth_date, as: :date, html5: true
+  .row
+    .col.text-left
+      / = link_to "Supprimer", users_informations_path, class: "btn btn-link"
+    .col.text-right
+      = link_to "Annuler", users_informations_path, class: "btn btn-link"
+      = f.button :submit

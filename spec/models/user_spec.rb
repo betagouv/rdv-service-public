@@ -60,4 +60,47 @@ describe User, type: :model do
       end
     end
   end
+
+  describe "#set_organisation_ids_from_parent" do
+    let(:user) { create(:user, organisations: [create(:organisation), create(:organisation)]) }
+    let(:child) { create(:user, parent_id: parent_id) }
+
+    describe "when there is no parent" do
+      let(:parent_id) { nil }
+
+      it { expect(child.organisation_ids).not_to eq(user.organisation_ids) }
+    end
+
+    describe "when user is parent" do
+      let(:parent_id) { user.id }
+
+      it { expect(child.organisation_ids).to eq(user.organisation_ids) }
+    end
+  end
+
+  describe "children association callbacks" do
+    let(:organisation) { create(:organisation) }
+    let(:organisation2) { create(:organisation) }
+    let(:user) { create(:user, organisations: [organisation]) }
+    let(:child1) { create(:user) }
+    let(:child2) { create(:user) }
+
+    before do
+      user.children << [child1, child2]
+    end
+
+    describe "#add_organisation_to_children" do
+      subject { user.add_organisation(organisation2) }
+
+      it { expect { subject }.to change(child1, :organisation_ids).from([organisation.id]).to([organisation.id, organisation2.id]) }
+      it { expect { subject }.to change(child2, :organisation_ids).from([organisation.id]).to([organisation.id, organisation2.id]) }
+    end
+
+    describe "#remove_organisation_to_children" do
+      subject { user.organisations.delete(organisation) }
+
+      it { expect { subject }.to change(child1, :organisation_ids).from([organisation.id]).to([]) }
+      it { expect { subject }.to change(child2, :organisation_ids).from([organisation.id]).to([]) }
+    end
+  end
 end
