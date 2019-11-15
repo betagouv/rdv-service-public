@@ -6,7 +6,7 @@ class AgentAuthController < ApplicationController
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
-  helper_method :current_organisation
+  helper_method :current_organisation, :policy_scope
 
   private
 
