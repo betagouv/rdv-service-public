@@ -2,7 +2,7 @@
   = simple_form_for [plage_ouverture.organisation, plage_ouverture], remote: request.xhr?, data: { rightbar: true } do |f|
     = render partial: 'layouts/model_errors', locals: { model: plage_ouverture }
     = f.input :title
-    = f.association :lieu, collection: policy_scope([:agent, Lieu]), label_method: :full_name, include_blank: false
+    = f.association :lieu, collection: policy_scope(Lieu), label_method: :full_name, include_blank: false
     .recurrence-select.recurrence-select--weekly data-controller="recurrence"
       = f.input :first_day, as: :date, html5: true, input_html: { id: "recurrence-source", data: { target: "recurrence.firstDay", action: "recurrence#updateRecurrence" } }
       .row
