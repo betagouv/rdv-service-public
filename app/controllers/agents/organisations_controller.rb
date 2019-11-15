@@ -1,4 +1,4 @@
-class OrganisationsController < DashboardAuthController
+class Agents::OrganisationsController < AgentAuthController
   respond_to :html, :json
 
   before_action :redirect_if_agent_incomplete, only: :index

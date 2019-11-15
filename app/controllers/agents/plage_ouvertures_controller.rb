@@ -1,4 +1,4 @@
-class PlageOuverturesController < DashboardAuthController
+class Agents::PlageOuverturesController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_plage_ouverture, only: [:edit, :update, :destroy]

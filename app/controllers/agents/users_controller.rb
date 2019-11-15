@@ -1,4 +1,4 @@
-class Organisations::UsersController < DashboardAuthController
+class Agents::UsersController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: [:new, :create]

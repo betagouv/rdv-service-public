@@ -1,4 +1,4 @@
-class LieuxController < DashboardAuthController
+class Agents::LieuxController < AgentAuthController
   respond_to :html, :json
 
   def index

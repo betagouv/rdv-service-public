@@ -23,35 +23,35 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
-      "fingerprint": "398928846b0b6670eee071afba19f3f6f1d02b79408a541ba5179fca432f732d",
+      "fingerprint": "e888917ccb1d0ad3936b89b30657e96972d5232a4f36da9cc4ba8bd992311378",
       "check_name": "Render",
       "message": "Render path contains parameter value",
-      "file": "app/views/lieux/index.html.slim",
+      "file": "app/views/agents/lieux/index.html.slim",
       "line": 17,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => policy_scope(Lieu).includes(:organisation).order(Arel.sql(\"LOWER(name)\")).page(params[:page]), {})",
       "render_path": [
         {
           "type": "controller",
-          "class": "LieuxController",
+          "class": "Agents::LieuxController",
           "method": "index",
           "line": 6,
-          "file": "app/controllers/lieux_controller.rb",
+          "file": "app/controllers/agents/lieux_controller.rb",
           "rendered": {
-            "name": "lieux/index",
-            "file": "app/views/lieux/index.html.slim"
+            "name": "agents/lieux/index",
+            "file": "app/views/agents/lieux/index.html.slim"
           }
         }
       ],
       "location": {
         "type": "template",
-        "template": "lieux/index"
+        "template": "agents/lieux/index"
       },
       "user_input": "params[:page]",
       "confidence": "Weak",
       "note": ""
     }
   ],
-  "updated": "2019-11-09 18:17:32 +0100",
+  "updated": "2019-11-14 17:42:06 +0100",
   "brakeman_version": "4.6.1"
 }

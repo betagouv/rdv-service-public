@@ -1,4 +1,4 @@
-RSpec.describe AbsencesController, type: :controller do
+RSpec.describe Agents::AbsencesController, type: :controller do
   render_views
 
   let(:agent) { create(:agent) }

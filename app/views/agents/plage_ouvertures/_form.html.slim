@@ -12,7 +12,7 @@
           = f.input :end_time, as: :select, collection: time_collections, selected: plage_ouverture.end_time&.strftime("%H:%M"), include_blank: false
       = f.association :motifs, collection: plage_ouverture.available_motifs, label_method: :name_with_badge, as: :check_boxes
       hr
-      = render partial: 'plage_ouvertures/recurrence', locals: { f: f, plage_ouverture: plage_ouverture }
+      = render partial: 'recurrence', locals: { f: f, plage_ouverture: plage_ouverture }
     .row
       - if plage_ouverture.persisted?
         .col.text-left

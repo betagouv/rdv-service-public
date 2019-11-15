@@ -1,4 +1,4 @@
-class DashboardAuthController < ApplicationController
+class AgentAuthController < ApplicationController
   rescue_from Pundit::NotAuthorizedError, with: :agent_not_authorized
 
   before_action :authenticate_agent!

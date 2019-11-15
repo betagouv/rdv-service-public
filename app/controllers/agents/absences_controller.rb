@@ -1,4 +1,4 @@
-class AbsencesController < DashboardAuthController
+class Agents::AbsencesController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_absence, only: [:edit, :update, :destroy]
