@@ -10,18 +10,18 @@ class TwilioTextMessenger
   def rdv_created
     message = "RDV Solidarités - Bonjour,\n"
     message += "RDV #{@rdv.motif.name} #{I18n.l(@rdv.starts_at, format: :human)} (durée : #{@rdv.duration_in_min} minutes) a été confirmé.\n"
-    if @rdv.motif.by_phone
-      message += "RDV Tél au #{@user.phone_number}.\n"
-    else
-      message += "Adresse: #{@rdv.location}.\n"
-    end
+    message += if @rdv.motif.by_phone
+                 "RDV Tél au #{@user.phone_number}.\n"
+               else
+                 "Adresse: #{@rdv.location}.\n"
+               end
     message += "Infos et annulation: link.\n"
 
     twilio_client = Twilio::REST::Client.new
-    twilio_client.messages.create({
+    twilio_client.messages.create(
       from: @from,
       to: "+33658032519",
       body: message
-    })
+    )
   end
 end
