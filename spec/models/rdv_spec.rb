@@ -122,6 +122,19 @@ describe Rdv, type: :model do
     end
   end
 
+  describe "#seconds_to_rdv" do
+    let(:rdv) { create(:rdv, starts_at: Time.zone.now + 2.hours) }
+    subject { rdv.seconds_to_rdv }
+
+    it "should return a float" do
+      expect(subject).to be_kind_of(Float)
+    end
+
+    it "send difference between RDV and current time" do
+      expect(subject).to be_within(1).of(2.hours.to_i)
+    end
+  end
+
   describe "#associate_users_with_organisation" do
     let(:organisation) { create(:organisation) }
     let(:organisation2) { create(:organisation) }

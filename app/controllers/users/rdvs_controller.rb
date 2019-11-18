@@ -48,6 +48,18 @@ class Users::RdvsController < UserAuthController
     authorize(@rdv)
   end
 
+  def cancel
+    rdv = Rdv.find(params[:rdv_id])
+    authorize(rdv)
+    rdv.cancel
+    if rdv.cancelled_at
+      flash[:notice] = "Le RDV a bien été annulé."
+    else
+      flash[:error] = "Impossible d'annuler le RDV."
+    end
+    redirect_to users_rdvs_path
+  end
+
   private
 
   def new_rdv_params

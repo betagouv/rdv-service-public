@@ -33,4 +33,24 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
     end
   end
+
+  describe "PUT #cancel" do
+    let(:rdv) { create(:rdv) }
+
+    subject { put :cancel, params: { rdv_id: rdv.id } }
+
+    before do
+      sign_in rdv.users.first
+      subject
+      rdv.reload
+    end
+
+    it "cancel rdv" do
+      expect(rdv.cancelled_at).to be_within(3.second).of(Time.current)
+    end
+
+    it "redirect to rdvs" do
+      expect(response).to redirect_to users_rdvs_path
+    end
+  end
 end

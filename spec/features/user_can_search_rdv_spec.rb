@@ -66,6 +66,15 @@ describe "User can search for rdvs" do
     expect(page).to have_content(motif.name)
     expect(page).to have_content(lieu.address)
     expect(page).to have_content("11h00")
+    if Rdv.last.seconds_to_rdv >= 60 * 60 * 4
+      expect(page).to have_content("Annuler le RDV")
+      click_link("Annuler le RDV")
+      alert = page.driver.browser.switch_to.alert
+      alert.accept
+      expect(page).not_to have_content(motif.name)
+    elsif Rdv.last.seconds_to_rdv > 0
+      expect(page).to have_content("Vous ne pouvez plus annuler ce RDV")
+    end
   end
 
   def click_first_suggestion

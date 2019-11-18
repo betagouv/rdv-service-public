@@ -83,6 +83,10 @@ class Rdv < ApplicationRecord
     "rdv-#{name.parameterize}-#{starts_at.to_s.parameterize}.ics"
   end
 
+  def seconds_to_rdv
+    starts_at - Time.zone.now
+  end
+
   def to_step_params
     {
       location: location,

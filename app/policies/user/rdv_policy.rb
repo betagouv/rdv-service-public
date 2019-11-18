@@ -7,9 +7,13 @@ class User::RdvPolicy < ApplicationPolicy
     @record.user_ids.include?(@user.id)
   end
 
+  def cancel?
+    @record.user_ids.include?(@user.id)
+  end
+
   class Scope < Scope
     def resolve
-      scope.joins(:users).where(users: { id: @user.id })
+      scope.joins(:users).where(users: { id: @user.id }, cancelled_at: nil).where("DATE(starts_at) >= ?", Date.today)
     end
   end
 end
