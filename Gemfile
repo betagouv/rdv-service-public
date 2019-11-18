@@ -5,8 +5,8 @@ ruby '2.6.5'
 
 gem 'dotenv-rails', '~> 2.7.2' # dotenv should always be loaded before rails
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0.1'
-gem 'sprockets-rails', '~> 3.2.1'
+gem 'rails', '~> 6.0'
+gem 'sprockets-rails'
 
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
