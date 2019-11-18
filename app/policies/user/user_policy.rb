@@ -1,4 +1,10 @@
 class User::UserPolicy < ApplicationPolicy
+  class Scope < Scope
+    def resolve
+      scope.where(id: @user.id).or(User.where(parent_id: @user.id))
+    end
+  end
+
   def create?
     user_is_parent?
   end

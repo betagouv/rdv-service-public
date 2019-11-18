@@ -36,15 +36,17 @@
             .col-auto
               = link_to "modifier", welcome_motif_path(@departement, @motif_name, where: @where)
 
-
       .card-body
         = simple_form_for(@rdv, url: users_rdvs_path) do |f|
 
-          = f.association :motif, as: :hidden
-          = f.input :lieu_id, as: :hidden, input_html: { value: @lieu.id }
-          = f.input :starts_at, as: :hidden
-          = f.input :where, as: :hidden, input_html: { value: @where }
-          = f.input :departement, as: :hidden, input_html: { value: @departement }
+          = f.association :motif, as: :hidden, wrapper_html: { class: 'mb-0' }
+          = f.input :lieu_id, as: :hidden, input_html: { value: @lieu.id }, wrapper_html: { class: 'mb-0' }
+          = f.input :starts_at, as: :hidden, wrapper_html: { class: 'mb-0' }
+          = f.input :where, as: :hidden, input_html: { value: @where }, wrapper_html: { class: 'mb-0' }
+          = f.input :departement, as: :hidden, input_html: { value: @departement }, wrapper_html: { class: 'mb-0' }
+          = f.association :users, label: "Pour qui prenez-vous rendez-vous ?", as: :radio_buttons, collection: current_user.available_users_for_rdv, checked: current_user.id, label_method: :full_name, wrapper_html: { class: 'mb-0' }
+          .form-group
+            = link_to "+ Ajouter un enfant", new_child_path
 
           .row
             .col
