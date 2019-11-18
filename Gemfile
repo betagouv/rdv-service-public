@@ -50,6 +50,9 @@ gem 'icalendar', '~> 2.5'
 gem 'sendgrid', '~> 1.2.4'
 gem 'premailer-rails'
 
+# SMS
+gem 'twilio-ruby', '~> 5.29.1'
+
 # Ops
 gem "sentry-raven"
 gem "skylight"
