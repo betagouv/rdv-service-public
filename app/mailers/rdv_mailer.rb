@@ -4,6 +4,7 @@ class RdvMailer < ApplicationMailer
 
   def send_ics_to_user(rdv, user, serialized_previous_starts_at = nil)
     @rdv = rdv
+    @user = user
     @previous_starts_at = parse_time(serialized_previous_starts_at)
 
     subject = subject(@rdv, @previous_starts_at)
