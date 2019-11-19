@@ -55,7 +55,7 @@ Rails.application.routes.draw do
   authenticated :agent do
     root to: 'agents/organisations#index', as: :authenticated_agent_root
     scope module: "agents" do
-      resources :organisations, only: [:show, :index] do
+      resources :organisations, except: :destroy do
         resources :lieux, except: :show
         resources :motifs, except: :show
         resources :plage_ouvertures, except: :show
