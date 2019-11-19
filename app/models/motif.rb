@@ -27,14 +27,14 @@ class Motif < ApplicationRecord
     service.name
   end
 
-  def self.grouped_by_service_for_departement(departement)
+  def self.names_grouped_by_service_for_departement(departement)
     Motif.online
          .active
          .joins(:organisation, :plage_ouvertures)
          .where(organisations: { departement: departement })
          .includes(:service)
-         .uniq
          .group_by { |m| m.service.name }
+         .map { |s, m| [s, m.map(&:name).uniq] }
   end
 
   def name_with_badge
