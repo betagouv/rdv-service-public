@@ -1,5 +1,5 @@
 class SessionsController < Devise::SessionsController
-  after_filter :sign_out_other_scope
+  after_action :sign_out_other_scope, only: :create
 
   private
 
