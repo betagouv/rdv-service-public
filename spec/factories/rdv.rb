@@ -6,10 +6,16 @@ FactoryBot.define do
     location { "10 rue de la Ferronerie 44100 Nantes" }
     organisation { Organisation.first || create(:organisation) }
     motif { build(:motif) }
-    users { [build(:user)] }
+    users { [User.first || build(:user)] }
     agents { [build(:agent)] }
     trait :by_phone do
       motif { build(:motif, :by_phone) }
+    end
+    trait :future do 
+      starts_at { 2.days.since }
+    end
+    trait :past do 
+      starts_at { 2.days.ago }
     end
   end
 end

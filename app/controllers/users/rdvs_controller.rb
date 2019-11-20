@@ -1,6 +1,8 @@
 class Users::RdvsController < UserAuthController
   def index
-    @rdvs = policy_scope(Rdv).includes(:motif, :rdvs_users, :users).order(starts_at: :desc).page(params[:page])
+    @rdvs = policy_scope(Rdv).includes(:motif, :rdvs_users, :users)
+    @rdvs = params[:past].present? ? @rdvs.past : @rdvs.future
+    @rdvs = @rdvs.order(starts_at: :desc).page(params[:page])
   end
 
   def new

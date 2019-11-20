@@ -7,6 +7,12 @@ module RdvsHelper
     rdv.users.map(&:full_name).sort.to_sentence
   end
 
+  def no_rdv_for_users
+    sentence = "Vous n'avez pas de RDV "  
+    sentence += params[:past].present? ? "passé." : "à venir."
+    sentence
+  end
+
   def human_location(rdv)
     rdv.location.blank? ? 'Non précisé' : rdv.location
   end
