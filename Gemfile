@@ -90,6 +90,7 @@ group :development, :test do
   gem 'meta_request', '~> 0.7'
   gem 'bullet'
   gem 'faker'
+  gem 'parallel_tests'
 end
 
 group :development do
