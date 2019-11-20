@@ -61,7 +61,7 @@ describe Rdv, type: :model do
     end
 
     it "calls RdvMailer to send email to user" do
-      expect(RdvMailer).to receive(:send_ics_to_users).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
+      expect(RdvMailer).to receive(:send_ics_to_user).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
       rdv.save!
     end
   end

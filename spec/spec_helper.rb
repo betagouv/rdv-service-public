@@ -116,6 +116,10 @@ RSpec.configure do |config|
   #   Kernel.srand config.seed
 
   config.before(:each) do
+    allow_any_instance_of(TwilioTextMessenger).to receive(:send).and_return(true)
+  end
+
+  config.before(:each) do
     DatabaseCleaner.start
   end
 
