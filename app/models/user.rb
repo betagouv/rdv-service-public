@@ -78,6 +78,10 @@ class User < ApplicationRecord
     parent_id.present?
   end
 
+  def formated_phone
+    Phonelib.parse(phone_number).e164
+  end
+
   protected
 
   def password_required?

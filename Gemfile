@@ -32,6 +32,7 @@ gem 'delayed_job_web'
 # Form
 gem 'simple_form', '~> 5.0'
 gem 'image_processing', '~> 1.8'
+gem 'phonelib'
 
 # Front
 gem 'sass-rails', '~> 6.0'
