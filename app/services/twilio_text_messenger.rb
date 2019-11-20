@@ -9,7 +9,7 @@ class TwilioTextMessenger
 
   def rdv_created
     message = "RDV Solidarités - Bonjour,\n"
-    message += "RDV #{@rdv.motif.name} #{I18n.l(@rdv.starts_at, format: :human)} (durée : #{@rdv.duration_in_min} minutes) a été confirmé.\n"
+    message += rdv_name(@rdv)
     message += if @rdv.motif.by_phone
                  "RDV Tél au #{@user.phone_number}.\n"
                else
@@ -22,5 +22,9 @@ class TwilioTextMessenger
       to: user.formated_phone,
       body: message
     )
+  end
+
+  def rdv_name(rdv)
+    "RDV #{rdv.motif.name} #{I18n.l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes) a été confirmé.\n"
   end
 end
