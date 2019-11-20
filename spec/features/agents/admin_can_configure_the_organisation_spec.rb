@@ -8,6 +8,7 @@ describe "Admin can configure the organisation" do
   let!(:secretariat) { create(:service, :secretariat) }
   let(:le_nouveau_lieu) { build(:lieu) }
   let(:le_nouveau_motif) { build(:motif) }
+  let(:la_nouvelle_org) { build(:organisation) }
 
   before do
     login_as(agent_admin, scope: :agent)
@@ -37,8 +38,6 @@ describe "Admin can configure the organisation" do
     expect_page_title("Nouveau lieu")
     fill_in 'Nom', with: le_nouveau_lieu.name
     fill_in 'Adresse', with: le_nouveau_lieu.address
-    fill_in 'Téléphone', with: le_nouveau_lieu.telephone
-    fill_in 'Horaires', with: le_nouveau_lieu.horaires
     click_button 'Créer'
     expect_page_title("Vos lieux de consultation")
     click_link le_nouveau_lieu.name
@@ -71,6 +70,18 @@ describe "Admin can configure the organisation" do
 
     open_email('jean@paul.com')
     expect(current_email.subject).to eq I18n.t("devise.mailer.invitation_instructions.subject")
+  end
+
+  scenario "Update organisation" do
+    click_link "Votre organisation"
+    expect_page_title("Modifier l'organisation")
+
+    fill_in 'Nom', with: la_nouvelle_org.name
+    fill_in 'Téléphone', with: la_nouvelle_org.phone_number
+    fill_in 'Horaires', with: la_nouvelle_org.horaires
+    click_button 'Modifier'
+
+    expect(page).to have_content('L\'organisation a été modifiée.')
   end
 
   scenario "CRUD on motifs" do

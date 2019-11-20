@@ -2,8 +2,6 @@
   = render partial: 'layouts/model_errors', locals: { model: lieu }
   = f.input :name
   = f.input :address, input_html: { class: "places-js-container" }
-  = f.input :telephone, placeholder: "ex: 0412345667"
-  = f.input :horaires, placeholder: "ex : du lundi au vendredi de 9h à 17h, le samedi de 9h à 12h"
   .row
     - if lieu.persisted?
       .col.text-left
