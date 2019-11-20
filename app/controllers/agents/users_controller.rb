@@ -76,7 +76,7 @@ class Agents::UsersController < AgentAuthController
   private
 
   def filter_users
-    @users = @users.search_by_name(params[:user][:search])
+    @users = @users.search_by_name_or_email(params[:user][:search])
     respond_to do |format|
       format.js { render partial: 'search-results' }
     end
