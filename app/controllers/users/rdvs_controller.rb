@@ -1,4 +1,6 @@
 class Users::RdvsController < UserAuthController
+  before_action :set_rdv, only: [:confirmation, :cancel]
+
   def index
     @rdvs = policy_scope(Rdv).includes(:motif, :rdvs_users, :users).order(starts_at: :desc).page(params[:page])
   end
@@ -45,14 +47,12 @@ class Users::RdvsController < UserAuthController
   end
 
   def confirmation
-    @rdv = Rdv.find(params[:rdv_id])
     authorize(@rdv)
   end
 
   def cancel
-    rdv = Rdv.find(params[:rdv_id])
-    authorize(rdv)
-    if rdv.cancel
+    authorize(@rdv)
+    if @rdv.cancel
       flash[:notice] = "Le RDV a bien été annulé."
     else
       flash[:error] = "Impossible d'annuler le RDV."
@@ -61,6 +61,10 @@ class Users::RdvsController < UserAuthController
   end
 
   private
+
+  def set_rdv
+    @rdv = policy_scope(Rdv).find(params[:rdv_id])
+  end
 
   def user_for_rdv
     if creneau_params[:user_ids]
