@@ -35,43 +35,41 @@ RSpec.describe Users::RdvsController, type: :controller do
   end
 
   describe "PUT #cancel" do
+    let(:now) { "01/01/2019 14:20".to_datetime }
     let(:rdv) { create(:rdv, starts_at: 5.hours.from_now) }
-    let(:rdv_now) { create(:rdv, starts_at: Time.current) }
     let(:user) { create(:user) }
 
-    subject { put :cancel, params: { rdv_id: rdv.id } }
+    subject do
+      put :cancel, params: { rdv_id: rdv.id }
+      rdv.reload
+    end
 
-    before { freeze_time }
+    before do
+      travel_to(now)
+      sign_in signed_in_user
+    end
 
-    context 'with correct values' do
-      before do
-        sign_in rdv.users.first
+    context 'when user belongs to rdv' do
+      let(:signed_in_user) { rdv.users.first }
+
+      it { expect { subject}.to change{ rdv.cancelled_at }.from(nil).to(now) }
+
+      it "redirects to rdvs" do
         subject
-        rdv.reload
-      end
-
-      it "cancel rdv" do
-        expect(rdv.cancelled_at).to eq(Time.current)
-      end
-
-      it "redirect to rdvs" do
         expect(response).to redirect_to users_rdvs_path
       end
+
+      context "when rdv is not cancellable" do
+        let(:rdv) { create(:rdv, starts_at: 3.hours.from_now) }
+
+        it { expect { subject}.not_to change{ rdv.cancelled_at } }
+      end
     end
 
-    it "should not allow any user to cancel" do
-      sign_in user
-      subject
-      rdv.reload
-      expect(rdv.cancelled_at).to be_nil
-    end
+    context "when user does not belongs to rdv" do
+      let(:signed_in_user) { create(:user) }
 
-    it "rdv should be cancellable" do
-      rdv = rdv_now
-      sign_in rdv.users.first
-      subject
-      rdv.reload
-      expect(rdv.cancelled_at).to be_nil
+      it { expect { subject}.not_to change{ rdv.cancelled_at } }
     end
   end
 end
