@@ -30,7 +30,7 @@ Rails.application.routes.draw do
   end
 
   ## APP ##
-  devise_for :users, controllers: { registrations: 'users/registrations' }
+  devise_for :users, controllers: { registrations: 'users/registrations', sessions: 'sessions' }
 
   namespace :users do
     resources :rdvs, only: [:index, :new, :create] do
@@ -45,7 +45,7 @@ Rails.application.routes.draw do
     resources :children, except: [:index, :destroy], controller: "users/children"
   end
 
-  devise_for :agents, controllers: { invitations: 'agents/invitations' }
+  devise_for :agents, controllers: { invitations: 'agents/invitations', sessions: 'sessions' }
 
   as :agent do
     get 'agents/edit' => 'agents/registrations#edit', as: 'edit_agent_registration'
