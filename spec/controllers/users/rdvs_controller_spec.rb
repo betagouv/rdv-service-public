@@ -52,7 +52,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     context 'when user belongs to rdv' do
       let(:signed_in_user) { rdv.users.first }
 
-      it { expect { subject}.to change{ rdv.cancelled_at }.from(nil).to(now) }
+      it { expect { subject }.to change(rdv, :cancelled_at).from(nil).to(now) }
 
       it "redirects to rdvs" do
         subject
@@ -62,14 +62,14 @@ RSpec.describe Users::RdvsController, type: :controller do
       context "when rdv is not cancellable" do
         let(:rdv) { create(:rdv, starts_at: 3.hours.from_now) }
 
-        it { expect { subject}.not_to change{ rdv.cancelled_at } }
+        it { expect { subject }.not_to change(rdv, :cancelled_at) }
       end
     end
 
     context "when user does not belongs to rdv" do
       let(:signed_in_user) { create(:user) }
 
-      it { expect { subject}.not_to change{ rdv.cancelled_at } }
+      it { expect { subject }.not_to change(rdv, :cancelled_at) }
     end
   end
 end
