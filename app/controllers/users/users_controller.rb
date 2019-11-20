@@ -18,6 +18,6 @@ class Users::UsersController < UserAuthController
   private
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :birth_date, :address, :caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :logement)
+    params.require(:user).permit(:first_name, :last_name, :birth_date, :phone_number, :address, :caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :logement)
   end
 end
