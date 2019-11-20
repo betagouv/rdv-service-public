@@ -7,11 +7,11 @@ describe "User views his rdv" do
     click_link "Vos rendez-vous"
   end
 
-  context 'with no rdv' do 
+  context 'with no rdv' do
     it { expect_page_with_no_record_text("Vous n'avez pas de RDV à venir.") }
   end
 
-  context 'with future rdv' do 
+  context 'with future rdv' do
     let!(:rdv) { create(:rdv, :future) }
     before { click_link "Vos rendez-vous" }
     it do
@@ -21,7 +21,7 @@ describe "User views his rdv" do
     end
   end
 
-  context 'with past rdv' do 
+  context 'with past rdv' do
     let!(:rdv) { create(:rdv, :past) }
     before { click_link "Vos rendez-vous" }
     it do
@@ -32,8 +32,8 @@ describe "User views his rdv" do
   end
 
   private
-  def rdv_title rdv
+
+  def rdv_title(rdv)
     "Le #{I18n.l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)"
   end
-
 end

@@ -8,7 +8,7 @@ module RdvsHelper
   end
 
   def no_rdv_for_users
-    sentence = "Vous n'avez pas de RDV "  
+    sentence = "Vous n'avez pas de RDV "
     sentence += params[:past].present? ? "passé." : "à venir."
     sentence
   end

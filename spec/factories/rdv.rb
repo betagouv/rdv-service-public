@@ -11,10 +11,10 @@ FactoryBot.define do
     trait :by_phone do
       motif { build(:motif, :by_phone) }
     end
-    trait :future do 
+    trait :future do
       starts_at { 2.days.since }
     end
-    trait :past do 
+    trait :past do
       starts_at { 2.days.ago }
     end
   end
