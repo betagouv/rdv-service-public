@@ -1,5 +1,4 @@
 class User < ApplicationRecord
-  include Authorizable
   include PgSearch::Model
 
   attr_accessor :created_or_updated_by_agent
