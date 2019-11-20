@@ -1,14 +1,20 @@
 class User::RdvPolicy < ApplicationPolicy
   def create?
-    (@record.user_ids & @user.available_users_for_rdv.pluck(:id)).any?
+    rdv_belongs_to_user_or_children?
   end
 
   def confirmation?
-    (@record.user_ids & @user.available_users_for_rdv.pluck(:id)).any?
+    rdv_belongs_to_user_or_children?
   end
 
   def cancel?
-    @record.cancellable? && @record.user_ids.include?(@user.id)
+    @record.cancellable? && rdv_belongs_to_user_or_children?
+  end
+
+  private
+
+  def rdv_belongs_to_user_or_children?
+    (@record.user_ids & @user.available_users_for_rdv.pluck(:id)).any?
   end
 
   class Scope < Scope
