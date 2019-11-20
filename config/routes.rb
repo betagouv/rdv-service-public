@@ -69,10 +69,8 @@ Rails.application.routes.draw do
           end
         end
 
-        # namespace :agents do
-        # end
-
         resources :users, except: :show do
+          resources :rdvs, only: :index
           post :invite, on: :member
           get :link_to_organisation, on: :member
         end
