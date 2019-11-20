@@ -11,7 +11,11 @@ module RdvsHelper
     rdv.location.blank? ? 'Non précisé' : rdv.location
   end
 
-  def future_tag(rdv)
-    content_tag(:span, 'À venir', class: 'badge badge-info') if rdv.starts_at.future?
+  def rdv_tag(rdv)
+    if rdv.cancelled_at
+      content_tag(:span, 'Annulé', class: 'badge badge-warning') 
+    elsif rdv.starts_at.future?
+      content_tag(:span, 'À venir', class: 'badge badge-info')
+    end
   end
 end

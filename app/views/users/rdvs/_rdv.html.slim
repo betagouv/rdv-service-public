@@ -4,7 +4,7 @@
       li.list-group-item
         .fa.fa-calendar>
         | Le #{l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)
-        = future_tag(rdv)
+        = rdv_tag(rdv)
       - if rdv.location
         li.list-group-item
           .fa.fa-map-marker>
