@@ -39,7 +39,7 @@ class Rdv < ApplicationRecord
   def send_notifications_to_users
     users.each do |user|
       RdvMailer.send_ics_to_user(self, user).deliver_later
-      TwilioTextMessenger.new(self, user).send if user.phone_number.present?
+      TwilioTextMessenger.new(self, user).send if user.formated_phone
     end
   end
 

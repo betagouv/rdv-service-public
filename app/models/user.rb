@@ -80,7 +80,8 @@ class User < ApplicationRecord
   end
 
   def formated_phone
-    Phonelib.parse(phone_number).e164
+    number = Phonelib.parse(phone_number)
+    number.valid? ? number.e164 : nil
   end
 
   protected

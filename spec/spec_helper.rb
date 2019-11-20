@@ -115,8 +115,8 @@ RSpec.configure do |config|
   #   # as the one that triggered the failure.
   #   Kernel.srand config.seed
 
-  config.before(:each) do
-    allow_any_instance_of(TwilioTextMessenger).to receive(:send).and_return(true)
+  config.before(:each, type: lambda {|v| v != :service}) do
+    allow_any_instance_of(TwilioTextMessenger).to receive(:send).and_return(Twilio::REST::Api::V2010::AccountContext::MessageInstance)
   end
 
   config.before(:each) do

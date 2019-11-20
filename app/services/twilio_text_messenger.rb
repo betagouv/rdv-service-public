@@ -9,11 +9,15 @@ class TwilioTextMessenger
 
   def send
     twilio_client = Twilio::REST::Client.new
-    twilio_client.messages.create(
-      from: @from,
-      to: user.formated_phone,
-      body: rdv_created_content
-    )
+    begin
+      twilio_client.messages.create(
+        from: @from,
+        to: @user.formated_phone,
+        body: rdv_created_content
+      )
+    rescue
+      return false
+    end
   end
 
   def rdv_created_content
