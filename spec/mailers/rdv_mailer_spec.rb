@@ -43,7 +43,7 @@ RSpec.describe RdvMailer, type: :mailer do
 
   describe "#send_ics_to_user" do
     let(:user) { rdv.users.first }
-    let(:mail) { RdvMailer.send_ics_to_user(rdv, user, previous_starts_at.to_s) }
+    let(:mail) { RdvMailer.send_ics_to_user(rdv, user) }
 
     it "renders the headers" do
       expect(mail.to).to eq([user.email])
@@ -52,50 +52,5 @@ RSpec.describe RdvMailer, type: :mailer do
     it_behaves_like "mail for rdv confirmation"
 
     it_behaves_like "mail with ICS"
-
-    context "when rdv was updated" do
-      let(:previous_starts_at) { 2.days.ago }
-
-      it_behaves_like "mail for updated rdv"
-
-      it_behaves_like "mail with ICS"
-    end
-
-    context "when rdv was cancelled" do
-      let(:rdv) { create(:rdv, cancelled_at: 1.day.ago) }
-
-      it_behaves_like "mail for cancelled rdv"
-
-      it_behaves_like "mail with ICS"
-    end
-  end
-
-  describe "#send_ics_to_agent" do
-    let(:agent) { create(:agent) }
-    let(:mail) { RdvMailer.send_ics_to_agent(rdv, agent, previous_starts_at.to_s) }
-
-    it "renders the headers" do
-      expect(mail.to).to eq([agent.email])
-    end
-
-    it_behaves_like "mail for rdv confirmation"
-
-    it_behaves_like "mail with ICS"
-
-    context "when rdv was updated" do
-      let(:previous_starts_at) { 2.days.ago }
-
-      it_behaves_like "mail for updated rdv"
-
-      it_behaves_like "mail with ICS"
-    end
-
-    context "when rdv was cancelled" do
-      let(:rdv) { create(:rdv, cancelled_at: 1.day.ago) }
-
-      it_behaves_like "mail for cancelled rdv"
-
-      it_behaves_like "mail with ICS"
-    end
   end
 end

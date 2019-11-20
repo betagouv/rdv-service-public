@@ -70,16 +70,24 @@ class User < ApplicationRecord
     delete
   end
 
+  def available_users_for_rdv
+    User.where(parent_id: id).or(User.where(id: id)).order('parent_id DESC NULLS FIRST', first_name: :asc)
+  end
+
+  def child?
+    parent_id.present?
+  end
+
   protected
 
   def password_required?
-    return false if created_or_updated_by_agent
+    return false if created_or_updated_by_agent || child?
 
     super
   end
 
   def email_required?
-    return false if created_or_updated_by_agent
+    return false if created_or_updated_by_agent || child?
 
     super
   end

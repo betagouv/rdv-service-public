@@ -1,6 +1,6 @@
 class Users::RdvsController < UserAuthController
   def index
-    @rdvs = policy_scope(Rdv).includes(:motif).page(params[:page])
+    @rdvs = policy_scope(Rdv).includes(:motif, :rdvs_users, :users).order(starts_at: :desc).page(params[:page])
   end
 
   def new
@@ -24,9 +24,10 @@ class Users::RdvsController < UserAuthController
     @motif = Motif.find(creneau_params[:motif_id])
     @starts_at = DateTime.parse(creneau_params[:starts_at])
     @creneau = Creneau.new(starts_at: @starts_at, motif: @motif, lieu_id: creneau_params[:lieu_id])
+    @user = user_for_rdv
     save_succeeded = false
     ActiveRecord::Base.transaction do
-      @rdv = @creneau.to_rdv_for_user(current_user)
+      @rdv = @creneau.to_rdv_for_user(@user)
       save_succeeded = if @rdv.present?
                          authorize(@rdv)
                          @rdv.save
@@ -61,11 +62,19 @@ class Users::RdvsController < UserAuthController
 
   private
 
+  def user_for_rdv
+    if creneau_params[:user_ids]
+      current_user.available_users_for_rdv.find(creneau_params[:user_ids])
+    else
+      current_user
+    end
+  end
+
   def new_rdv_params
     params.permit(:lieu_id, :motif_name, :starts_at, :departement, :where)
   end
 
   def creneau_params
-    params.require(:rdv).permit(:motif_id, :lieu_id, :starts_at, :departement, :where)
+    params.require(:rdv).permit(:motif_id, :lieu_id, :starts_at, :departement, :where, :user_ids)
   end
 end
