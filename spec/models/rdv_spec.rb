@@ -123,28 +123,24 @@ describe Rdv, type: :model do
   end
 
   describe "#cancellable?" do
-    let(:rdv) { create(:rdv) }
+    let(:rdv) { create(:rdv, starts_at: starts_at) }
     let(:now) { Time.current }
 
     subject { rdv.cancellable? }
 
-    before { freeze_time }
+    before { travel_to(now) }
     after { travel_back }
 
-    it "should be a boolean" do
-      expect(subject).to be_in([true, false])
+    context "when Rdv starts in 5 hours" do
+      let(:starts_at) { 5.hours.from_now }
+
+      it { expect(subject).to eq(true) }
     end
 
-    it "should be true" do
-      rdv.update(starts_at: 5.hours.from_now)
-      rdv.reload
-      expect(subject).to eq(true)
-    end
+    context "when Rdv starts in 4 hours" do
+      let(:starts_at) { 4.hours.from_now }
 
-    it "should be false" do
-      rdv.update(starts_at: 4.hours.from_now)
-      rdv.reload
-      expect(subject).to eq(false)
+      it { expect(subject).to eq(false) }
     end
   end
 
