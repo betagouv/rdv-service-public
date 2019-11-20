@@ -1,7 +1,7 @@
 class TwilioTextMessenger
   attr_reader :user, :rdv, :from
 
-  def initialize(user, rdv)
+  def initialize(rdv, user)
     @user = user
     @rdv = rdv
     @from = "+15005550006"
@@ -19,7 +19,7 @@ class TwilioTextMessenger
     twilio_client = Twilio::REST::Client.new
     twilio_client.messages.create(
       from: @from,
-      to: user.phone_number,
+      to: user.formated_phone,
       body: message
     )
   end

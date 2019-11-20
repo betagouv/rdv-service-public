@@ -18,6 +18,7 @@ class User < ApplicationRecord
 
   validates :last_name, :first_name, presence: true
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
+  validates :phone_number, phone: { possible: true, allow_blank: true }
 
   pg_search_scope :search_by_name, against: [:first_name, :last_name],
                   using: { tsearch: { prefix: true } }

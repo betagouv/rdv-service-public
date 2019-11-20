@@ -13,7 +13,7 @@ class Rdv < ApplicationRecord
 
   after_commit :reload_uuid, on: :create
 
-  after_create :send_ics_to_users
+  after_create :send_notifications_to_users
   after_save :associate_users_with_organisation
 
   def agenda_path
@@ -36,8 +36,11 @@ class Rdv < ApplicationRecord
     update(cancelled_at: Time.zone.now)
   end
 
-  def send_ics_to_users
-    users.each { |user| RdvMailer.send_ics_to_user(self, user).deliver_later }
+  def send_notifications_to_users
+    users.each do |user|
+      RdvMailer.send_ics_to_user(self, user).deliver_later
+      TwilioTextMessenger.new(self, user).rdv_created if user.phone_number.present?
+    end
   end
 
   def to_step_params

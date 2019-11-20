@@ -54,7 +54,6 @@ gem 'premailer-rails'
 # SMS
 gem 'twilio-ruby', '~> 5.29.1'
 
-
 # Ops
 gem "sentry-raven"
 gem "skylight"
