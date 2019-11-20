@@ -85,6 +85,7 @@ group :development, :test do
   gem 'brakeman', require: false
   gem 'rubocop', require: false
   gem 'rspec-rails', '>= 4.0.0.beta'
+  gem 'rspec_junit_formatter', require: false
   gem 'rails-controller-testing'
   gem 'factory_bot'
   gem 'meta_request', '~> 0.7'
