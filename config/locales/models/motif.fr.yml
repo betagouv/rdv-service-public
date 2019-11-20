@@ -11,5 +11,6 @@ fr:
         online: RDV en ligne
         by_phone: RDV téléphonique
         default_duration_in_min: Durée par défaut en minutes
+        send_notification: Envoi des notifications
         min_booking_delay: Délai minimum de réservation
         max_booking_delay: Délai maximum de réservation

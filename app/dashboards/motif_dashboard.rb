@@ -17,6 +17,7 @@ class MotifDashboard < Administrate::BaseDashboard
     by_phone: Field::Boolean,
     default_duration_in_min: Field::Number,
     min_booking_delay: Field::Number,
+    send_notification: Field::Boolean,
     max_booking_delay: Field::Number,
     deleted_at: Field::DateTime,
     created_at: Field::DateTime,
@@ -48,6 +49,7 @@ class MotifDashboard < Administrate::BaseDashboard
     :default_duration_in_min,
     :min_booking_delay,
     :max_booking_delay,
+    :send_notification,
     :deleted_at,
     :created_at,
     :updated_at,
@@ -66,6 +68,7 @@ class MotifDashboard < Administrate::BaseDashboard
     :service,
     :min_booking_delay,
     :max_booking_delay,
+    :send_notification,
     :deleted_at,
   ].freeze
 
