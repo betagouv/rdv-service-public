@@ -37,7 +37,6 @@ describe Rdv, type: :model do
   end
 
   describe "#cancellable?" do
-    let(:rdv) { create(:rdv, starts_at: starts_at) }
     let(:now) { Time.current }
 
     subject { rdv.cancellable? }
@@ -46,13 +45,19 @@ describe Rdv, type: :model do
     after { travel_back }
 
     context "when Rdv starts in 5 hours" do
-      let(:starts_at) { 5.hours.from_now }
+      let(:rdv) { create(:rdv, starts_at: 5.hours.from_now) }
 
       it { expect(subject).to eq(true) }
+
+      context "but is already cancelled" do
+        let(:rdv) { create(:rdv, cancelled_at: 1.hour.ago, starts_at: 5.hours.from_now) }
+
+        it { expect(subject).to eq(false) }
+      end
     end
 
     context "when Rdv starts in 4 hours" do
-      let(:starts_at) { 4.hours.from_now }
+      let(:rdv) { create(:rdv, starts_at: 4.hours.from_now) }
 
       it { expect(subject).to eq(false) }
     end

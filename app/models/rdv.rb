@@ -37,7 +37,7 @@ class Rdv < ApplicationRecord
   end
 
   def cancellable?
-    starts_at > 4.hours.from_now
+    !cancelled? && starts_at > 4.hours.from_now
   end
 
   def send_ics_to_users
