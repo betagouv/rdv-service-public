@@ -22,7 +22,7 @@ class WelcomeController < ApplicationController
     @departement = departement_params[:departement]
     @where = departement_params[:where]
 
-    @motifs = Motif.grouped_by_service_for_departement(@departement)
+    @motifs = Motif.names_grouped_by_service_for_departement(@departement)
   end
 
   def welcome_motif
