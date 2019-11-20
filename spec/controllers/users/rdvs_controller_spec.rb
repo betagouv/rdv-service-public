@@ -69,7 +69,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     context "when user does not belongs to rdv" do
       let(:signed_in_user) { create(:user) }
 
-      it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound)}
+      it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
   end
 end
