@@ -15,7 +15,7 @@ class TwilioTextMessenger
         to: @user.formated_phone,
         body: rdv_created_content
       )
-    rescue
+    rescue StandardError
       return false
     end
   end
