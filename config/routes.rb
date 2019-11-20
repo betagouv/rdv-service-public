@@ -34,6 +34,7 @@ Rails.application.routes.draw do
 
   namespace :users do
     resources :rdvs, only: [:index, :new, :create] do
+      put :cancel
       get :confirmation
     end
   end
