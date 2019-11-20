@@ -33,7 +33,7 @@ class Agents::RdvsController < AgentAuthController
 
   def destroy
     authorize(@rdv)
-    if @rdv.cancel!
+    if @rdv.cancel
       flash[:notice] = "Le rendez-vous a été annulé, un message a été envoyé à l'usager."
     else
       flash[:error] = "Une erreur s’est produite, le rendez-vous n’a pas pu être annulé."

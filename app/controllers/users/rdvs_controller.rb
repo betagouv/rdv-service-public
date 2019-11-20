@@ -51,7 +51,7 @@ class Users::RdvsController < UserAuthController
   def cancel
     rdv = Rdv.find(params[:rdv_id])
     authorize(rdv)
-    rdv.cancel!
+    rdv.cancel
     if rdv.cancelled_at
       flash[:notice] = "Le RDV a bien été annulé."
     else
