@@ -35,22 +35,43 @@ RSpec.describe Users::RdvsController, type: :controller do
   end
 
   describe "PUT #cancel" do
-    let(:rdv) { create(:rdv) }
+    let(:rdv) { create(:rdv, starts_at: 5.hours.from_now) }
+    let(:rdv_now) { create(:rdv, starts_at: Time.current) }
+    let(:user) { create(:user) }
 
     subject { put :cancel, params: { rdv_id: rdv.id } }
 
-    before do
+    before { freeze_time }
+
+    context 'with correct values' do
+      before do
+        sign_in rdv.users.first
+        subject
+        rdv.reload
+      end
+
+      it "cancel rdv" do
+        expect(rdv.cancelled_at).to eq(Time.current)
+      end
+
+      it "redirect to rdvs" do
+        expect(response).to redirect_to users_rdvs_path
+      end
+    end
+
+    it "should not allow any user to cancel" do
+      sign_in user
+      subject
+      rdv.reload
+      expect(rdv.cancelled_at).to be_nil
+    end
+
+    it "rdv should be cancellable" do
+      rdv = rdv_now
       sign_in rdv.users.first
       subject
       rdv.reload
-    end
-
-    it "cancel rdv" do
-      expect(rdv.cancelled_at).to be_within(3.second).of(Time.current)
-    end
-
-    it "redirect to rdvs" do
-      expect(response).to redirect_to users_rdvs_path
+      expect(rdv.cancelled_at).to be_nil
     end
   end
 end

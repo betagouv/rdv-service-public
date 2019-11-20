@@ -19,10 +19,9 @@
       li.list-group-item
         i.fa.fa-info-circle>
         = rdv.motif.name
-      - if rdv.seconds_to_rdv > 0
+      - if rdv.cancellable?
         li.list-group-item
-          - if rdv.seconds_to_rdv >= 4.hours.to_i
-            = link_to 'Annuler le RDV', users_rdv_cancel_path(rdv.id), data: { confirm: "Êtes-vous sûr de vouloir annuler ce RDV ?" }, method: :put, class: 'btn btn-danger'
-          - elsif rdv.seconds_to_rdv < 4.hours.to_i
-            span.font-italic
-              | Vous ne pouvez plus annuler ce RDV en ligne.
+          = link_to 'Annuler le RDV', users_rdv_cancel_path(rdv.id), data: { confirm: "Êtes-vous sûr de vouloir annuler ce RDV ?" }, method: :put, class: 'btn btn-danger'
+      - elsif !rdv.past?
+        span.font-italic
+          | Vous ne pouvez plus annuler ce RDV en ligne.

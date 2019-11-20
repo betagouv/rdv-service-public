@@ -122,16 +122,45 @@ describe Rdv, type: :model do
     end
   end
 
+  describe "#cancellable?" do
+    let(:rdv) { create(:rdv) }
+    let(:now) { Time.current }
+
+    subject { rdv.cancellable? }
+
+    before { freeze_time }
+    after { travel_back }
+
+    it "should be a boolean" do
+      expect(subject).to be_in([true, false])
+    end
+
+    it "should be true" do
+      rdv.update(starts_at: 5.hours.from_now)
+      rdv.reload
+      expect(subject).to eq(true)
+    end
+
+    it "should be false" do
+      rdv.update(starts_at: 4.hours.from_now)
+      rdv.reload
+      expect(subject).to eq(false)
+    end
+  end
+
   describe "#seconds_to_rdv" do
-    let(:rdv) { create(:rdv, starts_at: Time.zone.now + 2.hours) }
+    let(:rdv) { create(:rdv, starts_at: 2.hours.from_now) }
+
     subject { rdv.seconds_to_rdv }
+
+    before { freeze_time }
 
     it "should return a float" do
       expect(subject).to be_kind_of(Float)
     end
 
     it "send difference between RDV and current time" do
-      expect(subject).to be_within(1).of(2.hours.to_i)
+      expect(subject).to eq(2.hours.to_i)
     end
   end
 

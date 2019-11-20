@@ -37,6 +37,10 @@ class Rdv < ApplicationRecord
     update(cancelled_at: Time.zone.now)
   end
 
+  def cancellable?
+    starts_at > 4.hours.from_now
+  end
+
   def send_ics_to_users_and_agents
     users.each { |user| RdvMailer.send_ics_to_user(self, user).deliver_later }
     agents.each { |agent| RdvMailer.send_ics_to_agent(self, agent).deliver_later }
