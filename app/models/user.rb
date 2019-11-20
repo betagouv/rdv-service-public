@@ -17,6 +17,7 @@ class User < ApplicationRecord
   enum logement: { sdf: 0, heberge: 1, locataire: 1, en_accession_propriete: 2, proprietaire: 3, autre: 4 }
 
   validates :last_name, :first_name, presence: true
+  validates :phone_number, allow_blank: true, format: { with: /\A(\+\d)?[0-9]{10}\z/ }
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
   pg_search_scope :search_by_name, against: [:first_name, :last_name],
