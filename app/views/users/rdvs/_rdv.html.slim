@@ -4,7 +4,7 @@
       li.list-group-item
         .fa.fa-calendar>
         | Le #{l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)
-        = future_tag(rdv)
+        = rdv_tag(rdv)
       - if rdv.location
         li.list-group-item
           .fa.fa-map-marker>
@@ -19,3 +19,9 @@
       li.list-group-item
         i.fa.fa-info-circle>
         = rdv.motif.name
+      - if rdv.cancellable?
+        li.list-group-item
+          = link_to 'Annuler le RDV', users_rdv_cancel_path(rdv.id), data: { confirm: "Êtes-vous sûr de vouloir annuler ce RDV ?" }, method: :put, class: 'btn btn-danger'
+      - elsif !rdv.past? && !rdv.cancelled?
+        li.list-group-item.font-italic
+          | Ce rendez-vous commence dans moins de 4 heures, il n'est plus annulable en ligne. Prenez contact avec le secrétariat.

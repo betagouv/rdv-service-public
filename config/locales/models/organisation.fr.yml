@@ -6,3 +6,5 @@ fr:
       organisation:
         name: Nom
         departement: Département
+        phone_number: Téléphone
+        horaires: Horaires

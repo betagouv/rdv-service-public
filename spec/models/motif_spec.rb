@@ -25,29 +25,29 @@ describe Rdv, type: :model do
     end
   end
 
-  describe '.grouped_by_service_for_departement' do
+  describe '.names_grouped_by_service_for_departement' do
     let(:service) { create(:service) }
     let!(:service2) { create(:service) }
 
-    subject { Motif.grouped_by_service_for_departement(organisation.departement) }
+    subject { Motif.names_grouped_by_service_for_departement(organisation.departement) }
 
     describe "when motif is online" do
       let!(:motif) { create(:motif, service: service, online: true, deleted_at: deleted_at) }
       let(:deleted_at) { nil }
 
-      it { is_expected.to eq({}) }
+      it { is_expected.to eq([]) }
 
       describe "with a plage_ouverture" do
         let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif]) }
 
         it { expect(subject.size).to eq(1) }
         it { expect(subject.first.first).to eq(service.name) }
-        it { expect(subject.first.second).to contain_exactly(motif) }
+        it { expect(subject.first.second).to contain_exactly(motif.name) }
 
         describe "but motif is deleted" do
           let(:deleted_at) { Time.zone.now }
 
-          it { is_expected.to eq({}) }
+          it { is_expected.to eq([]) }
         end
 
         describe "with a second motif" do
@@ -57,12 +57,20 @@ describe Rdv, type: :model do
 
           it { expect(subject.size).to eq(1) }
           it { expect(subject.first.first).to eq(service.name) }
-          it { expect(subject.first.second).to contain_exactly(motif, motif2) }
+          it { expect(subject.first.second).to contain_exactly(motif.name, motif2.name) }
 
           describe "wich is deleted" do
             let(:deleted_at2) { Time.zone.now }
 
-            it { expect(subject.first.second).to contain_exactly(motif) }
+            it { expect(subject.first.second).to contain_exactly(motif.name) }
+          end
+
+          describe "which has same name" do
+            let(:organisation2) { create(:organisation) }
+            let!(:motif2) { create(:motif, service: service, online: true, deleted_at: deleted_at2, name: motif.name, organisation: organisation2) }
+            let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], organisation: organisation2) }
+
+            it { expect(subject.first.second).to contain_exactly(motif.name) }
           end
         end
       end
@@ -72,14 +80,14 @@ describe Rdv, type: :model do
       let!(:motif_offline) { create(:motif, service: service, online: false) }
       let!(:motif_online) { create(:motif, service: service, online: true) }
 
-      it { is_expected.to eq({}) }
+      it { is_expected.to eq([]) }
 
       describe "with a plage_ouverture" do
         let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif_offline, motif_online]) }
 
         it { expect(subject.size).to eq(1) }
         it { expect(subject.first.first).to eq(service.name) }
-        it { expect(subject.first.second).to contain_exactly(motif_online) }
+        it { expect(subject.first.second).to contain_exactly(motif_online.name) }
       end
     end
   end

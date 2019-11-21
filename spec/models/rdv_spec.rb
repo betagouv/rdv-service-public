@@ -1,4 +1,46 @@
 describe Rdv, type: :model do
+
+  describe "#cancel" do
+    let(:rdv) { create(:rdv) }
+    let(:now) { Time.current }
+
+    subject { rdv.cancel }
+
+    before { freeze_time }
+    after { travel_back }
+
+    it "should set cancelled_at" do
+      expect { subject }.to change { rdv.cancelled_at }.from(nil).to(now)
+    end
+  end
+
+  describe "#cancellable?" do
+    let(:now) { Time.current }
+
+    subject { rdv.cancellable? }
+
+    before { travel_to(now) }
+    after { travel_back }
+
+    context "when Rdv starts in 5 hours" do
+      let(:rdv) { create(:rdv, starts_at: 5.hours.from_now) }
+
+      it { expect(subject).to eq(true) }
+
+      context "but is already cancelled" do
+        let(:rdv) { create(:rdv, cancelled_at: 1.hour.ago, starts_at: 5.hours.from_now) }
+
+        it { expect(subject).to eq(false) }
+      end
+    end
+
+    context "when Rdv starts in 4 hours" do
+      let(:rdv) { create(:rdv, starts_at: 4.hours.from_now) }
+
+      it { expect(subject).to eq(false) }
+    end
+  end
+
   describe "#associate_users_with_organisation" do
     let(:organisation) { create(:organisation) }
     let(:organisation2) { create(:organisation) }

@@ -1,5 +1,4 @@
 class User < ApplicationRecord
-  include Authorizable
   include PgSearch::Model
 
   attr_accessor :created_or_updated_by_agent
@@ -20,7 +19,7 @@ class User < ApplicationRecord
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :phone_number, phone: { possible: true, allow_blank: true }
 
-  pg_search_scope :search_by_name, against: [:first_name, :last_name],
+  pg_search_scope :search_by_name_or_email, against: [:first_name, :last_name, :email],
                   using: { tsearch: { prefix: true } }
 
   before_save :set_email_to_null_if_blank
