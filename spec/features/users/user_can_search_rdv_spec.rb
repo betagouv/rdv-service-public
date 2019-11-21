@@ -84,7 +84,6 @@ describe "User can search for rdvs" do
 
     scenario "for children", js: true do
       # Step 4
-      # expect(page).to have_content(motif.name)
       expect(page).to have_content(user.full_name)
       expect(page).to have_content(child.full_name)
 

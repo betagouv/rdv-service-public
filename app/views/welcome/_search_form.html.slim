@@ -13,7 +13,7 @@
     - else
       - if @motifs.any?
         .form-row.d-flex.justify-content-md-center
-          .col-lg-5= f.input :motif, collection: @motifs, as: :grouped_select, group_method: :last, label_method: :name, value_method: :name, label: false, required: true, include_blank: "Choisissez un motif", input_html: { class: 'select2-input' }
+          .col-lg-5= f.input :motif, collection: @motifs, as: :grouped_select, group_method: :last, label: false, required: true, include_blank: "Choisissez un motif", input_html: { class: 'select2-input' }
           .col-lg-3= f.button :submit, "Choisir ce motif", class: 'btn-danger btn-lg w-100 text-center'
       - else
         h2.text-white.text-center.my-3 La prise de RDV n'est pas encore disponible dans ce département.
