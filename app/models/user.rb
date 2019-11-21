@@ -65,8 +65,8 @@ class User < ApplicationRecord
     organisations << organisation if organisation_ids.exclude?(organisation.id)
   end
 
-  def soft_delete
-    delete
+  def soft_delete(organisation = nil)
+    organisation.present? ? organisations.delete(organisation) : update(organisation_ids: [], deleted_at: Time.zone.now)
   end
 
   def available_users_for_rdv
@@ -75,6 +75,14 @@ class User < ApplicationRecord
 
   def child?
     parent_id.present?
+  end
+
+  def active_for_authentication?
+    super && !deleted_at
+  end
+
+  def inactive_message
+    !deleted_at ? super : :deleted_account
   end
 
   protected
