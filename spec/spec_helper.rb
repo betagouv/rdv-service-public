@@ -29,9 +29,10 @@ Capybara.register_driver :chrome do |app|
 end
 
 Capybara.configure do |config|
-  config.app_host = "http://localhost:3001"
+  port = 9887 + ENV['TEST_ENV_NUMBER'].to_i
+  config.app_host = "http://localhost:#{port}"
   config.server_host = "localhost"
-  config.server_port = "3001"
+  config.server_port = port
   config.javascript_driver = :chrome
   config.server = :puma, { Silent: true }
 end
