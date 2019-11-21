@@ -37,6 +37,7 @@ RSpec.describe Users::RdvsController, type: :controller do
   describe "PUT #cancel" do
     let(:now) { "01/01/2019 14:20".to_datetime }
     let(:rdv) { create(:rdv, starts_at: 5.hours.from_now) }
+    let!(:user) { create(:user) }
 
     subject do
       put :cancel, params: { rdv_id: rdv.id }
@@ -45,7 +46,6 @@ RSpec.describe Users::RdvsController, type: :controller do
 
     before do
       travel_to(now)
-      rdv.reload
       sign_in signed_in_user
     end
 
