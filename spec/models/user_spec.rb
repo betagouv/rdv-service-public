@@ -115,7 +115,10 @@ describe User, type: :model do
       let(:user) { create(:user, :with_multiple_organisations) }
       let(:deleted_org) { user.organisations.first }
       it { expect(user.organisation_ids).not_to include(deleted_org.id) }
-      it { expect(user.organisation_ids).not_to be_empty }
+      it "remove the correct organisation" do
+        left_orgs_ids = Organisation.where.not(id: deleted_org.id).pluck(:id)
+        expect(user.organisation_ids).to match_array(left_orgs_ids)
+      end
       it { expect(user.deleted_at).to be_nil }
     end
 
