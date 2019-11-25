@@ -64,22 +64,19 @@ describe "Agent can CRUD users" do
 
   # end
 
-
   describe "can see the children of the user" do 
     context "with no child" do 
       before { click_link user.full_name }
-      it {
-        expect(page).to have_content('Aucun enfant')
-
-
-      }
+      it { expect(page).to have_content('Aucun enfant') }
     end
 
     context "with children" do 
       let!(:child) { create :user, parent: user}
-      it do
+      before do 
         click_link user.full_name
         click_link child.full_name
+      end
+      it do
         expect(page).to have_content('Informations parentales')
       end
     end
@@ -103,7 +100,7 @@ describe "Agent can CRUD users" do
     click_link "Associer cet usager à l'organisation #{agent.organisations.first.name}"
     expect_page_title(existing_user.full_name)
     save_and_open_page
-    expect(page).to have_content("L'usager a été associé à l'organisation.")
+    expect(page).to have_content("L'usager a été associé à votre organisation.")
 
     expect(existing_user.reload.organisations).to include(agent.organisations.first)
   end
