@@ -9,9 +9,13 @@ describe TwilioTextMessenger, type: :service do
     is_expected.to be_kind_of(Twilio::REST::Api::V2010::AccountContext::MessageInstance)
   end
 
-  it 'return Twilio Error when phone is invalid' do
-    user.update(phone_number: "0712121212")
-    user.reload
-    is_expected.to be_kind_of(Twilio::REST::RestError)
+  it { expect(subject.body).to include("RDV Solidarités - Bonjour") }
+  it { expect(subject.body).to include("RDV #{rdv.motif.name} #{I18n.l(rdv.starts_at, format: :human)} a été confirmé.") }
+  it { expect(subject.body).to include("Adresse: #{rdv.location}.") }
+
+  context 'RDV is by_phone' do
+    let(:rdv) { create(:rdv, :by_phone) }
+
+    it { expect(subject.body).to include("RDV Téléphonique") }
   end
 end

@@ -17,7 +17,7 @@ class User < ApplicationRecord
 
   validates :last_name, :first_name, presence: true
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
-  validates :phone_number, phone: { possible: true, allow_blank: true }
+  validates :phone_number, phone: { allow_blank: true }
 
   pg_search_scope :search_by_name_or_email, against: [:first_name, :last_name, :email],
                   using: { tsearch: { prefix: true } }
@@ -79,8 +79,7 @@ class User < ApplicationRecord
   end
 
   def formated_phone
-    number = Phonelib.parse(phone_number)
-    number.valid? ? number.e164 : nil
+    Phonelib.parse(phone_number).e164
   end
 
   protected

@@ -4,7 +4,7 @@ class TwilioTextMessenger
   def initialize(rdv, user)
     @user = user
     @rdv = rdv
-    @from = "+15005550006"
+    @from = ENV["TWILIO_PHONE_NUMBER"]
   end
 
   def send
@@ -22,9 +22,9 @@ class TwilioTextMessenger
 
   def rdv_created_content
     message = "RDV Solidarités - Bonjour,\n"
-    message += "RDV #{@rdv.motif.name} #{I18n.l(@rdv.starts_at, format: :human)} (durée : #{@rdv.duration_in_min} minutes) a été confirmé.\n"
+    message += "RDV #{@rdv.motif.name} #{I18n.l(@rdv.starts_at, format: :human)} a été confirmé.\n"
     message + if @rdv.motif.by_phone
-                "RDV Tél au #{@user.phone_number}.\n"
+                "RDV Téléphonique.\n"
               else
                 "Adresse: #{@rdv.location}.\n"
               end
