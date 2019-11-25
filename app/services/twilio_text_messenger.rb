@@ -23,10 +23,12 @@ class TwilioTextMessenger
   def rdv_created_content
     message = "RDV Solidarités - Bonjour,\n"
     message += "RDV #{@rdv.motif.name} #{I18n.l(@rdv.starts_at, format: :human)} a été confirmé.\n"
-    message + if @rdv.motif.by_phone
+    message += if @rdv.motif.by_phone
                 "RDV Téléphonique.\n"
               else
                 "Adresse: #{@rdv.location}.\n"
               end
+    message += "Infos et annulation: #{@rdv.organisation.phone_number}" if @rdv.organisation.phone_number
+    message
   end
 end
