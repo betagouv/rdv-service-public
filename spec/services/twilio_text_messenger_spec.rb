@@ -12,6 +12,6 @@ describe TwilioTextMessenger, type: :service do
   it 'return Twilio Error when phone is invalid' do
     user.update(phone_number: "0712121212")
     user.reload
-    is_expected.to be false
+    is_expected.to be_kind_of(Twilio::REST::RestError)
   end
 end
