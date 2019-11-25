@@ -78,7 +78,7 @@ class User < ApplicationRecord
   end
 
   def invitable?
-    invitation_accepted_at.nil? && password.nil? && email && !child?
+    invitation_accepted_at.nil? && encrypted_password.blank? && email.present? && !child?
   end
 
   protected

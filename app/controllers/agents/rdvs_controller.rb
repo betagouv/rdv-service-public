@@ -7,7 +7,7 @@ class Agents::RdvsController < AgentAuthController
     @rdvs = policy_scope(Rdv).active
     if params[:user_id].present?
       @user = policy_scope(User).find(params[:user_id])
-      @rdvs = @rdvs.joins(:users).where(users: {id: @user.id}).page(params[:page])
+      @rdvs = @user.rdvs.active.includes(:organisation).where(organisation_id: current_organisation).page(params[:page])
     end
     @rdvs = @rdvs.where(starts_at: date_range_params) if filter_params[:start].present? && filter_params[:end].present?
     @rdvs = @rdvs.includes(:motif).order(:starts_at)

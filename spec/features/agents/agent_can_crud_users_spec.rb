@@ -11,20 +11,20 @@ describe "Agent can CRUD users" do
 
   scenario "default" do
     expect_page_title("Vos usagers")
-
-    expect(user.encrypted_password).not_to be_nil
     click_link user.full_name
-    expect_page_title("Modifier l'usager")
-    fill_in 'Prénom', with: 'Alberto'
+
+    expect_page_title(user.full_name)
+
+    click_link 'Modifier'
+    fill_in :user_first_name, with: new_user.first_name
+    fill_in :user_last_name, with: new_user.last_name
     fill_in 'Email', with: 'lenouvel@email.com'
-    click_button('Modifier')
+    click_button 'Modifier'
 
     # When the user has already a pwd, changing email send a confirmation email
     open_email('lenouvel@email.com')
     expect(current_email.subject).to eq I18n.t("devise.mailer.confirmation_instructions.subject")
-
-    expect_page_title("Vos usagers")
-    click_link "Alberto #{user.last_name}"
+    expect_page_title(new_user.full_name)
 
     expect(page).to have_content('En attente de confirmation pour lenouvel@email.com')
     click_link('Supprimer')
@@ -39,18 +39,52 @@ describe "Agent can CRUD users" do
     fill_in :user_last_name, with: new_user.last_name
     click_button 'Créer'
 
-    expect_page_title("Vos usagers")
-    click_link new_user.full_name
+    expect_page_title(new_user.full_name)
     expect(page).to have_no_content('Inviter')
 
+    click_link 'Modifier'
     fill_in 'Email', with: new_user.email
     click_button 'Modifier'
-    click_link new_user.full_name
+
     click_link 'Inviter'
 
     open_email(new_user.email)
     expect(current_email.subject).to eq I18n.t("devise.mailer.invitation_instructions.subject")
   end
+
+  # describe "can see the RDV of the user" do 
+  #   context "with no RDV" do 
+  #     click_link user.full_name
+
+  #   end
+
+  #   context "with RDVs" do 
+
+  #   end
+
+  # end
+
+
+  describe "can see the children of the user" do 
+    context "with no child" do 
+      before { click_link user.full_name }
+      it {
+        expect(page).to have_content('Aucun enfant')
+
+
+      }
+    end
+
+    context "with children" do 
+      let!(:child) { create :user, parent: user}
+      it do
+        click_link user.full_name
+        click_link child.full_name
+        expect(page).to have_content('Informations parentales')
+      end
+    end
+  end
+
 
   let!(:existing_user) { create(:user, organisations: [create(:organisation)]) }
 
@@ -67,8 +101,9 @@ describe "Agent can CRUD users" do
     expect(page).to have_content('Usager trouvé')
 
     click_link "Associer cet usager à l'organisation #{agent.organisations.first.name}"
-    expect_page_title("Modifier l'usager")
-    expect(page).to have_content("L'usager a été associé à l'organisation")
+    expect_page_title(existing_user.full_name)
+    save_and_open_page
+    expect(page).to have_content("L'usager a été associé à l'organisation.")
 
     expect(existing_user.reload.organisations).to include(agent.organisations.first)
   end

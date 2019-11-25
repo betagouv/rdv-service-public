@@ -1,5 +1,4 @@
 module RdvsHelper
-
   def rdv_title(rdv)
     "Le #{l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)"
   end
@@ -15,7 +14,7 @@ module RdvsHelper
   def rdv_status_tag(rdv)
     content_tag(:span, Rdv.human_enum_name(:status, rdv.status), class: 'badge badge-info')
   end
-  
+
   def human_location(rdv)
     rdv.location.blank? ? 'Non précisé' : rdv.location
   end
