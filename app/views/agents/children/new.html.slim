@@ -1,0 +1,10 @@
+- content_for :title do
+  .row.justify-content-center
+    .col-md-6
+      | Nouvel enfant
+
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-body
+        = render 'form', user: @user

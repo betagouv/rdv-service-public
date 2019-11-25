@@ -1,0 +1,16 @@
+= simple_form_for(user, url: organisation_user_children_path(current_organisation, user.parent), remote: request.xhr?, data: { rightbar: true }) do |f|
+  = render partial: 'layouts/model_errors', locals: { model: user }
+
+  = f.label "Parent"
+  p= user.parent.full_name
+
+  .form-row
+    .col-md-6= f.input :first_name
+    .col-md-6= f.input :last_name
+  = f.input :birth_date, as: :date, html5: true
+  .row
+    .col.text-left
+      / = link_to "Supprimer", users_informations_path, class: "btn btn-link"
+    .col.text-right
+      = link_to "Annuler", edit_organisation_user_path(current_organisation, user.parent), class: "btn btn-link"
+      = f.button :submit

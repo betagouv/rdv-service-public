@@ -1,21 +1,29 @@
 = simple_form_for([current_organisation, user], remote: request.xhr?, data: { rightbar: true }) do |f|
   = render partial: 'layouts/model_errors', locals: { model: user }
+  - if user.child?
+    = f.label "Parent"
+    p= link_to user.parent.full_name, edit_organisation_user_path(current_organisation, user.parent)
   .form-row
     .col-md-6= f.input :first_name
     .col-md-6= f.input :last_name
-  = f.input :email, as: :email
-  - if user.pending_reconfirmation?
-    .form-text.text-muted.mb-2
-      | En attente de confirmation pour #{user.unconfirmed_email}
+
+  - unless user.child?
+    = f.input :email, as: :email
+    - if user.pending_reconfirmation?
+      .form-text.text-muted.mb-2
+        | En attente de confirmation pour #{user.unconfirmed_email}
+
   = date_input(f, :birth_date)
-  = f.input :phone_number, as: :tel
-  = f.input :address, input_html: { class: "places-js-container" }
-  .form-row
-    .col-md-6= f.input :caisse_affiliation, collection: User.human_enum_collection(:caisse_affiliation)
-    .col-md-6= f.input :affiliation_number
-  .form-row
-    .col-md-6= f.input :family_situation, collection: User.human_enum_collection(:family_situation)
-    .col-md-6= f.input :number_of_children, input_html: { min: '0', max: '15', step: 'any' }
-  = f.input :logement, collection: User.human_enum_collection(:logement)
-  .text-right
-    = f.button :submit
+  - unless user.child?
+
+    = f.input :phone_number, as: :tel
+    = f.input :address, input_html: { class: "places-js-container" }
+    .form-row
+      .col-md-6= f.input :caisse_affiliation, collection: User.human_enum_collection(:caisse_affiliation)
+      .col-md-6= f.input :affiliation_number
+    .form-row
+      .col-md-6= f.input :family_situation, collection: User.human_enum_collection(:family_situation)
+      .col-md-6= f.input :number_of_children, input_html: { min: '0', max: '15', step: 'any' }
+    = f.input :logement, collection: User.human_enum_collection(:logement)
+    .text-right
+      = f.button :submit
