@@ -1,5 +1,4 @@
 describe Rdv, type: :model do
-
   describe "#cancel" do
     let(:rdv) { create(:rdv) }
     let(:now) { Time.current }
