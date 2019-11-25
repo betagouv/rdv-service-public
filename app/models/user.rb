@@ -85,6 +85,10 @@ class User < ApplicationRecord
     !deleted_at ? super : :deleted_account
   end
 
+  def user_to_notify
+    child? ? parent : self
+  end
+
   protected
 
   def password_required?
