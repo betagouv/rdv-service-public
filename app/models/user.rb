@@ -79,6 +79,7 @@ class User < ApplicationRecord
 
   def invitable?
     invitation_accepted_at.nil? && encrypted_password.blank? && email.present? && !child?
+  end
 
   def active_for_authentication?
     super && !deleted_at
