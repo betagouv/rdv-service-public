@@ -12,12 +12,14 @@
     .card
       .card-body
         - if @user.invitable?
-          .row
-            .col
-              .bg-info.text-right.text-white.p-2.mb-3
-                | Cet usager ne s'est pas encore créer de compte. 
-                span.pl-2= link_to 'Inviter', invite_organisation_user_path(current_organisation, @user), method: :post, class: 'btn btn-outline-white'
-
+          .row.bg-info.text-white.p-2.mb-3
+            .col-md-8
+              | Cet usager ne s'est pas encore créer de compte.
+              - if @user.invitation_sent_at
+                p.small.m-0 Invitation envoyée il y a #{distance_of_time_in_words_to_now(@user.invitation_sent_at)}
+            .col-md-4.text-right
+              = link_to 'Inviter', invite_organisation_user_path(current_organisation, @user), method: :post, class: 'btn btn-outline-white'
+                
         h4.card-title.mb-3 Informations générales
         ul.list-unstyled.mb-5
           - {birth_date: birth_date_and_age(@user), phone_number: @user.phone_number, address: @user.address, email: @user.email}.each do |k,v|
