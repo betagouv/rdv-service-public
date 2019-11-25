@@ -14,12 +14,22 @@ module RdvsHelper
   def rdv_status_tag(rdv)
     content_tag(:span, Rdv.human_enum_name(:status, rdv.status), class: 'badge badge-info')
   end
+    
+  def no_rdv_for_users
+    sentence = "Vous n'avez pas de RDV "
+    sentence += params[:past].present? ? "passé." : "à venir."
+    sentence
+  end
 
   def human_location(rdv)
     rdv.location.blank? ? 'Non précisé' : rdv.location
   end
 
-  def future_tag(rdv)
-    content_tag(:span, 'À venir', class: 'badge badge-info') if rdv.starts_at.future?
+  def rdv_tag(rdv)
+    if rdv.cancelled_at
+      content_tag(:span, 'Annulé', class: 'badge badge-warning')
+    elsif rdv.starts_at.future?
+      content_tag(:span, 'À venir', class: 'badge badge-info')
+    end
   end
 end

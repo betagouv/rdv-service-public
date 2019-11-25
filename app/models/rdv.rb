@@ -10,8 +10,9 @@ class Rdv < ApplicationRecord
 
   scope :active, -> { where(cancelled_at: nil) }
   scope :past, -> { where('starts_at < ?', Time.zone.now) }
-  scope :future, -> { to_be + waiting }
   scope :done, -> { seen + excused }
+  #  scope :future, -> { to_be + waiting }
+  scope :future, -> { where('starts_at > ?', Time.zone.now) }
 
   after_commit :reload_uuid, on: :create
 
@@ -38,8 +39,12 @@ class Rdv < ApplicationRecord
     update(cancelled_at: Time.zone.now)
   end
 
+  def cancellable?
+    !cancelled? && starts_at > 4.hours.from_now
+  end
+
   def send_ics_to_users
-    users.each { |user| RdvMailer.send_ics_to_user(self, user).deliver_later }
+    users.each { |user| RdvMailer.send_ics_to_user(self, user.user_to_notify).deliver_later }
   end
 
   def to_step_params

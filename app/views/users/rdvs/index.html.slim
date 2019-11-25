@@ -1,14 +1,23 @@
 - content_for :title
   | Vos rendez-vous
+
+- content_for :breadcrumb do
+  - if params[:past].present?
+    = link_to 'Voir vos prochains RDV', users_rdvs_path, class: 'btn btn-outline-primary'
+  - else
+    = link_to 'Voir vos RDV passés', users_rdvs_path(past: true), class: 'btn btn-outline-primary'
+
 - if @rdvs.any?
   = render partial: 'rdv', collection: @rdvs
   .d-flex.justify-content-center= paginate @rdvs, theme: 'twitter-bootstrap-4'
+  .text-center
+    = add_button 'Prendre un RDV', root_path
 - else
   .card
     .card-body
       .row.justify-content-md-center
         .col-md-6.text-center.my-5
-          p.mb-2.lead Vous n'avez pas encore pris de RDV.
+          p.mb-2.lead= no_rdv_for_users
           span.fa-stack.fa-4x
             i.fa.fa-circle.fa-stack-2x.text-primary
             i.fa.fa-calendar-o.fa-stack-1x.text-white

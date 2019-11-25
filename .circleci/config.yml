@@ -1,0 +1,113 @@
+version: 2
+
+defaults: &defaults
+  working_directory: ~/lapins
+  docker:
+    - image: circleci/ruby:2.6.5-node-browsers
+    - image: circleci/postgres:9.5
+      environment:
+        POSTGRES_USER: lapins_test
+        POSTGRES_PASSWORD: lapins_test
+        POSTGRES_DB: lapins_test
+
+bundle_restore_cache: &bundle_restore_cache
+  restore_cache:
+    name: Restore Bundler Package Cache
+    key: bundle-install-v9-{{ arch }}-{{ checksum "Gemfile.lock" }}
+
+bundle_save_cache: &bundle_save_cache
+  save_cache:
+    name: Save Bundler Package Cache
+    key: bundle-install-v9-{{ arch }}-{{ checksum "Gemfile.lock" }}
+    paths:
+      - ~/vendor/bundle
+
+bundle_install: &bundle_install
+  run:
+    name: Install Ruby Dependencies
+    command: bundle install --path ~/vendor/bundle
+
+yarn_restore_cache: &yarn_restore_cache
+  restore_cache:
+    name: Restore Yarn Package Cache
+    key: yarn-install-v1-{{ arch }}-{{ checksum "yarn.lock" }}
+
+yarn_save_cache: &yarn_save_cache
+  save_cache:
+    name: Save Yarn Package Cache
+    key: yarn-install-v1-{{ arch }}-{{ checksum "yarn.lock" }}
+    paths:
+      - ~/.cache/yarn
+
+yarn_install: &yarn_install
+  run:
+    name: Install JS Dependencies
+    command: yarn install --non-interactive || yarn install --non-interactive
+
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - *bundle_restore_cache
+      - *bundle_install
+      - *bundle_save_cache
+      - *yarn_restore_cache
+      - *yarn_save_cache
+      - *yarn_install
+  test:
+    <<: *defaults
+    parallelism: 3
+    steps:
+      - checkout
+      - *bundle_restore_cache
+      - *bundle_install
+      - *yarn_restore_cache
+      - *yarn_install
+      - run:
+          environment:
+            DATABASE_URL: "postgres://lapins_test@localhost:5432/lapins_test"
+          name: Create DB
+          command: bundle exec rake db:create db:schema:load db:migrate RAILS_ENV=test
+      - run:
+          environment:
+            RAILS_ENV: test
+          name: Precompile Webpack assets
+          command: bin/webpack
+      - run:
+          environment:
+            DATABASE_URL: "postgres://lapins_test@localhost:5432/lapins_test"
+          name: Run Tests, Splitted by Timings
+          command: |
+            COMMAND="bundle exec rspec --profile 10 \
+              --format RspecJunitFormatter \
+              --out ~/test_results/rspec.xml \
+              --format progress \
+              $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+            echo $COMMAND
+            eval $COMMAND
+      - store_test_results:
+          path: test-results
+  lint:
+    <<: *defaults
+    steps:
+      - checkout
+      - *bundle_restore_cache
+      - *bundle_install
+      - *yarn_restore_cache
+      - *yarn_install
+      - run:
+          name: Run linters
+          command: bundle exec rake ci
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - lint:
+          requires:
+            - build

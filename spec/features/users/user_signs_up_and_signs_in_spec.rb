@@ -30,12 +30,6 @@ feature 'User signs up and signs in' do
     click_on "Je m'inscris"
   end
 
-  def sign_in(user)
-    fill_in :user_email, with: user.email
-    fill_in :user_password, with: user.password
-    click_on "Se connecter"
-  end
-
   def expect_flash_info(message)
     expect(page).to have_selector('.alert.alert-info', text: message)
   end
