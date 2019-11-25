@@ -20,6 +20,17 @@ describe Rdv, type: :model do
       expect(RdvMailer).to receive(:send_ics_to_user).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
       rdv.save!
     end
+
+    context "when rdv is for a child" do
+      let(:parent) { create(:user) }
+      let(:child) { create(:user, parent_id: parent.id) }
+      let(:rdv) { build(:rdv, users: [child]) }
+
+      it "calls RdvMailer to send email to parent" do
+        expect(RdvMailer).to receive(:send_ics_to_user).with(rdv, parent).and_return(double(deliver_later: nil))
+        rdv.save!
+      end
+    end
   end
 
   describe "#cancel" do
