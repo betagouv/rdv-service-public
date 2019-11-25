@@ -5,7 +5,7 @@ ruby '2.6.5'
 
 gem 'dotenv-rails', '~> 2.7.2' # dotenv should always be loaded before rails
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0'
+gem 'rails', '~> 6.0.1'
 gem 'sprockets-rails'
 
 # Use Puma as the app server
@@ -35,7 +35,7 @@ gem 'image_processing', '~> 1.8'
 gem 'phonelib'
 
 # Front
-gem 'sass-rails', '~> 6.0'
+gem 'sass-rails', '>= 6.0'
 gem 'autoprefixer-rails', '~> 9.6'
 gem 'font-awesome-rails', '~> 4.7'
 gem "chartkick", '~> 3.2.0'
