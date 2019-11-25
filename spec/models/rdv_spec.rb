@@ -22,8 +22,8 @@ describe Rdv, type: :model do
     end
 
     context "when rdv is for a child" do
-      let(:parent) { create(:user)}
-      let(:child) { create(:user, parent_id: parent.id)}
+      let(:parent) { create(:user) }
+      let(:child) { create(:user, parent_id: parent.id) }
       let(:rdv) { build(:rdv, users: [child]) }
 
       it "calls RdvMailer to send email to parent" do
