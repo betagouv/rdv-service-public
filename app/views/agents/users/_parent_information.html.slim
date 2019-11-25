@@ -1,0 +1,15 @@
+ul.list-unstyled.mb-5
+  - {first_name: user.first_name, last_name: user.last_name, birth_date: birth_date_and_age(user), phone_number: user.phone_number, address: user.address, email: user.email}.each do |k,v|
+      li.mb-2 
+        strong= "#{t("activerecord.attributes.user.#{k}")} : "
+        | #{v}
+h4.card-title.mb-3 Informations sociales
+ul.list-unstyled.mb-5
+  - {caisse_affiliation: User.human_enum_name(:caisse_affiliation, user.caisse_affiliation), affiliation_number: user.affiliation_number, family_situation: User.human_enum_name(:family_situation,user.family_situation), number_of_children: user.number_of_children, logement: User.human_enum_name(:logement, user.logement) }.each do |k,v|
+      li.mb-2 
+        strong= "#{t("activerecord.attributes.user.#{k}")} : "
+        | #{v}
+
+- unless organisation_user_path(current_organisation, user) == request.path
+  .text-right
+    = link_to "Voir", organisation_user_path(current_organisation, user), class: "btn btn-outline-primary"
