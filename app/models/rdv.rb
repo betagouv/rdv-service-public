@@ -10,6 +10,8 @@ class Rdv < ApplicationRecord
 
   scope :active, -> { where(cancelled_at: nil) }
   scope :past, -> { where('starts_at < ?', Time.zone.now) }
+  scope :future, -> { to_be + waiting }
+  scope :done, -> { seen + excused }
 
   after_commit :reload_uuid, on: :create
 

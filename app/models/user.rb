@@ -77,6 +77,10 @@ class User < ApplicationRecord
     parent_id.present?
   end
 
+  def invitable?
+    invitation_accepted_at.nil? && password.nil? && email
+  end
+
   protected
 
   def password_required?

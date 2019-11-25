@@ -1,17 +1,26 @@
 - content_for :title do
-  | Liste des RDV pour #{link_to @user.full_name, edit_organisation_user_path(current_organisation, @user)}
+  | Liste des RDV
+
+- content_for :breadcrumb do
+  ol.breadcrumb.m-0
+    li.breadcrumb-item
+      = link_to 'Vos usagers', organisation_users_path(current_organisation)
+    li.breadcrumb-item
+      = link_to @user.full_name, organisation_user_path(current_organisation, @user)
+    li.breadcrumb-item.active Liste des RDV
 
 - if @rdvs.any?
-  = render partial: 'users/rdvs/rdv', collection: @rdvs
-  .d-flex.justify-content-center= paginate @rdvs, theme: 'twitter-bootstrap-4'
+  .row.justify-content-md-center
+    .col-md-6
+      = render partial: 'agents/rdvs/rdv', collection: @rdvs
+      .d-flex.justify-content-center= paginate @rdvs, theme: 'twitter-bootstrap-4'
 - else
   .card
     .card-body
       .row.justify-content-md-center
         .col-md-6.text-center.my-5
           p.mb-2.lead 
-            | Aucun RDV pour #{link_to @user.full_name, edit_organisation_user_path(current_organisation, @user)}.
-            
+            | Aucun RDV pour #{link_to @user.full_name, organisation_user_path(current_organisation, @user)}.
           span.fa-stack.fa-4x
             i.fa.fa-circle.fa-stack-2x.text-primary
             i.fa.fa-calendar-o.fa-stack-1x.text-white

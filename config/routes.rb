@@ -69,7 +69,7 @@ Rails.application.routes.draw do
           end
         end
 
-        resources :users, except: :show do
+        resources :users do
           resources :rdvs, only: :index
           post :invite, on: :member
           get :link_to_organisation, on: :member

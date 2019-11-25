@@ -3,8 +3,8 @@
     ul.list-group.list-group-flush
       li.list-group-item
         .fa.fa-calendar>
-        = rdv_title(rdv)
-        = future_tag(rdv)
+        = link_to rdv_title(rdv), organisation_rdv_path(rdv.organisation, rdv), data: { rightbar: true }
+        = rdv_status_tag(rdv)
       - if rdv.location
         li.list-group-item
           .fa.fa-map-marker>
@@ -13,9 +13,6 @@
         li.list-group-item
           .fa.fa-phone>
           | RDV Téléphonique
-      li.list-group-item
-        .fa.fa-user>
-        = users_to_sentence(rdv)
       li.list-group-item
         i.fa.fa-info-circle>
         = rdv.motif.name
