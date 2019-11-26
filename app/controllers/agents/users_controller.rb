@@ -32,14 +32,6 @@ class Agents::UsersController < AgentAuthController
     end
   end
 
-  def link_to_organisation
-    @user = User.find(params.require(:id))
-    user = @user.add_organisation(current_organisation)
-    authorize(@user)
-    flash[:notice] = "L'usager a été associé à votre organisation." if user
-    redirect_to organisation_user_path(current_organisation, @user)
-  end
-
   def show
     authorize(@user)
   end
@@ -67,6 +59,13 @@ class Agents::UsersController < AgentAuthController
     authorize(@user)
     flash[:notice] = "L'usager a été supprimé." if @user.soft_delete(current_organisation)
     redirect_to organisation_users_path(current_organisation)
+  end
+
+  def link_to_organisation
+    @user = User.find(params.require(:id))
+    authorize(current_organisation)
+    flash[:notice] = "L'usager a été associé à votre organisation." if @user.add_organisation(current_organisation)
+    redirect_to organisation_user_path(current_organisation, @user)
   end
 
   private
