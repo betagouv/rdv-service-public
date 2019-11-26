@@ -17,8 +17,9 @@ class User < ApplicationRecord
 
   validates :last_name, :first_name, presence: true
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
+  validate :birth_date_validity
 
-  pg_search_scope :search_by_name, against: [:first_name, :last_name],
+  pg_search_scope :search_by_name_or_email, against: [:first_name, :last_name, :email],
                   using: { tsearch: { prefix: true } }
 
   before_save :set_email_to_null_if_blank
@@ -65,8 +66,8 @@ class User < ApplicationRecord
     organisations << organisation if organisation_ids.exclude?(organisation.id)
   end
 
-  def soft_delete
-    delete
+  def soft_delete(organisation = nil)
+    organisation.present? ? organisations.delete(organisation) : update(organisation_ids: [], deleted_at: Time.zone.now)
   end
 
   def available_users_for_rdv
@@ -75,6 +76,18 @@ class User < ApplicationRecord
 
   def child?
     parent_id.present?
+  end
+
+  def active_for_authentication?
+    super && !deleted_at
+  end
+
+  def inactive_message
+    !deleted_at ? super : :deleted_account
+  end
+
+  def user_to_notify
+    child? ? parent : self
   end
 
   protected
@@ -107,5 +120,11 @@ class User < ApplicationRecord
 
   def set_email_to_null_if_blank
     self.email = nil if email.blank?
+  end
+
+  def birth_date_validity
+    return unless birth_date.present? && (birth_date > Date.today || birth_date < 130.years.ago)
+
+    errors.add(:birth_date, "est invalide")
   end
 end

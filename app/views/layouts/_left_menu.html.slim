@@ -29,6 +29,7 @@
               span Paramètres
               span.menu-arrow
             ul.side-nav-second-level aria-expanded="false"
+              li=link_to 'Votre organisation', edit_organisation_path(current_organisation), data: { rightbar: true }
               li=link_to 'Vos lieux', organisation_lieux_path(current_organisation)
               li=link_to 'Vos agents', organisation_agents_path(current_organisation)
-              li=link_to "Vos motifs", organisation_motifs_path(current_organisation)
+              li=link_to 'Vos motifs', organisation_motifs_path(current_organisation)

@@ -27,17 +27,6 @@ select.form-control-sm {
   }
 }
 
-.client-fields, .to-dos-fields {
-  border: 1px solid #dee2e6;
-  border-radius: 0.25rem;
-}
-
-.best_in_place {
-  &:hover {
-    background: darken(white, 10%);
-  }
-}
-
 .form-row {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -53,14 +42,6 @@ select.form-control-sm {
   padding-left: 5px; 
 }
 
-.invoice-type-choice {
-  min-height: 280px;
-  .col-md-6:first-child {
-    border-right: 1px solid $gray-700;
-
-  }
-}
-
-#payments .form-group, #invoice-lines .form-group {
-  margin-bottom: 0;
+.search-form-control {
+  min-width: 300px;
 }

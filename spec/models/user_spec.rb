@@ -103,4 +103,38 @@ describe User, type: :model do
       it { expect { subject }.to change(child2, :organisation_ids).from([organisation.id]).to([]) }
     end
   end
+
+  describe "#soft_delete" do
+    let(:now) { Time.current }
+    before do
+      freeze_time
+      user.soft_delete(deleted_org)
+    end
+
+    context 'belongs to multiple organisations and with organisation given' do
+      let(:user) { create(:user, :with_multiple_organisations) }
+      let(:deleted_org) { user.organisations.first }
+      it { expect(user.organisation_ids).not_to include(deleted_org.id) }
+      it "remove the correct organisation" do
+        left_orgs_ids = Organisation.where.not(id: deleted_org.id).pluck(:id)
+        expect(user.organisation_ids).to match_array(left_orgs_ids)
+      end
+      it { expect(user.deleted_at).to be_nil }
+    end
+
+    context 'belongs to one organisation and with organisation given' do
+      let(:user) { create(:user) }
+      let(:deleted_org) { user.organisations.first }
+      it { expect(user.organisation_ids).to be_empty }
+      it { expect(user.deleted_at).to be_nil }
+    end
+
+    context 'with no organisation given' do
+      let(:user) { create(:user, :with_multiple_organisations) }
+      let(:deleted_org) { nil }
+      it { expect(user.organisation_ids).to be_empty }
+      it { expect(user.deleted_at).not_to be_nil }
+      it { expect(user.deleted_at).to eq(now) }
+    end
+  end
 end

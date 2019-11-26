@@ -59,6 +59,9 @@ describe "User can search for rdvs" do
       click_button('Continuer')
 
       # Step 5
+      expect(page).to have_content("Votre rendez-vous est confirmé")
+      expect(page).not_to have_content("Annuler le RDV")
+
       click_link('Aller à la liste de vos rendez-vous')
 
       # Step 6
@@ -84,7 +87,6 @@ describe "User can search for rdvs" do
 
     scenario "for children", js: true do
       # Step 4
-      # expect(page).to have_content(motif.name)
       expect(page).to have_content(user.full_name)
       expect(page).to have_content(child.full_name)
 

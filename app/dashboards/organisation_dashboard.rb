@@ -12,6 +12,8 @@ class OrganisationDashboard < Administrate::BaseDashboard
     name: Field::String,
     agents: Field::HasMany,
     lieux: Field::HasMany,
+    horaires: Field::String,
+    phone_number: Field::String,
     departement: Field::String,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
@@ -33,6 +35,8 @@ class OrganisationDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = [
     :id,
     :name,
+    :horaires,
+    :phone_number,
     :agents,
     :lieux,
     :departement,
@@ -45,6 +49,8 @@ class OrganisationDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
     :name,
+    :horaires,
+    :phone_number,
     :agents,
     :lieux,
     :departement,

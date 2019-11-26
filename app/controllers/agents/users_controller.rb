@@ -69,14 +69,14 @@ class Agents::UsersController < AgentAuthController
 
   def destroy
     authorize(@user)
-    flash[:notice] = "L'usager a été supprimé." if @user.organisations.delete(current_organisation)
+    flash[:notice] = "L'usager a été supprimé." if @user.soft_delete(current_organisation)
     redirect_to organisation_users_path(current_organisation)
   end
 
   private
 
   def filter_users
-    @users = @users.search_by_name(params[:user][:search])
+    @users = @users.search_by_name_or_email(params[:user][:search])
     respond_to do |format|
       format.js { render partial: 'search-results' }
     end

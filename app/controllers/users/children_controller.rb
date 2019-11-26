@@ -6,7 +6,6 @@ class Users::ChildrenController < UserAuthController
   end
 
   def update
-    @user.created_or_updated_by_agent = true
     authorize(@user)
     if @user.update(user_params)
       flash[:notice] = "Les informations de l'enfant #{@user.full_name} ont été mises à jour."
@@ -25,7 +24,6 @@ class Users::ChildrenController < UserAuthController
     @user = User.new(user_params)
     @user.parent_id = current_user.id
     @user.organisation_ids = current_user.organisation_ids
-    @user.created_or_updated_by_agent = true
     authorize(@user)
     if @user.save
       flash[:notice] = "#{@user.full_name} a été ajouté comme enfant."

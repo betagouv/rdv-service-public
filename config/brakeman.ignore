@@ -23,11 +23,42 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
+      "fingerprint": "6075d5fa4ccf99eda55aafaca800151059078ca40af25908199abed7b5a245ed",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/users/rdvs/confirmation.html.slim",
+      "line": 17,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => policy_scope(Rdv).find(params[:rdv_id]), { :hide_cancellation_infos => true })",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Users::RdvsController",
+          "method": "confirmation",
+          "line": 53,
+          "file": "app/controllers/users/rdvs_controller.rb",
+          "rendered": {
+            "name": "users/rdvs/confirmation",
+            "file": "app/views/users/rdvs/confirmation.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "users/rdvs/confirmation"
+      },
+      "user_input": "params[:rdv_id]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
       "fingerprint": "e888917ccb1d0ad3936b89b30657e96972d5232a4f36da9cc4ba8bd992311378",
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/agents/lieux/index.html.slim",
-      "line": 17,
+      "line": 16,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => policy_scope(Lieu).includes(:organisation).order(Arel.sql(\"LOWER(name)\")).page(params[:page]), {})",
       "render_path": [
@@ -52,6 +83,6 @@
       "note": ""
     }
   ],
-  "updated": "2019-11-14 17:42:06 +0100",
+  "updated": "2019-11-25 18:08:53 +0100",
   "brakeman_version": "4.6.1"
 }
