@@ -88,15 +88,15 @@ describe User, type: :model do
     describe "#add_organisation_to_children", focus: true do
       subject { user.add_organisation(organisation2) }
 
-      it { expect { subject }.to change { child1.reload.organisation_ids }.from([organisation.id]).to([organisation.id, organisation2.id]) }
-      it { expect { subject }.to change { child2.reload.organisation_ids }.from([organisation.id]).to([organisation.id, organisation2.id]) }
+      it { expect { subject }.to change { child1.reload.organisation_ids.sort }.from([organisation.id]).to([organisation.id, organisation2.id].sort) }
+      it { expect { subject }.to change { child2.reload.organisation_ids.sort }.from([organisation.id]).to([organisation.id, organisation2.id].sort) }
     end
 
     describe "#remove_organisation_to_children" do
       subject { user.organisations.delete(organisation) }
 
-      it { expect { subject }.to change { child1.reload.organisation_ids }.from([organisation.id]).to([]) }
-      it { expect { subject }.to change { child2.reload.organisation_ids }.from([organisation.id]).to([]) }
+      it { expect { subject }.to change { child1.reload.organisation_ids.sort }.from([organisation.id]).to([]) }
+      it { expect { subject }.to change { child2.reload.organisation_ids.sort }.from([organisation.id]).to([]) }
     end
   end
 

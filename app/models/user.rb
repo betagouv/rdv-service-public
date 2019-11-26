@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   include PgSearch::Model
+  include FullNameConcern
 
   attr_accessor :created_or_updated_by_agent
 
@@ -26,14 +27,6 @@ class User < ApplicationRecord
 
   before_save :set_email_to_null_if_blank
   before_save :set_organisation_ids_from_parent, if: :parent_id_changed?
-
-  def full_name
-    "#{first_name} #{last_name}"
-  end
-
-  def initials
-    full_name.split.first(2).map(&:first).join.upcase
-  end
 
   def age
     years = age_in_years
