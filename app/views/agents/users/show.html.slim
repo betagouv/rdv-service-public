@@ -19,7 +19,7 @@
                 p.small.m-0 Invitation envoyée il y a #{distance_of_time_in_words_to_now(@user.invitation_sent_at)}
             .col-md-4.text-right
               = link_to 'Inviter', invite_organisation_user_path(current_organisation, @user), method: :post, class: 'btn btn-outline-white'
-       
+
         h4.card-title.mb-3 Informations générales
         - if @user.child?
           = render 'child_information', user: @user
@@ -58,3 +58,5 @@
                   .col
                     => link_to child.full_name, organisation_user_path(current_organisation, child)
                     = "(#{child.age})" if child.birth_date
+          .text-right
+            = link_to "Ajouter un enfant", new_organisation_user_child_path(current_organisation, @user), class: "btn btn-outline-primary"

@@ -14,7 +14,7 @@ class Agents::ChildrenController < AgentAuthController
     authorize(@user)
     if @user.save
       flash[:notice] = "#{@user.full_name} a été ajouté comme enfant."
-      redirect_to edit_organisation_user_path(current_organisation, @parent)
+      redirect_to organisation_user_path(current_organisation, @parent)
     else
       render :new
     end
