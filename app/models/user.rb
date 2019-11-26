@@ -77,7 +77,7 @@ class User < ApplicationRecord
   end
 
   def available_users_for_rdv
-    User.where(parent_id: id).or(User.where(id: id)).order('parent_id DESC NULLS FIRST', first_name: :asc)
+    User.where(parent_id: id).or(User.where(id: id)).order('parent_id DESC NULLS FIRST', first_name: :asc).active
   end
 
   def child?
