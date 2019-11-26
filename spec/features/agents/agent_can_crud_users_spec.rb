@@ -52,36 +52,6 @@ describe "Agent can CRUD users" do
     expect(current_email.subject).to eq I18n.t("devise.mailer.invitation_instructions.subject")
   end
 
-  # describe "can see the RDV of the user" do
-  #   context "with no RDV" do
-  #     click_link user.full_name
-
-  #   end
-
-  #   context "with RDVs" do
-
-  #   end
-
-  # end
-
-  describe "can see the children of the user" do
-    context "with no child" do
-      before { click_link user.full_name }
-      it { expect(page).to have_content('Aucun enfant') }
-    end
-
-    context "with children" do
-      let!(:child) { create :user, parent: user }
-      before do
-        click_link user.full_name
-        click_link child.full_name
-      end
-      it do
-        expect(page).to have_content('Informations parentales')
-      end
-    end
-  end
-
   let!(:existing_user) { create(:user, organisations: [create(:organisation)]) }
 
   scenario "when user already exist but is not associated to organisation" do
