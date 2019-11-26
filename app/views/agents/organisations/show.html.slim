@@ -7,4 +7,4 @@
 
 .card
   .card-body
-    #calendar data-event-sources="#{[organisation_rdvs_path(@organisation), organisation_absences_path(@organisation), organisation_plage_ouvertures_path(@organisation)].to_json}" data-organisation-id="#{@organisation.id}" data-default-date="#{@date.to_json}"
+    #calendar data-event-sources="#{[organisation_rdvs_path(@organisation, format: :json), organisation_absences_path(@organisation), organisation_plage_ouvertures_path(@organisation)].to_json}" data-organisation-id="#{@organisation.id}" data-default-date="#{@date.to_json}"
