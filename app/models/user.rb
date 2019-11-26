@@ -117,11 +117,11 @@ class User < ApplicationRecord
   private
 
   def add_organisation_to_children(organisation)
-    children.each { |child| child.add_organisation(organisation) }
+    children.active.each { |child| child.add_organisation(organisation) }
   end
 
   def remove_organisation_to_children(organisation)
-    children.each { |child| child.organisations.delete(organisation) }
+    children.active.each { |child| child.organisations.delete(organisation) }
   end
 
   def set_organisation_ids_from_parent

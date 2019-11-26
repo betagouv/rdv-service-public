@@ -82,25 +82,21 @@ describe User, type: :model do
     let(:organisation) { create(:organisation) }
     let(:organisation2) { create(:organisation) }
     let(:user) { create(:user, organisations: [organisation]) }
-    let(:child1) { create(:user) }
-    let(:child2) { create(:user) }
+    let!(:child1) { create(:user, parent_id: user.id) }
+    let!(:child2) { create(:user, parent_id: user.id) }
 
-    before do
-      user.children << [child1, child2]
-    end
-
-    describe "#add_organisation_to_children" do
+    describe "#add_organisation_to_children", focus: true do
       subject { user.add_organisation(organisation2) }
 
-      it { expect { subject }.to change(child1, :organisation_ids).from([organisation.id]).to([organisation.id, organisation2.id]) }
-      it { expect { subject }.to change(child2, :organisation_ids).from([organisation.id]).to([organisation.id, organisation2.id]) }
+      it { expect { subject }.to change { child1.reload.organisation_ids }.from([organisation.id]).to([organisation.id, organisation2.id]) }
+      it { expect { subject }.to change { child2.reload.organisation_ids }.from([organisation.id]).to([organisation.id, organisation2.id]) }
     end
 
     describe "#remove_organisation_to_children" do
       subject { user.organisations.delete(organisation) }
 
-      it { expect { subject }.to change(child1, :organisation_ids).from([organisation.id]).to([]) }
-      it { expect { subject }.to change(child2, :organisation_ids).from([organisation.id]).to([]) }
+      it { expect { subject }.to change { child1.reload.organisation_ids }.from([organisation.id]).to([]) }
+      it { expect { subject }.to change { child2.reload.organisation_ids }.from([organisation.id]).to([]) }
     end
   end
 
@@ -141,12 +137,14 @@ describe User, type: :model do
       let(:user) { create(:user, parent_id: create(:user).id) }
       let(:deleted_org) { nil }
 
+      it { expect(user.organisation_ids).to be_empty }
       it { expect(user.deleted_at).to eq(now) }
 
       context "and has multiple organisations" do
         let(:user) { create(:user, :with_multiple_organisations, parent_id: create(:user).id) }
         let(:deleted_org) { user.organisations.first }
 
+        it { expect(user.organisation_ids).to be_empty }
         it { expect(user.deleted_at).to eq(now) }
       end
     end

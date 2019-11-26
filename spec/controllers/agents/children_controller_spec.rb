@@ -17,7 +17,7 @@ RSpec.describe Agents::ChildrenController, type: :controller do
   end
 
   describe "POST #create" do
-    subject { post :create, params: { organisation_id: organisation_id, user_id: parent.id,  user: attributes } }
+    subject { post :create, params: { organisation_id: organisation_id, user_id: parent.id, user: attributes } }
 
     context "with valid params" do
       let(:attributes) do
