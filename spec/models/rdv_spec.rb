@@ -1,9 +1,9 @@
 describe Rdv, type: :model do
-  describe "#send_ics_to_users" do
+  describe "#send_notifications_to_users" do
     let(:rdv) { build(:rdv) }
 
     it "should be called after create" do
-      expect(rdv).to receive(:send_ics_to_users)
+      expect(rdv).to receive(:send_notifications_to_users)
       rdv.save!
     end
 
@@ -11,7 +11,7 @@ describe Rdv, type: :model do
       let(:rdv) { create(:rdv) }
 
       it "should not be called" do
-        expect(rdv).not_to receive(:send_ics_to_users)
+        expect(rdv).not_to receive(:send_notifications_to_users)
         rdv.save!
       end
     end
