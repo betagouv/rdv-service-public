@@ -19,8 +19,8 @@ fr:
           excused: Absent excusé
           notexcused: Absent non excusé
   agents:
-    users:
-      show:
+    rdvs:
+      rdvs_stats:
         rdvs:
           future:
             zero: Futur
