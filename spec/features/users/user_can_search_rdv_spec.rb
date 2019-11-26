@@ -59,6 +59,9 @@ describe "User can search for rdvs" do
       click_button('Continuer')
 
       # Step 5
+      expect(page).to have_content("Votre rendez-vous est confirmé")
+      expect(page).not_to have_content("Annuler le RDV")
+
       click_link('Aller à la liste de vos rendez-vous')
 
       # Step 6

@@ -48,6 +48,10 @@ class Rdv < ApplicationRecord
     !cancelled? && starts_at > 4.hours.from_now
   end
 
+  def send_ics_to_users
+    users.each { |user| RdvMailer.send_ics_to_user(self, user.user_to_notify).deliver_later }
+  end
+
   def to_step_params
     {
       location: location,
