@@ -22,6 +22,8 @@ class User < ApplicationRecord
   pg_search_scope :search_by_name_or_email, against: [:first_name, :last_name, :email],
                   using: { tsearch: { prefix: true } }
 
+  scope :active, -> { where(deleted_at: nil) }
+
   before_save :set_email_to_null_if_blank
   before_save :set_organisation_ids_from_parent, if: :parent_id_changed?
 
@@ -76,6 +78,10 @@ class User < ApplicationRecord
 
   def child?
     parent_id.present?
+  end
+
+  def invitable?
+    invitation_accepted_at.nil? && encrypted_password.blank? && email.present? && !child?
   end
 
   def active_for_authentication?

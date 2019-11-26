@@ -4,7 +4,13 @@ class Agents::RdvsController < AgentAuthController
   before_action :set_rdv, only: [:show, :edit, :update, :destroy, :status]
 
   def index
-    @rdvs = policy_scope(Rdv).active.where(starts_at: date_range_params).includes(:motif).order(:starts_at)
+    @rdvs = policy_scope(Rdv).active
+    if params[:user_id].present?
+      @user = policy_scope(User).find(params[:user_id])
+      @rdvs = @user.rdvs.active.includes(:organisation).where(organisation_id: current_organisation).page(params[:page])
+    end
+    @rdvs = @rdvs.where(starts_at: date_range_params) if filter_params[:start].present? && filter_params[:end].present?
+    @rdvs = @rdvs.includes(:motif).order(:starts_at)
   end
 
   def show
