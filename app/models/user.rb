@@ -69,7 +69,11 @@ class User < ApplicationRecord
   end
 
   def soft_delete(organisation = nil)
-    organisation.present? ? organisations.delete(organisation) : update(organisation_ids: [], deleted_at: Time.zone.now)
+    if organisation.present? && !child?
+      organisations.delete(organisation)
+    else
+      update(organisation_ids: [], deleted_at: Time.zone.now)
+    end
   end
 
   def available_users_for_rdv

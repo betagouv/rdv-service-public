@@ -136,5 +136,19 @@ describe User, type: :model do
       it { expect(user.deleted_at).not_to be_nil }
       it { expect(user.deleted_at).to eq(now) }
     end
+
+    context "when user is a child" do
+      let(:user) { create(:user, parent_id: create(:user).id) }
+      let(:deleted_org) { nil }
+
+      it { expect(user.deleted_at).to eq(now) }
+
+      context "and has multiple organisations" do
+        let(:user) { create(:user, :with_multiple_organisations, parent_id: create(:user).id) }
+        let(:deleted_org) { user.organisations.first }
+
+        it { expect(user.deleted_at).to eq(now) }
+      end
+    end
   end
 end
