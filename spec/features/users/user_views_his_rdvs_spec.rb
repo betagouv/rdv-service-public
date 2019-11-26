@@ -30,10 +30,4 @@ describe "User views his rdv" do
       expect(page).to have_content(rdv_title(rdv))
     end
   end
-
-  private
-
-  def rdv_title(rdv)
-    "Le #{I18n.l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)"
-  end
 end

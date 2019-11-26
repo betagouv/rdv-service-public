@@ -14,7 +14,7 @@ module RdvsHelper
   def rdv_status_tag(rdv)
     content_tag(:span, Rdv.human_enum_name(:status, rdv.status), class: 'badge badge-info')
   end
-    
+
   def no_rdv_for_users
     sentence = "Vous n'avez pas de RDV "
     sentence += params[:past].present? ? "passé." : "à venir."
