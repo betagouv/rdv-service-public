@@ -1,6 +1,7 @@
-tr class="#{'bg-light' if user.id == params[:to_user].to_i}"
+tr
   td
-    = link_to user.full_name, organisation_user_path(current_organisation, user)
+    - path = user.child? ? organisation_child_path(current_organisation, user) : organisation_user_path(current_organisation, user)
+    = link_to user.full_name, path
     = new_user_tag(user)
   td= birth_date_and_age(user)
   td= formatted_phone_number(user)

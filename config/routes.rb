@@ -74,9 +74,9 @@ Rails.application.routes.draw do
           resources :rdvs, only: :index
           post :invite, on: :member
           get :link_to_organisation, on: :member
-
-          resources :children, only: [:new, :create]
+          resources :children, only: [:create, :new]
         end
+        resources :children, except: [:create, :new]
 
         resources :rdvs, except: [:create, :new] do
           patch :status, on: :member

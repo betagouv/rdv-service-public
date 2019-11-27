@@ -66,11 +66,7 @@ class Agents::UsersController < AgentAuthController
   def destroy
     authorize(@user)
     flash[:notice] = "L'usager a été supprimé." if @user.soft_delete(current_organisation)
-    if @user.child?
-      redirect_to organisation_user_path(current_organisation, @user.parent)
-    else
-      redirect_to organisation_users_path(current_organisation)
-    end
+    redirect_to organisation_users_path(current_organisation)
   end
 
   private
