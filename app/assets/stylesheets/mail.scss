@@ -1,5 +1,5 @@
-@import 'bootstrap/scss/functions'; 
-@import 'bootstrap/scss/variables'; 
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
 @import "variables";
 @import "components/types";
 
@@ -19,7 +19,7 @@ $padding: 30px;
 }
 
 .wrapper {
-  width: 100%; 
+  width: 100%;
 }
 
 #outlook a {
@@ -862,7 +862,7 @@ a {
   margin: 0;
   Margin: 0;
   text-align: left;
-  line-height: 1.3; 
+  line-height: 1.3;
 }
 
 h1,
@@ -879,7 +879,7 @@ h6 {
   Margin-bottom: 20px; }
 
 h1 {
-  font-size: 27px; 
+  font-size: 27px;
   margin-bottom: 30px;
 }
 
@@ -1388,7 +1388,7 @@ body.outlook p {
 body,
 html,
 .body {
-  background: $white !important; 
+  background: $white !important;
   color: $body-color;
 
 }
@@ -1404,11 +1404,18 @@ html,
   padding-top: 15px; }
 
 .wrapper-inner {
-  padding: 40px 20px; 
+  padding: 40px 20px;
 }
 
 .header .container {
   background: transparent; }
 
 .wrapper.secondary {
-  background: #f3f3f3; }
+  background: #f3f3f3;
+}
+
+.btn-primary{
+  background-color: $primary;
+  padding: 10px;
+  color: $white;
+}
