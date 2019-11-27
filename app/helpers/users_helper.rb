@@ -8,5 +8,4 @@ module UsersHelper
   def formatted_phone_number(user)
     user.phone_number.chars.each_slice(2).map(&:join).join(' ') unless user.phone_number.blank?
   end
-
 end
