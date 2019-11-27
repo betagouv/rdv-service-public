@@ -50,7 +50,7 @@ RSpec.describe Agents::UsersController, type: :controller do
         {
           first_name: "Michel",
           last_name: "Lapin",
-          email: user.email
+          email: user.email,
         }
       end
 
