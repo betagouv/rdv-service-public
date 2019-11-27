@@ -55,7 +55,7 @@ class Rdv < ApplicationRecord
   end
 
   def notify?
-    motif.send_notification
+    !motif.disable_notifications_for_users
   end
 
   def to_step_params

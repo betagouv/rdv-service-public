@@ -7,7 +7,7 @@ FactoryBot.define do
     min_booking_delay { 30.minutes }
     max_booking_delay { 6.months }
     color { "##{SecureRandom.hex(3)}" }
-    send_notification { true }
+    disable_notifications_for_users { false }
     trait :with_rdvs do
       after(:create) do |motif|
         create_list(:rdv, 5, motif: motif)
@@ -18,7 +18,7 @@ FactoryBot.define do
       by_phone { true }
     end
     trait :no_notification do
-      send_notification { false }
+      disable_notifications_for_users { true }
     end
   end
 end
