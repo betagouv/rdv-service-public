@@ -25,10 +25,10 @@
       .card-body
         h4.card-title.mb-4 Mes enfants
         ul.list-group.mb-2
-          - if @user.children.empty?
+          - if @user.children.active.empty?
             li.list-group-item
               em Aucun enfant
-          - @user.children.each do |child|
+          - @user.children.active.each do |child|
             li.list-group-item
               .row
                 .col
@@ -37,4 +37,4 @@
                 .col-auto.text-right
                   = link_to "modifier", edit_child_path(child)
         .text-right
-          = link_to "+ Ajouter un enfant", new_child_path, class: "btn btn-outline-primary"
+          = link_to "Ajouter un enfant", new_child_path, class: "btn btn-outline-primary"

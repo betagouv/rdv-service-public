@@ -2,6 +2,7 @@ class Agent < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   include DeviseInvitable::Inviter
+  include FullNameConcern
 
   devise :invitable, :database_authenticatable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
@@ -22,20 +23,8 @@ class Agent < ApplicationRecord
   scope :complete, -> { where.not(first_name: nil).where.not(last_name: nil) }
   scope :active, -> { where(deleted_at: nil) }
 
-  def full_name
-    "#{first_name} #{last_name}"
-  end
-
-  def short_name
-    "#{first_name.first.upcase}. #{last_name}"
-  end
-
   def full_name_and_service
     service.present? ? "#{full_name} (#{service.name})" : full_name
-  end
-
-  def initials
-    full_name.split.first(2).map(&:first).join.upcase
   end
 
   def complete?

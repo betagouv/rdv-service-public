@@ -19,12 +19,9 @@
                 p.small.m-0 Invitation envoyée il y a #{distance_of_time_in_words_to_now(@user.invitation_sent_at)}
             .col-md-4.text-right
               = link_to 'Inviter', invite_organisation_user_path(current_organisation, @user), method: :post, class: 'btn btn-outline-white'
-       
+
         h4.card-title.mb-3 Informations générales
-        - if @user.child?
-          = render 'child_information', user: @user
-        - else
-          = render 'parent_information', user: @user
+        = render 'parent_information', user: @user
 
         .row
           .col.text-left
@@ -32,29 +29,26 @@
           .col.text-right
             = link_to "Modifier", edit_organisation_user_path(current_organisation, @user), class: "btn btn-primary"
 
-    - if @user.child?
-      .card
-        .card-body
-          h4.card-title.mb-3 Informations parentales
-          = render 'parent_information', user: @user.parent
-
   .col-md-6
     .card
       .card-body
         = render 'agents/rdvs/rdvs_stats', rdvs: @user.rdvs.active.where(organisation_id: current_organisation)
         .text-right
           = link_to 'Voir tous les RDV', organisation_user_rdvs_path(current_organisation, @user), class: 'btn btn-outline-primary'
-    - unless @user.child?
-      .card
-        .card-body
-          h4.card-title.mb-3 Enfants
-          ul.list-group.mb-2
-            - if @user.children.active.empty?
-              li.list-group-item
-                em Aucun enfant
-            - @user.children.active.each do |child|
-              li.list-group-item
-                .row
-                  .col
-                    => link_to child.full_name, organisation_user_path(current_organisation, child)
-                    = "(#{child.age})" if child.birth_date
+
+    .card
+      .card-body
+        h4.card-title.mb-3 Enfants
+        ul.list-group.mb-2
+          - if @user.children.active.empty?
+            li.list-group-item
+              em Aucun enfant
+          - @user.children.active.each do |child|
+            li.list-group-item
+              .row
+                .col
+                  => link_to child.full_name, organisation_child_path(current_organisation, child)
+                  = "(#{child.age})" if child.birth_date
+                  
+        .text-right
+          = link_to "Ajouter un enfant", new_organisation_user_child_path(current_organisation, @user), class: "btn btn-outline-primary"

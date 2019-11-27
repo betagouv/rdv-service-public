@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   include PgSearch::Model
+  include FullNameConcern
 
   attr_accessor :created_or_updated_by_agent
 
@@ -27,14 +28,6 @@ class User < ApplicationRecord
 
   before_save :set_email_to_null_if_blank
   before_save :set_organisation_ids_from_parent, if: :parent_id_changed?
-
-  def full_name
-    "#{first_name} #{last_name}"
-  end
-
-  def initials
-    full_name.split.first(2).map(&:first).join.upcase
-  end
 
   def age
     years = age_in_years
@@ -70,11 +63,15 @@ class User < ApplicationRecord
   end
 
   def soft_delete(organisation = nil)
-    organisation.present? ? organisations.delete(organisation) : update(organisation_ids: [], deleted_at: Time.zone.now)
+    if organisation.present? && !child?
+      organisations.delete(organisation)
+    else
+      update(organisation_ids: [], deleted_at: Time.zone.now)
+    end
   end
 
   def available_users_for_rdv
-    User.where(parent_id: id).or(User.where(id: id)).order('parent_id DESC NULLS FIRST', first_name: :asc)
+    User.where(parent_id: id).or(User.where(id: id)).order('parent_id DESC NULLS FIRST', first_name: :asc).active
   end
 
   def child?
@@ -118,11 +115,11 @@ class User < ApplicationRecord
   private
 
   def add_organisation_to_children(organisation)
-    children.each { |child| child.add_organisation(organisation) }
+    children.active.each { |child| child.add_organisation(organisation) }
   end
 
   def remove_organisation_to_children(organisation)
-    children.each { |child| child.organisations.delete(organisation) }
+    children.active.each { |child| child.organisations.delete(organisation) }
   end
 
   def set_organisation_ids_from_parent

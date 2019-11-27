@@ -43,7 +43,7 @@ Rails.application.routes.draw do
     get "/users/rdvs", to: 'users/rdvs#index', as: :authenticated_user_root
     get "/users/informations", to: 'users/users#edit'
     patch "users/informations", to: 'users/users#update'
-    resources :children, except: [:index, :destroy], controller: "users/children"
+    resources :children, except: [:index], controller: "users/children"
   end
 
   devise_for :agents, controllers: { invitations: 'agents/invitations', sessions: 'sessions' }
@@ -74,7 +74,9 @@ Rails.application.routes.draw do
           resources :rdvs, only: :index
           post :invite, on: :member
           get :link_to_organisation, on: :member
+          resources :children, only: [:create, :new]
         end
+        resources :children, except: [:create, :new]
 
         resources :rdvs, except: [:create, :new] do
           patch :status, on: :member

@@ -1,0 +1,38 @@
+- content_for :title do
+  | #{@user.full_name}
+
+- content_for :breadcrumb do
+  ol.breadcrumb.m-0
+    li.breadcrumb-item
+      = link_to 'Vos usagers', organisation_users_path(current_organisation)
+    li.breadcrumb-item
+      = link_to @user.parent.full_name, organisation_user_path(current_organisation, @user.parent)
+    li.breadcrumb-item.active #{@user.full_name}
+
+.row
+  .col-md-6
+    .card
+      .card-body
+        h4.card-title.mb-3 Informations de l'enfant
+        ul.list-unstyled.mb-5
+          - {first_name: @user.first_name, last_name: @user.last_name, birth_date: birth_date_and_age(@user) }.each do |k,v|
+              li.mb-2 
+                strong= "#{t("activerecord.attributes.user.#{k}")} : "
+                | #{v}
+        .row
+          .col.text-left
+            = link_to "Supprimer", organisation_child_path(current_organisation, @user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cet usager ?"}
+          .col.text-right
+            = link_to "Modifier", edit_organisation_child_path(current_organisation, @user), class: "btn btn-primary"
+
+    .card
+      .card-body
+        h4.card-title.mb-3 Informations parentales
+        = render 'agents/users/parent_information', user: @user.parent
+
+  .col-md-6
+    .card
+      .card-body
+        = render 'agents/rdvs/rdvs_stats', rdvs: @user.rdvs.active.where(organisation_id: current_organisation)
+        .text-right
+          = link_to 'Voir tous les RDV', organisation_user_rdvs_path(current_organisation, @user), class: 'btn btn-outline-primary'
