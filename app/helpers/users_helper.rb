@@ -12,4 +12,8 @@ module UsersHelper
   def new_user_tag(user)
     content_tag(:span, 'Nouveau', class: 'badge badge-info') unless user.rdvs.seen.past.any?
   end
+
+  def user_show_path(user)
+    user.child? ? organisation_child_path(current_organisation, user) : organisation_user_path(current_organisation, user)
+  end
 end
