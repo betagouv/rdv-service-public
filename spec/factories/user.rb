@@ -7,7 +7,7 @@ FactoryBot.define do
     email { generate(:user_email) }
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
-    phone_number { "0712121212" }
+    phone_number { "0658032519" }
     birth_date { Date.new(1990, 10, 12) }
     address { "20 avenue de Ségur, Paris" }
     organisations { [Organisation.first || create(:organisation)] }

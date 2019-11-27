@@ -20,8 +20,14 @@ Layout/AlignHash:
 Layout/ExtraSpacing:
   AllowForAlignment: true
 
+Metrics/AbcSize:
+  Enabled: false
+
 Metrics/BlockLength:
   Enabled: false
+
+Metrics/ClassLength:
+  Max: 150
 
 Metrics/LineLength:
   Enabled: false
@@ -57,7 +63,4 @@ Style/ClassAndModuleChildren:
   Enabled: false
 
 Style/FormatStringToken:
-  Enabled: false
-
-Metrics/AbcSize:
   Enabled: false
