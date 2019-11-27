@@ -34,7 +34,7 @@ describe Rdv, type: :model do
 
     context "motif with no notification" do
       let(:motif) { create(:motif, :no_notification) }
-      let(:rdv) { create(:rdv, motif: motif )}
+      let(:rdv) { create(:rdv, motif: motif) }
 
       it "should not be called" do
         expect(rdv).not_to receive(:send_notifications_to_users)
