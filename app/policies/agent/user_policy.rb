@@ -7,10 +7,6 @@ class Agent::UserPolicy < DefaultAgentPolicy
     same_org?
   end
 
-  def link_to_organisation?
-    true
-  end
-
   def invite?
     create?
   end
