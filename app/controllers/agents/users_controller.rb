@@ -5,15 +5,7 @@ class Agents::UsersController < AgentAuthController
   before_action :set_user, except: [:index, :new, :create, :link_to_organisation]
 
   def index
-    page = 1
-    @users = policy_scope(User).where(id: current_organisation.users.pluck(:id)).order(Arel.sql('LOWER(last_name)'))
-    if params[:page]
-      page = params[:page]
-    elsif params[:to_user]
-      index = @users.pluck(:id).index(params[:to_user].to_i)
-      page = index / Kaminari.config.default_per_page + 1
-    end
-    @users = @users.page(page)
+    @users = policy_scope(User).where(id: current_organisation.users.pluck(:id)).order(Arel.sql('LOWER(last_name)')).page(params[:page])
     filter_users if params[:user] && params[:user][:search]
   end
 
@@ -36,16 +28,12 @@ class Agents::UsersController < AgentAuthController
       @organisation = current_organisation
       @user.skip_confirmation!
       flash[:notice] = "L'usager a été créé." if @user.save
-      redirect_to organisation_users_path(@organisation, to_user: @user.id)
+      redirect_to organisation_user_path(@organisation, @user)
     end
   end
 
-  def link_to_organisation
-    @user = User.find(params.require(:id))
-    @user.add_organisation(current_organisation)
+  def show
     authorize(@user)
-    flash[:notice] = "L'usager a été associé à l'organisation #{current_organisation.name}"
-    redirect_to edit_organisation_user_path(current_organisation.id, @user.id)
   end
 
   def edit
@@ -57,20 +45,27 @@ class Agents::UsersController < AgentAuthController
     @user.created_or_updated_by_agent = true
     @user.skip_reconfirmation! if @user.encrypted_password.blank?
     flash[:notice] = "L'usager a été modifié." if @user.update(user_params)
-    respond_right_bar_with @user, location: organisation_users_path(current_organisation, to_user: @user.id)
+    respond_right_bar_with @user, location: organisation_user_path(current_organisation, @user)
   end
 
   def invite
     authorize(@user)
     @user.deliver_invitation
     flash[:notice] = "L'usager a été invité."
-    respond_right_bar_with @user, location: organisation_users_path(current_organisation, to_user: @user.id)
+    respond_right_bar_with @user, location: organisation_user_path(current_organisation, @user)
   end
 
   def destroy
     authorize(@user)
     flash[:notice] = "L'usager a été supprimé." if @user.soft_delete(current_organisation)
     redirect_to organisation_users_path(current_organisation)
+  end
+
+  def link_to_organisation
+    @user = User.find(params.require(:id))
+    authorize(current_organisation)
+    flash[:notice] = "L'usager a été associé à votre organisation." if @user.add_organisation(current_organisation)
+    redirect_to organisation_user_path(current_organisation, @user)
   end
 
   private
