@@ -43,7 +43,7 @@ class Rdv < ApplicationRecord
   def send_notifications_to_users
     users.map(&:user_to_notify).each do |user|
       RdvMailer.send_ics_to_user(self, user).deliver_later
-      TwilioTextMessenger.new(self, user).send if user.formated_phone
+      TwilioTextMessenger.new(:rdv_created, self, user).send_sms if user.formated_phone
     end
   end
 
@@ -58,6 +58,7 @@ class Rdv < ApplicationRecord
   def send_reminder
     users.map(&:user_to_notify).each do |user|
       RdvMailer.send_reminder(self, user).deliver_later
+      TwilioTextMessenger.new(:reminder, self, user).send_sms if user.formated_phone
     end
   end
 

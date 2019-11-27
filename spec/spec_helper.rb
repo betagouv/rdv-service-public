@@ -117,7 +117,7 @@ RSpec.configure do |config|
   #   Kernel.srand config.seed
 
   config.before(:each, type: ->(v) { v != :service }) do
-    allow_any_instance_of(TwilioTextMessenger).to receive(:send).and_return(Twilio::REST::Api::V2010::AccountContext::MessageInstance)
+    allow_any_instance_of(TwilioTextMessenger).to receive(:send_sms).and_return(Twilio::REST::Api::V2010::AccountContext::MessageInstance)
   end
 
   config.before(:each) do

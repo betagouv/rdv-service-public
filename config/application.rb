@@ -25,8 +25,6 @@ module Lapin
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
     config.action_mailer.preview_path = "#{Rails.root}/spec/mailers/previews"
 
-    config.active_job.queue_adapter = :delayed_job
-
     # Devise layout
     config.to_prepare do
       [Devise::RegistrationsController, Devise::SessionsController, Devise::ConfirmationsController, Devise::PasswordsController, Devise::InvitationsController].each do |controller|
