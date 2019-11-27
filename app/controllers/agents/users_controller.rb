@@ -27,8 +27,12 @@ class Agents::UsersController < AgentAuthController
     else
       @organisation = current_organisation
       @user.skip_confirmation!
-      flash[:notice] = "L'usager a été créé." if @user.save
-      redirect_to organisation_user_path(@organisation, @user)
+      if @user.save
+        flash[:notice] = "L'usager a été créé."
+        redirect_to organisation_user_path(@organisation, @user)
+      else
+        render :new
+      end
     end
   end
 
