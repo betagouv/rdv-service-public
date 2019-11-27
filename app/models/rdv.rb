@@ -17,7 +17,7 @@ class Rdv < ApplicationRecord
 
   after_commit :reload_uuid, on: :create
 
-  after_create :send_notifications_to_users
+  after_create :send_notifications_to_users, if: :notify?
   after_save :associate_users_with_organisation
 
   def agenda_path
@@ -60,6 +60,10 @@ class Rdv < ApplicationRecord
       RdvMailer.send_reminder(self, user).deliver_later
       TwilioTextMessenger.new(:reminder, self, user).send_sms if user.formated_phone
     end
+  end
+
+  def notify?
+    !motif.disable_notifications_for_users
   end
 
   def to_step_params
