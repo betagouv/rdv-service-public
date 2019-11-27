@@ -33,12 +33,6 @@ class Users::ChildrenController < UserAuthController
     end
   end
 
-  def destroy
-    authorize(@user)
-    flash[:notice] = "L'enfant a été supprimé." if @user.soft_delete(current_organisation)
-    redirect_to organisation_user_path(current_organisation, @user.parent)
-  end
-
   private
 
   def set_user

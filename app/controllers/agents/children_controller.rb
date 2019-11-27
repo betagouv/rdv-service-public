@@ -1,7 +1,7 @@
 class Agents::ChildrenController < AgentAuthController
+  before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   def show
-    @user = policy_scope(User).find(params[:id])
     authorize(@user)
   end
 
@@ -27,12 +27,10 @@ class Agents::ChildrenController < AgentAuthController
   end
 
   def edit
-    @user = policy_scope(User).find(params[:id])
     authorize(@user)
   end
 
   def update
-    @user = policy_scope(User).find(params[:id])
     authorize(@user)
     if @user.update(user_params)
       flash[:notice] = "Les informations de l'enfant #{@user.full_name} ont été mises à jour."
@@ -42,7 +40,18 @@ class Agents::ChildrenController < AgentAuthController
     end
   end
 
+  def destroy
+    authorize(@user)
+    flash[:notice] = "L'enfant a été supprimé." if @user.soft_delete
+    redirect_to organisation_user_path(current_organisation, @user.parent)
+  end
+
   private
+
+  def set_user
+    @user = policy_scope(User).find(params[:id])
+  end
+
   def user_params
     params.require(:user).permit(:first_name, :last_name, :birth_date)
   end
