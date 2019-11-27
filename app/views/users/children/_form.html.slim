@@ -7,7 +7,9 @@
   = f.input :birth_date, as: :date, html5: true
   .row
     .col.text-left
-      / = link_to "Supprimer", users_informations_path, class: "btn btn-link"
+      - if user.persisted?
+        = link_to "Supprimer", child_path(@user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cet enfant ?"}
+
     .col.text-right
       = link_to "Annuler", users_informations_path, class: "btn btn-link"
       = f.button :submit

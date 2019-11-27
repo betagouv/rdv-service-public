@@ -1,5 +1,5 @@
 class Users::ChildrenController < UserAuthController
-  before_action :set_user, only: [:edit, :update]
+  before_action :set_user, only: [:edit, :update, :destroy]
 
   def new
     @user = User.new(parent_id: current_user.id)
@@ -31,6 +31,12 @@ class Users::ChildrenController < UserAuthController
     else
       render :edit
     end
+  end
+
+  def destroy
+    authorize(@user)
+    flash[:notice] = "L'enfant a été supprimé." if @user.soft_delete
+    redirect_to users_informations_path
   end
 
   private

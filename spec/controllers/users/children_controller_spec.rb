@@ -126,4 +126,23 @@ RSpec.describe Users::ChildrenController, type: :controller do
       end
     end
   end
+
+  describe "DELETE #destroy" do
+    subject { delete :destroy, params: { id: child.id } }
+    let(:now) { "21/07/2019 08:22".to_time }
+
+    before { travel_to(now) }
+    after { travel_back }
+
+    it "soft deletes the child" do
+      expect do
+        subject
+      end.to change { child.reload.deleted_at }.from(nil).to(now)
+    end
+
+    it "redirects to user edit" do
+      subject
+      expect(response).to redirect_to(users_informations_path)
+    end
+  end
 end
