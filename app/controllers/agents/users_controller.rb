@@ -21,14 +21,18 @@ class Agents::UsersController < AgentAuthController
     @user.invited_by = current_agent
     @user.created_or_updated_by_agent = true
     authorize(@user)
-    if (@user_to_compare = User.find_by(email: @user.email))
+    if @user.email.present? && (@user_to_compare = User.find_by(email: @user.email))
       @user_not_in_organisation = @user_to_compare.organisation_ids.exclude?(current_organisation.id)
       render :compare
     else
       @organisation = current_organisation
       @user.skip_confirmation!
-      flash[:notice] = "L'usager a été créé." if @user.save
-      redirect_to organisation_user_path(@organisation, @user)
+      if @user.save
+        flash[:notice] = "L'usager a été créé."
+        redirect_to organisation_user_path(@organisation, @user)
+      else
+        render :new
+      end
     end
   end
 
