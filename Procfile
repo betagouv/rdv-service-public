@@ -1,3 +1,3 @@
 web: bundle exec puma
-worker: rake jobs:work
+jobs: bin/delayed_job run
 release: bundle exec rake db:migrate
