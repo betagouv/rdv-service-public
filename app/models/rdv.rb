@@ -13,6 +13,7 @@ class Rdv < ApplicationRecord
   scope :done, -> { seen + excused }
   #  scope :future, -> { to_be + waiting }
   scope :future, -> { where('starts_at > ?', Time.zone.now) }
+  scope :tomorrow, -> { where(starts_at: DateTime.tomorrow...DateTime.tomorrow + 1.day) }
 
   after_commit :reload_uuid, on: :create
 
@@ -42,7 +43,7 @@ class Rdv < ApplicationRecord
   def send_notifications_to_users
     users.map(&:user_to_notify).each do |user|
       RdvMailer.send_ics_to_user(self, user).deliver_later
-      TwilioTextMessenger.new(self, user).send if user.formated_phone
+      TwilioTextMessenger.new(:rdv_created, self, user).send_sms if user.formated_phone
     end
   end
 
@@ -52,6 +53,13 @@ class Rdv < ApplicationRecord
 
   def send_ics_to_users
     users.each { |user| RdvMailer.send_ics_to_user(self, user.user_to_notify).deliver_later }
+  end
+
+  def send_reminder
+    users.map(&:user_to_notify).each do |user|
+      RdvMailer.send_reminder(self, user).deliver_later
+      TwilioTextMessenger.new(:reminder, self, user).send_sms if user.formated_phone
+    end
   end
 
   def notify?

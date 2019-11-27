@@ -1,34 +1,54 @@
 class TwilioTextMessenger
-  attr_reader :user, :rdv, :from
+  attr_reader :user, :rdv, :from, :type
 
-  def initialize(rdv, user)
+  def initialize(type, rdv, user)
+    @type = type
     @user = user
     @rdv = rdv
     @from = ENV["TWILIO_PHONE_NUMBER"]
   end
 
-  def send
+  def send_sms
     twilio_client = Twilio::REST::Client.new
+    body = send(@type)
     begin
       twilio_client.messages.create(
         from: @from,
         to: @user.formated_phone,
-        body: rdv_created_content
+        body: body
       )
     rescue StandardError => e
       return e
     end
   end
 
-  def rdv_created_content
-    message = "RDV Solidarités - Bonjour,\n"
-    message += "RDV #{@rdv.motif.name} #{I18n.l(@rdv.starts_at, format: :human)} a été confirmé.\n"
-    message += if @rdv.motif.by_phone
-                 "RDV Téléphonique.\n"
-               else
-                 "Adresse: #{@rdv.location}.\n"
-               end
+  private
+
+  def sms_header
+    "RDV Solidarités - Bonjour,\n"
+  end
+
+  def sms_footer
+    message = if @rdv.motif.by_phone
+                "RDV Téléphonique.\n"
+              else
+                "Adresse: #{@rdv.location}.\n"
+              end
     message += "Infos et annulation: #{@rdv.organisation.phone_number}" if @rdv.organisation.phone_number
+    message
+  end
+
+  def rdv_created
+    message = sms_header
+    message += "RDV #{@rdv.motif.name} #{I18n.l(@rdv.starts_at, format: :human)} a été confirmé.\n"
+    message += sms_footer
+    message
+  end
+
+  def reminder
+    message = sms_header
+    message += "Rappel de votre RDV #{@rdv.motif.name} demain à #{@rdv.starts_at.strftime("%H:%M")}.\n"
+    message += sms_footer
     message
   end
 end

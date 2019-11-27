@@ -28,6 +28,8 @@ gem 'pundit', '~> 2.0'
 # Jobs
 gem 'delayed_job_active_record', '~> 4.1.4'
 gem 'delayed_job_web'
+gem 'delayed_cron_job'
+gem 'daemons'
 
 # Form
 gem 'simple_form', '~> 5.0'
