@@ -25,6 +25,7 @@ class User < ApplicationRecord
                   using: { tsearch: { prefix: true } }
 
   scope :active, -> { where(deleted_at: nil) }
+  scope :order_by_last_name, -> { order(Arel.sql('LOWER(last_name)')) }
 
   before_save :set_email_to_null_if_blank
   before_save :set_organisation_ids_from_parent, if: :parent_id_changed?

@@ -5,6 +5,12 @@ module UsersHelper
     "#{l(user.birth_date)} - #{user.age}"
   end
 
+  def full_name_and_birthdate(user)
+    label = user.full_name
+    label += " - #{birth_date_and_age(user)}" if user.birth_date
+    label
+  end
+
   def formatted_phone_number(user)
     user.phone_number.chars.each_slice(2).map(&:join).join(' ') unless user.phone_number.blank?
   end
