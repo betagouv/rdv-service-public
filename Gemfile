@@ -34,6 +34,7 @@ gem 'daemons'
 # Form
 gem 'simple_form', '~> 5.0'
 gem 'image_processing', '~> 1.8'
+gem 'phonelib'
 
 # Front
 gem 'sass-rails', '>= 6.0'
@@ -51,6 +52,9 @@ gem 'icalendar', '~> 2.5'
 # Mailing
 gem 'sendgrid', '~> 1.2.4'
 gem 'premailer-rails'
+
+# SMS
+gem 'twilio-ruby', '~> 5.29.1'
 
 # Ops
 gem "sentry-raven"

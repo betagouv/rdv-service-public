@@ -287,6 +287,7 @@ GEM
     pg_search (2.3.0)
       activerecord (>= 4.2)
       activesupport (>= 4.2)
+    phonelib (0.6.39)
     premailer (1.11.1)
       addressable
       css_parser (>= 1.6.0)
@@ -439,6 +440,10 @@ GEM
     turbolinks (5.2.0)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
+    twilio-ruby (5.29.1)
+      faraday (~> 0.9)
+      jwt (>= 1.5, <= 2.5)
+      nokogiri (>= 1.6, < 2.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     uglifier (4.1.20)
@@ -512,6 +517,7 @@ DEPENDENCIES
   parallel_tests
   pg (>= 0.18, < 2.0)
   pg_search (~> 2.3)
+  phonelib
   premailer-rails
   puma (~> 3.11)
   pundit (~> 2.0)
@@ -532,6 +538,7 @@ DEPENDENCIES
   sprockets-rails
   tod (~> 2.2)
   turbolinks (~> 5)
+  twilio-ruby (~> 5.29.1)
   uglifier (>= 1.3.0)
   web-console (>= 3.3.0)
   webdrivers (~> 4.0)
