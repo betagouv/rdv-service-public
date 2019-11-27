@@ -30,9 +30,9 @@ RSpec.describe Agents::ChildrenController, type: :controller do
         end.to change(parent.children, :count).from(0).to(1)
       end
 
-      it "redirects to the parent edit page" do
+      it "redirects to the parent show page" do
         subject
-        expect(response).to redirect_to(edit_organisation_user_path(organisation_id, parent.id))
+        expect(response).to redirect_to(organisation_user_path(organisation_id, parent.id))
       end
     end
 
