@@ -64,6 +64,8 @@ RSpec.describe Agents::UsersController, type: :controller do
     end
 
     context "with invalid params" do
+      let!(:user) { create(:user, email: nil, created_or_updated_by_agent: true) }
+
       let(:attributes) do
         {
           first_name: "Michel",
@@ -72,6 +74,11 @@ RSpec.describe Agents::UsersController, type: :controller do
 
       it { expect { subject }.not_to change(User, :count) }
       it { expect(subject).to render_template(:new) }
+
+      it do
+        subject
+        expect(assigns(:user_to_compare)).to be_nil
+      end
     end
   end
 end
