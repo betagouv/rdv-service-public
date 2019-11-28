@@ -71,8 +71,9 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 
 Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité du code.
 
-- Faire tourner tous les linters à la suite des tests : `bin/rake ci`
-- Demander à Rubocop de corriger les problèmes qu'il rencontre : `rubocop -a
+- Faire tourner tous les linters : `bin/rake ci`
+- Demander à Rubocop de corriger les problèmes qu'il rencontre : `bin/rubocop -a
+- Demander à Brakeman de passer en revue les vulnérabilités : `bin/brakeman -I
 
 ### Régénérer les binstubs
 
