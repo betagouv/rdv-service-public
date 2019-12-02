@@ -43,7 +43,7 @@ class Rdv < ApplicationRecord
   def send_notifications_to_users
     users.map(&:user_to_notify).each do |user|
       RdvMailer.send_ics_to_user(self, user).deliver_later if user.email.present?
-      TwilioTextMessenger.new(:rdv_created, self, user).send_sms if user.formated_phone
+      TwilioSenderJob.perform_later(:rdv_created, self, user) if user.formated_phone
     end
   end
 
@@ -51,14 +51,10 @@ class Rdv < ApplicationRecord
     !cancelled? && starts_at > 4.hours.from_now
   end
 
-  def send_ics_to_users
-    users.each { |user| RdvMailer.send_ics_to_user(self, user.user_to_notify).deliver_later }
-  end
-
   def send_reminder
     users.map(&:user_to_notify).each do |user|
       RdvMailer.send_reminder(self, user).deliver_later if user.email.present?
-      TwilioTextMessenger.new(:reminder, self, user).send_sms if user.formated_phone
+      TwilioSenderJob.perform_later(:reminder, self, user) if user.formated_phone
     end
   end
 
