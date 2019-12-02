@@ -83,3 +83,9 @@ production:
   database: lapin_production
   username: lapin
   password: <%= ENV['LAPIN_DATABASE_PASSWORD'] %>
+
+staging:
+  <<: *default
+  database: lapin_staging
+  username: lapin
+  password: <%= ENV['LAPIN_DATABASE_PASSWORD'] %>
