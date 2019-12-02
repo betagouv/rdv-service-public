@@ -4,7 +4,7 @@ places({
   countries: ['FR'],
   templates: {
     value: function(suggestion) {
-      return suggestion.name + ', ' + suggestion.postcode + ' ' + suggestion.city ;
+      return [suggestion.name, suggestion.postcode, suggestion.city].filter(Boolean).join(" ");
     },
   },
   container: document.querySelector('.places-js-container')
