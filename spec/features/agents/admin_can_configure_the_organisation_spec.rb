@@ -1,13 +1,17 @@
 describe "Admin can configure the organisation" do
   let!(:pmi) { create(:service, name: 'PMI') }
+  let!(:service_social) { create(:service, name: 'Service social') }
   let!(:agent_admin) { create(:agent, :admin, service: pmi) }
   let!(:agent_user) { create(:agent) }
-  let!(:motif) { create(:motif) }
+  let!(:motif_libelle) { create(:motif_libelle, name: "Motif 1") }
+  let!(:motif_libelle2) { create(:motif_libelle, name: "Motif 2") }
+  let!(:motif_libelle3) { create(:motif_libelle, name: "Motif 3", service: service_social) }
+  let!(:motif) { create(:motif, name: "Motif 1") }
   let!(:user) { create(:user) }
   let!(:lieu) { create(:lieu) }
   let!(:secretariat) { create(:service, :secretariat) }
   let(:le_nouveau_lieu) { build(:lieu) }
-  let(:le_nouveau_motif) { build(:motif) }
+  let(:le_nouveau_motif) { build(:motif, name: "Motif 2") }
   let(:la_nouvelle_org) { build(:organisation) }
 
   before do
@@ -84,33 +88,39 @@ describe "Admin can configure the organisation" do
     expect(page).to have_content('L\'organisation a été modifiée.')
   end
 
-  scenario "CRUD on motifs" do
+  scenario "CRUD on motifs", js: true do
     click_link "Vos motifs"
     expect_page_title("Vos motifs")
 
     click_link motif.name
-    expect_page_title("Modifier le motif")
-    fill_in :motif_name, with: 'Le nouveau motif'
+    expect(page).to have_content("Modifier le motif")
+    expect(page.find_by_id('motif_name')).to have_content(motif.name)
+    # fill_in :motif_name, with: 'Le nouveau motif'
+    select(motif_libelle2.name, from: :motif_name)
+    page.execute_script "$('.slimscroll-menu').scrollTop(10000)"
     click_button('Modifier')
-
+    expect(page).to have_content(motif_libelle2.name)
     expect_page_title("Vos motifs")
-    click_link 'Le nouveau motif'
 
+    click_link le_nouveau_motif.name
+    expect(page).to have_content("Modifier le motif")
+    page.execute_script "$('.slimscroll-menu').scrollTop(10000)"
     click_link('Supprimer')
+    alert = page.driver.browser.switch_to.alert
+    alert.accept
     expect_page_title("Vos motifs")
     expect_page_with_no_record_text("Vous n'avez pas encore créé de motif.")
 
     click_link 'Créer un motif', match: :first
-    expect_page_title("Nouveau motif")
-    fill_in 'Nom', with: le_nouveau_motif.name
-
+    expect(page).to have_content("Nouveau motif")
     ## Check secretariat is unavailable
-    expect(page.all('select#motif_service_id option').map(&:value)).to match_array ["", pmi.id.to_s]
-    select(agent_admin.service.name, from: :motif_service_id)
+    expect(page.all('select#motif_service_id option').map(&:value)).to match_array ["", pmi.id.to_s, service_social.id.to_s]
+    select(service_social.name, from: :motif_service_id)
+    expect(page).to have_select('motif[name]', with_options: ['', motif_libelle3.name], wait: 10)
+    select(motif_libelle3.name, from: :motif_name)
     fill_in 'Couleur', with: le_nouveau_motif.color
+    page.execute_script "$('.slimscroll-menu').scrollTop(10000)"
     click_button 'Créer'
-
-    expect_page_title("Vos motifs")
-    click_link le_nouveau_motif.name
+    expect(page).to have_link(motif_libelle3.name)
   end
 end
