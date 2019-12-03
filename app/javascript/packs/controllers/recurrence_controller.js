@@ -4,7 +4,7 @@ export default class extends Controller {
   static targets = [ "hasRecurrence", "recurrenceComputed", "interval", "every", "on", "until", "firstDay", "monthly" ]
 
   setOn (model) {
-    this.onTargets.forEach(elt => elt.checked = model.on.includes(elt.value));
+    this.onTargets.forEach(elt => elt.checked = (typeof(model.on) == "object") && model.on.includes(elt.value));
   }
 
   getOn () {
