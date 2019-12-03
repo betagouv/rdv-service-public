@@ -19,7 +19,6 @@ function get_motifs(serviceId, initialValue = null) {
   $.get(
     "/motif_libelles?service_id=" + serviceId,
     function (data) {
-      console.log('service_id', serviceId, 'libelle', data.motif_libelles);
       motifInput.html('')
       motifInput.append(new Option('', ''));
       data.motif_libelles.forEach((e) => {
