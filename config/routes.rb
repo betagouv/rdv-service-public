@@ -62,7 +62,8 @@ Rails.application.routes.draw do
         resources :plage_ouvertures, except: :show
         resources :absences, except: :show
 
-        resources :agents, only: [:index, :destroy] do
+        get "agent", to: "agents#show", as: "agent_with_id_in_query"
+        resources :agents, only: [:index, :show, :destroy] do
           post :reinvite, on: :member
           collection do
             resources :full_subscriptions, only: [:new, :create]

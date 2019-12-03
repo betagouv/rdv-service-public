@@ -16,6 +16,7 @@ class Agents::OrganisationsController < AgentAuthController
     @organisation = policy_scope(Organisation).find(params[:id])
     @date = params[:date] ? Date.parse(params[:date]) : nil
     authorize(@organisation)
+    redirect_to organisation_agent_path(@organisation, current_agent)
   end
 
   def edit

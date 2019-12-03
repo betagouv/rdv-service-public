@@ -7,6 +7,13 @@ class Agents::AgentsController < AgentAuthController
     @invited_agents = agents.invitation_not_accepted.created_by_invite
   end
 
+  def show
+    @agent = policy_scope(Agent).find(params[:id])
+    authorize(@agent)
+    @organisation = current_organisation
+    @date = params[:date] ? Date.parse(params[:date]) : nil
+  end
+
   def destroy
     @agent = policy_scope(Agent).find(params[:id])
     authorize(@agent)
