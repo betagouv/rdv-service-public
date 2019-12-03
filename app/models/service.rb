@@ -1,6 +1,7 @@
 class Service < ApplicationRecord
   has_many :agents, dependent: :nullify
   has_many :motifs, dependent: :destroy
+  has_many :motif_libelles, dependent: :destroy
   validates :name, presence: true, uniqueness: { case_sensitive: false }
   SECRETARIAT = 'Secrétariat'.freeze
 
