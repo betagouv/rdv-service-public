@@ -27,13 +27,13 @@ describe "Agent can manage recurrence on plage d'ouverture" do
     click_button('Modifier')
 
     # check if everything is ok in db
-    expect(plage_ouverture.reload.recurrence.to_hash).to eq({
+    expect(plage_ouverture.reload.recurrence.to_hash).to eq(
       day: [1, 2, 3, 4, 5, 6],
       every: :week,
       interval: 1,
-      on: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday"],
-      until: Time.zone.local(2019, 12, 30),
-    })
+      on: %w[monday tuesday wednesday thursday friday saturday],
+      until: Time.zone.local(2019, 12, 30)
+    )
 
     # reload page to check if form is filled correctly
     visit edit_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
@@ -56,12 +56,12 @@ describe "Agent can manage recurrence on plage d'ouverture" do
     click_button('Modifier')
 
     # check if everything is ok in db
-    expect(plage_ouverture.reload.recurrence.to_hash).to eq({
-      day: {3=>[2]},
+    expect(plage_ouverture.reload.recurrence.to_hash).to eq(
+      day: { 3 => [2] },
       every: :month,
       interval: 1,
-      until: Time.zone.local(2019, 12, 30),
-    })
+      until: Time.zone.local(2019, 12, 30)
+    )
 
     # reload page to check if form is filled correctly
     visit edit_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
@@ -71,7 +71,6 @@ describe "Agent can manage recurrence on plage d'ouverture" do
     expect(page).to have_text('Tous les 2ème mercredi du mois')
     expect(find_field('recurrence-until').value).to eq '2019-12-30'
   end
-
 
   def expect_checked(element_selector)
     expect(page).to have_field(element_selector, checked: true)
