@@ -19,7 +19,7 @@
           span Votre planning
           span.menu-arrow
         ul.side-nav-second-level aria-expanded="false"
-          li=link_to 'Vos plages d\'ouverture', organisation_plage_ouvertures_path(current_organisation)
+          li=link_to 'Vos plages d\'ouverture', organisation_agent_plage_ouvertures_path(current_organisation, current_agent)
           li=link_to 'Vos absences', organisation_agent_absences_path(current_organisation, current_agent)
 
         - if current_agent.admin?

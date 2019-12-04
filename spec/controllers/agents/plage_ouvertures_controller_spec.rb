@@ -11,7 +11,7 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
 
   describe "GET #index" do
     it "returns a success response" do
-      get :index, params: { organisation_id: organisation_id }
+      get :index, params: { organisation_id: organisation_id, agent_id: agent.id }
       expect(response).to be_successful
     end
 
@@ -26,7 +26,7 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
         sign_in agent
       end
 
-      subject { get :index, params: { format: "json", organisation_id: organisation_id, start: start_date, end: end_date } }
+      subject { get :index, params: { format: "json", organisation_id: organisation_id, agent_id: agent.id, start: start_date, end: end_date } }
 
       before do
         subject
@@ -134,7 +134,7 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
 
       it "redirects to the created plage_ouverture" do
         post :create, params: { organisation_id: organisation_id, plage_ouverture: valid_attributes }
-        expect(response).to redirect_to(organisation_plage_ouvertures_path(organisation_id))
+        expect(response).to redirect_to(organisation_agent_plage_ouvertures_path(organisation_id, plage_ouverture.agent_id))
       end
     end
 
@@ -176,7 +176,7 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
       end
 
       it "redirects to the plage_ouverture" do
-        expect(response).to redirect_to(organisation_plage_ouvertures_path(organisation_id))
+        expect(response).to redirect_to(organisation_agent_plage_ouvertures_path(organisation_id, plage_ouverture.agent_id))
       end
     end
 
@@ -209,7 +209,7 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
 
     it "redirects to the plage_ouvertures list" do
       delete :destroy, params: { organisation_id: organisation_id, id: plage_ouverture.to_param }
-      expect(response).to redirect_to(organisation_plage_ouvertures_path(organisation_id))
+      expect(response).to redirect_to(organisation_agent_plage_ouvertures_path(organisation_id, plage_ouverture.agent_id))
     end
   end
 end
