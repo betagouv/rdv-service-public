@@ -14,5 +14,8 @@
           .fa.fa-phone>
           | RDV Téléphonique
       li.list-group-item
+        .fa.fa-user>
+        = users_to_sentence(rdv)
+      li.list-group-item
         i.fa.fa-info-circle>
         = rdv.motif.name
