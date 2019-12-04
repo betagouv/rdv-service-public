@@ -60,7 +60,7 @@ Rails.application.routes.draw do
         resources :lieux, except: :show
         resources :motifs, except: :show
         resources :plage_ouvertures, except: :show
-        resources :absences, except: :show
+        resources :absences, except: [:index, :show]
 
         get "agent", to: "agents#show", as: "agent_with_id_in_query"
         resources :agents, only: [:index, :show, :destroy] do
@@ -71,6 +71,7 @@ Rails.application.routes.draw do
           end
 
           resources :rdvs, only: :index
+          resources :absences, only: :index
         end
 
         resources :users do
