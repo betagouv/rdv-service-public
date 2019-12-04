@@ -1,5 +1,4 @@
 class Agent::AbsencePolicy < DefaultAgentPolicy
-
   class Scope < Scope
     def resolve
       if @context.agent.admin?
