@@ -2,15 +2,11 @@ footer.main-footer
   .container
     .row
       .col-lg-12.col-md-6
-        = link_to 'Lapin.beta.gouv.fr', root_path, class: 'brand'
+        = link_to 'Rdv-solidarites.fr', root_path, class: 'brand'
     .row
       .col-lg-4.col-md-6
         ul.contact-info.list-unstyled
-          li= mail_to "lapins@beta.gouv.fr"
-        ul.social-icons.list-inline
-          li.list-inline-item
-            = link_to 'https://twitter.com/LapinApp', title: 'Twitter', target: '_blank' do 
-              i.fa.fa-twitter
+          li= mail_to "contact@rdv-solidarites.fr"
       .col-lg-4.col-md-6
         ul.links.list-unstyled
           li= link_to 'Beta gouv', 'https://beta.gouv.fr/', title: 'Beta.gouv.fr', target: '_blank'
@@ -25,5 +21,5 @@ footer.main-footer
             |Made with&nbsp;
             i.fa.fa-heart
             |&nbsp;by 
-            = link_to 'Lapin', root_path, target: '_blank' 
+            = link_to 'Rdv Solidarités', root_path, target: '_blank' 
             |&nbsp;© #{Time.zone.today.year}
