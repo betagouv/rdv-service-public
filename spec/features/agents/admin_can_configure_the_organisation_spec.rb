@@ -95,7 +95,6 @@ describe "Admin can configure the organisation" do
     click_link motif.name
     expect(page).to have_content("Modifier le motif")
     expect(page.find_by_id('motif_name')).to have_content(motif.name)
-    # fill_in :motif_name, with: 'Le nouveau motif'
     select(motif_libelle2.name, from: :motif_name)
     page.execute_script "$('.slimscroll-menu').scrollTop(10000)"
     click_button('Modifier')
