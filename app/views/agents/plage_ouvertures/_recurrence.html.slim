@@ -17,4 +17,4 @@
       span data-target="recurrence.monthly" Tous les X du mois
 
     .until-select
-      = n.input :until, as: :date, html5: true, required: false, label: "Date de fin (si aucune laisser vide)", input_html: { id: "recurrence-source", data: { target: "recurrence.until", action: "recurrence#updateRecurrence" } }
+      = n.input :until, as: :date, html5: true, required: false, label: "Date de fin (si aucune laisser vide)", input_html: { id: "recurrence-until", data: { target: "recurrence.until", action: "recurrence#updateRecurrence" } }

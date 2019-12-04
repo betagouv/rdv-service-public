@@ -4,7 +4,7 @@
     = f.input :title
     = f.association :lieu, collection: policy_scope(Lieu), label_method: :full_name, include_blank: false
     .recurrence-select.recurrence-select--weekly data-controller="recurrence"
-      = date_input(f, :first_day, nil, input_html: {id: "recurrence-source", data: { target: "recurrence.firstDay", action: "recurrence#updateRecurrence" }})
+      = f.input :first_day, as: :date, html5: true, input_html: { id: "recurrence-source", data: { target: "recurrence.firstDay", action: "recurrence#updateRecurrence" } }
       .row
         .col
           = f.input :start_time, as: :select, collection: time_collections, selected: plage_ouverture.start_time&.strftime("%H:%M"), include_blank: false
