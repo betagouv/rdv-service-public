@@ -30,7 +30,7 @@ class Agents::RdvsController < AgentAuthController
   def update
     authorize(@rdv)
     flash[:notice] = 'Le rendez-vous a été modifié.' if @rdv.update(rdv_params)
-    respond_right_bar_with @rdv.agenda_path
+    respond_right_bar_with @rdv, location: @agenda.agenda_path
   end
 
   def status
