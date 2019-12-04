@@ -5,7 +5,11 @@ class Agent::RdvPolicy < DefaultAgentPolicy
 
   class Scope < Scope
     def resolve
-      scope.joins(:agents).where(organisation_id: @context.organisation.id, agents: { id: @context.agent.id })
+      if @context.agent.admin?
+        scope.where(organisation_id: @context.organisation.id)
+      else
+        scope.joins(:agents).where(organisation_id: @context.organisation.id, agents: { id: @context.agent.id })
+      end
     end
   end
 end

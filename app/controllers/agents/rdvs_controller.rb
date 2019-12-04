@@ -5,6 +5,8 @@ class Agents::RdvsController < AgentAuthController
 
   def index
     @rdvs = policy_scope(Rdv).active
+    @agent = policy_scope(Agent).find(params[:agent_id])
+    @rdvs = @rdvs.joins(:agents).where(agents: { id: @agent })
     if params[:user_id].present?
       @user = policy_scope(User).find(params[:user_id])
       @rdvs = @user.rdvs.active.includes(:organisation).where(organisation_id: current_organisation).page(params[:page])

@@ -69,6 +69,8 @@ Rails.application.routes.draw do
             resources :full_subscriptions, only: [:new, :create]
             resources :permissions, only: [:edit, :update]
           end
+
+          resources :rdvs, only: :index
         end
 
         resources :users do
@@ -79,7 +81,7 @@ Rails.application.routes.draw do
         end
         resources :children, except: [:create, :new]
 
-        resources :rdvs, except: [:create, :new] do
+        resources :rdvs, except: [:index, :create, :new] do
           patch :status, on: :member
         end
 
