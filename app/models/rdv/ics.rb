@@ -23,7 +23,7 @@ class Rdv::Ics
       e.uid         = rdv.uuid
       e.sequence    = rdv.sequence
       e.ip_class    = "PRIVATE"
-      e.organizer   = "noreply@lapins.beta.gouv.fr"
+      e.organizer   = "noreply@rdv-solidarites.fr"
       e.attendee    = user.email
     end
 

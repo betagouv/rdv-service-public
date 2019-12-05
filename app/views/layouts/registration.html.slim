@@ -3,7 +3,7 @@ html
   head
     meta content=("text/html; charset=UTF-8") http-equiv="Content-Type"
     meta name="viewport" content="width=device-width, initial-scale=1.0"
-    title Lapin
+    title RDV Solidarités
     = csrf_meta_tags
     = csp_meta_tag
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
@@ -44,4 +44,4 @@ html
                 .mt-3.text-center
                   = yield :footer
           footer.footer.footer-alt
-            | © Lapin #{Time.zone.today.year}
+            | © RDV Solidarités #{Time.zone.today.year}
