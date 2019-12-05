@@ -251,5 +251,8 @@ footer.main-footer {
   font-size: 2rem;
   margin-top: -70px;
   font-weight: bold;
+  @include media-breakpoint-down(md) { 
+    margin-top: 0;
+  }
 }
 
