@@ -5,8 +5,10 @@ class Agents::RdvsController < AgentAuthController
 
   def index
     @rdvs = policy_scope(Rdv).active
-    @agent = policy_scope(Agent).find(params[:agent_id])
-    @rdvs = @rdvs.joins(:agents).where(agents: { id: @agent })
+    if params[:agent_id].present?
+      @agent = policy_scope(Agent).find(params[:agent_id])
+      @rdvs = @rdvs.joins(:agents).where(agents: { id: @agent })
+    end
     if params[:user_id].present?
       @user = policy_scope(User).find(params[:user_id])
       @rdvs = @user.rdvs.active.includes(:organisation).where(organisation_id: current_organisation).page(params[:page])
@@ -28,7 +30,7 @@ class Agents::RdvsController < AgentAuthController
   def update
     authorize(@rdv)
     flash[:notice] = 'Le rendez-vous a été modifié.' if @rdv.update(rdv_params)
-    respond_right_bar_with @rdv, location: @rdv.agenda_path
+    respond_right_bar_with @rdv, location: @rdv.agenda_path_for_agent(current_agent)
   end
 
   def status
@@ -47,7 +49,7 @@ class Agents::RdvsController < AgentAuthController
       flash[:error] = "Une erreur s’est produite, le rendez-vous n’a pas pu être annulé."
       Raven.capture_exception(Exception.new("Deletion failed for rdv : #{@rdv.id}"))
     end
-    redirect_to @rdv.agenda_path
+    redirect_to @rdv.agenda_path_for_agent(current_agent)
   end
 
   private

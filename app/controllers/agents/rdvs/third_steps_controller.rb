@@ -14,7 +14,7 @@ class Agents::Rdvs::ThirdStepsController < AgentAuthController
       @rdv = @third_step.rdv
       authorize(@rdv)
       @rdv.save
-      redirect_to @rdv.agenda_path, notice: "Le rendez-vous a été créé."
+      redirect_to @rdv.agenda_path_for_agent(current_agent), notice: "Le rendez-vous a été créé."
     else
       render 'new'
     end

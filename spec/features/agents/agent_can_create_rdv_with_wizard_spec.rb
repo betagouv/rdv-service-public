@@ -6,8 +6,7 @@ describe "Agent can create a Rdv with wizard" do
 
   before do
     login_as(agent, scope: :agent)
-    visit authenticated_agent_root_path
-    click_link('Créer un rendez-vous')
+    visit new_organisation_first_step_path(organisation_id: agent.organisation_ids.first)
   end
 
   scenario "default" do
@@ -47,7 +46,7 @@ describe "Agent can create a Rdv with wizard" do
     expect(rdv.motif).to eq(motif)
     expect(rdv.duration_in_min).to eq(35)
     expect(rdv.starts_at).to eq(Time.zone.local(2019, 10, 12, 14, 15))
-    expect(page).to have_current_path(rdv.agenda_path)
+    expect(page).to have_current_path(rdv.agenda_path_for_agent(agent))
   end
 
   def select_agent(agent)
