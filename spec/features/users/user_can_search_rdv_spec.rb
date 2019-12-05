@@ -16,7 +16,7 @@ describe "User can search for rdvs" do
       expect_page_h1("Prenez rendez-vous en ligne avec\nvotre Maison Départementale des Solidarités")
       fill_in('search_where', with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
       page.execute_script("document.querySelector('#search_departement').value = '92'")
-      click_button("Choisir cette adresse")
+      click_button("Rechercher")
 
       # Step 2
       expect_page_h1("Prenez rendez-vous en ligne avec\nvotre Maison Départementale des Solidarités du 92")

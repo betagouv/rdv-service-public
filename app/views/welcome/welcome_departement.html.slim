@@ -1,13 +1,13 @@
 - content_for :header
-  section#hero.hero.hero-home.p-5
+  section#hero.hero.hero-home.py-5
     .container
-      .row.text-center.text-white
-        .col-md-12
-          h1.mb-5
-            | Prenez rendez-vous en ligne avec
+      .row
+        .col-lg-10.justify-content-md-center
+          h1.mb-3.text-white
+            | Prenez 
+            span.text-secondary rendez-vous en ligne 
             br
-            | votre Maison Départementale des Solidarités du #{@departement}
-          p.hero-text Protection Maternelle Infantile (PMI), prévention éducative, cohésion sociale et protection de l'enfance
-      .row.justify-content-md-center.mb-5
-        .col-md-10
-          = render 'search_form'
+            | votre maison départementale des solidarités du 
+            span.text-secondary #{@departement}
+          .mb-5= render 'search_form'
+

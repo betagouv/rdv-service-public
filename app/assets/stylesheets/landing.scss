@@ -8,20 +8,8 @@
 @import "mixins/buttons";
 @import "mixins/background-variant";
 
-@import "components/buttons";
 @import "components/backgrounds";
 @import "components/types";
-
-.divider {
-  width: 100px;
-  height: 3px;
-  background-color: $primary;
-  margin: 2rem auto;
-}
-
-section {
-  padding: 150px 0;
-}
 
 h1 {
   font-size: 3rem;
@@ -34,11 +22,6 @@ a {
 
 p {
   line-height: 1.7rem;
-}
-
-.hero-text {
-  font-size: 1.125rem;
-  line-height: 1.5rem;
 }
 
 section header {
@@ -258,3 +241,15 @@ footer.main-footer {
   border: 1px solid transparent;
   border-radius: 50px;
 }
+
+.number-circle {
+  $radius: 70px;
+  width: $radius;
+  line-height: $radius;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 2rem;
+  margin-top: -70px;
+  font-weight: bold;
+}
+

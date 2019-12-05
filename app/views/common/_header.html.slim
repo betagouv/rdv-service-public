@@ -7,13 +7,10 @@ header.header
         span
         span
         span
-
       #navbarSupportedContent.collapse.navbar-collapse
         ul.navbar-nav.ml-auto.align-items-start.align-items-lg-center
           li.list-inline-item
-            = link_to accueil_mds_path, class: 'btn btn-outline-white' do 
-              i.fa.fa-user-md
-              |  Vous êtes un professionnel ?
+            = link_to 'Espace agent', accueil_mds_path, class: 'btn btn-link text-white'
           li.list-inline-item
             = sign_in_user_button
 

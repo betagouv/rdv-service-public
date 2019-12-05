@@ -4,12 +4,13 @@
   }
 }
 
-.bg-gray {
-  background-color: #f5f5f5;
-}
-
 .bg-light {
   background-color: darken(#F6F7FA, 2%) !important;
+}
+
+.bg-lightblue {
+  background-color: $lightblue;
+  color: $blue;
 }
 
 .bg-dark {
@@ -20,28 +21,14 @@
 }
 
 .bg-primary {
-  color: white;
   background-color: $primary !important;
-  p.hero-text { color: white;}
-  h1, h2, h3, h4, h5 { color: white; }
 }
-
 
 a.bg-primary {
   &:focus, &:hover {
     background-color: #2d6ade !important;
   }
 }
-
-.bg-gradient {
-  background-image: linear-gradient(to bottom right, $primary, $blue) !important;
-}
-
-.bg-gradient-pink {
-  background-image: linear-gradient(to bottom right, $pink, $danger) !important;
-}
-
-
 
 .bg-negative {
   margin-top: -80px;

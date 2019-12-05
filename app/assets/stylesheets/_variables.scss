@@ -5,11 +5,11 @@
 //
 
 // stylelint-disable
-$gray-100: #f1f3fa;
+$gray-100: #e6e6e6;
 $gray-200: #e3eaef;
-$gray-600: #98a6ad;
+$gray-600: #949494;
 $gray-700: #6c757d;
-$gray-900: #313a46;
+$gray-900: #313131;
 
 $grays: ();
 $grays: map-merge((
@@ -24,21 +24,23 @@ $grays: map-merge((
   "900": $gray-900
 ), $grays);
 
-$blue:       #2c8ef8;
+$blue:       #222E5C;
+$lightblue:  #afe0e5;
 $indigo:     #727cf5;
 $purple:     #6b5eae;
 $pink:       #ff679b;
 $red:        #fa5c7c;
-$orange:     #fd7e14;
+$orange:     #ff7d00;
 $yellow:     #ffbc00;
 $green:      #0acf97;
 $teal:       #02a8b5;
-$cyan:       #39afd1;
+$cyan:       #87e2bd;
 
 
 $colors: ();
 $colors: map-merge((
   "blue":       $blue,
+  "lightblue":  $lightblue,
   "indigo":     $indigo,
   "purple":     $purple,
   "pink":       $pink,
@@ -50,12 +52,12 @@ $colors: map-merge((
   "cyan":       $cyan,
   "white":      $white,
   "gray":       $gray-600,
-  "gray-dark":  $gray-800
+  "gray-dark":  $gray-900
 ), $colors);
 
 $white:         white;
-$primary:       $indigo;
-$secondary:     $gray-700;
+$primary:       $blue;
+$secondary:     $orange;
 $success:       $green;
 $info:          $cyan;
 $warning:       $yellow;
@@ -427,7 +429,7 @@ $shadow:                0px 0px 35px 0px rgba(154, 161, 171, 0.15);
 $shadow-lg:             0 0 45px 0 rgba(0, 0, 0, 0.12);
 
 //Background left-sidebar
-$bg-leftbar:            linear-gradient(135deg, darken($primary,15%) 0%, darken($primary,0%) 100%);
+$bg-leftbar:            $primary;
 $bg-leftbar-light:    #f1f3fa;
 $bg-topnav:             linear-gradient(to bottom, #8f75da, #727cf5);
 

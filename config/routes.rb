@@ -95,7 +95,7 @@ Rails.application.routes.draw do
     end
   end
 
-  { disclaimer: 'mentions_legales', terms: 'cgv' }.each do |k, v|
+  { disclaimer: 'mentions_legales', terms: 'cgv', mds: 'mds' }.each do |k, v|
     get v => "static_pages##{k}"
   end
 
