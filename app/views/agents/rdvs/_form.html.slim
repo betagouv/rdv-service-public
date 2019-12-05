@@ -1,5 +1,6 @@
 = simple_form_for([rdv.organisation, rdv], remote: request.xhr?, data: { rightbar: true }) do |f|
   = render partial: 'layouts/model_errors', locals: { model: rdv }
+  = hidden_field '', :callback_path, value: params[:callback_path]
   = f.input :name
   = f.association :motif, disabled: true
   = f.input :location, input_html: { class: "places-js-container" }

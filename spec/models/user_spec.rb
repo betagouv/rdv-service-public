@@ -149,4 +149,24 @@ describe User, type: :model do
       end
     end
   end
+
+  describe "#available_rdvs(organisation_id)" do
+    let!(:organisation1) { create(:organisation) }
+    let!(:organisation2) { create(:organisation) }
+    let!(:parent1) { create(:user) }
+    let!(:child1) { create(:user, parent_id: parent1.id) }
+    let!(:parent2) { create(:user) }
+
+    before do
+      [parent1, child1, parent2].each do |user|
+        create(:rdv, users: [user], organisation: organisation1)
+      end
+      create(:rdv, users: [parent1, child1], organisation: organisation1)
+    end
+
+    it { expect(parent1.available_rdvs(organisation1.id)).to match_array((parent1.rdvs + child1.rdvs).uniq) }
+    it { expect(child1.available_rdvs(organisation1.id)).to match_array child1.rdvs }
+    it { expect(parent2.available_rdvs(organisation1.id)).to match_array parent2.rdvs }
+    it { expect(parent1.available_rdvs(organisation2.id)).to be_empty }
+  end
 end

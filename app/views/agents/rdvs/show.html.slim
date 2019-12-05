@@ -1,5 +1,6 @@
 - content_for :title do
   | Résumé du rendez-vous
+  = params[:callback_path]
 
 p.card-text
   strong Nom :&nbsp;
@@ -31,8 +32,8 @@ p.card-text
   .col.text-right
     ul.list-inline.m-0
       - unless @rdv.cancelled?
-        li.list-inline-item= link_to "Supprimer", organisation_rdv_path(@rdv.organisation, @rdv), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Un email va être envoyé à l'usager pour le notifier de l'annulation. Êtes-vous sûr de vouloir supprimer ce rendez-vous ?"}
-        li.list-inline-item= link_to "Modifier", edit_organisation_rdv_path(@rdv.organisation, @rdv), class: "btn btn-outline-primary", data: { rightbar: true }
+        li.list-inline-item= link_to "Supprimer", organisation_rdv_path(@rdv.organisation, @rdv, callback_path: params[:callback_path]), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Un email va être envoyé à l'usager pour le notifier de l'annulation. Êtes-vous sûr de vouloir supprimer ce rendez-vous ?"}
+        li.list-inline-item= link_to "Modifier", edit_organisation_rdv_path(@rdv.organisation, @rdv, callback_path: params[:callback_path]), class: "btn btn-outline-primary", data: { rightbar: true }
 hr
 .row
   .col
