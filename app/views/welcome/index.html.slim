@@ -1,54 +1,46 @@
 - content_for :header
-  section#hero.hero.hero-home.p-5
+  section#hero.hero.hero-home.py-5
     .container
-      .row.text-center.text-white
-        .col-md-12
-          h1.mb-5
-            | Prenez rendez-vous en ligne avec
-            br
-            | votre Maison Départementale des Solidarités
-          p.hero-text Protection Maternelle Infantile (PMI), prévention éducative, cohésion sociale et protection de l'enfance
-      .row.justify-content-md-center.mb-5
-        .col-md-10
-          = render 'search_form'
       .row
-        .col-md-12.text-center
-          = link_to "Découvrir", "#discover", class: 'btn btn-link text-white link-scroll mb-5'
-
-section#discover.bg-light.p-4
+        .col-lg-10.justify-content-md-center
+          h1.mb-4.text-white
+            | Prenez 
+            span.text-secondary rendez-vous en ligne 
+            br
+            | avec votre maison départementale des solidarités
+          .mb-5= render 'search_form'
+      h3.text-white.text-center Comment ça marche ? 
+section.bg-negative.mt-3.mb-5
   .container
+    .row
+      .col-lg-3
+        .text-center
+          .d-flex.justify-content-center
+            .number-circle.bg-lightblue 1
+          h5.text-primary.mt-3 Choisir votre adresse
+          p.m-0 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      .col-lg-3
+        .text-center
+          .d-flex.justify-content-center
+            .number-circle.bg-lightblue 2
+          h5.text-primary.mt-3 Choisir un service
+          p.m-0 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      .col-lg-3
+        .text-center
+          .d-flex.justify-content-center
+            .number-circle.bg-lightblue 3
+          h5.text-primary.mt-3 Choisir un motif
+          p.m-0 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      .col-lg-3
+        .text-center
+          .d-flex.justify-content-center
+            .number-circle.bg-lightblue 4
+          h5.text-primary.mt-3 Choisir un créneau
+          p.m-0 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+section.bg-lightblue.p-5
+  .container 
     header
-      .text-center.w-75.m-auto
-        h3.mb-2 A quoi servent les Maisons Départementales des Solidarités (MDS) ?
-      .divider
-    .row.align-items-center.mb-4
-      .col-lg-8
-        h4.text-danger L'insertion sociale
-        .small-divider.bg-primary
-        p.lead Les professionnels des MDS aident les publics en difficulté (bénéficiaires de minima sociaux, demandeurs d'emploi) dans leurs démarches administratives ou la constitution de dossiers. En cas de gros problèmes financiers ou de difficultés à se loger, ils peuvent vous aider dans la recherche de solutions d'urgence provisoires : hébergement d'urgence, démarches auprès des banques...
-      .col-lg-4
-        = holder_tag '400x400', 'Illustration', 'lava', class: 'img-fluid p-3'
-
-    .row.align-items-center.mb-4
-      .col-lg-4
-        = holder_tag '400x400', 'Illustration', 'social', class: 'img-fluid p-3'
-      .col-lg-8
-        h4.text-danger L'accompagnement des futures et jeunes mères
-        .small-divider.bg-primary
-        p.lead Avant et après une naissance, les équipes des MDS peuvent orienter les femmes vers l'un des centres de protection maternelle et infantile (PMI). Ceux-ci proposent des consultations gratuites : suivi de grossesse, suivi médical des enfants de 0 à 6 ans (examens, pesée, vaccinations), conseils de puériculture et de diététique, les centres de PMI sont aussi des lieux d'information sur la vie affective et sexuelle, la contraception et les infections sexuellement transmissibles.
-
-    .row.align-items-center.mb-4
-      .col-lg-8
-        h4.text-danger La prévention et la protection de l'enfance
-        .small-divider.bg-primary
-        p.lead Dans le cadre de l'aide sociale à l'enfance (ASE), les travailleurs sociaux et médico-sociaux des MDS offrent un soutien matériel, éducatif et psychologique aux familles qui rencontrent des difficultés dans l'éducation de leurs enfants : aides éducatives à domicile, accueil des jeunes. Des activités de soutien à la parentalité sont également organisées pour permettre aux parents d'exprimer leurs difficultés et rompre leur isolement.
-      .col-lg-4
-        = holder_tag '400x400', 'Illustration', 'sky', class: 'img-fluid p-3'
-
-    .row.align-items-center.mb-4
-      .col-lg-4
-        = holder_tag '400x400', 'Illustration', 'vine', class: 'img-fluid p-3'
-      .col-lg-8
-        h4.text-danger La prise en charge des personnes âgées et handicapées
-        .small-divider.bg-primary
-        p.lead Quelles sont les solutions d'accueil existantes dans le département en faveur des personnes âgées et handicapées dépendantes ? Les travailleurs sociaux et médico-sociaux des MDS sont là pour vous orienter vers les structures compétentes. Ils vous conseillent aussi sur les possibilités d'aide au maintien à domicile ou l'hébergement en établissement spécialisé.
+      h3.mb-2 Vous êtes un agent ? 
+      p.lead Nous nous engageons à réduire le nombre de rendez-vous manqués dans les services sociaux départementaux.
+      = link_to 'En savoir plus', accueil_mds_path, class: 'btn btn-primary'

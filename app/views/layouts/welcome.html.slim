@@ -9,8 +9,7 @@ html
           .col-md-12
             .my-5= yield :title
 
-
-    .bg-gradient
+    .bg-primary
       - if current_user.present?
         = render "common/header_user_logged"
       - else

@@ -4,22 +4,10 @@ footer.main-footer
       .col-lg-12.col-md-6
         = link_to 'rdv-solidarites.fr', root_path, class: 'brand'
     .row
-      .col-lg-4.col-md-6
-        ul.contact-info.list-unstyled
-          li= mail_to "contact@rdv-solidarites.fr"
-      .col-lg-4.col-md-6
-        ul.links.list-unstyled
-          li= link_to 'Beta gouv', 'https://beta.gouv.fr/', title: 'Beta.gouv.fr', target: '_blank'
-      .col-lg-4.col-md-6
-        ul.links.list-unstyled
-          li= link_to 'Mentions Légales', mentions_legales_path
-  .copyrights
-    .container
-      .row
-        .col-md-12.text-center
-          p.template
-            |Made with&nbsp;
-            i.fa.fa-heart
-            |&nbsp;by 
-            = link_to 'Rdv Solidarités', root_path, target: '_blank' 
-            |&nbsp;© #{Time.zone.today.year}
+      .col-md-12
+        ul.links.list-inline.mb-5
+          li.list-inline-item.mr-5= mail_to "contact@rdv-solidarites.fr"
+          li.list-inline-item.mr-5= link_to "Espace professionel", accueil_mds_path
+          li.list-inline-item.mr-5= link_to "Qu'est-ce qu'une MDS ?", mds_path
+          li.list-inline-item.mr-5= link_to "Mentions Légales", mentions_legales_path
+          li.list-inline-item RDV Solidarités © #{Time.zone.today.year}

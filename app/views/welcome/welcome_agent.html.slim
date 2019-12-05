@@ -1,38 +1,36 @@
 - content_for :header
-  section#hero.hero.hero-home.pb-0.pt-5
+  section#hero.hero.hero-home.pb-0.py-5
     .container
       .row
-        .col-md-12.text-white
+        .col-md-12
           h1.mb-3 Gérez les rendez-vous de votre MDS
-          p.hero-text Cet espace est réservé aux professionnels des Maisons Départementales des Solidarités
           .mb-5= sign_in_agent_button
-      .row
-        .col-md-12.text-center
-          = link_to "Comment ça marche ?", "#discover", class: 'btn btn-outline-white link-scroll mb-5'
-.bg-white.p-5
+
+section.py-5
   .container
     .text-center.w-75.m-auto
       h2 Notre mission ?
-      h3.mb-2
+      h3.mb-5
         |Réduire le nombre de rendez-vous manqués
         br dans les services sociaux départementaux
     .divider
     .row
       .col-md-4
-        h4.font-16 Divisez le nombre de lapins
+        h4.font-16 Diviser le nombre de lapins
         h4 x4
       .col-md-4
-        h4.font-16 Divisez le temps de prise de RDV
+        h4.font-16 Diviser le temps de prise de RDV
         h4
           | x3
       .col-md-4
-        h4.font-16 Diminuez les délais d'attente pour l'usager
+        h4.font-16 Diminuer les délais d'attente pour l'usager
         h4
           | x2
-section#discover.bg-light
+
+section.bg-lightblue.py-5
   .container
     .text-center.w-75.m-auto
-      h2.mb-2 Comment ça marche ?
+      h2.mb-5 Comment ça marche ?
     .divider
     .row
       .col-md-4.text-center
@@ -53,4 +51,4 @@ section#discover.bg-light
     .row
       .col-md-12.text-center.mt-5
         p.lead Vous êtes intéressés pour votre Maison des Solidarités ?
-        = mail_to "contact@rdv-solidarites.fr", "Contactez-nous", class: 'btn btn-primary'
+        = mail_to "contact@rdv-solidarites.fr", "Contactez-nous", class: 'btn btn-secondary'
