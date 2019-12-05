@@ -31,7 +31,7 @@ class Agents::RdvsController < AgentAuthController
     authorize(@rdv)
     flash[:notice] = 'Le rendez-vous a été modifié.' if @rdv.update(rdv_params)
     location = callback_params[:callback_path] || @rdv.agenda_path
-    respond_right_bar_with @rdv, location: location
+    respond_right_bar_with @rdv, location: location.to_s
   end
 
   def status
@@ -51,7 +51,7 @@ class Agents::RdvsController < AgentAuthController
       Raven.capture_exception(Exception.new("Deletion failed for rdv : #{@rdv.id}"))
     end
     location = callback_params[:callback_path] || @rdv.agenda_path
-    redirect_to location
+    redirect_to location.to_s
   end
 
   private
