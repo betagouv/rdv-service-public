@@ -2,7 +2,7 @@ class Agents::AgentsController < AgentAuthController
   respond_to :html, :json
 
   def index
-    agents = policy_scope(Agent).active.order(Arel.sql('LOWER(last_name)'))
+    agents = policy_scope(Agent).active.order_by_last_name
     @complete_agents = agents.complete.includes(:service).page(params[:page])
     @invited_agents = agents.invitation_not_accepted.created_by_invite
   end
