@@ -1,5 +1,6 @@
 = simple_form_for [absence.organisation, absence], remote: request.xhr?, data: { rightbar: true } do |f|
   = render partial: 'layouts/model_errors', locals: { model: absence }
+  = f.hidden_field :agent_id
   = f.input :title
   = datetime_input f, :starts_at
   = datetime_input f, :ends_at

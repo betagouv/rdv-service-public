@@ -110,7 +110,7 @@ RSpec.describe Agents::AbsencesController, type: :controller do
 
   describe "GET #new" do
     it "returns a success response" do
-      get :new, params: { organisation_id: organisation_id }
+      get :new, params: { organisation_id: organisation_id, agent_id: agent.id }
       expect(response).to be_successful
     end
   end
@@ -143,6 +143,7 @@ RSpec.describe Agents::AbsencesController, type: :controller do
     context "with invalid params" do
       let(:invalid_attributes) do
         {
+          agent_id: agent.id,
           starts_at: "12/09/2019 16:00",
           ends_at: "12/09/2019 15:00",
         }
