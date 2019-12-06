@@ -13,7 +13,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
     let!(:rdv1) { create(:rdv, agents: [agent], starts_at: Time.zone.parse("21/07/2019 08:00")) }
     let!(:rdv2) { create(:rdv, agents: [agent], starts_at: Time.zone.parse("21/07/2019 09:00")) }
 
-    subject { get(:index, params: { organisation_id: organisation_id, start: start_time, end: end_time }, as: :json) }
+    subject { get(:index, params: { organisation_id: organisation_id, agent_id: agent.id, start: start_time, end: end_time }, as: :json) }
 
     before do
       subject
@@ -76,7 +76,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
 
       it "redirects to the agenda" do
         subject
-        expect(response).to redirect_to(rdv.agenda_path)
+        expect(response).to redirect_to(rdv.agenda_path_for_agent(agent))
       end
     end
 

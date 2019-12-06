@@ -4,7 +4,7 @@ class Agents::AbsencesController < AgentAuthController
   before_action :set_absence, only: [:edit, :update, :destroy]
 
   def index
-    absences = policy_scope(Absence)
+    absences = policy_scope(Absence).where(agent_id: params[:agent_id])
     respond_to do |f|
       f.json { @absences = absences.in_time_range(date_range_params).order(:starts_at) }
       f.html { @absences = absences.includes(:organisation).page(params[:page]) }
@@ -28,20 +28,19 @@ class Agents::AbsencesController < AgentAuthController
     @absence.agent = current_agent
     authorize(@absence)
     flash[:notice] = "L'absence a été créée." if @absence.save
-    respond_right_bar_with @absence, location: organisation_absences_path(@absence.organisation_id)
+    respond_right_bar_with @absence, location: organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
   end
 
   def update
     authorize(@absence)
     flash[:notice] = "L'absence a été modifiée." if @absence.update(absence_params)
-    respond_right_bar_with @absence, location: organisation_absences_path(@absence.organisation_id)
+    respond_right_bar_with @absence, location: organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
   end
 
   def destroy
     authorize(@absence)
-
     flash[:notice] = "L'absence a été supprimée." if @absence.destroy
-    redirect_to organisation_absences_path(@absence.organisation_id)
+    redirect_to organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
   end
 
   private

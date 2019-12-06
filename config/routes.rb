@@ -61,15 +61,20 @@ Rails.application.routes.draw do
       resources :organisations, except: :destroy do
         resources :lieux, except: :show
         resources :motifs, except: :show
-        resources :plage_ouvertures, except: :show
-        resources :absences, except: :show
+        resources :plage_ouvertures, except: [:index, :show]
+        resources :absences, except: [:index, :show]
 
-        resources :agents, only: [:index, :destroy] do
+        get "agent", to: "agents#show", as: "agent_with_id_in_query"
+        resources :agents, only: [:index, :show, :destroy] do
           post :reinvite, on: :member
           collection do
             resources :full_subscriptions, only: [:new, :create]
             resources :permissions, only: [:edit, :update]
           end
+
+          resources :rdvs, only: :index
+          resources :absences, only: :index
+          resources :plage_ouvertures, only: :index
         end
 
         resources :users do
@@ -80,7 +85,7 @@ Rails.application.routes.draw do
         end
         resources :children, except: [:create, :new]
 
-        resources :rdvs, except: [:create, :new] do
+        resources :rdvs, except: [:index, :create, :new] do
           patch :status, on: :member
         end
 

@@ -3,6 +3,10 @@ class Agent::AgentPolicy < Agent::AdminPolicy
     create?
   end
 
+  def show?
+    @context.agent.admin? || @context.agent == @record
+  end
+
   def reinvite?
     invite?
   end

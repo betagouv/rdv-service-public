@@ -21,8 +21,10 @@ class Rdv < ApplicationRecord
   after_create :send_notifications_to_users, if: :notify?
   after_save :associate_users_with_organisation
 
-  def agenda_path
-    Rails.application.routes.url_helpers.organisation_path(organisation, date: starts_at.to_date)
+  def agenda_path_for_agent(agent)
+    agent_for_agenda = agents.include?(agent) ? agent : agents.first
+
+    Rails.application.routes.url_helpers.organisation_agent_path(organisation, agent_for_agenda, date: starts_at.to_date)
   end
 
   def ends_at
