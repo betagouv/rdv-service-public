@@ -8,16 +8,10 @@ module WelcomeHelper
   end
 
   def sign_in_agent_button
-    link_to 'Se connecter', new_agent_session_path, class: 'btn btn-primary'
+    link_to 'Se connecter', new_agent_session_path, class: 'btn btn-outline-white'
   end
 
   def sign_in_user_button
     link_to 'Se connecter', new_user_session_path, class: 'btn btn-white'
-  end
-
-  def link_logo
-    link_to root_path do
-      holder_tag '200x50', 'Lapin Logo', class: 'img-fluid'
-    end
   end
 end

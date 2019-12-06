@@ -1,9 +1,9 @@
 .left-side-menu
   .slimscroll-menu
-    .text-center.m-2
-      .collapse-menu.float-right.font-18.ml-1
-        i.fa.fa-angle-left
+    .d-flex.align-items-center.m-2
       = link_logo
+      .collapse-menu.mx-2
+        i.fa.fa-2x.fa-angle-left
     ul.metismenu.side-nav.mt-5
       li.side-nav-item
         = link_to organisation_path(current_organisation), class: 'side-nav-link' do
