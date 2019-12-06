@@ -19,7 +19,7 @@
                 th Service
                 th Durée par défaut
             tbody
-              = render partial: 'motif', collection: @motifs
+              = render @motifs
           .d-flex.justify-content-center id="users-pagination"
             = paginate @motifs, theme: 'twitter-bootstrap-4'
         - else

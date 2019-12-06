@@ -22,6 +22,7 @@ import { Layout } from 'packs/components/layout';
 import { Modal } from 'packs/components/modal';
 import { Rightbar } from 'packs/components/rightbar';
 import { Rdvstatus } from 'packs/components/rdvstatus';
+import { PopulateLibelle } from 'packs/components/populate-libelle';
 import { Analytic } from 'packs/components/analytic.js.erb';
 import { PlacesInput } from 'packs/components/places-input.js.erb';
 import 'packs/components/calendar';
@@ -86,6 +87,8 @@ $(document).on('turbolinks:load', function() {
   });
 
   new PlacesInput(document.querySelector('.places-js-container'));
+
+  new PopulateLibelle();
 
   $(".select2-input").select2({
     theme: "bootstrap4"

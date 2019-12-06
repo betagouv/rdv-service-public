@@ -2,10 +2,8 @@ require("@rails/ujs").start()
 require("turbolinks").start()
 
 import { PlacesInput } from 'packs/components/places-input.js.erb';
-import { Scroller } from 'packs/components/scroller';
 import 'packs/components/browser-detection';
 import 'select2/dist/js/select2.min.js';
-
 import 'bootstrap';
 
 $(document).on('turbolinks:load', function() {
@@ -20,7 +18,6 @@ $(document).on('turbolinks:load', function() {
     }
 
   }
-  new Scroller();
   $(".select2-input").select2({
     theme: "bootstrap4"
   });

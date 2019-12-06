@@ -8,15 +8,11 @@ module WelcomeHelper
   end
 
   def sign_in_agent_button
-    link_to new_agent_session_path, class: 'btn btn-primary' do
-      content_tag(:i, '', class: 'fa fa-user-md').html_safe + ' Se connecter'
-    end
+    link_to 'Se connecter', new_agent_session_path, class: 'btn btn-primary'
   end
 
   def sign_in_user_button
-    link_to new_user_session_path, class: 'btn btn-danger' do
-      content_tag(:i, '', class: 'fa fa-user').html_safe + ' Se connecter'
-    end
+    link_to 'Se connecter', new_user_session_path, class: 'btn btn-white'
   end
 
   def link_logo

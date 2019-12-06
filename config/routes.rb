@@ -22,6 +22,7 @@ Rails.application.routes.draw do
     resources :rdvs
     resources :plage_ouvertures
     resources :absences
+    resources :motif_libelles
     root to: "agents#index"
 
     authenticate :super_admin do
@@ -56,6 +57,7 @@ Rails.application.routes.draw do
   authenticated :agent do
     root to: 'agents/organisations#index', as: :authenticated_agent_root
     scope module: "agents" do
+      resources :motif_libelles, only: :index
       resources :organisations, except: :destroy do
         resources :lieux, except: :show
         resources :motifs, except: :show
@@ -98,7 +100,7 @@ Rails.application.routes.draw do
     end
   end
 
-  { disclaimer: 'mentions_legales', terms: 'cgv' }.each do |k, v|
+  { disclaimer: 'mentions_legales', terms: 'cgv', mds: 'mds' }.each do |k, v|
     get v => "static_pages##{k}"
   end
 

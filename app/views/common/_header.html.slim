@@ -4,16 +4,11 @@ header.header
       = holder_tag '200x50', 'Lapin Logo',class: 'd-block'
     - if root_path?
       button.navbar-toggler.navbar-toggler-right aria-controls="navbarSupportedContent" aria-expanded="false" aria-label=("Toggle navigation") data-target="#navbarSupportedContent" data-toggle="collapse" type="button"
-        span
-        span
-        span
-
+        i.fa.fa-bars.text-white
       #navbarSupportedContent.collapse.navbar-collapse
         ul.navbar-nav.ml-auto.align-items-start.align-items-lg-center
           li.list-inline-item
-            = link_to accueil_mds_path, class: 'btn btn-outline-white' do 
-              i.fa.fa-user-md
-              |  Vous êtes un professionel ?
+            = link_to 'Espace agent', accueil_mds_path, class: 'btn btn-link text-white'
           li.list-inline-item
             = sign_in_user_button
 
