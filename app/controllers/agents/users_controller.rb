@@ -5,7 +5,7 @@ class Agents::UsersController < AgentAuthController
   before_action :set_user, except: [:index, :new, :create, :link_to_organisation]
 
   def index
-    @users = policy_scope(User).where(id: current_organisation.users.pluck(:id)).order(Arel.sql('LOWER(last_name)')).page(params[:page])
+    @users = policy_scope(User).order_by_last_name.page(params[:page])
     filter_users if params[:user] && params[:user][:search]
   end
 
