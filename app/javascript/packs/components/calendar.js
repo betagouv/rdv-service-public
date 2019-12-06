@@ -18,7 +18,9 @@ document.addEventListener('turbolinks:load', function() {
         alert("Une erreur s'est produite lors de la récupération des données du calendrier.");
       },
       defaultDate: JSON.parse(calendarEl.dataset.defaultDate),
-      defaultView: 'timeGridFourDay',
+      defaultView: 'timeGridWeek',
+      weekends: false,
+      height: "auto",
       selectable: true,
       select: function(info) {
         let startDate = moment(info.start);
@@ -36,15 +38,7 @@ document.addEventListener('turbolinks:load', function() {
         window.location = Routes.new_organisation_first_step_path(params);
       },
       header: {
-         center: 'dayGridMonth,timeGridWeek,timeGridFourDay'
-      },
-      views: {
-        timeGridFourDay: {
-          type: 'timeGrid',
-          duration: { days: 4 },
-          buttonText: '4 jours',
-          slotDuration: '00:15:00'
-        }
+         center: 'dayGridMonth,timeGridWeek'
       },
       businessHours: {
         // days of week. an array of zero-based day of week integers (0=Sunday)
@@ -52,7 +46,7 @@ document.addEventListener('turbolinks:load', function() {
         startTime: '07:00',
         endTime: '19:00',
       },
-      minTime: '06:00:00',
+      minTime: '07:00:00',
       maxTime: '20:00:00',
       eventRender: function (info) {
         if(info.event.extendedProps.past == true) {
