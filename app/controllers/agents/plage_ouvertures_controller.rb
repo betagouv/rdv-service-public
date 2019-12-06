@@ -4,6 +4,7 @@ class Agents::PlageOuverturesController < AgentAuthController
   before_action :set_plage_ouverture, only: [:edit, :update, :destroy]
 
   def index
+    @agent = policy_scope(Agent).find(params[:agent_id])
     plage_ouvertures = policy_scope(PlageOuverture).where(agent_id: params[:agent_id])
     respond_to do |f|
       f.json { @plage_ouverture_occurences = plage_ouvertures.flat_map { |po| po.occurences_for(date_range_params).map { |occurence| [po, occurence] } }.sort_by(&:second) }
@@ -12,7 +13,8 @@ class Agents::PlageOuverturesController < AgentAuthController
   end
 
   def new
-    @plage_ouverture = PlageOuverture.new(organisation: current_organisation, agent: current_agent, first_day: Time.zone.now, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(12))
+    @agent = Agent.find(params[:agent_id])
+    @plage_ouverture = PlageOuverture.new(organisation: current_organisation, agent: @agent, first_day: Time.zone.now, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(12))
     authorize(@plage_ouverture)
     respond_right_bar_with @plage_ouverture
   end
@@ -25,7 +27,6 @@ class Agents::PlageOuverturesController < AgentAuthController
   def create
     @plage_ouverture = PlageOuverture.new(plage_ouverture_params)
     @plage_ouverture.organisation = current_organisation
-    @plage_ouverture.agent_id = current_agent.id
     authorize(@plage_ouverture)
     flash[:notice] = "Plage d'ouverture créé." if @plage_ouverture.save
     respond_right_bar_with @plage_ouverture, location: organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent)
@@ -50,7 +51,7 @@ class Agents::PlageOuverturesController < AgentAuthController
   end
 
   def plage_ouverture_params
-    params.require(:plage_ouverture).permit(:title, :first_day, :start_time, :end_time, :lieu_id, :recurrence, motif_ids: [])
+    params.require(:plage_ouverture).permit(:title, :agent_id, :first_day, :start_time, :end_time, :lieu_id, :recurrence, motif_ids: [])
   end
 
   def date_range_params

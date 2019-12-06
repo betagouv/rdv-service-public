@@ -108,7 +108,7 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
 
   describe "GET #new" do
     it "returns a success response" do
-      get :new, params: { organisation_id: organisation_id }
+      get :new, params: { organisation_id: organisation_id, agent_id: agent.id }
       expect(response).to be_successful
     end
   end
@@ -141,6 +141,7 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
     context "with invalid params" do
       let(:invalid_attributes) do
         {
+          agent_id: agent.id,
           title: "test plage_ouverture",
         }
       end

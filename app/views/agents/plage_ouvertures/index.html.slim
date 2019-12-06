@@ -1,8 +1,15 @@
 - content_for :title do
-  | Vos plages d'ouverture
+  - if current_agent == @agent
+    | Vos plages d'ouverture
+  - else
+    | Plages d'ouverture de #{@agent.full_name_and_service}
 
 - content_for :breadcrumb do
-  = add_button 'Créer une plage d\'ouverture', new_organisation_plage_ouverture_path(current_organisation), header: true
+  - if current_agent.admin?
+    .d-inline-block.mr-2
+      = select_tag :id, options_for_select(policy_scope(Agent).complete.active.order_by_last_name.map { |agent| [agent.full_name, agent.id, { 'data-url': organisation_agent_plage_ouvertures_path(current_organisation, agent.id)}]}, selected: @agent.id), class: "select2-input", onchange: "window.location.href = $('.select2-input option:selected').attr('data-url')"
+
+  = link_to 'Créer une plage d\'ouverture', new_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-white align-bottom", data: { rightbar: true }
 
 .card
   .card-body
@@ -26,4 +33,4 @@
             i.fa.fa-circle.fa-stack-2x.text-primary
             i.fa.fa-calendar-o.fa-stack-1x.text-white
     .text-center
-      = add_button 'Créer une plage d\'ouverture', new_organisation_plage_ouverture_path(current_organisation)
+      = add_button 'Créer une plage d\'ouverture', new_organisation_agent_plage_ouverture_path(current_organisation, @agent.id)

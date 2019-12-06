@@ -7,7 +7,8 @@
 - content_for :breadcrumb do
 
   - if current_agent.admin?
-    = select_agent(@agent, organisation_agent_with_id_in_query_path)
+    = form_tag(organisation_agent_with_id_in_query_path, method: "get", class: "d-inline-block mr-2") do
+      = select_tag :id, options_from_collection_for_select(policy_scope(Agent).complete.active.order_by_last_name, 'id', 'full_name', @agent.id), class: "select2-input", onchange: 'this.form.submit()'
 
   = link_to "Trouver un créneau", organisation_agent_searches_path(@organisation), class: "btn btn-outline-white align-bottom"
 
