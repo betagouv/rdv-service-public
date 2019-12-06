@@ -8,7 +8,9 @@
     = link_to 'Voir vos RDV passés', users_rdvs_path(past: true), class: 'btn btn-outline-primary'
 
 - if @rdvs.any?
-  = render partial: 'rdv', collection: @rdvs
+  .row.justify-content-md-center
+    .col-md-6
+      = render partial: 'rdv', collection: @rdvs
   .d-flex.justify-content-center= paginate @rdvs, theme: 'twitter-bootstrap-4'
   .text-center
     = add_button 'Prendre un RDV', root_path
