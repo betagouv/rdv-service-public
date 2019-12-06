@@ -13,7 +13,7 @@ fr:
         duration_in_min: Durée en minutes
         status: Statut
         statuses:
-          to_be: À venir
+          unknown: Indéterminé
           waiting: En salle d'attente
           seen: Vu
           excused: Absent excusé
@@ -30,7 +30,7 @@ fr:
             zero: Vu / excusé
             one: Vu / excusé
             other: Vus / excusés
-          lapin: 
+          lapin:
             zero: Lapin
             one: Lapin
             other: Lapins

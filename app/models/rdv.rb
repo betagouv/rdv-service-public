@@ -4,14 +4,14 @@ class Rdv < ApplicationRecord
   has_and_belongs_to_many :agents
   has_and_belongs_to_many :users
 
-  enum status: { to_be: 0, waiting: 1, seen: 2, excused: 3, notexcused: 4 }
+  enum status: { unknown: 0, waiting: 1, seen: 2, excused: 3, notexcused: 4 }
 
   validates :users, :organisation, :motif, :starts_at, :duration_in_min, :agents, presence: true
 
   scope :active, -> { where(cancelled_at: nil) }
   scope :past, -> { where('starts_at < ?', Time.zone.now) }
   scope :done, -> { seen + excused }
-  #  scope :future, -> { to_be + waiting }
+  #  scope :future, -> { unknown + waiting }
   scope :future, -> { where('starts_at > ?', Time.zone.now) }
   scope :tomorrow, -> { where(starts_at: DateTime.tomorrow...DateTime.tomorrow + 1.day) }
   scope :user_with_children, ->(parent_id) { joins(:users).includes(:rdvs_users, :users).where('users.id IN (?)', [parent_id, User.find(parent_id).children.pluck(:id)].flatten) }
