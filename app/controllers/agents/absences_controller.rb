@@ -4,6 +4,7 @@ class Agents::AbsencesController < AgentAuthController
   before_action :set_absence, only: [:edit, :update, :destroy]
 
   def index
+    @agent = policy_scope(Agent).find(params[:agent_id])
     absences = policy_scope(Absence).where(agent_id: filter_params[:agent_id])
     respond_to do |f|
       f.json { @absences = absences.in_time_range(date_range_params).order(:starts_at) }
@@ -12,7 +13,8 @@ class Agents::AbsencesController < AgentAuthController
   end
 
   def new
-    @absence = Absence.new(organisation: current_organisation, agent: current_agent)
+    @agent = policy_scope(Agent).find(params[:agent_id])
+    @absence = Absence.new(organisation: current_organisation, agent: @agent)
     authorize(@absence)
     respond_right_bar_with @absence
   end
@@ -25,7 +27,6 @@ class Agents::AbsencesController < AgentAuthController
   def create
     @absence = Absence.new(absence_params)
     @absence.organisation = current_organisation
-    @absence.agent = current_agent
     authorize(@absence)
     flash[:notice] = "L'absence a été créée." if @absence.save
     respond_right_bar_with @absence, location: organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
@@ -50,7 +51,7 @@ class Agents::AbsencesController < AgentAuthController
   end
 
   def absence_params
-    params.require(:absence).permit(:title, :starts_at, :ends_at)
+    params.require(:absence).permit(:title, :starts_at, :ends_at, :agent_id)
   end
 
   def date_range_params
