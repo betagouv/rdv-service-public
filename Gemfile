@@ -45,7 +45,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'slim', '~> 4.0'
 
 ## Time Management
-gem 'montrose', github: 'beg/montrose'
+gem 'montrose', '~> 0.11.2'
 gem 'tod', '~> 2.2'
 gem 'icalendar', '~> 2.5'
 
