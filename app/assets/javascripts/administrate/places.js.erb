@@ -1,11 +1,14 @@
-places({
-  appId: "<%= ENV['PLACES_APP_ID'] %>",
-  apiKey: "<%= ENV['PLACES_API_KEY'] %>",
-  countries: ['FR'],
-  templates: {
-    value: function(suggestion) {
-      return [suggestion.name, suggestion.postcode, suggestion.city].filter(Boolean).join(" ");
+var container = document.querySelector('.places-js-container')
+if (container) {
+  places({
+    appId: "<%= ENV['PLACES_APP_ID'] %>",
+    apiKey: "<%= ENV['PLACES_API_KEY'] %>",
+    countries: ['FR'],
+    templates: {
+      value: function(suggestion) {
+        return [suggestion.name, suggestion.postcode, suggestion.city].filter(Boolean).join(" ");
+      },
     },
-  },
-  container: document.querySelector('.places-js-container')
-});
+    container
+  });
+}

@@ -7,6 +7,7 @@
 module Admin
   class ApplicationController < Administrate::ApplicationController
     before_action :authenticate_super_admin!
+    around_action :skip_bullet
 
     def authenticate_super_admin!
       if super_admin_signed_in?
@@ -14,6 +15,14 @@ module Admin
       else
         redirect_to super_admin_github_omniauth_authorize_path
       end
+    end
+
+    def skip_bullet
+      previous_value = Bullet.enable?
+      Bullet.enable = false
+      yield
+    ensure
+      Bullet.enable = previous_value
     end
 
     # Override this value to specify the number of elements to display at a time
