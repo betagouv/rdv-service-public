@@ -5,13 +5,13 @@ class Agents::RdvsController < AgentAuthController
 
   def index
     @rdvs = policy_scope(Rdv).active
-    if params[:agent_id].present?
-      @agent = policy_scope(Agent).find(params[:agent_id])
+    if filter_params[:agent_id].present?
+      @agent = policy_scope(Agent).find(filter_params[:agent_id])
       @rdvs = @rdvs.joins(:agents).where(agents: { id: @agent })
     end
-    if params[:user_id].present?
-      @user = policy_scope(User).find(params[:user_id])
-      @rdvs = @user.available_rdvs(current_organisation).page(params[:page])
+    if filter_params[:user_id].present?
+      @user = policy_scope(User).find(filter_params[:user_id])
+      @rdvs = @user.available_rdvs(current_organisation).page(filter_params[:page])
     end
     @rdvs = @rdvs.where(starts_at: date_range_params) if filter_params[:start].present? && filter_params[:end].present?
     @rdvs = @rdvs.includes(:motif).order(:starts_at)
@@ -79,6 +79,6 @@ class Agents::RdvsController < AgentAuthController
   end
 
   def filter_params
-    params.permit(:organisation_id, :start, :end)
+    params.permit(:organisation_id, :start, :end, :agent_id, :user_id, :page)
   end
 end
