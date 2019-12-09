@@ -1,14 +1,12 @@
 class PopulateLibelle {
 
   constructor() {
-    $(document).on('shown.rightbar', '.right-bar', function(e) {
-      var serviceInput = $("#motif_service_id")
-      if (serviceInput.val()) {
-        get_motifs(serviceInput, $('#motif_name').data('value'))
-      }
-      serviceInput.change(() => {
-        get_motifs(serviceInput)
-      })
+    var serviceInput = $("#motif_service_id")
+    if (serviceInput.val()) {
+      get_motifs(serviceInput, $('#motif_name').data('value'))
+    }
+    serviceInput.change(() => {
+      get_motifs(serviceInput)
     })
   }
 }

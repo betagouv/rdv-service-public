@@ -2,7 +2,7 @@ class Agents::MotifsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: [:new, :create]
-  before_action :set_motif, only: [:edit, :update, :destroy]
+  before_action :set_motif, only: [:show, :edit, :update, :destroy]
 
   def index
     @motifs = policy_scope(Motif).includes(:organisation).active.includes(:service).order(Arel.sql('LOWER(name)')).page(params[:page])
@@ -10,6 +10,11 @@ class Agents::MotifsController < AgentAuthController
 
   def new
     @motif = Motif.new(organisation_id: current_organisation.id)
+    authorize(@motif)
+    respond_right_bar_with @motif
+  end
+
+  def show
     authorize(@motif)
     respond_right_bar_with @motif
   end

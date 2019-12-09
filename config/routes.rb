@@ -60,7 +60,7 @@ Rails.application.routes.draw do
       resources :motif_libelles, only: :index
       resources :organisations, except: :destroy do
         resources :lieux, except: :show
-        resources :motifs, except: :show
+        resources :motifs
         resources :plage_ouvertures, except: [:index, :show, :new]
         resources :absences, except: [:index, :show, :new]
 

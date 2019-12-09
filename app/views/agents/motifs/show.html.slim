@@ -1,0 +1,34 @@
+- content_for :title do
+  | Détail du motif
+
+p.card-text
+  strong Nom :&nbsp;
+  = @motif.name
+  span.badge.badge-pill.ml-1 style="background: #{@motif.color};"
+    | &nbsp;
+p.card-text
+  strong Service :&nbsp;
+  = @motif.service.name
+p.card-text
+  strong Durée par défaut :&nbsp;
+  = "#{@motif.default_duration_in_min} minutes"
+p.card-text
+  strong Délai minimum de reservation :&nbsp;
+  = "#{min_max_delay_options.select{ |opt| opt[1] == @motif.min_booking_delay.seconds }.flatten[0]}"
+p.card-text
+  strong Durée par défaut :&nbsp;
+  = "#{min_max_delay_options.select{ |opt| opt[1] == @motif.max_booking_delay.seconds }.flatten[0]}"
+p.card-text
+  strong Options :
+  br
+  - [:online, :by_phone, :disable_notifications_for_users]. each do |attr|
+    - if @motif[attr]
+      strong
+        = "- #{Motif.human_attribute_name(attr)}"
+      br
+
+.row
+  .col.text-left
+    = link_to 'Supprimer', organisation_motif_path(current_organisation, @motif), data: { confirm: "Êtes-vous sûr de vouloir supprimer ce motif ?" }, method: :delete, class: 'btn btn-outline-danger'
+  .col.text-right
+    = link_to 'Modifier', edit_organisation_motif_path(current_organisation, @motif), class: 'btn btn-primary'
