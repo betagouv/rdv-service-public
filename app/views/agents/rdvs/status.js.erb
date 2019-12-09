@@ -1,1 +1,3 @@
-console.log('UX TODO');
+<% flash.now[:notice] = "Le rendez-vous a été modifié." %>
+$('#rdv-flash').html("")
+$('#rdv-flash').prepend("<%= escape_javascript render '/layouts/flash' %>").hide().show('slow');

@@ -20,7 +20,7 @@ class Users::RdvsController < UserAuthController
 
     return if @creneau.available?
 
-    flash[:error] = "Ce creneau n'est plus disponible. Veuillez en sélectionner un autre."
+    flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
     redirect_to welcome_motif_path(@departement, @motif_name, where: @where)
   end
 

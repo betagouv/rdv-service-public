@@ -2,22 +2,9 @@
 // menu.scss
 //
 
-// Logo
-.logo {
-  display: block;
-  line-height: 80px;
-
-  span.logo-lg {
-    display: block;
-  }
-  span.logo-sm {
-    display: none;
-  }
-}
-
-.logo-provider {
-  max-height: 75px;
-  max-width: 200px;
+body.enlarged .logo{
+  content:url(asset_path("logos/logo_small.svg"));
+  width: 30px;
 }
 
 // Wrapper

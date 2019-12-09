@@ -43,7 +43,7 @@ class Agents::Creneaux::AgentSearchesController < AgentAuthController
   private
 
   def filter_params
-    params.require(:creneau_agent_search).permit(:lieu_id, :motif_id, :from_date, agent_ids: [])
+    params.require(:creneau_agent_search).permit(:motif_id, :from_date, agent_ids: [], lieu_ids: [])
   end
 
   def by_lieu_params

@@ -1,4 +1,5 @@
 .breadcrumb-item {
+  a {@extend .text-white}
   +.breadcrumb-item {
     &::before {
       font-family: "FontAwesome"; font-weight: 900; content: "\f105";

@@ -5,10 +5,10 @@ class Agents::AbsencesController < AgentAuthController
 
   def index
     @agent = policy_scope(Agent).find(params[:agent_id])
-    absences = policy_scope(Absence).where(agent_id: params[:agent_id])
+    absences = policy_scope(Absence).where(agent_id: filter_params[:agent_id])
     respond_to do |f|
       f.json { @absences = absences.in_time_range(date_range_params).order(:starts_at) }
-      f.html { @absences = absences.includes(:organisation).page(params[:page]) }
+      f.html { @absences = absences.includes(:organisation).page(filter_params[:page]) }
     end
   end
 
@@ -61,6 +61,6 @@ class Agents::AbsencesController < AgentAuthController
   end
 
   def filter_params
-    params.permit(:start, :end, :organisation_id)
+    params.permit(:start, :end, :organisation_id, :agent_id, :page)
   end
 end
