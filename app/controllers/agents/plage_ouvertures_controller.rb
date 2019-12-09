@@ -4,11 +4,11 @@ class Agents::PlageOuverturesController < AgentAuthController
   before_action :set_plage_ouverture, only: [:edit, :update, :destroy]
 
   def index
-    @agent = policy_scope(Agent).find(params[:agent_id])
-    plage_ouvertures = policy_scope(PlageOuverture).where(agent_id: params[:agent_id])
+    @agent = policy_scope(Agent).find(filter_params[:agent_id])
+    plage_ouvertures = policy_scope(PlageOuverture).where(agent_id: filter_params[:agent_id])
     respond_to do |f|
       f.json { @plage_ouverture_occurences = plage_ouvertures.flat_map { |po| po.occurences_for(date_range_params).map { |occurence| [po, occurence] } }.sort_by(&:second) }
-      f.html { @plage_ouvertures = plage_ouvertures.includes(:lieu, :organisation).all.page(params[:page]) }
+      f.html { @plage_ouvertures = plage_ouvertures.includes(:lieu, :organisation).all.page(filter_params[:page]) }
     end
   end
 
@@ -61,6 +61,6 @@ class Agents::PlageOuverturesController < AgentAuthController
   end
 
   def filter_params
-    params.permit(:start, :end, :organisation_id)
+    params.permit(:start, :end, :organisation_id, :agent_id, :page)
   end
 end

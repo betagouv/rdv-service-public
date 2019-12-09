@@ -65,4 +65,10 @@ module ApplicationHelper
   def agents_or_users_body_class
     agent_path? ? 'agents' : 'users'
   end
+
+  def link_logo
+    link_to root_path do
+      image_tag 'logos/logo.svg', height: 50, alt: 'RDV Solidarités', class: 'd-inline logo'
+    end
+  end
 end

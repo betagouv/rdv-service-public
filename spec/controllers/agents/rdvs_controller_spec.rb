@@ -117,7 +117,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
     end
 
     it "changes status" do
-      expect { subject }.to change(rdv, :status).from("to_be").to("waiting")
+      expect { subject }.to change(rdv, :status).from("unknown").to("waiting")
     end
   end
 

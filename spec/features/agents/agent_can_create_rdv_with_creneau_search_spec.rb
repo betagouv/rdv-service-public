@@ -68,7 +68,7 @@ describe "Agent can create a Rdv with creneau search" do
 
     expect(page).to have_content("Le rendez-vous a été créé.")
     expect(page).to have_current_path(rdv.agenda_path_for_agent(agent))
-    expect(page).to have_content("29 JUIL. – 1 AOÛT 2019")
+    expect(page).to have_content("29 JUIL. – 2 AOÛT 2019")
   end
 
   def select_user(user)

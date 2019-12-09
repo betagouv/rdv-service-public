@@ -3,6 +3,7 @@
     &::before {
       font-family: "FontAwesome"; font-weight: 900; content: "\f105";
     }
+    a {@extend .text-white}
   }
 }
   
