@@ -1,4 +1,6 @@
 class TwilioTextMessenger
+  include Rails.application.routes.url_helpers
+
   attr_reader :user, :rdv, :from, :type
 
   def initialize(type, rdv, user)
@@ -34,20 +36,21 @@ class TwilioTextMessenger
               else
                 "Adresse: #{@rdv.location}.\n"
               end
-    message += "Infos et annulation: #{@rdv.organisation.phone_number}" if @rdv.organisation.phone_number
+    message += "Infos et annulation: #{rdvs_shorten_url(host: "http://#{ENV["HOST"]}")} "
+    message += " / #{@rdv.organisation.phone_number}" if @rdv.organisation.phone_number
     message
   end
 
   def rdv_created
     message = sms_header
-    message += "RDV #{@rdv.motif.name} #{I18n.l(@rdv.starts_at, format: :human)} a été confirmé.\n"
+    message += "RDV #{@rdv.motif.name} - #{@rdv.motif.service.name} #{I18n.l(@rdv.starts_at, format: :human)} a été confirmé.\n"
     message += sms_footer
     message
   end
 
   def reminder
     message = sms_header
-    message += "Rappel de votre RDV #{@rdv.motif.name} demain à #{@rdv.starts_at.strftime("%H:%M")}.\n"
+    message += "Rappel de votre RDV #{@rdv.motif.name} - #{@rdv.motif.service.name}, demain à #{@rdv.starts_at.strftime("%H:%M")}.\n"
     message += sms_footer
     message
   end
