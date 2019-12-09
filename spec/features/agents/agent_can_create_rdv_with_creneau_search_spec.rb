@@ -1,12 +1,14 @@
 describe "Agent can create a Rdv with creneau search" do
-  let!(:agent) { create(:agent, first_name: "Alain") }
-  let!(:agent2) { create(:agent, first_name: "Robert") }
+  let!(:agent) { create(:agent, first_name: "Alain", last_name: "Tiptop") }
+  let!(:agent2) { create(:agent, first_name: "Robert", last_name: "Voila") }
+  let!(:agent3) { create(:agent, first_name: "Michel", last_name: "Lapin") }
   let!(:motif) { create(:motif, online: true) }
   let!(:user) { create(:user) }
   let!(:lieu) { create(:lieu) }
   let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu, agent: agent) }
   let!(:lieu2) { create(:lieu) }
   let!(:plage_ouverture2) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu2, agent: agent2) }
+  let!(:plage_ouverture3) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu, agent: agent3) }
 
   before do
     travel_to(Time.zone.local(2019, 7, 22))
@@ -45,6 +47,10 @@ describe "Agent can create a Rdv with creneau search" do
     # Click to change to next week
     first(:link, ">>").click
     expect(page).to have_content('<<', wait: 5)
+
+    expect(page).to have_content(plage_ouverture.agent.short_name)
+    expect(page).not_to have_content(plage_ouverture2.agent.short_name)
+    expect(page).not_to have_content(plage_ouverture3.agent.short_name)
 
     # Select creneau
     first(:link, "09:30").click
