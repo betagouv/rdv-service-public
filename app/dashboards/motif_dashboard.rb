@@ -13,6 +13,8 @@ class MotifDashboard < Administrate::BaseDashboard
     organisation: Field::BelongsTo,
     service: Field::BelongsTo,
     color: Field::String,
+    restriction_for_rdv: Field::Text,
+    instruction_for_rdv: Field::Text,
     online: Field::Boolean,
     by_phone: Field::Boolean,
     default_duration_in_min: Field::Number,
@@ -46,6 +48,8 @@ class MotifDashboard < Administrate::BaseDashboard
     :color,
     :online,
     :by_phone,
+    :restriction_for_rdv,
+    :instruction_for_rdv,
     :default_duration_in_min,
     :min_booking_delay,
     :max_booking_delay,
@@ -69,6 +73,8 @@ class MotifDashboard < Administrate::BaseDashboard
     :min_booking_delay,
     :max_booking_delay,
     :disable_notifications_for_users,
+    :restriction_for_rdv,
+    :instruction_for_rdv,
     :deleted_at,
   ].freeze
 

@@ -11,6 +11,10 @@
   .form-row
     .col-md-6= f.input :min_booking_delay, collection: min_max_delay_options
     .col-md-6= f.input :max_booking_delay, collection: min_max_delay_options
+  .form-row
+    .col-12= f.input :restriction_for_rdv
+  .form-row
+    .col-12= f.input :instruction_for_rdv
   .row
     - if motif.persisted?
       .col.text-left
