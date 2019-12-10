@@ -5,8 +5,9 @@
     | Absences de #{@agent.full_name_and_service}
 
 - content_for :breadcrumb do
-  .d-inline-block.mr-2
-    = select_tag :id, options_for_select(policy_scope(Agent).complete.active.order_by_last_name.map { |agent| [agent.full_name, agent.id, { 'data-url': organisation_agent_absences_path(current_organisation, agent.id)}]}, selected: @agent.id), class: "select2-input", onchange: "window.location.href = $('.select2-input option:selected').attr('data-url')"
+  - if current_agent.access_planning?
+    .d-inline-block.mr-2
+      = select_tag :id, options_for_select(policy_scope(Agent).complete.active.order_by_last_name.map { |agent| [agent.full_name, agent.id, { 'data-url': organisation_agent_absences_path(current_organisation, agent.id)}]}, selected: @agent.id), class: "select2-input", onchange: "window.location.href = $('.select2-input option:selected').attr('data-url')"
 
   = link_to 'Créer une absence', new_organisation_agent_absence_path(current_organisation, @agent.id), class: "btn btn-outline-white align-bottom", data: { rightbar: true }
 .card

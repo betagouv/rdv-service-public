@@ -4,7 +4,7 @@ class Agent::AgentPolicy < Agent::AdminPolicy
   end
 
   def show?
-    @context.agent.admin? || @context.agent == @record
+    @context.agent.access_planning? || @context.agent == @record
   end
 
   def reinvite?
@@ -12,7 +12,7 @@ class Agent::AgentPolicy < Agent::AdminPolicy
   end
 
   def destroy?
-    same_agent_or_admin?
+    same_agent_or_has_access?
   end
 
   class Scope < Scope

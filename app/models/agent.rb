@@ -45,4 +45,8 @@ class Agent < ApplicationRecord
   def inactive_message
     !deleted_at ? super : :deleted_account
   end
+
+  def access_planning?
+    admin? || service.secretariat?
+  end
 end
