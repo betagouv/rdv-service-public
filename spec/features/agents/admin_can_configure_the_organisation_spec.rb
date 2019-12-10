@@ -107,8 +107,12 @@ describe "Admin can configure the organisation" do
     click_link le_nouveau_motif.name
     expect(page).to have_content(le_nouveau_motif.name)
     click_link('Supprimer')
-    alert = page.driver.browser.switch_to.alert
-    alert.accept
+    # # alert = page.driver.browser.switch_to.alert
+    # # alert.accept
+    # page.accept_alert
+    page.driver.browser.switch_to.alert.accept
+
+
     expect_page_title("Vos motifs")
     expect_page_with_no_record_text("Vous n'avez pas encore créé de motif.")
 

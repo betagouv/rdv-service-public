@@ -8,8 +8,9 @@ p.card-text
   span.badge.badge-pill.ml-1 style="background: #{@motif.color};"
     | &nbsp;
 
-p.card-text
-  | Le RDV sera effectué par téléphone. Il est disponible pour toutes les personnes du service Secrétariat.
+- if @motif.by_phone?
+  p.card-text
+    | Le RDV sera effectué par téléphone. Il est disponible pour toutes les personnes du service Secrétariat.
 
 - if @motif.online?
     hr.mb-3
