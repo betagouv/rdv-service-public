@@ -20,7 +20,11 @@ FactoryBot.define do
     end
 
     trait :weekly do
-      recurrence { Montrose.weekly.to_json }
+      recurrence { Montrose.weekly.on(:monday).to_json }
+    end
+
+    trait :monthly do
+      recurrence { Montrose.monthly.to_json }
     end
 
     trait :weekly_by_2 do
