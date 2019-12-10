@@ -105,8 +105,7 @@ describe "Admin can configure the organisation" do
     expect_page_title("Vos motifs")
 
     click_link le_nouveau_motif.name
-    expect(page).to have_content("Détail du motif")
-    page.execute_script "$('.slimscroll-menu').scrollTop(10000)"
+    expect(page).to have_content(le_nouveau_motif.name)
     click_link('Supprimer')
     alert = page.driver.browser.switch_to.alert
     alert.accept
@@ -121,7 +120,6 @@ describe "Admin can configure the organisation" do
     expect(page).to have_select('motif[name]', with_options: ['', motif_libelle3.name], wait: 10)
     select(motif_libelle3.name, from: :motif_name)
     fill_in 'Couleur', with: le_nouveau_motif.color
-    page.execute_script "$('.slimscroll-menu').scrollTop(10000)"
     click_button 'Créer'
     expect(page).to have_link(motif_libelle3.name)
   end
