@@ -3,7 +3,7 @@ class PlageOuverture::Ics
   attr_accessor :plage_ouverture
   validates :plage_ouverture, presence: true
 
-  def to_ical_for(agent)
+  def to_ical
     require 'icalendar'
     require 'icalendar/tzinfo'
 
@@ -11,20 +11,18 @@ class PlageOuverture::Ics
 
     tzid = "Europe/Paris"
     tz = TZInfo::Timezone.get tzid
-    timezone = tz.ical_timezone rdv.starts_at
+    timezone = tz.ical_timezone plage_ouverture.starts_at
     cal.add_timezone timezone
 
     cal.event do |e|
-      e.dtstart     = Icalendar::Values::DateTime.new(rdv.starts_at, 'tzid' => tzid)
-      e.dtend       = Icalendar::Values::DateTime.new(rdv.ends_at, 'tzid' => tzid)
-      e.summary     = "RDV #{rdv.name}"
+      e.dtstart     = Icalendar::Values::DateTime.new(plage_ouverture.starts_at, 'tzid' => tzid)
+      e.dtend       = Icalendar::Values::DateTime.new(plage_ouverture.ends_at, 'tzid' => tzid)
+      e.summary     = "#{BRAND} #{plage_ouverture.title}"
       e.description = ""
-      e.location    = rdv.location unless rdv.motif.by_phone?
-      e.uid         = rdv.uuid
-      e.sequence    = rdv.sequence
+      e.location    = plage_ouverture.lieu.address
       e.ip_class    = "PRIVATE"
       e.organizer   = "noreply@rdv-solidarites.fr"
-      e.attendee    = user.email
+      e.attendee    = plage_ouverture.agent.email
     end
 
     cal.ip_method = "REQUEST"
@@ -32,6 +30,6 @@ class PlageOuverture::Ics
   end
 
   def name
-    "rdv-#{rdv.name.parameterize}-#{rdv.starts_at.to_s.parameterize}.ics"
+    "plage-ouverture-#{plage_ouverture.title.parameterize}-#{plage_ouverture.starts_at.to_s.parameterize}.ics"
   end
 end
