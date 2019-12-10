@@ -93,6 +93,9 @@ describe "Admin can configure the organisation" do
     expect_page_title("Vos motifs")
 
     click_link motif.name
+    expect(page).to have_content(motif.name)
+    click_link 'Modifier'
+
     expect(page).to have_content("Modifier le motif")
     expect(page.find_by_id('motif_name')).to have_content(motif.name)
     select(motif_libelle2.name, from: :motif_name)
@@ -102,11 +105,15 @@ describe "Admin can configure the organisation" do
     expect_page_title("Vos motifs")
 
     click_link le_nouveau_motif.name
-    expect(page).to have_content("Modifier le motif")
-    page.execute_script "$('.slimscroll-menu').scrollTop(10000)"
+    expect(page).to have_content(le_nouveau_motif.name)
     click_link('Supprimer')
-    alert = page.driver.browser.switch_to.alert
-    alert.accept
+    begin
+      page.driver.browser.switch_to.alert.accept
+    rescue Selenium::WebDriver::Error::NoSuchAlertError
+      click_link('Supprimer')
+      retry
+    end
+
     expect_page_title("Vos motifs")
     expect_page_with_no_record_text("Vous n'avez pas encore créé de motif.")
 
@@ -118,7 +125,6 @@ describe "Admin can configure the organisation" do
     expect(page).to have_select('motif[name]', with_options: ['', motif_libelle3.name], wait: 10)
     select(motif_libelle3.name, from: :motif_name)
     fill_in 'Couleur', with: le_nouveau_motif.color
-    page.execute_script "$('.slimscroll-menu').scrollTop(10000)"
     click_button 'Créer'
     expect(page).to have_link(motif_libelle3.name)
   end

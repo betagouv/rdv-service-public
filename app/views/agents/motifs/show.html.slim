@@ -1,0 +1,43 @@
+- content_for :title do
+  | #{@motif.name}
+  br
+  small #{@motif.service.name}
+
+p.card-text
+  strong> Couleur dans l'agenda :
+  span.badge.badge-pill.ml-1 style="background: #{@motif.color};"
+    | &nbsp;
+
+- if @motif.by_phone?
+  p.card-text
+    | Le RDV sera effectué par téléphone. Il est disponible pour toutes les personnes du service Secrétariat.
+
+- if @motif.online?
+    hr.mb-3
+    h5 Réservation en ligne par les usagers
+    p.text-muted Ce motif est disponible à la réservation en ligne.
+    p.card-text
+      strong> Délais min / max de réservation : 
+      | #{distance_of_time_in_words(@motif.min_booking_delay)} / #{distance_of_time_in_words(@motif.max_booking_delay)}
+
+- if @motif.disable_notifications_for_users?
+  hr.mb-3
+  h5 Notifications des usagers par email et SMS
+  p.text-muted Les notifications sont désactivées pour les usagers.
+
+- if @motif.restriction_for_rdv.present? || @motif.instruction_for_rdv.present?
+  hr.mb-3
+  h5 Instructions
+  p.text-muted.font-14 Ces instructions sont affichées à l'usager.
+  - if @motif.restriction_for_rdv.present?
+    strong Avant la prise de rendez-vous
+    = simple_format @motif.restriction_for_rdv
+  - if @motif.instruction_for_rdv.present?
+    strong Après la prise de rendez-vous
+    = simple_format @motif.instruction_for_rdv
+
+.row
+  .col.text-left
+    = link_to 'Supprimer', organisation_motif_path(current_organisation, @motif), data: { confirm: "Êtes-vous sûr de vouloir supprimer ce motif ?" }, method: :delete, class: 'btn btn-outline-danger'
+  .col.text-right
+    = link_to 'Modifier', edit_organisation_motif_path(current_organisation, @motif), class: 'btn btn-primary'

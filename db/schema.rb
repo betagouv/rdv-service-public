@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_03_092753) do
+ActiveRecord::Schema.define(version: 2019_12_09_174606) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -156,6 +156,8 @@ ActiveRecord::Schema.define(version: 2019_12_03_092753) do
     t.bigint "service_id"
     t.boolean "by_phone", default: false, null: false
     t.boolean "disable_notifications_for_users", default: false
+    t.text "restriction_for_rdv"
+    t.text "instruction_for_rdv"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
     t.index ["service_id"], name: "index_motifs_on_service_id"

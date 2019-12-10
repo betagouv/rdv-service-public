@@ -2,7 +2,7 @@ class Agents::MotifsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: [:new, :create]
-  before_action :set_motif, only: [:edit, :update, :destroy]
+  before_action :set_motif, only: [:show, :edit, :update, :destroy]
 
   def index
     @motifs = policy_scope(Motif).includes(:organisation).active.includes(:service).order(Arel.sql('LOWER(name)')).page(params[:page])
@@ -10,6 +10,11 @@ class Agents::MotifsController < AgentAuthController
 
   def new
     @motif = Motif.new(organisation_id: current_organisation.id)
+    authorize(@motif)
+    respond_right_bar_with @motif
+  end
+
+  def show
     authorize(@motif)
     respond_right_bar_with @motif
   end
@@ -46,6 +51,6 @@ class Agents::MotifsController < AgentAuthController
   end
 
   def motif_params
-    params.require(:motif).permit(:name, :service_id, :color, :default_duration_in_min, :online, :by_phone, :max_booking_delay, :min_booking_delay, :disable_notifications_for_users)
+    params.require(:motif).permit(:name, :service_id, :color, :default_duration_in_min, :online, :by_phone, :max_booking_delay, :min_booking_delay, :disable_notifications_for_users, :restriction_for_rdv, :instruction_for_rdv)
   end
 end
