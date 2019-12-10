@@ -1,41 +1,39 @@
 - content_for :title do
-  | Détail du motif
+  | #{@motif.name}
+  br
+  small #{@motif.service.name}
 
 p.card-text
-  strong Nom :&nbsp;
-  = @motif.name
+  strong> Couleur dans l'agenda :
   span.badge.badge-pill.ml-1 style="background: #{@motif.color};"
     | &nbsp;
-p.card-text
-  strong Service :&nbsp;
-  = @motif.service.name
-p.card-text
-  strong Durée par défaut :&nbsp;
-  = "#{@motif.default_duration_in_min} minutes"
-p.card-text
-  strong Délai minimum de reservation :&nbsp;
-  = "#{min_max_delay_options.select{ |opt| opt[1] == @motif.min_booking_delay.seconds }.flatten[0]}"
-p.card-text
-  strong Délai maximum de reservation :&nbsp;
-  = "#{min_max_delay_options.select{ |opt| opt[1] == @motif.max_booking_delay.seconds }.flatten[0]}"
-p.card-text
-  strong Options :
-  br
-  - [:online, :by_phone, :disable_notifications_for_users]. each do |attr|
-    - if @motif[attr]
-      strong
-        = "- #{Motif.human_attribute_name(attr)}"
-      br
 
-- [:restriction_for_rdv, :instruction_for_rdv].each do |symb|
-  p.card-text
-    - if @motif[symb].present?
-      strong= "#{Motif.human_attribute_name(symb)} :"
-      br
-      = simple_format(@motif[symb])
-    - else
-      strong= "Vous n'avez pas renseigné de #{Motif.human_attribute_name(symb).downcase}"
+p.card-text
+  | Le RDV sera effectué par téléphone. Il est disponible pour toutes les personnes du service Secrétariat.
 
+- if @motif.online?
+    hr.mb-3
+    h5 Réservation en ligne par les usagers
+    p.text-muted Ce motif est disponible à la réservation en ligne.
+    p.card-text
+      strong> Délais min / max de réservation : 
+      | #{distance_of_time_in_words(@motif.min_booking_delay)} / #{distance_of_time_in_words(@motif.max_booking_delay)}
+
+- if @motif.disable_notifications_for_users?
+  hr.mb-3
+  h5 Notifications des usagers par email et SMS
+  p.text-muted Les notifications sont désactivées pour les usagers.
+
+- if @motif.restriction_for_rdv.present? || @motif.instruction_for_rdv.present?
+  hr.mb-3
+  h5 Instructions
+  p.text-muted.font-14 Ces instructions sont affichées à l'usager.
+  - if @motif.restriction_for_rdv.present?
+    strong Avant la prise de rendez-vous
+    = simple_format @motif.restriction_for_rdv
+  - if @motif.instruction_for_rdv.present?
+    strong Après la prise de rendez-vous
+    = simple_format @motif.instruction_for_rdv
 
 .row
   .col.text-left

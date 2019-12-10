@@ -93,7 +93,7 @@ describe "Admin can configure the organisation" do
     expect_page_title("Vos motifs")
 
     click_link motif.name
-    expect(page).to have_content("Détail du motif")
+    expect(page).to have_content(motif.name)
     click_link 'Modifier'
 
     expect(page).to have_content("Modifier le motif")
