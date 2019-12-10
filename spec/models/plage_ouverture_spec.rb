@@ -171,4 +171,27 @@ describe PlageOuverture, type: :model do
       it { is_expected.to contain_exactly(motif, motif2, motif3) }
     end
   end
+
+  describe "#send_ics_to_agent" do
+    let(:plage_ouverture) { build(:plage_ouverture) }
+
+    it "should be called after create" do
+      expect(plage_ouverture).to receive(:send_ics_to_agent)
+      plage_ouverture.save!
+    end
+
+    context "when rdv already exist" do
+      let(:plage_ouverture) { create(:plage_ouverture) }
+
+      it "should not be called" do
+        expect(plage_ouverture).not_to receive(:send_ics_to_agent)
+        plage_ouverture.save!
+      end
+    end
+
+    it "calls PlageOuvertureMailer to send email to agetn" do
+      expect(PlageOuvertureMailer).to receive(:send_ics_to_agent).with(plage_ouverture).and_return(double(deliver_later: nil))
+      plage_ouverture.save!
+    end
+  end
 end
