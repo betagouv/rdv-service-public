@@ -3,7 +3,7 @@ class PlageOuverture::Ics
   attr_accessor :plage_ouverture
   validates :plage_ouverture, presence: true
 
-  TZID = "Europe/Paris"
+  TZID = "Europe/Paris".freeze
 
   def to_ical
     require 'icalendar'
@@ -32,28 +32,38 @@ class PlageOuverture::Ics
   end
 
   def rrule
-    if plage_ouverture.recurrence.present?
-      recurrence_hash = plage_ouverture.recurrence.to_hash
+    return unless plage_ouverture.recurrence.present?
 
-      case recurrence_hash[:every]
-      when :week
-        freq = "FREQ=WEEKLY;"
-        by_day = "BYDAY=#{by_week_day(recurrence_hash[:on])};" if recurrence_hash[:on]
-      when :month
-        freq = "FREQ=MONTHLY;"
-        by_day = "BYDAY=#{by_month_day(recurrence_hash[:day])};" if recurrence_hash[:day]
-      end
+    recurrence_hash = plage_ouverture.recurrence.to_hash
 
-      if recurrence_hash[:interval]
-        interval = "INTERVAL=#{recurrence_hash[:interval]};"
-      end
-
-      if recurrence_hash[:until]
-        until_date = "UNTIL=#{Icalendar::Values::DateTime.new(recurrence_hash[:until], 'tzid' => TZID).value_ical};"
-      end
-
-      "#{freq}#{interval}#{by_day}#{until_date}"
+    case recurrence_hash[:every]
+    when :week
+      freq = "FREQ=WEEKLY;"
+      by_day = "BYDAY=#{by_week_day(recurrence_hash[:on])};" if recurrence_hash[:on]
+    when :month
+      freq = "FREQ=MONTHLY;"
+      by_day = "BYDAY=#{by_month_day(recurrence_hash[:day])};" if recurrence_hash[:day]
     end
+
+    interval = interval_from_hash(recurrence_hash)
+
+    until_date = until_from_hash(recurrence_hash)
+
+    "#{freq}#{interval}#{by_day}#{until_date}"
+  end
+
+  def name
+    "plage-ouverture-#{plage_ouverture.title.parameterize}-#{plage_ouverture.starts_at.to_s.parameterize}.ics"
+  end
+
+  private
+
+  def until_from_hash(recurrence_hash)
+    "UNTIL=#{Icalendar::Values::DateTime.new(recurrence_hash[:until], "tzid" => TZID).value_ical};" if recurrence_hash[:until]
+  end
+
+  def interval_from_hash(recurrence_hash)
+    "INTERVAL=#{recurrence_hash[:interval]};" if recurrence_hash[:interval]
   end
 
   def by_week_day(on)
@@ -66,9 +76,5 @@ class PlageOuverture::Ics
 
   def by_month_day(day)
     "#{day.values.first.first}#{Date::DAYNAMES[day.keys.first][0, 2].upcase}"
-  end
-
-  def name
-    "plage-ouverture-#{plage_ouverture.title.parameterize}-#{plage_ouverture.starts_at.to_s.parameterize}.ics"
   end
 end

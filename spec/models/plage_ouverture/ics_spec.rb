@@ -9,7 +9,7 @@ describe PlageOuverture::Ics, type: :model do
       is_expected.to include("SUMMARY:RDV Solidarités #{plage_ouverture.title}")
       is_expected.to match("DTSTART;TZID=Europe/Paris:20190722T080000")
       is_expected.to include("DTEND;TZID=Europe/Paris:20190722T120000")
-      is_expected.to include("LOCATION:1 rue de l'adresse\\, 12345 Ville")
+      is_expected.to include("LOCATION:#{plage_ouverture.lieu.address}")
       is_expected.to include("ORGANIZER:noreply@rdv-solidarites.fr")
       is_expected.to include("ATTENDEE:#{plage_ouverture.agent.email}")
       is_expected.to include("CLASS:PRIVATE")
@@ -18,39 +18,41 @@ describe PlageOuverture::Ics, type: :model do
   end
 
   describe "#rrule" do
+    let(:plage_ouverture) { create(:plage_ouverture, recurrence: recurrence) }
+
     subject { ics.rrule }
 
     context "every week" do
-      let(:plage_ouverture) { create(:plage_ouverture, :weekly) }
+      let(:recurrence) { Montrose.every(:week, on: ["monday"]) }
 
       it { is_expected.to eq("FREQ=WEEKLY;BYDAY=MO;") }
 
       context "on monday and wednesday" do
-        before { plage_ouverture.recurrence = Montrose.every(:week, on: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]) }
+        let(:recurrence) { Montrose.every(:week, on: %w[monday tuesday wednesday thursday friday saturday]) }
 
         it { is_expected.to eq("FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR,SA;") }
       end
 
       context "until 22/10/2019" do
-        before { plage_ouverture.recurrence = Montrose.every(:week, until: Date.new(2019, 10, 22)) }
+        let(:recurrence) { Montrose.every(:week, until: Time.zone.local(2019, 10, 22)) }
 
         it { is_expected.to eq("FREQ=WEEKLY;UNTIL=20191022T000000;") }
       end
     end
 
     context "every 2 weeks" do
-      let(:plage_ouverture) { create(:plage_ouverture, :weekly_by_2) }
+      let(:recurrence) { Montrose.every(:week, interval: 2) }
 
       it { is_expected.to eq("FREQ=WEEKLY;INTERVAL=2;") }
     end
 
     context "every month" do
-      let(:plage_ouverture) { create(:plage_ouverture, :monthly) }
+      let(:recurrence) { Montrose.every(:month) }
 
       it { is_expected.to eq("FREQ=MONTHLY;") }
 
       context "the 2nd wednesday of the month" do
-        before { plage_ouverture.recurrence = Montrose.every(:month, day: { 3 => [2] }) }
+        let(:recurrence) { Montrose.every(:month, day: { 3 => [2] }) }
 
         it { is_expected.to eq("FREQ=MONTHLY;BYDAY=2WE;") }
       end
@@ -58,7 +60,7 @@ describe PlageOuverture::Ics, type: :model do
   end
 
   describe "#by_week_day" do
-    subject { ics.by_week_day(on) }
+    subject { ics.send(:by_week_day, on) }
 
     context "repeat every friday of the week" do
       let(:on) { "friday" }
@@ -74,16 +76,16 @@ describe PlageOuverture::Ics, type: :model do
   end
 
   describe "#by_month_day" do
-    subject { ics.by_month_day(day) }
+    subject { ics.send(:by_month_day, day) }
 
     context "the 2nd wednesday of the month" do
-      let(:day) { { 3=>[2] } }
+      let(:day) { { 3 => [2] } }
 
       it { is_expected.to eq("2WE") }
     end
 
     context "the 1st monday of the month" do
-      let(:day) { { 1=>[1] } }
+      let(:day) { { 1 => [1] } }
 
       it { is_expected.to eq("1MO") }
     end
