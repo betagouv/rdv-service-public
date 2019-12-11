@@ -27,6 +27,7 @@ document.addEventListener('turbolinks:load', function() {
         let params = {
           starts_at: info.startStr,
           organisation_id: calendarEl.dataset.organisationId,
+          "agent_ids[]": calendarEl.dataset.agentId,
          };
         let plage_ouvertures = calendar.getEvents()
           .filter(e => e.rendering == "background")
