@@ -7,7 +7,7 @@
 module Admin
   class ApplicationController < Administrate::ApplicationController
     before_action :authenticate_super_admin!
-    around_action :skip_bullet
+    around_action :skip_bullet if defined?(Bullet)
 
     helper_method :sign_in_as_allowed?
 
