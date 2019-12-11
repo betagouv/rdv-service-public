@@ -66,11 +66,4 @@ class AgentDashboard < Administrate::BaseDashboard
     :service,
     :deleted_at,
   ].freeze
-
-  # Overwrite this method to customize how agents are displayed
-  # across all pages of the admin dashboard.
-  #
-  def display_resource(agent)
-    agent.email
-  end
 end

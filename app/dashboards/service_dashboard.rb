@@ -45,11 +45,4 @@ class ServiceDashboard < Administrate::BaseDashboard
     :motifs,
     :agents,
   ].freeze
-
-  # Overwrite this method to customize how super admins are displayed
-  # across all pages of the admin dashboard.
-  #
-  def display_resource(service)
-    service.name
-  end
 end
