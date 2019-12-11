@@ -11,12 +11,17 @@ class PlageOuverture < ApplicationRecord
   has_and_belongs_to_many :motifs, -> { distinct }
 
   before_save :clear_empty_recurrence
+  after_create :send_ics_to_agent
 
   validate :end_after_start
   validates :motifs, :title, :first_day, :start_time, :end_time, presence: true
 
   scope :exceptionnelles, -> { where(recurrence: nil) }
   scope :regulieres, -> { where.not(recurrence: nil) }
+
+  def send_ics_to_agent
+    PlageOuvertureMailer.send_ics_to_agent(self).deliver_later
+  end
 
   def starts_at
     start_time.on(first_day)
