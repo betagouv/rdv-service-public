@@ -43,11 +43,4 @@ class MotifLibelleDashboard < Administrate::BaseDashboard
     :name,
     :service,
   ].freeze
-
-  # Overwrite this method to customize how super admins are displayed
-  # across all pages of the admin dashboard.
-  #
-  def display_resource(motif_libelle)
-    motif_libelle.name
-  end
 end

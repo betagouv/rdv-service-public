@@ -1,0 +1,7 @@
+fr:
+  activerecord:
+    models:
+      super_admin: Super admin
+    attributes:
+      super_admin:    
+        email: Email

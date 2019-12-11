@@ -77,11 +77,4 @@ class MotifDashboard < Administrate::BaseDashboard
     :instruction_for_rdv,
     :deleted_at,
   ].freeze
-
-  # Overwrite this method to customize how super admins are displayed
-  # across all pages of the admin dashboard.
-  #
-  def display_resource(motif)
-    "#{motif.name} (#{motif.organisation&.name})"
-  end
 end

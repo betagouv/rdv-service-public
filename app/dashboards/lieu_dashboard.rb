@@ -46,11 +46,4 @@ class LieuDashboard < Administrate::BaseDashboard
     :organisation,
     :address,
   ].freeze
-
-  # Overwrite this method to customize how super admins are displayed
-  # across all pages of the admin dashboard.
-  #
-  def display_resource(lieu)
-    "#{lieu.name} (#{lieu.organisation.name})"
-  end
 end
