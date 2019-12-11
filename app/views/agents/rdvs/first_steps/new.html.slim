@@ -19,5 +19,9 @@
       = f.association :motif, collection: policy_scope(Motif).available_motifs_for_organisation_and_agent(current_organisation, current_agent), include_blank: "Sélectionnez un motif", input_html: { class: 'select2-input' }
       = f.input :starts_at, as: :hidden
       = f.input :location, as: :hidden
+      = f.input :location, as: :hidden
+      - @first_step.rdv.agents.each do |p|
+        / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
+        = f.hidden_field "agent_ids][", value: p.id
       .text-right
         = f.button :submit, 'Continuer'

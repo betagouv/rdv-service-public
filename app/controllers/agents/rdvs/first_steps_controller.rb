@@ -27,10 +27,10 @@ class Agents::Rdvs::FirstStepsController < AgentAuthController
   end
 
   def first_step_params
-    params.require(:rdv).permit(:motif_id, :starts_at, :location)
+    params.require(:rdv).permit(:motif_id, :starts_at, :location, agent_ids: [])
   end
 
   def query_params
-    params.permit(:motif_id, :starts_at, :location, :organisation_id)
+    params.permit(:motif_id, :starts_at, :location, :organisation_id, agent_ids: [])
   end
 end
