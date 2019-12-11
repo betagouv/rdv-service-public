@@ -70,7 +70,7 @@ class DefaultAgentPolicy
   end
 
   def same_agent_or_has_access?
-    same_agent? || (same_org? && @context.agent.access_planning?)
+    same_agent? || (same_org? && @context.agent.can_access_planning?)
   end
 
   class Scope

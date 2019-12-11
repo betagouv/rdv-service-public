@@ -5,7 +5,7 @@
     | Plages d'ouverture de #{@agent.full_name_and_service}
 
 - content_for :breadcrumb do
-  - if current_agent.access_planning?
+  - if current_agent.can_access_planning?
     .d-inline-block.mr-2
       = select_tag :id, options_for_select(policy_scope(Agent).complete.active.order_by_last_name.map { |agent| [agent.full_name, agent.id, { 'data-url': organisation_agent_plage_ouvertures_path(current_organisation, agent.id)}]}, selected: @agent.id), class: "select2-input", onchange: "Turbolinks.visit($('.select2-input option:selected').attr('data-url'))"
 

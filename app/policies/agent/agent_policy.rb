@@ -4,7 +4,7 @@ class Agent::AgentPolicy < Agent::AdminPolicy
   end
 
   def show?
-    @context.agent.access_planning? || @context.agent == @record
+    @context.agent.can_access_planning? || @context.agent == @record
   end
 
   def reinvite?
