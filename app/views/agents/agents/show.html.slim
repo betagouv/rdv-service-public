@@ -6,7 +6,7 @@
 
 - content_for :breadcrumb do
 
-  - if current_agent.can_access_planning?
+  - if current_agent.can_access_others_planning?
     = form_tag(organisation_agent_with_id_in_query_path, method: "get", class: "d-inline-block mr-2") do
       = select_tag :id, options_from_collection_for_select(policy_scope(Agent).complete.active.order_by_last_name, 'id', 'full_name', @agent.id), class: "select2-input", onchange: 'this.form.submit()'
 

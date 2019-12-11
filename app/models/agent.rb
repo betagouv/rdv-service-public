@@ -46,7 +46,7 @@ class Agent < ApplicationRecord
     !deleted_at ? super : :deleted_account
   end
 
-  def can_access_planning?
+  def can_access_others_planning?
     admin? || service.secretariat?
   end
 end
