@@ -16,11 +16,11 @@ class DefaultAgentPolicy
   end
 
   def show?
-    same_agent_or_admin?
+    same_agent_or_has_access?
   end
 
   def create?
-    same_agent_or_admin?
+    same_agent_or_has_access?
   end
 
   def new?
@@ -28,7 +28,7 @@ class DefaultAgentPolicy
   end
 
   def update?
-    same_agent_or_admin?
+    same_agent_or_has_access?
   end
 
   def edit?
@@ -36,7 +36,7 @@ class DefaultAgentPolicy
   end
 
   def destroy?
-    same_agent_or_admin?
+    same_agent_or_has_access?
   end
 
   def same_org?
@@ -69,8 +69,8 @@ class DefaultAgentPolicy
     admin? && same_org?
   end
 
-  def same_agent_or_admin?
-    same_agent? || admin_and_same_org?
+  def same_agent_or_has_access?
+    same_agent? || (same_org? && @context.agent.can_access_others_planning?)
   end
 
   class Scope
