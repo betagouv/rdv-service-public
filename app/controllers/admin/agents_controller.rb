@@ -1,10 +1,15 @@
 module Admin
   class AgentsController < Admin::ApplicationController
     def sign_in_as
-      sign_out(:user)
       agent = Agent.find(params[:id])
-      sign_in(:agent, agent, bypass: true)
-      redirect_to root_url
+      if sign_in_as_allowed?
+        sign_out(:user)
+        sign_in(:agent, agent, bypass: true)
+        redirect_to root_url
+      else
+        flash[:error] = "Fonctionnalité désactivée sur cet environnement."
+        redirect_to admin_agent_path(agent)
+      end
     end
 
     def create

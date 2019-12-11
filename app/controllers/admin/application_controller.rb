@@ -9,6 +9,8 @@ module Admin
     before_action :authenticate_super_admin!
     around_action :skip_bullet
 
+    helper_method :sign_in_as_allowed?
+
     def authenticate_super_admin!
       if super_admin_signed_in?
         super
@@ -23,6 +25,10 @@ module Admin
       yield
     ensure
       Bullet.enable = previous_value
+    end
+
+    def sign_in_as_allowed?
+      ENV.fetch('SIGN_IN_AS_ALLOWED') { false }
     end
 
     # Override this value to specify the number of elements to display at a time
