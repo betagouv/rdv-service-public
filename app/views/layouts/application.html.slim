@@ -9,17 +9,17 @@ html
         .content
           = render "layouts/navbar_dashboard"
           .container-fluid
-            - if content_for :title 
+            - if content_for :title
               .row.bg-dark.pb-5
                 .col-md-12
                   .page-title-box
-                    - if content_for :breadcrumb 
+                    - if content_for :breadcrumb
                       .page-title-right
                         = yield :breadcrumb
                     h4.page-title= yield :title
-            .bg-negative 
+            .bg-negative
               = render 'layouts/flash'
-              = yield 
+              = yield
 
     #modal-holder
     #right-bar-holder

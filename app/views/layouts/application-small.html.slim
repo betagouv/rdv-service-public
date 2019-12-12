@@ -11,7 +11,7 @@ html
           .container-fluid
             - if content_for :title
               .row.justify-content-md-center.bg-dark.pb-5
-                .col-md-6 
+                .col-md-6
                   .page-title-box
                     h4.page-title= yield :title
             .bg-negative
@@ -19,4 +19,5 @@ html
                 .col-md-6
                   = render 'layouts/flash'
                   = yield
+    #modal-holder
     = render "layouts/footer_dashboard"

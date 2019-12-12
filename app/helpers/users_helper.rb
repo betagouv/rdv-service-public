@@ -2,7 +2,7 @@ module UsersHelper
   def birth_date_and_age(user)
     return unless user.birth_date
 
-    "#{l(user.birth_date)} - #{user.age}"
+    "#{I18n.l(user.birth_date)} - #{user.age}"
   end
 
   def full_name_and_birthdate(user)

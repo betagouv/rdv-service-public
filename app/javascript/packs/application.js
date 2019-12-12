@@ -44,6 +44,7 @@ global.$ = require('jquery');
 
 $(document).on('shown.bs.modal', '.modal', function(e) {
   analytic.trackModalView(e);
+  new Datetimepicker();
 });
 
 $(document).on('shown.rightbar', '.right-bar', function(e) {

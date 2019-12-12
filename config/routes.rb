@@ -84,6 +84,7 @@ Rails.application.routes.draw do
           end
           collection do
             get :search
+            post :create_from_modal
           end
           resources :rdvs, only: :index
           resources :children, only: [:create, :new]
