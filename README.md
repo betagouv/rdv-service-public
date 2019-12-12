@@ -1,4 +1,4 @@
-# Lapins
+# rdv-solidarites.fr
 
 Réduire le nombre de rendez-vous annulés dans les maisons départementales de solidarité.
 
