@@ -6,6 +6,7 @@ import { Analytic } from 'packs/components/analytic.js.erb';
 import { Modal } from 'packs/components/modal';
 import 'packs/components/browser-detection';
 import 'select2/dist/js/select2.min.js';
+import 'select2/dist/js/i18n/fr.js';
 import 'packs/components/select2';
 import 'bootstrap';
 

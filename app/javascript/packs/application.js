@@ -15,6 +15,7 @@ import 'holderjs/holder.min';
 import 'jquery-slimscroll/jquery.slimscroll';
 import 'metismenu/dist/metisMenu.min';
 import 'select2/dist/js/select2.min.js';
+import 'select2/dist/js/i18n/fr.js';
 import { Datetimepicker } from 'packs/components/datetimepicker';
 import { Avatar } from 'packs/components/avatar';
 import { Menu } from 'packs/components/menu';
@@ -44,7 +45,6 @@ global.$ = require('jquery');
 $(document).on('shown.bs.modal', '.modal', function(e) {
   analytic.trackModalView(e);
 });
-
 
 $(document).on('shown.rightbar', '.right-bar', function(e) {
   analytic.trackRightbarView(e);

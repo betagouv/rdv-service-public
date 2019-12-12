@@ -2,11 +2,19 @@ class Agents::UsersController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: [:new, :create]
-  before_action :set_user, except: [:index, :new, :create, :link_to_organisation]
+  before_action :set_user, except: [:index, :search, :new, :create, :link_to_organisation]
 
   def index
     @users = policy_scope(User).order_by_last_name.page(params[:page])
     filter_users if params[:user] && params[:user][:search]
+  end
+
+  def search
+    @users = policy_scope(User).order_by_last_name.limit(10)
+    if search_params
+      @users = @users.search_by_name_or_email(search_params)
+    end
+    skip_authorization
   end
 
   def new
@@ -83,6 +91,10 @@ class Agents::UsersController < AgentAuthController
 
   def user_params
     params.require(:user).permit(:first_name, :last_name, :email, :phone_number, :birth_date, :address, :caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :logement)
+  end
+
+  def search_params
+    params.require(:term) if params[:term]
   end
 
   def set_user
