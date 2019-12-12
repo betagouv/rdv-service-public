@@ -26,6 +26,7 @@ import { PopulateLibelle } from 'packs/components/populate-libelle';
 import { Analytic } from 'packs/components/analytic.js.erb';
 import { PlacesInput } from 'packs/components/places-input.js.erb';
 import 'packs/components/calendar';
+import 'packs/components/select2';
 import 'packs/components/browser-detection';
 import "actiontext";
 import { Application } from "stimulus";
@@ -90,13 +91,5 @@ $(document).on('turbolinks:load', function() {
 
   new PopulateLibelle();
 
-  $(".select2-input").select2({
-    theme: "bootstrap4"
-  });
-
   new Datetimepicker();
-});
-
-$(document).on("turbolinks:before-cache", function() {
-  $('.select2-input').select2('destroy');
 });
