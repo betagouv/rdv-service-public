@@ -70,7 +70,7 @@ describe "User can search for rdvs" do
 
       # Step 5
       expect(page).to have_content("Votre rendez-vous est confirmé")
-      expect(page).to have_content(rdv.instruction_for_rdv)
+      expect(page).to have_content(motif.instruction_for_rdv)
       expect(page).not_to have_content("Annuler le RDV")
 
       click_link('Aller à la liste de vos rendez-vous')
