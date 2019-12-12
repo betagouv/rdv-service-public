@@ -14,13 +14,9 @@ class Users::ChildrenController < UserAuthController
     @user.parent_id = current_user.id
     @user.organisation_ids = current_user.organisation_ids
     authorize(@user)
-    if @user.save
-      flash[:notice] = "#{@user.full_name} a été ajouté comme enfant."
-      location = params[:callback_path].present? ? params[:callback_path] : users_informations_path
-      redirect_to location.to_s
-    else
-      respond_modal_with @user
-    end
+    flash[:notice] = "#{@user.full_name} a été ajouté comme enfant." if @user.save
+    location = params[:callback_path].present? ? params[:callback_path] : users_informations_path
+    respond_modal_with @user, location: location.to_s
   end
 
   def edit
