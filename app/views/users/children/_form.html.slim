@@ -1,6 +1,7 @@
 - form_url = user.persisted? ? child_path(user) : children_path
-= simple_form_for user, url: form_url do |f|
+= simple_form_for user, url: form_url, remote: request.xhr?, data: { modal: true } do |f|
   = render partial: 'layouts/model_errors', locals: { model: user }
+  = hidden_field '', :callback_path, value: params[:callback_path]
   .form-row
     .col-md-6= f.input :first_name
     .col-md-6= f.input :last_name

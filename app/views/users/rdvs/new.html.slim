@@ -37,6 +37,10 @@
               = link_to "modifier", welcome_motif_path(@departement, @motif_name, where: @where)
 
       .card-body
+        - if @motif.restriction_for_rdv.present?
+          .alert.alert-primary
+            strong Consignes pour ce rendez vous :
+            = simple_format(@motif.restriction_for_rdv, class: 'm-0 pl-1')
         = simple_form_for(@rdv, url: users_rdvs_path) do |f|
 
           = f.association :motif, as: :hidden, wrapper_html: { class: 'mb-0' }
@@ -46,7 +50,7 @@
           = f.input :departement, as: :hidden, input_html: { value: @departement }, wrapper_html: { class: 'mb-0' }
           = f.association :users, label: "Pour qui prenez-vous rendez-vous ?", as: :radio_buttons, collection: current_user.available_users_for_rdv, checked: current_user.id, label_method: lambda { |user| full_name_and_birthdate(user) }, wrapper_html: { class: 'mb-0' }
           .form-group
-            = link_to "Ajouter un enfant", new_child_path
+            = link_to "Ajouter un enfant", new_child_path(callback_path: request.url), data: { modal: true }
 
           .row
             .col

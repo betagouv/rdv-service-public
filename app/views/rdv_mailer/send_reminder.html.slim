@@ -1,1 +1,6 @@
 = render "title", rdv: @rdv, previous_starts_at: @previous_starts_at
+
+- if @rdv.motif.instruction_for_rdv.present?
+  p
+    | Quelques informations supplémentaires:
+    = simple_format(@rdv.motif.instruction_for_rdv)

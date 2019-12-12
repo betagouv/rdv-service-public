@@ -3,11 +3,13 @@ require("turbolinks").start()
 
 import { PlacesInput } from 'packs/components/places-input.js.erb';
 import { Analytic } from 'packs/components/analytic.js.erb';
+import { Modal } from 'packs/components/modal';
 import 'packs/components/browser-detection';
 import 'select2/dist/js/select2.min.js';
 import 'bootstrap';
 
 var analytic = new Analytic();
+new Modal();
 
 $(document).on('turbolinks:load', function() {
   analytic.trackPageView();
