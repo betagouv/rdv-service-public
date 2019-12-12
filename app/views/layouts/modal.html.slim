@@ -1,9 +1,9 @@
 #mainModal.modal.fade aria-hidden="true" aria-labelledby="mainModalLabel" role="dialog" tabindex="-1" data-url=request.path
-  .modal-dialog.modal-lg
+  .modal-dialog.modal-md
     .modal-content
       .modal-header.modal-colored-header.bg-primary
-        h4#mainModalLabel.modal-title.m-0
+        h4#mainModalLabel.modal-title.m-0.text-white.text-center.w-100
           = yield :title if content_for? :title
-        button.close aria-hidden="true" data-dismiss="modal" type="button"  ×
+        button.close.text-white aria-hidden="true" data-dismiss="modal" type="button"  ×
       .modal-body
         = yield

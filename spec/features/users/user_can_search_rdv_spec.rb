@@ -55,11 +55,22 @@ describe "User can search for rdvs" do
 
       # Step 4
       expect(page).to have_content(motif.name)
+      expect(page).to have_content(motif.restriction_for_rdv)
+
+      # Add Child
+      click_link("Ajouter un enfant")
+      expect(page).to have_selector('h4', text: "Ajouter un enfant")
+      fill_in('Prénom', with: "Mathieu")
+      fill_in('Nom', with: "Lapin")
+      fill_in('Date de naissance', with: Date.yesterday)
+      click_button('Créer')
+      expect(page).to have_content("Mathieu Lapin")
 
       click_button('Continuer')
 
       # Step 5
       expect(page).to have_content("Votre rendez-vous est confirmé")
+      expect(page).to have_content(motif.instruction_for_rdv)
       expect(page).not_to have_content("Annuler le RDV")
 
       click_link('Aller à la liste de vos rendez-vous')

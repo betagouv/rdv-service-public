@@ -1,9 +1,12 @@
 class Users::ChildrenController < UserAuthController
+  respond_to :html
+
   before_action :set_user, only: [:edit, :update, :destroy]
 
   def new
     @user = User.new(parent_id: current_user.id)
     authorize(@user)
+    respond_modal_with @user
   end
 
   def create
@@ -11,12 +14,9 @@ class Users::ChildrenController < UserAuthController
     @user.parent_id = current_user.id
     @user.organisation_ids = current_user.organisation_ids
     authorize(@user)
-    if @user.save
-      flash[:notice] = "#{@user.full_name} a été ajouté comme enfant."
-      redirect_to users_informations_path
-    else
-      render :new
-    end
+    flash[:notice] = "#{@user.full_name} a été ajouté comme enfant." if @user.save
+    location = params[:callback_path].present? ? params[:callback_path] : users_informations_path
+    respond_modal_with @user, location: location.to_s
   end
 
   def edit

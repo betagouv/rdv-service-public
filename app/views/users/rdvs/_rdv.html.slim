@@ -19,6 +19,11 @@
       li.list-group-item
         i.fa.fa-info-circle>
         = rdv.motif.name
+      - if rdv.motif.instruction_for_rdv.present?
+        li.list-group-item
+          i.fa.fa-exclamation-triangle>
+          strong Informations supplémentaires :
+          = simple_format(rdv.motif.instruction_for_rdv, class:"pl-3 pt-1")
     - unless defined?(hide_cancellation_infos) && hide_cancellation_infos
       - if rdv.cancellable?
         .text-right.mt-2
