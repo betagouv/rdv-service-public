@@ -8,6 +8,8 @@ FactoryBot.define do
     max_booking_delay { 6.months }
     color { "##{SecureRandom.hex(3)}" }
     disable_notifications_for_users { false }
+    instruction_for_rdv { "Intruction pour le RDV" }
+    restriction_for_rdv { "Consigne pour le RDV" }
     trait :with_rdvs do
       after(:create) do |motif|
         create_list(:rdv, 5, motif: motif)
