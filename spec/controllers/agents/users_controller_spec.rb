@@ -81,4 +81,35 @@ RSpec.describe Agents::UsersController, type: :controller do
       end
     end
   end
+
+  describe "POST #create_from_modal" do
+    subject { post :create_from_modal, params: { organisation_id: organisation_id, user: attributes }, format: :js }
+
+    context "for user without email" do
+      let(:attributes) do
+        {
+          first_name: "Michel",
+          last_name: "Lapin",
+        }
+      end
+
+      it { expect { subject }.to change(User, :count).by(1) }
+
+      it "redirects to the created user" do
+        subject
+        expect(subject).to render_template(:created_from_modal)
+      end
+    end
+
+    context "with invalid params" do
+      let(:attributes) do
+        {
+          first_name: "Michel",
+        }
+      end
+
+      it { expect { subject }.not_to change(User, :count) }
+      it { expect(subject).to render_template(:new) }
+    end
+  end
 end
