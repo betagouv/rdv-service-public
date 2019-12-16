@@ -1,0 +1,33 @@
+.overview
+  h3.aligncenter Recapitulatif
+  div.row-result
+    span.title Date :
+    span.float-right= l(rdv.starts_at, format: :human)
+    .clear
+  div.row-result
+    span.title Service :
+    span.float-right= rdv.motif.service.name
+    .clear
+  div.row-result
+    span.title Motif :
+    span.float-right= rdv.motif.name
+    .clear
+  div.row-result
+    span.title Durée :
+    span.float-right
+      = "#{rdv.duration_in_min} minutes"
+    .clear
+  - if rdv.motif.by_phone
+    div.row-result
+      span.title Ceci est un rendez-vous téléphonique
+  - else
+    div.row-result
+      span.title Adresse :
+      span.float-right
+        a href="https://maps.google.com?q=#{rdv.location.split(/,?\s/).join('+')}" target="_blank"
+          = rdv.location
+      .clear
+  - if rdv.motif.instruction_for_rdv.present?
+    .div.row-result.no-border
+      span.title Informations supplémentaires :
+      = simple_format(rdv.motif.instruction_for_rdv)

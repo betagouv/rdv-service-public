@@ -1,6 +1,9 @@
-= render "title", rdv: @rdv, previous_starts_at: @previous_starts_at
-
-- if @rdv.motif.instruction_for_rdv.present?
+div
+  p Bonjour,
   p
-    | Quelques informations supplémentaires:
-    = simple_format(@rdv.motif.instruction_for_rdv)
+    | Nous vous rappellons que vous avez un RDV prévu le #{l(@rdv.starts_at, format: :human)}.
+  = render "overview", rdv: @rdv
+  p
+    | Vous pouvez modifier ou annuler votre rendez-vous jusqu'à 4h avant celui-ci. Il suffit de vous rendre dans votre espace personnel ou en cliquant sur le lien ci-dessous.
+  .btn-wrapper
+    = link_to 'Mon espace', users_rdvs_url, class:'btn btn-primary'
