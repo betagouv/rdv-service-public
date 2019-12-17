@@ -3,6 +3,7 @@ class Agents::Rdvs::FirstStepsController < AgentAuthController
 
   def new
     rdv = Rdv.new(query_params)
+    @agent = params[:agent_ids].present? ? Agent.find(params[:agent_ids].first) : current_agent
     @first_step = Rdv::FirstStep.new(rdv.to_step_params)
     @first_step.organisation_id = current_organisation.id
     skip_authorization
