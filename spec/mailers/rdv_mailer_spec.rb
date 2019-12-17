@@ -15,7 +15,7 @@ RSpec.describe RdvMailer, type: :mailer do
     end
 
     it "renders the body" do
-      expect(mail.html_part.body.encoded).to match("RDV confirmé le #{I18n.l(rdv.starts_at, format: :human)}")
+      expect(mail.html_part.body.encoded).to match("Votre RDV du #{I18n.l(rdv.starts_at, format: :human)} a été confirmé")
     end
   end
 
