@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80px" height="80px" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
+    <title>illu</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0 80 80 80 80 0 0 0"></polygon>
+    </defs>
+    <g id="Homepage-particuliers" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1A-D-HPparticuliers" transform="translate(-808.000000, -431.000000)">
+            <g id="How-it-works-" transform="translate(15.000000, 377.000000)">
+                <g id="4" transform="translate(727.000000, 54.000000)">
+                    <g id="illu" transform="translate(66.000000, 0.000000)">
+                        <path d="M80,40 C80,62.092 62.092,80 40,80 C17.908,80 0,62.092 0,40 C0,17.908 17.908,0 40,0 C62.092,0 80,17.908 80,40" id="Fill-1" fill="#CEF3EF"></path>
+                        <path d="M14.4746,55.2148 L29.7446,55.2148 L29.7446,33.2908 L14.4746,55.2148 Z M54.2126,55.2148 L54.2126,67.0588 L44.7186,67.0588 L44.7186,79.7818 L29.7446,79.7818 L29.7446,67.0588 L0.4786,67.0588 L0.4786,55.7048 L32.4846,10.0938 L44.7186,10.0938 L44.7186,55.2148 L54.2126,55.2148 Z" id="Fill-3" fill="#222E5C"></path>
+                        <polygon id="Fill-5" fill="#FFFFFF" points="78.3818 49.208 78.6948 49.208 78.7588 49.208 78.7588 79.738 42.9498 79.738 29.7588 66.483 29.7588 49.208 30.0718 49.208"></polygon>
+                        <polygon id="Fill-7" fill="#66D9CE" points="78.7588 40.6016 78.7588 49.2076 78.6958 49.2076 78.3818 49.2076 30.0718 49.2076 29.7588 49.2076 29.7588 40.6016"></polygon>
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <g id="Clip-10"></g>
+                        <polygon id="Fill-9" fill="#46B7A9" mask="url(#mask-2)" points="63.537 44.747 68.537 44.747 68.537 35.198 63.537 35.198"></polygon>
+                        <polygon id="Fill-11" fill="#46B7A9" mask="url(#mask-2)" points="51.79 44.747 56.79 44.747 56.79 35.198 51.79 35.198"></polygon>
+                        <polygon id="Fill-12" fill="#46B7A9" mask="url(#mask-2)" points="40.5 44.747 45.5 44.747 45.5 35.198 40.5 35.198"></polygon>
+                        <polygon id="Fill-13" fill="#CEF3EF" mask="url(#mask-2)" points="64.335 62.5 74.335 62.5 74.335 52.5 64.335 52.5"></polygon>
+                        <polygon id="Fill-14" fill="#CEF3EF" mask="url(#mask-2)" points="49.259 62.5 59.259 62.5 59.259 52.5 49.259 52.5"></polygon>
+                        <polygon id="Fill-15" fill="#CEF3EF" mask="url(#mask-2)" points="34.182 62.5 44.182 62.5 44.182 52.5 34.182 52.5"></polygon>
+                        <polygon id="Fill-16" fill="#FF7D00" mask="url(#mask-2)" points="64.346 76.32 74.346 76.32 74.346 66.32 64.346 66.32"></polygon>
+                        <polygon id="Fill-17" fill="#CEF3EF" mask="url(#mask-2)" points="49.269 76.32 59.269 76.32 59.269 66.32 49.269 66.32"></polygon>
+                        <polygon id="Fill-18" fill="#66D9CE" mask="url(#mask-2)" points="42.9502 79.8018 42.9502 66.7348 30.0102 66.7348"></polygon>
+                        <path d="M78.9541,20.9443 C76.5421,27.3393 69.4031,30.5683 63.0091,28.1563 C56.6131,25.7453 53.3851,18.6053 55.7961,12.2113 C58.2081,5.8163 65.3471,2.5873 71.7411,4.9983 C78.1371,7.4103 81.3651,14.5483 78.9541,20.9443" id="Fill-19" fill="#FF7D00" mask="url(#mask-2)"></path>
+                        <path d="M72.5557,22.4375 L72.1027,23.6395 L59.1607,18.7585 L59.6147,17.5575 C59.9287,16.7255 60.5577,16.0835 61.3327,15.7075 L63.0737,14.9195 C63.8787,14.5545 64.4777,13.9015 64.7907,13.0695 L65.3497,11.5895 C66.0577,9.7105 68.1367,8.7705 70.0167,9.4785 C71.8967,10.1875 72.8367,12.2665 72.1277,14.1465 L71.5587,15.6565 C71.2447,16.4885 71.2927,17.3865 71.6267,18.1805 L72.4137,19.9205 C72.8217,20.7085 72.8587,21.6365 72.5557,22.4375" id="Fill-20" fill="#FFFFFF" mask="url(#mask-2)"></path>
+                        <path d="M63.7832,20.502 L63.5512,21.118 C63.1672,22.135 63.6852,23.281 64.7022,23.664 C65.7202,24.048 66.8652,23.529 67.2482,22.513 L67.4802,21.897" id="Fill-21" fill="#FFFFFF" mask="url(#mask-2)"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

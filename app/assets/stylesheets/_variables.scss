@@ -24,8 +24,9 @@ $grays: map-merge((
   "900": $gray-900
 ), $grays);
 
-$blue:       #222E5C;
-$lightblue:  #afe0e5;
+$blue:       #222e5c;
+$turquoise:  #66d9ce;
+$lightturquoise: #cef3ef;
 $indigo:     #727cf5;
 $purple:     #6b5eae;
 $pink:       #ff679b;
@@ -40,7 +41,8 @@ $cyan:       #39afd1;
 $colors: ();
 $colors: map-merge((
   "blue":       $blue,
-  "lightblue":  $lightblue,
+  "turquoise":  $turquoise,
+  "lightturquoise": $lightturquoise,
   "indigo":     $indigo,
   "purple":     $purple,
   "pink":       $pink,
@@ -58,6 +60,7 @@ $colors: map-merge((
 $white:         white;
 $primary:       $blue;
 $secondary:     $orange;
+$tertiary:      $turquoise;
 $success:       $green;
 $info:          $cyan;
 $warning:       $yellow;
@@ -69,6 +72,7 @@ $theme-colors: ();
 $theme-colors: map-merge((
   "primary":    $primary,
   "secondary":  $secondary,
+  "tertiary":   $tertiary,
   "success":    $success,
   "info":       $info,
   "warning":    $warning,
@@ -122,7 +126,7 @@ $sizes: map-merge((
 //
 // Settings for the `<body>` element.
 $body-bg:                   #fafbfe;
-$body-color:                #737373;
+$body-color:                $gray-900;
 
 // Links
 //

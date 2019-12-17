@@ -17,38 +17,33 @@ section.py-5
     .row
       .col-md-4
         h4.font-16 Diviser le nombre de lapins
-        h4 x4
+        h2 x4
       .col-md-4
         h4.font-16 Diviser le temps de prise de RDV
-        h4
-          | x3
+        h2 x3
       .col-md-4
         h4.font-16 Diminuer les délais d'attente pour l'usager
-        h4
-          | x2
+        h2 x2
 
-section.bg-lightblue.py-5
+section.bg-lightturquoise.py-5
   .container
     .text-center.w-75.m-auto
       h2.mb-5 Comment ça marche ?
     .divider
     .row
-      .col-md-4.text-center
-        = holder_tag 300, 'Illustration', 'gray', class: 'img-fluid mb-2'
+      .col-md-4
         h4 Prise de RDV en ligne
         p
           | Vous choisissez quel motif de RDV sont ouverts à la prise de RDV en ligne. Les agents peuvent garder la mains sur les motifs de RDV de leur choix.
-      .col-md-4.text-center
-        = holder_tag 300, 'Illustration', 'gray', class: 'img-fluid mb-2'
+      .col-md-4
         h4 Rappel des RDV
         p
           | Vos usagers sont notifiés lors de la prise et à l'échéance du RDV par SMS et par email. Ils peuvent le cas échéant modifier ou annuler le RDV directement en ligne.
-      .col-md-4.text-center
-        = holder_tag 300, 'Illustration', 'gray', class: 'img-fluid mb-2'
+      .col-md-4
         h4 Gestion des files d'attente
         p
           | RDV Solidarités optimise pour vous les calendriers de vos agents. A l'annulation d'un RDV, nous notifions pour vous les usagers de la disponibilité d'un nouveau créneau.
     .row
       .col-md-12.text-center.mt-5
         p.lead Vous êtes intéressés pour votre Maison des Solidarités ?
-        = mail_to "contact@rdv-solidarites.fr", "Contactez-nous", class: 'btn btn-secondary'
+        = mail_to "contact@rdv-solidarites.fr", "Contactez-nous", class: 'btn btn-tertiary'

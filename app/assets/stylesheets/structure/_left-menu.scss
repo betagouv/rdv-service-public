@@ -33,6 +33,8 @@ body.enlarged .logo{
   top: 0;
   .collapse-menu {
     color: $menu-item;
+    position: absolute;
+    right: 0;
     &:hover {
       cursor: pointer;
       color: $menu-item-hover;
