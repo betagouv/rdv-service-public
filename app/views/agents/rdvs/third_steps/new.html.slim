@@ -36,11 +36,10 @@
       = f.association :users,
         collection: @third_step.rdv.users,
         label_method: lambda { |user| full_name_and_birthdate(user) },
-        input_html: { multiple: true, class: 'select2-input', data: { "select-options": { ajax: { url: search_organisation_users_path(current_organisation), dataType: 'json', delay: 250 }} } }
-      i
-        | L'usager n'existe pas ?&nbsp;
-        = link_to "Créez le", new_organisation_user_path(current_organisation, modal: true), data: { modal: true }
-      .row.mt-2
+        input_html: { multiple: true, class: 'select2-input', data: { "select-options": { ajax: { url: search_organisation_users_path(current_organisation), dataType: 'json', delay: 250 }} } },
+        hint: raw("L'usager n'existe pas ? #{link_to "Créer", new_organisation_user_path(current_organisation, modal: true), data: { modal: true }}.")
+
+      .row
         .col.text-left
           = link_to 'Revenir en arrière', new_organisation_second_step_path(@third_step.to_query), class: 'btn btn-link'
         .col.text-right
