@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80px" height="80px" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
+    <title>illu</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0 80 80 80 80 0 0 0"></polygon>
+    </defs>
+    <g id="Homepage-particuliers" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1A-D-HPparticuliers" transform="translate(-323.000000, -431.000000)">
+            <g id="How-it-works-" transform="translate(15.000000, 377.000000)">
+                <g id="2" transform="translate(242.000000, 54.000000)">
+                    <g id="illu" transform="translate(66.000000, 0.000000)">
+                        <path d="M80,40 C80,62.092 62.092,80 40,80 C17.908,80 0,62.092 0,40 C0,17.908 17.908,0 40,0 C62.092,0 80,17.908 80,40" id="Fill-1" fill="#CEF3EF"></path>
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <g id="Clip-4"></g>
+                        <polygon id="Fill-3" fill="#46B7A9" mask="url(#mask-2)" points="32.327 80 54 80 54 25.714 32.327 25.714"></polygon>
+                        <polygon id="Fill-5" fill="#66D9CE" mask="url(#mask-2)" points="5 80 33.27 80 33.27 25.714 5 25.714"></polygon>
+                        <polygon id="Fill-6" fill="#46B7A9" mask="url(#mask-2)" points="10.48 38.23 16.48 38.23 16.48 32.23 10.48 32.23"></polygon>
+                        <polygon id="Fill-7" fill="#46B7A9" mask="url(#mask-2)" points="22 38 28 38 28 32 22 32"></polygon>
+                        <polygon id="Fill-8" fill="#46B7A9" mask="url(#mask-2)" points="10.48 48.23 16.48 48.23 16.48 42.23 10.48 42.23"></polygon>
+                        <polygon id="Fill-9" fill="#46B7A9" mask="url(#mask-2)" points="22 48 28 48 28 42 22 42"></polygon>
+                        <polygon id="Fill-10" fill="#46B7A9" mask="url(#mask-2)" points="10.48 59.23 16.48 59.23 16.48 53.23 10.48 53.23"></polygon>
+                        <polygon id="Fill-11" fill="#35A8C7" mask="url(#mask-2)" points="22 59 28 59 28 53 22 53"></polygon>
+                        <polygon id="Fill-12" fill="#35A8C7" mask="url(#mask-2)" points="10.48 69.23 16.48 69.23 16.48 63.23 10.48 63.23"></polygon>
+                        <polygon id="Fill-13" fill="#35A8C7" mask="url(#mask-2)" points="22 69 28 69 28 63 22 63"></polygon>
+                        <path d="M50.4727,67.5479 L50.4727,79.7819 L2.6117,79.7819 L2.6117,68.5269 L25.8077,43.8609 C30.6357,38.6429 33.0507,33.8789 33.0507,29.5719 C33.0507,26.8309 32.2497,24.7599 30.6527,23.3569 C29.0527,21.9539 26.7207,21.2519 23.6547,21.2519 C17.7167,21.2519 11.5497,23.5039 5.1567,28.0059 L0.2617,17.0429 C3.0667,14.6309 6.6567,12.7219 11.0287,11.3189 C15.3987,9.9149 19.8377,9.2129 24.3397,9.2129 C31.5817,9.2129 37.3397,10.9599 41.6147,14.4489 C45.8877,17.9419 48.0257,22.6229 48.0257,28.4949 C48.0257,32.5409 47.1937,36.2769 45.5307,39.7009 C43.8667,43.1269 41.0767,46.9299 37.1607,51.1049 L21.4037,67.5479 L50.4727,67.5479 Z" id="Fill-14" fill="#222E5C" mask="url(#mask-2)"></path>
+                        <polygon id="Fill-15" fill="#66D9CE" mask="url(#mask-2)" points="54.9453 80 75.8243 80 75.8243 49.934 44.2553 49.934"></polygon>
+                        <polygon id="Fill-16" fill="#FFFFFF" mask="url(#mask-2)" points="57.8682 80 24.4622 80 24.4622 49.934 41.0002 42 57.8682 49.934"></polygon>
+                        <polygon id="Fill-17" fill="#66D9CE" mask="url(#mask-2)" points="30.725 80 51.604 80 51.604 65.802 30.725 65.802"></polygon>
+                        <polygon id="Fill-18" fill="#FF7D00" mask="url(#mask-2)" points="28.219 61.297 54.11 61.297 54.11 54.615 28.219 54.615"></polygon>
+                        <polygon id="Fill-19" fill="#222E5C" mask="url(#mask-2)" points="75.8682 49.9336 59.1652 41.5816 41.0002 41.9996 58.0002 49.9996"></polygon>
+                        <polygon id="Fill-20" fill="#FFFFFF" mask="url(#mask-2)" points="68.07 80 70.015 80 70.015 61.514 68.07 61.514"></polygon>
+                        <path d="M68.5732,70.2705 C84.1402,70.2705 69.5462,43.9995 69.5462,43.9995 C69.5462,43.9995 53.9782,70.2705 68.5732,70.2705" id="Fill-21" fill="#46B7A9" mask="url(#mask-2)"></path>
+                        <polygon id="Fill-22" fill="#FFFFFF" mask="url(#mask-2)" points="44 80 46 80 46 66 44 66"></polygon>
+                        <polygon id="Fill-23" fill="#222E5C" mask="url(#mask-2)" points="51.6045 65.8018 30.7255 65.8018 26.7255 70.9998 47.6045 70.9998"></polygon>
+                        <path d="M77.5361,27.5879 L75.1151,27.5879 L75.1151,27.3749 C75.1151,25.4639 73.6281,23.9349 71.8021,23.9349 C70.7821,23.9349 69.8901,24.4009 69.2961,25.1239 C68.6161,23.8499 67.2991,22.9999 65.8121,22.9999 C63.6031,22.9999 61.8191,24.8689 61.8191,27.1199 C61.8191,27.2899 61.8191,27.4179 61.8621,27.5879 L61.1821,27.5879 C59.8231,27.5879 58.7611,28.7339 58.7611,30.0939 C58.7611,31.4949 59.8651,32.5999 61.1821,32.5999 L77.5791,32.5999 C78.9381,32.5999 80.0001,31.4529 80.0001,30.0939 C80.0001,28.7339 78.8951,27.5879 77.5361,27.5879" id="Fill-24" fill="#FFFFFF" mask="url(#mask-2)"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

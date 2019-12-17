@@ -3,44 +3,44 @@
     .container
       .row
         .col-lg-10.justify-content-md-center
-          h1.mb-4.text-white
+          h1.text-white
             | Prenez 
             span.text-secondary rendez-vous en ligne 
             br
-            | avec votre maison départementale des solidarités
+            | avec votre département
+          h3.text-white.mb-4 en PMI, CPEF
           .mb-5= render 'search_form'
       h3.text-white.text-center Comment ça marche ? 
 section.bg-negative.mt-3.mb-5
   .container
     .row
       .col-lg-3
-        .text-center
+        .text-center.mb-3
           .d-flex.justify-content-center
-            .number-circle.bg-lightturquoise 1
+            = image_tag 'welcome/location.svg', class: 'img-circle'
           h5.text-primary.mt-3 Choisir votre adresse
-          p.m-0 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
       .col-lg-3
-        .text-center
+        .text-center.mb-3
           .d-flex.justify-content-center
-            .number-circle.bg-lightturquoise 2
+            = image_tag 'welcome/service.svg', class: 'img-circle'
           h5.text-primary.mt-3 Choisir un service
-          p.m-0 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
       .col-lg-3
-        .text-center
+        .text-center.mb-3
           .d-flex.justify-content-center
-            .number-circle.bg-lightturquoise 3
+            = image_tag 'welcome/motif.svg', class: 'img-circle'
           h5.text-primary.mt-3 Choisir un motif
-          p.m-0 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
       .col-lg-3
-        .text-center
+        .text-center.mb-3
           .d-flex.justify-content-center
-            .number-circle.bg-lightturquoise 4
+            = image_tag 'welcome/creneau.svg', class: 'img-circle'
           h5.text-primary.mt-3 Choisir un créneau
-          p.m-0 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 section.bg-lightturquoise.p-5
   .container 
-    header
-      h3.mb-2.text-primary Vous êtes un agent ? 
-      p.lead Nous nous engageons à réduire le nombre de rendez-vous manqués dans les services sociaux départementaux.
-      = link_to 'En savoir plus', accueil_mds_path, class: 'btn btn-tertiary'
+    .row
+      .col-md-3.align-items-center
+        = image_tag 'welcome/agent.svg', class: 'mx-auto d-block'
+      .col-md-9
+        h3.mb-2.text-primary Vous êtes un agent ? 
+        p.lead Nous nous engageons à réduire le nombre de rendez-vous manqués dans les services sociaux départementaux.
+        = link_to 'En savoir plus', accueil_mds_path, class: 'btn btn-tertiary'

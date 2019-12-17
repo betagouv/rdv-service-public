@@ -242,15 +242,8 @@ footer.main-footer {
   border-radius: 50px;
 }
 
-.number-circle {
-  $radius: 70px;
-  width: $radius;
-  line-height: $radius;
-  border-radius: 50%;
-  text-align: center;
-  font-size: 2rem;
+.img-circle {
   margin-top: -70px;
-  font-weight: bold;
   @include media-breakpoint-down(md) { 
     margin-top: 0;
   }

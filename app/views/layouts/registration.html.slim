@@ -14,10 +14,7 @@ html
         = link_logo
         .align-items-center.d-flex.h-100
           .card-body
-            - if content_for :left_part
-              = yield :left_part
-            - else
-              = holder_tag 250, 'Image d\'illustration', 'gray', class: 'img-fluid mb-4'
+            = image_tag 'welcome/agent.svg', class: 'mx-auto mb-5'
             - if agent_path?
               h4.mb-3 Terminé l'agenda papier, moins de temps perdu.
               p.lead
@@ -38,7 +35,7 @@ html
                     h3 Espace reservé aux agents
                     p 
                       | Vous êtes un particulier ? 
-                      = link_to 'Cliquez-ici', request.path.gsub('pros', 'users')
+                      = link_to 'Cliquez-ici', request.path.gsub('agents', 'users')
                 = yield
                 - if content_for :footer
                 .mt-3.text-center
