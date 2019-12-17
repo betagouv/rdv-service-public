@@ -48,7 +48,6 @@ class Agents::UsersController < AgentAuthController
     @user.skip_confirmation!
     if @user.save
       flash[:notice] = "L'usager a été créé."
-      render :created_from_modal
     else
       render :new
     end
