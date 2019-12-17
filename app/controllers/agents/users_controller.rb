@@ -49,7 +49,8 @@ class Agents::UsersController < AgentAuthController
     if @user.save
       flash[:notice] = "L'usager a été créé."
     else
-      render :new
+      @for_modal = true
+      respond_modal_with @user
     end
   end
 
