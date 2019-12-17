@@ -7,6 +7,10 @@ class Agent::UserPolicy < DefaultAgentPolicy
     same_org?
   end
 
+  def create_from_modal?
+    same_org?
+  end
+
   def invite?
     create?
   end

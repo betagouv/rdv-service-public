@@ -15,6 +15,7 @@ import 'holderjs/holder.min';
 import 'jquery-slimscroll/jquery.slimscroll';
 import 'metismenu/dist/metisMenu.min';
 import 'select2/dist/js/select2.min.js';
+import 'select2/dist/js/i18n/fr.js';
 import { Datetimepicker } from 'packs/components/datetimepicker';
 import { Avatar } from 'packs/components/avatar';
 import { Menu } from 'packs/components/menu';
@@ -26,6 +27,7 @@ import { PopulateLibelle } from 'packs/components/populate-libelle';
 import { Analytic } from 'packs/components/analytic.js.erb';
 import { PlacesInput } from 'packs/components/places-input.js.erb';
 import 'packs/components/calendar';
+import 'packs/components/select2';
 import 'packs/components/browser-detection';
 import "actiontext";
 import { Application } from "stimulus";
@@ -42,8 +44,8 @@ global.$ = require('jquery');
 
 $(document).on('shown.bs.modal', '.modal', function(e) {
   analytic.trackModalView(e);
+  new Datetimepicker();
 });
-
 
 $(document).on('shown.rightbar', '.right-bar', function(e) {
   analytic.trackRightbarView(e);
@@ -90,13 +92,5 @@ $(document).on('turbolinks:load', function() {
 
   new PopulateLibelle();
 
-  $(".select2-input").select2({
-    theme: "bootstrap4"
-  });
-
   new Datetimepicker();
-});
-
-$(document).on("turbolinks:before-cache", function() {
-  $('.select2-input').select2('destroy');
 });

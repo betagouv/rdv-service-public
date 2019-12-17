@@ -17,13 +17,15 @@ class Modal {
     $(document).on('ajax:success', 'form[data-modal]', function(event){
       const [data, _status, xhr] = event.detail;
       const url = xhr.getResponseHeader('Location');
+      const type = xhr.getResponseHeader('Content-Type');
+
       if (url) {
         // Redirect to url
         window.location = url;
-      } else {
+      } else if (!type.match(/\b(?:java|ecma)script\b/)) {
         // Remove old modal backdrop
         $('.modal-backdrop').remove();
-        
+
         // Update modal content
         const modal = $(data).find('body').html();
         $(modal_holder_selector).html(modal).find(modal_selector).modal();

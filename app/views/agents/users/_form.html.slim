@@ -1,4 +1,6 @@
-= simple_form_for([current_organisation, user], remote: request.xhr?, data: { rightbar: true }) do |f|
+- url = @for_modal ? create_from_modal_organisation_users_path(current_organisation.id) : nil
+= simple_form_for([current_organisation, user], url: url, remote: request.xhr?, data: { modal: true }) do |f|
+  = hidden_field '', :modal, value: params[:modal]
   = render partial: 'layouts/model_errors', locals: { model: user }
   .form-row
     .col-md-6= f.input :first_name

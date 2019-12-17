@@ -78,9 +78,15 @@ Rails.application.routes.draw do
         end
 
         resources :users do
+          member do
+            post :invite
+            get :link_to_organisation
+          end
+          collection do
+            get :search
+            post :create_from_modal
+          end
           resources :rdvs, only: :index
-          post :invite, on: :member
-          get :link_to_organisation, on: :member
           resources :children, only: [:create, :new]
         end
         resources :children, except: [:create, :new]

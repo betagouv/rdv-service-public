@@ -6,6 +6,8 @@ import { Analytic } from 'packs/components/analytic.js.erb';
 import { Modal } from 'packs/components/modal';
 import 'packs/components/browser-detection';
 import 'select2/dist/js/select2.min.js';
+import 'select2/dist/js/i18n/fr.js';
+import 'packs/components/select2';
 import 'bootstrap';
 
 var analytic = new Analytic();
@@ -22,9 +24,5 @@ $(document).on('turbolinks:load', function() {
         document.querySelector('#search_departement').value = (e.suggestion.postcode || '').substring(0, 2);
       });
     }
-
   }
-  $(".select2-input").select2({
-    theme: "bootstrap4"
-  });
 });
