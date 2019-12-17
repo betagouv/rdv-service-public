@@ -4,49 +4,24 @@ html
     meta content="text/html; charset=utf-8" http-equiv="Content-Type"
     = stylesheet_link_tag 'mail'
   body
-    table.body
-      tr
-        td.center align="center" valign="top" 
-          center
-            table.wrapper.header.float-center align="center" 
+    table.body-wrap
+      tr.d-block align="center"
+        td.logo.d-block
+          = link_to root_url do
+            = image_tag '/logo.png', style: "width: 200px; margin: auto;"
+        td.container
+          .content
+            table.main width="100%"
               tr
-                td.wrapper-inner align='center'
-                  = link_to 'Lapin logo img', root_url          
-            table.container.float-center.content align="center" 
-              tbody
+                td.content-wrap
+                  table width="100%"
+                    tbody
+                      = yield
+                      p À bientot,
+                      p L'équipe RDV Solidarités
+            .footer
+              table width="100%"
                 tr
-                  td
-                    table.spacer
-                      tbody
-                        tr
-                          td height="30px" style="font-size:30px;line-height:30px;"   
-                    table.row
-                      tbody
-                        tr
-                          td.small-12.large-12.columns.first.last
-                            = yield
-                            - if content_for :action 
-                              center
-                                table.button.large.secondary
-                                  tr
-                                    td
-                                      table
-                                        tr
-                                          td= yield :action
-                          th.expander
-                        tr
-                          td
-                            p 
-                              | -- <br>
-                              | L'équipe RDV Solidarités
-
-
-            table.menu.float-center align="center" 
-              tr
-                td
-                  table
-                    tr
-                      th.menu-item.float-center.text-muted.font-13
-                        = "© RDV Solidarités #{Time.zone.today.year}"
-                      th.menu-item.float-center.font-13
-                        = link_to 'Mentions légales', mentions_legales_url
+                  td.aligncenter.content-block
+                    = "© RDV Solidarités #{Time.zone.today.year} | "
+                    = link_to 'Mentions légales', mentions_legales_url

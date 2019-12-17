@@ -1,23 +1,9 @@
-= render "title", rdv: @rdv, previous_starts_at: @previous_starts_at
-
 div
   p Bonjour,
   p
-    | Votre RDV du #{l(@rdv.starts_at, format: :human)} (durée : #{@rdv.duration_in_min} minutes) a été confirmé.
-    = " Motif du RDV: #{@rdv.motif.name}"
-  - if @rdv.motif.by_phone && false
-    p= "Le RDV Téléphonique aura lieu sur le numéro: #{@user.phone_number}"
-  - elsif !@rdv.location.nil?
-    p
-     = "Le RDV aura lieu à l'adresse: #{@rdv.location} "
-     a href="https://maps.google.com?q=#{@rdv.location.split(/,?\s/).join('+')}" target="_blank"
-      | (Obtenir l'itinéraire)
-  - if @rdv.motif.instruction_for_rdv.present?
-    p
-      | Quelques informations supplémentaires:
-      = simple_format(@rdv.motif.instruction_for_rdv)
-  p.text-center
-    = link_to 'Voir mes RDV', users_rdvs_url, class:'btn btn-primary'
-
-- if @rdv.cancelled?
-  p Nous allons vous recontacter rapidement pour vous proposer un nouveau rendez-vous.
+    | Votre RDV du #{l(@rdv.starts_at, format: :human)} a été confirmé.
+  = render "overview", rdv: @rdv
+  p
+    | Vous pouvez modifier ou annuler votre rendez-vous jusqu'à 4h avant celui-ci. Il suffit de vous rendre dans votre espace personnel ou en cliquant sur le lien ci-dessous.
+  .btn-wrapper
+    = link_to 'Mon espace', users_rdvs_url, class:'btn btn-primary'
