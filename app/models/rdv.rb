@@ -75,6 +75,17 @@ class Rdv < ApplicationRecord
     }
   end
 
+  def to_query
+    {
+      motif_id: motif&.id,
+      location: location,
+      duration_in_min: duration_in_min,
+      starts_at: starts_at&.to_s,
+      user_ids: users&.map(&:id),
+      agent_ids: agents&.map(&:id),
+    }
+  end
+
   private
 
   def associate_users_with_organisation
