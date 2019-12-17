@@ -150,4 +150,20 @@ describe Rdv, type: :model do
       rdv.save!
     end
   end
+
+  describe "valid?" do
+    let(:rdv) { build(:rdv, users: users) }
+    let(:user_without_email) { create(:user, :with_no_email) }
+
+    subject { rdv.save! }
+
+    context "with a user with no email" do
+      let(:users) { [User.find(user_without_email.id)] }
+
+      it do
+        rdv.save
+        expect(rdv.valid?).to eq(true)
+      end
+    end
+  end
 end

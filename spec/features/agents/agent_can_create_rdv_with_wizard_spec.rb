@@ -48,16 +48,24 @@ describe "Agent can create a Rdv with wizard" do
 
     fill_in :user_first_name, with: "Jean-Paul"
     fill_in :user_last_name, with: "Orvoir"
-    page.execute_script "$('#mainModal').scrollTop(1000)"
-    sleep(0.5) # wait for scroll to not interfere with email input
     fill_in :user_email, with: "jporvoir@bidule.com"
+    sleep(1) # wait for scroll to not interfere with form input
+    page.execute_script "$('#mainModal').scrollTop(1000)"
+    click_button('Créer')
+
+    # create user without email
+    click_link('Créer')
+    fill_in :user_first_name, with: "Jean-Marie"
+    fill_in :user_last_name, with: "Lapin"
+    sleep(1) # wait for scroll to not interfere with form input
+    page.execute_script "$('#mainModal').scrollTop(1000)"
     click_button('Créer')
 
     click_button('Continuer')
 
     expect(user.rdvs.count).to eq(1)
     rdv = user.rdvs.first
-    expect(rdv.users).to contain_exactly(user, User.find_by(email: "jporvoir@bidule.com"))
+    expect(rdv.users).to contain_exactly(user, User.find_by(email: "jporvoir@bidule.com"), User.find_by(first_name: "Jean-Marie", last_name: "Lapin"))
     expect(rdv.motif).to eq(motif)
     expect(rdv.duration_in_min).to eq(35)
     expect(rdv.starts_at).to eq(Time.zone.local(2019, 10, 11, 14, 15))

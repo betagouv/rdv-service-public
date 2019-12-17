@@ -2,7 +2,7 @@ class Rdv < ApplicationRecord
   belongs_to :organisation
   belongs_to :motif
   has_and_belongs_to_many :agents
-  has_and_belongs_to_many :users
+  has_and_belongs_to_many :users, validate: false
 
   enum status: { unknown: 0, waiting: 1, seen: 2, excused: 3, notexcused: 4 }
 
