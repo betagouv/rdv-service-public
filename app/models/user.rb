@@ -29,7 +29,7 @@ class User < ApplicationRecord
 
   before_save :set_email_to_null_if_blank
   before_save :set_organisation_ids_from_parent, if: :parent_id_changed?
-  before_save :downcase_name
+  before_save :format_name
 
   def age
     years = age_in_years
@@ -108,7 +108,7 @@ class User < ApplicationRecord
     end
   end
 
-  def downcase_name
+  def format_name
     first_name&.capitalize!
     last_name&.upcase!
   end

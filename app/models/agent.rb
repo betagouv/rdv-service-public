@@ -24,7 +24,7 @@ class Agent < ApplicationRecord
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql('LOWER(last_name)')) }
 
-  before_save :downcase_name
+  before_save :format_name
 
   def full_name_and_service
     service.present? ? "#{full_name} (#{service.name})" : full_name
@@ -52,7 +52,7 @@ class Agent < ApplicationRecord
     admin? || service.secretariat?
   end
 
-  def downcase_name
+  def format_name
     first_name&.capitalize!
     last_name&.upcase!
   end
