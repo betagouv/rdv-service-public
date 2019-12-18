@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   include PgSearch::Model
   include FullNameConcern
+  include AccountNormalizerConcern
 
   attr_accessor :created_or_updated_by_agent
 
@@ -29,6 +30,7 @@ class User < ApplicationRecord
 
   before_save :set_email_to_null_if_blank
   before_save :set_organisation_ids_from_parent, if: :parent_id_changed?
+  before_save :normalize_account
 
   def age
     years = age_in_years

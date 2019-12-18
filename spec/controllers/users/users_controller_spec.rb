@@ -17,7 +17,7 @@ RSpec.describe Users::UsersController, type: :controller do
     it "Should list children" do
       subject
       expect(response.body).to include("Mes enfants")
-      expect(response.body).to include("Katia Garcia (28 ans)")
+      expect(response.body).to include("Katia GARCIA (28 ans)")
     end
   end
 end
