@@ -23,6 +23,7 @@ class Agent < ApplicationRecord
   scope :complete, -> { where.not(first_name: nil).where.not(last_name: nil) }
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql('LOWER(last_name)')) }
+  scope :secretariat, -> { joins(:service).where(services: { name: 'Secrétariat'.freeze }) }
 
   def full_name_and_service
     service.present? ? "#{full_name} (#{service.name})" : full_name
