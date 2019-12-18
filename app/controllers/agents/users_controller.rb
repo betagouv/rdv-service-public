@@ -116,7 +116,7 @@ class Agents::UsersController < AgentAuthController
   end
 
   def search_params
-    params.require(:term) if params[:term]
+    params.require(:term) if !params[:term].blank?
   end
 
   def set_user
