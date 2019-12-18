@@ -6,41 +6,41 @@
     li.list-group-item
       i.fa.fa-check.fa-fw.mr-1.text-success
       | Motif :&nbsp;
-      = @third_step.rdv.motif.name
+      = @rdv.motif.name
     li.list-group-item
       i.fa.fa-check.fa-fw.mr-1.text-success
       | Lieu :&nbsp;
-      = human_location(@third_step.rdv)
+      = human_location(@rdv)
     li.list-group-item
       i.fa.fa-check.fa-fw.mr-1.text-success
       | Professionnels :&nbsp;
-      = agents_to_sentence(@third_step.rdv)
+      = agents_to_sentence(@rdv)
     li.list-group-item
       i.fa.fa-check.fa-fw.mr-1.text-success
-      = "Durée : #{@third_step.rdv.duration_in_min} minutes"
+      = "Durée : #{@rdv.duration_in_min} minutes"
     li.list-group-item
       i.fa.fa-check.fa-fw.mr-1.text-success
-      = "Commence le : #{l(@third_step.rdv.starts_at, format: :human)}"
+      = "Commence le : #{l(@rdv.starts_at, format: :human)}"
 
   .card-body
-    = render partial: 'layouts/model_errors', locals: { model: @third_step }
+    = render partial: 'layouts/model_errors', locals: { model: @rdv }
 
-    = simple_form_for(@third_step.rdv, url: organisation_third_steps_path(current_organisation)) do |f|
+    = simple_form_for(@rdv, url: organisation_third_steps_path(current_organisation)) do |f|
       = f.association :motif, as: :hidden
       = f.input :location, as: :hidden
-      - @third_step.rdv.agents.each do |p|
+      - @rdv.agents.each do |p|
         / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
         = f.hidden_field "agent_ids][", value: p.id
       = f.input :duration_in_min, as: :hidden
       = f.input :starts_at, as: :hidden
       = f.association :users,
-        collection: @third_step.rdv.users,
+        collection: @rdv.users,
         label_method: lambda { |user| full_name_and_birthdate(user) },
         input_html: { multiple: true, class: 'select2-input', data: { "select-options": { ajax: { url: search_organisation_users_path(current_organisation), dataType: 'json', delay: 250 }} } },
         hint: raw("L'usager n'existe pas ? #{link_to "Créer", new_organisation_user_path(current_organisation, modal: true), data: { modal: true }}.")
 
       .row
         .col.text-left
-          = link_to 'Revenir en arrière', new_organisation_second_step_path(@third_step.to_query), class: 'btn btn-link'
+          = link_to 'Revenir en arrière', new_organisation_second_step_path(@rdv.to_query), class: 'btn btn-link'
         .col.text-right
           = f.button :submit, 'Continuer'

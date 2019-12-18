@@ -22,5 +22,9 @@ FactoryBot.define do
     trait :with_multiple_organisations do
       organisations { create_list(:organisation, 3) }
     end
+    trait :with_no_email do
+      email { nil }
+      created_or_updated_by_agent { true }
+    end
   end
 end

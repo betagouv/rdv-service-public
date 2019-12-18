@@ -2,7 +2,7 @@ class Rdv < ApplicationRecord
   belongs_to :organisation
   belongs_to :motif
   has_and_belongs_to_many :agents
-  has_and_belongs_to_many :users
+  has_and_belongs_to_many :users, validate: false
 
   enum status: { unknown: 0, waiting: 1, seen: 2, excused: 3, notexcused: 4 }
 
@@ -72,6 +72,17 @@ class Rdv < ApplicationRecord
       starts_at: starts_at,
       users: users,
       agents: agents,
+    }
+  end
+
+  def to_query
+    {
+      motif_id: motif&.id,
+      location: location,
+      duration_in_min: duration_in_min,
+      starts_at: starts_at&.to_s,
+      user_ids: users&.map(&:id),
+      agent_ids: agents&.map(&:id),
     }
   end
 
