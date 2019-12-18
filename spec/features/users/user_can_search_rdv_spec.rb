@@ -1,5 +1,6 @@
 describe "User can search for rdvs" do
   let!(:motif) { create(:motif, name: "Vaccination", online: true) }
+  let!(:motif_libelle) { create(:motif_libelle, name: motif.name, service: motif.service) }
   let!(:lieu) { create(:lieu) }
   let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu) }
   let!(:lieu2) { create(:lieu) }
@@ -18,9 +19,8 @@ describe "User can search for rdvs" do
       page.execute_script("document.querySelector('#search_departement').value = '92'")
       expect(find("#search_service")).to have_content(motif.service.name)
       select(motif.service.id, from: 'search_service')
-      # should execute search-form.js : line 78 $.get but doesn't
       expect(find("#search_motif")).to have_content(motif.name)
-      select(motif.name, from: 'search_service')
+      select(motif.name, from: 'search_motif')
       click_button("Rechercher")
 
       # Step 3
