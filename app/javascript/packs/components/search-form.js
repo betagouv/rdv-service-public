@@ -88,3 +88,7 @@ $(document).on('turbolinks:load', function() {
     )
   })
 });
+
+$(document).on("turbolinks:before-cache", function() {
+  $('.select2-multiple').select2('destroy');
+});

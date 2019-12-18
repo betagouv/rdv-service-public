@@ -18,9 +18,9 @@ describe "User can search for rdvs" do
       fill_in('search_where', with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
       page.execute_script("document.querySelector('#search_departement').value = '92'")
       expect(find("#search_service")).to have_content(motif.service.name)
-      select(motif.service.id, from: 'search_service')
+      select(motif.service.id, from: 'search_service', visible: false)
       expect(find("#search_motif")).to have_content(motif.name)
-      select(motif.name, from: 'search_motif')
+      select(motif.name, from: 'search_motif', visible: false)
       click_button("Rechercher")
 
       # Step 2
