@@ -23,8 +23,7 @@ describe "User can search for rdvs" do
       select(motif.name, from: 'search_motif')
       click_button("Rechercher")
 
-      # Step 3
-      expect(page).to have_content("Modifier le motif")
+      # Step 2
       expect(page).to have_content(lieu.name)
       expect(page).to have_content(lieu2.name)
       expect(page).to have_content(lieu.name)
@@ -53,7 +52,7 @@ describe "User can search for rdvs" do
       fill_in('Mot de passe', with: "12345678")
       click_button("Se connecter")
 
-      # Step 4
+      # Step 3
       expect(page).to have_content(motif.name)
       expect(page).to have_content(motif.restriction_for_rdv)
 
@@ -68,14 +67,14 @@ describe "User can search for rdvs" do
 
       click_button('Continuer')
 
-      # Step 5
+      # Step 4
       expect(page).to have_content("Votre rendez-vous est confirmé")
       expect(page).to have_content(motif.instruction_for_rdv)
       expect(page).not_to have_content("Annuler le RDV")
 
       click_link('Aller à la liste de vos rendez-vous')
 
-      # Step 6
+      # Step 5
       expect(page).to have_content("Vos rendez-vous")
       expect(page).to have_content(motif.name)
       expect(page).to have_content(lieu.address)
