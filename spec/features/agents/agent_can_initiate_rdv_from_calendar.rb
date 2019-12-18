@@ -7,7 +7,7 @@ describe "Agent can initiate a Rdv from calendar" do
 
   before do
     login_as(agent, scope: :agent)
-    visit organisation_path(id: agent.organisation_ids.first)
+    visit authenticated_agent_root_path
   end
 
   scenario "for him", js: true do

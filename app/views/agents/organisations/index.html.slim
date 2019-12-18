@@ -4,4 +4,5 @@
   .card-body
     ul.list-group.list-group-flush
       - @organisations.each do |organisation|
-        li.list-group-item= link_to organisation.name, organisation_path(organisation)
+        li.list-group-item= link_to organisation.name, organisation_agent_path(organisation, current_agent) 
+

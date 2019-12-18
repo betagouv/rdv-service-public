@@ -1,0 +1,20 @@
+- content_for :title do
+  h1 Statistiques
+
+- @rdvs = Rdv.active
+.container
+  .row
+    .col-md-6
+      .card.mb-5
+        .card-body
+          = render 'agents/rdvs/rdvs_stats', rdvs: @rdvs
+    .col-md-6
+      .card.mb-5
+        .card-body
+          h4.card-title.mb-3 RDV créés
+          = column_chart @rdvs.group_by_month('rdvs.created_at', range: 3.month.ago..Time.now).count
+    .col-md-6
+      .card.mb-5
+        .card-body
+          h4.card-title.mb-3 Usagers créés
+          = column_chart @rdvs.active.group_by_month('rdvs.created_at', range: 3.month.ago..Time.now).count

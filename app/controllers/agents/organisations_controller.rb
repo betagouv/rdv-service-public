@@ -6,7 +6,7 @@ class Agents::OrganisationsController < AgentAuthController
   def index
     @organisations = policy_scope(Organisation)
     if @organisations.count == 1
-      redirect_to organisation_path(@organisations.first)
+      redirect_to organisation_agent_path(@organisations.first, current_agent)
     else
       render layout: 'registration'
     end
@@ -14,9 +14,8 @@ class Agents::OrganisationsController < AgentAuthController
 
   def show
     @organisation = policy_scope(Organisation).find(params[:id])
-    @date = params[:date] ? Date.parse(params[:date]) : nil
+    @rdvs = @organisation.rdvs.active
     authorize(@organisation)
-    redirect_to organisation_agent_path(@organisation, current_agent)
   end
 
   def edit
@@ -29,7 +28,7 @@ class Agents::OrganisationsController < AgentAuthController
     @organisation = policy_scope(Organisation).find(params[:id])
     authorize(@organisation)
     flash[:notice] = "L'organisation a été modifiée." if @organisation.update(organisation_params)
-    respond_right_bar_with @organisation
+    respond_right_bar_with @organisation, location: organisation_path(@organisation)
   end
 
   private
