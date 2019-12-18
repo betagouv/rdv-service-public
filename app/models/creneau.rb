@@ -73,7 +73,7 @@ class Creneau
     plages_ouverture = PlageOuverture.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range, agent_ids)
 
     results = plages_ouverture.flat_map do |po|
-      rdvs = po.agent.rdvs.where(starts_at: inclusive_date_range)
+      rdvs = po.agent.rdvs.where(starts_at: inclusive_date_range).active
       absences = po.agent.absences
       motifs = if for_agents
                  po.motifs
