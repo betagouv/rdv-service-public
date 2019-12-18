@@ -41,6 +41,8 @@ gem 'sass-rails', '>= 6.0'
 gem 'autoprefixer-rails', '~> 9.6'
 gem 'font-awesome-rails', '~> 4.7'
 gem "chartkick", '~> 3.3.0'
+gem 'groupdate', '~> 4.2'
+
 gem 'uglifier', '>= 1.3.0'
 gem 'slim', '~> 4.0'
 

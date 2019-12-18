@@ -78,8 +78,12 @@ describe "Admin can configure the organisation" do
 
   scenario "Update organisation" do
     click_link "Votre organisation"
-    expect_page_title("Modifier l'organisation")
+    expect_page_title("Votre organisation")
+    expect(page).to have_content('Statistiques')
+    expect(page).to have_content('RDV créés')
+    expect(page).to have_content('Usagers créés')
 
+    click_link 'Modifier'
     fill_in 'Nom', with: la_nouvelle_org.name
     fill_in 'Téléphone', with: la_nouvelle_org.phone_number
     fill_in 'Horaires', with: la_nouvelle_org.horaires

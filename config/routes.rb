@@ -37,7 +37,7 @@ Rails.application.routes.draw do
       get :confirmation
     end
   end
-
+  resources :stats, only: :index
   authenticated :user do
     get "/users/rdvs", to: 'users/rdvs#index', as: :authenticated_user_root
     get "/users/informations", to: 'users/users#edit'

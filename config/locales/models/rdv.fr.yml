@@ -22,15 +22,19 @@ fr:
     rdvs:
       rdvs_stats:
         rdvs:
-          future:
-            zero: Futur
-            one: Futur
-            other: Futurs
-          done:
-            zero: Vu / excusé
-            one: Vu / excusé
-            other: Vus / excusés
-          lapin:
+          unknown:
+            zero: Indéterminé
+            one: Indéterminé
+            other: Indéterminés
+          seen:
+            zero: Vu
+            one: Vu
+            other: Vus
+          excused:
+            zero: Excusé
+            one: Excusé
+            other: Excusés
+          notexcused:
             zero: Lapin
             one: Lapin
             other: Lapins
