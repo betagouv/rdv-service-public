@@ -1,4 +1,5 @@
-describe "User can see stats" do
+describe "Anybody can see stats" do
+
   before do
     visit root_path
     click_link 'Statistiques'
@@ -19,4 +20,5 @@ describe "User can see stats" do
   context "with RDVs" do
     it_behaves_like "a stats page"
   end
+
 end
