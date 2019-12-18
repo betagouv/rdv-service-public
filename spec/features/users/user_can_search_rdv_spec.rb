@@ -19,11 +19,9 @@ describe "User can search for rdvs" do
       expect(find("#search_service")).to have_content(motif.service.name)
       select(motif.service.id, from: 'search_service')
       # should execute search-form.js : line 78 $.get but doesn't
-      byebug
       expect(find("#search_motif")).to have_content(motif.name)
       select(motif.name, from: 'search_service')
       click_button("Rechercher")
-
 
       # Step 3
       expect(page).to have_content("Modifier le motif")

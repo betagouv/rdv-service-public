@@ -8,11 +8,18 @@ class WelcomeController < ApplicationController
   end
 
   def search
-    if search_params[:motif].present?
-      redirect_to welcome_motif_path(search_params[:departement], search_params[:motif], where: search_params[:where], service_id: search_params[:service])
-    else
-      render :index
+    departement = search_params[:departement]
+    @motif = search_params[:motif]
+    @where = search_params[:where]
+    @service_id = search_params[:service]
+    organisations = Organisation.where(departement: departement)
+
+    if @motif.present? && departement.present? && !organisations.empty?
+      return redirect_to welcome_motif_path(departement, @motif, where: @where, service_id: @service_id)
     end
+
+    flash.now[:notice] = "La prise de RDV n’est pas encore disponible dans ce département" if organisations.empty?
+    render :index
   end
 
   def welcome_motif
@@ -23,7 +30,7 @@ class WelcomeController < ApplicationController
 
     @date_range = Time.now.to_date..((Time.now + 6.days).to_date)
 
-    @lieux = Lieu.for_motif_and_departement(@motif, @departement)
+    @lieux = Lieu.for_motif_and_departement(@service_id, @motif, @departement)
 
     @creneaux_by_lieux = {}
     @lieux.each do |lieu|

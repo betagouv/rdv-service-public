@@ -63,6 +63,7 @@ $(document).on('turbolinks:load', function() {
     language: "fr",
     theme: "bootstrap4",
     dropdownAutoWidth: true,
+    width: '100%',
     selectionAdapter: $.fn.select2.amd.require("SearchableSingleSelection"),
     dropdownAdapter: $.fn.select2.amd.require("UnsearchableDropdown")
   })
