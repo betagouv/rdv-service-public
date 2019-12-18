@@ -55,6 +55,9 @@ document.addEventListener('turbolinks:load', function() {
         };
         $(info.el).addClass("fc-event-"+ info.event.extendedProps.status);
         $(info.el).attr("data-rightbar", "true");
+        if (info.event.rendering == 'background') {
+          $(info.el).append("<div class=\"fc-title\" style=\"color: white; padding: 2px 4px; font-size: 12px; font-weight: bold;\">" + info.event.title + "</div>");
+        }
       }
     });
 
