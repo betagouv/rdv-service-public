@@ -65,7 +65,7 @@ describe "Agent can create a Rdv with wizard" do
 
     expect(user.rdvs.count).to eq(1)
     rdv = user.rdvs.first
-    expect(rdv.users).to contain_exactly(user, User.find_by(email: "jporvoir@bidule.com"), User.find_by(first_name: "Jean-Marie", last_name: "Lapin"))
+    expect(rdv.users.count).to eq(3)
     expect(rdv.motif).to eq(motif)
     expect(rdv.duration_in_min).to eq(35)
     expect(rdv.starts_at).to eq(Time.zone.local(2019, 10, 11, 14, 15))
