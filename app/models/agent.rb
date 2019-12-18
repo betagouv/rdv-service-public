@@ -3,6 +3,7 @@ class Agent < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   include DeviseInvitable::Inviter
   include FullNameConcern
+  include AccountNormalizerConcern
 
   devise :invitable, :database_authenticatable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
@@ -24,7 +25,7 @@ class Agent < ApplicationRecord
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql('LOWER(last_name)')) }
 
-  before_save :format_name
+  before_save :normalize_account
 
   def full_name_and_service
     service.present? ? "#{full_name} (#{service.name})" : full_name
@@ -50,10 +51,5 @@ class Agent < ApplicationRecord
 
   def can_access_others_planning?
     admin? || service.secretariat?
-  end
-
-  def format_name
-    first_name&.capitalize!
-    last_name&.upcase!
   end
 end
