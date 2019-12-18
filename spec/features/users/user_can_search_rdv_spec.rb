@@ -16,12 +16,14 @@ describe "User can search for rdvs" do
       expect_page_h1("Prenez rendez-vous en ligne\navec votre département")
       fill_in('search_where', with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
       page.execute_script("document.querySelector('#search_departement').value = '92'")
+      expect(find("#search_service")).to have_content(motif.service.name)
+      select(motif.service.id, from: 'search_service')
+      # should execute search-form.js : line 78 $.get but doesn't
+      byebug
+      expect(find("#search_motif")).to have_content(motif.name)
+      select(motif.name, from: 'search_service')
       click_button("Rechercher")
 
-      # Step 2
-      expect_page_h1("Prenez rendez-vous en ligne\nvotre maison départementale des solidarités du 92")
-      select(motif.name, from: 'search_motif')
-      click_button("Choisir ce motif")
 
       # Step 3
       expect(page).to have_content("Modifier le motif")
