@@ -7,10 +7,11 @@ describe Lieu, type: :model do
 
   describe ".for_motif_and_departement" do
     let(:motif_name) { motif.name }
+    let(:service_id) { Service.first.id }
     let(:departement) { organisation.departement }
     let(:online) { true }
 
-    subject { Lieu.for_motif_and_departement(motif_name, departement) }
+    subject { Lieu.for_motif_and_departement(service_id, motif_name, departement) }
 
     before { freeze_time }
     after { travel_back }
@@ -46,6 +47,16 @@ describe Lieu, type: :model do
 
     context "with a motif not active" do
       before { motif.update(deleted_at: Time.zone.now) }
+
+      it { expect(subject).to eq([]) }
+    end
+
+    context "with same motif name but other service" do
+      before do
+        service2 = Service.create(name: "Service 2")
+        motif.update(service_id: service2.id)
+        motif.reload
+      end
 
       it { expect(subject).to eq([]) }
     end

@@ -10,9 +10,11 @@
 
 @import "components/backgrounds";
 @import "components/types";
+@import "components/search_form";
 
 h1 {
   font-size: 3rem;
+  font-weight: bold;
 }
 
 a {

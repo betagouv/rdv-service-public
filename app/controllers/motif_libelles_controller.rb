@@ -1,6 +1,4 @@
-class Agents::MotifLibellesController < AgentAuthController
-  skip_after_action :verify_policy_scoped, only: :index
-
+class MotifLibellesController < ApplicationController
   def index
     return unless params[:service_id]
 

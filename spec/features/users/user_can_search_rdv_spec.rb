@@ -1,5 +1,6 @@
 describe "User can search for rdvs" do
   let!(:motif) { create(:motif, name: "Vaccination", online: true) }
+  let!(:motif_libelle) { create(:motif_libelle, name: motif.name, service: motif.service) }
   let!(:lieu) { create(:lieu) }
   let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu) }
   let!(:lieu2) { create(:lieu) }
@@ -16,15 +17,13 @@ describe "User can search for rdvs" do
       expect_page_h1("Prenez rendez-vous en ligne\navec votre département")
       fill_in('search_where', with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
       page.execute_script("document.querySelector('#search_departement').value = '92'")
+      expect(find("#search_service")).to have_content(motif.service.name)
+      select(motif.service.name, from: :search_service)
+      expect(find("#search_motif")).to have_content(motif.name)
+      select(motif.name, from: 'search_motif', visible: false)
       click_button("Rechercher")
 
       # Step 2
-      expect_page_h1("Prenez rendez-vous en ligne\nvotre maison départementale des solidarités du 92")
-      select(motif.name, from: 'search_motif')
-      click_button("Choisir ce motif")
-
-      # Step 3
-      expect(page).to have_content("Modifier le motif")
       expect(page).to have_content(lieu.name)
       expect(page).to have_content(lieu2.name)
       expect(page).to have_content(lieu.name)
@@ -53,7 +52,7 @@ describe "User can search for rdvs" do
       fill_in('Mot de passe', with: "12345678")
       click_button("Se connecter")
 
-      # Step 4
+      # Step 3
       expect(page).to have_content(motif.name)
       expect(page).to have_content(motif.restriction_for_rdv)
 
@@ -68,14 +67,14 @@ describe "User can search for rdvs" do
 
       click_button('Continuer')
 
-      # Step 5
+      # Step 4
       expect(page).to have_content("Votre rendez-vous est confirmé")
       expect(page).to have_content(motif.instruction_for_rdv)
       expect(page).not_to have_content("Annuler le RDV")
 
       click_link('Aller à la liste de vos rendez-vous')
 
-      # Step 6
+      # Step 5
       expect(page).to have_content("Vos rendez-vous")
       expect(page).to have_content(motif.name)
       expect(page).to have_content(lieu.address)
