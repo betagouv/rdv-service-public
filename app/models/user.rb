@@ -29,6 +29,7 @@ class User < ApplicationRecord
 
   before_save :set_email_to_null_if_blank
   before_save :set_organisation_ids_from_parent, if: :parent_id_changed?
+  before_save :downcase_name
 
   def age
     years = age_in_years
@@ -105,6 +106,11 @@ class User < ApplicationRecord
     else
       Rdv.active.includes(:organisation).user_with_children(id).where(organisation_id: organisation_id)
     end
+  end
+
+  def downcase_name
+    first_name&.capitalize!
+    last_name&.upcase!
   end
 
   protected
