@@ -74,10 +74,8 @@ $(document).on('turbolinks:load', function() {
     $('#search_motif.select2-multiple').find('option').remove().end()
 
     // Add Motifs
-    console.log('hhklejljl');
     var placeholder = new Option("ex : Consultation médicale", '', false, false);
     $('#search_motif.select2-multiple').append(placeholder);
-    console.log('cc');
     $.get(
       "/motif_libelles?service_id=" + serviceId,
       function (data) {
