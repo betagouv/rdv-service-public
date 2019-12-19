@@ -1,41 +1,39 @@
 - content_for :title do
-  | Résumé du rendez-vous
-
-#rdv-flash
-p.card-text
-  strong Nom :&nbsp;
   = @rdv.name
   - if @rdv.cancelled?
     span.badge.badge-danger
-      | Annulé
+
+#rdv-flash
+p.card-text
+  i.fa.fa-fw.fa-calendar-o>
+  = rdv_title(@rdv)
+p.card-text
+  i.fa.fa-fw.fa-info-circle>
+  = @rdv.motif.name
+
 - if @rdv.location
   p.card-text
-    strong Lieu :&nbsp;
+    i.fa.fa-fw.fa-map-marker>
     = human_location(@rdv)
 - if @rdv.motif.by_phone
   p.card-text
-    i.fa.fa-phone>
+    i.fa.fa-fw.fa-phone>
     | RDV téléphonique
 p.card-text
-  strong Professionnels :&nbsp;
+  strong> Professionnel(s) :
   = agents_to_sentence(@rdv)
+
 p.card-text
-  strong Commence à :&nbsp;
-  = l(@rdv.starts_at, format: :human)
-p.card-text
-  strong Durée :&nbsp;
-  = "#{@rdv.duration_in_min} minutes"
-p.card-text
-  strong Usagers :&nbsp;
+  strong> Usager(s) :
   = users_to_sentence(@rdv)
-.row.text-right
-  .col.text-right
-    ul.list-inline.m-0
-      - unless @rdv.cancelled?
-        li.list-inline-item= link_to "Supprimer", organisation_rdv_path(@rdv.organisation, @rdv, callback_path: params[:callback_path]), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Un email va être envoyé à l'usager pour le notifier de l'annulation. Êtes-vous sûr de vouloir supprimer ce rendez-vous ?"}
-        li.list-inline-item= link_to "Modifier", edit_organisation_rdv_path(@rdv.organisation, @rdv, callback_path: params[:callback_path]), class: "btn btn-outline-primary", data: { rightbar: true }
-hr
+.row.mb-5
+  - unless @rdv.cancelled?
+    .col.text-left
+      = link_to "Supprimer", organisation_rdv_path(@rdv.organisation, @rdv, callback_path: params[:callback_path]), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Un email va être envoyé à l'usager pour le notifier de l'annulation. Êtes-vous sûr de vouloir supprimer ce rendez-vous ?"}
+    .col.text-right
+      = link_to "Modifier", edit_organisation_rdv_path(@rdv.organisation, @rdv, callback_path: params[:callback_path]), class: "btn btn-outline-primary", data: { rightbar: true }
 .row
   .col
-    = simple_form_for(@rdv, url: status_organisation_rdv_path(@rdv.organisation), remote: true) do |f|
-      = f.input :status, collection: Rdv.human_enum_collection(:status), as: :radio_buttons
+    .bg-light.p-2
+      = simple_form_for(@rdv, url: status_organisation_rdv_path(@rdv.organisation), remote: true) do |f|
+        = f.input :status, collection: Rdv.human_enum_collection(:status), as: :radio_buttons

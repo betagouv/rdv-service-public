@@ -7,6 +7,12 @@ module RdvsHelper
     rdv.agents.map(&:full_name_and_service).sort.to_sentence
   end
 
+  def users_to_links(rdv)
+    safe_join(rdv.users.order_by_last_name.map do |user|
+      link_to user.full_name, user_show_path(user), target: '_blank'
+    end, ", ")
+  end
+
   def users_to_sentence(rdv)
     rdv.users.map(&:full_name).sort.to_sentence
   end

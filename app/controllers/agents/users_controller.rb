@@ -20,7 +20,7 @@ class Agents::UsersController < AgentAuthController
   def new
     @user = User.new
     @user.organisation_ids = [current_organisation.id]
-    @for_modal = params[:modal].present?
+    @for_modal = from_modal?
     authorize(@user)
     respond_modal_with @user
   end
@@ -56,6 +56,7 @@ class Agents::UsersController < AgentAuthController
 
   def show
     authorize(@user)
+    respond_modal_with @user
   end
 
   def edit
@@ -108,7 +109,7 @@ class Agents::UsersController < AgentAuthController
   end
 
   def from_modal?
-    params[:modal]
+    params[:modal].present?
   end
 
   def user_params
