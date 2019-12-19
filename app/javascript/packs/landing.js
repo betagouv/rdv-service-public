@@ -2,8 +2,8 @@ require("@rails/ujs").start()
 require("turbolinks").start()
 require("chartkick")
 require("chart.js")
-import { PlacesInput } from 'packs/components/places-input.js.erb';
-import { Analytic } from 'packs/components/analytic.js.erb';
+import { PlacesInput } from 'packs/components/places-input.js';
+import { Analytic } from 'packs/components/analytic.js';
 import { Modal } from 'packs/components/modal';
 import 'packs/components/browser-detection';
 import 'select2/dist/js/select2.min.js';
