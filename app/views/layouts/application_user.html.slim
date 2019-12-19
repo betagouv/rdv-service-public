@@ -1,20 +1,20 @@
 doctype html
-html
+html lang="fr"
   head
     = render 'common/head_users'
   body class="#{agents_or_users_body_class}"
     = render "common/header_user_logged"
     .container
       .my-3
-        - if content_for :title 
+        - if content_for :title
           .row
             .col-md-12
               .page-title-box
-                - if content_for :breadcrumb 
+                - if content_for :breadcrumb
                   .page-title-right
                     = yield :breadcrumb
                 h1.page-title= yield :title
         = render 'layouts/flash'
-        = yield 
+        = yield
     #modal-holder
     = render "layouts/footer_dashboard"

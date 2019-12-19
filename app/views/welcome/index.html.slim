@@ -17,30 +17,30 @@ section.bg-negative.my-0.mt-lg-3.mb-lg-5
       .col-lg-3
         .text-center.mb-3
           .d-flex.justify-content-center
-            = image_tag 'welcome/location.svg', class: 'img-circle'
+            = image_tag 'welcome/location.svg', class: 'img-circle', alt: "premièrement"
           h5.text-primary.mt-3 Choisir votre adresse
       .col-lg-3
         .text-center.mb-3
           .d-flex.justify-content-center
-            = image_tag 'welcome/service.svg', class: 'img-circle'
+            = image_tag 'welcome/service.svg', class: 'img-circle', alt: "deuxièmement"
           h5.text-primary.mt-3 Choisir un service
       .col-lg-3
         .text-center.mb-3
           .d-flex.justify-content-center
-            = image_tag 'welcome/motif.svg', class: 'img-circle'
+            = image_tag 'welcome/motif.svg', class: 'img-circle', alt: "troisièmement"
           h5.text-primary.mt-3 Choisir un motif
       .col-lg-3
         .text-center.mb-3
           .d-flex.justify-content-center
-            = image_tag 'welcome/creneau.svg', class: 'img-circle'
+            = image_tag 'welcome/creneau.svg', class: 'img-circle', alt: "et quatrièmement"
           h5.text-primary.mt-3 Choisir un créneau
 
 section.bg-lightturquoise.p-5
-  .container 
+  .container
     .row
       .col-md-3.align-items-center
-        = image_tag 'welcome/agent.svg', class: 'mx-auto d-block'
+        = image_tag 'welcome/agent.svg', class: 'mx-auto d-block', alt: ""
       .col-md-9
-        h3.mb-2.text-primary Vous êtes un agent ? 
+        h3.mb-2.text-primary Vous êtes un agent ?
         p.lead Nous nous engageons à réduire le nombre de rendez-vous manqués dans les services sociaux départementaux.
         = link_to 'En savoir plus', accueil_mds_path, class: 'btn btn-tertiary'
