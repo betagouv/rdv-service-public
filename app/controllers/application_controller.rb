@@ -52,7 +52,7 @@ class ApplicationController < ActionController::Base
       devise_parameter_sanitizer.permit(:accept_invitation, keys: [:first_name, :last_name])
       devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :service_id])
     elsif resource_class == User
-      devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :email, :password])
+      devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :email, :phone_number, :password])
       devise_parameter_sanitizer.permit(:invite, keys: [:email, :first_name, :last_name, :address, :phone_number, :birth_date])
     end
   end
