@@ -14,13 +14,13 @@ html lang="fr"
         = link_logo
         .align-items-center.d-flex.h-100
           .card-body
-            = image_tag 'welcome/agent.svg', class: 'mx-auto mb-5'
+            = image_tag 'welcome/agent.svg', class: 'mx-auto mb-5', alt: ""
             - if agent_path?
               h4.mb-3 Terminé l'agenda papier, moins de temps perdu.
               p.lead
                 | Digitalisez votre prise de RDV !
             - else
-              h4.mb-3 Prenez RDV en ligne avec votre MDS!
+              h4.mb-3 Prenez RDV en ligne avec votre MDS !
 
       .auth-fluid-form-box
         .align-items-center.d-flex.h-100
