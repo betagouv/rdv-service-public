@@ -25,7 +25,7 @@ p.card-text
 
 p.card-text
   strong> Usager(s) :
-  = users_to_sentence(@rdv)
+  = users_to_links(@rdv)
 .row.mb-5
   - unless @rdv.cancelled?
     .col.text-left
