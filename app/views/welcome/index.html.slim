@@ -9,8 +9,8 @@
             br
             | avec votre département
           h3.text-white.mb-4.px-5 en PMI, CPEF
-          .mb-5= render 'search_form'
-      h3.text-white.text-center Comment ça marche ? 
+          .mb-5= render '/common/search_form'
+      h3.text-white.text-center Comment ça marche ?
 section.bg-negative.mt-3.mb-5
   .container
     .row
@@ -36,11 +36,11 @@ section.bg-negative.mt-3.mb-5
           h5.text-primary.mt-3 Choisir un créneau
 
 section.bg-lightturquoise.p-5
-  .container 
+  .container
     .row
       .col-md-3.align-items-center
         = image_tag 'welcome/agent.svg', class: 'mx-auto d-block'
       .col-md-9
-        h3.mb-2.text-primary Vous êtes un agent ? 
+        h3.mb-2.text-primary Vous êtes un agent ?
         p.lead Nous nous engageons à réduire le nombre de rendez-vous manqués dans les services sociaux départementaux.
         = link_to 'En savoir plus', accueil_mds_path, class: 'btn btn-tertiary'

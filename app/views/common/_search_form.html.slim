@@ -1,4 +1,4 @@
-= simple_form_for :search, url: root_path do |f|
+= simple_form_for :search, url: lieux_path, method: :get do |f|
   = f.input :departement, as: :hidden, input_html: { value: @departement }
   #search_form.form-row.d-flex.justify-content-md-center
     .col-lg-4.p-0.input-wrapper
