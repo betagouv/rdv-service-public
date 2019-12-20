@@ -28,7 +28,7 @@ module Admin
     end
 
     def sign_in_as_allowed?
-      ENV.fetch('SIGN_IN_AS_ALLOWED') { true }
+      ENV.fetch('SIGN_IN_AS_ALLOWED') { false }
     end
 
     # Override this value to specify the number of elements to display at a time
