@@ -8,18 +8,9 @@
   section.bg-light.p-4
     .container
       - if @lieux.empty?
-          h3.font-weight-bold Malheureusement, nous n'avons pas trouvé de créneau pour votre motif.
+          h3.font-weight-bold Nous n'avons pas trouvé de créneau pour votre motif.
           p.font-weight-bold Voici les organisations disponible dans votre departement.
-          - @organisations.each do |organisation|
-            .card.mb-3
-              .card-body
-                h4.card-title.mb-3.mt-0.text-success.font-weight-bold= organisation.name
-                h6.card-subtitle.mb-2
-                  i.fa.fa-phone.pr-1
-                  = organisation.phone_number
-                h6.card-subtitle
-                  i.fa.fa-calendar.pr-1
-                  = organisation.horaires
+          = render @organisations
       - else
         h3.font-weight-bold Résultats de votre recherche
         p.font-weight-bold= "#{@lieux.size.to_s} lieux sont disponible"
