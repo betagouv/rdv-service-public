@@ -74,13 +74,11 @@ $(document).on('turbolinks:load', function() {
     $('#search_motif.select2-multiple').find('option').remove().end()
 
     // Add Motifs
-    var placeholder = new Option("Votre motif ?", '', false, false);
+    var placeholder = new Option("ex : Consultation médicale", '', false, false);
     $('#search_motif.select2-multiple').append(placeholder);
-    console.log('cc');
     $.get(
       "/motif_libelles?service_id=" + serviceId,
       function (data) {
-        console.log('data', data);
         data.motif_libelles.forEach((e) => {
           $('#search_motif.select2-multiple').append(new Option(e.name, e.name, false, false));
         })

@@ -1,23 +1,41 @@
 #search_form{
-  background: white;
-  border-radius: .5rem;
+  > div {
+    margin-bottom: 1.4rem;
+  }
+
   .input-wrapper{
-    height: 3rem;
     input{
-      border-radius: 0;
       border: none;
       font-size: 18px;
     }
-    &:first-child input {
+  }
+
+  #search_where {
+    @media (min-width: 992px) {
       border-radius: .5rem 0 0 .5rem;
     }
   }
+
   button{
-    border-radius: 0 .5rem .5rem 0;
+    margin-top: 0.2rem;
+    border-radius: .5rem;
+
+    @media (min-width: 992px) {
+      border-radius: 0 .5rem .5rem 0;
+    }
+
     color: $blue;
     font-weight: bold;
-
   }
+
+  .select2 {
+    background: white;
+    border-radius: .5rem;
+    @media (min-width: 992px) {
+      border-radius: 0;
+    }
+  }
+
   .select2-multiple{
     left: 1.5rem;
     top: 32px;
@@ -28,7 +46,10 @@
     border: none;
     min-height: 3rem;
     border-left: .1rem solid $light;
-    border-radius: 0;
+    border-radius: .5rem;
+    @media (min-width: 992px) {
+      border-radius: 0;
+    }
   }
 }
 
@@ -43,40 +64,52 @@
   .select2-results > .select2-results__options{
     max-height: 259px;
   }
+
   li.select2-results__option{
     color: #313131;
     padding: 0.7rem 1.375rem;
     height: 46px;
   }
+
   .select2-selection__arrow {
     display: none;
   }
+
   .select2-results__option--highlighted[aria-selected]{
     background-color: #efefef;
     color: #313131;
   }
+
   .select2-selection--single{
     padding: .75rem 0 .75rem .375rem;
   }
+
   .select2-selection--single .select2-selection__rendered{
     color: #313131;
     font-size: 18px;
     padding-left: 10px;
     line-height: 24px;
   }
+
   .select2-search__field{
     height: 40px;
     padding-left: 10px;
   }
+
   &.select2-container--below{
     text-overflow: ellipsis;
     width: 100% !important;
   }
-  span[title="Votre service ?"], span[title="Votre motif ?"] {
+
+  span[title="ex : PMI"], span[title="ex : Consultation médicale"] {
     color: #b8bec5 !important;
   }
 }
 
 span.select2-search.select2-search--dropdown{
   border-left: .1rem solid $light;
+  border-radius: .5rem;
+  @media (min-width: 992px) {
+    border-radius: 0;
+  }
 }
