@@ -2,6 +2,7 @@
   | Vos rendez-vous
 
 - content_for :breadcrumb do
+  => add_button 'Prendre un RDV', root_path
   - if params[:past].present?
     = link_to 'Voir vos prochains RDV', users_rdvs_path, class: 'btn btn-outline-primary'
   - else
