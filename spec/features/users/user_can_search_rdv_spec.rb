@@ -27,6 +27,10 @@ describe "User can search for rdvs" do
       expect(page).to have_content(lieu.name)
       expect(page).to have_content(lieu2.name)
       expect(page).to have_content(lieu.name)
+      click_link(lieu.name)
+
+      # Step 3
+      expect(page).to have_content(lieu.name)
       first(:link, "11:00").click
 
       # Login page
@@ -52,7 +56,7 @@ describe "User can search for rdvs" do
       fill_in('Mot de passe', with: "12345678")
       click_button("Se connecter")
 
-      # Step 3
+      # Step 4
       expect(page).to have_content(motif.name)
       expect(page).to have_content(motif.restriction_for_rdv)
 
@@ -67,14 +71,14 @@ describe "User can search for rdvs" do
 
       click_button('Continuer')
 
-      # Step 4
+      # Step 5
       expect(page).to have_content("Votre rendez-vous est confirmé")
       expect(page).to have_content(motif.instruction_for_rdv)
       expect(page).not_to have_content("Annuler le RDV")
 
       click_link('Aller à la liste de vos rendez-vous')
 
-      # Step 5
+      # Step 6
       expect(page).to have_content("Vos rendez-vous")
       expect(page).to have_content(motif.name)
       expect(page).to have_content(lieu.address)
@@ -89,7 +93,6 @@ describe "User can search for rdvs" do
     before do
       travel_to(Time.zone.local(2019, 11, 18))
       login_as(user, scope: :user)
-      # visit welcome_motif_path("92", motif.name)
       visit new_users_rdv_path(starts_at: Time.zone.local(2019, 11, 18, 10, 15), motif_name: motif.name, lieu_id: lieu.id, departement: "92", where: "useless")
     end
 

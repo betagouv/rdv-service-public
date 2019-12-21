@@ -18,10 +18,11 @@ class Users::RdvsController < UserAuthController
     @rdv = Rdv.new(starts_at: @starts_at, motif: @motif, users: [current_user])
     authorize(@rdv)
 
+    @query = { where: @where, service: @motif.service.id, motif: @motif_name, departement: @departement }
     return if @creneau.available?
 
     flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
-    redirect_to welcome_motif_path(@departement, @motif_name, where: @where)
+    redirect_to lieu_path(@lieu, search: @query)
   end
 
   def create
@@ -43,8 +44,9 @@ class Users::RdvsController < UserAuthController
     if save_succeeded
       redirect_to users_rdv_confirmation_path(@rdv.id)
     else
+      @query = { where: creneau_params[:where], service: @motif.service.id, motif: @motif.name, departement: creneau_params[:departement] }
       flash[:error] = "Ce creneau n'est plus disponible. Veuillez en sélectionner un autre."
-      redirect_to welcome_motif_path(creneau_params[:departement], @motif.name, where: creneau_params[:where])
+      redirect_to lieu_path(creneau_params[:lieu_id], search: @query)
     end
   end
 

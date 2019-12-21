@@ -109,8 +109,7 @@ Rails.application.routes.draw do
 
   get 'r', to: redirect('users/rdvs', status: 301), as: "rdvs_shorten"
   get 'accueil_mds' => "welcome#welcome_agent"
-  post '/' => "welcome#search"
-  get 'departement/:departement/:motif', to: "welcome#welcome_motif", as: "welcome_motif"
+  resources :lieux, only: [:index, :show]
   resources :creneaux, only: [:index]
   resources :motif_libelles, only: :index
   root 'welcome#index'

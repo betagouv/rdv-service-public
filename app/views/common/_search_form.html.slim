@@ -1,14 +1,14 @@
-= simple_form_for :search, url: root_path do |f|
+= simple_form_for :search, url: lieux_path, method: :get do |f|
   = f.input :departement, as: :hidden, input_html: { value: @departement }
   #search_form.form-row.d-flex.justify-content-md-center
     .col-lg-5.p-0.input-wrapper
-      = f.label :where, "Votre adresse :", class: "text-white"
+      = f.label :where, "Votre adresse", class: "text-white"
       = f.input :where, label: false, placeholder: 'ex : 21 rue Anatole France, Calais ', input_html: { value: @where, class: "form-control-lg places-js-container" }, wrapper_html: { class: 'mb-0' }
     .col-lg-2.p-0.input-wrapper
-      = f.label :service, "Votre service :", class: "text-white"
+      = f.label :service, "Votre service", class: "text-white"
       = f.select :service, options_for_select(Service.with_motifs.collect { |service| [service.name, service.id]}, selected: @service_id), { prompt: "ex : PMI" }, required: true, class: "select2-multiple form-control-lg "
     .col-lg-3.p-0.input-wrapper
-      = f.label :motif, "Votre motif :", class: "text-white"
+      = f.label :motif, "Votre motif", class: "text-white"
       - motifs = @service_id.present? ? MotifLibelle.where(service_id: @service_id) : MotifLibelle.all
       = f.select :motif, options_for_select(motifs.collect { |motif| motif.name }, selected: @motif), { prompt: "ex : Consultation médicale" }, required: true, class: "select2-multiple form-control-lg "
     .col-lg-2.p-0.align-self-end
