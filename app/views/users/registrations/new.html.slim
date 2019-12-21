@@ -5,8 +5,9 @@
   .form-row
     .col-6= f.input :first_name
     .col-6= f.input :last_name
-  = f.input :email, as: :email, placeholder: 'nom.prenom@email.com'
-  = f.input :password, as: :password, placeholder: 'Votre mot de passe (au moins 6 caractères)'
+  = f.input :email, as: :email, placeholder: 'nom.prenom@email.com', required: true
+  = f.input :phone_number, as: :tel, placeholder: '061010101010', hint: 'Vous recevrez les rappels et les informations du RDV sur ce numéro.'
+  = f.input :password, as: :password, placeholder: 'Votre mot de passe (au moins 6 caractères)', required: true
   .form-group
     small
      | En vous inscrivant, vous acceptez les 
