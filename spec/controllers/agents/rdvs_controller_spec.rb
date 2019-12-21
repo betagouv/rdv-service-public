@@ -66,12 +66,12 @@ RSpec.describe Agents::RdvsController, type: :controller do
     context "with valid params" do
       let(:new_attributes) do
         {
-          name: "Le nouveau nom",
+          location: "Le nouveau lieu",
         }
       end
 
       it "updates the requested rdv" do
-        expect { subject }.to change(rdv, :name).to("Le nouveau nom")
+        expect { subject }.to change(rdv, :location).to("Le nouveau lieu")
       end
 
       it "redirects to the agenda" do

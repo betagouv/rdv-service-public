@@ -1,12 +1,12 @@
 = simple_form_for([rdv.organisation, rdv], remote: request.xhr?, data: { rightbar: true }) do |f|
   = render partial: 'layouts/model_errors', locals: { model: rdv }
   = hidden_field '', :callback_path, value: params[:callback_path]
-  = f.input :name
   = f.association :motif, disabled: true
+  .form-row
+    .col-md-6= datetime_input(f, :starts_at)
+    .col-md-6= f.input :duration_in_min
   = f.input :location, input_html: { class: "places-js-container" }
   = f.association :agents, collection: rdv.motif.service.agents, label_method: :full_name_and_service, input_html: { multiple: true, class: 'select2-input' }
-  = f.input :duration_in_min
-  = datetime_input(f, :starts_at)
   = f.association :users, collection: policy_scope(User).order_by_last_name, label_method: lambda { |user| full_name_and_birthdate(user) }, input_html: { multiple: true, class: 'select2-input' }
   .text-right
     = f.button :submit

@@ -132,7 +132,7 @@ $body-color:                $gray-900;
 //
 // Style anchor elements.
 
-$link-color:                $primary;
+$link-color:                lighten($primary, 30%);
 $link-hover-color:          darken($link-color, 15%);
 $link-hover-decoration:     none;
 

@@ -12,6 +12,9 @@
     = render partial: 'layouts/model_errors', locals: { model: @second_step }
     = simple_form_for(@second_step.rdv, url: organisation_second_steps_path(current_organisation)) do |f|
       = f.association :motif, as: :hidden,  wrapper_html: { class: 'm-0' }
+      .form-row
+        .col-md-6= datetime_input(f, :starts_at)
+        .col-md-6= f.input :duration_in_min, as: :integer, label: "Durée en minutes"
 
       - unless @second_step.rdv.motif.by_phone
         = f.input :location, input_html: { class: "places-js-container" }
@@ -19,12 +22,11 @@
         .mb-1
           - current_organisation.lieux.each do |l|
             = button_tag type: "button", onclick: "document.querySelector('#rdv_location').value = '#{escape_javascript(l.address)}'", class: "btn btn-outline-secondary btn-sm mb-1" do
-              i.fa.fa-map-marker.mr-1
+              i.fa.fa-map-marker>
               = l.full_name
 
       = f.association :agents, collection: @agents_authorize, label_method: :full_name_and_service, input_html: { multiple: true, class: 'select2-input' }
-      = f.input :duration_in_min, as: :integer, label: "Durée en minutes"
-      = datetime_input(f, :starts_at)
+
       .row
         .col.text-left
           = link_to 'Revenir en arrière', new_organisation_first_step_path(@second_step.to_query), class: 'btn btn-link'
