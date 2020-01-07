@@ -14,7 +14,11 @@ module RdvsHelper
   end
 
   def users_to_sentence(rdv)
-    rdv.users.map(&:full_name).sort.to_sentence
+    users = []
+    rdv.users.each do |user|
+      users << user if user == current_user || current_user.children.include?(user)
+    end
+    users.map(&:full_name).sort.to_sentence
   end
 
   def rdv_status_tag(rdv)
