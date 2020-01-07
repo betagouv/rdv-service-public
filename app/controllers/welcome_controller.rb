@@ -8,10 +8,14 @@ class WelcomeController < ApplicationController
   end
 
   def search
-    search_params = params.require(:search).permit(:departement, :where, :motif)
+    search_params = params.require(:search).permit(:departement, :where, :service, :motif)
 
-    if search_params[:motif].present?
-      redirect_to welcome_motif_path(search_params[:departement], search_params[:motif], where: search_params[:where])
+    if search_params[:service].present?
+      if search_params[:motif].present?
+        redirect_to welcome_motif_path(search_params[:departement], search_params[:service], search_params[:motif], where: search_params[:where])
+      else
+        redirect_to welcome_service_path(search_params[:departement], search_params[:service], where: search_params[:where])
+      end
     else
       redirect_to welcome_departement_path(search_params[:departement], where: search_params[:where])
     end
@@ -21,8 +25,15 @@ class WelcomeController < ApplicationController
     departement_params = params.permit(:departement, :where)
     @departement = departement_params[:departement]
     @where = departement_params[:where]
+  end
 
-    @motifs = Motif.names_grouped_by_service_for_departement(@departement)
+  def welcome_service
+    service_params = params.permit(:departement, :where, :service)
+    @departement = service_params[:departement]
+    @where = service_params[:where]
+    @service = Service.find(service_params[:service])
+
+    @motifs = Motif.names_for_service_and_departement(@service, @departement)
   end
 
   def welcome_motif
@@ -30,11 +41,13 @@ class WelcomeController < ApplicationController
     @departement = departement_params[:departement]
     @where = departement_params[:where]
     @motif = departement_params[:motif]
-    @service_id = params[:service_id].to_s
+    @service_id = params[:service].to_s
+    @service = Service.find(@service_id)
+    @motifs = Motif.names_for_service_and_departement(@service, @departement)
 
     @date_range = Time.now.to_date..((Time.now + 6.days).to_date)
 
-    @lieux = Lieu.for_motif_and_departement(@motif, @departement)
+    @lieux = Lieu.for_service_motif_and_departement(@service_id, @motif, @departement)
     @creneaux_by_lieux = {}
 
     @lieux.each do |lieu|

@@ -22,7 +22,7 @@ class Users::RdvsController < UserAuthController
     return if @creneau.available?
 
     flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
-    redirect_to welcome_motif_path(@departement, @motif_name, where: @where)
+    redirect_to welcome_motif_path(@departement, @motif.service.id, @motif_name, where: @where)
   end
 
   def create
@@ -46,7 +46,7 @@ class Users::RdvsController < UserAuthController
     else
       @query = { where: creneau_params[:where], service: @motif.service.id, motif: @motif.name, departement: creneau_params[:departement] }
       flash[:error] = "Ce creneau n'est plus disponible. Veuillez en sélectionner un autre."
-      redirect_to welcome_motif_path(creneau_params[:departement], @motif.name, where: creneau_params[:where])
+      redirect_to welcome_motif_path(creneau_params[:departement], @motif.service.id, @motif.name, where: creneau_params[:where])
     end
   end
 

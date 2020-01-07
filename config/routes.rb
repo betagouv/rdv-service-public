@@ -112,7 +112,8 @@ Rails.application.routes.draw do
   post '/' => "welcome#search"
   get 'departement/:departement', to: "welcome#welcome_departement", as: "welcome_departement"
   post 'departement/:departement' => "welcome#search_departement"
-  get 'departement/:departement/:motif', to: "welcome#welcome_motif", as: "welcome_motif"
+  get 'departement/:departement/:service', to: "welcome#welcome_service", as: "welcome_service"
+  get 'departement/:departement/:service/:motif', to: "welcome#welcome_motif", as: "welcome_motif"
   resources :lieux, only: [:index, :show]
   resources :creneaux, only: [:index]
   resources :motif_libelles, only: :index

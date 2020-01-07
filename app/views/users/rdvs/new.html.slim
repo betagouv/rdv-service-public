@@ -34,7 +34,7 @@
               | Date du rendez-vous :&nbsp;
               = l(@starts_at, format: :human)
             .col-auto
-              = link_to "modifier", welcome_motif_path(@departement, @motif_name, where: @where)
+              = link_to "modifier", welcome_motif_path(@departement, @motif.service.id, @motif_name, where: @where)
 
       .card-body
         - if @motif.restriction_for_rdv.present?
@@ -54,6 +54,6 @@
 
           .row
             .col
-              = link_to "Revenir en arrière", welcome_motif_path(@departement, @motif_name, where: @where), class: "btn btn-link"
+              = link_to "Revenir en arrière", welcome_motif_path(@departement, @motif.service.id, @motif_name, where: @where), class: "btn btn-link"
             .col.text-right
               = f.button :submit, 'Continuer'

@@ -37,6 +37,16 @@ class Motif < ApplicationRecord
          .map { |s, m| [s, m.map(&:name).uniq] }
   end
 
+  def self.names_for_service_and_departement(service, departement)
+    Motif.online
+         .active
+         .joins(:organisation, :plage_ouvertures)
+         .where(organisations: { departement: departement })
+         .where(service_id: service.id)
+         .pluck(:name)
+         .uniq
+  end
+
   def name_with_badge
     label = name
     label = "#{label} <span class='badge badge-danger'>En ligne</span>" if online
