@@ -66,25 +66,7 @@ $(document).on('turbolinks:load', function() {
     width: '100%',
     selectionAdapter: $.fn.select2.amd.require("SearchableSingleSelection"),
     dropdownAdapter: $.fn.select2.amd.require("UnsearchableDropdown")
-  })
-
-  $('#search_service').on('change.select2', (e) => {
-    var serviceId = e.target.value
-    // Clear
-    $('#search_motif.select2-multiple').find('option').remove().end()
-
-    // Add Motifs
-    var placeholder = new Option("ex : Consultation médicale", '', false, false);
-    $('#search_motif.select2-multiple').append(placeholder);
-    $.get(
-      "/motif_libelles?service_id=" + serviceId,
-      function (data) {
-        data.motif_libelles.forEach((e) => {
-          $('#search_motif.select2-multiple').append(new Option(e.name, e.name, false, false));
-        })
-      },
-    )
-  })
+  });
 });
 
 $(document).on("turbolinks:before-cache", function() {
