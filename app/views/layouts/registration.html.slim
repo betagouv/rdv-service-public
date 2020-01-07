@@ -6,6 +6,7 @@ html lang="fr"
     title RDV Solidarités
     = csrf_meta_tags
     = csp_meta_tag
+    = render 'common/env'
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
   body.auth-fluid-pages.pb-0 class="#{agents_or_users_body_class}"

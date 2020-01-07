@@ -34,7 +34,7 @@
               | Date du rendez-vous :&nbsp;
               = l(@starts_at, format: :human)
             .col-auto
-              = link_to "modifier", lieu_path(@lieu, search: @query)
+              = link_to "modifier", welcome_motif_path(@departement, @motif_name, where: @where)
 
       .card-body
         - if @motif.restriction_for_rdv.present?

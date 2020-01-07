@@ -1,6 +1,5 @@
 describe "User can search for rdvs" do
   let!(:motif) { create(:motif, name: "Vaccination", online: true) }
-  let!(:motif_libelle) { create(:motif_libelle, name: motif.name, service: motif.service) }
   let!(:lieu) { create(:lieu) }
   let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu) }
   let!(:lieu2) { create(:lieu) }
@@ -17,19 +16,17 @@ describe "User can search for rdvs" do
       expect_page_h1("Prenez rendez-vous en ligne\navec votre département")
       fill_in('search_where', with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
       page.execute_script("document.querySelector('#search_departement').value = '92'")
-      expect(find("#search_service")).to have_content(motif.service.name)
-      select(motif.service.name, from: :search_service)
-      expect(find("#search_motif")).to have_content(motif.name)
-      select(motif.name, from: 'search_motif', visible: false)
       click_button("Rechercher")
 
       # Step 2
-      expect(page).to have_content(lieu.name)
-      expect(page).to have_content(lieu2.name)
-      expect(page).to have_content(lieu.name)
-      click_link(lieu.name)
+      expect_page_h1("Prenez rendez-vous en ligne\navec votre département le 92")
+      select(motif.name, from: 'search_motif')
+      click_button("Choisir ce motif")
 
       # Step 3
+      expect(page).to have_content("Modifier le motif")
+      expect(page).to have_content(lieu.name)
+      expect(page).to have_content(lieu2.name)
       expect(page).to have_content(lieu.name)
       first(:link, "11:00").click
 
@@ -93,6 +90,7 @@ describe "User can search for rdvs" do
     before do
       travel_to(Time.zone.local(2019, 11, 18))
       login_as(user, scope: :user)
+      # visit welcome_motif_path("92", motif.name)
       visit new_users_rdv_path(starts_at: Time.zone.local(2019, 11, 18, 10, 15), motif_name: motif.name, lieu_id: lieu.id, departement: "92", where: "useless")
     end
 
