@@ -19,7 +19,7 @@ describe "User can search for rdvs" do
       click_button("Rechercher")
 
       # Step 2
-      expect_page_h1("Prenez rendez-vous en ligne\nvotre maison départementale des solidarités du 92")
+      expect_page_h1("Prenez rendez-vous en ligne\navec votre département le 92")
       select(motif.name, from: 'search_motif')
       click_button("Choisir ce motif")
 
