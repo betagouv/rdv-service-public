@@ -12,6 +12,7 @@ require("chartkick")
 require("chart.js")
 import 'bootstrap';
 import 'moment/moment.js';
+import 'jquery-mask-plugin';
 import 'moment/locale/fr.js';
 import 'holderjs/holder.min';
 import 'jquery-slimscroll/jquery.slimscroll';
@@ -51,6 +52,7 @@ $(document).on('shown.bs.modal', '.modal', function(e) {
 
 $(document).on('shown.rightbar', '.right-bar', function(e) {
   analytic.trackRightbarView(e);
+  $('input[type="tel"]').mask('00 00 00 00 00')
   $('.right-bar .slimscroll-menu').slimscroll({
     height: 'auto',
     position: 'right',
@@ -84,6 +86,7 @@ $(document).on('turbolinks:load', function() {
   menu.init();
   new Avatar().init();
 
+  $('input[type="tel"]').mask('00 00 00 00 00')
   $(window).on('resize', function(e) {
     e.preventDefault();
     layout.init();
