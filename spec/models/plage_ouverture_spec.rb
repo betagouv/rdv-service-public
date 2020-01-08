@@ -47,13 +47,23 @@ describe PlageOuverture, type: :model do
   describe "#occurences_for" do
     subject { plage_ouverture.occurences_for(date_range) }
 
+    let(:date_range) { Date.new(2019, 7, 22)..Date.new(2019, 7, 28) }
+
     context "when there is no recurrence" do
       let(:plage_ouverture) { build(:plage_ouverture, :no_recurrence, first_day: Date.new(2019, 7, 22)) }
-      let(:date_range) { Date.new(2019, 7, 22)..Date.new(2019, 7, 28) }
 
       it do
         expect(subject.size).to eq 1
         expect(subject.first).to eq plage_ouverture.starts_at
+      end
+
+      context "and the first_day is the last of the range" do
+        let(:plage_ouverture) { build(:plage_ouverture, :no_recurrence, first_day: date_range.end) }
+
+        it do
+          expect(subject.size).to eq 1
+          expect(subject.first).to eq plage_ouverture.starts_at
+        end
       end
     end
 
