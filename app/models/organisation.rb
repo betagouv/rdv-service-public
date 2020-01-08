@@ -8,4 +8,5 @@ class Organisation < ApplicationRecord
 
   validates :name, presence: true
   validates :departement, presence: true, length: { is: 2 }
+  validates :phone_number, phone: { allow_blank: true }
 end

@@ -8,6 +8,7 @@ import { Modal } from 'packs/components/modal';
 import 'packs/components/browser-detection';
 import 'select2/dist/js/select2.min.js';
 import 'select2/dist/js/i18n/fr.js';
+import 'jquery-mask-plugin';
 import 'packs/components/select2';
 import 'packs/components/sentry';
 import 'packs/components/search-form';
@@ -17,6 +18,7 @@ var analytic = new Analytic();
 new Modal();
 
 $(document).on('turbolinks:load', function() {
+  $('input[type="tel"]').mask('00 00 00 00 00')
   analytic.trackPageView();
   Holder.run();
   let placeJsContainer = document.querySelector('.places-js-container');
