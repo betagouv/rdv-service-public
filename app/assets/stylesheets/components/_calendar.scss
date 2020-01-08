@@ -113,13 +113,13 @@
 }
 
 .fc-event-past, .fc-event-excused, .fc-event-not_excused {
-  filter: opacity(30%);
+  background-color: #dedede !important;
 }
 
 .fc-event-excused, .fc-event-not_excused {
   .fc-content .fc-title {
     text-decoration: line-through;
-  } 
+  }
 }
 .external-event {
   cursor: move;
@@ -146,6 +146,16 @@
   .fc-content {
     color: $white;
   }
+  &.fc-event-small{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 0.65rem;
+    padding: 0;
+  }
+}
+.fc-event-container {
+  margin: 0 !important;
 }
 
 @include media-breakpoint-down(sm) {
