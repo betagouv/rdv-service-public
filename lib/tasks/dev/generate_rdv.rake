@@ -1,6 +1,5 @@
 task generate_rdv: :environment do
   Organisation.all.each do |organisation|
-    agent = organisation.agents
     (1..30).to_a.each do |n|
       (9..18).to_a.each do |j|
         motif = organisation.motifs.sample
