@@ -46,7 +46,8 @@ class PlageOuverture < ApplicationRecord
     if recurrence.present?
       recurrence.starting(starts_at).until(min_until).lazy.select { |o| o >= inclusive_date_range.begin.to_time }.to_a
     else
-      [starts_at].select { |t| inclusive_date_range.cover?(t) }
+      inclusive_datetime_range = (inclusive_date_range.begin.to_time)..(inclusive_date_range.end.end_of_day)
+      [starts_at].select { |t| inclusive_datetime_range.cover?(t) }
     end
   end
 
