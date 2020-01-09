@@ -47,9 +47,9 @@ class Agents::RdvsController < AgentAuthController
     authorize(@rdv)
     location = callback_params[:callback_path] || @rdv.agenda_path_for_agent(current_agent)
     if @rdv.destroy
-      flash[:notice] = "Le rendez-vous a été annulé, un message a été envoyé à l'usager."
+      flash[:notice] = "Le rendez-vous a été supprimé."
     else
-      flash[:error] = "Une erreur s’est produite, le rendez-vous n’a pas pu être annulé."
+      flash[:error] = "Une erreur s’est produite, le rendez-vous n’a pas pu être supprimé."
       Raven.capture_exception(Exception.new("Deletion failed for rdv : #{@rdv.id}"))
     end
     redirect_to location.to_s
