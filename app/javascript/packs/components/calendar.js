@@ -50,6 +50,7 @@ document.addEventListener('turbolinks:load', function() {
       minTime: '07:00:00',
       maxTime: '20:00:00',
       eventRender: function (info) {
+        $(info.el).attr("title", `${moment(info.event.start).format('H:mm')} - ${info.event.title} / ${info.event.extendedProps.duration} min`)
         if(info.event.extendedProps.past == true) {
           $(info.el).addClass("fc-event-past");
         };
