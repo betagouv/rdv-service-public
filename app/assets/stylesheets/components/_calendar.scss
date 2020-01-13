@@ -150,12 +150,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    line-height: 0.65rem;
+    line-height: 0.75rem;
     padding: 0;
   }
 }
 .fc-event-container {
   margin: 0 !important;
+  .fc-event{
+    border: none;
+  }
 }
 
 @include media-breakpoint-down(sm) {
