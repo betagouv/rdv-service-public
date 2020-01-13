@@ -10,10 +10,6 @@ defaults: &defaults
         POSTGRES_PASSWORD: lapins_test
         POSTGRES_DB: lapins_test
 
-dependencies:
-  pre:
-    - gem install bundler
-    
 bundle_restore_cache: &bundle_restore_cache
   restore_cache:
     name: Restore Bundler Package Cache
@@ -29,7 +25,9 @@ bundle_save_cache: &bundle_save_cache
 bundle_install: &bundle_install
   run:
     name: Install Ruby Dependencies
-    command: bundle install --path ~/vendor/bundle
+    command: |
+      gem install bundler -v 1.17.2
+      bundle install --path ~/vendor/bundle
 
 yarn_restore_cache: &yarn_restore_cache
   restore_cache:
