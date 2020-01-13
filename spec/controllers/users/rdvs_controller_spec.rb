@@ -28,7 +28,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       it "creates rdv" do
         expect(Rdv.count).to eq(0)
-        expect(response).to redirect_to welcome_motif_path("12", motif.name, where: "1 rue de la, ville 12345")
+        expect(response).to redirect_to welcome_motif_path("12", motif.service_id, motif.name, where: "1 rue de la, ville 12345")
         expect(flash[:error]).to eq "Ce creneau n'est plus disponible. Veuillez en sélectionner un autre."
       end
     end

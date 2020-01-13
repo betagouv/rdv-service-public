@@ -20,11 +20,15 @@ describe "User can search for rdvs" do
 
       # Step 2
       expect_page_h1("Prenez rendez-vous en ligne\navec votre département le 92")
+      select(motif.service.name, from: 'search_service')
+      click_button("Choisir ce service")
+
+      # Step 3
+      expect_page_h1("Prenez rendez-vous en ligne\navec votre département le 92")
       select(motif.name, from: 'search_motif')
       click_button("Choisir ce motif")
 
-      # Step 3
-      expect(page).to have_content("Modifier le motif")
+      # Step 4
       expect(page).to have_content(lieu.name)
       expect(page).to have_content(lieu2.name)
       expect(page).to have_content(lieu.name)
