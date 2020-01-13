@@ -35,23 +35,4 @@ class WelcomeController < ApplicationController
 
     @motifs = Motif.names_for_service_and_departement(@service, @departement)
   end
-
-  def welcome_motif
-    departement_params = params.permit(:departement, :where, :motif)
-    @departement = departement_params[:departement]
-    @where = departement_params[:where]
-    @motif = departement_params[:motif]
-    @service_id = params[:service].to_s
-    @service = Service.find(@service_id)
-
-    @date_range = Time.now.to_date..((Time.now + 6.days).to_date)
-
-    @motifs = Motif.names_for_service_and_departement(@service, @departement)
-    @lieux = Lieu.for_service_motif_and_departement(@service_id, @motif, @departement)
-    @creneaux_by_lieux = {}
-
-    @lieux.each do |lieu|
-      @creneaux_by_lieux[lieu.id] = Creneau.for_motif_and_lieu_from_date_range(@motif, lieu, @date_range)
-    end
-  end
 end
