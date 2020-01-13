@@ -3,7 +3,7 @@ version: 2
 defaults: &defaults
   working_directory: ~/lapins
   docker:
-    - image: circleci/ruby:2.6.5-node-browsers
+    - image: circleci/ruby:2.7.0-node-browsers
     - image: circleci/postgres:9.5
       environment:
         POSTGRES_USER: lapins_test
