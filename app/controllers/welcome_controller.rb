@@ -12,7 +12,7 @@ class WelcomeController < ApplicationController
 
     if search_params[:service].present?
       if search_params[:motif].present?
-        redirect_to welcome_motif_path(search_params[:departement], search_params[:service], search_params[:motif], where: search_params[:where])
+        redirect_to lieux_path(search: { departement: search_params[:departement], service: search_params[:service], motif: search_params[:motif], where: search_params[:where] })
       else
         redirect_to welcome_service_path(search_params[:departement], search_params[:service], where: search_params[:where])
       end
@@ -43,10 +43,10 @@ class WelcomeController < ApplicationController
     @motif = departement_params[:motif]
     @service_id = params[:service].to_s
     @service = Service.find(@service_id)
-    @motifs = Motif.names_for_service_and_departement(@service, @departement)
 
     @date_range = Time.now.to_date..((Time.now + 6.days).to_date)
 
+    @motifs = Motif.names_for_service_and_departement(@service, @departement)
     @lieux = Lieu.for_service_motif_and_departement(@service_id, @motif, @departement)
     @creneaux_by_lieux = {}
 

@@ -31,6 +31,9 @@ describe "User can search for rdvs" do
       # Step 4
       expect(page).to have_content(lieu.name)
       expect(page).to have_content(lieu2.name)
+
+      # Step 5
+      click_link(lieu.name)
       expect(page).to have_content(lieu.name)
       first(:link, "11:00").click
 
@@ -94,7 +97,6 @@ describe "User can search for rdvs" do
     before do
       travel_to(Time.zone.local(2019, 11, 18))
       login_as(user, scope: :user)
-      # visit welcome_motif_path("92", motif.name)
       visit new_users_rdv_path(starts_at: Time.zone.local(2019, 11, 18, 10, 15), motif_name: motif.name, lieu_id: lieu.id, departement: "92", where: "useless")
     end
 
