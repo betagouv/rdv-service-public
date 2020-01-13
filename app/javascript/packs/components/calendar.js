@@ -50,8 +50,14 @@ document.addEventListener('turbolinks:load', function() {
       minTime: '07:00:00',
       maxTime: '20:00:00',
       eventRender: function (info) {
+        if (info.event.extendedProps.duration) {
+          $(info.el).attr("title", `${moment(info.event.start).format('H:mm')} - ${info.event.title} / ${info.event.extendedProps.duration} min`)
+        }
         if(info.event.extendedProps.past == true) {
           $(info.el).addClass("fc-event-past");
+        };
+        if(info.event.extendedProps.duration <= 30) {
+          $(info.el).addClass("fc-event-small");
         };
         $(info.el).addClass("fc-event-"+ info.event.extendedProps.status);
         $(info.el).attr("data-rightbar", "true");

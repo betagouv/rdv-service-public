@@ -3,6 +3,7 @@ json.array! @rdvs do |rdv|
   json.extendedProps do
     json.status rdv.status
     json.past rdv.past?
+    json.duration rdv.duration_in_min
   end
   json.start rdv.starts_at
   json.end rdv.ends_at
