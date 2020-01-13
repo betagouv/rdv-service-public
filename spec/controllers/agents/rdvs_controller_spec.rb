@@ -125,8 +125,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
     it "cancel rdv" do
       expect do
         delete :destroy, params: { organisation_id: organisation_id, id: rdv.id }
-        rdv.reload
-      end.to change(rdv, :cancelled?).from(false).to(true)
+      end.to change { Rdv.count }.by(-1)
     end
   end
 end

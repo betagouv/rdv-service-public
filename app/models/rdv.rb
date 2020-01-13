@@ -38,7 +38,7 @@ class Rdv < ApplicationRecord
   end
 
   def cancel
-    update(cancelled_at: Time.zone.now)
+    update(cancelled_at: Time.zone.now, status: :excused)
   end
 
   def send_notifications_to_users

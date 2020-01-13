@@ -4,7 +4,7 @@ class Agents::RdvsController < AgentAuthController
   before_action :set_rdv, only: [:show, :edit, :update, :destroy, :status]
 
   def index
-    @rdvs = policy_scope(Rdv).active
+    @rdvs = policy_scope(Rdv)
     if filter_params[:agent_id].present?
       @agent = policy_scope(Agent).find(filter_params[:agent_id])
       @rdvs = @rdvs.joins(:agents).where(agents: { id: @agent })
@@ -36,7 +36,8 @@ class Agents::RdvsController < AgentAuthController
 
   def status
     authorize(@rdv)
-    @rdv.update(status_params)
+    cancelled_at = ['unknown', 'waiting', 'seen'].include?(status_params[:status]) ? nil : Time.zone.now
+    @rdv.update(status: status_params[:status], cancelled_at: cancelled_at)
     respond_to do |f|
       f.js
     end
@@ -44,13 +45,13 @@ class Agents::RdvsController < AgentAuthController
 
   def destroy
     authorize(@rdv)
-    if @rdv.cancel
-      flash[:notice] = "Le rendez-vous a été annulé, un message a été envoyé à l'usager."
+    location = callback_params[:callback_path] || @rdv.agenda_path_for_agent(current_agent)
+    if @rdv.destroy
+      flash[:notice] = "Le rendez-vous a été supprimé."
     else
-      flash[:error] = "Une erreur s’est produite, le rendez-vous n’a pas pu être annulé."
+      flash[:error] = "Une erreur s’est produite, le rendez-vous n’a pas pu être supprimé."
       Raven.capture_exception(Exception.new("Deletion failed for rdv : #{@rdv.id}"))
     end
-    location = callback_params[:callback_path] || @rdv.agenda_path_for_agent(current_agent)
     redirect_to location.to_s
   end
 
