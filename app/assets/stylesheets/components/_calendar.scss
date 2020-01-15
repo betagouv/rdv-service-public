@@ -113,7 +113,7 @@
 }
 
 .fc-event-past, .fc-event-excused, .fc-event-not_excused {
-  background-color: #dedede !important;
+  background-color: #666 !important;
 }
 
 .fc-event-excused, .fc-event-not_excused {
@@ -150,12 +150,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    line-height: 0.65rem;
+    line-height: 0.75rem;
     padding: 0;
   }
 }
 .fc-event-container {
   margin: 0 !important;
+  .fc-event{
+    border: none;
+  }
 }
 
 @include media-breakpoint-down(sm) {
