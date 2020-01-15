@@ -27,16 +27,6 @@ class Motif < ApplicationRecord
     service.name
   end
 
-  def self.names_grouped_by_service_for_departement(departement)
-    Motif.online
-         .active
-         .joins(:organisation, :plage_ouvertures)
-         .where(organisations: { departement: departement })
-         .includes(:service)
-         .group_by { |m| m.service.name }
-         .map { |s, m| [s, m.map(&:name).uniq] }
-  end
-
   def self.names_for_service_and_departement(service, departement)
     Motif.online
          .active

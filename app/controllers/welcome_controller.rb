@@ -25,6 +25,7 @@ class WelcomeController < ApplicationController
     departement_params = params.permit(:departement, :where)
     @departement = departement_params[:departement]
     @where = departement_params[:where]
+    @services = Service.with_online_and_active_motifs_for_departement(@departement)
   end
 
   def welcome_service

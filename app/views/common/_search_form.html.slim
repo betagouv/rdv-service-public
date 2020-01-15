@@ -25,7 +25,7 @@
         .form-row.d-flex.justify-content-md-center.mb-2
           .col-lg-9
             = f.label :service, label: "Votre service", required: true
-            = f.select :service, options_for_select(Service.with_motifs.collect { |service| [service.name, service.id]}), { prompt: "ex : PMI" }, required: true, class: "form-control-lg w-100"
+            = f.select :service, options_for_select(@services.collect { |service| [service.name, service.id]}), { prompt: "ex : PMI" }, required: true, class: "form-control-lg w-100"
           .col-lg-3.align-self-end= f.button :submit, "Choisir ce service", class: 'btn btn-secondary btn-lg w-100 text-center'
 
 
