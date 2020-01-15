@@ -112,15 +112,16 @@
   text-align: center;
 }
 
-.fc-event-past, .fc-event-excused, .fc-event-not_excused {
+.fc-event-past, .fc-event-excused, .fc-event-notexcused {
   background-color: #666 !important;
 }
 
-.fc-event-excused, .fc-event-not_excused {
+.fc-event-excused, .fc-event-notexcused {
   .fc-content .fc-title {
     text-decoration: line-through;
   }
 }
+
 .external-event {
   cursor: move;
   margin: 10px 0;
