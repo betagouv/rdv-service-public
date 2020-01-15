@@ -6,7 +6,7 @@ class Organisation < ApplicationRecord
   has_and_belongs_to_many :agents, -> { distinct }
   has_and_belongs_to_many :users, -> { distinct }
 
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true
   validates :departement, presence: true, length: { is: 2 }
   validates :phone_number, phone: { allow_blank: true }
 end
