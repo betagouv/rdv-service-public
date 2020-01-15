@@ -7,7 +7,6 @@ describe Rdv::Ics, type: :model do
     subject { ics.to_ical_for(user) }
 
     it do
-      p rdv.users.first.full_name
       is_expected.to include("SUMMARY:RDV #{rdv.name}")
       is_expected.to match("DTSTART;TZID=Europe/Paris:20190704T150000")
       is_expected.to include("DTEND;TZID=Europe/Paris:20190704T154500")
