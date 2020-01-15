@@ -113,7 +113,7 @@
 }
 
 .fc-event-past, .fc-event-excused, .fc-event-notexcused {
-  background-color: #dedede !important;
+  background-color: #666 !important;
 }
 
 .fc-event-excused, .fc-event-notexcused {
@@ -121,6 +121,7 @@
     text-decoration: line-through;
   }
 }
+
 .external-event {
   cursor: move;
   margin: 10px 0;
