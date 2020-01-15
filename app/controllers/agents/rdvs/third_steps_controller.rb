@@ -10,7 +10,6 @@ class Agents::Rdvs::ThirdStepsController < AgentAuthController
   def create
     @rdv = Rdv.new(third_step_params)
     @rdv.organisation = current_organisation
-    @rdv.name = "#{@rdv.users&.map(&:full_name)&.to_sentence} <> #{@rdv.motif&.name}"
     authorize(@rdv)
     if @rdv.save
       redirect_to @rdv.agenda_path_for_agent(current_agent), notice: "Le rendez-vous a été créé."

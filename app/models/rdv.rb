@@ -17,6 +17,7 @@ class Rdv < ApplicationRecord
   after_commit :reload_uuid, on: :create
 
   after_create :send_notifications_to_users, if: :notify?
+  before_save :update_name
   after_save :associate_users_with_organisation
 
   def agenda_path_for_agent(agent)
@@ -57,6 +58,10 @@ class Rdv < ApplicationRecord
       RdvMailer.send_reminder(self, user).deliver_later if user.email.present?
       TwilioSenderJob.perform_later(:reminder, self, user) if user.formated_phone
     end
+  end
+
+  def update_name
+    self.name = "#{users&.map(&:full_name)&.to_sentence} <> #{motif&.name}"
   end
 
   def notify?
