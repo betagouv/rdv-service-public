@@ -14,7 +14,7 @@ AllCops:
 Bundler/OrderedGems:
   Enabled: false
 
-Layout/AlignHash:
+Layout/HashAlignment:
   Enabled: false
 
 Layout/ExtraSpacing:
@@ -29,7 +29,7 @@ Metrics/BlockLength:
 Metrics/ClassLength:
   Max: 150
 
-Metrics/LineLength:
+Layout/LineLength:
   Enabled: false
 
 Metrics/MethodLength:
