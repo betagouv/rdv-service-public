@@ -23,5 +23,9 @@
       - @first_step.rdv.agents.each do |p|
         / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
         = f.hidden_field "agent_ids][", value: p.id
-      .text-right
-        = f.button :submit, 'Continuer'
+
+      .row
+        .col.text-left
+          = link_to 'Revenir en arrière', organisation_agent_path(current_organisation, @agent), class: 'btn btn-link'
+        .col.text-right
+          = f.button :submit, 'Continuer'
