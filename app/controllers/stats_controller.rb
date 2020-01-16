@@ -2,6 +2,6 @@ class StatsController < ApplicationController
   layout 'landing'
 
   def index
-    @rdvs = Rdv.active
+    @rdvs = Rdv.all
   end
 end
