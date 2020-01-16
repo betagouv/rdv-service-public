@@ -3,11 +3,16 @@ class UserAuthController < ApplicationController
 
   layout 'application_user'
   before_action :authenticate_user!
+  before_action :set_paper_trail_whodunnit
 
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
   private
+
+  def user_for_paper_trail
+    "[User] #{current_user.email}"
+  end
 
   def authorize(record)
     super([:user, record])

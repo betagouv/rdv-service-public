@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_paper_trail
   include PgSearch::Model
   include FullNameConcern
   include AccountNormalizerConcern
