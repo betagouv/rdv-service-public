@@ -9,8 +9,8 @@ class AgentAuthController < ApplicationController
 
   helper_method :current_organisation, :policy_scope
 
-
   private
+
   def user_for_paper_trail
     "[Agent] #{current_agent.email}"
   end
