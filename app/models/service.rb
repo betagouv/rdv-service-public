@@ -7,6 +7,15 @@ class Service < ApplicationRecord
 
   scope :with_motifs, -> { where.not(name: SECRETARIAT) }
 
+  scope :with_online_and_active_motifs_for_departement, lambda { |departement|
+                                                          where(id: Motif.online
+                                                          .active
+                                                          .joins(:organisation, :plage_ouvertures)
+                                                          .where(organisations: { departement: departement })
+                                                          .pluck(:service_id)
+                                                          .uniq)
+                                                        }
+
   def secretariat?
     name == SECRETARIAT
   end
