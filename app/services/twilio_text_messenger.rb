@@ -20,7 +20,7 @@ class TwilioTextMessenger
         body: body
       )
     rescue StandardError => e
-      return e
+      e
     end
   end
 
