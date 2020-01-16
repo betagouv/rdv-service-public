@@ -7,9 +7,14 @@
 module Admin
   class ApplicationController < Administrate::ApplicationController
     before_action :authenticate_super_admin!
+    before_action :set_paper_trail_whodunnit
     around_action :skip_bullet if defined?(Bullet)
 
     helper_method :sign_in_as_allowed?
+
+    def user_for_paper_trail
+      "[Admin] #{current_super_admin.email}"
+    end
 
     def authenticate_super_admin!
       if super_admin_signed_in?

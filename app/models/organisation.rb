@@ -1,4 +1,5 @@
 class Organisation < ApplicationRecord
+  has_paper_trail
   has_many :lieux, dependent: :destroy
   has_many :motifs, dependent: :destroy
   has_many :absences, dependent: :destroy

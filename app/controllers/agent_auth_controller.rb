@@ -2,13 +2,18 @@ class AgentAuthController < ApplicationController
   rescue_from Pundit::NotAuthorizedError, with: :agent_not_authorized
 
   before_action :authenticate_agent!
+  before_action :set_paper_trail_whodunnit
 
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
   helper_method :current_organisation, :policy_scope
 
+
   private
+  def user_for_paper_trail
+    "[Agent] #{current_agent.email}"
+  end
 
   def pundit_user
     AgentContext.new(current_agent, current_organisation)

@@ -1,4 +1,5 @@
 class Motif < ApplicationRecord
+  has_paper_trail
   belongs_to :organisation
   belongs_to :service
   has_many :rdvs, dependent: :restrict_with_exception
