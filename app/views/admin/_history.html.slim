@@ -1,0 +1,23 @@
+- if resource.is_a?(::PaperTrail::Model::InstanceMethods) && resource.versions.exists?
+  header.main-content__header style="width: 100%;"
+    h2.main-content__page-title
+      | Historique
+  section.main-content__body
+    table.table.table-striped
+      thead
+        tr
+          th Propriété
+          th Avant
+          th Après
+          th Quand
+          th Qui
+      tbody
+        - resource.versions.reverse_order.each  do |version|
+
+          - version.changeset.except('updated_at').each do |property,change|
+            tr
+              td=property
+              td=change.first.to_s.html_safe
+              td=change.last.to_s.html_safe
+              td=l version.created_at
+              td= version.whodunnit
