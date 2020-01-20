@@ -25,7 +25,7 @@ class Creneau
       occurence_match_creneau = p.occurences_ranges_for(date_range).any? do |occurences_range|
         (occurences_range.begin <= range.end) && (range.begin <= occurences_range.end)
       end
-      rdvs = p.agent.rdvs.where(starts_at: date_range)
+      rdvs = p.agent.rdvs.where(starts_at: date_range).active
       absences = p.agent.absences
 
       occurence_match_creneau && available_with_rdvs_and_absences?(rdvs, absences)

@@ -14,7 +14,7 @@ class Agents::RdvsController < AgentAuthController
       @rdvs = @user.available_rdvs(current_organisation).page(filter_params[:page])
     end
     @rdvs = @rdvs.where(starts_at: date_range_params) if filter_params[:start].present? && filter_params[:end].present?
-    @rdvs = @rdvs.includes(:motif).order(:starts_at)
+    @rdvs = @rdvs.includes(:motif).order(starts_at: :desc)
   end
 
   def show

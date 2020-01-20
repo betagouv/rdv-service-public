@@ -11,7 +11,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
 
   describe "GET index" do
     let!(:rdv1) { create(:rdv, agents: [agent], starts_at: Time.zone.parse("21/07/2019 08:00")) }
-    let!(:rdv2) { create(:rdv, agents: [agent], starts_at: Time.zone.parse("21/07/2019 09:00")) }
+    let!(:rdv2) { create(:rdv, agents: [agent], starts_at: Time.zone.parse("21/07/2019 07:00")) }
 
     subject { get(:index, params: { organisation_id: organisation_id, agent_id: agent.id, start: start_time, end: end_time }, as: :json) }
 
