@@ -287,4 +287,51 @@ describe Creneau, type: :model do
       it { expect(subject).to contain_exactly(plage_ouverture) }
     end
   end
+
+  describe ".next_availability_for_motif_and_lieu" do
+    let(:motif_name) { motif.name }
+    let(:from) { today }
+
+    subject do
+      Creneau.next_availability_for_motif_and_lieu(motif_name, lieu, from)
+    end
+
+    it { expect(subject.starts_at).to eq(Time.zone.local(2019, 9, 19, 9, 0)) }
+
+    describe "with not online motif" do
+      let(:online) { false }
+
+      it { expect(subject).to eq(nil) }
+    end
+
+    describe "with absence" do
+      let!(:absence) { create(:absence, agent: agent, starts_at: Time.zone.local(2019, 9, 19, 9, 0), ends_at: Time.zone.local(2019, 9, 19, 12, 0)) }
+
+      it { expect(subject).to eq(nil) }
+
+      describe "when plage_ouverture is recurrence" do
+        before { plage_ouverture.update(recurrence: Montrose.monthly.to_json) }
+
+        it { expect(subject.starts_at).to eq(Time.zone.local(2019, 10, 19, 9, 0)) }
+      end
+    end
+
+    describe "with rdv" do
+      let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 120, agents: [agent]) }
+
+      it { expect(subject).to eq(nil) }
+
+      context "which is cancelled" do
+        let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, agents: [agent], cancelled_at: Time.zone.local(2019, 9, 20, 9, 30)) }
+
+        it { expect(subject.starts_at).to eq(Time.zone.local(2019, 9, 19, 9, 0)) }
+      end
+
+      describe "when plage_ouverture is recurrence" do
+        before { plage_ouverture.update(recurrence: Montrose.monthly.to_json) }
+
+        it { expect(subject.starts_at).to eq(Time.zone.local(2019, 10, 19, 9, 0)) }
+      end
+    end
+  end
 end

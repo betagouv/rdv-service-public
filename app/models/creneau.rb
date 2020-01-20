@@ -100,6 +100,15 @@ class Creneau
     results.uniq(&uniq_by).sort_by(&:starts_at)
   end
 
+  def self.next_availability_for_motif_and_lieu(motif_name, lieu, from)
+    available_creneau = nil
+    from.step(from + 6.months, step = 7).find do |date|
+      creneaux = for_motif_and_lieu_from_date_range(motif_name, lieu, date..(date + 7.days))
+      available_creneau = creneaux.first if creneaux.any?
+    end
+    available_creneau
+  end
+
   private
 
   def date_range
