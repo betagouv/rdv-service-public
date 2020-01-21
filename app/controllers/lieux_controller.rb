@@ -34,7 +34,8 @@ class LieuxController < ApplicationController
     @service = Service.find(@service_id)
     @motifs = Motif.names_for_service_and_departement(@service, @departement)
 
-    @date_range = Time.now.to_date..((Time.now + 6.days).to_date)
+    start_date = params[:date]&.to_date || Date.today
+    @date_range = start_date..(start_date + 6.days)
     @lieu = Lieu.find(params[:id])
     @creneaux = Creneau.for_motif_and_lieu_from_date_range(@motif, @lieu, @date_range)
   end
