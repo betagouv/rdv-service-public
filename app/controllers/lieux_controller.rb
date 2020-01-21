@@ -12,6 +12,11 @@ class LieuxController < ApplicationController
     @lieux = Lieu.for_service_motif_and_departement(@service_id, @motif, @departement)
     @motifs = Motif.names_for_service_and_departement(@service, @departement)
 
+    @next_availability_by_lieux = {}
+    @lieux.each do |lieu|
+      @next_availability_by_lieux[lieu.id] = Creneau.next_availability_for_motif_and_lieu(@motif, lieu, Date.today)
+    end
+
     return redirect_to lieu_path(@lieux.first, search: @query) if @lieux.size == 1
 
     return unless @organisations.empty?
