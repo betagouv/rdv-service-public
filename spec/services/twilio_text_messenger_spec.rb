@@ -12,7 +12,7 @@ describe TwilioTextMessenger, type: :service do
 
     it { expect(subject.body).to include("RDV Solidarités") }
     it { expect(subject.body).to include("RDV #{rdv.motif.service.name} #{I18n.l(rdv.starts_at, format: :short)}") }
-    it { expect(subject.body).to include("#{rdv.location}") }
+    it { expect(subject.body).to include(rdv.location.to_s) }
 
     context 'RDV is by_phone' do
       let(:rdv) { create(:rdv, :by_phone) }
@@ -29,6 +29,6 @@ describe TwilioTextMessenger, type: :service do
 
     it { expect(subject.body).to include("RDV Solidarités") }
     it { expect(subject.body).to include("Rappel #{rdv.motif.service.name} demain à #{rdv.starts_at.strftime("%H:%M")}") }
-    it { expect(subject.body).to include("#{rdv.location}") }
+    it { expect(subject.body).to include(rdv.location.to_s) }
   end
 end
