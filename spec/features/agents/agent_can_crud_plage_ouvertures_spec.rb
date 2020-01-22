@@ -53,7 +53,7 @@ describe "Agent can CRUD users" do
       let!(:motif) { create(:motif, :by_phone) }
       scenario "can create a plage_ouverture" do
         click_link 'Créer une plage d\'ouverture', match: :first
-        fill_in 'Nom', with: new_plage_ouverture.title
+        fill_in 'Description', with: new_plage_ouverture.title
         check motif.name
         click_button 'Créer'
 
