@@ -27,11 +27,10 @@ p.card-text
   strong> Usager(s) :
   = users_to_links(@rdv)
 .row.mb-5
-  - unless @rdv.cancelled?
-    .col.text-left
-      = link_to "Supprimer", organisation_rdv_path(@rdv.organisation, @rdv, callback_path: params[:callback_path]), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Avant de supprimer ce rendez-vous, assurez-vous d’avoir averti #{@rdv.users.map(&:full_name).to_sentence}. Êtes-vous sûr de vouloir supprimer ce rendez-vous ?"}
-    .col.text-right
-      = link_to "Modifier", edit_organisation_rdv_path(@rdv.organisation, @rdv, callback_path: params[:callback_path]), class: "btn btn-outline-primary", data: { rightbar: true }
+  .col.text-left
+    = link_to "Supprimer", organisation_rdv_path(@rdv.organisation, @rdv, callback_path: params[:callback_path]), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Avant de supprimer ce rendez-vous, assurez-vous d’avoir averti #{@rdv.users.map(&:full_name).to_sentence}. Êtes-vous sûr de vouloir supprimer ce rendez-vous ?"}
+  .col.text-right
+    = link_to "Modifier", edit_organisation_rdv_path(@rdv.organisation, @rdv, callback_path: params[:callback_path]), class: "btn btn-outline-primary", data: { rightbar: true }
 .row
   .col
     .bg-light.p-2
