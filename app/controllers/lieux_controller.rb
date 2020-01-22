@@ -38,6 +38,13 @@ class LieuxController < ApplicationController
     @date_range = start_date..(start_date + 6.days)
     @lieu = Lieu.find(params[:id])
     @creneaux = Creneau.for_motif_and_lieu_from_date_range(@motif, @lieu, @date_range)
+
+    @next_availability = @creneaux.empty? ? Creneau.next_availability_for_motif_and_lieu(@motif, @lieu, @date_range.end) : nil
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   private

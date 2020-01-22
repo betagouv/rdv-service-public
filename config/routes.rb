@@ -115,7 +115,6 @@ Rails.application.routes.draw do
   get 'departement/:departement/:service', to: "welcome#welcome_service", as: "welcome_service"
   get 'departement/:departement/:service/:motif', to: "welcome#welcome_motif", as: "welcome_motif"
   resources :lieux, only: [:index, :show]
-  resources :creneaux, only: [:index]
   resources :motif_libelles, only: :index
   root 'welcome#index'
 end
