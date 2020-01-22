@@ -286,5 +286,17 @@ describe Creneau, type: :model do
 
       it { expect(subject).to contain_exactly(plage_ouverture) }
     end
+
+    describe "with a rdv" do
+      let!(:rdv) { create(:rdv, agents: [plage_ouverture.agent], starts_at: creneau.starts_at, duration_in_min: 30) }
+
+      it { expect(subject).to eq([]) }
+
+      describe "which is cancelled" do
+        let!(:rdv) { create(:rdv, agents: [plage_ouverture.agent], starts_at: creneau.starts_at, duration_in_min: 30, cancelled_at: 2.days.ago) }
+
+        it { expect(subject).to contain_exactly(plage_ouverture) }
+      end
+    end
   end
 end
