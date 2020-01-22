@@ -93,7 +93,7 @@ class Rdv < ApplicationRecord
   end
 
   def available_to_file_attente?
-    !cancelled? && starts_at > 14.days.from_now
+    !cancelled? && (starts_at - Time.now) > motif.min_booking_delay
   end
 
   private
