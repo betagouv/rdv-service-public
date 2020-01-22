@@ -1,0 +1,11 @@
+fr:
+  flipflop:
+    title: "Feature Flipping"
+    feature: "Fonctionnalité"
+    description: "Description"
+
+    feature_states:
+      enabled: "on"
+      disabled: "off"
+
+    clear: "clear"

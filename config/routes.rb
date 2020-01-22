@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 
     authenticate :super_admin do
       match "/delayed_job" => DelayedJobWeb, anchor: false, via: [:get, :post]
+      mount Flipflop::Engine => "/flipflop", as: "flipflop"
     end
   end
 
