@@ -13,7 +13,12 @@
       .form-row
         .col-md-4= f.input :default_duration_in_min
         .col-md-4= f.input :color, as: "color"
-      = f.input :by_phone, hint: 'Le RDV sera effectué par téléphone.'
+
+  .card
+    .card-body
+      h5.card-title RDV téléphonique
+      p.text-muted.font-14 L'usager sera notifié que le RDV se passera par téléphone, au numéro indiqué dans son profil.
+      = f.input :by_phone, label: 'Le RDV sera effectué par téléphone'
   
   .card
     .card-body
