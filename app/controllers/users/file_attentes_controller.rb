@@ -8,7 +8,6 @@ class Users::FileAttentesController < UserAuthController
          else
            FileAttente.where(rdv_id: file_attente_params[:rdv_id], user_id: file_attente_params[:user_id]).first
          end
-
     if fa.present?
       fa.destroy!
       flash[:alert] = "Vous n'êtes plus sur la liste d'attente"
@@ -16,7 +15,6 @@ class Users::FileAttentesController < UserAuthController
       FileAttente.create(rdv_id: file_attente_params[:rdv_id], user_id: file_attente_params[:user_id])
       flash[:notice] = "Vous êtes à présent sur la liste d'attente"
     end
-
     redirect_to request.referrer.to_s
   end
 
