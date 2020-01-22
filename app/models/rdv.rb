@@ -2,6 +2,7 @@ class Rdv < ApplicationRecord
   has_paper_trail
   belongs_to :organisation
   belongs_to :motif
+  has_many :file_attentes
   has_and_belongs_to_many :agents
   has_and_belongs_to_many :users, validate: false
 
@@ -89,6 +90,10 @@ class Rdv < ApplicationRecord
       user_ids: users&.map(&:id),
       agent_ids: agents&.map(&:id),
     }
+  end
+
+  def available_to_file_attente?
+    !cancelled? && starts_at > 14.days.from_now
   end
 
   private

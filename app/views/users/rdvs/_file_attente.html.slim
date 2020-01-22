@@ -1,0 +1,12 @@
+- if Flipflop.file_attente?
+  - if rdv.available_to_file_attente?
+    li.list-group-item
+      i.fa.fa-bell>
+      | Vous souhaitez prendre RDV plus tôt ?
+      - fa = rdv.file_attentes.where(user: current_user).first || FileAttente.new(user: current_user, rdv: rdv)
+      = simple_form_for fa, url: users_file_attente_path, html: { method: :post, class: 'form-inline' }, wrapper: :inline_form, remote: false  do |f|
+        = f.input :id, as: :hidden
+        = f.input :rdv_id, as: :hidden
+        = f.input :user_id, as: :hidden
+        = check_box "active", "0", { checked: (fa.id.nil? ? false : true), onchange: "this.form.submit()" }
+        = label_tag 'active[0]', 'Je souhaite être prévenu si un créneau se libère.', class: "pl-1"
