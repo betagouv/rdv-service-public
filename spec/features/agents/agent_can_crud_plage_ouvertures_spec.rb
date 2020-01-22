@@ -16,7 +16,7 @@ describe "Agent can CRUD users" do
       click_link plage_ouverture.title
 
       expect_page_title("Modifier la plage d'ouverture")
-      fill_in 'Nom', with: 'La belle plage'
+      fill_in 'Description', with: 'La belle plage'
       click_button('Modifier')
 
       expect_page_title("Vos plages d'ouverture")
@@ -29,7 +29,7 @@ describe "Agent can CRUD users" do
       click_link 'Créer une plage d\'ouverture', match: :first
 
       expect_page_title("Nouvelle plage d'ouverture")
-      fill_in 'Nom', with: new_plage_ouverture.title
+      fill_in 'Description', with: new_plage_ouverture.title
       check agent.service.motifs.first.name
       click_button 'Créer'
 
