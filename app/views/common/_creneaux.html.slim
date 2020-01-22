@@ -26,14 +26,15 @@ div id="creneaux-lieu-#{lieu.id}"
               p.text-center
                 i.fa.fa-minus.text-muted
         - if @next_availability
-          .position-absolute.h-100.w-100.bg-overlay
-            .text-center
-              | Prochaine disponibilité le
-              br
-              = link_to lieu_path(lieu, search: @query, date: @next_availability.starts_at), remote: true, class: 'btn btn-link', data: { disable_with: "..." } do
-                = l(@next_availability.starts_at, format: :human)
-                | &nbsp;
-                i.fa.fa-chevron-right
+          .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
+            = link_to lieu_path(lieu, search: @query, date: @next_availability.starts_at), remote: true, class: 'btn btn-light', data: { disable_with: "..." } do
+              .d-flex.align-items-center
+                div
+                  | Prochaine disponibilité le
+                  br
+                  strong= l(@next_availability.starts_at, format: :human)
+                .ml-2
+                  i.fa.fa-chevron-right
 
     .col-12.col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
       = link_to lieu_path(lieu, search: @query, date: date_range.end + 1.day), remote: true, class: 'btn btn-primary', data: { disable_with: "..." } do
