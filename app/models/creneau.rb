@@ -39,6 +39,7 @@ class Creneau
   def available_with_rdvs_and_absences?(rdvs, absences)
     !overlaps_rdv_or_absence?(rdvs) &&
       !overlaps_rdv_or_absence?(absences) &&
+      !overlaps_jour_ferie? &&
       !too_late?
   end
 
@@ -67,6 +68,10 @@ class Creneau
         (starts_at < r_o_a.starts_at && r_o_a.starts_at < ends_at) ||
         (r_o_a.starts_at <= starts_at && ends_at <= r_o_a.ends_at)
     end.any?
+  end
+
+  def overlaps_jour_ferie?
+    JoursFeriesService.all_in_date_range(self.starts_at.to_date..self.ends_at.to_date).any?
   end
 
   def self.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range, for_agents = false, agent_ids = nil)

@@ -28,6 +28,12 @@ describe JoursFeriesService, type: :service do
       it { is_expected.to match_array([Date.new(2021, 5, 1), Date.new(2021, 5, 8), Date.new(2021, 5, 13), Date.new(2021, 5, 24)]) }
     end
 
+    context "when date range is only one day" do
+      let(:range) { Date.new(2020, 1, 1)..Date.new(2020, 1, 1) }
+
+      it { is_expected.to match_array([Date.new(2020, 1, 1)]) }
+    end
+
     context "this test should be green on 1st Jan 2021, meanwhile do not run it" do
       let(:range) { Date.new(2022, 1, 1)..Date.new(2022, 1, 7) }
 
