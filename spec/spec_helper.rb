@@ -124,6 +124,10 @@ RSpec.configure do |config|
     DatabaseCleaner.start
   end
 
+  config.before(:each) do
+    Flipflop::FeatureSet.current.test!.switch!(:file_attente, true)
+  end
+
   config.before(:each, js: true) do
     DatabaseCleaner.strategy = :truncation
   end

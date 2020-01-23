@@ -18,6 +18,7 @@ gem 'kaminari', '~> 1.1'
 gem 'bootstrap4-kaminari-views', '~> 1.0'
 gem 'administrate', '~> 0.12'
 gem 'paper_trail'
+gem "flipflop"
 
 # Devise / auth
 gem 'devise', '~> 4.7'

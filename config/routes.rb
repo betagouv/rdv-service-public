@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 
     authenticate :super_admin do
       match "/delayed_job" => DelayedJobWeb, anchor: false, via: [:get, :post]
+      mount Flipflop::Engine => "/flipflop", as: "flipflop"
     end
   end
 
@@ -36,6 +37,7 @@ Rails.application.routes.draw do
       put :cancel
       get :confirmation
     end
+    post 'file_attente', to: 'file_attentes#create_or_delete'
   end
   resources :stats, only: :index
   authenticated :user do

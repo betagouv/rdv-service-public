@@ -28,4 +28,22 @@ describe "User can manage their rdvs" do
       expect(page).to have_selector('p.font-italic', text: "Ce rendez-vous commence dans moins de 4 heures, il n'est plus annulable en ligne.")
     end
   end
+
+  context "when available for file attente" do
+    let(:starts_at) { 15.days.from_now }
+    scenario "default", js: true do
+      expect(page).to have_content("Je souhaite être prévenu si un créneau se libère.")
+      check 'Je souhaite être prévenu si un créneau se libère.'
+      expect(page).to have_content("Vous êtes à présent sur la liste d'attente")
+      uncheck 'Je souhaite être prévenu si un créneau se libère.'
+      expect(page).to have_content("Vous n'êtes plus sur la liste d'attente")
+    end
+  end
+
+  context "when not available for file attente" do
+    let(:starts_at) { 7.days.from_now }
+    scenario "default", js: true do
+      expect(page).not_to have_content("Je souhaite être prévenu si un créneau se libère.")
+    end
+  end
 end
