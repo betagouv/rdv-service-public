@@ -16,4 +16,4 @@
       .card.mb-5
         .card-body
           h4.card-title.mb-3 Usagers créés
-          = column_chart @rdvs.active.group_by_month('rdvs.created_at', range: 3.month.ago..Time.now, format: '%b %y').count
+          = column_chart @users.group_by_month('users.created_at', range: 3.month.ago..Time.now, format: '%b %y').count
