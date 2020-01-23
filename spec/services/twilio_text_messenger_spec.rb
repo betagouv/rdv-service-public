@@ -10,9 +10,9 @@ describe TwilioTextMessenger, type: :service do
       is_expected.to be_kind_of(Twilio::REST::Api::V2010::AccountContext::MessageInstance)
     end
 
-    it { expect(subject.body).to include("RDV Solidarités - Bonjour") }
-    it { expect(subject.body).to include("RDV #{rdv.motif.name} - #{rdv.motif.service.name} #{I18n.l(rdv.starts_at, format: :human)} a été confirmé.") }
-    it { expect(subject.body).to include("Adresse: #{rdv.location}.") }
+    it { expect(subject.body).to include("RDV Solidarités") }
+    it { expect(subject.body).to include("RDV #{rdv.motif.service.name} #{I18n.l(rdv.starts_at, format: :short)}") }
+    it { expect(subject.body).to include(rdv.location.to_s) }
 
     context 'RDV is by_phone' do
       let(:rdv) { create(:rdv, :by_phone) }
@@ -27,8 +27,8 @@ describe TwilioTextMessenger, type: :service do
       is_expected.to be_kind_of(Twilio::REST::Api::V2010::AccountContext::MessageInstance)
     end
 
-    it { expect(subject.body).to include("RDV Solidarités - Bonjour") }
-    it { expect(subject.body).to include("Rappel de votre RDV #{rdv.motif.name} - #{rdv.motif.service.name}, demain à #{rdv.starts_at.strftime("%H:%M")}.") }
-    it { expect(subject.body).to include("Adresse: #{rdv.location}.") }
+    it { expect(subject.body).to include("RDV Solidarités") }
+    it { expect(subject.body).to include("Rappel RDV #{rdv.motif.service.name} demain à #{rdv.starts_at.strftime("%H:%M")}") }
+    it { expect(subject.body).to include(rdv.location.to_s) }
   end
 end
