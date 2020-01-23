@@ -33,6 +33,6 @@
   .col-md-6
     .card
       .card-body
-        = render 'agents/rdvs/rdvs_stats', rdvs: @user.rdvs.active.where(organisation_id: current_organisation)
+        = render 'agents/rdvs/rdvs_stats', rdvs: @user.rdvs.where(organisation_id: current_organisation)
         .text-right
           = link_to 'Voir tous les RDV', organisation_user_rdvs_path(current_organisation, @user), class: 'btn btn-outline-primary'
