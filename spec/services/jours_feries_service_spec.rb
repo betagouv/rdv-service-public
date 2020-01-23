@@ -1,7 +1,5 @@
 describe JoursFeriesService, type: :service do
-
   describe ".all_in_date_range" do
-
     subject { JoursFeriesService.all_in_date_range(range) }
 
     context "when jour ferie is the first day of the range" do

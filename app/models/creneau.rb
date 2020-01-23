@@ -71,7 +71,7 @@ class Creneau
   end
 
   def overlaps_jour_ferie?
-    JoursFeriesService.all_in_date_range(self.starts_at.to_date..self.ends_at.to_date).any?
+    JoursFeriesService.all_in_date_range(starts_at.to_date..ends_at.to_date).any?
   end
 
   def self.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range, for_agents = false, agent_ids = nil)

@@ -1,5 +1,4 @@
 class JoursFeriesService
-
   # https://demarchesadministratives.fr/actualites/calendrier-des-jours-feries-2019-2020-2021
   JOURS_FERIES_2020 = [
     Date.new(2020, 1, 1),
@@ -13,7 +12,7 @@ class JoursFeriesService
     Date.new(2020, 11, 1),
     Date.new(2020, 11, 11),
     Date.new(2020, 12, 25),
-  ]
+  ].freeze
 
   JOURS_FERIES_2021 = [
     Date.new(2021, 1, 1),
@@ -27,7 +26,7 @@ class JoursFeriesService
     Date.new(2021, 11, 1),
     Date.new(2021, 11, 11),
     Date.new(2021, 12, 25),
-  ]
+  ].freeze
 
   def self.all_in_date_range(date_range)
     date_range.select do |d|
