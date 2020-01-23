@@ -28,7 +28,7 @@ describe TwilioTextMessenger, type: :service do
     end
 
     it { expect(subject.body).to include("RDV Solidarités") }
-    it { expect(subject.body).to include("Rappel #{rdv.motif.service.name} demain à #{rdv.starts_at.strftime("%H:%M")}") }
+    it { expect(subject.body).to include("Rappel RDV #{rdv.motif.service.name} demain à #{rdv.starts_at.strftime("%H:%M")}") }
     it { expect(subject.body).to include(rdv.location.to_s) }
   end
 end
