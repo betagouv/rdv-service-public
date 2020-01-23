@@ -10,10 +10,10 @@ RSpec.describe Users::FileAttentesController, type: :controller do
     context "when rdv and user is given" do
       subject { post :create_or_delete, params: { file_attente: { rdv_id: rdv.id, user_id: user.id } } }
 
-      it "returns a success response" do
+      it "creates a FileAttente model" do
         expect { subject }.to change(FileAttente, :count).from(0).to(1)
       end
-      it "test2" do
+      it "deletes a FileAttente model" do
         FileAttente.create(rdv_id: rdv.id, user_id: user.id)
         expect { subject }.to change(FileAttente, :count).from(1).to(0)
       end
