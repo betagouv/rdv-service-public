@@ -47,8 +47,7 @@ class Creneau
 
     return unless agent.present?
 
-    Rdv.new(name: "Rdv en ligne",
-      agents: [agent],
+    Rdv.new(agents: [agent],
       duration_in_min: duration_in_min,
       starts_at: starts_at,
       organisation: motif.organisation,
