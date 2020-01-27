@@ -3,7 +3,7 @@ describe Creneau, type: :model do
   let(:online) { true }
   let!(:lieu) { create(:lieu) }
   let(:today) { Date.new(2019, 9, 19) }
-  let(:six_days_later) { Date.new(2019, 9, 25) }
+  let(:six_days_later) { today + 6.days }
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
   let(:agent) { plage_ouverture.agent }
   let(:now) { today.to_time }
@@ -96,6 +96,14 @@ describe Creneau, type: :model do
           is_expected.to include(starts_at: Time.zone.local(2019, 9, 25, 9, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
           is_expected.to include(starts_at: Time.zone.local(2019, 9, 25, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
         end
+      end
+    end
+
+    context "when today is jour ferie" do
+      let(:today) { Date.new(2020, 1, 1) }
+
+      it do
+        expect(subject.size).to eq(0)
       end
     end
 

@@ -102,6 +102,7 @@ Rails.application.routes.draw do
           resources step, only: [:new, :create], module: "rdvs"
         end
       end
+      resources :jours_feries, only: [:index]
     end
   end
 
