@@ -17,6 +17,18 @@ import 'bootstrap';
 var analytic = new Analytic();
 new Modal();
 
+let setWhereInvalid = function (where, submit) {
+  where.classList.remove("is-valid");
+  where.classList.add("is-invalid");
+  submit.disabled = true;
+}
+
+let setWhereValid = function (where, submit) {
+  where.classList.add("is-valid");
+  where.classList.remove("is-invalid");
+  submit.disabled = false;
+}
+
 $(document).on('turbolinks:load', function() {
   $('input[type="tel"]').mask('00 00 00 00 00')
   analytic.trackPageView();
@@ -25,9 +37,23 @@ $(document).on('turbolinks:load', function() {
   if (placeJsContainer !== null) {
     let placesInput = new PlacesInput(placeJsContainer);
     if (document.querySelector('#search_departement') !== null) {
+
+      let where = document.querySelector('#search_where');
+      let submit = document.querySelector('#search_submit');
+
       placesInput.on('change', function resultSelected(e) {
-        document.querySelector('#search_departement').value = (e.suggestion.postcode || '').substring(0, 2);
+        let departement = (e.suggestion.postcode || '').substring(0, 2);
+        document.querySelector('#search_departement').value = departement;
+        if (departement.length == 2) {
+          setWhereValid(where, submit);
+        } else {
+          setWhereInvalid(where, submit);
+        }
       });
+
+      placesInput.on('clear', function () {
+        setWhereInvalid(where, submit);
+      })
     }
   }
 });
