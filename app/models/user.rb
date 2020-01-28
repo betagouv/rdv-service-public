@@ -71,7 +71,9 @@ class User < ApplicationRecord
     if organisation.present? && !child?
       organisations.delete(organisation)
     else
-      update(organisation_ids: [], deleted_at: Time.zone.now)
+      now = Time.zone.now
+      update(organisation_ids: [], deleted_at: now)
+      children.update_all(deleted_at: now)
     end
   end
 
