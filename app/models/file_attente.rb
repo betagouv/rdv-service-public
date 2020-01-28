@@ -16,7 +16,8 @@ class FileAttente < ApplicationRecord
       next unless !creneaux.empty? && fa.notifications_sent < 10 && creneaux.first.starts_at < end_time
 
       fa.rdv.users.map(&:user_to_notify).uniq.each do |user|
-        FileAttenteJob.perform_later(user, fa.rdv)
+        TwilioSenderJob.perform_later(:file_attente, fa.rdv, user) if user.formated_phone
+        FileAttenteMailer.send_notification(fa.rdv, user).deliver_later if user.email
         fa.update!(last_creneau_sent_starts_at: creneaux.first.starts_at)
         fa.increment!(:notifications_sent)
       end

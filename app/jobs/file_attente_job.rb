@@ -1,6 +1,5 @@
 class FileAttenteJob < ApplicationJob
-  def perform(user, rdv)
-    TwilioSenderJob.perform_later(:file_attente, rdv, user) if user.formated_phone
-    FileAttenteMailer.send_notification(rdv, user) if user.email
+  def perform
+    FileAttente.send_notifications
   end
 end

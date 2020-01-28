@@ -12,11 +12,10 @@ RSpec.describe FileAttenteJob, type: :job do
       freeze_time
     end
 
-    after { FileAttenteJob.perform_now(rdv.users.first, rdv) }
+    after { FileAttenteJob.perform_now }
 
-    it 'should send an sms + rdv to rdv' do
-      expect(FileAttenteMailer).to receive(:send_notification).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
-      expect(TwilioTextMessenger).to receive(:new).with(:file_attente, rdv, rdv.users.first).and_call_original
+    it 'should call send_notifications' do
+      expect(FileAttente).to receive(:send_notifications)
     end
   end
 end

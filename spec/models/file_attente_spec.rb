@@ -29,9 +29,14 @@ describe FileAttente, type: :model do
           file_attente.reload
         end.to change(file_attente, :last_creneau_sent_starts_at).from(nil)
       end
-      it 'should increment notifications_sent' do
+      it 'should send an sms' do
         ActiveJob::Base.queue_adapter = :test
-        expect{subject}.to have_enqueued_job(FileAttenteJob)
+        expect{subject}.to have_enqueued_job(TwilioSenderJob)
+      end
+
+      it 'should send an email' do
+        expect(FileAttenteMailer).to receive(:send_notification).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
+        subject
       end
     end
 
@@ -39,7 +44,6 @@ describe FileAttente, type: :model do
       let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: now - 1.day) }
 
       it 'should not send notification' do
-        # debugger
         ActiveJob::Base.queue_adapter = :test
         expect{subject}.not_to have_enqueued_job(FileAttenteJob)
       end
