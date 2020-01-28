@@ -52,7 +52,7 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
             expect(first["end"]).to eq(plage_ouverture2.ends_at.as_json)
             expect(first["backgroundColor"]).to eq("#F00")
             expect(first["rendering"]).to eq("background")
-            expect(first["extendedProps"]).to eq({ location: plage_ouverture2.lieu.address }.as_json)
+            expect(first["extendedProps"]).to eq({ lieu: plage_ouverture2.lieu.name, location: plage_ouverture2.lieu.address }.as_json)
 
             second = @parsed_response[1]
             expect(second.size).to eq(6)
@@ -61,7 +61,7 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
             expect(second["end"]).to eq("2019-07-24T12:00:00.000+02:00")
             expect(second["backgroundColor"]).to eq("#F00")
             expect(second["rendering"]).to eq("background")
-            expect(second["extendedProps"]).to eq({ location: plage_ouverture3.lieu.address }.as_json)
+            expect(second["extendedProps"]).to eq({ lieu: plage_ouverture3.lieu.name, location: plage_ouverture3.lieu.address }.as_json)
 
             third = @parsed_response[2]
             expect(third.size).to eq(6)
@@ -70,7 +70,7 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
             expect(third["end"]).to eq("2019-07-24T12:00:00.000+02:00")
             expect(third["backgroundColor"]).to eq("#F00")
             expect(third["rendering"]).to eq("background")
-            expect(third["extendedProps"]).to eq({ location: plage_ouverture4.lieu.address }.as_json)
+            expect(third["extendedProps"]).to eq({ lieu: plage_ouverture4.lieu.name, location: plage_ouverture4.lieu.address }.as_json)
           end
         end
 
@@ -88,7 +88,7 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
             expect(first["end"]).to eq("2019-07-29T12:00:00.000+02:00")
             expect(first["backgroundColor"]).to eq("#F00")
             expect(first["rendering"]).to eq("background")
-            expect(first["extendedProps"]).to eq({ location: plage_ouverture2.lieu.address }.as_json)
+            expect(first["extendedProps"]).to eq({ lieu: plage_ouverture2.lieu.name, location: plage_ouverture2.lieu.address }.as_json)
 
             second = @parsed_response[1]
             expect(second.size).to eq(6)
@@ -97,7 +97,7 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
             expect(second["end"]).to eq("2019-07-31T12:00:00.000+02:00")
             expect(second["backgroundColor"]).to eq("#F00")
             expect(second["rendering"]).to eq("background")
-            expect(second["extendedProps"]).to eq({ location: plage_ouverture.lieu.address }.as_json)
+            expect(second["extendedProps"]).to eq({ lieu: plage_ouverture.lieu.name, location: plage_ouverture.lieu.address }.as_json)
           end
         end
       end

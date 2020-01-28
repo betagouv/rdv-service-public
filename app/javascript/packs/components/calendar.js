@@ -41,7 +41,7 @@ document.addEventListener('turbolinks:load', function() {
       header: {
          center: 'dayGridMonth,timeGridWeek'
       },
-      timeGridEventMinHeight: 35,
+      timeGridEventMinHeight: 5,
       businessHours: {
         // days of week. an array of zero-based day of week integers (0=Sunday)
         daysOfWeek: [1, 2, 3, 4, 5],
@@ -51,20 +51,33 @@ document.addEventListener('turbolinks:load', function() {
       minTime: '07:00:00',
       maxTime: '20:00:00',
       eventRender: function (info) {
-        if (info.event.extendedProps.duration) {
-          $(info.el).attr("title", `${moment(info.event.start).format('H:mm')} - ${info.event.title} / ${info.event.extendedProps.duration} min`)
-        }
+        let $el = $(info.el);
+
         if(info.event.extendedProps.past == true) {
-          $(info.el).addClass("fc-event-past");
+          $el.addClass("fc-event-past");
         };
         if(info.event.extendedProps.duration <= 30) {
-          $(info.el).addClass("fc-event-small");
+          $el.addClass("fc-event-small");
         };
-        $(info.el).addClass("fc-event-"+ info.event.extendedProps.status);
-        $(info.el).attr("data-rightbar", "true");
+        $el.addClass("fc-event-"+ info.event.extendedProps.status);
+        $el.attr("data-rightbar", "true");
+
+        let title = `${moment(info.event.start).format('H:mm')} - ${moment(info.event.end).format('H:mm')}`;
         if (info.event.rendering == 'background') {
-          $(info.el).append("<div class=\"fc-title\" style=\"color: white; padding: 2px 4px; font-size: 12px; font-weight: bold;\">" + info.event.title + "</div>");
+          $el.append("<div class=\"fc-title\" style=\"color: white; padding: 2px 4px; font-size: 12px; font-weight: bold;\">" + info.event.title + "</div>");
+
+          title += `<br><strong>${info.event.title}</strong><br> <small>Lieu : ${info.event.extendedProps.lieu}</small>`;
+        } else {
+          if (info.event.extendedProps.duration) {
+            title += ` <small>(${info.event.extendedProps.duration} min)</small>`;
+          }
+          title += `<br><strong>RDV : ${info.event.title}</strong>`;
         }
+
+        $el.attr("title", title);
+        $el.attr("data-toggle", "tooltip");
+        $el.attr("data-html", "true");
+        $el.tooltip()
       }
     });
 
