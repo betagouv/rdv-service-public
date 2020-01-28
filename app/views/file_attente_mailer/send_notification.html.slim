@@ -1,0 +1,9 @@
+div
+  p Bonjour,
+  p
+    | Un créneau pour votre RDV #{@rdv.motif.name} - #{@rdv.motif.service.name} qui a lieu le #{I18n.l(@rdv.starts_at, format: :human)} s'est libéré plus tôt.
+    | Votre RDV du #{l(@rdv.starts_at, format: :human)} a été confirmé.
+  p
+    | Vous pouvez avancer la date de votre RDV en cliquant sur le lien ci-dessous.
+  .btn-wrapper
+    = link_to 'Verifier les disponibilités', '/TODO', class:'btn btn-primary'

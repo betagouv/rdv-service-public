@@ -2,7 +2,7 @@ class Rdv < ApplicationRecord
   has_paper_trail
   belongs_to :organisation
   belongs_to :motif
-  has_many :file_attentes
+  has_many :file_attentes, dependent: :destroy
   has_and_belongs_to_many :agents
   has_and_belongs_to_many :users, validate: false
 
