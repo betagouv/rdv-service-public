@@ -20,6 +20,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       it "creates rdv" do
         expect(Rdv.count).to eq(1)
         expect(response).to redirect_to users_rdv_confirmation_path(Rdv.last.id)
+        expect(user.rdvs.last.created_by_user?).to be(true)
       end
     end
 
