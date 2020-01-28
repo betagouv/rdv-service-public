@@ -1,10 +1,9 @@
 describe FileAttente, type: :model do
-
   describe '#send_notifications' do
     let(:now) { DateTime.parse("01-01-2019 09:00") }
     let!(:lieu) { create(:lieu) }
     let!(:plage_ouverture) { create(:plage_ouverture, first_day: now + 2.weeks, start_time: Tod::TimeOfDay.new(10)) }
-    let!(:rdv) { create(:rdv, starts_at: now + 2.weeks, location: lieu.address, motif: plage_ouverture.motifs.first, agent_ids: [plage_ouverture.agent.id] ) }
+    let!(:rdv) { create(:rdv, starts_at: now + 2.weeks, location: lieu.address, motif: plage_ouverture.motifs.first, agent_ids: [plage_ouverture.agent.id]) }
     let!(:file_attente) { create(:file_attente, rdv: rdv) }
 
     before do
@@ -31,7 +30,7 @@ describe FileAttente, type: :model do
       end
       it 'should send an sms' do
         ActiveJob::Base.queue_adapter = :test
-        expect{subject}.to have_enqueued_job(TwilioSenderJob)
+        expect { subject }.to have_enqueued_job(TwilioSenderJob)
       end
 
       it 'should send an email' do
@@ -45,7 +44,7 @@ describe FileAttente, type: :model do
 
       it 'should not send notification' do
         ActiveJob::Base.queue_adapter = :test
-        expect{subject}.not_to have_enqueued_job(FileAttenteJob)
+        expect { subject }.not_to have_enqueued_job(FileAttenteJob)
       end
     end
 
@@ -56,7 +55,7 @@ describe FileAttente, type: :model do
         file_attente.update(last_creneau_sent_starts_at: now)
         file_attente.reload
         ActiveJob::Base.queue_adapter = :test
-        expect{subject}.not_to have_enqueued_job(FileAttenteJob)
+        expect { subject }.not_to have_enqueued_job(FileAttenteJob)
       end
     end
   end
