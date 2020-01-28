@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_22_091226) do
+ActiveRecord::Schema.define(version: 2020_01_28_104314) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -232,6 +232,8 @@ ActiveRecord::Schema.define(version: 2020_01_22_091226) do
     t.uuid "uuid", default: -> { "uuid_generate_v4()" }, null: false
     t.integer "status", default: 0
     t.string "location"
+    t.integer "created_by", default: 0
+    t.index ["created_by"], name: "index_rdvs_on_created_by"
     t.index ["motif_id"], name: "index_rdvs_on_motif_id"
     t.index ["organisation_id"], name: "index_rdvs_on_organisation_id"
   end

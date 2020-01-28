@@ -73,6 +73,7 @@ describe "Agent can create a Rdv with creneau search" do
     expect(rdv.users).to contain_exactly(user)
     expect(rdv.motif).to eq(motif)
     expect(rdv.duration_in_min).to eq(motif.default_duration_in_min)
+    expect(rdv.created_by_agent?).to be(true)
 
     expect(page).to have_content("Le rendez-vous a été créé.")
     expect(page).to have_current_path(rdv.agenda_path_for_agent(agent))
