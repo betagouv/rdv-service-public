@@ -54,4 +54,11 @@ class TwilioTextMessenger
     message += sms_footer
     message
   end
+
+  def file_attente
+    message = sms_header
+    message += "Un RDV #{@rdv.motif.name} - #{@rdv.motif.service.name} #{I18n.l(@rdv.starts_at, format: :human)} s'est libéré.\n"
+    message += "Cliquez pour vérifier la disponibilité: TODO\n"
+    message
+  end
 end
