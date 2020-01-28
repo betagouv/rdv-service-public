@@ -15,12 +15,16 @@ class FileAttente < ApplicationRecord
       creneaux = Creneau.for_motif_and_lieu_from_date_range(fa.rdv.motif.name, lieu, date_range)
       next unless !creneaux.empty? && fa.notifications_sent < 10 && creneaux.first.starts_at < end_time
 
-      fa.rdv.users.map(&:user_to_notify).uniq.each do |user|
-        TwilioSenderJob.perform_later(:file_attente, fa.rdv, user) if user.formated_phone
-        FileAttenteMailer.send_notification(fa.rdv, user).deliver_later if user.email
-        fa.update!(last_creneau_sent_starts_at: creneaux.first.starts_at)
-        fa.increment!(:notifications_sent)
-      end
+      fa.send_notification(creneaux.first.starts_at)
+    end
+  end
+
+  def send_notification(last_creneau_sent_starts_at)
+    rdv.users.map(&:user_to_notify).uniq.each do |user|
+      TwilioSenderJob.perform_later(:file_attente, rdv, user) if user.formated_phone
+      FileAttenteMailer.send_notification(rdv, user).deliver_later if user.email
+      update!(last_creneau_sent_starts_at: last_creneau_sent_starts_at)
+      increment!(:notifications_sent)
     end
   end
 end
