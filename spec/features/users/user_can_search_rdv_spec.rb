@@ -15,7 +15,11 @@ describe "User can search for rdvs" do
       # Step 1
       expect_page_h1("Prenez rendez-vous en ligne\navec votre département")
       fill_in('search_where', with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
+
+      # fake algolia autocomplete to pass on Circle ci
       page.execute_script("document.querySelector('#search_departement').value = '92'")
+      page.execute_script("document.querySelector('#search_submit').disabled = false")
+
       click_button("Rechercher")
 
       # Step 2
