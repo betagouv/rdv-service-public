@@ -184,3 +184,44 @@
     display: none;
   }
 }
+
+.fc-timeGridWeek-view {
+
+  .fc-event:hover {
+    height: auto;
+    z-index: 99 !important;
+
+    .fc-content {
+      position: absolute !important;
+      box-shadow: 0px 0px 10px rgb(0, 0, 0);
+      border: 2px solid white;
+      top: 0;
+      left: 15px;
+      background: inherit;
+      z-index: 99999;
+      width: auto;
+      overflow: visible !important;
+      border-radius: 2px;
+      padding: 10px;
+      height: auto;
+      max-height: initial;
+
+      .fc-time, .fc-title {
+        line-height: 19px;
+        font-size: 14px !important;
+      }
+
+      .fc-time {
+        display: block;
+
+        &::before, &::after {
+          content: none;
+        }
+
+        span {
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
