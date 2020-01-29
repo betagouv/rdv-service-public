@@ -77,4 +77,8 @@ class MotifDashboard < Administrate::BaseDashboard
     :instruction_for_rdv,
     :deleted_at,
   ].freeze
+
+  def display_resource(motif)
+    motif.name
+  end
 end
