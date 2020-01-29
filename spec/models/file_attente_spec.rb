@@ -11,22 +11,19 @@ describe FileAttente, type: :model do
       freeze_time
     end
 
-    subject { FileAttente.send_notifications }
+    subject do
+      FileAttente.send_notifications
+      file_attente.reload
+    end
 
     context "with availabilities before rdv" do
       let!(:plage_ouverture_2) { create(:plage_ouverture, :daily, first_day: now) }
 
       it 'should increment notifications_sent' do
-        expect do
-          subject
-          file_attente.reload
-        end.to change(file_attente, :notifications_sent).from(0).to(1)
+        expect { subject }.to change(file_attente, :notifications_sent).from(0).to(1)
       end
       it 'should save last creneau sent' do
-        expect do
-          subject
-          file_attente.reload
-        end.to change(file_attente, :last_creneau_sent_starts_at).from(nil)
+        expect { subject }.to change(file_attente, :last_creneau_sent_starts_at).from(nil)
       end
       it 'should send an sms' do
         ActiveJob::Base.queue_adapter = :test
