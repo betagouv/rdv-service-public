@@ -25,6 +25,7 @@ class User < ApplicationRecord
   validate :birth_date_validity
 
   pg_search_scope :search_by_name_or_email, against: [:first_name, :last_name, :email],
+                  ignoring: :accents,
                   using: { tsearch: { prefix: true } }
 
   scope :active, -> { where(deleted_at: nil) }
