@@ -8,7 +8,7 @@ module WelcomeHelper
   end
 
   def sign_in_agent_button
-    link_to 'Se connecter', new_agent_session_path, class: 'btn btn-outline-white'
+    link_to "Se connecter en tant qu'agent", new_agent_session_path, class: 'btn btn-outline-white'
   end
 
   def sign_in_user_button
