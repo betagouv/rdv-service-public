@@ -37,7 +37,7 @@ describe FileAttente, type: :model do
     end
 
     context "without availabilities before rdv" do
-      let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: now - 1.day) }
+      let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: Date.yesterday) }
 
       it 'should not send notification' do
         ActiveJob::Base.queue_adapter = :test
@@ -53,6 +53,14 @@ describe FileAttente, type: :model do
         file_attente.reload
         ActiveJob::Base.queue_adapter = :test
         expect { subject }.not_to have_enqueued_job(FileAttenteJob)
+      end
+    end
+
+    context "when creneau is too close to RDV" do
+      let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: 2.weeks.from_now - 1.day) }
+
+      it 'should not send notification' do
+        expect { subject }.not_to change(file_attente, :notifications_sent).from(0)
       end
     end
   end

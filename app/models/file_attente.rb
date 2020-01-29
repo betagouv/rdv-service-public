@@ -9,8 +9,8 @@ class FileAttente < ApplicationRecord
     FileAttente.active.each do |fa|
       next unless fa.lieu.present?
 
-      end_time = fa.last_creneau_sent_starts_at.nil? ? fa.rdv.starts_at : fa.last_creneau_sent_starts_at
-      date_range = Date.today...end_time.to_date
+      end_time = fa.last_creneau_sent_starts_at.nil? ? (fa.rdv.starts_at - 2.day) : fa.last_creneau_sent_starts_at
+      date_range = Date.today..end_time.to_date
       creneaux = Creneau.for_motif_and_lieu_from_date_range(fa.rdv.motif.name, fa.lieu, date_range)
       next unless creneaux.any? && fa.notifications_sent < 10 && creneaux.first.starts_at < end_time
 
