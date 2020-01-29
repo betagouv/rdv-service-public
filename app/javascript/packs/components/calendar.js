@@ -23,6 +23,8 @@ document.addEventListener('turbolinks:load', function() {
       height: "auto",
       selectable: true,
       select: function(info) {
+        if ($('body').hasClass('right-bar-enabled')) return false;
+
         let startDate = moment(info.start);
         let params = {
           starts_at: info.startStr,
