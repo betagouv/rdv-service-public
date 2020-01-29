@@ -66,4 +66,8 @@ class AgentDashboard < Administrate::BaseDashboard
     :service,
     :deleted_at,
   ].freeze
+
+  def display_resource(agent)
+    "##{agent.id} - #{agent.full_name}"
+  end
 end
