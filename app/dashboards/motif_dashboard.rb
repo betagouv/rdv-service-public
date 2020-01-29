@@ -79,6 +79,6 @@ class MotifDashboard < Administrate::BaseDashboard
   ].freeze
 
   def display_resource(motif)
-    motif.name
+    "Motif ##{motif.id} - #{motif.name}"
   end
 end

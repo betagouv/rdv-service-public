@@ -82,6 +82,6 @@ class UserDashboard < Administrate::BaseDashboard
   ].freeze
 
   def display_resource(user)
-    "##{user.id} - #{user.full_name}"
+    "User ##{user.id} - #{user.full_name}"
   end
 end

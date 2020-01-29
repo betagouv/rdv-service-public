@@ -46,8 +46,4 @@ class LieuDashboard < Administrate::BaseDashboard
     :organisation,
     :address,
   ].freeze
-
-  def display_resource(lieu)
-    lieu.name
-  end
 end

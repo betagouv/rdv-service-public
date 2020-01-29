@@ -68,6 +68,6 @@ class AgentDashboard < Administrate::BaseDashboard
   ].freeze
 
   def display_resource(agent)
-    "##{agent.id} - #{agent.full_name}"
+    "Agent ##{agent.id} - #{agent.full_name}"
   end
 end

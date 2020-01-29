@@ -47,6 +47,6 @@ class ServiceDashboard < Administrate::BaseDashboard
   ].freeze
 
   def display_resource(service)
-    service.name
+    "Service ##{service.id} - #{service.name}"
   end
 end

@@ -60,6 +60,6 @@ class OrganisationDashboard < Administrate::BaseDashboard
   # across all pages of the admin dashboard.
   #
   def display_resource(organisation)
-    organisation.name
+    "Organisation ##{organisation.id} - #{organisation.name}"
   end
 end
