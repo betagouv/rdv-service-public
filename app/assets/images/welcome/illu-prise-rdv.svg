@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 80 80" enable-background="new 0 0 80 80" xml:space="preserve">
+<g>
+	<polygon fill="#CEF3EF" points="80,80 80,22.9 79.9,22.9 79.4,22.9 0.5,22.9 0,22.9 0,80  "/>
+	<g>
+		<polygon fill="#FFFFFF" points="79.4,22.9 79.9,22.9 80,22.9 80,72.8 21.5,72.8 0,51.1 0,22.9 0.5,22.9   "/>
+	</g>
+	<polygon fill="#66D9CE" points="80,8.8 80,22.9 79.9,22.9 79.4,22.9 0.5,22.9 0,22.9 0,8.8  "/>
+	<g>
+		<rect x="55.1" fill="#1EA69B" width="8.2" height="15.6"/>
+		<rect x="36" fill="#1EA69B" width="8.2" height="15.6"/>
+		<rect x="17.5" fill="#1EA69B" width="8.2" height="15.6"/>
+	</g>
+	<g>
+		
+			<rect x="56.5" y="28.3" transform="matrix(-1 -4.523372e-11 4.523372e-11 -1 129.2306 72.9016)" fill="#CEF3EF" width="16.3" height="16.3"/>
+		
+			<rect x="31.8" y="28.3" transform="matrix(-1 -4.523372e-11 4.523372e-11 -1 79.9998 72.9016)" fill="#CEF3EF" width="16.3" height="16.3"/>
+		
+			<rect x="7.2" y="28.3" transform="matrix(-1 -4.523372e-11 4.523372e-11 -1 30.769 72.9016)" fill="#FF7D00" width="16.3" height="16.3"/>
+	</g>
+	<g>
+		
+			<rect x="56.5" y="50.9" transform="matrix(-1 -4.467683e-11 4.467683e-11 -1 129.2648 118.0797)" fill="#CEF3EF" width="16.3" height="16.3"/>
+		
+			<rect x="31.9" y="50.9" transform="matrix(-1 -4.523372e-11 4.523372e-11 -1 80.034 118.0797)" fill="#CEF3EF" width="16.3" height="16.3"/>
+	</g>
+	<polygon fill="#66D9CE" points="21.5,72.9 21.5,51.5 0.4,51.5  "/>
+</g>
+<g>
+	<polygon fill="#222E5C" points="12.2,35.5 16.8,62.8 24.4,53.6 35.7,49.9  "/>
+	<polygon fill="#222E5C" points="34.1,64.8 31.2,66.7 20.9,51.4 23.7,49.5  "/>
+</g>
+</svg>
