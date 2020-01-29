@@ -3,10 +3,11 @@ fr:
     models:
       user: Usager
     attributes:
-      user:    
+      user:
         email: Email
         first_name: Prénom
         last_name: Nom
+        birth_name: Nom de naissance
         birth_date: Date de naissance
         phone_number: Numéro de téléphone
         address: Adresse
@@ -14,14 +15,14 @@ fr:
         password: Mot de passe
         current_password: Mot de passe actuel
         caisse_affiliation : Caisse d'affiliation
-        caisse_affiliations: 
+        caisse_affiliations:
           aucune: Aucune
           caf: CAF
           msa: MSA
         affiliation_number: Numéro d'allocataire
         family_situation: Situation familiale
         number_of_children: Nombre d'enfants
-        family_situations: 
+        family_situations:
           single: Célibataire
           in_a_relationship: En couple
           divorced: Divorcé

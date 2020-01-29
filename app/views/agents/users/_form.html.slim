@@ -6,6 +6,10 @@
     .col-md-6= f.input :first_name
     .col-md-6= f.input :last_name
 
+  .form-row
+    .col-md-6= f.input :birth_name
+    .col-md-6= date_input(f, :birth_date)
+    
   = f.input :email, as: :email
   - if user.pending_reconfirmation?
     .form-text.text-muted.mb-2
