@@ -10,10 +10,11 @@ class FileAttente < ApplicationRecord
   def self.send_notifications
     FileAttente.active.each do |fa|
       next unless fa.lieu.present?
+
       end_time = fa.last_creneau_sent_starts_at.nil? ? (fa.rdv.starts_at - 2.day) : fa.last_creneau_sent_starts_at
       date_range = Date.today..end_time.to_date
       creneaux = Creneau.for_motif_and_lieu_from_date_range(fa.rdv.motif.name, fa.lieu, date_range)
-      creneau = creneaux.select{|c| fa.rdv.motif.min_booking_delay.seconds < (c.starts_at - Time.now).seconds }.first
+      creneau = creneaux.select { |c| fa.rdv.motif.min_booking_delay.seconds < (c.starts_at - Time.now).seconds }.first
       next unless fa.valid_for_notification?(creneau, end_time)
 
       fa.send_notification(creneaux.first.starts_at)
