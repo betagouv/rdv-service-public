@@ -44,6 +44,15 @@ body.authentication-bg {
     position: relative;
     color: $white;
     background-color: $primary;
+
+    body.agents & {
+      background-color: $turquoise;
+
+      .agent-profile {
+        border: 3px solid $white;
+        border-radius: 100%;
+      }
+    }
   }
 }
 

@@ -14,8 +14,8 @@ html lang="fr"
       .auth-fluid-left.text-center
         = link_logo
         .align-items-center.d-flex.h-100
-          .card-body
-            = image_tag 'welcome/agent.svg', class: 'mx-auto mb-5', alt: ""
+          .p-3
+            = image_tag 'welcome/agent.svg', class: 'agent-profile mx-auto mb-5', alt: ""
             - if agent_path?
               h4.mb-3 Terminé l'agenda papier, moins de temps perdu.
               p.lead
