@@ -26,6 +26,10 @@ fr:
             zero: Indéterminé
             one: Indéterminé
             other: Indéterminés
+          unknown_past:
+            zero: Passé et statut à renseigner
+            one: Passé et statut à renseigner
+            other: Passés et statut à renseigner
           seen:
             zero: Vu
             one: Vu

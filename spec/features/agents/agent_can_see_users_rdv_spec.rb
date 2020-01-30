@@ -11,7 +11,7 @@ describe "can see users' RDV" do
   context 'with no RDV' do
     before { click_link user.full_name }
     it do
-      expect(page).to have_content("0\nIndéterminé")
+      expect(page).to have_content("0\nÀ venir")
       click_link 'Voir tous les RDV'
       expect_page_title('Liste des RDV')
       expect_page_with_no_record_text("Aucun RDV pour #{user.full_name}")
@@ -22,7 +22,7 @@ describe "can see users' RDV" do
     let!(:rdv) { create :rdv, :future, users: [user] }
     before { click_link user.full_name }
     it do
-      expect(page).to have_content("1\nIndéterminé")
+      expect(page).to have_content("1\nÀ venir")
       click_link 'Voir tous les RDV'
       expect_page_title('Liste des RDV')
       expect(page).to have_content(rdv_title(rdv))
