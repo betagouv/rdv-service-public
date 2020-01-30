@@ -14,4 +14,8 @@ module WelcomeHelper
   def sign_in_user_button
     link_to 'Se connecter', new_user_session_path, class: 'btn btn-white'
   end
+
+  def contact_us_button
+    mail_to "contact@rdv-solidarites.fr", "Contactez-nous", class: 'btn btn-tertiary'
+  end
 end
