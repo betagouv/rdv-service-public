@@ -15,6 +15,8 @@ class UserDashboard < Administrate::BaseDashboard
     email: Field::String,
     address: Field::String,
     phone_number: Field::String,
+    parent: Field::BelongsTo.with_options(class_name: "User"),
+    children: Field::HasMany.with_options(class_name: "User"),
     caisse_affiliation: EnumField,
     family_situation: EnumField,
     logement: EnumField,
@@ -48,6 +50,8 @@ class UserDashboard < Administrate::BaseDashboard
     :address,
     :phone_number,
     :birth_date,
+    :parent,
+    :children,
     :caisse_affiliation,
     :affiliation_number,
     :family_situation,
@@ -76,4 +80,8 @@ class UserDashboard < Administrate::BaseDashboard
     :number_of_children,
     :deleted_at,
   ].freeze
+
+  def display_resource(user)
+    "User ##{user.id} - #{user.full_name}"
+  end
 end
