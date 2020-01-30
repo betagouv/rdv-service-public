@@ -38,3 +38,11 @@ fr:
             zero: Lapin
             one: Lapin
             other: Lapins
+          created_by_agent:
+            zero: Créé par un agent
+            one: Créé par un agent
+            other: Créés par un agent
+          created_by_user:
+            zero: Créé par un usager
+            one: Créés par un usager
+            other: Créés par un usager

@@ -34,6 +34,7 @@ class Users::RdvsController < UserAuthController
     ActiveRecord::Base.transaction do
       @rdv = @creneau.to_rdv_for_user(@user)
       save_succeeded = if @rdv.present?
+                         @rdv.created_by = :user
                          authorize(@rdv)
                          @rdv.save
                        else

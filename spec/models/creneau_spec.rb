@@ -3,7 +3,7 @@ describe Creneau, type: :model do
   let(:online) { true }
   let!(:lieu) { create(:lieu) }
   let(:today) { Date.new(2019, 9, 19) }
-  let(:six_days_later) { Date.new(2019, 9, 25) }
+  let(:six_days_later) { today + 6.days }
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
   let(:agent) { plage_ouverture.agent }
   let(:now) { today.to_time }
@@ -96,6 +96,14 @@ describe Creneau, type: :model do
           is_expected.to include(starts_at: Time.zone.local(2019, 9, 25, 9, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
           is_expected.to include(starts_at: Time.zone.local(2019, 9, 25, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
         end
+      end
+    end
+
+    context "when today is jour ferie" do
+      let(:today) { Date.new(2020, 1, 1) }
+
+      it do
+        expect(subject.size).to eq(0)
       end
     end
 
@@ -296,6 +304,53 @@ describe Creneau, type: :model do
         let!(:rdv) { create(:rdv, agents: [plage_ouverture.agent], starts_at: creneau.starts_at, duration_in_min: 30, cancelled_at: 2.days.ago) }
 
         it { expect(subject).to contain_exactly(plage_ouverture) }
+      end
+    end
+  end
+
+  describe ".next_availability_for_motif_and_lieu" do
+    let(:motif_name) { motif.name }
+    let(:from) { today }
+
+    subject do
+      Creneau.next_availability_for_motif_and_lieu(motif_name, lieu, from)
+    end
+
+    it { expect(subject.starts_at).to eq(Time.zone.local(2019, 9, 19, 9, 0)) }
+
+    describe "with not online motif" do
+      let(:online) { false }
+
+      it { expect(subject).to eq(nil) }
+    end
+
+    describe "with absence" do
+      let!(:absence) { create(:absence, agent: agent, starts_at: Time.zone.local(2019, 9, 19, 9, 0), ends_at: Time.zone.local(2019, 9, 19, 12, 0)) }
+
+      it { expect(subject).to eq(nil) }
+
+      describe "when plage_ouverture is recurrence" do
+        before { plage_ouverture.update(recurrence: Montrose.monthly.to_json) }
+
+        it { expect(subject.starts_at).to eq(Time.zone.local(2019, 10, 19, 9, 0)) }
+      end
+    end
+
+    describe "with rdv" do
+      let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 120, agents: [agent]) }
+
+      it { expect(subject).to eq(nil) }
+
+      context "which is cancelled" do
+        let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, agents: [agent], cancelled_at: Time.zone.local(2019, 9, 20, 9, 30)) }
+
+        it { expect(subject.starts_at).to eq(Time.zone.local(2019, 9, 19, 9, 0)) }
+      end
+
+      describe "when plage_ouverture is recurrence" do
+        before { plage_ouverture.update(recurrence: Montrose.monthly.to_json) }
+
+        it { expect(subject.starts_at).to eq(Time.zone.local(2019, 10, 19, 9, 0)) }
       end
     end
   end

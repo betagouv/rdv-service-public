@@ -1,14 +1,19 @@
 header.header
   nav.navbar.navbar-expand-lg.bg-transparent
     = link_logo
-    - if root_path?
+    - unless current_page?(stats_path)
       button.navbar-toggler.navbar-toggler-right aria-controls="navbarSupportedContent" aria-expanded="false" aria-label=("Toggle navigation") data-target="#navbarSupportedContent" data-toggle="collapse" type="button"
         i.fa.fa-bars.text-white
       #navbarSupportedContent.collapse.navbar-collapse
         ul.navbar-nav.ml-auto.align-items-start.align-items-lg-center
-          li.list-inline-item
-            = link_to 'Espace agent', accueil_mds_path, class: 'btn btn-link text-white'
-          li.list-inline-item
-            = sign_in_user_button
+          - if current_page?(accueil_mds_path)
+            li.list-inline-item
+              = link_to 'Espace usager', root_path, class: 'btn btn-link text-white'
+            li.list-inline-item
+              = sign_in_agent_button
 
-
+          - else
+            li.list-inline-item
+              = link_to 'Espace agent', accueil_mds_path, class: 'btn btn-link text-white'
+            li.list-inline-item
+              = sign_in_user_button

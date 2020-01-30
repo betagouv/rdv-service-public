@@ -3,5 +3,6 @@ class StatsController < ApplicationController
 
   def index
     @rdvs = Rdv.all
+    @users = User.active
   end
 end

@@ -4,7 +4,7 @@ fr:
       plage_ouverture: Plage d'ouverture
     attributes:
       plage_ouverture:
-        title: Nom
+        title: Description
         first_day: Premier jour
         start_time: Commence à
         end_time: Termine à

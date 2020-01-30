@@ -15,9 +15,23 @@
         h3.font-weight-bold Résultats de votre recherche
         p.font-weight-bold= "#{@lieux.size.to_s} lieux sont disponibles"
         - @lieux.each do |lieu|
+          - next_availability = @next_availability_by_lieux[lieu.id]
           .card.mb-3
             .card-body
-              = link_to lieu_path(lieu, search: @query) do
-                h4.card-title.mb-3.mt-0.text-success.font-weight-bold= lieu.name
-                h6.card-subtitle.mb-2= @service.name
-                h6.card-subtitle= lieu.address
+              = link_to lieu_path(lieu, search: @query, date: next_availability&.starts_at), class: "d-block" do
+                .row
+                  .col-md
+                    h4.card-title.mb-3.mt-0.text-success.font-weight-bold= lieu.name
+                    h6.card-subtitle.text-black-50.mb-2= @service.name
+                    h6.card-subtitle.text-black-50= lieu.address
+                  .col-md.align-self-center.pt-3.pt-md-0
+                    - if next_availability
+                      .row
+                        .col
+                          | Prochaine disponibilité le
+                          br
+                          strong= l(next_availability.starts_at, format: :human)
+                        .col-auto.align-self-center
+                         i.fa.fa-chevron-right
+                    - else
+                      em Aucune disponibilité

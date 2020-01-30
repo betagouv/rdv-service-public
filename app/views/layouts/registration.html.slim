@@ -14,8 +14,8 @@ html lang="fr"
       .auth-fluid-left.text-center
         = link_logo
         .align-items-center.d-flex.h-100
-          .card-body
-            = image_tag 'welcome/agent.svg', class: 'mx-auto mb-5', alt: ""
+          .p-3.flex-grow-1
+            = image_tag 'welcome/agent.svg', class: 'agent-profile mx-auto mb-5', alt: ""
             - if agent_path?
               h4.mb-3 Terminé l'agenda papier, moins de temps perdu.
               p.lead
@@ -25,7 +25,7 @@ html lang="fr"
 
       .auth-fluid-form-box
         .align-items-center.d-flex.h-100
-          .card-body
+          .p-3.flex-grow-1
             .auth-brand.text-center.bg-primary.py-2
               = link_logo
             = render 'layouts/flash'
@@ -35,7 +35,7 @@ html lang="fr"
                   .mb-4.text-center
                     h3 Espace reservé aux agents
                     p
-                      | Vous êtes un particulier ?
+                      | Vous êtes un particulier ? 
                       = link_to 'Cliquez-ici', request.path.gsub('agents', 'users')
                 = yield
                 - if content_for :footer

@@ -39,6 +39,7 @@ class Creneau
   def available_with_rdvs_and_absences?(rdvs, absences)
     !overlaps_rdv_or_absence?(rdvs) &&
       !overlaps_rdv_or_absence?(absences) &&
+      !overlaps_jour_ferie? &&
       !too_late?
   end
 
@@ -47,8 +48,7 @@ class Creneau
 
     return unless agent.present?
 
-    Rdv.new(name: "Rdv en ligne",
-      agents: [agent],
+    Rdv.new(agents: [agent],
       duration_in_min: duration_in_min,
       starts_at: starts_at,
       organisation: motif.organisation,
@@ -69,43 +69,48 @@ class Creneau
     end.any?
   end
 
+  def overlaps_jour_ferie?
+    JoursFeriesService.all_in_date_range(starts_at.to_date..ends_at.to_date).any?
+  end
+
   def self.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range, for_agents = false, agent_ids = nil)
     plages_ouverture = PlageOuverture.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range, agent_ids)
     inclusive_datetime_range = (inclusive_date_range.begin.to_time)..(inclusive_date_range.end.end_of_day)
 
     results = plages_ouverture.flat_map do |po|
-      rdvs = po.agent.rdvs.where(starts_at: inclusive_datetime_range).active
-      absences = po.agent.absences
-      motifs = if for_agents
-                 po.motifs
-               else
-                 po.motifs.online
-               end
+      motifs = po.motifs.where(name: motif_name).active
+      motifs = motifs.online unless for_agents
 
-      motifs.flat_map do |motif|
+      creneaux = motifs.flat_map do |motif|
         creneaux_nb = po.time_shift_duration_in_min / motif.default_duration_in_min
         po.occurences_for(inclusive_date_range).flat_map do |occurence_time|
           (0...creneaux_nb).map do |n|
-            creneau = Creneau.new(
+            Creneau.new(
               starts_at: (po.start_time + (n * motif.default_duration_in_min * 60)).on(occurence_time),
               lieu_id: lieu.id,
-              motif: motif
+              motif: motif,
+              agent_id: (po.agent_id if for_agents),
+              agent_name: (po.agent.short_name if for_agents)
             )
-            if for_agents
-              creneau.agent_id = po.agent_id
-              creneau.agent_name = po.agent.short_name
-            end
-            creneau.available_with_rdvs_and_absences?(rdvs, absences) ? creneau : nil
-          end.compact
+          end
         end
       end
+
+      rdvs = po.agent.rdvs.where(starts_at: inclusive_datetime_range).active
+      creneaux.select { |c| c.available_with_rdvs_and_absences?(rdvs, po.agent.absences) }
     end
 
-    if for_agents
-      results.uniq { |c| [c.starts_at, c.agent_id] }.sort_by(&:starts_at)
-    else
-      results.uniq(&:starts_at).sort_by(&:starts_at)
+    uniq_by = for_agents ? ->(c) { [c.starts_at, c.agent_id] } : ->(c) { c.starts_at }
+    results.uniq(&uniq_by).sort_by(&:starts_at)
+  end
+
+  def self.next_availability_for_motif_and_lieu(motif_name, lieu, from)
+    available_creneau = nil
+    from.step(from + 6.months, 7).find do |date|
+      creneaux = for_motif_and_lieu_from_date_range(motif_name, lieu, date..(date + 7.days))
+      available_creneau = creneaux.first if creneaux.any?
     end
+    available_creneau
   end
 
   private

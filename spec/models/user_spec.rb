@@ -102,10 +102,14 @@ describe User, type: :model do
 
   describe "#soft_delete" do
     let(:now) { Time.current }
+
     before do
       freeze_time
-      user.soft_delete(deleted_org)
+      child.reload if defined?(child)
+      subject
     end
+
+    subject { user.soft_delete(deleted_org) }
 
     context 'belongs to multiple organisations and with organisation given' do
       let(:user) { create(:user, :with_multiple_organisations) }
@@ -147,6 +151,19 @@ describe User, type: :model do
         it { expect(user.organisation_ids).to be_empty }
         it { expect(user.deleted_at).to eq(now) }
       end
+    end
+
+    context "when user has a child" do
+      let(:user) { create(:user) }
+      let!(:child) { create(:user, parent: user) }
+
+      let(:deleted_org) { nil }
+
+      it { expect(user.reload.organisation_ids).to be_empty }
+      it { expect(user.reload.deleted_at).to eq(now) }
+
+      it { expect(child.reload.organisation_ids).to be_empty }
+      it { expect(child.reload.deleted_at).to eq(now) }
     end
   end
 

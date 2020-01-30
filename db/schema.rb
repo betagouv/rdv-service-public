@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_27_112129) do
+ActiveRecord::Schema.define(version: 2020_01_28_155049) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "unaccent"
   enable_extension "uuid-ossp"
 
   create_table "absences", force: :cascade do |t|
@@ -234,6 +235,8 @@ ActiveRecord::Schema.define(version: 2020_01_27_112129) do
     t.uuid "uuid", default: -> { "uuid_generate_v4()" }, null: false
     t.integer "status", default: 0
     t.string "location"
+    t.integer "created_by", default: 0
+    t.index ["created_by"], name: "index_rdvs_on_created_by"
     t.index ["motif_id"], name: "index_rdvs_on_motif_id"
     t.index ["organisation_id"], name: "index_rdvs_on_organisation_id"
   end

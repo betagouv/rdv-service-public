@@ -8,10 +8,14 @@ module WelcomeHelper
   end
 
   def sign_in_agent_button
-    link_to 'Se connecter', new_agent_session_path, class: 'btn btn-outline-white'
+    link_to "Se connecter en tant qu'agent", new_agent_session_path, class: 'btn btn-outline-white'
   end
 
   def sign_in_user_button
     link_to 'Se connecter', new_user_session_path, class: 'btn btn-white'
+  end
+
+  def contact_us_button
+    mail_to "contact@rdv-solidarites.fr", "Contactez-nous", class: 'btn btn-tertiary'
   end
 end

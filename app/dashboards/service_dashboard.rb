@@ -45,4 +45,8 @@ class ServiceDashboard < Administrate::BaseDashboard
     :motifs,
     :agents,
   ].freeze
+
+  def display_resource(service)
+    "Service ##{service.id} - #{service.name}"
+  end
 end

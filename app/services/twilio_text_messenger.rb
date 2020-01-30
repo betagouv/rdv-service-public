@@ -27,30 +27,30 @@ class TwilioTextMessenger
   private
 
   def sms_header
-    "RDV Solidarités - Bonjour,\n"
+    "RDV Solidarités\n"
   end
 
   def sms_footer
     message = if @rdv.motif.by_phone
-                "RDV Téléphonique.\n"
+                "RDV Téléphonique\n"
               else
-                "Adresse: #{@rdv.location}.\n"
+                "#{@rdv.location}\n"
               end
-    message += "Infos et annulation: #{rdvs_shorten_url(host: "http://#{ENV["HOST"]}")} "
+    message += "Infos et annulation: #{rdvs_shorten_url(host: "https://#{ENV["HOST"]}")} "
     message += " / #{@rdv.organisation.phone_number}" if @rdv.organisation.phone_number
     message
   end
 
   def rdv_created
     message = sms_header
-    message += "RDV #{@rdv.motif.name} - #{@rdv.motif.service.name} #{I18n.l(@rdv.starts_at, format: :human)} a été confirmé.\n"
+    message += "RDV #{@rdv.motif.service.name} #{I18n.l(@rdv.starts_at, format: :short)}\n"
     message += sms_footer
     message
   end
 
   def reminder
     message = sms_header
-    message += "Rappel de votre RDV #{@rdv.motif.name} - #{@rdv.motif.service.name}, demain à #{@rdv.starts_at.strftime("%H:%M")}.\n"
+    message += "Rappel RDV #{@rdv.motif.service.name} demain à #{@rdv.starts_at.strftime("%H:%M")}\n"
     message += sms_footer
     message
   end

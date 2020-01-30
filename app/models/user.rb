@@ -25,6 +25,7 @@ class User < ApplicationRecord
   validate :birth_date_validity
 
   pg_search_scope :search_by_name_or_email, against: [:first_name, :last_name, :email],
+                  ignoring: :accents,
                   using: { tsearch: { prefix: true } }
 
   scope :active, -> { where(deleted_at: nil) }
@@ -71,7 +72,9 @@ class User < ApplicationRecord
     if organisation.present? && !child?
       organisations.delete(organisation)
     else
-      update(organisation_ids: [], deleted_at: Time.zone.now)
+      now = Time.zone.now
+      update(organisation_ids: [], deleted_at: now)
+      children.update_all(deleted_at: now)
     end
   end
 

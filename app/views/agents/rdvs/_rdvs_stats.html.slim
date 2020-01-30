@@ -2,6 +2,7 @@ h4.card-title.mb-3
   | Statistiques
   small.text-muted< sur #{rdvs.count} RDV
 
+hr
 .row
   .col-md-6
     .bg-info.text-white.p-2.mb-3.text-center
@@ -13,10 +14,20 @@ h4.card-title.mb-3
       p.lead= t '.rdvs.seen', count: rdvs.seen.count
 .row
   .col-md-6
-    .bg-tertiary.text-white.p-2.mb-3.text-center
+    .bg-tertiary.text-white.p-2.mb-3.mb-md-0.text-center
       p.h2= rdvs.excused.count
       p.lead= t '.rdvs.excused', count: rdvs.excused.count
   .col-md-6
-    .bg-danger.text-white.p-2.mb-3.text-center
+    .bg-danger.text-white.p-2.mb-3.mb-md-0.text-center
       p.h2= rdvs.notexcused.count
       p.lead= t '.rdvs.notexcused', count: rdvs.notexcused.count
+hr
+.row
+  .col-md-6
+    .bg-warning.p-2.mb-3.text-center
+      p.h2= rdvs.created_by_agent.count
+      p.lead= t '.rdvs.created_by_agent', count: rdvs.created_by_agent.count
+  .col-md-6
+    .bg-secondary.text-white.p-2.mb-3.text-center
+      p.h2= rdvs.created_by_user.count
+      p.lead= t '.rdvs.created_by_user', count: rdvs.created_by_user.count
