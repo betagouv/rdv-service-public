@@ -47,7 +47,7 @@ body.authentication-bg {
 
     body.agents & {
       background-color: $turquoise;
-
+      color: $primary;
       .agent-profile {
         border: 3px solid $white;
         border-radius: 100%;
@@ -55,7 +55,6 @@ body.authentication-bg {
     }
   }
 }
-
 
 .auth-brand {
   margin-bottom: 2rem;
@@ -68,7 +67,8 @@ body.authentication-bg {
 
     .auth-fluid-form-box {
       max-width: 100%;
-      min-height: 100vh
+      min-height: 100vh;
+      padding: 1rem;
     }
 
     .auth-fluid-left {
