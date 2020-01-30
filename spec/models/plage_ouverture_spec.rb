@@ -157,6 +157,12 @@ describe PlageOuverture, type: :model do
 
         it { expect(subject.count).to eq(0) }
       end
+
+      describe "and there is another plage_ouverture" do
+        let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today, agent: create(:agent), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
+
+        it { expect(subject).to contain_exactly(plage_ouverture) }
+      end
     end
   end
 
