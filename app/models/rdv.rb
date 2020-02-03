@@ -46,7 +46,7 @@ class Rdv < ApplicationRecord
   end
 
   def send_notifications_to_users
-    users.map(&:user_to_notify).each do |user|
+    users.map(&:user_to_notify).uniq.each do |user|
       RdvMailer.send_ics_to_user(self, user).deliver_later if user.email.present?
       TwilioSenderJob.perform_later(:rdv_created, self, user) if user.formated_phone
     end
@@ -57,7 +57,7 @@ class Rdv < ApplicationRecord
   end
 
   def send_reminder
-    users.map(&:user_to_notify).each do |user|
+    users.map(&:user_to_notify).uniq.each do |user|
       RdvMailer.send_reminder(self, user).deliver_later if user.email.present?
       TwilioSenderJob.perform_later(:reminder, self, user) if user.formated_phone
     end
