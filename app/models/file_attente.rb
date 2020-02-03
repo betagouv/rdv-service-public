@@ -27,8 +27,8 @@ class FileAttente < ApplicationRecord
 
   def send_notification(last_creneau_sent_starts_at)
     rdv.users.map(&:user_to_notify).uniq.each do |user|
-      TwilioSenderJob.perform_later(:file_attente, rdv, user) if user.formated_phone
-      FileAttenteMailer.send_notification(rdv, user).deliver_later if user.email
+      TwilioSenderJob.perform_later(:file_attente, rdv, user, creneau_starts_at: last_creneau_sent_starts_at) if user.formated_phone
+      FileAttenteMailer.send_notification(rdv, user, last_creneau_sent_starts_at).deliver_later if user.email
       update!(last_creneau_sent_starts_at: last_creneau_sent_starts_at, notifications_sent: notifications_sent + 1)
     end
   end

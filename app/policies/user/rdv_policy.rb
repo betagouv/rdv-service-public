@@ -1,4 +1,8 @@
 class User::RdvPolicy < ApplicationPolicy
+  def change_creneau?
+    rdv_belongs_to_user_or_children?
+  end
+
   def create?
     rdv_belongs_to_user_or_children?
   end
