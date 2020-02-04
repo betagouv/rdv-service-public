@@ -8,7 +8,7 @@ class Agents::InvitationsController < Devise::InvitationsController
   end
 
   def create
-    return unless resource_class == Agent
+    return unless resource_class == Agent && valid_email?(invite_params[:email])
     self.resource = Agent.find_by(email: invite_params[:email]) || invite_resource
     yield resource if block_given?
     org_to_add = Organisation.where(id: current_inviter.organisation_ids).find(organisation_id)
@@ -25,6 +25,10 @@ class Agents::InvitationsController < Devise::InvitationsController
 
   def invite_params
     devise_parameter_sanitizer.sanitize(:invite).except(:organisation_id)
+  end
+
+  def valid_email?(email)
+    email.match(Devise::email_regexp)
   end
 
 end
