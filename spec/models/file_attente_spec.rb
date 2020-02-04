@@ -1,6 +1,6 @@
 describe FileAttente, type: :model do
   describe '#send_notifications' do
-    let(:now) { DateTime.parse("01-01-2019 09:00") }
+    let(:now) { DateTime.parse("01-01-2019 09:00 +0100") }
     let!(:lieu) { create(:lieu) }
     let!(:plage_ouverture) { create(:plage_ouverture, first_day: now + 2.weeks, start_time: Tod::TimeOfDay.new(10)) }
     let!(:rdv) { create(:rdv, starts_at: now + 2.weeks, location: lieu.address, motif: plage_ouverture.motifs.first, agent_ids: [plage_ouverture.agent.id]) }
@@ -17,7 +17,7 @@ describe FileAttente, type: :model do
     end
 
     context "with availabilities before rdv" do
-      let!(:plage_ouverture_2) { create(:plage_ouverture, :daily, first_day: now) }
+      let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: 1.day.from_now, start_time: Tod::TimeOfDay.new(9)) }
 
       it 'should increment notifications_sent' do
         expect { subject }.to change(file_attente, :notifications_sent).from(0).to(1)
@@ -31,7 +31,7 @@ describe FileAttente, type: :model do
       end
 
       it 'should send an email' do
-        expect(FileAttenteMailer).to receive(:send_notification).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
+        expect(FileAttenteMailer).to receive(:send_notification).with(rdv, rdv.users.first, 1.day.from_now).and_return(double(deliver_later: nil))
         subject
       end
     end

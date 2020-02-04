@@ -3,7 +3,7 @@ class TwilioTextMessenger
 
   attr_reader :user, :rdv, :from, :type
 
-  def initialize(type, rdv, user, options)
+  def initialize(type, rdv, user, options = {})
     @type = type
     @user = user
     @rdv = rdv
