@@ -177,10 +177,12 @@ describe User, type: :model do
     before do
       [parent1, child1, parent2].each do |user|
         create(:rdv, users: [user], organisation: organisation1)
+        create(:rdv, :excused, users: [user], organisation: organisation1)
       end
       create(:rdv, users: [parent1, child1], organisation: organisation1)
     end
 
+    it { expect(parent1.available_rdvs(organisation1.id).size).to eq(5) }
     it { expect(parent1.available_rdvs(organisation1.id)).to match_array((parent1.rdvs + child1.rdvs).uniq) }
     it { expect(child1.available_rdvs(organisation1.id)).to match_array child1.rdvs }
     it { expect(parent2.available_rdvs(organisation1.id)).to match_array parent2.rdvs }
