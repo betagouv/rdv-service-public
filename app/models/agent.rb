@@ -12,9 +12,9 @@ class Agent < ApplicationRecord
   belongs_to :service
   has_many :lieux, through: :organisation
   has_many :motifs, through: :service
-  has_many :plage_ouvertures
-  has_many :absences
-  has_and_belongs_to_many :rdvs
+  has_many :plage_ouvertures, dependent: :destroy
+  has_many :absences, dependent: :destroy
+  has_and_belongs_to_many :rdvs, dependent: :destroy
   has_and_belongs_to_many :organisations, -> { distinct }
 
   enum role: { user: 0, admin: 1 }
@@ -40,7 +40,7 @@ class Agent < ApplicationRecord
   ## Soft Delete for Devise
   def soft_delete(organisation = nil)
     organisations.delete(organisation) && return if organisation.present? && organisations.count > 1
-    update_attribute(:deleted_at, Time.zone.now)
+    rdvs.empty? ? destroy : update_attribute(:deleted_at, Time.zone.now)
   end
 
   def active_for_authentication?
