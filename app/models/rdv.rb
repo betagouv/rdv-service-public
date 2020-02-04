@@ -15,6 +15,7 @@ class Rdv < ApplicationRecord
   scope :past, -> { where('starts_at < ?', Time.zone.now) }
   scope :future, -> { where('starts_at > ?', Time.zone.now) }
   scope :tomorrow, -> { where(starts_at: DateTime.tomorrow...DateTime.tomorrow + 1.day) }
+  scope :day_after_tomorrow, -> { where(starts_at: DateTime.tomorrow...DateTime.tomorrow + 2.day) }
   scope :user_with_children, ->(parent_id) { joins(:users).includes(:rdvs_users, :users).where('users.id IN (?)', [parent_id, User.find(parent_id).children.pluck(:id)].flatten) }
 
   after_commit :reload_uuid, on: :create
