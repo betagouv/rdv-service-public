@@ -20,5 +20,9 @@ FactoryBot.define do
     trait :by_phone do
       motif { build(:motif, :by_phone) }
     end
+    trait :excused do
+      cancelled_at { 2.days.ago }
+      status { 'excused' }
+    end
   end
 end

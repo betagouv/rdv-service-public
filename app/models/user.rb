@@ -108,9 +108,9 @@ class User < ApplicationRecord
 
   def available_rdvs(organisation_id)
     if child?
-      rdvs.active.includes(:organisation, :rdvs_users, :users).where(organisation_id: organisation_id)
+      rdvs.includes(:organisation, :rdvs_users, :users).where(organisation_id: organisation_id)
     else
-      Rdv.active.includes(:organisation).user_with_children(id).where(organisation_id: organisation_id)
+      Rdv.includes(:organisation).user_with_children(id).where(organisation_id: organisation_id)
     end
   end
 
