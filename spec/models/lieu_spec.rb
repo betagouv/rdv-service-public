@@ -88,4 +88,12 @@ describe Lieu, type: :model do
       it { expect(subject).to eq([]) }
     end
   end
+
+  describe '.distance' do
+    let!(:lieu_lille) { create(:lieu, latitude: 50.63, longitude: 3.053) }
+    let(:paris_loc) { { latitude: 48.83, longitude: 2.37 } }
+
+    it { expect(lieu_lille.distance(paris_loc[:latitude], paris_loc[:longitude])).to be_a_kind_of(Float) }
+    it { expect(lieu_lille.distance(paris_loc[:latitude], paris_loc[:longitude])).to be_within(10000).of(204000) }
+  end
 end
