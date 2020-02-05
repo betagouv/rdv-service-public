@@ -12,7 +12,8 @@ class LieuxController < ApplicationController
     end
 
     return redirect_to lieu_path(@lieux.first, search: @query) if @lieux.size == 1
-    @lieux = @lieux.sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f)}
+
+    @lieux = @lieux.sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f) }
     return unless @organisations.empty?
 
     flash.now[:notice] = "La prise de RDV n’est pas encore disponible dans ce département"
