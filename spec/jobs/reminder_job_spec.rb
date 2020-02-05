@@ -11,12 +11,12 @@ RSpec.describe ReminderJob, type: :job do
 
     after { ReminderJob.perform_now }
 
-    context "with rdv tomorrow" do
-      let(:rdv) { create(:rdv, starts_at: 1.day.from_now) }
+    context "with rdv after tomorrow" do
+      let(:rdv) { create(:rdv, starts_at: 2.day.from_now) }
 
       before { rdv.reload }
 
-      it 'should send an sms + rdv to tomorrow rdv' do
+      it 'should send an sms + email to after tomorrow rdv' do
         expect(RdvMailer).to receive(:send_reminder).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
         expect(TwilioTextMessenger).to receive(:new).with(:reminder, rdv, rdv.users.first).and_call_original
       end
@@ -25,8 +25,8 @@ RSpec.describe ReminderJob, type: :job do
         expect(RdvMailer).to receive(:send_reminder).once.and_return(double(deliver_later: nil))
         expect(TwilioTextMessenger).to receive(:new).with(:reminder, rdv, rdv.users.first).once.and_call_original
       end
-      it "should send two emails+sms when two rdvs tomorrow" do
-        rdv2 = create(:rdv, starts_at: 30.hours.from_now)
+      it "should send two emails+sms when two rdvs after tomorrow" do
+        rdv2 = create(:rdv, starts_at: 50.hours.from_now)
         [rdv, rdv2].each do |rdv|
           expect(RdvMailer).to receive(:send_reminder).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
           expect(TwilioTextMessenger).to receive(:new).with(:reminder, rdv, rdv.users.first).once.and_call_original
@@ -34,8 +34,8 @@ RSpec.describe ReminderJob, type: :job do
       end
     end
 
-    context "without rdv tomorrow" do
-      let(:start_dates) { [1.day.ago, now, 2.hours.from_now, 13.hours.from_now, 2.day.from_now, 5.day.from_now] }
+    context "without rdv after tomorrow" do
+      let(:start_dates) { [1.day.ago, now, 2.hours.from_now, 13.hours.from_now, 1.day.from_now, 5.day.from_now] }
 
       it "should not send sms+email" do
         start_dates.map { |date| create(:rdv, starts_at: date) }
