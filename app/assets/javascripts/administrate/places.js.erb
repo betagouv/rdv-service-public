@@ -6,9 +6,13 @@ if (container) {
     countries: ['FR'],
     templates: {
       value: function(suggestion) {
+        // console.log(suggestion.latlng)
         return [suggestion.name, suggestion.postcode, suggestion.city].filter(Boolean).join(" ");
       },
     },
     container
+  }).on('change', function(e) {
+    $('#lieu_latitude').val(e.suggestion.latlng.lat)
+    $('#lieu_longitude').val(e.suggestion.latlng.lng)
   });
 }

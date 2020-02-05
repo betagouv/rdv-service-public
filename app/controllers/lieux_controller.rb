@@ -1,16 +1,10 @@
 class LieuxController < ApplicationController
+  before_action :set_lieu_variables, only: [:index, :show]
   layout 'welcome'
 
   def index
-    @query = search_params.to_hash
-    @departement = search_params[:departement]
-    @motif = search_params[:motif]
-    @where = search_params[:where]
-    @service_id = search_params[:service]
-    @service = Service.find(@service_id)
     @organisations = Organisation.where(departement: @departement)
     @lieux = Lieu.for_service_motif_and_departement(@service_id, @motif, @departement)
-    @motifs = Motif.names_for_service_and_departement(@service, @departement)
 
     @next_availability_by_lieux = {}
     @lieux.each do |lieu|
@@ -18,7 +12,7 @@ class LieuxController < ApplicationController
     end
 
     return redirect_to lieu_path(@lieux.first, search: @query) if @lieux.size == 1
-
+    @lieux = @lieux.sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f)}
     return unless @organisations.empty?
 
     flash.now[:notice] = "La prise de RDV n’est pas encore disponible dans ce département"
@@ -26,14 +20,6 @@ class LieuxController < ApplicationController
   end
 
   def show
-    @query = search_params.to_hash
-    @departement = search_params[:departement]
-    @motif = search_params[:motif]
-    @where = search_params[:where]
-    @service_id = search_params[:service]
-    @service = Service.find(@service_id)
-    @motifs = Motif.names_for_service_and_departement(@service, @departement)
-
     start_date = params[:date]&.to_date || Date.today
     @date_range = start_date..(start_date + 6.days)
     @lieu = Lieu.find(params[:id])
@@ -50,6 +36,18 @@ class LieuxController < ApplicationController
   private
 
   def search_params
-    params.require(:search).permit(:departement, :where, :service, :motif)
+    params.require(:search).permit(:departement, :where, :service, :motif, :longitude, :latitude)
+  end
+
+  def set_lieu_variables
+    @query = search_params.to_hash
+    @departement = search_params[:departement]
+    @motif = search_params[:motif]
+    @where = search_params[:where]
+    @service_id = search_params[:service]
+    @service = Service.find(@service_id)
+    @motifs = Motif.names_for_service_and_departement(@service, @departement)
+    @latitude = search_params[:latitude]
+    @longitude = search_params[:longitude]
   end
 end

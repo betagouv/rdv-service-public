@@ -1,7 +1,7 @@
 class Lieu < ApplicationRecord
   belongs_to :organisation
   has_many :plage_ouvertures
-  validates :name, :address, presence: true
+  validates :name, :address, :latitude, :longitude, presence: true
 
   scope :for_motif, lambda { |motif|
     lieux_ids = PlageOuverture
@@ -31,5 +31,26 @@ class Lieu < ApplicationRecord
 
   def full_name
     "#{name} (#{address})"
+  end
+
+  def distance(lat, lng)
+    return 0 if latitude.nil? || longitude.nil?
+    
+    rad_per_deg = Math::PI/180  # PI / 180
+    earthRadius = 6371 * 1000 # Earth's radius in meter
+
+    dlat_rad = (lat-latitude) * rad_per_deg
+    dlon_rad = (lng-longitude) * rad_per_deg
+
+    # Calculate square of half the chord length between latitude and longitude
+    a = Math.sin(dlat_rad/2)**2 +
+        Math.cos((latitude/180 * Math::PI)) * Math.cos((lat/180 * Math::PI)) *
+        Math.sin(dlon_rad/2)**2
+
+    # Calculate the angular distance in radians
+    c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+
+    # Distance in meter
+    earthRadius * c
   end
 end

@@ -12,6 +12,9 @@ class LieuDashboard < Administrate::BaseDashboard
     name: Field::String,
     organisation: Field::BelongsTo,
     address: PlacesField,
+    latitude: Field::Number,
+    longitude: Field::Number,
+    address: PlacesField,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -34,6 +37,9 @@ class LieuDashboard < Administrate::BaseDashboard
     :name,
     :organisation,
     :address,
+    :latitude,
+    :longitude,
+    :address,
     :created_at,
     :updated_at,
   ].freeze
@@ -45,5 +51,7 @@ class LieuDashboard < Administrate::BaseDashboard
     :name,
     :organisation,
     :address,
+    :latitude,
+    :longitude
   ].freeze
 end

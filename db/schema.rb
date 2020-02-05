@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_28_155049) do
+ActiveRecord::Schema.define(version: 2020_02_05_142622) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -131,6 +131,8 @@ ActiveRecord::Schema.define(version: 2020_01_28_155049) do
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "notifications_sent", default: 0
+    t.datetime "last_creneau_sent_starts_at"
     t.index ["rdv_id"], name: "index_file_attentes_on_rdv_id"
     t.index ["user_id"], name: "index_file_attentes_on_user_id"
   end
@@ -148,6 +150,8 @@ ActiveRecord::Schema.define(version: 2020_01_28_155049) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "address"
+    t.float "latitude"
+    t.float "longitude"
     t.index ["organisation_id"], name: "index_lieux_on_organisation_id"
   end
 

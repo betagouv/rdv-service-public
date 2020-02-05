@@ -43,6 +43,8 @@ $(document).on('turbolinks:load', function() {
 
       placesInput.on('change', function resultSelected(e) {
         let departement = (e.suggestion.postcode || '').substring(0, 2);
+        $('#search_latitude').val(e.suggestion.latlng.lat)
+        $('#search_longitude').val(e.suggestion.latlng.lng)
         document.querySelector('#search_departement').value = departement;
         if (departement.length == 2) {
           setWhereValid(where, submit);

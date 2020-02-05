@@ -42,6 +42,6 @@ class Agents::LieuxController < AgentAuthController
   private
 
   def lieu_params
-    params.require(:lieu).permit(:name, :address, :horaires, :telephone)
+    params.require(:lieu).permit(:name, :address, :horaires, :telephone, :latitude, :longitude)
   end
 end
