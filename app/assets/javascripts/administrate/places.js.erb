@@ -6,7 +6,6 @@ if (container) {
     countries: ['FR'],
     templates: {
       value: function(suggestion) {
-        // console.log(suggestion.latlng)
         return [suggestion.name, suggestion.postcode, suggestion.city].filter(Boolean).join(" ");
       },
     },
