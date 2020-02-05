@@ -1,5 +1,5 @@
 class Users::RdvsController < UserAuthController
-  before_action :set_rdv, only: [:confirmation, :cancel, :change_creneau]
+  before_action :set_rdv, only: [:confirmation, :cancel]
 
   def index
     @rdvs = policy_scope(Rdv).includes(:motif, :rdvs_users, :users)
@@ -48,22 +48,6 @@ class Users::RdvsController < UserAuthController
       @query = { where: creneau_params[:where], service: @motif.service.id, motif: @motif.name, departement: creneau_params[:departement] }
       flash[:error] = "Ce creneau n'est plus disponible. Veuillez en sélectionner un autre."
       redirect_to lieux_path(search: { departement: creneau_params[:departement], service: @motif.service.id, motif: @motif.name, where: creneau_params[:where] })
-    end
-  end
-
-  def change_creneau
-    authorize(@rdv)
-    @starts_at = params[:starts_at].to_time
-    @state = nil
-    return if params[:confirmed] == 'true' && @starts_at.present? && @rdv.update(starts_at: @starts_at)
-
-    lieu = Lieu.find_by(address: @rdv.location)
-    @creneau = Creneau.new(starts_at: @starts_at, motif: @rdv.motif, lieu_id: lieu.id)
-    if @creneau.available?
-      @state = true
-    else
-      @state = false
-      flash.now[:error] = "Malheureusement, ce créneau n'est plus disponible."
     end
   end
 

@@ -6,4 +6,4 @@ div
   p
     | Vous pouvez avancer la date de votre RDV en cliquant sur le lien ci-dessous.
   .btn-wrapper
-    = link_to 'Verifier la disponibilité', users_change_creneau_url(rdv_id: @rdv.id, starts_at: @creneau_starts_at.to_s), class:'btn btn-primary'
+    = link_to 'Verifier la disponibilité', new_users_creneaux_url(rdv_id: @rdv.id, starts_at: @creneau_starts_at.to_s), class:'btn btn-primary'
