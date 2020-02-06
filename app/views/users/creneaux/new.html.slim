@@ -1,20 +1,24 @@
-.row
-  - if @creneau_available
-    h2 Un créneau s'est libéré
-    p.mb-5 Un créneau s'est liberé le #{l(@starts_at, format: :human)}. Vous pouvez prendre ce créneau si vous souhaitez avancer votre RDV. Sans action de votre part, vous conserverez votre créneau initiale et vous recevrez d'autres propositions si un créneau se libère.
-    .col.text-center
-      h4 Nouveau rendez-vous proposé
-      p= l(@starts_at, format: :human).capitalize
-      = link_to 'Changer de créneau', "?starts_at=#{@starts_at.to_s}&confirmed=true", class:"btn btn-primary"
-    .col-sm-12.mt-3.text-center
-      p.text-muted
-      | Si ce créneau ne vous convient pas, votre RDV restera le #{l(@rdv.starts_at, format: :human)}
-  - elsif @creneau_available.nil?
-    h2.mb-4 Votre RDV a bien été modifié
-    .mx-auto
-      = render partial: '/users/rdvs/rdv', locals: { rdv: @rdv, hide_file_attente_infos: true }
-  - elsif !@creneau_available
-    h2 Créneau indisponible
-    p.mb-5 Désolé le RDV a déjà été réattribué. Vous recevrez d'autres propositions si un créneau se libère.
-    .mx-auto
-      = render partial: '/users/rdvs/rdv', locals: { rdv: @rdv, hide_file_attente_infos: true }
+- if @creneau_available
+  .page-title-box
+    h1.page-title Un créneau s'est libéré
+  .card
+    .card-body.text-center
+      p
+        | Un créneau pour votre RDV #{@rdv.motif.name} - #{@rdv.motif.service.name} qui a lieu le #{I18n.l(@rdv.starts_at, format: :human)} s'est libéré plus tôt.
+      .my-5
+        h4 Nouveau rendez-vous proposé
+
+        p= l(@starts_at, format: :human).capitalize
+        = link_to 'Changer de créneau', "?starts_at=#{@starts_at.to_s}&confirmed=true", class:"btn btn-primary"
+      p.text-muted Sans action de votre part, votre RDV restera le #{l(@rdv.starts_at, format: :human)}. Vous continuerez à recevoir d'autres propositions si un créneau se libère.
+- elsif @creneau_available.nil?
+  .page-title-box
+    h1.page-title Votre RDV a été modifié
+  .mx-auto
+    = render partial: '/users/rdvs/rdv', locals: { rdv: @rdv, hide_file_attente_infos: true }
+- elsif !@creneau_available
+  .page-title-box
+    h1.page-title Créneau indisponible
+  .bg-info.text-white.p-2.mb-3 Désolé le créneau a déjà été réattribué. Vous recevrez d'autres propositions si un créneau se libère. Votre RDV reste le #{I18n.l(@rdv.starts_at, format: :human)}.
+  .mx-auto
+    = render partial: '/users/rdvs/rdv', locals: { rdv: @rdv, hide_file_attente_infos: true }
