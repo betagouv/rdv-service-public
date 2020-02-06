@@ -83,6 +83,9 @@ document.addEventListener('turbolinks:load', function() {
       }
     });
 
+    window.calendar = calendar
     calendar.render();
+
+    setInterval(function(){ calendar.refetchEvents }, 30000)
   }
 });
