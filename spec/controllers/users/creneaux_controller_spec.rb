@@ -46,7 +46,7 @@ RSpec.describe Users::CreneauxController, type: :controller do
       before { subject }
 
       it { expect(assigns(:creneau_available)).to eq(nil) }
-      it { expect(response.body).to include("Votre RDV a bien été modifié") }
+      it { expect(response.body).to include("Votre RDV a été modifié") }
       it { expect(rdv.starts_at).to eq(starts_at) }
     end
   end
