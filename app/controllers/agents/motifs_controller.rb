@@ -25,8 +25,12 @@ class Agents::MotifsController < AgentAuthController
   end
 
   def create
-    @motif = Motif.new(motif_params)
-    @motif.organisation = @organisation
+    if (@motif = Motif.find_by(name: motif_params[:name], organisation_id: @organisation.id))
+      @motif.update(motif_params.merge(deleted_at: nil))
+    else
+      @motif = Motif.new(motif_params)
+      @motif.organisation = @organisation
+    end
     authorize(@motif)
     flash[:notice] = "Motif créé." if @motif.save
     respond_right_bar_with @motif, location: organisation_motifs_path(@motif.organisation)
