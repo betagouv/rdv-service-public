@@ -22,7 +22,7 @@ RSpec.describe Users::CreneauxController, type: :controller do
 
       before { subject }
 
-      it { expect(assigns(:state)).to eq(true) }
+      it { expect(assigns(:creneau_available)).to eq(true) }
       it { expect(response.body).to include("Un créneau s'est libéré") }
       it { expect(response.body).to include("Changer de créneau") }
     end
@@ -30,7 +30,7 @@ RSpec.describe Users::CreneauxController, type: :controller do
     context "creneau isn't available" do
       before { subject }
 
-      it { expect(assigns(:state)).to eq(false) }
+      it { expect(assigns(:creneau_available)).to eq(false) }
       it { expect(response.body).to include("Créneau indisponible") }
       it { expect(response.body).to include(rdv.motif.name) }
     end
@@ -45,7 +45,7 @@ RSpec.describe Users::CreneauxController, type: :controller do
 
       before { subject }
 
-      it { expect(assigns(:state)).to eq(nil) }
+      it { expect(assigns(:creneau_available)).to eq(nil) }
       it { expect(response.body).to include("Votre RDV a bien été modifié") }
       it { expect(rdv.starts_at).to eq(starts_at) }
     end

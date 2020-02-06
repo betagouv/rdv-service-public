@@ -40,6 +40,6 @@ describe TwilioTextMessenger, type: :service do
 
     it { expect(subject.body).to include("RDV Solidarités") }
     it { expect(subject.body).to include("Un RDV #{rdv.motif.name} - #{rdv.motif.service.name} #{I18n.l(rdv.starts_at, format: :human)} s'est libéré.") }
-    it { expect(subject.body).to include("Cliquez pour vérifier la disponibilité:") }
+    it { expect(subject.body).to include("Cliquez pour vérifier la disponibilité :") }
   end
 end
