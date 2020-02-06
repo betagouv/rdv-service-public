@@ -25,11 +25,6 @@ class Agents::MotifsController < AgentAuthController
   end
 
   def create
-    # if (@motif = Motif.find_by(name: motif_params[:name], organisation_id: @organisation.id))
-    #   @motif.update(motif_params.merge(deleted_at: nil))
-    # else
-    #   @motif = Motif.new(motif_params)
-    # end
     @motif = Motif.where(name: motif_params[:name], organisation_id: @organisation.id).first_or_initialize(motif_params)
     @motif.update(motif_params) if @motif.id
     @motif.organisation = @organisation
