@@ -1,5 +1,4 @@
 describe Lieu, type: :model do
-
   let!(:motif) { create(:motif, name: "Vaccination", online: online) }
   let!(:lieu) { create(:lieu) }
   let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu) }
