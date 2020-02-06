@@ -131,6 +131,8 @@ ActiveRecord::Schema.define(version: 2020_01_28_155049) do
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "notifications_sent", default: 0
+    t.datetime "last_creneau_sent_starts_at"
     t.index ["rdv_id"], name: "index_file_attentes_on_rdv_id"
     t.index ["user_id"], name: "index_file_attentes_on_user_id"
   end

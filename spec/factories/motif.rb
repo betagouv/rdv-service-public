@@ -10,6 +10,7 @@ FactoryBot.define do
     disable_notifications_for_users { false }
     instruction_for_rdv { "Intruction pour le RDV" }
     restriction_for_rdv { "Consigne pour le RDV" }
+    online { true }
     trait :with_rdvs do
       after(:create) do |motif|
         create_list(:rdv, 5, motif: motif)
