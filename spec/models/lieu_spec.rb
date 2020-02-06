@@ -1,4 +1,5 @@
 describe Lieu, type: :model do
+
   let!(:motif) { create(:motif, name: "Vaccination", online: online) }
   let!(:lieu) { create(:lieu) }
   let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu) }
@@ -92,6 +93,7 @@ describe Lieu, type: :model do
   describe '.distance' do
     let!(:lieu_lille) { create(:lieu, latitude: 50.63, longitude: 3.053) }
     let(:paris_loc) { { latitude: 48.83, longitude: 2.37 } }
+    let(:online) { true }
 
     it { expect(lieu_lille.distance(paris_loc[:latitude], paris_loc[:longitude])).to be_a_kind_of(Float) }
     it { expect(lieu_lille.distance(paris_loc[:latitude], paris_loc[:longitude])).to be_within(10000).of(204000) }
