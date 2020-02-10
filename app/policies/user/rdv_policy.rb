@@ -11,6 +11,14 @@ class User::RdvPolicy < ApplicationPolicy
     @record.cancellable? && rdv_belongs_to_user_or_children?
   end
 
+  def edit?
+    rdv_belongs_to_user_or_children?
+  end
+
+  def update?
+    rdv_belongs_to_user_or_children?
+  end
+
   private
 
   def rdv_belongs_to_user_or_children?

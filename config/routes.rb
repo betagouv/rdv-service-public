@@ -37,7 +37,7 @@ Rails.application.routes.draw do
       put :cancel
       get :confirmation
     end
-    resources :creneaux, only: :new
+    resources :creneaux, only: [:edit, :update], param: :rdv_id
     post 'file_attente', to: 'file_attentes#create_or_delete'
   end
   resources :stats, only: :index
