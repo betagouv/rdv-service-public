@@ -4,4 +4,4 @@ div
     | Un créneau pour votre RDV #{@rdv.motif.name} - #{@rdv.motif.service.name} qui a lieu le #{I18n.l(@rdv.starts_at, format: :human)} s'est libéré plus tôt.
   p Vous pouvez avancer la date de votre RDV en cliquant sur le lien ci-dessous.
   .btn-wrapper
-    = link_to 'Verifier la disponibilité', new_users_creneaux_url(rdv_id: @rdv.id, starts_at: @creneau_starts_at.to_s), class:'btn btn-primary'
+    = link_to 'Verifier la disponibilité', edit_users_creneaux_url(rdv_id: @rdv.id, starts_at: @creneau_starts_at.to_s), class:'btn btn-primary'
