@@ -24,7 +24,7 @@ class User < ApplicationRecord
   validates :phone_number, phone: { allow_blank: true }
   validate :birth_date_validity
 
-  pg_search_scope :search_by_name_or_email, against: [:first_name, :last_name, :email],
+  pg_search_scope :search_by_name_or_email, against: [:first_name, :last_name, :birth_name, :email],
                   ignoring: :accents,
                   using: { tsearch: { prefix: true } }
 
