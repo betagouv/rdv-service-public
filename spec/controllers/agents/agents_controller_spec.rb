@@ -1,7 +1,8 @@
 RSpec.describe Agents::AgentsController, type: :controller do
   render_views
 
-  let(:agent) { create(:agent, :admin) }
+  let!(:agent) { create(:agent, :admin) }
+  let!(:agent1) { create(:agent, :admin) }
   let(:agent_invitee) { create(:agent, confirmed_at: nil, first_name: nil, last_name: nil) }
   let(:organisation_id) { agent.organisation_ids.first }
 
@@ -24,12 +25,9 @@ RSpec.describe Agents::AgentsController, type: :controller do
   end
 
   describe "DELETE #destroy" do
-    subject { delete :destroy, params: { organisation_id: organisation_id, id: agent.to_param } }
+    subject { delete :destroy, params: { organisation_id: organisation_id, id: agent1.id } }
     it "destroys the requested agent" do
-      expect do
-        subject
-        agent.reload
-      end.to change(agent, :deleted_at).from(nil)
+      expect { subject }.to change(Agent, :count).by(-1)
     end
 
     it "redirects to the agents list" do

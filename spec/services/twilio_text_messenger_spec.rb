@@ -28,7 +28,18 @@ describe TwilioTextMessenger, type: :service do
     end
 
     it { expect(subject.body).to include("RDV Solidarités") }
-    it { expect(subject.body).to include("Rappel RDV #{rdv.motif.service.name} demain à #{rdv.starts_at.strftime("%H:%M")}") }
+    it { expect(subject.body).to include("Rappel RDV #{rdv.motif.service.name} le #{I18n.localize(rdv.starts_at.to_date, format: :short).strip} à #{rdv.starts_at.strftime("%H:%M")}") }
     it { expect(subject.body).to include(rdv.location.to_s) }
+  end
+
+  context "when sending a file d'attente sms" do
+    let(:twilio) { TwilioTextMessenger.new(:file_attente, rdv, user, creneau_starts_at: Time.now) }
+    it 'return Twilio Object when sms is sent' do
+      is_expected.to be_kind_of(Twilio::REST::Api::V2010::AccountContext::MessageInstance)
+    end
+
+    it { expect(subject.body).to include("RDV Solidarités") }
+    it { expect(subject.body).to include("Un RDV #{rdv.motif.name} - #{rdv.motif.service.name} #{I18n.l(rdv.starts_at, format: :human)} s'est libéré.") }
+    it { expect(subject.body).to include("Cliquez pour vérifier la disponibilité :") }
   end
 end

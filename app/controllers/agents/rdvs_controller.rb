@@ -29,9 +29,13 @@ class Agents::RdvsController < AgentAuthController
 
   def update
     authorize(@rdv)
-    flash[:notice] = 'Le rendez-vous a été modifié.' if @rdv.update(rdv_params)
-    location = callback_params[:callback_path] || @rdv.agenda_path_for_agent(current_agent)
-    respond_right_bar_with @rdv, location: location.to_s
+    location = params[:callback_path].present? ? params[:callback_path] : @rdv.agenda_path_for_agent(current_agent)
+    if @rdv.update(rdv_params)
+      flash[:notice] = 'Le rendez-vous a été modifié.'
+      redirect_to location.to_s
+    else
+      respond_right_bar_with @rdv, location: location.to_s
+    end
   end
 
   def status

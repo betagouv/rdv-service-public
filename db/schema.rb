@@ -294,6 +294,7 @@ ActiveRecord::Schema.define(version: 2020_02_05_142622) do
     t.integer "logement"
     t.bigint "parent_id"
     t.datetime "deleted_at"
+    t.string "birth_name"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true

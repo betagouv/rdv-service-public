@@ -1,0 +1,4 @@
+.page-title-box
+  h1.page-title Votre RDV a été modifié
+.mx-auto
+  = render partial: '/users/rdvs/rdv', locals: { rdv: @rdv, hide_file_attente_infos: true }

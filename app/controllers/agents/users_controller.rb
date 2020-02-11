@@ -73,7 +73,7 @@ class Agents::UsersController < AgentAuthController
 
   def invite
     authorize(@user)
-    @user.deliver_invitation
+    @user.invite!
     flash[:notice] = "L'usager a été invité."
     respond_right_bar_with @user, location: organisation_user_path(current_organisation, @user)
   end
@@ -113,7 +113,7 @@ class Agents::UsersController < AgentAuthController
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :email, :phone_number, :birth_date, :address, :caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :logement)
+    params.require(:user).permit(:first_name, :last_name, :birth_name, :email, :phone_number, :birth_date, :address, :caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :logement)
   end
 
   def search_params

@@ -1,4 +1,6 @@
 RSpec.describe Users::RdvsController, type: :controller do
+  render_views
+
   describe "POST create" do
     let(:user) { create(:user) }
     let(:motif) { create(:motif) }
