@@ -8,7 +8,11 @@ class Agents::InvitationsController < Devise::InvitationsController
   end
 
   def create
-    return unless resource_class == Agent && valid_email?(invite_params[:email])
+    unless resource_class == Agent && valid_email?(invite_params[:email])
+      @agent = Agent.create(invite_params)
+      @agent.errors.delete(:password)
+      return respond_right_bar_with @agent, location: organisation_agents_path(organisation_id)
+    end
     self.resource = Agent.find_by(email: invite_params[:email]) || invite_resource
     yield resource if block_given?
     org_to_add = Organisation.where(id: current_inviter.organisation_ids).find(organisation_id)
