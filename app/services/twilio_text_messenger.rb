@@ -18,7 +18,7 @@ class TwilioTextMessenger
       twilio_client.messages.create(
         from: @from,
         to: @user.formated_phone,
-        body: body
+        body: replace_special_chars(body)
       )
     rescue StandardError => e
       e
@@ -27,8 +27,14 @@ class TwilioTextMessenger
 
   private
 
-  def sms_header
-    "RDV Solidarités\n"
+  def shorten_service(service_name)
+    service_name
+      .gsub('PMI (Protection Maternelle Infantile)', 'PMI')
+      .gsub("CPEF (Centre de planification et d'éducation familiale)", 'CPEF')
+  end
+
+  def replace_special_chars(body)
+    body.tr('áâãëẽêíïîĩóôõúûũçÀÁÂÃÈËẼÊÌÍÏÎĨÒÓÔÕÙÚÛŨ', 'aaaeeeiiiiooouuucAAAAEEEEIIIIIOOOOUUUU')
   end
 
   def sms_footer
@@ -37,28 +43,25 @@ class TwilioTextMessenger
               else
                 "#{@rdv.location}\n"
               end
-    message += "Infos et annulation: #{rdvs_shorten_url(host: "https://#{ENV["HOST"]}")} "
+    message += "Infos et annulation: #{rdvs_shorten_url(host: "https://#{ENV["HOST"]}")}"
     message += " / #{@rdv.organisation.phone_number}" if @rdv.organisation.phone_number
     message
   end
 
   def rdv_created
-    message = sms_header
-    message += "RDV #{@rdv.motif.service.name} #{I18n.l(@rdv.starts_at, format: :short)}\n"
+    message = "RDV #{shorten_service(@rdv.motif.service.name)} #{I18n.l(@rdv.starts_at, format: :short)}\n"
     message += sms_footer
     message
   end
 
   def reminder
-    message = sms_header
-    message += "Rappel RDV #{@rdv.motif.service.name} le #{I18n.localize(@rdv.starts_at.to_date, format: :short).strip} à #{@rdv.starts_at.strftime("%H:%M")}\n"
+    message = "Rappel RDV #{shorten_service(@rdv.motif.service.name)} le #{I18n.l(@rdv.starts_at.to_date, format: :short).strip} à #{@rdv.starts_at.strftime("%H:%M")}\n"
     message += sms_footer
     message
   end
 
   def file_attente
-    message = sms_header
-    message += "Un RDV #{@rdv.motif.name} - #{@rdv.motif.service.name} #{I18n.l(@rdv.starts_at, format: :human)} s'est libéré.\n"
+    message = "Un RDV #{@rdv.motif.name} - #{shorten_service(@rdv.motif.service.name)} #{I18n.l(@rdv.starts_at, format: :human)} s'est libéré.\n"
     message += "Cliquez pour vérifier la disponibilité : #{edit_users_creneaux_url(rdv_id: @rdv.id, starts_at: @options[:creneau_starts_at].to_s, host: "https://#{ENV["HOST"]}")}"
     message
   end
