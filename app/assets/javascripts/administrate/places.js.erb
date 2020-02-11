@@ -10,5 +10,8 @@ if (container) {
       },
     },
     container
+  }).on('change', function(e) {
+    $('#lieu_latitude').val(e.suggestion.latlng.lat)
+    $('#lieu_longitude').val(e.suggestion.latlng.lng)
   });
 }

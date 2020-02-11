@@ -6,3 +6,5 @@ fr:
       lieu:
         name: Nom
         address: Adresse
+        latitude: Latitude
+        longitude: Longitude

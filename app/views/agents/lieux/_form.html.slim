@@ -2,6 +2,8 @@
   = render partial: 'layouts/model_errors', locals: { model: lieu }
   = f.input :name
   = f.input :address, input_html: { class: "places-js-container" }
+  = f.input :latitude, as: :hidden
+  = f.input :longitude, as: :hidden
   .row
     - if lieu.persisted?
       .col.text-left

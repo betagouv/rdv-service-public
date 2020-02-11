@@ -42,6 +42,8 @@ describe "Admin can configure the organisation" do
     expect_page_title("Nouveau lieu")
     fill_in 'Nom', with: le_nouveau_lieu.name
     fill_in 'Adresse', with: le_nouveau_lieu.address
+    first('input#lieu_latitude', visible: false).set(32)
+    first('input#lieu_longitude', visible: false).set(2)
     click_button 'Créer'
     expect_page_title("Vos lieux de consultation")
     click_link le_nouveau_lieu.name
