@@ -3,7 +3,7 @@ module FullNameConcern
 
   def full_name
     f_n = "#{first_name} #{last_name}"
-    if defined?(birth_name) && birth_name
+    if defined?(birth_name) && birth_name.present?
       f_n += " (#{birth_name})"
     end
     f_n
