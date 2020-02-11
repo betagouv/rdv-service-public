@@ -22,7 +22,6 @@ class PlageOuverture::Ics
       e.description = ""
       e.location    = plage_ouverture.lieu.address
       e.ip_class    = "PRIVATE"
-      e.organizer   = "noreply@rdv-solidarites.fr"
       e.attendee    = plage_ouverture.agent.email
       e.rrule       = rrule
     end

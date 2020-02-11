@@ -10,7 +10,6 @@ describe PlageOuverture::Ics, type: :model do
       is_expected.to match("DTSTART;TZID=Europe/Paris:20190722T080000")
       is_expected.to include("DTEND;TZID=Europe/Paris:20190722T120000")
       is_expected.to include("LOCATION:#{plage_ouverture.lieu.address}")
-      is_expected.to include("ORGANIZER:noreply@rdv-solidarites.fr")
       is_expected.to include("ATTENDEE:#{plage_ouverture.agent.email}")
       is_expected.to include("CLASS:PRIVATE")
       is_expected.to include("METHOD:REQUEST")
