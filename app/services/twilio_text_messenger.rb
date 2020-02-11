@@ -51,7 +51,7 @@ class TwilioTextMessenger
 
   def reminder
     message = sms_header
-    message += "Rappel RDV #{@rdv.motif.service.name} demain à #{@rdv.starts_at.strftime("%H:%M")}\n"
+    message += "Rappel RDV #{@rdv.motif.service.name} le #{I18n.localize(@rdv.starts_at.to_date, format: :short).strip} à #{@rdv.starts_at.strftime("%H:%M")}\n"
     message += sms_footer
     message
   end
