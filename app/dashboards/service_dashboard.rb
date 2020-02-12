@@ -10,6 +10,7 @@ class ServiceDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
     name: Field::String,
+    short_name: Field::String,
     agents: Field::HasMany,
     motifs: Field::HasMany,
     created_at: Field::DateTime,
@@ -24,6 +25,7 @@ class ServiceDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = [
     :id,
     :name,
+    :short_name,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -31,6 +33,7 @@ class ServiceDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = [
     :id,
     :name,
+    :short_name,
     :agents,
     :motifs,
     :created_at,
@@ -42,6 +45,7 @@ class ServiceDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
     :name,
+    :short_name,
     :motifs,
     :agents,
   ].freeze
