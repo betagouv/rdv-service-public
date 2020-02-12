@@ -25,11 +25,21 @@ RSpec.describe ReminderJob, type: :job do
         expect(RdvMailer).to receive(:send_reminder).once.and_return(double(deliver_later: nil))
         expect(TwilioTextMessenger).to receive(:new).with(:reminder, rdv, rdv.users.first, {}).once.and_call_original
       end
+
       it "should send two emails+sms when two rdvs after tomorrow" do
         rdv2 = create(:rdv, starts_at: 50.hours.from_now)
         [rdv, rdv2].each do |rdv|
           expect(RdvMailer).to receive(:send_reminder).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
           expect(TwilioTextMessenger).to receive(:new).with(:reminder, rdv, rdv.users.first, {}).once.and_call_original
+        end
+      end
+
+      context "with a cancelled rdv" do
+        let(:rdv) { create(:rdv, starts_at: 2.day.from_now, cancelled_at: Time.zone.now) }
+
+        it "should not send sms+email" do
+          expect(RdvMailer).not_to receive(:send_reminder)
+          expect(TwilioTextMessenger).not_to receive(:new).and_call_original
         end
       end
     end
