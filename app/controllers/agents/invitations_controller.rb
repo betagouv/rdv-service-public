@@ -8,8 +8,8 @@ class Agents::InvitationsController < Devise::InvitationsController
   end
 
   def create
-    unless resource_class == Agent && valid_email?(invite_params[:email])
-      @agent = Agent.create(invite_params)
+    @agent = Agent.create(invite_params)
+    unless resource_class == Agent && @agent.errors[:email].empty?
       @agent.errors.delete(:password)
       return respond_right_bar_with @agent, location: organisation_agents_path(organisation_id)
     end
@@ -22,7 +22,7 @@ class Agents::InvitationsController < Devise::InvitationsController
     redirect_to organisation_agents_path(organisation_id)
   end
 
-  protected 
+  protected
   def organisation_id
     devise_parameter_sanitizer.sanitize(:invite)[:organisation_id]
   end
@@ -30,9 +30,4 @@ class Agents::InvitationsController < Devise::InvitationsController
   def invite_params
     devise_parameter_sanitizer.sanitize(:invite).except(:organisation_id)
   end
-
-  def valid_email?(email)
-    email.match(Devise::email_regexp)
-  end
-
 end
