@@ -1,4 +1,4 @@
-- if !@creneaux.empty?
+- if !@all_creneaux.empty?
   .page-title-box
     h1.page-title Voici les créneaux disponible pour avancer votre rendez-vous.
     = render 'creneaux', creneaux: @creneaux, date_range: @date_range, rdv: @rdv

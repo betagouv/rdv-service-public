@@ -22,7 +22,7 @@ div id="creneaux-lieu"
               - creneaux_for_date.each do |date, creneaux|
                 - creneaux.sort_by(&:starts_at).each do |creneau|
                   = link_to l(creneau.starts_at, format: "%H:%M"), edit_users_creneaux_path(@rdv.id, starts_at: creneau.starts_at), class: "btn btn-light mr-1 mb-1 w-100"
-    - if rdv.starts_at >= date_range.end
+    - if date_range.end < @all_creneaux.last.starts_at.to_date
       .col-12.col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
         = link_to users_creneaux_index_path(rdv_id: rdv.id, date: date_range.end + 1.day), remote: true, class: 'btn btn-primary', data: { disable_with: "..." } do
           span.d-md-none.mr-1
