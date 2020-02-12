@@ -98,6 +98,11 @@ class Rdv < ApplicationRecord
     !cancelled? && starts_at > 7.days.from_now
   end
 
+  def creneaux_available(date_range)
+    lieu = Lieu.find_by(address: location)
+    lieu.present? ? Creneau.for_motif_and_lieu_from_date_range(motif.name, lieu, date_range) : []
+  end
+
   private
 
   def associate_users_with_organisation

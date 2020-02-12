@@ -33,7 +33,7 @@ describe TwilioTextMessenger, type: :service do
   end
 
   context "when sending a file d'attente sms" do
-    let(:twilio) { TwilioTextMessenger.new(:file_attente, rdv, user, creneau_starts_at: Time.now) }
+    let(:twilio) { TwilioTextMessenger.new(:file_attente, rdv, user, creneaux: Time.now) }
     it 'return Twilio Object when sms is sent' do
       is_expected.to be_kind_of(Twilio::REST::Api::V2010::AccountContext::MessageInstance)
     end
