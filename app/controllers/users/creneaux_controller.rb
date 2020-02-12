@@ -18,10 +18,10 @@ class Users::CreneauxController < UserAuthController
   def edit
     @starts_at = params[:starts_at].to_time
     @creneau = Creneau.new(starts_at: @starts_at, motif: @rdv.motif, lieu_id: @lieu.id)
-    unless @creneau.available?
-      flash[:alert] = "Ce créneau n'est plus disponible"
-      redirect_to users_creneaux_index_path(rdv_id: @rdv.id)
-    end
+    return if @creneau.available?
+
+    flash[:alert] = "Ce créneau n'est plus disponible"
+    redirect_to users_creneaux_index_path(rdv_id: @rdv.id)
   end
 
   def update

@@ -7,4 +7,4 @@
     h1.page-title Malheureusement, tous les créneaux sont pris.
   .bg-info.text-white.p-2.mb-3 Vous recevrez d'autres propositions si un créneau se libère. Votre RDV reste le #{I18n.l(@rdv.starts_at, format: :human)}.
   .mx-auto
-    = render partial: '/users/rdvs/rdv', locals: { rdv: @rdv, hide_file_attente_infos: true }
+    = render partial: '/users/rdvs/rdv', locals: { rdv: @rdv }
