@@ -27,12 +27,6 @@ class TwilioTextMessenger
 
   private
 
-  def shorten_service(service_name)
-    service_name
-      .gsub('PMI (Protection Maternelle Infantile)', 'PMI')
-      .gsub("CPEF (Centre de planification et d'éducation familiale)", 'CPEF')
-  end
-
   def replace_special_chars(body)
     body.tr('áâãëẽêíïîĩóôõúûũçÀÁÂÃÈËẼÊÌÍÏÎĨÒÓÔÕÙÚÛŨ', 'aaaeeeiiiiooouuucAAAAEEEEIIIIIOOOOUUUU')
   end
@@ -49,19 +43,19 @@ class TwilioTextMessenger
   end
 
   def rdv_created
-    message = "RDV #{shorten_service(@rdv.motif.service.name)} #{I18n.l(@rdv.starts_at, format: :short)}\n"
+    message = "RDV #{@rdv.motif.service.short_name} #{I18n.l(@rdv.starts_at, format: :short)}\n"
     message += sms_footer
     message
   end
 
   def reminder
-    message = "Rappel RDV #{shorten_service(@rdv.motif.service.name)} le #{I18n.l(@rdv.starts_at.to_date, format: :short).strip} à #{@rdv.starts_at.strftime("%H:%M")}\n"
+    message = "Rappel RDV #{@rdv.motif.service.short_name} le #{I18n.l(@rdv.starts_at.to_date, format: :short).strip} à #{@rdv.starts_at.strftime("%H:%M")}\n"
     message += sms_footer
     message
   end
 
   def file_attente
-    message = "Un RDV #{@rdv.motif.name} - #{shorten_service(@rdv.motif.service.name)} #{I18n.l(@rdv.starts_at, format: :human)} s'est libéré.\n"
+    message = "Un RDV #{@rdv.motif.name} - #{@rdv.motif.service.short_name} #{I18n.l(@rdv.starts_at, format: :human)} s'est libéré.\n"
     message += "Cliquez pour vérifier la disponibilité : #{edit_users_creneaux_url(rdv_id: @rdv.id, starts_at: @options[:creneau_starts_at].to_s, host: "https://#{ENV["HOST"]}")}"
     message
   end

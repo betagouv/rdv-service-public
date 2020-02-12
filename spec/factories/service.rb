@@ -6,5 +6,11 @@ FactoryBot.define do
     trait :secretariat do
       name { 'Secrétariat' }
     end
+
+    after(:build) do |service|
+      unless service.short_name.present?
+        service.short_name = service.name
+      end
+    end
   end
 end
