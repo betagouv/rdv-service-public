@@ -1,9 +1,6 @@
 class PlageOuverture < ApplicationRecord
   include RecurrenceConcern
 
-  serialize :start_time, Tod::TimeOfDay
-  serialize :end_time, Tod::TimeOfDay
-
   belongs_to :organisation
   belongs_to :agent
   belongs_to :lieu
@@ -12,18 +9,10 @@ class PlageOuverture < ApplicationRecord
   after_create :send_ics_to_agent
 
   validate :end_after_start
-  validates :motifs, :title, :first_day, :start_time, :end_time, presence: true
+  validates :motifs, :title, presence: true
 
   def send_ics_to_agent
     PlageOuvertureMailer.send_ics_to_agent(self).deliver_later
-  end
-
-  def starts_at
-    start_time.on(first_day)
-  end
-
-  def ends_at
-    end_time.on(first_day)
   end
 
   def time_shift
