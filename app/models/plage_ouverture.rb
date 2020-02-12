@@ -1,23 +1,18 @@
 class PlageOuverture < ApplicationRecord
-  require "montrose"
+  include RecurrenceConcern
 
   serialize :start_time, Tod::TimeOfDay
   serialize :end_time, Tod::TimeOfDay
-  serialize :recurrence, Montrose::Recurrence
 
   belongs_to :organisation
   belongs_to :agent
   belongs_to :lieu
   has_and_belongs_to_many :motifs, -> { distinct }
 
-  before_save :clear_empty_recurrence
   after_create :send_ics_to_agent
 
   validate :end_after_start
   validates :motifs, :title, :first_day, :start_time, :end_time, presence: true
-
-  scope :exceptionnelles, -> { where(recurrence: nil) }
-  scope :regulieres, -> { where.not(recurrence: nil) }
 
   def send_ics_to_agent
     PlageOuvertureMailer.send_ics_to_agent(self).deliver_later
@@ -37,28 +32,6 @@ class PlageOuverture < ApplicationRecord
 
   def time_shift_duration_in_min
     time_shift.duration / 60
-  end
-
-  def occurences_for(inclusive_date_range)
-    recurrence_until = recurrence&.to_hash&.[](:until)
-    min_until = [inclusive_date_range.end, recurrence_until].compact.min.to_time.end_of_day
-
-    if recurrence.present?
-      recurrence.starting(starts_at).until(min_until).lazy.select { |o| o >= inclusive_date_range.begin.to_time }.to_a
-    else
-      inclusive_datetime_range = (inclusive_date_range.begin.to_time)..(inclusive_date_range.end.end_of_day)
-      [starts_at].select { |t| inclusive_datetime_range.cover?(t) }
-    end
-  end
-
-  def occurences_ranges_for(inclusive_date_range)
-    occurences_for(inclusive_date_range).map do |occurence|
-      occurence..(end_time.on(occurence.to_date))
-    end
-  end
-
-  def exceptionnelle?
-    recurrence.nil?
   end
 
   def self.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range, agent_ids = nil)
@@ -83,10 +56,6 @@ class PlageOuverture < ApplicationRecord
   end
 
   private
-
-  def clear_empty_recurrence
-    self.recurrence = nil if recurrence.present? && recurrence.to_hash == {}
-  end
 
   def end_after_start
     return if end_time.blank? || start_time.blank?
