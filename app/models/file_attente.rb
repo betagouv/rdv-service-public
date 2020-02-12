@@ -29,7 +29,7 @@ class FileAttente < ApplicationRecord
     rdv.users.map(&:user_to_notify).uniq.each do |user|
       TwilioSenderJob.perform_later(:file_attente, rdv, user) if user.formated_phone
       FileAttenteMailer.send_notification(rdv, user).deliver_later if user.email
-      update!(notifications_sent: notifications_sent + 1)
+      update!(notifications_sent: notifications_sent + 1, last_creneau_sent_at: Time.now)
     end
   end
 end
