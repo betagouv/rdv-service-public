@@ -13,8 +13,8 @@ RSpec.describe Agents::AbsencesController, type: :controller do
       end
 
       describe "for json format" do
-        let!(:absence1) { create(:absence, agent: agent, starts_at: Time.zone.parse("21/07/2019 08:00"), ends_at: Time.zone.parse("21/07/2019 10:00")) }
-        let!(:absence2) { create(:absence, agent: agent, starts_at: Time.zone.parse("20/08/2019 08:00"), ends_at: Time.zone.parse("31/08/2019 22:00")) }
+        let!(:absence1) { create(:absence, agent: agent, first_day: Date.new(2019, 7, 21), start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(10)) }
+        let!(:absence2) { create(:absence, agent: agent, first_day: Date.new(2019, 8, 20), start_time: Tod::TimeOfDay.new(8), end_day: Date.new(2019, 8, 31), end_time: Tod::TimeOfDay.new(22)) }
 
         before do
           sign_in agent
@@ -141,8 +141,9 @@ RSpec.describe Agents::AbsencesController, type: :controller do
         let(:invalid_attributes) do
           {
             agent_id: agent.id,
-            starts_at: "12/09/2019 16:00",
-            ends_at: "12/09/2019 15:00",
+            first_day: "12/09/2019",
+            start_time: "09:00",
+            end_time: "07:00",
           }
         end
 
@@ -184,8 +185,9 @@ RSpec.describe Agents::AbsencesController, type: :controller do
       context "with invalid params" do
         let(:new_attributes) do
           {
-            starts_at: "12/09/2019 16:00",
-            ends_at: "12/09/2019 15:00",
+            first_day: "12/09/2019",
+            start_time: "09:00",
+            end_time: "07:00",
           }
         end
 

@@ -4,3 +4,9 @@ tr
     = absence_tag(absence)
   td
     | Du #{l(absence.starts_at, format: :human)} au #{l(absence.ends_at, format: :human)}
+
+    - if absence.recurrence.present?
+      br
+      | Se répète :
+      br
+      = sanitize(display_recurrence(absence).join("<br/>"))

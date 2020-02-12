@@ -28,7 +28,7 @@ class PlageOuverture < ApplicationRecord
     results = PlageOuverture
               .includes(:motifs_plageouvertures)
               .where(lieu: lieu)
-              .where("first_day <= ?", inclusive_date_range.end)
+              .where("plage_ouvertures.first_day <= ?", inclusive_date_range.end)
               .joins(:motifs)
               .where(motifs: { id: motifs_ids })
               .includes(:motifs, agent: :absences)

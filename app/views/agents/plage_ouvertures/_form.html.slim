@@ -8,7 +8,7 @@
 
     hr
 
-    = render partial: 'recurrence', locals: { f: f, model: plage_ouverture }
+    = render partial: 'common/recurrence', locals: { f: f, model: plage_ouverture }
 
     .row
       - if plage_ouverture.persisted?

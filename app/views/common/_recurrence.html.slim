@@ -1,5 +1,11 @@
 .recurrence-select.recurrence-select--weekly data-controller="recurrence"
-  = f.input :first_day, as: :date, html5: true, input_html: { id: "recurrence-source", data: { target: "recurrence.firstDay", action: "recurrence#updateRecurrence" } }
+  .row
+    .col
+      = f.input :first_day, as: :date, html5: true, input_html: { id: "recurrence-source", data: { target: "recurrence.firstDay", action: "recurrence#updateRecurrence" } }
+    - if defined?(model.end_day)
+      .col
+        = f.input :end_day, as: :date, html5: true
+
   .row
     .col
       = f.input :start_time, as: :select, collection: time_collections, selected: model.start_time&.strftime("%H:%M"), include_blank: false
@@ -9,7 +15,7 @@
   = f.input :recurrence, as: :hidden, input_html: { value: model.recurrence.as_json.to_json, "data-target": "recurrence.recurrenceComputed" }
 
   = simple_fields_for :recurrence do |n|
-    = n.input :has_recurrence, as: :boolean, label: "Répéter la plage d'ouverture...", input_html: { data: { target: "recurrence.hasRecurrence", action: "recurrence#updateRecurrence" } }
+    = n.input :has_recurrence, as: :boolean, label: "Répéter...", input_html: { data: { target: "recurrence.hasRecurrence", action: "recurrence#updateRecurrence" } }
 
     .all-select
       .form-group
@@ -25,4 +31,4 @@
         span data-target="recurrence.monthly" Tous les X du mois
 
       .until-select
-        = n.input :until, as: :date, html5: true, required: false, label: "Date de fin (si aucune laisser vide)", input_html: { id: "recurrence-until", data: { target: "recurrence.until", action: "recurrence#updateRecurrence" } }
+        = n.input :until, as: :date, html5: true, required: false, label: "Finir la répétition le (si aucune laisser vide)", input_html: { id: "recurrence-until", data: { target: "recurrence.until", action: "recurrence#updateRecurrence" } }
