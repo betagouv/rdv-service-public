@@ -3,7 +3,7 @@ module RecurrenceConcern
 
   included do
     require "montrose"
-    
+
     serialize :recurrence, Montrose::Recurrence
 
     before_save :clear_empty_recurrence
