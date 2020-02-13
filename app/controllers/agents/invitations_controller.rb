@@ -8,18 +8,18 @@ class Agents::InvitationsController < Devise::InvitationsController
   end
 
   def create
-    @agent = Agent.create(invite_params)
-    unless resource_class == Agent && @agent.errors[:email].empty?
-      @agent.errors.delete(:password)
-      return respond_right_bar_with @agent, location: organisation_agents_path(organisation_id)
-    end
-    self.resource = Agent.find_by(email: invite_params[:email]) || invite_resource
+    self.resource = invite_resource
+    resource_invited = resource.errors.empty?
+
     yield resource if block_given?
-    org_to_add = Organisation.where(id: current_inviter.organisation_ids).find(organisation_id)
-    resource.organisations << org_to_add unless resource.organisations.include?(org_to_add)
-    resource.save(validate: false)
-    set_flash_message :notice, :send_instructions, email: resource.email if resource.errors.empty?
-    redirect_to organisation_agents_path(organisation_id)
+
+    if resource_invited
+      resource.add_organisation(Organisation.where(id: current_inviter.organisation_ids).find(organisation_id))
+      if is_flashing_format? && self.resource.invitation_sent_at
+        set_flash_message :notice, :send_instructions, email: self.resource.email
+      end
+    end
+    respond_right_bar_with resource, location: organisation_agents_path(organisation_id)
   end
 
   protected
