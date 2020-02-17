@@ -7,7 +7,7 @@ class Agent < ApplicationRecord
   include AccountNormalizerConcern
 
   devise :invitable, :database_authenticatable,
-         :recoverable, :rememberable, :validatable, :confirmable, :async
+         :recoverable, :rememberable, :validatable, :confirmable, :async, validate_on_invite: true
 
   belongs_to :service
   has_many :lieux, through: :organisation
@@ -20,7 +20,7 @@ class Agent < ApplicationRecord
   enum role: { user: 0, admin: 1 }
 
   validates :email, :role, presence: true
-  validates :last_name, :first_name, presence: true, on: :update
+  validates :last_name, :first_name, presence: true, on: :update, if: :accepted_or_not_invited?
 
   scope :complete, -> { where.not(first_name: nil).where.not(last_name: nil) }
   scope :active, -> { where(deleted_at: nil) }
@@ -53,5 +53,9 @@ class Agent < ApplicationRecord
 
   def can_access_others_planning?
     admin? || service.secretariat?
+  end
+
+  def add_organisation(organisation)
+    organisations << organisation if organisation_ids.exclude?(organisation.id)
   end
 end
