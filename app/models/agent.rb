@@ -6,7 +6,7 @@ class Agent < ApplicationRecord
   include FullNameConcern
   include AccountNormalizerConcern
 
-  devise :invitable, :database_authenticatable, :registerable,
+  devise :invitable, :database_authenticatable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
 
   belongs_to :service

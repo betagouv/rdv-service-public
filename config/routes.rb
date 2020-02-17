@@ -48,7 +48,13 @@ Rails.application.routes.draw do
     resources :children, except: [:index], controller: "users/children"
   end
 
-  devise_for :agents, controllers: { invitations: 'agents/invitations', sessions: 'sessions', registrations: 'agents/registrations' }
+  devise_for :agents, controllers: { invitations: 'agents/invitations', sessions: 'sessions' }
+
+  as :agent do
+    get 'agents/edit' => 'agents/registrations#edit', as: 'edit_agent_registration'
+    put 'agents' => 'agents/registrations#update', as: 'agent_registration'
+    delete 'agents' => 'agents/registrations#destroy', as: 'delete_agent_registration'
+  end
 
   authenticated :agent do
     root to: 'agents/organisations#index', as: :authenticated_agent_root
