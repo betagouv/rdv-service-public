@@ -46,7 +46,7 @@ Rails.application.routes.draw do
     patch "users/informations", to: 'users/users#update'
     resources :children, except: [:index], controller: "users/children"
   end
-  authenticated :user do 
+  authenticated :user do
     get "/users/rdvs", to: 'users/rdvs#index', as: :authenticated_user_root
   end
 
@@ -107,7 +107,7 @@ Rails.application.routes.draw do
       resources :jours_feries, only: [:index]
     end
   end
-  authenticated :agent do 
+  authenticated :agent do
     root to: 'agents/organisations#index', as: :authenticated_agent_root
   end
 
