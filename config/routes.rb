@@ -55,6 +55,7 @@ Rails.application.routes.draw do
   as :agent do
     get 'agents/edit' => 'agents/registrations#edit', as: 'edit_agent_registration'
     put 'agents' => 'agents/registrations#update', as: 'agent_registration'
+    delete 'agents' => 'agents/registrations#destroy', as: 'delete_agent_registration'
   end
 
   authenticate :agent do
