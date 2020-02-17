@@ -18,13 +18,16 @@ div id="creneaux-lieu-#{lieu.id}"
               = l(date, format: "%d %b")
             - creneaux_for_date = creneaux.group_by { |c| c.starts_at.to_date }.select { |k, v| k == date }
 
-            - if creneaux_for_date.any?
+            - if creneaux_for_date.any? && !creneaux_for_date[date].first.too_late?
               - creneaux_for_date.each do |date, creneaux|
                 - creneaux.sort_by(&:starts_at).each do |creneau|
                   = link_to l(creneau.starts_at, format: "%H:%M"), new_users_rdv_path(starts_at: creneau.starts_at, motif_name: motif, lieu_id: lieu.id, departement: departement, where: where), class: "btn btn-light mr-1 mb-1 w-100"
             - elsif creneaux.any?
               p.text-center
                 i.fa.fa-minus.text-muted
+            - else
+              p.text-center.text-muted
+                | Date fermé à la reservation
         - if @next_availability
           .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
             = link_to lieu_path(lieu, search: @query, date: @next_availability.starts_at), remote: true, class: 'btn btn-light', data: { disable_with: "..." } do
@@ -35,9 +38,9 @@ div id="creneaux-lieu-#{lieu.id}"
                   strong= l(@next_availability.starts_at, format: :human)
                 .ml-2
                   i.fa.fa-chevron-right
-
-    .col-12.col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
-      = link_to lieu_path(lieu, search: @query, date: date_range.end + 1.day), remote: true, class: 'btn btn-primary', data: { disable_with: "..." } do
-        span.d-md-none.mr-1
-          | sem. prochaine
-        i.fa.fa-chevron-right
+    - if !@creneaux.empty? || @creneaux.empty? && @next_availability.present?
+      .col-12.col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
+        = link_to lieu_path(lieu, search: @query, date: date_range.end + 1.day), remote: true, class: 'btn btn-primary', data: { disable_with: "..." } do
+          span.d-md-none.mr-1
+            | sem. prochaine
+          i.fa.fa-chevron-right
