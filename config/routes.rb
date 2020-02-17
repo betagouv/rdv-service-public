@@ -42,10 +42,12 @@ Rails.application.routes.draw do
   end
   resources :stats, only: :index
   authenticate :user do
-    get "/users/rdvs", to: 'users/rdvs#index', as: :authenticated_user_root
     get "/users/informations", to: 'users/users#edit'
     patch "users/informations", to: 'users/users#update'
     resources :children, except: [:index], controller: "users/children"
+  end
+  authenticated :user do 
+    get "/users/rdvs", to: 'users/rdvs#index', as: :authenticated_user_root
   end
 
   devise_for :agents, controllers: { invitations: 'agents/invitations', sessions: 'sessions' }
@@ -56,7 +58,6 @@ Rails.application.routes.draw do
   end
 
   authenticate :agent do
-    root to: 'agents/organisations#index', as: :authenticated_agent_root
     scope module: "agents" do
       resources :organisations, except: :destroy do
         resources :lieux, except: :show
@@ -105,6 +106,9 @@ Rails.application.routes.draw do
       end
       resources :jours_feries, only: [:index]
     end
+  end
+  authenticated :agent do 
+    root to: 'agents/organisations#index', as: :authenticated_agent_root
   end
 
   { disclaimer: 'mentions_legales', terms: 'cgv', mds: 'mds' }.each do |k, v|
