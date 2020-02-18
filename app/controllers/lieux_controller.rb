@@ -27,7 +27,7 @@ class LieuxController < ApplicationController
     @creneaux = Creneau.for_motif_and_lieu_from_date_range(@motif, @lieu, @date_range)
 
     @next_availability = @creneaux.empty? ? Creneau.next_availability_for_motif_and_lieu(@motif, @lieu, @date_range.end) : nil
-
+    @max_booking_delay = Motif.active.online.joins(:organisation).where(organisations: { departement: @departement }, name: @motif).maximum('max_booking_delay')
     respond_to do |format|
       format.html
       format.js
