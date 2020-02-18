@@ -57,8 +57,7 @@ class TwilioTextMessenger
   end
 
   def file_attente
-    message = sms_header
-    message += "Des créneaux se sont libérés plus tot.\n"
+    message += "Des créneaux se sont libérés plus tôt.\n"
     message += "Cliquez pour voir les disponibilités : #{users_creneaux_index_url(rdv_id: @rdv.id, host: "https://#{ENV["HOST"]}")}"
     message
   end
