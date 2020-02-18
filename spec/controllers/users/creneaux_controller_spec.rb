@@ -28,7 +28,7 @@ RSpec.describe Users::CreneauxController, type: :controller do
 
       before { subject }
 
-      it { expect(response.body).to include("Voici les créneaux disponible pour avancer votre rendez-vous.") }
+      it { expect(response.body).to include("Voici les créneaux disponibles pour avancer votre rendez-vous.") }
       it { expect(assigns(:date_range)).to eq(3.days.from_now.to_date..3.days.from_now.to_date) }
       it { expect(assigns(:creneaux)).not_to be_empty }
     end
