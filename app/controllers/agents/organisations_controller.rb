@@ -14,7 +14,7 @@ class Agents::OrganisationsController < AgentAuthController
 
   def show
     @organisation = policy_scope(Organisation).find(params[:id])
-    @rdvs = @organisation.rdvs.active
+    @rdvs = @organisation.rdvs
     authorize(@organisation)
   end
 
