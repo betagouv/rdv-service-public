@@ -4,16 +4,12 @@
     = f.hidden_field :agent_id
     = f.input :title, hint: 'Uniquement visible en interne', placeholder: 'Ex: Permanence PMI exceptionnelle'
     = f.association :lieu, collection: policy_scope(Lieu), label_method: :full_name, include_blank: false
-    .recurrence-select.recurrence-select--weekly data-controller="recurrence"
-      = f.input :first_day, as: :date, html5: true, input_html: { id: "recurrence-source", data: { target: "recurrence.firstDay", action: "recurrence#updateRecurrence" } }
-      .row
-        .col
-          = f.input :start_time, as: :select, collection: time_collections, selected: plage_ouverture.start_time&.strftime("%H:%M"), include_blank: false
-        .col
-          = f.input :end_time, as: :select, collection: time_collections, selected: plage_ouverture.end_time&.strftime("%H:%M"), include_blank: false
-      = f.association :motifs, collection: plage_ouverture.available_motifs, label_method: :name_with_badge, as: :check_boxes
-      hr
-      = render partial: 'recurrence', locals: { f: f, plage_ouverture: plage_ouverture }
+    = f.association :motifs, collection: plage_ouverture.available_motifs, label_method: :name_with_badge, as: :check_boxes
+
+    hr
+
+    = render partial: 'recurrence', locals: { f: f, model: plage_ouverture }
+
     .row
       - if plage_ouverture.persisted?
         .col.text-left
