@@ -18,7 +18,7 @@ class TwilioTextMessenger
       twilio_client.messages.create(
         from: @from,
         to: @user.formated_phone,
-        body: body
+        body: replace_special_chars(body)
       )
     rescue StandardError => e
       e
@@ -27,8 +27,8 @@ class TwilioTextMessenger
 
   private
 
-  def sms_header
-    "RDV Solidarités\n"
+  def replace_special_chars(body)
+    body.tr('áâãëẽêíïîĩóôõúûũçÀÁÂÃÈËẼÊÌÍÏÎĨÒÓÔÕÙÚÛŨ', 'aaaeeeiiiiooouuucAAAAEEEEIIIIIOOOOUUUU')
   end
 
   def sms_footer
@@ -37,21 +37,19 @@ class TwilioTextMessenger
               else
                 "#{@rdv.location}\n"
               end
-    message += "Infos et annulation: #{rdvs_shorten_url(host: "https://#{ENV["HOST"]}")} "
+    message += "Infos et annulation: #{rdvs_shorten_url(host: "https://#{ENV["HOST"]}")}"
     message += " / #{@rdv.organisation.phone_number}" if @rdv.organisation.phone_number
     message
   end
 
   def rdv_created
-    message = sms_header
-    message += "RDV #{@rdv.motif.service.name} #{I18n.l(@rdv.starts_at, format: :short)}\n"
+    message = "RDV #{@rdv.motif.service.short_name} #{I18n.l(@rdv.starts_at, format: :short)}\n"
     message += sms_footer
     message
   end
 
   def reminder
-    message = sms_header
-    message += "Rappel RDV #{@rdv.motif.service.name} le #{I18n.localize(@rdv.starts_at.to_date, format: :short).strip} à #{@rdv.starts_at.strftime("%H:%M")}\n"
+    message = "Rappel RDV #{@rdv.motif.service.short_name} le #{I18n.l(@rdv.starts_at.to_date, format: :short).strip} à #{@rdv.starts_at.strftime("%H:%M")}\n"
     message += sms_footer
     message
   end

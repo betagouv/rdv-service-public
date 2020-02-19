@@ -79,3 +79,8 @@ Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité
 
     bundle binstub railties --force
     bin/rake rails:update:bin
+
+### Programmation des jobs
+
+  rake send_reminder # Envoi des sms/email de rappel 48h avant le rdv
+  rake file_attente # Envoi des sms/email lorsque des créneaux se libèrent

@@ -40,6 +40,7 @@ class Creneau
     !overlaps_rdv_or_absence?(rdvs) &&
       !overlaps_rdv_or_absence?(absences) &&
       !overlaps_jour_ferie? &&
+      !too_soon? &&
       !too_late?
   end
 
@@ -57,8 +58,12 @@ class Creneau
       users: [user])
   end
 
-  def too_late?
+  def too_soon?
     (starts_at - motif.min_booking_delay.seconds) < Time.zone.now
+  end
+
+  def too_late?
+    starts_at > (Time.zone.now + motif.max_booking_delay.seconds)
   end
 
   def overlaps_rdv_or_absence?(rdvs_or_absences)

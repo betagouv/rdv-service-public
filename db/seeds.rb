@@ -1,18 +1,14 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+Organisation.create!(name: "MDS du 75", phone_number: "0123456789", departement: "75")
 
-Organisation.create!(name: "MDS du 75", departement: "75")
+Service.create!(name: "Protection Maternelle Infantile", short_name: "PMI")
+Service.create!(name: "Service Social", short_name: "Service Social")
 
-Lieu.create!(name: "Maison Paris Sud", telephone: "0123456789", organisation_id: 1, address: "18 Rue des Terres au Curé, 75013 Paris", horaires: "Du lundi au vendredi de 9h à 18h")
+Lieu.create!(name: "Maison Paris Sud", organisation_id: 1, address: "18 Rue des Terres au Curé, 75013 Paris", latitude: 48.85295, longitude: 2.34998)
 
-100.times do |_u|
+Motif.create!(name: 'Consultation médicale', color: '#FF7C00', organisation_id: 1, service_id: 1)
+
+3.times do |_u|
   User.create!(first_name: Faker::Name.first_name, last_name: Faker::Name.last_name, email: Faker::Internet.email, birth_date: Faker::Date.birthday, password: Faker::Internet.password, organisation_ids: [1])
 end
 
-Service.create!(name: "Protection Maternelle Infantile")
-Service.create!(name: "Service Social")
+Agent.create!(email: 'contact@rdv-solidarites.fr', role: 1, first_name: 'Johnny', last_name: 'Validay', password: '123456', service_id: 1, organisation_ids: [1])

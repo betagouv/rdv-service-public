@@ -165,6 +165,17 @@ describe Creneau, type: :model do
       end
     end
 
+    describe "when motif has max_booking_delay" do
+      let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, max_booking_delay: 45.minutes, online: true) }
+      let(:now) { Time.zone.local(2019, 9, 19, 9, 15) }
+
+      it do
+        expect(subject.size).to eq(1)
+
+        is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      end
+    end
+
     def expect_creneau_to_eq(creneau, attr = {})
       expect(creneau.starts_at).to eq(attr[:starts_at])
       expect(creneau.duration_in_min).to eq(attr[:duration_in_min])
@@ -352,6 +363,38 @@ describe Creneau, type: :model do
 
         it { expect(subject.starts_at).to eq(Time.zone.local(2019, 10, 19, 9, 0)) }
       end
+    end
+  end
+
+  describe "#too_late?" do
+    let(:motif) { create(:motif, max_booking_delay: max_booking_delay) }
+    let(:max_booking_delay) { 40.days }
+    let(:creneau) { Creneau.new(starts_at: 30.days.from_now, motif: motif) }
+
+    subject { creneau.too_late? }
+
+    it { is_expected.to be(false) }
+
+    context "when max_booking_delay is in 20 days" do
+      let(:max_booking_delay) { 20.days }
+
+      it { is_expected.to be(true) }
+    end
+  end
+
+  describe "#too_soon?" do
+    let(:motif) { create(:motif, min_booking_delay: min_booking_delay) }
+    let(:min_booking_delay) { 30.minutes }
+    let(:creneau) { Creneau.new(starts_at: 1.hour.from_now, motif: motif) }
+
+    subject { creneau.too_soon? }
+
+    it { is_expected.to be(false) }
+
+    context "when min_booking_delay is in 2 hours" do
+      let(:min_booking_delay) { 2.hours }
+
+      it { is_expected.to be(true) }
     end
   end
 end

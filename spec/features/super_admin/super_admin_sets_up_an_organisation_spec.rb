@@ -23,6 +23,7 @@ describe "Super admin can configure an account" do
     fill_in 'Prénom', with: agent.first_name
     fill_in 'Nom', with: agent.last_name
     select organisation.name, from: 'Organisation'
+    select Service.first.name, from: 'Service'
     click_button 'Créer'
     click_link agent.email
     click_link 'Inviter'

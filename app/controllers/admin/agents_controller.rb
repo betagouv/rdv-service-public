@@ -16,18 +16,24 @@ module Admin
       resource = resource_class.new(resource_params)
       authorize_resource(resource)
 
-      resource_class.invite!(resource_params) do |u|
+      agent = resource_class.invite!(resource_params) do |u|
         u.skip_invitation = true
       end
 
-      redirect_to(
-        [namespace, resource],
-        notice: translate_with_resource("create.success")
-      )
+      if agent.errors.any?
+        render :new, locals: {
+          page: Administrate::Page::Form.new(dashboard, resource),
+        }
+      else
+        redirect_to(
+          [namespace, resource],
+          notice: translate_with_resource("create.success")
+        )
+      end
     end
 
     def invite
-      requested_resource.deliver_invitation
+      requested_resource.invite!
       redirect_to(
         [namespace, requested_resource],
         notice: 'Invitation envoyée'
