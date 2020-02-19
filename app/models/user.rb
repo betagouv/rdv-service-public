@@ -31,6 +31,8 @@ class User < ApplicationRecord
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql('LOWER(last_name)')) }
 
+  after_create :send_invite_if_checked
+
   before_save :set_email_to_null_if_blank
   before_save :set_organisation_ids_from_parent, if: :parent_id_changed?
   before_save :normalize_account
@@ -150,5 +152,9 @@ class User < ApplicationRecord
     return unless birth_date.present? && (birth_date > Date.today || birth_date < 130.years.ago)
 
     errors.add(:birth_date, "est invalide")
+  end
+
+  def send_invite_if_checked
+    invite! if send_invite_on_create == "1" && email.present?
   end
 end
