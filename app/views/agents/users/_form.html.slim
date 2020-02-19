@@ -24,6 +24,10 @@
     .col-md-6= f.input :family_situation, collection: User.human_enum_collection(:family_situation)
     .col-md-6= f.input :number_of_children, input_html: { min: '0', max: '15', step: 'any' }
   = f.input :logement, collection: User.human_enum_collection(:logement)
+  #invite-user.form-row.align-items-baseline style="display: none"
+    = f.check_box :send_invite_on_create
+    = f.label :send_invite_on_create, "Inviter l'utilisateur à se créer un compte sur RDV-solidarites.", class: "ml-1"
+
 
   .text-right
     - if user.persisted?
@@ -31,3 +35,12 @@
     - else
       = link_to "Annuler", organisation_users_path(current_organisation), class: "btn btn-link"
     = f.button :submit
+
+javascript:
+  $("#user_email").change(function() {
+    if ($(this).val()) {
+      $('#invite-user').show()
+    } else {
+      $('#invite-user').hide()
+    }
+  })

@@ -4,7 +4,7 @@ class User < ApplicationRecord
   include FullNameConcern
   include AccountNormalizerConcern
 
-  attr_accessor :created_or_updated_by_agent
+  attr_accessor :created_or_updated_by_agent, :send_invite_on_create
 
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async

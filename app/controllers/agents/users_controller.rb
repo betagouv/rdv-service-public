@@ -113,7 +113,7 @@ class Agents::UsersController < AgentAuthController
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :birth_name, :email, :phone_number, :birth_date, :address, :caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :logement)
+    params.require(:user).permit(:first_name, :last_name, :birth_name, :email, :phone_number, :birth_date, :address, :caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :logement, :send_invite_on_create)
   end
 
   def search_params
