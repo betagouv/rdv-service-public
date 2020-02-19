@@ -7,7 +7,7 @@ class Agents::AbsencesController < AgentAuthController
     @agent = policy_scope(Agent).find(params[:agent_id])
     absences = policy_scope(Absence).where(agent_id: filter_params[:agent_id])
     respond_to do |f|
-      f.json { @absence_ocurrences = absences.flat_map { |ab| ab.occurences_for(date_range_params).map { |occurence| [ab, occurence] } }.sort_by(&:second) }
+      f.json { @absence_occurrences = absences.flat_map { |ab| ab.occurences_for(date_range_params).map { |occurence| [ab, occurence] } }.sort_by(&:second) }
       f.html { @absences = absences.includes(:organisation).page(filter_params[:page]) }
     end
   end

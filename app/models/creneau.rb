@@ -26,9 +26,9 @@ class Creneau
         (occurences_range.begin <= range.end) && (range.begin <= occurences_range.end)
       end
       rdvs = p.agent.rdvs.where(starts_at: date_range).active
-      absences = p.agent.absences
+      absences_occurrences = p.agent.absences.flat_map { |a| a.occurences_for(date_range) }
 
-      occurence_match_creneau && available_with_rdvs_and_absences?(rdvs, absences)
+      occurence_match_creneau && available_with_rdvs_and_absences?(rdvs, absences_occurrences)
     end
   end
 
@@ -88,10 +88,10 @@ class Creneau
 
       creneaux = motifs.flat_map do |motif|
         creneaux_nb = po.time_shift_duration_in_min / motif.default_duration_in_min
-        po.occurences_for(inclusive_date_range).flat_map do |occurence_time|
+        po.occurences_for(inclusive_date_range).flat_map do |occurence|
           (0...creneaux_nb).map do |n|
             Creneau.new(
-              starts_at: (po.start_time + (n * motif.default_duration_in_min * 60)).on(occurence_time),
+              starts_at: (po.start_time + (n * motif.default_duration_in_min * 60)).on(occurence.starts_at),
               lieu_id: lieu.id,
               motif: motif,
               agent_id: (po.agent_id if for_agents),
@@ -102,7 +102,9 @@ class Creneau
       end
 
       rdvs = po.agent.rdvs.where(starts_at: inclusive_datetime_range).active
-      creneaux.select { |c| c.available_with_rdvs_and_absences?(rdvs, po.agent.absences) }
+      absences_occurrences = po.agent.absences.flat_map { |a| a.occurences_for(inclusive_datetime_range) }
+
+      creneaux.select { |c| c.available_with_rdvs_and_absences?(rdvs, absences_occurrences) }
     end
 
     uniq_by = for_agents ? ->(c) { [c.starts_at, c.agent_id] } : ->(c) { c.starts_at }
