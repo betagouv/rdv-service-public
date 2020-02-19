@@ -34,6 +34,7 @@ class Agents::UsersController < AgentAuthController
     else
       @user.skip_confirmation!
       if @user.save
+        @user.invite! if user_params[:send_invite_on_create] == "1"
         flash[:notice] = "L'usager a été créé."
         redirect_to organisation_user_path(@organisation, @user)
       else
@@ -47,6 +48,7 @@ class Agents::UsersController < AgentAuthController
     authorize(@user)
     @user.skip_confirmation!
     if @user.save
+      @user.invite! if user_params[:send_invite_on_create] == "1"
       flash[:notice] = "L'usager a été créé."
     else
       @for_modal = true
