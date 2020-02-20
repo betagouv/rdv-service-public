@@ -8,8 +8,13 @@ class Agents::InvitationsController < Devise::InvitationsController
   end
 
   def create
-    self.resource = invite_resource
-    resource_invited = resource.errors.empty?
+    if agent = Agent.find_by(email: invite_params[:email])
+      self.resource = agent
+      resource_invited = true if agent.invite!
+    elsif
+      self.resource = invite_resource
+      resource_invited = resource.errors.empty?
+    end
 
     yield resource if block_given?
 
