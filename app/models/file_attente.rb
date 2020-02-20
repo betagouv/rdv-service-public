@@ -3,37 +3,33 @@ class FileAttente < ApplicationRecord
   belongs_to :user
   validates :rdv, uniqueness: { scope: :user }
 
-  STOP_NOTIFICATIONS = 7.days
+  NO_MORE_NOTIFICATIONS = 7.days
+  MAX_NOTIFICATIONS = 5
 
-  scope :active, -> { joins(:rdv).where('rdvs.starts_at > ?', STOP_NOTIFICATIONS.from_now).order(created_at: :desc) }
+  scope :active, -> { joins(:rdv).where('rdvs.starts_at > ?', NO_MORE_NOTIFICATIONS.from_now).order(created_at: :desc) }
 
   def self.send_notifications
     FileAttente.active.each do |fa|
-      next unless fa.lieu.present?
+      next if fa.rdv.motif.by_phone
 
-      end_time = fa.last_creneau_sent_starts_at.nil? ? (fa.rdv.starts_at - 2.day) : fa.last_creneau_sent_starts_at
+      end_time = fa.rdv.starts_at - 2.day
       date_range = Date.today..end_time.to_date
-      creneaux = Creneau.for_motif_and_lieu_from_date_range(fa.rdv.motif.name, fa.lieu, date_range)
-      creneau = creneaux.select { |c| fa.rdv.motif.min_booking_delay.seconds < (c.starts_at - Time.now).seconds }.first
-      next unless fa.valid_for_notification?(creneau, end_time)
+      creneaux = fa.rdv.creneaux_available(date_range)
+      next unless fa.valid_for_notification?(creneaux)
 
-      fa.send_notification(creneaux.first.starts_at)
+      fa.send_notification
     end
   end
 
-  def valid_for_notification?(creneau, end_time)
-    creneau.present? && notifications_sent < 5 && creneau.starts_at.to_date < end_time.to_date
+  def valid_for_notification?(creneaux)
+    !creneaux.empty? && notifications_sent < MAX_NOTIFICATIONS
   end
 
-  def send_notification(last_creneau_sent_starts_at)
+  def send_notification
     rdv.users.map(&:user_to_notify).uniq.each do |user|
-      TwilioSenderJob.perform_later(:file_attente, rdv, user, creneau_starts_at: last_creneau_sent_starts_at) if user.formated_phone
-      FileAttenteMailer.send_notification(rdv, user, last_creneau_sent_starts_at).deliver_later if user.email
-      update!(last_creneau_sent_starts_at: last_creneau_sent_starts_at, notifications_sent: notifications_sent + 1)
+      TwilioSenderJob.perform_later(:file_attente, rdv, user) if user.formated_phone
+      FileAttenteMailer.send_notification(rdv, user).deliver_later if user.email
+      update!(notifications_sent: notifications_sent + 1, last_creneau_sent_at: Time.now)
     end
-  end
-
-  def lieu
-    Lieu.find_by(address: rdv.location)
   end
 end

@@ -23,7 +23,7 @@ describe FileAttente, type: :model do
         expect { subject }.to change(file_attente, :notifications_sent).from(0).to(1)
       end
       it 'should save last creneau sent' do
-        expect { subject }.to change(file_attente, :last_creneau_sent_starts_at).from(nil)
+        expect { subject }.to change(file_attente, :last_creneau_sent_at).from(nil)
       end
       it 'should send an sms' do
         ActiveJob::Base.queue_adapter = :test
@@ -31,7 +31,7 @@ describe FileAttente, type: :model do
       end
 
       it 'should send an email' do
-        expect(FileAttenteMailer).to receive(:send_notification).with(rdv, rdv.users.first, 1.day.from_now).and_return(double(deliver_later: nil))
+        expect(FileAttenteMailer).to receive(:send_notification).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
         subject
       end
     end
@@ -49,7 +49,7 @@ describe FileAttente, type: :model do
       let!(:plage_ouverture) { create(:plage_ouverture, first_day: now, start_time: Tod::TimeOfDay.new(9)) }
 
       it 'should not send notification' do
-        file_attente.update(last_creneau_sent_starts_at: now)
+        file_attente.update(last_creneau_sent_at: now)
         file_attente.reload
         ActiveJob::Base.queue_adapter = :test
         expect { subject }.not_to have_enqueued_job(FileAttenteJob)

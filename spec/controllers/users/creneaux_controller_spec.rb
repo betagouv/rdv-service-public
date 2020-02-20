@@ -1,12 +1,41 @@
 RSpec.describe Users::CreneauxController, type: :controller do
   render_views
+  let(:now) { "01/01/2019 10:00".to_datetime }
+  let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes") }
+  let(:rdv) { create(:rdv, starts_at: 5.days.from_now, location: "10 rue de la Ferronerie 44100 Nantes") }
+  let!(:user) { create(:user) }
+
+  describe "GET #index" do
+    subject do
+      get :index, params: { rdv_id: rdv.id }
+      rdv.reload
+    end
+
+    before do
+      travel_to(now)
+      sign_in user
+    end
+
+    context "no creneaux available" do
+      before { subject }
+
+      it { expect(assigns(:all_creneaux)).to be_empty }
+      it { expect(response.body).to include("Malheureusement, tous les créneaux sont pris.") }
+    end
+
+    context "creneaux available" do
+      let!(:plage_ouverture) { create(:plage_ouverture, first_day: now + 3.days, start_time: Tod::TimeOfDay.new(10)) }
+
+      before { subject }
+
+      it { expect(response.body).to include("Voici les créneaux disponibles pour avancer votre rendez-vous du") }
+      it { expect(response.body).to include(I18n.l(rdv.starts_at, format: :human).to_s) }
+      it { expect(assigns(:date_range)).to eq(3.days.from_now.to_date..3.days.from_now.to_date) }
+      it { expect(assigns(:creneaux)).not_to be_empty }
+    end
+  end
 
   describe "GET #edit" do
-    let(:now) { "01/01/2019 10:00".to_datetime }
-    let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes") }
-    let(:rdv) { create(:rdv, starts_at: 5.days.from_now, location: "10 rue de la Ferronerie 44100 Nantes") }
-    let!(:user) { create(:user) }
-
     subject do
       get :edit, params: { rdv_id: rdv.id, starts_at: 3.day.from_now }
       rdv.reload
@@ -22,26 +51,18 @@ RSpec.describe Users::CreneauxController, type: :controller do
 
       before { subject }
 
-      it { expect(assigns(:creneau_available)).to eq(true) }
-      it { expect(response.body).to include("Un créneau s'est libéré") }
-      it { expect(response.body).to include("Changer de créneau") }
+      it { expect(response.body).to include("Modification du Rendez-vous") }
+      it { expect(response.body).to include("Confirmer le nouveau créneau") }
     end
 
     context "creneau isn't available" do
       before { subject }
 
-      it { expect(assigns(:creneau_available)).to eq(false) }
-      it { expect(response.body).to include("Ce créneau n'est plus disponible") }
-      it { expect(response.body).to include(rdv.motif.name) }
+      it { expect(response).to redirect_to(users_creneaux_index_path(rdv_id: rdv.id)) }
     end
   end
 
   describe "PUT #update" do
-    let(:now) { "01/01/2019 10:00".to_datetime }
-    let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes") }
-    let(:rdv) { create(:rdv, starts_at: 5.days.from_now, location: "10 rue de la Ferronerie 44100 Nantes") }
-    let!(:user) { create(:user) }
-
     subject do
       put :update, params: { rdv_id: rdv.id, starts_at: 3.day.from_now }
       rdv.reload
@@ -58,7 +79,6 @@ RSpec.describe Users::CreneauxController, type: :controller do
 
       before { subject }
 
-      it { expect(assigns(:creneau_available)).to eq(nil) }
       it { expect(response.body).to include("Votre RDV a été modifié") }
       it { expect(rdv.starts_at).to eq(starts_at) }
     end
@@ -66,7 +86,7 @@ RSpec.describe Users::CreneauxController, type: :controller do
     context "creneau isn't available" do
       let!(:starts_at) { 3.day.from_now }
 
-      it { expect(subject).to redirect_to(edit_users_creneaux_url(rdv_id: rdv.id, starts_at: starts_at.to_s)) }
+      it { expect(subject).to redirect_to(users_creneaux_index_path(rdv_id: rdv.id)) }
     end
   end
 end

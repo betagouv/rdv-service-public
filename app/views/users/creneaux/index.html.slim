@@ -1,0 +1,14 @@
+.page-title-box
+  h1.page-title
+    | Voici les créneaux disponibles pour avancer votre rendez-vous du
+    b= " #{l(@rdv.starts_at, format: :human)}."
+  - if !@all_creneaux.empty?
+    .card
+      .card-body
+        = render 'creneaux', creneaux: @creneaux, date_range: @date_range, rdv: @rdv
+  - else
+    .page-title-box
+      h1.page-title Malheureusement, tous les créneaux sont pris.
+    .bg-info.text-white.p-2.mb-3 Vous recevrez d'autres propositions si un créneau se libère. Votre RDV reste le #{I18n.l(@rdv.starts_at, format: :human)}.
+    .mx-auto
+      = render partial: '/users/rdvs/rdv', locals: { rdv: @rdv }

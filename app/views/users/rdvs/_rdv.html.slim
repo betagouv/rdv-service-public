@@ -25,7 +25,7 @@
           strong Informations supplémentaires :
           = simple_format(rdv.motif.instruction_for_rdv, class:"pl-3 pt-1")
       - unless defined?(hide_file_attente_infos) && hide_file_attente_infos
-        = render "file_attente", rdv: rdv
+        = render "/users/rdvs/file_attente", rdv: rdv
     - unless defined?(hide_cancellation_infos) && hide_cancellation_infos
       - if rdv.cancellable?
         .text-right.mt-2

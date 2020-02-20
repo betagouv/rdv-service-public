@@ -1,24 +1,41 @@
 class Users::CreneauxController < UserAuthController
-  before_action :set_creneau_params, only: [:edit, :update]
+  before_action :set_creneau_params, only: [:index, :edit, :update]
+
+  def index
+    @all_creneaux = @rdv.creneaux_available(Date.today..@rdv.starts_at - 1.day)
+    return if @all_creneaux.empty?
+
+    start_date = params[:date]&.to_date || @all_creneaux.first.starts_at.to_date
+    end_date = [start_date + 6.days, @all_creneaux.last.starts_at.to_date].min
+    @date_range = start_date..end_date
+    @creneaux = @rdv.creneaux_available(@date_range)
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
 
   def edit
-    @creneau_available = @creneau.available? ? true : false
+    @starts_at = params[:starts_at].to_time
+    @creneau = Creneau.new(starts_at: @starts_at, motif: @rdv.motif, lieu_id: @lieu.id)
+    return if @creneau.available?
+
+    flash[:alert] = "Ce créneau n'est plus disponible"
+    redirect_to users_creneaux_index_path(rdv_id: @rdv.id)
   end
 
   def update
+    @creneau = Creneau.new(starts_at: params[:starts_at].to_time, motif: @rdv.motif, lieu_id: @lieu.id)
     if @creneau.available?
-      @rdv.update(starts_at: @starts_at)
+      @rdv.update(starts_at: @creneau.starts_at)
     else
-      @creneau_available = false
-      redirect_to edit_users_creneaux_path(rdv_id: @rdv.id, starts_at: @starts_at)
+      redirect_to users_creneaux_index_path(rdv_id: @rdv.id)
     end
   end
 
   def set_creneau_params
     @rdv = policy_scope(Rdv).find(params[:rdv_id])
     authorize(@rdv)
-    @starts_at = params[:starts_at].to_time
-    lieu = Lieu.find_by(address: @rdv.location)
-    @creneau = Creneau.new(starts_at: @starts_at, motif: @rdv.motif, lieu_id: lieu.id)
+    @lieu = Lieu.find_by(address: @rdv.location)
   end
 end

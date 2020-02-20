@@ -55,8 +55,8 @@ class TwilioTextMessenger
   end
 
   def file_attente
-    message = "Un RDV #{@rdv.motif.name} - #{@rdv.motif.service.short_name} #{I18n.l(@rdv.starts_at, format: :human)} s'est libéré.\n"
-    message += "Cliquez pour vérifier la disponibilité : #{edit_users_creneaux_url(rdv_id: @rdv.id, starts_at: @options[:creneau_starts_at].to_s, host: "https://#{ENV["HOST"]}")}"
+    message = "Des créneaux se sont libérés plus tôt.\n"
+    message += "Cliquez pour voir les disponibilités : #{users_creneaux_index_url(rdv_id: @rdv.id, host: "https://#{ENV["HOST"]}")}"
     message
   end
 end

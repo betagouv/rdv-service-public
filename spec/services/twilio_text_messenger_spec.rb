@@ -37,8 +37,8 @@ describe TwilioTextMessenger, type: :service do
         is_expected.to be_kind_of(Twilio::REST::Api::V2010::AccountContext::MessageInstance)
       end
 
-      it { expect(subject.body).to include("Un RDV #{rdv.motif.name} - #{rdv.motif.service.name} #{I18n.l(rdv.starts_at, format: :human)} s'est libéré.") }
-      it { expect(subject.body).to include("Cliquez pour vérifier la disponibilité :") }
+      it { expect(subject.body).to include("Des créneaux se sont libérés plus tot.") }
+      it { expect(subject.body).to include("Cliquez pour voir les disponibilités :") }
     end
   end
 

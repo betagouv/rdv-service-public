@@ -19,6 +19,10 @@ class User::RdvPolicy < ApplicationPolicy
     rdv_belongs_to_user_or_children?
   end
 
+  def index?
+    rdv_belongs_to_user_or_children?
+  end
+
   private
 
   def rdv_belongs_to_user_or_children?
