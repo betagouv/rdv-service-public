@@ -1,4 +1,11 @@
-.page-title-box
-  h1.page-title Votre RDV a été modifié
-.mx-auto
-  = render partial: '/users/rdvs/rdv', locals: { rdv: @rdv, hide_file_attente_infos: true }
+- content_for :title do
+  | Votre RDV
+
+- content_for :breadcrumb do
+  = link_to 'Voir vos prochains RDV', users_rdvs_path, class: 'btn btn-outline-primary'
+
+.bg-info.text-white.p-2.mb-3 Votre RDV a été modifié.
+
+.row.justify-content-md-center
+  .col-md-6
+    = render partial: '/users/rdvs/rdv', locals: { rdv: @rdv, hide_file_attente_infos: true }
