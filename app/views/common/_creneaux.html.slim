@@ -24,7 +24,7 @@ div id="creneaux-lieu-#{lieu.id}"
                   = link_to l(creneau.starts_at, format: "%H:%M"), new_users_rdv_path(starts_at: creneau.starts_at, motif_name: motif, lieu_id: lieu.id, departement: departement, where: where), class: "btn btn-light mr-1 mb-1 w-100"
             - elsif date >= (Time.now + max_booking_delay.seconds).to_date
               p.text-center.text-muted
-                | Date fermé à la reservation
+                | Date fermée à la reservation
             - elsif creneaux.any?
               p.text-center
                 i.fa.fa-minus.text-muted
