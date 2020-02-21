@@ -22,7 +22,7 @@ class FileAttente < ApplicationRecord
   end
 
   def valid_for_notification?(creneaux)
-    !creneaux.empty? && notifications_sent < MAX_NOTIFICATIONS
+    !creneaux.empty? && notifications_sent < MAX_NOTIFICATIONS && (last_creneau_sent_at.nil? || last_creneau_sent_at.to_date < Date.today)
   end
 
   def send_notification
