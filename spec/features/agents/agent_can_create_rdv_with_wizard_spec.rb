@@ -42,6 +42,7 @@ describe "Agent can create a Rdv with wizard" do
     expect_checked("Commence le : vendredi 11 octobre 2019 à 14h15")
 
     select_user(user)
+    expect(page).to have_link('Créer')
     click_link('Créer')
 
     expect(find("#modal-holder")).to have_content("Nouvel usager")
