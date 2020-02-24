@@ -6,10 +6,11 @@ class InviteUserOnCreate {
         if ($email.val()) { $('#invite-user').show() }
         $email.change(function() {
           if ($(this).val()) {
-            $('#invite-user').show()
+            $("#user_invite_on_create").prop("checked", true);
+            $('#invite-user').hide().show("slow")
           } else {
-            $("#user_send_invite_on_create").prop("checked", false);
-            $('#invite-user').hide()
+            $("#user_invite_on_create").prop("checked", false);
+            $('#invite-user').hide("slow")
           }
         })
       }

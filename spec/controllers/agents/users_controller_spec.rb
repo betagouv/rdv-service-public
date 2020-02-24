@@ -15,7 +15,7 @@ RSpec.describe Agents::UsersController, type: :controller do
         first_name: "Michel",
         last_name: "Lapin",
         email: "michel@lapin.com",
-        send_invite_on_create: "1",
+        invite_on_create: "true",
       }
     end
     let(:format) { format }
@@ -27,7 +27,7 @@ RSpec.describe Agents::UsersController, type: :controller do
   end
 
   shared_examples "with invalid params" do
-    let(:attributes) { { first_name: "Michel", send_invite_on_create: "1" } }
+    let(:attributes) { { first_name: "Michel", invite_on_create: "true" } }
     let(:format) { :html }
 
     it { expect { subject }.not_to change(User, :count) }
@@ -67,7 +67,7 @@ RSpec.describe Agents::UsersController, type: :controller do
         {
           first_name: "Michel",
           last_name: "Lapin",
-          send_invite_on_create: "1",
+          invite_on_create: "true",
         }
       end
 

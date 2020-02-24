@@ -4,7 +4,7 @@ class User < ApplicationRecord
   include FullNameConcern
   include AccountNormalizerConcern
 
-  attr_accessor :created_or_updated_by_agent, :send_invite_on_create
+  attr_accessor :created_or_updated_by_agent, :invite_on_create
 
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
@@ -116,6 +116,10 @@ class User < ApplicationRecord
     end
   end
 
+  def invite_on_create?
+    invite_on_create == "true"
+  end
+
   protected
 
   def password_required?
@@ -155,6 +159,6 @@ class User < ApplicationRecord
   end
 
   def send_invite_if_checked
-    invite! if send_invite_on_create == "1" && email.present?
+    invite! if invite_on_create? && email.present?
   end
 end
