@@ -113,19 +113,12 @@ RSpec.describe Agents::InvitationsController, type: :controller do
 
       context "when agent is already in this organisation" do
         let!(:agent_2) { create(:agent, organisation_ids: [organisation_id]) }
-
-        it_behaves_like "existing user is added to organization"
-
-        it "should not send an email" do
-          subject
-          expect(Devise.mailer.deliveries.count).to eq(0)
-        end
+        it { expect { subject }.not_to change(Agent, :count) }
       end
 
       context "when agent has been invited by this organisation" do
         let!(:agent_2) { create(:agent, :not_confirmed, organisation_ids: [organisation_id]) }
-
-        it_behaves_like "existing user is added to organization"
+        it { expect { subject }.not_to change(Agent, :count) }
       end
     end
   end
