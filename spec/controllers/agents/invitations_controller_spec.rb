@@ -18,7 +18,7 @@ RSpec.describe Agents::InvitationsController, type: :controller do
   describe "POST #create" do
     subject { post :create, params: { agent: params }, format: :json }
 
-    shared_examples "invitation sent to existing user" do
+    shared_examples "existing user is added to organization" do
       it "should not create a new user" do
         expect { subject }.not_to change(Agent, :count)
       end
@@ -97,7 +97,7 @@ RSpec.describe Agents::InvitationsController, type: :controller do
       context "when agent is in another organisation" do
         let!(:agent_2) { create(:agent, organisation_ids: [organisation_2.id]) }
 
-        it_behaves_like "invitation sent to existing user"
+        it_behaves_like "existing user is added to organization"
 
         it "should not send an email" do
           subject
@@ -108,13 +108,13 @@ RSpec.describe Agents::InvitationsController, type: :controller do
       context "when agent has been invited by another organisation" do
         let!(:agent_2) { create(:agent, :not_confirmed, organisation_ids: [organisation_2.id]) }
 
-        it_behaves_like "invitation sent to existing user"
+        it_behaves_like "existing user is added to organization"
       end
 
       context "when agent is already in this organisation" do
         let!(:agent_2) { create(:agent, organisation_ids: [organisation_id]) }
 
-        it_behaves_like "invitation sent to existing user"
+        it_behaves_like "existing user is added to organization"
 
         it "should not send an email" do
           subject
@@ -125,7 +125,7 @@ RSpec.describe Agents::InvitationsController, type: :controller do
       context "when agent has been invited by this organisation" do
         let!(:agent_2) { create(:agent, :not_confirmed, organisation_ids: [organisation_id]) }
 
-        it_behaves_like "invitation sent to existing user"
+        it_behaves_like "existing user is added to organization"
       end
     end
   end

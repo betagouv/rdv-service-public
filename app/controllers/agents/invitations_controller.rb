@@ -9,18 +9,9 @@ class Agents::InvitationsController < Devise::InvitationsController
 
   def create
     agent = Agent.find_by(email: invite_params[:email])
-    if agent.present?
-      self.resource = agent
-      if agent.confirmed_at.present?
-        resource.add_organisation(Organisation.where(id: current_inviter.organisation_ids).find(organisation_id))
-        flash[:notice] = "L'agent a été ajouté à votre organisation"
-      else
-        resource.add_organisation(Organisation.where(id: current_inviter.organisation_ids).find(organisation_id))
-        agent.invite!
-        set_flash_message :notice, :send_instructions, email: self.resource.email
-      end
-    else
-      self.resource = invite_resource
+    self.resource = agent.nil? ? invite_resource : agent
+    resource_invited = resource.errors.empty?
+    if resource_invited
       resource.add_organisation(Organisation.where(id: current_inviter.organisation_ids).find(organisation_id))
       set_flash_message :notice, :send_instructions, email: self.resource.email
     end
@@ -28,7 +19,6 @@ class Agents::InvitationsController < Devise::InvitationsController
   end
 
   protected
-
 
   def organisation_id
     devise_parameter_sanitizer.sanitize(:invite)[:organisation_id]
