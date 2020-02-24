@@ -3,6 +3,7 @@ RSpec.describe Agents::InvitationsController, type: :controller do
 
   let!(:agent) { create(:agent, :admin) }
   let(:organisation_id) { agent.organisation_ids.first }
+  let!(:organisation_2) { create(:organisation) }
   let(:service_id) { agent.service.id }
 
   before do
@@ -17,7 +18,23 @@ RSpec.describe Agents::InvitationsController, type: :controller do
   describe "POST #create" do
     subject { post :create, params: { agent: params }, format: :json }
 
-    context "when email is correct" do
+    shared_examples "invitation sent to existing user" do
+      it "should not create a new user" do
+        expect { subject }.not_to change(Agent, :count)
+      end
+
+      it "should return a successful response" do
+        subject
+        expect(response).to be_successful
+      end
+
+      it "should add user to organisation" do
+        subject
+        expect(assigns(:agent).organisation_ids).to include(organisation_id)
+      end
+    end
+
+    context "when email is correct and no invitation has been sent" do
       let(:params) do
         {
           email: "michel@lapin.com",
@@ -27,18 +44,13 @@ RSpec.describe Agents::InvitationsController, type: :controller do
         }
       end
 
-      it "should return a successful response" do
-        subject
-        expect(response).to be_successful
-      end
-
-      it "should create a new user" do
+      it "should reate a new user" do
         expect { subject }.to change(Agent, :count).by(1)
       end
 
-      it "should add user to organisation" do
+      it "should return a successful response" do
         subject
-        expect(assigns(:agent).organisation_ids).to match_array([organisation_id])
+        expect(response).to be_successful
       end
 
       it "should send an email" do
@@ -73,8 +85,6 @@ RSpec.describe Agents::InvitationsController, type: :controller do
     end
 
     context "when agent already exist" do
-      let(:organisation) { create(:organisation) }
-      let!(:agent_2) { create(:agent, organisation_ids: [organisation.id]) }
       let(:params) do
         {
           email: agent_2.email,
@@ -84,18 +94,38 @@ RSpec.describe Agents::InvitationsController, type: :controller do
         }
       end
 
-      it "should not create a new user" do
-        expect { subject }.not_to change(Agent, :count)
+      context "when agent is in another organisation" do
+        let!(:agent_2) { create(:agent, organisation_ids: [organisation_2.id]) }
+
+        it_behaves_like "invitation sent to existing user"
+
+        it "should not send an email" do
+          subject
+          expect(Devise.mailer.deliveries.count).to eq(0)
+        end
       end
 
-      it "should return a successful response" do
-        subject
-        expect(response).to be_successful
+      context "when agent has been invited by another organisation" do
+        let!(:agent_2) { create(:agent, :not_confirmed, organisation_ids: [organisation_2.id]) }
+
+        it_behaves_like "invitation sent to existing user"
       end
 
-      it "should add user to organisation" do
-        subject
-        expect(assigns(:agent).organisation_ids).to match_array([organisation_id, organisation.id])
+      context "when agent is already in this organisation" do
+        let!(:agent_2) { create(:agent, organisation_ids: [organisation_id]) }
+
+        it_behaves_like "invitation sent to existing user"
+
+        it "should not send an email" do
+          subject
+          expect(Devise.mailer.deliveries.count).to eq(0)
+        end
+      end
+
+      context "when agent has been invited by this organisation" do
+        let!(:agent_2) { create(:agent, :not_confirmed, organisation_ids: [organisation_id]) }
+
+        it_behaves_like "invitation sent to existing user"
       end
     end
   end
