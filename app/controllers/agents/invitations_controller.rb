@@ -11,7 +11,7 @@ class Agents::InvitationsController < Devise::InvitationsController
     agent = Agent.find_by(email: invite_params[:email])
     if agent.present?
       self.resource = agent
-      if agent.confirmed_at
+      if agent.confirmed_at.present?
         resource.add_organisation(Organisation.where(id: current_inviter.organisation_ids).find(organisation_id))
         flash[:notice] = "L'agent a été ajouté à votre organisation"
       else
