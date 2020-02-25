@@ -4,7 +4,7 @@ class User < ApplicationRecord
   include FullNameConcern
   include AccountNormalizerConcern
 
-  attr_accessor :created_or_updated_by_agent
+  attr_accessor :created_or_updated_by_agent, :invite_on_create
 
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
@@ -30,6 +30,8 @@ class User < ApplicationRecord
 
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql('LOWER(last_name)')) }
+
+  after_create :send_invite_if_checked
 
   before_save :set_email_to_null_if_blank
   before_save :set_organisation_ids_from_parent, if: :parent_id_changed?
@@ -114,6 +116,10 @@ class User < ApplicationRecord
     end
   end
 
+  def invite_on_create?
+    invite_on_create == "true"
+  end
+
   protected
 
   def password_required?
@@ -150,5 +156,9 @@ class User < ApplicationRecord
     return unless birth_date.present? && (birth_date > Date.today || birth_date < 130.years.ago)
 
     errors.add(:birth_date, "est invalide")
+  end
+
+  def send_invite_if_checked
+    invite! if invite_on_create? && email.present?
   end
 end

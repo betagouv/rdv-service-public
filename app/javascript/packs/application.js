@@ -26,6 +26,7 @@ import { Layout } from 'packs/components/layout';
 import { Modal } from 'packs/components/modal';
 import { Rightbar } from 'packs/components/rightbar';
 import { Rdvstatus } from 'packs/components/rdvstatus';
+import { InviteUserOnCreate } from 'packs/components/invite-user-on-create';
 import { PopulateLibelle } from 'packs/components/populate-libelle';
 import { Analytic } from 'packs/components/analytic.js';
 import { PlacesInput } from 'packs/components/places-input.js';
@@ -49,6 +50,7 @@ global.$ = require('jquery');
 $(document).on('shown.bs.modal', '.modal', function(e) {
   analytic.trackModalView(e);
   new Datetimepicker();
+  new InviteUserOnCreate();
 });
 
 $(document).on('shown.rightbar', '.right-bar', function(e) {
@@ -75,7 +77,6 @@ $(document).on('hide.bs.modal', '.modal', function(e) {
   $("[data-behaviour='datepicker'], [data-behaviour='datetimepicker'], [data-behaviour='timepicker']").datetimepicker('destroy');
 });
 
-
 $(document).on('turbolinks:load', function() {
   analytic.trackPageView();
   Holder.run();
@@ -99,4 +100,6 @@ $(document).on('turbolinks:load', function() {
   new PopulateLibelle();
 
   new Datetimepicker();
+
+  new InviteUserOnCreate();
 });

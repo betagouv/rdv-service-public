@@ -9,6 +9,41 @@ RSpec.describe Agents::UsersController, type: :controller do
     sign_in agent
   end
 
+  shared_examples "with valid email" do |format|
+    let(:attributes) do
+      {
+        first_name: "Michel",
+        last_name: "Lapin",
+        email: "michel@lapin.com",
+        invite_on_create: "true",
+      }
+    end
+    let(:format) { format }
+
+    it "should send an invite" do
+      subject
+      expect(assigns(:user).invitation_sent_at).not_to be_nil
+    end
+  end
+
+  shared_examples "with invalid params" do
+    let(:attributes) { { first_name: "Michel", invite_on_create: "true" } }
+    let(:format) { :html }
+
+    it { expect { subject }.not_to change(User, :count) }
+    it { expect(subject).to render_template(:new) }
+
+    it do
+      subject
+      expect(assigns(:user_to_compare)).to be_nil
+    end
+
+    it "should not send an invite" do
+      subject
+      expect(assigns(:user).invitation_sent_at).to be_nil
+    end
+  end
+
   describe "DELETE destroy" do
     it "removes user from organisation" do
       expect do
@@ -32,10 +67,16 @@ RSpec.describe Agents::UsersController, type: :controller do
         {
           first_name: "Michel",
           last_name: "Lapin",
+          invite_on_create: "true",
         }
       end
 
       it { expect { subject }.to change(User, :count).by(1) }
+
+      it "should not send an invite" do
+        subject
+        expect(assigns(:user).invitation_sent_at).to be_nil
+      end
 
       it "redirects to the created user" do
         subject
@@ -63,23 +104,8 @@ RSpec.describe Agents::UsersController, type: :controller do
       end
     end
 
-    context "with invalid params" do
-      let!(:user) { create(:user, email: nil, created_or_updated_by_agent: true) }
-
-      let(:attributes) do
-        {
-          first_name: "Michel",
-        }
-      end
-
-      it { expect { subject }.not_to change(User, :count) }
-      it { expect(subject).to render_template(:new) }
-
-      it do
-        subject
-        expect(assigns(:user_to_compare)).to be_nil
-      end
-    end
+    it_behaves_like "with invalid params"
+    it_behaves_like "with valid email", :html
   end
 
   describe "POST #create_from_modal" do
@@ -103,17 +129,7 @@ RSpec.describe Agents::UsersController, type: :controller do
       end
     end
 
-    context "with invalid params" do
-      let(:attributes) do
-        {
-          first_name: "Michel",
-        }
-      end
-
-      let(:format) { :html }
-
-      it { expect { subject }.not_to change(User, :count) }
-      it { expect(subject).to render_template(:new) }
-    end
+    it_behaves_like "with invalid params"
+    it_behaves_like "with valid email", :js
   end
 end
