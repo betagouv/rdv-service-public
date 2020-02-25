@@ -1,6 +1,6 @@
 class Lieu < ApplicationRecord
   belongs_to :organisation
-  has_many :plage_ouvertures
+  has_many :plage_ouvertures, dependent: :restrict_with_error
   validates :name, :address, :latitude, :longitude, presence: true
 
   scope :for_motif, lambda { |motif|
