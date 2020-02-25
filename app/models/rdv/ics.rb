@@ -19,7 +19,7 @@ class Rdv::Ics
     cal.event do |e|
       e.dtstart     = Icalendar::Values::DateTime.new(rdv.starts_at, 'tzid' => tzid)
       e.dtend       = Icalendar::Values::DateTime.new(rdv.ends_at, 'tzid' => tzid)
-      e.summary     = "RDV #{rdv.name}"
+      e.summary     = "RDV #{rdv.name_for_user(user)}"
       e.description = description
       e.location    = rdv.location unless rdv.motif.by_phone?
       e.uid         = rdv.uuid
@@ -40,6 +40,6 @@ class Rdv::Ics
   end
 
   def name
-    "rdv-#{rdv.name.parameterize}-#{rdv.starts_at.to_s.parameterize}.ics"
+    "rdv-#{rdv.uuid}-#{rdv.starts_at.to_s.parameterize}.ics"
   end
 end

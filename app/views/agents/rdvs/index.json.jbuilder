@@ -1,5 +1,5 @@
 json.array! @rdvs do |rdv|
-  json.title rdv.name
+  json.title rdv.name_for_agent
   json.extendedProps do
     json.status rdv.status
     json.past rdv.past?

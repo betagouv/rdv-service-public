@@ -4,7 +4,6 @@ fr:
       rdv: Rendez-vous
     attributes:
       rdv:
-        name: Nom
         motif: Motif
         users: Usagers
         agents: Agents

@@ -15,7 +15,6 @@ class RdvDashboard < Administrate::BaseDashboard
     users: Field::HasMany,
     motif: Field::BelongsTo,
     id: Field::Number,
-    name: Field::String,
     duration_in_min: Field::Number,
     starts_at: Field::DateTime,
     created_at: Field::DateTime,
@@ -32,7 +31,6 @@ class RdvDashboard < Administrate::BaseDashboard
     :id,
     :organisation,
     :motif,
-    :name,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -44,7 +42,6 @@ class RdvDashboard < Administrate::BaseDashboard
     :users,
     :agents,
     :id,
-    :name,
     :duration_in_min,
     :starts_at,
     :created_at,
@@ -62,7 +59,6 @@ class RdvDashboard < Administrate::BaseDashboard
     :motif,
     :users,
     :agents,
-    :name,
     :duration_in_min,
     :starts_at,
     :cancelled_at,

@@ -21,7 +21,6 @@ class Rdv < ApplicationRecord
   after_commit :reload_uuid, on: :create
 
   after_create :send_notifications_to_users, if: :notify?
-  before_save :update_name
   after_save :associate_users_with_organisation
 
   def agenda_path_for_agent(agent)
@@ -64,8 +63,12 @@ class Rdv < ApplicationRecord
     end
   end
 
-  def update_name
-    self.name = "#{users&.map(&:full_name)&.to_sentence} <> #{motif&.name}"
+  def name_for_agent
+    "#{created_by_user? ? "@ " : ""}#{users&.map(&:full_name)&.to_sentence}"
+  end
+
+  def name_for_user(user)
+    "#{user.full_name} <> #{motif&.name}"
   end
 
   def notify?

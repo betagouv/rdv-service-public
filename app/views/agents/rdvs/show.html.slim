@@ -1,5 +1,5 @@
 - content_for :title do
-  = @rdv.name
+  = @rdv.name_for_agent
   - if @rdv.cancelled?
     span.badge.badge-danger
 
@@ -7,6 +7,10 @@
 p.card-text
   i.fa.fa-fw.fa-calendar-o>
   = rdv_title(@rdv)
+- if @rdv.created_by_user?
+  p.card-text
+    i.fa.fa-fw.fa-at>
+    | RDV pris sur Internet
 p.card-text
   i.fa.fa-fw.fa-info-circle>
   = @rdv.motif.name
@@ -22,10 +26,10 @@ p.card-text
 p.card-text
   strong> Professionnel(s) :
   = agents_to_sentence(@rdv)
-
 p.card-text
   strong> Usager(s) :
   = users_to_links(@rdv)
+
 .row.mb-5
   .col.text-left
     = link_to "Supprimer", organisation_rdv_path(@rdv.organisation, @rdv, callback_path: params[:callback_path]), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Avant de supprimer ce rendez-vous, assurez-vous d’avoir averti #{@rdv.users.map(&:full_name).to_sentence}. Êtes-vous sûr de vouloir supprimer ce rendez-vous ?"}
