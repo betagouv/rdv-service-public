@@ -18,8 +18,11 @@ class WelcomeController < ApplicationController
       else
         redirect_to welcome_service_path(search_params[:departement], search_params[:service], where: search_params[:where], latitude: search_params[:latitude], longitude: search_params[:longitude])
       end
-    else
+    elsif search_params[:departement].present?
       redirect_to welcome_departement_path(search_params[:departement], where: search_params[:where], latitude: search_params[:latitude], longitude: search_params[:longitude])
+    else
+      flash[:error] = "L'adresse entrée n'est pas valide. Vous devez choisir une des valeurs proposées sur le champ adresse."
+      redirect_to root_path
     end
   end
 
