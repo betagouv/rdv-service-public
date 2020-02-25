@@ -8,21 +8,18 @@ class Agents::InvitationsController < Devise::InvitationsController
   end
 
   def create
-    self.resource = invite_resource
+    agent = Agent.find_by(email: invite_params[:email])
+    self.resource = agent.nil? ? invite_resource : agent
     resource_invited = resource.errors.empty?
-
-    yield resource if block_given?
-
     if resource_invited
       resource.add_organisation(Organisation.where(id: current_inviter.organisation_ids).find(organisation_id))
-      if is_flashing_format? && self.resource.invitation_sent_at
-        set_flash_message :notice, :send_instructions, email: self.resource.email
-      end
+      set_flash_message :notice, :send_instructions, email: self.resource.email
     end
     respond_right_bar_with resource, location: organisation_agents_path(organisation_id)
   end
 
   protected
+
   def organisation_id
     devise_parameter_sanitizer.sanitize(:invite)[:organisation_id]
   end
