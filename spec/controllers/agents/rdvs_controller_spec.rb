@@ -31,7 +31,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
 
         first = @parsed_response[0]
         expect(first.size).to eq(6)
-        expect(first["title"]).to eq(rdv1.name)
+        expect(first["title"]).to eq(rdv1.name_for_agent)
         expect(first["start"]).to eq(rdv1.starts_at.as_json)
         expect(first["end"]).to eq(rdv1.ends_at.as_json)
         expect(first["backgroundColor"]).to eq(rdv1.motif.color)
@@ -40,7 +40,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
 
         second = @parsed_response[1]
         expect(second.size).to eq(6)
-        expect(second["title"]).to eq(rdv2.name)
+        expect(second["title"]).to eq(rdv2.name_for_agent)
         expect(second["start"]).to eq(rdv2.starts_at.as_json)
         expect(second["end"]).to eq(rdv2.ends_at.as_json)
         expect(second["backgroundColor"]).to eq(rdv2.motif.color)
@@ -92,7 +92,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
         expect(response).to be_successful
       end
 
-      it "does not change rdv name" do
+      it "does not change rdv" do
         expect { subject }.not_to change(rdv, :duration_in_min)
       end
     end
