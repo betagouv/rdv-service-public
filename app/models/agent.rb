@@ -30,7 +30,7 @@ class Agent < ApplicationRecord
   before_save :normalize_account
 
   def full_name_and_service
-    service.present? ? "#{full_name} (#{service.name})" : full_name
+    service.present? ? "#{full_name} (#{service.short_name})" : full_name
   end
 
   def complete?
