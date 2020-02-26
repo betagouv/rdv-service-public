@@ -67,12 +67,14 @@ class User < ApplicationRecord
   end
 
   def add_organisation(organisation)
-    organisations << organisation if organisation_ids.exclude?(organisation.id)
+    family.each do |u|
+      u.organisations << organisation if u.organisation_ids.exclude?(organisation.id)
+    end
   end
 
   def soft_delete(organisation = nil)
     if organisation.present? && !child?
-      organisations.delete(organisation)
+      family.each { |u| u.organisations.delete(organisation) }
     else
       now = Time.zone.now
       update(organisation_ids: [], deleted_at: now)
@@ -86,6 +88,11 @@ class User < ApplicationRecord
 
   def child?
     parent_id.present?
+  end
+
+  def family
+    user_id = child? ? parent.id : id
+    User.active.where("parent_id = ? OR id = ?", user_id, user_id)
   end
 
   def formated_phone

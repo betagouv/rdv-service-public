@@ -43,7 +43,12 @@ describe User, type: :model do
     let(:user) { create(:user, organisations: organisations) }
     let(:organisation) { create(:organisation) }
 
-    subject { user.add_organisation(organisation) }
+    subject do
+      user.add_organisation(organisation)
+      user.reload
+      child.reload if defined?(child)
+      parent.reload if defined?(parent)
+    end
 
     describe "when organisation is not associated" do
       let(:organisations) { [] }
@@ -57,6 +62,26 @@ describe User, type: :model do
       describe "with many organisations" do
         let(:organisations) { [organisation, create(:organisation)] }
         it { expect { subject }.not_to change(user, :organisation_ids) }
+      end
+    end
+
+    describe "when parent has child" do
+      let(:organisations) { [organisation] }
+
+      describe "add organisation to parent" do
+        let!(:user) { create(:user, organisations: []) }
+        let!(:child) { create(:user, organisations: [], parent_id: user.id) }
+
+        it { expect { subject }.to change(user, :organisation_ids).from([]).to([organisation.id]) }
+        it { expect { subject }.to change(child, :organisation_ids).from([]).to([organisation.id]) }
+      end
+
+      describe "add organisation to child" do
+        let!(:parent) { create(:user, organisations: []) }
+        let!(:user) { create(:user, organisations: [], parent_id: parent.id) }
+
+        it { expect { subject }.to change(user, :organisation_ids).from([]).to([organisation.id]) }
+        it { expect { subject }.to change(parent, :organisation_ids).from([]).to([organisation.id]) }
       end
     end
   end
@@ -109,7 +134,10 @@ describe User, type: :model do
       subject
     end
 
-    subject { user.soft_delete(deleted_org) }
+    subject do
+      user.soft_delete(deleted_org)
+      user.reload
+    end
 
     context 'belongs to multiple organisations and with organisation given' do
       let(:user) { create(:user, :with_multiple_organisations) }
