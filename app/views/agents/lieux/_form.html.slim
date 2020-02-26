@@ -4,9 +4,17 @@
   = f.input :address, input_html: { class: "places-js-container" }
   = f.input :latitude, as: :hidden
   = f.input :longitude, as: :hidden
+
+  - if lieu.plage_ouvertures.any?
+    .alert.alert-warning
+      | Il n'est pas possible de supprimer ce lieu car une ou plusieurs plages d'ouverture le référencent.
+      | Assignez ces plages d'ouverture à un autre lieu pour pouvoir le supprimer.
   .row
     - if lieu.persisted?
       .col.text-left
+        - if lieu.plage_ouvertures.any?
+          = button_tag "Supprimer", type: 'button', disabled: true, class: "btn btn-outline-danger"
+        - else
           = link_to "Supprimer", organisation_lieu_path(lieu.organisation, lieu), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce lieu ?"}
     .col.text-right
       = f.button :submit

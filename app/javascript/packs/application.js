@@ -32,6 +32,7 @@ import { Analytic } from 'packs/components/analytic.js';
 import { PlacesInput } from 'packs/components/places-input.js';
 import 'packs/components/calendar';
 import 'packs/components/select2';
+import 'packs/components/tooltip';
 import 'packs/components/sentry';
 import 'packs/components/browser-detection';
 import "actiontext";
