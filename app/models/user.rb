@@ -9,7 +9,7 @@ class User < ApplicationRecord
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
 
-  has_and_belongs_to_many :organisations, -> { distinct }, after_add: :add_organisation_to_children, after_remove: :remove_organisation_to_children
+  has_and_belongs_to_many :organisations, -> { distinct }
   has_and_belongs_to_many :rdvs
   belongs_to :parent, foreign_key: "parent_id", class_name: "User", optional: true
   has_many :children, foreign_key: "parent_id", class_name: "User"
@@ -78,7 +78,7 @@ class User < ApplicationRecord
     else
       now = Time.zone.now
       update(organisation_ids: [], deleted_at: now)
-      children.update_all(deleted_at: now)
+      children.each { |child| child.update(organisation_ids: [], deleted_at: now) }
     end
   end
 
@@ -142,14 +142,6 @@ class User < ApplicationRecord
   end
 
   private
-
-  def add_organisation_to_children(organisation)
-    children.active.each { |child| child.add_organisation(organisation) }
-  end
-
-  def remove_organisation_to_children(organisation)
-    children.active.each { |child| child.organisations.delete(organisation) }
-  end
 
   def set_organisation_ids_from_parent
     self.organisation_ids = parent.organisation_ids if parent

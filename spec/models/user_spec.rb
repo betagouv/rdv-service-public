@@ -103,28 +103,6 @@ describe User, type: :model do
     end
   end
 
-  describe "children association callbacks" do
-    let(:organisation) { create(:organisation) }
-    let(:organisation2) { create(:organisation) }
-    let(:user) { create(:user, organisations: [organisation]) }
-    let!(:child1) { create(:user, parent_id: user.id) }
-    let!(:child2) { create(:user, parent_id: user.id) }
-
-    describe "#add_organisation_to_children", focus: true do
-      subject { user.add_organisation(organisation2) }
-
-      it { expect { subject }.to change { child1.reload.organisation_ids.sort }.from([organisation.id]).to([organisation.id, organisation2.id].sort) }
-      it { expect { subject }.to change { child2.reload.organisation_ids.sort }.from([organisation.id]).to([organisation.id, organisation2.id].sort) }
-    end
-
-    describe "#remove_organisation_to_children" do
-      subject { user.organisations.delete(organisation) }
-
-      it { expect { subject }.to change { child1.reload.organisation_ids.sort }.from([organisation.id]).to([]) }
-      it { expect { subject }.to change { child2.reload.organisation_ids.sort }.from([organisation.id]).to([]) }
-    end
-  end
-
   describe "#soft_delete" do
     let(:now) { Time.current }
 
@@ -189,9 +167,17 @@ describe User, type: :model do
 
       it { expect(user.reload.organisation_ids).to be_empty }
       it { expect(user.reload.deleted_at).to eq(now) }
-
       it { expect(child.reload.organisation_ids).to be_empty }
       it { expect(child.reload.deleted_at).to eq(now) }
+
+      context "and belong to an organisation" do
+        let(:deleted_org) { user.organisations.first }
+
+        it { expect(user.reload.organisation_ids).to be_empty }
+        it { expect(user.reload.deleted_at).to eq(nil) }
+        it { expect(child.reload.organisation_ids).to be_empty }
+        it { expect(child.reload.deleted_at).to eq(nil) }
+      end
     end
   end
 
