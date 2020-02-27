@@ -43,7 +43,12 @@ describe User, type: :model do
     let(:user) { create(:user, organisations: organisations) }
     let(:organisation) { create(:organisation) }
 
-    subject { user.add_organisation(organisation) }
+    subject do
+      user.add_organisation(organisation)
+      user.reload
+      child.reload if defined?(child)
+      parent.reload if defined?(parent)
+    end
 
     describe "when organisation is not associated" do
       let(:organisations) { [] }
@@ -57,6 +62,26 @@ describe User, type: :model do
       describe "with many organisations" do
         let(:organisations) { [organisation, create(:organisation)] }
         it { expect { subject }.not_to change(user, :organisation_ids) }
+      end
+    end
+
+    describe "when parent has child" do
+      let(:organisations) { [organisation] }
+
+      describe "add organisation to parent" do
+        let!(:user) { create(:user, organisations: []) }
+        let!(:child) { create(:user, organisations: [], parent_id: user.id) }
+
+        it { expect { subject }.to change(user, :organisation_ids).from([]).to([organisation.id]) }
+        it { expect { subject }.to change(child, :organisation_ids).from([]).to([organisation.id]) }
+      end
+
+      describe "add organisation to child" do
+        let!(:parent) { create(:user, organisations: []) }
+        let!(:user) { create(:user, organisations: [], parent_id: parent.id) }
+
+        it { expect { subject }.to change(user, :organisation_ids).from([]).to([organisation.id]) }
+        it { expect { subject }.to change(parent, :organisation_ids).from([]).to([organisation.id]) }
       end
     end
   end
@@ -78,28 +103,6 @@ describe User, type: :model do
     end
   end
 
-  describe "children association callbacks" do
-    let(:organisation) { create(:organisation) }
-    let(:organisation2) { create(:organisation) }
-    let(:user) { create(:user, organisations: [organisation]) }
-    let!(:child1) { create(:user, parent_id: user.id) }
-    let!(:child2) { create(:user, parent_id: user.id) }
-
-    describe "#add_organisation_to_children", focus: true do
-      subject { user.add_organisation(organisation2) }
-
-      it { expect { subject }.to change { child1.reload.organisation_ids.sort }.from([organisation.id]).to([organisation.id, organisation2.id].sort) }
-      it { expect { subject }.to change { child2.reload.organisation_ids.sort }.from([organisation.id]).to([organisation.id, organisation2.id].sort) }
-    end
-
-    describe "#remove_organisation_to_children" do
-      subject { user.organisations.delete(organisation) }
-
-      it { expect { subject }.to change { child1.reload.organisation_ids.sort }.from([organisation.id]).to([]) }
-      it { expect { subject }.to change { child2.reload.organisation_ids.sort }.from([organisation.id]).to([]) }
-    end
-  end
-
   describe "#soft_delete" do
     let(:now) { Time.current }
 
@@ -109,7 +112,10 @@ describe User, type: :model do
       subject
     end
 
-    subject { user.soft_delete(deleted_org) }
+    subject do
+      user.soft_delete(deleted_org)
+      user.reload
+    end
 
     context 'belongs to multiple organisations and with organisation given' do
       let(:user) { create(:user, :with_multiple_organisations) }
@@ -161,9 +167,17 @@ describe User, type: :model do
 
       it { expect(user.reload.organisation_ids).to be_empty }
       it { expect(user.reload.deleted_at).to eq(now) }
-
       it { expect(child.reload.organisation_ids).to be_empty }
       it { expect(child.reload.deleted_at).to eq(now) }
+
+      context "and belong to an organisation" do
+        let(:deleted_org) { user.organisations.first }
+
+        it { expect(user.reload.organisation_ids).to be_empty }
+        it { expect(user.reload.deleted_at).to eq(nil) }
+        it { expect(child.reload.organisation_ids).to be_empty }
+        it { expect(child.reload.deleted_at).to eq(nil) }
+      end
     end
   end
 
