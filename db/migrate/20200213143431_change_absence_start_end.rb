@@ -9,10 +9,10 @@ class ChangeAbsenceStartEnd < ActiveRecord::Migration[6.0]
 
     Absence.all.each do |a|
       a.first_day = a[:starts_at].to_date
-      a.start_time = a[:starts_at].to_time_of_day
+      a.start_time = a[:starts_at].to_time_of_day.round(300)
 
       a.end_day = a[:ends_at].to_date
-      a.end_time = a[:ends_at].to_time_of_day
+      a.end_time = a[:ends_at].to_time_of_day.round(300)
       a.save!
     end
 

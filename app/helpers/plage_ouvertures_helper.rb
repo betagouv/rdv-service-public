@@ -1,6 +1,14 @@
 module PlageOuverturesHelper
-  def time_collections
-    (7..19).flat_map do |h|
+  def time_collections_for_plage_ouverture
+    time_collections_for_hours(7..19)
+  end
+
+  def time_collections_for_absence
+    time_collections_for_hours(0..23)
+  end
+
+  def time_collections_for_hours(hours_range)
+    hours_range.flat_map do |h|
       padded_h = format("%02i", h)
       (0..55).step(5).map do |m|
         padded_min = format("%02i", m)
