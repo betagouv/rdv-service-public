@@ -6,9 +6,9 @@
   = f.input :longitude, as: :hidden
 
   - if lieu.plage_ouvertures.any?
-    .alert.alert-warning
-      | Il n'est pas possible de supprimer ce lieu car une ou plusieurs plages d'ouverture le référencent.
-      | Assignez ces plages d'ouverture à un autre lieu pour pouvoir le supprimer.
+    .alert.alert-info
+      | Impossible de supprimer ce lieu 
+      = question_tag_tooltip "Une ou plusieurs plages d'ouverture référencent ce lieu. Assignez ces plages d'ouverture à un autre lieu pour pouvoir le supprimer."
   .row
     - if lieu.persisted?
       .col.text-left
