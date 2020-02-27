@@ -11,7 +11,12 @@ const browser = Bowser.getParser(window.navigator.userAgent);
 document.addEventListener('turbolinks:load', function() {
   var calendarEl = document.getElementById('calendar');
 
-  let defaultView = browser.is("mobile") ? "timeGridOneDay" : "timeGridWeek";
+  let defaultView = "timeGridOneDay";
+  if (!browser.is("mobile")) {
+    let viewFromLocalStorage = localStorage.getItem("calendarDefaultView");
+
+    defaultView = ['dayGridMonth', 'timeGridWeek', 'timeGridOneDay'].includes(viewFromLocalStorage) ? viewFromLocalStorage : "timeGridWeek";
+  }
 
   if (calendarEl !== null ) {
     var calendar = new Calendar(calendarEl, {
@@ -23,6 +28,9 @@ document.addEventListener('turbolinks:load', function() {
       },
       defaultDate: JSON.parse(calendarEl.dataset.defaultDate),
       defaultView: defaultView,
+      viewSkeletonRender: function (info) {
+        localStorage.setItem("calendarDefaultView", info.view.type);
+      },
       weekends: false,
       height: "auto",
       selectable: true,
