@@ -71,4 +71,8 @@ module ApplicationHelper
       image_tag 'logos/logo.svg', height: 40, alt: 'RDV Solidarités', class: 'd-inline logo'
     end
   end
+
+  def question_tag_tooltip title
+    content_tag(:i, nil, class: "fa fa-question-circle", data:{toggle: 'tooltip'}, title: title)
+  end
 end
