@@ -72,7 +72,7 @@ module ApplicationHelper
     end
   end
 
-  def question_tag_tooltip title
-    content_tag(:i, nil, class: "fa fa-question-circle", data:{toggle: 'tooltip'}, title: title)
+  def question_tag_tooltip(title)
+    content_tag(:i, nil, class: "fa fa-question-circle", data: { toggle: 'tooltip' }, title: title)
   end
 end
