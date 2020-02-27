@@ -42,6 +42,7 @@ class Agents::RdvsController < AgentAuthController
     authorize(@rdv)
     cancelled_at = ['unknown', 'waiting', 'seen'].include?(status_params[:status]) ? nil : Time.zone.now
     @rdv.update(status: status_params[:status], cancelled_at: cancelled_at)
+    @rdv.file_attentes.delete_all
     respond_to do |f|
       f.js
     end
