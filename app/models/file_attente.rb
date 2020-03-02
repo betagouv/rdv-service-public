@@ -4,7 +4,7 @@ class FileAttente < ApplicationRecord
   validates :rdv, uniqueness: { scope: :user }
 
   NO_MORE_NOTIFICATIONS = 7.days
-  MAX_NOTIFICATIONS = 5
+  MAX_NOTIFICATIONS = 3
 
   scope :active, -> { joins(:rdv).where('rdvs.starts_at > ?', NO_MORE_NOTIFICATIONS.from_now).order(created_at: :desc) }
 
