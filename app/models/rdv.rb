@@ -22,6 +22,7 @@ class Rdv < ApplicationRecord
 
   after_create :send_notifications_to_users, if: :notify?
   after_save :associate_users_with_organisation
+  after_update :send_notifications_to_users, if: -> { saved_change_to_starts_at? && notify? }
 
   def agenda_path_for_agent(agent)
     agent_for_agenda = agents.include?(agent) ? agent : agents.first
