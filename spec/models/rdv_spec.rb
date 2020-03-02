@@ -7,6 +7,12 @@ describe Rdv, type: :model do
       rdv.save!
     end
 
+    it "should be called after update starts_at" do
+      expect(rdv).to receive(:send_notifications_to_users).twice
+      rdv.save!
+      rdv.update(starts_at: 7.days.from_now)
+    end
+
     context "when rdv already exist" do
       let(:rdv) { create(:rdv) }
 
