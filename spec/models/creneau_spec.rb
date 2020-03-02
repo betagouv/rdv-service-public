@@ -51,13 +51,24 @@ describe Creneau, type: :model do
     end
 
     describe "with absence" do
-      let!(:absence) { create(:absence, agent: agent, starts_at: Time.zone.local(2019, 9, 19, 9, 45), ends_at: Time.zone.local(2019, 9, 19, 10, 15)) }
+      let!(:absence) { create(:absence, agent: agent, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 15)) }
 
       it do
         expect(subject.size).to eq(2)
 
         is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
         is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      end
+
+      context "which has a recurrence" do
+        let!(:absence) { create(:absence, :weekly, agent: agent, first_day: Date.new(2019, 9, 12), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 12), end_time: Tod::TimeOfDay.new(10, 15)) }
+
+        it do
+          expect(subject.size).to eq(2)
+
+          is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+          is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        end
       end
     end
 
@@ -205,37 +216,37 @@ describe Creneau, type: :model do
       subject { creneau.overlaps_rdv_or_absence?([absence]) }
 
       describe "absence overlaps beginning of creneau" do
-        let!(:absence) { create(:absence, starts_at: Time.zone.local(2019, 9, 19, 8, 30), ends_at: Time.zone.local(2019, 9, 19, 9, 30), agent: agent) }
+        let!(:absence) { create(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(8, 30), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(9, 30), agent: agent) }
         it { is_expected.to eq(true) }
       end
 
       describe "absence overlaps end of creneau" do
-        let!(:absence) { create(:absence, starts_at: Time.zone.local(2019, 9, 19, 9, 30), ends_at: Time.zone.local(2019, 9, 19, 10, 30), agent: agent) }
+        let!(:absence) { create(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 30), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 30), agent: agent) }
         it { is_expected.to eq(true) }
       end
 
       describe "absence is inside creneau" do
-        let!(:absence) { create(:absence, starts_at: Time.zone.local(2019, 9, 19, 9, 15), ends_at: Time.zone.local(2019, 9, 19, 9, 30), agent: agent) }
+        let!(:absence) { create(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 15), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(9, 30), agent: agent) }
         it { is_expected.to eq(true) }
       end
 
       describe "absence is before creneau" do
-        let!(:absence) { create(:absence, starts_at: Time.zone.local(2019, 9, 19, 8, 0), ends_at: Time.zone.local(2019, 9, 19, 9, 0o0), agent: agent) }
+        let!(:absence) { create(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(8, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(9, 0), agent: agent) }
         it { is_expected.to eq(false) }
       end
 
       describe "absence is after creneau" do
-        let!(:absence) { create(:absence, starts_at: Time.zone.local(2019, 9, 19, 10, 0o0), ends_at: Time.zone.local(2019, 9, 19, 10, 30), agent: agent) }
+        let!(:absence) { create(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(10, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 30), agent: agent) }
         it { is_expected.to eq(false) }
       end
 
       describe "absence is around creneau" do
-        let!(:absence) { create(:absence, starts_at: Time.zone.local(2019, 9, 19, 8, 0o0), ends_at: Time.zone.local(2019, 9, 19, 10, 30), agent: agent) }
+        let!(:absence) { create(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(8, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 30), agent: agent) }
         it { is_expected.to eq(true) }
       end
 
       describe "absence is like creneau" do
-        let!(:absence) { create(:absence, starts_at: Time.zone.local(2019, 9, 19, 9, 0o0), ends_at: Time.zone.local(2019, 9, 19, 10, 0o0), agent: agent) }
+        let!(:absence) { create(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 0), agent: agent) }
         it { is_expected.to eq(true) }
       end
     end
@@ -264,17 +275,17 @@ describe Creneau, type: :model do
       end
 
       describe "rdv is after creneau" do
-        let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 10, 0o0), duration_in_min: 45, agents: [agent]) }
+        let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 45, agents: [agent]) }
         it { is_expected.to eq(false) }
       end
 
       describe "rdv is around creneau" do
-        let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 8, 0o0), duration_in_min: 140, agents: [agent]) }
+        let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 8, 0), duration_in_min: 140, agents: [agent]) }
         it { is_expected.to eq(true) }
       end
 
       describe "rdv is like creneau" do
-        let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 0o0), duration_in_min: 60, agents: [agent]) }
+        let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 60, agents: [agent]) }
         it { is_expected.to eq(true) }
       end
     end
@@ -336,7 +347,7 @@ describe Creneau, type: :model do
     end
 
     describe "with absence" do
-      let!(:absence) { create(:absence, agent: agent, starts_at: Time.zone.local(2019, 9, 19, 9, 0), ends_at: Time.zone.local(2019, 9, 19, 12, 0)) }
+      let!(:absence) { create(:absence, agent: agent, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(12, 0)) }
 
       it { expect(subject).to eq(nil) }
 

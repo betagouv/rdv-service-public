@@ -2,9 +2,10 @@
   = render partial: 'layouts/model_errors', locals: { model: absence }
   = f.hidden_field :agent_id
   = f.input :title, hint:'Uniquement visible en interne', placeholder: 'Ex: Absence pour formation premiers secours'
-  .form-row
-    .col= datetime_input f, :starts_at
-    .col= datetime_input f, :ends_at
+
+  hr
+  = render partial: 'common/recurrence', locals: { f: f, model: absence }
+
   .row
     - if absence.persisted?
       .col.text-left

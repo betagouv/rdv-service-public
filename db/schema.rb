@@ -21,10 +21,13 @@ ActiveRecord::Schema.define(version: 2020_02_25_153357) do
     t.bigint "agent_id"
     t.string "title"
     t.bigint "organisation_id"
-    t.datetime "starts_at"
-    t.datetime "ends_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "recurrence"
+    t.date "first_day", null: false
+    t.time "start_time", null: false
+    t.date "end_day", null: false
+    t.time "end_time", null: false
     t.index ["agent_id"], name: "index_absences_on_agent_id"
     t.index ["organisation_id"], name: "index_absences_on_organisation_id"
   end

@@ -32,7 +32,8 @@ shared_examples_for "recurrence" do
 
       it do
         expect(subject.size).to eq 1
-        expect(subject.first).to eq model_instance.starts_at
+        expect(subject.first.starts_at).to eq model_instance.starts_at
+        expect(subject.first.ends_at).to eq model_instance.ends_at
       end
 
       context "and the first_day is the last of the range" do
@@ -40,7 +41,8 @@ shared_examples_for "recurrence" do
 
         it do
           expect(subject.size).to eq 1
-          expect(subject.first).to eq model_instance.starts_at
+          expect(subject.first.starts_at).to eq model_instance.starts_at
+          expect(subject.first.ends_at).to eq model_instance.ends_at
         end
       end
     end
@@ -51,13 +53,20 @@ shared_examples_for "recurrence" do
 
       it do
         expect(subject.size).to eq 7
-        expect(subject[0]).to eq model_instance.starts_at
-        expect(subject[1]).to eq(model_instance.starts_at + 1.day)
-        expect(subject[2]).to eq(model_instance.starts_at + 2.day)
-        expect(subject[3]).to eq(model_instance.starts_at + 3.day)
-        expect(subject[4]).to eq(model_instance.starts_at + 4.day)
-        expect(subject[5]).to eq(model_instance.starts_at + 5.day)
-        expect(subject[6]).to eq(model_instance.starts_at + 6.day)
+        expect(subject[0].starts_at).to eq(model_instance.starts_at)
+        expect(subject[0].ends_at).to eq(model_instance.ends_at)
+        expect(subject[1].starts_at).to eq(model_instance.starts_at + 1.day)
+        expect(subject[1].ends_at).to eq(model_instance.ends_at + 1.day)
+        expect(subject[2].starts_at).to eq(model_instance.starts_at + 2.day)
+        expect(subject[2].ends_at).to eq(model_instance.ends_at + 2.day)
+        expect(subject[3].starts_at).to eq(model_instance.starts_at + 3.day)
+        expect(subject[3].ends_at).to eq(model_instance.ends_at + 3.day)
+        expect(subject[4].starts_at).to eq(model_instance.starts_at + 4.day)
+        expect(subject[4].ends_at).to eq(model_instance.ends_at + 4.day)
+        expect(subject[5].starts_at).to eq(model_instance.starts_at + 5.day)
+        expect(subject[5].ends_at).to eq(model_instance.ends_at + 5.day)
+        expect(subject[6].starts_at).to eq(model_instance.starts_at + 6.day)
+        expect(subject[6].ends_at).to eq(model_instance.ends_at + 6.day)
       end
     end
 
@@ -67,9 +76,12 @@ shared_examples_for "recurrence" do
 
       it do
         expect(subject.size).to eq 3
-        expect(subject[0]).to eq model_instance.starts_at
-        expect(subject[1]).to eq(model_instance.starts_at + 1.week)
-        expect(subject[2]).to eq(model_instance.starts_at + 2.weeks)
+        expect(subject[0].starts_at).to eq(model_instance.starts_at)
+        expect(subject[0].ends_at).to eq(model_instance.ends_at)
+        expect(subject[1].starts_at).to eq(model_instance.starts_at + 1.week)
+        expect(subject[1].ends_at).to eq(model_instance.ends_at + 1.week)
+        expect(subject[2].starts_at).to eq(model_instance.starts_at + 2.weeks)
+        expect(subject[2].ends_at).to eq(model_instance.ends_at + 2.weeks)
       end
     end
 
@@ -79,18 +91,21 @@ shared_examples_for "recurrence" do
 
       it do
         expect(subject.size).to eq 2
-        expect(subject[0]).to eq model_instance.starts_at
-        expect(subject[1]).to eq(model_instance.starts_at + 2.weeks)
+        expect(subject[0].starts_at).to eq(model_instance.starts_at)
+        expect(subject[0].ends_at).to eq(model_instance.ends_at)
+        expect(subject[1].starts_at).to eq(model_instance.starts_at + 2.weeks)
+        expect(subject[1].ends_at).to eq(model_instance.ends_at + 2.weeks)
       end
     end
 
     context "when there is a daily recurrence and until is set" do
-      let(:model_instance) { build(model_symbol, first_day: Date.new(2019, 7, 22), recurrence: Montrose.daily.until(Date.new(2019, 8, 5)).to_json) }
+      let(:model_instance) { build(model_symbol, first_day: Date.new(2019, 7, 22), start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(12), recurrence: Montrose.daily.until(Date.new(2019, 8, 5)).to_json) }
       let(:date_range) { Date.new(2019, 8, 5)..Date.new(2019, 8, 11) }
 
       it do
         expect(subject.size).to eq 1
-        expect(subject[0]).to eq(Time.zone.local(2019, 8, 5, 8))
+        expect(subject[0].starts_at).to eq(Time.zone.local(2019, 8, 5, 8))
+        expect(subject[0].ends_at).to eq(Time.zone.local(2019, 8, 5, 12))
       end
     end
   end

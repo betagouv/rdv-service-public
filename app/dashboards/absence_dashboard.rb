@@ -12,8 +12,10 @@ class AbsenceDashboard < Administrate::BaseDashboard
     organisation: Field::BelongsTo,
     id: Field::Number,
     title: Field::String,
-    starts_at: Field::DateTime,
-    ends_at: Field::DateTime,
+    first_day: Field::DateTime,
+    end_day: Field::DateTime,
+    start_time: Field::Time,
+    end_time: Field::Time,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -27,12 +29,12 @@ class AbsenceDashboard < Administrate::BaseDashboard
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = [:agent, :organisation, :id, :title, :starts_at, :ends_at, :created_at, :updated_at].freeze
+  SHOW_PAGE_ATTRIBUTES = [:agent, :organisation, :id, :title, :first_day, :start_time, :end_day, :end_time, :created_at, :updated_at].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [:agent, :organisation, :title, :starts_at, :ends_at].freeze
+  FORM_ATTRIBUTES = [:agent, :organisation, :title, :first_day, :start_time, :end_day, :end_time].freeze
 
   # COLLECTION_FILTERS
   # a hash that defines filters that can be used while searching via the search

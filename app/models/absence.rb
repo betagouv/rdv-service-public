@@ -1,13 +1,14 @@
 class Absence < ApplicationRecord
+  include RecurrenceConcern
+
   belongs_to :agent
   belongs_to :organisation
 
-  validates :starts_at, :ends_at, :agent, :organisation, presence: true
+  before_validation :set_end_day
+  validates :agent, :organisation, :end_day, presence: true
   validate :ends_at_should_be_after_starts_at
 
-  default_scope -> { order(starts_at: :desc) }
-
-  scope :in_time_range, ->(time_range) { where(starts_at: time_range).or(where(ends_at: time_range)).or(where("starts_at < ? AND ends_at > ?", time_range.begin, time_range.end)) }
+  default_scope -> { order(first_day: :desc, start_time: :desc) }
 
   def title_or_default
     title.present? ? title : "Absence"
@@ -19,7 +20,13 @@ class Absence < ApplicationRecord
 
   private
 
+  def set_end_day
+    return unless end_day.nil?
+
+    self.end_day = first_day
+  end
+
   def ends_at_should_be_after_starts_at
-    errors.add(:ends_at, "doit être après la date de commencement.") if starts_at >= ends_at
+    errors.add(:ends_time, "doit être après le début.") if starts_at >= ends_at
   end
 end

@@ -5,5 +5,7 @@ fr:
     attributes:
       absence:
         title: Description
-        starts_at: Commence à
-        ends_at: Termine à
+        first_day: Commence le
+        end_day: Termine le
+        start_time: Commence à
+        end_time: Termine à
