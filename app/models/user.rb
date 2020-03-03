@@ -17,7 +17,7 @@ class User < ApplicationRecord
 
   enum caisse_affiliation: { aucune: 0, caf: 1, msa: 2 }
   enum family_situation: { single: 0, in_a_relationship: 1, divorced: 2 }
-  enum logement: { sdf: 0, heberge: 1, locataire: 1, en_accession_propriete: 2, proprietaire: 3, autre: 4 }
+  enum logement: { sdf: 0, heberge: 1, en_accession_propriete: 2, proprietaire: 3, autre: 4, locataire: 5 }
 
   validates :last_name, :first_name, presence: true
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
