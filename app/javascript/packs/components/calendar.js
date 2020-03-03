@@ -5,9 +5,18 @@ import listPlugin from '@fullcalendar/list';
 import frLocale from '@fullcalendar/core/locales/fr';
 import interactionPlugin from '@fullcalendar/interaction';
 import Routes from '../../routes.js.erb';
+import Bowser from "bowser";
+const browser = Bowser.getParser(window.navigator.userAgent);
 
 document.addEventListener('turbolinks:load', function() {
   var calendarEl = document.getElementById('calendar');
+
+  let defaultView = "timeGridOneDay";
+  if (!browser.is("mobile")) {
+    let viewFromLocalStorage = localStorage.getItem("calendarDefaultView");
+
+    defaultView = ['dayGridMonth', 'timeGridWeek', 'timeGridOneDay'].includes(viewFromLocalStorage) ? viewFromLocalStorage : "timeGridWeek";
+  }
 
   if (calendarEl !== null ) {
     var calendar = new Calendar(calendarEl, {
@@ -18,7 +27,10 @@ document.addEventListener('turbolinks:load', function() {
         alert("Une erreur s'est produite lors de la récupération des données du calendrier.");
       },
       defaultDate: JSON.parse(calendarEl.dataset.defaultDate),
-      defaultView: 'timeGridWeek',
+      defaultView: defaultView,
+      viewSkeletonRender: function (info) {
+        localStorage.setItem("calendarDefaultView", info.view.type);
+      },
       weekends: false,
       height: "auto",
       selectable: true,
@@ -41,7 +53,14 @@ document.addEventListener('turbolinks:load', function() {
         window.location = Routes.new_organisation_first_step_path(params);
       },
       header: {
-         center: 'dayGridMonth,timeGridWeek'
+        center: 'dayGridMonth,timeGridWeek,timeGridOneDay'
+      },
+      views: {
+        timeGridOneDay: {
+          type: 'timeGrid',
+          duration: { days: 1 },
+          buttonText: 'Journée'
+        }
       },
       timeGridEventMinHeight: 5,
       businessHours: {

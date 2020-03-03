@@ -162,6 +162,16 @@
   }
 }
 
+.fc-toolbar {
+  flex-direction: column;
+}
+
+@include media-breakpoint-up(sm) {
+  .fc-toolbar {
+    flex-direction: row;
+  }
+}
+
 @include media-breakpoint-down(sm) {
   .fc-toolbar {
     .fc-left,.fc-right,.fc-center {
