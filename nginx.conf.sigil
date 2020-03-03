@@ -2,6 +2,7 @@ server {
   listen      [::]:{{ .PROXY_PORT }};
   listen      {{ .PROXY_PORT }};
   server_name {{ .NOSSL_SERVER_NAME }};
+
   access_log  /var/log/nginx/{{ .APP }}-access.log;
   error_log   /var/log/nginx/{{ .APP }}-error.log;
 
@@ -11,7 +12,7 @@ server {
     proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection $http_connection;
     proxy_set_header Host $http_host;
-    proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+    proxy_set_header X-Forwarded-Proto https;
     proxy_set_header X-Forwarded-For $http_x_forwarded_for;
     proxy_set_header X-Forwarded-Port $http_x_forwarded_port;
     proxy_set_header X-Request-Start $msec;
