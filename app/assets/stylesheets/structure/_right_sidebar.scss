@@ -4,7 +4,7 @@
   display: block;
   position: fixed;
   transition: all 200ms ease-out;
-  width: $rightbar-width;
+  width: 100%;
   z-index: 1000;
   float: right !important;
   right: -($rightbar-width + 10px);
@@ -17,6 +17,20 @@
   }
   .right-bar-body {
     padding: 1.5rem;
+  }
+}
+
+.slimScrollDiv {
+  overflow: scroll !important;
+}
+
+@include media-breakpoint-up(sm) {
+  .right-bar {
+    width: $rightbar-width;
+  }
+
+  .slimScrollDiv {
+    overflow: inherit;
   }
 }
 
