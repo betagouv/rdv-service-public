@@ -4,7 +4,7 @@ class Agent::AgentPolicy < Agent::AdminPolicy
   end
 
   def show?
-   same_agent_or_has_access?
+    same_agent_or_has_access?
   end
 
   def reinvite?
