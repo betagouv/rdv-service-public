@@ -4,7 +4,7 @@ class Agent::PlageOuverturePolicy < DefaultAgentPolicy
       if @context.agent.can_access_others_planning?
         scope.where(organisation_id: @context.organisation.id)
       else
-        scope.where(organisation_id: @context.organisation.id, agent_id: @context.agent.id)
+        scope.joins(:agent).where(organisation_id: @context.organisation.id, agents: {service_id: @context.agent.service_id })
       end
     end
   end
