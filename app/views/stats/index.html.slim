@@ -1,19 +1,8 @@
 - content_for :title do
-  h1 Statistiques
+  h1 
+    | Statistiques 
+    br
+    small Du #{l(Stat::DEFAULT_RANGE.first.to_date)} au #{l(Stat::DEFAULT_RANGE.last.to_date)}
 
 .container
-  .row
-    .col-md-6
-      .card.mb-5
-        .card-body
-          = render 'agents/rdvs/rdvs_stats', rdvs: @rdvs
-    .col-md-6
-      .card.mb-5
-        .card-body
-          h4.card-title.mb-3 RDV créés
-          = column_chart rdvs_stats_path, stacked: true
-    .col-md-6
-      .card.mb-5
-        .card-body
-          h4.card-title.mb-3 Usagers créés
-          = column_chart users_stats_path
+  = render 'statistics', stats: @stats, rdvs_stats_path: rdvs_stats_path, users_stats_path: users_stats_path

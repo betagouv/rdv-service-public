@@ -1,6 +1,7 @@
 class Agents::OrganisationsController < AgentAuthController
   respond_to :html, :json
 
+  before_action :set_organisation, except: :index
   before_action :redirect_if_agent_incomplete, only: :index
 
   def index
@@ -13,19 +14,15 @@ class Agents::OrganisationsController < AgentAuthController
   end
 
   def show
-    @organisation = policy_scope(Organisation).find(params[:id])
-    @rdvs = @organisation.rdvs
     authorize(@organisation)
   end
 
   def edit
-    @organisation = policy_scope(Organisation).find(params[:id])
     authorize(@organisation)
     respond_right_bar_with @organisation
   end
 
   def update
-    @organisation = policy_scope(Organisation).find(params[:id])
     authorize(@organisation)
     flash[:notice] = "L'organisation a été modifiée." if @organisation.update(organisation_params)
     respond_right_bar_with @organisation, location: organisation_path(@organisation)

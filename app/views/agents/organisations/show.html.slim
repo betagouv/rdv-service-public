@@ -17,19 +17,3 @@
             strong> Horaires : 
             | #{@organisation.horaires}
         .text-right= link_to "Modifier", edit_organisation_path(@organisation), class: "btn btn-primary", data: { rightbar: true }
-
-  .col-md-6
-    .card
-      .card-body
-        = render 'agents/rdvs/rdvs_stats', rdvs: @rdvs
-.row
-  .col-md-6
-    .card
-      .card-body
-        h4.card-title.mb-3 RDV créés
-        = column_chart @rdvs.group_by_month('rdvs.created_at', range: 3.months.ago..Time.now, format: '%b %y').count
-  .col-md-6
-    .card
-      .card-body
-        h4.card-title.mb-3 Usagers créés
-        = column_chart @organisation.users.active.group_by_month('users.created_at', range: 3.months.ago..Time.now, format: '%b %y').count
