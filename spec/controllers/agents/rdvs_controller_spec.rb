@@ -36,7 +36,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
         expect(first["end"]).to eq(rdv1.ends_at.as_json)
         expect(first["backgroundColor"]).to eq(rdv1.motif.color)
         expect(first["url"]).to eq(organisation_rdv_path(rdv1.organisation, rdv1))
-        expect(first["extendedProps"]).to eq({ status: rdv1.status, past: rdv1.past?, duration: rdv.duration_in_min }.as_json)
+        expect(first["extendedProps"]).to eq({ status: rdv1.status, motif: rdv1.motif.name, past: rdv1.past?, duration: rdv.duration_in_min }.as_json)
 
         second = @parsed_response[1]
         expect(second.size).to eq(6)
@@ -45,7 +45,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
         expect(second["end"]).to eq(rdv2.ends_at.as_json)
         expect(second["backgroundColor"]).to eq(rdv2.motif.color)
         expect(second["url"]).to eq(organisation_rdv_path(rdv2.organisation, rdv2))
-        expect(first["extendedProps"]).to eq({ status: rdv1.status, past: rdv1.past?, duration: rdv.duration_in_min }.as_json)
+        expect(first["extendedProps"]).to eq({ status: rdv2.status, motif: rdv2.motif.name, past: rdv2.past?, duration: rdv.duration_in_min }.as_json)
       end
     end
   end
