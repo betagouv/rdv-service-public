@@ -16,7 +16,9 @@ class AgentAuthController < ApplicationController
   end
 
   def pundit_user
-    AgentContext.new(current_agent, current_organisation)
+    id = params[:controller] =='agents/agents' ? params[:id] : params[:agent_id]
+    selected_agent = Agent.find_by(id: id)
+    AgentContext.new(current_agent, selected_agent, current_organisation)
   end
 
   def authorize(record)
