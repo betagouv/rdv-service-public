@@ -5,7 +5,7 @@
     | Agenda de #{@agent.full_name_and_service}
 
 - content_for :breadcrumb do
-  - if policy_scope(Agent).complete.active.size > 1
+  - if policy_scope(Agent).complete.active.many?
     = form_tag(organisation_agent_with_id_in_query_path, method: "get", class: "d-inline-block mr-2") do
       = select_tag :id, options_from_collection_for_select(policy_scope(Agent).complete.active.order_by_last_name, 'id', 'full_name', @agent.id), class: "select2-input", onchange: 'this.form.submit()'
 

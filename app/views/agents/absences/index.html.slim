@@ -5,7 +5,7 @@
     | Absences de #{@agent.full_name_and_service}
 
 - content_for :breadcrumb do
-  - if policy_scope(Agent).complete.active.size > 1
+  - if policy_scope(Agent).complete.active.many?
     .d-inline-block.mr-2
       = select_tag :id, options_for_select(policy_scope(Agent).complete.active.order_by_last_name.map { |agent| [agent.full_name, agent.id, { 'data-url': organisation_agent_absences_path(current_organisation, agent.id)}]}, selected: @agent.id), class: "select2-input", onchange: "window.location.href = $('.select2-input option:selected').attr('data-url')"
 
