@@ -91,8 +91,9 @@ document.addEventListener('turbolinks:load', function() {
         } else {
           if (info.event.extendedProps.duration) {
             title += ` <small>(${info.event.extendedProps.duration} min)</small>`;
+            title += ` <br>${info.event.extendedProps.motif}`;
           }
-          title += `<br><strong>RDV : ${info.event.title}</strong>`;
+          title += `<br><strong>${info.event.title}</strong>`;
         }
 
         $el.attr("title", title);
