@@ -49,6 +49,11 @@ class DefaultAgentPolicy
     end
   end
 
+  def same_service?
+    service = @record.is_a?(Agent) ? @record.service : @record.agent.service
+    service == @context.agent.service
+  end
+
   def same_agent?
     if @record.is_a? Agent
       @record.id == @context.agent.id
@@ -70,7 +75,13 @@ class DefaultAgentPolicy
   end
 
   def same_agent_or_has_access?
-    same_agent? || (same_org? && @context.agent.can_access_others_planning?)
+    if same_agent?
+      true
+    elsif same_org?
+      same_service? || @context.agent.can_access_others_planning?
+    else
+      false
+    end
   end
 
   class Scope
