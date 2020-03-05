@@ -38,6 +38,7 @@
         label_method: lambda { |user| full_name_and_birthdate(user) },
         input_html: { multiple: true, class: 'select2-input', data: { "select-options": { ajax: { url: search_organisation_users_path(current_organisation), dataType: 'json', delay: 250 }} } },
         hint: raw("L'usager n'existe pas ? #{link_to "Créer", new_organisation_user_path(current_organisation, modal: true), data: { modal: true }}.")
+      = f.input :notes, input_html: { rows: 4 }
 
       .row
         .col.text-left

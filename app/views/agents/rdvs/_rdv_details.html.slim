@@ -19,3 +19,8 @@ p.card-text
 p.card-text
   strong> Usager(s) :
   = users_to_links(rdv)
+- if rdv.notes.present?
+  .card-text
+    i.fa.fa-fw.fa-sticky-note-o>
+    strong> Notes libres :
+    = simple_format(rdv.notes)
