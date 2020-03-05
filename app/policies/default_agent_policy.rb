@@ -50,7 +50,7 @@ class DefaultAgentPolicy
   end
 
   def same_service?
-    service = @record.class == Agent ? @record.service : @record.agent.service
+    service = @record.is_a?(Agent) ? @record.service : @record.agent.service
     service == @context.agent.service
   end
 
