@@ -72,7 +72,15 @@ module ApplicationHelper
     end
   end
 
+  def map_tag_marker(title)
+    icon_tag_tooltip(title, 'map-marker')
+  end
+
   def question_tag_tooltip(title)
-    content_tag(:i, nil, class: "fa fa-question-circle", data: { toggle: 'tooltip' }, title: title)
+    icon_tag_tooltip(title, 'question-circle')
+  end
+
+  def icon_tag_tooltip(title, icon)
+    content_tag(:i, nil, class: "fa fa-#{icon}", data: { toggle: 'tooltip' }, title: title)
   end
 end
