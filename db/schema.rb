@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_25_153357) do
+ActiveRecord::Schema.define(version: 2020_03_05_160249) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -240,6 +240,7 @@ ActiveRecord::Schema.define(version: 2020_02_25_153357) do
     t.integer "status", default: 0
     t.string "location"
     t.integer "created_by", default: 0
+    t.text "notes"
     t.index ["created_by"], name: "index_rdvs_on_created_by"
     t.index ["motif_id"], name: "index_rdvs_on_motif_id"
     t.index ["organisation_id"], name: "index_rdvs_on_organisation_id"
