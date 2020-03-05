@@ -71,6 +71,7 @@ $(document).on('shown.rightbar', '.right-bar', function(e) {
   });
   new Datetimepicker();
   new Rdvstatus();
+  $(".tooltip").tooltip("hide");
 });
 
 $(document).on('hide.bs.modal', '.modal', function(e) {

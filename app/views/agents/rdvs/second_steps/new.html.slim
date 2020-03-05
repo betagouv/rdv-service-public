@@ -21,9 +21,9 @@
 
         .mb-1
           - current_organisation.lieux.each do |l|
-            = button_tag type: "button", onclick: "document.querySelector('#rdv_location').value = '#{escape_javascript(l.address)}'", class: "btn btn-outline-secondary btn-sm mb-1" do
-              i.fa.fa-map-marker>
-              = l.full_name
+            => button_tag type: "button", onclick: "document.querySelector('#rdv_location').value = '#{escape_javascript(l.address)}'", class: "btn btn-outline-secondary btn-sm mb-1" do
+              => l.name
+              = map_tag_marker(l.address)
 
       = f.association :agents, collection: @agents_authorize, label_method: :full_name_and_service, input_html: { multiple: true, class: 'select2-input' }
 
