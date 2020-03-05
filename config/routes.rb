@@ -68,6 +68,12 @@ Rails.application.routes.draw do
         resources :motifs
         resources :plage_ouvertures, except: [:index, :show, :new]
         resources :absences, except: [:index, :show, :new]
+        resources :stats, only: :index do
+          collection do
+            get :rdvs
+            get :users
+          end
+        end
 
         get "agent", to: "agents#show", as: "agent_with_id_in_query"
         resources :agents, only: [:index, :show, :destroy] do

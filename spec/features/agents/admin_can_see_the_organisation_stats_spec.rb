@@ -1,11 +1,15 @@
-describe "Anybody can see stats" do
+describe "Admin can configure the organisation" do
+  let!(:agent_admin) { create(:agent, :admin) }
+
   before do
-    visit root_path
+    login_as(agent_admin, scope: :agent)
+    visit authenticated_agent_root_path
   end
 
   shared_examples "a stats page" do
     it "displays all the stats" do
-      click_link 'Statistiques'
+      click_link "Paramètres"
+      click_link 'Vos statistiques'
       expect(page).to have_content('Statistiques')
       expect(page).to have_content('RDV créés')
       expect(page).to have_content('Usagers créés')

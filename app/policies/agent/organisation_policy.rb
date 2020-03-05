@@ -7,6 +7,14 @@ class Agent::OrganisationPolicy < DefaultAgentPolicy
     false
   end
 
+  def users?
+    admin?
+  end
+
+  def rdvs?
+    admin?
+  end
+
   class Scope < Scope
     def resolve
       scope.where(id: @context.agent.organisation_ids)
