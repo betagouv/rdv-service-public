@@ -50,8 +50,13 @@ class DefaultAgentPolicy
   end
 
   def same_service?
-    service = @record.is_a?(Agent) ? @record.service : @record.agent.service
-    service == @context.agent.service
+    if @record.is_a? Agent
+      @record.service_id == @context.agent.service_id
+    elsif @record.respond_to?(:agent_id)
+      @record.agent.service_id == @context.agent.service_id
+    elsif @record.respond_to?(:agent_ids)
+      @record.agents.where(agents: { service_id: @context.agent.service_id }).exists?
+    end
   end
 
   def same_agent?
