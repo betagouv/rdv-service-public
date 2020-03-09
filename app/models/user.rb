@@ -4,7 +4,7 @@ class User < ApplicationRecord
   include FullNameConcern
   include AccountNormalizerConcern
 
-  attr_accessor :created_or_updated_by_agent, :invite_on_create
+  attr_accessor :created_or_updated_by_agent, :invite_on_create, :sign_up_params
 
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
@@ -127,6 +127,20 @@ class User < ApplicationRecord
     invite_on_create == "true"
   end
 
+  def send_invite_if_checked
+    invite! if invite_on_create? && email.present?
+  end
+
+  def active_for_authentication?
+    super && !encrypted_password.blank?
+  end
+
+  def valid_except_email?
+    self.valid?
+    errors.delete(:email)
+    errors.empty?
+  end
+
   protected
 
   def password_required?
@@ -157,7 +171,4 @@ class User < ApplicationRecord
     errors.add(:birth_date, "est invalide")
   end
 
-  def send_invite_if_checked
-    invite! if invite_on_create? && email.present?
-  end
 end

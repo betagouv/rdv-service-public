@@ -13,7 +13,7 @@
   = f.input :email, as: :email
   - if !user.persisted?
     #invite-user.form-row.align-items-baseline.ml-0 style="display: none"
-      = f.check_box :invite_on_create, {checked: true}, 'true', 'false'
+      = f.check_box :invite_on_create, {checked: false}, 'true', 'false'
       = f.label :invite_on_create, "Inviter l'utilisateur à se créer un compte sur RDV-solidarites.", class: "ml-1"
   - if user.pending_reconfirmation?
     .form-text.text-muted.mb-2
