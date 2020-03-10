@@ -21,7 +21,7 @@ class PlageOuverture::Ics
       e.summary     = "#{BRAND} #{plage_ouverture.title}"
       e.description = ""
       e.location    = plage_ouverture.lieu.address
-      e.ip_class    = "PRIVATE"
+      e.ip_class    = "PUBLIC"
       e.attendee    = plage_ouverture.agent.email
       e.rrule       = rrule
     end
