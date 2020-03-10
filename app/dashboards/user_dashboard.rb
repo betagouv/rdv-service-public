@@ -70,6 +70,7 @@ class UserDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = [
     :organisations,
     :parent,
+    :children,
     :first_name,
     :last_name,
     :birth_name,
