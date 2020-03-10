@@ -69,6 +69,11 @@ GEM
       momentjs-rails (~> 2.8)
       sassc-rails (~> 2.1)
       selectize-rails (~> 0.6)
+    administrate-field-belongs_to_search (0.7.0)
+      administrate (>= 0.3, < 1.0)
+      jbuilder (~> 2)
+      rails (>= 4.2, < 7.0)
+      selectize-rails (~> 0.6)
     ast (2.4.0)
     autoprefixer-rails (9.7.4)
       execjs
@@ -484,6 +489,7 @@ PLATFORMS
 
 DEPENDENCIES
   administrate (~> 0.12)
+  administrate-field-belongs_to_search (~> 0.7)
   autoprefixer-rails (~> 9.6)
   better_errors
   binding_of_caller

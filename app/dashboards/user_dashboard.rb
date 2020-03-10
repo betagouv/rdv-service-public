@@ -16,7 +16,7 @@ class UserDashboard < Administrate::BaseDashboard
     email: Field::String,
     address: Field::String,
     phone_number: Field::String,
-    parent: Field::BelongsTo.with_options(class_name: "User"),
+    parent: Field::BelongsToSearch.with_options(class_name: 'User'),
     children: Field::HasMany.with_options(class_name: "User"),
     caisse_affiliation: EnumField,
     family_situation: EnumField,
@@ -69,6 +69,7 @@ class UserDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
     :organisations,
+    :parent,
     :first_name,
     :last_name,
     :birth_name,
