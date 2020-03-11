@@ -10,7 +10,7 @@ class Agents::RdvsController < AgentAuthController
     @rdvs = @rdvs.default_stats_period if filter_params[:default_period].present?
     @rdvs = @rdvs.status(filter_params[:status]) if filter_params[:status].present?
     @rdvs = @rdvs.where(starts_at: date_range_params) if filter_params[:start].present? && filter_params[:end].present?
-    @rdvs = @rdvs.includes(:motif).order(starts_at: :desc)
+    @rdvs = @rdvs.includes(:organisation, :motif, :agents_rdvs, agents: :service).order(starts_at: :desc)
   end
 
   def show
