@@ -10,27 +10,25 @@ h4.card-title.mb-3
       p.lead
         => t '.rdvs.unknown_past', count: rdvs.unknown.past.count 
         = rdv_danger_icon(rdvs.unknown.past.count)
-      = link_to 'Voir', stats_rdv_path('unknown_past'), class: 'btn btn-outline-dark' unless stats_path?
+      = link_to_rdv('unknown_past', clasz: 'btn-outline-dark')
   .col-md-4
     .bg-success.text-white.p-2.mb-3.text-center
       p.h2= rdvs.seen.count
       p.lead= t '.rdvs.seen', count: rdvs.seen.count
-      = link_to 'Voir', stats_rdv_path('seen'), class: 'btn btn-outline-white' unless stats_path?
+      = link_to_rdv('seen')
   .col-md-4
     .bg-info.text-white.p-2.mb-3.text-center
       p.h2= rdvs.unknown.future.count
       p.lead À venir
-      = link_to 'Voir', stats_rdv_path('unknown_future'), class: 'btn btn-outline-white ' unless stats_path?
-
+      = link_to_rdv('unknown_future')
 .row
   .col-md-6
     .bg-tertiary.text-white.p-2.mb-3.text-center
       p.h2= rdvs.excused.count
       p.lead= t '.rdvs.excused', count: rdvs.excused.count
-      = link_to 'Voir', stats_rdv_path('excused'), class: 'btn btn-outline-white' unless stats_path?
-
+      = link_to_rdv('excused')
   .col-md-6
     .bg-danger.text-white.p-2.mb-3.text-center
       p.h2= rdvs.notexcused.count
       p.lead= t '.rdvs.notexcused', count: rdvs.notexcused.count
-      = link_to 'Voir', stats_rdv_path('notexcused'), class: 'btn btn-outline-white' unless stats_path?
+      = link_to_rdv('notexcused')
