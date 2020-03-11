@@ -33,5 +33,7 @@
               li=link_to 'Vos lieux', organisation_lieux_path(current_organisation)
               li=link_to 'Vos agents', organisation_agents_path(current_organisation)
               li=link_to 'Vos motifs', organisation_motifs_path(current_organisation)
-              li=link_to 'Vos statistiques', organisation_stats_path(current_organisation)
+              li=link_to organisation_stats_path(current_organisation) do 
+                | Vos statistiques
+                = unknown_past_danger_bage
 

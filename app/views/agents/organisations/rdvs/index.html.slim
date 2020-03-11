@@ -1,0 +1,27 @@
+- content_for :title do
+  | Liste des RDV
+
+- content_for :breadcrumb do
+  ol.breadcrumb.m-0
+    li.breadcrumb-item
+      = link_to 'Votre organisation', organisation_path(current_organisation), class: 'text-white'
+    li.breadcrumb-item
+      =link_to 'Vos statistiques', organisation_stats_path(current_organisation), class: 'text-white'
+    li.breadcrumb-item.active Liste des RDV
+
+- if @rdvs.any?
+  .row.justify-content-md-center
+    .col-md-6
+      = render partial: 'agents/rdvs/rdv', collection: @rdvs
+      .d-flex.justify-content-center= paginate @rdvs, theme: 'twitter-bootstrap-4'
+
+- else
+  .card
+    .card-body
+      .row.justify-content-md-center
+        .col-md-6.text-center.my-5
+          p.mb-2.lead 
+            | Aucun RDV.
+          span.fa-stack.fa-4x
+            i.fa.fa-circle.fa-stack-2x.text-primary
+            i.fa.fa-calendar-o.fa-stack-1x.text-white

@@ -1,18 +1,13 @@
 class Agents::RdvsController < AgentAuthController
   respond_to :html, :json
 
-  before_action :set_rdv, only: [:show, :edit, :update, :destroy, :status]
+  before_action :set_rdv, except: [:index]
 
   def index
     @rdvs = policy_scope(Rdv)
-    if filter_params[:agent_id].present?
-      @agent = policy_scope(Agent).find(filter_params[:agent_id])
-      @rdvs = @rdvs.joins(:agents).where(agents: { id: @agent })
-    end
-    if filter_params[:user_id].present?
-      @user = policy_scope(User).find(filter_params[:user_id])
-      @rdvs = @user.available_rdvs(current_organisation).page(filter_params[:page])
-    end
+    @agent = policy_scope(Agent).find(filter_params[:agent_id])
+    @rdvs = @rdvs.joins(:agents).where(agents: { id: @agent })
+    @rdvs = @rdvs.status(params[:status]) if params[:status].present?
     @rdvs = @rdvs.where(starts_at: date_range_params) if filter_params[:start].present? && filter_params[:end].present?
     @rdvs = @rdvs.includes(:motif).order(starts_at: :desc)
   end
@@ -29,13 +24,8 @@ class Agents::RdvsController < AgentAuthController
 
   def update
     authorize(@rdv)
-    location = params[:callback_path].present? ? params[:callback_path] : @rdv.agenda_path_for_agent(current_agent)
-    if @rdv.update(rdv_params)
-      flash[:notice] = 'Le rendez-vous a été modifié.'
-      redirect_to location.to_s
-    else
-      respond_right_bar_with @rdv, location: location.to_s
-    end
+    flash[:notice] = 'Le rendez-vous a été modifié.' if @rdv.update(rdv_params)
+    respond_right_bar_with @rdv, location: callback_path(@rdv)
   end
 
   def status
@@ -50,20 +40,24 @@ class Agents::RdvsController < AgentAuthController
 
   def destroy
     authorize(@rdv)
-    location = callback_params[:callback_path] || @rdv.agenda_path_for_agent(current_agent)
     if @rdv.destroy
       flash[:notice] = "Le rendez-vous a été supprimé."
     else
       flash[:error] = "Une erreur s’est produite, le rendez-vous n’a pas pu être supprimé."
       Raven.capture_exception(Exception.new("Deletion failed for rdv : #{@rdv.id}"))
     end
-    redirect_to location.to_s
+    redirect_to callback_path(@rdv)
   end
 
   private
 
   def set_rdv
     @rdv = Rdv.find(params[:id])
+  end
+
+  def callback_path(rdv)
+    location = params[:callback_path].present? ? params[:callback_path] : rdv.agenda_path_for_agent(current_agent)
+    location.to_s
   end
 
   def rdv_params

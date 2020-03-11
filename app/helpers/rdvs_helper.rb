@@ -42,4 +42,42 @@ module RdvsHelper
       content_tag(:span, 'À venir', class: 'badge badge-info')
     end
   end
+
+  def callback_path(rdv)
+    if params[:agent_id].present?
+      organisation_agent_rdvs_path(rdv.organisation, params[:agent_id], page: params[:page])
+    elsif params[:user_id].present?
+      organisation_user_rdvs_path(rdv.organisation, params[:user_id], page: params[:page])
+    else
+      organisation_rdvs_path(rdv.organisation, page: params[:page])
+    end
+  end
+
+  def stats_rdv_path(status)
+    case controller_name
+    when 'stats'
+      organisation_rdvs_path(current_organisation, page: params[:page], status: status)
+    when 'users' || 'chridren'
+      organisation_user_rdvs_path(current_organisation, params[:id], page: params[:page], status: status)
+    when 'agents'
+      organisation_agent_rdvs_path(current_organisation, params[:id], page: params[:page], status: status)
+    end
+  end
+
+  def stats_path?
+    stats_path == request.path
+  end
+
+  def unknown_past_danger_bage
+    unknown_past_rdvs = current_organisation.rdvs.status('unknown_past').where(created_at: Stat::DEFAULT_RANGE).count
+    rdv_danger_badge(unknown_past_rdvs)
+  end
+
+  def rdv_danger_badge(count)
+    content_tag(:span, count, class: 'badge badge-danger') if count.positive?
+  end
+
+  def rdv_danger_icon(count)
+    content_tag(:i, nil, class: "fa fa-exclamation-circle text-danger") if count.positive?
+  end
 end

@@ -62,10 +62,13 @@ Rails.application.routes.draw do
   end
 
   authenticate :agent do
-    scope module: "agents" do
+    scope module: 'agents' do
       resources :organisations, except: :destroy do
         resources :lieux, except: :show
         resources :motifs
+        scope module: 'organisations' do
+          resources :rdvs, only: :index
+        end
         resources :plage_ouvertures, except: [:index, :show, :new]
         resources :absences, except: [:index, :show, :new]
         resources :stats, only: :index do
@@ -97,7 +100,9 @@ Rails.application.routes.draw do
             get :search
             post :create_from_modal
           end
-          resources :rdvs, only: :index
+          scope module: :users do
+            resources :rdvs, only: :index
+          end
           resources :children, only: [:create, :new]
         end
         resources :children, except: [:create, :new]
