@@ -1,19 +1,18 @@
 class Agents::StatsController < AgentAuthController
   respond_to :html, :json
 
-  before_action :set_organisation
-
   def index
-    @stats = Stat.new(rdvs: policy_scope(Rdv), users: policy_scope(User))
+    @stats = Stat.new(rdvs: rdvs_for_current_agent)
   end
 
   def rdvs
-    authorize(@organisation)
-    render json: Stat.new(rdvs: policy_scope(Rdv)).rdv_group_by_week_fr.chart_json
+    authorize(current_agent)
+    render json: Stat.new(rdvs: rdvs_for_current_agent).rdv_group_by_week_fr.chart_json
   end
 
-  def users
-    authorize(@organisation)
-    render json: Stat.new(users: policy_scope(User)).users_group_by_week
+  private
+
+  def rdvs_for_current_agent
+    policy_scope(Rdv).joins(:agents).where(agents: { id: current_agent.id })
   end
 end

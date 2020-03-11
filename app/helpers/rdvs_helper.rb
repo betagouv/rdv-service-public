@@ -56,11 +56,13 @@ module RdvsHelper
   def stats_rdv_path(status)
     case controller_name
     when 'stats'
-      organisation_rdvs_path(current_organisation, page: params[:page], status: status)
+      if params[:agent_id].present?
+        organisation_agent_rdvs_path(current_organisation, params[:agent_id], status: status, default_period: true)
+      else
+        organisation_rdvs_path(current_organisation, status: status, default_period: true)
+      end
     when 'users' || 'chridren'
       organisation_user_rdvs_path(current_organisation, params[:id], page: params[:page], status: status)
-    when 'agents'
-      organisation_agent_rdvs_path(current_organisation, params[:id], page: params[:page], status: status)
     end
   end
 
@@ -68,8 +70,13 @@ module RdvsHelper
     stats_path == request.path
   end
 
-  def unknown_past_danger_bage
+  def unknown_past_rdvs_danger_bage
     unknown_past_rdvs = current_organisation.rdvs.status('unknown_past').where(created_at: Stat::DEFAULT_RANGE).count
+    rdv_danger_badge(unknown_past_rdvs)
+  end
+
+  def unknown_past_agent_rdvs_danger_bage
+    unknown_past_rdvs = current_organisation.rdvs.joins(:agents).where(agents: { id: current_agent }).status('unknown_past').where(created_at: Stat::DEFAULT_RANGE).count
     rdv_danger_badge(unknown_past_rdvs)
   end
 
@@ -82,6 +89,6 @@ module RdvsHelper
   end
 
   def link_to_rdv(status, clasz: 'btn-outline-white')
-    link_to 'Voir', stats_rdv_path('unknown_future'), class: "btn #{clasz}" unless stats_path?
+    link_to 'Voir', stats_rdv_path(status), class: "btn #{clasz}" unless stats_path?
   end
 end

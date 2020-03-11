@@ -5,8 +5,7 @@ h4.card-title.mb-3
 .row
   .col-md-4
     .bg-light.p-2.mb-3.mb-md-0.text-center
-      p.h2
-        = rdvs.unknown.past.count
+      p.h2= rdvs.unknown.past.count
       p.lead
         => t '.rdvs.unknown_past', count: rdvs.unknown.past.count 
         = rdv_danger_icon(rdvs.unknown.past.count)

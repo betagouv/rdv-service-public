@@ -7,7 +7,8 @@ class Agents::RdvsController < AgentAuthController
     @rdvs = policy_scope(Rdv)
     @agent = policy_scope(Agent).find(filter_params[:agent_id])
     @rdvs = @rdvs.joins(:agents).where(agents: { id: @agent })
-    @rdvs = @rdvs.status(params[:status]) if params[:status].present?
+    @rdvs = @rdvs.default_stats_period if filter_params[:default_period].present?
+    @rdvs = @rdvs.status(filter_params[:status]) if filter_params[:status].present?
     @rdvs = @rdvs.where(starts_at: date_range_params) if filter_params[:start].present? && filter_params[:end].present?
     @rdvs = @rdvs.includes(:motif).order(starts_at: :desc)
   end
@@ -79,6 +80,6 @@ class Agents::RdvsController < AgentAuthController
   end
 
   def filter_params
-    params.permit(:organisation_id, :start, :end, :agent_id, :user_id, :page)
+    params.permit(:organisation_id, :start, :end, :agent_id, :user_id, :page, :status, :default_period)
   end
 end

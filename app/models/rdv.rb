@@ -26,6 +26,7 @@ class Rdv < ApplicationRecord
       where(status: status)
     end
   }
+  scope :default_stats_period, -> { where(created_at: Stat::DEFAULT_RANGE) }
 
   after_commit :reload_uuid, on: :create
 
