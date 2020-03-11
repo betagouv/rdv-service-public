@@ -25,6 +25,10 @@ module RdvsHelper
     content_tag(:span, Rdv.human_enum_name(:status, rdv.status), class: 'badge badge-info')
   end
 
+  def rdv_filter_status_tag
+    content_tag(:span, Rdv.human_enum_name(:status, params[:status]), class: 'badge badge-info') if params[:status].present?
+  end
+
   def no_rdv_for_users
     sentence = "Vous n'avez pas de RDV "
     sentence += params[:past].present? ? "passé." : "à venir."
@@ -88,7 +92,7 @@ module RdvsHelper
     content_tag(:i, nil, class: "fa fa-exclamation-circle text-danger") if count.positive?
   end
 
-  def link_to_rdv(status, clasz: 'btn-outline-white')
+  def link_to_rdvs(status, clasz: 'btn-outline-white')
     link_to 'Voir', stats_rdv_path(status), class: "btn #{clasz}" unless stats_path?
   end
 end

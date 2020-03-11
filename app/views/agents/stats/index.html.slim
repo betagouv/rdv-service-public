@@ -1,6 +1,6 @@
 - content_for :title do
-  | Statistiques 
-  small Du #{l(Stat::DEFAULT_RANGE.first.to_date)} au #{l(Stat::DEFAULT_RANGE.last.to_date)} pour #{current_agent.full_name}
+  | Statistiques #{current_agent.full_name} 
+  small Du #{l(Stat::DEFAULT_RANGE.first.to_date)} au #{l(Stat::DEFAULT_RANGE.last.to_date)} 
 
 .card.mb-5
   .card-body

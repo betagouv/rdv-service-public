@@ -1,3 +1,7 @@
+- content_for :title do
+  | Liste des RDV 
+  = rdv_filter_status_tag
+  
 - if rdvs.any?
   .row.justify-content-md-center
     .col-md-6

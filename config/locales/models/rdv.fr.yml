@@ -18,6 +18,9 @@ fr:
           seen: Vu
           excused: Absent excusé
           notexcused: Absent non excusé
+          unknown_past: À renseigner
+          unknown_future: À venir
+
   agents:
     rdvs:
       rdvs_stats:
