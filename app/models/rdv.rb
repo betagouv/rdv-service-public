@@ -19,9 +19,9 @@ class Rdv < ApplicationRecord
   scope :user_with_children, ->(parent_id) { joins(:users).includes(:rdvs_users, :users).where('users.id IN (?)', [parent_id, User.find(parent_id).children.pluck(:id)].flatten) }
   scope :status, lambda { |status|
     if status == 'unknown_past'
-      unknown.past
+      past.where(status: ['unknown', 'waiting'])
     elsif status == 'unknown_future'
-      unknown.future
+      future.where(status: ['unknown', 'waiting'])
     else
       where(status: status)
     end

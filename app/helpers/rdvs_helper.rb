@@ -89,7 +89,7 @@ module RdvsHelper
   end
 
   def rdv_danger_icon(count)
-    content_tag(:i, nil, class: "fa fa-exclamation-circle text-danger") if count.positive?
+    content_tag(:i, nil, class: "fa fa-exclamation-circle text-danger") if count.positive? && !stats_path?
   end
 
   def link_to_rdvs(status, clasz: 'btn-outline-white')
