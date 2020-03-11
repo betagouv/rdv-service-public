@@ -4,7 +4,7 @@ class User < ApplicationRecord
   include FullNameConcern
   include AccountNormalizerConcern
 
-  attr_accessor :created_or_updated_by_agent, :invite_on_create, :sign_up_params
+  attr_accessor :created_or_updated_by_agent, :invite_on_create
 
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
@@ -104,7 +104,7 @@ class User < ApplicationRecord
   end
 
   def active_for_authentication?
-    super && !deleted_at
+    super && !deleted_at && !encrypted_password.blank?
   end
 
   def inactive_message
@@ -131,12 +131,8 @@ class User < ApplicationRecord
     invite! if invite_on_create? && email.present?
   end
 
-  def active_for_authentication?
-    super && !encrypted_password.blank?
-  end
-
   def valid_except_email?
-    self.valid?
+    valid?
     errors.delete(:email)
     errors.empty?
   end
@@ -170,5 +166,4 @@ class User < ApplicationRecord
 
     errors.add(:birth_date, "est invalide")
   end
-
 end

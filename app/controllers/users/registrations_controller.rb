@@ -46,21 +46,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def prepare_resource
     resource = User.find_by(email: sign_up_params[:email], confirmed_at: nil)
     user = build_resource(sign_up_params)
-    
+
     if resource.present? && resource.encrypted_password.blank? && user.valid_except_email?
-      # email exist but has never signin
-      resource.password = sign_up_params[:password]
-      resource.save(validate: false)
-      resource.sign_up_params = sign_up_params.except(:password)
-      resource.send(:generate_confirmation_token)
-      Devise::Mailer.confirmation_instructions(resource, resource.instance_variable_get(:@raw_confirmation_token), sign_up_params: sign_up_params).deliver_now
+      resource.invite!
     elsif resource.nil? || resource.encrypted_password.blank?
-      # email dont exist or email has never signin => error in login
       resource = user
       resource.save
       resource.errors.delete(:email) if resource.present?
     end
     self.resource = resource
   end
-
 end

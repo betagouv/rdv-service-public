@@ -30,7 +30,7 @@ Rails.application.routes.draw do
   end
 
   ## APP ##
-  devise_for :users, controllers: { registrations: 'users/registrations', sessions: 'sessions', confirmations: 'users/confirmations' }
+  devise_for :users, controllers: { registrations: 'users/registrations', sessions: 'sessions' }
 
   namespace :users do
     resources :rdvs, only: [:index, :new, :create] do
