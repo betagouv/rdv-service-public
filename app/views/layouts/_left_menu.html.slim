@@ -16,7 +16,7 @@
       li.side-nav-item
         = link_to organisation_agent_stats_path(current_organisation, current_agent), class: 'side-nav-link' do
           i.fa.fa-bar-chart
-          span Vos statistiques
+          span Vos statistiques 
           = unknown_past_agent_rdvs_danger_bage
 
       li.side-nav-item
@@ -40,6 +40,6 @@
               li=link_to 'Vos agents', organisation_agents_path(current_organisation)
               li=link_to 'Vos motifs', organisation_motifs_path(current_organisation)
               li=link_to organisation_stats_path(current_organisation) do 
-                | Vos statistiques globales
+                | Vos statistiques globales 
                 = unknown_past_rdvs_danger_bage
 
