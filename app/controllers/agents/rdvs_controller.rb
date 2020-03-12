@@ -41,13 +41,14 @@ class Agents::RdvsController < AgentAuthController
 
   def destroy
     authorize(@rdv)
+    redirect_location = callback_path(@rdv)
     if @rdv.destroy
       flash[:notice] = "Le rendez-vous a été supprimé."
     else
       flash[:error] = "Une erreur s’est produite, le rendez-vous n’a pas pu être supprimé."
       Raven.capture_exception(Exception.new("Deletion failed for rdv : #{@rdv.id}"))
     end
-    redirect_to callback_path(@rdv)
+    redirect_to redirect_location
   end
 
   private
