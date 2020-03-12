@@ -2,26 +2,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
   layout :user_devise_layout
 
   def create
-    prepare_resource
+    return invite_and_redirect if User.find_by(email: sign_up_params[:email], confirmed_at: nil)
 
-    yield resource if block_given?
-
-    if resource.persisted?
-      if resource.active_for_authentication?
-        set_flash_message! :notice, :signed_up
-        sign_up(resource_name, resource)
-        respond_with resource, location: after_sign_up_path_for(resource)
-      else
-        set_flash_message! :notice, :"signed_up_but_#{resource.inactive_message}"
-        expire_data_after_sign_in!
-        respond_with resource, location: after_inactive_sign_up_path_for(resource)
-      end
-    else
-      clean_up_passwords resource
-      set_minimum_password_length
-      set_minimum_password_length
-      respond_with resource
-    end
+    super
   end
 
   def destroy
@@ -43,17 +26,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
     new_user_session_path
   end
 
-  def prepare_resource
-    resource = User.find_by(email: sign_up_params[:email], confirmed_at: nil)
-    user = build_resource(sign_up_params)
-
-    if resource.present? && resource.encrypted_password.blank? && user.valid_except_email?
-      resource.invite!
-    elsif resource.nil? || resource.encrypted_password.blank?
-      resource = user
-      resource.save
-      resource.errors.delete(:email) if resource.present?
-    end
-    self.resource = resource
+  def invite_and_redirect
+    user = User.find_by(email: sign_up_params[:email], confirmed_at: nil)
+    user.invite!
+    set_flash_message! :notice, :"signed_up_but_unconfirmed"
+    respond_with user, location: after_inactive_sign_up_path_for(user)
   end
+
 end
