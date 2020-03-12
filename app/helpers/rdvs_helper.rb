@@ -65,8 +65,8 @@ module RdvsHelper
       else
         organisation_rdvs_path(current_organisation, status: status, default_period: true)
       end
-    when 'users' || 'chridren'
-      organisation_user_rdvs_path(current_organisation, params[:id], page: params[:page], status: status)
+    when 'users', 'children'
+      organisation_user_rdvs_path(current_organisation, params[:id], status: status)
     end
   end
 
