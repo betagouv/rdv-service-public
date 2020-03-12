@@ -8,7 +8,7 @@ module MotifsHelper
   end
 
   def secretariat_badge(motif)
-    content_tag(:span, 'Secrétariat', class: 'badge badge-secondary') if motif.by_phone
+    content_tag(:span, 'Secrétariat', class: 'badge badge-secondary') if motif.for_secretariat
   end
 
   def min_max_delay_options
