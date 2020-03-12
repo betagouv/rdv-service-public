@@ -20,6 +20,9 @@ FactoryBot.define do
     trait :by_phone do
       by_phone { true }
     end
+    trait :for_secretariat do
+      for_secretariat { true }
+    end
     trait :no_notification do
       disable_notifications_for_users { true }
     end

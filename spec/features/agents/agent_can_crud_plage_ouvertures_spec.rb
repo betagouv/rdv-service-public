@@ -49,8 +49,8 @@ describe "Agent can CRUD users" do
       click_link 'Créer une plage d\'ouverture', match: :first
       expect(page).to have_content("Aucun motif disponible. Vous ne pouvez pas créer de plage d'ouverture.")
     end
-    context 'with one by_phone motif' do
-      let!(:motif) { create(:motif, :by_phone) }
+    context 'with motif for_secretariat' do
+      let!(:motif) { create(:motif, :for_secretariat) }
       scenario "can create a plage_ouverture" do
         click_link 'Créer une plage d\'ouverture', match: :first
         fill_in 'Description', with: new_plage_ouverture.title

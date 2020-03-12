@@ -7,6 +7,10 @@ module MotifsHelper
     content_tag(:span, 'Par tél.', class: 'badge badge-info') if motif.by_phone
   end
 
+  def secretariat_badge(motif)
+    content_tag(:span, 'Secrétariat', class: 'badge badge-secondary') if motif.by_phone
+  end
+
   def min_max_delay_options
     [["1/2 heure", 30.minutes], ["1 heure", 1.hour], ["2 heures", 2.hours],
      ["3 heures", 3.hours], ["6 heures", 6.hours], ["12 heures", 12.hours],
