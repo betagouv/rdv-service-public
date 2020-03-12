@@ -14,7 +14,7 @@ describe "can see users' RDV" do
       expect(page).to have_content("0\nÀ venir")
       click_link 'Voir tous les RDV'
       expect_page_title('Liste des RDV')
-      expect_page_with_no_record_text("Aucun RDV pour #{user.full_name}")
+      expect_page_with_no_record_text("Aucun RDV")
     end
   end
 

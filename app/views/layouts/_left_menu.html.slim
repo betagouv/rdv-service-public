@@ -9,9 +9,15 @@
         = link_to organisation_agent_path(current_organisation, current_agent), class: 'side-nav-link' do
           i.fa.fa-calendar-o
           span Vos agendas
+      li.side-nav-item
         = link_to organisation_users_path(current_organisation), class: 'side-nav-link' do
           i.fa.fa-user
           span Vos usagers
+      li.side-nav-item
+        = link_to organisation_agent_stats_path(current_organisation, current_agent), class: 'side-nav-link' do
+          i.fa.fa-bar-chart
+          span Vos statistiques 
+          = unknown_past_agent_rdvs_danger_bage
 
       li.side-nav-item
         = link_to '#', class: 'side-nav-link' do
@@ -33,5 +39,7 @@
               li=link_to 'Vos lieux', organisation_lieux_path(current_organisation)
               li=link_to 'Vos agents', organisation_agents_path(current_organisation)
               li=link_to 'Vos motifs', organisation_motifs_path(current_organisation)
-              li=link_to 'Vos statistiques', organisation_stats_path(current_organisation)
+              li=link_to organisation_stats_path(current_organisation) do 
+                | Vos statistiques globales 
+                = unknown_past_rdvs_danger_bage
 

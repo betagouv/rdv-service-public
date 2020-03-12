@@ -7,6 +7,10 @@ class Agent::AgentPolicy < Agent::AdminPolicy
     same_agent_or_has_access?
   end
 
+  def rdvs?
+    same_agent_or_has_access?
+  end
+
   def reinvite?
     invite?
   end
