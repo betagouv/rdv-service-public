@@ -53,6 +53,6 @@ class Agents::ChildrenController < AgentAuthController
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :birth_date)
+    params.require(:user).permit(:first_name, :last_name, :birth_date, :notes)
   end
 end
