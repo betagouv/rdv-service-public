@@ -1,0 +1,26 @@
+- if Flipflop.corona?
+  section.py-2
+    .card.card-warning
+      .card-body
+        h4.card-title.text-center 
+          | Message d'information Coronavirus (COVID-19)
+        .container
+          .row
+            .col-md-6
+              p
+                | Accédez à toutes les informations officielles 
+                br 
+                | sur 
+                = link_to 'le site du gouvernement', 'https://www.gouvernement.fr/info-coronavirus'
+                br 
+                | ou au 0 800 130 000 
+                span.font-13 numéro gratuit et officiel d'informations
+            .col-md-6
+              p
+                | En cas de signes d'infection respiratoire (fièvre ou sensation de fièvre, toux, difficultés respiratoires) :
+                ul
+                  li Restez à la maison confiné 7 jours et appelez votre médecin traitant ou un pharmacien pour un avis adapté à votre situation
+                  li Si votre médecin traitant le propose, effectuez une vidéo consultation
+                  li Évitez tout contact avec votre entourage
+                  li Ne vous rendez pas chez votre médecin traitant ou aux urgences
+                  li vous avez du mal à respirer et dans ce cas uniquement faites le 15
