@@ -14,12 +14,17 @@
     .card
       .card-body
         h4.card-title.mb-3 Informations de l'enfant
-        ul.list-unstyled.mb-5
+        ul.list-unstyled
           - {first_name: @user.first_name, last_name: @user.last_name, birth_date: birth_date_and_age(@user) }.each do |k,v|
               li.mb-2 
                 strong= "#{t("activerecord.attributes.user.#{k}")} : "
                 | #{v}
-        .row
+        - if @user.notes.present?
+          .card-text
+            i.fa.fa-fw.fa-sticky-note-o>
+            strong> Notes libres :
+            = simple_format(@user.notes)
+        .row.mt-5
           .col.text-left
             = link_to "Supprimer", organisation_child_path(current_organisation, @user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cet usager ?"}
           .col.text-right
