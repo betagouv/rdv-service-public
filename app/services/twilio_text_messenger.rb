@@ -61,6 +61,6 @@ class TwilioTextMessenger
   end
 
   def coronavirus
-    "Pour faire face au Coronavirus, votre RDV du #{I18n.l(@rdv.starts_at.to_date, format: :short)} avec #{@rdv.organisation.name} a été annulé."
+    "Pour faire face au Coronavirus, votre RDV #{@rdv.motif.service.short_name} du #{I18n.l(@rdv.starts_at.to_date, format: :short)} a été annulé."
   end
 end
