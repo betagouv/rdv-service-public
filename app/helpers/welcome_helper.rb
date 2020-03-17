@@ -21,7 +21,7 @@ module WelcomeHelper
 
   if Flipflop.corona?
     def urgency_quote
-      "Si vous en ressentez le besoin, vous pouvez contacter le <b>#{urgency_number}</b>.".html_safe if urgency_number
+      "En cas de besoin, vous pouvez contacter le <b>#{urgency_number}</b>.".html_safe if urgency_number
     end
 
     def urgency_number
