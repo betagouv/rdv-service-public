@@ -10,6 +10,7 @@ AllCops:
     # Overload of Devis invite and register
     - "app/controllers/agents/registrations_controller.rb"
     - "app/controllers/agents/invitations_controller.rb"
+    - "app/helpers/welcome_helper.rb"
 
 Bundler/OrderedGems:
   Enabled: false
