@@ -19,32 +19,30 @@ module WelcomeHelper
     mail_to "contact@rdv-solidarites.fr", "Contactez-nous", class: 'btn btn-tertiary'
   end
 
-  if Flipflop.corona?
-    def urgency_quote
-      "En cas de besoin, vous pouvez contacter le <b>#{urgency_number}</b>.".html_safe if urgency_number
-    end
+  def urgency_quote
+    "En cas de besoin, vous pouvez contacter le <b>#{urgency_number}</b>.".html_safe if urgency_number
+  end
 
-    def urgency_number
-      case departement_params
-      when '77'
-        '01.64.14.77.77'
-      when '92'
-        '01.55.48.03.30'
-      when '64'
-        '05.59.69.34.11'
-      when '62'
-        '03 21 216 216'
-      when '22'
-        '02.96.60.86.86'
-      when '80'
-        '06.47.46.19.86'
-      when '55'
-        '03.29.80.32.34'
-      end
+  def urgency_number
+    case departement_params
+    when '77'
+      '01.64.14.77.77'
+    when '92'
+      '01.55.48.03.30'
+    when '64'
+      '05.59.69.34.11'
+    when '62'
+      '03 21 216 216'
+    when '22'
+      '02.96.60.86.86'
+    when '80'
+      '06.47.46.19.86'
+    when '55'
+      '03.29.80.32.34'
     end
+  end
 
-    def departement_params
-      (controller_name == 'welcome' && params[:departement]) || (params[:search] && params[:search][:departement])
-    end
+  def departement_params
+    (controller_name == 'welcome' && params[:departement]) || (params[:search] && params[:search][:departement])
   end
 end
