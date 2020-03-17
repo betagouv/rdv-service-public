@@ -4,7 +4,7 @@ namespace :prod do
   desc "Massive cancel of rdv due to COVID 19"
   task :massive_cancel, [:end_date] => :environment do |_t, args|
     args.with_defaults(end_date: 15.days.since)
-    rdvs = Rdv.future.active.status('unknown_future').where('DATE(starts_at) < ?', args.end_date.to_date)
+    rdvs = Rdv.active.status('unknown_future').joins(:organisation).where("departement != '14'").where('DATE(starts_at) < ?', args.end_date.to_date)
     puts "RDV concernés: #{rdvs.size}"
     now = Time.now
     rdvs.each do |rdv|
