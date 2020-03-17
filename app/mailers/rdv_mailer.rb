@@ -16,6 +16,12 @@ class RdvMailer < ApplicationMailer
     mail(to: user.email, subject: reminder_subject(@rdv))
   end
 
+  def cancel_rdv(rdv, user)
+    @rdv = rdv
+    @user = user
+    mail(to: user.email, subject: "RDV annulé le #{l(rdv.starts_at, format: :human)} avec #{rdv.organisation.name}")
+  end
+
   private
 
   def confirmation_subject(rdv)
