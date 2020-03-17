@@ -8,7 +8,9 @@ class LieuxController < ApplicationController
 
     @next_availability_by_lieux = {}
     @lieux.each do |lieu|
-      @next_availability_by_lieux[lieu.id] = Creneau.next_availability_for_motif_and_lieu(@motif, lieu, Date.today)
+      unless Flipflop.corona?
+        @next_availability_by_lieux[lieu.id] = Creneau.next_availability_for_motif_and_lieu(@motif, lieu, Date.today)
+      end
     end
 
     return redirect_to lieu_path(@lieux.first, search: @query) if @lieux.size == 1
