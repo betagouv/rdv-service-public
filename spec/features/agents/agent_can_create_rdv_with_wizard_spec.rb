@@ -53,6 +53,7 @@ describe "Agent can create a Rdv with wizard" do
     sleep(1) # wait for scroll to not interfere with form input
     page.execute_script "$('#mainModal').scrollTop(1000)"
     click_button('Créer')
+    sleep(1) # wait for modal to hide completely
 
     # create user without email
     click_link('Créer')
@@ -61,6 +62,7 @@ describe "Agent can create a Rdv with wizard" do
     sleep(1) # wait for scroll to not interfere with form input
     page.execute_script "$('#mainModal').scrollTop(1000)"
     click_button('Créer')
+    sleep(1) # wait for modal to hide completely
 
     click_button('Continuer')
 
