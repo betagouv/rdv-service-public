@@ -2,7 +2,7 @@
 # Or with an end_date: rake "prod:massive_cancel[01/10/2021]"
 namespace :prod do
   desc "Massive cancel of rdv due to COVID 19"
-  task :massive_cancel, [:end_date] => :environment  do |t, args|
+  task :massive_cancel, [:end_date] => :environment do |_t, args|
     args.with_defaults(end_date: 15.days.since)
     rdvs = Rdv.future.active.status('unknown_future').where('DATE(starts_at) < ?', args.end_date.to_date)
     puts "RDV concernés: #{rdvs.size}"
