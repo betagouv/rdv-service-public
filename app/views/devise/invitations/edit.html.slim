@@ -7,5 +7,8 @@
   .form-row
     .col-md-6= f.input :first_name, placeholder: 'Prénom', label: false
     .col-md-6= f.input :last_name, placeholder: 'Nom', label: false
-  = f.input :password, required: true
+  .form-group
+    = f.label :password
+    = f.password_field :password, required: true, class: 'form-control ', placeholder: 'Votre mot de passe', id: "password"
+    span.fa.fa-fw.fa-eye.toggle-password
   .text-center= f.button :submit, t("devise.invitations.edit.submit_button")

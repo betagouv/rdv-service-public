@@ -26,7 +26,7 @@ feature 'User signs up and signs in' do
     fill_in :user_first_name, with: user.first_name
     fill_in :user_last_name, with: user.last_name
     fill_in :user_email, with: user.email
-    fill_in :user_password, with: user.password
+    fill_in :password, with: user.password
     click_on "Je m'inscris"
   end
 
