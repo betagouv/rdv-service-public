@@ -79,7 +79,7 @@ describe PlageOuverture, type: :model do
   describe "#available_motifs" do
     let!(:motif) { create(:motif) }
     let!(:motif2) { create(:motif) }
-    let!(:motif3) { create(:motif, :by_phone) }
+    let!(:motif3) { create(:motif, :for_secretariat) }
     let!(:motif4) { create(:motif, organisation: create(:organisation)) }
     let(:plage_ouverture) { build(:plage_ouverture, agent: agent) }
 

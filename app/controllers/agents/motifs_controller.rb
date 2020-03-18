@@ -55,6 +55,6 @@ class Agents::MotifsController < AgentAuthController
   end
 
   def motif_params
-    params.require(:motif).permit(:name, :service_id, :color, :default_duration_in_min, :online, :by_phone, :max_booking_delay, :min_booking_delay, :disable_notifications_for_users, :restriction_for_rdv, :instruction_for_rdv)
+    params.require(:motif).permit(:name, :service_id, :color, :default_duration_in_min, :online, :by_phone, :max_booking_delay, :min_booking_delay, :disable_notifications_for_users, :restriction_for_rdv, :instruction_for_rdv, :for_secretariat)
   end
 end

@@ -11,6 +11,9 @@ p.card-text
 - if @motif.by_phone?
   p.card-text Le RDV sera effectué par téléphone
 
+- if @motif.for_secretariat?
+  p.card-text Le RDV peut être effectué par le service secrétariat
+
 - if @motif.online?
     hr.mb-3
     h5 Réservation en ligne par les usagers

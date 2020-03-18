@@ -1,11 +1,11 @@
 = simple_form_for [motif.organisation, motif], remote: request.xhr?, data: { rightbar: true } do |f|
- 
+
   = render partial: 'layouts/model_errors', locals: { model: motif }
 
   .card
     .card-body
       h5.card-title Configuration générale
-      .form-row      
+      .form-row
         .col-md-6
           = f.association :service, collection: Service.with_motifs
         .col-md-6
@@ -19,7 +19,13 @@
       h5.card-title RDV téléphonique
       p.text-muted.font-14 L'usager sera notifié que le RDV se passera par téléphone, au numéro indiqué dans son profil.
       = f.input :by_phone, label: 'Le RDV sera effectué par téléphone'
-  
+
+  .card
+    .card-body
+      h5.card-title RDV secrétariat
+      p.text-muted.font-14 Les membres du service Secrétariat pourront poser des RDV dans leur agenda et configurer les plages d'ouverture avec ce motif.
+      = f.input :for_secretariat, label: 'Le RDV poura être effectué par le service secrétariat'
+
   .card
     .card-body
       h5.card-title Prise de RDV en ligne par les usagers
