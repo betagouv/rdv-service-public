@@ -9,7 +9,7 @@ class Agents::Organisations::StatsController < AgentAuthController
 
   def rdvs
     authorize(@organisation)
-    render json: Stat.new(rdvs: policy_scope(Rdv)).rdv_group_by_week_fr.chart_json
+    render json: Stat.new(rdvs: policy_scope(Rdv)).rdvs_group_by_week_fr.chart_json
   end
 
   def users
