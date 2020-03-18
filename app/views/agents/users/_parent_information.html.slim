@@ -13,6 +13,11 @@ ul.list-unstyled.mb-5
       li.mb-2
         strong= "#{t("activerecord.attributes.user.#{k}")} : "
         | #{v}
+  - if user.notes.present?
+    strong
+      i.fa.fa-fw.fa-sticky-note-o>
+      | Notes libres :
+    = simple_format(user.notes)
 
 - unless organisation_user_path(current_organisation, user) == request.path
   .text-right

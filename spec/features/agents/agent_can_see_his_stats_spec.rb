@@ -1,17 +1,16 @@
-describe "Admin can configure the organisation" do
-  let!(:agent_admin) { create(:agent, :admin) }
+describe "Agent can see his stats" do
+  let!(:agent) { create(:agent) }
 
   before do
-    login_as(agent_admin, scope: :agent)
+    login_as(agent, scope: :agent)
     visit authenticated_agent_root_path
   end
 
   shared_examples "a stats page" do
     it "displays all the stats" do
-      click_link 'Vos statistiques globales'
+      click_link 'Vos statistiques'
       expect(page).to have_content('Statistiques')
       expect(page).to have_content('RDV créés')
-      expect(page).to have_content('Usagers créés')
     end
   end
 

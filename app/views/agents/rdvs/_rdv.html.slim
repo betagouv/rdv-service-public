@@ -2,6 +2,6 @@
   .card-body
     p.card-text
       i.fa.fa-fw.fa-calendar-o>
-      = link_to rdv_title(rdv), organisation_rdv_path(rdv.organisation, rdv, callback_path: organisation_user_rdvs_path(rdv.organisation, params[:user_id])), data: { rightbar: true }
+      = link_to rdv_title(rdv), organisation_rdv_path(rdv.organisation, rdv, callback_path: callback_path(rdv)), data: { rightbar: true }
       = rdv_status_tag(rdv)
-    = render 'rdv_details', rdv: rdv
+    = render 'agents/rdvs/rdv_details', rdv: rdv

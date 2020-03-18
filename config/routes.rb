@@ -62,18 +62,21 @@ Rails.application.routes.draw do
   end
 
   authenticate :agent do
-    scope module: "agents" do
+    scope module: 'agents' do
       resources :organisations, except: :destroy do
         resources :lieux, except: :show
         resources :motifs
-        resources :plage_ouvertures, except: [:index, :show, :new]
-        resources :absences, except: [:index, :show, :new]
-        resources :stats, only: :index do
-          collection do
-            get :rdvs
-            get :users
+        scope module: 'organisations' do
+          resources :rdvs, only: :index
+          resources :stats, only: :index do
+            collection do
+              get :rdvs
+              get :users
+            end
           end
         end
+        resources :plage_ouvertures, except: [:index, :show, :new]
+        resources :absences, except: [:index, :show, :new]
 
         get "agent", to: "agents#show", as: "agent_with_id_in_query"
         resources :agents, only: [:index, :show, :destroy] do
@@ -82,10 +85,15 @@ Rails.application.routes.draw do
             resources :full_subscriptions, only: [:new, :create]
             resources :permissions, only: [:edit, :update]
           end
-
           resources :rdvs, only: :index
           resources :absences, only: [:index, :new]
           resources :plage_ouvertures, only: [:index, :new]
+          resources :stats, only: :index do
+            collection do
+              get :rdvs
+              get :users
+            end
+          end
         end
 
         resources :users do
@@ -97,7 +105,9 @@ Rails.application.routes.draw do
             get :search
             post :create_from_modal
           end
-          resources :rdvs, only: :index
+          scope module: :users do
+            resources :rdvs, only: :index
+          end
           resources :children, only: [:create, :new]
         end
         resources :children, except: [:create, :new]

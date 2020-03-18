@@ -6,7 +6,13 @@ class StatsController < ApplicationController
   end
 
   def rdvs
-    render json: Stat.new(rdvs: Rdv.all).rdv_group_by_week_fr.chart_json
+    stats = Stat.new(rdvs: Rdv.all)
+    stats = if params[:by_departement].present?
+              stats.rdvs_group_by_departement
+            else
+              stats.rdvs_group_by_week_fr
+            end
+    render json: stats.chart_json
   end
 
   def users

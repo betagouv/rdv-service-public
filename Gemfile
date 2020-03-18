@@ -16,9 +16,10 @@ gem 'pg', '>= 0.18', '< 2.0'
 gem 'pg_search', '~> 2.3'
 gem 'kaminari', '~> 1.1'
 gem 'bootstrap4-kaminari-views', '~> 1.0'
-gem 'administrate', '~> 0.12'
+gem 'administrate', '~> 0.13'
+gem 'administrate-field-belongs_to_search', '~> 0.7'
 gem 'paper_trail'
-gem "flipflop"
+gem 'flipflop'
 
 # Devise / auth
 gem 'devise', '~> 4.7'

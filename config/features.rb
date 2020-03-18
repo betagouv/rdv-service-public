@@ -6,4 +6,8 @@ Flipflop.configure do
   feature :file_attente,
           title: "File d'attente",
           description: "Permettre aux usagers de s'inscrire sur une liste d'attente"
+
+  feature :corona,
+          title: 'Corona',
+          description: "Annonce suite au Coronavirus"
 end
