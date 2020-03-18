@@ -3,7 +3,7 @@ class AddWithSecretariatToRdv < ActiveRecord::Migration[6.0]
     add_column :motifs, :for_secretariat, :boolean, default: false
 
     Motif.where(by_phone: true).each do |motif|
-      motif.update(by_phone: false, for_secretariat: true)
+      motif.update(for_secretariat: true)
     end
   end
 
