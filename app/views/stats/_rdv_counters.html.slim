@@ -1,0 +1,33 @@
+h4.card-title.mb-3
+  | Statuts
+  small.text-muted< sur #{rdvs.count} RDV
+
+.row
+  .col-md-4
+    .bg-light.p-2.mb-3.mb-md-0.text-center
+      p.h2= rdvs.status('unknown_past').count 
+      p.lead
+        => t '.rdvs.unknown_past', count: rdvs.status('unknown_past').count 
+        = rdv_danger_icon(rdvs.status('unknown_past').count)
+      = link_to_rdvs('unknown_past', clasz: 'btn-outline-dark')
+  .col-md-4
+    .bg-success.text-white.p-2.mb-3.text-center
+      p.h2= rdvs.seen.count
+      p.lead= t '.rdvs.seen', count: rdvs.seen.count
+      = link_to_rdvs('seen')
+  .col-md-4
+    .bg-info.text-white.p-2.mb-3.text-center
+      p.h2= rdvs.status('unknown_future').count 
+      p.lead À venir
+      = link_to_rdvs('unknown_future')
+.row
+  .col-md-6
+    .bg-tertiary.text-white.p-2.mb-3.text-center
+      p.h2= rdvs.excused.count
+      p.lead= t '.rdvs.excused', count: rdvs.excused.count
+      = link_to_rdvs('excused')
+  .col-md-6
+    .bg-danger.text-white.p-2.mb-3.text-center
+      p.h2= rdvs.notexcused.count
+      p.lead= t '.rdvs.notexcused', count: rdvs.notexcused.count
+      = link_to_rdvs('notexcused')

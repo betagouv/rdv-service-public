@@ -2,6 +2,7 @@ json.array! @rdvs do |rdv|
   json.title rdv.name_for_agent
   json.extendedProps do
     json.status rdv.status
+    json.motif rdv.motif.name
     json.past rdv.past?
     json.duration rdv.duration_in_min
   end

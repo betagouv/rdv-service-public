@@ -59,4 +59,8 @@ class TwilioTextMessenger
     message += "Cliquez pour voir les disponibilités : #{users_creneaux_index_url(rdv_id: @rdv.id, host: "https://#{ENV["HOST"]}")}"
     message
   end
+
+  def coronavirus
+    "Pour faire face au Coronavirus, votre RDV #{@rdv.motif.service.short_name} du #{I18n.l(@rdv.starts_at.to_date, format: :short)} a été annulé."
+  end
 end

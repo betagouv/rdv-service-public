@@ -1,20 +1,16 @@
 class Agents::RdvsController < AgentAuthController
   respond_to :html, :json
 
-  before_action :set_rdv, only: [:show, :edit, :update, :destroy, :status]
+  before_action :set_rdv, except: [:index]
 
   def index
     @rdvs = policy_scope(Rdv)
-    if filter_params[:agent_id].present?
-      @agent = policy_scope(Agent).find(filter_params[:agent_id])
-      @rdvs = @rdvs.joins(:agents).where(agents: { id: @agent })
-    end
-    if filter_params[:user_id].present?
-      @user = policy_scope(User).find(filter_params[:user_id])
-      @rdvs = @user.available_rdvs(current_organisation).page(filter_params[:page])
-    end
+    @agent = policy_scope(Agent).find(filter_params[:agent_id])
+    @rdvs = @rdvs.joins(:agents).where(agents: { id: @agent })
+    @rdvs = @rdvs.default_stats_period if filter_params[:default_period].present?
+    @rdvs = @rdvs.status(filter_params[:status]) if filter_params[:status].present?
     @rdvs = @rdvs.where(starts_at: date_range_params) if filter_params[:start].present? && filter_params[:end].present?
-    @rdvs = @rdvs.includes(:motif).order(starts_at: :desc)
+    @rdvs = @rdvs.includes(:organisation, :motif, :agents_rdvs, agents: :service).order(starts_at: :desc)
   end
 
   def show
@@ -29,13 +25,8 @@ class Agents::RdvsController < AgentAuthController
 
   def update
     authorize(@rdv)
-    location = params[:callback_path].present? ? params[:callback_path] : @rdv.agenda_path_for_agent(current_agent)
-    if @rdv.update(rdv_params)
-      flash[:notice] = 'Le rendez-vous a été modifié.'
-      redirect_to location.to_s
-    else
-      respond_right_bar_with @rdv, location: location.to_s
-    end
+    flash[:notice] = 'Le rendez-vous a été modifié.' if @rdv.update(rdv_params)
+    respond_right_bar_with @rdv, location: callback_path(@rdv)
   end
 
   def status
@@ -50,14 +41,14 @@ class Agents::RdvsController < AgentAuthController
 
   def destroy
     authorize(@rdv)
-    location = callback_params[:callback_path] || @rdv.agenda_path_for_agent(current_agent)
+    redirect_location = callback_path(@rdv)
     if @rdv.destroy
       flash[:notice] = "Le rendez-vous a été supprimé."
     else
       flash[:error] = "Une erreur s’est produite, le rendez-vous n’a pas pu être supprimé."
       Raven.capture_exception(Exception.new("Deletion failed for rdv : #{@rdv.id}"))
     end
-    redirect_to location.to_s
+    redirect_to redirect_location
   end
 
   private
@@ -66,8 +57,13 @@ class Agents::RdvsController < AgentAuthController
     @rdv = Rdv.find(params[:id])
   end
 
+  def callback_path(rdv)
+    location = params[:callback_path].present? ? params[:callback_path] : rdv.agenda_path_for_agent(current_agent)
+    location.to_s
+  end
+
   def rdv_params
-    params.require(:rdv).permit(:location, :duration_in_min, :starts_at, agent_ids: [], user_ids: [])
+    params.require(:rdv).permit(:location, :duration_in_min, :starts_at, :notes, agent_ids: [], user_ids: [])
   end
 
   def status_params
@@ -85,6 +81,6 @@ class Agents::RdvsController < AgentAuthController
   end
 
   def filter_params
-    params.permit(:organisation_id, :start, :end, :agent_id, :user_id, :page)
+    params.permit(:organisation_id, :start, :end, :agent_id, :user_id, :page, :status, :default_period)
   end
 end

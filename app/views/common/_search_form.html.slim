@@ -31,6 +31,7 @@
             .col-lg-3.align-self-end= f.button :submit, "Choisir ce service", class: 'btn btn-secondary btn-lg w-100 text-center'
           - else
             h2.text-white.text-center La prise de rendez-vous n'est pas disponible pour ce département.
+      = render 'corona/info_rdv'
 
     - else
       .form-row.d-flex.justify-content-md-center
@@ -39,3 +40,4 @@
           = f.button :button, id: "search_submit", class: 'btn-secondary btn-lg w-100 text-center', disabled: true do
             i.fa.fa-search>
             | Rechercher
+

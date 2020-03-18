@@ -21,7 +21,7 @@ class Agents::Rdvs::ThirdStepsController < AgentAuthController
   private
 
   def third_step_params
-    params.require(:rdv).permit(:motif_id, :duration_in_min, :starts_at, :location, agent_ids: [], user_ids: [])
+    params.require(:rdv).permit(:motif_id, :duration_in_min, :starts_at, :location, :notes, agent_ids: [], user_ids: [])
   end
 
   def query_params

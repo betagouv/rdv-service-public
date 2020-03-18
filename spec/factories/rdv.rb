@@ -7,8 +7,12 @@ FactoryBot.define do
     motif { Motif.first || build(:motif) }
     users { [User.first || build(:user)] }
     agents { [build(:agent)] }
+    notes { "Une jolie note." }
     trait :by_phone do
       motif { build(:motif, :by_phone) }
+    end
+    trait :random_start do
+      starts_at { Faker::Time.between(from: 10.days.ago, to: 3.month.since) }
     end
     trait :future do
       starts_at { 2.days.since }

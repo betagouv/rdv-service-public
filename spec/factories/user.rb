@@ -8,7 +8,7 @@ FactoryBot.define do
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name.upcase }
     phone_number { "0658032519" }
-    birth_date { Date.new(1990, 10, 12) }
+    birth_date { Faker::Date.between(from: 80.years.ago, to: Date.today) }
     address { "20 avenue de Ségur, Paris" }
     organisations { [Organisation.first || create(:organisation)] }
     password { "12345678" }

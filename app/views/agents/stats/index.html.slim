@@ -1,0 +1,12 @@
+- content_for :title do
+  | Statistiques #{current_agent.full_name} 
+  small Du #{l(Stat::DEFAULT_RANGE.first.to_date)} au #{l(Stat::DEFAULT_RANGE.last.to_date)} 
+
+.card.mb-5
+  .card-body
+    = render 'stats/rdv_counters', rdvs: @stats.rdvs_for_default_range
+
+.card.mb-5
+  .card-body
+    h4.card-title.mb-3 RDV créés (#{@stats.rdvs_for_default_range.count})
+    = column_chart rdvs_organisation_agent_stats_path(current_organisation, current_agent), stacked: true
