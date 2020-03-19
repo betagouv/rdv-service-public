@@ -10,6 +10,7 @@ class Agents::AgentsController < AgentAuthController
   def show
     @agent = policy_scope(Agent).find(params[:id])
     authorize(@agent)
+    @status = params[:status]
     @organisation = current_organisation
     @date = params[:date] ? Date.parse(params[:date]) : nil
   end
