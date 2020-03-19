@@ -97,14 +97,14 @@ module RdvsHelper
   end
 
   def rdv_status_hash
-    Rdv.statuses.to_a.map{|array| [I18n.t("activerecord.attributes.rdv.statuses.#{array[0]}"), array[1]]}.unshift(["Tous les rdvs", ""])
+    Rdv.statuses.to_a.map { |array| [I18n.t("activerecord.attributes.rdv.statuses.#{array[0]}"), array[1]] }.unshift(["Tous les rdvs", ""])
   end
 
   def rdv_status_value(status)
     if status.blank?
       ["Tous les rdvs", ""]
     else
-      Rdv.statuses.to_a.find{|s| s[1] == status.to_i}
+      Rdv.statuses.to_a.find { |s| s[1] == status.to_i }
     end
   end
 end
