@@ -10,8 +10,8 @@
   .form-group
     = f.label :password
     = f.password_field :password, required: true, class: 'form-control ', placeholder: 'Votre mot de passe (au moins 6 caractères)', id: "password"
-    span.fa.fa-fw.fa-eye.toggle-password
-    
+    span.fa.fa-fw.fa-eye.toggle-password role="button" tabindex="0"
+
   .form-group
     small
      | En vous inscrivant, vous acceptez les
