@@ -46,7 +46,7 @@ describe "Agent can CRUD absences" do
   end
 
   def crud_absence(current_agent, agent_crud)
-    title =  agent_crud == current_agent ? "Vos absences" : "absences de #{agent_crud.full_name_and_service}"
+    title = agent_crud == current_agent ? "Vos absences" : "absences de #{agent_crud.full_name_and_service}"
 
     expect_page_title(title)
     click_link absence.title
