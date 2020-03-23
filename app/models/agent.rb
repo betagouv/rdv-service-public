@@ -62,4 +62,8 @@ class Agent < ApplicationRecord
     errors.add(:email, 'existe déjà dans cette organisation') && return if organisation_ids.include?(organisation.id)
     organisations << organisation
   end
+
+  def to_detailed
+    as_json(only: [:id, :first_name, :last_name, :email])
+  end
 end

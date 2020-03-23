@@ -36,6 +36,9 @@ class Rdv < ApplicationRecord
   after_save :associate_users_with_organisation
   after_update :send_notifications_to_users, if: -> { saved_change_to_starts_at? && notify? }
 
+  after_save :send_web_hook
+  before_destroy :send_web_hook_on_destroy, prepend: true
+
   def agenda_path_for_agent(agent)
     agent_for_agenda = agents.include?(agent) ? agent : agents.first
 
@@ -76,6 +79,17 @@ class Rdv < ApplicationRecord
     end
   end
 
+  def send_web_hook
+    WebHookJob.perform_later(to_detailed, organisation.departement)
+  end
+
+  def send_web_hook_on_destroy
+    rdv = to_detailed
+    rdv['status'] = 'deleted'
+
+    WebHookJob.perform_later(rdv, organisation.departement)
+  end
+
   def notify?
     !motif.disable_notifications_for_users && !starts_at.to_date.past?
   end
@@ -95,6 +109,22 @@ class Rdv < ApplicationRecord
       user_ids: users&.map(&:id),
       agent_ids: agents&.map(&:id),
     }
+  end
+
+  def to_detailed
+    result = as_json(
+      only: [:id, :status, :location, :duration_in_min, :starts_at],
+      include: {
+        organisation: { only: [:id, :name, :departement] },
+        motif: { only: [:id, :name] },
+      }
+    )
+
+    result['status'] = destroyed? ? 'deleted' : status
+    result['users'] = users&.map { |item| item.to_detailed }
+    result['agents'] = agents&.map { |item| item.to_detailed }
+
+    result
   end
 
   def available_to_file_attente?
