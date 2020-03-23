@@ -1,4 +1,4 @@
-describe "Agent can CRUD users" do
+describe "Agent can CRUD plage d'ouverture" do
   let!(:agent) { create(:agent, :admin) }
   let!(:other_agent) { create(:agent, organisations: [agent.organisations.first]) }
   let!(:plage_ouverture) { create(:plage_ouverture, agent: agent) }
