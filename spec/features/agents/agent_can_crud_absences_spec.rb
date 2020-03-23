@@ -49,7 +49,7 @@ describe "Agent can CRUD absences" do
     expect_page_title("Nouvelle absence")
     fill_in 'Description', with: new_absence.title
     fill_in "absence[first_day]", with: new_absence.first_day
-    fill_in "absence[end_day]", with: new_absence.end_day
+    fill_in "absence[end_day]", with: new_absence.first_day + 1.day
     click_button 'Créer'
 
     expect_page_title(title)

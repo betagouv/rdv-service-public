@@ -17,13 +17,10 @@ RSpec.describe Agents::AbsencesController, type: :controller do
         let!(:absence1) { create(:absence, agent: agent, first_day: Date.new(2019, 7, 21), start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(10)) }
         let!(:absence2) { create(:absence, agent: agent, first_day: Date.new(2019, 8, 20), start_time: Tod::TimeOfDay.new(8), end_day: Date.new(2019, 8, 31), end_time: Tod::TimeOfDay.new(22)) }
 
-        before do
-          sign_in agent
-        end
-
         subject { get :index, params: { format: "json", organisation_id: organisation_id, agent_id: agent.id, start: start_time, end: end_time } }
 
         before do
+          sign_in agent
           subject
           @parsed_response = JSON.parse(response.body)
         end
@@ -38,7 +35,7 @@ RSpec.describe Agents::AbsencesController, type: :controller do
 
             first = @parsed_response[0]
             expect(first.size).to eq(5)
-            expect(first["title"]).to eq("Absence")
+            expect(first["title"]).to eq(expected_absence.title)
             expect(first["start"]).to eq(expected_absence_starts_at.as_json)
             expect(first["end"]).to eq(expected_absence_ends_at.as_json)
             expect(first["backgroundColor"]).to eq("#7f8c8d")

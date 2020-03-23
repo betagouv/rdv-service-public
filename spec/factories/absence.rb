@@ -5,7 +5,6 @@ FactoryBot.define do
     title { generate(:absence_title) }
     organisation { Organisation.first || create(:organisation) }
     first_day { Date.new(2019, 7, 4) }
-    end_day { Date.new(2019, 8, 4) }
     agent { Agent.first || create(:agent) }
     start_time { Tod::TimeOfDay.new(10) }
     end_time { Tod::TimeOfDay.new(15, 30) }
