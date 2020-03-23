@@ -1,8 +1,12 @@
 FactoryBot.define do
+  sequence(:absence_title) { |n| "Absence #{n}" }
+
   factory :absence do
+    title { generate(:absence_title) }
     organisation { Organisation.first || create(:organisation) }
-    agent { Agent.first || create(:agent) }
     first_day { Date.new(2019, 7, 4) }
+    end_day { Date.new(2019, 8, 4) }
+    agent { Agent.first || create(:agent) }
     start_time { Tod::TimeOfDay.new(10) }
     end_time { Tod::TimeOfDay.new(15, 30) }
     no_recurrence

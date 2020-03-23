@@ -2,7 +2,7 @@ describe "Agent can CRUD absences" do
   let!(:agent) { create(:agent, :admin) }
   let!(:other_agent) { create(:agent, organisations: [agent.organisations.first]) }
   let!(:absence) { create(:absence, agent: agent) }
-  let(:new_absence) { build(:absence) }
+  let!(:new_absence) { build(:absence) }
 
   before do
     login_as(agent, scope: :agent)
@@ -13,25 +13,6 @@ describe "Agent can CRUD absences" do
   context 'for an agent' do
     scenario "default" do
       crud_absence(agent, agent)
-    end
-  end
-
-  context 'for a secretaire' do
-    let(:agent) { create(:agent, :secretaire) }
-
-    scenario "cannot create absence" do
-      expect_page_title("Vos absences")
-      click_link 'Créer une pabsence', match: :first
-      expect(page).to have_content("Aucun motif disponible. Vous ne pouvez pas créer de absence.")
-    end
-
-    context 'with motif for_secretariat' do
-      let!(:motif) { create(:motif, :for_secretariat) }
-      let(:absence) { create(:absence, agent: agent, motifs: [motif]) }
-
-      scenario "can crud a absence" do
-        crud_absence(agent, agent)
-      end
     end
   end
 
@@ -46,28 +27,29 @@ describe "Agent can CRUD absences" do
   end
 
   def crud_absence(current_agent, agent_crud)
-    title = agent_crud == current_agent ? "Vos absences" : "absences de #{agent_crud.full_name_and_service}"
+    title = agent_crud == current_agent ? "Vos absences" : "Absences de #{agent_crud.full_name_and_service}"
 
     expect_page_title(title)
     click_link absence.title
 
-    expect_page_title("Modifier la absence")
-    fill_in 'Description', with: 'La belle plage'
+    expect_page_title("Modifier l'absence")
+    fill_in 'Description', with: 'La belle absence'
     click_button('Modifier')
 
     expect_page_title(title)
-    click_link 'La belle plage'
+    click_link 'La belle absence'
 
     click_link('Supprimer')
     expect_page_title(title)
-    empty_text = agent_crud == current_agent ? "Vous n'avez pas encore créé de absence" : "#{agent_crud.full_name} n'a pas encore créé de absence"
+    empty_text = agent_crud == current_agent ? "Vous n'avez pas encore créé d'absence" : "#{agent_crud.full_name} n'a pas encore créé d'absence"
     expect_page_with_no_record_text(empty_text)
 
     click_link 'Créer une absence', match: :first
 
     expect_page_title("Nouvelle absence")
     fill_in 'Description', with: new_absence.title
-    check absence.motifs.first.name
+    fill_in "absence[first_day]", with: new_absence.first_day
+    fill_in "absence[end_day]", with: new_absence.end_day
     click_button 'Créer'
 
     expect_page_title(title)
