@@ -6,7 +6,7 @@
 
 - content_for :breadcrumb do
   = form_tag(organisation_agent_with_id_in_query_path, method: "get", class: "d-inline-flex mr-2") do
-    = select_tag :status, options_for_select(rdv_status_hash, rdv_status_value(@status)), class:"select2-input", onchange: 'this.form.submit()'
+    = select_tag :status, options_for_select(Rdv.human_enum_collection(:statuses).unshift(["Tous les rdvs", ""]), rdv_status_value(@status)), class:"select2-input", onchange: 'this.form.submit()'
     - if policy_scope(Agent).complete.active.many?
       = select_tag :id, options_from_collection_for_select(policy_scope(Agent).complete.active.order_by_last_name, 'id', 'full_name', @agent.id), class: "select2-input", onchange: 'this.form.submit()', data: {'container-css-class': 'ml-2'}
     - else
