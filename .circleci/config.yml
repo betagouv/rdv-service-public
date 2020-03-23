@@ -106,6 +106,19 @@ jobs:
       - run:
           name: Run linters
           command: bundle exec rake ci
+  deploy:
+    <<: *defaults
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "aa:6b:b6:ea:06:30:ed:23:69:9f:4c:43:0d:5a:36:41"
+      - run:
+          name: Push to remote
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "demo" ]; then
+              git push dokku@$DEMO_IP:lapin-demo master
+            fi
 
 workflows:
   version: 2
@@ -118,3 +131,7 @@ workflows:
       - lint:
           requires:
             - build
+      - deploy:
+          requires:
+            - test
+            - lint

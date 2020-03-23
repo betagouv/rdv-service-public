@@ -35,7 +35,7 @@ Afin d'initialiser l'environnement de développement, exécutez la commande suiv
 
 ### Lancement de l'application
 
-    foreman s -f Procfile.dev
+    foreman s -f Procfile.dev 
 
 L'application tourne à l'adresse `http://localhost:5000`.
 
