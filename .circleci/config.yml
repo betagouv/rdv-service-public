@@ -121,7 +121,7 @@ jobs:
           name: Push to remote
           command: |
             if [ "${CIRCLE_BRANCH}" == "demo" ]; then
-              git push dokku@$DEMO_IP:lapin-demo master
+              git push dokku@$DEMO_IP:lapin-demo master -f
             fi
 
 workflows:
