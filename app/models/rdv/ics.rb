@@ -25,7 +25,7 @@ class Rdv::Ics
       e.uid         = rdv.uuid
       e.sequence    = rdv.sequence
       e.ip_class    = "PRIVATE"
-      e.attendee    = user.email
+      e.attendee    = "mailto:#{user.email}"
     end
 
     cal.ip_method = "REQUEST"

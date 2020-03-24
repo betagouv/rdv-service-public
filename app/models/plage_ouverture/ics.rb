@@ -22,7 +22,7 @@ class PlageOuverture::Ics
       e.description = ""
       e.location    = plage_ouverture.lieu.address
       e.ip_class    = "PUBLIC"
-      e.attendee    = plage_ouverture.agent.email
+      e.attendee    = "mailto:#{plage_ouverture.agent.email}"
       e.rrule       = rrule
     end
 
