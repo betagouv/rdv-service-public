@@ -118,10 +118,16 @@ jobs:
           command: |
             echo -e "Host $DEMO_IP\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
       - run:
-          name: Push to remote
+          name: Push to remote 1
           command: |
             if [ "${CIRCLE_BRANCH}" == "demo" ]; then
-              git push dokku@$DEMO_IP:lapin-demo demo:master -f
+              git push dokku@$DEMO_WEB1_IP:lapin-demo demo:master -f
+            fi
+      - run:
+          name: Push to remote 2
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "demo" ]; then
+              git push dokku@$DEMO_WEB2_IP:lapin-demo demo:master -f
             fi
 
 workflows:
