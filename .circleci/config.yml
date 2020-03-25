@@ -114,19 +114,17 @@ jobs:
           fingerprints:
             - "aa:6b:b6:ea:06:30:ed:23:69:9f:4c:43:0d:5a:36:41"
       - run:
-          name: Establishing the authenticity of an SSH host
-          command: |
-            echo -e "Host $DEMO_IP\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
-      - run:
           name: Push to remote 1
           command: |
             if [ "${CIRCLE_BRANCH}" == "demo" ]; then
+              echo -e "Host $DEMO_WEB1_IP\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
               git push dokku@$DEMO_WEB1_IP:lapin-demo demo:master -f
             fi
       - run:
           name: Push to remote 2
           command: |
             if [ "${CIRCLE_BRANCH}" == "demo" ]; then
+              echo -e "Host $DEMO_WEB2_IP\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
               git push dokku@$DEMO_WEB2_IP:lapin-demo demo:master -f
             fi
 
