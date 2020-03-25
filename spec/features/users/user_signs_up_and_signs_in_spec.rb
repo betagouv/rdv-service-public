@@ -39,13 +39,25 @@ feature 'User signs up and signs in' do
       click_link 'Se déconnecter'
       expect(current_path).to eq(root_path)
     end
+     
+    context 'if agent goes wrong' do
+      let!(:agent) { create(:agent, password: "123456") }
+
+      scenario '.sign_in as user and be signed in as agent' do
+        click_link 'Se connecter'
+        fill_in :user_email, with: agent.email
+        fill_in :password, with: agent.password
+        click_on "Se connecter"
+        expect(current_path).to eq(organisation_agent_path(agent.organisation_ids.first, agent.id))
+      end
+    end
   end
 
   def sign_up(user)
     fill_in :user_first_name, with: user.first_name
     fill_in :user_last_name, with: user.last_name
     fill_in :user_email, with: user.email
-    fill_in :user_password, with: user.password
+    fill_in :password, with: user.password
     click_on "Je m'inscris"
   end
 

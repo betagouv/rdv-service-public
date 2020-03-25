@@ -71,6 +71,11 @@ document.addEventListener('turbolinks:load', function() {
       },
       minTime: '07:00:00',
       maxTime: '20:00:00',
+      datesRender: function(info) {
+        if ($('#fc-date').length) {
+          $('#fc-date').val(moment(info.view.activeStart).format('L'))
+        }
+      },
       eventRender: function (info) {
         let $el = $(info.el);
 

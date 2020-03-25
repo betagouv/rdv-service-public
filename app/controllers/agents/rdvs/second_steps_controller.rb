@@ -6,7 +6,7 @@ class Agents::Rdvs::SecondStepsController < AgentAuthController
     rdv = Rdv.new(query_params)
     rdv.agents << current_agent unless query_params[:agent_ids].present?
     @agents_authorize = rdv.motif.service.agents.complete.active.joins(:organisations).where(organisations: { id: current_organisation.id })
-    @agents_authorize += current_organisation.agents.complete.active.includes(:service).secretariat if rdv.motif.by_phone
+    @agents_authorize += current_organisation.agents.complete.active.includes(:service).secretariat if rdv.motif.for_secretariat
     @second_step = Rdv::SecondStep.new(rdv.to_step_params)
     @second_step.starts_at ||= Time.zone.now
     @second_step.duration_in_min ||= @second_step.motif.default_duration_in_min

@@ -61,6 +61,15 @@ body.authentication-bg {
   display: none;
 }
 
+.toggle-password{
+  float: right;
+  margin-right: 1rem;
+  margin-top: -1.8rem;
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+}
+
 @include media-breakpoint-down(md) {
   .auth-fluid {
     display: block;

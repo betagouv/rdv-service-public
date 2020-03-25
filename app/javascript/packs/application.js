@@ -17,7 +17,7 @@ import 'moment/locale/fr.js';
 import 'holderjs/holder.min';
 import 'jquery-slimscroll/jquery.slimscroll';
 import 'metismenu/dist/metisMenu.min';
-import 'select2/dist/js/select2.min.js';
+import 'select2/dist/js/select2.full.min.js';
 import 'select2/dist/js/i18n/fr.js';
 import { Datetimepicker } from 'packs/components/datetimepicker';
 import { Avatar } from 'packs/components/avatar';
@@ -30,6 +30,7 @@ import { InviteUserOnCreate } from 'packs/components/invite-user-on-create';
 import { PopulateLibelle } from 'packs/components/populate-libelle';
 import { Analytic } from 'packs/components/analytic.js';
 import { PlacesInput } from 'packs/components/places-input.js';
+import { ShowHidePassword } from 'packs/components/show-hide-password.js';
 import 'packs/components/calendar';
 import 'packs/components/select2';
 import 'packs/components/tooltip';
@@ -104,4 +105,6 @@ $(document).on('turbolinks:load', function() {
   new Datetimepicker();
 
   new InviteUserOnCreate();
+
+  new ShowHidePassword();
 });

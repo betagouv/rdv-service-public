@@ -15,8 +15,9 @@ class Motif < ApplicationRecord
   scope :active, -> { where(deleted_at: nil) }
   scope :online, -> { where(online: true) }
   scope :by_phone, -> { where(by_phone: true) }
+  scope :for_secretariat, -> { where(for_secretariat: true) }
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
-    available_motifs = agent.service.secretariat? ? by_phone : where(service: agent.service)
+    available_motifs = agent.service.secretariat? ? for_secretariat : where(service: agent.service)
     available_motifs.where(organisation_id: organisation.id).active.order(Arel.sql('LOWER(name)'))
   }
 
@@ -42,6 +43,7 @@ class Motif < ApplicationRecord
     label = name
     label = "#{label} <span class='badge badge-danger'>En ligne</span>" if online
     label = "#{label} <span class='badge badge-info'>Par tél.</span>" if by_phone
+    label = "#{label} <span class='badge badge-secondary'>Secrétariat</span>" if for_secretariat
     label.html_safe
   end
 

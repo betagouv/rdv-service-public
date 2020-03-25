@@ -16,9 +16,12 @@ FactoryBot.define do
         create_list(:rdv, 5, motif: motif)
       end
     end
-    service { Service.first || create(:service) }
+    service { Service.where.not(name: "Secrétariat").first || create(:service) }
     trait :by_phone do
       by_phone { true }
+    end
+    trait :for_secretariat do
+      for_secretariat { true }
     end
     trait :no_notification do
       disable_notifications_for_users { true }

@@ -7,10 +7,14 @@
     .col-6= f.input :last_name
   = f.input :email, as: :email, placeholder: 'nom.prenom@email.com', required: true
   = f.input :phone_number, as: :tel, placeholder: '061010101010', hint: 'Vous recevrez les rappels et les informations du RDV sur ce numéro.'
-  = f.input :password, as: :password, placeholder: 'Votre mot de passe (au moins 6 caractères)', required: true
+  .form-group
+    = f.label :password
+    = f.password_field :password, required: true, class: 'form-control ', placeholder: 'Votre mot de passe (au moins 6 caractères)', id: "password"
+    span.fa.fa-fw.fa-eye.toggle-password role="button" tabindex="0"
+
   .form-group
     small
-     | En vous inscrivant, vous acceptez les 
+     | En vous inscrivant, vous acceptez les
      = link_to 'conditions générales d\'utilisation', cgv_path
 
   .form-group.mb-0.text-center

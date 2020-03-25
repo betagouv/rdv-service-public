@@ -28,7 +28,7 @@ describe Rdv, type: :model do
   describe "#available_motifs_for_organisation_and_agent" do
     let!(:motif) { create(:motif) }
     let!(:motif2) { create(:motif) }
-    let!(:motif3) { create(:motif, :by_phone) }
+    let!(:motif3) { create(:motif, :for_secretariat) }
     let!(:motif4) { create(:motif, organisation: create(:organisation)) }
     let(:plage_ouverture) { build(:plage_ouverture, agent: agent) }
 
@@ -36,7 +36,6 @@ describe Rdv, type: :model do
 
     describe "for secretaire" do
       let(:agent) { create(:agent, :secretaire) }
-
       it { is_expected.to contain_exactly(motif3) }
     end
 

@@ -20,6 +20,7 @@ fr:
           caf: CAF
           msa: MSA
         affiliation_number: Numéro d'allocataire
+        notes: Notes
         family_situation: Situation familiale
         number_of_children: Nombre d'enfants
         family_situations:
