@@ -31,7 +31,7 @@ feature 'User signs up and signs in' do
       open_email(invited_user.email)
       current_email.click_link "Accepter l'invitation"
       expect(page).to have_content('Inscription')
-      fill_in :user_password, with: "123456"
+      fill_in :password, with: "123456"
       click_on "Enregistrer"
       expect(current_path).to eq(root_path)
       expect_flash_info(I18n.t("devise.invitations.updated"))
@@ -39,7 +39,7 @@ feature 'User signs up and signs in' do
       click_link 'Se déconnecter'
       expect(current_path).to eq(root_path)
     end
-     
+
     context 'if agent goes wrong' do
       let!(:agent) { create(:agent, password: "123456") }
 
