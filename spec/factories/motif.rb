@@ -16,7 +16,7 @@ FactoryBot.define do
         create_list(:rdv, 5, motif: motif)
       end
     end
-    service { Service.first || create(:service) }
+    service { Service.where.not(name: "Secrétariat").first || create(:service) }
     trait :by_phone do
       by_phone { true }
     end

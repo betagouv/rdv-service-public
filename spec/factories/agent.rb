@@ -16,7 +16,7 @@ FactoryBot.define do
       confirmed_at { nil }
     end
     trait :secretaire do
-      service { create(:service, :secretariat) }
+      service { Service.find_by(name: "Secrétariat") || create(:service, :secretariat) }
     end
     trait :with_multiple_organisations do
       organisations { create_list(:organisation, 3) }
