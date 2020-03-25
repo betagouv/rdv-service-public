@@ -14,7 +14,7 @@ describe Rdv::Ics, type: :model do
       is_expected.to include("UID:")
       is_expected.to include("DESCRIPTION:Infos et annulation:")
       is_expected.to include("LOCATION:10 rue de la Ferronerie 44100 Nantes")
-      is_expected.to include("ATTENDEE:#{user.email}")
+      is_expected.to include("ATTENDEE:mailto:#{user.email}")
       is_expected.to include("CLASS:PRIVATE")
       is_expected.to include("METHOD:REQUEST")
     end
