@@ -32,7 +32,7 @@ class Agents::UsersController < AgentAuthController
       @user_not_in_organisation = @user_to_compare.organisation_ids.exclude?(current_organisation.id)
       render :compare
     else
-      @user.skip_confirmation!
+      @user.skip_confirmation_notification!
       if @user.save
         flash[:notice] = "L'usager a été créé."
         redirect_to organisation_user_path(@organisation, @user)
@@ -45,7 +45,7 @@ class Agents::UsersController < AgentAuthController
   def create_from_modal
     prepare_create
     authorize(@user)
-    @user.skip_confirmation!
+    @user.skip_confirmation_notification!
     if @user.save
       flash[:notice] = "L'usager a été créé."
     else
