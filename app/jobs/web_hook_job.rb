@@ -2,8 +2,8 @@ class WebHookJob < ApplicationJob
   ENDPOINT_PREFIX = 'WEBHOOK_ENDPOINT_'.freeze
   TIMEOUT = 10
 
-  def perform(rdv, organisme)
-    endpoint = ENV["#{ENDPOINT_PREFIX}#{organisme}"]
+  def perform(rdv, departement)
+    endpoint = ENV["#{ENDPOINT_PREFIX}#{departement}"]
     return unless endpoint
 
     Typhoeus.post(
