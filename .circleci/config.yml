@@ -151,4 +151,6 @@ workflows:
             - lint
           filters:
             branches:
-              only: demo
+              only:
+                - demo
+                - master
