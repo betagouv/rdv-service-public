@@ -119,6 +119,9 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "demo" ]; then
               echo -e "Host $DEMO_WEB1_IP\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
               git push dokku@$DEMO_WEB1_IP:lapin-demo demo:master -f
+            elif [ "${CIRCLE_BRANCH}" == "master" ]; then
+              echo -e "Host $PRODUCTION_WEB1_IP\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+              git push dokku@$PRODUCTION_WEB1_IP:lapin-master demo:master -f
             fi
       - run:
           name: Push to remote 2
@@ -126,6 +129,9 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "demo" ]; then
               echo -e "Host $DEMO_WEB2_IP\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
               git push dokku@$DEMO_WEB2_IP:lapin-demo demo:master -f
+            elif [ "${CIRCLE_BRANCH}" == "master" ]; then
+              echo -e "Host $PRODUCTION_WEB2_IP\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+              git push dokku@$PRODUCTION_WEB2_IP:lapin-master demo:master -f
             fi
 
 workflows:
@@ -145,4 +151,6 @@ workflows:
             - lint
           filters:
             branches:
-              only: demo
+              only:
+                - demo
+                - master
