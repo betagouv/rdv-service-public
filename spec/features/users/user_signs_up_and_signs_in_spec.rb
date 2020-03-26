@@ -1,5 +1,6 @@
 feature 'User signs up and signs in' do
   let(:user) { build(:user) }
+  let(:invited_user) { create(:user, :unconfirmed) }
 
   context 'through home page' do
     before { visit root_path }
@@ -17,6 +18,24 @@ feature 'User signs up and signs in' do
       expect(current_path).to eq(authenticated_user_root_path)
       expect_flash_info(I18n.t("devise.sessions.signed_in"))
       click_link user.first_name
+      click_link 'Se déconnecter'
+      expect(current_path).to eq(root_path)
+    end
+
+    scenario '.sign_up, .invite!, accept_invite and then signs out' do
+      click_link 'Se connecter'
+      click_link 'Je m\'inscris'
+      sign_up(invited_user)
+      expect(current_path).to eq(new_user_session_path)
+      expect_flash_info(I18n.t("devise.registrations.signed_up_but_unconfirmed"))
+      open_email(invited_user.email)
+      current_email.click_link "Accepter l'invitation"
+      expect(page).to have_content('Inscription')
+      fill_in :password, with: "123456"
+      click_on "Enregistrer"
+      expect(current_path).to eq(root_path)
+      expect_flash_info(I18n.t("devise.invitations.updated"))
+      click_link invited_user.first_name
       click_link 'Se déconnecter'
       expect(current_path).to eq(root_path)
     end

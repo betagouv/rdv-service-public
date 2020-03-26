@@ -104,7 +104,7 @@ class User < ApplicationRecord
   end
 
   def active_for_authentication?
-    super && !deleted_at
+    super && !deleted_at && !encrypted_password.blank?
   end
 
   def inactive_message
@@ -125,6 +125,16 @@ class User < ApplicationRecord
 
   def invite_on_create?
     invite_on_create == "true"
+  end
+
+  def send_invite_if_checked
+    invite! if invite_on_create? && email.present?
+  end
+
+  def valid_except_email?
+    valid?
+    errors.delete(:email)
+    errors.empty?
   end
 
   protected
@@ -155,9 +165,5 @@ class User < ApplicationRecord
     return unless birth_date.present? && (birth_date > Date.today || birth_date < 130.years.ago)
 
     errors.add(:birth_date, "est invalide")
-  end
-
-  def send_invite_if_checked
-    invite! if invite_on_create? && email.present?
   end
 end

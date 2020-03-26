@@ -1,6 +1,12 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   layout :user_devise_layout
 
+  def create
+    return invite_and_redirect if User.find_by(email: sign_up_params[:email], confirmed_at: nil)
+
+    super
+  end
+
   def destroy
     authorize([:user, resource])
     resource.soft_delete
@@ -18,5 +24,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def after_inactive_sign_up_path_for(_)
     new_user_session_path
+  end
+
+  def invite_and_redirect
+    user = User.find_by(email: sign_up_params[:email], confirmed_at: nil)
+    user.invite!
+    set_flash_message! :notice, :signed_up_but_unconfirmed
+    respond_with user, location: after_inactive_sign_up_path_for(user)
   end
 end

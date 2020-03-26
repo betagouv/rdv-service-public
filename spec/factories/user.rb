@@ -20,6 +20,9 @@ FactoryBot.define do
     family_situation { 'divorced' }
     logement { 'sdf' }
     number_of_children { 12 }
+    trait :unconfirmed do
+      confirmed_at { nil }
+    end
     trait :with_multiple_organisations do
       organisations { create_list(:organisation, 3) }
     end
