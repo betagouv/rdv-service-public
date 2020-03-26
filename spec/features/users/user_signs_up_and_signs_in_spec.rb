@@ -7,7 +7,7 @@ feature 'User signs up and signs in' do
 
     scenario '.sign_up, .confirm, .sign_in and then signs out' do
       click_link 'Se connecter'
-      click_link 'Je m\'inscris'
+      click_button 'Je m\'inscris'
       sign_up(user)
       expect(current_path).to eq(new_user_session_path)
       expect_flash_info(I18n.t("devise.registrations.signed_up_but_unconfirmed"))
@@ -24,7 +24,7 @@ feature 'User signs up and signs in' do
 
     scenario '.sign_up, .invite!, accept_invite and then signs out' do
       click_link 'Se connecter'
-      click_link 'Je m\'inscris'
+      click_button 'Je m\'inscris'
       sign_up(invited_user)
       expect(current_path).to eq(new_user_session_path)
       expect_flash_info(I18n.t("devise.registrations.signed_up_but_unconfirmed"))
