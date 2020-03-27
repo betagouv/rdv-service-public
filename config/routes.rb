@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     resources :plage_ouvertures
     resources :absences
     resources :motif_libelles
+    resources :webhooks
     root to: "agents#index"
 
     authenticate :super_admin do

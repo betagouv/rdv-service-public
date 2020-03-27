@@ -80,14 +80,18 @@ class Rdv < ApplicationRecord
   end
 
   def send_web_hook
-    WebHookJob.perform_later(to_detailed, organisation.departement)
+    organisation.webhooks.each do |w|
+      WebHookJob.perform_later(to_detailed, w)
+    end
   end
 
   def send_web_hook_on_destroy
     rdv = to_detailed
     rdv['status'] = 'deleted'
 
-    WebHookJob.perform_later(rdv, organisation.departement)
+    organisation.webhooks.each do |w|
+      WebHookJob.perform_later(rdv, w)
+    end
   end
 
   def notify?
