@@ -33,9 +33,15 @@ Afin d'initialiser l'environnement de développement, exécutez la commande suiv
 
     bin/setup
 
+### Préparation des variables d'environnement
+
+- `cp .env.sample .env`
+- https://www.algolia.com/users/sign_up/places pour renseigner PLACES_APP_ID et PLACES_API_KEY
+
+
 ### Lancement de l'application
 
-    foreman s -f Procfile.dev 
+    foreman s -f Procfile.dev
 
 L'application tourne à l'adresse `http://localhost:5000`.
 
