@@ -12,6 +12,7 @@ https://beta.gouv.fr/startups/lapins.html
 
 #### Tous environnements
 
+- Ruby 2.7.0
 - postgresql
 
 #### Développement
@@ -31,13 +32,17 @@ https://beta.gouv.fr/startups/lapins.html
 
 Afin d'initialiser l'environnement de développement, exécutez la commande suivante :
 
-    bin/setup
+```bash
+bin/setup
+```
 
 ### Lancement de l'application
 
-    foreman s -f Procfile.dev 
+```bash
+foreman s -f Procfile.dev
+```
 
-L'application tourne à l'adresse `http://localhost:5000`.
+L'application tourne à l'adresse [http://localhost:5000].
 
 ### Voir les emails envoyés en local
 
@@ -47,7 +52,9 @@ Ouvrez la page [http://localhost:5000/letter_opener](http://localhost:5000/lette
 
 Pour mettre à jour votre environnement de développement, installer les nouvelles dépendances et faire jouer les migrations, exécutez :
 
-    bin/update
+```bash
+bin/update
+```
 
 ### Exécution des tests (RSpec)
 
@@ -57,15 +64,21 @@ Pour exécuter les tests de l'application, plusieurs possibilités :
 
 - Lancer tous les tests
 
-        bin/rspec
+```bash
+bin/rspec
+```
 
 - Lancer un test en particulier
 
-        bin/rspec file_path/file_name_spec.rb:line_number
+```bash
+bin/rspec file_path/file_name_spec.rb:line_number
+```
 
 - Lancer tous les tests d'un fichier
 
-        bin/rspec file_path/file_name_spec.rb
+```bash
+bin/rspec file_path/file_name_spec.rb
+```
 
 ### Linting
 
@@ -77,10 +90,18 @@ Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité
 
 ### Régénérer les binstubs
 
-    bundle binstub railties --force
-    bin/rake rails:update:bin
+```bash
+bundle binstub railties --force
+bin/rake rails:update:bin
+```
 
 ### Programmation des jobs
 
-  rake send_reminder # Envoi des sms/email de rappel 48h avant le rdv
-  rake file_attente # Envoi des sms/email lorsque des créneaux se libèrent
+```bash
+# Envoi des sms/email de rappel 48h avant le rdv
+rake send_reminder
+
+# Envoi des sms/email lorsque des créneaux se libèrent
+rake file_attente
+```
+
