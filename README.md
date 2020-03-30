@@ -35,7 +35,6 @@ Afin d'initialiser l'environnement de développement, exécutez la commande suiv
 ```bash
 bin/setup
 ```
-
 Vous pouvez aussi vous créer un compte SuperAdmin dans une console Rails :
 
 ```
@@ -110,7 +109,6 @@ rake send_reminder
 # Envoi des sms/email lorsque des créneaux se libèrent
 rake file_attente
 ```
-
 ### Déploiement
 
 Les environnements de production et de pré-production (démo) sont déployés sur
