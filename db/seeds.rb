@@ -26,7 +26,7 @@ motif1 = Motif.create!(
     email: Faker::Internet.email,
     birth_date: Faker::Date.birthday,
     password: '123456',
-    organisations: [org1]
+    organisation_ids: [org1.id]
   )
 end
 
@@ -37,7 +37,7 @@ agent1 = Agent.create!(
   last_name: 'Validay',
   password: '123456',
   service: service1,
-  organisations: [org1]
+  organisation_ids: [org1.id]
 )
 
 _plage_ouverture1 = PlageOuverture.create!(
