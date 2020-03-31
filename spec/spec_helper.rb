@@ -21,17 +21,12 @@ require 'webdrivers'
 chrome_bin = ENV.fetch('GOOGLE_CHROME_SHIM', nil)
 Capybara.register_driver :chrome do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    { loggingPrefs: { browser: 'ALL' } }.merge(
-      chrome_bin ? { binary: chrome_bin } : {}
-    )
+    chromeOptions: chrome_bin ? { binary: chrome_bin } : {}
   )
-  options = Selenium::WebDriver::Chrome::Options.new
-  chrome_args = %w[--headless]
-  chrome_args.each { |arg| options.add_argument(arg) }
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    options: options,
+    options: Selenium::WebDriver::Chrome::Options.new(args: %w[headless]),
     desired_capabilities: capabilities
   )
 end
@@ -41,7 +36,6 @@ Capybara.configure do |config|
   config.app_host = "http://localhost:#{port}"
   config.server_host = "localhost"
   config.server_port = port
-  config.default_driver = :chrome
   config.javascript_driver = :chrome
   config.server = :puma, { Silent: true }
 end
