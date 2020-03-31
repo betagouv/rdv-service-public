@@ -1,3 +1,9 @@
+# when trying to create models using direct associations like
+# `organisation: org1` instead of `organisation_id: org1.id`
+# CircleCI throws ActiveRecord::AssociationTypeMismatch that seems to indicate
+# that the model files are loaded twice, or something related to HABTM
+# associations..
+
 org1 = Organisation.create!(name: "MDS du 75", phone_number: "0123456789", departement: "75")
 
 service1 = Service.create!(name: "Protection Maternelle Infantile", short_name: "PMI")
