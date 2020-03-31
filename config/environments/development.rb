@@ -41,6 +41,12 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
+  # allows to see debug logs when running with foreman / overmind
+  # cf https://github.com/rails/sprockets-rails/issues/376#issuecomment-287560399
+  logger = ActiveSupport::Logger.new(STDOUT)
+  logger.formatter = config.log_formatter
+  config.logger = ActiveSupport::TaggedLogging.new(logger)
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
