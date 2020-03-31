@@ -19,12 +19,15 @@ require 'capybara/email/rspec'
 require 'webdrivers'
 
 chrome_bin = ENV.fetch('GOOGLE_CHROME_SHIM', nil)
-chrome_opts = chrome_bin ? { 'chromeOptions' => { 'binary' => chrome_bin } } : {}
 Capybara.register_driver :chrome do |app|
+  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
+    chromeOptions: chrome_bin ? { binary: chrome_bin } : {}
+  )
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    desired_capabilities: Selenium::WebDriver::Remote::Capabilities.chrome(chrome_opts)
+    options: Selenium::WebDriver::Chrome::Options.new(args: %w[headless]),
+    desired_capabilities: capabilities
   )
 end
 
