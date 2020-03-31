@@ -35,4 +35,5 @@ yarn-debug.log*
 
 .DS_Store
 .env
+.ruby-gemset
 lapins.kdbx
