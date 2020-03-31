@@ -14,8 +14,8 @@ lieu1 = Lieu.create!(
 motif1 = Motif.create!(
   name: 'Consultation médicale',
   color: '#FF7C00',
-  organisation: org1,
-  service: service1,
+  organisation_id: org1.id,
+  service_id: service1.id,
   online: true
 )
 
@@ -36,16 +36,16 @@ agent1 = Agent.create!(
   first_name: 'Johnny',
   last_name: 'Validay',
   password: '123456',
-  service: service1,
+  service_id: service1.id,
   organisation_ids: [org1.id]
 )
 
 _plage_ouverture1 = PlageOuverture.create!(
   title: 'Permanence classique',
-  organisation: org1,
-  agent: agent1,
-  lieu: lieu1,
-  motifs: [motif1],
+  organisation_id: org1.id,
+  agent_id: agent1.id,
+  lieu_id: lieu1.id,
+  motif_ids: [motif1.id],
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(8),
   end_time: Tod::TimeOfDay.new(12),
