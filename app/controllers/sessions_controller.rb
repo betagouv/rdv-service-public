@@ -2,7 +2,7 @@ class SessionsController < Devise::SessionsController
   after_action :sign_out_other_scope, only: :create
 
   def create
-    if auth_options[:scope] == :user && (self.resource = Agent.find_by(email: params[:user]["email"]))
+    if auth_options[:scope] == :user && (self.resource = Agent.find_by(email: params[:user]["email"])) && resource.valid_password?(params[:user]["password"])
       set_flash_message!(:notice, :signed_in)
       sign_in(:agent, resource)
       yield resource if block_given?
