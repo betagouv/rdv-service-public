@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_16_134303) do
+ActiveRecord::Schema.define(version: 2020_04_01_085539) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -183,6 +183,7 @@ ActiveRecord::Schema.define(version: 2020_03_16_134303) do
     t.text "restriction_for_rdv"
     t.text "instruction_for_rdv"
     t.boolean "for_secretariat", default: false
+    t.integer "location_type", default: 0, null: false
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
     t.index ["service_id"], name: "index_motifs_on_service_id"
