@@ -6,7 +6,7 @@
     li.breadcrumb-item
       = link_to 'Vos usagers', organisation_users_path(current_organisation)
     li.breadcrumb-item
-      = link_to @user.parent.full_name, organisation_user_path(current_organisation, @user.parent)
+      = link_to @user.responsible.full_name, organisation_user_path(current_organisation, @user.responsible)
     li.breadcrumb-item.active #{@user.full_name}
 
 .row
@@ -26,14 +26,14 @@
             = simple_format(@user.notes)
         .row.mt-5
           .col.text-left
-            = link_to "Supprimer", organisation_child_path(current_organisation, @user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cet usager ?"}
+            = link_to "Supprimer", organisation_relative_path(current_organisation, @user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cet usager ?"}
           .col.text-right
-            = link_to "Modifier", edit_organisation_child_path(current_organisation, @user), class: "btn btn-primary"
+            = link_to "Modifier", edit_organisation_relative_path(current_organisation, @user), class: "btn btn-primary"
 
     .card
       .card-body
-        h4.card-title.mb-3 Informations parentales
-        = render 'agents/users/parent_information', user: @user.parent
+        h4.card-title.mb-3 Informations responsibleales
+        = render 'agents/users/responsible_information', user: @user.responsible
 
   .col-md-6
     .card
