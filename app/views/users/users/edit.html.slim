@@ -25,11 +25,11 @@
   .col-md-6
     .card
       .card-body
-        h4.card-title.mb-4 Mes enfants
+        h4.card-title.mb-4 Mes proches
         ul.list-group.mb-2
           - if @user.relatives.active.empty?
             li.list-group-item
-              em Aucun enfant
+              em Aucun proche
           - @user.relatives.active.each do |relative|
             li.list-group-item
               .row
@@ -39,4 +39,4 @@
                 .col-auto.text-right
                   = link_to "modifier", edit_relative_path(relative)
         .text-right
-          = link_to "Ajouter un enfant", new_relative_path, class: "btn btn-outline-primary", data: { modal: true }
+          = link_to "Ajouter un proche", new_relative_path, class: "btn btn-outline-primary", data: { modal: true }

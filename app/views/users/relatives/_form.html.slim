@@ -9,7 +9,7 @@
   .row
     .col.text-left
       - if user.persisted?
-        = link_to "Supprimer", relative_path(@user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cet enfant ?"}
+        = link_to "Supprimer", relative_path(@user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce proche ?"}
 
     .col.text-right
       = link_to "Annuler", users_informations_path, class: "btn btn-link"

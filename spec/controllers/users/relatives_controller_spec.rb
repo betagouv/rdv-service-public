@@ -21,7 +21,7 @@ RSpec.describe Users::RelativesController, type: :controller do
     end
 
     it "should assign relative" do
-      expect(response.body).to include("Modifier un enfant")
+      expect(response.body).to include("Modifier un proche")
       expect(assigns(:user)).to eq(relative)
     end
   end
@@ -36,7 +36,7 @@ RSpec.describe Users::RelativesController, type: :controller do
     end
 
     it "should assign a new user" do
-      expect(response.body).to include("Ajouter un enfant")
+      expect(response.body).to include("Ajouter un proche")
       expect(assigns(:user)).to be_a_new(User)
     end
   end

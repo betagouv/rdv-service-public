@@ -69,8 +69,8 @@ describe "User can search for rdvs" do
       expect(page).to have_content(motif.restriction_for_rdv)
 
       # Add relative
-      click_link("Ajouter un enfant")
-      expect(page).to have_selector('h4', text: "Ajouter un enfant")
+      click_link("Ajouter un proche")
+      expect(page).to have_selector('h4', text: "Ajouter un proche")
       fill_in('Prénom', with: "Mathieu")
       fill_in('Nom', with: "Lapin")
       fill_in('Date de naissance', with: Date.yesterday)

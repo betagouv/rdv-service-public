@@ -13,7 +13,7 @@
   .col-md-6
     .card
       .card-body
-        h4.card-title.mb-3 Informations de l'enfant
+        h4.card-title.mb-3 Informations de votre proche
         ul.list-unstyled
           - {first_name: @user.first_name, last_name: @user.last_name, birth_date: birth_date_and_age(@user) }.each do |k,v|
               li.mb-2 

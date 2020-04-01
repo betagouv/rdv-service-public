@@ -16,7 +16,7 @@ RSpec.describe Users::UsersController, type: :controller do
 
     it "Should list relatives" do
       subject
-      expect(response.body).to include("Mes enfants")
+      expect(response.body).to include("Mes proches")
       expect(response.body).to include("Katia GARCIA (28 ans)")
     end
   end

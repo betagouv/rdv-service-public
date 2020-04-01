@@ -10,7 +10,7 @@ describe "can see the relatives of the user" do
 
   context "with no relative" do
     before { click_link user.full_name }
-    it { expect(page).to have_content('Aucun enfant') }
+    it { expect(page).to have_content('Aucun proche') }
   end
 
   context "with relatives" do

@@ -19,7 +19,7 @@ class Agents::RelativesController < AgentAuthController
     @user.organisation_ids = responsible.organisation_ids
     authorize(@user)
     if @user.save
-      flash[:notice] = "#{@user.full_name} a été ajouté comme enfant."
+      flash[:notice] = "#{@user.full_name} a été ajouté comme proche."
       redirect_to organisation_user_path(current_organisation, responsible)
     else
       render :new
@@ -33,7 +33,7 @@ class Agents::RelativesController < AgentAuthController
   def update
     authorize(@user)
     if @user.update(user_params)
-      flash[:notice] = "Les informations de l'enfant #{@user.full_name} ont été mises à jour."
+      flash[:notice] = "Les informations de votre proche #{@user.full_name} ont été mises à jour."
       redirect_to organisation_relative_path(current_organisation, @user)
     else
       render :edit
@@ -42,7 +42,7 @@ class Agents::RelativesController < AgentAuthController
 
   def destroy
     authorize(@user)
-    flash[:notice] = "L'enfant a été supprimé." if @user.soft_delete
+    flash[:notice] = "Votre proche a été supprimé." if @user.soft_delete
     redirect_to organisation_user_path(current_organisation, @user.responsible)
   end
 
