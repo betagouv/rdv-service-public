@@ -21,7 +21,7 @@ class Rdv::Ics
       e.dtend       = Icalendar::Values::DateTime.new(rdv.ends_at, 'tzid' => tzid)
       e.summary     = "RDV #{rdv.name_for_user(user)}"
       e.description = description
-      e.location    = rdv.location unless rdv.motif.by_phone?
+      e.location    = rdv.location unless rdv.motif.phone?
       e.uid         = rdv.uuid
       e.sequence    = rdv.sequence
       e.ip_class    = "PRIVATE"
@@ -34,7 +34,7 @@ class Rdv::Ics
 
   def description
     d = ""
-    d += "RDV Téléphonique " if @rdv.motif.by_phone
+    d += "RDV Téléphonique " if @rdv.motif.phone?
     d += "Infos et annulation: #{rdvs_shorten_url(host: "https://#{ENV["HOST"]}")}"
     d
   end

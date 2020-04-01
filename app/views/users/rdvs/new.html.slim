@@ -18,7 +18,7 @@
           i.fa.fa-check.fa-fw.mr-1.text-success
           | Motif :&nbsp;
           = @motif_name
-        - if @rdv.motif.by_phone
+        - if @rdv.motif.phone?
           li.list-group-item
             i.fa.fa-check.fa-fw.mr-1.text-success
             | RDV téléphonique

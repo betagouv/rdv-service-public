@@ -9,7 +9,7 @@
         li.list-group-item
           .fa.fa-map-marker>
           = human_location(rdv)
-      - if rdv.motif.by_phone
+      - if rdv.motif.phone?
         li.list-group-item
           .fa.fa-phone>
           | RDV Téléphonique
