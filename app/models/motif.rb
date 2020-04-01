@@ -5,6 +5,8 @@ class Motif < ApplicationRecord
   has_many :rdvs, dependent: :restrict_with_exception
   has_and_belongs_to_many :plage_ouvertures, -> { distinct }
 
+  enum location_type: [:public_office, :phone]
+
   validates :name, presence: true, uniqueness: { scope: :organisation }
   validates :color, :service, :default_duration_in_min, :min_booking_delay, :max_booking_delay, presence: true
   validates :min_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
@@ -20,6 +22,8 @@ class Motif < ApplicationRecord
     available_motifs = agent.service.secretariat? ? for_secretariat : where(service: agent.service)
     available_motifs.where(organisation_id: organisation.id).active.order(Arel.sql('LOWER(name)'))
   }
+
+  before_save { self.location_type = by_phone? ? :phone : :public_office }
 
   def soft_delete
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
