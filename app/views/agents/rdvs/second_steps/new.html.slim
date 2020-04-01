@@ -16,7 +16,7 @@
         .col-md-6= datetime_input(f, :starts_at)
         .col-md-6= f.input :duration_in_min, as: :integer, label: "Durée en minutes"
 
-      - unless @second_step.rdv.motif.by_phone
+      - unless @second_step.rdv.motif.phone?
         = f.input :location, input_html: { class: "places-js-container" }
 
         .mb-1

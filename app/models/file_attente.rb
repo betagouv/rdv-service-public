@@ -10,7 +10,7 @@ class FileAttente < ApplicationRecord
 
   def self.send_notifications
     FileAttente.active.each do |fa|
-      next if fa.rdv.motif.by_phone
+      next if fa.rdv.motif.phone?
 
       end_time = fa.rdv.starts_at - 2.day
       date_range = Date.today..end_time.to_date

@@ -3,8 +3,8 @@ module MotifsHelper
     content_tag(:span, 'En ligne', class: 'badge badge-danger') if motif.online
   end
 
-  def by_phone_badge(motif)
-    content_tag(:span, 'Par tél.', class: 'badge badge-info') if motif.by_phone
+  def location_type_badge(motif)
+    content_tag(:span, 'Par tél.', class: 'badge badge-info') if motif.phone?
   end
 
   def secretariat_badge(motif)

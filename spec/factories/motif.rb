@@ -11,6 +11,7 @@ FactoryBot.define do
     instruction_for_rdv { "Intruction pour le RDV" }
     restriction_for_rdv { "Consigne pour le RDV" }
     online { true }
+    location_type { :public_office }
     trait :with_rdvs do
       after(:create) do |motif|
         create_list(:rdv, 5, motif: motif)
@@ -18,7 +19,7 @@ FactoryBot.define do
     end
     service { Service.where.not(name: "Secrétariat").first || create(:service) }
     trait :by_phone do
-      by_phone { true }
+      location_type { :phone }
     end
     trait :for_secretariat do
       for_secretariat { true }

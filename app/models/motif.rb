@@ -16,14 +16,12 @@ class Motif < ApplicationRecord
 
   scope :active, -> { where(deleted_at: nil) }
   scope :online, -> { where(online: true) }
-  scope :by_phone, -> { where(by_phone: true) }
+  scope :by_phone, -> { Motif.phone } # default scope created by enum
   scope :for_secretariat, -> { where(for_secretariat: true) }
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
     available_motifs = agent.service.secretariat? ? for_secretariat : where(service: agent.service)
     available_motifs.where(organisation_id: organisation.id).active.order(Arel.sql('LOWER(name)'))
   }
-
-  before_save { self.location_type = by_phone? ? :phone : :public_office }
 
   def soft_delete
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
@@ -46,7 +44,7 @@ class Motif < ApplicationRecord
   def name_with_badge
     label = name
     label = "#{label} <span class='badge badge-danger'>En ligne</span>" if online
-    label = "#{label} <span class='badge badge-info'>Par tél.</span>" if by_phone
+    label = "#{label} <span class='badge badge-info'>Par tél.</span>" if phone?
     label = "#{label} <span class='badge badge-secondary'>Secrétariat</span>" if for_secretariat
     label.html_safe
   end
