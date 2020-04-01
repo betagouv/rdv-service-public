@@ -46,8 +46,8 @@ describe User, type: :model do
     subject do
       user.add_organisation(organisation)
       user.reload
-      child.reload if defined?(child)
-      parent.reload if defined?(parent)
+      relative.reload if defined?(relative)
+      responsible.reload if defined?(responsible)
     end
 
     describe "when organisation is not associated" do
@@ -65,41 +65,41 @@ describe User, type: :model do
       end
     end
 
-    describe "when parent has child" do
+    describe "when responsible has relative" do
       let(:organisations) { [organisation] }
 
-      describe "add organisation to parent" do
+      describe "add organisation to responsible" do
         let!(:user) { create(:user, organisations: []) }
-        let!(:child) { create(:user, organisations: [], parent_id: user.id) }
+        let!(:relative) { create(:user, organisations: [], responsible_id: user.id) }
 
         it { expect { subject }.to change(user, :organisation_ids).from([]).to([organisation.id]) }
-        it { expect { subject }.to change(child, :organisation_ids).from([]).to([organisation.id]) }
+        it { expect { subject }.to change(relative, :organisation_ids).from([]).to([organisation.id]) }
       end
 
-      describe "add organisation to child" do
-        let!(:parent) { create(:user, organisations: []) }
-        let!(:user) { create(:user, organisations: [], parent_id: parent.id) }
+      describe "add organisation to relative" do
+        let!(:responsible) { create(:user, organisations: []) }
+        let!(:user) { create(:user, organisations: [], responsible_id: responsible.id) }
 
         it { expect { subject }.to change(user, :organisation_ids).from([]).to([organisation.id]) }
-        it { expect { subject }.to change(parent, :organisation_ids).from([]).to([organisation.id]) }
+        it { expect { subject }.to change(responsible, :organisation_ids).from([]).to([organisation.id]) }
       end
     end
   end
 
-  describe "#set_organisation_ids_from_parent" do
+  describe "#set_organisation_ids_from_responsible" do
     let(:user) { create(:user, organisations: [create(:organisation), create(:organisation)]) }
-    let(:child) { create(:user, parent_id: parent_id) }
+    let(:relative) { create(:user, responsible_id: responsible_id) }
 
-    describe "when there is no parent" do
-      let(:parent_id) { nil }
+    describe "when there is no responsible" do
+      let(:responsible_id) { nil }
 
-      it { expect(child.organisation_ids).not_to eq(user.organisation_ids) }
+      it { expect(relative.organisation_ids).not_to eq(user.organisation_ids) }
     end
 
-    describe "when user is parent" do
-      let(:parent_id) { user.id }
+    describe "when user is responsible" do
+      let(:responsible_id) { user.id }
 
-      it { expect(child.organisation_ids).to eq(user.organisation_ids) }
+      it { expect(relative.organisation_ids).to eq(user.organisation_ids) }
     end
   end
 
@@ -108,7 +108,7 @@ describe User, type: :model do
 
     before do
       freeze_time
-      child.reload if defined?(child)
+      relative.reload if defined?(relative)
       subject
     end
 
@@ -143,15 +143,15 @@ describe User, type: :model do
       it { expect(user.deleted_at).to eq(now) }
     end
 
-    context "when user is a child" do
-      let(:user) { create(:user, parent_id: create(:user).id) }
+    context "when user is a relative" do
+      let(:user) { create(:user, responsible_id: create(:user).id) }
       let(:deleted_org) { nil }
 
       it { expect(user.organisation_ids).to be_empty }
       it { expect(user.deleted_at).to eq(now) }
 
       context "and has multiple organisations" do
-        let(:user) { create(:user, :with_multiple_organisations, parent_id: create(:user).id) }
+        let(:user) { create(:user, :with_multiple_organisations, responsible_id: create(:user).id) }
         let(:deleted_org) { user.organisations.first }
 
         it { expect(user.organisation_ids).to be_empty }
@@ -159,24 +159,24 @@ describe User, type: :model do
       end
     end
 
-    context "when user has a child" do
+    context "when user has a relative" do
       let(:user) { create(:user) }
-      let!(:child) { create(:user, parent: user) }
+      let!(:relative) { create(:user, responsible: user) }
 
       let(:deleted_org) { nil }
 
       it { expect(user.reload.organisation_ids).to be_empty }
       it { expect(user.reload.deleted_at).to eq(now) }
-      it { expect(child.reload.organisation_ids).to be_empty }
-      it { expect(child.reload.deleted_at).to eq(now) }
+      it { expect(relative.reload.organisation_ids).to be_empty }
+      it { expect(relative.reload.deleted_at).to eq(now) }
 
       context "and belong to an organisation" do
         let(:deleted_org) { user.organisations.first }
 
         it { expect(user.reload.organisation_ids).to be_empty }
         it { expect(user.reload.deleted_at).to eq(nil) }
-        it { expect(child.reload.organisation_ids).to be_empty }
-        it { expect(child.reload.deleted_at).to eq(nil) }
+        it { expect(relative.reload.organisation_ids).to be_empty }
+        it { expect(relative.reload.deleted_at).to eq(nil) }
       end
     end
   end
@@ -184,22 +184,22 @@ describe User, type: :model do
   describe "#available_rdvs(organisation_id)" do
     let!(:organisation1) { create(:organisation) }
     let!(:organisation2) { create(:organisation) }
-    let!(:parent1) { create(:user) }
-    let!(:child1) { create(:user, parent_id: parent1.id) }
-    let!(:parent2) { create(:user) }
+    let!(:responsible1) { create(:user) }
+    let!(:relative1) { create(:user, responsible_id: responsible1.id) }
+    let!(:responsible2) { create(:user) }
 
     before do
-      [parent1, child1, parent2].each do |user|
+      [responsible1, relative1, responsible2].each do |user|
         create(:rdv, users: [user], organisation: organisation1)
         create(:rdv, :excused, users: [user], organisation: organisation1)
       end
-      create(:rdv, users: [parent1, child1], organisation: organisation1)
+      create(:rdv, users: [responsible1, relative1], organisation: organisation1)
     end
 
-    it { expect(parent1.available_rdvs(organisation1.id).size).to eq(5) }
-    it { expect(parent1.available_rdvs(organisation1.id)).to match_array((parent1.rdvs + child1.rdvs).uniq) }
-    it { expect(child1.available_rdvs(organisation1.id)).to match_array child1.rdvs }
-    it { expect(parent2.available_rdvs(organisation1.id)).to match_array parent2.rdvs }
-    it { expect(parent1.available_rdvs(organisation2.id)).to be_empty }
+    it { expect(responsible1.available_rdvs(organisation1.id).size).to eq(5) }
+    it { expect(responsible1.available_rdvs(organisation1.id)).to match_array((responsible1.rdvs + relative1.rdvs).uniq) }
+    it { expect(relative1.available_rdvs(organisation1.id)).to match_array relative1.rdvs }
+    it { expect(responsible2.available_rdvs(organisation1.id)).to match_array responsible2.rdvs }
+    it { expect(responsible1.available_rdvs(organisation2.id)).to be_empty }
   end
 end

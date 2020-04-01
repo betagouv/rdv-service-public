@@ -1,4 +1,4 @@
-class Agents::ChildrenController < AgentAuthController
+class Agents::RelativesController < AgentAuthController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   def show
@@ -6,21 +6,21 @@ class Agents::ChildrenController < AgentAuthController
   end
 
   def new
-    parent = policy_scope(User).find(params[:user_id])
-    @user = User.new(parent: parent)
-    @user.organisation_ids = parent.organisation_ids
+    responsible = policy_scope(User).find(params[:user_id])
+    @user = User.new(responsible: responsible)
+    @user.organisation_ids = responsible.organisation_ids
     authorize(@user)
   end
 
   def create
-    parent = policy_scope(User).find(params[:user_id])
+    responsible = policy_scope(User).find(params[:user_id])
     @user = User.new(user_params)
-    @user.parent = policy_scope(User).find(params[:user_id])
-    @user.organisation_ids = parent.organisation_ids
+    @user.responsible = policy_scope(User).find(params[:user_id])
+    @user.organisation_ids = responsible.organisation_ids
     authorize(@user)
     if @user.save
       flash[:notice] = "#{@user.full_name} a été ajouté comme enfant."
-      redirect_to organisation_user_path(current_organisation, parent)
+      redirect_to organisation_user_path(current_organisation, responsible)
     else
       render :new
     end
@@ -34,7 +34,7 @@ class Agents::ChildrenController < AgentAuthController
     authorize(@user)
     if @user.update(user_params)
       flash[:notice] = "Les informations de l'enfant #{@user.full_name} ont été mises à jour."
-      redirect_to organisation_child_path(current_organisation, @user)
+      redirect_to organisation_relative_path(current_organisation, @user)
     else
       render :edit
     end
@@ -43,7 +43,7 @@ class Agents::ChildrenController < AgentAuthController
   def destroy
     authorize(@user)
     flash[:notice] = "L'enfant a été supprimé." if @user.soft_delete
-    redirect_to organisation_user_path(current_organisation, @user.parent)
+    redirect_to organisation_user_path(current_organisation, @user.responsible)
   end
 
   private

@@ -1,4 +1,4 @@
-describe "can see the children of the user" do
+describe "can see the relatives of the user" do
   let!(:agent) { create(:agent) }
   let!(:user) { create(:user) }
 
@@ -8,19 +8,19 @@ describe "can see the children of the user" do
     click_link "Vos usagers"
   end
 
-  context "with no child" do
+  context "with no relative" do
     before { click_link user.full_name }
     it { expect(page).to have_content('Aucun enfant') }
   end
 
-  context "with children" do
-    let!(:child) { create :user, parent: user }
+  context "with relatives" do
+    let!(:relative) { create :user, responsible: user }
     before do
       click_link user.full_name
-      click_link child.full_name
+      click_link relative.full_name
     end
     it do
-      expect(page).to have_content('Informations parentales')
+      expect(page).to have_content('Informations responsibleales')
     end
   end
 end

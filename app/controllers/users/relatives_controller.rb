@@ -1,17 +1,17 @@
-class Users::ChildrenController < UserAuthController
+class Users::RelativesController < UserAuthController
   respond_to :html
 
   before_action :set_user, only: [:edit, :update, :destroy]
 
   def new
-    @user = User.new(parent_id: current_user.id)
+    @user = User.new(responsible_id: current_user.id)
     authorize(@user)
     respond_modal_with @user
   end
 
   def create
     @user = User.new(user_params)
-    @user.parent_id = current_user.id
+    @user.responsible_id = current_user.id
     @user.organisation_ids = current_user.organisation_ids
     authorize(@user)
     flash[:notice] = "#{@user.full_name} a été ajouté comme enfant." if @user.save

@@ -11,8 +11,8 @@ class User < ApplicationRecord
 
   has_and_belongs_to_many :organisations, -> { distinct }
   has_and_belongs_to_many :rdvs
-  belongs_to :parent, foreign_key: "parent_id", class_name: "User", optional: true
-  has_many :children, foreign_key: "parent_id", class_name: "User"
+  belongs_to :responsible, foreign_key: "responsible_id", class_name: "User", optional: true
+  has_many :relatives, foreign_key: "responsible_id", class_name: "User"
   has_many :file_attentes, dependent: :destroy
 
   enum caisse_affiliation: { aucune: 0, caf: 1, msa: 2 }
@@ -34,7 +34,7 @@ class User < ApplicationRecord
   after_create :send_invite_if_checked
 
   before_save :set_email_to_null_if_blank
-  before_save :set_organisation_ids_from_parent, if: :parent_id_changed?
+  before_save :set_organisation_ids_from_responsible, if: :responsible_id_changed?
   before_save :normalize_account
 
   def age
@@ -73,26 +73,26 @@ class User < ApplicationRecord
   end
 
   def soft_delete(organisation = nil)
-    if organisation.present? && !child?
+    if organisation.present? && !relative?
       family.each { |u| u.organisations.delete(organisation) }
     else
       now = Time.zone.now
       update(organisation_ids: [], deleted_at: now)
-      children.each { |child| child.update(organisation_ids: [], deleted_at: now) }
+      relatives.each { |relative| relative.update(organisation_ids: [], deleted_at: now) }
     end
   end
 
   def available_users_for_rdv
-    User.where(parent_id: id).or(User.where(id: id)).order('parent_id DESC NULLS FIRST', first_name: :asc).active
+    User.where(responsible_id: id).or(User.where(id: id)).order('responsible_id DESC NULLS FIRST', first_name: :asc).active
   end
 
-  def child?
-    parent_id.present?
+  def relative?
+    responsible_id.present?
   end
 
   def family
-    user_id = child? ? parent.id : id
-    User.active.where("parent_id = ? OR id = ?", user_id, user_id)
+    user_id = relative? ? responsible.id : id
+    User.active.where("responsible_id = ? OR id = ?", user_id, user_id)
   end
 
   def formated_phone
@@ -100,7 +100,7 @@ class User < ApplicationRecord
   end
 
   def invitable?
-    invitation_accepted_at.nil? && encrypted_password.blank? && email.present? && !child?
+    invitation_accepted_at.nil? && encrypted_password.blank? && email.present? && !relative?
   end
 
   def active_for_authentication?
@@ -112,14 +112,14 @@ class User < ApplicationRecord
   end
 
   def user_to_notify
-    child? ? parent : self
+    relative? ? responsible : self
   end
 
   def available_rdvs(organisation_id)
-    if child?
+    if relative?
       rdvs.includes(:organisation, :rdvs_users, :users).where(organisation_id: organisation_id)
     else
-      Rdv.includes(:organisation).user_with_children(id).where(organisation_id: organisation_id)
+      Rdv.includes(:organisation).user_with_relatives(id).where(organisation_id: organisation_id)
     end
   end
 
@@ -140,21 +140,21 @@ class User < ApplicationRecord
   protected
 
   def password_required?
-    return false if created_or_updated_by_agent || child?
+    return false if created_or_updated_by_agent || relative?
 
     super
   end
 
   def email_required?
-    return false if created_or_updated_by_agent || child?
+    return false if created_or_updated_by_agent || relative?
 
     super
   end
 
   private
 
-  def set_organisation_ids_from_parent
-    self.organisation_ids = parent.organisation_ids if parent
+  def set_organisation_ids_from_responsible
+    self.organisation_ids = responsible.organisation_ids if responsible
   end
 
   def set_email_to_null_if_blank

@@ -16,7 +16,7 @@ module RdvsHelper
   def users_to_sentence(rdv)
     users = []
     rdv.users.each do |user|
-      users << user if user == current_user || current_user.children.include?(user)
+      users << user if user == current_user || current_user.relatives.include?(user)
     end
     users.map(&:full_name).sort.to_sentence
   end
@@ -65,7 +65,7 @@ module RdvsHelper
       else
         organisation_rdvs_path(current_organisation, status: status, default_period: true)
       end
-    when 'users', 'children'
+    when 'users', 'relatives'
       organisation_user_rdvs_path(current_organisation, params[:id], status: status)
     end
   end
