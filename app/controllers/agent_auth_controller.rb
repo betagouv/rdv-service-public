@@ -20,11 +20,11 @@ class AgentAuthController < ApplicationController
   end
 
   def authorize(record)
-    record.class.module_responsible == Agent ? super(record) : super([:agent, record])
+    record.class.module_parent == Agent ? super(record) : super([:agent, record])
   end
 
   def policy_scope(clasz)
-    clasz.module_responsible == Agent ? super(record) : super([:agent, clasz])
+    clasz.module_parent == Agent ? super(record) : super([:agent, clasz])
   end
 
   def agent_not_authorized(exception)
