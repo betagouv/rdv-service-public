@@ -3,8 +3,6 @@ tr
     span.badge.badge-pill.ml-0.mr-2 style="background: #{motif.color};"
       | &nbsp;
     = link_to motif.name, organisation_motif_path(motif.organisation, motif), data: { rightbar: true }
-    = online_badge(motif)
-    = location_type_badge(motif)
-    = secretariat_badge(motif)
+    = motif_badges(motif)
   td= motif.service.name
   td= "#{motif.default_duration_in_min} min."
