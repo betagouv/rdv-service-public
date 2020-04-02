@@ -12,7 +12,7 @@ class Agents::AgentsController < AgentAuthController
     authorize(@agent)
     @status = params[:status]
     @organisation = current_organisation
-    @date = params[:date] ? Date.parse(params[:date]) : nil
+    @date = params[:date].present? ? Date.parse(params[:date]) : nil
   end
 
   def destroy
