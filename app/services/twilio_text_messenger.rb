@@ -32,7 +32,7 @@ class TwilioTextMessenger
   end
 
   def sms_footer
-    message = if @rdv.motif.by_phone
+    message = if @rdv.motif.phone?
                 "RDV Téléphonique\n"
               else
                 "#{@rdv.location}\n"

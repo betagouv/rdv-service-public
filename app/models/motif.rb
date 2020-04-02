@@ -5,6 +5,8 @@ class Motif < ApplicationRecord
   has_many :rdvs, dependent: :restrict_with_exception
   has_and_belongs_to_many :plage_ouvertures, -> { distinct }
 
+  enum location_type: [:public_office, :phone, :home]
+
   validates :name, presence: true, uniqueness: { scope: :organisation }
   validates :color, :service, :default_duration_in_min, :min_booking_delay, :max_booking_delay, presence: true
   validates :min_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
@@ -14,7 +16,7 @@ class Motif < ApplicationRecord
 
   scope :active, -> { where(deleted_at: nil) }
   scope :online, -> { where(online: true) }
-  scope :by_phone, -> { where(by_phone: true) }
+  scope :by_phone, -> { Motif.phone } # default scope created by enum
   scope :for_secretariat, -> { where(for_secretariat: true) }
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
     available_motifs = agent.service.secretariat? ? for_secretariat : where(service: agent.service)
@@ -42,7 +44,7 @@ class Motif < ApplicationRecord
   def name_with_badge
     label = name
     label = "#{label} <span class='badge badge-danger'>En ligne</span>" if online
-    label = "#{label} <span class='badge badge-info'>Par tél.</span>" if by_phone
+    label = "#{label} <span class='badge badge-info'>Par tél.</span>" if phone?
     label = "#{label} <span class='badge badge-secondary'>Secrétariat</span>" if for_secretariat
     label.html_safe
   end

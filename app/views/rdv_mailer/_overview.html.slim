@@ -17,7 +17,7 @@
     span.float-right
       = "#{rdv.duration_in_min} minutes"
     .clear
-  - if rdv.motif.by_phone
+  - if rdv.motif.phone?
     div.row-result
       span.title Ceci est un rendez-vous téléphonique
   - else

@@ -9,7 +9,7 @@ p.card-text
   p.card-text
     i.fa.fa-fw.fa-map-marker>
     = human_location(rdv)
-- if rdv.motif.by_phone
+- if rdv.motif.phone?
   p.card-text
     i.fa.fa-fw.fa-phone>
     | RDV téléphonique

@@ -9,7 +9,11 @@ fr:
         name: Nom
         color: Couleur
         online: RDV en ligne
-        by_phone: RDV téléphonique
+        location_type: Type de RDV
+        location_types:
+          home: À domicile
+          phone: Par téléphone
+          public_office: Sur place
         for_secretariat: Motif accessible au secrétariat
         default_duration_in_min: Durée par défaut en minutes
         disable_notifications_for_users: Désactiver les notifications pour l'usager

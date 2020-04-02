@@ -36,6 +36,12 @@ Afin d'initialiser l'environnement de développement, exécutez la commande suiv
 bin/setup
 ```
 
+Vous pouvez aussi vous créer un compte SuperAdmin dans une console Rails :
+
+```
+SuperAdmin.create!(email: 'email_associated_to_your_github_account@prov.com')
+```
+
 ### Lancement de l'application
 
 ```bash
@@ -105,3 +111,24 @@ rake send_reminder
 rake file_attente
 ```
 
+### Déploiement
+
+Les environnements de production et de pré-production (démo) sont déployés sur
+[Scalingo](https://scalingo.com/)
+
+La CI est configurée pour déployer automatiquement la branche `master` vers un
+environnement de preprod: https://demo.rdv-solidarites.fr . La branche `master`
+est protégée, les commits directs sont interdits, il faudra donc passer par une
+PR et une review.
+
+Pour déployer en production, vous aurez besoin d'être ajouté en tant que
+collaborateur sur l'application Scalingo, demandez à un membre de l'équipe.
+Vous devez ensuite ajouter le remote git à votre répértoire local :
+`git remote add production git@ssh.osc-fr1.scalingo.com:production-rdv-solidarites.git`
+Assurez-vous que votre clé SSH est bien configurée sur votre compte personnel
+Scalingo [ici](https://my.osc-fr1.scalingo.com/keys), puis vous pourrez déployer
+grace à un simple push git: `git push production master`
+
+Si cela ne fonctionne pas, il se peut que l'adresse du remote git ait changé,
+vérifiez la avec: `scalingo git-show --app production-rdv-solidarites` si vous
+avez installé le [CLI Scalingo](https://doc.scalingo.com/platform/cli/start)

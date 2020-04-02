@@ -8,7 +8,10 @@ p.card-text
   span.badge.badge-pill.ml-1 style="background: #{@motif.color};"
     | &nbsp;
 
-- if @motif.by_phone?
+- if Flipflop.visite_a_domicile? && @motif.home?
+  p.card-text Le RDV aura lieu au domicile de l'usager
+
+- if @motif.phone?
   p.card-text Le RDV sera effectué par téléphone
 
 - if @motif.for_secretariat?
@@ -19,7 +22,7 @@ p.card-text
     h5 Réservation en ligne par les usagers
     p.text-muted Ce motif est disponible à la réservation en ligne.
     p.card-text
-      strong> Délais min / max de réservation : 
+      strong> Délais min / max de réservation :
       | #{distance_of_time_in_words(@motif.min_booking_delay)} / #{distance_of_time_in_words(@motif.max_booking_delay)}
 
 - if @motif.disable_notifications_for_users?

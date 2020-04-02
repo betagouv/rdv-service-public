@@ -1,14 +1,11 @@
 module MotifsHelper
-  def online_badge(motif)
-    content_tag(:span, 'En ligne', class: 'badge badge-danger') if motif.online
-  end
-
-  def by_phone_badge(motif)
-    content_tag(:span, 'Par tél.', class: 'badge badge-info') if motif.by_phone
-  end
-
-  def secretariat_badge(motif)
-    content_tag(:span, 'Secrétariat', class: 'badge badge-secondary') if motif.for_secretariat
+  def motif_badges(motif)
+    [
+      motif.online ? content_tag(:span, 'En ligne', class: 'badge badge-danger') : nil,
+      motif.phone? ? content_tag(:span, 'Par tél.', class: 'badge badge-info') : nil,
+      Flipflop.visite_a_domicile? && motif.home? ? content_tag(:span, 'À domicile', class: 'badge badge-dark') : nil,
+      motif.for_secretariat ? content_tag(:span, 'Secrétariat', class: 'badge badge-secondary') : nil,
+    ].compact.presence&.sum
   end
 
   def min_max_delay_options

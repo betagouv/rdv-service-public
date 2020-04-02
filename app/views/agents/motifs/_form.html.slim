@@ -14,11 +14,28 @@
         .col-md-4= f.input :default_duration_in_min
         .col-md-4= f.input :color, as: "color"
 
-  .card
-    .card-body
-      h5.card-title RDV téléphonique
-      p.text-muted.font-14 L'usager sera notifié que le RDV se passera par téléphone, au numéro indiqué dans son profil.
-      = f.input :by_phone, label: 'Le RDV sera effectué par téléphone'
+  - if Flipflop.visite_a_domicile?
+    .card
+      .card-body
+        h5.card-title Type de RDV
+        = label_tag do
+          = f.radio_button(:location_type, :public_office)
+          span.ml-1= t("activerecord.attributes.motif.location_types.public_office")
+          p.text-muted.font-14 Le RDV aura lieu au lieu sélectionné (MDS...)
+        = label_tag do
+          = f.radio_button(:location_type, :phone)
+          span.ml-1= t("activerecord.attributes.motif.location_types.phone")
+          p.text-muted.font-14 L'usager sera notifié que le RDV se passera par téléphone, au numéro indiqué dans son profil.
+        = label_tag do
+          = f.radio_button(:location_type, :home)
+          span.ml-1= t("activerecord.attributes.motif.location_types.home")
+          p.text-muted.font-14 L'usager sera notifié que le RDV aura lieu à l'adresse remplie dans son profil.
+  - else
+    .card
+      .card-body
+        h5.card-title RDV téléphonique
+        p.text-muted.font-14 L'usager sera notifié que le RDV se passera par téléphone, au numéro indiqué dans son profil.
+        = f.input :location_type, as: :boolean, label: 'Le RDV sera effectué par téléphone', checked_value: :phone, unchecked_value: :public_office, input_html: { checked: motif.phone? }
 
   .card
     .card-body
