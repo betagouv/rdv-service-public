@@ -18,6 +18,9 @@ FactoryBot.define do
       end
     end
     service { Service.where.not(name: "Secrétariat").first || create(:service) }
+    trait :at_home do
+      location_type { :home }
+    end
     trait :by_phone do
       location_type { :phone }
     end

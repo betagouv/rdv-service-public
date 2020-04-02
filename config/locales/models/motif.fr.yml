@@ -11,6 +11,7 @@ fr:
         online: RDV en ligne
         location_type: Type de RDV
         location_types:
+          home: À domicile
           phone: Par téléphone
           public_office: Sur place
         for_secretariat: Motif accessible au secrétariat

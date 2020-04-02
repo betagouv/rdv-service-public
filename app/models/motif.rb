@@ -5,7 +5,7 @@ class Motif < ApplicationRecord
   has_many :rdvs, dependent: :restrict_with_exception
   has_and_belongs_to_many :plage_ouvertures, -> { distinct }
 
-  enum location_type: [:public_office, :phone]
+  enum location_type: [:public_office, :phone, :home]
 
   validates :name, presence: true, uniqueness: { scope: :organisation }
   validates :color, :service, :default_duration_in_min, :min_booking_delay, :max_booking_delay, presence: true
