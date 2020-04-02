@@ -15,9 +15,9 @@ class Analytic {
 
   trackPageView(partialUrl) {
     if (window._paq) {
-      _paq.push(['setDocumentTitle', location.href.split('#')[0]);
+      _paq.push(['setCustomUrl', location.href.split('#')[0]);
       if (partialUrl) {
-        _paq.push(['setDocumentTitle', partialUrl);
+        _paq.push(['setCustomUrl', partialUrl);
       }
       _paq.push(['trackPageView']);
     }
@@ -25,14 +25,14 @@ class Analytic {
 
   trackEvent(type, value) {
     if (window._paq) {
-      _paq.push(['setDocumentTitle', location.href.split('#')[0]);
+      _paq.push(['setCustomUrl', location.href.split('#')[0]);
       _paq.push(['trackPageView']);
     }
   }
 
   trackEventWithLabel(category, action, label) {
     if (window._paq) {
-      _paq.push(['setDocumentTitle', location.href.split('#')[0]);
+      _paq.push(['setCustomUrl', location.href.split('#')[0]);
       _paq.push(['trackPageView']);
     }
   }
