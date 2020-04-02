@@ -35,7 +35,7 @@
       .card-body
         h5.card-title RDV téléphonique
         p.text-muted.font-14 L'usager sera notifié que le RDV se passera par téléphone, au numéro indiqué dans son profil.
-        = f.input :location_type, as: :boolean, label: 'Le RDV sera effectué par téléphone', checked_value: :phone, unchecked_value: nil
+        = f.input :location_type, as: :boolean, label: 'Le RDV sera effectué par téléphone', checked_value: :phone, unchecked_value: :public_office, input_html: { checked: motif.phone? }
 
   .card
     .card-body
