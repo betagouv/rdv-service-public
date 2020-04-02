@@ -7,3 +7,17 @@ footer.footer
         .text-md-right.footer-links.d-none.d-md-block
           = link_to 'Mentions légales', mentions_legales_path
           = mail_to "contact@rdv-solidarites.fr", 'Contact'
+
+- if Rails.env.production?
+  javascript:
+    var _paq = window._paq || [];
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+      var u="//stats.data.gouv.fr/";
+      _paq.push(['setTrackerUrl', u+'piwik.php']);
+      _paq.push(['setSiteId', #{ENV[MATOMO_APP_ID]}]);
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+    })();

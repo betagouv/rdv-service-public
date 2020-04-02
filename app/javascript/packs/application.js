@@ -28,7 +28,6 @@ import { Rightbar } from 'packs/components/rightbar';
 import { Rdvstatus } from 'packs/components/rdvstatus';
 import { InviteUserOnCreate } from 'packs/components/invite-user-on-create';
 import { PopulateLibelle } from 'packs/components/populate-libelle';
-import { Analytic } from 'packs/components/analytic.js';
 import { PlacesInput } from 'packs/components/places-input.js';
 import { ShowHidePassword } from 'packs/components/show-hide-password.js';
 import 'packs/components/calendar';
