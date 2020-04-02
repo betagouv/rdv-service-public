@@ -2,7 +2,6 @@ class Analytic {
 
   constructor() {
     var _paq = window._paq || [];
-    _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
     (function() {
       var u="//stats.data.gouv.fr/";
@@ -19,20 +18,6 @@ class Analytic {
       if (partialUrl) {
         _paq.push(['setCustomUrl', partialUrl);
       }
-      _paq.push(['trackPageView']);
-    }
-  }
-
-  trackEvent(type, value) {
-    if (window._paq) {
-      _paq.push(['setCustomUrl', location.href.split('#')[0]);
-      _paq.push(['trackPageView']);
-    }
-  }
-
-  trackEventWithLabel(category, action, label) {
-    if (window._paq) {
-      _paq.push(['setCustomUrl', location.href.split('#')[0]);
       _paq.push(['trackPageView']);
     }
   }
