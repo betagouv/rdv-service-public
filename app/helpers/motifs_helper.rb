@@ -5,7 +5,7 @@ module MotifsHelper
       motif.phone? ? content_tag(:span, 'Par tél.', class: 'badge badge-info') : nil,
       Flipflop.visite_a_domicile? && motif.home? ? content_tag(:span, 'À domicile', class: 'badge badge-dark') : nil,
       motif.for_secretariat ? content_tag(:span, 'Secrétariat', class: 'badge badge-secondary') : nil,
-    ].compact.sum
+    ].compact.presence&.sum
   end
 
   def min_max_delay_options
