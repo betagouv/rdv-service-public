@@ -20,7 +20,7 @@ describe "can see the relatives of the user" do
       click_link relative.full_name
     end
     it do
-      expect(page).to have_content('Informations responsibleales')
+      expect(page).to have_content('Informations sur l'usager en charge')
     end
   end
 end
