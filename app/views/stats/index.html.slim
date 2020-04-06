@@ -1,8 +1,8 @@
 - content_for :title do
-  h1 
-    | Statistiques 
+  h1
+    | Statistiques
     br
     small Du #{l(Stat::DEFAULT_RANGE.first.to_date)} au #{l(Stat::DEFAULT_RANGE.last.to_date)}
 
 .container
-  = render 'statistics', stats: @stats, rdvs_stats_path: rdvs_stats_path, users_stats_path: users_stats_path
+  = render 'statistics', stats: @stats, rdvs_stats_path: rdvs_stats_path, users_stats_path: users_stats_path, service_stats_path: rdvs_stats_path(by_service: true)

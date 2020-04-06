@@ -9,7 +9,13 @@ class Agents::Organisations::StatsController < AgentAuthController
 
   def rdvs
     authorize(@organisation)
-    render json: Stat.new(rdvs: policy_scope(Rdv)).rdvs_group_by_week_fr.chart_json
+    stats = Stat.new(rdvs: policy_scope(Rdv))
+    stats = if params[:by_service].present?
+              stats.rdvs_group_by_service
+            else
+              stats.rdvs_group_by_week_fr
+            end
+    render json: stats.chart_json
   end
 
   def users

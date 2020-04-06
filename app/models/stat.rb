@@ -20,6 +20,10 @@ class Stat
     rdvs.joins(:organisation).group('organisations.departement').group_by_week('rdvs.created_at', range: DEFAULT_RANGE, format: '%d/%m/%Y').count
   end
 
+  def rdvs_group_by_service
+    rdvs.joins(motif: :service).group('services.name').group_by_week('rdvs.created_at', range: DEFAULT_RANGE, format: '%d/%m/%Y').count
+  end
+
   def users_group_by_week
     users.active.group_by_week('users.created_at', range: DEFAULT_RANGE, format: '%d/%m/%Y').count
   end
