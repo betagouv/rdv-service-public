@@ -5,10 +5,17 @@
         .fa.fa-calendar-o>
         = rdv_title(rdv)
         = rdv_tag(rdv)
+
+      - if rdv.motif.home?
+         li.list-group-item
+          .fa.fa-home>
+          | Ce RDV se déroulera à domicile
+
       - if rdv.location
         li.list-group-item
           .fa.fa-map-marker>
           = human_location(rdv)
+
       - if rdv.motif.phone?
         li.list-group-item
           .fa.fa-phone>
