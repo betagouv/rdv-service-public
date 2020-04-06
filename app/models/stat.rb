@@ -25,6 +25,11 @@ class Stat
   end
 
   def rdvs_group_by_week_fr
-    rdvs_group_by_week.transform_keys { |key| key[0] == 'agent' ? ["agent (#{rdvs_for_default_range.created_by_agent.count})", key[1]] : ["usager (#{rdvs_for_default_range.created_by_user.count})", key[1]] }
+    new_keys = {
+      agent: "Agent (#{rdvs_for_default_range.created_by_agent.count})",
+      user: "Usager (#{rdvs_for_default_range.created_by_user.count})",
+      file_attente: "File d'attente (#{rdvs_for_default_range.created_by_file_attente.count})",
+    }
+    rdvs_group_by_week.transform_keys { |key| [new_keys[key[0].to_sym], key[1]] }
   end
 end
