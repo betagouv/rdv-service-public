@@ -13,10 +13,19 @@ class Analytic {
   }
 
   trackPageView(partialUrl) {
+    let href = localtion.href;
+
+    const paramsToFilter = ['address', 'first_name', 'last_name', 'affiliation_number', 'lattitude', 'longitude', 'where'];
+
+    paramsToFilter.forEach(function(paramToFilter) {
+      let expression = new RegExp(`${paramToFilter}=([^&]+)`);
+      href = href.replace(expression, '');
+    });
+
     if (window._paq) {
-      _paq.push(['setCustomUrl', location.href.split('#')[0]);
+      _paq.push(['setCustomUrl', href.split('#')[0]]);
       if (partialUrl) {
-        _paq.push(['setCustomUrl', partialUrl);
+        _paq.push(['setCustomUrl', partialUrl]);
       }
       _paq.push(['trackPageView']);
     }
