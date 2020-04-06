@@ -9,6 +9,8 @@ class StatsController < ApplicationController
     stats = Stat.new(rdvs: Rdv.all)
     stats = if params[:by_departement].present?
               stats.rdvs_group_by_departement
+            elsif params[:by_service].present?
+              stats.rdvs_group_by_service
             else
               stats.rdvs_group_by_week_fr
             end
