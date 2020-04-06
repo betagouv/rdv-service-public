@@ -13,7 +13,7 @@ class Analytic {
   }
 
   trackPageView(partialUrl) {
-    let href = localtion.href;
+    let href = location.href;
 
     const paramsToFilter = ['address', 'first_name', 'last_name',
       'affiliation_number', 'latitude', 'longitude', 'where',
