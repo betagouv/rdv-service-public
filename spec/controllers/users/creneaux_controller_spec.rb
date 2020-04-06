@@ -81,6 +81,7 @@ RSpec.describe Users::CreneauxController, type: :controller do
 
       it { expect(response.body).to include("Votre RDV a été modifié") }
       it { expect(rdv.starts_at).to eq(starts_at) }
+      it { expect(rdv.created_by).to eq("file_attente") }
     end
 
     context "creneau isn't available" do

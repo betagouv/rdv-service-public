@@ -53,3 +53,7 @@ fr:
             zero: Créé par un usager
             one: Créés par un usager
             other: Créés par un usager
+          created_by_file_attente:
+            zero: Créé par la file d'attente
+            one: Créé par la file d'attente
+            other: Créés par la file d'attente

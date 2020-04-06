@@ -27,7 +27,7 @@ class Users::CreneauxController < UserAuthController
   def update
     @creneau = Creneau.new(starts_at: params[:starts_at].to_time, motif: @rdv.motif, lieu_id: @lieu.id)
     if @creneau.available?
-      @rdv.update(starts_at: @creneau.starts_at)
+      @rdv.update(starts_at: @creneau.starts_at, created_by: :file_attente)
     else
       redirect_to users_creneaux_index_path(rdv_id: @rdv.id)
     end
