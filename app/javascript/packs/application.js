@@ -31,6 +31,7 @@ import { PopulateLibelle } from 'packs/components/populate-libelle';
 import { Analytic } from 'packs/components/analytic.js';
 import { PlacesInput } from 'packs/components/places-input.js';
 import { ShowHidePassword } from 'packs/components/show-hide-password.js';
+import { MotifForm } from 'packs/components/motif-form.js';
 import 'packs/components/calendar';
 import 'packs/components/select2';
 import 'packs/components/tooltip';
@@ -107,4 +108,6 @@ $(document).on('turbolinks:load', function() {
   new InviteUserOnCreate();
 
   new ShowHidePassword();
+
+  new MotifForm();
 });
