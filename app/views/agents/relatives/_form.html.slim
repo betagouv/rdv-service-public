@@ -1,4 +1,4 @@
-- form_url = user.persisted? ? organisation_child_path(current_organisation, user) : organisation_user_children_path(current_organisation, user.parent)
+- form_url = user.persisted? ? organisation_relative_path(current_organisation, user) : organisation_user_relatives_path(current_organisation, user.responsible)
 = simple_form_for user, url: form_url do |f|
   = render partial: 'layouts/model_errors', locals: { model: user }
   .form-row
@@ -10,5 +10,5 @@
     - if user.persisted?
       = link_to "Annuler", user_show_path(user), class: "btn btn-link"
     - else
-      = link_to "Annuler", user_show_path(user.parent), class: "btn btn-link"
+      = link_to "Annuler", user_show_path(user.responsible), class: "btn btn-link"
     = f.button :submit

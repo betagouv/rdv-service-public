@@ -47,7 +47,7 @@ Rails.application.routes.draw do
   authenticate :user do
     get "/users/informations", to: 'users/users#edit'
     patch "users/informations", to: 'users/users#update'
-    resources :children, except: [:index], controller: "users/children"
+    resources :relatives, except: [:index], controller: "users/relatives"
   end
   authenticated :user do
     get "/users/rdvs", to: 'users/rdvs#index', as: :authenticated_user_root
@@ -108,9 +108,9 @@ Rails.application.routes.draw do
           scope module: :users do
             resources :rdvs, only: :index
           end
-          resources :children, only: [:create, :new]
+          resources :relatives, only: [:create, :new]
         end
-        resources :children, except: [:create, :new]
+        resources :relatives, except: [:create, :new]
 
         resources :rdvs, except: [:index, :create, :new] do
           patch :status, on: :member

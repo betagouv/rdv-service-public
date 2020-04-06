@@ -51,7 +51,7 @@
           = f.input :departement, as: :hidden, input_html: { value: @departement }, wrapper_html: { class: 'mb-0' }
           = f.association :users, label: "Pour qui prenez-vous rendez-vous ?", as: :radio_buttons, collection: current_user.available_users_for_rdv, checked: current_user.id, label_method: lambda { |user| full_name_and_birthdate(user) }, wrapper_html: { class: 'mb-0' }
           .form-group
-            = link_to "Ajouter un enfant", new_child_path(callback_path: request.url), data: { modal: true }
+            = link_to "Ajouter un proche", new_relative_path(callback_path: request.url), data: { modal: true }
 
           .row
             .col

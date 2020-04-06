@@ -1,9 +1,9 @@
-RSpec.describe Agents::ChildrenController, type: :controller do
+RSpec.describe Agents::RelativesController, type: :controller do
   render_views
 
   let(:agent) { create(:agent, :admin) }
   let(:organisation_id) { agent.organisation_ids.first }
-  let!(:parent) { create(:user) }
+  let!(:responsible) { create(:user) }
 
   before do
     sign_in agent
@@ -11,28 +11,28 @@ RSpec.describe Agents::ChildrenController, type: :controller do
 
   describe "GET #new" do
     it "returns a success response" do
-      get :new, params: { organisation_id: organisation_id, user_id: parent.id }
+      get :new, params: { organisation_id: organisation_id, user_id: responsible.id }
       expect(response).to be_successful
     end
   end
 
   describe "POST #create" do
-    subject { post :create, params: { organisation_id: organisation_id, user_id: parent.id, user: attributes } }
+    subject { post :create, params: { organisation_id: organisation_id, user_id: responsible.id, user: attributes } }
 
     context "with valid params" do
       let(:attributes) do
         build(:user).attributes
       end
 
-      it "creates a child for parent" do
+      it "creates a relative for responsible" do
         expect do
           subject
-        end.to change(parent.children, :count).from(0).to(1)
+        end.to change(responsible.relatives, :count).from(0).to(1)
       end
 
-      it "redirects to the parent show page" do
+      it "redirects to the responsible show page" do
         subject
-        expect(response).to redirect_to(organisation_user_path(organisation_id, parent.id))
+        expect(response).to redirect_to(organisation_user_path(organisation_id, responsible.id))
       end
     end
 

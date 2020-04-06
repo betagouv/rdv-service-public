@@ -21,7 +21,7 @@
               = link_to 'Inviter', invite_organisation_user_path(current_organisation, @user), method: :post, class: 'btn btn-outline-white'
 
         h4.card-title.mb-3 Informations générales
-        = render 'parent_information', user: @user
+        = render 'responsible_information', user: @user
 
         .row
           .col.text-left
@@ -31,23 +31,22 @@
   .col-md-6
     .card.mb-5
       .card-body
-        = render 'stats/rdv_counters', rdvs: Rdv.user_with_children(@user.id).where(organisation_id: current_organisation)
+        = render 'stats/rdv_counters', rdvs: Rdv.user_with_relatives(@user.id).where(organisation_id: current_organisation)
         .text-right
           = link_to 'Voir tous les RDV', organisation_user_rdvs_path(current_organisation, @user), class: 'btn btn-outline-primary'
 
     .card
       .card-body
-        h4.card-title.mb-3 Enfants
+        h4.card-title.mb-3 Proches
         ul.list-group.mb-2
-          - if @user.children.active.empty?
+          - if @user.relatives.active.empty?
             li.list-group-item
-              em Aucun enfant
-          - @user.children.active.each do |child|
+              em Aucun proche
+          - @user.relatives.active.each do |relative|
             li.list-group-item
               .row
                 .col
-                  => link_to child.full_name, organisation_child_path(current_organisation, child)
-                  = "(#{child.age})" if child.birth_date
+                  => link_to relative.full_name, organisation_relative_path(current_organisation, relative)
+                  = "(#{relative.age})" if relative.birth_date
         .text-right
-          = link_to "Ajouter un enfant", new_organisation_user_child_path(current_organisation, @user), class: "btn btn-outline-primary"
-
+          = link_to "Ajouter un proche", new_organisation_user_relative_path(current_organisation, @user), class: "btn btn-outline-primary"

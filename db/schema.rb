@@ -297,7 +297,7 @@ ActiveRecord::Schema.define(version: 2020_04_01_145901) do
     t.integer "family_situation"
     t.integer "number_of_children"
     t.integer "logement"
-    t.bigint "parent_id"
+    t.bigint "responsible_id"
     t.datetime "deleted_at"
     t.string "birth_name"
     t.text "notes"
@@ -307,8 +307,8 @@ ActiveRecord::Schema.define(version: 2020_04_01_145901) do
     t.index ["invitations_count"], name: "index_users_on_invitations_count"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_users_on_invited_by_type_and_invited_by_id"
-    t.index ["parent_id"], name: "index_users_on_parent_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["responsible_id"], name: "index_users_on_responsible_id"
   end
 
   create_table "versions", force: :cascade do |t|
@@ -337,5 +337,5 @@ ActiveRecord::Schema.define(version: 2020_04_01_145901) do
   add_foreign_key "plage_ouvertures", "organisations"
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"
-  add_foreign_key "users", "users", column: "parent_id"
+  add_foreign_key "users", "users", column: "responsible_id"
 end

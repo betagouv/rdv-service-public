@@ -68,9 +68,9 @@ describe "User can search for rdvs" do
       expect(page).to have_content(motif.name)
       expect(page).to have_content(motif.restriction_for_rdv)
 
-      # Add Child
-      click_link("Ajouter un enfant")
-      expect(page).to have_selector('h4', text: "Ajouter un enfant")
+      # Add relative
+      click_link("Ajouter un proche")
+      expect(page).to have_selector('h4', text: "Ajouter un proche")
       fill_in('Prénom', with: "Mathieu")
       fill_in('Nom', with: "Lapin")
       fill_in('Date de naissance', with: Date.yesterday)
@@ -94,9 +94,9 @@ describe "User can search for rdvs" do
     end
   end
 
-  describe "with user and child" do
+  describe "with user and relative" do
     let!(:user) { create(:user) }
-    let!(:child) { create(:user, parent_id: user.id) }
+    let!(:relative) { create(:user, responsible_id: user.id) }
 
     before do
       travel_to(Time.zone.local(2019, 11, 18))
@@ -106,19 +106,19 @@ describe "User can search for rdvs" do
 
     after { travel_back }
 
-    scenario "for children", js: true do
+    scenario "for relatives", js: true do
       # Step 4
       expect(page).to have_content(user.full_name)
-      expect(page).to have_content(child.full_name)
+      expect(page).to have_content(relative.full_name)
 
-      choose(child.full_name)
+      choose(relative.full_name)
 
       click_button('Continuer')
 
       click_link('Aller à la liste de vos rendez-vous')
 
       # Step 6
-      expect(page).to have_content(child.full_name)
+      expect(page).to have_content(relative.full_name)
     end
   end
 

@@ -1,8 +1,8 @@
-RSpec.describe Users::ChildrenController, type: :controller do
+RSpec.describe Users::RelativesController, type: :controller do
   render_views
 
   let(:user) { create(:user) }
-  let!(:child) { create(:user, first_name: "Katia", last_name: "Garcia", birth_date: Date.parse("12/10/1990"), parent_id: user.id) }
+  let!(:relative) { create(:user, first_name: "Katia", last_name: "Garcia", birth_date: Date.parse("12/10/1990"), responsible_id: user.id) }
 
   before do
     travel_to(Time.zone.local(2019, 7, 20))
@@ -12,7 +12,7 @@ RSpec.describe Users::ChildrenController, type: :controller do
   after { travel_back }
 
   describe "GET #edit" do
-    subject { get :edit, params: { id: child.id } }
+    subject { get :edit, params: { id: relative.id } }
 
     before { subject }
 
@@ -20,9 +20,9 @@ RSpec.describe Users::ChildrenController, type: :controller do
       expect(response).to be_successful
     end
 
-    it "should assign child" do
-      expect(response.body).to include("Modifier un enfant")
-      expect(assigns(:user)).to eq(child)
+    it "should assign relative" do
+      expect(response.body).to include("Modifier un proche")
+      expect(assigns(:user)).to eq(relative)
     end
   end
 
@@ -36,7 +36,7 @@ RSpec.describe Users::ChildrenController, type: :controller do
     end
 
     it "should assign a new user" do
-      expect(response.body).to include("Ajouter un enfant")
+      expect(response.body).to include("Ajouter un proche")
       expect(assigns(:user)).to be_a_new(User)
     end
   end
@@ -55,7 +55,7 @@ RSpec.describe Users::ChildrenController, type: :controller do
         end.to change(User, :count).by(1)
       end
 
-      it "set organisation_ids for child" do
+      it "set organisation_ids for relative" do
         subject
         expect(assigns(:user).organisation_ids).to eq(user.organisation_ids)
       end
@@ -88,18 +88,18 @@ RSpec.describe Users::ChildrenController, type: :controller do
   describe "POST #update" do
     subject do
       post :update, params: attributes
-      child.reload
+      relative.reload
     end
 
     context "with valid params" do
       let(:attributes) do
-        { id: child.id, user: { first_name: "Eliott" } }
+        { id: relative.id, user: { first_name: "Eliott" } }
       end
 
       it "creates a new User" do
         expect do
           subject
-        end.to change(child, :first_name).from("Katia").to("Eliott")
+        end.to change(relative, :first_name).from("Katia").to("Eliott")
       end
 
       it "redirects to user informations" do
@@ -110,13 +110,13 @@ RSpec.describe Users::ChildrenController, type: :controller do
 
     context "with invalid params" do
       let(:attributes) do
-        { id: child.id, user: { first_name: " " } }
+        { id: relative.id, user: { first_name: " " } }
       end
 
       it "does not creates a new User" do
         expect do
           subject
-        end.not_to change(child, :first_name)
+        end.not_to change(relative, :first_name)
       end
 
       it "returns a success response (i.e. to display the 'edit' template)" do
@@ -128,16 +128,16 @@ RSpec.describe Users::ChildrenController, type: :controller do
   end
 
   describe "DELETE #destroy" do
-    subject { delete :destroy, params: { id: child.id } }
+    subject { delete :destroy, params: { id: relative.id } }
     let(:now) { "21/07/2019 08:22".to_time }
 
     before { travel_to(now) }
     after { travel_back }
 
-    it "soft deletes the child" do
+    it "soft deletes the relative" do
       expect do
         subject
-      end.to change { child.reload.deleted_at }.from(nil).to(now)
+      end.to change { relative.reload.deleted_at }.from(nil).to(now)
     end
 
     it "redirects to user edit" do

@@ -2,7 +2,7 @@ RSpec.describe Users::UsersController, type: :controller do
   render_views
 
   let(:user) { create(:user) }
-  let!(:child) { create(:user, first_name: "Katia", last_name: "Garcia", birth_date: Date.parse("12/10/1990"), parent_id: user.id) }
+  let!(:relative) { create(:user, first_name: "Katia", last_name: "Garcia", birth_date: Date.parse("12/10/1990"), responsible_id: user.id) }
 
   before do
     travel_to(Time.zone.local(2019, 7, 20))
@@ -14,9 +14,9 @@ RSpec.describe Users::UsersController, type: :controller do
   describe "GET #edit" do
     subject { get :edit }
 
-    it "Should list children" do
+    it "Should list relatives" do
       subject
-      expect(response.body).to include("Mes enfants")
+      expect(response.body).to include("Mes proches")
       expect(response.body).to include("Katia GARCIA (28 ans)")
     end
   end

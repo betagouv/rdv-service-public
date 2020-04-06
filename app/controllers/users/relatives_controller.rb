@@ -1,20 +1,20 @@
-class Users::ChildrenController < UserAuthController
+class Users::RelativesController < UserAuthController
   respond_to :html
 
   before_action :set_user, only: [:edit, :update, :destroy]
 
   def new
-    @user = User.new(parent_id: current_user.id)
+    @user = User.new(responsible_id: current_user.id)
     authorize(@user)
     respond_modal_with @user
   end
 
   def create
     @user = User.new(user_params)
-    @user.parent_id = current_user.id
+    @user.responsible_id = current_user.id
     @user.organisation_ids = current_user.organisation_ids
     authorize(@user)
-    flash[:notice] = "#{@user.full_name} a été ajouté comme enfant." if @user.save
+    flash[:notice] = "#{@user.full_name} a été ajouté comme proche." if @user.save
     location = params[:callback_path].present? ? params[:callback_path] : users_informations_path
     respond_modal_with @user, location: location.to_s
   end
@@ -26,7 +26,7 @@ class Users::ChildrenController < UserAuthController
   def update
     authorize(@user)
     if @user.update(user_params)
-      flash[:notice] = "Les informations de l'enfant #{@user.full_name} ont été mises à jour."
+      flash[:notice] = "Les informations de votre proche #{@user.full_name} ont été mises à jour."
       redirect_to users_informations_path
     else
       render :edit
@@ -35,7 +35,7 @@ class Users::ChildrenController < UserAuthController
 
   def destroy
     authorize(@user)
-    flash[:notice] = "L'enfant a été supprimé." if @user.soft_delete
+    flash[:notice] = "Votre proche a été supprimé." if @user.soft_delete
     redirect_to users_informations_path
   end
 

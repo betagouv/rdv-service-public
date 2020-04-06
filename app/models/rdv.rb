@@ -16,7 +16,7 @@ class Rdv < ApplicationRecord
   scope :future, -> { where('starts_at > ?', Time.zone.now) }
   scope :tomorrow, -> { where(starts_at: DateTime.tomorrow...DateTime.tomorrow + 1.day) }
   scope :day_after_tomorrow, -> { where(starts_at: DateTime.tomorrow + 1.day...DateTime.tomorrow + 2.day) }
-  scope :user_with_children, ->(parent_id) { joins(:users).includes(:rdvs_users, :users).where('users.id IN (?)', [parent_id, User.find(parent_id).children.pluck(:id)].flatten) }
+  scope :user_with_relatives, ->(responsible_id) { joins(:users).includes(:rdvs_users, :users).where('users.id IN (?)', [responsible_id, User.find(responsible_id).relatives.pluck(:id)].flatten) }
   scope :status, lambda { |status|
     if status == 'unknown_past'
       past.where(status: ['unknown', 'waiting'])

@@ -27,13 +27,13 @@ describe Rdv, type: :model do
       rdv.save!
     end
 
-    context "when rdv is for a child" do
-      let(:parent) { create(:user) }
-      let(:child) { create(:user, parent_id: parent.id) }
-      let(:rdv) { build(:rdv, users: [child]) }
+    context "when rdv is for a relative" do
+      let(:responsible) { create(:user) }
+      let(:relative) { create(:user, responsible_id: responsible.id) }
+      let(:rdv) { build(:rdv, users: [relative]) }
 
-      it "calls RdvMailer to send email to parent" do
-        expect(RdvMailer).to receive(:send_ics_to_user).with(rdv, parent).and_return(double(deliver_later: nil))
+      it "calls RdvMailer to send email to responsible" do
+        expect(RdvMailer).to receive(:send_ics_to_user).with(rdv, responsible).and_return(double(deliver_later: nil))
         rdv.save!
       end
     end

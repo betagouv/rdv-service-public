@@ -1,4 +1,4 @@
-- form_url = user.persisted? ? child_path(user) : children_path
+- form_url = user.persisted? ? relative_path(user) : relatives_path
 = simple_form_for user, url: form_url, remote: request.xhr?, data: { modal: true } do |f|
   = render partial: 'layouts/model_errors', locals: { model: user }
   = hidden_field '', :callback_path, value: params[:callback_path]
@@ -9,7 +9,7 @@
   .row
     .col.text-left
       - if user.persisted?
-        = link_to "Supprimer", child_path(@user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cet enfant ?"}
+        = link_to "Supprimer", relative_path(@user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce proche ?"}
 
     .col.text-right
       = link_to "Annuler", users_informations_path, class: "btn btn-link"
