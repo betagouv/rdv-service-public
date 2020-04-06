@@ -1,45 +1,37 @@
 class Analytic {
 
   constructor() {
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    ga('create', ENV.GOOGLE_ANALYTICS, 'auto');
+    var _paq = window._paq || [];
+    _paq.push(['enableLinkTracking']);
+    (function() {
+      var u="//stats.data.gouv.fr/";
+      _paq.push(['setTrackerUrl', u+'piwik.php']);
+      _paq.push(['setSiteId', ENV.MATOMO_APP_ID]);
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+    })();
   }
 
   trackPageView(partialUrl) {
-    if (window.ga) {
-      ga('set', 'location', location.href.split('#')[0]);
-      if (partialUrl) {
-        ga('send', 'pageview', partialUrl)
-      }
-      else {
-        ga('send', 'pageview')
-      }
-    }
-  }
+    let href = localtion.href;
 
-  trackEvent(type, value) {
-    if (window.ga) {
-      ga('set', 'location', location.href.split('#')[0]);
-      ga('send', 'event', type, value);
-    }
-  }
+    const paramsToFilter = ['address', 'first_name', 'last_name',
+      'affiliation_number', 'latitude', 'longitude', 'where',
+      'invitation_token', 'confirmation_token', 'unlock_token',
+      'reset_password_token'];
 
-  trackEventWithLabel(category, action, label) {
-    if (window.ga) {
-      ga('set', 'location', location.href.split('#')[0]);
-      ga('send', 'event', category, action, label)
-    }
-  }
 
-  trackModalView(evt) {
-    this.trackPageView($(evt.currentTarget).data("url"))
-  }
+    paramsToFilter.forEach(function(paramToFilter) { let expression = new
+        RegExp(`${paramToFilter}=([^&]+)`); href = href.replace(expression,
+          ''); });
 
-  trackRightbarView(evt) {
-    this.trackPageView($(evt.currentTarget).data("url"))
+    if (window._paq) { _paq.push(['setCustomUrl', href.split('#')[0]]); if
+      (partialUrl) { _paq.push(['setCustomUrl', partialUrl]); }
+      _paq.push(['trackPageView']); } }
+
+  trackModalView(evt) { this.trackPageView($(evt.currentTarget).data("url")) }
+
+  trackRightbarView(evt) { this.trackPageView($(evt.currentTarget).data("url"))
   }
 
 }

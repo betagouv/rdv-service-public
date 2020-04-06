@@ -46,17 +46,19 @@ application.load(definitionsFromContext(context));
 
 new Modal();
 new Rightbar();
-var analytic = new Analytic();
+
+if(ENV.ENV == "production") var analytic = new Analytic();
+
 global.$ = require('jquery');
 
 $(document).on('shown.bs.modal', '.modal', function(e) {
-  analytic.trackModalView(e);
+  if(analytic) analytic.trackModalView(e);
   new Datetimepicker();
   new InviteUserOnCreate();
 });
 
 $(document).on('shown.rightbar', '.right-bar', function(e) {
-  analytic.trackRightbarView(e);
+  if(analytic) analytic.trackRightbarView(e);
   $('input[type="tel"]').mask('00 00 00 00 00')
   $('.right-bar .slimscroll-menu').slimscroll({
     height: 'auto',
@@ -81,7 +83,7 @@ $(document).on('hide.bs.modal', '.modal', function(e) {
 });
 
 $(document).on('turbolinks:load', function() {
-  analytic.trackPageView();
+  if(analytic) analytic.trackPageView();
   Holder.run();
 
   let menu = new Menu();
