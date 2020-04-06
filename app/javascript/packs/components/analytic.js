@@ -15,28 +15,23 @@ class Analytic {
   trackPageView(partialUrl) {
     let href = localtion.href;
 
-    const paramsToFilter = ['address', 'first_name', 'last_name', 'affiliation_number', 'lattitude', 'longitude', 'where'];
+    const paramsToFilter = ['address', 'first_name', 'last_name',
+      'affiliation_number', 'latitude', 'longitude', 'where',
+      'invitation_token', 'confirmation_token', 'unlock_token',
+      'reset_password_token'];
 
-    paramsToFilter.forEach(function(paramToFilter) {
-      let expression = new RegExp(`${paramToFilter}=([^&]+)`);
-      href = href.replace(expression, '');
-    });
 
-    if (window._paq) {
-      _paq.push(['setCustomUrl', href.split('#')[0]]);
-      if (partialUrl) {
-        _paq.push(['setCustomUrl', partialUrl]);
-      }
-      _paq.push(['trackPageView']);
-    }
-  }
+    paramsToFilter.forEach(function(paramToFilter) { let expression = new
+        RegExp(`${paramToFilter}=([^&]+)`); href = href.replace(expression,
+          ''); });
 
-  trackModalView(evt) {
-    this.trackPageView($(evt.currentTarget).data("url"))
-  }
+    if (window._paq) { _paq.push(['setCustomUrl', href.split('#')[0]]); if
+      (partialUrl) { _paq.push(['setCustomUrl', partialUrl]); }
+      _paq.push(['trackPageView']); } }
 
-  trackRightbarView(evt) {
-    this.trackPageView($(evt.currentTarget).data("url"))
+  trackModalView(evt) { this.trackPageView($(evt.currentTarget).data("url")) }
+
+  trackRightbarView(evt) { this.trackPageView($(evt.currentTarget).data("url"))
   }
 
 }
