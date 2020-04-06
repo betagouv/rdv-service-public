@@ -1,5 +1,5 @@
 - content_for :title do
-  = @rdv.name_for_agent
+  = rdv_title_for_agent(@rdv)
   - if @rdv.cancelled?
     span.badge.badge-danger
 

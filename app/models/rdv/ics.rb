@@ -1,6 +1,7 @@
 class Rdv::Ics
   include ActiveModel::Model
   include Rails.application.routes.url_helpers
+  include RdvsHelper
 
   attr_accessor :rdv
   validates :rdv, presence: true
@@ -19,7 +20,7 @@ class Rdv::Ics
     cal.event do |e|
       e.dtstart     = Icalendar::Values::DateTime.new(rdv.starts_at, 'tzid' => tzid)
       e.dtend       = Icalendar::Values::DateTime.new(rdv.ends_at, 'tzid' => tzid)
-      e.summary     = "RDV #{rdv.name_for_user(user)}"
+      e.summary     = "RDV #{rdv_title_for_user(rdv, user)}"
       e.description = description
       e.location    = rdv.location unless rdv.motif.phone?
       e.uid         = rdv.uuid

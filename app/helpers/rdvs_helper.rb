@@ -3,6 +3,14 @@ module RdvsHelper
     "Le #{l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)"
   end
 
+  def rdv_title_for_agent(rdv)
+    "#{rdv.created_by_user? ? "@ " : ""}#{rdv.users&.map(&:full_name)&.to_sentence}"
+  end
+
+  def rdv_title_for_user(rdv, user)
+    "#{user.full_name} <> #{rdv.motif&.name}"
+  end
+
   def agents_to_sentence(rdv)
     rdv.agents.map(&:full_name_and_service).sort.to_sentence
   end

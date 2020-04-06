@@ -74,14 +74,6 @@ class Rdv < ApplicationRecord
     end
   end
 
-  def name_for_agent
-    "#{created_by_user? ? "@ " : ""}#{users&.map(&:full_name)&.to_sentence}"
-  end
-
-  def name_for_user(user)
-    "#{user.full_name} <> #{motif&.name}"
-  end
-
   def notify?
     !motif.disable_notifications_for_users
   end
