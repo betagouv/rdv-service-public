@@ -3,7 +3,7 @@ require("turbolinks").start()
 require("chartkick")
 require("chart.js")
 import { PlacesInput } from 'packs/components/places-input.js';
-import { Analytic } from 'packs/components/analytic.js';
+import 'packs/components/analytic.js';
 import { Modal } from 'packs/components/modal';
 import 'packs/components/browser-detection';
 import 'select2/dist/js/select2.min.js';
@@ -14,7 +14,6 @@ import 'packs/components/sentry';
 import 'packs/components/search-form';
 import 'bootstrap';
 
-var analytic = new Analytic();
 new Modal();
 
 let setWhereInvalid = function (where, submit) {
@@ -31,7 +30,6 @@ let setWhereValid = function (where, submit) {
 
 $(document).on('turbolinks:load', function() {
   $('input[type="tel"]').mask('00 00 00 00 00')
-  analytic.trackPageView();
   Holder.run();
   let placeJsContainer = document.querySelector('.places-js-container');
   if (placeJsContainer !== null) {

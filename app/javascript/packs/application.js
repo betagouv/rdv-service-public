@@ -28,7 +28,7 @@ import { Rightbar } from 'packs/components/rightbar';
 import { Rdvstatus } from 'packs/components/rdvstatus';
 import { InviteUserOnCreate } from 'packs/components/invite-user-on-create';
 import { PopulateLibelle } from 'packs/components/populate-libelle';
-import { Analytic } from 'packs/components/analytic.js';
+import 'packs/components/analytic.js';
 import { PlacesInput } from 'packs/components/places-input.js';
 import { ShowHidePassword } from 'packs/components/show-hide-password.js';
 import { MotifForm } from 'packs/components/motif-form.js';
@@ -48,18 +48,14 @@ application.load(definitionsFromContext(context));
 new Modal();
 new Rightbar();
 
-if(ENV.ENV == "production") var analytic = new Analytic();
-
 global.$ = require('jquery');
 
 $(document).on('shown.bs.modal', '.modal', function(e) {
-  if(analytic) analytic.trackModalView(e);
   new Datetimepicker();
   new InviteUserOnCreate();
 });
 
 $(document).on('shown.rightbar', '.right-bar', function(e) {
-  if(analytic) analytic.trackRightbarView(e);
   $('input[type="tel"]').mask('00 00 00 00 00')
   $('.right-bar .slimscroll-menu').slimscroll({
     height: 'auto',
@@ -84,7 +80,6 @@ $(document).on('hide.bs.modal', '.modal', function(e) {
 });
 
 $(document).on('turbolinks:load', function() {
-  if(analytic) analytic.trackPageView();
   Holder.run();
 
   let menu = new Menu();
