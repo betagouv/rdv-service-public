@@ -112,7 +112,7 @@ Rails.application.routes.draw do
         end
         resources :relatives, except: [:create, :new]
 
-        resources :rdvs, except: [:index, :create, :new] do
+        resources :rdvs, except: [:index, :new] do
           patch :status, on: :member
         end
 
@@ -123,7 +123,7 @@ Rails.application.routes.draw do
         resource :rdv_wizard, module: 'rdv_wizard' do
           resource :step1, controller: :step1, only: [:new, :create]
           resource :step2, controller: :step2, only: [:new, :create]
-          resource :step3, controller: :step3, only: [:new, :create]
+          resource :step3, controller: :step3, only: [:new]
         end
       end
       resources :jours_feries, only: [:index]

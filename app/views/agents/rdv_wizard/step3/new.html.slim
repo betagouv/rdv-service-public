@@ -25,7 +25,7 @@
   .card-body
     = render partial: 'layouts/model_errors', locals: { model: @rdv }
 
-    = simple_form_for(@rdv, url: organisation_rdv_wizard_step3_path(current_organisation)) do |f|
+    = simple_form_for(@rdv, url: organisation_rdvs_path(current_organisation)) do |f|
       = f.association :motif, as: :hidden
       = f.input :location, as: :hidden
       - @rdv.agents.each do |p|
