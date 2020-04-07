@@ -55,7 +55,7 @@ class DefaultAgentPolicy
     elsif @record.respond_to?(:agent_id)
       @record.agent.service_id == @context.agent.service_id
     elsif @record.respond_to?(:agent_ids)
-      Agent.where(id: @record.agent_ids).pluck(:service_id).include?(@context.agent.service_id)
+      Agent.where(id: @record.agent_ids).pluck(:service_id).uniq == [@context.agent.service_id]
     end
   end
 
