@@ -7,7 +7,7 @@ module RdvsHelper
     (rdv.created_by_user? ? "@ " : "") +
       rdv.users&.map(&:full_name)&.to_sentence +
       (rdv.motif.home? ? " 🏠" : "") +
-      (rdv.motif.phone? ? " 📞" : "")
+      (rdv.motif.phone? ? " ☎️" : "")
   end
 
   def rdv_title_for_user(rdv, user)

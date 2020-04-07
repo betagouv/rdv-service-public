@@ -25,7 +25,7 @@ describe RdvsHelper do
 
     context "phone RDV" do
       let(:rdv) { build(:rdv, :by_phone, users: [user]) }
-      it { should eq "Marie DENIS 📞" }
+      it { should eq "Marie DENIS ☎️" }
     end
 
     context "at home RDV" do
