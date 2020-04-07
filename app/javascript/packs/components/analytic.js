@@ -1,49 +1,66 @@
-class Analytic {
+let previousPageUrl = null;
 
-  constructor() {
-    var _paq = window._paq || [];
-    _paq.push(['trackPageView']);
-    _paq.push(['enableLinkTracking']);
-    (function() {
-      var u="//stats.data.gouv.fr/";
-      _paq.push(['setTrackerUrl', u+'piwik.php']);
-      _paq.push(['setSiteId', ENV.MATOMO_APP_ID]);
-      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-      g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js';
-      s.parentNode.insertBefore(g,s); })();
-  }
+const paramsToFilter = ['address', 'first_name', 'last_name', 'affiliation_number', 'latitude', 'longitude', 'where', 'invitation_token', 'confirmation_token', 'unlock_token', 'reset_password_token'];
 
-  trackPageView(partialUrl) {
-    let href = location.href;
+if (ENV.ENV == "production") {
+  window._paq = window._paq || [];
 
-    const paramsToFilter = ['address', 'first_name', 'last_name',
-      'affiliation_number', 'latitude', 'longitude', 'where',
-      'invitation_token', 'confirmation_token', 'unlock_token',
-      'reset_password_token'];
+  const url = '//stats.data.gouv.fr/';
+  const trackerUrl = `${url}piwik.php`;
+  const jsUrl = `${url}piwik.js`;
 
-    paramsToFilter.forEach(function(paramToFilter) {
-      let expression = new RegExp(`${paramToFilter}=([^&]+)`);
-      href = href.replace(expression, '');
-    });
+  // Configure Matomo analytics
+  //window._paq.push(['setCookieDomain', '*.www.demarches-simplifiees.fr']);
+  //window._paq.push(['setDomains', ['*.www.demarches-simplifiees.fr']]);
+  window._paq.push(['setDoNotTrack', true]);
+  window._paq.push(['setCustomUrl', customHref()]);
+  window._paq.push(['trackPageView']);
+  window._paq.push(['enableLinkTracking']);
 
-    if (window._paq) {
-      _paq.push(['setCustomUrl', href.split('#')[0]]);
-      if (partialUrl) {
-        _paq.push(['setCustomUrl', partialUrl]);
-      }
-      _paq.push(['trackPageView']);
-    }
+  // Load script from Matomo
+  window._paq.push(['setTrackerUrl', trackerUrl]);
+  window._paq.push(['setSiteId', ENV.MATOMO_APP_ID]);
 
-  }
+  const script = document.createElement('script');
+  const firstScript = document.getElementsByTagName('script')[0];
+  script.type = 'text/javascript';
+  script.id = 'matomo-js';
+  script.async = true;
+  script.src = jsUrl;
+  firstScript.parentNode.insertBefore(script, firstScript);
 
-  trackModalView(evt) {
-    this.trackPageView($(evt.currentTarget).data("url"))
-  }
-
-  trackRightbarView(evt) {
-    this.trackPageView($(evt.currentTarget).data("url"))
-  }
-
+  addEventListener('turbolinks:load', sendDataToMatomo);
+  $(document).on('shown.rightbar', '.right-bar', sendDataToMatomo);
+  $(document).on('shown.bs.modal', '.modal', sendDataToMatomo);
 }
 
-export { Analytic };
+function sendDataToMatomo (event) {
+
+  // Send Matomo a new event when navigating to a new page using Turbolinks
+  // (see https://developer.matomo.org/guides/spa-tracking)
+  if (previousPageUrl) {
+    window._paq.push(['setReferrerUrl', previousPageUrl]);
+    window._paq.push(['setCustomUrl', customHref()]);
+    window._paq.push(['setDocumentTitle', document.title]);
+    if (event.data && event.data.timing) {
+      window._paq.push([
+        'setGenerationTimeMs',
+        event.data.timing.visitEnd - event.data.timing.visitStart
+      ]);
+    }
+    window._paq.push(['trackPageView']);
+  }
+  previousPageUrl = customHref;
+}
+
+
+function customHref () {
+  let customHref = window.location.href;
+
+  paramsToFilter.forEach(function(paramToFilter) {
+    let expression = new RegExp(`${paramToFilter}=([^&]+)&?`);
+    customHref = customHref.replace(expression, '');
+  });
+
+  return customHref;
+}
