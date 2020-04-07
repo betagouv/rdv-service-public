@@ -22,5 +22,15 @@ describe RdvsHelper do
       let(:rdv) { build(:rdv, users: [user], motif: motif, created_by: :user) }
       it { should eq "@ Marie DENIS" }
     end
+
+    context "phone RDV" do
+      let(:rdv) { build(:rdv, :by_phone, users: [user]) }
+      it { should eq "Marie DENIS ☎️" }
+    end
+
+    context "at home RDV" do
+      let(:rdv) { build(:rdv, :at_home, users: [user]) }
+      it { should eq "Marie DENIS 🏠" }
+    end
   end
 end

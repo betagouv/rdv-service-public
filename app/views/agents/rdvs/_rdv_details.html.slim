@@ -13,6 +13,10 @@ p.card-text
   p.card-text
     i.fa.fa-fw.fa-phone>
     | RDV téléphonique
+- elsif Flipflop.visite_a_domicile? && rdv.motif.home?
+  p.card-text
+    i.fa.fa-fw.fa-home>
+    | RDV à domicile
 p.card-text
   strong> Professionnel(s) :
   = agents_to_sentence(rdv)

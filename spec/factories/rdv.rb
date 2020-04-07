@@ -20,8 +20,8 @@ FactoryBot.define do
     trait :past do
       starts_at { 2.days.ago }
     end
-    trait :by_phone do
-      motif { build(:motif, :by_phone) }
+    trait :at_home do
+      motif { build(:motif, :at_home) }
     end
     trait :excused do
       cancelled_at { 2.days.ago }
