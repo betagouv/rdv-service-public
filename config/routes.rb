@@ -120,8 +120,10 @@ Rails.application.routes.draw do
           get :by_lieu, on: :collection
         end
 
-        [:first_steps, :second_steps, :third_steps].each do |step|
-          resources step, only: [:new, :create], module: "rdvs"
+        resource :rdv_wizard, module: 'rdv_wizard' do
+          resource :step1, controller: :step1, only: [:new, :create]
+          resource :step2, controller: :step2, only: [:new, :create]
+          resource :step3, controller: :step3, only: [:new, :create]
         end
       end
       resources :jours_feries, only: [:index]

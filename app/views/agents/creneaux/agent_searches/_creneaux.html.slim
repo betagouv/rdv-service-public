@@ -15,7 +15,7 @@ div id="creneaux-lieu-#{lieu.id}"
         - if creneaux_for_date.any?
           - creneaux_for_date.each do |date, creneaux|
             - creneaux.sort_by(&:starts_at).each do |creneau|
-              = link_to new_organisation_third_step_path(starts_at: creneau.starts_at, motif_id: motif.id, location: lieu.address, organisation_id: motif.organisation_id, duration_in_min: motif.default_duration_in_min, "agent_ids[]": creneau.agent_id), class: "btn btn-light mr-1 mb-1 w-100" do
+              = link_to new_organisation_rdv_wizard_step3_path(starts_at: creneau.starts_at, motif_id: motif.id, location: lieu.address, organisation_id: motif.organisation_id, duration_in_min: motif.default_duration_in_min, "agent_ids[]": creneau.agent_id), class: "btn btn-light mr-1 mb-1 w-100" do
                 = l(creneau.starts_at, format: "%H:%M")
                 br
                 small= creneau.agent_name

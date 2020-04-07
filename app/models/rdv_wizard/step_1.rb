@@ -1,4 +1,4 @@
-class Rdv::FirstStep
+class RdvWizard::Step1
   include ActiveModel::Model
 
   attr_accessor :motif, :organisation_id, :duration_in_min, :starts_at, :location, :users, :agents

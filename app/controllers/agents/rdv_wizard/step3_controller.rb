@@ -1,4 +1,4 @@
-class Agents::Rdvs::ThirdStepsController < AgentAuthController
+class Agents::RdvWizard::Step3Controller < AgentAuthController
   layout 'application-small'
 
   def new
@@ -8,7 +8,7 @@ class Agents::Rdvs::ThirdStepsController < AgentAuthController
   end
 
   def create
-    @rdv = Rdv.new(third_step_params)
+    @rdv = Rdv.new(rdv_params)
     @rdv.organisation = current_organisation
     authorize(@rdv)
     if @rdv.save
@@ -20,7 +20,7 @@ class Agents::Rdvs::ThirdStepsController < AgentAuthController
 
   private
 
-  def third_step_params
+  def rdv_params
     params.require(:rdv).permit(:motif_id, :duration_in_min, :starts_at, :location, :notes, agent_ids: [], user_ids: [])
   end
 
