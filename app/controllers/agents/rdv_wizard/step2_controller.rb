@@ -1,6 +1,4 @@
-class Agents::RdvWizard::Step2Controller < AgentAuthController
-  layout 'application-small'
-
+class Agents::RdvWizard::Step2Controller < Agents::RdvWizard::BaseController
   def new
     skip_authorization
     rdv = Rdv.new(query_params)
@@ -23,15 +21,5 @@ class Agents::RdvWizard::Step2Controller < AgentAuthController
     else
       render 'new'
     end
-  end
-
-  private
-
-  def rdv_params
-    params.require(:rdv).permit(:motif_id, :duration_in_min, :starts_at, :location, agent_ids: [])
-  end
-
-  def query_params
-    params.permit(:organisation_id, :motif_id, :duration_in_min, :starts_at, :location, agent_ids: [])
   end
 end

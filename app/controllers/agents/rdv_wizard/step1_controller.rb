@@ -1,6 +1,4 @@
-class Agents::RdvWizard::Step1Controller < AgentAuthController
-  layout 'application-small'
-
+class Agents::RdvWizard::Step1Controller < Agents::RdvWizard::BaseController
   def new
     rdv = Rdv.new(query_params)
     @agent = params[:agent_ids].present? ? Agent.find(params[:agent_ids].first) : current_agent
@@ -19,15 +17,5 @@ class Agents::RdvWizard::Step1Controller < AgentAuthController
     else
       render 'new'
     end
-  end
-
-  private
-
-  def rdv_params
-    params.require(:rdv).permit(:motif_id, :starts_at, :location, agent_ids: [])
-  end
-
-  def query_params
-    params.permit(:motif_id, :starts_at, :location, :organisation_id, agent_ids: [])
   end
 end
