@@ -42,6 +42,6 @@
 
       .row
         .col.text-left
-          = link_to 'Revenir en arrière', new_organisation_rdv_wizard_step2_path(@rdv.to_query), class: 'btn btn-link'
+          = link_to 'Revenir en arrière', new_organisation_rdv_wizard_step_path(@rdv.to_query.merge(step: 2)), class: 'btn btn-link'
         .col.text-right
           = f.button :submit, 'Continuer'

@@ -120,11 +120,7 @@ Rails.application.routes.draw do
           get :by_lieu, on: :collection
         end
 
-        resource :rdv_wizard, module: 'rdv_wizard' do
-          resource :step1, controller: :step1, only: [:new, :create]
-          resource :step2, controller: :step2, only: [:new, :create]
-          resource :step3, controller: :step3, only: [:new]
-        end
+        resource :rdv_wizard_step, only: [:new, :create]
       end
       resources :jours_feries, only: [:index]
     end

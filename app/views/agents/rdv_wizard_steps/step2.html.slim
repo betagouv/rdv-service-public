@@ -6,17 +6,17 @@
     li.list-group-item
       i.fa.fa-check.fa-fw.mr-1.text-success
       | Motif :&nbsp;
-      = @rdv_wizard.rdv.motif.name
+      = @rdv.motif.name
 
   .card-body
     = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }
-    = simple_form_for(@rdv_wizard.rdv, url: organisation_rdv_wizard_step2_path(current_organisation)) do |f|
+    = simple_form_for(@rdv, url: organisation_rdv_wizard_step_path(current_organisation, step: 2)) do |f|
       = f.association :motif, as: :hidden,  wrapper_html: { class: 'm-0' }
       .form-row
         .col-md-6= datetime_input(f, :starts_at)
         .col-md-6= f.input :duration_in_min, as: :integer, label: "Durée en minutes"
 
-      - unless @rdv_wizard.rdv.motif.phone?
+      - unless @rdv.motif.phone?
         = f.input :location, input_html: { class: "places-js-container" }
 
         .mb-1
@@ -29,6 +29,6 @@
 
       .row
         .col.text-left
-          = link_to 'Revenir en arrière', new_organisation_rdv_wizard_step1_path(@rdv_wizard.to_query), class: 'btn btn-link'
+          = link_to 'Revenir en arrière', new_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 1)), class: 'btn btn-link'
         .col.text-right
           = f.button :submit, 'Continuer'

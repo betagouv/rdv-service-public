@@ -50,7 +50,8 @@ document.addEventListener('turbolinks:load', function() {
         if (plage_ouvertures[0] !== undefined) {
           params.location = plage_ouvertures[0].extendedProps.location;
         }
-        window.location = Routes.new_organisation_rdv_wizard_step1_path(params);
+        window.location = Routes.new_organisation_rdv_wizard_step_path(params);
+
       },
       header: {
         center: 'dayGridMonth,timeGridWeek,timeGridOneDay'

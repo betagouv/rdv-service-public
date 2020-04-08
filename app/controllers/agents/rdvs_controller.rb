@@ -58,7 +58,7 @@ class Agents::RdvsController < AgentAuthController
     if @rdv.save
       redirect_to @rdv.agenda_path_for_agent(current_agent), notice: "Le rendez-vous a été créé."
     else
-      render 'agents/rdv_wizard/step3/new', layout: 'application-small'
+      render 'agents/rdv_wizard_steps/step3', layout: 'application-small'
     end
   end
 
