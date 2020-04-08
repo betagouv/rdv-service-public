@@ -10,7 +10,7 @@ class Agents::RdvWizardStepsController < AgentAuthController
   def new
     @rdv_wizard = rdv_wizard_for(query_params)
     @rdv = @rdv_wizard.rdv
-    @agents_authorize = agents_authorized if current_step == 'step2'
+    @agents_authorize = agents_authorized if current_step == 'step3'
     skip_authorization
     render current_step
   end

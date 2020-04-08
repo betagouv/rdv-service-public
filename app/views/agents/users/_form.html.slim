@@ -34,6 +34,7 @@
   .text-right
     - if user.persisted?
       = link_to "Annuler", organisation_user_path(current_organisation, user), class: "btn btn-link"
+      = f.button :submit
     - else
       = link_to "Annuler", organisation_users_path(current_organisation), class: "btn btn-link"
-    = f.button :submit
+      = f.button :submit, "Créer usager"

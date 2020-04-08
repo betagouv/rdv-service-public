@@ -10,7 +10,7 @@ module RdvWizard
 
     # delegates all getters and setters to rdv
     delegate(*::Rdv.attribute_names, to: :rdv)
-    delegate :motif, :organisation, :agents, to: :rdv
+    delegate :motif, :organisation, :agents, :users, to: :rdv
 
     def initialize(agent, organisation, attributes)
       @plage_ouverture_location = attributes[:plage_ouverture_location]
@@ -35,7 +35,7 @@ module RdvWizard
   end
 
   class Step2 < Step1
-    validates :duration_in_min, :starts_at, :agents, presence: true
+    validates :users, presence: true
   end
 
   class Step3 < Step2; end

@@ -1,8 +1,12 @@
 - content_for :title do
-  | Choisir la durée et la date
+  | Choisir le ou les usagers
 
 .card
   ul.list-group.list-group-flush
+    - if @rdv.starts_at.present?
+      li.list-group-item
+        i.fa.fa-check.fa-fw.mr-1.text-success
+        = "Commence le : #{l(@rdv.starts_at, format: :human)}"
     li.list-group-item
       i.fa.fa-check.fa-fw.mr-1.text-success
       | Motif :&nbsp;
@@ -10,22 +14,21 @@
 
   .card-body
     = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }
+
     = simple_form_for(@rdv, url: organisation_rdv_wizard_step_path(current_organisation, step: 2)) do |f|
-      = f.association :motif, as: :hidden,  wrapper_html: { class: 'm-0' }
-      .form-row
-        .col-md-6= datetime_input(f, :starts_at)
-        .col-md-6= f.input :duration_in_min, as: :integer, label: "Durée en minutes"
+      = f.input_field :motif_id, as: :hidden
+      = f.input_field :starts_at, as: :hidden
+      = hidden_field_tag 'plage_ouverture_location', @rdv_wizard.plage_ouverture_location
+      - @rdv.agents.each do |p|
+        / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
+        = f.hidden_field "agent_ids][", value: p.id
 
-      - unless @rdv.motif.phone?
-        = f.input :location, input_html: { class: "places-js-container" }
-
-        .mb-1
-          - current_organisation.lieux.each do |l|
-            => button_tag type: "button", onclick: "document.querySelector('#rdv_location').value = '#{escape_javascript(l.address)}'", class: "btn btn-outline-secondary btn-sm mb-1" do
-              => l.name
-              = map_tag_marker(l.address)
-
-      = f.association :agents, collection: @agents_authorize, label_method: :full_name_and_service, input_html: { multiple: true, class: 'select2-input' }
+      = f.association :users,
+        collection: @rdv.users,
+        label_method: lambda { |user| full_name_and_birthdate(user) },
+        input_html: { multiple: true, required: false, class: 'select2-input', data: { "select-options": { ajax: { url: search_organisation_users_path(current_organisation), dataType: 'json', delay: 250 }} } },
+        hint: raw("L'usager n'existe pas ? #{link_to "Créer un usager", new_organisation_user_path(current_organisation, modal: true), data: { modal: true }}.")
+      = f.input :notes, input_html: { rows: 4 }
 
       .row
         .col.text-left
