@@ -137,6 +137,10 @@ class User < ApplicationRecord
     errors.empty?
   end
 
+  def address
+    super.presence || responsible&.address
+  end
+
   protected
 
   def password_required?

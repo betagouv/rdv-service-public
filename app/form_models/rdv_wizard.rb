@@ -22,7 +22,11 @@ module RdvWizard
       }
       @rdv = ::Rdv.new(rdv_defaults.merge(rdv_attributes))
       @rdv.duration_in_min ||= @rdv.motif.default_duration_in_min if @rdv.motif.present?
-      @rdv.location ||= @plage_ouverture_location if @rdv.motif&.public_office?
+      if @rdv.motif&.public_office?
+        @rdv.location ||= @plage_ouverture_location
+      elsif @rdv.motif&.home?
+        @rdv.location ||= @rdv.users.select { _1.address.present? }.first&.address
+      end
     end
 
     def to_query

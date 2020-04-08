@@ -12,20 +12,48 @@ describe RdvWizard do
       expect(rdv_wizard.notes).to eq 'test'
     end
 
-    context "linked to a motif" do
-      let!(:motif) { create(:motif, default_duration_in_min: 25) }
-      let(:rdv_attributes) { { user_ids: [user.id], motif_id: motif.id, notes: 'test' } }
+    describe "motif default behaviour" do
+      context "linked to a motif" do
+        let!(:motif) { create(:motif, default_duration_in_min: 25) }
+        let(:rdv_attributes) { { user_ids: [user.id], motif_id: motif.id, notes: 'test' } }
 
-      context "no duration passed explicitly" do
-        it "should use motif default duration" do
-          rdv_wizard = RdvWizard::Step1.new(agent, organisation, rdv_attributes)
-          expect(rdv_wizard.duration_in_min).to eq 25
+        context "no duration passed explicitly" do
+          it "should use motif default duration" do
+            rdv_wizard = RdvWizard::Step1.new(agent, organisation, rdv_attributes)
+            expect(rdv_wizard.duration_in_min).to eq 25
+          end
+        end
+        context "some duration passed explicitly" do
+          it "should not use motif default duration" do
+            rdv_wizard = RdvWizard::Step1.new(agent, organisation, rdv_attributes.merge(duration_in_min: 7))
+            expect(rdv_wizard.duration_in_min).to eq 7
+          end
         end
       end
-      context "some duration passed explicitly" do
-        it "should not use motif default duration" do
-          rdv_wizard = RdvWizard::Step1.new(agent, organisation, rdv_attributes.merge(duration_in_min: 7))
-          expect(rdv_wizard.duration_in_min).to eq 7
+
+      describe "location default behaviour" do
+        let(:rdv_attributes) { { user_ids: [user.id], motif_id: motif.id } }
+        subject { RdvWizard::Step1.new(agent, organisation, rdv_attributes).location }
+        context "motif is public office" do
+          let!(:motif) { create(:motif, :at_public_office) }
+          let!(:user) { create(:user, address: "10 rue du havre") }
+          it { should be_blank }
+        end
+        context "motif is at home and user has address" do
+          let!(:motif) { create(:motif, :at_home) }
+          let!(:user) { create(:user, address: "10 rue du havre") }
+          it { should eq("10 rue du havre") }
+        end
+        context "motif is at home but user doesn't have an address" do
+          let!(:motif) { create(:motif, :at_home) }
+          let!(:user) { create(:user, address: "") }
+          it { should be_blank }
+        end
+        context "motif is at home but user is a relative" do
+          let!(:motif) { create(:motif, :at_home) }
+          let!(:user_responsible) { create(:user, address: "10 rue du havre") }
+          let!(:user) { create(:user, responsible: user_responsible, address: "") }
+          it { should eq("10 rue du havre") }
         end
       end
     end
