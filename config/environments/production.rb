@@ -70,15 +70,15 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default_url_options = { protocol: 'https', host: ENV["HOST"], utm_source: "rdv-solidarites", utm_medium: "email", utm_campaign: "auto" }
-  ActionMailer::Base.smtp_settings = {
-    address:        'smtp.sendgrid.net',
+  config.action_mailer.smtp_settings = {
+    address:        'smtp-relay.sendinblue.com',
     port:           '587',
     authentication: :plain,
-    user_name:      ENV["SENDGRID_USERNAME"],
-    password:       ENV["SENDGRID_PASSWORD"],
-    domain:         'heroku.com',
+    user_name:      ENV["SENDINBLUE_USERNAME"],
+    password:       ENV["SENDINBLUE_PASSWORD"],
+    domain:         'rdv-solidarites.fr',
   }
-  ActionMailer::Base.delivery_method = :smtp
+  config.action_mailerdelivery_method = :smtp
   config.action_mailer.asset_host = "https://#{ENV["HOST"]}"
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
