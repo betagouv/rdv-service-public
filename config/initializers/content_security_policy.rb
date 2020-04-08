@@ -14,10 +14,10 @@ unless Rails.env.test?
 
     if Rails.env.development?
       policy.script_src :self, :unsafe_inline, "stats.data.gouv.fr", "localhost:3035"
-      policy.connect_src :self, "*.algolia.net", "localhost:3035", "ws://localhost:3035"
+      policy.connect_src :self, "*.algolia.net", "sentry.io", "*.algolianet.com", "localhost:3035", "ws://localhost:3035"
     else
       policy.script_src :self, :unsafe_inline, "stats.data.gouv.fr"
-      policy.connect_src :self, "*.algolia.net"
+      policy.connect_src :self, "*.algolia.net", "sentry.io", "*.algolianet.com"
     end
 
     # Specify URI for violation reports
