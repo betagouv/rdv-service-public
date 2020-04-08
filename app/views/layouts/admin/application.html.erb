@@ -1,0 +1,47 @@
+<%#
+# Application Layout
+
+This view template is used as the layout
+for every page that Administrate generates.
+
+By default, it renders:
+- Navigation
+- Content for a search bar
+  (if provided by a `content_for` block in a nested page)
+- Flashes
+- Links to stylesheets and JavaScripts
+%>
+
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>">
+  <head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noodp, noydir, index, follow">
+    <meta name="viewport" content="initial-scale=1">
+    <title>
+      <%= content_for(:title) || 'Dashboard' %> - <%= Rails.application.class.module_parent_name.titlecase %>
+    </title>
+    <%= javascript_pack_tag 'administrate', 'data-turbolinks-track': 'reload' %>
+
+    <%= render "stylesheet" %>
+    <%= csrf_meta_tags %>
+
+
+    <meta name="turbolinks-root" content="/admin">
+  </head>
+  <body>
+    <div class="app-container">
+      <%= render "navigation" -%>
+
+      <main class="main-content" role="main">
+        <%= render "flashes" -%>
+        <%= yield %>
+      </main>
+    </div>
+
+    <div style="display: none; width: 0; height: 0; overflow: hidden; position: absolute">
+      <%= render "icons" %>
+    </div>
+    <%= render "javascript" %>
+  </body>
+</html>
