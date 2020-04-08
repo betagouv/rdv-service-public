@@ -9,10 +9,17 @@ module RdvWizard
     attr_accessor :rdv
 
     # delegates all getters and setters to rdv
-    delegate :motif, :organisation, :duration_in_min, :starts_at, :agents, :to_query, to: :rdv
+    delegate(*::Rdv.attribute_names, to: :rdv)
+    delegate :motif, :organisation, :agents, :to_query, to: :rdv
 
-    def initialize(rdv_attributes)
-      @rdv = ::Rdv.new(rdv_attributes)
+    def initialize(agent, organisation, rdv_attributes)
+      defaults = {
+        agent_ids: [agent.id],
+        organisation_id: organisation.id,
+        starts_at: Time.zone.now,
+      }
+      @rdv = ::Rdv.new(defaults.merge(rdv_attributes))
+      @rdv.duration_in_min ||= @rdv.motif.default_duration_in_min if @rdv.motif.present?
     end
   end
 

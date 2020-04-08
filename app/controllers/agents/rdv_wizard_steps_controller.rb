@@ -46,13 +46,8 @@ class Agents::RdvWizardStepsController < AgentAuthController
   end
 
   def rdv_wizard_for(request_params)
-    defaults = {
-      agent_ids: [current_agent.id],
-      organisation_id: current_organisation.id,
-      starts_at: Time.zone.now,
-      duration_in_min: query_params[:motif_id].present? ? Motif.where(id: query_params[:motif_id]).first&.default_duration_in_min : nil,
-    }
-    "RdvWizard::#{current_step.camelize}".constantize.new(defaults.merge(request_params))
+    klass = "RdvWizard::#{current_step.camelize}".constantize
+    klass.new(current_agent, current_organisation, request_params)
   end
 
   def agents_authorized
