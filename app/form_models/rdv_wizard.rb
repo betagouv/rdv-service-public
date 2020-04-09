@@ -25,7 +25,7 @@ module RdvWizard
       if @rdv.motif&.public_office?
         @rdv.location ||= @plage_ouverture_location
       elsif @rdv.motif&.home?
-        @rdv.location ||= @rdv.users.select { _1.address.present? }.first&.address
+        @rdv.location ||= @rdv.users.map(&:address).map(&:presence).compact.first
       end
     end
 

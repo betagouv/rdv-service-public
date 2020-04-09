@@ -43,6 +43,12 @@ describe RdvWizard do
           let!(:motif) { create(:motif, :at_home) }
           let!(:user) { create(:user, address: "10 rue du havre") }
           it { should eq("10 rue du havre") }
+
+          context "a different address is given in the wizard" do
+            let(:rdv_attributes) { { user_ids: [user.id], motif_id: motif.id, location: "20 rue des PTT" } }
+
+            it { should eq("20 rue des PTT") }
+          end
         end
         context "motif is at home but user doesn't have an address" do
           let!(:motif) { create(:motif, :at_home) }
