@@ -1,0 +1,41 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "variables";
+@import "font-awesome";
+@import "mixins/buttons";
+@import "mixins/background-variant";
+@import "bootstrap/scss/bootstrap";
+
+// Structure
+@import "structure/general";
+@import "structure/left-menu";
+@import "structure/topbar";
+@import "structure/footer";
+@import "structure/page-head";
+@import "structure/authentication";
+@import "structure/right_sidebar";
+
+// Components
+@import "components/backgrounds";
+@import "components/calendar";
+@import "components/forms";
+@import "components/breadcrumb";
+@import "components/dropdown";
+@import "components/nav";
+@import "components/tables";
+@import "components/types";
+@import "components/cards";
+@import "components/timeline";
+@import "components/progress_bars";
+@import "components/recurrence";
+@import "components/utilities";
+
+// Plugins
+@import "actiontext";
+@import '@fullcalendar/core/main';
+@import '@fullcalendar/daygrid/main';
+@import '@fullcalendar/timegrid/main';
+@import '@fullcalendar/list/main';
+@import "select2/dist/css/select2";
+@import "select2-bootstrap4-theme/dist/select2-bootstrap4.min";
+@import "jquery-datetimepicker/build/jquery.datetimepicker.min";
