@@ -1,6 +1,6 @@
 require "administrate/base_dashboard"
 
-class WebhookDashboard < Administrate::BaseDashboard
+class WebhookEndpointDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
   # a hash that describes the type of each of the model's fields.
   #
@@ -8,8 +8,9 @@ class WebhookDashboard < Administrate::BaseDashboard
   # which determines how the attribute is displayed
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
-    endpoint: Field::String,
+    target_url: Field::String,
     organisation: Field::BelongsTo,
+    secret: Field::String,
     id: Field::Number,
   }.freeze
 
@@ -18,7 +19,7 @@ class WebhookDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = [
     :id,
     :organisation,
-    :endpoint,
+    :target_url,
   ].freeze
 
   # COLLECTION_ATTRIBUTES
@@ -29,7 +30,7 @@ class WebhookDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = [
     :id,
     :organisation,
-    :endpoint,
+    :target_url,
   ].freeze
 
   # FORM_ATTRIBUTES
@@ -37,7 +38,8 @@ class WebhookDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
     :organisation,
-    :endpoint,
+    :target_url,
+    :secret,
   ].freeze
 
   # Overwrite this method to customize how rdvs are displayed

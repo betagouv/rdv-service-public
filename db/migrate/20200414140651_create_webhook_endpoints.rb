@@ -1,4 +1,4 @@
-class CreateWebhooks < ActiveRecord::Migration[6.0]
+class CreateWebhookEndpoints < ActiveRecord::Migration[6.0]
   def change
     create_table :webhook_endpoints do |t|
       t.string :target_url, null: false

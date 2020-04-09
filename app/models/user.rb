@@ -143,7 +143,7 @@ class User < ApplicationRecord
 
   def to_detailed
     res = as_json(only: [:id, :first_name, :last_name, :email, :address, :birth_date])
-    res['parent'] = parent&.to_detailed
+    res['responsible'] = responsible&.to_detailed
     res
   end
 

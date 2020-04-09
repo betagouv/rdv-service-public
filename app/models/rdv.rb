@@ -80,8 +80,8 @@ class Rdv < ApplicationRecord
   end
 
   def send_web_hook
-    organisation.webhooks.each do |w|
-      WebHookJob.perform_later(to_detailed, w)
+    organisation.webhook_endpoints.each do |w|
+      WebhookJob.perform_later(to_detailed, w)
     end
   end
 
@@ -89,8 +89,8 @@ class Rdv < ApplicationRecord
     rdv = to_detailed
     rdv['status'] = 'deleted'
 
-    organisation.webhooks.each do |w|
-      WebHookJob.perform_later(rdv, w)
+    organisation.webhook_endpoints.each do |w|
+      WebhookJob.perform_later(rdv, w)
     end
   end
 

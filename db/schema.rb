@@ -322,12 +322,13 @@ ActiveRecord::Schema.define(version: 2020_04_14_140651) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
-  create_table "webhooks", force: :cascade do |t|
-    t.string "endpoint"
+  create_table "webhook_endpoints", force: :cascade do |t|
+    t.string "target_url", null: false
+    t.string "secret"
     t.bigint "organisation_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["organisation_id"], name: "index_webhooks_on_organisation_id"
+    t.index ["organisation_id"], name: "index_webhook_endpoints_on_organisation_id"
   end
 
   add_foreign_key "absences", "agents"
@@ -346,5 +347,5 @@ ActiveRecord::Schema.define(version: 2020_04_14_140651) do
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"
   add_foreign_key "users", "users", column: "responsible_id"
-  add_foreign_key "webhooks", "organisations"
+  add_foreign_key "webhook_endpoints", "organisations"
 end
