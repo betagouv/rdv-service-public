@@ -31,6 +31,7 @@ class RdvDashboard < Administrate::BaseDashboard
     :id,
     :organisation,
     :motif,
+    :starts_at,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
