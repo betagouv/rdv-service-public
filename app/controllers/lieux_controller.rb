@@ -8,7 +8,7 @@ class LieuxController < ApplicationController
 
     @next_availability_by_lieux = {}
     @lieux.each do |lieu|
-      unless Flipflop.corona?
+      if !Flipflop.corona? || @departement == '62'
         @next_availability_by_lieux[lieu.id] = Creneau.next_availability_for_motif_and_lieu(@motif, lieu, Date.today)
       end
     end
@@ -27,12 +27,12 @@ class LieuxController < ApplicationController
     @date_range = start_date..(start_date + 6.days)
     @lieu = Lieu.find(params[:id])
 
-    if Flipflop.corona?
-      @creneaux = []
-      @next_availability = nil
-    else
+    if !Flipflop.corona? || @departement == '62'
       @creneaux = Creneau.for_motif_and_lieu_from_date_range(@motif, @lieu, @date_range)
       @next_availability = @creneaux.empty? ? Creneau.next_availability_for_motif_and_lieu(@motif, @lieu, @date_range.end) : nil
+    else
+      @creneaux = []
+      @next_availability = nil
     end
     @max_booking_delay = Motif.active.online.joins(:organisation).where(organisations: { departement: @departement }, name: @motif).maximum('max_booking_delay')
     respond_to do |format|
