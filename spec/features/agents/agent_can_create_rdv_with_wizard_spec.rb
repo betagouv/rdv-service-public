@@ -9,7 +9,7 @@ describe "Agent can create a Rdv with wizard" do
   before do
     travel_to(Time.zone.local(2019, 10, 2))
     login_as(agent, scope: :agent)
-    visit new_organisation_first_step_path(organisation_id: agent.organisation_ids.first)
+    visit new_organisation_rdv_wizard_step_path(organisation_id: agent.organisation_ids.first)
   end
 
   after { travel_back }

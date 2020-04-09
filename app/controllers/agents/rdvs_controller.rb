@@ -1,7 +1,7 @@
 class Agents::RdvsController < AgentAuthController
   respond_to :html, :json
 
-  before_action :set_rdv, except: [:index]
+  before_action :set_rdv, except: [:index, :create]
 
   def index
     @rdvs = policy_scope(Rdv)
@@ -51,6 +51,17 @@ class Agents::RdvsController < AgentAuthController
     redirect_to redirect_location
   end
 
+  def create
+    @rdv = Rdv.new(rdv_params)
+    @rdv.organisation = current_organisation
+    authorize(@rdv)
+    if @rdv.save
+      redirect_to @rdv.agenda_path_for_agent(current_agent), notice: "Le rendez-vous a été créé."
+    else
+      render 'agents/rdv_wizard_steps/step3', layout: 'application-small'
+    end
+  end
+
   private
 
   def set_rdv
@@ -63,7 +74,7 @@ class Agents::RdvsController < AgentAuthController
   end
 
   def rdv_params
-    params.require(:rdv).permit(:location, :duration_in_min, :starts_at, :notes, agent_ids: [], user_ids: [])
+    params.require(:rdv).permit(:motif_id, :location, :duration_in_min, :starts_at, :notes, agent_ids: [], user_ids: [])
   end
 
   def status_params

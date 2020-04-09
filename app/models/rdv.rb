@@ -78,17 +78,6 @@ class Rdv < ApplicationRecord
     !motif.disable_notifications_for_users
   end
 
-  def to_step_params
-    {
-      location: location,
-      motif: motif,
-      duration_in_min: duration_in_min,
-      starts_at: starts_at,
-      users: users,
-      agents: agents,
-    }
-  end
-
   def to_query
     {
       motif_id: motif&.id,
