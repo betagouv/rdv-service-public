@@ -16,6 +16,11 @@ class Stat
     rdvs.group(:created_by).group_by_week('rdvs.created_at', range: DEFAULT_RANGE, format: '%d/%m/%Y').count
   end
 
+  def rdvs_group_by_type
+    result = rdvs.joins(:motif).group('motifs.location_type').count
+    result.keys.map{|k| I18n.t(Motif.location_types.invert[k]) }.zip(result.values).to_h
+  end
+
   def rdvs_group_by_departement
     rdvs.joins(:organisation).group('organisations.departement').group_by_week('rdvs.created_at', range: DEFAULT_RANGE, format: '%d/%m/%Y').count
   end

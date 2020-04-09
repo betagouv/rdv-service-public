@@ -1,24 +1,29 @@
 .card.mb-5
   .card-body
-    = render 'stats/rdv_counters', rdvs: stats.rdvs_for_default_range
+    = render 'stats/rdv_counters', rdvs: @stats.rdvs_for_default_range
 
 .card.mb-5
   .card-body
-    h4.card-title.mb-3 RDV créés (#{stats.rdvs_for_default_range.count})
+    h4.card-title.mb-3 RDV créés (#{@stats.rdvs_for_default_range.count})
     = column_chart rdvs_stats_path, stacked: true
 
 - if request.path == stats_path
   .card.mb-5
     .card-body
-      h4.card-title.mb-3 RDV créés par département(#{stats.rdvs_for_default_range.count})
+      h4.card-title.mb-3 RDV créés par département(#{@stats.rdvs_for_default_range.count})
       = column_chart rdvs_stats_path(by_departement: true), stacked: true
 
 .card.mb-5
   .card-body
-    h4.card-title.mb-3 RDV créés par service (#{stats.rdvs_for_default_range.count})
-    = column_chart service_stats_path, stacked: true
+    h4.card-title.mb-3 RDV créés par service (#{@stats.rdvs_for_default_range.count})
+    = column_chart rdvs_stats_path(by_service: true), stacked: true
 
 .card.mb-5
   .card-body
-    h4.card-title.mb-3 Usagers créés (#{stats.users_for_default_range.count})
-    = column_chart users_stats_path
+    h4.card-title.mb-3 RDV par type
+    = column_chart rdvs_stats_path(by_location_type: true), stacked: true
+
+.card.mb-5
+  .card-body
+    h4.card-title.mb-3 Usagers créés (#{@stats.users_for_default_range.count})
+    = column_chart  users_stats_path

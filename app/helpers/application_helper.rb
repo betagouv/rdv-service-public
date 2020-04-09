@@ -83,4 +83,6 @@ module ApplicationHelper
   def icon_tag_tooltip(title, icon)
     content_tag(:i, nil, class: "fa fa-#{icon}", data: { toggle: 'tooltip' }, title: title)
   end
+
 end
+

@@ -219,3 +219,6 @@ fr:
       short: "%d %b %Hh%M"
       human: "%A %d %B %Y à %Hh%M"
     pm: pm
+  public_office: "au local"
+  phone: "par téléphone"
+  home: "à domicile"
