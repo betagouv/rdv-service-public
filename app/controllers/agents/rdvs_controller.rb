@@ -6,7 +6,7 @@ class Agents::RdvsController < AgentAuthController
   def index
     @agent = policy_scope(Agent).find(filter_params[:agent_id])
 
-    @rdvs = @agent.rdvs
+    @rdvs = @agent.rdvs.where(organisation: current_organisation)
     @rdvs = @rdvs.default_stats_period if filter_params[:default_period].present?
     @rdvs = @rdvs.status(filter_params[:status]) if filter_params[:status].present?
     @rdvs = @rdvs.where(starts_at: date_range_params) if filter_params[:start].present? && filter_params[:end].present?
