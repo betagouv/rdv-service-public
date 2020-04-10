@@ -4,9 +4,9 @@ class Agents::RdvsController < AgentAuthController
   before_action :set_rdv, except: [:index, :create]
 
   def index
-    @rdvs = policy_scope(Rdv)
     @agent = policy_scope(Agent).find(filter_params[:agent_id])
-    @rdvs = @rdvs.joins(:agents).where(agents: { id: @agent })
+
+    @rdvs = @agent.rdvs
     @rdvs = @rdvs.default_stats_period if filter_params[:default_period].present?
     @rdvs = @rdvs.status(filter_params[:status]) if filter_params[:status].present?
     @rdvs = @rdvs.where(starts_at: date_range_params) if filter_params[:start].present? && filter_params[:end].present?
