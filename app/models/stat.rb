@@ -17,8 +17,7 @@ class Stat
   end
 
   def rdvs_group_by_type
-    result = rdvs.joins(:motif).group('motifs.location_type').count
-    result.keys.map { |k| I18n.t(Motif.location_types.invert[k]) }.zip(result.values).to_h
+    rdvs.joins(:motif).group('motifs.location_type').group_by_week('rdvs.created_at', range: DEFAULT_RANGE, format: '%d/%m/%Y').count.transform_keys { |key| [I18n.t(Motif.location_types.invert[key[0]]), key[1]] }
   end
 
   def rdvs_group_by_departement
