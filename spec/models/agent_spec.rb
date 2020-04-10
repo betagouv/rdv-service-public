@@ -31,4 +31,21 @@ describe Agent, type: :model do
       it { expect { agent.soft_delete deleted_org }.to change(Agent, :count).by(-1) }
     end
   end
+
+  describe "#can_access_others_planning?" do
+    it "return true when agent is admin" do
+      admin = create(:agent, :admin)
+      expect(admin.can_access_others_planning?).to be_truthy
+    end
+
+    it "return true when agent is secretaire" do
+      secretaire = create(:agent, :secretaire)
+      expect(secretaire.can_access_others_planning?).to be_truthy
+    end
+
+    it "return false with a classical agent" do
+      secretaire = create(:agent)
+      expect(secretaire.can_access_others_planning?).to be_falsy
+    end
+  end
 end
