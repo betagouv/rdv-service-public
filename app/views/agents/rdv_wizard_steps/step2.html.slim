@@ -6,7 +6,7 @@
     li.list-group-item
       i.fa.fa-check.fa-fw.mr-1.text-success
       | Motif :&nbsp;
-      = @rdv.motif.name
+      = motif_name_with_location_type(@rdv.motif)
 
   .card-body
     = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }

@@ -7,7 +7,7 @@
     = simple_form_for(Creneau::AgentSearch.new, remote: true, url: organisation_agent_searches_path(@organisation), method: :get) do |f|
       .row
         .col-md-3
-          = f.input :motif_id, collection: @motifs, required: true, include_blank: "Sélectionnez un motif", input_html: { class: 'select2-input' }
+          = f.input :motif_id, collection: @motifs, label_method: -> { motif_name_with_location_type(_1) }, required: true, include_blank: "Sélectionnez un motif", input_html: { class: 'select2-input' }
         .col-md-2
           = date_input(f, :from_date, label = "À partir du")
         .col-md-3
