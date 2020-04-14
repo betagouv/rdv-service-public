@@ -17,9 +17,10 @@ require 'database_cleaner'
 require 'capybara/rspec'
 require 'capybara/email/rspec'
 require 'webdrivers'
+require 'capybara-screenshot/rspec'
 
 chrome_bin = ENV.fetch('GOOGLE_CHROME_SHIM', nil)
-Capybara.register_driver :chrome do |app|
+Capybara.register_driver :selenium do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
     chromeOptions: chrome_bin ? { binary: chrome_bin } : {}
   )
@@ -34,9 +35,10 @@ end
 Capybara.configure do |config|
   port = 9887 + ENV['TEST_ENV_NUMBER'].to_i
   config.app_host = "http://localhost:#{port}"
+  # config.asset_host = "http://localhost:#{port}"  # for screenshots
   config.server_host = "localhost"
   config.server_port = port
-  config.javascript_driver = :chrome
+  config.javascript_driver = :selenium
   config.server = :puma, { Silent: true }
 end
 
