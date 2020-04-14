@@ -59,10 +59,10 @@ class Agents::RdvWizardStepsController < AgentAuthController
   end
 
   def rdv_params
-    params.require(:rdv).permit(PERMITTED_PARAMS)
+    params.require(:rdv).permit(PERMITTED_PARAMS).merge(params.permit(:plage_ouverture_location))
   end
 
   def query_params
-    params.permit(PERMITTED_PARAMS)
+    params.permit(:plage_ouverture_location, *PERMITTED_PARAMS)
   end
 end

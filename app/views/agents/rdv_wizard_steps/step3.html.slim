@@ -7,10 +7,11 @@
       i.fa.fa-check.fa-fw.mr-1.text-success
       | Motif :&nbsp;
       = @rdv.motif.name
-    li.list-group-item
-      i.fa.fa-check.fa-fw.mr-1.text-success
-      | Lieu :&nbsp;
-      = human_location(@rdv)
+    - if @rdv.location.present?
+      li.list-group-item
+        i.fa.fa-check.fa-fw.mr-1.text-success
+        | Lieu :&nbsp;
+        = human_location(@rdv)
     li.list-group-item
       i.fa.fa-check.fa-fw.mr-1.text-success
       | Professionnels :&nbsp;
