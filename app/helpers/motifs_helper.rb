@@ -1,4 +1,14 @@
 module MotifsHelper
+  def motif_name_with_location_type(motif)
+    if motif.phone?
+      motif.name + " (Par tél.)"
+    elsif Flipflop.visite_a_domicile? && motif.home?
+      motif.name + " (À domicile)"
+    else
+      motif.name
+    end
+  end
+
   def motif_badges(motif)
     [
       motif.online ? content_tag(:span, 'En ligne', class: 'badge badge-danger') : nil,

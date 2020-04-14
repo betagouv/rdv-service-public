@@ -10,7 +10,7 @@ class Agents::RdvWizardStepsController < AgentAuthController
   def new
     @rdv_wizard = rdv_wizard_for(query_params)
     @rdv = @rdv_wizard.rdv
-    @agents_authorize = agents_authorized if current_step == 'step2'
+    @agents_authorize = agents_authorized if current_step == 'step3'
     skip_authorization
     render current_step
   end
@@ -59,10 +59,10 @@ class Agents::RdvWizardStepsController < AgentAuthController
   end
 
   def rdv_params
-    params.require(:rdv).permit(PERMITTED_PARAMS)
+    params.require(:rdv).permit(PERMITTED_PARAMS).merge(params.permit(:plage_ouverture_location))
   end
 
   def query_params
-    params.permit(PERMITTED_PARAMS)
+    params.permit(:plage_ouverture_location, *PERMITTED_PARAMS)
   end
 end
