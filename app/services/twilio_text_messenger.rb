@@ -46,21 +46,21 @@ class TwilioTextMessenger
   end
 
   def rdv_created
-    if @rdv.home?
-      message = "RDV #{@rdv.motif.service.short_name} #{I18n.l(@rdv.starts_at, format: :short_approx)}\n"
-    else
-      message = "RDV #{@rdv.motif.service.short_name} #{I18n.l(@rdv.starts_at, format: :short)}\n"
-    end
+    message = if @rdv.home?
+                "RDV #{@rdv.motif.service.short_name} #{I18n.l(@rdv.starts_at, format: :short_approx)}\n"
+              else
+                "RDV #{@rdv.motif.service.short_name} #{I18n.l(@rdv.starts_at, format: :short)}\n"
+              end
     message += sms_footer
     message
   end
 
   def reminder
-    if @rdv.home?
-      message = "Rappel RDV #{@rdv.motif.service.short_name} le #{I18n.l(@rdv.starts_at, format: :short_approx)}\n"
-    else
-      message = "Rappel RDV #{@rdv.motif.service.short_name} le #{I18n.l(@rdv.starts_at, format: :short)}\n"
-    end
+    message = if @rdv.home?
+                "Rappel RDV #{@rdv.motif.service.short_name} le #{I18n.l(@rdv.starts_at, format: :short_approx)}\n"
+              else
+                "Rappel RDV #{@rdv.motif.service.short_name} le #{I18n.l(@rdv.starts_at, format: :short)}\n"
+              end
     message += sms_footer
     message
   end
