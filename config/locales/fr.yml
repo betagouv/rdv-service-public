@@ -216,8 +216,10 @@ fr:
     formats:
       default: "%d %B %Y %Hh %Mmin %Ss"
       long: "%A %d %B %Y %Hh%M"
-      short: "%d %b %Hh%M"
+      short: "%e %b à %Hh%M"
+      short_approx: "%e %b vers %Hh%M"
       human: "%A %d %B %Y à %Hh%M"
+      human_approx: "%A %d %B %Y vers Hh%M"
     pm: pm
   public_office: "au local"
   phone: "par téléphone"

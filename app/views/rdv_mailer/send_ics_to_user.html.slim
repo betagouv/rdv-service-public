@@ -1,7 +1,10 @@
 div
   p Bonjour,
   p
-    | Votre RDV du #{l(@rdv.starts_at, format: :human)} a été confirmé.
+    - if @rdv.home?
+      | Votre RDV du #{l(@rdv.starts_at, format: :human_approx)} a été confirmé.
+    - else
+      | Votre RDV du #{l(@rdv.starts_at, format: :human)} a été confirmé.
   = render "overview", rdv: @rdv
   p
     | Vous pouvez modifier ou annuler votre rendez-vous jusqu'à 4h avant celui-ci. Il suffit de vous rendre dans votre espace personnel ou en cliquant sur le lien ci-dessous.
