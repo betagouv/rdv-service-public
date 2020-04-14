@@ -88,11 +88,13 @@ jobs:
           command: |
             COMMAND="bundle exec rspec --profile 10 \
               --format RspecJunitFormatter \
-              --out ~/test_results/rspec.xml \
+              --out test-results/rspec.xml \
               --format progress \
               $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
             echo $COMMAND
             eval $COMMAND
+      - store_test_results:
+          path: test-results
       - store_artifacts:
           path: tmp/capybara
   lint:
