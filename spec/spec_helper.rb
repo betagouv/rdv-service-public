@@ -22,12 +22,13 @@ require 'capybara-screenshot/rspec'
 chrome_bin = ENV.fetch('GOOGLE_CHROME_SHIM', nil)
 Capybara.register_driver :selenium do |app|
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: chrome_bin ? { binary: chrome_bin } : {}
+    chromeOptions: {args: %w[headless no-sandbox disable-gpu], w3c: false},
+    "goog:loggingPrefs" => { browser: 'ALL' },
   )
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    options: Selenium::WebDriver::Chrome::Options.new(args: %w[headless]),
+    # options: Selenium::WebDriver::Chrome::Options.new(args: %w[headless], w3c: false),
     desired_capabilities: capabilities
   )
 end
@@ -146,5 +147,20 @@ RSpec.configure do |config|
   config.before(:suite) do
     DatabaseCleaner.strategy = :deletion
     DatabaseCleaner.clean_with(:truncation)
+  end
+
+
+  # cf https://testautomationu.applitools.com/capybara-ruby/chapter7.2.html
+  config.after(:each, js: true) do
+    browser_errors = Capybara.page.driver.browser.manage.logs.get(:browser)
+    driver_errors = Capybara.page.driver.browser.manage.logs.get(:driver)
+
+    open('tmp/capybara/chrome.log', 'a') do |f|
+      f << browser_errors
+    end
+
+    open('tmp/capybara/chromedriver.log', 'a') do |f|
+      f << driver_errors
+    end
   end
 end
