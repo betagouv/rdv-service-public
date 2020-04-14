@@ -8,11 +8,6 @@
         li.list-group-item
           i.fa.fa-check.fa-fw.mr-1.text-success
           = "Commence le : #{l(@rdv.starts_at, format: :human)}"
-      - if @rdv.location.present?
-        li.list-group-item
-          i.fa.fa-check.fa-fw.mr-1.text-success
-          | Lieu :&nbsp;
-          = human_location(@rdv)
   .card-body
     = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }
     = simple_form_for(@rdv, url: organisation_rdv_wizard_step_path(current_organisation, step: 1)) do |f|
