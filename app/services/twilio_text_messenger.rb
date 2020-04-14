@@ -35,8 +35,7 @@ class TwilioTextMessenger
     message = if @rdv.phone?
                 "RDV Téléphonique\n"
               elsif @rdv.home?
-                "RDV à domicile\n"
-                "#{@rdv.location}\n"
+                "RDV à domicile\n#{@rdv.location}\n"
               else
                 "#{@rdv.location}\n"
               end
