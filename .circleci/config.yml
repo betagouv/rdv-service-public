@@ -93,8 +93,8 @@ jobs:
               $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
             echo $COMMAND
             eval $COMMAND
-      - store_test_results:
-          path: test-results
+      - store_artifacts:
+          path: tmp/capybara
   lint:
     <<: *defaults
     steps:
