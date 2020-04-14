@@ -28,8 +28,7 @@ class Agents::UsersController < AgentAuthController
   def create
     prepare_create
     authorize(@user)
-    if find_duplicate.present?
-      @user_to_compare = find_duplicate
+    if (@user_to_compare = DuplicateUserFinderService.new(@user).perform)
       @user_not_in_organisation = @user_to_compare.organisation_ids.exclude?(current_organisation.id)
       render :compare
     else
@@ -93,11 +92,6 @@ class Agents::UsersController < AgentAuthController
   end
 
   private
-
-  def find_duplicate
-    User.find_by(email: @user.email) ||
-      (User.where(phone_number: @user.phone_number).where.not(phone_number: "") || User.where(first_name: @user.first_name.capitalize, last_name: @user.last_name.upcase, birth_date: @user.birth_date)).left_joins(:rdvs).group(:id).order('COUNT(rdvs.id) DESC').first
-  end
 
   def prepare_create
     @user = User.new(user_params)
