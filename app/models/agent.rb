@@ -26,8 +26,8 @@ class Agent < ApplicationRecord
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql('LOWER(last_name)')) }
   scope :secretariat, -> { joins(:service).where(services: { name: 'Secrétariat'.freeze }) }
-  scope :available_for_rdv, lambda { |motif, service|
-    motif.for_secretariat ? joins(:service).where(service: service).or(secretariat) : where(service: service)
+  scope :can_perform_motif, lambda { |motif|
+    motif.for_secretariat ? joins(:service).where(service: motif.service).or(secretariat) : where(service: motif.service)
   }
 
   before_save :normalize_account
