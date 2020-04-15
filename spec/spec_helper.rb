@@ -152,19 +152,13 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:truncation)
   end
 
-  # write chrome headless browser and driver logs
-  config.before(:each, js: true) do
-    FileUtils.mkdir_p "tmp/capybara"
-    Dir.glob("tmp/capybara/chrome.*.log").each { File.delete(_1) }
-  end
-
   config.after(:each, js: true) do |example|
     next unless example.exception # only write logs for failed tests
 
     [:browser, :driver].each do |source|
       errors = Capybara.page.driver.browser.manage.logs.get(source)
       fp = "tmp/capybara/chrome.#{example.full_description.parameterize}.#{source}.log"
-      File.open(fp, 'a') do |f|
+      File.open(fp, 'w') do |f|
         f << "// empty logs" if errors.empty?
         errors.each do |e|
           f << "#{e.timestamp} [#{e.level}]: #{e.message}"
