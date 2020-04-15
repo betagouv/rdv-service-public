@@ -10,25 +10,24 @@ describe Rdv, type: :model do
   describe '#send_web_hook' do
     let(:rdv) { create(:rdv) }
 
-    it 'publishes the default status' do
-      expect(WebhookJob).to receive(:perform_later).with(hash_including('status' => 'unknown'), instance_of(WebhookEndpoint))
+    it 'notifies on creation' do
+      expect(WebhookJob).to receive(:perform_later).with(hash_including('event' => 'created'), webhook_endpoint.id)
       rdv.reload
     end
 
-    describe 'publication on update' do
-      before { rdv.reload }
+    it 'notifies on update' do
+      rdv.reload
 
-      it 'publishes the new status' do
-        expect(WebhookJob).to receive(:perform_later).with(hash_including('status' => 'excused'), instance_of(WebhookEndpoint))
-        rdv.status = :excused
-        rdv.save
-      end
+      expect(WebhookJob).to receive(:perform_later).with(hash_including('event' => 'updated'), webhook_endpoint.id)
+      rdv.status = :excused
+      rdv.save
+    end
 
-      it 'publishes the deleted status' do
-        expect(WebhookJob).to receive(:perform_later).with(hash_including('status' => 'deleted'), instance_of(WebhookEndpoint))
+    it 'notifies on deletion' do
+      rdv.reload
 
-        rdv.destroy
-      end
+      expect(WebhookJob).to receive(:perform_later).with(hash_including('event' => 'destroyed'), webhook_endpoint.id)
+      rdv.destroy
     end
   end
 end

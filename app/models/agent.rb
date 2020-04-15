@@ -63,7 +63,7 @@ class Agent < ApplicationRecord
     organisations << organisation
   end
 
-  def to_detailed
+  def webhook_data
     as_json(only: [:id, :first_name, :last_name, :email])
   end
 end
