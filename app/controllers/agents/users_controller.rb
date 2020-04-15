@@ -28,7 +28,8 @@ class Agents::UsersController < AgentAuthController
   def create
     prepare_create
     authorize(@user)
-    if (@user_to_compare = DuplicateUserFinderService.new(@user).perform)
+    if DuplicateUserFinderService.new(@user).perform.present?
+      @user_to_compare = DuplicateUserFinderService.new(@user).perform
       @user_not_in_organisation = @user_to_compare.organisation_ids.exclude?(current_organisation.id)
       render :compare
     else
