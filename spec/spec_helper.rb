@@ -19,16 +19,19 @@ require 'capybara/email/rspec'
 require 'webdrivers'
 require 'capybara-screenshot/rspec'
 
-chrome_bin = ENV.fetch('GOOGLE_CHROME_SHIM', nil)
 Capybara.register_driver :selenium do |app|
+  # these args seem to reduce test flakyness
+  # w3c false required for logs cf https://github.com/SeleniumHQ/selenium/issues/7270
+  chrome_options = { args: %w[headless no-sandbox disable-gpu], w3c: false }
+  chrome_bin = ENV.fetch('GOOGLE_CHROME_SHIM', nil)
+  chrome_options[:binary] = chrome_bin if chrome_bin
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: {args: %w[headless no-sandbox disable-gpu], w3c: false},
-    "goog:loggingPrefs" => { browser: 'ALL' },
+    chromeOptions: chrome_options,
+    "goog:loggingPrefs" => { browser: 'ALL' }
   )
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    # options: Selenium::WebDriver::Chrome::Options.new(args: %w[headless], w3c: false),
     desired_capabilities: capabilities
   )
 end
@@ -149,14 +152,10 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:truncation)
   end
 
-  # cf https://testautomationu.applitools.com/capybara-ruby/chapter7.2.html
-  config.before(:suite) do
+  # write chrome headless browser and driver logs
+  config.before(:each, js: true) do
     FileUtils.mkdir_p "tmp/capybara"
-    [:browser, :driver].each do |source|
-      fp = "tmp/capybara/chrome_#{source}.log"
-      FileUtils.touch fp
-      File.open(fp, 'w') {}
-    end
+    Dir.glob("tmp/capybara/chrome.*.log").each { File.delete(_1) }
   end
 
   config.after(:each, js: true) do |example|
@@ -164,8 +163,8 @@ RSpec.configure do |config|
 
     [:browser, :driver].each do |source|
       errors = Capybara.page.driver.browser.manage.logs.get(source)
-      open("tmp/capybara/chrome_#{source}.log", 'a') do |f|
-        f << "// failed spec '#{example.full_description}':\n"
+      fp = "tmp/capybara/chrome.#{example.full_description.parameterize}.#{source}.log"
+      File.open(fp, 'a') do |f|
         f << "// empty logs" if errors.empty?
         errors.each do |e|
           f << "#{e.timestamp} [#{e.level}]: #{e.message}"
