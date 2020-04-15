@@ -149,18 +149,29 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:truncation)
   end
 
-
   # cf https://testautomationu.applitools.com/capybara-ruby/chapter7.2.html
-  config.after(:each, js: true) do
-    browser_errors = Capybara.page.driver.browser.manage.logs.get(:browser)
-    driver_errors = Capybara.page.driver.browser.manage.logs.get(:driver)
-
-    open('tmp/capybara/chrome.log', 'a') do |f|
-      f << browser_errors
+  config.before(:suite) do
+    FileUtils.mkdir_p "tmp/capybara"
+    [:browser, :driver].each do |source|
+      fp = "tmp/capybara/chrome_#{source}.log"
+      FileUtils.touch fp
+      File.open(fp, 'w') {}
     end
+  end
 
-    open('tmp/capybara/chromedriver.log', 'a') do |f|
-      f << driver_errors
+  config.after(:each, js: true) do |example|
+    next unless example.exception # only write logs for failed tests
+
+    [:browser, :driver].each do |source|
+      errors = Capybara.page.driver.browser.manage.logs.get(source)
+      open("tmp/capybara/chrome_#{source}.log", 'a') do |f|
+        f << "// failed spec '#{example.full_description}':\n"
+        f << "// empty logs" if errors.empty?
+        errors.each do |e|
+          f << "#{e.timestamp} [#{e.level}]: #{e.message}"
+        end
+        f << "\n"
+      end
     end
   end
 end
