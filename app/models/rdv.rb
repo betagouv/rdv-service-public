@@ -80,17 +80,17 @@ class Rdv < ApplicationRecord
   end
 
   def send_web_hook
-    organisation.webhook_endpoints.each do |w|
-      WebhookJob.perform_later(to_detailed, w)
+    organisation.webhook_endpoints.each do |webhook_endpoint|
+      WebhookJob.perform_later(to_webhook_data, webhook_endpoint.id)
     end
   end
 
   def send_web_hook_on_destroy
-    rdv = to_detailed
+    rdv = to_webhook_data
     rdv['status'] = 'deleted'
 
-    organisation.webhook_endpoints.each do |w|
-      WebhookJob.perform_later(rdv, w)
+    organisation.webhook_endpoints.each do |webhook_endpoint|
+      WebhookJob.perform_later(rdv, webhook_endpoint.id)
     end
   end
 
@@ -115,7 +115,7 @@ class Rdv < ApplicationRecord
     }
   end
 
-  def to_detailed
+  def to_webhook_data
     result = as_json(
       only: [:id, :status, :location, :duration_in_min, :starts_at],
       include: {
@@ -125,8 +125,8 @@ class Rdv < ApplicationRecord
     )
 
     result['status'] = destroyed? ? 'deleted' : status
-    result['users'] = users&.map { |item| item.to_detailed }
-    result['agents'] = agents&.map { |item| item.to_detailed }
+    result['users'] = users&.map { |item| item.to_webhook_data }
+    result['agents'] = agents&.map { |item| item.to_webhook_data }
 
     result
   end

@@ -141,9 +141,9 @@ class User < ApplicationRecord
     super.presence || responsible&.address
   end
 
-  def to_detailed
+  def to_webhook_data
     res = as_json(only: [:id, :first_name, :last_name, :email, :address, :birth_date])
-    res['responsible'] = responsible&.to_detailed
+    res['responsible'] = responsible&.to_webhook_data
     res
   end
 

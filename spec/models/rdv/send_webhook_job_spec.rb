@@ -10,11 +10,9 @@ describe Rdv, type: :model do
   describe '#send_web_hook' do
     let(:rdv) { create(:rdv) }
 
-    describe 'default publication' do
-      it 'publishes the default status' do
-        expect(WebhookJob).to receive(:perform_later).with(hash_including('status' => 'unknown'), instance_of(WebhookEndpoint))
-        rdv.reload
-      end
+    it 'publishes the default status' do
+      expect(WebhookJob).to receive(:perform_later).with(hash_including('status' => 'unknown'), instance_of(WebhookEndpoint))
+      rdv.reload
     end
 
     describe 'publication on update' do

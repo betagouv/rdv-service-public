@@ -1,7 +1,9 @@
 class WebhookJob < ApplicationJob
   TIMEOUT = 10
 
-  def perform(rdv, webhook_endpoint)
+  def perform(rdv, webhook_endpoint_id)
+    webhook_endpoint = WebhookJob.find(webhook_endpoint_id)
+
     body = ActiveSupport::JSON.encode(rdv)
     Typhoeus.post(
       webhook_endpoint.target_url,
