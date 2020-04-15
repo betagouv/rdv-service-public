@@ -97,6 +97,28 @@ RSpec.describe Agents::RdvsController, type: :controller do
         expect { subject }.not_to change(rdv, :duration_in_min)
       end
     end
+
+    context "with cancel status" do
+      let(:now) { Time.now }
+
+      before do
+        travel_to(now)
+        freeze_time
+      end
+
+      subject do
+        put :update, params: { organisation_id: organisation.id, id: rdv.to_param, status: :cancel }
+        rdv.reload
+      end
+
+      it "changes status to excused" do
+        expect { subject }.to change(rdv, :status).from("unknown").to("excused")
+      end
+
+      it "sets cancelled_at to now" do
+        expect { subject }.to change(rdv, :cancelled_at).from(nil).to(Time.now)
+      end
+    end
   end
 
   describe "GET #show" do

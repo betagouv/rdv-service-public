@@ -76,6 +76,13 @@ class Rdv < ApplicationRecord
     end
   end
 
+  def send_cancellation_notifications
+    users.map(&:user_to_notify).uniq.each do |user|
+      RdvMailer.cancellation(self, user).deliver_later if user.email.present?
+      TwilioSenderJob.perform_later(:rdv_cancelled, self, user) if user.formated_phone
+    end
+  end
+
   def notify?
     !motif.disable_notifications_for_users
   end

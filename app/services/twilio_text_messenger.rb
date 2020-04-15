@@ -54,6 +54,16 @@ class TwilioTextMessenger
     message
   end
 
+  def rdv_cancelled
+    message = "RDV #{@rdv.motif.service.short_name} #{I18n.l(@rdv.starts_at, format: :short)} a été annulé\n"
+    message += if @rdv.organisation.phone_number
+                 "Appelez le #{@rdv.organisation.phone_number} ou allez sur https://rdv-solidarites.fr pour reprendre RDV."
+               else
+                 "Allez sur https://rdv-solidarites.fr pour reprendre RDV."
+               end
+    message
+  end
+
   def reminder
     message = if @rdv.home?
                 "Rappel RDV #{@rdv.motif.service.short_name} le #{I18n.l(@rdv.starts_at, format: :short_approx)}\n"

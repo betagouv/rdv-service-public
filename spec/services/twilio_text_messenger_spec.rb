@@ -40,6 +40,15 @@ describe TwilioTextMessenger, type: :service do
       it { expect(subject.body).to include("Des créneaux se sont libérés plus tot.") }
       it { expect(subject.body).to include("Cliquez pour voir les disponibilités :") }
     end
+
+    context "when sending a cancellation sms" do
+      let(:twilio) { TwilioTextMessenger.new(:rdv_cancelled, rdv, user) }
+      it 'return Twilio Object when sms is sent' do
+        is_expected.to be_kind_of(Twilio::REST::Api::V2010::AccountContext::MessageInstance)
+      end
+
+      it { expect(subject.body).to include("RDV #{rdv.motif.service.short_name} #{I18n.l(rdv.starts_at, format: :short)} a été annulé") }
+    end
   end
 
   describe "#replace_special_chars" do
