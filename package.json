@@ -2,6 +2,7 @@
   "name": "lapin",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.13.0",
     "@fullcalendar/core": "^4.1.0",
     "@fullcalendar/daygrid": "^4.1.0",
     "@fullcalendar/interaction": "^4.3.0",

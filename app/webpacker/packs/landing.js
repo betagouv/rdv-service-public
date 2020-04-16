@@ -2,17 +2,20 @@ require("@rails/ujs").start()
 require("turbolinks").start()
 require("chartkick")
 require("chart.js")
-import { PlacesInput } from 'packs/components/places-input.js';
-import 'packs/components/analytic.js';
-import { Modal } from 'packs/components/modal';
-import 'packs/components/browser-detection';
+import { PlacesInput } from 'components/places-input.js';
+import 'components/analytic.js';
+import { Modal } from 'components/modal';
+import 'components/browser-detection';
 import 'select2/dist/js/select2.min.js';
 import 'select2/dist/js/i18n/fr.js';
 import 'jquery-mask-plugin';
-import 'packs/components/select2';
-import 'packs/components/sentry';
-import 'packs/components/search-form';
+import 'components/select2';
+import 'components/sentry';
+import 'components/search-form';
 import 'bootstrap';
+
+import 'stylesheets/landing';
+import 'stylesheets/print';
 
 new Modal();
 

@@ -4,7 +4,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import frLocale from '@fullcalendar/core/locales/fr';
 import interactionPlugin from '@fullcalendar/interaction';
-import Routes from '../../routes.js.erb';
+import Routes from '../routes.js.erb';
 import Bowser from "bowser";
 const browser = Bowser.getParser(window.navigator.userAgent);
 

@@ -1,9 +1,9 @@
-// 
+//
 // menu.scss
 //
 
 body.enlarged .logo{
-  content:url(asset_path("logos/logo_small.svg"));
+  // content:url(asset_path("logos/logo_small.svg"));
   width: 30px;
 }
 
@@ -81,17 +81,11 @@ body.enlarged .logo{
     position: absolute;
     right: 30px;
     display: inline-block;
-    font-family: 'FontAwesome';
     font-weight: 900;
     text-rendering: auto;
     line-height: 1.5rem;
     font-size: 1.1rem;
     transform: translate(0, 0);
-    &:before {
-      content: "\f105";        
-    }
-
-
   }
 
   .badge{

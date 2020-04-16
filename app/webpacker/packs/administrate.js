@@ -3,4 +3,6 @@ require("turbolinks").start()
 
 import "actiontext";
 
-require("packs/administrate/index")
+require("../administrate/index")
+
+import "stylesheets/administrate/application";

@@ -1,11 +1,3 @@
-/* eslint no-console:0 */
-// This file is automatically compiled by Webpack, along with any other files
-// present in this directory. You're encouraged to place your actual application logic in
-// a relevant structure within app/javascript and only use these pack files to reference
-// that code so it'll be compiled.
-//
-// To reference this file, add <%= javascript_pack_tag 'application' %> to the appropriate
-// layout file, like app/views/layouts/application.html.erb
 require("@rails/ujs").start()
 require("turbolinks").start()
 require("chartkick")
@@ -19,27 +11,32 @@ import 'jquery-slimscroll/jquery.slimscroll';
 import 'metismenu/dist/metisMenu.min';
 import 'select2/dist/js/select2.full.min.js';
 import 'select2/dist/js/i18n/fr.js';
-import { Datetimepicker } from 'packs/components/datetimepicker';
-import { Avatar } from 'packs/components/avatar';
-import { Menu } from 'packs/components/menu';
-import { Layout } from 'packs/components/layout';
-import { Modal } from 'packs/components/modal';
-import { Rightbar } from 'packs/components/rightbar';
-import { Rdvstatus } from 'packs/components/rdvstatus';
-import { InviteUserOnCreate } from 'packs/components/invite-user-on-create';
-import { PopulateLibelle } from 'packs/components/populate-libelle';
-import 'packs/components/analytic.js';
-import { PlacesInput } from 'packs/components/places-input.js';
-import { ShowHidePassword } from 'packs/components/show-hide-password.js';
-import { MotifForm } from 'packs/components/motif-form.js';
-import 'packs/components/calendar';
-import 'packs/components/select2';
-import 'packs/components/tooltip';
-import 'packs/components/sentry';
-import 'packs/components/browser-detection';
+import { Datetimepicker } from 'components/datetimepicker';
+import { Avatar } from 'components/avatar';
+import { Menu } from 'components/menu';
+import { Layout } from 'components/layout';
+import { Modal } from 'components/modal';
+import { Rightbar } from 'components/rightbar';
+import { Rdvstatus } from 'components/rdvstatus';
+import { InviteUserOnCreate } from 'components/invite-user-on-create';
+import { PopulateLibelle } from 'components/populate-libelle';
+import 'components/analytic.js';
+import { PlacesInput } from 'components/places-input.js';
+import { ShowHidePassword } from 'components/show-hide-password.js';
+import { MotifForm } from 'components/motif-form.js';
+import 'components/calendar';
+import 'components/select2';
+import 'components/tooltip';
+import 'components/sentry';
+import 'components/browser-detection';
 import "actiontext";
 import { Application } from "stimulus";
 import { definitionsFromContext } from "stimulus/webpack-helpers";
+
+// import "@fortawesome/fontawesome-free/js/all.js";
+// import "@fortawesome/fontawesome-free/css/all.css";
+import 'stylesheets/print';
+import 'stylesheets/application'
 
 const application = Application.start();
 const context = require.context("./controllers", true, /\.js$/);

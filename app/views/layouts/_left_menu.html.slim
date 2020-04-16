@@ -7,7 +7,7 @@
     ul.metismenu.side-nav.mt-5
       li.side-nav-item
         = link_to organisation_agent_path(current_organisation, current_agent), class: 'side-nav-link' do
-          i.fa.fa-calendar-o
+          i.far.fa-calendar
           span Vos agendas
       li.side-nav-item
         = link_to organisation_users_path(current_organisation), class: 'side-nav-link' do
@@ -15,15 +15,15 @@
           span Vos usagers
       li.side-nav-item
         = link_to organisation_agent_stats_path(current_organisation, current_agent), class: 'side-nav-link' do
-          i.fa.fa-bar-chart
-          span Vos statistiques 
+          i.fa.fa-chart-bar
+          span Vos statistiques
           = unknown_past_agent_rdvs_danger_bage
 
       li.side-nav-item
         = link_to '#', class: 'side-nav-link' do
-          i.fa.fa-clock-o
+          i.far.fa-clock
           span Votre planning
-          span.menu-arrow
+          i.fa.fa-angle-right.menu-arrow
         ul.side-nav-second-level aria-expanded="false"
           li=link_to 'Vos plages d\'ouverture', organisation_agent_plage_ouvertures_path(current_organisation, current_agent)
           li=link_to 'Vos absences', organisation_agent_absences_path(current_organisation, current_agent)
@@ -33,13 +33,12 @@
             = link_to '#', class: 'side-nav-link' do
               i.fa.fa-cog
               span Paramètres
-              span.menu-arrow
+              i.fa.fa-angle-right.menu-arrow
             ul.side-nav-second-level aria-expanded="false"
               li=link_to 'Votre organisation', organisation_path(current_organisation)
               li=link_to 'Vos lieux', organisation_lieux_path(current_organisation)
               li=link_to 'Vos agents', organisation_agents_path(current_organisation)
               li=link_to 'Vos motifs', organisation_motifs_path(current_organisation)
-              li=link_to organisation_stats_path(current_organisation) do 
-                | Vos statistiques globales 
+              li=link_to organisation_stats_path(current_organisation) do
+                | Vos statistiques globales
                 = unknown_past_rdvs_danger_bage
-
