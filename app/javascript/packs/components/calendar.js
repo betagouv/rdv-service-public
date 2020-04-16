@@ -48,9 +48,10 @@ document.addEventListener('turbolinks:load', function() {
           .filter(e => startDate.isBetween(e.start, e.end, null, "[]"));
 
         if (plage_ouvertures[0] !== undefined) {
-          params.location = plage_ouvertures[0].extendedProps.location;
+          params['plage_ouverture_location'] = plage_ouvertures[0].extendedProps.location;
         }
-        window.location = Routes.new_organisation_first_step_path(params);
+        window.location = Routes.new_organisation_rdv_wizard_step_path(params);
+
       },
       header: {
         center: 'dayGridMonth,timeGridWeek,timeGridOneDay'

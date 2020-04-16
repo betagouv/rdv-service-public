@@ -21,6 +21,9 @@ FactoryBot.define do
     trait :at_home do
       location_type { :home }
     end
+    trait :at_public_office do
+      location_type { :public_office }
+    end
     trait :by_phone do
       location_type { :phone }
     end

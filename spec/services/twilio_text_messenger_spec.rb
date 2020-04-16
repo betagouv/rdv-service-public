@@ -27,7 +27,7 @@ describe TwilioTextMessenger, type: :service do
         is_expected.to be_kind_of(Twilio::REST::Api::V2010::AccountContext::MessageInstance)
       end
 
-      it { expect(subject.body).to include("Rappel RDV #{rdv.motif.service.name} le #{I18n.localize(rdv.starts_at.to_date, format: :short).strip} à #{rdv.starts_at.strftime("%H:%M")}") }
+      it { expect(subject.body).to include("Rappel RDV #{rdv.motif.service.name} le #{I18n.localize(rdv.starts_at, format: :short)}") }
       it { expect(subject.body).to include(rdv.location.to_s) }
     end
 

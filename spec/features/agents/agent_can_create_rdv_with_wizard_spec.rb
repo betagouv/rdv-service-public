@@ -9,7 +9,7 @@ describe "Agent can create a Rdv with wizard" do
   before do
     travel_to(Time.zone.local(2019, 10, 2))
     login_as(agent, scope: :agent)
-    visit new_organisation_first_step_path(organisation_id: agent.organisation_ids.first)
+    visit new_organisation_rdv_wizard_step_path(organisation_id: agent.organisation_ids.first)
   end
 
   after { travel_back }
@@ -22,6 +22,34 @@ describe "Agent can create a Rdv with wizard" do
     click_button('Continuer')
 
     # Step 2
+    expect_page_title("Choisir le ou les usagers")
+    expect_checked("Motif : #{motif.name}")
+    select_user(user)
+    expect(page).to have_link('Créer un usager')
+    click_link('Créer un usager')
+
+    # create user with mail
+    expect(find("#modal-holder")).to have_content("Nouvel usager")
+    fill_in :user_first_name, with: "Jean-Paul"
+    fill_in :user_last_name, with: "Orvoir"
+    fill_in :user_email, with: "jporvoir@bidule.com"
+    sleep(1) # wait for scroll to not interfere with form input
+    page.execute_script "$('#mainModal').scrollTop(1000)"
+    click_button('Créer usager')
+    sleep(1) # wait for modal to hide completely
+
+    # create user without email
+    click_link('Créer un usager')
+    fill_in :user_first_name, with: "Jean-Marie"
+    fill_in :user_last_name, with: "Lapin"
+    sleep(1) # wait for scroll to not interfere with form input
+    page.execute_script "$('#mainModal').scrollTop(1000)"
+    click_button('Créer usager')
+    sleep(1) # wait for modal to hide completely
+
+    click_button('Continuer')
+
+    # Step 3
     expect_page_title("Choisir la durée et la date")
     expect_checked(motif.name)
     expect(page).to have_selector("input#rdv_duration_in_min[value='#{motif.default_duration_in_min}']")
@@ -31,40 +59,7 @@ describe "Agent can create a Rdv with wizard" do
 
     select_agent(agent)
     select_agent(agent2)
-    click_button('Continuer')
-
-    # Step 3
-    expect_page_title("Choisir l'usager")
-    expect_checked("Motif : #{motif.name}")
-    expect_checked("Lieu : 79 Rue de Plaisance, 92250 La Garenne-Colombes")
-    expect_checked("Durée : 35 minutes")
-    expect_checked("Professionnels : #{agent.full_name_and_service} et #{agent2.full_name_and_service}")
-    expect_checked("Commence le : vendredi 11 octobre 2019 à 14h15")
-
-    select_user(user)
-    expect(page).to have_link('Créer')
-    click_link('Créer')
-
-    expect(find("#modal-holder")).to have_content("Nouvel usager")
-
-    fill_in :user_first_name, with: "Jean-Paul"
-    fill_in :user_last_name, with: "Orvoir"
-    fill_in :user_email, with: "jporvoir@bidule.com"
-    sleep(1) # wait for scroll to not interfere with form input
-    page.execute_script "$('#mainModal').scrollTop(1000)"
-    click_button('Créer')
-    sleep(1) # wait for modal to hide completely
-
-    # create user without email
-    click_link('Créer')
-    fill_in :user_first_name, with: "Jean-Marie"
-    fill_in :user_last_name, with: "Lapin"
-    sleep(1) # wait for scroll to not interfere with form input
-    page.execute_script "$('#mainModal').scrollTop(1000)"
-    click_button('Créer')
-    sleep(1) # wait for modal to hide completely
-
-    click_button('Continuer')
+    click_button('Créer RDV')
 
     expect(user.rdvs.count).to eq(1)
     rdv = user.rdvs.first

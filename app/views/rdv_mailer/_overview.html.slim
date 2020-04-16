@@ -2,7 +2,10 @@
   h3.aligncenter Recapitulatif
   div.row-result
     span.title Date :
-    span.float-right= l(rdv.starts_at, format: :human)
+    - if rdv.home?
+      span.float-right= l(rdv.starts_at, format: :human_approx)
+    - else
+      span.float-right= l(rdv.starts_at, format: :human)
     .clear
   div.row-result
     span.title Service :
@@ -17,12 +20,18 @@
     span.float-right
       = "#{rdv.duration_in_min} minutes"
     .clear
-  - if rdv.motif.phone?
+  - if rdv.phone?
     div.row-result
       span.title Ceci est un rendez-vous téléphonique
+  - elsif rdv.home?
+    div.row-result
+      span.title Ceci est un rendez-vous à domicile à l'adresse&nbsp;:
+      span.float-right
+        a href="https://maps.google.com?q=#{rdv.location.split(/,?\s/).join('+')}" target="_blank"
+          = rdv.location
   - else
     div.row-result
-      span.title Adresse :
+      span.title Adresse&nbsp;:
       span.float-right
         a href="https://maps.google.com?q=#{rdv.location.split(/,?\s/).join('+')}" target="_blank"
           = rdv.location

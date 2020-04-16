@@ -25,6 +25,8 @@ module RdvsHelper
   end
 
   def users_to_sentence(rdv)
+    return rdv.users.map(&:full_name).sort.to_sentence if current_agent
+
     users = []
     rdv.users.each do |user|
       users << user if user == current_user || current_user.relatives.include?(user)

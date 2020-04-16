@@ -57,16 +57,16 @@ describe "Agent can create a Rdv with creneau search" do
     # Select creneau
     first(:link, "09:30").click
 
-    # Step 3
-    expect_page_title("Choisir l'usager")
-    expect_checked("Motif : #{motif.name}")
-    expect_checked("Lieu : #{lieu.address}")
-    expect_checked("Durée : #{motif.default_duration_in_min} minutes")
-    expect_checked("Professionnels : #{agent.full_name_and_service}")
-
+    # Step 2
+    expect_page_title("Choisir le ou les usagers")
     select_user(user)
-
     click_button('Continuer')
+
+    # Step 3
+    expect_page_title("Choisir la durée et la date")
+    expect_checked("Motif : #{motif.name}")
+    expect(find_field('rdv[location]').value).to eq(lieu.address)
+    click_button('Créer RDV')
 
     expect(user.rdvs.count).to eq(1)
     rdv = user.rdvs.first
