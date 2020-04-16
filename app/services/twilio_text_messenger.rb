@@ -17,7 +17,7 @@ class TwilioTextMessenger
     begin
       twilio_client.messages.create(
         from: @from,
-        to: @user.formated_phone,
+        to: @user.formatted_phone,
         body: replace_special_chars(body)
       )
     rescue StandardError => e
@@ -51,6 +51,16 @@ class TwilioTextMessenger
                 "RDV #{@rdv.motif.service.short_name} #{I18n.l(@rdv.starts_at, format: :short)}\n"
               end
     message += sms_footer
+    message
+  end
+
+  def rdv_cancelled
+    message = "RDV #{@rdv.motif.service.short_name} #{I18n.l(@rdv.starts_at, format: :short)} a été annulé\n"
+    message += if @rdv.organisation.phone_number
+                 "Appelez le #{@rdv.organisation.phone_number} ou allez sur https://rdv-solidarites.fr pour reprendre RDV."
+               else
+                 "Allez sur https://rdv-solidarites.fr pour reprendre RDV."
+               end
     message
   end
 

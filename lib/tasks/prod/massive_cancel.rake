@@ -18,7 +18,7 @@ namespace :prod do
       rdv.update(status: :excused, cancelled_at: Time.zone.now, notes: "[Annulation COVID-19]" + rdv.notes.to_s)
       rdv.users.map(&:user_to_notify).uniq.each do |user|
         RdvMailer.cancel_rdv_coronavirus(rdv, user).deliver_now if user.email.present?
-        TwilioTextMessenger.new(:coronavirus, rdv, user).send_sms if user.formated_phone
+        TwilioTextMessenger.new(:coronavirus, rdv, user).send_sms if user.formatted_phone
       end
     end
     puts "RDV concernés: #{rdvs.size}"

@@ -23,6 +23,10 @@ class DefaultAgentPolicy
     same_agent_or_has_access?
   end
 
+  def cancel?
+    same_agent_or_has_access?
+  end
+
   def new?
     create?
   end

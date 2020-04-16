@@ -1,0 +1,15 @@
+div
+  p Bonjour,
+  p
+    | Votre RDV #{@rdv.motif.service.name} du #{l(@rdv.starts_at, format: :human)} a été annulé.
+  p
+    - if @rdv.organisation.phone_number.present?
+      = "Appelez le #{@rdv.organisation.phone_number} pour plus d'information."
+    - else
+      | Contactez votre organisme pour plus d'information.
+
+  - if @rdv.lieu.present?
+    p Trouvez un nouveau créneau en cliquant sur le lien ci-dessous.
+
+    .btn-wrapper
+      = link_to 'Reprendre RDV', lieu_url(@rdv.lieu.id, search: {departement: @rdv.organisation.departement, motif: @rdv.motif.name, service: @rdv.motif.service.id, where: @rdv.location}), class:'btn btn-primary'
