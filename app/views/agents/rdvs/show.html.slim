@@ -15,7 +15,7 @@ p.card-text
 
   .col.text-right
     - if @rdv.cancellable?
-      = link_to "Annuler", organisation_rdv_path(@rdv.organisation, @rdv, status: :cancel, callback_path: params[:callback_path]), method: :put, class: "btn btn-outline-danger mr-1", data: { confirm: "Êtes-vous sûr de vouloir supprimer ce rendez-vous ? L'usager recevra une notification de cette annulation."}
+      = link_to "Annuler", organisation_rdv_path(@rdv.organisation, @rdv, status: :cancel, callback_path: params[:callback_path]), method: :put, class: "btn btn-outline-danger mr-1", data: { confirm: "Êtes-vous sûr de vouloir annuler ce rendez-vous ? L'usager recevra une notification de cette annulation."}
     = link_to "Modifier", edit_organisation_rdv_path(@rdv.organisation, @rdv, callback_path: params[:callback_path]), class: "btn btn-outline-primary", data: { rightbar: true }
 .row
   .col
