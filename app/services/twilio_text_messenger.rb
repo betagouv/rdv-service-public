@@ -17,7 +17,7 @@ class TwilioTextMessenger
     begin
       twilio_client.messages.create(
         from: @from,
-        to: @user.formated_phone,
+        to: @user.formatted_phone,
         body: replace_special_chars(body)
       )
     rescue StandardError => e

@@ -95,7 +95,7 @@ class User < ApplicationRecord
     User.active.where("responsible_id = ? OR id = ?", user_id, user_id)
   end
 
-  def formated_phone
+  def formatted_phone
     Phonelib.parse(phone_number).e164
   end
 
