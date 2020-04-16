@@ -38,6 +38,8 @@ import { definitionsFromContext } from "stimulus/webpack-helpers";
 import 'stylesheets/print';
 import 'stylesheets/application'
 
+require.context('../images', true)
+
 const application = Application.start();
 const context = require.context("./controllers", true, /\.js$/);
 application.load(definitionsFromContext(context));

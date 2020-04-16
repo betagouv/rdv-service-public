@@ -15,7 +15,7 @@ html lang="fr"
         = link_logo
         .align-items-center.d-flex.h-100
           .p-3.flex-grow-1
-            = image_tag 'welcome/agent.svg', class: 'agent-profile mx-auto mb-5', alt: ""
+            = image_pack_tag 'welcome/agent.svg', class: 'agent-profile mx-auto mb-5', alt: ""
             - if agent_path?
               h4.mb-3 Terminé l'agenda papier, moins de temps perdu.
               p.lead

@@ -40,12 +40,8 @@ gem 'image_processing', '~> 1.8'
 gem 'phonelib'
 
 # Front
-gem 'sass-rails', '>= 6.0'
-gem 'autoprefixer-rails', '~> 9.6'
 gem "chartkick", '~> 3.3.0'
 gem 'groupdate', '~> 4.2'
-
-gem 'uglifier', '>= 1.3.0'
 gem 'slim', '~> 4.0'
 
 ## Time Management
