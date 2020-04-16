@@ -141,12 +141,6 @@ class User < ApplicationRecord
     super.presence || responsible&.address
   end
 
-  def webhook_data
-    res = as_json(only: [:id, :first_name, :last_name, :email, :address, :birth_date])
-    res['responsible'] = responsible&.webhook_data
-    res
-  end
-
   protected
 
   def password_required?

@@ -7,6 +7,11 @@ class Rdv < ApplicationRecord
   has_many :file_attentes, dependent: :destroy
   has_and_belongs_to_many :agents
   has_and_belongs_to_many :users, validate: false
+
+  def webhook_renderer
+    RdvBlueprint
+  end
+
   has_many :webhook_endpoints, through: :organisation
 
   enum status: { unknown: 0, waiting: 1, seen: 2, excused: 3, notexcused: 4 }
@@ -98,21 +103,6 @@ class Rdv < ApplicationRecord
       user_ids: users&.map(&:id),
       agent_ids: agents&.map(&:id),
     }
-  end
-
-  def webhook_data
-    result = as_json(
-      only: [:id, :status, :location, :duration_in_min, :starts_at],
-      include: {
-        organisation: { only: [:id, :name, :departement] },
-        motif: { only: [:id, :name] },
-      }
-    )
-
-    result['users'] = users&.map { |item| item.webhook_data }
-    result['agents'] = agents&.map { |item| item.webhook_data }
-
-    result
   end
 
   def available_to_file_attente?

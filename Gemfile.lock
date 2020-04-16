@@ -91,6 +91,7 @@ GEM
     bindex (0.8.1)
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
+    blueprinter (0.23.3)
     bootsnap (1.4.5)
       msgpack (~> 1.0)
     bootstrap4-kaminari-views (1.0.1)
@@ -496,6 +497,7 @@ DEPENDENCIES
   administrate-field-belongs_to_search (~> 0.7)
   better_errors
   binding_of_caller
+  blueprinter
   bootsnap (>= 1.1.0)
   bootstrap4-kaminari-views (~> 1.0)
   brakeman

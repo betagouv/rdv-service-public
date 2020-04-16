@@ -15,9 +15,9 @@ module Webhook
       around_destroy :save_payload
 
       def save_payload
-        payload = webhook_data
+        payload = generate_webhook_payload(:destroyed)
         yield
-        deliver_webhook(:destroyed, payload)
+        send_webhook(payload)
       end
     end
   end

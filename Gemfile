@@ -56,6 +56,7 @@ gem 'premailer-rails'
 gem 'twilio-ruby', '~> 5.29.1'
 
 # Web Hook
+gem 'blueprinter'
 gem 'typhoeus'
 
 # Ops
