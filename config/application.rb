@@ -1,5 +1,6 @@
 require_relative 'boot'
 
+# explode rails/all to be able to exclude sprockets
 require "active_record/railtie"
 require "active_storage/engine"
 require "action_controller/railtie"
