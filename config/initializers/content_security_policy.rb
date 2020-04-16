@@ -8,15 +8,15 @@ unless Rails.env.test?
   Rails.application.config.content_security_policy do |policy|
     policy.default_src :self
     policy.font_src    :self, :data, "https://fonts.gstatic.com"
-    policy.img_src     :self, :data, "stats.data.gouv.fr"
+    policy.img_src     :self, :data, "stats.data.gouv.fr", "*.gstatic.com"
     policy.object_src  :none
-    policy.style_src   :self, :unsafe_inline, "fonts.googleapis.com"
+    policy.style_src   :self, :unsafe_inline, "fonts.googleapis.com", "*.bootstrapcdn.com"
 
     if Rails.env.development?
-      policy.script_src :self, :unsafe_inline, "stats.data.gouv.fr", "localhost:3035"
+      policy.script_src :self, :unsafe_inline, "stats.data.gouv.fr", "*.algolianet.com", "*.algolianet.net", "localhost:3035"
       policy.connect_src :self, "*.algolia.net", "sentry.io", "*.algolianet.com", "localhost:3035", "ws://localhost:3035"
     else
-      policy.script_src :self, :unsafe_inline, "stats.data.gouv.fr"
+      policy.script_src :self, :unsafe_inline, "stats.data.gouv.fr", "*.algolianet.com", "*.algolianet.net"
       policy.connect_src :self, "*.algolia.net", "sentry.io", "*.algolianet.com"
     end
 
