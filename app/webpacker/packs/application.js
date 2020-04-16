@@ -33,11 +33,10 @@ import "actiontext";
 import { Application } from "stimulus";
 import { definitionsFromContext } from "stimulus/webpack-helpers";
 
-// import "@fortawesome/fontawesome-free/js/all.js";
-// import "@fortawesome/fontawesome-free/css/all.css";
 import 'stylesheets/print';
 import 'stylesheets/application'
 
+// this is necessary so images are compiled by webpack
 require.context('../images', true)
 
 const application = Application.start();

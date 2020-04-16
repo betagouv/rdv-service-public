@@ -1,10 +1,7 @@
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 @import "./_variables";
-
-// TODO Yarn install font-awesome & remove font-awesome-rails gem
-// @import "~font-awesome/scss/font-awesome";
-// @import "font-awesome";
+@import "./fontawesome_imports";
 
 @import "~bootstrap/scss/bootstrap";
 @import "~select2/dist/css/select2";
