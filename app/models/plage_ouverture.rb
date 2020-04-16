@@ -1,5 +1,6 @@
 class PlageOuverture < ApplicationRecord
   include RecurrenceConcern
+  include WebhookDeliverable
 
   belongs_to :organisation
   belongs_to :agent
@@ -10,6 +11,8 @@ class PlageOuverture < ApplicationRecord
 
   validate :end_after_start
   validates :motifs, :title, presence: true
+
+  has_many :webhook_endpoints, through: :organisation
 
   def send_ics_to_agent
     PlageOuvertureMailer.send_ics_to_agent(self).deliver_later
