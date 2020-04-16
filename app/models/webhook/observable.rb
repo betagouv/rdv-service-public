@@ -12,8 +12,12 @@ module Webhook
         deliver_webhook(:updated)
       end
 
-      before_destroy prepend: true do
-        deliver_webhook(:destroyed)
+      around_destroy :save_payload
+
+      def save_payload
+        payload = webhook_data
+        yield
+        deliver_webhook(:destroyed, payload)
       end
     end
   end
