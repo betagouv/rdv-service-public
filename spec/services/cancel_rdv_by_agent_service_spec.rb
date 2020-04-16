@@ -13,7 +13,7 @@ describe CancelRdvByAgentService, type: :service do
     end
 
     it "calls RdvMailer to send email to user" do
-      expect(RdvMailer).to receive(:cancellation).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
+      expect(RdvMailer).to receive(:cancel_by_agent).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
       subject
     end
 

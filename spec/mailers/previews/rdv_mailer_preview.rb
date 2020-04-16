@@ -4,8 +4,8 @@ class RdvMailerPreview < ActionMailer::Preview
     RdvMailer.send_ics_to_user(rdv, rdv.users.first)
   end
 
-  def cancellation
+  def cancel_by_agent
     rdv = Rdv.active.last
-    RdvMailer.cancellation(rdv, rdv.users.first)
+    RdvMailer.cancel_by_agent(rdv, rdv.users.first)
   end
 end
