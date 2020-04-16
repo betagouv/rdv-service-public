@@ -49,17 +49,6 @@ describe Rdv, type: :model do
     end
   end
 
-  describe "#send_cancellation_notifications" do
-    let(:rdv) { create(:rdv) }
-
-    subject { rdv.send_cancellation_notifications }
-
-    it "calls RdvMailer to send email to user" do
-      expect(RdvMailer).to receive(:cancellation).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
-      subject
-    end
-  end
-
   describe "#cancel" do
     let(:rdv) { create(:rdv) }
     let(:now) { Time.current }
