@@ -1,4 +1,4 @@
-describe Rdv, type: :model do
+describe Webhook::Observable, type: :concern do
   include ActiveJob::TestHelper
 
   let!(:webhook_endpoint) { create(:webhook_endpoint) }
