@@ -25,7 +25,7 @@ class Agents::RdvsController < AgentAuthController
 
   def update
     authorize(@rdv)
-    if params[:event] == 'cancel'
+    if params[:status] == 'excused'
       CancelRdvByAgentService.new(@rdv).perform
       flash[:notice] = 'Le rendez-vous a été annulé.'
     elsif @rdv.update(rdv_params)

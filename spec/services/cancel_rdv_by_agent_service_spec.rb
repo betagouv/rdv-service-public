@@ -1,12 +1,6 @@
 describe CancelRdvByAgentService, type: :service do
-  describe ".perform" do
-    let(:now) { Time.now }
+  describe "#perform" do
     let(:rdv) { create(:rdv) }
-
-    before do
-      travel_to(now)
-      freeze_time
-    end
 
     subject { CancelRdvByAgentService.new(rdv).perform }
 
@@ -15,7 +9,7 @@ describe CancelRdvByAgentService, type: :service do
     end
 
     it "sets cancelled_at to now" do
-      expect { subject }.to change(rdv, :cancelled_at).from(nil).to(Time.now)
+      expect { subject }.to change(rdv, :cancelled_at).from(nil).to(be_within(5.seconds).of(Time.now))
     end
 
     it "calls RdvMailer to send email to user" do
