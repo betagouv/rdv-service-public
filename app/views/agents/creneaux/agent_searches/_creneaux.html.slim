@@ -15,7 +15,7 @@ div id="creneaux-lieu-#{lieu.id}"
         - if creneaux_for_date.any?
           - creneaux_for_date.each do |date, creneaux|
             - creneaux.sort_by(&:starts_at).each do |creneau|
-              = link_to new_organisation_rdv_wizard_step_path(build_link_to_rdv_wizard_params(lieu, motif, creneau, @user)), class: "btn btn-light mr-1 mb-1 w-100" do
+              = link_to new_organisation_rdv_wizard_step_path(build_link_to_rdv_wizard_params(lieu, motif, creneau, user_id)), class: "btn btn-light mr-1 mb-1 w-100" do
                 = l(creneau.starts_at, format: "%H:%M")
                 br
                 small= creneau.agent_name
