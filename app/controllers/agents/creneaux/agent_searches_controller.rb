@@ -3,7 +3,7 @@ class Agents::Creneaux::AgentSearchesController < AgentAuthController
 
   def index
     skip_policy_scope
-    @user = User.find(params[:user_id])
+    @user = User.find(params[:user_id]) if params[:user_id]
     respond_to do |format|
       format.html do
         @organisation = current_organisation
