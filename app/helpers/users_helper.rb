@@ -1,6 +1,7 @@
 module UsersHelper
   def birth_date_and_age(user)
     return unless user.birth_date
+
     "#{I18n.l(user.birth_date)} - #{user.age}"
   end
 

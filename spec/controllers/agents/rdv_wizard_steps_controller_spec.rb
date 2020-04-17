@@ -6,7 +6,8 @@ describe Agents::RdvWizardStepsController, type: :controller do
 
     before { sign_in agent }
 
-    let(:params) do {
+    let(:params) do
+      {
         step: 2,
         organisation_id: organisation_id,
         user_ids: [user.id],
