@@ -24,7 +24,7 @@ module AgentsHelper
     params[:organisation_id] = motif.organisation_id
     params[:duration_in_min] = motif.default_duration_in_min
     params["agent_ids[]"] = creneau.agent_id
-    params["user_ids[]"] = user if user
+    params["user_ids[]"] = user.id if user
     params
   end
 end
