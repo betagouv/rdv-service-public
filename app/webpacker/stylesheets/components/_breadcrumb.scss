@@ -2,8 +2,7 @@
   a {@extend .text-white}
   +.breadcrumb-item {
     &::before {
-      font-family: "FontAwesome"; font-weight: 900; content: "\f105";
+      font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f054";
     }
   }
 }
-  

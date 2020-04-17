@@ -23,7 +23,7 @@
         = link_to '#', class: 'side-nav-link' do
           i.far.fa-clock
           span Votre planning
-          i.fa.fa-angle-right.menu-arrow
+          i.fa.fa-angle-right.menu-arrow.mt-1
         ul.side-nav-second-level aria-expanded="false"
           li=link_to 'Vos plages d\'ouverture', organisation_agent_plage_ouvertures_path(current_organisation, current_agent)
           li=link_to 'Vos absences', organisation_agent_absences_path(current_organisation, current_agent)
@@ -33,7 +33,7 @@
             = link_to '#', class: 'side-nav-link' do
               i.fa.fa-cog
               span Paramètres
-              i.fa.fa-angle-right.menu-arrow
+              i.fa.fa-angle-right.menu-arrow.mt-1
             ul.side-nav-second-level aria-expanded="false"
               li=link_to 'Votre organisation', organisation_path(current_organisation)
               li=link_to 'Vos lieux', organisation_lieux_path(current_organisation)
