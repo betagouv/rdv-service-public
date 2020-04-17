@@ -1,6 +1,6 @@
 let previousPageUrl = null;
 
-const paramsToFilter = ['address', 'first_name', 'last_name', 'affiliation_number', 'latitude', 'longitude', 'where', 'invitation_token', 'confirmation_token', 'unlock_token', 'reset_password_token'];
+const paramsToFilter = ['address', 'first_name', 'last_name', 'affiliation_number', 'latitude', 'longitude', 'where', 'invitation_token', 'confirmation_token', 'unlock_token', 'reset_password_token', 'search[departement]', 'search[latitude]', 'search[longitude]', 'search[where]'];
 
 if (ENV.ENV == "production") {
   window._paq = window._paq || [];
