@@ -1,1 +1,1 @@
-document.querySelector("#creneaux-lieu-<%= @lieu.id %>").innerHTML = "<%= escape_javascript(render 'creneaux', lieu: @lieu, creneaux: @creneaux, date_range: @date_range, motif: @motif, agent_ids: @agent_ids) %>";
+document.querySelector("#creneaux-lieu-<%= @lieu.id %>").innerHTML = "<%= escape_javascript(render 'creneaux', lieu: @lieu, creneaux: @creneaux, date_range: @date_range, motif: @motif, agent_ids: @agent_ids, user_id: nil) %>";
