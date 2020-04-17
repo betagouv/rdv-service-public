@@ -26,7 +26,7 @@
   - elsif rdv.home?
     div.row-result
       span.title Ceci est un rendez-vous à domicile à l'adresse&nbsp;:
-      span.float-right
+      div.alignright
         a href="https://maps.google.com?q=#{rdv.location.split(/,?\s/).join('+')}" target="_blank"
           = rdv.location
   - else
