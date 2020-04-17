@@ -1,4 +1,4 @@
-describe Webhook::Observable, type: :concern do
+describe WebhookDeliverable, type: :concern do
   include ActiveJob::TestHelper
 
   let!(:webhook_endpoint) { create(:webhook_endpoint) }

@@ -1,5 +1,5 @@
 class Rdv < ApplicationRecord
-  include Webhook::Observable
+  include WebhookDeliverable
 
   has_paper_trail
   belongs_to :organisation
@@ -7,10 +7,6 @@ class Rdv < ApplicationRecord
   has_many :file_attentes, dependent: :destroy
   has_and_belongs_to_many :agents
   has_and_belongs_to_many :users, validate: false
-
-  def webhook_renderer
-    RdvBlueprint
-  end
 
   has_many :webhook_endpoints, through: :organisation
 
