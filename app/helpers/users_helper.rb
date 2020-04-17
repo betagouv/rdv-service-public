@@ -1,7 +1,6 @@
 module UsersHelper
   def birth_date_and_age(user)
     return unless user.birth_date
-
     "#{I18n.l(user.birth_date)} - #{user.age}"
   end
 
@@ -9,6 +8,10 @@ module UsersHelper
     label = user.full_name
     label += " - #{birth_date_and_age(user)}" if user.birth_date
     label
+  end
+
+  def full_name(user)
+    "#{user.first_name} #{user.last_name}"
   end
 
   def user_show_path(user)

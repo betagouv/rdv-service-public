@@ -6,15 +6,14 @@ describe Agents::RdvWizardStepsController, type: :controller do
 
     before { sign_in agent }
 
-    let(:params) do
-      {
+    let(:params) do {
         step: 2,
-     organisation_id: organisation_id,
-     user: user.id,
-     duration_in_min: 30,
-     motif_id: 1,
-     plage_ouverture_location: "18+Rue+des+Terres+au+Cur%C3%A9%2C+75013+Paris",
-     starts_at: DateTime.new(2020, 4, 20, 8, 0, 0),
+        organisation_id: organisation_id,
+        user_ids: [user.id],
+        duration_in_min: 30,
+        motif_id: 1,
+        plage_ouverture_location: "18+Rue+des+Terres+au+Cur%C3%A9%2C+75013+Paris",
+        starts_at: DateTime.new(2020, 4, 20, 8, 0, 0),
       }
     end
 
@@ -25,7 +24,7 @@ describe Agents::RdvWizardStepsController, type: :controller do
 
     it "return success" do
       get :new, params: params
-      expect(assigns(:user)).to eq(user)
+      expect(assigns(:rdv).users).to eq([user])
     end
 
     it "return success" do
