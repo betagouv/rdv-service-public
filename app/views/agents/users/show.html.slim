@@ -32,8 +32,11 @@
     .card.mb-5
       .card-body
         = render 'stats/rdv_counters', rdvs: Rdv.user_with_relatives(@user.id).where(organisation_id: current_organisation)
-        .text-right
-          = link_to 'Voir tous les RDV', organisation_user_rdvs_path(current_organisation, @user), class: 'btn btn-outline-primary'
+        .row
+          .col.text-left
+            = link_to "Trouver un créneau", organisation_agent_searches_path(current_organisation, user_id: @user.id), class: "btn btn-outline-primary"
+          .col.text-right
+            = link_to 'Voir tous les RDV', organisation_user_rdvs_path(current_organisation, @user), class: 'btn btn-outline-primary'
 
     .card
       .card-body
