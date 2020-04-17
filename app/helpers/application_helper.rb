@@ -73,7 +73,7 @@ module ApplicationHelper
   end
 
   def map_tag_marker(title)
-    icon_tag_tooltip(title, 'map-marker')
+    icon_tag_tooltip(title, 'map-marker-alt')
   end
 
   def question_tag_tooltip(title)
