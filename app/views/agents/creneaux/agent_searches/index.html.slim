@@ -5,6 +5,8 @@
   .card-body
     h5.card-title Configuration des filtres
     = simple_form_for(Creneau::AgentSearch.new, remote: true, url: organisation_agent_searches_path(@organisation), method: :get) do |f|
+      - if @user
+        = hidden_field_tag :user, @user
       .row
         .col-md-3
           = f.input :motif_id, collection: @motifs, label_method: -> { motif_name_with_location_type(_1) }, required: true, include_blank: "Sélectionnez un motif", input_html: { class: 'select2-input' }

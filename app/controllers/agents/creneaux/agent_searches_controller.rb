@@ -3,6 +3,7 @@ class Agents::Creneaux::AgentSearchesController < AgentAuthController
 
   def index
     skip_policy_scope
+    @user = params[:user]
     respond_to do |format|
       format.html do
         @organisation = current_organisation
