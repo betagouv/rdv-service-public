@@ -15,7 +15,7 @@ module AgentsHelper
     link_to 'Supprimer', organisation_agent_path(current_organisation, agent), data: { confirm: "Êtes-vous sûr de vouloir supprimer cet agent ?" }, method: :delete, class: 'dropdown-item' if policy([:agent, agent]).destroy?
   end
 
-  def build_link_to_rdv_wiard_params(lieu, motif, creneau, user)
+  def build_link_to_rdv_wizard_params(lieu, motif, creneau, user)
     params = {}
     params[:step] = 2
     params[:starts_at] = creneau.starts_at
