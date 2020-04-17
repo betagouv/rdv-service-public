@@ -7,7 +7,7 @@ html lang="fr"
     = csrf_meta_tags
     = csp_meta_tag
     = render 'common/env'
-    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = stylesheet_pack_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
   body.auth-fluid-pages.pb-0 class="#{agents_or_users_body_class}"
     .auth-fluid
@@ -15,7 +15,7 @@ html lang="fr"
         = link_logo
         .align-items-center.d-flex.h-100
           .p-3.flex-grow-1
-            = image_tag 'welcome/agent.svg', class: 'agent-profile mx-auto mb-5', alt: ""
+            = image_pack_tag 'welcome/agent.svg', class: 'agent-profile mx-auto mb-5', alt: ""
             - if agent_path?
               h4.mb-3 Terminé l'agenda papier, moins de temps perdu.
               p.lead
@@ -35,7 +35,7 @@ html lang="fr"
                   .mb-4.text-center
                     h3 Espace reservé aux agents
                     p
-                      | Vous êtes un particulier ? 
+                      | Vous êtes un particulier ?
                       = link_to 'Cliquez-ici', request.path.gsub('agents', 'users')
                 = yield
                 - if content_for :footer

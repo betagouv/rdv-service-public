@@ -7,7 +7,7 @@ p.card-text
   = rdv.motif.name
 - if rdv.location
   p.card-text
-    i.fa.fa-fw.fa-map-marker>
+    i.fa.fa-fw.fa-map-marker-alt>
     = human_location(rdv)
 - if rdv.motif.phone?
   p.card-text
@@ -25,6 +25,6 @@ p.card-text
   = users_to_links(rdv)
 - if rdv.notes.present?
   .card-text
-    i.fa.fa-fw.fa-sticky-note-o>
+    i.far.fa-fw.fa-sticky-note>
     strong> Notes libres :
     = simple_format(rdv.notes)
