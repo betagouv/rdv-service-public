@@ -68,12 +68,12 @@ module ApplicationHelper
 
   def link_logo
     link_to root_path do
-      image_tag 'logos/logo.svg', height: 40, alt: 'RDV Solidarités', class: 'd-inline logo'
+      image_pack_tag 'logos/logo.svg', height: 40, alt: 'RDV Solidarités', class: 'd-inline logo'
     end
   end
 
   def map_tag_marker(title)
-    icon_tag_tooltip(title, 'map-marker')
+    icon_tag_tooltip(title, 'map-marker-alt')
   end
 
   def question_tag_tooltip(title)

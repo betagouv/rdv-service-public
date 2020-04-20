@@ -19,15 +19,19 @@ require 'capybara/email/rspec'
 require 'webdrivers'
 require 'capybara-screenshot/rspec'
 
-chrome_bin = ENV.fetch('GOOGLE_CHROME_SHIM', nil)
 Capybara.register_driver :selenium do |app|
+  # these args seem to reduce test flakyness
+  # w3c false required for logs cf https://github.com/SeleniumHQ/selenium/issues/7270
+  chrome_options = { args: %w[headless no-sandbox disable-gpu], w3c: false }
+  chrome_bin = ENV.fetch('GOOGLE_CHROME_SHIM', nil)
+  chrome_options[:binary] = chrome_bin if chrome_bin
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: chrome_bin ? { binary: chrome_bin } : {}
+    chromeOptions: chrome_options,
+    "goog:loggingPrefs" => { browser: 'ALL' }
   )
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    options: Selenium::WebDriver::Chrome::Options.new(args: %w[headless]),
     desired_capabilities: capabilities
   )
 end
@@ -130,10 +134,6 @@ RSpec.configure do |config|
     DatabaseCleaner.start
   end
 
-  config.before(:each) do
-    Flipflop::FeatureSet.current.test!.switch!(:file_attente, true)
-  end
-
   config.before(:each, js: true) do
     DatabaseCleaner.strategy = :truncation
   end
@@ -146,5 +146,22 @@ RSpec.configure do |config|
   config.before(:suite) do
     DatabaseCleaner.strategy = :deletion
     DatabaseCleaner.clean_with(:truncation)
+  end
+
+  config.after(:each, js: true) do |example|
+    next unless example.exception # only write logs for failed tests
+
+    FileUtils.mkdir_p "tmp/capybara"
+    [:browser, :driver].each do |source|
+      errors = Capybara.page.driver.browser.manage.logs.get(source)
+      fp = "tmp/capybara/chrome.#{example.full_description.parameterize}.#{source}.log"
+      File.open(fp, 'w') do |f|
+        f << "// empty logs" if errors.empty?
+        errors.each do |e|
+          f << "#{e.timestamp} [#{e.level}]: #{e.message}"
+        end
+        f << "\n"
+      end
+    end
   end
 end

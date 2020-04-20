@@ -25,7 +25,12 @@ class Agents::RdvsController < AgentAuthController
 
   def update
     authorize(@rdv)
-    flash[:notice] = 'Le rendez-vous a été modifié.' if @rdv.update(rdv_params)
+    if params[:status] == 'excused'
+      CancelRdvByAgentService.new(@rdv).perform
+      flash[:notice] = 'Le rendez-vous a été annulé.'
+    elsif @rdv.update(rdv_params)
+      flash[:notice] = 'Le rendez-vous a été modifié.'
+    end
     respond_right_bar_with @rdv, location: callback_path(@rdv)
   end
 
