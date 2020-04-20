@@ -15,7 +15,7 @@ class MotifForm {
 
   constructor() {
     // short circuit when not on the motif form page
-    const inputs = document.querySelectorAll("input[name=\"motif[location_type]\"")
+    const inputs = document.querySelectorAll("input[name=\"motif[location_type]\"]")
     if (!inputs) return false;
 
     // initial boolean value is true as the html displays the input enabled in
