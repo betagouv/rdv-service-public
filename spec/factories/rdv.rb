@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :rdv do
     duration_in_min { 45 }
-    starts_at { DateTime.now }
+    starts_at { Time.zone.now }
     location { "10 rue de la Ferronerie 44100 Nantes" }
     organisation { Organisation.first || create(:organisation) }
     motif { Motif.first || build(:motif) }
