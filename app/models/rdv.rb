@@ -77,7 +77,7 @@ class Rdv < ApplicationRecord
   end
 
   def notify?
-    !motif.disable_notifications_for_users
+    !motif.disable_notifications_for_users && starts_at.to_date >= Date.today
   end
 
   def lieu

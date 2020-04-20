@@ -2,8 +2,7 @@ describe Rdv::Ics, type: :model do
   describe '#to_ical_for' do
     let(:motif) { create(:motif, name: "Consultation initiale") }
     let(:user) { create(:user, first_name: "elisa", last_name: "simon", email: "elisa@simon.fr") }
-    let(:rdv) { create(:rdv, users: [user], motif: motif) }
-    # let(:rdv_by_phone) { create(:rdv, :by_phone) }  # unused
+    let(:rdv) { create(:rdv, users: [user], motif: motif, starts_at: Time.zone.local(2019, 7, 4, 15, 0)) }
     let(:ics) { Rdv::Ics.new(rdv: rdv) }
     subject { ics.to_ical_for(user) }
 
