@@ -26,7 +26,7 @@ fr:
         family_situations:
           single: Célibataire
           in_a_relationship: En couple
-          divorced: Divorcé
+          separated_or_divorced: Séparé / Divorcé
         logement: Logement
         logements:
           sdf: Sans domicile fixe
@@ -35,3 +35,13 @@ fr:
           en_accession_propriete: En accession à la propriété
           proprietaire: Propriétaire
           autre: Autre
+        working_status: Situation professionnelle
+        working_statuses:
+          unemployed: Sans emploi
+          employed: Salarié(e)
+          self_employed: Travaille à son compte
+        resource_origin: Nature des ressources
+        resource_amount: Montant des ressources
+        rental_charge: Montant du loyer
+        conjoint_full_name: Nom et prénom du conjoint
+        conjoint_birth_date: Date de naissance du conjoint

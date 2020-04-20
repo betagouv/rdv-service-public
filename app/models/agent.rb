@@ -19,6 +19,8 @@ class Agent < ApplicationRecord
 
   enum role: { user: 0, admin: 1 }
 
+  delegate :service_social?, to: :service
+
   validates :email, :role, presence: true
   validates :last_name, :first_name, presence: true, on: :update, if: :accepted_or_not_invited?
 

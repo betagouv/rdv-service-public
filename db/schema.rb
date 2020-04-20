@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_01_145901) do
+ActiveRecord::Schema.define(version: 2020_04_17_154956) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -301,6 +301,12 @@ ActiveRecord::Schema.define(version: 2020_04_01_145901) do
     t.datetime "deleted_at"
     t.string "birth_name"
     t.text "notes"
+    t.integer "working_status"
+    t.string "resource_origin"
+    t.float "resource_amount"
+    t.float "rental_charge"
+    t.string "conjoint_full_name"
+    t.date "conjoint_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true

@@ -2,39 +2,53 @@
 = simple_form_for([current_organisation, user], url: url, remote: request.xhr?, data: { modal: true }) do |f|
   = hidden_field '', :modal, value: params[:modal]
   = render partial: 'layouts/model_errors', locals: { model: user }
-  .form-row
-    .col-md-6= f.input :first_name
-    .col-md-6= f.input :last_name
+  .card
+    .card-body
+      h5.card-title Informations générales
+      .form-row
+        .col-md-6= f.input :first_name
+        .col-md-6= f.input :last_name
 
-  .form-row
-    .col-md-6= f.input :birth_name
-    .col-md-6= date_input(f, :birth_date)
+      .form-row
+        .col-md-6= f.input :birth_name
+        .col-md-6= date_input(f, :birth_date)
 
-  = f.input :email, as: :email
-  - if !user.persisted?
-    #invite-user.form-row.align-items-baseline.ml-0 style="display: none"
-      = f.check_box :invite_on_create, {checked: true}, 'true', 'false'
-      = f.label :invite_on_create, "Inviter l'utilisateur à se créer un compte sur RDV-solidarites.", class: "ml-1"
-  - if user.pending_reconfirmation?
-    .form-text.text-muted.mb-2
-      | En attente de confirmation pour #{user.unconfirmed_email}
+      = f.input :email, as: :email
+      - if !user.persisted?
+        #invite-user.form-row.align-items-baseline.ml-0 style="display: none"
+          = f.check_box :invite_on_create, {checked: true}, 'true', 'false'
+          = f.label :invite_on_create, "Inviter l'utilisateur à se créer un compte sur RDV-solidarites.", class: "ml-1"
+      - if user.pending_reconfirmation?
+        .form-text.text-muted.mb-2
+          | En attente de confirmation pour #{user.unconfirmed_email}
 
-  = f.input :phone_number, as: :tel
-  = f.input :address, input_html: { class: "places-js-container" }
-  .form-row
-    .col-md-6= f.input :caisse_affiliation, collection: User.human_enum_collection(:caisse_affiliation)
-    .col-md-6= f.input :affiliation_number
-  .form-row
-    .col-md-6= f.input :family_situation, collection: User.human_enum_collection(:family_situation)
-    .col-md-6= f.input :number_of_children, input_html: { min: '0', max: '15', step: 'any' }
-  = f.input :logement, collection: User.human_enum_collection(:logement)
-  = f.input :notes, input_html: { rows: 6 }
+      = f.input :phone_number, as: :tel
+      = f.input :address, input_html: { class: "places-js-container" }
+  .card
+    .card-body
+      h5.card-title Informations sociales
+      .form-row
+        .col-md-6= f.input :caisse_affiliation, collection: User.human_enum_collection(:caisse_affiliation)
+        .col-md-6= f.input :affiliation_number
+      .form-row
+        .col-md-6= f.input :family_situation, collection: User.human_enum_collection(:family_situation)
+        .col-md-6= f.input :number_of_children, input_html: { min: '0', max: '15', step: 'any' }
+      = f.input :logement, collection: User.human_enum_collection(:logement)
+      = f.input :notes, input_html: { rows: 6 }
+      - if @current_agent.service_social?
+        .form-row
+          .col-md-6= f.input :working_status, collection: User.human_enum_collection(:working_status)
+          .col-md-6= f.input :resource_origin
+          .col-md-6= f.input :resource_amount, input_html: { min: '0', step: 'any' }
+          .col-md-6= f.input :rental_charge, input_html: { min: '0', step: 'any' }
+          .col-md-6= f.input :conjoint_full_name
+          .col-md-6= f.input :conjoint_birth_date, as: :date, html5: true
 
-
-  .text-right
-    - if user.persisted?
-      = link_to "Annuler", organisation_user_path(current_organisation, user), class: "btn btn-link"
-      = f.button :submit
-    - else
-      = link_to "Annuler", organisation_users_path(current_organisation), class: "btn btn-link"
-      = f.button :submit, "Créer usager"
+  .row.mb-5
+    .col.text-right
+      - if user.persisted?
+        = link_to "Annuler", organisation_user_path(current_organisation, user), class: "btn btn-link"
+        = f.button :submit
+      - else
+        = link_to "Annuler", organisation_users_path(current_organisation), class: "btn btn-link"
+        = f.button :submit, "Créer usager"

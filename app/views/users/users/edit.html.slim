@@ -19,7 +19,7 @@
           .form-row
             .col-md-6= f.input :family_situation, collection: User.human_enum_collection(:family_situation)
             .col-md-6= f.input :number_of_children, input_html: { min: '0', max: '15', step: 'any' }
-          = f.input :logement, collection: User.human_enum_collection(:logement)
+          = f.input :working_status, collection: User.human_enum_collection(:working_status)
           .text-right
             = f.button :submit
   .col-md-6

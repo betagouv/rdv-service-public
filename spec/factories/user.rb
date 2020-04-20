@@ -17,7 +17,7 @@ FactoryBot.define do
     confirmed_at { Time.zone.now }
     caisse_affiliation { 'caf' }
     affiliation_number { '39012093812038' }
-    family_situation { 'divorced' }
+    family_situation { 'separated_or_divorced' }
     logement { 'sdf' }
     number_of_children { 12 }
     responsible { nil }
