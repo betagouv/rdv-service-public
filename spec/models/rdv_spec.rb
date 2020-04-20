@@ -1,4 +1,8 @@
 describe Rdv, type: :model do
+  it "a une fabrique valide" do
+    expect(build(:rdv)).to be_valid
+  end
+
   describe "#send_notifications_to_users" do
     let(:rdv) { build(:rdv) }
 
@@ -133,6 +137,18 @@ describe Rdv, type: :model do
         rdv.save
         expect(rdv.valid?).to eq(true)
       end
+    end
+  end
+
+  describe "#notify?" do
+    it "true avec un rendez-vous dans le futur dans le futur" do
+      rdv = build(:rdv, starts_at: DateTime.now + 1.day)
+      expect(rdv.notify?).to be_truthy
+    end
+
+    it "false avec un rendez-vous dans le passé" do
+      rdv = build(:rdv, starts_at: DateTime.now - 1.day)
+      expect(rdv.notify?).to be_falsy
     end
   end
 end
