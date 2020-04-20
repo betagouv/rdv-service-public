@@ -17,7 +17,7 @@ unless Rails.env.test?
       policy.connect_src :self, "*.algolia.net", "sentry.io", "*.algolianet.com", "localhost:3035", "ws://localhost:3035"
     else
       policy.script_src :self, :unsafe_inline, "stats.data.gouv.fr", "*.algolianet.com", "*.algolianet.net"
-      policy.connect_src :self, "*.algolia.net", "sentry.io", "*.algolianet.com"
+      policy.connect_src :self, "*.algolia.net", "sentry.io", "*.algolianet.com", "cdnjs.cloudflare.com"
     end
 
     # Specify URI for violation reports
