@@ -19,7 +19,7 @@ module UsersHelper
     {
       caisse_affiliation: User.human_enum_name(:caisse_affiliation, user.caisse_affiliation),
       affiliation_number: user.affiliation_number,
-      family_situation: User.human_enum_name(:family_situation,user.family_situation),
+      family_situation: User.human_enum_name(:family_situation, user.family_situation),
       number_of_children: user.number_of_children,
       logement: User.human_enum_name(:logement, user.logement),
       working_status: User.human_enum_name(:working_status, user.working_status),
@@ -27,7 +27,7 @@ module UsersHelper
       resource_amount: user.resource_amount,
       rental_charge: user.rental_charge,
       conjoint_full_name: user.conjoint_full_name,
-      conjoint_birth_date: user.conjoint_birth_date
+      conjoint_birth_date: user.conjoint_birth_date,
     }
   end
 
@@ -39,8 +39,7 @@ module UsersHelper
       birth_date: birth_date_and_age(user),
       phone_number: user.phone_number,
       address: user.address,
-      email: user.email
+      email: user.email,
     }
   end
-
 end
