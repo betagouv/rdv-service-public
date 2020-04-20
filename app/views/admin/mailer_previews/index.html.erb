@@ -1,0 +1,18 @@
+<%# adapted from https://github.com/rails/rails/blob/master/railties/lib/rails/templates/rails/mailers/index.html.erb %>
+<div class='main-content__header'>
+  <h1>Mailer Previews</h1>
+</div>
+<div class='main-content__body' data-turbolinks="false">
+  <% @previews.each do |preview| %>
+    <div style='margin-bottom: 12px;'>
+      <h3><%= preview.preview_name.titleize %></h3>
+      <ul>
+        <% preview.emails.each do |email| %>
+          <li>
+            <%= link_to(email, admin_mailer_preview_path("#{preview.preview_name}/#{email}")) %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+</div>

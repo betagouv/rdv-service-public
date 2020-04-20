@@ -22,6 +22,7 @@ Rails.application.routes.draw do
     resources :absences
     resources :motif_libelles
     resources :webhook_endpoints
+    resources :mailer_previews, only: [:index, :show]
     root to: "agents#index"
 
     authenticate :super_admin do
