@@ -141,14 +141,14 @@ describe Rdv, type: :model do
   end
 
   describe "#notify?" do
-    it "true avec un rendez-vous dans le futur dans le futur" do
+    it "true avec un rendez-vous dans le futur" do
       rdv = build(:rdv, starts_at: DateTime.now + 1.day)
-      expect(rdv.notify?).to be_truthy
+      expect(rdv.notify?).to be true
     end
 
     it "false avec un rendez-vous dans le passé" do
       rdv = build(:rdv, starts_at: DateTime.now - 1.day)
-      expect(rdv.notify?).to be_falsy
+      expect(rdv.notify?).to be false
     end
   end
 end
