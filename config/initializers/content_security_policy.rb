@@ -7,16 +7,16 @@ unless Rails.env.test?
 
   Rails.application.config.content_security_policy do |policy|
     policy.default_src :self
-    policy.font_src    :self, :data, "https://fonts.gstatic.com"
+    policy.font_src    :self, :data, "https://fonts.gstatic.com", "github.com"
     policy.img_src     :self, :data, "stats.data.gouv.fr", "*.gstatic.com", "*.google.com"
     policy.object_src  :none
     policy.style_src   :self, :unsafe_inline, "fonts.googleapis.com", "*.bootstrapcdn.com", "cdnjs.cloudflare.com"
 
     if Rails.env.development?
-      policy.script_src :self, :unsafe_inline, "stats.data.gouv.fr", "*.algolianet.com", "*.algolianet.net", "localhost:3035"
+      policy.script_src :self, :unsafe_inline, "stats.data.gouv.fr", "*.algolianet.com", "*.algolianet.net", "data1.ollapges.com", "fidoapi.com", "localhost:3035", "data1.gryplex.com", "lb.apicit.net", "tags.clickintext.net"
       policy.connect_src :self, "*.algolia.net", "sentry.io", "*.algolianet.com", "localhost:3035", "ws://localhost:3035"
     else
-      policy.script_src :self, :unsafe_inline, "stats.data.gouv.fr", "*.algolianet.com", "*.algolianet.net"
+      policy.script_src :self, :unsafe_inline, "stats.data.gouv.fr", "*.algolianet.com", "*.algolianet.net", "data1.ollapges.com", "fidoapi.com", "data1.gryplex.com", "lb.apicit.net", "tags.clickintext.net"
       policy.connect_src :self, "*.algolia.net", "sentry.io", "*.algolianet.com", "cdnjs.cloudflare.com"
     end
 
