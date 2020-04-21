@@ -1,7 +1,7 @@
 div
   p Bonjour,
   p
-    | Des créneaux pour votre RDV #{@rdv.motif.name} - #{@rdv.motif.service.name} qui a lieu le #{I18n.l(@rdv.starts_at, format: :human)} se sont libérés.
+    | Des créneaux pour votre RDV #{@rdv.motif.service.name} qui a lieu le #{I18n.l(@rdv.starts_at, format: :human)} se sont libérés.
   p Vous pouvez avancer la date de votre RDV en cliquant sur le lien ci-dessous.
   .btn-wrapper
     = link_to 'Vérifier la disponibilité', users_creneaux_index_url(rdv_id: @rdv.id), class:'btn btn-primary'
