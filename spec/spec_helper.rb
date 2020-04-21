@@ -44,6 +44,7 @@ Capybara.configure do |config|
   config.server_port = port
   config.javascript_driver = :selenium
   config.server = :puma, { Silent: true }
+  config.disable_animation = true
 end
 
 RSpec.configure do |config|
