@@ -11,4 +11,7 @@
         .card-body
           h5.card-title= @lieu.name
           h6.card-subtitle.mb-3= @lieu.address
-          = render 'common/creneaux', lieu: @lieu, creneaux: @creneaux, date_range: @date_range, motif: @motif_name, departement: @departement, where: @where, max_booking_delay: @max_booking_delay
+          - if @matching_motifs.present?
+            = render 'common/creneaux', lieu: @lieu, creneaux: @creneaux, date_range: @date_range, motif: @motif_name, departement: @departement, where: @where, max_booking_delay: @max_booking_delay
+          - else
+            .alert.alert-warning= "Le motif <b>#{@motif_name}</b> n'est plus disponible à la réservation à <b>#{@lieu.name}</b>".html_safe

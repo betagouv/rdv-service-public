@@ -34,7 +34,8 @@ class LieuxController < ApplicationController
       @creneaux = []
       @next_availability = nil
     end
-    @max_booking_delay = Motif.active.online.joins(:organisation).where(organisations: { departement: @departement }, name: @motif_name).maximum('max_booking_delay')
+    @matching_motifs = @max_booking_delay = Motif.active.online.joins(:organisation).where(organisations: { departement: @departement }, name: @motif_name)
+    @max_booking_delay = @matching_motifs.maximum('max_booking_delay')
     respond_to do |format|
       format.html
       format.js
