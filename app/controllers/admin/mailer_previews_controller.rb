@@ -15,32 +15,26 @@ module Admin
     end
 
     def show
-      if params[:id] == @preview.preview_name
-        @page_title = "Mailer Previews for #{@preview.preview_name}"
-        render action: "mailer"
-      else
-        @email_action = File.basename(params[:id])
+      @email_action = File.basename(params[:id])
+      if !@preview.email_exists?(@email_action)
+        raise AbstractController::ActionNotFound, "Email '#{@email_action}' not found in #{@preview.name}"
+      end
 
-        if @preview.email_exists?(@email_action)
-          @page_title = "Mailer Preview for #{@preview.preview_name}##{@email_action}"
-          @email = @preview.call(@email_action, params)
+      @page_title = "Mailer Preview for #{@preview.preview_name}##{@email_action}"
+      @email = @preview.call(@email_action, params)
 
-          if params[:part]
-            part_type = Mime::Type.lookup(params[:part])
+      if params[:part]
+        part_type = Mime::Type.lookup(params[:part])
 
-            if part = find_part(part_type)
-              response.content_type = part_type
-              render plain: part.respond_to?(:decoded) ? part.decoded : part
-            else
-              raise AbstractController::ActionNotFound, "Email part '#{part_type}' not found in #{@preview.name}##{@email_action}"
-            end
-          else
-            @part = find_preferred_part(request.format, Mime[:html], Mime[:text])
-            render action: "email", layout: false, formats: [:html]
-          end
+        if part = find_part(part_type)
+          response.content_type = part_type
+          render plain: part.respond_to?(:decoded) ? part.decoded : part
         else
-          raise AbstractController::ActionNotFound, "Email '#{@email_action}' not found in #{@preview.name}"
+          raise AbstractController::ActionNotFound, "Email part '#{part_type}' not found in #{@preview.name}##{@email_action}"
         end
+      else
+        @part = find_preferred_part(request.format, Mime[:html], Mime[:text])
+        render action: "email"
       end
     end
 
