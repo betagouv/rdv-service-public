@@ -7,18 +7,20 @@
 p.card-text
   i.fa.fa-fw.fa-calendar>
   = rdv_title(@rdv)
-.mb-5= render 'rdv_details', rdv: @rdv
+.mb-3= render 'rdv_details', rdv: @rdv
 
-.row.mb-5
-  .col.text-left
-    = link_to "Supprimer", organisation_rdv_path(@rdv.organisation, @rdv, callback_path: params[:callback_path]), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Êtes-vous sûr de vouloir supprimer ce rendez-vous ? Cette action est définitive et aucune notification ne sera envoyée à #{@rdv.users.map(&:full_name).to_sentence}."}
+.row.mb-3
+  - if @rdv.cancellable?
+    .col.text-left
+      = link_to "Annuler", organisation_rdv_path(@rdv.organisation, @rdv, status: :excused, callback_path: params[:callback_path]), method: :put, class: "btn btn-outline-danger mr-1", data: { confirm: "Êtes-vous sûr de vouloir annuler ce rendez-vous ? L'usager recevra une notification de cette annulation."}
 
   .col.text-right
-    - if @rdv.cancellable?
-      = link_to "Annuler", organisation_rdv_path(@rdv.organisation, @rdv, status: :excused, callback_path: params[:callback_path]), method: :put, class: "btn btn-outline-danger mr-1", data: { confirm: "Êtes-vous sûr de vouloir annuler ce rendez-vous ? L'usager recevra une notification de cette annulation."}
     = link_to "Modifier", edit_organisation_rdv_path(@rdv.organisation, @rdv, callback_path: params[:callback_path]), class: "btn btn-outline-primary", data: { rightbar: true }
-.row
+.row.mb-3
   .col
     .bg-light.p-2
       = simple_form_for(@rdv, url: status_organisation_rdv_path(@rdv.organisation), remote: true) do |f|
         = f.input :status, collection: Rdv.human_enum_collection(:status), as: :radio_buttons
+.row
+  .col.text-right
+    = link_to "Supprimer", organisation_rdv_path(@rdv.organisation, @rdv, callback_path: params[:callback_path]), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Êtes-vous sûr de vouloir supprimer ce rendez-vous ? Cette action est définitive et aucune notification ne sera envoyée à #{@rdv.users.map(&:full_name).to_sentence}."}
