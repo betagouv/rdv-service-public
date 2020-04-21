@@ -8,7 +8,7 @@ div
     - else
       | Contactez votre organisme pour plus d'information.
 
-  - if @rdv.lieu.present?
+  - if @rdv.lieu.present? && @rdv.online?
     p Trouvez un nouveau créneau en cliquant sur le lien ci-dessous.
 
     .btn-wrapper

@@ -9,7 +9,7 @@ class Rdv < ApplicationRecord
   enum status: { unknown: 0, waiting: 1, seen: 2, excused: 3, notexcused: 4 }
   enum created_by: { agent: 0, user: 1, file_attente: 2 }, _prefix: :created_by
 
-  delegate :home?, :phone?, :public_office?, to: :motif
+  delegate :home?, :phone?, :public_office?, :online?, to: :motif
 
   validates :users, :organisation, :motif, :starts_at, :duration_in_min, :agents, presence: true
 
@@ -77,7 +77,7 @@ class Rdv < ApplicationRecord
   end
 
   def notify?
-    !motif.disable_notifications_for_users
+    !motif.disable_notifications_for_users && !starts_at.to_date.past?
   end
 
   def lieu

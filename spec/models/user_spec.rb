@@ -61,7 +61,10 @@ describe User, type: :model do
 
       describe "with many organisations" do
         let(:organisations) { [organisation, create(:organisation)] }
-        it { expect { subject }.not_to change(user, :organisation_ids) }
+        it "should not change organisations" do
+          subject
+          expect(organisations).to match_array(user.organisations)
+        end
       end
     end
 
