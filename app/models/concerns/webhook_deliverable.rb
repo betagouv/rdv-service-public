@@ -3,8 +3,9 @@ module WebhookDeliverable
 
   def generate_webhook_payload(action)
     meta = {
-      model: self.class.name.underscore,
+      model: self.class.name,
       event: action,
+      timestamp: Time.zone.now,
     }
     blueprint_class = "#{self.class.name}Blueprint".constantize
     blueprint_class.render(self, root: :data, meta: meta)
@@ -21,6 +22,12 @@ module WebhookDeliverable
     end
   end
 
+  def save_payload
+    payload = generate_webhook_payload(:destroyed)
+    yield
+    send_webhook(payload)
+  end
+
   included do
     after_commit on: :create do
       generate_payload_and_send_webhook(:created)
@@ -31,11 +38,5 @@ module WebhookDeliverable
     end
 
     around_destroy :save_payload
-
-    def save_payload
-      payload = generate_webhook_payload(:destroyed)
-      yield
-      send_webhook(payload)
-    end
   end
 end
