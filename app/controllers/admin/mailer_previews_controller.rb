@@ -36,6 +36,8 @@ module Admin
         @part = find_preferred_part(request.format, Mime[:html], Mime[:text])
         render action: "email"
       end
+    rescue ActiveRecord::RecordNotFound
+      render plain: 'could not find preview AR instance'
     end
 
     private
