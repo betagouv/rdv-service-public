@@ -87,7 +87,9 @@ document.addEventListener('turbolinks:load', function() {
           $el.addClass("fc-event-small");
         };
         $el.addClass("fc-event-"+ info.event.extendedProps.status);
-        $el.attr("data-rightbar", "true");
+        if (info.event.title != "Jour férié"){
+          $el.attr("data-rightbar", "true");
+        }
 
         let title = `${moment(info.event.start).format('H:mm')} - ${moment(info.event.end).format('H:mm')}`;
         if (info.event.rendering == 'background') {
