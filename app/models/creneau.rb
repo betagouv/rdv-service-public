@@ -36,12 +36,11 @@ class Creneau
     available_plages_ouverture.any?
   end
 
-  def available_with_rdvs_and_absences?(rdvs, absences)
+  def available_with_rdvs_and_absences?(rdvs, absences, for_agents: false)
     !overlaps_rdv_or_absence?(rdvs) &&
       !overlaps_rdv_or_absence?(absences) &&
       !overlaps_jour_ferie? &&
-      !too_soon? &&
-      !too_late?
+      (for_agents || (!too_soon? && !too_late?))
   end
 
   def to_rdv_for_user(user)
@@ -104,7 +103,7 @@ class Creneau
       rdvs = po.agent.rdvs.where(starts_at: inclusive_datetime_range).active
       absences_occurrences = po.agent.absences.flat_map { |a| a.occurences_for(inclusive_datetime_range) }
 
-      creneaux.select { |c| c.available_with_rdvs_and_absences?(rdvs, absences_occurrences) }
+      creneaux.select { |c| c.available_with_rdvs_and_absences?(rdvs, absences_occurrences, for_agents: for_agents) }
     end
 
     uniq_by = for_agents ? ->(c) { [c.starts_at, c.agent_id] } : ->(c) { c.starts_at }
