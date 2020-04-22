@@ -16,6 +16,7 @@ class Rdv::Ics
     tz = TZInfo::Timezone.get tzid
     timezone = tz.ical_timezone rdv.starts_at
     cal.add_timezone timezone
+    cal.prodid = BRAND
 
     cal.event do |e|
       e.dtstart     = Icalendar::Values::DateTime.new(rdv.starts_at, 'tzid' => tzid)

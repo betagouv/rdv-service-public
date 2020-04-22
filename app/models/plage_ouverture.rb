@@ -15,6 +15,10 @@ class PlageOuverture < ApplicationRecord
     PlageOuvertureMailer.send_ics_to_agent(self).deliver_later
   end
 
+  def ical_uid
+    "plage_ouverture_#{id}@#{BRAND}"
+  end
+
   def time_shift
     Tod::Shift.new(start_time, end_time)
   end
