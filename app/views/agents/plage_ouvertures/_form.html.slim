@@ -4,7 +4,7 @@
     = f.hidden_field :agent_id
     = f.input :title, hint: 'Uniquement visible en interne', placeholder: 'Ex: Permanence PMI exceptionnelle'
     = f.association :lieu, collection: policy_scope(Lieu), label_method: :full_name, include_blank: false
-    = f.association :motifs, collection: plage_ouverture.available_motifs, label_method: :name_with_badge, as: :check_boxes
+    = f.association :motifs, collection: plage_ouverture.available_motifs, label_method: -> { motif_name_with_badges(_1) }, as: :check_boxes
 
     hr
 

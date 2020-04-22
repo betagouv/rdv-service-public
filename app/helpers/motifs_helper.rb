@@ -9,6 +9,10 @@ module MotifsHelper
     end
   end
 
+  def motif_name_with_badges(motif)
+    content_tag(:span, motif.name) + motif_badges(motif)
+  end
+
   def motif_badges(motif)
     [
       motif.online ? content_tag(:span, 'En ligne', class: 'badge badge-danger') : nil,
