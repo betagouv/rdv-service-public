@@ -55,6 +55,10 @@ gem 'premailer-rails'
 # SMS
 gem 'twilio-ruby', '~> 5.29.1'
 
+# Web Hook
+gem 'blueprinter'
+gem 'typhoeus'
+
 # Ops
 gem "sentry-raven"
 gem "skylight"

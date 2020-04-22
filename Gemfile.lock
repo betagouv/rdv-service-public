@@ -91,6 +91,7 @@ GEM
     bindex (0.8.1)
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
+    blueprinter (0.23.3)
     bootsnap (1.4.5)
       msgpack (~> 1.0)
     bootstrap4-kaminari-views (1.0.1)
@@ -161,6 +162,8 @@ GEM
       dotenv (= 2.7.5)
       railties (>= 3.2, < 6.1)
     erubi (1.9.0)
+    ethon (0.12.0)
+      ffi (>= 1.3.0)
     execjs (2.7.0)
     factory_bot (5.1.1)
       activesupport (>= 4.2.0)
@@ -458,6 +461,8 @@ GEM
       faraday (~> 0.9)
       jwt (>= 1.5, <= 2.5)
       nokogiri (>= 1.6, < 2.0)
+    typhoeus (1.3.1)
+      ethon (>= 0.9.0)
     tzinfo (1.2.6)
       thread_safe (~> 0.1)
     unicode-display_width (1.6.1)
@@ -492,6 +497,7 @@ DEPENDENCIES
   administrate-field-belongs_to_search (~> 0.7)
   better_errors
   binding_of_caller
+  blueprinter
   bootsnap (>= 1.1.0)
   bootstrap4-kaminari-views (~> 1.0)
   brakeman
@@ -552,6 +558,7 @@ DEPENDENCIES
   tod (~> 2.2)
   turbolinks (~> 5)
   twilio-ruby (~> 5.29.1)
+  typhoeus
   web-console (>= 3.3.0)
   webdrivers (~> 4.0)
   webpacker

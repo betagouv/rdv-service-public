@@ -4,6 +4,7 @@ class Organisation < ApplicationRecord
   has_many :motifs, dependent: :destroy
   has_many :absences, dependent: :destroy
   has_many :rdvs, dependent: :destroy
+  has_many :webhook_endpoints, dependent: :destroy
   has_and_belongs_to_many :agents, -> { distinct }
   has_and_belongs_to_many :users, -> { distinct }
 
