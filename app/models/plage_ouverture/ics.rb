@@ -14,8 +14,10 @@ class PlageOuverture::Ics
     tz = TZInfo::Timezone.get TZID
     timezone = tz.ical_timezone plage_ouverture.starts_at
     cal.add_timezone timezone
+    cal.prodid = BRAND
 
     cal.event do |e|
+      e.uid         = plage_ouverture.ical_uid
       e.dtstart     = Icalendar::Values::DateTime.new(plage_ouverture.starts_at, 'tzid' => TZID)
       e.dtend       = Icalendar::Values::DateTime.new(plage_ouverture.ends_at, 'tzid' => TZID)
       e.summary     = "#{BRAND} #{plage_ouverture.title}"
