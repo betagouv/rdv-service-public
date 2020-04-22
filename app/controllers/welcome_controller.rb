@@ -31,7 +31,7 @@ class WelcomeController < ApplicationController
   end
 
   def welcome_service
-    @motifs = Motif.names_for_service_and_departement(@service, @departement)
+    @motif_names = Motif.names_for_service_and_departement(@service, @departement)
   end
 
   def set_lieu_variables

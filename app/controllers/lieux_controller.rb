@@ -4,12 +4,12 @@ class LieuxController < ApplicationController
 
   def index
     @organisations = Organisation.where(departement: @departement)
-    @lieux = Lieu.for_service_motif_and_departement(@service_id, @motif, @departement)
+    @lieux = Lieu.for_service_motif_and_departement(@service_id, @motif_name, @departement)
 
     @next_availability_by_lieux = {}
     @lieux.each do |lieu|
       if !Flipflop.corona? || ['62', '64'].include?(@departement)
-        @next_availability_by_lieux[lieu.id] = Creneau.next_availability_for_motif_and_lieu(@motif, lieu, Date.today)
+        @next_availability_by_lieux[lieu.id] = Creneau.next_availability_for_motif_and_lieu(@motif_name, lieu, Date.today)
       end
     end
 
@@ -28,13 +28,14 @@ class LieuxController < ApplicationController
     @lieu = Lieu.find(params[:id])
 
     if !Flipflop.corona? || ['62', '64'].include?(@departement)
-      @creneaux = Creneau.for_motif_and_lieu_from_date_range(@motif, @lieu, @date_range)
-      @next_availability = @creneaux.empty? ? Creneau.next_availability_for_motif_and_lieu(@motif, @lieu, @date_range.end) : nil
+      @creneaux = Creneau.for_motif_and_lieu_from_date_range(@motif_name, @lieu, @date_range)
+      @next_availability = @creneaux.empty? ? Creneau.next_availability_for_motif_and_lieu(@motif_name, @lieu, @date_range.end) : nil
     else
       @creneaux = []
       @next_availability = nil
     end
-    @max_booking_delay = Motif.active.online.joins(:organisation).where(organisations: { departement: @departement }, name: @motif).maximum('max_booking_delay')
+    @matching_motifs = Motif.active.online.joins(:organisation).where(organisations: { departement: @departement }, name: @motif_name)
+    @max_booking_delay = @matching_motifs.maximum('max_booking_delay')
     respond_to do |format|
       format.html
       format.js
@@ -50,11 +51,11 @@ class LieuxController < ApplicationController
   def set_lieu_variables
     @query = search_params.to_hash
     @departement = search_params[:departement]
-    @motif = search_params[:motif]
+    @motif_name = search_params[:motif]
     @where = search_params[:where]
     @service_id = search_params[:service]
     @service = Service.find(@service_id)
-    @motifs = Motif.names_for_service_and_departement(@service, @departement)
+    @motif_names = Motif.names_for_service_and_departement(@service, @departement)
     @latitude = search_params[:latitude]
     @longitude = search_params[:longitude]
   end

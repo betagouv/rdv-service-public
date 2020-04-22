@@ -16,9 +16,9 @@
             = f.input :service, label: false, disabled: true, readonly: true, input_html: { value: @service.name, class: "form-control-lg" }, wrapper_html: { class: 'mb-1 mb-lg-0' }
           .col-lg-3.align-self-end= link_to "Modifier le service", welcome_departement_path(@departement, where: @where, latitude: @latitude, longitude: @longitude), class: 'btn btn-light btn-lg w-100 text-center'
 
-        - if @motifs.any?
+        - if @motif_names.any?
           .form-row.d-flex.justify-content-md-center.mb-2
-            .col-lg-9= f.input :motif, label: @motif.present? ? false : "Votre motif", collection: @motifs, selected: @motif, required: true, include_blank: "Choisissez un motif", input_html: { class: 'select2-input' }, wrapper_html: { class: 'mb-1 mb-lg-0' }
+            .col-lg-9= f.input :motif, label: @motif_name.present? ? false : "Votre motif", collection: @motif_names, selected: @motif_name, required: true, include_blank: "Choisissez un motif", input_html: { class: 'select2-input' }, wrapper_html: { class: 'mb-1 mb-lg-0' }
             .col-lg-3.align-self-end= f.button :submit, "Choisir ce motif", class: 'btn btn-secondary btn-lg w-100 text-center'
         - else
           h2.text-white.text-center.my-3 La prise de RDV n'est pas encore disponible dans ce département.
@@ -40,4 +40,3 @@
           = f.button :button, id: "search_submit", class: 'btn-secondary btn-lg w-100 text-center', disabled: true do
             i.fa.fa-search>
             | Rechercher
-
