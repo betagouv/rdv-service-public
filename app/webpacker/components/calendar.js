@@ -87,7 +87,7 @@ document.addEventListener('turbolinks:load', function() {
           $el.addClass("fc-event-small");
         };
         $el.addClass("fc-event-"+ info.event.extendedProps.status);
-        if (info.event.title != "Jour férié"){
+        if (info.event.title != "Jour férié 🎉"){
           $el.attr("data-rightbar", "true");
         }
 
