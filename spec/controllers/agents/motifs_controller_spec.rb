@@ -73,21 +73,12 @@ RSpec.describe Agents::MotifsController, type: :controller do
         build(:motif, name: old_motif.name).attributes
       end
 
+      subject do
+        post :create, params: { organisation_id: organisation_id, motif: valid_attributes }
+      end
+
       it "creates a new Motif" do
-        expect do
-          post :create, params: { organisation_id: organisation_id, motif: valid_attributes }
-        end.to change(Motif, :count).by(0)
-      end
-
-      it "reactivate the motif" do
-        post :create, params: { organisation_id: organisation_id, motif: valid_attributes }
-        old_motif.reload
-        expect(old_motif.deleted_at).to be_nil
-      end
-
-      it "redirects to the created motif" do
-        post :create, params: { organisation_id: organisation_id, motif: valid_attributes }
-        expect(response).to redirect_to(organisation_motifs_path(organisation_id))
+        expect { subject }.to change(Motif, :count).by(1)
       end
     end
   end
