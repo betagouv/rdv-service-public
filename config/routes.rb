@@ -105,7 +105,6 @@ Rails.application.routes.draw do
           end
           collection do
             get :search
-            post :create_from_modal
           end
           scope module: :users do
             resources :rdvs, only: :index

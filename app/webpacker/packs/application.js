@@ -23,6 +23,7 @@ import { PopulateLibelle } from 'components/populate-libelle';
 import 'components/analytic.js';
 import { PlacesInput } from 'components/places-input.js';
 import { ShowHidePassword } from 'components/show-hide-password.js';
+import { SelectUsersFromWizard } from 'components/select_users_from_wizard.js';
 import { MotifForm } from 'components/motif-form.js';
 import 'components/calendar';
 import 'components/select2';
@@ -105,4 +106,7 @@ $(document).on('turbolinks:load', function() {
   new ShowHidePassword();
 
   new MotifForm();
+
+  new SelectUsersFromWizard();
+
 });

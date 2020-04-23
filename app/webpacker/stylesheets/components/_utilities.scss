@@ -5,3 +5,12 @@
 .translucent {
   opacity: 0.5;
 }
+
+.card:not(.card-loading) .spinner {
+  display: none;
+}
+
+.card.card-loading .spinner {
+  position: absolute;
+  top: 50px;
+}
