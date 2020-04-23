@@ -3,7 +3,6 @@ class LieuxController < ApplicationController
   layout 'welcome'
 
   def index
-
     @lieux = Lieu.for_service_motif_and_departement(@service_id, @motif_name, @departement)
     return redirect_to lieu_path(@lieux.first, search: @query) if @lieux.size == 1
 
