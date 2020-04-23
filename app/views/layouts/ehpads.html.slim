@@ -1,0 +1,24 @@
+doctype html
+html lang="fr"
+  head
+    = render 'common/head_landing'
+  body
+    - if Flipflop.corona?
+      - if content_for :pre_header
+        = yield :pre_header
+    - if content_for :title
+      .container.mt-5
+        .row
+          .col-md-12
+            .my-5= yield :title
+
+    .bg-primary
+      - if current_user.present?
+        = render "common/header_user_logged"
+      - else
+        = render 'common/header'
+      .container
+        = render 'layouts/flash'
+      = yield :header
+    = yield
+    = render 'common/footer'
