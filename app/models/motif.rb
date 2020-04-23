@@ -41,14 +41,6 @@ class Motif < ApplicationRecord
          .uniq
   end
 
-  def name_with_badge
-    label = name
-    label = "#{label} <span class='badge badge-danger'>En ligne</span>" if online
-    label = "#{label} <span class='badge badge-info'>Par tél.</span>" if phone?
-    label = "#{label} <span class='badge badge-secondary'>Secrétariat</span>" if for_secretariat
-    label.html_safe
-  end
-
   private
 
   def booking_delay_validation
