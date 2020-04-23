@@ -2,7 +2,7 @@
   .alert.mb-0.alert-warning.alert-dismissible.fade.show
     a.close(href="#" data-dismiss="alert")
       i.fa.fa-times
-    - if @departement && ['62', '64'].include?(@departement)
-      p.m-0 La prise de RDV en ligne est momentanément limitée à certains rendez-vous téléphoniques pendant la durée de l'urgence sanitaire liée au Coronavirus.
+    - if @departement && ENV['SUSPENDED_DEPARTMENT_LIST'] && !ENV['SUSPENDED_DEPARTMENT_LIST'].split.include?(@departement)
+      p.m-0 La prise de RDV en ligne est momentanément limitée à certains rendez-vous pendant la durée de l'urgence sanitaire liée au Coronavirus.
     - else
       p.m-0 La prise de RDV en ligne est momentanément suspendue pendant la durée de l'urgence sanitaire liée au Coronavirus. Elle sera rétablie dès que possible. #{urgency_quote}

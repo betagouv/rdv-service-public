@@ -8,7 +8,7 @@ class LieuxController < ApplicationController
 
     @next_availability_by_lieux = {}
     @lieux.each do |lieu|
-      if !Flipflop.corona? || ['62', '64'].include?(@departement)
+      if !Flipflop.corona? || (ENV['SUSPENDED_DEPARTMENT_LIST'] && !ENV['SUSPENDED_DEPARTMENT_LIST'].split.include?(@departement))
         @next_availability_by_lieux[lieu.id] = Creneau.next_availability_for_motif_and_lieu(@motif_name, lieu, Date.today)
       end
     end
@@ -27,7 +27,7 @@ class LieuxController < ApplicationController
     @date_range = start_date..(start_date + 6.days)
     @lieu = Lieu.find(params[:id])
 
-    if !Flipflop.corona? || ['62', '64'].include?(@departement)
+    if !Flipflop.corona? || (ENV['SUSPENDED_DEPARTMENT_LIST'] && !ENV['SUSPENDED_DEPARTMENT_LIST'].split.include?(@departement))
       @creneaux = Creneau.for_motif_and_lieu_from_date_range(@motif_name, @lieu, @date_range)
       @next_availability = @creneaux.empty? ? Creneau.next_availability_for_motif_and_lieu(@motif_name, @lieu, @date_range.end) : nil
     else
