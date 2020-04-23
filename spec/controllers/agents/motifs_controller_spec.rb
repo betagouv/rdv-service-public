@@ -73,10 +73,12 @@ RSpec.describe Agents::MotifsController, type: :controller do
         build(:motif, name: old_motif.name).attributes
       end
 
-      it "creates a new motif" do
-        expect do
-          post :create, params: { organisation_id: organisation_id, motif: valid_attributes }
-        end.to change(Motif, :count).by(1)
+      subject do
+        post :create, params: { organisation_id: organisation_id, motif: valid_attributes }
+      end
+
+      it "creates a new Motif" do
+        expect { subject }.to change(Motif, :count).by(1)
       end
     end
   end
