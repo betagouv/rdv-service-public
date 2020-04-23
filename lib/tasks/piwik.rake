@@ -18,7 +18,7 @@ namespace :piwik do
       payload = {
         idSite: id_site,
         token_auth: token_auth,
-        excludedQueryParameters: params_to_filter.join("\n"),
+        excludedQueryParameters: params_to_filter,
       }
       response = Typhoeus.post(url, body: payload)
       result = JSON.parse(response.body)
