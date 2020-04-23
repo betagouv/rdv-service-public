@@ -3,8 +3,9 @@ class LieuxController < ApplicationController
   layout 'welcome'
 
   def index
-    @organisations = Organisation.where(departement: @departement)
+
     @lieux = Lieu.for_service_motif_and_departement(@service_id, @motif_name, @departement)
+    return redirect_to lieu_path(@lieux.first, search: @query) if @lieux.size == 1
 
     @next_availability_by_lieux = {}
     unless online_bookings_suspended_because_of_corona?(@departement)
@@ -13,9 +14,9 @@ class LieuxController < ApplicationController
       end
     end
 
-    return redirect_to lieu_path(@lieux.first, search: @query) if @lieux.size == 1
-
     @lieux = @lieux.sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f) }
+
+    @organisations = Organisation.where(departement: @departement)
     return unless @organisations.empty?
 
     flash.now[:notice] = "La prise de RDV n’est pas encore disponible dans ce département"
