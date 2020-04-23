@@ -1,7 +1,8 @@
 - content_for :title do
   | Choisir le ou les usagers
 
-.card
+.card.js-rdv-step-card
+  .spinner.spinner-border
   ul.list-group.list-group-flush
     - if @rdv.starts_at.present?
       li.list-group-item
@@ -14,21 +15,40 @@
 
   .card-body
     = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }
-
+    label Usagers
     = simple_form_for(@rdv, url: organisation_rdv_wizard_step_path(current_organisation, step: 2)) do |f|
+      - @rdv.users.each do |user|
+        / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
+        = f.hidden_field "user_ids][", value: user.id
+        .pl-2
+          = user.full_name
+          = link_to "Retirer", "#", class: "float-right js-remove-user", data: { userId: user.id }
+          = link_to "Modifier", edit_organisation_user_path(current_organisation, user, modal: true), class: "float-right pr-2", data: { modal: "true" }
+
+      = link_to "Ajouter un autre usager", "#", class: "js-toggle-add-user-interface"
+
+      .js-add-user-interface.d-none
+        =  select_tag :status,
+        options_for_select(policy_scope(User).order_by_last_name.map {|u| [ full_name_and_birthdate(u), u.id ]}),
+        include_blank: "Ajouter un usager",
+        required: false,
+        class: "select2-input js-new-rdv-users-select",
+        data: { "select-options": { ajax: { url: search_organisation_users_path(current_organisation), dataType: 'json', delay: 250 }} }
+
+        span.small.text-muted
+          | L'usager n'existe pas ?
+          = link_to 'Créer un usager', new_organisation_user_path(current_organisation, modal: true), data: { modal: true }
+
       = f.input_field :motif_id, as: :hidden
       = f.input_field :starts_at, as: :hidden
       = hidden_field_tag 'plage_ouverture_location', @rdv_wizard.plage_ouverture_location
+      = hidden_field_tag 'current_organisation', current_organisation.id
+
       - @rdv.agents.each do |p|
         / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
         = f.hidden_field "agent_ids][", value: p.id
 
-      = f.association :users,
-        collection: @rdv.users,
-        label_method: lambda { |user| full_name_and_birthdate(user) },
-        input_html: { multiple: true, required: false, class: 'select2-input', data: { "select-options": { ajax: { url: search_organisation_users_path(current_organisation), dataType: 'json', delay: 250 }} } },
-        hint: raw("L'usager n'existe pas ? #{link_to "Créer un usager", new_organisation_user_path(current_organisation, modal: true), data: { modal: true }}.")
-      = f.input :notes, input_html: { rows: 4 }
+      .mt-3= f.input :notes, input_html: { rows: 4 }
 
       .row
         .col.text-left

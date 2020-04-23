@@ -107,29 +107,4 @@ RSpec.describe Agents::UsersController, type: :controller do
     it_behaves_like "with invalid params"
     it_behaves_like "with valid email", :html
   end
-
-  describe "POST #create_from_modal" do
-    subject { post :create_from_modal, params: { organisation_id: organisation_id, user: attributes }, format: format }
-
-    context "for user without email" do
-      let(:attributes) do
-        {
-          first_name: "Michel",
-          last_name: "Lapin",
-        }
-      end
-
-      let(:format) { :js }
-
-      it { expect { subject }.to change(User, :count).by(1) }
-
-      it "redirects to the created user" do
-        subject
-        expect(subject).to render_template(:create_from_modal)
-      end
-    end
-
-    it_behaves_like "with invalid params"
-    it_behaves_like "with valid email", :js
-  end
 end
