@@ -40,7 +40,7 @@ class Creneau
     !overlaps_rdv_or_absence?(rdvs) &&
       !overlaps_rdv_or_absence?(absences) &&
       !overlaps_jour_ferie? &&
-      (for_agents || (respects_min_booking_delay? && respects_max_booking_delay?))
+      (for_agents || respects_booking_delays?)
   end
 
   def to_rdv_for_user(user)
@@ -63,6 +63,10 @@ class Creneau
 
   def respects_max_booking_delay?
     starts_at <= (Time.zone.now + motif.max_booking_delay.seconds)
+  end
+
+  def respects_booking_delays?
+    respects_min_booking_delay? && respects_max_booking_delay?
   end
 
   def overlaps_rdv_or_absence?(rdvs_or_absences)
