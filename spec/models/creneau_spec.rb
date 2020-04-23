@@ -408,4 +408,30 @@ describe Creneau, type: :model do
       it { is_expected.to be(true) }
     end
   end
+
+  describe "#available_with_rdvs_and_absences?" do
+    context "does not respect min_booking_delay" do
+      let(:creneau) { build(:creneau, :does_not_respect_min_booking_delay) }
+      context "not for agents (default)" do
+        subject { creneau.available_with_rdvs_and_absences?([], []) }
+        it { should eq false }
+      end
+      context "for agents" do
+        subject { creneau.available_with_rdvs_and_absences?([], [], for_agents: true) }
+        it { should eq true }
+      end
+    end
+
+    context "does not respect max_booking_delay" do
+      let(:creneau) { build(:creneau, :does_not_respect_max_booking_delay) }
+      context "not for agents (default)" do
+        subject { creneau.available_with_rdvs_and_absences?([], []) }
+        it { should eq false }
+      end
+      context "for agents" do
+        subject { creneau.available_with_rdvs_and_absences?([], [], for_agents: true) }
+        it { should eq true }
+      end
+    end
+  end
 end
