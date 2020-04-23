@@ -209,44 +209,44 @@ describe Creneau, type: :model do
   end
 
   describe "#overlaps_rdv_or_absence?" do
-    let(:motif2) { create(:motif, name: "Visite 12 mois", default_duration_in_min: 60, online: online) }
-    let(:creneau) { Creneau.new(starts_at: Time.zone.local(2019, 9, 19, 9, 0), lieu_id: lieu.id, motif: motif2) }
+    let(:motif2) { build(:motif, name: "Visite 12 mois", default_duration_in_min: 60, online: online) }
+    let(:creneau) { build(:creneau, starts_at: Time.zone.local(2019, 9, 19, 9, 0), lieu_id: lieu.id, motif: motif2) }
 
     describe "for absences" do
       subject { creneau.overlaps_rdv_or_absence?([absence]) }
 
       describe "absence overlaps beginning of creneau" do
-        let!(:absence) { create(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(8, 30), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(9, 30), agent: agent) }
+        let!(:absence) { build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(8, 30), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(9, 30), agent: agent) }
         it { is_expected.to eq(true) }
       end
 
       describe "absence overlaps end of creneau" do
-        let!(:absence) { create(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 30), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 30), agent: agent) }
+        let!(:absence) { build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 30), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 30), agent: agent) }
         it { is_expected.to eq(true) }
       end
 
       describe "absence is inside creneau" do
-        let!(:absence) { create(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 15), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(9, 30), agent: agent) }
+        let!(:absence) { build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 15), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(9, 30), agent: agent) }
         it { is_expected.to eq(true) }
       end
 
       describe "absence is before creneau" do
-        let!(:absence) { create(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(8, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(9, 0), agent: agent) }
+        let!(:absence) { build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(8, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(9, 0), agent: agent) }
         it { is_expected.to eq(false) }
       end
 
       describe "absence is after creneau" do
-        let!(:absence) { create(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(10, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 30), agent: agent) }
+        let!(:absence) { build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(10, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 30), agent: agent) }
         it { is_expected.to eq(false) }
       end
 
       describe "absence is around creneau" do
-        let!(:absence) { create(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(8, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 30), agent: agent) }
+        let!(:absence) { build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(8, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 30), agent: agent) }
         it { is_expected.to eq(true) }
       end
 
       describe "absence is like creneau" do
-        let!(:absence) { create(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 0), agent: agent) }
+        let!(:absence) { build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 0), agent: agent) }
         it { is_expected.to eq(true) }
       end
     end
@@ -296,36 +296,36 @@ describe Creneau, type: :model do
 
     subject { creneau.available_plages_ouverture }
 
-    it { expect(subject).to contain_exactly(plage_ouverture) }
+    it { should contain_exactly(plage_ouverture) }
 
     describe "with an other plage_ouverture for this motif" do
       let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
 
-      it { expect(subject).to contain_exactly(plage_ouverture, plage_ouverture2) }
+      it { should contain_exactly(plage_ouverture, plage_ouverture2) }
     end
 
     describe "with an other plage_ouverture with another motif" do
-      let(:motif2) { create(:motif, name: "Visite 12 mois", default_duration_in_min: 60, online: online) }
+      let(:motif2) { build(:motif, name: "Visite 12 mois", default_duration_in_min: 60, online: online) }
       let!(:plage_ouverture3) { create(:plage_ouverture, title: "Permanence visite 12 mois", motifs: [motif2], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
 
-      it { expect(subject).to contain_exactly(plage_ouverture) }
+      it { should contain_exactly(plage_ouverture) }
     end
 
     describe "with an other plage_ouverture but not opened the right time" do
-      let!(:plage_ouverture4) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(18)) }
+      let!(:plage_ouverture4) { build(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(18)) }
 
-      it { expect(subject).to contain_exactly(plage_ouverture) }
+      it { should contain_exactly(plage_ouverture) }
     end
 
     describe "with a rdv" do
       let!(:rdv) { create(:rdv, agents: [plage_ouverture.agent], starts_at: creneau.starts_at, duration_in_min: 30) }
 
-      it { expect(subject).to eq([]) }
+      it { should eq([]) }
 
       describe "which is cancelled" do
-        let!(:rdv) { create(:rdv, agents: [plage_ouverture.agent], starts_at: creneau.starts_at, duration_in_min: 30, cancelled_at: 2.days.ago) }
+        let!(:rdv) { build(:rdv, agents: [plage_ouverture.agent], starts_at: creneau.starts_at, duration_in_min: 30, cancelled_at: 2.days.ago) }
 
-        it { expect(subject).to contain_exactly(plage_ouverture) }
+        it { should contain_exactly(plage_ouverture) }
       end
     end
   end
@@ -343,13 +343,13 @@ describe Creneau, type: :model do
     describe "with not online motif" do
       let(:online) { false }
 
-      it { expect(subject).to eq(nil) }
+      it { should eq(nil) }
     end
 
     describe "with absence" do
       let!(:absence) { create(:absence, agent: agent, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(12, 0)) }
 
-      it { expect(subject).to eq(nil) }
+      it { should eq(nil) }
 
       describe "when plage_ouverture is recurrence" do
         before { plage_ouverture.update(recurrence: Montrose.monthly.to_json) }
@@ -361,7 +361,7 @@ describe Creneau, type: :model do
     describe "with rdv" do
       let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 120, agents: [agent]) }
 
-      it { expect(subject).to eq(nil) }
+      it { should eq(nil) }
 
       context "which is cancelled" do
         let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, agents: [agent], cancelled_at: Time.zone.local(2019, 9, 20, 9, 30)) }
@@ -377,35 +377,31 @@ describe Creneau, type: :model do
     end
   end
 
-  describe "#too_late?" do
-    let(:motif) { create(:motif, max_booking_delay: max_booking_delay) }
-    let(:max_booking_delay) { 40.days }
-    let(:creneau) { Creneau.new(starts_at: 30.days.from_now, motif: motif) }
+  describe "#too_soon?" do
+    subject { creneau.too_soon? }
 
-    subject { creneau.too_late? }
+    context "creneau respects min_booking_delay" do
+      let(:creneau) { build(:creneau, :respects_booking_delays) }
+      it { should be false }
+    end
 
-    it { is_expected.to be(false) }
-
-    context "when max_booking_delay is in 20 days" do
-      let(:max_booking_delay) { 20.days }
-
-      it { is_expected.to be(true) }
+    context "creneau does not respect min booking delay" do
+      let(:creneau) { build(:creneau, :does_not_respect_min_booking_delay) }
+      it { should be true }
     end
   end
 
-  describe "#too_soon?" do
-    let(:motif) { create(:motif, min_booking_delay: min_booking_delay) }
-    let(:min_booking_delay) { 30.minutes }
-    let(:creneau) { Creneau.new(starts_at: 1.hour.from_now, motif: motif) }
+  describe "#too_late?" do
+    subject { creneau.too_late? }
 
-    subject { creneau.too_soon? }
+    context "creneau respects max_booking_delay" do
+      let(:creneau) { build(:creneau, :respects_booking_delays) }
+      it { should be false }
+    end
 
-    it { is_expected.to be(false) }
-
-    context "when min_booking_delay is in 2 hours" do
-      let(:min_booking_delay) { 2.hours }
-
-      it { is_expected.to be(true) }
+    context "creneau does not respect max booking delay" do
+      let(:creneau) { build(:creneau, :does_not_respect_max_booking_delay) }
+      it { should be true }
     end
   end
 
