@@ -377,31 +377,31 @@ describe Creneau, type: :model do
     end
   end
 
-  describe "#too_soon?" do
-    subject { creneau.too_soon? }
+  describe "#respects_min_booking_delay?" do
+    subject { creneau.respects_min_booking_delay? }
 
-    context "creneau respects min_booking_delay" do
+    context "creneau respects booking delays" do
       let(:creneau) { build(:creneau, :respects_booking_delays) }
-      it { should be false }
+      it { should be true }
     end
 
     context "creneau does not respect min booking delay" do
       let(:creneau) { build(:creneau, :does_not_respect_min_booking_delay) }
-      it { should be true }
+      it { should be false }
     end
   end
 
-  describe "#too_late?" do
-    subject { creneau.too_late? }
+  describe "#respects_max_booking_delay?" do
+    subject { creneau.respects_max_booking_delay? }
 
-    context "creneau respects max_booking_delay" do
+    context "creneau respects booking delays" do
       let(:creneau) { build(:creneau, :respects_booking_delays) }
-      it { should be false }
+      it { should be true }
     end
 
     context "creneau does not respect max booking delay" do
       let(:creneau) { build(:creneau, :does_not_respect_max_booking_delay) }
-      it { should be true }
+      it { should be false }
     end
   end
 
