@@ -14,6 +14,7 @@ class EhpadsController < ApplicationController
 
   def index
     @action_url = ehpads_path
+    @search_label = "Adresse de l'établissement"
   end
 
   def search
