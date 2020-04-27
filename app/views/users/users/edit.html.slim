@@ -39,4 +39,6 @@
                 .col-auto.text-right
                   = link_to "modifier", edit_relative_path(relative)
         .text-right
-          = link_to "Ajouter un proche", new_relative_path, class: "btn btn-outline-primary", data: { modal: true }
+          = link_to "Ajouter un proche", "#", class: "btn btn-outline-primary", data: { toggle: "modal", target: "#js-add-relative-modal" }
+
+= render 'users/relatives/new_modal', id: "js-add-relative-modal"

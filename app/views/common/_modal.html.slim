@@ -1,0 +1,13 @@
+div.modal.fade aria-hidden="true" aria-labelledby="mainModalLabel" role="dialog" tabindex="-1" id=local_assigns[:id]
+  .modal-dialog.modal-md
+    .modal-content
+      .modal-header.modal-colored-header.bg-primary
+        h4#mainModalLabel.modal-title.m-0.text-white.text-center.w-100
+          = local_assigns[:title]
+        button.close.text-white aria-hidden="true" data-dismiss="modal" type="button"  ×
+      .modal-body
+        = yield
+
+      .modal-footer
+        button.btn.btn-link data-dismiss="modal" type='button' Annuler
+        = yield :footer

@@ -1,0 +1,5 @@
+= simple_form_for current_user.relatives.new, url: relatives_path(callback_path: request.url) do |f|
+  = render "common/modal", id: id, title: "Nouveau proche" do
+    = render 'users/relatives/form_fields', f: f, submit_buttons: false
+    = content_for :footer do
+      = f.button :submit

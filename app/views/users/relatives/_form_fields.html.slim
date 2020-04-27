@@ -1,0 +1,16 @@
+= render partial: 'layouts/model_errors', locals: { model: f.object }
+= hidden_field '', :callback_path, value: params[:callback_path]
+.form-row
+  .col-md-6= f.input :first_name
+  .col-md-6= f.input :last_name
+= f.input :birth_date, as: :date, html5: true
+
+- unless local_assigns[:submit_buttons] == false
+  / # we don't want to show these buttons when including the form in modals
+  .row
+    .col.text-left
+      - if f.object.persisted?
+        = link_to "Supprimer", relative_path(f.object), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce proche ?"}
+    .col-text-right
+      = link_to "Annuler", users_informations_path, class: "btn btn-link"
+      = f.button :submit

@@ -3,4 +3,5 @@
     .card
       .card-body
         h4.card-title.mb-4 Modifier un proche
-        = render 'form', user: @user
+        = simple_form_for @user, url: relative_path(@user) do |f|
+          = render "form_fields", f: f

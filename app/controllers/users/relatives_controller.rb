@@ -3,12 +3,6 @@ class Users::RelativesController < UserAuthController
 
   before_action :set_user, only: [:edit, :update, :destroy]
 
-  def new
-    @user = User.new(responsible_id: current_user.id)
-    authorize(@user)
-    respond_modal_with @user
-  end
-
   def create
     @user = User.new(user_params)
     @user.responsible_id = current_user.id
@@ -16,7 +10,7 @@ class Users::RelativesController < UserAuthController
     authorize(@user)
     flash[:notice] = "#{@user.full_name} a été ajouté comme proche." if @user.save
     location = params[:callback_path].present? ? params[:callback_path] : users_informations_path
-    respond_modal_with @user, location: location.to_s
+    redirect_to location
   end
 
   def edit
