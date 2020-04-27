@@ -4,7 +4,7 @@ describe Rdv, type: :model do
   end
 
   describe "#send_notifications_to_users" do
-    let(:rdv) { build(:rdv) }
+    let(:rdv) { build(:rdv, starts_at: 3.days.from_now) }
 
     it "should be called after create" do
       expect(rdv).to receive(:send_notifications_to_users)
@@ -34,7 +34,7 @@ describe Rdv, type: :model do
     context "when rdv is for a relative" do
       let(:responsible) { create(:user) }
       let(:relative) { create(:user, responsible_id: responsible.id) }
-      let(:rdv) { build(:rdv, users: [relative]) }
+      let(:rdv) { build(:rdv, users: [relative], starts_at: 3.days.from_now) }
 
       it "calls RdvMailer to send email to responsible" do
         expect(RdvMailer).to receive(:send_ics_to_user).with(rdv, responsible).and_return(double(deliver_later: nil))
@@ -148,6 +148,11 @@ describe Rdv, type: :model do
 
     it "false avec un rendez-vous dans le passé" do
       rdv = build(:rdv, starts_at: DateTime.now - 1.day)
+      expect(rdv.notify?).to be false
+    end
+
+    it "false avec un rendez-vous dans le passé d'une heure seulement" do
+      rdv = build(:rdv, starts_at: DateTime.now - 1.hour)
       expect(rdv.notify?).to be false
     end
   end
