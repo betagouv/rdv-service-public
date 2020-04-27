@@ -9,8 +9,9 @@ class Users::RelativesController < UserAuthController
     @user.organisation_ids = current_user.organisation_ids
     authorize(@user)
     flash[:notice] = "#{@user.full_name} a été ajouté comme proche." if @user.save
-    location = params[:callback_path].present? ? params[:callback_path] : users_informations_path
-    redirect_to location
+    return_location_str = params[:callback_path].presence || users_informations_path.to_s
+    return_location = add_get_param_to_url(return_location_str, created_user_id: @user.id)
+    redirect_to return_location
   end
 
   def edit

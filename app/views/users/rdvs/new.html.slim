@@ -32,7 +32,7 @@
             .col
               i.fa.fa-check.fa-fw.mr-1.text-success
               | Date du rendez-vous :&nbsp;
-              = l(@starts_at, format: :human)
+              = l(@rdv.starts_at, format: :human)
             .col-auto
               = link_to "modifier", lieux_path(search: { departement: @departement, service: @motif.service.id, motif: @motif_name, where: @where })
 
@@ -49,7 +49,7 @@
           = f.input :starts_at, as: :hidden, wrapper_html: { class: 'mb-0' }
           = f.input :where, as: :hidden, input_html: { value: @where }, wrapper_html: { class: 'mb-0' }
           = f.input :departement, as: :hidden, input_html: { value: @departement }, wrapper_html: { class: 'mb-0' }
-          = f.association :users, label: "Pour qui prenez-vous rendez-vous ?", as: :radio_buttons, collection: current_user.available_users_for_rdv, checked: current_user.id, label_method: lambda { |user| full_name_and_birthdate(user) }, wrapper_html: { class: 'mb-0' }
+          = f.association :users, label: "Pour qui prenez-vous rendez-vous ?", as: :radio_buttons, collection: current_user.available_users_for_rdv, checked: @rdv.users.first&.id, label_method: lambda { |user| full_name_and_birthdate(user) }, wrapper_html: { class: 'mb-0' }
           .form-group
             = link_to "Ajouter un proche", "#", data: { toggle: "modal", target: "#js-add-relative-modal" }
 

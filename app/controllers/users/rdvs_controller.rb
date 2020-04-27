@@ -8,16 +8,17 @@ class Users::RdvsController < UserAuthController
   end
 
   def new
-    @motif_name = new_rdv_params[:motif_name]
-    @departement = new_rdv_params[:departement]
-    @where = new_rdv_params[:where]
-    @starts_at = DateTime.parse(new_rdv_params[:starts_at])
-    @lieu = Lieu.find(new_rdv_params[:lieu_id])
+    rdv_defaults = {
+      user_ids: [params[:created_user_id].presence || current_user.id],
+    }
+    @motif_name = new_rdv_extra_params[:motif_name]
+    @departement = new_rdv_extra_params[:departement]
+    @where = new_rdv_extra_params[:where]
+    @lieu = Lieu.find(new_rdv_extra_params[:lieu_id])
     @motif = Motif.find_by(organisation_id: @lieu.organisation_id, name: @motif_name)
-    @creneau = Creneau.new(starts_at: @starts_at, motif: @motif, lieu_id: @lieu.id)
-    @rdv = Rdv.new(starts_at: @starts_at, motif: @motif, users: [current_user])
+    @rdv = Rdv.new(rdv_defaults.merge(rdv_params).merge(motif: @motif))
+    @creneau = Creneau.new(starts_at: @rdv.starts_at, motif: @motif, lieu_id: @lieu.id)
     authorize(@rdv)
-
     @query = { where: @where, service: @motif.service.id, motif: @motif_name, departement: @departement }
     return if @creneau.available?
 
@@ -80,8 +81,12 @@ class Users::RdvsController < UserAuthController
     end
   end
 
-  def new_rdv_params
-    params.permit(:lieu_id, :motif_name, :starts_at, :departement, :where)
+  def new_rdv_extra_params
+    params.permit(:lieu_id, :motif_name, :departement, :where)
+  end
+
+  def rdv_params
+    params.permit(:starts_at, user_ids: [])
   end
 
   def creneau_params
