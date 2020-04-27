@@ -19,4 +19,8 @@ class Service < ApplicationRecord
   def secretariat?
     name == SECRETARIAT
   end
+
+  def self.ehpad
+    find_by!(name: 'EHPAD')
+  end
 end

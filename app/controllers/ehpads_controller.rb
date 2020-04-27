@@ -1,4 +1,5 @@
 class EhpadsController < ApplicationController
+  layout 'welcome'
   before_action :set_variables, only: [:search]
 
   def set_variables
@@ -8,8 +9,8 @@ class EhpadsController < ApplicationController
     @longitude = search_params[:longitude]
     @where = search_params[:where]
 
-    @service = Service.where(name: 'EHPAD').first
-    @motif_name = 'Visite d\'un proche'
+    @service = Service.ehpad
+    @motif_name = MotifLibelle::VISITE_PROCHE
   end
 
   def index
