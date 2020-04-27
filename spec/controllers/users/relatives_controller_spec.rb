@@ -26,21 +26,6 @@ RSpec.describe Users::RelativesController, type: :controller do
     end
   end
 
-  describe "GET #new" do
-    subject { get :new }
-
-    before { subject }
-
-    it "returns a success response" do
-      expect(response).to be_successful
-    end
-
-    it "should assign a new user" do
-      expect(response.body).to include("Ajouter un proche")
-      expect(assigns(:user)).to be_a_new(User)
-    end
-  end
-
   describe "POST #create" do
     subject { post :create, params: attributes }
 
@@ -60,8 +45,9 @@ RSpec.describe Users::RelativesController, type: :controller do
         expect(assigns(:user).organisation_ids).to eq(user.organisation_ids)
       end
 
-      it "redirects to user informations" do
+      it "redirects to user informations with a success flash" do
         subject
+        expect(flash[:success]).to be_present
         expect(response).to redirect_to(users_informations_path)
       end
     end
@@ -77,10 +63,10 @@ RSpec.describe Users::RelativesController, type: :controller do
         end.not_to change(User, :count)
       end
 
-      it "returns a success response (i.e. to display the 'new' template)" do
+      it "also redirects but with an error flash" do
         subject
-        expect(response).to be_successful
-        expect(response).to render_template(:new)
+        expect(flash[:error]).to be_present
+        expect(response).to redirect_to(users_informations_path)
       end
     end
   end

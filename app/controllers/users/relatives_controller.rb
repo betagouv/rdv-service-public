@@ -8,7 +8,11 @@ class Users::RelativesController < UserAuthController
     @user.responsible_id = current_user.id
     @user.organisation_ids = current_user.organisation_ids
     authorize(@user)
-    flash[:notice] = "#{@user.full_name} a été ajouté comme proche." if @user.save
+    if @user.save
+      flash[:success] = "#{@user.full_name} a été ajouté comme proche."
+    else
+      flash[:error] = "Impossible de créer le nouveau proche."
+    end
     location = params[:callback_path].present? ? params[:callback_path] : users_informations_path
     redirect_to location
   end
