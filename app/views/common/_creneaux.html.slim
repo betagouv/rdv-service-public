@@ -18,7 +18,7 @@ div id="creneaux-lieu-#{lieu.id}"
               = l(date, format: "%d %b")
             - creneaux_for_date = creneaux.group_by { |c| c.starts_at.to_date }.select { |k, v| k == date }
 
-            - if creneaux_for_date.any? && !creneaux_for_date[date].first.too_late?
+            - if creneaux_for_date.any? && creneaux_for_date[date].first.respects_max_booking_delay?
               - creneaux_for_date.each do |date, creneaux|
                 - creneaux.sort_by(&:starts_at).each do |creneau|
                   = link_to l(creneau.starts_at, format: "%H:%M"), new_users_rdv_path(starts_at: creneau.starts_at, motif_name: motif, lieu_id: lieu.id, departement: departement, where: where), class: "btn btn-light mr-1 mb-1 w-100"
