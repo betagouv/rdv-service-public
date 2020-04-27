@@ -10,13 +10,16 @@
             br
             | avec votre département
           h3.text-white.mb-4.px-lg-5 dans les services des solidarités
-          .mb-5.px-lg-5= render '/common/search_form'
-        - if Flipflop.EHPAD?
+      - if Flipflop.EHPAD?
+        .row
           .col-lg-12.justify-content-md-center
-            div.px-lg-5.row
+            .px-lg-5.row
               .col-lg-9.text-white.align-self-center
                 h4 RDV-Solidarités s'adapte pour faciliter les visites dans les EHPAD&nbsp:
               = link_to 'Rendre visite à un proche en EHPAD', ehpads_path, class: 'col-lg-3 btn btn-lg btn-tertiary'
+      .row
+        .col-lg-12.justify-content-md-center
+            .mb-5.px-lg-5= render '/common/search_form'
       h3.text-white.text-center Comment ça marche ?
 
 = render 'how_to'
