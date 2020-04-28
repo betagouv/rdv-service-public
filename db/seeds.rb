@@ -8,6 +8,7 @@ org1 = Organisation.create!(name: "MDS du 75", phone_number: "0123456789", depar
 
 service1 = Service.create!(name: "Protection Maternelle Infantile", short_name: "PMI")
 _service2 = Service.create!(name: "Service Social", short_name: "Service Social")
+Service.create!(name: "EHPAD", short_name: "EHPAD")
 
 lieu1 = Lieu.create!(
   name: "Maison Paris Sud",
