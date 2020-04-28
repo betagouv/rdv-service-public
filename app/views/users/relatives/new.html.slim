@@ -1,4 +1,11 @@
 - content_for(:title) do
   | Ajouter un proche
 
-= render 'form', user: @user
+= simple_form_for @user, url: relatives_path, remote: true, data: { modal: true } do |f|
+  = render partial: 'layouts/model_errors', locals: { model: @user }
+  = hidden_field '', :callback_path, value: @callback_path
+  = render "form_fields", f: f
+  .row
+    .col.text-right
+      button.btn.btn-link aria-hidden="true" data-dismiss="modal" type="button" Annuler
+      = f.button :submit
