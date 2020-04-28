@@ -3,4 +3,13 @@
     .card
       .card-body
         h4.card-title.mb-4 Modifier un proche
-        = render 'form', user: @user
+        = simple_form_for @user, url: relative_path(@user) do |f|
+          = render partial: 'layouts/model_errors', locals: { model: @user }
+          = render "form_fields", f: f
+          .row
+            .col.text-left
+              = link_to "Supprimer", relative_path(@user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce proche ?"}
+
+            .col.text-right
+              = link_to "Annuler", users_informations_path, class: "btn btn-link"
+              = f.button :submit
