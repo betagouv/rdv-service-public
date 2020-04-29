@@ -38,9 +38,9 @@ class Agents::RelativesController < AgentAuthController
   def update
     authorize(@user)
     user_updated = @user.update(user_params)
-    return respond_modal_with @user, location: request.referer if from_modal?
-
-    if user_updated
+    if from_modal?
+      respond_modal_with @user, location: request.referer
+    elsif user_updated
       flash[:notice] = "Les informations de votre proche #{@user.full_name} ont été mises à jour."
       redirect_to organisation_relative_path(current_organisation, @user)
     else

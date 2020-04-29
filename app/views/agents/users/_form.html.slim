@@ -1,5 +1,6 @@
-= simple_form_for([current_organisation, user], url: user.persisted? ? organisation_user_path(current_organisation, user) : organisation_users_path, remote: local_assigns[:modal].present?, data: {modal: local_assigns[:modal]}) do |f|
-  = hidden_field '', :modal, value: params[:modal]
+= simple_form_for([current_organisation, user], url: user.persisted? ? organisation_user_path(current_organisation, user) : organisation_users_path, remote: from_modal?, data: { modal: from_modal? }) do |f|
+  - if from_modal?
+    = hidden_field '', :modal, value: true
   = render partial: 'layouts/model_errors', locals: { model: user }
   .form-row
     .col-md-6= f.input :first_name
@@ -31,7 +32,7 @@
 
 
   .text-right
-    - if local_assigns[:modal]
+    - if from_modal?
       = link_to "Annuler", "#", class: "btn btn-link", data: { dismiss: 'modal' }
     - elsif user.persisted?
       = link_to "Annuler", organisation_user_path(current_organisation, user), class: "btn btn-link"
