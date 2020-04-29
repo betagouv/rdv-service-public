@@ -92,7 +92,7 @@ class Agents::UsersController < AgentAuthController
 
   def create_from_modal
     if @user_to_compare.present?
-      @user.errors.add(:base, "il y a un doublon")
+      @user.errors.add(:base, "L'utilisateur que vous essayez de créer existe deja")
     else
       @user.save
     end
