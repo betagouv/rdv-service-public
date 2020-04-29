@@ -12,7 +12,7 @@ class Agents::UsersController < AgentAuthController
   end
 
   def search
-    @users = policy_scope(User).order_by_last_name.limit(10)
+    @users = policy_scope(User).where.not(id: params[:exclude_ids]).order_by_last_name.limit(10)
     if search_params
       @users = @users.search_by_name_or_email(search_params)
     end
@@ -30,15 +30,14 @@ class Agents::UsersController < AgentAuthController
     prepare_create
     authorize(@user)
     @user_to_compare = DuplicateUserFinderService.new(@user).perform
+    return create_from_modal if from_modal?
+
     if @user_to_compare.present?
       @user_not_in_organisation = @user_to_compare.organisation_ids.exclude?(current_organisation.id)
       render :compare
     else
       @user.skip_confirmation_notification!
-      if from_modal?
-        @user.save
-        respond_modal_with @user, location: request.referer
-      elsif @user.save
+      if @user.save
         flash[:notice] = "L'usager a été créé."
         redirect_to organisation_user_path(@organisation, @user)
       else
@@ -90,6 +89,16 @@ class Agents::UsersController < AgentAuthController
   end
 
   private
+
+  def create_from_modal
+    if @user_to_compare.present?
+       @user.errors.add(:base, "il y a un doublon")
+    else
+      @user.save
+    end
+    # TODO change with Adispasqual PR
+    respond_modal_with @user, location: request.referer.to_s + "&user_ids[]=#{@user.id}"
+  end
 
   def prepare_create
     @user = User.new(user_params)

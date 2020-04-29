@@ -1,5 +1,9 @@
 class Agents::RelativesController < AgentAuthController
+  respond_to :html, :json
+
   before_action :set_user, only: [:show, :edit, :update, :destroy]
+
+  helper_method :from_modal?
 
   def show
     authorize(@user)
@@ -28,13 +32,18 @@ class Agents::RelativesController < AgentAuthController
 
   def edit
     authorize(@user)
+    respond_modal_with @user if from_modal?
   end
 
   def update
     authorize(@user)
     if @user.update(user_params)
       flash[:notice] = "Les informations de votre proche #{@user.full_name} ont été mises à jour."
-      redirect_to organisation_relative_path(current_organisation, @user)
+      if from_modal?
+        respond_modal_with @user, location: request.referer
+      else
+        redirect_to organisation_relative_path(current_organisation, @user)
+      end
     else
       render :edit
     end
@@ -47,6 +56,10 @@ class Agents::RelativesController < AgentAuthController
   end
 
   private
+
+  def from_modal?
+    params[:modal].present?
+  end
 
   def set_user
     @user = policy_scope(User).find(params[:id])

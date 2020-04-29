@@ -16,28 +16,32 @@
   .card-body
     = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }
     label Usagers
+
     = simple_form_for(@rdv, url: organisation_rdv_wizard_step_path(current_organisation, step: 2)) do |f|
       - @rdv.users.each do |user|
         / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
         = f.hidden_field "user_ids][", value: user.id
         .pl-2
           = user.full_name
+          = relative_tag(user)
           = link_to "Retirer", "#", class: "float-right js-remove-user", data: { userId: user.id }
-          = link_to "Modifier", edit_organisation_user_path(current_organisation, user, modal: true), class: "float-right pr-2", data: { modal: "true" }
+          - edit_path = user.relative? ? edit_organisation_relative_path(current_organisation, user, modal: true) : edit_organisation_user_path(current_organisation, user, modal: true)
+          = link_to "Modifier", edit_path, class: "float-right pr-2", data: { modal: "true" }
 
-      = link_to "Ajouter un autre usager", "#", class: "js-toggle-add-user-interface"
+      = link_to "Ajouter un autre usager", "#", class: "js-toggle-add-user-interface #{'d-none' if @rdv.users.empty?}"
 
-      .js-add-user-interface.d-none
+      .js-add-user-interface.mt-2 class=('d-none' if @rdv.users.any?)
         =  select_tag :status,
         options_for_select(policy_scope(User).order_by_last_name.map {|u| [ full_name_and_birthdate(u), u.id ]}),
         include_blank: "Ajouter un usager",
         required: false,
         class: "select2-input js-new-rdv-users-select",
-        data: { "select-options": { ajax: { url: search_organisation_users_path(current_organisation), dataType: 'json', delay: 250 }} }
+        data: { "select-options": { ajax: { url: search_organisation_users_path(current_organisation, exclude_ids: @rdv.users.map(&:id)), dataType: 'json', delay: 250 }} }
 
         span.small.text-muted
           | L'usager n'existe pas ?
           = link_to 'Créer un usager', new_organisation_user_path(current_organisation, modal: true), data: { modal: true }
+
 
       = f.input_field :motif_id, as: :hidden
       = f.input_field :starts_at, as: :hidden
