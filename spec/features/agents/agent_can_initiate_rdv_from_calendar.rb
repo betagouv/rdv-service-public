@@ -45,5 +45,4 @@ describe "Agent can initiate a Rdv from calendar" do
     # Step 5
     expect(page).to have_content("Le rendez-vous a été créé.")
   end
-
 end
