@@ -42,6 +42,7 @@ RSpec.describe Users::RelativesController, type: :controller do
   end
 
   describe "POST #create" do
+    before { request.headers['HTTP_REFERER'] = users_informations_path }
     subject { post :create, params: attributes }
 
     context "with valid params" do
@@ -50,9 +51,7 @@ RSpec.describe Users::RelativesController, type: :controller do
       end
 
       it "creates a new User" do
-        expect do
-          subject
-        end.to change(User, :count).by(1)
+        expect { subject }.to change(User, :count).by(1)
       end
 
       it "set organisation_ids for relative" do
@@ -60,9 +59,9 @@ RSpec.describe Users::RelativesController, type: :controller do
         expect(assigns(:user).organisation_ids).to eq(user.organisation_ids)
       end
 
-      it "redirects to user informations" do
+      it "redirects to user informations with the newly created user id as a param" do
         subject
-        expect(response).to redirect_to(users_informations_path)
+        expect(response).to redirect_to(users_informations_path(created_user_id: User.last.id))
       end
     end
 
