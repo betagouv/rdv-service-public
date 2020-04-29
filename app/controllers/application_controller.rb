@@ -73,4 +73,13 @@ class ApplicationController < ActionController::Base
     # :user is the scope we are authenticating
     store_location_for(:user, request.fullpath)
   end
+
+  def add_query_string_params_to_url(url, new_params)
+    # cf https://stackoverflow.com/questions/7785793/add-parameter-to-url
+    parsed_uri = URI.parse(url)
+    parsed_query_string = URI.decode_www_form(parsed_uri.query || '')
+    new_params.each { |k, v| parsed_query_string.append([k, v]) }
+    parsed_uri.query = URI.encode_www_form(parsed_query_string)
+    parsed_uri.to_s
+  end
 end
