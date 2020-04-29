@@ -39,7 +39,7 @@
         data: { "select-options": { ajax: { url: search_organisation_users_path(current_organisation, exclude_ids: @rdv.users.map(&:id)), dataType: 'json', delay: 250 }} }
 
         span.small.text-muted
-          | L'usager n'existe pas ?
+          | L'usager n'existe pas ?&nbsp;
           = link_to 'Créer un usager', new_organisation_user_path(current_organisation, modal: true), data: { modal: true }
 
 
