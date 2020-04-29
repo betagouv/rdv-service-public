@@ -75,6 +75,8 @@ class ApplicationController < ActionController::Base
   end
 
   def add_query_string_params_to_url(url, new_params)
+    return url if url.blank?
+
     # cf https://stackoverflow.com/questions/7785793/add-parameter-to-url
     parsed_uri = URI.parse(url)
     parsed_query_string = URI.decode_www_form(parsed_uri.query || '')
