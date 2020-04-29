@@ -92,12 +92,11 @@ class Agents::UsersController < AgentAuthController
 
   def create_from_modal
     if @user_to_compare.present?
-       @user.errors.add(:base, "il y a un doublon")
+      @user.errors.add(:base, "il y a un doublon")
     else
       @user.save
     end
-    # TODO change with Adispasqual PR
-    respond_modal_with @user, location: request.referer.to_s + "&user_ids[]=#{@user.id}"
+    respond_modal_with @user, location: add_query_string_params_to_url(request.referer, 'user_ids[]': @user.id)
   end
 
   def prepare_create
