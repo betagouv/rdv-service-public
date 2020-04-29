@@ -74,13 +74,6 @@ describe "Agent can create a Rdv with wizard" do
     sleep(0.5) # wait for ajax request
   end
 
-  def select_user(user)
-    find(:css, ".select2-search__field").set(user.full_name)
-    sleep(0.5)
-    expect(page).to have_content(full_name_and_birthdate(user))
-    find('.select2-search__field').native.send_keys(:return)
-  end
-
   def select_agent(agent)
     select(agent.full_name_and_service, from: 'rdv_agent_ids')
   end

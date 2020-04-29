@@ -46,10 +46,4 @@ describe "Agent can initiate a Rdv from calendar" do
     expect(page).to have_content("Le rendez-vous a été créé.")
   end
 
-  def select_user(user)
-    find(:css, ".select2-search__field").set(user.full_name)
-    sleep(0.5)
-    expect(page).to have_content(full_name_and_birthdate(user))
-    find('.select2-search__field').native.send_keys(:return)
-  end
 end

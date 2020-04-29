@@ -80,15 +80,6 @@ describe "Agent can create a Rdv with creneau search" do
     expect(page).to have_content("29 JUIL. – 2 AOÛT 2019")
   end
 
-  def select_user(user)
-    find(".select2-selection").click
-    find(:xpath, "//body").find(".select2-search input.select2-search__field").set(user.full_name)
-    sleep(0.5)
-    page.execute_script(%|$("input.select2-search__field:visible").keyup();|)
-    find(:xpath, "//body").find(".select2-results li.select2-results__option", text: user.full_name).click
-    expect(page).to have_content('Modifier')
-  end
-
   def expect_checked(text)
     expect(page).to have_selector(".card .list-group-item", text: text)
   end
