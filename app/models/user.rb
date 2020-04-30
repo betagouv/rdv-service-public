@@ -173,8 +173,7 @@ class User < ApplicationRecord
   end
 
   def user_is_not_duplicate
-    # fail
-    return unless User.find_by(first_name: first_name, last_name: last_name, birth_date: birth_date).present?
+    return unless User.where(first_name: first_name, last_name: last_name, birth_date: birth_date).where.not(id: id).any?
 
     errors.add(:base, "L'utilisateur que vous essayez de créer existe déjà")
   end
