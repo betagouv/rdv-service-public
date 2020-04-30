@@ -4,7 +4,7 @@ class RdvWizardStep2 {
     if (!$('.js-new-rdv-users-select').length) { return; }
 
     this.urlSearchParams = new URLSearchParams(window.location.search.substr(1))
-    this.organisationId = $("input[name=current_organisation]").val()
+    this.organisationId = $("input.js-current-organisation-id").val()
     $('.js-new-rdv-users-select').on('select2:select', (e) => {
       this.urlSearchParams.append("user_ids[]", e.params.data.id)
       window.location.search = this.urlSearchParams.toString();

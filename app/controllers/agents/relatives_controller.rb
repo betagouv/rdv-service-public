@@ -3,8 +3,6 @@ class Agents::RelativesController < AgentAuthController
 
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
-  helper_method :from_modal?
-
   def show
     authorize(@user)
   end
