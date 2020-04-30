@@ -4,8 +4,6 @@ class Agents::UsersController < AgentAuthController
   before_action :set_organisation, only: [:new, :create]
   before_action :set_user, except: [:index, :search, :new, :create, :link_to_organisation]
 
-  helper_method :from_modal?
-
   def index
     @users = policy_scope(User).order_by_last_name.page(params[:page])
     filter_users if params[:user] && params[:user][:search]
@@ -112,10 +110,6 @@ class Agents::UsersController < AgentAuthController
     respond_to do |format|
       format.js { render partial: 'search-results' }
     end
-  end
-
-  def from_modal?
-    params[:modal].present?
   end
 
   def user_params

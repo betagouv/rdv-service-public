@@ -1,8 +1,7 @@
 - content_for :title do
   | Choisir le ou les usagers
 
-.card.js-rdv-step-card
-  .spinner.spinner-border
+.card
   ul.list-group.list-group-flush
     - if @rdv.starts_at.present?
       li.list-group-item

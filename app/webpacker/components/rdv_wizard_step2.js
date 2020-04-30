@@ -1,6 +1,8 @@
-class SelectUsersFromWizard {
+class RdvWizardStep2 {
 
   constructor() {
+    if (!$('.js-new-rdv-users-select').length) { return; }
+
     this.urlSearchParams = new URLSearchParams(window.location.search.substr(1))
     this.organisationId = $("input[name=current_organisation]").val()
     $('.js-new-rdv-users-select').on('select2:select', (e) => {
@@ -32,4 +34,4 @@ class SelectUsersFromWizard {
   }
 }
 
-export { SelectUsersFromWizard };
+export { RdvWizardStep2 };

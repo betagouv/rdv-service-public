@@ -1,5 +1,5 @@
 class Agents::RelativesController < AgentAuthController
-  respond_to :html, :json
+  respond_to :html
 
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
@@ -55,10 +55,6 @@ class Agents::RelativesController < AgentAuthController
   end
 
   private
-
-  def from_modal?
-    params[:modal].present?
-  end
 
   def set_user
     @user = policy_scope(User).find(params[:id])
