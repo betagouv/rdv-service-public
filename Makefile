@@ -14,6 +14,6 @@ stop: ## Stop the app server
 	foreman stop
 
 clean: ## Clean temporary files and installed dependencies
-	bundle exec rails log:clean tmp:clean
+	bundle exec rails log:clear tmp:clear
 
 .PHONY: deploy install run test clean stop
