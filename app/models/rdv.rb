@@ -107,7 +107,7 @@ class Rdv < ApplicationRecord
 
   def creneaux_available(date_range)
     lieu = Lieu.find_by(address: location)
-    lieu.present? ? Creneau.for_motif_and_lieu_from_date_range(motif.name, lieu, date_range) : []
+    lieu.present? ? CreneauxBuilderService.new(motif.name, lieu, date_range).perform : []
   end
 
   private
