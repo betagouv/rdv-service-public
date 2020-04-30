@@ -20,9 +20,11 @@
       - @rdv.users.each do |user|
         / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
         = f.hidden_field "user_ids][", value: user.id
-        .pl-2
+        .pl-2.my-1
           .d-flex
             div
+              i.fa.fa-user
+              | &nbsp;
               = user.full_name
               = relative_tag(user)
             div.ml-2= link_to "╳ Retirer", "#", class: "js-remove-user", data: { userId: user.id }
