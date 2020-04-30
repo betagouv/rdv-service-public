@@ -1,14 +1,15 @@
 class CreneauxBuilderService < BaseService
-  def initialize(motif_name, lieu, inclusive_date_range, for_agents: false, agent_ids: nil)
+  def initialize(motif_name, lieu, inclusive_date_range, **options)
     @motif_name = motif_name
     @lieu = lieu
     @inclusive_date_range = inclusive_date_range
-    @for_agents = for_agents
-    @agent_ids = agent_ids
+    @for_agents = options.fetch(:for_agents, false)
+    @agent_ids = options.fetch(:agent_ids, nil)
   end
 
   def perform
     creneaux = plages_ouvertures.flat_map { |po| creneaux_for_plage_ouverture(po) }
+    creneaux = creneaux.select { |c| c.starts_at >= Time.zone.now }
     uniq_by = @for_agents ? ->(c) { [c.starts_at, c.agent_id] } : ->(c) { c.starts_at }
     creneaux.uniq(&uniq_by).sort_by(&:starts_at)
   end
