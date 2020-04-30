@@ -15,7 +15,10 @@
   .card-body
     = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }
     input.js-current-organisation-id type='hidden' value=current_organisation.id
-    label Usagers
+
+    .d-flex.justify-content-between
+      label Usagers
+      .js-users-spinner.spinner-border.d-none &nbsp;
 
     = simple_form_for(@rdv, url: organisation_rdv_wizard_step_path(current_organisation, step: 2)) do |f|
       - @rdv.users.each do |user|
@@ -33,7 +36,7 @@
               - edit_path = user.relative? ? edit_organisation_relative_path(current_organisation, user, modal: true) : edit_organisation_user_path(current_organisation, user, modal: true)
               = link_to "✎ Modifier usager", edit_path, data: { modal: "true" }
 
-      .pl-2.pt-2= link_to "+ Ajouter un autre usager", "#", class: "js-toggle-add-user-interface #{'d-none' if @rdv.users.empty?}"
+      .pl-2.mt-2= link_to "+ Ajouter un autre usager", "#", class: "js-toggle-add-user-interface #{'d-none' if @rdv.users.empty?}"
 
       .js-add-user-interface.mt-2 class=('d-none' if @rdv.users.any?)
         =  select_tag :status,

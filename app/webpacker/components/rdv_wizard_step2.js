@@ -6,6 +6,7 @@ class RdvWizardStep2 {
     this.urlSearchParams = new URLSearchParams(window.location.search.substr(1))
     this.organisationId = $("input.js-current-organisation-id").val()
     $('.js-new-rdv-users-select').on('select2:select', (e) => {
+      this.showSpinner()
       this.urlSearchParams.append("user_ids[]", e.params.data.id)
       window.location.search = this.urlSearchParams.toString();
     });
@@ -24,6 +25,7 @@ class RdvWizardStep2 {
 
   attachRemoveUserListeners = () => {
     $('.js-remove-user').click(event => {
+      this.showSpinner()
       const userId = event.currentTarget.getAttribute('data-user-id')
       let userIds = this.urlSearchParams.getAll("user_ids[]")
       userIds.splice(userIds.indexOf(userId), 1)
@@ -31,6 +33,10 @@ class RdvWizardStep2 {
       userIds.forEach(id => this.urlSearchParams.append("user_ids[]", id))
       window.location.search = this.urlSearchParams.toString();
     });
+  }
+
+  showSpinner = () => {
+    $(".js-users-spinner").removeClass("d-none")
   }
 }
 
