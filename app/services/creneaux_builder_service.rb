@@ -1,4 +1,4 @@
-class CreneauxBuilderService
+class CreneauxBuilderService < BaseService
   def initialize(motif_name, lieu, inclusive_date_range, for_agents: false, agent_ids: nil)
     @motif_name = motif_name
     @lieu = lieu

@@ -84,7 +84,7 @@ class Creneau
   def self.next_availability_for_motif_and_lieu(motif_name, lieu, from)
     available_creneau = nil
     from.step(from + 6.months, 7).find do |date|
-      creneaux = CreneauxBuilderService.new(motif_name, lieu, date..(date + 7.days)).perform
+      creneaux = CreneauxBuilderService.perform_with(motif_name, lieu, date..(date + 7.days))
       available_creneau = creneaux.first if creneaux.any?
     end
     available_creneau

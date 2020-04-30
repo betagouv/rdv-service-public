@@ -31,7 +31,7 @@ class LieuxController < ApplicationController
       @creneaux = []
       @next_availability = nil
     else
-      @creneaux = CreneauxBuilderService.new(@motif_name, @lieu, @date_range).perform
+      @creneaux = CreneauxBuilderService.perform_with(@motif_name, @lieu, @date_range)
       @next_availability = @creneaux.empty? ? Creneau.next_availability_for_motif_and_lieu(@motif_name, @lieu, @date_range.end) : nil
     end
     @matching_motifs = Motif.active.online.joins(:organisation).where(organisations: { departement: @departement }, name: @motif_name)

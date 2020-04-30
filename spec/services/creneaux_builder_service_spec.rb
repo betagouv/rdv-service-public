@@ -16,7 +16,7 @@ describe CreneauxBuilderService, type: :service do
   after { travel_back }
 
   subject do
-    creneaux = CreneauxBuilderService.new(motif_name, lieu, next_7_days_range, for_agents: for_agents, agent_ids: agent_ids).perform
+    creneaux = CreneauxBuilderService.perform_with(motif_name, lieu, next_7_days_range, for_agents: for_agents, agent_ids: agent_ids)
     creneaux.map { |c| creneau_to_hash(c, for_agents) }
   end
 
