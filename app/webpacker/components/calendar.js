@@ -18,7 +18,7 @@ document.addEventListener('turbolinks:load', function() {
     defaultView = ['dayGridMonth', 'timeGridWeek', 'timeGridOneDay'].includes(viewFromLocalStorage) ? viewFromLocalStorage : "timeGridWeek";
   }
 
-  if (calendarEl !== null ) {
+  if (calendarEl !== null && calendarEl.innerHTML == "") {
     var calendar = new Calendar(calendarEl, {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       locale: frLocale,
@@ -116,3 +116,11 @@ document.addEventListener('turbolinks:load', function() {
     setInterval(function(){ calendar.refetchEvents }, 30000)
   }
 });
+
+document.addEventListener("turbolinks:before-cache", function() {
+  // force calendar reload on turbolinks re-visit, otherwise event listeners
+  // are not attached
+  document.getElementById('calendar').innerHTML = ""
+  // fixes hanging tooltip on back
+  $(".tooltip").removeClass("show")
+})
