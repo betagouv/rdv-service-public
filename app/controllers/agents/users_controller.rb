@@ -28,14 +28,16 @@ class Agents::UsersController < AgentAuthController
     prepare_create
     authorize(@user)
     @user_to_compare = DuplicateUserFinderService.new(@user).perform
-    return create_from_modal if from_modal?
 
-    if @user_to_compare.present?
+    if @user_to_compare.present? && !from_modal?
       @user_not_in_organisation = @user_to_compare.organisation_ids.exclude?(current_organisation.id)
       render :compare
     else
       @user.skip_confirmation_notification!
-      if @user.save
+      user_persisted = @user.save
+      return respond_modal_with @user, location: add_query_string_params_to_url(request.referer, 'user_ids[]': @user.id) if from_modal?
+
+      if user_persisted
         flash[:notice] = "L'usager a été créé."
         redirect_to organisation_user_path(@organisation, @user)
       else
@@ -87,15 +89,6 @@ class Agents::UsersController < AgentAuthController
   end
 
   private
-
-  def create_from_modal
-    if @user_to_compare.present?
-      @user.errors.add(:base, "L'utilisateur que vous essayez de créer existe deja")
-    else
-      @user.save
-    end
-    respond_modal_with @user, location: add_query_string_params_to_url(request.referer, 'user_ids[]': @user.id)
-  end
 
   def prepare_create
     @user = User.new(user_params)
