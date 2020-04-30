@@ -6,9 +6,8 @@ describe CreneauxBuilderService, type: :service do
   let(:six_days_later) { today + 6.days }
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
   let(:agent) { plage_ouverture.agent }
-  let(:now) { today.to_time }
-  let(:for_agents) { nil }
-  let(:agent_ids) { nil }
+  let(:now) { today.in_time_zone + 8.hours } # 8 am
+  let(:options) { {} }
   let(:motif_name) { motif.name }
   let(:next_7_days_range) { today..six_days_later }
 
@@ -16,8 +15,8 @@ describe CreneauxBuilderService, type: :service do
   after { travel_back }
 
   subject do
-    creneaux = CreneauxBuilderService.perform_with(motif_name, lieu, next_7_days_range, for_agents: for_agents, agent_ids: agent_ids)
-    creneaux.map { |c| creneau_to_hash(c, for_agents) }
+    creneaux = CreneauxBuilderService.perform_with(motif_name, lieu, next_7_days_range, **options)
+    creneaux.map { |c| creneau_to_hash(c, options[:for_agents]) }
   end
 
   it "should work" do
@@ -37,7 +36,7 @@ describe CreneauxBuilderService, type: :service do
     end
 
     context "when the result is for pros" do
-      let(:for_agents) { true }
+      let(:options) { { for_agents: true } }
 
       it do
         expect(subject.size).to eq(4)
@@ -134,7 +133,7 @@ describe CreneauxBuilderService, type: :service do
     end
 
     context "when the result is for agents" do
-      let(:for_agents) { true }
+      let(:options) { { for_agents: true } }
 
       it do
         expect(subject.size).to eq(8)
@@ -150,7 +149,7 @@ describe CreneauxBuilderService, type: :service do
       end
 
       context "when the result is filtered for agent2" do
-        let(:agent_ids) { [agent2.id] }
+        let(:options) { { for_agents: true, agent_ids: [agent2.id] } }
 
         it do
           expect(subject.size).to eq(4)
@@ -184,6 +183,23 @@ describe CreneauxBuilderService, type: :service do
       expect(subject.size).to eq(1)
 
       is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+    end
+  end
+
+  context "past creneaux for users" do
+    let(:now) { today.in_time_zone + 10.hours } # 10 am
+
+    it "should not appear" do
+      expect(subject.first[:starts_at].hour).to eq(10)
+    end
+  end
+
+  context "past creneaux for agents" do
+    let(:now) { today.in_time_zone + 10.hours } # 10 am
+    let(:options) { { for_agents: true } }
+
+    it "should not appear" do
+      expect(subject.first[:starts_at].hour).to eq(10)
     end
   end
 
