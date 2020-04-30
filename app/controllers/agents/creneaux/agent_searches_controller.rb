@@ -18,7 +18,7 @@ class Agents::Creneaux::AgentSearchesController < AgentAuthController
         @lieux = @agent_search.lieux
 
         @creneaux_by_lieux = @lieux.each_with_object({}) do |lieu, creneaux_by_lieux|
-          creneaux_by_lieux[lieu.id] = Creneau.for_motif_and_lieu_from_date_range(@motif.name, lieu, @date_range, true, @agent_ids)
+          creneaux_by_lieux[lieu.id] = CreneauxBuilderService.perform_with(@motif.name, lieu, @date_range, for_agents: true, agent_ids: @agent_ids)
         end
       end
     end
@@ -32,7 +32,7 @@ class Agents::Creneaux::AgentSearchesController < AgentAuthController
     set_params
     @lieu = @agent_search.lieu
 
-    @creneaux = Creneau.for_motif_and_lieu_from_date_range(@motif.name, @lieu, @date_range, true, @agent_ids)
+    @creneaux = CreneauxBuilderService.perform_with(@motif.name, @lieu, @date_range, for_agents: true, agent_ids: @agent_ids)
   end
 
   def set_params
