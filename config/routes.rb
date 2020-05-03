@@ -1,31 +1,27 @@
 Rails.application.routes.draw do
-  ## ADMIN ##
-  devise_for :super_admins, controllers: { omniauth_callbacks: 'super_admins/omniauth_callbacks' }
-
-  delete 'admin/sign_out' => 'super_admins/sessions#destroy'
-
+  ## Administrate interface: only for agents with role super_admin  ##
   namespace :admin do
-    resources :agents do
-      get 'sign_in_as', on: :member
-      post :invite, on: :member
-    end
-    resources :super_admins
-    resources :organisations
-    resources :lieux
-    resources :services
-    resources :motifs
-    resources :users do
-      get 'sign_in_as', on: :member
-    end
-    resources :rdvs
-    resources :plage_ouvertures
-    resources :absences
-    resources :motif_libelles
-    resources :webhook_endpoints
-    resources :mailer_previews, only: [:index, :show]
-    root to: "agents#index"
+    authenticate :agent, -> { _1.super_admin? } do
+      resources :agents do
+        get 'sign_in_as', on: :member
+        post :invite, on: :member
+      end
+      resources :super_admins
+      resources :organisations
+      resources :lieux
+      resources :services
+      resources :motifs
+      resources :users do
+        get 'sign_in_as', on: :member
+      end
+      resources :rdvs
+      resources :plage_ouvertures
+      resources :absences
+      resources :motif_libelles
+      resources :webhook_endpoints
+      resources :mailer_previews, only: [:index, :show]
+      root to: "agents#index"
 
-    authenticate :super_admin do
       match "/delayed_job" => DelayedJobWeb, anchor: false, via: [:get, :post]
       mount Flipflop::Engine => "/flipflop", as: "flipflop"
     end
