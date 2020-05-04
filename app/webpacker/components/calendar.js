@@ -118,9 +118,11 @@ document.addEventListener('turbolinks:load', function() {
 });
 
 document.addEventListener("turbolinks:before-cache", function() {
+  const calendarElt = document.getElementById('calendar')
+  if (!calendarElt) { return false }
   // force calendar reload on turbolinks re-visit, otherwise event listeners
   // are not attached
-  document.getElementById('calendar').innerHTML = ""
+  calendarElt.innerHTML = ""
   // fixes hanging tooltip on back
   $(".tooltip").removeClass("show")
 })
