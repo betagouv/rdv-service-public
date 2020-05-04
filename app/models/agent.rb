@@ -16,6 +16,7 @@ class Agent < ApplicationRecord
   has_many :absences, dependent: :destroy
   has_and_belongs_to_many :rdvs, dependent: :destroy
   has_and_belongs_to_many :organisations, -> { distinct }
+  has_and_belongs_to_many :users
 
   enum role: { user: 0, admin: 1 }
 
