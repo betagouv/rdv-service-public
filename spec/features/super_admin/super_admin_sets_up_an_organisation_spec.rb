@@ -1,11 +1,11 @@
 describe "Super admin can configure an account" do
-  let!(:super_admin) { create(:super_admin) }
+  let!(:super_admin) { create(:agent, :super_admin) }
   let(:organisation) { build(:organisation) }
   let(:agent) { build(:agent) }
   let!(:agent_1) { create(:agent) }
 
   before do
-    login_as(super_admin, scope: :super_admin)
+    login_as(super_admin, scope: :agent)
     visit admin_agents_path
   end
 
@@ -51,7 +51,7 @@ describe "Super admin can configure an account" do
     end
   end
 
-  [:agent, :user, :super_admin, :lieu, :service, :motif, :rdv, :plage_ouverture, :absence, :motif_libelle].each do |resource|
+  [:agent, :user, :lieu, :service, :motif, :rdv, :plage_ouverture, :absence, :motif_libelle].each do |resource|
     context resource do
       let!(:resource) { create resource }
       it_behaves_like 'an administrate resource'

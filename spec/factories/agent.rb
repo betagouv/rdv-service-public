@@ -12,6 +12,9 @@ FactoryBot.define do
     trait :admin do
       role { "admin" }
     end
+    trait :super_admin do
+      role { :super_admin }
+    end
     trait :not_confirmed do
       confirmed_at { nil }
     end

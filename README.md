@@ -35,11 +35,6 @@ Afin d'initialiser l'environnement de développement, exécutez la commande suiv
 ```bash
 bin/setup
 ```
-Vous pouvez aussi vous créer un compte SuperAdmin dans une console Rails :
-
-```
-SuperAdmin.create!(email: 'email_associated_to_your_github_account@prov.com')
-```
 
 ### Lancement de l'application
 
