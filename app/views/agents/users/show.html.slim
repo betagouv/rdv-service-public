@@ -25,12 +25,6 @@
         h4.card-title.mb-3 Informations générales
         = render 'responsible_information', user: @user
 
-        h4.card-title.mb-3 Référents
-        ul.list-unstyled.mb-5
-          - @user.agents.includes([:service]).each do |agent|
-            li.mb-2 
-              | #{agent.full_name_and_service}
-
         .row
           .col.text-left
               = link_to "Supprimer", organisation_user_path(current_organisation, @user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cet usager ?"}
