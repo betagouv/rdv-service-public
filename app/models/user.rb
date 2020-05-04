@@ -11,6 +11,7 @@ class User < ApplicationRecord
 
   has_and_belongs_to_many :organisations, -> { distinct }
   has_and_belongs_to_many :rdvs
+  has_and_belongs_to_many :agents
   belongs_to :responsible, foreign_key: "responsible_id", class_name: "User", optional: true
   has_many :relatives, foreign_key: "responsible_id", class_name: "User"
   has_many :file_attentes, dependent: :destroy
