@@ -173,7 +173,7 @@ class User < ApplicationRecord
   end
 
   def user_is_not_duplicate
-    return unless DuplicateUserFinderService.new(self).perform.any?
+    return unless DuplicateUserFinderService.new(self).perform.present?
 
     errors.add(:base, "L'utilisateur que vous essayez de créer existe déjà")
   end
