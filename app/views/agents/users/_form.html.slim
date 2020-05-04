@@ -1,6 +1,6 @@
-- url = @for_modal ? create_from_modal_organisation_users_path(current_organisation.id) : nil
-= simple_form_for([current_organisation, user], url: url, remote: request.xhr?, data: { modal: true }) do |f|
-  = hidden_field '', :modal, value: params[:modal]
+= simple_form_for([current_organisation, user], url: user.persisted? ? organisation_user_path(current_organisation, user) : organisation_users_path, remote: from_modal?, data: { modal: from_modal? }) do |f|
+  - if from_modal?
+    = hidden_field '', :modal, value: true
   = render partial: 'layouts/model_errors', locals: { model: user }
   .form-row
     .col-md-6= f.input :first_name
@@ -32,9 +32,14 @@
 
 
   .text-right
-    - if user.persisted?
+    - if from_modal?
+      = link_to "Annuler", "#", class: "btn btn-link", data: { dismiss: 'modal' }
+    - elsif user.persisted?
       = link_to "Annuler", organisation_user_path(current_organisation, user), class: "btn btn-link"
-      = f.button :submit
     - else
       = link_to "Annuler", organisation_users_path(current_organisation), class: "btn btn-link"
+
+    - if user.persisted?
+      = f.button :submit
+    - else
       = f.button :submit, "Créer usager"

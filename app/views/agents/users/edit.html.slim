@@ -9,8 +9,11 @@
       = link_to @user.full_name, organisation_user_path(current_organisation, @user)
     li.breadcrumb-item.active Modifier l'usager
 
-.row.justify-content-center
-  .col-md-6
-    .card
-      .card-body
-        = render 'form', user: @user
+- if from_modal?
+  = render 'form', user: @user
+- else
+  .row.justify-content-center
+    .col-md-6
+      .card
+        .card-body
+          = render 'form', user: @user

@@ -25,6 +25,7 @@ describe "Agent can create a Rdv with wizard" do
     expect_page_title("Choisir le ou les usagers")
     expect_checked("Motif : #{motif.name}")
     select_user(user)
+    click_link('Ajouter un autre usager')
     expect(page).to have_link('Créer un usager')
     click_link('Créer un usager')
 
@@ -39,6 +40,7 @@ describe "Agent can create a Rdv with wizard" do
     sleep(1) # wait for modal to hide completely
 
     # create user without email
+    click_link('Ajouter un autre usager')
     click_link('Créer un usager')
     fill_in :user_first_name, with: "Jean-Marie"
     fill_in :user_last_name, with: "Lapin"
@@ -72,13 +74,6 @@ describe "Agent can create a Rdv with wizard" do
     expect(page).to have_current_path(rdv.agenda_path_for_agent(agent))
     expect(page).to have_content("Votre agenda")
     sleep(0.5) # wait for ajax request
-  end
-
-  def select_user(user)
-    find(:css, ".select2-search__field").set(user.full_name)
-    sleep(0.5)
-    expect(page).to have_content(full_name_and_birthdate(user))
-    find('.select2-search__field').native.send_keys(:return)
   end
 
   def select_agent(agent)

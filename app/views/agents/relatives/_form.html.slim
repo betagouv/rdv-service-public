@@ -1,5 +1,7 @@
 - form_url = user.persisted? ? organisation_relative_path(current_organisation, user) : organisation_user_relatives_path(current_organisation, user.responsible)
-= simple_form_for user, url: form_url do |f|
+= simple_form_for user, url: form_url, remote: from_modal?, data: { modal: from_modal? } do |f|
+  - if from_modal?
+    = hidden_field '', :modal, value: true
   = render partial: 'layouts/model_errors', locals: { model: user }
   .form-row
     .col-md-6= f.input :first_name

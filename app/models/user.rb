@@ -23,6 +23,7 @@ class User < ApplicationRecord
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :phone_number, phone: { allow_blank: true }
   validate :birth_date_validity
+  validate :user_is_not_duplicate, on: :create
 
   pg_search_scope :search_by_name_or_email, against: [:first_name, :last_name, :birth_name, :email],
                   ignoring: :accents,
@@ -169,5 +170,11 @@ class User < ApplicationRecord
     return unless birth_date.present? && (birth_date > Date.today || birth_date < 130.years.ago)
 
     errors.add(:birth_date, "est invalide")
+  end
+
+  def user_is_not_duplicate
+    return unless DuplicateUserFinderService.new(self).perform.present?
+
+    errors.add(:base, "L'utilisateur que vous essayez de créer existe déjà")
   end
 end

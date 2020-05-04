@@ -2,7 +2,7 @@ class Agents::UsersController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: [:new, :create]
-  before_action :set_user, except: [:index, :search, :new, :create, :link_to_organisation, :create_from_modal]
+  before_action :set_user, except: [:index, :search, :new, :create, :link_to_organisation]
 
   def index
     @users = policy_scope(User).order_by_last_name.page(params[:page])
@@ -10,7 +10,7 @@ class Agents::UsersController < AgentAuthController
   end
 
   def search
-    @users = policy_scope(User).order_by_last_name.limit(10)
+    @users = policy_scope(User).where.not(id: params[:exclude_ids]).order_by_last_name.limit(10)
     if search_params
       @users = @users.search_by_name_or_email(search_params)
     end
@@ -20,7 +20,6 @@ class Agents::UsersController < AgentAuthController
   def new
     @user = User.new
     @user.organisation_ids = [current_organisation.id]
-    @for_modal = from_modal?
     authorize(@user)
     respond_modal_with @user
   end
@@ -29,29 +28,21 @@ class Agents::UsersController < AgentAuthController
     prepare_create
     authorize(@user)
     @user_to_compare = DuplicateUserFinderService.new(@user).perform
-    if @user_to_compare.present?
+
+    if @user_to_compare.present? && !from_modal?
       @user_not_in_organisation = @user_to_compare.organisation_ids.exclude?(current_organisation.id)
       render :compare
     else
       @user.skip_confirmation_notification!
-      if @user.save
+      user_persisted = @user.save
+      return respond_modal_with @user, location: add_query_string_params_to_url(request.referer, 'user_ids[]': @user.id) if from_modal?
+
+      if user_persisted
         flash[:notice] = "L'usager a été créé."
         redirect_to organisation_user_path(@organisation, @user)
       else
         render :new
       end
-    end
-  end
-
-  def create_from_modal
-    prepare_create
-    authorize(@user)
-    @user.skip_confirmation_notification!
-    if @user.save
-      flash[:notice] = "L'usager a été créé."
-    else
-      @for_modal = true
-      respond_modal_with @user
     end
   end
 
@@ -62,6 +53,7 @@ class Agents::UsersController < AgentAuthController
 
   def edit
     authorize(@user)
+    respond_modal_with @user if from_modal?
   end
 
   def update
@@ -69,7 +61,11 @@ class Agents::UsersController < AgentAuthController
     @user.created_or_updated_by_agent = true
     @user.skip_reconfirmation! if @user.encrypted_password.blank?
     flash[:notice] = "L'usager a été modifié." if @user.update(user_params)
-    respond_right_bar_with @user, location: organisation_user_path(current_organisation, @user)
+    if from_modal?
+      respond_modal_with @user, location: request.referer
+    else
+      respond_right_bar_with @user, location: organisation_user_path(current_organisation, @user)
+    end
   end
 
   def invite
@@ -107,10 +103,6 @@ class Agents::UsersController < AgentAuthController
     respond_to do |format|
       format.js { render partial: 'search-results' }
     end
-  end
-
-  def from_modal?
-    params[:modal].present?
   end
 
   def user_params

@@ -7,7 +7,7 @@ class AgentAuthController < ApplicationController
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
-  helper_method :current_organisation, :policy_scope
+  helper_method :current_organisation, :policy_scope, :from_modal?
 
   private
 
@@ -42,5 +42,9 @@ class AgentAuthController < ApplicationController
     id ? current_agent.organisations.find(id) : current_agent.organisations.first
   rescue ActiveRecord::RecordNotFound
     raise Pundit::NotAuthorizedError
+  end
+
+  def from_modal?
+    params[:modal].present?
   end
 end
