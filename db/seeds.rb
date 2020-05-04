@@ -37,6 +37,18 @@ motif1 = Motif.create!(
   )
 end
 
+super_admin1 = Agent.new(
+  email: 'admin@rdv-solidarites.fr',
+  role: :super_admin,
+  first_name: 'Jeanne',
+  last_name: 'Dupont',
+  password: '123456',
+  service_id: service1.id,
+  organisation_ids: [org1.id]
+)
+super_admin1.skip_confirmation!
+super_admin1.save!
+
 agent1 = Agent.create!(
   email: 'contact@rdv-solidarites.fr',
   role: 1, # == admin
