@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_27_093834) do
+ActiveRecord::Schema.define(version: 2020_05_05_101547) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -106,7 +106,7 @@ ActiveRecord::Schema.define(version: 2020_04_27_093834) do
     t.index ["organisation_id"], name: "index_agents_organisations_on_organisation_id"
   end
 
-  create_table "agents_rdvs", id: false, force: :cascade do |t|
+  create_table "agents_rdvs", force: :cascade do |t|
     t.bigint "agent_id"
     t.bigint "rdv_id"
     t.index ["agent_id"], name: "index_agents_rdvs_on_agent_id"
@@ -254,7 +254,7 @@ ActiveRecord::Schema.define(version: 2020_04_27_093834) do
     t.index ["organisation_id"], name: "index_rdvs_on_organisation_id"
   end
 
-  create_table "rdvs_users", id: false, force: :cascade do |t|
+  create_table "rdvs_users", force: :cascade do |t|
     t.bigint "rdv_id"
     t.bigint "user_id"
     t.index ["rdv_id"], name: "index_rdvs_users_on_rdv_id"

@@ -14,7 +14,8 @@ class Agent < ApplicationRecord
   has_many :motifs, through: :service
   has_many :plage_ouvertures, dependent: :destroy
   has_many :absences, dependent: :destroy
-  has_and_belongs_to_many :rdvs, dependent: :destroy
+  has_many :agents_rdvs, dependent: :destroy
+  has_many :rdvs, dependent: :destroy, through: :agents_rdvs
   has_and_belongs_to_many :organisations, -> { distinct }
   has_and_belongs_to_many :users
 
