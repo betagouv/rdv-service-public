@@ -13,8 +13,8 @@ describe "User can manage their rdvs" do
     scenario "default", js: true do
       expect(page).to have_content(rdv.motif.name)
       click_link("Annuler le RDV")
-      alert = page.driver.browser.switch_to.alert
-      alert.accept
+      expect(page).to have_content("Confirmation")
+      click_link("Oui, annuler le RDV")
       expect(page).to have_selector('.badge', text: "Annulé")
     end
   end
