@@ -6,7 +6,7 @@ class DuplicateUserFinderService
   end
 
   def perform
-    user_with_same_email = User.find_by(email: @user.email)
+    user_with_same_email = User.where.not(email: nil).find_by(email: @user.email)
     return user_with_same_email if user_with_same_email.present?
 
     similar_users = User.none
