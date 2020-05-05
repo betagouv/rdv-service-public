@@ -5,8 +5,10 @@ class Rdv < ApplicationRecord
   belongs_to :organisation
   belongs_to :motif
   has_many :file_attentes, dependent: :destroy
-  has_and_belongs_to_many :agents
-  has_and_belongs_to_many :users, validate: false
+  has_many :agents_rdvs, inverse_of: :rdv, dependent: :destroy
+  has_many :agents, through: :agents_rdvs
+  has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy
+  has_many :users, through: :rdvs_users, validate: false
 
   has_many :webhook_endpoints, through: :organisation
 

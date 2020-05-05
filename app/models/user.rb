@@ -10,7 +10,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :confirmable, :async
 
   has_and_belongs_to_many :organisations, -> { distinct }
-  has_and_belongs_to_many :rdvs
+  has_many :rdvs_users, dependent: :destroy
+  has_many :rdvs, through: :rdvs_users
   has_and_belongs_to_many :agents
   belongs_to :responsible, foreign_key: "responsible_id", class_name: "User", optional: true
   has_many :relatives, foreign_key: "responsible_id", class_name: "User"
