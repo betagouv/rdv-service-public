@@ -9,11 +9,14 @@
       </div>
       <div class='modal-body'>
         <p>
-          <%= yield %>
+          <%= body_message %>
         </p>
       </div>
       <div class='modal-footer'>
-        <%= content_for :footer %>
+        <button type='button' class='btn btn-light' data-dismiss='modal'>
+          <%= local_assigns[:cancel_message] || "Annuler"  %>
+        </button>
+        <%= link_to local_assigns[:confirm_message] || "Confirmer", confirm_path, **local_assigns[:confirm_link_options] %>
       </div>
     </div>
   </div>

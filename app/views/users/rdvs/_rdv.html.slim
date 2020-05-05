@@ -41,9 +41,12 @@
         p.font-italic
           | Ce rendez-vous commence dans moins de 4 heures, il n'est plus annulable en ligne. Prenez contact avec le secrétariat.
 
-= render "common/modal_confirmation", id: "js-cancel-rdv-modal-#{rdv.id}" do
-  | Êtes-vous sûr de vouloir annuler ce RDV ?
-  = content_for :footer do
-    button type='button' class='btn btn-light' data-dismiss='modal'
-      | Non, annuler
-    = link_to "Oui, annuler le RDV", users_rdv_cancel_path(rdv.id), class: "btn btn-danger", method: :put
+= render( \
+  "common/modal_confirmation", \
+  id: "js-cancel-rdv-modal-#{rdv.id}", \
+  body_message: "Êtes-vous sûr de vouloir annuler ce RDV ?", \
+  cancel_message: "Non, annuler", \
+  confirm_path: users_rdv_cancel_path(rdv.id), \
+  confirm_message: "Oui, annuler le RDV", \
+  confirm_link_options: { class: "btn btn-danger", method: :put } \
+)
