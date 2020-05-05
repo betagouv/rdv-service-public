@@ -8,6 +8,12 @@ describe DuplicateUserFinderService, type: :service do
       it { should be_nil }
     end
 
+    context "email is nil" do
+      let(:user) { build(:user, first_name: "Mathieu", last_name: "Lapin", email: nil) }
+      let!(:user_without_email) { create(:user, :with_no_email) }
+      it { should be_nil }
+    end
+
     context "there is an homonym" do
       let!(:homonym_user) { create(:user, first_name: "Mathieu", last_name: "Lapin") }
       it { should be_nil }
