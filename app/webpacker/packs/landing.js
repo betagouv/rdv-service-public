@@ -4,6 +4,7 @@ require("chartkick")
 require("chart.js")
 import { PlacesInput } from 'components/places-input.js';
 import 'components/analytic.js';
+import { ConfirmModal } from 'components/confirm_modal';
 import { Modal } from 'components/modal';
 import 'components/browser-detection';
 import 'select2/dist/js/select2.min.js';
@@ -32,6 +33,7 @@ let setWhereValid = function (where, submit) {
 }
 
 $(document).on('turbolinks:load', function() {
+  new ConfirmModal();
   $('input[type="tel"]').mask('00 00 00 00 00')
   Holder.run();
   let placeJsContainer = document.querySelector('.places-js-container');
