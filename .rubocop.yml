@@ -77,3 +77,7 @@ Style/HashTransformKeys:
 
 Style/HashTransformValues:
   Enabled: true
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - "app/helpers/motifs_helper.rb"
