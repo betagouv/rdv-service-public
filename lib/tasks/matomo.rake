@@ -1,6 +1,6 @@
-namespace :piwik do
+namespace :matomo do
   task :exclude_params do
-    # Please run bundle exec rake piwik:exclude_params
+    # Please run bundle exec rake matomo:exclude_params
     # if you update that list
     params_to_filter = %w[address /.*_name/ affiliation_number /.*latitude.*/ /.*longitude.*/ /.*where.*/ /.*_token/]
 
@@ -18,7 +18,7 @@ namespace :piwik do
       payload = {
         idSite: id_site,
         token_auth: token_auth,
-        excludedQueryParameters: params_to_filter,
+        excludedQueryParameters: params_to_filter.join(','),
       }
       response = Typhoeus.post(url, body: payload)
       result = JSON.parse(response.body)
