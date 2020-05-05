@@ -1,0 +1,24 @@
+{
+  "name": "RDV-Solidarités",
+  "stack": "scalingo-18",
+  "addons": ["scalingo-postgresql:postgresql-sandbox"],
+  "env": {
+    "HOST": {
+      "description": "HOST",
+      "generator": "url"
+    }
+  },
+  "scripts": {
+    "first-deploy": "bundle exec rake db:schema:load db:seed"
+  },
+  "formation": {
+    "web": {
+      "amount": 1,
+      "size": "S"
+    },
+    "jobs": {
+      "amount": 1,
+      "size": "S"
+    }
+  }
+}
