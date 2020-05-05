@@ -41,7 +41,7 @@
       .js-add-user-interface.mt-2 class=('d-none' if @rdv.users.any?)
         =  select_tag :status,
         options_for_select(policy_scope(User).order_by_last_name.map {|u| [ full_name_and_birthdate(u), u.id ]}),
-        include_blank: "Ajouter un usager",
+        include_blank: "Sélectionner un usager",
         required: false,
         class: "select2-input js-new-rdv-users-select",
         data: { "select-options": { ajax: { url: search_organisation_users_path(current_organisation, exclude_ids: @rdv.users.map(&:id)), dataType: 'json', delay: 250 }} }
