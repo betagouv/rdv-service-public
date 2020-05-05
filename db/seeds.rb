@@ -1,4 +1,4 @@
-# when trying to create models using direct associations like
+# TODO: when trying to create models using direct associations like
 # `organisation: org1` instead of `organisation_id: org1.id`
 # CircleCI throws ActiveRecord::AssociationTypeMismatch that seems to indicate
 # that the model files are loaded twice, or something related to HABTM
@@ -26,26 +26,62 @@ motif1 = Motif.create!(
   online: true
 )
 
-3.times do |_u|
-  User.create!(
-    first_name: Faker::Name.first_name,
-    last_name: Faker::Name.last_name,
-    email: Faker::Internet.email,
-    birth_date: Faker::Date.birthday,
-    password: '123456',
-    organisation_ids: [org1.id]
-  )
-end
+user1 = User.new(
+  first_name: "Patricia",
+  last_name: "Duroy",
+  email: "patricia_duroy@demo.rdv-solidarites.fr",
+  birth_date: Date.parse("20/06/1975"),
+  password: '123456',
+  organisation_ids: [org1.id]
+)
+user1.skip_confirmation!
+user1.save!
 
-agent1 = Agent.create!(
-  email: 'contact@rdv-solidarites.fr',
+user2 = User.new(
+  first_name: "Léa",
+  last_name: "Dupont",
+  email: "martine_dupont@demo.rdv-solidarites.fr",
+  birth_date: Date.parse("01/12/1982"),
+  password: '123456',
+  organisation_ids: [org1.id]
+)
+user2.skip_confirmation!
+user2.save!
+
+user3 = User.new(
+  first_name: "Jean",
+  last_name: "Moustache",
+  email: "jean_moustache@demo.rdv-solidarites.fr",
+  birth_date: Date.parse("10/01/1973"),
+  password: '123456',
+  organisation_ids: [org1.id]
+)
+user3.skip_confirmation!
+user3.save!
+
+agent1 = Agent.new(
+  email: 'martine@demo.rdv-solidarites.fr',
   role: 1, # == admin
-  first_name: 'Johnny',
+  first_name: 'Martine',
   last_name: 'Validay',
   password: '123456',
   service_id: service1.id,
   organisation_ids: [org1.id]
 )
+agent1.skip_confirmation!
+agent1.save!
+
+agent2 = Agent.new(
+  email: 'marco@demo.rdv-solidarites.fr',
+  role: :user,
+  first_name: 'Marco',
+  last_name: 'Durand',
+  password: '123456',
+  service_id: service1.id,
+  organisation_ids: [org1.id]
+)
+agent2.skip_confirmation!
+agent2.save!
 
 _plage_ouverture1 = PlageOuverture.create!(
   title: 'Permanence classique',
@@ -58,3 +94,15 @@ _plage_ouverture1 = PlageOuverture.create!(
   end_time: Tod::TimeOfDay.new(12),
   recurrence: Montrose.every(:day)
 )
+
+rdv1 = Rdv.new(
+  duration_in_min: 30,
+  starts_at: Date.today + 3.days + 10.hours,
+  motif_id: motif1.id,
+  location: lieu1.address,
+  organisation_id: org1.id,
+  agent_ids: [agent1.id],
+  user_ids: [user1.id],
+  notes: "Rendez-vous important !"
+)
+rdv1.save!
