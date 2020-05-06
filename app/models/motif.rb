@@ -41,6 +41,19 @@ class Motif < ApplicationRecord
          .uniq
   end
 
+  def authorized_agents
+    Agent
+      .joins(:organisations)
+      .where(organisations: { id: organisation.id })
+      .complete
+      .active
+      .where(service: authorized_services)
+  end
+
+  def authorized_services
+    for_secretariat ? [service, Service.secretariat] : [service]
+  end
+
   private
 
   def booking_delay_validation
