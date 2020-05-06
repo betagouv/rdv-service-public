@@ -35,9 +35,9 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: 'users/registrations', sessions: 'sessions' }
 
   namespace :users do
-    resources :rdvs, only: [:index, :new, :create] do
+    resource :rdv_wizard_step, only: [:new, :create]
+    resources :rdvs, only: [:index, :create] do
       put :cancel
-      get :confirmation
     end
     resources :creneaux, only: [:index, :edit, :update], param: :rdv_id
     post 'file_attente', to: 'file_attentes#create_or_delete'

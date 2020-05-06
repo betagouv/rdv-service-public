@@ -5,7 +5,7 @@
         .step-item
           span Identification
         .step-item.current
-          span Vérification
+          span Recapitulatif du RDV
         .step-item
           span Confirmation
       .process-line style=("width: 50%;")
@@ -17,7 +17,7 @@
         li.list-group-item
           i.fa.fa-check.fa-fw.mr-1.text-success
           | Motif :&nbsp;
-          = @motif_name
+          = @rdv.motif.name
         - if @rdv.motif.phone?
           li.list-group-item
             i.fa.fa-check.fa-fw.mr-1.text-success
@@ -34,27 +34,23 @@
               | Date du rendez-vous :&nbsp;
               = l(@rdv.starts_at, format: :human)
             .col-auto
-              = link_to "modifier", lieux_path(search: { departement: @departement, service: @motif.service.id, motif: @motif_name, where: @where })
-
+              = link_to "modifier", lieux_path(search: @rdv_wizard.to_query)
 
       .card-body
-        - if @motif.restriction_for_rdv.present?
+        - if @rdv.motif.restriction_for_rdv.present?
           .alert.alert-primary
             strong Consignes pour ce rendez vous :
-            = simple_format(@motif.restriction_for_rdv, class: 'm-0 pl-1')
-        = simple_form_for(@rdv, url: users_rdvs_path) do |f|
+            = simple_format(@rdv.motif.restriction_for_rdv, class: 'm-0 pl-1')
+        = simple_form_for(@rdv, url: users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query)) do |f|
 
           = f.association :motif, as: :hidden, wrapper_html: { class: 'mb-0' }
-          = f.input :lieu_id, as: :hidden, input_html: { value: @lieu.id }, wrapper_html: { class: 'mb-0' }
           = f.input :starts_at, as: :hidden, wrapper_html: { class: 'mb-0' }
-          = f.input :where, as: :hidden, input_html: { value: @where }, wrapper_html: { class: 'mb-0' }
-          = f.input :departement, as: :hidden, input_html: { value: @departement }, wrapper_html: { class: 'mb-0' }
           = f.association :users, label: "Pour qui prenez-vous rendez-vous ?", as: :radio_buttons, collection: current_user.available_users_for_rdv, checked: @rdv.users.first&.id, label_method: lambda { |user| full_name_and_birthdate(user) }, wrapper_html: { class: 'mb-0' }
           .form-group
             = link_to "Ajouter un proche", new_relative_path, data: { modal: true }
 
           .row
             .col
-              = link_to "Revenir en arrière", lieux_path(search: { departement: @departement, service: @motif.service.id, motif: @motif_name, where: @where }), class: "btn btn-link"
+              = link_to "Revenir en arrière", lieux_path(search: @rdv_wizard.to_query), class: "btn btn-link"
             .col.text-right
               = f.button :submit, 'Continuer'
