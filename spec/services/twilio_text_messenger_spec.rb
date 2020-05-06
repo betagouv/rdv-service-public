@@ -41,7 +41,7 @@ describe TwilioTextMessenger, type: :service do
       it { expect(subject.body).to include("Cliquez pour voir les disponibilités :") }
     end
 
-    context "when sending a cancel_by_agent sms" do
+    context "when sending a rdv_cancelled_by_agent sms" do
       let(:twilio) { TwilioTextMessenger.new(:rdv_cancelled, rdv, user) }
       it 'return Twilio Object when sms is sent' do
         is_expected.to be_kind_of(Twilio::REST::Api::V2010::AccountContext::MessageInstance)

@@ -3,53 +3,21 @@ describe Rdv, type: :model do
     expect(build(:rdv)).to be_valid
   end
 
-  describe "#send_notifications_to_users" do
+  describe "#notify_rdv_created" do
     let(:rdv) { build(:rdv, starts_at: 3.days.from_now) }
 
     it "should be called after create" do
-      expect(rdv).to receive(:send_notifications_to_users)
+      expect(rdv).to receive(:notify_rdv_created)
       rdv.save!
     end
+  end
+
+  describe "#notify_rdv_updated" do
+    let(:rdv) { create(:rdv, starts_at: 3.days.from_now) }
 
     it "should be called after update starts_at" do
-      expect(rdv).to receive(:send_notifications_to_users).twice
-      rdv.save!
-      rdv.update(starts_at: 7.days.from_now)
-    end
-
-    context "when rdv already exist" do
-      let(:rdv) { create(:rdv) }
-
-      it "should not be called" do
-        expect(rdv).not_to receive(:send_notifications_to_users)
-        rdv.save!
-      end
-    end
-
-    it "calls RdvMailer to send email to user" do
-      expect(RdvMailer).to receive(:send_ics_to_user).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
-      rdv.save!
-    end
-
-    context "when rdv is for a relative" do
-      let(:responsible) { create(:user) }
-      let(:relative) { create(:user, responsible_id: responsible.id) }
-      let(:rdv) { build(:rdv, users: [relative], starts_at: 3.days.from_now) }
-
-      it "calls RdvMailer to send email to responsible" do
-        expect(RdvMailer).to receive(:send_ics_to_user).with(rdv, responsible).and_return(double(deliver_later: nil))
-        rdv.save!
-      end
-    end
-
-    context "motif with no notification" do
-      let(:motif) { create(:motif, :no_notification) }
-      let(:rdv) { create(:rdv, motif: motif) }
-
-      it "should not be called" do
-        expect(rdv).not_to receive(:send_notifications_to_users)
-        rdv.save!
-      end
+      expect(rdv).to receive(:notify_rdv_updated)
+      rdv.update!(starts_at: 7.days.from_now)
     end
   end
 
@@ -137,23 +105,6 @@ describe Rdv, type: :model do
         rdv.save
         expect(rdv.valid?).to eq(true)
       end
-    end
-  end
-
-  describe "#notify?" do
-    it "true avec un rendez-vous dans le futur" do
-      rdv = build(:rdv, starts_at: DateTime.now + 1.day)
-      expect(rdv.notify?).to be true
-    end
-
-    it "false avec un rendez-vous dans le passé" do
-      rdv = build(:rdv, starts_at: DateTime.now - 1.day)
-      expect(rdv.notify?).to be false
-    end
-
-    it "false avec un rendez-vous dans le passé d'une heure seulement" do
-      rdv = build(:rdv, starts_at: DateTime.now - 1.hour)
-      expect(rdv.notify?).to be false
     end
   end
 end
