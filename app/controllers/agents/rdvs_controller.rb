@@ -14,6 +14,7 @@ class Agents::RdvsController < AgentAuthController
   end
 
   def show
+    @uncollapsed_section = params[:uncollapsed_section]
     authorize(@rdv)
   end
 

@@ -220,6 +220,7 @@ fr:
       short_approx: "%e %b vers %Hh%M"
       human: "%A %d %B %Y à %Hh%M"
       human_approx: "%A %d %B %Y vers %Hh%M"
+      dense: "%d/%m/%Y à %H:%M"
     pm: pm
   public_office: "au local"
   phone: "par téléphone"
