@@ -6,6 +6,7 @@ class Service < ApplicationRecord
   SECRETARIAT = 'Secrétariat'.freeze
 
   scope :with_motifs, -> { where.not(name: SECRETARIAT) }
+  scope :secretariat, -> { where(name: SECRETARIAT).first }
 
   scope :with_online_and_active_motifs_for_departement, lambda { |departement|
                                                           where(id: Motif.online

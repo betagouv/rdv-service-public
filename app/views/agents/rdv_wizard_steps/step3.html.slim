@@ -38,7 +38,7 @@
         / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
         = f.hidden_field "user_ids][", value: user.id
 
-      = f.association :agents, collection: @agents_authorize, label_method: :full_name_and_service, input_html: { multiple: true, class: 'select2-input' }
+      = f.association :agents, collection: @rdv.motif.authorized_agents, label_method: :full_name_and_service, input_html: { multiple: true, class: 'select2-input' }
 
       .row
         .col.text-left

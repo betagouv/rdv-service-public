@@ -10,7 +10,6 @@ class Agents::RdvWizardStepsController < AgentAuthController
   def new
     @rdv_wizard = rdv_wizard_for(query_params)
     @rdv = @rdv_wizard.rdv
-    @agents_authorize = agents_authorized if current_step == 'step3'
     skip_authorization
     render current_step
   end
@@ -48,14 +47,6 @@ class Agents::RdvWizardStepsController < AgentAuthController
   def rdv_wizard_for(request_params)
     klass = "RdvWizard::#{current_step.camelize}".constantize
     klass.new(current_agent, current_organisation, request_params)
-  end
-
-  def agents_authorized
-    return [] if @rdv_wizard.motif.nil?
-
-    agents = @rdv_wizard.motif.service.agents.complete.active.joins(:organisations).where(organisations: { id: current_organisation.id })
-    agents += current_organisation.agents.complete.active.includes(:service).secretariat if @rdv_wizard.motif.for_secretariat
-    agents
   end
 
   def rdv_params
