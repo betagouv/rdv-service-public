@@ -46,7 +46,7 @@ class Users::RdvsController < UserAuthController
     if save_succeeded
       redirect_to users_rdv_confirmation_path(@rdv.id)
     else
-      @query = { where: creneau_params[:where], service: @motif.service.id, motif: @motif.name, departement: creneau_params[:departement] }
+      query = { where: new_rdv_extra_params[:where], service: motif.service.id, motif_name: motif.name, departement: new_rdv_extra_params[:departement] }
       flash[:error] = "Ce creneau n'est plus disponible. Veuillez en sélectionner un autre."
       redirect_to lieux_path(search: { departement: creneau_params[:departement], service: @motif.service.id, motif: @motif.name, where: creneau_params[:where] })
     end

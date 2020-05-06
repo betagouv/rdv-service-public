@@ -45,13 +45,13 @@ class LieuxController < ApplicationController
   private
 
   def search_params
-    params.require(:search).permit(:departement, :where, :service, :motif, :longitude, :latitude)
+    params.require(:search).permit(:departement, :where, :service, :motif_name, :longitude, :latitude)
   end
 
   def set_lieu_variables
     @query = search_params.to_hash
     @departement = search_params[:departement]
-    @motif_name = search_params[:motif]
+    @motif_name = search_params[:motif_name]
     @where = search_params[:where]
     @service_id = search_params[:service]
     @service = Service.find(@service_id)

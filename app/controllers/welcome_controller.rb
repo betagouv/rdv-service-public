@@ -10,11 +10,11 @@ class WelcomeController < ApplicationController
   end
 
   def search
-    search_params = params.require(:search).permit(:departement, :where, :service, :motif, :latitude, :longitude)
+    search_params = params.require(:search).permit(:departement, :where, :service, :motif_name, :latitude, :longitude)
 
     if search_params[:service].present?
-      if search_params[:motif].present?
-        redirect_to lieux_path(search: { departement: search_params[:departement], service: search_params[:service], motif: search_params[:motif], where: search_params[:where], latitude: search_params[:latitude], longitude: search_params[:longitude] })
+      if search_params[:motif_name].present?
+        redirect_to lieux_path(search: { departement: search_params[:departement], service: search_params[:service], motif_name: search_params[:motif_name], where: search_params[:where], latitude: search_params[:latitude], longitude: search_params[:longitude] })
       else
         redirect_to welcome_service_path(search_params[:departement], search_params[:service], where: search_params[:where], latitude: search_params[:latitude], longitude: search_params[:longitude])
       end
