@@ -17,7 +17,6 @@ import { Menu } from 'components/menu';
 import { Layout } from 'components/layout';
 import { Modal } from 'components/modal';
 import { Rightbar } from 'components/rightbar';
-import { Rdvstatus } from 'components/rdvstatus';
 import { InviteUserOnCreate } from 'components/invite-user-on-create';
 import { PopulateLibelle } from 'components/populate-libelle';
 import 'components/analytic.js';
@@ -70,7 +69,6 @@ $(document).on('shown.rightbar', '.right-bar', function(e) {
     theme: "bootstrap4"
   });
   new Datetimepicker();
-  new Rdvstatus();
   $(".tooltip").tooltip("hide");
 });
 

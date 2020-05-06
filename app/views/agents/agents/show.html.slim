@@ -6,7 +6,6 @@
 
 - content_for :breadcrumb do
   = form_tag(organisation_agent_with_id_in_query_path, method: "get", class: "d-inline-flex mr-2") do
-    = hidden_field_tag 'date', @date, id: "fc-date"
     = select_tag :status, options_for_select(Rdv.human_enum_collection(:statuses).unshift(["Tous les rdvs", ""]), rdv_status_value(@status)), class:"select2-input", onchange: 'this.form.submit()'
     - if policy_scope(Agent).complete.active.many?
       = select_tag :id, options_from_collection_for_select(policy_scope(Agent).complete.active.order_by_last_name, 'id', 'full_name', @agent.id), class: "select2-input", onchange: 'this.form.submit()', data: {'container-css-class': 'ml-2'}
@@ -17,4 +16,10 @@
 
 .card
   .card-body.pt-0
-    #calendar data-event-sources="#{[organisation_agent_rdvs_path(@organisation, @agent, status: @status, format: :json), organisation_agent_absences_path(@organisation, @agent), organisation_agent_plage_ouvertures_path(@organisation, @agent), jours_feries_path].to_json}" data-organisation-id="#{@organisation.id}" data-default-date="#{@date.to_json}" data-agent-id="#{@agent.id}"
+    #calendar[
+      data-default-date-json="#{@date&.to_json}"
+      data-agent-id="#{@agent.id}"
+      data-selected-event-id="#{@selected_event_id}"
+      data-organisation-id="#{@organisation.id}"
+      data-event-sources-json="#{[organisation_agent_rdvs_path(@organisation, @agent, status: @status, format: :json), organisation_agent_absences_path(@organisation, @agent), organisation_agent_plage_ouvertures_path(@organisation, @agent), jours_feries_path].to_json}"
+    ]

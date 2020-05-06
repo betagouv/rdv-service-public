@@ -12,6 +12,7 @@ class Agents::AgentsController < AgentAuthController
     authorize(@agent)
     @status = params[:status]
     @organisation = current_organisation
+    @selected_event_id = params[:selected_event_id]
     @date = params[:date].present? ? Date.parse(params[:date]) : nil
   end
 

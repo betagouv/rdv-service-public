@@ -15,7 +15,6 @@ class Agents::RdvsController < AgentAuthController
 
   def show
     authorize(@rdv)
-    respond_right_bar_with(@rdv)
   end
 
   def edit
@@ -31,17 +30,17 @@ class Agents::RdvsController < AgentAuthController
     elsif @rdv.update(rdv_params)
       flash[:notice] = 'Le rendez-vous a été modifié.'
     end
-    respond_right_bar_with @rdv, location: callback_path(@rdv)
+    respond_right_bar_with @rdv, location: request.referer
   end
 
   def status
+    # TODO: remove this route and use #update
     authorize(@rdv)
     cancelled_at = ['unknown', 'waiting', 'seen'].include?(status_params[:status]) ? nil : Time.zone.now
     @rdv.update(status: status_params[:status], cancelled_at: cancelled_at)
     @rdv.file_attentes.delete_all
-    respond_to do |f|
-      f.js
-    end
+    flash[:notice] = "Le statut du RDV a été modifié"
+    redirect_to organisation_rdv_path(@rdv.organisation, @rdv)
   end
 
   def destroy
