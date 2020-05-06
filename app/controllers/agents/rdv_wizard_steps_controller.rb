@@ -33,20 +33,20 @@ class Agents::RdvWizardStepsController < AgentAuthController
   end
 
   def current_step
-    return RdvWizard::STEPS.first if params[:step].blank?
+    return AgentRdvWizard::STEPS.first if params[:step].blank?
 
     step = "step#{params[:step]}"
-    raise InvalidStep unless step.in?(RdvWizard::STEPS)
+    raise InvalidStep unless step.in?(AgentRdvWizard::STEPS)
 
     step
   end
 
   def next_step_index
-    RdvWizard::STEPS.index(current_step) + 2 # steps start at 1 + increment
+    AgentRdvWizard::STEPS.index(current_step) + 2 # steps start at 1 + increment
   end
 
   def rdv_wizard_for(request_params)
-    klass = "RdvWizard::#{current_step.camelize}".constantize
+    klass = "AgentRdvWizard::#{current_step.camelize}".constantize
     klass.new(current_agent, current_organisation, request_params)
   end
 
