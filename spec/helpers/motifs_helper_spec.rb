@@ -1,7 +1,5 @@
 describe MotifsHelper do
-
   describe "#motif_badges" do
-
     it "affiche le badge En ligne pour un motif `online`" do
       motif = build(:motif, online: true, location_type: :public_office)
       badges = motif_badges(motif)
@@ -51,7 +49,5 @@ describe MotifsHelper do
       expect(badges).to include("Par tél.")
       expect(badges).to include("badge-motif-phone")
     end
-
   end
-
 end

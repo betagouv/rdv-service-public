@@ -71,7 +71,6 @@ describe Rdv, type: :model do
   end
 
   describe "secretariat?" do
-
     it "return true if motif for_secretariat" do
       motif = build(:motif, for_secretariat: true)
       expect(motif.secretariat?).to be true
@@ -81,6 +80,5 @@ describe Rdv, type: :model do
       motif = build(:motif, for_secretariat: false)
       expect(motif.secretariat?).to be false
     end
-
   end
 end

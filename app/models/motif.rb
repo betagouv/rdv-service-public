@@ -55,7 +55,7 @@ class Motif < ApplicationRecord
   end
 
   def secretariat?
-    self.for_secretariat?
+    for_secretariat?
   end
 
   private

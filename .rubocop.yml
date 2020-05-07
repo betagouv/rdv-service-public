@@ -80,4 +80,3 @@ Style/HashTransformValues:
 
 Metrics/CyclomaticComplexity:
   Exclude:
-    - "app/helpers/motifs_helper.rb"
