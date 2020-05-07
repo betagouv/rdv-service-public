@@ -10,10 +10,11 @@ namespace :prod do
 
     args.with_defaults(end_date: DEFAULT_CANCEL_END_DATE)
     rdvs = Rdv.active.status('unknown_future')
-              .joins(:organisation).where.not(organisations: { id: EXCLUDED_ORGANISATIONS })
-              .where.not(organisations: { departement: EXCLUDED_DEPARTEMENTS })
-              .where.not(location: EXCLUDED_LIEUX)
-              .where('DATE(starts_at) < ?', args.end_date.to_date)
+      .joins(:organisation)
+      .where.not(organisations: { id: EXCLUDED_ORGANISATIONS })
+      .where.not(organisations: { departement: EXCLUDED_DEPARTEMENTS })
+      .where.not(location: EXCLUDED_LIEUX)
+      .where('DATE(starts_at) < ?', args.end_date.to_date)
     rdvs.each do |rdv|
       rdv.update(status: :excused, cancelled_at: Time.zone.now, notes: "[Annulation COVID-19]" + rdv.notes.to_s)
       rdv.users.map(&:user_to_notify).uniq.each do |user|

@@ -33,12 +33,12 @@ class Motif < ApplicationRecord
 
   def self.names_for_service_and_departement(service, departement)
     Motif.online
-         .active
-         .joins(:organisation, :plage_ouvertures)
-         .where(organisations: { departement: departement })
-         .where(service_id: service.id)
-         .pluck(:name)
-         .uniq
+      .active
+      .joins(:organisation, :plage_ouvertures)
+      .where(organisations: { departement: departement })
+      .where(service_id: service.id)
+      .pluck(:name)
+      .uniq
   end
 
   def authorized_agents

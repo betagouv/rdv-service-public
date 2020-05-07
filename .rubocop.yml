@@ -21,6 +21,9 @@ Layout/HashAlignment:
 Layout/ExtraSpacing:
   AllowForAlignment: true
 
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
 Metrics/AbcSize:
   Enabled: false
 
@@ -69,7 +72,7 @@ Style/FormatStringToken:
 Style/HashEachMethods:
   Enabled: true
 
-Style/HashTransformKeys: 
+Style/HashTransformKeys:
   Enabled: true
 
 Style/HashTransformValues:
