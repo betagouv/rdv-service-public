@@ -31,6 +31,10 @@ class LieuxController < ApplicationController
     if online_bookings_suspended_because_of_corona?(@departement)
       @creneaux = []
       @next_availability = nil
+    elsif !current_user && Motif.where(name: @motif_name).first&.follow_up?
+      redirect_to new_user_session_path, flash: {
+        justification: "le RDV '#{@motif_name}' est disponible pour les personnes déjà suivies. Veuillez vous connecter pour prendre ce type de RDV.",
+      }
     else
       @creneaux = CreneauxBuilderService.perform_with(@motif_name, @lieu, @date_range)
       @next_availability = @creneaux.empty? ? Creneau.next_availability_for_motif_and_lieu(@motif_name, @lieu, @date_range.end) : nil
