@@ -69,4 +69,18 @@ describe Rdv, type: :model do
       it { should_not include(agent_pmi3) }
     end
   end
+
+  describe "secretariat?" do
+
+    it "return true if motif for_secretariat" do
+      motif = build(:motif, for_secretariat: true)
+      expect(motif.secretariat?).to be true
+    end
+
+    it "return false if motif for_secretariat" do
+      motif = build(:motif, for_secretariat: false)
+      expect(motif.secretariat?).to be false
+    end
+
+  end
 end
