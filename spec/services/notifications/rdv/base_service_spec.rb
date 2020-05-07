@@ -1,5 +1,9 @@
-describe Notifications::Rdv::BaseService, type: :service do
-  subject { Notifications::Rdv::BaseService.perform_with(rdv) }
+class TestService < ::BaseService
+  include Notifications::Rdv::BaseServiceConcern
+end
+
+describe Notifications::Rdv::BaseServiceConcern, type: :service do
+  subject { TestService.perform_with(rdv) }
 
   context "rdv dans le futur" do
     let(:rdv) { build(:rdv, starts_at: DateTime.now + 1.day) }
