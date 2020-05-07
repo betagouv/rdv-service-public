@@ -7,15 +7,15 @@ class PlageOuverture < ApplicationRecord
   belongs_to :lieu
   has_and_belongs_to_many :motifs, -> { distinct }
 
-  after_create :send_ics_to_agent
+  after_create :plage_ouverture_created
 
   validate :end_after_start
   validates :motifs, :title, presence: true
 
   has_many :webhook_endpoints, through: :organisation
 
-  def send_ics_to_agent
-    PlageOuvertureMailer.send_ics_to_agent(self).deliver_later
+  def plage_ouverture_created
+    Agents::PlageOuvertureMailer.plage_ouverture_created(self).deliver_later
   end
 
   def ical_uid

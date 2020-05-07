@@ -12,13 +12,9 @@ describe CancelRdvByAgentService, type: :service do
       expect { subject }.to change(rdv, :cancelled_at).from(nil).to(be_within(5.seconds).of(Time.now))
     end
 
-    it "calls RdvMailer to send email to user" do
-      expect(RdvMailer).to receive(:cancel_by_agent).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
-      subject
-    end
-
-    it "calls RdvMailer to send email to user" do
-      expect(TwilioSenderJob).to receive(:perform_later).with(:rdv_cancelled, rdv, rdv.users.first)
+    it "calls notification service" do
+      expect(Notifications::Rdv::RdvCancelledByAgentService).to receive(:perform_with)
+        .with(rdv)
       subject
     end
   end

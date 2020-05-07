@@ -1,4 +1,4 @@
-RSpec.describe RdvMailer, type: :mailer do
+RSpec.describe Users::RdvMailer, type: :mailer do
   let(:rdv) { create(:rdv) }
   let(:previous_starts_at) { nil }
 
@@ -41,9 +41,9 @@ RSpec.describe RdvMailer, type: :mailer do
     end
   end
 
-  describe "#send_ics_to_user" do
+  describe "#rdv_created" do
     let(:user) { rdv.users.first }
-    let(:mail) { RdvMailer.send_ics_to_user(rdv, user) }
+    let(:mail) { Users::RdvMailer.rdv_created(rdv, user) }
 
     it "renders the headers" do
       expect(mail.to).to eq([user.email])

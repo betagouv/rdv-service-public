@@ -98,11 +98,11 @@ describe PlageOuverture, type: :model do
     end
   end
 
-  describe "#send_ics_to_agent" do
+  describe "#plage_ouverture_created" do
     let(:plage_ouverture) { build(:plage_ouverture) }
 
     it "should be called after create" do
-      expect(plage_ouverture).to receive(:send_ics_to_agent)
+      expect(plage_ouverture).to receive(:plage_ouverture_created)
       plage_ouverture.save!
     end
 
@@ -110,13 +110,13 @@ describe PlageOuverture, type: :model do
       let(:plage_ouverture) { create(:plage_ouverture) }
 
       it "should not be called" do
-        expect(plage_ouverture).not_to receive(:send_ics_to_agent)
+        expect(plage_ouverture).not_to receive(:plage_ouverture_created)
         plage_ouverture.save!
       end
     end
 
-    it "calls PlageOuvertureMailer to send email to agetn" do
-      expect(PlageOuvertureMailer).to receive(:send_ics_to_agent).with(plage_ouverture).and_return(double(deliver_later: nil))
+    it "calls Agents::PlageOuvertureMailer to send email to agetn" do
+      expect(Agents::PlageOuvertureMailer).to receive(:plage_ouverture_created).with(plage_ouverture).and_return(double(deliver_later: nil))
       plage_ouverture.save!
     end
   end

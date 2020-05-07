@@ -31,7 +31,7 @@ describe FileAttente, type: :model do
       end
 
       it 'should send an email' do
-        expect(FileAttenteMailer).to receive(:send_notification).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
+        expect(Users::FileAttenteMailer).to receive(:new_creneau_available).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
         subject
       end
     end
@@ -42,7 +42,7 @@ describe FileAttente, type: :model do
       it 'should not send notification' do
         subject
         expect(TwilioSenderJob).not_to receive(:perform_later)
-        expect(FileAttenteMailer).not_to receive(:send_notification)
+        expect(Users::FileAttenteMailer).not_to receive(:new_creneau_available)
       end
     end
 
@@ -54,7 +54,7 @@ describe FileAttente, type: :model do
         file_attente.reload
         subject
         expect(TwilioSenderJob).not_to receive(:perform_later)
-        expect(FileAttenteMailer).not_to receive(:send_notification)
+        expect(Users::FileAttenteMailer).not_to receive(:new_creneau_available)
       end
     end
 

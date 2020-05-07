@@ -38,9 +38,9 @@ class Rdv < ApplicationRecord
 
   after_commit :reload_uuid, on: :create
 
-  after_create :send_notifications_to_users, if: :notify?
+  after_create :notify_rdv_created
   after_save :associate_users_with_organisation
-  after_update :send_notifications_to_users, if: -> { saved_change_to_starts_at? && notify? }
+  after_update :notify_rdv_updated, if: -> { saved_change_to_starts_at? }
 
   def agenda_path_for_agent(agent)
     agent_for_agenda = agents.include?(agent) ? agent : agents.first
@@ -64,26 +64,8 @@ class Rdv < ApplicationRecord
     update(cancelled_at: Time.zone.now, status: :excused)
   end
 
-  def send_notifications_to_users
-    users.map(&:user_to_notify).uniq.each do |user|
-      RdvMailer.send_ics_to_user(self, user).deliver_later if user.email.present?
-      TwilioSenderJob.perform_later(:rdv_created, self, user) if user.formatted_phone
-    end
-  end
-
   def cancellable?
     !cancelled? && starts_at > 4.hours.from_now
-  end
-
-  def send_reminder
-    users.map(&:user_to_notify).uniq.each do |user|
-      RdvMailer.send_reminder(self, user).deliver_later if user.email.present?
-      TwilioSenderJob.perform_later(:reminder, self, user) if user.formatted_phone
-    end
-  end
-
-  def notify?
-    !motif.disable_notifications_for_users && !starts_at.past?
   end
 
   def lieu
@@ -110,6 +92,14 @@ class Rdv < ApplicationRecord
   def creneaux_available(date_range)
     lieu = Lieu.find_by(address: location)
     lieu.present? ? CreneauxBuilderService.perform_with(motif.name, lieu, date_range) : []
+  end
+
+  def notify_rdv_created
+    Notifications::Rdv::RdvCreatedService.perform_with(self)
+  end
+
+  def notify_rdv_updated
+    Notifications::Rdv::RdvUpdatedService.perform_with(self)
   end
 
   private
