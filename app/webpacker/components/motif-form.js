@@ -1,7 +1,7 @@
 class MotifForm {
 
   setSecretariatEnabled() {
-    const enabled = this.valueForSecretariat();
+    const enabled = this.secretariatShouldBeEnabled();
     if (enabled == this.secretariatEnabled) return;
 
     const secretariatCheckbox = document.querySelector('#motif_for_secretariat')
@@ -12,7 +12,7 @@ class MotifForm {
     this.secretariatEnabled = enabled
   }
 
-  valueForSecretariat() {
+  secretariatShouldBeEnabled() {
     return !document.querySelector("#motif_location_type_home:checked") &&
       !document.querySelector("#motif_follow_up:checked")
   }
