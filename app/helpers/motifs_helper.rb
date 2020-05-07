@@ -15,11 +15,11 @@ module MotifsHelper
 
   def motif_badges(motif)
     [
-      motif.online ? content_tag(:span, 'En ligne', class: 'badge online') : nil,
-      motif.phone? ? content_tag(:span, 'Par tél.', class: 'badge phone') : nil,
-      Flipflop.visite_a_domicile? && motif.home? ? content_tag(:span, 'À domicile', class: 'badge home') : nil,
-      motif.for_secretariat ? content_tag(:span, 'Secrétariat', class: 'badge secretariat') : nil,
-      motif.follow_up ? content_tag(:span, 'Suivi', class: 'badge follow-up') : nil,
+      motif.online ? content_tag(:span, 'En ligne', class: 'badge badge-motif-online') : nil,
+      motif.phone? ? content_tag(:span, 'Par tél.', class: 'badge badge-motif-phone') : nil,
+      Flipflop.visite_a_domicile? && motif.home? ? content_tag(:span, 'À domicile', class: 'badge badge-motif-home') : nil,
+      motif.for_secretariat ? content_tag(:span, 'Secrétariat', class: 'badge badge-motif-secretariat') : nil,
+      motif.follow_up ? content_tag(:span, 'Suivi', class: 'badge badge-motif-follow-up') : nil,
     ].compact.presence&.sum
   end
 
