@@ -78,3 +78,12 @@ Style/HashTransformKeys:
 Style/HashTransformValues:
   Enabled: true
 
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - "app/controllers/lieux_controller.rb"
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - "app/controllers/lieux_controller.rb"
+

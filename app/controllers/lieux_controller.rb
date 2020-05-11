@@ -27,19 +27,25 @@ class LieuxController < ApplicationController
     @date_range = start_date..(start_date + 6.days)
     @lieu = Lieu.find(params[:id])
     @query.merge!(lieu_id: @lieu.id)
+    @matching_motifs = Motif.active.online.joins(:organisation).where(organisations: { departement: @departement }, name: @motif_name)
 
     if online_bookings_suspended_because_of_corona?(@departement)
       @creneaux = []
       @next_availability = nil
-    elsif !current_user && Motif.where(name: @motif_name).first&.follow_up?
+    elsif !current_user && @matching_motifs.first&.follow_up?
+      # TODO: revoir les contraintes d'unicitees completes (il manque :location_type dans le where) ou bien revoir la notion de motif.
       redirect_to new_user_session_path, flash: {
         notice: "le RDV '#{@motif_name}' est disponible pour les personnes déjà suivies. Veuillez vous connecter pour prendre ce type de RDV.",
       }
+    elsif @matching_motifs.first&.follow_up? && current_user && current_user.agents.empty?
+      @referent_missing = "Le motif <b>#{@motif_name}</b> nécessite d'avoir un référent. Nous n'avons pas trouvé votre référent.".html_safe
+      @creneaux = []
+      @next_availability = nil
     else
       @creneaux = CreneauxBuilderService.perform_with(@motif_name, @lieu, @date_range)
       @next_availability = @creneaux.empty? ? Creneau.next_availability_for_motif_and_lieu(@motif_name, @lieu, @date_range.end) : nil
     end
-    @matching_motifs = Motif.active.online.joins(:organisation).where(organisations: { departement: @departement }, name: @motif_name)
+
     @max_booking_delay = @matching_motifs.maximum('max_booking_delay')
     respond_to do |format|
       format.html

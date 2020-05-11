@@ -62,13 +62,14 @@ RSpec.describe LieuxController, type: :controller do
           }
 
           expect(response).to redirect_to(new_user_session_path)
-          expect(flash[:justification]).to eq("le RDV '#{motif.name}' est disponible pour les personnes déjà suivies. Veuillez vous connecter pour prendre ce type de RDV.")
+          expect(flash[:notice]).to eq("le RDV '#{motif.name}' est disponible pour les personnes déjà suivies. Veuillez vous connecter pour prendre ce type de RDV.")
         end
       end
 
-      context "avec un usager déjà connecté" do
+      context "avec un usager avec agent référent déjà connecté" do
         it "propose les créneaux" do
-          usager = create(:user)
+          agent = create(:agent)
+          usager = create(:user, agents: [agent])
           sign_in usager
           lieu = create(:lieu, latitude: 50.63, longitude: 3.06)
           motif = create(:motif, online: true, follow_up: true)
@@ -89,7 +90,36 @@ RSpec.describe LieuxController, type: :controller do
           }
 
           expect(response).to be_successful
-          expect(flash[:justification]).to be_nil
+          expect(flash[:notice]).to be_nil
+          expect(assigns(:creneaux).count).to eq(5)
+        end
+      end
+
+      context "avec un usage qui n'a pas de référent" do
+        it "annonce qu'il n'y a pas de créneaux parce que pas de référent" do
+          usager = create(:user, agents: [])
+          sign_in usager
+          lieu = create(:lieu, latitude: 50.63, longitude: 3.06)
+          motif = create(:motif, online: true, follow_up: true)
+          create(:plage_ouverture, :weekly,
+                 title: "Tous les lundis",
+                 first_day: first_day,
+                 lieu: lieu,
+                 motifs: [motif])
+
+          get :show, params: {
+            id: lieu,
+            search: {
+              departement: lieu.organisation.departement,
+              where: "useless 12345",
+              service: motif.service_id,
+              motif: motif.name,
+            },
+          }
+
+          expect(response).to be_successful
+          expect(assigns[:referent_missing]).to eq("Le motif <b>#{motif.name}</b> nécessite d'avoir un référent. Nous n'avons pas trouvé votre référent.")
+          expect(assigns[:creneaux]).to be_empty
         end
       end
     end
