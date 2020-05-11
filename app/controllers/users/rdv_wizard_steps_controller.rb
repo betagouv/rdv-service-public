@@ -44,7 +44,7 @@ class Users::RdvWizardStepsController < UserAuthController
   end
 
   def new_rdv_extra_params
-    params.permit(:lieu_id, :motif_name, :departement, :where)
+    params.permit(:lieu_id, :motif_name, :departement, :where, :created_user_id)
   end
 
   def rdv_params

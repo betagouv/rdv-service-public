@@ -15,12 +15,23 @@ module UserRdvWizard
       @lieu = Lieu.find(attributes[:lieu_id])
       @motif = Motif.find_by(organisation_id: @lieu.organisation_id, name: @motif_name)
       @rdv_defaults = {
-        user_ids: [attributes[:created_user_id].presence || current_user.id],
+        user_ids: user_ids(attributes),
         starts_at: attributes[:starts_at],
         motif_id: @motif.id
       }
       @rdv = Rdv.new(@rdv_defaults.merge(motif: @motif))
       @creneau = Creneau.new(starts_at: @rdv.starts_at, motif: @motif, lieu_id: @lieu.id)
+      
+    end
+
+    def user_ids(attributes)
+      if attributes[:created_user_id]
+        [attributes[:created_user_id]]
+      elsif attributes[:user_ids].present?
+        attributes[:user_ids]
+      else
+        attributes[current_user.id]
+      end
     end
 
     def to_query

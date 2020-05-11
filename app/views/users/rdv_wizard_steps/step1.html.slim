@@ -41,16 +41,18 @@
           .alert.alert-primary
             strong Consignes pour ce rendez vous :
             = simple_format(@rdv.motif.restriction_for_rdv, class: 'm-0 pl-1')
-        = simple_form_for(@rdv, url: users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query)) do |f|
+
+        = simple_form_for(@rdv, url: users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query.except(:rdv))) do |f|
 
           = f.association :motif, as: :hidden, wrapper_html: { class: 'mb-0' }
           = f.input :starts_at, as: :hidden, wrapper_html: { class: 'mb-0' }
-          = f.association :users, label: "Pour qui prenez-vous rendez-vous ?", as: :radio_buttons, collection: current_user.available_users_for_rdv, checked: @rdv.users.first&.id, label_method: lambda { |user| full_name_and_birthdate(user) }, wrapper_html: { class: 'mb-0' }
+          - # https://blog.bigbinary.com/2016/05/18/rails-5-add-a-hidden-field-on-collection-radio-buttons.html
+          = f.association :users, label: "Pour qui prenez-vous rendez-vous ?", as: :radio_buttons, include_hidden: false, collection: current_user.available_users_for_rdv, checked: @rdv.users.first&.id, label_method: lambda { |user| full_name_and_birthdate(user) }, wrapper_html: { class: 'mb-0' }, input_html: { name: 'rdv[user_ids][]' }
           .form-group
             = link_to "Ajouter un proche", new_relative_path, data: { modal: true }
 
           .row
             .col
-              = link_to "Revenir en arrière", lieux_path(search: @rdv_wizard.to_query), class: "btn btn-link"
+              = link_to "Revenir en arrière", lieux_path(search: @rdv_wizard.to_query.except(:rdv)), class: "btn btn-link"
             .col.text-right
               = f.button :submit, 'Continuer'
