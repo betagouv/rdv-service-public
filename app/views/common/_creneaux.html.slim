@@ -21,7 +21,7 @@ div id="creneaux-lieu-#{lieu.id}"
             - if creneaux_for_date.any? && creneaux_for_date[date].first.respects_max_booking_delay?
               - creneaux_for_date.each do |date, creneaux|
                 - creneaux.sort_by(&:starts_at).each do |creneau|
-                  = link_to l(creneau.starts_at, format: "%H:%M"), new_users_rdv_wizard_step_path(rdv: { starts_at: creneau.starts_at}, motif_name: motif_name, lieu_id: lieu.id, departement: departement, where: where), class: "btn btn-light mr-1 mb-1 w-100"
+                  = link_to l(creneau.starts_at, format: "%H:%M"), new_users_rdv_wizard_step_path(starts_at: creneau.starts_at, motif_id: creneau.motif.id, lieu_id: lieu.id, departement: departement, where: where), class: "btn btn-light mr-1 mb-1 w-100"
             - elsif date >= (Time.now + max_booking_delay.seconds).to_date
               p.text-center.text-muted
                 | Date fermée à la reservation

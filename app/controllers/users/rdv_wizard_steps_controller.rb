@@ -1,7 +1,9 @@
 class Users::RdvWizardStepsController < UserAuthController
+  RDV_PERMITTED_PARAMS = [:starts_at, :motif_id, user_ids: []].freeze
+  EXTRA_PERMITTED_PARAMS = [:lieu_id, :departement, :where, :created_user_id].freeze
 
   def new
-    @rdv_wizard = rdv_wizard_for(current_user, rdv_params.merge(**new_rdv_extra_params))
+    @rdv_wizard = rdv_wizard_for(current_user, query_params)
     @rdv = @rdv_wizard.rdv
     authorize(@rdv)
     if @rdv_wizard.creneau.available?
@@ -13,7 +15,7 @@ class Users::RdvWizardStepsController < UserAuthController
   end
 
   def create
-    @rdv_wizard = rdv_wizard_for(current_user, rdv_params.merge(**new_rdv_extra_params))
+    @rdv_wizard = rdv_wizard_for(current_user, rdv_params)
     @rdv = @rdv_wizard.rdv
     skip_authorization
     if @rdv_wizard.valid?
@@ -43,11 +45,11 @@ class Users::RdvWizardStepsController < UserAuthController
     klass.new(current_user, request_params)
   end
 
-  def new_rdv_extra_params
-    params.permit(:lieu_id, :motif_name, :departement, :where, :created_user_id)
+  def rdv_params
+    params.require(:rdv).permit(*RDV_PERMITTED_PARAMS).merge(params.permit(*EXTRA_PERMITTED_PARAMS))
   end
 
-  def rdv_params
-    params.require(:rdv).permit(:starts_at, :motif_id, user_ids: [])
+  def query_params
+    params.permit(*RDV_PERMITTED_PARAMS, *EXTRA_PERMITTED_PARAMS)
   end
 end

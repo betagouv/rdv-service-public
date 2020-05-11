@@ -27,7 +27,7 @@
           li.list-group-item
             i.fa.fa-check.fa-fw.mr-1.text-success
             | Lieu :&nbsp;
-            = @lieu.full_name
+            = @rdv_wizard.lieu_full_name
         li.list-group-item
           .row
             .col
@@ -35,7 +35,7 @@
               | Date du rendez-vous :&nbsp;
               = l(@rdv.starts_at, format: :human)
             .col-auto
-              = link_to "modifier", lieux_path(search: @rdv_wizard.to_query)
+              = link_to "modifier", lieux_path(search: @rdv_wizard.to_search_query)
         li.list-group-item
           .row
             .col
@@ -55,7 +55,7 @@
               = current_user.email
           .row
             .col.ml-3
-              | 📞 Téléphone :&nbsp; 
+              | 📞 Téléphone :&nbsp;
               = current_user.phone_number || "Non renseigné"
             .col-auto
               - # TODO
