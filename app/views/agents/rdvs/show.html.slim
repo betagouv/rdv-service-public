@@ -1,13 +1,13 @@
-- content_for :breadcrumb do
-  ol.breadcrumb.m-0
-    li.breadcrumb-item
-      = link_to 'Vos agendas', organisation_agent_path(current_organisation, current_agent)
-
 - content_for :title do
-  | RDV
-  = rdv_title_for_agent(@rdv)
-  - if @rdv.cancelled?
-    span.badge.badge-danger
+  ol.breadcrumb.m-0.p-0
+    li.breadcrumb-item.p-0
+      = link_to 'Vos agendas', organisation_agent_path(current_organisation, current_agent)
+    li.breadcrumb-item.p-0.ml-2
+      | RDV
+      |&nbsp;
+      = rdv_title_for_agent(@rdv)
+      - if @rdv.cancelled?
+        span.badge.badge-danger
 
 .row
   .col-md-8.mb-3
