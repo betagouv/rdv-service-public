@@ -15,6 +15,10 @@ $(document).on('turbolinks:load', function() {
   initSelect2();
 });
 
+$(document).on('shown.bs.modal', '.modal', function(e) {
+  initSelect2();
+});
+
 $(document).on('shown.rightbar', '.right-bar', function(e) {
   initSelect2();
 });
