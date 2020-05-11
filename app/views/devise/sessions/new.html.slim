@@ -5,8 +5,8 @@
 
   = devise_error_messages!
 
-  - if flash[:justification]
-    .alert.alert-warning= flash[:justification]
+  - if flash[:notice]
+    .alert.alert-warning= flash[:notice]
 
   .form-group
     = f.label :email
