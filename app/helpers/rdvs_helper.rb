@@ -60,16 +60,6 @@ module RdvsHelper
     end
   end
 
-  def callback_path(rdv)
-    if params[:agent_id].present?
-      organisation_agent_rdvs_path(rdv.organisation, params[:agent_id], page: params[:page])
-    elsif params[:user_id].present?
-      organisation_user_rdvs_path(rdv.organisation, params[:user_id], page: params[:page])
-    else
-      organisation_rdvs_path(rdv.organisation, page: params[:page])
-    end
-  end
-
   def stats_rdv_path(status)
     case controller_name
     when 'stats'

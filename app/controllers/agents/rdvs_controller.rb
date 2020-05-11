@@ -50,14 +50,13 @@ class Agents::RdvsController < AgentAuthController
 
   def destroy
     authorize(@rdv)
-    redirect_location = callback_path(@rdv)
     if @rdv.destroy
       flash[:notice] = "Le rendez-vous a été supprimé."
     else
       flash[:error] = "Une erreur s’est produite, le rendez-vous n’a pas pu être supprimé."
       Raven.capture_exception(Exception.new("Deletion failed for rdv : #{@rdv.id}"))
     end
-    redirect_to redirect_location
+    redirect_to organisation_agent_path(current_organisation, current_agent)
   end
 
   def create
@@ -78,21 +77,12 @@ class Agents::RdvsController < AgentAuthController
     @rdv = Rdv.find(params[:id])
   end
 
-  def callback_path(rdv)
-    location = params[:callback_path].present? ? params[:callback_path] : rdv.agenda_path_for_agent(current_agent)
-    location.to_s
-  end
-
   def rdv_params
     params.require(:rdv).permit(:motif_id, :location, :duration_in_min, :starts_at, :notes, agent_ids: [], user_ids: [])
   end
 
   def status_params
     params.require(:rdv).permit(:status)
-  end
-
-  def callback_params
-    params.permit(:callback_path)
   end
 
   def date_range_params
