@@ -1,0 +1,8 @@
+div
+  p Bonjour,
+  p
+    | Un nouveau RDV qui aura lieu #{@date_str} vient d'être ajouté à votre agenda
+    = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :agent
+
+  p.aligncenter
+    = link_to "Voir sur RDV-Solidarités", organisation_agent_url(@rdv.organisation, @agent),  class: 'btn btn-primary'

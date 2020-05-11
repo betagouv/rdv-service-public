@@ -1,3 +1,4 @@
+- for_role = local_assigns.fetch(:for_role, :user)
 .overview
   h3.aligncenter Recapitulatif
   div.row-result
@@ -7,6 +8,15 @@
     - else
       span.float-right= l(rdv.starts_at, format: :human)
     .clear
+  - if for_role == :agent
+    div.row-result
+      span.title Usager(s):
+      span.float-right= rdv.users.map(&:full_name).sort.to_sentence
+      .clear
+    div.row-result
+      span.title Motif:
+      span.float-right= rdv.motif.name
+      .clear
   div.row-result
     span.title Service :
     span.float-right= rdv.motif.service.name
