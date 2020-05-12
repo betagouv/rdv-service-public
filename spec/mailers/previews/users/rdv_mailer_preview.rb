@@ -36,5 +36,10 @@ class Users::RdvMailerPreview < ActionMailer::Preview
     Users::RdvMailer.rdv_cancelled_by_agent(rdv, rdv.users.first)
   end
 
+  def rdv_upcoming_reminder
+    rdv = Rdv.active.last
+    Users::RdvMailer.rdv_upcoming_reminder(rdv, rdv.users.first)
+  end
+
   # rubocop:enable Naming/MethodName
 end
