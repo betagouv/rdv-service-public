@@ -5,7 +5,7 @@
 .card.mb-5
   .card-body
     h4.card-title.mb-3 RDV créés (#{stats.rdvs_for_default_range.count})
-    = column_chart rdvs_stats_path(by_service: true), stacked: true
+    = column_chart rdvs_stats_path, stacked: true
 
 - if request.path == stats_path
   .card.mb-5
