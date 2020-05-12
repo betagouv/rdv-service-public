@@ -13,7 +13,7 @@ RSpec.describe LieuxController, type: :controller do
 
   describe "GET #show" do
     let(:first_day) { now }
-    subject { get :show, params: { id: lieu, search: { departement: lieu.organisation.departement, where: "useless 12345", service: motif.service_id, motif: motif.name } } }
+    subject { get :show, params: { id: lieu, search: { departement: lieu.organisation.departement, where: "useless 12345", service: motif.service_id, motif_name: motif.name } } }
 
     before { subject }
 
@@ -40,7 +40,7 @@ RSpec.describe LieuxController, type: :controller do
 
   describe "GET #index" do
     let(:first_day) { now }
-    subject { get :index, params: { search: { departement: lieu.organisation.departement, where: "useless 12345", service: motif.service_id, motif: motif.name, latitude: lieu.latitude, longitude: lieu.longitude } } }
+    subject { get :index, params: { search: { departement: lieu.organisation.departement, where: "useless 12345", service: motif.service_id, motif_name: motif.name, latitude: lieu.latitude, longitude: lieu.longitude } } }
 
     before { subject }
 
@@ -58,7 +58,7 @@ RSpec.describe LieuxController, type: :controller do
     end
 
     context "request is closer to lieu_2" do
-      subject { get :index, params: { search: { departement: lieu.organisation.departement, where: "useless 12345", service: motif.service_id, motif: motif.name, latitude: lieu2.latitude, longitude: lieu2.longitude } } }
+      subject { get :index, params: { search: { departement: lieu.organisation.departement, where: "useless 12345", service: motif.service_id, motif_name: motif.name, latitude: lieu2.latitude, longitude: lieu2.longitude } } }
 
       it "return lieu2 first" do
         expect(assigns(:lieux).first).to eq(lieu2)

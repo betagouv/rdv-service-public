@@ -29,7 +29,7 @@ describe "User can search for rdvs" do
 
       # Step 3
       expect_page_h1("Prenez rendez-vous en ligne\navec votre département le 92")
-      select(motif.name, from: 'search_motif')
+      select(motif.name, from: 'search_motif_name')
       click_button("Choisir ce motif")
 
       # Step 4
@@ -80,11 +80,9 @@ describe "User can search for rdvs" do
       click_button('Continuer')
 
       # Step 5
-      expect(page).to have_content("Votre rendez-vous est confirmé")
-      expect(page).to have_content(motif.instruction_for_rdv)
-      expect(page).not_to have_content("Annuler le RDV")
-
-      click_link('Aller à la liste de vos rendez-vous')
+      expect(page).to have_content("Récapitulatif de votre rendez vous")
+      expect(page).to have_content("Mathieu LAPIN")
+      click_link('Confirmer mon RDV')
 
       # Step 6
       expect(page).to have_content("Vos rendez-vous")
@@ -101,7 +99,7 @@ describe "User can search for rdvs" do
     before do
       travel_to(Time.zone.local(2019, 11, 18))
       login_as(user, scope: :user)
-      visit new_users_rdv_path(starts_at: Time.zone.local(2019, 11, 18, 10, 15), motif_name: motif.name, lieu_id: lieu.id, departement: "92", where: "useless")
+      visit new_users_rdv_wizard_step_path(step: 1, starts_at: Time.zone.local(2019, 11, 18, 10, 15), motif_id: motif.id, lieu_id: lieu.id, departement: "92", where: "useless")
     end
 
     after { travel_back }
@@ -115,7 +113,7 @@ describe "User can search for rdvs" do
 
       click_button('Continuer')
 
-      click_link('Aller à la liste de vos rendez-vous')
+      click_link('Confirmer mon RDV')
 
       # Step 6
       expect(page).to have_content(relative.full_name)
