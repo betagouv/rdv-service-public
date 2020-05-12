@@ -14,7 +14,6 @@
 
   .card-body
     = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }
-    input.js-current-organisation-id type='hidden' value=current_organisation.id
 
     .d-flex.justify-content-between
       label Usagers
@@ -67,4 +66,5 @@
         .col.text-right
           = f.button :submit, 'Continuer'
 
+input type='hidden' name="js-current-organisation-id" value=current_organisation.id
 input type='hidden' name="js-canonical-path" value=new_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 2))
