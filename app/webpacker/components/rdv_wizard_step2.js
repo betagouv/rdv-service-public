@@ -3,12 +3,14 @@ class RdvWizardStep2 {
   constructor() {
     if (!$('.js-new-rdv-users-select').length) { return; }
 
-    this.urlSearchParams = new URLSearchParams(window.location.search.substr(1))
+    const canonicalUrlStr = document.querySelector("input[name=js-canonical-path]").value
+    this.canonicalUrl = new URL(canonicalUrlStr, window.location)
+    this.urlSearchParams = new URLSearchParams(this.canonicalUrl.search.substr(1))
     this.organisationId = $("input.js-current-organisation-id").val()
     $('.js-new-rdv-users-select').on('select2:select', (e) => {
       this.showSpinner()
       this.urlSearchParams.append("user_ids[]", e.params.data.id)
-      window.location.search = this.urlSearchParams.toString();
+      this.redirectToNewUrl()
     });
     this.attachRemoveUserListeners()
     $(".js-toggle-add-user-interface").on('click', (e) => {
@@ -31,12 +33,17 @@ class RdvWizardStep2 {
       userIds.splice(userIds.indexOf(userId), 1)
       this.urlSearchParams.delete("user_ids[]")
       userIds.forEach(id => this.urlSearchParams.append("user_ids[]", id))
-      window.location.search = this.urlSearchParams.toString();
+      this.redirectToNewUrl()
     });
   }
 
   showSpinner = () => {
     $(".js-users-spinner").removeClass("d-none")
+  }
+
+  redirectToNewUrl = () => {
+    this.canonicalUrl.search = this.urlSearchParams.toString();
+    window.location = this.canonicalUrl;
   }
 }
 

@@ -66,3 +66,5 @@
           = link_to 'Revenir en arrière', new_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 1)), class: 'btn btn-link'
         .col.text-right
           = f.button :submit, 'Continuer'
+
+input type='hidden' name="js-canonical-path" value=new_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 2))
