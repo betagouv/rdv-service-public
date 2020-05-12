@@ -26,6 +26,7 @@ class LieuxController < ApplicationController
     start_date = params[:date]&.to_date || Date.today
     @date_range = start_date..(start_date + 6.days)
     @lieu = Lieu.find(params[:id])
+    @query.merge!(lieu_id: @lieu.id)
 
     if online_bookings_suspended_because_of_corona?(@departement)
       @creneaux = []

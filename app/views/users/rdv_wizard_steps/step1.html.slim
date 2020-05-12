@@ -53,6 +53,6 @@
 
           .row
             .col
-              = link_to "Revenir en arrière", lieux_path(search: @rdv_wizard.to_query.except(:rdv)), class: "btn btn-link"
+              = link_to "Revenir en arrière", lieux_path(search: @rdv_wizard.to_search_query), class: "btn btn-link"
             .col.text-right
               = f.button :submit, 'Continuer'

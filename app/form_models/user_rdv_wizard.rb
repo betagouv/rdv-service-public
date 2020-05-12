@@ -31,13 +31,13 @@ module UserRdvWizard
     end
 
     def to_query
-      rdv.to_query.merge(@attributes.slice(:where, :departement, :lieu_id))
+      rdv.to_query.merge(@attributes.slice(:where, :departement, :lieu_id, :latitude, :longitude))
     end
 
     def to_search_query
       @attributes
         .slice(:departement, :latitude, :longitude, :motif_name, :where)
-        .merge(service: @rdv.motif.service_id)
+        .merge(service: @rdv.motif.service_id, motif_name: @rdv.motif.name)
     end
   end
 
