@@ -222,6 +222,6 @@ fr:
       human_approx: "%A %d %B %Y vers %Hh%M"
       dense: "%d/%m/%Y à %H:%M"
     pm: pm
-  public_office: "au local"
+  public_office: "sur place"
   phone: "par téléphone"
   home: "à domicile"

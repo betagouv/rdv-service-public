@@ -2,4 +2,4 @@
   | Statistiques #{current_organisation.name}
   small Du #{l(Stat::DEFAULT_RANGE.first.to_date)} au #{l(Stat::DEFAULT_RANGE.last.to_date)}
 
-= render 'stats/statistics', stats: @stats, rdvs_stats_path: rdvs_organisation_stats_path(@organisation), users_stats_path: users_organisation_stats_path(@organisation), service_stats_path: rdvs_organisation_stats_path(@organisation, by_service: true)
+= render 'stats/statistics', stats: @stats, rdvs_stats_path: rdvs_organisation_stats_path(@organisation), users_stats_path: users_organisation_stats_path(@organisation)
