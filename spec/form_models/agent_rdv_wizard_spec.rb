@@ -1,4 +1,4 @@
-describe RdvWizard do
+describe AgentRdvWizard do
   let(:organisation) { build(:organisation) }
   let!(:agent) { create(:agent) }
   let!(:user) { create(:user) }

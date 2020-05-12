@@ -6,7 +6,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:motif) { create(:motif) }
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], first_day: Date.new(2019, 7, 24)) }
 
-    subject { post :create, params: { organisation_id: plage_ouverture.organisation_id, rdv: { motif_id: motif.id, lieu_id: plage_ouverture.lieu.id, starts_at: starts_at, departement: "12", where: "1 rue de la, ville 12345" } } }
+    subject { post :create, params: { organisation_id: plage_ouverture.organisation_id, lieu_id: plage_ouverture.lieu.id, departement: "12", where: "1 rue de la, ville 12345", motif_id: motif.id, starts_at: starts_at } }
 
     before do
       travel_to(Time.zone.local(2019, 7, 20))
@@ -21,7 +21,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       it "creates rdv" do
         expect(Rdv.count).to eq(1)
-        expect(response).to redirect_to users_rdv_confirmation_path(Rdv.last.id)
+        expect(response).to redirect_to users_rdvs_path
         expect(user.rdvs.last.created_by_user?).to be(true)
       end
     end
@@ -31,7 +31,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       it "creates rdv" do
         expect(Rdv.count).to eq(0)
-        expect(response).to redirect_to lieux_path(search: { departement: "12", service: motif.service_id, motif: motif.name, where: "1 rue de la, ville 12345" })
+        expect(response).to redirect_to lieux_path(search: { departement: "12", service: motif.service_id, motif_name: motif.name, where: "1 rue de la, ville 12345" })
         expect(flash[:error]).to eq "Ce creneau n'est plus disponible. Veuillez en sélectionner un autre."
       end
     end

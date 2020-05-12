@@ -58,11 +58,12 @@ class Users::RdvsController < UserAuthController
       current_user
     end
   end
+
   def new_rdv_extra_params
     params.permit(:lieu_id, :motif_name, :departement, :where)
   end
 
   def rdv_params
-    params.require(:rdv).permit(:starts_at, :motif_id, user_ids: [])
+    params.permit(:starts_at, :motif_id, user_ids: [])
   end
 end
