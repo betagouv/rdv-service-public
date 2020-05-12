@@ -48,7 +48,7 @@ describe Stat, type: :model do
       stats = Stat.new(rdvs: Rdv.all)
       expect(stats.rdvs_group_by_type[["à domicile", "05/04/2020"]]).to eq(1)
       expect(stats.rdvs_group_by_type[["par téléphone", "05/04/2020"]]).to eq(1)
-      expect(stats.rdvs_group_by_type[["au local", "05/04/2020"]]).to eq(1)
+      expect(stats.rdvs_group_by_type[["sur place", "05/04/2020"]]).to eq(1)
     end
   end
 end

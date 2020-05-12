@@ -5,23 +5,23 @@
 .card.mb-5
   .card-body
     h4.card-title.mb-3 RDV créés (#{stats.rdvs_for_default_range.count})
-    = column_chart rdvs_stats_path, stacked: true
+    = column_chart rdvs_statistic_path, stacked: true
 
 - if request.path == stats_path
   .card.mb-5
     .card-body
       h4.card-title.mb-3 RDV créés par département(#{stats.rdvs_for_default_range.count})
-      = column_chart add_query_string_params_to_url(rdvs_stats_path, by_departement: true), stacked: true
+      = column_chart add_query_string_params_to_url(rdvs_statistic_path, by_departement: true), stacked: true
 
 .card.mb-5
   .card-body
     h4.card-title.mb-3 RDV créés par service (#{stats.rdvs_for_default_range.count})
-    = column_chart add_query_string_params_to_url(rdvs_stats_path, by_service: true), stacked: true
+    = column_chart add_query_string_params_to_url(rdvs_statistic_path, by_service: true), stacked: true
 
 .card.mb-5
   .card-body
     h4.card-title.mb-3 RDV par type
-    = column_chart add_query_string_params_to_url(rdvs_stats_path, by_location_type: true), stacked: true
+    = column_chart add_query_string_params_to_url(rdvs_statistic_path, by_location_type: true), stacked: true
 
 .card.mb-5
   .card-body
