@@ -81,10 +81,10 @@ class Creneau
     JoursFeriesService.all_in_date_range(starts_at.to_date..ends_at.to_date).any?
   end
 
-  def self.next_availability_for_motif_and_lieu(motif_name, lieu, from)
+  def self.next_availability_for_motif_and_lieu(motif_name, lieu, from, **options)
     available_creneau = nil
     from.step(from + 6.months, 7).find do |date|
-      creneaux = CreneauxBuilderService.perform_with(motif_name, lieu, date..(date + 7.days))
+      creneaux = CreneauxBuilderService.perform_with(motif_name, lieu, date..(date + 7.days), options)
       available_creneau = creneaux.first if creneaux.any?
     end
     available_creneau

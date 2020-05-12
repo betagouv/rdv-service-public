@@ -77,6 +77,7 @@ RSpec.describe LieuxController, type: :controller do
                  title: "Tous les lundis",
                  first_day: first_day,
                  lieu: lieu,
+                 agent: agent,
                  motifs: [motif])
 
           get :show, params: {

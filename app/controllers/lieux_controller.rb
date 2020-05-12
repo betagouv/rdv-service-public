@@ -6,10 +6,22 @@ class LieuxController < ApplicationController
     @lieux = Lieu.for_service_motif_and_departement(@service_id, @motif_name, @departement)
     return redirect_to lieu_path(@lieux.first, search: @query) if @lieux.size == 1
 
+    @matching_motifs = Motif.active.online.joins(:organisation).where(organisations: { departement: @departement }, name: @motif_name)
+
+    if !current_user && @matching_motifs.first&.follow_up?
+      # TODO: revoir les contraintes d'unicitees completes (il manque :location_type dans le where) ou bien revoir la notion de motif.
+      redirect_to new_user_session_path, flash: {
+        notice: "le RDV '#{@motif_name}' est disponible pour les personnes déjà suivies. Veuillez vous connecter pour prendre ce type de RDV.",
+      }
+    end
     @next_availability_by_lieux = {}
     unless online_bookings_suspended_because_of_corona?(@departement)
       @lieux.each do |lieu|
-        @next_availability_by_lieux[lieu.id] = Creneau.next_availability_for_motif_and_lieu(@motif_name, lieu, Date.today)
+        @next_availability_by_lieux[lieu.id] = if current_user && @matching_motifs.first&.follow_up?
+                                                 Creneau.next_availability_for_motif_and_lieu(@motif_name, lieu, Date.today, agent_ids: current_user.agents)
+                                               else
+                                                 Creneau.next_availability_for_motif_and_lieu(@motif_name, lieu, Date.today)
+                                               end
       end
     end
 
@@ -41,12 +53,16 @@ class LieuxController < ApplicationController
       @referent_missing = "Le motif <b>#{@motif_name}</b> nécessite d'avoir un référent. Nous n'avons pas trouvé votre référent.".html_safe
       @creneaux = []
       @next_availability = nil
+    elsif @matching_motifs.first&.follow_up? && current_user
+      @creneaux = CreneauxBuilderService.perform_with(@motif_name, @lieu, @date_range, agent_ids: current_user.agents)
+      @next_availability = @creneaux.empty? ? Creneau.next_availability_for_motif_and_lieu(@motif_name, @lieu, @date_range.end, agent_ids: current_user.agents) : nil
     else
       @creneaux = CreneauxBuilderService.perform_with(@motif_name, @lieu, @date_range)
       @next_availability = @creneaux.empty? ? Creneau.next_availability_for_motif_and_lieu(@motif_name, @lieu, @date_range.end) : nil
     end
 
     @max_booking_delay = @matching_motifs.maximum('max_booking_delay')
+
     respond_to do |format|
       format.html
       format.js
