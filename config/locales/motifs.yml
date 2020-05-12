@@ -6,3 +6,4 @@ fr:
       home: "À domicile"
       secretariat: "Secrétariat"
       follow_up: "Suivi"
+    follow_up_need_signed_user: "le RDV '%{motif_name}' est disponible pour les personnes déjà suivies. Veuillez vous connecter pour prendre ce type de RDV."

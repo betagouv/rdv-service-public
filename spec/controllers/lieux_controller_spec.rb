@@ -93,6 +93,36 @@ RSpec.describe LieuxController, type: :controller do
           expect(response).to be_successful
           expect(flash[:notice]).to be_nil
           expect(assigns(:creneaux).count).to eq(5)
+          expect(assigns(:next_availability)).to be_nil
+        end
+
+        it "sans créneaux dispo sur la semaine qui arrive" do
+          agent = create(:agent)
+          usager = create(:user, agents: [agent])
+          sign_in usager
+          lieu = create(:lieu, latitude: 50.63, longitude: 3.06)
+          motif = create(:motif, online: true, follow_up: true)
+
+          create(:plage_ouverture, :weekly,
+                 title: "Tous les lundis",
+                 first_day: first_day + 4.month,
+                 agent: agent,
+                 lieu: lieu,
+                 motifs: [motif])
+
+          get :show, params: {
+            id: lieu,
+            search: {
+              departement: lieu.organisation.departement,
+              where: "useless 12345",
+              service: motif.service_id,
+              motif: motif.name,
+            },
+          }
+
+          expect(response).to be_successful
+          expect(assigns(:creneaux)).to be_empty
+          expect(assigns(:next_availability).starts_at).to eq(Time.utc(2019, 11, 25, 7, 0, 0).in_time_zone("CET"))
         end
       end
 
@@ -121,6 +151,7 @@ RSpec.describe LieuxController, type: :controller do
           expect(response).to be_successful
           expect(assigns[:referent_missing]).to eq("Le motif <b>#{motif.name}</b> nécessite d'avoir un référent. Nous n'avons pas trouvé votre référent.")
           expect(assigns[:creneaux]).to be_empty
+          expect(assigns(:next_availability)).to be_nil
         end
       end
     end
