@@ -31,7 +31,7 @@
               | &nbsp;
               = user.full_name
               = relative_tag(user)
-            div.ml-2= link_to "╳ Retirer", "#", class: "js-remove-user", data: { userId: user.id }
+            div.ml-2= link_to "╳ Retirer", "#", class: "js-remove-user", data: { 'user-id': user.id }
             div.ml-2
               - edit_path = user.relative? ? edit_organisation_relative_path(current_organisation, user, modal: true) : edit_organisation_user_path(current_organisation, user, modal: true)
               = link_to "✎ Modifier usager", edit_path, data: { modal: "true" }
