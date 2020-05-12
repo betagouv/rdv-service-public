@@ -42,7 +42,7 @@
         a href="https://maps.google.com?q=#{rdv.location.split(/,?\s/).join('+')}" target="_blank"
           = rdv.location
       .clear
-  - if rdv.motif.instruction_for_rdv.present?
+  - if rdv.motif.instruction_for_rdv.present? && for_role == :user
     .div.row-result.no-border
       span.title Informations supplémentaires :
       = simple_format(rdv.motif.instruction_for_rdv)
