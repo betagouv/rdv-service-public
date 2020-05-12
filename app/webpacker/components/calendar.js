@@ -9,7 +9,7 @@ import Bowser from "bowser";
 const browser = Bowser.getParser(window.navigator.userAgent);
 
 document.addEventListener('turbolinks:load', function() {
-  var calendarEl = document.getElementById('calendar');
+  const calendarEl = document.getElementById('calendar');
 
   let defaultView = "timeGridOneDay";
   if (!browser.is("mobile")) {
@@ -19,14 +19,16 @@ document.addEventListener('turbolinks:load', function() {
   }
 
   if (calendarEl !== null && calendarEl.innerHTML == "") {
+    const { eventSourcesJson, defaultDateJson, selectedEventId, organisationId, agentId } = calendarEl.dataset
+    const defaultDate = JSON.parse(defaultDateJson || sessionStorage.getItem('calendarStartDate'))
     var calendar = new Calendar(calendarEl, {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       locale: frLocale,
-      eventSources: JSON.parse(calendarEl.dataset.eventSources),
+      eventSources: JSON.parse(eventSourcesJson),
       eventSourceFailure: function (errorObj) {
         alert("Une erreur s'est produite lors de la récupération des données du calendrier.");
       },
-      defaultDate: JSON.parse(calendarEl.dataset.defaultDate),
+      defaultDate: defaultDate,
       defaultView: defaultView,
       viewSkeletonRender: function (info) {
         localStorage.setItem("calendarDefaultView", info.view.type);
@@ -40,8 +42,8 @@ document.addEventListener('turbolinks:load', function() {
         let startDate = moment(info.start);
         let params = {
           starts_at: info.startStr,
-          organisation_id: calendarEl.dataset.organisationId,
-          "agent_ids[]": calendarEl.dataset.agentId,
+          organisation_id: organisationId,
+          "agent_ids[]": agentId,
          };
         let plage_ouvertures = calendar.getEvents()
           .filter(e => e.rendering == "background")
@@ -73,9 +75,7 @@ document.addEventListener('turbolinks:load', function() {
       minTime: '07:00:00',
       maxTime: '20:00:00',
       datesRender: function(info) {
-        if ($('#fc-date').length) {
-          $('#fc-date').val(moment(info.view.activeStart).format('L'))
-        }
+        sessionStorage.setItem("calendarStartDate", JSON.stringify(info.view.currentStart))
       },
       eventRender: function (info) {
         let $el = $(info.el);
@@ -86,9 +86,9 @@ document.addEventListener('turbolinks:load', function() {
         if(info.event.extendedProps.duration <= 30) {
           $el.addClass("fc-event-small");
         };
+        if (selectedEventId && info.event.id == selectedEventId) $el.addClass("selected");
         $el.addClass("fc-event-"+ info.event.extendedProps.status);
         if (info.event.extendedProps.unclickable != true){
-          $el.attr("data-rightbar", "true");
           let title = `${moment(info.event.start).format('H:mm')} - ${moment(info.event.end).format('H:mm')}`;
           if (info.event.rendering == 'background') {
             $el.append("<div class=\"fc-title\" style=\"color: white; padding: 2px 4px; font-size: 12px; font-weight: bold;\">" + info.event.title + "</div>");

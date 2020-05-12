@@ -31,7 +31,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
         expect(@parsed_response.size).to eq(2)
 
         first = @parsed_response[0]
-        expect(first.size).to eq(6)
+        expect(first.size).to eq(7)
         expect(first["title"]).to eq("Marie DENIS")
         expect(first["start"]).to eq(rdv1.starts_at.as_json)
         expect(first["end"]).to eq(rdv1.ends_at.as_json)
@@ -40,7 +40,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
         expect(first["extendedProps"]).to eq({ status: rdv1.status, motif: rdv1.motif.name, past: rdv1.past?, duration: rdv.duration_in_min }.as_json)
 
         second = @parsed_response[1]
-        expect(second.size).to eq(6)
+        expect(second.size).to eq(7)
         expect(second["title"]).to eq("Marie DENIS")
         expect(second["start"]).to eq(rdv2.starts_at.as_json)
         expect(second["end"]).to eq(rdv2.ends_at.as_json)
@@ -59,6 +59,9 @@ RSpec.describe Agents::RdvsController, type: :controller do
   end
 
   describe "PUT #update" do
+    let(:referer_path) { organisation_agent_path(organisation.id, agent.id) }
+    before { request.headers['HTTP_REFERER'] = referer_path }
+
     subject do
       put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: new_attributes }
       rdv.reload
@@ -77,7 +80,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
 
       it "redirects to the agenda" do
         subject
-        expect(response).to redirect_to(rdv.agenda_path_for_agent(agent))
+        expect(response).to redirect_to(referer_path)
       end
     end
 
@@ -114,7 +117,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
 
     it "returns a success response" do
       subject
-      expect(response).to be_successful
+      expect(response).to redirect_to(organisation_rdv_path(rdv.organisation, rdv))
     end
 
     it "changes status" do

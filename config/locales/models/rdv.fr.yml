@@ -5,8 +5,10 @@ fr:
     attributes:
       rdv:
         motif: Motif
+        user_ids: Usagers
         users: Usagers
         agents: Agents
+        agent_ids: Agents
         location: Lieu
         starts_at: Commence à
         duration_in_min: Durée en minutes

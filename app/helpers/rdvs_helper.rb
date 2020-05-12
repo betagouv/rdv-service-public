@@ -20,7 +20,7 @@ module RdvsHelper
 
   def users_to_links(rdv)
     safe_join(rdv.users.order_by_last_name.map do |user|
-      link_to user.full_name, user_show_path(user), target: '_blank'
+      link_to user.full_name, user_show_path(user)
     end, ", ")
   end
 
@@ -57,16 +57,6 @@ module RdvsHelper
       content_tag(:span, 'Annulé', class: 'badge badge-warning')
     elsif rdv.starts_at.future?
       content_tag(:span, 'À venir', class: 'badge badge-info')
-    end
-  end
-
-  def callback_path(rdv)
-    if params[:agent_id].present?
-      organisation_agent_rdvs_path(rdv.organisation, params[:agent_id], page: params[:page])
-    elsif params[:user_id].present?
-      organisation_user_rdvs_path(rdv.organisation, params[:user_id], page: params[:page])
-    else
-      organisation_rdvs_path(rdv.organisation, page: params[:page])
     end
   end
 

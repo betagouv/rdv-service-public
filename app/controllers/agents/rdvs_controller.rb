@@ -14,8 +14,8 @@ class Agents::RdvsController < AgentAuthController
   end
 
   def show
+    @uncollapsed_section = params[:uncollapsed_section]
     authorize(@rdv)
-    respond_right_bar_with(@rdv)
   end
 
   def edit
@@ -25,35 +25,38 @@ class Agents::RdvsController < AgentAuthController
 
   def update
     authorize(@rdv)
+    @rdv.updated_at = Time.zone.now
+    # TODO: replace this manual touch. It forces creating a version when an
+    # agent or a user is removed from the RDV. the touch: true option on the
+    # association does not do it for some reason I could not figure out
     if params[:status] == 'excused'
       CancelRdvByAgentService.new(@rdv).perform
       flash[:notice] = 'Le rendez-vous a été annulé.'
     elsif @rdv.update(rdv_params)
       flash[:notice] = 'Le rendez-vous a été modifié.'
     end
-    respond_right_bar_with @rdv, location: callback_path(@rdv)
+    respond_right_bar_with @rdv, location: request.referer
   end
 
   def status
+    # TODO: remove this route and use #update
     authorize(@rdv)
     cancelled_at = ['unknown', 'waiting', 'seen'].include?(status_params[:status]) ? nil : Time.zone.now
     @rdv.update(status: status_params[:status], cancelled_at: cancelled_at)
     @rdv.file_attentes.delete_all
-    respond_to do |f|
-      f.js
-    end
+    flash[:notice] = "Le statut du RDV a été modifié"
+    redirect_to organisation_rdv_path(@rdv.organisation, @rdv)
   end
 
   def destroy
     authorize(@rdv)
-    redirect_location = callback_path(@rdv)
     if @rdv.destroy
       flash[:notice] = "Le rendez-vous a été supprimé."
     else
       flash[:error] = "Une erreur s’est produite, le rendez-vous n’a pas pu être supprimé."
       Raven.capture_exception(Exception.new("Deletion failed for rdv : #{@rdv.id}"))
     end
-    redirect_to redirect_location
+    redirect_to organisation_agent_path(current_organisation, current_agent)
   end
 
   def create
@@ -74,21 +77,12 @@ class Agents::RdvsController < AgentAuthController
     @rdv = Rdv.find(params[:id])
   end
 
-  def callback_path(rdv)
-    location = params[:callback_path].present? ? params[:callback_path] : rdv.agenda_path_for_agent(current_agent)
-    location.to_s
-  end
-
   def rdv_params
     params.require(:rdv).permit(:motif_id, :location, :duration_in_min, :starts_at, :notes, agent_ids: [], user_ids: [])
   end
 
   def status_params
     params.require(:rdv).permit(:status)
-  end
-
-  def callback_params
-    params.permit(:callback_path)
   end
 
   def date_range_params

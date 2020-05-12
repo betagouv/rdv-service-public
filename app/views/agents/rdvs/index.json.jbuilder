@@ -1,5 +1,6 @@
 json.array! @rdvs do |rdv|
   json.title rdv_title_for_agent(rdv)
+  json.id rdv.id
   json.extendedProps do
     json.status rdv.status
     json.motif rdv.motif.name

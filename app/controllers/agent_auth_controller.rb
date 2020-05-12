@@ -19,8 +19,8 @@ class AgentAuthController < ApplicationController
     AgentContext.new(current_agent, current_organisation)
   end
 
-  def authorize(record)
-    record.class.module_parent == Agent ? super(record) : super([:agent, record])
+  def authorize(record, *args)
+    record.class.module_parent == Agent ? super(record, *args) : super([:agent, record], *args)
   end
 
   def policy_scope(clasz)

@@ -1,0 +1,21 @@
+- if @resource.is_a?(::PaperTrail::Model::InstanceMethods) && @resource.versions.exists?
+  table.table.table-striped.papertrail_versions
+    thead
+      tr
+        th Date
+        th Auteur
+        th Changements
+    tbody
+      - @augmented_versions.each do |augmented_version|
+        tr
+          td= l(augmented_version.created_at, format: :dense)
+          td= augmented_version.whodunnit
+          td
+            ul
+              - augmented_version.changes.each do |property,change|
+                li
+                  = "#{@resource.class.human_attribute_name(property)} : "
+                  b= paper_trail_change_value(@resource, property, change.last)
+                  - if change.first.present?
+                    | &nbsp;au lieu de&nbsp;
+                    span.strikethrough= paper_trail_change_value(@resource, property, change.first)

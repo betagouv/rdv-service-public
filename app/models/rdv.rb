@@ -1,7 +1,9 @@
 class Rdv < ApplicationRecord
   include WebhookDeliverable
 
-  has_paper_trail
+  has_paper_trail(
+    meta: { virtual_attributes: :virtual_attributes_for_paper_trail }
+  )
   belongs_to :organisation
   belongs_to :motif
   has_many :file_attentes, dependent: :destroy
@@ -103,6 +105,10 @@ class Rdv < ApplicationRecord
   end
 
   private
+
+  def virtual_attributes_for_paper_trail
+    { user_ids: users&.pluck(:id), agent_ids: agents&.pluck(:id) }
+  end
 
   def associate_users_with_organisation
     users.each do |u|
