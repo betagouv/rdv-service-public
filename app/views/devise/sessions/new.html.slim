@@ -5,9 +5,6 @@
 
   = devise_error_messages!
 
-  - if flash[:notice]
-    .alert.alert-warning= flash[:notice]
-
   .form-group
     = f.label :email
     = f.email_field :email, autofocus: true, class: 'form-control', placeholder: 'nom.prenom@email.com'
