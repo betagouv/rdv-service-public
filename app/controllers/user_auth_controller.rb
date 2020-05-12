@@ -11,7 +11,7 @@ class UserAuthController < ApplicationController
   private
 
   def user_for_paper_trail
-    "[User] #{current_user.email}"
+    "[User] #{current_user.full_name}"
   end
 
   def authorize(record)

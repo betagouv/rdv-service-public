@@ -12,7 +12,7 @@ class AgentAuthController < ApplicationController
   private
 
   def user_for_paper_trail
-    "[Agent] #{current_agent.email}"
+    "[Agent] #{current_agent.full_name}"
   end
 
   def pundit_user
