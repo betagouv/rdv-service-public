@@ -11,9 +11,7 @@ module UserRdvWizard
     def initialize(user, attributes)
       @user = user
       @attributes = attributes.to_h.symbolize_keys
-      rdv_defaults = {
-        user_ids: [attributes[:created_user_id] || user.id],
-      }
+      rdv_defaults = { user_ids: [user.id] }
       @rdv = Rdv.new(
         rdv_defaults
           .merge(motif: @motif)
@@ -43,7 +41,12 @@ module UserRdvWizard
 
   class Step1 < Base; end
 
-  class Step2 < Step1; end
+  class Step2 < Step1
+    def initialize(user, attributes)
+      super(user, attributes)
+      @rdv.user_ids = [attributes[:created_user_id]] if attributes[:created_user_id].present?
+    end
+  end
 
   class Step3 < Step2; end
 end

@@ -44,6 +44,6 @@
 
           .row
             .col
-              = link_to "Revenir en arrière", lieux_path(search: @rdv_wizard.to_search_query), class: "btn btn-link"
+              = link_to "Revenir en arrière", new_users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query), class: "btn btn-link"
             .col.text-right
               = f.button :submit, 'Continuer'

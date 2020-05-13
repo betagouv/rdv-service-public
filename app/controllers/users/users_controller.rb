@@ -8,7 +8,7 @@ class Users::UsersController < UserAuthController
     @user = current_user
     authorize(@user)
     user_saved = @user.update(user_params)
-    if params[:from_wizard].presence
+    if user_saved && params[:from_wizard].presence
       redirect_to new_users_rdv_wizard_step_path(step: 2, **wizard_params)
     elsif user_saved
       flash[:notice] = "Vos informations ont été mises à jour."
