@@ -14,7 +14,6 @@
 
   .card-body
     = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }
-    input.js-current-organisation-id type='hidden' value=current_organisation.id
 
     .d-flex.justify-content-between
       label Usagers
@@ -31,7 +30,7 @@
               | &nbsp;
               = user.full_name
               = relative_tag(user)
-            div.ml-2= link_to "╳ Retirer", "#", class: "js-remove-user", data: { userId: user.id }
+            div.ml-2= link_to "╳ Retirer", "#", class: "js-remove-user", data: { 'user-id': user.id }
             div.ml-2
               - edit_path = user.relative? ? edit_organisation_relative_path(current_organisation, user, modal: true) : edit_organisation_user_path(current_organisation, user, modal: true)
               = link_to "✎ Modifier usager", edit_path, data: { modal: "true" }
@@ -66,3 +65,6 @@
           = link_to 'Revenir en arrière', new_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 1)), class: 'btn btn-link'
         .col.text-right
           = f.button :submit, 'Continuer'
+
+input type='hidden' name="js-current-organisation-id" value=current_organisation.id
+input type='hidden' name="js-canonical-path" value=new_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 2))
