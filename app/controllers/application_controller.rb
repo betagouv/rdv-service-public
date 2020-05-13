@@ -6,12 +6,11 @@ class ApplicationController < ActionController::Base
   before_action :set_raven_context
 
   def after_sign_in_path_for(resource)
-    path = if resource.class == Agent
-             current_agent.complete? ? authenticated_agent_root_path : new_agents_full_subscription_path
-           elsif resource.class == User
-             stored_location_for(resource) || authenticated_user_root_path
-           end
-    path
+    if resource.class == Agent
+      authenticated_agent_root_path
+    elsif resource.class == User
+      stored_location_for(resource) || authenticated_user_root_path
+    end
   end
 
   def respond_modal_with(*args, &blk)

@@ -84,7 +84,6 @@ Rails.application.routes.draw do
         resources :agents, only: [:index, :show, :destroy] do
           post :reinvite, on: :member
           collection do
-            resources :full_subscriptions, only: [:new, :create]
             resources :permissions, only: [:edit, :update]
           end
           resources :rdvs, only: :index
