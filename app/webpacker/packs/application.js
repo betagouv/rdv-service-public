@@ -1,3 +1,4 @@
+import 'core-js/stable'
 require("@rails/ujs").start()
 require("turbolinks").start()
 require("chartkick")
