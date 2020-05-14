@@ -5,7 +5,7 @@
       b Se connecter
     |.
 
-- if devise_mapping.confirmable? && controller_name != 'confirmations'
+- if devise_mapping.confirmable? && controller_name != 'confirmations'  && resource_name == :user
   p.text-muted
     | Vous n'avez pas reçu le mail de confirmation ? 
     = link_to new_confirmation_path(resource_name) do 

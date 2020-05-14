@@ -55,7 +55,7 @@ Rails.application.routes.draw do
     get "/users/rdvs", to: 'users/rdvs#index', as: :authenticated_user_root
   end
 
-  devise_for :agents, controllers: { invitations: 'agents/invitations', sessions: 'sessions' }
+  devise_for :agents, controllers: { invitations: 'agents/invitations', sessions: 'sessions', passwords: 'agents/passwords' }
 
   as :agent do
     get 'agents/edit' => 'agents/registrations#edit', as: 'edit_agent_registration'
