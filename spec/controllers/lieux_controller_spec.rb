@@ -116,7 +116,7 @@ RSpec.describe LieuxController, type: :controller do
               departement: lieu.organisation.departement,
               where: "useless 12345",
               service: motif.service_id,
-              motif: motif.name,
+              motif_name: motif.name,
             },
           }
 
@@ -144,7 +144,7 @@ RSpec.describe LieuxController, type: :controller do
               departement: lieu.organisation.departement,
               where: "useless 12345",
               service: motif.service_id,
-              motif: motif.name,
+              motif_name: motif.name,
             },
           }
 
