@@ -72,7 +72,7 @@ describe "User can search for rdvs" do
       # Step 5
       expect(page).to have_content(motif.name)
       expect(page).to have_content("Michel LAPIN (LAPINOU)")
-      
+
       expect(page).to have_content(motif.restriction_for_rdv)
 
       # Add relative
