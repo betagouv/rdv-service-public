@@ -21,7 +21,8 @@ class Agents::UsersController < AgentAuthController
     @user = User.new
     @user.organisation_ids = [current_organisation.id]
     authorize(@user)
-    respond_modal_with @user
+    respond_modal_with @user_ids if from_modal?
+    render :new, layout: 'application-small'
   end
 
   def create

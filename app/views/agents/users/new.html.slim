@@ -4,8 +4,6 @@
 - if from_modal?
   = render 'form', user: @user
 - else
-  .row
-    .col-md-6
-      .card
-        .card-body
-          = render 'form', user: @user
+  .card
+    .card-body
+      = render 'form', user: @user
