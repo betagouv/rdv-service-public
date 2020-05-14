@@ -56,7 +56,7 @@ class LieuxController < ApplicationController
   private
 
   def options_to_build_creneaux
-    @_options ||= follow_up_rdv_and_online_user? ? { agent_ids: current_user.agent_ids, agent_name: true } : {}
+    @options_to_build_creneaux ||= follow_up_rdv_and_online_user? ? { agent_ids: current_user.agent_ids, agent_name: true } : {}
   end
 
   def follow_up_rdv_without_referent?

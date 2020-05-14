@@ -62,7 +62,7 @@ RSpec.describe LieuxController, type: :controller do
           }
 
           expect(response).to redirect_to(new_user_session_path)
-          expect(flash[:notice]).to eq("le RDV '#{motif.name}' est disponible pour les personnes déjà suivies. Veuillez vous connecter pour prendre ce type de RDV.")
+          expect(flash[:notice]).to eq("Le RDV '#{motif.name}' est disponible uniquement pour les personnes déjà suivies. Veuillez vous connecter pour prendre ce type de RDV.")
         end
       end
 
