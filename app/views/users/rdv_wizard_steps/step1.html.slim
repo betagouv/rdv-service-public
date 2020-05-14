@@ -5,6 +5,6 @@
     h2.text-center.mb-4 Mettez à jour vos informations
     .card
       .card-body
-        = render "users/users/form", user: current_user, from_wizard: @rdv_wizard.to_query
+        = render "users/users/form", user: current_user, rdv_wizard: @rdv_wizard.to_query
         .col
           = link_to "Revenir en arrière", lieux_path(search: @rdv_wizard.to_search_query), class: "btn btn-link"

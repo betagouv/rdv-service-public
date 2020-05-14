@@ -37,16 +37,29 @@ module UserRdvWizard
         .slice(:departement, :latitude, :longitude, :motif_name, :where)
         .merge(service: @rdv.motif.service_id, motif_name: @rdv.motif.name)
     end
+
+    def save
+      true
+    end
   end
 
-  class Step1 < Base; end
+  class Step1 < Base
+    def initialize(user, attributes)
+      super
+      @user_attributes = @attributes[:user]
+    end
 
-  class Step2 < Step1
+    def save
+      @user.update(@user_attributes)
+    end
+  end
+
+  class Step2 < Base
     def initialize(user, attributes)
       super(user, attributes)
       @rdv.user_ids = [attributes[:created_user_id]] if attributes[:created_user_id].present?
     end
   end
 
-  class Step3 < Step2; end
+  class Step3 < Base; end
 end
