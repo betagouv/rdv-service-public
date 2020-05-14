@@ -27,7 +27,7 @@
     "metismenu": "^2.7.9",
     "minimist": "^1.2.3",
     "moment": "^2.24.0",
-    "places.js": "^1.16.4",
+    "places.js": "^1.18.2",
     "popper.js": "^1.15.0",
     "rails-erb-loader": "^5.5.2",
     "select2": "^4.0.8",
