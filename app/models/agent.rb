@@ -42,6 +42,12 @@ class Agent < ApplicationRecord
     first_name.present? && last_name.present?
   end
 
+  def from_safe_domain?
+    pattern = "@(#{ENV['SAFE_DOMAIN_LIST']&.split&.join('|')})$"
+    regex = Regexp.new(pattern)
+    regex.match? email
+  end
+
   ## Soft Delete for Devise
   def soft_delete(organisation = nil)
     organisations.delete(organisation) && return if organisation.present? && organisations.count > 1

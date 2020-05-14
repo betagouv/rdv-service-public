@@ -40,7 +40,14 @@ section.py-5.bg-lightturquoise.text-primary
 
         .text-dark.text-center.mt-5
           p.lead Vous souhaitez en savoir plus ?
-          = contact_us_button
+          .row.d-flex.justify-content-center
+            .col-md-3.p-2.px-3.p-md-0
+              = contact_us_button
+            .col-md-3.p-2.px-3.p-md-0
+              = link_to "Créez votre service", new_organisation_path, class: 'btn btn-tertiary'
+            - unless demo?
+              .col-md-3.p-2.px-3.p-md-0
+                = link_to "Testez l'outil", "https://demo.rdv-solidarites.fr#{new_organisation_path}", class: 'btn btn-tertiary'
 
 section.bg-white.py-5
   .container
@@ -96,4 +103,12 @@ section.bg-lightturquoise.py-5
     .row
       .col-md-12.text-center.mt-5
         p.lead Vous êtes intéressés pour votre Maison des Solidarités ?
-        = contact_us_button
+        .col-md-9.m-auto
+          .row.d-flex.justify-content-center
+            .col-md-3.p-2.px-3.p-md-0
+              = contact_us_button
+            .col-md-3.p-2.px-3.p-md-0
+              = link_to "Créez votre service", new_organisation_path, class: 'btn btn-tertiary'
+            - unless demo?
+              .col-md-3.p-2.px-3.p-md-0
+                = link_to "Testez l'outil", "https://demo.rdv-solidarites.fr#{new_organisation_path}", class: 'btn btn-tertiary'

@@ -63,12 +63,15 @@ Rails.application.routes.draw do
     delete 'agents' => 'agents/registrations#destroy', as: 'delete_agent_registration'
   end
 
+  resources :organisations, only: [:new, :create]
+
   authenticate :agent do
     scope module: 'agents' do
-      resources :organisations, except: :destroy do
+      resources :organisations, except: [:destroy, :new, :create] do
         resources :lieux, except: :show
         resources :motifs
         scope module: 'organisations' do
+          resource :setup_checklist
           resources :rdvs, only: :index
           resources :stats, only: :index do
             collection do

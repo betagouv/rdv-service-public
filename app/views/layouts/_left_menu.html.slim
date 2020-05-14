@@ -5,6 +5,11 @@
       .collapse-menu.mx-2
         i.fa.fa-2x.fa-angle-left
     ul.metismenu.side-nav.mt-5
+      - if current_organisation.recent?
+        li.side-nav-item
+          = link_to organisation_setup_checklist_path(current_organisation), class: 'side-nav-link' do
+            i.far.fa-calendar
+            span Premiers pas
       li.side-nav-item
         = link_to '#', class: 'side-nav-link' do
           i.far.fa-clock

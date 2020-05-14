@@ -1,0 +1,97 @@
+- content_for :title do
+  | Votre installation
+
+.row
+  .col-md-6
+    .card
+      .card-body
+        h4.card-title.mb-3 Installation pas à pas
+        p L'objectif de cette page est de regrouper les actions nécessaires pour permettre la prise de RDV (en ligne ou en interne) au sein de votre organisation puis de permettre cette prise de RDV en ligne.
+        ul.mb-5
+          li.mb-2
+            strong
+              = link_to "Ajouter un lieu", organisation_lieux_path(@organisation)
+            - if @lieux.length > 0
+                span &nbsp;✅&nbsp;-&nbsp;
+                span = @lieux.length == 1 ? @lieux.first.name : "#{@lieux.length} lieux créés"
+          li.mb-2
+            strong
+              = link_to "Ajouter un agent", organisation_agents_path(@organisation)
+            - if @other_agents.length > 0
+                span &nbsp;✅&nbsp;-&nbsp;
+                span = @other_agents.length == 1 ? @other_agents.last.full_name : "#{@other_agents.length} agents créés"
+          li.mb-2
+            strong
+              = link_to "Ajouter un motif de RDV", organisation_motifs_path(@organisation)
+            - if @motifs.length > 0
+                span &nbsp;✅&nbsp;-&nbsp;
+                span = @motifs.length == 1 ? @motifs.last.name : "#{@motifs.length} motifs créés"
+          li.mb-2
+            strong Ajouter une plage d'ouverture
+            ul
+              li
+                strong
+                  = link_to "Dans votre agenda", organisation_agent_plage_ouvertures_path(@organisation, @current_agent.id)
+                  - if current_agent.plage_ouvertures.length > 0
+                      span &nbsp;✅&nbsp
+              - @other_agents.each  do |agent|
+                li
+                  strong
+                    - if agent.complete?
+                      = link_to "Dans l'agenda de #{agent.full_name}", organisation_agent_plage_ouvertures_path(@organisation, agent.id)
+                      - if agent.plage_ouvertures.length > 0
+                          span &nbsp;✅&nbsp
+                    - else
+                      span= "Dans l'agenda de #{agent.email} (Validation en attente)"
+          li.mb-2
+            strong Intégrer les RDV prévus dans le futur
+            ul
+              li
+                strong
+                  = link_to "Créer une fiche usager", new_organisation_user_path(@organisation)
+              li
+                strong Ajouter un RDV
+                ul
+                  li
+                    strong
+                      = link_to "Dans votre agenda", organisation_agent_path(@organisation, @current_agent.id)
+                      - if current_agent.rdvs.length > 0
+                          span &nbsp;✅&nbsp
+                  - @other_agents.each  do |agent|
+                    li
+                      strong
+                        - if agent.complete?
+                          = link_to "Dans l'agenda de #{agent.full_name}", organisation_agent_path(@organisation, agent.id)
+                          - if agent.rdvs.length > 0
+                              span &nbsp;✅&nbsp
+                        - else
+                          span= "Dans l'agenda de #{agent.email} (Validation en attente)"
+          li.mb-2
+            strong Ajouter un créneau d'absence pour éviter la prise de RDV sur un créneau normalement ouvert
+            ul
+              li
+                strong
+                  = link_to "Dans votre agenda", organisation_agent_absences_path(@organisation, @current_agent.id)
+                  - if current_agent.absences.length > 0
+                      span &nbsp;✅&nbsp
+              - @other_agents.each  do |agent|
+                li
+                  strong
+                    - if agent.complete?
+                      = link_to "Dans l'agenda de #{agent.full_name}", organisation_agent_absences_path(@organisation, agent.id)
+                      - if agent.absences.length > 0
+                          span &nbsp;✅&nbsp
+                    - else
+                      span= "Dans l'agenda de #{agent.email} (Validation en attente)"
+          li.mb-2
+            strong Ouvrir un motif de RDV en ligne
+            ul
+              - @motifs.each  do |motif|
+                li
+                  - if motif.online?
+                    span= "#{motif.name} ✅"
+                  - else
+                    = link_to "Modifier #{motif.name}", edit_organisation_motif_path(@organisation, motif)
+          li.mb-2
+            strong
+              = link_to "Accéder à la vue usager de prise de RDV en ligne", welcome_departement_path(departement: @organisation.departement)

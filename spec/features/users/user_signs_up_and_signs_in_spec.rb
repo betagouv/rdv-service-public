@@ -1,4 +1,6 @@
 feature 'User signs up and signs in' do
+  include OrganisationsHelper
+
   let(:user) { build(:user) }
   let(:invited_user) { create(:user, :unconfirmed) }
 
@@ -48,7 +50,7 @@ feature 'User signs up and signs in' do
         fill_in :user_email, with: agent.email
         fill_in :password, with: agent.password
         click_on "Se connecter"
-        expect(current_path).to eq(organisation_agent_path(agent.organisation_ids.first, agent.id))
+        expect(current_path).to eq(agent.organisation_ids.first.home_path(agent.id))
       end
     end
   end

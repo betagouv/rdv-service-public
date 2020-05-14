@@ -6,7 +6,7 @@ class Agents::OrganisationsController < AgentAuthController
   def index
     @organisations = policy_scope(Organisation)
     if @organisations.count == 1
-      redirect_to organisation_agent_path(@organisations.first, current_agent)
+      redirect_to @organisations.first.home_path(current_agent)
     else
       render layout: 'registration'
     end
