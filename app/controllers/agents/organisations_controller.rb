@@ -2,7 +2,6 @@ class Agents::OrganisationsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation, except: :index
-  before_action :redirect_if_agent_incomplete, only: :index
 
   def index
     @organisations = policy_scope(Organisation)
@@ -32,11 +31,5 @@ class Agents::OrganisationsController < AgentAuthController
 
   def organisation_params
     params.require(:organisation).permit(:name, :horaires, :phone_number)
-  end
-
-  def redirect_if_agent_incomplete
-    return unless agent_signed_in?
-
-    redirect_to(new_agents_full_subscription_path) && return unless current_agent.complete?
   end
 end
