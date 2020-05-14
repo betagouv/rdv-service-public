@@ -9,6 +9,7 @@ class Users::RdvMailer < ApplicationMailer
     attachments[ics.name] = {
       mime_type: 'text/calendar',
       content: ics.to_ical_for(user),
+      encoding: "8bit", # fixes encoding issues in ICS
     }
     mail(
       to: user.email,
