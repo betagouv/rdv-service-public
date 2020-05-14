@@ -5,7 +5,7 @@ class LieuxController < ApplicationController
   def index
     @lieux = Lieu.for_service_motif_and_departement(@service_id, @motif_name, @departement)
     return redirect_to lieu_path(@lieux.first, search: @query) if @lieux.size == 1
-    return redirect_to new_user_session_path, flash: { notice: I18n.t("motifs.follow_up_need_signed_user", motif_name: @motif_name) } if follow_up_rdv_and_offline_user?
+    return redirect_to new_user_session_path, flash: { alert: I18n.t("motifs.follow_up_need_signed_user", motif_name: @motif_name) } if follow_up_rdv_and_offline_user?
 
     @next_availability_by_lieux = {}
     unless online_bookings_suspended_because_of_corona?(@departement)
@@ -56,8 +56,7 @@ class LieuxController < ApplicationController
   private
 
   def options_to_build_creneaux
-    @_options ||= follow_up_rdv_and_online_user? ? { agent_ids: current_user.agent_ids, for_agents: true } : {}
-    @_options
+    @_options ||= follow_up_rdv_and_online_user? ? { agent_ids: current_user.agent_ids, agent_name: true } : {}
   end
 
   def follow_up_rdv_without_referent?
