@@ -2,7 +2,7 @@
 
 .row.justify-content-center
   .col-lg-7.col-md-10.col-sm-11
-    h2.text-center.mb-4 Confirmation
+    h3.text-center.mb-3 Confirmation
     .card
       ul.list-group.list-group-flush
         li.list-group-item
@@ -49,7 +49,7 @@
               = current_user.phone_number || "Non renseigné"
             .col-auto
               = link_to "modifier", new_users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query)
-          
+
 
         .card-body
           - if @rdv.motif.restriction_for_rdv.present?

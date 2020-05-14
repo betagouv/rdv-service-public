@@ -3,11 +3,11 @@
 = simple_form_for user, url: form_url, method: form_method  do |f|
   = render partial: 'layouts/model_errors', locals: { model: user }
   .form-row
-    .col-6= f.input :first_name, placeholder: 'Prénom'
-    .col-6= f.input :last_name, placeholder: 'Nom'
+    .col-md-6= f.input :first_name, placeholder: 'Prénom'
+    .col-md-6= f.input :last_name, placeholder: 'Nom'
   .form-row
-    .col-6= f.input :birth_name, placeholder: 'Nom de naissance'
-    .col-6= f.input :birth_date, as: :date, html5: true
+    .col-md-6= f.input :birth_name, placeholder: 'Nom de naissance'
+    .col-md-6= f.input :birth_date, as: :date, html5: true
   = f.input :phone_number, as: :tel
   = f.input :address, input_html: { class: "places-js-container" }
   .form-row
