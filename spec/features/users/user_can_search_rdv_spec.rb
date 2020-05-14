@@ -65,7 +65,11 @@ describe "User can search for rdvs" do
       click_button("Se connecter")
 
       # Step 4
-      expect(page).to have_content("Mettez à jour vos informations")
+      expect(page).to have_content("Vos informations")
+      fill_in('Date de naissance', with: Date.tomorrow)
+      click_button('Continuer')
+      expect(page).to have_content("Date de naissance est invalide")
+      fill_in('Date de naissance', with: Date.yesterday)
       fill_in('Nom de naissance', with: "Lapinou")
       click_button('Continuer')
 
