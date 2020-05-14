@@ -6,7 +6,7 @@ class Agents::PasswordsController < Devise::PasswordsController
     if agent && !agent.complete?
       agent.invite!
       flash[:notice] = "Vous n'avez pas activé votre compte, un email vous a été envoyé."
-      redirect_to root_page
+      redirect_to root_path
     else
       super
     end
