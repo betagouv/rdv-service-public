@@ -5,16 +5,13 @@ class LieuxController < ApplicationController
   def index
     @lieux = Lieu.for_service_motif_and_departement(@service_id, @motif_name, @departement)
     return redirect_to lieu_path(@lieux.first, search: @query) if @lieux.size == 1
-
-    # TODO: revoir les contraintes d'unicitees completes (il manque :location_type dans le where) ou bien revoir la notion de motif.
-    return redirect_to new_user_session_path, flash: { notice: I18n.t("motifs.follow_up_need_signed_user", motif_name: @motif_name) } if follow_up_rdv_and_online_user?
+    return redirect_to new_user_session_path, flash: { notice: I18n.t("motifs.follow_up_need_signed_user", motif_name: @motif_name) } if follow_up_rdv_and_offline_user?
 
     @next_availability_by_lieux = {}
     unless online_bookings_suspended_because_of_corona?(@departement)
       @lieux.each do |lieu|
-        # TODO au lieux de current_user.agents, il faudrait sans doute filtrer sur les agents du service lié au motif, de la même organisation
-        options = follow_up_rdv_and_online_user? ? { agent_ids: current_user.agent_ids } : {}
-        @next_availability_by_lieux[lieu.id] = Creneau.next_availability_for_motif_and_lieu(@motif_name, lieu, Date.today, **options)
+        # TODO: au lieux de current_user.agents, il faudrait sans doute filtrer sur les agents du service lie au motif, de la meme organisation
+        @next_availability_by_lieux[lieu.id] = Creneau.next_availability_for_motif_and_lieu(@motif_name, lieu, Date.today, options_to_build_creneaux)
       end
     end
 
@@ -44,9 +41,8 @@ class LieuxController < ApplicationController
       @referent_missing = "Vous ne semblez pas bénéficier d’un accompagnement ou d’un suivi, merci de choisir un autre motif ou de contacter la MDS au #{@lieu.organisation.phone_number}".html_safe
       @creneaux = []
     else
-      options = follow_up_rdv_and_online_user? ? { agent_ids: current_user.agent_ids } : {}
-      @creneaux = CreneauxBuilderService.perform_with(@motif_name, @lieu, @date_range, options)
-      @next_availability = Creneau.next_availability_for_motif_and_lieu(@motif_name, @lieu, @date_range.end, options) if @creneaux.empty?
+      @creneaux = CreneauxBuilderService.perform_with(@motif_name, @lieu, @date_range, options_to_build_creneaux)
+      @next_availability = Creneau.next_availability_for_motif_and_lieu(@motif_name, @lieu, @date_range.end, options_to_build_creneaux) if @creneaux.empty?
     end
 
     @max_booking_delay = @matching_motifs.maximum('max_booking_delay')
@@ -59,8 +55,13 @@ class LieuxController < ApplicationController
 
   private
 
+  def options_to_build_creneaux
+    @_options ||= follow_up_rdv_and_online_user? ? { agent_ids: current_user.agent_ids, for_agents: true } : {}
+    @_options
+  end
+
   def follow_up_rdv_without_referent?
-    # TODO au lieux de current_user.agents, il faudrait sans doute filtrer sur les agents du service lié au motif, de la même organisation
+    # TODO: au lieux de current_user.agents, il faudrait sans doute filtrer sur les agents du service lie au motif, de la meme organisation
     @matching_motifs.first&.follow_up? && current_user && current_user.agents.empty?
   end
 
