@@ -1,4 +1,8 @@
-- form_url = user.persisted? ? organisation_relative_path(current_organisation, user) : organisation_user_relatives_path(current_organisation, user.responsible)
+- form_url = user.persisted? ? \
+  organisation_relative_path(current_organisation, user) : \
+  user.responsible_id.present? ? \
+    organisation_user_relatives_path(current_organisation, user.responsible) : \
+    "#"
 = simple_form_for user, url: form_url, remote: from_modal?, data: { modal: from_modal? } do |f|
   - if from_modal?
     = hidden_field '', :modal, value: true
@@ -8,9 +12,34 @@
     .col-md-6= f.input :last_name
   = f.input :birth_date, as: :date, html5: true
   = f.input :notes, input_html: { rows: 6 }
+  - unless user.responsible_id.present?
+    .form-row
+      .col-md-12.border.p-2.bg-light
+        h5.mb-3 Usager Responsable
+        ul.nav.nav-pills role="tablist"
+          li.nav-item
+            a.nav-link.active data-toggle="tab" href="#js-responsible-exists" role="tab" aria-selected="true"
+              | Usager Existant
+          li.nav-item
+            a.nav-link data-toggle="tab" href="#js-responsible-new" role="tab" aria-selected="false"
+              | Nouvel Usager
+        .tab-content.mt-3
+          .tab-pane.show.active#js-responsible-exists role="tabpanel"
+              = f.association( \
+                  :responsible, \
+                  collection: policy_scope(User).order_by_last_name, \
+                  label_method: -> { full_name_and_birthdate(_1) }, \
+                  label: false, \
+                  input_html: { class: 'select2-input' } \
+                )
+          .tab-pane#js-responsible-new role="tabpanel"
+            = render "agents/users/form", user: User.new, skip_cta: true
+
   .text-right
     - if user.persisted?
       = link_to "Annuler", user_show_path(user), class: "btn btn-link"
-    - else
+    - elsif user.responsible_id.present?
       = link_to "Annuler", user_show_path(user.responsible), class: "btn btn-link"
+    - else
+      = link_to "Annuler", "#", class: "btn btn-link"
     = f.button :submit

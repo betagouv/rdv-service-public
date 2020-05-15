@@ -5,5 +5,18 @@
   = render 'form', user: @user
 - else
   .card
-    .card-body
-      = render 'form', user: @user
+    .card-body data-controller="new-user"
+      .mb-2.d-flex
+        div Type d'usager
+        .ml-2
+          input type="radio" value="responsible" name="user_type" id="user_type_responsible" data-target="new-user.typeRadio"
+          | &nbsp;
+          label for="user_type_responsible" Responsable
+        .ml-2
+          input type="radio" value="relative" name="user_type" id="user_type_relative" data-target="new-user.typeRadio"
+          | &nbsp;
+          label for="user_type_relative" Proche
+      div data-target="new-user.form" data-user-type="responsible"
+        = render 'form', user: @user
+      div data-target="new-user.form" data-user-type="relative"
+        = render 'agents/relatives/form', user: @user

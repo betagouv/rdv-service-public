@@ -32,15 +32,16 @@
 
   = f.association :agents, collection: current_organisation.agents.complete.active.includes(:service), label_method: :full_name_and_service, input_html: { multiple: true, class: 'select2-input' }
 
-  .text-right
-    - if from_modal?
-      = link_to "Annuler", "#", class: "btn btn-link", data: { dismiss: 'modal' }
-    - elsif user.persisted?
-      = link_to "Annuler", organisation_user_path(current_organisation, user), class: "btn btn-link"
-    - else
-      = link_to "Annuler", organisation_users_path(current_organisation), class: "btn btn-link"
+  - unless local_assigns[:skip_cta]
+    .text-right
+      - if from_modal?
+        = link_to "Annuler", "#", class: "btn btn-link", data: { dismiss: 'modal' }
+      - elsif user.persisted?
+        = link_to "Annuler", organisation_user_path(current_organisation, user), class: "btn btn-link"
+      - else
+        = link_to "Annuler", organisation_users_path(current_organisation), class: "btn btn-link"
 
-    - if user.persisted?
-      = f.button :submit
-    - else
-      = f.button :submit, "Créer usager"
+        - if user.persisted?
+          = f.button :submit
+        - else
+          = f.button :submit, "Créer usager"
