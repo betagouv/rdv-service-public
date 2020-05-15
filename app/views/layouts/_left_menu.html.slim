@@ -6,9 +6,16 @@
         i.fa.fa-2x.fa-angle-left
     ul.metismenu.side-nav.mt-5
       li.side-nav-item
-        = link_to organisation_agent_path(current_organisation, current_agent), class: 'side-nav-link' do
-          i.far.fa-calendar
-          span Vos agendas
+        = link_to '#', class: 'side-nav-link' do
+          i.far.fa-clock
+          span Votre planning
+          i.fa.fa-angle-right.menu-arrow.mt-1
+        ul.side-nav-second-level aria-expanded="false"
+          li=link_to 'Vos agendas', organisation_agent_path(current_organisation, current_agent)
+          / i.far.fa-calendar
+          / span Vos agendas
+          li=link_to 'Vos plages d\'ouverture', organisation_agent_plage_ouvertures_path(current_organisation, current_agent)
+          li=link_to 'Vos absences', organisation_agent_absences_path(current_organisation, current_agent)
       li.side-nav-item
         = link_to organisation_users_path(current_organisation), class: 'side-nav-link' do
           i.fa.fa-user
@@ -18,15 +25,6 @@
           i.fa.fa-chart-bar
           span Vos statistiques
           = unknown_past_agent_rdvs_danger_bage
-
-      li.side-nav-item
-        = link_to '#', class: 'side-nav-link' do
-          i.far.fa-clock
-          span Votre planning
-          i.fa.fa-angle-right.menu-arrow.mt-1
-        ul.side-nav-second-level aria-expanded="false"
-          li=link_to 'Vos plages d\'ouverture', organisation_agent_plage_ouvertures_path(current_organisation, current_agent)
-          li=link_to 'Vos absences', organisation_agent_absences_path(current_organisation, current_agent)
 
         - if current_agent.admin?
           li.side-nav-item
