@@ -221,6 +221,7 @@ fr:
       human: "%A %d %B %Y à %Hh%M"
       human_approx: "%A %d %B %Y vers %Hh%M"
       dense: "%d/%m/%Y à %H:%M"
+      time_only: "%Hh%M"
     pm: pm
   public_office: "sur place"
   phone: "par téléphone"

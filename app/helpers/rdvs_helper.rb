@@ -1,6 +1,8 @@
 module RdvsHelper
-  def rdv_title(rdv)
-    "Le #{l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)"
+  def rdv_title(rdv, date_format: :human)
+    article = date_format == :time_only ? "À" : "Le"
+    "#{article} #{l(rdv.starts_at, format: date_format)} " \
+      "(durée : #{rdv.duration_in_min} minutes)"
   end
 
   def rdv_title_for_agent(rdv)
@@ -36,10 +38,6 @@ module RdvsHelper
 
   def rdv_status_tag(rdv)
     content_tag(:span, Rdv.human_enum_name(:status, rdv.status), class: 'badge badge-info')
-  end
-
-  def rdv_filter_status_tag
-    content_tag(:span, Rdv.human_enum_name(:status, params[:status]), class: 'badge badge-info') if params[:status].present?
   end
 
   def no_rdv_for_users

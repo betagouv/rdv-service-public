@@ -5,12 +5,8 @@ class Agents::RdvsController < AgentAuthController
 
   def index
     @agent = policy_scope(Agent).find(filter_params[:agent_id])
-
-    @rdvs = @agent.rdvs.where(organisation: current_organisation)
-    @rdvs = @rdvs.default_stats_period if filter_params[:default_period].present?
-    @rdvs = @rdvs.status(filter_params[:status]) if filter_params[:status].present?
-    @rdvs = @rdvs.where(starts_at: date_range_params) if filter_params[:start].present? && filter_params[:end].present?
-    @rdvs = @rdvs.includes(:organisation, :motif, :agents_rdvs, agents: :service).order(starts_at: :desc)
+    @form = AgentRdvSearchForm.new(filter_params)
+    @rdvs = rdvs_list(@agent, @form)
   end
 
   def show
@@ -85,13 +81,20 @@ class Agents::RdvsController < AgentAuthController
     params.require(:rdv).permit(:status)
   end
 
-  def date_range_params
-    start_param = Date.parse(filter_params[:start])
-    end_param = Date.parse(filter_params[:end])
-    start_param..end_param
+  def filter_params
+    params.permit(:organisation_id, :start, :end, :date, :agent_id, :user_id, :page, :status, :default_period, :show_user_details)
   end
 
-  def filter_params
-    params.permit(:organisation_id, :start, :end, :agent_id, :user_id, :page, :status, :default_period)
+  def rdvs_list(agent, form)
+    rdvs = agent.rdvs.where(organisation: current_organisation)
+    rdvs = rdvs.default_stats_period if form.default_period.present?
+    rdvs = rdvs.status(form.status) if form.status.present?
+    if form.date_range_params.present?
+      rdvs = rdvs.where(starts_at: form.date_range_params)
+    elsif form.date.present?
+      rdvs = rdvs.where("DATE(starts_at) = ?", form.date)
+    end
+    rdvs = rdvs.includes(:organisation, :motif, :agents_rdvs, agents: :service).order(starts_at: :desc)
+    rdvs
   end
 end

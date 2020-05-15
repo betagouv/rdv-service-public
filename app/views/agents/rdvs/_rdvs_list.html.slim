@@ -1,12 +1,10 @@
-- content_for :title do
-  | Liste des RDV
-  = rdv_filter_status_tag
-
 - if rdvs.any?
-  .row.justify-content-md-center
-    .col-md-6
-      = render partial: 'agents/rdvs/rdv', collection: rdvs
-      .d-flex.justify-content-center= paginate rdvs, theme: 'twitter-bootstrap-4'
+  = render( \
+    partial: 'agents/rdvs/rdv', \
+    collection: rdvs, \
+    locals: local_assigns.slice(:date_format, :show_user_details) \
+  )
+  .d-flex.justify-content-center= paginate rdvs, theme: 'twitter-bootstrap-4'
 - else
   .card
     .card-body

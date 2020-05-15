@@ -1,5 +1,0 @@
-ul.list-unstyled.mb-5
-  - {first_name: user.first_name, last_name: user.last_name, birth_date: birth_date_and_age(user) }.each do |k,v|
-      li.mb-2 
-        strong= "#{t("activerecord.attributes.user.#{k}")} : "
-        | #{v}

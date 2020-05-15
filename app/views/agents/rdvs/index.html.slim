@@ -1,7 +1,47 @@
+- content_for :title do
+  | Liste des RDV
+
 - content_for :breadcrumb do
   ol.breadcrumb.m-0
-    li.breadcrumb-item
-      = link_to 'Vos statistiques', organisation_agent_stats_path(current_organisation, current_agent)
-    li.breadcrumb-item.active Liste des RDV
+    - if @form.date
+      li.breadcrumb-item
+        = link_to "Agenda de #{@agent.full_name}", organisation_agent_path(current_organisation, @agent, date: @form.date)
+    - else
+      li.breadcrumb-item
+        = link_to 'Vos statistiques', organisation_agent_stats_path(current_organisation, current_agent)
+      li.breadcrumb-item.active Liste des RDV
 
-= render partial: 'agents/rdvs/rdvs_list', locals: {rdvs: @rdvs.page(params[:page])}
+.row.justify-content-md-center
+  .col-md-6
+    .card.border-info
+      .card-header ⚙️ Filtres et options
+      .card-body
+        = simple_form_for(@form, method: "GET", url: url_for({}), as: "") do |f|
+          = f.input :agent_id, collection: [@agent], label: "Agent", label_method: :full_name, input_html: { class: 'select2-input', disabled: true }, wrapper: "horizontal_form"
+          - if @form.date.present?
+            = date_input(f, :date, label = "Date", wrapper: "horizontal_form")
+
+          - if @form.status.present?
+            = f.input :status, collection: Rdv.statuses.keys + ["unknown_past", "unknown_future"], label_method: -> { ::Rdv.human_enum_name(:status, _1) }, label: "Statut", wrapper: "horizontal_form"
+
+          div.my-1
+            = f.check_box :show_user_details, type: "checkbox"
+            span.pl-1= f.label :show_user_details do
+              | Afficher détails usagers 🔍
+          div.d-flex.justify-content-between
+            input.btn.btn-small.btn-primary.d-print-none type="submit" value="Rafraîchir la liste"
+            input.btn.btn-small.btn-link.d-print-none type="submit" value="Imprimer 🖨" onclick="window.print();return false;"
+
+- rdvs_list = render( \
+  'agents/rdvs/rdvs_list', \
+  rdvs: @rdvs.page(params[:page]), \
+  date_format: (@form.date.present? && :time_only), \
+  show_user_details: @form.show_user_details \
+)
+
+- if @form.show_user_details
+  = rdvs_list
+- else
+  .row.justify-content-center
+    .col-md-6
+      = rdvs_list

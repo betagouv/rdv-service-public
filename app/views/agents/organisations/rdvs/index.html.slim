@@ -1,3 +1,6 @@
+- content_for :title do
+  | Liste des RDV
+
 - content_for :breadcrumb do
   ol.breadcrumb.m-0
     li.breadcrumb-item
@@ -6,5 +9,6 @@
       =link_to 'Vos statistiques', organisation_stats_path(current_organisation), class: 'text-white'
     li.breadcrumb-item.active Liste des RDV
 
-
-= render partial: 'agents/rdvs/rdvs_list', locals: {rdvs: @rdvs}
+.row.justify-content-center
+  .col-md-6
+    = render partial: 'agents/rdvs/rdvs_list', locals: {rdvs: @rdvs}
