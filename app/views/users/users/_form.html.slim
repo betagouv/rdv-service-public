@@ -1,5 +1,5 @@
-- form_url = defined?(rdv_wizard) ? users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query.except(:rdv)) : users_informations_path
-- form_method = defined?(rdv_wizard) ? "post" : "patch"
+- form_url = local_assigns[:rdv_wizard].present? ? users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query.except(:rdv)) : users_informations_path
+- form_method = local_assigns[:rdv_wizard].present? ? "post" : "patch"
 = simple_form_for user, url: form_url, method: form_method  do |f|
   = render partial: 'layouts/model_errors', locals: { model: user }
   .form-row
@@ -9,7 +9,7 @@
     .col-md-6= f.input :birth_name, placeholder: 'Nom de naissance'
     .col-md-6= f.input :birth_date, as: :date, html5: true
   = f.input :phone_number, as: :tel
-  - address_value = defined?(rdv_wizard) && user.address.nil? ? rdv_wizard[:where] : user.address
+  - address_value = local_assigns[:rdv_wizard].present? && user.address.nil? ? rdv_wizard[:where] : user.address
   = f.input :address, input_html: {value: address_value, class: "places-js-container" }
   .form-row
     .col-md-6= f.input :caisse_affiliation, collection: User.human_enum_collection(:caisse_affiliation)
@@ -18,9 +18,9 @@
     .col-md-6= f.input :family_situation, collection: User.human_enum_collection(:family_situation)
     .col-md-6= f.input :number_of_children, input_html: { min: '0', max: '15', step: 'any' }
   = f.input :logement, collection: User.human_enum_collection(:logement)
-  - if defined?(rdv_wizard)
+  - if local_assigns[:rdv_wizard].present?
     - rdv_wizard.each do |wizard_key, wizard_value|
       = hidden_field_tag "rdv[#{wizard_key}]", wizard_value
 
   .text-right
-    = f.button :submit, (defined?(rdv_wizard) ? 'Continuer' : 'Modifier')
+    = f.button :submit, (local_assigns[:rdv_wizard].present? ? 'Continuer' : 'Modifier')
