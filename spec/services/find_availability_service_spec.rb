@@ -1,4 +1,4 @@
-describe FindAvailability, type: :service do
+describe FindAvailabilityService, type: :service do
   let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, online: online) }
   let(:online) { true }
   let!(:lieu) { create(:lieu) }
@@ -15,7 +15,7 @@ describe FindAvailability, type: :service do
     let(:from) { today }
 
     subject do
-      FindAvailability.perform_with(motif_name, lieu, from)
+      FindAvailabilityService.perform_with(motif_name, lieu, from)
     end
 
     it { expect(subject.starts_at).to eq(Time.zone.local(2019, 9, 19, 9, 0)) }
@@ -56,5 +56,4 @@ describe FindAvailability, type: :service do
       end
     end
   end
-
 end

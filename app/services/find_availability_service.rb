@@ -1,4 +1,4 @@
-class FindAvailability < BaseService
+class FindAvailabilityService < BaseService
   def initialize(motif_name, lieu, from)
     @motif_name = motif_name
     @lieu = lieu
