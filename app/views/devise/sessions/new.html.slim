@@ -2,9 +2,7 @@
   .text-center.w-75.m-auto
     h4.text-dark-50.text-center.mt-0.font-weight-bold  Se connecter
     p.text-muted.mb-4 Entrez votre email et votre mot de passe.
-
   = devise_error_messages!
-
   .form-group
     = f.label :email
     = f.email_field :email, autofocus: true, class: 'form-control', placeholder: 'nom.prenom@email.com'
@@ -22,7 +20,6 @@
       = f.label :remember_me, t('.remember_me'),class: 'custom-control-label'
   .form-group.mb-0.text-center
     = f.submit 'Se connecter', class: 'btn btn-primary'
-
 
 - content_for :footer do
   = render "devise/shared/links"
