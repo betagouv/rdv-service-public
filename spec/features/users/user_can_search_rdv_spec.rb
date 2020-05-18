@@ -65,7 +65,18 @@ describe "User can search for rdvs" do
       click_button("Se connecter")
 
       # Step 4
+      expect(page).to have_content("Vos informations")
+      fill_in('Date de naissance', with: Date.tomorrow)
+      click_button('Continuer')
+      expect(page).to have_content("Date de naissance est invalide")
+      fill_in('Date de naissance', with: Date.yesterday)
+      fill_in('Nom de naissance', with: "Lapinou")
+      click_button('Continuer')
+
+      # Step 5
       expect(page).to have_content(motif.name)
+      expect(page).to have_content("Michel LAPIN (LAPINOU)")
+
       expect(page).to have_content(motif.restriction_for_rdv)
 
       # Add relative
@@ -79,12 +90,12 @@ describe "User can search for rdvs" do
 
       click_button('Continuer')
 
-      # Step 5
-      expect(page).to have_content("Récapitulatif de votre rendez vous")
+      # Step 6
+      expect(page).to have_content("Informations de contact")
       expect(page).to have_content("Mathieu LAPIN")
       click_link('Confirmer mon RDV')
 
-      # Step 6
+      # Step 7
       expect(page).to have_content("Vos rendez-vous")
       expect(page).to have_content(motif.name)
       expect(page).to have_content(lieu.address)
@@ -99,7 +110,7 @@ describe "User can search for rdvs" do
     before do
       travel_to(Time.zone.local(2019, 11, 18))
       login_as(user, scope: :user)
-      visit new_users_rdv_wizard_step_path(step: 1, starts_at: Time.zone.local(2019, 11, 18, 10, 15), motif_id: motif.id, lieu_id: lieu.id, departement: "92", where: "useless")
+      visit new_users_rdv_wizard_step_path(step: 2, starts_at: Time.zone.local(2019, 11, 18, 10, 15), motif_id: motif.id, lieu_id: lieu.id, departement: "92", where: "useless")
     end
 
     after { travel_back }

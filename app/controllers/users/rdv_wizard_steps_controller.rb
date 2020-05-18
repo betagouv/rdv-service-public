@@ -15,10 +15,10 @@ class Users::RdvWizardStepsController < UserAuthController
   end
 
   def create
-    @rdv_wizard = rdv_wizard_for(current_user, rdv_params)
+    @rdv_wizard = rdv_wizard_for(current_user, rdv_params.merge(user_params))
     @rdv = @rdv_wizard.rdv
     skip_authorization
-    if @rdv_wizard.valid?
+    if @rdv_wizard.valid? && @rdv_wizard.save
       redirect_to new_users_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: next_step_index))
     else
       render current_step
@@ -51,5 +51,9 @@ class Users::RdvWizardStepsController < UserAuthController
 
   def query_params
     params.permit(*RDV_PERMITTED_PARAMS, *EXTRA_PERMITTED_PARAMS)
+  end
+
+  def user_params
+    params.permit(user: [:first_name, :last_name, :birth_name, :phone_number, :birth_date, :address, :caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :logement])
   end
 end
