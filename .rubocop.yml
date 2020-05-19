@@ -20,3 +20,7 @@ Style/HashTransformKeys:
 
 Style/HashTransformValues:
   Enabled: true
+
+Metrics/BlockLength:
+  Exclude:
+    - 'db/schema.rb'
