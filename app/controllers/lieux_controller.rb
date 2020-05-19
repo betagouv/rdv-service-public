@@ -9,7 +9,7 @@ class LieuxController < ApplicationController
     @next_availability_by_lieux = {}
     unless online_bookings_suspended_because_of_corona?(@departement)
       @lieux.each do |lieu|
-        @next_availability_by_lieux[lieu.id] = Creneau.next_availability_for_motif_and_lieu(@motif_name, lieu, Date.today)
+        @next_availability_by_lieux[lieu.id] = FindAvailabilityService.perform_with(@motif_name, lieu, Date.today)
       end
     end
 
@@ -33,7 +33,7 @@ class LieuxController < ApplicationController
       @next_availability = nil
     else
       @creneaux = CreneauxBuilderService.perform_with(@motif_name, @lieu, @date_range)
-      @next_availability = @creneaux.empty? ? Creneau.next_availability_for_motif_and_lieu(@motif_name, @lieu, @date_range.end) : nil
+      @next_availability = @creneaux.empty? ? FindAvailabilityService.perform_with(@motif_name, @lieu, @date_range.end) : nil
     end
     @matching_motifs = Motif.active.online.joins(:organisation).where(organisations: { departement: @departement }, name: @motif_name)
     @max_booking_delay = @matching_motifs.maximum('max_booking_delay')
