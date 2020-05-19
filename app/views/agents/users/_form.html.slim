@@ -21,6 +21,7 @@
 
   = f.input :phone_number, as: :tel
   = f.input :address, input_html: { class: "places-js-container" }
+  = f.association :agents, collection: current_organisation.agents.complete.active.includes(:service), label_method: :full_name_and_service, label: "Agents référent", input_html: { multiple: true, class: 'select2-input' }
   .form-row
     .col-md-6= f.input :caisse_affiliation, collection: User.human_enum_collection(:caisse_affiliation)
     .col-md-6= f.input :affiliation_number
@@ -30,7 +31,6 @@
   = f.input :logement, collection: User.human_enum_collection(:logement)
   = f.input :notes, input_html: { rows: 6 }
 
-  = f.association :agents, collection: current_organisation.agents.complete.active.includes(:service), label_method: :full_name_and_service, input_html: { multiple: true, class: 'select2-input' }
 
   .text-right
     - if from_modal?
