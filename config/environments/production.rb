@@ -71,7 +71,7 @@ Rails.application.configure do
     password:       ENV["SENDINBLUE_PASSWORD"],
     domain:         'rdv-solidarites.fr',
   }
-  config.action_mailerdelivery_method = :smtp
+  config.action_mailer.delivery_method = :smtp
   config.action_mailer.asset_host = "https://#{ENV["HOST"]}"
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
