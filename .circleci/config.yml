@@ -74,11 +74,13 @@ jobs:
       - run:
           environment:
             DATABASE_URL: "postgres://lapins_test@localhost:5432/lapins_test"
+            HOST_QUALIFIED: http://localhost:3000
           name: Test seed configuration
           command: bundle exec rake db:create db:schema:load db:migrate db:seed db:drop RAILS_ENV=test
       - run:
           environment:
             DATABASE_URL: "postgres://lapins_test@localhost:5432/lapins_test"
+            HOST_QUALIFIED: http://localhost:3000
           name: Create DB
           command: bundle exec rake db:create db:schema:load db:migrate RAILS_ENV=test
       - run:
@@ -89,6 +91,7 @@ jobs:
       - run:
           environment:
             DATABASE_URL: "postgres://lapins_test@localhost:5432/lapins_test"
+            HOST_QUALIFIED: http://localhost:3000
           name: Run Tests, Splitted by Timings
           command: |
             COMMAND="bundle exec rspec --profile 10 \

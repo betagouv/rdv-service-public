@@ -1,8 +1,7 @@
 # adapted from https://github.com/rails/rails/blob/master/railties/lib/rails/mailers_controller.rb
-# rubocop:disable all
+
 module Admin
   class MailerPreviewsController < Admin::ApplicationController
-
     before_action :find_preview, only: :show
     around_action :set_locale, only: :show
 
@@ -16,7 +15,7 @@ module Admin
 
     def show
       @email_action = File.basename(params[:id])
-      if !@preview.email_exists?(@email_action)
+      unless @preview.email_exists?(@email_action)
         raise AbstractController::ActionNotFound, "Email '#{@email_action}' not found in #{@preview.name}"
       end
 
@@ -26,12 +25,11 @@ module Admin
       if params[:part]
         part_type = Mime::Type.lookup(params[:part])
 
-        if part = find_part(part_type)
-          response.content_type = part_type
-          render plain: part.respond_to?(:decoded) ? part.decoded : part
-        else
-          raise AbstractController::ActionNotFound, "Email part '#{part_type}' not found in #{@preview.name}##{@email_action}"
+        if (part = find_part(part_type))
+          return response.content_type = part_type &&
+                                         render(plain: part.respond_to?(:decoded) ? part.decoded : part)
         end
+        raise AbstractController::ActionNotFound, "Email part '#{part_type}' not found in #{@preview.name}##{@email_action}"
       else
         @part = find_preferred_part(request.format, Mime[:html], Mime[:text])
         render action: "email"
@@ -47,27 +45,23 @@ module Admin
       params[:id].to_s.scan(%r{/|$}) { candidates << $` }
       preview = candidates.detect { |candidate| ActionMailer::Preview.exists?(candidate) }
 
-      if preview
-        @preview = ActionMailer::Preview.find(preview)
-      else
-        raise AbstractController::ActionNotFound, "Mailer preview '#{params[:id]}' not found"
-      end
+      return @preview = ActionMailer::Preview.find(preview) if preview
+
+      raise AbstractController::ActionNotFound, "Mailer preview '#{params[:id]}' not found"
     end
 
-    def find_preferred_part(*formats) # :doc:
+    def find_preferred_part(*formats)
       formats.each do |format|
-        if part = @email.find_first_mime_type(format)
+        if (part = @email.find_first_mime_type(format))
           return part
         end
       end
 
-      if formats.any? { |f| @email.mime_type == f }
-        @email
-      end
+      return @email if formats.any? { |f| @email.mime_type == f }
     end
 
-    def find_part(format) # :doc:
-      if part = @email.find_first_mime_type(format)
+    def find_part(format)
+      if (part = @email.find_first_mime_type(format))
         part
       elsif @email.mime_type == format
         @email
@@ -89,4 +83,3 @@ module Admin
     end
   end
 end
-# rubocop:enable all
