@@ -7,7 +7,7 @@ describe "Agent can CRUD absences" do
   before do
     login_as(agent, scope: :agent)
     visit authenticated_agent_root_path
-    click_link "Vos absences"
+    click_link "Absences"
   end
 
   context 'for an agent' do
