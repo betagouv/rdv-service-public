@@ -41,6 +41,11 @@ describe "User can search for rdvs" do
       expect(page).to have_content(lieu.name)
       first(:link, "11:00").click
 
+      # Restriction Page
+      expect(page).to have_content("À lire avant de prendre un rendez-vous")
+      expect(page).to have_content(motif.restriction_for_rdv)
+      click_link("Accepter")
+
       # Login page
       expect(page).to have_content("Se connecter")
       click_link("Je m'inscris")
@@ -76,8 +81,6 @@ describe "User can search for rdvs" do
       # Step 5
       expect(page).to have_content(motif.name)
       expect(page).to have_content("Michel LAPIN (LAPINOU)")
-
-      expect(page).to have_content(motif.restriction_for_rdv)
 
       # Add relative
       click_link("Ajouter un proche")
