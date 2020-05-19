@@ -37,7 +37,7 @@ class Rdv::Ics
   def description
     d = ""
     d += "RDV Téléphonique " if @rdv.motif.phone?
-    d += "Infos et annulation: #{rdvs_shorten_url(host: "https://#{ENV["HOST"]}")}"
+    d += "Infos et annulation: #{rdvs_shorten_url(host: ENV["HOST_QUALIFIED"])}"
     d
   end
 

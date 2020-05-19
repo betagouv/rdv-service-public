@@ -39,7 +39,7 @@ class TwilioTextMessenger
               else
                 "#{@rdv.location}\n"
               end
-    message += "Infos et annulation: #{rdvs_shorten_url(host: "https://#{ENV["HOST"]}")}"
+    message += "Infos et annulation: #{rdvs_shorten_url(host: ENV["HOST_QUALIFIED"])}"
     message += " / #{@rdv.organisation.phone_number}" if @rdv.organisation.phone_number
     message
   end
@@ -76,7 +76,7 @@ class TwilioTextMessenger
 
   def file_attente
     message = "Des créneaux se sont libérés plus tôt.\n"
-    message += "Cliquez pour voir les disponibilités : #{users_creneaux_index_url(rdv_id: @rdv.id, host: "https://#{ENV["HOST"]}")}"
+    message += "Cliquez pour voir les disponibilités : #{users_creneaux_index_url(rdv_id: @rdv.id, host: ENV["HOST_QUALIFIED"])}"
     message
   end
 
