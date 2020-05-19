@@ -50,7 +50,6 @@ module Admin
       raise AbstractController::ActionNotFound, "Mailer preview '#{params[:id]}' not found"
     end
 
-    # :doc:
     def find_preferred_part(*formats)
       formats.each do |format|
         if (part = @email.find_first_mime_type(format))
@@ -61,7 +60,6 @@ module Admin
       return @email if formats.any? { |f| @email.mime_type == f }
     end
 
-    # :doc:
     def find_part(format)
       if (part = @email.find_first_mime_type(format))
         part

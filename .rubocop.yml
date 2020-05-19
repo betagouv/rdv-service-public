@@ -1,5 +1,10 @@
 inherit_from: .rubocop_todo.yml
 
+AllCops:
+  Exclude:
+    - "bin/*"
+    - "node_modules/**/*"
+
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 
