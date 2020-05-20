@@ -1,0 +1,53 @@
+- content_for :title do
+  | #{user.full_name}
+
+- content_for :breadcrumb do
+  ol.breadcrumb.mr-2.d-inline-flex
+    li.breadcrumb-item
+      = link_to 'Vos usagers', organisation_users_path(current_organisation)
+    li.breadcrumb-item.active #{user.full_name}
+
+.row
+  .col-md-6
+    .card
+      .card-body
+        - if user.invitable?
+          .row.bg-info.text-white.p-2.mb-3
+            .col-md-8
+              | Cet usager ne s'est pas encore créé de compte.
+              - if user.invitation_sent_at
+                p.small.m-0 Invitation envoyée il y a #{distance_of_time_in_words_to_now(user.invitation_sent_at)}
+            .col-md-4.text-right
+              = link_to 'Inviter', invite_organisation_user_path(current_organisation, user), method: :post, class: 'btn btn-outline-white'
+
+        h4.card-title.mb-3 Informations générales
+        = render 'responsible_information', user: user
+        .row
+          .col.text-left
+            = link_to "Supprimer", organisation_user_path(current_organisation, user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cet usager ?"}
+          .col.text-right
+            = link_to "Modifier", edit_organisation_user_path(current_organisation, user), class: "btn btn-primary"
+
+  .col-md-6
+    .card.mb-5
+      .card-body
+        = render 'stats/rdv_counters', rdvs: Rdv.user_with_relatives(user.id).where(organisation_id: current_organisation)
+        .row
+          .col.text-right
+            = link_to 'Voir tous les RDV', organisation_user_rdvs_path(current_organisation, user), class: 'btn btn-outline-primary'
+
+    .card
+      .card-body
+        h4.card-title.mb-3 Proches
+        ul.list-group.mb-2
+          - if user.relatives.active.empty?
+            li.list-group-item
+              em Aucun proche
+          - user.relatives.active.each do |relative|
+            li.list-group-item
+              .row
+                .col
+                  => link_to relative.full_name, organisation_user_path(current_organisation, relative)
+                  = "(#{relative.age})" if relative.birth_date
+        .text-right
+          = link_to "Ajouter un proche", new_organisation_user_path(current_organisation, responsible_id: user.id), class: "btn btn-outline-primary"

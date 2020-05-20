@@ -93,6 +93,10 @@ class User < ApplicationRecord
     responsible_id.present?
   end
 
+  def responsible?
+    !relative?
+  end
+
   def family
     user_id = relative? ? responsible.id : id
     User.active.where("responsible_id = ? OR id = ?", user_id, user_id)

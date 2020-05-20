@@ -1,5 +1,5 @@
 tr
-  td= link_to user.full_name, user_show_path(user)
+  td= link_to user.full_name, organisation_user_path(current_organisation, user)
   td= birth_date_and_age(user)
   td= user.phone_number
   td= user.email

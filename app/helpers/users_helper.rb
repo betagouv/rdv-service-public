@@ -15,7 +15,11 @@ module UsersHelper
     label
   end
 
-  def user_show_path(user)
-    user.relative? ? organisation_relative_path(current_organisation, user) : organisation_user_path(current_organisation, user)
+  def agent_user_form_url(user)
+    if user.persisted?
+      organisation_user_path(current_organisation, user)
+    else
+      organisation_users_path(current_organisation)
+    end
   end
 end
