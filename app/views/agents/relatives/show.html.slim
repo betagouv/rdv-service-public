@@ -24,10 +24,8 @@
         .card-text
           i.far.fa-fw.fa-sticky-note>
           strong> Notes libres :
-          - if @user.notes.blank?
-            span.font-italic Non renseignées
-          - else
-            = simple_format(@user.notes)
+          = display_notes(@user.notes)
+          
         .row.mt-5
           .col.text-left
             = link_to "Supprimer", organisation_relative_path(current_organisation, @user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cet usager ?"}

@@ -26,7 +26,4 @@ p.card-text
 .card-text
   i.far.fa-fw.fa-sticky-note>
   strong> Notes libres :&nbsp;
-  - if rdv.notes.blank?
-    span.font-italic Non renseignées
-  - else
-    = simple_format(rdv.notes)
+  = display_notes(rdv.notes)

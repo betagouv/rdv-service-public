@@ -83,4 +83,12 @@ module ApplicationHelper
   def icon_tag_tooltip(title, icon)
     content_tag(:i, nil, class: "fa fa-#{icon}", data: { toggle: 'tooltip' }, title: title)
   end
+
+  def display_notes(notes)
+    if notes.blank?
+      content_tag(:span, "Non renseignées", class: "font-italic")
+    else
+      simple_format(notes)
+    end
+  end
 end
