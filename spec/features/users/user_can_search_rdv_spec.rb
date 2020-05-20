@@ -76,6 +76,7 @@ describe "User can search for rdvs" do
       expect(page).to have_content("Date de naissance est invalide")
       fill_in('Date de naissance', with: Date.yesterday)
       fill_in('Nom de naissance', with: "Lapinou")
+      expect(page).to have_field('Adresse', with: '79 Rue de Plaisance, 92250 La Garenne-Colombes')
       click_button('Continuer')
 
       # Step 5

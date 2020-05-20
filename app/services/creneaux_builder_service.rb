@@ -5,6 +5,7 @@ class CreneauxBuilderService < BaseService
     @inclusive_date_range = inclusive_date_range
     @for_agents = options.fetch(:for_agents, false)
     @agent_ids = options.fetch(:agent_ids, nil)
+    @agent_name = options.fetch(:agent_name, false)
   end
 
   def perform
@@ -46,7 +47,7 @@ class CreneauxBuilderService < BaseService
           lieu_id: @lieu.id,
           motif: motif,
           agent_id: (plage_ouverture.agent_id if @for_agents),
-          agent_name: (plage_ouverture.agent.short_name if @for_agents)
+          agent_name: (plage_ouverture.agent.short_name if @for_agents || @agent_name)
         )
       end
     end

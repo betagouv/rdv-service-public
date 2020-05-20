@@ -39,6 +39,11 @@
 
   .card
     .card-body
+      h5.card-title RDV de suivi
+      = f.input :follow_up, label: "Ce motif est réservé aux usagers bénéficiant d'un accompagnement"
+
+  .card
+    .card-body
       h5.card-title RDV secrétariat
       p.text-muted.font-14 Les membres du service Secrétariat pourront poser des RDV dans leur agenda et configurer les plages d'ouverture avec ce motif.
       = f.input :for_secretariat, label: 'Le RDV pourra être effectué par le service secrétariat'

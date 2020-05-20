@@ -3,9 +3,6 @@ html lang="fr"
   head
     = render 'common/head_landing'
   body
-    - if Flipflop.corona?
-      - if content_for :pre_header
-        = yield :pre_header
     - if content_for :title
       .container.mt-5
         .row

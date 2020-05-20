@@ -54,6 +54,10 @@ class Motif < ApplicationRecord
     for_secretariat ? [service, Service.secretariat] : [service]
   end
 
+  def secretariat?
+    for_secretariat?
+  end
+
   private
 
   def booking_delay_validation

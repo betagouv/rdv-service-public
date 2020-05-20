@@ -1,0 +1,9 @@
+fr:
+  motifs:
+    badges:
+      online: "En ligne"
+      phone: "Par tél."
+      home: "À domicile"
+      secretariat: "Secrétariat"
+      follow_up: "Suivi"
+    follow_up_need_signed_user: "Le RDV '%{motif_name}' est disponible uniquement pour les personnes déjà suivies. Veuillez vous connecter pour prendre ce type de RDV."

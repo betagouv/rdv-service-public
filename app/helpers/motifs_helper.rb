@@ -14,12 +14,12 @@ module MotifsHelper
   end
 
   def motif_badges(motif)
-    [
-      motif.online ? content_tag(:span, 'En ligne', class: 'badge badge-danger') : nil,
-      motif.phone? ? content_tag(:span, 'Par tél.', class: 'badge badge-info') : nil,
-      Flipflop.visite_a_domicile? && motif.home? ? content_tag(:span, 'À domicile', class: 'badge badge-dark') : nil,
-      motif.for_secretariat ? content_tag(:span, 'Secrétariat', class: 'badge badge-secondary') : nil,
-    ].compact.presence&.sum
+    badges = [:online, :phone, :home, :secretariat, :follow_up]
+    badges.select { motif.send("#{_1}?") }.map { build_badge_tag_for(_1) }.join("").html_safe
+  end
+
+  def build_badge_tag_for(motif)
+    content_tag(:span, I18n.t("motifs.badges.#{motif}"), class: "badge badge-motif-#{motif}")
   end
 
   def min_max_delay_options
