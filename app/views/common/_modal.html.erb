@@ -1,4 +1,4 @@
-<div class='modal' tabindex='-1' role='dialog' id="<%= local_assigns[:id] %>">
+<div class='modal' tabindex='-1' role='dialog' id="<%= id %>">
   <div class='modal-dialog' role='document'>
     <div class='modal-content'>
       <div class='modal-header'>
@@ -9,7 +9,7 @@
       </div>
       <div class='modal-body'>
         <p>
-          <%= simple_format local_assigns[:body_message] %>
+          <%= local_assigns[:body_message] || yield  %>
         </p>
       </div>
       <div class='modal-footer'>
