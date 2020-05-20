@@ -134,12 +134,6 @@ class User < ApplicationRecord
     invite! if invite_on_create? && email.present?
   end
 
-  def valid_except_email?
-    valid?
-    errors.delete(:email)
-    errors.empty?
-  end
-
   def address
     super.presence || responsible&.address
   end
