@@ -13,10 +13,12 @@ ul.list-unstyled.mb-5
       li.mb-2
         strong= "#{t("activerecord.attributes.user.#{k}")} : "
         | #{v}
-  - if user.notes.present?
-    strong
-      i.far.fa-fw.fa-sticky-note>
-      | Notes libres :
+  strong
+    i.far.fa-fw.fa-sticky-note>
+    | Notes libres :
+  - if user.notes.blank?
+    span.font-italic Non renseignées
+  - else
     = simple_format(user.notes)
 
 h4.card-title.mb-3 Agent référent

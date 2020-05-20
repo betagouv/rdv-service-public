@@ -21,10 +21,12 @@
               li.mb-2
                 strong= "#{t("activerecord.attributes.user.#{k}")} : "
                 | #{v}
-        - if @user.notes.present?
-          .card-text
-            i.far.fa-fw.fa-sticky-note>
-            strong> Notes libres :
+        .card-text
+          i.far.fa-fw.fa-sticky-note>
+          strong> Notes libres :
+          - if @user.notes.blank?
+            span.font-italic Non renseignées
+          - else
             = simple_format(@user.notes)
         .row.mt-5
           .col.text-left
