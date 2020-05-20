@@ -79,18 +79,23 @@ class Menu {
   }
 
   _initMenuItemActive(){
-    $(".side-nav a").each(function () {
-      var pageUrl = window.location.href.split(/[?#]/)[0];
-      if (this.href == pageUrl) {
-        $(this).addClass("active");
-          $(this).parent().addClass("active"); // add active to li of the current link
-          $(this).parent().parent().addClass("in");
-          $(this).parent().parent().prev().addClass("active"); // add active class to an anchor
-          $(this).parent().parent().parent().addClass("active");
-          $(this).parent().parent().parent().parent().addClass("in"); // add active to li of the current link
-          $(this).parent().parent().parent().parent().parent().addClass("active");
-        }
-      });
+    const currentPath = new URL(window.location.href).pathname;
+    const currentRouteElt = document.getElementById("js-current-route")
+    const currentRoute = currentRouteElt && currentRouteElt.value;
+    document.querySelectorAll(".side-nav a").forEach(elt => {
+      if (
+        currentPath != elt.getAttribute("href") &&
+        (!currentRoute || currentRoute != elt.getAttribute("data-route"))
+      ) return
+      const $elt = $(elt)
+      $elt.addClass("active");
+      $elt.parent().addClass("active"); // add active to li of the current link
+      $elt.parent().parent().addClass("in");
+      $elt.parent().parent().prev().addClass("active"); // add active class to an anchor
+      $elt.parent().parent().parent().addClass("active");
+      $elt.parent().parent().parent().parent().addClass("in"); // add active to li of the current link
+      $elt.parent().parent().parent().parent().parent().addClass("active");
+    });
   }
 
   _initTopMenuItemActive(){

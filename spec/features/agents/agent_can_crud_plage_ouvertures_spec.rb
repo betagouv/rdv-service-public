@@ -7,7 +7,7 @@ describe "Agent can CRUD plage d'ouverture" do
   before do
     login_as(agent, scope: :agent)
     visit authenticated_agent_root_path
-    click_link "Vos plages d'ouverture"
+    click_link "Plages d'ouverture"
   end
 
   context 'for an agent' do
