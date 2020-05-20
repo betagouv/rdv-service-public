@@ -205,4 +205,23 @@ describe User, type: :model do
     it { expect(responsible2.available_rdvs(organisation1.id)).to match_array responsible2.rdvs }
     it { expect(responsible1.available_rdvs(organisation2.id)).to be_empty }
   end
+
+  describe "responsible_attributes" do
+    it "should allow saving nested responsible" do
+      expect(User.count).to eq(0)
+      loulou = User.new(
+        first_name: "loulou",
+        last_name: "durand",
+        responsible_attributes: {
+          first_name: "Jean",
+          last_name: "durand",
+          email: "jean@durand.fr"
+        }
+      )
+      loulou.save!
+      expect(User.count).to eq(2)
+      expect(loulou.responsible).not_to be_nil
+      expect(loulou.responsible.first_name).to eq("Jean")
+    end
+  end
 end

@@ -37,8 +37,9 @@ class User < ApplicationRecord
   after_create :send_invite_if_checked
 
   before_save :set_email_to_null_if_blank
-  before_save :set_organisation_ids_from_responsible, if: :responsible_id_changed?
   before_save :normalize_account
+
+  include User::ResponsabilityConcern
 
   def age
     years = age_in_years
@@ -89,14 +90,6 @@ class User < ApplicationRecord
     User.where(responsible_id: id).or(User.where(id: id)).order('responsible_id DESC NULLS FIRST', first_name: :asc).active
   end
 
-  def relative?
-    responsible_id.present?
-  end
-
-  def responsible?
-    !relative?
-  end
-
   def family
     user_id = relative? ? responsible.id : id
     User.active.where("responsible_id = ? OR id = ?", user_id, user_id)
@@ -138,20 +131,7 @@ class User < ApplicationRecord
     invite! if invite_on_create? && email.present?
   end
 
-  def address
-    # TODO : this is dangerously hiding behaviour
-    super.presence || responsible&.address
-  end
-
-  def responsible_phone_number
-    relative? ? responsible.phone_number : phone_number
-  end
-
-  def responsible_email
-    relative? ? responsible.email : email
-  end
-
-  protected
+  private
 
   def password_required?
     false # users without passwords and emails can be created by agents
@@ -159,10 +139,6 @@ class User < ApplicationRecord
 
   def email_required?
     false # users without passwords and emails can be created by agents
-  end
-
-  def set_organisation_ids_from_responsible
-    self.organisation_ids = responsible.organisation_ids if responsible
   end
 
   def set_email_to_null_if_blank

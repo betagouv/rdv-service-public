@@ -32,6 +32,56 @@ module UsersHelper
       end
     end.join.html_safe
   end
+
+  def agent_user_form_div_toggle_opts(user)
+    {
+      relative: {
+        "data-target": "agents--user-form--responsability.toggleDiv",
+        "data-responsability-type": "relative",
+        "class": ("d-none" if user.responsability_type != :relative)
+      },
+      responsible: {
+        "data-target": "agents--user-form--responsability.toggleDiv",
+        "data-responsability-type": "responsible",
+        "class": ("d-none" if user.responsability_type != :responsible)
+      },
+    }
+  end
+
+  def agent_user_form_input_toggle_opts(user)
+    {
+      responsible: {
+        input_html: {
+          "data-target": "agents--user-form--responsability.toggleInput",
+          "data-responsability-type": "responsible",
+        },
+        disabled: user.responsability_type != :responsible
+      },
+      relative: {
+        input_html: {
+          "data-target": "agents--user-form--responsability.toggleInput",
+          "data-responsability-type": "relative",
+        },
+        disabled: user.responsability_type != :relative
+      },
+      relative_new: {
+        input_html: {
+          "data-target": "agents--user-form--responsability.toggleInput",
+          "data-responsability-type": "relative",
+          "data-relative-type": "new",
+        },
+        disabled: !(user.responsability_type == :relative && user.responsible.new_and_blank?)
+      },
+      relative_existing: {
+        input_html: {
+          "data-target": "agents--user-form--responsability.toggleInput",
+          "data-responsability-type": "relative",
+          "data-relative-type": "existing",
+        },
+        disabled: !(user.responsability_type == :relative && !user.responsible.new_and_blank?)
+      }
+    }
+  end
 end
 
 class DisplayableUser

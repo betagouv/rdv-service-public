@@ -35,3 +35,7 @@ fr:
           en_accession_propriete: En accession à la propriété
           proprietaire: Propriétaire
           autre: Autre
+        responsability_type: Type d'usager
+        responsability_types:
+          responsible: "Responsable"
+          relative: "Proche"

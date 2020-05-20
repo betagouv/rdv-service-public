@@ -80,6 +80,8 @@ Metrics/CyclomaticComplexity:
 # Configuration parameters: CountComments, ExcludedMethods.
 Metrics/MethodLength:
   Max: 24
+  Exclude:
+    - app/helpers/users_helper.rb
 
 # Offense count: 1
 Metrics/PerceivedComplexity:

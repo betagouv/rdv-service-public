@@ -34,14 +34,19 @@ select.form-control-sm {
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
   margin-right: -5px;
-  margin-left: -5px; 
+  margin-left: -5px;
 }
 .form-row > .col,
 .form-row > [class*="col-"] {
   padding-right: 5px;
-  padding-left: 5px; 
+  padding-left: 5px;
 }
 
 .search-form-control {
   min-width: 300px;
+}
+
+// hack for agents users form responsability type radio
+.form-group.radio_buttons.d-flex .form-check{
+  margin-right: 1rem;
 }
