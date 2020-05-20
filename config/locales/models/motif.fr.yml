@@ -19,5 +19,5 @@ fr:
         disable_notifications_for_users: Désactiver les notifications pour l'usager
         min_booking_delay: Délai minimum de réservation
         max_booking_delay: Délai maximum de réservation
-        restriction_for_rdv: Consignes avant la prise de rendez-vous
-        instruction_for_rdv: Consignes après la prise de rendez-vous
+        restriction_for_rdv: Instructions à accepter avant la prise du rendez-vous
+        instruction_for_rdv: Indications affichées après la confirmation du rendez-vous
