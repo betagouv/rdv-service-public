@@ -32,5 +32,13 @@ describe Users::RegistrationForm, type: :form_model do
       form.save
       expect(form.errors.keys).to match_array([:first_name])
     end
+
+    it "accessing errors multiple times causes no problem" do
+      form = Users::RegistrationForm.new(attributes.except(:email, :first_name))
+      form.save
+      form.save
+      expect(form.errors[:first_name].count).to eq 1
+      expect(form.errors[:first_name].count).to eq 1
+    end
   end
 end

@@ -6,24 +6,22 @@ class Users::RegistrationForm
   # these delegates are necessary for redirect after signup
   delegate :persisted?, :active_for_authentication?, :inactive_message, to: :user
 
-  validates :email, presence: true
-  validates :password, presence: true
+  validates :password, :email, presence: true
 
   def initialize(attributes)
     @user = User.new(attributes)
   end
 
   def save
-    user.save if valid?
+    if valid?
+      user.save
+    else
+      # I'd rather override the errors method but it's incredibly tricky
+      user.errors.each { |k, v| errors.add(k, v) }
+    end
   end
 
   def valid?
     [super, user.valid?].all?
-  end
-
-  def errors
-    e = super.deep_dup
-    e.copy!(user.errors)
-    e
   end
 end
