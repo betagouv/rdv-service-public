@@ -57,8 +57,8 @@ jobs:
       - *bundle_install
       - *bundle_save_cache
       - *yarn_restore_cache
-      - *yarn_save_cache
       - *yarn_install
+      - *yarn_save_cache
       - slack/status:
           fail_only: true
           only_for_branches: master
