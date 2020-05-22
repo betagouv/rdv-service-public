@@ -1,4 +1,4 @@
-= simple_form_for resource, as: resource_name, url: registration_path(resource_name) do |f|
+= simple_form_for resource, as: :user, url: registration_path(resource_name) do |f|
   .text-center.w-75.m-auto
     h4.text-dark-50.text-center.mt-0.font-weight-bold.mb-4  Inscription
   = devise_error_messages!

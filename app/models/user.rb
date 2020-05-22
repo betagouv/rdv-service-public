@@ -4,7 +4,7 @@ class User < ApplicationRecord
   include FullNameConcern
   include AccountNormalizerConcern
 
-  attr_accessor :created_or_updated_by_agent, :invite_on_create
+  attr_accessor :invite_on_create
 
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
@@ -138,21 +138,15 @@ class User < ApplicationRecord
     super.presence || responsible&.address
   end
 
-  protected
+  private
 
   def password_required?
-    return false if created_or_updated_by_agent || relative?
-
-    super
+    false # users without passwords and emails can be created by agents
   end
 
   def email_required?
-    return false if created_or_updated_by_agent || relative?
-
-    super
+    false # users without passwords and emails can be created by agents
   end
-
-  private
 
   def set_organisation_ids_from_responsible
     self.organisation_ids = responsible.organisation_ids if responsible
