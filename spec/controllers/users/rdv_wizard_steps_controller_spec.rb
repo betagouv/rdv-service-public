@@ -4,8 +4,15 @@ describe Users::RdvWizardStepsController, type: :controller do
     let!(:motif) { create(:motif) }
     let!(:lieu) { create(:lieu) }
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu) }
-    let!(:creneau) { build(:creneau, motif: motif, starts_at: 10.days.from_now.change(hour: 10)) }
+    let!(:creneau) do
+      build(
+        :creneau,
+        motif: motif,
+        starts_at: Date.parse("2020-03-03").in_time_zone + 10.hours
+      )
+    end
 
+    before { travel_to Date.parse("2020-03-01").in_time_zone + 8.hours }
     before { sign_in user }
 
     let(:params) do
