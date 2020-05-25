@@ -5,7 +5,11 @@
   "env": {
     "HOST": {
       "description": "HOST",
-      "generator": "url"
+      "≈": "url"
+    },
+    "ADMIN_BASIC_AUTH_PASSWORD": {
+      "description": "Basic auth password for review apps super admin",
+      "generator": "secret"
     }
   },
   "scripts": {
