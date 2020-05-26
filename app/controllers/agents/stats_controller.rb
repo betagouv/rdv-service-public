@@ -3,6 +3,15 @@ class Agents::StatsController < AgentAuthController
 
   def index
     @stats = Stat.new(rdvs: rdvs_for_current_agent)
+
+    respond_to do |format|
+      format.csv do
+        csv = ["date et heure, motif, pris par, status, agents"]
+        csv += current_organisation.rdvs.map(&:to_csv)
+        send_data(csv.join("\n"))
+      end
+      format.html
+    end
   end
 
   def rdvs
