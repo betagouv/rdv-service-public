@@ -2,9 +2,11 @@
   | Statistiques #{current_agent.full_name} 
   small Du #{l(Stat::DEFAULT_RANGE.first.to_date)} au #{l(Stat::DEFAULT_RANGE.last.to_date)} 
 
+
 .card.mb-5
   .card-body
     = render 'stats/rdv_counters', rdvs: @stats.rdvs_for_default_range
+    = link_to("export", organisation_agent_stats_path(current_organisation, current_agent, format: "csv"), class: "btn btn-outline-dark")
 
 .card.mb-5
   .card-body
