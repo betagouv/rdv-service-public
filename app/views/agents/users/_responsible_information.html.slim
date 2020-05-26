@@ -13,16 +13,15 @@ ul.list-unstyled.mb-5
       li.mb-2
         strong= "#{t("activerecord.attributes.user.#{k}")} : "
         | #{v}
-  - if user.notes.present?
-    strong
-      i.far.fa-fw.fa-sticky-note>
-      | Notes libres :
-    = simple_format(user.notes)
+  strong
+    i.far.fa-fw.fa-sticky-note>
+    | Notes libres :
+  = display_notes(user.notes)
 
 h4.card-title.mb-3 Agent référent
 ul.list-unstyled.mb-5
   - user.agents.includes([:service]).each do |agent|
-    li.mb-2 
+    li.mb-2
     | #{agent.full_name_and_service}
 
 
