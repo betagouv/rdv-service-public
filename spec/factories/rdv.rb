@@ -27,5 +27,11 @@ FactoryBot.define do
       cancelled_at { 2.days.ago }
       status { 'excused' }
     end
+
+    after(:build) { |rdv| rdv.class.skip_callback(:create, :after, :notify_rdv_created) }
+
+    factory :with_notify_rdv_created do
+      after(:create) { |user| user.send(:notify_rdv_created) }
+    end
   end
 end
