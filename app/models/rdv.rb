@@ -105,11 +105,6 @@ class Rdv < ApplicationRecord
     Notifications::Rdv::RdvUpdatedService.perform_with(self)
   end
 
-  def to_csv
-    type = { "user" => "Usager", "agent" => "Agent", "file_attente" => "File d'attente" }
-    "#{starts_at},#{motif.name},#{type[created_by]},#{status},#{agents.map(&:full_name_and_service).join(',')}"
-  end
-
   private
 
   def virtual_attributes_for_paper_trail

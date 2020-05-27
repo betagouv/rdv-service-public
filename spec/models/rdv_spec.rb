@@ -108,41 +108,4 @@ describe Rdv, type: :model do
     end
   end
 
-  describe "#to_csv" do
-    it "return start_at" do
-      rdv = build(:rdv)
-      expect(rdv.to_csv.split(",")[0]).to eq(rdv.starts_at.to_s)
-    end
-
-    it "return motif" do
-      rdv = build(:rdv)
-      expect(rdv.to_csv.split(",")[1]).to eq(rdv.motif.name)
-    end
-
-    it "return taken by" do
-      rdv = build(:rdv, created_by: 0)
-      expect(rdv.to_csv.split(",")[2]).to eq("Agent")
-    end
-
-    it "return taken by" do
-      rdv = build(:rdv, created_by: 1)
-      expect(rdv.to_csv.split(",")[2]).to eq("Usager")
-    end
-
-    it "return taken by" do
-      rdv = build(:rdv, created_by: 2)
-      expect(rdv.to_csv.split(",")[2]).to eq("File d'attente")
-    end
-
-    it "return taken by" do
-      rdv = build(:rdv, status: 3)
-      expect(rdv.to_csv.split(",")[3]).to eq(rdv.status)
-    end
-
-    it "return agents" do
-      agent = build(:agent)
-      rdv = build(:rdv, agents: [agent])
-      expect(rdv.to_csv.split(",")[4]).to eq(agent.full_name_and_service)
-    end
-  end
 end
