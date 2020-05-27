@@ -107,5 +107,4 @@ describe Rdv, type: :model do
       end
     end
   end
-
 end
