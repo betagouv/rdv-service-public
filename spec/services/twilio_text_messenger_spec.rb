@@ -1,62 +1,129 @@
-describe TwilioTextMessenger, type: :service do
-  let(:rdv) { create(:rdv) }
-  let(:user) { rdv.users.first }
+describe TwilioTextMessenger, type: :service, skip_mock_sms: true  do
+  let(:user) { create(:user, phone_number: "+33640404040") }
 
   describe "#send_sms" do
-    subject { twilio.send_sms }
+    let(:service_pmi) { create(:service, :pmi) }
+    let(:motif) { create(:motif, service: service_pmi) }
+    let(:motif_by_phone) { create(:motif, :by_phone, service: service_pmi) }
+    let(:twilio_client) { instance_double(Twilio::REST::Client) }
+    let(:twilio_messages_list) { instance_double(Twilio::REST::Api::V2010::AccountContext::MessageList) }
 
-    context "when sending a sms when rdv is created" do
-      let(:twilio) { TwilioTextMessenger.new(:rdv_created, rdv, user) }
-      it 'return Twilio Object when sms is sent' do
-        is_expected.to be_kind_of(Twilio::REST::Api::V2010::AccountContext::MessageInstance)
+    before do
+      expect(Twilio::REST::Client).to receive(:new).at_least(:once).and_return(twilio_client)
+      expect(twilio_client).to receive(:messages).at_least(:once).and_return(twilio_messages_list)
+    end
+
+    context "for rdv_created notifications" do
+      context "simple RDV" do
+        let(:rdv) do
+          create(
+            :rdv,
+            :without_notify_created_callback,
+            motif: motif,
+            users: [user],
+            location: "20 rue du Louvre, Paris",
+            starts_at: Time.zone.parse("2020-10-25 10:30")
+          )
+        end
+        it 'should call twilio message creation' do
+          expect(twilio_messages_list).to receive(:create).with(
+            from: ENV["TWILIO_PHONE_NUMBER"],
+            to: "+33640404040",
+            body: "RDV PMI 25 oct. à 10h30\n20 rue du Louvre, Paris\nInfos et annulation: #{ENV['HOST']}/r"
+          )
+          TwilioTextMessenger.new(:rdv_created, rdv, user).send_sms
+        end
       end
 
-      it { expect(subject.body).to include("RDV #{rdv.motif.service.name} #{I18n.l(rdv.starts_at, format: :short)}") }
-      it { expect(subject.body).to include(rdv.location.to_s) }
-
-      context 'RDV is by_phone' do
-        let(:rdv) { create(:rdv, :by_phone) }
-
-        it { expect(subject.body).to include("RDV Téléphonique") }
+      context 'phone RDV' do
+        let(:rdv) do
+          create(
+            :rdv,
+            :without_notify_created_callback,
+            motif: motif_by_phone,
+            users: [user],
+            starts_at: Time.zone.parse("2020-10-25 10:30"),
+          )
+        end
+        it "should call twilio message creation" do
+          expect(twilio_messages_list).to receive(:create).with(
+            from: ENV["TWILIO_PHONE_NUMBER"],
+            to: "+33640404040",
+            body: "RDV PMI 25 oct. à 10h30\nRDV Téléphonique\nInfos et annulation: #{ENV['HOST']}/r"
+          )
+          TwilioTextMessenger.new(:rdv_created, rdv, user).send_sms
+        end
       end
     end
 
     context "when sending a reminder sms" do
-      let(:twilio) { TwilioTextMessenger.new(:reminder, rdv, user) }
-      it 'return Twilio Object when sms is sent' do
-        is_expected.to be_kind_of(Twilio::REST::Api::V2010::AccountContext::MessageInstance)
+      let(:rdv) do
+        create(
+          :rdv,
+          :without_notify_created_callback,
+          location: "20 rue du Louvre, Paris",
+          motif: motif,
+          users: [user],
+          starts_at: Time.zone.parse("2020-10-25 10:30")
+        )
       end
-
-      it { expect(subject.body).to include("Rappel RDV #{rdv.motif.service.name} le #{I18n.localize(rdv.starts_at, format: :short)}") }
-      it { expect(subject.body).to include(rdv.location.to_s) }
+      it "should call twilio message creation" do
+        expect(twilio_messages_list).to receive(:create).with(
+          from: ENV["TWILIO_PHONE_NUMBER"],
+          to: "+33640404040",
+          body: "Rappel RDV PMI le 25 oct. à 10h30\n20 rue du Louvre, Paris\nInfos et annulation: #{ENV['HOST']}/r"
+        )
+        TwilioTextMessenger.new(:reminder, rdv, user).send_sms
+      end
     end
 
     context "when sending a file d'attente sms" do
-      let(:twilio) { TwilioTextMessenger.new(:file_attente, rdv, user, creneau_starts_at: Time.now) }
-      it 'return Twilio Object when sms is sent' do
-        is_expected.to be_kind_of(Twilio::REST::Api::V2010::AccountContext::MessageInstance)
+      let(:rdv) do
+        create(
+          :rdv,
+          :without_notify_created_callback,
+          users: [user]
+        )
       end
-
-      it { expect(subject.body).to include("Des créneaux se sont libérés plus tot.") }
-      it { expect(subject.body).to include("Cliquez pour voir les disponibilités :") }
+      it "should call twilio message creation" do
+        expect(twilio_messages_list).to receive(:create).with(
+          from: ENV["TWILIO_PHONE_NUMBER"],
+          to: "+33640404040",
+          body: "Des créneaux se sont libérés plus tot.\nCliquez pour voir les disponibilités : #{ENV['HOST']}/users/creneaux?rdv_id=#{rdv.id}"
+        )
+        TwilioTextMessenger.new(:file_attente, rdv, user, creneau_starts_at: Time.now).send_sms
+      end
     end
 
     context "when sending a rdv_cancelled_by_agent sms" do
-      let(:twilio) { TwilioTextMessenger.new(:rdv_cancelled, rdv, user) }
-      it 'return Twilio Object when sms is sent' do
-        is_expected.to be_kind_of(Twilio::REST::Api::V2010::AccountContext::MessageInstance)
+      let(:rdv) do
+        create(
+          :rdv,
+          :without_notify_created_callback,
+          motif: motif,
+          users: [user],
+          starts_at: Time.zone.parse("2020-10-25 10:30")
+        )
       end
-
-      it { expect(subject.body).to include("RDV #{rdv.motif.service.short_name} #{I18n.l(rdv.starts_at, format: :short)} a été annulé") }
+      it "should call twilio message creation" do
+        expect(twilio_messages_list).to receive(:create).with(
+          from: ENV["TWILIO_PHONE_NUMBER"],
+          to: "+33640404040",
+          body: "RDV PMI 25 oct. à 10h30 a été annulé\nAllez sur https://rdv-solidarites.fr pour reprendre RDV."
+        )
+        TwilioTextMessenger.new(:rdv_cancelled, rdv, user).send_sms
+      end
     end
   end
 
   describe "#replace_special_chars" do
-    let(:twilio) { TwilioTextMessenger.new(:rdv_created, rdv, user) }
-    let(:body) { "àáäâãèéëẽêìíïîĩòóöôõùúüûũñçÀÁÄÂÃÈÉËẼÊÌÍÏÎĨÒÓÖÔÕÙÚÜÛŨÑÇ" }
-
-    subject { twilio.send(:replace_special_chars, body) }
-
-    it { is_expected.to eq("àaäaaèéeeeìiiiiòoöooùuüuuñcAAÄAAEÉEEEIIIIIOOÖOOUUÜUUÑÇ") }
+    it "should work" do
+      body = "àáäâãèéëẽêìíïîĩòóöôõùúüûũñçÀÁÄÂÃÈÉËẼÊÌÍÏÎĨÒÓÖÔÕÙÚÜÛŨÑÇ"
+      expect(
+        TwilioTextMessenger
+          .new(:rdv_created, nil, user)
+          .send(:replace_special_chars, body)
+      ).to eq("àaäaaèéeeeìiiiiòoöooùuüuuñcAAÄAAEÉEEEIIIIIOOÖOOUUÜUUÑÇ")
+    end
   end
 end
