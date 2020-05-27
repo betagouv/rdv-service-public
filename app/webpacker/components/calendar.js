@@ -79,7 +79,7 @@ document.addEventListener('turbolinks:load', function() {
       },
       eventRender: function (info) {
         let $el = $(info.el);
-
+        setBackground($el, info.event);
         if(info.event.extendedProps.past == true) {
           $el.addClass("fc-event-past");
         };
@@ -100,6 +100,7 @@ document.addEventListener('turbolinks:load', function() {
               title += ` <br>${info.event.extendedProps.motif}`;
             }
             title += `<br><strong>${info.event.title}</strong>`;
+            title += `<br><strong>Statut:</strong> ${info.event.extendedProps.readableStatus}`;
           }
 
           $el.attr("title", title);
@@ -113,9 +114,25 @@ document.addEventListener('turbolinks:load', function() {
     window.calendar = calendar
     calendar.render();
 
-    setInterval(function(){ calendar.refetchEvents() }, 30000)
+    // setInterval(function(){ calendar.refetchEvents() }, 30000)
   }
 });
+
+
+function setBackground(el, event) {
+  let backgroundColor = event.backgroundColor;
+  let rdvStatus = event.extendedProps.status;
+  let rdvInPast = event.extendedProps.past;
+  console.log(rdvStatus);
+  if (rdvStatus == "unknown") {
+  } else if (rdvStatus == "waiting") {
+    el.addClass("progress-bar-striped")
+  } else if (rdvStatus == "seen") {
+  } else if (rdvStatus == "notexcused") {
+  } else if (rdvStatus == "excused") {
+  }
+}
+
 
 document.addEventListener("turbolinks:before-cache", function() {
   const calendarElt = document.getElementById('calendar')

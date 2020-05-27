@@ -1,14 +1,14 @@
-json.array! @rdvs do |rdv|
-  json.title rdv_title_for_agent(rdv)
-  json.id rdv.id
+json.array! @plage_ouverture_occurences do |plage_ouverture, occurence|
+  json.title plage_ouverture.title
+  json.start occurence.starts_at
+  json.end occurence.ends_at
+  json.backgroundColor "#6fceff80"
+  json.rendering "background"
   json.extendedProps do
-    json.status rdv.status
-    json.motif rdv.motif.name
-    json.past rdv.past?
-    json.duration rdv.duration_in_min
+    json.location plage_ouverture.lieu.address
+    json.lieu plage_ouverture.lieu.name
   end
-  json.start rdv.starts_at
-  json.end rdv.ends_at
-  json.url organisation_rdv_path(rdv.organisation, rdv)
+end
+l organisation_rdv_path(rdv.organisation, rdv)
   json.backgroundColor rdv.motif&.color
 end
