@@ -58,7 +58,6 @@ class Agents::UsersController < AgentAuthController
 
   def update
     authorize(@user)
-    @user.created_or_updated_by_agent = true
     @user.skip_reconfirmation! if @user.encrypted_password.blank?
     flash[:notice] = "L'usager a été modifié." if @user.update(user_params)
     if from_modal?
@@ -94,7 +93,6 @@ class Agents::UsersController < AgentAuthController
     @user = User.new(user_params)
     @user.organisation_ids = [current_organisation.id]
     @user.invited_by = current_agent
-    @user.created_or_updated_by_agent = true
     @organisation = current_organisation
   end
 

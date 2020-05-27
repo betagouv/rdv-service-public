@@ -29,7 +29,6 @@ FactoryBot.define do
     end
     trait :with_no_email do
       email { nil }
-      created_or_updated_by_agent { true }
     end
   end
 end

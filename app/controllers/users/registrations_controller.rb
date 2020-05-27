@@ -18,6 +18,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   private
 
+  def build_resource(hash = {})
+    self.resource = Users::RegistrationForm.new(hash)
+  end
+
   def user_devise_layout
     user_signed_in? ? 'application_user' : 'registration'
   end
