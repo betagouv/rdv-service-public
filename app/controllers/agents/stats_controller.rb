@@ -5,6 +5,9 @@ class Agents::StatsController < AgentAuthController
     @stats = Stat.new(rdvs: rdvs_for_current_agent)
 
     respond_to do |format|
+      format.ods do
+        send_data(RdvStatBuilderService.perform_with(current_organisation, StringIO.new), filename: "stats.ods", type: "application/ods")
+      end
       format.csv do
         csv = ["date et heure, motif, pris par, status, agents"]
         csv += current_organisation.rdvs.map(&:to_csv)
