@@ -16,9 +16,7 @@ describe TwilioTextMessenger, type: :service, skip_mock_sms: true  do
     context "for rdv_created notifications" do
       context "simple RDV" do
         let(:rdv) do
-          create(
-            :rdv,
-            :without_notify_created_callback,
+          create_rdv(
             motif: motif,
             users: [user],
             location: "20 rue du Louvre, Paris",
@@ -37,9 +35,7 @@ describe TwilioTextMessenger, type: :service, skip_mock_sms: true  do
 
       context 'phone RDV' do
         let(:rdv) do
-          create(
-            :rdv,
-            :without_notify_created_callback,
+          create_rdv(
             motif: motif_by_phone,
             users: [user],
             starts_at: Time.zone.parse("2020-10-25 10:30"),
@@ -58,9 +54,7 @@ describe TwilioTextMessenger, type: :service, skip_mock_sms: true  do
 
     context "when sending a reminder sms" do
       let(:rdv) do
-        create(
-          :rdv,
-          :without_notify_created_callback,
+        create_rdv(
           location: "20 rue du Louvre, Paris",
           motif: motif,
           users: [user],
@@ -78,13 +72,7 @@ describe TwilioTextMessenger, type: :service, skip_mock_sms: true  do
     end
 
     context "when sending a file d'attente sms" do
-      let(:rdv) do
-        create(
-          :rdv,
-          :without_notify_created_callback,
-          users: [user]
-        )
-      end
+      let(:rdv) { create_rdv(users: [user]) }
       it "should call twilio message creation" do
         expect(twilio_messages_list).to receive(:create).with(
           from: ENV["TWILIO_PHONE_NUMBER"],
@@ -97,9 +85,7 @@ describe TwilioTextMessenger, type: :service, skip_mock_sms: true  do
 
     context "when sending a rdv_cancelled_by_agent sms" do
       let(:rdv) do
-        create(
-          :rdv,
-          :without_notify_created_callback,
+        create_rdv(
           motif: motif,
           users: [user],
           starts_at: Time.zone.parse("2020-10-25 10:30")
@@ -126,4 +112,11 @@ describe TwilioTextMessenger, type: :service, skip_mock_sms: true  do
       ).to eq("àaäaaèéeeeìiiiiòoöooùuüuuñcAAÄAAEÉEEEIIIIIOOÖOOUUÜUUÑÇ")
     end
   end
+end
+
+def create_rdv(*args, **kwargs)
+  Rdv.skip_callback(:create, :after, :notify_rdv_created)
+  rdv = create(:rdv, *args, **kwargs)
+  Rdv.set_callback(:create, :after, :notify_rdv_created)
+  rdv
 end

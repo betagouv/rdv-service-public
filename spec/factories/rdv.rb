@@ -27,9 +27,5 @@ FactoryBot.define do
       cancelled_at { 2.days.ago }
       status { 'excused' }
     end
-    trait :without_notify_created_callback do
-      after(:build) { |rdv| rdv.class.skip_callback(:create, :after, :notify_rdv_created) }
-      after(:create) { |rdv| rdv.class.set_callback(:create, :after, :notify_rdv_created) }
-    end
   end
 end
