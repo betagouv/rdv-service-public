@@ -1,4 +1,4 @@
-describe TwilioTextMessenger, type: :service do
+describe TwilioTextMessenger, type: :service, skip_mock_sms: true do
   let(:rdv) { create(:rdv) }
   let(:user) { rdv.users.first }
 
