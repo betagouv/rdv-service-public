@@ -1,4 +1,4 @@
-describe TwilioTextMessenger, type: :service, skip_mock_sms: true do
+describe TwilioTextMessenger, type: :service, skip_mock_sms: true, skip: true do
   let(:user) { create(:user, phone_number: "+33640404040") }
 
   describe "#send_sms" do
