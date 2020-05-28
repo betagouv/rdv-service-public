@@ -1,12 +1,12 @@
-class RdvStatBuilderService < BaseService
+class RdvExporterService < BaseService
   TYPE = { "user" => "Usager", "agent" => "Agent", "file_attente" => "File d'attente" }.freeze
   HourFormat = Spreadsheet::Format.new(number_format: 'hh:mm')
   DateFormat = Spreadsheet::Format.new(number_format: 'DD/MM/YYYY')
   HEADER = ["date prise rdv", "heure prise rdv", "date rdv", "heure rdv", "motif", "pris par", "status", "agents"].freeze
 
-  def initialize(organisation, file)
+  def initialize(rdvs, file)
     Spreadsheet.client_encoding = 'UTF-8'
-    @organisation = organisation
+    @rdvs = rdvs
     @file = file
   end
 
@@ -20,7 +20,7 @@ class RdvStatBuilderService < BaseService
     sheet = book.create_worksheet
     sheet.row(0).concat(HEADER)
 
-    @organisation.rdvs.each_with_index do |rdv, index|
+    @rdvs.each_with_index do |rdv, index|
       row = sheet.row(index + 1)
       row.set_format 0, DateFormat
       row.set_format 1, HourFormat

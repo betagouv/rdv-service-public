@@ -1,27 +1,23 @@
-describe RdvStatBuilderService, type: :service do
+describe RdvExporterService, type: :service do
   it "build a workbook" do
-    orga = build(:organisation)
-    rdv_stat_builder = RdvStatBuilderService.new(orga, StringIO.new)
+    rdv_stat_builder = RdvExporterService.new([], StringIO.new)
     expect(rdv_stat_builder.workbook).to be_kind_of(Spreadsheet::Workbook)
   end
 
   it "have a work sheet in workbook" do
-    orga = build(:organisation)
-    rdv_stat_builder = RdvStatBuilderService.new(orga, StringIO.new)
+    rdv_stat_builder = RdvExporterService.new([], StringIO.new)
     expect(rdv_stat_builder.workbook.worksheet(0)).to be_kind_of(Spreadsheet::Worksheet)
   end
 
   context "with a sheet inside" do
     it "have an header" do
-      orga = build(:organisation)
-      sheet = RdvStatBuilderService.new(orga, StringIO.new).workbook.worksheet(0)
+      sheet = RdvExporterService.new([], StringIO.new).workbook.worksheet(0)
       expect(sheet.row(0)).to eq(["date prise rdv", "heure prise rdv", "date rdv", "heure rdv", "motif", "pris par", "status", "agents"])
     end
 
     it "have a line for a RDV" do
-      orga = create(:organisation)
-      rdv = create(:rdv, organisation: orga)
-      sheet = RdvStatBuilderService.new(orga, StringIO.new).workbook.worksheet(0)
+      rdv = build(:rdv, created_at: Time.new(2020, 3, 23, 9, 54, 33))
+      sheet = RdvExporterService.new([rdv], StringIO.new).workbook.worksheet(0)
       expect(sheet.row(1)[0]).to eq(rdv.created_at.to_date)
       expect(sheet.row(1)[1].min).to eq(rdv.created_at.to_time.min)
       expect(sheet.row(1)[2]).to eq(rdv.starts_at.to_date)
