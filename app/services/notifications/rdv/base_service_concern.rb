@@ -9,7 +9,7 @@ module Notifications::Rdv::BaseServiceConcern
     return false if @rdv.starts_at < Time.zone.now || @rdv.motif.disable_notifications_for_users
 
     if methods.include?(:notify_user)
-      @rdv.users.map(&:user_to_notify).uniq.each { notify_user(_1) }
+      @rdv.users.map(&:reload).map(&:user_to_notify).uniq.each { notify_user(_1) }
     end
 
     if methods.include?(:notify_agent)
