@@ -20,6 +20,9 @@ class Agents::UsersController < AgentAuthController
   def new
     @user = User.new
     @user.organisation_ids = [current_organisation.id]
+    if params[:responsible_id].present?
+      @user.responsible = policy_scope(User).find(params[:responsible_id])
+    end
     authorize(@user)
     respond_modal_with @user
   end
@@ -27,28 +30,28 @@ class Agents::UsersController < AgentAuthController
   def create
     prepare_create
     authorize(@user)
-    @user_to_compare = DuplicateUserFinderService.new(@user).perform
+    return render :compare if duplicate_found? && !from_modal?
 
-    if @user_to_compare.present? && !from_modal?
-      @user_not_in_organisation = @user_to_compare.organisation_ids.exclude?(current_organisation.id)
-      render :compare
-    else
-      @user.skip_confirmation_notification!
-      user_persisted = @user.save
-      return respond_modal_with @user, location: add_query_string_params_to_url(request.referer, 'user_ids[]': @user.id) if from_modal?
+    @user.skip_confirmation_notification!
+    user_persisted = @user.save
+    return respond_modal_with @user, location: add_query_string_params_to_url(request.referer, 'user_ids[]': @user.id) if from_modal?
 
-      if user_persisted
+    if user_persisted
+      if @user.responsible?
         flash[:notice] = "L'usager a été créé."
         redirect_to organisation_user_path(@organisation, @user)
       else
-        render :new
+        flash[:notice] = "#{@user.full_name} a été ajouté comme proche."
+        redirect_to organisation_user_path(current_organisation, @user.responsible)
       end
+    else
+      render :new
     end
   end
 
   def show
     authorize(@user)
-    respond_modal_with @user
+    respond_modal_with @user if from_modal?
   end
 
   def edit
@@ -59,11 +62,14 @@ class Agents::UsersController < AgentAuthController
   def update
     authorize(@user)
     @user.skip_reconfirmation! if @user.encrypted_password.blank?
-    flash[:notice] = "L'usager a été modifié." if @user.update(user_params)
-    if from_modal?
-      respond_modal_with @user, location: request.referer
+    user_updated = @user.update(user_params)
+    flash[:notice] = "L'usager a été modifié." if user_updated
+    return respond_modal_with @user, location: request.referer if from_modal?
+
+    if user_updated
+      redirect_to organisation_user_path(current_organisation, @user)
     else
-      respond_right_bar_with @user, location: organisation_user_path(current_organisation, @user)
+      render :edit
     end
   end
 
@@ -77,7 +83,12 @@ class Agents::UsersController < AgentAuthController
   def destroy
     authorize(@user)
     flash[:notice] = "L'usager a été supprimé." if @user.soft_delete(current_organisation)
-    redirect_to organisation_users_path(current_organisation)
+
+    if @user.relative?
+      redirect_to organisation_user_path(current_organisation, @user.responsible)
+    else
+      redirect_to organisation_users_path(current_organisation)
+    end
   end
 
   def link_to_organisation
@@ -89,8 +100,18 @@ class Agents::UsersController < AgentAuthController
 
   private
 
+  def duplicate_found?
+    @user_to_compare = DuplicateUserFinderService.new(@user).perform
+
+    return false unless @user_to_compare.present?
+
+    @user_not_in_organisation = @user_to_compare.organisation_ids.exclude?(current_organisation.id)
+    true
+  end
+
   def prepare_create
     @user = User.new(user_params)
+    authorize(@user.responsible) if @user.responsible.present?
     @user.organisation_ids = [current_organisation.id]
     @user.invited_by = current_agent
     @organisation = current_organisation
@@ -104,7 +125,7 @@ class Agents::UsersController < AgentAuthController
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :birth_name, :email, :phone_number, :birth_date, :address, :caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :logement, :invite_on_create, :notes, agent_ids: [])
+    params.require(:user).permit(:first_name, :last_name, :birth_name, :email, :phone_number, :birth_date, :address, :caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :logement, :invite_on_create, :notes, :responsible_id, agent_ids: [])
   end
 
   def search_params

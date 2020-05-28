@@ -108,9 +108,7 @@ Rails.application.routes.draw do
           scope module: :users do
             resources :rdvs, only: :index
           end
-          resources :relatives, only: [:create, :new]
         end
-        resources :relatives, except: [:create, :new]
 
         resources :rdvs, except: [:index, :new] do
           patch :status, on: :member
