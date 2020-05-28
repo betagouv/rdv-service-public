@@ -165,7 +165,7 @@ GEM
     ethon (0.12.0)
       ffi (>= 1.3.0)
     execjs (2.7.0)
-    factory_bot (5.1.1)
+    factory_bot (5.2.0)
       activesupport (>= 4.2.0)
     faker (2.10.2)
       i18n (>= 1.6, < 2)
@@ -257,7 +257,7 @@ GEM
     mini_magick (4.10.1)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
-    minitest (5.14.0)
+    minitest (5.14.1)
     momentjs-rails (2.20.1)
       railties (>= 3.1)
     montrose (0.11.2)
@@ -381,7 +381,7 @@ GEM
     rspec-mocks (3.9.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
-    rspec-rails (4.0.0.beta4)
+    rspec-rails (4.0.1)
       actionpack (>= 4.2)
       activesupport (>= 4.2)
       railties (>= 4.2)
@@ -463,7 +463,7 @@ GEM
       nokogiri (>= 1.6, < 2.0)
     typhoeus (1.3.1)
       ethon (>= 0.9.0)
-    tzinfo (1.2.6)
+    tzinfo (1.2.7)
       thread_safe (~> 0.1)
     unicode-display_width (1.6.1)
     uniform_notifier (1.13.0)
@@ -544,7 +544,7 @@ DEPENDENCIES
   pundit (~> 2.0)
   rails (~> 6.0)
   rails-controller-testing
-  rspec-rails (>= 4.0.0.beta)
+  rspec-rails (>= 4.0.1)
   rspec_junit_formatter
   rubocop
   sentry-raven

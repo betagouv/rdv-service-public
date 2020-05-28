@@ -93,7 +93,7 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'brakeman', require: false
   gem 'rubocop', require: false
-  gem 'rspec-rails', '>= 4.0.0.beta'
+  gem 'rspec-rails', '>= 4.0.1'
   gem 'rspec_junit_formatter', require: false
   gem 'rails-controller-testing'
   gem 'factory_bot'
