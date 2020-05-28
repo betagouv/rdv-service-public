@@ -14,7 +14,7 @@ gem 'puma', '~> 3.12'
 # DB
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'pg_search', '~> 2.3'
-gem 'kaminari', '~> 1.1'
+gem 'kaminari', '~> 1.2'
 gem 'bootstrap4-kaminari-views', '~> 1.0'
 gem 'administrate', github: 'thoughtbot/administrate', branch: 'master' # to use PR #1579
 gem 'administrate-field-belongs_to_search', '~> 0.7'
