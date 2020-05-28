@@ -23,7 +23,17 @@
       data-organisation-id="#{@organisation.id}"
       data-event-sources-json="#{[organisation_agent_rdvs_path(@organisation, @agent, status: @status, format: :json), organisation_agent_absences_path(@organisation, @agent), organisation_agent_plage_ouvertures_path(@organisation, @agent), jours_feries_path].to_json}"
     ]
-    .mt-3.my-1
+    .mt-3
+      = link_to organisation_agent_rdvs_path(current_organisation, @agent, date: @date, show_user_details: true), class: "js-link-print-rdvs" do
+        - if current_agent == @agent
+          ' 🖨 Liste détaillée des RDVs du
+          span.js-date
+          / date is filled from JS
+        - else
+          ' 🖨 Liste détaillée des RDVs du
+          span.js-date' &nbsp;
+          | pour #{@agent.full_name}
+    .my-1
       = link_to( \
           @agent == current_agent ? \
           "Créer/modifier vos plages d'ouvertures" : \

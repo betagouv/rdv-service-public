@@ -76,6 +76,15 @@ document.addEventListener('turbolinks:load', function() {
       maxTime: '20:00:00',
       datesRender: function(info) {
         sessionStorage.setItem("calendarStartDate", JSON.stringify(info.view.currentStart))
+        const printLinkElt = document.querySelector(".js-link-print-rdvs")
+        printLinkElt.classList.toggle("d-none", info.view.type != "timeGridOneDay")
+        if (info.view.type != "timeGridOneDay") return
+
+        const url = new URL(printLinkElt.href)
+        const date = moment(info.view.currentStart)
+        printLinkElt.querySelector(".js-date").innerHTML = date.format("DD/MM/YYYY")
+        url.searchParams.set("date", date.format("YYYY-MM-DD"))
+        printLinkElt.href = url.toString()
       },
       eventRender: function (info) {
         let $el = $(info.el);

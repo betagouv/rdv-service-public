@@ -139,10 +139,19 @@ class User < ApplicationRecord
   end
 
   def address
+    # TODO : this is dangerously hiding behaviour
     super.presence || responsible&.address
   end
 
-  private
+  def responsible_phone_number
+    relative? ? responsible.phone_number : phone_number
+  end
+
+  def responsible_email
+    relative? ? responsible.email : email
+  end
+
+  protected
 
   def password_required?
     false # users without passwords and emails can be created by agents

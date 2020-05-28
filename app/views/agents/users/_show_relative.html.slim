@@ -18,10 +18,7 @@
       .card-body
         h4.card-title.mb-3 Informations de votre proche
         ul.list-unstyled
-          - {first_name: user.first_name, last_name: user.last_name, birth_date: birth_date_and_age(user) }.each do |k,v|
-              li.mb-2
-                strong= "#{t("activerecord.attributes.user.#{k}")} : "
-                | #{v}
+          = user_details(@user, :first_name, :last_name, :birth_date)
         .card-text
           i.far.fa-fw.fa-sticky-note>
           strong> Notes libres :
