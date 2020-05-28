@@ -1,4 +1,4 @@
-describe TwilioTextMessenger, type: :service, skip_mock_sms: true  do
+describe TwilioTextMessenger, type: :service, skip_mock_sms: true do
   let(:user) { create(:user, phone_number: "+33640404040") }
 
   describe "#send_sms" do
@@ -38,7 +38,7 @@ describe TwilioTextMessenger, type: :service, skip_mock_sms: true  do
           create_rdv(
             motif: motif_by_phone,
             users: [user],
-            starts_at: Time.zone.parse("2020-10-25 10:30"),
+            starts_at: Time.zone.parse("2020-10-25 10:30")
           )
         end
         it "should call twilio message creation" do
