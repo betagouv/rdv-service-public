@@ -115,8 +115,8 @@ describe TwilioTextMessenger, type: :service, skip_mock_sms: true do
 end
 
 def create_rdv(*args, **kwargs)
-  Rdv.skip_callback(:create, :after, :notify_rdv_created)
-  rdv = create(:rdv, *args, **kwargs)
-  Rdv.set_callback(:create, :after, :notify_rdv_created)
+  rdv = build(:rdv, *args, **kwargs)
+  rdv.extend(SkipCallbacksConcern)
+  rdv.save!
   rdv
 end
