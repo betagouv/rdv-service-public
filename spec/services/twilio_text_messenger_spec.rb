@@ -116,7 +116,7 @@ end
 
 def create_rdv(*args, **kwargs)
   rdv = build(:rdv, *args, **kwargs)
-  rdv.extend(SkipCallbacks)
+  rdv.extend(SkipCallbacksConcern)
   rdv.save!
   rdv
 end
