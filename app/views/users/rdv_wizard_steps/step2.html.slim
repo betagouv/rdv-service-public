@@ -27,6 +27,7 @@
             .col-auto
               = link_to "modifier", lieux_path(search: @rdv_wizard.to_search_query)
 
+      .card-body
         = simple_form_for(@rdv, url: users_rdv_wizard_step_path(step: 2, **@rdv_wizard.to_query.except(:rdv))) do |f|
 
           = f.association :motif, as: :hidden, wrapper_html: { class: 'mb-0' }
