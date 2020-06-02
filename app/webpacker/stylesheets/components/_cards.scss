@@ -45,7 +45,7 @@
 .card-warning {
   border: 1px solid $warning;
   background-color: lighten($warning, 45%);
-} 
+}
 
 //Card disable loading (Custom Cards)
 .card-disabled {
@@ -86,7 +86,7 @@
 
 .card-pricing {
   position: relative;
-  
+
   .card-pricing-plan-name {
     padding-bottom: 20px;
   }
@@ -136,5 +136,12 @@
     font-weight: 700;
     border-radius: .25rem .25rem 0 0;
     margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+  }
+}
+
+.card-hoverable {
+  border: 1px solid transparent;
+  &:hover {
+    border-color: $blue;
   }
 }

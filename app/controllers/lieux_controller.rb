@@ -4,7 +4,6 @@ class LieuxController < ApplicationController
 
   def index
     @lieux = Lieu.for_service_motif_and_departement(@service_id, @motif_name, @departement)
-    return redirect_to lieu_path(@lieux.first, search: @query) if @lieux.size == 1
     return redirect_to new_user_session_path, flash: { alert: I18n.t("motifs.follow_up_need_signed_user", motif_name: @motif_name) } if follow_up_rdv_and_offline_user?
 
     @next_availability_by_lieux = {}
