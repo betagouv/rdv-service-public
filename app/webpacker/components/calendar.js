@@ -122,10 +122,10 @@ document.addEventListener('turbolinks:load', function() {
     window.calendar = calendar
     calendar.render();
 
-    var refreshCalendar = setInterval(function(){ calendar.refetchEvents() }, 30000);
+    const refreshCalendarInterval = setInterval(function(){ calendar.refetchEvents() }, 30000);
 
     $(document).on('turbolinks:before-cache turbolinks:before-render', function() {
-      clearTimeout(refreshCalendar)
+      clearTimeout(refreshCalendarInterval)
     });
   }
 });
