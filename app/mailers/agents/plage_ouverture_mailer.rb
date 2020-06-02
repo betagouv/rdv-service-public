@@ -13,7 +13,7 @@ class Agents::PlageOuvertureMailer < ApplicationMailer
     )
     m.add_part(
       Mail::Part.new do
-        content_type "text/calendar; method=REQUEST"
+        content_type "text/calendar; method=REQUEST; charset=utf-8"
         body ics.to_ical
         content_transfer_encoding "8bit"
       end
