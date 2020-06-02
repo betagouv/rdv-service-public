@@ -3,16 +3,18 @@ html lang="fr"
   head
     = render 'common/head_landing'
   body
-    .bg-primary.mb-3
+    .bg-primary
       - if current_user.present?
         = render "common/header_user_logged"
       - else
         = render 'common/header'
-      - if content_for :title
-        .container
+      .container
+        = render 'layouts/flash'
+        - if content_for :title
           .row
             .col-md-12
               .my-4= yield :title
+      = yield :header
 
     = yield
     = render 'common/footer'

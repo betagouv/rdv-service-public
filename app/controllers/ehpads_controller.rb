@@ -1,5 +1,5 @@
 class EhpadsController < ApplicationController
-  layout 'welcome'
+  layout 'landing'
   before_action :set_variables, only: [:search]
 
   def set_variables

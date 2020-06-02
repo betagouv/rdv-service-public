@@ -1,6 +1,6 @@
 class LieuxController < ApplicationController
   before_action :set_lieu_variables, only: [:index, :show]
-  layout 'welcome'
+  layout 'landing'
 
   def index
     @lieux = Lieu.for_service_motif_and_departement(@service_id, @motif_name, @departement)

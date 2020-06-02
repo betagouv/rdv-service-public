@@ -1,13 +1,11 @@
 class WelcomeController < ApplicationController
   before_action :set_lieu_variables, only: [:welcome_departement, :welcome_service]
 
-  layout 'welcome'
+  layout 'landing'
 
   def index; end
 
-  def welcome_agent
-    render layout: 'welcome_agent'
-  end
+  def welcome_agent;end
 
   def search
     search_params = params.require(:search).permit(:departement, :where, :service, :motif_name, :latitude, :longitude)
