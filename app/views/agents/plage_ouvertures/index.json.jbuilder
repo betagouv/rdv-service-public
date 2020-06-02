@@ -9,6 +9,3 @@ json.array! @plage_ouverture_occurences do |plage_ouverture, occurence|
     json.lieu plage_ouverture.lieu.name
   end
 end
-l organisation_rdv_path(rdv.organisation, rdv)
-  json.backgroundColor rdv.motif&.color
-end
