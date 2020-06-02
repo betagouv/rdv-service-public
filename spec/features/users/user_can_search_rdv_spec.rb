@@ -37,7 +37,7 @@ describe "User can search for rdvs" do
       expect(page).to have_content(lieu2.name)
 
       # Step 5
-      click_link(lieu.name)
+      find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
       expect(page).to have_content(lieu.name)
       first(:link, "11:00").click
 
