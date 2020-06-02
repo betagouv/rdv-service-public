@@ -21,7 +21,7 @@
           = link_to "voir dans l'agenda", organisation_agent_path(current_organisation, @rdv.agents.first, selected_event_id: @rdv.id, date: @rdv.starts_at.to_date)
         = render 'rdv_details', rdv: @rdv
         .row
-          - if @rdv.cancellable?
+          - unless @rdv.cancelled?
             .col.text-left
               = link_to "Annuler", organisation_rdv_path(@rdv.organisation, @rdv, status: :excused), method: :put, class: "btn btn-outline-danger mr-1", data: { confirm: "Êtes-vous sûr de vouloir annuler ce rendez-vous ? L'usager recevra une notification de cette annulation."}
               | ou
