@@ -28,6 +28,7 @@ class Rdv::Ics
       e.sequence    = rdv.sequence
       e.ip_class    = "PRIVATE"
       e.attendee    = "mailto:#{user.email}"
+      e.organizer   = "mailto:contact@rdv-solidarites.fr"
     end
 
     cal.ip_method = "REQUEST"
