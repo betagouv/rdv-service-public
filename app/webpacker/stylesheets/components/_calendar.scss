@@ -112,8 +112,20 @@
   text-align: center;
 }
 
-.fc-event-past, .fc-event-excused, .fc-event-notexcused {
-  background-color: #666 !important;
+.fc-bgevent {
+  opacity: 1;
+  .fc-title{
+    color: black !important;
+  }
+}
+
+.fc-event-excused, .fc-event-seen {
+  opacity: .7;
+}
+
+.fc-event-waiting {
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.3) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0.3) 75%, transparent 75%, transparent);
+  background-size: 1rem 1rem;
 }
 
 .fc-event-excused, .fc-event-notexcused {
@@ -144,15 +156,19 @@
 }
 
 .fc-time-grid-event {
-  .fc-content {
-    color: $white;
-  }
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding-left: 0.6rem;
   &.fc-event-small{
-    display: flex;
-    justify-content: center;
-    align-items: center;
     line-height: 0.75rem;
     padding: 0;
+  }
+  .fc-time, .fc-title{
+    text-align: left;
+  }
+  .fc-content {
+    color: $white;
   }
 }
 .fc-event-container {

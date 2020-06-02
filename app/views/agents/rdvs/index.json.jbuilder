@@ -3,6 +3,7 @@ json.array! @rdvs do |rdv|
   json.id rdv.id
   json.extendedProps do
     json.status rdv.status
+    json.readableStatus Rdv.human_enum_name(:status, rdv.status)
     json.motif rdv.motif.name
     json.past rdv.past?
     json.duration rdv.duration_in_min

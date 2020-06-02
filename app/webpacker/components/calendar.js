@@ -88,7 +88,6 @@ document.addEventListener('turbolinks:load', function() {
       },
       eventRender: function (info) {
         let $el = $(info.el);
-
         if(info.event.extendedProps.past == true) {
           $el.addClass("fc-event-past");
         };
@@ -109,6 +108,7 @@ document.addEventListener('turbolinks:load', function() {
               title += ` <br>${info.event.extendedProps.motif}`;
             }
             title += `<br><strong>${info.event.title}</strong>`;
+            title += `<br><strong>Statut:</strong> ${info.event.extendedProps.readableStatus}`;
           }
 
           $el.attr("title", title);
@@ -125,6 +125,7 @@ document.addEventListener('turbolinks:load', function() {
     setInterval(function(){ calendar.refetchEvents() }, 30000)
   }
 });
+
 
 document.addEventListener("turbolinks:before-cache", function() {
   const calendarElt = document.getElementById('calendar')
