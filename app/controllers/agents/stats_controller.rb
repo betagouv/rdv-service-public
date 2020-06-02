@@ -3,6 +3,11 @@ class Agents::StatsController < AgentAuthController
 
   def index
     @stats = Stat.new(rdvs: rdvs_for_current_agent)
+
+    respond_to do |format|
+      format.ods { send_data(RdvStatBuilderService.perform_with(current_organisation, StringIO.new), filename: "stats.ods", type: "application/ods") }
+      format.html
+    end
   end
 
   def rdvs

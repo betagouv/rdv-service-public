@@ -400,6 +400,7 @@ GEM
       rexml
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
+    ruby-ole (1.2.12.2)
     ruby-progressbar (1.10.1)
     ruby-vips (2.0.17)
       ffi (~> 1.9)
@@ -436,6 +437,8 @@ GEM
     slim (4.0.1)
       temple (>= 0.7.6, < 0.9)
       tilt (>= 2.0.6, < 2.1)
+    spreadsheet (1.2.6)
+      ruby-ole (>= 1.0)
     spring (2.1.0)
     spring-commands-rspec (1.0.4)
       spring (>= 0.9.1)
@@ -551,6 +554,7 @@ DEPENDENCIES
   simple_form (~> 5.0)
   skylight
   slim (~> 4.0)
+  spreadsheet
   spring
   spring-commands-rspec
   spring-watcher-listen (~> 2.0.0)

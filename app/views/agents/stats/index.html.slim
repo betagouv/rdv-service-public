@@ -1,10 +1,13 @@
 - content_for :title do
-  | Statistiques #{current_agent.full_name} 
-  small Du #{l(Stat::DEFAULT_RANGE.first.to_date)} au #{l(Stat::DEFAULT_RANGE.last.to_date)} 
+  | Statistiques #{current_agent.full_name}
+  small Du #{l(Stat::DEFAULT_RANGE.first.to_date)} au #{l(Stat::DEFAULT_RANGE.last.to_date)}
 
 .card.mb-5
   .card-body
     = render 'stats/rdv_counters', rdvs: @stats.rdvs_for_default_range
+    = link_to organisation_rdvs_path(current_organisation, format: "ods"), class: "btn btn-link" do
+      i.fa.fa-download'
+      | Télécharger un export des RDVs de l'organisation
 
 .card.mb-5
   .card-body
