@@ -13,8 +13,14 @@
 @import "./components/types";
 @import "./components/search_form";
 @import "./components/forms";
-@import "./components/cards";
 @import "./components/utilities";
+@import "./components/steps";
+
+// Structure
+@import "./structure/general";
+@import "./structure/topbar";
+@import "./structure/footer";
+@import "./structure/page-head";
 
 h1 {
   font-size: 3rem;
