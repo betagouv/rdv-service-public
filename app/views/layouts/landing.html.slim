@@ -3,7 +3,7 @@ html lang="fr"
   head
     = render 'common/head_landing'
   body class="#{agents_or_users_body_class}"
-    .div class="#{ current_user.present? ? '' : 'bg-primary'}"
+    div class="#{ params[:controller].include?('users/') ? '' : 'bg-primary'}"
       - if current_user.present?
         = render "common/header_user_logged"
       - else
@@ -21,7 +21,7 @@ html lang="fr"
 
       = yield :header
 
-    .div class="#{ current_user.present? ? 'container' : 'mt-3'}"
+    div class="#{ params[:controller].include?('users/') ? 'container' : 'mt-3'}"
       = yield
     #modal-holder
-= render 'common/footer'
+    = render 'common/footer'
