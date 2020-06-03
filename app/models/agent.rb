@@ -43,7 +43,9 @@ class Agent < ApplicationRecord
   end
 
   def from_safe_domain?
-    pattern = "@(#{ENV['SAFE_DOMAIN_LIST']&.split&.join('|')})$"
+    return false if ENV['SAFE_DOMAIN_LIST'].blank?
+
+    pattern = "@(#{ENV['SAFE_DOMAIN_LIST'].split&.join('|')})$"
     regex = Regexp.new(pattern)
     regex.match? email
   end
@@ -69,5 +71,11 @@ class Agent < ApplicationRecord
   def add_organisation(organisation)
     errors.add(:email, 'existe déjà dans cette organisation') && return if organisation_ids.include?(organisation.id)
     organisations << organisation
+  end
+
+  protected
+
+  def password_required?
+    persisted?
   end
 end

@@ -1,5 +1,4 @@
 class Organisation < ApplicationRecord
-  include Rails.application.routes.url_helpers
   has_paper_trail
   has_many :lieux, dependent: :destroy
   has_many :motifs, dependent: :destroy
@@ -13,18 +12,14 @@ class Organisation < ApplicationRecord
   validates :departement, presence: true, length: { is: 2 }
   validates :phone_number, phone: { allow_blank: true }
 
-  after_create :notify_admin
+  after_create :notify_admin_organisation_created
 
-  def home_path(agent)
-    if recent?
-      organisation_setup_checklist_path(self)
-    else
-      organisation_agent_path(self, agent)
-    end
-  end
+  accepts_nested_attributes_for :agents
 
-  def notify_admin
-    Admins::OrganisationMailer.new_organisation(agents.first).deliver_later if agents.present?
+  def notify_admin_organisation_created
+    return unless agents.present?
+
+    Admins::OrganisationMailer.organisation_created(agents.first).deliver_later
   end
 
   def recent?

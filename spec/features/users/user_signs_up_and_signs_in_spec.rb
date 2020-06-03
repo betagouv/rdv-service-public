@@ -50,7 +50,7 @@ feature 'User signs up and signs in' do
         fill_in :user_email, with: agent.email
         fill_in :password, with: agent.password
         click_on "Se connecter"
-        expect(current_path).to eq(agent.organisation_ids.first.home_path(agent.id))
+        expect(current_path).to eq(organisation_home_path(agent.organisations.first))
       end
     end
   end

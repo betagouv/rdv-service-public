@@ -1,6 +1,6 @@
 class Admins::OrganisationMailerPreview < ActionMailer::Preview
-  def new_organisation
+  def organisation_created
     agent = Organisation.first.agents.first
-    Admins::OrganisationMailer.new_organisation(agent)
+    Admins::OrganisationMailer.organisation_created(agent)
   end
 end
