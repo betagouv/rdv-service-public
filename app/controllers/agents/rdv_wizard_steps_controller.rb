@@ -1,5 +1,4 @@
 class Agents::RdvWizardStepsController < AgentAuthController
-
   before_action :set_agent, :set_rdv_wizard_layout_flag
 
   PERMITTED_PARAMS = [

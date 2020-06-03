@@ -5,7 +5,7 @@ class WelcomeController < ApplicationController
 
   def index; end
 
-  def welcome_agent;end
+  def welcome_agent; end
 
   def search
     search_params = params.require(:search).permit(:departement, :where, :service, :motif_name, :latitude, :longitude)
