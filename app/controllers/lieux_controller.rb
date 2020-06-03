@@ -10,7 +10,7 @@ class LieuxController < ApplicationController
     unless online_bookings_suspended_because_of_corona?(@departement)
       @lieux.each do |lieu|
         # TODO: au lieux de current_user.agents, il faudrait sans doute filtrer sur les agents du service lie au motif, de la meme organisation
-        @next_availability_by_lieux[lieu.id] = FindAvailabilityService.perform_with(@motif_name, lieu, Date.today, options_to_build_creneaux)
+        @next_availability_by_lieux[lieu.id] = FindAvailabilityService.perform_with(@motif_name, lieu, Date.today, **options_to_build_creneaux)
       end
     end
 
@@ -40,8 +40,8 @@ class LieuxController < ApplicationController
       @referent_missing = "Vous ne semblez pas bénéficier d’un accompagnement ou d’un suivi, merci de choisir un autre motif ou de contacter la MDS au #{@lieu.organisation.phone_number}".html_safe
       @creneaux = []
     else
-      @creneaux = CreneauxBuilderService.perform_with(@motif_name, @lieu, @date_range, options_to_build_creneaux)
-      @next_availability = FindAvailabilityService.perform_with(@motif_name, @lieu, @date_range.end, options_to_build_creneaux) if @creneaux.empty?
+      @creneaux = CreneauxBuilderService.perform_with(@motif_name, @lieu, @date_range, **options_to_build_creneaux)
+      @next_availability = FindAvailabilityService.perform_with(@motif_name, @lieu, @date_range.end, **options_to_build_creneaux) if @creneaux.empty?
     end
 
     @max_booking_delay = @matching_motifs.maximum('max_booking_delay')

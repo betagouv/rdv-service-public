@@ -2,7 +2,7 @@
   .card-body
     p.card-text
       i.fa.fa-fw.fa-calendar>
-      = link_to rdv_title(rdv, { date_format: local_assigns[:date_format] }.compact), organisation_rdv_path(rdv.organisation, rdv)
+      = link_to rdv_title(rdv, **{ date_format: local_assigns[:date_format] }.compact), organisation_rdv_path(rdv.organisation, rdv)
       = rdv_status_tag(rdv)
 
     - if local_assigns[:show_user_details]
@@ -16,7 +16,7 @@
               - rdv.users.order_by_last_name.each do |user|
                 div
                   = link_to organisation_user_path(current_organisation, user) do
-                    b' #{user.full_name}
+                    b> #{user.full_name}
                   - if user.responsible.present?
                     | (proche de #{link_to(user.responsible.full_name, organisation_user_path(current_organisation, user.responsible))})
                   ul.list-unstyled
