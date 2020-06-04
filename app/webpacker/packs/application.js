@@ -1,4 +1,5 @@
 import 'core-js/stable'
+import "regenerator-runtime/runtime"; // cf https://github.com/rails/webpacker#usage
 require("@rails/ujs").start()
 require("turbolinks").start()
 require("chartkick")
