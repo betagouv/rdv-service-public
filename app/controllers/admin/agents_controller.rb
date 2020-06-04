@@ -33,6 +33,7 @@ module Admin
     end
 
     def invite
+      requested_resource.invited_by = current_super_admin
       requested_resource.invite!
       redirect_to(
         [namespace, requested_resource],
