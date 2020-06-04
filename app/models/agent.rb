@@ -72,10 +72,4 @@ class Agent < ApplicationRecord
     errors.add(:email, 'existe déjà dans cette organisation') && return if organisation_ids.include?(organisation.id)
     organisations << organisation
   end
-
-  protected
-
-  def password_required?
-    persisted?
-  end
 end
