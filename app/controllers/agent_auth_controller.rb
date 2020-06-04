@@ -1,5 +1,4 @@
 class AgentAuthController < ApplicationController
-
   rescue_from Pundit::NotAuthorizedError, with: :agent_not_authorized
 
   layout 'application_agent'

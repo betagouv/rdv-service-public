@@ -1,5 +1,4 @@
 class StatsController < ApplicationController
-
   def index
     @stats = Stat.new(rdvs: Rdv.all, users: User.all)
   end

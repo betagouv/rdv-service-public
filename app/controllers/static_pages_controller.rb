@@ -1,5 +1,4 @@
 class StaticPagesController < ApplicationController
-
   def disclaimer; end
 
   def terms; end
