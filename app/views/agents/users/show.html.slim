@@ -8,10 +8,7 @@
     - if @user.relative?
       li.breadcrumb-item
         = link_to @user.responsible.full_name, organisation_user_path(current_organisation, @user.responsible)
-      li.breadcrumb-item.active #{@user.full_name}
-    - else
-
-      li.breadcrumb-item.active #{@user.full_name}
+    li.breadcrumb-item.active #{@user.full_name}
 
   = link_to "Trouver un créneau", organisation_agent_searches_path(current_organisation, user_id: @user.id), class: "btn btn-outline-white"
 
