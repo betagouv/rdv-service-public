@@ -63,8 +63,6 @@ gem 'typhoeus'
 gem "sentry-raven"
 gem "skylight"
 
-gem "js-routes"
-
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
 gem 'webpacker'
 # See https://github.com/rails/execjs#readme for more supported runtimes
