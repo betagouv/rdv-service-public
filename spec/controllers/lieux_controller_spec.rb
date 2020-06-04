@@ -3,7 +3,7 @@ RSpec.describe LieuxController, type: :controller do
 
   let(:lieu) { create(:lieu, latitude: 50.63, longitude: 3.06) }
   let(:lieu2) { create(:lieu, latitude: 50.72, longitude: 3.16) }
-  let(:motif) { create(:motif, online: true) }
+  let(:motif) { create(:motif, reservable_online: true) }
   let(:now) { Date.new(2019, 7, 22) }
   let!(:plage_ouverture) { create(:plage_ouverture, :weekly, title: "Tous les lundis", first_day: first_day, lieu: lieu, motifs: [motif]) }
   let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, title: "Tous les lundis", first_day: first_day + 1.week, lieu: lieu2, motifs: [motif]) }
@@ -44,7 +44,7 @@ RSpec.describe LieuxController, type: :controller do
       context "avec un usager non connecté" do
         it "redirige vers la page de login" do
           lieu = create(:lieu, latitude: 50.63, longitude: 3.06)
-          motif = create(:motif, online: true, follow_up: true)
+          motif = create(:motif, reservable_online: true, follow_up: true)
           create(:plage_ouverture, :weekly,
                  title: "Tous les lundis",
                  first_day: first_day,
@@ -72,7 +72,7 @@ RSpec.describe LieuxController, type: :controller do
           usager = create(:user, agents: [agent])
           sign_in usager
           lieu = create(:lieu, latitude: 50.63, longitude: 3.06)
-          motif = create(:motif, online: true, follow_up: true)
+          motif = create(:motif, reservable_online: true, follow_up: true)
           create(:plage_ouverture, :weekly,
                  title: "Tous les lundis",
                  first_day: first_day,
@@ -101,7 +101,7 @@ RSpec.describe LieuxController, type: :controller do
           usager = create(:user, agents: [agent])
           sign_in usager
           lieu = create(:lieu, latitude: 50.63, longitude: 3.06)
-          motif = create(:motif, online: true, follow_up: true)
+          motif = create(:motif, reservable_online: true, follow_up: true)
 
           create(:plage_ouverture, :weekly,
                  title: "Tous les lundis",
@@ -131,7 +131,7 @@ RSpec.describe LieuxController, type: :controller do
           usager = create(:user, agents: [])
           sign_in usager
           lieu = create(:lieu, latitude: 50.63, longitude: 3.06)
-          motif = create(:motif, online: true, follow_up: true)
+          motif = create(:motif, reservable_online: true, follow_up: true)
           create(:plage_ouverture, :weekly,
                  title: "Tous les lundis",
                  first_day: first_day,

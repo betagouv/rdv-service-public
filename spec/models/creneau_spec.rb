@@ -1,6 +1,6 @@
 describe Creneau, type: :model do
-  let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, online: online) }
-  let(:online) { true }
+  let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, reservable_online: reservable_online) }
+  let(:reservable_online) { true }
   let!(:lieu) { create(:lieu) }
   let(:today) { Date.new(2019, 9, 19) }
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
@@ -11,7 +11,7 @@ describe Creneau, type: :model do
   after { travel_back }
 
   describe "#overlaps_rdv_or_absence?" do
-    let(:motif2) { build(:motif, name: "Visite 12 mois", default_duration_in_min: 60, online: online) }
+    let(:motif2) { build(:motif, name: "Visite 12 mois", default_duration_in_min: 60, reservable_online: reservable_online) }
     let(:creneau) { build(:creneau, starts_at: Time.zone.local(2019, 9, 19, 9, 0), lieu_id: lieu.id, motif: motif2) }
 
     describe "for absences" do
@@ -107,7 +107,7 @@ describe Creneau, type: :model do
     end
 
     describe "with an other plage_ouverture with another motif" do
-      let(:motif2) { build(:motif, name: "Visite 12 mois", default_duration_in_min: 60, online: online) }
+      let(:motif2) { build(:motif, name: "Visite 12 mois", default_duration_in_min: 60, reservable_online: reservable_online) }
       let!(:plage_ouverture3) { create(:plage_ouverture, title: "Permanence visite 12 mois", motifs: [motif2], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
 
       it { should contain_exactly(plage_ouverture) }

@@ -15,7 +15,7 @@ class Motif < ApplicationRecord
   validate :not_associated_with_secretariat
 
   scope :active, -> { where(deleted_at: nil) }
-  scope :online, -> { where(online: true) }
+  scope :reservable_online, -> { where(reservable_online: true) }
   scope :by_phone, -> { Motif.phone } # default scope created by enum
   scope :for_secretariat, -> { where(for_secretariat: true) }
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
@@ -32,7 +32,7 @@ class Motif < ApplicationRecord
   end
 
   def self.names_for_service_and_departement(service, departement)
-    Motif.online
+    Motif.reservable_online
       .active
       .joins(:organisation, :plage_ouvertures)
       .where(organisations: { departement: departement })

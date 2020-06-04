@@ -3,7 +3,7 @@ RSpec.describe WelcomeController, type: :controller do
 
   describe "GET #welcome_departement" do
     let(:service) { create(:service, name: "Joli service") }
-    let!(:motif) { create(:motif, service: service, online: true) }
+    let!(:motif) { create(:motif, service: service, reservable_online: true) }
     let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif]) }
     let(:departement) { plage_ouverture.organisation.departement }
 

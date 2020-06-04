@@ -14,7 +14,7 @@ module MotifsHelper
   end
 
   def motif_badges(motif)
-    badges = [:online, :phone, :home, :secretariat, :follow_up]
+    badges = [:reservable_online, :phone, :home, :secretariat, :follow_up]
     badges.select { motif.send("#{_1}?") }.map { build_badge_tag_for(_1) }.join("").html_safe
   end
 

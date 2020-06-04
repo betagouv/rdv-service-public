@@ -4,7 +4,7 @@ describe "Agent can create a Rdv with creneau search" do
   let!(:agent) { create(:agent, first_name: "Alain", last_name: "Tiptop") }
   let!(:agent2) { create(:agent, first_name: "Robert", last_name: "Voila") }
   let!(:agent3) { create(:agent, first_name: "Michel", last_name: "Lapin") }
-  let!(:motif) { create(:motif, online: true) }
+  let!(:motif) { create(:motif, reservable_online: true) }
   let!(:user) { create(:user) }
   let!(:lieu) { create(:lieu) }
   let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu, agent: agent) }
