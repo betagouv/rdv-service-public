@@ -1,6 +1,8 @@
 class AgentAuthController < ApplicationController
+
   rescue_from Pundit::NotAuthorizedError, with: :agent_not_authorized
 
+  layout 'application_agent'
   before_action :authenticate_agent!
   before_action :set_paper_trail_whodunnit
 

@@ -1,8 +1,6 @@
 class WelcomeController < ApplicationController
   before_action :set_lieu_variables, only: [:welcome_departement, :welcome_service]
 
-  layout 'landing'
-
   def index; end
 
   def welcome_agent; end

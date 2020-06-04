@@ -1,112 +1,62 @@
-import 'core-js/stable'
 require("@rails/ujs").start()
 require("turbolinks").start()
 require("chartkick")
 require("chart.js")
-import 'bootstrap';
-import 'moment/moment.js';
-import 'jquery-mask-plugin';
-import 'moment/locale/fr.js';
-import 'holderjs/holder.min';
-import 'jquery-slimscroll/jquery.slimscroll';
-import 'metismenu/dist/metisMenu.min';
-import 'select2/dist/js/select2.full.min.js';
-import 'select2/dist/js/i18n/fr.js';
-import { Datetimepicker } from 'components/datetimepicker';
-import { Avatar } from 'components/avatar';
-import { Menu } from 'components/menu';
-import { Layout } from 'components/layout';
-import { Modal } from 'components/modal';
-import { Rightbar } from 'components/rightbar';
-import { InviteUserOnCreate } from 'components/invite-user-on-create';
-import { PopulateLibelle } from 'components/populate-libelle';
-import 'components/analytic.js';
 import { PlacesInput } from 'components/places-input.js';
-import { ShowHidePassword } from 'components/show-hide-password.js';
-import { RdvWizardStep2 } from 'components/rdv_wizard_step2.js';
-import { MotifForm } from 'components/motif-form.js';
-import 'components/calendar';
-import 'components/select2';
-import 'components/tooltip';
-import 'components/sentry';
+import 'components/analytic.js';
+import { Modal } from 'components/modal';
 import 'components/browser-detection';
-import "actiontext";
-import { Application } from "stimulus";
-import { definitionsFromContext } from "stimulus/webpack-helpers";
+import 'select2/dist/js/select2.min.js';
+import 'select2/dist/js/i18n/fr.js';
+import 'jquery-mask-plugin';
+import 'components/select2';
+import 'components/sentry';
+import 'components/search-form';
+import 'bootstrap';
 
+import 'stylesheets/application';
 import 'stylesheets/print';
-import 'stylesheets/application'
-
-// this is necessary so images are compiled by webpack
-require.context('../images', true)
-
-const application = Application.start();
-const context = require.context("./controllers", true, /\.js$/);
-application.load(definitionsFromContext(context));
 
 new Modal();
-new Rightbar();
 
-global.$ = require('jquery');
+let setWhereInvalid = function (where, submit) {
+  where.classList.remove("is-valid");
+  where.classList.add("is-invalid");
+  submit.disabled = true;
+}
 
-$(document).on('shown.bs.modal', '.modal', function(e) {
-  $('input[type="tel"]').mask('00 00 00 00 00')
-  new Datetimepicker();
-  new InviteUserOnCreate();
-});
-
-$(document).on('shown.rightbar', '.right-bar', function(e) {
-  $('input[type="tel"]').mask('00 00 00 00 00')
-  $('.right-bar .slimscroll-menu').slimscroll({
-    height: 'auto',
-    position: 'right',
-    size: "8px",
-    color: '#9ea5ab',
-    wheelStep: 5,
-    touchScrollStep: 20
-  });
-  new PlacesInput(document.querySelector('.places-js-container'));
-  $( ".select2-input").select2({
-    theme: "bootstrap4"
-  });
-  new Datetimepicker();
-  $(".tooltip").tooltip("hide");
-});
-
-$(document).on('hide.bs.modal', '.modal', function(e) {
-  $('.modal-backdrop').remove();
-  $("[data-behaviour='datepicker'], [data-behaviour='datetimepicker'], [data-behaviour='timepicker']").datetimepicker('destroy');
-});
+let setWhereValid = function (where, submit) {
+  where.classList.add("is-valid");
+  where.classList.remove("is-invalid");
+  submit.disabled = false;
+}
 
 $(document).on('turbolinks:load', function() {
-  Holder.run();
-
-  let menu = new Menu();
-  let layout = new Layout();
-
-  layout.init();
-  menu.init();
-  new Avatar().init();
-
   $('input[type="tel"]').mask('00 00 00 00 00')
-  $(window).on('resize', function(e) {
-    e.preventDefault();
-    layout.init();
-    menu.resetSidebarScroll();
-  });
+  Holder.run();
+  let placeJsContainer = document.querySelector('.places-js-container');
+  if (placeJsContainer !== null) {
+    let placesInput = new PlacesInput(placeJsContainer);
+    if (document.querySelector('#search_departement') !== null) {
 
-  new PlacesInput(document.querySelector('.places-js-container'));
+      let where = document.querySelector('#search_where');
+      let submit = document.querySelector('#search_submit');
 
-  new PopulateLibelle();
+      placesInput.on('change', function resultSelected(e) {
+        let departement = (e.suggestion.postcode || '').substring(0, 2);
+        $('#search_latitude').val(e.suggestion.latlng.lat)
+        $('#search_longitude').val(e.suggestion.latlng.lng)
+        document.querySelector('#search_departement').value = departement;
+        if (departement.length == 2) {
+          setWhereValid(where, submit);
+        } else {
+          setWhereInvalid(where, submit);
+        }
+      });
 
-  new Datetimepicker();
-
-  new InviteUserOnCreate();
-
-  new ShowHidePassword();
-
-  new MotifForm();
-
-  new RdvWizardStep2();
-
+      placesInput.on('clear', function () {
+        setWhereInvalid(where, submit);
+      })
+    }
+  }
 });

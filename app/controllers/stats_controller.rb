@@ -1,5 +1,4 @@
 class StatsController < ApplicationController
-  layout 'landing'
 
   def index
     @stats = Stat.new(rdvs: Rdv.all, users: User.all)
