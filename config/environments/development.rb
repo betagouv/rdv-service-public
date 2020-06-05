@@ -74,7 +74,7 @@ Rails.application.configure do
   # Check N+1 Queries / Eager loading
   config.after_initialize do
     Bullet.enable = true
-    Bullet.alert = true
+    # Bullet.alert = true
     Bullet.rails_logger = true
   end
 
