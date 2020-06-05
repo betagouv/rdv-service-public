@@ -10,7 +10,12 @@ class OrganisationsController < ApplicationController
     @organisation = Organisation.new(organisation_params)
     @organisation.agents.each do |agent|
       agent.role = :admin
+      # because we're not passing through the regular `.invite!` method, we
+      # have to hack our way into creating a user that bypasses validations and
+      # callbacks:
       agent.skip_confirmation!
+      agent.skip_invitation = true
+      agent.define_singleton_method(:password_required?) { false }
     end
     return render :new unless @organisation.save
 
