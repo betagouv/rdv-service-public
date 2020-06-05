@@ -2,7 +2,7 @@ module MotifsHelper
   def motif_name_with_location_type(motif)
     if motif.phone?
       motif.name + " (Par tél.)"
-    elsif Flipflop.visite_a_domicile? && motif.home?
+    elsif motif.home?
       motif.name + " (À domicile)"
     else
       motif.name

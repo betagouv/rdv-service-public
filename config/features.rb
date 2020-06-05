@@ -3,10 +3,6 @@ Flipflop.configure do
   strategy :active_record # or :sequel, :redis
   strategy :default
 
-  feature :visite_a_domicile,
-          title: 'Visite à domicile',
-          description: "Mise en place des visites à domicile"
-
   feature :corona,
           title: 'Corona',
           description: "Annonce suite au Coronavirus"
