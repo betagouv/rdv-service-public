@@ -8,7 +8,7 @@ class Agents::InvitationsController < Devise::InvitationsController
   end
 
   def create
-    agent = Agent.find_by(email: invite_params[:email])
+    agent = Agent.find_by(email: invite_params[:email].downcase)
     self.resource = agent.nil? ? invite_resource : agent
     resource_invited = resource.errors.empty?
     if resource_invited
