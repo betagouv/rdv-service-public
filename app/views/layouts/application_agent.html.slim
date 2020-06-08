@@ -11,21 +11,15 @@ html lang="fr"
           .container-fluid
             - if content_for :title
               .row.bg-dark.pb-5.justify-content-md-center
-                div class=(@rdv_wizard_layout.present? ? 'col-md-6' : 'col-md-12')
+                div.col-md-12
                   .page-title-box
                     - if content_for :breadcrumb
                       .page-title-right
                         = yield :breadcrumb
                     h4.page-title= yield :title
             .bg-negative
-              - if @rdv_wizard_layout.present?
-                .row.justify-content-md-center
-                  .col-md-6
-                    = render 'layouts/flash'
-                    = yield
-              - else
-                = render 'layouts/flash'
-                = yield
+              = render 'layouts/flash'
+              = yield
 
     #modal-holder
     #right-bar-holder

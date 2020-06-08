@@ -1,5 +1,5 @@
 class Agents::RdvWizardStepsController < AgentAuthController
-  before_action :set_agent, :set_rdv_wizard_layout_flag
+  before_action :set_agent
 
   PERMITTED_PARAMS = [
     :motif_id, :duration_in_min, :starts_at, :location, :notes,
@@ -25,10 +25,6 @@ class Agents::RdvWizardStepsController < AgentAuthController
   end
 
   protected
-
-  def set_rdv_wizard_layout_flag
-    @rdv_wizard_layout = true
-  end
 
   def set_agent
     @agent = params[:agent_ids].present? ? Agent.find(params[:agent_ids].first) : current_agent
