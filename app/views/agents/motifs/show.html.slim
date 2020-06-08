@@ -17,7 +17,7 @@ p.card-text
 - if @motif.for_secretariat?
   p.card-text Le RDV peut être effectué par le service secrétariat
 
-- if @motif.online?
+- if @motif.reservable_online?
     hr.mb-3
     h5 Réservation en ligne par les usagers
     p.text-muted Ce motif est disponible à la réservation en ligne.

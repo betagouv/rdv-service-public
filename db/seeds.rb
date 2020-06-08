@@ -33,7 +33,7 @@ motif_org1_pmi_rappel = Motif.create!(
   color: '#FF7C00',
   organisation_id: org1.id,
   service_id: service_pmi.id,
-  online: true,
+  reservable_online: true,
   location_type: :phone
 )
 motif_org1_pmi_prenatale = Motif.create!(
@@ -41,7 +41,7 @@ motif_org1_pmi_prenatale = Motif.create!(
   color: '#CC7C00',
   organisation_id: org1.id,
   service_id: service_pmi.id,
-  online: true,
+  reservable_online: true,
   location_type: :public_office
 )
 motif_org1_pmi_suivi = Motif.create!(
@@ -49,7 +49,7 @@ motif_org1_pmi_suivi = Motif.create!(
   color: '#00FC60',
   organisation_id: org1.id,
   service_id: service_pmi.id,
-  online: true,
+  reservable_online: true,
   location_type: :public_office,
   follow_up: true
 )
@@ -58,7 +58,7 @@ motif_org1_pmi_securite = Motif.create!(
   color: '#1010FF',
   organisation_id: org1.id,
   service_id: service_pmi.id,
-  online: true,
+  reservable_online: true,
   location_type: :home
 )
 _motif_org1_social_rappel = Motif.create!(
@@ -66,7 +66,7 @@ _motif_org1_social_rappel = Motif.create!(
   color: '#FF7C00',
   organisation_id: org1.id,
   service_id: service_social.id,
-  online: true,
+  reservable_online: true,
   location_type: :phone
 )
 _motif_org1_social_suivi = Motif.create!(
@@ -74,7 +74,7 @@ _motif_org1_social_suivi = Motif.create!(
   color: '#CC7C00',
   organisation_id: org1.id,
   service_id: service_social.id,
-  online: true,
+  reservable_online: true,
   location_type: :public_office,
   follow_up: true
 )
@@ -83,7 +83,7 @@ _motif_org1_social_droits = Motif.create!(
   color: '#00FC60',
   organisation_id: org1.id,
   service_id: service_social.id,
-  online: true,
+  reservable_online: true,
   location_type: :public_office
 )
 
@@ -94,7 +94,7 @@ motif_org2_pmi_rappel = Motif.create!(
   color: '#10FF10',
   organisation_id: org2.id,
   service_id: service_pmi.id,
-  online: true,
+  reservable_online: true,
   location_type: :phone
 )
 motif_org2_pmi_prenatale = Motif.create!(
@@ -102,7 +102,7 @@ motif_org2_pmi_prenatale = Motif.create!(
   color: '#FF1010',
   organisation_id: org2.id,
   service_id: service_pmi.id,
-  online: true,
+  reservable_online: true,
   location_type: :public_office
 )
 

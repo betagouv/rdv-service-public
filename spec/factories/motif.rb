@@ -10,7 +10,7 @@ FactoryBot.define do
     disable_notifications_for_users { false }
     instruction_for_rdv { "Intruction pour le RDV" }
     restriction_for_rdv { "Consigne pour le RDV" }
-    online { true }
+    reservable_online { true }
     location_type { :public_office }
     trait :with_rdvs do
       after(:create) do |motif|

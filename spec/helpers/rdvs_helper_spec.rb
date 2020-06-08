@@ -18,7 +18,7 @@ describe RdvsHelper do
       it { should eq "Marie DENIS et Lea CAVE" }
     end
 
-    context "created by user (online)" do
+    context "created by user (reservable_online)" do
       let(:rdv) { build(:rdv, users: [user], motif: motif, created_by: :user) }
       it { should eq "@ Marie DENIS" }
     end

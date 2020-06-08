@@ -27,7 +27,7 @@ class CreneauxBuilderService < BaseService
 
   def motifs_for_plage_ouverture(plage_ouverture)
     motifs = plage_ouverture.motifs.where(name: @motif_name).active
-    @for_agents ? motifs : motifs.online
+    @for_agents ? motifs : motifs.reservable_online
   end
 
   def creneaux_for_plage_ouverture(plage_ouverture)

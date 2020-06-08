@@ -85,6 +85,6 @@ class LieuxController < ApplicationController
     @motif_names = Motif.names_for_service_and_departement(@service, @departement)
     @latitude = search_params[:latitude]
     @longitude = search_params[:longitude]
-    @matching_motifs = Motif.active.online.joins(:organisation).where(organisations: { departement: @departement }, name: @motif_name)
+    @matching_motifs = Motif.active.reservable_online.joins(:organisation).where(organisations: { departement: @departement }, name: @motif_name)
   end
 end

@@ -1,6 +1,6 @@
 describe FindAvailabilityService, type: :service do
-  let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, online: online) }
-  let(:online) { true }
+  let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, reservable_online: reservable_online) }
+  let(:reservable_online) { true }
   let!(:lieu) { create(:lieu) }
   let(:today) { Date.new(2019, 9, 19) }
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
@@ -20,8 +20,8 @@ describe FindAvailabilityService, type: :service do
 
     it { expect(subject.starts_at).to eq(Time.zone.local(2019, 9, 19, 9, 0)) }
 
-    describe "with not online motif" do
-      let(:online) { false }
+    describe "with not reservable_online motif" do
+      let(:reservable_online) { false }
 
       it { should eq(nil) }
     end

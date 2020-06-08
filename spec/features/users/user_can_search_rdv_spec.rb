@@ -1,5 +1,5 @@
 describe "User can search for rdvs" do
-  let!(:motif) { create(:motif, name: "Vaccination", online: true) }
+  let!(:motif) { create(:motif, name: "Vaccination", reservable_online: true) }
   let!(:lieu) { create(:lieu) }
   let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu) }
   let!(:lieu2) { create(:lieu) }
