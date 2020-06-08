@@ -1,69 +1,71 @@
 - content_for :title do
   | Choisir le ou les usagers
 
-.card
-  ul.list-group.list-group-flush
-    - if @rdv.starts_at.present?
-      li.list-group-item
-        i.fa.fa-check.fa-fw.mr-1.text-success
-        = "Commence le : #{l(@rdv.starts_at, format: :human)}"
-    li.list-group-item
-      i.fa.fa-check.fa-fw.mr-1.text-success
-      | Motif :&nbsp;
-      = motif_name_with_location_type(@rdv.motif)
+.row.justify-content-md-center
+  .col-md-6
+    .card
+      ul.list-group.list-group-flush
+        - if @rdv.starts_at.present?
+          li.list-group-item
+            i.fa.fa-check.fa-fw.mr-1.text-success
+            = "Commence le : #{l(@rdv.starts_at, format: :human)}"
+        li.list-group-item
+          i.fa.fa-check.fa-fw.mr-1.text-success
+          | Motif :&nbsp;
+          = motif_name_with_location_type(@rdv.motif)
 
-  .card-body
-    = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }
+      .card-body
+        = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }
 
-    .d-flex.justify-content-between
-      label Usagers
-      .js-users-spinner.spinner-border.d-none &nbsp;
+        .d-flex.justify-content-between
+          label Usagers
+          .js-users-spinner.spinner-border.d-none &nbsp;
 
-    = simple_form_for(@rdv, url: organisation_rdv_wizard_step_path(current_organisation, step: 2)) do |f|
-      - @rdv.users.each do |user|
-        / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
-        = f.hidden_field "user_ids][", value: user.id
-        .pl-2.my-1
-          .d-flex
-            div
-              i.fa.fa-user
-              | &nbsp;
-              = user.full_name
-              = relative_tag(user)
-            div.ml-2= link_to "╳ Retirer", "#", class: "js-remove-user", data: { 'user-id': user.id }
-            div.ml-2
-              = link_to "✎ Modifier usager", edit_organisation_user_path(current_organisation, user, modal: true), data: { modal: "true" }
+        = simple_form_for(@rdv, url: organisation_rdv_wizard_step_path(current_organisation, step: 2)) do |f|
+          - @rdv.users.each do |user|
+            / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
+            = f.hidden_field "user_ids][", value: user.id
+            .pl-2.my-1
+              .d-flex
+                div
+                  i.fa.fa-user
+                  | &nbsp;
+                  = user.full_name
+                  = relative_tag(user)
+                div.ml-2= link_to "╳ Retirer", "#", class: "js-remove-user", data: { 'user-id': user.id }
+                div.ml-2
+                  = link_to "✎ Modifier usager", edit_organisation_user_path(current_organisation, user, modal: true), data: { modal: "true" }
 
-      .pl-2.mt-2= link_to "+ Ajouter un autre usager", "#", class: "js-toggle-add-user-interface #{'d-none' if @rdv.users.empty?}"
+          .pl-2.mt-2= link_to "+ Ajouter un autre usager", "#", class: "js-toggle-add-user-interface #{'d-none' if @rdv.users.empty?}"
 
-      .js-add-user-interface.mt-2 class=('d-none' if @rdv.users.any?)
-        =  select_tag :status,
-        options_for_select(policy_scope(User).order_by_last_name.map {|u| [ full_name_and_birthdate(u), u.id ]}),
-        include_blank: "Sélectionner un usager",
-        required: false,
-        class: "select2-input js-new-rdv-users-select",
-        data: { "select-options": { ajax: { url: search_organisation_users_path(current_organisation, exclude_ids: @rdv.users.map(&:id)), dataType: 'json', delay: 250 }} }
+          .js-add-user-interface.mt-2 class=('d-none' if @rdv.users.any?)
+            =  select_tag :status,
+            options_for_select(policy_scope(User).order_by_last_name.map {|u| [ full_name_and_birthdate(u), u.id ]}),
+            include_blank: "Sélectionner un usager",
+            required: false,
+            class: "select2-input js-new-rdv-users-select",
+            data: { "select-options": { ajax: { url: search_organisation_users_path(current_organisation, exclude_ids: @rdv.users.map(&:id)), dataType: 'json', delay: 250 }} }
 
-        span.small.text-muted
-          | L'usager n'existe pas ?&nbsp;
-          = link_to 'Créer un usager', new_organisation_user_path(current_organisation, modal: true), data: { modal: true }
+            span.small.text-muted
+              | L'usager n'existe pas ?&nbsp;
+              = link_to 'Créer un usager', new_organisation_user_path(current_organisation, modal: true), data: { modal: true }
 
 
-      = f.input_field :motif_id, as: :hidden
-      = f.input_field :starts_at, as: :hidden
-      = hidden_field_tag 'plage_ouverture_location', @rdv_wizard.plage_ouverture_location
+          = f.input_field :motif_id, as: :hidden
+          = f.input_field :starts_at, as: :hidden
+          = hidden_field_tag 'plage_ouverture_location', @rdv_wizard.plage_ouverture_location
 
-      - @rdv.agents.each do |p|
-        / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
-        = f.hidden_field "agent_ids][", value: p.id
+          - @rdv.agents.each do |p|
+            / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
+            = f.hidden_field "agent_ids][", value: p.id
 
-      .mt-3= f.input :notes, input_html: { rows: 4 }
+          .mt-3= f.input :notes, input_html: { rows: 4 }
 
-      .row
-        .col.text-left
-          = link_to 'Revenir en arrière', new_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 1)), class: 'btn btn-link'
-        .col.text-right
-          = f.button :submit, 'Continuer'
+          .row
+            .col.text-left
+              = link_to 'Revenir en arrière', new_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 1)), class: 'btn btn-link'
+            .col.text-right
+              = f.button :submit, 'Continuer'
 
 input type='hidden' name="js-current-organisation-id" value=current_organisation.id
 input type='hidden' name="js-canonical-path" value=new_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 2))
