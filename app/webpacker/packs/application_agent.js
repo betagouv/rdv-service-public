@@ -79,6 +79,10 @@ $(document).on('hide.bs.modal', '.modal', function(e) {
   $("[data-behaviour='datepicker'], [data-behaviour='datetimepicker'], [data-behaviour='timepicker']").datetimepicker('destroy');
 });
 
+$(document).on('show.bs.modal', '.modal', function(e) {
+  new PlacesInput(document.querySelector('.places-js-container'));
+});
+
 $(document).on('turbolinks:load', function() {
   Holder.run();
 

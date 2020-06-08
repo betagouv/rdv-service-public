@@ -2,7 +2,7 @@ require("@rails/ujs").start()
 require("turbolinks").start()
 require("chartkick")
 require("chart.js")
-import { PlacesInput } from 'components/places-input.js';
+import { PlacesInput } from 'components/places-input.js'
 import 'components/analytic.js';
 import { Modal } from 'components/modal';
 import 'components/browser-detection';
@@ -19,44 +19,22 @@ import 'stylesheets/print';
 
 new Modal();
 
-let setWhereInvalid = function (where, submit) {
-  where.classList.remove("is-valid");
-  where.classList.add("is-invalid");
-  submit.disabled = true;
-}
-
-let setWhereValid = function (where, submit) {
-  where.classList.add("is-valid");
-  where.classList.remove("is-invalid");
-  submit.disabled = false;
-}
-
 $(document).on('turbolinks:load', function() {
   $('input[type="tel"]').mask('00 00 00 00 00')
   Holder.run();
-  let placeJsContainer = document.querySelector('.places-js-container');
+
+  const placeJsContainer = document.querySelector('.places-js-container');
   if (placeJsContainer !== null) {
-    let placesInput = new PlacesInput(placeJsContainer);
-    if (document.querySelector('#search_departement') !== null) {
-
-      let where = document.querySelector('#search_where');
-      let submit = document.querySelector('#search_submit');
-
-      placesInput.on('change', function resultSelected(e) {
-        let departement = (e.suggestion.postcode || '').substring(0, 2);
-        $('#search_latitude').val(e.suggestion.latlng.lat)
-        $('#search_longitude').val(e.suggestion.latlng.lng)
-        document.querySelector('#search_departement').value = departement;
-        if (departement.length == 2) {
-          setWhereValid(where, submit);
-        } else {
-          setWhereInvalid(where, submit);
-        }
-      });
-
-      placesInput.on('clear', function () {
-        setWhereInvalid(where, submit);
-      })
-    }
+    new PlacesInput(placeJsContainer);
   }
+
+  const whereInput = document.querySelector('#search_where');
+  const submitButton = document.querySelector('#search_submit');
+  const departementInput = document.querySelector('#search_departement')
+  departementInput.addEventListener('change', event => {
+    const valid = departementInput.value.length == 2
+    whereInput.classList.toggle('is-valid', valid)
+    whereInput.classList.toggle('is-invalid', !valid)
+    submitButton.toggleAttribute('disabled', !valid)
+  })
 });
