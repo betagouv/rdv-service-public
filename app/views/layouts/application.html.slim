@@ -21,7 +21,7 @@ html lang="fr"
 
       = yield :header
 
-    .mb-3 class="#{ 'container' if params[:controller].include?('users/') }"
+    div class="#{ 'container' if params[:controller].include?('users/') }"
       = yield
     #modal-holder
     = render 'common/footer'
