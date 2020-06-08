@@ -8,7 +8,7 @@ p.card-text
   span.badge.badge-pill.ml-1 style="background: #{@motif.color};"
     | &nbsp;
 
-- if Flipflop.visite_a_domicile? && @motif.home?
+- if @motif.home?
   p.card-text Le RDV aura lieu au domicile de l'usager
 
 - if @motif.phone?
