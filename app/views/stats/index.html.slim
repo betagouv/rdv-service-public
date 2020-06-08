@@ -4,5 +4,5 @@
     br
     small Du #{l(Stat::DEFAULT_RANGE.first.to_date)} au #{l(Stat::DEFAULT_RANGE.last.to_date)}
 
-.container
+.container.mt-3
   = render 'statistics', stats: @stats, rdvs_statistic_path: rdvs_stats_path
