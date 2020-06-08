@@ -9,7 +9,7 @@ class Service < ApplicationRecord
   scope :secretariat, -> { where(name: SECRETARIAT).first }
 
   scope :with_online_and_active_motifs_for_departement, lambda { |departement|
-                                                          where(id: Motif.online
+                                                          where(id: Motif.reservable_online
                                                           .active
                                                           .joins(:organisation, :plage_ouvertures)
                                                           .where(organisations: { departement: departement })

@@ -25,7 +25,7 @@ describe "can see users' RDV" do
       expect(page).to have_content("1\nÀ venir")
       click_link 'Voir tous les RDV'
       expect_page_title('Liste des RDV')
-      expect(page).to have_content(rdv_title(rdv))
+      expect(page).to have_content(rdv_title_spec(rdv))
     end
   end
 end

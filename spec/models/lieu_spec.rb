@@ -1,5 +1,5 @@
 describe Lieu, type: :model do
-  let!(:motif) { create(:motif, name: "Vaccination", online: online) }
+  let!(:motif) { create(:motif, name: "Vaccination", reservable_online: reservable_online) }
   let!(:lieu) { create(:lieu) }
   let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu) }
   let!(:user) { create(:user) }
@@ -9,7 +9,7 @@ describe Lieu, type: :model do
     let(:motif_name) { motif.name }
     let(:service_id) { Service.first.id }
     let(:departement) { organisation.departement }
-    let(:online) { true }
+    let(:reservable_online) { true }
 
     subject { Lieu.for_motif_and_departement(motif_name, departement) }
 
@@ -32,8 +32,8 @@ describe Lieu, type: :model do
       it { expect(subject).to contain_exactly(lieu, lieu2) }
     end
 
-    context "with a motif not online" do
-      let(:online) { false }
+    context "with a motif not reservable_online" do
+      let(:reservable_online) { false }
 
       it { expect(subject).to eq([]) }
     end
@@ -54,7 +54,7 @@ describe Lieu, type: :model do
 
   describe ".for_motif" do
     subject { Lieu.for_motif(motif) }
-    let(:online) { false }
+    let(:reservable_online) { false }
 
     before { freeze_time }
     after { travel_back }
@@ -92,7 +92,7 @@ describe Lieu, type: :model do
   describe '.distance' do
     let!(:lieu_lille) { create(:lieu, latitude: 50.63, longitude: 3.053) }
     let(:paris_loc) { { latitude: 48.83, longitude: 2.37 } }
-    let(:online) { true }
+    let(:reservable_online) { true }
 
     it { expect(lieu_lille.distance(paris_loc[:latitude], paris_loc[:longitude])).to be_a_kind_of(Float) }
     it { expect(lieu_lille.distance(paris_loc[:latitude], paris_loc[:longitude])).to be_within(10000).of(204000) }

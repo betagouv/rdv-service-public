@@ -1,4 +1,4 @@
-= form_for resource, as: resource_name, url: confirmation_path(resource_name) do |f|
+= form_for resource, as: resource_name, url: confirmation_path(resource_name), method: :post do |f|
   .text-center.w-75.m-auto
     h4.text-dark-50.text-center.mt-0.font-weight-bold Confirmer mon adresse
     p.text-muted.mb-4 Renvoyer les informations de confirmation par email

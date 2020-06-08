@@ -1,6 +1,6 @@
 describe CreneauxBuilderService, type: :service do
-  let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, online: online) }
-  let(:online) { true }
+  let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, reservable_online: reservable_online) }
+  let(:reservable_online) { true }
   let!(:lieu) { create(:lieu) }
   let(:today) { Date.new(2019, 9, 19) }
   let(:six_days_later) { today + 6.days }
@@ -28,8 +28,8 @@ describe CreneauxBuilderService, type: :service do
     is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
   end
 
-  context "with motif not bookable online" do
-    let(:online) { false }
+  context "with motif not bookable reservable_online" do
+    let(:reservable_online) { false }
 
     it "should return 0 creneaux" do
       expect(subject.size).to eq(0)
@@ -164,7 +164,7 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "when motif has min_booking_delay" do
-    let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, min_booking_delay: 30.minutes, online: true) }
+    let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, min_booking_delay: 30.minutes, reservable_online: true) }
     let(:now) { Time.zone.local(2019, 9, 19, 9, 15) }
 
     it do
@@ -176,7 +176,7 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "when motif has max_booking_delay" do
-    let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, max_booking_delay: 45.minutes, online: true) }
+    let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, max_booking_delay: 45.minutes, reservable_online: true) }
     let(:now) { Time.zone.local(2019, 9, 19, 9, 15) }
 
     it do

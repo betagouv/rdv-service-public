@@ -4,7 +4,6 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import frLocale from '@fullcalendar/core/locales/fr';
 import interactionPlugin from '@fullcalendar/interaction';
-import Routes from '../routes.js.erb';
 import Bowser from "bowser";
 const browser = Bowser.getParser(window.navigator.userAgent);
 
@@ -40,19 +39,18 @@ document.addEventListener('turbolinks:load', function() {
         if ($('body').hasClass('right-bar-enabled')) return false;
 
         let startDate = moment(info.start);
-        let params = {
+        const urlSearchParams = new URLSearchParams({
           starts_at: info.startStr,
-          organisation_id: organisationId,
           "agent_ids[]": agentId,
-         };
+         });
         let plage_ouvertures = calendar.getEvents()
           .filter(e => e.rendering == "background")
           .filter(e => startDate.isBetween(e.start, e.end, null, "[]"));
 
         if (plage_ouvertures[0] !== undefined) {
-          params['plage_ouverture_location'] = plage_ouvertures[0].extendedProps.location;
+          urlSearchParams.append('plage_ouverture_location', plage_ouvertures[0].extendedProps.location);
         }
-        window.location = Routes.new_organisation_rdv_wizard_step_path(params);
+        window.location = `/organisations/${organisationId}/rdv_wizard_step/new?${urlSearchParams.toString()}`;;
 
       },
       header: {

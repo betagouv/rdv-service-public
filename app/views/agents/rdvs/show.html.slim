@@ -21,11 +21,11 @@
           = link_to "voir dans l'agenda", organisation_agent_path(current_organisation, @rdv.agents.first, selected_event_id: @rdv.id, date: @rdv.starts_at.to_date)
         = render 'rdv_details', rdv: @rdv
         .row
-          - if @rdv.cancellable?
-            .col.text-left
+          .col
+            - if !@rdv.past? && !@rdv.cancelled?
               = link_to "Annuler", organisation_rdv_path(@rdv.organisation, @rdv, status: :excused), method: :put, class: "btn btn-outline-danger mr-1", data: { confirm: "Êtes-vous sûr de vouloir annuler ce rendez-vous ? L'usager recevra une notification de cette annulation."}
               | ou
-              = link_to "Supprimer ❌", organisation_rdv_path(@rdv.organisation, @rdv), method: :delete, class: "btn btn-link text-danger", data: { confirm: "Êtes-vous sûr de vouloir supprimer ce rendez-vous ? Cette action est définitive et aucune notification ne sera envoyée à #{@rdv.users.map(&:full_name).to_sentence}."}
+            = link_to "Supprimer ❌", organisation_rdv_path(@rdv.organisation, @rdv), method: :delete, class: "btn btn-link text-danger", data: { confirm: "Êtes-vous sûr de vouloir supprimer ce rendez-vous ? Cette action est définitive et aucune notification ne sera envoyée à #{@rdv.users.map(&:full_name).to_sentence}."}
 
           .col.text-right
             = link_to "Modifier", edit_organisation_rdv_path(@rdv.organisation, @rdv), class: "btn btn-outline-primary", data: { rightbar: true }
@@ -39,7 +39,7 @@
           = f.input :status, collection: Rdv.human_enum_collection(:status), as: :radio_buttons, label: ''
           .text-right= f.submit class: 'btn btn-secondary'
 
-.row data-controller='versions' data-versions-url=organisation_rdv_versions_path(@rdv.organisation, @rdv, only: ['user_ids', 'agent_ids', 'duration_in_min', 'status', 'starts_at', 'location'])
+.row data-controller='versions' data-versions-url=organisation_rdv_versions_path(@rdv.organisation, @rdv, only: ['user_ids', 'agent_ids', 'duration_in_min', 'status', 'starts_at', 'location', 'notes'])
   .col-md-12
     .card
       .card-header

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_06_085804) do
+ActiveRecord::Schema.define(version: 2020_06_04_083849) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -180,7 +180,7 @@ ActiveRecord::Schema.define(version: 2020_05_06_085804) do
     t.datetime "updated_at", null: false
     t.integer "default_duration_in_min", default: 30, null: false
     t.bigint "organisation_id"
-    t.boolean "online", default: false, null: false
+    t.boolean "reservable_online", default: false, null: false
     t.integer "min_booking_delay", default: 1800
     t.integer "max_booking_delay", default: 7889238
     t.datetime "deleted_at"

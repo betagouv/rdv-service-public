@@ -121,5 +121,25 @@ RSpec.describe Agents::InvitationsController, type: :controller do
         it { expect { subject }.not_to change(Agent, :count) }
       end
     end
+
+    context "when agent already exist but with different email capitalization" do
+      let(:params) do
+        {
+          email: "MARCO@demo.rdv-solidarites.fr",
+          organisation_id: organisation_id,
+          role: 'user',
+          service_id: service_id,
+        }
+      end
+      let!(:existing_agent) do
+        create(
+          :agent,
+          email: "marco@demo.rdv-solidarites.fr",
+          organisation_ids: [organisation_2.id]
+        )
+      end
+
+      it_behaves_like "existing user is added to organization"
+    end
   end
 end

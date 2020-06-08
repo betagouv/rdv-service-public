@@ -15,7 +15,7 @@ describe "User views his rdv" do
     let!(:rdv) { create(:rdv, :future) }
     before { click_link "Vos rendez-vous" }
     it do
-      expect(page).to have_content(rdv_title(rdv))
+      expect(page).to have_content(rdv_title_spec(rdv))
       click_link 'Voir vos RDV passés'
       expect_page_with_no_record_text("Vous n'avez pas de RDV passé.")
     end
@@ -27,7 +27,7 @@ describe "User views his rdv" do
     it do
       expect_page_with_no_record_text("Vous n'avez pas de RDV à venir.")
       click_link 'Voir vos RDV passés'
-      expect(page).to have_content(rdv_title(rdv))
+      expect(page).to have_content(rdv_title_spec(rdv))
     end
   end
 end

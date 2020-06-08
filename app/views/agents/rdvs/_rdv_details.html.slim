@@ -13,7 +13,7 @@ p.card-text
   p.card-text
     i.fa.fa-fw.fa-phone>
     | RDV téléphonique
-- elsif Flipflop.visite_a_domicile? && rdv.motif.home?
+- elsif rdv.motif.home?
   p.card-text
     i.fa.fa-fw.fa-home>
     | RDV à domicile
@@ -24,7 +24,7 @@ p.card-text
   p.card-text
     strong> Usager(s) :
     = users_to_links(rdv)
-.card-text
+p.card-text
   i.far.fa-fw.fa-sticky-note>
   strong> Notes libres :&nbsp;
   = display_notes(rdv.notes)

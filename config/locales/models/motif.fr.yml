@@ -8,7 +8,7 @@ fr:
         service: Service
         name: Nom
         color: Couleur
-        online: RDV en ligne
+        reservable_online: RDV en ligne
         location_type: Type de RDV
         location_types:
           home: À domicile
