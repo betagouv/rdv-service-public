@@ -6,6 +6,7 @@ class Rdv < ApplicationRecord
   )
   belongs_to :organisation
   belongs_to :motif
+  belongs_to :lieu, optional: true
   has_many :file_attentes, dependent: :destroy
   has_many :agents_rdvs, inverse_of: :rdv, dependent: :destroy
   has_many :agents, through: :agents_rdvs
@@ -70,16 +71,10 @@ class Rdv < ApplicationRecord
     !cancelled? && starts_at > 4.hours.from_now
   end
 
-  def lieu
-    return nil unless public_office?
-
-    Lieu.find_by(address: location)
-  end
-
   def to_query
     {
       motif_id: motif&.id,
-      location: location,
+      lieu_id: lieu_id,
       duration_in_min: duration_in_min,
       starts_at: starts_at&.to_s,
       user_ids: users&.map(&:id),
@@ -93,7 +88,6 @@ class Rdv < ApplicationRecord
   end
 
   def creneaux_available(date_range)
-    lieu = Lieu.find_by(address: location)
     lieu.present? ? CreneauxBuilderService.perform_with(motif.name, lieu, date_range) : []
   end
 
@@ -103,6 +97,16 @@ class Rdv < ApplicationRecord
 
   def notify_rdv_updated
     Notifications::Rdv::RdvUpdatedService.perform_with(self)
+  end
+
+  def address
+    return location if location.present? && lieu_id.nil?
+
+    if home?
+      users.map(&:address).map(&:presence).compact.first
+    elsif public_office?
+      lieu.address
+    end
   end
 
   private

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_04_083849) do
+ActiveRecord::Schema.define(version: 2020_06_08_122449) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -250,7 +250,9 @@ ActiveRecord::Schema.define(version: 2020_06_04_083849) do
     t.string "location"
     t.integer "created_by", default: 0
     t.text "notes"
+    t.bigint "lieu_id"
     t.index ["created_by"], name: "index_rdvs_on_created_by"
+    t.index ["lieu_id"], name: "index_rdvs_on_lieu_id"
     t.index ["motif_id"], name: "index_rdvs_on_motif_id"
     t.index ["organisation_id"], name: "index_rdvs_on_organisation_id"
   end
@@ -353,6 +355,7 @@ ActiveRecord::Schema.define(version: 2020_06_04_083849) do
   add_foreign_key "plage_ouvertures", "agents"
   add_foreign_key "plage_ouvertures", "lieux"
   add_foreign_key "plage_ouvertures", "organisations"
+  add_foreign_key "rdvs", "lieux"
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"
   add_foreign_key "users", "users", column: "responsible_id"
