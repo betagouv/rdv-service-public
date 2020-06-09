@@ -23,7 +23,7 @@ class Rdv::Ics
       e.dtend       = Icalendar::Values::DateTime.new(rdv.ends_at, 'tzid' => tzid)
       e.summary     = "RDV #{rdv_title_for_user(rdv, user)}"
       e.description = description
-      e.location    = rdv.location unless rdv.motif.phone?
+      e.location    = rdv.address unless rdv.motif.phone?
       e.uid         = rdv.uuid
       e.sequence    = rdv.sequence
       e.ip_class    = "PRIVATE"

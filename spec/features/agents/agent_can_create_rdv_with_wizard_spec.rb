@@ -5,6 +5,7 @@ describe "Agent can create a Rdv with wizard" do
   let!(:agent2) { create(:agent, first_name: "Robert") }
   let!(:motif) { create(:motif) }
   let!(:user) { create(:user) }
+  let!(:lieu) { create(:lieu) }
 
   before do
     travel_to(Time.zone.local(2019, 10, 2))
@@ -56,7 +57,7 @@ describe "Agent can create a Rdv with wizard" do
     expect_page_title("Choisir la durée et la date")
     expect_checked(motif.name)
     expect(page).to have_selector("input#rdv_duration_in_min[value='#{motif.default_duration_in_min}']")
-    fill_in 'Lieu', with: "79 Rue de Plaisance, 92250 La Garenne-Colombes"
+    select(lieu.full_name, from: 'rdv_lieu_id')
     fill_in 'Durée en minutes', with: '35'
     fill_in 'Commence à', with: '11/10/2019 14:15'
 

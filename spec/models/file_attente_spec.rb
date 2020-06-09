@@ -3,7 +3,7 @@ describe FileAttente, type: :model do
     let(:now) { DateTime.parse("01-01-2019 09:00 +0100") }
     let!(:lieu) { create(:lieu) }
     let!(:plage_ouverture) { create(:plage_ouverture, first_day: now + 2.weeks, start_time: Tod::TimeOfDay.new(10)) }
-    let!(:rdv) { create(:rdv, starts_at: now + 2.weeks, location: lieu.address, motif: plage_ouverture.motifs.first, agent_ids: [plage_ouverture.agent.id]) }
+    let!(:rdv) { create(:rdv, starts_at: now + 2.weeks, lieu: lieu, motif: plage_ouverture.motifs.first, agent_ids: [plage_ouverture.agent.id]) }
     let!(:file_attente) { create(:file_attente, rdv: rdv) }
 
     before do
