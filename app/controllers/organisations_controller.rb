@@ -1,5 +1,5 @@
 class OrganisationsController < ApplicationController
-  layout 'welcome'
+  layout 'application'
 
   def new
     @organisation = Organisation.new
