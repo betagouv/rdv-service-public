@@ -62,19 +62,19 @@
         h5 Motifs ouverts à la réservation en ligne
         ul.mb-1.list-unstyled
           li.mb-2
-            span>= setup_checklist_item(@organisation.motifs.any?(&:online?))
+            span>= setup_checklist_item(@organisation.motifs.any?(&:reservable_online?))
             span> Ouvrir un motif à la réservation en ligne
         ul.mb-4.list-unstyled
           - @motifs.each do |motif|
             li
               span>
-                - if motif.online?
+                - if motif.reservable_online?
                   i.fa.fa-check
                 - else
                   i.fa.fa-times
               span>= link_to motif.name, edit_organisation_motif_path(@organisation, motif)
               span>= ":"
-              - if motif.online?
+              - if motif.reservable_online?
                 i>= "ouvert à la réservation en ligne"
               - else
                 i>= "fermé à la réservation en ligne"
