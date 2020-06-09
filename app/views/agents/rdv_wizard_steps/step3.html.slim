@@ -23,7 +23,6 @@
 
       - if @rdv.public_office?
         = f.association :lieu, collection: policy_scope(Lieu), label_method: :full_name, include_blank: false
-        - # A tester
       - elsif @rdv.home?
         = f.input :address, label: "Lieu (RDV à domicile)", disabled: true
       - @rdv.users.each do |user|
