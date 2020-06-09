@@ -14,7 +14,6 @@ class PlacesInput {
       { hint: false },
       [{
         source: this.getSuggestions,
-        displayKey: 'label',
         debounce: 100,
         templates: { suggestion: this.suggestionTemplate }
       }]
@@ -42,8 +41,14 @@ class PlacesInput {
     latitude: feature.geometry.coordinates[0],
     longitude: feature.geometry.coordinates[1],
     departement: feature.properties.context.split(",")[0],
+    value: this.getFeatureValueText(feature),
     ...feature.properties,
   })
+
+  getFeatureValueText = (feature) => {
+    const { name, district, context } = feature.properties
+    return [name, district, context].filter(e => e).join(", ")
+  }
 
   setDependentInputs = suggestion =>
     this.dependentInputs.forEach(({ name, elt }) => {
@@ -52,27 +57,21 @@ class PlacesInput {
     })
 
   suggestionTemplate = suggestion => {
+    const { type, name, district, context } = suggestion
     const icon = {
       housenumber: "map-marker",
       locality: "map-pin",
       municipality: "city",
       street: 'road'
-    }[suggestion.type] || "question"
+    }[type] || "question"
+    const details = [district, context].filter(e => e).join(" ")
+    const content = `<b>${name}</b> <span class='text-muted'>${details}</span>`
     return `
       <div class='d-flex'>
         <div class='ml-1'><i class="fa fa-${icon}"></i></div>
-        <div class='ml-1'>${this.suggestionContent(suggestion)}</div>
+        <div class='ml-1'>${content}</div>
       </div>
     `
-  }
-
-  suggestionContent = suggestion => {
-    const { label, type, name, district, context } = suggestion
-    if (["housenumber", "street"].indexOf(type) >= 0) {
-      const details = [district, context].filter(e => e).join(" ")
-      return `<b>${name}</b> <span class='text-muted'>${details}</span>`
-    }
-    return label
   }
 }
 

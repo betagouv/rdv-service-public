@@ -32,7 +32,7 @@ $(document).on('turbolinks:load', function() {
   const submitButton = document.querySelector('#search_submit');
   const departementInput = document.querySelector('#search_departement')
   departementInput.addEventListener('change', event => {
-    const valid = departementInput.value.length == 2
+    const valid = [2, 3].includes(departementInput.value.length)
     whereInput.classList.toggle('is-valid', valid)
     whereInput.classList.toggle('is-invalid', !valid)
     submitButton.toggleAttribute('disabled', !valid)
