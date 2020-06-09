@@ -9,7 +9,7 @@ class RdvDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     status: EnumField,
-    location: PlacesField,
+    lieu: Field::BelongsTo,
     organisation: Field::BelongsTo,
     agents: Field::HasMany,
     users: Field::HasMany,
@@ -48,7 +48,7 @@ class RdvDashboard < Administrate::BaseDashboard
     :created_at,
     :updated_at,
     :cancelled_at,
-    :location,
+    :lieu,
   ].freeze
 
   # FORM_ATTRIBUTES
@@ -63,7 +63,7 @@ class RdvDashboard < Administrate::BaseDashboard
     :duration_in_min,
     :starts_at,
     :cancelled_at,
-    :location,
+    :lieu,
   ].freeze
 
   # Overwrite this method to customize how rdvs are displayed
