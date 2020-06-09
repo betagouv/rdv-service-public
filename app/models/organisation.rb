@@ -11,6 +11,14 @@ class Organisation < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :departement, presence: true, length: { is: 2 }
   validates :phone_number, phone: { allow_blank: true }
+  validates(
+    :human_id,
+    format: {
+      with: /\A[a-z0-9_\-]{3,99}\z/,
+      message: :human_id_error,
+      if: -> { human_id.present? }
+    }
+  )
 
   after_create :notify_admin_organisation_created
 
