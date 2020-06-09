@@ -248,7 +248,7 @@ rdv1 = Rdv.new(
   duration_in_min: 30,
   starts_at: Date.today + 3.days + 10.hours,
   motif_id: motif_org1_pmi_rappel.id,
-  location: lieu_org1_sud.address,
+  lieu: lieu_org1_sud,
   organisation_id: org1.id,
   agent_ids: [agent_org1_pmi_martine.id],
   user_ids: [user_org1_patricia.id],
