@@ -6,7 +6,7 @@ class Agents::Organisations::RdvsController < AgentAuthController
     @rdvs = @rdvs.includes(:organisation, :motif, agents: :service).order(starts_at: :desc)
 
     respond_to do |format|
-      format.ods { send_data(RdvExporterService.perform_with(@rdvs, StringIO.new), filename: "stats.ods", type: "application/ods") }
+      format.xls { send_data(RdvExporterService.perform_with(@rdvs, StringIO.new), filename: "rdvs.xls", type: "application/xls") }
       format.html { @rdvs = @rdvs.page(params[:page]) }
     end
   end

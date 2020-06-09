@@ -1,1 +1,1 @@
-Mime::Type.register "application/ods", :ods
+Mime::Type.register "application/xls", :xls
