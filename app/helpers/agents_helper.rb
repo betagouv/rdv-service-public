@@ -20,7 +20,7 @@ module AgentsHelper
     params[:step] = 2
     params[:starts_at] = creneau.starts_at
     params[:motif_id] = motif.id
-    params[:plage_ouverture_location] = lieu.address
+    params[:lieu_id] = lieu.id
     params[:organisation_id] = motif.organisation_id
     params[:duration_in_min] = motif.default_duration_in_min
     params["agent_ids[]"] = creneau.agent_id

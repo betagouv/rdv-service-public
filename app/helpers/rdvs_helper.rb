@@ -47,7 +47,14 @@ module RdvsHelper
   end
 
   def human_location(rdv)
-    rdv.location.blank? ? 'Non précisé' : rdv.location
+    text = ""
+    if rdv.home?
+      text += "Rdv à domicile"
+      text += rdv.address.present? ? rdv.address : " - Adresse non renseignée"
+    elsif rdv.public_office?
+      text = rdv.lieu&.address
+    end
+    text
   end
 
   def rdv_tag(rdv)
