@@ -22,18 +22,10 @@
         .col-md-6= f.input :duration_in_min, as: :integer, label: "Durée en minutes"
 
       - if @rdv.public_office?
-        = f.input :location, input_html: { class: "places-js-container" }
-        .mb-1
-          - current_organisation.lieux.each do |l|
-            => button_tag type: "button", onclick: "document.querySelector('#rdv_location').value = '#{escape_javascript(l.address)}'", class: "btn btn-outline-secondary btn-sm mb-1" do
-              => l.name
-              = map_tag_marker(l.address)
+        = f.association :lieu, collection: policy_scope(Lieu), label_method: :full_name, include_blank: false
+        - # A tester
       - elsif @rdv.home?
-        = f.input :location, label: "Lieu (RDV à domicile)", input_html: { class: "places-js-container" }
-        .mb-2
-          - @rdv.users.select { _1.address.present? }.each do |user|
-            => button_tag type: "button", onclick: "document.querySelector('#rdv_location').value = '#{escape_javascript(user.address)}'", class: "btn btn-outline-secondary btn-sm mb-1" do
-              = "🏠 Chez #{user.full_name}"
+        = f.input :address, label: "Lieu (RDV à domicile)", disabled: true
       - @rdv.users.each do |user|
         / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
         = f.hidden_field "user_ids][", value: user.id
