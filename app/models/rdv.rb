@@ -104,7 +104,7 @@ class Rdv < ApplicationRecord
 
     if home?
       users.map do |user|
-        user.responsible? ? user.address : user.responsible.adress
+        user.responsible? ? user.address : user.responsible.address
       end.map(&:presence).compact.first
     elsif public_office?
       lieu.address

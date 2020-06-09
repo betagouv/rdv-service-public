@@ -107,4 +107,30 @@ describe Rdv, type: :model do
       end
     end
   end
+
+  describe "#address" do
+    subject { rdv.address }
+
+    context "when rdv is in public_office" do
+      let(:rdv) { create(:rdv) }
+
+      it { should be rdv.lieu.address }
+    end
+
+    context "when rdv is at home" do
+      let(:responsible) { create(:user) }
+      let(:child) { create(:user, responsible: responsible) }
+      let(:rdv) { create(:rdv, :at_home, users: [child]) }
+
+      it { should be responsible.address }
+    end
+
+    context "when rdv is by phone" do
+      let(:responsible) { create(:user) }
+      let(:child) { create(:user, responsible: responsible) }
+      let(:rdv) { create(:rdv, :by_phone, users: [child]) }
+
+      it { should be_blank }
+    end
+  end
 end
