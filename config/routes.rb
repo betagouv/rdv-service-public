@@ -46,6 +46,11 @@ Rails.application.routes.draw do
   get 'stats/rdvs', to: "stats#rdvs", as: "rdvs_stats"
   get 'stats/users', to: "stats#users", as: "users_stats"
 
+  # Scope to departement
+  get 'stats/:departement', to: "stats#index", as: "departement_stats"
+  get 'stats/rdvs/:departement', to: "stats#rdvs", as: "departement_rdvs_stats"
+  get 'stats/users/:departement', to: "stats#users", as: "departement_users_stats"
+
   authenticate :user do
     get "/users/informations", to: 'users/users#edit'
     patch "users/informations", to: 'users/users#update'

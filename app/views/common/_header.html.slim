@@ -1,7 +1,7 @@
 header.header
   nav.navbar.navbar-expand-lg.bg-transparent
     = link_logo
-    - unless current_page?(stats_path)
+    - unless current_page?(controller: "stats")
       button.navbar-toggler.navbar-toggler-right aria-controls="navbarSupportedContent" aria-expanded="false" aria-label=("Toggle navigation") data-target="#navbarSupportedContent" data-toggle="collapse" type="button"
         i.fa.fa-bars.text-white
       #navbarSupportedContent.collapse.navbar-collapse

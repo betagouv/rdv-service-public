@@ -1,8 +1,12 @@
 - content_for :title do
   h1
     | Statistiques
+    = " pour le #{@departement}" if @departement.present?
     br
     small Du #{l(Stat::DEFAULT_RANGE.first.to_date)} au #{l(Stat::DEFAULT_RANGE.last.to_date)}
 
 .container.mt-3
-  = render 'statistics', stats: @stats, rdvs_statistic_path: rdvs_stats_path
+  - if @departement.present? && Organisation.where(departement: @departement).empty?
+    h3 Ce departement n'utilise pas RDV-solidarites
+  - else
+      = render 'statistics', stats: @stats, rdvs_statistic_path: rdvs_stats_path
