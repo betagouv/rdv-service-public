@@ -6,15 +6,16 @@
     small Du #{l(Stat::DEFAULT_RANGE.first.to_date)} au #{l(Stat::DEFAULT_RANGE.last.to_date)}
 
 .container.mt-3
-  .card.mb-5
+  .card
     .card-body
-      p
-        span
-          | Afficher les statistiques par département&nbsp;: 
-        - @departements.sort.each do |d|
-          span
+      p.mb-0
+        span> Afficher les statistiques par département :
+        - @departements.each do |d|
+          span>
             = link_to d, departement_stats_path(departement: d)
-            |&nbsp;
+            | &nbsp;|
+      - if @departement.present?
+        = link_to "Retour aux statistiques de la plateforme", stats_path
 
 .container.mt-3
   - if @departement.present? && Organisation.where(departement: @departement).empty?

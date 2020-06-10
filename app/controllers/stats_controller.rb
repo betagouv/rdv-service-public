@@ -33,6 +33,6 @@ class StatsController < ApplicationController
       @users = User.all
     end
 
-    @departements = Organisation.all.group('organisations.departement').count.map { |g| g[0] }
+    @departements = Organisation.all.map(&:departement).uniq.sort
   end
 end

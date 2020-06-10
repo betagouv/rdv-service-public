@@ -45,8 +45,6 @@ Rails.application.routes.draw do
   resources :stats, only: :index
   get 'stats/rdvs', to: "stats#rdvs", as: "rdvs_stats"
   get 'stats/users', to: "stats#users", as: "users_stats"
-
-  # Scope to departement
   get 'stats/:departement', to: "stats#index", as: "departement_stats"
 
   authenticate :user do
