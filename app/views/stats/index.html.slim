@@ -7,6 +7,6 @@
 
 .container.mt-3
   - if @departement.present? && Organisation.where(departement: @departement).empty?
-    h3 Ce departement n'utilise pas RDV-Solidarités
+    h3 Ce departement n'utilise pas RDV-Solidarités.
   - else
-      = render 'statistics', stats: @stats, rdvs_statistic_path: rdvs_stats_path
+    = render 'statistics', stats: @stats, rdvs_statistic_path: rdvs_stats_path
