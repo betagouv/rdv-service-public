@@ -22,7 +22,11 @@ module RdvsHelper
 
   def users_to_links(rdv)
     safe_join(rdv.users.order_by_last_name.map do |user|
-      link_to user.full_name, organisation_user_path(current_organisation, user)
+      if user.organisations.include?(current_organisation)
+        link_to user.full_name, organisation_user_path(current_organisation, user)
+      else
+        user.full_name
+      end
     end, ", ")
   end
 
