@@ -6,6 +6,17 @@
     small Du #{l(Stat::DEFAULT_RANGE.first.to_date)} au #{l(Stat::DEFAULT_RANGE.last.to_date)}
 
 .container.mt-3
+  .card.mb-5
+    .card-body
+      p
+        span
+          | Afficher les statistiques par département&nbsp;: 
+        - @departements.sort.each do |d|
+          span
+            = link_to d, departement_stats_path(departement: d)
+            |&nbsp;
+
+.container.mt-3
   - if @departement.present? && Organisation.where(departement: @departement).empty?
     h3 Ce departement n'utilise pas RDV-Solidarités.
   - else

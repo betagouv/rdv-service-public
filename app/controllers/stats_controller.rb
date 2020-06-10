@@ -32,5 +32,7 @@ class StatsController < ApplicationController
       @rdvs = Rdv.all
       @users = User.all
     end
+
+    @departements = Organisation.all.group('organisations.departement').count.map { |g| g[0] }
   end
 end
