@@ -10,7 +10,7 @@ module AgentRdvWizard
 
     # delegates all getters and setters to rdv
     delegate(*::Rdv.attribute_names, to: :rdv)
-    delegate :motif, :organisation, :agents, :users, to: :rdv
+    delegate :motif, :organisation, :agents, :users, :to_query, to: :rdv
 
     def initialize(agent, organisation, attributes)
       rdv_attributes = attributes.to_h.symbolize_keys
@@ -21,10 +21,6 @@ module AgentRdvWizard
       }
       @rdv = ::Rdv.new(rdv_defaults.merge(rdv_attributes))
       @rdv.duration_in_min ||= @rdv.motif.default_duration_in_min if @rdv.motif.present?
-    end
-
-    def to_query
-      rdv.to_query
     end
   end
 

@@ -103,11 +103,10 @@ class Rdv < ApplicationRecord
     return location if location.present? && lieu_id.nil?
 
     if home?
-      users.map do |user|
-        user.responsible? ? user.address : user.responsible.address
-      end.map(&:presence).compact.first
+      users.filter(&:responsible?).first&.address ||
+        users.map(&:responsible_address).filter(&:present?).first
     elsif public_office?
-      lieu.address
+      lieu.full_name
     end
   end
 
