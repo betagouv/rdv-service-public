@@ -3,7 +3,7 @@ class OrganisationsController < ApplicationController
 
   def new
     @organisation = Organisation.new
-    @organisation.agents << @organisation.agents.build
+    @organisation.agents.build
   end
 
   def create
