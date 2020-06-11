@@ -17,7 +17,7 @@ class StatsController < ApplicationController
               stats.rdvs_group_by_week_fr
             end
     respond_to do |format|
-      format.xls { send_data(MonthlyStatsExporterService.perform_with(@rdvs, StringIO.new), filename: "rdvs.xls", type: "application/xls") }
+      format.xls { send_data(MonthlyStatsExporterService.perform_with(@rdvs, StringIO.new), filename: "stats.xls", type: "application/xls") }
       format.json { render json: stats.chart_json }
     end
   end
