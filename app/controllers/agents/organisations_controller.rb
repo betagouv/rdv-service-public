@@ -1,4 +1,6 @@
 class Agents::OrganisationsController < AgentAuthController
+  include OrganisationsHelper
+
   respond_to :html, :json
 
   before_action :set_organisation, except: :index
@@ -6,7 +8,7 @@ class Agents::OrganisationsController < AgentAuthController
   def index
     @organisations = policy_scope(Organisation)
     if @organisations.count == 1
-      redirect_to organisation_agent_path(@organisations.first, current_agent)
+      redirect_to organisation_home_path(@organisations.first)
     else
       render layout: 'registration'
     end

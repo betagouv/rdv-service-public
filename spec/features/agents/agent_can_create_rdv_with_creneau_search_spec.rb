@@ -15,7 +15,7 @@ describe "Agent can create a Rdv with creneau search" do
   before do
     travel_to(Time.zone.local(2019, 7, 22))
     login_as(agent, scope: :agent)
-    visit authenticated_agent_root_path
+    visit organisation_agent_path(user.organisations.first, user)
 
     expect(user.rdvs.count).to eq(0)
     click_link('Trouver un créneau')

@@ -31,6 +31,11 @@ class ApplicationController < ActionController::Base
   end
   helper_method :online_bookings_suspended_because_of_corona?
 
+  def demo?
+    ENV['HOST']&.match(/demo/)
+  end
+  helper_method :demo?
+
   protected
 
   def set_raven_context
