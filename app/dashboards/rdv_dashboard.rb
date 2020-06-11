@@ -10,6 +10,7 @@ class RdvDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     status: EnumField,
     lieu: Field::BelongsTo,
+    location: PlacesField,
     organisation: Field::BelongsTo,
     agents: Field::HasMany,
     users: Field::HasMany,
@@ -43,12 +44,13 @@ class RdvDashboard < Administrate::BaseDashboard
     :users,
     :agents,
     :id,
+    :lieu,
+    :location,
     :duration_in_min,
     :starts_at,
     :created_at,
     :updated_at,
     :cancelled_at,
-    :lieu,
   ].freeze
 
   # FORM_ATTRIBUTES

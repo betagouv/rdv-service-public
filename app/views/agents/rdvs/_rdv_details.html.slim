@@ -16,7 +16,7 @@ p.card-text
       | RDV à domicile
       = human_location(rdv)
     - elsif rdv.public_office?
-      = rdv.lieu.full_name
+      = human_location(rdv)
 p.card-text
   strong> Professionnel(s) :
   = agents_to_sentence(rdv)

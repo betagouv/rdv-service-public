@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :rdv do
     duration_in_min { 45 }
     starts_at { Time.zone.now }
-    lieu { Lieu.first || build(:lieu) }
+    lieu { build(:lieu) }
     organisation { Organisation.first || create(:organisation) }
     motif { Motif.first || build(:motif) }
     users { [User.first || build(:user)] }
