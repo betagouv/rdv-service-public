@@ -122,7 +122,7 @@ describe Rdv, type: :model do
       let(:child) { create(:user, responsible: responsible) }
       let(:rdv) { create(:rdv, :at_home, users: [child]) }
 
-      it { should be responsible.address }
+      it { should eq responsible.address }
     end
 
     context "when rdv is by phone" do

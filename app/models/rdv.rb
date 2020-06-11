@@ -99,14 +99,27 @@ class Rdv < ApplicationRecord
     Notifications::Rdv::RdvUpdatedService.perform_with(self)
   end
 
-  def address(opt = {})
+  def address
     return location if location.present? && lieu_id.nil?
 
     user = user_for_home_rdv
     if home? && user.present?
-      opt[:with_detail] ? "Adresse de #{user.full_name} - #{user.responsible_address}" : user.address.to_s
+      user.address.to_s
     elsif public_office? && lieu.present?
-      opt[:with_detail] ? lieu.full_name : lieu.address
+      lieu.address
+    else
+      ""
+    end
+  end
+
+  def complete_address
+    return location if location.present? && lieu_id.nil?
+
+    user = user_for_home_rdv
+    if home? && user.present?
+      "Adresse de #{user.full_name} - #{user.responsible_address}"
+    elsif public_office? && lieu.present?
+      lieu.full_name
     else
       ""
     end
@@ -114,7 +127,7 @@ class Rdv < ApplicationRecord
 
   def user_for_home_rdv
     responsibles = users.where.not(responsible_id: [nil])
-    responsibles.where.not(address: [nil, '']).first || users.where.not(address: [nil, '']).first
+    [responsibles, users].flatten.select(&:address).first
   end
 
   private

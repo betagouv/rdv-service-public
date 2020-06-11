@@ -34,13 +34,13 @@
       span.title Ceci est un rendez-vous à domicile à l'adresse&nbsp;:
       div.alignright
         a href="https://maps.google.com?q=#{rdv.address.split(/,?\s/).join('+')}" target="_blank"
-          = rdv.address(with_detail: true)
+          = rdv.complete_address
   - else
     div.row-result
       span.title Adresse&nbsp;:
       span.float-right
         a href="https://maps.google.com?q=#{rdv.address.split(/,?\s/).join('+')}" target="_blank"
-          = rdv.address(with_detail: true)
+          = rdv.complete_address
       .clear
   - if rdv.motif.instruction_for_rdv.present? && for_role == :user
     .div.row-result.no-border

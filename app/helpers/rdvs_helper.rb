@@ -47,7 +47,7 @@ module RdvsHelper
   end
 
   def human_location(rdv)
-    text = rdv.address(with_detail: true)
+    text = rdv.complete_address
     text += " - Adresse non renseigné" if rdv.address.blank?
     text
   end
