@@ -36,7 +36,7 @@
           .card-text
             i.far.fa-fw.fa-sticky-note>
             strong> Notes libres :
-            = display_notes(@user.notes)
+            = display_notes(@user.profile_for(current_organisation).notes)
 
         .row.mt-3
           .col.text-left

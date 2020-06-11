@@ -74,8 +74,8 @@
 
         p.mb-1 Logement
         p
-          - if @user_to_compare.logement
-            strong= t("activerecord.attributes.user.logements.#{@user_to_compare.logement}")
+          - if @user_to_compare.profile_for(current_organisation)&.logement
+            strong= t("activerecord.attributes.user.logements.#{@user_to_compare.profile_for(current_organisation).logement}")
 
         .text-center
           - if @user_not_in_organisation

@@ -17,7 +17,10 @@
   .form-row
     .col-md-6= f.input :family_situation, collection: User.human_enum_collection(:family_situation)
     .col-md-6= f.input :number_of_children, input_html: { min: '0', max: '15', step: 'any' }
-  = f.input :logement, collection: User.human_enum_collection(:logement)
+
+  = f.simple_fields_for :user_profiles, UserProfile do |n|
+    = n.input :logement, collection: UserProfile.human_enum_collection(:logement)
+
   - if local_assigns[:rdv_wizard].present?
     - rdv_wizard.each do |wizard_key, wizard_value|
       = hidden_field_tag "rdv[#{wizard_key}]", wizard_value

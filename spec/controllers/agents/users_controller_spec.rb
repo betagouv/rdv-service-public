@@ -2,8 +2,8 @@ RSpec.describe Agents::UsersController, type: :controller do
   render_views
 
   let(:agent) { create(:agent) }
-  let(:organisation_id) { agent.organisation_ids.first }
-  let!(:user) { create(:user) }
+  let(:organisation) { agent.organisations.first }
+  let!(:user) { create(:user, organisations: [organisation]) }
 
   before do
     sign_in agent
@@ -47,20 +47,20 @@ RSpec.describe Agents::UsersController, type: :controller do
   describe "DELETE destroy" do
     it "removes user from organisation" do
       expect do
-        delete :destroy, params: { organisation_id: organisation_id, id: user.id }
+        delete :destroy, params: { organisation_id: organisation.id, id: user.id }
         user.reload
-      end.to change(user, :organisation_ids).from([organisation_id]).to([])
+      end.to change(user, :organisation_ids).from([organisation.id]).to([])
     end
 
     it "does not destroy user" do
       expect do
-        delete :destroy, params: { organisation_id: organisation_id, id: user.id }
+        delete :destroy, params: { organisation_id: organisation.id, id: user.id }
       end.not_to change(User, :count)
     end
   end
 
   describe "POST #create" do
-    subject { post :create, params: { organisation_id: organisation_id, user: attributes } }
+    subject { post :create, params: { organisation_id: organisation.id, user: attributes } }
 
     context "for user without email" do
       let(:attributes) do
@@ -80,7 +80,7 @@ RSpec.describe Agents::UsersController, type: :controller do
 
       it "redirects to the created user" do
         subject
-        expect(response).to redirect_to(organisation_user_path(organisation_id, User.last.id))
+        expect(response).to redirect_to(organisation_user_path(organisation.id, User.last.id))
       end
     end
 

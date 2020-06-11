@@ -6,7 +6,9 @@ class Organisation < ApplicationRecord
   has_many :rdvs, dependent: :destroy
   has_many :webhook_endpoints, dependent: :destroy
   has_and_belongs_to_many :agents, -> { distinct }
-  has_and_belongs_to_many :users, -> { distinct }
+
+  has_many :user_profiles
+  has_many :users, through: :user_profiles
 
   validates :name, presence: true, uniqueness: true
   validates :departement, presence: true, length: { is: 2 }

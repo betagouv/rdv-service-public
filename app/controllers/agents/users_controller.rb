@@ -117,7 +117,9 @@ class Agents::UsersController < AgentAuthController
   def prepare_create
     @user = User.new(user_params)
     authorize(@user.responsible) if @user.responsible.present?
-    @user.organisation_ids = [current_organisation.id]
+
+    @user.user_profiles = [set_user_profile(@user, current_organisation)]
+
     @user.invited_by = current_agent
     @organisation = current_organisation
   end
@@ -130,7 +132,22 @@ class Agents::UsersController < AgentAuthController
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :birth_name, :email, :phone_number, :birth_date, :address, :caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :logement, :invite_on_create, :notes, :responsible_id, agent_ids: [])
+    params.require(:user).permit(
+      :first_name,
+      :last_name,
+      :birth_name,
+      :email,
+      :phone_number,
+      :birth_date,
+      :address,
+      :caisse_affiliation,
+      :affiliation_number,
+      :family_situation,
+      :number_of_children,
+      :invite_on_create,
+      :responsible_id,
+      user_profiles_attributes: [:notes, :logement, :id], agent_ids: []
+    )
   end
 
   def search_params
@@ -139,5 +156,12 @@ class Agents::UsersController < AgentAuthController
 
   def set_user
     @user = policy_scope(User).find(params[:id])
+  end
+
+  def set_user_profile(user, organisation)
+    user.organisation_ids = [organisation.id]
+    profile = user.user_profiles.first
+    profile.organisation = organisation
+    profile
   end
 end

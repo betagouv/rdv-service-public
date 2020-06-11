@@ -1,6 +1,6 @@
 describe "can see users' RDV" do
   let!(:agent) { create(:agent) }
-  let!(:user) { create(:user) }
+  let!(:user) { create(:user, organisations: [Organisation.first || create(:organisation)]) }
 
   before do
     login_as(agent, scope: :agent)
