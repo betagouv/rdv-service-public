@@ -102,16 +102,18 @@ class Rdv < ApplicationRecord
   def address(opt = {})
     return location if location.present? && lieu_id.nil?
 
-    if home?
-      user = user_for_home_rdv
+    user = user_for_home_rdv
+    if home? && user.present?
       opt[:with_detail] ? "Adresse de #{user.full_name} - #{user.responsible_address}" : user.address.to_s
-    elsif public_office?
-      opt[:with_detail] ? lieu.full_name.to_s : lieu.address.to_s
+    elsif public_office? && lieu.present?
+      opt[:with_detail] ? lieu.full_name : lieu.address
+    else
+      ""
     end
   end
 
   def user_for_home_rdv
-    responsibles = users.filter(&:responsible?)
+    responsibles = users.where.not(responsible_id: [nil])
     responsibles.where.not(address: [nil, '']).first || users.where.not(address: [nil, '']).first
   end
 
