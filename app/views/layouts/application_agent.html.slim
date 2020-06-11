@@ -1,0 +1,29 @@
+doctype html
+html lang="fr"
+  head
+    = render 'common/head_agent'
+  body
+    .wrapper
+      = render "layouts/left_menu"
+      .content-page
+        .content
+          = render "layouts/navbar_dashboard"
+          .container-fluid
+            - if content_for :title
+              .row.bg-dark.pb-5.justify-content-md-center
+                div.col-md-12
+                  .page-title-box
+                    - if content_for :breadcrumb
+                      .page-title-right
+                        = yield :breadcrumb
+                    h4.page-title= yield :title
+            .bg-negative
+              = render 'layouts/flash'
+              = yield
+
+    #modal-holder
+    #right-bar-holder
+    - if content_for :popin
+      = yield :popin
+    = render "common/footer"
+    input type='hidden' name='js-current-route' id="js-current-route" value="#{controller_path}##{action_name}"

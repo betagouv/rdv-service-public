@@ -1,8 +1,24 @@
 - content_for :title do
   h1
     | Statistiques
+    = " pour le #{@departement}" if @departement.present?
     br
     small Du #{l(Stat::DEFAULT_RANGE.first.to_date)} au #{l(Stat::DEFAULT_RANGE.last.to_date)}
 
-.container
-  = render 'statistics', stats: @stats, rdvs_statistic_path: rdvs_stats_path
+.container.mt-3
+  .card
+    .card-body
+      p.mb-0
+        span> Afficher les statistiques par département :
+        - @departements.each do |d|
+          span>
+            = link_to d, departement_stats_path(departement: d)
+            | &nbsp;|
+      - if @departement.present?
+        = link_to "Retour aux statistiques de la plateforme", stats_path
+
+.container.mt-3
+  - if @departement.present? && Organisation.where(departement: @departement).empty?
+    h3 Ce departement n'utilise pas RDV-Solidarités.
+  - else
+    = render 'statistics', stats: @stats, rdvs_statistic_path: rdvs_stats_path

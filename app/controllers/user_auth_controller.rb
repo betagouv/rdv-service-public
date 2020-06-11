@@ -1,7 +1,6 @@
 class UserAuthController < ApplicationController
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
-  layout 'application_user'
   before_action :authenticate_user!
   before_action :set_paper_trail_whodunnit
 

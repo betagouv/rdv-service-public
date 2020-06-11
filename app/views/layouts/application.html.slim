@@ -2,28 +2,26 @@ doctype html
 html lang="fr"
   head
     = render 'common/head'
-  body
-    .wrapper
-      = render "layouts/left_menu"
-      .content-page
-        .content
-          = render "layouts/navbar_dashboard"
-          .container-fluid
-            - if content_for :title
-              .row.bg-dark.pb-5
-                .col-md-12
-                  .page-title-box
-                    - if content_for :breadcrumb
-                      .page-title-right
-                        = yield :breadcrumb
-                    h4.page-title= yield :title
-            .bg-negative
-              = render 'layouts/flash'
-              = yield
+  body class="#{agents_or_users_body_class}"
+    div class="#{ params[:controller].include?('users/') ? '' : 'bg-primary'}"
+      - if current_user.present?
+        = render "common/header_user_logged"
+      - else
+        = render 'common/header'
 
+      .container
+        = render 'layouts/flash'
+        - if content_for :title
+          .row
+            .col-md-12.d-flex.justify-content-between.align-items-center
+              .my-4= yield :title
+              - if content_for :breadcrumb
+                div
+                  = yield :breadcrumb
+
+      = yield :header
+
+    div class="#{ 'container' if params[:controller].include?('users/') }"
+      = yield
     #modal-holder
-    #right-bar-holder
-    - if content_for :popin
-      = yield :popin
-    = render "layouts/footer_dashboard"
-    input type='hidden' name='js-current-route' id="js-current-route" value="#{controller_path}##{action_name}"
+    = render 'common/footer'

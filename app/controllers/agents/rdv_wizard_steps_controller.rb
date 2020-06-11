@@ -1,5 +1,4 @@
 class Agents::RdvWizardStepsController < AgentAuthController
-  layout 'application-small'
   before_action :set_agent
 
   PERMITTED_PARAMS = [
