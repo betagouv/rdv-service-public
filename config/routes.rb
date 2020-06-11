@@ -43,6 +43,8 @@ Rails.application.routes.draw do
     post 'file_attente', to: 'file_attentes#create_or_delete'
   end
   resources :stats, only: :index
+  get 'stats/agents', to: "stats#agents", as: "agents_stats"
+  get 'stats/organisations', to: "stats#organisations", as: "organisations_stats"
   get 'stats/rdvs', to: "stats#rdvs", as: "rdvs_stats"
   get 'stats/users', to: "stats#users", as: "users_stats"
   get 'stats/:departement', to: "stats#index", as: "departement_stats"
