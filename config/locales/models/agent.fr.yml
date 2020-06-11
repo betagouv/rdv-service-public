@@ -15,5 +15,5 @@ fr:
         roles:
           user: Utilisateur
           admin: Admin
-          user_html: <i class='far fa-user'></i> Utilisateur<br>Peut lire, créer, modifier son agenda.
-          admin_html: <i class='fa fa-user-plus'></i> Admin<br>Peut lire, créer, modifier et <strong>supprimer</strong> des agendas et <strong>des utilisateurs</strong>.
+          user_html: <i class='far fa-user'></i> Utilisateur<br><ul><li>Peut lire, créer, modifier son agenda et celui des agents de son service.</li><li>Pour le service secrétariat, ce niveau permet d’accéder à l'ensemble des agendas des agents d'une organisation.</li></ul>
+          admin_html: <i class='fa fa-user-plus'></i> Admin<br><ul><li>Peut lire, créer, modifier l'agenda de l'ensemble des agents</li><li>Peut créer, modifier, supprimer des lieux, des motifs et des agents</li><li>Accéde aux statistiques de l'organisation.</li></ul>
