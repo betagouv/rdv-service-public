@@ -76,7 +76,7 @@ module RdvsHelper
   end
 
   def stats_path?
-    stats_path == request.path
+    request.path.match(%r{^/stats.*})
   end
 
   def unknown_past_rdvs_danger_bage

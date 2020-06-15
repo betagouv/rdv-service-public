@@ -6,8 +6,10 @@
 
 # ORGANISATIONS
 
+Organisation.skip_callback(:create, :after, :notify_admin_organisation_created)
 org1 = Organisation.create!(name: "MDS du 75", phone_number: "0123456789", departement: "75")
 org2 = Organisation.create!(name: "MDS du 62", phone_number: "0123456789", departement: "62")
+Organisation.set_callback(:create, :after, :notify_admin_organisation_created)
 
 # SERVICES
 

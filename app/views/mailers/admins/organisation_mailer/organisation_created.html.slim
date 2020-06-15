@@ -1,0 +1,14 @@
+p Bonjour,
+
+p
+  ' L'organisation « #{@agent.organisations.first.name} » vient d'être créée par
+  = mail_to @agent.email, @agent.email
+  |.
+- if @agent.from_safe_domain?
+  p Le domaine du mail de l'agent ayant été reconnu, une invitation lui a automatiquement été envoyée.
+- else
+  p Une invitation doit être envoyée pour permettre l'accès à la plateforme.
+p
+  ' Accédez à
+  = link_to "la fiche agent", admin_agent_url(@agent)
+  |  de l'interface d'administration pour envoyer une invitation ou bien prenez contact avec la personne pour avoir plus d'informations.

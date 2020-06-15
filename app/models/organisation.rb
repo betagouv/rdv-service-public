@@ -11,4 +11,18 @@ class Organisation < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :departement, presence: true, length: { is: 2 }
   validates :phone_number, phone: { allow_blank: true }
+
+  after_create :notify_admin_organisation_created
+
+  accepts_nested_attributes_for :agents
+
+  def notify_admin_organisation_created
+    return unless agents.present?
+
+    Admins::OrganisationMailer.organisation_created(agents.first).deliver_later
+  end
+
+  def recent?
+    1.week.ago < created_at
+  end
 end
