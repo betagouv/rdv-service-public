@@ -102,9 +102,8 @@ class Rdv < ApplicationRecord
   def address
     return location if location.present? && lieu_id.nil?
 
-    user = user_for_home_rdv
-    if home? && user.present?
-      user.address.to_s
+    if home? && user_for_home_rdv.present?
+      user_for_home_rdv.address.to_s
     elsif public_office? && lieu.present?
       lieu.address
     else
@@ -112,12 +111,11 @@ class Rdv < ApplicationRecord
     end
   end
 
-  def complete_address
+  def address_complete
     return location if location.present? && lieu_id.nil?
 
-    user = user_for_home_rdv
     if home? && user.present?
-      "Adresse de #{user.full_name} - #{user.responsible_address}"
+      "Adresse de #{user_for_home_rdv.full_name} - #{user_for_home_rdv.responsible_address}"
     elsif public_office? && lieu.present?
       lieu.full_name
     else
@@ -127,7 +125,7 @@ class Rdv < ApplicationRecord
 
   def user_for_home_rdv
     responsibles = users.where.not(responsible_id: [nil])
-    [responsibles, users].flatten.select(&:address).first
+    [responsibles, users].flatten.select(&:address).first || users.first
   end
 
   private
