@@ -4,7 +4,7 @@ class Agents::Organisations::StatsController < AgentAuthController
   before_action :set_organisation
 
   def index
-    @stats = Stat.new(rdvs: policy_scope(Rdv), users: policy_scope(User))
+    @stats = Stat.new(rdvs: policy_scope(Rdv), agents: policy_scope(Agent), users: policy_scope(User))
   end
 
   def rdvs

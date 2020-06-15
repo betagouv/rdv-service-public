@@ -22,3 +22,8 @@
     h3 Ce departement n'utilise pas RDV-Solidarités.
   - else
     = render 'statistics', stats: @stats, rdvs_statistic_path: rdvs_stats_path
+
+  .card.mb-5
+    .card-body
+      h4.card-title.mb-3 Organisations créées (#{@stats.organisations_for_default_range.count})
+      = column_chart add_query_string_params_to_url(organisations_stats_path, departement: @departement)
