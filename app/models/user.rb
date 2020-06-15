@@ -76,12 +76,15 @@ class User < ApplicationRecord
   end
 
   def soft_delete(organisation = nil)
-    if organisation.present? && !relative?
-      family.each { |u| u.organisations.delete(organisation) }
+    now = Time.zone.now
+    user_with_relatives = [self, relatives].flatten
+    if organisation.present?
+      user_with_relatives.each do |u|
+        u.organisations.delete(organisation)
+        u.update(deleted_at: now) if u.organisations.empty?
+      end
     else
-      now = Time.zone.now
-      update(organisation_ids: [], deleted_at: now)
-      relatives.each { |relative| relative.update(organisation_ids: [], deleted_at: now) }
+      user_with_relatives.each { |u| u.update(organisation_ids: [], deleted_at: now) }
     end
   end
 

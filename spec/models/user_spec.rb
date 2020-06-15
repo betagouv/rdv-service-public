@@ -135,7 +135,7 @@ describe User, type: :model do
       let(:user) { create(:user) }
       let(:deleted_org) { user.organisations.first }
       it { expect(user.organisation_ids).to be_empty }
-      it { expect(user.deleted_at).to be_nil }
+      it { expect(user.deleted_at).to eq(now) }
     end
 
     context 'with no organisation given' do
@@ -177,9 +177,9 @@ describe User, type: :model do
         let(:deleted_org) { user.organisations.first }
 
         it { expect(user.reload.organisation_ids).to be_empty }
-        it { expect(user.reload.deleted_at).to eq(nil) }
+        it { expect(user.reload.deleted_at).to eq(now) }
         it { expect(relative.reload.organisation_ids).to be_empty }
-        it { expect(relative.reload.deleted_at).to eq(nil) }
+        it { expect(relative.reload.deleted_at).to eq(now) }
       end
     end
   end

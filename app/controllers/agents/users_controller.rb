@@ -82,7 +82,12 @@ class Agents::UsersController < AgentAuthController
 
   def destroy
     authorize(@user)
-    flash[:notice] = "L'usager a été supprimé." if @user.soft_delete(current_organisation)
+    if Rdv.future.active.where(users: @user.family.pluck(:id), organisation: current_organisation).empty?
+      @user.soft_delete(current_organisation)
+      flash[:notice] = "L'usager a été supprimé."
+    else
+      flash[:error] = "L'usager ou ses proches ont des rendez-vous programmés, vous ne pouvez pas le supprimer."
+    end
 
     if @user.relative?
       redirect_to organisation_user_path(current_organisation, @user.responsible)
