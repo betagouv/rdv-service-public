@@ -45,9 +45,8 @@ class PlacesInput {
     ...feature.properties,
   })
 
-  getFeatureValueText = (feature) => {
-    const { name, district, context } = feature.properties
-    return [name, district, context].filter(e => e).join(", ")
+  getFeatureValueText = ({ properties }) => {
+    return [properties.name].concat(this.getDetails(properties)).join(", ")
   }
 
   setDependentInputs = suggestion =>
@@ -57,14 +56,14 @@ class PlacesInput {
     })
 
   suggestionTemplate = suggestion => {
-    const { type, name, district, context } = suggestion
+    const { type, name } = suggestion
     const icon = {
       housenumber: "map-marker",
       locality: "map-pin",
       municipality: "city",
       street: 'road'
     }[type] || "question"
-    const details = [district, context].filter(e => e).join(" ")
+    const details = this.getDetails(suggestion).join(", ")
     const content = `<b>${name}</b> <span class='text-muted'>${details}</span>`
     return `
       <div class='d-flex'>
@@ -72,6 +71,13 @@ class PlacesInput {
         <div class='ml-1'>${content}</div>
       </div>
     `
+  }
+
+  getDetails = ({ name, city, postcode, district, context }) => {
+    let attributes = [postcode, district, context]
+    if (name !== city) // could also check for type !== 'municipality'
+      attributes.unshift(city)
+    return attributes.filter(e => e)
   }
 }
 
