@@ -26,7 +26,7 @@
               - if @rdv.public_office?
                 = f.association :lieu, collection: policy_scope(Lieu), label_method: :full_name, include_blank: false
               - elsif @rdv.home?
-                = f.input :address, label: "Lieu (RDV à domicile)",  disabled: true, hint: "L'adresse utilisé est celle de #{@rdv.user_for_home_rdv.full_name}"
+                = f.input :address, label: "Lieu (RDV à domicile)",  disabled: true, hint: "L'adresse utilisée est celle de #{@rdv.user_for_home_rdv.full_name}"
             - @rdv.users.each do |user|
               / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
               = f.hidden_field "user_ids][", value: user.id
