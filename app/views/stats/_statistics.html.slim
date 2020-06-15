@@ -3,9 +3,6 @@
 .card.mb-5
   .card-body
     = render 'stats/rdv_counters', rdvs: stats.rdvs_for_default_range
-    = link_to rdvs_stats_path(format: "xls"), class: "btn btn-link" do
-      i.fa.fa-download>
-      | Télécharger un export des RDVs de l'organisation
 
 .card.mb-5
   .card-body
