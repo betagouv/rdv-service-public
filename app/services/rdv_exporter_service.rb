@@ -1,25 +1,20 @@
 class RdvExporterService < BaseService
-  TYPE = { "user" => "Usager", "agent" => "Agent", "file_attente" => "File d'attente" }.freeze
-  HourFormat = Spreadsheet::Format.new(number_format: 'hh:mm')
-  DateFormat = Spreadsheet::Format.new(number_format: 'DD/MM/YYYY')
-  HEADER = ["date prise rdv", "heure prise rdv", "date rdv", "heure rdv", "motif", "pris par", "statut", "agents"].freeze
+  include XlsExporter
 
   def initialize(rdvs, file)
-    Spreadsheet.client_encoding = 'UTF-8'
     @rdvs = rdvs
     @file = file
   end
 
-  def perform
-    workbook.write(@file)
-    @file.string
+  TYPE = { "user" => "Usager", "agent" => "Agent", "file_attente" => "File d'attente" }.freeze
+  HourFormat = Spreadsheet::Format.new(number_format: 'hh:mm')
+  DateFormat = Spreadsheet::Format.new(number_format: 'DD/MM/YYYY')
+
+  def header
+    ["date prise rdv", "heure prise rdv", "date rdv", "heure rdv", "motif", "pris par", "statut", "agents"].freeze
   end
 
-  def workbook
-    book = Spreadsheet::Workbook.new
-    sheet = book.create_worksheet
-    sheet.row(0).concat(HEADER)
-
+  def build_lines(sheet)
     @rdvs.each_with_index do |rdv, index|
       row = sheet.row(index + 1)
       row.set_format 0, DateFormat
@@ -29,7 +24,6 @@ class RdvExporterService < BaseService
 
       row.concat(row_array_from(rdv))
     end
-    book
   end
 
   def row_array_from(rdv)
