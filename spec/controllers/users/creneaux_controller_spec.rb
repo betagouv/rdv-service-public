@@ -2,7 +2,7 @@ RSpec.describe Users::CreneauxController, type: :controller do
   render_views
   let(:now) { "01/01/2019 10:00".to_datetime }
   let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes") }
-  let(:rdv) { create(:rdv, starts_at: 5.days.from_now, location: "10 rue de la Ferronerie 44100 Nantes") }
+  let(:rdv) { create(:rdv, starts_at: 5.days.from_now, lieu: lieu) }
   let!(:user) { create(:user) }
 
   describe "GET #index" do

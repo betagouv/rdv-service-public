@@ -4,7 +4,7 @@
 .row.justify-content-md-center
   .col-md-6
     .card
-      - if @rdv.starts_at.present? || @rdv.location.present?
+      - if @rdv.starts_at.present?
         ul.list-group.list-group-flush
           - if @rdv.starts_at.present?
             li.list-group-item
@@ -14,7 +14,7 @@
         = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }
         = simple_form_for(@rdv, url: organisation_rdv_wizard_step_path(current_organisation, step: 1)) do |f|
           = f.input_field :starts_at, as: :hidden
-          = hidden_field_tag 'plage_ouverture_location', @rdv_wizard.plage_ouverture_location
+          = f.input_field :lieu_id, as: :hidden
           - @rdv.agents.each do |p|
             / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
             = f.hidden_field "agent_ids][", value: p.id

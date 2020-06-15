@@ -12,4 +12,4 @@ div
     p Trouvez un nouveau créneau en cliquant sur le lien ci-dessous.
 
     .btn-wrapper
-      = link_to 'Reprendre RDV', lieu_url(@rdv.lieu.id, search: {departement: @rdv.organisation.departement, motif: @rdv.motif.name, service: @rdv.motif.service.id, where: @rdv.location}), class:'btn btn-primary'
+      = link_to 'Reprendre RDV', lieu_url(@rdv.lieu.id, search: {departement: @rdv.organisation.departement, motif: @rdv.motif.name, service: @rdv.motif.service.id, where: @rdv.address}), class:'btn btn-primary'

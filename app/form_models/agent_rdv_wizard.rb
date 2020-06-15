@@ -6,15 +6,14 @@ module AgentRdvWizard
   class Base
     include ActiveModel::Model
 
-    attr_accessor :rdv, :plage_ouverture_location
+    attr_accessor :rdv
 
     # delegates all getters and setters to rdv
     delegate(*::Rdv.attribute_names, to: :rdv)
-    delegate :motif, :organisation, :agents, :users, to: :rdv
+    delegate :motif, :organisation, :agents, :users, :to_query, to: :rdv
 
     def initialize(agent, organisation, attributes)
-      @plage_ouverture_location = attributes[:plage_ouverture_location]
-      rdv_attributes = attributes.to_h.symbolize_keys.reject { |k, _v| k == :plage_ouverture_location }
+      rdv_attributes = attributes.to_h.symbolize_keys
       rdv_defaults = {
         agent_ids: [agent.id],
         organisation_id: organisation.id,
@@ -22,15 +21,6 @@ module AgentRdvWizard
       }
       @rdv = ::Rdv.new(rdv_defaults.merge(rdv_attributes))
       @rdv.duration_in_min ||= @rdv.motif.default_duration_in_min if @rdv.motif.present?
-      if @rdv.motif&.public_office?
-        @rdv.location ||= @plage_ouverture_location
-      elsif @rdv.motif&.home?
-        @rdv.location ||= @rdv.users.map(&:address).map(&:presence).compact.first
-      end
-    end
-
-    def to_query
-      rdv.to_query.merge(plage_ouverture_location: plage_ouverture_location)
     end
   end
 

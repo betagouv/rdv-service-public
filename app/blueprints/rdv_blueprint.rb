@@ -1,7 +1,7 @@
 class RdvBlueprint < Blueprinter::Base
   identifier :id
 
-  fields :uuid, :status, :location, :duration_in_min, :starts_at
+  fields :uuid, :status, :duration_in_min, :starts_at, :address
 
   association :organisation, blueprint: OrganisationBlueprint
   association :motif, blueprint: MotifBlueprint

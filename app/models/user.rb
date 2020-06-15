@@ -151,6 +151,10 @@ class User < ApplicationRecord
     relative? ? responsible.email : email
   end
 
+  def responsible_address
+    relative? ? responsible.address : address
+  end
+
   protected
 
   def password_required?

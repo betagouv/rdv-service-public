@@ -13,7 +13,7 @@ describe Agents::RdvWizardStepsController, type: :controller do
         user_ids: [user.id],
         duration_in_min: 30,
         motif_id: 1,
-        plage_ouverture_location: "18+Rue+des+Terres+au+Cur%C3%A9%2C+75013+Paris",
+        lieu_id: 1,
         starts_at: DateTime.new(2020, 4, 20, 8, 0, 0),
       }
     end

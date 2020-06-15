@@ -65,7 +65,7 @@ describe "Agent can create a Rdv with creneau search" do
     # Step 3
     expect_page_title("Choisir la durée et la date")
     expect_checked("Motif : #{motif.name}")
-    expect(find_field('rdv[location]').value).to eq(lieu.address)
+    expect(find_field('rdv[lieu_id]').value).to eq(lieu.id.to_s)
     click_button('Créer RDV')
 
     expect(user.rdvs.count).to eq(1)

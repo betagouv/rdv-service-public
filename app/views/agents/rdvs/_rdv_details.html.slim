@@ -5,18 +5,18 @@
 p.card-text
   i.fa.fa-fw.fa-info-circle>
   = rdv.motif.name
-- if rdv.location
-  p.card-text
-    i.fa.fa-fw.fa-map-marker-alt>
-    = human_location(rdv)
-- if rdv.motif.phone?
+- if rdv.phone?
   p.card-text
     i.fa.fa-fw.fa-phone>
     | RDV téléphonique
-- elsif rdv.motif.home?
+- else
   p.card-text
-    i.fa.fa-fw.fa-home>
-    | RDV à domicile
+    strong> Lieu :
+    - if rdv.home?
+      | RDV à domicile
+      = human_location(rdv)
+    - elsif rdv.public_office?
+      = human_location(rdv)
 p.card-text
   strong> Professionnel(s) :
   = agents_to_sentence(rdv)

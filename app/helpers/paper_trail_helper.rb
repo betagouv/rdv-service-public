@@ -40,6 +40,12 @@ module PaperTrailHelper
           ::Agent.where(id: @value).order_by_last_name.map(&:full_name).join(", ")
         end
       end
+
+      class LieuId < Base
+        def to_s
+          Lieu.find(@value).full_name
+        end
+      end
     end
   end
 end

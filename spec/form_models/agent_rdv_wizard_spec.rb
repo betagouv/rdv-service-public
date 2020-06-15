@@ -31,24 +31,19 @@ describe AgentRdvWizard do
         end
       end
 
-      describe "location default behaviour" do
-        let(:rdv_attributes) { { user_ids: [user.id], motif_id: motif.id } }
-        subject { AgentRdvWizard::Step1.new(agent, organisation, rdv_attributes).location }
+      describe "rdv address default behaviour" do
+        let(:lieu) { create(:lieu) }
+        let(:rdv_attributes) { { user_ids: [user.id], motif_id: motif.id, lieu: lieu } }
+        subject { AgentRdvWizard::Step1.new(agent, organisation, rdv_attributes).rdv.address }
         context "motif is public office" do
           let!(:motif) { create(:motif, :at_public_office) }
           let!(:user) { create(:user, address: "10 rue du havre") }
-          it { should be_blank }
+          it { should be lieu.address }
         end
         context "motif is at home and user has address" do
           let!(:motif) { create(:motif, :at_home) }
           let!(:user) { create(:user, address: "10 rue du havre") }
-          it { should eq("10 rue du havre") }
-
-          context "a different address is given in the wizard" do
-            let(:rdv_attributes) { { user_ids: [user.id], motif_id: motif.id, location: "20 rue des PTT" } }
-
-            it { should eq("20 rue des PTT") }
-          end
+          it { should eq "10 rue du havre" }
         end
         context "motif is at home but user doesn't have an address" do
           let!(:motif) { create(:motif, :at_home) }
@@ -59,7 +54,7 @@ describe AgentRdvWizard do
           let!(:motif) { create(:motif, :at_home) }
           let!(:user_responsible) { create(:user, address: "10 rue du havre") }
           let!(:user) { create(:user, responsible: user_responsible, address: "") }
-          it { should eq("10 rue du havre") }
+          it { should eq "10 rue du havre" }
         end
       end
     end

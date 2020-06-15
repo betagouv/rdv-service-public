@@ -74,7 +74,7 @@ class Agents::RdvsController < AgentAuthController
   end
 
   def rdv_params
-    params.require(:rdv).permit(:motif_id, :location, :duration_in_min, :starts_at, :notes, agent_ids: [], user_ids: [])
+    params.require(:rdv).permit(:motif_id, :lieu_id, :duration_in_min, :starts_at, :notes, agent_ids: [], user_ids: [])
   end
 
   def status_params

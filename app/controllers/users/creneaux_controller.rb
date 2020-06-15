@@ -36,6 +36,6 @@ class Users::CreneauxController < UserAuthController
   def set_creneau_params
     @rdv = policy_scope(Rdv).find(params[:rdv_id])
     authorize(@rdv)
-    @lieu = Lieu.find_by(address: @rdv.location)
+    @lieu = @rdv.lieu
   end
 end

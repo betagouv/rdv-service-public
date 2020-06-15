@@ -53,7 +53,7 @@ class Creneau
       starts_at: starts_at,
       organisation: motif.organisation,
       motif: motif,
-      location: lieu.address,
+      lieu_id: lieu.id,
       users: [user])
   end
 

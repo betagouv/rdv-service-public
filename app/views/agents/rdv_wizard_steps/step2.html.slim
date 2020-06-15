@@ -50,10 +50,9 @@
               | L'usager n'existe pas ?&nbsp;
               = link_to 'Créer un usager', new_organisation_user_path(current_organisation, modal: true), data: { modal: true }
 
-
           = f.input_field :motif_id, as: :hidden
           = f.input_field :starts_at, as: :hidden
-          = hidden_field_tag 'plage_ouverture_location', @rdv_wizard.plage_ouverture_location
+          = f.input_field :lieu_id, as: :hidden
 
           - @rdv.agents.each do |p|
             / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field

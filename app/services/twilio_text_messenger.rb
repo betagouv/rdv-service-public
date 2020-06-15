@@ -35,9 +35,9 @@ class TwilioTextMessenger
     message = if @rdv.phone?
                 "RDV Téléphonique\n"
               elsif @rdv.home?
-                "RDV à domicile\n#{@rdv.location}\n"
+                "RDV à domicile\n#{@rdv.address}\n"
               else
-                "#{@rdv.location}\n"
+                "#{@rdv.address}\n"
               end
     message += "Infos et annulation: #{rdvs_shorten_url(host: ENV["HOST"])}"
     message += " / #{@rdv.organisation.phone_number}" if @rdv.organisation.phone_number

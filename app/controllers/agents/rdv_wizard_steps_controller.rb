@@ -2,7 +2,7 @@ class Agents::RdvWizardStepsController < AgentAuthController
   before_action :set_agent
 
   PERMITTED_PARAMS = [
-    :motif_id, :duration_in_min, :starts_at, :location, :notes,
+    :motif_id, :duration_in_min, :starts_at, :lieu_id, :notes,
     :organisation_id, agent_ids: [], user_ids: []
   ].freeze
 
@@ -49,10 +49,10 @@ class Agents::RdvWizardStepsController < AgentAuthController
   end
 
   def rdv_params
-    params.require(:rdv).permit(PERMITTED_PARAMS).merge(params.permit(:plage_ouverture_location))
+    params.require(:rdv).permit(PERMITTED_PARAMS)
   end
 
   def query_params
-    params.permit(:plage_ouverture_location, *PERMITTED_PARAMS)
+    params.permit(PERMITTED_PARAMS)
   end
 end
