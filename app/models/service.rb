@@ -8,14 +8,9 @@ class Service < ApplicationRecord
   scope :with_motifs, -> { where.not(name: SECRETARIAT) }
   scope :secretariat, -> { where(name: SECRETARIAT).first }
 
-  scope :with_online_and_active_motifs_for_departement, lambda { |departement|
-                                                          where(id: Motif.reservable_online
-                                                          .active
-                                                          .joins(:organisation, :plage_ouvertures)
-                                                          .where(organisations: { departement: departement })
-                                                          .pluck(:service_id)
-                                                          .uniq)
-                                                        }
+  scope :searchable, lambda { |organisations|
+    where(id: Motif.searchable(organisations).pluck(:service_id).uniq)
+  }
 
   def secretariat?
     name == SECRETARIAT

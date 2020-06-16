@@ -45,4 +45,12 @@ module WelcomeHelper
   def departement_params
     (controller_name == 'welcome' && params[:departement]) || (params[:search] && params[:search][:departement])
   end
+
+  def sectorisation_hint(zone, organisations, departement)
+    if zone.present?
+      "Sectorisation : Commune #{@zone.city_name} → #{organisations.pluck(:name).join(', ')}"
+    else
+      "Sectorisation : Département #{departement}"
+    end
+  end
 end

@@ -23,22 +23,22 @@ class Motif < ApplicationRecord
     available_motifs.where(organisation_id: organisation.id).active.order(Arel.sql('LOWER(name)'))
   }
 
+  def self.searchable(organisations, service: nil)
+    motifs = Motif
+      .reservable_online
+      .active
+      .joins(:organisation, :plage_ouvertures)
+      .where(organisation_id: organisations.pluck(:id))
+    motifs = motifs.where(service_id: service.id) if service
+    motifs
+  end
+
   def soft_delete
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
   end
 
   def service_name
     service.name
-  end
-
-  def self.names_for_service_and_departement(service, departement)
-    Motif.reservable_online
-      .active
-      .joins(:organisation, :plage_ouvertures)
-      .where(organisations: { departement: departement })
-      .where(service_id: service.id)
-      .pluck(:name)
-      .uniq
   end
 
   def authorized_agents
