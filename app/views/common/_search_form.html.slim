@@ -1,6 +1,6 @@
 #search_form
   = simple_form_for :search, url: @action_url.present? ? @action_url : root_path do |f|
-    = f.input :departement, as: :hidden, input_html: { value: @departement }, wrapper_html: { class: 'mb-0' }
+    = f.input :departement, as: :hidden, input_html: { value: @departement }
     = f.input :latitude, as: :hidden, input_html: {value: @latitude}
     = f.input :longitude, as: :hidden, input_html: {value: @longitude}
     - if @where.present?
