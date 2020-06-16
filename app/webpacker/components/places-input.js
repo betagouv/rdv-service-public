@@ -4,9 +4,10 @@ class PlacesInput {
   constructor(container) {
     if (container === null) return false;
 
+    this.addressType = container.dataset.addressType;
     const form = container.closest('form');
     this.dependentInputs =
-      ["departement", "latitude", "longitude"].
+      ["departement", "latitude", "longitude", "city_code", "city_name"].
         map(name => ({ name, elt: form.querySelector(`input[name*=${name}]`)})).
         filter(i => !!i.elt) // filter only present inputs
 
@@ -29,6 +30,7 @@ class PlacesInput {
     const url = "https://api-adresse.data.gouv.fr/search/"
     const searchParams = new URLSearchParams()
     searchParams.append("q", query)
+    if (this.addressType) searchParams.append("type", this.addressType)
     fetch(`${url}?${searchParams}`).
       then(res => res.json()).
       then(this.remapBanFeatures).
@@ -42,6 +44,8 @@ class PlacesInput {
     longitude: feature.geometry.coordinates[1],
     departement: feature.properties.context.split(",")[0],
     value: this.getFeatureValueText(feature),
+    city_code: feature.properties.citycode,
+    city_name: feature.properties.city,
     ...feature.properties,
   })
 
