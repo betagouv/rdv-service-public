@@ -114,7 +114,7 @@ class Rdv < ApplicationRecord
   def address_complete
     return location if location.present? && lieu_id.nil?
 
-    if home? && user.present?
+    if home? && user_for_home_rdv.present?
       "Adresse de #{user_for_home_rdv.full_name} - #{user_for_home_rdv.responsible_address}"
     elsif public_office? && lieu.present?
       lieu.full_name
