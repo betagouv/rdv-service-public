@@ -2,12 +2,13 @@ class Agents::ZonesController < AgentDepartementAuthController
   def index
     @search_form = ZoneSearchForm.new(search_params)
     @zones = policy_scope(Zone)
-      .joins(:organisation)
+      .includes(:organisation)
       .where(organisations: { departement: current_departement.number })
       .order(:organisation_id)
     @zones = @search_form.filter_zones(@zones)
-    @zones = @zones.page(params[:page])
+    @zones = @zones.page(params[:page]) unless view_params[:view] == "map"
     authorize(@zones)
+    return render :map if view_params[:view] == "map"
   end
 
   def new
@@ -72,5 +73,9 @@ class Agents::ZonesController < AgentDepartementAuthController
 
   def search_params
     params.permit(:level, :city, :organisation_id)
+  end
+
+  def view_params
+    params.permit(:view)
   end
 end
