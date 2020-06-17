@@ -72,6 +72,7 @@ Rails.application.routes.draw do
     scope module: 'agents' do
       resources :departements, only: [] do
         resources :zones
+        resources :zone_imports, only: [:new, :create]
         delete '/zones' => 'zones#destroy_multiple'
       end
       resources :organisations, except: [:destroy, :new, :create] do

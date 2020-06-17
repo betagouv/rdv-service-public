@@ -1,0 +1,16 @@
+= simple_form_for form, url: departement_zone_imports_path(current_departement), as: :zone_import do |f|
+  = f.input :zones_file, \
+    as: :file, \
+    label: "Fichier à importer"
+  = f.input :departement, \
+    collection: policy_scope(Organisation).map(&:departement).uniq, \
+    include_blank: false
+  = f.input :override_conflicts, \
+    as: :boolean, \
+    label: "Écraser les zones existantes en conflit", \
+    hint: "Si une zone existe avec le même code commune, elle sera écrasée"
+  = f.input :dry_run, \
+    as: :boolean, \
+    label: "Simulation d'import", \
+    hint: "Aucune zone ne sera importée"
+  .text-right= f.submit class: "btn btn-primary"

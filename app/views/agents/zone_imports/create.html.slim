@@ -1,0 +1,86 @@
+- content_for :title do
+  | Sectorisation - Import
+
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-header Import de zones
+      .card-body
+        = render "form", form: @form
+  .col-md-6
+    .card
+      .card-header
+        | Résultat de #{@form.dry_run ? "la simulation" : "de l'import"}
+        - if @res[:valid]
+          span.badge.badge-success Succès
+        - else
+          span.badge.badge-danger Échec
+
+      .card-body
+        - if @res[:valid] && @form.dry_run
+          p #{@res[:counts][:imported].values.sum} zones auraient été importées
+        - elsif @res[:valid]
+          p #{@res[:counts][:imported].values.sum} zones importés avec succès
+        - else
+          p Un ou plusieurs problèmes de validation sont survenus et votre fichier n'a donc pas été importé. Veuillez corriger les problèmes dans le fichier et le réimporter.
+
+        - if @res[:errors].any?
+          h5 #{@res[:errors].count} erreurs globales
+          ul
+            - @res[:errors].each do |message|
+              li= message
+
+        - if @res[:counts][:imported_new].any?
+          h5 Zones créées par organisation
+          ul
+            - @res[:counts][:imported_new].each do |case_name, count|
+              li
+                span>= "#{case_name} :"
+                span>= count
+
+        - if @res[:counts][:imported_override].any?
+          h5 Zones écrasées par organisation
+          ul
+            - @res[:counts][:imported_override].each do |case_name, count|
+              li
+                span>= "#{case_name} :"
+                span>= count
+
+        - if @res[:counts][:errors].any?
+          h5 #{@res[:counts][:errors].values.sum} lignes erronées
+          ul
+            - @res[:counts][:errors].each do |case_name, count|
+              li
+                span>= count
+                span.text-monospace.text-small= case_name
+          p
+            | Détail ligne par ligne
+            ul.list-unstyled
+              - @res[:row_errors].each do |row_index, message|
+                li
+                  b>= "l. #{row_index} :"
+                  span>= message
+
+  - if @res[:imported_zones].any?
+    .col-md-12
+      .card
+        .card-header Zones #{@form.dry_run ? "qui auraient été importées" : "importées"}
+        .card-body
+          table.table
+            thead
+              tr
+                th Organisation
+                th Niveau
+                th Département
+                th Commune
+                th Code Commune
+            tbody
+              - @res[:imported_zones].each do |zone|
+                tr
+                  td
+                    span>= zone.organisation.name
+                    span>= organisation_human_id(zone.organisation)
+                  td= Zone.human_enum_name(:level, zone.level)
+                  td= zone.departement
+                  td= zone.city_name
+                  td= zone.city_code

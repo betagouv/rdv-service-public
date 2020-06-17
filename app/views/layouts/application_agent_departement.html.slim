@@ -4,6 +4,9 @@
     li=link_to departement_zones_path(current_departement), class: 'side-nav-link' do
       i.fa.fa-table
       | Zones
+    li=link_to new_departement_zone_import_path(current_departement), class: 'side-nav-link' do
+      i.fa.fa-download
+      | Importer fichier
   ul.metismenu.side-nav
     li.side-nav-item
       = link_to organisations_path, class: 'side-nav-link' do
