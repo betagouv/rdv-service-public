@@ -14,4 +14,12 @@ module OrganisationsHelper
       content_tag(:i, nil, class: "far  fa-square")
     end
   end
+
+  def organisation_human_id(organisation)
+    content_tag(
+      :span,
+      organisation.human_id,
+      class: "badge badge-light text-monospace"
+    )
+  end
 end

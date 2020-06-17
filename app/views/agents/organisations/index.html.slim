@@ -3,7 +3,12 @@
 - @organisations_by_departement.each do |departement, organisations|
   .card
     .card-header
-      h5 Département du #{departement}
+      .d-flex.justify-content-between.align-items-center
+        h5 Département du #{departement}
+        - if current_agent.admin_departement?
+          = link_to departement_zones_path(departement), class: 'float-right' do
+            i.fa.fa-map>
+            | Sectorisation
     .card-body
       ul.list-group.list-group-flush
         - organisations.each do |organisation|

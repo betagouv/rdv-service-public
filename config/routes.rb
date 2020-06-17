@@ -70,6 +70,10 @@ Rails.application.routes.draw do
 
   authenticate :agent do
     scope module: 'agents' do
+      resources :departements, only: [] do
+        resources :zones
+        delete '/zones' => 'zones#destroy_multiple'
+      end
       resources :organisations, except: [:destroy, :new, :create] do
         resources :lieux, except: :show
         resources :motifs

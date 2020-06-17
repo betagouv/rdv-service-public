@@ -252,7 +252,7 @@ agent_org_paris_nord_pmi_marco.save!
 
 org_arques_pmi_maya = Agent.new(
   email: 'maya@demo.rdv-solidarites.fr',
-  role: :admin,
+  role: :admin_departement,
   first_name: 'Maya',
   last_name: 'Patrick',
   password: '123456',

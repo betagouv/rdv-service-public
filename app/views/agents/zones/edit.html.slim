@@ -1,0 +1,8 @@
+- content_for :title do
+  | Sectorisation #{current_departement} - Modifier Zone ##{@zone_form.zone.id}
+
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-body
+        = render "form", zone_form: @zone_form

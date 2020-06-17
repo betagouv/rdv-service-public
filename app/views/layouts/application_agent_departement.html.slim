@@ -1,0 +1,13 @@
+- content_for :side_nav_menu
+  ul.metismenu.side-nav.mt-5
+    li.side-nav-title Sectorisation du #{current_departement}
+    li=link_to departement_zones_path(current_departement), class: 'side-nav-link' do
+      i.fa.fa-table
+      | Zones
+  ul.metismenu.side-nav
+    li.side-nav-item
+      = link_to organisations_path, class: 'side-nav-link' do
+        span> Liste organisations
+        i.fa.fa-sign-out-alt>
+
+= render template: "layouts/application_agent"
