@@ -16,6 +16,11 @@
             span> Assurez-vous de bien respecter les trois noms de colonnes
             span.text-monospace> city_id, city_name, organisation_id
           li L'ordre des colonnes n'est pas important
+          li
+            span> Assurez-vous que la colonne
+            span.text-monospace> organisation_id
+            span> contient des
+            =link_to("identifiants d'organisations valides", departement_organisation_human_ids_path(current_departement))
 
     .card
       .card-header Modèle de fichier à importer

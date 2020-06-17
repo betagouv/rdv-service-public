@@ -7,6 +7,9 @@
     li=link_to new_departement_zone_import_path(current_departement), class: 'side-nav-link' do
       i.fa.fa-download
       | Importer fichier
+    li=link_to departement_organisation_human_ids_path(current_departement), class: 'side-nav-link' do
+      i.fa.fa-building
+      | Organisations
   ul.metismenu.side-nav
     li.side-nav-item
       = link_to organisations_path, class: 'side-nav-link' do
