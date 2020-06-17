@@ -74,6 +74,8 @@ Rails.application.routes.draw do
         resources :zones
         resources :zone_imports, only: [:new, :create]
         delete '/zones' => 'zones#destroy_multiple'
+        resources :organisation_human_ids, only: [:index]
+        patch '/organisation_human_ids' => 'organisation_human_ids#update'
       end
       resources :organisations, except: [:destroy, :new, :create] do
         resources :lieux, except: :show
