@@ -22,4 +22,8 @@ module OrganisationsHelper
       class: "badge badge-light text-monospace"
     )
   end
+
+  def organisation_zone_color(organisation)
+    "##{Digest::MD5.hexdigest("orga-#{organisation.id}")[0..5]}"
+  end
 end

@@ -1,6 +1,7 @@
 doctype html
 html lang="fr"
   head
+    = yield :html_head_prepend
     = render 'common/head_agent'
   body
     .wrapper
