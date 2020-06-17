@@ -342,6 +342,16 @@ ActiveRecord::Schema.define(version: 2020_06_08_122449) do
     t.index ["organisation_id"], name: "index_webhook_endpoints_on_organisation_id"
   end
 
+  create_table "zones", force: :cascade do |t|
+    t.bigint "organisation_id", null: false
+    t.string "level"
+    t.string "city_name"
+    t.string "city_code"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["organisation_id"], name: "index_zones_on_organisation_id"
+  end
+
   add_foreign_key "absences", "agents"
   add_foreign_key "absences", "organisations"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -360,4 +370,5 @@ ActiveRecord::Schema.define(version: 2020_06_08_122449) do
   add_foreign_key "rdvs", "organisations"
   add_foreign_key "users", "users", column: "responsible_id"
   add_foreign_key "webhook_endpoints", "organisations"
+  add_foreign_key "zones", "organisations"
 end
