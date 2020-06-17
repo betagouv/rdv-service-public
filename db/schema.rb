@@ -210,6 +210,7 @@ ActiveRecord::Schema.define(version: 2020_06_08_122449) do
     t.string "departement"
     t.text "horaires"
     t.string "phone_number"
+    t.string "human_id"
   end
 
   create_table "organisations_users", id: false, force: :cascade do |t|
