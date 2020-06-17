@@ -8,3 +8,8 @@ fr:
         departement: Département
         phone_number: Téléphone
         horaires: Horaires
+        human_id: Identifiant
+    errors:
+      models:
+        organisation:
+          human_id_error: "doit contenir uniquement des lettres non accentués, des chiffres, des tirets hauts et bas, pas d'espaces, entre 3 et 99 caractères. exemples: arques-test, arras_nord_2, ..."
