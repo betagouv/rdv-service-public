@@ -28,7 +28,7 @@ class Agents::PlageOuverturesController < AgentAuthController
     @plage_ouverture = PlageOuverture.new(plage_ouverture_params)
     @plage_ouverture.organisation = current_organisation
     authorize(@plage_ouverture)
-    flash[:notice] = "Plage d'ouverture créé." if @plage_ouverture.save
+    flash[:notice] = "Plage d'ouverture créée" if @plage_ouverture.save
     respond_right_bar_with @plage_ouverture, location: organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent)
   end
 
