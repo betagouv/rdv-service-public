@@ -2,7 +2,7 @@ class LieuxController < ApplicationController
   before_action :set_lieu_variables, only: [:index, :show]
 
   def index
-    @lieux = Lieu.for_service_motif_and_departement(@service_id, @motif_name, @departement)
+    @lieux = Lieu.with_open_slots_for_motifs(@matching_motifs)
     return redirect_to new_user_session_path, flash: { alert: I18n.t("motifs.follow_up_need_signed_user", motif_name: @motif_name) } if follow_up_rdv_and_offline_user?
 
     @next_availability_by_lieux = {}
@@ -15,7 +15,6 @@ class LieuxController < ApplicationController
 
     @lieux = @lieux.sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f) }
 
-    @organisations = Organisation.where(departement: @departement)
     return unless @organisations.empty?
 
     flash.now[:notice] = "La prise de RDV n’est pas encore disponible dans ce département"
@@ -71,7 +70,7 @@ class LieuxController < ApplicationController
   end
 
   def search_params
-    params.require(:search).permit(:departement, :where, :service, :motif_name, :longitude, :latitude)
+    params.require(:search).permit(:departement, :where, :service, :motif_name, :longitude, :latitude, :city_code)
   end
 
   def set_lieu_variables
@@ -80,10 +79,14 @@ class LieuxController < ApplicationController
     @motif_name = search_params[:motif_name]
     @where = search_params[:where]
     @service_id = search_params[:service]
+    @city_code = search_params[:city_code]
     @service = Service.find(@service_id)
-    @motif_names = Motif.names_for_service_and_departement(@service, @departement)
+    @zone = Zone.in_address_sector(@city_code)
+    @organisations = Organisation.in_zone_or_departement(@zone, @departement)
+    searchable_motifs = Motif.searchable(@organisations, service: @service)
+    @motif_names = searchable_motifs.pluck(:name).uniq
+    @matching_motifs = searchable_motifs.where(name: @motif_name)
     @latitude = search_params[:latitude]
     @longitude = search_params[:longitude]
-    @matching_motifs = Motif.active.reservable_online.joins(:organisation).where(organisations: { departement: @departement }, name: @motif_name)
   end
 end

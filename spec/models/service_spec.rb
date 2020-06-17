@@ -2,8 +2,8 @@ describe Service, type: :model do
   let(:service) { create(:service) }
   let!(:service2) { create(:service) }
 
-  describe ".with_online_and_active_motifs_for_departement" do
-    subject { Service.with_online_and_active_motifs_for_departement(motif.organisation.departement) }
+  describe "#searchable" do
+    subject { Service.searchable([motif.organisation]) }
 
     let!(:motif) { create(:motif, service: service, reservable_online: true) }
     let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif]) }

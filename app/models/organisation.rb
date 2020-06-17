@@ -25,6 +25,10 @@ class Organisation < ApplicationRecord
 
   accepts_nested_attributes_for :agents
 
+  def self.in_zone_or_departement(zone, departement)
+    zone ? [zone.organisation] : Organisation.where(departement: departement)
+  end
+
   def notify_admin_organisation_created
     return unless agents.present?
 

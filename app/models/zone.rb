@@ -10,6 +10,10 @@ class Zone < ApplicationRecord
 
   delegate :departement, to: :organisation, allow_nil: true
 
+  def self.in_address_sector(city_code)
+    find_by(city_code: city_code)
+  end
+
   def city?
     level == LEVEL_CITY
   end
