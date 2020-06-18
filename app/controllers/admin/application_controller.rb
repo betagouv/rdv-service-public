@@ -27,7 +27,8 @@ module Admin
       if super_admin_signed_in?
         super
       else
-        redirect_to super_admin_github_omniauth_authorize_path
+        #redirect_to super_admin_github_omniauth_authorize_path
+        redirect_to super_admin_franceconnect_omniauth_authorize_path
       end
     end
 

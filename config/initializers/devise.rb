@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+#require 'strategies/franceconnect'
+require 'omniauth/strategies/franceconnect'
+
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -310,6 +313,7 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
   config.omniauth :github, ENV["GITHUB_APP_ID"], ENV["GITHUB_APP_SECRET"], scope: 'user:email'
+  config.omniauth :franceconnect, ENV["FRANCECONNECT_APP_ID"], ENV["FRANCECONNECT_APP_SECRET"], scope: 'openid,profile,email', strategy_class: OmniAuth::Strategies::Franceconnect
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
@@ -332,7 +336,7 @@ Devise.setup do |config|
   #
   # When using OmniAuth, Devise cannot automatically set OmniAuth path,
   # so you need to do it manually. For the users scope, it would be:
-  # config.omniauth_path_prefix = '/my_engine/users/auth'
+  #config.omniauth_path_prefix = 'auth'
 
   # ==> Turbolinks configuration
   # If your app is using Turbolinks, Turbolinks::Controller needs to be included to make redirection work correctly:

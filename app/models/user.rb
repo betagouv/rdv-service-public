@@ -8,6 +8,8 @@ class User < ApplicationRecord
 
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
+         #,
+         # :omniauthable, omniauth_providers: [:franceconnect]
 
   has_and_belongs_to_many :organisations, -> { distinct }
   has_many :rdvs_users, dependent: :destroy

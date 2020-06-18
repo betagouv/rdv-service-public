@@ -32,7 +32,7 @@ Rails.application.routes.draw do
   end
 
   ## APP ##
-  devise_for :users, controllers: { registrations: 'users/registrations', sessions: 'sessions' }
+  devise_for :users, controllers: { registrations: 'users/registrations', sessions: 'sessions' } # , omniauth_callbacks: 'users/omniauth_callbacks' }
 
   namespace :users do
     resource :rdv_wizard_step, only: [:new, :create]
@@ -137,6 +137,8 @@ Rails.application.routes.draw do
   { disclaimer: 'mentions_legales', terms: 'cgv', mds: 'mds' }.each do |k, v|
     get v => "static_pages##{k}"
   end
+
+  get 'fc' => 'franceconnect#index', as: 'franceconnect'
 
   get 'ehpads' => 'ehpads#index'
   post 'ehpads' => 'ehpads#search'
