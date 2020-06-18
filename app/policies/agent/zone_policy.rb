@@ -18,6 +18,10 @@ class Agent::ZonePolicy < DefaultAgentPolicy
     orga_admin?
   end
 
+  def update?
+    orga_admin?
+  end
+
   def create?
     orga_admin?
   end

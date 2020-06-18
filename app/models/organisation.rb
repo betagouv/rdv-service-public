@@ -20,6 +20,7 @@ class Organisation < ApplicationRecord
       if: -> { human_id.present? }
     }
   )
+  validates :human_id, uniqueness: { scope: :departement }, if: -> { human_id.present? }
 
   after_create :notify_admin_organisation_created
 

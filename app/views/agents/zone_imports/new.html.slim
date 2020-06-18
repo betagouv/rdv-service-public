@@ -1,5 +1,5 @@
 - content_for :title do
-  | Sectorisation - Importer un fichier
+  | Sectorisation #{current_departement} - Importer un fichier
 
 .row.justify-content-center
   .col-md-6
@@ -12,6 +12,7 @@
       .card-body
         ul
           li Utilisez un format XLS ou CSV (délimité par des virgules)
+          li Utilisez un encodage UTF-8
           li
             span> Assurez-vous de bien respecter les trois noms de colonnes
             span.text-monospace> city_id, city_name, organisation_id

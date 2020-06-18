@@ -3,7 +3,7 @@ class ZoneForm
 
   attr_reader :zone, :city_label
 
-  delegate :organisation, :organisation_id, :level, :city_name, :city_code, :errors, :save, to: :zone
+  delegate :organisation, :organisation_id, :level, :city_name, :city_code, :errors, :save, :persisted?, to: :zone
 
   def initialize(zone, **attributes)
     @zone = zone

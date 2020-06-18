@@ -72,7 +72,7 @@ class Agents::ZonesController < AgentDepartementAuthController
   end
 
   def search_params
-    params.permit(:level, :city, :organisation_id)
+    params.permit(:level, :city, :orga_id)
   end
 
   def view_params

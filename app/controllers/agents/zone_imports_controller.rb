@@ -10,7 +10,7 @@ class Agents::ZoneImportsController < AgentDepartementAuthController
     if @form.valid?
       @res = ImportZoneRowsService.perform_with(
         CsvOrXlsReader::Importer.new(@form.zones_file).rows,
-        @form.departement,
+        current_departement.number,
         current_agent,
         dry_run: @form.dry_run,
         override_conflicts: @form.override_conflicts
@@ -25,6 +25,6 @@ class Agents::ZoneImportsController < AgentDepartementAuthController
   def import_params
     params
       .require(:zone_import)
-      .permit(:zones_file, :departement, :dry_run, :override_conflicts)
+      .permit(:zones_file, :dry_run, :override_conflicts)
   end
 end

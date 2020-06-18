@@ -1,9 +1,9 @@
 class ZoneImportForm
   include ActiveModel::Model
 
-  attr_accessor :zones_file, :departement, :dry_run, :override_conflicts
+  attr_accessor :zones_file, :dry_run, :override_conflicts
 
-  validates :zones_file, :departement, presence: true
+  validates :zones_file, presence: true
 
   def initialize(attributes = {})
     attributes[:dry_run] = attributes[:dry_run] == '1' if attributes.key?(:dry_run)

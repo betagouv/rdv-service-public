@@ -22,7 +22,10 @@
             label_method: -> { Zone.human_enum_name(:level, _1) }, \
             wrapper: "horizontal_form"
           = f.input :city, label: "Commune", wrapper: "horizontal_form", hint: "Nom ou code"
-          = f.input :organisation_id, as: :select, collection: policy_scope(Organisation), wrapper: "horizontal_form"
+          = f.input :orga_id, \
+            as: :select, \
+            collection: policy_scope(Organisation).where(departement: current_departement.number), \
+            wrapper: "horizontal_form"
           .text-right= f.submit class: "btn btn-primary", value: "Filtrer"
 
 .card

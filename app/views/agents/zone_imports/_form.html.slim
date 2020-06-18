@@ -2,9 +2,6 @@
   = f.input :zones_file, \
     as: :file, \
     label: "Fichier à importer"
-  = f.input :departement, \
-    collection: policy_scope(Organisation).map(&:departement).uniq, \
-    include_blank: false
   = f.input :override_conflicts, \
     as: :boolean, \
     label: "Écraser les zones existantes en conflit", \
