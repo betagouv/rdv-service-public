@@ -27,4 +27,4 @@ html lang="fr"
     - if content_for :popin
       = yield :popin
     = render "common/footer"
-    input type='hidden' name='js-current-route' id="js-current-route" value="#{controller_path}##{action_name}"
+    input type='hidden' name='js-current-route' id="js-current-route" value=current_route_for_js
