@@ -7,17 +7,21 @@ import interactionPlugin from '@fullcalendar/interaction';
 import Bowser from "bowser";
 const browser = Bowser.getParser(window.navigator.userAgent);
 
-document.addEventListener('turbolinks:load', function() {
-  const calendarEl = document.getElementById('calendar');
+class CalendarRdvSolidarites {
 
-  let defaultView = "timeGridOneDay";
-  if (!browser.is("mobile")) {
-    let viewFromLocalStorage = localStorage.getItem("calendarDefaultView");
+  constructor() {
+    const calendarEl = document.getElementById('calendar');
 
-    defaultView = ['dayGridMonth', 'timeGridWeek', 'timeGridOneDay'].includes(viewFromLocalStorage) ? viewFromLocalStorage : "timeGridWeek";
-  }
+    if (calendarEl == null || calendarEl.innerHTML !== "")
+      return
 
-  if (calendarEl !== null && calendarEl.innerHTML == "") {
+    let defaultView = "timeGridOneDay";
+    if (!browser.is("mobile")) {
+      let viewFromLocalStorage = localStorage.getItem("calendarDefaultView");
+
+      defaultView = ['dayGridMonth', 'timeGridWeek', 'timeGridOneDay'].includes(viewFromLocalStorage) ? viewFromLocalStorage : "timeGridWeek";
+    }
+
     const { eventSourcesJson, defaultDateJson, selectedEventId, organisationId, agentId } = calendarEl.dataset
     const defaultDate = JSON.parse(defaultDateJson || sessionStorage.getItem('calendarStartDate'))
     var calendar = new Calendar(calendarEl, {
@@ -42,7 +46,7 @@ document.addEventListener('turbolinks:load', function() {
         const urlSearchParams = new URLSearchParams({
           starts_at: info.startStr,
           "agent_ids[]": agentId,
-         });
+        });
         let plage_ouvertures = calendar.getEvents()
           .filter(e => e.rendering == "background")
           .filter(e => startDate.isBetween(e.start, e.end, null, "[]"));
@@ -126,6 +130,10 @@ document.addEventListener('turbolinks:load', function() {
       clearTimeout(refreshCalendarInterval)
     });
   }
+}
+
+document.addEventListener('turbolinks:load', function() {
+  new CalendarRdvSolidarites()
 });
 
 
