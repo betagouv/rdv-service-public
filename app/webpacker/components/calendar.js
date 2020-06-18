@@ -27,6 +27,8 @@ class CalendarRdvSolidarites {
       // force calendar reload on turbolinks re-visit, otherwise event listeners
       // are not attached
       this.calendarEl.innerHTML = ""
+      this.currentViewType = null
+      this.currentTodayVisible = null
       // fixes hanging tooltip on back
       $(".tooltip").removeClass("show")
     })
@@ -107,6 +109,20 @@ class CalendarRdvSolidarites {
   }
 
   datesRender = (info) => {
+    if (
+      this.currentTodayVisible && !this.isTodayVisible(info.view) &&
+      this.currentViewType &&
+      (
+        (this.currentViewType == 'dayGridMonth' && info.view.type == 'timeGridWeek') ||
+        (['dayGridMonth', 'timeGridWeek'].indexOf(this.currentViewType) >= 0 && info.view.type == 'timeGridOneDay')
+      )
+    ) {
+      this.fullCalendarInstance.gotoDate(new Date())
+      return false // unfortunately this does not cancel the current rendering but it's fast
+    }
+    this.currentTodayVisible = this.isTodayVisible(info.view);
+    this.currentViewType = info.view.type;
+
     sessionStorage.setItem("calendarStartDate", JSON.stringify(info.view.currentStart))
     const printLinkElt = document.querySelector(".js-link-print-rdvs")
     printLinkElt.classList.toggle("d-none", info.view.type != "timeGridOneDay")
@@ -150,6 +166,11 @@ class CalendarRdvSolidarites {
       $el.attr("data-html", "true");
       $el.tooltip()
     }
+  }
+
+  isTodayVisible = ({ activeStart, activeEnd }) => {
+    const now = new Date()
+    return now >= activeStart && now <= activeEnd;
   }
 }
 
