@@ -1,10 +1,12 @@
 import 'autocomplete.js/dist/autocomplete.jquery.js'
+import 'custom-event-polyfill'
+import 'whatwg-fetch'
 
 class PlacesInput {
   constructor(container) {
     if (container === null) return false;
 
-    const form = container.closest('form');
+    const form = $(container).closest('form')[0];
     this.dependentInputs =
       ["departement", "latitude", "longitude"].
         map(name => ({ name, elt: form.querySelector(`input[name*=${name}]`)})).
@@ -52,7 +54,7 @@ class PlacesInput {
   setDependentInputs = suggestion =>
     this.dependentInputs.forEach(({ name, elt }) => {
       elt.value = suggestion[name] || ""
-      elt.dispatchEvent(new Event("change")) // not triggered automatically
+      elt.dispatchEvent(new CustomEvent("change")) // not triggered automatically
     })
 
   suggestionTemplate = suggestion => {
