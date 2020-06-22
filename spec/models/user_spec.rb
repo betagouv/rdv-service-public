@@ -206,7 +206,7 @@ describe User, type: :model do
   end
 
   describe "#profile" do
-    it "renvoie le profile de l'organisation passé en paramètre" do
+    it "renvoie le profile de l'organisation passée en paramètre" do
       profile = create(:user_profile)
       organisation = profile.organisation
       user = profile.user
