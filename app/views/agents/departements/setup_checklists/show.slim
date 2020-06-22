@@ -23,11 +23,22 @@
     .card
       .card-body
         h4.card-title.mb-3 Activation pour le #{current_departement}
-        p La sectorisation est désactivée par défaut pour tous les départements.
-        .alert.alert-warning
-          | Une fois la sectorisation activée, les recherches dans des parties de votre département non couvertes par des Zones ne renverront plus aucun résultat
+        - if sectorisation_enabled?(current_departement.number)
+          .mb-2.d-flex.align-items-center
+            span
+              .badge.badge-success Activée
+            div.ml-1
+              .alert.alert-warning Les recherches dans des parties de votre département non couvertes par des Zones ne renverront plus aucun résultat
+        - else
+          .mb-2.d-flex.align-items-center
+            span
+              .badge.badge-danger Désactivée
+            div.ml-1 La sectorisation est désactivée par défaut pour tous les départements.
+
+          .alert.alert-warning
+            | Une fois la sectorisation activée, les recherches dans des parties de votre département non couvertes par des Zones ne renverront plus aucun résultat
         p
           span> Veuillez nous écrire sur
           a[href='mailto:dev@rdv-solidarites.fr']
             span> dev@rdv-solidarites.fr
-          span> pour que nous l'activions.
+          span> pour activer ou désactiver la sectorisation

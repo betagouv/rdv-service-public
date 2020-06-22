@@ -1,4 +1,6 @@
 class Organisation < ApplicationRecord
+  extend SectorisationUtils
+
   has_paper_trail
   has_many :lieux, dependent: :destroy
   has_many :motifs, dependent: :destroy
@@ -27,7 +29,11 @@ class Organisation < ApplicationRecord
   accepts_nested_attributes_for :agents
 
   def self.in_zone_or_departement(zone, departement)
-    zone ? [zone.organisation] : Organisation.where(departement: departement)
+    if sectorisation_enabled?(departement) && zone.present?
+      [zone.organisation]
+    else
+      Organisation.where(departement: departement)
+    end
   end
 
   def notify_admin_organisation_created
