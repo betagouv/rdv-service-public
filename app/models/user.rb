@@ -157,13 +157,12 @@ class User < ApplicationRecord
     relative? ? responsible.email : email
   end
 
-<<<<<<< HEAD
   def responsible_address
     relative? ? responsible.address : address
-=======
+  end
+
   def profile_for(organisation)
     user_profiles.find_by(organisation: organisation)
->>>>>>> associe les notes et logement à la liaison user-organisation
   end
 
   protected
