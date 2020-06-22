@@ -18,7 +18,7 @@ class TransactionnalSms
     transac_sms = SibApiV3Sdk::SendTransacSms.new(
       sender: @from,
       recipient: @user.formatted_phone,
-      content: replace_special_chars(body),
+      content: replace_special_chars(body)
     )
     begin
       sib_instance.send_transac_sms(transac_sms)
@@ -41,7 +41,7 @@ class TransactionnalSms
               else
                 "#{@rdv.address}\n"
               end
-    message += "Infos et annulation: #{rdvs_shorten_url(host: ENV["HOST"])}"
+    message += "Infos et annulation: #{rdvs_shorten_url(host: ENV['HOST'])}"
     message += " / #{@rdv.organisation.phone_number}" if @rdv.organisation.phone_number
     message
   end
@@ -78,7 +78,7 @@ class TransactionnalSms
 
   def file_attente
     message = "Des créneaux se sont libérés plus tôt.\n"
-    message += "Cliquez pour voir les disponibilités : #{users_creneaux_index_url(rdv_id: @rdv.id, host: ENV["HOST"])}"
+    message += "Cliquez pour voir les disponibilités : #{users_creneaux_index_url(rdv_id: @rdv.id, host: ENV['HOST'])}"
     message
   end
 
