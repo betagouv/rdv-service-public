@@ -12,14 +12,14 @@ class Agents::ZonesController < AgentDepartementAuthController
   end
 
   def new
-    @zone_form = ZoneForm.new(Zone.new(organisation: current_organisation))
-    authorize(@zone_form.zone)
+    @zone = Zone.new(organisation: current_organisation)
+    authorize(@zone)
   end
 
   def create
-    @zone_form = ZoneForm.new(Zone.new, **zone_params)
-    authorize(@zone_form.zone)
-    if @zone_form.save
+    @zone = Zone.new(**zone_params)
+    authorize(@zone)
+    if @zone.save
       redirect_to departement_zones_path(current_departement), flash: { success: "Zone créée" }
     else
       render :new
@@ -27,14 +27,15 @@ class Agents::ZonesController < AgentDepartementAuthController
   end
 
   def edit
-    @zone_form = ZoneForm.new(Zone.find(params[:id]))
-    authorize(@zone_form.zone)
+    @zone = Zone.find(params[:id])
+    authorize(@zone)
   end
 
   def update
-    @zone_form = ZoneForm.new(Zone.find(params[:id]), **zone_params)
-    authorize(@zone_form.zone)
-    if @zone_form.save
+    @zone = Zone.find(params[:id])
+    @zone.assign_attributes(**zone_params)
+    authorize(@zone)
+    if @zone.save
       redirect_to departement_zones_path(current_departement), flash: { success: "Zone mise à jour" }
     else
       render :edit
@@ -68,7 +69,7 @@ class Agents::ZonesController < AgentDepartementAuthController
   private
 
   def zone_params
-    params.require(:zone).permit(:organisation_id, :level, :city_name, :city_code, :city_label)
+    params.require(:zone).permit(:organisation_id, :level, :city_name, :city_code)
   end
 
   def search_params
