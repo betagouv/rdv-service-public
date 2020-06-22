@@ -71,12 +71,11 @@ Rails.application.routes.draw do
   authenticate :agent do
     scope module: 'agents' do
       resources :departements, only: [] do
-        resources :zones
-        resources :zone_imports, only: [:new, :create]
-        delete '/zones' => 'zones#destroy_multiple'
-        resources :organisation_human_ids, only: [:index]
-        patch '/organisation_human_ids' => 'organisation_human_ids#update'
         scope module: 'departements' do
+          resources :zone_imports, only: [:new, :create]
+          resource :organisations, only: [:show, :update] # note the singular
+          resources :zones
+          delete '/zones' => 'zones#destroy_multiple'
           resource :setup_checklist, only: [:show]
         end
       end

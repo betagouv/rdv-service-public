@@ -1,10 +1,11 @@
-class Agents::OrganisationHumanIdsController < AgentDepartementAuthController
-  def index
+class Agents::Departements::OrganisationsController < AgentDepartementAuthController
+  def show
     @organisations_by_departement = policy_scope(Organisation)
       .where(departement: current_departement.number)
       .to_a
       .concat(inaccessible_organisations)
       .group_by(&:departement)
+    @organisations_by_departement.values.flatten.each { authorize _1 }
   end
 
   def update
@@ -16,7 +17,7 @@ class Agents::OrganisationHumanIdsController < AgentDepartementAuthController
       orga.update_attributes(human_id: organisations_params[orga.id.to_s][:human_id])
     end
     if orgas.map(&:valid?).all? && orgas.map(&:save!)
-      redirect_to departement_organisation_human_ids_path(current_departement), flash: { success: "Identifiants mis à jour !" }
+      redirect_to departement_organisations_path(current_departement), flash: { success: "Identifiants mis à jour !" }
     else
       @organisations_by_departement = orgas.to_a
         .concat(inaccessible_organisations)

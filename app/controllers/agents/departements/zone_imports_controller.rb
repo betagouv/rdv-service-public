@@ -1,4 +1,4 @@
-class Agents::ZoneImportsController < AgentDepartementAuthController
+class Agents::Departements::ZoneImportsController < AgentDepartementAuthController
   def new
     authorize(current_organisation)
     @form = ZoneImportForm.new

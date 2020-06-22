@@ -1,4 +1,4 @@
-class Agents::ZonesController < AgentDepartementAuthController
+class Agents::Departements::ZonesController < AgentDepartementAuthController
   def index
     @search_form = ZoneSearchForm.new(search_params)
     @zones = policy_scope(Zone)

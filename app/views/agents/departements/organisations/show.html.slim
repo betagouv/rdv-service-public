@@ -6,7 +6,7 @@
     .card
       .card-body
         p Les identifiants affichés ci-dessous sont ceux à utiliser dans les fichiers d'imports de zones.
-        = form_with url: departement_organisation_human_ids_path(current_departement), method: :patch, data: { remote: false } do |f|
+        = form_with url: departement_organisations_path(current_departement), method: :patch, data: { remote: false } do |f|
           - @organisations_by_departement.each do |departement, organisations|
             h4 Département #{departement}
             - organisations.each do |organisation|
