@@ -76,12 +76,15 @@ Rails.application.routes.draw do
         delete '/zones' => 'zones#destroy_multiple'
         resources :organisation_human_ids, only: [:index]
         patch '/organisation_human_ids' => 'organisation_human_ids#update'
+        scope module: 'departements' do
+          resource :setup_checklist, only: [:show]
+        end
       end
       resources :organisations, except: [:destroy, :new, :create] do
         resources :lieux, except: :show
         resources :motifs
         scope module: 'organisations' do
-          resource :setup_checklist
+          resource :setup_checklist, only: [:show]
           resources :rdvs, only: :index
           resources :stats, only: :index do
             collection do

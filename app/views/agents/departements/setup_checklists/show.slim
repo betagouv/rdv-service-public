@@ -1,0 +1,33 @@
+- content_for :title do
+  | Sectorisation #{current_departement}
+
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-body
+        h4.card-title.mb-3 Fonctionnement de la sectorisation
+        p La sectorisation permet de découper votre département en Zones géographiques liées à vos Organisations
+        .alert.alert-warning
+          | Pour l'instant la sectorisation ne supporte que les Zones définies à l'échelle de communes entières
+        p Les Zones à l'échelle d'une rue ou d'une partie de rue seront bientôt développées.
+        p La sectorisation ne permet pas pour l'instant d'assigner des zones géographiques à des Agents précis, seulement à des Organisations entières.
+        p Seuls les Agents avec le rôle Admin ont accès à ces pages de configuration de la Sectorisation
+        p
+          span> Vous verrez dans cette interface les Zones de l'ensemble du département du #{current_departement.number}. Cependant vous pourrez créer, éditer et importer des Zones
+          u> uniquement
+          span> pour les Organisations dont vous êtes administrateur.
+        p
+          span> En cas de problème, veuillez-nous écrire à cette adresse pour que nous puissions vous aider:
+          a href='mailto:dev@rdv-solidarites.fr' dev@rdv-solidarites.fr
+  .col-md-6
+    .card
+      .card-body
+        h4.card-title.mb-3 Activation pour le #{current_departement}
+        p La sectorisation est désactivée par défaut pour tous les départements.
+        .alert.alert-warning
+          | Une fois la sectorisation activée, les recherches dans des parties de votre département non couvertes par des Zones ne renverront plus aucun résultat
+        p
+          span> Veuillez nous écrire sur
+          a[href='mailto:dev@rdv-solidarites.fr']
+            span> dev@rdv-solidarites.fr
+          span> pour que nous l'activions.

@@ -3,6 +3,12 @@
     li.side-nav-title Sectorisation du #{current_departement}
     li.side-nav-item
       = link_to \
+        "Instructions...",
+        departement_setup_checklist_path(current_departement), \
+        class: 'side-nav-link', \
+        data: { route: 'agents/departements/setup_checklist' }
+    li.side-nav-item
+      = link_to \
         departement_zones_path(current_departement), \
         class: 'side-nav-link', \
         data: { route: 'agents/zones#index' } \
