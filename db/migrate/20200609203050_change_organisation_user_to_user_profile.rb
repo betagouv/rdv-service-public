@@ -10,7 +10,7 @@ class ChangeOrganisationUserToUserProfile < ActiveRecord::Migration[6.0]
 
     User.all.each do |user|
       user.organisations.each do |organisation|
-        UserProfile.create!(user: user, organisation: organisation, logement: user.old_logement, notes: user.old_notes)
+        UserProfile.find_or_create_by!(user: user, organisation: organisation, logement: user.old_logement, notes: user.old_notes)
       end
     end
   end
