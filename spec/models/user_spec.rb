@@ -205,7 +205,7 @@ describe User, type: :model do
     it { expect(responsible1.available_rdvs(organisation2.id)).to be_empty }
   end
 
-  describe "#profile" do
+  describe "#profile_for" do
     it "renvoie le profile de l'organisation passée en paramètre" do
       profile = create(:user_profile)
       organisation = profile.organisation
