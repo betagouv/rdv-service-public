@@ -37,6 +37,7 @@
       .col-md-6= f.input :number_of_children, input_html: { min: '0', max: '15', step: 'any' }
 
     = f.simple_fields_for :user_profiles, user_profile  do |n|
+      = n.input :organisation_id, as: :hidden
       = n.input :logement, collection: UserProfile.human_enum_collection(:logement)
       = n.input :notes, input_html: { rows: 6 }
 
