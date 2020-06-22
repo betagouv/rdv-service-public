@@ -24,6 +24,7 @@ class WelcomeController < ApplicationController
 
   def welcome_departement
     @services = Service.with_online_and_active_motifs_for_departement(@departement)
+    @organisations = Organisation.where(departement: @departement)
   end
 
   def welcome_service
