@@ -3,7 +3,7 @@ class Agent::ZonePolicy < DefaultAgentPolicy
   # belong to
 
   def index?
-    @context.agent.admin_departement?
+    @context.agent.admin?
   end
 
   def destroy?
@@ -29,7 +29,7 @@ class Agent::ZonePolicy < DefaultAgentPolicy
   private
 
   def orga_admin?
-    @context.agent.admin_departement? && @context.agent.organisation_ids.include?(@record.organisation_id)
+    @context.agent.admin? && @context.agent.organisation_ids.include?(@record.organisation_id)
   end
 
   class Scope < Scope

@@ -12,9 +12,6 @@ FactoryBot.define do
     trait :admin do
       role { "admin" }
     end
-    trait :admin_departement do
-      role { "admin_departement" }
-    end
     trait :not_confirmed do
       confirmed_at { nil }
     end

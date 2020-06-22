@@ -19,7 +19,7 @@ class Agent < ApplicationRecord
   has_and_belongs_to_many :organisations, -> { distinct }
   has_and_belongs_to_many :users
 
-  enum role: { user: 0, admin: 1, admin_departement: 2 }
+  enum role: { user: 0, admin: 1 }
 
   validates :email, :role, presence: true
   validates :last_name, :first_name, presence: true, on: :update, if: :accepted_or_not_invited?

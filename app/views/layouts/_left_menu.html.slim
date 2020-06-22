@@ -52,6 +52,11 @@
             i.fa.fa-chart-bar
             span Vos statistiques
             = unknown_past_agent_rdvs_danger_bage
+        - if current_agent.admin? && policy_scope(Organisation).count == 1
+          li.side-nav-item
+            = link_to departement_zones_path(current_organisation.departement), class: "side-nav-link" do
+              i.fa.fa-map>
+              | Sectorisation #{current_organisation.departement}
         li.side-nav-item
           = link_to '#', class: 'side-nav-link' do
             i.fa.fa-cog

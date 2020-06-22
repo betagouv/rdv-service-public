@@ -1,7 +1,7 @@
 describe ImportZoneRowsService, type: :service do
   let!(:orga_arques) { create(:organisation, human_id: "arques", departement: '62') }
   let!(:orga_arras_sud) { create(:organisation, human_id: "arras-sud", departement: '62') }
-  let!(:agent) { create(:agent, :admin_departement, organisation_ids: [orga_arques.id, orga_arras_sud.id]) }
+  let!(:agent) { create(:agent, :admin, organisation_ids: [orga_arques.id, orga_arras_sud.id]) }
 
   context "valid rows" do
     let(:rows) do
