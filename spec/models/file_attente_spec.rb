@@ -26,7 +26,7 @@ describe FileAttente, type: :model do
         expect { subject }.to change(file_attente, :last_creneau_sent_at).from(nil).to(now)
       end
       it 'should send an sms' do
-        expect(TwilioSenderJob).to receive(:perform_later)
+        expect(SmsSenderJob).to receive(:perform_later)
         subject
       end
 
@@ -41,7 +41,7 @@ describe FileAttente, type: :model do
 
       it 'should not send notification' do
         subject
-        expect(TwilioSenderJob).not_to receive(:perform_later)
+        expect(SmsSenderJob).not_to receive(:perform_later)
         expect(Users::FileAttenteMailer).not_to receive(:new_creneau_available)
       end
     end
@@ -53,7 +53,7 @@ describe FileAttente, type: :model do
         file_attente.update(last_creneau_sent_at: now)
         file_attente.reload
         subject
-        expect(TwilioSenderJob).not_to receive(:perform_later)
+        expect(SmsSenderJob).not_to receive(:perform_later)
         expect(Users::FileAttenteMailer).not_to receive(:new_creneau_available)
       end
     end

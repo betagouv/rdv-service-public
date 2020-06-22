@@ -1,4 +1,4 @@
-class TwilioTextMessenger
+class TransactionnalSms
   include Rails.application.routes.url_helpers
 
   attr_reader :user, :rdv, :from, :type
@@ -8,20 +8,22 @@ class TwilioTextMessenger
     @user = user
     @rdv = rdv
     @options = options
-    @from = ENV["TWILIO_PHONE_NUMBER"]
+    @from = 'RdvSoli'
   end
 
   def send_sms
-    twilio_client = Twilio::REST::Client.new
+    sib_instance = SibApiV3Sdk::TransactionalSMSApi.new
+
     body = send(@type)
+    transac_sms = SibApiV3Sdk::SendTransacSms.new(
+      sender: @from,
+      recipient: @user.formatted_phone,
+      content: replace_special_chars(body),
+    )
     begin
-      twilio_client.messages.create(
-        from: @from,
-        to: @user.formatted_phone,
-        body: replace_special_chars(body)
-      )
+      sib_instance.send_transac_sms(transac_sms)
     rescue StandardError => e
-      e
+      "Exception when calling TransactionalSMSApi->get_sms_events: #{e.response_body}"
     end
   end
 
