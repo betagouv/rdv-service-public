@@ -461,10 +461,6 @@ GEM
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
-    twilio-ruby (5.29.1)
-      faraday (~> 0.9)
-      jwt (>= 1.5, <= 2.5)
-      nokogiri (>= 1.6, < 2.0)
     typhoeus (1.3.1)
       ethon (>= 0.9.0)
     tzinfo (1.2.7)
@@ -562,7 +558,6 @@ DEPENDENCIES
   sprockets-rails
   tod (~> 2.2)
   turbolinks (~> 5)
-  twilio-ruby (~> 5.29.1)
   typhoeus
   web-console (>= 3.3.0)
   webdrivers (~> 4.0)
