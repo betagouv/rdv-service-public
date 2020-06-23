@@ -144,6 +144,7 @@ user_org1_patricia = User.new(
 )
 user_org1_patricia.skip_confirmation!
 user_org1_patricia.save!
+user_org1_patricia.profile_for(org1).update(notes: "des notes de test", logement: 2)
 
 user_org1_lea = User.new(
   first_name: "Léa",
@@ -151,10 +152,11 @@ user_org1_lea = User.new(
   email: "lea_dupont@demo.rdv-solidarites.fr",
   birth_date: Date.parse("01/12/1982"),
   password: '123456',
-  organisation_ids: [org1.id]
+  organisation_ids: [org1.id],
 )
 user_org1_lea.skip_confirmation!
 user_org1_lea.save!
+user_org1_lea.profile_for(org1).update(notes: "des notes de test", logement: 2)
 
 user_org1_jean = User.new(
   first_name: "Jean",
@@ -162,10 +164,11 @@ user_org1_jean = User.new(
   email: "jean_moustache@demo.rdv-solidarites.fr",
   birth_date: Date.parse("10/01/1973"),
   password: '123456',
-  organisation_ids: [org1.id]
+  organisation_ids: [org1.id],
 )
 user_org1_jean.skip_confirmation!
 user_org1_jean.save!
+user_org1_jean.profile_for(org1).update(notes: "des notes de test", logement: 2)
 
 # AGENTS
 
