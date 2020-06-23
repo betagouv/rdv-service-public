@@ -1,9 +1,9 @@
-describe TransactionalSms, type: :service do
+describe SendTransactionalSmsService, type: :service do
   let(:user) { create(:user, phone_number: "+33640404040", address: "10 rue de Toulon, Lille") }
 
   describe ".sms_footer" do
     let(:rdv) { create(:rdv, motif: motif, users: [user], starts_at: 5.days.from_now) }
-    subject { TransactionalSms.new(:rdv_created, rdv, user).send(:sms_footer) }
+    subject { SendTransactionalSmsService.new(:rdv_created, rdv, user).send(:sms_footer) }
 
     context "when regular Rdv" do
       let(:motif) { create(:motif, :at_public_office) }
@@ -26,7 +26,7 @@ describe TransactionalSms, type: :service do
   describe ".send(type)" do
     let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now) }
 
-    subject { TransactionalSms.new(:rdv_created, rdv, user).send(type) }
+    subject { SendTransactionalSmsService.new(:rdv_created, rdv, user).send(type) }
 
     context "when rdv created" do
       let(:type) { :rdv_created }
@@ -54,7 +54,7 @@ describe TransactionalSms, type: :service do
     it "should work" do
       body = "àáäâãèéëẽêìíïîĩòóöôõùúüûũñçÀÁÄÂÃÈÉËẼÊÌÍÏÎĨÒÓÖÔÕÙÚÜÛŨÑÇ"
       expect(
-        TransactionalSms
+        SendTransactionalSmsService
           .new(:rdv_created, nil, user)
           .send(:replace_special_chars, body)
       ).to eq("àaäaaèéeeeìiiiiòoöooùuüuuñcAAÄAAEÉEEEIIIIIOOÖOOUUÜUUÑÇ")

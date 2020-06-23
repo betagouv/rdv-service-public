@@ -1,4 +1,4 @@
-class TransactionalSms
+class SendTransactionalSmsService < BaseService
   include Rails.application.routes.url_helpers
 
   attr_reader :user, :rdv, :from, :type
@@ -11,7 +11,7 @@ class TransactionalSms
     @from = 'RdvSoli'
   end
 
-  def send_sms
+  def perform
     sib_instance = SibApiV3Sdk::TransactionalSMSApi.new
 
     body = send(@type)
