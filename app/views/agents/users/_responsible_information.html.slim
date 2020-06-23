@@ -11,7 +11,7 @@ ul.list-unstyled.mb-5
     strong>
       | Logement :
     span
-      = user.profile_for(current_organisation).logement
+      = UserProfile.human_enum_name(:logement, user.profile_for(current_organisation).logement)
   strong
     i.far.fa-fw.fa-sticky-note>
     | Notes libres :
