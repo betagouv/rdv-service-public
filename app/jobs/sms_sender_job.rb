@@ -1,5 +1,5 @@
 class SmsSenderJob < ApplicationJob
   def perform(status, rdv, user, options = {})
-    SendTransactionalSmsService.new(status, rdv, user, options).perform if Rails.env.production?
+    SendTransactionalSmsService.perform_with(status, rdv, user, options) if Rails.env.production?
   end
 end
