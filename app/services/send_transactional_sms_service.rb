@@ -20,11 +20,7 @@ class SendTransactionalSmsService < BaseService
       recipient: @user.formatted_phone,
       content: replace_special_chars(body)
     )
-    begin
-      sib_instance.send_transac_sms(transac_sms)
-    rescue StandardError => e
-      "Exception when calling TransactionalSMSApi->get_sms_events: #{e.response_body}"
-    end
+    sib_instance.send_transac_sms(transac_sms)
   end
 
   private
