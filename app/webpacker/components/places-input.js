@@ -40,8 +40,8 @@ class PlacesInput {
   remapBanFeatures = data => data.features.map(this.remapBanFeature)
 
   remapBanFeature = feature => ({
-    latitude: feature.geometry.coordinates[0],
-    longitude: feature.geometry.coordinates[1],
+    longitude: feature.geometry.coordinates[0],
+    latitude: feature.geometry.coordinates[1],
     departement: feature.properties.context.split(",")[0],
     value: this.getFeatureValueText(feature),
     ...feature.properties,
