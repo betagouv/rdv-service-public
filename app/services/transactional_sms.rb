@@ -1,4 +1,4 @@
-class TransactionnalSms
+class TransactionalSms
   include Rails.application.routes.url_helpers
 
   attr_reader :user, :rdv, :from, :type
