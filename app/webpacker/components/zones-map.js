@@ -15,7 +15,8 @@ class ZonesMap {
       container: 'zones-map',
       hash: true,
       center: [2.3103, 50.7406], // TODO: 62 hardcoded so far
-      zoom: 7,
+      zoom: 8,
+      minZoom: 5,
       style: {
         version: 8,
         sources: {

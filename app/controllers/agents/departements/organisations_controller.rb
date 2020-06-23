@@ -22,7 +22,7 @@ class Agents::Departements::OrganisationsController < AgentDepartementAuthContro
       @organisations_by_departement = orgas.to_a
         .concat(inaccessible_organisations)
         .group_by(&:departement)
-      render :index
+      render :show
     end
   end
 

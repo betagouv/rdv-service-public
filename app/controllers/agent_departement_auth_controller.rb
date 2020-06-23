@@ -11,6 +11,7 @@ class AgentDepartementAuthController < AgentAuthController
 
   def set_departement
     @departement = Departement.new(params[:departement_id])
-    # authorize(current_agent.organisations.where(departement: @departement).first)
+    raise Pundit::NotAuthorizedError unless \
+      current_agent.organisations.where(departement: @departement.number).any?
   end
 end

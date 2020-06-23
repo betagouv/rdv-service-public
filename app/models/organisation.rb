@@ -29,8 +29,8 @@ class Organisation < ApplicationRecord
   accepts_nested_attributes_for :agents
 
   def self.in_zone_or_departement(zone, departement)
-    if sectorisation_enabled?(departement) && zone.present?
-      [zone.organisation]
+    if sectorisation_enabled?(departement)
+      zone.present? ? [zone.organisation] : []
     else
       Organisation.where(departement: departement)
     end

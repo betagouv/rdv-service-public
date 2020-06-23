@@ -25,8 +25,9 @@
           = f.input :orga_id, \
             as: :select, \
             collection: policy_scope(Organisation).where(departement: current_departement.number), \
-            wrapper: "horizontal_form"
-          .text-right= f.submit class: "btn btn-primary", value: "Filtrer"
+            wrapper: "horizontal_form", \
+            label: "Organisation"
+          .text-right= f.submit class: "btn btn-primary", value: "Filtrer", data: { "disable-with": "Filtrer" }
 
 .card
   .pt-3.pr-3.pl-3

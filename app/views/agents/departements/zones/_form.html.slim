@@ -1,29 +1,29 @@
 = render partial: 'layouts/model_errors', locals: { model: zone }
 
-- I18n.with_options scope: 'activerecord.attributes.zone' do |i18n|
-  = simple_form_for([:departement, zone]) do |f|
-    = f.input :organisation_id, \
-      collection: policy_scope(Organisation).where(departement: current_departement.number), \
-      include_blank: false
-    = f.input :level, \
-      as: :select, \
-      collection: [Zone::LEVEL_CITY], \
-      include_blank: false, \
-      label_method: -> { Zone.human_enum_name(:level, _1) },
-      label: i18n.t(:level)
-    = f.input :city_label, \
-      label: "Commune", \
-      input_html: { \
-        class: "places-js-container", \
-        data: { "address-type": "municipality" } \
-      }, \
-      hint: "Le code postal affiché ici est différent du <a href='https://fr.wikipedia.org/wiki/Code_officiel_g%C3%A9ographique#Code_commune' target='_blank'>code commune <i class='fa fa-external-link-alt'></i></a>".html_safe
-    = f.input :city_name, \
-      input_html: { readonly: true }, \
-      required: true, \
-      label: i18n.t(:city_name)
-    = f.input :city_code, \
-      input_html: { readonly: true }, \
-      required: true, \
-      label: i18n.t(:city_code)
-    = f.submit class: 'btn btn-primary'
+= simple_form_for( \
+  zone, \
+  url: zone.new_record? ? departement_zones_path(current_departement) : departement_zone_path(current_departement, zone) \
+) do |f|
+  = f.input :organisation_id, \
+    collection: policy_scope(Organisation).where(departement: current_departement.number), \
+    include_blank: false
+
+  = f.input :level, \
+    as: :select, \
+    collection: [Zone::LEVEL_CITY], \
+    include_blank: false, \
+    label_method: -> { Zone.human_enum_name(:level, _1) }
+
+  = f.input :city_label, \
+    label: "Commune", \
+    input_html: { \
+      class: "places-js-container", \
+      data: { "address-type": "municipality" } \
+    }, \
+    hint: "Le code postal affiché ici est différent du <a href='https://fr.wikipedia.org/wiki/Code_officiel_g%C3%A9ographique#Code_commune' target='_blank'>code commune <i class='fa fa-external-link-alt'></i></a>".html_safe
+
+  = f.input :city_name, input_html: { readonly: true }, required: true
+
+  = f.input :city_code, input_html: { readonly: true }, required: true
+
+  = f.submit class: 'btn btn-primary'
