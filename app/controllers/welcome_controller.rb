@@ -34,6 +34,7 @@ class WelcomeController < ApplicationController
 
   def welcome_departement
     @services = Service.searchable(@organisations)
+    @organisations_departement = Organisation.where(departement: @departement)
   end
 
   def welcome_service

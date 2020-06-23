@@ -4,8 +4,8 @@ class Agents::PlageOuvertureMailer < ApplicationMailer
     ics = PlageOuverture::Ics.new(plage_ouverture: @plage_ouverture)
     attachments["invite.ics"] = {
       mime_type: 'application/ics',
-      content: ics.to_ical,
-      encoding: "8bit", # fixes encoding issues in ICS
+      content: Base64.encode64(ics.to_ical),
+      encoding: "base64", # seems necessary for attachments
     }
     m = mail(
       to: plage_ouverture.agent.email,
@@ -14,8 +14,9 @@ class Agents::PlageOuvertureMailer < ApplicationMailer
     m.add_part(
       Mail::Part.new do
         content_type "text/calendar; method=REQUEST; charset=utf-8"
-        body ics.to_ical
-        content_transfer_encoding "8bit"
+        body Base64.encode64(ics.to_ical)
+        content_transfer_encoding "base64"
+        # quoted-printable would be more adapted but there seems to be an encoding problem with extra =0D
       end
     )
     m

@@ -8,7 +8,7 @@ unless Rails.env.test?
   Rails.application.config.content_security_policy do |policy|
     policy.default_src :self
     policy.font_src    :self, :data, "https://fonts.gstatic.com", "github.com"
-    policy.img_src     :self, :data, "stats.data.gouv.fr", "*.gstatic.com", "*.google.com"
+    policy.img_src     :self, :data, "stats.data.gouv.fr", "*.gstatic.com", "*.google.com", "voxusagers.numerique.gouv.fr"
     policy.object_src  :none
     policy.style_src   :self, :unsafe_inline, "fonts.googleapis.com", "*.bootstrapcdn.com", "cdnjs.cloudflare.com", 'api.mapbox.com'
 
