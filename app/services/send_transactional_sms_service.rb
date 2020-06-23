@@ -18,7 +18,8 @@ class SendTransactionalSmsService < BaseService
     transac_sms = SibApiV3Sdk::SendTransacSms.new(
       sender: @from,
       recipient: @user.formatted_phone,
-      content: replace_special_chars(body)
+      content: replace_special_chars(body),
+      tag: "#{@rdv.organisation.id}_#{@type}"
     )
     sib_instance.send_transac_sms(transac_sms)
   end
