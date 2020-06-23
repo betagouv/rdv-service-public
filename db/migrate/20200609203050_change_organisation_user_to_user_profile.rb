@@ -12,5 +12,4 @@ class ChangeOrganisationUserToUserProfile < ActiveRecord::Migration[6.0]
       profile.update!(logement: profile.user.old_logement, notes: profile.user.old_notes)
     end
   end
-
 end

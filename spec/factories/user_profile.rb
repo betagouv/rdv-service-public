@@ -3,6 +3,6 @@ FactoryBot.define do
     user
     organisation
     notes { "Notes libres" }
-    logement { 'locataire' }
+    logement { UserProfile.locataire }
   end
 end
