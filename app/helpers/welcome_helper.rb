@@ -26,6 +26,8 @@ module WelcomeHelper
   end
 
   def urgency_number
+    return nil unless urgency_number_raw.present?
+
     human, raw = urgency_number_raw
     link_to human, "tel:#{raw}", class: 'urgency-number'
   end

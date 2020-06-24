@@ -36,8 +36,9 @@
                     em Aucune disponibilité
 
 
-        .row
-          .col-md-10
-            h4.card-title.mb-3.mt-0.text-muted Vous ne trouvez pas votre lieu ?
-            h6.card-subtitle.text-black-50.mb-2 Il est possible que la prise de rendez vous ne soit pas encore disponible.
-            h6.card-subtitle.text-black-50= "Prenez contact avec le #{urgency_number} pour plus d'informations".html_safe
+        - if urgency_number
+          .row
+            .col-md-10
+              h4.card-title.mb-3.mt-0.text-muted Vous ne trouvez pas votre lieu ?
+              h6.card-subtitle.text-black-50.mb-2 Il est possible que la prise de rendez vous ne soit pas encore disponible.
+              h6.card-subtitle.text-black-50= "Prenez contact avec le #{urgency_number} pour plus d'informations".html_safe
