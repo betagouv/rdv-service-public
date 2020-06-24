@@ -13,6 +13,6 @@ class Agents::StatsController < AgentAuthController
   private
 
   def rdvs_for_current_agent
-    policy_scope(Rdv).joins(:agents).where(agents: { id: current_agent.id })
+    policy_scope(Rdv).with_agent(current_agent)
   end
 end
