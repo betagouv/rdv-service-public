@@ -57,32 +57,33 @@
             = link_to departement_setup_checklist_path(current_organisation.departement), class: "side-nav-link" do
               i.fa.fa-map>
               | Sectorisation #{current_organisation.departement}
-        li.side-nav-item
-          = link_to '#', class: 'side-nav-link' do
-            i.fa.fa-cog
-            span Paramètres
-            i.fa.fa-angle-right.menu-arrow.mt-1
-          ul.side-nav-second-level aria-expanded="false"
-            li
-              =link_to 'Votre organisation', \
-                organisation_path(current_organisation), \
-                data: { route: 'agents/organisations#show' }
-            li
-              =link_to 'Vos lieux', \
-                organisation_lieux_path(current_organisation), \
-                data: { route: 'agents/lieux#index' }
-            li
-              =link_to 'Vos agents', \
-              organisation_agents_path(current_organisation), \
-              data: { route: 'agents/agents#index' }
-            li
-              = link_to 'Vos motifs', \
-                organisation_motifs_path(current_organisation), \
-                data: { route: 'agents/motifs#index' }
-            li
-              = link_to( \
-                organisation_stats_path(current_organisation), \
-                data: { route: 'agents/organisations/stats#index' } \
-              ) do
-                | Vos statistiques globales
-                = unknown_past_rdvs_danger_bage
+        - if current_agent.admin?
+          li.side-nav-item
+            = link_to '#', class: 'side-nav-link' do
+              i.fa.fa-cog
+              span Paramètres
+              i.fa.fa-angle-right.menu-arrow.mt-1
+            ul.side-nav-second-level aria-expanded="false"
+              li
+                =link_to 'Votre organisation', \
+                  organisation_path(current_organisation), \
+                  data: { route: 'agents/organisations#show' }
+              li
+                =link_to 'Vos lieux', \
+                  organisation_lieux_path(current_organisation), \
+                  data: { route: 'agents/lieux#index' }
+              li
+                =link_to 'Vos agents', \
+                organisation_agents_path(current_organisation), \
+                data: { route: 'agents/agents#index' }
+              li
+                = link_to 'Vos motifs', \
+                  organisation_motifs_path(current_organisation), \
+                  data: { route: 'agents/motifs#index' }
+              li
+                = link_to( \
+                  organisation_stats_path(current_organisation), \
+                  data: { route: 'agents/organisations/stats#index' } \
+                ) do
+                  | Vos statistiques globales
+                  = unknown_past_rdvs_danger_bage
