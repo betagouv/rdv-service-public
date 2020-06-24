@@ -101,4 +101,10 @@ module ApplicationHelper
       simple_format(notes)
     end
   end
+
+  def current_route_for_js
+    base = "#{controller_path}##{action_name}"
+    base += "?view=#{params[:view]}" if params[:view].present?
+    base
+  end
 end

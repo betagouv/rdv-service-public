@@ -159,7 +159,6 @@ Style/StringLiteralsInInterpolation:
     - 'app/helpers/plage_ouvertures_helper.rb'
     - 'app/models/plage_ouverture/ics.rb'
     - 'app/models/rdv/ics.rb'
-    - 'app/services/twilio_text_messenger.rb'
     - 'config/environments/production.rb'
 
 # Offense count: 83

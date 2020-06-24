@@ -1,3 +1,5 @@
+import 'core-js/stable'
+import "regenerator-runtime/runtime"; // cf https://github.com/rails/webpacker#usage
 require("@rails/ujs").start()
 require("turbolinks").start()
 require("chartkick")
@@ -36,7 +38,7 @@ $(document).on('turbolinks:load', function() {
       const valid = [2, 3].includes(departementInput.value.length)
       whereInput.classList.toggle('is-valid', valid)
       whereInput.classList.toggle('is-invalid', !valid)
-      submitButton.toggleAttribute('disabled', !valid)
+      $(submitButton).attr('disabled', !valid)
     })
   }
 });

@@ -1,27 +1,30 @@
 #search_form
   = simple_form_for :search, url: @action_url.present? ? @action_url : root_path do |f|
-    = f.input :departement, as: :hidden, input_html: { value: @departement }, wrapper_html: { class: 'mb-0' }
+    = f.input :departement, as: :hidden, input_html: { value: @departement }
+    = f.input :city_code, as: :hidden, input_html: { value: @city_code }
     = f.input :latitude, as: :hidden, input_html: {value: @latitude}
     = f.input :longitude, as: :hidden, input_html: {value: @longitude}
     - if @where.present?
       .form-row.d-flex.justify-content-md-center.mb-2
-        .col-lg-9= f.input :where, label: false, readonly: true, input_html: { value: @where, class: "form-control-lg" }, wrapper_html: { class: 'mb-1 mb-lg-0' }
-        .col-lg-3.align-self-end= link_to "Modifier l'adresse", root_path, class: 'btn btn-light btn-lg w-100 text-center'
+        .col-lg-9
+          = f.input :where, label: false, readonly: true, input_html: { value: @where, class: "form-control-lg" }, wrapper_html: { class: 'mb-1 mb-lg-0' }, hint: sectorisation_hint(@zone, @organisations, @departement)
+        .col-lg-3= link_to "Modifier l'adresse", root_path, class: 'btn btn-light btn-lg w-100 text-center'
 
-      - if @service.present?
+      - if @service.present? && @motif_names.any?
         .form-row.d-flex.justify-content-md-center.mb-2
           .col-lg-9
             = f.input :service, as: :hidden, input_html: { value: @service.id }, wrapper_html: { class: 'd-none' }
 
             = f.input :service, label: false, disabled: true, readonly: true, input_html: { value: @service.name, class: "form-control-lg" }, wrapper_html: { class: 'mb-1 mb-lg-0' }
-          .col-lg-3.align-self-end= link_to "Modifier le service", welcome_departement_path(@departement, where: @where, latitude: @latitude, longitude: @longitude), class: 'btn btn-light btn-lg w-100 text-center'
+          .col-lg-3.align-self-end= link_to "Modifier le service", welcome_departement_path(@departement, where: @where, latitude: @latitude, longitude: @longitude, city_code: @city_code), class: 'btn btn-light btn-lg w-100 text-center'
 
-        - if @motif_names.any?
-          .form-row.d-flex.justify-content-md-center.mb-2
-            .col-lg-9= f.input :motif_name, label: @motif_name.present? ? false : "Votre motif", collection: @motif_names, selected: @motif_name, required: true, include_blank: "Choisissez un motif", input_html: { class: 'select2-input' }, wrapper_html: { class: 'mb-1 mb-lg-0' }
-            .col-lg-3.align-self-end= f.button :submit, "Choisir ce motif", class: 'btn btn-secondary btn-lg w-100 text-center'
-        - else
-          h2.text-white.text-center.my-3 La prise de RDV n'est pas encore disponible dans ce département.
+        .form-row.d-flex.justify-content-md-center.mb-2
+          .col-lg-9= f.input :motif_name, label: @motif_name.present? ? false : "Votre motif", collection: @motif_names, selected: @motif_name, required: true, include_blank: "Choisissez un motif", input_html: { class: 'select2-input' }, wrapper_html: { class: 'mb-1 mb-lg-0' }
+          .col-lg-3.align-self-end= f.button :submit, "Choisir ce motif", class: 'btn btn-secondary btn-lg w-100 text-center'
+          - if urgency_number
+            small.col-sm-12.pt-1.text-light.font-italic
+              | Si votre motif ne figure pas dans la liste contactez par téléphone le
+              u=< urgency_number
 
       - else
         .form-row.d-flex.justify-content-md-center.mb-2
@@ -29,8 +32,24 @@
             .col-lg-9
               = f.input :service, label: "Votre service", collection: @services, label_method: :name, value_method: :id, required: true, include_blank: "Choisissez un service", input_html: { class: 'form-control-lg w-100' }, wrapper_html: { class: 'mb-1 mb-lg-0' }
             .col-lg-3.align-self-end= f.button :submit, "Choisir ce service", class: 'btn btn-secondary btn-lg w-100 text-center'
+            - if urgency_number
+              small.col-sm-12.pt-1.text-light.font-italic
+                span> Si votre service ne figure pas dans la liste contactez par téléphone le
+                span>= urgency_number
           - else
-            h2.text-white.text-center La prise de rendez-vous n'est pas disponible pour ce département.
+            h2.text-white.text-center
+              - if @organisations_departement.any? && sectorisation_enabled?(@departement)
+                span Votre adresse n'est pas disponible à la prise de RDV en ligne
+                - if urgency_number
+                  span>, veuillez contacter le
+                  span>= urgency_number
+              - elsif @organisations_departement.any? && urgency_number
+                span> Votre département n'est pas disponible à la prise de RDV en ligne
+                - if urgency_number
+                  span>, veuillez contacter le
+                  span>= urgency_number
+              - else
+                | La prise de rendez-vous n'est pas disponible pour ce département.
       = render 'corona/info_rdv'
 
     - else

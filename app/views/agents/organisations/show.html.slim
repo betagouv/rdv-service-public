@@ -7,13 +7,20 @@
       .card-body
         h4.card-title.mb-3 Informations générales
         ul.list-unstyled.mb-5
-          li.mb-2 
+          li.mb-2
             strong> Nom :
             | #{@organisation.name}
           li.mb-2
             strong> Téléphone :
             | #{@organisation.phone_number}
           li.mb-2
-            strong> Horaires : 
+            strong> Horaires :
             | #{@organisation.horaires}
+          li.mb-2
+            strong> Identifiant :
+            - if @organisation.human_id.blank?
+              i> N/A
+            - else
+              span>= organisation_human_id(@organisation)
+            i>= "(utilisé pour la sectorisation)"
         .text-right= link_to "Modifier", edit_organisation_path(@organisation), class: "btn btn-primary", data: { rightbar: true }

@@ -1,0 +1,59 @@
+- content_for :title do
+  | Sectorisation #{current_departement} - Importer un fichier
+
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-body
+        = render "form", form: @form
+  .col-md-6
+    .card
+      .card-header Instructions
+      .card-body
+        ul
+          li Utilisez un format XLS ou CSV (délimité par des virgules)
+          li Utilisez un encodage UTF-8
+          li
+            span> Assurez-vous de bien respecter les trois noms de colonnes
+            span.text-monospace> city_id, city_name, organisation_id
+          li L'ordre des colonnes n'est pas important
+          li
+            span> Assurez-vous que la colonne
+            span.text-monospace> organisation_id
+            span> contient des
+            =link_to("identifiants d'organisations valides", departement_organisations_path(current_departement))
+
+    .card
+      .card-header Modèle de fichier à importer
+      table.table.table-bordered.bg-light
+        thead
+          tr
+            th.text-monospace
+              abbr[title="identifiant de l'organisation (obligatoire)"] organisation_id
+            th.text-monospace
+              abbr[title="Code INSEE de la commune (obligatoire)"] city_code
+            th.text-monospace
+              abbr[title="Nom de la commune (obligatoire)"] city_name
+        tbody
+          tr
+            td arques
+            td> 62053
+            td Audincthun
+          tr
+            td arques
+            td> 62205
+            td CAMPAGNE-LES-WARDRECQUES
+          tr
+            td bapaume
+            td> 62042
+            td ATHIES
+          tr
+            td.text-center[colspan=3] ...
+      .text-center
+        ul.list-unstyled
+          li= link_to "/zones_example.xls", class: 'btn btn-link', download: "zones_example.xls" do
+            i.fa.fa-download>
+            span> Fichier d'exemple au format XLS
+          li= link_to "/zones_example.csv", class: 'btn btn-link', download: "zones_example.csv" do
+            i.fa.fa-download>
+            span> Fichier d'exemple au format CSV

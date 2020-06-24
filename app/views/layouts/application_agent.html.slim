@@ -1,6 +1,7 @@
 doctype html
 html lang="fr"
   head
+    = yield :html_head_prepend
     = render 'common/head_agent'
   body
     .wrapper
@@ -26,4 +27,4 @@ html lang="fr"
     - if content_for :popin
       = yield :popin
     = render "common/footer"
-    input type='hidden' name='js-current-route' id="js-current-route" value="#{controller_path}##{action_name}"
+    input type='hidden' name='js-current-route' id="js-current-route" value=current_route_for_js

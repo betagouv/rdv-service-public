@@ -8,14 +8,10 @@ fr:
       truncate: "&hellip;"
   helpers:
     page_entries_info:
-      entry:
-        zero: "entrée"
-        one: "entrée"
-        other: "entrées"
       one_page:
         display_entries:
-          zero: "No %{entry_name} found"
-          one: "Displaying <b>1</b> %{entry_name}"
-          other: "Displaying <b>all %{count}</b> %{entry_name}"
+          zero: "Aucun(e) %{entry_name} trouvé(e)s"
+          one: "Affichage de <b>1</b> %{entry_name}"
+          other: "Affichage des <b>%{count}</b> %{entry_name}"
       more_pages:
-        display_entries: "Displaying %{entry_name} <b>%{first}&nbsp;-&nbsp;%{last}</b> of <b>%{total}</b> in total"
+        display_entries: "%{entry_name} <b>%{first}</b> à <b>%{last}</b> affiché(e)s sur <b>%{total}</b> au total"

@@ -1,12 +1,15 @@
 import 'autocomplete.js/dist/autocomplete.jquery.js'
+import 'custom-event-polyfill'
+import 'whatwg-fetch'
 
 class PlacesInput {
   constructor(container) {
     if (container === null) return false;
 
-    const form = container.closest('form');
+    this.addressType = container.dataset.addressType;
+    const form = $(container).closest('form')[0];
     this.dependentInputs =
-      ["departement", "latitude", "longitude"].
+      ["departement", "latitude", "longitude", "city_code", "city_name"].
         map(name => ({ name, elt: form.querySelector(`input[name*=${name}]`)})).
         filter(i => !!i.elt) // filter only present inputs
 
@@ -29,6 +32,7 @@ class PlacesInput {
     const url = "https://api-adresse.data.gouv.fr/search/"
     const searchParams = new URLSearchParams()
     searchParams.append("q", query)
+    if (this.addressType) searchParams.append("type", this.addressType)
     fetch(`${url}?${searchParams}`).
       then(res => res.json()).
       then(this.remapBanFeatures).
@@ -38,10 +42,12 @@ class PlacesInput {
   remapBanFeatures = data => data.features.map(this.remapBanFeature)
 
   remapBanFeature = feature => ({
-    latitude: feature.geometry.coordinates[0],
-    longitude: feature.geometry.coordinates[1],
+    longitude: feature.geometry.coordinates[0],
+    latitude: feature.geometry.coordinates[1],
     departement: feature.properties.context.split(",")[0],
     value: this.getFeatureValueText(feature),
+    city_code: feature.properties.citycode,
+    city_name: feature.properties.city,
     ...feature.properties,
   })
 
@@ -52,7 +58,7 @@ class PlacesInput {
   setDependentInputs = suggestion =>
     this.dependentInputs.forEach(({ name, elt }) => {
       elt.value = suggestion[name] || ""
-      elt.dispatchEvent(new Event("change")) // not triggered automatically
+      elt.dispatchEvent(new CustomEvent("change")) // not triggered automatically
     })
 
   suggestionTemplate = suggestion => {

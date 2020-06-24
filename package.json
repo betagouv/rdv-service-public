@@ -3,11 +3,11 @@
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.13.0",
-    "@fullcalendar/core": "^4.1.0",
-    "@fullcalendar/daygrid": "^4.1.0",
-    "@fullcalendar/interaction": "^4.3.0",
-    "@fullcalendar/list": "^4.1.0",
-    "@fullcalendar/timegrid": "^4.1.0",
+    "@fullcalendar/core": "^4.4.2",
+    "@fullcalendar/daygrid": "^4.4.2",
+    "@fullcalendar/interaction": "^4.4.2",
+    "@fullcalendar/list": "^4.4.2",
+    "@fullcalendar/timegrid": "^4.4.2",
     "@rails/ujs": "^6.0.0",
     "@rails/webpacker": "^5.1.1",
     "@sentry/browser": "^5.10.2",
@@ -17,6 +17,7 @@
     "bowser": "^2.7.0",
     "chart.js": "^2.9.3",
     "chartkick": "^3.2.0",
+    "custom-event-polyfill": "^1.0.7",
     "flatpickr": "^4.6.3",
     "fstream": "^1.0.12",
     "holderjs": "^2.9.6",
@@ -35,7 +36,8 @@
     "selectize": "^0.12.6",
     "serialize-javascript": "^2.1.1",
     "stimulus": "^1.1.1",
-    "turbolinks": "^5.2.0"
+    "turbolinks": "^5.2.0",
+    "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
     "webpack-dev-server": "^3.3.1"
