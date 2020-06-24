@@ -1,4 +1,6 @@
 module WelcomeHelper
+  include SectorisationUtils
+
   def root_path?
     root_path == request.path
   end
@@ -49,5 +51,11 @@ module WelcomeHelper
 
   def departement_params
     (controller_name == 'welcome' && params[:departement]) || (params[:search] && params[:search][:departement])
+  end
+
+  def sectorisation_hint(zone, organisations, departement)
+    return nil if !sectorisation_enabled?(departement) || zone.nil?
+
+    "Sectorisation : Commune #{@zone.city_name} → #{organisations.pluck(:name).join(', ')}"
   end
 end

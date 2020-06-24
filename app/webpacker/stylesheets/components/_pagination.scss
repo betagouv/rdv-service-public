@@ -1,0 +1,11 @@
+nav.pagination {
+  display: flex;
+  justify-content: center;
+  padding: 0.8rem;
+  &::before {
+    content: "Page "
+  }
+}
+nav.pagination > span {
+  margin-left: 0.5rem;
+}

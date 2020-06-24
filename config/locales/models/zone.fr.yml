@@ -1,0 +1,12 @@
+fr:
+  activerecord:
+    models:
+      zone: Zone
+    attributes:
+      zone:
+        name: Nom
+        city_name: Nom de la commune
+        city_code: Code de la commune (Code INSEE)
+        level: Niveau
+        levels:
+          city: Ville

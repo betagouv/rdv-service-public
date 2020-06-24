@@ -1,0 +1,23 @@
+- content_for :title do
+  | Sectorisation - Organisations
+
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-body
+        p Les identifiants affichés ci-dessous sont ceux à utiliser dans les fichiers d'imports de zones.
+        = form_with url: departement_organisations_path(current_departement), method: :patch, data: { remote: false } do |f|
+          - @organisations_by_departement.each do |departement, organisations|
+            h4 Département #{departement}
+            - organisations.each do |organisation|
+              h5 Organisation #{organisation.name}
+              - if current_agent.organisation_ids.include?(organisation.id)
+                = render partial: 'layouts/model_errors', locals: { model: organisation }
+                = simple_fields_for "organisations[]", organisation do |ff|
+                  = ff.input :id, as: :hidden, wrapper: false
+                  = ff.input :human_id, label: false, input_html: { autocomplete: 'off' }
+              - else
+                p.text-danger Vous n'avez pas les droits pour éditer cette Organisation, ni pour y importer des Zones
+                .form-group
+                  = text_field_tag :org, organisation.human_id || "N/A", class: 'form-control string', disabled: 'disabled'
+          .text-right= f.submit value: "Mettre à jour", class: 'btn btn-primary'

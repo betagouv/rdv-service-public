@@ -1,12 +1,14 @@
 #search_form
   = simple_form_for :search, url: @action_url.present? ? @action_url : root_path do |f|
-    = f.input :departement, as: :hidden, input_html: { value: @departement }, wrapper_html: { class: 'mb-0' }
+    = f.input :departement, as: :hidden, input_html: { value: @departement }
+    = f.input :city_code, as: :hidden, input_html: { value: @city_code }
     = f.input :latitude, as: :hidden, input_html: {value: @latitude}
     = f.input :longitude, as: :hidden, input_html: {value: @longitude}
     - if @where.present?
       .form-row.d-flex.justify-content-md-center.mb-2
-        .col-lg-9= f.input :where, label: false, readonly: true, input_html: { value: @where, class: "form-control-lg" }, wrapper_html: { class: 'mb-1 mb-lg-0' }
-        .col-lg-3.align-self-end= link_to "Modifier l'adresse", root_path, class: 'btn btn-light btn-lg w-100 text-center'
+        .col-lg-9
+          = f.input :where, label: false, readonly: true, input_html: { value: @where, class: "form-control-lg" }, wrapper_html: { class: 'mb-1 mb-lg-0' }, hint: sectorisation_hint(@zone, @organisations, @departement)
+        .col-lg-3= link_to "Modifier l'adresse", root_path, class: 'btn btn-light btn-lg w-100 text-center'
 
       - if @service.present? && @motif_names.any?
         .form-row.d-flex.justify-content-md-center.mb-2
@@ -34,7 +36,12 @@
               span>= urgency_number
           - else
             h2.text-white.text-center
-              - if @organisations.any? && urgency_number
+              - if @organisations_departement.any? && sectorisation_enabled?(@departement)
+                span Votre adresse n'est pas disponible à la prise de RDV en ligne
+                - if urgency_number
+                  span>, veuillez contacter le
+                  span>= urgency_number
+              - elsif @organisations_departement.any? && urgency_number
                 span> Votre département n'est pas disponible à la prise de RDV en ligne, veuillez contacter le
                 span>= urgency_number
               - else
