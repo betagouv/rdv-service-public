@@ -1,4 +1,4 @@
-class TwilioTextMessenger
+class SendTransactionalSmsService < BaseService
   include Rails.application.routes.url_helpers
 
   attr_reader :user, :rdv, :from, :type
@@ -8,21 +8,20 @@ class TwilioTextMessenger
     @user = user
     @rdv = rdv
     @options = options
-    @from = ENV["TWILIO_PHONE_NUMBER"]
+    @from = 'RdvSoli'
   end
 
-  def send_sms
-    twilio_client = Twilio::REST::Client.new
+  def perform
+    sib_instance = SibApiV3Sdk::TransactionalSMSApi.new
+
     body = send(@type)
-    begin
-      twilio_client.messages.create(
-        from: @from,
-        to: @user.formatted_phone,
-        body: replace_special_chars(body)
-      )
-    rescue StandardError => e
-      e
-    end
+    transac_sms = SibApiV3Sdk::SendTransacSms.new(
+      sender: @from,
+      recipient: @user.formatted_phone,
+      content: replace_special_chars(body),
+      tag: "#{@rdv.organisation.id}_#{@type}"
+    )
+    sib_instance.send_transac_sms(transac_sms)
   end
 
   private
@@ -39,7 +38,7 @@ class TwilioTextMessenger
               else
                 "#{@rdv.address}\n"
               end
-    message += "Infos et annulation: #{rdvs_shorten_url(host: ENV["HOST"])}"
+    message += "Infos et annulation: #{rdvs_shorten_url(host: ENV['HOST'])}"
     message += " / #{@rdv.organisation.phone_number}" if @rdv.organisation.phone_number
     message
   end
@@ -76,7 +75,7 @@ class TwilioTextMessenger
 
   def file_attente
     message = "Des créneaux se sont libérés plus tôt.\n"
-    message += "Cliquez pour voir les disponibilités : #{users_creneaux_index_url(rdv_id: @rdv.id, host: ENV["HOST"])}"
+    message += "Cliquez pour voir les disponibilités : #{users_creneaux_index_url(rdv_id: @rdv.id, host: ENV['HOST'])}"
     message
   end
 
