@@ -9,7 +9,7 @@ describe Notifications::Rdv::RdvUpcomingReminderService, type: :service do
       .with(rdv, user1)
       .and_return(double(deliver_later: nil))
     expect(SendTransactionalSmsJob).to receive(:perform_later)
-      .with(:reminder, rdv, user1)
+      .with(:reminder, rdv.id, user1.id)
     # .and_call_original
     subject
   end

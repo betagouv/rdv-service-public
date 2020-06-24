@@ -12,7 +12,7 @@ describe Notifications::Rdv::RdvCancelledByAgentService, type: :service do
 
   it "calls RdvMailer to send email to user" do
     expect(SendTransactionalSmsJob).to receive(:perform_later)
-      .with(:rdv_cancelled, rdv, user1)
+      .with(:rdv_cancelled, rdv.id, user1.id)
     subject
   end
 end
