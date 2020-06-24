@@ -6,11 +6,9 @@ class LieuxController < ApplicationController
     return redirect_to new_user_session_path, flash: { alert: I18n.t("motifs.follow_up_need_signed_user", motif_name: @motif_name) } if follow_up_rdv_and_offline_user?
 
     @next_availability_by_lieux = {}
-    unless online_bookings_suspended_because_of_corona?(@departement)
-      @lieux.each do |lieu|
-        # TODO: au lieux de current_user.agents, il faudrait sans doute filtrer sur les agents du service lie au motif, de la meme organisation
-        @next_availability_by_lieux[lieu.id] = FindAvailabilityService.perform_with(@motif_name, lieu, Date.today, **options_to_build_creneaux)
-      end
+    @lieux.each do |lieu|
+      # TODO: au lieux de current_user.agents, il faudrait sans doute filtrer sur les agents du service lie au motif, de la meme organisation
+      @next_availability_by_lieux[lieu.id] = FindAvailabilityService.perform_with(@motif_name, lieu, Date.today, **options_to_build_creneaux)
     end
 
     @lieux = @lieux.sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f) }
@@ -32,9 +30,7 @@ class LieuxController < ApplicationController
 
     @next_availability = nil
 
-    if online_bookings_suspended_because_of_corona?(@departement)
-      @creneaux = []
-    elsif follow_up_rdv_without_referent?
+    if follow_up_rdv_without_referent?
       @referent_missing = "Vous ne semblez pas bénéficier d’un accompagnement ou d’un suivi, merci de choisir un autre motif ou de contacter la MDS au #{@lieu.organisation.phone_number}".html_safe
       @creneaux = []
     else
