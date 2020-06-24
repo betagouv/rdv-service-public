@@ -38,6 +38,7 @@ class Rdv < ApplicationRecord
     end
   }
   scope :default_stats_period, -> { where(created_at: Stat::DEFAULT_RANGE) }
+  scope :with_agent, ->(agent) { joins(:agents).where(agents: { id: agent.id }) }
 
   after_commit :reload_uuid, on: :create
 
