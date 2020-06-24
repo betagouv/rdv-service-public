@@ -11,7 +11,7 @@ describe Notifications::Rdv::RdvCancelledByAgentService, type: :service do
   end
 
   it "calls RdvMailer to send email to user" do
-    expect(SmsSenderJob).to receive(:perform_later)
+    expect(SendTransactionalSmsJob).to receive(:perform_later)
       .with(:rdv_cancelled, rdv, user1)
     subject
   end
