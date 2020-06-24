@@ -5,7 +5,7 @@ class Agents::Departements::OrganisationsController < AgentDepartementAuthContro
       .to_a
       .concat(inaccessible_organisations)
       .group_by(&:departement)
-    @organisations_by_departement.values.flatten.each { authorize _1 }
+    skip_authorization
   end
 
   def update
