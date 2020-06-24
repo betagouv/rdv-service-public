@@ -72,7 +72,8 @@ class CalendarRdvSolidarites {
       minTime: '07:00:00',
       maxTime: '20:00:00',
       datesRender: this.datesRender,
-      eventRender: this.eventRender
+      eventRender: this.eventRender,
+      eventMouseLeave: (info) => $(info.el).tooltip('hide') // extra security
     });
   }
 
