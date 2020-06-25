@@ -129,6 +129,10 @@ class Rdv < ApplicationRecord
     [responsibles, users].flatten.select(&:address).first || users.first
   end
 
+  def for_service_social?
+    agents.select { |a| a.service.service_social? }.any?
+  end
+
   private
 
   def virtual_attributes_for_paper_trail
