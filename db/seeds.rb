@@ -202,7 +202,7 @@ user_org_paris_nord_patricia = User.new(
 
 user_org_paris_nord_patricia.skip_confirmation!
 user_org_paris_nord_patricia.save!
-user_org_paris_nord_patricia.profile_for(org1).update!(notes: "des notes de test", logement: 2)
+user_org_paris_nord_patricia.profile_for(org_paris_nord).update!(notes: "des notes de test", logement: 2)
 
 user_org_paris_nord_lea = User.new(
   first_name: "Léa",
@@ -215,7 +215,7 @@ user_org_paris_nord_lea = User.new(
 
 user_org_paris_nord_lea.skip_confirmation!
 user_org_paris_nord_lea.save!
-user_org_paris_nord_lea.profile_for(org1).update!(notes: "des notes de test", logement: 2)
+user_org_paris_nord_lea.profile_for(org_paris_nord).update!(notes: "des notes de test", logement: 2)
 
 user_org_paris_nord_jean = User.new(
   first_name: "Jean",
@@ -228,7 +228,7 @@ user_org_paris_nord_jean = User.new(
 
 user_org_paris_nord_jean.skip_confirmation!
 user_org_paris_nord_jean.save!
-user_org_paris_nord_jean.profile_for(org1).update!(notes: "des notes de test", logement: 2)
+user_org_paris_nord_jean.profile_for(org_paris_nord).update!(notes: "des notes de test", logement: 2)
 
 # AGENTS
 
