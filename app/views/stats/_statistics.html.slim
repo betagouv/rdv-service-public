@@ -4,6 +4,10 @@
   .card-body
     = render 'stats/rdv_counters', rdvs: stats.rdvs_for_default_range
 
+    = link_to organisation_rdvs_path(current_organisation, format: "xls"), class: "btn btn-link" do
+      i.fa.fa-download>
+      | Télécharger un export de l'ensemble des RDV de l'organisation
+
 .card.mb-5
   .card-body
     h4.card-title.mb-3 RDV créés (#{stats.rdvs_for_default_range.count})
