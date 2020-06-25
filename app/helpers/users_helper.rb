@@ -23,9 +23,11 @@ module UsersHelper
     end
   end
 
-  def user_details(user, *attributes, li_class: nil)
+  def user_details(user, *attributes, li_class: nil, show_empty: true)
     displayable_user = DisplayableUser.new(user)
     attributes.map do |attr_name|
+      next unless show_empty || displayable_user.send(attr_name).present?
+
       content_tag(:li, class: li_class) do
         content_tag(:strong, "#{t("activerecord.attributes.user.#{attr_name}")} : ") +
           content_tag(:span, displayable_user.send(attr_name))

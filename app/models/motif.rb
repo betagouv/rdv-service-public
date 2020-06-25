@@ -8,6 +8,8 @@ class Motif < ApplicationRecord
   enum location_type: [:public_office, :phone, :home]
   validates :name, presence: true, uniqueness: { scope: [:organisation, :location_type], conditions: -> { where(deleted_at: nil) }, message: "est déjà utilisé pour un motif avec le même type de RDV" }
 
+  delegate :service_social?, to: :service
+
   validates :color, :service, :default_duration_in_min, :min_booking_delay, :max_booking_delay, presence: true
   validates :min_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
   validates :max_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
