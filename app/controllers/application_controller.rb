@@ -25,12 +25,6 @@ class ApplicationController < ActionController::Base
     respond_with *args, options, &blk
   end
 
-  def online_bookings_suspended_because_of_corona?(departement)
-    Flipflop.corona? &&
-      ENV['CORONA_SUSPENDED_DEPARTMENT_LIST']&.split&.include?(departement)
-  end
-  helper_method :online_bookings_suspended_because_of_corona?
-
   def demo?
     ENV['HOST']&.match(/demo/)
   end
