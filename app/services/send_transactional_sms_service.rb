@@ -19,7 +19,7 @@ class SendTransactionalSmsService < BaseService
       sender: @from,
       recipient: @user.formatted_phone,
       content: replace_special_chars(body),
-      tag: "#{@rdv.organisation.id}_#{@type}"
+      tag: [ENV['APP'], @rdv.organisation.id, @type].join(" ")
     )
     sib_instance.send_transac_sms(transac_sms)
   end
