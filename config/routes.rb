@@ -147,6 +147,9 @@ Rails.application.routes.draw do
     get v => "static_pages##{k}"
   end
 
+  get 'france_connect/login' => "france_connect#login"
+  get 'france_connect/callback' => "france_connect#callback"
+
   get 'ehpads' => 'ehpads#index'
   post 'ehpads' => 'ehpads#search'
 

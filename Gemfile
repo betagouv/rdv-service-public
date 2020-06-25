@@ -26,6 +26,7 @@ gem 'devise', '~> 4.7'
 gem 'devise_invitable', '~> 2.0'
 gem 'devise-async', '~> 1.0'
 gem 'omniauth-github', '~> 1.4'
+gem 'openid_connect'
 gem 'pundit', '~> 2.0'
 
 # Jobs
