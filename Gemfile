@@ -53,7 +53,7 @@ gem 'icalendar', '~> 2.5'
 gem 'premailer-rails'
 
 # SMS
-gem 'twilio-ruby', '~> 5.29.1'
+gem 'sib-api-v3-sdk'
 
 # Web Hook
 gem 'blueprinter'

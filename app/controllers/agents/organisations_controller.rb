@@ -6,12 +6,11 @@ class Agents::OrganisationsController < AgentAuthController
   before_action :set_organisation, except: :index
 
   def index
-    @organisations = policy_scope(Organisation)
-    if @organisations.count == 1
-      redirect_to organisation_home_path(@organisations.first)
-    else
-      render layout: 'registration'
-    end
+    return redirect_to organisation_home_path(policy_scope(Organisation).first) \
+      if policy_scope(Organisation).count == 1
+
+    @organisations_by_departement = policy_scope(Organisation).group_by(&:departement)
+    render layout: 'registration'
   end
 
   def show
@@ -32,6 +31,6 @@ class Agents::OrganisationsController < AgentAuthController
   private
 
   def organisation_params
-    params.require(:organisation).permit(:name, :horaires, :phone_number)
+    params.require(:organisation).permit(:name, :horaires, :phone_number, :human_id)
   end
 end

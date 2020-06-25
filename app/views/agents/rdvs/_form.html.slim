@@ -5,7 +5,11 @@
     .col-md-6= datetime_input(f, :starts_at)
     .col-md-6= f.input :duration_in_min
   - if rdv.motif.public_office?
-    = f.association :lieu, collection: policy_scope(Lieu), label_method: :full_name, include_blank: false
+    = f.association :lieu, \
+      collection: policy_scope(Lieu), \
+      label_method: :full_name, \
+      include_blank: false, \
+      input_html: { class: "select2-input" }
   - elsif rdv.motif.home?
     = f.input :address, label: "Lieu (RDV à domicile)", disabled: true
   = f.association :agents, collection: rdv.organisation.agents.can_perform_motif(rdv.motif), label_method: :full_name_and_service, input_html: { multiple: true, class: 'select2-input' }

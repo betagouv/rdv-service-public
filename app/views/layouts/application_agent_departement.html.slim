@@ -1,0 +1,54 @@
+- content_for :side_nav_menu
+  ul.metismenu.side-nav.mt-5
+    li.side-nav-title Sectorisation du #{current_departement}
+    li.side-nav-item
+      = link_to \
+        "Instructions...",
+        departement_setup_checklist_path(current_departement), \
+        class: 'side-nav-link', \
+        data: { route: 'agents/departements/setup_checklists#show' }
+    li.side-nav-item
+      = link_to \
+        departement_zones_path(current_departement), \
+        class: 'side-nav-link', \
+        data: { route: 'agents/departements/zones#index' } \
+      do
+        i.fa.fa-table
+        | Zones
+    li.side-nav-item
+      = link_to \
+        new_departement_zone_import_path(current_departement), \
+        class: 'side-nav-link', \
+        data: { route: 'agents/departements/zone_imports#new' } \
+      do
+        i.fa.fa-download
+        | Importer fichier
+    li.side-nav-item
+      = link_to \
+        departement_organisations_path(current_departement), \
+        class: 'side-nav-link', \
+        data: { route: 'agents/departements/organisations#show' } \
+      do
+        i.fa.fa-building
+        | Organisations
+    li.side-nav-item
+      = link_to \
+        departement_zones_path(current_departement, view: "map"), \
+        class: 'side-nav-link', \
+        data: { route: 'agents/departements/zones#index?view=map' } \
+      do
+        i.fa.fa-map
+        | Carte
+  ul.metismenu.side-nav
+    li.side-nav-item
+      - if policy_scope(Organisation).count > 1
+        = link_to organisations_path, class: 'side-nav-link' do
+          span> Liste organisations
+          i.fa.fa-sign-out-alt>
+      - else
+        - organisation = policy_scope(Organisation).first
+        = link_to organisation_home_path(organisation), class: 'side-nav-link' do
+            span>= organisation.name
+            i.fa.fa-sign-out-alt>
+
+= render template: "layouts/application_agent"

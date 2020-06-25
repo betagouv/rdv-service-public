@@ -1,4 +1,6 @@
 module WelcomeHelper
+  include SectorisationUtils
+
   def root_path?
     root_path == request.path
   end
@@ -24,6 +26,8 @@ module WelcomeHelper
   end
 
   def urgency_number
+    return nil unless urgency_number_raw.present?
+
     human, raw = urgency_number_raw
     link_to human, "tel:#{raw}", class: 'urgency-number'
   end
@@ -41,7 +45,7 @@ module WelcomeHelper
     when '22'
       ['02.96.60.86.86', "+330296608686"]
     when '80'
-      ['06.47.46.19.86', "+330647461986"]
+      ['03.22.71.80.80', "+33322718080"]
     when '55'
       ['03.29.80.32.34', "+330329803234"]
     end
@@ -49,5 +53,11 @@ module WelcomeHelper
 
   def departement_params
     (controller_name == 'welcome' && params[:departement]) || (params[:search] && params[:search][:departement])
+  end
+
+  def sectorisation_hint(zone, organisations, departement)
+    return nil if !sectorisation_enabled?(departement) || zone.nil?
+
+    "Sectorisation : Commune #{@zone.city_name} → #{organisations.pluck(:name).join(', ')}"
   end
 end
