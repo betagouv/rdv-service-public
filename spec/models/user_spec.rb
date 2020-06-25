@@ -89,20 +89,18 @@ describe User, type: :model do
     end
   end
 
-  describe "#set_organisation_ids_from_responsible" do
+  describe "#set_organisations_from_responsible" do
     let(:user) { create(:user, organisations: [create(:organisation), create(:organisation)]) }
     let(:relative) { create(:user, responsible_id: responsible_id) }
 
     describe "when there is no responsible" do
       let(:responsible_id) { nil }
-
-      it { expect(relative.organisation_ids).not_to eq(user.organisation_ids) }
+      it { expect(relative.organisations).not_to eq(user.organisations) }
     end
 
     describe "when user is responsible" do
       let(:responsible_id) { user.id }
-
-      it { expect(relative.organisation_ids).to eq(user.organisation_ids) }
+      it { expect(relative.organisations.sort).to eq(user.organisations.sort) }
     end
   end
 
@@ -123,25 +121,26 @@ describe User, type: :model do
     context 'belongs to multiple organisations and with organisation given' do
       let(:user) { create(:user, :with_multiple_organisations) }
       let(:deleted_org) { user.organisations.first }
-      it { expect(user.organisation_ids).not_to include(deleted_org.id) }
+      it { expect(user.organisations).not_to include(deleted_org) }
+
       it "remove the correct organisation" do
         left_orgs_ids = Organisation.where.not(id: deleted_org.id).pluck(:id)
-        expect(user.organisation_ids).to match_array(left_orgs_ids)
+        expect(user.organisations.pluck(:id)).to match_array(left_orgs_ids)
       end
       it { expect(user.deleted_at).to be_nil }
     end
 
     context 'belongs to one organisation and with organisation given' do
-      let(:user) { create(:user) }
+      let(:user) { create(:user, organisations: [create(:organisation)]) }
       let(:deleted_org) { user.organisations.first }
-      it { expect(user.organisation_ids).to be_empty }
       it { expect(user.deleted_at).to eq(now) }
+      it { expect(user.organisations).to be_empty }
     end
 
     context 'with no organisation given' do
       let(:user) { create(:user, :with_multiple_organisations) }
       let(:deleted_org) { nil }
-      it { expect(user.organisation_ids).to be_empty }
+      it { expect(user.organisations).to be_empty }
       it { expect(user.deleted_at).not_to be_nil }
       it { expect(user.deleted_at).to eq(now) }
     end
@@ -150,35 +149,35 @@ describe User, type: :model do
       let(:user) { create(:user, responsible_id: create(:user).id) }
       let(:deleted_org) { nil }
 
-      it { expect(user.organisation_ids).to be_empty }
+      it { expect(user.organisations).to be_empty }
       it { expect(user.deleted_at).to eq(now) }
 
       context "and has multiple organisations" do
         let(:user) { create(:user, :with_multiple_organisations, responsible_id: create(:user).id) }
         let(:deleted_org) { user.organisations.first }
 
-        it { expect(user.organisation_ids).to be_empty }
+        it { expect(user.organisations).to be_empty }
         it { expect(user.deleted_at).to eq(now) }
       end
     end
 
     context "when user has a relative" do
-      let(:user) { create(:user) }
-      let!(:relative) { create(:user, responsible: user) }
+      let(:user) { create(:user, organisations: [create(:organisation)]) }
+      let!(:relative) { create(:user, responsible: user, organisations: user.organisations) }
 
       let(:deleted_org) { nil }
 
-      it { expect(user.reload.organisation_ids).to be_empty }
-      it { expect(user.reload.deleted_at).to eq(now) }
-      it { expect(relative.reload.organisation_ids).to be_empty }
+      it { expect(user.organisations).to be_empty }
+      it { expect(user.deleted_at).to eq(now) }
+      it { expect(relative.reload.organisations).to be_empty }
       it { expect(relative.reload.deleted_at).to eq(now) }
 
       context "and belong to an organisation" do
         let(:deleted_org) { user.organisations.first }
 
-        it { expect(user.reload.organisation_ids).to be_empty }
+        it { expect(user.organisations).to be_empty }
         it { expect(user.reload.deleted_at).to eq(now) }
-        it { expect(relative.reload.organisation_ids).to be_empty }
+        it { expect(relative.reload.organisations).to be_empty }
         it { expect(relative.reload.deleted_at).to eq(now) }
       end
     end
@@ -204,5 +203,22 @@ describe User, type: :model do
     it { expect(relative1.available_rdvs(organisation1.id)).to match_array relative1.rdvs }
     it { expect(responsible2.available_rdvs(organisation1.id)).to match_array responsible2.rdvs }
     it { expect(responsible1.available_rdvs(organisation2.id)).to be_empty }
+  end
+
+  describe "#profile_for" do
+    it "renvoie le profile de l'organisation passée en paramètre" do
+      profile = create(:user_profile)
+      organisation = profile.organisation
+      user = profile.user
+      expect(user.profile_for(organisation)).to eq(profile)
+    end
+
+    it "avec plusieurs organisation, renvoie le profile de l'organisation passé en paramètre" do
+      profile = create(:user_profile)
+      organisation = profile.organisation
+      user = profile.user
+      create(:user_profile, user: user)
+      expect(user.profile_for(organisation)).to eq(profile)
+    end
   end
 end

@@ -59,10 +59,6 @@ class DisplayableUser
     User.human_enum_name(:family_situation, @user.family_situation)
   end
 
-  def logement
-    User.human_enum_name(:logement, @user.logement)
-  end
-
   def phone_number
     @user.responsible_phone_number
   end

@@ -1,0 +1,15 @@
+fr:
+  activerecord:
+    models:
+      user_profile: Profil Usager
+    attributes:
+      user_profile:
+        notes: Notes
+        logement: Logement
+        logements:
+          sdf: Sans domicile fixe
+          heberge: Hébergé
+          locataire: Locataire
+          en_accession_propriete: En accession à la propriété
+          proprietaire: Propriétaire
+          autre: Autre

@@ -1,7 +1,7 @@
 describe "Agent can CRUD users" do
   let!(:agent) { create(:agent) }
-  let!(:user) { create(:user) }
-  let(:new_user) { build(:user) }
+  let!(:user) { create(:user, organisations: [Organisation.first || create(:organisation)]) }
+  let(:new_user) { build(:user, organisations: [Organisation.first || create(:organisation)]) }
 
   before do
     login_as(agent, scope: :agent)

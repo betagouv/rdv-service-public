@@ -9,7 +9,9 @@ class User < ApplicationRecord
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
 
-  has_and_belongs_to_many :organisations, -> { distinct }
+  has_many :user_profiles
+  has_many :organisations, through: :user_profiles
+
   has_many :rdvs_users, dependent: :destroy
   has_many :rdvs, through: :rdvs_users
   has_and_belongs_to_many :agents
@@ -19,13 +21,14 @@ class User < ApplicationRecord
 
   enum caisse_affiliation: { aucune: 0, caf: 1, msa: 2 }
   enum family_situation: { single: 0, in_a_relationship: 1, divorced: 2 }
-  enum logement: { sdf: 0, heberge: 1, en_accession_propriete: 2, proprietaire: 3, autre: 4, locataire: 5 }
 
   validates :last_name, :first_name, presence: true
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :phone_number, phone: { allow_blank: true }
   validate :birth_date_validity
   validate :user_is_not_duplicate, on: :create
+
+  accepts_nested_attributes_for :user_profiles
 
   pg_search_scope :search_by_name_or_email, against: [:first_name, :last_name, :birth_name, :email],
                   ignoring: :accents,
@@ -84,7 +87,7 @@ class User < ApplicationRecord
         u.update(deleted_at: now) if u.organisations.empty?
       end
     else
-      user_with_relatives.each { |u| u.update(organisation_ids: [], deleted_at: now) }
+      user_with_relatives.each { |u| u.update(organisations: [], deleted_at: now) }
     end
   end
 
@@ -156,6 +159,10 @@ class User < ApplicationRecord
 
   def responsible_address
     relative? ? responsible.address : address
+  end
+
+  def profile_for(organisation)
+    user_profiles.find_by(organisation: organisation)
   end
 
   protected

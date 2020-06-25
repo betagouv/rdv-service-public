@@ -4,8 +4,8 @@ describe "Agent can create a Rdv with wizard" do
   let!(:agent) { create(:agent, first_name: "Alain") }
   let!(:agent2) { create(:agent, first_name: "Robert") }
   let!(:motif) { create(:motif) }
-  let!(:user) { create(:user) }
   let!(:lieu) { create(:lieu) }
+  let!(:user) { create(:user, organisations: [Organisation.first || create(:organisation)]) }
 
   before do
     travel_to(Time.zone.local(2019, 10, 2))

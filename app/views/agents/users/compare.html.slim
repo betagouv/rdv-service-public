@@ -72,11 +72,6 @@
             p
               strong= @user_to_compare.number_of_children
 
-        p.mb-1 Logement
-        p
-          - if @user_to_compare.logement
-            strong= t("activerecord.attributes.user.logements.#{@user_to_compare.logement}")
-
         .text-center
           - if @user_not_in_organisation
             = link_to "Associer cet usager à l'organisation #{current_organisation.name}", link_to_organisation_organisation_user_path(current_organisation, @user_to_compare), class: "btn btn-warning"

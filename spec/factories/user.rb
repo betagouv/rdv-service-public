@@ -9,16 +9,13 @@ FactoryBot.define do
     last_name { Faker::Name.last_name.upcase }
     phone_number { Faker::PhoneNumber.phone_number }
     birth_date { Faker::Date.between(from: 80.years.ago, to: Date.today) }
-    notes { "Notes libres" }
     address { "20 avenue de Ségur, Paris" }
-    organisations { [Organisation.first || create(:organisation)] }
     password { "12345678" }
     password_confirmation { "12345678" }
     confirmed_at { Time.zone.now }
     caisse_affiliation { 'caf' }
     affiliation_number { '39012093812038' }
     family_situation { 'divorced' }
-    logement { 'sdf' }
     number_of_children { 12 }
     responsible { nil }
     trait :unconfirmed do

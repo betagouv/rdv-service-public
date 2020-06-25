@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_08_122449) do
+ActiveRecord::Schema.define(version: 2020_06_09_203050) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -213,14 +213,6 @@ ActiveRecord::Schema.define(version: 2020_06_08_122449) do
     t.string "human_id"
   end
 
-  create_table "organisations_users", id: false, force: :cascade do |t|
-    t.bigint "organisation_id"
-    t.bigint "user_id"
-    t.index ["organisation_id", "user_id"], name: "index_organisations_users_on_organisation_id_and_user_id", unique: true
-    t.index ["organisation_id"], name: "index_organisations_users_on_organisation_id"
-    t.index ["user_id"], name: "index_organisations_users_on_user_id"
-  end
-
   create_table "plage_ouvertures", force: :cascade do |t|
     t.bigint "agent_id"
     t.string "title"
@@ -278,6 +270,16 @@ ActiveRecord::Schema.define(version: 2020_06_08_122449) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "user_profiles", force: :cascade do |t|
+    t.bigint "organisation_id"
+    t.bigint "user_id"
+    t.text "notes"
+    t.integer "logement"
+    t.index ["organisation_id", "user_id"], name: "index_user_profiles_on_organisation_id_and_user_id", unique: true
+    t.index ["organisation_id"], name: "index_user_profiles_on_organisation_id"
+    t.index ["user_id"], name: "index_user_profiles_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
@@ -307,11 +309,11 @@ ActiveRecord::Schema.define(version: 2020_06_08_122449) do
     t.string "affiliation_number"
     t.integer "family_situation"
     t.integer "number_of_children"
-    t.integer "logement"
+    t.integer "old_logement"
     t.bigint "responsible_id"
     t.datetime "deleted_at"
     t.string "birth_name"
-    t.text "notes"
+    t.text "old_notes"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
