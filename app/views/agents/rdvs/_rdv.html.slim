@@ -21,7 +21,7 @@
                     | (proche de #{link_to(user.responsible.full_name, organisation_user_path(current_organisation, user.responsible))})
                   ul.list-unstyled
                     = user_details(user, :birth_date, :phone_number, :address, :email)
-                    - if rdv.for_service_social?
+                    - if rdv.service_social?
                       = user_details(user, :logement, :number_of_children, :family_situation, :affiliation_number, :caisse_affiliation, show_empty: false)
     - else
       = render 'agents/rdvs/rdv_details', rdv: rdv

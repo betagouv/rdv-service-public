@@ -18,7 +18,7 @@ class Rdv < ApplicationRecord
   enum status: { unknown: 0, waiting: 1, seen: 2, excused: 3, notexcused: 4 }
   enum created_by: { agent: 0, user: 1, file_attente: 2 }, _prefix: :created_by
 
-  delegate :home?, :phone?, :public_office?, :reservable_online?, to: :motif
+  delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, to: :motif
 
   validates :users, :organisation, :motif, :starts_at, :duration_in_min, :agents, presence: true
 
@@ -127,10 +127,6 @@ class Rdv < ApplicationRecord
   def user_for_home_rdv
     responsibles = users.where.not(responsible_id: [nil])
     [responsibles, users].flatten.select(&:address).first || users.first
-  end
-
-  def for_service_social?
-    agents.select { |a| a.service.service_social? }.any?
   end
 
   private
