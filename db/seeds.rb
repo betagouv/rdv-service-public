@@ -48,8 +48,8 @@ Organisation.set_callback(:create, :after, :notify_admin_organisation_created)
 
 # SERVICES
 
-service_pmi = Service.create!(name: "Protection Maternelle Infantile", short_name: "PMI")
-service_social = Service.create!(name: "Service Social", short_name: "Service Social")
+service_pmi = Service.create!(name: "PMI (Protection Maternelle Infantile)", short_name: "PMI")
+service_social = Service.create!(name: "Service social", short_name: "Service Social")
 _service_secretariat = Service.create!(name: "Secrétariat", short_name: "Secrétariat")
 _service_ehpad = Service.create!(name: "EHPAD", short_name: "EHPAD")
 
