@@ -90,17 +90,32 @@ describe User, type: :model do
   end
 
   describe "#set_organisations_from_responsible" do
-    let(:user) { create(:user, organisations: [create(:organisation), create(:organisation)]) }
-    let(:relative) { create(:user, responsible_id: responsible_id) }
-
-    describe "when there is no responsible" do
-      let(:responsible_id) { nil }
-      it { expect(relative.organisations).not_to eq(user.organisations) }
+    it "no changes without responsible" do
+      responsive = create(:user, organisations: [create(:organisation), create(:organisation)])
+      relative = create(:user, responsible_id: nil)
+      expect(relative.organisations).not_to eq(responsive.organisations)
     end
 
-    describe "when user is responsible" do
-      let(:responsible_id) { user.id }
-      it { expect(relative.organisations.sort).to eq(user.organisations.sort) }
+    it "when user is responsible" do
+      responsive = create(:user, organisations: [create(:organisation), create(:organisation)])
+      relative = create(:user, responsible: responsive)
+      expect(relative.organisations.sort).to eq(responsive.organisations.sort)
+    end
+  end
+
+  describe "#soft_delete avec des it" do
+    it "and has multiple organisations" do
+      orga1 = create(:organisation)
+      orga2 = create(:organisation)
+      responsible = create(:user, organisations: [orga1, orga2])
+      relative = create(:user, responsible: responsible)
+
+      expect(relative.organisations.count).to eq(2)
+
+      responsible.soft_delete(orga1)
+
+      expect(relative.reload.organisations).to eq(responsible.reload.organisations)
+      expect(relative.reload.deleted_at).to eq(nil)
     end
   end
 
@@ -151,14 +166,6 @@ describe User, type: :model do
 
       it { expect(user.organisations).to be_empty }
       it { expect(user.deleted_at).to eq(now) }
-
-      context "and has multiple organisations" do
-        let(:user) { create(:user, :with_multiple_organisations, responsible_id: create(:user).id) }
-        let(:deleted_org) { user.organisations.first }
-
-        it { expect(user.organisations).to be_empty }
-        it { expect(user.deleted_at).to eq(now) }
-      end
     end
 
     context "when user has a relative" do
