@@ -176,7 +176,12 @@ class User < ApplicationRecord
   end
 
   def set_organisation_ids_from_responsible
-    self.organisation_ids = responsible.organisation_ids if responsible && (responsible.user_profiles.map(&:organisation_id).sort != user_profiles.map(&:organisation_id).sort)
+    organisations.concat(responsible.organisations - organisations) if organisations_mismatch?
+  end
+
+  def organisations_mismatch?
+    responsible &&
+      responsible.user_profiles.map(&:organisation_id).sort != user_profiles.map(&:organisation_id).sort
   end
 
   def set_email_to_null_if_blank
