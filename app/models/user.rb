@@ -176,7 +176,15 @@ class User < ApplicationRecord
   end
 
   def set_organisation_ids_from_responsible
-    organisations.concat(responsible.organisations - organisations) if organisations_mismatch?
+    return unless organisations_mismatch?
+
+    missing_organisation_ids.each do |missing_organisation_id|
+      user_profiles.build(organisation_id: missing_organisation_id)
+    end
+  end
+
+  def missing_organisation_ids
+    responsible.user_profiles.map(&:organisation_id) - user_profiles.map(&:organisation_id)
   end
 
   def organisations_mismatch?
