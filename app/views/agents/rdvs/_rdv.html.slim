@@ -22,6 +22,12 @@
                   ul.list-unstyled
                     = user_details(user, :birth_date, :phone_number, :address, :email)
                     - if rdv.service_social?
-                      = user_details(user, :logement, :number_of_children, :family_situation, :affiliation_number, :caisse_affiliation, show_empty: false)
+                      = user_details(user, :number_of_children, :family_situation, :affiliation_number, :caisse_affiliation, show_empty: false)
+                      li.mb-2>
+                        strong>
+                          | Logement :
+                        span
+                          = UserProfile.human_enum_name(:logement, user.profile_for(current_organisation).logement)
+
     - else
       = render 'agents/rdvs/rdv_details', rdv: rdv
