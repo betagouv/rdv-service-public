@@ -256,6 +256,18 @@ agent_org_paris_nord_pmi_marco = Agent.new(
 agent_org_paris_nord_pmi_marco.skip_confirmation!
 agent_org_paris_nord_pmi_marco.save!
 
+agent_org_paris_nord_social_polo = Agent.new(
+  email: 'polo@demo.rdv-solidarites.fr',
+  role: :user,
+  first_name: 'Polo',
+  last_name: 'Durant',
+  password: '123456',
+  service_id: service_social.id,
+  organisation_ids: [org_paris_nord.id]
+)
+agent_org_paris_nord_social_polo.skip_confirmation!
+agent_org_paris_nord_social_polo.save!
+
 org_arques_pmi_maya = Agent.new(
   email: 'maya@demo.rdv-solidarites.fr',
   role: :admin,
