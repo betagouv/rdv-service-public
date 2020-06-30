@@ -11,7 +11,7 @@ class RdvExporterService < BaseService
     "motif",
     "pris par",
     "statut",
-    "lieux du rdv",
+    "lieu du rdv",
     "service",
     "agents"
   ].freeze
@@ -54,9 +54,15 @@ class RdvExporterService < BaseService
       rdv.motif.name,
       TYPE[rdv.created_by],
       ::Rdv.human_enum_name(:status, rdv.status),
-      rdv.address,
+      lieu(rdv),
       rdv.motif.service.name,
       rdv.agents.map(&:full_name).join(", ")
     ]
+  end
+
+  def lieu(rdv)
+    return "" if rdv.phone? || rdv.home?
+
+    rdv.address
   end
 end

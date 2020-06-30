@@ -12,7 +12,7 @@ describe RdvExporterService, type: :service do
   context "with a sheet inside" do
     it "have an header" do
       sheet = RdvExporterService.new([], StringIO.new).workbook.worksheet(0)
-      expect(sheet.row(0)).to eq(["année", "date prise rdv", "heure prise rdv", "date rdv", "heure rdv", "motif", "pris par", "statut", "lieux du rdv", "service", "agents"])
+      expect(sheet.row(0)).to eq(["année", "date prise rdv", "heure prise rdv", "date rdv", "heure rdv", "motif", "pris par", "statut", "lieu du rdv", "service", "agents"])
     end
 
     it "have a line for a RDV" do
@@ -37,5 +37,29 @@ describe RdvExporterService, type: :service do
     rdv = build(:rdv, created_at: Time.new(2020, 3, 23, 9, 54, 33), motif: motif, lieu: nil)
     sheet = RdvExporterService.new([rdv], StringIO.new).workbook.worksheet(0)
     expect(sheet.row(1)[8]).to eq("")
+  end
+
+  describe "#lieu" do
+    it "return nothing for a phone rdv" do
+      rdv = build(:rdv, :by_phone)
+      exporter = RdvExporterService.new([rdv], StringIO.new)
+      expect(exporter.lieu(rdv)).to eq("")
+    end
+
+    it "return mds address for a public_office rdv" do
+      rdv = build(:rdv, motif: build(:motif, :at_public_office))
+      exporter = RdvExporterService.new([rdv], StringIO.new)
+      expect(exporter.lieu(rdv)).to eq(rdv.address)
+    end
+
+    # TODO: retourner la ville quand les adresses seront enregistrees plus proprement
+    it "return only city for a at_home rdv"
+
+    it "return nothing for a at_home rdv" do
+      user = build(:user, address: "3 rue de l'églie 75020 Paris")
+      rdv = build(:rdv, motif: build(:motif, :at_home), users: [user])
+      exporter = RdvExporterService.new([rdv], StringIO.new)
+      expect(exporter.lieu(rdv)).to eq("")
+    end
   end
 end
