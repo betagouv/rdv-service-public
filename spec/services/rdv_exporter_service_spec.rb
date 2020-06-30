@@ -26,9 +26,16 @@ describe RdvExporterService, type: :service do
       expect(sheet.row(1)[5]).to eq(rdv.motif.name)
       expect(sheet.row(1)[6]).to eq("Agent")
       expect(sheet.row(1)[7]).to eq("Indéterminé")
-      expect(sheet.row(1)[8]).to eq(rdv.lieu.full_name)
+      expect(sheet.row(1)[8]).to eq(rdv.address)
       expect(sheet.row(1)[9]).to eq(rdv.motif.service.name)
       expect(sheet.row(1)[10]).to eq(rdv.agents.map(&:full_name).join(", "))
     end
+  end
+
+  it "return empty lieu when it's phone rdv" do
+    motif  = build(:motif, :by_phone)
+    rdv = build(:rdv, created_at: Time.new(2020, 3, 23, 9, 54, 33), motif: motif, lieu: nil)
+    sheet = RdvExporterService.new([rdv], StringIO.new).workbook.worksheet(0)
+    expect(sheet.row(1)[8]).to eq("")
   end
 end

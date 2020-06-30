@@ -54,7 +54,7 @@ class RdvExporterService < BaseService
       rdv.motif.name,
       TYPE[rdv.created_by],
       ::Rdv.human_enum_name(:status, rdv.status),
-      rdv.lieu.full_name,
+      rdv.address,
       rdv.motif.service.name,
       rdv.agents.map(&:full_name).join(", ")
     ]
