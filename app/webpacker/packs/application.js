@@ -7,6 +7,7 @@ require("chart.js")
 import { PlacesInput } from 'components/places-input.js'
 import 'components/analytic.js';
 import { Modal } from 'components/modal';
+import { ShowHidePassword } from 'components/show-hide-password.js';
 import 'components/browser-detection';
 import 'select2/dist/js/select2.min.js';
 import 'select2/dist/js/i18n/fr.js';
@@ -24,6 +25,8 @@ new Modal();
 $(document).on('turbolinks:load', function() {
   $('input[type="tel"]').mask('00 00 00 00 00')
   Holder.run();
+
+  new ShowHidePassword();
 
   const placeJsContainer = document.querySelector('.places-js-container');
   if (placeJsContainer !== null) {

@@ -23,7 +23,6 @@ import { InviteUserOnCreate } from 'components/invite-user-on-create';
 import { PopulateLibelle } from 'components/populate-libelle';
 import 'components/analytic.js';
 import { PlacesInput } from 'components/places-input.js';
-import { ShowHidePassword } from 'components/show-hide-password.js';
 import { RdvWizardStep2 } from 'components/rdv_wizard_step2.js';
 import { MotifForm } from 'components/motif-form.js';
 import { ZonesMap } from 'components/zones-map.js';
@@ -108,8 +107,6 @@ $(document).on('turbolinks:load', function() {
   new Datetimepicker();
 
   new InviteUserOnCreate();
-
-  new ShowHidePassword();
 
   new MotifForm();
 
