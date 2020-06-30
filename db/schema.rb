@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_09_203050) do
+ActiveRecord::Schema.define(version: 2020_06_30_131443) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -224,6 +224,7 @@ ActiveRecord::Schema.define(version: 2020_06_09_203050) do
     t.datetime "updated_at", null: false
     t.text "recurrence"
     t.bigint "lieu_id"
+    t.boolean "expired_cached", default: false
     t.index ["agent_id"], name: "index_plage_ouvertures_on_agent_id"
     t.index ["lieu_id"], name: "index_plage_ouvertures_on_lieu_id"
     t.index ["organisation_id"], name: "index_plage_ouvertures_on_organisation_id"
