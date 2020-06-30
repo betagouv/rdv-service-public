@@ -15,6 +15,9 @@ class PlageOuverture < ApplicationRecord
 
   has_many :webhook_endpoints, through: :organisation
 
+  scope :expired, -> { where(expired_cached: true) }
+  scope :active, -> { where(expired_cached: false) }
+
   def plage_ouverture_created
     Agents::PlageOuvertureMailer.plage_ouverture_created(self).deliver_later
   end
