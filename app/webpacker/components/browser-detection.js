@@ -4,7 +4,7 @@ const browser = Bowser.getParser(window.navigator.userAgent);
 document.addEventListener('turbolinks:load', function() {
   const oldBrowser = browser.satisfies({
     chrome: "<78",
-    firefox: "<70",
+    firefox: "<68",
     edge: "<17",
   });
 
