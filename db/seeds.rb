@@ -291,8 +291,29 @@ _plage_ouverture_org_paris_nord_martine_classique = PlageOuverture.create!(
   motif_ids: [motif_org_paris_nord_pmi_rappel.id, motif_org_paris_nord_pmi_prenatale.id, motif_org_paris_nord_pmi_suivi.id, motif_org_paris_nord_pmi_securite.id],
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(8),
+  end_time: Tod::TimeOfDay.new(12),
+  recurrence: Montrose.every(:week, day: [1, 2, 3, 4, 5], interval: 1, on: [:monday, :tuesday, :thursday, :friday])
+)
+_plage_ouverture_org_paris_nord_martine_mercredi = PlageOuverture.create!(
+  title: 'Permanence enfant',
+  organisation_id: org_paris_nord.id,
+  agent_id: agent_org_paris_nord_pmi_martine.id,
+  lieu_id: lieu_org_paris_nord_sud.id,
+  motif_ids: [motif_org_paris_nord_pmi_rappel.id, motif_org_paris_nord_pmi_prenatale.id, motif_org_paris_nord_pmi_suivi.id, motif_org_paris_nord_pmi_securite.id],
+  first_day: Date.tomorrow,
+  start_time: Tod::TimeOfDay.new(8),
+  end_time: Tod::TimeOfDay.new(12),
+  recurrence: Montrose.every(:week, on: [:wednesday], interval: 1),
+)
+_plage_ouverture_org_paris_nord_martine_exceptionnelle = PlageOuverture.create!(
+  title: 'Aprem PMI exptn',
+  organisation_id: org_paris_nord.id,
+  agent_id: agent_org_paris_nord_pmi_martine.id,
+  lieu_id: lieu_org_paris_nord_sud.id,
+  motif_ids: [motif_org_paris_nord_pmi_rappel.id, motif_org_paris_nord_pmi_prenatale.id, motif_org_paris_nord_pmi_suivi.id, motif_org_paris_nord_pmi_securite.id],
+  first_day: Date.tomorrow,
+  start_time: Tod::TimeOfDay.new(14),
   end_time: Tod::TimeOfDay.new(18),
-  recurrence: Montrose.every(:week, interval: 1)
 )
 _plage_ouverture_org_paris_nord_marco_perm = PlageOuverture.create!(
   title: 'Perm.',
