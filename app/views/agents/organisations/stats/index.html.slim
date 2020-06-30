@@ -15,12 +15,6 @@
     h4.card-title.mb-3 RDV créés (#{@stats.rdvs_for_default_range.count})
     = column_chart add_query_string_params_to_url(rdvs_organisation_stats_path(@organisation), departement: @departement), stacked: true
 
-- if request.path == stats_path && !@departement.present?
-  .card.mb-5
-    .card-body
-      h4.card-title.mb-3 RDV créés par département(#{@stats.rdvs_for_default_range.count})
-      = column_chart add_query_string_params_to_url(rdvs_organisation_stats_path(@organisation), by_departement: true, departement: @departement), stacked: true
-
 .card.mb-5
   .card-body
     h4.card-title.mb-3 RDV créés par service (#{@stats.rdvs_for_default_range.count})
