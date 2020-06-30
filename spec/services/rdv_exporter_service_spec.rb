@@ -33,7 +33,7 @@ describe RdvExporterService, type: :service do
   end
 
   it "return empty lieu when it's phone rdv" do
-    motif  = build(:motif, :by_phone)
+    motif = build(:motif, :by_phone)
     rdv = build(:rdv, created_at: Time.new(2020, 3, 23, 9, 54, 33), motif: motif, lieu: nil)
     sheet = RdvExporterService.new([rdv], StringIO.new).workbook.worksheet(0)
     expect(sheet.row(1)[8]).to eq("")
