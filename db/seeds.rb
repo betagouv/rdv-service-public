@@ -292,7 +292,7 @@ _plage_ouverture_org_paris_nord_martine_classique = PlageOuverture.create!(
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(8),
   end_time: Tod::TimeOfDay.new(18),
-  recurrence: Montrose.every(:day)
+  recurrence: Montrose.every(:week, interval: 1)
 )
 _plage_ouverture_org_paris_nord_marco_perm = PlageOuverture.create!(
   title: 'Perm.',
@@ -303,7 +303,7 @@ _plage_ouverture_org_paris_nord_marco_perm = PlageOuverture.create!(
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(8),
   end_time: Tod::TimeOfDay.new(12),
-  recurrence: Montrose.every(:day)
+  recurrence: Montrose.every(:week, interval: 1)
 )
 _plage_ouverture_org_arques_maya_tradi = PlageOuverture.create!(
   title: 'Perm. tradi',
@@ -314,7 +314,7 @@ _plage_ouverture_org_arques_maya_tradi = PlageOuverture.create!(
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(9),
   end_time: Tod::TimeOfDay.new(15),
-  recurrence: Montrose.every(:day)
+  recurrence: Montrose.every(:week, interval: 1)
 )
 _plage_ouverture_org_bapaume_bruno_classique = PlageOuverture.create!(
   title: 'Perm. classique',
@@ -325,7 +325,7 @@ _plage_ouverture_org_bapaume_bruno_classique = PlageOuverture.create!(
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(9),
   end_time: Tod::TimeOfDay.new(15),
-  recurrence: Montrose.every(:day)
+  recurrence: Montrose.every(:week, interval: 1)
 )
 PlageOuverture.set_callback(:create, :after, :plage_ouverture_created)
 
