@@ -32,7 +32,7 @@
         - else
           h4.card-title.mb-3 Informations de votre proche
           ul.list-unstyled
-            = user_details(@user, :first_name, :last_name, :birth_date)
+            = user_details(@user, current_organisation, :first_name, :last_name, :birth_date)
           .card-text
             i.far.fa-fw.fa-sticky-note>
             strong> Notes libres :
