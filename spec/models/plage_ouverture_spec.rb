@@ -76,6 +76,50 @@ describe PlageOuverture, type: :model do
     end
   end
 
+  describe "#expired?" do
+    subject { plage_ouverture.expired? }
+
+    context "with exceptionnelles plages" do
+      describe "when first_day is in past" do
+        let(:plage_ouverture) { create(:plage_ouverture, :no_recurrence, first_day: 2.days.ago) }
+
+        it { should be true }
+      end
+
+      describe "when first_day is in future" do
+        let(:plage_ouverture) { create(:plage_ouverture, :no_recurrence, first_day: 2.days.from_now) }
+
+        it { should be false }
+      end
+
+      describe "when first_day is today" do
+        let(:plage_ouverture) { create(:plage_ouverture, :no_recurrence, first_day: Date.today) }
+
+        it { should be false }
+      end
+    end
+
+    context "with plages regulières" do
+      describe "when until is in past" do
+        let(:plage_ouverture) { create(:plage_ouverture, recurrence: Montrose.every(:week, until: 2.days.ago).to_json) }
+
+        it { should be true }
+      end
+
+      describe "when until is in future" do
+        let(:plage_ouverture) { create(:plage_ouverture, recurrence: Montrose.every(:week, until: 2.days.from_now).to_json) }
+
+        it { should be false }
+      end
+
+      describe "when until is today" do
+        let(:plage_ouverture) { create(:plage_ouverture, recurrence: Montrose.every(:week, until: Date.today).to_json) }
+
+        it { should be false }
+      end
+    end
+  end
+
   describe "#available_motifs" do
     let!(:motif) { create(:motif) }
     let!(:motif2) { create(:motif) }

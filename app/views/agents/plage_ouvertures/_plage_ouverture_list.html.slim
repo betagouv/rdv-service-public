@@ -1,0 +1,21 @@
+- if plage_ouvertures.any?
+  table.table
+    thead
+      tr
+        th.border-top-0 Description
+        th.border-top-0 Motifs
+        th.border-top-0 Lieu
+        th.border-top-0
+    tbody
+      = render plage_ouvertures
+- else
+  .row.justify-content-md-center
+    .col-md-6.text-center.my-5
+      p.mb-2.lead
+        - if current_agent == agent
+          | Vous n'avez pas encore créé de plage d'ouverture.
+        - else
+          | #{agent.full_name} n'a pas encore créé de plage d'ouverture.
+      span.fa-stack.fa-4x
+        i.fa.fa-circle.fa-stack-2x.text-primary
+        i.far.fa-calendar.fa-stack-1x.text-white

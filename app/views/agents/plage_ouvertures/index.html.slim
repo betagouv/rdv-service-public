@@ -12,29 +12,21 @@
   = link_to 'Créer une plage d\'ouverture', new_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-white align-bottom", data: { rightbar: true }
 
 .card
+  - if @plage_ouvertures_expired.any?
+    ul.nav.nav-tabs.px-2.mt-2
+      li.nav-item
+        a.nav-link.active aria-expanded="true" data-toggle="tab" href="#active-po"
+          span En cours
+      li.nav-item
+        a.nav-link aria-expanded="false" data-toggle="tab" href="#past-po"
+          span Expirés
+
   .card-body
-    - if @plage_ouvertures.any?
-      table.table
-        thead
-          tr
-            th Description
-            th Motifs
-            th Lieu
-            th
-        tbody
-          = render @plage_ouvertures
-      .d-flex.justify-content-center
-        = paginate @plage_ouvertures, theme: 'twitter-bootstrap-4'
-    - else
-      .row.justify-content-md-center
-        .col-md-6.text-center.my-5
-          p.mb-2.lead
-            - if current_agent == @agent
-              | Vous n'avez pas encore créé de plage d'ouverture.
-            - else
-              | #{@agent.full_name} n'a pas encore créé de plage d'ouverture.
-          span.fa-stack.fa-4x
-            i.fa.fa-circle.fa-stack-2x.text-primary
-            i.far.fa-calendar.fa-stack-1x.text-white
+    .tab-content
+      #active-po.tab-pane.show.active
+        = render 'plage_ouverture_list', plage_ouvertures: @plage_ouvertures_active, agent: @agent, param_name: "page_active"
+      #past-po.tab-pane
+        = render 'plage_ouverture_list', plage_ouvertures: @plage_ouvertures_expired, agent: @agent, param_name: "page_inactive"
+
     .text-center
       = add_button 'Créer une plage d\'ouverture', new_organisation_agent_plage_ouverture_path(current_organisation, @agent.id)

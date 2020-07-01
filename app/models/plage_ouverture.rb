@@ -53,7 +53,8 @@ class PlageOuverture < ApplicationRecord
 
   def expired?
     # Use .expired_cached? for performance
-    (recurrence.nil? && first_day < Date.today) && (recurrence.present? && recurrence.until < Date.today)
+    (recurrence.nil? && first_day < Date.today) ||
+      (recurrence.present? && recurrence.to_hash[:until].present? && recurrence.to_hash[:until].to_date < Date.today)
   end
 
   def available_motifs
@@ -62,7 +63,7 @@ class PlageOuverture < ApplicationRecord
 
   def verify_plage_ouverture_expire_date
     is_expired = expired? ? true : false
-    self.update_column(:expired_cached, is_expired)
+    update_column(:expired_cached, is_expired)
   end
 
   private
