@@ -26,7 +26,7 @@
       #active-po.tab-pane.show.active
         = render 'plage_ouverture_list', plage_ouvertures: @plage_ouvertures_active, agent: @agent, param_name: "page_active"
       #past-po.tab-pane
-        = render 'plage_ouverture_list', plage_ouvertures: @plage_ouvertures_expired, agent: @agent, param_name: "page_inactive"
+        = render 'plage_ouverture_list', plage_ouvertures: @plage_ouvertures_expired, agent: @agent, param_name: "page_expired"
 
     .text-center
       = add_button 'Créer une plage d\'ouverture', new_organisation_agent_plage_ouverture_path(current_organisation, @agent.id)

@@ -303,7 +303,7 @@ _plage_ouverture_org_paris_nord_martine_mercredi = PlageOuverture.create!(
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(8),
   end_time: Tod::TimeOfDay.new(12),
-  recurrence: Montrose.every(:week, on: [:wednesday], interval: 1),
+  recurrence: Montrose.every(:week, on: [:wednesday], interval: 1)
 )
 _plage_ouverture_org_paris_nord_martine_exceptionnelle = PlageOuverture.create!(
   title: 'Aprem PMI exptn',
@@ -313,7 +313,7 @@ _plage_ouverture_org_paris_nord_martine_exceptionnelle = PlageOuverture.create!(
   motif_ids: [motif_org_paris_nord_pmi_rappel.id, motif_org_paris_nord_pmi_prenatale.id, motif_org_paris_nord_pmi_suivi.id, motif_org_paris_nord_pmi_securite.id],
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(14),
-  end_time: Tod::TimeOfDay.new(18),
+  end_time: Tod::TimeOfDay.new(18)
 )
 _plage_ouverture_org_paris_nord_marco_perm = PlageOuverture.create!(
   title: 'Perm.',

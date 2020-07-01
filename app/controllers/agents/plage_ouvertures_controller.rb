@@ -5,12 +5,12 @@ class Agents::PlageOuverturesController < AgentAuthController
 
   def index
     @agent = policy_scope(Agent).find(filter_params[:agent_id])
-    plage_ouvertures = policy_scope(PlageOuverture).includes(:lieu, :organisation).where(agent_id: filter_params[:agent_id]).order(title: :asc)
+    plage_ouvertures = policy_scope(PlageOuverture).includes(:lieu, :organisation).where(agent_id: filter_params[:agent_id]).order(recurrence: :asc, title: :asc)
     respond_to do |f|
       f.json { @plage_ouverture_occurences = plage_ouvertures.flat_map { |po| po.occurences_for(date_range_params).map { |occurence| [po, occurence] } }.sort_by(&:second) }
       f.html do
-        @plage_ouvertures_active = plage_ouvertures.active.regulieres + plage_ouvertures.active.exceptionnelles
-        @plage_ouvertures_expired = plage_ouvertures.expired.regulieres + plage_ouvertures.expired.exceptionnelles
+        @plage_ouvertures_active = plage_ouvertures.active.page(filter_params[:page_active])
+        @plage_ouvertures_expired = plage_ouvertures.expired.page(filter_params[:page_expired])
       end
     end
   end
@@ -64,6 +64,6 @@ class Agents::PlageOuverturesController < AgentAuthController
   end
 
   def filter_params
-    params.permit(:start, :end, :organisation_id, :agent_id, :page)
+    params.permit(:start, :end, :organisation_id, :agent_id, :page_active, :page_expired)
   end
 end
