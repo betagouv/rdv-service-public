@@ -28,6 +28,7 @@
                   collection: policy_scope(Lieu), \
                   label_method: :full_name, \
                   include_blank: true,
+                  required: true,
                   input_html: { class: 'select2-input' }
               - elsif @rdv.home?
                 = f.input :address, label: "Lieu (RDV à domicile)",  disabled: true, hint: "L'adresse utilisée est celle de #{@rdv.user_for_home_rdv.full_name}"
