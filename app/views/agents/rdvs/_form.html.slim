@@ -8,7 +8,8 @@
     = f.association :lieu, \
       collection: policy_scope(Lieu), \
       label_method: :full_name, \
-      include_blank: false, \
+      include_blank: true, \
+      required: true,
       input_html: { class: "select2-input" }
   - elsif rdv.motif.home?
     = f.input :address, label: "Lieu (RDV à domicile)", disabled: true
