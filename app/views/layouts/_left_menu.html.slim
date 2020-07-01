@@ -52,11 +52,6 @@
             i.fa.fa-chart-bar
             span Vos statistiques
             = unknown_past_agent_rdvs_danger_bage
-        - if current_agent.admin? && policy_scope(Organisation).count == 1
-          li.side-nav-item
-            = link_to departement_setup_checklist_path(current_organisation.departement), class: "side-nav-link" do
-              i.fa.fa-map>
-              | Sectorisation #{current_organisation.departement}
         - if current_agent.admin?
           li.side-nav-item
             = link_to '#', class: 'side-nav-link' do
@@ -80,6 +75,9 @@
                 = link_to 'Vos motifs', \
                   organisation_motifs_path(current_organisation), \
                   data: { route: 'agents/motifs#index' }
+              - if current_agent.admin? && policy_scope(Organisation).count == 1
+                li
+                  = link_to "Sectorisation #{current_organisation.departement}", departement_setup_checklist_path(current_organisation.departement)
               li
                 = link_to( \
                   organisation_stats_path(current_organisation), \
