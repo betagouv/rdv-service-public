@@ -15,6 +15,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     horaires: Field::String,
     phone_number: Field::String,
     departement: Field::String,
+    human_id: Field::String,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -40,6 +41,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     :agents,
     :lieux,
     :departement,
+    :human_id,
     :created_at,
     :updated_at,
   ].freeze
@@ -54,6 +56,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     :agents,
     :lieux,
     :departement,
+    :human_id
   ].freeze
 
   # Overwrite this method to customize how super admins are displayed

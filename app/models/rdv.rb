@@ -21,6 +21,7 @@ class Rdv < ApplicationRecord
   delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, to: :motif
 
   validates :users, :organisation, :motif, :starts_at, :duration_in_min, :agents, presence: true
+  validates :lieu, presence: true, if: :public_office?
 
   scope :active, -> { where(cancelled_at: nil) }
   scope :past, -> { where('starts_at < ?', Time.zone.now) }

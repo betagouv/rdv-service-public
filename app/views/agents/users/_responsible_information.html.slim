@@ -1,17 +1,12 @@
 ul.list-unstyled.mb-5
-  = user_details(user, :first_name, :last_name, :birth_name, :birth_date, :phone_number, :address, :email, li_class: "mb-2")
+  = user_details(user, current_organisation, :first_name, :last_name, :birth_name, :birth_date, :phone_number, :address, :email, li_class: "mb-2")
   - if user.pending_reconfirmation?
     .text-muted.mb-2
       | En attente de confirmation pour #{user.unconfirmed_email}
 
 h4.card-title.mb-3 Informations sociales
 ul.list-unstyled.mb-5
-  = user_details(user, :caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, li_class: "mb-2")
-  li.mb-2>
-    strong>
-      | Logement :
-    span
-      = UserProfile.human_enum_name(:logement, user.profile_for(current_organisation).logement)
+  = user_details(user, current_organisation, :caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :logement, li_class: "mb-2")
   strong
     i.far.fa-fw.fa-sticky-note>
     | Notes libres :
