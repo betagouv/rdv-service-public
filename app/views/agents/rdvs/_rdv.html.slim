@@ -20,14 +20,8 @@
                   - if user.responsible.present?
                     | (proche de #{link_to(user.responsible.full_name, organisation_user_path(current_organisation, user.responsible))})
                   ul.list-unstyled
-                    = user_details(user, :birth_date, :phone_number, :address, :email)
+                    = user_details(user, current_organisation, :birth_date, :phone_number, :address, :email)
                     - if rdv.service_social?
-                      = user_details(user, :number_of_children, :family_situation, :affiliation_number, :caisse_affiliation, show_empty: false)
-                      li.mb-2>
-                        strong>
-                          | Logement :
-                        span
-                          = UserProfile.human_enum_name(:logement, user.profile_for(current_organisation).logement)
-
+                      = user_details(user, current_organisation, :logement, :number_of_children, :family_situation, :affiliation_number, :caisse_affiliation, show_empty: false)
     - else
       = render 'agents/rdvs/rdv_details', rdv: rdv

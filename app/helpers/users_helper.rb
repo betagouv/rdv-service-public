@@ -23,13 +23,14 @@ module UsersHelper
     end
   end
 
-  def user_details(user, *attributes, li_class: nil, show_empty: true)
-    displayable_user = DisplayableUser.new(user)
+  def user_details(user, organisation, *attributes, li_class: nil, show_empty: true)
+    displayable_user = DisplayableUser.new(user, organisation)
     attributes.map do |attr_name|
       next unless show_empty || displayable_user.send(attr_name).present?
 
+      i18n_ns = [:logement, :notes].include?(attr_name.to_sym) ? :user_profile : :user
       content_tag(:li, class: li_class) do
-        content_tag(:strong, "#{t("activerecord.attributes.user.#{attr_name}")} : ") +
+        content_tag(:strong, "#{t("activerecord.attributes.#{i18n_ns}.#{attr_name}")} : ") +
           content_tag(:span, displayable_user.send(attr_name))
       end
     end.join.html_safe
@@ -43,8 +44,9 @@ class DisplayableUser
 
   attr_reader :user
 
-  def initialize(user)
+  def initialize(user, organisation)
     @user = user
+    @user_profile = @user.profile_for(organisation)
   end
 
   def birth_date
@@ -65,5 +67,9 @@ class DisplayableUser
 
   def email
     @user.responsible_email
+  end
+
+  def logement
+    UserProfile.human_enum_name(:logement, @user_profile.logement)
   end
 end
