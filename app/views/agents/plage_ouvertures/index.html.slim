@@ -24,7 +24,7 @@
   .card-body
     .tab-content
       #active-po.tab-pane.show.active
-        = render 'plage_ouverture_list', plage_ouvertures: @plage_ouvertures_active, agent: @agent, param_name: "page_active"
+        = render 'plage_ouverture_list', plage_ouvertures: @plage_ouvertures_not_expired, agent: @agent, param_name: "page_not_expired"
       #past-po.tab-pane
         = render 'plage_ouverture_list', plage_ouvertures: @plage_ouvertures_expired, agent: @agent, param_name: "page_expired"
 
