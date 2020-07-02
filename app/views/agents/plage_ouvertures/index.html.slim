@@ -12,14 +12,13 @@
   = link_to 'Créer une plage d\'ouverture', new_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-white align-bottom", data: { rightbar: true }
 
 .card
-  - if @plage_ouvertures.any?
-    ul.nav.nav-tabs.px-2.mt-2
-      li.nav-item
-        a.nav-link class=('active' if params[:current_tab] != 'expired') href=(add_query_string_params_to_url(request.url, {current_tab: 'not_expired'}))
-          span En cours
-      li.nav-item
-        a.nav-link class=('active' if params[:current_tab] == 'expired') href=(add_query_string_params_to_url(request.url, {current_tab: 'expired'}))
-          span Passées
+  ul.nav.nav-tabs.px-2.mt-2
+    li.nav-item
+      a.nav-link class=('active' if params[:current_tab] != 'expired') href=(add_query_string_params_to_url(request.url, {current_tab: 'not_expired'}))
+        span En cours
+    li.nav-item
+      a.nav-link class=('active' if params[:current_tab] == 'expired') href=(add_query_string_params_to_url(request.url, {current_tab: 'expired'}))
+        span Passées
 
   .card-body
     - if @plage_ouvertures.any?

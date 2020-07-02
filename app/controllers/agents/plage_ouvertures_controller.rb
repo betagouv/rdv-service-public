@@ -13,7 +13,7 @@ class Agents::PlageOuverturesController < AgentAuthController
                               plage_ouvertures.expired.page(filter_params[:page_expired])
                             else
                               plage_ouvertures.not_expired.page(filter_params[:page_not_expired])
-        end
+                            end
       end
     end
   end
