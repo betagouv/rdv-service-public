@@ -14,7 +14,14 @@ class Agents::PlageOuverturesController < AgentAuthController
 
   def new
     @agent = Agent.find(params[:agent_id])
-    @plage_ouverture = PlageOuverture.new(organisation: current_organisation, agent: @agent, first_day: Time.zone.now, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(12))
+    @plage_ouverture = PlageOuverture.new(
+      organisation: current_organisation,
+      agent: @agent,
+      first_day: Time.zone.now,
+      start_time: Tod::TimeOfDay.new(9),
+      end_time: Tod::TimeOfDay.new(12),
+      **params.permit(:title, :lieu_id, motif_ids: [])
+    )
     authorize(@plage_ouverture)
     respond_right_bar_with @plage_ouverture
   end
