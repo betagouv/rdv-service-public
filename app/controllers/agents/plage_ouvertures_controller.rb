@@ -9,8 +9,11 @@ class Agents::PlageOuverturesController < AgentAuthController
     respond_to do |f|
       f.json { @plage_ouverture_occurences = plage_ouvertures.flat_map { |po| po.occurences_for(date_range_params).map { |occurence| [po, occurence] } }.sort_by(&:second) }
       f.html do
-        @plage_ouvertures_not_expired = plage_ouvertures.not_expired.page(filter_params[:page_not_expired])
-        @plage_ouvertures_expired = plage_ouvertures.expired.page(filter_params[:page_expired])
+        @plage_ouvertures = if params[:current_tab] == 'expired'
+                              plage_ouvertures.expired.page(filter_params[:page_expired])
+                            else
+                              plage_ouvertures.not_expired.page(filter_params[:page_not_expired])
+        end
       end
     end
   end
