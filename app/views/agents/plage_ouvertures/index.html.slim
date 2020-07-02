@@ -15,17 +15,17 @@
   - if @plage_ouvertures_expired.any?
     ul.nav.nav-tabs.px-2.mt-2
       li.nav-item
-        a.nav-link.active aria-expanded="true" data-toggle="tab" href="#active-po"
+        a.nav-link class=('active' if params[:page_expired].blank?) aria-expanded="true" data-toggle="tab" href="#active-po"
           span En cours
       li.nav-item
-        a.nav-link aria-expanded="false" data-toggle="tab" href="#past-po"
-          span Expirés
+        a.nav-link class=('active' if params[:page_expired].present?) aria-expanded="false" data-toggle="tab" href="#past-po"
+          span Passées
 
   .card-body
     .tab-content
-      #active-po.tab-pane.show.active
+      #active-po.tab-pane class=('show active' if params[:page_expired].blank?)
         = render 'plage_ouverture_list', plage_ouvertures: @plage_ouvertures_not_expired, agent: @agent, param_name: "page_not_expired"
-      #past-po.tab-pane
+      #past-po.tab-pane class=('show active' if params[:page_expired].present?)
         = render 'plage_ouverture_list', plage_ouvertures: @plage_ouvertures_expired, agent: @agent, param_name: "page_expired"
 
     .text-center
