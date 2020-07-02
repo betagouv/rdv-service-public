@@ -54,15 +54,9 @@ class RdvExporterService < BaseService
       rdv.motif.name,
       TYPE[rdv.created_by],
       ::Rdv.human_enum_name(:status, rdv.status),
-      lieu(rdv),
+      rdv.address_complete_without_personnal_details,
       rdv.motif.service.name,
       rdv.agents.map(&:full_name).join(", ")
     ]
-  end
-
-  def lieu(rdv)
-    return "" if rdv.phone? || rdv.home?
-
-    rdv.address
   end
 end
