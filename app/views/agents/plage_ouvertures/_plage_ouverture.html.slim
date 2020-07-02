@@ -13,3 +13,15 @@ tr
       = sanitize(display_recurrence(plage_ouverture).join("<br/>"))
     - else
       | Le #{l(plage_ouverture.first_day, format: :human)} #{display_time_range(plage_ouverture)}
+  td
+    div= link_to "Éditer", edit_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture), data: { rightbar: true }
+    div
+      = link_to( \
+        "Dupliquer", \
+        new_organisation_agent_plage_ouverture_path( \
+          current_organisation, \
+          @agent.id, \
+          duplicate_plage_ouverture_id: plage_ouverture.id \
+        ), \
+        data: { rightbar: true } \
+      )
