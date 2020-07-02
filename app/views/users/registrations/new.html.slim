@@ -2,6 +2,8 @@
   .text-center.w-75.m-auto
     h4.text-dark-50.text-center.mt-0.font-weight-bold.mb-4  Inscription
   = devise_error_messages!
+  - if resource.errors[:email]&.include?(I18n.t('errors.messages.taken'))
+    .mb-3= link_to "Mot de passe oublié ?", new_password_path(resource_name, "email": resource.email)
   .form-row
     .col-6= f.input :first_name, label: t('activerecord.attributes.user.first_name'), required: true
     .col-6= f.input :last_name, label: t('activerecord.attributes.user.last_name'), required: true
