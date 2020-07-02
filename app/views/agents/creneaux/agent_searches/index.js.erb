@@ -1,1 +1,6 @@
-document.querySelector("#creneaux").innerHTML = "<%= escape_javascript(render 'lieux', lieux: @lieux, creneaux_by_lieux: @creneaux_by_lieux, motif: @motif, date_range: @date_range, agent_ids: @agent_ids, user_id: @user ? @user.id : nil) %>";
+document.querySelector("#creneaux").innerHTML = "<%= escape_javascript(render 'lieux', lieux: @lieux, creneaux_by_lieux: @creneaux_by_lieux, motif: @motif, date_range: @date_range, agent_ids: @agent_ids, user_id: @user ? @user.id : nil, next_availability_by_lieux: @next_availability_by_lieux) %>";
+$('.js-collapse-toggler').click(function(){ //you can give id or class name here for $('button')
+  $(this).text(function(i,old){
+      return old=='Voir plus' ?  'Voir moins' : 'Voir plus';
+  });
+});
