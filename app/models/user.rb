@@ -78,16 +78,18 @@ class User < ApplicationRecord
     end
   end
 
-  def soft_delete(organisation = nil)
-    now = Time.zone.now
-    user_with_relatives = [self, relatives].flatten
-    if organisation.present?
-      user_with_relatives.each do |u|
-        u.organisations.delete(organisation)
-        u.update(deleted_at: now) if u.organisations.empty?
-      end
+  def soft_delete(organisation = nil, recursive: true)
+    if recursive
+      [self, relatives].flatten.each { _1.soft_delete(organisation, recursive: false) }
     else
-      user_with_relatives.each { |u| u.update(organisations: [], deleted_at: now) }
+      if organisation.present?
+        organisations.delete(organisation)
+      else
+        self.organisations = []
+      end
+      return save! if organisations.any? # only actually soft delete when no orgas left
+
+      update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email)
     end
   end
 
@@ -163,6 +165,10 @@ class User < ApplicationRecord
 
   def profile_for(organisation)
     user_profiles.find_by(organisation: organisation)
+  end
+
+  def deleted_email
+    "user_#{id}@deleted.rdv-solidarites.fr"
   end
 
   protected
