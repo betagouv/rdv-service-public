@@ -1,6 +1,4 @@
 document.querySelector("#creneaux-lieu-<%= @lieu.id %>").innerHTML = "<%= escape_javascript(render 'creneaux', lieu: @lieu, creneaux: @creneaux, date_range: @date_range, motif: @motif, agent_ids: @agent_ids, user_id: nil, next_availability: @next_availability) %>";
-$('.js-collapse-toggler').click(function(){ //you can give id or class name here for $('button')
-  $(this).text(function(i,old){
-      return old=='Voir plus' ?  'Voir moins' : 'Voir plus';
-  });
+$('.js-collapse-toggler').click(function(){
+  $(this).hide()
 });
