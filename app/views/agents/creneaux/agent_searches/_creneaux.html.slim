@@ -12,20 +12,18 @@ div id="creneaux-lieu-#{lieu.id}"
           = l(date, format: "%d %b")
         - creneaux_for_date = creneaux.select { |c| c.starts_at.to_date == date }.sort_by(&:starts_at)
 
-        - if creneaux_for_date.any? && creneaux_for_date.size <= 5
-          - creneaux_for_date.each do |creneau|
-            = display_creneau(creneau, new_organisation_rdv_wizard_step_path(build_link_to_rdv_wizard_params(lieu, motif, creneau, user_id)))
-        - elsif creneaux_for_date.size > 5
-          - creneaux_for_date.first(5).each do |creneau|
-            = display_creneau(creneau, new_organisation_rdv_wizard_step_path(build_link_to_rdv_wizard_params(lieu, motif, creneau, user_id)))
-          .collapse id="collapse-#{lieu.id}"
-            - creneaux_for_date.drop(5).each do |creneau|
-              = display_creneau(creneau, new_organisation_rdv_wizard_step_path(build_link_to_rdv_wizard_params(lieu, motif, creneau, user_id)))
-
-
-        - else
+        - if creneaux.empty?
           p.text-center
             small aucune disponibilité
+        - else
+          - creneaux_for_date = creneaux.select { |c| c.starts_at.to_date == date }.sort_by(&:starts_at)
+          - creneaux_for_date.first(5).each do |creneau|
+            = display_creneau(creneau, new_organisation_rdv_wizard_step_path(build_link_to_rdv_wizard_params(lieu, motif, creneau, user_id)))
+          - if creneaux_for_date.size > 5
+            .collapse id="collapse-#{lieu.id}"
+              - creneaux_for_date.drop(5).each do |creneau|
+                = display_creneau(creneau, new_organisation_rdv_wizard_step_path(build_link_to_rdv_wizard_params(lieu, motif, creneau, user_id)))
+
     - if date_range.end < next_availability.starts_at.to_date
       .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
         = link_to by_lieu_organisation_agent_searches_path(from_date: next_availability.starts_at.to_date, lieu_id: lieu.id, motif_id: motif.id, agent_ids: agent_ids), remote: true, class: 'btn btn-light', data: { disable_with: "..." } do
@@ -38,6 +36,8 @@ div id="creneaux-lieu-#{lieu.id}"
               i.fa.fa-chevron-right
     .col.d-flex.align-items-center
       = link_to ">>", by_lieu_organisation_agent_searches_path(from_date: date_range.end + 1.day, lieu_id: lieu.id, motif_id: motif.id, agent_ids: agent_ids), remote: true, class: 'btn btn-primary', data: { disable_with: "..." }
-  .row.d-flex.justify-content-center.mt-1
-    a.js-collapse-toggler.btn.btn-primary data-toggle="collapse" href="#collapse-#{lieu.id}"
-      | Voir plus d'horraire
+
+  - if creneaux.group_by{ _1.starts_at.to_date }.values.any?{ _1.count > 5 }
+    .row.d-flex.justify-content-center.mt-1
+      a.js-collapse-toggler.btn.btn-primary data-toggle="collapse" href="#collapse-#{lieu.id}"
+        | Voir plus d'horaires
