@@ -26,7 +26,7 @@ class User < ApplicationRecord
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :phone_number, phone: { allow_blank: true }
   validate :birth_date_validity
-  validate :user_is_not_duplicate, on: :create
+  validate :user_is_not_duplicate, on: :create, unless: -> { errors[:email]&.present? } # to avoid two similar errors on duplicate email
 
   accepts_nested_attributes_for :user_profiles
 
