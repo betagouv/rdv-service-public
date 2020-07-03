@@ -125,4 +125,5 @@ group :test do
   gem 'capybara-screenshot'
   gem 'webdrivers', '~> 4.0'
   gem 'database_cleaner'
+  gem 'simplecov', require: false
 end

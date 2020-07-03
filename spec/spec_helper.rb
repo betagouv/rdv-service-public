@@ -19,6 +19,10 @@ require 'capybara/email/rspec'
 require 'webdrivers'
 require 'capybara-screenshot/rspec'
 
+require 'simplecov'
+SimpleCov.refuse_coverage_drop
+SimpleCov.start
+
 Capybara.register_driver :selenium do |app|
   # these args seem to reduce test flakyness
   # w3c false required for logs cf https://github.com/SeleniumHQ/selenium/issues/7270
