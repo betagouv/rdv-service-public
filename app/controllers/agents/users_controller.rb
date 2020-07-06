@@ -12,6 +12,11 @@ class Agents::UsersController < AgentAuthController
     :invite_on_create, :notes
   ].freeze
 
+  PERMITTED_NESTED_ATTRIBUTES = {
+    agent_ids: [],
+    user_profiles_attributes: [:notes, :logement, :id, :organisation_id],
+  }.freeze
+
   def index
     @users = policy_scope(User).order_by_last_name.page(params[:page])
     filter_users if params[:user] && params[:user][:search]
@@ -142,8 +147,8 @@ class Agents::UsersController < AgentAuthController
     params.require(:user).permit(
       *PERMITTED_ATTRIBUTES,
       :responsible_id,
-      agent_ids: [],
-      responsible_attributes: [PERMITTED_ATTRIBUTES, agent_ids: []]
+      **PERMITTED_NESTED_ATTRIBUTES,
+      responsible_attributes: [PERMITTED_ATTRIBUTES, **PERMITTED_NESTED_ATTRIBUTES]
     )
   end
 
