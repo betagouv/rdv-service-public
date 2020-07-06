@@ -26,3 +26,5 @@ $(document).on('shown.rightbar', '.right-bar', function(e) {
 $(document).on("turbolinks:before-cache", function() {
   $('.select2-input').select2('destroy');
 });
+
+export { initSelect2 };

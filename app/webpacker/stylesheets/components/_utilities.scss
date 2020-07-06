@@ -9,3 +9,8 @@
 .strikethrough {
   text-decoration: line-through;
 }
+
+a[disabled] {
+  pointer-events: none;
+  cursor: not-allowed;
+}

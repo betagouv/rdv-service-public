@@ -16,4 +16,8 @@ class ApplicationRecord < ActiveRecord::Base
   def self.human_enum_collection_html(enum_name)
     send(enum_name.to_s.pluralize).keys.collect { |val| [human_enum_name_html(enum_name, val).html_safe, val] }
   end
+
+  def new_and_blank?
+    new_record? && attributes == self.class.new.attributes
+  end
 end

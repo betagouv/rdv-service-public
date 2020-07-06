@@ -228,4 +228,23 @@ describe User, type: :model do
       expect(user.profile_for(organisation)).to eq(profile)
     end
   end
+
+  describe "responsible_attributes" do
+    it "should allow saving nested responsible" do
+      expect(User.count).to eq(0)
+      loulou = User.new(
+        first_name: "loulou",
+        last_name: "durand",
+        responsible_attributes: {
+          first_name: "Jean",
+          last_name: "durand",
+          email: "jean@durand.fr"
+        }
+      )
+      loulou.save!
+      expect(User.count).to eq(2)
+      expect(loulou.responsible).not_to be_nil
+      expect(loulou.responsible.first_name).to eq("Jean")
+    end
+  end
 end

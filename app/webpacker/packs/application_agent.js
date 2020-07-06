@@ -19,7 +19,6 @@ import { Menu } from 'components/menu';
 import { Layout } from 'components/layout';
 import { Modal } from 'components/modal';
 import { Rightbar } from 'components/rightbar';
-import { InviteUserOnCreate } from 'components/invite-user-on-create';
 import { PopulateLibelle } from 'components/populate-libelle';
 import 'components/analytic.js';
 import { PlacesInputs } from 'components/places-inputs.js';
@@ -53,7 +52,6 @@ global.$ = require('jquery');
 $(document).on('shown.bs.modal', '.modal', function(e) {
   $('input[type="tel"]').mask('00 00 00 00 00')
   new Datetimepicker();
-  new InviteUserOnCreate();
 });
 
 $(document).on('shown.rightbar', '.right-bar', function(e) {
@@ -105,8 +103,6 @@ $(document).on('turbolinks:load', function() {
   new PopulateLibelle();
 
   new Datetimepicker();
-
-  new InviteUserOnCreate();
 
   new MotifForm();
 

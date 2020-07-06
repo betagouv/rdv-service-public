@@ -49,3 +49,8 @@ select.form-control-sm {
 .ap-icon-pin{
   display: none;
 }
+
+// hack for agents users form responsability type radio
+.form-group.radio_buttons.d-flex .form-check{
+  margin-right: 1rem;
+}

@@ -35,6 +35,40 @@ module UsersHelper
       end
     end.join.html_safe
   end
+
+  def agent_user_form_div_toggle_opts(user)
+    {
+      relative: {
+        "data-target": "agents--user-form--responsability.toggleDiv",
+        "data-responsability-type": "relative",
+        "class": ("d-none" if user.responsability_type != :relative)
+      },
+      responsible: {
+        "data-target": "agents--user-form--responsability.toggleDiv",
+        "data-responsability-type": "responsible",
+        "class": ("d-none" if user.responsability_type != :responsible)
+      },
+    }
+  end
+
+  def agent_user_form_input_toggle_opts(user)
+    hash = {}
+    [:responsible, :relative, :relative_new, :relative_existing].each do |key|
+      hash[key] = {
+        input_html: {
+          "data-target": "agents--user-form--responsability.toggleInput",
+          "data-responsability-type": key == :responsible ? "responsible" : "relative",
+        }
+      }
+    end
+    hash[:responsible][:disabled] = user.responsability_type != :responsible
+    hash[:relative][:disabled] = user.responsability_type != :relative
+    hash[:relative_new][:disabled] = !(user.responsability_type == :relative && user.responsible.new_and_blank?)
+    hash[:relative_new]["data-relative-type".to_sym] = "new"
+    hash[:relative_existing][:disabled] = !(user.responsability_type == :relative && !user.responsible.new_and_blank?)
+    hash[:relative_existing]["data-relative-type".to_sym] = "existing"
+    hash
+  end
 end
 
 class DisplayableUser
