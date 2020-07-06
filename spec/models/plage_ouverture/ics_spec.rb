@@ -1,5 +1,5 @@
 describe PlageOuverture::Ics, type: :model do
-  let(:plage_ouverture) { create(:plage_ouverture) }
+  let(:plage_ouverture) { create(:plage_ouverture, first_day: Date.new(2019, 7, 22)) }
   let(:ics) { PlageOuverture::Ics.new(plage_ouverture: plage_ouverture) }
 
   describe '#to_ical' do
