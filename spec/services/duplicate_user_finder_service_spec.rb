@@ -23,16 +23,31 @@ describe DuplicateUserFinderService, type: :service do
       context "same email" do
         let!(:duplicated_user) { create(:user, email: "lapin@beta.fr") }
         it { should eq(duplicated_user) }
+
+        context "but soft deleted" do
+          before { duplicated_user.soft_delete }
+          it { should be_nil }
+        end
       end
 
       context "same main first_name, last_name, birth_date" do
         let!(:duplicated_user) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: '21/10/2000') }
         it { should eq(duplicated_user) }
+
+        context "but soft deleted" do
+          before { duplicated_user.soft_delete }
+          it { should be_nil }
+        end
       end
 
       context "same phone_number" do
         let!(:duplicated_user) { create(:user, phone_number: '0658032518') }
         it { should eq(duplicated_user) }
+
+        context "but soft deleted" do
+          before { duplicated_user.soft_delete }
+          it { should be_nil }
+        end
       end
 
       context "multiple account" do
@@ -40,6 +55,19 @@ describe DuplicateUserFinderService, type: :service do
         let!(:duplicated_user_2) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: '21/10/2000') }
         let!(:rdv) { create(:rdv, users: [duplicated_user_1]) }
         it { should eq(duplicated_user_1) }
+
+        context "but first soft deleted" do
+          before { duplicated_user_1.soft_delete }
+          it { should eq(duplicated_user_2) }
+        end
+
+        context "but both soft deleted" do
+          before do
+            duplicated_user_1.soft_delete
+            duplicated_user_2.soft_delete
+          end
+          it { should be_nil }
+        end
       end
     end
   end
