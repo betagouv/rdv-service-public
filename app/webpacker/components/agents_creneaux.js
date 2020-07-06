@@ -21,6 +21,7 @@ class AgentsCreneaux {
   }
 
   removeCollapsed = (elt) => {
+    console.log("triggg", elt)
     $(elt).closest('.js-creneaux-list').removeClass("collapsed")
     elt.remove()
   }
