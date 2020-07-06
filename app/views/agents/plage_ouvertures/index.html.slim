@@ -32,7 +32,7 @@
         tbody
           = render @plage_ouvertures
       .d-flex.justify-content-center
-        = paginate @plage_ouvertures, theme: 'twitter-bootstrap-4', page_param: params[:current_tab] == 'expired' ? 'page_expired' : 'page_not_expired'
+        = paginate @plage_ouvertures, theme: 'twitter-bootstrap-4', param_name: params[:current_tab] == 'expired' ? 'page_expired' : 'page_not_expired'
     - else
       .row.justify-content-md-center
         .col-md-6.text-center.my-5
