@@ -1,12 +1,20 @@
 class AgentsCreneaux {
   constructor() {
-    const formElt = document.querySelector('.js-creneaux-search-form')
-    if (!formElt) return;
-
-    formElt.addEventListener('ajax:success', this.attachEventListeners)
+    this.attachAllEventListeners()
   }
 
-  attachEventListeners = () => {
+  attachAllEventListeners = () => {
+    this.attachFormListeners()
+    this.attachCollapserListeners()
+  }
+
+  attachFormListeners = () => {
+    document.querySelectorAll('.js-creneaux-form').forEach(formElt =>
+      formElt.addEventListener('ajax:success', this.attachAllEventListeners)
+    )
+  }
+
+  attachCollapserListeners = () => {
     document.querySelectorAll('.js-collapse-toggler').forEach(elt =>
       elt.addEventListener('click', () => this.removeCollapsed(elt))
     )
