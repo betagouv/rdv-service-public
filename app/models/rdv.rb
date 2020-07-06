@@ -125,6 +125,13 @@ class Rdv < ApplicationRecord
     end
   end
 
+  def address_complete_without_personnal_details
+    return "Par téléphone" if phone?
+    return "À domicile" if home?
+
+    address_complete
+  end
+
   def user_for_home_rdv
     responsibles = users.where.not(responsible_id: [nil])
     [responsibles, users].flatten.select(&:address).first || users.first

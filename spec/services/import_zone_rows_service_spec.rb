@@ -146,7 +146,7 @@ describe ImportZoneRowsService, type: :service do
         res = ImportZoneRowsService.perform_with(rows, '62', agent)
         expect(res[:valid]).to eq(false)
         expect(res[:counts][:imported]).to be_empty
-        expect(res[:row_errors][0]).to eq("Code de la commune (Code INSEE) n'est pas disponible")
+        expect(res[:row_errors][0]).to eq("Code de la commune (Code INSEE) est déjà utilisé")
         expect(Zone.count).to eq(1)
         expect(Zone.first.city_code).to eq('62040')
         expect(Zone.first.organisation).to eq(orga_arras_sud) # unchanged
