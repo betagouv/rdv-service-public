@@ -32,7 +32,7 @@ Rails.application.routes.draw do
   end
 
   ## APP ##
-  devise_for :users, controllers: { registrations: 'users/registrations', sessions: 'sessions', passwords: 'users/passwords', confirmations: 'users/confirmations' }
+  devise_for :users, controllers: { registrations: 'users/registrations', sessions: 'users/sessions', passwords: 'users/passwords', confirmations: 'users/confirmations' }
 
   namespace :users do
     resource :rdv_wizard_step, only: [:new, :create]
@@ -58,7 +58,11 @@ Rails.application.routes.draw do
     get "/users/rdvs", to: 'users/rdvs#index', as: :authenticated_user_root
   end
 
-  devise_for :agents, controllers: { invitations: 'agents/invitations', sessions: 'sessions', passwords: 'agents/passwords' }
+  devise_for :agents, controllers: {
+    invitations: 'agents/invitations',
+    sessions: 'agents/sessions',
+    passwords: 'agents/passwords'
+  }
 
   as :agent do
     get 'agents/edit' => 'agents/registrations#edit', as: 'edit_agent_registration'

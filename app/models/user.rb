@@ -117,7 +117,7 @@ class User < ApplicationRecord
   end
 
   def active_for_authentication?
-    super && !deleted_at && !encrypted_password.blank?
+    super && !deleted_at
   end
 
   def inactive_message
