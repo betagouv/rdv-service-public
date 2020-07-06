@@ -7,7 +7,7 @@
     .col-md-6= f.input :last_name, placeholder: 'Nom'
   .form-row
     .col-md-6= f.input :birth_name, placeholder: 'Nom de naissance'
-    .col-md-6= f.input :birth_date, as: :date, html5: true
+    .col-md-6= date_input(f, :birth_date)
   = f.input :phone_number, as: :tel
   - address_value = local_assigns[:rdv_wizard].present? && user.address.nil? ? rdv_wizard[:where] : user.address
   = f.input :address, input_html: {value: address_value, class: "places-js-container" }

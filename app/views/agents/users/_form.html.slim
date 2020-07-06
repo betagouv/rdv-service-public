@@ -42,7 +42,7 @@
       = n.input :notes, input_html: { rows: 6 }
 
   - elsif user.relative?
-    = f.input :birth_date, as: :date, html5: true
+    = date_input(f, :birth_date)
 
     = f.simple_fields_for :user_profiles, user_profile do |n|
       = n.input :organisation_id, as: :hidden

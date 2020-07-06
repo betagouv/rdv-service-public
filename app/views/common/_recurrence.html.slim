@@ -1,10 +1,10 @@
 .recurrence-select.recurrence-select--weekly data-controller="recurrence"
   .row
     .col
-      = f.input :first_day, as: :date, html5: true, input_html: { id: "recurrence-source", data: { target: "recurrence.firstDay", action: "recurrence#updateRecurrence" } }
+      = date_input(f, :first_day, input_html: { id: "recurrence-source", data: { target: "recurrence.firstDay", action: "recurrence#updateRecurrence" }} )
     - if defined?(model.end_day)
       .col
-        = f.input :end_day, as: :date, html5: true
+        = date_input(f, :end_day)
 
   .row
     - time_collections = model.is_a?(Absence) ? time_collections_for_absence : time_collections_for_plage_ouverture
@@ -32,4 +32,4 @@
         span data-target="recurrence.monthly" Tous les X du mois
 
       .until-select
-        = n.input :until, as: :date, html5: true, required: false, label: "Finir la répétition le (si aucune laisser vide)", input_html: { id: "recurrence-until", data: { target: "recurrence.until", action: "recurrence#updateRecurrence" } }
+        = date_input(n, :until, required: false, label: "Finir la répétition le (si aucune laisser vide)", input_html: { id: "recurrence-until", data: { target: "recurrence.until", action: "recurrence#updateRecurrence" }} )
