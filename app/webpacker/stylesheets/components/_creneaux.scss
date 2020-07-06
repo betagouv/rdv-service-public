@@ -1,7 +1,6 @@
-.creneau-opacity{
+.collapsed .creneau:nth-child(6){
   position: relative;
-}
-.creneau-opacity:nth-child(6){
+
   &::before {
     content: '';
     position: absolute;

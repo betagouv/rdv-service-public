@@ -1,5 +1,5 @@
 document.querySelector("#creneaux").innerHTML = "<%= escape_javascript(render 'lieux', lieux: @lieux, creneaux_by_lieux: @creneaux_by_lieux, motif: @motif, date_range: @date_range, agent_ids: @agent_ids, user_id: @user ? @user.id : nil, next_availability_by_lieux: @next_availability_by_lieux) %>";
 $('.js-collapse-toggler').click(function(){
-  $(this).parent().parent().find('.creneau-opacity').removeClass('creneau-opacity')
+  $(this).closest('.js-creneau').removeClass("collapsed")
   $(this).hide()
 });

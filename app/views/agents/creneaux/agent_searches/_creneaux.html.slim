@@ -1,4 +1,4 @@
-div id="creneaux-lieu-#{lieu.id}"
+div.js-creneau.collapsed id="creneaux-lieu-#{lieu.id}"
   .row
     - if date_range.begin > Date.today
       - previous_from_date = date_range.begin - 7.days

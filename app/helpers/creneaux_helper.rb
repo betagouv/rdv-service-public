@@ -1,6 +1,6 @@
 module CreneauxHelper
   def display_creneau(creneau, link)
-    link_to link, class: "btn btn-light creneau-opacity mr-1 mb-1 w-100 border-0" do
+    link_to link, class: "btn btn-light creneau mr-1 mb-1 w-100 border-0" do
       content_tag(:span, l(creneau.starts_at, format: "%H:%M")) +
         tag(:br) +
         content_tag(:small, creneau.agent_name)
