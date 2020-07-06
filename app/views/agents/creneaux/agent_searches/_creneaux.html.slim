@@ -1,5 +1,5 @@
 div.js-creneaux-list.collapsed id="creneaux-lieu-#{lieu.id}"
-  .row
+  .row.no-gutters.creneaux-row
     - if date_range.begin > Date.today
       - previous_from_date = date_range.begin - 7.days
       .col.d-flex.align-items-center
@@ -18,11 +18,11 @@ div.js-creneaux-list.collapsed id="creneaux-lieu-#{lieu.id}"
         - else
           - creneaux_for_date = creneaux.select { |c| c.starts_at.to_date == date }.sort_by(&:starts_at)
           - creneaux_for_date.first(5).each do |creneau|
-            = display_creneau(creneau, new_organisation_rdv_wizard_step_path(build_link_to_rdv_wizard_params(lieu, motif, creneau, user_id)))
+            = render "creneau", creneau: creneau, user_id: user_id
           - if creneaux_for_date.size > 5
             .collapse id="collapse-#{lieu.id}"
               - creneaux_for_date.drop(5).each do |creneau|
-                = display_creneau(creneau, new_organisation_rdv_wizard_step_path(build_link_to_rdv_wizard_params(lieu, motif, creneau, user_id)))
+                = render "creneau", creneau: creneau, user_id: user_id
 
     - if date_range.end < next_availability.starts_at.to_date
       .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center

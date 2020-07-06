@@ -1,3 +1,26 @@
+.creneaux-row .col {
+  margin-left: 2px;
+  margin-right: 2px;
+
+  &::first-child {
+    margin-left: none;
+  }
+  &::last-child {
+    margin-right: none;
+  }
+}
+
+.creneau {
+  div {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  small {
+    white-space: nowrap;
+  }
+}
+
 .collapsed .creneau:nth-child(6){
   position: relative;
 
