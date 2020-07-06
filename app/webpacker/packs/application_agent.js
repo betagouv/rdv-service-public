@@ -22,7 +22,7 @@ import { Rightbar } from 'components/rightbar';
 import { InviteUserOnCreate } from 'components/invite-user-on-create';
 import { PopulateLibelle } from 'components/populate-libelle';
 import 'components/analytic.js';
-import { PlacesInput } from 'components/places-input.js';
+import { PlacesInputs } from 'components/places-inputs.js';
 import { RdvWizardStep2 } from 'components/rdv_wizard_step2.js';
 import { MotifForm } from 'components/motif-form.js';
 import { ZonesMap } from 'components/zones-map.js';
@@ -66,7 +66,7 @@ $(document).on('shown.rightbar', '.right-bar', function(e) {
     wheelStep: 5,
     touchScrollStep: 20
   });
-  new PlacesInput(document.querySelector('.places-js-container'));
+  new PlacesInputs();
   $( ".select2-input").select2({
     theme: "bootstrap4"
   });
@@ -80,7 +80,7 @@ $(document).on('hide.bs.modal', '.modal', function(e) {
 });
 
 $(document).on('show.bs.modal', '.modal', function(e) {
-  new PlacesInput(document.querySelector('.places-js-container'));
+  new PlacesInputs();
 });
 
 $(document).on('turbolinks:load', function() {
@@ -100,7 +100,7 @@ $(document).on('turbolinks:load', function() {
     menu.resetSidebarScroll();
   });
 
-  new PlacesInput(document.querySelector('.places-js-container'));
+  new PlacesInputs();
 
   new PopulateLibelle();
 
