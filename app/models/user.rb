@@ -78,19 +78,8 @@ class User < ApplicationRecord
     end
   end
 
-  def soft_delete(organisation = nil, recursive: true)
-    if recursive
-      [self, relatives].flatten.each { _1.soft_delete(organisation, recursive: false) }
-    else
-      if organisation.present?
-        organisations.delete(organisation)
-      else
-        self.organisations = []
-      end
-      return save! if organisations.any? # only actually soft delete when no orgas left
-
-      update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email)
-    end
+  def soft_delete(organisation = nil)
+    [self, relatives].flatten.each { _1.do_soft_delete(organisation) }
   end
 
   def available_users_for_rdv
@@ -212,5 +201,16 @@ class User < ApplicationRecord
     return unless DuplicateUserFinderService.new(self).perform.present?
 
     errors.add(:base, "L'utilisateur que vous essayez de créer existe déjà")
+  end
+
+  def do_soft_delete(organisation)
+    if organisation.present?
+      organisations.delete(organisation)
+    else
+      self.organisations = []
+    end
+    return save! if organisations.any? # only actually mark deleted when no orgas left
+
+    update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email)
   end
 end
