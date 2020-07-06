@@ -7,10 +7,10 @@
   margin-left: 2px;
   margin-right: 2px;
 
-  &::first-child {
+  &:first-child {
     margin-left: none;
   }
-  &::last-child {
+  &:last-child {
     margin-right: none;
   }
 }
