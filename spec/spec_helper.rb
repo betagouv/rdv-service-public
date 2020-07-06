@@ -21,7 +21,7 @@ require 'capybara-screenshot/rspec'
 
 require 'simplecov'
 SimpleCov.refuse_coverage_drop
-SimpleCov.start
+SimpleCov.start 'rails'
 
 Capybara.register_driver :selenium do |app|
   # these args seem to reduce test flakyness
