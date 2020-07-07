@@ -4,7 +4,7 @@ require("@rails/ujs").start()
 require("turbolinks").start()
 require("chartkick")
 require("chart.js")
-import { PlacesInput } from 'components/places-input.js'
+import { PlacesInputs } from 'components/places-inputs.js'
 import 'components/analytic.js';
 import { Modal } from 'components/modal';
 import { ShowHidePassword } from 'components/show-hide-password.js';
@@ -27,11 +27,7 @@ $(document).on('turbolinks:load', function() {
   Holder.run();
 
   new ShowHidePassword();
-
-  const placeJsContainer = document.querySelector('.places-js-container');
-  if (placeJsContainer !== null) {
-    new PlacesInput(placeJsContainer);
-  }
+  new PlacesInputs();
 
   const whereInput = document.querySelector('#search_where');
   const submitButton = document.querySelector('#search_submit');
