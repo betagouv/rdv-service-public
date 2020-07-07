@@ -134,7 +134,7 @@ describe User, type: :model do
     end
 
     context 'belongs to multiple organisations and with organisation given' do
-      let(:user) { create(:user, :with_multiple_organisations) }
+      let(:user) { create(:user, :with_multiple_organisations, email: "jean@valjean.fr") }
       let(:deleted_org) { user.organisations.first }
       it { expect(user.organisations).not_to include(deleted_org) }
 
@@ -143,12 +143,15 @@ describe User, type: :model do
         expect(user.organisations.pluck(:id)).to match_array(left_orgs_ids)
       end
       it { expect(user.deleted_at).to be_nil }
+      it { expect(user.email).to eq "jean@valjean.fr" }
     end
 
     context 'belongs to one organisation and with organisation given' do
-      let(:user) { create(:user, organisations: [create(:organisation)]) }
+      let(:user) { create(:user, email: "jean@valjean.fr", organisations: [create(:organisation)]) }
       let(:deleted_org) { user.organisations.first }
       it { expect(user.deleted_at).to eq(now) }
+      it { expect(user.email).to end_with('deleted.rdv-solidarites.fr') }
+      it { expect(user.email_original).to eq('jean@valjean.fr') }
       it { expect(user.organisations).to be_empty }
     end
 

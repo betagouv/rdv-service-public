@@ -27,5 +27,21 @@ FactoryBot.define do
     trait :with_no_email do
       email { nil }
     end
+    trait :unregistered do
+      confirmed_at { nil }
+      password { nil }
+      password_confirmation { nil }
+    end
+    trait :relative do
+      phone_number { nil }
+      address { nil }
+      password { nil }
+      password_confirmation { nil }
+      confirmed_at { nil }
+      caisse_affiliation { nil }
+      affiliation_number { nil }
+      family_situation { nil }
+      number_of_children { nil }
+    end
   end
 end

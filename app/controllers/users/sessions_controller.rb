@@ -1,5 +1,5 @@
-class SessionsController < Devise::SessionsController
-  after_action :sign_out_other_scope, only: :create
+class Users::SessionsController < Devise::SessionsController
+  before_action :exclude_signed_in_agents
 
   def create
     if auth_options[:scope] == :user && (self.resource = Agent.find_by(email: params[:user]["email"])) && resource.valid_password?(params[:user]["password"])
@@ -14,8 +14,12 @@ class SessionsController < Devise::SessionsController
 
   private
 
-  def sign_out_other_scope
-    sign_out :agent if resource_name == User && return
-    sign_out :user if resource_name == Agent && return
+  def exclude_signed_in_agents
+    return true unless agent_signed_in?
+
+    redirect_to(
+      root_path,
+      flash: { error: "Déconnectez-vous d'abord de votre compte agent pour vous connecter en tant qu'utilisateur" }
+    )
   end
 end

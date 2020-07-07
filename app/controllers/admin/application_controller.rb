@@ -24,11 +24,9 @@ module Admin
     end
 
     def authenticate_super_admin!
-      if super_admin_signed_in?
-        super
-      else
-        redirect_to super_admin_github_omniauth_authorize_path
-      end
+      return redirect_to super_admin_github_omniauth_authorize_path unless super_admin_signed_in?
+
+      super
     end
 
     def skip_bullet
