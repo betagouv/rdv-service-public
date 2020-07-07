@@ -2,6 +2,7 @@ import 'autocomplete.js/dist/autocomplete.jquery.js'
 import 'custom-event-polyfill'
 import 'whatwg-fetch'
 
+
 class PlacesInput {
   constructor(container) {
     if (container === null) return false;
@@ -87,4 +88,11 @@ class PlacesInput {
   }
 }
 
-export { PlacesInput };
+class PlacesInputs {
+  constructor() {
+    document.querySelectorAll('.places-js-container').forEach(elt => new PlacesInput(elt))
+  }
+}
+
+
+export { PlacesInputs };

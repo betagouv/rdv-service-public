@@ -11,6 +11,12 @@
       .card-header Instructions
       .card-body
         ul
+          li
+            span> ⚠️ Utilisez les
+            = link_to 'https://fr.wikipedia.org/wiki/Code_officiel_g%C3%A9ographique#Code_commune', target: '_blank' do
+              span> codes communes INSEE
+              i.fa.fa-external-link-alt>
+            | et non les codes postaux
           li Utilisez un format XLS ou CSV (délimité par des virgules)
           li Utilisez un encodage UTF-8
           li

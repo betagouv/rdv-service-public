@@ -1,27 +1,20 @@
 - if controller_name != 'sessions'
   p.text-muted
-    | Vous avez un compte ? 
-    = link_to new_session_path(resource_name) do 
+    | Vous avez un compte ?
+    = link_to new_session_path(resource_name) do
       b Se connecter
     |.
 
-- if devise_mapping.confirmable? && controller_name != 'confirmations'  && resource_name == :user
+- if devise_mapping.confirmable? && controller_name != 'confirmations' && resource_name == :user
   p.text-muted
-    | Vous n'avez pas reçu le mail de confirmation ? 
-    = link_to new_confirmation_path(resource_name) do 
-      b Renvoyer
-    |.
-
-- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks'
-  p.text-muted
-    | Vous n'avez pas reçu le mail de déblocage ? 
-    = link_to new_unlock_path(resource_name) do 
+    | Vous n'avez pas reçu le mail de confirmation ?
+    = link_to new_confirmation_path(resource_name) do
       b Renvoyer
     |.
 
 - if devise_mapping.registerable? && controller_name != 'registrations'
   hr.my-4
   .text-center.mb-5
-    h4.text-dark-50.text-center.mt-0.mb-4.font-weight-bold.font-18 Vous n'avez pas de compte ?  
+    h4.text-dark-50.text-center.mt-0.mb-4.font-weight-bold.font-18 Vous n'avez pas de compte ?
     p
       = link_to 'Je m\'inscris', new_registration_path(resource_name), class: 'btn btn-outline-primary'

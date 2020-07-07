@@ -1,9 +1,9 @@
 import 'selectize'
 
 import '../components/table'
-import { PlacesInput } from '../components/places-input.js';
+import { PlacesInputs } from '../components/places-inputs.js';
 
 $(document).on('turbolinks:load', function() {
   $(".field-unit--has-many select").selectize({});
-  new PlacesInput(document.querySelector('.places-js-container'));
+  new PlacesInputs();
 });
