@@ -16,10 +16,6 @@ class Agents::Creneaux::AgentSearchesController < AgentAuthController
         @agent_search.organisation_id = current_organisation.id
         set_params
         @lieux = @agent_search.lieux
-        @next_availability_by_lieux = {}
-        @lieux.each do |lieu|
-          @next_availability_by_lieux[lieu.id] = FindAvailabilityService.perform_with(@motif.name, lieu, Date.today)
-        end
 
         @creneaux_by_lieux = @lieux.each_with_object({}) do |lieu, creneaux_by_lieux|
           creneaux_by_lieux[lieu.id] = CreneauxBuilderService.perform_with(@motif.name, lieu, @date_range, for_agents: true, agent_ids: @agent_ids)
@@ -35,7 +31,7 @@ class Agents::Creneaux::AgentSearchesController < AgentAuthController
     @agent_search.organisation_id = current_organisation.id
     set_params
     @lieu = @agent_search.lieu
-    @next_availability = FindAvailabilityService.perform_with(@motif.name, @lieu, Date.today)
+
     @creneaux = CreneauxBuilderService.perform_with(@motif.name, @lieu, @date_range, for_agents: true, agent_ids: @agent_ids)
   end
 
