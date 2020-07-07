@@ -14,7 +14,7 @@
 
 .row
   .col-md-6
-    .card
+    .card#spec-primary-user-card
       .card-body
         - if @user.invitable?
           .row.bg-info.text-white.p-2.mb-3
@@ -45,7 +45,7 @@
             = link_to "Modifier", edit_organisation_user_path(current_organisation, @user), class: "btn btn-primary"
 
     - if @user.relative?
-      .card
+      .card#spec-secondary-user-card
         .card-body
           h4.card-title.mb-3 Informations sur l'usager en charge
           = render 'agents/users/responsible_information', user: @user.responsible
