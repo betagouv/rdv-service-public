@@ -5,6 +5,7 @@ require("turbolinks").start()
 require("chartkick")
 require("chart.js")
 import { PlacesInput } from 'components/places-input.js'
+import { Datetimepicker } from 'components/datetimepicker';
 import 'components/analytic.js';
 import { Modal } from 'components/modal';
 import { ShowHidePassword } from 'components/show-hide-password.js';
@@ -27,6 +28,7 @@ $(document).on('turbolinks:load', function() {
   Holder.run();
 
   new ShowHidePassword();
+  new Datetimepicker();
 
   const placeJsContainer = document.querySelector('.places-js-container');
   if (placeJsContainer !== null) {

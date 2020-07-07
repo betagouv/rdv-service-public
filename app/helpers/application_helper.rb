@@ -34,14 +34,12 @@ module ApplicationHelper
   end
 
   def date_input(form, field, label = nil, input_html: {}, **kwargs)
-    value = nil
-    value = form.object.send(field)&.strftime("%d/%m/%Y") if form.object.present?
     form.input(
       field,
       as: :string,
       label: label,
       input_html: {
-        value: value,
+        value: form.object&.send(field)&.strftime("%d/%m/%Y"),
         data: { behaviour: 'datepicker' },
         autocomplete: "off",
       }.deep_merge(input_html),
