@@ -5,15 +5,17 @@ class Agents::PlageOuverturesController < AgentAuthController
 
   def index
     @agent = policy_scope(Agent).find(filter_params[:agent_id])
-    plage_ouvertures = policy_scope(PlageOuverture).includes(:lieu, :organisation).where(agent_id: filter_params[:agent_id]).order(recurrence: :asc, title: :asc)
+    plage_ouvertures = policy_scope(PlageOuverture)
+      .includes(:lieu, :organisation)
+      .where(agent_id: filter_params[:agent_id])
+      .order(recurrence: :asc, title: :asc)
     respond_to do |f|
       f.json { @plage_ouverture_occurences = plage_ouvertures.flat_map { |po| po.occurences_for(date_range_params).map { |occurence| [po, occurence] } }.sort_by(&:second) }
       f.html do
-        @plage_ouvertures = if params[:current_tab] == 'expired'
-                              plage_ouvertures.expired.page(filter_params[:page_expired])
-                            else
-                              plage_ouvertures.not_expired.page(filter_params[:page_not_expired])
-                            end
+        @current_tab = filter_params[:current_tab]
+        @plage_ouvertures = plage_ouvertures
+          .where(expired_cached: filter_params[:current_tab] == 'expired')
+          .page(filter_params[:page])
       end
     end
   end
@@ -67,6 +69,6 @@ class Agents::PlageOuverturesController < AgentAuthController
   end
 
   def filter_params
-    params.permit(:start, :end, :organisation_id, :agent_id, :page_not_expired, :page_expired)
+    params.permit(:start, :end, :organisation_id, :agent_id, :page, :current_tab)
   end
 end
