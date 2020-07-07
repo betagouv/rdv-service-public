@@ -18,7 +18,7 @@ class Agents::Creneaux::AgentSearchesController < AgentAuthController
         @lieux = @agent_search.lieux
         @next_availability_by_lieux = {}
         @lieux.each do |lieu|
-          @next_availability_by_lieux[lieu.id] = FindAvailabilityService.perform_with(@motif.name, lieu, Date.today)
+          @next_availability_by_lieux[lieu.id] = FindAvailabilityService.perform_with(@motif.name, lieu, Date.today, for_agents: true)
         end
 
         @creneaux_by_lieux = @lieux.each_with_object({}) do |lieu, creneaux_by_lieux|

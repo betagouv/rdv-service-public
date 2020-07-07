@@ -1,5 +1,7 @@
 - if lieux.any?
   - lieux.each do |lieu|
+    - next if next_availability_by_lieux[lieu.id].blank?
+    
     .card
       .card-body
         h5.card-title= lieu.name
