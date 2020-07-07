@@ -40,6 +40,7 @@ class Organisation < ApplicationRecord
 
   def notify_admin_organisation_created
     return unless agents.present?
+    return if agents.first.invited_by.present?
 
     Admins::OrganisationMailer.organisation_created(agents.first).deliver_later
   end
