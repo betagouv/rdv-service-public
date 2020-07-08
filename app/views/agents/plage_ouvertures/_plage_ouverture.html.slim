@@ -2,8 +2,13 @@ tr
   td
     = link_to plage_ouverture.title, edit_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture), data: { rightbar: true }
     = po_exceptionnelle_tag(plage_ouverture)
+    br
+    small
+      | Dernières modifications: #{l(plage_ouverture.updated_at, format: :short)}
   td
-    = plage_ouverture.motifs.pluck(:name).to_sentence
+    - plage_ouverture.motifs.each do |motif|
+      =  "- " + motif.name
+      br
   td
     = plage_ouverture.lieu.name
     br
