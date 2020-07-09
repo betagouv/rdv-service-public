@@ -4,6 +4,7 @@ require("@rails/ujs").start()
 require("turbolinks").start()
 require("chartkick")
 require("chart.js")
+import { Datetimepicker } from 'components/datetimepicker';
 import { PlacesInputs } from 'components/places-inputs.js'
 import 'components/analytic.js';
 import { Modal } from 'components/modal';
@@ -27,6 +28,7 @@ $(document).on('turbolinks:load', function() {
   Holder.run();
 
   new ShowHidePassword();
+  new Datetimepicker();
   new PlacesInputs();
 
   const whereInput = document.querySelector('#search_where');
