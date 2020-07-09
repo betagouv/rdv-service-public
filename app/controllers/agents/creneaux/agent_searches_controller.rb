@@ -35,7 +35,7 @@ class Agents::Creneaux::AgentSearchesController < AgentAuthController
     @agent_search.organisation_id = current_organisation.id
     set_params
     @lieu = @agent_search.lieu
-    @next_availability = FindAvailabilityService.perform_with(@motif.name, @lieu, Date.today)
+    @next_availability = FindAvailabilityService.perform_with(@motif.name, @lieu, Date.today, for_agents: true)
     @creneaux = CreneauxBuilderService.perform_with(@motif.name, @lieu, @date_range, for_agents: true, agent_ids: @agent_ids)
   end
 
