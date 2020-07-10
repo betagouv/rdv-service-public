@@ -3,7 +3,7 @@ div.js-creneaux-list.collapsed id="creneaux-lieu-#{lieu.id}"
     - if date_range.begin > Date.today
       - previous_from_date = date_range.begin - 7.days
       .col-auto.d-flex.align-items-center
-        = link_to "<<", by_lieu_organisation_agent_searches_path(organisation_id: motif.organisation_id, from_date: previous_from_date, lieu_id: lieu.id, motif_id: motif.id, agent_ids: agent_ids), remote: true, class: 'btn btn-primary js-creneaux-form', data: { disable_with: "..." }
+        = link_to "<<", by_lieu_organisation_agent_searches_path(organisation_id: motif.organisation_id, from_date: previous_from_date, lieu_id: lieu.id, motif_id: motif.id, agent_ids: agent_ids, user_ids: user_ids), remote: true, class: 'btn btn-primary js-creneaux-form', data: { disable_with: "..." }
     .col
       .row.no-gutters.creneaux-row.lieu-creneaux-card
         - date_range.each do |date|
@@ -20,15 +20,15 @@ div.js-creneaux-list.collapsed id="creneaux-lieu-#{lieu.id}"
             - else
               - creneaux_for_date = creneaux.select { |c| c.starts_at.to_date == date }.sort_by(&:starts_at)
               - creneaux_for_date.first(5).each do |creneau|
-                = render "creneau", creneau: creneau, user_id: user_id
+                = render "creneau", creneau: creneau, user_ids: user_ids
               - if creneaux_for_date.size > 5
                 .collapse id="collapse-#{lieu.id}"
                   - creneaux_for_date.drop(5).each do |creneau|
-                    = render "creneau", creneau: creneau, user_id: user_id
+                    = render "creneau", creneau: creneau, user_ids: user_ids
 
     - if date_range.end < next_availability.starts_at.to_date
       .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
-        = link_to by_lieu_organisation_agent_searches_path(from_date: next_availability.starts_at.to_date, lieu_id: lieu.id, motif_id: motif.id, agent_ids: agent_ids), remote: true, class: 'btn btn-light js-creneaux-form', data: { disable_with: "..." } do
+        = link_to by_lieu_organisation_agent_searches_path(from_date: next_availability.starts_at.to_date, lieu_id: lieu.id, motif_id: motif.id, agent_ids: agent_ids, user_ids: user_ids), remote: true, class: 'btn btn-light js-creneaux-form', data: { disable_with: "..." } do
           .d-flex.align-items-center
             div
               | Prochaine disponibilité le
@@ -38,7 +38,7 @@ div.js-creneaux-list.collapsed id="creneaux-lieu-#{lieu.id}"
               i.fa.fa-chevron-right
 
     .col-auto.d-flex.align-items-center
-      = link_to ">>", by_lieu_organisation_agent_searches_path(from_date: date_range.end + 1.day, lieu_id: lieu.id, motif_id: motif.id, agent_ids: agent_ids), remote: true, class: 'btn btn-primary js-creneaux-form', data: { disable_with: "..." }
+      = link_to ">>", by_lieu_organisation_agent_searches_path(from_date: date_range.end + 1.day, lieu_id: lieu.id, motif_id: motif.id, agent_ids: agent_ids, user_ids: user_ids), remote: true, class: 'btn btn-primary js-creneaux-form', data: { disable_with: "..." }
 
   - if creneaux.group_by{ _1.starts_at.to_date }.values.any?{ _1.count > 5 }
     .row.d-flex.justify-content-center.mt-1
