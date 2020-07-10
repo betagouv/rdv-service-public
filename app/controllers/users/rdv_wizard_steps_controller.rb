@@ -54,6 +54,18 @@ class Users::RdvWizardStepsController < UserAuthController
   end
 
   def user_params
-    params.permit(user: [:first_name, :last_name, :birth_name, :phone_number, :birth_date, :address, :caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :logement])
+    params.permit(user: [
+                    :first_name,
+                    :last_name,
+                    :birth_name,
+                    :phone_number,
+                    :birth_date,
+                    :address,
+                    :caisse_affiliation,
+                    :affiliation_number,
+                    :family_situation,
+                    :number_of_children,
+                    user_profiles_attributes: [:logement, :id, :organisation_id]
+                  ])
   end
 end
