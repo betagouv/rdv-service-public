@@ -22,7 +22,7 @@ require 'capybara-screenshot/rspec'
 Capybara.register_driver :selenium do |app|
   # these args seem to reduce test flakyness
   # w3c false required for logs cf https://github.com/SeleniumHQ/selenium/issues/7270
-  chrome_options = { args: %w[headless no-sandbox disable-gpu], w3c: false }
+  chrome_options = { args: %w[headless no-sandbox disable-gpu window-size=1500,1000], w3c: false }
   chrome_bin = ENV.fetch('GOOGLE_CHROME_SHIM', nil)
   chrome_options[:binary] = chrome_bin if chrome_bin
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
