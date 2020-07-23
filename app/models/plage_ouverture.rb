@@ -8,11 +8,15 @@ class PlageOuverture < ApplicationRecord
   has_and_belongs_to_many :motifs, -> { distinct }
 
   after_create :plage_ouverture_created
+  after_save :refresh_plage_ouverture_expired_cached
 
   validate :end_after_start
   validates :motifs, :title, presence: true
 
   has_many :webhook_endpoints, through: :organisation
+
+  scope :expired, -> { where(expired_cached: true) }
+  scope :not_expired, -> { where(expired_cached: false) }
 
   def plage_ouverture_created
     Agents::PlageOuvertureMailer.plage_ouverture_created(self).deliver_later
@@ -47,8 +51,18 @@ class PlageOuverture < ApplicationRecord
     results.uniq
   end
 
+  def expired?
+    # Use .expired_cached? for performance
+    (recurrence.nil? && first_day < Date.today) ||
+      (recurrence.present? && recurrence.to_hash[:until].present? && recurrence.to_hash[:until].to_date < Date.today)
+  end
+
   def available_motifs
     Motif.available_motifs_for_organisation_and_agent(organisation, agent)
+  end
+
+  def refresh_plage_ouverture_expired_cached
+    update_column(:expired_cached, expired?)
   end
 
   private
