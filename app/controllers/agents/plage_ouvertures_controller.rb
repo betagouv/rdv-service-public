@@ -24,33 +24,34 @@ class Agents::PlageOuverturesController < AgentAuthController
         end_time: Tod::TimeOfDay.new(12),
       }
     end
-    puts "defaults is #{defaults}"
     @plage_ouverture = PlageOuverture.new(
       organisation: current_organisation,
       agent: @agent,
       **defaults
     )
     authorize(@plage_ouverture)
-    respond_right_bar_with @plage_ouverture
   end
 
   def edit
     authorize(@plage_ouverture)
-    respond_right_bar_with @plage_ouverture
   end
 
   def create
     @plage_ouverture = PlageOuverture.new(plage_ouverture_params)
     @plage_ouverture.organisation = current_organisation
     authorize(@plage_ouverture)
-    flash[:notice] = "Plage d'ouverture créée" if @plage_ouverture.save
-    respond_right_bar_with @plage_ouverture, location: organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent)
+    if @plage_ouverture.save
+      flash[:notice] = "Plage d'ouverture créée"
+      redirect_to organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent)
+    else
+      render :new
+    end
   end
 
   def update
     authorize(@plage_ouverture)
     flash[:notice] = "La plage d'ouverture a été modifiée." if @plage_ouverture.update(plage_ouverture_params)
-    respond_right_bar_with @plage_ouverture, location: organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent)
+    render :edit
   end
 
   def destroy
