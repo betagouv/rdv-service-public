@@ -9,14 +9,15 @@
     .d-inline-block.mr-2
       = select_tag :id, options_for_select(policy_scope(Agent).complete.active.order_by_last_name.map { |agent| [agent.full_name, agent.id, { 'data-url': organisation_agent_plage_ouvertures_path(current_organisation, agent.id)}]}, selected: @agent.id), class: "select2-input", onchange: "Turbolinks.visit($('.select2-input option:selected').attr('data-url'))"
 
-  = link_to 'Créer une plage d\'ouverture', new_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-white align-bottom", data: { rightbar: true }
+  = link_to 'Créer une plage d\'ouverture', new_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-white align-bottom"
 
 .card
-  ul.nav.nav-tabs.px-2.mt-2
-    li.nav-item
-      = link_to "En cours", organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, current_tab: 'not_expired'), class: "nav-link #{'active' if @current_tab != 'expired'}"
-    li.nav-item
-      = link_to "Passées", organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, current_tab: 'expired'), class: "nav-link #{'active' if @current_tab == 'expired'}"
+  - if @display_tabs
+    ul.nav.nav-tabs.px-2.mt-2
+      li.nav-item
+        = link_to "En cours", organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, current_tab: 'not_expired'), class: "nav-link #{'active' if @current_tab != 'expired'}"
+      li.nav-item
+        = link_to "Passées", organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, current_tab: 'expired'), class: "nav-link #{'active' if @current_tab == 'expired'}"
 
   - if @plage_ouvertures.any?
     table.table
@@ -47,4 +48,4 @@
 
   .card-body
     .text-center
-      = add_button 'Créer une plage d\'ouverture', new_organisation_agent_plage_ouverture_path(current_organisation, @agent.id)
+      = link_to 'Créer une plage d\'ouverture', new_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-primary"

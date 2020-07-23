@@ -1,6 +1,6 @@
 tr
   td
-    = link_to plage_ouverture.title, edit_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture), data: { rightbar: true }
+    = link_to plage_ouverture.title, edit_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
     = po_exceptionnelle_tag(plage_ouverture)
     br
     small
@@ -19,7 +19,7 @@ tr
     - else
       | Le #{l(plage_ouverture.first_day, format: :human)} #{display_time_range(plage_ouverture)}
   td
-    div= link_to "Éditer", edit_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture), data: { rightbar: true }
+    div= link_to "Éditer", edit_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
     div
       = link_to( \
         "Dupliquer", \
@@ -27,6 +27,5 @@ tr
           current_organisation, \
           @agent.id, \
           duplicate_plage_ouverture_id: plage_ouverture.id \
-        ), \
-        data: { rightbar: true } \
+        ) \
       )

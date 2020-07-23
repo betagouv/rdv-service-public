@@ -55,8 +55,8 @@ describe "Agent can CRUD plage d'ouverture" do
     fill_in 'Description', with: 'La belle plage'
     click_button('Modifier')
 
-    expect_page_title(title)
-    click_link 'La belle plage'
+    expect_page_title("Modifier la plage d'ouverture")
+    expect(page).to have_content("La belle plage")
 
     click_link('Supprimer')
     expect_page_title(title)
