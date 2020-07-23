@@ -10,6 +10,7 @@ class Datetimepicker {
       mask: true,
       scrollMonth: false,
       scrollInput: false,
+      onChangeDateTime: (_, $input) => { $input[0].dispatchEvent(new Event("change")); } // forces stimulus actions to execute
     });
     $("[data-behaviour='datetimepicker']").datetimepicker({
       format:'d/m/Y H:i',
