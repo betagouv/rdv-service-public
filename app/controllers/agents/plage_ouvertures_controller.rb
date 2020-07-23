@@ -8,7 +8,7 @@ class Agents::PlageOuverturesController < AgentAuthController
     plage_ouvertures = policy_scope(PlageOuverture)
       .includes(:lieu, :organisation)
       .where(agent_id: filter_params[:agent_id])
-      .order(recurrence: :asc, updated_at: :desc)
+      .order(updated_at: :desc)
     respond_to do |f|
       f.json { @plage_ouverture_occurences = plage_ouvertures.flat_map { |po| po.occurences_for(date_range_params).map { |occurence| [po, occurence] } }.sort_by(&:second) }
       f.html do
