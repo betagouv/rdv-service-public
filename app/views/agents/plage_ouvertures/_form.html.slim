@@ -1,5 +1,5 @@
 - if plage_ouverture.available_motifs.any?
-  = simple_form_for [plage_ouverture.organisation, plage_ouverture], remote: request.xhr?, data: { rightbar: true } do |f|
+  = simple_form_for [plage_ouverture.organisation, plage_ouverture] do |f|
     = render partial: 'layouts/model_errors', locals: { model: plage_ouverture }
     = f.hidden_field :agent_id
     = f.input :title, hint: 'Uniquement visible en interne', placeholder: 'Ex: Permanence PMI exceptionnelle'

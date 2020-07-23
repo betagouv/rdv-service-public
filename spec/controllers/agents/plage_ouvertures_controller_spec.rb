@@ -169,12 +169,9 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
         end
 
         it "updates the requested plage_ouverture" do
+          expect(response.status).to eq(200)
           plage_ouverture.reload
           expect(plage_ouverture.title).to eq("Le nouveau nom")
-        end
-
-        it "redirects to the plage_ouverture" do
-          expect(response).to redirect_to(organisation_agent_plage_ouvertures_path(organisation_id, plage_ouverture.agent_id))
         end
       end
 
