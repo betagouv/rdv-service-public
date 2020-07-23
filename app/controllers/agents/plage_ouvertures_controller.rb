@@ -22,7 +22,22 @@ class Agents::PlageOuverturesController < AgentAuthController
 
   def new
     @agent = Agent.find(params[:agent_id])
-    @plage_ouverture = PlageOuverture.new(organisation: current_organisation, agent: @agent, first_day: Time.zone.now, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(12))
+    if params[:duplicate_plage_ouverture_id].present?
+      original_po = PlageOuverture.find(params[:duplicate_plage_ouverture_id])
+      defaults = original_po.slice(:title, :lieu_id, :motif_ids, :first_day, :start_time, :end_time, :recurrence)
+    else
+      defaults = {
+        first_day: Time.zone.now,
+        start_time: Tod::TimeOfDay.new(9),
+        end_time: Tod::TimeOfDay.new(12),
+      }
+    end
+    puts "defaults is #{defaults}"
+    @plage_ouverture = PlageOuverture.new(
+      organisation: current_organisation,
+      agent: @agent,
+      **defaults
+    )
     authorize(@plage_ouverture)
     respond_right_bar_with @plage_ouverture
   end

@@ -21,7 +21,43 @@
   - if @departement.present? && Organisation.where(departement: @departement).empty?
     h3 Ce departement n'utilise pas RDV-Solidarités.
   - else
-    = render 'statistics', stats: @stats, rdvs_statistic_path: rdvs_stats_path
+      .card.mb-5
+        .card-body
+          = render 'stats/rdv_counters', rdvs: @stats.rdvs_for_default_range
+
+      .card.mb-5
+        .card-body
+          h4.card-title.mb-3 RDV créés (#{@stats.rdvs_for_default_range.count})
+          = column_chart add_query_string_params_to_url(rdvs_stats_path, departement: @departement), stacked: true
+
+      - unless @departement.present?
+        .card.mb-5
+          .card-body
+            h4.card-title.mb-3 RDV créés par département(#{@stats.rdvs_for_default_range.count})
+            = column_chart add_query_string_params_to_url(rdvs_stats_path, by_departement: true, departement: @departement), stacked: true
+
+      .card.mb-5
+        .card-body
+          h4.card-title.mb-3 RDV créés par service (#{@stats.rdvs_for_default_range.count})
+          = column_chart add_query_string_params_to_url(rdvs_stats_path, by_service: true, departement: @departement), stacked: true
+
+      .card.mb-5
+        .card-body
+          h4.card-title.mb-3 RDV par type (#{@stats.rdvs_for_default_range.count})
+          = column_chart add_query_string_params_to_url(rdvs_stats_path, by_location_type: true, departement: @departement), stacked: true
+
+      .card.mb-5
+        .card-body
+          h4.card-title.mb-3 Usagers créés (#{@stats.users_for_default_range.count})
+          = column_chart add_query_string_params_to_url(users_stats_path, departement: @departement)
+
+      .card.mb-5
+        .card-body
+          h4.card-title.mb-3 Agents créés (#{@stats.agents_for_default_range.count})
+          = column_chart add_query_string_params_to_url(agents_stats_path, departement: @departement)
+
+
+
 
   .card.mb-5
     .card-body

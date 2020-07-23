@@ -17,12 +17,16 @@ class CalendarRdvSolidarites {
     this.data = this.calendarEl.dataset
     this.fullCalendarInstance = this.initFullCalendar(this.calendarEl)
     this.fullCalendarInstance.render();
-    const refreshCalendarInterval = setInterval(() => this.fullCalendarInstance.refetchEvents(), 3000);
 
-    $(document).on('turbolinks:before-cache turbolinks:before-render', function() {
-      clearTimeout(refreshCalendarInterval)
-    });
-
+    document.addEventListener('turbolinks:before-cache', this.clearRefetchInterval);
+    document.addEventListener('turbolinks:before-render', this.clearRefetchInterval);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        this.setRefetchInterval();
+      } else if (this.refreshCalendarInterval) {
+        this.clearRefetchInterval()
+      }
+    })
     document.addEventListener("turbolinks:before-cache", () => {
       // force calendar reload on turbolinks re-visit, otherwise event listeners
       // are not attached
@@ -32,7 +36,18 @@ class CalendarRdvSolidarites {
       // fixes hanging tooltip on back
       $(".tooltip").removeClass("show")
     })
+    this.setRefetchInterval()
+  }
 
+  setRefetchInterval = () => {
+    if (this.refreshCalendarInterval) return
+    this.refreshCalendarInterval = setInterval(() => this.fullCalendarInstance.refetchEvents(), 30000)
+  }
+
+  clearRefetchInterval = () => {
+    if (!this.refreshCalendarInterval) return
+    clearTimeout(this.refreshCalendarInterval)
+    this.refreshCalendarInterval = null
   }
 
   initFullCalendar = () => {
