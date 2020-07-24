@@ -8,8 +8,7 @@ class Agents::UsersController < AgentAuthController
     :id,
     :first_name, :last_name, :birth_name, :email, :phone_number,
     :birth_date, :address, :caisse_affiliation, :affiliation_number,
-    :family_situation, :number_of_children, :logement,
-    :invite_on_create, :notes
+    :family_situation, :number_of_children, :invite_on_create
   ].freeze
 
   PERMITTED_NESTED_ATTRIBUTES = {
@@ -33,12 +32,12 @@ class Agents::UsersController < AgentAuthController
   def new
     @user = User.new
     @user.user_profiles.build(organisation: current_organisation)
-    @user.responsible =
-      if params[:responsible_id].present?
-        policy_scope(User).find(params[:responsible_id])
-      else
-        User.new
-      end
+    if params[:responsible_id].present?
+      @user.responsible = policy_scope(User).find(params[:responsible_id])
+    else
+      @user.responsible = User.new
+      @user.responsible.user_profiles.build(organisation: current_organisation)
+    end
     authorize(@user)
     respond_modal_with @user
   end
@@ -56,7 +55,10 @@ class Agents::UsersController < AgentAuthController
       flash[:notice] = "L'usager a été créé."
       redirect_to organisation_user_path(@organisation, @user)
     else
-      @user.responsible ||= User.new
+      if !@user.responsible
+        @user.responsible = User.new
+        @user.responsible.user_profiles.build(organisation: current_organisation)
+      end
       render :new
     end
   end
@@ -129,8 +131,6 @@ class Agents::UsersController < AgentAuthController
   def prepare_create
     @user = User.new(user_params)
     authorize(@user.responsible) if @user.responsible&.persisted?
-    @user.organisation_ids = [current_organisation.id]
-    @user.responsible.organisation_ids = [current_organisation.id] if @user.responsible.present? # TODO: this is DANGEROUS
     @user.invited_by = current_agent
     authorize(@user.responsible) if @user.responsible.present?
     @organisation = current_organisation
