@@ -55,7 +55,7 @@ class Agents::UsersController < AgentAuthController
       flash[:notice] = "L'usager a été créé."
       redirect_to organisation_user_path(@organisation, @user)
     else
-      if !@user.responsible
+      if @user.responsible.nil?
         @user.responsible = User.new
         @user.responsible.user_profiles.build(organisation: current_organisation)
       end
