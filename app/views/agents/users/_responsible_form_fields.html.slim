@@ -49,5 +49,5 @@
   = f_user_profile.input :logement, collection: UserProfile.human_enum_collection(:logement), **input_opts
 - else
   = f.simple_fields_for :user_profiles, user.profile_for(current_organisation) do |f_user_profile|
-    = f_user_profile.input :organisation_id, as: :hidden, **input_opts
+    = f_user_profile.input :organisation_id, as: :hidden, wrapper: false, **input_opts
     = f_user_profile.input :logement, collection: UserProfile.human_enum_collection(:logement), **input_opts

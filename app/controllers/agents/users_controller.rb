@@ -32,12 +32,8 @@ class Agents::UsersController < AgentAuthController
   def new
     @user = User.new
     @user.user_profiles.build(organisation: current_organisation)
-    if params[:responsible_id].present?
-      @user.responsible = policy_scope(User).find(params[:responsible_id])
-    else
-      @user.responsible = User.new
-      @user.responsible.user_profiles.build(organisation: current_organisation)
-    end
+    @user.responsible = policy_scope(User).find(params[:responsible_id]) if params[:responsible_id].present?
+    prepare_new
     authorize(@user)
     respond_modal_with @user
   end
@@ -55,10 +51,7 @@ class Agents::UsersController < AgentAuthController
       flash[:notice] = "L'usager a été créé."
       redirect_to organisation_user_path(@organisation, @user)
     else
-      if @user.responsible.nil?
-        @user.responsible = User.new
-        @user.responsible.user_profiles.build(organisation: current_organisation)
-      end
+      prepare_new
       render :new
     end
   end
@@ -126,6 +119,13 @@ class Agents::UsersController < AgentAuthController
 
     @user_not_in_organisation = @user_to_compare.organisation_ids.exclude?(current_organisation.id)
     true
+  end
+
+  def prepare_new
+    return unless @user.responsible.nil?
+
+    @user.responsible = User.new
+    @user.responsible.user_profiles.build(organisation: current_organisation)
   end
 
   def prepare_create

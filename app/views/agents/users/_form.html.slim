@@ -8,7 +8,7 @@
 ) do |f|
 
   - f.simple_fields_for :user_profiles, user.profile_for(current_organisation) do |f_user_profile|
-    = f_user_profile.input :organisation_id, as: :hidden
+    = f_user_profile.input :organisation_id, as: :hidden, wrapper: false
 
     - if from_modal?
       = hidden_field '', :modal, value: true
@@ -40,7 +40,7 @@
     = f_user_profile.input :notes, input_html: { rows: 6 }
 
     - if user.new_record? || user.relative?
-      .form-row *div_opts[:relative]
+      .form-row.mb-2 *div_opts[:relative]
         .col-md-12.border.p-2.bg-light
           h5.mb-3 Usager Responsable
           ul.nav.nav-pills role="tablist"
