@@ -20,8 +20,8 @@ describe "Agent can create a relative" do
     fill_in :user_birth_date, with: "07/11/2001"
     fill_in "Notes", with: "jeune loup"
     click_button "Créer usager"
-    expect_page_title("Fiona LEGENDE")
-    expect(page).to have_content("Loulou LEGENDE a été ajouté comme proche")
+    expect_page_title("Loulou LEGENDE")
+    expect(page).to have_content("L'usager a été créé")
     expect(page).not_to have_content('Aucun proche')
   end
 end
