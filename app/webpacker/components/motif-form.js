@@ -7,7 +7,7 @@ class MotifForm {
     const secretariatCheckbox = document.querySelector('#motif_for_secretariat')
     if (!enabled) secretariatCheckbox.checked = false
     secretariatCheckbox.disabled = !enabled
-    secretariatCheckbox.closest('.card').classList.toggle('translucent', !enabled)
+    $(secretariatCheckbox).closest('.card').toggleClass('translucent', !enabled)
 
     this.secretariatEnabled = enabled
   }
