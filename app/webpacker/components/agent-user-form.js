@@ -32,11 +32,11 @@ class AgentUserForm {
     })
   }
 
-  onEmailChangeHandler = (evt) =>
-    evt.currentTarget.
-      parentElement.parentElement.
-      querySelector(".js-invite-row").
-      classList.toggle("d-none", !evt.currentTarget.value)
+  onEmailChangeHandler = (evt) => {
+    const inviteRow = evt.currentTarget.parentElement.parentElement.querySelector(".js-invite-row");
+    if (!inviteRow) return
+    inviteRow.classList.toggle("d-none", !evt.currentTarget.value)
+  }
 
   refreshVisibleFields = () => {
     this.formElt.querySelectorAll("div[data-togglable]").forEach(d =>
