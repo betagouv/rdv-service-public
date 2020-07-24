@@ -39,20 +39,19 @@
 
     = f_user_profile.input :notes, input_html: { rows: 6 }
 
-    - if user.new_record? || user.relative?
+    - if user.new_record?
       .form-row.mb-2 *div_opts[:relative]
         .col-md-12.border.p-2.bg-light
           h5.mb-3 Usager Responsable
-          ul.nav.nav-pills role="tablist"
+          ul.nav.nav-pills.mb-3 role="tablist"
             li.nav-item
               a.nav-link.js-relative-tab-link[
-                data-toggle=("tab" unless user.persisted?)
+                data-toggle="tab"
                 href=".tab-pane[data-relative-type='existing']"
                 role="tab"
                 aria-selected="true"
                 data-relative-type="existing"
                 class=("active" if initial_relative_type_tab == :existing)
-                disabled=(user.persisted?)
               ]
                 | Usager Existant
             li.nav-item
@@ -63,10 +62,9 @@
                 aria-selected="false"
                 data-relative-type="new"
                 class=("active" if initial_relative_type_tab == :new)
-                disabled=(user.persisted?)
               ]
                 | Nouvel Usager
-          .tab-content.mt-3
+          .tab-content
             .tab-pane.show[
               role="tabpanel"
               data-relative-type="existing"
@@ -79,11 +77,7 @@
                 label: false, \
                 **{input_html: { class: 'select2-input' }}.deep_merge(input_opts[:relative_existing]), \
                 required: true, \
-                disabled: user.persisted? \
               )
-              - if user.persisted?
-                = f.simple_fields_for(:responsible, include_id: true) do |sub_form|
-                  = render "responsible_form_fields", f: sub_form, input_opts: input_opts[:relative_existing]
             - unless user.persisted?
               .tab-pane[
                 role="tabpanel"
@@ -92,6 +86,17 @@
               ]
                 = f.simple_fields_for(:responsible, include_id: false) do |sub_form|
                   = render "responsible_form_fields", f: sub_form, input_opts: input_opts[:relative_new]
+
+    - elsif user.persisted? && user.relative?
+      .form-row.mb-2
+        .col-md-12.border.p-2.bg-light
+          h5.mb-3 Usager Responsable
+          a.nav-link.js-relative-tab-link.active.d-none[data-relative-type="existing"]
+          / ^ for JS
+          .mb-3
+            b= link_to full_name_and_birthdate(user.responsible), organisation_user_path(current_organisation, user.responsible)
+          = f.simple_fields_for(:responsible, include_id: true) do |sub_form|
+            = render "responsible_form_fields", f: sub_form, input_opts: input_opts[:relative_existing]
 
     .text-right
       - if from_modal?

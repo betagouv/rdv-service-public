@@ -7,7 +7,8 @@ class AgentUserForm {
 
     const checkedTypeRadio = this.formElt.querySelector(".js-responsability-type:checked")
     this.currentResponsabilityType = checkedTypeRadio ? checkedTypeRadio.value : null
-    this.currentRelativeType = this.formElt.querySelector(".js-relative-tab-link.active").dataset.relativeType
+    const currentRelativeTabElt = this.formElt.querySelector(".js-relative-tab-link.active")
+    this.currentRelativeType = currentRelativeTabElt && currentRelativeTabElt.dataset.relativeType
 
     this.attachListeners()
     this.refreshVisibleFields()
