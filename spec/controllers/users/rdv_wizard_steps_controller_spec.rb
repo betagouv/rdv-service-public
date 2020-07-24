@@ -3,7 +3,7 @@ describe Users::RdvWizardStepsController, type: :controller do
     let!(:user) { create(:user) }
     let!(:motif) { create(:motif) }
     let!(:lieu) { create(:lieu) }
-    let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: Date.new(2019, 7, 22), motifs: [motif], lieu: lieu) }
     let!(:creneau) do
       build(
         :creneau,

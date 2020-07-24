@@ -39,7 +39,7 @@ module ApplicationHelper
       as: :string,
       label: label,
       input_html: {
-        value: form.object.send(field)&.strftime("%d/%m/%Y"),
+        value: form.object&.send(field)&.strftime("%d/%m/%Y"),
         data: { behaviour: 'datepicker' },
         autocomplete: "off",
       }.deep_merge(input_html),

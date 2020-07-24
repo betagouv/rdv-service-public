@@ -224,6 +224,7 @@ ActiveRecord::Schema.define(version: 2020_07_02_132842) do
     t.datetime "updated_at", null: false
     t.text "recurrence"
     t.bigint "lieu_id"
+    t.boolean "expired_cached", default: false
     t.index ["agent_id"], name: "index_plage_ouvertures_on_agent_id"
     t.index ["lieu_id"], name: "index_plage_ouvertures_on_lieu_id"
     t.index ["organisation_id"], name: "index_plage_ouvertures_on_organisation_id"

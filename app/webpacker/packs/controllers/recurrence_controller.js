@@ -12,7 +12,7 @@ export default class extends Controller {
   }
 
   getFirstDay () {
-    return moment(this.firstDayTarget.value, "YYYY-MM-DD");
+    return moment(this.firstDayTarget.value, "DD/MM/YYYY");
   }
 
   setRecurrenceComputed (model) {
@@ -37,7 +37,7 @@ export default class extends Controller {
       this.everyTarget.value = model.every;
       this.intervalTarget.value = model.interval;
       if (model.until) {
-        this.untilTarget.value = moment(model.until).format("YYYY-MM-DD");
+        this.untilTarget.value = moment(model.until).format("DD/MM/YYYY");
       }
     }
 
@@ -50,7 +50,6 @@ export default class extends Controller {
 
   updateRecurrence () {
     let model = {};
-    let firstDay;
 
     if (this.hasRecurrenceTarget.checked) {
       model.every = this.everyTarget.value;

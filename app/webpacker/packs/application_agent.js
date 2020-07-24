@@ -25,6 +25,7 @@ import { PlacesInputs } from 'components/places-inputs.js';
 import { RdvWizardStep2 } from 'components/rdv_wizard_step2.js';
 import { MotifForm } from 'components/motif-form.js';
 import { ZonesMap } from 'components/zones-map.js';
+import { AgentsCreneaux } from 'components/agents_creneaux.js'
 import 'components/calendar';
 import 'components/select2';
 import 'components/tooltip';
@@ -109,4 +110,6 @@ $(document).on('turbolinks:load', function() {
   new RdvWizardStep2();
 
   new ZonesMap();
+
+  new AgentsCreneaux();
 });

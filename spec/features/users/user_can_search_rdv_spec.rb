@@ -1,9 +1,9 @@
 describe "User can search for rdvs" do
   let!(:motif) { create(:motif, name: "Vaccination", reservable_online: true) }
   let!(:lieu) { create(:lieu) }
-  let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu) }
+  let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: Date.new(2019, 7, 22), motifs: [motif], lieu: lieu) }
   let!(:lieu2) { create(:lieu) }
-  let!(:plage_ouverture2) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu2) }
+  let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: Date.new(2019, 7, 22), motifs: [motif], lieu: lieu2) }
   let!(:organisation) { plage_ouverture.organisation }
 
   describe "default" do
@@ -71,16 +71,16 @@ describe "User can search for rdvs" do
 
       # Step 4
       expect(page).to have_content("Vos informations")
-      fill_in('Date de naissance', with: Date.tomorrow)
+      fill_in('Date de naissance', with: Date.tomorrow.strftime("%d/%m/%Y"))
       click_button('Continuer')
       expect(page).to have_content("Date de naissance est invalide")
-      fill_in('Date de naissance', with: Date.yesterday)
+      fill_in('Date de naissance', with: DateTime.yesterday.strftime("%d/%m/%Y"))
       fill_in('Nom de naissance', with: "Lapinou")
       expect(page).to have_field('Adresse', with: '79 Rue de Plaisance, 92250 La Garenne-Colombes')
       click_button('Continuer')
 
       # Step 5
-      expect(page).to have_content(motif.name)
+      expect(page).to have_content("Vaccination")
       expect(page).to have_content("Michel LAPIN (LAPINOU)")
 
       # Add relative

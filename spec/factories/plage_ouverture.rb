@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :plage_ouverture do
     title { generate(:plage_title) }
     organisation { Organisation.first || create(:organisation) }
-    first_day { Date.new(2019, 7, 22) }
+    first_day { Date.today.next_week(:monday) }
     agent { Agent.first || create(:agent) }
     start_time { Tod::TimeOfDay.new(8) }
     end_time { Tod::TimeOfDay.new(12) }

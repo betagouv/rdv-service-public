@@ -16,6 +16,10 @@ class Agents::Creneaux::AgentSearchesController < AgentAuthController
         @agent_search.organisation_id = current_organisation.id
         set_params
         @lieux = @agent_search.lieux
+        @next_availability_by_lieux = {}
+        @lieux.each do |lieu|
+          @next_availability_by_lieux[lieu.id] = FindAvailabilityService.perform_with(@motif.name, lieu, Date.today, for_agents: true)
+        end
 
         @creneaux_by_lieux = @lieux.each_with_object({}) do |lieu, creneaux_by_lieux|
           creneaux_by_lieux[lieu.id] = CreneauxBuilderService.perform_with(@motif.name, lieu, @date_range, for_agents: true, agent_ids: @agent_ids)
@@ -31,14 +35,15 @@ class Agents::Creneaux::AgentSearchesController < AgentAuthController
     @agent_search.organisation_id = current_organisation.id
     set_params
     @lieu = @agent_search.lieu
-
-    @creneaux = CreneauxBuilderService.perform_with(@motif.name, @lieu, @date_range, for_agents: true, agent_ids: @agent_ids)
+    @next_availability = FindAvailabilityService.perform_with(@motif.name, @lieu, Date.today, for_agents: true)
+    @creneaux = CreneauxBuilderService.perform_with(@motif.name, @lieu, @date_range, for_agents: true, agent_ids: @agent_ids, user_ids: @user_ids)
   end
 
   def set_params
     @date_range = @agent_search.from_date..(@agent_search.from_date + 6.days)
     @motif = @agent_search.motif
     @agent_ids = @agent_search.agent_ids
+    @user_ids = @agent_search.user_ids
   end
 
   private
@@ -48,6 +53,6 @@ class Agents::Creneaux::AgentSearchesController < AgentAuthController
   end
 
   def by_lieu_params
-    params.permit(:lieu_id, :motif_id, :from_date, agent_ids: [])
+    params.permit(:lieu_id, :motif_id, :from_date, agent_ids: [], user_ids: [])
   end
 end

@@ -5,10 +5,19 @@ class Agents::PlageOuverturesController < AgentAuthController
 
   def index
     @agent = policy_scope(Agent).find(filter_params[:agent_id])
-    plage_ouvertures = policy_scope(PlageOuverture).where(agent_id: filter_params[:agent_id])
+    plage_ouvertures = policy_scope(PlageOuverture)
+      .includes(:lieu, :organisation)
+      .where(agent_id: filter_params[:agent_id])
+      .order(updated_at: :desc)
     respond_to do |f|
       f.json { @plage_ouverture_occurences = plage_ouvertures.flat_map { |po| po.occurences_for(date_range_params).map { |occurence| [po, occurence] } }.sort_by(&:second) }
-      f.html { @plage_ouvertures = plage_ouvertures.includes(:lieu, :organisation).all.page(filter_params[:page]) }
+      f.html do
+        @current_tab = filter_params[:current_tab]
+        @plage_ouvertures = plage_ouvertures
+          .where(expired_cached: filter_params[:current_tab] == 'expired')
+          .page(filter_params[:page])
+        @display_tabs = plage_ouvertures.where(expired_cached: true).any? || params[:current_tab] == 'expired'
+      end
     end
   end
 
@@ -24,33 +33,34 @@ class Agents::PlageOuverturesController < AgentAuthController
         end_time: Tod::TimeOfDay.new(12),
       }
     end
-    puts "defaults is #{defaults}"
     @plage_ouverture = PlageOuverture.new(
       organisation: current_organisation,
       agent: @agent,
       **defaults
     )
     authorize(@plage_ouverture)
-    respond_right_bar_with @plage_ouverture
   end
 
   def edit
     authorize(@plage_ouverture)
-    respond_right_bar_with @plage_ouverture
   end
 
   def create
     @plage_ouverture = PlageOuverture.new(plage_ouverture_params)
     @plage_ouverture.organisation = current_organisation
     authorize(@plage_ouverture)
-    flash[:notice] = "Plage d'ouverture créée" if @plage_ouverture.save
-    respond_right_bar_with @plage_ouverture, location: organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent)
+    if @plage_ouverture.save
+      flash[:notice] = "Plage d'ouverture créée"
+      redirect_to organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent)
+    else
+      render :new
+    end
   end
 
   def update
     authorize(@plage_ouverture)
     flash[:notice] = "La plage d'ouverture a été modifiée." if @plage_ouverture.update(plage_ouverture_params)
-    respond_right_bar_with @plage_ouverture, location: organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent)
+    render :edit
   end
 
   def destroy
@@ -76,6 +86,6 @@ class Agents::PlageOuverturesController < AgentAuthController
   end
 
   def filter_params
-    params.permit(:start, :end, :organisation_id, :agent_id, :page)
+    params.permit(:start, :end, :organisation_id, :agent_id, :page, :current_tab)
   end
 end

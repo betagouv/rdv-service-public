@@ -9,24 +9,31 @@
     .d-inline-block.mr-2
       = select_tag :id, options_for_select(policy_scope(Agent).complete.active.order_by_last_name.map { |agent| [agent.full_name, agent.id, { 'data-url': organisation_agent_plage_ouvertures_path(current_organisation, agent.id)}]}, selected: @agent.id), class: "select2-input", onchange: "Turbolinks.visit($('.select2-input option:selected').attr('data-url'))"
 
-  = link_to 'Créer une plage d\'ouverture', new_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-white align-bottom", data: { rightbar: true }
+  = link_to 'Créer une plage d\'ouverture', new_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-white align-bottom"
 
 .card
-  .card-body
-    - if @plage_ouvertures.any?
-      table.table
-        thead
-          tr
-            th Description
-            th Motifs
-            th Lieu
-            th Dates
-            th
-        tbody
-          = render @plage_ouvertures
-      .d-flex.justify-content-center
-        = paginate @plage_ouvertures, theme: 'twitter-bootstrap-4'
-    - else
+  - if @display_tabs
+    ul.nav.nav-tabs.px-2.mt-2
+      li.nav-item
+        = link_to "En cours", organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, current_tab: 'not_expired'), class: "nav-link #{'active' if @current_tab != 'expired'}"
+      li.nav-item
+        = link_to "Passées", organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, current_tab: 'expired'), class: "nav-link #{'active' if @current_tab == 'expired'}"
+
+  - if @plage_ouvertures.any?
+    table.table
+      thead
+        tr
+          th.border-top-0 Description
+          th.border-top-0 Motifs
+          th.border-top-0 Lieu
+          th.border-top-0 Dates
+          th.border-top-0
+      tbody
+        = render @plage_ouvertures
+    .d-flex.justify-content-center
+      = paginate @plage_ouvertures, theme: 'twitter-bootstrap-4'
+  - else
+    .card-body
       .row.justify-content-md-center
         .col-md-6.text-center.my-5
           p.mb-2.lead
@@ -38,5 +45,7 @@
           span.fa-stack.fa-4x
             i.fa.fa-circle.fa-stack-2x.text-primary
             i.far.fa-calendar.fa-stack-1x.text-white
+
+  .card-body
     .text-center
-      = add_button 'Créer une plage d\'ouverture', new_organisation_agent_plage_ouverture_path(current_organisation, @agent.id)
+      = link_to 'Créer une plage d\'ouverture', new_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-primary"

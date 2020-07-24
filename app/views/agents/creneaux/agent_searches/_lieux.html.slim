@@ -1,12 +1,14 @@
 - if lieux.any?
   - lieux.each do |lieu|
+    - next if next_availability_by_lieux[lieu.id].blank?
+    
     .card
       .card-body
         h5.card-title= lieu.name
         h6.card-subtitle.mb-3= lieu.address
 
         - creneaux = creneaux_by_lieux[lieu.id]
-        = render 'creneaux', lieu: lieu, creneaux: creneaux, date_range: date_range, motif: motif, agent_ids: agent_ids, user_id: user_id
+        = render 'creneaux', lieu: lieu, creneaux: creneaux, date_range: date_range, motif: motif, agent_ids: agent_ids, user_ids: user_ids, next_availability: next_availability_by_lieux[lieu.id]
 
 - else
   | Il n'y a pour l'instant aucune disponibilité pour le motif #{motif.name}

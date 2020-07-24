@@ -2,7 +2,7 @@ class Creneau::AgentSearch
   include ActiveModel::Model
 
   attr_accessor :organisation_id, :motif_id, :lieu_id
-  attr_writer :from_date, :agent_ids, :lieu_ids
+  attr_writer :from_date, :user_ids, :agent_ids, :lieu_ids
 
   validates :organisation_id, :motif_id, presence: true
 
@@ -12,6 +12,10 @@ class Creneau::AgentSearch
 
   def motif
     organisation.motifs.find_by(id: motif_id)
+  end
+
+  def users
+    organisation.users.where(id: user_ids)
   end
 
   def agents
@@ -34,6 +38,10 @@ class Creneau::AgentSearch
 
   def lieu_ids
     @lieu_ids&.reject(&:blank?)
+  end
+
+  def user_ids
+    @user_ids&.reject(&:blank?)
   end
 
   def agent_ids
