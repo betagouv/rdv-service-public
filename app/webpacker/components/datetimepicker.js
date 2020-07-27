@@ -11,7 +11,7 @@ class Datetimepicker {
       scrollMonth: false,
       scrollInput: false,
       dayOfWeekStart: 1,
-      onChangeDateTime: (_, $input) => { $input[0].dispatchEvent(new Event("change")); } // forces stimulus actions to execute
+      onChangeDateTime: (_, $input) => { $input[0].dispatchEvent(new Event("change")); } // forces hooks to execute
     });
     $("[data-behaviour='datetimepicker']").datetimepicker({
       format:'d/m/Y H:i',

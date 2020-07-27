@@ -35,18 +35,12 @@ import 'components/tooltip';
 import 'components/sentry';
 import 'components/browser-detection';
 import "actiontext";
-import { Application } from "stimulus";
-import { definitionsFromContext } from "stimulus/webpack-helpers";
 
 import 'stylesheets/print';
 import 'stylesheets/application_agent'
 
 // this is necessary so images are compiled by webpack
 require.context('../images', true)
-
-const application = Application.start();
-const context = require.context("./controllers", true, /\.js$/);
-application.load(definitionsFromContext(context));
 
 new Modal();
 new Rightbar();
