@@ -39,18 +39,17 @@
           = f.input :status, collection: Rdv.human_enum_collection(:status), as: :radio_buttons, label: ''
           .text-right= f.submit class: 'btn btn-secondary'
 
-.row data-controller='versions' data-versions-url=organisation_rdv_versions_path(@rdv.organisation, @rdv, only: ['user_ids', 'agent_ids', 'duration_in_min', 'status', 'starts_at', 'lieu_id', 'notes', 'location'])
+.row
   .col-md-12
     .card
       .card-header
-        a[
+        a.js-record-versions-toggle[
           href="#history"
-          data-action="click->versions#toggle"
-          data-target="versions.title"
           data-text-close="🕵️‍♂️ Cacher l'historique des actions ˄"
           data-text-open="🕵️‍♂️ Afficher l'historique des actions ⌄"
+          data-versions-url=organisation_rdv_versions_path(@rdv.organisation, @rdv, only: ['user_ids', 'agent_ids', 'duration_in_min', 'status', 'starts_at', 'lieu_id', 'notes', 'location'])
         ]
           | 🕵️‍♂️ Afficher l'historique des actions ⌄
-      #history.collapse class=(@uncollapsed_section == 'history' ? "show" : "") data-target="versions.body"
+      .js-record-versions-body#history.collapse class=(@uncollapsed_section == 'history' ? "show" : "")
         .text-center.py-4
           .spinner.spinner-border
