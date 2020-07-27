@@ -28,6 +28,7 @@ import { ZonesMap } from 'components/zones-map.js';
 import { AgentsCreneaux } from 'components/agents_creneaux.js'
 import { AgentUserForm } from 'components/agent-user-form.js'
 import { RecordVersions } from 'components/record-versions.js'
+import { RecurrenceForm } from 'components/recurrence-form.js'
 import 'components/calendar';
 import 'components/select2';
 import 'components/tooltip';
@@ -119,4 +120,6 @@ $(document).on('turbolinks:load', function() {
   new AgentUserForm();
 
   new RecordVersions();
+
+  new RecurrenceForm();
 });
