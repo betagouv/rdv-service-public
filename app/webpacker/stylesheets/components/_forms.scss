@@ -50,7 +50,7 @@ select.form-control-sm {
   display: none;
 }
 
-// hack for agents users form responsability type radio
-.form-group.radio_buttons.d-flex .form-check{
-  margin-right: 1rem;
+// for agents users form responsability type radio
+.form-check-inline .collection_radio_buttons {
+  margin-bottom: 0;
 }

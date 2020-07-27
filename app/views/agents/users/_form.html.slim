@@ -21,11 +21,12 @@
       collection: [:responsible, :relative], \
       label_method: -> { I18n.t("activerecord.attributes.user.responsability_types.#{_1}") }, \
       disabled: user.persisted?, \
-      wrapper_html: { class: 'd-flex' }, \
+      wrapper: :vertical_collection_inline, \
       input_html: { \
         autocomplete: "off", \
         class: "js-responsability-type" \
-      } \
+      }, \
+      label_html: { class: 'mb-0' } \
     )
 
     div *div_opts[:responsible]
