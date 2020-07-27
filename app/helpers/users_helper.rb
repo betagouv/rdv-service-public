@@ -15,14 +15,6 @@ module UsersHelper
     label
   end
 
-  def agent_user_form_url(user)
-    if user.persisted?
-      organisation_user_path(current_organisation, user)
-    else
-      organisation_users_path(current_organisation)
-    end
-  end
-
   def user_details(user, organisation, *attributes, li_class: nil, show_empty: true)
     displayable_user = DisplayableUser.new(user, organisation)
     attributes.map do |attr_name|

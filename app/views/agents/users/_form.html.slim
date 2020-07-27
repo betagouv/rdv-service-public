@@ -1,62 +1,111 @@
-= simple_form_for(user, url: agent_user_form_url(user), remote: from_modal?, data: { modal: from_modal? }) do |f|
-  - if from_modal?
-    = hidden_field '', :modal, value: true
+- div_opts = agent_user_form_div_toggle_opts(user)
+- input_opts = agent_user_form_input_toggle_opts(user)
+- initial_relative_type_tab = user.responsible&.persisted? || user.responsible&.new_and_blank? ? :existing : :new
 
-  = render partial: 'layouts/model_errors', locals: { model: user }
+= simple_form_for( \
+  user, url: agent_user_form_url(user), remote: from_modal?, \
+  html: { class: "js-agent-user-form" }, data: { modal: from_modal? } \
+) do |f|
 
-  = f.input :responsible_id, as: :hidden, wrapper: false
+  - f.simple_fields_for :user_profiles, user.profile_for(current_organisation) do |f_user_profile|
+    = f_user_profile.input :organisation_id, as: :hidden, wrapper: false
 
-  .form-row
-    .col-md-6= f.input :first_name
-    .col-md-6= f.input :last_name
-
-  - user_profile = user.profile_for(current_organisation)
-
-  - if user.responsible?
-    .form-row
-      .col-md-6= f.input :birth_name
-      .col-md-6= date_input(f, :birth_date)
-
-    = f.input :email, as: :email
-    - if !user.persisted?
-      #invite-user.form-row.align-items-baseline.ml-0 style="display: none"
-        = f.check_box :invite_on_create, {checked: true}, 'true', 'false'
-        = f.label :invite_on_create, "Inviter l'utilisateur à se créer un compte sur RDV-solidarites.", class: "ml-1"
-    - if user.pending_reconfirmation?
-      .form-text.text-muted.mb-2
-        | En attente de confirmation pour #{user.unconfirmed_email}
-
-    = f.input :phone_number, as: :tel
-    = f.input :address, input_html: { class: "places-js-container" }
-    = f.association :agents, collection: current_organisation.agents.complete.active.includes(:service), label_method: :full_name_and_service, label: "Agent(s) référent(s)", input_html: { multiple: true, class: 'select2-input' }
-    .form-row
-      .col-md-6= f.input :caisse_affiliation, collection: User.human_enum_collection(:caisse_affiliation)
-      .col-md-6= f.input :affiliation_number
-    .form-row
-      .col-md-6= f.input :family_situation, collection: User.human_enum_collection(:family_situation)
-      .col-md-6= f.input :number_of_children, input_html: { min: '0', max: '15', step: 'any' }
-
-    = f.simple_fields_for :user_profiles, user_profile  do |n|
-      = n.input :organisation_id, as: :hidden
-      = n.input :logement, collection: UserProfile.human_enum_collection(:logement)
-      = n.input :notes, input_html: { rows: 6 }
-
-  - elsif user.relative?
-    = date_input(f, :birth_date)
-
-    = f.simple_fields_for :user_profiles, user_profile do |n|
-      = n.input :organisation_id, as: :hidden
-      = n.input :notes, input_html: { rows: 6 }
-
-  .text-right
     - if from_modal?
-      = link_to "Annuler", "#", class: "btn btn-link", data: { dismiss: 'modal' }
-    - elsif user.persisted?
-      = link_to "Annuler", organisation_user_path(current_organisation, user), class: "btn btn-link"
-    - else
-      = link_to "Annuler", organisation_users_path(current_organisation), class: "btn btn-link"
+      = hidden_field '', :modal, value: true
 
-    - if user.persisted?
-      = f.button :submit
-    - else
-      = f.button :submit, "Créer usager"
+    = render partial: 'layouts/model_errors', locals: { model: user }
+
+    = f.input( \
+      :responsability_type, \
+      as: :radio_buttons, \
+      collection: [:responsible, :relative], \
+      label_method: -> { I18n.t("activerecord.attributes.user.responsability_types.#{_1}") }, \
+      disabled: user.persisted?, \
+      wrapper: :vertical_collection_inline, \
+      input_html: { \
+        autocomplete: "off", \
+        class: "js-responsability-type" \
+      }, \
+      label_html: { class: 'mb-0' } \
+    )
+
+    div *div_opts[:responsible]
+      = render "responsible_form_fields", f: f, f_user_profile: f_user_profile, input_opts: input_opts[:responsible]
+
+    div *div_opts[:relative]
+      .form-row
+        .col-md-6= f.input :first_name, **input_opts[:relative]
+        .col-md-6= f.input :last_name, **input_opts[:relative]
+      = f.input :birth_date, as: :date, html5: true, **input_opts[:relative]
+
+    = f_user_profile.input :notes, input_html: { rows: 6 }
+
+    - if user.new_record?
+      .form-row.mb-2 *div_opts[:relative]
+        .col-md-12.border.p-2.bg-light
+          h5.mb-3 Usager Responsable
+          ul.nav.nav-pills.mb-3 role="tablist"
+            li.nav-item
+              a.nav-link.js-relative-tab-link[
+                data-toggle="tab"
+                href=".tab-pane[data-relative-type='existing']"
+                role="tab"
+                aria-selected="true"
+                data-relative-type="existing"
+                class=("active" if initial_relative_type_tab == :existing)
+              ]
+                | Usager Existant
+            li.nav-item
+              a.nav-link.js-relative-tab-link[
+                data-toggle=("tab" unless user.persisted?)
+                href=".tab-pane[data-relative-type='new']"
+                role="tab"
+                aria-selected="false"
+                data-relative-type="new"
+                class=("active" if initial_relative_type_tab == :new)
+              ]
+                | Nouvel Usager
+          .tab-content
+            .tab-pane.show[
+              role="tabpanel"
+              data-relative-type="existing"
+              class=("active" if initial_relative_type_tab == :existing)
+            ]
+              = f.association( \
+                :responsible, \
+                collection: policy_scope(User).responsible.order_by_last_name, \
+                label_method: -> { full_name_and_birthdate(_1) }, \
+                label: false, \
+                **{input_html: { class: 'select2-input' }}.deep_merge(input_opts[:relative_existing]), \
+                required: true, \
+              )
+            - unless user.persisted?
+              .tab-pane[
+                role="tabpanel"
+                data-relative-type="new"
+                class=("active" if initial_relative_type_tab == :new)
+              ]
+                = f.simple_fields_for(:responsible, include_id: false) do |sub_form|
+                  = render "responsible_form_fields", f: sub_form, input_opts: input_opts[:relative_new]
+
+    - elsif user.persisted? && user.relative?
+      .form-row.mb-2
+        .col-md-12.border.p-2.bg-light
+          h5.mb-3 Usager Responsable
+          a.nav-link.js-relative-tab-link.active.d-none[data-relative-type="existing"]
+          / ^ for JS
+          .mb-3
+            b= link_to full_name_and_birthdate(user.responsible), organisation_user_path(current_organisation, user.responsible)
+          = f.simple_fields_for(:responsible, include_id: true) do |sub_form|
+            = render "responsible_form_fields", f: sub_form, input_opts: input_opts[:relative_existing]
+
+    .text-right
+      - if from_modal?
+        = link_to "Annuler", "#", class: "btn btn-link", data: { dismiss: 'modal' }
+      - else
+        = link_to "Annuler", agent_user_form_cancel_path(user), class: "btn btn-link"
+
+      - if user.persisted?
+        = f.button :submit
+      - else
+        = f.button :submit, "Créer usager"

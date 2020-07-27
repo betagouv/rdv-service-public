@@ -1,0 +1,53 @@
+- user = f.object
+
+.form-row
+  .col-md-6= f.input :first_name, **input_opts
+  .col-md-6= f.input :last_name, **input_opts
+
+.form-row
+  .col-md-6= f.input :birth_name, **input_opts
+  .col-md-6= date_input(f, :birth_date, **input_opts)
+
+= f.input(:email, as: :email, **input_opts)
+
+- if user.new_record?
+  = f.input( \
+    :invite_on_create, \
+    as: :boolean, \
+    label: "Inviter l'utilisateur à se créer un compte sur RDV-solidarites.", \
+    wrapper_html: { \
+      class:"align-items-baseline ml-0 d-none js-invite-row",
+    }, \
+    **input_opts, \
+  )
+
+- elsif user.pending_reconfirmation?
+  .form-text.text-muted.mb-2
+    | En attente de confirmation pour #{user.unconfirmed_email}
+
+= f.input :phone_number, as: :tel, **input_opts
+
+= f.input :address, **(input_opts.deep_merge(input_html: { class: "places-js-container" }))
+
+= f.association( \
+  :agents, \
+  collection: current_organisation.agents.complete.active.includes(:service), \
+  label_method: :full_name_and_service, \
+  label: "Agent(s) référent(s)", \
+  **{input_html: { multiple: true, class: 'select2-input' }}.deep_merge(input_opts), \
+)
+
+.form-row
+  .col-md-6= f.input :caisse_affiliation, collection: User.human_enum_collection(:caisse_affiliation), **input_opts
+  .col-md-6= f.input :affiliation_number, **input_opts
+
+.form-row
+  .col-md-6= f.input :family_situation, collection: User.human_enum_collection(:family_situation), **input_opts
+  .col-md-6= f.input :number_of_children, **{ input_html: { min: '0', max: '15', step: 'any' } }.deep_merge(input_opts)
+
+- if local_assigns[:f_user_profile]
+  = f_user_profile.input :logement, collection: UserProfile.human_enum_collection(:logement), **input_opts
+- else
+  = f.simple_fields_for :user_profiles, user.profile_for(current_organisation) do |f_user_profile|
+    = f_user_profile.input :organisation_id, as: :hidden, wrapper: false, **input_opts
+    = f_user_profile.input :logement, collection: UserProfile.human_enum_collection(:logement), **input_opts

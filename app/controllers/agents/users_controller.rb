@@ -4,6 +4,18 @@ class Agents::UsersController < AgentAuthController
   before_action :set_organisation, only: [:new, :create]
   before_action :set_user, except: [:index, :search, :new, :create, :link_to_organisation]
 
+  PERMITTED_ATTRIBUTES = [
+    :id,
+    :first_name, :last_name, :birth_name, :email, :phone_number,
+    :birth_date, :address, :caisse_affiliation, :affiliation_number,
+    :family_situation, :number_of_children, :invite_on_create
+  ].freeze
+
+  PERMITTED_NESTED_ATTRIBUTES = {
+    agent_ids: [],
+    user_profiles_attributes: [:notes, :logement, :id, :organisation_id],
+  }.freeze
+
   def index
     @users = policy_scope(User).order_by_last_name.page(params[:page])
     filter_users if params[:user] && params[:user][:search]
@@ -20,9 +32,8 @@ class Agents::UsersController < AgentAuthController
   def new
     @user = User.new
     @user.user_profiles.build(organisation: current_organisation)
-    if params[:responsible_id].present?
-      @user.responsible = policy_scope(User).find(params[:responsible_id])
-    end
+    @user.responsible = policy_scope(User).find(params[:responsible_id]) if params[:responsible_id].present?
+    prepare_new
     authorize(@user)
     respond_modal_with @user
   end
@@ -37,14 +48,10 @@ class Agents::UsersController < AgentAuthController
     return respond_modal_with @user, location: add_query_string_params_to_url(request.referer, 'user_ids[]': @user.id) if from_modal?
 
     if user_persisted
-      if @user.responsible?
-        flash[:notice] = "L'usager a été créé."
-        redirect_to organisation_user_path(@organisation, @user)
-      else
-        flash[:notice] = "#{@user.full_name} a été ajouté comme proche."
-        redirect_to organisation_user_path(current_organisation, @user.responsible)
-      end
+      flash[:notice] = "L'usager a été créé."
+      redirect_to organisation_user_path(@organisation, @user)
     else
+      prepare_new
       render :new
     end
   end
@@ -114,8 +121,16 @@ class Agents::UsersController < AgentAuthController
     true
   end
 
+  def prepare_new
+    return unless @user.responsible.nil?
+
+    @user.responsible = User.new
+    @user.responsible.user_profiles.build(organisation: current_organisation)
+  end
+
   def prepare_create
     @user = User.new(user_params)
+    authorize(@user.responsible) if @user.responsible&.persisted?
     @user.invited_by = current_agent
     authorize(@user.responsible) if @user.responsible.present?
     @organisation = current_organisation
@@ -130,21 +145,10 @@ class Agents::UsersController < AgentAuthController
 
   def user_params
     params.require(:user).permit(
-      :first_name,
-      :last_name,
-      :birth_name,
-      :email,
-      :phone_number,
-      :birth_date,
-      :address,
-      :caisse_affiliation,
-      :affiliation_number,
-      :family_situation,
-      :number_of_children,
-      :invite_on_create,
+      *PERMITTED_ATTRIBUTES,
       :responsible_id,
-      user_profiles_attributes: [:notes, :logement, :id, :organisation_id],
-      agent_ids: []
+      **PERMITTED_NESTED_ATTRIBUTES,
+      responsible_attributes: [PERMITTED_ATTRIBUTES, **PERMITTED_NESTED_ATTRIBUTES]
     )
   end
 

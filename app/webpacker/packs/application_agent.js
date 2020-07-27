@@ -19,7 +19,6 @@ import { Menu } from 'components/menu';
 import { Layout } from 'components/layout';
 import { Modal } from 'components/modal';
 import { Rightbar } from 'components/rightbar';
-import { InviteUserOnCreate } from 'components/invite-user-on-create';
 import { PopulateLibelle } from 'components/populate-libelle';
 import 'components/analytic.js';
 import { PlacesInputs } from 'components/places-inputs.js';
@@ -27,6 +26,7 @@ import { RdvWizardStep2 } from 'components/rdv_wizard_step2.js';
 import { MotifForm } from 'components/motif-form.js';
 import { ZonesMap } from 'components/zones-map.js';
 import { AgentsCreneaux } from 'components/agents_creneaux.js'
+import { AgentUserForm } from 'components/agent-user-form.js'
 import 'components/calendar';
 import 'components/select2';
 import 'components/tooltip';
@@ -54,7 +54,7 @@ global.$ = require('jquery');
 $(document).on('shown.bs.modal', '.modal', function(e) {
   $('input[type="tel"]').mask('00 00 00 00 00')
   new Datetimepicker();
-  new InviteUserOnCreate();
+  new AgentUserForm()
 });
 
 $(document).on('shown.rightbar', '.right-bar', function(e) {
@@ -107,8 +107,6 @@ $(document).on('turbolinks:load', function() {
 
   new Datetimepicker();
 
-  new InviteUserOnCreate();
-
   new MotifForm();
 
   new RdvWizardStep2();
@@ -116,4 +114,6 @@ $(document).on('turbolinks:load', function() {
   new ZonesMap();
 
   new AgentsCreneaux();
+
+  new AgentUserForm();
 });

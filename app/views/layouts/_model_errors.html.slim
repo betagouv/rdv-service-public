@@ -3,5 +3,5 @@
     a.close(href="#" data-dismiss="alert")
       i.fa.fa-times
     ul.m-0
-      - model.errors.full_messages.each do |msg|
+      - errors_full_messages(model).each do |msg|
         li=msg
