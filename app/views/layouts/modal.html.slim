@@ -1,5 +1,5 @@
 #mainModal.modal.fade aria-hidden="true" aria-labelledby="mainModalLabel" role="dialog" tabindex="-1" data-url=request.path
-  .modal-dialog.modal-md
+  .modal-dialog class=(content_for(:modal_class) || 'modal-md')
     .modal-content
       .modal-header.modal-colored-header.bg-primary
         h4#mainModalLabel.modal-title.m-0.text-white.text-center.w-100
