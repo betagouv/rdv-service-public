@@ -8,6 +8,7 @@ class Agents::PlageOuvertureMailer < ApplicationMailer
       encoding: "base64", # seems necessary for attachments
     }
     m = mail(
+      from: 'secretariat-auto@rdv-solidarites.fr',
       to: plage_ouverture.agent.email,
       subject: "#{BRAND} #{plage_ouverture.title} - Plage d'ouverture"
     )
