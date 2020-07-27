@@ -34,7 +34,6 @@ import 'components/select2';
 import 'components/tooltip';
 import 'components/sentry';
 import 'components/browser-detection';
-import "actiontext";
 
 import 'stylesheets/print';
 import 'stylesheets/application_agent'
