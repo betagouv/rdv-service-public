@@ -41,7 +41,7 @@ class Agents::UsersController < AgentAuthController
   def create
     prepare_create
     authorize(@user)
-    return render :compare if duplicate_found? && !from_modal?
+    return render :compare, **(from_modal? ? { layout: 'modal' } : {}) if duplicate_found?
 
     @user.skip_confirmation_notification!
     user_persisted = @user.save
