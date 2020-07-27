@@ -1,29 +1,29 @@
 import 'whatwg-fetch'
-import { Controller } from "stimulus"
 
-export default class extends Controller {
+class RecordVersions {
 
-  static targets = [ "title", "body" ]
-
-  initialize() {
-    this.loaded = false;
-    this.displayed = false;
-  }
-
-  connect() {
+  constructor() {
     if (window.location.hash != "#history") return;
 
+    this.loaded = false;
+    this.displayed = false;
+
+    this.titleTarget = document.querySelector('.js-record-versions-toggle')
+    this.bodyTarget = document.querySelector('.js-record-versions-body')
+    if (!this.titleTarget || !this.bodyTarget) return;
+
+    this.titleTarget.addEventListener('click', this.toggle)
     this.toggle()
   }
 
-  toggle(event) {
+  toggle = (event) => {
     if (event) { event.preventDefault() }
     this.displayed = !this.displayed
     const textKey = this.displayed ? "close" : "open"
     this.titleTarget.textContent = this.titleTarget.getAttribute(`data-text-${textKey}`)
     $(this.bodyTarget).collapse(this.displayed ? "show" : "hide")
     if (!this.loaded && this.displayed) {
-      fetch(this.data.get("url"))
+      fetch(this.titleTarget.dataset.versionsUrl)
         .then(res => res.text())
         .then(text => {
           this.bodyTarget.innerHTML = text
@@ -33,3 +33,5 @@ export default class extends Controller {
     history.replaceState(null, null, this.displayed ? "#history" : "#")
   }
 }
+
+export { RecordVersions }

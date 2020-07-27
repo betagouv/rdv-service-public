@@ -27,24 +27,20 @@ import { MotifForm } from 'components/motif-form.js';
 import { ZonesMap } from 'components/zones-map.js';
 import { AgentsCreneaux } from 'components/agents_creneaux.js'
 import { AgentUserForm } from 'components/agent-user-form.js'
+import { RecordVersions } from 'components/record-versions.js'
+import { RecurrenceForm } from 'components/recurrence-form.js'
 import 'components/calendar';
 import 'components/select2';
 import 'components/tooltip';
 import 'components/sentry';
 import 'components/browser-detection';
 import "actiontext";
-import { Application } from "stimulus";
-import { definitionsFromContext } from "stimulus/webpack-helpers";
 
 import 'stylesheets/print';
 import 'stylesheets/application_agent'
 
 // this is necessary so images are compiled by webpack
 require.context('../images', true)
-
-const application = Application.start();
-const context = require.context("./controllers", true, /\.js$/);
-application.load(definitionsFromContext(context));
 
 new Modal();
 new Rightbar();
@@ -116,4 +112,8 @@ $(document).on('turbolinks:load', function() {
   new AgentsCreneaux();
 
   new AgentUserForm();
+
+  new RecordVersions();
+
+  new RecurrenceForm();
 });

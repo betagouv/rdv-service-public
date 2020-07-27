@@ -34,7 +34,6 @@
     "select2-bootstrap4-theme": "^1.0.0",
     "selectize": "^0.12.6",
     "serialize-javascript": "^2.1.1",
-    "stimulus": "^1.1.1",
     "turbolinks": "^5.2.0",
     "whatwg-fetch": "^3.0.0"
   },

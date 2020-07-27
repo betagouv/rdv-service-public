@@ -1,35 +1,21 @@
-import { Controller } from "stimulus"
+class RecurrenceForm {
+  constructor() {
+    this.element = document.querySelector('.js-recurrence-container')
+    if (!this.element) return;
 
-export default class extends Controller {
-  static targets = [ "hasRecurrence", "recurrenceComputed", "interval", "every", "on", "until", "firstDay", "monthly" ]
+    this.hasRecurrenceTarget = document.querySelector('.js-recurrence-toggle')
+    this.recurrenceComputedTarget = document.querySelector('.js-recurrence-computed')
+    this.intervalTarget = document.querySelector('.js-recurrence-interval')
+    this.everyTarget = document.querySelector('.js-recurrence-every')
+    this.onTargets = Array.from(document.querySelectorAll('.js-recurrence-on'))
+    this.untilTarget = document.querySelector('.js-recurrence-until')
+    this.firstDayTarget = document.querySelector('.js-recurrence-first-day')
+    this.monthlyTarget = document.querySelector('.js-recurrence-monthly')
 
-  setOn (model) {
-    this.onTargets.forEach(elt => elt.checked = (typeof(model.on) == "object") && model.on.includes(elt.value));
-  }
+    document.querySelectorAll('.js-recurrence-input').
+      forEach(i => i.addEventListener('change', this.updateRecurrence))
 
-  getOn () {
-    return this.onTargets.filter(x => x.checked).map(x => x.value);
-  }
-
-  getFirstDay () {
-    return moment(this.firstDayTarget.value, "DD/MM/YYYY");
-  }
-
-  setRecurrenceComputed (model) {
-    if (model.every == undefined) {
-      this.recurrenceComputedTarget.value = "";
-    } else {
-      this.recurrenceComputedTarget.value = JSON.stringify(model);
-    }
-  }
-
-  getRecurrenceComputed () {
-    return JSON.parse(this.recurrenceComputedTarget.value);
-  }
-
-  initialize() {
     let model = this.getRecurrenceComputed() || {};
-
     if (model.every == undefined) {
       this.hasRecurrenceTarget.checked = false;
     } else {
@@ -40,15 +26,35 @@ export default class extends Controller {
         this.untilTarget.value = moment(model.until).format("DD/MM/YYYY");
       }
     }
-
-    if(model.every == "week") {
-      this.setOn(model);
-    }
-
+    if(model.every == "week") this.setOn(model);
     this.updateView(model);
   }
 
-  updateRecurrence () {
+  setOn = (model) => {
+    this.onTargets.forEach(elt => elt.checked = (typeof(model.on) == "object") && model.on.includes(elt.value));
+  }
+
+  getOn = () => {
+    return this.onTargets.filter(x => x.checked).map(x => x.value);
+  }
+
+  getFirstDay = () => {
+    return moment(this.firstDayTarget.value, "DD/MM/YYYY");
+  }
+
+  setRecurrenceComputed = (model) => {
+    if (model.every == undefined) {
+      this.recurrenceComputedTarget.value = "";
+    } else {
+      this.recurrenceComputedTarget.value = JSON.stringify(model);
+    }
+  }
+
+  getRecurrenceComputed = () => {
+    return JSON.parse(this.recurrenceComputedTarget.value);
+  }
+
+  updateRecurrence = () => {
     let model = {};
 
     if (this.hasRecurrenceTarget.checked) {
@@ -65,16 +71,14 @@ export default class extends Controller {
         model.day[this.getWeekday(this.getFirstDay())] = this.getWeekdayPositionInMonth(this.getFirstDay());
       }
 
-      if (this.untilTarget.value) {
-        model.until = this.untilTarget.value;
-      }
+      if (this.untilTarget.value) model.until = this.untilTarget.value;
     }
 
     this.updateView(model)
     this.setRecurrenceComputed(model);
   }
 
-  updateView (model) {
+  updateView = (model) => {
     this.element.classList.remove("recurrence-select--weekly");
     this.element.classList.remove("recurrence-select--monthly");
     this.element.classList.remove("recurrence-select--never");
@@ -89,16 +93,16 @@ export default class extends Controller {
     }
   }
 
-  getWeekday (momentDate) {
+  getWeekday = (momentDate) => {
     return momentDate.locale("en").format("dddd").toLowerCase();
   }
 
-  getWeekdayPositionInMonth (momentDate) {
+  getWeekdayPositionInMonth = (momentDate) => {
     let dayInMonth = momentDate.date();
     return Math.floor((dayInMonth - 1) / 7) + 1;
   }
 
-  getDayText (momentDate) {
+  getDayText = (momentDate) => {
     let nthWeekdayOfMonth = this.getWeekdayPositionInMonth(momentDate)
     if (nthWeekdayOfMonth == 1) {
       nthWeekdayOfMonth = `${nthWeekdayOfMonth}er`
@@ -109,3 +113,5 @@ export default class extends Controller {
     return `Tous les ${nthWeekdayOfMonth} ${momentDate.format("dddd")} du mois`;
   }
 }
+
+export { RecurrenceForm }
