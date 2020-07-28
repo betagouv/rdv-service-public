@@ -287,4 +287,30 @@ describe User, type: :model do
       end
     end
   end
+
+  describe "#search_by_text" do
+    let!(:user_jean) { create(:user, first_name: "jean", last_name: "moustache", email: "jean@moustache.fr", phone_number: "01 30 30 04 04") }
+    let!(:user_patricia) { create(:user, first_name: "patricia", last_name: "duroy", email: "patoche@duroy.fr", phone_number: nil) }
+    let!(:user_maurice) { create(:user, first_name: "maurice", last_name: "rhey", email: "mo@mo.lo", phone_number: '0152424242') }
+    subject { User.search_by_text(query) }
+
+    context "name query" do
+      let(:query) { "patricia" }
+      it { should include(user_patricia) }
+      it { should_not include(user_jean) }
+    end
+
+    context "email query" do
+      let(:query) { "patoche@duro" }
+      it { should include(user_patricia) }
+      it { should_not include(user_jean) }
+    end
+
+    context "phone number query" do
+      let(:query) { "013030" }
+      it { should include(user_jean) }
+      it { should_not include(user_patricia) }
+      it { should_not include(user_maurice) }
+    end
+  end
 end

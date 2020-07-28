@@ -3,6 +3,7 @@ class User < ApplicationRecord
   include PgSearch::Model
   include FullNameConcern
   include AccountNormalizerConcern
+  include User::SearchableConcern
 
   attr_accessor :invite_on_create
 
@@ -29,10 +30,6 @@ class User < ApplicationRecord
   validate :user_is_not_duplicate, on: :create, unless: -> { errors[:email]&.present? } # to avoid two similar errors on duplicate email
 
   accepts_nested_attributes_for :user_profiles
-
-  pg_search_scope :search_by_name_or_email, against: [:first_name, :last_name, :birth_name, :email],
-                  ignoring: :accents,
-                  using: { tsearch: { prefix: true } }
 
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql('LOWER(last_name)')) }
