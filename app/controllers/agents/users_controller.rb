@@ -23,9 +23,7 @@ class Agents::UsersController < AgentAuthController
 
   def search
     @users = policy_scope(User).where.not(id: params[:exclude_ids]).order_by_last_name.limit(10)
-    if search_params
-      @users = @users.search_by_name_or_email(search_params)
-    end
+    @users = @users.search_by_text(search_params) if search_params
     skip_authorization
   end
 
@@ -137,7 +135,7 @@ class Agents::UsersController < AgentAuthController
   end
 
   def filter_users
-    @users = @users.search_by_name_or_email(params[:user][:search])
+    @users = @users.search_by_text(params[:user][:search])
     respond_to do |format|
       format.js { render partial: 'search-results' }
     end

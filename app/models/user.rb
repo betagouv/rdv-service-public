@@ -3,6 +3,7 @@ class User < ApplicationRecord
   include PgSearch::Model
   include FullNameConcern
   include AccountNormalizerConcern
+  include User::SearchableConcern
 
   attr_accessor :invite_on_create
 
@@ -30,10 +31,6 @@ class User < ApplicationRecord
 
   accepts_nested_attributes_for :user_profiles
 
-  pg_search_scope :search_by_name_or_email, against: [:first_name, :last_name, :birth_name, :email],
-                  ignoring: :accents,
-                  using: { tsearch: { prefix: true } }
-
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql('LOWER(last_name)')) }
   scope :responsible, -> { where(responsible_id: nil) }
@@ -42,6 +39,7 @@ class User < ApplicationRecord
 
   before_save :set_email_to_null_if_blank
   before_save :normalize_account
+  before_save :format_phone_number
 
   include User::ResponsabilityConcern
 
@@ -91,10 +89,6 @@ class User < ApplicationRecord
   def family
     user_id = relative? ? responsible.id : id
     User.active.where("responsible_id = ? OR id = ?", user_id, user_id)
-  end
-
-  def formatted_phone
-    Phonelib.parse(phone_number).e164
   end
 
   def invitable?
@@ -172,5 +166,13 @@ class User < ApplicationRecord
     return save! if organisations.any? # only actually mark deleted when no orgas left
 
     update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email)
+  end
+
+  def format_phone_number
+    self.phone_number_formatted = (
+      phone_number.present? &&
+      Phonelib.valid?(phone_number) &&
+      Phonelib.parse(phone_number).e164
+    ) || nil
   end
 end
