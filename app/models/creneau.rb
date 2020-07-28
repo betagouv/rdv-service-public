@@ -20,27 +20,23 @@ class Creneau
   end
 
   def available_plages_ouverture
+    return [] if overlaps_jour_ferie? || !respects_booking_delays?
+
     plages_ouverture = PlageOuverture.for_motif_and_lieu_from_date_range(motif.name, lieu, date_range)
     plages_ouverture.select do |p|
       occurence_match_creneau = p.occurences_ranges_for(date_range).any? do |occurences_range|
         (occurences_range.begin <= range.end) && (range.begin <= occurences_range.end)
       end
+      next unless occurence_match_creneau
+
       rdvs = p.agent.rdvs.where(starts_at: date_range).active
       absences_occurrences = p.agent.absences.flat_map { |a| a.occurences_for(date_range) }
-
-      occurence_match_creneau && available_with_rdvs_and_absences?(rdvs, absences_occurrences)
+      overlapping_rdvs_or_absences(rdvs.to_a + absences_occurrences.to_a).empty?
     end
   end
 
   def available?
     available_plages_ouverture.any?
-  end
-
-  def available_with_rdvs_and_absences?(rdvs, absences, for_agents: false)
-    !overlaps_rdv_or_absence?(rdvs) &&
-      !overlaps_rdv_or_absence?(absences) &&
-      !overlaps_jour_ferie? &&
-      (for_agents || respects_booking_delays?)
   end
 
   def to_rdv_for_user(user)
@@ -69,12 +65,12 @@ class Creneau
     respects_min_booking_delay? && respects_max_booking_delay?
   end
 
-  def overlaps_rdv_or_absence?(rdvs_or_absences)
+  def overlapping_rdvs_or_absences(rdvs_or_absences)
     rdvs_or_absences.select do |r_o_a|
       (starts_at < r_o_a.ends_at && r_o_a.ends_at < ends_at) ||
         (starts_at < r_o_a.starts_at && r_o_a.starts_at < ends_at) ||
         (r_o_a.starts_at <= starts_at && ends_at <= r_o_a.ends_at)
-    end.any?
+    end.sort_by(&:ends_at).reverse
   end
 
   def overlaps_jour_ferie?

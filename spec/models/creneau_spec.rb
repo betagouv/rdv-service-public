@@ -10,12 +10,12 @@ describe Creneau, type: :model do
   before { travel_to(now) }
   after { travel_back }
 
-  describe "#overlaps_rdv_or_absence?" do
+  describe "#overlapping_rdvs_or_absences" do
     let(:motif2) { build(:motif, name: "Visite 12 mois", default_duration_in_min: 60, reservable_online: reservable_online) }
     let(:creneau) { build(:creneau, starts_at: Time.zone.local(2019, 9, 19, 9, 0), lieu_id: lieu.id, motif: motif2) }
 
     describe "for absences" do
-      subject { creneau.overlaps_rdv_or_absence?([absence]) }
+      subject { creneau.overlapping_rdvs_or_absences([absence]).any? }
 
       describe "absence overlaps beginning of creneau" do
         let!(:absence) { build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(8, 30), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(9, 30), agent: agent) }
@@ -54,7 +54,7 @@ describe Creneau, type: :model do
     end
 
     describe "for rdvs" do
-      subject { creneau.overlaps_rdv_or_absence?([rdv]) }
+      subject { creneau.overlapping_rdvs_or_absences([rdv]).any? }
 
       describe "rdv overlaps beginning of creneau" do
         let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 8, 30), duration_in_min: 45, agents: [agent]) }
@@ -89,6 +89,21 @@ describe Creneau, type: :model do
       describe "rdv is like creneau" do
         let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 60, agents: [agent]) }
         it { is_expected.to eq(true) }
+      end
+    end
+
+    describe "mixed absences and rdvs" do
+      subject { creneau.overlapping_rdvs_or_absences([rdv1, rdv2, absence]) }
+
+      describe "all overlap creneau" do
+        let(:rdv1) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 10, agents: [agent]) }
+        let(:rdv2) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 35, agents: [agent]) }
+        let(:absence) { build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(9, 20), agent: agent) }
+
+        it "should work and be ordered so the first is the one that ends last" do
+          expect(subject.count).to eq(3)
+          expect(subject.first).to eq(rdv2)
+        end
       end
     end
   end
@@ -176,20 +191,6 @@ describe Creneau, type: :model do
     context "creneau does not respect max booking delay" do
       let(:creneau) { build(:creneau, :does_not_respect_max_booking_delay) }
       it { should be false }
-    end
-  end
-
-  describe "#available_with_rdvs_and_absences?" do
-    context "does not respect min or max booking delay" do
-      let(:creneau) { build(:creneau, :does_not_respect_min_booking_delay) }
-      context "not for agents (default)" do
-        subject { creneau.available_with_rdvs_and_absences?([], []) }
-        it { should eq false }
-      end
-      context "for agents" do
-        subject { creneau.available_with_rdvs_and_absences?([], [], for_agents: true) }
-        it { should eq true }
-      end
     end
   end
 end
