@@ -1,5 +1,5 @@
 .float-right.mb-2
   = simple_form_for :user, url: organisation_users_path(current_organisation), html: { method: :get, class: 'form-inline' }, wrapper: :inline_form, remote: true  do |f|
-    = f.input :search, placeholder: 'Prénom, Nom, Email, Téléphone', label: false, input_html: { autocomplete: 'off', class: 'search-form-control' }
+    = f.input :search, placeholder: 'Prénom, Nom, Email, Téléphone', label: false, input_html: { autocomplete: 'off', class: 'search-form-control', value: params.dig(:user, :search) }
     = f.button :submit, 'Rechercher'
-= link_to 'Réinitialiser', organisation_users_path(current_organisation), class: 'btn btn-link float-right d-none', id: "clear-search-link"
+= link_to 'Réinitialiser', organisation_users_path(current_organisation), class: "btn btn-link float-right #{params.dig(:user, :search).blank? && 'd-none'}", id: "clear-search-link"

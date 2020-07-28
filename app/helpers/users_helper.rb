@@ -14,19 +14,6 @@ module UsersHelper
     label += " - #{birth_date_and_age(user)}" if user.birth_date
     label
   end
-
-  def user_details(user, organisation, *attributes, li_class: nil, show_empty: true)
-    displayable_user = DisplayableUser.new(user, organisation)
-    attributes.map do |attr_name|
-      next unless show_empty || displayable_user.send(attr_name).present?
-
-      i18n_ns = [:logement, :notes].include?(attr_name.to_sym) ? :user_profile : :user
-      content_tag(:li, class: li_class) do
-        content_tag(:strong, "#{t("activerecord.attributes.#{i18n_ns}.#{attr_name}")} : ") +
-          content_tag(:span, displayable_user.send(attr_name))
-      end
-    end.join.html_safe
-  end
 end
 
 class DisplayableUser

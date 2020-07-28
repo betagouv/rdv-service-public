@@ -1,12 +1,15 @@
 ul.list-unstyled.mb-5
-  = user_details(user, current_organisation, :first_name, :last_name, :birth_name, :birth_date, :phone_number, :address, :email, li_class: "mb-2")
+  - [:first_name, :last_name, :birth_name, :birth_date, :phone_number, :address, :email].each do |attr_name|
+    li.mb-2= render "common/user_attribute", user: user, attribute_name: attr_name
+
   - if user.pending_reconfirmation?
     .text-muted.mb-2
       | En attente de confirmation pour #{user.unconfirmed_email}
 
 h4.card-title.mb-3 Informations sociales
 ul.list-unstyled.mb-5
-  = user_details(user, current_organisation, :caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :logement, li_class: "mb-2")
+  - [:caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :logement].each do |attr_name|
+    li.mb-2= render "common/user_attribute", user: user, attribute_name: attr_name
   strong
     i.far.fa-fw.fa-sticky-note>
     | Notes libres :

@@ -131,6 +131,14 @@ class User < ApplicationRecord
     "user_#{id}@deleted.rdv-solidarites.fr"
   end
 
+  def other_users_with_same_phone_number(organisation)
+    User
+      .joins(:user_profiles)
+      .where(user_profiles: { organisation: organisation })
+      .where.not(id: id)
+      .where(phone_number_formatted: phone_number_formatted)
+  end
+
   protected
 
   def password_required?
