@@ -250,4 +250,41 @@ describe User, type: :model do
       expect(loulou.responsible.first_name).to eq("Jean")
     end
   end
+
+  describe "phone_number formatted normalization" do
+    subject { user.phone_number_formatted }
+    context "on create" do
+      context "no phone number" do
+        let!(:user) { create(:user, phone_number: nil) }
+        it { should eq(nil) }
+      end
+      context "blank phone number" do
+        let!(:user) { create(:user, phone_number: '') }
+        it { should eq(nil) }
+      end
+      context "valid phone number" do
+        let!(:user) { create(:user, phone_number: '01 30 30 40 40') }
+        it { should eq('+33130304040') }
+      end
+      context "invalid phone number" do
+        it "should not save" do
+          user = build(:user, phone_number: '01 30 20')
+          expect(user.save).to be false
+        end
+      end
+    end
+
+    context "on update" do
+      context "previous phone number" do
+        it "should update it" do
+          user = create(:user, phone_number: '01 30 30 40 40')
+          expect(user.phone_number_formatted).to eq('+33130304040')
+          user.update!(phone_number: '04 300 32020')
+          expect(user.phone_number_formatted).to eq('+33430032020')
+          user.update!(phone_number: '')
+          expect(user.phone_number_formatted).to eq(nil)
+        end
+      end
+    end
+  end
 end
