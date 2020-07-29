@@ -57,6 +57,10 @@ class Rdv < ApplicationRecord
     starts_at + duration_in_min.minutes
   end
 
+  def starts_at_date
+    starts_at.to_date
+  end
+
   def past?
     ends_at < Time.zone.now
   end

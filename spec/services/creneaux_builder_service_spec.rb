@@ -4,7 +4,7 @@ describe CreneauxBuilderService, type: :service do
   let!(:lieu) { create(:lieu) }
   let(:today) { Date.new(2019, 9, 19) }
   let(:six_days_later) { today + 6.days }
-  let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
+  let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes) }
   let(:agent) { plage_ouverture.agent }
   let(:now) { today.in_time_zone + 8.hours } # 8 am
   let(:options) { {} }
@@ -53,10 +53,46 @@ describe CreneauxBuilderService, type: :service do
     let!(:absence) { create(:absence, agent: agent, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 15)) }
 
     it do
-      expect(subject.size).to eq(2)
+      expect(subject.size).to eq(3)
 
       is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 15), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 45), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+    end
+  end
+
+  context "recurring plage ouverture" do
+    let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, recurrence: Montrose.every(:day)) }
+
+    context "with absence spanning 2 days, ending before start of second day" do
+      let!(:absence) { create(:absence, agent: agent, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 20), end_time: Tod::TimeOfDay.new(6, 30)) }
+
+      it do
+        creneaux_day1 = subject.select { _1[:starts_at].to_date == Date.new(2019, 9, 19) }
+        expect(creneaux_day1.size).to eq(1)
+        creneaux_day1.should include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        creneaux_day2 = subject.select { _1[:starts_at].to_date == Date.new(2019, 9, 20) }
+        expect(creneaux_day2.size).to eq(4)
+        creneaux_day2.should include(starts_at: Time.zone.local(2019, 9, 20, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        creneaux_day2.should include(starts_at: Time.zone.local(2019, 9, 20, 9, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        creneaux_day2.should include(starts_at: Time.zone.local(2019, 9, 20, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        creneaux_day2.should include(starts_at: Time.zone.local(2019, 9, 20, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      end
+    end
+
+    context "with absence spanning 2 days, ending in middle of second day" do
+      let!(:absence) { create(:absence, agent: agent, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 20), end_time: Tod::TimeOfDay.new(9, 5)) }
+
+      it do
+        creneaux_day1 = subject.select { _1[:starts_at].to_date == Date.new(2019, 9, 19) }
+        expect(creneaux_day1.size).to eq(1)
+        creneaux_day1.should include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        creneaux_day2 = subject.select { _1[:starts_at].to_date == Date.new(2019, 9, 20) }
+        # expect(creneaux_day2.size).to eq(4)
+        creneaux_day2.should include(starts_at: Time.zone.local(2019, 9, 20, 9, 5), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        creneaux_day2.should include(starts_at: Time.zone.local(2019, 9, 20, 9, 35), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        creneaux_day2.should include(starts_at: Time.zone.local(2019, 9, 20, 10, 5), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      end
     end
   end
 
@@ -64,10 +100,11 @@ describe CreneauxBuilderService, type: :service do
     let!(:absence) { create(:absence, :weekly, agent: agent, first_day: Date.new(2019, 9, 12), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 12), end_time: Tod::TimeOfDay.new(10, 15)) }
 
     it do
-      expect(subject.size).to eq(2)
+      expect(subject.size).to eq(3)
 
       is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 15), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 45), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
   end
 
@@ -80,6 +117,31 @@ describe CreneauxBuilderService, type: :service do
       is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
       is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
       is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+    end
+  end
+
+  context "with a RDV shorter than the motif" do
+    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 15, agents: [agent]) }
+
+    it do
+      expect(subject.size).to eq(4)
+
+      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 45), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 15), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 45), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+    end
+  end
+
+  context "with a RDV longer than the motif" do
+    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 45, agents: [agent]) }
+
+    it do
+      expect(subject.size).to eq(3)
+
+      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 15), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 45), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
   end
 

@@ -49,7 +49,7 @@ global.$ = require('jquery');
 $(document).on('shown.bs.modal', '.modal', function(e) {
   $('input[type="tel"]').mask('00 00 00 00 00')
   new Datetimepicker();
-  new AgentUserForm()
+  new AgentUserForm();
 });
 
 $(document).on('shown.rightbar', '.right-bar', function(e) {
@@ -68,6 +68,7 @@ $(document).on('shown.rightbar', '.right-bar', function(e) {
   });
   new Datetimepicker();
   $(".tooltip").tooltip("hide");
+  new RecurrenceForm();
 });
 
 $(document).on('hide.bs.modal', '.modal', function(e) {
