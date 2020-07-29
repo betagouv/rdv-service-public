@@ -132,6 +132,8 @@ class User < ApplicationRecord
   end
 
   def other_users_with_same_phone_number(organisation)
+    return User.none if phone_number_formatted.blank?
+
     User
       .joins(:user_profiles)
       .where(user_profiles: { organisation: organisation })
