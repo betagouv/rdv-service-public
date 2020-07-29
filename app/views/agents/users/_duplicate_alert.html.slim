@@ -2,7 +2,10 @@
   div.mr-2
     i.fa.fa-exclamation-triangle
   div.flex-grow-1
-    p= "Un usager avec le même #{attributes.map { t("activerecord.attributes.user.#{_1}") }.map(&:downcase).join(",")} existe déjà"
+    p
+      span>= "Un usager avec le même #{attributes.map { t("activerecord.attributes.user.#{_1}") }.map(&:downcase).join(",")} existe déjà"
+      - if user.organisation_ids.exclude?(current_organisation.id)
+        span dans une autre organisation
     p
       div
         b= full_name_and_birthdate(user)
@@ -13,4 +16,7 @@
       - if user.phone_number.present?
         div= user.phone_number
     div.text-right
-      = link_to "Modifier cet usager", edit_organisation_user_path(current_organisation, user), class: "btn btn-secondary btn-small"
+      - if user.organisation_ids.include?(current_organisation.id)
+        = link_to "Modifier cet usager", edit_organisation_user_path(current_organisation, user), class: "btn btn-secondary btn-small"
+      - else
+        = link_to "Associer cet usager à l'organisation #{current_organisation.name}", link_to_organisation_organisation_user_path(current_organisation, user), class: "btn btn-warning"
