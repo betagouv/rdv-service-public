@@ -1,0 +1,16 @@
+.alert.d-flex class=(severity == :error ? 'alert-danger' : 'alert-warning')
+  div.mr-2
+    i.fa.fa-exclamation-triangle
+  div.flex-grow-1
+    p= "Un usager avec le même #{attributes.map { t("activerecord.attributes.user.#{_1}") }.map(&:downcase).join(",")} existe déjà"
+    p
+      div
+        b= full_name_and_birthdate(user)
+      - if user.address
+        div= user.address
+      - if user.email.present?
+        div= user.email
+      - if user.phone_number.present?
+        div= user.phone_number
+    div.text-right
+      = link_to "Modifier cet usager", edit_organisation_user_path(current_organisation, user), class: "btn btn-secondary btn-small"

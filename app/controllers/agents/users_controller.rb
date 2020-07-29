@@ -8,7 +8,8 @@ class Agents::UsersController < AgentAuthController
     :id,
     :first_name, :last_name, :birth_name, :email, :phone_number,
     :birth_date, :address, :caisse_affiliation, :affiliation_number,
-    :family_situation, :number_of_children, :invite_on_create
+    :family_situation, :number_of_children,
+    :invite_on_create, :skip_duplicate_warnings
   ].freeze
 
   PERMITTED_NESTED_ATTRIBUTES = {
@@ -39,17 +40,17 @@ class Agents::UsersController < AgentAuthController
   def create
     prepare_create
     authorize(@user)
-    return render :compare, **(from_modal? ? { layout: 'modal' } : {}) if duplicate_found?
-
+    @duplicate_user_result = DuplicateUserFinderService.perform_with(@user)
     @user.skip_confirmation_notification!
     user_persisted = @user.save
-    return respond_modal_with @user, location: add_query_string_params_to_url(request.referer, 'user_ids[]': @user.id) if from_modal?
+    prepare_new unless user_persisted
 
-    if user_persisted
+    if from_modal?
+      respond_modal_with @user, location: add_query_string_params_to_url(request.referer, 'user_ids[]': @user.id)
+    elsif user_persisted
       flash[:notice] = "L'usager a été créé."
       redirect_to organisation_user_path(@organisation, @user)
     else
-      prepare_new
       render :new
     end
   end
@@ -110,20 +111,12 @@ class Agents::UsersController < AgentAuthController
 
   private
 
-  def duplicate_found?
-    @user_to_compare = DuplicateUserFinderService.new(@user).perform
-
-    return false unless @user_to_compare.present?
-
-    @user_not_in_organisation = @user_to_compare.organisation_ids.exclude?(current_organisation.id)
-    true
-  end
-
   def prepare_new
     return unless @user.responsible.nil?
 
     @user.responsible = User.new
     @user.responsible.user_profiles.build(organisation: current_organisation)
+    @user.skip_duplicate_warnings = true if @duplicate_user_result&.severity == :warning
   end
 
   def prepare_create

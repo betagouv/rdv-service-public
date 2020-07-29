@@ -5,7 +5,7 @@ class User < ApplicationRecord
   include AccountNormalizerConcern
   include User::SearchableConcern
 
-  attr_accessor :invite_on_create
+  attr_accessor :invite_on_create, :skip_duplicate_warnings
 
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
@@ -141,6 +141,15 @@ class User < ApplicationRecord
       .where(phone_number_formatted: phone_number_formatted)
   end
 
+  def dup_without_duplicate_user_errors
+    duplicate_user = dup
+    duplicate_user.valid?
+    duplicate_user.errors
+      .map { |k, v| k if v.include?("déjà utilisé") }.compact.uniq
+      .each { duplicate_user.errors.delete(_1) }
+    duplicate_user
+  end
+
   protected
 
   def password_required?
@@ -162,9 +171,10 @@ class User < ApplicationRecord
   end
 
   def user_is_not_duplicate
-    return unless DuplicateUserFinderService.new(self).perform.present?
+    duplicate_result = DuplicateUserFinderService.new(self).perform
+    return if duplicate_result.nil? || (duplicate_result.severity == :warning && skip_duplicate_warnings?)
 
-    errors.add(:base, "L'utilisateur que vous essayez de créer existe déjà")
+    duplicate_result.attributes.each { |k| errors.add(k, "déjà utilisé") }
   end
 
   def do_soft_delete(organisation)
@@ -184,5 +194,9 @@ class User < ApplicationRecord
       Phonelib.valid?(phone_number) &&
       Phonelib.parse(phone_number).e164
     ) || nil
+  end
+
+  def skip_duplicate_warnings?
+    [true, "true", "1"].include?(skip_duplicate_warnings) # should be in controller
   end
 end

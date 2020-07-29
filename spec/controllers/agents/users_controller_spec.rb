@@ -105,12 +105,7 @@ RSpec.describe Agents::UsersController, type: :controller do
       end
 
       it { expect { subject }.not_to change(User, :count) }
-      it { expect(subject).to render_template(:compare) }
-
-      it do
-        subject
-        expect(assigns(:user_to_compare)).to eq(user)
-      end
+      it { expect(subject).to render_template(:new) }
     end
 
     it_behaves_like "with invalid params"
