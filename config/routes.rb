@@ -27,7 +27,6 @@ Rails.application.routes.draw do
 
     authenticate :super_admin do
       match "/delayed_job" => DelayedJobWeb, anchor: false, via: [:get, :post]
-      mount Flipflop::Engine => "/flipflop", as: "flipflop"
     end
   end
 
@@ -150,9 +149,6 @@ Rails.application.routes.draw do
   { disclaimer: 'mentions_legales', terms: 'cgv', mds: 'mds' }.each do |k, v|
     get v => "static_pages##{k}"
   end
-
-  get 'ehpads' => 'ehpads#index'
-  post 'ehpads' => 'ehpads#search'
 
   get 'r', to: redirect('users/rdvs', status: 301), as: "rdvs_shorten"
   get 'accueil_mds' => "welcome#welcome_agent"
