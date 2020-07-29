@@ -35,7 +35,7 @@ describe AgentsHelper do
       creneau.lieu_id = create(:lieu).id
       motif = create(:motif)
       creneau.motif = motif
-      expect(build_link_to_rdv_wizard_params(creneau, user_ids)["user_ids[]"]).to eq(user.id)
+      expect(build_link_to_rdv_wizard_params(creneau, user_ids)["user_ids"]).to eq(user_ids)
     end
   end
 end

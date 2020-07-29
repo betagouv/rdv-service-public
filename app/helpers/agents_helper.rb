@@ -23,8 +23,8 @@ module AgentsHelper
     params[:lieu_id] = creneau.lieu.id
     params[:organisation_id] = creneau.motif.organisation_id
     params[:duration_in_min] = creneau.motif.default_duration_in_min
-    params["agent_ids[]"] = creneau.agent_id
-    user_ids.each { |user_id| params["user_ids[]"] = user_id.to_i } if user_ids.present?
+    params["agent_ids"] = [creneau.agent_id]
+    params["user_ids"] = user_ids if user_ids.present?
     params
   end
 end
