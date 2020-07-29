@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_28_074728) do
+ActiveRecord::Schema.define(version: 2020_07_29_093918) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -145,13 +145,6 @@ ActiveRecord::Schema.define(version: 2020_07_28_074728) do
     t.datetime "last_creneau_sent_at"
     t.index ["rdv_id"], name: "index_file_attentes_on_rdv_id"
     t.index ["user_id"], name: "index_file_attentes_on_user_id"
-  end
-
-  create_table "flipflop_features", force: :cascade do |t|
-    t.string "key", null: false
-    t.boolean "enabled", default: false, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "lieux", force: :cascade do |t|

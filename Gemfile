@@ -19,7 +19,6 @@ gem 'bootstrap4-kaminari-views', '~> 1.0'
 gem 'administrate', github: 'thoughtbot/administrate', branch: 'master' # to use PR #1579
 gem 'administrate-field-belongs_to_search', '~> 0.7'
 gem 'paper_trail'
-gem 'flipflop'
 
 # Devise / auth
 gem 'devise', '~> 4.7'

@@ -172,8 +172,6 @@ GEM
     faraday (0.17.3)
       multipart-post (>= 1.2, < 3)
     ffi (1.12.2)
-    flipflop (2.6.0)
-      activesupport (>= 4.0)
     formatador (0.2.5)
     fuubar (2.5.0)
       rspec-core (~> 3.0)
@@ -519,7 +517,6 @@ DEPENDENCIES
   dotenv-rails (~> 2.7.2)
   factory_bot
   faker
-  flipflop
   fuubar
   groupdate (~> 4.2)
   guard-rspec

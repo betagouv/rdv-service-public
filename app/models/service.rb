@@ -20,8 +20,4 @@ class Service < ApplicationRecord
   def service_social?
     name == SERVICE_SOCIAL
   end
-
-  def self.ehpad
-    find_by!(name: 'EHPAD')
-  end
 end
