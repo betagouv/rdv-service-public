@@ -13,7 +13,11 @@
     - if from_modal?
       = hidden_field '', :modal, value: true
 
-    = render partial: 'layouts/model_errors', locals: { model: user }
+    - if @duplicate_user_result
+      = render "duplicate_alert", attributes: @duplicate_user_result.attributes, user: @duplicate_user_result.user, severity: @duplicate_user_result.severity
+      = render partial: 'layouts/model_errors', locals: { model: user.dup_without_duplicate_user_errors }
+    - else
+      = render partial: 'layouts/model_errors', locals: { model: user }
 
     = f.input( \
       :responsability_type, \
@@ -98,6 +102,10 @@
             b= link_to full_name_and_birthdate(user.responsible), organisation_user_path(current_organisation, user.responsible)
           = f.simple_fields_for(:responsible, include_id: true) do |sub_form|
             = render "responsible_form_fields", f: sub_form, input_opts: input_opts[:relative_existing]
+
+    - if user.skip_duplicate_warnings
+      .alert.alert-warning.pb-0
+        = f.input :skip_duplicate_warnings, as: :boolean, label: "Ignorer les avertissements"
 
     .text-right
       - if from_modal?
