@@ -64,6 +64,8 @@ class CreneauxBuilderForDate < BaseService
 
     overlapping_rdvs_or_absences = creneau.overlapping_rdvs_or_absences(rdvs + absences_occurrences)
     if overlapping_rdvs_or_absences.any?
+      return if overlapping_rdvs_or_absences.first.ends_at.to_date > @date
+
       @next_starts_at = overlapping_rdvs_or_absences.first.ends_at
     elsif !@for_agents && !creneau.respects_booking_delays?
       @next_starts_at += @motif.default_duration_in_min.minutes
