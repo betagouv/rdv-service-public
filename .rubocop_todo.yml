@@ -147,7 +147,9 @@ Style/RedundantSelf:
 # Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
 # SupportedStyles: single_quotes, double_quotes
 Style/StringLiterals:
-  Enabled: false
+  Enabled: true
+  Exclude:
+    - 'db/schema.rb'
 
 # Offense count: 11
 # Cop supports --auto-correct.
