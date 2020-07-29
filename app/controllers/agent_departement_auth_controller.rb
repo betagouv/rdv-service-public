@@ -1,6 +1,6 @@
 class AgentDepartementAuthController < AgentAuthController
   before_action :set_departement
-  layout "application_agent_departement"
+  layout 'application_agent_departement'
 
   def current_departement
     @departement

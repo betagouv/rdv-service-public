@@ -1,6 +1,6 @@
 class Users::FileAttenteMailer < ApplicationMailer
   def new_creneau_available(rdv, user)
     @rdv = rdv
-    mail(to: user.email, subject: "Un créneau vient de se liberer !")
+    mail(to: user.email, subject: 'Un créneau vient de se liberer !')
   end
 end

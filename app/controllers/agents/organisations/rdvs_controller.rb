@@ -7,7 +7,7 @@ class Agents::Organisations::RdvsController < AgentAuthController
     @rdvs = @rdvs.with_agent(Agent.find(params[:agent_id])) if params[:agent_id].present?
 
     respond_to do |format|
-      format.xls { send_data(RdvExporterService.perform_with(@rdvs, StringIO.new), filename: "rdvs.xls", type: "application/xls") }
+      format.xls { send_data(RdvExporterService.perform_with(@rdvs, StringIO.new), filename: 'rdvs.xls', type: 'application/xls') }
       format.html { @rdvs = @rdvs.page(params[:page]) }
     end
   end

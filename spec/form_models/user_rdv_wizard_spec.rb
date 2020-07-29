@@ -14,8 +14,8 @@ describe UserRdvWizard do
     }
   end
 
-  describe "#new" do
-    it "should work" do
+  describe '#new' do
+    it 'should work' do
       rdv_wizard = UserRdvWizard::Step1.new(user, rdv_attributes)
       expect(rdv_wizard.rdv.user_ids).to eq [user_for_rdv.id]
       expect(rdv_wizard.creneau.starts_at).to eq creneau.starts_at

@@ -25,7 +25,7 @@ describe Rdv, type: :model do
     end
   end
 
-  describe "#available_motifs_for_organisation_and_agent" do
+  describe '#available_motifs_for_organisation_and_agent' do
     let!(:motif) { create(:motif) }
     let!(:motif2) { create(:motif) }
     let!(:motif3) { create(:motif, :for_secretariat) }
@@ -34,21 +34,21 @@ describe Rdv, type: :model do
 
     subject { Motif.available_motifs_for_organisation_and_agent(motif.organisation, agent) }
 
-    describe "for secretaire" do
+    describe 'for secretaire' do
       let(:agent) { create(:agent, :secretaire) }
       it { is_expected.to contain_exactly(motif3) }
     end
 
-    describe "for other service" do
+    describe 'for other service' do
       let(:agent) { create(:agent, service: motif.service) }
 
       it { is_expected.to contain_exactly(motif, motif2, motif3) }
     end
   end
 
-  describe "#authorized_agents" do
+  describe '#authorized_agents' do
     let(:org1) { create(:organisation) }
-    let!(:service_pmi) { create(:service, name: "PMI") }
+    let!(:service_pmi) { create(:service, name: 'PMI') }
     let!(:service_secretariat) { create(:service, name: Service::SECRETARIAT) }
     let!(:agent_pmi1) { create(:agent, organisations: [org1], service: service_pmi) }
     let!(:agent_pmi2) { create(:agent, organisations: [org1], service: service_pmi) }
@@ -58,25 +58,25 @@ describe Rdv, type: :model do
 
     it { should match_array([agent_pmi1, agent_pmi2]) }
 
-    context "motif is available for secretariat" do
+    context 'motif is available for secretariat' do
       let!(:motif) { create(:motif, service: service_pmi, organisation: org1, for_secretariat: true) }
       it { should match_array([agent_pmi1, agent_pmi2, agent_secretariat1]) }
     end
 
-    context "agent from same service but different orga" do
+    context 'agent from same service but different orga' do
       let(:org2) { create(:organisation) }
       let!(:agent_pmi3) { create(:agent, organisations: [org2], service: service_pmi) }
       it { should_not include(agent_pmi3) }
     end
   end
 
-  describe "secretariat?" do
-    it "return true if motif for_secretariat" do
+  describe 'secretariat?' do
+    it 'return true if motif for_secretariat' do
       motif = build(:motif, for_secretariat: true)
       expect(motif.secretariat?).to be true
     end
 
-    it "return false if motif for_secretariat" do
+    it 'return false if motif for_secretariat' do
       motif = build(:motif, for_secretariat: false)
       expect(motif.secretariat?).to be false
     end

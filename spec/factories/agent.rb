@@ -10,13 +10,13 @@ FactoryBot.define do
     confirmed_at { 1.day.ago }
     service { Service.first || create(:service) }
     trait :admin do
-      role { "admin" }
+      role { 'admin' }
     end
     trait :not_confirmed do
       confirmed_at { nil }
     end
     trait :secretaire do
-      service { Service.find_by(name: "Secrétariat") || create(:service, :secretariat) }
+      service { Service.find_by(name: 'Secrétariat') || create(:service, :secretariat) }
     end
     trait :with_multiple_organisations do
       organisations { create_list(:organisation, 3) }

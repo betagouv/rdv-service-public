@@ -1,4 +1,4 @@
-require "administrate/base_dashboard"
+require 'administrate/base_dashboard'
 
 class OrganisationDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES

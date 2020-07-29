@@ -1,4 +1,4 @@
-require "administrate/base_dashboard"
+require 'administrate/base_dashboard'
 
 class UserDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
@@ -17,7 +17,7 @@ class UserDashboard < Administrate::BaseDashboard
     address: Field::String,
     phone_number: Field::String,
     responsible: Field::BelongsToSearch.with_options(class_name: 'User'),
-    relatives: Field::HasMany.with_options(class_name: "User"),
+    relatives: Field::HasMany.with_options(class_name: 'User'),
     caisse_affiliation: EnumField,
     family_situation: EnumField,
     affiliation_number: Field::String,

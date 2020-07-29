@@ -1,4 +1,4 @@
-describe "Agent can CRUD absences" do
+describe 'Agent can CRUD absences' do
   let!(:agent) { create(:agent, :admin) }
   let!(:other_agent) { create(:agent, organisations: [agent.organisations.first]) }
   let!(:absence) { create(:absence, agent: agent) }
@@ -7,11 +7,11 @@ describe "Agent can CRUD absences" do
   before do
     login_as(agent, scope: :agent)
     visit authenticated_agent_root_path
-    click_link "Absences"
+    click_link 'Absences'
   end
 
   context 'for an agent' do
-    scenario "default" do
+    scenario 'default' do
       crud_absence(agent, agent)
     end
   end
@@ -19,7 +19,7 @@ describe "Agent can CRUD absences" do
   context 'for an other agent calendar' do
     let!(:absence) { create(:absence, agent: other_agent) }
 
-    scenario "can crud a absence" do
+    scenario 'can crud a absence' do
       # select(other_agent.full_name, from: :id)
       visit organisation_agent_absences_path(agent.organisations.first.id, other_agent.id)
       crud_absence(agent, other_agent)
@@ -27,7 +27,7 @@ describe "Agent can CRUD absences" do
   end
 
   def crud_absence(current_agent, agent_crud)
-    title = agent_crud == current_agent ? "Vos absences" : "Absences de #{agent_crud.full_name_and_service}"
+    title = agent_crud == current_agent ? 'Vos absences' : "Absences de #{agent_crud.full_name_and_service}"
 
     expect_page_title(title)
     click_link absence.title
@@ -46,10 +46,10 @@ describe "Agent can CRUD absences" do
 
     click_link 'Créer une absence', match: :first
 
-    expect_page_title("Nouvelle absence")
+    expect_page_title('Nouvelle absence')
     fill_in 'Description', with: new_absence.title
-    fill_in "absence[first_day]", with: new_absence.first_day
-    fill_in "absence[end_day]", with: new_absence.first_day + 1.day
+    fill_in 'absence[first_day]', with: new_absence.first_day
+    fill_in 'absence[end_day]', with: new_absence.first_day + 1.day
     click_button 'Créer'
 
     expect_page_title(title)

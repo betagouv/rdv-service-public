@@ -1,4 +1,4 @@
-describe "Super admin can configure an account" do
+describe 'Super admin can configure an account' do
   let!(:super_admin) { create(:super_admin) }
   let(:organisation) { build(:organisation) }
   let(:agent) { build(:agent) }
@@ -9,7 +9,7 @@ describe "Super admin can configure an account" do
     visit admin_agents_path
   end
 
-  scenario "Create organisation and invite a agent" do
+  scenario 'Create organisation and invite a agent' do
     click_link 'Organisation'
     click_link 'Création organisation'
     fill_in 'Nom', with: organisation.name
@@ -30,7 +30,7 @@ describe "Super admin can configure an account" do
     click_link 'Se déconnecter'
 
     open_email(agent.email)
-    expect(current_email.subject).to eq I18n.t("devise.mailer.invitation_instructions.subject")
+    expect(current_email.subject).to eq I18n.t('devise.mailer.invitation_instructions.subject')
   end
 
   shared_examples 'an administrate resource' do

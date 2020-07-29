@@ -56,23 +56,23 @@ Rails.application.configure do
   # Use a real queuing backend for Active Job (and separate queues per environment)
   config.active_job.queue_adapter = :delayed_job
 
-  config.default_url_options = { host: ENV["HOST"].sub(%r{^https?:\/\/}, "") }
+  config.default_url_options = { host: ENV['HOST'].sub(%r{^https?:\/\/}, '') }
   config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.default_url_options = { protocol: 'https', host: ENV["HOST"].sub(%r{^https?:\/\/}, ""), utm_source: "rdv-solidarites", utm_medium: "email", utm_campaign: "auto" }
+  config.action_mailer.default_url_options = { protocol: 'https', host: ENV['HOST'].sub(%r{^https?:\/\/}, ''), utm_source: 'rdv-solidarites', utm_medium: 'email', utm_campaign: 'auto' }
   config.action_mailer.smtp_settings = {
     address:        'smtp-relay.sendinblue.com',
     port:           '587',
     authentication: :plain,
-    user_name:      ENV["SENDINBLUE_USERNAME"],
-    password:       ENV["SENDINBLUE_PASSWORD"],
+    user_name:      ENV['SENDINBLUE_USERNAME'],
+    password:       ENV['SENDINBLUE_PASSWORD'],
     domain:         'rdv-solidarites.fr',
   }
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.asset_host = ENV["HOST"]
+  config.action_mailer.asset_host = ENV['HOST']
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
@@ -88,7 +88,7 @@ Rails.application.configure do
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
+  if ENV['RAILS_LOG_TO_STDOUT'].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
     config.logger    = ActiveSupport::TaggedLogging.new(logger)

@@ -109,7 +109,7 @@ class Rdv < ApplicationRecord
     elsif public_office? && lieu.present?
       lieu.address
     else
-      ""
+      ''
     end
   end
 
@@ -121,13 +121,13 @@ class Rdv < ApplicationRecord
     elsif public_office? && lieu.present?
       lieu.full_name
     else
-      ""
+      ''
     end
   end
 
   def address_complete_without_personnal_details
-    return "Par téléphone" if phone?
-    return "À domicile" if home?
+    return 'Par téléphone' if phone?
+    return 'À domicile' if home?
 
     address_complete
   end

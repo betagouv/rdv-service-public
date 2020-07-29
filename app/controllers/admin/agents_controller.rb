@@ -7,7 +7,7 @@ module Admin
         sign_in(:agent, agent, bypass: true)
         redirect_to root_url
       else
-        flash[:error] = "Fonctionnalité désactivée sur cet environnement."
+        flash[:error] = 'Fonctionnalité désactivée sur cet environnement.'
         redirect_to admin_agent_path(agent)
       end
     end
@@ -27,7 +27,7 @@ module Admin
       else
         redirect_to(
           [namespace, resource],
-          notice: translate_with_resource("create.success")
+          notice: translate_with_resource('create.success')
         )
       end
     end

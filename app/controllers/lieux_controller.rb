@@ -3,7 +3,7 @@ class LieuxController < ApplicationController
 
   def index
     @lieux = Lieu.with_open_slots_for_motifs(@matching_motifs)
-    return redirect_to new_user_session_path, flash: { alert: I18n.t("motifs.follow_up_need_signed_user", motif_name: @motif_name) } if follow_up_rdv_and_offline_user?
+    return redirect_to new_user_session_path, flash: { alert: I18n.t('motifs.follow_up_need_signed_user', motif_name: @motif_name) } if follow_up_rdv_and_offline_user?
 
     @next_availability_by_lieux = {}
     @lieux.each do |lieu|
@@ -15,7 +15,7 @@ class LieuxController < ApplicationController
 
     return unless @organisations.empty?
 
-    flash.now[:notice] = "La prise de RDV n’est pas encore disponible dans ce département"
+    flash.now[:notice] = 'La prise de RDV n’est pas encore disponible dans ce département'
     render 'welcome/index'
   end
 
@@ -26,7 +26,7 @@ class LieuxController < ApplicationController
     @query.merge!(lieu_id: @lieu.id)
 
     # TODO: revoir les contraintes d'unicitees completes (il manque :location_type dans le where) ou bien revoir la notion de motif.
-    return redirect_to new_user_session_path, flash: { notice: I18n.t("motifs.follow_up_need_signed_user", motif_name: @motif_name) } if follow_up_rdv_and_offline_user?
+    return redirect_to new_user_session_path, flash: { notice: I18n.t('motifs.follow_up_need_signed_user', motif_name: @motif_name) } if follow_up_rdv_and_offline_user?
 
     @next_availability = nil
 

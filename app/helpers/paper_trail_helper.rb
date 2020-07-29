@@ -14,7 +14,7 @@ module PaperTrailHelper
       end
 
       def to_s
-        return "N/A" if @value.nil?
+        return 'N/A' if @value.nil?
 
         return I18n.l(@value, format: :dense) if @value.is_a? Time
 
@@ -31,13 +31,13 @@ module PaperTrailHelper
 
       class UserIds < Base
         def to_s
-          ::User.where(id: @value).order_by_last_name.map(&:full_name).join(", ")
+          ::User.where(id: @value).order_by_last_name.map(&:full_name).join(', ')
         end
       end
 
       class AgentIds < Base
         def to_s
-          ::Agent.where(id: @value).order_by_last_name.map(&:full_name).join(", ")
+          ::Agent.where(id: @value).order_by_last_name.map(&:full_name).join(', ')
         end
       end
 

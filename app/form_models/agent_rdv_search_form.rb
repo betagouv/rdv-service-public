@@ -9,7 +9,7 @@ class AgentRdvSearchForm
     attributes[:date] = Date.parse(attributes[:date]) if attributes[:date].present?
     attributes[:start] = Date.parse(attributes[:start]) if attributes[:start].present?
     attributes[:end] = Date.parse(attributes[:end]) if attributes[:end].present?
-    attributes[:show_user_details] = ["1", "true"].include?(attributes[:show_user_details])
+    attributes[:show_user_details] = ['1', 'true'].include?(attributes[:show_user_details])
     super(attributes)
   end
 

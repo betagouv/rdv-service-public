@@ -9,53 +9,53 @@ RSpec.describe Agents::MotifsController, type: :controller do
     sign_in agent
   end
 
-  describe "GET #index" do
-    it "returns a success response" do
+  describe 'GET #index' do
+    it 'returns a success response' do
       get :index, params: { organisation_id: organisation_id }
       expect(response).to be_successful
     end
   end
 
-  describe "GET #new" do
-    it "returns a success response" do
+  describe 'GET #new' do
+    it 'returns a success response' do
       get :new, params: { organisation_id: organisation_id }
       expect(response).to be_successful
     end
   end
 
-  describe "GET #edit" do
-    it "returns a success response" do
+  describe 'GET #edit' do
+    it 'returns a success response' do
       get :edit, params: { organisation_id: organisation_id, id: motif.to_param }
       expect(response).to be_successful
     end
   end
 
-  describe "POST #create" do
-    context "with valid params" do
+  describe 'POST #create' do
+    context 'with valid params' do
       let(:valid_attributes) do
         build(:motif).attributes
       end
 
-      it "creates a new Motif" do
+      it 'creates a new Motif' do
         expect do
           post :create, params: { organisation_id: organisation_id, motif: valid_attributes }
         end.to change(Motif, :count).by(1)
       end
 
-      it "redirects to the created motif" do
+      it 'redirects to the created motif' do
         post :create, params: { organisation_id: organisation_id, motif: valid_attributes }
         expect(response).to redirect_to(organisation_motifs_path(organisation_id))
       end
     end
 
-    context "with invalid params" do
+    context 'with invalid params' do
       let(:invalid_attributes) do
         {
-          name: "test motif",
+          name: 'test motif',
         }
       end
 
-      it "does not create a new Motif" do
+      it 'does not create a new Motif' do
         expect do
           post :create, params: { organisation_id: organisation_id, motif: invalid_attributes }
         end.not_to change(Motif, :count)
@@ -67,7 +67,7 @@ RSpec.describe Agents::MotifsController, type: :controller do
       end
     end
 
-    context "with old deleted motif name" do
+    context 'with old deleted motif name' do
       let!(:old_motif) { create(:motif, deleted_at: Time.now) }
       let(:valid_attributes) do
         build(:motif, name: old_motif.name).attributes
@@ -77,38 +77,38 @@ RSpec.describe Agents::MotifsController, type: :controller do
         post :create, params: { organisation_id: organisation_id, motif: valid_attributes }
       end
 
-      it "creates a new Motif" do
+      it 'creates a new Motif' do
         expect { subject }.to change(Motif, :count).by(1)
       end
     end
   end
 
-  describe "PUT #update" do
+  describe 'PUT #update' do
     subject { put :update, params: { organisation_id: organisation_id, id: motif.to_param, motif: new_attributes } }
 
     before { subject }
 
-    context "with valid params" do
+    context 'with valid params' do
       let(:new_attributes) do
         {
-          name: "Le nouveau nom",
+          name: 'Le nouveau nom',
         }
       end
 
-      it "updates the requested motif" do
+      it 'updates the requested motif' do
         motif.reload
-        expect(motif.name).to eq("Le nouveau nom")
+        expect(motif.name).to eq('Le nouveau nom')
       end
 
-      it "redirects to the motif" do
+      it 'redirects to the motif' do
         expect(response).to redirect_to(organisation_motifs_path(organisation_id))
       end
     end
 
-    context "with invalid params" do
+    context 'with invalid params' do
       let(:new_attributes) do
         {
-          name: "",
+          name: '',
         }
       end
 
@@ -116,21 +116,21 @@ RSpec.describe Agents::MotifsController, type: :controller do
         expect(response).to be_successful
       end
 
-      it "does not change motif name" do
+      it 'does not change motif name' do
         motif.reload
-        expect(motif.name).not_to eq("")
+        expect(motif.name).not_to eq('')
       end
     end
   end
 
-  describe "DELETE #destroy" do
-    it "destroys the requested motif" do
+  describe 'DELETE #destroy' do
+    it 'destroys the requested motif' do
       expect do
         delete :destroy, params: { organisation_id: organisation_id, id: motif.to_param }
       end.to change(Motif, :count).by(-1)
     end
 
-    it "redirects to the motifs list" do
+    it 'redirects to the motifs list' do
       delete :destroy, params: { organisation_id: organisation_id, id: motif.to_param }
       expect(response).to redirect_to(organisation_motifs_path(organisation_id))
     end

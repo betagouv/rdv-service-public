@@ -40,16 +40,16 @@ class Agents::RdvsController < AgentAuthController
     cancelled_at = ['unknown', 'waiting', 'seen'].include?(status_params[:status]) ? nil : Time.zone.now
     @rdv.update(status: status_params[:status], cancelled_at: cancelled_at)
     @rdv.file_attentes.delete_all
-    flash[:notice] = "Le statut du RDV a été modifié"
+    flash[:notice] = 'Le statut du RDV a été modifié'
     redirect_to organisation_rdv_path(@rdv.organisation, @rdv)
   end
 
   def destroy
     authorize(@rdv)
     if @rdv.destroy
-      flash[:notice] = "Le rendez-vous a été supprimé."
+      flash[:notice] = 'Le rendez-vous a été supprimé.'
     else
-      flash[:error] = "Une erreur s’est produite, le rendez-vous n’a pas pu être supprimé."
+      flash[:error] = 'Une erreur s’est produite, le rendez-vous n’a pas pu être supprimé.'
       Raven.capture_exception(Exception.new("Deletion failed for rdv : #{@rdv.id}"))
     end
     redirect_to organisation_agent_path(current_organisation, current_agent)
@@ -60,7 +60,7 @@ class Agents::RdvsController < AgentAuthController
     @rdv.organisation = current_organisation
     authorize(@rdv)
     if @rdv.save
-      redirect_to @rdv.agenda_path_for_agent(current_agent), notice: "Le rendez-vous a été créé."
+      redirect_to @rdv.agenda_path_for_agent(current_agent), notice: 'Le rendez-vous a été créé.'
     else
       @rdv_wizard = AgentRdvWizard::Step3.new(current_agent, current_organisation, @rdv.attributes)
       render 'agents/rdv_wizard_steps/step3'
@@ -92,7 +92,7 @@ class Agents::RdvsController < AgentAuthController
     if form.date_range_params.present?
       rdvs = rdvs.where(starts_at: form.date_range_params)
     elsif form.date.present?
-      rdvs = rdvs.where("DATE(starts_at) = ?", form.date)
+      rdvs = rdvs.where('DATE(starts_at) = ?', form.date)
     end
     rdvs = rdvs.includes(:organisation, :motif, :agents_rdvs, agents: :service).order(starts_at: :desc)
     rdvs

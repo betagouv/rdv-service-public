@@ -7,7 +7,7 @@ module Admin
         sign_in(:user, user, bypass: true)
         redirect_to root_url
       else
-        flash[:error] = "Fonctionnalité désactivée sur cet environnement."
+        flash[:error] = 'Fonctionnalité désactivée sur cet environnement.'
         redirect_to admin_user_path(user)
       end
     end

@@ -16,8 +16,8 @@ class User < ApplicationRecord
   has_many :rdvs_users, dependent: :destroy
   has_many :rdvs, through: :rdvs_users
   has_and_belongs_to_many :agents
-  belongs_to :responsible, foreign_key: "responsible_id", class_name: "User", optional: true
-  has_many :relatives, foreign_key: "responsible_id", class_name: "User"
+  belongs_to :responsible, foreign_key: 'responsible_id', class_name: 'User', optional: true
+  has_many :relatives, foreign_key: 'responsible_id', class_name: 'User'
   has_many :file_attentes, dependent: :destroy
 
   enum caisse_affiliation: { aucune: 0, caf: 1, msa: 2 }
@@ -88,7 +88,7 @@ class User < ApplicationRecord
 
   def family
     user_id = relative? ? responsible.id : id
-    User.active.where("responsible_id = ? OR id = ?", user_id, user_id)
+    User.active.where('responsible_id = ? OR id = ?', user_id, user_id)
   end
 
   def invitable?
@@ -116,7 +116,7 @@ class User < ApplicationRecord
   end
 
   def invite_on_create?
-    invite_on_create == "true"
+    invite_on_create == 'true'
   end
 
   def send_invite_if_checked
@@ -148,7 +148,7 @@ class User < ApplicationRecord
   def birth_date_validity
     return unless birth_date.present? && (birth_date > Date.today || birth_date < 130.years.ago)
 
-    errors.add(:birth_date, "est invalide")
+    errors.add(:birth_date, 'est invalide')
   end
 
   def user_is_not_duplicate

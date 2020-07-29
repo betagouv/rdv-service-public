@@ -19,7 +19,7 @@ class SendTransactionalSmsService < BaseService
       sender: @from,
       recipient: @user.phone_number_formatted,
       content: replace_special_chars(body),
-      tag: [ENV['APP'], @rdv.organisation.id, @type].join(" ")
+      tag: [ENV['APP'], @rdv.organisation.id, @type].join(' ')
     )
     sib_instance.send_transac_sms(transac_sms)
   end
@@ -58,7 +58,7 @@ class SendTransactionalSmsService < BaseService
     message += if @rdv.organisation.phone_number
                  "Appelez le #{@rdv.organisation.phone_number} ou allez sur https://rdv-solidarites.fr pour reprendre RDV."
                else
-                 "Allez sur https://rdv-solidarites.fr pour reprendre RDV."
+                 'Allez sur https://rdv-solidarites.fr pour reprendre RDV.'
                end
     message
   end

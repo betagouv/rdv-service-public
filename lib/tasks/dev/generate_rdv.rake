@@ -1,5 +1,5 @@
 namespace :dev do
-  desc "Generate sample Rdvs for a months"
+  desc 'Generate sample Rdvs for a months'
   task generate_rdv: [:development] do
     Organisation.all.each do |organisation|
       (1..30).to_a.each do |n|

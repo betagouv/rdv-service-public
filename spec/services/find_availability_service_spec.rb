@@ -1,5 +1,5 @@
 describe FindAvailabilityService, type: :service do
-  let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, reservable_online: reservable_online) }
+  let!(:motif) { create(:motif, name: 'Vaccination', default_duration_in_min: 30, reservable_online: reservable_online) }
   let(:reservable_online) { true }
   let!(:lieu) { create(:lieu) }
   let(:today) { Date.new(2019, 9, 19) }
@@ -10,7 +10,7 @@ describe FindAvailabilityService, type: :service do
   before { travel_to(now) }
   after { travel_back }
 
-  describe ".next_availability_for_motif_and_lieu" do
+  describe '.next_availability_for_motif_and_lieu' do
     let(:motif_name) { motif.name }
     let(:from) { today }
 
@@ -20,36 +20,36 @@ describe FindAvailabilityService, type: :service do
 
     it { expect(subject.starts_at).to eq(Time.zone.local(2019, 9, 19, 9, 0)) }
 
-    describe "with not reservable_online motif" do
+    describe 'with not reservable_online motif' do
       let(:reservable_online) { false }
 
       it { should eq(nil) }
     end
 
-    describe "with absence" do
+    describe 'with absence' do
       let!(:absence) { create(:absence, agent: agent, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(12, 0)) }
 
       it { should eq(nil) }
 
-      describe "when plage_ouverture is recurrence" do
+      describe 'when plage_ouverture is recurrence' do
         before { plage_ouverture.update(recurrence: Montrose.monthly.to_json) }
 
         it { expect(subject.starts_at).to eq(Time.zone.local(2019, 10, 19, 9, 0)) }
       end
     end
 
-    describe "with rdv" do
+    describe 'with rdv' do
       let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 120, agents: [agent]) }
 
       it { should eq(nil) }
 
-      context "which is cancelled" do
+      context 'which is cancelled' do
         let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, agents: [agent], cancelled_at: Time.zone.local(2019, 9, 20, 9, 30)) }
 
         it { expect(subject.starts_at).to eq(Time.zone.local(2019, 9, 19, 9, 0)) }
       end
 
-      describe "when plage_ouverture is recurrence" do
+      describe 'when plage_ouverture is recurrence' do
         before { plage_ouverture.update(recurrence: Montrose.monthly.to_json) }
 
         it { expect(subject.starts_at).to eq(Time.zone.local(2019, 10, 19, 9, 0)) }

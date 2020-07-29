@@ -1,5 +1,5 @@
 class Zone < ApplicationRecord
-  LEVEL_CITY = "city".freeze
+  LEVEL_CITY = 'city'.freeze
 
   belongs_to :organisation
 

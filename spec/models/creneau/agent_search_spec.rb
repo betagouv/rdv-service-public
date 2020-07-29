@@ -13,25 +13,25 @@ describe Creneau::AgentSearch, type: :model do
 
     it { expect(subject).to contain_exactly(lieu) }
 
-    context "when there is many agents / po / lieux but same motif" do
+    context 'when there is many agents / po / lieux but same motif' do
       let(:lieu2) { create(:lieu) }
       let(:agent2) { create(:agent) }
       let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, agent: agent2, lieu: lieu2, motifs: [motif]) }
 
       it { expect(subject).to contain_exactly(lieu, lieu2) }
 
-      context "when filtering by lieu" do
+      context 'when filtering by lieu' do
         let(:lieu_ids) { [lieu2.id] }
 
         it { expect(subject).to contain_exactly(lieu2) }
       end
 
-      context "when filtering by agent" do
+      context 'when filtering by agent' do
         let(:agent_ids) { [agent2.id] }
 
         it { expect(subject).to contain_exactly(lieu2) }
 
-        context "and by lieu" do
+        context 'and by lieu' do
           let(:lieu_ids) { [lieu.id] }
 
           it { expect(subject).to eq([]) }

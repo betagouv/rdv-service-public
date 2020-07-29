@@ -2,7 +2,7 @@ module RecurrenceConcern
   extend ActiveSupport::Concern
 
   included do
-    require "montrose"
+    require 'montrose'
 
     serialize :recurrence, Montrose::Recurrence
     serialize :start_time, Tod::TimeOfDay

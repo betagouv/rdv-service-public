@@ -3,6 +3,6 @@ FactoryBot.define do
 
   factory :organisation do
     name { generate(:orga_name) }
-    departement { "92" }
+    departement { '92' }
   end
 end

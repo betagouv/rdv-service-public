@@ -25,7 +25,7 @@ class Users::RdvsController < UserAuthController
                        end
     end
     if save_succeeded
-      flash[:notice] = "Votre rendez vous a été confirmé."
+      flash[:notice] = 'Votre rendez vous a été confirmé.'
       redirect_to authenticated_user_root_path
     else
       query = { where: new_rdv_extra_params[:where], service: motif.service.id, motif_name: motif.name, departement: new_rdv_extra_params[:departement] }
@@ -38,7 +38,7 @@ class Users::RdvsController < UserAuthController
     authorize(@rdv)
     if @rdv.cancel
       @rdv.file_attentes.destroy_all
-      flash[:notice] = "Le RDV a bien été annulé."
+      flash[:notice] = 'Le RDV a bien été annulé.'
     else
       flash[:error] = "Impossible d'annuler le RDV."
     end

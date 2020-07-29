@@ -40,7 +40,7 @@ gem 'image_processing', '~> 1.8'
 gem 'phonelib'
 
 # Front
-gem "chartkick", '~> 3.3.0'
+gem 'chartkick', '~> 3.3.0'
 gem 'groupdate', '~> 4.2'
 gem 'slim', '~> 4.0'
 
@@ -60,8 +60,8 @@ gem 'blueprinter'
 gem 'typhoeus'
 
 # Ops
-gem "sentry-raven"
-gem "skylight"
+gem 'sentry-raven'
+gem 'skylight'
 
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
 gem 'webpacker'

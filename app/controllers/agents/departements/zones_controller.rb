@@ -6,9 +6,9 @@ class Agents::Departements::ZonesController < AgentDepartementAuthController
       .where(organisations: { departement: current_departement.number })
       .order(:organisation_id)
     @zones = @search_form.filter_zones(@zones)
-    @zones = @zones.page(params[:page]) unless view_params[:view] == "map"
+    @zones = @zones.page(params[:page]) unless view_params[:view] == 'map'
     authorize(@zones)
-    return render :map if view_params[:view] == "map"
+    return render :map if view_params[:view] == 'map'
   end
 
   def new
@@ -20,7 +20,7 @@ class Agents::Departements::ZonesController < AgentDepartementAuthController
     @zone = Zone.new(**zone_params)
     authorize(@zone)
     if @zone.save
-      redirect_to departement_zones_path(current_departement), flash: { success: "Zone créée" }
+      redirect_to departement_zones_path(current_departement), flash: { success: 'Zone créée' }
     else
       render :new
     end
@@ -36,7 +36,7 @@ class Agents::Departements::ZonesController < AgentDepartementAuthController
     @zone.assign_attributes(**zone_params)
     authorize(@zone)
     if @zone.save
-      redirect_to departement_zones_path(current_departement), flash: { success: "Zone mise à jour" }
+      redirect_to departement_zones_path(current_departement), flash: { success: 'Zone mise à jour' }
     else
       render :edit
     end
@@ -46,9 +46,9 @@ class Agents::Departements::ZonesController < AgentDepartementAuthController
     zone = Zone.find(params[:id])
     authorize(zone)
     if zone.destroy
-      redirect_to departement_zones_path(current_departement), flash: { success: "Zone supprimée" }
+      redirect_to departement_zones_path(current_departement), flash: { success: 'Zone supprimée' }
     else
-      redirect_to departement_zones_path(current_departement), flash: { error: "Erreur lors de la suppression" }
+      redirect_to departement_zones_path(current_departement), flash: { error: 'Erreur lors de la suppression' }
     end
   end
 

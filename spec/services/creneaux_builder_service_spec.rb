@@ -1,5 +1,5 @@
 describe CreneauxBuilderService, type: :service do
-  let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, reservable_online: reservable_online) }
+  let!(:motif) { create(:motif, name: 'Vaccination', default_duration_in_min: 30, reservable_online: reservable_online) }
   let(:reservable_online) { true }
   let!(:lieu) { create(:lieu) }
   let(:today) { Date.new(2019, 9, 19) }
@@ -19,7 +19,7 @@ describe CreneauxBuilderService, type: :service do
     creneaux.map { |c| creneau_to_hash(c, options[:for_agents]) }
   end
 
-  it "should work" do
+  it 'should work' do
     expect(subject.size).to eq(4)
 
     is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
@@ -28,14 +28,14 @@ describe CreneauxBuilderService, type: :service do
     is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
   end
 
-  context "with motif not bookable reservable_online" do
+  context 'with motif not bookable reservable_online' do
     let(:reservable_online) { false }
 
-    it "should return 0 creneaux" do
+    it 'should return 0 creneaux' do
       expect(subject.size).to eq(0)
     end
 
-    context "when the result is for pros" do
+    context 'when the result is for pros' do
       let(:options) { { for_agents: true } }
 
       it do
@@ -49,7 +49,7 @@ describe CreneauxBuilderService, type: :service do
     end
   end
 
-  context "with absences" do
+  context 'with absences' do
     let!(:absence) { create(:absence, agent: agent, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 15)) }
 
     it do
@@ -60,7 +60,7 @@ describe CreneauxBuilderService, type: :service do
     end
   end
 
-  context "with recurring absences" do
+  context 'with recurring absences' do
     let!(:absence) { create(:absence, :weekly, agent: agent, first_day: Date.new(2019, 9, 12), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 12), end_time: Tod::TimeOfDay.new(10, 15)) }
 
     it do
@@ -71,7 +71,7 @@ describe CreneauxBuilderService, type: :service do
     end
   end
 
-  context "with a RDV" do
+  context 'with a RDV' do
     let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, agents: [agent]) }
 
     it do
@@ -83,7 +83,7 @@ describe CreneauxBuilderService, type: :service do
     end
   end
 
-  context "with a cancelled RDV" do
+  context 'with a cancelled RDV' do
     let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, agents: [agent], cancelled_at: Time.zone.local(2019, 9, 20, 9, 30)) }
 
     it do
@@ -96,7 +96,7 @@ describe CreneauxBuilderService, type: :service do
     end
   end
 
-  context "with a RDV on the last day of the range" do
+  context 'with a RDV on the last day of the range' do
     let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: Date.new(2019, 9, 25), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
     let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 25, 10, 0), duration_in_min: 30, agents: [agent]) }
 
@@ -109,7 +109,7 @@ describe CreneauxBuilderService, type: :service do
     end
   end
 
-  context "when today is jour ferie" do
+  context 'when today is jour ferie' do
     let(:today) { Date.new(2020, 1, 1) }
 
     it do
@@ -117,7 +117,7 @@ describe CreneauxBuilderService, type: :service do
     end
   end
 
-  context "when there are two agents" do
+  context 'when there are two agents' do
     let(:agent2) { create(:agent) }
     let!(:plage_ouverture2) { create(:plage_ouverture, agent: agent2, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(10), end_time: Tod::TimeOfDay.new(12)) }
 
@@ -132,7 +132,7 @@ describe CreneauxBuilderService, type: :service do
       is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 11, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
 
-    context "when the result is for agents" do
+    context 'when the result is for agents' do
       let(:options) { { for_agents: true } }
 
       it do
@@ -148,7 +148,7 @@ describe CreneauxBuilderService, type: :service do
         is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 11, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
       end
 
-      context "when the result is filtered for agent2" do
+      context 'when the result is filtered for agent2' do
         let(:options) { { for_agents: true, agent_ids: [agent2.id] } }
 
         it do
@@ -163,8 +163,8 @@ describe CreneauxBuilderService, type: :service do
     end
   end
 
-  context "when motif has min_booking_delay" do
-    let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, min_booking_delay: 30.minutes, reservable_online: true) }
+  context 'when motif has min_booking_delay' do
+    let!(:motif) { create(:motif, name: 'Vaccination', default_duration_in_min: 30, min_booking_delay: 30.minutes, reservable_online: true) }
     let(:now) { Time.zone.local(2019, 9, 19, 9, 15) }
 
     it do
@@ -175,8 +175,8 @@ describe CreneauxBuilderService, type: :service do
     end
   end
 
-  context "when motif has max_booking_delay" do
-    let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, max_booking_delay: 45.minutes, reservable_online: true) }
+  context 'when motif has max_booking_delay' do
+    let!(:motif) { create(:motif, name: 'Vaccination', default_duration_in_min: 30, max_booking_delay: 45.minutes, reservable_online: true) }
     let(:now) { Time.zone.local(2019, 9, 19, 9, 15) }
 
     it do
@@ -186,19 +186,19 @@ describe CreneauxBuilderService, type: :service do
     end
   end
 
-  context "past creneaux for users" do
+  context 'past creneaux for users' do
     let(:now) { today.in_time_zone + 10.hours } # 10 am
 
-    it "should not appear" do
+    it 'should not appear' do
       expect(subject.first[:starts_at].hour).to eq(10)
     end
   end
 
-  context "past creneaux for agents" do
+  context 'past creneaux for agents' do
     let(:now) { today.in_time_zone + 10.hours } # 10 am
     let(:options) { { for_agents: true } }
 
-    it "should not appear" do
+    it 'should not appear' do
       expect(subject.first[:starts_at].hour).to eq(10)
     end
   end

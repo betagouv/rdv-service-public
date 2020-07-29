@@ -29,7 +29,7 @@ class Agents::RegistrationsController < Devise::RegistrationsController
 
   def destroy
     current_agent.soft_delete
-    flash[:notice] = "Votre compte a été supprimé."
+    flash[:notice] = 'Votre compte a été supprimé.'
     Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
     redirect_to root_path
   end

@@ -1,5 +1,5 @@
 describe Users::RdvWizardStepsController, type: :controller do
-  describe "GET index html format" do
+  describe 'GET index html format' do
     let!(:user) { create(:user) }
     let!(:motif) { create(:motif) }
     let!(:lieu) { create(:lieu) }
@@ -8,11 +8,11 @@ describe Users::RdvWizardStepsController, type: :controller do
       build(
         :creneau,
         motif: motif,
-        starts_at: Date.parse("2020-03-03").in_time_zone + 10.hours
+        starts_at: Date.parse('2020-03-03').in_time_zone + 10.hours
       )
     end
 
-    before { travel_to Date.parse("2020-03-01").in_time_zone + 8.hours }
+    before { travel_to Date.parse('2020-03-01').in_time_zone + 8.hours }
     before { sign_in user }
 
     let(:params) do
@@ -24,19 +24,19 @@ describe Users::RdvWizardStepsController, type: :controller do
       }
     end
 
-    it "return success" do
+    it 'return success' do
       get :new, params: params
       expect(response).to have_http_status(:success)
     end
 
-    it "return success" do
+    it 'return success' do
       get :new, params: params
       expect(assigns(:rdv).users).to eq([user])
     end
 
-    it "return success" do
+    it 'return success' do
       get :new, params: params
-      expect(response).to render_template("users/rdv_wizard_steps/step2")
+      expect(response).to render_template('users/rdv_wizard_steps/step2')
     end
   end
 end

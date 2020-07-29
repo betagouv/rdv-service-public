@@ -11,18 +11,18 @@ require 'dotenv/load'
 require 'trello'
 
 Trello.configure do |config|
-  config.developer_public_key = ENV["TRELLO_DEVELOPER_PUBLIC_KEY"]
-  config.member_token = ENV["TRELLO_MEMBER_TOKEN"]
+  config.developer_public_key = ENV['TRELLO_DEVELOPER_PUBLIC_KEY']
+  config.member_token = ENV['TRELLO_MEMBER_TOKEN']
 end
 
-board = Trello::Board.find("5cdac252d7d01b6f728c0308")
+board = Trello::Board.find('5cdac252d7d01b6f728c0308')
 list_deployed = board.lists.last
 list_deployed.cards.each do |card|
   puts "- [#{card.name}](#{card.short_url})"
 end
 
-if ARGV[0] == "--archive"
-  puts "archiving all deployed cards..."
+if ARGV[0] == '--archive'
+  puts 'archiving all deployed cards...'
   list_deployed.archive_all_cards
-  puts "done"
+  puts 'done'
 end

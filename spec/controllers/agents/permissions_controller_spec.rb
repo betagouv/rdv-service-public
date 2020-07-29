@@ -9,26 +9,26 @@ RSpec.describe Agents::PermissionsController, type: :controller do
     sign_in agent
   end
 
-  describe "GET #edit" do
-    it "returns a success response" do
+  describe 'GET #edit' do
+    it 'returns a success response' do
       get :edit, params: { organisation_id: organisation_id, id: agent_user.id }
       expect(response).to be_successful
     end
   end
 
-  describe "POST #update" do
+  describe 'POST #update' do
     subject do
-      post :update, params: { organisation_id: organisation_id, id: agent_user.id, agent_permission: { role: "admin" } }
+      post :update, params: { organisation_id: organisation_id, id: agent_user.id, agent_permission: { role: 'admin' } }
       agent_user.reload
     end
 
-    it "returns a success response" do
+    it 'returns a success response' do
       subject
       expect(response).to redirect_to(organisation_agents_path(organisation_id))
     end
 
-    it "changes role" do
-      expect { subject }.to change(agent_user, :role).from("user").to("admin")
+    it 'changes role' do
+      expect { subject }.to change(agent_user, :role).from('user').to('admin')
     end
   end
 end

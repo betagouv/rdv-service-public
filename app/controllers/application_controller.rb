@@ -62,7 +62,7 @@ class ApplicationController < ActionController::Base
   end
 
   def storable_location?
-    return true if params[:controller].to_s == "flipflop/features"
+    return true if params[:controller].to_s == 'flipflop/features'
 
     request.get? && is_navigational_format? && !devise_controller? && !request.xhr? && request.fullpath != root_path
   end

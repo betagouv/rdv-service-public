@@ -5,12 +5,12 @@ end
 describe Notifications::Rdv::BaseServiceConcern, type: :service do
   subject { TestService.perform_with(rdv) }
 
-  context "rdv dans le futur" do
+  context 'rdv dans le futur' do
     let(:rdv) { build(:rdv, starts_at: DateTime.now + 1.day) }
     it { should eq true }
   end
 
-  context "rdv dans le passé" do
+  context 'rdv dans le passé' do
     let(:rdv) { build(:rdv, starts_at: DateTime.now - 1.day) }
     it { should eq false }
   end

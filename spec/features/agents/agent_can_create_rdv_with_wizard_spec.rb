@@ -1,8 +1,8 @@
-describe "Agent can create a Rdv with wizard" do
+describe 'Agent can create a Rdv with wizard' do
   include UsersHelper
 
-  let!(:agent) { create(:agent, first_name: "Alain") }
-  let!(:agent2) { create(:agent, first_name: "Robert") }
+  let!(:agent) { create(:agent, first_name: 'Alain') }
+  let!(:agent2) { create(:agent, first_name: 'Robert') }
   let!(:motif) { create(:motif) }
   let!(:lieu) { create(:lieu) }
   let!(:user) { create(:user, organisations: [Organisation.first || create(:organisation)]) }
@@ -15,15 +15,15 @@ describe "Agent can create a Rdv with wizard" do
 
   after { travel_back }
 
-  scenario "default", js: true do
+  scenario 'default', js: true do
     # Step 1
-    expect_page_title("Choisir le motif")
+    expect_page_title('Choisir le motif')
 
-    select(motif.name, from: "rdv_motif_id")
+    select(motif.name, from: 'rdv_motif_id')
     click_button('Continuer')
 
     # Step 2
-    expect_page_title("Choisir le ou les usagers")
+    expect_page_title('Choisir le ou les usagers')
     expect_checked("Motif : #{motif.name}")
     select_user(user)
     click_link('Ajouter un autre usager')
@@ -31,10 +31,10 @@ describe "Agent can create a Rdv with wizard" do
     click_link('Créer un usager')
 
     # create user with mail
-    expect(find("#modal-holder")).to have_content("Nouvel usager")
-    fill_in :user_first_name, with: "Jean-Paul"
-    fill_in :user_last_name, with: "Orvoir"
-    fill_in :user_email, with: "jporvoir@bidule.com"
+    expect(find('#modal-holder')).to have_content('Nouvel usager')
+    fill_in :user_first_name, with: 'Jean-Paul'
+    fill_in :user_last_name, with: 'Orvoir'
+    fill_in :user_email, with: 'jporvoir@bidule.com'
     sleep(1) # wait for scroll to not interfere with form input
     page.execute_script "$('#mainModal').scrollTop(1000)"
     click_button('Créer usager')
@@ -43,18 +43,18 @@ describe "Agent can create a Rdv with wizard" do
     # create user without email
     click_link('Ajouter un autre usager')
     click_link('Créer un usager')
-    fill_in :user_first_name, with: "Jean-Marie"
-    fill_in :user_last_name, with: "Lapin"
+    fill_in :user_first_name, with: 'Jean-Marie'
+    fill_in :user_last_name, with: 'Lapin'
     sleep(1) # wait for scroll to not interfere with form input
     page.execute_script "$('#mainModal').scrollTop(1000)"
     click_button('Créer usager')
     sleep(1) # wait for modal to hide completely
 
-    fill_in :rdv_notes, with: "RDV très spécial"
+    fill_in :rdv_notes, with: 'RDV très spécial'
     click_button('Continuer')
 
     # Step 3
-    expect_page_title("Choisir la durée et la date")
+    expect_page_title('Choisir la durée et la date')
     expect_checked(motif.name)
     expect(page).to have_selector("input#rdv_duration_in_min[value='#{motif.default_duration_in_min}']")
     select(lieu.full_name, from: 'rdv_lieu_id')
@@ -72,10 +72,10 @@ describe "Agent can create a Rdv with wizard" do
     expect(rdv.duration_in_min).to eq(35)
     expect(rdv.starts_at).to eq(Time.zone.local(2019, 10, 11, 14, 15))
     expect(rdv.created_by_agent?).to be(true)
-    expect(rdv.notes).to eq("RDV très spécial")
+    expect(rdv.notes).to eq('RDV très spécial')
 
     expect(page).to have_current_path(rdv.agenda_path_for_agent(agent))
-    expect(page).to have_content("Votre agenda")
+    expect(page).to have_content('Votre agenda')
     sleep(0.5) # wait for ajax request
   end
 
@@ -84,6 +84,6 @@ describe "Agent can create a Rdv with wizard" do
   end
 
   def expect_checked(text)
-    expect(page).to have_selector(".card .list-group-item", text: text)
+    expect(page).to have_selector('.card .list-group-item', text: text)
   end
 end

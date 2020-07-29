@@ -27,7 +27,7 @@ Capybara.register_driver :selenium do |app|
   chrome_options[:binary] = chrome_bin if chrome_bin
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
     chromeOptions: chrome_options,
-    "goog:loggingPrefs" => { browser: 'ALL' }
+    'goog:loggingPrefs' => { browser: 'ALL' }
   )
   Capybara::Selenium::Driver.new(
     app,
@@ -40,7 +40,7 @@ Capybara.configure do |config|
   port = 9887 + ENV['TEST_ENV_NUMBER'].to_i
   config.app_host = "http://localhost:#{port}"
   # config.asset_host = "http://localhost:#{port}"  # for screenshots
-  config.server_host = "localhost"
+  config.server_host = 'localhost'
   config.server_port = port
   config.javascript_driver = :selenium
   config.server = :puma, { Silent: true }
@@ -90,7 +90,7 @@ RSpec.configure do |config|
   #   # Allows RSpec to persist some state between runs in order to support
   #   # the `--only-failures` and `--next-failure` CLI options. We recommend
   #   # you configure your source control system to ignore this file.
-  config.example_status_persistence_file_path = "tmp/rspec-persistence.txt"
+  config.example_status_persistence_file_path = 'tmp/rspec-persistence.txt'
 
   #
   #   # Limits the available syntax to the non-monkey patched syntax that is
@@ -148,12 +148,12 @@ RSpec.configure do |config|
   config.after(:each, js: true) do |example|
     next unless example.exception # only write logs for failed tests
 
-    FileUtils.mkdir_p "tmp/capybara"
+    FileUtils.mkdir_p 'tmp/capybara'
     [:browser, :driver].each do |source|
       errors = Capybara.page.driver.browser.manage.logs.get(source)
       fp = "tmp/capybara/chrome.#{example.full_description.parameterize}.#{source}.log"
       File.open(fp, 'w') do |f|
-        f << "// empty logs" if errors.empty?
+        f << '// empty logs' if errors.empty?
         errors.each do |e|
           f << "#{e.timestamp} [#{e.level}]: #{e.message}"
         end

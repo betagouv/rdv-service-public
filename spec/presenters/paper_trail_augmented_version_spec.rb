@@ -1,7 +1,7 @@
 describe PaperTrailAugmentedVersion do
-  describe "#changes" do
-    context "no previous version" do
-      it "should work with only object_changes" do
+  describe '#changes' do
+    context 'no previous version' do
+      it 'should work with only object_changes' do
         version = instance_double(PaperTrail::Version)
         prepare_version_double(version, object_changes: { 'title' => ['foo', 'bar'] })
         expect(PaperTrailAugmentedVersion.new(version, nil).changes).to eq(
@@ -9,64 +9,64 @@ describe PaperTrailAugmentedVersion do
         )
       end
 
-      it "should work with object_changes and virtual_attributes" do
+      it 'should work with object_changes and virtual_attributes' do
         version = instance_double(PaperTrail::Version)
         prepare_version_double(
           version,
           object_changes: { 'title' => ['foo', 'bar'] },
-          virtual_attributes: { "user_ids" => [1, 2] }
+          virtual_attributes: { 'user_ids' => [1, 2] }
         )
         expect(PaperTrailAugmentedVersion.new(version, nil).changes).to eq(
           {
             'title' => ['foo', 'bar'],
-            "user_ids" => [nil, [1, 2]],
+            'user_ids' => [nil, [1, 2]],
           }
         )
       end
     end
 
-    context "with some previous version" do
+    context 'with some previous version' do
       let(:version) { instance_double(PaperTrail::Version) }
       let(:previous_version) { instance_double(PaperTrail::Version) }
       before do
         prepare_version_double(
           version,
           object_changes: { 'title' => ['foo', 'bar'] },
-          virtual_attributes: { "user_ids" => [1, 2], "agent_ids" => [3] }
+          virtual_attributes: { 'user_ids' => [1, 2], 'agent_ids' => [3] }
         )
         prepare_version_double(
           previous_version,
           object_changes: { 'title' => ['baz', 'foo'] },
-          virtual_attributes: { "user_ids" => [1], "agent_ids" => [3] }
+          virtual_attributes: { 'user_ids' => [1], 'agent_ids' => [3] }
         )
       end
 
-      it "should compute virtual attributes changes from both versions" do
+      it 'should compute virtual attributes changes from both versions' do
         expect(
           PaperTrailAugmentedVersion.new(version, previous_version).changes
         ).to eq(
           {
             'title' => ['foo', 'bar'],
-            "user_ids" => [[1], [1, 2]],
+            'user_ids' => [[1], [1, 2]],
             # agent_ids has not changed so it does not appear here
           }
         )
       end
 
-      it "filters optional whitelisted attributes" do
+      it 'filters optional whitelisted attributes' do
         expect(
           PaperTrailAugmentedVersion.new(
             version,
             previous_version,
-            attributes_whitelist: ["user_ids"]
+            attributes_whitelist: ['user_ids']
           ).changes
-        ).to eq({ "user_ids" => [[1], [1, 2]] })
+        ).to eq({ 'user_ids' => [[1], [1, 2]] })
       end
     end
   end
 
-  describe ".for_resource" do
-    it "should call initializer with the right versions pairs" do
+  describe '.for_resource' do
+    it 'should call initializer with the right versions pairs' do
       resource = instance_double(Rdv)
       versions = [instance_double(PaperTrail::Version)] * 4
       augmented_versions = [instance_double(PaperTrailAugmentedVersion)] * 4

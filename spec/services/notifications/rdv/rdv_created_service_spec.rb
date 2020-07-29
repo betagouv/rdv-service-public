@@ -5,11 +5,11 @@ describe Notifications::Rdv::RdvCreatedService, type: :service do
   let(:agent1) { build(:agent) }
   let(:agent2) { build(:agent) }
 
-  context "starts in more than 2 days" do
+  context 'starts in more than 2 days' do
     let(:rdv) { create(:rdv, starts_at: 3.days.from_now, users: [user1, user2], agents: [agent1, agent2]) }
     # create is necessary for serialization reasons (?)
 
-    it "triggers sending mail to users but not to agents" do
+    it 'triggers sending mail to users but not to agents' do
       expect(Users::RdvMailer).to receive(:rdv_created).with(rdv, user1).and_return(double(deliver_later: nil))
       expect(Users::RdvMailer).to receive(:rdv_created).with(rdv, user2).and_return(double(deliver_later: nil))
       expect(Agents::RdvMailer).not_to receive(:rdv_starting_soon_created)
@@ -17,11 +17,11 @@ describe Notifications::Rdv::RdvCreatedService, type: :service do
     end
   end
 
-  context "starts today or tomorrow" do
+  context 'starts today or tomorrow' do
     let(:rdv) { create(:rdv, starts_at: 2.hours.from_now, users: [user1, user2], agents: [agent1, agent2]) }
     # create is necessary for serialization reasons (?)
 
-    it "triggers sending mails to both user and agents" do
+    it 'triggers sending mails to both user and agents' do
       expect(Users::RdvMailer).to receive(:rdv_created).with(rdv, user1).and_return(double(deliver_later: nil))
       expect(Users::RdvMailer).to receive(:rdv_created).with(rdv, user2).and_return(double(deliver_later: nil))
       expect(Agents::RdvMailer).to receive(:rdv_starting_soon_created).with(rdv, agent1).and_return(double(deliver_later: nil))
@@ -30,23 +30,23 @@ describe Notifications::Rdv::RdvCreatedService, type: :service do
     end
   end
 
-  context "motif with users notifications disabled" do
+  context 'motif with users notifications disabled' do
     let(:motif) { build(:motif, :no_notification) }
     let(:rdv) { create(:rdv, motif: motif, starts_at: 3.days.from_now, users: [user1, user2]) }
 
-    it "should not be called" do
+    it 'should not be called' do
       expect(Users::RdvMailer).not_to receive(:rdv_created)
       subject
     end
   end
 
-  context "when rdv is for a relative" do
+  context 'when rdv is for a relative' do
     # TODO: this is actually testing the users#user_to_notify method, move it
     let(:responsible) { create(:user) }
     let(:relative) { create(:user, responsible_id: responsible.id) }
     let(:rdv) { create(:rdv, users: [relative], starts_at: 3.days.from_now) }
 
-    it "calls RdvMailer to send email to responsible" do
+    it 'calls RdvMailer to send email to responsible' do
       expect(Users::RdvMailer).to receive(:rdv_created).with(rdv, responsible).and_return(double(deliver_later: nil))
       subject
     end

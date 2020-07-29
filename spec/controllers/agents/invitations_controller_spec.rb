@@ -7,7 +7,7 @@ RSpec.describe Agents::InvitationsController, type: :controller do
   let(:service_id) { agent.service.id }
 
   before do
-    request.env["devise.mapping"] = Devise.mappings[:agent]
+    request.env['devise.mapping'] = Devise.mappings[:agent]
     sign_in agent
   end
 
@@ -15,76 +15,76 @@ RSpec.describe Agents::InvitationsController, type: :controller do
     Devise.mailer.deliveries.clear
   end
 
-  describe "POST #create" do
+  describe 'POST #create' do
     subject { post :create, params: { agent: params }, format: :json }
 
-    shared_examples "existing user is added to organization" do
-      it "should not create a new user" do
+    shared_examples 'existing user is added to organization' do
+      it 'should not create a new user' do
         expect { subject }.not_to change(Agent, :count)
       end
 
-      it "should return a successful response" do
+      it 'should return a successful response' do
         subject
         expect(response).to be_successful
       end
 
-      it "should add user to organisation" do
+      it 'should add user to organisation' do
         subject
         expect(assigns(:agent).organisation_ids).to include(organisation_id)
       end
     end
 
-    context "when email is correct and no invitation has been sent" do
+    context 'when email is correct and no invitation has been sent' do
       let(:params) do
         {
-          email: "michel@lapin.com",
+          email: 'michel@lapin.com',
           organisation_id: organisation_id,
           role: 'user',
           service_id: service_id,
         }
       end
 
-      it "should reate a new user" do
+      it 'should reate a new user' do
         expect { subject }.to change(Agent, :count).by(1)
       end
 
-      it "should return a successful response" do
+      it 'should return a successful response' do
         subject
         expect(response).to be_successful
       end
 
-      it "should send an email" do
+      it 'should send an email' do
         subject
         expect(Devise.mailer.deliveries.count).to eq(1)
       end
     end
 
-    context "when email is incorrect" do
+    context 'when email is incorrect' do
       let(:params) do
         {
-          email: "aa@hhh",
+          email: 'aa@hhh',
           organisation_id: organisation_id,
           role: 'user',
           service_id: service_id,
         }
       end
 
-      it "should not create a new user" do
+      it 'should not create a new user' do
         expect { subject }.not_to change(Agent, :count)
       end
 
-      it "should not be successful" do
+      it 'should not be successful' do
         subject
         expect(response).not_to be_successful
       end
 
-      it "should render errors" do
+      it 'should render errors' do
         subject
         expect(assigns(:agent).errors[:email]).not_to be_empty
       end
     end
 
-    context "when agent already exist" do
+    context 'when agent already exist' do
       let(:params) do
         {
           email: agent_2.email,
@@ -94,38 +94,38 @@ RSpec.describe Agents::InvitationsController, type: :controller do
         }
       end
 
-      context "when agent is in another organisation" do
+      context 'when agent is in another organisation' do
         let!(:agent_2) { create(:agent, organisation_ids: [organisation_2.id]) }
 
-        it_behaves_like "existing user is added to organization"
+        it_behaves_like 'existing user is added to organization'
 
-        it "should not send an email" do
+        it 'should not send an email' do
           subject
           expect(Devise.mailer.deliveries.count).to eq(0)
         end
       end
 
-      context "when agent has been invited by another organisation" do
+      context 'when agent has been invited by another organisation' do
         let!(:agent_2) { create(:agent, :not_confirmed, organisation_ids: [organisation_2.id]) }
 
-        it_behaves_like "existing user is added to organization"
+        it_behaves_like 'existing user is added to organization'
       end
 
-      context "when agent is already in this organisation" do
+      context 'when agent is already in this organisation' do
         let!(:agent_2) { create(:agent, organisation_ids: [organisation_id]) }
         it { expect { subject }.not_to change(Agent, :count) }
       end
 
-      context "when agent has been invited by this organisation" do
+      context 'when agent has been invited by this organisation' do
         let!(:agent_2) { create(:agent, :not_confirmed, organisation_ids: [organisation_id]) }
         it { expect { subject }.not_to change(Agent, :count) }
       end
     end
 
-    context "when agent already exist but with different email capitalization" do
+    context 'when agent already exist but with different email capitalization' do
       let(:params) do
         {
-          email: "MARCO@demo.rdv-solidarites.fr",
+          email: 'MARCO@demo.rdv-solidarites.fr',
           organisation_id: organisation_id,
           role: 'user',
           service_id: service_id,
@@ -134,12 +134,12 @@ RSpec.describe Agents::InvitationsController, type: :controller do
       let!(:existing_agent) do
         create(
           :agent,
-          email: "marco@demo.rdv-solidarites.fr",
+          email: 'marco@demo.rdv-solidarites.fr',
           organisation_ids: [organisation_2.id]
         )
       end
 
-      it_behaves_like "existing user is added to organization"
+      it_behaves_like 'existing user is added to organization'
     end
   end
 end

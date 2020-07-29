@@ -32,7 +32,7 @@ module Admin
         raise AbstractController::ActionNotFound, "Email part '#{part_type}' not found in #{@preview.name}##{@email_action}"
       else
         @part = find_preferred_part(request.format, Mime[:html], Mime[:text])
-        render action: "email"
+        render action: 'email'
       end
     rescue ActiveRecord::RecordNotFound
       render plain: 'could not find preview AR instance'

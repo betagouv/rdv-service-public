@@ -1,7 +1,7 @@
 class ImportZoneRowsService < BaseService
   include DataUtils
 
-  REQUIRED_FIELDS = ["organisation_id", "city_name", "city_code"].freeze
+  REQUIRED_FIELDS = ['organisation_id', 'city_name', 'city_code'].freeze
 
   def initialize(rows, departement, agent, **options)
     @rows = rows
@@ -52,7 +52,7 @@ class ImportZoneRowsService < BaseService
   def validate_rows_present?
     return true if @rows.any?
 
-    @result[:errors] << "Aucune ligne"
+    @result[:errors] << 'Aucune ligne'
     false
   end
 
@@ -65,7 +65,7 @@ class ImportZoneRowsService < BaseService
   end
 
   def validate_inner_conflicts?
-    conflicts = value_counts(@rows.pluck("city_code")).to_a.filter { _2 > 1 }
+    conflicts = value_counts(@rows.pluck('city_code')).to_a.filter { _2 > 1 }
     return true if conflicts.empty?
 
     conflicts.each do |city_code, count|
@@ -84,7 +84,7 @@ class ImportZoneRowsService < BaseService
   end
 
   def validate_row_organisation_found(row, row_index)
-    return true if find_organisation(row["organisation_id"]).present?
+    return true if find_organisation(row['organisation_id']).present?
 
     @result[:row_errors][row_index] = "Aucune organisation trouvée pour l'identifiant #{row['organisation_id']}"
     @result[:counts][:errors][:organisation_not_found] += 1
@@ -95,7 +95,7 @@ class ImportZoneRowsService < BaseService
     zone = build_zone(row)
     return true if zone.valid?
 
-    @result[:row_errors][row_index] = zone.errors.full_messages.join(", ")
+    @result[:row_errors][row_index] = zone.errors.full_messages.join(', ')
     @result[:counts][:errors]["invalid_zone_#{zone.errors.keys.first}".to_sym] += 1
     false
   end
@@ -126,10 +126,10 @@ class ImportZoneRowsService < BaseService
   end
 
   def build_zone(row)
-    unique_attributes = { level: 'city', city_code: row["city_code"] }
+    unique_attributes = { level: 'city', city_code: row['city_code'] }
     extra_attributes = {
-      organisation: find_organisation(row["organisation_id"]),
-      city_name: row["city_name"]
+      organisation: find_organisation(row['organisation_id']),
+      city_name: row['city_name']
     }
     if @override_conflicts
       Zone.find_or_initialize_by(unique_attributes) # could be optimized

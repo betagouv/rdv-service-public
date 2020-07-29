@@ -15,7 +15,7 @@ class Agents::LieuxController < AgentAuthController
     @lieu = Lieu.new(organisation_id: current_organisation.id)
     @lieu.assign_attributes(lieu_params)
     authorize(@lieu)
-    flash.notice = "Le lieu a été créé." if @lieu.save
+    flash.notice = 'Le lieu a été créé.' if @lieu.save
     respond_right_bar_with @lieu, location: organisation_lieux_path(@lieu.organisation)
   end
 

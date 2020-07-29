@@ -4,7 +4,7 @@ class Agents::RdvMailer < ApplicationMailer
     @agent = agent
     @date_str = {
       Date.today => "aujourd'hui",
-      Date.tomorrow => "demain",
+      Date.tomorrow => 'demain',
     }[@rdv.starts_at.to_date]
     mail(
       to: agent.email,

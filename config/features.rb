@@ -5,5 +5,5 @@ Flipflop.configure do
 
   feature :EHPAD,
           title: 'Visite en EHPAD',
-          description: "Active le parcours dédié aux visites en EHPAD"
+          description: 'Active le parcours dédié aux visites en EHPAD'
 end

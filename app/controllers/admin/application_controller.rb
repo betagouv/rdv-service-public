@@ -6,9 +6,9 @@
 # you're free to overwrite the RESTful controller actions.
 module Admin
   class ApplicationController < Administrate::ApplicationController
-    if ENV["ADMIN_BASIC_AUTH_PASSWORD"].present?
+    if ENV['ADMIN_BASIC_AUTH_PASSWORD'].present?
       # don't set this env var in prod!
-      http_basic_authenticate_with name: "rdv-solidarites", password: ENV["ADMIN_BASIC_AUTH_PASSWORD"]
+      http_basic_authenticate_with name: 'rdv-solidarites', password: ENV['ADMIN_BASIC_AUTH_PASSWORD']
     else
       before_action :authenticate_super_admin!
     end
@@ -18,7 +18,7 @@ module Admin
     helper_method :sign_in_as_allowed?
 
     def user_for_paper_trail
-      return "SuperAdmin" if current_super_admin.nil?
+      return 'SuperAdmin' if current_super_admin.nil?
 
       "[Admin] #{current_super_admin.email}"
     end

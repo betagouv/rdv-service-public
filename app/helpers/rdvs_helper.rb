@@ -1,15 +1,15 @@
 module RdvsHelper
   def rdv_title(rdv, date_format: :human)
-    article = date_format == :time_only ? "À" : "Le"
+    article = date_format == :time_only ? 'À' : 'Le'
     "#{article} #{l(rdv.starts_at, format: date_format)} " \
       "(durée : #{rdv.duration_in_min} minutes)"
   end
 
   def rdv_title_for_agent(rdv)
-    (rdv.created_by_user? ? "@ " : "") +
+    (rdv.created_by_user? ? '@ ' : '') +
       rdv.users&.map(&:full_name)&.to_sentence +
-      (rdv.motif.home? ? " 🏠" : "") +
-      (rdv.motif.phone? ? " ☎️" : "")
+      (rdv.motif.home? ? ' 🏠' : '') +
+      (rdv.motif.phone? ? ' ☎️' : '')
   end
 
   def rdv_title_for_user(rdv, user)
@@ -27,7 +27,7 @@ module RdvsHelper
       else
         "#{user.full_name} - l'usager a été supprimé"
       end
-    end, ", ")
+    end, ', ')
   end
 
   def users_to_sentence(rdv)
@@ -46,13 +46,13 @@ module RdvsHelper
 
   def no_rdv_for_users
     sentence = "Vous n'avez pas de RDV "
-    sentence += params[:past].present? ? "passé." : "à venir."
+    sentence += params[:past].present? ? 'passé.' : 'à venir.'
     sentence
   end
 
   def human_location(rdv)
     text = rdv.address_complete
-    text += " - Adresse non renseignée" if rdv.address.blank?
+    text += ' - Adresse non renseignée' if rdv.address.blank?
     text
   end
 
@@ -96,7 +96,7 @@ module RdvsHelper
   end
 
   def rdv_danger_icon(count)
-    content_tag(:i, nil, class: "fa fa-exclamation-circle text-danger") if count.positive? && !stats_path?
+    content_tag(:i, nil, class: 'fa fa-exclamation-circle text-danger') if count.positive? && !stats_path?
   end
 
   def link_to_rdvs(status, clasz: 'btn-outline-white')
@@ -105,7 +105,7 @@ module RdvsHelper
 
   def rdv_status_value(status)
     if status.blank?
-      ["Tous les rdvs", ""]
+      ['Tous les rdvs', '']
     else
       Rdv.statuses.to_a.find { |s| s[0] == status }
     end

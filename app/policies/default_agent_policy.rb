@@ -2,9 +2,9 @@ class DefaultAgentPolicy
   attr_reader :context, :record
 
   def initialize(context, record)
-    raise Pundit::NotAuthorizedError, "must be logged in" unless context.agent
+    raise Pundit::NotAuthorizedError, 'must be logged in' unless context.agent
     if context.organisation && context.agent.organisation_ids.exclude?(context.organisation.id)
-      raise Pundit::NotAuthorizedError, "must be of the same organisation"
+      raise Pundit::NotAuthorizedError, 'must be of the same organisation'
     end
 
     @context = context

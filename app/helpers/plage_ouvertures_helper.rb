@@ -9,9 +9,9 @@ module PlageOuverturesHelper
 
   def time_collections_for_hours(hours_range)
     hours_range.flat_map do |h|
-      padded_h = format("%02i", h)
+      padded_h = format('%02i', h)
       (0..55).step(5).map do |m|
-        padded_min = format("%02i", m)
+        padded_min = format('%02i', m)
         "#{padded_h}:#{padded_min}"
       end
     end
@@ -68,13 +68,13 @@ module PlageOuverturesHelper
 
   def weekday_in_fr(weekday)
     weekdays = {
-      "monday" => "lundi",
-      "tuesday" => "mardi",
-      "wednesday" => "mercredi",
-      "thursday" => "jeudi",
-      "friday" => "vendredi",
-      "saturday" => "samedi",
-      "sunday" => "dimanche",
+      'monday' => 'lundi',
+      'tuesday' => 'mardi',
+      'wednesday' => 'mercredi',
+      'thursday' => 'jeudi',
+      'friday' => 'vendredi',
+      'saturday' => 'samedi',
+      'sunday' => 'dimanche',
     }
     weekdays[weekday]
   end

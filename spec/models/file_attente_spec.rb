@@ -1,6 +1,6 @@
 describe FileAttente, type: :model do
   describe '#send_notifications' do
-    let(:now) { DateTime.parse("01-01-2019 09:00 +0100") }
+    let(:now) { DateTime.parse('01-01-2019 09:00 +0100') }
     let!(:lieu) { create(:lieu) }
     let!(:plage_ouverture) { create(:plage_ouverture, first_day: now + 2.weeks, start_time: Tod::TimeOfDay.new(10)) }
     let!(:rdv) { create(:rdv, starts_at: now + 2.weeks, lieu: lieu, motif: plage_ouverture.motifs.first, agent_ids: [plage_ouverture.agent.id]) }
@@ -16,7 +16,7 @@ describe FileAttente, type: :model do
       file_attente.reload
     end
 
-    context "with availabilities before rdv" do
+    context 'with availabilities before rdv' do
       let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: 1.day.from_now, start_time: Tod::TimeOfDay.new(9)) }
 
       it 'should increment notifications_sent' do
@@ -36,7 +36,7 @@ describe FileAttente, type: :model do
       end
     end
 
-    context "without availabilities before rdv" do
+    context 'without availabilities before rdv' do
       let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: Date.yesterday) }
 
       it 'should not send notification' do
@@ -46,7 +46,7 @@ describe FileAttente, type: :model do
       end
     end
 
-    context "when creneau was already sent" do
+    context 'when creneau was already sent' do
       let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: 1.day.from_now, start_time: Tod::TimeOfDay.new(9)) }
 
       it 'should not send notification' do
@@ -58,7 +58,7 @@ describe FileAttente, type: :model do
       end
     end
 
-    context "when creneau is too close to RDV" do
+    context 'when creneau is too close to RDV' do
       let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: 2.weeks.from_now - 1.day) }
 
       it 'should not send notification' do

@@ -9,37 +9,37 @@ require 'csv'
 # ORGANISATIONS
 
 Organisation.skip_callback(:create, :after, :notify_admin_organisation_created)
-org_paris_nord = Organisation.create!(name: "MDS Paris Nord", phone_number: "0123456789", departement: "75", human_id: "paris-nord")
+org_paris_nord = Organisation.create!(name: 'MDS Paris Nord', phone_number: '0123456789', departement: '75', human_id: 'paris-nord')
 organisations_by_human_id = [
-  { human_id: "1030", name: "MDS Arques" },
-  { human_id: "1034", name: "MDS Bapaume" },
-  { human_id: "1031", name: "MDS Arras Nord" },
-  { human_id: "1032", name: "MDS Arras Sud" },
-  { human_id: "1033", name: "MDS Avion" },
-  { human_id: "1042", name: "MDS Etaples" },
-  { human_id: "1043", name: "MDS Hénin-Beaumont" },
-  { human_id: "1052", name: "MDS Outreau" },
-  { human_id: "1050", name: "MDS Berck" },
-  { human_id: "1036", name: "MDS Boulogne-sur-Mer" },
-  { human_id: "1037", name: "MDS Bruay la Buissière" },
-  { human_id: "1038", name: "MDS Bully les Mines" },
-  { human_id: "1035", name: "MDS Béthune" },
-  { human_id: "1039", name: "MDS Calais 1" },
-  { human_id: "1040", name: "MDS Calais 2" },
-  { human_id: "1041", name: "MDS Carvin" },
-  { human_id: "1046", name: "MDS Lens 1" },
-  { human_id: "1047", name: "MDS Lens 2" },
-  { human_id: "1049", name: "MDS Lillers" },
-  { human_id: "1048", name: "MDS Liévin" },
-  { human_id: "1044", name: "MDS Marconne" },
-  { human_id: "1051", name: "MDS Noeux les Mines" },
-  { human_id: "1053", name: "MDS St Martin les Boulogne" },
-  { human_id: "1054", name: "MDS St Omer" },
-  { human_id: "1055", name: "MDS St Pol sur Ternoise" }
+  { human_id: '1030', name: 'MDS Arques' },
+  { human_id: '1034', name: 'MDS Bapaume' },
+  { human_id: '1031', name: 'MDS Arras Nord' },
+  { human_id: '1032', name: 'MDS Arras Sud' },
+  { human_id: '1033', name: 'MDS Avion' },
+  { human_id: '1042', name: 'MDS Etaples' },
+  { human_id: '1043', name: 'MDS Hénin-Beaumont' },
+  { human_id: '1052', name: 'MDS Outreau' },
+  { human_id: '1050', name: 'MDS Berck' },
+  { human_id: '1036', name: 'MDS Boulogne-sur-Mer' },
+  { human_id: '1037', name: 'MDS Bruay la Buissière' },
+  { human_id: '1038', name: 'MDS Bully les Mines' },
+  { human_id: '1035', name: 'MDS Béthune' },
+  { human_id: '1039', name: 'MDS Calais 1' },
+  { human_id: '1040', name: 'MDS Calais 2' },
+  { human_id: '1041', name: 'MDS Carvin' },
+  { human_id: '1046', name: 'MDS Lens 1' },
+  { human_id: '1047', name: 'MDS Lens 2' },
+  { human_id: '1049', name: 'MDS Lillers' },
+  { human_id: '1048', name: 'MDS Liévin' },
+  { human_id: '1044', name: 'MDS Marconne' },
+  { human_id: '1051', name: 'MDS Noeux les Mines' },
+  { human_id: '1053', name: 'MDS St Martin les Boulogne' },
+  { human_id: '1054', name: 'MDS St Omer' },
+  { human_id: '1055', name: 'MDS St Pol sur Ternoise' }
 ].map do |attributes|
   [
     attributes[:human_id],
-    Organisation.create!(phone_number: "0123456789", departement: "62", **attributes)
+    Organisation.create!(phone_number: '0123456789', departement: '62', **attributes)
   ]
 end.to_h
 org_arques = organisations_by_human_id['1030']
@@ -48,21 +48,21 @@ Organisation.set_callback(:create, :after, :notify_admin_organisation_created)
 
 # SERVICES
 
-service_pmi = Service.create!(name: "PMI (Protection Maternelle Infantile)", short_name: "PMI")
-service_social = Service.create!(name: "Service social", short_name: "Service Social")
-_service_secretariat = Service.create!(name: "Secrétariat", short_name: "Secrétariat")
-_service_ehpad = Service.create!(name: "EHPAD", short_name: "EHPAD")
+service_pmi = Service.create!(name: 'PMI (Protection Maternelle Infantile)', short_name: 'PMI')
+service_social = Service.create!(name: 'Service social', short_name: 'Service Social')
+_service_secretariat = Service.create!(name: 'Secrétariat', short_name: 'Secrétariat')
+_service_ehpad = Service.create!(name: 'EHPAD', short_name: 'EHPAD')
 
 # SERVICE LIBELLES
 
-libelle_pmi_rappel = MotifLibelle.create!(service: service_pmi, name: "Être rappelé par la PMI")
-libelle_pmi_prenatale = MotifLibelle.create!(service: service_pmi, name: "Consultation prénatale")
-libelle_pmi_gyneco = MotifLibelle.create!(service: service_pmi, name: "Consultation gynécologie / contraception")
-libelle_pmi_suivi = MotifLibelle.create!(service: service_pmi, name: "Suivi après naissance")
-libelle_pmi_securite = MotifLibelle.create!(service: service_pmi, name: "Sécurité du domicile")
-libelle_social_rappel = MotifLibelle.create!(service: service_social, name: "Être rappelé par la MDS")
-libelle_social_suivi = MotifLibelle.create!(service: service_social, name: "Suivi RSA")
-libelle_social_droits = MotifLibelle.create!(service: service_social, name: "Droits sociaux")
+libelle_pmi_rappel = MotifLibelle.create!(service: service_pmi, name: 'Être rappelé par la PMI')
+libelle_pmi_prenatale = MotifLibelle.create!(service: service_pmi, name: 'Consultation prénatale')
+libelle_pmi_gyneco = MotifLibelle.create!(service: service_pmi, name: 'Consultation gynécologie / contraception')
+libelle_pmi_suivi = MotifLibelle.create!(service: service_pmi, name: 'Suivi après naissance')
+libelle_pmi_securite = MotifLibelle.create!(service: service_pmi, name: 'Sécurité du domicile')
+libelle_social_rappel = MotifLibelle.create!(service: service_social, name: 'Être rappelé par la MDS')
+libelle_social_suivi = MotifLibelle.create!(service: service_social, name: 'Suivi RSA')
+libelle_social_droits = MotifLibelle.create!(service: service_social, name: 'Droits sociaux')
 
 # MOTIFS org_paris_nord
 
@@ -159,30 +159,30 @@ end
 # LIEUX
 
 lieu_org_paris_nord_sud = Lieu.create!(
-  name: "Maison Paris Sud",
+  name: 'Maison Paris Sud',
   organisation: org_paris_nord,
-  address: "18 Rue des Terres au Curé, 75013 Paris",
+  address: '18 Rue des Terres au Curé, 75013 Paris',
   latitude: 48.85295,
   longitude: 2.34998
 )
 lieu_org_paris_nord_nord = Lieu.create!(
-  name: "Maison Paris Nord",
+  name: 'Maison Paris Nord',
   organisation: org_paris_nord,
   address: "18 Boulevard d'Aubervilliers, 75019 Paris",
   latitude: 48.8882196,
   longitude: 2.3650464
 )
 lieu_arques_nord = Lieu.create!(
-  name: "Maison Arques Nord",
+  name: 'Maison Arques Nord',
   organisation: org_arques,
-  address: "10 rue du marechal leclerc, 62410 Arques",
+  address: '10 rue du marechal leclerc, 62410 Arques',
   latitude: 50.7406,
   longitude: 2.3103
 )
 lieu_bapaume_est = Lieu.create!(
-  name: "MJC Bapaume Est",
+  name: 'MJC Bapaume Est',
   organisation: org_bapaume,
-  address: "10 rue emile delot, 62450 Arques",
+  address: '10 rue emile delot, 62450 Arques',
   latitude: 50.1026,
   longitude: 2.8486
 )
@@ -201,43 +201,43 @@ end
 # USERS
 
 user_org_paris_nord_patricia = User.new(
-  first_name: "Patricia",
-  last_name: "Duroy",
-  email: "patricia_duroy@demo.rdv-solidarites.fr",
-  birth_date: Date.parse("20/06/1975"),
+  first_name: 'Patricia',
+  last_name: 'Duroy',
+  email: 'patricia_duroy@demo.rdv-solidarites.fr',
+  birth_date: Date.parse('20/06/1975'),
   password: '123456',
   organisation_ids: [org_paris_nord.id]
 )
 
 user_org_paris_nord_patricia.skip_confirmation!
 user_org_paris_nord_patricia.save!
-user_org_paris_nord_patricia.profile_for(org_paris_nord).update!(notes: "des notes de test", logement: 2)
+user_org_paris_nord_patricia.profile_for(org_paris_nord).update!(notes: 'des notes de test', logement: 2)
 
 user_org_paris_nord_lea = User.new(
-  first_name: "Léa",
-  last_name: "Dupont",
-  email: "lea_dupont@demo.rdv-solidarites.fr",
-  birth_date: Date.parse("01/12/1982"),
+  first_name: 'Léa',
+  last_name: 'Dupont',
+  email: 'lea_dupont@demo.rdv-solidarites.fr',
+  birth_date: Date.parse('01/12/1982'),
   password: '123456',
   organisation_ids: [org_paris_nord.id]
 )
 
 user_org_paris_nord_lea.skip_confirmation!
 user_org_paris_nord_lea.save!
-user_org_paris_nord_lea.profile_for(org_paris_nord).update!(notes: "des notes de test", logement: 2)
+user_org_paris_nord_lea.profile_for(org_paris_nord).update!(notes: 'des notes de test', logement: 2)
 
 user_org_paris_nord_jean = User.new(
-  first_name: "Jean",
-  last_name: "Moustache",
-  email: "jean_moustache@demo.rdv-solidarites.fr",
-  birth_date: Date.parse("10/01/1973"),
+  first_name: 'Jean',
+  last_name: 'Moustache',
+  email: 'jean_moustache@demo.rdv-solidarites.fr',
+  birth_date: Date.parse('10/01/1973'),
   password: '123456',
   organisation_ids: [org_paris_nord.id]
 )
 
 user_org_paris_nord_jean.skip_confirmation!
 user_org_paris_nord_jean.save!
-user_org_paris_nord_jean.profile_for(org_paris_nord).update!(notes: "des notes de test", logement: 2)
+user_org_paris_nord_jean.profile_for(org_paris_nord).update!(notes: 'des notes de test', logement: 2)
 
 # AGENTS
 
@@ -382,7 +382,7 @@ rdv1 = Rdv.new(
   organisation_id: org_paris_nord.id,
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_patricia.id],
-  notes: "Rendez-vous important !"
+  notes: 'Rendez-vous important !'
 )
 rdv1.save!
 Rdv.set_callback(:create, :after, :notify_rdv_created)

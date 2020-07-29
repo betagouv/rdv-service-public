@@ -1,5 +1,5 @@
 describe Agents::RdvWizardStepsController, type: :controller do
-  describe "GET index html format" do
+  describe 'GET index html format' do
     let!(:agent) { create(:agent, :secretaire) }
     let!(:organisation_id) { agent.organisation_ids.first }
     let!(:user) { create(:user) }
@@ -18,19 +18,19 @@ describe Agents::RdvWizardStepsController, type: :controller do
       }
     end
 
-    it "return success" do
+    it 'return success' do
       get :new, params: params
       expect(response).to have_http_status(:success)
     end
 
-    it "return success" do
+    it 'return success' do
       get :new, params: params
       expect(assigns(:rdv).users).to eq([user])
     end
 
-    it "return success" do
+    it 'return success' do
       get :new, params: params
-      expect(response).to render_template("agents/rdv_wizard_steps/step2")
+      expect(response).to render_template('agents/rdv_wizard_steps/step2')
     end
   end
 end

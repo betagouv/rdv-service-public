@@ -1,12 +1,12 @@
 RSpec.describe Users::RdvsController, type: :controller do
   render_views
 
-  describe "POST create" do
+  describe 'POST create' do
     let(:user) { create(:user) }
     let(:motif) { create(:motif) }
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], first_day: Date.new(2019, 7, 24)) }
 
-    subject { post :create, params: { organisation_id: plage_ouverture.organisation_id, lieu_id: plage_ouverture.lieu.id, departement: "12", where: "1 rue de la, ville 12345", motif_id: motif.id, starts_at: starts_at } }
+    subject { post :create, params: { organisation_id: plage_ouverture.organisation_id, lieu_id: plage_ouverture.lieu.id, departement: '12', where: '1 rue de la, ville 12345', motif_id: motif.id, starts_at: starts_at } }
 
     before do
       travel_to(Time.zone.local(2019, 7, 20))
@@ -16,29 +16,29 @@ RSpec.describe Users::RdvsController, type: :controller do
 
     after { travel_back }
 
-    describe "when the starts_at is correct" do
+    describe 'when the starts_at is correct' do
       let(:starts_at) { Time.zone.local(2019, 7, 25, 10, 30) }
 
-      it "creates rdv" do
+      it 'creates rdv' do
         expect(Rdv.count).to eq(1)
         expect(response).to redirect_to users_rdvs_path
         expect(user.rdvs.last.created_by_user?).to be(true)
       end
     end
 
-    describe "when the starts_at not correct" do
+    describe 'when the starts_at not correct' do
       let(:starts_at) { Time.zone.local(2019, 7, 25, 14, 30) }
 
-      it "creates rdv" do
+      it 'creates rdv' do
         expect(Rdv.count).to eq(0)
-        expect(response).to redirect_to lieux_path(search: { departement: "12", service: motif.service_id, motif_name: motif.name, where: "1 rue de la, ville 12345" })
+        expect(response).to redirect_to lieux_path(search: { departement: '12', service: motif.service_id, motif_name: motif.name, where: '1 rue de la, ville 12345' })
         expect(flash[:error]).to eq "Ce creneau n'est plus disponible. Veuillez en sélectionner un autre."
       end
     end
   end
 
-  describe "PUT #cancel" do
-    let(:now) { "01/01/2019 14:20".to_datetime }
+  describe 'PUT #cancel' do
+    let(:now) { '01/01/2019 14:20'.to_datetime }
     let(:rdv) { create(:rdv, starts_at: 5.hours.from_now) }
     let!(:user) { create(:user) }
 
@@ -57,19 +57,19 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       it { expect { subject }.to change(rdv, :cancelled_at).from(nil).to(now) }
 
-      it "redirects to rdvs" do
+      it 'redirects to rdvs' do
         subject
         expect(response).to redirect_to users_rdvs_path
       end
 
-      context "when rdv is not cancellable" do
+      context 'when rdv is not cancellable' do
         let(:rdv) { create(:rdv, starts_at: 3.hours.from_now) }
 
         it { expect { subject }.not_to change(rdv, :cancelled_at) }
       end
     end
 
-    context "when user does not belongs to rdv" do
+    context 'when user does not belongs to rdv' do
       let(:signed_in_user) { create(:user) }
 
       it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }

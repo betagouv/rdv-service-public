@@ -6,7 +6,7 @@ class Motif < ApplicationRecord
   has_and_belongs_to_many :plage_ouvertures, -> { distinct }
 
   enum location_type: [:public_office, :phone, :home]
-  validates :name, presence: true, uniqueness: { scope: [:organisation, :location_type], conditions: -> { where(deleted_at: nil) }, message: "est déjà utilisé pour un motif avec le même type de RDV" }
+  validates :name, presence: true, uniqueness: { scope: [:organisation, :location_type], conditions: -> { where(deleted_at: nil) }, message: 'est déjà utilisé pour un motif avec le même type de RDV' }
 
   delegate :service_social?, to: :service
 
@@ -65,12 +65,12 @@ class Motif < ApplicationRecord
   def booking_delay_validation
     return if min_booking_delay.zero? && max_booking_delay.zero?
 
-    errors.add(:max_booking_delay, "doit être supérieur au délai de réservation minimum") if max_booking_delay <= min_booking_delay
+    errors.add(:max_booking_delay, 'doit être supérieur au délai de réservation minimum') if max_booking_delay <= min_booking_delay
   end
 
   def not_associated_with_secretariat
     return if service_id.nil?
 
-    errors.add(:service_id, "ne peut être le secrétariat") if service.secretariat?
+    errors.add(:service_id, 'ne peut être le secrétariat') if service.secretariat?
   end
 end

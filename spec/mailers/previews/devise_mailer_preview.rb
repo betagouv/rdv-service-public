@@ -4,6 +4,6 @@ class DeviseMailerPreview < ActionMailer::Preview
   end
 
   def reset_password_instructions
-    Devise::Mailer.reset_password_instructions(Agent.first, "faketoken")
+    Devise::Mailer.reset_password_instructions(Agent.first, 'faketoken')
   end
 end

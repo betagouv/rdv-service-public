@@ -11,7 +11,7 @@ class Absence < ApplicationRecord
   default_scope -> { order(first_day: :desc, start_time: :desc) }
 
   def title_or_default
-    title.present? ? title : "Absence"
+    title.present? ? title : 'Absence'
   end
 
   def in_progress?
@@ -27,6 +27,6 @@ class Absence < ApplicationRecord
   end
 
   def ends_at_should_be_after_starts_at
-    errors.add(:ends_time, "doit être après le début.") if starts_at >= ends_at
+    errors.add(:ends_time, 'doit être après le début.') if starts_at >= ends_at
   end
 end

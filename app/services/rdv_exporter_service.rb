@@ -1,19 +1,19 @@
 class RdvExporterService < BaseService
-  TYPE = { "user" => "Usager", "agent" => "Agent", "file_attente" => "File d'attente" }.freeze
+  TYPE = { 'user' => 'Usager', 'agent' => 'Agent', 'file_attente' => "File d'attente" }.freeze
   HourFormat = Spreadsheet::Format.new(number_format: 'hh:mm')
   DateFormat = Spreadsheet::Format.new(number_format: 'DD/MM/YYYY')
   HEADER = [
-    "année",
-    "date prise rdv",
-    "heure prise rdv",
-    "date rdv",
-    "heure rdv",
-    "motif",
-    "pris par",
-    "statut",
-    "lieu du rdv",
-    "service",
-    "agents"
+    'année',
+    'date prise rdv',
+    'heure prise rdv',
+    'date rdv',
+    'heure rdv',
+    'motif',
+    'pris par',
+    'statut',
+    'lieu du rdv',
+    'service',
+    'agents'
   ].freeze
 
   def initialize(rdvs, file)
@@ -56,7 +56,7 @@ class RdvExporterService < BaseService
       ::Rdv.human_enum_name(:status, rdv.status),
       rdv.address_complete_without_personnal_details,
       rdv.motif.service.name,
-      rdv.agents.map(&:full_name).join(", ")
+      rdv.agents.map(&:full_name).join(', ')
     ]
   end
 end

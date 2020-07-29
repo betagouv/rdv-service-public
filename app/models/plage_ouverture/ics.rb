@@ -3,7 +3,7 @@ class PlageOuverture::Ics
   attr_accessor :plage_ouverture
   validates :plage_ouverture, presence: true
 
-  TZID = "Europe/Paris".freeze
+  TZID = 'Europe/Paris'.freeze
 
   def to_ical
     require 'icalendar'
@@ -21,14 +21,14 @@ class PlageOuverture::Ics
       e.dtstart     = Icalendar::Values::DateTime.new(plage_ouverture.starts_at, 'tzid' => TZID)
       e.dtend       = Icalendar::Values::DateTime.new(plage_ouverture.ends_at, 'tzid' => TZID)
       e.summary     = "#{BRAND} #{plage_ouverture.title}"
-      e.description = ""
+      e.description = ''
       e.location    = plage_ouverture.lieu.address
-      e.ip_class    = "PUBLIC"
+      e.ip_class    = 'PUBLIC'
       e.attendee    = "mailto:#{plage_ouverture.agent.email}"
       e.rrule       = rrule
     end
 
-    cal.ip_method = "REQUEST"
+    cal.ip_method = 'REQUEST'
     cal.to_ical
   end
 
@@ -39,10 +39,10 @@ class PlageOuverture::Ics
 
     case recurrence_hash[:every]
     when :week
-      freq = "FREQ=WEEKLY;"
+      freq = 'FREQ=WEEKLY;'
       by_day = "BYDAY=#{by_week_day(recurrence_hash[:on])};" if recurrence_hash[:on]
     when :month
-      freq = "FREQ=MONTHLY;"
+      freq = 'FREQ=MONTHLY;'
       by_day = "BYDAY=#{by_month_day(recurrence_hash[:day])};" if recurrence_hash[:day]
     end
 
