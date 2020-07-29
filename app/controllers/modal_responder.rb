@@ -1,6 +1,6 @@
 class ModalResponder < ActionController::Responder
   cattr_accessor :modal_layout
-  self.modal_layout = 'modal'
+  self.modal_layout = "modal"
 
   def render(*args)
     options = args.extract_options!

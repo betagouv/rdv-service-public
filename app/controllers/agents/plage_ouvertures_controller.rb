@@ -14,9 +14,9 @@ class Agents::PlageOuverturesController < AgentAuthController
       f.html do
         @current_tab = filter_params[:current_tab]
         @plage_ouvertures = plage_ouvertures
-          .where(expired_cached: filter_params[:current_tab] == 'expired')
+          .where(expired_cached: filter_params[:current_tab] == "expired")
           .page(filter_params[:page])
-        @display_tabs = plage_ouvertures.where(expired_cached: true).any? || params[:current_tab] == 'expired'
+        @display_tabs = plage_ouvertures.where(expired_cached: true).any? || params[:current_tab] == "expired"
       end
     end
   end

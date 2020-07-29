@@ -8,7 +8,7 @@ class SendTransactionalSmsService < BaseService
     @user = user
     @rdv = rdv
     @options = options
-    @from = 'RdvSoli'
+    @from = "RdvSoli"
   end
 
   def perform
@@ -19,7 +19,7 @@ class SendTransactionalSmsService < BaseService
       sender: @from,
       recipient: @user.phone_number_formatted,
       content: replace_special_chars(body),
-      tag: [ENV['APP'], @rdv.organisation.id, @type].join(" ")
+      tag: [ENV["APP"], @rdv.organisation.id, @type].join(" ")
     )
     sib_instance.send_transac_sms(transac_sms)
   end
@@ -27,7 +27,7 @@ class SendTransactionalSmsService < BaseService
   private
 
   def replace_special_chars(body)
-    body.tr('áâãëẽêíïîĩóôõúûũçÀÁÂÃÈËẼÊÌÍÏÎĨÒÓÔÕÙÚÛŨ', 'aaaeeeiiiiooouuucAAAAEEEEIIIIIOOOOUUUU')
+    body.tr("áâãëẽêíïîĩóôõúûũçÀÁÂÃÈËẼÊÌÍÏÎĨÒÓÔÕÙÚÛŨ", "aaaeeeiiiiooouuucAAAAEEEEIIIIIOOOOUUUU")
   end
 
   def sms_footer

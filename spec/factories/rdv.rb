@@ -27,7 +27,7 @@ FactoryBot.define do
     end
     trait :excused do
       cancelled_at { 2.days.ago }
-      status { 'excused' }
+      status { "excused" }
     end
   end
 end

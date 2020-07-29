@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
   end
 
   def demo?
-    ENV['HOST']&.match(/demo/)
+    ENV["HOST"]&.match(/demo/)
   end
   helper_method :demo?
 
@@ -41,7 +41,7 @@ class ApplicationController < ActionController::Base
     user = current_agent || current_user
     {
       id: user&.id,
-      role: user&.class&.name || 'Guest',
+      role: user&.class&.name || "Guest",
       email: user&.email,
     }.compact
   end
@@ -75,7 +75,7 @@ class ApplicationController < ActionController::Base
 
     # cf https://stackoverflow.com/questions/7785793/add-parameter-to-url
     parsed_uri = URI.parse(url)
-    parsed_query_string = URI.decode_www_form(parsed_uri.query || '')
+    parsed_query_string = URI.decode_www_form(parsed_uri.query || "")
     new_params.each { |k, v| parsed_query_string.append([k, v]) }
     parsed_uri.query = URI.encode_www_form(parsed_query_string)
     parsed_uri.to_s

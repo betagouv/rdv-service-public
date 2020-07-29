@@ -1,4 +1,4 @@
-require_relative 'boot'
+require_relative "boot"
 
 # explode rails/all to be able to exclude sprockets
 require "active_record/railtie"
@@ -28,22 +28,22 @@ module Lapin
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
 
-    config.time_zone = 'Paris'
+    config.time_zone = "Paris"
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     config.i18n.available_locales = [:fr, :en]
     config.i18n.default_locale = :fr
     config.action_view.raise_on_missing_translations = true
-    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
+    config.i18n.load_path += Dir[Rails.root.join("config", "locales", "**", "*.{rb,yml}")]
     config.action_mailer.preview_path = "#{Rails.root}/spec/mailers/previews"
 
     # Devise layout
     config.to_prepare do
       [Devise::RegistrationsController, Devise::SessionsController, Devise::ConfirmationsController, Devise::PasswordsController, Devise::InvitationsController].each do |controller|
-        controller.layout 'registration'
+        controller.layout "registration"
       end
-      Devise::Mailer.layout 'mailer'
+      Devise::Mailer.layout "mailer"
     end
   end
 end

@@ -20,15 +20,15 @@ describe "Agent can create a Rdv with wizard" do
     expect_page_title("Choisir le motif")
 
     select(motif.name, from: "rdv_motif_id")
-    click_button('Continuer')
+    click_button("Continuer")
 
     # Step 2
     expect_page_title("Choisir le ou les usagers")
     expect_checked("Motif : #{motif.name}")
     select_user(user)
-    click_link('Ajouter un autre usager')
-    expect(page).to have_link('Créer un usager')
-    click_link('Créer un usager')
+    click_link("Ajouter un autre usager")
+    expect(page).to have_link("Créer un usager")
+    click_link("Créer un usager")
 
     # create user with mail
     expect(find("#modal-holder")).to have_content("Nouvel usager")
@@ -37,33 +37,33 @@ describe "Agent can create a Rdv with wizard" do
     fill_in :user_email, with: "jporvoir@bidule.com"
     sleep(1) # wait for scroll to not interfere with form input
     page.execute_script "$('#mainModal').scrollTop(1000)"
-    click_button('Créer usager')
+    click_button("Créer usager")
     sleep(1) # wait for modal to hide completely
 
     # create user without email
-    click_link('Ajouter un autre usager')
-    click_link('Créer un usager')
+    click_link("Ajouter un autre usager")
+    click_link("Créer un usager")
     fill_in :user_first_name, with: "Jean-Marie"
     fill_in :user_last_name, with: "Lapin"
     sleep(1) # wait for scroll to not interfere with form input
     page.execute_script "$('#mainModal').scrollTop(1000)"
-    click_button('Créer usager')
+    click_button("Créer usager")
     sleep(1) # wait for modal to hide completely
 
     fill_in :rdv_notes, with: "RDV très spécial"
-    click_button('Continuer')
+    click_button("Continuer")
 
     # Step 3
     expect_page_title("Choisir la durée et la date")
     expect_checked(motif.name)
     expect(page).to have_selector("input#rdv_duration_in_min[value='#{motif.default_duration_in_min}']")
-    select(lieu.full_name, from: 'rdv_lieu_id')
-    fill_in 'Durée en minutes', with: '35'
-    fill_in 'Commence à', with: '11/10/2019 14:15'
+    select(lieu.full_name, from: "rdv_lieu_id")
+    fill_in "Durée en minutes", with: "35"
+    fill_in "Commence à", with: "11/10/2019 14:15"
 
     select_agent(agent)
     select_agent(agent2)
-    click_button('Créer RDV')
+    click_button("Créer RDV")
 
     expect(user.rdvs.count).to eq(1)
     rdv = user.rdvs.first
@@ -80,7 +80,7 @@ describe "Agent can create a Rdv with wizard" do
   end
 
   def select_agent(agent)
-    select(agent.full_name_and_service, from: 'rdv_agent_ids')
+    select(agent.full_name_and_service, from: "rdv_agent_ids")
   end
 
   def expect_checked(text)

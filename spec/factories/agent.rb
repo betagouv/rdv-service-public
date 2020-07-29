@@ -5,7 +5,7 @@ FactoryBot.define do
     email { generate(:agent_email) }
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
-    password { 'password' }
+    password { "password" }
     organisations { [Organisation.first || create(:organisation)] }
     confirmed_at { 1.day.ago }
     service { Service.first || create(:service) }

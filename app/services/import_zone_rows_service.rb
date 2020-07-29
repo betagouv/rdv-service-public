@@ -126,7 +126,7 @@ class ImportZoneRowsService < BaseService
   end
 
   def build_zone(row)
-    unique_attributes = { level: 'city', city_code: row["city_code"] }
+    unique_attributes = { level: "city", city_code: row["city_code"] }
     extra_attributes = {
       organisation: find_organisation(row["organisation_id"]),
       city_name: row["city_name"]

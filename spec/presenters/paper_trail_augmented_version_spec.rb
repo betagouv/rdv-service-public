@@ -3,9 +3,9 @@ describe PaperTrailAugmentedVersion do
     context "no previous version" do
       it "should work with only object_changes" do
         version = instance_double(PaperTrail::Version)
-        prepare_version_double(version, object_changes: { 'title' => ['foo', 'bar'] })
+        prepare_version_double(version, object_changes: { "title" => ["foo", "bar"] })
         expect(PaperTrailAugmentedVersion.new(version, nil).changes).to eq(
-          { 'title' => ['foo', 'bar'] }
+          { "title" => ["foo", "bar"] }
         )
       end
 
@@ -13,12 +13,12 @@ describe PaperTrailAugmentedVersion do
         version = instance_double(PaperTrail::Version)
         prepare_version_double(
           version,
-          object_changes: { 'title' => ['foo', 'bar'] },
+          object_changes: { "title" => ["foo", "bar"] },
           virtual_attributes: { "user_ids" => [1, 2] }
         )
         expect(PaperTrailAugmentedVersion.new(version, nil).changes).to eq(
           {
-            'title' => ['foo', 'bar'],
+            "title" => ["foo", "bar"],
             "user_ids" => [nil, [1, 2]],
           }
         )
@@ -31,12 +31,12 @@ describe PaperTrailAugmentedVersion do
       before do
         prepare_version_double(
           version,
-          object_changes: { 'title' => ['foo', 'bar'] },
+          object_changes: { "title" => ["foo", "bar"] },
           virtual_attributes: { "user_ids" => [1, 2], "agent_ids" => [3] }
         )
         prepare_version_double(
           previous_version,
-          object_changes: { 'title' => ['baz', 'foo'] },
+          object_changes: { "title" => ["baz", "foo"] },
           virtual_attributes: { "user_ids" => [1], "agent_ids" => [3] }
         )
       end
@@ -46,7 +46,7 @@ describe PaperTrailAugmentedVersion do
           PaperTrailAugmentedVersion.new(version, previous_version).changes
         ).to eq(
           {
-            'title' => ['foo', 'bar'],
+            "title" => ["foo", "bar"],
             "user_ids" => [[1], [1, 2]],
             # agent_ids has not changed so it does not appear here
           }

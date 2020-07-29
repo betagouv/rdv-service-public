@@ -35,7 +35,7 @@ module Admin
         render action: "email"
       end
     rescue ActiveRecord::RecordNotFound
-      render plain: 'could not find preview AR instance'
+      render plain: "could not find preview AR instance"
     end
 
     private

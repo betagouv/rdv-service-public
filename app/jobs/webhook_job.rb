@@ -7,8 +7,8 @@ class WebhookJob < ApplicationJob
     Typhoeus.post(
       webhook_endpoint.target_url,
       headers: {
-        'Content-Type' => 'application/json; charset=utf-8',
-        'X-Lapin-Signature' => OpenSSL::HMAC.hexdigest("SHA256", webhook_endpoint.secret, payload),
+        "Content-Type" => "application/json; charset=utf-8",
+        "X-Lapin-Signature" => OpenSSL::HMAC.hexdigest("SHA256", webhook_endpoint.secret, payload),
       },
       body: payload,
       timeout: TIMEOUT

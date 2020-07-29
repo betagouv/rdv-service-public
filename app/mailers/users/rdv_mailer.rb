@@ -7,7 +7,7 @@ class Users::RdvMailer < ApplicationMailer
     @user = user
     ics = Rdv::Ics.new(rdv: @rdv)
     attachments[ics.name] = {
-      mime_type: 'text/calendar',
+      mime_type: "text/calendar",
       content: ics.to_ical_for(user),
       encoding: "8bit", # fixes encoding issues in ICS
     }

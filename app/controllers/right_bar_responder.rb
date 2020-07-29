@@ -1,6 +1,6 @@
 class RightBarResponder < ActionController::Responder
   cattr_accessor :right_bar_layout
-  self.right_bar_layout = 'right_bar'
+  self.right_bar_layout = "right_bar"
 
   def render(*args)
     options = args.extract_options!

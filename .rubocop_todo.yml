@@ -142,13 +142,6 @@ Style/RedundantSelf:
   Exclude:
     - 'app/controllers/agents/invitations_controller.rb'
 
-# Offense count: 1822
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiterals:
-  Enabled: false
-
 # Offense count: 11
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.

@@ -220,7 +220,7 @@ RSpec.describe Agents::AbsencesController, type: :controller do
   end
 
   context "admin can CRUD on an agent's absences" do
-    let(:admin) { create(:agent, role: 'admin') }
+    let(:admin) { create(:agent, role: "admin") }
 
     before { sign_in admin }
 

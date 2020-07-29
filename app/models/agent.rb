@@ -26,8 +26,8 @@ class Agent < ApplicationRecord
 
   scope :complete, -> { where.not(first_name: nil).where.not(last_name: nil) }
   scope :active, -> { where(deleted_at: nil) }
-  scope :order_by_last_name, -> { order(Arel.sql('LOWER(last_name)')) }
-  scope :secretariat, -> { joins(:service).where(services: { name: 'Secrétariat'.freeze }) }
+  scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
+  scope :secretariat, -> { joins(:service).where(services: { name: "Secrétariat".freeze }) }
   scope :can_perform_motif, lambda { |motif|
     motif.for_secretariat ? joins(:service).where(service: motif.service).or(secretariat) : where(service: motif.service)
   }
@@ -43,7 +43,7 @@ class Agent < ApplicationRecord
   end
 
   def from_safe_domain?
-    return false if ENV['SAFE_DOMAIN_LIST'].blank?
+    return false if ENV["SAFE_DOMAIN_LIST"].blank?
 
     pattern = "@(#{ENV['SAFE_DOMAIN_LIST'].split&.join('|')})$"
     regex = Regexp.new(pattern)
@@ -69,7 +69,7 @@ class Agent < ApplicationRecord
   end
 
   def add_organisation(organisation)
-    errors.add(:email, 'existe déjà dans cette organisation') && return if organisation_ids.include?(organisation.id)
+    errors.add(:email, "existe déjà dans cette organisation") && return if organisation_ids.include?(organisation.id)
     organisations << organisation
   end
 end

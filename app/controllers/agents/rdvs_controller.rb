@@ -25,11 +25,11 @@ class Agents::RdvsController < AgentAuthController
     # TODO: replace this manual touch. It forces creating a version when an
     # agent or a user is removed from the RDV. the touch: true option on the
     # association does not do it for some reason I could not figure out
-    if params[:status] == 'excused'
+    if params[:status] == "excused"
       CancelRdvByAgentService.new(@rdv).perform
-      flash[:notice] = 'Le rendez-vous a été annulé.'
+      flash[:notice] = "Le rendez-vous a été annulé."
     elsif @rdv.update(rdv_params)
-      flash[:notice] = 'Le rendez-vous a été modifié.'
+      flash[:notice] = "Le rendez-vous a été modifié."
     end
     respond_right_bar_with @rdv, location: request.referer
   end
@@ -37,7 +37,7 @@ class Agents::RdvsController < AgentAuthController
   def status
     # TODO: remove this route and use #update
     authorize(@rdv)
-    cancelled_at = ['unknown', 'waiting', 'seen'].include?(status_params[:status]) ? nil : Time.zone.now
+    cancelled_at = ["unknown", "waiting", "seen"].include?(status_params[:status]) ? nil : Time.zone.now
     @rdv.update(status: status_params[:status], cancelled_at: cancelled_at)
     @rdv.file_attentes.delete_all
     flash[:notice] = "Le statut du RDV a été modifié"
@@ -63,7 +63,7 @@ class Agents::RdvsController < AgentAuthController
       redirect_to @rdv.agenda_path_for_agent(current_agent), notice: "Le rendez-vous a été créé."
     else
       @rdv_wizard = AgentRdvWizard::Step3.new(current_agent, current_organisation, @rdv.attributes)
-      render 'agents/rdv_wizard_steps/step3'
+      render "agents/rdv_wizard_steps/step3"
     end
   end
 

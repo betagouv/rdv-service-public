@@ -1,6 +1,6 @@
 describe Agent, type: :model do
-  describe '#soft_delete' do
-    context 'with many remaining organisations' do
+  describe "#soft_delete" do
+    context "with many remaining organisations" do
       before { agent.soft_delete deleted_org }
       let(:agent) { create(:agent, :with_multiple_organisations) }
       let(:deleted_org) { agent.organisations.first }
@@ -8,15 +8,15 @@ describe Agent, type: :model do
       it { expect(agent.deleted_at).to be_nil }
     end
 
-    context 'with one remaining organisations' do
+    context "with one remaining organisations" do
       let!(:agent) { create(:agent) }
       let(:deleted_org) { agent.organisations.first }
 
-      context 'without rdv' do
+      context "without rdv" do
         it { expect { agent.soft_delete deleted_org }.to change(Agent, :count).by(-1) }
       end
 
-      context 'with rdv' do
+      context "with rdv" do
         let!(:rdv) { create(:rdv, agent_ids: [agent.id]) }
         before { agent.soft_delete deleted_org }
 
@@ -24,7 +24,7 @@ describe Agent, type: :model do
       end
     end
 
-    context 'with no organisation given' do
+    context "with no organisation given" do
       let!(:agent) { create(:agent, :with_multiple_organisations) }
       let(:deleted_org) { nil }
 

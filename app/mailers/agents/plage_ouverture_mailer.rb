@@ -3,12 +3,12 @@ class Agents::PlageOuvertureMailer < ApplicationMailer
     @plage_ouverture = plage_ouverture
     ics = PlageOuverture::Ics.new(plage_ouverture: @plage_ouverture)
     attachments["invite.ics"] = {
-      mime_type: 'application/ics',
+      mime_type: "application/ics",
       content: Base64.encode64(ics.to_ical),
       encoding: "base64", # seems necessary for attachments
     }
     m = mail(
-      from: 'secretariat-auto@rdv-solidarites.fr',
+      from: "secretariat-auto@rdv-solidarites.fr",
       to: plage_ouverture.agent.email,
       subject: "#{BRAND} #{plage_ouverture.title} - Plage d'ouverture"
     )

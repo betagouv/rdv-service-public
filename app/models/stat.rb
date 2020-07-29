@@ -2,8 +2,8 @@ class Stat
   include ActiveModel::Model
   attr_accessor :agents, :organisations, :users, :rdvs
 
-  DEFAULT_RANGE = (Date.strptime('01/02/2020', '%d/%m/%Y').beginning_of_day..Time.zone.now.end_of_day).freeze
-  DEFAULT_FORMAT = '%d/%m/%Y'.freeze
+  DEFAULT_RANGE = (Date.strptime("01/02/2020", "%d/%m/%Y").beginning_of_day..Time.zone.now.end_of_day).freeze
+  DEFAULT_FORMAT = "%d/%m/%Y".freeze
 
   def rdvs_for_default_range
     rdvs.where(created_at: DEFAULT_RANGE)
@@ -14,7 +14,7 @@ class Stat
   end
 
   def users_group_by_week
-    users.active.group_by_week('users.created_at', range: DEFAULT_RANGE, format: DEFAULT_FORMAT).count
+    users.active.group_by_week("users.created_at", range: DEFAULT_RANGE, format: DEFAULT_FORMAT).count
   end
 
   def organisations_for_default_range
@@ -22,7 +22,7 @@ class Stat
   end
 
   def organisations_group_by_week
-    organisations.group_by_week('organisations.created_at', range: DEFAULT_RANGE, format: DEFAULT_FORMAT).count
+    organisations.group_by_week("organisations.created_at", range: DEFAULT_RANGE, format: DEFAULT_FORMAT).count
   end
 
   def agents_for_default_range
@@ -30,23 +30,23 @@ class Stat
   end
 
   def agents_group_by_week
-    agents.active.group_by_week('agents.created_at', range: DEFAULT_RANGE, format: DEFAULT_FORMAT).count
+    agents.active.group_by_week("agents.created_at", range: DEFAULT_RANGE, format: DEFAULT_FORMAT).count
   end
 
   def rdvs_group_by_week
-    rdvs.group(:created_by).group_by_week('rdvs.created_at', range: DEFAULT_RANGE, format: DEFAULT_FORMAT).count
+    rdvs.group(:created_by).group_by_week("rdvs.created_at", range: DEFAULT_RANGE, format: DEFAULT_FORMAT).count
   end
 
   def rdvs_group_by_type
-    rdvs.joins(:motif).group('motifs.location_type').group_by_week('rdvs.created_at', range: DEFAULT_RANGE, format: DEFAULT_FORMAT).count.transform_keys { |key| [I18n.t(Motif.location_types.invert[key[0]]), key[1]] }
+    rdvs.joins(:motif).group("motifs.location_type").group_by_week("rdvs.created_at", range: DEFAULT_RANGE, format: DEFAULT_FORMAT).count.transform_keys { |key| [I18n.t(Motif.location_types.invert[key[0]]), key[1]] }
   end
 
   def rdvs_group_by_departement
-    rdvs.joins(:organisation).group('organisations.departement').group_by_week('rdvs.created_at', range: DEFAULT_RANGE, format: DEFAULT_FORMAT).count
+    rdvs.joins(:organisation).group("organisations.departement").group_by_week("rdvs.created_at", range: DEFAULT_RANGE, format: DEFAULT_FORMAT).count
   end
 
   def rdvs_group_by_service
-    rdvs.joins(motif: :service).group('services.name').group_by_week('rdvs.created_at', range: DEFAULT_RANGE, format: DEFAULT_FORMAT).count
+    rdvs.joins(motif: :service).group("services.name").group_by_week("rdvs.created_at", range: DEFAULT_RANGE, format: DEFAULT_FORMAT).count
   end
 
   def rdvs_group_by_week_fr

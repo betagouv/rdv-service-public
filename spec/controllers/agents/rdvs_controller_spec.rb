@@ -60,7 +60,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
 
   describe "PUT #update" do
     let(:referer_path) { organisation_agent_path(organisation.id, agent.id) }
-    before { request.headers['HTTP_REFERER'] = referer_path }
+    before { request.headers["HTTP_REFERER"] = referer_path }
 
     subject do
       put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: new_attributes }

@@ -23,7 +23,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def user_devise_layout
-    user_signed_in? ? 'application' : 'registration'
+    user_signed_in? ? "application" : "registration"
   end
 
   def after_inactive_sign_up_path_for(_)

@@ -25,9 +25,9 @@ describe "Agent can update a relative" do
     click_button "Modifier"
     expect_page_title "Michelle MYTHE"
     expect(page).to have_content("L'usager a été modifié")
-    expect(find('#spec-primary-user-card')).to have_content('Informations de votre proche')
-    expect(find('#spec-primary-user-card')).to have_content('fougue ultime')
-    expect(find('#spec-secondary-user-card')).to have_content("Informations sur l'usager en charge")
-    expect(find('#spec-secondary-user-card')).to have_content('tenebres')
+    expect(find("#spec-primary-user-card")).to have_content("Informations de votre proche")
+    expect(find("#spec-primary-user-card")).to have_content("fougue ultime")
+    expect(find("#spec-secondary-user-card")).to have_content("Informations sur l'usager en charge")
+    expect(find("#spec-secondary-user-card")).to have_content("tenebres")
   end
 end

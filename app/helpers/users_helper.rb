@@ -6,7 +6,7 @@ module UsersHelper
   end
 
   def relative_tag(user)
-    user.relative? ? content_tag(:span, 'Proche', class: 'badge badge-info') : nil
+    user.relative? ? content_tag(:span, "Proche", class: "badge badge-info") : nil
   end
 
   def full_name_and_birthdate(user)

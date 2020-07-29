@@ -16,7 +16,7 @@ class UserDashboard < Administrate::BaseDashboard
     email: Field::String,
     address: Field::String,
     phone_number: Field::String,
-    responsible: Field::BelongsToSearch.with_options(class_name: 'User'),
+    responsible: Field::BelongsToSearch.with_options(class_name: "User"),
     relatives: Field::HasMany.with_options(class_name: "User"),
     caisse_affiliation: EnumField,
     family_situation: EnumField,

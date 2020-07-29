@@ -37,7 +37,7 @@ module Admin
       requested_resource.invite!
       redirect_to(
         [namespace, requested_resource],
-        notice: 'Invitation envoyée'
+        notice: "Invitation envoyée"
       )
     end
   end

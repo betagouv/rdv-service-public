@@ -69,8 +69,8 @@ guard :rspec, cmd: "bin/rspec" do
   end
 end
 
-guard 'spring', bundler: true do
-  watch('Gemfile.lock')
+guard "spring", bundler: true do
+  watch("Gemfile.lock")
   watch(%r{^config/})
   watch(%r{^spec/(support|factories)/})
   watch(%r{^spec/factory.rb})

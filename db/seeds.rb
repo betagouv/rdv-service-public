@@ -1,4 +1,4 @@
-require 'csv'
+require "csv"
 
 # TODO: when trying to create models using direct associations like
 # `organisation: org_paris_nord` instead of `organisation_id: org_paris_nord.id`
@@ -42,8 +42,8 @@ organisations_by_human_id = [
     Organisation.create!(phone_number: "0123456789", departement: "62", **attributes)
   ]
 end.to_h
-org_arques = organisations_by_human_id['1030']
-org_bapaume = organisations_by_human_id['1034']
+org_arques = organisations_by_human_id["1030"]
+org_bapaume = organisations_by_human_id["1034"]
 Organisation.set_callback(:create, :after, :notify_admin_organisation_created)
 
 # SERVICES
@@ -67,7 +67,7 @@ libelle_social_droits = MotifLibelle.create!(service: service_social, name: "Dro
 
 motif_org_paris_nord_pmi_rappel = Motif.create!(
   name: libelle_pmi_rappel.name,
-  color: '#FF7C00',
+  color: "#FF7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
   reservable_online: true,
@@ -75,7 +75,7 @@ motif_org_paris_nord_pmi_rappel = Motif.create!(
 )
 motif_org_paris_nord_pmi_gyneco = Motif.create!(
   name: libelle_pmi_gyneco.name,
-  color: '#FF7C00',
+  color: "#FF7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
   reservable_online: false,
@@ -83,7 +83,7 @@ motif_org_paris_nord_pmi_gyneco = Motif.create!(
 )
 motif_org_paris_nord_pmi_prenatale = Motif.create!(
   name: libelle_pmi_prenatale.name,
-  color: '#CC7C00',
+  color: "#CC7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
   reservable_online: true,
@@ -91,7 +91,7 @@ motif_org_paris_nord_pmi_prenatale = Motif.create!(
 )
 motif_org_paris_nord_pmi_suivi = Motif.create!(
   name: libelle_pmi_suivi.name,
-  color: '#00FC60',
+  color: "#00FC60",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
   reservable_online: true,
@@ -100,7 +100,7 @@ motif_org_paris_nord_pmi_suivi = Motif.create!(
 )
 motif_org_paris_nord_pmi_securite = Motif.create!(
   name: libelle_pmi_securite.name,
-  color: '#1010FF',
+  color: "#1010FF",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
   reservable_online: true,
@@ -108,7 +108,7 @@ motif_org_paris_nord_pmi_securite = Motif.create!(
 )
 _motif_org_paris_nord_social_rappel = Motif.create!(
   name: libelle_social_rappel.name,
-  color: '#FF7C00',
+  color: "#FF7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
   reservable_online: true,
@@ -116,7 +116,7 @@ _motif_org_paris_nord_social_rappel = Motif.create!(
 )
 _motif_org_paris_nord_social_suivi = Motif.create!(
   name: libelle_social_suivi.name,
-  color: '#CC7C00',
+  color: "#CC7C00",
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
   reservable_online: true,
@@ -125,7 +125,7 @@ _motif_org_paris_nord_social_suivi = Motif.create!(
 )
 _motif_org_paris_nord_social_droits = Motif.create!(
   name: libelle_social_droits.name,
-  color: '#00FC60',
+  color: "#00FC60",
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
   reservable_online: true,
@@ -139,7 +139,7 @@ motifs = {}
   motifs[seed_id] ||= {}
   motifs[seed_id][:pmi_rappel] = Motif.create!(
     name: libelle_pmi_rappel.name,
-    color: '#10FF10',
+    color: "#10FF10",
     organisation_id: org.id,
     service_id: service_pmi.id,
     reservable_online: true,
@@ -147,7 +147,7 @@ motifs = {}
   )
   motifs[seed_id][:pmi_prenatale] = Motif.create!(
     name: libelle_pmi_prenatale.name,
-    color: '#FF1010',
+    color: "#FF1010",
     organisation_id: org.id,
     service_id: service_pmi.id,
     reservable_online: true,
@@ -187,13 +187,13 @@ lieu_bapaume_est = Lieu.create!(
 )
 
 ## ZONES
-zones_csv_path = File.join(Rails.root, 'db', 'seeds', 'zones_62.csv')
+zones_csv_path = File.join(Rails.root, "db", "seeds", "zones_62.csv")
 CSV.read(zones_csv_path, headers: :first_row).each do |att|
   Zone.create!(
-    level: 'city',
-    organisation: organisations_by_human_id[att['organisation_id']],
-    city_code: att['city_code'],
-    city_name: att['city_name']
+    level: "city",
+    organisation: organisations_by_human_id[att["organisation_id"]],
+    city_code: att["city_code"],
+    city_name: att["city_name"]
   )
 end
 
@@ -204,7 +204,7 @@ user_org_paris_nord_patricia = User.new(
   last_name: "Duroy",
   email: "patricia_duroy@demo.rdv-solidarites.fr",
   birth_date: Date.parse("20/06/1975"),
-  password: '123456',
+  password: "123456",
   organisation_ids: [org_paris_nord.id]
 )
 
@@ -217,7 +217,7 @@ user_org_paris_nord_lea = User.new(
   last_name: "Dupont",
   email: "lea_dupont@demo.rdv-solidarites.fr",
   birth_date: Date.parse("01/12/1982"),
-  password: '123456',
+  password: "123456",
   organisation_ids: [org_paris_nord.id]
 )
 
@@ -230,7 +230,7 @@ user_org_paris_nord_jean = User.new(
   last_name: "Moustache",
   email: "jean_moustache@demo.rdv-solidarites.fr",
   birth_date: Date.parse("10/01/1973"),
-  password: '123456',
+  password: "123456",
   organisation_ids: [org_paris_nord.id]
 )
 
@@ -241,11 +241,11 @@ user_org_paris_nord_jean.profile_for(org_paris_nord).update!(notes: "des notes d
 # AGENTS
 
 agent_org_paris_nord_pmi_martine = Agent.new(
-  email: 'martine@demo.rdv-solidarites.fr',
+  email: "martine@demo.rdv-solidarites.fr",
   role: :admin,
-  first_name: 'Martine',
-  last_name: 'Validay',
-  password: '123456',
+  first_name: "Martine",
+  last_name: "Validay",
+  password: "123456",
   service_id: service_pmi.id,
   organisation_ids: [org_paris_nord.id]
 )
@@ -253,11 +253,11 @@ agent_org_paris_nord_pmi_martine.skip_confirmation!
 agent_org_paris_nord_pmi_martine.save!
 
 agent_org_paris_nord_pmi_marco = Agent.new(
-  email: 'marco@demo.rdv-solidarites.fr',
+  email: "marco@demo.rdv-solidarites.fr",
   role: :user,
-  first_name: 'Marco',
-  last_name: 'Durand',
-  password: '123456',
+  first_name: "Marco",
+  last_name: "Durand",
+  password: "123456",
   service_id: service_pmi.id,
   organisation_ids: [org_paris_nord.id]
 )
@@ -265,11 +265,11 @@ agent_org_paris_nord_pmi_marco.skip_confirmation!
 agent_org_paris_nord_pmi_marco.save!
 
 agent_org_paris_nord_social_polo = Agent.new(
-  email: 'polo@demo.rdv-solidarites.fr',
+  email: "polo@demo.rdv-solidarites.fr",
   role: :user,
-  first_name: 'Polo',
-  last_name: 'Durant',
-  password: '123456',
+  first_name: "Polo",
+  last_name: "Durant",
+  password: "123456",
   service_id: service_social.id,
   organisation_ids: [org_paris_nord.id]
 )
@@ -277,23 +277,23 @@ agent_org_paris_nord_social_polo.skip_confirmation!
 agent_org_paris_nord_social_polo.save!
 
 org_arques_pmi_maya = Agent.new(
-  email: 'maya@demo.rdv-solidarites.fr',
+  email: "maya@demo.rdv-solidarites.fr",
   role: :admin,
-  first_name: 'Maya',
-  last_name: 'Patrick',
-  password: '123456',
+  first_name: "Maya",
+  last_name: "Patrick",
+  password: "123456",
   service_id: service_pmi.id,
-  organisation_ids: Organisation.where(departement: '62').pluck(:id)
+  organisation_ids: Organisation.where(departement: "62").pluck(:id)
 )
 org_arques_pmi_maya.skip_confirmation!
 org_arques_pmi_maya.save!
 
 org_bapaume_pmi_bruno = Agent.new(
-  email: 'bruno@demo.rdv-solidarites.fr',
+  email: "bruno@demo.rdv-solidarites.fr",
   role: :admin,
-  first_name: 'Bruno',
-  last_name: 'Frangi',
-  password: '123456',
+  first_name: "Bruno",
+  last_name: "Frangi",
+  password: "123456",
   service_id: service_pmi.id,
   organisation_ids: [org_bapaume.id]
 )
@@ -304,7 +304,7 @@ org_bapaume_pmi_bruno.save!
 
 PlageOuverture.skip_callback(:create, :after, :plage_ouverture_created)
 _plage_ouverture_org_paris_nord_martine_classique = PlageOuverture.create!(
-  title: 'Permanence classique',
+  title: "Permanence classique",
   organisation_id: org_paris_nord.id,
   agent_id: agent_org_paris_nord_pmi_martine.id,
   lieu_id: lieu_org_paris_nord_sud.id,
@@ -315,7 +315,7 @@ _plage_ouverture_org_paris_nord_martine_classique = PlageOuverture.create!(
   recurrence: Montrose.every(:week, day: [1, 2, 3, 4, 5], interval: 1, on: [:monday, :tuesday, :thursday, :friday])
 )
 _plage_ouverture_org_paris_nord_martine_mercredi = PlageOuverture.create!(
-  title: 'Permanence enfant',
+  title: "Permanence enfant",
   organisation_id: org_paris_nord.id,
   agent_id: agent_org_paris_nord_pmi_martine.id,
   lieu_id: lieu_org_paris_nord_sud.id,
@@ -326,7 +326,7 @@ _plage_ouverture_org_paris_nord_martine_mercredi = PlageOuverture.create!(
   recurrence: Montrose.every(:week, on: [:wednesday], interval: 1)
 )
 _plage_ouverture_org_paris_nord_martine_exceptionnelle = PlageOuverture.create!(
-  title: 'Aprem PMI exptn',
+  title: "Aprem PMI exptn",
   organisation_id: org_paris_nord.id,
   agent_id: agent_org_paris_nord_pmi_martine.id,
   lieu_id: lieu_org_paris_nord_sud.id,
@@ -336,7 +336,7 @@ _plage_ouverture_org_paris_nord_martine_exceptionnelle = PlageOuverture.create!(
   end_time: Tod::TimeOfDay.new(18)
 )
 _plage_ouverture_org_paris_nord_marco_perm = PlageOuverture.create!(
-  title: 'Perm.',
+  title: "Perm.",
   organisation_id: org_paris_nord.id,
   agent_id: agent_org_paris_nord_pmi_marco.id,
   lieu_id: lieu_org_paris_nord_nord.id,
@@ -347,7 +347,7 @@ _plage_ouverture_org_paris_nord_marco_perm = PlageOuverture.create!(
   recurrence: Montrose.every(:week, interval: 1)
 )
 _plage_ouverture_org_arques_maya_tradi = PlageOuverture.create!(
-  title: 'Perm. tradi',
+  title: "Perm. tradi",
   organisation_id: org_arques.id,
   agent_id: org_arques_pmi_maya.id,
   lieu_id: lieu_arques_nord.id,
@@ -358,7 +358,7 @@ _plage_ouverture_org_arques_maya_tradi = PlageOuverture.create!(
   recurrence: Montrose.every(:week, interval: 1)
 )
 _plage_ouverture_org_bapaume_bruno_classique = PlageOuverture.create!(
-  title: 'Perm. classique',
+  title: "Perm. classique",
   organisation_id: org_bapaume.id,
   agent_id: org_bapaume_pmi_bruno.id,
   lieu_id: lieu_bapaume_est.id,

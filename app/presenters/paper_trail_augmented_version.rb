@@ -19,7 +19,7 @@ class PaperTrailAugmentedVersion
 
   def changes
     @changes ||= begin
-      c = @version.changeset.except('updated_at').to_h.merge(virtual_changes)
+      c = @version.changeset.except("updated_at").to_h.merge(virtual_changes)
       c = c.slice(*@attributes_whitelist) unless @attributes_whitelist.nil?
       c
     end

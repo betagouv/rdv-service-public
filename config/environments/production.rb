@@ -20,7 +20,7 @@ Rails.application.configure do
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
-  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
+  config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false
@@ -62,14 +62,14 @@ Rails.application.configure do
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.default_url_options = { protocol: 'https', host: ENV["HOST"].sub(%r{^https?:\/\/}, ""), utm_source: "rdv-solidarites", utm_medium: "email", utm_campaign: "auto" }
+  config.action_mailer.default_url_options = { protocol: "https", host: ENV["HOST"].sub(%r{^https?:\/\/}, ""), utm_source: "rdv-solidarites", utm_medium: "email", utm_campaign: "auto" }
   config.action_mailer.smtp_settings = {
-    address:        'smtp-relay.sendinblue.com',
-    port:           '587',
+    address:        "smtp-relay.sendinblue.com",
+    port:           "587",
     authentication: :plain,
     user_name:      ENV["SENDINBLUE_USERNAME"],
     password:       ENV["SENDINBLUE_PASSWORD"],
-    domain:         'rdv-solidarites.fr',
+    domain:         "rdv-solidarites.fr",
   }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.asset_host = ENV["HOST"]

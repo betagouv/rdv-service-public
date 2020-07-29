@@ -11,7 +11,7 @@ module User::SearchableConcern
           {
             using: { tsearch: { prefix: true } },
             against: [:phone_number_formatted],
-            query: query.sub(/^0/, '+33').gsub(/\s/, '')
+            query: query.sub(/^0/, "+33").gsub(/\s/, "")
           }
         else
           {

@@ -14,7 +14,7 @@ describe "User can search for rdvs" do
     scenario "default", js: true do
       # Step 1
       expect_page_h1("Prenez rendez-vous en ligne\navec votre département")
-      fill_in('search_where', with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
+      fill_in("search_where", with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
 
       # fake algolia autocomplete to pass on Circle ci
       page.execute_script("document.querySelector('#search_departement').value = '92'")
@@ -24,12 +24,12 @@ describe "User can search for rdvs" do
 
       # Step 2
       expect_page_h1("Prenez rendez-vous en ligne\navec votre département le 92")
-      select(motif.service.name, from: 'search_service')
+      select(motif.service.name, from: "search_service")
       click_button("Choisir ce service")
 
       # Step 3
       expect_page_h1("Prenez rendez-vous en ligne\navec votre département le 92")
-      select(motif.name, from: 'search_motif_name')
+      select(motif.name, from: "search_motif_name")
       click_button("Choisir ce motif")
 
       # Step 4
@@ -54,30 +54,30 @@ describe "User can search for rdvs" do
       expect(page).to have_content("Inscription")
       fill_in(:user_first_name, with: "Michel")
       fill_in(:user_last_name, with: "Lapin")
-      fill_in('Email', with: "michel@lapin.fr")
+      fill_in("Email", with: "michel@lapin.fr")
       fill_in(:password, with: "12345678")
       click_button("Je m'inscris")
 
       # Confirmation email
-      open_email('michel@lapin.fr')
+      open_email("michel@lapin.fr")
       expect(current_email).to have_content("Merci pour votre inscription")
       current_email.click_link("Confirmer mon compte")
 
       # Login page
       expect(page).to have_content("Se connecter")
-      fill_in('Email', with: "michel@lapin.fr")
+      fill_in("Email", with: "michel@lapin.fr")
       fill_in(:password, with: "12345678")
       click_button("Se connecter")
 
       # Step 4
       expect(page).to have_content("Vos informations")
-      fill_in('Date de naissance', with: Date.tomorrow.strftime("%d/%m/%Y"))
-      click_button('Continuer')
+      fill_in("Date de naissance", with: Date.tomorrow.strftime("%d/%m/%Y"))
+      click_button("Continuer")
       expect(page).to have_content("Date de naissance est invalide")
-      fill_in('Date de naissance', with: DateTime.yesterday.strftime("%d/%m/%Y"))
-      fill_in('Nom de naissance', with: "Lapinou")
-      expect(page).to have_field('Adresse', with: '79 Rue de Plaisance, 92250 La Garenne-Colombes')
-      click_button('Continuer')
+      fill_in("Date de naissance", with: DateTime.yesterday.strftime("%d/%m/%Y"))
+      fill_in("Nom de naissance", with: "Lapinou")
+      expect(page).to have_field("Adresse", with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
+      click_button("Continuer")
 
       # Step 5
       expect(page).to have_content("Vaccination")
@@ -85,19 +85,19 @@ describe "User can search for rdvs" do
 
       # Add relative
       click_link("Ajouter un proche")
-      expect(page).to have_selector('h4', text: "Ajouter un proche")
-      fill_in('Prénom', with: "Mathieu")
-      fill_in('Nom', with: "Lapin")
-      fill_in('Date de naissance', with: Date.yesterday)
-      click_button('Créer')
+      expect(page).to have_selector("h4", text: "Ajouter un proche")
+      fill_in("Prénom", with: "Mathieu")
+      fill_in("Nom", with: "Lapin")
+      fill_in("Date de naissance", with: Date.yesterday)
+      click_button("Créer")
       expect(page).to have_content("Mathieu LAPIN")
 
-      click_button('Continuer')
+      click_button("Continuer")
 
       # Step 6
       expect(page).to have_content("Informations de contact")
       expect(page).to have_content("Mathieu LAPIN")
-      click_link('Confirmer mon RDV')
+      click_link("Confirmer mon RDV")
 
       # Step 7
       expect(page).to have_content("Vos rendez-vous")
@@ -126,9 +126,9 @@ describe "User can search for rdvs" do
 
       choose(relative.full_name)
 
-      click_button('Continuer')
+      click_button("Continuer")
 
-      click_link('Confirmer mon RDV')
+      click_link("Confirmer mon RDV")
 
       # Step 6
       expect(page).to have_content(relative.full_name)
@@ -136,6 +136,6 @@ describe "User can search for rdvs" do
   end
 
   def expect_page_h1(title)
-    expect(page).to have_selector('h1', text: title)
+    expect(page).to have_selector("h1", text: title)
   end
 end

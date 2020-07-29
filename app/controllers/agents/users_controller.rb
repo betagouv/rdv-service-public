@@ -130,7 +130,7 @@ class Agents::UsersController < AgentAuthController
   def filter_users
     @users = @users.search_by_text(params[:user][:search])
     respond_to do |format|
-      format.js { render partial: 'search-results' }
+      format.js { render partial: "search-results" }
       format.html
     end
   end

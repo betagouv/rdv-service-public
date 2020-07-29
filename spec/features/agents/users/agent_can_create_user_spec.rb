@@ -9,20 +9,20 @@ describe "Agent can create user" do
     login_as(agent, scope: :agent)
     visit authenticated_agent_root_path
     click_link "Vos usagers"
-    click_link 'Créer un usager', match: :first
+    click_link "Créer un usager", match: :first
     expect_page_title("Nouvel usager")
   end
 
   it "should work" do
     fill_in :user_first_name, with: "Marco"
     fill_in :user_last_name, with: "Lebreton"
-    click_button 'Créer'
+    click_button "Créer"
     expect_page_title("Marco LEBRETON")
-    expect(page).to have_no_content('Inviter')
-    click_link 'Modifier'
-    fill_in 'Email', with: "marco@lebreton.bzh"
-    click_button 'Modifier'
-    click_link 'Inviter'
+    expect(page).to have_no_content("Inviter")
+    click_link "Modifier"
+    fill_in "Email", with: "marco@lebreton.bzh"
+    click_button "Modifier"
+    click_link "Inviter"
     open_email("marco@lebreton.bzh")
     expect(current_email.subject).to eq I18n.t("devise.mailer.invitation_instructions.subject")
   end
@@ -36,7 +36,7 @@ describe "Agent can create user" do
       fill_in :user_first_name, with: "Cee-Lo"
       fill_in :user_last_name, with: "Green"
       fill_in :user_email, with: "ceelo@green.com"
-      click_button 'Créer'
+      click_button "Créer"
       expect(page).to have_content("Un usager avec le même email existe déjà dans une autre organisation")
       click_link "Associer cet usager à l'organisation MDS des Champs"
       expect_page_title("Cee-Lo GREEN")

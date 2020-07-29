@@ -13,7 +13,7 @@ describe "Agent can create a relative" do
   end
 
   it "should work" do
-    expect(page).to have_content('Aucun proche')
+    expect(page).to have_content("Aucun proche")
     click_link "Ajouter un proche"
     fill_in :user_first_name, with: "Loulou"
     fill_in :user_last_name, with: "Legende"
@@ -22,6 +22,6 @@ describe "Agent can create a relative" do
     click_button "Créer usager"
     expect_page_title("Loulou LEGENDE")
     expect(page).to have_content("L'usager a été créé")
-    expect(page).not_to have_content('Aucun proche')
+    expect(page).not_to have_content("Aucun proche")
   end
 end

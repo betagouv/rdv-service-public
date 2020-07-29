@@ -41,7 +41,7 @@ module RdvsHelper
   end
 
   def rdv_status_tag(rdv)
-    content_tag(:span, Rdv.human_enum_name(:status, rdv.status), class: 'badge badge-info')
+    content_tag(:span, Rdv.human_enum_name(:status, rdv.status), class: "badge badge-info")
   end
 
   def no_rdv_for_users
@@ -58,21 +58,21 @@ module RdvsHelper
 
   def rdv_tag(rdv)
     if rdv.cancelled_at
-      content_tag(:span, 'Annulé', class: 'badge badge-warning')
+      content_tag(:span, "Annulé", class: "badge badge-warning")
     elsif rdv.starts_at.future?
-      content_tag(:span, 'À venir', class: 'badge badge-info')
+      content_tag(:span, "À venir", class: "badge badge-info")
     end
   end
 
   def stats_rdv_path(status)
     case controller_name
-    when 'stats'
+    when "stats"
       if params[:agent_id].present?
         organisation_agent_rdvs_path(current_organisation, params[:agent_id], status: status, default_period: true)
       else
         organisation_rdvs_path(current_organisation, status: status, default_period: true)
       end
-    when 'users', 'relatives'
+    when "users", "relatives"
       organisation_user_rdvs_path(current_organisation, params[:id], status: status)
     end
   end
@@ -82,25 +82,25 @@ module RdvsHelper
   end
 
   def unknown_past_rdvs_danger_bage
-    unknown_past_rdvs = current_organisation.rdvs.status('unknown_past').where(created_at: Stat::DEFAULT_RANGE).count
+    unknown_past_rdvs = current_organisation.rdvs.status("unknown_past").where(created_at: Stat::DEFAULT_RANGE).count
     rdv_danger_badge(unknown_past_rdvs)
   end
 
   def unknown_past_agent_rdvs_danger_bage
-    unknown_past_rdvs = current_organisation.rdvs.joins(:agents).where(agents: { id: current_agent }).status('unknown_past').where(created_at: Stat::DEFAULT_RANGE).count
+    unknown_past_rdvs = current_organisation.rdvs.joins(:agents).where(agents: { id: current_agent }).status("unknown_past").where(created_at: Stat::DEFAULT_RANGE).count
     rdv_danger_badge(unknown_past_rdvs)
   end
 
   def rdv_danger_badge(count)
-    content_tag(:span, count, class: 'badge badge-danger') if count.positive?
+    content_tag(:span, count, class: "badge badge-danger") if count.positive?
   end
 
   def rdv_danger_icon(count)
     content_tag(:i, nil, class: "fa fa-exclamation-circle text-danger") if count.positive? && !stats_path?
   end
 
-  def link_to_rdvs(status, clasz: 'btn-outline-white')
-    link_to 'Voir', stats_rdv_path(status), class: "btn #{clasz}" unless stats_path?
+  def link_to_rdvs(status, clasz: "btn-outline-white")
+    link_to "Voir", stats_rdv_path(status), class: "btn #{clasz}" unless stats_path?
   end
 
   def rdv_status_value(status)

@@ -1,5 +1,5 @@
 describe PlageOuverture, type: :model do
-  describe '#end_after_start' do
+  describe "#end_after_start" do
     let(:plage_ouverture) { build(:plage_ouverture, start_time: start_time, end_time: end_time) }
 
     context "start_time < end_time" do

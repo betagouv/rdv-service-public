@@ -8,9 +8,9 @@ describe "Agent can see his stats" do
 
   shared_examples "a stats page" do
     it "displays all the stats" do
-      click_link 'Vos statistiques'
-      expect(page).to have_content('Statistiques')
-      expect(page).to have_content('RDV créés')
+      click_link "Vos statistiques"
+      expect(page).to have_content("Statistiques")
+      expect(page).to have_content("RDV créés")
     end
   end
 

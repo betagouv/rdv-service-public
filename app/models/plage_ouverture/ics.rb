@@ -6,8 +6,8 @@ class PlageOuverture::Ics
   TZID = "Europe/Paris".freeze
 
   def to_ical
-    require 'icalendar'
-    require 'icalendar/tzinfo'
+    require "icalendar"
+    require "icalendar/tzinfo"
 
     cal = Icalendar::Calendar.new
 
@@ -18,8 +18,8 @@ class PlageOuverture::Ics
 
     cal.event do |e|
       e.uid         = plage_ouverture.ical_uid
-      e.dtstart     = Icalendar::Values::DateTime.new(plage_ouverture.starts_at, 'tzid' => TZID)
-      e.dtend       = Icalendar::Values::DateTime.new(plage_ouverture.ends_at, 'tzid' => TZID)
+      e.dtstart     = Icalendar::Values::DateTime.new(plage_ouverture.starts_at, "tzid" => TZID)
+      e.dtend       = Icalendar::Values::DateTime.new(plage_ouverture.ends_at, "tzid" => TZID)
       e.summary     = "#{BRAND} #{plage_ouverture.title}"
       e.description = ""
       e.location    = plage_ouverture.lieu.address
@@ -71,7 +71,7 @@ class PlageOuverture::Ics
     if on.is_a?(String)
       on[0, 2].upcase
     else
-      on.map { |d| d[0, 2].upcase }.join(',')
+      on.map { |d| d[0, 2].upcase }.join(",")
     end
   end
 

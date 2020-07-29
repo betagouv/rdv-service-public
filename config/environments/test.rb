@@ -15,7 +15,7 @@ Rails.application.configure do
   # Configure public file server for tests with Cache-Control for performance.
   config.public_file_server.enabled = true
   config.public_file_server.headers = {
-    'Cache-Control' => "public, max-age=#{1.hour.to_i}",
+    "Cache-Control" => "public, max-age=#{1.hour.to_i}",
   }
 
   # Show full error reports and disable caching.
@@ -32,8 +32,8 @@ Rails.application.configure do
   config.active_storage.service = :test
   config.active_job.queue_adapter = :inline
 
-  port = 9887 + ENV['TEST_ENV_NUMBER'].to_i
-  config.action_mailer.default_url_options = { host: "localhost:#{port}", utm_source: 'test', utm_medium: 'email', utm_campaign: 'default' }
+  port = 9887 + ENV["TEST_ENV_NUMBER"].to_i
+  config.action_mailer.default_url_options = { host: "localhost:#{port}", utm_source: "test", utm_medium: "email", utm_campaign: "default" }
   config.action_mailer.perform_caching = false
 
   config.assets.compile = true
