@@ -1,0 +1,20 @@
+- value = DisplayableUser.new(user, current_organisation).send(attribute_name)
+- if value.present? || !local_assigns[:skip_empty]
+  - if [:logement, :notes].include?(attribute_name)
+    strong
+      = I18n.t("activerecord.attributes.user_profile.#{attribute_name}")
+      span<>= ":"
+    span= value
+  - else
+    strong
+      = I18n.t("activerecord.attributes.user.#{attribute_name}")
+      span<>= ":"
+    span= value
+
+  - if ( \
+    attribute_name == :phone_number && \
+    user.other_users_with_same_phone_number(current_organisation).any? \
+  )
+    .alert.alert-warning.mt-1
+      span> ⚠️ D'autres usagers utilisent ce numéro de téléphone.
+      = link_to "voir la liste", organisation_users_path(current_organisation, "user[search]": user.phone_number)

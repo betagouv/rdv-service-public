@@ -20,8 +20,10 @@
                   - if user.responsible.present?
                     | (proche de #{link_to(user.responsible.full_name, organisation_user_path(current_organisation, user.responsible))})
                   ul.list-unstyled
-                    = user_details(user, current_organisation, :birth_date, :phone_number, :address, :email)
+                    - [:birth_date, :phone_number, :address, :email].each do |attr_name|
+                      li= render "common/user_attribute", user: user, attribute_name: attr_name
                     - if rdv.service_social?
-                      = user_details(user, current_organisation, :logement, :number_of_children, :family_situation, :affiliation_number, :caisse_affiliation, show_empty: false)
+                      - [:logement, :number_of_children, :family_situation, :affiliation_number, :caisse_affiliation].each do |attr_name|
+                        li= render "common/user_attribute", user: user, attribute_name: attr_name, skip_empty: true
     - else
       = render 'agents/rdvs/rdv_details', rdv: rdv
