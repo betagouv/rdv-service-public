@@ -12,7 +12,7 @@ https://beta.gouv.fr/startups/lapins.html
 
 #### Tous environnements
 
-- Ruby 2.7.0
+- Ruby 2.7.1
 - postgresql
 
 #### Développement
