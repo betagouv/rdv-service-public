@@ -39,7 +39,7 @@ RSpec.describe Agents::InvitationsController, type: :controller do
         {
           email: "michel@lapin.com",
           organisation_id: organisation_id,
-          role: 'user',
+          role: "user",
           service_id: service_id,
         }
       end
@@ -64,7 +64,7 @@ RSpec.describe Agents::InvitationsController, type: :controller do
         {
           email: "aa@hhh",
           organisation_id: organisation_id,
-          role: 'user',
+          role: "user",
           service_id: service_id,
         }
       end
@@ -89,7 +89,7 @@ RSpec.describe Agents::InvitationsController, type: :controller do
         {
           email: agent_2.email,
           organisation_id: organisation_id,
-          role: 'user',
+          role: "user",
           service_id: service_id,
         }
       end
@@ -127,7 +127,7 @@ RSpec.describe Agents::InvitationsController, type: :controller do
         {
           email: "MARCO@demo.rdv-solidarites.fr",
           organisation_id: organisation_id,
-          role: 'user',
+          role: "user",
           service_id: service_id,
         }
       end

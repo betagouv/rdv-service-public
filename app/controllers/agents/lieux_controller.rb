@@ -2,7 +2,7 @@ class Agents::LieuxController < AgentAuthController
   respond_to :html, :json
 
   def index
-    @lieux = policy_scope(Lieu).includes(:organisation).order(Arel.sql('LOWER(name)')).page(params[:page])
+    @lieux = policy_scope(Lieu).includes(:organisation).order(Arel.sql("LOWER(name)")).page(params[:page])
   end
 
   def new
@@ -28,14 +28,14 @@ class Agents::LieuxController < AgentAuthController
   def update
     @lieu = Lieu.find(params[:id])
     authorize(@lieu)
-    flash[:notice] = 'Lieu a été modifié.' if @lieu.update(lieu_params)
+    flash[:notice] = "Lieu a été modifié." if @lieu.update(lieu_params)
     respond_right_bar_with @lieu, location: organisation_lieux_path(@lieu.organisation)
   end
 
   def destroy
     @lieu = Lieu.find(params[:id])
     authorize(@lieu)
-    flash[:notice] = 'Le lieu a été supprimé.' if @lieu.destroy
+    flash[:notice] = "Le lieu a été supprimé." if @lieu.destroy
     respond_right_bar_with @lieu, location: organisation_lieux_path(@lieu.organisation)
   end
 

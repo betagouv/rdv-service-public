@@ -4,14 +4,14 @@ describe Rdv, type: :model do
   let(:secretariat) { create(:service, :secretariat) }
   let(:motif_with_rdv) { create(:motif, :with_rdvs) }
 
-  describe '.create when associated with secretariat' do
+  describe ".create when associated with secretariat" do
     let(:motif) { build(:motif, service: secretariat) }
     it {
       expect(motif.valid?).to be false
     }
   end
 
-  describe '#soft_delete' do
+  describe "#soft_delete" do
     before do
       freeze_time
       @delation_time = Time.current

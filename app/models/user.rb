@@ -32,7 +32,7 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :user_profiles
 
   scope :active, -> { where(deleted_at: nil) }
-  scope :order_by_last_name, -> { order(Arel.sql('LOWER(last_name)')) }
+  scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
   scope :responsible, -> { where(responsible_id: nil) }
 
   after_commit :send_invite_if_checked, on: :create
@@ -83,7 +83,7 @@ class User < ApplicationRecord
   end
 
   def available_users_for_rdv
-    User.where(responsible_id: id).or(User.where(id: id)).order('responsible_id DESC NULLS FIRST', first_name: :asc).active
+    User.where(responsible_id: id).or(User.where(id: id)).order("responsible_id DESC NULLS FIRST", first_name: :asc).active
   end
 
   def family

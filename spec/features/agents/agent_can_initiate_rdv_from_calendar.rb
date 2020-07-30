@@ -19,7 +19,7 @@ describe "Agent can initiate a Rdv from calendar" do
   end
 
   scenario "for an other agent", js: true do
-    select(agent2.full_name, from: 'id')
+    select(agent2.full_name, from: "id")
     expect_page_title("Agenda de #{agent2.full_name_and_service}")
 
     initiate_rdv(agent2)
@@ -27,20 +27,20 @@ describe "Agent can initiate a Rdv from calendar" do
 
   def initiate_rdv(agent)
     # Step 1
-    find('.fc-bgevent', match: :first).click
+    find(".fc-bgevent", match: :first).click
 
     # Step 2
     select(motif.name, from: "rdv_motif_id")
-    click_button('Continuer')
+    click_button("Continuer")
 
     # Step 3
     expect(find(".select2")).to have_content(agent.full_name_and_service)
-    click_button('Continuer')
+    click_button("Continuer")
 
     # Step 4
     select_user(user)
     expect(page).to have_content(full_name_and_birthdate(user))
-    click_button('Continuer')
+    click_button("Continuer")
 
     # Step 5
     expect(page).to have_content("Le rendez-vous a été créé.")

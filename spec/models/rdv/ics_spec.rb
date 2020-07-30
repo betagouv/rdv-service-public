@@ -1,5 +1,5 @@
 describe Rdv::Ics, type: :model do
-  describe '#to_ical_for' do
+  describe "#to_ical_for" do
     let(:motif) { create(:motif, name: "Consultation initiale") }
     let(:user) { create(:user, first_name: "elisa", last_name: "simon", email: "elisa@simon.fr") }
     let(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes") }
@@ -20,7 +20,7 @@ describe Rdv::Ics, type: :model do
       is_expected.to include("METHOD:REQUEST")
     end
 
-    context 'when the motif is by_phone' do
+    context "when the motif is by_phone" do
       # TODO: this does not test for RDVs by phone at all.
       it { is_expected.to include("LOCATION:") }
     end

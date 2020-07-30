@@ -16,7 +16,7 @@ class LieuxController < ApplicationController
     return unless @organisations.empty?
 
     flash.now[:notice] = "La prise de RDV n’est pas encore disponible dans ce département"
-    render 'welcome/index'
+    render "welcome/index"
   end
 
   def show
@@ -38,7 +38,7 @@ class LieuxController < ApplicationController
       @next_availability = FindAvailabilityService.perform_with(@motif_name, @lieu, @date_range.end, **options_to_build_creneaux) if @creneaux.empty?
     end
 
-    @max_booking_delay = @matching_motifs.maximum('max_booking_delay')
+    @max_booking_delay = @matching_motifs.maximum("max_booking_delay")
 
     respond_to do |format|
       format.html

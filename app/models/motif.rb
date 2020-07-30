@@ -22,7 +22,7 @@ class Motif < ApplicationRecord
   scope :for_secretariat, -> { where(for_secretariat: true) }
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
     available_motifs = agent.service.secretariat? ? for_secretariat : where(service: agent.service)
-    available_motifs.where(organisation_id: organisation.id).active.order(Arel.sql('LOWER(name)'))
+    available_motifs.where(organisation_id: organisation.id).active.order(Arel.sql("LOWER(name)"))
   }
 
   def self.searchable(organisations, service: nil)

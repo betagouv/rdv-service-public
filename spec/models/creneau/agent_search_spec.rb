@@ -6,7 +6,7 @@ describe Creneau::AgentSearch, type: :model do
   let(:lieu_ids) { [] }
   let(:agent_ids) { [] }
 
-  describe '#lieux' do
+  describe "#lieux" do
     subject { agent_search.lieux }
 
     let(:motif) { plage_ouverture.motifs.first }

@@ -26,7 +26,7 @@ class DuplicateUserFinderService < BaseService
       first_name: @user.first_name.capitalize,
       last_name: @user.last_name.upcase,
       birth_date: @user.birth_date
-    ).left_joins(:rdvs).group(:id).order('COUNT(rdvs.id) DESC').first
+    ).left_joins(:rdvs).group(:id).order("COUNT(rdvs.id) DESC").first
     return nil unless similar_user.present?
 
     OpenStruct.new(severity: :error, attributes: [:first_name, :last_name, :birth_date], user: similar_user)
@@ -35,7 +35,7 @@ class DuplicateUserFinderService < BaseService
   def check_phone_number
     return nil unless @user.phone_number.present?
 
-    similar_user = users_in_scope.where(phone_number: @user.phone_number).left_joins(:rdvs).group(:id).order('COUNT(rdvs.id) DESC').first
+    similar_user = users_in_scope.where(phone_number: @user.phone_number).left_joins(:rdvs).group(:id).order("COUNT(rdvs.id) DESC").first
     return nil unless similar_user.present?
 
     OpenStruct.new(severity: :warning, attributes: [:phone_number], user: similar_user)

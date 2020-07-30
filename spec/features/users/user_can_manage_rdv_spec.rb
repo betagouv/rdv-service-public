@@ -15,7 +15,7 @@ describe "User can manage their rdvs" do
       click_link("Annuler le RDV")
       expect(page).to have_content("Confirmation")
       click_link("Oui, annuler le RDV")
-      expect(page).to have_selector('.badge', text: "Annulé")
+      expect(page).to have_selector(".badge", text: "Annulé")
     end
   end
 
@@ -24,8 +24,8 @@ describe "User can manage their rdvs" do
 
     scenario "default", js: true do
       expect(page).to have_content(rdv.motif.name)
-      expect(page).not_to have_selector('li', text: "Annuler le RDV")
-      expect(page).to have_selector('p.font-italic', text: "Ce rendez-vous commence dans moins de 4 heures, il n'est plus annulable en ligne.")
+      expect(page).not_to have_selector("li", text: "Annuler le RDV")
+      expect(page).to have_selector("p.font-italic", text: "Ce rendez-vous commence dans moins de 4 heures, il n'est plus annulable en ligne.")
     end
   end
 
@@ -33,9 +33,9 @@ describe "User can manage their rdvs" do
     let(:starts_at) { 15.days.from_now }
     scenario "default", js: true do
       expect(page).to have_content("Je souhaite être prévenu si un créneau se libère.")
-      check 'Je souhaite être prévenu si un créneau se libère.'
+      check "Je souhaite être prévenu si un créneau se libère."
       expect(page).to have_content("Vous êtes à présent sur la liste d'attente")
-      uncheck 'Je souhaite être prévenu si un créneau se libère.'
+      uncheck "Je souhaite être prévenu si un créneau se libère."
       expect(page).to have_content("Vous n'êtes plus sur la liste d'attente")
     end
   end

@@ -216,7 +216,7 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
   end
 
   context "admin CRUD on an agent's plage ouverture" do
-    let(:admin) { create(:agent, role: 'admin') }
+    let(:admin) { create(:agent, role: "admin") }
 
     before { sign_in admin }
 

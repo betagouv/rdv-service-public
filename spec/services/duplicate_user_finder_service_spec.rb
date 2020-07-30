@@ -1,6 +1,6 @@
 describe DuplicateUserFinderService, type: :service do
   describe ".perform" do
-    let(:user) { build(:user, first_name: "Mathieu", last_name: "Lapin", email: "lapin@beta.fr", birth_date: '21/10/2000', phone_number: '0658032518') }
+    let(:user) { build(:user, first_name: "Mathieu", last_name: "Lapin", email: "lapin@beta.fr", birth_date: "21/10/2000", phone_number: "0658032518") }
 
     subject { DuplicateUserFinderService.new(user).perform }
 
@@ -31,7 +31,7 @@ describe DuplicateUserFinderService, type: :service do
       end
 
       context "same main first_name, last_name, birth_date" do
-        let!(:duplicated_user) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: '21/10/2000') }
+        let!(:duplicated_user) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000") }
         it { should eq(OpenStruct.new(severity: :error, attributes: [:first_name, :last_name, :birth_date], user: duplicated_user)) }
 
         context "but soft deleted" do
@@ -41,7 +41,7 @@ describe DuplicateUserFinderService, type: :service do
       end
 
       context "same phone_number" do
-        let!(:duplicated_user) { create(:user, phone_number: '0658032518') }
+        let!(:duplicated_user) { create(:user, phone_number: "0658032518") }
         it { should eq(OpenStruct.new(severity: :warning, attributes: [:phone_number], user: duplicated_user)) }
 
         context "but soft deleted" do
@@ -57,8 +57,8 @@ describe DuplicateUserFinderService, type: :service do
       end
 
       context "multiple account" do
-        let!(:duplicated_user_1) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: '21/10/2000') }
-        let!(:duplicated_user_2) { create(:user, phone_number: '0658032518') }
+        let!(:duplicated_user_1) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000") }
+        let!(:duplicated_user_2) { create(:user, phone_number: "0658032518") }
         let!(:rdv) { create(:rdv, users: [duplicated_user_1]) }
         it { should eq(OpenStruct.new(severity: :error, attributes: [:first_name, :last_name, :birth_date], user: duplicated_user_1)) }
 

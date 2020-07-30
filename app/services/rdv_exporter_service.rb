@@ -1,7 +1,7 @@
 class RdvExporterService < BaseService
   TYPE = { "user" => "Usager", "agent" => "Agent", "file_attente" => "File d'attente" }.freeze
-  HourFormat = Spreadsheet::Format.new(number_format: 'hh:mm')
-  DateFormat = Spreadsheet::Format.new(number_format: 'DD/MM/YYYY')
+  HourFormat = Spreadsheet::Format.new(number_format: "hh:mm")
+  DateFormat = Spreadsheet::Format.new(number_format: "DD/MM/YYYY")
   HEADER = [
     "année",
     "date prise rdv",
@@ -17,7 +17,7 @@ class RdvExporterService < BaseService
   ].freeze
 
   def initialize(rdvs, file)
-    Spreadsheet.client_encoding = 'UTF-8'
+    Spreadsheet.client_encoding = "UTF-8"
     @rdvs = rdvs
     @file = file
   end

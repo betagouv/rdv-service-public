@@ -4,7 +4,7 @@
 # are locale specific, and you may define rules for as many different
 # locales as you wish. All of these examples are active by default:
 ActiveSupport::Inflector.inflections do |inflect|
-  inflect.irregular 'lieu', 'lieux'
+  inflect.irregular "lieu", "lieux"
 end
 
 # These inflection rules are supported but not enabled by default:

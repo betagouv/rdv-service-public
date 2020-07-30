@@ -1,5 +1,5 @@
 FactoryBot.define do
-  require 'faker'
+  require "faker"
 
   sequence(:user_email) { |n| "usager_#{n}@lapin.fr" }
 
@@ -7,15 +7,15 @@ FactoryBot.define do
     email { generate(:user_email) }
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name.upcase }
-    phone_number { Faker::Base.numerify('06 ## ## ## ##') }
+    phone_number { Faker::Base.numerify("06 ## ## ## ##") }
     birth_date { Faker::Date.between(from: 80.years.ago, to: Date.today) }
     address { "20 avenue de Ségur, Paris" }
     password { "12345678" }
     password_confirmation { "12345678" }
     confirmed_at { Time.zone.now }
-    caisse_affiliation { 'caf' }
-    affiliation_number { '39012093812038' }
-    family_situation { 'divorced' }
+    caisse_affiliation { "caf" }
+    affiliation_number { "39012093812038" }
+    family_situation { "divorced" }
     number_of_children { 12 }
     responsible { nil }
     trait :unconfirmed do

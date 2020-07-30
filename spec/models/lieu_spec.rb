@@ -89,7 +89,7 @@ describe Lieu, type: :model do
     end
   end
 
-  describe '.distance' do
+  describe ".distance" do
     let!(:lieu_lille) { create(:lieu, latitude: 50.63, longitude: 3.053) }
     let(:paris_loc) { { latitude: 48.83, longitude: 2.37 } }
     let(:reservable_online) { true }

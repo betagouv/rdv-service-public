@@ -18,7 +18,7 @@ describe "Agent can create a Rdv with creneau search" do
     visit organisation_agent_path(agent.organisations.first, agent)
 
     expect(user.rdvs.count).to eq(0)
-    click_link('Trouver un créneau')
+    click_link("Trouver un créneau")
   end
 
   after { travel_back }
@@ -26,7 +26,7 @@ describe "Agent can create a Rdv with creneau search" do
   scenario "default", js: true do
     expect_page_title("Choisir un créneau")
     select(motif.name, from: "creneau_agent_search_motif_id")
-    click_button('Afficher les créneaux')
+    click_button("Afficher les créneaux")
 
     # Display results for both lieux
     expect(page).to have_content(plage_ouverture.lieu.address)
@@ -36,19 +36,19 @@ describe "Agent can create a Rdv with creneau search" do
 
     # Add a filter on lieu
     select(lieu.name, from: "creneau_agent_search_lieu_ids")
-    click_button('Afficher les créneaux')
+    click_button("Afficher les créneaux")
     expect(page).to have_content(plage_ouverture.lieu.address)
     expect(page).not_to have_content(plage_ouverture2.lieu.address)
 
     # Add an agent filter
     select(agent.full_name, from: "creneau_agent_search_agent_ids")
-    click_button('Afficher les créneaux')
+    click_button("Afficher les créneaux")
     expect(page).to have_content(plage_ouverture.agent.short_name)
     expect(page).not_to have_content(plage_ouverture2.agent.short_name)
 
     # Click to change to next week
     first(:link, ">>").click
-    expect(page).to have_content('<<', wait: 5)
+    expect(page).to have_content("<<", wait: 5)
 
     expect(page).to have_content(plage_ouverture.agent.short_name)
     expect(page).not_to have_content(plage_ouverture2.agent.short_name)
@@ -60,13 +60,13 @@ describe "Agent can create a Rdv with creneau search" do
     # Step 2
     expect_page_title("Choisir le ou les usagers")
     select_user(user)
-    click_button('Continuer')
+    click_button("Continuer")
 
     # Step 3
     expect_page_title("Choisir la durée et la date")
     expect_checked("Motif : #{motif.name}")
-    expect(find_field('rdv[lieu_id]').value).to eq(lieu.id.to_s)
-    click_button('Créer RDV')
+    expect(find_field("rdv[lieu_id]").value).to eq(lieu.id.to_s)
+    click_button("Créer RDV")
 
     expect(user.rdvs.count).to eq(1)
     rdv = user.rdvs.first

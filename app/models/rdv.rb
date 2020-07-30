@@ -24,16 +24,16 @@ class Rdv < ApplicationRecord
   validates :lieu, presence: true, if: :public_office?
 
   scope :active, -> { where(cancelled_at: nil) }
-  scope :past, -> { where('starts_at < ?', Time.zone.now) }
-  scope :future, -> { where('starts_at > ?', Time.zone.now) }
+  scope :past, -> { where("starts_at < ?", Time.zone.now) }
+  scope :future, -> { where("starts_at > ?", Time.zone.now) }
   scope :tomorrow, -> { where(starts_at: DateTime.tomorrow...DateTime.tomorrow + 1.day) }
   scope :day_after_tomorrow, -> { where(starts_at: DateTime.tomorrow + 1.day...DateTime.tomorrow + 2.day) }
-  scope :user_with_relatives, ->(responsible_id) { joins(:users).includes(:rdvs_users, :users).where('users.id IN (?)', [responsible_id, User.find(responsible_id).relatives.pluck(:id)].flatten) }
+  scope :user_with_relatives, ->(responsible_id) { joins(:users).includes(:rdvs_users, :users).where("users.id IN (?)", [responsible_id, User.find(responsible_id).relatives.pluck(:id)].flatten) }
   scope :status, lambda { |status|
-    if status == 'unknown_past'
-      past.where(status: ['unknown', 'waiting'])
-    elsif status == 'unknown_future'
-      future.where(status: ['unknown', 'waiting'])
+    if status == "unknown_past"
+      past.where(status: ["unknown", "waiting"])
+    elsif status == "unknown_future"
+      future.where(status: ["unknown", "waiting"])
     else
       where(status: status)
     end
@@ -155,6 +155,6 @@ class Rdv < ApplicationRecord
 
   def reload_uuid
     # https://github.com/rails/rails/issues/17605
-    self[:uuid] = self.class.where(id: id).pluck(:uuid).first if attributes.key? 'uuid'
+    self[:uuid] = self.class.where(id: id).pluck(:uuid).first if attributes.key? "uuid"
   end
 end

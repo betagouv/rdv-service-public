@@ -7,8 +7,8 @@ class Rdv::Ics
   validates :rdv, presence: true
 
   def to_ical_for(user)
-    require 'icalendar'
-    require 'icalendar/tzinfo'
+    require "icalendar"
+    require "icalendar/tzinfo"
 
     cal = Icalendar::Calendar.new
 
@@ -19,8 +19,8 @@ class Rdv::Ics
     cal.prodid = BRAND
 
     cal.event do |e|
-      e.dtstart     = Icalendar::Values::DateTime.new(rdv.starts_at, 'tzid' => tzid)
-      e.dtend       = Icalendar::Values::DateTime.new(rdv.ends_at, 'tzid' => tzid)
+      e.dtstart     = Icalendar::Values::DateTime.new(rdv.starts_at, "tzid" => tzid)
+      e.dtend       = Icalendar::Values::DateTime.new(rdv.ends_at, "tzid" => tzid)
       e.summary     = "RDV #{rdv_title_for_user(rdv, user)}"
       e.description = description
       e.location    = rdv.address unless rdv.motif.phone?

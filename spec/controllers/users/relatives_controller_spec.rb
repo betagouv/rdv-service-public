@@ -42,7 +42,7 @@ RSpec.describe Users::RelativesController, type: :controller do
   end
 
   describe "POST #create" do
-    before { request.headers['HTTP_REFERER'] = users_informations_path }
+    before { request.headers["HTTP_REFERER"] = users_informations_path }
     subject { post :create, params: attributes }
 
     context "with valid params" do

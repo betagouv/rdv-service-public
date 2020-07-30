@@ -1,38 +1,38 @@
 describe User, type: :model do
-  describe '#age' do
+  describe "#age" do
     let(:user) { build(:user, birth_date: birth_date) }
 
-    context 'born 4 years ago' do
+    context "born 4 years ago" do
       let(:birth_date) { 4.years.ago }
 
       it { expect(user.age).to eq("4 ans") }
     end
 
-    context 'born 4 years + 1 day ago' do
+    context "born 4 years + 1 day ago" do
       let(:birth_date) { 4.years.ago + 1.day }
 
       it { expect(user.age).to eq("3 ans") }
     end
 
-    context 'born 2 months ago' do
+    context "born 2 months ago" do
       let(:birth_date) { 2.months.ago }
 
       it { expect(user.age).to eq("2 mois") }
     end
 
-    context 'born 23 months ago' do
+    context "born 23 months ago" do
       let(:birth_date) { 23.months.ago }
 
       it { expect(user.age).to eq("23 mois") }
     end
 
-    context 'born 24 months ago' do
+    context "born 24 months ago" do
       let(:birth_date) { 24.months.ago }
 
       it { expect(user.age).to eq("2 ans") }
     end
 
-    context 'born 20 days ago' do
+    context "born 20 days ago" do
       let(:birth_date) { 20.days.ago }
 
       it { expect(user.age).to eq("20 jours") }
@@ -133,7 +133,7 @@ describe User, type: :model do
       user.reload
     end
 
-    context 'belongs to multiple organisations and with organisation given' do
+    context "belongs to multiple organisations and with organisation given" do
       let(:user) { create(:user, :with_multiple_organisations, email: "jean@valjean.fr") }
       let(:deleted_org) { user.organisations.first }
       it { expect(user.organisations).not_to include(deleted_org) }
@@ -146,16 +146,16 @@ describe User, type: :model do
       it { expect(user.email).to eq "jean@valjean.fr" }
     end
 
-    context 'belongs to one organisation and with organisation given' do
+    context "belongs to one organisation and with organisation given" do
       let(:user) { create(:user, email: "jean@valjean.fr", organisations: [create(:organisation)]) }
       let(:deleted_org) { user.organisations.first }
       it { expect(user.deleted_at).to eq(now) }
-      it { expect(user.email).to end_with('deleted.rdv-solidarites.fr') }
-      it { expect(user.email_original).to eq('jean@valjean.fr') }
+      it { expect(user.email).to end_with("deleted.rdv-solidarites.fr") }
+      it { expect(user.email_original).to eq("jean@valjean.fr") }
       it { expect(user.organisations).to be_empty }
     end
 
-    context 'with no organisation given' do
+    context "with no organisation given" do
       let(:user) { create(:user, :with_multiple_organisations) }
       let(:deleted_org) { nil }
       it { expect(user.organisations).to be_empty }
@@ -259,16 +259,16 @@ describe User, type: :model do
         it { should eq(nil) }
       end
       context "blank phone number" do
-        let!(:user) { create(:user, phone_number: '') }
+        let!(:user) { create(:user, phone_number: "") }
         it { should eq(nil) }
       end
       context "valid phone number" do
-        let!(:user) { create(:user, phone_number: '01 30 30 40 40') }
-        it { should eq('+33130304040') }
+        let!(:user) { create(:user, phone_number: "01 30 30 40 40") }
+        it { should eq("+33130304040") }
       end
       context "invalid phone number" do
         it "should not save" do
-          user = build(:user, phone_number: '01 30 20')
+          user = build(:user, phone_number: "01 30 20")
           expect(user.save).to be false
         end
       end
@@ -277,11 +277,11 @@ describe User, type: :model do
     context "on update" do
       context "previous phone number" do
         it "should update it" do
-          user = create(:user, phone_number: '01 30 30 40 40')
-          expect(user.phone_number_formatted).to eq('+33130304040')
-          user.update!(phone_number: '04 300 32020')
-          expect(user.phone_number_formatted).to eq('+33430032020')
-          user.update!(phone_number: '')
+          user = create(:user, phone_number: "01 30 30 40 40")
+          expect(user.phone_number_formatted).to eq("+33130304040")
+          user.update!(phone_number: "04 300 32020")
+          expect(user.phone_number_formatted).to eq("+33430032020")
+          user.update!(phone_number: "")
           expect(user.phone_number_formatted).to eq(nil)
         end
       end
@@ -291,7 +291,7 @@ describe User, type: :model do
   describe "#search_by_text" do
     let!(:user_jean) { create(:user, first_name: "jean", last_name: "moustache", email: "jean@moustache.fr", phone_number: "01 30 30 04 04") }
     let!(:user_patricia) { create(:user, first_name: "patricia", last_name: "duroy", email: "patoche@duroy.fr", phone_number: nil) }
-    let!(:user_maurice) { create(:user, first_name: "maurice", last_name: "rhey", email: "mo@mo.lo", phone_number: '0152424242') }
+    let!(:user_maurice) { create(:user, first_name: "maurice", last_name: "rhey", email: "mo@mo.lo", phone_number: "0152424242") }
     subject { User.search_by_text(query) }
 
     context "name query" do

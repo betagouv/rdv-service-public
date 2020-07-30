@@ -52,7 +52,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       sign_in signed_in_user
     end
 
-    context 'when user belongs to rdv' do
+    context "when user belongs to rdv" do
       let(:signed_in_user) { rdv.users.first }
 
       it { expect { subject }.to change(rdv, :cancelled_at).from(nil).to(now) }

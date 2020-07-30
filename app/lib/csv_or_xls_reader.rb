@@ -1,10 +1,10 @@
-require 'csv'
+require "csv"
 
 module CsvOrXlsReader
   class Importer
     def initialize(form_file)
       @form_file = form_file
-      @extension = File.extname(@form_file.original_filename)&.tr('.', '')&.downcase&.to_sym
+      @extension = File.extname(@form_file.original_filename)&.tr(".", "")&.downcase&.to_sym
 
       if @extension == :csv
         extend CsvImporter

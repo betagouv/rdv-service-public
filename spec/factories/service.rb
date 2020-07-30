@@ -4,10 +4,10 @@ FactoryBot.define do
   factory :service do
     name { generate(:service_name) }
     trait :secretariat do
-      name { 'Secrétariat' }
+      name { "Secrétariat" }
     end
     trait :pmi do
-      name { 'PMI' }
+      name { "PMI" }
     end
 
     after(:build) do |service|

@@ -10,7 +10,7 @@ class Agents::OrganisationsController < AgentAuthController
       if policy_scope(Organisation).count == 1
 
     @organisations_by_departement = policy_scope(Organisation).group_by(&:departement)
-    render layout: 'registration'
+    render layout: "registration"
   end
 
   def show
