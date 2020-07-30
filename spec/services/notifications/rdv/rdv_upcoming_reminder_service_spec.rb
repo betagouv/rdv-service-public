@@ -12,5 +12,7 @@ describe Notifications::Rdv::RdvUpcomingReminderService, type: :service do
       .with(:reminder, rdv.id, user1.id)
     # .and_call_original
     subject
+    expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "upcoming_reminder").count).to eq 1
+    expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: "upcoming_reminder").count).to eq 1
   end
 end
