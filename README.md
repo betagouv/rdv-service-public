@@ -108,6 +108,9 @@ rake send_reminder
 
 # Envoi des sms/email lorsque des créneaux se libèrent
 rake file_attente
+
+# Envoi d'un mail quotidien de monitoring des notifs a l'equipe
+rake rdv_events_stats_mail
 ```
 
 ### Organisation du développement et processus de déploiement
