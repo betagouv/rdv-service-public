@@ -3,9 +3,15 @@ class Notifications::Rdv::RdvUpdatedService < ::BaseService
 
   protected
 
-  def notify_user(user)
-    # TODO : it's weird that it uses the exact same notifications as for creations
-    Users::RdvMailer.rdv_created(@rdv, user).deliver_later if user.email.present?
-    SendTransactionalSmsJob.perform_later(:rdv_created, @rdv.id, user.id) if user.phone_number_formatted
+  # TODO : it's weird that it uses the exact same notifications as for creations
+
+  def notify_user_by_mail(user)
+    Users::RdvMailer.rdv_created(@rdv, user).deliver_later
+    @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: :updated)
+  end
+
+  def notify_user_by_sms(user)
+    SendTransactionalSmsJob.perform_later(:rdv_created, @rdv.id, user.id)
+    @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: :updated)
   end
 end

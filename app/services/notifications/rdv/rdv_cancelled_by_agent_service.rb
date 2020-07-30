@@ -3,8 +3,13 @@ class Notifications::Rdv::RdvCancelledByAgentService < ::BaseService
 
   protected
 
-  def notify_user(user)
-    Users::RdvMailer.rdv_cancelled_by_agent(@rdv, user).deliver_later if user.email.present?
-    SendTransactionalSmsJob.perform_later(:rdv_cancelled, @rdv.id, user.id) if user.phone_number_formatted
+  def notify_user_by_mail(user)
+    Users::RdvMailer.rdv_cancelled_by_agent(@rdv, user).deliver_later
+    @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: :cancelled_by_agent)
+  end
+
+  def notify_user_by_sms(user)
+    SendTransactionalSmsJob.perform_later(:rdv_cancelled, @rdv.id, user.id)
+    @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: :cancelled_by_agent)
   end
 end

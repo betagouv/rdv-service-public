@@ -3,9 +3,14 @@ class Notifications::Rdv::RdvCreatedService < ::BaseService
 
   protected
 
-  def notify_user(user)
-    Users::RdvMailer.rdv_created(@rdv, user).deliver_later if user.email.present?
-    SendTransactionalSmsJob.perform_later(:rdv_created, @rdv.id, user.id) if user.phone_number_formatted
+  def notify_user_by_mail(user)
+    Users::RdvMailer.rdv_created(@rdv, user).deliver_later
+    @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: :created)
+  end
+
+  def notify_user_by_sms(user)
+    SendTransactionalSmsJob.perform_later(:rdv_created, @rdv.id, user.id)
+    @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: :created)
   end
 
   def notify_agent(agent)

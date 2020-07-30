@@ -159,5 +159,6 @@ Rails.application.routes.draw do
   get "departement/:departement/:service/:motif", to: "welcome#welcome_motif", as: "welcome_motif"
   resources :lieux, only: [:index, :show]
   resources :motif_libelles, only: :index
+  get "health_checks/rdv_events_stats", to: "health_checks#rdv_events_stats"
   root "welcome#index"
 end

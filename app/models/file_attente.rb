@@ -27,9 +27,16 @@ class FileAttente < ApplicationRecord
 
   def send_notification
     rdv.users.map(&:user_to_notify).uniq.each do |user|
-      SendTransactionalSmsJob.perform_later(:file_attente, rdv.id, user.id) if user.phone_number_formatted
-      Users::FileAttenteMailer.new_creneau_available(rdv, user).deliver_later if user.email
+      if user.phone_number_formatted
+        SendTransactionalSmsJob.perform_later(:file_attente, rdv.id, user.id)
+        rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: :file_attente_creneaux_available)
+      end
+
+      next unless user.email
+
+      Users::FileAttenteMailer.new_creneau_available(rdv, user).deliver_later if
       update!(notifications_sent: notifications_sent + 1, last_creneau_sent_at: Time.now)
+      rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: :file_attente_creneaux_available)
     end
   end
 end
