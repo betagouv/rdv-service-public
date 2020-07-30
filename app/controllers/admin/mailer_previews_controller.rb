@@ -26,8 +26,9 @@ module Admin
         part_type = Mime::Type.lookup(params[:part])
 
         if (part = find_part(part_type))
-          return response.content_type = part_type &&
-                                         render(plain: part.respond_to?(:decoded) ? part.decoded : part)
+          response.content_type = part_type.to_s
+          render(plain: part.respond_to?(:decoded) ? part.decoded : part)
+          return
         end
         raise AbstractController::ActionNotFound, "Email part '#{part_type}' not found in #{@preview.name}##{@email_action}"
       else
