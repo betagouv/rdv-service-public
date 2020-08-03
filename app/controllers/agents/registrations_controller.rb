@@ -34,7 +34,6 @@ class Agents::RegistrationsController < Devise::RegistrationsController
     redirect_to root_path
   end
 
-
   private
 
   def after_inactive_sign_up_path_for(_)

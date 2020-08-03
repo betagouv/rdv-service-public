@@ -9,6 +9,9 @@ Bundler/OrderedGems:
   TreatCommentsAsGroupSeparators: true
   Enabled: true
 
+Layout/EmptyLines:
+  Enabled: true
+
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 
