@@ -38,6 +38,9 @@ Metrics/PerceivedComplexity:
 Style/ClassAndModuleChildren:
   Enabled: false
 
+Style/Documentation:
+  Enabled: false
+
 Style/HashEachMethods:
   Enabled: true
 
