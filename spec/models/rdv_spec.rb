@@ -155,4 +155,12 @@ describe Rdv, type: :model do
       expect(rdv.address_complete_without_personnal_details).to eq("À domicile")
     end
   end
+
+  describe "#destroy" do
+    let!(:rdv) { create(:rdv) }
+    let!(:rdv_event) { create(:rdv_event, rdv: rdv) }
+    it "should work" do
+      expect { rdv.destroy }.to change { Rdv.count }.by(-1)
+    end
+  end
 end
