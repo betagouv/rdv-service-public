@@ -4,6 +4,7 @@ AllCops:
   Exclude:
     - "bin/*"
     - "node_modules/**/*"
+    - "db/schema.rb"
 
 Bundler/OrderedGems:
   TreatCommentsAsGroupSeparators: true
@@ -16,8 +17,7 @@ Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 
 Metrics/BlockLength:
-  Exclude:
-    - 'db/schema.rb'
+  Enabled: true
 
 Style/HashEachMethods:
   Enabled: true
@@ -29,8 +29,7 @@ Style/HashTransformValues:
   Enabled: true
 
 Style/NumericLiterals:
-  Exclude:
-    - "db/schema.rb"
+  Enabled: true
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
