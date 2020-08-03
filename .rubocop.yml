@@ -5,12 +5,16 @@ AllCops:
     - "bin/*"
     - "node_modules/**/*"
 
+Bundler/OrderedGems:
+  TreatCommentsAsGroupSeparators: true
+  Enabled: true
+
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 
-Style/NumericLiterals:
+Metrics/BlockLength:
   Exclude:
-    - "db/schema.rb"
+    - 'db/schema.rb'
 
 Style/HashEachMethods:
   Enabled: true
@@ -21,9 +25,9 @@ Style/HashTransformKeys:
 Style/HashTransformValues:
   Enabled: true
 
-Metrics/BlockLength:
+Style/NumericLiterals:
   Exclude:
-    - 'db/schema.rb'
+    - "db/schema.rb"
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
