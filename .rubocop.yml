@@ -23,6 +23,9 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   Enabled: false
 
+Metrics/ClassLength:
+  Enabled: false
+
 Style/HashEachMethods:
   Enabled: true
 
