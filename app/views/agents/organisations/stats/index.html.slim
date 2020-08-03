@@ -1,6 +1,6 @@
 - content_for :title do
   | Statistiques #{current_organisation.name}
-  small Du #{l(Stat::DEFAULT_RANGE.first.to_date)} au #{l(Stat::DEFAULT_RANGE.last.to_date)}
+  small Du #{l(Stat.default_date_range.first.to_date)} au #{l(Stat.default_date_range.last.to_date)}
 
 .card.mb-5
   .card-body
