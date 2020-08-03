@@ -45,12 +45,12 @@ class Creneau
     return unless agent.present?
 
     Rdv.new(agents: [agent],
-      duration_in_min: duration_in_min,
-      starts_at: starts_at,
-      organisation: motif.organisation,
-      motif: motif,
-      lieu_id: lieu.id,
-      users: [user])
+            duration_in_min: duration_in_min,
+            starts_at: starts_at,
+            organisation: motif.organisation,
+            motif: motif,
+            lieu_id: lieu.id,
+            users: [user])
   end
 
   def respects_min_booking_delay?
