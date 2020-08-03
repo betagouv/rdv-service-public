@@ -20,6 +20,9 @@ Lint/AmbiguousOperator:
 Metrics/AbcSize:
   Enabled: false
 
+Metrics/BlockLength:
+  Enabled: false
+
 Style/HashEachMethods:
   Enabled: true
 
