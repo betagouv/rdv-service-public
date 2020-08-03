@@ -56,6 +56,9 @@ Style/HashTransformKeys:
 Style/HashTransformValues:
   Enabled: true
 
+Style/IfUnlessModifier:
+  Enabled: false
+
 Style/StringLiterals:
   EnforcedStyle: double_quotes
   Enabled: true
