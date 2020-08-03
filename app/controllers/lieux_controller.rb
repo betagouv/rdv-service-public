@@ -31,7 +31,7 @@ class LieuxController < ApplicationController
     @next_availability = nil
 
     if follow_up_rdv_without_referent?
-      @referent_missing = "Vous ne semblez pas bénéficier d’un accompagnement ou d’un suivi, merci de choisir un autre motif ou de contacter la MDS au #{@lieu.organisation.phone_number}".html_safe
+      @referent_missing = "Vous ne semblez pas bénéficier d’un accompagnement ou d’un suivi, merci de choisir un autre motif ou de contacter votre département au #{@lieu.organisation.phone_number}".html_safe
       @creneaux = []
     else
       @creneaux = CreneauxBuilderService.perform_with(@motif_name, @lieu, @date_range, **options_to_build_creneaux)
