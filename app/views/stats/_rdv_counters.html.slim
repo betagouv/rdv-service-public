@@ -5,9 +5,9 @@ h4.card-title.mb-3
 .row
   .col-md-4
     .bg-light.p-2.mb-3.mb-md-0.text-center
-      p.h2= rdvs.status('unknown_past').count 
+      p.h2= rdvs.status('unknown_past').count
       p.lead
-        => t '.rdvs.unknown_past', count: rdvs.status('unknown_past').count 
+        => t '.rdvs.unknown_past', count: rdvs.status('unknown_past').count
         = rdv_danger_icon(rdvs.status('unknown_past').count)
       = link_to_rdvs('unknown_past', clasz: 'btn-outline-dark')
   .col-md-4
@@ -17,7 +17,7 @@ h4.card-title.mb-3
       = link_to_rdvs('seen')
   .col-md-4
     .bg-info.text-white.p-2.mb-3.text-center
-      p.h2= rdvs.status('unknown_future').count 
+      p.h2= rdvs.status('unknown_future').count
       p.lead À venir
       = link_to_rdvs('unknown_future')
 .row
