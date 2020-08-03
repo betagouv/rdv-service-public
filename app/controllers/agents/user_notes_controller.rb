@@ -9,11 +9,8 @@ class Agents::UserNotesController < AgentAuthController
   def create
     user = User.find(params[:user_id])
     authorize(user)
-    UserNote.create!(organisation: current_organisation, user: user, agent: current_agent, text: params[:user_note][:text])
-    if request.headers["HTTP_REFERER"]
-      redirect_to(request.headers["HTTP_REFERER"] += "#notes")
-    else
-      redirect_to organisation_user_path(current_organisation, user, anchor: "notes")
-    end
+    note = UserNote.new(organisation: current_organisation, user: user, agent: current_agent, text: params[:user_note][:text])
+    flash[:error] = note.errors.full_message unless note.save
+    redirect_back(fallback_location: organisation_user_path(current_organisation, user, anchor: "notes"))
   end
 end

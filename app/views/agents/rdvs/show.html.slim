@@ -10,7 +10,7 @@
         span.badge.badge-danger
 
 .row
-  .col-md-8.mb-3
+  .col-md-7.mb-3
     .card
       .card-header Détails du RDV
       .card-body
@@ -52,23 +52,7 @@
           .col.text-right
             = link_to "Modifier", edit_organisation_rdv_path(@rdv.organisation, @rdv), class: "btn btn-outline-primary", data: { rightbar: true }
 
-    .card#notes
-      .card-header Notes du RDV
-      .card-body
-        = simple_form_for(UserNote.new, url: organisation_user_notes_path(current_organisation, @rdv.users.first)) do |f|
-          = f.input_field :user_ids, value: @rdv.users.map(&:id)[1..], as: :hidden
-          = f.input :text, label: false
-          = f.button :submit, "Enregistrer"
-        hr
-        - @rdv.notes.limit(5).each do |note|
-          p.card-text = note.text
-          i.far.fa-calendar>
-          = display_meta_note(note)
-          hr
-        - if @rdv.notes.count > 5
-          p.card-text.text-center = link_to("Notes plus anciennes", organisation_user_notes_path(current_organisation, @rdv.users.first, anchor: @rdv.notes[5].id))
-
-  .col-md-6.mb-3
+  .col-md-5.mb-3
 
     - @rdv.users.each do |user|
       .card
@@ -80,6 +64,20 @@
           p.card-text
             i.fa.fa-fw.fa-envelope>
             = user.email
+
+          h4.cart-title.mb-2.mt-4 Notes
+          = simple_form_for(UserNote.new, url: organisation_user_notes_path(current_organisation, user)) do |f|
+            = f.input :text, label: false
+            = f.button :submit, "Enregistrer"
+          hr
+          - user.notes_for(@rdv.organisation).limit(5).each do |note|
+            p.card-text = note.text
+            i.far.fa-calendar>
+            = display_meta_note(note)
+            hr
+          - if user.notes_for(@rdv.organisation).count > 5
+            p.card-text.text-center = link_to("Notes plus anciennes", organisation_user_notes_path(current_organisation, user, anchor: user.notes_for(@rdv.organisation)[5].id))
+
 
     .card
       .card-header

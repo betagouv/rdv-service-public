@@ -10,7 +10,6 @@ class MoveUserAndRdvNotesToUserNotes < ActiveRecord::Migration[6.0]
 
     rename_column :rdvs, :notes, :old_notes
 
-
     UserProfile.all.each do |profile|
       note = "*attention cette note note est plus ancienne que la date affichée*   " + profile.notes
       UserNote.create(user: profile.user, organisation: profile.organisation, agent: nil, text: note)

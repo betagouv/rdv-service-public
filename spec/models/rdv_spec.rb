@@ -163,14 +163,4 @@ describe Rdv, type: :model do
       expect { rdv.destroy }.to change { Rdv.count }.by(-1)
     end
   end
-
-  describe "#notes" do
-    it "works" do
-      user = create(:user)
-      organisation = create(:organisation)
-      note = create(:user_note, user: user, organisation: organisation, text: "blablabla")
-      rdv = create(:rdv, users: [user], organisation: organisation)
-      expect(rdv.notes).to eq([note])
-    end
-  end
 end
