@@ -1,5 +1,4 @@
 class Agents::InvitationsController < Devise::InvitationsController
-
   respond_to :html, :json
 
   def new
