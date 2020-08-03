@@ -45,7 +45,7 @@ class Agent < ApplicationRecord
   def from_safe_domain?
     return false if ENV["SAFE_DOMAIN_LIST"].blank?
 
-    pattern = "@(#{ENV['SAFE_DOMAIN_LIST'].split&.join('|')})$"
+    pattern = "@(#{ENV["SAFE_DOMAIN_LIST"].split&.join("|")})$"
     regex = Regexp.new(pattern)
     regex.match? email
   end

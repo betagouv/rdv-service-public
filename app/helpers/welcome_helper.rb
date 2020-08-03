@@ -53,6 +53,6 @@ module WelcomeHelper
   def sectorisation_hint(zone, organisations, departement)
     return nil if !sectorisation_enabled?(departement) || zone.nil?
 
-    "Sectorisation : Commune #{@zone.city_name} → #{organisations.pluck(:name).join(', ')}"
+    "Sectorisation : Commune #{@zone.city_name} → #{organisations.pluck(:name).join(", ")}"
   end
 end

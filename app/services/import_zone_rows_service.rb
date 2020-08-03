@@ -60,7 +60,7 @@ class ImportZoneRowsService < BaseService
     missing_columns = REQUIRED_FIELDS - @rows.first.to_h.keys
     return true if missing_columns.empty?
 
-    @result[:errors] << "Colonne(s) #{missing_columns.join(', ')} absente(s)"
+    @result[:errors] << "Colonne(s) #{missing_columns.join(", ")} absente(s)"
     false
   end
 
@@ -78,7 +78,7 @@ class ImportZoneRowsService < BaseService
     missing_fields = REQUIRED_FIELDS.filter { row[_1].blank? }
     return true if missing_fields.empty?
 
-    @result[:row_errors][row_index] = "Champ(s) #{missing_fields.join(',')} manquant(s)"
+    @result[:row_errors][row_index] = "Champ(s) #{missing_fields.join(",")} manquant(s)"
     @result[:counts][:errors][:missing_fields] += 1
     false
   end
@@ -86,7 +86,7 @@ class ImportZoneRowsService < BaseService
   def validate_row_organisation_found(row, row_index)
     return true if find_organisation(row["organisation_id"]).present?
 
-    @result[:row_errors][row_index] = "Aucune organisation trouvée pour l'identifiant #{row['organisation_id']}"
+    @result[:row_errors][row_index] = "Aucune organisation trouvée pour l'identifiant #{row["organisation_id"]}"
     @result[:counts][:errors][:organisation_not_found] += 1
     false
   end
