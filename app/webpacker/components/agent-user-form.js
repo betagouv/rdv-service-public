@@ -1,4 +1,5 @@
 import { initSelect2 } from "components/select2"
+import 'custom-event-polyfill'
 
 class AgentUserForm {
   constructor() {
@@ -29,7 +30,7 @@ class AgentUserForm {
     )
     this.formElt.querySelectorAll("input[type=email]").forEach(elt => {
       elt.addEventListener("change", this.onEmailChangeHandler);
-      elt.dispatchEvent(new Event("change"));
+      elt.dispatchEvent(new CustomEvent("change"));
     })
   }
 
