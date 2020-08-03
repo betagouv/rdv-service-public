@@ -69,3 +69,7 @@ Style/StringLiterals:
 Style/StringLiteralsInInterpolation:
   EnforcedStyle: double_quotes
   Enabled: true
+
+Style/SymbolArray:
+  EnforcedStyle: brackets
+  Enabled: true
