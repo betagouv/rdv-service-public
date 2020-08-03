@@ -13,6 +13,10 @@ Bundler/OrderedGems:
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 
+Lint/AmbiguousOperator:
+  Exclude:
+    - 'app/controllers/application_controller.rb'
+
 Style/HashEachMethods:
   Enabled: true
 
