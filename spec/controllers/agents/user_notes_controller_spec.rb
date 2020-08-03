@@ -25,7 +25,7 @@ describe Agents::UserNotesController, type: :controller do
       expect do
         post :create, params: { organisation_id: organisation.id, user_id: user.id, "user_note" => { "user_ids" => enfant.id.to_s, "text" => "un truc nouveau à ajouter" } }
       end.to change(UserNote, :count).by(1)
-      expect(response).to redirect_to(organisation_rdv_path(organisation, rdv, anchor: "notes"))
+      expect(response).to redirect_to(organisation_rdv_path(organisation, rdv))
     end
   end
 
