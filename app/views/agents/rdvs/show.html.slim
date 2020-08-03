@@ -12,7 +12,7 @@
 .row
   .col-md-8.mb-3
     .card
-      .card-header Détails du RDV
+      .card-header = l(@rdv.starts_at.to_date, format: :human )
       .card-body
         p.card-text
           i.fa.fa-fw.fa-calendar>
