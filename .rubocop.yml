@@ -17,6 +17,9 @@ Lint/AmbiguousOperator:
   Exclude:
     - 'app/controllers/application_controller.rb'
 
+Metrics/AbcSize:
+  Enabled: false
+
 Style/HashEachMethods:
   Enabled: true
 
