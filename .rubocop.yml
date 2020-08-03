@@ -29,6 +29,9 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Enabled: false
 
+Metrics/MethodLength:
+  Enabled: false
+
 Style/HashEachMethods:
   Enabled: true
 
