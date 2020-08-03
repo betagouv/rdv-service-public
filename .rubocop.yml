@@ -10,14 +10,8 @@ Bundler/OrderedGems:
   TreatCommentsAsGroupSeparators: true
   Enabled: true
 
-Layout/EmptyLines:
-  Enabled: true
-
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
-
-Metrics/BlockLength:
-  Enabled: true
 
 Style/HashEachMethods:
   Enabled: true
@@ -26,9 +20,6 @@ Style/HashTransformKeys:
   Enabled: true
 
 Style/HashTransformValues:
-  Enabled: true
-
-Style/NumericLiterals:
   Enabled: true
 
 Style/StringLiterals:
