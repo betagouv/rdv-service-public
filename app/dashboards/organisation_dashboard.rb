@@ -58,7 +58,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     :agents,
     :lieux,
     :departement,
-    :human_id
+    :human_id,
   ].freeze
 
   # Overwrite this method to customize how super admins are displayed

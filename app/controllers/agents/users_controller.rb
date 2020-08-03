@@ -9,7 +9,7 @@ class Agents::UsersController < AgentAuthController
     :first_name, :last_name, :birth_name, :email, :phone_number,
     :birth_date, :address, :caisse_affiliation, :affiliation_number,
     :family_situation, :number_of_children,
-    :invite_on_create, :skip_duplicate_warnings
+    :invite_on_create, :skip_duplicate_warnings,
   ].freeze
 
   PERMITTED_NESTED_ATTRIBUTES = {

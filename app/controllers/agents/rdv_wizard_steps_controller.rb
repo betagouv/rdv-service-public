@@ -3,7 +3,7 @@ class Agents::RdvWizardStepsController < AgentAuthController
 
   PERMITTED_PARAMS = [
     :motif_id, :duration_in_min, :starts_at, :lieu_id, :notes,
-    :organisation_id, agent_ids: [], user_ids: []
+    :organisation_id, agent_ids: [], user_ids: [],
   ].freeze
 
   def new

@@ -1,6 +1,6 @@
 class WelcomeController < ApplicationController
   PERMITTED_PARAMS = [
-    :departement, :where, :service, :motif_name, :latitude, :longitude, :city_code
+    :departement, :where, :service, :motif_name, :latitude, :longitude, :city_code,
   ].freeze
 
   before_action :set_lieu_variables, only: [:welcome_departement, :welcome_service]

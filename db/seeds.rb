@@ -35,11 +35,11 @@ organisations_by_human_id = [
   { human_id: "1051", name: "MDS Noeux les Mines" },
   { human_id: "1053", name: "MDS St Martin les Boulogne" },
   { human_id: "1054", name: "MDS St Omer" },
-  { human_id: "1055", name: "MDS St Pol sur Ternoise" }
+  { human_id: "1055", name: "MDS St Pol sur Ternoise" },
 ].map do |attributes|
   [
     attributes[:human_id],
-    Organisation.create!(phone_number: "0123456789", departement: "62", **attributes)
+    Organisation.create!(phone_number: "0123456789", departement: "62", **attributes),
   ]
 end.to_h
 org_arques = organisations_by_human_id["1030"]

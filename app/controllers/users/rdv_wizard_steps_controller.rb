@@ -65,7 +65,7 @@ class Users::RdvWizardStepsController < UserAuthController
                     :affiliation_number,
                     :family_situation,
                     :number_of_children,
-                    user_profiles_attributes: [:logement, :id, :organisation_id]
+                    user_profiles_attributes: [:logement, :id, :organisation_id],
                   ])
   end
 end
