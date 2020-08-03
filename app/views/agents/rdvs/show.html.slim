@@ -10,16 +10,36 @@
         span.badge.badge-danger
 
 .row
-  .col-md-8.mb-3
+  .col-md-6.mb-3
     .card
       .card-header Détails du RDV
       .card-body
         p.card-text
           i.fa.fa-fw.fa-calendar>
-          = rdv_title(@rdv)
-          | &nbsp;
-          = link_to "voir dans l'agenda", organisation_agent_path(current_organisation, @rdv.agents.first, selected_event_id: @rdv.id, date: @rdv.starts_at.to_date)
-        = render 'rdv_details', rdv: @rdv
+          = link_to rdv_time_and_duration(@rdv), organisation_agent_path(current_organisation, @rdv.agents.first, selected_event_id: @rdv.id, date: @rdv.starts_at.to_date)
+        - if @rdv.created_by_user?
+          p.card-text
+            i.fa.fa-fw.fa-at>
+            | RDV pris sur Internet
+        p.card-text
+          i.fa.fa-fw.fa-info-circle>
+          = @rdv.motif.name
+        - if @rdv.phone?
+          p.card-text
+            i.fa.fa-fw.fa-phone>
+            | RDV téléphonique
+        - else
+          p.card-text
+            strong> Lieu :
+            - if @rdv.home?
+              | RDV à domicile
+              = human_location(@rdv)
+            - elsif @rdv.public_office?
+              = human_location(@rdv)
+        p.card-text
+          strong> Professionnel(s) :
+          = agents_to_sentence(@rdv)
+
         .row
           .col
             - if !@rdv.past? && !@rdv.cancelled?
@@ -30,7 +50,35 @@
           .col.text-right
             = link_to "Modifier", edit_organisation_rdv_path(@rdv.organisation, @rdv), class: "btn btn-outline-primary", data: { rightbar: true }
 
-  .col-md-4.mb-3
+    .card#notes
+      .card-header Notes du RDV
+      .card-body
+        = simple_form_for(UserNote.new, url: organisation_user_notes_path(current_organisation, @rdv.users.first)) do |f|
+          = f.input_field :user_ids, value: @rdv.users.map(&:id)[1..], as: :hidden
+          = f.input :text, label: false
+          = f.button :submit, "Enregistrer"
+        hr
+        - @rdv.notes.limit(5).each do |note|
+          p.card-text = note.text
+          i.far.fa-calendar>
+          = display_meta_note(note)
+          hr
+        - if @rdv.notes.count > 5
+          p.card-text.text-center = link_to("Notes plus anciennes", organisation_user_notes_path(current_organisation, @rdv.users.first, anchor: @rdv.notes[5].id))
+
+  .col-md-6.mb-3
+
+    - @rdv.users.each do |user|
+      .card
+        .card-header = user.full_name
+        .card-body
+          p.card-text
+            i.fa.fa-fw.fa-phone>
+            = user.phone_number
+          p.card-text
+            i.fa.fa-fw.fa-envelope>
+            = user.email
+
     .card
       .card-header
         | Modifier le statut du RDV rapidement

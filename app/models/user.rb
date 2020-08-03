@@ -150,6 +150,10 @@ class User < ApplicationRecord
     duplicate_user
   end
 
+  def notes_for(organisation)
+    UserNote.where(organisation: organisation, user: self).order("created_at desc")
+  end
+
   protected
 
   def password_required?

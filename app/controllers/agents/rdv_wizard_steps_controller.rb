@@ -2,7 +2,7 @@ class Agents::RdvWizardStepsController < AgentAuthController
   before_action :set_agent
 
   PERMITTED_PARAMS = [
-    :motif_id, :duration_in_min, :starts_at, :lieu_id, :notes,
+    :motif_id, :duration_in_min, :starts_at, :lieu_id,
     :organisation_id, agent_ids: [], user_ids: []
   ].freeze
 

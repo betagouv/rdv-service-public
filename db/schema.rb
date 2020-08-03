@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_30_084038) do
+ActiveRecord::Schema.define(version: 2020_08_03_164154) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -244,7 +244,7 @@ ActiveRecord::Schema.define(version: 2020_07_30_084038) do
     t.integer "status", default: 0
     t.string "location"
     t.integer "created_by", default: 0
-    t.text "notes"
+    t.text "old_notes"
     t.bigint "lieu_id"
     t.index ["created_by"], name: "index_rdvs_on_created_by"
     t.index ["lieu_id"], name: "index_rdvs_on_lieu_id"
@@ -270,6 +270,18 @@ ActiveRecord::Schema.define(version: 2020_07_30_084038) do
     t.string "email", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "user_notes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "organisation_id", null: false
+    t.bigint "agent_id"
+    t.text "text"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["agent_id"], name: "index_user_notes_on_agent_id"
+    t.index ["organisation_id"], name: "index_user_notes_on_organisation_id"
+    t.index ["user_id"], name: "index_user_notes_on_user_id"
   end
 
   create_table "user_profiles", force: :cascade do |t|
@@ -376,6 +388,8 @@ ActiveRecord::Schema.define(version: 2020_07_30_084038) do
   add_foreign_key "rdvs", "lieux"
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"
+  add_foreign_key "user_notes", "organisations"
+  add_foreign_key "user_notes", "users"
   add_foreign_key "users", "users", column: "responsible_id"
   add_foreign_key "webhook_endpoints", "organisations"
   add_foreign_key "zones", "organisations"

@@ -15,6 +15,5 @@
     = f.input :address, label: "Lieu (RDV à domicile)", disabled: true
   = f.association :agents, collection: rdv.organisation.agents.can_perform_motif(rdv.motif), label_method: :full_name_and_service, input_html: { multiple: true, class: 'select2-input' }
   = f.association :users, collection: policy_scope(User).order_by_last_name, label_method: lambda { |user| full_name_and_birthdate(user) }, input_html: { multiple: true, class: 'select2-input' }
-  = f.input :notes, input_html: { rows: 6 }
   .text-right
     = f.button :submit

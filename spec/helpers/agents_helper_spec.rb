@@ -38,4 +38,18 @@ describe AgentsHelper do
       expect(build_link_to_rdv_wizard_params(creneau, user_ids)["user_ids"]).to eq(user_ids)
     end
   end
+
+  describe "#display_meta_note" do
+    it "render date and agent full_name" do
+      service = build(:service, name: "CIA")
+      agent = build(:agent, first_name: "John", last_name: "Francis", service: service)
+      note = build(:user_note, created_at: Time.new(2020, 5, 23, 4, 56), agent: agent)
+      expect(display_meta_note(note)).to eq("le 23/05/2020 par John Francis (CIA)")
+    end
+
+    it "render only date when no agent (need for previous notes without agent)" do
+      note = build(:user_note, created_at: Time.new(2020, 5, 23, 4, 56), agent: nil)
+      expect(display_meta_note(note)).to eq("le 23/05/2020")
+    end
+  end
 end

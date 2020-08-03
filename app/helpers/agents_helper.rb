@@ -27,4 +27,10 @@ module AgentsHelper
     params["user_ids"] = user_ids if user_ids.present?
     params
   end
+
+  def display_meta_note(note)
+    meta = "le #{l(note.created_at.to_date)}"
+    meta += " par #{note.agent.full_name_and_service}" if note.agent
+    meta
+  end
 end

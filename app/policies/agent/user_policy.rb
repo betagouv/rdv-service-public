@@ -1,4 +1,8 @@
 class Agent::UserPolicy < DefaultAgentPolicy
+  def index?
+    same_org?
+  end
+
   def show?
     same_org?
   end

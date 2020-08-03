@@ -1,0 +1,18 @@
+
+- content_for :title do
+  | Journal
+
+- content_for :breadcrumb do
+  = link_to("Retour", @back_path, class: "btn btn-outline-white align-bottom")
+
+.row
+  .col-md-12.mb-3
+    .card
+      .card-header = "Notes à propos de #{@user.full_name}"
+      .card-body
+        - @notes.each do |note|
+          p.card-text id=note.id
+            = note.text
+          i.far.fa-calendar>
+          = " le #{l(note.created_at.to_date)} par #{note.agent.full_name_and_service}"
+          hr

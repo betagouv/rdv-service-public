@@ -58,8 +58,6 @@
             / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
             = f.hidden_field "agent_ids][", value: p.id
 
-          .mt-3= f.input :notes, input_html: { rows: 4 }
-
           .row
             .col.text-left
               = link_to 'Revenir en arrière', new_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 1)), class: 'btn btn-link'

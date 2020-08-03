@@ -7,7 +7,7 @@ FactoryBot.define do
     motif { Motif.first || build(:motif) }
     users { [User.first || build(:user)] }
     agents { [build(:agent)] }
-    notes { "Une jolie note." }
+
     trait :by_phone do
       motif { build(:motif, :by_phone) }
       lieu { nil }

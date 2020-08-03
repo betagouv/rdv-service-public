@@ -142,6 +142,10 @@ class Rdv < ApplicationRecord
     [responsibles, users].flatten.select(&:address).first || users.first
   end
 
+  def notes
+    UserNote.where(organisation: organisation, user: users)
+  end
+
   private
 
   def virtual_attributes_for_paper_trail
