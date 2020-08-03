@@ -122,73 +122,83 @@ describe User, type: :model do
   describe "#soft_delete" do
     let(:now) { Time.current }
 
-    before do
-      freeze_time
-      relative.reload if defined?(relative)
-      subject
-    end
+    context "belongs to multiple organisations" do
+      let!(:org1) { create(:organisation) }
+      let!(:org2) { create(:organisation) }
+      let(:user) { create(:user, organisations: [org1, org2], email: "jean@valjean.fr") }
 
-    subject do
-      user.soft_delete(deleted_org)
-      user.reload
-    end
+      context "with organisation given" do
+        subject { user.soft_delete(org1) }
 
-    context "belongs to multiple organisations and with organisation given" do
-      let(:user) { create(:user, :with_multiple_organisations, email: "jean@valjean.fr") }
-      let(:deleted_org) { user.organisations.first }
-      it { expect(user.organisations).not_to include(deleted_org) }
+        it "should remove from org1 only" do
+          subject
+          expect(user.reload.organisations).not_to include(org1)
+          expect(user.reload.organisations).to include(org2)
+        end
 
-      it "remove the correct organisation" do
-        left_orgs_ids = Organisation.where.not(id: deleted_org.id).pluck(:id)
-        expect(user.organisations.pluck(:id)).to match_array(left_orgs_ids)
+        it "should not mark user as deleted" do
+          subject
+          expect(user.deleted_at).to be_nil
+          expect(user.email).to eq "jean@valjean.fr"
+        end
       end
-      it { expect(user.deleted_at).to be_nil }
-      it { expect(user.email).to eq "jean@valjean.fr" }
+
+      context "without a given organisation" do
+        subject { user.soft_delete }
+
+        it "should remove all orgas and mark user as deleted" do
+          subject
+          expect(user.reload.organisations).to be_empty
+          expect(user.deleted_at).not_to be_nil
+          expect(user.deleted_at).to be_within(5.seconds).of(Time.now)
+        end
+      end
     end
 
     context "belongs to one organisation and with organisation given" do
-      let(:user) { create(:user, email: "jean@valjean.fr", organisations: [create(:organisation)]) }
-      let(:deleted_org) { user.organisations.first }
-      it { expect(user.deleted_at).to eq(now) }
-      it { expect(user.email).to end_with("deleted.rdv-solidarites.fr") }
-      it { expect(user.email_original).to eq("jean@valjean.fr") }
-      it { expect(user.organisations).to be_empty }
-    end
+      let!(:org1) { create(:organisation) }
+      let(:user) { create(:user, email: "jean@valjean.fr", organisations: [org1]) }
 
-    context "with no organisation given" do
-      let(:user) { create(:user, :with_multiple_organisations) }
-      let(:deleted_org) { nil }
-      it { expect(user.organisations).to be_empty }
-      it { expect(user.deleted_at).not_to be_nil }
-      it { expect(user.deleted_at).to eq(now) }
+      it "should remove from this orga and mark user as deleted" do
+        user.soft_delete(org1)
+        expect(user.deleted_at).to be_within(5.seconds).of(Time.now)
+        expect(user.email).to end_with("deleted.rdv-solidarites.fr")
+        expect(user.email_original).to eq("jean@valjean.fr")
+        expect(user.organisations).to be_empty
+      end
     end
 
     context "when user is a relative" do
       let(:user) { create(:user, responsible_id: create(:user).id) }
-      let(:deleted_org) { nil }
 
-      it { expect(user.organisations).to be_empty }
-      it { expect(user.deleted_at).to eq(now) }
+      it "should delete user anyhow" do
+        user.soft_delete
+        expect(user.organisations).to be_empty
+        expect(user.deleted_at).to be_within(5.seconds).of(Time.now)
+      end
     end
 
     context "when user has a relative" do
-      let(:user) { create(:user, organisations: [create(:organisation)]) }
-      let!(:relative) { create(:user, responsible: user, organisations: user.organisations) }
+      let(:org1) { create(:organisation) }
+      let(:user) { create(:user, organisations: [org1]) }
+      let!(:relative) { create(:user, responsible: user, organisations: [org1]) }
 
-      let(:deleted_org) { nil }
+      it "should delete user and relative" do
+        user.soft_delete
+        expect(user.organisations).to be_empty
+        expect(user.deleted_at).to be_within(5.seconds).of(Time.now)
+        expect(relative.reload.organisations).to be_empty
+        expect(relative.reload.deleted_at).to be_within(5.seconds).of(Time.now)
+      end
 
-      it { expect(user.organisations).to be_empty }
-      it { expect(user.deleted_at).to eq(now) }
-      it { expect(relative.reload.organisations).to be_empty }
-      it { expect(relative.reload.deleted_at).to eq(now) }
-
-      context "and belong to an organisation" do
-        let(:deleted_org) { user.organisations.first }
-
-        it { expect(user.organisations).to be_empty }
-        it { expect(user.reload.deleted_at).to eq(now) }
-        it { expect(relative.reload.organisations).to be_empty }
-        it { expect(relative.reload.deleted_at).to eq(now) }
+      context "with given orga" do
+        it "should delete user and relative" do
+          user.soft_delete(org1)
+          expect(user.organisations).to be_empty
+          expect(user.deleted_at).to be_within(5.seconds).of(Time.now)
+          expect(relative.reload.organisations).to be_empty
+          expect(relative.reload.deleted_at).to be_within(5.seconds).of(Time.now)
+        end
       end
     end
   end
