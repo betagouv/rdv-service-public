@@ -20,8 +20,8 @@ class ImportZoneRowsService < BaseService
         imported: Hash.new(0),
         imported_new: Hash.new(0),
         imported_override: Hash.new(0),
-        errors: Hash.new(0)
-      }
+        errors: Hash.new(0),
+      },
     }
     @result[:valid] = valid?
     @rows.each { import_row(_1) } if valid?
@@ -129,7 +129,7 @@ class ImportZoneRowsService < BaseService
     unique_attributes = { level: "city", city_code: row["city_code"] }
     extra_attributes = {
       organisation: find_organisation(row["organisation_id"]),
-      city_name: row["city_name"]
+      city_name: row["city_name"],
     }
     if @override_conflicts
       Zone.find_or_initialize_by(unique_attributes) # could be optimized

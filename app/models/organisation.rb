@@ -21,7 +21,7 @@ class Organisation < ApplicationRecord
     format: {
       with: /\A[a-z0-9_\-]{3,99}\z/,
       message: :human_id_error,
-      if: -> { human_id.present? }
+      if: -> { human_id.present? },
     }
   )
   validates :human_id, uniqueness: { scope: :departement }, if: -> { human_id.present? }

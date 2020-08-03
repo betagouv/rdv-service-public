@@ -11,14 +11,14 @@ module User::SearchableConcern
           {
             using: { tsearch: { prefix: true } },
             against: [:phone_number_formatted],
-            query: query.sub(/^0/, "+33").gsub(/\s/, "")
+            query: query.sub(/^0/, "+33").gsub(/\s/, ""),
           }
         else
           {
             ignoring: :accents,
             using: { tsearch: { prefix: true } },
             against: [:first_name, :last_name, :birth_name, :email],
-            query: query
+            query: query,
           }
         end
       }

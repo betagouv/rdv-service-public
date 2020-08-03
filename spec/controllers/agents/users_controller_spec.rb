@@ -16,7 +16,7 @@ RSpec.describe Agents::UsersController, type: :controller do
         last_name: "Lapin",
         email: "michel@lapin.com",
         invite_on_create: "true",
-        user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } }
+        user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } },
       }
     end
     let(:format) { format }
@@ -32,7 +32,7 @@ RSpec.describe Agents::UsersController, type: :controller do
       {
         first_name: "Michel",
         invite_on_create: "true",
-        user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } }
+        user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } },
       }
     end
     let(:format) { :html }
@@ -75,7 +75,7 @@ RSpec.describe Agents::UsersController, type: :controller do
           first_name: "Michel",
           last_name: "Lapin",
           invite_on_create: "true",
-          user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } }
+          user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } },
         }
       end
 
@@ -100,7 +100,7 @@ RSpec.describe Agents::UsersController, type: :controller do
           first_name: "Michel",
           last_name: "Lapin",
           email: user.email,
-          user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } }
+          user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } },
         }
       end
 

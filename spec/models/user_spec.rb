@@ -241,7 +241,7 @@ describe User, type: :model do
         responsible_attributes: {
           first_name: "Jean",
           last_name: "durand",
-          email: "jean@durand.fr"
+          email: "jean@durand.fr",
         }
       )
       loulou.save!

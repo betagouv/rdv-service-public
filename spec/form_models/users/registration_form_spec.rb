@@ -4,7 +4,7 @@ describe Users::RegistrationForm, type: :form_model do
       first_name: "jean",
       last_name: "durand",
       email: "jean@durand.fr",
-      password: "jeanjean"
+      password: "jeanjean",
     }
   end
 

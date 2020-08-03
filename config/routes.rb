@@ -60,7 +60,7 @@ Rails.application.routes.draw do
   devise_for :agents, controllers: {
     invitations: "agents/invitations",
     sessions: "agents/sessions",
-    passwords: "agents/passwords"
+    passwords: "agents/passwords",
   }
 
   as :agent do

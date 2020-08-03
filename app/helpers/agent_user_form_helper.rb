@@ -22,12 +22,12 @@ module AgentUserFormHelper
       relative: {
         "data-togglable": true,
         "data-responsability-type": "relative",
-        "class": ("d-none" if user.responsability_type != :relative)
+        "class": ("d-none" if user.responsability_type != :relative),
       },
       responsible: {
         "data-togglable": true,
         "data-responsability-type": "responsible",
-        "class": ("d-none" if user.responsability_type != :responsible)
+        "class": ("d-none" if user.responsability_type != :responsible),
       },
     }
   end
@@ -42,9 +42,9 @@ module AgentUserFormHelper
     {
       input_html: {
         "data-togglable": true,
-        "data-responsability-type": "responsible"
+        "data-responsability-type": "responsible",
       },
-      disabled: user.responsability_type != :responsible
+      disabled: user.responsability_type != :responsible,
     }
   end
 
@@ -52,9 +52,9 @@ module AgentUserFormHelper
     {
       input_html: {
         "data-togglable": true,
-        "data-responsability-type": "relative"
+        "data-responsability-type": "relative",
       },
-      disabled: user.responsability_type != :relative
+      disabled: user.responsability_type != :relative,
     }
   end
 
@@ -63,9 +63,9 @@ module AgentUserFormHelper
       input_html: {
         "data-togglable": true,
         "data-responsability-type": "relative",
-        "data-relative-type": "new"
+        "data-relative-type": "new",
       },
-      disabled: !(user.responsability_type == :relative && user.responsible.new_and_blank?)
+      disabled: !(user.responsability_type == :relative && user.responsible.new_and_blank?),
     }
   end
 
@@ -74,9 +74,9 @@ module AgentUserFormHelper
       input_html: {
         "data-togglable": true,
         "data-responsability-type": "relative",
-        "data-relative-type": "existing"
+        "data-relative-type": "existing",
       },
-      disabled: !(user.responsability_type == :relative && !user.responsible.new_and_blank?)
+      disabled: !(user.responsability_type == :relative && !user.responsible.new_and_blank?),
     }
   end
 end
