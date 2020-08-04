@@ -56,7 +56,11 @@
 
     - @rdv.users.each do |user|
       .card
-        .card-header = user.full_name
+        .card-header
+          .d-flex.justify-content-between
+            = user.full_name
+            = link_to "Voir la fiche usager", organisation_user_path(current_organisation, user), class: "btn btn-outline-primary"
+
         .card-body
           p.card-text
             i.fa.fa-fw.fa-phone>
