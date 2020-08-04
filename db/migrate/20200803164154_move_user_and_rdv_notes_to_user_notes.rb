@@ -16,7 +16,7 @@ class MoveUserAndRdvNotesToUserNotes < ActiveRecord::Migration[6.0]
     end
 
     Rdv.where.not(old_notes: ["", nil]).each do |rdv|
-      rdv.users.each do |user|
+      rdv.users.where(responsible_id: ["", nil]).each do |user|
         note = "*attention cette note note est plus ancienne que la date affichée*   " + rdv.old_notes
         UserNote.create(user: user, organisation: rdv.organisation, agent: rdv.agents.first, text: note)
       end
