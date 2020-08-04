@@ -7,7 +7,7 @@ FactoryBot.define do
     last_name { Faker::Name.last_name }
     password { "password" }
     organisations { [Organisation.first || create(:organisation)] }
-    confirmed_at { 1.day.ago }
+    confirmed_at { DateTime.parse("2020-07-30 10:30").in_time_zone }
     service { Service.first || create(:service) }
     trait :admin do
       role { "admin" }

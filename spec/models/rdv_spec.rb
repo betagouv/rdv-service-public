@@ -49,7 +49,7 @@ describe Rdv, type: :model do
       it { expect(subject).to eq(true) }
 
       context "but is already cancelled" do
-        let(:rdv) { create(:rdv, cancelled_at: 1.hour.ago, starts_at: 5.hours.from_now) }
+        let(:rdv) { create(:rdv, cancelled_at: DateTime.parse("2020-07-30 10:30").in_time_zone, starts_at: 5.hours.from_now) }
 
         it { expect(subject).to eq(false) }
       end
