@@ -88,7 +88,7 @@ class CreneauxBuilderForDate < BaseService
   end
 
   def rdvs
-    @rdvs ||= @plage_ouverture.agent.rdvs.where(starts_at: inclusive_datetime_range).active.to_a
+    @rdvs ||= @plage_ouverture.agent.rdvs.where(starts_at: inclusive_datetime_range).not_cancelled.to_a
   end
 
   def absences_occurrences
