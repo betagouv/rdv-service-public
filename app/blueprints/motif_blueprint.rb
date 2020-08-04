@@ -1,5 +1,5 @@
 class MotifBlueprint < Blueprinter::Base
   identifier :id
 
-  fields :name
+  fields :name, :location_type
 end
