@@ -153,6 +153,12 @@ class User < ApplicationRecord
     duplicate_user
   end
 
+  def can_be_soft_deleted_from_organisation?(organisation)
+    Rdv.future.not_cancelled
+      .where(users: @user.self_and_relatives.pluck(:id), organisation: organisation)
+      .empty?
+  end
+
   protected
 
   def password_required?
