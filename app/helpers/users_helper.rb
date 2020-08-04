@@ -14,6 +14,20 @@ module UsersHelper
     label += " - #{birth_date_and_age(user)}" if user.birth_date
     label
   end
+
+  def user_soft_delete_confirm_message(user)
+    [
+      "Confirmez-vous la suppression de cet usager ?",
+      case user.relatives.active.count
+      when 0
+        nil
+      when 1
+        "⚠️ Cet usager a un proche qui sera aussi supprimé"
+      else
+        "⚠️ Cet usager a #{user.relatives.active.count} proches qui seront aussi supprimés"
+      end,
+    ].compact.join("\n\n")
+  end
 end
 
 class DisplayableUser
