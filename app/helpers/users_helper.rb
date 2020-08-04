@@ -18,23 +18,9 @@ module UsersHelper
   def user_soft_delete_confirm_message(user)
     [
       "Confirmez-vous la suppression de cet usager ?",
-      case user.relatives.active.count
-      when 0
-        nil
-      when 1
-        "⚠️ Cet usager a un proche qui sera aussi supprimé"
-      else
-        "⚠️ Cet usager a #{user.relatives.active.count} proches qui seront aussi supprimés"
-      end,
-      case Rdv.with_user_in(user.self_and_relatives).active.count
-      when 0
-        nil
-      when 1
-        "⚠️ Cet usager (ou un proche) a un RDV qui sera aussi supprimé"
-      else
-        "⚠️ Cet usager (ou un proche) a #{Rdv.with_user_in(user.self_and_relatives).active.count} RDVs qui seront aussi supprimés"
-      end,
-    ].compact.join("\n\n")
+      I18n.t("users.soft_delete_confirm_message.relatives", count: user.relatives.active.count),
+      I18n.t("users.soft_delete_confirm_message.rdvs", count: Rdv.with_user_in(user.self_and_relatives).active.count),
+    ].select(&:present?).join("\n\n")
   end
 end
 
