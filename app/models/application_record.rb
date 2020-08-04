@@ -1,4 +1,6 @@
 class ApplicationRecord < ActiveRecord::Base
+  acts_as_copy_target
+
   self.abstract_class = true
 
   def self.human_enum_name(enum_name, enum_value)

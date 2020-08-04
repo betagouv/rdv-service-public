@@ -300,6 +300,10 @@ GEM
       activerecord (>= 5.2)
       activesupport (>= 5.2)
     phonelib (0.6.42)
+    postgres-copy (1.5.0)
+      activerecord (>= 5.1)
+      pg (>= 0.17)
+      responders
     premailer (1.11.1)
       addressable
       css_parser (>= 1.6.0)
@@ -535,6 +539,7 @@ DEPENDENCIES
   pg (>= 0.18, < 2.0)
   pg_search (~> 2.3)
   phonelib
+  postgres-copy
   premailer-rails
   puma (~> 3.12)
   pundit (~> 2.0)

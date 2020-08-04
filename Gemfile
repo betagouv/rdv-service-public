@@ -61,6 +61,7 @@ gem "typhoeus"
 # Ops
 gem "sentry-raven"
 gem "skylight"
+gem "postgres-copy"
 
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
 gem "webpacker"
