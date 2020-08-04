@@ -154,9 +154,8 @@ class User < ApplicationRecord
   end
 
   def can_be_soft_deleted_from_organisation?(organisation)
-    Rdv.future.not_cancelled
-      .where(users: @user.self_and_relatives.pluck(:id), organisation: organisation)
-      .empty?
+    Rdv.with_user_in(self_and_relatives_and_responsible)
+      .active.not_cancelled.future.where(organisation: organisation).empty?
   end
 
   protected

@@ -41,6 +41,7 @@ class Rdv < ApplicationRecord
   }
   scope :default_stats_period, -> { where(created_at: Stat.default_date_range) }
   scope :with_agent, ->(agent) { joins(:agents).where(agents: { id: agent.id }) }
+  scope :with_user_in, ->(users) { joins(:rdvs_users).where(rdvs_users: { user_id: users.pluck(:id) }).distinct }
 
   after_commit :reload_uuid, on: :create
 
