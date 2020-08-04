@@ -205,7 +205,7 @@ user_org_paris_nord_patricia = User.new(
   email: "patricia_duroy@demo.rdv-solidarites.fr",
   birth_date: Date.parse("20/06/1975"),
   password: "123456",
-  phone_number: "0123456789",
+  phone_number: "9901010101",
   organisation_ids: [org_paris_nord.id]
 )
 
@@ -219,7 +219,7 @@ user_org_paris_nord_lea = User.new(
   email: "lea_dupont@demo.rdv-solidarites.fr",
   birth_date: Date.parse("01/12/1982"),
   password: "123456",
-  phone_number: "0123456788",
+  phone_number: "9901010102",
   organisation_ids: [org_paris_nord.id]
 )
 
@@ -233,7 +233,7 @@ user_org_paris_nord_jean = User.new(
   email: "jean_moustache@demo.rdv-solidarites.fr",
   birth_date: Date.parse("10/01/1973"),
   password: "123456",
-  phone_number: "0123456787",
+  phone_number: "9901010103",
   organisation_ids: [org_paris_nord.id]
 )
 
