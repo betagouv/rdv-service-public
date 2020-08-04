@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :rdv do
     duration_in_min { 45 }
-    starts_at { Time.zone.now }
+    starts_at { DateTime.parse("2020-06-15 10:30").in_time_zone }
     lieu { build(:lieu) }
     organisation { Organisation.first || create(:organisation) }
     motif { Motif.first || build(:motif) }
@@ -33,14 +33,14 @@ FactoryBot.define do
       starts_at { 2.days.since }
     end
     trait :past do
-      starts_at { 2.days.ago }
+      starts_at { DateTime.parse("2020-01-15 10:30").in_time_zone }
     end
     trait :at_home do
       motif { build(:motif, :at_home) }
       lieu { nil }
     end
     trait :excused do
-      cancelled_at { 2.days.ago }
+      cancelled_at { DateTime.parse("2020-01-15 10:30").in_time_zone }
       status { "excused" }
     end
   end
