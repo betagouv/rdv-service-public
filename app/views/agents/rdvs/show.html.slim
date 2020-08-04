@@ -16,9 +16,9 @@
       .card-body
         p.card-text
           i.fa.fa-fw.fa-calendar>
-        = rdv_title(@rdv)
-        | &nbsp;
-        = link_to "voir dans l'agenda", organisation_agent_path(current_organisation, @rdv.agents.first, selected_event_id: @rdv.id, date: @rdv.starts_at.to_date)
+          = rdv_title(@rdv)
+          | &nbsp;
+          = link_to "voir dans l'agenda", organisation_agent_path(current_organisation, @rdv.agents.first, selected_event_id: @rdv.id, date: @rdv.starts_at.to_date)
         - if @rdv.created_by_user?
           p.card-text
             i.fa.fa-fw.fa-at>
