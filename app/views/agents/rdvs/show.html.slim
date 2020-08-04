@@ -69,7 +69,7 @@
             i.fa.fa-fw.fa-envelope>
             = user.email
 
-          h4.cart-title.mb-2.mt-4 Notes
+          h5.cart-title.mb-2.mt-4 Notes
           = simple_form_for(UserNote.new, url: organisation_user_notes_path(current_organisation, user)) do |f|
             = f.input :text, label: false
             = f.button :submit, "Enregistrer"
