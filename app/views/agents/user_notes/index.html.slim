@@ -5,15 +5,16 @@
 - content_for :breadcrumb do
   = link_to("Retour", back_path, class: "btn btn-outline-white align-bottom")
 
-.row
-  .col-md-12.mb-3
+.row.justify-content-center
+  .col-md-5.mb-3
     .card
       .card-header = "Notes à propos de #{@user.full_name}"
       .card-body
         - @notes.each do |note|
           p.card-text id=note.id
+            = link_to "x", organisation_user_note_path(current_organisation, @user, note), method: :delete, class: "btn btn-link text-danger mt-0 close", data: { confirm: "Êtes-vous sûr de vouloir supprimer cette note ? Cette action est définitive." }
             = note.text
-          i.far.fa-calendar>
-          = display_meta_note(note)
-          = link_to "Supprimer ❌", organisation_user_note_path(current_organisation, @user, note), method: :delete, class: "btn btn-link text-danger", data: { confirm: "Êtes-vous sûr de vouloir supprimer cette note ? Cette action est définitive." }
+            br
+            i.far.fa-calendar>
+            = display_meta_note(note)
           hr
