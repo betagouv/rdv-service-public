@@ -40,7 +40,7 @@ describe Lieu, type: :model do
 
     context "with a plage_ouverture with no recurrence and closed" do
       let!(:lieu2) { create(:lieu) }
-      let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif], lieu: lieu2, first_day: 2.days.ago) }
+      let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif], lieu: lieu2, first_day: Date.parse("2020-07-30")) }
 
       it { expect(subject).to contain_exactly(lieu) }
     end
@@ -77,7 +77,7 @@ describe Lieu, type: :model do
 
     context "with a plage_ouverture with no recurrence and closed" do
       let!(:lieu2) { create(:lieu) }
-      let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif], lieu: lieu2, first_day: 2.days.ago) }
+      let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif], lieu: lieu2, first_day: Date.parse("2020-07-30")) }
 
       it { expect(subject).to contain_exactly(lieu) }
     end
