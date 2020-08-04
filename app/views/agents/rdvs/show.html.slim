@@ -64,23 +64,27 @@
         .card-body
           p.card-text
             i.fa.fa-fw.fa-phone>
-            = user.phone_number
+            = display_without_blank(user.phone_number)
           p.card-text
             i.fa.fa-fw.fa-envelope>
-            = user.email
+            = display_without_blank(user.email)
 
           h5.cart-title.mb-2.mt-4 Notes
           = simple_form_for(UserNote.new, url: organisation_user_notes_path(current_organisation, user)) do |f|
             = f.input :text, label: false
             = f.button :submit, "Enregistrer"
           hr
-          - user.notes_for(@rdv.organisation).limit(5).each do |note|
-            p.card-text = note.text
-            i.far.fa-calendar>
-            = display_meta_note(note)
-            hr
-          - if user.notes_for(@rdv.organisation).count > 5
-            p.card-text.text-center = link_to("Notes plus anciennes", organisation_user_notes_path(current_organisation, user, anchor: user.notes_for(@rdv.organisation)[5].id))
+          - notes = user.notes_for(@rdv.organisation)
+          - if notes.empty?
+            | Aucune notes pour cette usager
+          - else
+            - notes.limit(5).each do |note|
+              p.card-text = note.text
+              i.far.fa-calendar>
+              = display_meta_note(note)
+              hr
+            - if notes.count > 5
+              p.card-text.text-center = link_to("Notes plus anciennes", organisation_user_notes_path(current_organisation, user, anchor: user.notes_for(@rdv.organisation)[5].id))
 
 
     .card

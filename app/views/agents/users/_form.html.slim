@@ -42,8 +42,6 @@
         .col-md-6= f.input :last_name, **input_opts[:relative]
       = f.input :birth_date, as: :date, html5: true, **input_opts[:relative]
 
-    = f_user_profile.input :notes, input_html: { rows: 6 }
-
     - if user.new_record?
       .form-row.mb-2 *div_opts[:relative]
         .col-md-12.border.p-2.bg-light
