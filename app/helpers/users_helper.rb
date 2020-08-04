@@ -26,6 +26,14 @@ module UsersHelper
       else
         "⚠️ Cet usager a #{user.relatives.active.count} proches qui seront aussi supprimés"
       end,
+      case Rdv.with_user_in(user.self_and_relatives).active.count
+      when 0
+        nil
+      when 1
+        "⚠️ Cet usager (ou un proche) a un RDV qui sera aussi supprimé"
+      else
+        "⚠️ Cet usager (ou un proche) a #{Rdv.with_user_in(user.self_and_relatives).active.count} RDVs qui seront aussi supprimés"
+      end,
     ].compact.join("\n\n")
   end
 end

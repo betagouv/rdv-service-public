@@ -164,6 +164,31 @@ describe Rdv, type: :model do
     end
   end
 
+  describe "#soft_delete_for_user" do
+    context "rdv with multiple users" do
+      let(:user1) { create(:user) }
+      let(:user2) { create(:user) }
+      let(:rdv) { create(:rdv, users: [user1, user2]) }
+
+      it "should just remove user, not mark rdv as soft deleted" do
+        rdv.soft_delete_for_user(user1)
+        expect(rdv.deleted_at).to be_nil
+        expect(rdv.users).to eq([user2])
+      end
+    end
+
+    context "rdv with single user" do
+      let(:user1) { create(:user) }
+      let(:rdv) { create(:rdv, users: [user1]) }
+
+      it "should mark rdv as soft_deleted but leave user" do
+        rdv.soft_delete_for_user(user1)
+        expect(rdv.deleted_at).not_to be_nil
+        expect(rdv.users).to eq([user1])
+      end
+    end
+  end
+
   describe "Rdv.with_user_in" do
     let!(:user1) { create(:user) }
     let!(:user2) { create(:user) }

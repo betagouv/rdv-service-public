@@ -201,6 +201,38 @@ describe User, type: :model do
         end
       end
     end
+
+    context "with rdvs" do
+      let!(:org1) { create(:organisation) }
+      let!(:org2) { create(:organisation) }
+      let!(:user) { create(:user, organisations: [org1]) }
+      let!(:rdv1) { create(:rdv, users: [user], organisation: org1) }
+      let!(:rdv2) { create(:rdv, users: [user], organisation: org2) }
+
+      context "with given orga" do
+        subject { user.soft_delete(org1) }
+
+        it "should soft delete the rdvs of the matching organisation" do
+          expect(user.reload.rdvs.active.count).to eq 2
+          subject
+          expect(user.reload.rdvs.active.count).to eq 1
+          expect(rdv1.reload.deleted_at).to be_present
+          expect(rdv2.reload.deleted_at).not_to be_present
+        end
+      end
+
+      context "without given orga" do
+        subject { user.soft_delete }
+
+        it "should soft delete all rdvs" do
+          expect(user.reload.rdvs.active.count).to eq 2
+          subject
+          expect(user.reload.rdvs.active.count).to eq 0
+          expect(rdv1.reload.deleted_at).to be_present
+          expect(rdv2.reload.deleted_at).to be_present
+        end
+      end
+    end
   end
 
   describe "#available_rdvs(organisation_id)" do

@@ -112,9 +112,9 @@ class User < ApplicationRecord
 
   def available_rdvs(organisation_id)
     if relative?
-      rdvs.includes(:organisation, :rdvs_users, :users).where(organisation_id: organisation_id)
+      rdvs.active.includes(:organisation, :rdvs_users, :users).where(organisation_id: organisation_id)
     else
-      Rdv.includes(:organisation).user_with_relatives(id).where(organisation_id: organisation_id)
+      Rdv.active.includes(:organisation).user_with_relatives(id).where(organisation_id: organisation_id)
     end
   end
 
@@ -187,8 +187,10 @@ class User < ApplicationRecord
 
   def do_soft_delete(organisation)
     if organisation.present?
+      rdvs.where(organisation: organisation).each { _1.soft_delete_for_user(self) }
       organisations.delete(organisation)
     else
+      rdvs.each { _1.soft_delete_for_user(self) }
       self.organisations = []
     end
     return save! if organisations.any? # only actually mark deleted when no orgas left

@@ -86,7 +86,7 @@ class Agents::RdvsController < AgentAuthController
   end
 
   def rdvs_list(agent, form)
-    rdvs = agent.rdvs.where(organisation: current_organisation)
+    rdvs = agent.rdvs.active.where(organisation: current_organisation)
     rdvs = rdvs.default_stats_period if form.default_period.present?
     rdvs = rdvs.status(form.status) if form.status.present?
     if form.date_range_params.present?

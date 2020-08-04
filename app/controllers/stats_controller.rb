@@ -34,12 +34,12 @@ class StatsController < ApplicationController
   def scope_rdv_to_departement
     @departement = params[:departement]
     if @departement.present?
-      @rdvs = Rdv.joins(:organisation).where(organisations: { departement: @departement })
+      @rdvs = Rdv.active.joins(:organisation).where(organisations: { departement: @departement })
       @users = User.joins(:organisations).where(organisations: { departement: @departement })
       @agents = Agent.joins(:organisations).where(organisations: { departement: @departement })
       @organisations = Organisation.where(organisations: { departement: @departement })
     else
-      @rdvs = Rdv.all
+      @rdvs = Rdv.active
       @users = User.all
       @agents = Agent.all
       @organisations = Organisation.all

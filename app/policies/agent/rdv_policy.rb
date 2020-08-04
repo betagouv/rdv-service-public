@@ -6,9 +6,9 @@ class Agent::RdvPolicy < DefaultAgentPolicy
   class Scope < Scope
     def resolve
       if @context.agent.can_access_others_planning?
-        scope.where(organisation_id: @context.organisation.id)
+        scope.active.where(organisation_id: @context.organisation.id)
       else
-        scope.joins(:agents).where(organisation_id: @context.organisation.id, agents: { id: @context.agent.id })
+        scope.active.joins(:agents).where(organisation_id: @context.organisation.id, agents: { id: @context.agent.id })
       end
     end
   end

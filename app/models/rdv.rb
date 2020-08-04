@@ -25,6 +25,7 @@ class Rdv < ApplicationRecord
   validates :lieu, presence: true, if: :public_office?
 
   scope :not_cancelled, -> { where(cancelled_at: nil) }
+  scope :active, -> { where(deleted_at: nil) }
   scope :past, -> { where("starts_at < ?", Time.zone.now) }
   scope :future, -> { where("starts_at > ?", Time.zone.now) }
   scope :tomorrow, -> { where(starts_at: DateTime.tomorrow...DateTime.tomorrow + 1.day) }
@@ -141,6 +142,16 @@ class Rdv < ApplicationRecord
   def user_for_home_rdv
     responsibles = users.where.not(responsible_id: [nil])
     [responsibles, users].flatten.select(&:address).first || users.first
+  end
+
+  def soft_delete_for_user(user)
+    return if deleted_at.present?
+
+    if users.to_a != [user]
+      users.delete(user)
+    else
+      update_columns(deleted_at: Time.zone.now)
+    end
   end
 
   private
