@@ -118,8 +118,4 @@ module ApplicationHelper
       end
     end
   end
-
-  def display_without_blank(field_value)
-    field_value.blank? ? "Non renseigné" : field_value
-  end
 end

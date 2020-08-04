@@ -110,4 +110,8 @@ module RdvsHelper
       Rdv.statuses.to_a.find { |s| s[0] == status }
     end
   end
+
+  def display_without_blank(field_value)
+    field_value.blank? ? "Non renseigné" : field_value
+  end
 end
