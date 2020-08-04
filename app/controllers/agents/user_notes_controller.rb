@@ -16,8 +16,8 @@ class Agents::UserNotesController < AgentAuthController
 
   def destroy
     user = User.find(params[:user_id])
-    authorize(user)
     note = UserNote.find(params[:id])
+    authorize(note)
     flash[:error] = note.errors.full_messages.join(", ") unless note.destroy
     redirect_back(fallback_location: organisation_user_path(current_organisation, user, anchor: "notes"))
   end
