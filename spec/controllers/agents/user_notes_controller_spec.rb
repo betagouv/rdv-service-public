@@ -44,4 +44,23 @@ describe Agents::UserNotesController, type: :controller do
       expect(assigns(:notes)).to eq([note])
     end
   end
+
+  describe "#destroy" do
+    it "remove note from rdv page" do
+      organisation = create(:organisation)
+      agent = create(:agent, organisations: [organisation])
+      user = create(:user, organisations: [organisation])
+      note = create(:user_note, organisation: organisation, user: user, agent: agent)
+      rdv = create(:rdv, :future, users: [user], organisation: organisation)
+
+      sign_in agent
+
+      request.headers["Referer"] = organisation_rdv_path(organisation, rdv)
+      expect do
+        post :destroy, params: { organisation_id: organisation.id, user_id: user.id, id: note.id }
+      end.to change(UserNote, :count).by(-1)
+
+      expect(response).to redirect_to(organisation_rdv_path(organisation, rdv))
+    end
+  end
 end

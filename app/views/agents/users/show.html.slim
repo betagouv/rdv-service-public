@@ -83,6 +83,7 @@
           p.card-text = note.text
           i.far.fa-calendar>
           = display_meta_note(note)
+          = link_to "Supprimer ❌", organisation_user_note_path(current_organisation, @user, note), method: :delete, class: "btn btn-link text-danger", data: { confirm: "Êtes-vous sûr de vouloir supprimer cette note ? Cette action est définitive." }
           hr
         - if @user.notes_for(current_organisation).count > 5
           p.card-text.text-center = link_to("Notes plus anciennes", organisation_user_notes_path(current_organisation, @user, anchor: @user.notes_for(current_organisation)[5].id))

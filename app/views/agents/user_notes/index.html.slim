@@ -1,9 +1,9 @@
-
+- back_path = @back_path || organisation_user_path(current_organisation, @user)
 - content_for :title do
   | Notes
 
 - content_for :breadcrumb do
-  = link_to("Retour", @back_path, class: "btn btn-outline-white align-bottom")
+  = link_to("Retour", back_path, class: "btn btn-outline-white align-bottom")
 
 .row
   .col-md-12.mb-3
@@ -14,5 +14,6 @@
           p.card-text id=note.id
             = note.text
           i.far.fa-calendar>
-          = " le #{l(note.created_at.to_date)} par #{note.agent.full_name_and_service}"
+          = display_meta_note(note)
+          = link_to "Supprimer ❌", organisation_user_note_path(current_organisation, @user, note), method: :delete, class: "btn btn-link text-danger", data: { confirm: "Êtes-vous sûr de vouloir supprimer cette note ? Cette action est définitive." }
           hr
