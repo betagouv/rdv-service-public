@@ -5,8 +5,6 @@ describe "Agent can update a relative" do
     create(:user, first_name: "Fiona", last_name: "LEGENDE", email: "jean@legende.com", organisations: [organisation])
   end
 
-  before { user.profile_for(organisation).update!(notes: "tenebres") }
-
   let!(:relative) do
     create(:user, :relative, responsible: user, first_name: "Mimi", last_name: "LEGENDE")
   end
