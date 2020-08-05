@@ -4,7 +4,7 @@ class Agents::UserNotesController < AgentAuthController
     @notes = policy_scope(UserNote)
       .where(organisation: current_organisation, user: @user)
       .order("created_at desc")
-    @back_path = request.headers["REFERER"]
+    @from_rdv = params[:rdv_id].present? && policy_scope(Rdv).find(params[:rdv_id])
   end
 
   def create

@@ -87,7 +87,7 @@
                 = display_meta_note(note)
               hr
             - if notes.count > 5
-              p.card-text.text-center = link_to("Notes plus anciennes", organisation_user_notes_path(current_organisation, user, anchor: user.notes_for(@rdv.organisation)[5].id))
+              p.card-text.text-center = link_to("Notes plus anciennes", organisation_user_notes_path(current_organisation, user, anchor: user.notes_for(@rdv.organisation)[5].id, rdv_id: @rdv.id))
 
 
     .card
