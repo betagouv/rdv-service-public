@@ -21,13 +21,15 @@ module RdvsHelper
   end
 
   def users_to_links(rdv)
-    safe_join(rdv.users.order_by_last_name.map do |user|
-      if user.organisations.include?(current_organisation)
-        link_to user.full_name, organisation_user_path(current_organisation, user)
-      else
-        "#{user.full_name} - l'usager a été supprimé"
-      end
-    end, ", ")
+    safe_join(rdv.users.order_by_last_name.map { user_to_link(_1) }, ", ")
+  end
+
+  def user_to_link(user)
+    if user.organisations.include?(current_organisation)
+      link_to user.full_name, organisation_user_path(current_organisation, user)
+    else
+      "#{user.full_name} - l'usager a été supprimé"
+    end
   end
 
   def users_to_sentence(rdv)

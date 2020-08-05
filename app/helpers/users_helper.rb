@@ -56,6 +56,8 @@ class DisplayableUser
   end
 
   def logement
+    return nil unless @user_profile.present?
+
     UserProfile.human_enum_name(:logement, @user_profile.logement)
   end
 end
