@@ -4,7 +4,7 @@ FactoryBot.define do
 
   factory :lieu do
     name { generate(:lieu_name) }
-    organisation { Organisation.first || create(:organisation) }
+    organisation { create(:organisation) }
     address { generate(:address) }
     latitude { 38.8951 }
     longitude { -77.0364 }

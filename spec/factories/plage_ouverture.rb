@@ -3,12 +3,12 @@ FactoryBot.define do
 
   factory :plage_ouverture do
     title { generate(:plage_title) }
-    organisation { Organisation.first || create(:organisation) }
+    organisation { create(:organisation) }
     first_day { Date.today.next_week(:monday) }
-    agent { Agent.first || create(:agent) }
+    agent { create(:agent, organisations: [organisation]) }
     start_time { Tod::TimeOfDay.new(8) }
     end_time { Tod::TimeOfDay.new(12) }
-    lieu { Lieu.first || create(:lieu) }
+    lieu { create(:lieu, organisation: organisation) }
     no_recurrence
 
     trait :no_recurrence do
@@ -33,7 +33,7 @@ FactoryBot.define do
 
     after(:build) do |plage_ouverture|
       if plage_ouverture.motifs.empty?
-        plage_ouverture.motifs << (Motif.first || create(:motif))
+        plage_ouverture.motifs << create(:motif, organisation: plage_ouverture.organisation)
       end
     end
   end

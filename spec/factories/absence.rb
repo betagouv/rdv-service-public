@@ -3,9 +3,9 @@ FactoryBot.define do
 
   factory :absence do
     title { generate(:absence_title) }
-    organisation { Organisation.first || create(:organisation) }
+    organisation { create(:organisation) }
     first_day { Date.new(2019, 7, 4) }
-    agent { Agent.first || create(:agent) }
+    agent { create(:agent, organisations: [organisation]) }
     start_time { Tod::TimeOfDay.new(10) }
     end_time { Tod::TimeOfDay.new(15, 30) }
     no_recurrence

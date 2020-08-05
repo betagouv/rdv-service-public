@@ -2,14 +2,14 @@ FactoryBot.define do
   factory :rdv do
     duration_in_min { 45 }
     starts_at { DateTime.parse("2020-06-15 10:30").in_time_zone }
-    lieu { build(:lieu) }
-    organisation { Organisation.first || create(:organisation) }
-    motif { Motif.first || build(:motif) }
-    users { [User.first || build(:user)] }
-    agents { [build(:agent)] }
+    organisation { create(:organisation) }
+    lieu { build(:lieu, organisation: organisation) }
+    motif { build(:motif, organisation: organisation) }
+    users { [build(:user)] }
+    agents { [build(:agent, organisations: [organisation])] }
     notes { "Une jolie note." }
     trait :by_phone do
-      motif { build(:motif, :by_phone) }
+      motif { build(:motif, :by_phone, organisation: organisation) }
       lieu { nil }
     end
     trait :random_start do
@@ -36,7 +36,7 @@ FactoryBot.define do
       starts_at { DateTime.parse("2020-01-15 10:30").in_time_zone }
     end
     trait :at_home do
-      motif { build(:motif, :at_home) }
+      motif { build(:motif, :at_home, organisation: organisation) }
       lieu { nil }
     end
     trait :excused do

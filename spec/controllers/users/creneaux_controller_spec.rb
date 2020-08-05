@@ -1,9 +1,12 @@
 RSpec.describe Users::CreneauxController, type: :controller do
   render_views
+  let(:organisation) { create(:organisation) }
   let(:now) { "01/01/2019 10:00".to_datetime }
-  let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes") }
-  let(:rdv) { create(:rdv, starts_at: 5.days.from_now, lieu: lieu) }
+  let!(:agent) { create(:agent, organisations: [organisation]) }
+  let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
+  let!(:motif) { create(:motif, organisation: organisation) }
   let!(:user) { create(:user) }
+  let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation) }
 
   describe "GET #index" do
     subject do
@@ -24,7 +27,7 @@ RSpec.describe Users::CreneauxController, type: :controller do
     end
 
     context "creneaux available" do
-      let!(:plage_ouverture) { create(:plage_ouverture, first_day: now + 3.days, start_time: Tod::TimeOfDay.new(10)) }
+      let!(:plage_ouverture) { create(:plage_ouverture, first_day: now + 3.days, start_time: Tod::TimeOfDay.new(10), lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
 
       before { subject }
 
@@ -47,7 +50,7 @@ RSpec.describe Users::CreneauxController, type: :controller do
     end
 
     context "creneau is available" do
-      let!(:plage_ouverture) { create(:plage_ouverture, first_day: now + 3.days, start_time: Tod::TimeOfDay.new(10)) }
+      let!(:plage_ouverture) { create(:plage_ouverture, first_day: now + 3.days, start_time: Tod::TimeOfDay.new(10), lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
 
       before { subject }
 
@@ -74,7 +77,7 @@ RSpec.describe Users::CreneauxController, type: :controller do
     end
 
     context "creneau is available" do
-      let!(:plage_ouverture) { create(:plage_ouverture, first_day: now + 3.days, start_time: Tod::TimeOfDay.new(10)) }
+      let!(:plage_ouverture) { create(:plage_ouverture, first_day: now + 3.days, start_time: Tod::TimeOfDay.new(10), motifs: [motif], lieu: lieu, agent: agent, organisation: organisation) }
       let!(:starts_at) { 3.day.from_now }
 
       before { subject }

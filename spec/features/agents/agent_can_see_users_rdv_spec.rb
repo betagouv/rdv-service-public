@@ -1,6 +1,7 @@
 describe "can see users' RDV" do
-  let!(:agent) { create(:agent) }
-  let!(:user) { create(:user, organisations: [Organisation.first || create(:organisation)]) }
+  let!(:organisation) { create(:organisation) }
+  let!(:agent) { create(:agent, organisations: [organisation]) }
+  let!(:user) { create(:user, organisations: [organisation]) }
 
   before do
     login_as(agent, scope: :agent)
@@ -19,7 +20,7 @@ describe "can see users' RDV" do
   end
 
   context "with one RDV" do
-    let!(:rdv) { create :rdv, :future, users: [user] }
+    let!(:rdv) { create :rdv, :future, users: [user], organisation: organisation }
     before { click_link user.full_name }
     it do
       expect(page).to have_content("1\nÀ venir")

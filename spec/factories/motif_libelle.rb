@@ -3,6 +3,6 @@ FactoryBot.define do
 
   factory :motif_libelle do
     name { generate(:libelle_name) }
-    service { Service.first || create(:service) }
+    service { create(:service) }
   end
 end

@@ -2,7 +2,7 @@ FactoryBot.define do
   sequence(:motif_name) { |n| "Motif #{n}" }
   factory :motif do
     name { generate(:motif_name) }
-    organisation { Organisation.first || create(:organisation) }
+    organisation { create(:organisation) }
     default_duration_in_min { 45 }
     min_booking_delay { 30.minutes }
     max_booking_delay { 6.months }
@@ -17,7 +17,7 @@ FactoryBot.define do
         create_list(:rdv, 5, motif: motif)
       end
     end
-    service { Service.where.not(name: "Secrétariat").first || create(:service) }
+    service { create(:service) }
     trait :at_home do
       location_type { :home }
     end

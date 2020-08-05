@@ -2,11 +2,13 @@ RSpec.describe Users::RdvsController, type: :controller do
   render_views
 
   describe "POST create" do
+    let!(:organisation) { create(:organisation) }
     let(:user) { create(:user) }
-    let(:motif) { create(:motif) }
-    let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], first_day: Date.new(2019, 7, 24)) }
+    let(:motif) { create(:motif, organisation: organisation) }
+    let(:lieu) { create(:lieu, organisation: organisation) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], first_day: Date.new(2019, 7, 24), lieu: lieu, organisation: organisation) }
 
-    subject { post :create, params: { organisation_id: plage_ouverture.organisation_id, lieu_id: plage_ouverture.lieu.id, departement: "12", where: "1 rue de la, ville 12345", motif_id: motif.id, starts_at: starts_at } }
+    subject { post :create, params: { organisation_id: plage_ouverture.organisation_id, lieu_id: lieu.id, departement: "12", where: "1 rue de la, ville 12345", motif_id: motif.id, starts_at: starts_at } }
 
     before do
       travel_to(Time.zone.local(2019, 7, 20))
