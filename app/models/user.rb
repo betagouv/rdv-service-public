@@ -73,22 +73,25 @@ class User < ApplicationRecord
   end
 
   def add_organisation(organisation)
-    family.each do |u|
+    self_and_relatives_and_responsible.each do |u|
       u.organisations << organisation if u.organisation_ids.exclude?(organisation.id)
     end
   end
 
   def soft_delete(organisation = nil)
-    [self, relatives].flatten.each { _1.do_soft_delete(organisation) }
+    self_and_relatives.each { _1.do_soft_delete(organisation) }
   end
 
   def available_users_for_rdv
     User.where(responsible_id: id).or(User.where(id: id)).order("responsible_id DESC NULLS FIRST", first_name: :asc).active
   end
 
-  def family
-    user_id = relative? ? responsible.id : id
-    User.active.where("responsible_id = ? OR id = ?", user_id, user_id)
+  def self_and_relatives
+    [self, relatives].flatten
+  end
+
+  def self_and_relatives_and_responsible
+    [self, relatives, responsible].compact.flatten
   end
 
   def invitable?
@@ -140,6 +143,13 @@ class User < ApplicationRecord
       .map { |k, v| k if v.include?("déjà utilisé") }.compact.uniq
       .each { duplicate_user.errors.delete(_1) }
     duplicate_user
+  end
+
+  def can_be_soft_deleted_from_organisation?(organisation)
+    Rdv.not_cancelled.future
+      .with_user_in(self_and_relatives_and_responsible)
+      .where(organisation: organisation)
+      .empty?
   end
 
   protected

@@ -6,10 +6,10 @@ class FileAttente < ApplicationRecord
   NO_MORE_NOTIFICATIONS = 7.days
   MAX_NOTIFICATIONS = 3
 
-  scope :active, -> { joins(:rdv).where("rdvs.starts_at > ?", NO_MORE_NOTIFICATIONS.from_now).order(created_at: :desc) }
+  scope :with_upcoming_rdvs, -> { joins(:rdv).where("rdvs.starts_at > ?", NO_MORE_NOTIFICATIONS.from_now).order(created_at: :desc) }
 
   def self.send_notifications
-    FileAttente.active.each do |fa|
+    FileAttente.with_upcoming_rdvs.each do |fa|
       next if fa.rdv.motif.phone?
 
       end_time = fa.rdv.starts_at - 2.day
