@@ -13,7 +13,7 @@ class Agent::UserNotePolicy < DefaultAgentPolicy
 
   class Scope < Scope
     def resolve
-      scope.joins(:organisations).where(organisations: { id: @context.organisation.id })
+      scope.where(organisation: @context.organisation)
     end
   end
 

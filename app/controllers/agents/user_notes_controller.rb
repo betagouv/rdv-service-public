@@ -1,8 +1,9 @@
 class Agents::UserNotesController < AgentAuthController
   def index
     @user = policy_scope(User).find(params[:user_id])
-    authorize(@user)
-    @notes = @user.notes_for(current_organisation)
+    @notes = policy_scope(UserNote)
+      .where(organisation: current_organisation, user: @user)
+      .order("created_at desc")
     @back_path = request.headers["REFERER"]
   end
 
