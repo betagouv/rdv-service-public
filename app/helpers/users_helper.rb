@@ -14,6 +14,13 @@ module UsersHelper
     label += " - #{birth_date_and_age(user)}" if user.birth_date
     label
   end
+
+  def user_soft_delete_confirm_message(user)
+    [
+      "Confirmez-vous la suppression de cet usager ?",
+      I18n.t("users.soft_delete_confirm_message.relatives", count: user.relatives.active.count),
+    ].select(&:present?).join("\n\n")
+  end
 end
 
 class DisplayableUser
