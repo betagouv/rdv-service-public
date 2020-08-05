@@ -107,14 +107,6 @@ class User < ApplicationRecord
     relative? ? responsible : self
   end
 
-  def available_rdvs(organisation_id)
-    if relative?
-      rdvs.includes(:organisation, :rdvs_users, :users).where(organisation_id: organisation_id)
-    else
-      Rdv.includes(:organisation).user_with_relatives(id).where(organisation_id: organisation_id)
-    end
-  end
-
   def invite_on_create?
     invite_on_create == "true"
   end
