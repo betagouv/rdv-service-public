@@ -193,28 +193,6 @@ describe User, type: :model do
     end
   end
 
-  describe "#available_rdvs(organisation_id)" do
-    let!(:organisation1) { create(:organisation) }
-    let!(:organisation2) { create(:organisation) }
-    let!(:responsible1) { create(:user) }
-    let!(:relative1) { create(:user, responsible_id: responsible1.id) }
-    let!(:responsible2) { create(:user) }
-
-    before do
-      [responsible1, relative1, responsible2].each do |user|
-        create(:rdv, users: [user], organisation: organisation1)
-        create(:rdv, :excused, users: [user], organisation: organisation1)
-      end
-      create(:rdv, users: [responsible1, relative1], organisation: organisation1)
-    end
-
-    it { expect(responsible1.available_rdvs(organisation1.id).size).to eq(5) }
-    it { expect(responsible1.available_rdvs(organisation1.id)).to match_array((responsible1.rdvs + relative1.rdvs).uniq) }
-    it { expect(relative1.available_rdvs(organisation1.id)).to match_array relative1.rdvs }
-    it { expect(responsible2.available_rdvs(organisation1.id)).to match_array responsible2.rdvs }
-    it { expect(responsible1.available_rdvs(organisation2.id)).to be_empty }
-  end
-
   describe "#profile_for" do
     it "renvoie le profile de l'organisation passée en paramètre" do
       profile = create(:user_profile)
