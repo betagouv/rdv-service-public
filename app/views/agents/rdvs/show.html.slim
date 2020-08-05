@@ -19,28 +19,7 @@
           = rdv_title(@rdv)
           | &nbsp;
           = link_to "voir dans l'agenda", organisation_agent_path(current_organisation, @rdv.agents.first, selected_event_id: @rdv.id, date: @rdv.starts_at.to_date)
-        - if @rdv.created_by_user?
-          p.card-text
-            i.fa.fa-fw.fa-at>
-            | RDV pris sur Internet
-        p.card-text
-          i.fa.fa-fw.fa-info-circle>
-          = @rdv.motif.name
-        - if @rdv.phone?
-          p.card-text
-            i.fa.fa-fw.fa-phone>
-            | RDV téléphonique
-        - else
-          p.card-text
-            strong> Lieu :
-            - if @rdv.home?
-              | RDV à domicile
-              = human_location(@rdv)
-            - elsif @rdv.public_office?
-              = human_location(@rdv)
-        p.card-text
-          strong> Professionnel(s) :
-          = agents_to_sentence(@rdv)
+        = render 'rdv_details', rdv: @rdv, display_links_to_users: false
 
         .row
           .col
@@ -64,10 +43,10 @@
         .card-body
           p.card-text
             i.fa.fa-fw.fa-phone>
-            = display_without_blank(user.phone_number)
+            = display_value_or_na_placeholder(user.phone_number)
           p.card-text
             i.fa.fa-fw.fa-envelope>
-            = display_without_blank(user.email)
+            = display_value_or_na_placeholder(user.email)
 
           h5.cart-title.mb-2.mt-4 Notes
           = simple_form_for(UserNote.new, url: organisation_user_notes_path(current_organisation, user)) do |f|
