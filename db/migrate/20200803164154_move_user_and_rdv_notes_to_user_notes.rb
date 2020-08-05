@@ -1,6 +1,4 @@
 class MoveUserAndRdvNotesToUserNotes < ActiveRecord::Migration[6.0]
-  MESSAGE = "*attention cette note note est plus ancienne que la date affichée*   ".freeze
-
   def up
     create_table :user_notes do |t|
       t.belongs_to :user, null: false, foreign_key: true
@@ -26,23 +24,23 @@ class MoveUserAndRdvNotesToUserNotes < ActiveRecord::Migration[6.0]
   private
 
   def migrate_user_profile_notes(user_profile)
-    UserNote.create!(
+    UserNote.new(
       user: user_profile.user,
       organisation: user_profile.organisation,
       agent: nil,
-      text: MESSAGE + user_profile.old_notes
-    )
+      text: user_profile.old_notes
+    ).save!(validate: false)
   end
 
   def migrate_rdv_notes(rdv)
     target_user = rdv.users.responsible.first || rdv.users.first
     raise unless target_user.present?
 
-    UserNote.create!(
+    UserNote.new(
       user: target_user,
       organisation: rdv.organisation,
       agent: nil,
-      text: MESSAGE + rdv.old_notes
-    )
+      text: rdv.old_notes
+    ).save!(validate: false)
   end
 end

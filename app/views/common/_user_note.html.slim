@@ -9,6 +9,11 @@ p.card-text.mb-0  id="user-note-#{user_note.id}"
   = user_note.text
 div
   small
-    i.far.fa-calendar>
-  = display_meta_note(user_note)
+    - if user_note.agent.present?
+      i.far.fa-calendar>
+      = display_meta_note(user_note)
+    - else
+      i.fa.fa-info-circle>
+      span.font-italic title="Cette note a été créée à un moment où on ne stockait ni la date ni l'auteur de la note"
+        | Date et auteur de la note N/A
 hr
