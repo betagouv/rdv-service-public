@@ -1,0 +1,18 @@
+- user_notes = user.notes_for(current_organisation)
+
+- if user_notes.empty?
+  | Aucune notes pour cette usager
+- else
+  - user_notes.limit(5).each do |user_note|
+    = render "common/user_note", user_note: user_note
+  - if user_notes.count > 5
+    p.card-text.text-center
+      = link_to( \
+        "Notes plus anciennes",  \
+        organisation_user_notes_path( \
+          current_organisation,  \
+          user,  \
+          anchor: "user-note-#{user_notes[5].id}",  \
+          **local_assigns.fetch(:extra_link_params, {}) \
+        ) \
+      )
