@@ -3,8 +3,9 @@ describe UserNote, type: :model do
     expect(build(:user_note)).to be_valid
   end
 
-  it "could exist without agent" do
-    expect(build(:user_note, agent: nil)).to be_valid
+  it "can not exist without agent" do
+    # this is invalid , but some were created like this during the migration
+    expect(build(:user_note, agent: nil)).to be_invalid
   end
 
   it "invalid without text" do
