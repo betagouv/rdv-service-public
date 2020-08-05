@@ -287,7 +287,7 @@ ActiveRecord::Schema.define(version: 2020_08_03_164154) do
   create_table "user_profiles", force: :cascade do |t|
     t.bigint "organisation_id"
     t.bigint "user_id"
-    t.text "notes"
+    t.text "old_notes"
     t.integer "logement"
     t.index ["organisation_id", "user_id"], name: "index_user_profiles_on_organisation_id_and_user_id", unique: true
     t.index ["organisation_id"], name: "index_user_profiles_on_organisation_id"
@@ -388,6 +388,7 @@ ActiveRecord::Schema.define(version: 2020_08_03_164154) do
   add_foreign_key "rdvs", "lieux"
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"
+  add_foreign_key "user_notes", "agents"
   add_foreign_key "user_notes", "organisations"
   add_foreign_key "user_notes", "users"
   add_foreign_key "users", "users", column: "responsible_id"
