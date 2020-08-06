@@ -1,8 +1,11 @@
 FactoryBot.define do
   sequence(:motif_name) { |n| "Motif #{n}" }
+
   factory :motif do
-    name { generate(:motif_name) }
     organisation { create(:organisation) }
+    service { create(:service) }
+
+    name { generate(:motif_name) }
     default_duration_in_min { 45 }
     min_booking_delay { 30.minutes }
     max_booking_delay { 6.months }
@@ -12,12 +15,12 @@ FactoryBot.define do
     restriction_for_rdv { "Consigne pour le RDV" }
     reservable_online { true }
     location_type { :public_office }
+
     trait :with_rdvs do
       after(:create) do |motif|
-        create_list(:rdv, 5, motif: motif)
+        create_list(:rdv, 5, motif: motif, organisation: motif.organisation)
       end
     end
-    service { create(:service) }
     trait :at_home do
       location_type { :home }
     end

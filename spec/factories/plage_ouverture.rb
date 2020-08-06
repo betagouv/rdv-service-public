@@ -2,13 +2,14 @@ FactoryBot.define do
   sequence(:plage_title) { |n| "Plage #{n}" }
 
   factory :plage_ouverture do
-    title { generate(:plage_title) }
     organisation { create(:organisation) }
-    first_day { Date.today.next_week(:monday) }
     agent { create(:agent, organisations: [organisation]) }
+    lieu { create(:lieu, organisation: organisation) }
+
+    title { generate(:plage_title) }
+    first_day { Date.today.next_week(:monday) }
     start_time { Tod::TimeOfDay.new(8) }
     end_time { Tod::TimeOfDay.new(12) }
-    lieu { create(:lieu, organisation: organisation) }
     no_recurrence
 
     trait :no_recurrence do
