@@ -29,7 +29,7 @@ class Creneau
       end
       next unless occurence_match_creneau
 
-      rdvs = p.agent.rdvs.where(starts_at: date_range).active
+      rdvs = p.agent.rdvs.where(starts_at: date_range).not_cancelled
       absences_occurrences = p.agent.absences.flat_map { |a| a.occurences_for(date_range) }
       overlapping_rdvs_or_absences(rdvs.to_a + absences_occurrences.to_a).empty?
     end

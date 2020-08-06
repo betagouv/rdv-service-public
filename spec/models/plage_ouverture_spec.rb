@@ -81,7 +81,7 @@ describe PlageOuverture, type: :model do
 
     context "with exceptionnelles plages" do
       describe "when first_day is in past" do
-        let(:plage_ouverture) { create(:plage_ouverture, :no_recurrence, first_day: 2.days.ago) }
+        let(:plage_ouverture) { create(:plage_ouverture, :no_recurrence, first_day: Date.parse("2020-07-30")) }
 
         it { should be true }
       end
@@ -101,7 +101,7 @@ describe PlageOuverture, type: :model do
 
     context "with plages regulières" do
       describe "when until is in past" do
-        let(:plage_ouverture) { create(:plage_ouverture, recurrence: Montrose.every(:week, until: 2.days.ago).to_json) }
+        let(:plage_ouverture) { create(:plage_ouverture, recurrence: Montrose.every(:week, until: DateTime.parse("2020-07-30 10:30").in_time_zone).to_json) }
 
         it { should be true }
       end

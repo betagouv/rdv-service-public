@@ -140,7 +140,7 @@ describe Creneau, type: :model do
       it { should eq([]) }
 
       describe "which is cancelled" do
-        let!(:rdv) { build(:rdv, agents: [plage_ouverture.agent], starts_at: creneau.starts_at, duration_in_min: 30, cancelled_at: 2.days.ago) }
+        let!(:rdv) { build(:rdv, agents: [plage_ouverture.agent], starts_at: creneau.starts_at, duration_in_min: 30, cancelled_at: DateTime.parse("2020-07-30 10:30").in_time_zone) }
 
         it { should contain_exactly(plage_ouverture) }
       end

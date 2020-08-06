@@ -37,7 +37,10 @@
 
         .row.mt-3
           .col.text-left
-            = link_to "Supprimer", organisation_user_path(current_organisation, @user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cet usager ?"}
+            - if @user.can_be_soft_deleted_from_organisation?(current_organisation)
+              = link_to "Supprimer", organisation_user_path(current_organisation, @user), method: :delete, class: "btn btn-outline-danger", data: { confirm: user_soft_delete_confirm_message(@user)}
+            - else
+              = link_to "Supprimer", "#", class: "btn btn-outline-danger", onclick: "alert(this.dataset.message)", data: { message: I18n.t("users.can_not_delete_because_has_future_rdvs") }
           .col.text-right
             = link_to "Modifier", edit_organisation_user_path(current_organisation, @user), class: "btn btn-primary"
 
