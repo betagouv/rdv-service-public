@@ -1,12 +1,13 @@
 RSpec.describe LieuxController, type: :controller do
   render_views
 
-  let(:lieu) { create(:lieu, latitude: 50.63, longitude: 3.06) }
-  let(:lieu2) { create(:lieu, latitude: 50.72, longitude: 3.16) }
-  let(:motif) { create(:motif, reservable_online: true) }
+  let(:organisation) { create(:organisation) }
+  let(:lieu) { create(:lieu, latitude: 50.63, longitude: 3.06, organisation: organisation) }
+  let(:lieu2) { create(:lieu, latitude: 50.72, longitude: 3.16, organisation: organisation) }
+  let(:motif) { create(:motif, reservable_online: true, organisation: organisation) }
   let(:now) { Date.new(2019, 7, 22) }
-  let!(:plage_ouverture) { create(:plage_ouverture, :weekly, title: "Tous les lundis", first_day: first_day, lieu: lieu, motifs: [motif]) }
-  let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, title: "Tous les lundis", first_day: first_day + 1.week, lieu: lieu2, motifs: [motif]) }
+  let!(:plage_ouverture) { create(:plage_ouverture, :weekly, title: "Tous les lundis", first_day: first_day, lieu: lieu, motifs: [motif], organisation: organisation) }
+  let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, title: "Tous les lundis", first_day: first_day + 1.week, lieu: lieu2, motifs: [motif], organisation: organisation) }
 
   before { travel_to(now) }
   after { travel_back }
@@ -43,13 +44,14 @@ RSpec.describe LieuxController, type: :controller do
     context "pour un rendez-vous de suivi" do
       context "avec un usager non connecté" do
         it "redirige vers la page de login" do
-          lieu = create(:lieu, latitude: 50.63, longitude: 3.06)
-          motif = create(:motif, reservable_online: true, follow_up: true)
+          lieu = create(:lieu, latitude: 50.63, longitude: 3.06, organisation: organisation)
+          motif = create(:motif, reservable_online: true, follow_up: true, organisation: organisation)
           create(:plage_ouverture, :weekly,
                  title: "Tous les lundis",
                  first_day: first_day,
                  lieu: lieu,
-                 motifs: [motif])
+                 motifs: [motif],
+                 organisation: organisation)
 
           get :show, params: {
             id: lieu,
@@ -68,17 +70,18 @@ RSpec.describe LieuxController, type: :controller do
 
       context "avec un usager avec agent référent déjà connecté" do
         it "propose les créneaux" do
-          agent = create(:agent)
+          agent = create(:agent, organisations: [organisation])
           usager = create(:user, agents: [agent])
           sign_in usager
-          lieu = create(:lieu, latitude: 50.63, longitude: 3.06)
-          motif = create(:motif, reservable_online: true, follow_up: true)
+          lieu = create(:lieu, latitude: 50.63, longitude: 3.06, organisation: organisation)
+          motif = create(:motif, reservable_online: true, follow_up: true, organisation: organisation)
           create(:plage_ouverture, :weekly,
                  title: "Tous les lundis",
                  first_day: first_day,
                  lieu: lieu,
                  agent: agent,
-                 motifs: [motif])
+                 motifs: [motif],
+                 organisation: organisation)
 
           get :show, params: {
             id: lieu,
@@ -97,18 +100,19 @@ RSpec.describe LieuxController, type: :controller do
         end
 
         it "sans créneaux dispo sur la semaine qui arrive" do
-          agent = create(:agent)
+          agent = create(:agent, organisations: [organisation])
           usager = create(:user, agents: [agent])
           sign_in usager
-          lieu = create(:lieu, latitude: 50.63, longitude: 3.06)
-          motif = create(:motif, reservable_online: true, follow_up: true)
+          lieu = create(:lieu, latitude: 50.63, longitude: 3.06, organisation: organisation)
+          motif = create(:motif, reservable_online: true, follow_up: true, organisation: organisation)
 
           create(:plage_ouverture, :weekly,
                  title: "Tous les lundis",
                  first_day: first_day + 4.month,
                  agent: agent,
                  lieu: lieu,
-                 motifs: [motif])
+                 motifs: [motif],
+                 organisation: organisation)
 
           get :show, params: {
             id: lieu,
@@ -130,13 +134,14 @@ RSpec.describe LieuxController, type: :controller do
         it "annonce qu'il n'y a pas de créneaux parce que pas de référent" do
           usager = create(:user, agents: [])
           sign_in usager
-          lieu = create(:lieu, latitude: 50.63, longitude: 3.06)
-          motif = create(:motif, reservable_online: true, follow_up: true)
+          lieu = create(:lieu, latitude: 50.63, longitude: 3.06, organisation: organisation)
+          motif = create(:motif, reservable_online: true, follow_up: true, organisation: organisation)
           create(:plage_ouverture, :weekly,
                  title: "Tous les lundis",
                  first_day: first_day,
                  lieu: lieu,
-                 motifs: [motif])
+                 motifs: [motif],
+                 organisation: organisation)
 
           get :show, params: {
             id: lieu,

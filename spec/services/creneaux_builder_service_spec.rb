@@ -1,11 +1,12 @@
 describe CreneauxBuilderService, type: :service do
-  let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, reservable_online: reservable_online) }
+  let!(:organisation) { create(:organisation) }
+  let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, reservable_online: reservable_online, organisation: organisation) }
   let(:reservable_online) { true }
-  let!(:lieu) { create(:lieu) }
+  let!(:lieu) { create(:lieu, organisation: organisation) }
   let(:today) { Date.new(2019, 9, 19) }
   let(:six_days_later) { today + 6.days }
-  let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes) }
-  let(:agent) { plage_ouverture.agent }
+  let!(:agent) { create(:agent, organisations: [organisation]) }
+  let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, agent: agent, organisation: organisation) }
   let(:now) { today.in_time_zone + 8.hours } # 8 am
   let(:options) { {} }
   let(:motif_name) { motif.name }
@@ -50,7 +51,7 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "with absences" do
-    let!(:absence) { create(:absence, agent: agent, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 15)) }
+    let!(:absence) { create(:absence, agent: agent, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 15), organisation: organisation) }
 
     it do
       expect(subject.size).to eq(3)
@@ -62,10 +63,10 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "recurring plage ouverture" do
-    let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, recurrence: Montrose.every(:day)) }
+    let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, recurrence: Montrose.every(:day), agent: agent, organisation: organisation) }
 
     context "with absence spanning 2 days, ending before start of second day" do
-      let!(:absence) { create(:absence, agent: agent, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 20), end_time: Tod::TimeOfDay.new(6, 30)) }
+      let!(:absence) { create(:absence, agent: agent, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 20), end_time: Tod::TimeOfDay.new(6, 30), organisation: organisation) }
 
       it do
         creneaux_day1 = subject.select { _1[:starts_at].to_date == Date.new(2019, 9, 19) }
@@ -81,7 +82,7 @@ describe CreneauxBuilderService, type: :service do
     end
 
     context "with absence spanning 2 days, ending in middle of second day" do
-      let!(:absence) { create(:absence, agent: agent, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 20), end_time: Tod::TimeOfDay.new(9, 5)) }
+      let!(:absence) { create(:absence, agent: agent, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 20), end_time: Tod::TimeOfDay.new(9, 5), organisation: organisation) }
 
       it do
         creneaux_day1 = subject.select { _1[:starts_at].to_date == Date.new(2019, 9, 19) }
@@ -97,7 +98,7 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "with recurring absences" do
-    let!(:absence) { create(:absence, :weekly, agent: agent, first_day: Date.new(2019, 9, 12), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 12), end_time: Tod::TimeOfDay.new(10, 15)) }
+    let!(:absence) { create(:absence, :weekly, agent: agent, first_day: Date.new(2019, 9, 12), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 12), end_time: Tod::TimeOfDay.new(10, 15), organisation: organisation) }
 
     it do
       expect(subject.size).to eq(3)
@@ -109,7 +110,7 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "with a RDV" do
-    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, agents: [agent]) }
+    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, agents: [agent], organisation: organisation) }
 
     it do
       expect(subject.size).to eq(3)
@@ -121,7 +122,7 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "with a RDV shorter than the motif" do
-    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 15, agents: [agent]) }
+    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 15, agents: [agent], organisation: organisation) }
 
     it do
       expect(subject.size).to eq(4)
@@ -134,7 +135,7 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "with a RDV longer than the motif" do
-    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 45, agents: [agent]) }
+    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 45, agents: [agent], organisation: organisation) }
 
     it do
       expect(subject.size).to eq(3)
@@ -146,7 +147,7 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "with a cancelled RDV" do
-    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, agents: [agent], cancelled_at: Time.zone.local(2019, 9, 20, 9, 30)) }
+    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, agents: [agent], cancelled_at: Time.zone.local(2019, 9, 20, 9, 30), organisation: organisation) }
 
     it do
       expect(subject.size).to eq(4)
@@ -159,8 +160,8 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "with a RDV on the last day of the range" do
-    let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: Date.new(2019, 9, 25), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
-    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 25, 10, 0), duration_in_min: 30, agents: [agent]) }
+    let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: Date.new(2019, 9, 25), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent, organisation: organisation) }
+    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 25, 10, 0), duration_in_min: 30, agents: [agent], organisation: organisation) }
 
     it do
       expect(subject.size).to eq(3)
@@ -180,8 +181,8 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "when there are two agents" do
-    let(:agent2) { create(:agent) }
-    let!(:plage_ouverture2) { create(:plage_ouverture, agent: agent2, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(10), end_time: Tod::TimeOfDay.new(12)) }
+    let(:agent2) { create(:agent, organisations: [organisation]) }
+    let!(:plage_ouverture2) { create(:plage_ouverture, agent: agent2, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(10), end_time: Tod::TimeOfDay.new(12), organisation: organisation) }
 
     it do
       expect(subject.size).to eq(6)
@@ -226,7 +227,7 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "when motif has min_booking_delay" do
-    let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, min_booking_delay: 30.minutes, reservable_online: true) }
+    let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, min_booking_delay: 30.minutes, reservable_online: true, organisation: organisation) }
     let(:now) { Time.zone.local(2019, 9, 19, 9, 15) }
 
     it do
@@ -238,7 +239,7 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "when motif has max_booking_delay" do
-    let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, max_booking_delay: 45.minutes, reservable_online: true) }
+    let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, max_booking_delay: 45.minutes, reservable_online: true, organisation: organisation) }
     let(:now) { Time.zone.local(2019, 9, 19, 9, 15) }
 
     it do

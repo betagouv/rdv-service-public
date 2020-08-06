@@ -1,8 +1,9 @@
 describe "Agent can CRUD absences" do
-  let!(:agent) { create(:agent, :admin) }
-  let!(:other_agent) { create(:agent, organisations: [agent.organisations.first]) }
-  let!(:absence) { create(:absence, agent: agent) }
-  let!(:new_absence) { build(:absence) }
+  let!(:organisation) { create(:organisation) }
+  let!(:agent) { create(:agent, :admin, organisations: [organisation]) }
+  let!(:other_agent) { create(:agent, organisations: [organisation]) }
+  let!(:absence) { create(:absence, agent: agent, organisation: organisation) }
+  let!(:new_absence) { build(:absence, agent: agent, organisation: organisation) }
 
   before do
     login_as(agent, scope: :agent)
@@ -17,11 +18,11 @@ describe "Agent can CRUD absences" do
   end
 
   context "for an other agent calendar" do
-    let!(:absence) { create(:absence, agent: other_agent) }
+    let!(:absence) { create(:absence, agent: other_agent, organisation: organisation) }
 
     scenario "can crud a absence" do
       # select(other_agent.full_name, from: :id)
-      visit organisation_agent_absences_path(agent.organisations.first.id, other_agent.id)
+      visit organisation_agent_absences_path(organisation, other_agent.id)
       crud_absence(agent, other_agent)
     end
   end

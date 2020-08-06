@@ -1,29 +1,31 @@
 RSpec.describe Agents::PlageOuverturesController, type: :controller do
   render_views
 
-  let!(:agent) { create(:agent) }
-  let!(:organisation_id) { agent.organisation_ids.first }
-  let!(:plage_ouverture) { create(:plage_ouverture, organisation_id: organisation_id, agent_id: agent.id) }
+  let!(:organisation) { create(:organisation) }
+  let!(:agent) { create(:agent, organisations: [organisation]) }
+  let!(:motif) { create(:motif, organisation: organisation) }
+  let!(:lieu1) { create(:lieu, organisation: organisation, name: "MDS Sud", address: "10 rue Belsunce") }
+  let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu1, organisation: organisation, agent: agent) }
 
   shared_examples "agent can CRUD plage ouverture" do
     describe "GET #index" do
       it "returns a success response" do
-        get :index, params: { organisation_id: organisation_id, agent_id: agent.id }
+        get :index, params: { organisation_id: organisation.id, agent_id: agent.id }
         expect(response).to be_successful
       end
 
       describe "format json" do
-        let(:agent) { create(:agent) }
-        let!(:plage_ouverture) { create(:plage_ouverture, :weekly_by_2, title: "Une semaine sur deux les mercredis à partir du 17/07", first_day: Date.new(2019, 7, 17), agent: agent) }
-        let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, title: "Tous les lundis à partir du 22/07", first_day: Date.new(2019, 7, 22), agent: agent) }
-        let!(:plage_ouverture3) { create(:plage_ouverture, title: "Une seule fois le 24/07", first_day: Date.new(2019, 7, 24), agent: agent) }
-        let!(:plage_ouverture4) { create(:plage_ouverture, title: "Une seule fois le 24/07", first_day: Date.new(2019, 7, 24), agent: agent, recurrence: Montrose::Recurrence.new) }
+        let(:agent) { create(:agent, organisations: [organisation]) }
+        let!(:plage_ouverture) { create(:plage_ouverture, :weekly_by_2, title: "Une semaine sur deux les mercredis à partir du 17/07", first_day: Date.new(2019, 7, 17), lieu: lieu1, agent: agent, organisation: organisation) }
+        let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, title: "Tous les lundis à partir du 22/07", first_day: Date.new(2019, 7, 22), lieu: lieu1, agent: agent, organisation: organisation) }
+        let!(:plage_ouverture3) { create(:plage_ouverture, title: "Une seule fois le 24/07", first_day: Date.new(2019, 7, 24), lieu: lieu1, agent: agent, organisation: organisation) }
+        let!(:plage_ouverture4) { create(:plage_ouverture, title: "Une seule fois le 24/07", first_day: Date.new(2019, 7, 24), lieu: lieu1, agent: agent, recurrence: Montrose::Recurrence.new, organisation: organisation) }
 
         before do
           sign_in agent
         end
 
-        subject { get :index, params: { format: "json", organisation_id: organisation_id, agent_id: agent.id, start: start_date, end: end_date } }
+        subject { get :index, params: { format: "json", organisation_id: organisation.id, agent_id: agent.id, start: start_date, end: end_date } }
 
         before do
           subject
@@ -52,7 +54,7 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
             expect(first["end"]).to eq(plage_ouverture2.ends_at.as_json)
             expect(first["backgroundColor"]).to eq("#6fceff80")
             expect(first["rendering"]).to eq("background")
-            expect(first["extendedProps"]).to eq({ lieu: plage_ouverture2.lieu.name, location: plage_ouverture2.lieu.address }.as_json)
+            expect(first["extendedProps"]).to eq({ lieu: "MDS Sud", location: "10 rue Belsunce" }.as_json)
 
             second = @parsed_response[1]
             expect(second.size).to eq(6)
@@ -61,7 +63,7 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
             expect(second["end"]).to eq("2019-07-24T12:00:00.000+02:00")
             expect(second["backgroundColor"]).to eq("#6fceff80")
             expect(second["rendering"]).to eq("background")
-            expect(second["extendedProps"]).to eq({ lieu: plage_ouverture3.lieu.name, location: plage_ouverture3.lieu.address }.as_json)
+            expect(second["extendedProps"]).to eq({ lieu: "MDS Sud", location: "10 rue Belsunce" }.as_json)
 
             third = @parsed_response[2]
             expect(third.size).to eq(6)
@@ -70,7 +72,7 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
             expect(third["end"]).to eq("2019-07-24T12:00:00.000+02:00")
             expect(third["backgroundColor"]).to eq("#6fceff80")
             expect(third["rendering"]).to eq("background")
-            expect(third["extendedProps"]).to eq({ lieu: plage_ouverture4.lieu.name, location: plage_ouverture4.lieu.address }.as_json)
+            expect(third["extendedProps"]).to eq({ lieu: "MDS Sud", location: "10 rue Belsunce" }.as_json)
           end
         end
 
@@ -105,14 +107,14 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
 
     describe "GET #new" do
       it "returns a success response" do
-        get :new, params: { organisation_id: organisation_id, agent_id: agent.id }
+        get :new, params: { organisation_id: organisation.id, agent_id: agent.id }
         expect(response).to be_successful
       end
     end
 
     describe "GET #edit" do
       it "returns a success response" do
-        get :edit, params: { organisation_id: organisation_id, id: plage_ouverture.to_param }
+        get :edit, params: { organisation_id: organisation.id, id: plage_ouverture.to_param }
         expect(response).to be_successful
       end
     end
@@ -125,13 +127,13 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
 
         it "creates a new PlageOuverture" do
           expect do
-            post :create, params: { organisation_id: organisation_id, plage_ouverture: valid_attributes }
+            post :create, params: { organisation_id: organisation.id, plage_ouverture: valid_attributes }
           end.to change(PlageOuverture, :count).by(1)
         end
 
         it "redirects to the created plage_ouverture" do
-          post :create, params: { organisation_id: organisation_id, plage_ouverture: valid_attributes }
-          expect(response).to redirect_to(organisation_agent_plage_ouvertures_path(organisation_id, PlageOuverture.last.agent_id))
+          post :create, params: { organisation_id: organisation.id, plage_ouverture: valid_attributes }
+          expect(response).to redirect_to(organisation_agent_plage_ouvertures_path(organisation, PlageOuverture.last.agent_id))
         end
       end
 
@@ -145,19 +147,19 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
 
         it "does not create a new PlageOuverture" do
           expect do
-            post :create, params: { organisation_id: organisation_id, plage_ouverture: invalid_attributes }
+            post :create, params: { organisation_id: organisation.id, plage_ouverture: invalid_attributes }
           end.not_to change(PlageOuverture, :count)
         end
 
         it "returns a success response (i.e. to display the 'new' template)" do
-          post :create, params: { organisation_id: organisation_id, plage_ouverture: invalid_attributes }
+          post :create, params: { organisation_id: organisation.id, plage_ouverture: invalid_attributes }
           expect(response).to be_successful
         end
       end
     end
 
     describe "PUT #update" do
-      subject { put :update, params: { organisation_id: organisation_id, id: plage_ouverture.to_param, plage_ouverture: new_attributes } }
+      subject { put :update, params: { organisation_id: organisation.id, id: plage_ouverture.to_param, plage_ouverture: new_attributes } }
 
       before { subject }
 
@@ -198,13 +200,13 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
     describe "DELETE #destroy" do
       it "destroys the requested plage_ouverture" do
         expect do
-          delete :destroy, params: { organisation_id: organisation_id, id: plage_ouverture.to_param }
+          delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.to_param }
         end.to change(PlageOuverture, :count).by(-1)
       end
 
       it "redirects to the plage_ouvertures list" do
-        delete :destroy, params: { organisation_id: organisation_id, id: plage_ouverture.to_param }
-        expect(response).to redirect_to(organisation_agent_plage_ouvertures_path(organisation_id, plage_ouverture.agent_id))
+        delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.to_param }
+        expect(response).to redirect_to(organisation_agent_plage_ouvertures_path(organisation, plage_ouverture.agent_id))
       end
     end
   end
@@ -216,7 +218,7 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
   end
 
   context "admin CRUD on an agent's plage ouverture" do
-    let(:admin) { create(:agent, role: "admin") }
+    let(:admin) { create(:agent, role: "admin", organisations: [organisation]) }
 
     before { sign_in admin }
 

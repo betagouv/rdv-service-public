@@ -1,16 +1,18 @@
 describe "Agent can create a Rdv with wizard" do
   include UsersHelper
 
-  let!(:agent) { create(:agent, first_name: "Alain") }
-  let!(:agent2) { create(:agent, first_name: "Robert") }
-  let!(:motif) { create(:motif) }
-  let!(:lieu) { create(:lieu) }
-  let!(:user) { create(:user, organisations: [Organisation.first || create(:organisation)]) }
+  let(:organisation) { create(:organisation) }
+  let(:service) { create(:service) }
+  let!(:agent) { create(:agent, first_name: "Alain", service: service, organisations: [organisation]) }
+  let!(:agent2) { create(:agent, first_name: "Robert", service: service, organisations: [organisation]) }
+  let!(:motif) { create(:motif, service: service, organisation: organisation) }
+  let!(:lieu) { create(:lieu, organisation: organisation) }
+  let!(:user) { create(:user, organisations: [organisation]) }
 
   before do
     travel_to(Time.zone.local(2019, 10, 2))
     login_as(agent, scope: :agent)
-    visit new_organisation_rdv_wizard_step_path(organisation_id: agent.organisation_ids.first)
+    visit new_organisation_rdv_wizard_step_path(organisation_id: organisation.id)
   end
 
   after { travel_back }

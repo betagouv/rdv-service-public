@@ -1,21 +1,23 @@
 describe "Agent can create a Rdv with creneau search" do
   include UsersHelper
 
-  let!(:agent) { create(:agent, first_name: "Alain", last_name: "Tiptop") }
-  let!(:agent2) { create(:agent, first_name: "Robert", last_name: "Voila") }
-  let!(:agent3) { create(:agent, first_name: "Michel", last_name: "Lapin") }
-  let!(:motif) { create(:motif, reservable_online: true) }
-  let!(:user) { create(:user, organisations: [Organisation.first || create(:organisation)]) }
-  let!(:lieu) { create(:lieu) }
-  let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: Date.new(2019, 7, 22), motifs: [motif], lieu: lieu, agent: agent) }
-  let!(:lieu2) { create(:lieu) }
-  let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: Date.new(2019, 7, 22), motifs: [motif], lieu: lieu2, agent: agent2) }
-  let!(:plage_ouverture3) { create(:plage_ouverture, :daily, first_day: Date.new(2019, 7, 22), motifs: [motif], lieu: lieu, agent: agent3) }
+  let!(:organisation) { create(:organisation) }
+  let!(:service) { create(:service) }
+  let!(:agent) { create(:agent, first_name: "Alain", last_name: "Tiptop", service: service, organisations: [organisation]) }
+  let!(:agent2) { create(:agent, first_name: "Robert", last_name: "Voila", service: service, organisations: [organisation]) }
+  let!(:agent3) { create(:agent, first_name: "Michel", last_name: "Lapin", service: service, organisations: [organisation]) }
+  let!(:motif) { create(:motif, reservable_online: true, service: service, organisation: organisation) }
+  let!(:user) { create(:user, organisations: [organisation]) }
+  let!(:lieu) { create(:lieu, organisation: organisation) }
+  let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: Date.new(2019, 7, 22), motifs: [motif], lieu: lieu, agent: agent, organisation: organisation) }
+  let!(:lieu2) { create(:lieu, organisation: organisation) }
+  let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: Date.new(2019, 7, 22), motifs: [motif], lieu: lieu2, agent: agent2, organisation: organisation) }
+  let!(:plage_ouverture3) { create(:plage_ouverture, :daily, first_day: Date.new(2019, 7, 22), motifs: [motif], lieu: lieu, agent: agent3, organisation: organisation) }
 
   before do
     travel_to(Time.zone.local(2019, 7, 22))
     login_as(agent, scope: :agent)
-    visit organisation_agent_path(agent.organisations.first, agent)
+    visit organisation_agent_path(organisation, agent)
 
     expect(user.rdvs.count).to eq(0)
     click_link("Trouver un créneau")

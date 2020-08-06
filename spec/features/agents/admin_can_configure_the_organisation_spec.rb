@@ -1,17 +1,18 @@
 describe "Admin can configure the organisation" do
+  let!(:organisation) { create(:organisation) }
   let!(:pmi) { create(:service, name: "PMI") }
   let!(:service_social) { create(:service, name: "Service social") }
-  let!(:agent_admin) { create(:agent, :admin, service: pmi) }
-  let!(:agent_user) { create(:agent) }
-  let!(:motif_libelle) { create(:motif_libelle, name: "Motif 1") }
-  let!(:motif_libelle2) { create(:motif_libelle, name: "Motif 2") }
-  let!(:motif_libelle3) { create(:motif_libelle, name: "Motif 3", service: service_social) }
-  let!(:motif) { create(:motif, name: "Motif 1") }
-  let!(:user) { create(:user) }
-  let!(:lieu) { create(:lieu) }
+  let!(:agent_admin) { create(:agent, :admin, service: pmi, organisations: [organisation]) }
+  let!(:agent_user) { create(:agent, service: pmi, organisations: [organisation]) }
+  let!(:motif_libelle) { create(:motif_libelle, service: pmi, name: "Motif 1") }
+  let!(:motif_libelle2) { create(:motif_libelle, service: pmi, name: "Motif 2") }
+  let!(:motif_libelle3) { create(:motif_libelle, service: service_social, name: "Motif 3") }
+  let!(:motif) { create(:motif, name: "Motif 1", service: pmi, organisation: organisation) }
+  let!(:user) { create(:user, organisations: [organisation]) }
+  let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:secretariat) { create(:service, :secretariat) }
-  let(:le_nouveau_lieu) { build(:lieu) }
-  let(:le_nouveau_motif) { build(:motif, name: "Motif 2") }
+  let(:le_nouveau_lieu) { build(:lieu, organisation: organisation) }
+  let(:le_nouveau_motif) { build(:motif, name: "Motif 2", service: pmi, organisation: organisation) }
   let(:la_nouvelle_org) { build(:organisation) }
 
   before do

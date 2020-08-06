@@ -1,18 +1,19 @@
 RSpec.describe Agents::RdvsController, type: :controller do
   render_views
 
-  let(:agent) { create(:agent) }
-  let(:organisation) { agent.organisations.first }
+  let!(:organisation) { create(:organisation) }
+  let(:agent) { create(:agent, organisations: [organisation]) }
   let!(:user) { create(:user, first_name: "Marie", last_name: "Denis") }
-  let!(:rdv) { create(:rdv, agents: [agent], users: [user], organisation: organisation) }
+  let!(:motif) { create(:motif, name: "Suivi", organisation: organisation) }
+  let!(:rdv) { create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation) }
 
   before do
     sign_in agent
   end
 
   describe "GET index" do
-    let!(:rdv1) { create(:rdv, agents: [agent], starts_at: Time.zone.parse("21/07/2019 08:00")) }
-    let!(:rdv2) { create(:rdv, agents: [agent], starts_at: Time.zone.parse("21/07/2019 07:00")) }
+    let!(:rdv1) { create(:rdv, motif: motif, agents: [agent], users: [user], starts_at: Time.zone.parse("21/07/2019 08:00"), organisation: organisation) }
+    let!(:rdv2) { create(:rdv, motif: motif, agents: [agent], users: [user], starts_at: Time.zone.parse("21/07/2019 07:00"), organisation: organisation) }
 
     subject { get(:index, params: { organisation_id: organisation.id, agent_id: agent.id, start: start_time, end: end_time }, as: :json) }
 
@@ -37,7 +38,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
         expect(first["end"]).to eq(rdv1.ends_at.as_json)
         expect(first["backgroundColor"]).to eq(rdv1.motif.color)
         expect(first["url"]).to eq(organisation_rdv_path(rdv1.organisation, rdv1))
-        expect(first["extendedProps"]).to eq({ readableStatus: Rdv.human_enum_name(:status, rdv1.status), status: rdv1.status, motif: rdv1.motif.name, past: rdv1.past?, duration: rdv.duration_in_min }.as_json)
+        expect(first["extendedProps"]).to eq({ readableStatus: Rdv.human_enum_name(:status, rdv1.status), status: rdv1.status, motif: "Suivi", past: rdv1.past?, duration: rdv.duration_in_min }.as_json)
 
         second = @parsed_response[1]
         expect(second.size).to eq(7)
@@ -68,7 +69,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
     end
 
     context "with valid params" do
-      let(:lieu) { create(:lieu) }
+      let(:lieu) { create(:lieu, organisation: organisation) }
       let(:new_attributes) do
         {
           lieu_id: lieu.id,

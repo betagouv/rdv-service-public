@@ -1,7 +1,8 @@
 describe WebhookDeliverable, type: :concern do
   include ActiveJob::TestHelper
 
-  let!(:webhook_endpoint) { create(:webhook_endpoint) }
+  let!(:organisation) { create(:organisation) }
+  let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: organisation) }
 
   after(:each) do
     clear_enqueued_jobs
@@ -15,7 +16,7 @@ describe WebhookDeliverable, type: :concern do
   end
 
   describe "#send_web_hook" do
-    let(:rdv) { create(:rdv) }
+    let(:rdv) { create(:rdv, organisation: organisation) }
 
     it "notifies on creation" do
       expect(WebhookJob).to receive(:perform_later).with(json_payload_with_meta("event", "created"), webhook_endpoint.id)
