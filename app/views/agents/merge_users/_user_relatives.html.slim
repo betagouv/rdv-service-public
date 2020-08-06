@@ -1,0 +1,5 @@
+- relatives = user&.relatives&.active
+- if relatives.present?
+  = "#{relatives.count} proches"
+- else
+  i.text-muted Aucun proche

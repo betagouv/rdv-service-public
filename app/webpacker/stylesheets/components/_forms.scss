@@ -54,3 +54,57 @@ select.form-control-sm {
 .form-check-inline .collection_radio_buttons {
   margin-bottom: 0;
 }
+
+.merge-users-table {
+  label {
+    display: block;
+    cursor: pointer;
+    margin-bottom: 0;
+  }
+
+  tr.identical {
+    td:not(:first-child) {
+      background-color: #DDFFEB;
+      color: #39C06E;
+    }
+
+    td:nth-child(2) > div{
+      position: relative;
+
+      &::before {
+        content: '=';
+        display: block;
+        position: absolute;
+        right: -27px;
+        background-color: #39C06E;
+        color: #FFF;
+        padding: 0 6px;
+        border-radius: 10px;
+        font-size: 20px;
+      }
+    }
+  }
+
+  tr.different {
+    td:not(:first-child) {
+      background-color: #FEF9CB;
+      color: #FE8810;
+    }
+
+    td:nth-child(2) > div{
+      position: relative;
+
+      &::before {
+        content: '≠';
+        display: block;
+        position: absolute;
+        right: -27px;
+        background-color: #FE8810;
+        color: #FFF;
+        padding: 0 6px;
+        border-radius: 10px;
+        font-size: 20px;
+      }
+    }
+  }
+}
