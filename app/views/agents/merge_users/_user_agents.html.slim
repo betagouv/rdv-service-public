@@ -1,0 +1,5 @@
+- agents = user&.agents&.within_organisation(current_organisation)
+- if agents.present?
+  = agents.map(&:full_name).to_sentence
+- else
+  i.text-muted Aucun agent responsable
