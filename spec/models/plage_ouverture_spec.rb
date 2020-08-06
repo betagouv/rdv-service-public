@@ -1,6 +1,8 @@
 describe PlageOuverture, type: :model do
+  let!(:organisation) { create(:organisation) }
+
   describe "#end_after_start" do
-    let(:plage_ouverture) { build(:plage_ouverture, start_time: start_time, end_time: end_time) }
+    let(:plage_ouverture) { build(:plage_ouverture, start_time: start_time, end_time: end_time, organisation: organisation) }
 
     context "start_time < end_time" do
       let(:start_time) { Tod::TimeOfDay.new(7) }
@@ -28,11 +30,15 @@ describe PlageOuverture, type: :model do
   it_behaves_like "recurrence"
 
   describe ".for_motif_and_lieu_from_date_range" do
-    let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30) }
-    let!(:lieu) { create(:lieu) }
+    let!(:service) { create(:service, name: "pmi") }
+    let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, service: service, organisation: organisation) }
+    let!(:lieu) { create(:lieu, organisation: organisation) }
     let(:today) { Date.new(2019, 9, 19) }
     let(:six_days_later) { Date.new(2019, 9, 25) }
-    let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
+    let(:agent) { create(:agent, service: service, organisations: [organisation]) }
+    let(:agent2) { create(:agent, service: service, organisations: [organisation]) }
+    let(:agent3) { create(:agent, service: service, organisations: [organisation]) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :weekly, agent: agent, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation) }
     let(:agent_ids) { nil }
 
     subject { PlageOuverture.for_motif_and_lieu_from_date_range(motif.name, lieu, today..six_days_later, agent_ids) }
@@ -40,36 +46,36 @@ describe PlageOuverture, type: :model do
     it { expect(subject).to contain_exactly(plage_ouverture) }
 
     describe "when first_day is the last day of time range" do
-      let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: six_days_later, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
+      let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: six_days_later, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation) }
 
       it { expect(subject).to contain_exactly(plage_ouverture) }
     end
 
     describe "when first_day is before time range" do
-      let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today - 2.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
+      let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today - 2.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation) }
 
       it { expect(subject).to contain_exactly(plage_ouverture) }
     end
 
     describe "when first_day is after time range" do
-      let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today + 8.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
+      let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today + 8.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation) }
 
       it { expect(subject.count).to eq(0) }
     end
 
     describe "when agent_ids is passed to filter" do
-      let(:agent_ids) { [plage_ouverture.agent_id] }
+      let(:agent_ids) { [agent.id] }
 
       it { expect(subject).to contain_exactly(plage_ouverture) }
 
       describe "and plage_ouverture.agent_id is not passed" do
-        let(:agent_ids) { [create(:agent).id, create(:agent).id] }
+        let(:agent_ids) { [agent2.id, agent3.id] }
 
         it { expect(subject.count).to eq(0) }
       end
 
       describe "and there is another plage_ouverture" do
-        let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today, agent: create(:agent), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
+        let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today, agent: create(:agent), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation) }
 
         it { expect(subject).to contain_exactly(plage_ouverture) }
       end
@@ -81,19 +87,19 @@ describe PlageOuverture, type: :model do
 
     context "with exceptionnelles plages" do
       describe "when first_day is in past" do
-        let(:plage_ouverture) { create(:plage_ouverture, :no_recurrence, first_day: Date.parse("2020-07-30")) }
+        let(:plage_ouverture) { create(:plage_ouverture, :no_recurrence, first_day: Date.parse("2020-07-30"), organisation: organisation) }
 
         it { should be true }
       end
 
       describe "when first_day is in future" do
-        let(:plage_ouverture) { create(:plage_ouverture, :no_recurrence, first_day: 2.days.from_now) }
+        let(:plage_ouverture) { create(:plage_ouverture, :no_recurrence, first_day: 2.days.from_now, organisation: organisation) }
 
         it { should be false }
       end
 
       describe "when first_day is today" do
-        let(:plage_ouverture) { create(:plage_ouverture, :no_recurrence, first_day: Date.today) }
+        let(:plage_ouverture) { create(:plage_ouverture, :no_recurrence, first_day: Date.today, organisation: organisation) }
 
         it { should be false }
       end
@@ -101,19 +107,19 @@ describe PlageOuverture, type: :model do
 
     context "with plages regulières" do
       describe "when until is in past" do
-        let(:plage_ouverture) { create(:plage_ouverture, recurrence: Montrose.every(:week, until: DateTime.parse("2020-07-30 10:30").in_time_zone).to_json) }
+        let(:plage_ouverture) { create(:plage_ouverture, recurrence: Montrose.every(:week, until: DateTime.parse("2020-07-30 10:30").in_time_zone).to_json, organisation: organisation) }
 
         it { should be true }
       end
 
       describe "when until is in future" do
-        let(:plage_ouverture) { create(:plage_ouverture, recurrence: Montrose.every(:week, until: 2.days.from_now).to_json) }
+        let(:plage_ouverture) { create(:plage_ouverture, recurrence: Montrose.every(:week, until: 2.days.from_now).to_json, organisation: organisation) }
 
         it { should be false }
       end
 
       describe "when until is today" do
-        let(:plage_ouverture) { create(:plage_ouverture, recurrence: Montrose.every(:week, until: Date.today).to_json) }
+        let(:plage_ouverture) { create(:plage_ouverture, recurrence: Montrose.every(:week, until: Date.today).to_json, organisation: organisation) }
 
         it { should be false }
       end
@@ -121,29 +127,31 @@ describe PlageOuverture, type: :model do
   end
 
   describe "#available_motifs" do
-    let!(:motif) { create(:motif) }
-    let!(:motif2) { create(:motif) }
-    let!(:motif3) { create(:motif, :for_secretariat) }
-    let!(:motif4) { create(:motif, organisation: create(:organisation)) }
-    let(:plage_ouverture) { build(:plage_ouverture, agent: agent) }
+    let!(:orga2) { create(:organisation) }
+    let!(:service) { create(:service) }
+    let!(:motif) { create(:motif, name: "Accueil", service: service, organisation: organisation) }
+    let!(:motif2) { create(:motif, name: "Suivi", service: service, organisation: organisation) }
+    let!(:motif3) { create(:motif, :for_secretariat, name: "Test", service: service, organisation: organisation) }
+    let!(:motif4) { create(:motif, name: "other orga", service: service, organisation: orga2) }
+    let(:plage_ouverture) { build(:plage_ouverture, agent: agent, organisation: organisation, motifs: [motif]) }
 
     subject { plage_ouverture.available_motifs }
 
     describe "for secretaire" do
-      let(:agent) { create(:agent, :secretaire) }
+      let(:agent) { create(:agent, :secretaire, organisations: [organisation]) }
 
       it { is_expected.to contain_exactly(motif3) }
     end
 
     describe "for other service" do
-      let(:agent) { create(:agent, service: motif.service) }
+      let(:agent) { create(:agent, service: service, organisations: [organisation]) }
 
       it { is_expected.to contain_exactly(motif, motif2, motif3) }
     end
   end
 
   describe "#plage_ouverture_created" do
-    let(:plage_ouverture) { build(:plage_ouverture) }
+    let(:plage_ouverture) { build(:plage_ouverture, organisation: organisation) }
 
     it "should be called after create" do
       expect(plage_ouverture).to receive(:plage_ouverture_created)
@@ -151,7 +159,7 @@ describe PlageOuverture, type: :model do
     end
 
     context "when rdv already exist" do
-      let(:plage_ouverture) { create(:plage_ouverture) }
+      let(:plage_ouverture) { create(:plage_ouverture, organisation: organisation) }
 
       it "should not be called" do
         expect(plage_ouverture).not_to receive(:plage_ouverture_created)

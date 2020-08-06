@@ -1,23 +1,23 @@
 RSpec.describe Agents::AbsencesController, type: :controller do
   render_views
 
-  let!(:agent) { create(:agent) }
-  let!(:organisation_id) { agent.organisation_ids.first }
-  let!(:absence) { create(:absence, agent_id: agent.id, organisation_id: organisation_id) }
-  let!(:absence_with_recurrence) { create(:absence, :weekly, agent: agent, first_day: Date.new(2020, 7, 15), start_time: Tod::TimeOfDay.new(8), end_day: Date.new(2020, 7, 17), end_time: Tod::TimeOfDay.new(10), organisation_id: organisation_id) }
+  let!(:organisation) { create(:organisation) }
+  let!(:agent) { create(:agent, organisations: [organisation]) }
+  let!(:absence) { create(:absence, agent_id: agent.id, organisation: organisation) }
+  let!(:absence_with_recurrence) { create(:absence, :weekly, agent: agent, first_day: Date.new(2020, 7, 15), start_time: Tod::TimeOfDay.new(8), end_day: Date.new(2020, 7, 17), end_time: Tod::TimeOfDay.new(10), organisation: organisation) }
 
   shared_examples "agent can CRUD absences" do
     describe "GET #index" do
       it "returns a success response" do
-        get :index, params: { organisation_id: organisation_id, agent_id: agent.id }
+        get :index, params: { organisation_id: organisation.id, agent_id: agent.id }
         expect(response).to be_successful
       end
 
       describe "for json format" do
-        let!(:absence1) { create(:absence, agent: agent, first_day: Date.new(2019, 7, 21), start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(10)) }
-        let!(:absence2) { create(:absence, agent: agent, first_day: Date.new(2019, 8, 20), start_time: Tod::TimeOfDay.new(8), end_day: Date.new(2019, 8, 31), end_time: Tod::TimeOfDay.new(22)) }
+        let!(:absence1) { create(:absence, agent: agent, first_day: Date.new(2019, 7, 21), start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(10), organisation: organisation) }
+        let!(:absence2) { create(:absence, agent: agent, first_day: Date.new(2019, 8, 20), start_time: Tod::TimeOfDay.new(8), end_day: Date.new(2019, 8, 31), end_time: Tod::TimeOfDay.new(22), organisation: organisation) }
 
-        subject { get :index, params: { format: "json", organisation_id: organisation_id, agent_id: agent.id, start: start_time, end: end_time } }
+        subject { get :index, params: { format: "json", organisation_id: organisation.id, agent_id: agent.id, start: start_time, end: end_time } }
 
         before do
           sign_in agent
@@ -103,14 +103,14 @@ RSpec.describe Agents::AbsencesController, type: :controller do
 
     describe "GET #new" do
       it "returns a success response" do
-        get :new, params: { organisation_id: organisation_id, agent_id: agent.id }
+        get :new, params: { organisation_id: organisation.id, agent_id: agent.id }
         expect(response).to be_successful
       end
     end
 
     describe "GET #edit" do
       it "returns a success response" do
-        get :edit, params: { organisation_id: organisation_id, id: absence.to_param }
+        get :edit, params: { organisation_id: organisation.id, id: absence.to_param }
         expect(response).to be_successful
       end
     end
@@ -118,18 +118,18 @@ RSpec.describe Agents::AbsencesController, type: :controller do
     describe "POST #create" do
       context "with valid params" do
         let(:valid_attributes) do
-          build(:absence).attributes
+          build(:absence, agent: agent, organisation: organisation).attributes
         end
 
         it "creates a new Absence" do
           expect do
-            post :create, params: { organisation_id: organisation_id, absence: valid_attributes }
+            post :create, params: { organisation_id: organisation.id, absence: valid_attributes }
           end.to change(Absence, :count).by(1)
         end
 
         it "redirects to the created absence" do
-          post :create, params: { organisation_id: organisation_id, absence: valid_attributes }
-          expect(response).to redirect_to(organisation_agent_absences_path(organisation_id, absence.agent_id))
+          post :create, params: { organisation_id: organisation.id, absence: valid_attributes }
+          expect(response).to redirect_to(organisation_agent_absences_path(organisation, absence.agent_id))
         end
       end
 
@@ -145,19 +145,19 @@ RSpec.describe Agents::AbsencesController, type: :controller do
 
         it "does not create a new Absence" do
           expect do
-            post :create, params: { organisation_id: organisation_id, absence: invalid_attributes }
+            post :create, params: { organisation_id: organisation.id, absence: invalid_attributes }
           end.not_to change(Absence, :count)
         end
 
         it "returns a success response (i.e. to display the 'new' template)" do
-          post :create, params: { organisation_id: organisation_id, absence: invalid_attributes }
+          post :create, params: { organisation_id: organisation.id, absence: invalid_attributes }
           expect(response).to be_successful
         end
       end
     end
 
     describe "PUT #update" do
-      subject { put :update, params: { organisation_id: organisation_id, id: absence.to_param, absence: new_attributes } }
+      subject { put :update, params: { organisation_id: organisation.id, id: absence.to_param, absence: new_attributes } }
 
       before { subject }
 
@@ -174,7 +174,7 @@ RSpec.describe Agents::AbsencesController, type: :controller do
         end
 
         it "redirects to the absence" do
-          expect(response).to redirect_to(organisation_agent_absences_path(organisation_id, absence.agent_id))
+          expect(response).to redirect_to(organisation_agent_absences_path(organisation, absence.agent_id))
         end
       end
 
@@ -202,13 +202,13 @@ RSpec.describe Agents::AbsencesController, type: :controller do
     describe "DELETE #destroy" do
       it "destroys the requested absence" do
         expect do
-          delete :destroy, params: { organisation_id: organisation_id, id: absence.to_param }
+          delete :destroy, params: { organisation_id: organisation.id, id: absence.to_param }
         end.to change(Absence, :count).by(-1)
       end
 
       it "redirects to the absences list" do
-        delete :destroy, params: { organisation_id: organisation_id, id: absence.to_param }
-        expect(response).to redirect_to(organisation_agent_absences_path(organisation_id, absence.agent_id))
+        delete :destroy, params: { organisation_id: organisation.id, id: absence.to_param }
+        expect(response).to redirect_to(organisation_agent_absences_path(organisation, absence.agent_id))
       end
     end
   end
@@ -220,7 +220,7 @@ RSpec.describe Agents::AbsencesController, type: :controller do
   end
 
   context "admin can CRUD on an agent's absences" do
-    let(:admin) { create(:agent, role: "admin") }
+    let(:admin) { create(:agent, role: "admin", organisations: [organisation]) }
 
     before { sign_in admin }
 

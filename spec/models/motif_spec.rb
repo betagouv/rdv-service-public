@@ -1,11 +1,11 @@
 describe Rdv, type: :model do
-  let!(:organisation) { Organisation.last || create(:organisation) }
-  let(:motif) { create(:motif) }
+  let!(:organisation) { create(:organisation) }
+  let(:motif) { create(:motif, organisation: organisation) }
   let(:secretariat) { create(:service, :secretariat) }
-  let(:motif_with_rdv) { create(:motif, :with_rdvs) }
+  let(:motif_with_rdv) { create(:motif, :with_rdvs, organisation: organisation) }
 
   describe ".create when associated with secretariat" do
-    let(:motif) { build(:motif, service: secretariat) }
+    let(:motif) { build(:motif, service: secretariat, organisation: organisation) }
     it {
       expect(motif.valid?).to be false
     }
@@ -26,21 +26,22 @@ describe Rdv, type: :model do
   end
 
   describe "#available_motifs_for_organisation_and_agent" do
-    let!(:motif) { create(:motif) }
-    let!(:motif2) { create(:motif) }
-    let!(:motif3) { create(:motif, :for_secretariat) }
-    let!(:motif4) { create(:motif, organisation: create(:organisation)) }
-    let(:plage_ouverture) { build(:plage_ouverture, agent: agent) }
+    let(:service) { create(:service) }
+    let!(:motif) { create(:motif, service: service, organisation: organisation) }
+    let!(:motif2) { create(:motif, service: service, organisation: organisation) }
+    let!(:motif3) { create(:motif, :for_secretariat, service: service, organisation: organisation) }
+    let!(:motif4) { create(:motif, service: service, organisation: create(:organisation)) }
+    let(:plage_ouverture) { build(:plage_ouverture, agent: agent, organisation: organisation) }
 
     subject { Motif.available_motifs_for_organisation_and_agent(motif.organisation, agent) }
 
     describe "for secretaire" do
-      let(:agent) { create(:agent, :secretaire) }
+      let(:agent) { create(:agent, :secretaire, organisations: [organisation]) }
       it { is_expected.to contain_exactly(motif3) }
     end
 
     describe "for other service" do
-      let(:agent) { create(:agent, service: motif.service) }
+      let(:agent) { create(:agent, service: service, organisations: [organisation]) }
 
       it { is_expected.to contain_exactly(motif, motif2, motif3) }
     end
@@ -72,12 +73,12 @@ describe Rdv, type: :model do
 
   describe "secretariat?" do
     it "return true if motif for_secretariat" do
-      motif = build(:motif, for_secretariat: true)
+      motif = build(:motif, for_secretariat: true, organisation: organisation)
       expect(motif.secretariat?).to be true
     end
 
     it "return false if motif for_secretariat" do
-      motif = build(:motif, for_secretariat: false)
+      motif = build(:motif, for_secretariat: false, organisation: organisation)
       expect(motif.secretariat?).to be false
     end
   end

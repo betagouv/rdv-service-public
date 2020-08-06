@@ -1,10 +1,11 @@
 describe Creneau::AgentSearch, type: :model do
-  let(:agent_search) { Creneau::AgentSearch.new(organisation_id: plage_ouverture.organisation_id, motif_id: motif.id, agent_ids: agent_ids, lieu_ids: lieu_ids) }
-  let(:plage_ouverture) { create(:plage_ouverture, :weekly, agent: agent, lieu: lieu) }
-  let(:agent) { create(:agent) }
-  let(:lieu) { create(:lieu) }
+  let!(:organisation) { create(:organisation) }
+  let(:agent) { create(:agent, organisations: [organisation]) }
+  let(:lieu) { create(:lieu, organisation: organisation) }
+  let(:plage_ouverture) { create(:plage_ouverture, :weekly, agent: agent, lieu: lieu, organisation: organisation) }
   let(:lieu_ids) { [] }
   let(:agent_ids) { [] }
+  let(:agent_search) { Creneau::AgentSearch.new(organisation_id: organisation.id, motif_id: motif.id, agent_ids: agent_ids, lieu_ids: lieu_ids) }
 
   describe "#lieux" do
     subject { agent_search.lieux }
@@ -14,9 +15,9 @@ describe Creneau::AgentSearch, type: :model do
     it { expect(subject).to contain_exactly(lieu) }
 
     context "when there is many agents / po / lieux but same motif" do
-      let(:lieu2) { create(:lieu) }
-      let(:agent2) { create(:agent) }
-      let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, agent: agent2, lieu: lieu2, motifs: [motif]) }
+      let(:lieu2) { create(:lieu, organisation: organisation) }
+      let(:agent2) { create(:agent, organisations: [organisation]) }
+      let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, agent: agent2, lieu: lieu2, motifs: [motif], organisation: organisation) }
 
       it { expect(subject).to contain_exactly(lieu, lieu2) }
 

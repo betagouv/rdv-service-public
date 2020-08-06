@@ -1,9 +1,12 @@
 describe FileAttente, type: :model do
   describe "#send_notifications" do
     let(:now) { DateTime.parse("01-01-2019 09:00 +0100") }
-    let!(:lieu) { create(:lieu) }
-    let!(:plage_ouverture) { create(:plage_ouverture, first_day: now + 2.weeks, start_time: Tod::TimeOfDay.new(10)) }
-    let!(:rdv) { create(:rdv, starts_at: now + 2.weeks, lieu: lieu, motif: plage_ouverture.motifs.first, agent_ids: [plage_ouverture.agent.id]) }
+    let!(:organisation) { create(:organisation) }
+    let(:motif) { create(:motif, organisation: organisation) }
+    let!(:lieu) { create(:lieu, organisation: organisation) }
+    let!(:agent) { create(:agent, organisations: [organisation]) }
+    let!(:plage_ouverture) { create(:plage_ouverture, first_day: now + 2.weeks, start_time: Tod::TimeOfDay.new(10), agent: agent, lieu: lieu, motifs: [motif], organisation: organisation) }
+    let!(:rdv) { create(:rdv, starts_at: now + 2.weeks, lieu: lieu, motif: motif, agents: [agent], organisation: organisation) }
     let!(:file_attente) { create(:file_attente, rdv: rdv) }
 
     before do
@@ -17,7 +20,7 @@ describe FileAttente, type: :model do
     end
 
     context "with availabilities before rdv" do
-      let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: 1.day.from_now, start_time: Tod::TimeOfDay.new(9)) }
+      let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: 1.day.from_now, start_time: Tod::TimeOfDay.new(9), lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
 
       it "should increment notifications_sent" do
         expect { subject }.to change(file_attente, :notifications_sent).from(0).to(1)
@@ -39,7 +42,7 @@ describe FileAttente, type: :model do
     end
 
     context "without availabilities before rdv" do
-      let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: Date.yesterday) }
+      let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: Date.yesterday, lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
 
       it "should not send notification" do
         subject
@@ -49,7 +52,7 @@ describe FileAttente, type: :model do
     end
 
     context "when creneau was already sent" do
-      let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: 1.day.from_now, start_time: Tod::TimeOfDay.new(9)) }
+      let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: 1.day.from_now, start_time: Tod::TimeOfDay.new(9), lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
 
       it "should not send notification" do
         file_attente.update(last_creneau_sent_at: now)
@@ -61,7 +64,7 @@ describe FileAttente, type: :model do
     end
 
     context "when creneau is too close to RDV" do
-      let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: 2.weeks.from_now - 1.day) }
+      let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: 2.weeks.from_now - 1.day, lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
 
       it "should not send notification" do
         expect { subject }.not_to change(file_attente, :notifications_sent).from(0)
