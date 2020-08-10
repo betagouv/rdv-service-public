@@ -2,6 +2,6 @@ FactoryBot.define do
   factory :user_profile do
     user
     organisation
-    logement { UserProfile.locataire }
+    logement { :locataire }
   end
 end

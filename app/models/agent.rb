@@ -31,6 +31,9 @@ class Agent < ApplicationRecord
   scope :can_perform_motif, lambda { |motif|
     motif.for_secretariat ? joins(:service).where(service: motif.service).or(secretariat) : where(service: motif.service)
   }
+  scope :within_organisation, lambda { |organisation|
+    joins(:organisations).where(organisations: { id: organisation.id })
+  }
 
   before_save :normalize_account
 
