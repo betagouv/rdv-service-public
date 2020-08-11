@@ -30,6 +30,7 @@ import { AgentUserForm } from 'components/agent-user-form.js'
 import { RecordVersions } from 'components/record-versions.js'
 import { RecurrenceForm } from 'components/recurrence-form.js'
 import { MergeUsersForm } from 'components/merge-users-form.js'
+import { DuplicateUsersSuggestions } from "components/duplicate-users-suggestions"
 import 'components/calendar';
 import 'components/select2';
 import 'components/tooltip';
@@ -119,4 +120,6 @@ $(document).on('turbolinks:load', function() {
   new RecurrenceForm();
 
   new MergeUsersForm();
+
+  new DuplicateUsersSuggestions();
 });

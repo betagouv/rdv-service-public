@@ -58,6 +58,9 @@ gem "sib-api-v3-sdk"
 gem "blueprinter"
 gem "typhoeus"
 
+# Other
+gem "damerau-levenshtein"
+
 # Ops
 gem "sentry-raven"
 gem "skylight"

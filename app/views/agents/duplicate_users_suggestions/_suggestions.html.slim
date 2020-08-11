@@ -1,0 +1,37 @@
+- if suggestions.empty?
+  p.my-1
+    i.text-muted Aucune suggestion d'usagers doublons
+
+- suggestions.each_with_index do |suggestion, idx|
+  .row.mb-1.pb-1.border-bottom.border-light
+    .col-sm-9
+      .row
+        .col-sm-6.text-right.py-1= user_to_link(suggestion.users.first)
+        .col-sm-6.text-left.py-1= user_to_link(suggestion.users.second)
+    .col-sm-3.text-right
+      = link_to( \
+        'Fusionner…', \
+        new_organisation_merge_users_path(\
+          current_organisation, \
+          user1_id: suggestion.users.first.id, \
+          user2_id: suggestion.users.second \
+        ), \
+        class: 'btn btn-primary' \
+      )
+
+.js-load-more-duplicate-users-target
+  .text-center.mt-3
+    .js-load-more-collapse.collapse
+      .spinner.spinner-border
+    .js-load-more-collapse.collapse.show
+      div= link_to_next_page \
+        paginatable_combinations, \
+        "Voir d'autres suggestions", \
+        class: 'btn btn-primary js-load-more-duplicate-users-suggestions', \
+        remote: true, \
+        data: { \
+          toggle: "collapse", \
+          target: ".js-load-more-collapse" \
+        }
+      - if paginatable_combinations.next_page.present?
+        i.text-muted= "encore #{@pages_left} pages"

@@ -139,6 +139,7 @@ Rails.application.routes.draw do
         end
 
         resource :rdv_wizard_step, only: [:new, :create]
+        resources :duplicate_users_suggestions, only: [:index]
         resource :merge_users, only: [:new, :create]
       end
       resources :jours_feries, only: [:index]

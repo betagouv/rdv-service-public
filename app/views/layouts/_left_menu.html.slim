@@ -47,6 +47,10 @@
                 organisation_users_path(current_organisation), \
                 data: { route: "agents/users#index" }
             li
+              = link_to "Doublons", \
+                organisation_duplicate_users_suggestions_path(current_organisation), \
+                data: { route: "agents/duplicate_users_suggestions#index" }
+            li
               = link_to "Fusionner", \
                 new_organisation_merge_users_path(current_organisation), \
                 data: { route: "agents/merge_users#new" }
