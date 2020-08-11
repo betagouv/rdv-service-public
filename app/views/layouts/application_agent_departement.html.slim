@@ -11,7 +11,10 @@
       = link_to \
         departement_zones_path(current_departement), \
         class: 'side-nav-link', \
-        data: { route: 'agents/departements/zones#index' } \
+        data: { \
+          route: 'agents/departements/zones#index', \
+          controller: 'agents/departements/zones' \
+        } \
       do
         i.fa.fa-table
         | Zones

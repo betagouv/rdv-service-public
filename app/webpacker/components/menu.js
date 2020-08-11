@@ -78,23 +78,32 @@ class Menu {
   }
 
   _initMenuItemActive = () => {
-    document.querySelectorAll(".side-nav a").forEach(elt => {
-      if (!this.isCurrentRoute(elt)) return
+    const sideNavLinks = Array.from(document.querySelectorAll(".side-nav a"))
+    const currentNavLink = sideNavLinks.find(this.isCurrentRoute) ||
+      sideNavLinks.find(this.isCurrentController)
+    if (!currentNavLink) return
 
-      const $elt = $(elt)
-      $elt.addClass("active");
-      $elt.closest("li").addClass("active")
-      $elt.closest("ul").addClass("in")
-      const $topItemElt = $elt.closest(".side-nav-item")
-      $topItemElt.addClass("active");
-      $topItemElt.find(">.side-nav-link").addClass("active");
-    });
+    const $elt = $(currentNavLink)
+    $elt.addClass("active");
+    $elt.closest("li").addClass("active")
+    $elt.closest("ul").addClass("in")
+    const $topItemElt = $elt.closest(".side-nav-item")
+    $topItemElt.addClass("active");
+    $topItemElt.find(">.side-nav-link").addClass("active");
   }
 
-  isCurrentRoute = (elt) => {
+  isCurrentRoute = (elt) => this.getCurrentRoute() === elt.getAttribute("data-route")
+
+  isCurrentController = (elt) => this.getCurrentController() === elt.getAttribute("data-controller")
+
+  getCurrentRoute = () => {
     const currentRouteElt = document.getElementById("js-current-route")
-    const currentRoute = currentRouteElt && currentRouteElt.value;
-    return (!currentRoute || currentRoute === elt.getAttribute("data-route"))
+    return currentRouteElt && currentRouteElt.value
+  }
+
+  getCurrentController = () => {
+    const currentControllerElt = document.getElementById("js-current-controller")
+    return currentControllerElt && currentControllerElt.value
   }
 
   _initNavbarToggle(){

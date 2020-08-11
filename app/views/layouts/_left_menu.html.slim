@@ -30,11 +30,14 @@
             li
               = link_to "Plages d'ouverture", \
                 organisation_agent_plage_ouvertures_path(current_organisation, current_agent), \
-                data: { route: "agents/plage_ouvertures#index" }
+                data: { \
+                  route: "agents/plage_ouvertures#index", \
+                  controller: "agents/plage_ouvertures" \
+                }
             li
               = link_to 'Absences', \
                 organisation_agent_absences_path(current_organisation, current_agent), \
-                data: { route: "agents/absences#index" }
+                data: { route: "agents/absences#index", controller: "agents/absences" }
 
         li.side-nav-item
           = link_to '#', class: 'side-nav-link' do
@@ -45,7 +48,7 @@
             li
               = link_to "Usagers", \
                 organisation_users_path(current_organisation), \
-                data: { route: "agents/users#index" }
+                data: { route: "agents/users#index", controller: "agents/users" }
             li
               = link_to "Fusionner", \
                 new_organisation_merge_users_path(current_organisation), \
@@ -81,7 +84,7 @@
               li
                 = link_to 'Vos motifs', \
                   organisation_motifs_path(current_organisation), \
-                  data: { route: 'agents/motifs#index' }
+                  data: { route: 'agents/motifs#index', controller: "agents/motifs" }
               - if current_agent.admin? && policy_scope(Organisation).count == 1
                 li
                   = link_to "Sectorisation #{current_organisation.departement}", departement_setup_checklist_path(current_organisation.departement)
