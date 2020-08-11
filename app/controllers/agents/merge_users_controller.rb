@@ -5,14 +5,16 @@ class Agents::MergeUsersController < AgentAuthController
     user1 = policy_scope(User).find(params[:user1_id]) if params[:user1_id].present?
     user2 = policy_scope(User).find(params[:user2_id]) if params[:user2_id].present?
     @merge_users_form = MergeUsersForm.new(current_organisation, user1: user1, user2: user2)
-    skip_authorization
+    authorize(user1, :update?) if user1.present?
+    authorize(user2, :update?) if user2.present?
+    skip_authorization if user1.nil? && user2.nil?
   end
 
   def create
     user1 = policy_scope(User).find(params[:merge_users_form][:user1_id])
     user2 = policy_scope(User).find(params[:merge_users_form][:user2_id])
-    authorize(user1)
-    authorize(user2)
+    authorize(user1, :update?)
+    authorize(user2, :update?)
     @merge_users_form = MergeUsersForm.new(current_organisation, user1: user1, user2: user2, **merge_users_params)
     if @merge_users_form.save
       redirect_to organisation_user_path(current_organisation, @merge_users_form.user_target), flash: { success: "Les usagers ont été fusionnés" }
