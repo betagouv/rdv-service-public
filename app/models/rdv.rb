@@ -87,7 +87,6 @@ class Rdv < ApplicationRecord
       starts_at: starts_at&.to_s,
       user_ids: users&.map(&:id),
       agent_ids: agents&.map(&:id),
-      notes: notes,
     }
   end
 

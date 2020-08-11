@@ -17,7 +17,6 @@
       .card-body
         = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }
         = simple_form_for(@rdv, url: organisation_rdvs_path(current_organisation)) do |f|
-          = f.input :notes, as: :hidden, wrapper_html: { class: 'm-0' }
           = f.association :motif, as: :hidden,  wrapper_html: { class: 'm-0' }
           .form-row
             .col-md-6= datetime_input(f, :starts_at)

@@ -34,10 +34,6 @@
           ul.list-unstyled
             - [:first_name, :last_name, :birth_date].each do |attr_name|
               li= render "common/user_attribute", user: @user, attribute_name: attr_name
-          .card-text
-            i.far.fa-fw.fa-sticky-note>
-            strong> Notes libres :
-            = display_notes(@user.profile_for(current_organisation).notes)
 
         .row.mt-3
           .col.text-left
@@ -77,3 +73,13 @@
                     = "(#{relative.age})" if relative.birth_date
           .text-right
             = link_to "Ajouter un proche", new_organisation_user_path(current_organisation, responsible_id: @user.id), class: "btn btn-outline-primary"
+
+
+    .card#notes
+      .card-header Notes
+      .card-body
+        = simple_form_for(UserNote.new(user: @user, organisation: current_organisation, agent: current_agent), url: organisation_user_notes_path(current_organisation, @user)) do |f|
+          = f.input :text, label: false, mandatory: true
+          = f.button :submit, "Enregistrer"
+        hr
+        = render "common/user_notes", user: @user

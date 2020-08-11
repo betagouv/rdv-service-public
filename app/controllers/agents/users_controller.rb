@@ -14,7 +14,7 @@ class Agents::UsersController < AgentAuthController
 
   PERMITTED_NESTED_ATTRIBUTES = {
     agent_ids: [],
-    user_profiles_attributes: [:notes, :logement, :id, :organisation_id],
+    user_profiles_attributes: [:logement, :id, :organisation_id],
   }.freeze
 
   def index

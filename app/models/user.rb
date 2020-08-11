@@ -145,6 +145,10 @@ class User < ApplicationRecord
     duplicate_user
   end
 
+  def notes_for(organisation)
+    UserNote.where(organisation: organisation, user: self).order("created_at desc")
+  end
+
   def can_be_soft_deleted_from_organisation?(organisation)
     Rdv.not_cancelled.future
       .with_user_in(self_and_relatives_and_responsible)

@@ -8,7 +8,6 @@ FactoryBot.define do
 
     duration_in_min { 45 }
     starts_at { DateTime.parse("2020-06-15 10:30").in_time_zone }
-    notes { "Une jolie note." }
     trait :by_phone do
       motif { build(:motif, :by_phone, organisation: organisation) }
       lieu { nil }

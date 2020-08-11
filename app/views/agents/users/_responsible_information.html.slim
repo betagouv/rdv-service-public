@@ -10,10 +10,6 @@ h4.card-title.mb-3 Informations sociales
 ul.list-unstyled.mb-5
   - [:caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :logement].each do |attr_name|
     li.mb-2= render "common/user_attribute", user: user, attribute_name: attr_name
-  strong
-    i.far.fa-fw.fa-sticky-note>
-    | Notes libres :
-  = display_notes(user.profile_for(current_organisation).notes)
 
 h4.card-title.mb-3 Agent référent
 ul.list-unstyled.mb-5

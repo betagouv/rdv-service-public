@@ -23,8 +23,7 @@ p.card-text
 - if local_assigns.fetch(:show_users, true)
   p.card-text
     strong> Usager(s) :
-    = users_to_links(rdv)
-p.card-text
-  i.far.fa-fw.fa-sticky-note>
-  strong> Notes libres :&nbsp;
-  = display_notes(rdv.notes)
+    - if local_assigns.fetch(:display_links_to_users, true)
+      = users_to_links(rdv)
+    - else
+      = users_to_sentence(rdv)

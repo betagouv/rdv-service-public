@@ -10,7 +10,7 @@
         span.badge.badge-danger
 
 .row
-  .col-md-8.mb-3
+  .col-md-7.mb-3
     .card
       .card-header Détails du RDV
       .card-body
@@ -19,7 +19,8 @@
           = rdv_title(@rdv)
           | &nbsp;
           = link_to "voir dans l'agenda", organisation_agent_path(current_organisation, @rdv.agents.first, selected_event_id: @rdv.id, date: @rdv.starts_at.to_date)
-        = render 'rdv_details', rdv: @rdv
+        = render 'rdv_details', rdv: @rdv, display_links_to_users: false
+
         .row
           .col
             - if !@rdv.past? && !@rdv.cancelled?
@@ -30,7 +31,30 @@
           .col.text-right
             = link_to "Modifier", edit_organisation_rdv_path(@rdv.organisation, @rdv), class: "btn btn-outline-primary", data: { rightbar: true }
 
-  .col-md-4.mb-3
+  .col-md-5.mb-3
+
+    - @rdv.users.each do |user|
+      .card
+        .card-header
+          .d-flex.justify-content-between
+            .mt-1 = user.full_name
+            = link_to "Voir la fiche usager", organisation_user_path(current_organisation, user), class: "btn btn-outline-primary small"
+
+        .card-body
+          p.card-text
+            i.fa.fa-fw.fa-phone>
+            = display_value_or_na_placeholder(user.phone_number)
+          p.card-text
+            i.fa.fa-fw.fa-envelope>
+            = display_value_or_na_placeholder(user.email)
+
+          h5.cart-title.mb-2.mt-4 Notes
+          = simple_form_for(UserNote.new, url: organisation_user_notes_path(current_organisation, user)) do |f|
+            = f.input :text, label: false, mandatory: true
+            = f.button :submit, "Enregistrer"
+          hr
+          = render "common/user_notes", user: user, extra_link_params: { rdv_id: @rdv.id }
+
     .card
       .card-header
         | Modifier le statut du RDV rapidement
