@@ -8,7 +8,7 @@ class Datetimepicker {
     $("[data-behaviour='datepicker']").datetimepicker({
       format:'d/m/Y',
       timepicker:false,
-      mask: true,
+      mask: false,
       scrollMonth: false,
       scrollInput: false,
       dayOfWeekStart: 1,

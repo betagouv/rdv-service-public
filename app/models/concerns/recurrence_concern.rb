@@ -17,10 +17,14 @@ module RecurrenceConcern
   end
 
   def starts_at
+    return nil if start_time.blank? || first_day.blank?
+
     start_time&.on(first_day)
   end
 
   def ends_at
+    return nil if end_time.blank? || (first_day.blank? && (!defined(end_day) || end_day.blank?))
+
     if defined?(end_day) && end_day.present?
       end_time.on(end_day)
     else
