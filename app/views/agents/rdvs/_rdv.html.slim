@@ -15,10 +15,10 @@
             .pl-2.pt-1
               - rdv.users.order_by_last_name.each do |user|
                 div
-                  = link_to organisation_user_path(current_organisation, user) do
-                    b> #{user.full_name}
-                  - if user.responsible.present?
-                    | (proche de #{link_to(user.responsible.full_name, organisation_user_path(current_organisation, user.responsible))})
+                  b= user_to_link(user)
+                - if user.responsible.present?
+                  div= "proche de #{user_to_link(user.responsible)}".html_safe
+                div
                   ul.list-unstyled
                     - [:birth_date, :phone_number, :address, :email].each do |attr_name|
                       li= render "common/user_attribute", user: user, attribute_name: attr_name

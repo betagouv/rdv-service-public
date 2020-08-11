@@ -3,8 +3,9 @@ FactoryBot.define do
   sequence(:address) { |n| "#{n} rue de l'adresse 12345 Ville" }
 
   factory :lieu do
+    organisation { create(:organisation) }
+
     name { generate(:lieu_name) }
-    organisation { Organisation.first || create(:organisation) }
     address { generate(:address) }
     latitude { 38.8951 }
     longitude { -77.0364 }

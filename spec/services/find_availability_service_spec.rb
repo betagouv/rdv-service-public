@@ -1,10 +1,11 @@
 describe FindAvailabilityService, type: :service do
-  let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, reservable_online: reservable_online) }
+  let!(:organisation) { create(:organisation) }
+  let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, reservable_online: reservable_online, organisation: organisation) }
   let(:reservable_online) { true }
-  let!(:lieu) { create(:lieu) }
+  let!(:lieu) { create(:lieu, organisation: organisation) }
   let(:today) { Date.new(2019, 9, 19) }
-  let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11)) }
-  let(:agent) { plage_ouverture.agent }
+  let!(:agent) { create(:agent, organisations: [organisation]) }
+  let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent, organisation: organisation) }
   let(:now) { today.to_time }
 
   before { travel_to(now) }
@@ -27,7 +28,7 @@ describe FindAvailabilityService, type: :service do
     end
 
     describe "with absence" do
-      let!(:absence) { create(:absence, agent: agent, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(12, 0)) }
+      let!(:absence) { create(:absence, agent: agent, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(12, 0), organisation: organisation) }
 
       it { should eq(nil) }
 
@@ -39,12 +40,12 @@ describe FindAvailabilityService, type: :service do
     end
 
     describe "with rdv" do
-      let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 120, agents: [agent]) }
+      let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 120, agents: [agent], organisation: organisation) }
 
       it { should eq(nil) }
 
       context "which is cancelled" do
-        let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, agents: [agent], cancelled_at: Time.zone.local(2019, 9, 20, 9, 30)) }
+        let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, agents: [agent], cancelled_at: Time.zone.local(2019, 9, 20, 9, 30), organisation: organisation) }
 
         it { expect(subject.starts_at).to eq(Time.zone.local(2019, 9, 19, 9, 0)) }
       end

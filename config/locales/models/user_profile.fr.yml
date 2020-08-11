@@ -4,7 +4,6 @@ fr:
       user_profile: Profil Usager
     attributes:
       user_profile:
-        notes: Notes
         logement: Logement
         logements:
           sdf: Sans domicile fixe

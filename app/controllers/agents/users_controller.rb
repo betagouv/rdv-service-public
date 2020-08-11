@@ -14,7 +14,7 @@ class Agents::UsersController < AgentAuthController
 
   PERMITTED_NESTED_ATTRIBUTES = {
     agent_ids: [],
-    user_profiles_attributes: [:notes, :logement, :id, :organisation_id],
+    user_profiles_attributes: [:logement, :id, :organisation_id],
   }.freeze
 
   def index
@@ -88,11 +88,11 @@ class Agents::UsersController < AgentAuthController
 
   def destroy
     authorize(@user)
-    if Rdv.future.active.where(users: @user.family.pluck(:id), organisation: current_organisation).empty?
+    if @user.can_be_soft_deleted_from_organisation?(current_organisation)
       @user.soft_delete(current_organisation)
       flash[:notice] = "L'usager a été supprimé."
     else
-      flash[:error] = "L'usager ou ses proches ont des rendez-vous programmés, vous ne pouvez pas le supprimer."
+      flash[:error] = I18n.t("users.can_not_delete_because_has_future_rdvs")
     end
 
     if @user.relative?

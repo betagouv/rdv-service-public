@@ -1,9 +1,10 @@
 describe Users::RdvWizardStepsController, type: :controller do
   describe "GET index html format" do
+    let!(:organisation) { create(:organisation) }
     let!(:user) { create(:user) }
-    let!(:motif) { create(:motif) }
-    let!(:lieu) { create(:lieu) }
-    let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: Date.new(2019, 7, 22), motifs: [motif], lieu: lieu) }
+    let!(:motif) { create(:motif, organisation: organisation) }
+    let!(:lieu) { create(:lieu, organisation: organisation) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: Date.new(2019, 7, 22), motifs: [motif], lieu: lieu, organisation: organisation) }
     let!(:creneau) do
       build(
         :creneau,

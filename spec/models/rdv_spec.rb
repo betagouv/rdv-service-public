@@ -163,4 +163,20 @@ describe Rdv, type: :model do
       expect { rdv.destroy }.to change { Rdv.count }.by(-1)
     end
   end
+
+  describe "Rdv.with_user_in" do
+    let!(:user1) { create(:user) }
+    let!(:user2) { create(:user) }
+    let!(:user3) { create(:user) }
+    let!(:rdv1) { create(:rdv, users: [user1, user2]) }
+    let!(:rdv2) { create(:rdv, users: [user2]) }
+    let!(:rdv3) { create(:rdv, users: [user3]) }
+
+    it "should retrieve rdv, contrarily to where(users:)" do
+      expect(Rdv.where(users: [user1, user2])).to be_empty
+      expect(Rdv.with_user_in([user1, user2])).to include(rdv1)
+      expect(Rdv.with_user_in([user1, user2])).to include(rdv2)
+      expect(Rdv.with_user_in([user1, user2])).not_to include(rdv3)
+    end
+  end
 end

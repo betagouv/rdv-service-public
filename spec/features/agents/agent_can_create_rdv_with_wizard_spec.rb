@@ -1,16 +1,18 @@
 describe "Agent can create a Rdv with wizard" do
   include UsersHelper
 
-  let!(:agent) { create(:agent, first_name: "Alain") }
-  let!(:agent2) { create(:agent, first_name: "Robert") }
-  let!(:motif) { create(:motif) }
-  let!(:lieu) { create(:lieu) }
-  let!(:user) { create(:user, organisations: [Organisation.first || create(:organisation)]) }
+  let(:organisation) { create(:organisation) }
+  let(:service) { create(:service) }
+  let!(:agent) { create(:agent, first_name: "Alain", service: service, organisations: [organisation]) }
+  let!(:agent2) { create(:agent, first_name: "Robert", service: service, organisations: [organisation]) }
+  let!(:motif) { create(:motif, service: service, organisation: organisation) }
+  let!(:lieu) { create(:lieu, organisation: organisation) }
+  let!(:user) { create(:user, organisations: [organisation]) }
 
   before do
     travel_to(Time.zone.local(2019, 10, 2))
     login_as(agent, scope: :agent)
-    visit new_organisation_rdv_wizard_step_path(organisation_id: agent.organisation_ids.first)
+    visit new_organisation_rdv_wizard_step_path(organisation_id: organisation.id)
   end
 
   after { travel_back }
@@ -50,7 +52,6 @@ describe "Agent can create a Rdv with wizard" do
     click_button("Créer usager")
     sleep(1) # wait for modal to hide completely
 
-    fill_in :rdv_notes, with: "RDV très spécial"
     click_button("Continuer")
 
     # Step 3
@@ -72,7 +73,6 @@ describe "Agent can create a Rdv with wizard" do
     expect(rdv.duration_in_min).to eq(35)
     expect(rdv.starts_at).to eq(Time.zone.local(2019, 10, 11, 14, 15))
     expect(rdv.created_by_agent?).to be(true)
-    expect(rdv.notes).to eq("RDV très spécial")
 
     expect(page).to have_current_path(rdv.agenda_path_for_agent(agent))
     expect(page).to have_content("Votre agenda")

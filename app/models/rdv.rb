@@ -24,7 +24,7 @@ class Rdv < ApplicationRecord
   validates :users, :organisation, :motif, :starts_at, :duration_in_min, :agents, presence: true
   validates :lieu, presence: true, if: :public_office?
 
-  scope :active, -> { where(cancelled_at: nil) }
+  scope :not_cancelled, -> { where(cancelled_at: nil) }
   scope :past, -> { where("starts_at < ?", Time.zone.now) }
   scope :future, -> { where("starts_at > ?", Time.zone.now) }
   scope :tomorrow, -> { where(starts_at: DateTime.tomorrow...DateTime.tomorrow + 1.day) }
@@ -41,6 +41,7 @@ class Rdv < ApplicationRecord
   }
   scope :default_stats_period, -> { where(created_at: Stat.default_date_range) }
   scope :with_agent, ->(agent) { joins(:agents).where(agents: { id: agent.id }) }
+  scope :with_user_in, ->(users) { joins(:rdvs_users).where(rdvs_users: { user_id: users.pluck(:id) }).distinct }
 
   after_commit :reload_uuid, on: :create
 
@@ -86,7 +87,6 @@ class Rdv < ApplicationRecord
       starts_at: starts_at&.to_s,
       user_ids: users&.map(&:id),
       agent_ids: agents&.map(&:id),
-      notes: notes,
     }
   end
 

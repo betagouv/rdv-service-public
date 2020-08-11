@@ -1,5 +1,6 @@
 describe "User views his rdv" do
-  let(:user) { create(:user) }
+  let!(:organisation) { create(:organisation) }
+  let(:user) { create(:user, organisations: [organisation]) }
 
   before do
     login_as(user, scope: :user)
@@ -12,7 +13,7 @@ describe "User views his rdv" do
   end
 
   context "with future rdv" do
-    let!(:rdv) { create(:rdv, :future) }
+    let!(:rdv) { create(:rdv, :future, users: [user], organisation: organisation) }
     before { click_link "Vos rendez-vous" }
     it do
       expect(page).to have_content(rdv_title_spec(rdv))
@@ -22,7 +23,7 @@ describe "User views his rdv" do
   end
 
   context "with past rdv" do
-    let!(:rdv) { create(:rdv, :past) }
+    let!(:rdv) { create(:rdv, :past, users: [user], organisation: organisation) }
     before { click_link "Vos rendez-vous" }
     it do
       expect_page_with_no_record_text("Vous n'avez pas de RDV à venir.")

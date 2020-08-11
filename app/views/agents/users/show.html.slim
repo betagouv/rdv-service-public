@@ -34,14 +34,13 @@
           ul.list-unstyled
             - [:first_name, :last_name, :birth_date].each do |attr_name|
               li= render "common/user_attribute", user: @user, attribute_name: attr_name
-          .card-text
-            i.far.fa-fw.fa-sticky-note>
-            strong> Notes libres :
-            = display_notes(@user.profile_for(current_organisation).notes)
 
         .row.mt-3
           .col.text-left
-            = link_to "Supprimer", organisation_user_path(current_organisation, @user), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cet usager ?"}
+            - if @user.can_be_soft_deleted_from_organisation?(current_organisation)
+              = link_to "Supprimer", organisation_user_path(current_organisation, @user), method: :delete, class: "btn btn-outline-danger", data: { confirm: user_soft_delete_confirm_message(@user)}
+            - else
+              = link_to "Supprimer", "#", class: "btn btn-outline-danger", onclick: "alert(this.dataset.message)", data: { message: I18n.t("users.can_not_delete_because_has_future_rdvs") }
           .col.text-right
             = link_to "Modifier", edit_organisation_user_path(current_organisation, @user), class: "btn btn-primary"
 
@@ -109,3 +108,13 @@
                     = "(#{relative.age})" if relative.birth_date
           .text-right
             = link_to "Ajouter un proche", new_organisation_user_path(current_organisation, responsible_id: @user.id), class: "btn btn-outline-primary"
+
+
+    .card#notes
+      .card-header Notes
+      .card-body
+        = simple_form_for(UserNote.new(user: @user, organisation: current_organisation, agent: current_agent), url: organisation_user_notes_path(current_organisation, @user)) do |f|
+          = f.input :text, label: false, mandatory: true
+          = f.button :submit, "Enregistrer"
+        hr
+        = render "common/user_notes", user: @user

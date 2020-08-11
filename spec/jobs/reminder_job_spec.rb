@@ -1,4 +1,11 @@
 RSpec.describe ReminderJob, type: :job do
+  let(:now) { DateTime.parse("01-01-2019 09:00") }
+
+  before do
+    travel_to(now)
+    freeze_time
+  end
+
   subject { ReminderJob.perform_now }
 
   context "single rdv the day after tomorrow" do
