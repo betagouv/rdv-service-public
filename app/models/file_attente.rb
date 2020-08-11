@@ -7,6 +7,9 @@ class FileAttente < ApplicationRecord
   MAX_NOTIFICATIONS = 3
 
   scope :with_upcoming_rdvs, -> { joins(:rdv).where("rdvs.starts_at > ?", NO_MORE_NOTIFICATIONS.from_now).order(created_at: :desc) }
+  scope :for_organisation, lambda { |organisation|
+    joins(:rdv).where(rdvs: { organisation: organisation })
+  }
 
   def self.send_notifications
     FileAttente.with_upcoming_rdvs.each do |fa|

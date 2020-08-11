@@ -1,0 +1,7 @@
+- rdvs = user&.rdvs&.where(organisation: current_organisation)
+- if rdvs.present?
+  div>= "#{rdvs.count} RDVs"
+  div>= "dont #{rdvs.future.not_cancelled.count} à venir"
+  div>= "et dont #{rdvs.count} en file d'attente"
+- else
+  i.text-muted Aucun RDV
