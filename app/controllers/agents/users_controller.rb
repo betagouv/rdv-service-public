@@ -18,12 +18,12 @@ class Agents::UsersController < AgentAuthController
   }.freeze
 
   def index
-    @users = policy_scope(User).order_by_last_name.page(params[:page])
+    @users = policy_scope(User).active.order_by_last_name.page(params[:page])
     filter_users if params[:user] && params[:user][:search]
   end
 
   def search
-    @users = policy_scope(User).where.not(id: params[:exclude_ids]).order_by_last_name.limit(10)
+    @users = policy_scope(User).where.not(id: params[:exclude_ids]).active.order_by_last_name.limit(10)
     @users = @users.search_by_text(search_params) if search_params
     skip_authorization
   end
