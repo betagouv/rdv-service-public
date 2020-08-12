@@ -13,7 +13,7 @@
             = link_to( \
               organisation_setup_checklist_path(current_organisation), \
               class: 'side-nav-link', \
-              data: { route: "agents/organisations/setup_checklists#show" } \
+              id: "menu-setup-checklist" \
             ) do
               i.far.fa-calendar
               span Premiers pas
@@ -26,15 +26,15 @@
             li
               = link_to 'Agendas', \
                 organisation_agent_path(current_organisation, current_agent), \
-                data: { route: "agents/agents#show" }
+                id: "menu-agendas"
             li
               = link_to "Plages d'ouverture", \
                 organisation_agent_plage_ouvertures_path(current_organisation, current_agent), \
-                data: { route: "agents/plage_ouvertures#index" }
+                id: "menu-plages-ouvertures"
             li
               = link_to 'Absences', \
                 organisation_agent_absences_path(current_organisation, current_agent), \
-                data: { route: "agents/absences#index" }
+                id: "menu-absences"
 
         li.side-nav-item
           = link_to '#', class: 'side-nav-link' do
@@ -45,16 +45,16 @@
             li
               = link_to "Usagers", \
                 organisation_users_path(current_organisation), \
-                data: { route: "agents/users#index" }
+                id: "menu-users"
             li
               = link_to "Fusionner", \
                 new_organisation_merge_users_path(current_organisation), \
-                data: { route: "agents/merge_users#new" }
+                id: "menu-merge-users"
         li.side-nav-item
           = link_to( \
             organisation_agent_stats_path(current_organisation, current_agent), \
             class: 'side-nav-link', \
-            data: { route: "agents/stats#index" } \
+            id: "menu-stats" \
           ) do
             i.fa.fa-chart-bar
             span Vos statistiques
@@ -69,26 +69,27 @@
               li
                 =link_to 'Votre organisation', \
                   organisation_path(current_organisation), \
-                  data: { route: 'agents/organisations#show' }
+                  id: 'menu-organisation'
               li
                 =link_to 'Vos lieux', \
                   organisation_lieux_path(current_organisation), \
-                  data: { route: 'agents/lieux#index' }
+                  id: 'menu-lieux'
               li
                 =link_to 'Vos agents', \
-                organisation_agents_path(current_organisation), \
-                data: { route: 'agents/agents#index' }
+                  organisation_agents_path(current_organisation), \
+                  id: 'menu-agents'
               li
                 = link_to 'Vos motifs', \
                   organisation_motifs_path(current_organisation), \
-                  data: { route: 'agents/motifs#index' }
+                  id: 'menu-motifs'
               - if current_agent.admin? && policy_scope(Organisation).count == 1
                 li
-                  = link_to "Sectorisation #{current_organisation.departement}", departement_setup_checklist_path(current_organisation.departement)
+                  = link_to "Sectorisation #{current_organisation.departement}", \
+                    departement_setup_checklist_path(current_organisation.departement)
               li
                 = link_to( \
                   organisation_stats_path(current_organisation), \
-                  data: { route: 'agents/organisations/stats#index' } \
+                  id: 'menu-organisation-stats' \
                 ) do
                   | Statistiques de l'organisation
                   = unknown_past_rdvs_danger_bage
