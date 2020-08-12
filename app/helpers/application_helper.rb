@@ -99,12 +99,6 @@ module ApplicationHelper
     field_value.blank? ? "Non renseigné" : field_value
   end
 
-  def current_route_for_js
-    base = "#{controller_path}##{action_name}"
-    base += "?view=#{params[:view]}" if params[:view].present?
-    base
-  end
-
   def errors_full_messages(object)
     object.errors.map do |attribute, message|
       if attribute.to_s.starts_with?("responsible.")
