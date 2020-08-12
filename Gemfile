@@ -39,7 +39,7 @@ gem "image_processing", "~> 1.8"
 gem "phonelib"
 
 # Front
-gem "chartkick", "~> 3.3.0"
+gem "chartkick", "~> 3.4.0"
 gem "groupdate", "~> 4.2"
 gem "slim", "~> 4.0"
 
