@@ -42,6 +42,7 @@ module ApplicationHelper
         value: form.object&.send(field)&.strftime("%d/%m/%Y"),
         data: { behaviour: "datepicker" },
         autocomplete: "off",
+        placeholder: "__/__/___"
       }.deep_merge(input_html),
       **kwargs
     )
