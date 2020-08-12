@@ -31,7 +31,7 @@
     "rails-erb-loader": "^5.5.2",
     "select2": "^4.0.8",
     "select2-bootstrap4-theme": "^1.0.0",
-    "serialize-javascript": "^2.1.1",
+    "serialize-javascript": "^3.1.0",
     "turbolinks": "^5.2.0",
     "whatwg-fetch": "^3.0.0"
   },
