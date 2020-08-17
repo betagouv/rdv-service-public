@@ -40,7 +40,7 @@
       .form-row
         .col-md-6= f.input :first_name, **input_opts[:relative]
         .col-md-6= f.input :last_name, **input_opts[:relative]
-      = f.input :birth_date, as: :date, html5: true, **input_opts[:relative]
+      = date_input(f, :birth_date, **input_opts[:relative])
 
     - if user.new_record?
       .form-row.mb-2 *div_opts[:relative]
