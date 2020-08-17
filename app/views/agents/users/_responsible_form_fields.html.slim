@@ -16,14 +16,10 @@
     as: :boolean, \
     label: "Inviter l'utilisateur à se créer un compte sur RDV-solidarites.", \
     wrapper_html: { \
-      class:"align-items-baseline ml-0 d-none js-invite-row",
+      class:"align-items-baseline ml-0",
     }, \
     **input_opts, \
   )
-
-- elsif user.pending_reconfirmation?
-  .form-text.text-muted.mb-2
-    | En attente de confirmation pour #{user.unconfirmed_email}
 
 = f.input :phone_number, as: :tel, **input_opts
 

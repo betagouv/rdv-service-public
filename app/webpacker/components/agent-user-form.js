@@ -28,16 +28,6 @@ class AgentUserForm {
         this.refreshVisibleFields()
       })
     )
-    this.formElt.querySelectorAll("input[type=email]").forEach(elt => {
-      elt.addEventListener("change", this.onEmailChangeHandler);
-      elt.dispatchEvent(new CustomEvent("change"));
-    })
-  }
-
-  onEmailChangeHandler = (evt) => {
-    const inviteRow = evt.currentTarget.parentElement.parentElement.querySelector(".js-invite-row");
-    if (!inviteRow) return
-    inviteRow.classList.toggle("d-none", !evt.currentTarget.value)
   }
 
   refreshVisibleFields = () => {
