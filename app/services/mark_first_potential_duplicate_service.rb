@@ -44,6 +44,4 @@ class MarkFirstPotentialDuplicateService < BaseService
       .gsub("-", " ")
       .strip
   end
-
 end
-

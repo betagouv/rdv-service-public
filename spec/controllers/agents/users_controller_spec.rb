@@ -110,5 +110,25 @@ RSpec.describe Agents::UsersController, type: :controller do
 
     it_behaves_like "with invalid params"
     it_behaves_like "with valid email", :html
+
+    it "search potential duplicate" do
+      attributes = {
+        first_name: "Michel",
+        last_name: "Lapin",
+        invite_on_create: "true",
+        user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } }
+      }
+
+      expect(SearchPotentialDuplicateJob).to receive(:perform_later)
+      post :create, params: { organisation_id: organisation.id, user: attributes }
+    end
+  end
+
+  describe "#update" do
+    it "search potential duplicate" do
+      expect(SearchPotentialDuplicateJob).to receive(:perform_later)
+      post :update, params: { id: user.id, organisation_id: organisation.id, user: { first_name: "Henri" } }
+      expect(response).to redirect_to(organisation_user_path(organisation, user))
+    end
   end
 end

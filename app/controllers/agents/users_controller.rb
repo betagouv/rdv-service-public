@@ -45,6 +45,8 @@ class Agents::UsersController < AgentAuthController
     user_persisted = @user.save
     prepare_new unless user_persisted
 
+    SearchPotentialDuplicateJob.perform_later(@user.id) if user_persisted
+
     if from_modal?
       respond_modal_with @user, location: add_query_string_params_to_url(request.referer, 'user_ids[]': @user.id)
     elsif user_persisted
@@ -73,6 +75,7 @@ class Agents::UsersController < AgentAuthController
     return respond_modal_with @user, location: request.referer if from_modal?
 
     if user_updated
+      SearchPotentialDuplicateJob.perform_later(@user.id)
       redirect_to organisation_user_path(current_organisation, @user)
     else
       render :edit

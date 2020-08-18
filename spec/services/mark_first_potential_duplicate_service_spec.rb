@@ -28,7 +28,7 @@ describe MarkFirstPotentialDuplicateService, type: :service do
     it "not match, even with monsieur / madame" do
       organisation = create(:organisation)
       user = create(:user, organisations: [organisation], first_name: "Monsieur / Madame Jean", last_name: "JACQUES")
-      duplicate = create(:user, organisations: [organisation], first_name: "Monsieur / Madame Jean", last_name: "JANY")
+      create(:user, organisations: [organisation], first_name: "Monsieur / Madame Jean", last_name: "JANY")
       assert_duplication_found(user, nil)
     end
   end

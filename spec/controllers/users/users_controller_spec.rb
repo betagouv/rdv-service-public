@@ -25,7 +25,7 @@ RSpec.describe Users::UsersController, type: :controller do
     describe "#update" do
       it "update user and redirect to" do
         expect(SearchPotentialDuplicateJob).to receive(:perform_later).with(user.id)
-        post :update, params: { id: user.id, user: {first_name: "Henri"}}
+        post :update, params: { id: user.id, user: { first_name: "Henri" } }
         expect(response).to redirect_to(users_informations_path)
         expect(flash[:notice]).to eq("Vos informations ont été mises à jour.")
       end
