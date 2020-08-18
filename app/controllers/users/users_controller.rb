@@ -8,6 +8,7 @@ class Users::UsersController < UserAuthController
     @user = current_user
     authorize(@user)
     if @user.update(user_params)
+      SearchPotentialDuplicateJob.perform_later(@user.id)
       flash[:notice] = "Vos informations ont été mises à jour."
       redirect_to users_informations_path
     else
