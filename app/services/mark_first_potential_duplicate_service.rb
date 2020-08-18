@@ -1,4 +1,4 @@
-class MarkFirstDuplicateUsersService < BaseService
+class MarkFirstPotentialDuplicateService < BaseService
   attr_reader :user
 
   SCORE_THRESHOLD = 0.8

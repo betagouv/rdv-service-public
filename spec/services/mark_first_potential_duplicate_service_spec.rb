@@ -1,4 +1,4 @@
-describe MarkFirstDuplicateUsersService, type: :service do
+describe MarkFirstPotentialDuplicateService, type: :service do
   describe ".perform" do
     it "return empty array when no duplicate" do
       assert_duplication_found(create(:user), nil)
@@ -34,7 +34,7 @@ describe MarkFirstDuplicateUsersService, type: :service do
   end
 
   def assert_duplication_found(user, expected_duplicate)
-    duplicate = MarkFirstDuplicateUsersService.perform_with(user)
+    duplicate = MarkFirstPotentialDuplicateService.perform_with(user)
     expect(duplicate).to eq(expected_duplicate)
     expect(user.reload.potential_duplicate).to eq(expected_duplicate)
   end
