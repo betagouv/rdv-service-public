@@ -33,6 +33,26 @@ describe MarkFirstPotentialDuplicateService, type: :service do
     end
   end
 
+  describe ".mark" do
+    it "put reference to duplicate user with a user given" do
+      organisation = create(:organisation)
+      user = create(:user, organisations: [organisation], first_name: "Monsieur / Madame Jean", last_name: "JACQUES")
+      duplicate = create(:user, organisations: [organisation], first_name: "Monsieur / Madame Jean", last_name: "JACQUS")
+      marker = MarkFirstPotentialDuplicateService.new(user)
+      marker.mark(duplicate)
+      expect(user.reload.potential_duplicate).to eq(duplicate)
+    end
+
+    it "clear attribute with no duplicate found" do
+      organisation = create(:organisation)
+      previous_duplicate = create(:user, organisations: [organisation], first_name: "Henri", last_name: "Ford")
+      user = create(:user, organisations: [organisation], first_name: "Monsieur / Madame Jean", last_name: "JACQUES", potential_duplicate: previous_duplicate)
+      marker = MarkFirstPotentialDuplicateService.new(user)
+      marker.mark(nil)
+      expect(user.reload.potential_duplicate).to eq(nil)
+    end
+  end
+
   def assert_duplication_found(user, expected_duplicate)
     duplicate = MarkFirstPotentialDuplicateService.perform_with(user)
     expect(duplicate).to eq(expected_duplicate)

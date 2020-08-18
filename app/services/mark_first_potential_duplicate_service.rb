@@ -31,7 +31,7 @@ class MarkFirstPotentialDuplicateService < BaseService
   end
 
   def mark(duplicate)
-    user.update(potential_duplicate: duplicate) unless duplicate.blank?
+    user.update!(potential_duplicate: duplicate)
     duplicate
   end
 
