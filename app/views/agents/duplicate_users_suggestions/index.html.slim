@@ -1,0 +1,37 @@
+- content_for :title do
+  | Suggestions d'usagers doublons
+
+- content_for :breadcrumb do
+  = add_button 'Fusionner deux usagers', new_organisation_merge_users_path(current_organisation), header: true
+
+.row.justify-content-md-center
+  .col-md-6
+    .card
+      .card-body
+        - if @duplicate_users_suggestions.any?
+          - @duplicate_users_suggestions.each do |suggestion|
+            .row.mb-1.pb-1.border-bottom.border-light
+              .col-sm-9
+                .row
+                  .col-sm-6.text-right.py-1= user_to_link(suggestion)
+                  .col-sm-6.text-left.py-1= user_to_link(suggestion.potential_duplicate)
+              .col-sm-3.text-right
+                = link_to( \
+                    'Fusionner…', \
+                    new_organisation_merge_users_path(\
+                      current_organisation, \
+                      user1_id: suggestion.id, \
+                      user2_id: suggestion.potential_duplicate_id \
+                      ), \
+                    class: 'btn btn-primary' \
+                    )
+
+
+        - else
+          .row.justify-content-md-center
+            .col-md-6.text-center.my-5
+              p.mb-2.lead Aucun doublon détécté
+              p L'algorithme de détection de doublons de RDV-Solidarités se base principalement sur le prénom et le nom, il se peut qu'il rate des doublons.
+
+          .text-center
+            = add_button 'Fusionner deux usagers', new_organisation_merge_users_path(current_organisation)
