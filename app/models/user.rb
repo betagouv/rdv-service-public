@@ -16,6 +16,7 @@ class User < ApplicationRecord
   has_many :rdvs_users, dependent: :destroy
   has_many :rdvs, through: :rdvs_users
   has_and_belongs_to_many :agents
+  belongs_to :potential_duplicate, foreign_key: "potential_duplicate_id", class_name: "User", optional: true
   belongs_to :responsible, foreign_key: "responsible_id", class_name: "User", optional: true
   has_many :relatives, foreign_key: "responsible_id", class_name: "User"
   has_many :file_attentes, dependent: :destroy

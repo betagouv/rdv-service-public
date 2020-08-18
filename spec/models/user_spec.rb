@@ -1,4 +1,8 @@
 describe User, type: :model do
+  it "have a valid factory" do
+    expect(build(:user)).to be_valid
+  end
+
   describe "#age" do
     let(:user) { build(:user, birth_date: birth_date) }
 
@@ -316,6 +320,16 @@ describe User, type: :model do
       note_ancienne = create(:user_note, user: user, organisation: organisation, text: "blablabla", created_at: DateTime.new(2020, 3, 15, 9, 59))
       note_recente = create(:user_note, user: user, organisation: organisation, text: "blablabla", created_at: DateTime.new(2020, 6, 23, 12, 39))
       expect(user.notes_for(organisation)).to eq([note_recente, note_ancienne])
+    end
+  end
+
+  describe ".potential_duplicate" do
+    it "return nil without potential duplicate" do
+      expect(build(:user, potential_duplicate: nil).potential_duplicate).to be_nil
+    end
+    it "return a user with potential duplicate" do
+      duplicate = build(:user)
+      expect(build(:user, potential_duplicate: duplicate).potential_duplicate).to eq(duplicate)
     end
   end
 end
