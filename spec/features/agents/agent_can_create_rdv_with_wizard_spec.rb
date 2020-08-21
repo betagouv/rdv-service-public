@@ -75,7 +75,7 @@ describe "Agent can create a Rdv with wizard" do
     expect(rdv.created_by_agent?).to be(true)
 
     expect(page).to have_current_path(organisation_rdv_path(organisation, rdv))
-    expect(page).to have_content("Votre agenda")
+    expect(page).to have_content("Le rendez-vous a été créé.")
     sleep(0.5) # wait for ajax request
   end
 
