@@ -49,12 +49,6 @@ class Rdv < ApplicationRecord
   after_save :associate_users_with_organisation
   after_update :notify_rdv_updated, if: -> { saved_change_to_starts_at? }
 
-  def agenda_path_for_agent(agent)
-    agent_for_agenda = agents.include?(agent) ? agent : agents.first
-
-    Rails.application.routes.url_helpers.organisation_agent_path(organisation, agent_for_agenda, date: starts_at.to_date)
-  end
-
   def ends_at
     starts_at + duration_in_min.minutes
   end

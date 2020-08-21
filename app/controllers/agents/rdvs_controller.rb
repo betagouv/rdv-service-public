@@ -60,7 +60,7 @@ class Agents::RdvsController < AgentAuthController
     @rdv.organisation = current_organisation
     authorize(@rdv)
     if @rdv.save
-      redirect_to @rdv.agenda_path_for_agent(current_agent), notice: "Le rendez-vous a été créé."
+      redirect_to organisation_rdv_path(current_organisation, @rdv), notice: "Le rendez-vous a été créé."
     else
       @rdv_wizard = AgentRdvWizard::Step3.new(current_agent, current_organisation, @rdv.attributes)
       render "agents/rdv_wizard_steps/step3"

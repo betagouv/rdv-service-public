@@ -74,7 +74,7 @@ describe "Agent can create a Rdv with wizard" do
     expect(rdv.starts_at).to eq(Time.zone.local(2019, 10, 11, 14, 15))
     expect(rdv.created_by_agent?).to be(true)
 
-    expect(page).to have_current_path(rdv.agenda_path_for_agent(agent))
+    expect(page).to have_current_path(organisation_rdv_path(organisation, rdv))
     expect(page).to have_content("Votre agenda")
     sleep(0.5) # wait for ajax request
   end
