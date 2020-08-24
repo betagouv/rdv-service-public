@@ -4,10 +4,13 @@
       = link_logo
       .collapse-menu.mx-2
         i.fa.fa-2x.fa-angle-left
+
+    = render "layouts/navbar_dashboard"
+
     - if content_for? :side_nav_menu
       = yield :side_nav_menu
     - else
-      ul.metismenu.side-nav.mt-5
+      ul.metismenu.side-nav.mt-2
         - if current_organisation.recent?
           li.side-nav-item
             = link_to( \

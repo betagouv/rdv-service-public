@@ -1,8 +1,7 @@
 .navbar-custom {
-  padding: 0 30px;
-  background-color: $bg-topbar;
+  margin: 2.5rem 1rem;
+  background-color: $bg-leftbar;
   box-shadow: $shadow;
-  margin: -5px -20px 0;
   min-height: 70px;
 
   .topbar-left {
@@ -22,56 +21,18 @@
     }
   }
   .topbar-right-menu {
-    li {
-      float: left;
-    }
     .nav-link {
-      padding: 0;
-      color: $gray-600;
-      min-width: 32px;
+      color: $white;
       display: block;
-      text-align: center;
-      margin: 0 8px;
     }
-  }
-}
-
-/* Search */
-
-.app-search {
-  padding: 16px 0;
-  overflow: hidden;
-  form {
-    max-width: 320px;
-  }
-  .form-control {
-    border: none;
-    height: 38px;
-    padding-left: 40px;
-    padding-right: 20px;
-    background-color: $gray-100;
-    box-shadow: none;
-  }
-  span {
-    position: absolute;
-    z-index: 10;
-    font-size: 20px;
-    line-height: 38px;
-    left: 10px;
-  }
-  .input-group-append {
-    margin-left: 0;
-    z-index: 4;
   }
 }
 
 .nav-user {
-  padding: 12px 20px 12px 57px !important;
-  text-align: left !important;
+  padding: 0;
+  text-align: left;
   position: relative;
-  background-color: lighten($gray-100, 2.5%);
-  border: 1px solid $gray-100;
-  border-width: 0 1px;
+  background-color: lighten($bg-leftbar, 10%);
   min-height: 70px;
 
   .account-position {
