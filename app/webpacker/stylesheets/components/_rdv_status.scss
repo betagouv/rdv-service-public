@@ -1,29 +1,29 @@
 a.rdv-status {
-  border: 1px solid $dark;
-  color: $dark;
+  border:0;
+  border-radius: 5px;
 }
 
-a.rdv-status[data-status="unknown"] {
-  background-color: #222E5C;
-  color:#fff;
+a.rdv-status-unknown {
+  background-color: $blue;
+  color: $white;
 }
 
-a.rdv-status[data-status="waiting"] {
-  background-color: #66d9cE;
-  color:#222E5C;
+a.rdv-status-waiting {
+  background-color: $turquoise;
+  color: $blue;
 }
 
-a.rdv-status[data-status="seen"] {
-  background-color: #0acf97;
-  color:#222E5C;
+a.rdv-status-seen {
+  background-color: $green;
+  color: $blue;
 }
 
-a.rdv-status[data-status="excused"] {
-  background-color: blue;
-  color:#222E5C;
+a.rdv-status-excused {
+  background-color: $green;
+  color: $blue;
 }
 
-a.rdv-status[data-status="notexcused"] {
+a.rdv-status-notexcused {
   background-color: #fe6376;
-  color:#222E5C;
+  color: $blue;
 }
