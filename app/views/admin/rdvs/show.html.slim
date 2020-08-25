@@ -12,7 +12,28 @@
 .row
   .col-md-6.mb-3
     .card
-      .card-header = l(@rdv.starts_at.to_date, format: :human )
+      .card-header
+        .d-flex.justify-content-between
+          = l(@rdv.starts_at.to_date, format: :human )
+
+          ul.list-unstyled.topbar-right-menu.float-right.mb-0
+            li.dropdown
+              a.dropdown-toggle.btn.rdv-status.mr-0 data-status=@rdv.status aria-expanded="false" aria-haspopup="false" data-toggle="dropdown" href="#" role="button"
+                = Rdv.human_enum_name(:status, @rdv.status)
+              .dropdown-menu.dropdown-menu-right.dropdown-menu-animated.profile-dropdown
+                .dropdown-header.noti-title
+                  = link_to organisation_rdv_path(@rdv.organisation, @rdv, rdv: {status: "unknown"}), method: :put, class: 'dropdown-item' do
+                    span Indeterminé
+                  = link_to organisation_rdv_path(@rdv.organisation, @rdv, rdv: {status: "waiting"}), method: :put, class: 'dropdown-item' do
+                    span En salle d'attente
+                  = link_to organisation_rdv_path(@rdv.organisation, @rdv, rdv: {status: "seen"}), method: :put, class: 'dropdown-item' do
+                    span Vu
+                  = link_to organisation_rdv_path(@rdv.organisation, @rdv, rdv: {status: "excused"}), method: :put, class: 'dropdown-item' do
+                    span Excusé
+                  = link_to organisation_rdv_path(@rdv.organisation, @rdv, rdv: {status: "notexcused"}), method: :put, class: 'dropdown-item' do
+                    span Non excusé
+
+
       .card-body
         p.card-text
           i.fa.fa-fw.fa-calendar>

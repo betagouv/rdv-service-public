@@ -1,0 +1,29 @@
+a.rdv-status {
+  border: 1px solid $dark;
+  color: $dark;
+}
+
+a.rdv-status[data-status="unknown"] {
+  background-color: #222E5C;
+  color:#fff;
+}
+
+a.rdv-status[data-status="waiting"] {
+  background-color: #66d9cE;
+  color:#222E5C;
+}
+
+a.rdv-status[data-status="seen"] {
+  background-color: #0acf97;
+  color:#222E5C;
+}
+
+a.rdv-status[data-status="excused"] {
+  background-color: blue;
+  color:#222E5C;
+}
+
+a.rdv-status[data-status="notexcused"] {
+  background-color: #fe6376;
+  color:#222E5C;
+}
