@@ -1,3 +1,5 @@
+- content_for(:menu_item) { 'menu-stats' }
+
 - content_for :title do
   span> Statistiques #{current_agent.full_name}
   small du #{l(Stat.default_date_range.first.to_date)} au #{l(Stat.default_date_range.last.to_date)}

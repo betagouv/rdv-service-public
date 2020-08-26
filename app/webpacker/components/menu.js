@@ -78,23 +78,22 @@ class Menu {
   }
 
   _initMenuItemActive = () => {
-    document.querySelectorAll(".side-nav a").forEach(elt => {
-      if (!this.isCurrentRoute(elt)) return
+    if (!this.getCurrentMenuItem()) return
 
-      const $elt = $(elt)
-      $elt.addClass("active");
-      $elt.closest("li").addClass("active")
-      $elt.closest("ul").addClass("in")
-      const $topItemElt = $elt.closest(".side-nav-item")
-      $topItemElt.addClass("active");
-      $topItemElt.find(">.side-nav-link").addClass("active");
-    });
+    const $elt = $(this.getCurrentMenuItem())
+    $elt.addClass("active");
+    $elt.closest("li").addClass("active")
+    $elt.closest("ul").addClass("in")
+    const $topItemElt = $elt.closest(".side-nav-item")
+    $topItemElt.addClass("active");
+    $topItemElt.find(">.side-nav-link").addClass("active");
   }
 
-  isCurrentRoute = (elt) => {
-    const currentRouteElt = document.getElementById("js-current-route")
-    const currentRoute = currentRouteElt && currentRouteElt.value;
-    return (!currentRoute || currentRoute === elt.getAttribute("data-route"))
+  getCurrentMenuItem = () => {
+    const menuId = (document.getElementById("js-current-menu-item") || {}).value
+    if (!menuId) return
+
+    return document.querySelector(`.side-nav a#${menuId}`)
   }
 
   _initNavbarToggle(){

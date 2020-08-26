@@ -4,6 +4,7 @@ module User::ResponsabilityConcern
   included do
     before_save :set_organisation_ids_from_responsible, if: :responsible_id_changed?
     accepts_nested_attributes_for :responsible
+    validate :cannot_be_responsible_of_self
   end
 
   def responsability_type
@@ -53,5 +54,9 @@ module User::ResponsabilityConcern
   def organisations_mismatch?
     responsible &&
       responsible.user_profiles.map(&:organisation_id).sort != user_profiles.map(&:organisation_id).sort
+  end
+
+  def cannot_be_responsible_of_self
+    errors.add(:responsible_id, "ne peut pas être l'usager lui même") if responsible_id.present? && responsible_id == id
   end
 end

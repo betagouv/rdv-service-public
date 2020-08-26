@@ -6,12 +6,12 @@
         "Instructions...",
         departement_setup_checklist_path(current_departement), \
         class: 'side-nav-link', \
-        data: { route: 'agents/departements/setup_checklists#show' }
+        id: "menu-departement-setup-checklist"
     li.side-nav-item
       = link_to \
         departement_zones_path(current_departement), \
         class: 'side-nav-link', \
-        data: { route: 'agents/departements/zones#index' } \
+        id: 'menu-departement-zones' \
       do
         i.fa.fa-table
         | Zones
@@ -19,7 +19,7 @@
       = link_to \
         new_departement_zone_import_path(current_departement), \
         class: 'side-nav-link', \
-        data: { route: 'agents/departements/zone_imports#new' } \
+        id: 'menu-departement-zone-imports' \
       do
         i.fa.fa-download
         | Importer fichier
@@ -27,7 +27,7 @@
       = link_to \
         departement_organisations_path(current_departement), \
         class: 'side-nav-link', \
-        data: { route: 'agents/departements/organisations#show' } \
+        id: 'menu-departement-organisations' \
       do
         i.fa.fa-building
         | Organisations
@@ -35,7 +35,7 @@
       = link_to \
         departement_zones_path(current_departement, view: "map"), \
         class: 'side-nav-link', \
-        data: { route: 'agents/departements/zones#index?view=map' } \
+        id: 'menu-departement-zones-map' \
       do
         i.fa.fa-map
         | Carte
