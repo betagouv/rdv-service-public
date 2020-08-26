@@ -1,10 +1,12 @@
 p Bonjour,
 
 p
-  ' L'organisation « #{@agent.organisations.first.name} » vient d'être créée par
+  ' L'organisation « #{@organisation.name} » dans le #{@organisation.departement} vient d'être créée par
   = mail_to @agent.email, @agent.email
   |.
-- if @agent.from_safe_domain?
+- if @agent.invitation_accepted?
+  p L'agent ayant créé cette organisation était déjà admin d'une autre organisation, la création a donc été validée automatiquement.
+- elsif @agent.from_safe_domain?
   p Le domaine du mail de l'agent ayant été reconnu, une invitation lui a automatiquement été envoyée.
 - else
   p Une invitation doit être envoyée pour permettre l'accès à la plateforme.

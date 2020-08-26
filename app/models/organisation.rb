@@ -41,7 +41,7 @@ class Organisation < ApplicationRecord
   def notify_admin_organisation_created
     return unless agents.present?
 
-    Admins::OrganisationMailer.organisation_created(agents.first).deliver_later
+    Admins::OrganisationMailer.organisation_created(agents.first, self).deliver_later
   end
 
   def recent?
