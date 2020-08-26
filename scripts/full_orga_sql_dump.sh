@@ -93,13 +93,6 @@ psql $SOURCE_DB_URL -c "COPY (
     )
   ) ORDER BY responsible_id
 ) TO '$OUTPUT_PATH/users.csv';"
-# psql $SOURCE_DB_URL -c "COPY (
-#   SELECT * FROM users WHERE id IN (
-#     SELECT users.responsible_id FROM users
-#     LEFT JOIN user_profiles ON user_profiles.user_id = users.id
-#     WHERE user_profiles.organisation_id=$ORGANISATION_ID
-#   )
-# ) TO '$OUTPUT_PATH/users_responsibles.csv';"
 
 # version
 echo "creating temporary PostgreSQL database $TEMP_DB_NAME..."
@@ -124,13 +117,11 @@ psql $TEMP_DB_URL -c "COPY user_profiles FROM '$OUTPUT_PATH/user_profiles.csv';"
 psql $TEMP_DB_URL -c "COPY zones FROM '$OUTPUT_PATH/zones.csv';"
 psql $TEMP_DB_URL -c "COPY agents_rdvs FROM '$OUTPUT_PATH/agents_rdvs.csv';"
 psql $TEMP_DB_URL -c "COPY agents_users FROM '$OUTPUT_PATH/agents_users.csv';"
-# psql $TEMP_DB_URL -c "COPY file_attentes FROM '$OUTPUT_PATH/file_attentes.csv';"
 psql $TEMP_DB_URL -c "COPY motifs_plage_ouvertures FROM '$OUTPUT_PATH/motifs_plage_ouvertures.csv';"
 psql $TEMP_DB_URL -c "COPY rdv_events FROM '$OUTPUT_PATH/rdv_events.csv';"
 psql $TEMP_DB_URL -c "COPY rdvs_users FROM '$OUTPUT_PATH/rdvs_users.csv';"
-# psql $TEMP_DB_URL -c "COPY users FROM '$OUTPUT_PATH/users_responsibles.csv';"
 psql $TEMP_DB_URL -c "COPY users FROM '$OUTPUT_PATH/users.csv';"
-
+psql $TEMP_DB_URL -c "COPY file_attentes FROM '$OUTPUT_PATH/file_attentes.csv';"
 
 echo "exporting SQL dump"
 pg_dump --clean --no-owner --no-privileges --file $OUTPUT_PATH/full_dump_organisation_$ORGANISATION_ID.sql $TEMP_DB_NAME
