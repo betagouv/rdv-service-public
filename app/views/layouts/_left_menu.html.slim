@@ -5,12 +5,28 @@
       .collapse-menu.mx-2
         i.fa.fa-2x.fa-angle-left
 
-    = render "layouts/navbar_dashboard"
-
     - if content_for? :side_nav_menu
       = yield :side_nav_menu
     - else
       ul.metismenu.side-nav.mt-2
+        li.side-nav-item
+          = link_to '#', class: 'side-nav-link' do
+            i.far.fa-user
+            span= "#{current_agent.first_name&.capitalize} (#{current_agent.service&.short_name})"
+            i.fa.fa-angle-right.menu-arrow.mt-1
+          ul.side-nav-second-level aria-expanded="false"
+            li
+              = link_to "Mon compte", edit_agent_registration_path
+            li
+              = link_to destroy_agent_session_path, method: :delete do
+                i.fa.fa-sign-out
+                span Se déconnecter
+
+        li.side-nav-item
+          = link_to(organisations_path(), class: 'side-nav-link') do
+              i.fas.fa-users
+              span= current_organisation.name
+
         - if current_organisation.recent?
           li.side-nav-item
             = link_to( \
