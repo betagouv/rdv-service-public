@@ -100,6 +100,33 @@ body.enlarged .logo{
         }
       }
     }
+    &.connected-agent {
+      background-color: #39AFD1;
+      color: $blue;
+
+      .side-nav-link {
+        display: flex;
+        color: lighten($blue, 20%);
+
+        &:hover, &:active, &:focus {
+          color: $blue;
+        }
+      }
+
+      .side-nav-second-level,
+      .side-nav-third-level {
+        li {
+          a {
+            padding: 8px 20px 8px 68px;
+            color: lighten($blue, 20%);
+
+            &:hover, &:active, &:focus {
+              color: $blue;
+            }
+          }
+        }
+      }
+    }
   }
 
   .collapse-menu {
@@ -121,128 +148,128 @@ body.enlarged .logo{
 // Enlarge menu
 .enlarged {
   .wrapper {
-        // Side menu
+    // Side menu
 
-        .left-side-menu {
-          position: absolute;
-          padding-top: 0;
-          width: 70px;
-          z-index: 5;
-          .collapse-menu {
-            transform: rotate(180deg);
-          }
-          .slimScrollDiv,
-          .slimscroll-menu {
-            overflow: inherit !important;
-            height: auto !important;
-          }
-          .slimScrollBar {
-            visibility: hidden;
-          }
-        }
-
-        // Help Box
-        .help-box {
-          display: none;
-        }
-
-        // Content Page
-        .content-page {
-          margin-left: 70px;
-        }
-
-        //Footer
-        .footer {
-          left: 70px;
-        }
+    .left-side-menu {
+      position: absolute;
+      padding-top: 0;
+      width: 70px;
+      z-index: 5;
+      .collapse-menu {
+        transform: rotate(180deg);
       }
-
-    // Sidebar Menu
-    .side-nav {
-      .side-nav-title,
-      .menu-arrow,
-      .badge,
-      .collapse.in {
-        display: none !important;
+      .slimScrollDiv,
+      .slimscroll-menu {
+        overflow: inherit !important;
+        height: auto !important;
       }
-      .nav.collapse {
-        height: inherit !important;
-      }
-
-      .side-nav-item {
-        position: relative;
-        white-space: nowrap;
-
-        .side-nav-link {
-          padding: 15px 20px;
-          min-height: 56px;
-
-          &:hover,
-          &:active,
-          &:focus {
-            color: $menu-item-hover;
-          }
-
-          i {
-            font-size: 1.125rem;
-            margin-right: 20px;
-          }
-
-          span {
-            display: none;
-            padding-left: 10px;
-          }
-        }
-
-        &:hover  {
-          .side-nav-link {
-            position: relative;
-            width: 260px;
-            color: $white;
-            background: $bg-leftbar;
-
-            span {
-              display: inline;
-            }
-          }
-
-          > ul {
-            display: block;
-            left: 70px;
-            position: absolute;
-            width: 190px;
-            height: auto !important;
-            padding: 5px 0;
-            z-index: 9999;
-            background: $bg-leftbar;
-            a {
-              padding: 8px 20px;
-              position: relative;
-              width: 190px;
-              &:hover {
-                color: $menu-item-hover;
-              }
-            }
-
-            ul {
-              left: 190px;
-              top: 0;
-            }
-          }
-        }
+      .slimScrollBar {
+        visibility: hidden;
       }
     }
-    .logo {
-      span.logo-lg {
-        display: none;
+
+    // Help Box
+    .help-box {
+      display: none;
+    }
+
+    // Content Page
+    .content-page {
+      margin-left: 70px;
+    }
+
+    //Footer
+    .footer {
+      left: 70px;
+    }
+  }
+
+  // Sidebar Menu
+  .side-nav {
+    .side-nav-title,
+    .menu-arrow,
+    .badge,
+    .collapse.in {
+      display: none !important;
+    }
+    .nav.collapse {
+      height: inherit !important;
+    }
+
+    .side-nav-item {
+      position: relative;
+      white-space: nowrap;
+
+      .side-nav-link {
+        padding: 15px 20px;
+        min-height: 56px;
+
+        &:hover,
+        &:active,
+        &:focus {
+          color: $menu-item-hover;
+        }
+
+        i {
+          font-size: 1.125rem;
+          margin-right: 20px;
+        }
+
+        span {
+          display: none;
+          padding-left: 10px;
+        }
       }
-      span.logo-sm {
-        display: block;
-        line-height: 70px;
-        color: $primary;
+
+      &:hover  {
+        .side-nav-link {
+          position: relative;
+          width: 260px;
+          color: $white;
+          background: $bg-leftbar;
+
+          span {
+            display: inline;
+          }
+        }
+
+        > ul {
+          display: block;
+          left: 70px;
+          position: absolute;
+          width: 190px;
+          height: auto !important;
+          padding: 5px 0;
+          z-index: 9999;
+          background: $bg-leftbar;
+          a {
+            padding: 8px 20px;
+            position: relative;
+            width: 190px;
+            &:hover {
+              color: $menu-item-hover;
+            }
+          }
+
+          ul {
+            left: 190px;
+            top: 0;
+          }
+        }
       }
     }
   }
+  .logo {
+    span.logo-lg {
+      display: none;
+    }
+    span.logo-sm {
+      display: block;
+      line-height: 70px;
+      color: $primary;
+    }
+  }
+}
 
 // Body min-height set
 body.enlarged {
