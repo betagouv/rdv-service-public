@@ -101,15 +101,16 @@ body.enlarged .logo{
       }
     }
     &.connected-agent {
-      background-color: #39AFD1;
-      color: $blue;
+      background-color: #566CC1;
+      color: $white;
 
       .side-nav-link {
         display: flex;
-        color: lighten($blue, 10%);
+        color: $menu-item;
+
 
         &:hover, &:active, &:focus {
-          color: $blue;
+          color: $menu-item-hover;
         }
       }
 
@@ -118,10 +119,10 @@ body.enlarged .logo{
         li {
           a {
             padding: 8px 20px 8px 68px;
-            color: lighten($blue, 20%);
+            color: $menu-item;
 
             &:hover, &:active, &:focus {
-              color: $blue;
+              color: $menu-item-hover;
             }
           }
         }
