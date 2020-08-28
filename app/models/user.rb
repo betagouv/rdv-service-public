@@ -45,7 +45,7 @@ class User < ApplicationRecord
 
   def age
     years = age_in_years
-    return "#{years} ans" if years >= 2
+    return "#{years} ans" if years >= 3
 
     months = age_in_months
     return "#{months} mois" if months.positive?
