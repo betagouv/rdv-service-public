@@ -106,7 +106,7 @@ body.enlarged .logo{
 
       .side-nav-link {
         display: flex;
-        color: lighten($blue, 20%);
+        color: lighten($blue, 10%);
 
         &:hover, &:active, &:focus {
           color: $blue;
