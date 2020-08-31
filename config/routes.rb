@@ -74,7 +74,11 @@ Rails.application.routes.draw do
 
   authenticate :agent do
     namespace "admin" do
-      resources :organisations
+      resources :organisations do
+        resources :agent_searches, only: :index, module: "creneaux" do
+          get :by_lieu, on: :collection
+        end
+      end
     end
 
     scope module: "agents" do
@@ -138,10 +142,6 @@ Rails.application.routes.draw do
         resources :rdvs, except: [:index, :new] do
           patch :status, on: :member
           resources :versions, only: [:index]
-        end
-
-        resources :agent_searches, only: :index, module: "creneaux" do
-          get :by_lieu, on: :collection
         end
 
         resource :rdv_wizard_step, only: [:new, :create]

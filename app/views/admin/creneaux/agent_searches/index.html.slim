@@ -9,7 +9,7 @@
 .card
   .card-body
     h5.card-title Configuration des filtres
-    = simple_form_for(Creneau::AgentSearch.new, remote: true, url: organisation_agent_searches_path(@organisation), method: :get, html: { class: 'js-creneaux-form' }) do |f|
+    = simple_form_for(Creneau::AgentSearch.new, remote: true, url: admin_organisation_agent_searches_path(@organisation), method: :get, html: { class: 'js-creneaux-form' }) do |f|
       - if @user
         = hidden_field_tag :user_id, @user.id
       .row

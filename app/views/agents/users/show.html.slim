@@ -12,7 +12,7 @@
         = link_to @user.responsible.full_name, organisation_user_path(current_organisation, @user.responsible)
     li.breadcrumb-item.active #{@user.full_name}
 
-  = link_to "Trouver un créneau", organisation_agent_searches_path(current_organisation, user_id: @user.id), class: "btn btn-outline-white"
+  = link_to "Trouver un créneau", admin_organisation_agent_searches_path(current_organisation, user_id: @user.id), class: "btn btn-outline-white"
 
 .row
   .col-md-6
@@ -94,9 +94,9 @@
         .row
           .col-md-4
             .bg-light.p-2.mb-3.mb-md-0.text-center
-              p.h2= rdvs.status('unknown_past').count 
+              p.h2= rdvs.status('unknown_past').count
               p.lead
-                => t 'stats.rdv_counters.rdvs.unknown_past', count: rdvs.status('unknown_past').count 
+                => t 'stats.rdv_counters.rdvs.unknown_past', count: rdvs.status('unknown_past').count
                 = rdv_danger_icon(rdvs.status('unknown_past').count)
               = link_to_rdvs('unknown_past', clasz: 'btn-outline-dark')
           .col-md-4
@@ -106,7 +106,7 @@
               = link_to_rdvs('seen')
           .col-md-4
             .bg-info.text-white.p-2.mb-3.text-center
-              p.h2= rdvs.status('unknown_future').count 
+              p.h2= rdvs.status('unknown_future').count
               p.lead À venir
               = link_to_rdvs('unknown_future')
         .row
