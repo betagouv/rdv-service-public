@@ -1,4 +1,4 @@
-class Agents::LieuxController < AgentAuthController
+class Admin::LieuxController < AgentAuthController
   respond_to :html, :json
 
   def index
@@ -16,7 +16,7 @@ class Agents::LieuxController < AgentAuthController
     @lieu.assign_attributes(lieu_params)
     authorize(@lieu)
     flash.notice = "Le lieu a été créé." if @lieu.save
-    respond_right_bar_with @lieu, location: organisation_lieux_path(@lieu.organisation)
+    respond_right_bar_with @lieu, location: admin_organisation_lieux_path(@lieu.organisation)
   end
 
   def edit
@@ -29,14 +29,14 @@ class Agents::LieuxController < AgentAuthController
     @lieu = Lieu.find(params[:id])
     authorize(@lieu)
     flash[:notice] = "Lieu a été modifié." if @lieu.update(lieu_params)
-    respond_right_bar_with @lieu, location: organisation_lieux_path(@lieu.organisation)
+    respond_right_bar_with @lieu, location: admin_organisation_lieux_path(@lieu.organisation)
   end
 
   def destroy
     @lieu = Lieu.find(params[:id])
     authorize(@lieu)
     flash[:notice] = "Le lieu a été supprimé." if @lieu.destroy
-    respond_right_bar_with @lieu, location: organisation_lieux_path(@lieu.organisation)
+    respond_right_bar_with @lieu, location: admin_organisation_lieux_path(@lieu.organisation)
   end
 
   private
