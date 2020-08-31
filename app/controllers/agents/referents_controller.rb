@@ -1,9 +1,9 @@
 class Agents::ReferentsController < AgentAuthController
-  before_action :set_organisation, only: [:create]
-
-  def create
-    user = policy_scope(User).find(params[:id])
-    flash[:error] = "Erreur lors de la modification des référents" unless user.update(agents: Agent.where(id: params[:user][:agent_ids]))
+  def update
+    user = policy_scope(User).find(params[:user_id])
+    authorize(user)
+    agents = policy_scope(Agent).where(id: params[:user][:agent_ids])
+    flash[:error] = "Erreur lors de la modification des référents" unless user.update(agents: agents)
     redirect_to organisation_user_path(current_organisation, user)
   end
 end
