@@ -1,7 +1,7 @@
 # adapted from https://github.com/rails/rails/blob/master/railties/lib/rails/mailers_controller.rb
 
-module Admin
-  class MailerPreviewsController < Admin::ApplicationController
+module SuperAdmins
+  class MailerPreviewsController < SuperAdmins::ApplicationController
     before_action :find_preview, only: :show
     around_action :set_locale, only: :show
 

@@ -2,9 +2,9 @@ Rails.application.routes.draw do
   ## ADMIN ##
   devise_for :super_admins, controllers: { omniauth_callbacks: "super_admins/omniauth_callbacks" }
 
-  delete "admin/sign_out" => "super_admins/sessions#destroy"
+  delete "super_admins/sign_out" => "super_admins/sessions#destroy"
 
-  namespace :admin do
+  namespace :super_admins do
     resources :agents do
       get "sign_in_as", on: :member
       post :invite, on: :member
@@ -29,6 +29,7 @@ Rails.application.routes.draw do
       match "/delayed_job" => DelayedJobWeb, anchor: false, via: [:get, :post]
     end
   end
+  get "super_admin", to: redirect("super_admins", status: 301)
 
   ## APP ##
   devise_for :users, controllers: { registrations: "users/registrations", sessions: "users/sessions", passwords: "users/passwords", confirmations: "users/confirmations" }
