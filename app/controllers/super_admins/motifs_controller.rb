@@ -1,5 +1,5 @@
-module Admin
-  class LieuxController < Admin::ApplicationController
+module SuperAdmins
+  class MotifsController < SuperAdmins::ApplicationController
     # To customize the behavior of this controller,
     # you can overwrite any of the RESTful actions. For example:
     #

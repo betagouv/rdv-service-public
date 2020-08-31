@@ -6,7 +6,7 @@ module SuperAdmins
 
       if super_admin.present?
         sign_in super_admin
-        redirect_to admin_agents_path
+        redirect_to super_admins_agents_path
       else
         flash[:alert] = "Compte GitHub non autorisé"
         Rails.logger.error("OmniAuth failed for #{email}")

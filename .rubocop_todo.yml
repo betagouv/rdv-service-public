@@ -114,7 +114,7 @@ Style/FrozenStringLiteralComment:
 # Cop supports --auto-correct.
 Style/IfUnlessModifier:
   Exclude:
-    - 'app/controllers/admin/mailer_previews_controller.rb'
+    - 'app/controllers/super_admins/mailer_previews_controller.rb'
     - 'app/controllers/agents/users_controller.rb'
     - 'app/controllers/modal_responder.rb'
     - 'app/controllers/right_bar_responder.rb'

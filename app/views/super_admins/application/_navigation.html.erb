@@ -3,12 +3,12 @@
 
 This partial is used to display the navigation in Administrate.
 By default, the navigation contains navigation links
-for all resources in the admin dashboard,
-as defined by the routes in the `admin/` namespace
+for all resources in the super_admin dashboard,
+as defined by the routes in the `super_admins/` namespace
 %>
 
 <nav class="navigation" role="navigation">
-  <%= link_to "Se déconnecter", admin_sign_out_path, method: :delete, class: "navigation__link" %>
+  <%= link_to "Se déconnecter", super_admins_sign_out_path, method: :delete, class: "navigation__link" %>
 
   <hr />
 
@@ -21,5 +21,5 @@ as defined by the routes in the `admin/` namespace
   <% end %>
 
   <hr />
-  <%= link_to "Delayed Jobs", admin_delayed_job_path, class: "navigation__link" %>
+  <%= link_to "Delayed Jobs", super_admins_delayed_job_path, class: "navigation__link" %>
 </nav>
