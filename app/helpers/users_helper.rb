@@ -2,7 +2,36 @@ module UsersHelper
   def birth_date_and_age(user)
     return unless user.birth_date
 
-    "#{I18n.l(user.birth_date)} - #{user.age}"
+    "#{I18n.l(user.birth_date)} - #{age(user)}"
+  end
+
+  def age(user)
+    years = age_in_years(user)
+    return "#{years} ans" if years >= 3
+
+    months = age_in_months(user)
+    return "#{months} mois" if months.positive?
+
+    "#{age_in_days(user).to_i} jours"
+  end
+
+  def age_in_years(user)
+    today = Time.zone.now.to_date
+    years = today.year - user.birth_date.year
+    if today.month > user.birth_date.month || (today.month == user.birth_date.month && today.day >= user.birth_date.day)
+      years
+    else
+      years - 1
+    end
+  end
+
+  def age_in_months(user)
+    today = Time.zone.now.to_date
+    (today.year - user.birth_date.year) * 12 + today.month - user.birth_date.month - (today.day >= user.birth_date.day ? 0 : 1)
+  end
+
+  def age_in_days(user)
+    Time.zone.now.to_date - user.birth_date
   end
 
   def relative_tag(user)
