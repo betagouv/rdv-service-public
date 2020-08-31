@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # ./scripts/full_orga_sql_dump.sh 83 postgresql://localhost/rdv-sol-prod-dump
+# ./scripts/full_orga_sql_dump.sh ORGANISATION_ID $DATABASE_URL
 
 set -e  # will exit upon failure
 
