@@ -17,7 +17,7 @@
               .row
                 .col
                   => relative.full_name
-                  = "(#{relative.age})" if relative.birth_date
+                  = "(#{age(relative)})" if relative.birth_date
                 .col-auto.text-right
                   = link_to "modifier", edit_relative_path(relative)
         .text-right
