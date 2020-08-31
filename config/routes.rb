@@ -90,11 +90,6 @@ Rails.application.routes.draw do
         end
         resources :lieux, except: :show
         resources :motifs
-      end
-    end
-
-    scope module: "agents" do
-      resources :organisations, only: [] do
         scope module: "organisations" do
           resource :setup_checklist, only: [:show]
           resources :rdvs, only: :index
@@ -105,6 +100,11 @@ Rails.application.routes.draw do
             end
           end
         end
+      end
+    end
+
+    scope module: "agents" do
+      resources :organisations, only: [] do
         resources :plage_ouvertures, except: [:index, :show, :new]
         resources :absences, except: [:index, :show, :new]
 

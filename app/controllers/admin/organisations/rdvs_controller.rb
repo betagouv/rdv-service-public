@@ -1,4 +1,4 @@
-class Agents::Organisations::RdvsController < AgentAuthController
+class Admin::Organisations::RdvsController < AgentAuthController
   def index
     @rdvs = policy_scope(Rdv)
     @rdvs = @rdvs.default_stats_period if params[:default_period].present?
