@@ -74,14 +74,6 @@ Rails.application.routes.draw do
 
   authenticate :agent do
     namespace "admin" do
-      resources :organisations do
-        resources :agent_searches, only: :index, module: "creneaux" do
-          get :by_lieu, on: :collection
-        end
-      end
-    end
-
-    scope module: "agents" do
       resources :departements, only: [] do
         scope module: "departements" do
           resources :zone_imports, only: [:new, :create]
@@ -91,6 +83,15 @@ Rails.application.routes.draw do
           resource :setup_checklist, only: [:show]
         end
       end
+
+      resources :organisations do
+        resources :agent_searches, only: :index, module: "creneaux" do
+          get :by_lieu, on: :collection
+        end
+      end
+    end
+
+    scope module: "agents" do
       resources :organisations, only: [] do
         resources :lieux, except: :show
         resources :motifs

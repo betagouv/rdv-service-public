@@ -2,7 +2,7 @@
 
 = simple_form_for( \
   zone, \
-  url: zone.new_record? ? departement_zones_path(current_departement) : departement_zone_path(current_departement, zone) \
+  url: zone.new_record? ? admin_departement_zones_path(current_departement) : admin_departement_zone_path(current_departement, zone) \
 ) do |f|
   = f.input :organisation_id, \
     collection: policy_scope(Organisation).where(departement: current_departement.number), \
