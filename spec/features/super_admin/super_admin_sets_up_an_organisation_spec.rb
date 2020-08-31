@@ -6,7 +6,7 @@ describe "Super admin can configure an account" do
 
   before do
     login_as(super_admin, scope: :super_admin)
-    visit admin_agents_path
+    visit super_admins_agents_path
   end
 
   scenario "Create organisation and invite a agent" do
