@@ -1,4 +1,4 @@
-class Agents::Departements::ZonesController < AgentDepartementAuthController
+class Admin::Departements::ZonesController < AgentDepartementAuthController
   def index
     @search_form = ZoneSearchForm.new(search_params)
     @zones = policy_scope(Zone)
@@ -20,7 +20,7 @@ class Agents::Departements::ZonesController < AgentDepartementAuthController
     @zone = Zone.new(**zone_params)
     authorize(@zone)
     if @zone.save
-      redirect_to departement_zones_path(current_departement), flash: { success: "Zone créée" }
+      redirect_to admin_departement_zones_path(current_departement), flash: { success: "Zone créée" }
     else
       render :new
     end
@@ -36,7 +36,7 @@ class Agents::Departements::ZonesController < AgentDepartementAuthController
     @zone.assign_attributes(**zone_params)
     authorize(@zone)
     if @zone.save
-      redirect_to departement_zones_path(current_departement), flash: { success: "Zone mise à jour" }
+      redirect_to admin_departement_zones_path(current_departement), flash: { success: "Zone mise à jour" }
     else
       render :edit
     end
@@ -46,9 +46,9 @@ class Agents::Departements::ZonesController < AgentDepartementAuthController
     zone = Zone.find(params[:id])
     authorize(zone)
     if zone.destroy
-      redirect_to departement_zones_path(current_departement), flash: { success: "Zone supprimée" }
+      redirect_to admin_departement_zones_path(current_departement), flash: { success: "Zone supprimée" }
     else
-      redirect_to departement_zones_path(current_departement), flash: { error: "Erreur lors de la suppression" }
+      redirect_to admin_departement_zones_path(current_departement), flash: { error: "Erreur lors de la suppression" }
     end
   end
 
@@ -63,7 +63,7 @@ class Agents::Departements::ZonesController < AgentDepartementAuthController
     else
       flash[:danger] = "Erreur lors de la suppression des #{count} zones"
     end
-    redirect_to departement_zones_path(current_departement, **search_params)
+    redirect_to admin_departement_zones_path(current_departement, **search_params)
   end
 
   private

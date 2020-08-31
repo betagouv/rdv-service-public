@@ -85,7 +85,7 @@
               - if current_agent.admin? && policy_scope(Organisation).count == 1
                 li
                   = link_to "Sectorisation #{current_organisation.departement}", \
-                    departement_setup_checklist_path(current_organisation.departement)
+                    admin_departement_setup_checklist_path(current_organisation.departement)
               li
                 = link_to( \
                   organisation_stats_path(current_organisation), \
