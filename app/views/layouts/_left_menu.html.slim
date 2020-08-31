@@ -12,11 +12,10 @@
           = link_to '#', class: 'side-nav-link' do
             div
               i.far.fa-user
-            div
+            div.d-flex.flex-column
+              / spans required for responsive behaviour
               span= current_agent.first_name&.capitalize
-              br
               span= current_agent.service&.short_name
-              br
               span= current_organisation.name
             i.fa.fa-angle-right.menu-arrow.mt-1
           ul.side-nav-second-level. aria-expanded="false"
