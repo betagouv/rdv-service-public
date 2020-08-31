@@ -88,12 +88,12 @@ Rails.application.routes.draw do
         resources :agent_searches, only: :index, module: "creneaux" do
           get :by_lieu, on: :collection
         end
+        resources :lieux, except: :show
       end
     end
 
     scope module: "agents" do
       resources :organisations, only: [] do
-        resources :lieux, except: :show
         resources :motifs
         scope module: "organisations" do
           resource :setup_checklist, only: [:show]

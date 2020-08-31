@@ -1,4 +1,4 @@
-RSpec.describe Agents::LieuxController, type: :controller do
+RSpec.describe Admin::LieuxController, type: :controller do
   render_views
 
   let(:agent) { create(:agent, :admin) }
@@ -44,7 +44,7 @@ RSpec.describe Agents::LieuxController, type: :controller do
 
       it "redirects to the created lieu" do
         post :create, params: { organisation_id: organisation_id, lieu: valid_attributes }
-        expect(response).to redirect_to(organisation_lieux_path(organisation_id))
+        expect(response).to redirect_to(admin_organisation_lieux_path(organisation_id))
       end
     end
 
@@ -86,7 +86,7 @@ RSpec.describe Agents::LieuxController, type: :controller do
       end
 
       it "redirects to the lieu" do
-        expect(response).to redirect_to(organisation_lieux_path(organisation_id))
+        expect(response).to redirect_to(admin_organisation_lieux_path(organisation_id))
       end
     end
 
@@ -117,7 +117,7 @@ RSpec.describe Agents::LieuxController, type: :controller do
 
     it "redirects to the lieux list" do
       delete :destroy, params: { organisation_id: organisation_id, id: lieu.to_param }
-      expect(response).to redirect_to(organisation_lieux_path(organisation_id))
+      expect(response).to redirect_to(admin_organisation_lieux_path(organisation_id))
     end
   end
 end
