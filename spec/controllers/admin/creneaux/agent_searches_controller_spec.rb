@@ -1,4 +1,4 @@
-describe Agents::Creneaux::AgentSearchesController, type: :controller do
+describe Admin::Creneaux::AgentSearchesController, type: :controller do
   context "with a secretaire signed_in" do
     let!(:agent) { create(:agent, :secretaire) }
     before(:each) { sign_in agent }

@@ -1,4 +1,4 @@
-class Agents::Creneaux::AgentSearchesController < AgentAuthController
+class Admin::Creneaux::AgentSearchesController < AgentAuthController
   respond_to :html, :js
 
   def index
