@@ -101,7 +101,7 @@ body.enlarged .logo{
       }
     }
     &.connected-agent {
-      background-color: #566CC1;
+      background-color: lighten($bg-leftbar, 10%);
       color: $white;
 
       .side-nav-link {
