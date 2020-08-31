@@ -4,7 +4,7 @@
   | Vos motifs
 
 - content_for :breadcrumb do
-  = link_to 'Créer un motif', new_organisation_motif_path(current_organisation), class:"btn btn-outline-white"
+  = link_to 'Créer un motif', new_admin_organisation_motif_path(current_organisation), class:"btn btn-outline-white"
 
 .row
   .col-md-12
@@ -33,4 +33,4 @@
                 i.fa.fa-circle.fa-stack-2x.text-primary
                 i.far.fa-calendar.fa-stack-1x.text-white
         .text-center
-          = link_to 'Créer un motif', new_organisation_motif_path(current_organisation), class: 'btn btn-primary'
+          = link_to 'Créer un motif', new_admin_organisation_motif_path(current_organisation), class: 'btn btn-primary'

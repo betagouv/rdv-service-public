@@ -45,6 +45,6 @@ p.card-text
 
 .row
   .col.text-left
-    = link_to 'Supprimer', organisation_motif_path(current_organisation, @motif), data: { confirm: "Êtes-vous sûr de vouloir supprimer ce motif ?" }, method: :delete, class: 'btn btn-outline-danger'
+    = link_to 'Supprimer', admin_organisation_motif_path(current_organisation, @motif), data: { confirm: "Êtes-vous sûr de vouloir supprimer ce motif ?" }, method: :delete, class: 'btn btn-outline-danger'
   .col.text-right
-    = link_to 'Modifier', edit_organisation_motif_path(current_organisation, @motif), class: 'btn btn-primary'
+    = link_to 'Modifier', edit_admin_organisation_motif_path(current_organisation, @motif), class: 'btn btn-primary'

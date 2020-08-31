@@ -80,7 +80,7 @@
                   id: 'menu-agents'
               li
                 = link_to 'Vos motifs', \
-                  organisation_motifs_path(current_organisation), \
+                  admin_organisation_motifs_path(current_organisation), \
                   id: 'menu-motifs'
               - if current_agent.admin? && policy_scope(Organisation).count == 1
                 li

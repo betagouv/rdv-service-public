@@ -22,7 +22,7 @@
               i= @other_agents.length == 1 ? @other_agents.last.full_name : "#{@other_agents.length} agents créés"
           li.mb-2
             span>= setup_checklist_item(@motifs.length > 0)
-            span>= link_to "Ajouter un motif de RDV", organisation_motifs_path(@organisation)
+            span>= link_to "Ajouter un motif de RDV", admin_organisation_motifs_path(@organisation)
             - if @motifs.length > 0
                 i>= @motifs.length == 1 ? @motifs.last.name : "#{@motifs.length} motifs créés"
 
@@ -74,7 +74,7 @@
                   i.fa.fa-check
                 - else
                   i.fa.fa-times
-              span>= link_to motif.name, edit_organisation_motif_path(@organisation, motif)
+              span>= link_to motif.name, edit_admin_organisation_motif_path(@organisation, motif)
               span>= ":"
               - if motif.reservable_online?
                 i>= "ouvert à la réservation en ligne"
