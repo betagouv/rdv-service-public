@@ -10,14 +10,16 @@
       ul.metismenu.side-nav.mt-5
         li.side-nav-item.connected-agent
           = link_to '#', class: 'side-nav-link' do
-            div
-              i.far.fa-user
+            div.only-visible-when-enlarged
+              i.far.fa-id-card
             div.d-flex.flex-column
               / spans required for responsive behaviour
-              span= current_agent.first_name&.capitalize
+              span
+                h4= current_agent.first_name&.capitalize
               span= current_agent.service&.short_name
               span= current_organisation.name
-            i.fa.fa-angle-right.menu-arrow.mt-1
+            div.d-flex.align-items-center
+              i.fa.fa-angle-right.menu-arrow.mt-1
           ul.side-nav-second-level. aria-expanded="false"
             li
               = link_to "Mon compte", edit_agent_registration_path

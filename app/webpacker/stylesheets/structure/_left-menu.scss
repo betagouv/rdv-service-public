@@ -146,6 +146,12 @@ body.enlarged .logo{
 }
 
 // Enlarge menu
+body:not(.enlarged) {
+  .only-visible-when-enlarged {
+    display: none;
+  }
+}
+
 .enlarged {
   .wrapper {
     // Side menu
@@ -165,6 +171,9 @@ body.enlarged .logo{
       }
       .slimScrollBar {
         visibility: hidden;
+      }
+      .only-visible-when-enlarged {
+        display: auto;
       }
     }
 
