@@ -11,7 +11,7 @@
         - if current_organisation.recent?
           li.side-nav-item
             = link_to( \
-              organisation_setup_checklist_path(current_organisation), \
+              admin_organisation_setup_checklist_path(current_organisation), \
               class: 'side-nav-link', \
               id: "menu-setup-checklist" \
             ) do
@@ -88,7 +88,7 @@
                     admin_departement_setup_checklist_path(current_organisation.departement)
               li
                 = link_to( \
-                  organisation_stats_path(current_organisation), \
+                  admin_organisation_stats_path(current_organisation), \
                   id: 'menu-organisation-stats' \
                 ) do
                   | Statistiques de l'organisation

@@ -1,4 +1,4 @@
-class Agents::Organisations::StatsController < AgentAuthController
+class Admin::Organisations::StatsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation

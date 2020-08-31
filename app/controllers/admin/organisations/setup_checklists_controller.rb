@@ -1,4 +1,4 @@
-class Agents::Organisations::SetupChecklistsController < AgentAuthController
+class Admin::Organisations::SetupChecklistsController < AgentAuthController
   before_action :set_organisation
 
   def show
