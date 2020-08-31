@@ -1,7 +1,7 @@
 - user_notes = user.notes_for(current_organisation)
 
 - if user_notes.empty?
-  | Aucune notes pour cette usager
+  | Aucune note pour cet usager
 - else
   - user_notes.limit(5).each do |user_note|
     = render "common/user_note", user_note: user_note
