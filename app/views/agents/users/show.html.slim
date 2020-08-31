@@ -50,7 +50,7 @@
       .card
         .card-header
           .d-flex.justify-content-between
-            .mt-1 Agents référent
+            .mt-1 Agents référents
             button.small.btn.btn-primary type="button" data-toggle="collapse" data-target=".collapse-referent-form" aria-expanded="false" aria-controls="collapse-referent-form"
               | Modifier
         .card-body
@@ -64,7 +64,7 @@
                 li.mb-2
                 | #{agent.full_name_and_service}
               - if @user.agents.empty?
-                small.font-italic aucun référent
+                .font-italic aucun référent
 
     - if @user.relative?
       .card#spec-secondary-user-card
@@ -74,14 +74,14 @@
 
       .card
         .card-header
-            .mt-1 Agents référent du responsable
+            .mt-1 Agents référents du responsable
         .card-body
           ul.list-unstyled.mb-2
             - @user.responsible.agents.includes([:service]).each do |agent|
               li.mb-2
               | #{agent.full_name_and_service}
             - if @user.responsible.agents.empty?
-              small.font-italic aucun référent
+              .font-italic aucun référent
 
 
   - rdvs = @user.rdvs.where(organisation_id: current_organisation)
