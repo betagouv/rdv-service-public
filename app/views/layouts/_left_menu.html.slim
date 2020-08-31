@@ -14,8 +14,7 @@
               i.far.fa-id-card
             div.d-flex.flex-column
               / spans required for responsive behaviour
-              span
-                h4= current_agent.first_name&.capitalize
+              span.h5= current_agent.first_name&.capitalize
               span= current_agent.service&.short_name
               span= current_organisation.name
             div.d-flex.align-items-center
