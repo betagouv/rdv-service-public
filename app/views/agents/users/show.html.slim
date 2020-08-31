@@ -46,29 +46,41 @@
           .col.text-right
             = link_to "Modifier", edit_organisation_user_path(current_organisation, @user), class: "btn btn-primary"
 
+    - if @user.responsible?
+      .card
+        .card-header
+          .d-flex.justify-content-between
+            .mt-1 Agents référent
+            button.small.btn.btn-primary type="button" data-toggle="collapse" data-target=".collapse-referent-form" aria-expanded="false" aria-controls="collapse-referent-form"
+              | Modifier
+        .card-body
+          .collapse.collapse-referent-form
+            = simple_form_for(@user, url: organisation_user_referents_path(current_organisation, @user), method: :create) do |f|
+              = f.association(:agents, collection: policy_scope(Agent).order_by_last_name.page(params[:page]), label_method: :full_name_and_service, label: false, **{input_html: { multiple: true, class: 'select2-input'}})
+              = f.button :submit, "Enregistrer"
+          .show.collapse-referent-form
+            ul.list-unstyled.mb-2
+              - @user.agents.includes([:service]).each do |agent|
+                li.mb-2
+                | #{agent.full_name_and_service}
+              - if @user.agents.empty?
+                small.font-italic aucun référent
+
     - if @user.relative?
       .card#spec-secondary-user-card
         .card-body
           h4.card-title.mb-3 Informations sur l'usager en charge
           = render 'agents/users/responsible_information', user: @user.responsible
 
-    .card
-      .card-header
-        .d-flex.justify-content-between
-          .mt-1 Agents référent
-          button.small.btn.btn-primary type="button" data-toggle="collapse" data-target=".collapseExample" aria-expanded="false" aria-controls="collapseExample"
-            | Modifier
-      .card-body
-        .collapse.collapseExample
-          = simple_form_for(@user, url: organisation_user_referents_path(current_organisation, @user), method: :create) do |f|
-            = f.association(:agents, collection: policy_scope(Agent).order_by_last_name.page(params[:page]), label_method: :full_name_and_service, label: false, **{input_html: { multiple: true, class: 'select2-input'}})
-            = f.button :submit, "Enregistrer"
-        .show.collapseExample
+      .card
+        .card-header
+            .mt-1 Agents référent du responsable
+        .card-body
           ul.list-unstyled.mb-2
-            - @user.agents.includes([:service]).each do |agent|
+            - @user.responsible.agents.includes([:service]).each do |agent|
               li.mb-2
               | #{agent.full_name_and_service}
-            - if @user.agents.empty?
+            - if @user.responsible.agents.empty?
               small.font-italic aucun référent
 
 
