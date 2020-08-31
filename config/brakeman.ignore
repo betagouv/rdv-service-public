@@ -23,6 +23,37 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
+      "fingerprint": "5dac0e77a1407c8fe48311e85004875de6856a785512abf2ef6e27ebc3f4a376",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/admin/motifs/index.html.slim",
+      "line": 24,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => policy_scope(Motif).includes(:organisation).active.includes(:service).order(Arel.sql(\"LOWER(name)\")).page(params[:page]), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::MotifsController",
+          "method": "index",
+          "line": 9,
+          "file": "app/controllers/admin/motifs_controller.rb",
+          "rendered": {
+            "name": "admin/motifs/index",
+            "file": "app/views/admin/motifs/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "admin/motifs/index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
       "fingerprint": "932ed3a736f629ffd5d6e0036b22d376294a4605c5a260b2006a303a2d340292",
       "check_name": "Render",
       "message": "Render path contains parameter value",
@@ -50,39 +81,8 @@
       "user_input": "params[:page]",
       "confidence": "Weak",
       "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "be54b3c320f298176f5ef68935255ddb6ba20d13ad4635ef4a843b8103bcd0b9",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/agents/motifs/index.html.slim",
-      "line": 24,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(Motif).includes(:organisation).active.includes(:service).order(Arel.sql(\"LOWER(name)\")).page(params[:page]), {})",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Agents::MotifsController",
-          "method": "index",
-          "line": 9,
-          "file": "app/controllers/agents/motifs_controller.rb",
-          "rendered": {
-            "name": "agents/motifs/index",
-            "file": "app/views/agents/motifs/index.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "agents/motifs/index"
-      },
-      "user_input": "params[:page]",
-      "confidence": "Weak",
-      "note": ""
     }
   ],
-  "updated": "2020-08-31 18:59:56 +0200",
+  "updated": "2020-08-31 19:01:51 +0200",
   "brakeman_version": "4.7.2"
 }

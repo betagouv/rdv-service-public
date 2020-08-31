@@ -1,4 +1,4 @@
-class Agents::MotifsController < AgentAuthController
+class Admin::MotifsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: [:new, :create]
@@ -29,19 +29,19 @@ class Agents::MotifsController < AgentAuthController
     @motif.organisation = @organisation
     authorize(@motif)
     flash[:notice] = "Motif créé." if @motif.save
-    respond_right_bar_with @motif, location: organisation_motifs_path(@motif.organisation)
+    respond_right_bar_with @motif, location: admin_organisation_motifs_path(@motif.organisation)
   end
 
   def update
     authorize(@motif)
     flash[:notice] = "Le motif a été modifié." if @motif.update(motif_params)
-    respond_right_bar_with @motif, location: organisation_motifs_path(@motif.organisation)
+    respond_right_bar_with @motif, location: admin_organisation_motifs_path(@motif.organisation)
   end
 
   def destroy
     authorize(@motif)
     flash[:notice] = "Le motif a été supprimé." if @motif.soft_delete
-    respond_right_bar_with @motif, location: organisation_motifs_path(@motif.organisation)
+    respond_right_bar_with @motif, location: admin_organisation_motifs_path(@motif.organisation)
   end
 
   private

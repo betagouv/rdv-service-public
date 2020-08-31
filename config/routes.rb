@@ -89,12 +89,12 @@ Rails.application.routes.draw do
           get :by_lieu, on: :collection
         end
         resources :lieux, except: :show
+        resources :motifs
       end
     end
 
     scope module: "agents" do
       resources :organisations, only: [] do
-        resources :motifs
         scope module: "organisations" do
           resource :setup_checklist, only: [:show]
           resources :rdvs, only: :index

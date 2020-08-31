@@ -1,4 +1,4 @@
-RSpec.describe Agents::MotifsController, type: :controller do
+RSpec.describe Admin::MotifsController, type: :controller do
   render_views
 
   let(:agent) { create(:agent, :admin) }
@@ -44,7 +44,7 @@ RSpec.describe Agents::MotifsController, type: :controller do
 
       it "redirects to the created motif" do
         post :create, params: { organisation_id: organisation_id, motif: valid_attributes }
-        expect(response).to redirect_to(organisation_motifs_path(organisation_id))
+        expect(response).to redirect_to(admin_organisation_motifs_path(organisation_id))
       end
     end
 
@@ -101,7 +101,7 @@ RSpec.describe Agents::MotifsController, type: :controller do
       end
 
       it "redirects to the motif" do
-        expect(response).to redirect_to(organisation_motifs_path(organisation_id))
+        expect(response).to redirect_to(admin_organisation_motifs_path(organisation_id))
       end
     end
 
@@ -132,7 +132,7 @@ RSpec.describe Agents::MotifsController, type: :controller do
 
     it "redirects to the motifs list" do
       delete :destroy, params: { organisation_id: organisation_id, id: motif.to_param }
-      expect(response).to redirect_to(organisation_motifs_path(organisation_id))
+      expect(response).to redirect_to(admin_organisation_motifs_path(organisation_id))
     end
   end
 end
