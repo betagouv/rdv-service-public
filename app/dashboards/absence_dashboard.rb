@@ -49,7 +49,7 @@ class AbsenceDashboard < Administrate::BaseDashboard
   COLLECTION_FILTERS = {}.freeze
 
   # Overwrite this method to customize how absences are displayed
-  # across all pages of the admin dashboard.
+  # across all pages of the super_admin dashboard.
   #
   # def display_resource(absence)
   #   "Absence ##{absence.id}"

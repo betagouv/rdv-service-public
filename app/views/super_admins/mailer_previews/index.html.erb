@@ -9,7 +9,7 @@
       <ul>
         <% preview.emails.each do |email| %>
           <li>
-            <%= link_to(email, admin_mailer_preview_path("#{preview.preview_name}/#{email}")) %>
+            <%= link_to(email, super_admins_mailer_preview_path("#{preview.preview_name}/#{email}")) %>
           </li>
         <% end %>
       </ul>
