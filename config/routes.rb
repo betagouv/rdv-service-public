@@ -73,6 +73,10 @@ Rails.application.routes.draw do
   resources :organisations, only: [:new, :create]
 
   authenticate :agent do
+    namespace "admin" do
+      resources :organisations
+    end
+
     scope module: "agents" do
       resources :departements, only: [] do
         scope module: "departements" do
@@ -83,7 +87,7 @@ Rails.application.routes.draw do
           resource :setup_checklist, only: [:show]
         end
       end
-      resources :organisations, except: [:destroy, :new, :create] do
+      resources :organisations, only: [] do
         resources :lieux, except: :show
         resources :motifs
         scope module: "organisations" do
@@ -147,7 +151,7 @@ Rails.application.routes.draw do
     end
   end
   authenticated :agent do
-    root to: "agents/organisations#index", as: :authenticated_agent_root
+    root to: "admin/organisations#index", as: :authenticated_agent_root, defaults: { follow_unique: "1" }
   end
 
   { disclaimer: "mentions_legales", terms: "cgv", mds: "mds" }.each do |k, v|

@@ -250,7 +250,8 @@ agent_org_paris_nord_pmi_martine = Agent.new(
   last_name: "Validay",
   password: "123456",
   service_id: service_pmi.id,
-  organisation_ids: [org_paris_nord.id]
+  organisation_ids: [org_paris_nord.id],
+  invitation_accepted_at: 10.days.ago
 )
 agent_org_paris_nord_pmi_martine.skip_confirmation!
 agent_org_paris_nord_pmi_martine.save!
@@ -262,7 +263,8 @@ agent_org_paris_nord_pmi_marco = Agent.new(
   last_name: "Durand",
   password: "123456",
   service_id: service_pmi.id,
-  organisation_ids: [org_paris_nord.id]
+  organisation_ids: [org_paris_nord.id],
+  invitation_accepted_at: 10.days.ago
 )
 agent_org_paris_nord_pmi_marco.skip_confirmation!
 agent_org_paris_nord_pmi_marco.save!
@@ -274,7 +276,8 @@ agent_org_paris_nord_social_polo = Agent.new(
   last_name: "Durant",
   password: "123456",
   service_id: service_social.id,
-  organisation_ids: [org_paris_nord.id]
+  organisation_ids: [org_paris_nord.id],
+  invitation_accepted_at: 10.days.ago
 )
 agent_org_paris_nord_social_polo.skip_confirmation!
 agent_org_paris_nord_social_polo.save!
@@ -286,7 +289,8 @@ org_arques_pmi_maya = Agent.new(
   last_name: "Patrick",
   password: "123456",
   service_id: service_pmi.id,
-  organisation_ids: Organisation.where(departement: "62").pluck(:id)
+  organisation_ids: Organisation.where(departement: "62").pluck(:id),
+  invitation_accepted_at: 10.days.ago
 )
 org_arques_pmi_maya.skip_confirmation!
 org_arques_pmi_maya.save!
@@ -298,7 +302,8 @@ org_bapaume_pmi_bruno = Agent.new(
   last_name: "Frangi",
   password: "123456",
   service_id: service_pmi.id,
-  organisation_ids: [org_bapaume.id]
+  organisation_ids: [org_bapaume.id],
+  invitation_accepted_at: 10.days.ago
 )
 org_bapaume_pmi_bruno.skip_confirmation!
 org_bapaume_pmi_bruno.save!
