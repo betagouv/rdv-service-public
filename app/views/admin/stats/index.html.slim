@@ -14,4 +14,4 @@
 .card.mb-5
   .card-body
     h4.card-title.mb-3 RDV créés (#{@stats.rdvs_for_default_range.count})
-    = column_chart rdvs_organisation_agent_stats_path(current_organisation, current_agent), stacked: true
+    = column_chart rdvs_admin_organisation_agent_stats_path(current_organisation, current_agent), stacked: true
