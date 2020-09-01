@@ -1,4 +1,4 @@
-describe Agents::UserNotesController, type: :controller do
+describe Admin::UserNotesController, type: :controller do
   render_views
 
   describe "#create" do
