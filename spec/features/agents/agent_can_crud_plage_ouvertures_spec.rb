@@ -44,7 +44,7 @@ describe "Agent can CRUD plage d'ouverture" do
 
     scenario "can crud a plage_ouverture" do
       # select(other_agent.full_name, from: :id)
-      visit organisation_agent_plage_ouvertures_path(organisation, other_agent.id)
+      visit admin_organisation_agent_plage_ouvertures_path(organisation, other_agent.id)
       crud_plage_ouverture(agent, other_agent)
     end
   end

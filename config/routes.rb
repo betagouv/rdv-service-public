@@ -85,6 +85,7 @@ Rails.application.routes.draw do
       end
 
       resources :organisations do
+        resources :plage_ouvertures, except: [:index, :show, :new]
         resources :agent_searches, only: :index, module: "creneaux" do
           get :by_lieu, on: :collection
         end
@@ -113,6 +114,7 @@ Rails.application.routes.draw do
           end
           post :reinvite, on: :member
           resources :absences, only: [:index, :new]
+          resources :plage_ouvertures, only: [:index, :new]
         end
         resource :merge_users, only: [:new, :create]
       end
@@ -122,11 +124,8 @@ Rails.application.routes.draw do
 
     scope module: "agents" do
       resources :organisations, only: [] do
-        resources :plage_ouvertures, except: [:index, :show, :new]
-
         resources :agents, only: [] do
           resources :rdvs, only: :index
-          resources :plage_ouvertures, only: [:index, :new]
           resources :stats, only: :index do
             collection do
               get :rdvs
