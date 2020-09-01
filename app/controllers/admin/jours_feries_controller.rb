@@ -1,4 +1,4 @@
-class Agents::JoursFeriesController < AgentAuthController
+class Admin::JoursFeriesController < AgentAuthController
   respond_to :json
 
   def index

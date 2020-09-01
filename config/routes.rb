@@ -112,6 +112,8 @@ Rails.application.routes.draw do
           resources :absences, only: [:index, :new]
         end
       end
+
+      resources :jours_feries, only: [:index]
     end
 
     scope module: "agents" do
@@ -152,7 +154,6 @@ Rails.application.routes.draw do
         resource :rdv_wizard_step, only: [:new, :create]
         resource :merge_users, only: [:new, :create]
       end
-      resources :jours_feries, only: [:index]
     end
   end
   authenticated :agent do
