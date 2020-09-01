@@ -1,4 +1,4 @@
-class Agents::StatsController < AgentAuthController
+class Admin::StatsController < AgentAuthController
   respond_to :html, :json
 
   def index

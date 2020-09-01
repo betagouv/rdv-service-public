@@ -119,6 +119,12 @@ Rails.application.routes.draw do
           post :reinvite, on: :member
           resources :absences, only: [:index, :new]
           resources :plage_ouvertures, only: [:index, :new]
+          resources :stats, only: :index do
+            collection do
+              get :rdvs
+              get :users
+            end
+          end
         end
         resource :merge_users, only: [:new, :create]
         resource :rdv_wizard_step, only: [:new, :create]
@@ -129,15 +135,6 @@ Rails.application.routes.draw do
 
     scope module: "agents" do
       resources :organisations, only: [] do
-        resources :agents, only: [] do
-          resources :stats, only: :index do
-            collection do
-              get :rdvs
-              get :users
-            end
-          end
-        end
-
         resources :users do
           member do
             post :invite
