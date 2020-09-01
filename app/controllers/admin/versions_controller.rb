@@ -1,4 +1,4 @@
-class Agents::VersionsController < AgentAuthController
+class Admin::VersionsController < AgentAuthController
   layout false # loaded and injected in the pages through AJAX
 
   before_action :set_resource

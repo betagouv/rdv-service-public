@@ -93,6 +93,7 @@ Rails.application.routes.draw do
         resources :motifs
         resources :rdvs, except: [:index, :new] do
           patch :status, on: :member
+          resources :versions, only: [:index]
         end
         scope module: "organisations" do
           resource :setup_checklist, only: [:show]
@@ -145,9 +146,6 @@ Rails.application.routes.draw do
       resources :organisations, only: [] do
         resources :users, only: [] do
           resource :referents, only: [:update]
-        end
-        resources :rdvs, only: [] do
-          resources :versions, only: [:index]
         end
       end
     end
