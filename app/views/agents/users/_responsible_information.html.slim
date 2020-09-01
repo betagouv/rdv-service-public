@@ -11,12 +11,6 @@ ul.list-unstyled.mb-5
   - [:caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :logement].each do |attr_name|
     li.mb-2= render "common/user_attribute", user: user, attribute_name: attr_name
 
-h4.card-title.mb-3 Agent référent
-ul.list-unstyled.mb-5
-  - user.agents.includes([:service]).each do |agent|
-    li.mb-2
-    | #{agent.full_name_and_service}
-
 - unless organisation_user_path(current_organisation, user) == request.path
   .text-right
     = link_to "Voir", organisation_user_path(current_organisation, user), class: "btn btn-outline-primary"
