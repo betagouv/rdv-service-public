@@ -107,7 +107,7 @@
                 .row
                   .col
                     => link_to relative.full_name, organisation_user_path(current_organisation, relative)
-                    = "(#{relative.age})" if relative.birth_date
+                    = "(#{age(relative)})" if relative.birth_date
           .text-right
             = link_to "Ajouter un proche", new_organisation_user_path(current_organisation, responsible_id: @user.id), class: "btn btn-outline-primary"
 
