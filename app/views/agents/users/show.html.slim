@@ -147,7 +147,7 @@
     .card#notes
       .card-header Notes
       .card-body
-        = simple_form_for(UserNote.new(user: @user, organisation: current_organisation, agent: current_agent), url: organisation_user_notes_path(current_organisation, @user)) do |f|
+        = simple_form_for(UserNote.new(user: @user, organisation: current_organisation, agent: current_agent), url: admin_organisation_user_notes_path(current_organisation, @user)) do |f|
           = f.input :text, label: false, mandatory: true
           = f.button :submit, "Enregistrer"
         hr

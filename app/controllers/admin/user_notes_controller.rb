@@ -1,4 +1,4 @@
-class Agents::UserNotesController < AgentAuthController
+class Admin::UserNotesController < AgentAuthController
   def index
     @user = policy_scope(User).find(params[:user_id])
     @notes = policy_scope(UserNote)

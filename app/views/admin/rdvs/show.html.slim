@@ -48,7 +48,7 @@
             = display_value_or_na_placeholder(user.email)
 
           h5.cart-title.mb-2.mt-4 Notes
-          = simple_form_for(UserNote.new, url: organisation_user_notes_path(current_organisation, user)) do |f|
+          = simple_form_for(UserNote.new, url: admin_organisation_user_notes_path(current_organisation, user)) do |f|
             = f.input :text, label: false, mandatory: true
             = f.button :submit, "Enregistrer"
           hr

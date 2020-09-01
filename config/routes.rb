@@ -108,6 +108,7 @@ Rails.application.routes.draw do
           scope module: :users do
             resources :rdvs, only: :index
           end
+          resources :user_notes, as: :notes, only: [:index, :create, :destroy]
         end
         resources :absences, except: [:index, :show, :new]
         get "agent", to: "agents#show", as: "agent_with_id_in_query"
@@ -143,7 +144,6 @@ Rails.application.routes.draw do
           collection do
             get :search
           end
-          resources :user_notes, as: :notes, only: [:index, :create, :destroy]
           resource :referents, only: [:update]
         end
         resources :rdvs, only: [] do
