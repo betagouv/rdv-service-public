@@ -121,7 +121,7 @@ class CalendarRdvSolidarites {
     if (plage_ouvertures[0] !== undefined) {
       urlSearchParams.append('plage_ouverture_location', plage_ouvertures[0].extendedProps.location);
     }
-    window.location = `/organisations/${this.data.organisationId}/rdv_wizard_step/new?${urlSearchParams.toString()}`;;
+    window.location = `/admin/organisations/${this.data.organisationId}/rdv_wizard_step/new?${urlSearchParams.toString()}`;;
   }
 
   datesRender = (info) => {

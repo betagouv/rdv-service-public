@@ -1,4 +1,4 @@
-describe Agents::RdvWizardStepsController, type: :controller do
+describe Admin::RdvWizardStepsController, type: :controller do
   describe "GET index html format" do
     let!(:agent) { create(:agent, :secretaire) }
     let!(:organisation_id) { agent.organisation_ids.first }
@@ -30,7 +30,7 @@ describe Agents::RdvWizardStepsController, type: :controller do
 
     it "return success" do
       get :new, params: params
-      expect(response).to render_template("agents/rdv_wizard_steps/step2")
+      expect(response).to render_template("admin/rdv_wizard_steps/step2")
     end
   end
 end
