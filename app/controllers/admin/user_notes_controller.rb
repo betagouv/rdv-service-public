@@ -12,7 +12,7 @@ class Admin::UserNotesController < AgentAuthController
     note = UserNote.new(organisation: current_organisation, user: user, agent: current_agent, text: params[:user_note][:text])
     authorize(note)
     flash[:error] = note.errors.full_messages.join(", ") unless note.save
-    redirect_back(fallback_location: organisation_user_path(current_organisation, user, anchor: "notes"))
+    redirect_back(fallback_location: admin_organisation_user_path(current_organisation, user, anchor: "notes"))
   end
 
   def destroy
@@ -20,6 +20,6 @@ class Admin::UserNotesController < AgentAuthController
     note = UserNote.find(params[:id])
     authorize(note)
     flash[:error] = note.errors.full_messages.join(", ") unless note.destroy
-    redirect_back(fallback_location: organisation_user_path(current_organisation, user, anchor: "notes"))
+    redirect_back(fallback_location: admin_organisation_user_path(current_organisation, user, anchor: "notes"))
   end
 end

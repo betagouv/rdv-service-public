@@ -4,7 +4,7 @@
   | Vos usagers
 
 - content_for :breadcrumb do
-  = link_to 'Créer un usager', new_organisation_user_path(current_organisation), class: "btn btn-outline-white"
+  = link_to 'Créer un usager', new_admin_organisation_user_path(current_organisation), class: "btn btn-outline-white"
 
 .card
   .card-body
@@ -29,4 +29,4 @@
             i.fa.fa-circle.fa-stack-2x.text-primary
             i.fa.fa-users.fa-stack-1x.text-white
     .text-center
-      = link_to 'Créer un usager', new_organisation_user_path(current_organisation), class: "btn btn-primary"
+      = link_to 'Créer un usager', new_admin_organisation_user_path(current_organisation), class: "btn btn-primary"

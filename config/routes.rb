@@ -105,6 +105,13 @@ Rails.application.routes.draw do
           end
         end
         resources :users do
+          member do
+            post :invite
+            get :link_to_organisation
+          end
+          collection do
+            get :search
+          end
           scope module: :users do
             resources :rdvs, only: :index
           end
@@ -136,14 +143,7 @@ Rails.application.routes.draw do
 
     scope module: "agents" do
       resources :organisations, only: [] do
-        resources :users do
-          member do
-            post :invite
-            get :link_to_organisation
-          end
-          collection do
-            get :search
-          end
+        resources :users, only: [] do
           resource :referents, only: [:update]
         end
         resources :rdvs, only: [] do

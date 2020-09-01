@@ -1,4 +1,4 @@
-class Agents::UsersController < AgentAuthController
+class Admin::UsersController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: [:new, :create]
@@ -49,7 +49,7 @@ class Agents::UsersController < AgentAuthController
       respond_modal_with @user, location: add_query_string_params_to_url(request.referer, 'user_ids[]': @user.id)
     elsif user_persisted
       flash[:notice] = "L'usager a été créé."
-      redirect_to organisation_user_path(@organisation, @user)
+      redirect_to admin_organisation_user_path(@organisation, @user)
     else
       render :new
     end
@@ -73,7 +73,7 @@ class Agents::UsersController < AgentAuthController
     return respond_modal_with @user, location: request.referer if from_modal?
 
     if user_updated
-      redirect_to organisation_user_path(current_organisation, @user)
+      redirect_to admin_organisation_user_path(current_organisation, @user)
     else
       render :edit
     end
@@ -83,7 +83,7 @@ class Agents::UsersController < AgentAuthController
     authorize(@user)
     @user.invite!
     flash[:notice] = "L'usager a été invité."
-    respond_right_bar_with @user, location: organisation_user_path(current_organisation, @user)
+    respond_right_bar_with @user, location: admin_organisation_user_path(current_organisation, @user)
   end
 
   def destroy
@@ -96,9 +96,9 @@ class Agents::UsersController < AgentAuthController
     end
 
     if @user.relative?
-      redirect_to organisation_user_path(current_organisation, @user.responsible)
+      redirect_to admin_organisation_user_path(current_organisation, @user.responsible)
     else
-      redirect_to organisation_users_path(current_organisation)
+      redirect_to admin_organisation_users_path(current_organisation)
     end
   end
 
@@ -106,7 +106,7 @@ class Agents::UsersController < AgentAuthController
     @user = User.find(params.require(:id))
     authorize(current_organisation)
     flash[:notice] = "L'usager a été associé à votre organisation." if @user.add_organisation(current_organisation)
-    redirect_to organisation_user_path(current_organisation, @user)
+    redirect_to admin_organisation_user_path(current_organisation, @user)
   end
 
   private

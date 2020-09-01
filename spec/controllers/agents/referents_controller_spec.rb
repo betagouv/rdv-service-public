@@ -12,7 +12,7 @@ describe Agents::ReferentsController, type: :controller do
       post :update, params: { organisation_id: organisation.id, user_id: user.id, user: { agent_ids: [lea.id, stef.id] } }
 
       expect(user.reload.agents.sort).to eq([lea, stef].sort)
-      expect(response).to redirect_to(organisation_user_path(organisation, user))
+      expect(response).to redirect_to(admin_organisation_user_path(organisation, user))
     end
 
     it "with a bad agent_id only, delete agents and return to user's page" do
@@ -25,7 +25,7 @@ describe Agents::ReferentsController, type: :controller do
       post :update, params: { organisation_id: organisation.id, user_id: user.id, user: { agent_ids: ["bad agent id"] } }
 
       expect(user.reload.agents).to eq([])
-      expect(response).to redirect_to(organisation_user_path(organisation, user))
+      expect(response).to redirect_to(admin_organisation_user_path(organisation, user))
     end
 
     it "when update failed return to user's page with an error message" do
@@ -41,7 +41,7 @@ describe Agents::ReferentsController, type: :controller do
 
       expect(flash[:error]).to eq("Erreur lors de la modification des référents")
       expect(user.reload.agents).to eq([lea])
-      expect(response).to redirect_to(organisation_user_path(organisation, user))
+      expect(response).to redirect_to(admin_organisation_user_path(organisation, user))
     end
   end
 end

@@ -97,7 +97,7 @@
           a.nav-link.js-relative-tab-link.active.d-none[data-relative-type="existing"]
           / ^ for JS
           .mb-3
-            b= link_to full_name_and_birthdate(user.responsible), organisation_user_path(current_organisation, user.responsible)
+            b= link_to full_name_and_birthdate(user.responsible), admin_organisation_user_path(current_organisation, user.responsible)
           = f.simple_fields_for(:responsible, include_id: true) do |sub_form|
             = render "responsible_form_fields", f: sub_form, input_opts: input_opts[:relative_existing]
 

@@ -20,6 +20,6 @@
         - if from_modal?
           = link_to "Choisir cet usager", add_query_string_params_to_url(request.referer, 'user_ids[]': user.id), class: "btn btn-secondary btn-small"
         - else
-          = link_to "Modifier cet usager", edit_organisation_user_path(current_organisation, user), class: "btn btn-secondary btn-small"
+          = link_to "Modifier cet usager", edit_admin_organisation_user_path(current_organisation, user), class: "btn btn-secondary btn-small"
       - else
-        = link_to "Associer cet usager à l'organisation #{current_organisation.name}", link_to_organisation_organisation_user_path(current_organisation, user), class: "btn btn-warning"
+        = link_to "Associer cet usager à l'organisation #{current_organisation.name}", link_to_organisation_admin_organisation_user_path(current_organisation, user), class: "btn btn-warning"
