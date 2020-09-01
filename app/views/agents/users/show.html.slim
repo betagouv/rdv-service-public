@@ -124,7 +124,7 @@
 
 
         .text-right
-          = link_to 'Voir tous les RDV', organisation_user_rdvs_path(current_organisation, @user), class: 'btn btn-outline-primary'
+          = link_to 'Voir tous les RDV', admin_organisation_user_rdvs_path(current_organisation, @user), class: 'btn btn-outline-primary'
 
     - if @user.responsible?
       .card
