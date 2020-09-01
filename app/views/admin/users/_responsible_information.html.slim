@@ -11,6 +11,6 @@ ul.list-unstyled.mb-5
   - [:caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :logement].each do |attr_name|
     li.mb-2= render "common/user_attribute", user: user, attribute_name: attr_name
 
-- unless organisation_user_path(current_organisation, user) == request.path
+- unless admin_organisation_user_path(current_organisation, user) == request.path
   .text-right
-    = link_to "Voir", organisation_user_path(current_organisation, user), class: "btn btn-outline-primary"
+    = link_to "Voir", admin_organisation_user_path(current_organisation, user), class: "btn btn-outline-primary"

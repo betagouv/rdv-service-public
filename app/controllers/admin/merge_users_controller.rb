@@ -17,7 +17,7 @@ class Admin::MergeUsersController < AgentAuthController
     authorize(user2, :update?)
     @merge_users_form = MergeUsersForm.new(current_organisation, user1: user1, user2: user2, **merge_users_params)
     if @merge_users_form.save
-      redirect_to organisation_user_path(current_organisation, @merge_users_form.user_target), flash: { success: "Les usagers ont été fusionnés" }
+      redirect_to admin_organisation_user_path(current_organisation, @merge_users_form.user_target), flash: { success: "Les usagers ont été fusionnés" }
     else
       render :new
     end

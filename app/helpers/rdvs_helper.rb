@@ -26,7 +26,7 @@ module RdvsHelper
 
   def user_to_link(user)
     if user.organisations.include?(current_organisation)
-      link_to user.full_name, organisation_user_path(current_organisation, user)
+      link_to user.full_name, admin_organisation_user_path(current_organisation, user)
     else
       "#{user.full_name} - l'usager a été supprimé"
     end

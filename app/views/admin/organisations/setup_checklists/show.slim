@@ -40,7 +40,7 @@
         ul.mb-4.list-unstyled
           li.mb-2
             span>= setup_checklist_item(@organisation.users.any?)
-            span>= link_to "Créer une fiche usager", new_organisation_user_path(@organisation)
+            span>= link_to "Créer une fiche usager", new_admin_organisation_user_path(@organisation)
           li.mb-2
             span>= setup_checklist_item(current_agent.rdvs.length > 0)
             span>= link_to "Ajouter un RDV dans votre agenda", admin_organisation_agent_path(@organisation, current_agent.id)

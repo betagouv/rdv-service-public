@@ -10,7 +10,7 @@ describe Admin::UserNotesController, type: :controller do
       expect  do
         post :create, params: { organisation_id: organisation.id, user_id: user.id, "user_note" => { "text" => "un truc nouveau à ajouter" } }
       end.to change(UserNote, :count).by(1)
-      expect(response).to redirect_to(organisation_user_path(organisation, user, anchor: "notes"))
+      expect(response).to redirect_to(admin_organisation_user_path(organisation, user, anchor: "notes"))
     end
 
     it "from rdv page, create a note for each users of rdv, and redirect to rdv page" do

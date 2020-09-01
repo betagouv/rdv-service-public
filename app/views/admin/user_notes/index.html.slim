@@ -7,7 +7,7 @@
       li.breadcrumb-item
         = link_to "RDV du #{l(@from_rdv.starts_at, format: :human)}", admin_organisation_rdv_path(current_organisation, @from_rdv)
     li.breadcrumb-item
-      = link_to @user.full_name, organisation_user_path(current_organisation, @user)
+      = link_to @user.full_name, admin_organisation_user_path(current_organisation, @user)
     li.breadcrumb-item.active
       | Notes
 

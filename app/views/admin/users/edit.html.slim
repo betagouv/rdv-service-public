@@ -7,11 +7,11 @@
   - content_for :breadcrumb do
     ol.breadcrumb.m-0
       li.breadcrumb-item
-        = link_to 'Vos usagers', organisation_users_path(current_organisation)
+        = link_to 'Vos usagers', admin_organisation_users_path(current_organisation)
       li.breadcrumb-item
-        = link_to @user.responsible.full_name, organisation_user_path(current_organisation, @user.responsible)
+        = link_to @user.responsible.full_name, admin_organisation_user_path(current_organisation, @user.responsible)
       li.breadcrumb-item
-        = link_to @user.full_name, organisation_user_path(current_organisation, @user)
+        = link_to @user.full_name, admin_organisation_user_path(current_organisation, @user)
       li.breadcrumb-item.active Modifier un proche
 - else
   - content_for :title do
@@ -20,9 +20,9 @@
   - content_for :breadcrumb do
     ol.breadcrumb.m-0
       li.breadcrumb-item
-        = link_to 'Vos usagers', organisation_users_path(current_organisation)
+        = link_to 'Vos usagers', admin_organisation_users_path(current_organisation)
       li.breadcrumb-item
-        = link_to @user.full_name, organisation_user_path(current_organisation, @user)
+        = link_to @user.full_name, admin_organisation_user_path(current_organisation, @user)
       li.breadcrumb-item.active Modifier l'usager
 
 - if from_modal?

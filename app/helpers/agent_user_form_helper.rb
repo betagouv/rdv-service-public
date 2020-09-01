@@ -1,19 +1,19 @@
 module AgentUserFormHelper
   def agent_user_form_url(user)
     if user.persisted?
-      organisation_user_path(current_organisation, user)
+      admin_organisation_user_path(current_organisation, user)
     else
-      organisation_users_path(current_organisation)
+      admin_organisation_users_path(current_organisation)
     end
   end
 
   def agent_user_form_cancel_path(user)
     if user.persisted?
-      organisation_user_path(current_organisation, user)
+      admin_organisation_user_path(current_organisation, user)
     elsif user.relative? && user.responsible.persisted?
-      organisation_user_path(current_organisation, user.responsible)
+      admin_organisation_user_path(current_organisation, user.responsible)
     else
-      organisation_users_path(current_organisation)
+      admin_organisation_users_path(current_organisation)
     end
   end
 

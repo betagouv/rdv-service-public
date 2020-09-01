@@ -1,4 +1,4 @@
-RSpec.describe Agents::UsersController, type: :controller do
+RSpec.describe Admin::UsersController, type: :controller do
   render_views
 
   let(:agent) { create(:agent) }
@@ -88,7 +88,7 @@ RSpec.describe Agents::UsersController, type: :controller do
 
       it "redirects to the created user" do
         subject
-        expect(response).to redirect_to(organisation_user_path(organisation.id, User.last.id))
+        expect(response).to redirect_to(admin_organisation_user_path(organisation.id, User.last.id))
       end
     end
 
