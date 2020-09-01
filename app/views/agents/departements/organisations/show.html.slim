@@ -22,4 +22,9 @@
                 p.text-danger Vous n'avez pas les droits pour éditer cette Organisation, ni pour y importer des Zones
                 .form-group
                   = text_field_tag :org, organisation.human_id || "N/A", class: 'form-control string', disabled: 'disabled'
-          .text-right= f.submit value: "Mettre à jour", class: 'btn btn-primary'
+          .text-right
+            = f.submit value: "Mettre à jour", class: 'btn btn-primary'
+            - if policy([:agent, :organisation]).new?
+              .mt-2.text-muted.font-italic
+                span> ou
+                = link_to("Créer une organisation", new_admin_organisation_path, class: "")

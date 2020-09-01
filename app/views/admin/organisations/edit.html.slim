@@ -3,7 +3,7 @@
 - content_for :title do
   | Modifier l'organisation
 
-= simple_form_for @organisation, remote: request.xhr?, data: { rightbar: true } do |f|
+= simple_form_for [:admin, @organisation], remote: request.xhr?, data: { rightbar: true } do |f|
   = render partial: 'layouts/model_errors', locals: { model: @organisation }
   = f.input :name
   = f.input :phone_number, placeholder: "ex: 0412345667"

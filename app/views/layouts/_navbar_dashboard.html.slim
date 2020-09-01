@@ -12,10 +12,13 @@
           h6.text-overflow.m-0 Bienvenue !
           - if current_agent.organisations.count > 1
             span.text-muted
-              | #{current_organisation.name} 
-              = link_to '(changer)', organisations_path
+              | #{current_organisation.name}
+              = link_to '(changer)', admin_organisations_path
         = link_to edit_agent_registration_path , class: 'dropdown-item', data: { rightbar: true } do
           span Mon compte
+        - if policy([:agent, :organisation]).new?
+          = link_to new_admin_organisation_path , class: 'dropdown-item' do
+            span Créer une nouvelle organisation
         = link_to destroy_agent_session_path, method: :delete, class: 'dropdown-item' do
           i.fa.fa-sign-out
           span Se déconnecter

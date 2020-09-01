@@ -13,3 +13,7 @@
       ul.list-group.list-group-flush
         - organisations.each do |organisation|
           li.list-group-item= link_to organisation.name, organisation_home_path(organisation)
+
+- if policy([:agent, :organisation]).new?
+  .text-center.mt-4
+    = link_to "Créer une nouvelle organisation", new_admin_organisation_path, class: "btn btn-primary"
