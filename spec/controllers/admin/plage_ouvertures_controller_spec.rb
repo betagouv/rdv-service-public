@@ -1,4 +1,4 @@
-RSpec.describe Agents::PlageOuverturesController, type: :controller do
+RSpec.describe Admin::PlageOuverturesController, type: :controller do
   render_views
 
   let!(:organisation) { create(:organisation) }
@@ -133,7 +133,7 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
 
         it "redirects to the created plage_ouverture" do
           post :create, params: { organisation_id: organisation.id, plage_ouverture: valid_attributes }
-          expect(response).to redirect_to(organisation_agent_plage_ouvertures_path(organisation, PlageOuverture.last.agent_id))
+          expect(response).to redirect_to(admin_organisation_agent_plage_ouvertures_path(organisation, PlageOuverture.last.agent_id))
         end
       end
 
@@ -206,7 +206,7 @@ RSpec.describe Agents::PlageOuverturesController, type: :controller do
 
       it "redirects to the plage_ouvertures list" do
         delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.to_param }
-        expect(response).to redirect_to(organisation_agent_plage_ouvertures_path(organisation, plage_ouverture.agent_id))
+        expect(response).to redirect_to(admin_organisation_agent_plage_ouvertures_path(organisation, plage_ouverture.agent_id))
       end
     end
   end

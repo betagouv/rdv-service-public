@@ -30,11 +30,11 @@
         ul.mb-4.list-unstyled
           li.mb-2
             span>= setup_checklist_item(current_agent.plage_ouvertures.length > 0)
-            span>= link_to "Ajouter une plage d'ouverture dans votre agenda", organisation_agent_plage_ouvertures_path(@organisation, current_agent.id)
+            span>= link_to "Ajouter une plage d'ouverture dans votre agenda", admin_organisation_agent_plage_ouvertures_path(@organisation, current_agent.id)
           - @other_agents.each do |agent|
             li.mb-2
               span>= setup_checklist_item(agent.plage_ouvertures.length > 0)
-              span>= link_to "Ajouter une plage d'ouverture dans l'agenda de #{agent.full_name}", organisation_agent_plage_ouvertures_path(@organisation, agent.id)
+              span>= link_to "Ajouter une plage d'ouverture dans l'agenda de #{agent.full_name}", admin_organisation_agent_plage_ouvertures_path(@organisation, agent.id)
 
         h5 Intégrer les RDV prévus dans le futur
         ul.mb-4.list-unstyled

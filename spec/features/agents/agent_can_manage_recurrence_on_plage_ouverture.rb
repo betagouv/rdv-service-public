@@ -5,7 +5,7 @@ describe "Agent can manage recurrence on plage d'ouverture" do
   before do
     travel_to(Time.zone.local(2019, 12, 2))
     login_as(agent, scope: :agent)
-    visit edit_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
+    visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
   end
 
   scenario "default", js: true do
@@ -36,7 +36,7 @@ describe "Agent can manage recurrence on plage d'ouverture" do
     )
 
     # reload page to check if form is filled correctly
-    visit edit_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
+    visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
     expect_checked("recurrence_has_recurrence")
     expect_checked("recurrence_on_monday")
     expect_checked("recurrence_on_tuesday")
@@ -46,7 +46,7 @@ describe "Agent can manage recurrence on plage d'ouverture" do
     expect_checked("recurrence_on_saturday")
     expect(find_field("recurrence-until").value).to eq "2019-12-30"
 
-    visit edit_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
+    visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
     select("mois", from: "recurrence_every")
     expect(page).not_to have_text("Répéter les")
     expect(page).to have_text("Tous les 1er mardi du mois")
@@ -64,7 +64,7 @@ describe "Agent can manage recurrence on plage d'ouverture" do
     )
 
     # reload page to check if form is filled correctly
-    visit edit_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
+    visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
     expect_checked("recurrence_has_recurrence")
     expect(page).to have_select("recurrence_every", selected: "mois")
     expect(page).to have_select("recurrence_interval", selected: "1")

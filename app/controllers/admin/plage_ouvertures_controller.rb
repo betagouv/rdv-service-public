@@ -1,4 +1,4 @@
-class Agents::PlageOuverturesController < AgentAuthController
+class Admin::PlageOuverturesController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_plage_ouverture, only: [:edit, :update, :destroy]
@@ -51,7 +51,7 @@ class Agents::PlageOuverturesController < AgentAuthController
     authorize(@plage_ouverture)
     if @plage_ouverture.save
       flash[:notice] = "Plage d'ouverture créée"
-      redirect_to organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent)
+      redirect_to admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent)
     else
       render :new
     end
@@ -66,7 +66,7 @@ class Agents::PlageOuverturesController < AgentAuthController
   def destroy
     authorize(@plage_ouverture)
     @plage_ouverture.destroy
-    redirect_to organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent), notice: "La plage d'ouverture a été supprimée."
+    redirect_to admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent), notice: "La plage d'ouverture a été supprimée."
   end
 
   private
