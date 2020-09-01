@@ -1,4 +1,4 @@
-class Agents::Users::RdvsController < AgentAuthController
+class Admin::Users::RdvsController < AgentAuthController
   def index
     @user = policy_scope(User).find(params[:user_id])
     @rdvs = @user.rdvs

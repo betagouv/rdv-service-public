@@ -100,6 +100,11 @@ Rails.application.routes.draw do
             end
           end
         end
+        resources :users do
+          scope module: :users do
+            resources :rdvs, only: :index
+          end
+        end
       end
     end
 
@@ -132,9 +137,6 @@ Rails.application.routes.draw do
           end
           collection do
             get :search
-          end
-          scope module: :users do
-            resources :rdvs, only: :index
           end
           resources :user_notes, as: :notes, only: [:index, :create, :destroy]
           resource :referents, only: [:update]

@@ -75,7 +75,7 @@ module RdvsHelper
         admin_organisation_rdvs_path(current_organisation, status: status, default_period: true)
       end
     when "users", "relatives"
-      organisation_user_rdvs_path(current_organisation, params[:id], status: status)
+      admin_organisation_user_rdvs_path(current_organisation, params[:id], status: status)
     end
   end
 
