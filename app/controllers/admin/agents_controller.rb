@@ -1,4 +1,4 @@
-class Agents::AgentsController < AgentAuthController
+class Admin::AgentsController < AgentAuthController
   respond_to :html, :json
 
   def index
@@ -20,7 +20,7 @@ class Agents::AgentsController < AgentAuthController
     @agent = policy_scope(Agent).find(params[:id])
     authorize(@agent)
     flash[:notice] = "L'utilisateur a été supprimé." if @agent.soft_delete current_organisation
-    respond_right_bar_with @agent, location: organisation_agents_path(current_organisation)
+    respond_right_bar_with @agent, location: admin_organisation_agents_path(current_organisation)
   end
 
   def reinvite
@@ -28,7 +28,7 @@ class Agents::AgentsController < AgentAuthController
     authorize(@agent)
     @agent.invite!
     respond_to do |f|
-      f.html { redirect_to organisation_agents_path(current_organisation), notice: "L'agent a été réinvité." }
+      f.html { redirect_to admin_organisation_agents_path(current_organisation), notice: "L'agent a été réinvité." }
       f.js
     end
   end

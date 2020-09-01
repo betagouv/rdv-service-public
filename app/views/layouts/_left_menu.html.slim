@@ -25,7 +25,7 @@
           ul.side-nav-second-level aria-expanded="false"
             li
               = link_to 'Agendas', \
-                organisation_agent_path(current_organisation, current_agent), \
+                admin_organisation_agent_path(current_organisation, current_agent), \
                 id: "menu-agendas"
             li
               = link_to "Plages d'ouverture", \
@@ -76,7 +76,7 @@
                   id: 'menu-lieux'
               li
                 =link_to 'Vos agents', \
-                  organisation_agents_path(current_organisation), \
+                  admin_organisation_agents_path(current_organisation), \
                   id: 'menu-agents'
               li
                 = link_to 'Vos motifs', \

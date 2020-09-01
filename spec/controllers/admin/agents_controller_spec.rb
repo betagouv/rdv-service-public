@@ -1,4 +1,4 @@
-RSpec.describe Agents::AgentsController, type: :controller do
+RSpec.describe Admin::AgentsController, type: :controller do
   render_views
 
   let!(:organisation) { create(:organisation) }
@@ -20,7 +20,7 @@ RSpec.describe Agents::AgentsController, type: :controller do
   describe "POST #reinvite" do
     it "returns a success response" do
       post :reinvite, params: { organisation_id: organisation.id, id: agent_invitee.to_param }
-      expect(response).to redirect_to(organisation_agents_path(organisation))
+      expect(response).to redirect_to(admin_organisation_agents_path(organisation))
     end
   end
 
@@ -32,7 +32,7 @@ RSpec.describe Agents::AgentsController, type: :controller do
 
     it "redirects to the agents list" do
       subject
-      expect(response).to redirect_to(organisation_agents_path(organisation))
+      expect(response).to redirect_to(admin_organisation_agents_path(organisation))
     end
   end
 end

@@ -11,7 +11,7 @@ class Agents::PermissionsController < AgentAuthController
     @permission = Agent::Permission.new(agent: Agent.find(params[:id]))
     authorize(@permission)
     flash[:notice] = "Agent mis à jour" if @permission.update(permission_params)
-    respond_right_bar_with @permission, location: organisation_agents_path(current_organisation)
+    respond_right_bar_with @permission, location: admin_organisation_agents_path(current_organisation)
   end
 
   private

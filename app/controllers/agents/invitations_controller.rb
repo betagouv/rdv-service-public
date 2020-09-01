@@ -15,7 +15,7 @@ class Agents::InvitationsController < Devise::InvitationsController
       resource.add_organisation(Organisation.where(id: current_inviter.organisation_ids).find(organisation_id))
       set_flash_message :notice, :send_instructions, email: self.resource.email
     end
-    respond_right_bar_with resource, location: organisation_agents_path(organisation_id)
+    respond_right_bar_with resource, location: admin_organisation_agents_path(organisation_id)
   end
 
   protected
