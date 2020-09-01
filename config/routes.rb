@@ -106,7 +106,9 @@ Rails.application.routes.draw do
           end
         end
         resources :absences, except: [:index, :show, :new]
-        resources :agents, only: [] do
+        get "agent", to: "agents#show", as: "agent_with_id_in_query"
+        resources :agents, only: [:index, :show, :destroy] do
+          post :reinvite, on: :member
           resources :absences, only: [:index, :new]
         end
       end
@@ -116,9 +118,7 @@ Rails.application.routes.draw do
       resources :organisations, only: [] do
         resources :plage_ouvertures, except: [:index, :show, :new]
 
-        get "agent", to: "agents#show", as: "agent_with_id_in_query"
-        resources :agents, only: [:index, :show, :destroy] do
-          post :reinvite, on: :member
+        resources :agents, only: [] do
           collection do
             resources :permissions, only: [:edit, :update]
           end

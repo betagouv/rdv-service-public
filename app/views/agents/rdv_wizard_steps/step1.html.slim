@@ -24,6 +24,6 @@
           = f.association(:motif, collection: policy_scope(Motif).available_motifs_for_organisation_and_agent(current_organisation, @agent), label_method: -> { motif_name_with_location_type(_1) }, include_blank: "Sélectionnez un motif", input_html: { class: 'select2-input' })
           .row
             .col.text-left
-              = link_to 'Revenir en arrière', organisation_agent_path(current_organisation, @agent), class: 'btn btn-link'
+              = link_to 'Revenir en arrière', admin_organisation_agent_path(current_organisation, @agent), class: 'btn btn-link'
             .col.text-right
               = f.button :submit, 'Continuer'

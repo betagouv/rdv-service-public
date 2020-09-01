@@ -24,7 +24,7 @@ RSpec.describe Agents::PermissionsController, type: :controller do
 
     it "returns a success response" do
       subject
-      expect(response).to redirect_to(organisation_agents_path(organisation))
+      expect(response).to redirect_to(admin_organisation_agents_path(organisation))
     end
 
     it "changes role" do
