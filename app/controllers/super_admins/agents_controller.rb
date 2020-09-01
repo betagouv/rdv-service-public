@@ -1,5 +1,5 @@
-module Admin
-  class AgentsController < Admin::ApplicationController
+module SuperAdmins
+  class AgentsController < SuperAdmins::ApplicationController
     def sign_in_as
       agent = Agent.find(params[:id])
       if sign_in_as_allowed?
@@ -8,7 +8,7 @@ module Admin
         redirect_to root_url
       else
         flash[:error] = "Fonctionnalité désactivée sur cet environnement."
-        redirect_to admin_agent_path(agent)
+        redirect_to super_admins_agent_path(agent)
       end
     end
 

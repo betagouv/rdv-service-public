@@ -1,10 +1,10 @@
-# All Administrate controllers inherit from this `Admin::ApplicationController`,
+# All Administrate controllers inherit from this `SuperAdmins::ApplicationController`,
 # making it the ideal place to put authentication logic or other
 # before_actions.
 #
 # If you want to add pagination or other controller-level concerns,
 # you're free to overwrite the RESTful controller actions.
-module Admin
+module SuperAdmins
   class ApplicationController < Administrate::ApplicationController
     if ENV["ADMIN_BASIC_AUTH_PASSWORD"].present?
       # don't set this env var in prod!
@@ -20,7 +20,7 @@ module Admin
     def user_for_paper_trail
       return "SuperAdmin" if current_super_admin.nil?
 
-      "[Admin] #{current_super_admin.email}"
+      "[SuperAdmin] #{current_super_admin.email}"
     end
 
     def authenticate_super_admin!

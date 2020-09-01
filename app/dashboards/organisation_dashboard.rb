@@ -62,7 +62,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
   ].freeze
 
   # Overwrite this method to customize how super admins are displayed
-  # across all pages of the admin dashboard.
+  # across all pages of the super_admin dashboard.
   #
   def display_resource(organisation)
     "Organisation ##{organisation.id} - #{organisation.name}"
