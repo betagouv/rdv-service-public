@@ -3,7 +3,7 @@
 - content_for :title do
   = t "devise.invitations.new.header"
 
-= simple_form_for resource, as: resource_name, url: invitation_path(resource_name), remote: request.xhr?, html: { method: :post, data: { rightbar: true } } do |f|
+= simple_form_for [:admin, resource], as: resource_name, url: invitation_path(resource_name), remote: request.xhr?, html: { method: :post, data: { rightbar: true } } do |f|
   = devise_error_messages!
   = f.input :email, placeholder: 'votre_nom@votre_entreprise.com', input_html: { autocomplete: 'off'}
   = f.association :service, collection: Service.all, include_blank: false
