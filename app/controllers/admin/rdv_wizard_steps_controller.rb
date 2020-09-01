@@ -1,4 +1,4 @@
-class Agents::RdvWizardStepsController < AgentAuthController
+class Admin::RdvWizardStepsController < AgentAuthController
   before_action :set_agent
 
   PERMITTED_PARAMS = [
@@ -18,7 +18,7 @@ class Agents::RdvWizardStepsController < AgentAuthController
     @rdv = @rdv_wizard.rdv
     skip_authorization
     if @rdv_wizard.valid?
-      redirect_to new_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: next_step_index))
+      redirect_to new_admin_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: next_step_index))
     else
       render current_step
     end

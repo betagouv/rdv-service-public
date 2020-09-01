@@ -117,6 +117,7 @@ Rails.application.routes.draw do
           resources :plage_ouvertures, only: [:index, :new]
         end
         resource :merge_users, only: [:new, :create]
+        resource :rdv_wizard_step, only: [:new, :create]
       end
 
       resources :jours_feries, only: [:index]
@@ -150,8 +151,6 @@ Rails.application.routes.draw do
           patch :status, on: :member
           resources :versions, only: [:index]
         end
-
-        resource :rdv_wizard_step, only: [:new, :create]
       end
     end
   end
