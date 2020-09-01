@@ -22,7 +22,7 @@ describe "Agent can CRUD absences" do
 
     scenario "can crud a absence" do
       # select(other_agent.full_name, from: :id)
-      visit organisation_agent_absences_path(organisation, other_agent.id)
+      visit admin_organisation_agent_absences_path(organisation, other_agent.id)
       crud_absence(agent, other_agent)
     end
   end

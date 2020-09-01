@@ -1,4 +1,4 @@
-class Agents::AbsencesController < AgentAuthController
+class Admin::AbsencesController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_absence, only: [:edit, :update, :destroy]
@@ -29,19 +29,19 @@ class Agents::AbsencesController < AgentAuthController
     @absence.organisation = current_organisation
     authorize(@absence)
     flash[:notice] = "L'absence a été créée." if @absence.save
-    respond_right_bar_with @absence, location: organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
+    respond_right_bar_with @absence, location: admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
   end
 
   def update
     authorize(@absence)
     flash[:notice] = "L'absence a été modifiée." if @absence.update(absence_params)
-    respond_right_bar_with @absence, location: organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
+    respond_right_bar_with @absence, location: admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
   end
 
   def destroy
     authorize(@absence)
     flash[:notice] = "L'absence a été supprimée." if @absence.destroy
-    redirect_to organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
+    redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
   end
 
   private

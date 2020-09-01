@@ -55,11 +55,11 @@
         ul.mb-4.list-unstyled
           li.mb-2
             span>= setup_checklist_item(current_agent.absences.length > 0)
-            span>= link_to "Ajouter un créneau d'absence dans votre agenda", organisation_agent_absences_path(@organisation, current_agent.id)
+            span>= link_to "Ajouter un créneau d'absence dans votre agenda", admin_organisation_agent_absences_path(@organisation, current_agent.id)
           - @other_agents.each do |agent|
             li.mb-2
               span>= setup_checklist_item(agent.absences.length > 0)
-              span>= link_to "Ajouter un créneau d'absence dans l'agenda de #{agent.full_name}", organisation_agent_absences_path(@organisation, agent.id)
+              span>= link_to "Ajouter un créneau d'absence dans l'agenda de #{agent.full_name}", admin_organisation_agent_absences_path(@organisation, agent.id)
 
         h5 Motifs ouverts à la réservation en ligne
         ul.mb-1.list-unstyled

@@ -105,13 +105,16 @@ Rails.application.routes.draw do
             resources :rdvs, only: :index
           end
         end
+        resources :absences, except: [:index, :show, :new]
+        resources :agents, only: [] do
+          resources :absences, only: [:index, :new]
+        end
       end
     end
 
     scope module: "agents" do
       resources :organisations, only: [] do
         resources :plage_ouvertures, except: [:index, :show, :new]
-        resources :absences, except: [:index, :show, :new]
 
         get "agent", to: "agents#show", as: "agent_with_id_in_query"
         resources :agents, only: [:index, :show, :destroy] do
@@ -120,7 +123,6 @@ Rails.application.routes.draw do
             resources :permissions, only: [:edit, :update]
           end
           resources :rdvs, only: :index
-          resources :absences, only: [:index, :new]
           resources :plage_ouvertures, only: [:index, :new]
           resources :stats, only: :index do
             collection do

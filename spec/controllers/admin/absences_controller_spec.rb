@@ -1,4 +1,4 @@
-RSpec.describe Agents::AbsencesController, type: :controller do
+RSpec.describe Admin::AbsencesController, type: :controller do
   render_views
 
   let!(:organisation) { create(:organisation) }
@@ -39,7 +39,7 @@ RSpec.describe Agents::AbsencesController, type: :controller do
             expect(first["start"]).to eq(expected_absence_starts_at.as_json)
             expect(first["end"]).to eq(expected_absence_ends_at.as_json)
             expect(first["backgroundColor"]).to eq("#7f8c8d")
-            expect(first["url"]).to eq(edit_organisation_absence_path(absence.organisation, expected_absence))
+            expect(first["url"]).to eq(edit_admin_organisation_absence_path(absence.organisation, expected_absence))
           end
         end
 
@@ -129,7 +129,7 @@ RSpec.describe Agents::AbsencesController, type: :controller do
 
         it "redirects to the created absence" do
           post :create, params: { organisation_id: organisation.id, absence: valid_attributes }
-          expect(response).to redirect_to(organisation_agent_absences_path(organisation, absence.agent_id))
+          expect(response).to redirect_to(admin_organisation_agent_absences_path(organisation, absence.agent_id))
         end
       end
 
@@ -174,7 +174,7 @@ RSpec.describe Agents::AbsencesController, type: :controller do
         end
 
         it "redirects to the absence" do
-          expect(response).to redirect_to(organisation_agent_absences_path(organisation, absence.agent_id))
+          expect(response).to redirect_to(admin_organisation_agent_absences_path(organisation, absence.agent_id))
         end
       end
 
@@ -208,7 +208,7 @@ RSpec.describe Agents::AbsencesController, type: :controller do
 
       it "redirects to the absences list" do
         delete :destroy, params: { organisation_id: organisation.id, id: absence.to_param }
-        expect(response).to redirect_to(organisation_agent_absences_path(organisation, absence.agent_id))
+        expect(response).to redirect_to(admin_organisation_agent_absences_path(organisation, absence.agent_id))
       end
     end
   end
