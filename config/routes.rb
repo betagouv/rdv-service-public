@@ -111,6 +111,7 @@ Rails.application.routes.draw do
           post :reinvite, on: :member
           resources :absences, only: [:index, :new]
         end
+        resource :merge_users, only: [:new, :create]
       end
 
       resources :jours_feries, only: [:index]
@@ -152,7 +153,6 @@ Rails.application.routes.draw do
         end
 
         resource :rdv_wizard_step, only: [:new, :create]
-        resource :merge_users, only: [:new, :create]
       end
     end
   end
