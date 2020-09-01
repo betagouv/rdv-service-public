@@ -1,4 +1,4 @@
-RSpec.describe Agents::RdvsController, type: :controller do
+RSpec.describe Admin::RdvsController, type: :controller do
   render_views
 
   let!(:organisation) { create(:organisation) }
@@ -37,7 +37,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
         expect(first["start"]).to eq(rdv1.starts_at.as_json)
         expect(first["end"]).to eq(rdv1.ends_at.as_json)
         expect(first["backgroundColor"]).to eq(rdv1.motif.color)
-        expect(first["url"]).to eq(organisation_rdv_path(rdv1.organisation, rdv1))
+        expect(first["url"]).to eq(admin_organisation_rdv_path(rdv1.organisation, rdv1))
         expect(first["extendedProps"]).to eq({ readableStatus: Rdv.human_enum_name(:status, rdv1.status), status: rdv1.status, motif: "Suivi", past: rdv1.past?, duration: rdv.duration_in_min }.as_json)
 
         second = @parsed_response[1]
@@ -46,7 +46,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
         expect(second["start"]).to eq(rdv2.starts_at.as_json)
         expect(second["end"]).to eq(rdv2.ends_at.as_json)
         expect(second["backgroundColor"]).to eq(rdv2.motif.color)
-        expect(second["url"]).to eq(organisation_rdv_path(rdv2.organisation, rdv2))
+        expect(second["url"]).to eq(admin_organisation_rdv_path(rdv2.organisation, rdv2))
         expect(first["extendedProps"]).to eq({ readableStatus: Rdv.human_enum_name(:status, rdv2.status), status: rdv2.status, motif: rdv2.motif.name, past: rdv2.past?, duration: rdv.duration_in_min }.as_json)
       end
     end
@@ -119,7 +119,7 @@ RSpec.describe Agents::RdvsController, type: :controller do
 
     it "returns a success response" do
       subject
-      expect(response).to redirect_to(organisation_rdv_path(rdv.organisation, rdv))
+      expect(response).to redirect_to(admin_organisation_rdv_path(rdv.organisation, rdv))
     end
 
     it "changes status" do

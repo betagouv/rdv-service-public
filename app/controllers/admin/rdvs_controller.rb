@@ -1,4 +1,4 @@
-class Agents::RdvsController < AgentAuthController
+class Admin::RdvsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_rdv, except: [:index, :create]
@@ -41,7 +41,7 @@ class Agents::RdvsController < AgentAuthController
     @rdv.update(status: status_params[:status], cancelled_at: cancelled_at)
     @rdv.file_attentes.delete_all
     flash[:notice] = "Le statut du RDV a été modifié"
-    redirect_to organisation_rdv_path(@rdv.organisation, @rdv)
+    redirect_to admin_organisation_rdv_path(@rdv.organisation, @rdv)
   end
 
   def destroy
@@ -60,7 +60,7 @@ class Agents::RdvsController < AgentAuthController
     @rdv.organisation = current_organisation
     authorize(@rdv)
     if @rdv.save
-      redirect_to organisation_rdv_path(current_organisation, @rdv), notice: "Le rendez-vous a été créé."
+      redirect_to admin_organisation_rdv_path(current_organisation, @rdv), notice: "Le rendez-vous a été créé."
     else
       @rdv_wizard = AgentRdvWizard::Step3.new(current_agent, current_organisation, @rdv.attributes)
       render "admin/rdv_wizard_steps/step3"

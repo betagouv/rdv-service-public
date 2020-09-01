@@ -9,4 +9,4 @@
       = link_to @user.full_name, organisation_user_path(current_organisation, @user)
     li.breadcrumb-item.active Liste des RDV
 
-= render partial: 'agents/rdvs/rdvs_list', locals: {rdvs: @rdvs}
+= render partial: 'admin/rdvs/rdvs_list', locals: {rdvs: @rdvs}

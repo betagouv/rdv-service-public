@@ -1,4 +1,4 @@
-= simple_form_for([rdv.organisation, rdv], remote: request.xhr?, data: { rightbar: true }) do |f|
+= simple_form_for([:admin, rdv.organisation, rdv], remote: request.xhr?, data: { rightbar: true }) do |f|
   = render partial: 'layouts/model_errors', locals: { model: rdv }
   = f.association :motif, disabled: true
   .form-row

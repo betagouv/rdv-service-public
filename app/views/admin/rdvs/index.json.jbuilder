@@ -10,6 +10,6 @@ json.array! @rdvs do |rdv|
   end
   json.start rdv.starts_at
   json.end rdv.ends_at
-  json.url organisation_rdv_path(rdv.organisation, rdv)
+  json.url admin_organisation_rdv_path(rdv.organisation, rdv)
   json.backgroundColor rdv.motif&.color
 end

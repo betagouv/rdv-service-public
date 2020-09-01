@@ -2,13 +2,13 @@
   .card-body
     p.card-text
       i.fa.fa-fw.fa-calendar>
-      = link_to rdv_title(rdv, **{ date_format: local_assigns[:date_format] }.compact), organisation_rdv_path(rdv.organisation, rdv)
+      = link_to rdv_title(rdv, **{ date_format: local_assigns[:date_format] }.compact), admin_organisation_rdv_path(rdv.organisation, rdv)
       = rdv_status_tag(rdv)
 
     - if local_assigns[:show_user_details]
       .row
         .col-md-6.mb-2
-          = render 'agents/rdvs/rdv_details', rdv: rdv, show_users: false
+          = render 'admin/rdvs/rdv_details', rdv: rdv, show_users: false
         .col-md-6
           .card-text
             strong> Usager(s) :
@@ -26,4 +26,4 @@
                       - [:logement, :number_of_children, :family_situation, :affiliation_number, :caisse_affiliation].each do |attr_name|
                         li= render "common/user_attribute", user: user, attribute_name: attr_name, skip_empty: true
     - else
-      = render 'agents/rdvs/rdv_details', rdv: rdv
+      = render 'admin/rdvs/rdv_details', rdv: rdv

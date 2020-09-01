@@ -91,6 +91,9 @@ Rails.application.routes.draw do
         end
         resources :lieux, except: :show
         resources :motifs
+        resources :rdvs, except: [:index, :new] do
+          patch :status, on: :member
+        end
         scope module: "organisations" do
           resource :setup_checklist, only: [:show]
           resources :rdvs, only: :index
@@ -109,6 +112,7 @@ Rails.application.routes.draw do
         resources :absences, except: [:index, :show, :new]
         get "agent", to: "agents#show", as: "agent_with_id_in_query"
         resources :agents, only: [:index, :show, :destroy] do
+          resources :rdvs, only: :index
           collection do
             resources :permissions, only: [:edit, :update]
           end
@@ -126,7 +130,6 @@ Rails.application.routes.draw do
     scope module: "agents" do
       resources :organisations, only: [] do
         resources :agents, only: [] do
-          resources :rdvs, only: :index
           resources :stats, only: :index do
             collection do
               get :rdvs
@@ -146,9 +149,7 @@ Rails.application.routes.draw do
           resources :user_notes, as: :notes, only: [:index, :create, :destroy]
           resource :referents, only: [:update]
         end
-
-        resources :rdvs, except: [:index, :new] do
-          patch :status, on: :member
+        resources :rdvs, only: [] do
           resources :versions, only: [:index]
         end
       end

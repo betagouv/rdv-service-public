@@ -70,7 +70,7 @@ module RdvsHelper
     case controller_name
     when "stats"
       if params[:agent_id].present?
-        organisation_agent_rdvs_path(current_organisation, params[:agent_id], status: status, default_period: true)
+        admin_organisation_agent_rdvs_path(current_organisation, params[:agent_id], status: status, default_period: true)
       else
         admin_organisation_rdvs_path(current_organisation, status: status, default_period: true)
       end
