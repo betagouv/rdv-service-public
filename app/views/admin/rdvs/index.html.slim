@@ -33,7 +33,7 @@
             input.btn.btn-small.btn-link.d-print-none type="submit" value="Imprimer 🖨" onclick="window.print();return false;"
 
 - rdvs_list = render( \
-  'agents/rdvs/rdvs_list', \
+  'admin/rdvs/rdvs_list', \
   rdvs: @rdvs.page(params[:page]), \
   date_format: (@form.date.present? && :time_only), \
   show_user_details: @form.show_user_details \

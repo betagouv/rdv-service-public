@@ -23,10 +23,10 @@
       data-agent-id="#{@agent.id}"
       data-selected-event-id="#{@selected_event_id}"
       data-organisation-id="#{@organisation.id}"
-      data-event-sources-json="#{[organisation_agent_rdvs_path(@organisation, @agent, status: @status, format: :json), admin_organisation_agent_absences_path(@organisation, @agent), admin_organisation_agent_plage_ouvertures_path(@organisation, @agent), admin_jours_feries_path].to_json}"
+      data-event-sources-json="#{[admin_organisation_agent_rdvs_path(@organisation, @agent, status: @status, format: :json), admin_organisation_agent_absences_path(@organisation, @agent), admin_organisation_agent_plage_ouvertures_path(@organisation, @agent), admin_jours_feries_path].to_json}"
     ]
     .mt-3
-      = link_to organisation_agent_rdvs_path(current_organisation, @agent, date: @date, show_user_details: true), class: "js-link-print-rdvs" do
+      = link_to admin_organisation_agent_rdvs_path(current_organisation, @agent, date: @date, show_user_details: true), class: "js-link-print-rdvs" do
         - if current_agent == @agent
           ' 🖨 Liste détaillée des RDVs du
           span.js-date
