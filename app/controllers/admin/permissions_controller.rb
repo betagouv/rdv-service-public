@@ -1,4 +1,4 @@
-class Agents::PermissionsController < AgentAuthController
+class Admin::PermissionsController < AgentAuthController
   respond_to :html, :json
 
   def edit

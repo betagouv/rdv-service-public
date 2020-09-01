@@ -1,4 +1,4 @@
-RSpec.describe Agents::PermissionsController, type: :controller do
+RSpec.describe Admin::PermissionsController, type: :controller do
   render_views
 
   let!(:organisation) { create(:organisation) }
