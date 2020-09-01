@@ -132,6 +132,7 @@ Rails.application.routes.draw do
             resources :rdvs, only: :index
           end
           resources :user_notes, as: :notes, only: [:index, :create, :destroy]
+          resource :referents, only: [:update]
         end
 
         resources :rdvs, except: [:index, :new] do
