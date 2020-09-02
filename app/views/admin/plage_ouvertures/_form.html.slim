@@ -1,0 +1,20 @@
+- if plage_ouverture.available_motifs.any?
+  = simple_form_for [:admin, plage_ouverture.organisation, plage_ouverture] do |f|
+    = render partial: 'layouts/model_errors', locals: { model: plage_ouverture }
+    = f.hidden_field :agent_id
+    = f.input :title, hint: 'Uniquement visible en interne', placeholder: 'Ex: Permanence PMI exceptionnelle'
+    = f.association :lieu, collection: policy_scope(Lieu), label_method: :full_name, include_blank: false
+    = f.association :motifs, collection: plage_ouverture.available_motifs, label_method: -> { motif_name_with_badges(_1) }, as: :check_boxes
+
+    hr
+
+    = render partial: 'common/recurrence', locals: { f: f, model: plage_ouverture }
+
+    .row
+      - if plage_ouverture.persisted?
+        .col.text-left
+          = link_to "Supprimer", admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"}
+      .col.text-right
+        = f.button :submit
+- else
+  | Aucun motif disponible. Vous ne pouvez pas créer de plage d'ouverture.

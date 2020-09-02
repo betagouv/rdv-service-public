@@ -1,119 +1,88 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "5dac0e77a1407c8fe48311e85004875de6856a785512abf2ef6e27ebc3f4a376",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/admin/motifs/index.html.slim",
+      "line": 24,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => policy_scope(Motif).includes(:organisation).active.includes(:service).order(Arel.sql(\"LOWER(name)\")).page(params[:page]), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::MotifsController",
+          "method": "index",
+          "line": 9,
+          "file": "app/controllers/admin/motifs_controller.rb",
+          "rendered": {
+            "name": "admin/motifs/index",
+            "file": "app/views/admin/motifs/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "admin/motifs/index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "932ed3a736f629ffd5d6e0036b22d376294a4605c5a260b2006a303a2d340292",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/admin/lieux/index.html.slim",
+      "line": 18,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => policy_scope(Lieu).includes(:organisation).order(Arel.sql(\"LOWER(name)\")).page(params[:page]), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::LieuxController",
+          "method": "index",
+          "line": 6,
+          "file": "app/controllers/admin/lieux_controller.rb",
+          "rendered": {
+            "name": "admin/lieux/index",
+            "file": "app/views/admin/lieux/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "admin/lieux/index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
       "warning_type": "Mass Assignment",
       "warning_code": 105,
-      "fingerprint": "20e498d9978e98273aa5ae7cf5c653952eed1e475bb8a03d49e52393b0f425c1",
+      "fingerprint": "cf1a40ea12517005d0224e24210107133e043f0fd5bf869bcbf290c7a15ead57",
       "check_name": "PermitAttributes",
       "message": "Potentially dangerous key allowed for mass assignment",
-      "file": "app/controllers/agents/permissions_controller.rb",
+      "file": "app/controllers/admin/permissions_controller.rb",
       "line": 20,
       "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
       "code": "params.require(:agent_permission).permit(:role, :service_id)",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "Agents::PermissionsController",
+        "class": "Admin::PermissionsController",
         "method": "permission_params"
       },
       "user_input": ":role",
       "confidence": "Medium",
       "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "6075d5fa4ccf99eda55aafaca800151059078ca40af25908199abed7b5a245ed",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/users/rdvs/confirmation.html.slim",
-      "line": 17,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(Rdv).find(params[:rdv_id]), { :hide_cancellation_infos => true })",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Users::RdvsController",
-          "method": "confirmation",
-          "line": 53,
-          "file": "app/controllers/users/rdvs_controller.rb",
-          "rendered": {
-            "name": "users/rdvs/confirmation",
-            "file": "app/views/users/rdvs/confirmation.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "users/rdvs/confirmation"
-      },
-      "user_input": "params[:rdv_id]",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "be54b3c320f298176f5ef68935255ddb6ba20d13ad4635ef4a843b8103bcd0b9",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/agents/motifs/index.html.slim",
-      "line": 22,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(Motif).includes(:organisation).active.includes(:service).order(Arel.sql(\"LOWER(name)\")).page(params[:page]), {})",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Agents::MotifsController",
-          "method": "index",
-          "line": 9,
-          "file": "app/controllers/agents/motifs_controller.rb",
-          "rendered": {
-            "name": "agents/motifs/index",
-            "file": "app/views/agents/motifs/index.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "agents/motifs/index"
-      },
-      "user_input": "params[:page]",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "e888917ccb1d0ad3936b89b30657e96972d5232a4f36da9cc4ba8bd992311378",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/agents/lieux/index.html.slim",
-      "line": 16,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(Lieu).includes(:organisation).order(Arel.sql(\"LOWER(name)\")).page(params[:page]), {})",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Agents::LieuxController",
-          "method": "index",
-          "line": 6,
-          "file": "app/controllers/agents/lieux_controller.rb",
-          "rendered": {
-            "name": "agents/lieux/index",
-            "file": "app/views/agents/lieux/index.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "agents/lieux/index"
-      },
-      "user_input": "params[:page]",
-      "confidence": "Weak",
-      "note": ""
     }
   ],
-  "updated": "2019-12-04 19:23:20 +0100",
-  "brakeman_version": "4.6.1"
+  "updated": "2020-09-01 11:44:39 +0200",
+  "brakeman_version": "4.7.2"
 }

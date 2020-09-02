@@ -1,0 +1,17 @@
+tr id="agent_#{agent.id}"
+  td
+    = agent.email
+    = admin_tag(agent)
+    br
+      small.invitation-text
+        - if agent.invitation_sent_at
+         | il y a #{distance_of_time_in_words_to_now(agent.invitation_sent_at)}
+        - else
+          small Aucune invitation envoyée
+  td.text-right
+    .dropdown
+      a.dropdown-toggle.arrow-none.text-primary aria-expanded="false" data-toggle="dropdown" href="#"
+        i.fa.fa-ellipsis-v.fa-fw
+      .dropdown-menu.dropdown-menu-right
+        = link_to "Renvoyer l'invitation", reinvite_admin_organisation_agent_path(current_organisation,agent), method: :post, remote: true, class: 'dropdown-item'
+        = delete_dropdown_link agent

@@ -1,0 +1,87 @@
+- content_for(:menu_item) { 'menu-setup-checklist' }
+
+- content_for :title do
+  | Votre installation
+
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-body
+        h4.card-title.mb-3 Installation pas à pas
+        p L'objectif de cette page est de regrouper les actions nécessaires pour permettre la prise de RDV (en ligne ou en interne) au sein de votre organisation puis de permettre cette prise de RDV en ligne.
+        ul.mb-4.list-unstyled
+          li.mb-2
+            span>= setup_checklist_item(@lieux.length > 0)
+            span>= link_to "Ajouter un lieu", admin_organisation_lieux_path(@organisation)
+            - if @lieux.length > 0
+              i= @lieux.length == 1 ? @lieux.first.name : "#{@lieux.length} lieux créés"
+          li.mb-2
+            span>= setup_checklist_item(@other_agents.length > 0)
+            span>= link_to "Ajouter un agent", admin_organisation_agents_path(@organisation)
+            - if @other_agents.length > 0
+              i= @other_agents.length == 1 ? @other_agents.last.full_name : "#{@other_agents.length} agents créés"
+          li.mb-2
+            span>= setup_checklist_item(@motifs.length > 0)
+            span>= link_to "Ajouter un motif de RDV", admin_organisation_motifs_path(@organisation)
+            - if @motifs.length > 0
+                i>= @motifs.length == 1 ? @motifs.last.name : "#{@motifs.length} motifs créés"
+
+        h5 Plages d'ouvertures
+        ul.mb-4.list-unstyled
+          li.mb-2
+            span>= setup_checklist_item(current_agent.plage_ouvertures.length > 0)
+            span>= link_to "Ajouter une plage d'ouverture dans votre agenda", admin_organisation_agent_plage_ouvertures_path(@organisation, current_agent.id)
+          - @other_agents.each do |agent|
+            li.mb-2
+              span>= setup_checklist_item(agent.plage_ouvertures.length > 0)
+              span>= link_to "Ajouter une plage d'ouverture dans l'agenda de #{agent.full_name}", admin_organisation_agent_plage_ouvertures_path(@organisation, agent.id)
+
+        h5 Intégrer les RDV prévus dans le futur
+        ul.mb-4.list-unstyled
+          li.mb-2
+            span>= setup_checklist_item(@organisation.users.any?)
+            span>= link_to "Créer une fiche usager", new_admin_organisation_user_path(@organisation)
+          li.mb-2
+            span>= setup_checklist_item(current_agent.rdvs.length > 0)
+            span>= link_to "Ajouter un RDV dans votre agenda", admin_organisation_agent_path(@organisation, current_agent.id)
+          - @other_agents.each do |agent|
+            li.mb-2
+              span>= setup_checklist_item(agent.rdvs.length > 0)
+              span>= link_to "Ajouter un RDV dans l'agenda de #{agent.full_name}#{agent.complete? ? '' : ' (en attente de validation)'}", admin_organisation_agent_path(@organisation, agent.id)
+
+        h5 Créneaux d'absences
+        .mb-2
+          i Les créneaux d'absences permettent d'éviter la prise de RDV sur une plage d'ouverture
+        ul.mb-4.list-unstyled
+          li.mb-2
+            span>= setup_checklist_item(current_agent.absences.length > 0)
+            span>= link_to "Ajouter un créneau d'absence dans votre agenda", admin_organisation_agent_absences_path(@organisation, current_agent.id)
+          - @other_agents.each do |agent|
+            li.mb-2
+              span>= setup_checklist_item(agent.absences.length > 0)
+              span>= link_to "Ajouter un créneau d'absence dans l'agenda de #{agent.full_name}", admin_organisation_agent_absences_path(@organisation, agent.id)
+
+        h5 Motifs ouverts à la réservation en ligne
+        ul.mb-1.list-unstyled
+          li.mb-2
+            span>= setup_checklist_item(@organisation.motifs.any?(&:reservable_online?))
+            span> Ouvrir un motif à la réservation en ligne
+        ul.mb-4.list-unstyled
+          - @motifs.each do |motif|
+            li
+              span>
+                - if motif.reservable_online?
+                  i.fa.fa-check
+                - else
+                  i.fa.fa-times
+              span>= link_to motif.name, edit_admin_organisation_motif_path(@organisation, motif)
+              span>= ":"
+              - if motif.reservable_online?
+                i>= "ouvert à la réservation en ligne"
+              - else
+                i>= "fermé à la réservation en ligne"
+
+        h5 Tester la vue usager
+        ul.mb-4.list-unstyled
+          li.mb-2
+            = link_to "Accéder à la vue usager de prise de RDV en ligne", welcome_departement_path(departement: @organisation.departement)

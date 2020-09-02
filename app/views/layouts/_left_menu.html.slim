@@ -22,9 +22,8 @@
           ul.side-nav-second-level. aria-expanded="false"
             li
               = link_to "Mon compte", edit_agent_registration_path
-            - if current_agent.organisations.count > 1
-              li
-                = link_to "Mes organisations", organisations_path
+            li
+              = link_to "Mes organisations", admin_organisations_path
             li
               = link_to destroy_agent_session_path, method: :delete do
                 i.fa.fa-sign-out
@@ -33,7 +32,7 @@
         - if current_organisation.recent?
           li.side-nav-item
             = link_to( \
-              organisation_setup_checklist_path(current_organisation), \
+              admin_organisation_setup_checklist_path(current_organisation), \
               class: 'side-nav-link', \
               id: "menu-setup-checklist" \
             ) do
@@ -47,15 +46,15 @@
           ul.side-nav-second-level aria-expanded="false"
             li
               = link_to 'Agendas', \
-                organisation_agent_path(current_organisation, current_agent), \
+                admin_organisation_agent_path(current_organisation, current_agent), \
                 id: "menu-agendas"
             li
               = link_to "Plages d'ouverture", \
-                organisation_agent_plage_ouvertures_path(current_organisation, current_agent), \
+                admin_organisation_agent_plage_ouvertures_path(current_organisation, current_agent), \
                 id: "menu-plages-ouvertures"
             li
               = link_to 'Absences', \
-                organisation_agent_absences_path(current_organisation, current_agent), \
+                admin_organisation_agent_absences_path(current_organisation, current_agent), \
                 id: "menu-absences"
 
         li.side-nav-item
@@ -66,15 +65,15 @@
           ul.side-nav-second-level aria-expanded="false"
             li
               = link_to "Usagers", \
-                organisation_users_path(current_organisation), \
+                admin_organisation_users_path(current_organisation), \
                 id: "menu-users"
             li
               = link_to "Fusionner", \
-                new_organisation_merge_users_path(current_organisation), \
+                new_admin_organisation_merge_users_path(current_organisation), \
                 id: "menu-merge-users"
         li.side-nav-item
           = link_to( \
-            organisation_agent_stats_path(current_organisation, current_agent), \
+            admin_organisation_agent_stats_path(current_organisation, current_agent), \
             class: 'side-nav-link', \
             id: "menu-stats" \
           ) do
@@ -90,27 +89,27 @@
             ul.side-nav-second-level aria-expanded="false"
               li
                 =link_to 'Votre organisation', \
-                  organisation_path(current_organisation), \
+                  admin_organisation_path(current_organisation), \
                   id: 'menu-organisation'
               li
                 =link_to 'Vos lieux', \
-                  organisation_lieux_path(current_organisation), \
+                  admin_organisation_lieux_path(current_organisation), \
                   id: 'menu-lieux'
               li
                 =link_to 'Vos agents', \
-                  organisation_agents_path(current_organisation), \
+                  admin_organisation_agents_path(current_organisation), \
                   id: 'menu-agents'
               li
                 = link_to 'Vos motifs', \
-                  organisation_motifs_path(current_organisation), \
+                  admin_organisation_motifs_path(current_organisation), \
                   id: 'menu-motifs'
               - if current_agent.admin? && policy_scope(Organisation).count == 1
                 li
                   = link_to "Sectorisation #{current_organisation.departement}", \
-                    departement_setup_checklist_path(current_organisation.departement)
+                    admin_departement_setup_checklist_path(current_organisation.departement)
               li
                 = link_to( \
-                  organisation_stats_path(current_organisation), \
+                  admin_organisation_stats_path(current_organisation), \
                   id: 'menu-organisation-stats' \
                 ) do
                   | Statistiques de l'organisation

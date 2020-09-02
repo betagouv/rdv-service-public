@@ -1,0 +1,79 @@
+- content_for(:menu_item) { 'menu-departement-zones' }
+
+- content_for :title do
+  | Sectorisation #{current_departement}
+
+- content_for :breadcrumb do
+  = link_to new_admin_departement_zone_path(current_departement), class: "btn btn-outline-white align-bottom" do
+    i.fa.fa-plus>
+    span> Nouvelle zone
+
+
+.row.justify-content-center
+  .col-md-6
+    .card.border-info
+      .card-header
+        i.fa.fa-filter>
+        | Filtres
+      .card-body
+        = simple_form_for @search_form, as: '', url: admin_departement_zones_path(current_departement), method: :get do |f|
+          = f.input :level, \
+            label: "Niveau", \
+            as: :select, \
+            collection: [Zone::LEVEL_CITY], \
+            label_method: -> { Zone.human_enum_name(:level, _1) }, \
+            wrapper: "horizontal_form"
+          = f.input :city, label: "Commune", wrapper: "horizontal_form", hint: "Nom ou code"
+          = f.input :orga_id, \
+            as: :select, \
+            collection: policy_scope(Organisation).where(departement: current_departement.number), \
+            wrapper: "horizontal_form", \
+            label: "Organisation"
+          .text-right= f.submit class: "btn btn-primary", value: "Filtrer", data: { "disable-with": "Filtrer" }
+
+.card
+  .pt-3.pr-3.pl-3
+    .mb-2.text-center= page_entries_info @zones
+
+  table.table
+    thead
+      tr
+        th Organisation
+        th Niveau
+        th Département
+        th Commune
+        th Code Commune
+        th Actions
+    tbody
+      - @zones.each do |zone|
+        tr
+          td
+            span>= zone.organisation.name
+            span>= organisation_human_id(zone.organisation)
+          td= Zone.human_enum_name(:level, zone.level)
+          td= zone.departement
+          td= zone.city_name
+          td= zone.city_code
+          td
+            .d-flex.justify-content-between
+              - if policy([:agent, zone]).edit?
+                div= link_to edit_admin_departement_zone_path(current_departement, zone), title: "Modifier" do
+                  i.fa.fa-edit
+              - if policy([:agent, zone]).destroy?
+                div= link_to admin_departement_zone_path(current_departement, zone), method: :delete, title: "Supprimer" do
+                  i.fa.fa-trash-alt
+  .pb-3.pr-3.pl-3
+    div= paginate @zones
+    .text-center
+      .mb-2= page_entries_info @zones
+      - if @zones.any?
+        .mb-2= link_to( \
+          "🗑 Supprimer ces #{@zones.total_count} zones ...", \
+          admin_departement_zones_path(current_departement, **@search_form.to_query), \
+          method: :delete, \
+          data: { confirm: "Êtes-vous sûr de vouloir supprimer #{@zones.total_count} zones ?" }, \
+          class: 'btn btn-danger btn-sm m-2' \
+        )
+      .mb-2= link_to new_admin_departement_zone_path(current_departement) do
+        i.fa.fa-plus>
+        span> Créer une nouvelle zone

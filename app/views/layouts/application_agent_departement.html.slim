@@ -4,12 +4,12 @@
     li.side-nav-item
       = link_to \
         "Instructions...",
-        departement_setup_checklist_path(current_departement), \
+        admin_departement_setup_checklist_path(current_departement), \
         class: 'side-nav-link', \
         id: "menu-departement-setup-checklist"
     li.side-nav-item
       = link_to \
-        departement_zones_path(current_departement), \
+        admin_departement_zones_path(current_departement), \
         class: 'side-nav-link', \
         id: 'menu-departement-zones' \
       do
@@ -17,7 +17,7 @@
         | Zones
     li.side-nav-item
       = link_to \
-        new_departement_zone_import_path(current_departement), \
+        new_admin_departement_zone_import_path(current_departement), \
         class: 'side-nav-link', \
         id: 'menu-departement-zone-imports' \
       do
@@ -25,7 +25,7 @@
         | Importer fichier
     li.side-nav-item
       = link_to \
-        departement_organisations_path(current_departement), \
+        admin_departement_organisations_path(current_departement), \
         class: 'side-nav-link', \
         id: 'menu-departement-organisations' \
       do
@@ -33,7 +33,7 @@
         | Organisations
     li.side-nav-item
       = link_to \
-        departement_zones_path(current_departement, view: "map"), \
+        admin_departement_zones_path(current_departement, view: "map"), \
         class: 'side-nav-link', \
         id: 'menu-departement-zones-map' \
       do

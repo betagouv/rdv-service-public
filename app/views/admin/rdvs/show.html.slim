@@ -1,0 +1,78 @@
+- content_for :title do
+  ol.breadcrumb.m-0.p-0
+    li.breadcrumb-item.p-0
+      = link_to 'Vos agendas', admin_organisation_agent_path(current_organisation, current_agent)
+    li.breadcrumb-item.p-0.ml-2
+      | RDV
+      |&nbsp;
+      = rdv_title_for_agent(@rdv)
+      - if @rdv.cancelled?
+        span.badge.badge-danger
+
+.row
+  .col-md-6.mb-3
+    .card
+      .card-header = l(@rdv.starts_at.to_date, format: :human )
+      .card-body
+        p.card-text
+          i.fa.fa-fw.fa-calendar>
+          = rdv_time_and_duration(@rdv)
+          |&nbsp;
+          = link_to "voir dans l'agenda", admin_organisation_agent_path(current_organisation, @rdv.agents.first, selected_event_id: @rdv.id, date: @rdv.starts_at.to_date)
+        = render 'rdv_details', rdv: @rdv, display_links_to_users: false
+        .row
+          .col
+            - if !@rdv.past? && !@rdv.cancelled?
+              = link_to "Annuler", admin_organisation_rdv_path(@rdv.organisation, @rdv, status: :excused), method: :put, class: "btn btn-outline-danger mr-1", data: { confirm: "Êtes-vous sûr de vouloir annuler ce rendez-vous ? L'usager recevra une notification de cette annulation."}
+              | ou
+            = link_to "Supprimer ❌", admin_organisation_rdv_path(@rdv.organisation, @rdv), method: :delete, class: "btn btn-link text-danger", data: { confirm: "Êtes-vous sûr de vouloir supprimer ce rendez-vous ? Cette action est définitive et aucune notification ne sera envoyée à #{@rdv.users.map(&:full_name).to_sentence}."}
+
+          .col.text-right
+            = link_to "Modifier", edit_admin_organisation_rdv_path(@rdv.organisation, @rdv), class: "btn btn-outline-primary", data: { rightbar: true }
+
+  .col-md-6.mb-3
+
+    - @rdv.users.each do |user|
+      .card
+        .card-header
+          .d-flex.justify-content-between
+            .mt-1 = user.full_name
+            = link_to "Voir la fiche usager", admin_organisation_user_path(current_organisation, user), class: "btn btn-outline-primary small"
+
+        .card-body
+          p.card-text
+            i.fa.fa-fw.fa-phone>
+            = display_value_or_na_placeholder(user.phone_number)
+          p.card-text
+            i.fa.fa-fw.fa-envelope>
+            = display_value_or_na_placeholder(user.email)
+
+          h5.cart-title.mb-2.mt-4 Notes
+          = simple_form_for(UserNote.new, url: admin_organisation_user_notes_path(current_organisation, user)) do |f|
+            = f.input :text, label: false, mandatory: true
+            = f.button :submit, "Enregistrer"
+          hr
+          = render "common/user_notes", user: user, extra_link_params: { rdv_id: @rdv.id }
+
+    .card
+      .card-header
+        | Modifier le statut du RDV rapidement
+      .card-body
+        = simple_form_for(@rdv, url: status_admin_organisation_rdv_path(@rdv.organisation)) do |f|
+          = f.input :status, collection: Rdv.human_enum_collection(:status), as: :radio_buttons, label: ''
+          .text-right= f.submit class: 'btn btn-secondary'
+
+.row
+  .col-md-12
+    .card
+      .card-header
+        a.js-record-versions-toggle[
+          href="#history"
+          data-text-close="🕵️‍♂️ Cacher l'historique des actions ˄"
+          data-text-open="🕵️‍♂️ Afficher l'historique des actions ⌄"
+          data-versions-url=admin_organisation_rdv_versions_path(@rdv.organisation, @rdv, only: ['user_ids', 'agent_ids', 'duration_in_min', 'status', 'starts_at', 'lieu_id', 'notes', 'location'])
+        ]
+          | 🕵️‍♂️ Afficher l'historique des actions ⌄
+      .js-record-versions-body#history.collapse class=(@uncollapsed_section == 'history' ? "show" : "")
+        .text-center.py-4
+          .spinner.spinner-border

@@ -3,6 +3,14 @@ class Agent::OrganisationPolicy < DefaultAgentPolicy
     @context.agent.organisation_ids.include?(@record.id)
   end
 
+  def new?
+    admin?
+  end
+
+  def create?
+    admin?
+  end
+
   def destroy?
     false
   end

@@ -1,0 +1,51 @@
+- content_for(:menu_item) { 'menu-agendas' }
+
+- content_for :title do
+  - if current_agent == @agent
+    | Votre agenda
+  - else
+    | Agenda de #{@agent.full_name_and_service}
+
+- content_for :breadcrumb do
+  = form_tag(admin_organisation_agent_with_id_in_query_path, method: "get", class: "d-inline-flex mr-2") do
+    = select_tag :status, options_for_select(Rdv.human_enum_collection(:statuses).unshift(["Tous les rdvs", ""]), rdv_status_value(@status)), class:"select2-input", onchange: 'this.form.submit()'
+    - if policy_scope(Agent).complete.active.many?
+      = select_tag :id, options_from_collection_for_select(policy_scope(Agent).complete.active.order_by_last_name, 'id', 'full_name', @agent.id), class: "select2-input", onchange: 'this.form.submit()', data: {'container-css-class': 'ml-2'}
+    - else
+      = hidden_field_tag 'id', current_agent.id
+
+  = link_to "Trouver un créneau", admin_organisation_agent_searches_path(@organisation), class: "btn btn-outline-white align-bottom"
+
+.card
+  .card-body.pt-0
+    #calendar[
+      data-default-date-json="#{@date&.to_json}"
+      data-agent-id="#{@agent.id}"
+      data-selected-event-id="#{@selected_event_id}"
+      data-organisation-id="#{@organisation.id}"
+      data-event-sources-json="#{[admin_organisation_agent_rdvs_path(@organisation, @agent, status: @status, format: :json), admin_organisation_agent_absences_path(@organisation, @agent), admin_organisation_agent_plage_ouvertures_path(@organisation, @agent), admin_jours_feries_path].to_json}"
+    ]
+    .mt-3
+      = link_to admin_organisation_agent_rdvs_path(current_organisation, @agent, date: @date, show_user_details: true), class: "js-link-print-rdvs" do
+        - if current_agent == @agent
+          ' 🖨 Liste détaillée des RDVs du
+          span.js-date
+          / date is filled from JS
+        - else
+          ' 🖨 Liste détaillée des RDVs du
+          span.js-date>
+          | pour #{@agent.full_name}
+    .my-1
+      = link_to( \
+          @agent == current_agent ? \
+          "Créer/modifier vos plages d'ouvertures" : \
+          "Créer/modifier les plages d'ouvertures de #{@agent.full_name}", \
+        admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent) \
+      )
+    .my-1
+      = link_to( \
+          @agent == current_agent ? \
+          "Créer/modifier vos absences" : \
+          "Créer/modifier les absences de #{@agent.full_name}", \
+        admin_organisation_agent_absences_path(current_organisation, @agent) \
+      )

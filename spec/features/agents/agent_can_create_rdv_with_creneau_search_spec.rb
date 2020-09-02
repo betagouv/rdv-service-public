@@ -17,7 +17,7 @@ describe "Agent can create a Rdv with creneau search" do
   before do
     travel_to(Time.zone.local(2019, 7, 22))
     login_as(agent, scope: :agent)
-    visit organisation_agent_path(organisation, agent)
+    visit admin_organisation_agent_path(organisation, agent)
 
     expect(user.rdvs.count).to eq(0)
     click_link("Trouver un créneau")
@@ -35,11 +35,13 @@ describe "Agent can create a Rdv with creneau search" do
     expect(page).to have_content(plage_ouverture2.lieu.address)
     expect(page).to have_content(plage_ouverture.agent.short_name)
     expect(page).to have_content(plage_ouverture2.agent.short_name)
+    expect(page).to have_content(plage_ouverture3.agent.short_name)
 
     # Add a filter on lieu
     select(lieu.name, from: "creneau_agent_search_lieu_ids")
     click_button("Afficher les créneaux")
     expect(page).to have_content(plage_ouverture.lieu.address)
+    expect(page).to have_content(plage_ouverture3.agent.short_name)
     expect(page).not_to have_content(plage_ouverture2.lieu.address)
 
     # Add an agent filter
@@ -47,6 +49,7 @@ describe "Agent can create a Rdv with creneau search" do
     click_button("Afficher les créneaux")
     expect(page).to have_content(plage_ouverture.agent.short_name)
     expect(page).not_to have_content(plage_ouverture2.agent.short_name)
+    expect(page).not_to have_content(plage_ouverture3.agent.short_name)
 
     # Click to change to next week
     first(:link, ">>").click
@@ -77,7 +80,7 @@ describe "Agent can create a Rdv with creneau search" do
     expect(rdv.duration_in_min).to eq(motif.default_duration_in_min)
     expect(rdv.created_by_agent?).to be(true)
 
-    expect(page).to have_current_path(organisation_rdv_path(organisation, rdv))
+    expect(page).to have_current_path(admin_organisation_rdv_path(organisation, rdv))
     expect(page).to have_content("Le rendez-vous a été créé.")
     expect(page).to have_content("lundi 29 juillet 2019")
   end

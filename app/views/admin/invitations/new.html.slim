@@ -1,0 +1,14 @@
+- content_for(:menu_item) { 'menu-agents' }
+
+- content_for :title do
+  = t "devise.invitations.new.header"
+
+= simple_form_for [:admin, resource], as: resource_name, url: invitation_path(resource_name), remote: request.xhr?, html: { method: :post, data: { rightbar: true } } do |f|
+  = devise_error_messages!
+  = f.input :email, placeholder: 'votre_nom@votre_entreprise.com', input_html: { autocomplete: 'off'}
+  = f.association :service, collection: Service.all, include_blank: false
+  - organisation_id = params[:agent] ? params.require(:agent).permit(:organisation_id)[:organisation_id] : params[:organisation_id]
+  = f.input :organisation_id, as: :hidden, input_html: { value: organisation_id }
+  = f.input :role, collection: Agent.human_enum_collection_html(:role), as: :radio_buttons
+  .text-right
+    = f.button :submit, t("devise.invitations.new.submit_button")

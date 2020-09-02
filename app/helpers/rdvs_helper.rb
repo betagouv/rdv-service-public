@@ -26,7 +26,7 @@ module RdvsHelper
 
   def user_to_link(user)
     if user.organisations.include?(current_organisation)
-      link_to user.full_name, organisation_user_path(current_organisation, user)
+      link_to user.full_name, admin_organisation_user_path(current_organisation, user)
     else
       "#{user.full_name} - l'usager a été supprimé"
     end
@@ -70,12 +70,12 @@ module RdvsHelper
     case controller_name
     when "stats"
       if params[:agent_id].present?
-        organisation_agent_rdvs_path(current_organisation, params[:agent_id], status: status, default_period: true)
+        admin_organisation_agent_rdvs_path(current_organisation, params[:agent_id], status: status, default_period: true)
       else
-        organisation_rdvs_path(current_organisation, status: status, default_period: true)
+        admin_organisation_rdvs_path(current_organisation, status: status, default_period: true)
       end
     when "users", "relatives"
-      organisation_user_rdvs_path(current_organisation, params[:id], status: status)
+      admin_organisation_user_rdvs_path(current_organisation, params[:id], status: status)
     end
   end
 

@@ -59,7 +59,7 @@ Rails.application.routes.draw do
   end
 
   devise_for :agents, controllers: {
-    invitations: "agents/invitations",
+    invitations: "admin/invitations",
     sessions: "agents/sessions",
     passwords: "agents/passwords"
   }
@@ -73,7 +73,7 @@ Rails.application.routes.draw do
   resources :organisations, only: [:new, :create]
 
   authenticate :agent do
-    scope module: "agents" do
+    namespace "admin" do
       resources :departements, only: [] do
         scope module: "departements" do
           resources :zone_imports, only: [:new, :create]
@@ -83,9 +83,18 @@ Rails.application.routes.draw do
           resource :setup_checklist, only: [:show]
         end
       end
-      resources :organisations, except: [:destroy, :new, :create] do
+
+      resources :organisations do
+        resources :plage_ouvertures, except: [:index, :show, :new]
+        resources :agent_searches, only: :index, module: "creneaux" do
+          get :by_lieu, on: :collection
+        end
         resources :lieux, except: :show
         resources :motifs
+        resources :rdvs, except: [:index, :new] do
+          patch :status, on: :member
+          resources :versions, only: [:index]
+        end
         scope module: "organisations" do
           resource :setup_checklist, only: [:show]
           resources :rdvs, only: :index
@@ -96,26 +105,6 @@ Rails.application.routes.draw do
             end
           end
         end
-        resources :plage_ouvertures, except: [:index, :show, :new]
-        resources :absences, except: [:index, :show, :new]
-
-        get "agent", to: "agents#show", as: "agent_with_id_in_query"
-        resources :agents, only: [:index, :show, :destroy] do
-          post :reinvite, on: :member
-          collection do
-            resources :permissions, only: [:edit, :update]
-          end
-          resources :rdvs, only: :index
-          resources :absences, only: [:index, :new]
-          resources :plage_ouvertures, only: [:index, :new]
-          resources :stats, only: :index do
-            collection do
-              get :rdvs
-              get :users
-            end
-          end
-        end
-
         resources :users do
           member do
             post :invite
@@ -128,25 +117,34 @@ Rails.application.routes.draw do
             resources :rdvs, only: :index
           end
           resources :user_notes, as: :notes, only: [:index, :create, :destroy]
+          resource :referents, only: [:update]
         end
-
-        resources :rdvs, except: [:index, :new] do
-          patch :status, on: :member
-          resources :versions, only: [:index]
+        resources :absences, except: [:index, :show, :new]
+        get "agent", to: "agents#show", as: "agent_with_id_in_query"
+        resources :agents, only: [:index, :show, :destroy] do
+          resources :rdvs, only: :index
+          collection do
+            resources :permissions, only: [:edit, :update]
+          end
+          post :reinvite, on: :member
+          resources :absences, only: [:index, :new]
+          resources :plage_ouvertures, only: [:index, :new]
+          resources :stats, only: :index do
+            collection do
+              get :rdvs
+              get :users
+            end
+          end
         end
-
-        resources :agent_searches, only: :index, module: "creneaux" do
-          get :by_lieu, on: :collection
-        end
-
-        resource :rdv_wizard_step, only: [:new, :create]
         resource :merge_users, only: [:new, :create]
+        resource :rdv_wizard_step, only: [:new, :create]
       end
+
       resources :jours_feries, only: [:index]
     end
   end
   authenticated :agent do
-    root to: "agents/organisations#index", as: :authenticated_agent_root
+    root to: "admin/organisations#index", as: :authenticated_agent_root, defaults: { follow_unique: "1" }
   end
 
   { disclaimer: "mentions_legales", terms: "cgv", mds: "mds" }.each do |k, v|
@@ -164,4 +162,9 @@ Rails.application.routes.draw do
   resources :motif_libelles, only: :index
   get "health_checks/rdv_events_stats", to: "health_checks#rdv_events_stats"
   root "welcome#index"
+
+  # temporary route after admin namespace introduction
+  # rubocop:disable Style/StringLiterals, Style/FormatStringToken
+  get "/organisations/*rest", to: redirect('admin/organisations/%{rest}')
+  # rubocop:enable Style/StringLiterals, Style/FormatStringToken
 end

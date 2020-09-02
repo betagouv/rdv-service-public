@@ -1,0 +1,38 @@
+- content_for(:menu_item) { 'menu-organisation-stats' }
+
+- content_for :title do
+  | Statistiques #{current_organisation.name}
+  small Du #{l(Stat.default_date_range.first.to_date)} au #{l(Stat.default_date_range.last.to_date)}
+
+.card.mb-5
+  .card-body
+    = render 'stats/rdv_counters', rdvs: @stats.rdvs_for_default_range
+
+    = link_to admin_organisation_rdvs_path(current_organisation, format: "xls"), class: "btn btn-link" do
+      i.fa.fa-download>
+      | Télécharger un export de l'ensemble des RDV de l'organisation
+
+.card.mb-5
+  .card-body
+    h4.card-title.mb-3 RDV créés (#{@stats.rdvs_for_default_range.count})
+    = column_chart add_query_string_params_to_url(rdvs_admin_organisation_stats_path(@organisation), departement: @departement), stacked: true
+
+.card.mb-5
+  .card-body
+    h4.card-title.mb-3 RDV créés par service (#{@stats.rdvs_for_default_range.count})
+    = column_chart add_query_string_params_to_url(rdvs_admin_organisation_stats_path(@organisation), by_service: true, departement: @departement), stacked: true
+
+.card.mb-5
+  .card-body
+    h4.card-title.mb-3 RDV par type (#{@stats.rdvs_for_default_range.count})
+    = column_chart add_query_string_params_to_url(rdvs_admin_organisation_stats_path(@organisation), by_location_type: true, departement: @departement), stacked: true
+
+.card.mb-5
+  .card-body
+    h4.card-title.mb-3 Usagers créés (#{@stats.users_for_default_range.count})
+    = column_chart add_query_string_params_to_url(users_admin_organisation_stats_path(@organisation), departement: @departement)
+
+.card.mb-5
+  .card-body
+    h4.card-title.mb-3 Agents créés (#{@stats.agents_for_default_range.count})
+    = column_chart add_query_string_params_to_url(agents_stats_path, departement: @departement)

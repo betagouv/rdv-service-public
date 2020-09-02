@@ -1,0 +1,117 @@
+- div_opts = agent_user_form_div_toggle_opts(user)
+- input_opts = agent_user_form_input_toggle_opts(user)
+- initial_relative_type_tab = user.responsible&.persisted? || user.responsible&.new_and_blank? ? :existing : :new
+
+= simple_form_for( \
+  user, url: agent_user_form_url(user), remote: from_modal?, \
+  html: { class: "js-agent-user-form" }, data: { modal: from_modal? } \
+) do |f|
+
+  - f.simple_fields_for :user_profiles, user.profile_for(current_organisation) do |f_user_profile|
+    = f_user_profile.input :organisation_id, as: :hidden, wrapper: false
+
+    - if from_modal?
+      = hidden_field '', :modal, value: true
+
+    - if @duplicate_user_result
+      = render "duplicate_alert", attributes: @duplicate_user_result.attributes, user: @duplicate_user_result.user, severity: @duplicate_user_result.severity
+      = render partial: 'layouts/model_errors', locals: { model: user.dup_without_duplicate_user_errors }
+    - else
+      = render partial: 'layouts/model_errors', locals: { model: user }
+
+    = f.input( \
+      :responsability_type, \
+      as: :radio_buttons, \
+      collection: [:responsible, :relative], \
+      label_method: -> { I18n.t("activerecord.attributes.user.responsability_types.#{_1}") }, \
+      disabled: user.persisted?, \
+      wrapper: :vertical_collection_inline, \
+      input_html: { \
+        autocomplete: "off", \
+        class: "js-responsability-type" \
+      }, \
+      label_html: { class: 'mb-0' } \
+    )
+
+    div *div_opts[:responsible]
+      = render "responsible_form_fields", f: f, f_user_profile: f_user_profile, input_opts: input_opts[:responsible]
+
+    div *div_opts[:relative]
+      .form-row
+        .col-md-6= f.input :first_name, **input_opts[:relative]
+        .col-md-6= f.input :last_name, **input_opts[:relative]
+      = date_input(f, :birth_date, **input_opts[:relative])
+
+    - if user.new_record?
+      .form-row.mb-2 *div_opts[:relative]
+        .col-md-12.border.p-2.bg-light
+          h5.mb-3 Usager Responsable
+          ul.nav.nav-pills.mb-3 role="tablist"
+            li.nav-item
+              a.nav-link.js-relative-tab-link[
+                data-toggle="tab"
+                href=".tab-pane[data-relative-type='existing']"
+                role="tab"
+                aria-selected="true"
+                data-relative-type="existing"
+                class=("active" if initial_relative_type_tab == :existing)
+              ]
+                | Usager Existant
+            li.nav-item
+              a.nav-link.js-relative-tab-link[
+                data-toggle=("tab" unless user.persisted?)
+                href=".tab-pane[data-relative-type='new']"
+                role="tab"
+                aria-selected="false"
+                data-relative-type="new"
+                class=("active" if initial_relative_type_tab == :new)
+              ]
+                | Nouvel Usager
+          .tab-content
+            .tab-pane.show[
+              role="tabpanel"
+              data-relative-type="existing"
+              class=("active" if initial_relative_type_tab == :existing)
+            ]
+              = f.association( \
+                :responsible, \
+                collection: policy_scope(User).responsible.order_by_last_name, \
+                label_method: -> { full_name_and_birthdate(_1) }, \
+                label: false, \
+                **{input_html: { class: 'select2-input' }}.deep_merge(input_opts[:relative_existing]), \
+                required: true, \
+              )
+            - unless user.persisted?
+              .tab-pane[
+                role="tabpanel"
+                data-relative-type="new"
+                class=("active" if initial_relative_type_tab == :new)
+              ]
+                = f.simple_fields_for(:responsible, include_id: false) do |sub_form|
+                  = render "responsible_form_fields", f: sub_form, input_opts: input_opts[:relative_new]
+
+    - elsif user.persisted? && user.relative?
+      .form-row.mb-2
+        .col-md-12.border.p-2.bg-light
+          h5.mb-3 Usager Responsable
+          a.nav-link.js-relative-tab-link.active.d-none[data-relative-type="existing"]
+          / ^ for JS
+          .mb-3
+            b= link_to full_name_and_birthdate(user.responsible), admin_organisation_user_path(current_organisation, user.responsible)
+          = f.simple_fields_for(:responsible, include_id: true) do |sub_form|
+            = render "responsible_form_fields", f: sub_form, input_opts: input_opts[:relative_existing]
+
+    - if user.skip_duplicate_warnings
+      .alert.alert-warning.pb-0
+        = f.input :skip_duplicate_warnings, as: :boolean, label: "Ignorer les avertissements"
+
+    .text-right
+      - if from_modal?
+        = link_to "Annuler", "#", class: "btn btn-link", data: { dismiss: 'modal' }
+      - else
+        = link_to "Annuler", agent_user_form_cancel_path(user), class: "btn btn-link"
+
+      - if user.persisted?
+        = f.button :submit
+      - else
+        = f.button :submit, "Créer usager"
