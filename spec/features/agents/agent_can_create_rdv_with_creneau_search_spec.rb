@@ -35,11 +35,13 @@ describe "Agent can create a Rdv with creneau search" do
     expect(page).to have_content(plage_ouverture2.lieu.address)
     expect(page).to have_content(plage_ouverture.agent.short_name)
     expect(page).to have_content(plage_ouverture2.agent.short_name)
+    expect(page).to have_content(plage_ouverture3.agent.short_name)
 
     # Add a filter on lieu
     select(lieu.name, from: "creneau_agent_search_lieu_ids")
     click_button("Afficher les créneaux")
     expect(page).to have_content(plage_ouverture.lieu.address)
+    expect(page).to have_content(plage_ouverture3.agent.short_name)
     expect(page).not_to have_content(plage_ouverture2.lieu.address)
 
     # Add an agent filter
@@ -47,6 +49,7 @@ describe "Agent can create a Rdv with creneau search" do
     click_button("Afficher les créneaux")
     expect(page).to have_content(plage_ouverture.agent.short_name)
     expect(page).not_to have_content(plage_ouverture2.agent.short_name)
+    expect(page).not_to have_content(plage_ouverture3.agent.short_name)
 
     # Click to change to next week
     first(:link, ">>").click
