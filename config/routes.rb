@@ -169,4 +169,9 @@ Rails.application.routes.draw do
   resources :motif_libelles, only: :index
   get "health_checks/rdv_events_stats", to: "health_checks#rdv_events_stats"
   root "welcome#index"
+
+  # temporary route after admin namespace introduction
+  # rubocop:disable Style/StringLiterals, Style/FormatStringToken
+  get "/organisations/*rest", to: redirect('admin/organisations/%{rest}')
+  # rubocop:enable Style/StringLiterals, Style/FormatStringToken
 end
