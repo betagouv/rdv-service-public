@@ -1,4 +1,4 @@
-describe Agents::ReferentsController, type: :controller do
+describe Admin::ReferentsController, type: :controller do
   describe "#update" do
     it "update user's agent_ids reference and redirect to user's page" do
       organisation = create(:organisation)

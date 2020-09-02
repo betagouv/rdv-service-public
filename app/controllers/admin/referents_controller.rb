@@ -1,4 +1,4 @@
-class Agents::ReferentsController < AgentAuthController
+class Admin::ReferentsController < AgentAuthController
   def update
     user = policy_scope(User).find(params[:user_id])
     authorize(user)

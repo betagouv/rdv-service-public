@@ -117,6 +117,7 @@ Rails.application.routes.draw do
             resources :rdvs, only: :index
           end
           resources :user_notes, as: :notes, only: [:index, :create, :destroy]
+          resource :referents, only: [:update]
         end
         resources :absences, except: [:index, :show, :new]
         get "agent", to: "agents#show", as: "agent_with_id_in_query"
@@ -140,14 +141,6 @@ Rails.application.routes.draw do
       end
 
       resources :jours_feries, only: [:index]
-    end
-
-    scope module: "agents" do
-      resources :organisations, only: [] do
-        resources :users, only: [] do
-          resource :referents, only: [:update]
-        end
-      end
     end
   end
   authenticated :agent do
