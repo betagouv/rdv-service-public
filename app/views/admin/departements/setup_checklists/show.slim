@@ -1,0 +1,58 @@
+- content_for(:menu_item) { 'menu-departement-setup-checklist' }
+
+- content_for :title do
+  | Sectorisation #{current_departement}
+
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-header
+        h4 Fonctionnement de la sectorisation
+      .card-body
+        p La sectorisation permet d’attacher des zones géographiques aux organisations. Un usager est orienté vers l'organisation dont il dépend en fonction de l'adresse saisie lors de sa prise de RDV en ligne
+        p Actuellement, Les zones géographiques correspondent à des communes entières.
+        p Les Zones à l'échelle d'une rue ou d'une partie de rue seront bientôt développées.
+        p Pour l’instant, la sectorisation ne permet pas de relier des agents précis à des zones géographiques. Les zones sont attachées à des organisations entières.
+        p Seuls les Agents avec le rôle Administrateur peuvent configurer la sectorisation des organisations qu’ils administrent. Néanmoins, ils ont la visibilité sur l’ensemble des zones du Département.
+        p.d-flex.justify-content-between.align-items-center
+          span= link_to "Importer un fichier", new_admin_departement_zone_import_path(current_departement), class: 'btn btn-primary'
+          span ou
+          span= link_to "Créer des zones <br/> manuellement".html_safe, admin_departement_zones_path(current_departement), class: 'btn btn-link'
+        hr
+        p
+          span> En cas de problème, veuillez nous écrire à cette adresse pour que nous puissions vous aider:
+          a href='mailto:dev@rdv-solidarites.fr' dev@rdv-solidarites.fr
+  .col-md-6
+    .card
+      .card-header
+        h4 Activation pour le #{current_departement}
+      .card-body
+        - if sectorisation_enabled?(current_departement.number)
+          .mb-2.d-flex.align-items-top
+            span
+              .badge.badge-success Activée
+            div.ml-1
+              p L’usager est orienté vers l’organisation dont il dépend en fonction de l'adresse saisie lors de sa prise de RDV en ligne
+          p Lors de la prise de RDV en ligne, les communes ou adresses non attachées à une organisation ne renvoient à aucun résultat.
+          hr
+          h5 Désactivation
+          p En désactivant la sectorisation, les zones seront ignorées et les usagers pourront faire des recherches dans l'ensemble du département
+          p
+            span> Pour désactiver la sectorisation, veuillez nous écrire sur
+            a[href='mailto:dev@rdv-solidarites.fr'] dev@rdv-solidarites.fr
+        - else
+          .mb-2.d-flex.align-items-center
+            span
+              .badge.badge-danger Désactivée
+            div.ml-1 L’usager a accès à l’ensemble des lieux de RDV configurés et accessibles à la prise de RDV en ligne dans votre Département
+          p La sectorisation est désactivée par défaut
+          hr
+          h5 Activation
+          p
+            span> Une fois la sectorisation activée :
+            ul
+              li L’usager sera orienté vers l’organisation dont il dépend en fonction de l'adresse saisie lors de sa prise de RDV en ligne
+              li Les communes ou adresses non attachées à une organisation ne renverront plus aucun résultat
+          p
+            span> Pour activer la sectorisation, veuillez nous écrire sur
+            a[href='mailto:dev@rdv-solidarites.fr'] dev@rdv-solidarites.fr

@@ -8,6 +8,6 @@
 
   .row
     .col.text-left
-      = link_to 'Supprimer', organisation_agent_path(current_organisation, @permission.agent), data: { confirm: "Êtes-vous sûr de vouloir supprimer cet utilisateur ?" }, method: :delete, class: 'btn btn-outline-danger'
+      = link_to 'Supprimer', admin_organisation_agent_path(current_organisation, @permission.agent), data: { confirm: "Êtes-vous sûr de vouloir supprimer cet utilisateur ?" }, method: :delete, class: 'btn btn-outline-danger'
     .col.text-right
       = f.button :submit

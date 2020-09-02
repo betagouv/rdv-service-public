@@ -74,10 +74,6 @@ Rails.application.routes.draw do
 
   authenticate :agent do
     namespace "admin" do
-      resources :organisations
-    end
-
-    scope module: "agents" do
       resources :departements, only: [] do
         scope module: "departements" do
           resources :zone_imports, only: [:new, :create]
@@ -87,7 +83,11 @@ Rails.application.routes.draw do
           resource :setup_checklist, only: [:show]
         end
       end
-      resources :organisations, only: [] do
+
+      resources :organisations do
+        resources :agent_searches, only: :index, module: "creneaux" do
+          get :by_lieu, on: :collection
+        end
         resources :lieux, except: :show
         resources :motifs
         scope module: "organisations" do
@@ -100,17 +100,29 @@ Rails.application.routes.draw do
             end
           end
         end
-        resources :plage_ouvertures, except: [:index, :show, :new]
+        resources :users do
+          scope module: :users do
+            resources :rdvs, only: :index
+          end
+        end
         resources :absences, except: [:index, :show, :new]
-
         get "agent", to: "agents#show", as: "agent_with_id_in_query"
         resources :agents, only: [:index, :show, :destroy] do
           post :reinvite, on: :member
+          resources :absences, only: [:index, :new]
+        end
+      end
+    end
+
+    scope module: "agents" do
+      resources :organisations, only: [] do
+        resources :plage_ouvertures, except: [:index, :show, :new]
+
+        resources :agents, only: [] do
           collection do
             resources :permissions, only: [:edit, :update]
           end
           resources :rdvs, only: :index
-          resources :absences, only: [:index, :new]
           resources :plage_ouvertures, only: [:index, :new]
           resources :stats, only: :index do
             collection do
@@ -128,9 +140,6 @@ Rails.application.routes.draw do
           collection do
             get :search
           end
-          scope module: :users do
-            resources :rdvs, only: :index
-          end
           resources :user_notes, as: :notes, only: [:index, :create, :destroy]
           resource :referents, only: [:update]
         end
@@ -138,10 +147,6 @@ Rails.application.routes.draw do
         resources :rdvs, except: [:index, :new] do
           patch :status, on: :member
           resources :versions, only: [:index]
-        end
-
-        resources :agent_searches, only: :index, module: "creneaux" do
-          get :by_lieu, on: :collection
         end
 
         resource :rdv_wizard_step, only: [:new, :create]
@@ -169,4 +174,9 @@ Rails.application.routes.draw do
   resources :motif_libelles, only: :index
   get "health_checks/rdv_events_stats", to: "health_checks#rdv_events_stats"
   root "welcome#index"
+
+  # temporary route after admin namespace introduction
+  # rubocop:disable Style/StringLiterals, Style/FormatStringToken
+  get "/organisations/*rest", to: redirect('admin/organisations/%{rest}')
+  # rubocop:enable Style/StringLiterals, Style/FormatStringToken
 end

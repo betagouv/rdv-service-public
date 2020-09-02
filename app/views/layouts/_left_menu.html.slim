@@ -11,7 +11,7 @@
         - if current_organisation.recent?
           li.side-nav-item
             = link_to( \
-              organisation_setup_checklist_path(current_organisation), \
+              admin_organisation_setup_checklist_path(current_organisation), \
               class: 'side-nav-link', \
               id: "menu-setup-checklist" \
             ) do
@@ -25,7 +25,7 @@
           ul.side-nav-second-level aria-expanded="false"
             li
               = link_to 'Agendas', \
-                organisation_agent_path(current_organisation, current_agent), \
+                admin_organisation_agent_path(current_organisation, current_agent), \
                 id: "menu-agendas"
             li
               = link_to "Plages d'ouverture", \
@@ -33,7 +33,7 @@
                 id: "menu-plages-ouvertures"
             li
               = link_to 'Absences', \
-                organisation_agent_absences_path(current_organisation, current_agent), \
+                admin_organisation_agent_absences_path(current_organisation, current_agent), \
                 id: "menu-absences"
 
         li.side-nav-item
@@ -72,23 +72,23 @@
                   id: 'menu-organisation'
               li
                 =link_to 'Vos lieux', \
-                  organisation_lieux_path(current_organisation), \
+                  admin_organisation_lieux_path(current_organisation), \
                   id: 'menu-lieux'
               li
                 =link_to 'Vos agents', \
-                  organisation_agents_path(current_organisation), \
+                  admin_organisation_agents_path(current_organisation), \
                   id: 'menu-agents'
               li
                 = link_to 'Vos motifs', \
-                  organisation_motifs_path(current_organisation), \
+                  admin_organisation_motifs_path(current_organisation), \
                   id: 'menu-motifs'
               - if current_agent.admin? && policy_scope(Organisation).count == 1
                 li
                   = link_to "Sectorisation #{current_organisation.departement}", \
-                    departement_setup_checklist_path(current_organisation.departement)
+                    admin_departement_setup_checklist_path(current_organisation.departement)
               li
                 = link_to( \
-                  organisation_stats_path(current_organisation), \
+                  admin_organisation_stats_path(current_organisation), \
                   id: 'menu-organisation-stats' \
                 ) do
                   | Statistiques de l'organisation
