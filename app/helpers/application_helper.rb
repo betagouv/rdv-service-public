@@ -70,7 +70,7 @@ module ApplicationHelper
   end
 
   def agent_path?
-    request.path =~ /(agents)/
+    request.path =~ /(agents|admin)/ || (request.path == "/" && current_agent.present?)
   end
 
   def agents_or_users_body_class
