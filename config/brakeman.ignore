@@ -1,26 +1,6 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "Mass Assignment",
-      "warning_code": 105,
-      "fingerprint": "20e498d9978e98273aa5ae7cf5c653952eed1e475bb8a03d49e52393b0f425c1",
-      "check_name": "PermitAttributes",
-      "message": "Potentially dangerous key allowed for mass assignment",
-      "file": "app/controllers/agents/permissions_controller.rb",
-      "line": 20,
-      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
-      "code": "params.require(:agent_permission).permit(:role, :service_id)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Agents::PermissionsController",
-        "method": "permission_params"
-      },
-      "user_input": ":role",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
       "fingerprint": "5dac0e77a1407c8fe48311e85004875de6856a785512abf2ef6e27ebc3f4a376",
@@ -81,8 +61,28 @@
       "user_input": "params[:page]",
       "confidence": "Weak",
       "note": ""
+    },
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 105,
+      "fingerprint": "cf1a40ea12517005d0224e24210107133e043f0fd5bf869bcbf290c7a15ead57",
+      "check_name": "PermitAttributes",
+      "message": "Potentially dangerous key allowed for mass assignment",
+      "file": "app/controllers/admin/permissions_controller.rb",
+      "line": 20,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(:agent_permission).permit(:role, :service_id)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Admin::PermissionsController",
+        "method": "permission_params"
+      },
+      "user_input": ":role",
+      "confidence": "Medium",
+      "note": ""
     }
   ],
-  "updated": "2020-08-31 19:01:51 +0200",
+  "updated": "2020-09-01 11:44:39 +0200",
   "brakeman_version": "4.7.2"
 }

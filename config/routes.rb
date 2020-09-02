@@ -59,7 +59,7 @@ Rails.application.routes.draw do
   end
 
   devise_for :agents, controllers: {
-    invitations: "agents/invitations",
+    invitations: "admin/invitations",
     sessions: "agents/sessions",
     passwords: "agents/passwords"
   }
@@ -85,11 +85,16 @@ Rails.application.routes.draw do
       end
 
       resources :organisations do
+        resources :plage_ouvertures, except: [:index, :show, :new]
         resources :agent_searches, only: :index, module: "creneaux" do
           get :by_lieu, on: :collection
         end
         resources :lieux, except: :show
         resources :motifs
+        resources :rdvs, except: [:index, :new] do
+          patch :status, on: :member
+          resources :versions, only: [:index]
+        end
         scope module: "organisations" do
           resource :setup_checklist, only: [:show]
           resources :rdvs, only: :index
@@ -101,28 +106,28 @@ Rails.application.routes.draw do
           end
         end
         resources :users do
+          member do
+            post :invite
+            get :link_to_organisation
+          end
+          collection do
+            get :search
+          end
           scope module: :users do
             resources :rdvs, only: :index
           end
+          resources :user_notes, as: :notes, only: [:index, :create, :destroy]
+          resource :referents, only: [:update]
         end
         resources :absences, except: [:index, :show, :new]
         get "agent", to: "agents#show", as: "agent_with_id_in_query"
         resources :agents, only: [:index, :show, :destroy] do
-          post :reinvite, on: :member
-          resources :absences, only: [:index, :new]
-        end
-      end
-    end
-
-    scope module: "agents" do
-      resources :organisations, only: [] do
-        resources :plage_ouvertures, except: [:index, :show, :new]
-
-        resources :agents, only: [] do
+          resources :rdvs, only: :index
           collection do
             resources :permissions, only: [:edit, :update]
           end
-          resources :rdvs, only: :index
+          post :reinvite, on: :member
+          resources :absences, only: [:index, :new]
           resources :plage_ouvertures, only: [:index, :new]
           resources :stats, only: :index do
             collection do
@@ -131,27 +136,10 @@ Rails.application.routes.draw do
             end
           end
         end
-
-        resources :users do
-          member do
-            post :invite
-            get :link_to_organisation
-          end
-          collection do
-            get :search
-          end
-          resources :user_notes, as: :notes, only: [:index, :create, :destroy]
-          resource :referents, only: [:update]
-        end
-
-        resources :rdvs, except: [:index, :new] do
-          patch :status, on: :member
-          resources :versions, only: [:index]
-        end
-
-        resource :rdv_wizard_step, only: [:new, :create]
         resource :merge_users, only: [:new, :create]
+        resource :rdv_wizard_step, only: [:new, :create]
       end
+
       resources :jours_feries, only: [:index]
     end
   end

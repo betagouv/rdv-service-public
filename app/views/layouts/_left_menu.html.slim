@@ -29,7 +29,7 @@
                 id: "menu-agendas"
             li
               = link_to "Plages d'ouverture", \
-                organisation_agent_plage_ouvertures_path(current_organisation, current_agent), \
+                admin_organisation_agent_plage_ouvertures_path(current_organisation, current_agent), \
                 id: "menu-plages-ouvertures"
             li
               = link_to 'Absences', \
@@ -44,15 +44,15 @@
           ul.side-nav-second-level aria-expanded="false"
             li
               = link_to "Usagers", \
-                organisation_users_path(current_organisation), \
+                admin_organisation_users_path(current_organisation), \
                 id: "menu-users"
             li
               = link_to "Fusionner", \
-                new_organisation_merge_users_path(current_organisation), \
+                new_admin_organisation_merge_users_path(current_organisation), \
                 id: "menu-merge-users"
         li.side-nav-item
           = link_to( \
-            organisation_agent_stats_path(current_organisation, current_agent), \
+            admin_organisation_agent_stats_path(current_organisation, current_agent), \
             class: 'side-nav-link', \
             id: "menu-stats" \
           ) do

@@ -1,0 +1,17 @@
+- content_for(:menu_item) { 'menu-stats' }
+
+- content_for :title do
+  span> Statistiques #{current_agent.full_name}
+  small du #{l(Stat.default_date_range.first.to_date)} au #{l(Stat.default_date_range.last.to_date)}
+
+.card.mb-5
+  .card-body
+    = render 'stats/rdv_counters', rdvs: @stats.rdvs_for_default_range
+    = link_to admin_organisation_rdvs_path(current_organisation, format: "xls", agent_id: current_agent.id), class: "btn btn-link" do
+      i.fa.fa-download>
+      | Télécharger un export de vos RDVs
+
+.card.mb-5
+  .card-body
+    h4.card-title.mb-3 RDV créés (#{@stats.rdvs_for_default_range.count})
+    = column_chart rdvs_admin_organisation_agent_stats_path(current_organisation, current_agent), stacked: true
