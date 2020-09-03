@@ -64,6 +64,6 @@ class Users::RdvsController < UserAuthController
   end
 
   def rdv_params
-    params.permit(:starts_at, :motif_id, user_ids: [])
+    params.permit(:starts_at, :motif_id, :context, user_ids: [])
   end
 end

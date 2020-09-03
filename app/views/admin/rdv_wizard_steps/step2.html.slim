@@ -52,6 +52,8 @@
               | L'usager n'existe pas ?&nbsp;
               = link_to 'Créer un usager', new_admin_organisation_user_path(current_organisation, modal: true), data: { modal: true }
 
+          .mt-3= f.input :context, input_html: { rows: 4 }
+
           = f.input_field :motif_id, as: :hidden
           = f.input_field :starts_at, as: :hidden
           = f.input_field :lieu_id, as: :hidden

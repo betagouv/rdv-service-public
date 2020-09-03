@@ -48,10 +48,6 @@
             = display_value_or_na_placeholder(user.email)
 
           h5.cart-title.mb-2.mt-4 Notes
-          = simple_form_for(UserNote.new, url: admin_organisation_user_notes_path(current_organisation, user)) do |f|
-            = f.input :text, label: false, mandatory: true
-            = f.button :submit, "Enregistrer"
-          hr
           = render "common/user_notes", user: user, extra_link_params: { rdv_id: @rdv.id }
 
     .card
@@ -70,7 +66,7 @@
           href="#history"
           data-text-close="🕵️‍♂️ Cacher l'historique des actions ˄"
           data-text-open="🕵️‍♂️ Afficher l'historique des actions ⌄"
-          data-versions-url=admin_organisation_rdv_versions_path(@rdv.organisation, @rdv, only: ['user_ids', 'agent_ids', 'duration_in_min', 'status', 'starts_at', 'lieu_id', 'notes', 'location'])
+          data-versions-url=admin_organisation_rdv_versions_path(@rdv.organisation, @rdv, only: ['user_ids', 'agent_ids', 'duration_in_min', 'status', 'starts_at', 'lieu_id', 'notes', 'location', 'context'])
         ]
           | 🕵️‍♂️ Afficher l'historique des actions ⌄
       .js-record-versions-body#history.collapse class=(@uncollapsed_section == 'history' ? "show" : "")

@@ -1,5 +1,5 @@
 class Users::RdvWizardStepsController < UserAuthController
-  RDV_PERMITTED_PARAMS = [:starts_at, :motif_id, user_ids: []].freeze
+  RDV_PERMITTED_PARAMS = [:starts_at, :motif_id, :context, user_ids: []].freeze
   EXTRA_PERMITTED_PARAMS = [:lieu_id, :departement, :where, :created_user_id, :latitude, :longitude, :city_code].freeze
 
   def new

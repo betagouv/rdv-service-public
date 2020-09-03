@@ -388,7 +388,8 @@ rdv1 = Rdv.new(
   lieu: lieu_org_paris_nord_sud,
   organisation_id: org_paris_nord.id,
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
-  user_ids: [user_org_paris_nord_patricia.id]
+  user_ids: [user_org_paris_nord_patricia.id],
+  context: "Visite de courtoisie"
 )
 rdv1.save!
 Rdv.set_callback(:create, :after, :notify_rdv_created)
