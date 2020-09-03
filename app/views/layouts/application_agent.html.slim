@@ -5,6 +5,7 @@ html lang="fr"
     = render 'common/head_agent'
   body
     .wrapper
+      = render 'layouts/degraded_service', message: ENV["DEGRADED_SERVICE_MESSAGE_AGENTS"]
       = render "layouts/left_menu"
       .content-page
         .content
