@@ -15,11 +15,23 @@ html lang="fr"
         = link_logo
         .align-items-center.d-flex.h-100
           .p-3.flex-grow-1
-            = image_pack_tag 'welcome/agent.svg', class: 'agent-profile mx-auto mb-5', alt: ""
-            - if agent_path?
+            = image_pack_tag 'welcome/agent.svg', class: 'agent-profile mx-auto mb-4', alt: ""
+            - if agent_path? && current_agent.nil?
               h4.mb-3 Terminé l'agenda papier, moins de temps perdu.
               p.lead
                 | Digitalisez votre prise de RDV !
+            - elsif agent_path? && current_agent.present?
+              h4.mb-3
+                i.far.fa-id-card>
+                = current_agent.full_name_and_service
+              .d-flex.flex-row.justify-content-center
+                ul.list-unstyled.text-left
+                  li
+                    h5= link_to "Mon compte", edit_agent_registration_path
+                  li
+                    h5= link_to "Mes organisations", admin_organisations_path
+                  li
+                    h5= link_to "Se déconnecter", destroy_agent_session_path, method: :delete
             - else
               h4.mb-3 Prenez RDV en ligne avec votre département !
 
