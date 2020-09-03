@@ -116,4 +116,27 @@ module RdvsHelper
   def rdv_time_and_duration(rdv)
     "#{l(rdv.starts_at, format: :time_only)} (#{rdv.duration_in_min} minutes)"
   end
+
+  def rdv_status_for(rdv)
+    if rdv.starts_at < Date.today
+      ["unknown_future", "excused"]
+    elsif rdv.starts_at.to_date == Date.today
+      ["unknown_future", "waiting", "notexcused", "excused"]
+    else
+      ["unknown_past", "notexcused", "excused"]
+    end.map{|x| rdv_status_item(x)}
+  end
+
+  def rdv_status_item(status)
+    [I18n.t("activerecord.attributes.rdv.statuses.#{status}"), status.split("_")[0]]
+  end
+
+  def rdv_status_label(rdv)
+    status = rdv.status
+    status = "unknown_future" if rdv.unknown? && rdv.starts_at.to_date >= Date.today
+    status = "unknown_past" if rdv.unknown? && rdv.starts_at.to_date < Date.today
+    I18n.t("activerecord.attributes.rdv.statuses.#{status}")
+  end
+
 end
+

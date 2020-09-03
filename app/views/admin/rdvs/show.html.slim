@@ -19,10 +19,10 @@
           ul.list-unstyled.topbar-right-menu.float-right.mb-0
             li.dropdown
               a.dropdown-toggle.btn.rdv-status.mr-0 class="rdv-status-#{@rdv.status}" aria-expanded="false" aria-haspopup="false" data-toggle="dropdown" href="#" role="button"
-                = Rdv.human_enum_name(:status, @rdv.status)
+                = rdv_status_label(@rdv)
               .dropdown-menu.dropdown-menu-right.dropdown-menu-animated.profile-dropdown
                 .dropdown-header.noti-title
-                  - Rdv.human_enum_collection(:status).each do |status|
+                  - rdv_status_for(@rdv).each do |status|
                     = link_to status[0], organisation_rdv_path(@rdv.organisation, @rdv, rdv: {status: status[1]}), method: :put, class: "dropdown-item"
 
       .card-body

@@ -40,4 +40,74 @@ describe RdvsHelper do
       expect(rdv_time_and_duration(rdv)).to eq("13h46 (4 minutes)")
     end
   end
+
+  describe "#rdv_status_for" do
+
+    it "return À venir et Excusé before rdv's day" do
+      now = DateTime.new(2020, 3, 23, 12, 46)
+      travel_to(now)
+      rdv = build(:rdv, starts_at: (now - 2.days))
+      expected = [["À venir", "unknown"], ["Absent excusé", "excused"]]
+      expect(rdv_status_for(rdv)).to eq(expected)
+    end
+
+    it "return À venir, En salle d'attente, Vu, Non Excusé et Excusé at rdv's day" do
+      now = DateTime.new(2020, 3, 23, 12, 46)
+      travel_to(now)
+      expected = [
+        ["À venir", "unknown"],
+        ["En salle d'attente", "waiting"],
+        ["Absent non excusé", "notexcused"],
+        ["Absent excusé", "excused"]
+      ]
+      rdv = build(:rdv, starts_at: now - 3.hours)
+      expect(rdv_status_for(rdv)).to eq(expected)
+      rdv = build(:rdv, starts_at: now + 4.hours)
+      expect(rdv_status_for(rdv)).to eq(expected)
+    end
+
+    it "return Indéterminé, Vu, Non Excusé et Excusé after rdv's day" do
+      now = DateTime.new(2020, 3, 23, 12, 46)
+      travel_to(now)
+      rdv = build(:rdv, starts_at: (now + 2.days))
+      expected = [
+        ["À renseigner", "unknown"],
+        ["Absent non excusé", "notexcused"],
+        ["Absent excusé", "excused"]
+      ]
+      expect(rdv_status_for(rdv)).to eq(expected)
+    end
+
+  end
+
+  describe "#rdv_status_label" do
+    ["waiting", "excused", "seen", "notexcused"].each do |status|
+      it "use I18n to find label of #{status}" do
+        rdv = build(:rdv, status: status)
+        expect(rdv_status_label(rdv)).to eq(I18n.t("activerecord.attributes.rdv.statuses.#{status}"))
+      end
+    end
+
+    it "return à venir when status is unknow and starts_at in the future" do
+      now = DateTime.new(2020, 3, 23, 12, 46)
+      travel_to(now)
+      rdv = build(:rdv, status: "unknown", starts_at: now + 1.month)
+      expect(rdv_status_label(rdv)).to eq(I18n.t("activerecord.attributes.rdv.statuses.unknown_future"))
+    end
+
+    it "return à venir when status is unknow and starts_at is today" do
+      now = DateTime.new(2020, 3, 23, 12, 46)
+      travel_to(now)
+      rdv = build(:rdv, status: "unknown", starts_at: now - 1.hour)
+      expect(rdv_status_label(rdv)).to eq(I18n.t("activerecord.attributes.rdv.statuses.unknown_future"))
+    end
+
+    it "return à renseigner when status is unknow and starts_at in the past" do
+      now = DateTime.new(2020, 3, 23, 12, 46)
+      travel_to(now)
+      rdv = build(:rdv, status: "unknown", starts_at: now - 1.month)
+      expect(rdv_status_label(rdv)).to eq(I18n.t("activerecord.attributes.rdv.statuses.unknown_past"))
+    end
+
+  end
 end
