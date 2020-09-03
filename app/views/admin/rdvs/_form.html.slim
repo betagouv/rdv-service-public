@@ -1,6 +1,7 @@
 = simple_form_for([:admin, rdv.organisation, rdv], remote: request.xhr?, data: { rightbar: true }) do |f|
   = render partial: 'layouts/model_errors', locals: { model: rdv }
   = f.association :motif, disabled: true
+  = f.input :context, input_html: { rows: 3 }
   .form-row
     .col-md-6= datetime_input(f, :starts_at)
     .col-md-6= f.input :duration_in_min
