@@ -45,6 +45,15 @@ class Admin::OrganisationsController < AgentAuthController
 
   private
 
+  def current_organisation
+    # overrides AgentAuthController's because here it's params[:id]
+    if params[:id].present?
+      current_agent.organisations.find(params[:id])
+    else
+      current_agent.organisations.first # necessary for pundit but should not
+    end
+  end
+
   def organisation_params
     params.require(:organisation).permit(:name, :horaires, :phone_number, :human_id)
   end
