@@ -66,23 +66,6 @@ module RdvsHelper
     end
   end
 
-  def stats_rdv_path(status)
-    case controller_name
-    when "stats"
-      if params[:agent_id].present?
-        admin_organisation_agent_rdvs_path(current_organisation, params[:agent_id], status: status, default_period: true)
-      else
-        admin_organisation_rdvs_path(current_organisation, status: status, default_period: true)
-      end
-    when "users", "relatives"
-      admin_organisation_user_rdvs_path(current_organisation, params[:id], status: status)
-    end
-  end
-
-  def stats_path?
-    request.path.match(%r{^/stats.*})
-  end
-
   def unknown_past_rdvs_danger_bage
     unknown_past_rdvs = current_organisation.rdvs.status("unknown_past").where(created_at: Stat.default_date_range).count
     rdv_danger_badge(unknown_past_rdvs)
@@ -106,11 +89,9 @@ module RdvsHelper
   end
 
   def rdv_status_value(status)
-    if status.blank?
-      ["Tous les rdvs", ""]
-    else
-      Rdv.statuses.to_a.find { |s| s[0] == status }
-    end
+    return  ["Tous les rdvs", ""] if status.blank?
+
+    Rdv.statuses.to_a.find { |s| s[0] == status }
   end
 
   def rdv_time_and_duration(rdv)
