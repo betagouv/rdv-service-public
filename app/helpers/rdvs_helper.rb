@@ -124,7 +124,7 @@ module RdvsHelper
       ["unknown_future", "waiting", "notexcused", "excused"]
     else
       ["unknown_past", "notexcused", "excused"]
-    end.map{|x| rdv_status_item(x)}
+    end.map { |x| rdv_status_item(x) }
   end
 
   def rdv_status_item(status)
@@ -137,6 +137,4 @@ module RdvsHelper
     status = "unknown_past" if rdv.unknown? && rdv.starts_at.to_date < Date.today
     I18n.t("activerecord.attributes.rdv.statuses.#{status}")
   end
-
 end
-

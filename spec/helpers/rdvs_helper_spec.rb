@@ -42,7 +42,6 @@ describe RdvsHelper do
   end
 
   describe "#rdv_status_for" do
-
     it "return À venir et Excusé before rdv's day" do
       now = DateTime.new(2020, 3, 23, 12, 46)
       travel_to(now)
@@ -77,7 +76,6 @@ describe RdvsHelper do
       ]
       expect(rdv_status_for(rdv)).to eq(expected)
     end
-
   end
 
   describe "#rdv_status_label" do
@@ -108,6 +106,5 @@ describe RdvsHelper do
       rdv = build(:rdv, status: "unknown", starts_at: now - 1.month)
       expect(rdv_status_label(rdv)).to eq(I18n.t("activerecord.attributes.rdv.statuses.unknown_past"))
     end
-
   end
 end
