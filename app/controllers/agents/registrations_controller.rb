@@ -5,9 +5,7 @@ class Agents::RegistrationsController < Devise::RegistrationsController
     AgentContext.new(current_agent)
   end
 
-  def edit
-    respond_right_bar_with resource
-  end
+  def edit; end
 
   def update
     self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)

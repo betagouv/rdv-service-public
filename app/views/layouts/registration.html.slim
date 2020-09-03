@@ -31,12 +31,17 @@ html lang="fr"
             = render 'layouts/flash'
             .row
               .col-md-6.offset-md-3
-                - if agent_path?
+                - if agent_path? && current_agent&.nil?
                   .mb-4.text-center
                     h3 Espace reservé aux agents
                     p
                       | Vous êtes un particulier ?
                       = link_to 'Cliquez-ici', request.path.gsub('agents', 'users')
+                - if content_for :title
+                  .text-center.m-auto
+                    h4.text-dark-50.text-center.mt-0.font-weight-bold.mb-4
+                      = content_for :title
+
                 = yield
                 - if content_for :footer
                 .mt-3.text-center
