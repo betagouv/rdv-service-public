@@ -39,10 +39,7 @@ class AgentAuthController < ApplicationController
   end
 
   def current_organisation
-    id = params[:controller] == "agents/organisations" ? params[:id] : params[:organisation_id]
-    id ? current_agent.organisations.find(id) : current_agent.organisations.first
-  rescue ActiveRecord::RecordNotFound
-    raise Pundit::NotAuthorizedError
+    current_agent.organisations.find(params[:organisation_id])
   end
 
   def from_modal?
