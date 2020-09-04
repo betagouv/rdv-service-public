@@ -1,7 +1,7 @@
 - if rdvs.any?
   = render( \
     partial: 'admin/rdvs/rdv', \
-    collection: rdvs, \
+    collection: rdvs.sort_by(&:starts_at), \
     locals: local_assigns.slice(:date_format, :show_user_details) \
   )
   .d-flex.justify-content-center= paginate rdvs, theme: 'twitter-bootstrap-4'
