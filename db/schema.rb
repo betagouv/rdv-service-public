@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_07_084438) do
+ActiveRecord::Schema.define(version: 2020_09_07_123203) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -287,7 +287,6 @@ ActiveRecord::Schema.define(version: 2020_09_07_084438) do
   create_table "user_profiles", force: :cascade do |t|
     t.bigint "organisation_id"
     t.bigint "user_id"
-    t.text "old_notes"
     t.integer "logement"
     t.index ["organisation_id", "user_id"], name: "index_user_profiles_on_organisation_id_and_user_id", unique: true
     t.index ["organisation_id"], name: "index_user_profiles_on_organisation_id"
