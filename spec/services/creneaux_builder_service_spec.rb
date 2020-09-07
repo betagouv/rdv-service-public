@@ -3,7 +3,8 @@ describe CreneauxBuilderService, type: :service do
   let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, reservable_online: reservable_online, organisation: organisation) }
   let(:reservable_online) { true }
   let!(:lieu) { create(:lieu, organisation: organisation) }
-  let(:today) { Date.new(2019, 9, 19) }
+  let(:today) { Date.new(2019, 9, 19) } # a thursday
+  let(:tomorrow) { Date.new(2019, 9, 20) }
   let(:six_days_later) { today + 6.days }
   let!(:agent) { create(:agent, organisations: [organisation]) }
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, agent: agent, organisation: organisation) }
@@ -263,6 +264,35 @@ describe CreneauxBuilderService, type: :service do
 
     it "should not appear" do
       expect(subject.first[:starts_at].hour).to eq(10)
+    end
+  end
+
+  context "recurring plage ouverture + absence ending late" do
+    let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, recurrence: Montrose.every(:day), agent: agent, organisation: organisation) }
+    let!(:absence) { create(:absence, :weekly, agent: agent, first_day: tomorrow, start_time: Tod::TimeOfDay.new(0, 0), end_day: tomorrow, end_time: absence_end_time, organisation: organisation) }
+
+    context "absence end_time leaves enough time for a full creneau after" do
+      let(:absence_end_time) { Tod::TimeOfDay.new(23, 0) }
+
+      it do
+        tomorrow_creneaux = subject.select { _1[:starts_at].to_date == tomorrow }
+        expect(tomorrow_creneaux.count).to eq(0)
+        day_after_tomorrow_creneaux = subject.select { _1[:starts_at].to_date == tomorrow + 1.day }
+        expect(day_after_tomorrow_creneaux.count).to be > 0
+        expect(day_after_tomorrow_creneaux.first[:starts_at].to_time_of_day).to eq(Tod::TimeOfDay.new(9))
+      end
+    end
+
+    context "absence end_time does not leave enough time for a full creneau" do
+      let(:absence_end_time) { Tod::TimeOfDay.new(23, 55) }
+
+      it do
+        tomorrow_creneaux = subject.select { _1[:starts_at].to_date == tomorrow }
+        expect(tomorrow_creneaux.count).to eq(0)
+        day_after_tomorrow_creneaux = subject.select { _1[:starts_at].to_date == tomorrow + 1.day }
+        expect(day_after_tomorrow_creneaux.count).to be > 0
+        expect(day_after_tomorrow_creneaux.first[:starts_at].to_time_of_day).to eq(Tod::TimeOfDay.new(9))
+      end
     end
   end
 
