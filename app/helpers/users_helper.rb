@@ -96,4 +96,27 @@ class DisplayableUser
 
     simple_format(@user_profile.notes)
   end
+
+  def users_to_links(users)
+    safe_join(users.order_by_last_name.map { user_to_link(_1) }, ", ")
+  end
+
+  def user_to_link(user)
+    if user.organisations.include?(current_organisation)
+      link_to user.full_name, admin_organisation_user_path(current_organisation, user)
+    else
+      "#{user.full_name} - l'usager a été supprimé"
+    end
+  end
+
+  def users_to_sentence(rdv)
+    return rdv.users.map(&:full_name).sort.to_sentence if current_agent
+
+    users = []
+    rdv.users.each do |user|
+      users << user if user == current_user || current_user.relatives.include?(user)
+    end
+    users.map(&:full_name).sort.to_sentence
+  end
+
 end

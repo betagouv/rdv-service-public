@@ -1,10 +1,6 @@
 module WelcomeHelper
   include SectorisationUtils
 
-  def root_path?
-    root_path == request.path
-  end
-
   def sign_up_agent_button
     link_to "Je m'inscris", new_agent_registration_path, class: "btn btn-primary"
   end

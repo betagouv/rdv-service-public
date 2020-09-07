@@ -29,11 +29,11 @@ p.card-text
       = human_location(rdv)
 p.card-text
   strong> Professionnel(s) :
-  = agents_to_sentence(rdv)
+  = agents_to_sentence(rdv.agents)
 - if local_assigns.fetch(:show_users, true)
   p.card-text
     strong> Usager(s) :
     - if local_assigns.fetch(:display_links_to_users, true)
-      = users_to_links(rdv)
+      = users_to_links(rdv.users)
     - else
       = users_to_sentence(rdv)
