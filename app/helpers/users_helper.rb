@@ -58,56 +58,6 @@ module UsersHelper
       user == current_user || current_user.relatives.include?(user)
     end.map(&:full_name).sort.to_sentence
   end
-end
-
-class DisplayableUser
-  include UsersHelper
-  include ActionView::Helpers::TextHelper
-
-  delegate :first_name, :last_name, :birth_name, :address, :affiliation_number, :number_of_children, to: :user
-
-  attr_reader :user
-
-  def initialize(user, organisation)
-    @user = user
-    @user_profile = @user.profile_for(organisation)
-  end
-
-  def birth_date
-    birth_date_and_age(@user)
-  end
-
-  def caisse_affiliation
-    User.human_enum_name(:caisse_affiliation, @user.caisse_affiliation)
-  end
-
-  def family_situation
-    User.human_enum_name(:family_situation, @user.family_situation)
-  end
-
-  def phone_number
-    @user.responsible_phone_number
-  end
-
-  def email
-    @user.responsible_email
-  end
-
-  def logement
-    return nil unless @user_profile.present?
-
-    UserProfile.human_enum_name(:logement, @user_profile.logement)
-  end
-
-  def notes
-    return nil if @user_profile.nil? || @user_profile.notes.blank?
-
-    simple_format(@user_profile.notes)
-  end
-
-  def users_to_links(users)
-    safe_join(users.order_by_last_name.map { user_to_link(_1) }, ", ")
-  end
 
   def user_to_link(user)
     if user.organisations.include?(current_organisation)
@@ -115,5 +65,9 @@ class DisplayableUser
     else
       "#{user.full_name} - l'usager a été supprimé"
     end
+  end
+
+  def users_to_links(users)
+    safe_join(users.order_by_last_name.map { user_to_link(_1) }, ", ")
   end
 end
