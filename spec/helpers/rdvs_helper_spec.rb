@@ -56,6 +56,7 @@ describe RdvsHelper do
       expected = [
         ["À venir", "unknown"],
         ["En salle d'attente", "waiting"],
+        ["Vu", "seen"],
         ["Absent non excusé", "notexcused"],
         ["Absent excusé", "excused"]
       ]
@@ -71,6 +72,7 @@ describe RdvsHelper do
       rdv = build(:rdv, starts_at: (now - 2.days))
       expected = [
         ["À renseigner", "unknown"],
+        ["Vu", "seen"],
         ["Absent non excusé", "notexcused"],
         ["Absent excusé", "excused"]
       ]

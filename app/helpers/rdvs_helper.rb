@@ -89,9 +89,9 @@ module RdvsHelper
     if rdv.starts_at.to_date > Date.today
       ["unknown_future", "excused"]
     elsif rdv.starts_at.to_date == Date.today
-      ["unknown_future", "waiting", "notexcused", "excused"]
+      ["unknown_future", "waiting", "seen", "notexcused", "excused"]
     else
-      ["unknown_past", "notexcused", "excused"]
+      ["unknown_past", "seen", "notexcused", "excused"]
     end.map { |x| rdv_status_item(x) }
   end
 
