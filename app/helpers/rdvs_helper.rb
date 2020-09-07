@@ -99,7 +99,7 @@ module RdvsHelper
   end
 
   def rdv_status_for(rdv)
-    if rdv.starts_at < Date.today
+    if rdv.starts_at.to_date > Date.today
       ["unknown_future", "excused"]
     elsif rdv.starts_at.to_date == Date.today
       ["unknown_future", "waiting", "notexcused", "excused"]
