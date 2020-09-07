@@ -143,12 +143,10 @@
           .text-right
             = link_to "Ajouter un proche", new_admin_organisation_user_path(current_organisation, responsible_id: @user.id), class: "btn btn-outline-primary"
 
-
     .card#notes
-      .card-header Notes
+      .card-header Remarques
       .card-body
-        = simple_form_for(UserNote.new(user: @user, organisation: current_organisation, agent: current_agent), url: admin_organisation_user_notes_path(current_organisation, @user)) do |f|
-          = f.input :text, label: false, mandatory: true
+        = simple_form_for(@user, url: admin_organisation_user_path(current_organisation, @user)) do |f|
+          = f.simple_fields_for :user_profiles, @user.profile_for(current_organisation) do |f_user_profile|
+            = f_user_profile.input :notes, label: false, mandatory: true
           = f.button :submit, "Enregistrer"
-        hr
-        = render "common/user_notes", user: @user

@@ -6,7 +6,7 @@ class MergeUsersForm
     :first_name, :last_name, :birth_name, :birth_date, :phone_number,
     :address, :caisse_affiliation, :affiliation_number, :family_situation,
     :number_of_children,
-    :logement
+    :logement, :notes
   ].freeze
 
   attr_accessor :user1, :user2, :change_user1_id, :change_user2_id, *ATTRIBUTES
@@ -93,7 +93,7 @@ class MergeUsersForm
   end
 
   def values_for(attribute)
-    if [:logement].include?(attribute)
+    if [:logement, :notes].include?(attribute)
       [user1_profile&.send(attribute), user2_profile&.send(attribute)]
     else
       [user1&.send(attribute), user2&.send(attribute)]

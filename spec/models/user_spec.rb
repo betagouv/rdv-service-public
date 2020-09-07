@@ -265,17 +265,9 @@ describe User, type: :model do
   describe "#notes_for" do
     it "return notes for user and organisation" do
       organisation = create(:organisation)
-      user = create(:user, organisations: [organisation])
-      note = create(:user_note, user: user, organisation: organisation, text: "blablabla")
-      expect(user.notes_for(organisation)).to eq([note])
-    end
-
-    it "sort notes with created_at descending" do
-      organisation = create(:organisation)
-      user = create(:user, organisations: [organisation])
-      note_ancienne = create(:user_note, user: user, organisation: organisation, text: "blablabla", created_at: DateTime.new(2020, 3, 15, 9, 59))
-      note_recente = create(:user_note, user: user, organisation: organisation, text: "blablabla", created_at: DateTime.new(2020, 6, 23, 12, 39))
-      expect(user.notes_for(organisation)).to eq([note_recente, note_ancienne])
+      user = create(:user)
+      _user_profile = create(:user_profile, user: user, organisation: organisation, notes: "blablabla")
+      expect(user.notes_for(organisation)).to eq("blablabla")
     end
   end
 end

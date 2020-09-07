@@ -1,10 +1,17 @@
 - value = DisplayableUser.new(user, current_organisation).send(attribute_name)
 - if value.present? || !local_assigns[:skip_empty]
-  - if [:logement].include?(attribute_name)
+  - if attribute_name == :logement
     strong
-      = I18n.t("activerecord.attributes.user_profile.#{attribute_name}")
+      = I18n.t("activerecord.attributes.user_profile.logement")
       span<>= ":"
     span= value
+  - elsif attribute_name == :notes
+    .d-flex
+      div.mr-1
+        strong
+          = I18n.t("activerecord.attributes.user_profile.notes")
+          span<>= ":"
+      div= value
   - else
     strong
       = I18n.t("activerecord.attributes.user.#{attribute_name}")

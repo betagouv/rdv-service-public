@@ -14,7 +14,7 @@ class MigrateUserNotesBackToUserProfiles < ActiveRecord::Migration[6.0]
   private
 
   def migrate_user_notes(user, organisation_id)
-    orga_user_notes = user.notes_for(organisation_id)
+    orga_user_notes = user.deprecated_user_notes_for(organisation_id)
     user_profile = user.profile_for(organisation_id)
     if user_profile.nil?
       print "---"
