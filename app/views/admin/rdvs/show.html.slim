@@ -22,7 +22,7 @@
                 = I18n.t("activerecord.attributes.rdv.statuses.#{@rdv.temporal_status}")
               .dropdown-menu.dropdown-menu-right.dropdown-menu-animated.profile-dropdown
                 .dropdown-header.noti-title
-                  - rdv_possible_statuses(@rdv).each do |status|
+                  - rdv_possible_statuses_option_items(@rdv).each do |status|
                     = link_to status[0], admin_organisation_rdv_path(@rdv.organisation, @rdv, rdv: {status: status[1]}), method: :put, class: "dropdown-item"
 
       .card-body
