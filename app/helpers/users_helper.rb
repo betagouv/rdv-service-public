@@ -50,6 +50,14 @@ module UsersHelper
       (I18n.t("users.soft_delete_confirm_message.relatives", count: user.relatives.active.count) if user.relatives.active.any?),
     ].select(&:present?).join("\n\n")
   end
+
+  def users_to_sentence(users, current_agent, current_user)
+    return users.map(&:full_name).sort.to_sentence if current_agent
+
+    users.select do |user|
+      user == current_user || current_user.relatives.include?(user)
+    end.map(&:full_name).sort.to_sentence
+  end
 end
 
 class DisplayableUser
@@ -108,15 +116,4 @@ class DisplayableUser
       "#{user.full_name} - l'usager a été supprimé"
     end
   end
-
-  def users_to_sentence(rdv)
-    return rdv.users.map(&:full_name).sort.to_sentence if current_agent
-
-    users = []
-    rdv.users.each do |user|
-      users << user if user == current_user || current_user.relatives.include?(user)
-    end
-    users.map(&:full_name).sort.to_sentence
-  end
-
 end
