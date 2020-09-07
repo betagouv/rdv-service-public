@@ -60,7 +60,7 @@ class CreneauxBuilderForDate < BaseService
 
   def next_creneaux
     creneau = generate_creneau
-    return if creneau.ends_at.to_time_of_day > @plage_ouverture.end_time || creneau.overlaps_jour_ferie?
+    return if no_more_creneaux_for_the_day?(creneau)
 
     overlapping_rdvs_or_absences = creneau.overlapping_rdvs_or_absences(rdvs + absences_occurrences)
     if overlapping_rdvs_or_absences.any?
@@ -85,6 +85,12 @@ class CreneauxBuilderForDate < BaseService
       agent_id: (@plage_ouverture.agent_id if @for_agents),
       agent_name: (@plage_ouverture.agent.short_name if @for_agents || @agent_name)
     )
+  end
+
+  def no_more_creneaux_for_the_day?(creneau)
+    creneau.ends_at.to_time_of_day > @plage_ouverture.end_time ||
+      creneau.ends_at.to_date > creneau.starts_at.to_date ||
+      creneau.overlaps_jour_ferie?
   end
 
   def rdvs
