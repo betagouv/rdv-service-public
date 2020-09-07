@@ -68,6 +68,16 @@ class Rdv < ApplicationRecord
     status
   end
 
+  def possible_temporal_statuses
+    if starts_at.to_date > Date.today
+      ["unknown_future", "excused"]
+    elsif starts_at.to_date == Date.today
+      %w[unknown_future waiting seen notexcused excused]
+    else
+      ["unknown_past", "seen", "notexcused", "excused"]
+    end
+  end
+
   def cancelled?
     cancelled_at.present?
   end
