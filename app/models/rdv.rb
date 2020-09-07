@@ -61,6 +61,13 @@ class Rdv < ApplicationRecord
     ends_at < Time.zone.now
   end
 
+  def temporal_status
+    return "unknown_future" if unknown? && starts_at.to_date >= Date.today
+    return "unknown_past" if unknown? && starts_at.to_date < Date.today
+
+    status
+  end
+
   def cancelled?
     cancelled_at.present?
   end

@@ -77,34 +77,4 @@ describe RdvsHelper do
       expect(rdv_possible_statuses(rdv)).to eq(expected)
     end
   end
-
-  describe "#rdv_status_label" do
-    ["waiting", "excused", "seen", "notexcused"].each do |status|
-      it "use I18n to find label of #{status}" do
-        rdv = build(:rdv, status: status)
-        expect(rdv_status_label(rdv)).to eq(I18n.t("activerecord.attributes.rdv.statuses.#{status}"))
-      end
-    end
-
-    it "return à venir when status is unknow and starts_at in the future" do
-      now = DateTime.new(2020, 3, 23, 12, 46)
-      travel_to(now)
-      rdv = build(:rdv, status: "unknown", starts_at: now + 1.month)
-      expect(rdv_status_label(rdv)).to eq(I18n.t("activerecord.attributes.rdv.statuses.unknown_future"))
-    end
-
-    it "return à venir when status is unknow and starts_at is today" do
-      now = DateTime.new(2020, 3, 23, 12, 46)
-      travel_to(now)
-      rdv = build(:rdv, status: "unknown", starts_at: now - 1.hour)
-      expect(rdv_status_label(rdv)).to eq(I18n.t("activerecord.attributes.rdv.statuses.unknown_future"))
-    end
-
-    it "return à renseigner when status is unknow and starts_at in the past" do
-      now = DateTime.new(2020, 3, 23, 12, 46)
-      travel_to(now)
-      rdv = build(:rdv, status: "unknown", starts_at: now - 1.month)
-      expect(rdv_status_label(rdv)).to eq(I18n.t("activerecord.attributes.rdv.statuses.unknown_past"))
-    end
-  end
 end

@@ -179,4 +179,31 @@ describe Rdv, type: :model do
       expect(Rdv.with_user_in([user1, user2])).not_to include(rdv3)
     end
   end
+
+  describe "#temporal_status" do
+    it "return status when not unknown" do
+      rdv = build(:rdv, status: "waiting")
+      expect(rdv.temporal_status).to eq("waiting")
+      rdv = build(:rdv, status: "seen")
+      expect(rdv.temporal_status).to eq("seen")
+      rdv = build(:rdv, status: "excused")
+      expect(rdv.temporal_status).to eq("excused")
+      rdv = build(:rdv, status: "notexcused")
+      expect(rdv.temporal_status).to eq("notexcused")
+    end
+
+    it "return unknown_future" do
+      today = Time.new(2020, 3, 23, 14, 54)
+      travel_to(today)
+      rdv = build(:rdv, status: "unknown", starts_at: today + 1.day)
+      expect(rdv.temporal_status).to eq("unknown_future")
+    end
+
+    it "return unknown_past" do
+      today = Time.new(2020, 3, 23, 14, 54)
+      travel_to(today)
+      rdv = build(:rdv, status: "unknown", starts_at: today - 1.day)
+      expect(rdv.temporal_status).to eq("unknown_past")
+    end
+  end
 end

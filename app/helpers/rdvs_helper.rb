@@ -98,11 +98,4 @@ module RdvsHelper
   def rdv_status_item(status)
     [I18n.t("activerecord.attributes.rdv.statuses.#{status}"), status.split("_")[0]]
   end
-
-  def rdv_status_label(rdv)
-    status = rdv.status
-    status = "unknown_future" if rdv.unknown? && rdv.starts_at.to_date >= Date.today
-    status = "unknown_past" if rdv.unknown? && rdv.starts_at.to_date < Date.today
-    I18n.t("activerecord.attributes.rdv.statuses.#{status}")
-  end
 end
