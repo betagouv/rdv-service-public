@@ -98,7 +98,7 @@ module RdvsHelper
     "#{l(rdv.starts_at, format: :time_only)} (#{rdv.duration_in_min} minutes)"
   end
 
-  def rdv_status_for(rdv)
+  def rdv_possible_statuses(rdv)
     if rdv.starts_at.to_date > Date.today
       ["unknown_future", "excused"]
     elsif rdv.starts_at.to_date == Date.today

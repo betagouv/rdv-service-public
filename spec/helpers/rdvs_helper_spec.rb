@@ -41,13 +41,13 @@ describe RdvsHelper do
     end
   end
 
-  describe "#rdv_status_for" do
+  describe "#rdv_possible_statuses" do
     it "return À venir et Excusé before rdv's day" do
       now = DateTime.new(2020, 3, 23, 12, 46)
       travel_to(now)
       rdv = build(:rdv, starts_at: (now + 2.days))
       expected = [["À venir", "unknown"], ["Absent excusé", "excused"]]
-      expect(rdv_status_for(rdv)).to eq(expected)
+      expect(rdv_possible_statuses(rdv)).to eq(expected)
     end
 
     it "return À venir, En salle d'attente, Vu, Non Excusé et Excusé at rdv's day" do
@@ -60,9 +60,9 @@ describe RdvsHelper do
         ["Absent excusé", "excused"]
       ]
       rdv = build(:rdv, starts_at: now - 3.hours)
-      expect(rdv_status_for(rdv)).to eq(expected)
+      expect(rdv_possible_statuses(rdv)).to eq(expected)
       rdv = build(:rdv, starts_at: now + 4.hours)
-      expect(rdv_status_for(rdv)).to eq(expected)
+      expect(rdv_possible_statuses(rdv)).to eq(expected)
     end
 
     it "return Indéterminé, Vu, Non Excusé et Excusé after rdv's day" do
@@ -74,7 +74,7 @@ describe RdvsHelper do
         ["Absent non excusé", "notexcused"],
         ["Absent excusé", "excused"]
       ]
-      expect(rdv_status_for(rdv)).to eq(expected)
+      expect(rdv_possible_statuses(rdv)).to eq(expected)
     end
   end
 
