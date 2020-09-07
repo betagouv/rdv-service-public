@@ -51,7 +51,7 @@ module UsersHelper
     ].select(&:present?).join("\n\n")
   end
 
-  def users_to_sentence(users, current_agent, current_user)
+  def users_to_sentence(users)
     return users.map(&:full_name).sort.to_sentence if current_agent
 
     users.select do |user|

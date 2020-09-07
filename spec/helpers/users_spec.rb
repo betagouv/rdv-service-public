@@ -25,45 +25,4 @@ describe UsersHelper, type: :helper do
       expect(age(user)).to eq("20 jours")
     end
   end
-
-  describe "#users_to_sentence" do
-    it "return nothing without current agent and no agents for rdv" do
-      current_agent = nil
-      current_user = build(:user)
-      user = build(:user, first_name: "Jade", last_name: "MAILLARD")
-      users = [user]
-      expect(users_to_sentence(users, current_agent, current_user)).to eq("")
-    end
-
-    it "Return user full name with a current agent" do
-      current_agent = build(:agent)
-      current_user = nil
-      user = build(:user, first_name: "Jade", last_name: "MAILLARD")
-      users = [user]
-      expect(users_to_sentence(users, current_agent, current_user)).to eq("Jade MAILLARD")
-    end
-
-    it "Return user full name with a current user as rdv's user " do
-      current_agent = nil
-      current_user = build(:user, first_name: "Jade", last_name: "MAILLARD")
-      users = [current_user]
-      expect(users_to_sentence(users, current_agent, current_user)).to eq("Jade MAILLARD")
-    end
-
-    it "Return user full name only for current_user as rdv's user (exclude other not relative users) " do
-      current_agent = nil
-      current_user = build(:user, first_name: "Jade", last_name: "MAILLARD")
-      other_user = build(:user, first_name: "André", last_name: "CITRON")
-      users = [current_user, other_user]
-      expect(users_to_sentence(users, current_agent, current_user)).to eq("Jade MAILLARD")
-    end
-
-    it "Return current user and relatives full name" do
-      current_agent = nil
-      relative_user = build(:user, first_name: "André", last_name: "CITRON")
-      current_user = build(:user, first_name: "Jade", last_name: "MAILLARD", relatives: [relative_user])
-      users = [current_user, relative_user]
-      expect(users_to_sentence(users, current_agent, current_user)).to eq("André CITRON et Jade MAILLARD")
-    end
-  end
 end

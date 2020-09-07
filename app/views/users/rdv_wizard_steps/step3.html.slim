@@ -31,7 +31,7 @@
             .col
               i.fa.fa-check.fa-fw.mr-1.text-success
               | Usager :&nbsp;
-              = users_to_sentence(@rdv.users, current_agent, current_user)
+              = users_to_sentence(@rdv.users)
             .col-auto
               = link_to "modifier", new_users_rdv_wizard_step_path(step: 2, **@rdv_wizard.to_query)
         li.list-group-item
