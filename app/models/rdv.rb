@@ -53,17 +53,13 @@ class Rdv < ApplicationRecord
     starts_at + duration_in_min.minutes
   end
 
-  def starts_at_date
-    starts_at.to_date
-  end
-
   def past?
     ends_at < Time.zone.now
   end
 
   def temporal_status
-    return "unknown_future" if unknown? && starts_at.to_date >= Date.today
-    return "unknown_past" if unknown? && starts_at.to_date < Date.today
+    return "unknown_future" if unknown? && starts_at >= Time.zone.now
+    return "unknown_past" if unknown? && starts_at < Time.zone.now
 
     status
   end
@@ -71,8 +67,10 @@ class Rdv < ApplicationRecord
   def possible_temporal_statuses
     if starts_at.to_date > Date.today
       ["unknown_future", "excused"]
-    elsif starts_at.to_date == Date.today
+    elsif starts_at.to_date == Date.today && starts_at > Time.zone.now
       %w[unknown_future waiting seen notexcused excused]
+    elsif starts_at.to_date == Date.today && starts_at <= Time.zone.now
+      %w[unknown_past waiting seen notexcused excused]
     else
       ["unknown_past", "seen", "notexcused", "excused"]
     end
@@ -119,27 +117,19 @@ class Rdv < ApplicationRecord
   end
 
   def address
-    return location if location.present? && lieu_id.nil?
+    return location if location_without_lieu?
+    return user_for_home_rdv.address.to_s if rdv_at_home?
+    return lieu.address if rdv_in_public_office?
 
-    if home? && user_for_home_rdv.present?
-      user_for_home_rdv.address.to_s
-    elsif public_office? && lieu.present?
-      lieu.address
-    else
-      ""
-    end
+    ""
   end
 
   def address_complete
-    return location if location.present? && lieu_id.nil?
+    return location if location_without_lieu?
+    return "Adresse de #{user_for_home_rdv.full_name} - #{user_for_home_rdv.responsible_address}" if rdv_at_home?
+    return lieu.full_name if rdv_in_public_office?
 
-    if home? && user_for_home_rdv.present?
-      "Adresse de #{user_for_home_rdv.full_name} - #{user_for_home_rdv.responsible_address}"
-    elsif public_office? && lieu.present?
-      lieu.full_name
-    else
-      ""
-    end
+    ""
   end
 
   def address_complete_without_personnal_details
@@ -155,6 +145,18 @@ class Rdv < ApplicationRecord
   end
 
   private
+
+  def rdv_in_public_office?
+    public_office? && lieu.present?
+  end
+
+  def rdv_at_home?
+    home? && user_for_home_rdv.present?
+  end
+
+  def location_without_lieu?
+    location.present? && lieu_id.nil?
+  end
 
   def virtual_attributes_for_paper_trail
     { user_ids: users&.pluck(:id), agent_ids: agents&.pluck(:id) }
