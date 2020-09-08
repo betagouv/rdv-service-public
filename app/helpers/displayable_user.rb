@@ -1,5 +1,6 @@
 class DisplayableUser
   include UsersHelper
+  include ActionView::Helpers::TextHelper
 
   delegate :first_name, :last_name, :birth_name, :address, :affiliation_number, :number_of_children, to: :user
 
