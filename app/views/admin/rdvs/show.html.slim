@@ -46,9 +46,11 @@
           p.card-text
             i.fa.fa-fw.fa-envelope>
             = display_value_or_na_placeholder(user.email)
-
-          h5.cart-title.mb-2.mt-4 Notes
-          = render "common/user_notes", user: user, extra_link_params: { rdv_id: @rdv.id }
+          - if user.notes_for(current_organisation).present?
+            .d-flex title="Remarques"
+              div.mr-1
+                i.fa.fa-fw.fa-info-circle>
+              div= simple_format(user.notes_for(current_organisation))
 
     .card
       .card-header

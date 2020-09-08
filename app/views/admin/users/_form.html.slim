@@ -41,6 +41,7 @@
         .col-md-6= f.input :first_name, **input_opts[:relative]
         .col-md-6= f.input :last_name, **input_opts[:relative]
       = date_input(f, :birth_date, **input_opts[:relative])
+      = f_user_profile.input :notes, **input_opts[:relative].deep_merge(input_html: { rows: 6 })
 
     - if user.new_record?
       .form-row.mb-2 *div_opts[:relative]
@@ -87,8 +88,7 @@
                 data-relative-type="new"
                 class=("active" if initial_relative_type_tab == :new)
               ]
-                = f.simple_fields_for(:responsible, include_id: false) do |sub_form|
-                  = render "responsible_form_fields", f: sub_form, input_opts: input_opts[:relative_new]
+                = render "responsible_form_wrapper", f: f, input_opts: input_opts[:relative_new], user_type_key: :relative_new
 
     - elsif user.persisted? && user.relative?
       .form-row.mb-2
@@ -98,8 +98,7 @@
           / ^ for JS
           .mb-3
             b= link_to full_name_and_birthdate(user.responsible), admin_organisation_user_path(current_organisation, user.responsible)
-          = f.simple_fields_for(:responsible, include_id: true) do |sub_form|
-            = render "responsible_form_fields", f: sub_form, input_opts: input_opts[:relative_existing]
+          = render "responsible_form_wrapper", f: f, input_opts: input_opts[:relative_existing], user_type_key: :relative_existing
 
     - if user.skip_duplicate_warnings
       .alert.alert-warning.pb-0

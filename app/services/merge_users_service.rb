@@ -14,7 +14,6 @@ class MergeUsersService < BaseService
       merge_user_profiles
       merge_file_attentes
       merge_agents
-      merge_user_notes
       @user_to_merge.reload.soft_delete(@organisation) # ! reload refreshes associations to delete
     end
   end
@@ -76,18 +75,11 @@ class MergeUsersService < BaseService
     @user_target.update!(agents: agents)
   end
 
-  def merge_user_notes
-    @user_to_merge.notes_for(@organisation).each do |user_note|
-      user_note.update_columns(user_id: @user_target.id)
-      # skip validation because of migrated notes without agent
-    end
-  end
-
   def user_attributes_to_merge
-    @attributes_to_merge.without(:logement)
+    @attributes_to_merge.without(:logement, :notes)
   end
 
   def user_profile_attributes_to_merge
-    @attributes_to_merge.select{ [:logement].include?(_1) }
+    @attributes_to_merge.select{ [:logement, :notes].include?(_1) }
   end
 end

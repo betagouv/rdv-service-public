@@ -116,8 +116,12 @@ class User < ApplicationRecord
     duplicate_user
   end
 
-  def notes_for(organisation)
+  def deprecated_user_notes_for(organisation)
     UserNote.where(organisation: organisation, user: self).order("created_at desc")
+  end
+
+  def notes_for(organisation)
+    profile_for(organisation).notes
   end
 
   def can_be_soft_deleted_from_organisation?(organisation)

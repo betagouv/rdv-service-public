@@ -1,0 +1,20 @@
+= f.simple_fields_for \
+  :responsible, \
+  include_id: user_type_key == :relative_existing \
+do |sub_form|
+
+  = sub_form.simple_fields_for( \
+    :user_profiles, \
+    sub_form.object.profile_for(current_organisation) \
+  ) do |sub_form_user_profile|
+
+    = sub_form_user_profile.input \
+      :organisation_id, \
+      as: :hidden, \
+      wrapper: false, \
+      **input_opts
+
+    = render "responsible_form_fields", \
+      f: sub_form, \
+      f_user_profile: sub_form_user_profile, \
+      input_opts: input_opts

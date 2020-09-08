@@ -28,6 +28,12 @@ describe "Agent can update user" do
     expect(page).to have_content("En attente de confirmation pour jeanne@reynolds.com")
   end
 
+  scenario "update user notes" do
+    fill_in "Remarques", with: "Pas très sympa"
+    click_button "Modifier"
+    expect(page).to have_content("Pas très sympa")
+  end
+
   context "unregistered user" do
     let!(:user) do
       create(:user, :unregistered, first_name: "Jean", last_name: "LEGENDE", email: nil, organisations: [organisation])

@@ -25,6 +25,8 @@
 
 = f.input :address, **(input_opts.deep_merge(input_html: { class: "places-js-container" }))
 
+= f_user_profile.input :notes, **input_opts.deep_merge(input_html: { rows: 6 })
+
 .form-row
   .col-md-6= f.input :caisse_affiliation, collection: User.human_enum_collection(:caisse_affiliation), **input_opts
   .col-md-6= f.input :affiliation_number, **input_opts
@@ -33,9 +35,4 @@
   .col-md-6= f.input :family_situation, collection: User.human_enum_collection(:family_situation), **input_opts
   .col-md-6= f.input :number_of_children, **{ input_html: { min: '0', max: '15', step: 'any' } }.deep_merge(input_opts)
 
-- if local_assigns[:f_user_profile]
-  = f_user_profile.input :logement, collection: UserProfile.human_enum_collection(:logement), **input_opts
-- else
-  = f.simple_fields_for :user_profiles, user.profile_for(current_organisation) do |f_user_profile|
-    = f_user_profile.input :organisation_id, as: :hidden, wrapper: false, **input_opts
-    = f_user_profile.input :logement, collection: UserProfile.human_enum_collection(:logement), **input_opts
+= f_user_profile.input :logement, collection: UserProfile.human_enum_collection(:logement), **input_opts
