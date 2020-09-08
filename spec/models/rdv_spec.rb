@@ -215,10 +215,10 @@ describe Rdv, type: :model do
       expect(rdv.possible_temporal_statuses).to eq(["unknown_future", "excused"])
     end
 
-    it "returns `unknonw_future`, `waiting`, `seen`, `notexcused` and `excused` at rdv's day before rdv's time" do
+    it "returns `unknonw_future`, `waiting` and `excused` at rdv's day before rdv's time" do
       now = DateTime.new(2020, 3, 23, 12, 46)
       travel_to(now)
-      expected = %w[unknown_future waiting seen notexcused excused]
+      expected = %w[unknown_future waiting excused]
       rdv = build(:rdv, starts_at: now + 4.minutes)
       expect(rdv.possible_temporal_statuses).to eq(expected)
     end
@@ -229,13 +229,6 @@ describe Rdv, type: :model do
       expected = %w[unknown_past seen notexcused excused]
       rdv = build(:rdv, starts_at: now - 2.minutes)
       expect(rdv.possible_temporal_statuses).to eq(expected)
-    end
-
-    it "returns `unknonw_past`, `seen`, `notexcused` and `excused` after rdv's day" do
-      now = DateTime.new(2020, 3, 23, 12, 46)
-      travel_to(now)
-      rdv = build(:rdv, starts_at: (now - 2.days))
-      expect(rdv.possible_temporal_statuses).to eq(["unknown_past", "seen", "notexcused", "excused"])
     end
   end
 end

@@ -57,18 +57,24 @@ class Rdv < ApplicationRecord
     ends_at < Time.zone.now
   end
 
+  def in_the_future?
+    starts_at > Time.zone.now
+  end
+
+  def today?
+    starts_at.to_date == Date.today
+  end
+
   def temporal_status
-    return "unknown_future" if unknown? && starts_at >= Time.zone.now
-    return "unknown_past" if unknown? && starts_at < Time.zone.now
+    return "unknown_future" if unknown? && in_the_future?
+    return "unknown_past" if unknown? && !in_the_future?
 
     status
   end
 
   def possible_temporal_statuses
-    if starts_at.to_date > Date.today
-      %w[unknown_future excused]
-    elsif starts_at.to_date == Date.today && starts_at > Time.zone.now
-      %w[unknown_future waiting seen notexcused excused]
+    if in_the_future?
+      ["unknown_future", today? ? "waiting" : nil, "excused"].compact
     else
       %w[unknown_past seen notexcused excused]
     end
