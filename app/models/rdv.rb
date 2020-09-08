@@ -61,10 +61,6 @@ class Rdv < ApplicationRecord
     starts_at > Time.zone.now
   end
 
-  def today?
-    starts_at.to_date == Date.today
-  end
-
   def temporal_status
     return "unknown_future" if unknown? && in_the_future?
     return "unknown_past" if unknown? && !in_the_future?
@@ -74,7 +70,7 @@ class Rdv < ApplicationRecord
 
   def possible_temporal_statuses
     if in_the_future?
-      ["unknown_future", today? ? "waiting" : nil, "excused"].compact
+      ["unknown_future", starts_at.to_date.today? ? "waiting" : nil, "excused"].compact
     else
       %w[unknown_past seen notexcused excused]
     end
@@ -122,16 +118,16 @@ class Rdv < ApplicationRecord
 
   def address
     return location if location_without_lieu?
-    return user_for_home_rdv.address.to_s if rdv_at_home?
-    return lieu.address if rdv_in_public_office?
+    return user_for_home_rdv.address.to_s if home? && user_for_home_rdv.present?
+    return lieu.address if public_office? && lieu.present?
 
     ""
   end
 
   def address_complete
     return location if location_without_lieu?
-    return "Adresse de #{user_for_home_rdv.full_name} - #{user_for_home_rdv.responsible_address}" if rdv_at_home?
-    return lieu.full_name if rdv_in_public_office?
+    return "Adresse de #{user_for_home_rdv.full_name} - #{user_for_home_rdv.responsible_address}" ifhome? && user_for_home_rdv.present?
+    return lieu.full_name if public_office? && lieu.present?
 
     ""
   end
@@ -149,14 +145,6 @@ class Rdv < ApplicationRecord
   end
 
   private
-
-  def rdv_in_public_office?
-    public_office? && lieu.present?
-  end
-
-  def rdv_at_home?
-    home? && user_for_home_rdv.present?
-  end
 
   def location_without_lieu?
     location.present? && lieu_id.nil?
