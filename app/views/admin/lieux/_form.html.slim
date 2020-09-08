@@ -1,4 +1,4 @@
-= simple_form_for [:admin, lieu.organisation, lieu], remote: request.xhr?, data: { rightbar: true } do |f|
+= simple_form_for [:admin, lieu.organisation, lieu] do |f|
   = render partial: 'layouts/model_errors', locals: { model: lieu }
   = f.input :name
   = f.input :address, input_html: { class: "places-js-container" }
