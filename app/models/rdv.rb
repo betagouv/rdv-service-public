@@ -66,13 +66,11 @@ class Rdv < ApplicationRecord
 
   def possible_temporal_statuses
     if starts_at.to_date > Date.today
-      ["unknown_future", "excused"]
+      %w[unknown_future excused]
     elsif starts_at.to_date == Date.today && starts_at > Time.zone.now
       %w[unknown_future waiting seen notexcused excused]
-    elsif starts_at.to_date == Date.today && starts_at <= Time.zone.now
-      %w[unknown_past waiting seen notexcused excused]
     else
-      ["unknown_past", "seen", "notexcused", "excused"]
+      %w[unknown_past seen notexcused excused]
     end
   end
 
