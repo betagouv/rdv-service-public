@@ -34,7 +34,7 @@
         - else
           h4.card-title.mb-3 Informations de votre proche
           ul.list-unstyled
-            - [:first_name, :last_name, :birth_date].each do |attr_name|
+            - [:first_name, :last_name, :birth_date, :notes].each do |attr_name|
               li= render "common/user_attribute", user: @user, attribute_name: attr_name
 
         .row.mt-3
@@ -142,11 +142,3 @@
                     = "(#{age(relative)})" if relative.birth_date
           .text-right
             = link_to "Ajouter un proche", new_admin_organisation_user_path(current_organisation, responsible_id: @user.id), class: "btn btn-outline-primary"
-
-    .card#notes
-      .card-header Remarques
-      .card-body
-        = simple_form_for(@user, url: admin_organisation_user_path(current_organisation, @user)) do |f|
-          = f.simple_fields_for :user_profiles, @user.profile_for(current_organisation) do |f_user_profile|
-            = f_user_profile.input :notes, label: false, mandatory: true
-          = f.button :submit, "Enregistrer"
