@@ -35,4 +35,10 @@ class DisplayableUser
 
     UserProfile.human_enum_name(:logement, @user_profile.logement)
   end
+
+  def notes
+    return nil if @user_profile.nil? || @user_profile.notes.blank?
+
+    simple_format(@user_profile.notes)
+  end
 end
