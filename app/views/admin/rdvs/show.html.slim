@@ -12,7 +12,19 @@
 .row
   .col-md-6.mb-3
     .card
-      .card-header = l(@rdv.starts_at.to_date, format: :human )
+      .card-header
+        .d-flex.justify-content-between
+          = l(@rdv.starts_at.to_date, format: :human )
+
+          ul.list-unstyled.topbar-right-menu.float-right.mb-0
+            li.dropdown
+              a.dropdown-toggle.btn.rdv-status.mr-0 class="rdv-status-#{@rdv.status}" aria-expanded="false" aria-haspopup="false" data-toggle="dropdown" href="#" role="button"
+                = I18n.t("activerecord.attributes.rdv.statuses.#{@rdv.temporal_status}")
+              .dropdown-menu.dropdown-menu-right.dropdown-menu-animated.profile-dropdown
+                .dropdown-header.noti-title
+                  - rdv_possible_statuses_option_items(@rdv).each do |status|
+                    = link_to status[0], admin_organisation_rdv_path(@rdv.organisation, @rdv, rdv: {status: status[1]}), method: :put, class: "dropdown-item"
+
       .card-body
         p.card-text
           i.fa.fa-fw.fa-calendar>
@@ -51,14 +63,6 @@
               div.mr-1
                 i.fa.fa-fw.fa-info-circle>
               div= simple_format(user.notes_for(current_organisation))
-
-    .card
-      .card-header
-        | Modifier le statut du RDV rapidement
-      .card-body
-        = simple_form_for(@rdv, url: status_admin_organisation_rdv_path(@rdv.organisation)) do |f|
-          = f.input :status, collection: Rdv.human_enum_collection(:status), as: :radio_buttons, label: ''
-          .text-right= f.submit class: 'btn btn-secondary'
 
 .row
   .col-md-12

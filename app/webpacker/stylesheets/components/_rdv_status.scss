@@ -1,0 +1,54 @@
+a.rdv-status {
+  border:0;
+  border-radius: 5px;
+}
+
+a.rdv-status-unknown {
+  background-color: $blue;
+  color: $white;
+
+  &:hover {
+    background-color: $white;
+    color: $blue;
+  }
+}
+
+a.rdv-status-waiting {
+  background-color: $turquoise;
+  color: $blue;
+
+  &:hover {
+    background-color: $blue;
+    color: $turquoise;
+  }
+}
+
+a.rdv-status-seen {
+  background-color: $green;
+  color: $blue;
+
+  &:hover {
+    background-color: $blue;
+    color: $green;
+  }
+}
+
+a.rdv-status-excused {
+  background-color: $green;
+  color: $blue;
+
+  &:hover {
+    background-color: $blue;
+    color: $green;
+  }
+}
+
+a.rdv-status-notexcused {
+  background-color: #fe6376;
+  color: $blue;
+
+  &:hover {
+    color: #fe6376;
+    background-color: $blue;
+  }
+}

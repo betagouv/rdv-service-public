@@ -53,12 +53,27 @@ class Rdv < ApplicationRecord
     starts_at + duration_in_min.minutes
   end
 
-  def starts_at_date
-    starts_at.to_date
-  end
-
   def past?
     ends_at < Time.zone.now
+  end
+
+  def in_the_future?
+    starts_at > Time.zone.now
+  end
+
+  def temporal_status
+    return "unknown_future" if unknown? && in_the_future?
+    return "unknown_past" if unknown? && !in_the_future?
+
+    status
+  end
+
+  def possible_temporal_statuses
+    if in_the_future?
+      ["unknown_future", starts_at.to_date.today? ? "waiting" : nil, "excused"].compact
+    else
+      %w[unknown_past seen notexcused excused]
+    end
   end
 
   def cancelled?
@@ -102,27 +117,19 @@ class Rdv < ApplicationRecord
   end
 
   def address
-    return location if location.present? && lieu_id.nil?
+    return location if location_without_lieu?
+    return user_for_home_rdv.address.to_s if home? && user_for_home_rdv.present?
+    return lieu.address if public_office? && lieu.present?
 
-    if home? && user_for_home_rdv.present?
-      user_for_home_rdv.address.to_s
-    elsif public_office? && lieu.present?
-      lieu.address
-    else
-      ""
-    end
+    ""
   end
 
   def address_complete
-    return location if location.present? && lieu_id.nil?
+    return location if location_without_lieu?
+    return "Adresse de #{user_for_home_rdv.full_name} - #{user_for_home_rdv.responsible_address}" if home? && user_for_home_rdv.present?
+    return lieu.full_name if public_office? && lieu.present?
 
-    if home? && user_for_home_rdv.present?
-      "Adresse de #{user_for_home_rdv.full_name} - #{user_for_home_rdv.responsible_address}"
-    elsif public_office? && lieu.present?
-      lieu.full_name
-    else
-      ""
-    end
+    ""
   end
 
   def address_complete_without_personnal_details
@@ -138,6 +145,10 @@ class Rdv < ApplicationRecord
   end
 
   private
+
+  def location_without_lieu?
+    location.present? && lieu_id.nil?
+  end
 
   def virtual_attributes_for_paper_trail
     { user_ids: users&.pluck(:id), agent_ids: agents&.pluck(:id) }

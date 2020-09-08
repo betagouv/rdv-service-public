@@ -179,4 +179,56 @@ describe Rdv, type: :model do
       expect(Rdv.with_user_in([user1, user2])).not_to include(rdv3)
     end
   end
+
+  describe "#temporal_status" do
+    it "return status when not unknown" do
+      rdv = build(:rdv, status: "waiting")
+      expect(rdv.temporal_status).to eq("waiting")
+      rdv = build(:rdv, status: "seen")
+      expect(rdv.temporal_status).to eq("seen")
+      rdv = build(:rdv, status: "excused")
+      expect(rdv.temporal_status).to eq("excused")
+      rdv = build(:rdv, status: "notexcused")
+      expect(rdv.temporal_status).to eq("notexcused")
+    end
+
+    it "return unknown_future" do
+      today = Time.new(2020, 3, 23, 14, 54)
+      travel_to(today)
+      rdv = build(:rdv, status: "unknown", starts_at: today + 1.hour)
+      expect(rdv.temporal_status).to eq("unknown_future")
+    end
+
+    it "return unknown_past" do
+      today = Time.new(2020, 3, 23, 14, 54)
+      travel_to(today)
+      rdv = build(:rdv, status: "unknown", starts_at: today - 1.minute)
+      expect(rdv.temporal_status).to eq("unknown_past")
+    end
+  end
+
+  describe "#possible_temporal_statuses" do
+    it "returns `unknown_future` and `excused` before rdv's day" do
+      now = DateTime.new(2020, 3, 23, 12, 46)
+      travel_to(now)
+      rdv = build(:rdv, starts_at: (now + 2.days))
+      expect(rdv.possible_temporal_statuses).to eq(["unknown_future", "excused"])
+    end
+
+    it "returns `unknonw_future`, `waiting` and `excused` at rdv's day before rdv's time" do
+      now = DateTime.new(2020, 3, 23, 12, 46)
+      travel_to(now)
+      expected = %w[unknown_future waiting excused]
+      rdv = build(:rdv, starts_at: now + 4.minutes)
+      expect(rdv.possible_temporal_statuses).to eq(expected)
+    end
+
+    it "returns `unknonw_past`, `seen`, `notexcused` and `excused` at rdv's day after rdv's time" do
+      now = DateTime.new(2020, 3, 23, 12, 46)
+      travel_to(now)
+      expected = %w[unknown_past seen notexcused excused]
+      rdv = build(:rdv, starts_at: now - 2.minutes)
+      expect(rdv.possible_temporal_statuses).to eq(expected)
+    end
+  end
 end

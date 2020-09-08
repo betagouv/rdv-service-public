@@ -40,4 +40,39 @@ describe RdvsHelper do
       expect(rdv_time_and_duration(rdv)).to eq("13h46 (4 minutes)")
     end
   end
+
+  describe "#rdv_possible_statuses" do
+    it "return À venir et Excusé before rdv's day" do
+      now = DateTime.new(2020, 3, 23, 12, 46)
+      travel_to(now)
+      rdv = build(:rdv, starts_at: (now + 2.days))
+      expected = [["À venir", "unknown"], ["Absent excusé", "excused"]]
+      expect(rdv_possible_statuses_option_items(rdv)).to eq(expected)
+    end
+
+    it "return À venir, En salle d'attente et Excusé at rdv's day" do
+      now = DateTime.new(2020, 3, 23, 12, 46)
+      travel_to(now)
+      expected = [
+        ["À venir", "unknown"],
+        ["En salle d'attente", "waiting"],
+        ["Absent excusé", "excused"]
+      ]
+      rdv = build(:rdv, starts_at: now + 3.minutes)
+      expect(rdv_possible_statuses_option_items(rdv)).to eq(expected)
+    end
+
+    it "return À renseigner, Vu, Non Excusé et Excusé at rdv's day" do
+      now = DateTime.new(2020, 3, 23, 12, 46)
+      travel_to(now)
+      expected = [
+        ["À renseigner", "unknown"],
+        ["Vu", "seen"],
+        ["Absent non excusé", "notexcused"],
+        ["Absent excusé", "excused"]
+      ]
+      rdv = build(:rdv, starts_at: now - 4.minutes)
+      expect(rdv_possible_statuses_option_items(rdv)).to eq(expected)
+    end
+  end
 end

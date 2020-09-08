@@ -50,50 +50,24 @@ module UsersHelper
       (I18n.t("users.soft_delete_confirm_message.relatives", count: user.relatives.active.count) if user.relatives.active.any?),
     ].select(&:present?).join("\n\n")
   end
-end
 
-class DisplayableUser
-  include UsersHelper
-  include ActionView::Helpers::TextHelper
+  def users_to_sentence(users)
+    return users.map(&:full_name).sort.to_sentence if current_agent
 
-  delegate :first_name, :last_name, :birth_name, :address, :affiliation_number, :number_of_children, to: :user
-
-  attr_reader :user
-
-  def initialize(user, organisation)
-    @user = user
-    @user_profile = @user.profile_for(organisation)
+    users.select do |user|
+      user == current_user || current_user.relatives.include?(user)
+    end.map(&:full_name).sort.to_sentence
   end
 
-  def birth_date
-    birth_date_and_age(@user)
+  def user_to_link(user)
+    if user.organisations.include?(current_organisation)
+      link_to user.full_name, admin_organisation_user_path(current_organisation, user)
+    else
+      "#{user.full_name} - l'usager a été supprimé"
+    end
   end
 
-  def caisse_affiliation
-    User.human_enum_name(:caisse_affiliation, @user.caisse_affiliation)
-  end
-
-  def family_situation
-    User.human_enum_name(:family_situation, @user.family_situation)
-  end
-
-  def phone_number
-    @user.responsible_phone_number
-  end
-
-  def email
-    @user.responsible_email
-  end
-
-  def logement
-    return nil unless @user_profile.present?
-
-    UserProfile.human_enum_name(:logement, @user_profile.logement)
-  end
-
-  def notes
-    return nil if @user_profile.nil? || @user_profile.notes.blank?
-
-    simple_format(@user_profile.notes)
+  def users_to_links(users)
+    safe_join(users.order_by_last_name.map { user_to_link(_1) }, ", ")
   end
 end
