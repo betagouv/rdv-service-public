@@ -47,10 +47,9 @@
             i.fa.fa-fw.fa-envelope>
             = display_value_or_na_placeholder(user.email)
           - if user.notes_for(current_organisation).present?
-            .d-flex
+            .d-flex title="Remarques"
               div.mr-1
                 i.fa.fa-fw.fa-info-circle>
-                strong> Remarques
               div= simple_format(user.notes_for(current_organisation))
 
     .card

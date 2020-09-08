@@ -34,7 +34,7 @@ class AgentUserForm {
     this.formElt.querySelectorAll("div[data-togglable]").forEach(d =>
       d.classList.toggle("d-none", !this.divShouldBeVisible(d))
     )
-    this.formElt.querySelectorAll("input[data-togglable], select[data-togglable]").forEach(i =>
+    this.formElt.querySelectorAll("input[data-togglable], select[data-togglable], textarea[data-togglable]").forEach(i =>
       i.disabled = !this.inputShouldBeEnabled(i)
     )
     initSelect2()
