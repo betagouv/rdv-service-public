@@ -2,7 +2,7 @@ class Admin::LieuxController < AgentAuthController
   respond_to :html, :json
 
   def index
-    @lieux = policy_scope(Lieu).includes(:organisation).order(Arel.sql("LOWER(name)")).page(params[:page])
+    @lieux = policy_scope(Lieu).includes(:organisation).ordered_by_name.page(params[:page])
   end
 
   def new
