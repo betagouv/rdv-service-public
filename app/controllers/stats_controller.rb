@@ -13,6 +13,8 @@ class StatsController < ApplicationController
               stats.rdvs_group_by_service
             elsif params[:by_location_type].present?
               stats.rdvs_group_by_type
+            elsif params[:by_status].present?
+              stats.rdvs_group_by_status
             else
               stats.rdvs_group_by_week_fr
             end

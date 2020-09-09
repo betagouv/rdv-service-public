@@ -48,6 +48,11 @@
 
       .card.mb-5
         .card-body
+          h4.card-title.mb-3 RDV par statut (#{@stats.rdvs_for_default_range.count})
+          = column_chart add_query_string_params_to_url(rdvs_stats_path, by_status: true, departement: @departement), stacked: :percent, max: 100, suffix: "%"
+
+      .card.mb-5
+        .card-body
           h4.card-title.mb-3 Usagers créés (#{@stats.users_for_default_range.count})
           = column_chart add_query_string_params_to_url(users_stats_path, departement: @departement)
 
