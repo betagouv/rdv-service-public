@@ -5,6 +5,7 @@ class Agent < ApplicationRecord
   include DeviseInvitable::Inviter
   include FullNameConcern
   include AccountNormalizerConcern
+  include Agent::SearchableConcern
 
   devise :invitable, :database_authenticatable,
          :recoverable, :rememberable, :validatable, :confirmable, :async, validate_on_invite: true

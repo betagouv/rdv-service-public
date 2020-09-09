@@ -63,6 +63,37 @@
       "note": ""
     },
     {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "bdaeb989380e722b9a047a04d36090a280b52b0fbde8615842f34b6248b9dd9d",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/admin/users/index.html.slim",
+      "line": 26,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => policy_scope(User).active.order_by_last_name.page(params[:page]).search_by_text(params[:search]), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::UsersController",
+          "method": "index",
+          "line": 23,
+          "file": "app/controllers/admin/users_controller.rb",
+          "rendered": {
+            "name": "admin/users/index",
+            "file": "app/views/admin/users/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "admin/users/index"
+      },
+      "user_input": "params[:search]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
       "warning_type": "Mass Assignment",
       "warning_code": 105,
       "fingerprint": "cf1a40ea12517005d0224e24210107133e043f0fd5bf869bcbf290c7a15ead57",
@@ -83,6 +114,6 @@
       "note": ""
     }
   ],
-  "updated": "2020-09-01 11:44:39 +0200",
+  "updated": "2020-09-09 15:53:57 +0200",
   "brakeman_version": "4.7.2"
 }
