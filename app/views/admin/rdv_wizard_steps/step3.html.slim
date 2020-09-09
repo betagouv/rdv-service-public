@@ -14,7 +14,7 @@
         li.list-group-item
           i.fa.fa-check.fa-fw.mr-1.text-success
           | Usager(s) :&nbsp;
-          = users_to_sentence(@rdv)
+          = users_to_sentence(@rdv.users)
 
       .card-body
         = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }

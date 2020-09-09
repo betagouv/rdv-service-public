@@ -1,5 +1,5 @@
 ul.list-unstyled.mb-5
-  - [:first_name, :last_name, :birth_name, :birth_date, :phone_number, :address, :email].each do |attr_name|
+  - [:first_name, :last_name, :birth_name, :birth_date, :phone_number, :address, :email, :notes].each do |attr_name|
     li.mb-2= render "common/user_attribute", user: user, attribute_name: attr_name
 
   - if user.pending_reconfirmation?
@@ -11,6 +11,6 @@ ul.list-unstyled.mb-5
   - [:caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :logement].each do |attr_name|
     li.mb-2= render "common/user_attribute", user: user, attribute_name: attr_name
 
-- unless admin_organisation_user_path(current_organisation, user) == request.path
+- unless user_path?(user)
   .text-right
     = link_to "Voir", admin_organisation_user_path(current_organisation, user), class: "btn btn-outline-primary"

@@ -16,32 +16,6 @@ module RdvsHelper
     "#{user.full_name} <> #{rdv.motif&.name}"
   end
 
-  def agents_to_sentence(rdv)
-    rdv.agents.map(&:full_name_and_service).sort.to_sentence
-  end
-
-  def users_to_links(rdv)
-    safe_join(rdv.users.order_by_last_name.map { user_to_link(_1) }, ", ")
-  end
-
-  def user_to_link(user)
-    if user.organisations.include?(current_organisation)
-      link_to user.full_name, admin_organisation_user_path(current_organisation, user)
-    else
-      "#{user.full_name} - l'usager a été supprimé"
-    end
-  end
-
-  def users_to_sentence(rdv)
-    return rdv.users.map(&:full_name).sort.to_sentence if current_agent
-
-    users = []
-    rdv.users.each do |user|
-      users << user if user == current_user || current_user.relatives.include?(user)
-    end
-    users.map(&:full_name).sort.to_sentence
-  end
-
   def rdv_status_tag(rdv)
     content_tag(:span, Rdv.human_enum_name(:status, rdv.status), class: "badge badge-info")
   end
@@ -79,10 +53,6 @@ module RdvsHelper
     end
   end
 
-  def stats_path?
-    request.path.match(%r{^/stats.*})
-  end
-
   def unknown_past_rdvs_danger_bage
     unknown_past_rdvs = current_organisation.rdvs.status("unknown_past").where(created_at: Stat.default_date_range).count
     rdv_danger_badge(unknown_past_rdvs)
@@ -106,14 +76,18 @@ module RdvsHelper
   end
 
   def rdv_status_value(status)
-    if status.blank?
-      ["Tous les rdvs", ""]
-    else
-      Rdv.statuses.to_a.find { |s| s[0] == status }
-    end
+    return  ["Tous les rdvs", ""] if status.blank?
+
+    Rdv.statuses.to_a.find { |s| s[0] == status }
   end
 
   def rdv_time_and_duration(rdv)
     "#{l(rdv.starts_at, format: :time_only)} (#{rdv.duration_in_min} minutes)"
+  end
+
+  def rdv_possible_statuses_option_items(rdv)
+    rdv.possible_temporal_statuses.map do |status|
+      [I18n.t("activerecord.attributes.rdv.statuses.#{status}"), status.split("_")[0]]
+    end
   end
 end

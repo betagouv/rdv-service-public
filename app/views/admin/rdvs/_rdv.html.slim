@@ -20,7 +20,7 @@
                   div= "proche de #{user_to_link(user.responsible)}".html_safe
                 div
                   ul.list-unstyled
-                    - [:birth_date, :phone_number, :address, :email].each do |attr_name|
+                    - [:birth_date, :phone_number, :address, :email, :notes].each do |attr_name|
                       li= render "common/user_attribute", user: user, attribute_name: attr_name
                     - if rdv.service_social?
                       - [:logement, :number_of_children, :family_situation, :affiliation_number, :caisse_affiliation].each do |attr_name|

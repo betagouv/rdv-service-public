@@ -236,26 +236,33 @@ describe MergeUsersService, type: :service do
     end
   end
 
-  context "user has notes" do
-    let!(:note1) { create(:user_note, organisation: organisation, user: user_target) }
-    let!(:note2) { create(:user_note, organisation: organisation, user: user_to_merge) }
-    let!(:note3) { create(:user_note, organisation: organisation, user: user_to_merge) }
+  context "target user has notes" do
+    before { user_target.profile_for(organisation).update(notes: "Sympa") }
 
     it "should move notes" do
       subject
-      expect(user_target.notes_for(organisation)).to contain_exactly(note1, note2, note3)
+      expect(user_target.notes_for(organisation)).to eq("Sympa")
     end
   end
 
-  context "user has notes in other orga" do
-    let!(:organisation2) { create(:organisation) }
-    let!(:note1) { create(:user_note, organisation: organisation, user: user_target) }
-    let!(:note2) { create(:user_note, organisation: organisation, user: user_to_merge) }
-    let!(:note3) { create(:user_note, organisation: organisation2, user: user_to_merge) }
+  context "both users have notes" do
+    before do
+      user_target.profile_for(organisation).update(notes: "Sympa")
+      user_to_merge.profile_for(organisation).update(notes: "thiquement")
+    end
 
-    it "should move only same orga notes" do
+    it "should preserve target by default" do
       subject
-      expect(user_target.notes_for(organisation)).to contain_exactly(note1, note2)
+      expect(user_target.notes_for(organisation)).to eq("Sympa")
+    end
+
+    context "when merging notes" do
+      let(:attributes_to_merge) { [:notes] }
+
+      it "should override notes from merged user" do
+        subject
+        expect(user_target.notes_for(organisation)).to eq("thiquement")
+      end
     end
   end
 end

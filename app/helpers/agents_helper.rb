@@ -33,4 +33,8 @@ module AgentsHelper
     meta += " par #{note.agent.full_name_and_service}"
     content_tag(:span, meta, class: "font-italic")
   end
+
+  def agents_to_sentence(agents)
+    agents.map(&:full_name_and_service).sort.to_sentence
+  end
 end

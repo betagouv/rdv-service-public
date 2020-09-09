@@ -25,10 +25,6 @@ module ApplicationHelper
     end
   end
 
-  def root_path?
-    request.path == root_path
-  end
-
   def datetime_input(form, field)
     form.input(field, as: :string, input_html: { value: form.object.send(field)&.strftime("%d/%m/%Y %H:%M"), data: { behaviour: "datetimepicker" }, autocomplete: "off" })
   end
@@ -67,10 +63,6 @@ module ApplicationHelper
     options = options.merge(html_options)
 
     tag :img, options
-  end
-
-  def agent_path?
-    request.path =~ /(agents|admin)/ || (request.path == "/" && current_agent.present?)
   end
 
   def agents_or_users_body_class
