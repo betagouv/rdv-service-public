@@ -36,6 +36,8 @@ class Lieu < ApplicationRecord
     )
   }
 
+  scope :ordered_by_name, -> { order(Arel.sql("LOWER(name)")) }
+
   def full_name
     "#{name} (#{address})"
   end
