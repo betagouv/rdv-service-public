@@ -8,35 +8,45 @@ class Admin::LieuxController < AgentAuthController
   def new
     @lieu = Lieu.new(organisation_id: current_organisation.id)
     authorize(@lieu)
-    respond_right_bar_with @lieu
   end
 
   def create
     @lieu = Lieu.new(organisation_id: current_organisation.id)
     @lieu.assign_attributes(lieu_params)
     authorize(@lieu)
-    flash.notice = "Le lieu a été créé." if @lieu.save
-    respond_right_bar_with @lieu, location: admin_organisation_lieux_path(@lieu.organisation)
+    if @lieu.save
+      flash.notice = "Le lieu a été créé."
+      redirect_to admin_organisation_lieux_path(@lieu.organisation)
+    else
+      render :new
+    end
   end
 
   def edit
     @lieu = policy_scope(Lieu).find(params[:id])
     authorize(@lieu)
-    respond_right_bar_with @lieu
   end
 
   def update
     @lieu = Lieu.find(params[:id])
     authorize(@lieu)
-    flash[:notice] = "Lieu a été modifié." if @lieu.update(lieu_params)
-    respond_right_bar_with @lieu, location: admin_organisation_lieux_path(@lieu.organisation)
+    if @lieu.update(lieu_params)
+      flash[:notice] = "Lieu a été modifié."
+      redirect_to admin_organisation_lieux_path(@lieu.organisation)
+    else
+      render :edit
+    end
   end
 
   def destroy
     @lieu = Lieu.find(params[:id])
     authorize(@lieu)
-    flash[:notice] = "Le lieu a été supprimé." if @lieu.destroy
-    respond_right_bar_with @lieu, location: admin_organisation_lieux_path(@lieu.organisation)
+    if @lieu.destroy
+      flash[:notice] = "Le lieu a été supprimé."
+      redirect_to admin_organisation_lieux_path(@lieu.organisation)
+    else
+      render :edit
+    end
   end
 
   private
