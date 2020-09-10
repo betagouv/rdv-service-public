@@ -17,8 +17,10 @@
   .row.mt-3
     .col
       - if lieu.plage_ouvertures.any?
-        .alert.alert-info Impossible de supprimer ce lieu
-        p Une ou plusieurs plages d'ouverture référencent ce lieu. Assignez ces plages d'ouverture à un autre lieu pour pouvoir le supprimer.
+        .alert.alert-info
+          p Impossible de supprimer ce lieu
+          p Une ou plusieurs plages d'ouverture référencent ce lieu. Assignez ces plages d'ouverture à un autre lieu pour pouvoir le supprimer.
       - elsif lieu.rdvs.any?
-        .alert.alert-info Impossible de supprimer ce lieu
-        p Un ou plusieurs RDVs sont associés à ce lieu. Supprimez les avant de pouvoir supprimer ce lieu.
+        .alert.alert-info
+          p Impossible de supprimer ce lieu
+          p Un ou plusieurs RDVs sont associés à ce lieu. Supprimez les avant de pouvoir supprimer ce lieu.
