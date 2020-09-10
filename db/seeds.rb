@@ -213,6 +213,15 @@ user_org_paris_nord_patricia.skip_confirmation!
 user_org_paris_nord_patricia.save!
 user_org_paris_nord_patricia.profile_for(org_paris_nord).update!(logement: 2)
 
+user_org_paris_nord_josephine = User.new(
+  first_name: "Joséphine",
+  last_name: "Duroy",
+  birth_date: Date.parse("01/03/2018"),
+  responsible: user_org_paris_nord_patricia,
+  organisation_ids: [org_paris_nord.id]
+)
+user_org_paris_nord_josephine.save!
+
 user_org_paris_nord_lea = User.new(
   first_name: "Léa",
   last_name: "Dupont",
@@ -392,6 +401,17 @@ rdv1 = Rdv.new(
   context: "Visite de courtoisie"
 )
 rdv1.save!
+rdv2 = Rdv.new(
+  duration_in_min: 30,
+  starts_at: Date.today + 4.days + 15.hours,
+  motif_id: motif_org_paris_nord_pmi_suivi.id,
+  lieu: lieu_org_paris_nord_nord,
+  organisation_id: org_paris_nord.id,
+  agent_ids: [agent_org_paris_nord_pmi_martine.id],
+  user_ids: [user_org_paris_nord_josephine.id],
+  context: "Suivi vaccins"
+)
+rdv2.save!
 Rdv.set_callback(:create, :after, :notify_rdv_created)
 
 # User Notes
