@@ -5,7 +5,7 @@ class Admin::MotifsController < AgentAuthController
   before_action :set_motif, only: [:show, :edit, :update, :destroy]
 
   def index
-    @motifs = policy_scope(Motif).includes(:organisation).active.includes(:service).order(Arel.sql("LOWER(name)")).page(params[:page])
+    @motifs = policy_scope(Motif).includes(:organisation).active.includes(:service).ordered_by_name.page(params[:page])
   end
 
   def new

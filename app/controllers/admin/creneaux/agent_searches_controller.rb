@@ -7,9 +7,9 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
     respond_to do |format|
       format.html do
         @organisation = current_organisation
-        @motifs = @organisation.motifs.active
-        @agents = @organisation.agents.complete.active
-        @lieux = @organisation.lieux
+        @motifs = policy_scope(Motif).active.ordered_by_name
+        @agents = policy_scope(Agent).complete.active.order_by_last_name
+        @lieux = policy_scope(Lieu).ordered_by_name
       end
       format.js do
         @agent_search = Creneau::AgentSearch.new(filter_params)

@@ -27,7 +27,7 @@
             .col-md-12
               - if @rdv.public_office?
                 = f.association :lieu, \
-                  collection: policy_scope(Lieu), \
+                  collection: policy_scope(Lieu).ordered_by_name, \
                   label_method: :full_name, \
                   include_blank: true,
                   required: true,

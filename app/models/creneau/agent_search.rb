@@ -28,9 +28,9 @@ class Creneau::AgentSearch
 
   def lieux
     filtered_lieux = if lieu_ids.any?
-                       organisation.lieux.where(id: lieu_ids)
+                       organisation.lieux.where(id: lieu_ids).ordered_by_name
                      else
-                       organisation.lieux.for_motif(motif)
+                       organisation.lieux.for_motif(motif).ordered_by_name
                      end
     filtered_lieux = filtered_lieux.where(id: PlageOuverture.where(agent_id: agent_ids).pluck(:lieu_id)) if agent_ids.any?
     filtered_lieux

@@ -20,9 +20,10 @@ class Motif < ApplicationRecord
   scope :reservable_online, -> { where(reservable_online: true) }
   scope :by_phone, -> { Motif.phone } # default scope created by enum
   scope :for_secretariat, -> { where(for_secretariat: true) }
+  scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
     available_motifs = agent.service.secretariat? ? for_secretariat : where(service: agent.service)
-    available_motifs.where(organisation_id: organisation.id).active.order(Arel.sql("LOWER(name)"))
+    available_motifs.where(organisation_id: organisation.id).active.ordered_by_name
   }
 
   def self.searchable(organisations, service: nil)
@@ -50,6 +51,7 @@ class Motif < ApplicationRecord
       .complete
       .active
       .where(service: authorized_services)
+      .order_by_last_name
   end
 
   def authorized_services
