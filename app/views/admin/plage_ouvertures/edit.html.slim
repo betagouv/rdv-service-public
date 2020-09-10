@@ -1,12 +1,19 @@
 - content_for(:menu_item) { 'menu-plages-ouvertures' }
 
 - content_for :title do
-  | Modifier la plage d'ouverture
+  - if @plage_ouverture.agent == current_agent
+    | Modifier votre plage d'ouverture
+  - else
+    | Modifier la plage d'ouverture de #{@plage_ouverture.agent.full_name}
 
 - content_for :breadcrumb do
   ol.breadcrumb.m-0
     li.breadcrumb-item
-      = link_to "Plages d'ouverture", admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent)
+      = link_to admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent) do
+        - if @plage_ouverture.agent == current_agent
+          | Vos plages d'ouverture
+        - else
+          | Plages d'ouverture de #{@plage_ouverture.agent.full_name}
     li.breadcrumb-item.active
       = truncate(@plage_ouverture.title, length: 20)
 
