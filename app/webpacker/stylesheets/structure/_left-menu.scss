@@ -112,20 +112,6 @@ body.enlarged .logo{
           color: $menu-item-hover;
         }
       }
-
-      .side-nav-second-level,
-      .side-nav-third-level {
-        li {
-          a {
-            padding: 8px 20px 8px 68px;
-            color: $menu-item;
-
-            &:hover, &:active, &:focus {
-              color: $menu-item-hover;
-            }
-          }
-        }
-      }
     }
   }
 
@@ -401,7 +387,7 @@ body[data-layout="topnav"] {
 .side-nav-third-level {
   li {
     a {
-      padding: 8px 20px 8px 68px;
+      padding: 8px 20px 8px 63px;
       color: $menu-item;
       display: block;
       position: relative;
