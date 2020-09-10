@@ -3,6 +3,37 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
+      "fingerprint": "29e444edecbb24dca14f234041519278e4d627e960dc2df4de112e59ce0098e9",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/admin/lieux/index.html.slim",
+      "line": 18,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => policy_scope(Lieu).includes(:organisation).ordered_by_name.page(params[:page]), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::LieuxController",
+          "method": "index",
+          "line": 6,
+          "file": "app/controllers/admin/lieux_controller.rb",
+          "rendered": {
+            "name": "admin/lieux/index",
+            "file": "app/views/admin/lieux/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "admin/lieux/index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
       "fingerprint": "5dac0e77a1407c8fe48311e85004875de6856a785512abf2ef6e27ebc3f4a376",
       "check_name": "Render",
       "message": "Render path contains parameter value",
@@ -112,8 +143,39 @@
       "user_input": ":role",
       "confidence": "Medium",
       "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "d73171480d9871ed50cc113b6a9bfc457a0c694d2f085d7537447509b41509e0",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/admin/motifs/index.html.slim",
+      "line": 24,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => policy_scope(Motif).includes(:organisation).active.includes(:service).ordered_by_name.page(params[:page]), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::MotifsController",
+          "method": "index",
+          "line": 9,
+          "file": "app/controllers/admin/motifs_controller.rb",
+          "rendered": {
+            "name": "admin/motifs/index",
+            "file": "app/views/admin/motifs/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "admin/motifs/index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "note": ""
     }
   ],
-  "updated": "2020-09-09 15:53:57 +0200",
+  "updated": "2020-09-09 10:21:07 +0200",
   "brakeman_version": "4.7.2"
 }

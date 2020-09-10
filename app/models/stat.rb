@@ -57,6 +57,30 @@ class Stat
     rdvs_group_by_week.transform_keys { |key| [new_keys[key[0].to_sym], key[1]] }
   end
 
+  def rdvs_group_by_status
+    res = rdvs
+      .where("starts_at < ?", Date.today)
+      .where.not(status: :waiting)
+      .group("status")
+      .group_by_week("rdvs.starts_at", range: default_date_range, format: DEFAULT_FORMAT)
+      .count
+    res = res.select { _2.positive? } # otherwise we would divide by 0 later
+    rdvs_count_per_date = Hash.new(0)
+    res.each { |key, rdvs_count| rdvs_count_per_date[key[1]] += rdvs_count }
+    # ruby hashes are ordered and we care about the order here
+    res_ordered = [:seen, :excused, :unknown, :notexcused]
+      .reverse
+      .map { |status| res.select { |key, _rdvs_count| key[0] == status.to_s } }
+      .reduce(:merge)
+    # normalize over 100 because chart.js does not support stacked: relative
+    res_ordered.map do |key, rdvs_count|
+      [
+        [::Rdv.human_enum_name(:status, key[0]), key[1]],
+        (rdvs_count.to_f * 100 / rdvs_count_per_date[key[1]]).round
+      ]
+    end.to_h
+  end
+
   def default_date_range
     self.class.default_date_range
   end
