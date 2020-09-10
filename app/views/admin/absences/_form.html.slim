@@ -1,4 +1,4 @@
-= simple_form_for [:admin, absence.organisation, absence], remote: request.xhr?, data: { rightbar: true } do |f|
+= simple_form_for [:admin, absence.organisation, absence] do |f|
   = render partial: 'layouts/model_errors', locals: { model: absence }
   = f.hidden_field :agent_id
   = f.input :title, hint:'Uniquement visible en interne', placeholder: 'Ex: Absence pour formation premiers secours'
