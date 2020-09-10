@@ -3,8 +3,9 @@ class Admin::AgentsController < AgentAuthController
 
   def index
     agents = policy_scope(Agent).active.order_by_last_name
-    @complete_agents = agents.complete.includes(:service).page(params[:page])
     @invited_agents = agents.invitation_not_accepted.created_by_invite
+    @complete_agents = params[:search].present? ? agents.search_by_text(params[:search]) : agents
+    @complete_agents = @complete_agents.complete.includes(:service).page(params[:page])
   end
 
   def show

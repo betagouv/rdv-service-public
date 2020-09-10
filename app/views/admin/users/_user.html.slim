@@ -2,4 +2,4 @@ tr
   td= link_to user.full_name, admin_organisation_user_path(current_organisation, user)
   td= birth_date_and_age(user)
   td= user.phone_number
-  td= user.email
+  td.word-break-all= user.email

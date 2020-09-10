@@ -4,7 +4,7 @@ tr id="agent_#{agent.id}"
       = link_to agent.full_name, edit_admin_organisation_permission_path(current_organisation, agent), class: "mr-2", data: { rightbar: true }
       = admin_tag(agent)
       = me_tag(agent)
-  td
+  td.word-break-all
     = agent.email
   td
     = agent.service&.name
