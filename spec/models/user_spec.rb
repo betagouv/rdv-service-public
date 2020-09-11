@@ -275,7 +275,7 @@ describe User, type: :model do
     it "return empty array without previous rdv" do
       organisation = create(:organisation)
       user = create(:user, organisations: [organisation])
-      rdv = create(:rdv, users: [user])
+      create(:rdv, users: [user])
       expect(user.previous_rdvs(organisation)).to eq([])
     end
 
@@ -283,8 +283,8 @@ describe User, type: :model do
       organisation = create(:organisation)
       user = create(:user, organisations: [organisation])
       rdv = create(:rdv, users: [user])
-      other_org_and_user_rdv = create(:rdv)
-      other_org_rdv = create(:rdv, users: [user])
+      create(:rdv)
+      create(:rdv, users: [user])
       previous_rdv = create(:rdv, starts_at: rdv.starts_at - 1.day, organisation: organisation, users: [user])
 
       expect(user.previous_rdvs(organisation)).to eq([previous_rdv])
@@ -298,7 +298,7 @@ describe User, type: :model do
       p4 = create(:rdv, starts_at: rdv.starts_at - 7.day, organisation: organisation, users: [user])
       p5 = create(:rdv, starts_at: rdv.starts_at - 13.day, organisation: organisation, users: [user])
       p1 = create(:rdv, starts_at: rdv.starts_at - 1.day, organisation: organisation, users: [user])
-      p6 = create(:rdv, starts_at: rdv.starts_at - 16.day, organisation: organisation, users: [user])
+      create(:rdv, starts_at: rdv.starts_at - 16.day, organisation: organisation, users: [user])
       p2 = create(:rdv, starts_at: rdv.starts_at - 2.day, organisation: organisation, users: [user])
       p3 = create(:rdv, starts_at: rdv.starts_at - 4.day, organisation: organisation, users: [user])
 
@@ -312,10 +312,9 @@ describe User, type: :model do
       user = create(:user, organisations: [organisation])
       rdv = create(:rdv, users: [user], starts_at: today)
       past_rdv = create(:rdv, starts_at: rdv.starts_at - 4.day, organisation: organisation, users: [user])
-      future_rdv = create(:rdv, starts_at: rdv.starts_at + 4.day, organisation: organisation, users: [user])
+      create(:rdv, starts_at: rdv.starts_at + 4.day, organisation: organisation, users: [user])
       expect(user.previous_rdvs(organisation).count).to eq([past_rdv].count)
       expect(user.previous_rdvs(organisation)).to eq([past_rdv])
     end
   end
-
 end
