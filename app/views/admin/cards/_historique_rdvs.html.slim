@@ -1,0 +1,20 @@
+.card
+  .card-header
+    .d-flex.justify-content-between
+      .mt-1
+        | Les 5 derniers rendez-vous de #{user.full_name}
+      = link_to "Voir tous les rendez-vous précédent", admin_organisation_user_rdvs_path(current_organisation, user), class: "btn btn-outline-primary small"
+  .card-body
+    - user.previous_rdvs(current_organisation).each do |previous_rdv|
+      div
+        strong= "Le #{l(previous_rdv.starts_at, format: :human)}"
+        div
+          = previous_rdv.motif.name
+          div
+            - if previous_rdv.context.blank?
+              .text-muted  Pas de contexte renseigné
+            - else
+              .text-muted Contexte :
+              .border-left.pl-2= simple_format(previous_rdv.context)
+
+

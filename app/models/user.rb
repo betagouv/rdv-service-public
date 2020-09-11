@@ -131,6 +131,10 @@ class User < ApplicationRecord
       .empty?
   end
 
+  def previous_rdvs(organisation)
+    Rdv.where(organisation: organisation).with_user_in([self]).past.order("starts_at desc").limit(5)
+  end
+
   protected
 
   def password_required?
