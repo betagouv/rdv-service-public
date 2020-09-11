@@ -20,10 +20,6 @@
   }
 }
 
-.slimScrollDiv {
-  overflow: scroll !important;
-}
-
 @include media-breakpoint-up(sm) {
   .right-bar {
     width: $rightbar-width;

@@ -13,7 +13,7 @@ html lang="fr"
     .auth-fluid
       .auth-fluid-left.text-center
         = link_logo
-        .align-items-center.d-flex.h-100
+        .align-items-center.d-flex.mt-4
           .p-3.flex-grow-1
             = image_pack_tag 'welcome/agent.svg', class: 'agent-profile mx-auto mb-4', alt: ""
             - if agent_path? && current_agent.nil?
@@ -21,7 +21,7 @@ html lang="fr"
               p.lead
                 | Digitalisez votre prise de RDV !
             - elsif agent_path? && current_agent.present?
-              h4.mb-3
+              h4
                 i.far.fa-id-card>
                 = current_agent.full_name_and_service
               .d-flex.flex-row.justify-content-center
@@ -31,7 +31,7 @@ html lang="fr"
                   li
                     h5= link_to "Mes organisations", admin_organisations_path
                   li
-                    h5= link_to "Se déconnecter", destroy_agent_session_path, method: :delete
+                    h5= link_to "Me déconnecter", destroy_agent_session_path, method: :delete
             - else
               h4.mb-3 Prenez RDV en ligne avec votre département !
 
