@@ -9,36 +9,44 @@
 .row
   .col-md-8
     .card
-      .card-body
-        .table-responsive
-          table.table
-            thead
-              tr
-                th.w-50 Nom
-                th Email
-                th Service
-            tbody
-              = render partial: 'agent', collection: @complete_agents
-        .d-flex.justify-content-center
-          = paginate @complete_agents, theme: 'twitter-bootstrap-4'
+      .m-3.d-flex.justify-content-end
+        div= link_to 'Réinitialiser', admin_organisation_agents_path(current_organisation), class: "btn btn-link #{params[:search].blank? && 'd-none'}"
+        div= simple_form_for '', url: admin_organisation_agents_path(current_organisation), html: { method: :get, class: 'form-inline' }, wrapper: :inline_form do |f|
+          = f.input :search, placeholder: 'Prénom, Nom, Email', label: false, input_html: { autocomplete: 'off', class: 'search-form-control', value: params[:search] }, required: false
+          = f.button :submit, 'Rechercher'
+      .table-responsive
+        table.table
+          thead
+            tr
+              th Nom
+              th Email
+              th Service
+          tbody
+            = render partial: 'agent', collection: @complete_agents
+
+      - if @complete_agents.empty?
+        .mb-4.p.text-center Aucun agent trouvé
+      - elsif @complete_agents.total_pages > 1
+        .m-3
+          .d-flex.justify-content-center
+            = paginate @complete_agents, theme: 'twitter-bootstrap-4'
+          .text-center= page_entries_info @complete_agents
+
   .col-md-4
     .card
-      .card-body
-        - if @invited_agents.any?
-          table.table
-            thead
-              tr
-                th.w-50 Vos invitations
-                th
-            tbody
-              = render partial: 'invited_agent', collection: @invited_agents, as: :agent
-        - else
+      .card-header
+        h5 Vos invitations
+      - if @invited_agents.any?
+        table.table
+          tbody
+            = render partial: 'invited_agent', collection: @invited_agents, as: :agent
+      - else
+        .card-body
           .row.justify-content-md-center
             .text-center.mb-3
               p.mb-2.lead Vous n'avez pas d'invitation en cours.
               span.fa-stack.fa-4x
                 i.fa.fa-circle.fa-stack-2x.text-primary
                 i.far.fa-envelope.fa-stack-1x.text-white
-
-        .text-center
-          = add_button 'Inviter un professionnel', new_agent_invitation_path(organisation_id: current_organisation)
+      .mb-3.ml-2.mr-2.text-center
+        = add_button 'Inviter un professionnel', new_agent_invitation_path(organisation_id: current_organisation)

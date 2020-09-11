@@ -3,4 +3,15 @@
 - content_for :title do
   | Nouveau lieu
 
-= render 'form', lieu: @lieu
+- content_for :breadcrumb do
+  ol.breadcrumb.m-0
+    li.breadcrumb-item
+      = link_to 'Vos lieux', admin_organisation_lieux_path(current_organisation)
+    li.breadcrumb-item.active Nouveau lieu
+
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-header Nouveau lieu
+      .card-body
+          = render 'form', lieu: @lieu

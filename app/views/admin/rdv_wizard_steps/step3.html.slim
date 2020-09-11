@@ -14,7 +14,7 @@
         li.list-group-item
           i.fa.fa-check.fa-fw.mr-1.text-success
           | Usager(s) :&nbsp;
-          = users_to_sentence(@rdv.users)
+          = users_inline_list_for_agents(@rdv.users)
 
       .card-body
         = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }
@@ -27,7 +27,7 @@
             .col-md-12
               - if @rdv.public_office?
                 = f.association :lieu, \
-                  collection: policy_scope(Lieu), \
+                  collection: policy_scope(Lieu).ordered_by_name, \
                   label_method: :full_name, \
                   include_blank: true,
                   required: true,

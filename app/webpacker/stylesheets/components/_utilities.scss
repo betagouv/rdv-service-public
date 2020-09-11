@@ -14,3 +14,7 @@ a[disabled] {
   pointer-events: none;
   cursor: not-allowed;
 }
+
+.word-break-all {
+  word-break: break-all;
+}

@@ -1,10 +1,12 @@
 ul.list-unstyled.mb-5
-  - [:first_name, :last_name, :birth_name, :birth_date, :phone_number, :address, :email, :notes].each do |attr_name|
+  - [:first_name, :last_name, :birth_name, :birth_date, :phone_number, :address, :email].each do |attr_name|
     li.mb-2= render "common/user_attribute", user: user, attribute_name: attr_name
 
   - if user.pending_reconfirmation?
     .text-muted.mb-2
       | En attente de confirmation pour #{user.unconfirmed_email}
+
+  li.mb-2= render "common/user_attribute", user: user, attribute_name: :notes
 
 h4.card-title.mb-3 Informations sociales
 ul.list-unstyled.mb-5

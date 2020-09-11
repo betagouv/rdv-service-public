@@ -19,7 +19,7 @@ class Admin::UsersController < AgentAuthController
 
   def index
     @users = policy_scope(User).active.order_by_last_name.page(params[:page])
-    filter_users if params[:user] && params[:user][:search]
+    @users = @users.search_by_text(params[:search]) if params[:search].present?
   end
 
   def search
@@ -125,14 +125,6 @@ class Admin::UsersController < AgentAuthController
     @user.invited_by = current_agent
     authorize(@user.responsible) if @user.responsible.present?
     @organisation = current_organisation
-  end
-
-  def filter_users
-    @users = @users.search_by_text(params[:user][:search])
-    respond_to do |format|
-      format.js { render partial: "search-results" }
-      format.html
-    end
   end
 
   def user_params

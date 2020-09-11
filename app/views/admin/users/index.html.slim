@@ -7,9 +7,14 @@
   = link_to 'Créer un usager', new_admin_organisation_user_path(current_organisation), class: "btn btn-outline-white"
 
 .card
-  .card-body
-    - if @users.any? || params[:user].present?
-      = render 'search'
+  - if @users.any? || params[:search].present?
+    .m-3.d-flex.justify-content-end
+      div= link_to 'Réinitialiser', admin_organisation_users_path(current_organisation), class: "btn btn-link #{params[:search].blank? && 'd-none'}"
+      div= simple_form_for '', url: admin_organisation_users_path(current_organisation), html: { method: :get, class: 'form-inline' }, wrapper: :inline_form  do |f|
+        = f.input :search, placeholder: 'Prénom, Nom, Email, Téléphone', label: false, input_html: { autocomplete: 'off', class: 'search-form-control', value: params[:search] }, required: false
+        = f.button :submit, 'Rechercher'
+
+    .table-responsive
       table.table
         thead
           tr
@@ -18,15 +23,23 @@
             th Téléphone
             th Email
         tbody id="users-list"
-          = render 'results'
-      .d-flex.justify-content-center id="users-pagination"
-        = paginate @users, theme: 'twitter-bootstrap-4'
-    - else
+          = render @users
+
+    - if @users.empty?
+      .mb-4.p.text-center Aucun usager trouvé
+    - elsif @users.total_pages > 1
+      .m-3
+        .d-flex.justify-content-center id="users-pagination"
+          = paginate @users, theme: 'twitter-bootstrap-4'
+          .text-center= page_entries_info @users
+
+  - else
+    .card-body
       .row.justify-content-md-center
         .col-md-6.text-center.my-5
           p.mb-2.lead Vous n'avez pas encore ajouté d'usager.
           span.fa-stack.fa-4x
             i.fa.fa-circle.fa-stack-2x.text-primary
             i.fa.fa-users.fa-stack-1x.text-white
-    .text-center
-      = link_to 'Créer un usager', new_admin_organisation_user_path(current_organisation), class: "btn btn-primary"
+  .m-3.text-center
+    = link_to 'Créer un usager', new_admin_organisation_user_path(current_organisation), class: "btn btn-primary"

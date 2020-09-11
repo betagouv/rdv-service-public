@@ -33,7 +33,4 @@ p.card-text
 - if local_assigns.fetch(:show_users, true)
   p.card-text
     strong> Usager(s) :
-    - if local_assigns.fetch(:display_links_to_users, true)
-      = users_to_links(rdv.users)
-    - else
-      = users_to_sentence(rdv.users)
+    = users_inline_list_for_agents(rdv.users, display_links_to_users: local_assigns.fetch(:display_links_to_users, true))
