@@ -48,7 +48,9 @@
       .card
         .card-header
           .d-flex.justify-content-between
-            .mt-1 = user.full_name
+            .mt-1
+              = user.full_name
+              = relative_tag(user)
             = link_to "Voir la fiche usager", admin_organisation_user_path(current_organisation, user), class: "btn btn-outline-primary small"
 
         .card-body

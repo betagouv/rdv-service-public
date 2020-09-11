@@ -51,9 +51,20 @@ module UsersHelper
     ].select(&:present?).join("\n\n")
   end
 
-  def users_to_sentence(users)
-    return users.map(&:full_name).sort.to_sentence if current_agent
+  def users_inline_list_for_agents(users, display_links_to_users: false)
+    users.sort_by(&:last_name).each_with_index.reduce("") do |acc, (user, idx)|
+      user_span = \
+        if display_links_to_users
+          user_to_link(user)
+        else
+          content_tag(:span, user.full_name) + relative_tag(user)
+        end
+      acc << (idx.positive? ? content_tag(:span, ", ") : "") + user_span
+    end.html_safe
+  end
 
+  def users_to_sentence(users)
+    # only used in user space
     users.select do |user|
       user == current_user || current_user.relatives.include?(user)
     end.map(&:full_name).sort.to_sentence
@@ -61,9 +72,11 @@ module UsersHelper
 
   def user_to_link(user)
     if user.organisations.include?(current_organisation)
-      link_to user.full_name, admin_organisation_user_path(current_organisation, user)
+      link_to admin_organisation_user_path(current_organisation, user) do
+        content_tag(:span, user.full_name) + relative_tag(user)
+      end
     else
-      "#{user.full_name} - l'usager a été supprimé"
+      content_tag(:span, user.full_name) + relative_tag(user) + content_tag(:span, "l'usager a été supprimé")
     end
   end
 
