@@ -1,5 +1,9 @@
 .text-center.m-auto
-  h4.text-dark-50.text-center.mt-0.font-weight-bold.mb-4  Modifier mon mot de passe
+  h4.text-dark-50.text-center.mt-0.font-weight-bold.mb-4 Définir mon mot de passe
+
+- if @from_confirmation
+  p.text-muted Pour finaliser votre inscription, veuillez définir un mot de passe.
+
 = simple_form_for resource, as: resource_name, url: password_path(resource_name), html: { method: :put } do |f|
   = devise_error_messages!
   = f.input :reset_password_token, as: :hidden
@@ -8,7 +12,8 @@
     .form-text.text-muted.mb-2
       | #{@minimum_password_length} caractères minimum
   .text-center
-    = f.submit 'Modifier', class: 'btn btn btn-primary'
+    = f.submit 'Enregistrer', class: 'btn btn btn-primary'
 
-- content_for :footer do
-  = render "devise/shared/links"
+- unless @from_confirmation
+  - content_for :footer do
+    = render "devise/shared/links"
