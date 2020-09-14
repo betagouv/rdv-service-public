@@ -51,6 +51,11 @@ describe Rdv, type: :model do
       let(:agent) { create(:agent, :admin, organisations: [organisation]) }
       it { is_expected.to contain_exactly(motif, motif2, motif3, motif5) }
     end
+
+    describe "for secretary admin" do
+      let(:agent) { create(:agent, :secretaire, :admin, organisations: [organisation]) }
+      it { is_expected.to contain_exactly(motif, motif2, motif3, motif5) }
+    end
   end
 
   describe "#authorized_agents" do

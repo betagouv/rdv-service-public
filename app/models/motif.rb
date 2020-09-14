@@ -22,10 +22,10 @@ class Motif < ApplicationRecord
   scope :for_secretariat, -> { where(for_secretariat: true) }
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
-    available_motifs = if agent.service.secretariat?
-                         for_secretariat
-                       elsif agent.admin?
+    available_motifs = if agent.admin?
                          all
+                       elsif agent.service.secretariat?
+                         for_secretariat
                        else
                          where(service: agent.service)
                        end
