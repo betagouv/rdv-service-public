@@ -3,7 +3,7 @@
     .d-flex.justify-content-between
       .mt-1
         | Derniers rendez-vous
-      = link_to "Voir tous les rendez-vous précédent", admin_organisation_user_rdvs_path(current_organisation, user), class: "btn btn-outline-primary small"
+      = link_to "Voir tous les rendez-vous précédents", admin_organisation_user_rdvs_path(current_organisation, user), class: "btn btn-outline-primary small"
   .card-body
     - user.previous_rdvs(current_organisation).each do |previous_rdv|
       div
