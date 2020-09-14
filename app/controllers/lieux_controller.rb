@@ -80,6 +80,7 @@ class LieuxController < ApplicationController
     @zone = Zone.in_address_sector(@city_code)
     @organisations = Organisation.in_zone_or_departement(@zone, @departement)
     searchable_motifs = Motif.searchable(@organisations, service: @service)
+    redirect_to root_path, flash: { error: "Une erreur s'est produite, veuillez recommencer votre recherche" } if searchable_motifs.empty?
     @motif_names = searchable_motifs.pluck(:name).uniq
     @matching_motifs = searchable_motifs.where(name: @motif_name)
     @latitude = search_params[:latitude]

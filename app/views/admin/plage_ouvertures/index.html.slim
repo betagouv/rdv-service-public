@@ -13,7 +13,7 @@
 
   = link_to 'Créer une plage d\'ouverture', new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-white align-bottom"
 
-.card
+.card.pb-3
   - if @display_tabs
     ul.nav.nav-tabs.px-2.mt-2
       li.nav-item
@@ -35,19 +35,21 @@
     .d-flex.justify-content-center
       = paginate @plage_ouvertures, theme: 'twitter-bootstrap-4'
   - else
-    .card-body
-      .row.justify-content-md-center
-        .col-md-6.text-center.my-5
-          p.mb-2.lead
-            - if current_agent == @agent
-              | Vous n'avez pas encore créé de plage d'ouverture.
-            - else
-              | #{@agent.full_name} n'a pas encore créé de plage d'ouverture.
-          p Les plages d'ouvertures affichent votre disponibilité à la prise de RDV, qu'elle soit faite par l'usager lui même (en ligne) ou par un autre agent de votre organisation. Chaque agent a ses propres plages d'ouvertures et peut y associer des motifs et un lieu. Les plages peuvent être récurrentes.
-          span.fa-stack.fa-4x
-            i.fa.fa-circle.fa-stack-2x.text-primary
-            i.far.fa-calendar.fa-stack-1x.text-white
+    .row.justify-content-md-center.p-2.mt-3
+      .col-md-6.text-center.mb-2
+        p.mb-2.lead
+          - if current_agent == @agent
+            | Vous n'avez pas encore créé de plage d'ouverture.
+          - else
+            | #{@agent.full_name} n'a pas encore créé de plage d'ouverture.
+        p Les plages d'ouvertures affichent votre disponibilité à la prise de RDV, qu'elle soit faite par l'usager lui même (en ligne) ou par un autre agent de votre organisation. Chaque agent a ses propres plages d'ouvertures et peut y associer des motifs et un lieu. Les plages peuvent être récurrentes.
+        span.fa-stack.fa-4x
+          i.fa.fa-circle.fa-stack-2x.text-primary
+          i.far.fa-calendar.fa-stack-1x.text-white
 
-  .card-body
-    .text-center
-      = link_to 'Créer une plage d\'ouverture', new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-primary"
+  .text-center.py-2
+    = link_to new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-primary" do
+      - if current_agent == @agent
+        | Créer une plage d'ouverture
+      - else
+        | Créer une plage d'ouverture pour #{@agent.full_name}

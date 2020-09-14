@@ -110,7 +110,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
 
     describe "GET #edit" do
       it "returns a success response" do
-        get :edit, params: { organisation_id: organisation.id, id: absence.to_param }
+        get :edit, params: { organisation_id: organisation.id, agent_id: agent.id, id: absence.to_param }
         expect(response).to be_successful
       end
     end

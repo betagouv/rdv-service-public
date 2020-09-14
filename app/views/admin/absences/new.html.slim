@@ -1,6 +1,24 @@
 - content_for(:menu_item) { 'menu-absences' }
 
 - content_for :title do
-  | Nouvelle absence
+  - if @absence.agent == current_agent
+    | Nouvelle absence
+  - else
+    | Nouvelle absence pour #{@agent.full_name}
 
-= render 'form', absence: @absence, agent: @agent
+- content_for :breadcrumb do
+  ol.breadcrumb.m-0
+    li.breadcrumb-item
+      = link_to admin_organisation_agent_absences_path(@absence.organisation, @absence.agent) do
+        - if @absence.agent == current_agent
+          | Vos Absences
+        - else
+          | Absences de #{@absence.agent.full_name}
+    li.breadcrumb-item.active
+      | Nouvelle absence
+
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-body
+        = render 'form', absence: @absence, agent: @agent
