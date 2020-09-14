@@ -6,7 +6,7 @@
       = link_to "Voir tous les rendez-vous précédents", admin_organisation_user_rdvs_path(current_organisation, user), class: "btn btn-outline-primary small"
   .card-body
     - user.previous_rdvs(current_organisation).each do |previous_rdv|
-      div
+      .mb-2
         - if previous_rdv.cancelled?
           strike
             = "Le #{l(previous_rdv.starts_at, format: :human)}"
@@ -21,5 +21,6 @@
             - else
               .text-muted Contexte :
               .border-left.pl-2= simple_format(previous_rdv.context)
+        hr
 
 
