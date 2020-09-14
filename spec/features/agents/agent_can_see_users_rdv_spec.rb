@@ -14,7 +14,7 @@ describe "can see users' RDV" do
     before { click_link user.full_name }
     it do
       expect(page).to have_content("0\nÀ venir")
-      click_link "Voir tous les RDV précédents"
+      click_link "Voir tous les rendez-vous précédents"
       expect_page_title("Liste des RDV")
       expect_page_with_no_record_text("Aucun RDV")
     end
@@ -25,7 +25,7 @@ describe "can see users' RDV" do
     before { click_link user.full_name }
     it do
       expect(page).to have_content("1\nÀ venir")
-      click_link "Voir tous les RDV précédents"
+      click_link "Voir tous les rendez-vous précédents"
       expect_page_title("Liste des RDV")
       expect(page).to have_content(rdv_title_spec(rdv))
     end
