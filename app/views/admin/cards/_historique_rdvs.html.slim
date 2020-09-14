@@ -7,7 +7,12 @@
   .card-body
     - user.previous_rdvs(current_organisation).each do |previous_rdv|
       div
-        strong= "Le #{l(previous_rdv.starts_at, format: :human)}"
+        - if previous_rdv.cancelled?
+          strike
+            = "Le #{l(previous_rdv.starts_at, format: :human)}"
+          |&nbsp; annulé
+        - else
+          strong= "Le #{l(previous_rdv.starts_at, format: :human)}"
         div
           = previous_rdv.motif.name
           div
