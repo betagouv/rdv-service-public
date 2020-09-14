@@ -6,7 +6,7 @@ class Motif < ApplicationRecord
   has_and_belongs_to_many :plage_ouvertures, -> { distinct }
 
   enum location_type: [:public_office, :phone, :home]
-  validates :name, presence: true, uniqueness: { scope: [:organisation, :location_type], conditions: -> { where(deleted_at: nil) }, message: "est déjà utilisé pour un motif avec le même type de RDV" }
+  validates :name, presence: true, uniqueness: { scope: [:organisation, :location_type, :service], conditions: -> { where(deleted_at: nil) }, message: "est déjà utilisé pour un motif avec le même type de RDV" }
 
   delegate :service_social?, to: :service
 
