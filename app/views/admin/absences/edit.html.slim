@@ -4,7 +4,7 @@
   - if @absence.agent == current_agent
     | Modifier votre absence
   - else
-    | Modifier l'absence de #{@agent.full_name}
+    | Modifier l'absence de #{@absence.agent.full_name}
 
 - content_for :breadcrumb do
   ol.breadcrumb.m-0
