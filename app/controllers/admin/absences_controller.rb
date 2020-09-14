@@ -16,32 +16,42 @@ class Admin::AbsencesController < AgentAuthController
     @agent = policy_scope(Agent).find(params[:agent_id])
     @absence = Absence.new(organisation: current_organisation, agent: @agent)
     authorize(@absence)
-    respond_right_bar_with @absence
   end
 
   def edit
     authorize(@absence)
-    respond_right_bar_with @absence
   end
 
   def create
     @absence = Absence.new(absence_params)
     @absence.organisation = current_organisation
     authorize(@absence)
-    flash[:notice] = "L'absence a été créée." if @absence.save
-    respond_right_bar_with @absence, location: admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
+    if @absence.save
+      flash[:notice] = "L'absence a été créée."
+      redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
+    else
+      render :edit
+    end
   end
 
   def update
     authorize(@absence)
-    flash[:notice] = "L'absence a été modifiée." if @absence.update(absence_params)
-    respond_right_bar_with @absence, location: admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
+    if @absence.update(absence_params)
+      flash[:notice] = "L'absence a été modifiée."
+      redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
+    else
+      render :edit
+    end
   end
 
   def destroy
     authorize(@absence)
-    flash[:notice] = "L'absence a été supprimée." if @absence.destroy
-    redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
+    if @absence.destroy
+      flash[:notice] = "L'absence a été supprimée."
+      redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
+    else
+      render :edit
+    end
   end
 
   private
