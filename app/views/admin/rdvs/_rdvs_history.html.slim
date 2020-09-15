@@ -9,7 +9,7 @@
       .text-muted aucun rendez-vous précédent
     - user.previous_rdvs(current_organisation).each do |previous_rdv|
       .mb-2
-        strong= "Le #{l(previous_rdv.starts_at, format: :human)}"
+        strong= link_to rdv_title(previous_rdv, **{ date_format: local_assigns[:date_format] }.compact), admin_organisation_rdv_path(previous_rdv.organisation, previous_rdv)
         = rdv_status_tag(previous_rdv)
         div
           = previous_rdv.motif.name
