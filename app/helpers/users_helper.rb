@@ -45,9 +45,10 @@ module UsersHelper
   end
 
   def user_soft_delete_confirm_message(user)
+    relatives = user.relatives.within_organisation(current_organisation).active
     [
       "Confirmez-vous la suppression de cet usager ?",
-      (I18n.t("users.soft_delete_confirm_message.relatives", count: user.relatives.active.count) if user.relatives.active.any?),
+      (I18n.t("users.soft_delete_confirm_message.relatives", count: relatives.count) if relatives.any?),
     ].select(&:present?).join("\n\n")
   end
 
