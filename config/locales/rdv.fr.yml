@@ -1,0 +1,5 @@
+fr:
+  see_all_rdv:
+    zero: "Aucun RDV"
+    one: "Voir le RDV de %{name}"
+    other: "Voir les %{count} RDVs de %{name}"
