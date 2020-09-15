@@ -19,6 +19,7 @@
             - else
               .text-muted Contexte :
               .border-left.pl-2= simple_format(previous_rdv.context)
-        hr
+        - if user.previous_rdvs(current_organisation).last != previous_rdv
+          hr
 
 
