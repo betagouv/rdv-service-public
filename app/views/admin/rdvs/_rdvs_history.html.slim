@@ -9,12 +9,8 @@
       .text-muted aucun rendez-vous précédent
     - user.previous_rdvs(current_organisation).each do |previous_rdv|
       .mb-2
-        - if previous_rdv.cancelled?
-          strike
-            = "Le #{l(previous_rdv.starts_at, format: :human)}"
-          |&nbsp; annulé
-        - else
-          strong= "Le #{l(previous_rdv.starts_at, format: :human)}"
+        strong= "Le #{l(previous_rdv.starts_at, format: :human)}"
+        = rdv_status_tag(previous_rdv)
         div
           = previous_rdv.motif.name
           div

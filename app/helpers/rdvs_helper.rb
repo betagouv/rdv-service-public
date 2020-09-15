@@ -17,7 +17,7 @@ module RdvsHelper
   end
 
   def rdv_status_tag(rdv)
-    content_tag(:span, Rdv.human_enum_name(:status, rdv.status), class: "badge badge-info")
+    content_tag(:span, Rdv.human_enum_name(:status, rdv.status), class: "badge badge-info rdv-status-#{rdv.status}")
   end
 
   def no_rdv_for_users
