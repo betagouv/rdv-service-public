@@ -83,4 +83,20 @@ module UsersHelper
   def users_to_links(users)
     safe_join(users.order_by_last_name.map { user_to_link(_1) }, ", ")
   end
+
+  def email_tld_infos(email_tld)
+    {
+      "gmail.com" => { url: "https://mail.google.com", name: "GMail" },
+      "hotmail.fr" => { url: "https://outlook.live.com/", name: "Hotmail" },
+      "hotmail.com" => { url: "https://outlook.live.com/", name: "Hotmail" },
+      "outlook.fr" => { url: "https://outlook.live.com/", name: "Outlook" },
+      "outlook.com" => { url: "https://outlook.live.com/", name: "Outlook" },
+      "live.fr" => { url: "https://rms.orange.fr/mail/inbox", name: "Orange" },
+      "laposte.net" => { url: "https://www.laposte.net/accueil", name: "Laposte.net" },
+      "yahoo.fr" => { url: "https://fr.mail.yahoo.com", name: "Yahoo Mail" },
+      "yahoo.com" => { url: "https://mail.yahoo.com", name: "Yahoo Mail" },
+      "sfr.fr" => { url: "https://webmail.sfr.fr", name: "SFR Mail" },
+      "free.fr" => { url: "https://webmail.free.fr/", name: "Free Webmail" }
+    }[email_tld]
+  end
 end

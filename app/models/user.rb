@@ -131,6 +131,10 @@ class User < ApplicationRecord
       .empty?
   end
 
+  def email_tld
+    email&.split("@")&.last&.downcase
+  end
+
   protected
 
   def password_required?

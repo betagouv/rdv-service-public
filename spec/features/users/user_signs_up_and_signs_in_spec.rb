@@ -12,7 +12,7 @@ feature "User signs up and signs in" do
         fill_in :user_last_name, with: user.last_name
         fill_in :user_email, with: user.email
         click_on "Je m'inscris"
-        expect(current_path).to eq(new_user_session_path)
+        expect(current_path).to eq(users_pending_registration_path)
         expect_flash_info(I18n.t("devise.registrations.signed_up_but_unconfirmed"))
         open_email(user.email)
         current_email.click_link "Confirmer mon compte"
@@ -37,7 +37,7 @@ feature "User signs up and signs in" do
         fill_in :user_last_name, with: invited_user.last_name
         fill_in :user_email, with: invited_user.email
         click_on "Je m'inscris"
-        expect(current_path).to eq(new_user_session_path)
+        expect(current_path).to eq(users_pending_registration_path)
         expect_flash_info(I18n.t("devise.registrations.signed_up_but_unconfirmed"))
         open_email(invited_user.email)
         current_email.click_link "Accepter l'invitation"

@@ -31,6 +31,10 @@ Rails.application.routes.draw do
   end
   get "super_admin", to: redirect("super_admins", status: 301)
 
+  devise_scope :user do
+    get "users/pending_registration" => "users/registrations#pending"
+  end
+
   ## APP ##
   devise_for :users, controllers: { registrations: "users/registrations", sessions: "users/sessions", passwords: "users/passwords", confirmations: "users/confirmations" }
 
