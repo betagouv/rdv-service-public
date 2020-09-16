@@ -68,6 +68,8 @@
                 i.fa.fa-fw.fa-info-circle>
               div= simple_format(user.notes_for(current_organisation))
 
+      = render "admin/rdvs/rdvs_history", user: user
+
 .row
   .col-md-12
     .card
@@ -82,3 +84,4 @@
       .js-record-versions-body#history.collapse class=(@uncollapsed_section == 'history' ? "show" : "")
         .text-center.py-4
           .spinner.spinner-border
+

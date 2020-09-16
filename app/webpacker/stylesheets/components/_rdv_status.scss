@@ -3,7 +3,7 @@ a.rdv-status {
   border-radius: 5px;
 }
 
-a.rdv-status-unknown {
+.rdv-status-unknown {
   background-color: $blue;
   color: $white;
 
@@ -13,7 +13,7 @@ a.rdv-status-unknown {
   }
 }
 
-a.rdv-status-waiting {
+.rdv-status-waiting {
   background-color: $turquoise;
   color: $blue;
 
@@ -23,7 +23,7 @@ a.rdv-status-waiting {
   }
 }
 
-a.rdv-status-seen {
+.rdv-status-seen {
   background-color: $green;
   color: $blue;
 
@@ -33,7 +33,7 @@ a.rdv-status-seen {
   }
 }
 
-a.rdv-status-excused {
+.rdv-status-excused {
   background-color: $green;
   color: $blue;
 
@@ -43,7 +43,7 @@ a.rdv-status-excused {
   }
 }
 
-a.rdv-status-notexcused {
+.rdv-status-notexcused {
   background-color: #fe6376;
   color: $blue;
 
