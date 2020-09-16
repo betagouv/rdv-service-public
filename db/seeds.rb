@@ -59,9 +59,11 @@ libelle_pmi_prenatale = MotifLibelle.create!(service: service_pmi, name: "Consul
 libelle_pmi_gyneco = MotifLibelle.create!(service: service_pmi, name: "Consultation gynécologie / contraception")
 libelle_pmi_suivi = MotifLibelle.create!(service: service_pmi, name: "Suivi après naissance")
 libelle_pmi_securite = MotifLibelle.create!(service: service_pmi, name: "Sécurité du domicile")
+libelle_pmi_collectif = MotifLibelle.create!(service: service_pmi, name: "RDV Collectif")
 libelle_social_rappel = MotifLibelle.create!(service: service_social, name: "Être rappelé par la MDS")
 libelle_social_suivi = MotifLibelle.create!(service: service_social, name: "Suivi RSA")
 libelle_social_droits = MotifLibelle.create!(service: service_social, name: "Droits sociaux")
+libelle_social_collectif = MotifLibelle.create!(service: service_social, name: "RDV Collectif")
 
 # MOTIFS org_paris_nord
 
@@ -106,6 +108,14 @@ motif_org_paris_nord_pmi_securite = Motif.create!(
   reservable_online: true,
   location_type: :home
 )
+_motif_org_paris_nord_pmi_collectif = Motif.create!(
+  name: libelle_pmi_collectif.name,
+  color: "#1049F3",
+  organisation_id: org_paris_nord.id,
+  service_id: service_pmi.id,
+  reservable_online: true,
+  location_type: :public_office
+)
 _motif_org_paris_nord_social_rappel = Motif.create!(
   name: libelle_social_rappel.name,
   color: "#FF7C00",
@@ -126,6 +136,14 @@ _motif_org_paris_nord_social_suivi = Motif.create!(
 _motif_org_paris_nord_social_droits = Motif.create!(
   name: libelle_social_droits.name,
   color: "#00FC60",
+  organisation_id: org_paris_nord.id,
+  service_id: service_social.id,
+  reservable_online: true,
+  location_type: :public_office
+)
+_motif_org_paris_nord_social_collectif = Motif.create!(
+  name: libelle_social_collectif.name,
+  color: "#113C65",
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
   reservable_online: true,
