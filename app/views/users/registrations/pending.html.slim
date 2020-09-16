@@ -1,11 +1,16 @@
 .card.mt-3
   .card-body
     p Veuillez cliquer sur le lien dans l'email qui vient de vous être envoyé
-    - unless email_tld_infos(@email_tld).blank?
-      = link_to email_tld_infos(@email_tld)[:url], target: 'blank', class: 'btn btn-primary d-flex justify-content-between' do
-        div &nbsp;
-        div
-          i.fa.fa-envelope-open-text>
-          span> Ouvrir #{email_tld_infos(@email_tld)[:name]}
-        div
+    .text-center
+      - unless email_tld_infos(@email_tld).blank?
+        = link_to email_tld_infos(@email_tld)[:url], target: 'blank', class: 'btn btn-link' do
+          span.mr-2 #{email_tld_infos(@email_tld)[:name]}
           i.fa.fa-external-link-alt
+
+      - if apple_mobile_device? # could not find android equivalent
+        .mt-2
+          - if email_tld_infos(@email_tld).present?
+            .mb-2 OU
+          = link_to "message://", target: 'blank', class: 'btn btn-primary d-block' do
+            i.fa.fa-envelope>
+            span> Ouvrir l'app Mail

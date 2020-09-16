@@ -97,4 +97,10 @@ module ApplicationHelper
       end
     end
   end
+
+  def apple_mobile_device?
+    user_agent = request.headers["User-Agent"]&.downcase || ""
+    user_agent.include?("apple") && user_agent.include?("mobile")
+    # HACK: avoids including a full-blown gem like `browser`
+  end
 end
