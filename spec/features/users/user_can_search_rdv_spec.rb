@@ -55,7 +55,7 @@ describe "User can search for rdvs" do
       fill_in(:user_first_name, with: "Michel")
       fill_in(:user_last_name, with: "Lapin")
       fill_in("Email", with: "michel@lapin.fr")
-      fill_in(:password, with: "12345678")
+      # fill_in(:password, with: "12345678")
       click_button("Je m'inscris")
 
       # Confirmation email
@@ -63,11 +63,11 @@ describe "User can search for rdvs" do
       expect(current_email).to have_content("Merci pour votre inscription")
       current_email.click_link("Confirmer mon compte")
 
-      # Login page
-      expect(page).to have_content("Se connecter")
-      fill_in("Email", with: "michel@lapin.fr")
-      fill_in(:password, with: "12345678")
-      click_button("Se connecter")
+      # Password reset page after confirmation
+      expect(page).to have_content("Votre compte a été validé")
+      expect(page).to have_content("Définir mon mot de passe")
+      fill_in(:user_password, with: "12345678")
+      click_button("Enregistrer")
 
       # Step 4
       expect(page).to have_content("Vos informations")
