@@ -131,10 +131,10 @@
         .card-header Proches
         .card-body
           ul.list-group.mb-2
-            - if @user.relatives.active.empty?
+            - if @user.relatives.within_organisation(current_organisation).active.empty?
               li.list-group-item
                 em Aucun proche
-            - @user.relatives.active.each do |relative|
+            - @user.relatives.within_organisation(current_organisation).active.each do |relative|
               li.list-group-item
                 .row
                   .col
