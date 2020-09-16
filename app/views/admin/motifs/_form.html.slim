@@ -1,4 +1,4 @@
-= simple_form_for [:admin, motif.organisation, motif], remote: request.xhr?, data: { rightbar: true } do |f|
+= simple_form_for [:admin, motif.organisation, motif] do |f|
 
   = render partial: 'layouts/model_errors', locals: { model: motif }
 

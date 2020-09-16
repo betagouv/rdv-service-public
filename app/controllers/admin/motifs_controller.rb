@@ -2,7 +2,7 @@ class Admin::MotifsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: [:new, :create]
-  before_action :set_motif, only: [:show, :edit, :update, :destroy]
+  before_action :set_motif, only: [:edit, :update, :destroy]
 
   def index
     @motifs = policy_scope(Motif).includes(:organisation).active.includes(:service).ordered_by_name.page(params[:page])
@@ -11,37 +11,42 @@ class Admin::MotifsController < AgentAuthController
   def new
     @motif = Motif.new(organisation_id: current_organisation.id)
     authorize(@motif)
-    respond_right_bar_with @motif
-  end
-
-  def show
-    authorize(@motif)
-    respond_right_bar_with @motif
   end
 
   def edit
     authorize(@motif)
-    respond_right_bar_with @motif
   end
 
   def create
     @motif = Motif.new(motif_params)
     @motif.organisation = @organisation
     authorize(@motif)
-    flash[:notice] = "Motif créé." if @motif.save
-    respond_right_bar_with @motif, location: admin_organisation_motifs_path(@motif.organisation)
+    if @motif.save
+      flash[:notice] = "Motif créé."
+      redirect_to admin_organisation_motifs_path(@motif.organisation)
+    else
+      render :new
+    end
   end
 
   def update
     authorize(@motif)
-    flash[:notice] = "Le motif a été modifié." if @motif.update(motif_params)
-    respond_right_bar_with @motif, location: admin_organisation_motifs_path(@motif.organisation)
+    if @motif.update(motif_params)
+      flash[:notice] = "Le motif a été modifié."
+      redirect_to admin_organisation_motifs_path(@motif.organisation)
+    else
+      render :edit
+    end
   end
 
   def destroy
     authorize(@motif)
-    flash[:notice] = "Le motif a été supprimé." if @motif.soft_delete
-    respond_right_bar_with @motif, location: admin_organisation_motifs_path(@motif.organisation)
+    if @motif.soft_delete
+      flash[:notice] = "Le motif a été supprimé."
+      redirect_to admin_organisation_motifs_path(@motif.organisation)
+    else
+      render :show
+    end
   end
 
   private
