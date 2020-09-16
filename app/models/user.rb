@@ -34,6 +34,9 @@ class User < ApplicationRecord
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
   scope :responsible, -> { where(responsible_id: nil) }
+  scope :within_organisation, lambda { |organisation|
+    joins(:organisations).where(organisations: { id: organisation.id })
+  }
 
   after_commit :send_invite_if_checked, on: :create
 
@@ -121,7 +124,7 @@ class User < ApplicationRecord
   end
 
   def notes_for(organisation)
-    profile_for(organisation).notes
+    profile_for(organisation)&.notes
   end
 
   def can_be_soft_deleted_from_organisation?(organisation)
@@ -129,6 +132,10 @@ class User < ApplicationRecord
       .with_user_in(self_and_relatives_and_responsible)
       .where(organisation: organisation)
       .empty?
+  end
+
+  def previous_rdvs(organisation)
+    Rdv.where(organisation: organisation).with_user_in([self]).past.order("starts_at desc").limit(5)
   end
 
   def email_tld

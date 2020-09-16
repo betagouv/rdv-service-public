@@ -1,0 +1,26 @@
+.card
+  .card-header
+    .d-flex.justify-content-between
+      .mt-1
+        | Derniers rendez-vous
+      - if user.rdvs.count > 0
+        = link_to I18n.t(".see_all_rdv", count: user.rdvs.count, name: user.full_name), admin_organisation_user_rdvs_path(current_organisation, user), class: "btn btn-outline-primary small"
+  .card-body
+    - if user.previous_rdvs(current_organisation).empty?
+      .text-muted aucun rendez-vous
+    - user.previous_rdvs(current_organisation).each do |previous_rdv|
+      .mb-2
+        strong= link_to rdv_title(previous_rdv, **{ date_format: local_assigns[:date_format] }.compact), admin_organisation_rdv_path(previous_rdv.organisation, previous_rdv)
+        = rdv_status_tag(previous_rdv)
+        div
+          = previous_rdv.motif.name
+          div
+            - if previous_rdv.context.blank?
+              .text-muted  Pas de contexte renseigné
+            - else
+              .text-muted Contexte :
+              .border-left.pl-2= simple_format(previous_rdv.context)
+        - if user.previous_rdvs(current_organisation).last != previous_rdv
+          hr
+
+

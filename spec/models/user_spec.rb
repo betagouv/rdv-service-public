@@ -271,6 +271,53 @@ describe User, type: :model do
     end
   end
 
+  describe "#previous_rdvs" do
+    it "return empty array without previous rdv" do
+      organisation = create(:organisation)
+      user = create(:user, organisations: [organisation])
+      create(:rdv, users: [user])
+      expect(user.previous_rdvs(organisation)).to eq([])
+    end
+
+    it "return rdv for same user and organisation" do
+      organisation = create(:organisation)
+      user = create(:user, organisations: [organisation])
+      rdv = create(:rdv, users: [user])
+      create(:rdv)
+      create(:rdv, users: [user])
+      previous_rdv = create(:rdv, starts_at: rdv.starts_at - 1.day, organisation: organisation, users: [user])
+
+      expect(user.previous_rdvs(organisation)).to eq([previous_rdv])
+    end
+
+    it "return only 5 last previous rdv order by starts_at desc" do
+      organisation = create(:organisation)
+      user = create(:user, organisations: [organisation])
+      rdv = create(:rdv, users: [user])
+
+      p4 = create(:rdv, starts_at: rdv.starts_at - 7.day, organisation: organisation, users: [user])
+      p5 = create(:rdv, starts_at: rdv.starts_at - 13.day, organisation: organisation, users: [user])
+      p1 = create(:rdv, starts_at: rdv.starts_at - 1.day, organisation: organisation, users: [user])
+      create(:rdv, starts_at: rdv.starts_at - 16.day, organisation: organisation, users: [user])
+      p2 = create(:rdv, starts_at: rdv.starts_at - 2.day, organisation: organisation, users: [user])
+      p3 = create(:rdv, starts_at: rdv.starts_at - 4.day, organisation: organisation, users: [user])
+
+      expect(user.previous_rdvs(organisation)).to eq([p1, p2, p3, p4, p5])
+    end
+
+    it "returns only past rdv" do
+      today = Time.new(2020, 5, 23, 15, 56)
+      travel_to(today - 2.days)
+      organisation = create(:organisation)
+      user = create(:user, organisations: [organisation])
+      rdv = create(:rdv, users: [user], starts_at: today)
+      past_rdv = create(:rdv, starts_at: rdv.starts_at - 4.day, organisation: organisation, users: [user])
+      create(:rdv, starts_at: rdv.starts_at + 4.day, organisation: organisation, users: [user])
+      expect(user.previous_rdvs(organisation).count).to eq([past_rdv].count)
+      expect(user.previous_rdvs(organisation)).to eq([past_rdv])
+    end
+  end
+
   # cf https://github.com/heartcombo/devise/wiki/How-To:-Email-only-sign-up
   describe "#set_reset_password_token" do
     it "returns the plaintext token" do

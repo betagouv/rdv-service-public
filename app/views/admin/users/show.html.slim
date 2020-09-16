@@ -121,20 +121,17 @@
               p.lead= t 'stats.rdv_counters.rdvs.notexcused', count: rdvs.notexcused.count
               = link_to_rdvs('notexcused')
 
-
-
-        .text-right
-          = link_to 'Voir tous les RDV', admin_organisation_user_rdvs_path(current_organisation, @user), class: 'btn btn-outline-primary'
+    = render "admin/rdvs/rdvs_history", user: @user
 
     - if @user.responsible?
       .card
         .card-header Proches
         .card-body
           ul.list-group.mb-2
-            - if @user.relatives.active.empty?
+            - if @user.relatives.within_organisation(current_organisation).active.empty?
               li.list-group-item
                 em Aucun proche
-            - @user.relatives.active.each do |relative|
+            - @user.relatives.within_organisation(current_organisation).active.each do |relative|
               li.list-group-item
                 .row
                   .col
@@ -142,3 +139,4 @@
                     = "(#{age(relative)})" if relative.birth_date
           .text-right
             = link_to "Ajouter un proche", new_admin_organisation_user_path(current_organisation, responsible_id: @user.id), class: "btn btn-outline-primary"
+

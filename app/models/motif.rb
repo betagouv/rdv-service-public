@@ -6,7 +6,7 @@ class Motif < ApplicationRecord
   has_and_belongs_to_many :plage_ouvertures, -> { distinct }
 
   enum location_type: [:public_office, :phone, :home]
-  validates :name, presence: true, uniqueness: { scope: [:organisation, :location_type], conditions: -> { where(deleted_at: nil) }, message: "est déjà utilisé pour un motif avec le même type de RDV" }
+  validates :name, presence: true, uniqueness: { scope: [:organisation, :location_type, :service], conditions: -> { where(deleted_at: nil) }, message: "est déjà utilisé pour un motif avec le même type de RDV" }
 
   delegate :service_social?, to: :service
 
@@ -22,7 +22,13 @@ class Motif < ApplicationRecord
   scope :for_secretariat, -> { where(for_secretariat: true) }
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
-    available_motifs = agent.service.secretariat? ? for_secretariat : where(service: agent.service)
+    available_motifs = if agent.admin?
+                         all
+                       elsif agent.service.secretariat?
+                         for_secretariat
+                       else
+                         where(service: agent.service)
+                       end
     available_motifs.where(organisation_id: organisation.id).active.ordered_by_name
   }
 

@@ -51,7 +51,9 @@
             .mt-1
               = user.full_name
               = relative_tag(user)
-            = link_to "Voir la fiche usager", admin_organisation_user_path(current_organisation, user), class: "btn btn-outline-primary small"
+              = user_soft_deleted_from_current_organisation_tag(user)
+            - if user.organisations.include?(current_organisation) # excludes soft deleted
+              = link_to "Voir la fiche usager", admin_organisation_user_path(current_organisation, user), class: "btn btn-outline-primary small"
 
         .card-body
           p.card-text
@@ -65,6 +67,8 @@
               div.mr-1
                 i.fa.fa-fw.fa-info-circle>
               div= simple_format(user.notes_for(current_organisation))
+
+      = render "admin/rdvs/rdvs_history", user: user
 
 .row
   .col-md-12
@@ -80,3 +84,4 @@
       .js-record-versions-body#history.collapse class=(@uncollapsed_section == 'history' ? "show" : "")
         .text-center.py-4
           .spinner.spinner-border
+

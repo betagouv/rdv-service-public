@@ -38,6 +38,10 @@ module UsersHelper
     user.relative? ? content_tag(:span, "Proche", class: "badge badge-info") : nil
   end
 
+  def user_soft_deleted_from_current_organisation_tag(user)
+    user.organisations.include?(current_organisation) ? nil : content_tag(:span, "Supprimé", class: "badge badge-danger")
+  end
+
   def full_name_and_birthdate(user)
     label = user.full_name
     label += " - #{birth_date_and_age(user)}" if user.birth_date
@@ -45,9 +49,10 @@ module UsersHelper
   end
 
   def user_soft_delete_confirm_message(user)
+    relatives = user.relatives.within_organisation(current_organisation).active
     [
       "Confirmez-vous la suppression de cet usager ?",
-      (I18n.t("users.soft_delete_confirm_message.relatives", count: user.relatives.active.count) if user.relatives.active.any?),
+      (I18n.t("users.soft_delete_confirm_message.relatives", count: relatives.count) if relatives.any?),
     ].select(&:present?).join("\n\n")
   end
 
@@ -76,7 +81,9 @@ module UsersHelper
         content_tag(:span, user.full_name) + relative_tag(user)
       end
     else
-      content_tag(:span, user.full_name) + relative_tag(user) + content_tag(:span, "l'usager a été supprimé")
+      content_tag(:span, user.full_name) +
+        relative_tag(user) +
+        user_soft_deleted_from_current_organisation_tag(user)
     end
   end
 
