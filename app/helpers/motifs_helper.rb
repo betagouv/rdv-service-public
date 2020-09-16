@@ -1,16 +1,10 @@
 module MotifsHelper
   def motif_name_with_location_type(motif)
-    if motif.phone?
-      motif.name + " (Par tél.)"
-    elsif motif.home?
-      motif.name + " (À domicile)"
-    else
-      motif.name
-    end
+    "#{motif.name} (#{Motif.human_enum_name(:location_type, motif.location_type)})"
   end
 
-  def motif_name_with_badges(motif)
-    content_tag(:span, motif.name) + motif_badges(motif)
+  def motif_name_with_location_type_and_badges(motif)
+    content_tag(:span, motif_name_with_location_type(motif)) + motif_badges(motif)
   end
 
   def motif_badges(motif)
