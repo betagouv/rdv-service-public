@@ -124,7 +124,7 @@ class User < ApplicationRecord
   end
 
   def notes_for(organisation)
-    profile_for(organisation).notes
+    profile_for(organisation)&.notes
   end
 
   def can_be_soft_deleted_from_organisation?(organisation)
