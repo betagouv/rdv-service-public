@@ -9,28 +9,25 @@
 .row
   .col-md-12
     .card
-      .card-body
-        - if @motifs.any?
-          table.table
-            thead
-              tr
-                th
-                  span.badge.badge-pill.ml-0.mr-2
-                    | &nbsp;
-                  | Nom
-                th Service
-                th Durée par défaut
-            tbody
-              = render @motifs
-          .d-flex.justify-content-center id="users-pagination"
-            = paginate @motifs, theme: 'twitter-bootstrap-4'
-        - else
-          .row.justify-content-md-center
-            .col-md-6.text-center.my-5
-              p.mb-2.lead Vous n'avez pas encore créé de motif.
-              p Les motifs sont les types de RDV que vous proposez dans votre organisation. Chaque motif a des options indépendantes : durée, format (à domicile, par téléphone, sur place), prise de RDV en ligne activée etc...
-              span.fa-stack.fa-4x
-                i.fa.fa-circle.fa-stack-2x.text-primary
-                i.far.fa-calendar.fa-stack-1x.text-white
-        .text-center
-          = link_to 'Créer un motif', new_admin_organisation_motif_path(current_organisation), class: 'btn btn-primary'
+      - if @motifs.any?
+        table.table
+          thead
+            tr
+              th
+              th= t("activerecord.attributes.motif.name")
+              th= t("activerecord.attributes.motif.service")
+              th= t("activerecord.attributes.motif.default_duration")
+          tbody
+            = render @motifs
+        .d-flex.justify-content-center id="users-pagination"
+          = paginate @motifs, theme: 'twitter-bootstrap-4'
+      - else
+        .row.justify-content-md-center
+          .col-md-6.text-center.my-5
+            p.mb-2.lead Vous n'avez pas encore créé de motif.
+            p Les motifs sont les types de RDV que vous proposez dans votre organisation. Chaque motif a des options indépendantes : durée, format (à domicile, par téléphone, sur place), prise de RDV en ligne activée etc...
+            span.fa-stack.fa-4x
+              i.fa.fa-circle.fa-stack-2x.text-primary
+              i.far.fa-calendar.fa-stack-1x.text-white
+      .text-center.mb-3
+        = link_to 'Créer un motif', new_admin_organisation_motif_path(current_organisation), class: 'btn btn-primary'

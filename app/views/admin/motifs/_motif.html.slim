@@ -1,7 +1,7 @@
 tr
+  td.pr-0.text-right
+    span.badge.badge-pill.ml-0.mr-2 style="background: #{motif.color};" &nbsp;
   td
-    span.badge.badge-pill.ml-0.mr-2 style="background: #{motif.color};"
-      | &nbsp;
     = link_to motif.name, admin_organisation_motif_path(motif.organisation, motif), data: { rightbar: true }
     = motif_badges(motif)
   td= motif.service.name
