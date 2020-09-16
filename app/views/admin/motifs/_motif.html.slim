@@ -4,6 +4,7 @@ tr
   td
     = link_to motif.name, edit_admin_organisation_motif_path(motif.organisation, motif)
     = motif_badges(motif)
-  td= motif.service.name
+  td= motif.service.short_name
+  td= Motif.human_enum_name(:location_type, motif.location_type)
   td= "#{motif.default_duration_in_min} min."
   td= link_to "Éditer", edit_admin_organisation_motif_path(motif.organisation, motif)
