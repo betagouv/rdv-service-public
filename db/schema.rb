@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_07_124800) do
+ActiveRecord::Schema.define(version: 2020_09_17_145803) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -88,6 +88,7 @@ ActiveRecord::Schema.define(version: 2020_09_07_124800) do
     t.integer "invitations_count", default: 0
     t.datetime "deleted_at"
     t.bigint "service_id"
+    t.string "email_original"
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true
     t.index ["invitation_token"], name: "index_agents_on_invitation_token", unique: true

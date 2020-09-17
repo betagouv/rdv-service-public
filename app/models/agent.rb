@@ -57,7 +57,11 @@ class Agent < ApplicationRecord
   ## Soft Delete for Devise
   def soft_delete(organisation = nil)
     organisations.delete(organisation) && return if organisation.present? && organisations.count > 1
-    rdvs.empty? ? destroy : update_attribute(:deleted_at, Time.zone.now)
+    rdvs.empty? ? destroy : update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email)
+  end
+
+  def deleted_email
+    "agent_#{id}@deleted.rdv-solidarites.fr"
   end
 
   def active_for_authentication?
