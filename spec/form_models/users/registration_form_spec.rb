@@ -3,8 +3,7 @@ describe Users::RegistrationForm, type: :form_model do
     {
       first_name: "jean",
       last_name: "durand",
-      email: "jean@durand.fr",
-      password: "jeanjean"
+      email: "jean@durand.fr"
     }
   end
 
@@ -19,12 +18,6 @@ describe Users::RegistrationForm, type: :form_model do
       form = Users::RegistrationForm.new(attributes.except(:email))
       expect(form.valid?).to eq(false)
       expect(form.errors.keys).to match_array([:email])
-    end
-
-    it "should not allow empty password" do
-      form = Users::RegistrationForm.new(attributes.except(:password))
-      expect(form.valid?).to eq(false)
-      expect(form.errors.keys).to match_array([:password])
     end
 
     it "also validates user model errors" do

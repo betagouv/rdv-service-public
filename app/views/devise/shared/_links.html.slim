@@ -5,13 +5,6 @@
       b Se connecter
     |.
 
-- if devise_mapping.confirmable? && controller_name != 'confirmations' && resource_name == :user
-  p.text-muted
-    | Vous n'avez pas reçu le mail de confirmation ?
-    = link_to new_confirmation_path(resource_name) do
-      b Renvoyer
-    |.
-
 - if devise_mapping.registerable? && controller_name != 'registrations'
   hr.my-4
   .text-center.mb-5
