@@ -55,7 +55,6 @@ describe "User can search for rdvs" do
       fill_in(:user_first_name, with: "Michel")
       fill_in(:user_last_name, with: "Lapin")
       fill_in("Email", with: "michel@lapin.fr")
-      # fill_in(:password, with: "12345678")
       click_button("Je m'inscris")
 
       # Confirmation email
