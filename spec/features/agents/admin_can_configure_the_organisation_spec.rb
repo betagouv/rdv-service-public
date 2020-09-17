@@ -95,9 +95,6 @@ describe "Admin can configure the organisation" do
     expect_page_title("Vos motifs")
 
     click_link motif.name
-    expect(page).to have_content(motif.name)
-    click_link "Modifier"
-
     expect(page).to have_content("Modifier le motif")
     expect(page.find_by_id("motif_name")).to have_content(motif.name)
     select(motif_libelle2.name, from: :motif_name)
@@ -117,7 +114,7 @@ describe "Admin can configure the organisation" do
     end
 
     expect_page_title("Vos motifs")
-    expect_page_with_no_record_text("Vous n'avez pas encore créé de motif.")
+    expect(page).to have_content("Vous n'avez pas encore créé de motif.")
 
     click_link "Créer un motif", match: :first
     expect(page).to have_content("Nouveau motif")
