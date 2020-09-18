@@ -31,6 +31,10 @@ Rails.application.routes.draw do
   end
   get "super_admin", to: redirect("super_admins", status: 301)
 
+  devise_scope :user do
+    get "users/pending_registration" => "users/registrations#pending"
+  end
+
   ## APP ##
   devise_for :users, controllers: { registrations: "users/registrations", sessions: "users/sessions", passwords: "users/passwords", confirmations: "users/confirmations" }
 
@@ -90,7 +94,7 @@ Rails.application.routes.draw do
           get :by_lieu, on: :collection
         end
         resources :lieux, except: :show
-        resources :motifs
+        resources :motifs, except: :show
         resources :rdvs, except: [:index, :new] do
           patch :status, on: :member
           resources :versions, only: [:index]

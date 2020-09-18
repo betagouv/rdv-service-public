@@ -16,6 +16,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
     respond_with_navigational(resource) { redirect_to after_sign_out_path_for(resource_name) }
   end
 
+  def pending
+    @email_tld = params[:email_tld]
+  end
+
   private
 
   def build_resource(hash = {})
@@ -26,8 +30,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
     user_signed_in? ? "application" : "registration"
   end
 
-  def after_inactive_sign_up_path_for(_)
-    new_user_session_path
+  def after_inactive_sign_up_path_for(resource)
+    users_pending_registration_path(email_tld: resource.email_tld)
   end
 
   def invite_and_redirect
