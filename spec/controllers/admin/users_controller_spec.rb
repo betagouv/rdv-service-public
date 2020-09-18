@@ -9,48 +9,6 @@ RSpec.describe Admin::UsersController, type: :controller do
     sign_in agent
   end
 
-  shared_examples "with valid email" do |format|
-    let(:attributes) do
-      {
-        first_name: "Michel",
-        last_name: "Lapin",
-        email: "michel@lapin.com",
-        invite_on_create: "true",
-        user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } }
-      }
-    end
-    let(:format) { format }
-
-    it "should send an invite" do
-      subject
-      expect(assigns(:user).invitation_sent_at).not_to be_nil
-    end
-  end
-
-  shared_examples "with invalid params" do
-    let(:attributes) do
-      {
-        first_name: "Michel",
-        invite_on_create: "true",
-        user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } }
-      }
-    end
-    let(:format) { :html }
-
-    it { expect { subject }.not_to change(User, :count) }
-    it { expect(subject).to render_template(:new) }
-
-    it do
-      subject
-      expect(assigns(:user_to_compare)).to be_nil
-    end
-
-    it "should not send an invite" do
-      subject
-      expect(assigns(:user).invitation_sent_at).to be_nil
-    end
-  end
-
   describe "DELETE destroy" do
     it "removes user from organisation" do
       expect do
@@ -108,7 +66,46 @@ RSpec.describe Admin::UsersController, type: :controller do
       it { expect(subject).to render_template(:new) }
     end
 
-    it_behaves_like "with invalid params"
-    it_behaves_like "with valid email", :html
+    context "with invalid params" do
+      let(:attributes) do
+        {
+          first_name: "Michel",
+          invite_on_create: "true",
+          user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } }
+        }
+      end
+      let(:format) { :html }
+
+      it { expect { subject }.not_to change(User, :count) }
+      it { expect(subject).to render_template(:new) }
+
+      it do
+        subject
+        expect(assigns(:user_to_compare)).to be_nil
+      end
+
+      it "should not send an invite" do
+        subject
+        expect(assigns(:user).invitation_sent_at).to be_nil
+      end
+
+      context "with valid email" do
+        let(:attributes) do
+          {
+            first_name: "Michel",
+            last_name: "Lapin",
+            email: "michel@lapin.com",
+            invite_on_create: "1",
+            user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } }
+          }
+        end
+        let(:format) { format }
+
+        it "should send an invite" do
+          expect_any_instance_of(User).to receive(:invite!)
+          subject
+        end
+      end
+    end
   end
 end
