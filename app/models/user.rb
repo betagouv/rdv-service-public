@@ -38,8 +38,6 @@ class User < ApplicationRecord
     joins(:organisations).where(organisations: { id: organisation.id })
   }
 
-  after_commit :send_invite_if_checked, on: :create
-
   before_save :set_email_to_null_if_blank
   before_save :normalize_account
   before_save :format_phone_number
@@ -82,14 +80,6 @@ class User < ApplicationRecord
 
   def user_to_notify
     relative? ? responsible : self
-  end
-
-  def invite_on_create?
-    invite_on_create == "true"
-  end
-
-  def send_invite_if_checked
-    invite! if invite_on_create? && email.present?
   end
 
   def profile_for(organisation)

@@ -9,7 +9,7 @@ class Admin::UsersController < AgentAuthController
     :first_name, :last_name, :birth_name, :email, :phone_number,
     :birth_date, :address, :caisse_affiliation, :affiliation_number,
     :family_situation, :number_of_children,
-    :invite_on_create, :skip_duplicate_warnings
+    :skip_duplicate_warnings
   ].freeze
 
   PERMITTED_NESTED_ATTRIBUTES = {
@@ -43,6 +43,8 @@ class Admin::UsersController < AgentAuthController
     @duplicate_user_result = DuplicateUserFinderService.perform_with(@user)
     @user.skip_confirmation_notification!
     user_persisted = @user.save
+
+    @user.invite! if invite_user?(@user, params)
     prepare_new unless user_persisted
 
     if from_modal?
@@ -110,6 +112,10 @@ class Admin::UsersController < AgentAuthController
   end
 
   private
+
+  def invite_user?(user, params)
+    user.persisted? && user.email.present? && (params[:user][:invite_on_create] == "1")
+  end
 
   def prepare_new
     return unless @user.responsible.nil?
