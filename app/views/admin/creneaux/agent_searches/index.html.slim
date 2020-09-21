@@ -27,12 +27,11 @@
   .text-center
     - if @form.motif.blank?
       | Choisissez un motif pour afficher les créneaux disponibles.
-    - elsif @form.lieux.empty?
+    - elsif @search_result.lieux.empty?
       | Il n'y a pour l'instant aucune disponibilité pour le motif #{@form.motif.name}
     - else
       = render 'lieux', \
-        lieux: @form.lieux, \
-        creneaux_by_lieux: @creneaux_by_lieux, \
+        lieux: @search_result.lieux, \
+        creneaux_by_lieux: @search_result.creneaux_by_lieux, \
         agent_creneaux_search_form: @form, \
-        next_availability_by_lieux: @next_availability_by_lieux
-
+        next_availability_by_lieux: @search_result.next_availability_by_lieux
