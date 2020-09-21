@@ -32,7 +32,6 @@ RSpec.describe Admin::UsersController, type: :controller do
         {
           first_name: "Michel",
           last_name: "Lapin",
-          invite_on_create: "true",
           user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } }
         }
       end
@@ -40,7 +39,7 @@ RSpec.describe Admin::UsersController, type: :controller do
       it { expect { subject }.to change(User, :count).by(1) }
 
       it "should not send an invite" do
-        subject
+        post :create, params: { organisation_id: organisation.id, user: attributes, invite_on_create: 0}
         expect(assigns(:user).invitation_sent_at).to be_nil
       end
 
@@ -70,7 +69,6 @@ RSpec.describe Admin::UsersController, type: :controller do
       let(:attributes) do
         {
           first_name: "Michel",
-          invite_on_create: "true",
           user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } }
         }
       end
@@ -95,7 +93,6 @@ RSpec.describe Admin::UsersController, type: :controller do
             first_name: "Michel",
             last_name: "Lapin",
             email: "michel@lapin.com",
-            invite_on_create: "1",
             user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } }
           }
         end
@@ -103,7 +100,7 @@ RSpec.describe Admin::UsersController, type: :controller do
 
         it "should send an invite" do
           expect_any_instance_of(User).to receive(:invite!)
-          subject
+          post :create, params: { organisation_id: organisation.id, user: attributes, invite_on_create: "1"}
         end
       end
     end
