@@ -5,7 +5,7 @@ class User < ApplicationRecord
   include AccountNormalizerConcern
   include User::SearchableConcern
 
-  attr_accessor :invite_on_create, :skip_duplicate_warnings
+  attr_accessor :skip_duplicate_warnings
 
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async
@@ -37,8 +37,6 @@ class User < ApplicationRecord
   scope :within_organisation, lambda { |organisation|
     joins(:organisations).where(organisations: { id: organisation.id })
   }
-
-  after_commit :send_invite_if_checked, on: :create
 
   before_save :set_email_to_null_if_blank
   before_save :normalize_account
@@ -82,14 +80,6 @@ class User < ApplicationRecord
 
   def user_to_notify
     relative? ? responsible : self
-  end
-
-  def invite_on_create?
-    invite_on_create == "true"
-  end
-
-  def send_invite_if_checked
-    invite! if invite_on_create? && email.present?
   end
 
   def profile_for(organisation)
