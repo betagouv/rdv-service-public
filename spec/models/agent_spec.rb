@@ -30,6 +30,22 @@ describe Agent, type: :model do
 
       it { expect { agent.soft_delete deleted_org }.to change(Agent, :count).by(-1) }
     end
+
+    it "keep old mail in an `email_original` attribute" do
+      organisation = create(:organisation)
+      agent = create(:agent, email: "karim@le64.fr", organisations: [organisation])
+      create(:rdv, agents: [agent])
+      agent.soft_delete(organisation)
+      expect(agent.email_original).to eq("karim@le64.fr")
+    end
+
+    it "update mail with a deleted_mail (agent_\#{id}@deleted.rdv-solidarites.fr" do
+      organisation = create(:organisation)
+      agent = create(:agent, organisations: [organisation])
+      create(:rdv, agents: [agent])
+      agent.soft_delete(organisation)
+      expect(agent.email).to eq("agent_#{agent.id}@deleted.rdv-solidarites.fr")
+    end
   end
 
   describe "#can_access_others_planning?" do
