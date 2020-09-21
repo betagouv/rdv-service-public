@@ -4,14 +4,29 @@ class SearchCreneauxForAgentsService < BaseService
   end
 
   def perform
-    OpenStruct.new(
-      lieux: lieux,
-      next_availability_by_lieux: next_availability_by_lieux,
-      creneaux_by_lieux: creneaux_by_lieux
-    )
+    lieux.map { build_result(_1) }
   end
 
   private
+
+  def build_result(lieu)
+    OpenStruct.new(
+      lieu: lieu,
+      next_availability: FindAvailabilityService.perform_with(
+        @form.motif.name,
+        lieu,
+        Date.today,
+        for_agents: true
+      ),
+      creneaux: CreneauxBuilderService.perform_with(
+        @form.motif.name,
+        lieu,
+        @form.date_range,
+        for_agents: true,
+        agent_ids: @form.agent_ids
+      )
+    )
+  end
 
   def lieux
     return [] unless @form.motif.present?
@@ -28,21 +43,5 @@ class SearchCreneauxForAgentsService < BaseService
     @lieux = @lieux.where(id: PlageOuverture.where(agent_id: @form.agent_ids).pluck(:lieu_id)) if @form.agent_ids.any?
     @lieux.ordered_by_name
     @lieux
-  end
-
-  def creneaux_by_lieux
-    @creneaux_by_lieux ||= lieux.each_with_object({}) do |lieu, creneaux_by_lieux|
-      creneaux_by_lieux[lieu.id] = CreneauxBuilderService
-        .perform_with(@form.motif.name, lieu, @form.date_range, for_agents: true, agent_ids: @form.agent_ids)
-    end
-  end
-
-  def next_availability_by_lieux
-    @next_availability_by_lieux = []
-    lieux.each do |lieu|
-      @next_availability_by_lieux[lieu.id] = FindAvailabilityService
-        .perform_with(@form.motif.name, lieu, Date.today, for_agents: true)
-    end
-    @next_availability_by_lieux
   end
 end

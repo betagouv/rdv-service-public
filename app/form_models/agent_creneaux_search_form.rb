@@ -4,7 +4,7 @@ class AgentCreneauxSearchForm
   attr_accessor :organisation_id, :motif_id, :agent_ids, :user_ids, :lieu_ids
   attr_writer :from_date
 
-  validates :organisation_id, presence: true
+  validates :organisation_id, :motif_id, presence: true
 
   def organisation
     Organisation.find_by(id: organisation_id)

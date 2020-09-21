@@ -5,7 +5,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
     skip_policy_scope # TODO: remove
     @user = User.find(params[:user_id]) if params[:user_id]
     @form = build_agent_creneaux_search_form
-    @search_result = SearchCreneauxForAgentsService.perform_with(@form) \
+    @search_results = SearchCreneauxForAgentsService.perform_with(@form) \
       if (params[:commit].present? || request.format.js?) && @form.valid?
     respond_to do |format|
       format.html do
