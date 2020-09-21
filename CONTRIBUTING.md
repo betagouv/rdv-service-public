@@ -17,30 +17,22 @@
 
 ### Processus de développement
 
-- Choisir une tâche dans la colonne Todo, la déplacer dans En cours, se l'assigner
-- Une fois le code développé, créer une PR, attendre la review, ajouter le tag to review sur trello.
+- Choisir une tâche dans la colonne `Backlog produit`, la déplacer dans `Développement en cours`, se l'assigner
+- Une fois le code développé, créer une PR, attendre la review, ajouter le tag `à examiner` sur trello.
 - Une fois la PR approuvée :
-- S'il n'y a pas de migration :
-  - Merger la PR. Cela déclenche le déploiement en démo et en production
-- S'il y a des migrations :
-  - Prévenir que l'on "bloque" les release temporairement pour simplifier.
-  - Déployer manuellement la branche en démo. S'assurer que la migration passe correctement et éventuellement tester la nouvelle fonctionnalité.
-  - Merger la PR
-  - Prévenir que tout est ok.
-- Une fois le déploiement terminé avec succès, déplacer toutes les tâches de "En développement" vers "En production".
+- Merger la PR. Cela déclenche le déploiement en démo et en production
+- Une fois le déploiement terminé avec succès, déplacer la tâche vers `En production et en démo`.
 
 ### Vues
 
-- ne pas utiliser de variable d'instance dans une vue partielle;
-
+- préférer le passage explicites de variables locales à l'utilisation de variables d'instances venant des controlleurs dans les partials pour permettre plus de généricité
 
 ## Tests
 
 - Privilégier les tests unitaires sur les tests bout en bout ;
 - Nous allons considérer que les tests unitaires dans rails peuvent inclure ActiveRecord ;
 - Chaque élément nécessaire à un test doit se trouver dans un même écran (dans les mêmes ~20 lignes);
-- Nous utilisons la syntaxe Rspec
-
+- Nous utilisons [RSpec](https://rspec.info/) pour écrire nos tests
 
 
 ## Déploiement
