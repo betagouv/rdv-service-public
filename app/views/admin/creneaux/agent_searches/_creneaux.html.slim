@@ -1,13 +1,9 @@
-- motif = form.motif
-- date_range = form.date_range
-- agent_ids = form.agent_ids
-- user_ids = form.user_ids
-- path_opts = { lieu_ids: [lieu.id], motif_id: motif.id, agent_ids: agent_ids, user_ids: user_ids }
+- path_opts = { lieu_ids: [lieu.id], motif_id: form.motif.id, agent_ids: form.agent_ids, user_id: form.user_id }
 
 div.js-creneaux-list.collapsed id="creneaux-lieu-#{lieu.id}"
   .row
-    - if date_range.begin > Date.today
-      - previous_from_date = date_range.begin - 7.days
+    - if form.date_range.begin > Date.today
+      - previous_from_date = form.date_range.begin - 7.days
       .col-auto.d-flex.align-items-center
         = link_to \
           "<<", \
@@ -20,7 +16,7 @@ div.js-creneaux-list.collapsed id="creneaux-lieu-#{lieu.id}"
           data: { disable_with: "..." }
     .col
       .row.no-gutters.creneaux-row.lieu-creneaux-card
-        - date_range.each do |date|
+        - form.date_range.each do |date|
           .col.position-relative
             p.text-center.sticky-top.bg-white
               strong= l(date, format: "%A")
@@ -34,13 +30,13 @@ div.js-creneaux-list.collapsed id="creneaux-lieu-#{lieu.id}"
             - else
               - creneaux_for_date = creneaux.select { |c| c.starts_at.to_date == date }.sort_by(&:starts_at)
               - creneaux_for_date.first(5).each do |creneau|
-                = render "creneau", creneau: creneau, user_ids: user_ids
+                = render "creneau", creneau: creneau, user_ids: form.user_ids
               - if creneaux_for_date.size > 5
                 .collapse id="collapse-#{lieu.id}"
                   - creneaux_for_date.drop(5).each do |creneau|
-                    = render "creneau", creneau: creneau, user_ids: user_ids
+                    = render "creneau", creneau: creneau, user_ids: form.user_ids
 
-    - if date_range.end < next_availability.starts_at.to_date
+    - if form.date_range.end < next_availability.starts_at.to_date
       .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
         = link_to \
             admin_organisation_agent_searches_path( \
@@ -63,7 +59,7 @@ div.js-creneaux-list.collapsed id="creneaux-lieu-#{lieu.id}"
       = link_to  \
         ">>", \
         admin_organisation_agent_searches_path( \
-          from_date: date_range.end + 1.day, \
+          from_date: form.date_range.end + 1.day, \
           **path_opts \
         ), \
         remote: true, \
