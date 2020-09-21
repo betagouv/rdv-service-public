@@ -39,7 +39,7 @@ RSpec.describe Admin::UsersController, type: :controller do
       it { expect { subject }.to change(User, :count).by(1) }
 
       it "should not send an invite" do
-        post :create, params: { organisation_id: organisation.id, user: attributes, invite_on_create: 0}
+        post :create, params: { organisation_id: organisation.id, user: attributes, invite_on_create: 0 }
         expect(assigns(:user).invitation_sent_at).to be_nil
       end
 
@@ -100,7 +100,7 @@ RSpec.describe Admin::UsersController, type: :controller do
 
         it "should send an invite" do
           expect_any_instance_of(User).to receive(:invite!)
-          post :create, params: { organisation_id: organisation.id, user: attributes, invite_on_create: "1"}
+          post :create, params: { organisation_id: organisation.id, user: attributes, invite_on_create: "1" }
         end
       end
     end
