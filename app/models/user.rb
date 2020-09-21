@@ -5,7 +5,7 @@ class User < ApplicationRecord
   include AccountNormalizerConcern
   include User::SearchableConcern
 
-  attr_accessor :invite_on_create, :skip_duplicate_warnings
+  attr_accessor :skip_duplicate_warnings
 
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async

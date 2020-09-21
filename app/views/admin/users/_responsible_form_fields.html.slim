@@ -11,15 +11,12 @@
 = f.input(:email, as: :email, **input_opts)
 
 - if user.new_record?
-  = f.input( \
-    :invite_on_create, \
-    as: :boolean, \
-    label: "Inviter l'utilisateur à se créer un compte sur RDV-solidarites.", \
-    wrapper_html: { \
-      class:"align-items-baseline ml-0",
-    }, \
-    **input_opts, \
-  )
+  label
+    = check_box_tag :invite_on_create, \
+      1, \
+      false, \
+      class:"align-items-baseline ml-0"
+    |&nbsp; Inviter l'utilisateur à se créer un compte sur RDV-solidarites.
 
 = f.input :phone_number, as: :tel, **input_opts
 

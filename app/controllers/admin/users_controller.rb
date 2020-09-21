@@ -114,7 +114,7 @@ class Admin::UsersController < AgentAuthController
   private
 
   def invite_user?(user, params)
-    user.persisted? && user.email.present? && (params[:user][:invite_on_create] == "1")
+    user.persisted? && user.email.present? && (params[:invite_on_create] == "1")
   end
 
   def prepare_new
