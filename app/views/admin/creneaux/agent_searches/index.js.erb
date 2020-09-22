@@ -1,1 +1,11 @@
-document.querySelector("#creneaux").innerHTML = "<%= escape_javascript(render 'lieux', lieux: @lieux, creneaux_by_lieux: @creneaux_by_lieux, motif: @motif, date_range: @date_range, agent_ids: @agent_ids, user_ids: @user ? [@user.id] : [], next_availability_by_lieux: @next_availability_by_lieux) %>";
+<% @search_results.each do |search_result| %>
+  document.querySelector("#creneaux-lieu-<%= search_result.lieu.id %>").outerHTML = "<%= escape_javascript(
+    render(
+      'creneaux',
+      lieu: search_result.lieu,
+      creneaux: search_result.creneaux,
+      form: @form,
+      next_availability: search_result.next_availability
+    )
+  ) %>";
+<% end %>

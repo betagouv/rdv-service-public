@@ -27,7 +27,7 @@ describe "Agent can create a Rdv with creneau search" do
 
   scenario "default", js: true do
     expect_page_title("Choisir un créneau")
-    select(motif.name, from: "creneau_agent_search_motif_id")
+    select(motif.name, from: "motif_id")
     click_button("Afficher les créneaux")
 
     # Display results for both lieux
@@ -38,14 +38,14 @@ describe "Agent can create a Rdv with creneau search" do
     expect(page).to have_content(plage_ouverture3.agent.short_name)
 
     # Add a filter on lieu
-    select(lieu.name, from: "creneau_agent_search_lieu_ids")
+    select(lieu.name, from: "lieu_ids")
     click_button("Afficher les créneaux")
     expect(page).to have_content(plage_ouverture.lieu.address)
     expect(page).to have_content(plage_ouverture3.agent.short_name)
     expect(page).not_to have_content(plage_ouverture2.lieu.address)
 
     # Add an agent filter
-    select(agent.full_name, from: "creneau_agent_search_agent_ids")
+    select(agent.full_name, from: "agent_ids")
     click_button("Afficher les créneaux")
     expect(page).to have_content(plage_ouverture.agent.short_name)
     expect(page).not_to have_content(plage_ouverture2.agent.short_name)

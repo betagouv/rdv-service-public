@@ -9,7 +9,7 @@
 .card
   .card-body
     h5.card-title Configuration des filtres
-    = simple_form_for(Creneau::AgentSearch.new, remote: true, url: admin_organisation_agent_searches_path(@organisation), method: :get, html: { class: 'js-creneaux-form' }) do |f|
+    = simple_form_for(@form, as: '', url: admin_organisation_agent_searches_path(current_organisation), method: :get, html: { class: 'js-creneaux-form' }) do |f|
       - if @user
         = hidden_field_tag :user_id, @user.id
       .row
@@ -25,4 +25,11 @@
 
 #creneaux
   .text-center
-    | Choisissez un motif pour afficher les créneaux disponibles.
+    - if @form.motif.blank?
+      | Sélectionnez un motif pour afficher les créneaux disponibles.
+    - elsif @form.errors.any?
+      | Nous ne reconnaissons pas certains éléments du formulaire, pouvez-vous vérifier ?
+    - elsif @search_results.empty?
+      | Il n'y a pour l'instant aucune disponibilité pour le motif #{@form.motif.name}
+    - else
+      = render partial: "search_result", collection: @search_results, locals: { form: @form }
