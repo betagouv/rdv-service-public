@@ -41,7 +41,7 @@ class SearchCreneauxForAgentsService < BaseService
         @lieux.for_motif(@form.motif)
       end
     @lieux = @lieux.where(id: PlageOuverture.where(agent_id: @form.agent_ids).pluck(:lieu_id)) if @form.agent_ids.any?
-    @lieux.ordered_by_name
+    @lieux = @lieux.ordered_by_name
     @lieux
   end
 end
