@@ -16,7 +16,8 @@ class SearchCreneauxForAgentsService < BaseService
         @form.motif.name,
         lieu,
         Date.today,
-        for_agents: true
+        for_agents: true,
+        agent_ids: @form.agent_ids
       ),
       creneaux: CreneauxBuilderService.perform_with(
         @form.motif.name,
