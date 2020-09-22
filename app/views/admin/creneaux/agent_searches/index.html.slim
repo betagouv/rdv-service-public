@@ -28,7 +28,7 @@
     - if @form.motif.blank?
       | Sélectionnez un motif pour afficher les créneaux disponibles.
     - elsif @form.errors.any?
-      | Corrigez le formulaire pour afficher les créneaux disponibles.
+      | Nous ne reconnaissons pas certains éléments du formulaire, pouvez-vous vérifier ?
     - elsif @search_results.empty?
       | Il n'y a pour l'instant aucune disponibilité pour le motif #{@form.motif.name}
     - else
