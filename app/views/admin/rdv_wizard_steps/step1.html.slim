@@ -14,14 +14,29 @@
               = "Commence le : #{l(@rdv.starts_at, format: :human)}"
       .card-body
         = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }
-        = simple_form_for(@rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation, step: 1)) do |f|
+        = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation, step: 1)) do |f|
           = f.input_field :starts_at, as: :hidden
           = f.input_field :lieu_id, as: :hidden
           - @rdv.agents.each do |p|
             / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
             = f.hidden_field "agent_ids][", value: p.id
-
-          = f.association(:motif, collection: policy_scope(Motif).available_motifs_for_organisation_and_agent(current_organisation, @agent), label_method: -> { motif_name_with_location_type(_1) }, include_blank: "Sélectionnez un motif", input_html: { class: 'select2-input' })
+          = f.input :service_id, \
+            collection: @services.ordered_by_name, \
+            input_html: { \
+              class: 'select2-input js-service-filter', \
+              data: { \
+                placeholder: "Sélectionnez un service pour filtrer les motifs", \
+                "select-options": { disableSearch: true } \
+              } \
+            }
+          = f.input :motif_id, \
+            required: true, \
+            include_blank: true, \
+            collection: @motifs.includes(:service).to_a.group_by { _1.service.name }, \
+            as: :grouped_select, \
+            group_method: :last,
+            label_method: -> { motif_name_with_location_type(_1) }, \
+            input_html: { class: 'js-filtered-motifs' }
           .row
             .col.text-left
               = link_to 'Revenir en arrière', admin_organisation_agent_path(current_organisation, @agent), class: 'btn btn-link'

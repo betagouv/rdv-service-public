@@ -1,7 +1,8 @@
 function initSelect2() {
   $(".select2-input").each(function () {
     const options = this.dataset.selectOptions !== undefined ? JSON.parse(this.dataset.selectOptions) : {};
-
+    if (options.disableSearch)
+      options.minimumResultsForSearch = Infinity // cf https://select2.org/searching
     $(this).select2(options);
   });
 }

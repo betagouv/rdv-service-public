@@ -25,6 +25,7 @@ module AgentRdvWizard
   end
 
   class Step1 < Base
+    attr_accessor :service_id
     validates :motif, :organisation, presence: true
   end
 
