@@ -42,6 +42,9 @@ import 'stylesheets/application_agent'
 // this is necessary so images are compiled by webpack
 require.context('../images', true)
 
+$.fn.select2.defaults.set("theme", "bootstrap4");
+$.fn.select2.defaults.set("language", "fr");
+
 new Modal();
 new Rightbar();
 

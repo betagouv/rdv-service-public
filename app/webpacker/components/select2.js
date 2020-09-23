@@ -1,11 +1,6 @@
 function initSelect2() {
   $(".select2-input").each(function () {
-    let customOptions = this.dataset.selectOptions !== undefined ? JSON.parse(this.dataset.selectOptions) : {};
-    let defaultOptions = {
-      language: "fr",
-      theme: "bootstrap4"
-    };
-    let options = Object.assign(customOptions, defaultOptions);
+    const options = this.dataset.selectOptions !== undefined ? JSON.parse(this.dataset.selectOptions) : {};
 
     $(this).select2(options);
   });

@@ -15,7 +15,6 @@ import 'select2/dist/js/i18n/fr.js';
 import 'jquery-mask-plugin';
 import 'components/select2';
 import 'components/sentry';
-import 'components/search-form';
 import 'bootstrap';
 
 import 'stylesheets/application';
