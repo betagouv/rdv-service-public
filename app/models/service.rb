@@ -8,6 +8,7 @@ class Service < ApplicationRecord
 
   scope :with_motifs, -> { where.not(name: SECRETARIAT) }
   scope :secretariat, -> { where(name: SECRETARIAT).first }
+  scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }
 
   scope :searchable, lambda { |organisations|
     where(id: Motif.searchable(organisations).pluck(:service_id).uniq)

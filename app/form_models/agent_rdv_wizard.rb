@@ -6,14 +6,14 @@ module AgentRdvWizard
   class Base
     include ActiveModel::Model
 
-    attr_accessor :rdv
+    attr_accessor :rdv, :service_id
 
     # delegates all getters and setters to rdv
     delegate(*::Rdv.attribute_names, to: :rdv)
-    delegate :motif, :organisation, :agents, :users, :to_query, to: :rdv
+    delegate :motif, :organisation, :agents, :users, to: :rdv
 
     def initialize(agent, organisation, attributes)
-      rdv_attributes = attributes.to_h.symbolize_keys
+      rdv_attributes = attributes.to_h.symbolize_keys.except(:service_id)
       rdv_defaults = {
         agent_ids: [agent.id],
         organisation_id: organisation.id,
@@ -21,6 +21,11 @@ module AgentRdvWizard
       }
       @rdv = ::Rdv.new(rdv_defaults.merge(rdv_attributes))
       @rdv.duration_in_min ||= @rdv.motif.default_duration_in_min if @rdv.motif.present?
+      @service_id = attributes.to_h.symbolize_keys[:service_id]
+    end
+
+    def to_query
+      @rdv.to_query.merge(service_id: service_id)
     end
   end
 

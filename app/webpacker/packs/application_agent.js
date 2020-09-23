@@ -20,6 +20,7 @@ import { Layout } from 'components/layout';
 import { Modal } from 'components/modal';
 import { Rightbar } from 'components/rightbar';
 import { PopulateLibelle } from 'components/populate-libelle';
+import { ServiceFilterForMotifsSelects } from 'components/service-filter-for-motifs-selects';
 import 'components/analytic.js';
 import { PlacesInputs } from 'components/places-inputs.js';
 import { RdvWizardStep2 } from 'components/rdv_wizard_step2.js';
@@ -48,6 +49,7 @@ $.fn.select2.defaults.set("language", "fr");
 new Modal();
 new Rightbar();
 new Select2Inputs();
+new ServiceFilterForMotifsSelects();
 
 global.$ = require('jquery');
 
