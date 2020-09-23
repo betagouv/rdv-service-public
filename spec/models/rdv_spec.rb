@@ -16,7 +16,7 @@ describe Rdv, type: :model do
     let(:rdv) { create(:rdv, starts_at: 3.days.from_now) }
 
     it "should be called after update starts_at" do
-      expect(rdv).to receive(:notify_rdv_updated)
+      expect(rdv).to receive(:notify_rdv_date_updated)
       rdv.update!(starts_at: 7.days.from_now)
     end
   end

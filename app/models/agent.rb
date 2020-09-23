@@ -80,4 +80,8 @@ class Agent < ApplicationRecord
     errors.add(:email, "existe déjà dans cette organisation") && return if organisation_ids.include?(organisation.id)
     organisations << organisation
   end
+
+  def user_for_paper_trail
+    "[Agent] #{full_name}"
+  end
 end
