@@ -9,7 +9,7 @@
 
   = f.input :first_name, placeholder: 'Prénom'
   = f.input :last_name, placeholder: 'Nom'
-  = f.association :service, collection: Service.all
+  = f.association :service, collection: Agent::ServicePolicy::AdminScope.new(pundit_user, Service).resolve
 
   = f.input :password, placeholder: 'Votre mot de passe (au moins 6 caractères)'
   .form-text.text-muted.mb-2
