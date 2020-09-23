@@ -5,14 +5,6 @@ describe Notifications::Rdv::RdvCreatedService, type: :service do
   let(:agent1) { build(:agent) }
   let(:agent2) { build(:agent) }
 
-  def create_rdv_skip_notify(**kwargs)
-    rdv = build(:rdv, **kwargs)
-    # HACK: skip callback on single object
-    def rdv.notify_rdv_created; end
-    rdv.save!
-    rdv
-  end
-
   context "starts in more than 2 days" do
     let(:rdv) { create_rdv_skip_notify(starts_at: 3.days.from_now, users: [user1, user2], agents: [agent1, agent2]) }
     # create is necessary for serialization reasons (?)

@@ -38,6 +38,7 @@ RSpec.configure do |config|
   config.include PageSpecHelper
   config.include SigninSpecHelper
   config.include Select2SpecHelper
+  config.include RdvSpecHelper
   config.include ActiveSupport::Testing::TimeHelpers
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Warden::Test::Helpers, type: :feature

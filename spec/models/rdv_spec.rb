@@ -7,17 +7,32 @@ describe Rdv, type: :model do
     let(:rdv) { build(:rdv, starts_at: 3.days.from_now) }
 
     it "should be called after create" do
-      expect(rdv).to receive(:notify_rdv_created)
+      expect(Notifications::Rdv::RdvCreatedService).to receive(:perform_with).with(rdv)
+      expect(Notifications::Rdv::RdvDateUpdatedService).not_to receive(:perform_with)
+      expect(Notifications::Rdv::RdvCancelledService).not_to receive(:perform_with)
       rdv.save!
     end
   end
 
-  describe "#notify_rdv_updated" do
-    let(:rdv) { create(:rdv, starts_at: 3.days.from_now) }
+  describe "#notify_rdv_date_updated" do
+    let!(:rdv) { create(:rdv, starts_at: 3.days.from_now) }
 
     it "should be called after update starts_at" do
-      expect(rdv).to receive(:notify_rdv_date_updated)
+      expect(Notifications::Rdv::RdvCreatedService).not_to receive(:perform_with)
+      expect(Notifications::Rdv::RdvDateUpdatedService).to receive(:perform_with).with(rdv)
+      expect(Notifications::Rdv::RdvCancelledService).not_to receive(:perform_with)
       rdv.update!(starts_at: 7.days.from_now)
+    end
+  end
+
+  describe "#notify_rdv_cancelled" do
+    let!(:rdv) { create(:rdv, status: :unknown, starts_at: 3.days.from_now) }
+
+    it "should be called after update starts_at" do
+      expect(Notifications::Rdv::RdvCreatedService).not_to receive(:perform_with)
+      expect(Notifications::Rdv::RdvDateUpdatedService).not_to receive(:perform_with)
+      expect(Notifications::Rdv::RdvCancelledService).to receive(:perform_with).with(rdv)
+      rdv.update!(status: :excused)
     end
   end
 
