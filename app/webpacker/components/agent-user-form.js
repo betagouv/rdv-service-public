@@ -1,4 +1,4 @@
-import { initSelect2 } from "components/select2"
+import { Select2Inputs } from "components/select2-inputs"
 import 'custom-event-polyfill'
 
 class AgentUserForm {
@@ -37,7 +37,7 @@ class AgentUserForm {
     this.formElt.querySelectorAll("input[data-togglable], select[data-togglable], textarea[data-togglable]").forEach(i =>
       i.disabled = !this.inputShouldBeEnabled(i)
     )
-    initSelect2()
+    new Select2Inputs()
   }
 
   divShouldBeVisible = (divElt) => {
