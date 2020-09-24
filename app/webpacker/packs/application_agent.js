@@ -30,8 +30,8 @@ import { AgentUserForm } from 'components/agent-user-form.js'
 import { RecordVersions } from 'components/record-versions.js'
 import { RecurrenceForm } from 'components/recurrence-form.js'
 import { MergeUsersForm } from 'components/merge-users-form.js'
+import { Select2Inputs } from 'components/select2-inputs';
 import 'components/calendar';
-import 'components/select2';
 import 'components/tooltip';
 import 'components/sentry';
 import 'components/browser-detection';
@@ -42,8 +42,12 @@ import 'stylesheets/application_agent'
 // this is necessary so images are compiled by webpack
 require.context('../images', true)
 
+$.fn.select2.defaults.set("theme", "bootstrap4");
+$.fn.select2.defaults.set("language", "fr");
+
 new Modal();
 new Rightbar();
+new Select2Inputs();
 
 global.$ = require('jquery');
 
@@ -64,9 +68,6 @@ $(document).on('shown.rightbar', '.right-bar', function(e) {
     touchScrollStep: 20
   });
   new PlacesInputs();
-  $( ".select2-input").select2({
-    theme: "bootstrap4"
-  });
   new Datetimepicker();
   $(".tooltip").tooltip("hide");
   new RecurrenceForm();

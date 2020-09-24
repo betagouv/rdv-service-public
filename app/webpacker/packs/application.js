@@ -13,15 +13,15 @@ import 'components/browser-detection';
 import 'select2/dist/js/select2.min.js';
 import 'select2/dist/js/i18n/fr.js';
 import 'jquery-mask-plugin';
-import 'components/select2';
+import { Select2Inputs } from 'components/select2-inputs';
 import 'components/sentry';
-import 'components/search-form';
 import 'bootstrap';
 
 import 'stylesheets/application';
 import 'stylesheets/print';
 
 new Modal();
+new Select2Inputs();
 
 $(document).on('turbolinks:load', function() {
   $('input[type="tel"]').mask('00 00 00 00 00')
