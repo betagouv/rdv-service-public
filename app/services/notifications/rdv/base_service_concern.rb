@@ -26,4 +26,16 @@ module Notifications::Rdv::BaseServiceConcern
   def users_to_notify
     @rdv.users.map(&:user_to_notify).uniq
   end
+
+  protected
+
+  def change_triggered_by?(user_or_agent)
+    change_triggered_by_str == user_or_agent.name_for_paper_trail
+  end
+
+  def change_triggered_by_str
+    # TODO: this is quite hacky as it relies on the last version being
+    # the one that triggered the notification
+    @rdv.versions.last.whodunnit
+  end
 end

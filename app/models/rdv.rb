@@ -1,5 +1,6 @@
 class Rdv < ApplicationRecord
   include WebhookDeliverable
+  include Rdv::NotifiableConcern
 
   has_paper_trail(
     meta: { virtual_attributes: :virtual_attributes_for_paper_trail }
@@ -25,6 +26,7 @@ class Rdv < ApplicationRecord
   validates :lieu, presence: true, if: :public_office?
 
   scope :not_cancelled, -> { where(cancelled_at: nil) }
+  scope :cancelled, -> { where.not(cancelled_at: nil) }
   scope :past, -> { where("starts_at < ?", Time.zone.now) }
   scope :future, -> { where("starts_at > ?", Time.zone.now) }
   scope :tomorrow, -> { where(starts_at: DateTime.tomorrow...DateTime.tomorrow + 1.day) }
@@ -44,10 +46,7 @@ class Rdv < ApplicationRecord
   scope :with_user_in, ->(users) { joins(:rdvs_users).where(rdvs_users: { user_id: users.pluck(:id) }).distinct }
 
   after_commit :reload_uuid, on: :create
-
-  after_create :notify_rdv_created
   after_save :associate_users_with_organisation
-  after_update :notify_rdv_updated, if: -> { saved_change_to_starts_at? }
 
   def ends_at
     starts_at + duration_in_min.minutes
@@ -106,14 +105,6 @@ class Rdv < ApplicationRecord
 
   def creneaux_available(date_range)
     lieu.present? ? CreneauxBuilderService.perform_with(motif.name, lieu, date_range) : []
-  end
-
-  def notify_rdv_created
-    Notifications::Rdv::RdvCreatedService.perform_with(self)
-  end
-
-  def notify_rdv_updated
-    Notifications::Rdv::RdvUpdatedService.perform_with(self)
   end
 
   def address
