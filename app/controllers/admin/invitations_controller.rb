@@ -19,6 +19,10 @@ class Admin::InvitationsController < Devise::InvitationsController
 
   protected
 
+  def pundit_user
+    AgentContext.new(current_agent)
+  end
+
   def organisation_id
     devise_parameter_sanitizer.sanitize(:invite)[:organisation_id]
   end
