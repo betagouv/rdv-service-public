@@ -13,7 +13,7 @@ class AgentAuthController < ApplicationController
   private
 
   def user_for_paper_trail
-    current_agent.user_for_paper_trail
+    current_agent.name_for_paper_trail
   end
 
   def pundit_user

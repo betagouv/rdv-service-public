@@ -132,7 +132,7 @@ class User < ApplicationRecord
     email&.split("@")&.last&.downcase
   end
 
-  def user_for_paper_trail
+  def name_for_paper_trail
     "[User] #{full_name}"
   end
 

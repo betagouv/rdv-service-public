@@ -81,7 +81,7 @@ class Agent < ApplicationRecord
     organisations << organisation
   end
 
-  def user_for_paper_trail
+  def name_for_paper_trail
     "[Agent] #{full_name}"
   end
 end

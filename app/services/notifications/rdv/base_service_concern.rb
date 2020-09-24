@@ -30,7 +30,7 @@ module Notifications::Rdv::BaseServiceConcern
   protected
 
   def change_triggered_by?(user_or_agent)
-    change_triggered_by_str == user_or_agent.user_for_paper_trail
+    change_triggered_by_str == user_or_agent.name_for_paper_trail
   end
 
   def change_triggered_by_str
