@@ -23,7 +23,7 @@
           label Usagers
           .js-users-spinner.spinner-border.d-none &nbsp;
 
-        = simple_form_for(@rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation, step: 2)) do |f|
+        = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation, step: 2)) do |f|
           - @rdv.users.each do |user|
             / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
             = f.hidden_field "user_ids][", value: user.id
@@ -52,11 +52,12 @@
               | L'usager n'existe pas ?&nbsp;
               = link_to 'Créer un usager', new_admin_organisation_user_path(current_organisation, modal: true), data: { modal: true }
 
-          .mt-3= f.input :context, input_html: { rows: 4 }
+          .mt-3= f.input :context, as: :text, label: t("activerecord.attributes.rdv.context"), input_html: { rows: 4 }
 
           = f.input_field :motif_id, as: :hidden
           = f.input_field :starts_at, as: :hidden
           = f.input_field :lieu_id, as: :hidden
+          = f.input_field :service_id, as: :hidden
 
           - @rdv.agents.each do |p|
             / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
