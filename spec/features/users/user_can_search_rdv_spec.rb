@@ -65,7 +65,7 @@ describe "User can search for rdvs" do
       # Password reset page after confirmation
       expect(page).to have_content("Votre compte a été validé")
       expect(page).to have_content("Définir mon mot de passe")
-      fill_in(:user_password, with: "12345678")
+      fill_in(:password, with: "12345678")
       click_button("Enregistrer")
 
       # Step 4
