@@ -1,0 +1,15 @@
+- content_for :title
+  h1 Mot de passe oublié ?
+
+.container.mt-3
+  .card
+    .card-body
+      = form_for resource, as: resource_name, url: password_path(resource_name) do |f|
+        .text-center.w-75.m-auto
+        = devise_error_messages!
+        .form-group
+          = f.email_field :email, autofocus: true, required: true, placeholder: "nom.prenom@email.com", class: 'form-control'
+        .form-group.mb-0.text-center
+          = f.submit 'Envoyer', class: 'btn btn btn-primary'
+
+      = render "devise/shared/links"

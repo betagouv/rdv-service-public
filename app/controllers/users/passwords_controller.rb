@@ -1,4 +1,6 @@
 class Users::PasswordsController < Devise::PasswordsController
+  layout "user_registration"
+
   def new
     self.resource = resource_class.new(params.permit(:email))
   end

@@ -1,4 +1,6 @@
 class Users::SessionsController < Devise::SessionsController
+  layout "user_registration"
+
   before_action :exclude_signed_in_agents
 
   def create
