@@ -5,4 +5,11 @@
   .card
     .card-body
       = render "common/session_form", resource: resource, resource_name: resource_name
-      = render "devise/shared/links"
+
+      hr
+      .text-center
+        p.text-muted
+          | Vous n'avez pas de compte ?&nbsp;
+          = link_to new_registration_path(resource_name) do
+            b Je m'inscris
+

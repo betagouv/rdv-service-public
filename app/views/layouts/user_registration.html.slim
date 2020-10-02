@@ -13,9 +13,6 @@ html lang="fr"
           .row
             .col-md-12.d-flex.justify-content-between.align-items-center
               .my-4= yield :title
-              - if content_for :breadcrumb
-                div
-                  = yield :breadcrumb
       = yield :header
     .container
       = yield

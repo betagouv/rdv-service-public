@@ -12,4 +12,15 @@
         .form-group.mb-0.text-center
           = f.submit 'Envoyer', class: 'btn btn btn-primary'
 
-      = render "devise/shared/links"
+      hr
+      .text-center
+        p.text-muted
+          | Vous avez un compte ?&nbsp;
+          = link_to new_session_path(resource_name) do
+            b Se connecter
+
+        p.text-muted
+          | Vous n'avez pas de compte ?&nbsp;
+          = link_to new_registration_path(resource_name) do
+            b Je m'inscris
+

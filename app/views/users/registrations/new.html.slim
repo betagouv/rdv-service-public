@@ -23,4 +23,10 @@
         .form-group.mb-0.text-center
           = f.button :submit, 'Je m\'inscris'
 
-    = render "devise/shared/links"
+      hr
+      .text-center
+        p.text-muted
+          | Vous avez un compte ?&nbsp;
+          = link_to new_session_path(resource_name) do
+            b Se connecter
+
