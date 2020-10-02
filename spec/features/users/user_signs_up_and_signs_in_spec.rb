@@ -57,9 +57,11 @@ feature "User signs up and signs in" do
 
       scenario ".sign_in as user and be signed in as agent" do
         click_link "Se connecter"
-        fill_in :user_email, with: agent.email
-        fill_in :password, with: agent.password
-        click_on "Se connecter"
+        within("form") do
+          fill_in :user_email, with: agent.email
+          fill_in :password, with: agent.password
+          click_on "Se connecter"
+        end
         expect(current_path).to eq(admin_organisation_setup_checklist_path(agent.organisations.first))
       end
     end

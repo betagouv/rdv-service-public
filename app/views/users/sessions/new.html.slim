@@ -1,8 +1,15 @@
-.text-center.w-75.m-auto
-  h4.text-dark-50.text-center.mt-0.font-weight-bold Se connecter
-  p.text-muted.mb-4 Entrez votre email et votre mot de passe.
+- content_for :title do
+  h1 Connexion
 
-= render "common/session_form", resource: resource, resource_name: resource_name
+.container.mt-3
+  .card
+    .card-body
+      = render "common/session_form", resource: resource, resource_name: resource_name
 
-- content_for :footer do
-  = render "devise/shared/links"
+      hr
+      .text-center
+        p.text-muted
+          | Vous n'avez pas de compte ?&nbsp;
+          = link_to new_registration_path(resource_name) do
+            b Je m'inscris
+

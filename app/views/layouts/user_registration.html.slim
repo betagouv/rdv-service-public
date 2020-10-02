@@ -1,0 +1,21 @@
+doctype html
+html lang="fr"
+  head
+    = render 'common/head'
+  body class="user"
+    = render 'layouts/degraded_service', message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
+    .bg-primary
+      = render 'common/header'
+
+      .container
+        = render 'layouts/flash'
+        - if content_for :title
+          .row
+            .col-md-12.d-flex.justify-content-between.align-items-center
+              .my-4= yield :title
+      = yield :header
+    .container
+      = yield
+
+    #modal-holder
+    = render 'common/footer'
