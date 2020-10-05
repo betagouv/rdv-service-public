@@ -1,0 +1,59 @@
+- content_for(:menu_item) { 'menu-departement-sectors' }
+
+- content_for :title do
+  | Secteurs du #{current_departement}
+
+- content_for :breadcrumb do
+  = link_to new_admin_departement_sector_path(current_departement), class: "btn btn-outline-white align-bottom" do
+    i.fa.fa-plus>
+    span> Nouveau secteur
+
+.row.justify-content-center
+  .col-md-10
+    .card
+      .p-2.d-grid.grid-three-columns.grid-first-column-empty.grid-align-center
+        .text-center= page_entries_info @sectors
+        div.text-right
+          = link_to admin_departement_sectors_path(current_departement, view: "map"), class: "btn btn-light" do
+            span> Voir la carte
+            i.fa.fa-map
+
+      table.table
+        thead
+          tr
+            th Nom
+            th Identifiant
+            th Zones
+            th Attributions
+            th Actions
+        tbody
+          - @sectors.each do |sector|
+            tr
+              td= sector.name
+              td= human_id(sector)
+              td= "#{sector.zones.count} communes"
+              td
+                - if sector.attributions.any?
+                  ul
+                    - sector.attributions.each do |attribution|
+                      li= "Organisation #{attribution.organisation.name}"
+                - else
+                  | Aucune attribution
+              td
+                .d-flex.justify-content-between
+                  - if policy([:agent, sector]).show?
+                    div= link_to admin_departement_sector_path(current_departement, sector), title: "Voir" do
+                      i.fa.fa-eye
+                  - if policy([:agent, sector]).edit?
+                    div= link_to edit_admin_departement_sector_path(current_departement, sector), title: "Modifier" do
+                      i.fa.fa-edit
+                  - if policy([:agent, sector]).destroy?
+                    div= link_to admin_departement_sector_path(current_departement, sector), method: :delete, title: "Supprimer" do
+                      i.fa.fa-trash-alt
+      .pb-3.pr-3.pl-3
+        div= paginate @sectors
+        .text-center
+          .mb-2= page_entries_info @sectors
+          .mb-2= link_to new_admin_departement_sector_path(current_departement), class: "btn btn-primary" do
+            i.fa.fa-plus>
+            span> Créer un nouveau secteur

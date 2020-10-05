@@ -1,13 +1,13 @@
 require "rails_helper"
 
 RSpec.describe Zone, type: :model do
-  let(:organisation) { build(:organisation, departement: "75") }
+  let(:sector) { build(:sector, departement: "75") }
 
   describe "uniqueness" do
     context "city zone" do
       let(:zone_attributes) do
         {
-          organisation: organisation,
+          sector: sector,
           level: "city",
           city_name: "Paris XXe",
           city_code: "75120"
@@ -20,10 +20,10 @@ RSpec.describe Zone, type: :model do
         expect(zone.errors).to be_empty
       end
 
-      it "should prevent creating a zone with existing postcode" do
+      it "should prevent creating a zone with existing postcode in the same sector" do
         Zone.create!(zone_attributes)
         duplicate_zone = Zone.new(
-          organisation: build(:organisation),
+          sector: sector,
           level: "city",
           city_name: "Paris 20e",
           city_code: "75120"
@@ -31,13 +31,25 @@ RSpec.describe Zone, type: :model do
         expect(duplicate_zone.valid?).to eq false
         expect(duplicate_zone.errors.keys).to include(:city_code)
       end
+
+      it "should allow creating a zone with existing postcode in a different sector" do
+        Zone.create!(zone_attributes)
+        duplicate_zone = Zone.new(
+          sector: create(:sector, departement: "75"),
+          level: "city",
+          city_name: "Paris 20e",
+          city_code: "75120"
+        )
+        expect(duplicate_zone.errors.keys).to be_empty
+        expect(duplicate_zone.valid?).to eq true
+      end
     end
   end
 
   describe "incoherent departement and city code" do
     it "should be invalid" do
       zone = Zone.new(
-        organisation: build(:organisation, departement: "75"),
+        sector: sector,
         level: "city",
         city_name: "Paris XXe",
         city_code: "62120"

@@ -1,0 +1,9 @@
+fr:
+  activerecord:
+    models:
+      sector_attribution: Attribution
+    attributes:
+      sector_attribution:
+        level: Niveau
+        organisation_id: Organisation
+        sector_id: Secteur

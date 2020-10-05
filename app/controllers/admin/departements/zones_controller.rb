@@ -1,26 +1,16 @@
 class Admin::Departements::ZonesController < AgentDepartementAuthController
-  def index
-    @search_form = ZoneSearchForm.new(search_params)
-    @zones = policy_scope(Zone)
-      .includes(:organisation)
-      .where(organisations: { departement: current_departement.number })
-      .order(:organisation_id)
-    @zones = @search_form.filter_zones(@zones)
-    @zones = @zones.page(params[:page]) unless view_params[:view] == "map"
-    authorize(@zones)
-    return render :map if view_params[:view] == "map"
-  end
+  before_action :set_sector
 
   def new
-    @zone = Zone.new(organisation: current_organisation)
+    @zone = Zone.new(sector: @sector)
     authorize(@zone)
   end
 
   def create
-    @zone = Zone.new(**zone_params)
+    @zone = Zone.new(**zone_params, sector: @sector)
     authorize(@zone)
     if @zone.save
-      redirect_to admin_departement_zones_path(current_departement), flash: { success: "Zone créée" }
+      redirect_to admin_departement_sector_path(current_departement, @sector), flash: { success: "Zone créée" }
     else
       render :new
     end
@@ -36,7 +26,7 @@ class Admin::Departements::ZonesController < AgentDepartementAuthController
     @zone.assign_attributes(**zone_params)
     authorize(@zone)
     if @zone.save
-      redirect_to admin_departement_zones_path(current_departement), flash: { success: "Zone mise à jour" }
+      redirect_to admin_departement_sector_path(current_departement, @sector), flash: { success: "Zone mise à jour" }
     else
       render :edit
     end
@@ -46,16 +36,14 @@ class Admin::Departements::ZonesController < AgentDepartementAuthController
     zone = Zone.find(params[:id])
     authorize(zone)
     if zone.destroy
-      redirect_to admin_departement_zones_path(current_departement), flash: { success: "Zone supprimée" }
+      redirect_to admin_departement_sector_path(current_departement, @sector), flash: { success: "Zone supprimée" }
     else
-      redirect_to admin_departement_zones_path(current_departement), flash: { error: "Erreur lors de la suppression" }
+      redirect_to admin_departement_sector_path(current_departement, @sector), flash: { error: "Erreur lors de la suppression" }
     end
   end
 
   def destroy_multiple
-    search_form = ZoneSearchForm.new(search_params)
-    zones = policy_scope(Zone)
-    zones = search_form.filter_zones(zones)
+    zones = @sector.zones
     zones = zones.filter { authorize(_1, :destroy?) }
     count = zones.count
     if zones.map(&:destroy).all?
@@ -63,20 +51,16 @@ class Admin::Departements::ZonesController < AgentDepartementAuthController
     else
       flash[:danger] = "Erreur lors de la suppression des #{count} zones"
     end
-    redirect_to admin_departement_zones_path(current_departement, **search_params)
+    redirect_to admin_departement_sector_path(current_departement, @sector)
   end
 
   private
 
+  def set_sector
+    @sector = policy_scope(Sector).find(params[:sector_id])
+  end
+
   def zone_params
-    params.require(:zone).permit(:organisation_id, :level, :city_name, :city_code)
-  end
-
-  def search_params
-    params.permit(:level, :city, :orga_id)
-  end
-
-  def view_params
-    params.permit(:view)
+    params.require(:zone).permit(:level, :city_name, :city_code)
   end
 end

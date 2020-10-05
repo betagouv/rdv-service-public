@@ -1,8 +1,12 @@
-class Agent::ZonePolicy < DefaultAgentPolicy
-  # agents can see all departement zones but only edit zones from orgas they
+class Agent::SectorPolicy < DefaultAgentPolicy
+  # agents can see all departement sectors but only edit zones from orgas they
   # belong to
 
   def index?
+    @context.agent.admin?
+  end
+
+  def show?
     @context.agent.admin?
   end
 
@@ -29,13 +33,13 @@ class Agent::ZonePolicy < DefaultAgentPolicy
   private
 
   def orga_admin?
-    @context.agent.admin? && @context.agent.organisations.pluck(:departement).include?(@record.sector.departement)
+    @context.agent.admin? && @context.agent.organisations.pluck(:departement).include?(@record.departement)
   end
 
   class Scope < Scope
     def resolve
       departements = @context.agent.organisations.pluck(:departement).uniq
-      scope.joins(:sectors).where(sectors: { departement: departements })
+      scope.where(departement: departements)
     end
   end
 end

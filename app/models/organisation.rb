@@ -7,7 +7,9 @@ class Organisation < ApplicationRecord
   has_many :absences, dependent: :destroy
   has_many :rdvs, dependent: :destroy
   has_many :webhook_endpoints, dependent: :destroy
-  has_many :zones
+  has_many :sector_attributions, dependent: :destroy
+  has_many :sectors, through: :sector_attributions
+  has_many :zones, through: :zones
   has_and_belongs_to_many :agents, -> { distinct }
 
   has_many :user_profiles
@@ -29,14 +31,6 @@ class Organisation < ApplicationRecord
   after_create :notify_admin_organisation_created
 
   accepts_nested_attributes_for :agents
-
-  def self.in_zone_or_departement(zone, departement)
-    if sectorisation_enabled?(departement)
-      zone.present? ? [zone.organisation] : []
-    else
-      Organisation.where(departement: departement)
-    end
-  end
 
   def notify_admin_organisation_created
     return unless agents.present?
