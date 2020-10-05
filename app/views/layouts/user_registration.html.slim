@@ -6,16 +6,15 @@ html lang="fr"
     = render 'layouts/degraded_service', message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
     .bg-primary
       = render 'common/header'
-
-      .container
-        = render 'layouts/flash'
-        - if content_for :title
-          .row
-            .col-md-12.d-flex.justify-content-between.align-items-center
-              .my-4= yield :title
       = yield :header
     .container
-      = yield
+      .row
+        .col-md-12
+          = render 'layouts/flash'
+        .col-md-6.m-auto.pt-3
+          - if content_for :title
+            h1.mb-3= yield :title
+          = yield
 
     #modal-holder
     = render 'common/footer'
