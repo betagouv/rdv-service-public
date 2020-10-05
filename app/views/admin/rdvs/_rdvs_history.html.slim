@@ -4,7 +4,7 @@
       .mt-1
         | Derniers rendez-vous
       - if user.rdvs.count > 0
-        = link_to I18n.t(".see_all_rdv", count: user.rdvs.count, name: user.full_name), admin_organisation_user_rdvs_path(current_organisation, user), class: "btn btn-outline-primary small"
+        = link_to "Voir tous les rendez-vous de #{user.full_name}", admin_organisation_user_rdvs_path(current_organisation, user), class: "btn btn-outline-primary small"
   .card-body
     - if user.previous_rdvs(current_organisation).empty?
       .text-muted aucun rendez-vous
