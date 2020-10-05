@@ -1,5 +1,5 @@
 class Users::RegistrationsController < Devise::RegistrationsController
-  layout "user_registration"
+  layout :user_devise_layout
 
   def create
     return invite_and_redirect if User.find_by(email: sign_up_params[:email], confirmed_at: nil)
@@ -27,7 +27,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def user_devise_layout
-    user_signed_in? ? "application" : "registration"
+    user_signed_in? ? "application" : "user_registration"
   end
 
   def after_inactive_sign_up_path_for(resource)

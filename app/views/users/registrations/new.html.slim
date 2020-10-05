@@ -1,32 +1,28 @@
-- content_for :title
-  h1 Inscription
+- content_for :title, "Inscription"
 
+.card
+  .card-body
+    = simple_form_for resource, as: :user, url: registration_path(resource_name) do |f|
+      = devise_error_messages!
+      - if resource.errors[:email]&.include?(I18n.t('errors.messages.taken'))
+        .mb-3= link_to "Mot de passe oublié ?", new_password_path(resource_name, "email": resource.email)
+      .form-row
+        .col-6= f.input :first_name, label: t('activerecord.attributes.user.first_name'), required: true
+        .col-6= f.input :last_name, label: t('activerecord.attributes.user.last_name'), required: true
+      = f.input :email, as: :email, placeholder: 'nom.prenom@email.com', required: true, label: t('activerecord.attributes.user.email')
+      = f.input :phone_number, as: :tel, placeholder: '061010101010', hint: 'Vous recevrez les rappels et les informations du RDV sur ce numéro.', label: t('activerecord.attributes.user.phone_number')
 
-.container.mt-3
-  .card
-    .card-body
-      = simple_form_for resource, as: :user, url: registration_path(resource_name) do |f|
-        = devise_error_messages!
-        - if resource.errors[:email]&.include?(I18n.t('errors.messages.taken'))
-          .mb-3= link_to "Mot de passe oublié ?", new_password_path(resource_name, "email": resource.email)
-        .form-row
-          .col-6= f.input :first_name, label: t('activerecord.attributes.user.first_name'), required: true
-          .col-6= f.input :last_name, label: t('activerecord.attributes.user.last_name'), required: true
-        = f.input :email, as: :email, placeholder: 'nom.prenom@email.com', required: true, label: t('activerecord.attributes.user.email')
-        = f.input :phone_number, as: :tel, placeholder: '061010101010', hint: 'Vous recevrez les rappels et les informations du RDV sur ce numéro.', label: t('activerecord.attributes.user.phone_number')
+      .form-group
+        small
+        span> En vous inscrivant, vous acceptez les
+        = link_to 'conditions générales d\'utilisation', cgv_path
 
-        .form-group
-          small
-          | En vous inscrivant, vous acceptez les
-          = link_to 'conditions générales d\'utilisation', cgv_path
+      .form-group.mb-0.text-center
+        = f.button :submit, 'Je m\'inscris'
 
-        .form-group.mb-0.text-center
-          = f.button :submit, 'Je m\'inscris'
-
-      hr
-      .text-center
-        p.text-muted
-          | Vous avez un compte ?&nbsp;
-          = link_to new_session_path(resource_name) do
-            b Se connecter
-
+    hr
+    .text-center
+      p.text-muted
+        | Vous avez un compte ?&nbsp;
+        = link_to new_session_path(resource_name) do
+          b Se connecter

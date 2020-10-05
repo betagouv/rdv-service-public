@@ -1,13 +1,12 @@
 .row.justify-content-md-center
   .col-md-6
+    h1.text-dark.my-3 Votre compte
     .card.mt-3
       .card-body
-        h4.card-title.mb-4  Votre compte
-
         = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), remote: request.xhr?, html: { method: :put, data: {rightbar: true} }) do |f|
           = devise_error_messages!
           = f.input :email, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), placeholder: 'nom.prenom@email.com'
-          - if devise_mapping.confirmable? && resource.pending_reconfirmation? 
+          - if devise_mapping.confirmable? && resource.pending_reconfirmation?
             .form-text.text-muted.mb-2
               | En attente de confirmation pour #{resource.unconfirmed_email}
           = f.input :password, placeholder: 'Votre mot de passe (au moins 6 caractères)'
@@ -19,8 +18,5 @@
           .text-right= f.submit "Modifier", class: 'btn btn-primary'
           .mt-5.text-center
             hr
-            p.font-13 Vous souhaitez supprimer votre compte ? 
+            p.font-13 Vous souhaitez supprimer votre compte ?
             = link_to 'Supprimer', user_registration_path, data:{confirm: "Êtes-vous sûr de vouloir supprimer votre compte ?"}, method: :delete, class: 'btn btn-outline-danger btn-sm'
-
-
-
