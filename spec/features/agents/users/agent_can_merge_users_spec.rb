@@ -28,7 +28,7 @@ describe "Agent can delete user" do
     login_as(agent, scope: :agent)
     visit authenticated_agent_root_path
     click_link "Usagers"
-    click_link "Fusionner des fiches"
+    click_link "Fusionner deux usagers"
     find("#select2-user1_id-container").click
     find(".select2-results__option") { _1.text == "Aalyah SWAN" }.click
     find("#select2-user2_id-container").click
