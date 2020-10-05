@@ -1,0 +1,126 @@
+- content_for(:menu_item) { 'menu-departement-sectors' }
+
+-content_for :html_head_prepend do
+  / mapbox is hard to use with webpack because of
+  / https://github.com/mapbox/mapbox-gl-js/issues/1649
+  <script src='https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css' rel='stylesheet' />
+
+- content_for :title do
+  | Secteur #{@sector.name}
+
+- content_for :breadcrumb do
+  ol.breadcrumb.m-0
+    li.breadcrumb-item
+      = link_to "Secteurs", admin_departement_sectors_path(current_departement)
+    li.breadcrumb-item.active
+      = truncate(@sector.name, length: 20)
+
+.row.justify-content-center
+  .col-md-7
+    .card
+      .p-2.d-grid.grid-three-columns.grid-first-column-empty.grid-align-center
+        .text-center= page_entries_info @zones
+        div.text-right
+          = link_to new_admin_departement_sector_zone_path(current_departement, @sector), class: "btn btn-primary" do
+            i.fa.fa-plus>
+            span> Ajouter une zone
+      table.table
+        thead
+          tr
+            th Niveau
+            th Commune
+            th Code Commune
+            th Actions
+        tbody
+          - @zones.each do |zone|
+            tr
+              td= Zone.human_enum_name(:level, zone.level)
+              td= zone.city_name
+              td= zone.city_code
+              td
+                .d-flex
+                  - if policy([:agent, zone]).edit?
+                    div.mr-3= link_to edit_admin_departement_sector_zone_path(current_departement, @sector, zone), title: "Modifier" do
+                      i.fa.fa-edit
+                  - if policy([:agent, zone]).destroy?
+                    div= link_to admin_departement_sector_zone_path(current_departement, @sector, zone), method: :delete, title: "Supprimer" do
+                      i.fa.fa-trash-alt
+      div= paginate @zones
+      .mb-2.text-center
+        .mb-2= page_entries_info @zones
+        - if @zones.any?
+          div= link_to( \
+            "🗑 Supprimer les #{@zones.total_count} zones de ce secteur …", \
+            admin_departement_sector_zones_path(current_departement, @sector), \
+            method: :delete, \
+            data: { confirm: "Êtes-vous sûr de vouloir supprimer ces #{@zones.total_count} zones ?" }, \
+            class: 'btn btn-danger' \
+          )
+  .col-md-5
+    .card
+      .card-body.d-flex.justify-content-between
+        ul.list-unstyled
+          li
+            span> Nom:
+            b= @sector.name
+          li
+            span> Identifiant:
+            b= human_id(@sector)
+        - if policy([:agent, @sector]).edit?
+          div= link_to edit_admin_departement_sector_path(current_departement, @sector), class: "btn btn-primary w-100" do
+            i.fa.fa-edit>
+            | Modifier
+    .card
+      .card-header
+        .card-title
+          h5 Organisations attribuées
+      .card-body
+        - if @sector.attributions.any?
+          .mb-3
+            - @sector.attributions.each do |attribution|
+              .d-flex.justify-content-between.mb-1
+                div>= "Organisation #{attribution.organisation.name}"
+                div.ml-2>= link_to "Retirer", admin_departement_sector_attribution_path(current_departement, @sector, attribution), method: :delete
+        - else
+          .alert.alert-warning.d-flex.align-items-center
+            div.mr-2.h4 ⚠️
+            div
+              .mb-1 Aucune organisation attribuée
+              div Ce secteur ne renvoie pas de disponibilités
+        = link_to ".new-sector-organisation-form-collapse", \
+          class: "btn btn-primary w-100 new-sector-organisation-form-collapse collapse show", \
+          data: { toggle: "collapse" } do
+          i.fa.fa-plus>
+          | Ajouter une organisation
+        .new-sector-organisation-form-collapse.collapse
+          = simple_form_for \
+            @new_sector_attribution, \
+            url: admin_departement_sector_attributions_path(current_departement, @sector) \
+          do |f|
+            = f.input :level, \
+              collection: [SectorAttribution::LEVEL_ORGANISATION], \
+              include_blank: false, \
+              input_html: { class: "select2-input" }
+            = f.input :organisation_id, \
+              collection: policy_scope(Organisation).where.not(id: @sector.attributions.pluck(:organisation_id)).where(departement: current_departement.number), \
+              include_blank: true, \
+              required: true, \
+              input_html: { class: "select2-input" }
+            = f.submit value: "Ajouter", class: "btn btn-primary w-100"
+      .card-footer
+        .text-muted Lorsqu'un usager cherche une adresse couverte par ce secteur, les disponibilités des Organisations attribuées lui seront proposées
+
+    .card
+      #zones-map.small[
+        data-center-query="#{@sector&.zones&.first&.city_name}, #{current_departement}"
+      ]
+      #zones-map-small-legend
+        .hovered-city-container
+          #js-hovered-city>
+        ul.list-unstyled
+          li.mb-1[
+            data-color=sector_zone_color(@sector)
+            data-city-codes-json={colors: @sector.zones.pluck(:city_code)}.to_json
+            class='js-legend-organisation'
+          ]
