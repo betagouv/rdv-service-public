@@ -8,7 +8,6 @@ describe "Agent can update user" do
   before do
     login_as(agent, scope: :agent)
     visit authenticated_agent_root_path
-    click_link "Vos usagers"
     click_link "Usagers"
     expect_page_title("Vos usagers")
     click_link "Jean LEGENDE"
