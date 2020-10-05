@@ -55,19 +55,13 @@
                 id: "menu-absences"
 
         li.side-nav-item
-          = link_to '#', class: 'side-nav-link' do
-            i.fa.fa-user
-            span Vos usagers
-            i.fa.fa-angle-right.menu-arrow.mt-1
-          ul.side-nav-second-level aria-expanded="false"
-            li
-              = link_to "Usagers", \
-                admin_organisation_users_path(current_organisation), \
-                id: "menu-users"
-            li
-              = link_to "Fusionner", \
-                new_admin_organisation_merge_users_path(current_organisation), \
-                id: "menu-merge-users"
+          = link_to( \
+              admin_organisation_users_path(current_organisation), \
+              class: 'side-nav-link', \
+              id: "menu-users" \
+              ) do
+                i.fa.fa-user
+                span Usagers
         li.side-nav-item
           = link_to( \
             admin_organisation_agent_stats_path(current_organisation, current_agent), \

@@ -6,7 +6,6 @@ describe "can see users' RDV" do
   before do
     login_as(agent, scope: :agent)
     visit authenticated_agent_root_path
-    click_link "Vos usagers"
     click_link "Usagers"
   end
 
