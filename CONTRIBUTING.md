@@ -7,23 +7,32 @@
 - Limiter le stock des "En cours" pour éviter d'avoir trop de sujets en tête en même temps
 - Chaque développeur·se doit pouvoir être autonome dans le processus de déploiement
 
-## Dévelopement
+## Installation
 
-### Processus de dev, qualité etc
+Installer :
+- Ruby 2.7.1
+- postgresql
+- Yarn : voir https://yarnpkg.com/en/docs/install
+- Foreman : voir https://github.com/ddollar/foreman
 
-- Lint via rubocop. automatisé sur la CI
-- Obligation de review des PRs pour merger.
-- Découpage des grosses PRs en plusieurs petites. Utilisation du feature flipper pour cacher la feature sur les envs non-dev
+```bash
+sudo -u postgres psql -c "create role MON_LOGIN_UNIX with createdb login superuser;"
+```
 
-### Processus de développement
+Afin d'initialiser l'environnement de développement, exécutez la commande suivante :
 
-- Choisir une tâche dans la colonne `Backlog produit`, la déplacer dans `Développement en cours`, se l'assigner
-- Une fois le code développé, créer une PR, attendre la review, ajouter le tag `à examiner` sur trello.
-- Une fois la PR approuvée :
-- Merger la PR. Cela déclenche le déploiement en démo et en production
-- Une fois le déploiement terminé avec succès, déplacer la tâche vers `En production et en démo`.
+```bash
+bin/setup
+```
 
-### Vues
+Vous pouvez aussi vous créer un compte SuperAdmin dans une console Rails :
+
+```
+SuperAdmin.create!(email: 'email_associated_to_your_github_account@prov.com')
+```
+
+
+## Vues
 
 - préférer le passage explicites de variables locales à l'utilisation de variables d'instances venant des controlleurs dans les partials pour permettre plus de généricité
 
