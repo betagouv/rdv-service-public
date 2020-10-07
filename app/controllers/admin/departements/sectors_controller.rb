@@ -26,7 +26,6 @@ class Admin::Departements::SectorsController < AgentDepartementAuthController
 
   def show
     @sector = Sector.find(params[:id])
-    @new_sector_attribution = SectorAttribution.new(sector: @sector)
     authorize(@sector)
     @zones = @sector.zones.page(params[:page])
   end

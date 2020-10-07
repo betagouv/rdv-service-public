@@ -1,4 +1,8 @@
 class Agent::SectorAttributionPolicy < DefaultAgentPolicy
+  def new?
+    orga_admin?
+  end
+
   def create?
     orga_admin?
   end
