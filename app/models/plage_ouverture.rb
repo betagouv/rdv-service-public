@@ -34,21 +34,14 @@ class PlageOuverture < ApplicationRecord
     time_shift.duration / 60
   end
 
-  def self.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range, agent_ids = nil)
-    motifs_ids = Motif.where(name: motif_name, organisation_id: lieu.organisation_id)
-    results = PlageOuverture
+  def self.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range)
+    PlageOuverture
       .includes(:motifs_plageouvertures)
       .where(lieu: lieu)
       .where("plage_ouvertures.first_day <= ?", inclusive_date_range.end)
       .joins(:motifs)
-      .where(motifs: { id: motifs_ids })
+      .where(motifs: { name: motif_name, organisation_id: lieu.organisation_id })
       .includes(:motifs, agent: :absences)
-
-    if agent_ids.present?
-      results = results.where(agent_id: agent_ids)
-    end
-
-    results.uniq
   end
 
   def expired?
