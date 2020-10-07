@@ -18,7 +18,7 @@ class WebhookJob < ApplicationJob
     )
 
     request.on_complete do |response|
-      raise OutgoingWebhookError, "Webhook failed with status code #{response.code} and body #{response.body[0...1000]}" unless response.success?
+      raise OutgoingWebhookError, "Webhook failed with status code #{response.code} and body #{response.body.force_encoding('UTF-8')[0...1000]}" unless response.success?
     end
 
     request.run
