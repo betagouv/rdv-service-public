@@ -74,39 +74,45 @@
     .card
       .card-header
         .card-title
-          h5 Organisations attribuées
+          h5 Organisations & Agents attribués
       .card-body
         - if @sector.attributions.any?
-          .mb-3
-            - @sector.attributions.each do |attribution|
-              .d-flex.justify-content-between.mb-1
-                div>= "Organisation #{attribution.organisation.name}"
-                div.ml-2>= link_to "Retirer", admin_departement_sector_attribution_path(current_departement, @sector, attribution), method: :delete
+          ul.mb-3.pl-2
+            - @sector.attributions.to_a.group_by(&:organisation).each do |organisation, attributions|
+              - if attributions.count == 1 && attributions.first.level_organisation?
+                li
+                  .d-flex.justify-content-between.mb-2
+                    div= "Organisation entière #{organisation.name}"
+                    div.ml-2>= link_to "Retirer", admin_departement_sector_attribution_path(current_departement, @sector, attributions.first), method: :delete
+              - elsif attributions.all?(&:level_agent?)
+                li.mb-2
+                  div.mb-1= "Agents dans l'organisation #{organisation.name} :"
+                  ul.pl-2
+                    - attributions.each do |attribution|
+                      li
+                        .d-flex.justify-content-between.mb-1
+                          div= attribution.agent.full_name_and_service
+                          div.ml-2>= link_to "Retirer", admin_departement_sector_attribution_path(current_departement, @sector, attribution), method: :delete
+                    li.mb-3= link_to \
+                      "Attribuer un autre agent de #{organisation.name.truncate(10)}", \
+                      new_admin_departement_sector_attribution_path( \
+                        current_departement, \
+                        @sector, \
+                        level: "agent", \
+                        organisation_id: organisation.id \
+                    )
+
         - else
-          div ⚠️ Aucune organisation attribuée pour l'instant
-          div.small> Ce secteur n'est pas utilisable tant qu'aucune organisation n'est attribuée.
-        = link_to ".new-sector-organisation-form-collapse", \
-          class: "btn btn-primary w-100 new-sector-organisation-form-collapse collapse show", \
-          data: { toggle: "collapse" } do
+          .alert.alert-warning.d-flex.align-items-center
+            div.mr-2.h4 ⚠️
+            div
+              .mb-1 Aucune organisation ni agent attribués
+              div Ce secteur ne renvoie pas de disponibilités
+        = link_to new_admin_departement_sector_attribution_path(current_departement, @sector, level: "organisation"), class: "btn btn-primary w-100" do
           i.fa.fa-plus>
-          | Ajouter une organisation
-        .new-sector-organisation-form-collapse.collapse
-          = simple_form_for \
-            @new_sector_attribution, \
-            url: admin_departement_sector_attributions_path(current_departement, @sector) \
-          do |f|
-            = f.input :level, \
-              collection: [SectorAttribution::LEVEL_ORGANISATION], \
-              include_blank: false, \
-              input_html: { class: "select2-input" }
-            = f.input :organisation_id, \
-              collection: policy_scope(Organisation).where.not(id: @sector.attributions.pluck(:organisation_id)).where(departement: current_departement.number), \
-              include_blank: true, \
-              required: true, \
-              input_html: { class: "select2-input" }
-            = f.submit value: "Ajouter", class: "btn btn-primary w-100"
+          | Attribuer une organisation ou un agent
       .card-footer
-        .text-muted Lorsqu'un usager cherche une adresse qui est couverte par cette zone, un RDV lui sera proposé parmi ces organisations attribuées, selon leurs disponibilités
+        .text-muted Lorsqu'un usager cherche une adresse couverte par ce secteur, les disponibilités des Organisations et-ou des agents attribués lui seront proposées
 
     .card
       .card-header

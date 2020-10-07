@@ -108,3 +108,14 @@ select.form-control-sm {
     }
   }
 }
+
+.card-overlay-spinner {
+  position: absolute;
+  width: 100%;
+  background: rgba(0,0,0,0.3);
+  height: 100%;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

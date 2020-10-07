@@ -83,7 +83,7 @@ Rails.application.routes.draw do
           resources :zone_imports, only: [:new, :create]
           resources :sectors do
             resources :zones, except: [:index]
-            resources :sector_attributions, only: [:create, :destroy], as: :attributions
+            resources :sector_attributions, only: [:new, :create, :destroy], as: :attributions
             delete "/zones" => "zones#destroy_multiple"
           end
           resource :setup_checklist, only: [:show]
