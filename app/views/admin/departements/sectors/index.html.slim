@@ -23,13 +23,13 @@
           tr
             th Nom
             th Identifiant
-            th Zones
+            th Communes
             th Attributions
             th Actions
         tbody
           - @sectors.each do |sector|
             tr
-              td= sector.name
+              td= link_to sector.name, admin_departement_sector_path(current_departement, sector)
               td= human_id(sector)
               td= "#{sector.zones.count} communes"
               td

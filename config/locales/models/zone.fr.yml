@@ -1,13 +1,13 @@
 fr:
   activerecord:
     models:
-      zone: Zone
+      zone: Commune
     attributes:
       zone:
         sector_id: Secteur
         name: Nom
         city_name: Nom de la commune
         city_code: Code de la commune (Code INSEE)
-        level: Niveau
+        level: Étendue
         levels:
-          city: Ville
+          city: Commune entière

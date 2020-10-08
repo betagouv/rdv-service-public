@@ -8,7 +8,6 @@ class ImportZoneRowsService < BaseService
     @departement = departement
     @agent = agent
     @dry_run = options.fetch(:dry_run, false)
-    @override_conflicts = options.fetch(:override_conflicts, false)
   end
 
   def perform
@@ -105,7 +104,7 @@ class ImportZoneRowsService < BaseService
     policy = Pundit.policy(AgentContext.new(@agent), [:agent, zone])
     return true if policy.create?
 
-    @result[:row_errors][row_index] = "Pas les droits nécessaires pour créer une zone pour le secteur #{zone.sector_id}"
+    @result[:row_errors][row_index] = "Pas les droits nécessaires pour créer une commune pour le secteur #{zone.sector_id}"
     @result[:counts][:errors][:unauthorized_zone] += 1
     false
   end
@@ -131,12 +130,8 @@ class ImportZoneRowsService < BaseService
       sector: find_sector(row["sector_id"]),
       city_name: row["city_name"]
     }
-    if @override_conflicts
-      Zone.find_or_initialize_by(unique_attributes) # could be optimized
-        .tap { _1.assign_attributes(extra_attributes) }
-    else
-      Zone.new(unique_attributes.merge(extra_attributes))
-    end
+    Zone.find_or_initialize_by(unique_attributes) # could be optimized
+      .tap { _1.assign_attributes(extra_attributes) }
   end
 
   def find_sector(human_id)

@@ -19,46 +19,6 @@
 .row.justify-content-center
   .col-md-7
     .card
-      .p-2.d-grid.grid-three-columns.grid-first-column-empty.grid-align-center
-        .text-center= page_entries_info @zones
-        div.text-right
-          = link_to new_admin_departement_sector_zone_path(current_departement, @sector), class: "btn btn-primary" do
-            i.fa.fa-plus>
-            span> Ajouter une zone
-      table.table
-        thead
-          tr
-            th Niveau
-            th Commune
-            th Code Commune
-            th Actions
-        tbody
-          - @zones.each do |zone|
-            tr
-              td= Zone.human_enum_name(:level, zone.level)
-              td= zone.city_name
-              td= zone.city_code
-              td
-                .d-flex
-                  - if policy([:agent, zone]).edit?
-                    div.mr-3= link_to edit_admin_departement_sector_zone_path(current_departement, @sector, zone), title: "Modifier" do
-                      i.fa.fa-edit
-                  - if policy([:agent, zone]).destroy?
-                    div= link_to admin_departement_sector_zone_path(current_departement, @sector, zone), method: :delete, title: "Supprimer" do
-                      i.fa.fa-trash-alt
-      div= paginate @zones
-      .mb-2.text-center
-        .mb-2= page_entries_info @zones
-        - if @zones.any?
-          div= link_to( \
-            "🗑 Supprimer les #{@zones.total_count} zones de ce secteur …", \
-            admin_departement_sector_zones_path(current_departement, @sector), \
-            method: :delete, \
-            data: { confirm: "Êtes-vous sûr de vouloir supprimer ces #{@zones.total_count} zones ?" }, \
-            class: 'btn btn-danger' \
-          )
-  .col-md-5
-    .card
       .card-body.d-flex.justify-content-between
         ul.list-unstyled
           li
@@ -71,6 +31,42 @@
           div= link_to edit_admin_departement_sector_path(current_departement, @sector), class: "btn btn-primary w-100" do
             i.fa.fa-edit>
             | Modifier
+    .card
+      .p-2.d-grid.grid-three-columns.grid-first-column-empty.grid-align-center
+        .text-center= page_entries_info @zones
+        div.text-right
+          = link_to new_admin_departement_sector_zone_path(current_departement, @sector), class: "btn btn-primary" do
+            i.fa.fa-plus>
+            span> Ajouter une commune
+      table.table
+        thead
+          tr
+            th Étendue
+            th Commune
+            th Code Commune
+            th Actions
+        tbody
+          - @zones.each do |zone|
+            tr
+              td= Zone.human_enum_name(:level, zone.level)
+              td= zone.city_name
+              td= zone.city_code
+              td
+                - if policy([:agent, zone]).destroy?
+                  div= link_to admin_departement_sector_zone_path(current_departement, @sector, zone), method: :delete, title: "Supprimer" do
+                    i.fa.fa-trash-alt
+      div= paginate @zones
+      .mb-2.text-center
+        .mb-2= page_entries_info @zones
+        - if @zones.any?
+          div= link_to( \
+            "🗑 Retirer les #{@zones.total_count} communes de ce secteur …", \
+            admin_departement_sector_zones_path(current_departement, @sector), \
+            method: :delete, \
+            data: { confirm: "Êtes-vous sûr de vouloir retirer ces #{@zones.total_count} communes ?" }, \
+            class: 'btn btn-danger' \
+          )
+  .col-md-5
     .card
       .card-header
         .card-title
@@ -109,7 +105,7 @@
               input_html: { class: "select2-input" }
             = f.submit value: "Ajouter", class: "btn btn-primary w-100"
       .card-footer
-        .text-muted Lorsqu'un usager cherche une adresse couverte par ce secteur, les disponibilités des Organisations attribuées lui seront proposées
+        .text-muted Lorsqu'un usager cherche une adresse couverte par ce secteur, les disponibilités des organisations attribuées lui seront proposées
 
     .card
       #zones-map.small[

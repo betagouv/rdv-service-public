@@ -19,6 +19,6 @@ class Zone < ApplicationRecord
   def coherent_city_code_departement
     return true if city_code.blank? || sector&.departement.blank? || city_code.start_with?(sector&.departement)
 
-    errors.add(:city_code, "doit commencer par le département du secteur")
+    errors.add(:base, "La commune #{city_name} n'appartient pas au département #{sector&.departement}")
   end
 end

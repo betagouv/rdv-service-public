@@ -12,8 +12,7 @@ class Admin::Departements::ZoneImportsController < AgentDepartementAuthControlle
         CsvOrXlsReader::Importer.new(@form.zones_file).rows,
         current_departement.number,
         current_agent,
-        dry_run: @form.dry_run,
-        override_conflicts: @form.override_conflicts
+        dry_run: @form.dry_run
       )
     else
       render :new
@@ -25,6 +24,6 @@ class Admin::Departements::ZoneImportsController < AgentDepartementAuthControlle
   def import_params
     params
       .require(:zone_import)
-      .permit(:zones_file, :dry_run, :override_conflicts)
+      .permit(:zones_file, :dry_run)
   end
 end

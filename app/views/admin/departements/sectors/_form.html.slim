@@ -6,5 +6,5 @@
 ) do |f|
   = f.input :departement, disabled: true
   = f.input :name
-  = f.input :human_id
+  = f.input :human_id, hint: "permet d'identifier l'organisation dans les fichiers de sectorisation"
   = f.submit class: 'btn btn-primary'

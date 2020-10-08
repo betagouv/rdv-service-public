@@ -10,25 +10,9 @@ class Admin::Departements::ZonesController < AgentDepartementAuthController
     @zone = Zone.new(**zone_params, sector: @sector)
     authorize(@zone)
     if @zone.save
-      redirect_to admin_departement_sector_path(current_departement, @sector), flash: { success: "Zone créée" }
+      redirect_to admin_departement_sector_path(current_departement, @sector), flash: { success: "Commune ajoutée au secteur" }
     else
       render :new
-    end
-  end
-
-  def edit
-    @zone = Zone.find(params[:id])
-    authorize(@zone)
-  end
-
-  def update
-    @zone = Zone.find(params[:id])
-    @zone.assign_attributes(**zone_params)
-    authorize(@zone)
-    if @zone.save
-      redirect_to admin_departement_sector_path(current_departement, @sector), flash: { success: "Zone mise à jour" }
-    else
-      render :edit
     end
   end
 
@@ -36,9 +20,9 @@ class Admin::Departements::ZonesController < AgentDepartementAuthController
     zone = Zone.find(params[:id])
     authorize(zone)
     if zone.destroy
-      redirect_to admin_departement_sector_path(current_departement, @sector), flash: { success: "Zone supprimée" }
+      redirect_to admin_departement_sector_path(current_departement, @sector), flash: { success: "Commune retirée du secteur" }
     else
-      redirect_to admin_departement_sector_path(current_departement, @sector), flash: { error: "Erreur lors de la suppression" }
+      redirect_to admin_departement_sector_path(current_departement, @sector), flash: { error: "Erreur lors du retrait de la commune" }
     end
   end
 
@@ -47,9 +31,9 @@ class Admin::Departements::ZonesController < AgentDepartementAuthController
     zones = zones.filter { authorize(_1, :destroy?) }
     count = zones.count
     if zones.map(&:destroy).all?
-      flash[:success] = "Les #{count} zones ont été supprimées"
+      flash[:success] = "Les #{count} communes ont été retirées du secteur"
     else
-      flash[:danger] = "Erreur lors de la suppression des #{count} zones"
+      flash[:danger] = "Erreur lors du retrait des #{count} communes"
     end
     redirect_to admin_departement_sector_path(current_departement, @sector)
   end

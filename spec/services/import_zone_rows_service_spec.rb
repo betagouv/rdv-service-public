@@ -142,31 +142,17 @@ describe ImportZoneRowsService, type: :service do
         { "city_code" => "62004", "city_name" => "ACHICOURT", "sector_id" => "arques" },
       ]
     end
-    context "without override option" do
-      it "should not import anything" do
-        res = ImportZoneRowsService.perform_with(rows, "62", agent)
-        expect(res[:valid]).to eq(false)
-        expect(res[:counts][:imported]).to be_empty
-        expect(res[:row_errors][0]).to eq("Code de la commune (Code INSEE) est déjà utilisé")
-        expect(Zone.count).to eq(1)
-        expect(Zone.first.city_code).to eq("62040")
-        expect(Zone.first.sector).to eq(sector_arques)
-        expect(Zone.first.city_name).to eq("AIRE-SUR-LA-LYS") # unchanged
-      end
-    end
-    context "with override option" do
-      it "should not import anything" do
-        res = ImportZoneRowsService.perform_with(rows, "62", agent, override_conflicts: true)
-        expect(res[:row_errors]).to be_empty
-        expect(res[:valid]).to eq(true)
-        expect(res[:counts][:imported]["arques"]).to eq(2)
-        expect(res[:counts][:imported_override]["arques"]).to eq(1)
-        expect(res[:counts][:imported_new]["arques"]).to eq(1)
-        expect(Zone.count).to eq(2)
-        expect(Zone.find_by(city_code: "62040").sector).to eq(sector_arques)
-        expect(Zone.find_by(city_code: "62040").city_name).to eq("AIRE-SUR-LA-lièsse") # changed
-        expect(Zone.find_by(city_code: "62004").sector).to eq(sector_arques)
-      end
+    it "should import and override existing zones" do
+      res = ImportZoneRowsService.perform_with(rows, "62", agent)
+      expect(res[:row_errors]).to be_empty
+      expect(res[:valid]).to eq(true)
+      expect(res[:counts][:imported]["arques"]).to eq(2)
+      expect(res[:counts][:imported_override]["arques"]).to eq(1)
+      expect(res[:counts][:imported_new]["arques"]).to eq(1)
+      expect(Zone.count).to eq(2)
+      expect(Zone.find_by(city_code: "62040").sector).to eq(sector_arques)
+      expect(Zone.find_by(city_code: "62040").city_name).to eq("AIRE-SUR-LA-lièsse") # changed
+      expect(Zone.find_by(city_code: "62004").sector).to eq(sector_arques)
     end
   end
 

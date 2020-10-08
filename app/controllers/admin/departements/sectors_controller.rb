@@ -41,7 +41,7 @@ class Admin::Departements::SectorsController < AgentDepartementAuthController
     @sector.assign_attributes(**sector_params)
     authorize(@sector)
     if @sector.save
-      redirect_to admin_departement_sectors_path(current_departement), flash: { success: "Zone mise à jour" }
+      redirect_to admin_departement_sectors_path(current_departement), flash: { success: "Commune mise à jour" }
     else
       render :edit
     end

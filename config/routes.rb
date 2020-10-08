@@ -82,9 +82,9 @@ Rails.application.routes.draw do
         scope module: "departements" do
           resources :zone_imports, only: [:new, :create]
           resources :sectors do
-            resources :zones, except: [:index]
-            resources :sector_attributions, only: [:create, :destroy], as: :attributions
+            resources :zones, only: [:new, :create, :destroy]
             delete "/zones" => "zones#destroy_multiple"
+            resources :sector_attributions, only: [:create, :destroy], as: :attributions
           end
           resource :setup_checklist, only: [:show]
         end
