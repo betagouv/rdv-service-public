@@ -32,39 +32,52 @@
             i.fa.fa-edit>
             | Modifier
     .card
-      .p-2.d-flex.align-items-center
-        div.flex-grow-1.text-center= page_entries_info @zones
-        div= link_to new_admin_departement_sector_zone_path(current_departement, @sector), class: "btn btn-primary" do
-          i.fa.fa-plus>
-          span> Ajouter une commune
-      table.table
-        thead
-          tr
-            th Étendue
-            th Commune
-            th Code Commune
-            th
-        tbody
-          - @zones.each do |zone|
+      - if @zones.empty?
+        .card-header
+          .card-title
+            h5 Communes associées
+        .card-body
+          .alert.alert-warning.d-flex.align-items-center
+            div.mr-2.h4 ⚠️
+            div
+              .mb-1 Aucune commune associée
+              div Ce secteur ne peut pas être recherché par les usagers
+          div= link_to new_admin_departement_sector_zone_path(current_departement, @sector), class: "btn btn-primary w-100" do
+            i.fa.fa-plus>
+            span> Ajouter une commune
+      - else
+        .p-2.d-flex.align-items-center
+          div.flex-grow-1.text-center= page_entries_info @zones
+          div= link_to new_admin_departement_sector_zone_path(current_departement, @sector), class: "btn btn-primary" do
+            i.fa.fa-plus>
+            span> Ajouter une commune
+        table.table
+          thead
             tr
-              td= Zone.human_enum_name(:level, zone.level).sub(" ", "&nbsp;").html_safe
-              td= zone.city_name
-              td= zone.city_code
-              td
-                - if policy([:agent, zone]).destroy?
-                  div= link_to admin_departement_sector_zone_path(current_departement, @sector, zone), method: :delete, title: "Supprimer" do
-                    i.fa.fa-trash-alt
-      div= paginate @zones
-      .mb-2.text-center
-        .mb-2= page_entries_info @zones
-        - if @zones.any?
-          div= link_to( \
-            "🗑 Retirer les #{@zones.total_count} communes de ce secteur …", \
-            admin_departement_sector_zones_path(current_departement, @sector), \
-            method: :delete, \
-            data: { confirm: "Êtes-vous sûr de vouloir retirer ces #{@zones.total_count} communes ?" }, \
-            class: 'btn btn-danger' \
-          )
+              th Étendue
+              th Commune
+              th Code Commune
+              th
+          tbody
+            - @zones.each do |zone|
+              tr
+                td= Zone.human_enum_name(:level, zone.level).sub(" ", "&nbsp;").html_safe
+                td= zone.city_name
+                td= zone.city_code
+                td
+                  - if policy([:agent, zone]).destroy?
+                    = link_to "retirer", admin_departement_sector_zone_path(current_departement, @sector, zone), method: :delete
+        div= paginate @zones
+        .mb-2.text-center
+          .mb-2= page_entries_info @zones
+          - if @zones.count > 5
+            div= link_to( \
+              "🗑 Retirer les #{@zones.total_count} communes de ce secteur …", \
+              admin_departement_sector_zones_path(current_departement, @sector), \
+              method: :delete, \
+              data: { confirm: "Êtes-vous sûr de vouloir retirer ces #{@zones.total_count} communes ?" }, \
+              class: 'btn btn-danger' \
+            )
   .col-md-5
     .card
       .card-header
@@ -82,7 +95,7 @@
             div.mr-2.h4 ⚠️
             div
               .mb-1 Aucune organisation attribuée
-              div Ce secteur ne renvoie pas de disponibilités
+              div Ce secteur ne renverra aucune disponibilité
         = link_to ".new-sector-organisation-form-collapse", \
           class: "btn btn-primary w-100 new-sector-organisation-form-collapse collapse show", \
           data: { toggle: "collapse" } do
