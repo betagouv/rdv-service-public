@@ -15,7 +15,8 @@ class SectoriseAddressService < BaseService
   private
 
   def enabled?
-    sectorisation_enabled?(@departement)
+    # ||= does not work with boolean values
+    @enabled = @enabled.nil? ? sectorisation_enabled?(@departement) : @enabled
   end
 
   def organisations
