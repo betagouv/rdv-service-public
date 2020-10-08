@@ -1,6 +1,6 @@
 describe CreneauxBuilderService, type: :service do
   let!(:organisation) { create(:organisation) }
-  let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, reservable_online: reservable_online, organisation: organisation) }
+  let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, reservable_online: reservable_online, organisation: organisation, location_type: :public_office) }
   let(:reservable_online) { true }
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let(:today) { Date.new(2019, 9, 19) } # a thursday
@@ -222,6 +222,17 @@ describe CreneauxBuilderService, type: :service do
           is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
           is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 11, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
           is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 11, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
+        end
+      end
+
+      context "when there is another motif with the same name but a different location_type" do
+        let!(:motif_home) { create(:motif, name: "Vaccination", default_duration_in_min: 30, organisation: organisation, location_type: :home) }
+        let!(:plage_ouverture_home) { create(:plage_ouverture, motifs: [motif_home], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(14) + 35.minutes, agent: agent, organisation: organisation) }
+
+        let(:options) { { for_agents: true, motif_location_type: :home } }
+
+        it "should include only the filtered one" do
+          expect(subject.pluck(:motif_id).uniq).to eq([motif_home.id])
         end
       end
     end

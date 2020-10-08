@@ -17,14 +17,16 @@ class SearchCreneauxForAgentsService < BaseService
         lieu,
         Date.today,
         for_agents: true,
-        agent_ids: @form.agent_ids
+        agent_ids: @form.agent_ids,
+        motif_location_type: @form.motif.location_type
       ),
       creneaux: CreneauxBuilderService.perform_with(
         @form.motif.name,
         lieu,
         @form.date_range,
         for_agents: true,
-        agent_ids: @form.agent_ids
+        agent_ids: @form.agent_ids,
+        motif_location_type: @form.motif.location_type
       )
     )
   end

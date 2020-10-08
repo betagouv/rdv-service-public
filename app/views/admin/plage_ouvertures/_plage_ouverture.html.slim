@@ -8,7 +8,7 @@ tr
   td
     ul.pl-2
       - plage_ouverture.motifs.each do |motif|
-        li= motif.name
+        li= motif_name_with_location_type_and_badges(motif)
   td
     = plage_ouverture.lieu.name
     br

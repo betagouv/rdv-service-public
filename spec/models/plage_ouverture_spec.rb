@@ -39,9 +39,8 @@ describe PlageOuverture, type: :model do
     let(:agent2) { create(:agent, service: service, organisations: [organisation]) }
     let(:agent3) { create(:agent, service: service, organisations: [organisation]) }
     let!(:plage_ouverture) { create(:plage_ouverture, :weekly, agent: agent, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation) }
-    let(:agent_ids) { nil }
 
-    subject { PlageOuverture.for_motif_and_lieu_from_date_range(motif.name, lieu, today..six_days_later, agent_ids) }
+    subject { PlageOuverture.for_motif_and_lieu_from_date_range(motif.name, lieu, today..six_days_later) }
 
     it { expect(subject).to contain_exactly(plage_ouverture) }
 
@@ -61,24 +60,6 @@ describe PlageOuverture, type: :model do
       let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today + 8.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation) }
 
       it { expect(subject.count).to eq(0) }
-    end
-
-    describe "when agent_ids is passed to filter" do
-      let(:agent_ids) { [agent.id] }
-
-      it { expect(subject).to contain_exactly(plage_ouverture) }
-
-      describe "and plage_ouverture.agent_id is not passed" do
-        let(:agent_ids) { [agent2.id, agent3.id] }
-
-        it { expect(subject.count).to eq(0) }
-      end
-
-      describe "and there is another plage_ouverture" do
-        let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today, agent: create(:agent), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation) }
-
-        it { expect(subject).to contain_exactly(plage_ouverture) }
-      end
     end
   end
 
