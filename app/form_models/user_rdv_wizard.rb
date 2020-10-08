@@ -17,11 +17,13 @@ module UserRdvWizard
           .merge(motif: @motif)
           .merge(@attributes.slice(:starts_at, :user_ids, :motif_id))
       )
+      @geo_search = Users::GeoSearch.new(**@attributes.slice(:departement, :city_code))
       @creneau = Users::CreneauSearch.creneau_for(
         user: @user,
         motif: @rdv.motif,
         lieu: Lieu.find(@attributes[:lieu_id]),
-        starts_at: @rdv.starts_at
+        starts_at: @rdv.starts_at,
+        geo_search: @geo_search
       )
     end
 

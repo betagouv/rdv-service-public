@@ -9,7 +9,7 @@
       - if @lieux.empty?
           h3.font-weight-bold Nous n'avons pas trouvé de créneaux pour votre motif.
           p.font-weight-bold Voici les organisations disponibles dans votre département.
-          = render @organisations
+          = render @geo_search.attributed_organisations
       - else
         h3.font-weight-bold Résultats de votre recherche
         p.font-weight-bold= "#{@lieux.size.to_s} lieux sont disponibles"

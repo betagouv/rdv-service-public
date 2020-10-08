@@ -22,7 +22,7 @@ class CreneauxBuilderService < BaseService
   def plages_ouvertures
     @plages_ouvertures ||= PlageOuverture
       .for_motif_and_lieu_from_date_range(@motif_name, @lieu, @inclusive_date_range)
-      .where(({ agent_id: @agent_ids } if @agent_ids.present?))
+      .where(({ agent_id: @agent_ids } unless @agent_ids.nil?))
       .where(({ motifs: { location_type: @motif_location_type } } if @motif_location_type.present?))
   end
 
