@@ -32,23 +32,22 @@
             i.fa.fa-edit>
             | Modifier
     .card
-      .p-2.d-grid.grid-three-columns.grid-first-column-empty.grid-align-center
-        .text-center= page_entries_info @zones
-        div.text-right
-          = link_to new_admin_departement_sector_zone_path(current_departement, @sector), class: "btn btn-primary" do
-            i.fa.fa-plus>
-            span> Ajouter une commune
+      .p-2.d-flex.align-items-center
+        div.flex-grow-1.text-center= page_entries_info @zones
+        div= link_to new_admin_departement_sector_zone_path(current_departement, @sector), class: "btn btn-primary" do
+          i.fa.fa-plus>
+          span> Ajouter une commune
       table.table
         thead
           tr
             th Étendue
             th Commune
             th Code Commune
-            th Actions
+            th
         tbody
           - @zones.each do |zone|
             tr
-              td= Zone.human_enum_name(:level, zone.level)
+              td= Zone.human_enum_name(:level, zone.level).sub(" ", "&nbsp;").html_safe
               td= zone.city_name
               td= zone.city_code
               td
