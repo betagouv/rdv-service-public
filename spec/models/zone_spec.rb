@@ -55,7 +55,7 @@ RSpec.describe Zone, type: :model do
         city_code: "62120"
       )
       expect(zone.valid?).to eq false
-      expect(zone.errors.keys).to eq([:city_code])
+      expect(zone.errors.keys).to eq([:base])
     end
   end
 end

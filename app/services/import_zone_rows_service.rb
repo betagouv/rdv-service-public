@@ -125,11 +125,8 @@ class ImportZoneRowsService < BaseService
   end
 
   def build_zone(row)
-    unique_attributes = { level: "city", city_code: row["city_code"] }
-    extra_attributes = {
-      sector: find_sector(row["sector_id"]),
-      city_name: row["city_name"]
-    }
+    unique_attributes = { level: "city", city_code: row["city_code"], sector: find_sector(row["sector_id"]) }
+    extra_attributes = { city_name: row["city_name"] }
     Zone.find_or_initialize_by(unique_attributes) # could be optimized
       .tap { _1.assign_attributes(extra_attributes) }
   end

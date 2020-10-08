@@ -113,7 +113,7 @@ describe ImportZoneRowsService, type: :service do
     it "should not import anything" do
       res = ImportZoneRowsService.perform_with(rows, "62", agent)
       expect(res[:valid]).to eq(false)
-      expect(res[:row_errors][0]).to include("doit commencer par le département du secteur")
+      expect(res[:row_errors][0]).to include("La commune AIRE-SUR-LA-LYS n'appartient pas au département 62")
       expect(Zone.count).to eq(0)
     end
   end
