@@ -7,29 +7,50 @@ class SectoriseAddressService < BaseService
   end
 
   def perform
-    infos = { organisations: organisations, enabled?: enabled? }
-    infos.merge!({ zones: zones, sectors: sectors }) if enabled?
+    infos = {
+      attributed_organisations: attributed_organisations,
+      enabled?: enabled?
+    }
+    if enabled?
+      infos.merge!(
+        zones: zones,
+        sectors: sectors,
+        attributed_agents_by_organisation: attributed_agents_by_organisation
+      )
+    end
     OpenStruct.new(infos)
   end
 
   private
 
   def enabled?
-    sectorisation_enabled?(@departement)
+    # ||= does not work with boolean values
+    @enabled = @enabled.nil? ? sectorisation_enabled?(@departement) : @enabled
   end
 
-  def organisations
-    @organisations ||= begin
+  def attributed_organisations
+    @attributed_organisations ||= \
       if enabled?
-        sectors
-          .includes(attributions: [:organisation])
-          .map(&:attributions)
-          .to_a
-          .flatten
+        SectorAttribution
+          .includes(:organisation)
+          .level_organisation
+          .where(sector_id: sectors.pluck(:id))
           .map(&:organisation)
       else
         Organisation.where(departement: @departement)
       end
+  end
+
+  def attributed_agents_by_organisation
+    @attributed_agents_by_organisation ||= begin
+      by_orga = {}
+      sectors.each do |sector|
+        sector.attributions.level_agent.each do |attribution|
+          by_orga[attribution.organisation] = [] unless by_orga.keys.include?(attribution.organisation)
+          by_orga[attribution.organisation] << attribution.agent
+        end
+      end
+      by_orga
     end
   end
 

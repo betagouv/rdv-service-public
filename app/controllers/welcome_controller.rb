@@ -33,7 +33,7 @@ class WelcomeController < ApplicationController
   end
 
   def welcome_departement
-    @services = Service.searchable(@organisations)
+    @services = FooService.perform_with(@sectorisation_infos).services
     @organisations_departement = Organisation.where(departement: @departement)
   end
 
@@ -49,7 +49,6 @@ class WelcomeController < ApplicationController
     @city_code = lieu_params[:city_code]
     @service = Service.find(lieu_params[:service]) if lieu_params[:service]
     @sectorisation_infos = SectoriseAddressService.perform_with(@departement, @city_code)
-    @organisations = @sectorisation_infos.organisations
   end
 
   private
