@@ -1,8 +1,11 @@
 class Absence < ApplicationRecord
+  include WebhookDeliverable
   include RecurrenceConcern
 
   belongs_to :agent
   belongs_to :organisation
+
+  has_many :webhook_endpoints, through: :organisation
 
   before_validation :set_end_day
   validates :agent, :organisation, :first_day, presence: true
