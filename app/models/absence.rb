@@ -21,6 +21,10 @@ class Absence < ApplicationRecord
     starts_at.past? && ends_at.future?
   end
 
+  def ical_uid
+    "absence_#{id}@#{BRAND}"
+  end
+
   private
 
   def set_end_day
