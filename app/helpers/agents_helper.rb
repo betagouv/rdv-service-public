@@ -28,6 +28,18 @@ module AgentsHelper
     params
   end
 
+  def duplicate_rdv_wizard_path(rdv)
+    new_admin_organisation_rdv_wizard_step_path(
+      step: 1,
+      service_id: rdv.motif.service_id,
+      agent_ids: rdv.agent_ids,
+      user_ids: rdv.user_ids,
+      **rdv.attributes.symbolize_keys.slice(
+        :starts_at, :motif_id, :lieu_id, :organisation_id, :duration_in_min, :context
+      )
+    )
+  end
+
   def display_meta_note(note)
     meta = content_tag(:span, "le #{l(note.created_at.to_date)}", title: l(note.created_at))
     meta += " par #{note.agent.full_name_and_service}"
