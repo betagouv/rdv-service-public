@@ -64,7 +64,6 @@ RSpec.describe Admin::RdvsController, type: :controller do
     before { request.headers["HTTP_REFERER"] = referer_path }
 
     context "with valid params" do
-
       it "updates the requested rdv" do
         lieu = create(:lieu, organisation: organisation)
         put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { lieu_id: lieu.id } }
@@ -88,11 +87,9 @@ RSpec.describe Admin::RdvsController, type: :controller do
         put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { lieu_id: lieu.id } }
         expect(response).to redirect_to(referer_path)
       end
-
     end
 
     context "with invalid params" do
-
       it "returns a success response (i.e. to display the 'edit' template)" do
         new_attributes = { duration_in_min: nil }
         put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: new_attributes }
@@ -101,9 +98,9 @@ RSpec.describe Admin::RdvsController, type: :controller do
 
       it "does not change rdv" do
         new_attributes = { duration_in_min: nil }
-        expect {
+        expect do
           put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: new_attributes }
-        }.not_to change(rdv, :duration_in_min)
+        end.not_to change(rdv, :duration_in_min)
       end
     end
   end
