@@ -1,8 +1,29 @@
 - content_for :title, "Connexion"
 
 .card
+  ul.list-group.list-group-flush
+    li.list-group-item
+      i.fa.fa-check.fa-fw.mr-1.text-success
+      | Motif :&nbsp;
+      = @motif.name
+    - if @motif.phone?
+      li.list-group-item
+        i.fa.fa-check.fa-fw.mr-1.text-success
+        | RDV téléphonique
+    - else
+      li.list-group-item
+        i.fa.fa-check.fa-fw.mr-1.text-success
+        | Lieu :&nbsp;
+        = @lieu.lieu_full_name
+    li.list-group-item
+      .row
+        .col
+          i.fa.fa-check.fa-fw.mr-1.text-success
+          | Date du rendez-vous :&nbsp;
+           = l(@starts_at, format: :human)
+
   .card-body
-    = render "common/session_form", resource: resource, resource_name: resource_name
+    = render "common/session_form", resource: User.new, resource_name: "user"
 
     hr
     .text-center
