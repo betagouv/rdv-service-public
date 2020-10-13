@@ -22,6 +22,9 @@ class Admin::RdvsController < AgentAuthController
   def update
     authorize(@rdv)
     @rdv.updated_at = Time.zone.now
+    # TODO: replace this manual touch. It forces creating a version when an
+    # agent or a user is removed from the RDV. the touch: true option on the
+    # association does not do it for some reason I could not figure out
     @rdv.cancelled_at = nil
     if params[:rdv][:status] == "excused"
       CancelRdvByAgentService.new(@rdv).perform
