@@ -76,7 +76,7 @@ RSpec.describe Admin::RdvsController, type: :controller do
       end
 
       it "set cancelled_at to nil when change status from cancel to other" do
-        rdv.cancel
+        rdv.cancel!
         put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { status: "waiting" } }
         expect(rdv.reload.cancelled_at).to eq(nil)
         expect(rdv.reload.status).to eq("waiting")
