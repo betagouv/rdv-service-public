@@ -1,8 +1,11 @@
 class Absence < ApplicationRecord
+  include WebhookDeliverable
   include RecurrenceConcern
 
   belongs_to :agent
   belongs_to :organisation
+
+  has_many :webhook_endpoints, through: :organisation
 
   before_validation :set_end_day
   validates :agent, :organisation, :first_day, presence: true
@@ -16,6 +19,10 @@ class Absence < ApplicationRecord
 
   def in_progress?
     starts_at.past? && ends_at.future?
+  end
+
+  def ical_uid
+    "absence_#{id}@#{BRAND}"
   end
 
   private
