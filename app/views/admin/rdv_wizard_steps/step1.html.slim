@@ -17,8 +17,11 @@
         = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation, step: 1)) do |f|
           = f.input_field :starts_at, as: :hidden
           = f.input_field :lieu_id, as: :hidden
-          - @rdv.agents.each do |p|
+          = f.input_field :context, as: :hidden
+          - @rdv.users.each do |p|
             / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
+            = f.hidden_field "user_ids][", value: p.id
+          - @rdv.agents.each do |p|
             = f.hidden_field "agent_ids][", value: p.id
           = f.input :service_id, \
             collection: @services.ordered_by_name, \

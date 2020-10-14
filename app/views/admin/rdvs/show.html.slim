@@ -9,6 +9,9 @@
       - if @rdv.cancelled?
         span.badge.badge-danger
 
+- content_for :breadcrumb do
+  = link_to "Dupliquer…", duplicate_rdv_wizard_path(@rdv), class: "btn btn-outline-white"
+
 .row
   .col-md-6.mb-3
     .card
@@ -84,4 +87,3 @@
       .js-record-versions-body#history.collapse class=(@uncollapsed_section == 'history' ? "show" : "")
         .text-center.py-4
           .spinner.spinner-border
-
