@@ -94,7 +94,6 @@ Rails.application.routes.draw do
         resources :lieux, except: :show
         resources :motifs, except: :show
         resources :rdvs, except: [:index, :new] do
-          patch :status, on: :member
           resources :versions, only: [:index]
         end
         scope module: "organisations" do

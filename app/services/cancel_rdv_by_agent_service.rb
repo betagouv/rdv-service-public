@@ -4,7 +4,7 @@ class CancelRdvByAgentService
   end
 
   def perform
-    @rdv.update!(status: :excused, cancelled_at: Time.now)
+    @rdv.cancel!
     Notifications::Rdv::RdvCancelledByAgentService.perform_with(@rdv)
   end
 end

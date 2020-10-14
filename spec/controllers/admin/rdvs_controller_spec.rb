@@ -63,43 +63,44 @@ RSpec.describe Admin::RdvsController, type: :controller do
     let(:referer_path) { admin_organisation_agent_path(organisation.id, agent.id) }
     before { request.headers["HTTP_REFERER"] = referer_path }
 
-    subject do
-      put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: new_attributes }
-      rdv.reload
-    end
-
     context "with valid params" do
-      let(:lieu) { create(:lieu, organisation: organisation) }
-      let(:new_attributes) do
-        {
-          lieu_id: lieu.id,
-        }
+      it "updates the requested rdv" do
+        lieu = create(:lieu, organisation: organisation)
+        put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { lieu_id: lieu.id } }
+        expect(rdv.reload.lieu).to eq(lieu)
       end
 
-      it "updates the requested rdv" do
-        expect { subject }.to change(rdv, :lieu_id).to(lieu.id)
+      it "updates the requested rdv status" do
+        put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { status: "waiting" } }
+        expect(rdv.reload.status).to eq("waiting")
+      end
+
+      it "set cancelled_at to nil when change status from cancel to other" do
+        rdv.cancel!
+        put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { status: "waiting" } }
+        expect(rdv.reload.cancelled_at).to eq(nil)
+        expect(rdv.reload.status).to eq("waiting")
       end
 
       it "redirects to the agenda" do
-        subject
+        lieu = create(:lieu, organisation: organisation)
+        put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { lieu_id: lieu.id } }
         expect(response).to redirect_to(referer_path)
       end
     end
 
     context "with invalid params" do
-      let(:new_attributes) do
-        {
-          duration_in_min: nil,
-        }
-      end
-
       it "returns a success response (i.e. to display the 'edit' template)" do
-        subject
+        new_attributes = { duration_in_min: nil }
+        put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: new_attributes }
         expect(response).to be_successful
       end
 
       it "does not change rdv" do
-        expect { subject }.not_to change(rdv, :duration_in_min)
+        new_attributes = { duration_in_min: nil }
+        expect do
+          put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: new_attributes }
+        end.not_to change(rdv, :duration_in_min)
       end
     end
   end
@@ -108,22 +109,6 @@ RSpec.describe Admin::RdvsController, type: :controller do
     it "returns a success response" do
       get :show, params: { organisation_id: organisation.id, id: rdv.id }
       expect(response).to be_successful
-    end
-  end
-
-  describe "POST #status" do
-    subject do
-      post :status, params: { organisation_id: organisation.id, id: rdv.id, rdv: { status: "waiting" }, format: "js" }
-      rdv.reload
-    end
-
-    it "returns a success response" do
-      subject
-      expect(response).to redirect_to(admin_organisation_rdv_path(rdv.organisation, rdv))
-    end
-
-    it "changes status" do
-      expect { subject }.to change(rdv, :status).from("unknown").to("waiting")
     end
   end
 

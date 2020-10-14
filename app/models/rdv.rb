@@ -79,7 +79,7 @@ class Rdv < ApplicationRecord
     cancelled_at.present?
   end
 
-  def cancel
+  def cancel!
     update(cancelled_at: Time.zone.now, status: :excused)
   end
 
