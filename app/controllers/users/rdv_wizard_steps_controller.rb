@@ -7,7 +7,7 @@ class Users::RdvWizardStepsController < UserAuthController
 
   def new
     unless user_signed_in?
-      redirect_to session_path(User, params: params.slice(:lieu_id, :motif_id, :starts_at, :step).permit!)
+      redirect_to session_path(User, params: params.slice(:lieu_id, :motif_id, :starts_at, :step).permit(:lieu_id, :motif_id, :starts_at, :step))
       skip_authorization
       return
     end
