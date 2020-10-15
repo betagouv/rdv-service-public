@@ -25,7 +25,6 @@ describe Users::RdvWizardStepsController, type: :controller do
     end
 
     context "with logged user" do
-
       before { sign_in user }
 
       it "return success" do
@@ -45,20 +44,9 @@ describe Users::RdvWizardStepsController, type: :controller do
     end
 
     context "without logged user" do
-
-      it "render template users/sessions/new" do
+      it "redirect to new use session path with parameters" do
         get :new, params: params
-        expect(response).to render_template("users/sessions/new")
-      end
-
-      it "assigns Lieu" do
-        get :new, params: params
-        expect(assigns(:lieu)).to eq(lieu)
-      end
-
-      it "assigns motif" do
-        get :new, params: params
-        expect(assigns(:motif)).to eq(motif)
+        expect(response).to redirect_to(new_user_session_path(params: params))
       end
     end
   end
