@@ -2,117 +2,36 @@
 
 Réduire le nombre de rendez-vous annulés dans les maisons départementales de solidarité.
 
-https://beta.gouv.fr/startups/lapins.html
+## Présentation
+
+### Une solution numérique pour faciliter la prise, l’annulation et le remplacement de rendez-vous
+
+L'application permet de fluidifier la prise de rendez-vous. Elle permet la simplification du travail d'organisation et de suivi par les agents. Cinq moyens de base sont identifiés : la saisie unique des informations de l'usager, l'usage d'agendas partagés,  des rappels automatiques par email et SMS. Dans certains cas, les usagers peuvent prendre rendez-vous en ligne et modifier ou annuler leur rendez-vous en autonomie. Des files d'attente pour prévenir automatiquement les usagers de créneaux rendus disponibles sont mis en place. 
+
+### Une démarche progressive de co-construction avec les utilisateurs
+
+Une organisation projet est mise en place à plusieurs niveaux : une équipe de développement, des référents dans chaque départements, des correspondants dans chaque MDS et des utilisateurs volontaires pour la phase de construction du produit.
+
+Chaque département partenaire identifie une ou plusieurs maisons pilotes. Nos relais sont en priorité les travailleurs des MDS : assistants sociaux, infirmières puéricultrices, médecins de PMI et fonctions support (secrétariat, accueil téléphonique). Nous les interrogeons directement, pour construire avec eux une solution adaptée à leurs usages. Ils testent en continu la solution proposée. 
+
+[Fiche complète sur beta.gouv.fr](https://beta.gouv.fr/startups/lapins.html)
+
+## Statistique 
+
+[Statistique de RDV](https://www.rdv-solidarites.fr/stats)
+
+[stastistiques d'accès](https://stats.data.gouv.fr/index.php?module=CoreHome&action=index&idSite=123&period=range&date=previous30&updated=1#?idSite=123&period=range&date=previous30&category=Dashboard_Dashboard&subcategory=1)
 
 [![View performance data on Skylight](https://badges.skylight.io/status/RgR7i58P67xN.svg)](https://oss.skylight.io/app/applications/RgR7i58P67xN)
 
-## Installation pour le développement
+## Licence 
 
-### Dépendances techniques
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-#### Tous environnements
+Ce logiciel et son code source sont distribués sous [licence AGPL](https://www.gnu.org/licenses/why-affero-gpl.fr.html).
 
-- Ruby 2.7.1
-- postgresql
+## Développement
 
-#### Développement
+[Contribuer](CONTRIBUTING.md)
 
-- rbenv : voir https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts
-- Yarn : voir https://yarnpkg.com/en/docs/install
-- Foreman : voir https://github.com/ddollar/foreman
 
-#### Tests
-
-- Chrome
-- chromedriver :
-  * Mac : `brew cask install chromedriver`
-  * Linux : voir https://sites.google.com/a/chromium.org/chromedriver/downloads
-
-### Initialisation de l'environnement de développement
-
-Afin d'initialiser l'environnement de développement, exécutez la commande suivante :
-
-```bash
-bin/setup
-```
-Vous pouvez aussi vous créer un compte SuperAdmin dans une console Rails :
-
-```
-SuperAdmin.create!(email: 'email_associated_to_your_github_account@prov.com')
-```
-
-### Lancement de l'application
-
-```bash
-foreman s -f Procfile.dev
-```
-
-L'application tourne à l'adresse [http://localhost:5000].
-
-### Voir les emails envoyés en local
-
-Ouvrez la page [http://localhost:5000/letter_opener](http://localhost:5000/letter_opener).
-
-### Mise à jour de l'application
-
-Pour mettre à jour votre environnement de développement, installer les nouvelles dépendances et faire jouer les migrations, exécutez :
-
-```bash
-bin/update
-```
-
-### Exécution des tests (RSpec)
-
-Les tests ont besoin de leur propre base de données et certains d'entre eux utilisent Selenium pour s'exécuter dans un navigateur. N'oubliez pas de créer la base de test et d'installer chrome et chromedriver pour exécuter tous les tests.
-
-Pour exécuter les tests de l'application, plusieurs possibilités :
-
-- Lancer tous les tests
-
-```bash
-bin/rspec
-```
-
-- Lancer un test en particulier
-
-```bash
-bin/rspec file_path/file_name_spec.rb:line_number
-```
-
-- Lancer tous les tests d'un fichier
-
-```bash
-bin/rspec file_path/file_name_spec.rb
-```
-
-### Linting
-
-Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité du code.
-
-- Faire tourner tous les linters : `bin/rake ci`
-- Demander à Rubocop de corriger les problèmes qu'il rencontre : `bin/rubocop -a
-- Demander à Brakeman de passer en revue les vulnérabilités : `bin/brakeman -I
-
-### Régénérer les binstubs
-
-```bash
-bundle binstub railties --force
-bin/rake rails:update:bin
-```
-
-### Programmation des jobs
-
-```bash
-# Envoi des sms/email de rappel 48h avant le rdv
-rake send_reminder
-
-# Envoi des sms/email lorsque des créneaux se libèrent
-rake file_attente
-
-# Envoi d'un mail quotidien de monitoring des notifs a l'equipe
-rake rdv_events_stats_mail
-```
-
-### Organisation du développement et processus de déploiement
-
-décrit [dans le wiki](https://github.com/betagouv/rdv-solidarites.fr/wiki/Organisation-du-d%C3%A9veloppement#processus-de-d%C3%A9veloppement)
