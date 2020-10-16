@@ -1,72 +1,74 @@
 # CONTRIBUTING
 
+## Signaler un problème
 
-## Objectifs
+Si vous rencontrez un problème avec l'application vous pouvez nous contacter à contact@rdv-solidarites.fr 
+
+## Soumettre une mofification
+
+Voici la marche à suivre pour nous soumettre une modification de code
+- Clone le projet dans votre environement
+- Crée une branche 
+- Apporter les modifications que vous souhaitez en respectant [le guide de programmation](#Guide-de-programmation) 
+- Poussez votre code sur github
+- Crée une Pull Request 
+
+## Guide de programmation
+
+### Objectifs
 
 - Mettre en prod aussi fréquemment que possible et d'autant petites releases que possible
-- Limiter le stock des "En cours" pour éviter d'avoir trop de sujets en tête en même temps
+- Limiter le stock des "En cours" pQour éviter d'avoir trop de sujets en tête en même temps
 - Chaque développeur·se doit pouvoir être autonome dans le processus de déploiement
 
-## Installation
-
-Installer :
-- Ruby 2.7.1
-- postgresql
-- Yarn : voir https://yarnpkg.com/en/docs/install
-- Foreman : voir https://github.com/ddollar/foreman
-
-```bash
-sudo -u postgres psql -c "create role MON_LOGIN_UNIX with createdb login superuser;"
-```
-
-Afin d'initialiser l'environnement de développement, exécutez la commande suivante :
-
-```bash
-bin/setup
-```
-
-Vous pouvez aussi vous créer un compte SuperAdmin dans une console Rails :
-
-```
-SuperAdmin.create!(email: 'email_associated_to_your_github_account@prov.com')
-```
-
-
-## Vues
+### Vues
 
 - préférer le passage explicites de variables locales à l'utilisation de variables d'instances venant des controlleurs dans les partials pour permettre plus de généricité
 
-## Tests
+### Tests
 
 - Privilégier les tests unitaires sur les tests bout en bout ;
 - Nous allons considérer que les tests unitaires dans rails peuvent inclure ActiveRecord ;
 - Chaque élément nécessaire à un test doit se trouver dans un même écran (dans les mêmes ~20 lignes);
 - Nous utilisons [RSpec](https://rspec.info/) pour écrire nos tests
 
+#### Exécution des tests (RSpec)
 
-## Déploiement
+Les tests ont besoin de leur propre base de données et certains d'entre eux utilisent Selenium pour s'exécuter dans un navigateur. N'oubliez pas de créer la base de test et d'installer chrome et chromedriver pour exécuter tous les tests.
 
-Les environnements de production et de pré-production (démo) sont hébergés sur
-[Scalingo](https://scalingo.com/)
+Pour exécuter les tests de l'application, plusieurs possibilités :
 
-La CI est configurée pour déployer automatiquement la branche `master` vers un
-un environnement de [démo](https://demo.rdv-solidarites.fr) et **vers la production**.
+- Lancer tous les tests
 
+```bash
+bin/rspec
+```
 
-> _Note : Éviter de merger des PR simultanément_
->
-> Il faut éviter de merger sur master des PRs trop rapprochées (quelques minutes) pour éviter que ça ne s'emmêle et déploie la mauvaise
-> 
-> ou alors, il faut merger la première PR -> annuler le build CircleCI tout de suite -> puis merger la deuxième PR
+- Lancer un test en particulier
 
+```bash
+bin/rspec file_path/file_name_spec.rb:line_number
+```
 
-### Déploiement manuel (vers la demo ou la production)
+- Lancer tous les tests d'un fichier
 
-`scalingo integration-link-manual-deploy -a demo-rdv-solidarites master`
+```bash
+bin/rspec file_path/file_name_spec.rb
+```
 
-Pré-requis :
-- être ajouté en tant que collaborateur sur l'application Scalingo, demandez à un membre de l'équipe
-- Installer le [CLI Scalingo](https://doc.scalingo.com/platform/cli/start)
-- Connectez votre machine avec `scalingo login --api-token SOME_TOKEN` que vous pourrez créer ici : [https://my.scalingo.com/profile](https://my.scalingo.com/profile)
+#### Linting
+
+Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité du code.
+
+- Faire tourner tous les linters : `bin/rake ci`
+- Demander à Rubocop de corriger les problèmes qu'il rencontre : `bin/rubocop -a`
+- Demander à Brakeman de passer en revue les vulnérabilités : `bin/brakeman -I`
+
+## D'autres façon de contribuer
+
+Si vous souhaitez contribuer à notre pojet, vous pouvez 
+- En parler autour de vous 
+- Participer à la [documentation](https://doc.rdv-solidarites.fr/)
+- Faire des petits gâteaux maisons pour l'équipe de RDV-solidarité (^^)
 
 

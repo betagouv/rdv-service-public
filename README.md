@@ -34,4 +34,8 @@ Ce logiciel et son code source sont distribués sous [licence AGPL](https://www.
 
 [Contribuer](CONTRIBUTING.md)
 
+## Documentation
+
+[documentation](https://doc.rdv-solidarites.fr/)
+
 
