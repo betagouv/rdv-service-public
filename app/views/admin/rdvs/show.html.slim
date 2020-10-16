@@ -10,7 +10,8 @@
         span.badge.badge-danger
 
 - content_for :breadcrumb do
-  = link_to "Dupliquer…", duplicate_rdv_wizard_path(@rdv), class: "btn btn-outline-white"
+  = link_to "Dupliquer…", admin_organisation_agent_searches_path(current_organisation, service_id: @rdv.motif.service_id, from_date: @rdv.starts_at + 1.day, user_ids: @rdv.user_ids, context: @rdv.context), class: "btn btn-outline-white"
+
 
 .row
   .col-md-6.mb-3

@@ -2,7 +2,6 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
   respond_to :html, :js
 
   def index
-    @user = User.find(params[:user_id]) if params[:user_id]
     @form = build_agent_creneaux_search_form
     @search_results = SearchCreneauxForAgentsService.perform_with(@form) \
       if (params[:commit].present? || request.format.js?) && @form.valid?
@@ -30,7 +29,8 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
       service_id: params[:service_id],
       motif_id: params[:motif_id],
       from_date: params[:from_date],
-      user_id: params[:user_id].presence,
+      user_ids: params[:user_ids].presence || [],
+      context: params[:context].presence,
       agent_ids: params[:agent_ids]&.reject(&:blank?) || [],
       lieu_ids: params[:lieu_ids]&.reject(&:blank?) || []
     )

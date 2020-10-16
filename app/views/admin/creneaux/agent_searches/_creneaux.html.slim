@@ -1,4 +1,4 @@
-- path_opts = { lieu_ids: [lieu.id], motif_id: form.motif.id, agent_ids: form.agent_ids, user_id: form.user_id }
+- path_opts = { lieu_ids: [lieu.id], motif_id: form.motif.id, agent_ids: form.agent_ids, user_ids: form.user_ids, context: form.context }
 
 div.js-creneaux-list.collapsed id="creneaux-lieu-#{lieu.id}"
   .row
@@ -30,11 +30,11 @@ div.js-creneaux-list.collapsed id="creneaux-lieu-#{lieu.id}"
             - else
               - creneaux_for_date = creneaux.select { |c| c.starts_at.to_date == date }.sort_by(&:starts_at)
               - creneaux_for_date.first(5).each do |creneau|
-                = render "creneau", creneau: creneau, user_ids: form.user_ids
+                = render "creneau", creneau: creneau, form: form
               - if creneaux_for_date.size > 5
                 .collapse id="collapse-#{lieu.id}"
                   - creneaux_for_date.drop(5).each do |creneau|
-                    = render "creneau", creneau: creneau, user_ids: form.user_ids
+                    = render "creneau", creneau: creneau, form: form
 
     - if form.date_range.end < next_availability.starts_at.to_date
       .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
