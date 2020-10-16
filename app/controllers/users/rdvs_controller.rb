@@ -36,7 +36,7 @@ class Users::RdvsController < UserAuthController
 
   def cancel
     authorize(@rdv)
-    if @rdv.cancel
+    if @rdv.cancel!
       @rdv.file_attentes.destroy_all
       flash[:notice] = "Le RDV a bien été annulé."
     else

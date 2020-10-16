@@ -25,23 +25,14 @@ class Admin::RdvsController < AgentAuthController
     # TODO: replace this manual touch. It forces creating a version when an
     # agent or a user is removed from the RDV. the touch: true option on the
     # association does not do it for some reason I could not figure out
-    if params[:status] == "excused"
+    @rdv.cancelled_at = nil
+    if params[:rdv][:status] == "excused"
       CancelRdvByAgentService.new(@rdv).perform
       flash[:notice] = "Le rendez-vous a été annulé."
     elsif @rdv.update(rdv_params)
       flash[:notice] = "Le rendez-vous a été modifié."
     end
     respond_right_bar_with @rdv, location: request.referer
-  end
-
-  def status
-    # TODO: remove this route and use #update
-    authorize(@rdv)
-    cancelled_at = ["unknown", "waiting", "seen"].include?(status_params[:status]) ? nil : Time.zone.now
-    @rdv.update(status: status_params[:status], cancelled_at: cancelled_at)
-    @rdv.file_attentes.delete_all
-    flash[:notice] = "Le statut du RDV a été modifié"
-    redirect_to admin_organisation_rdv_path(@rdv.organisation, @rdv)
   end
 
   def destroy

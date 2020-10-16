@@ -15,7 +15,7 @@ module AgentsHelper
     link_to "Supprimer", admin_organisation_agent_path(current_organisation, agent), data: { confirm: "Êtes-vous sûr de vouloir supprimer cet agent ?" }, method: :delete, class: "dropdown-item" if policy([:agent, agent]).destroy?
   end
 
-  def build_link_to_rdv_wizard_params(creneau, user_ids)
+  def build_link_to_rdv_wizard_params(creneau, form)
     params = {}
     params[:step] = 2
     params[:starts_at] = creneau.starts_at
@@ -24,20 +24,9 @@ module AgentsHelper
     params[:organisation_id] = creneau.motif.organisation_id
     params[:duration_in_min] = creneau.motif.default_duration_in_min
     params["agent_ids"] = [creneau.agent_id]
-    params["user_ids"] = user_ids if user_ids.present?
+    params["user_ids"] = form.user_ids if form.user_ids.present?
+    params["context"] = form.context if form.context.present?
     params
-  end
-
-  def duplicate_rdv_wizard_path(rdv)
-    new_admin_organisation_rdv_wizard_step_path(
-      step: 1,
-      service_id: rdv.motif.service_id,
-      agent_ids: rdv.agent_ids,
-      user_ids: rdv.user_ids,
-      **rdv.attributes.symbolize_keys.slice(
-        :starts_at, :motif_id, :lieu_id, :organisation_id, :duration_in_min, :context
-      )
-    )
   end
 
   def display_meta_note(note)

@@ -10,8 +10,10 @@
   .card-body
     h5.card-title Configuration des filtres
     = simple_form_for(@form, as: '', url: admin_organisation_agent_searches_path(current_organisation), method: :get, html: { class: 'js-creneaux-form' }) do |f|
-      - if @user
-        = hidden_field_tag :user_id, @user.id
+      - @form.user_ids.each do |user_id|
+        = hidden_field_tag "user_ids[]", user_id
+      - if @form.context.present?
+        = hidden_field_tag :context, @form.context
       .row
         .col-md-4
           = f.input :service_id, \

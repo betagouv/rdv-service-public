@@ -10,7 +10,8 @@
         span.badge.badge-danger
 
 - content_for :breadcrumb do
-  = link_to "Dupliquer…", duplicate_rdv_wizard_path(@rdv), class: "btn btn-outline-white"
+  = link_to "Dupliquer…", admin_organisation_agent_searches_path(current_organisation, service_id: @rdv.motif.service_id, from_date: @rdv.starts_at + 1.day, user_ids: @rdv.user_ids, context: @rdv.context), class: "btn btn-outline-white"
+
 
 .row
   .col-md-6.mb-3
@@ -38,7 +39,7 @@
         .row
           .col
             - if !@rdv.past? && !@rdv.cancelled?
-              = link_to "Annuler", admin_organisation_rdv_path(@rdv.organisation, @rdv, status: :excused), method: :put, class: "btn btn-outline-danger mr-1", data: { confirm: "Êtes-vous sûr de vouloir annuler ce rendez-vous ? L'usager recevra une notification de cette annulation."}
+              = link_to "Annuler", admin_organisation_rdv_path(@rdv.organisation, @rdv, rdv: {status: :excused}), method: :put, class: "btn btn-outline-danger mr-1", data: { confirm: "Êtes-vous sûr de vouloir annuler ce rendez-vous ? L'usager recevra une notification de cette annulation."}
               | ou
             = link_to "Supprimer ❌", admin_organisation_rdv_path(@rdv.organisation, @rdv), method: :delete, class: "btn btn-link text-danger", data: { confirm: "Êtes-vous sûr de vouloir supprimer ce rendez-vous ? Cette action est définitive et aucune notification ne sera envoyée à #{@rdv.users.map(&:full_name).to_sentence}."}
 
