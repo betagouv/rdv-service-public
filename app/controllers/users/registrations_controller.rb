@@ -1,12 +1,9 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   layout :user_devise_layout
 
-  def new
-    @motif = Motif.find(params["motif_id"]) if params && params["motif_id"].present?
-    @starts_at = Time.parse(params["starts_at"]) if params && params["starts_at"].present?
-    @lieu = Lieu.find(params["lieu_id"]) if params && params["lieu_id"].present?
-    super
-  end
+  include FromRdvParams
+
+  before_action :set_resources_from_rdv_params
 
   def create
     return invite_and_redirect if User.find_by(email: sign_up_params[:email], confirmed_at: nil)
