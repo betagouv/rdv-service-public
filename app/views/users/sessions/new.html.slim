@@ -4,7 +4,7 @@
   = render "users/rdvs/summary_in_user_wizard", motif: @motif, lieu: @lieu, starts_at: @starts_at
 
   .card-body
-    = render "common/session_form", resource: User.new, resource_name: "user"
+    = render "common/session_form", resource: resource, resource_name: resource_name
 
     hr
     .text-center
