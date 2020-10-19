@@ -10,5 +10,5 @@
     .text-center
       p.text-muted
         | Vous n'avez pas de compte ?&nbsp;
-        = link_to new_registration_path(resource_name, params: params.slice(:lieu_id, :motif_id, :starts_at, :step).permit!) do
+        = link_to new_registration_path(resource_name, params: params.permit(:lieu_id, :motif_id, :starts_at)) do
           b Je m'inscris
