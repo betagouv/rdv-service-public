@@ -68,5 +68,4 @@ class Users::RdvWizardStepsController < UserAuthController
                     user_profiles_attributes: [:logement, :id, :organisation_id]
                   ])
   end
-
 end
