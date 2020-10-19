@@ -6,11 +6,11 @@ require "csv"
 # that the model files are loaded twice, or something related to HABTM
 # associations..
 
-# ORGANISATIONS
+# ORGANISATIONS & SECTORS
 
 Organisation.skip_callback(:create, :after, :notify_admin_organisation_created)
 org_paris_nord = Organisation.create!(name: "MDS Paris Nord", phone_number: "0123456789", departement: "75", human_id: "paris-nord")
-organisations_by_human_id = [
+human_id_map = [
   { human_id: "1030", name: "MDS Arques" },
   { human_id: "1034", name: "MDS Bapaume" },
   { human_id: "1031", name: "MDS Arras Nord" },
@@ -37,13 +37,13 @@ organisations_by_human_id = [
   { human_id: "1054", name: "MDS St Omer" },
   { human_id: "1055", name: "MDS St Pol sur Ternoise" }
 ].map do |attributes|
-  [
-    attributes[:human_id],
-    Organisation.create!(phone_number: "0123456789", departement: "62", **attributes)
-  ]
+  organisation = Organisation.create!(phone_number: "0123456789", departement: "62", **attributes)
+  sector = Sector.create!(name: attributes[:name][4..-1], human_id: attributes[:human_id], departement: "62")
+  sector.attributions.create!(organisation: organisation, level: SectorAttribution::LEVEL_ORGANISATION)
+  [attributes[:human_id], { organisation: organisation, sector: sector }]
 end.to_h
-org_arques = organisations_by_human_id["1030"]
-org_bapaume = organisations_by_human_id["1034"]
+org_arques = human_id_map["1030"][:organisation]
+org_bapaume = human_id_map["1034"][:organisation]
 Organisation.set_callback(:create, :after, :notify_admin_organisation_created)
 
 # SERVICES
@@ -206,12 +206,12 @@ lieu_bapaume_est = Lieu.create!(
 
 ## ZONES
 zones_csv_path = File.join(Rails.root, "db", "seeds", "zones_62.csv")
-CSV.read(zones_csv_path, headers: :first_row).each do |att|
+CSV.read(zones_csv_path, headers: :first_row).each do |row|
   Zone.create!(
     level: "city",
-    organisation: organisations_by_human_id[att["organisation_id"]],
-    city_code: att["city_code"],
-    city_name: att["city_name"]
+    sector: human_id_map[row["sector_id"]][:sector],
+    city_code: row["city_code"],
+    city_name: row["city_name"]
   )
 end
 

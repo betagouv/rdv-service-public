@@ -103,4 +103,12 @@ module ApplicationHelper
     user_agent.include?("apple") && user_agent.include?("mobile")
     # HACK: avoids including a full-blown gem like `browser`
   end
+
+  def human_id(organisation_or_sector)
+    content_tag(
+      :span,
+      organisation_or_sector.human_id,
+      class: "badge badge-light text-monospace"
+    )
+  end
 end

@@ -1,14 +1,13 @@
 class ImportZoneRowsService < BaseService
   include DataUtils
 
-  REQUIRED_FIELDS = ["organisation_id", "city_name", "city_code"].freeze
+  REQUIRED_FIELDS = ["sector_id", "city_name", "city_code"].freeze
 
   def initialize(rows, departement, agent, **options)
     @rows = rows
     @departement = departement
     @agent = agent
     @dry_run = options.fetch(:dry_run, false)
-    @override_conflicts = options.fetch(:override_conflicts, false)
   end
 
   def perform
@@ -42,7 +41,7 @@ class ImportZoneRowsService < BaseService
       validate_inner_conflicts? &&
       @rows.each_with_index.map do |row, row_index|
         validate_row_fields_present(row, row_index) &&
-        validate_row_organisation_found(row, row_index) &&
+        validate_row_sector_found(row, row_index) &&
         validate_row_valid_zone(row, row_index) &&
         validate_row_authorized(row, row_index)
       end.all?
@@ -83,11 +82,11 @@ class ImportZoneRowsService < BaseService
     false
   end
 
-  def validate_row_organisation_found(row, row_index)
-    return true if find_organisation(row["organisation_id"]).present?
+  def validate_row_sector_found(row, row_index)
+    return true if find_sector(row["sector_id"]).present?
 
-    @result[:row_errors][row_index] = "Aucune organisation trouvée pour l'identifiant #{row['organisation_id']}"
-    @result[:counts][:errors][:organisation_not_found] += 1
+    @result[:row_errors][row_index] = "Aucun secteur trouvé pour l'identifiant #{row['sector_id']}"
+    @result[:counts][:errors][:sector_not_found] += 1
     false
   end
 
@@ -105,7 +104,7 @@ class ImportZoneRowsService < BaseService
     policy = Pundit.policy(AgentContext.new(@agent), [:agent, zone])
     return true if policy.create?
 
-    @result[:row_errors][row_index] = "Pas les droits nécessaires pour créer une zone pour l'organisation #{zone.organisation.human_id}"
+    @result[:row_errors][row_index] = "Pas les droits nécessaires pour créer une commune pour le secteur #{zone.sector_id}"
     @result[:counts][:errors][:unauthorized_zone] += 1
     false
   end
@@ -121,30 +120,23 @@ class ImportZoneRowsService < BaseService
     special_key = zone.new_record? ? :imported_new : :imported_override
     zone.save! unless @dry_run
     @result[:imported_zones] << zone
-    @result[:counts][:imported][zone.organisation.human_id] += 1
-    @result[:counts][special_key][zone.organisation.human_id] += 1
+    @result[:counts][:imported][zone.sector.human_id] += 1
+    @result[:counts][special_key][zone.sector.human_id] += 1
   end
 
   def build_zone(row)
-    unique_attributes = { level: "city", city_code: row["city_code"] }
-    extra_attributes = {
-      organisation: find_organisation(row["organisation_id"]),
-      city_name: row["city_name"]
-    }
-    if @override_conflicts
-      Zone.find_or_initialize_by(unique_attributes) # could be optimized
-        .tap { _1.assign_attributes(extra_attributes) }
-    else
-      Zone.new(unique_attributes.merge(extra_attributes))
-    end
+    unique_attributes = { level: "city", city_code: row["city_code"], sector: find_sector(row["sector_id"]) }
+    extra_attributes = { city_name: row["city_name"] }
+    Zone.find_or_initialize_by(unique_attributes) # could be optimized
+      .tap { _1.assign_attributes(extra_attributes) }
   end
 
-  def find_organisation(human_id)
-    @organisations_cache ||= {}
-    unless @organisations_cache.key?(human_id)
-      @organisations_cache[human_id] = \
-        Organisation.find_by(departement: @departement, human_id: human_id)
+  def find_sector(human_id)
+    @sectors_cache ||= {}
+    unless @sectors_cache.key?(human_id)
+      @sectors_cache[human_id] = \
+        Sector.find_by(departement: @departement, human_id: human_id)
     end
-    @organisations_cache[human_id]
+    @sectors_cache[human_id]
   end
 end

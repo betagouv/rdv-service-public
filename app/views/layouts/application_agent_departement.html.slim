@@ -3,18 +3,28 @@
     li.side-nav-title Sectorisation du #{current_departement}
     li.side-nav-item
       = link_to \
-        "Instructions...",
         admin_departement_setup_checklist_path(current_departement), \
         class: 'side-nav-link', \
-        id: "menu-departement-setup-checklist"
+        id: "menu-departement-setup-checklist" \
+      do
+        i.fa.fa-info
+        | Instructions
     li.side-nav-item
       = link_to \
-        admin_departement_zones_path(current_departement), \
+        admin_departement_sectors_path(current_departement), \
         class: 'side-nav-link', \
-        id: 'menu-departement-zones' \
+        id: 'menu-departement-sectors' \
       do
         i.fa.fa-table
-        | Zones
+        | Secteurs
+    li.side-nav-item
+      = link_to \
+        admin_departement_sectors_path(current_departement, view: "map"), \
+        class: 'side-nav-link', \
+        id: 'menu-departement-sectors-map' \
+      do
+        i.fa.fa-map
+        | Carte
     li.side-nav-item
       = link_to \
         new_admin_departement_zone_import_path(current_departement), \
@@ -23,26 +33,10 @@
       do
         i.fa.fa-download
         | Importer fichier
-    li.side-nav-item
-      = link_to \
-        admin_departement_organisations_path(current_departement), \
-        class: 'side-nav-link', \
-        id: 'menu-departement-organisations' \
-      do
-        i.fa.fa-building
-        | Organisations
-    li.side-nav-item
-      = link_to \
-        admin_departement_zones_path(current_departement, view: "map"), \
-        class: 'side-nav-link', \
-        id: 'menu-departement-zones-map' \
-      do
-        i.fa.fa-map
-        | Carte
   ul.metismenu.side-nav
     li.side-nav-item
       - if policy_scope(Organisation).count > 1
-        = link_to organisations_path, class: 'side-nav-link' do
+        = link_to admin_organisations_path, class: 'side-nav-link' do
           span> Liste organisations
           i.fa.fa-sign-out-alt>
       - else

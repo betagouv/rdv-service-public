@@ -23,36 +23,36 @@
           li Utilisez un encodage UTF-8
           li
             span> Assurez-vous de bien respecter les trois noms de colonnes
-            span.text-monospace> city_id, city_name, organisation_id
+            span.text-monospace> city_id, city_name, sector_id
           li L'ordre des colonnes n'est pas important
           li
             span> Assurez-vous que la colonne
-            span.text-monospace> organisation_id
+            span.text-monospace> sector_id
             span> contient des
-            =link_to("identifiants d'organisations valides", admin_departement_organisations_path(current_departement))
+            =link_to("identifiants de secteurs valides", admin_departement_sectors_path(current_departement))
 
     .card
       .card-header Modèle de fichier à importer
-      table.table.table-bordered.bg-light
+      table.table.table-bordered.bg-light.text-monospace
         thead
           tr
-            th.text-monospace
-              abbr[title="identifiant de l'organisation (obligatoire)"] organisation_id
-            th.text-monospace
+            th
+              abbr[title="identifiant du secteur (obligatoire)"] sector_id
+            th
               abbr[title="Code INSEE de la commune (obligatoire)"] city_code
-            th.text-monospace
+            th
               abbr[title="Nom de la commune (obligatoire)"] city_name
         tbody
           tr
-            td arques
+            td arques-rural
             td> 62053
             td Audincthun
           tr
-            td arques
+            td arques-rural
             td> 62205
             td CAMPAGNE-LES-WARDRECQUES
           tr
-            td bapaume
+            td bapaume-large
             td> 62042
             td ATHIES
           tr
