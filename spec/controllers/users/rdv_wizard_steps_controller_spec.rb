@@ -46,7 +46,7 @@ describe Users::RdvWizardStepsController, type: :controller do
     context "without logged user" do
       it "redirect to new use session path with parameters" do
         get :new, params: params
-        expect(response).to redirect_to(new_user_session_path(params: params))
+        expect(response).to redirect_to(new_user_session_path)
       end
     end
   end
