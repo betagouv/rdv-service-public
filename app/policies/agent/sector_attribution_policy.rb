@@ -1,28 +1,9 @@
-class Agent::ZonePolicy < DefaultAgentPolicy
-  # agents can see all departement zones but only edit zones from orgas they
-  # belong to
-
-  def index?
-    @context.agent.admin?
+class Agent::SectorAttributionPolicy < DefaultAgentPolicy
+  def create?
+    orga_admin?
   end
 
   def destroy?
-    orga_admin?
-  end
-
-  def destroy_multiple?
-    orga_admin?
-  end
-
-  def edit?
-    orga_admin?
-  end
-
-  def update?
-    orga_admin?
-  end
-
-  def create?
     orga_admin?
   end
 

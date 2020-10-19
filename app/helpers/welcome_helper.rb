@@ -46,9 +46,16 @@ module WelcomeHelper
     (controller_name == "welcome" && params[:departement]) || (params[:search] && params[:search][:departement])
   end
 
-  def sectorisation_hint(zone, organisations, departement)
-    return nil if !sectorisation_enabled?(departement) || zone.nil?
+  def sectorisation_hint(sectorisation_infos)
+    return nil if !sectorisation_infos.enabled? || sectorisation_infos.organisations.empty?
 
-    "Sectorisation : Commune #{@zone.city_name} → #{organisations.pluck(:name).join(', ')}"
+    explanations = sectorisation_infos.zones.map do |zone|
+      "#{zone.city_name} → " +
+        zone.sector.attributions.map { _1.organisation.name }.join(", ")
+    end
+    content_tag(:div, class: "d-flex") do
+      content_tag(:div, "Sectorisation :", class: "mr-1") +
+        content_tag(:div, explanations.join("<br />").html_safe)
+    end
   end
 end

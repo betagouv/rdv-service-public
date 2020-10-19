@@ -18,3 +18,16 @@ a[disabled] {
 .word-break-all {
   word-break: break-all;
 }
+
+.d-grid {
+  display: grid;
+}
+.grid-three-columns {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.grid-align-center {
+  align-items: center;
+}
+.grid-first-column-empty > *:nth-child(1) {
+  grid-column-start: 2;
+}

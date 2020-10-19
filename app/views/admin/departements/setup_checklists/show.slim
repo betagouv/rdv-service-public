@@ -9,19 +9,28 @@
       .card-header
         h4 Fonctionnement de la sectorisation
       .card-body
-        p La sectorisation permet d’attacher des zones géographiques aux organisations. Un usager est orienté vers l'organisation dont il dépend en fonction de l'adresse saisie lors de sa prise de RDV en ligne
-        p Actuellement, Les zones géographiques correspondent à des communes entières.
-        p Les Zones à l'échelle d'une rue ou d'une partie de rue seront bientôt développées.
-        p Pour l’instant, la sectorisation ne permet pas de relier des agents précis à des zones géographiques. Les zones sont attachées à des organisations entières.
-        p Seuls les Agents avec le rôle Administrateur peuvent configurer la sectorisation des organisations qu’ils administrent. Néanmoins, ils ont la visibilité sur l’ensemble des zones du Département.
+        p La sectorisation permet d’attribuer des secteurs géographiques à des organisations. Un usager est orienté vers les organisations dont il dépend en fonction de l'adresse saisie lors de sa prise de RDV en ligne
+
+        p.mt-3
+          | Chaque <b>Secteur</b> est défini comme un ensemble de communes.
+          br
+          span.text-muted La possibilité de définir un secteur à l'échelle de rues sera bientôt développée
+
+        p.mt-3
+          | Chaque <b>Secteur</b> est attribué à une ou plusieurs <b>Organisations</b>.
+          br
+          span.text-muted Les attributions au niveau d'un <b>Agent</b> seront bientôt développées.
+
+        p.mt-3 Seuls les <b>Agents</b> avec le rôle Administrateur peuvent configurer la sectorisation des organisations qu’ils administrent. Néanmoins, ils ont la visibilité sur l’ensemble des <b>Secteurs</b> du Département.
         p.d-flex.justify-content-between.align-items-center
           span= link_to "Importer un fichier", new_admin_departement_zone_import_path(current_departement), class: 'btn btn-primary'
           span ou
-          span= link_to "Créer des zones <br/> manuellement".html_safe, admin_departement_zones_path(current_departement), class: 'btn btn-link'
+          span= link_to "Créer des secteurs".html_safe, admin_departement_sectors_path(current_departement), class: 'btn btn-link'
         hr
         p
           span> En cas de problème, veuillez nous écrire à cette adresse pour que nous puissions vous aider:
           a href='mailto:dev@rdv-solidarites.fr' dev@rdv-solidarites.fr
+
   .col-md-6
     .card
       .card-header
@@ -36,7 +45,7 @@
           p Lors de la prise de RDV en ligne, les communes ou adresses non attachées à une organisation ne renvoient à aucun résultat.
           hr
           h5 Désactivation
-          p En désactivant la sectorisation, les zones seront ignorées et les usagers pourront faire des recherches dans l'ensemble du département
+          p En désactivant la sectorisation, les <b>Secteurs</b> seront ignorés et les usagers pourront faire des recherches dans l'ensemble du département
           p
             span> Pour désactiver la sectorisation, veuillez nous écrire sur
             a[href='mailto:dev@rdv-solidarites.fr'] dev@rdv-solidarites.fr
@@ -56,3 +65,30 @@
           p
             span> Pour activer la sectorisation, veuillez nous écrire sur
             a[href='mailto:dev@rdv-solidarites.fr'] dev@rdv-solidarites.fr
+
+  .col-md-12
+    .card
+      .card-header
+        h4 Exemple
+      .d-flex
+        div= image_pack_tag("sectorisation_explanations.png", style: "width: 700px;")
+        div.p-2
+          div.mb-1
+            b Cas 1. un usager cherche dans la commune AUDICTHUN
+          ul
+            li Une <b>Zone</b> correspondant à cette commune est trouvée : la Zone 33.
+            li Le <b>Secteur</b> "ARQUES & ENVIRONS" associé à cette <b>Zone</b> est attribué à 1 Organisation
+            li Les RDVs proposés à l'usager seront donc ceux disponibles dans l'Organisation "MDS Site Arques"
+
+          div.mt-3.mb-1
+            b Cas 2. un usager cherche dans la commune DELETTES
+          ul
+            li Une <b>Zone</b> correspondant à cette commune est trouvée : la Zone 105.
+            li Le <b>Secteur</b> "RURAL" associé à cette <b>Zone</b> est attribué à 2 Organisations
+            li Les RDVs proposés à l'usager seront donc ceux disponibles dans ces deux Organisations "MDS Site ERNY" et "MDS locale campagne"
+
+          div.mt-3.mb-1
+            b Cas 3. un usager cherche dans la commune BOMY
+          ul
+            li Aucune <b>Zone</b> n'est associée à cette commune, donc aucun <b>Secteur</b>, ni aucune <b>Organisation</b>
+            li Aucun RDV ne sera donc proposé à cet usager, il lui sera indiqué que la prise de RDV en ligne n'est pas disponible à son adresse.

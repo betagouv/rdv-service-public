@@ -48,8 +48,8 @@ class WelcomeController < ApplicationController
     @where = lieu_params[:where]
     @city_code = lieu_params[:city_code]
     @service = Service.find(lieu_params[:service]) if lieu_params[:service]
-    @zone = Zone.in_address_sector(@city_code)
-    @organisations = Organisation.in_zone_or_departement(@zone, @departement)
+    @sectorisation_infos = SectoriseAddressService.perform_with(@departement, @city_code)
+    @organisations = @sectorisation_infos.organisations
   end
 
   private
