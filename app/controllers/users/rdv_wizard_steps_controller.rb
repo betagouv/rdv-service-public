@@ -2,15 +2,7 @@ class Users::RdvWizardStepsController < UserAuthController
   RDV_PERMITTED_PARAMS = [:starts_at, :motif_id, :context, user_ids: []].freeze
   EXTRA_PERMITTED_PARAMS = [:lieu_id, :departement, :where, :created_user_id, :latitude, :longitude, :city_code].freeze
 
-  skip_before_action :authenticate_user!, only: :new
-  skip_before_action :set_paper_trail_whodunnit, only: :new
-
   def new
-    unless user_signed_in?
-      redirect_to session_path(User, params: params.permit(:lieu_id, :motif_id, :starts_at, :step))
-      skip_authorization
-      return
-    end
     @rdv_wizard = rdv_wizard_for(current_user, query_params)
     @rdv = @rdv_wizard.rdv
     authorize(@rdv)
