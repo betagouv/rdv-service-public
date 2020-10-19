@@ -87,6 +87,23 @@ RSpec.describe Admin::RdvsController, type: :controller do
         put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { lieu_id: lieu.id } }
         expect(response).to redirect_to(referer_path)
       end
+
+      it "where status is excused, cancelled_at should not be nil" do
+        today = rdv.starts_at - 3.days
+        travel_to(today)
+        put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { status: "excused" } }
+        expect(rdv.reload.cancelled_at).to eq(today)
+        expect(rdv.reload.status).to eq("excused")
+      end
+
+      it "where status is excused, change other field should not reset cancelled_at" do
+        today = rdv.starts_at - 3.days
+        travel_to(today)
+        rdv.cancel!
+        put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { context: "change some context" } }
+        expect(rdv.reload.cancelled_at).to eq(today)
+        expect(rdv.reload.status).to eq("excused")
+      end
     end
 
     context "with invalid params" do
