@@ -4,7 +4,7 @@ class CancelRdvByAgentService
   end
 
   def perform
-    @rdv.cancel!
+    @rdv.cancel
     Notifications::Rdv::RdvCancelledByAgentService.perform_with(@rdv)
   end
 end
