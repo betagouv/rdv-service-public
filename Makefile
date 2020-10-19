@@ -1,8 +1,11 @@
+install: ## Install project & dependencies
+	bundle install && yarn install && bundle exec rails db:migrate
+
+update: ## update project & dependencies
+	git pull --rebase --prune https://github.com/betagouv/rdv-solidarites.fr.git master && bundle install && yarn install && bundle exec rails db:migrate
+
 test: ## Run the tests and rubocop
 	bundle exec rubocop -a && bundle exec rspec --profile 3 && bundle exec brakeman
-
-install: ## Install or update dependencies
-	bundle install && yarn install && bundle exec rails db:migrate
 
 run: ## Start the app server
 	foreman s -f Procfile.dev
