@@ -76,7 +76,7 @@ RSpec.describe Admin::RdvsController, type: :controller do
       end
 
       it "set cancelled_at to nil when change status from cancel to other" do
-        rdv.cancel!
+        rdv.cancel
         put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { status: "waiting" } }
         expect(rdv.reload.cancelled_at).to eq(nil)
         expect(rdv.reload.status).to eq("waiting")
@@ -86,6 +86,30 @@ RSpec.describe Admin::RdvsController, type: :controller do
         lieu = create(:lieu, organisation: organisation)
         put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { lieu_id: lieu.id } }
         expect(response).to redirect_to(referer_path)
+      end
+
+      it "where status is excused, cancelled_at should not be nil" do
+        today = rdv.starts_at - 3.days
+        travel_to(today)
+        put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { status: "excused" } }
+        expect(rdv.reload.cancelled_at).to eq(today)
+        expect(rdv.reload.status).to eq("excused")
+      end
+
+      it "where status is excused, change other field should not reset cancelled_at" do
+        today = rdv.starts_at - 3.days
+        travel_to(today)
+        rdv.cancel
+        put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { context: "change some context" } }
+        expect(rdv.reload.cancelled_at).to eq(today)
+        expect(rdv.reload.status).to eq("excused")
+      end
+
+      it "where status is excused, change other field should not reset cancelled_at" do
+        rdv.update(cancelled_at: 2.days.ago, status: "excused")
+        put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { status: "unknown" } }
+        expect(rdv.reload.cancelled_at).to eq(nil)
+        expect(rdv.reload.status).to eq("unknown")
       end
     end
 

@@ -36,11 +36,11 @@ describe Rdv, type: :model do
     end
   end
 
-  describe "#cancel!" do
+  describe "#cancel" do
     let(:rdv) { create(:rdv) }
     let(:now) { Time.current }
 
-    subject { rdv.cancel! }
+    subject { rdv.cancel }
 
     before { freeze_time }
     after { travel_back }
