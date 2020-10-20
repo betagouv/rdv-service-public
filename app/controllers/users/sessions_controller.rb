@@ -1,7 +1,10 @@
 class Users::SessionsController < Devise::SessionsController
   layout "user_registration"
 
+  include FromRdvParams
+
   before_action :exclude_signed_in_agents
+  before_action :set_resources_from_rdv_params
 
   def create
     if auth_options[:scope] == :user && (self.resource = Agent.find_by(email: params[:user]["email"])) && resource.valid_password?(params[:user]["password"])
