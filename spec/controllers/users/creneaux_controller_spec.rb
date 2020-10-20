@@ -39,57 +39,61 @@ RSpec.describe Users::CreneauxController, type: :controller do
   end
 
   describe "GET #edit" do
+    let(:starts_at) { 3.days.from_now }
+
     subject do
-      get :edit, params: { rdv_id: rdv.id, starts_at: 3.day.from_now }
+      get :edit, params: { rdv_id: rdv.id, starts_at: starts_at }
       rdv.reload
     end
 
     before do
       travel_to(now)
       sign_in user
+      expect(Users::CreneauSearch).to receive(:creneau_for)
+        .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
+        .and_return(returned_creneau)
     end
 
     context "creneau is available" do
-      let!(:plage_ouverture) { create(:plage_ouverture, first_day: now + 3.days, start_time: Tod::TimeOfDay.new(10), lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
-
+      let(:returned_creneau) { Creneau.new }
       before { subject }
-
       it { expect(response.body).to include("Modification du Rendez-vous") }
       it { expect(response.body).to include("Confirmer le nouveau créneau") }
     end
 
     context "creneau isn't available" do
+      let(:returned_creneau) { nil }
       before { subject }
-
       it { expect(response).to redirect_to(users_creneaux_index_path(rdv_id: rdv.id)) }
     end
   end
 
   describe "PUT #update" do
+    let(:starts_at) { 3.days.from_now }
+
     subject do
-      put :update, params: { rdv_id: rdv.id, starts_at: 3.day.from_now }
+      put :update, params: { rdv_id: rdv.id, starts_at: starts_at }
       rdv.reload
     end
 
     before do
       travel_to(now)
       sign_in user
+      expect(Users::CreneauSearch).to receive(:creneau_for)
+        .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
+        .and_return(returned_creneau)
     end
 
     context "creneau is available" do
-      let!(:plage_ouverture) { create(:plage_ouverture, first_day: now + 3.days, start_time: Tod::TimeOfDay.new(10), motifs: [motif], lieu: lieu, agent: agent, organisation: organisation) }
-      let!(:starts_at) { 3.day.from_now }
-
+      let(:returned_creneau) { Creneau.new(starts_at: starts_at) }
       before { subject }
-
       it { expect(response.body).to include("Votre RDV a été modifié") }
       it { expect(rdv.starts_at).to eq(starts_at) }
       it { expect(rdv.created_by).to eq("file_attente") }
     end
 
     context "creneau isn't available" do
-      let!(:starts_at) { 3.day.from_now }
-
+      let(:returned_creneau) { nil }
       it { expect(subject).to redirect_to(users_creneaux_index_path(rdv_id: rdv.id)) }
     end
   end

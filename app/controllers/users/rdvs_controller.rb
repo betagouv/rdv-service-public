@@ -9,22 +9,21 @@ class Users::RdvsController < UserAuthController
 
   def create
     motif = Motif.find(rdv_params[:motif_id])
-    starts_at = DateTime.parse(rdv_params[:starts_at])
-    creneau = Creneau.new(starts_at: starts_at, motif: motif, lieu_id: new_rdv_extra_params[:lieu_id])
-    user = user_for_rdv
-    save_succeeded = false
     ActiveRecord::Base.transaction do
-      rdv = creneau.to_rdv_for_user(user)
-      save_succeeded = if rdv.present?
-                         rdv.created_by = :user
-                         authorize(rdv)
-                         rdv.save
-                       else
-                         skip_authorization
-                         false
-                       end
+      @creneau = Users::CreneauSearch.creneau_for(
+        user: current_user,
+        starts_at: DateTime.parse(rdv_params[:starts_at]),
+        motif: motif,
+        lieu: Lieu.find(new_rdv_extra_params[:lieu_id])
+      )
+      if @creneau.present?
+        @rdv = build_rdv_from_creneau(@creneau)
+        authorize(@rdv)
+        @save_succeeded = @rdv.save
+      end
     end
-    if save_succeeded
+    skip_authorization if @creneau.nil?
+    if @save_succeeded
       flash[:notice] = "Votre rendez vous a été confirmé."
       redirect_to authenticated_user_root_path
     else
@@ -49,6 +48,19 @@ class Users::RdvsController < UserAuthController
 
   def set_rdv
     @rdv = policy_scope(Rdv).find(params[:rdv_id])
+  end
+
+  def build_rdv_from_creneau(creneau)
+    Rdv.new(
+      agents: [creneau.agent],
+      duration_in_min: creneau.duration_in_min,
+      starts_at: creneau.starts_at,
+      organisation: creneau.motif.organisation,
+      motif: creneau.motif,
+      lieu_id: creneau.lieu.id,
+      users: [user_for_rdv],
+      created_by: :user
+    )
   end
 
   def user_for_rdv
