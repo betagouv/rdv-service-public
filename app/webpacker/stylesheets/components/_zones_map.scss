@@ -1,6 +1,10 @@
 #zones-map {
   width: 100%;
   height: 80vh;
+
+  &.small {
+    height: 400px;
+  }
 }
 .legend-organisation-circle {
   padding: 3px 10px;
@@ -17,6 +21,16 @@
   width: 200px;
   max-height: 80vh;
   overflow: auto;
+}
+#zones-map-small-legend {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  background-color: rgba(255,255,255,0.8);
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+  height: 3rem;
+  overflow: hidden;
 }
 .hovered-city-container {
   min-height: 4rem;

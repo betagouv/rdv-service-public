@@ -97,4 +97,26 @@ describe Lieu, type: :model do
     it { expect(lieu_lille.distance(paris_loc[:latitude], paris_loc[:longitude])).to be_a_kind_of(Float) }
     it { expect(lieu_lille.distance(paris_loc[:latitude], paris_loc[:longitude])).to be_within(10000).of(204000) }
   end
+
+  describe "#with_open_slots_for_motifs" do
+    subject { Lieu.with_open_slots_for_motifs([motif]) }
+
+    context "motif has current plage ouvertures" do
+      let!(:motif) { create(:motif, name: "Vaccination") }
+      let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu) }
+      it { should include(lieu) }
+    end
+
+    context "motif has finished plage ouverture" do
+      let!(:motif) { create(:motif, name: "Vaccination") }
+      let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu, first_day: 2.days.ago, recurrence: nil) }
+      it { should_not include(lieu) }
+    end
+
+    context "motif has no plage ouvertures" do
+      let!(:motif) { create(:motif, name: "Vaccination") }
+      let(:plage_ouverture) { nil }
+      it { should_not include(lieu) }
+    end
+  end
 end

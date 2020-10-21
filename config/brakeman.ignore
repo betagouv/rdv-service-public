@@ -32,65 +32,34 @@
       "note": ""
     },
     {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "5dac0e77a1407c8fe48311e85004875de6856a785512abf2ef6e27ebc3f4a376",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/admin/motifs/index.html.slim",
-      "line": 24,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(Motif).includes(:organisation).active.includes(:service).order(Arel.sql(\"LOWER(name)\")).page(params[:page]), {})",
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "70b3c5f95e396f2dbf82d05bbcaa00342d6a11cbe91d45c6e82307dcc988662d",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/admin/departements/sectors/show.html.slim",
+      "line": 64,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Zone.human_enum_name(:level, (Unresolved Model).new.level).sub(\" \", \"&nbsp;\")",
       "render_path": [
         {
           "type": "controller",
-          "class": "Admin::MotifsController",
-          "method": "index",
-          "line": 9,
-          "file": "app/controllers/admin/motifs_controller.rb",
+          "class": "Admin::Departements::SectorsController",
+          "method": "show",
+          "line": 32,
+          "file": "app/controllers/admin/departements/sectors_controller.rb",
           "rendered": {
-            "name": "admin/motifs/index",
-            "file": "app/views/admin/motifs/index.html.slim"
+            "name": "admin/departements/sectors/show",
+            "file": "app/views/admin/departements/sectors/show.html.slim"
           }
         }
       ],
       "location": {
         "type": "template",
-        "template": "admin/motifs/index"
+        "template": "admin/departements/sectors/show"
       },
-      "user_input": "params[:page]",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "932ed3a736f629ffd5d6e0036b22d376294a4605c5a260b2006a303a2d340292",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/admin/lieux/index.html.slim",
-      "line": 18,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(Lieu).includes(:organisation).order(Arel.sql(\"LOWER(name)\")).page(params[:page]), {})",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Admin::LieuxController",
-          "method": "index",
-          "line": 6,
-          "file": "app/controllers/admin/lieux_controller.rb",
-          "rendered": {
-            "name": "admin/lieux/index",
-            "file": "app/views/admin/lieux/index.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "admin/lieux/index"
-      },
-      "user_input": "params[:page]",
-      "confidence": "Weak",
+      "user_input": null,
+      "confidence": "Medium",
       "note": ""
     },
     {
@@ -100,7 +69,7 @@
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/users/index.html.slim",
-      "line": 26,
+      "line": 27,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => policy_scope(User).active.order_by_last_name.page(params[:page]).search_by_text(params[:search]), {})",
       "render_path": [
@@ -151,7 +120,7 @@
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/motifs/index.html.slim",
-      "line": 24,
+      "line": 23,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => policy_scope(Motif).includes(:organisation).active.includes(:service).ordered_by_name.page(params[:page]), {})",
       "render_path": [
@@ -176,6 +145,6 @@
       "note": ""
     }
   ],
-  "updated": "2020-09-09 10:21:07 +0200",
+  "updated": "2020-10-08 16:13:25 +0200",
   "brakeman_version": "4.7.2"
 }

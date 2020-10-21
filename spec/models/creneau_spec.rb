@@ -109,45 +109,6 @@ describe Creneau, type: :model do
     end
   end
 
-  describe "#available_plages_ouverture" do
-    let(:creneau) { Creneau.new(starts_at: Time.zone.local(2019, 9, 19, 9, 0), lieu_id: lieu.id, motif: motif) }
-
-    subject { creneau.available_plages_ouverture }
-
-    it { should contain_exactly(plage_ouverture) }
-
-    describe "with an other plage_ouverture for this motif" do
-      let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation) }
-
-      it { should contain_exactly(plage_ouverture, plage_ouverture2) }
-    end
-
-    describe "with an other plage_ouverture with another motif" do
-      let(:motif2) { build(:motif, name: "Visite 12 mois", default_duration_in_min: 60, reservable_online: reservable_online, organisation: organisation) }
-      let!(:plage_ouverture3) { create(:plage_ouverture, title: "Permanence visite 12 mois", motifs: [motif2], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation) }
-
-      it { should contain_exactly(plage_ouverture) }
-    end
-
-    describe "with an other plage_ouverture but not opened the right time" do
-      let!(:plage_ouverture4) { build(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(18), organisation: organisation) }
-
-      it { should contain_exactly(plage_ouverture) }
-    end
-
-    describe "with a rdv" do
-      let!(:rdv) { create(:rdv, agents: [plage_ouverture.agent], starts_at: creneau.starts_at, duration_in_min: 30, organisation: organisation) }
-
-      it { should eq([]) }
-
-      describe "which is cancelled" do
-        let!(:rdv) { build(:rdv, agents: [plage_ouverture.agent], starts_at: creneau.starts_at, duration_in_min: 30, cancelled_at: DateTime.parse("2020-07-30 10:30").in_time_zone, organisation: organisation) }
-
-        it { should contain_exactly(plage_ouverture) }
-      end
-    end
-  end
-
   describe "#respects_min_booking_delay?" do
     subject { creneau.respects_min_booking_delay? }
 

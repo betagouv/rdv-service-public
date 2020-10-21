@@ -29,14 +29,13 @@ class Agent::ZonePolicy < DefaultAgentPolicy
   private
 
   def orga_admin?
-    @context.agent.admin? && @context.agent.organisation_ids.include?(@record.organisation_id)
+    @context.agent.admin? && @context.agent.organisations.pluck(:departement).include?(@record.sector.departement)
   end
 
   class Scope < Scope
     def resolve
       departements = @context.agent.organisations.pluck(:departement).uniq
-      orgas = Organisation.where(departement: departements)
-      scope.where(organisation_id: orgas.pluck(:id))
+      scope.joins(:sectors).where(sectors: { departement: departements })
     end
   end
 end

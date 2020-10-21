@@ -2,10 +2,11 @@
 
 = simple_form_for( \
   zone, \
-  url: zone.new_record? ? admin_departement_zones_path(current_departement) : admin_departement_zone_path(current_departement, zone) \
+  url: zone.new_record? ? admin_departement_sector_zones_path(current_departement, sector) : admin_departement_sector_zone_path(current_departement, sector, zone) \
 ) do |f|
-  = f.input :organisation_id, \
-    collection: policy_scope(Organisation).where(departement: current_departement.number), \
+  = f.input :sector_id, \
+    collection: policy_scope(Sector).where(departement: current_departement.number), \
+    disabled: true, \
     include_blank: false
 
   = f.input :level, \

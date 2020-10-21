@@ -6,7 +6,7 @@
 .row.justify-content-center
   .col-md-6
     .card
-      .card-header Import de zones
+      .card-header Import de communes
       .card-body
         = render "form", form: @form
   .col-md-6
@@ -20,9 +20,9 @@
 
       .card-body
         - if @res[:valid] && @form.dry_run
-          p #{@res[:counts][:imported].values.sum} zones auraient été importées
+          p #{@res[:counts][:imported].values.sum} communes auraient été importées
         - elsif @res[:valid]
-          p #{@res[:counts][:imported].values.sum} zones importés avec succès
+          p #{@res[:counts][:imported].values.sum} communes importés avec succès
         - else
           p Un ou plusieurs problèmes de validation sont survenus et votre fichier n'a donc pas été importé. Veuillez corriger les problèmes dans le fichier et le réimporter.
 
@@ -33,7 +33,7 @@
               li= message
 
         - if @res[:counts][:imported_new].any?
-          h5 Zones créées par organisation
+          h5 Communes créées par secteur
           ul
             - @res[:counts][:imported_new].each do |case_name, count|
               li
@@ -41,7 +41,7 @@
                 span>= count
 
         - if @res[:counts][:imported_override].any?
-          h5 Zones écrasées par organisation
+          h5 Communes écrasées par secteur
           ul
             - @res[:counts][:imported_override].each do |case_name, count|
               li
@@ -66,23 +66,21 @@
   - if @res[:imported_zones].any?
     .col-md-12
       .card
-        .card-header Zones #{@form.dry_run ? "qui auraient été importées" : "importées"}
+        .card-header Communes #{@form.dry_run ? "qui auraient été importées" : "importées"}
         .card-body
           table.table
             thead
               tr
-                th Organisation
+                th Secteur
                 th Niveau
-                th Département
                 th Commune
                 th Code Commune
             tbody
               - @res[:imported_zones].each do |zone|
                 tr
                   td
-                    span>= zone.organisation.name
-                    span>= organisation_human_id(zone.organisation)
+                    span>= zone.sector.name
+                    span>= human_id(zone.sector)
                   td= Zone.human_enum_name(:level, zone.level)
-                  td= zone.departement
                   td= zone.city_name
                   td= zone.city_code

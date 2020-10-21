@@ -6,30 +6,48 @@ RSpec.describe LieuxController, type: :controller do
   let(:lieu2) { create(:lieu, latitude: 50.72, longitude: 3.16, organisation: organisation) }
   let(:motif) { create(:motif, reservable_online: true, organisation: organisation) }
   let(:now) { Date.new(2019, 7, 22) }
-  let!(:plage_ouverture) { create(:plage_ouverture, :weekly, title: "Tous les lundis", first_day: first_day, lieu: lieu, motifs: [motif], organisation: organisation) }
-  let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, title: "Tous les lundis", first_day: first_day + 1.week, lieu: lieu2, motifs: [motif], organisation: organisation) }
-
   before { travel_to(now) }
   after { travel_back }
+  before { expect(Motif).to receive(:searchable).and_return(Motif.all) }
 
   describe "GET #show" do
-    let(:first_day) { now }
-
     context "pour un motif" do
       subject { get :show, params: { id: lieu, search: { departement: lieu.organisation.departement, where: "useless 12345", service: motif.service_id, motif_name: motif.name } } }
-
-      before { subject }
-
-      it "returns a success response" do
-        expect(response).to be_successful
+      before do
+        expect(Users::CreneauxSearch).to receive(:new).with(
+          user: nil,
+          motifs: [motif],
+          lieu: lieu,
+          date_range: (Date.new(2019, 7, 22)..Date.new(2019, 7, 28))
+        ).and_return(mock_creneaux_search)
+        subject
       end
 
-      it "returns a creneau" do
-        expect(response.body).to include("08:00")
+      context "creneaux are available soon" do
+        let(:mock_creneaux_search) do
+          instance_double(
+            Users::CreneauxSearch,
+            creneaux: [build(:creneau, starts_at: DateTime.parse("2019-07-22 08h00"))]
+          )
+        end
+
+        it "returns a success response" do
+          expect(response).to be_successful
+        end
+
+        it "returns a creneau" do
+          expect(response.body).to include("08:00")
+        end
       end
 
-      context "when first_day is in the future" do
-        let(:first_day) { now + 10.days }
+      context "when first availability is in the future" do
+        let(:mock_creneaux_search) do
+          instance_double(
+            Users::CreneauxSearch,
+            creneaux: [],
+            next_availability: build(:creneau, starts_at: DateTime.parse("2019-08-05 08h00"))
+          )
+        end
 
         it "returns a success response" do
           expect(response).to be_successful
@@ -42,117 +60,83 @@ RSpec.describe LieuxController, type: :controller do
     end
 
     context "pour un rendez-vous de suivi" do
+      let(:lieu) { create(:lieu, latitude: 50.63, longitude: 3.06, organisation: organisation) }
+      let(:motif) { create(:motif, reservable_online: true, follow_up: true, organisation: organisation) }
+      subject do
+        get :show, params: {
+          id: lieu,
+          search: {
+            departement: lieu.organisation.departement,
+            where: "useless 12345",
+            service: motif.service_id,
+            motif_name: motif.name,
+          },
+        }
+      end
+
       context "avec un usager non connecté" do
         it "redirige vers la page de login" do
-          lieu = create(:lieu, latitude: 50.63, longitude: 3.06, organisation: organisation)
-          motif = create(:motif, reservable_online: true, follow_up: true, organisation: organisation)
-          create(:plage_ouverture, :weekly,
-                 title: "Tous les lundis",
-                 first_day: first_day,
-                 lieu: lieu,
-                 motifs: [motif],
-                 organisation: organisation)
-
-          get :show, params: {
-            id: lieu,
-            search: {
-              departement: lieu.organisation.departement,
-              where: "useless 12345",
-              service: motif.service_id,
-              motif_name: motif.name,
-            },
-          }
-
+          subject
           expect(response).to redirect_to(new_user_session_path)
           expect(flash[:notice]).to eq("Le RDV '#{motif.name}' est disponible uniquement pour les personnes déjà suivies. Veuillez vous connecter pour prendre ce type de RDV.")
         end
       end
 
-      context "avec un usager avec agent référent déjà connecté" do
-        it "propose les créneaux" do
-          agent = create(:agent, organisations: [organisation])
-          usager = create(:user, agents: [agent])
-          sign_in usager
-          lieu = create(:lieu, latitude: 50.63, longitude: 3.06, organisation: organisation)
-          motif = create(:motif, reservable_online: true, follow_up: true, organisation: organisation)
-          create(:plage_ouverture, :weekly,
-                 title: "Tous les lundis",
-                 first_day: first_day,
-                 lieu: lieu,
-                 agent: agent,
-                 motifs: [motif],
-                 organisation: organisation)
-
-          get :show, params: {
-            id: lieu,
-            search: {
-              departement: lieu.organisation.departement,
-              where: "useless 12345",
-              service: motif.service_id,
-              motif_name: motif.name,
-            },
-          }
-
-          expect(response).to be_successful
-          expect(flash[:notice]).to be_nil
-          expect(assigns(:creneaux).count).to eq(5)
-          expect(assigns(:next_availability)).to be_nil
+      context "avec un usager connecté avec agent référent" do
+        let(:agent) { create(:agent, organisations: [organisation]) }
+        let(:user) { create(:user, agents: [agent]) }
+        before { sign_in user }
+        before do
+          expect(Users::CreneauxSearch).to receive(:new).with(
+            user: user,
+            motifs: [motif],
+            lieu: lieu,
+            date_range: (Date.new(2019, 7, 22)..Date.new(2019, 7, 28))
+          ).and_return(mock_creneaux_search)
+          subject
         end
 
-        it "sans créneaux dispo sur la semaine qui arrive" do
-          agent = create(:agent, organisations: [organisation])
-          usager = create(:user, agents: [agent])
-          sign_in usager
-          lieu = create(:lieu, latitude: 50.63, longitude: 3.06, organisation: organisation)
-          motif = create(:motif, reservable_online: true, follow_up: true, organisation: organisation)
+        context "creneaux dispos" do
+          let(:mock_creneaux_search) do
+            instance_double(
+              Users::CreneauxSearch,
+              creneaux: [build(:creneau, starts_at: DateTime.parse("2019-07-22 08h00")), build(:creneau, starts_at: DateTime.parse("2019-07-22 09h00"))]
+            )
+          end
 
-          create(:plage_ouverture, :weekly,
-                 title: "Tous les lundis",
-                 first_day: first_day + 4.month,
-                 agent: agent,
-                 lieu: lieu,
-                 motifs: [motif],
-                 organisation: organisation)
+          it "propose les créneaux" do
+            subject
+            expect(response).to be_successful
+            expect(flash[:notice]).to be_nil
+            expect(assigns(:creneaux).count).to eq(2)
+            expect(assigns(:next_availability)).to be_nil
+          end
+        end
 
-          get :show, params: {
-            id: lieu,
-            search: {
-              departement: lieu.organisation.departement,
-              where: "useless 12345",
-              service: motif.service_id,
-              motif_name: motif.name,
-            },
-          }
+        context "sans créneaux dispo sur la semaine qui arrive" do
+          let(:mock_creneaux_search) do
+            instance_double(
+              Users::CreneauxSearch,
+              creneaux: [],
+              next_availability: build(:creneau, starts_at: DateTime.parse("2019-11-25 07h00"))
+            )
+          end
 
-          expect(response).to be_successful
-          expect(assigns(:creneaux)).to be_empty
-          expect(assigns(:next_availability).starts_at).to eq(Time.utc(2019, 11, 25, 7, 0, 0).in_time_zone("CET"))
+          it "shows next availability" do
+            subject
+            expect(response).to be_successful
+            expect(assigns(:creneaux)).to be_empty
+            expect(assigns(:next_availability).starts_at).to eq(Time.utc(2019, 11, 25, 7, 0, 0).in_time_zone("CET"))
+          end
         end
       end
 
-      context "avec un usage qui n'a pas de référent" do
+      context "avec un usager connecté mais sans agent référents" do
+        let(:user) { create(:user, agents: []) }
+        before { sign_in user }
+
         it "annonce qu'il n'y a pas de créneaux parce que pas de référent" do
-          usager = create(:user, agents: [])
-          sign_in usager
-          lieu = create(:lieu, latitude: 50.63, longitude: 3.06, organisation: organisation)
-          motif = create(:motif, reservable_online: true, follow_up: true, organisation: organisation)
-          create(:plage_ouverture, :weekly,
-                 title: "Tous les lundis",
-                 first_day: first_day,
-                 lieu: lieu,
-                 motifs: [motif],
-                 organisation: organisation)
-
-          get :show, params: {
-            id: lieu,
-            search: {
-              departement: lieu.organisation.departement,
-              where: "useless 12345",
-              service: motif.service_id,
-              motif_name: motif.name,
-            },
-          }
-
+          subject
           expect(response).to be_successful
           expect(assigns[:referent_missing]).to eq("Vous ne semblez pas bénéficier d’un accompagnement ou d’un suivi, merci de choisir un autre motif ou de contacter votre département au ")
           expect(assigns[:creneaux]).to be_empty
@@ -163,7 +147,42 @@ RSpec.describe LieuxController, type: :controller do
   end
 
   describe "GET #index" do
-    let(:first_day) { now }
+    before do
+      expect(Lieu).to receive(:with_open_slots_for_motifs).and_return(Lieu.all)
+      expect(Users::CreneauxSearch).to \
+        receive(:new)
+        .with(
+          user: nil,
+          motifs: [motif],
+          lieu: lieu,
+          date_range: (Date.new(2019, 7, 15)..Date.new(2019, 7, 22))
+        )
+        .and_return(
+          instance_double(
+            Users::CreneauxSearch,
+            creneaux: [],
+            next_availability: build(:creneau, starts_at: DateTime.parse("2019-07-22 08h00"))
+          )
+        )
+
+      expect(Users::CreneauxSearch).to \
+        receive(:new)
+        .with(
+          user: nil,
+          motifs: [motif],
+          lieu: lieu2,
+          date_range: (Date.new(2019, 7, 15)..Date.new(2019, 7, 22))
+        )
+        .and_return(
+          instance_double(
+            Users::CreneauxSearch,
+            creneaux: [],
+            next_availability: build(:creneau, starts_at: DateTime.parse("2019-07-29 08h00"))
+          )
+        )
+      subject
+    end
+
     subject { get :index, params: { search: { departement: lieu.organisation.departement, where: "useless 12345", service: motif.service_id, motif_name: motif.name, latitude: lieu.latitude, longitude: lieu.longitude } } }
 
     before { subject }

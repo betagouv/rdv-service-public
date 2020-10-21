@@ -1,22 +1,36 @@
 class ZonesMap {
 
   constructor() {
-    const container = document.querySelector('#zones-map')
-    if (!container) { return; }
+    this.mapElement = document.querySelector('#zones-map')
+    if (!this.mapElement) return
 
     this.hoveredCityElt = document.querySelector("#js-hovered-city")
-
-    // lazy way to 'make sure' mapboxgl is loaded
-    window.setTimeout(this.initMap, 1000)
+    this.getCenterCoordinates()
   }
 
-  initMap = () => {
+  getCenterCoordinates = () => {
+    const url = "https://api-adresse.data.gouv.fr/search/"
+    const searchParams = new URLSearchParams()
+    searchParams.append("q", this.mapElement.dataset.centerQuery)
+    searchParams.append("type", "municipality")
+    searchParams.append("limit", "1")
+    fetch(`${url}?${searchParams}`).
+      then(res => res.json()).
+      then(data => {
+        if (data.features.length > 0)
+          this.initMap(data.features[0].geometry.coordinates, 8)
+        else
+          this.initMap([1.7191036, 46.71109], 4)
+      })
+  }
+
+  initMap = (centerCoordinates, zoom) => {
     var map = new mapboxgl.Map({
       container: 'zones-map',
       hash: true,
-      center: [2.3103, 50.7406], // TODO: 62 hardcoded so far
-      zoom: 8,
-      minZoom: 5,
+      center: centerCoordinates,
+      zoom: zoom,
+      minZoom: 1,
       style: {
         version: 8,
         sources: {
@@ -86,13 +100,12 @@ class ZonesMap {
   }
 
   getMatchingValues = () => {
-    const cases = []
+    let cases = []
     document.querySelectorAll(".js-legend-organisation").forEach(elt => {
       const cityCodes = JSON.parse(elt.dataset.cityCodesJson).colors
       const color = elt.dataset.color
       cityCodes.forEach(code => {
-        cases.push(code)
-        cases.push(color)
+        if (cases.indexOf(code) == -1) cases = cases.concat([code, color])
       })
     })
     return cases;

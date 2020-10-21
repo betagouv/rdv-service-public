@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_17_145803) do
+ActiveRecord::Schema.define(version: 2020_10_05_094454) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -260,6 +260,24 @@ ActiveRecord::Schema.define(version: 2020_09_17_145803) do
     t.index ["user_id"], name: "index_rdvs_users_on_user_id"
   end
 
+  create_table "sector_attributions", force: :cascade do |t|
+    t.bigint "sector_id", null: false
+    t.bigint "organisation_id", null: false
+    t.string "level", null: false
+    t.index ["organisation_id"], name: "index_sector_attributions_on_organisation_id"
+    t.index ["sector_id"], name: "index_sector_attributions_on_sector_id"
+  end
+
+  create_table "sectors", force: :cascade do |t|
+    t.string "departement", null: false
+    t.string "name", null: false
+    t.string "human_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["departement"], name: "index_sectors_on_departement"
+    t.index ["human_id"], name: "index_sectors_on_human_id"
+  end
+
   create_table "services", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
@@ -362,13 +380,13 @@ ActiveRecord::Schema.define(version: 2020_09_17_145803) do
   end
 
   create_table "zones", force: :cascade do |t|
-    t.bigint "organisation_id", null: false
     t.string "level"
     t.string "city_name"
     t.string "city_code"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["organisation_id"], name: "index_zones_on_organisation_id"
+    t.bigint "sector_id", null: false
+    t.index ["sector_id"], name: "index_zones_on_sector_id"
   end
 
   add_foreign_key "absences", "agents"
@@ -393,5 +411,4 @@ ActiveRecord::Schema.define(version: 2020_09_17_145803) do
   add_foreign_key "user_notes", "users"
   add_foreign_key "users", "users", column: "responsible_id"
   add_foreign_key "webhook_endpoints", "organisations"
-  add_foreign_key "zones", "organisations"
 end
