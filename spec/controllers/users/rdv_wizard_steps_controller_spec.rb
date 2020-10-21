@@ -1,5 +1,5 @@
 describe Users::RdvWizardStepsController, type: :controller do
-  describe "GET index html format" do
+  describe "GET new html format" do
     let!(:organisation) { create(:organisation) }
     let!(:user) { create(:user) }
     let!(:motif) { create(:motif, organisation: organisation) }
@@ -14,7 +14,6 @@ describe Users::RdvWizardStepsController, type: :controller do
     end
 
     before { travel_to Date.parse("2020-03-01").in_time_zone + 8.hours }
-    before { sign_in user }
 
     let(:params) do
       {
@@ -25,19 +24,30 @@ describe Users::RdvWizardStepsController, type: :controller do
       }
     end
 
-    it "return success" do
-      get :new, params: params
-      expect(response).to have_http_status(:success)
+    context "with logged user" do
+      before { sign_in user }
+
+      it "return success" do
+        get :new, params: params
+        expect(response).to have_http_status(:success)
+      end
+
+      it "assigns RDV with users" do
+        get :new, params: params
+        expect(assigns(:rdv).users).to eq([user])
+      end
+
+      it "render template rdv_wizard_steps/step2" do
+        get :new, params: params
+        expect(response).to render_template("users/rdv_wizard_steps/step2")
+      end
     end
 
-    it "return success" do
-      get :new, params: params
-      expect(assigns(:rdv).users).to eq([user])
-    end
-
-    it "return success" do
-      get :new, params: params
-      expect(response).to render_template("users/rdv_wizard_steps/step2")
+    context "without logged user" do
+      it "redirect to new use session path" do
+        get :new, params: params
+        expect(response).to redirect_to(new_user_session_path)
+      end
     end
   end
 end

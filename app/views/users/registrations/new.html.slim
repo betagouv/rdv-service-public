@@ -1,6 +1,8 @@
 - content_for :title, "Inscription"
 
 .card
+  = render "users/rdvs/summary_in_user_wizard", motif: @motif, lieu: @lieu, starts_at: @starts_at
+
   .card-body
     = simple_form_for resource, as: :user, url: registration_path(resource_name) do |f|
       = devise_error_messages!
@@ -24,5 +26,5 @@
     .text-center
       p.text-muted
         | Vous avez un compte ?&nbsp;
-        = link_to new_session_path(resource_name) do
+        = link_to new_session_path(resource_name, params: params.permit(:lieu_id, :motif_id, :starts_at)) do
           b Se connecter
