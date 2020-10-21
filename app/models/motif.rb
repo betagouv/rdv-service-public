@@ -32,16 +32,6 @@ class Motif < ApplicationRecord
     available_motifs.where(organisation_id: organisation.id).active.ordered_by_name
   }
 
-  def self.searchable(organisations, service: nil)
-    motifs = Motif
-      .reservable_online
-      .active
-      .joins(:organisation, :plage_ouvertures)
-      .where(organisation_id: organisations.pluck(:id))
-    motifs = motifs.where(service_id: service.id) if service
-    motifs
-  end
-
   def soft_delete
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
   end

@@ -1,18 +1,22 @@
 RSpec.describe LieuxController, type: :controller do
   render_views
 
-  let(:organisation) { create(:organisation) }
+  let(:organisation) { create(:organisation, departement: "62") }
   let(:lieu) { create(:lieu, latitude: 50.63, longitude: 3.06, organisation: organisation) }
   let(:lieu2) { create(:lieu, latitude: 50.72, longitude: 3.16, organisation: organisation) }
   let(:motif) { create(:motif, reservable_online: true, organisation: organisation) }
   let(:now) { Date.new(2019, 7, 22) }
+  let(:mock_geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.all, departement_sectorisation_enabled?: false) }
+
   before { travel_to(now) }
   after { travel_back }
-  before { expect(Motif).to receive(:searchable).and_return(Motif.all) }
+  before do
+    expect(Users::GeoSearch).to receive(:new).with("62", "62100").and_return(mock_geo_search)
+  end
 
   describe "GET #show" do
     context "pour un motif" do
-      subject { get :show, params: { id: lieu, search: { departement: lieu.organisation.departement, where: "useless 12345", service: motif.service_id, motif_name: motif.name } } }
+      subject { get :show, params: { id: lieu, search: { departement: "62", city_code: "62100", where: "useless 12345", service: motif.service_id, motif_name: motif.name } } }
       before do
         expect(Users::CreneauxSearch).to receive(:new).with(
           user: nil,
@@ -66,7 +70,8 @@ RSpec.describe LieuxController, type: :controller do
         get :show, params: {
           id: lieu,
           search: {
-            departement: lieu.organisation.departement,
+            departement: "62",
+            city_code: "62100",
             where: "useless 12345",
             service: motif.service_id,
             motif_name: motif.name,
@@ -183,7 +188,7 @@ RSpec.describe LieuxController, type: :controller do
       subject
     end
 
-    subject { get :index, params: { search: { departement: lieu.organisation.departement, where: "useless 12345", service: motif.service_id, motif_name: motif.name, latitude: lieu.latitude, longitude: lieu.longitude } } }
+    subject { get :index, params: { search: { departement: "62", city_code: "62100", where: "useless 12345", service: motif.service_id, motif_name: motif.name, latitude: lieu.latitude, longitude: lieu.longitude } } }
 
     before { subject }
 
@@ -201,7 +206,7 @@ RSpec.describe LieuxController, type: :controller do
     end
 
     context "request is closer to lieu_2" do
-      subject { get :index, params: { search: { departement: lieu.organisation.departement, where: "useless 12345", service: motif.service_id, motif_name: motif.name, latitude: lieu2.latitude, longitude: lieu2.longitude } } }
+      subject { get :index, params: { search: { departement: "62", city_code: "62100", where: "useless 12345", service: motif.service_id, motif_name: motif.name, latitude: lieu2.latitude, longitude: lieu2.longitude } } }
 
       it "return lieu2 first" do
         expect(assigns(:lieux).first).to eq(lieu2)

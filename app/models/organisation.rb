@@ -32,6 +32,15 @@ class Organisation < ApplicationRecord
 
   accepts_nested_attributes_for :agents
 
+  scope :attributed_to_sectors, lambda { |sectors|
+    where(
+      id: SectorAttribution
+        .level_organisation
+        .where(sector_id: sectors.pluck(:id))
+        .pluck(:organisation_id)
+    )
+  }
+
   def notify_admin_organisation_created
     return unless agents.present?
 

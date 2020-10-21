@@ -6,4 +6,6 @@ class SectorAttribution < ApplicationRecord
 
   validates :organisation, :sector, :level, presence: true
   validates :level, inclusion: { in: [LEVEL_ORGANISATION] }
+
+  scope :level_organisation, -> { where(level: LEVEL_ORGANISATION) }
 end

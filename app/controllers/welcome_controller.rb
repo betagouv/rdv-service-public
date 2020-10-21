@@ -33,12 +33,12 @@ class WelcomeController < ApplicationController
   end
 
   def welcome_departement
-    @services = Service.searchable(@organisations)
+    @services = @geo_search.available_services
     @organisations_departement = Organisation.where(departement: @departement)
   end
 
   def welcome_service
-    @motif_names = Motif.searchable(@organisations, service: @service).pluck(:name).uniq
+    @motif_names = @geo_search.available_motifs.where(service: @service).pluck(:name).uniq
   end
 
   def set_lieu_variables
@@ -48,8 +48,7 @@ class WelcomeController < ApplicationController
     @where = lieu_params[:where]
     @city_code = lieu_params[:city_code]
     @service = Service.find(lieu_params[:service]) if lieu_params[:service]
-    @sectorisation_infos = SectoriseAddressService.perform_with(@departement, @city_code)
-    @organisations = @sectorisation_infos.organisations
+    @geo_search = Users::GeoSearch.new(@departement, @city_code)
   end
 
   private
