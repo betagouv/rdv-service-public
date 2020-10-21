@@ -6,20 +6,26 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:user) { create(:user) }
     let(:motif) { create(:motif, organisation: organisation) }
     let(:lieu) { create(:lieu, organisation: organisation) }
-    let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], first_day: Date.new(2019, 7, 24), lieu: lieu, organisation: organisation) }
+    let(:starts_at) { DateTime.parse("2020-10-20 10h30") }
 
-    subject { post :create, params: { organisation_id: plage_ouverture.organisation_id, lieu_id: lieu.id, departement: "12", where: "1 rue de la, ville 12345", motif_id: motif.id, starts_at: starts_at } }
+    subject { post :create, params: { organisation_id: organisation.id, lieu_id: lieu.id, departement: "12", where: "1 rue de la, ville 12345", motif_id: motif.id, starts_at: starts_at } }
 
     before do
       travel_to(Time.zone.local(2019, 7, 20))
       sign_in user
+      expect(Users::CreneauSearch).to receive(:creneau_for)
+        .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
+        .and_return(mock_creneau)
       subject
     end
 
     after { travel_back }
 
-    describe "when the starts_at is correct" do
-      let(:starts_at) { Time.zone.local(2019, 7, 25, 10, 30) }
+    describe "when there is an available creneau" do
+      let!(:agent) { create(:agent, organisations: [organisation]) }
+      let(:mock_creneau) do
+        instance_double(Creneau, agent: agent, motif: motif, lieu: lieu, starts_at: starts_at, duration_in_min: 30)
+      end
 
       it "creates rdv" do
         expect(Rdv.count).to eq(1)
@@ -28,8 +34,8 @@ RSpec.describe Users::RdvsController, type: :controller do
       end
     end
 
-    describe "when the starts_at not correct" do
-      let(:starts_at) { Time.zone.local(2019, 7, 25, 14, 30) }
+    describe "when there is no available creneau" do
+      let(:mock_creneau) { nil }
 
       it "creates rdv" do
         expect(Rdv.count).to eq(0)

@@ -25,6 +25,7 @@ class Lieu < ApplicationRecord
     where(id: lieux_ids)
   }
 
+  # TODO: remove this method in favor of CreneauBuilderService usage
   scope :with_open_slots_for_motifs, lambda { |motifs|
     where(
       id: PlageOuverture

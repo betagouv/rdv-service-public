@@ -15,42 +15,12 @@ class Creneau
     Lieu.find(lieu_id)
   end
 
+  def agent
+    Agent.find(agent_id)
+  end
+
   def duration_in_min
     motif.default_duration_in_min
-  end
-
-  def available_plages_ouverture
-    return [] if overlaps_jour_ferie? || !respects_booking_delays?
-
-    plages_ouverture = PlageOuverture.for_motif_and_lieu_from_date_range(motif.name, lieu, date_range)
-    plages_ouverture.select do |p|
-      occurence_match_creneau = p.occurences_ranges_for(date_range).any? do |occurences_range|
-        (occurences_range.begin <= range.end) && (range.begin <= occurences_range.end)
-      end
-      next unless occurence_match_creneau
-
-      rdvs = p.agent.rdvs.where(starts_at: date_range).not_cancelled
-      absences_occurrences = p.agent.absences.flat_map { |a| a.occurences_for(date_range) }
-      overlapping_rdvs_or_absences(rdvs.to_a + absences_occurrences.to_a).empty?
-    end
-  end
-
-  def available?
-    available_plages_ouverture.any?
-  end
-
-  def to_rdv_for_user(user)
-    agent = available_plages_ouverture.sample&.agent
-
-    return unless agent.present?
-
-    Rdv.new(agents: [agent],
-      duration_in_min: duration_in_min,
-      starts_at: starts_at,
-      organisation: motif.organisation,
-      motif: motif,
-      lieu_id: lieu.id,
-      users: [user])
   end
 
   def respects_min_booking_delay?

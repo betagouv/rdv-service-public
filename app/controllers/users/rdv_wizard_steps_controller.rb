@@ -6,7 +6,7 @@ class Users::RdvWizardStepsController < UserAuthController
     @rdv_wizard = rdv_wizard_for(current_user, query_params)
     @rdv = @rdv_wizard.rdv
     authorize(@rdv)
-    if @rdv_wizard.creneau.available?
+    if @rdv_wizard.creneau.present?
       render current_step
     else
       flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."

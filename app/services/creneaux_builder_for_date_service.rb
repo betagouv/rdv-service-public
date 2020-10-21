@@ -40,7 +40,7 @@ class CreneauxBuilderForDateService < BaseService
       starts_at: @next_starts_at,
       lieu_id: @lieu.id,
       motif: @motif,
-      agent_id: (@plage_ouverture.agent_id if @for_agents),
+      agent_id: @plage_ouverture.agent_id,
       agent_name: (@plage_ouverture.agent.short_name if @for_agents || @agent_name)
     )
   end

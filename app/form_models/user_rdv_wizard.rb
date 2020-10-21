@@ -17,10 +17,11 @@ module UserRdvWizard
           .merge(motif: @motif)
           .merge(@attributes.slice(:starts_at, :user_ids, :motif_id))
       )
-      @creneau = Creneau.new(
-        lieu_id: @attributes[:lieu_id],
-        starts_at: @rdv.starts_at,
-        motif: @rdv.motif
+      @creneau = Users::CreneauSearch.creneau_for(
+        user: @user,
+        motif: @rdv.motif,
+        lieu: Lieu.find(@attributes[:lieu_id]),
+        starts_at: @rdv.starts_at
       )
     end
 
