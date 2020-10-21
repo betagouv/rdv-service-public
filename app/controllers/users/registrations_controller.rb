@@ -1,9 +1,7 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   layout :user_devise_layout
 
-  include FromRdvParams
-
-  before_action :set_resources_from_rdv_params
+  include CanHaveRdvWizardContext
 
   def create
     return invite_and_redirect if User.find_by(email: sign_up_params[:email], confirmed_at: nil)
