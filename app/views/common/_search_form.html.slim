@@ -60,7 +60,7 @@
                 span>= urgency_number
           - else
             h2.text-white.text-center
-              - if @organisations_departement.any? && sectorisation_enabled?(@departement)
+              - if @organisations_departement.any? && departement_sectorisation_enabled?(@departement)
                 span Votre adresse n'est pas disponible à la prise de RDV en ligne
                 - if urgency_number
                   span>, veuillez contacter le

@@ -1,13 +1,11 @@
 class Users::GeoSearch
-  include SectorisationUtils
-
-  def initialize(departement, city_code)
+  def initialize(departement:, city_code: nil)
     @departement = departement
     @city_code = city_code
   end
 
   def departement_sectorisation_enabled?
-    sectorisation_enabled?(@departement)
+    ENV["SECTORISATION_ENABLED_DEPARTMENT_LIST"]&.split&.include?(@departement)
   end
 
   def attributed_organisations
@@ -20,7 +18,7 @@ class Users::GeoSearch
   end
 
   def matching_zones
-    return nil unless departement_sectorisation_enabled?
+    return nil if !departement_sectorisation_enabled? || @city_code.nil?
 
     @matching_zones ||= Zone.includes(:sector).where(city_code: @city_code)
   end

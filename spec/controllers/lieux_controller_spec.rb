@@ -11,7 +11,9 @@ RSpec.describe LieuxController, type: :controller do
   before { travel_to(now) }
   after { travel_back }
   before do
-    expect(Users::GeoSearch).to receive(:new).with("62", "62100").and_return(mock_geo_search)
+    expect(Users::GeoSearch).to receive(:new)
+      .with(departement: "62", city_code: "62100")
+      .and_return(mock_geo_search)
   end
 
   describe "GET #show" do

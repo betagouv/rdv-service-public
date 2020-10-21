@@ -48,7 +48,7 @@ class WelcomeController < ApplicationController
     @where = lieu_params[:where]
     @city_code = lieu_params[:city_code]
     @service = Service.find(lieu_params[:service]) if lieu_params[:service]
-    @geo_search = Users::GeoSearch.new(@departement, @city_code)
+    @geo_search = Users::GeoSearch.new(departement: @departement, city_code: @city_code)
   end
 
   private

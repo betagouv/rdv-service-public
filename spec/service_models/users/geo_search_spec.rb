@@ -1,5 +1,5 @@
 describe Users::GeoSearch, type: :service_model do
-  subject { Users::GeoSearch.new("62", searched_city_code) }
+  subject { Users::GeoSearch.new(departement: "62", city_code: searched_city_code) }
 
   let(:searched_city_code) { "62100" }
   let!(:organisation1) { create(:organisation, departement: "62", name: "MDS Arques") }

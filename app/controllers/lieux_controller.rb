@@ -74,7 +74,7 @@ class LieuxController < ApplicationController
     @service_id = search_params[:service]
     @city_code = search_params[:city_code]
     @service = Service.find(@service_id)
-    @geo_search = Users::GeoSearch.new(@departement, @city_code)
+    @geo_search = Users::GeoSearch.new(departement: @departement, city_code: @city_code)
     searchable_motifs = @geo_search.available_motifs.where(service: @service)
     @motif_names = searchable_motifs.pluck(:name).uniq
     @matching_motifs = searchable_motifs.where(name: @motif_name)
