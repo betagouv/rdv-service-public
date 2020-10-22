@@ -36,7 +36,7 @@
       .card-header
         h4 Activation pour le #{current_departement}
       .card-body
-        - if sectorisation_enabled?(current_departement.number)
+        - if departement_sectorisation_enabled?(departement: current_departement.number)
           .mb-2.d-flex.align-items-top
             span
               .badge.badge-success Activée

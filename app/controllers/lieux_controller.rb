@@ -74,10 +74,8 @@ class LieuxController < ApplicationController
     @service_id = search_params[:service]
     @city_code = search_params[:city_code]
     @service = Service.find(@service_id)
-    @sectorisation_infos = SectoriseAddressService.perform_with(@departement, @city_code)
-    @organisations = @sectorisation_infos.organisations
-    searchable_motifs = Motif.searchable(@organisations, service: @service)
-    redirect_to root_path, flash: { error: "Une erreur s'est produite, veuillez recommencer votre recherche" } if searchable_motifs.empty?
+    @geo_search = Users::GeoSearch.new(departement: @departement, city_code: @city_code)
+    searchable_motifs = @geo_search.available_motifs.where(service: @service)
     @motif_names = searchable_motifs.pluck(:name).uniq
     @matching_motifs = searchable_motifs.where(name: @motif_name)
     @latitude = search_params[:latitude]
