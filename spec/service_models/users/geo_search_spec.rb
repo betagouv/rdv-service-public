@@ -131,4 +131,51 @@ describe Users::GeoSearch, type: :service_model do
       end
     end
   end
+
+  context "sectorisation is enabled, overlapping matching sectors with multiple agents attributed" do
+    let(:sectorisation_enabled) { true }
+
+    let!(:motifs_orga1) { create_list(:motif, 5, service: service1, reservable_online: true, organisation: organisation1) }
+    let!(:motifs_orga2) { create_list(:motif, 2, service: service1, reservable_online: true, organisation: organisation2) }
+
+    let!(:sector_arques) { create(:sector, departement: "62", name: "Arques CENTRE", human_id: "arques") }
+    let!(:zone_arques) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector_arques) }
+    let!(:sector_ville) { create(:sector, departement: "62", name: "Ville", human_id: "ville") }
+    let!(:zone_ville) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector_ville) }
+
+    # first agent : sector Arques, orga 1
+    let!(:agent_arques1) { create(:agent, organisations: [organisation1]) }
+    let!(:attribution_arques1) { SectorAttribution.create(level: "agent", sector: sector_arques, organisation: organisation1, agent: agent_arques1) }
+    let!(:plage_ouverture_arques1) { create(:plage_ouverture, agent: agent_arques1, motifs: [motifs_orga1[0], motifs_orga1[1]], organisation: organisation1) }
+    let!(:agent_arques_not_attributed) { create(:agent, organisations: [organisation1]) }
+    let!(:plage_ouverture_arques_not_attributed) { create(:plage_ouverture, agent: agent_arques_not_attributed, motifs: [motifs_orga1[2]], organisation: organisation1) }
+
+    # second agent : sector Ville, orga 1
+    let!(:agent_ville1) { create(:agent, organisations: [organisation1]) }
+    let!(:attribution_ville1) { SectorAttribution.create(level: "agent", sector: sector_ville, organisation: organisation1, agent: agent_ville1) }
+    let!(:plage_ouverture_ville1) { create(:plage_ouverture, agent: agent_ville1, motifs: [motifs_orga1[4]], organisation: organisation1) }
+
+    # second agent : sector Ville, orga 2
+    let!(:agent_ville2) { create(:agent, organisations: [organisation2]) }
+    let!(:attribution_ville2) { SectorAttribution.create(level: "agent", sector: sector_ville, organisation: organisation2, agent: agent_ville2) }
+    let!(:plage_ouverture_ville2) { create(:plage_ouverture, agent: agent_ville2, motifs: [motifs_orga2[0]], organisation: organisation2) }
+
+    it "should filter accordingly" do
+      expect(subject.attributed_organisations).to be_empty
+      expect(subject.attributed_agents_by_organisation.keys.flatten).to include(organisation1)
+      expect(subject.attributed_agents_by_organisation.keys.flatten).to include(organisation2)
+      expect(subject.attributed_agents_by_organisation[organisation1]).to include(agent_arques1)
+      expect(subject.attributed_agents_by_organisation[organisation1]).to include(agent_ville1)
+      expect(subject.attributed_agents_by_organisation[organisation1]).not_to include(agent_arques_not_attributed)
+      expect(subject.attributed_agents_by_organisation[organisation2]).to include(agent_ville2)
+      expect(subject.available_motifs).to include(motifs_orga1[0])
+      expect(subject.available_motifs).to include(motifs_orga1[1])
+      expect(subject.available_motifs).not_to include(motifs_orga1[2])
+      expect(subject.available_motifs).not_to include(motifs_orga1[3])
+      expect(subject.available_motifs).to include(motifs_orga1[4])
+      expect(subject.available_motifs).to include(motifs_orga2[0])
+      expect(subject.available_motifs).not_to include(motifs_orga2[1]) # no plage ouvertures
+      expect(subject.available_services).to include(service1)
+    end
+  end
 end

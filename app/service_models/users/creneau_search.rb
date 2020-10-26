@@ -1,11 +1,12 @@
 class Users::CreneauSearch
   include Users::CreneauxSearchConcern
 
-  def initialize(user:, motif:, lieu:, starts_at:)
+  def initialize(user:, motif:, lieu:, starts_at:, geo_search: nil)
     @user = user
     @motif = motif
     @lieu = lieu
     @starts_at = starts_at
+    @geo_search = geo_search
   end
 
   def creneau

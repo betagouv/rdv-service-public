@@ -6,13 +6,18 @@ require "csv"
 # that the model files are loaded twice, or something related to HABTM
 # associations..
 
+def create_organisation_and_sector(name:, human_id:)
+  organisation = Organisation.create!(phone_number: "0123456789", departement: "62", human_id: human_id, name: name)
+  sector = Sector.create!(name: "Secteur de #{name[4..-1]}", human_id: human_id, departement: "62")
+  [organisation, sector]
+end
+
 # ORGANISATIONS & SECTORS
 
 Organisation.skip_callback(:create, :after, :notify_admin_organisation_created)
 org_paris_nord = Organisation.create!(name: "MDS Paris Nord", phone_number: "0123456789", departement: "75", human_id: "paris-nord")
 human_id_map = [
   { human_id: "1030", name: "MDS Arques" },
-  { human_id: "1034", name: "MDS Bapaume" },
   { human_id: "1031", name: "MDS Arras Nord" },
   { human_id: "1032", name: "MDS Arras Sud" },
   { human_id: "1033", name: "MDS Avion" },
@@ -37,13 +42,18 @@ human_id_map = [
   { human_id: "1054", name: "MDS St Omer" },
   { human_id: "1055", name: "MDS St Pol sur Ternoise" }
 ].map do |attributes|
-  organisation = Organisation.create!(phone_number: "0123456789", departement: "62", **attributes)
-  sector = Sector.create!(name: attributes[:name][4..-1], human_id: attributes[:human_id], departement: "62")
+  organisation, sector = create_organisation_and_sector(**attributes)
   sector.attributions.create!(organisation: organisation, level: SectorAttribution::LEVEL_ORGANISATION)
   [attributes[:human_id], { organisation: organisation, sector: sector }]
 end.to_h
+
+# Bapaume is created without the organisation-level attribution
+org_bapaume, sector_bapaume = create_organisation_and_sector(name: "MDS Bapaume", human_id: "1034")
+human_id_map["1034"] = { organisation: org_bapaume, sector: sector_bapaume }
+
 org_arques = human_id_map["1030"][:organisation]
 org_bapaume = human_id_map["1034"][:organisation]
+
 Organisation.set_callback(:create, :after, :notify_admin_organisation_created)
 
 # SERVICES
@@ -322,7 +332,7 @@ org_arques_pmi_maya = Agent.new(
 org_arques_pmi_maya.skip_confirmation!
 org_arques_pmi_maya.save!
 
-org_bapaume_pmi_bruno = Agent.new(
+agent_org_bapaume_pmi_bruno = Agent.new(
   email: "bruno@demo.rdv-solidarites.fr",
   role: :admin,
   first_name: "Bruno",
@@ -332,8 +342,17 @@ org_bapaume_pmi_bruno = Agent.new(
   organisation_ids: [org_bapaume.id],
   invitation_accepted_at: 10.days.ago
 )
-org_bapaume_pmi_bruno.skip_confirmation!
-org_bapaume_pmi_bruno.save!
+agent_org_bapaume_pmi_bruno.skip_confirmation!
+agent_org_bapaume_pmi_bruno.save!
+
+# SECTOR ATTRIBUTIONS - AGENT LEVEL
+
+SectorAttribution.create!(
+  sector: sector_bapaume,
+  organisation: org_bapaume,
+  agent: agent_org_bapaume_pmi_bruno,
+  level: SectorAttribution::LEVEL_AGENT
+)
 
 # PLAGES OUVERTURES
 
@@ -395,7 +414,7 @@ _plage_ouverture_org_arques_maya_tradi = PlageOuverture.create!(
 _plage_ouverture_org_bapaume_bruno_classique = PlageOuverture.create!(
   title: "Perm. classique",
   organisation_id: org_bapaume.id,
-  agent_id: org_bapaume_pmi_bruno.id,
+  agent_id: agent_org_bapaume_pmi_bruno.id,
   lieu_id: lieu_bapaume_est.id,
   motif_ids: [motifs[:bapaume][:pmi_rappel].id, motifs[:bapaume][:pmi_prenatale].id],
   first_day: Date.tomorrow,

@@ -7,14 +7,18 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:motif) { create(:motif, organisation: organisation) }
     let(:lieu) { create(:lieu, organisation: organisation) }
     let(:starts_at) { DateTime.parse("2020-10-20 10h30") }
+    let(:mock_geo_search) { instance_double(Users::GeoSearch) }
 
-    subject { post :create, params: { organisation_id: organisation.id, lieu_id: lieu.id, departement: "12", where: "1 rue de la, ville 12345", motif_id: motif.id, starts_at: starts_at } }
+    subject { post :create, params: { organisation_id: organisation.id, lieu_id: lieu.id, departement: "12", city_code: "12100", where: "1 rue de la, ville 12345", motif_id: motif.id, starts_at: starts_at } }
 
     before do
       travel_to(Time.zone.local(2019, 7, 20))
       sign_in user
+      expect(Users::GeoSearch).to receive(:new)
+        .with(departement: "12", city_code: "12100")
+        .and_return(mock_geo_search)
       expect(Users::CreneauSearch).to receive(:creneau_for)
-        .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
+        .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu, geo_search: mock_geo_search)
         .and_return(mock_creneau)
       subject
     end

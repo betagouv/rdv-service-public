@@ -59,7 +59,13 @@ class LieuxController < ApplicationController
   end
 
   def creneaux_search_for(lieu, date_range)
-    Users::CreneauxSearch.new(user: current_user, motifs: @matching_motifs, lieu: lieu, date_range: date_range)
+    Users::CreneauxSearch.new(
+      user: current_user,
+      motifs: @matching_motifs,
+      lieu: lieu,
+      date_range: date_range,
+      geo_search: @geo_search
+    )
   end
 
   def search_params

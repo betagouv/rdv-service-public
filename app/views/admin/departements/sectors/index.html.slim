@@ -34,11 +34,18 @@
               td= "#{sector.zones.count} communes"
               td
                 - if sector.attributions.any?
-                  ul
-                    - sector.attributions.each do |attribution|
-                      li= "Organisation #{attribution.organisation.name}"
+                  ul.pl-2.mb-0
+                    - sector.attributions.to_a.group_by(&:organisation).each do |organisation, attributions|
+                      - if attributions.count == 1 && attributions.all?(&:level_organisation?)
+                        li= "Organisation entière #{organisation.name}"
+                      - if attributions.all?(&:level_agent?)
+                        li
+                          = "Agents de l'organisation #{organisation.name}:"
+                          ul.pl-2
+                            - attributions.each do |attribution|
+                              li= attribution.agent.full_name_and_service
                 - else
-                  | Aucune attribution
+                  .text-muted Aucune attribution
               td
                 .d-flex
                   - if policy([:agent, sector]).show?

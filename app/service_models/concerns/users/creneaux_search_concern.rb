@@ -27,16 +27,25 @@ module Users::CreneauxSearchConcern
   def options
     @options ||= {
       agent_ids: agent_ids,
-      agent_name: follow_up_rdv_and_online_user? || nil,
+      agent_name: follow_up_rdv_and_online_user?,
       motif_location_type: motif_location_type
-    }.compact
+    }.select { |_key, value| value } # rejects false and nil but not [] or 0
   end
 
   def agent_ids
-    @agent_ids ||= follow_up_rdv_and_online_user? ? @user.agent_ids : nil
+    @agent_ids ||= [
+      follow_up_rdv_and_online_user? ? @user.agent_ids : nil,
+      geo_attributed_agents ? geo_attributed_agents.pluck(:id) : nil
+    ].compact.reduce(:intersection)
   end
 
   def follow_up_rdv_and_online_user?
     @user && follow_up_motif?
+  end
+
+  def geo_attributed_agents
+    return unless @geo_search.present?
+
+    @geo_search.attributed_agents_by_organisation[@lieu.organisation]
   end
 end

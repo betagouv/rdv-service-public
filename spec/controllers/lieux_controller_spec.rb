@@ -24,7 +24,8 @@ RSpec.describe LieuxController, type: :controller do
           user: nil,
           motifs: [motif],
           lieu: lieu,
-          date_range: (Date.new(2019, 7, 22)..Date.new(2019, 7, 28))
+          date_range: (Date.new(2019, 7, 22)..Date.new(2019, 7, 28)),
+          geo_search: mock_geo_search
         ).and_return(mock_creneaux_search)
         subject
       end
@@ -98,7 +99,8 @@ RSpec.describe LieuxController, type: :controller do
             user: user,
             motifs: [motif],
             lieu: lieu,
-            date_range: (Date.new(2019, 7, 22)..Date.new(2019, 7, 28))
+            date_range: (Date.new(2019, 7, 22)..Date.new(2019, 7, 28)),
+            geo_search: mock_geo_search
           ).and_return(mock_creneaux_search)
           subject
         end
@@ -162,7 +164,8 @@ RSpec.describe LieuxController, type: :controller do
           user: nil,
           motifs: [motif],
           lieu: lieu,
-          date_range: (Date.new(2019, 7, 15)..Date.new(2019, 7, 22))
+          date_range: (Date.new(2019, 7, 15)..Date.new(2019, 7, 22)),
+          geo_search: mock_geo_search
         )
         .and_return(
           instance_double(
@@ -178,7 +181,8 @@ RSpec.describe LieuxController, type: :controller do
           user: nil,
           motifs: [motif],
           lieu: lieu2,
-          date_range: (Date.new(2019, 7, 15)..Date.new(2019, 7, 22))
+          date_range: (Date.new(2019, 7, 15)..Date.new(2019, 7, 22)),
+          geo_search: mock_geo_search
         )
         .and_return(
           instance_double(
