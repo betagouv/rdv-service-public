@@ -4,29 +4,7 @@
   .col-lg-7.col-md-10.col-sm-11
     h3.text-center.mb-3 Choix de l'usager
     .card
-      ul.list-group.list-group-flush
-        li.list-group-item
-          i.fa.fa-check.fa-fw.mr-1.text-success
-          | Motif :&nbsp;
-          = @rdv.motif.name
-        - if @rdv.motif.phone?
-          li.list-group-item
-            i.fa.fa-check.fa-fw.mr-1.text-success
-            | RDV téléphonique
-        - else
-          li.list-group-item
-            i.fa.fa-check.fa-fw.mr-1.text-success
-            | Lieu :&nbsp;
-            = @rdv_wizard.lieu_full_name
-        li.list-group-item
-          .row
-            .col
-              i.fa.fa-check.fa-fw.mr-1.text-success
-              | Date du rendez-vous :&nbsp;
-              = l(@rdv.starts_at, format: :human)
-            .col-auto
-              = link_to "modifier", lieux_path(search: @rdv_wizard.to_search_query)
-
+      = render "rdv_wizard_summary", rdv_wizard: @rdv_wizard
       .card-body
         = simple_form_for(@rdv, url: users_rdv_wizard_step_path(step: 2, **@rdv_wizard.to_query.except(:rdv))) do |f|
 

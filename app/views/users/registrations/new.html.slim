@@ -1,7 +1,7 @@
 - content_for :title, "Inscription"
 
 .card
-  = render "users/rdvs/summary_in_user_wizard", motif: @motif, lieu: @lieu, starts_at: @starts_at
+  = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
 
   .card-body
     = simple_form_for resource, as: :user, url: registration_path(resource_name) do |f|
