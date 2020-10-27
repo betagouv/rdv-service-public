@@ -4,6 +4,7 @@
   .col-lg-7.col-md-10.col-sm-11
     h3.text-center.mb-3 Vos informations
     .card
+      = render "rdv_wizard_summary", rdv_wizard: @rdv_wizard
       .card-body
         = render "users/users/form", user: current_user, rdv_wizard: @rdv_wizard.to_query
         .col
