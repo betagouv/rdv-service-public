@@ -27,7 +27,7 @@ class Admin::Departements::SectorsController < AgentDepartementAuthController
   def show
     @sector = Sector.find(params[:id])
     authorize(@sector)
-    @zones = @sector.zones.page(params[:page])
+    @zones = @sector.zones.order(updated_at: :desc).page(params[:page])
   end
 
   def edit

@@ -10,7 +10,7 @@ class PlacesInput {
     this.addressType = container.dataset.addressType;
     const form = $(container).closest('form')[0];
     this.dependentInputs =
-      ["departement", "latitude", "longitude", "city_code", "city_name"].
+      ["departement", "latitude", "longitude", "city_code", "city_name", "street_ban_id", "street_name"].
         map(name => ({ name, elt: form.querySelector(`input[name*=${name}]`)})).
         filter(i => !!i.elt) // filter only present inputs
 
@@ -49,8 +49,18 @@ class PlacesInput {
     value: this.getFeatureValueText(feature),
     city_code: feature.properties.citycode,
     city_name: feature.properties.city,
+    ...this.remapBanStreetFeature(feature),
     ...feature.properties,
   })
+
+  remapBanStreetFeature = feature => {
+    if (feature.properties.type !== "street") return {}
+
+    return {
+      street_ban_id: feature.properties.id,
+      street_name: feature.properties.name
+    }
+  }
 
   getFeatureValueText = ({ properties }) => {
     return [properties.name].concat(this.getDetails(properties)).join(", ")

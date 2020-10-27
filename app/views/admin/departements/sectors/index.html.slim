@@ -23,7 +23,7 @@
           tr
             th Nom
             th Identifiant
-            th Communes
+            th Géographie
             th Attributions
             th Actions
         tbody
@@ -31,7 +31,12 @@
             tr
               td= link_to sector.name, admin_departement_sector_path(current_departement, sector)
               td= human_id(sector)
-              td= "#{sector.zones.count} communes"
+              td
+                ul.list-unstyled
+                  - if sector.zones.cities.any?
+                    li= "#{sector.zones.cities.count}&nbsp;communes".html_safe
+                  - if sector.zones.streets.any?
+                    li= "#{sector.zones.streets.count}&nbsp;rues".html_safe
               td
                 - if sector.attributions.any?
                   ul.pl-2.mb-0

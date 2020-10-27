@@ -6,7 +6,7 @@
 .row.justify-content-center
   .col-md-6
     .card
-      .card-header Import de communes
+      .card-header Import de communes et de rues
       .card-body
         = render "form", form: @form
   .col-md-6
@@ -20,9 +20,9 @@
 
       .card-body
         - if @res[:valid] && @form.dry_run
-          p #{@res[:counts][:imported].values.sum} communes auraient été importées
+          p #{@res[:counts][:imported].values.sum} communes ou rues auraient été importées
         - elsif @res[:valid]
-          p #{@res[:counts][:imported].values.sum} communes importés avec succès
+          p #{@res[:counts][:imported].values.sum} communes ou rues importées avec succès
         - else
           p Un ou plusieurs problèmes de validation sont survenus et votre fichier n'a donc pas été importé. Veuillez corriger les problèmes dans le fichier et le réimporter.
 
@@ -33,7 +33,7 @@
               li= message
 
         - if @res[:counts][:imported_new].any?
-          h5 Communes créées par secteur
+          h5 Communes ou rues créées par secteur
           ul
             - @res[:counts][:imported_new].each do |case_name, count|
               li
@@ -41,7 +41,7 @@
                 span>= count
 
         - if @res[:counts][:imported_override].any?
-          h5 Communes écrasées par secteur
+          h5 Communes ou rues écrasées par secteur
           ul
             - @res[:counts][:imported_override].each do |case_name, count|
               li
@@ -66,21 +66,25 @@
   - if @res[:imported_zones].any?
     .col-md-12
       .card
-        .card-header Communes #{@form.dry_run ? "qui auraient été importées" : "importées"}
-        .card-body
-          table.table
-            thead
+        .card-header Communes et rues #{@form.dry_run ? "qui auraient été importées" : "importées"}
+        table.table
+          thead
+            tr
+              th Secteur
+              th Commune
+              th Rue
+          tbody
+            - @res[:imported_zones].each do |zone|
               tr
-                th Secteur
-                th Niveau
-                th Commune
-                th Code Commune
-            tbody
-              - @res[:imported_zones].each do |zone|
-                tr
+                td
+                  span>= link_to zone.sector.name, admin_departement_sector_path(current_departement, zone.sector)
+                  span>= human_id(zone.sector)
+                td
+                  = zone.city_name
+                  .badge.badge-light.text-monospace= zone.city_code
+                - if zone.level_street?
                   td
-                    span>= zone.sector.name
-                    span>= human_id(zone.sector)
-                  td= Zone.human_enum_name(:level, zone.level)
-                  td= zone.city_name
-                  td= zone.city_code
+                    = zone.street_name
+                    .badge.badge-light.text-monospace= zone.street_ban_id
+                - else
+                  td.text-muted Commune entière

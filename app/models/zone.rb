@@ -1,17 +1,33 @@
 class Zone < ApplicationRecord
   LEVEL_CITY = "city".freeze
+  LEVEL_STREET = "street".freeze
+  LEVELS = [LEVEL_CITY, LEVEL_STREET].freeze
 
   belongs_to :sector
 
+  # common validations
   validates :sector, :level, :city_name, :city_code, presence: true
-  validates :level, inclusion: { in: [LEVEL_CITY] }
-  validates :city_code, uniqueness: { scope: :sector }, if: :city?
+  validates :level, inclusion: { in: LEVELS }
   validate :coherent_city_code_departement
+  # level city validations
+  validates :city_code, uniqueness: { scope: :sector }, if: :level_city?
+  validates :street_ban_id, :street_name, absence: true, if: :level_city?
+  # level street validations
+  validates :street_ban_id, :street_name, presence: true, if: :level_street?
+  validates :street_ban_id, uniqueness: { scope: :sector }, if: :level_street?
+  validate :coherent_street_ban_id, if: :level_street?
 
-  attr_accessor :city_label # used in zone form
+  scope :cities, -> { where(level: LEVEL_CITY) }
+  scope :streets, -> { where(level: LEVEL_STREET) }
 
-  def city?
+  attr_accessor :city_label, :street_label # used in zone form
+
+  def level_city?
     level == LEVEL_CITY
+  end
+
+  def level_street?
+    level == LEVEL_STREET
   end
 
   protected
@@ -20,5 +36,12 @@ class Zone < ApplicationRecord
     return true if city_code.blank? || sector&.departement.blank? || city_code.start_with?(sector&.departement)
 
     errors.add(:base, "La commune #{city_name} n'appartient pas au département #{sector&.departement}")
+  end
+
+  def coherent_street_ban_id
+    expected_prefix = "#{city_code}_"
+    return true if street_ban_id.blank? || city_code.blank? || street_ban_id.start_with?(expected_prefix)
+
+    errors.add(:base, "La rue #{street_name} n'appartient pas à la ville #{city_name}")
   end
 end

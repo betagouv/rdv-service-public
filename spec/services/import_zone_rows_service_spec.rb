@@ -1,4 +1,6 @@
 describe ImportZoneRowsService, type: :service do
+  # TODO: this spec should mock ZoneImportRow calls and tests should be moved
+
   let!(:orga_62) { create(:organisation, departement: "62") }
   let!(:sector_arques) { create(:sector, human_id: "arques", departement: "62") }
   let!(:sector_arras_sud) { create(:sector, human_id: "arras-sud", departement: "62") }
@@ -30,6 +32,40 @@ describe ImportZoneRowsService, type: :service do
         expect(res[:valid]).to eq(true)
         expect(res[:counts][:imported_new]["arques"]).to eq(2)
         expect(res[:counts][:imported_new]["arras-sud"]).to eq(1)
+        expect(res[:imported_zones].count).to eq(3)
+        expect(Zone.count).to eq(0)
+      end
+    end
+  end
+
+  context "valid rows with streets" do
+    let(:rows) do
+      [
+        { "city_code" => "62040", "city_name" => "AIRE-SUR-LA-LYS", "sector_id" => "arques" },
+        { "city_code" => "62080", "city_name" => "BAPAUME", "sector_id" => "arras-sud", "street_name" => "rue de la gare", "street_ban_id" => "62080_0580" },
+        { "city_code" => "62080", "city_name" => "BAPAUME", "sector_id" => "arras-sud", "street_name" => "rue des casernes", "street_ban_id" => "62080_0180" },
+      ]
+    end
+
+    it "should be valid and import zones" do
+      res = ImportZoneRowsService.perform_with(rows, "62", agent)
+      expect(res[:valid]).to eq(true)
+      expect(res[:counts][:imported_new]["arques"]).to eq(1)
+      expect(res[:counts][:imported_new]["arras-sud"]).to eq(2)
+      expect(Zone.count).to eq(3)
+      expect(Zone.cities.count).to eq(1)
+      expect(Zone.streets.count).to eq(2)
+      expect(Zone.where(city_code: "62080").count).to eq(2)
+      expect(Zone.where(city_code: "62080").first.sector).to eq(sector_arras_sud)
+      expect(Zone.where(city_code: "62080").pluck(:street_ban_id)).to contain_exactly("62080_0580", "62080_0180")
+    end
+
+    context "dry_run" do
+      it "should return counters but not actually import" do
+        res = ImportZoneRowsService.perform_with(rows, "62", agent, dry_run: true)
+        expect(res[:valid]).to eq(true)
+        expect(res[:counts][:imported_new]["arques"]).to eq(1)
+        expect(res[:counts][:imported_new]["arras-sud"]).to eq(2)
         expect(res[:imported_zones].count).to eq(3)
         expect(Zone.count).to eq(0)
       end
