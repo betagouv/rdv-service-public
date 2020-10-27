@@ -1,3 +1,4 @@
 web: bundle exec puma
 worker: bin/rake jobs:work
 webpack: bin/webpack-dev-server
+ban_mock_server: cd ban_mock_server && bundle exec puma -p 5010

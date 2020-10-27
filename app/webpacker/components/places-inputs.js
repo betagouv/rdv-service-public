@@ -30,7 +30,7 @@ class PlacesInput {
   }
 
   getSuggestions = (query, callback) => {
-    const url = "https://api-adresse.data.gouv.fr/search/"
+    const url = ENV.BAN_API_URL || "https://api-adresse.data.gouv.fr/search/"
     const searchParams = new URLSearchParams()
     searchParams.append("q", query)
     if (this.addressType) searchParams.append("type", this.addressType)
