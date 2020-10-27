@@ -42,8 +42,8 @@ describe ImportZoneRowsService, type: :service do
     let(:rows) do
       [
         { "city_code" => "62040", "city_name" => "AIRE-SUR-LA-LYS", "sector_id" => "arques" },
-        { "city_code" => "62080", "city_name" => "BAPAUME", "sector_id" => "arras-sud", "street_name" => "rue de la gare", "street_ban_id" => "62080_0580" },
-        { "city_code" => "62080", "city_name" => "BAPAUME", "sector_id" => "arras-sud", "street_name" => "rue des casernes", "street_ban_id" => "62080_0180" },
+        { "city_code" => "62080", "city_name" => "BAPAUME", "sector_id" => "arras-sud", "street_name" => "rue de la gare", "street_code" => "62080_0580" },
+        { "city_code" => "62080", "city_name" => "BAPAUME", "sector_id" => "arras-sud", "street_name" => "rue des casernes", "street_code" => "62080_0180" },
       ]
     end
 

@@ -31,7 +31,7 @@ module UserRdvWizard
     end
 
     def geo_search
-      @geo_search ||= Users::GeoSearch.new(**@attributes.slice(:departement, :city_code))
+      @geo_search ||= Users::GeoSearch.new(**@attributes.slice(:departement, :city_code, :street_ban_id))
     end
 
     def lieu_full_name
@@ -39,12 +39,12 @@ module UserRdvWizard
     end
 
     def to_query
-      rdv.to_query.merge(@attributes.slice(:where, :departement, :lieu_id, :latitude, :longitude, :city_code))
+      rdv.to_query.merge(@attributes.slice(:where, :departement, :lieu_id, :latitude, :longitude, :city_code, :street_ban_id))
     end
 
     def to_search_query
       @attributes
-        .slice(:departement, :latitude, :longitude, :motif_name, :where, :city_code)
+        .slice(:departement, :latitude, :longitude, :motif_name, :where, :city_code, :street_ban_id)
         .merge(service: @rdv.motif.service_id, motif_name: @rdv.motif.name)
     end
 

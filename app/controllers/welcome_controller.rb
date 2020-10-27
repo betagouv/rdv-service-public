@@ -1,6 +1,6 @@
 class WelcomeController < ApplicationController
   PERMITTED_PARAMS = [
-    :departement, :where, :service, :motif_name, :latitude, :longitude, :city_code
+    :departement, :where, :service, :motif_name, :latitude, :longitude, :city_code, :street_ban_id
   ].freeze
 
   before_action :set_lieu_variables, only: [:welcome_departement, :welcome_service]
@@ -47,8 +47,9 @@ class WelcomeController < ApplicationController
     @longitude = lieu_params[:longitude]
     @where = lieu_params[:where]
     @city_code = lieu_params[:city_code]
+    @street_ban_id = lieu_params[:street_ban_id]
     @service = Service.find(lieu_params[:service]) if lieu_params[:service]
-    @geo_search = Users::GeoSearch.new(departement: @departement, city_code: @city_code)
+    @geo_search = Users::GeoSearch.new(departement: @departement, city_code: @city_code, street_ban_id: @street_ban_id)
   end
 
   private

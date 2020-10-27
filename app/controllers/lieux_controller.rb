@@ -69,7 +69,7 @@ class LieuxController < ApplicationController
   end
 
   def search_params
-    params.require(:search).permit(:departement, :where, :service, :motif_name, :longitude, :latitude, :city_code)
+    params.require(:search).permit(:departement, :where, :service, :motif_name, :longitude, :latitude, :city_code, :street_ban_id)
   end
 
   def set_lieu_variables
@@ -79,8 +79,12 @@ class LieuxController < ApplicationController
     @where = search_params[:where]
     @service_id = search_params[:service]
     @city_code = search_params[:city_code]
+    @street_ban_id = search_params[:street_ban_id]
     @service = Service.find(@service_id)
-    @geo_search = Users::GeoSearch.new(departement: @departement, city_code: @city_code)
+    @geo_search = Users::GeoSearch.new(
+      { departement: @departement, city_code: @city_code }
+        .merge(@street_ban_id.present? ? { street_ban_id: @street_ban_id } : {})
+    )
     searchable_motifs = @geo_search.available_motifs.where(service: @service)
     @motif_names = searchable_motifs.pluck(:name).uniq
     @matching_motifs = searchable_motifs.where(name: @motif_name)
