@@ -16,6 +16,7 @@ class Zone < ApplicationRecord
   validates :street_ban_id, :street_name, presence: true, if: :level_street?
   validates :street_ban_id, uniqueness: { scope: :sector }, if: :level_street?
   validate :coherent_street_ban_id, if: :level_street?
+  validate :no_existing_city_zone?, if: :level_street?
 
   scope :cities, -> { where(level: LEVEL_CITY) }
   scope :streets, -> { where(level: LEVEL_STREET) }
@@ -43,5 +44,11 @@ class Zone < ApplicationRecord
     return true if street_ban_id.blank? || city_code.blank? || street_ban_id.start_with?(expected_prefix)
 
     errors.add(:base, "La rue #{street_name} n'appartient pas à la ville #{city_name}")
+  end
+
+  def no_existing_city_zone?
+    return true if city_code.blank? || sector.blank? || sector.zones.cities.where(city_code: city_code).empty?
+
+    errors.add(:base, "La commune #{city_name} est déjà couverte intégralement par le secteur")
   end
 end
