@@ -1,4 +1,6 @@
-city_code,city_name,sector_id
-62040,AIRE-SUR-LA-LYS,arques-rural
-62110,ARQUES,arques-rural
-62007,ACQ,arras-sud
+sector_id,city_code,city_name,street_name,street_code
+arques-rural,62053,AUDICTHUN,,
+arques-rural,62205,CAMPAGNE-LES-WARDRECQUES,,
+arques-rural,62042,ATHIES,,
+bapaume-sud,62080,BAPAUME,Rue de la gare,62080_0580
+bapaume-sud,62080,BAPAUME,Rue des casernes,62080_0180

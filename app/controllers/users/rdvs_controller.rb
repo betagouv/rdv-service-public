@@ -53,8 +53,10 @@ class Users::RdvsController < UserAuthController
   end
 
   def set_geo_search
-    @geo_search = Users::GeoSearch
-      .new(departement: params[:departement], city_code: params[:city_code])
+    @geo_search = Users::GeoSearch.new(
+      { departement: params[:departement], city_code: params[:city_code] }
+        .merge(params[:street_ban_id].present? ? { street_ban_id: params[:street_ban_id] } : {})
+    )
   end
 
   def build_rdv_from_creneau(creneau)

@@ -2,8 +2,8 @@ class Admin::Departements::SectorsController < AgentDepartementAuthController
   def index
     @sectors = policy_scope(Sector)
       .where(departement: current_departement.number)
-      .order(:name)
       .includes(:attributions)
+      .order_by_name
     @sectors = @sectors.page(params[:page]) unless params[:view] == "map"
     authorize(@sectors)
     render :index_map if params[:view] == "map"
@@ -27,7 +27,7 @@ class Admin::Departements::SectorsController < AgentDepartementAuthController
   def show
     @sector = Sector.find(params[:id])
     authorize(@sector)
-    @zones = @sector.zones.page(params[:page])
+    @zones = @sector.zones.order(updated_at: :desc).page(params[:page])
   end
 
   def edit

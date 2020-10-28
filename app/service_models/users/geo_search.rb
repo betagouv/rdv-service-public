@@ -1,7 +1,8 @@
 class Users::GeoSearch
-  def initialize(departement:, city_code: nil)
+  def initialize(departement:, city_code: nil, street_ban_id: nil)
     @departement = departement
     @city_code = city_code
+    @street_ban_id = street_ban_id
   end
 
   def departement_sectorisation_enabled?
@@ -21,7 +22,7 @@ class Users::GeoSearch
     return {} unless departement_sectorisation_enabled?
 
     @attributed_agents_by_organisation ||= matching_sectors
-      .map { |sector| sector.attributions.level_agent.includes(:agent).to_a }
+      .map { |sector| sector.attributions.level_agent.includes(:agent).where.not(organisation: attributed_organisations).to_a }
       .flatten
       .group_by(&:organisation)
       .transform_values { |attributions| attributions.map(&:agent) }
@@ -30,7 +31,8 @@ class Users::GeoSearch
   def matching_zones
     return nil if !departement_sectorisation_enabled? || @city_code.nil?
 
-    @matching_zones ||= Zone.includes(:sector).where(city_code: @city_code)
+    @matching_zones ||= \
+      matching_zones_streets_arel.any? ? matching_zones_streets_arel : matching_zones_cities_arel
   end
 
   def matching_sectors
@@ -52,6 +54,16 @@ class Users::GeoSearch
   end
 
   private
+
+  def matching_zones_cities_arel
+    Zone.cities.includes(:sector).where(city_code: @city_code)
+  end
+
+  def matching_zones_streets_arel
+    return Zone.includes(:sector).none if @street_ban_id.blank?
+
+    Zone.streets.includes(:sector).where(street_ban_id: @street_ban_id)
+  end
 
   def available_motifs_arels
     [available_motifs_from_attributed_organisations_arel] +

@@ -13,7 +13,10 @@
       | Ajouter la commune
 
 .row.justify-content-center
-  .col-md-6
-    .card
+  .col-md-8
+    .card[style="position: relative;"]
+      .card-overlay-spinner.js-spinner-overlay.d-none
+        .spinner.spinner-border
       .card-body
+        = render partial: 'layouts/model_errors', locals: { model: @zone }
         = render "form", zone: @zone, sector: @sector

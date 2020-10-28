@@ -48,7 +48,8 @@ module WelcomeHelper
     return nil if !geo_search.departement_sectorisation_enabled? || geo_search.empty_attributions?
 
     explanations = geo_search.matching_zones.map do |zone|
-      "#{zone.city_name} → " +
+      (zone.level_street? ? "#{zone.street_name} " : "") +
+        "#{zone.city_name} → " +
         zone.sector.attributions.to_a.group_by(&:organisation).map do |organisation, attributions|
           organisation.name + (attributions.all?(&:level_agent?) ? " (certains agents)" : "")
         end.join(", ")

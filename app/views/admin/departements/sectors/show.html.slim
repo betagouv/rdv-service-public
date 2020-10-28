@@ -35,35 +35,40 @@
       - if @zones.empty?
         .card-header
           .card-title
-            h5 Communes associées
+            h5 Communes ou rues associées
         .card-body
           .alert.alert-warning.d-flex.align-items-center
             div.mr-2.h4 ⚠️
             div
-              .mb-1 Aucune commune associée
+              .mb-1 Aucune commune ni rue associée
               div Ce secteur ne peut pas être recherché par les usagers
           div= link_to new_admin_departement_sector_zone_path(current_departement, @sector), class: "btn btn-primary w-100" do
             i.fa.fa-plus>
-            span> Ajouter une commune
+            span> Ajouter une commune ou une rue
       - else
         .p-2.d-flex.align-items-center
           div.flex-grow-1.text-center= page_entries_info @zones
           div= link_to new_admin_departement_sector_zone_path(current_departement, @sector), class: "btn btn-primary" do
             i.fa.fa-plus>
-            span> Ajouter une commune
+            span> Ajouter une commune ou une rue
         table.table
           thead
             tr
-              th Étendue
               th Commune
-              th Code Commune
+              th Rue
               th
           tbody
             - @zones.each do |zone|
               tr
-                td= Zone.human_enum_name(:level, zone.level).sub(" ", "&nbsp;").html_safe
-                td= zone.city_name
-                td= zone.city_code
+                td
+                  = zone.city_name
+                  .badge.badge-light.text-monospace= zone.city_code
+                - if zone.level_street?
+                  td
+                    = zone.street_name
+                    .badge.badge-light.text-monospace= zone.street_ban_id
+                - else
+                  td.text-muted Commune entière
                 td
                   - if policy([:agent, zone]).destroy?
                     = link_to "retirer", admin_departement_sector_zone_path(current_departement, @sector, zone), method: :delete
@@ -72,10 +77,10 @@
           .mb-2= page_entries_info @zones
           - if @zones.count > 5
             div= link_to( \
-              "🗑 Retirer les #{@zones.total_count} communes de ce secteur …", \
+              "🗑 Retirer les #{@zones.total_count} communes et rues de ce secteur …", \
               admin_departement_sector_zones_path(current_departement, @sector), \
               method: :delete, \
-              data: { confirm: "Êtes-vous sûr de vouloir retirer ces #{@zones.total_count} communes ?" }, \
+              data: { confirm: "Êtes-vous sûr de vouloir retirer ces #{@zones.total_count} communes et rues ?" }, \
               class: 'btn btn-danger' \
             )
   .col-md-5
