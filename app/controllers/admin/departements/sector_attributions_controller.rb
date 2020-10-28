@@ -34,6 +34,7 @@ class Admin::Departements::SectorAttributionsController < AgentDepartementAuthCo
     @available_organisations = policy_scope(Organisation)
       .where(departement: current_departement.number)
       .where.not(id: excluded_organisation_ids)
+      .order_by_name
     return if @sector_attribution.level_organisation? || @sector_attribution.organisation.blank?
 
     existing_agent_attributions = @sector

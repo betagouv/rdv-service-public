@@ -7,6 +7,8 @@ class Sector < ApplicationRecord
   validates :human_id, uniqueness: { scope: :departement }
   validate :coherent_city_code_departement
 
+  scope :order_by_name, -> { order(Arel.sql("LOWER(name)")) }
+
   protected
 
   def coherent_city_code_departement

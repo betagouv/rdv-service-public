@@ -38,6 +38,7 @@ class Organisation < ApplicationRecord
         .pluck(:organisation_id)
     )
   }
+  scope :order_by_name, -> { order(Arel.sql("LOWER(name)")) }
 
   def notify_admin_organisation_created
     return unless agents.present?
