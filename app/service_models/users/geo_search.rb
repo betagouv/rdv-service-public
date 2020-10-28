@@ -31,7 +31,8 @@ class Users::GeoSearch
   def matching_zones
     return nil if !departement_sectorisation_enabled? || @city_code.nil?
 
-    @matching_zones ||= matching_zones_cities_arel.or(matching_zones_streets_arel)
+    @matching_zones ||= \
+      matching_zones_streets_arel.any? ? matching_zones_streets_arel : matching_zones_cities_arel
   end
 
   def matching_sectors
