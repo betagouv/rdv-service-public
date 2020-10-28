@@ -54,7 +54,6 @@ class CalendarRdvSolidarites {
     return new Calendar(this.calendarEl, {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       locale: frLocale,
-      timeZone: "Europe/Paris",
       eventSources: JSON.parse(this.data.eventSourcesJson),
       eventSourceFailure: function (errorObj) {
         alert("Une erreur s'est produite lors de la récupération des données du calendrier.");
