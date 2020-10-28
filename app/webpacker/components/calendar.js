@@ -78,7 +78,6 @@ class CalendarRdvSolidarites {
           buttonText: 'Journée'
         }
       },
-      timeGridEventMinHeight: 15,
       businessHours: {
         // days of week. an array of zero-based day of week integers (0=Sunday)
         daysOfWeek: [1, 2, 3, 4, 5],
