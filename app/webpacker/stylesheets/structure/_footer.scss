@@ -1,3 +1,34 @@
+// common : users & agents
+footer {
+  color: $gray-600;
+  text-decoration: none;
+
+  .footer-links a {
+    color: $gray-600;
+    &:hover {
+      color: $gray-900;
+    }
+  }
+}
+
+// only used for users
+footer.main-footer {
+  padding: 3rem 0 0;
+  overflow-x: hidden;
+  .brand {
+    font-weight: 800;
+    font-size: 1.7rem;
+    color: #222;
+    margin-bottom: 20px;
+  }
+}
+@media (max-width: 991px) {
+  footer.main-footer {
+    padding: 100px 0 0;
+  }
+}
+
+// only used for agents
 .footer {
   border-top: 1px solid rgba($gray-600, 0.2);
   bottom: 0;
@@ -6,20 +37,6 @@
   right: 0;
   color: $gray-600;
   left: $leftbar-width;
-
-  .footer-links {
-    a {
-      color: $gray-600;
-      margin-left: 1.5rem;
-      transition: all .4s;
-      &:hover {
-        color: $gray-900;
-      }
-      &:first-of-type {
-        margin-left: 0;
-      }
-    }
-  }
 }
 
 body.users .footer {left: 0;}
@@ -44,8 +61,8 @@ body.providers .footer {
 
 // Layout - Topnav
 body[data-layout="topnav"] {
-    .footer {
-        left: 0 !important;
-        padding: 19px 0 20px;
-    }
+  .footer {
+      left: 0 !important;
+      padding: 19px 0 20px;
+  }
 }

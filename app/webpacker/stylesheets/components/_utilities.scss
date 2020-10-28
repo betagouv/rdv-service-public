@@ -31,3 +31,7 @@ a[disabled] {
 .grid-first-column-empty > *:nth-child(1) {
   grid-column-start: 2;
 }
+
+.flex-gap-1em {
+  gap: 0 1em;
+}
