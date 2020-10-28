@@ -155,7 +155,7 @@ describe Users::GeoSearch, type: :service_model do
     let!(:attribution_ville1) { SectorAttribution.create(level: "agent", sector: sector_ville, organisation: organisation1, agent: agent_ville1) }
     let!(:plage_ouverture_ville1) { create(:plage_ouverture, agent: agent_ville1, motifs: [motifs_orga1[4]], organisation: organisation1) }
 
-    # second agent : sector Ville, orga 2
+    # third agent : sector Ville, orga 2
     let!(:agent_ville2) { create(:agent, organisations: [organisation2]) }
     let!(:attribution_ville2) { SectorAttribution.create(level: "agent", sector: sector_ville, organisation: organisation2, agent: agent_ville2) }
     let!(:plage_ouverture_ville2) { create(:plage_ouverture, agent: agent_ville2, motifs: [motifs_orga2[0]], organisation: organisation2) }
@@ -176,6 +176,24 @@ describe Users::GeoSearch, type: :service_model do
       expect(subject.available_motifs).to include(motifs_orga2[0])
       expect(subject.available_motifs).not_to include(motifs_orga2[1]) # no plage ouvertures
       expect(subject.available_services).to include(service1)
+    end
+  end
+
+  context "sectorisation is enabled, one matching sector attributed to full orga, other matching sector attributed to agent in same orga" do
+    let(:sectorisation_enabled) { true }
+    let!(:motif) { create(:motif, service: service1, reservable_online: true, organisation: organisation1) }
+    let!(:sector_arques_rural) { create(:sector, departement: "62", name: "Arques CENTRE", human_id: "arques") }
+    let!(:zone_arques_rural) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector_arques_rural) }
+    let!(:sector_arques_ville) { create(:sector, departement: "62", name: "Ville", human_id: "ville") }
+    let!(:zone_arques_ville) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector_arques_ville) }
+    let!(:agent) { create(:agent, organisations: [organisation1]) }
+    let!(:plage_ouverture) { create(:plage_ouverture, agent: agent, motifs: [motif], organisation: organisation1) }
+    let!(:attribution_organisation_arques_rural) { SectorAttribution.create(level: "organisation", sector: sector_arques_rural, organisation: organisation1) }
+    let!(:attribution_agent_arques_ville) { SectorAttribution.create(level: "agent", sector: sector_arques_ville, organisation: organisation1, agent: agent) }
+
+    it "should attribute only full organisation, not redundant attributed agent" do
+      expect(subject.attributed_organisations).to contain_exactly(organisation1)
+      expect(subject.attributed_agents_by_organisation).to be_empty
     end
   end
 end

@@ -22,7 +22,7 @@ class Users::GeoSearch
     return {} unless departement_sectorisation_enabled?
 
     @attributed_agents_by_organisation ||= matching_sectors
-      .map { |sector| sector.attributions.level_agent.includes(:agent).to_a }
+      .map { |sector| sector.attributions.level_agent.includes(:agent).where.not(organisation: attributed_organisations).to_a }
       .flatten
       .group_by(&:organisation)
       .transform_values { |attributions| attributions.map(&:agent) }
