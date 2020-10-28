@@ -6,12 +6,6 @@ require "csv"
 # that the model files are loaded twice, or something related to HABTM
 # associations..
 
-def create_organisation_and_sector(name:, human_id:)
-  organisation = Organisation.create!(phone_number: "0123456789", departement: "62", human_id: human_id, name: name)
-  sector = Sector.create!(name: "Secteur de #{name[4..-1]}", human_id: human_id, departement: "62")
-  [organisation, sector]
-end
-
 # ORGANISATIONS & SECTORS
 
 Organisation.skip_callback(:create, :after, :notify_admin_organisation_created)
@@ -42,17 +36,22 @@ human_id_map = [
   { human_id: "1054", name: "MDS St Omer" },
   { human_id: "1055", name: "MDS St Pol sur Ternoise" }
 ].map do |attributes|
-  organisation, sector = create_organisation_and_sector(**attributes)
+  organisation = Organisation.create!(phone_number: "0123456789", departement: "62", human_id: attributes[:human_id], name: attributes[:name])
+  sector = Sector.create!(name: "Secteur de #{attributes[:name][4..-1]}", human_id: attributes[:human_id], departement: "62")
   sector.attributions.create!(organisation: organisation, level: SectorAttribution::LEVEL_ORGANISATION)
   [attributes[:human_id], { organisation: organisation, sector: sector }]
 end.to_h
 
 # Bapaume is created without the organisation-level attribution
-org_bapaume, sector_bapaume = create_organisation_and_sector(name: "MDS Bapaume", human_id: "1034")
-human_id_map["1034"] = { organisation: org_bapaume, sector: sector_bapaume }
-
+org_bapaume = Organisation.create!(phone_number: "0123456789", departement: "62", human_id: "1034-nord", name: "MDS Bapaume")
+sector_bapaume_nord = Sector.create!(name: "Bapaume Nord", human_id: "1034-nord", departement: "62")
+sector_bapaume_sud = Sector.create!(name: "Bapaume Sud", human_id: "1034-sud", departement: "62")
+sector_bapaume_fallback = Sector.create!(name: "Bapaume Entier", human_id: "1034-fallback", departement: "62")
+sector_bapaume_fallback.attributions.create!(organisation: org_bapaume, level: SectorAttribution::LEVEL_ORGANISATION)
+human_id_map["1034-nord"] = { organisation: org_bapaume, sector: sector_bapaume_nord }
+human_id_map["1034-sud"] = { organisation: org_bapaume, sector: sector_bapaume_sud }
+human_id_map["1034-fallback"] = { organisation: org_bapaume, sector: sector_bapaume_fallback }
 org_arques = human_id_map["1030"][:organisation]
-org_bapaume = human_id_map["1034"][:organisation]
 
 Organisation.set_callback(:create, :after, :notify_admin_organisation_created)
 
@@ -218,10 +217,12 @@ lieu_bapaume_est = Lieu.create!(
 zones_csv_path = File.join(Rails.root, "db", "seeds", "zones_62.csv")
 CSV.read(zones_csv_path, headers: :first_row).each do |row|
   Zone.create!(
-    level: "city",
+    level: row["street_ban_id"].present? ? "street" : "city",
     sector: human_id_map[row["sector_id"]][:sector],
     city_code: row["city_code"],
-    city_name: row["city_name"]
+    city_name: row["city_name"],
+    street_name: row["street_name"],
+    street_ban_id: row["street_ban_id"]
   )
 end
 
@@ -345,12 +346,32 @@ agent_org_bapaume_pmi_bruno = Agent.new(
 agent_org_bapaume_pmi_bruno.skip_confirmation!
 agent_org_bapaume_pmi_bruno.save!
 
+agent_org_bapaume_pmi_gina = Agent.new(
+  email: "gina@demo.rdv-solidarites.fr",
+  role: :admin,
+  first_name: "Gina",
+  last_name: "Leone",
+  password: "123456",
+  service_id: service_pmi.id,
+  organisation_ids: [org_bapaume.id],
+  invitation_accepted_at: 10.days.ago
+)
+agent_org_bapaume_pmi_gina.skip_confirmation!
+agent_org_bapaume_pmi_gina.save!
+
 # SECTOR ATTRIBUTIONS - AGENT LEVEL
 
 SectorAttribution.create!(
-  sector: sector_bapaume,
+  sector: sector_bapaume_nord,
   organisation: org_bapaume,
   agent: agent_org_bapaume_pmi_bruno,
+  level: SectorAttribution::LEVEL_AGENT
+)
+
+SectorAttribution.create!(
+  sector: sector_bapaume_sud,
+  organisation: org_bapaume,
+  agent: agent_org_bapaume_pmi_gina,
   level: SectorAttribution::LEVEL_AGENT
 )
 
@@ -420,6 +441,17 @@ _plage_ouverture_org_bapaume_bruno_classique = PlageOuverture.create!(
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(9),
   end_time: Tod::TimeOfDay.new(15),
+  recurrence: Montrose.every(:week, interval: 1)
+)
+_plage_ouverture_org_bapaume_gina_classique = PlageOuverture.create!(
+  title: "Perm. prenatale",
+  organisation_id: org_bapaume.id,
+  agent_id: agent_org_bapaume_pmi_gina.id,
+  lieu_id: lieu_bapaume_est.id,
+  motif_ids: [motifs[:bapaume][:pmi_prenatale].id],
+  first_day: Date.tomorrow,
+  start_time: Tod::TimeOfDay.new(11),
+  end_time: Tod::TimeOfDay.new(18),
   recurrence: Montrose.every(:week, interval: 1)
 )
 PlageOuverture.set_callback(:create, :after, :notify_agent_plage_ouverture_created)
