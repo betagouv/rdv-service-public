@@ -1,4 +1,13 @@
 GIT
+  remote: https://github.com/lynndylanhurley/devise_token_auth.git
+  revision: 5ef7197d5e2ca50f7fc92a7b04884341759b6e87
+  specs:
+    devise_token_auth (1.1.4)
+      bcrypt (~> 3.0)
+      devise (> 3.5.2, < 5)
+      rails (>= 4.2.0, < 6.1)
+
+GIT
   remote: https://github.com/thoughtbot/administrate.git
   revision: eb9b1b158d3529e7d6cedd9ee5bbee88244edbc3
   branch: master
@@ -514,6 +523,7 @@ DEPENDENCIES
   devise (~> 4.7)
   devise-async (~> 1.0)
   devise_invitable (~> 2.0)
+  devise_token_auth!
   dotenv-rails (~> 2.7.2)
   factory_bot
   faker

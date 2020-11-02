@@ -69,9 +69,16 @@ Rails.application.routes.draw do
   }
 
   as :agent do
-    get "agents/edit" => "agents/registrations#edit", as: "edit_agent_registration"
-    put "agents" => "agents/registrations#update", as: "agent_registration"
-    delete "agents" => "agents/registrations#destroy", as: "delete_agent_registration"
+    get "agents/edit" => "agents/registrations#edit", as: "edit_devise_agent_registration"
+    put "agents" => "agents/registrations#update", as: "devise_agent_registration"
+    delete "agents" => "agents/registrations#destroy", as: "delete_devise_agent_registration"
+  end
+
+  namespace :api do
+    namespace :v1 do
+      mount_devise_token_auth_for "Agent", at: "auth"
+      resources :absences, only: [:index, :create]
+    end
   end
 
   resources :organisations, only: [:new, :create]

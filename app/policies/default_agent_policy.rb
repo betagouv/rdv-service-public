@@ -44,6 +44,8 @@ class DefaultAgentPolicy
   end
 
   def same_org?
+    return false if @context.organisation.nil?
+
     if @record.respond_to?(:organisation_id)
       @record.organisation_id == @context.organisation.id
     elsif @record.respond_to?(:organisation_ids)

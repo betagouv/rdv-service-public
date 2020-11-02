@@ -26,6 +26,7 @@ gem "devise_invitable", "~> 2.0"
 gem "devise-async", "~> 1.0"
 gem "omniauth-github", "~> 1.4"
 gem "pundit", "~> 2.0"
+gem "devise_token_auth", github: "lynndylanhurley/devise_token_auth"
 
 # Jobs
 gem "delayed_job_active_record", "~> 4.1.4"
