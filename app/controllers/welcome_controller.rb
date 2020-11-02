@@ -38,6 +38,8 @@ class WelcomeController < ApplicationController
   end
 
   def welcome_service
+    @services = @geo_search.available_services
+    @organisations_departement = Organisation.where(departement: @departement)
     @motif_names = @geo_search.available_motifs.where(service: @service).pluck(:name).uniq
   end
 
