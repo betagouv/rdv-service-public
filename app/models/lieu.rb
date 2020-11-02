@@ -4,6 +4,8 @@ class Lieu < ApplicationRecord
   has_many :rdvs
   validates :name, :address, :latitude, :longitude, presence: true
 
+  delegate :phone_number, to: :organisation
+
   scope :for_motif, lambda { |motif|
     lieux_ids = PlageOuverture
       .where.not("recurrence IS ? AND first_day < ?", nil, Time.zone.today)

@@ -19,7 +19,7 @@
             = f.input :service, label: false, disabled: true, readonly: true, input_html: { value: @service.name, class: "form-control-lg" }, wrapper_html: { class: 'mb-1 mb-lg-0' }
           .col-lg-3.align-self-end= link_to "Modifier le service", welcome_departement_path(@departement, where: @where, latitude: @latitude, longitude: @longitude, city_code: @city_code, street_ban_id: @street_ban_id), class: 'btn btn-light btn-lg w-100 text-center'
 
-        .form-row.d-flex.justify-content-md-center.mb-2
+        .form-row.d-flex.mb-2
           .col-lg-9
             = f.input :motif_name, \
               label: @motif_name.present? ? false : "Votre motif", \
@@ -33,10 +33,26 @@
               }, \
               wrapper_html: { class: 'mb-1 mb-lg-0' }
           .col-lg-3.align-self-end= f.button :submit, "Choisir ce motif", class: 'btn btn-secondary btn-lg w-100 text-center'
+
           - if urgency_number
             small.col-sm-12.pt-1.text-light.font-italic
               | Si votre motif ne figure pas dans la liste contactez par téléphone le
               u=< urgency_number
+
+
+          - if @organisations_departement.present?
+            h4.text-white
+              | Le motif que vous cherchez n'est pas dans la liste ?
+              - if @organisations_departement.first.phone_number.present?
+                .text-white
+                  span> Contactez l'organisation de votre secteur au 
+                  = link_to "☎️ #{@organisations_departement.first.phone_number}", "tel:#{@organisations_departement.first.phone_number}", class: 'text-white', style: 'text-decoration: underline'
+              - else
+                .text-white
+                  span> Retrouver les coordonées de votre département sur
+                  = link_to "la page contact", contact_path, class: 'text-white', style: 'text-decoration: underline'
+
+
 
       - else
         .form-row.d-flex.mb-2
@@ -69,7 +85,10 @@
                   .text-white
                     span> Contactez l'organisation de votre secteur au 
                     = link_to "☎️ #{@organisations_departement.first.phone_number}", "tel:#{@organisations_departement.first.phone_number}", class: 'text-white', style: 'text-decoration: underline'
-
+                - else
+                  .text-white
+                    span> Retrouver les coordonées de votre département sur
+                    = link_to "la page contact", contact_path, class: 'text-white', style: 'text-decoration: underline'
 
 
           - else
