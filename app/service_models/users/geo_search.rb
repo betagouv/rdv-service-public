@@ -38,7 +38,7 @@ class Users::GeoSearch
   def matching_sectors
     return nil unless departement_sectorisation_enabled?
 
-    @matching_sectors ||= Sector.where(id: matching_zones.pluck(:sector_id))
+    @matching_sectors ||= Sector.where(id: matching_zones&.pluck(:sector_id))
   end
 
   def available_services
