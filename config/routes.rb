@@ -149,7 +149,7 @@ Rails.application.routes.draw do
     root to: "admin/organisations#index", as: :authenticated_agent_root, defaults: { follow_unique: "1" }
   end
 
-  { disclaimer: "mentions_legales", terms: "cgv", mds: "mds" }.each do |k, v|
+  { contact: "contact", disclaimer: "mentions_legales", terms: "cgv", mds: "mds" }.each do |k, v|
     get v => "static_pages##{k}"
   end
 

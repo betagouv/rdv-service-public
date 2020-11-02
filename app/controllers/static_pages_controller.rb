@@ -4,4 +4,5 @@ class StaticPagesController < ApplicationController
   def terms; end
 
   def mds; end
+  def contact; end
 end
