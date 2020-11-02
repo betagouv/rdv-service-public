@@ -39,7 +39,7 @@
               u=< urgency_number
 
       - else
-        .form-row.d-flex.justify-content-md-center.mb-2
+        .form-row.d-flex.mb-2
           - if @services.any?
             .col-lg-9
               = f.input :service, \
@@ -55,10 +55,23 @@
                 }, \
                 wrapper_html: { class: 'mb-1 mb-lg-0' }
             .col-lg-3.align-self-end= f.button :submit, "Choisir ce service", class: 'btn btn-secondary btn-lg w-100 text-center'
+
             - if urgency_number
               small.col-sm-12.pt-1.text-light.font-italic
                 span> Si votre service ne figure pas dans la liste contactez par téléphone le
                 span>= urgency_number
+
+
+            - if @organisations_departement.present? && @service.blank?
+              h4.text-white 
+                | Le service que vous cherchez n'est pas dans la liste ?
+                - if @organisations_departement.first.phone_number.present?
+                  .text-white
+                    span> Contactez l'organisation de votre secteur au 
+                    = link_to "☎️ #{@organisations_departement.first.phone_number}", "tel:#{@organisations_departement.first.phone_number}", class: 'text-white', style: 'text-decoration: underline'
+
+
+
           - else
             h2.text-white.text-center
               - if @organisations_departement.any? && departement_sectorisation_enabled?(@departement)
