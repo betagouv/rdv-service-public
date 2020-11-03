@@ -55,7 +55,7 @@ class Admin::OrganisationsController < AgentAuthController
   end
 
   def organisation_params
-    params.require(:organisation).permit(:name, :horaires, :phone_number, :human_id)
+    params.require(:organisation).permit(:name, :horaires, :phone_number, :website, :email, :human_id)
   end
 
   def new_organisation_params

@@ -1,14 +1,18 @@
-.col-sm-12.pt-1.text-light.font-italic.text-white
-  - if objet.present?
+.pt-1.text-light.font-italic.text-white
+  - if objet
     span> Le #{objet} que vous cherchez n'est pas dans la liste ?
     - if geo_search.present?
       .text-white Vous pouvez contacter
       - geo_search.attributed_organisations.select{|o| o.phone_number.present? }.each do |organisation|
         .text-white
           => organisation.name
-          | au
-          =< link_to "☎️ #{organisation.phone_number}", "tel:#{organisation.phone_number}", class: 'text-white', style: 'text-decoration: underline'
-  .text-white
-    span> Retrouver les coordonées de votre département sur
+          - if organisation.phone_number.present?
+            i.fa.fa-phone> = link_to organisation.phone_number, "tel:#{organisation.phone_number}", class: 'text-white'
+          - if organisation.email.present?
+            i.fa.fa-envelope> = mail_to organisation.email, "#{organisation.email}", class: 'text-white'
+          - if organisation.website.present?
+            i.fa.fa-file-o> = link_to organisation.website, "#{organisation.website}", class: 'text-white'
+  - else
+    | Retrouver les coordonées de votre département sur
     =< link_to "la page contact", contact_path, class: 'text-white', style: 'text-decoration: underline'
 
