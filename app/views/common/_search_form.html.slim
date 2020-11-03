@@ -34,16 +34,18 @@
               wrapper_html: { class: 'mb-1 mb-lg-0' }
           .col-lg-3.align-self-end= f.button :submit, "Choisir ce motif", class: 'btn btn-secondary btn-lg w-100 text-center'
 
-          - if @organisations_departement.present?
+          - if @geo_search.present?
             small.col-sm-12.pt-1.text-light.font-italic.text-white
-              | Le motif que vous cherchez n'est pas dans la liste ?
-              - if @organisations_departement.first.phone_number.present?
+              span> Le motif que vous cherchez n'est pas dans la liste ?
+              | Vous pouvez contacter
+              - @geo_search.attributed_organisations.select{|o| o.phone_number.present? }.each do |organisation|
                 .text-white
-                  span> Contactez l'organisation de votre secteur au 
-                  u=< link_to "☎️ #{@organisations_departement.first.phone_number}", "tel:#{@organisations_departement.first.phone_number}", class: 'text-white'
+                  => organisation.name
+                  | au
+                  =< link_to "☎️ #{organisation.phone_number}", "tel:#{organisation.phone_number}", class: 'text-white', style: 'text-decoration: underline'
               .text-white
                 span> Retrouver les coordonées de votre département sur
-                u=< link_to "la page contact", contact_path, class: 'text-white'
+                =< link_to "la page contact", contact_path, class: 'text-white', style: 'text-decoration: underline'
 
 
 
@@ -65,13 +67,15 @@
                 wrapper_html: { class: 'mb-1 mb-lg-0' }
             .col-lg-3.align-self-end= f.button :submit, "Choisir ce service", class: 'btn btn-secondary btn-lg w-100 text-center'
 
-            - if @organisations_departement.present? && @service.blank?
+            - if @geo_search.present? && @service.blank?
               small.col-sm-12.pt-1.text-light.font-italic.text-white
                 | Le service que vous cherchez n'est pas dans la liste ?
-                - if @organisations_departement.first.phone_number.present?
+                | Vous pouvez contacter
+                - @geo_search.attributed_organisations.select{|o| o.phone_number.present? }.each do |organisation|
                   .text-white
-                    span> Contactez l'organisation de votre secteur au 
-                    = link_to "☎️ #{@organisations_departement.first.phone_number}", "tel:#{@organisations_departement.first.phone_number}", class: 'text-white', style: 'text-decoration: underline'
+                    => organisation.name
+                    | au
+                    =< link_to "☎️ #{organisation.phone_number}", "tel:#{organisation.phone_number}", class: 'text-white', style: 'text-decoration: underline'
                 .text-white
                   span> Retrouver les coordonées de votre département sur la page
                   = link_to "contact", contact_path, class: 'text-white', style: 'text-decoration: underline'
