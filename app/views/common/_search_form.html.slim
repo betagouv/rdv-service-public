@@ -34,20 +34,7 @@
               wrapper_html: { class: 'mb-1 mb-lg-0' }
           .col-lg-3.align-self-end= f.button :submit, "Choisir ce motif", class: 'btn btn-secondary btn-lg w-100 text-center'
 
-          - if @geo_search.present?
-            small.col-sm-12.pt-1.text-light.font-italic.text-white
-              span> Le motif que vous cherchez n'est pas dans la liste ?
-              | Vous pouvez contacter
-              - @geo_search.attributed_organisations.select{|o| o.phone_number.present? }.each do |organisation|
-                .text-white
-                  => organisation.name
-                  | au
-                  =< link_to "☎️ #{organisation.phone_number}", "tel:#{organisation.phone_number}", class: 'text-white', style: 'text-decoration: underline'
-              .text-white
-                span> Retrouver les coordonées de votre département sur
-                =< link_to "la page contact", contact_path, class: 'text-white', style: 'text-decoration: underline'
-
-
+          = render "common/contact", geo_search: @geo_search, objet: "motif"
 
       - else
         .form-row.d-flex.mb-2
@@ -67,19 +54,7 @@
                 wrapper_html: { class: 'mb-1 mb-lg-0' }
             .col-lg-3.align-self-end= f.button :submit, "Choisir ce service", class: 'btn btn-secondary btn-lg w-100 text-center'
 
-            - if @geo_search.present? && @service.blank?
-              small.col-sm-12.pt-1.text-light.font-italic.text-white
-                | Le service que vous cherchez n'est pas dans la liste ?
-                | Vous pouvez contacter
-                - @geo_search.attributed_organisations.select{|o| o.phone_number.present? }.each do |organisation|
-                  .text-white
-                    => organisation.name
-                    | au
-                    =< link_to "☎️ #{organisation.phone_number}", "tel:#{organisation.phone_number}", class: 'text-white', style: 'text-decoration: underline'
-                .text-white
-                  span> Retrouver les coordonées de votre département sur la page
-                  = link_to "contact", contact_path, class: 'text-white', style: 'text-decoration: underline'
-
+            = render "common/contact", geo_search: @geo_search, objet: "service"
 
           - else
             h3.text-white
