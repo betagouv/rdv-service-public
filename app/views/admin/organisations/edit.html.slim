@@ -3,10 +3,16 @@
 - content_for :title do
   | Modifier l'organisation
 
-= simple_form_for [:admin, @organisation], remote: request.xhr?, data: { rightbar: true } do |f|
-  = render partial: 'layouts/model_errors', locals: { model: @organisation }
-  = f.input :name
-  = f.input :phone_number, placeholder: "ex: 0412345667"
-  = f.input :horaires, placeholder: "ex : du lundi au vendredi de 9h à 17h, le samedi de 9h à 12h"
-  .text-right
-    = f.button :submit
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-body
+        = simple_form_for [:admin, @organisation], remote: request.xhr?, data: { rightbar: true } do |f|
+          = render partial: 'layouts/model_errors', locals: { model: @organisation }
+          = f.input :name
+          = f.input :phone_number, placeholder: "ex: 0412345667"
+          = f.input :website, placeholder: "ex: http://rdv-solidarites.fr"
+          = f.input :email, placeholder: "ex: contact@ma-mds.fr"
+          = f.input :horaires, placeholder: "ex : du lundi au vendredi de 9h à 17h, le samedi de 9h à 12h"
+          .text-right
+            = f.button :submit
