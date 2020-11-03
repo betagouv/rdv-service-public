@@ -26,5 +26,21 @@ html lang="fr"
     #right-bar-holder
     - if content_for :popin
       = yield :popin
-    = render "common/footer"
+    footer.footer
+      .container-fluid
+        .row
+          .col-md-12
+            .footer-links.d-none.d-md-flex.flex-wrap.flex-gap-1em.justify-content-end.mb-2
+              span
+                = link_to "https://github.com/betagouv/rdv-solidarites.fr/commits/#{ENV["CONTAINER_VERSION"]}" do
+                  span>= ENV["RDV_SOLIDARITES_VERSION"]
+                  i.fa.fa-external-link-alt
+              = link_to "https://github.com/betagouv/rdv-solidarites.fr/wiki/Changelog" do
+                span> Dernières nouveautés
+                i.fa.fa-external-link-alt
+              = link_to "https://trello.com/b/BiT8tx09/rdv-solidarit%C3%A9s-dev" do
+                span> Feuille de route
+                i.fa.fa-external-link-alt
+              = link_to 'Mentions légales', mentions_legales_path
+              = mail_to "contact@rdv-solidarites.fr", 'Contact'
     input type='hidden' id="js-current-menu-item" value=content_for(:menu_item)
