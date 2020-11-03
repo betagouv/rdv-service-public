@@ -64,9 +64,7 @@
                 span> Vous ne pouvez pas prendre de rendez-vous en ligne dans votre département
               - else
                 | La prise de rendez-vous n'est pas disponible pour ce département.
-              .text-white
-                span> Retrouver les coordonées de votre département sur la page
-                = link_to "contact", contact_path, class: 'text-white', style: 'text-decoration: underline'
+              = render "common/contact", geo_search: @geo_search
     - else
       .form-row.d-flex.justify-content-md-center
         .col-lg-9= f.input :where, label: @search_label.present? ? @search_label : "Votre adresse", placeholder: 'ex : 21 rue Anatole France, Calais', input_html: { value: @where, class: "form-control-lg places-js-container" }, wrapper_html: { class: 'mb-1 mb-lg-0' }
