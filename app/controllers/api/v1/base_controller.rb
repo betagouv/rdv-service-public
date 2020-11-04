@@ -4,7 +4,7 @@ class Api::V1::BaseController < ActionController::Base
   include DeviseTokenAuth::Concerns::SetUserByToken
   respond_to :json
   rescue_from Pundit::NotAuthorizedError, with: :not_authorized
-  before_action :authenticate_api_v1_agent!
+  before_action :authenticate_api_v1_agent_with_token_auth!
 
   def pundit_user
     AgentContext.new(current_agent, current_organisation)

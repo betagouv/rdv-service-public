@@ -8,7 +8,7 @@ describe "API auth", type: :request do
   context "login with wrong password" do
     it "should return error" do
       post(
-        api_v1_agent_session_path,
+        api_v1_agent_with_token_auth_session_path,
         params: { email: agent.email, password: "blahblah" }.to_json,
         headers: { CONTENT_TYPE: "application/json", ACCEPT: "application/json" }
       )
@@ -20,7 +20,7 @@ describe "API auth", type: :request do
   context "login with wrong email" do
     it "should return error" do
       post(
-        api_v1_agent_session_path,
+        api_v1_agent_with_token_auth_session_path,
         params: { email: "blah@demo.rdv-sol.fr", password: "123456" }.to_json,
         headers: { CONTENT_TYPE: "application/json", ACCEPT: "application/json" }
       )
@@ -53,7 +53,7 @@ describe "API auth", type: :request do
   context "log in, then query" do
     it "gives you an authentication code if you are an existing user and you satisfy the password" do
       post(
-        api_v1_agent_session_path,
+        api_v1_agent_with_token_auth_session_path,
         params: { email: agent.email, password: "123456" }.to_json,
         headers: { CONTENT_TYPE: "application/json", ACCEPT: "application/json" }
       )
