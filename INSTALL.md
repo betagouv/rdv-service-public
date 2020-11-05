@@ -16,7 +16,7 @@ Afin d'initialiser l'environnement de développement, exécutez la commande suiv
 ```bash
 bin/setup
 ```
-Pour accedez à l'interface SuperAdmin créer un compte via la console Rails :
+Pour acceder à l'interface SuperAdmin créez un compte via la console Rails :
 
 ```
 bundle exec rails console
