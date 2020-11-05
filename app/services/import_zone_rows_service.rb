@@ -1,7 +1,10 @@
 class ImportZoneRowsService < BaseService
   include DataUtils
 
-  REQUIRED_FIELDS = ["sector_id", "city_name", "city_code"].freeze
+  REQUIRED_FIELDS = {
+    Zone::LEVEL_CITY => %w[sector_id city_name city_code],
+    Zone::LEVEL_STREET => %w[sector_id city_name city_code street_name street_code]
+  }.freeze
 
   def initialize(rows, departement, agent, **options)
     @rows = rows
@@ -30,22 +33,14 @@ class ImportZoneRowsService < BaseService
   private
 
   def valid?
-    @valid = compute_valid if @valid.nil? # avoid computing multiple times
-    @valid
-  end
+    return @valid unless @valid.nil? # avoid computing multiple times
 
-  def compute_valid
-    (
+    @valid = \
       validate_rows_present? &&
       validate_columns? &&
-      validate_inner_conflicts? &&
-      @rows.each_with_index.map do |row, row_index|
-        validate_row_fields_present(row, row_index) &&
-        validate_row_sector_found(row, row_index) &&
-        validate_row_valid_zone(row, row_index) &&
-        validate_row_authorized(row, row_index)
-      end.all?
-    )
+      validate_inner_conflicts_cities? &&
+      validate_inner_conflicts_streets? &&
+      @rows.each_with_index.map { |row, row_index| valid_row?(row, row_index) }.all?
   end
 
   def validate_rows_present?
@@ -56,15 +51,15 @@ class ImportZoneRowsService < BaseService
   end
 
   def validate_columns?
-    missing_columns = REQUIRED_FIELDS - @rows.first.to_h.keys
+    missing_columns = REQUIRED_FIELDS[Zone::LEVEL_CITY] - @rows.first.to_h.keys
     return true if missing_columns.empty?
 
     @result[:errors] << "Colonne(s) #{missing_columns.join(', ')} absente(s)"
     false
   end
 
-  def validate_inner_conflicts?
-    conflicts = value_counts(@rows.pluck("city_code")).to_a.filter { _2 > 1 }
+  def validate_inner_conflicts_cities?
+    conflicts = value_counts(rows_cities.pluck("city_code")).to_a.filter { _2 > 1 }
     return true if conflicts.empty?
 
     conflicts.each do |city_code, count|
@@ -73,70 +68,64 @@ class ImportZoneRowsService < BaseService
     false
   end
 
-  def validate_row_fields_present(row, row_index)
-    missing_fields = REQUIRED_FIELDS.filter { row[_1].blank? }
-    return true if missing_fields.empty?
+  def validate_inner_conflicts_streets?
+    conflicts = value_counts(rows_streets.pluck("street_code")).to_a.filter { _2 > 1 }
+    return true if conflicts.empty?
 
-    @result[:row_errors][row_index] = "Champ(s) #{missing_fields.join(',')} manquant(s)"
-    @result[:counts][:errors][:missing_fields] += 1
+    conflicts.each do |street_ban_id, count|
+      @result[:errors] << "Le code rue #{street_ban_id} apparaît #{count} fois"
+    end
     false
   end
 
-  def validate_row_sector_found(row, row_index)
-    return true if find_sector(row["sector_id"]).present?
+  def valid_row?(row, row_index)
+    zone_import_row = zone_import_row_for(row)
+    return true if zone_import_row.valid?
 
-    @result[:row_errors][row_index] = "Aucun secteur trouvé pour l'identifiant #{row['sector_id']}"
-    @result[:counts][:errors][:sector_not_found] += 1
-    false
-  end
-
-  def validate_row_valid_zone(row, row_index)
-    zone = build_zone(row)
-    return true if zone.valid?
-
-    @result[:row_errors][row_index] = zone.errors.full_messages.join(", ")
-    @result[:counts][:errors]["invalid_zone_#{zone.errors.keys.first}".to_sym] += 1
-    false
-  end
-
-  def validate_row_authorized(row, row_index)
-    zone = build_zone(row)
-    policy = Pundit.policy(AgentContext.new(@agent), [:agent, zone])
-    return true if policy.create?
-
-    @result[:row_errors][row_index] = "Pas les droits nécessaires pour créer une commune pour le secteur #{zone.sector_id}"
-    @result[:counts][:errors][:unauthorized_zone] += 1
+    zone_import_row.errors.each do |error|
+      @result[:row_errors][row_index] = error[:message]
+      @result[:counts][:errors][error[:key]] += 1
+    end
     false
   end
 
   def import_row(row)
-    zone = build_zone(row)
-    unless zone.valid?
-      @messages[:error]
+    row_import_result = zone_import_row_for(row).import
+    unless row_import_result.imported?
       @result[:counts][:errors][:invalid] += 1
       return
     end
 
-    special_key = zone.new_record? ? :imported_new : :imported_override
-    zone.save! unless @dry_run
-    @result[:imported_zones] << zone
-    @result[:counts][:imported][zone.sector.human_id] += 1
-    @result[:counts][special_key][zone.sector.human_id] += 1
+    @result[:imported_zones] << row_import_result.zone
+    @result[:counts][:imported][row_import_result.zone.sector.human_id] += 1
+    @result[:counts][row_import_result.key][row_import_result.zone.sector.human_id] += 1
   end
 
-  def build_zone(row)
-    unique_attributes = { level: "city", city_code: row["city_code"], sector: find_sector(row["sector_id"]) }
-    extra_attributes = { city_name: row["city_name"] }
-    Zone.find_or_initialize_by(unique_attributes) # could be optimized
-      .tap { _1.assign_attributes(extra_attributes) }
+  def sectors_by_human_id
+    @sectors_by_human_id ||= Sector
+      .where(departement: @departement, human_id: @rows.pluck("sector_id"))
+      .map { [_1.human_id, _1] }
+      .to_h
   end
 
-  def find_sector(human_id)
-    @sectors_cache ||= {}
-    unless @sectors_cache.key?(human_id)
-      @sectors_cache[human_id] = \
-        Sector.find_by(departement: @departement, human_id: human_id)
-    end
-    @sectors_cache[human_id]
+  def zone_import_row_for(row)
+    ZoneImportRow.new(
+      row,
+      agent: @agent,
+      dry_run: @dry_run,
+      sectors_by_human_id: sectors_by_human_id
+    )
+  end
+
+  def rows_cities
+    @rows_cities ||= @rows.select { row_level(_1) == Zone::LEVEL_CITY }
+  end
+
+  def rows_streets
+    @rows_streets ||= @rows.select { row_level(_1) == Zone::LEVEL_STREET }
+  end
+
+  def row_level(row)
+    row["street_name"].present? || row["street_code"].present? ? Zone::LEVEL_STREET : Zone::LEVEL_CITY
   end
 end

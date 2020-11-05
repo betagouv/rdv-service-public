@@ -82,9 +82,9 @@ Rails.application.routes.draw do
         scope module: "departements" do
           resources :zone_imports, only: [:new, :create]
           resources :sectors do
-            resources :zones, only: [:new, :create, :destroy]
+            resources :zones, except: [:index]
+            resources :sector_attributions, only: [:new, :create, :destroy], as: :attributions
             delete "/zones" => "zones#destroy_multiple"
-            resources :sector_attributions, only: [:create, :destroy], as: :attributions
           end
           resource :setup_checklist, only: [:show]
         end
@@ -149,7 +149,7 @@ Rails.application.routes.draw do
     root to: "admin/organisations#index", as: :authenticated_agent_root, defaults: { follow_unique: "1" }
   end
 
-  { disclaimer: "mentions_legales", terms: "cgv", mds: "mds" }.each do |k, v|
+  { contact: "contact", disclaimer: "mentions_legales", terms: "cgv", mds: "mds" }.each do |k, v|
     get v => "static_pages##{k}"
   end
 

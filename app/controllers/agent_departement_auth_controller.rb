@@ -7,6 +7,10 @@ class AgentDepartementAuthController < AgentAuthController
   end
   helper_method :current_departement
 
+  def pundit_user
+    AgentContext.new(current_agent, nil)
+  end
+
   def current_organisation
     # TODO: remove and fix pundit policies for departement-level routes
     current_agent.organisations.where(departement: current_departement.to_s).first

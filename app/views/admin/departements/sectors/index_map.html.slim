@@ -20,7 +20,7 @@
   .col-md-12
     .card
       .alert.alert-warning.text-center
-        | ⚠️ Cette carte n'affiche pas correctement les secteurs qui se chevauchent
+        | ⚠️ Cette carte n'affiche pas correctement les secteurs qui se chevauchent ni les rues dans le détail
       div.position-relative
         #zones-map[
           data-center-query="#{@sectors.first&.zones&.first&.city_name}, #{current_departement}"

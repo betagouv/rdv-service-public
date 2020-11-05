@@ -1,6 +1,6 @@
 class WelcomeController < ApplicationController
   PERMITTED_PARAMS = [
-    :departement, :where, :service, :motif_name, :latitude, :longitude, :city_code
+    :departement, :where, :service, :motif_name, :latitude, :longitude, :city_code, :street_ban_id
   ].freeze
 
   before_action :set_lieu_variables, only: [:welcome_departement, :welcome_service]
@@ -33,12 +33,14 @@ class WelcomeController < ApplicationController
   end
 
   def welcome_departement
-    @services = Service.searchable(@organisations)
+    @services = @geo_search.available_services
     @organisations_departement = Organisation.where(departement: @departement)
   end
 
   def welcome_service
-    @motif_names = Motif.searchable(@organisations, service: @service).pluck(:name).uniq
+    @services = @geo_search.available_services
+    @organisations_departement = Organisation.where(departement: @departement)
+    @motif_names = @geo_search.available_motifs.where(service: @service).pluck(:name).uniq
   end
 
   def set_lieu_variables
@@ -47,9 +49,9 @@ class WelcomeController < ApplicationController
     @longitude = lieu_params[:longitude]
     @where = lieu_params[:where]
     @city_code = lieu_params[:city_code]
+    @street_ban_id = lieu_params[:street_ban_id]
     @service = Service.find(lieu_params[:service]) if lieu_params[:service]
-    @sectorisation_infos = SectoriseAddressService.perform_with(@departement, @city_code)
-    @organisations = @sectorisation_infos.organisations
+    @geo_search = Users::GeoSearch.new(departement: @departement, city_code: @city_code, street_ban_id: @street_ban_id)
   end
 
   private

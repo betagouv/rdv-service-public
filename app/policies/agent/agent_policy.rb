@@ -21,7 +21,9 @@ class Agent::AgentPolicy < Agent::AdminPolicy
 
   class Scope < Scope
     def resolve
-      if @context.agent.can_access_others_planning?
+      if @context.organisation.nil? && @context.agent.can_access_others_planning?
+        scope.joins(:organisations).where(organisations: { id: @context.agent.organisation_ids })
+      elsif @context.agent.can_access_others_planning?
         scope.joins(:organisations).where(organisations: { id: @context.organisation.id })
       else
         scope.joins(:organisations).where(organisations: { id: @context.organisation.id }, service_id: @context.agent.service_id)

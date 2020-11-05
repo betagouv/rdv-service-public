@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_05_094454) do
+ActiveRecord::Schema.define(version: 2020_10_26_192321) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -264,6 +264,8 @@ ActiveRecord::Schema.define(version: 2020_10_05_094454) do
     t.bigint "sector_id", null: false
     t.bigint "organisation_id", null: false
     t.string "level", null: false
+    t.bigint "agent_id"
+    t.index ["agent_id"], name: "index_sector_attributions_on_agent_id"
     t.index ["organisation_id"], name: "index_sector_attributions_on_organisation_id"
     t.index ["sector_id"], name: "index_sector_attributions_on_sector_id"
   end
@@ -386,6 +388,8 @@ ActiveRecord::Schema.define(version: 2020_10_05_094454) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "sector_id", null: false
+    t.string "street_name"
+    t.string "street_ban_id"
     t.index ["sector_id"], name: "index_zones_on_sector_id"
   end
 
@@ -406,6 +410,7 @@ ActiveRecord::Schema.define(version: 2020_10_05_094454) do
   add_foreign_key "rdvs", "lieux"
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"
+  add_foreign_key "sector_attributions", "agents"
   add_foreign_key "user_notes", "agents"
   add_foreign_key "user_notes", "organisations"
   add_foreign_key "user_notes", "users"

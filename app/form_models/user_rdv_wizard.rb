@@ -6,36 +6,45 @@ module UserRdvWizard
   class Base
     include ActiveModel::Model
 
-    attr_accessor :rdv, :creneau
+    attr_accessor :rdv
+    delegate :motif, :starts_at, :users, to: :rdv
 
     def initialize(user, attributes)
       @user = user
       @attributes = attributes.to_h.symbolize_keys
-      rdv_defaults = { user_ids: [user.id] }
+      rdv_defaults = { user_ids: [user&.id] }
       @rdv = Rdv.new(
         rdv_defaults
           .merge(motif: @motif)
           .merge(@attributes.slice(:starts_at, :user_ids, :motif_id))
       )
-      @creneau = Users::CreneauSearch.creneau_for(
+    end
+
+    def creneau
+      @creneau ||= Users::CreneauSearch.creneau_for(
         user: @user,
         motif: @rdv.motif,
         lieu: Lieu.find(@attributes[:lieu_id]),
-        starts_at: @rdv.starts_at
+        starts_at: @rdv.starts_at,
+        geo_search: geo_search
       )
     end
 
+    def geo_search
+      @geo_search ||= Users::GeoSearch.new(**@attributes.slice(:departement, :city_code, :street_ban_id))
+    end
+
     def lieu_full_name
-      @creneau.lieu.full_name
+      creneau.lieu.full_name
     end
 
     def to_query
-      rdv.to_query.merge(@attributes.slice(:where, :departement, :lieu_id, :latitude, :longitude, :city_code))
+      rdv.to_query.merge(@attributes.slice(:where, :departement, :lieu_id, :latitude, :longitude, :city_code, :street_ban_id))
     end
 
     def to_search_query
       @attributes
-        .slice(:departement, :latitude, :longitude, :motif_name, :where, :city_code)
+        .slice(:departement, :latitude, :longitude, :motif_name, :where, :city_code, :street_ban_id)
         .merge(service: @rdv.motif.service_id, motif_name: @rdv.motif.name)
     end
 

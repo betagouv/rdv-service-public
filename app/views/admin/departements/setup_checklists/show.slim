@@ -9,19 +9,15 @@
       .card-header
         h4 Fonctionnement de la sectorisation
       .card-body
-        p La sectorisation permet d’attribuer des secteurs géographiques à des organisations. Un usager est orienté vers les organisations dont il dépend en fonction de l'adresse saisie lors de sa prise de RDV en ligne
+        p La sectorisation permet de définir des Secteurs géographiques et de leur attribuer des responsables. Les usagers sont orientés vers les bons responsables selon l'adresse saisie lors de leur prise de RDV en ligne.
 
         p.mt-3
-          | Chaque <b>Secteur</b> est défini comme un ensemble de communes.
-          br
-          span.text-muted La possibilité de définir un secteur à l'échelle de rues sera bientôt développée
+          span> Voir plus de détails et des exemples dans la documentation :
+          a href="https://doc.rdv-solidarites.fr/sectorisation-geographique" target="blank"
+            span> doc.rdv-solidarites.fr
+            i.fa.fa-external-link-alt>
 
-        p.mt-3
-          | Chaque <b>Secteur</b> est attribué à une ou plusieurs <b>Organisations</b>.
-          br
-          span.text-muted Les attributions au niveau d'un <b>Agent</b> seront bientôt développées.
 
-        p.mt-3 Seuls les <b>Agents</b> avec le rôle Administrateur peuvent configurer la sectorisation des organisations qu’ils administrent. Néanmoins, ils ont la visibilité sur l’ensemble des <b>Secteurs</b> du Département.
         p.d-flex.justify-content-between.align-items-center
           span= link_to "Importer un fichier", new_admin_departement_zone_import_path(current_departement), class: 'btn btn-primary'
           span ou
@@ -36,16 +32,16 @@
       .card-header
         h4 Activation pour le #{current_departement}
       .card-body
-        - if sectorisation_enabled?(current_departement.number)
+        - if departement_sectorisation_enabled?(departement: current_departement.number)
           .mb-2.d-flex.align-items-top
             span
               .badge.badge-success Activée
             div.ml-1
-              p L’usager est orienté vers l’organisation dont il dépend en fonction de l'adresse saisie lors de sa prise de RDV en ligne
+              p L’usager est orienté vers les organisations ou les agents dont il dépend en fonction de l'adresse saisie lors de sa prise de RDV en ligne
           p Lors de la prise de RDV en ligne, les communes ou adresses non attachées à une organisation ne renvoient à aucun résultat.
           hr
           h5 Désactivation
-          p En désactivant la sectorisation, les <b>Secteurs</b> seront ignorés et les usagers pourront faire des recherches dans l'ensemble du département
+          p En désactivant la sectorisation, les Secteurs seront ignorés et les usagers pourront faire des recherches dans l'ensemble du département
           p
             span> Pour désactiver la sectorisation, veuillez nous écrire sur
             a[href='mailto:dev@rdv-solidarites.fr'] dev@rdv-solidarites.fr
@@ -60,35 +56,8 @@
           p
             span> Une fois la sectorisation activée :
             ul
-              li L’usager sera orienté vers l’organisation dont il dépend en fonction de l'adresse saisie lors de sa prise de RDV en ligne
-              li Les communes ou adresses non attachées à une organisation ne renverront plus aucun résultat
+              li L’usager sera orienté vers les rganisations ou les agents dont il dépend en fonction de l'adresse saisie lors de sa prise de RDV en ligne
+              li Les communes ou adresses non attachées à une organisation ou un agent ne renverront plus aucun résultat
           p
             span> Pour activer la sectorisation, veuillez nous écrire sur
             a[href='mailto:dev@rdv-solidarites.fr'] dev@rdv-solidarites.fr
-
-  .col-md-12
-    .card
-      .card-header
-        h4 Exemple
-      .d-flex
-        div= image_pack_tag("sectorisation_explanations.png", style: "width: 700px;")
-        div.p-2
-          div.mb-1
-            b Cas 1. un usager cherche dans la commune AUDICTHUN
-          ul
-            li Une <b>Zone</b> correspondant à cette commune est trouvée : la Zone 33.
-            li Le <b>Secteur</b> "ARQUES & ENVIRONS" associé à cette <b>Zone</b> est attribué à 1 Organisation
-            li Les RDVs proposés à l'usager seront donc ceux disponibles dans l'Organisation "MDS Site Arques"
-
-          div.mt-3.mb-1
-            b Cas 2. un usager cherche dans la commune DELETTES
-          ul
-            li Une <b>Zone</b> correspondant à cette commune est trouvée : la Zone 105.
-            li Le <b>Secteur</b> "RURAL" associé à cette <b>Zone</b> est attribué à 2 Organisations
-            li Les RDVs proposés à l'usager seront donc ceux disponibles dans ces deux Organisations "MDS Site ERNY" et "MDS locale campagne"
-
-          div.mt-3.mb-1
-            b Cas 3. un usager cherche dans la commune BOMY
-          ul
-            li Aucune <b>Zone</b> n'est associée à cette commune, donc aucun <b>Secteur</b>, ni aucune <b>Organisation</b>
-            li Aucun RDV ne sera donc proposé à cet usager, il lui sera indiqué que la prise de RDV en ligne n'est pas disponible à son adresse.

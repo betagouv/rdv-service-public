@@ -59,11 +59,17 @@ class LieuxController < ApplicationController
   end
 
   def creneaux_search_for(lieu, date_range)
-    Users::CreneauxSearch.new(user: current_user, motifs: @matching_motifs, lieu: lieu, date_range: date_range)
+    Users::CreneauxSearch.new(
+      user: current_user,
+      motifs: @matching_motifs,
+      lieu: lieu,
+      date_range: date_range,
+      geo_search: @geo_search
+    )
   end
 
   def search_params
-    params.require(:search).permit(:departement, :where, :service, :motif_name, :longitude, :latitude, :city_code)
+    params.require(:search).permit(:departement, :where, :service, :motif_name, :longitude, :latitude, :city_code, :street_ban_id)
   end
 
   def set_lieu_variables
@@ -73,11 +79,13 @@ class LieuxController < ApplicationController
     @where = search_params[:where]
     @service_id = search_params[:service]
     @city_code = search_params[:city_code]
+    @street_ban_id = search_params[:street_ban_id]
     @service = Service.find(@service_id)
-    @sectorisation_infos = SectoriseAddressService.perform_with(@departement, @city_code)
-    @organisations = @sectorisation_infos.organisations
-    searchable_motifs = Motif.searchable(@organisations, service: @service)
-    redirect_to root_path, flash: { error: "Une erreur s'est produite, veuillez recommencer votre recherche" } if searchable_motifs.empty?
+    @geo_search = Users::GeoSearch.new(
+      { departement: @departement, city_code: @city_code }
+        .merge(@street_ban_id.present? ? { street_ban_id: @street_ban_id } : {})
+    )
+    searchable_motifs = @geo_search.available_motifs.where(service: @service)
     @motif_names = searchable_motifs.pluck(:name).uniq
     @matching_motifs = searchable_motifs.where(name: @motif_name)
     @latitude = search_params[:latitude]

@@ -1,6 +1,4 @@
 class Organisation < ApplicationRecord
-  extend SectorisationUtils
-
   has_paper_trail
   has_many :lieux, dependent: :destroy
   has_many :motifs, dependent: :destroy
@@ -31,6 +29,16 @@ class Organisation < ApplicationRecord
   after_create :notify_admin_organisation_created
 
   accepts_nested_attributes_for :agents
+
+  scope :attributed_to_sectors, lambda { |sectors|
+    where(
+      id: SectorAttribution
+        .level_organisation
+        .where(sector_id: sectors.pluck(:id))
+        .pluck(:organisation_id)
+    )
+  }
+  scope :order_by_name, -> { order(Arel.sql("LOWER(name)")) }
 
   def notify_admin_organisation_created
     return unless agents.present?

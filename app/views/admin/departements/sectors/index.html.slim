@@ -23,7 +23,7 @@
           tr
             th Nom
             th Identifiant
-            th Communes
+            th Géographie
             th Attributions
             th Actions
         tbody
@@ -31,14 +31,26 @@
             tr
               td= link_to sector.name, admin_departement_sector_path(current_departement, sector)
               td= human_id(sector)
-              td= "#{sector.zones.count} communes"
+              td
+                ul.list-unstyled
+                  - if sector.zones.cities.any?
+                    li= "#{sector.zones.cities.count}&nbsp;communes".html_safe
+                  - if sector.zones.streets.any?
+                    li= "#{sector.zones.streets.count}&nbsp;rues".html_safe
               td
                 - if sector.attributions.any?
-                  ul
-                    - sector.attributions.each do |attribution|
-                      li= "Organisation #{attribution.organisation.name}"
+                  ul.pl-2.mb-0
+                    - sector.attributions.to_a.group_by(&:organisation).each do |organisation, attributions|
+                      - if attributions.count == 1 && attributions.all?(&:level_organisation?)
+                        li= "Organisation entière #{organisation.name}"
+                      - if attributions.all?(&:level_agent?)
+                        li
+                          = "Agents de l'organisation #{organisation.name}:"
+                          ul.pl-2
+                            - attributions.each do |attribution|
+                              li= attribution.agent.full_name_and_service
                 - else
-                  | Aucune attribution
+                  .text-muted Aucune attribution
               td
                 .d-flex
                   - if policy([:agent, sector]).show?

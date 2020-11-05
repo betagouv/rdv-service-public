@@ -1,5 +1,6 @@
 class Users::RdvsController < UserAuthController
   before_action :set_rdv, only: [:cancel]
+  before_action :set_geo_search, only: [:create]
 
   def index
     @rdvs = policy_scope(Rdv).includes(:motif, :rdvs_users, :users)
@@ -14,7 +15,8 @@ class Users::RdvsController < UserAuthController
         user: current_user,
         starts_at: DateTime.parse(rdv_params[:starts_at]),
         motif: motif,
-        lieu: Lieu.find(new_rdv_extra_params[:lieu_id])
+        lieu: Lieu.find(new_rdv_extra_params[:lieu_id]),
+        geo_search: @geo_search
       )
       if @creneau.present?
         @rdv = build_rdv_from_creneau(@creneau)
@@ -48,6 +50,13 @@ class Users::RdvsController < UserAuthController
 
   def set_rdv
     @rdv = policy_scope(Rdv).find(params[:rdv_id])
+  end
+
+  def set_geo_search
+    @geo_search = Users::GeoSearch.new(
+      { departement: params[:departement], city_code: params[:city_code] }
+        .merge(params[:street_ban_id].present? ? { street_ban_id: params[:street_ban_id] } : {})
+    )
   end
 
   def build_rdv_from_creneau(creneau)

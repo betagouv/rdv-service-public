@@ -1,0 +1,22 @@
+footer.main-footer
+  .container
+    .row
+      .col-lg-12.col-md-6
+        = link_to 'rdv-solidarites.fr', root_path, class: 'brand'
+    .row
+      .col-md-12
+        .footer-links.d-flex.flex-wrap.flex-gap-1em.mb-3
+          = link_to "Contact", contact_path
+          = link_to "Statistiques", stats_path
+          = link_to "Espace professionel", accueil_mds_path
+          = link_to "Les solidarités dans votre département", mds_path
+          = link_to "Mentions Légales", mentions_legales_path
+        .footer-links.d-flex.flex-wrap.flex-gap-1em.mb-2
+          span
+            span> RDV-Solidarités
+            = link_to "https://github.com/betagouv/rdv-solidarites.fr/commits/#{ENV["CONTAINER_VERSION"]}" do
+              span>= ENV["RDV_SOLIDARITES_VERSION"]
+              i.fa.fa-external-link-alt
+          = link_to "https://github.com/betagouv/rdv-solidarites.fr/" do
+            span> Code Source sur GitHub
+            i.fa.fa-external-link-alt

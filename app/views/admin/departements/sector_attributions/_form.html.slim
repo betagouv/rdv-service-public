@@ -1,0 +1,56 @@
+= simple_form_for \
+  sector_attribution, \
+  url: admin_departement_sector_attributions_path(current_departement, ), \
+  html: { class: "js-sector-attribution-form" } \
+do |f|
+
+  = f.input_field :level, \
+    label: false, \
+    collection: SectorAttribution::LEVELS, \
+    label_method: -> { "&nbsp;&nbsp;".html_safe + SectorAttribution.human_enum_name(:level, _1) }, \
+    as: :radio_buttons, \
+    wrapper: :vertical_collection_inline
+  .d-flex.align-items-center.mb-3.mt-1.text-muted
+    i.fa.fa-info
+    div.pl-2
+    - if sector_attribution.level_organisation?
+      | Toutes les disponibilités de l'organisation seront proposées aux usagers dans ce ce secteur
+    - elsif sector_attribution.level_agent?
+      | Seules les disponibilités des agents choisis dans l'organisation seront proposées aux usagers dans ce ce secteur
+
+  - if available_organisations.any?
+    = f.input :organisation_id, \
+      collection: available_organisations, \
+      include_blank: true, \
+      required: true, \
+      input_html: { class: "select2-input" }
+  - else
+    = f.input :organisation_id, \
+      collection: [], \
+      required: true, \
+      disabled: true, \
+      input_html: { class: "select2-input" }
+
+  - if sector_attribution.level_agent?
+    = f.input :agent_id, \
+      collection: available_agents || [], \
+      include_blank: true, \
+      required: true, \
+      disabled: available_agents.blank?, \
+      label_method: :full_name_and_service,
+      input_html: { class: "select2-input" }
+
+  = f.submit \
+    value: "Ajouter", \
+    class: "btn btn-primary w-100", \
+    disabled: available_organisations.blank? || (sector_attribution.level_agent? && available_agents.blank?)
+
+  - if available_organisations.blank?
+    .alert.alert-warning.mt-2
+      | Impossible de rajouter une attribution à une organisation entière car les organisations dont vous êtes administrateur sont déjà attribuées à ce Secteur.
+  - elsif sector_attribution.level_agent? && available_agents&.empty?
+    .alert.alert-warning.mt-2
+      - if sector.attributions.level_agent.where(organisation: sector_attribution.organisation).any?
+        | Tous les agents de l'organisation #{sector_attribution.organisation.name} sont déjà attribués à ce secteur.
+      - else
+        | Aucun agent de l'organisation #{sector_attribution.organisation.name} n'est disponible pour être attribué à ce secteur.

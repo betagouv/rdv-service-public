@@ -35,35 +35,40 @@
       - if @zones.empty?
         .card-header
           .card-title
-            h5 Communes associées
+            h5 Communes ou rues associées
         .card-body
           .alert.alert-warning.d-flex.align-items-center
             div.mr-2.h4 ⚠️
             div
-              .mb-1 Aucune commune associée
+              .mb-1 Aucune commune ni rue associée
               div Ce secteur ne peut pas être recherché par les usagers
           div= link_to new_admin_departement_sector_zone_path(current_departement, @sector), class: "btn btn-primary w-100" do
             i.fa.fa-plus>
-            span> Ajouter une commune
+            span> Ajouter une commune ou une rue
       - else
         .p-2.d-flex.align-items-center
           div.flex-grow-1.text-center= page_entries_info @zones
           div= link_to new_admin_departement_sector_zone_path(current_departement, @sector), class: "btn btn-primary" do
             i.fa.fa-plus>
-            span> Ajouter une commune
+            span> Ajouter une commune ou une rue
         table.table
           thead
             tr
-              th Étendue
               th Commune
-              th Code Commune
+              th Rue
               th
           tbody
             - @zones.each do |zone|
               tr
-                td= Zone.human_enum_name(:level, zone.level).sub(" ", "&nbsp;").html_safe
-                td= zone.city_name
-                td= zone.city_code
+                td
+                  = zone.city_name
+                  .badge.badge-light.text-monospace= zone.city_code
+                - if zone.level_street?
+                  td
+                    = zone.street_name
+                    .badge.badge-light.text-monospace= zone.street_ban_id
+                - else
+                  td.text-muted Commune entière
                 td
                   - if policy([:agent, zone]).destroy?
                     = link_to "retirer", admin_departement_sector_zone_path(current_departement, @sector, zone), method: :delete
@@ -72,52 +77,55 @@
           .mb-2= page_entries_info @zones
           - if @zones.count > 5
             div= link_to( \
-              "🗑 Retirer les #{@zones.total_count} communes de ce secteur …", \
+              "🗑 Retirer les #{@zones.total_count} communes et rues de ce secteur …", \
               admin_departement_sector_zones_path(current_departement, @sector), \
               method: :delete, \
-              data: { confirm: "Êtes-vous sûr de vouloir retirer ces #{@zones.total_count} communes ?" }, \
+              data: { confirm: "Êtes-vous sûr de vouloir retirer ces #{@zones.total_count} communes et rues ?" }, \
               class: 'btn btn-danger' \
             )
   .col-md-5
     .card
       .card-header
         .card-title
-          h5 Organisations attribuées
+          h5 Organisations & Agents attribués
       .card-body
         - if @sector.attributions.any?
-          .mb-3
-            - @sector.attributions.each do |attribution|
-              .d-flex.justify-content-between.mb-1
-                div>= "Organisation #{attribution.organisation.name}"
-                div.ml-2>= link_to "Retirer", admin_departement_sector_attribution_path(current_departement, @sector, attribution), method: :delete
+          ul.mb-3.pl-2
+            - @sector.attributions.to_a.group_by(&:organisation).each do |organisation, attributions|
+              - if attributions.count == 1 && attributions.first.level_organisation?
+                li
+                  .d-flex.justify-content-between.mb-2
+                    div= "Organisation entière #{organisation.name}"
+                    div.ml-2>= link_to "Retirer", admin_departement_sector_attribution_path(current_departement, @sector, attributions.first), method: :delete
+              - elsif attributions.all?(&:level_agent?)
+                li.mb-2
+                  div.mb-1= "Agents dans l'organisation #{organisation.name} :"
+                  ul.pl-2
+                    - attributions.each do |attribution|
+                      li
+                        .d-flex.justify-content-between.mb-1
+                          div= attribution.agent.full_name_and_service
+                          div.ml-2>= link_to "Retirer", admin_departement_sector_attribution_path(current_departement, @sector, attribution), method: :delete
+                    li.mb-3= link_to \
+                      "Attribuer un autre agent de #{organisation.name.truncate(10)}", \
+                      new_admin_departement_sector_attribution_path( \
+                        current_departement, \
+                        @sector, \
+                        level: "agent", \
+                        organisation_id: organisation.id \
+                    )
+
         - else
           .alert.alert-warning.d-flex.align-items-center
             div.mr-2.h4 ⚠️
             div
-              .mb-1 Aucune organisation attribuée
-              div Ce secteur ne renverra aucune disponibilité
-        = link_to ".new-sector-organisation-form-collapse", \
-          class: "btn btn-primary w-100 new-sector-organisation-form-collapse collapse show", \
-          data: { toggle: "collapse" } do
+              .mb-1 Aucune organisation ni agent attribués
+              div Ce secteur ne renvoie pas de disponibilités
+        = link_to new_admin_departement_sector_attribution_path(current_departement, @sector, level: "organisation"), class: "btn btn-primary w-100" do
           i.fa.fa-plus>
-          | Ajouter une organisation
-        .new-sector-organisation-form-collapse.collapse
-          = simple_form_for \
-            @new_sector_attribution, \
-            url: admin_departement_sector_attributions_path(current_departement, @sector) \
-          do |f|
-            = f.input :level, \
-              collection: [SectorAttribution::LEVEL_ORGANISATION], \
-              include_blank: false, \
-              input_html: { class: "select2-input" }
-            = f.input :organisation_id, \
-              collection: policy_scope(Organisation).where.not(id: @sector.attributions.pluck(:organisation_id)).where(departement: current_departement.number), \
-              include_blank: true, \
-              required: true, \
-              input_html: { class: "select2-input" }
-            = f.submit value: "Ajouter", class: "btn btn-primary w-100"
+          | Attribuer une organisation ou un agent
       .card-footer
-        .text-muted Lorsqu'un usager cherche une adresse couverte par ce secteur, les disponibilités des organisations attribuées lui seront proposées
+        .text-muted Lorsqu'un usager cherche une adresse couverte par ce secteur, les disponibilités des organisations ou des agents attribués lui seront proposées
 
     .card
       #zones-map.small[

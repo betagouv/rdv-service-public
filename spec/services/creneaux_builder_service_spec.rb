@@ -225,6 +225,16 @@ describe CreneauxBuilderService, type: :service do
         end
       end
 
+      context "when the result is filtered with an empty agents set" do
+        let(:options) { { agent_ids: [] } }
+        it { should be_empty }
+      end
+
+      context "when the result is filtered with an empty agents set, for agents" do
+        let(:options) { { for_agents: true, agent_ids: [] } }
+        it { should be_empty }
+      end
+
       context "when there is another motif with the same name but a different location_type" do
         let!(:motif_home) { create(:motif, name: "Vaccination", default_duration_in_min: 30, organisation: organisation, location_type: :home) }
         let!(:plage_ouverture_home) { create(:plage_ouverture, motifs: [motif_home], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(14) + 35.minutes, agent: agent, organisation: organisation) }
