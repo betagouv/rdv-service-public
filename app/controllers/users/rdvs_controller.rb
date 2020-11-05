@@ -3,7 +3,7 @@ class Users::RdvsController < UserAuthController
   before_action :set_geo_search, only: [:create]
 
   def index
-    @rdvs = policy_scope(Rdv).includes(:motif, :rdvs_users, :users)
+    @rdvs = policy_scope(Rdv).without_no_notification.includes(:motif, :rdvs_users, :users)
     @rdvs = params[:past].present? ? @rdvs.past : @rdvs.future
     @rdvs = @rdvs.order(starts_at: :desc).page(params[:page])
   end

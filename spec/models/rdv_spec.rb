@@ -246,4 +246,18 @@ describe Rdv, type: :model do
       expect(rdv.possible_temporal_statuses).to eq(expected)
     end
   end
+
+  describe "#without_no_notification" do
+    it "don't return rdv with motif without notification" do
+      motif = create(:motif, :no_notification)
+      create(:rdv, motif: motif)
+      expect(Rdv.without_no_notification).to eq([])
+    end
+
+    it "return rdv with motif with notification on" do
+      motif = create(:motif)
+      rdv = create(:rdv, motif: motif)
+      expect(Rdv.without_no_notification).to eq([rdv])
+    end
+  end
 end
