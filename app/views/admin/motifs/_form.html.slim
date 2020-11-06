@@ -52,8 +52,22 @@
         .col-md-4= f.input :max_booking_delay, collection: min_max_delay_options
   .card
     .card-body
-      h5 Notifications des usagers par email et SMS
-      = f.input :disable_notifications_for_users
+      h5 Visibilité usager
+      = label_tag do
+        = f.radio_button(:visibility_type, :visible_and_notified)
+        span.ml-1= t("activerecord.attributes.motif.visibility_types.visible_and_notified")
+        p.text-muted.font-14 Le RDV sera visible coté usager, et cette personne sera notifé par SMS et/ou email
+      = label_tag do
+        = f.radio_button(:visibility_type, :visible_and_not_notified)
+        span.ml-1= t("activerecord.attributes.motif.visibility_types.visible_and_not_notified")
+        p.text-muted.font-14 Le RDV sera visible dans l'interface usager s'il si connect, mais il ne recevra aucune notification (SMS ou email)
+      = label_tag do
+        = f.radio_button(:visibility_type, :invisible)
+        span.ml-1= t("activerecord.attributes.motif.visibility_types.invisible")
+        p.text-muted.font-14 Le RDV sera invisible pour l'usager. Il ne recevra aucune notification (SMS ou email)
+
+
+
   .card
     .card-body
       h5 Instructions
