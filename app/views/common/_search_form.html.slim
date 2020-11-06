@@ -33,8 +33,7 @@
               }, \
               wrapper_html: { class: 'mb-1 mb-lg-0' }
           .col-lg-3.align-self-end= f.button :submit, "Choisir ce motif", class: 'btn btn-secondary btn-lg w-100 text-center'
-
-          = render "common/contact", geo_search: @geo_search, objet: "motif"
+          .col-lg-12= render "common/contact", geo_search: @geo_search, message: "Le motif que vous cherchez n'est pas dans la liste ?"
 
       - else
         .form-row.d-flex.mb-2
@@ -54,7 +53,7 @@
                 wrapper_html: { class: 'mb-1 mb-lg-0' }
             .col-lg-3.align-self-end= f.button :submit, "Choisir ce service", class: 'btn btn-secondary btn-lg w-100 text-center'
 
-            = render "common/contact", geo_search: @geo_search, objet: "service"
+            .col-lg-12= render "common/contact", geo_search: @geo_search, message: "Le service que vous cherchez n'est pas dans la liste ?"
 
           - else
             h3.text-white
@@ -64,7 +63,7 @@
                 span> Vous ne pouvez pas prendre de rendez-vous en ligne dans votre département
               - else
                 | La prise de rendez-vous n'est pas disponible pour ce département.
-              = render "common/contact", geo_search: @geo_search, objet: nil
+              = render "common/contact", geo_search: @geo_search
     - else
       .form-row.d-flex.justify-content-md-center
         .col-lg-9= f.input :where, label: @search_label.present? ? @search_label : "Votre adresse", placeholder: 'ex : 21 rue Anatole France, Calais', input_html: { value: @where, class: "form-control-lg places-js-container" }, wrapper_html: { class: 'mb-1 mb-lg-0' }

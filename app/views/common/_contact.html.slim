@@ -1,18 +1,30 @@
-.pt-1.text-light.font-italic.text-white
-  - if objet
-    span> Le #{objet} que vous cherchez n'est pas dans la liste ?
-    - if geo_search.present?
-      .text-white Vous pouvez contacter
-      - geo_search.attributed_organisations.select{|o| o.phone_number.present? }.each do |organisation|
-        .text-white
-          => organisation.name
-          - if organisation.phone_number.present?
-            i.fa.fa-phone> = link_to organisation.phone_number, "tel:#{organisation.phone_number}", class: 'text-white'
-          - if organisation.email.present?
-            i.fa.fa-envelope> = mail_to organisation.email, "#{organisation.email}", class: 'text-white'
-          - if organisation.website.present?
-            i.fa.fa-file-o> = link_to organisation.website, "#{organisation.website}", class: 'text-white'
-  - else
-    | Retrouver les coordonées de votre département sur
-    =< link_to "la page contact", contact_path, class: 'text-white', style: 'text-decoration: underline'
+- contactable_organisations = local_assigns[:geo_search].present? && geo_search.attributed_organisations.select{ |o| o.phone_number.present? }
 
+- if local_assigns[:message].blank?
+  .pt-1.text-light.text-white.mt-2
+    span> Retrouver les coordonées de votre département sur
+    = link_to "la page contact", contact_path, class: 'text-white', style: 'text-decoration: underline'
+
+- elsif contactable_organisations.any?
+  .pt-1.text-light.text-white
+    span>= message
+    - if contactable_organisations.count > 1
+      .text-white Vous pouvez contacter
+    - contactable_organisations.each do |organisation|
+      .d-flex.text-white.flex-gap-1em.flex-wrap
+        - if contactable_organisations.count == 1
+          span> Vous pouvez contacter #{organisation.name}:
+        - else
+          span> #{organisation.name}:
+        - if organisation.phone_number.present?
+          div
+            i.fa.fa-phone>
+            = link_to organisation.phone_number, "tel:#{organisation.phone_number}", class: 'text-white'
+        - if organisation.email.present?
+          div
+            i.fa.fa-envelope>
+            = mail_to organisation.email, "#{organisation.email}", class: 'text-white'
+        - if organisation.website.present?
+          div
+            i.fa.fa-file-o>
+            = link_to organisation.website, "#{organisation.website}", class: 'text-white'
