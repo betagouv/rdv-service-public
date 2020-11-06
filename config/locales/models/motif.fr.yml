@@ -9,6 +9,11 @@ fr:
         name: Nom
         color: Couleur
         reservable_online: RDV en ligne
+        visibility_type: Visibilité usager
+        visibility_types:
+          visible_and_notified: Visible et notifié
+          visible_and_not_notified: Visible et non notifié
+          invisible: Invisible
         location_type: Type de RDV
         location_types:
           home: À domicile

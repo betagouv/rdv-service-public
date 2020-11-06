@@ -5,7 +5,9 @@ class Motif < ApplicationRecord
   has_many :rdvs, dependent: :restrict_with_exception
   has_and_belongs_to_many :plage_ouvertures, -> { distinct }
 
+  enum visibility_type: [:visible_and_notified, :visible_and_not_notified, :invisible]
   enum location_type: [:public_office, :phone, :home]
+
   validates :name, presence: true, uniqueness: { scope: [:organisation, :location_type, :service], conditions: -> { where(deleted_at: nil) }, message: "est déjà utilisé pour un motif avec le même type de RDV" }
 
   delegate :service_social?, to: :service

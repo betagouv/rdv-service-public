@@ -1,4 +1,8 @@
-describe Rdv, type: :model do
+describe Motif, type: :model do
+  it "have a valid factory" do
+    expect(build(:motif)).to be_valid
+  end
+
   let!(:organisation) { create(:organisation) }
   let(:motif) { create(:motif, organisation: organisation) }
   let(:secretariat) { create(:service, :secretariat) }
