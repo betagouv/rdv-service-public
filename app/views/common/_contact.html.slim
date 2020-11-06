@@ -1,4 +1,4 @@
-- contactable_organisations = local_assigns[:geo_search].present? && geo_search.attributed_organisations.select{ |o| o.phone_number.present? }
+- contactable_organisations = local_assigns[:geo_search].present? && geo_search.attributed_organisations.contactable
 
 - if local_assigns[:message].blank?
   .pt-1.text-light.text-white.mt-2
