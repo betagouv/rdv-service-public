@@ -211,8 +211,6 @@ ActiveRecord::Schema.define(version: 2020_11_09_102539) do
     t.text "horaires"
     t.string "phone_number"
     t.string "human_id"
-    t.string "website"
-    t.string "email"
   end
 
   create_table "plage_ouvertures", force: :cascade do |t|
