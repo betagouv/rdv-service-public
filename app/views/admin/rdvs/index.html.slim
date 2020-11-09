@@ -2,46 +2,75 @@
   | Liste des RDV
 
 - content_for :breadcrumb do
-  ol.breadcrumb.m-0
-    - if @form.date
+  - if @breadcrumb_page == "agenda" && @form.agent.present?
+    ol.breadcrumb.m-0
       li.breadcrumb-item
-        = link_to "Agenda de #{@agent.full_name}", admin_organisation_agent_path(current_organisation, @agent, date: @form.date)
-    - else
-      li.breadcrumb-item
-        = link_to 'Vos statistiques', admin_organisation_agent_stats_path(current_organisation, current_agent)
+        = link_to "Agenda de #{@form.agent.full_name}", admin_organisation_agent_path(current_organisation, @form.agent, date: @form.start)
       li.breadcrumb-item.active Liste des RDV
 
-.row.justify-content-md-center
-  .col-md-6
-    .card.border-info
-      .card-header ⚙️ Filtres et options
-      .card-body
-        = simple_form_for(@form, method: "GET", url: url_for({}), as: "") do |f|
-          = f.input :agent_id, collection: [@agent], label: "Agent", label_method: :full_name, input_html: { class: 'select2-input', disabled: true }, wrapper: "horizontal_form"
-          - if @form.date.present?
-            = date_input(f, :date, label = "Date", wrapper: "horizontal_form")
+  - if @breadcrumb_page == "agent_stats" && @form.agent == current_agent
+    ol.breadcrumb.m-0
+      li.breadcrumb-item
+          = link_to 'Vos statistiques', admin_organisation_agent_stats_path(current_organisation, current_agent)
+      li.breadcrumb-item.active RDVs #{::Rdv.human_enum_name(:status, @form.status).downcase}
 
-          - if @form.status.present?
-            = f.input :status, collection: Rdv.statuses.keys + ["unknown_past", "unknown_future"], label_method: -> { ::Rdv.human_enum_name(:status, _1) }, label: "Statut", wrapper: "horizontal_form"
+  - if @breadcrumb_page == "user" && @form.user.present?
+    ol.breadcrumb.m-0
+      li.breadcrumb-item
+        = link_to 'Vos usagers', admin_organisation_users_path(current_organisation), class: 'text-white'
+      li.breadcrumb-item
+        = link_to @form.user.full_name, admin_organisation_user_path(current_organisation, @form.user)
+      li.breadcrumb-item.active RDVs #{::Rdv.human_enum_name(:status, @form.status).downcase}
 
-          div.my-1
-            = f.check_box :show_user_details, type: "checkbox"
-            span.pl-1= f.label :show_user_details do
-              | Afficher détails usagers 🔍
-          div.d-flex.justify-content-between
-            input.btn.btn-small.btn-primary.d-print-none type="submit" value="Rafraîchir la liste"
-            input.btn.btn-small.btn-link.d-print-none type="submit" value="Imprimer 🖨" onclick="window.print();return false;"
+  - if @breadcrumb_page == "organisation_stats"
+    ol.breadcrumb.m-0
+      li.breadcrumb-item
+        = link_to "Statistiques de l'organisation", admin_organisation_stats_path(current_organisation), class: 'text-white'
+      li.breadcrumb-item.active RDVs #{::Rdv.human_enum_name(:status, @form.status).downcase}
 
-- rdvs_list = render( \
-  'admin/rdvs/rdvs_list', \
-  rdvs: @rdvs.page(params[:page]), \
-  date_format: (@form.date.present? && :time_only), \
-  show_user_details: @form.show_user_details \
-)
 
-- if @form.show_user_details
-  = rdvs_list
-- else
-  .row.justify-content-center
-    .col-md-6
-      = rdvs_list
+.card.border-info
+  .card-header ⚙️ Filtres et options
+  .card-body
+    = simple_form_for(@form, method: "GET", url: url_for({}), as: "") do |f|
+      .row
+        .col-md-6
+          = f.input :agent_id, collection: policy_scope(Agent), label: "Agent", label_method: :full_name, input_html: { class: 'select2-input' }, wrapper: "horizontal_form"
+          = f.input :user_id, collection: policy_scope(User), label: "Usager", label_method: :full_name, input_html: { class: 'select2-input' }, wrapper: "horizontal_form"
+          = f.input :show_user_details, as: :boolean, wrapper: "horizontal_form", label: "Détails usagers"
+        .col-md-6
+          = f.input :status, collection: Rdv.statuses.keys - ["unknown"] + ["unknown_past", "unknown_future"], label_method: -> { ::Rdv.human_enum_name(:status, _1) }, label: "Statut", wrapper: "horizontal_form", input_html: { class: 'select2-input' }
+          = date_input(f, :start, label = "Période - Début", wrapper: "horizontal_form")
+          = date_input(f, :end, label = "Période - Fin", wrapper: "horizontal_form")
+      input.btn.btn-primary.d-print-none type="submit" value="Rafraîchir la liste"
+  - if @rdvs.any?
+    .card-footer
+      div.d-flex.justify-content-end
+        = link_to admin_organisation_rdvs_path(current_organisation, format: "xls", **@form.to_query), class: "btn btn-small btn-link d-print-none" do
+          span> Exporter les #{@rdvs.total_count} RDVs en XLS
+          i.fa.fa-download>
+        input.btn.btn-small.btn-link.d-print-none type="submit" value="Imprimer 🖨" onclick="window.print();return false;"
+
+.row.justify-content-center.pb-3
+  div class=(@form.show_user_details ? "col-md-12" : "col-md-6")
+    - if @rdvs.any?
+      .d-flex.justify-content-center= paginate @rdvs, theme: 'twitter-bootstrap-4'
+      = render( \
+        partial: 'admin/rdvs/rdv', \
+        collection: @rdvs.sort_by(&:starts_at), \
+        locals: { \
+          date_format: (@form.start.present? && @form.start == @form.end ? :time_only : nil), \
+          show_user_details: @form.show_user_details \
+        } \
+      )
+      .d-flex.justify-content-center= paginate @rdvs, theme: 'twitter-bootstrap-4'
+    - else
+      .card
+        .card-body
+          .row.justify-content-md-center
+            .col-md-6.text-center.my-5
+              p.mb-2.lead
+                | Aucun RDV
+              span.fa-stack.fa-4x
+                i.fa.fa-circle.fa-stack-2x.text-primary
+                i.far.fa-calendar.fa-stack-1x.text-white

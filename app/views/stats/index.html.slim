@@ -23,7 +23,7 @@
   - else
       .card.mb-5
         .card-body
-          = render 'stats/rdv_counters', rdvs: @stats.rdvs_for_default_range
+          = render 'stats/rdv_counters', rdvs: @stats.rdvs_for_default_range, show_links: false
 
       .card.mb-5
         .card-body

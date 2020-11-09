@@ -1,21 +1,32 @@
 class AgentRdvSearchForm
   include ActiveModel::Model
 
-  attr_accessor :organisation_id, :start, :end, :date, :agent_id, :user_id, :page, :status, :default_period, :show_user_details
+  attr_accessor :organisation_id, :start, :end, :agent_id, :user_id, :status, :show_user_details
 
-  # belongs_to :organisation, :agent
-
-  def initialize(attributes)
-    attributes[:date] = Date.parse(attributes[:date]) if attributes[:date].present?
-    attributes[:start] = Date.parse(attributes[:start]) if attributes[:start].present?
-    attributes[:end] = Date.parse(attributes[:end]) if attributes[:end].present?
-    attributes[:show_user_details] = ["1", "true"].include?(attributes[:show_user_details])
-    super(attributes)
+  def organisation
+    @organisation ||= Organisation.find(organisation_id) if organisation_id.present?
   end
 
-  def date_range_params
-    return nil if start.blank? || self.end.blank?
+  def agent
+    @agent ||= Agent.find(agent_id) if agent_id.present?
+  end
 
-    start..self.end
+  def user
+    @user ||= User.find(user_id) if user_id.present?
+  end
+
+  def rdvs
+    rdvs = Rdv.where(organisation: organisation)
+    rdvs = rdvs.with_agent(agent) if agent.present?
+    rdvs = rdvs.with_user(user) if user.present?
+    rdvs = rdvs.status(status) if status.present?
+    rdvs = rdvs.where("DATE(starts_at) >= ?", start) if start.present?
+    rdvs = rdvs.where("DATE(starts_at) <= ?", send(:end)) if send(:end).present?
+    rdvs
+  end
+
+  def to_query
+    [:organisation_id, :start, :end, :agent_id, :user_id, :status, :show_user_details]
+      .map { [_1, send(_1)] }.to_h
   end
 end

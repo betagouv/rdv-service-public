@@ -86,6 +86,10 @@ class Stat
   end
 
   def self.default_date_range
-    Date.strptime("01/02/2020", "%d/%m/%Y").beginning_of_day..Time.zone.now.end_of_day
+    default_range_start_date..Time.zone.now.end_of_day
+  end
+
+  def self.default_range_start_date
+    Date.strptime("01/02/2020", "%d/%m/%Y")
   end
 end

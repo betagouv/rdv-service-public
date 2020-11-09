@@ -95,12 +95,11 @@ Rails.application.routes.draw do
         resources :agent_searches, only: :index, module: "creneaux"
         resources :lieux, except: :show
         resources :motifs, except: :show
-        resources :rdvs, except: [:index, :new] do
+        resources :rdvs, except: [:new] do
           resources :versions, only: [:index]
         end
         scope module: "organisations" do
           resource :setup_checklist, only: [:show]
-          resources :rdvs, only: :index
           resources :stats, only: :index do
             collection do
               get :rdvs
@@ -116,15 +115,12 @@ Rails.application.routes.draw do
           collection do
             get :search
           end
-          scope module: :users do
-            resources :rdvs, only: :index
-          end
           resource :referents, only: [:update]
         end
         resources :absences, except: [:index, :show, :new]
         get "agent", to: "agents#show", as: "agent_with_id_in_query"
         resources :agents, only: [:index, :show, :destroy] do
-          resources :rdvs, only: :index
+          # resources :rdvs, only: :index
           collection do
             resources :permissions, only: [:edit, :update]
           end
