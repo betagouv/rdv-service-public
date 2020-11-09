@@ -10,7 +10,6 @@ FactoryBot.define do
     min_booking_delay { 30.minutes }
     max_booking_delay { 6.months }
     color { "##{SecureRandom.hex(3)}" }
-    disable_notifications_for_users { false }
     instruction_for_rdv { "Intruction pour le RDV" }
     restriction_for_rdv { "Consigne pour le RDV" }
     reservable_online { true }
@@ -21,20 +20,33 @@ FactoryBot.define do
         create_list(:rdv, 5, motif: motif, organisation: motif.organisation)
       end
     end
+
     trait :at_home do
       location_type { :home }
     end
+
     trait :at_public_office do
       location_type { :public_office }
     end
+
     trait :by_phone do
       location_type { :phone }
     end
+
     trait :for_secretariat do
       for_secretariat { true }
     end
-    trait :no_notification do
-      disable_notifications_for_users { true }
+
+    trait :invisible do
+      visibility_type { Motif.visibility_types[:invisible] }
+    end
+
+    trait :visible_and_notified do
+      visibility_type { Motif.visibility_types[:visible_and_notified] }
+    end
+
+    trait :visible_and_not_notified do
+      visibility_type { Motif.visibility_types[:visible_and_not_notified] }
     end
   end
 end
