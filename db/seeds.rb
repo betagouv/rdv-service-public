@@ -283,6 +283,7 @@ user_org_paris_nord_jean.profile_for(org_paris_nord).update!(logement: 2)
 
 agent_org_paris_nord_pmi_martine = Agent.new(
   email: "martine@demo.rdv-solidarites.fr",
+  uid: "martine@demo.rdv-solidarites.fr",
   role: :admin,
   first_name: "Martine",
   last_name: "Validay",
@@ -296,6 +297,7 @@ agent_org_paris_nord_pmi_martine.save!
 
 agent_org_paris_nord_pmi_marco = Agent.new(
   email: "marco@demo.rdv-solidarites.fr",
+  uid: "marco@demo.rdv-solidarites.fr",
   role: :user,
   first_name: "Marco",
   last_name: "Durand",
@@ -309,6 +311,7 @@ agent_org_paris_nord_pmi_marco.save!
 
 agent_org_paris_nord_social_polo = Agent.new(
   email: "polo@demo.rdv-solidarites.fr",
+  uid: "polo@demo.rdv-solidarites.fr",
   role: :user,
   first_name: "Polo",
   last_name: "Durant",
@@ -322,6 +325,7 @@ agent_org_paris_nord_social_polo.save!
 
 org_arques_pmi_maya = Agent.new(
   email: "maya@demo.rdv-solidarites.fr",
+  uid: "maya@demo.rdv-solidarites.fr",
   role: :admin,
   first_name: "Maya",
   last_name: "Patrick",
@@ -335,6 +339,7 @@ org_arques_pmi_maya.save!
 
 agent_org_bapaume_pmi_bruno = Agent.new(
   email: "bruno@demo.rdv-solidarites.fr",
+  uid: "bruno@demo.rdv-solidarites.fr",
   role: :admin,
   first_name: "Bruno",
   last_name: "Frangi",
@@ -348,6 +353,7 @@ agent_org_bapaume_pmi_bruno.save!
 
 agent_org_bapaume_pmi_gina = Agent.new(
   email: "gina@demo.rdv-solidarites.fr",
+  uid: "gina@demo.rdv-solidarites.fr",
   role: :admin,
   first_name: "Gina",
   last_name: "Leone",

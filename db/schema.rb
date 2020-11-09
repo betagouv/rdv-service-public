@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_26_192321) do
+ActiveRecord::Schema.define(version: 2020_11_02_134747) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -89,6 +89,10 @@ ActiveRecord::Schema.define(version: 2020_10_26_192321) do
     t.datetime "deleted_at"
     t.bigint "service_id"
     t.string "email_original"
+    t.string "provider", default: "email", null: false
+    t.string "uid", default: "", null: false
+    t.text "tokens"
+    t.boolean "allow_password_change", default: false
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true
     t.index ["invitation_token"], name: "index_agents_on_invitation_token", unique: true
@@ -97,6 +101,7 @@ ActiveRecord::Schema.define(version: 2020_10_26_192321) do
     t.index ["invited_by_type", "invited_by_id"], name: "index_agents_on_invited_by_type_and_invited_by_id"
     t.index ["reset_password_token"], name: "index_agents_on_reset_password_token", unique: true
     t.index ["service_id"], name: "index_agents_on_service_id"
+    t.index ["uid", "provider"], name: "index_agents_on_uid_and_provider", unique: true
   end
 
   create_table "agents_organisations", id: false, force: :cascade do |t|
