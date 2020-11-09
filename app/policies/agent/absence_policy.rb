@@ -1,11 +1,14 @@
 class Agent::AbsencePolicy < DefaultAgentPolicy
   class Scope < Scope
     def resolve
-      if @context.agent.can_access_others_planning?
-        scope.where(organisation_id: @context.organisation.id)
-      else
-        scope.joins(:agent).where(organisation_id: @context.organisation.id, agents: { service_id: @context.agent.service_id })
+      new_scope = scope.where(organisation_id: @context.agent.organisations.pluck(:id))
+      new_scope = new_scope.where(organisation_id: @context.organisation.id) if @context.organisation.present?
+      unless @context.agent.can_access_others_planning?
+        new_scope = new_scope
+          .joins(:agent)
+          .where(agents: { service_id: @context.agent.service_id })
       end
+      new_scope
     end
   end
 end

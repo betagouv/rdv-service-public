@@ -1,7 +1,5 @@
 class Agent < ApplicationRecord
   has_paper_trail
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   include DeviseInvitable::Inviter
   include FullNameConcern
   include AccountNormalizerConcern
@@ -9,6 +7,9 @@ class Agent < ApplicationRecord
 
   devise :invitable, :database_authenticatable,
          :recoverable, :rememberable, :validatable, :confirmable, :async, validate_on_invite: true
+
+  include DeviseTokenAuth::Concerns::ConfirmableSupport
+  include DeviseTokenAuth::Concerns::UserOmniauthCallbacks
 
   belongs_to :service
   has_many :lieux, through: :organisation

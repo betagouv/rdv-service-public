@@ -74,6 +74,13 @@ Rails.application.routes.draw do
     delete "agents" => "agents/registrations#destroy", as: "delete_agent_registration"
   end
 
+  namespace :api do
+    namespace :v1 do
+      mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
+      resources :absences, only: [:index, :create]
+    end
+  end
+
   resources :organisations, only: [:new, :create]
 
   authenticate :agent do
