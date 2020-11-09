@@ -19,6 +19,10 @@ class Admin::InvitationsController < Devise::InvitationsController
 
   protected
 
+  def invite_resource
+    super { |agent| agent.uid = agent.email }
+  end
+
   def pundit_user
     AgentContext.new(current_agent)
   end
