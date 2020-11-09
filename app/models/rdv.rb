@@ -41,11 +41,11 @@ class Rdv < ApplicationRecord
       where(status: status)
     end
   }
-  scope :without_no_notification, -> { joins(:motif).where(motifs: { disable_notifications_for_users: false }) }
   scope :default_stats_period, -> { where(created_at: Stat.default_date_range) }
   scope :with_agent, ->(agent) { joins(:agents).where(agents: { id: agent.id }) }
   scope :with_user, ->(user) { joins(:rdvs_users).where(rdvs_users: { user_id: user.id }) }
   scope :with_user_in, ->(users) { joins(:rdvs_users).where(rdvs_users: { user_id: users.pluck(:id) }).distinct }
+  scope :visible, -> { joins(:motif).where(motifs: { visibility_type: [Motif.visibility_types[:visible_and_notified], Motif.visibility_types[:visible_and_not_notified]] }) }
 
   after_commit :reload_uuid, on: :create
   after_save :associate_users_with_organisation

@@ -247,17 +247,23 @@ describe Rdv, type: :model do
     end
   end
 
-  describe "#without_no_notification" do
-    it "don't return rdv with motif without notification" do
-      motif = create(:motif, :no_notification)
+  describe "#visible" do
+    it "don't return rdv with invisible motif" do
+      motif = create(:motif, :invisible)
       create(:rdv, motif: motif)
-      expect(Rdv.without_no_notification).to eq([])
+      expect(Rdv.visible).to eq([])
     end
 
-    it "return rdv with motif with notification on" do
-      motif = create(:motif)
+    it "return rdv with visible and notified motif" do
+      motif = create(:motif, :visible_and_notified)
       rdv = create(:rdv, motif: motif)
-      expect(Rdv.without_no_notification).to eq([rdv])
+      expect(Rdv.visible).to eq([rdv])
+    end
+
+    it "return rdv with visible and not notified motif" do
+      motif = create(:motif, :visible_and_not_notified)
+      rdv = create(:rdv, motif: motif)
+      expect(Rdv.visible).to eq([rdv])
     end
   end
 end
