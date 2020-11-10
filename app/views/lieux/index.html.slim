@@ -22,7 +22,6 @@
                   h4.card-title.mb-3.mt-0.text-success.font-weight-bold= lieu.name
                   h6.card-subtitle.text-black-50.mb-2= @service.name
                   h6.card-subtitle.text-black-50= lieu.address
-                  h6.card-subtitle.text-black-50.mt-1= "☎️ #{lieu.phone_number}"
                 .col-md.align-self-center.pt-3.pt-md-0.position-static
                   - if next_availability
                     = link_to lieu_path(lieu, search: @query, date: next_availability&.starts_at), class: "d-block stretched-link" do

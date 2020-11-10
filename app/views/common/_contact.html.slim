@@ -2,7 +2,7 @@
 
 - if local_assigns[:message].blank?
   .pt-1.text-light.text-white.mt-2
-    span> Retrouver les coordonées de votre département sur
+    span> Retrouver les coordonnées de votre département sur
     = link_to "la page contact", contact_path, class: 'text-white', style: 'text-decoration: underline'
 
 - elsif contactable_organisations.any?
