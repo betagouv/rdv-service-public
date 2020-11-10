@@ -18,7 +18,7 @@ describe "can see users' RDV" do
   end
 
   context "with one RDV" do
-    let!(:rdv) { create :rdv, :future, users: [user], organisation: organisation }
+    let!(:rdv) { create :rdv, :future, users: [user], organisation: organisation, agents: [agent] }
     before { click_link user.full_name }
     it do
       expect(page).to have_content("1\nÀ venir")
