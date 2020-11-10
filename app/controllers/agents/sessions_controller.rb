@@ -1,5 +1,5 @@
 class Agents::SessionsController < Devise::SessionsController
-  before_action :exclude_signed_in_users
+  before_action :exclude_signed_in_users, only: [:new]
 
   private
 
