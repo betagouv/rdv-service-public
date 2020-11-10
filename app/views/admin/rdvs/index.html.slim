@@ -1,6 +1,8 @@
 - content_for :title do
   | Liste des RDV
 
+- content_for(:menu_item) { 'menu-rdvs-list' }
+
 - content_for :breadcrumb do
   - if @breadcrumb_page == "agenda" && @form.agent.present?
     ol.breadcrumb.m-0
@@ -27,7 +29,6 @@
       li.breadcrumb-item
         = link_to "Statistiques de l'organisation", admin_organisation_stats_path(current_organisation), class: 'text-white'
       li.breadcrumb-item.active RDVs #{::Rdv.human_enum_name(:status, @form.status).downcase}
-
 
 .card.border-info
   .card-header ⚙️ Filtres et options
