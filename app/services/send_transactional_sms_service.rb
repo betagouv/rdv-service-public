@@ -12,16 +12,18 @@ class SendTransactionalSmsService < BaseService
   end
 
   def perform
-    sib_instance = SibApiV3Sdk::TransactionalSMSApi.new
-
-    body = send(@type)
-    transac_sms = SibApiV3Sdk::SendTransacSms.new(
+    sms_params = {
       sender: @from,
       recipient: @user.phone_number_formatted,
-      content: replace_special_chars(body),
+      content: replace_special_chars(send(@type)),
       tag: [ENV["APP"], @rdv.organisation.id, @type].join(" ")
-    )
-    sib_instance.send_transac_sms(transac_sms)
+    }
+    if Rails.env.production?
+      sib_transac_sms = SibApiV3Sdk::SendTransacSms.new(sms_params)
+      SibApiV3Sdk::TransactionalSMSApi.new.send_transac_sms(sib_transac_sms)
+    else
+      Rails.logger.debug("following SMS would have been sent in production environment: #{sms_params}")
+    end
   end
 
   private
@@ -36,7 +38,7 @@ class SendTransactionalSmsService < BaseService
               elsif @rdv.home?
                 "RDV à domicile\n#{@rdv.address}\n"
               else
-                "#{@rdv.address}\n"
+                "#{@rdv.address_complete}\n"
               end
     message += "Infos et annulation: #{rdvs_shorten_url(host: ENV['HOST'])}"
     message += " / #{@rdv.organisation.phone_number}" if @rdv.organisation.phone_number

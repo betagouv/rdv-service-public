@@ -50,6 +50,15 @@ RSpec.describe Admin::RdvsController, type: :controller do
         expect(first["extendedProps"]).to eq({ readableStatus: Rdv.human_enum_name(:status, rdv2.status), status: rdv2.status, motif: rdv2.motif.name, past: rdv2.past?, duration: rdv.duration_in_min }.as_json)
       end
     end
+
+    context "when rdvs starts_at is outside of window" do
+      let(:start_time) { Time.zone.parse("10/07/2019 00:00") }
+      let(:end_time) { Time.zone.parse("17/07/2019 00:00") }
+
+      it "should return no rdvs" do
+        expect(@parsed_response.size).to eq(0)
+      end
+    end
   end
 
   describe "GET #edit" do

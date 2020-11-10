@@ -4,9 +4,21 @@ class Admin::RdvsController < AgentAuthController
   before_action :set_rdv, except: [:index, :create]
 
   def index
-    @agent = policy_scope(Agent).find(filter_params[:agent_id])
-    @form = AgentRdvSearchForm.new(filter_params)
-    @rdvs = rdvs_list(@agent, @form)
+    @form = AgentRdvSearchForm.new(
+      start: parse_date_from_params(:start),
+      end: parse_date_from_params(:end),
+      show_user_details: ["1", "true"].include?(params[:show_user_details]),
+      **params.permit(:organisation_id, :agent_id, :user_id, :status)
+    )
+    @rdvs = policy_scope(Rdv).merge(@form.rdvs)
+      .includes(:organisation, :agents_rdvs, :lieu, agents: :service, motif: :service)
+      .order(starts_at: :desc)
+    @breadcrumb_page = params[:breadcrumb_page]
+    respond_to do |format|
+      format.xls { send_data(RdvExporterService.perform_with(@rdvs, StringIO.new), filename: "rdvs.xls", type: "application/xls") }
+      format.html { @rdvs = @rdvs.page(params[:page]) }
+      format.json
+    end
   end
 
   def show
@@ -68,6 +80,12 @@ class Admin::RdvsController < AgentAuthController
 
   private
 
+  def parse_date_from_params(param_name)
+    return nil if params[param_name].blank? || params[param_name] == "__/__/____"
+
+    Date.parse(params[param_name])
+  end
+
   def set_rdv
     @rdv = Rdv.find(params[:id])
   end
@@ -78,22 +96,5 @@ class Admin::RdvsController < AgentAuthController
 
   def status_params
     params.require(:rdv).permit(:status)
-  end
-
-  def filter_params
-    params.permit(:organisation_id, :start, :end, :date, :agent_id, :user_id, :page, :status, :default_period, :show_user_details)
-  end
-
-  def rdvs_list(agent, form)
-    rdvs = agent.rdvs.where(organisation: current_organisation)
-    rdvs = rdvs.default_stats_period if form.default_period.present?
-    rdvs = rdvs.status(form.status) if form.status.present?
-    if form.date_range_params.present?
-      rdvs = rdvs.where(starts_at: form.date_range_params)
-    elsif form.date.present?
-      rdvs = rdvs.where("DATE(starts_at) = ?", form.date)
-    end
-    rdvs = rdvs.includes(:organisation, :motif, :agents_rdvs, agents: :service).order(starts_at: :desc)
-    rdvs
   end
 end

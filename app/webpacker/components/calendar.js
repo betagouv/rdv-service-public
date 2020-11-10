@@ -146,7 +146,8 @@ class CalendarRdvSolidarites {
     const url = new URL(printLinkElt.href)
     const date = moment(info.view.currentStart)
     printLinkElt.querySelector(".js-date").innerHTML = date.format("DD/MM/YYYY")
-    url.searchParams.set("date", date.format("YYYY-MM-DD"))
+    url.searchParams.set("start", date.format("YYYY-MM-DD"))
+    url.searchParams.set("end", date.format("YYYY-MM-DD"))
     printLinkElt.href = url.toString()
   }
 

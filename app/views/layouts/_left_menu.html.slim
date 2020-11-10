@@ -53,6 +53,10 @@
               = link_to 'Absences', \
                 admin_organisation_agent_absences_path(current_organisation, current_agent), \
                 id: "menu-absences"
+            li
+              = link_to 'Liste des RDV', \
+                admin_organisation_rdvs_path(current_organisation), \
+                id: "menu-rdvs-list"
 
         li.side-nav-item
           = link_to( \

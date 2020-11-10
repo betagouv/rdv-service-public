@@ -98,28 +98,28 @@
               p.lead
                 => t 'stats.rdv_counters.rdvs.unknown_past', count: rdvs.status('unknown_past').count
                 = rdv_danger_icon(rdvs.status('unknown_past').count)
-              = link_to_rdvs('unknown_past', clasz: 'btn-outline-dark')
+              = link_to "Voir", admin_organisation_rdvs_path(current_organisation, user_id: @user.id, breadcrumb_page: "user", status: "unknown_past"), class: "btn btn-outline-dark"
           .col-md-4
             .bg-success.text-white.p-2.mb-3.text-center
               p.h2= rdvs.seen.count
               p.lead= t 'stats.rdv_counters.rdvs.seen', count: rdvs.seen.count
-              = link_to_rdvs('seen')
+              = link_to "Voir", admin_organisation_rdvs_path(current_organisation, user_id: @user.id, breadcrumb_page: "user", status: "seen"), class: "btn btn-outline-white"
           .col-md-4
             .bg-info.text-white.p-2.mb-3.text-center
               p.h2= rdvs.status('unknown_future').count
               p.lead À venir
-              = link_to_rdvs('unknown_future')
+              = link_to "Voir", admin_organisation_rdvs_path(current_organisation, user_id: @user.id, breadcrumb_page: "user", status: "unknown_future"), class: "btn btn-outline-white"
         .row
           .col-md-6
             .bg-tertiary.text-white.p-2.mb-3.text-center
               p.h2= rdvs.excused.count
               p.lead= t 'stats.rdv_counters.rdvs.excused', count: rdvs.excused.count
-              = link_to_rdvs('excused')
+              = link_to "Voir", admin_organisation_rdvs_path(current_organisation, user_id: @user.id, breadcrumb_page: "user", status: "excused"), class: "btn btn-outline-white"
           .col-md-6
             .bg-danger.text-white.p-2.mb-3.text-center
               p.h2= rdvs.notexcused.count
               p.lead= t 'stats.rdv_counters.rdvs.notexcused', count: rdvs.notexcused.count
-              = link_to_rdvs('notexcused')
+              = link_to "Voir", admin_organisation_rdvs_path(current_organisation, user_id: @user.id, breadcrumb_page: "user", status: "notexcused"), class: "btn btn-outline-white"
 
     = render "admin/rdvs/rdvs_history", user: @user
 
@@ -139,4 +139,3 @@
                     = "(#{age(relative)})" if relative.birth_date
           .text-right
             = link_to "Ajouter un proche", new_admin_organisation_user_path(current_organisation, responsible_id: @user.id), class: "btn btn-outline-primary"
-
