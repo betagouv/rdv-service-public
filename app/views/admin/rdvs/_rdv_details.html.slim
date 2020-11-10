@@ -2,18 +2,18 @@
   p.card-text
     i.fa.fa-fw.fa-at>
     | RDV pris sur Internet
-p.card-text
-  .d-flex
-    div.mr-1
-      i.fa.fa-fw.fa-info-circle>
+
+.d-flex.card-text
+  div.mr-1
+    i.fa.fa-fw.fa-info-circle>
+  div
+    = rdv.motif.name
     div
-      = rdv.motif.name
-      div
-        - if rdv.context.blank?
-          .text-muted  Pas de contexte renseigné
-        - else
-          .text-muted Contexte :
-          .border-left.pl-2= simple_format(rdv.context)
+      - if rdv.context.blank?
+        .text-muted  Pas de contexte renseigné
+      - else
+        .text-muted Contexte :
+        .border-left.pl-2= simple_format(rdv.context)
 
 - if rdv.phone?
   p.card-text
