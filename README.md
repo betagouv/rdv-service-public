@@ -2,117 +2,32 @@
 
 Réduire le nombre de rendez-vous annulés dans les maisons départementales de solidarité.
 
-https://beta.gouv.fr/startups/lapins.html
+## Des milliers de lapins dans les Maisons départementales de solidarité !
+
+Chaque année, des dizaines de milliers de rendez-vous pris dans les maisons départementales de solidarité (MDS). Selon nos estimations réalisées dans plusieurs départements, près de 20 % en moyenne ne sont ni honorés, ni excusés : ce sont des lapins. A ces lapins s’ajoutent des rendez-vous annulés et non remplacés, portant la moyenne des rendez-vous vacants à près de 25%.
+
+Le projet est né dans le Pas-de-Calais, sur proposition de deux travailleuses médico-sociales devenues intrapreneuses du projet. Pendant un an, l’équipe a cherché à caractériser le problème et ses causes et à expérimenter des solutions. Elle a trouvé les moyens de réduire le taux de lapins à un niveau inférieur à 5% sur les zones pilotes.
+
+Les conditions de la prise de rendez-vous sont déterminantes. Aujourd’hui, les rendez-vous sont pris par téléphone ou physiquement et les annulations faites par téléphone. Les créneaux sont souvent imposés aux usagers. Les délais d’attente peuvent être importants, ce qui favorise l’oubli. Il y a rarement de confirmation avant la date de rendez-vous et pas de conséquences pour l’usager qui pose un lapin.
+
+Les activités de la Protection Maternelle et Infantile (PMI) et d’accueil social sont particulièrement concernées. Ces lapins ont un coût financier substantiel et un coût social, avec l’allongement de délais de prise de rendez-vous, des conséquences sur les situations individuelles de personnes fragiles et des impacts négatifs sur les agents.
+
+Les solutions trouvées pour le Pas-de-Calais ont vocation à être étendues, enrichies et partagées avec d’autres départements. Une rapide étude a confirmé l’existence de cette situation dans un nombre considérable de départements.
+
+_Voir toute la documentation sur [doc.rdv-solidarites.fr](https://doc.rdv-solidarites.fr/)_
+
+[Statistique de RDV](https://www.rdv-solidarites.fr/stats)
+
+[stastistiques d'accès](https://stats.data.gouv.fr/index.php?module=CoreHome&action=index&idSite=123&period=range&date=previous30&updated=1#?idSite=123&period=range&date=previous30&category=Dashboard_Dashboard&subcategory=1)
 
 [![View performance data on Skylight](https://badges.skylight.io/status/RgR7i58P67xN.svg)](https://oss.skylight.io/app/applications/RgR7i58P67xN)
 
-## Installation pour le développement
+## Licence 
 
-### Dépendances techniques
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-#### Tous environnements
+Ce logiciel et son code source sont distribués sous [licence AGPL](https://www.gnu.org/licenses/why-affero-gpl.fr.html).
 
-- Ruby 2.7.1
-- postgresql
+## Développement
 
-#### Développement
-
-- rbenv : voir https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts
-- Yarn : voir https://yarnpkg.com/en/docs/install
-- Foreman : voir https://github.com/ddollar/foreman
-
-#### Tests
-
-- Chrome
-- chromedriver :
-  * Mac : `brew cask install chromedriver`
-  * Linux : voir https://sites.google.com/a/chromium.org/chromedriver/downloads
-
-### Initialisation de l'environnement de développement
-
-Afin d'initialiser l'environnement de développement, exécutez la commande suivante :
-
-```bash
-bin/setup
-```
-Vous pouvez aussi vous créer un compte SuperAdmin dans une console Rails :
-
-```
-SuperAdmin.create!(email: 'email_associated_to_your_github_account@prov.com')
-```
-
-### Lancement de l'application
-
-```bash
-foreman s -f Procfile.dev
-```
-
-L'application tourne à l'adresse [http://localhost:5000].
-
-### Voir les emails envoyés en local
-
-Ouvrez la page [http://localhost:5000/letter_opener](http://localhost:5000/letter_opener).
-
-### Mise à jour de l'application
-
-Pour mettre à jour votre environnement de développement, installer les nouvelles dépendances et faire jouer les migrations, exécutez :
-
-```bash
-bin/update
-```
-
-### Exécution des tests (RSpec)
-
-Les tests ont besoin de leur propre base de données et certains d'entre eux utilisent Selenium pour s'exécuter dans un navigateur. N'oubliez pas de créer la base de test et d'installer chrome et chromedriver pour exécuter tous les tests.
-
-Pour exécuter les tests de l'application, plusieurs possibilités :
-
-- Lancer tous les tests
-
-```bash
-bin/rspec
-```
-
-- Lancer un test en particulier
-
-```bash
-bin/rspec file_path/file_name_spec.rb:line_number
-```
-
-- Lancer tous les tests d'un fichier
-
-```bash
-bin/rspec file_path/file_name_spec.rb
-```
-
-### Linting
-
-Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité du code.
-
-- Faire tourner tous les linters : `bin/rake ci`
-- Demander à Rubocop de corriger les problèmes qu'il rencontre : `bin/rubocop -a
-- Demander à Brakeman de passer en revue les vulnérabilités : `bin/brakeman -I
-
-### Régénérer les binstubs
-
-```bash
-bundle binstub railties --force
-bin/rake rails:update:bin
-```
-
-### Programmation des jobs
-
-```bash
-# Envoi des sms/email de rappel 48h avant le rdv
-rake send_reminder
-
-# Envoi des sms/email lorsque des créneaux se libèrent
-rake file_attente
-
-# Envoi d'un mail quotidien de monitoring des notifs a l'equipe
-rake rdv_events_stats_mail
-```
-
-### Organisation du développement et processus de déploiement
-
-décrit [dans le wiki](https://github.com/betagouv/rdv-solidarites.fr/wiki/Organisation-du-d%C3%A9veloppement#processus-de-d%C3%A9veloppement)
+[Contribuer](CONTRIBUTING.md)
