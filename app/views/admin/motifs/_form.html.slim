@@ -60,11 +60,11 @@
       = label_tag do
         = f.radio_button(:visibility_type, :visible_and_not_notified)
         span.ml-1= t("activerecord.attributes.motif.visibility_types.visible_and_not_notified")
-        p.text-muted.font-14 Le RDV sera visible dans l'interface usager s'il si connect, mais il ne recevra aucune notification (SMS ou email)
+        p.text-muted.font-14 Le RDV sera visible  dans la liste des RDVs côté usager, mais il ne recevra aucune notification (ni SMS ni email)
       = label_tag do
         = f.radio_button(:visibility_type, :invisible)
         span.ml-1= t("activerecord.attributes.motif.visibility_types.invisible")
-        p.text-muted.font-14 Le RDV sera invisible pour l'usager. Il ne recevra aucune notification (SMS ou email)
+        p.text-muted.font-14 Le RDV sera invisible pour l'usager. Il ne recevra aucune notification (ni SMS ni email)
 
 
 
