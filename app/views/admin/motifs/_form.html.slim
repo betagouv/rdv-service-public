@@ -56,15 +56,15 @@
       = label_tag do
         = f.radio_button(:visibility_type, :visible_and_notified)
         span.ml-1= t("activerecord.attributes.motif.visibility_types.visible_and_notified")
-        p.text-muted.font-14 Le RDV sera visible dans la liste des RDVs côté usager, et cette personne sera notifée par SMS et/ou email
+        p.text-muted.font-14 Le RDV sera visible dans la liste des RDVs côté usager, l'usager sera notifié par SMS et/ou email
       = label_tag do
         = f.radio_button(:visibility_type, :visible_and_not_notified)
         span.ml-1= t("activerecord.attributes.motif.visibility_types.visible_and_not_notified")
-        p.text-muted.font-14 Le RDV sera visible  dans la liste des RDVs côté usager, mais il ne recevra aucune notification (ni SMS ni email)
+        p.text-muted.font-14 Le RDV sera visible dans la liste des RDVs côté usager, l'usager ne recevra aucune notification (ni SMS ni email)
       = label_tag do
         = f.radio_button(:visibility_type, :invisible)
         span.ml-1= t("activerecord.attributes.motif.visibility_types.invisible")
-        p.text-muted.font-14 Le RDV sera invisible pour l'usager. Il ne recevra aucune notification (ni SMS ni email)
+        p.text-muted.font-14 Le RDV sera invisible dans la liste des RDVs côté usager, l'usager ne recevra aucune notification (ni SMS ni email)
 
   .card
     .card-body
