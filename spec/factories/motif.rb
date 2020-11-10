@@ -14,6 +14,7 @@ FactoryBot.define do
     restriction_for_rdv { "Consigne pour le RDV" }
     reservable_online { true }
     location_type { :public_office }
+    visibility_type { Motif::VISIBLE_AND_NOTIFIED }
 
     trait :with_rdvs do
       after(:create) do |motif|
@@ -38,15 +39,15 @@ FactoryBot.define do
     end
 
     trait :invisible do
-      visibility_type { Motif.visibility_types[:invisible] }
+      visibility_type { Motif::INVISIBLE }
     end
 
     trait :visible_and_notified do
-      visibility_type { Motif.visibility_types[:visible_and_notified] }
+      visibility_type { Motif::VISIBLE_AND_NOTIFIED }
     end
 
     trait :visible_and_not_notified do
-      visibility_type { Motif.visibility_types[:visible_and_not_notified] }
+      visibility_type { Motif::VISIBLE_AND_NOT_NOTIFIED }
     end
   end
 end

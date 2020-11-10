@@ -251,19 +251,19 @@ describe Rdv, type: :model do
     it "don't return rdv with invisible motif" do
       motif = create(:motif, :invisible)
       create(:rdv, motif: motif)
-      expect(Rdv.visible).to eq([])
+      expect(Rdv.visible).to contain_exactly()
     end
 
     it "return rdv with visible and notified motif" do
       motif = create(:motif, :visible_and_notified)
       rdv = create(:rdv, motif: motif)
-      expect(Rdv.visible).to eq([rdv])
+      expect(Rdv.visible).to contain_exactly(rdv)
     end
 
     it "return rdv with visible and not notified motif" do
       motif = create(:motif, :visible_and_not_notified)
       rdv = create(:rdv, motif: motif)
-      expect(Rdv.visible).to eq([rdv])
+      expect(Rdv.visible).to contain_exactly(rdv)
     end
   end
 end

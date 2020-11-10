@@ -20,7 +20,7 @@ class MotifDashboard < Administrate::BaseDashboard
     for_secretariat: Field::Boolean,
     default_duration_in_min: Field::Number,
     min_booking_delay: Field::Number,
-    visibility_type: EnumField,
+    visibility_type: Field::String,
     max_booking_delay: Field::Number,
     deleted_at: Field::DateTime,
     created_at: Field::DateTime,

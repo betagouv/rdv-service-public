@@ -98,4 +98,21 @@ describe Motif, type: :model do
       expect(motif.secretariat?).to be false
     end
   end
+
+  describe "visible_and_notified?" do
+    it "vrai quand visible_type == visible_and_notified" do
+      motif = build(:motif, :visible_and_notified)
+      expect(motif.visible_and_notified?).to eq(true)
+    end
+
+    it "faux quand visible_type == visible_and_not_notified" do
+      motif = build(:motif, :visible_and_not_notified)
+      expect(motif.visible_and_notified?).to eq(false)
+    end
+
+    it "faux quand visible_type == invisible" do
+      motif = build(:motif, :invisible)
+      expect(motif.visible_and_notified?).to eq(false)
+    end
+  end
 end
