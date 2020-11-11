@@ -125,9 +125,7 @@ Rails.application.routes.draw do
           resource :referents, only: [:update]
         end
         resources :absences, except: [:index, :show, :new]
-        get "agent", to: "agents#show", as: "agent_with_id_in_query"
         resources :agents, only: [:index, :show, :destroy] do
-          # resources :rdvs, only: :index
           collection do
             resources :permissions, only: [:edit, :update]
           end

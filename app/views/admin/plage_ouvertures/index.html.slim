@@ -1,4 +1,5 @@
 - content_for(:menu_item) { 'menu-plages-ouvertures' }
+- content_for(:menu_agent_select_path_helper_name) { 'admin_organisation_agent_plage_ouvertures_path' }
 
 - content_for :title do
   - if current_agent == @agent
@@ -7,10 +8,6 @@
     | Plages d'ouverture de #{@agent.full_name_and_service}
 
 - content_for :breadcrumb do
-  - if policy_scope(Agent).complete.active.many?
-    .d-inline-block.mr-2
-      = select_tag :id, options_for_select(policy_scope(Agent).complete.active.order_by_last_name.map { |agent| [agent.full_name, agent.id, { 'data-url': admin_organisation_agent_plage_ouvertures_path(current_organisation, agent.id)}]}, selected: @agent.id), class: "select2-input", onchange: "Turbolinks.visit($('.select2-input option:selected').attr('data-url'))"
-
   = link_to 'Créer une plage d\'ouverture', new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-white align-bottom"
 
 .card.pb-3

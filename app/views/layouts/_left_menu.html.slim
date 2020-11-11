@@ -7,15 +7,17 @@
       ul.metismenu.side-nav.mt-3
         li.side-nav-item.connected-agent
           = link_to '#', class: 'side-nav-link' do
-            div.only-visible-when-enlarged
-              i.far.fa-id-card
-            div.d-flex.flex-column
-              / spans required for responsive behaviour
-              span.h5= current_agent.first_name&.capitalize
-              span= current_agent.service&.short_name
-              span= current_organisation.name
-            div.d-flex.align-items-center
-              i.fa.fa-angle-right.menu-arrow.mt-1
+            .d-flex.justify-content-between.w-100
+              div
+                div.only-visible-when-enlarged
+                  i.far.fa-id-card
+                div.d-flex.flex-column
+                  / spans required for responsive behaviour
+                  span.h5= current_agent.first_name&.capitalize
+                  span= current_agent.service&.short_name
+                  span= current_organisation.name
+              div.d-flex.align-items-center
+                i.fa.fa-angle-right.menu-arrow.mr-0
           ul.side-nav-second-level. aria-expanded="false"
             li
               = link_to "Mon compte", edit_agent_registration_path
@@ -37,26 +39,32 @@
               span Premiers pas
         li.side-nav-item
           = link_to '#', class: 'side-nav-link' do
-            i.far.fa-clock
-            span Votre planning
-            i.fa.fa-angle-right.menu-arrow.mt-1
+            .d-flex.justify-content-between
+              div
+                i.far.fa-clock
+                span Planning
+              div
+                i.fa.fa-angle-right.menu-arrow.mr-0
           ul.side-nav-second-level aria-expanded="false"
             li
-              = link_to 'Agendas', \
-                admin_organisation_agent_path(current_organisation, current_agent), \
+              form
+                = select_tag( \
+                  :agent_id, \
+                  selectable_planning_agents_options, \
+                  class: "select2-input form-control js-planning-agent-select" \
+                )
+            li
+              = link_to 'Agenda', \
+                admin_organisation_agent_path(current_organisation, (@agent || current_agent)), \
                 id: "menu-agendas"
             li
               = link_to "Plages d'ouverture", \
-                admin_organisation_agent_plage_ouvertures_path(current_organisation, current_agent), \
+                admin_organisation_agent_plage_ouvertures_path(current_organisation, (@agent || current_agent)), \
                 id: "menu-plages-ouvertures"
             li
               = link_to 'Absences', \
-                admin_organisation_agent_absences_path(current_organisation, current_agent), \
+                admin_organisation_agent_absences_path(current_organisation, (@agent || current_agent)), \
                 id: "menu-absences"
-            li
-              = link_to 'Liste des RDV', \
-                admin_organisation_rdvs_path(current_organisation), \
-                id: "menu-rdvs-list"
 
         li.side-nav-item
           = link_to( \
@@ -72,15 +80,20 @@
             class: 'side-nav-link', \
             id: "menu-stats" \
           ) do
-            i.fa.fa-chart-bar
-            span Vos statistiques
-            = unknown_past_agent_rdvs_danger_bage
+            .d-flex.justify-content-between
+              div
+                i.fa.fa-chart-bar
+                span Vos statistiques
+              div= unknown_past_agent_rdvs_danger_bage
         - if current_agent.admin?
           li.side-nav-item
             = link_to '#', class: 'side-nav-link' do
-              i.fa.fa-cog
-              span Paramètres
-              i.fa.fa-angle-right.menu-arrow.mt-1
+              .d-flex.justify-content-between
+                div
+                  i.fa.fa-cog
+                  span Paramètres
+                div
+                  i.fa.fa-angle-right.menu-arrow.mr-0
             ul.side-nav-second-level aria-expanded="false"
               li
                 =link_to 'Votre organisation', \

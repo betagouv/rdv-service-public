@@ -47,7 +47,7 @@ body.enlarged .logo{
   .side-nav-link {
     color: $menu-item;
     display: block;
-    padding: 15px 30px;
+    padding: 15px 20px 15px 30px;
     font-size: 0.9375rem;
     position: relative;
     transition: all 0.4s;
@@ -78,8 +78,6 @@ body.enlarged .logo{
 
   .menu-arrow {
     transition: transform .15s;
-    position: absolute;
-    right: 30px;
     display: inline-block;
     font-weight: 900;
     text-rendering: auto;
@@ -386,8 +384,10 @@ body[data-layout="topnav"] {
 .side-nav-second-level,
 .side-nav-third-level {
   li {
-    a {
+    a, form {
       padding: 8px 20px 8px 63px;
+    }
+    a {
       color: $menu-item;
       display: block;
       position: relative;
