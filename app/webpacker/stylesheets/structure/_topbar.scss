@@ -37,18 +37,6 @@
   }
 }
 
-[data-keep-enlarged="true"] {
-  .navbar-custom {
-    padding-left: 0;
-  }
-
-  .button-menu-mobile {
-    &.disable-btn {
-      display: inline-block;
-    }
-  }
-}
-
 @media (max-width: 1024px) {
   .navbar-custom {
     left: 70px;

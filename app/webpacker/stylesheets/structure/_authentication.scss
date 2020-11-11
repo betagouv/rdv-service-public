@@ -9,10 +9,6 @@ body.authentication-bg {
   background: linear-gradient(to right, lighten($primary, 30%), lighten($secondary, 30%));
 }
 
-.authentication-bg.enlarged,.auth-fluid-pages.enlarged {
-  min-height: 100px;
-}
-
 // Logout page
 .logout-icon {
   width: 140px;
@@ -39,7 +35,6 @@ body.authentication-bg {
   }
 
   .auth-fluid-left {
-    padding: 6rem 3rem;
     flex: 1;
     position: relative;
     color: $white;
@@ -70,6 +65,14 @@ body.authentication-bg {
   cursor: pointer;
 }
 
+@include media-breakpoint-up(lg) {
+  .auth-fluid {
+    .auth-fluid-left {
+      padding: 6rem 3rem;
+    }
+  }
+}
+
 @include media-breakpoint-down(md) {
   .auth-fluid {
     display: block;
@@ -80,9 +83,9 @@ body.authentication-bg {
       padding: 1rem;
     }
 
-    .auth-fluid-left {
-      display: none;
-    }
+    // .auth-fluid-left {
+    //   display: none;
+    // }
     .auth-brand {
       display: block;
       top: 3rem;
