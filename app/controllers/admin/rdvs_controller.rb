@@ -40,9 +40,9 @@ class Admin::RdvsController < AgentAuthController
     @rdv.cancelled_at = nil if params[:rdv][:status]
     if params[:rdv][:status] == "excused"
       CancelRdvByAgentService.new(@rdv).perform
-      flash[:notice] = "Le rendez-vous a été annulé." if request.format.html?
+      flash[:notice] = "Le rendez-vous a été annulé." unless request.format.json?
     elsif @rdv.update(rdv_params)
-      flash[:notice] = "Le rendez-vous a été modifié." if request.format.html?
+      flash[:notice] = "Le rendez-vous a été modifié." unless request.format.json?
     end
     respond_to do |format|
       format.json do
@@ -50,6 +50,7 @@ class Admin::RdvsController < AgentAuthController
         render json: { rdv: @rdv.attributes.to_h.merge(temporal_status_human: temporal_status_human) }
       end
       format.html { respond_right_bar_with @rdv, location: request.referer }
+      format.js { respond_right_bar_with @rdv, location: request.referer }
     end
   end
 

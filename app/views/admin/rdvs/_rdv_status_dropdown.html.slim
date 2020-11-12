@@ -14,7 +14,12 @@ ul.list-unstyled.topbar-right-menu.float-right.mb-0
         - rdv_possible_statuses_option_items(rdv).each do |status|
           = link_to( \
             status[0], \
-            admin_organisation_rdv_path(rdv.organisation, rdv, rdv: {status: status[1]}), \
+            admin_organisation_rdv_path( \
+              rdv.organisation, \
+              rdv, \
+              rdv: { status: status[1] }, \
+              format: local_assigns[:remote] ? 'json' : 'html' \
+            ), \
             method: :put, \
             class: "dropdown-item js-change-link", \
             remote: local_assigns.fetch(:remote, false) \
