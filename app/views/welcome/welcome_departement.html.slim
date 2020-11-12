@@ -3,15 +3,15 @@
     .container
       .row
         .col-lg-12.justify-content-md-center
-          h1.text-white.px-lg-5
+          h1.text-white
             | Prenez&nbsp;
             span.text-secondary rendez-vous en ligne
             br
             | avec votre département le&nbsp;
             span.text-secondary #{@departement}
-          h3.text-white.mb-4.px-lg-5 en PMI, CPEF, Service Social
+          h3.text-white.mb-4 en PMI, CPEF, Service Social
 
-          .mb-5.px-lg-5= render 'common/search_form'
+          .mb-5= render 'common/search_form'
       h3.text-white.text-center Comment ça marche ?
 
 = render 'how_to'
