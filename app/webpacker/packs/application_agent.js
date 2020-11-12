@@ -31,6 +31,7 @@ import { MergeUsersForm } from 'components/merge-users-form.js'
 import { SectorAttributionForm } from 'components/sector-attribution-form.js'
 import { ZoneForm } from 'components/zone-form.js'
 import { Select2Inputs } from 'components/select2-inputs';
+import { PlanningAgentSelect } from 'components/planning-agent-select';
 import { RdvStatusDropdowns } from 'components/rdv-status-dropdowns'
 import 'components/calendar';
 import 'components/tooltip';
@@ -114,6 +115,8 @@ $(document).on('turbolinks:load', function() {
   new SectorAttributionForm();
 
   new ZoneForm();
+
+  new PlanningAgentSelect();
 
   new RdvStatusDropdowns();
 });

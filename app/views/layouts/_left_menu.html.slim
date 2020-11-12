@@ -51,23 +51,30 @@
           .d-flex.justify-content-between
             div
               i.far.fa-clock>
-              span.ml-1 Votre planning
+              span.ml-1 Planning
             div
               i.fa.fa-angle-right.menu-arrow.mt-1
         ul.list-unstyled.ml-3.left-submenu-planning.collapse[
           class=("show" if menu_top_level_item == "planning")
         ]
+          li
+            form.my-2
+              = select_tag( \
+                :agent_id, \
+                selectable_planning_agents_options, \
+                class: "select2-input form-control js-planning-agent-select" \
+              )
           li.my-2
-            = link_to 'Agendas', \
-              admin_organisation_agent_path(current_organisation, current_agent), \
+            = link_to 'Agenda', \
+              admin_organisation_agent_path(current_organisation, (@agent || current_agent)), \
               class: ("active" if content_for(:menu_item) == "menu-agendas")
           li.my-2
             = link_to "Plages d'ouverture", \
-              admin_organisation_agent_plage_ouvertures_path(current_organisation, current_agent), \
+              admin_organisation_agent_plage_ouvertures_path(current_organisation, (@agent || current_agent)), \
               class: ("active" if content_for(:menu_item) == "menu-plages-ouvertures")
           li.my-2
             = link_to 'Absences', \
-              admin_organisation_agent_absences_path(current_organisation, current_agent), \
+              admin_organisation_agent_absences_path(current_organisation, (@agent || current_agent)), \
               class: ("active" if content_for(:menu_item) == "menu-absences")
 
       li.side-nav-item.mb-4.pl-3.pr-2

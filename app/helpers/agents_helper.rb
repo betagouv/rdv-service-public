@@ -55,4 +55,18 @@ module AgentsHelper
       "men-department-zone-imports" => "",
     }[content_for(:menu_item)]
   end
+
+  def selectable_planning_agents_options
+    path_helper_name = content_for(:menu_agent_select_path_helper_name) || :admin_organisation_agent_path
+    options_for_select(
+      policy_scope(Agent).complete.active.order_by_last_name .map do |agent|
+        [
+          agent.full_name,
+          agent.id,
+          { 'data-url': send(path_helper_name, current_organisation, agent.id) }
+        ]
+      end,
+      selected: (@agent || current_agent).id
+    )
+  end
 end

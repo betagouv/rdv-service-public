@@ -1,4 +1,5 @@
 - content_for(:menu_item) { 'menu-absences' }
+- content_for(:menu_agent_select_path_helper_name) { 'admin_organisation_agent_absences_path' }
 
 - content_for :title do
   - if current_agent == @agent
@@ -7,11 +8,8 @@
     | Absences de #{@agent.full_name_and_service}
 
 - content_for :breadcrumb do
-  - if policy_scope(Agent).complete.active.many?
-    .d-inline-block.mr-2
-      = select_tag :id, options_for_select(policy_scope(Agent).complete.active.order_by_last_name.map { |agent| [agent.full_name, agent.id, { 'data-url': admin_organisation_agent_absences_path(current_organisation, agent.id)}]}, selected: @agent.id), class: "select2-input", onchange: "window.location.href = $('.select2-input option:selected').attr('data-url')"
-
   = link_to 'Créer une absence', new_admin_organisation_agent_absence_path(current_organisation, @agent.id), class: "btn btn-outline-white align-bottom"
+
 .card.pb-3
   - if @absences.any?
     table.table
