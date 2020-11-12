@@ -1,40 +1,41 @@
 - content_for :side_nav_menu
-  ul.metismenu.side-nav.mt-5
-    li.side-nav-title Sectorisation du #{current_departement}
-    li.side-nav-item
+  ul.side-nav.list-unstyled.mt-4
+    li.side-nav-title.pl-3.mb-4
+      | Sectorisation du #{current_departement}
+
+    li.side-nav-item.mb-4.pl-3.pr-2
       = link_to \
         admin_departement_setup_checklist_path(current_departement), \
-        class: 'side-nav-link', \
-        id: "menu-departement-setup-checklist" \
+        class: ('active' if content_for(:menu_item) == 'menu-departement-setup-checklist') \
       do
-        i.fa.fa-info
-        | Instructions
-    li.side-nav-item
+        i.fa.fa-info>
+        span.ml-1 Instructions
+
+    li.side-nav-item.mb-4.pl-3.pr-2
       = link_to \
         admin_departement_sectors_path(current_departement), \
-        class: 'side-nav-link', \
-        id: 'menu-departement-sectors' \
+        class: ('active' if content_for(:menu_item) == 'menu-departement-sectors') \
       do
-        i.fa.fa-table
-        | Secteurs
-    li.side-nav-item
+        i.fa.fa-table>
+        span.ml-1 Secteurs
+
+    li.side-nav-item.mb-4.pl-3.pr-2
       = link_to \
         admin_departement_sectors_path(current_departement, view: "map"), \
-        class: 'side-nav-link', \
-        id: 'menu-departement-sectors-map' \
+        class: ('active' if content_for(:menu_item) == 'menu-departement-sectors-map') \
       do
-        i.fa.fa-map
-        | Carte
-    li.side-nav-item
+        i.fa.fa-map>
+        span.ml-1 Carte
+
+    li.side-nav-item.mb-4.pl-3.pr-2
       = link_to \
         new_admin_departement_zone_import_path(current_departement), \
-        class: 'side-nav-link', \
-        id: 'menu-departement-zone-imports' \
+        class: ('active' if content_for(:menu_item) == 'menu-departement-zone-imports') \
       do
-        i.fa.fa-download
-        | Importer fichier
-  ul.metismenu.side-nav
-    li.side-nav-item
+        i.fa.fa-download>
+        span.ml-1 Importer fichier
+
+    li.side-nav-item.mb-4.pl-3.pr-2
       - if policy_scope(Organisation).count > 1
         = link_to admin_organisations_path, class: 'side-nav-link' do
           span> Liste organisations

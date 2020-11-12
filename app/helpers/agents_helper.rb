@@ -38,4 +38,21 @@ module AgentsHelper
   def agents_to_sentence(agents)
     agents.map(&:full_name_and_service).sort.to_sentence
   end
+
+  def menu_top_level_item
+    {
+      "menu-agendas" => "planning",
+      "menu-plages-ouvertures" => "planning",
+      "menu-absences" => "planning",
+      "menu-agents" => "settings",
+      "menu-lieux" => "settings",
+      "menu-motifs" => "settings",
+      "menu-organisation" => "settings",
+      "menu-organisation-stats" => "settings",
+      "men-department-sectors" => "",
+      "men-department-zones" => "",
+      "men-department-setup-checklist" => "",
+      "men-department-zone-imports" => "",
+    }[content_for(:menu_item)]
+  end
 end
