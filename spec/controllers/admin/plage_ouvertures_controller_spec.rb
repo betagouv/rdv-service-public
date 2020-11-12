@@ -51,7 +51,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
             expect(first.size).to eq(6)
             expect(first["title"]).to eq(plage_ouverture2.title)
             expect(first["start"]).to eq(plage_ouverture2.starts_at.as_json)
-            expect(first["end"]).to eq(plage_ouverture2.ends_at.as_json)
+            expect(first["end"]).to eq(plage_ouverture2.first_occurence_ends_at.as_json)
             expect(first["backgroundColor"]).to eq("#6fceff80")
             expect(first["rendering"]).to eq("background")
             expect(first["extendedProps"]).to eq({ lieu: "MDS Sud", location: "10 rue Belsunce" }.as_json)
@@ -120,40 +120,47 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
     end
 
     describe "POST #create" do
-      context "with valid params" do
-        let(:valid_attributes) do
-          plage_ouverture.attributes.merge(motif_ids: [plage_ouverture.motifs.last.id])
-        end
-
-        it "creates a new PlageOuverture" do
-          expect do
-            post :create, params: { organisation_id: organisation.id, plage_ouverture: valid_attributes }
-          end.to change(PlageOuverture, :count).by(1)
-        end
-
-        it "redirects to the created plage_ouverture" do
-          post :create, params: { organisation_id: organisation.id, plage_ouverture: valid_attributes }
+      context "with valid params for non-overlapping exceptional PO" do
+        it "creates it and redirects to the index" do
+          post(
+            :create,
+            params: {
+              organisation_id: organisation.id,
+              plage_ouverture: {
+                title: "Permanence ecole",
+                motif_ids: [motif.id],
+                lieu_id: lieu1.id,
+                organisation_id: organisation.id,
+                agent_id: agent.id,
+                first_day: "17/11/2020",
+                start_time: "09:00",
+                end_time: "12:00"
+              }
+            }
+          )
           expect(response).to redirect_to(admin_organisation_agent_plage_ouvertures_path(organisation, PlageOuverture.last.agent_id))
+          expect(agent.plage_ouvertures.count).to eq 2
         end
       end
 
       context "with invalid params" do
-        let(:invalid_attributes) do
-          {
-            agent_id: agent.id,
-            title: "test plage_ouverture",
-          }
-        end
-
-        it "does not create a new PlageOuverture" do
-          expect do
-            post :create, params: { organisation_id: organisation.id, plage_ouverture: invalid_attributes }
-          end.not_to change(PlageOuverture, :count)
-        end
-
-        it "returns a success response (i.e. to display the 'new' template)" do
-          post :create, params: { organisation_id: organisation.id, plage_ouverture: invalid_attributes }
+        it "does not create a new plage ouverture" do
+          post(
+            :create,
+            params: {
+              organisation_id: organisation.id,
+              plage_ouverture: {
+                motif_ids: [motif.id],
+                lieu_id: lieu1.id,
+                organisation_id: organisation.id,
+                agent_id: agent.id,
+                # missing fields
+              }
+            }
+          )
           expect(response).to be_successful
+          expect(response).to render_template(:new)
+          expect(agent.plage_ouvertures.count).to eq 1
         end
       end
     end

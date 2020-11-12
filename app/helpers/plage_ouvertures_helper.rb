@@ -46,7 +46,7 @@ module PlageOuverturesHelper
   end
 
   def display_time_range(plage_ouverture)
-    "de #{l(plage_ouverture.starts_at, format: "%H:%M")} à #{l(plage_ouverture.ends_at, format: "%H:%M")}"
+    "de #{l(plage_ouverture.start_time, format: "%H:%M")} à #{l(plage_ouverture.end_time, format: "%H:%M")}"
   end
 
   def display_recurrence_range(plage_ouverture)
