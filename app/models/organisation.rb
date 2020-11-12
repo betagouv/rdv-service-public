@@ -39,6 +39,11 @@ class Organisation < ApplicationRecord
     )
   }
   scope :order_by_name, -> { order(Arel.sql("LOWER(name)")) }
+  scope :contactable, lambda {
+    where.not(phone_number: ["", nil])
+      .or(where.not(website: ["", nil]))
+      .or(where.not(email: ["", nil]))
+  }
 
   def notify_admin_organisation_created
     return unless agents.present?
