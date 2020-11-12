@@ -1,10 +1,12 @@
 .card.mb-3.print-border-bottom.print-border-top
-  .card-body
-    p.card-text
-      i.fa.fa-fw.fa-calendar>
-      = link_to rdv_title(rdv, **{ date_format: local_assigns[:date_format] }.compact), admin_organisation_rdv_path(rdv.organisation, rdv)
-      = rdv_status_tag(rdv)
+  .card-header
+    .d-flex.justify-content-between
+      div
+        i.fa.fa-fw.fa-calendar>
+        = link_to rdv_title(rdv, **{ date_format: local_assigns[:date_format] }.compact), admin_organisation_rdv_path(rdv.organisation, rdv)
+      = render "rdv_status_dropdown", rdv: rdv, remote: true
 
+  .card-body
     - if local_assigns[:show_user_details]
       .row
         .col-md-6.mb-2
