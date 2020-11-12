@@ -4,13 +4,13 @@ html lang="fr"
     = render 'common/head'
   body class="#{agents_or_users_body_class}"
     = render 'layouts/degraded_service', message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
-    div class="#{ params[:controller].include?('users/') ? '' : 'bg-primary'}"
-      - if current_user.present?
-        = render "common/header_user_logged"
-      - else
-        = render 'common/header'
-
+    .bg-primary
       .container
+        - if current_user.present?
+          = render "common/header_user_logged"
+        - else
+          = render 'common/header'
+
         = render 'layouts/flash'
         - if content_for :title
           .row

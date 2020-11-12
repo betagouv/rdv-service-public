@@ -5,8 +5,9 @@ html lang="fr"
   body class="user"
     = render 'layouts/degraded_service', message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
     .bg-primary
-      = render 'common/header'
-      = yield :header
+      .container
+        = render 'common/header'
+        = yield :header
     .container
       .row
         .col-md-12

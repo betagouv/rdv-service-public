@@ -1,5 +1,6 @@
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
 @import "./_variables";
 @import "./fontawesome_imports";
 @import "./fonts";
@@ -39,6 +40,19 @@ h2{
   font-size: 2rem;
   padding-bottom: 1rem;
 }
+
+@include media-breakpoint-only(xs) {
+  h1 {
+    font-size: 2rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+  }
+  h3 {
+    font-size: 1.3rem;
+  }
+}
+
 
 a {
   transition: all 0.3s;
@@ -91,6 +105,9 @@ section header {
 nav.navbar {
   background: none;
   transition: all 0.5s;
+  padding-left: 0;
+  padding-right: 0;
+
   .navbar-brand {
     font-weight: 800;
     font-size: 1.7rem;
@@ -140,12 +157,6 @@ nav.navbar {
   }
 }
 
-@media (min-width: 992px) {
-  nav.navbar {
-    padding-left: 3rem;
-    padding-right: 3rem;
-  }
-}
 
 /*
 * ==========================================================
