@@ -49,8 +49,6 @@ module AgentsHelper
       "menu-motifs" => "settings",
       "menu-organisation" => "settings",
       "menu-organisation-stats" => "settings",
-      "menu-merge-users" => "", # TODO
-      "menu-rdvs-list" => "", # TODO
       "men-department-sectors" => "",
       "men-department-zones" => "",
       "men-department-setup-checklist" => "",

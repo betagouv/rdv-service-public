@@ -69,10 +69,6 @@
             = link_to 'Absences', \
               admin_organisation_agent_absences_path(current_organisation, current_agent), \
               class: ("active" if content_for(:menu_item) == "menu-absences")
-          li.my-2
-            = link_to 'Liste des RDV', \
-              admin_organisation_rdvs_path(current_organisation), \
-              class: ("active" if content_for(:menu_item) == "menu-rdvs-list")
 
       li.side-nav-item.mb-4.pl-3.pr-2
         = link_to( \
@@ -90,6 +86,14 @@
           i.fa.fa-chart-bar>
           span.ml-1 Vos statistiques
           = unknown_past_agent_rdvs_danger_bage
+
+      li.side-nav-item.mb-4.pl-3.pr-2
+        = link_to \
+          admin_organisation_rdvs_path(current_organisation), \
+          class: ("active" if content_for(:menu_item) == "menu-rdvs-list") \
+        do
+          i.fa.fa-list>
+          span.ml-1 Liste des RDV
 
       - if current_agent.admin?
         li.side-nav-item.mb-4.pl-3.pr-2
