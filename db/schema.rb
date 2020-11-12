@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_12_102708) do
+ActiveRecord::Schema.define(version: 2020_11_12_164609) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -184,7 +184,6 @@ ActiveRecord::Schema.define(version: 2020_11_12_102708) do
     t.integer "max_booking_delay", default: 7889238
     t.datetime "deleted_at"
     t.bigint "service_id"
-    t.boolean "disable_notifications_for_users", default: false
     t.text "restriction_for_rdv"
     t.text "instruction_for_rdv"
     t.boolean "for_secretariat", default: false
