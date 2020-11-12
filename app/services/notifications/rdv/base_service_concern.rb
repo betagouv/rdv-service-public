@@ -6,7 +6,7 @@ module Notifications::Rdv::BaseServiceConcern
   end
 
   def perform
-    return false if @rdv.starts_at < Time.zone.now || @rdv.motif.disable_notifications_for_users
+    return false if @rdv.starts_at < Time.zone.now || !@rdv.motif.visible_and_notified?
 
     if methods.include?(:notify_user_by_mail)
       users_to_notify.select { _1.email.present? }.each { notify_user_by_mail(_1) }

@@ -3,7 +3,7 @@
 - content_for :title do
   | Votre organisation
 
-.row
+.row.justify-content-center
   .col-md-6
     .card
       .card-body
@@ -16,6 +16,12 @@
             strong> Téléphone :
             | #{@organisation.phone_number}
           li.mb-2
+            strong> Email :
+            | #{@organisation.email}
+          li.mb-2
+            strong> Site web :
+            | #{@organisation.website}
+          li.mb-2
             strong> Horaires :
             | #{@organisation.horaires}
-        .text-right= link_to "Modifier", edit_admin_organisation_path(@organisation), class: "btn btn-primary", data: { rightbar: true }
+        .text-right= link_to "Modifier", edit_admin_organisation_path(@organisation), class: "btn btn-primary"

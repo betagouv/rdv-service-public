@@ -1,24 +1,13 @@
-//
-// authentication.scss
-//
-
-// authentication pages background
 body.authentication-bg {
   background-size: cover;
   background-position: center;
   background: linear-gradient(to right, lighten($primary, 30%), lighten($secondary, 30%));
 }
 
-.authentication-bg.enlarged,.auth-fluid-pages.enlarged {
-  min-height: 100px;
-}
-
-// Logout page
 .logout-icon {
   width: 140px;
 }
 
-// Authentication fluid
 .auth-fluid {
   position: relative;
   display: flex;
@@ -39,7 +28,6 @@ body.authentication-bg {
   }
 
   .auth-fluid-left {
-    padding: 6rem 3rem;
     flex: 1;
     position: relative;
     color: $white;
@@ -70,6 +58,14 @@ body.authentication-bg {
   cursor: pointer;
 }
 
+@include media-breakpoint-up(lg) {
+  .auth-fluid {
+    .auth-fluid-left {
+      padding: 6rem 3rem;
+    }
+  }
+}
+
 @include media-breakpoint-down(md) {
   .auth-fluid {
     display: block;
@@ -80,9 +76,6 @@ body.authentication-bg {
       padding: 1rem;
     }
 
-    .auth-fluid-left {
-      display: none;
-    }
     .auth-brand {
       display: block;
       top: 3rem;

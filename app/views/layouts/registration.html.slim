@@ -12,10 +12,11 @@ html lang="fr"
   body.auth-fluid-pages.pb-0 class="#{agents_or_users_body_class}"
     .auth-fluid
       .auth-fluid-left.text-center
-        = link_logo
-        .align-items-center.d-flex.mt-4
-          .p-3.flex-grow-1
-            = image_pack_tag 'welcome/agent.svg', class: 'agent-profile mx-auto mb-4', alt: ""
+        .p-2
+          = link_logo
+        .align-items-center.d-flex.mt-lg-4
+          .p-lg-3.flex-grow-1
+            .d-none.d-lg-block= image_pack_tag 'welcome/agent.svg', class: 'agent-profile mx-auto mb-4', alt: ""
             - if agent_path? && current_agent.nil?
               h4.mb-3 Terminé l'agenda papier, moins de temps perdu.
             - elsif agent_path? && current_agent.present?
@@ -36,8 +37,6 @@ html lang="fr"
       .auth-fluid-form-box
         .align-items-center.d-flex.h-100
           .p-3.flex-grow-1
-            .auth-brand.text-center.bg-primary.py-2
-              = link_logo
             = render 'layouts/flash'
             .row
               .col-md-6.offset-md-3

@@ -31,7 +31,7 @@ class User::RdvPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      scope.joins(:users).where(users: { id: @user.id }).or(User.joins(:users).where(users: { responsible_id: @user.id }))
+      scope.joins(:users).where(users: { id: @user.id }).or(User.joins(:users).where(users: { responsible_id: @user.id })).visible
     end
   end
 end

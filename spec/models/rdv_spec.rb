@@ -246,4 +246,24 @@ describe Rdv, type: :model do
       expect(rdv.possible_temporal_statuses).to eq(expected)
     end
   end
+
+  describe "#visible" do
+    it "don't return rdv with invisible motif" do
+      motif = create(:motif, :invisible)
+      create(:rdv, motif: motif)
+      expect(Rdv.visible).to contain_exactly
+    end
+
+    it "return rdv with visible and notified motif" do
+      motif = create(:motif, :visible_and_notified)
+      rdv = create(:rdv, motif: motif)
+      expect(Rdv.visible).to contain_exactly(rdv)
+    end
+
+    it "return rdv with visible and not notified motif" do
+      motif = create(:motif, :visible_and_not_notified)
+      rdv = create(:rdv, motif: motif)
+      expect(Rdv.visible).to contain_exactly(rdv)
+    end
+  end
 end
