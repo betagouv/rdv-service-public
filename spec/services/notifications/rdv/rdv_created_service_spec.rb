@@ -30,8 +30,8 @@ describe Notifications::Rdv::RdvCreatedService, type: :service do
     end
   end
 
-  context "motif with users notifications disabled" do
-    let(:motif) { build(:motif, :no_notification) }
+  context "with visible and not notified motif" do
+    let(:motif) { build(:motif, :visible_and_not_notified) }
     let(:rdv) { create_rdv_skip_notify(motif: motif, starts_at: 3.days.from_now, users: [user1, user2]) }
 
     it "should not be called" do

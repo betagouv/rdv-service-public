@@ -1,7 +1,7 @@
 = simple_form_for [:admin, lieu.organisation, lieu] do |f|
   = render partial: 'layouts/model_errors', locals: { model: lieu }
-  = f.input :name
-  = f.input :address, input_html: { class: "places-js-container" }
+  = f.input :name, hint: "Le nom apparaîtra dans les notifications mails et SMS aux usagers"
+  = f.input :address, input_html: { class: "places-js-container" }, hint: "L'adresse apparaîtra dans les notifications mails et SMS aux usagers"
   = f.input :latitude, as: :hidden
   = f.input :longitude, as: :hidden
 

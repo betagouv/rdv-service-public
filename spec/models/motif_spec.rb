@@ -1,4 +1,8 @@
-describe Rdv, type: :model do
+describe Motif, type: :model do
+  it "have a valid factory" do
+    expect(build(:motif)).to be_valid
+  end
+
   let!(:organisation) { create(:organisation) }
   let(:motif) { create(:motif, organisation: organisation) }
   let(:secretariat) { create(:service, :secretariat) }
@@ -92,6 +96,23 @@ describe Rdv, type: :model do
     it "return false if motif for_secretariat" do
       motif = build(:motif, for_secretariat: false, organisation: organisation)
       expect(motif.secretariat?).to be false
+    end
+  end
+
+  describe "visible_and_notified?" do
+    it "vrai quand visible_type == visible_and_notified" do
+      motif = build(:motif, :visible_and_notified)
+      expect(motif.visible_and_notified?).to eq(true)
+    end
+
+    it "faux quand visible_type == visible_and_not_notified" do
+      motif = build(:motif, :visible_and_not_notified)
+      expect(motif.visible_and_notified?).to eq(false)
+    end
+
+    it "faux quand visible_type == invisible" do
+      motif = build(:motif, :invisible)
+      expect(motif.visible_and_notified?).to eq(false)
     end
   end
 end

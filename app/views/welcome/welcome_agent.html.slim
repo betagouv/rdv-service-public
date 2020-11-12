@@ -6,7 +6,7 @@
           h1.mb-3.text-white
             span.text-secondary> Gérez les rendez-vous
             | de votre département
-          .mt-5= sign_in_agent_button
+          .mt-5= link_to "Se connecter en tant qu'agent", new_agent_session_path, class: "btn btn-outline-white"
 
 section.py-5.bg-lightturquoise.text-primary
   .container
@@ -42,7 +42,7 @@ section.py-5.bg-lightturquoise.text-primary
           p.lead Vous souhaitez en savoir plus ?
           .row.d-flex.justify-content-center
             .col-md-3.p-2.px-3.p-md-0
-              = contact_us_button
+              = mail_to "contact@rdv-solidarites.fr", "Contactez-nous", class: "btn btn-tertiary"
             .col-md-3.p-2.px-3.p-md-0
               = link_to "Créez votre service", new_organisation_path, class: 'btn btn-tertiary'
             - unless demo?
@@ -106,7 +106,7 @@ section.bg-lightturquoise.py-5
         .col-md-9.m-auto
           .row.d-flex.justify-content-center
             .col-md-3.p-2.px-3.p-md-0
-              = contact_us_button
+              = mail_to "contact@rdv-solidarites.fr", "Contactez-nous", class: "btn btn-tertiary"
             .col-md-3.p-2.px-3.p-md-0
               = link_to "Créez votre service", new_organisation_path, class: 'btn btn-tertiary'
             - unless demo?

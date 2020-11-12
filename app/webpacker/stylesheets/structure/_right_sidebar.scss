@@ -24,10 +24,6 @@
   .right-bar {
     width: $rightbar-width;
   }
-
-  .slimScrollDiv {
-    overflow: inherit;
-  }
 }
 
 .right-bar-enabled {
@@ -39,8 +35,5 @@
 @include media-breakpoint-down(sm) {
   .right-bar {
     overflow: auto;
-    .slimscroll-menu {
-      height: auto !important;
-    }
   }
 }

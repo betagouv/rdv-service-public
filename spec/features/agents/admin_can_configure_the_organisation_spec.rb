@@ -18,7 +18,6 @@ describe "Admin can configure the organisation" do
   before do
     login_as(agent_admin, scope: :agent)
     visit authenticated_agent_root_path
-    click_link "Paramètres"
   end
 
   scenario "CRUD on lieux" do
@@ -91,6 +90,7 @@ describe "Admin can configure the organisation" do
   end
 
   scenario "CRUD on motifs", js: true do
+    click_link "Paramètres"
     click_link "Vos motifs"
     expect_page_title("Vos motifs")
 
@@ -98,7 +98,6 @@ describe "Admin can configure the organisation" do
     expect(page).to have_content("Modifier le motif")
     expect(page.find_by_id("motif_name")).to have_content(motif.name)
     select(motif_libelle2.name, from: :motif_name)
-    page.execute_script "$('.slimscroll-menu').scrollTop(10000)"
     click_button("Modifier")
     expect(page).to have_content(motif_libelle2.name)
     expect_page_title("Vos motifs")

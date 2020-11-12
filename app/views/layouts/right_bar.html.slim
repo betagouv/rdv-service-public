@@ -1,9 +1,8 @@
 .right-bar data-url=request.path
-  .slimscroll-menu
-    .right-bar-title
-      = link_to '#', class: 'right-bar-toggle float-right text-white' do
-        i.fa.fa-times
-      h5.m-0
-        = yield :title if content_for? :title
-    .right-bar-body
-      = yield
+  .right-bar-title
+    = link_to '#', class: 'right-bar-toggle float-right text-white' do
+      i.fa.fa-times
+    h5.m-0
+      = yield :title if content_for? :title
+  .right-bar-body
+    = yield
