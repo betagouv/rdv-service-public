@@ -6,6 +6,7 @@
 
 .left-side-menu {
   background: $bg-leftbar;
+  scrollbar-width: thin;
 
   a {
     color: $menu-item;
