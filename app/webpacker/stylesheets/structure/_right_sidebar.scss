@@ -10,6 +10,9 @@
   right: -($rightbar-width + 10px);
   top: 0;
   bottom: 0;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+
   .right-bar-title {
     background-color: $primary;
     padding: 1rem;
