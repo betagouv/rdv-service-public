@@ -1,4 +1,8 @@
 - content_for :title do
   | Modifier le rendez-vous
 
-= render 'form', rdv: @rdv
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-body
+        = render 'form', rdv: @rdv
