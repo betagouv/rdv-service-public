@@ -70,9 +70,6 @@ RSpec.describe Admin::RdvsController, type: :controller do
   end
 
   describe "PUT #update" do
-    let(:referer_path) { admin_organisation_agent_path(organisation.id, agent.id) }
-    before { request.headers["HTTP_REFERER"] = referer_path }
-
     context "with valid params" do
       it "updates the requested rdv" do
         lieu = create(:lieu, organisation: organisation)
@@ -92,10 +89,10 @@ RSpec.describe Admin::RdvsController, type: :controller do
         expect(rdv.reload.status).to eq("waiting")
       end
 
-      it "redirects to the agenda" do
+      it "redirects to the rdv" do
         lieu = create(:lieu, organisation: organisation)
         put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { lieu_id: lieu.id } }
-        expect(response).to redirect_to(referer_path)
+        expect(response).to redirect_to(admin_organisation_rdv_path(organisation, rdv))
       end
 
       it "where status is excused, cancelled_at should not be nil" do
@@ -127,7 +124,7 @@ RSpec.describe Admin::RdvsController, type: :controller do
       it "returns a success response (i.e. to display the 'edit' template)" do
         new_attributes = { duration_in_min: nil }
         put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: new_attributes }
-        expect(response).to be_successful
+        expect(response).to redirect_to(admin_organisation_rdv_path(organisation, rdv))
       end
 
       it "does not change rdv" do

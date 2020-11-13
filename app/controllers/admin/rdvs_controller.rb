@@ -49,8 +49,7 @@ class Admin::RdvsController < AgentAuthController
         temporal_status_human = I18n.t("activerecord.attributes.rdv.statuses.#{@rdv.temporal_status}")
         render json: { rdv: @rdv.attributes.to_h.merge(temporal_status_human: temporal_status_human) }
       end
-      format.html { respond_right_bar_with @rdv, location: request.referer }
-      format.js { respond_right_bar_with @rdv, location: request.referer }
+      format.html { redirect_to admin_organisation_rdv_path(current_organisation, @rdv) }
     end
   end
 
