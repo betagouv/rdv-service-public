@@ -40,7 +40,7 @@ class WelcomeController < ApplicationController
   def welcome_service
     @services = @geo_search.available_services
     @organisations_departement = Organisation.where(departement: @departement)
-    @motif_names = @geo_search.available_motifs.where(service: @service).pluck(:name).uniq
+    @motif_names = @geo_search.available_motifs.where(service: @service).ordered_by_name.pluck(:name).uniq
   end
 
   def set_lieu_variables
