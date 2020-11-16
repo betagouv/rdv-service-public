@@ -11,7 +11,11 @@
   - else
     ul.side-nav.list-unstyled#menu-agent.pb-3.mb-0
       li.side-nav-item.connected-agent.mb-3.pl-3.pr-2.py-2
-        a data-toggle="collapse" href=".left-submenu-account" aria-expanded="false"
+        a[
+          data-toggle="collapse"
+          href=".left-submenu-account"
+          aria-expanded=(menu_top_level_item == "account" ? "true" : "false")
+        ]
           .d-flex.justify-content-between.w-100
             div.d-flex.align-items-center
               div.mr-2.small
@@ -23,13 +27,19 @@
                 span= current_organisation.name
             div.d-flex.align-items-center
               i.fa.fa-angle-right.menu-arrow.mt-1
-        ul.list-unstyled.ml-3.left-submenu-account.collapse
+        ul.list-unstyled.ml-3.left-submenu-account.collapse[
+          class=("show" if menu_top_level_item == "account")
+        ]
           li.my-2
             = link_to "Mon compte", edit_agent_registration_path
           li.my-2
             = link_to "Mes organisations", admin_organisations_path
           li.my-2
-            = link_to "Mes statistiques", admin_organisation_agent_stats_path(current_organisation, current_agent)
+            = link_to( \
+              "Mes statistiques", \
+              admin_organisation_agent_stats_path(current_organisation, current_agent), \
+              class: ("active" if content_for(:menu_item) == "menu-stats") \
+            )
             = unknown_past_agent_rdvs_danger_bage
           li.my-2
             = link_to destroy_agent_session_path, method: :delete do
