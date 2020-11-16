@@ -7,9 +7,6 @@ install: ## Install or update dependencies
 run: ## Start the app server
 	foreman s -f Procfile.dev
 
-stop: ## Stop the app server
-	foreman stop
-
 clean: ## Clean temporary files and installed dependencies
 	bundle exec rails log:clear tmp:clear
 
