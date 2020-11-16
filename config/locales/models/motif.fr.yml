@@ -22,7 +22,6 @@ fr:
         for_secretariat: Motif accessible au secrétariat
         default_duration_in_min: Durée par défaut en minutes
         default_duration: Durée par défaut
-        disable_notifications_for_users: Désactiver les notifications pour l'usager
         min_booking_delay: Délai minimum de réservation
         max_booking_delay: Délai maximum de réservation
         restriction_for_rdv: Instructions à accepter avant la prise du rendez-vous

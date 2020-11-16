@@ -27,7 +27,7 @@ class Motif < ApplicationRecord
   scope :reservable_online, -> { where(reservable_online: true) }
   scope :by_phone, -> { Motif.phone } # default scope created by enum
   scope :for_secretariat, -> { where(for_secretariat: true) }
-  scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }
+  scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(motifs.name))")) }
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
     available_motifs = if agent.admin?
                          all
