@@ -33,6 +33,21 @@ describe RdvUpdater, type: :service do
 
       rdv_updater.update(rdv_params)
     end
+
+    it "force updated_at to ensure new version will be recorded" do
+      now = Time.new(2020, 4, 23, 12, 56)
+      travel_to(now)
+      previous_date = now - 3.days
+
+      rdv = create(:rdv, updated_at: previous_date)
+      rdv_updater = RdvUpdater.new(rdv)
+      rdv_params = {}
+
+      rdv_updater.update(rdv_params)
+      expect(rdv.reload.updated_at).to eq(now)
+
+      travel_back
+    end
   end
 
 end
