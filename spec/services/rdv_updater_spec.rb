@@ -24,10 +24,15 @@ describe RdvUpdater, type: :service do
       expect(rdv_updater.update(rdv_params)).to eq(false)
     end
 
-    it "notify when status is excused"
-    it "return 'rendez-vous annulé' when status is excused"
-    it "return 'rendez-vous modifié' when update ok"
+    it "notify user when rdv cancelled" do
+      rdv = create(:rdv, status: "waiting")
+      rdv_updater = RdvUpdater.new(rdv)
+      rdv_params = {status: "excused"}
 
+      expect(Notifications::Rdv::RdvCancelledByAgentService).to receive(:perform_with).with(rdv).and_return(true)
+
+      rdv_updater.update(rdv_params)
+    end
   end
 
 end
