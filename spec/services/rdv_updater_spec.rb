@@ -39,9 +39,9 @@ describe RdvUpdater, type: :service do
       travel_to(now)
       previous_date = now - 3.days
 
-      rdv = create(:rdv, updated_at: previous_date)
+      rdv = create(:rdv, updated_at: previous_date, context: "")
       rdv_updater = RdvUpdater.new(rdv)
-      rdv_params = {}
+      rdv_params = {context: "un nouveau context"}
 
       rdv_updater.update(rdv_params)
       expect(rdv.reload.updated_at).to eq(now)
