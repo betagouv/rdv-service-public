@@ -17,6 +17,17 @@ describe RdvUpdater, type: :service do
       rdv_updater.update(rdv_params)
     end
 
+    it "return false when update fail" do
+      rdv = create(:rdv, agents: [create(:agent)])
+      rdv_updater = RdvUpdater.new(rdv)
+      rdv_params = attributes_for(:rdv, :future, agents: [])
+      expect(rdv_updater.update(rdv_params)).to eq(false)
+    end
+
+    it "notify when status is excused"
+    it "return 'rendez-vous annulé' when status is excused"
+    it "return 'rendez-vous modifié' when update ok"
+
   end
 
 end
