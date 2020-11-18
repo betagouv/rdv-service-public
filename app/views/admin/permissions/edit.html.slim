@@ -1,13 +1,25 @@
 - content_for :title do
-  | Modifier le professionnel
+  | Modifier l'agent #{@permission.agent.full_name}
 
-= simple_form_for [:admin, @permission], url: admin_organisation_permission_path(current_organisation, @permission), remote: request.xhr?, html: { data: { rightbar: true } } do |f|
-  = render partial: 'layouts/model_errors', locals: { model: @permission }
-  = f.input :service_id, collection: Agent::ServicePolicy::AdminScope.new(pundit_user, Service).resolve, as: :select, label: 'Service'
-  = f.input :role, collection: Agent.human_enum_collection_html(:role), as: :radio_buttons, label: "Rôle de #{@permission.agent.full_name}"
 
-  .row
-    .col.text-left
-      = link_to 'Supprimer', admin_organisation_agent_path(current_organisation, @permission.agent), data: { confirm: "Êtes-vous sûr de vouloir supprimer cet utilisateur ?" }, method: :delete, class: 'btn btn-outline-danger'
-    .col.text-right
-      = f.button :submit
+- content_for :breadcrumb do
+  ol.breadcrumb.m-0
+    li.breadcrumb-item
+      = link_to "Vos agents", admin_organisation_agents_path(current_organisation)
+    li.breadcrumb-item.active
+      = @permission.agent.full_name
+
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-body
+        = simple_form_for [:admin, @permission], url: admin_organisation_permission_path(current_organisation, @permission), remote: request.xhr?, html: { data: { rightbar: true } } do |f|
+          = render partial: 'layouts/model_errors', locals: { model: @permission }
+          = f.input :service_id, collection: Agent::ServicePolicy::AdminScope.new(pundit_user, Service).resolve, as: :select, label: 'Service'
+          = f.input :role, collection: Agent.human_enum_collection_html(:role), as: :radio_buttons, label: "Rôle de #{@permission.agent.full_name}"
+
+          .row
+            .col.text-left
+              = link_to 'Supprimer', admin_organisation_agent_path(current_organisation, @permission.agent), data: { confirm: "Êtes-vous sûr de vouloir supprimer cet utilisateur ?" }, method: :delete, class: 'btn btn-outline-danger'
+            .col.text-right
+              = f.button :submit
