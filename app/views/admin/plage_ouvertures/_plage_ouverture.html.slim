@@ -29,3 +29,10 @@ tr
           duplicate_plage_ouverture_id: plage_ouverture.id \
         ) \
       )
+    div
+      = link_to( \
+        "Supprimer", \
+        admin_organisation_plage_ouverture_path(current_organisation, plage_ouverture), \
+        method: :delete, \
+        data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"} \
+      )
