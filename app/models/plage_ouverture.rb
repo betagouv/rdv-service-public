@@ -13,6 +13,7 @@ class PlageOuverture < ApplicationRecord
 
   validate :end_after_start
   validates :motifs, :title, presence: true
+  caution :warn_overlapping_plage_ouvertures
 
   has_many :webhook_endpoints, through: :organisation
 
@@ -63,11 +64,37 @@ class PlageOuverture < ApplicationRecord
     update_column(:expired_cached, expired?)
   end
 
+  def overlaps?(other)
+    PlageOuvertureOverlap.new(self, other).exists?
+  end
+
+  def overlapping_plages_ouvertures
+    return [] unless valid_date_and_times?
+
+    candidate_pos = PlageOuverture.where(agent: agent).where.not(id: id)
+      .where("recurrence IS NOT NULL or first_day >= ?", first_day)
+    if exceptionnelle?
+      candidate_pos = candidate_pos.where("first_day <= ?", first_day)
+    end
+    # we could further restrict this query if perfs are an issue
+    @overlapping_plages_ouvertures ||= candidate_pos.select { overlaps?(_1) }
+  end
+
   private
+
+  def valid_date_and_times?
+    [first_day, start_time, end_time].all?(&:present?)
+  end
 
   def end_after_start
     return if end_time.blank? || start_time.blank?
 
     errors.add(:end_time, "doit être après l'heure de début") if end_time <= start_time
+  end
+
+  def warn_overlapping_plage_ouvertures
+    return if overlapping_plages_ouvertures.empty?
+
+    warnings.add(:base, "Conflit de dates et d'horaires avec d'autres plages d'ouvertures", active: true)
   end
 end

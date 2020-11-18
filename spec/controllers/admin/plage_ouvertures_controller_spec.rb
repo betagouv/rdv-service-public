@@ -30,10 +30,10 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
 
     describe "GET #index.json" do
       let(:agent) { create(:agent, organisations: [organisation]) }
-      let!(:plage_ouverture) { create(:plage_ouverture, :weekly_by_2, title: "Une semaine sur deux les mercredis à partir du 17/07", first_day: Date.new(2019, 7, 17), lieu: lieu1, agent: agent, organisation: organisation) }
-      let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, title: "Tous les lundis à partir du 22/07", first_day: Date.new(2019, 7, 22), lieu: lieu1, agent: agent, organisation: organisation) }
-      let!(:plage_ouverture3) { create(:plage_ouverture, title: "Une seule fois le 24/07", first_day: Date.new(2019, 7, 24), lieu: lieu1, agent: agent, organisation: organisation) }
-      let!(:plage_ouverture4) { create(:plage_ouverture, title: "Une seule fois le 24/07", first_day: Date.new(2019, 7, 24), lieu: lieu1, agent: agent, organisation: organisation) }
+      let!(:plage_ouverture) { create(:plage_ouverture, :weekly_by_2, title: "Une semaine sur deux les mercredis à partir du 17/07", first_day: Date.new(2019, 7, 17), lieu: lieu1, agent: agent, organisation: organisation, active_warnings_confirm_decision: true) }
+      let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, title: "Tous les lundis à partir du 22/07", first_day: Date.new(2019, 7, 22), lieu: lieu1, agent: agent, organisation: organisation, active_warnings_confirm_decision: true) }
+      let!(:plage_ouverture3) { create(:plage_ouverture, title: "Une seule fois le 24/07", first_day: Date.new(2019, 7, 24), lieu: lieu1, agent: agent, organisation: organisation, active_warnings_confirm_decision: true) }
+      let!(:plage_ouverture4) { create(:plage_ouverture, title: "Une seule fois le 24/07", first_day: Date.new(2019, 7, 24), lieu: lieu1, agent: agent, organisation: organisation, active_warnings_confirm_decision: true) }
 
       before do
         sign_in agent

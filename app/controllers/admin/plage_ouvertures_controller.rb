@@ -53,6 +53,7 @@ class Admin::PlageOuverturesController < AgentAuthController
       flash[:notice] = "Plage d'ouverture créée"
       redirect_to admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent)
     else
+      @overlapping_plages_ouvertures = policy_scope(PlageOuverture).merge(@plage_ouverture.overlapping_plages_ouvertures)
       render :new
     end
   end
@@ -60,6 +61,7 @@ class Admin::PlageOuverturesController < AgentAuthController
   def update
     authorize(@plage_ouverture)
     flash[:notice] = "La plage d'ouverture a été modifiée." if @plage_ouverture.update(plage_ouverture_params)
+    @overlapping_plages_ouvertures = policy_scope(PlageOuverture).merge(@plage_ouverture.overlapping_plages_ouvertures)
     render :edit
   end
 
@@ -76,7 +78,7 @@ class Admin::PlageOuverturesController < AgentAuthController
   end
 
   def plage_ouverture_params
-    params.require(:plage_ouverture).permit(:title, :agent_id, :first_day, :start_time, :end_time, :lieu_id, :recurrence, motif_ids: [])
+    params.require(:plage_ouverture).permit(:title, :agent_id, :first_day, :start_time, :end_time, :lieu_id, :recurrence, :active_warnings_confirm_decision, motif_ids: [])
   end
 
   def date_range_params

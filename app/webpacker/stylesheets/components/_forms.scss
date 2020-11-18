@@ -119,3 +119,22 @@ select.form-control-sm {
   align-items: center;
   justify-content: center;
 }
+
+.form-collapsable-fields-wrapper {
+  position: relative;
+
+  &:not(.show) {
+    display: block !important;
+
+    &::before {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      content: "";
+      background: rgba(255,255,255,0.5);
+      z-index: 1000;
+    }
+  }
+}

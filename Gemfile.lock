@@ -8,6 +8,18 @@ GIT
       rails (>= 4.2.0, < 6.1)
 
 GIT
+  remote: https://github.com/rdv-solidarites/activemodel-caution.git
+  revision: 6b2b0ca5bc302cac1971fb474b707ebb0fb55a81
+  branch: feature/generization
+  specs:
+    activemodel-caution (6.0.3.3.0)
+      actionpack (= 6.0.3.3)
+      activemodel (= 6.0.3.3)
+      activerecord (= 6.0.3.3)
+      activesupport (= 6.0.3.3)
+      railties (= 6.0.3.3)
+
+GIT
   remote: https://github.com/thoughtbot/administrate.git
   revision: eb9b1b158d3529e7d6cedd9ee5bbee88244edbc3
   branch: master
@@ -500,6 +512,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activemodel-caution!
   administrate!
   administrate-field-belongs_to_search (~> 0.7)
   better_errors

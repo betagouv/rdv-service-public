@@ -1,7 +1,13 @@
-- if model.errors.any?
-  .alert.alert-danger.alert-dismissible.fade.show
-    a.close(href="#" data-dismiss="alert")
-      i.fa.fa-times
+- if model.respond_to?(:warnings_need_confirmation?) &&  model.warnings_need_confirmation?
+  / warnings only appear if there are no other errors
+  .mb-1 Avertissements :
+  .alert.alert-warning.show
+    ul.pl-1
+      - model.warnings.each do |key, msg|
+        li= msg
+
+- elsif model.errors.any?
+  .alert.alert-danger.fade.show
     ul.m-0
       - errors_full_messages(model).each do |msg|
-        li=msg
+        li= msg
