@@ -1,0 +1,79 @@
+- content_for :title do
+  = truncate(@plage_ouverture.title, length: 40)
+
+- content_for :breadcrumb do
+  ol.breadcrumb.m-0.p-0
+    li.breadcrumb-item
+      = link_to admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent) do
+        - if @plage_ouverture.agent == current_agent
+          | Vos plages d'ouverture
+        - else
+          | Plages d'ouverture de #{@plage_ouverture.agent.full_name}
+    li.breadcrumb-item.active
+      = truncate(@plage_ouverture.title, length: 20)
+
+.row.justify-content-center
+  .col-md-6.mb-3
+    .card
+      .card-header
+        b Plage d'ouverture ##{@plage_ouverture.id}
+      .card-body
+        div.mt-2.d-flex
+          .flex-shrink-0.mr-1.font-weight-bold Description :
+          span= @plage_ouverture.title
+        div.mt-2.d-flex
+          .flex-shrink-0.mr-1.font-weight-bold Professionnel :
+          span= @plage_ouverture.agent.full_name
+        div.mt-2.d-flex
+          .flex-shrink-0.mr-1.font-weight-bold Lieu :
+          span= "#{@plage_ouverture.lieu.name} (#{@plage_ouverture.lieu.address})"
+        div.mt-2.d-flex
+          .flex-shrink-0.mr-1.font-weight-bold Motifs :
+          ul.pl-3.mb-0
+            - @plage_ouverture.motifs.each do |motif|
+              li= motif_name_with_location_type_and_badges(motif)
+        div.mt-2.d-flex
+          .flex-shrink-0.mr-1.font-weight-bold Répétition :
+          span= @plage_ouverture.recurring? ? "Récurrente" : po_exceptionnelle_tag(@plage_ouverture)
+        div.mt-2.d-flex
+          .flex-shrink-0.mr-1.font-weight-bold Dates :
+          - if @plage_ouverture.recurring?
+            = sanitize(display_recurrence(@plage_ouverture).join(" "))
+          - else
+            | Le #{l(@plage_ouverture.first_day, format: :human)} #{display_time_range(@plage_ouverture)}
+        div.mt-3.text-muted.text-right
+          | modifiée le #{l(@plage_ouverture.updated_at, format: :short)}
+        - if @plage_ouverture.overlapping_plages_ouvertures?
+          div.mt-3
+            .alert.alert-warning.mt-1.mb-0
+              | Conflit de dates et d'horaires avec d'autres plages d'ouvertures
+            .border-left.border-right.border-bottom.rounded.border-warning
+              ul.pl-3.py-2.mb-0
+                = render "overlapping_plage_ouvertures", \
+                  overlapping_plages_ouvertures: @overlapping_plages_ouvertures, \
+                  overlapping_plages_ouvertures_out_of_scope_count: @overlapping_plages_ouvertures_out_of_scope_count
+
+      .card-footer.d-flex.justify-content-between
+        div
+          = link_to( \
+            "Supprimer", \
+            admin_organisation_plage_ouverture_path(current_organisation, @plage_ouverture), \
+            method: :delete, \
+            data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"}, \
+            class: "btn btn-danger" \
+          )
+        div
+          = link_to( \
+            "Dupliquer", \
+            new_admin_organisation_agent_plage_ouverture_path( \
+              current_organisation, \
+              @plage_ouverture.agent.id, \
+              duplicate_plage_ouverture_id: @plage_ouverture.id \
+            ), \
+            class: "btn btn-link" \
+          )
+          = link_to( \
+            "Modifier", \
+            edit_admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture), \
+            class: "btn btn-primary" \
+          )

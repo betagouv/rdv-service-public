@@ -1,6 +1,6 @@
 tr
   td
-    = link_to plage_ouverture.title, edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
+    = link_to plage_ouverture.title, admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
     = po_exceptionnelle_tag(plage_ouverture)
     br
     small
@@ -18,21 +18,19 @@ tr
       = sanitize(display_recurrence(plage_ouverture).join("<br/>"))
     - else
       | Le #{l(plage_ouverture.first_day, format: :human)} #{display_time_range(plage_ouverture)}
+    - if plage_ouverture.overlapping_plages_ouvertures?
+      .alert.alert-warning.py-1.px-2.mt-1 ⚠️ Conflit de dates
   td
-    div= link_to "Éditer", edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
+    div
+      = link_to admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture) do
+        i.fa.fa-eye
+    div
+      = link_to edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture) do
+        i.fa.fa-pencil-alt
     div
       = link_to( \
-        "Dupliquer", \
-        new_admin_organisation_agent_plage_ouverture_path( \
-          current_organisation, \
-          @agent.id, \
-          duplicate_plage_ouverture_id: plage_ouverture.id \
-        ) \
-      )
-    div
-      = link_to( \
-        "Supprimer", \
         admin_organisation_plage_ouverture_path(current_organisation, plage_ouverture), \
         method: :delete, \
         data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"} \
-      )
+      ) do
+        i.fa.fa-trash

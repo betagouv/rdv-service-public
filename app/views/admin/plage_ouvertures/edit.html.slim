@@ -15,7 +15,7 @@
         - else
           | Plages d'ouverture de #{@plage_ouverture.agent.full_name}
     li.breadcrumb-item.active
-      = truncate(@plage_ouverture.title, length: 20)
+      = link_to truncate(@plage_ouverture.title, length: 20), admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture)
 
 .row.justify-content-center
   .col-md-6

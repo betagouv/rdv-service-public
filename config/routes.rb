@@ -98,7 +98,7 @@ Rails.application.routes.draw do
       end
 
       resources :organisations do
-        resources :plage_ouvertures, except: [:index, :show, :new]
+        resources :plage_ouvertures, except: [:index, :new]
         resources :agent_searches, only: :index, module: "creneaux"
         resources :lieux, except: :show
         resources :motifs, except: :show

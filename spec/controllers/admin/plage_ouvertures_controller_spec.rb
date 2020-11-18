@@ -8,6 +8,27 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
   let!(:lieu1) { create(:lieu, organisation: organisation, name: "MDS Sud", address: "10 rue Belsunce") }
 
   shared_examples "agent can CRUD plage ouverture" do
+    describe "GET #show" do
+      let!(:plage_ouverture) do
+        create(
+          :plage_ouverture,
+          title: "Permanence",
+          first_day: Date.new(2020, 11, 16),
+          start_time: Tod::TimeOfDay(9),
+          end_time: Tod::TimeOfDay(12),
+          motifs: [motif],
+          lieu: lieu1,
+          organisation: organisation,
+          agent: agent
+        )
+      end
+      it "should display the PO" do
+        get :show, params: { organisation_id: organisation.id, id: plage_ouverture.id }
+        expect(response).to be_successful
+        expect(response.body).to include("Permanence")
+      end
+    end
+
     describe "GET #index" do
       let!(:plage_ouverture) do
         create(
@@ -177,7 +198,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
               }
             }
           )
-          expect(response).to redirect_to(admin_organisation_agent_plage_ouvertures_path(organisation, PlageOuverture.last.agent_id))
+          expect(response).to redirect_to(admin_organisation_plage_ouverture_path(organisation, PlageOuverture.last))
           expect(agent.plage_ouvertures.count).to eq 2
         end
       end
@@ -221,9 +242,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
       context "with valid params" do
         it "updates the requested plage_ouverture" do
           put :update, params: { organisation_id: organisation.id, id: plage_ouverture.to_param, plage_ouverture: { title: "Le nouveau nom" } }
-          expect(response.status).to eq(200)
-          plage_ouverture.reload
-          expect(plage_ouverture.title).to eq("Le nouveau nom")
+          expect(response).to redirect_to(admin_organisation_plage_ouverture_path(organisation, plage_ouverture))
         end
       end
 

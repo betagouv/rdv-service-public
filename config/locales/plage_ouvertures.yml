@@ -1,0 +1,5 @@
+fr:
+  plage_ouvertures:
+    overlapping_out_of_scope:
+      one: "%{count} plage d'ouverture dans une organisation à laquelle vous n'avez pas accès"
+      other: "%{count} plages d'ouvertures dans des organisations auxquelles vous n'avez pas accès"

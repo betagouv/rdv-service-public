@@ -68,7 +68,18 @@ class PlageOuverture < ApplicationRecord
     PlageOuvertureOverlap.new(self, other).exists?
   end
 
+  def overlapping_plages_ouvertures?
+    overlapping_plages_ouvertures_candidates.any? { overlaps?(_1) }
+  end
+
   def overlapping_plages_ouvertures
+    @overlapping_plages_ouvertures ||= overlapping_plages_ouvertures_candidates
+      .select { overlaps?(_1) }
+  end
+
+  private
+
+  def overlapping_plages_ouvertures_candidates
     return [] unless valid_date_and_times?
 
     candidate_pos = PlageOuverture.where(agent: agent).where.not(id: id)
@@ -77,10 +88,8 @@ class PlageOuverture < ApplicationRecord
       candidate_pos = candidate_pos.where("first_day <= ?", first_day)
     end
     # we could further restrict this query if perfs are an issue
-    @overlapping_plages_ouvertures ||= candidate_pos.select { overlaps?(_1) }
+    candidate_pos
   end
-
-  private
 
   def valid_date_and_times?
     [first_day, start_time, end_time].all?(&:present?)

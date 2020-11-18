@@ -4,19 +4,10 @@
     = render partial: 'layouts/model_errors', locals: { model: plage_ouverture }
 
     - if plage_ouverture.warnings_need_confirmation?
-      - if @overlapping_plages_ouvertures.any?
-        ul
-          - @overlapping_plages_ouvertures.each do |overlapping_plage_ouverture|
-            li.mb-1
-              span>= link_to("Plage d'ouverture #{overlapping_plage_ouverture.id}", edit_admin_organisation_plage_ouverture_path(overlapping_plage_ouverture.organisation, overlapping_plage_ouverture))
-              span> à #{overlapping_plage_ouverture.lieu.name}
-              - if overlapping_plage_ouverture.recurring?
-                span>= display_recurrence(overlapping_plage_ouverture).join(" ")
-              - else
-                span>= l(overlapping_plage_ouverture.first_day, format: :human)
-                span>= display_time_range(overlapping_plage_ouverture)
-              - if overlapping_plage_ouverture.organisation != current_organisation
-                span>= "(Organisation #{organisation.name})"
+      ul.pl-3
+        = render "overlapping_plage_ouvertures", \
+          overlapping_plages_ouvertures: @overlapping_plages_ouvertures, \
+          overlapping_plages_ouvertures_out_of_scope_count: @overlapping_plages_ouvertures_out_of_scope_count
 
       .collapse.show.js-collapse-warning-confirmation
         .text-muted Ces avertissements ne sont pas bloquants, vous pouvez les ignorer en confirmant
@@ -46,9 +37,10 @@
       = render partial: 'common/recurrence', locals: { f: f, model: plage_ouverture }
 
       .row
-        - if plage_ouverture.persisted?
-          .col.text-left
-            = link_to "Supprimer", admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"}
+        .col.text-left
+          = link_to "Annuler", \
+            plage_ouverture.persisted? ? admin_organisation_plage_ouverture_path(current_organisation, plage_ouverture) : admin_organisation_plage_ouvertures_path(current_organisation), \
+            class: "btn btn-link"
         .col.text-right
           = f.button :submit
 - else
