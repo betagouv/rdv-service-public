@@ -1,5 +1,5 @@
 - content_for :title do
-  | Modifier l'agent #{@permission.agent.full_name}
+  | Modifier le professionnel #{@permission.agent.full_name}
 
 
 - content_for :breadcrumb do
@@ -20,6 +20,10 @@
 
           .row
             .col.text-left
-              = link_to 'Supprimer', admin_organisation_agent_path(current_organisation, @permission.agent), data: { confirm: "Êtes-vous sûr de vouloir supprimer cet utilisateur ?" }, method: :delete, class: 'btn btn-outline-danger'
+              = link_to "Retirer de l'organisation", \
+                admin_organisation_agent_path(current_organisation, @permission.agent), \
+                data: { confirm: "Êtes-vous sûr de vouloir retirer cet agent de l'organisation #{current_organisation.name} ?\n\nToutes ses absences et ses plages d'ouvertures seront supprimées de manière irréversible." }, \
+                method: :delete, \
+                class: 'btn btn-outline-danger'
             .col.text-right
               = f.button :submit

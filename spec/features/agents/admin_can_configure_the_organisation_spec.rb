@@ -2,8 +2,8 @@ describe "Admin can configure the organisation" do
   let!(:organisation) { create(:organisation) }
   let!(:pmi) { create(:service, name: "PMI") }
   let!(:service_social) { create(:service, name: "Service social") }
-  let!(:agent_admin) { create(:agent, :admin, service: pmi, organisations: [organisation]) }
-  let!(:agent_user) { create(:agent, service: pmi, organisations: [organisation]) }
+  let!(:agent_admin) { create(:agent, :admin, first_name: "Jeanne", last_name: "Dupont", email: "jeanne.dupont@love.fr", service: pmi, organisations: [organisation]) }
+  let!(:agent_user) { create(:agent, first_name: "Tony", last_name: "Patrick", email: "tony@patrick.fr", service: pmi, organisations: [organisation]) }
   let!(:motif_libelle) { create(:motif_libelle, service: pmi, name: "Motif 1") }
   let!(:motif_libelle2) { create(:motif_libelle, service: pmi, name: "Motif 2") }
   let!(:motif_libelle3) { create(:motif_libelle, service: service_social, name: "Motif 3") }
@@ -53,19 +53,19 @@ describe "Admin can configure the organisation" do
     click_link "Vos agents"
     expect_page_title("Vos agents")
 
-    click_link agent_user.full_name
-    expect_page_title("Modifier le professionnel")
+    click_link "Tony PATRICK"
+    expect_page_title("Modifier le professionnel Tony PATRICK")
     choose :agent_permission_role_admin
     click_button("Modifier")
 
     expect_page_title("Vos agents")
     expect(page).to have_selector("span.badge.badge-danger", count: 2)
 
-    click_link agent_user.full_name
-    click_link("Supprimer")
+    click_link "Tony PATRICK"
+    click_link("Retirer de l'organisation")
 
     expect_page_title("Vos agents")
-    expect(page).to have_no_content(agent_user.full_name)
+    expect(page).to have_no_content("Tony PATRICK")
 
     click_link "Inviter un professionnel", match: :first
     fill_in "Email", with: "jean@paul.com"

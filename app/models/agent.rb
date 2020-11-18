@@ -1,3 +1,5 @@
+class SoftDeleteError < StandardError; end
+
 class Agent < ApplicationRecord
   has_paper_trail
   include DeviseInvitable::Inviter
@@ -55,10 +57,10 @@ class Agent < ApplicationRecord
     regex.match? email
   end
 
-  ## Soft Delete for Devise
-  def soft_delete(organisation = nil)
-    organisations.delete(organisation) && return if organisation.present? && organisations.count > 1
-    rdvs.empty? ? destroy : update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email)
+  def soft_delete
+    raise SoftDeleteError, "agent still has attached resources" if organisations.any? || plage_ouvertures.any? || absences.any?
+
+    update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email)
   end
 
   def deleted_email
