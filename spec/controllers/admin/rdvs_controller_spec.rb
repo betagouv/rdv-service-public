@@ -2,9 +2,10 @@ RSpec.describe Admin::RdvsController, type: :controller do
   render_views
 
   let!(:organisation) { create(:organisation) }
-  let(:agent) { create(:agent, organisations: [organisation]) }
+  let!(:service) { create(:service) }
+  let(:agent) { create(:agent, organisations: [organisation], service: service) }
   let!(:user) { create(:user, first_name: "Marie", last_name: "Denis") }
-  let!(:motif) { create(:motif, name: "Suivi", organisation: organisation) }
+  let!(:motif) { create(:motif, name: "Suivi", organisation: organisation, service: service) }
   let!(:rdv) { create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation) }
 
   before do
