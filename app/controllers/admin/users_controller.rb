@@ -59,6 +59,7 @@ class Admin::UsersController < AgentAuthController
 
   def show
     authorize(@user)
+    @rdvs = policy_scope(Rdv).merge(@user.rdvs)
     respond_modal_with @user if from_modal?
   end
 
