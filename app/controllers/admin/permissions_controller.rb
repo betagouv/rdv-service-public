@@ -1,17 +1,17 @@
 class Admin::PermissionsController < AgentAuthController
-  respond_to :html, :json
-
   def edit
     @permission = Agent::Permission.new(agent: Agent.find(params[:id]))
     authorize(@permission)
-    respond_right_bar_with @permission
   end
 
   def update
     @permission = Agent::Permission.new(agent: Agent.find(params[:id]))
     authorize(@permission)
-    flash[:notice] = "Agent mis à jour" if @permission.update(permission_params)
-    respond_right_bar_with @permission, location: admin_organisation_agents_path(current_organisation)
+    if @permission.update(permission_params)
+      redirect_to admin_organisation_agents_path(current_organisation), success: "Les permissions de l'agent ont été mises à jour"
+    else
+      render :edit
+    end
   end
 
   private

@@ -1,49 +1,34 @@
 describe Agent, type: :model do
   describe "#soft_delete" do
-    context "with many remaining organisations" do
-      before { agent.soft_delete deleted_org }
-      let(:agent) { create(:agent, :with_multiple_organisations) }
-      let(:deleted_org) { agent.organisations.first }
-      it { expect(agent.organisation_ids).not_to include(deleted_org.id) }
-      it { expect(agent.deleted_at).to be_nil }
-    end
+    context "with remaining organisations attached" do
+      let(:organisation) { create(:organisation) }
+      let(:agent) { create(:agent, organisations: [organisation]) }
 
-    context "with one remaining organisations" do
-      let!(:agent) { create(:agent) }
-      let(:deleted_org) { agent.organisations.first }
-
-      context "without rdv" do
-        it { expect { agent.soft_delete deleted_org }.to change(Agent, :count).by(-1) }
-      end
-
-      context "with rdv" do
-        let!(:rdv) { create(:rdv, agent_ids: [agent.id]) }
-        before { agent.soft_delete deleted_org }
-
-        it { expect(agent.deleted_at).not_to be_nil }
+      it "should raise" do
+        expect { agent.soft_delete }.to raise_error SoftDeleteError
       end
     end
 
-    context "with no organisation given" do
-      let!(:agent) { create(:agent, :with_multiple_organisations) }
-      let(:deleted_org) { nil }
+    context "without organisations" do
+      let!(:agent) { create(:agent, organisations: []) }
 
-      it { expect { agent.soft_delete deleted_org }.to change(Agent, :count).by(-1) }
+      it "should mark agent as soft deleted" do
+        agent.soft_delete
+        expect(agent.deleted_at).to be_present
+      end
     end
 
     it "keep old mail in an `email_original` attribute" do
-      organisation = create(:organisation)
-      agent = create(:agent, email: "karim@le64.fr", organisations: [organisation])
+      agent = create(:agent, email: "karim@le64.fr", organisations: [])
       create(:rdv, agents: [agent])
-      agent.soft_delete(organisation)
+      agent.soft_delete
       expect(agent.email_original).to eq("karim@le64.fr")
     end
 
     it "update mail with a deleted_mail (agent_\#{id}@deleted.rdv-solidarites.fr" do
-      organisation = create(:organisation)
-      agent = create(:agent, organisations: [organisation])
+      agent = create(:agent, organisations: [])
       create(:rdv, agents: [agent])
-      agent.soft_delete(organisation)
+      agent.soft_delete
       expect(agent.email).to eq("agent_#{agent.id}@deleted.rdv-solidarites.fr")
     end
   end

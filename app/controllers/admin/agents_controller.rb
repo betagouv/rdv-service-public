@@ -20,8 +20,15 @@ class Admin::AgentsController < AgentAuthController
   def destroy
     @agent = policy_scope(Agent).find(params[:id])
     authorize(@agent)
-    flash[:notice] = "L'utilisateur a été supprimé." if @agent.soft_delete current_organisation
-    respond_right_bar_with @agent, location: admin_organisation_agents_path(current_organisation)
+    removal_service = AgentRemoval.new(@agent, current_organisation)
+    if removal_service.upcoming_rdvs?
+      flash[:error] = "Impossible de retirer cet agent car il a des RDVs à venir dans cette organisation. Veuillez les supprimer ou les réaffecter avant de retirer cet agent."
+      redirect_to edit_admin_organisation_permission_path(current_organisation, @agent)
+    else
+      removal_service.remove!
+      flash[:notice] = "L'agent a été retiré de l'organisation"
+      redirect_to admin_organisation_agents_path(current_organisation)
+    end
   end
 
   def reinvite
