@@ -37,4 +37,3 @@ yarn-debug.log*
 .env
 .ruby-gemset
 lapins.kdbx
-.commit_template
