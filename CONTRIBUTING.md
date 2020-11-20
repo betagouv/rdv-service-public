@@ -62,11 +62,10 @@ Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité
 
 #### WebHook
 
-- tu copies l'url que te donne webhook.site ;
-- tu vas dans la super admin > webhook endpoints ;
-- tu en crées un avec cette URL et n'importe quel secret ;
-- tu déclenches des évènements en faisant des actions depuis l'interface _admin_ pour l'organisation associé ;
-- les events apparaissent sur ta page webhook.site que tu as bien laissé ouverte.
+- copier l'url que te donne webhook.site ;
+- créer un endpoints, dans la page super admin > webhook, avec cette URL et n'importe quel secret ;
+- déclencher des évènements en faisant des actions depuis l'interface _admin_ pour l'organisation associé ;
+- les events apparaissent sur ta page webhook.site laissé ouverte.
 
 ## D'autres façon de contribuer
 
