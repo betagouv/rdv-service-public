@@ -124,7 +124,8 @@ RSpec.describe Admin::RdvsController, type: :controller do
       it "returns a success response (i.e. to display the 'edit' template)" do
         new_attributes = { duration_in_min: nil }
         put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: new_attributes }
-        expect(response).to redirect_to(admin_organisation_rdv_path(organisation, rdv))
+        expect(response).to be_successful
+        expect(response).to render_template(:edit)
       end
 
       it "does not change rdv" do
