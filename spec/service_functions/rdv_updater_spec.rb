@@ -15,7 +15,7 @@ describe RdvUpdater, type: :service do
 
     it "return false when update fail" do
       rdv = create(:rdv, agents: [create(:agent)])
-      rdv_params = { agents: []}
+      rdv_params = { agents: [] }
       expect(RdvUpdater.update(rdv, rdv_params)).to eq(false)
     end
 
