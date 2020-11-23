@@ -33,14 +33,14 @@ class Admin::RdvsController < AgentAuthController
 
   def update
     authorize(@rdv)
-
+    success_message = RdvUpdater.update(@rdv, rdv_params)
     respond_to do |format|
       format.json do
         temporal_status_human = I18n.t("activerecord.attributes.rdv.statuses.#{@rdv.temporal_status}")
         render json: { rdv: @rdv.attributes.to_h.merge(temporal_status_human: temporal_status_human) }
       end
       format.html do
-        if (success_message = RdvUpdater.update(@rdv, rdv_params))
+        if success_message
           flash[:notice] = success_message
           redirect_to admin_organisation_rdv_path(current_organisation, @rdv)
         else
