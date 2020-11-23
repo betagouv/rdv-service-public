@@ -12,12 +12,8 @@ module RdvUpdater
 
       return false unless rdv.update(rdv_params)
 
-      if rdv_params[:status] == "excused"
-        Notifications::Rdv::RdvCancelledByAgentService.perform_with(rdv)
-        "Le rendez-vous a été annulé."
-      else
-        "Le rendez-vous a été modifié."
-      end
+      Notifications::Rdv::RdvCancelledByAgentService.perform_with(rdv) if rdv_params[:status] == "excused"
+      true
     end
 
     private

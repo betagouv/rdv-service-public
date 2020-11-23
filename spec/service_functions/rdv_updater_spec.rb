@@ -3,7 +3,7 @@ describe RdvUpdater, type: :service do
     it "true when everything is ok" do
       rdv = create(:rdv)
       rdv_params = {}
-      expect(RdvUpdater.update(rdv, rdv_params)).to eq("Le rendez-vous a été modifié.")
+      expect(RdvUpdater.update(rdv, rdv_params)).to eq(true)
     end
 
     it "call rdv.update with params" do
