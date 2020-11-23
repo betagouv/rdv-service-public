@@ -8,4 +8,16 @@ class Agent::PlageOuverturePolicy < DefaultAgentPolicy
       end
     end
   end
+
+  class DepartementScope < Scope
+    def resolve
+      if @context.agent.can_access_others_planning?
+        scope.where(organisation_id: @context.agent.organisations.pluck(:id))
+      else
+        scope.joins(:agent)
+          .where(organisation_id: @context.agent.organisations.pluck(:id))
+          .where(agents: { service_id: @context.agent.service_id })
+      end
+    end
+  end
 end

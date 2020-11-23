@@ -21,7 +21,7 @@ FactoryBot.define do
     end
 
     trait :weekly do
-      recurrence { Montrose.weekly.on(:monday).to_json }
+      recurrence { Montrose.weekly.on([:monday]).to_json }
     end
 
     trait :monthly do

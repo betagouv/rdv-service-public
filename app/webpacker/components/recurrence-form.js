@@ -51,6 +51,8 @@ class RecurrenceForm {
   }
 
   getRecurrenceComputed = () => {
+    if (this.recurrenceComputedTarget.value === "")
+      return null
     return JSON.parse(this.recurrenceComputedTarget.value);
   }
 

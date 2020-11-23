@@ -1,20 +1,47 @@
 - if plage_ouverture.available_motifs.any?
   = simple_form_for [:admin, plage_ouverture.organisation, plage_ouverture] do |f|
+
     = render partial: 'layouts/model_errors', locals: { model: plage_ouverture }
-    = f.hidden_field :agent_id
-    = f.input :title, hint: 'Uniquement visible en interne', placeholder: 'Ex: Permanence PMI exceptionnelle'
-    = f.association :lieu, collection: policy_scope(Lieu).ordered_by_name, label_method: :full_name, include_blank: false
-    = f.association :motifs, collection: plage_ouverture.available_motifs, label_method: -> { motif_name_with_location_type_and_badges(_1) }, as: :check_boxes
 
-    hr
+    - if plage_ouverture.warnings_need_confirmation?
+      ul.pl-3
+        = render "overlapping_plage_ouvertures", \
+          overlapping_plages_ouvertures: @overlapping_plages_ouvertures, \
+          overlapping_plages_ouvertures_out_of_scope_count: @overlapping_plages_ouvertures_out_of_scope_count
 
-    = render partial: 'common/recurrence', locals: { f: f, model: plage_ouverture }
+      .collapse.show.js-collapse-warning-confirmation
+        .text-muted Ces avertissements ne sont pas bloquants, vous pouvez les ignorer en confirmant
+        = f.input :active_warnings_confirm_decision, as: :hidden, input_html: {class: "js-warning-confirm-input", value: "1" }
+        .d-flex.justify-content-between
+          div
+            a.btn.btn-outline-dark[
+              data-toggle="collapse"
+              data-target=".js-collapse-warning-confirmation"
+              href="#"
+              onclick="document.querySelector('.js-warning-confirm-input').setAttribute('disabled', 'disabled');"
+            ] Annuler et modifier
+          div= f.submit "Confirmer", class: "btn btn-warning"
+        hr
 
-    .row
-      - if plage_ouverture.persisted?
+    .form-collapsable-fields-wrapper.collapse.js-collapse-warning-confirmation[
+      class=(plage_ouverture.warnings_need_confirmation? ? "" : "show")
+      aria-expanded=(plage_ouverture.warnings_need_confirmation? ? "false" : "true")
+    ]
+      = f.hidden_field :agent_id
+      = f.input :title, hint: 'Uniquement visible en interne', placeholder: 'Ex: Permanence PMI exceptionnelle'
+      = f.association :lieu, collection: policy_scope(Lieu).ordered_by_name, label_method: :full_name, include_blank: false
+      = f.association :motifs, collection: plage_ouverture.available_motifs, label_method: -> { motif_name_with_location_type_and_badges(_1) }, as: :check_boxes
+
+      hr
+
+      = render partial: 'common/recurrence', locals: { f: f, model: plage_ouverture }
+
+      .row
         .col.text-left
-          = link_to "Supprimer", admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"}
-      .col.text-right
-        = f.button :submit
+          = link_to "Annuler", \
+            plage_ouverture.persisted? ? admin_organisation_plage_ouverture_path(current_organisation, plage_ouverture) : admin_organisation_plage_ouvertures_path(current_organisation), \
+            class: "btn btn-link"
+        .col.text-right
+          = f.button :submit
 - else
   | Aucun motif disponible. Vous ne pouvez pas créer de plage d'ouverture.

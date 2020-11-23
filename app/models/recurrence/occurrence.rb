@@ -7,4 +7,8 @@ class Recurrence::Occurrence
   def <=>(other)
     starts_at <=> other.starts_at
   end
+
+  def to_date
+    starts_at.to_date
+  end
 end

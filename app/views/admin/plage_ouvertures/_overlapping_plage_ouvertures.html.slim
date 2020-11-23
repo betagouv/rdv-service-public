@@ -1,0 +1,15 @@
+- overlapping_plages_ouvertures.each do |overlapping_plage_ouverture|
+  li.mb-1
+    span>= link_to("Plage d'ouverture #{overlapping_plage_ouverture.id}", edit_admin_organisation_plage_ouverture_path(overlapping_plage_ouverture.organisation, overlapping_plage_ouverture))
+    span> à #{overlapping_plage_ouverture.lieu.name}
+    - if overlapping_plage_ouverture.recurring?
+      span>= display_recurrence(overlapping_plage_ouverture).join(" ")
+    - else
+      span>= l(overlapping_plage_ouverture.first_day, format: :human)
+      span>= display_time_range(overlapping_plage_ouverture)
+    - if overlapping_plage_ouverture.organisation != current_organisation
+      span>= "(Organisation #{overlapping_plage_ouverture.organisation.name})"
+
+- if overlapping_plages_ouvertures_out_of_scope_count == 1
+  li.mb-1
+    = t("plage_ouvertures.overlapping_out_of_scope", count: overlapping_plages_ouvertures_out_of_scope_count)

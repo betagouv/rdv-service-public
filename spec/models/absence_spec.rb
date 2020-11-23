@@ -12,7 +12,7 @@ describe Absence, type: :model do
       it do
         expect(subject.size).to eq 1
         expect(subject.first.starts_at).to eq absence.starts_at
-        expect(subject.first.ends_at).to eq absence.ends_at
+        expect(subject.first.ends_at).to eq absence.first_occurence_ends_at
       end
 
       context "if the abence has many occurrences in range" do
@@ -22,9 +22,9 @@ describe Absence, type: :model do
         it do
           expect(subject.size).to eq 2
           expect(subject.first.starts_at).to eq(absence.starts_at + 1.weeks) # first one ends in range
-          expect(subject.first.ends_at).to eq(absence.ends_at + 1.weeks) # first one ends in range
+          expect(subject.first.ends_at).to eq(absence.first_occurence_ends_at + 1.weeks) # first one ends in range
           expect(subject.second.starts_at).to eq(absence.starts_at + 2.weeks) # second one starts in range
-          expect(subject.second.ends_at).to eq(absence.ends_at + 2.weeks) # second one starts in range
+          expect(subject.second.ends_at).to eq(absence.first_occurence_ends_at + 2.weeks) # second one starts in range
         end
       end
     end

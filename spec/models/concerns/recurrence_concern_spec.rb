@@ -5,7 +5,7 @@ shared_examples_for "recurrence" do
   describe "#starts_at" do
     subject { model_instance.starts_at }
 
-    context "for a plage" do
+    context "exceptionnelle" do
       let(:model_instance) { create(model_symbol, first_day: Date.new(2019, 7, 22), start_time: Tod::TimeOfDay.new(9)) }
 
       it { is_expected.to eq(Time.zone.local(2019, 7, 22, 9)) }
@@ -15,10 +15,19 @@ shared_examples_for "recurrence" do
   describe "#ends_at" do
     subject { model_instance.ends_at }
 
-    context "for a plage" do
+    context "exceptionnelle" do
       let(:model_instance) { create(model_symbol, first_day: Date.new(2019, 7, 22), end_time: Tod::TimeOfDay.new(12)) }
-
       it { is_expected.to eq(Time.zone.local(2019, 7, 22, 12)) }
+    end
+
+    context "recurring without end date" do
+      let(:model_instance) { create(model_symbol, first_day: Date.new(2019, 7, 22), end_time: Tod::TimeOfDay.new(12), recurrence: Montrose.weekly.on(:tuesday).to_json) }
+      it { is_expected.to be_nil }
+    end
+
+    context "recurring with end date" do
+      let(:model_instance) { create(model_symbol, first_day: Date.new(2020, 11, 17), end_time: Tod::TimeOfDay.new(12), recurrence: Montrose.every(:week, on: [:tuesday], until: Date.new(2020, 11, 25)).to_json) }
+      it { is_expected.to eq(Time.zone.local(2020, 11, 25, 12)) }
     end
   end
 
@@ -33,7 +42,7 @@ shared_examples_for "recurrence" do
       it do
         expect(subject.size).to eq 1
         expect(subject.first.starts_at).to eq model_instance.starts_at
-        expect(subject.first.ends_at).to eq model_instance.ends_at
+        expect(subject.first.ends_at).to eq model_instance.first_occurence_ends_at
       end
 
       context "and the first_day is the last of the range" do
@@ -42,7 +51,7 @@ shared_examples_for "recurrence" do
         it do
           expect(subject.size).to eq 1
           expect(subject.first.starts_at).to eq model_instance.starts_at
-          expect(subject.first.ends_at).to eq model_instance.ends_at
+          expect(subject.first.ends_at).to eq model_instance.first_occurence_ends_at
         end
       end
     end
@@ -54,19 +63,19 @@ shared_examples_for "recurrence" do
       it do
         expect(subject.size).to eq 7
         expect(subject[0].starts_at).to eq(model_instance.starts_at)
-        expect(subject[0].ends_at).to eq(model_instance.ends_at)
+        expect(subject[0].ends_at).to eq(model_instance.first_occurence_ends_at)
         expect(subject[1].starts_at).to eq(model_instance.starts_at + 1.day)
-        expect(subject[1].ends_at).to eq(model_instance.ends_at + 1.day)
+        expect(subject[1].ends_at).to eq(model_instance.first_occurence_ends_at + 1.day)
         expect(subject[2].starts_at).to eq(model_instance.starts_at + 2.day)
-        expect(subject[2].ends_at).to eq(model_instance.ends_at + 2.day)
+        expect(subject[2].ends_at).to eq(model_instance.first_occurence_ends_at + 2.day)
         expect(subject[3].starts_at).to eq(model_instance.starts_at + 3.day)
-        expect(subject[3].ends_at).to eq(model_instance.ends_at + 3.day)
+        expect(subject[3].ends_at).to eq(model_instance.first_occurence_ends_at + 3.day)
         expect(subject[4].starts_at).to eq(model_instance.starts_at + 4.day)
-        expect(subject[4].ends_at).to eq(model_instance.ends_at + 4.day)
+        expect(subject[4].ends_at).to eq(model_instance.first_occurence_ends_at + 4.day)
         expect(subject[5].starts_at).to eq(model_instance.starts_at + 5.day)
-        expect(subject[5].ends_at).to eq(model_instance.ends_at + 5.day)
+        expect(subject[5].ends_at).to eq(model_instance.first_occurence_ends_at + 5.day)
         expect(subject[6].starts_at).to eq(model_instance.starts_at + 6.day)
-        expect(subject[6].ends_at).to eq(model_instance.ends_at + 6.day)
+        expect(subject[6].ends_at).to eq(model_instance.first_occurence_ends_at + 6.day)
       end
     end
 
@@ -77,11 +86,11 @@ shared_examples_for "recurrence" do
       it do
         expect(subject.size).to eq 3
         expect(subject[0].starts_at).to eq(model_instance.starts_at)
-        expect(subject[0].ends_at).to eq(model_instance.ends_at)
+        expect(subject[0].ends_at).to eq(model_instance.first_occurence_ends_at)
         expect(subject[1].starts_at).to eq(model_instance.starts_at + 1.week)
-        expect(subject[1].ends_at).to eq(model_instance.ends_at + 1.week)
+        expect(subject[1].ends_at).to eq(model_instance.first_occurence_ends_at + 1.week)
         expect(subject[2].starts_at).to eq(model_instance.starts_at + 2.weeks)
-        expect(subject[2].ends_at).to eq(model_instance.ends_at + 2.weeks)
+        expect(subject[2].ends_at).to eq(model_instance.first_occurence_ends_at + 2.weeks)
       end
     end
 
@@ -92,9 +101,9 @@ shared_examples_for "recurrence" do
       it do
         expect(subject.size).to eq 2
         expect(subject[0].starts_at).to eq(model_instance.starts_at)
-        expect(subject[0].ends_at).to eq(model_instance.ends_at)
+        expect(subject[0].ends_at).to eq(model_instance.first_occurence_ends_at)
         expect(subject[1].starts_at).to eq(model_instance.starts_at + 2.weeks)
-        expect(subject[1].ends_at).to eq(model_instance.ends_at + 2.weeks)
+        expect(subject[1].ends_at).to eq(model_instance.first_occurence_ends_at + 2.weeks)
       end
     end
 

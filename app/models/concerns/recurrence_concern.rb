@@ -23,43 +23,67 @@ module RecurrenceConcern
   end
 
   def ends_at
-    return nil if end_time.blank? || (first_day.blank? && (!defined(end_day) || end_day.blank?))
-
-    if defined?(end_day) && end_day.present?
+    if end_time.blank?
+      nil
+    elsif recurring?
+      recurrence_until.present? ? end_time.on(recurrence_until.to_date) : nil
+    elsif defined?(end_day) && end_day.present?
       end_time.on(end_day)
     else
-      end_time&.on(first_day)
+      first_day.present? ? end_time.on(first_day) : nil
+    end
+  end
+
+  def first_occurence_ends_at
+    if end_time.blank?
+      nil
+    elsif defined?(end_day) && end_day.present?
+      end_time.on(end_day)
+    else
+      first_day.present? ? end_time.on(first_day) : nil
     end
   end
 
   def duration
-    (ends_at - starts_at).to_i
+    (first_occurence_ends_at - starts_at).to_i
   end
 
   def exceptionnelle?
     recurrence.nil?
   end
 
-  def occurences_for(inclusive_date_range)
-    recurrence_until = recurrence&.to_hash&.[](:until)
-    min_until = [inclusive_date_range.end, recurrence_until].compact.min.to_time.end_of_day
-
-    inclusive_datetime_range = (inclusive_date_range.begin.to_time)..(inclusive_date_range.end.end_of_day)
-    results = if recurrence.present?
-                recurrence.starting(starts_at).until(min_until).lazy.select { |occurrence_starts_at| event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range) }.to_a
-              else
-                [starts_at].select { |_t| event_in_range?(starts_at, ends_at, inclusive_datetime_range) }
-              end
-    results.map { |o| Recurrence::Occurrence.new(starts_at: o, ends_at: o + duration) }
+  def recurring?
+    recurrence.present?
   end
 
-  def occurences_ranges_for(inclusive_date_range)
-    occurences_for(inclusive_date_range).map do |occurence|
-      occurence.starts_at..(occurence.ends_at)
-    end
+  def occurences_for(inclusive_date_range)
+    return [] if inclusive_date_range.nil?
+
+    occurence_start_at_list_for(inclusive_date_range)
+      .map { |o| Recurrence::Occurrence.new(starts_at: o, ends_at: o + duration) }
+  end
+
+  def recurrence_opts
+    { interval: 1 }.merge(recurrence.default_options.to_h)
+  end
+
+  def recurrence_until
+    recurrence&.to_hash&.[](:until)
   end
 
   private
+
+  def occurence_start_at_list_for(inclusive_date_range)
+    min_until = [inclusive_date_range.end, recurrence_until].compact.min.to_time.end_of_day
+    inclusive_datetime_range = (inclusive_date_range.begin.to_time)..(inclusive_date_range.end.end_of_day)
+    if recurring?
+      recurrence.starting(starts_at).until(min_until).lazy.select do |occurrence_starts_at|
+        event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
+      end.to_a
+    else
+      event_in_range?(starts_at, first_occurence_ends_at, inclusive_datetime_range) ? [starts_at] : []
+    end
+  end
 
   def event_in_range?(event_starts_at, event_ends_at, range)
     range.cover?(event_starts_at) || range.cover?(event_ends_at) || (event_starts_at < range.begin && range.end < event_ends_at)
