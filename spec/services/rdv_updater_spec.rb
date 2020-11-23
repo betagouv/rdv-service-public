@@ -34,7 +34,7 @@ describe RdvUpdater, type: :service do
       rdv = create(:rdv, updated_at: previous_date, context: "")
       rdv_params = { context: "un nouveau context" }
       RdvUpdater.update(rdv, rdv_params)
-      expect(rdv.reload.updated_at).to eq(now)
+      expect(rdv.reload.updated_at).to be_within(3.second).of now
       travel_back
     end
 
@@ -51,7 +51,7 @@ describe RdvUpdater, type: :service do
       rdv = create(:rdv, status: "excused", cancelled_at: cancelled_at, context: "")
       rdv_params = { context: "something new" }
       RdvUpdater.update(rdv, rdv_params)
-      expect(rdv.reload.cancelled_at).to eq(cancelled_at)
+      expect(rdv.reload.cancelled_at).to be_within(3.second).of cancelled_at
     end
 
     it "where status change from excused to notexcused, cancelled_at should be refresh" do
@@ -59,7 +59,7 @@ describe RdvUpdater, type: :service do
       travel_to(now)
       rdv = create(:rdv, status: "excused", cancelled_at: Time.zone.parse("12/1/2020 12:56"))
       RdvUpdater.update(rdv, { status: "notexcused" })
-      expect(rdv.reload.cancelled_at).to eq(now)
+      expect(rdv.reload.cancelled_at).to be_within(3.second).of now
     end
   end
 end
