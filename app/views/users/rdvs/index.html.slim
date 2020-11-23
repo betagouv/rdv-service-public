@@ -1,32 +1,31 @@
-- content_for :title
-  | Vos rendez-vous
+.row.mt-3.justify-content-center
+  .col-md-6
+    h1.text-dark.mb-3 Vos rendez-vous
+    div.mb-3
+      .float-right= link_to 'Prendre un RDV', root_path, class: "btn btn-primary"
+      - if params[:past].present?
+        = link_to 'Voir vos prochains RDV', users_rdvs_path, class: 'btn btn-outline-primary'
+      - else
+        = link_to 'Voir vos RDV passés', users_rdvs_path(past: true), class: 'btn btn-outline-primary'
 
-- content_for :breadcrumb do
-  => add_button 'Prendre un RDV', root_path
-  - if params[:past].present?
-    = link_to 'Voir vos prochains RDV', users_rdvs_path, class: 'btn btn-outline-primary'
-  - else
-    = link_to 'Voir vos RDV passés', users_rdvs_path(past: true), class: 'btn btn-outline-primary'
+    - if @rdvs.any?
+          - @rdvs.each do |rdv|
+            .card
+              .card-body
+                = render 'rdv', rdv: rdv
+          .d-flex.justify-content-center= paginate @rdvs, theme: 'twitter-bootstrap-4'
+          .text-center= link_to 'Prendre un autre RDV', root_path, class: "btn btn-primary"
+    - else
+      .card
+        .card-body
+          .text-center.my-5
+            p.mb-2.lead= no_rdv_for_users
+            span.fa-stack.fa-4x
+              i.fa.fa-circle.fa-stack-2x.text-primary
+              i.far.fa-calendar.fa-stack-1x.text-white
+            .text-center.mt-2
+              = link_to 'Prendre un RDV', root_path, class: "btn btn-primary"
 
-- if @rdvs.any?
-  .row.justify-content-md-center
-    .col-md-6
-      = render partial: 'rdv', collection: @rdvs
-  .d-flex.justify-content-center= paginate @rdvs, theme: 'twitter-bootstrap-4'
-  .text-center
-    = add_button 'Prendre un RDV', root_path
-- else
-  .card
-    .card-body
-      .row.justify-content-md-center
-        .col-md-6.text-center.my-5
-          p.mb-2.lead= no_rdv_for_users
-          span.fa-stack.fa-4x
-            i.fa.fa-circle.fa-stack-2x.text-primary
-            i.far.fa-calendar.fa-stack-1x.text-white
-          .text-center.mt-2
-            = add_button 'Prendre un RDV', root_path
-
-.text-center.my-5
-  = link_to "https://voxusagers.numerique.gouv.fr/Demarches/2484?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=b4053638f7a51e868dea83f4361ebc23" do
-    img src="https://voxusagers.numerique.gouv.fr/static/bouton-blanc.svg" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche"
+    .text-center.my-5
+      = link_to "https://voxusagers.numerique.gouv.fr/Demarches/2484?&view-mode=formulaire-avis&nd_mode=en-ligne-enti%C3%A8rement&nd_source=button&key=b4053638f7a51e868dea83f4361ebc23" do
+        img src="https://voxusagers.numerique.gouv.fr/static/bouton-blanc.svg" alt="Je donne mon avis" title="Je donne mon avis sur cette démarche"

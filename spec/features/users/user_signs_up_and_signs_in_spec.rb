@@ -21,8 +21,7 @@ feature "User signs up and signs in" do
         fill_in :password, with: user.password
         click_on "Enregistrer"
         expect_flash_info(I18n.t("devise.passwords.updated")) # auto-connected
-        click_link user.first_name
-        click_link "Se déconnecter"
+        click_link "Déconnexion"
         expect(current_path).to eq(root_path)
       end
     end
@@ -46,8 +45,7 @@ feature "User signs up and signs in" do
         click_on "Enregistrer"
         expect(current_path).to eq(root_path)
         expect_flash_info(I18n.t("devise.invitations.updated"))
-        click_link invited_user.first_name
-        click_link "Se déconnecter"
+        click_link "Déconnexion"
         expect(current_path).to eq(root_path)
       end
     end

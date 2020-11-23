@@ -1,46 +1,44 @@
-.card.mb-3
-  .card-body
-    ul.list-group.list-group-flush
+ul.list-group.list-group-flush
+  li.list-group-item
+    .fa.fa-calendar>
+    = rdv_title(rdv)
+    = rdv_tag(rdv)
+
+  - if rdv.home?
       li.list-group-item
-        .fa.fa-calendar>
-        = rdv_title(rdv)
-        = rdv_tag(rdv)
+      .fa.fa-home>
+      | Ce RDV se déroulera à domicile
 
-      - if rdv.home?
-         li.list-group-item
-          .fa.fa-home>
-          | Ce RDV se déroulera à domicile
+  - elsif rdv.public_office?
+    li.list-group-item
+      .fa.fa-map-marker-alt>
+      = human_location(rdv)
 
-      - elsif rdv.public_office?
-        li.list-group-item
-          .fa.fa-map-marker-alt>
-          = human_location(rdv)
+  - elsif rdv.phone?
+    li.list-group-item
+      .fa.fa-phone>
+      | RDV Téléphonique
 
-      - elsif rdv.phone?
-        li.list-group-item
-          .fa.fa-phone>
-          | RDV Téléphonique
-
-      li.list-group-item
-        .fa.fa-user>
-        = users_to_sentence(rdv.users)
-      li.list-group-item
-        i.fa.fa-info-circle>
-        = rdv.motif.name
-      - if rdv.motif.instruction_for_rdv.present?
-        li.list-group-item
-          i.fa.fa-exclamation-triangle>
-          strong Informations supplémentaires :
-          = simple_format(rdv.motif.instruction_for_rdv, class:"pl-3 pt-1")
-      - unless defined?(hide_file_attente_infos) && hide_file_attente_infos
-        = render "/users/rdvs/file_attente", rdv: rdv
-    - unless defined?(hide_cancellation_infos) && hide_cancellation_infos
-      - if rdv.cancellable?
-        .text-right.mt-2
-          = link_to 'Annuler le RDV', "#", data: { toggle: "modal", target: "#js-cancel-rdv-modal-#{rdv.id}" }, class: 'btn btn-outline-danger'
-      - elsif !rdv.past? && !rdv.cancelled?
-        p.font-italic
-          | Ce rendez-vous commence dans moins de 4 heures, il n'est plus annulable en ligne. Prenez contact avec le secrétariat.
+  li.list-group-item
+    .fa.fa-user>
+    = users_to_sentence(rdv.users)
+  li.list-group-item
+    i.fa.fa-info-circle>
+    = rdv.motif.name
+  - if rdv.motif.instruction_for_rdv.present?
+    li.list-group-item
+      i.fa.fa-exclamation-triangle>
+      strong Informations supplémentaires :
+      = simple_format(rdv.motif.instruction_for_rdv, class:"pl-3 pt-1")
+  - unless defined?(hide_file_attente_infos) && hide_file_attente_infos
+    = render "/users/rdvs/file_attente", rdv: rdv
+- unless defined?(hide_cancellation_infos) && hide_cancellation_infos
+  - if rdv.cancellable?
+    .text-right.mt-2
+      = link_to 'Annuler le RDV', "#", data: { toggle: "modal", target: "#js-cancel-rdv-modal-#{rdv.id}" }, class: 'btn btn-outline-danger'
+  - elsif !rdv.past? && !rdv.cancelled?
+    p.font-italic
+      | Ce rendez-vous commence dans moins de 4 heures, il n'est plus annulable en ligne. Prenez contact avec le secrétariat.
 
 = render( \
   "common/modal_confirmation", \
