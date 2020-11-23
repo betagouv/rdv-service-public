@@ -67,7 +67,11 @@ module AgentsHelper
           { 'data-url': send(path_helper_name, current_organisation, agent.id) }
         ]
       end,
-      selected: (@agent || current_agent).id
+      selected: agent_for_left_menu.id
     )
+  end
+
+  def agent_for_left_menu
+    @agent&.persisted? ? @agent : current_agent
   end
 end
