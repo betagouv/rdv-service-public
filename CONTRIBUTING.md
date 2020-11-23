@@ -4,14 +4,14 @@
 
 Si vous rencontrez un problème avec l'application vous pouvez nous contacter à [contact@rdv-solidarites.fr](mailto:contact@rdv-solidarites.fr) 
 
-## Soumettre une mofification
+## Soumettre une modification
 
 Voici la marche à suivre pour nous soumettre une modification de code
-- Clone le projet dans votre environement
+- Clone le projet dans votre environnement
 - Créer une branche 
 - Apporter les modifications que vous souhaitez en respectant [le guide de programmation](#Guide-de-programmation) 
 - Pousser votre code sur github
-- Créer une Pull Request 
+- Créer une Pull Request
 
 ## Guide de programmation
 
@@ -19,7 +19,7 @@ Utilisation des conventions de Ruby on Rails [Rails best practice](https://rail
 
 ### Vues
 
-- Préférer le passage explicites de variables locales à l'utilisation de variables d'instances venant des controlleurs dans les partials pour permettre plus de généricité
+- Préférer le passage explicites de variables locales à l'utilisation de variables d'instances venant des contrôleurs dans les partials pour permettre plus de généricité
 
 ### Tests
 
@@ -59,6 +59,13 @@ Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité
 - Faire tourner tous les linters : `bin/rake ci`
 - Demander à Rubocop de corriger les problèmes qu'il rencontre : `bin/rubocop -a`
 - Demander à Brakeman de passer en revue les vulnérabilités : `bin/brakeman -I`
+
+#### WebHook
+
+- copier l'url que te donne webhook.site ;
+- créer un endpoints, dans la page super admin > webhook, avec cette URL et n'importe quel secret ;
+- déclencher des évènements en faisant des actions depuis l'interface _admin_ pour l'organisation associé ;
+- les events apparaissent sur ta page webhook.site laissé ouverte.
 
 ## D'autres façon de contribuer
 
