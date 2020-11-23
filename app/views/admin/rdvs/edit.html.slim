@@ -24,5 +24,5 @@
           = f.association :agents, collection: @rdv.organisation.agents.can_perform_motif(@rdv.motif), label_method: :full_name_and_service, input_html: { multiple: true, class: 'select2-input' }
           = f.association :users, collection: policy_scope(User).order_by_last_name, label_method: lambda { |user| full_name_and_birthdate(user) }, input_html: { multiple: true, class: 'select2-input' }
           .text-right
-            = link_to "Retour", :back, class: "btn btn-link"
+            = link_to "Retour", admin_organisation_rdv_path(current_organisation, @rdv), class: "btn btn-link"
             = f.button :submit, "Enregistrer"
