@@ -7,7 +7,7 @@ FactoryBot.define do
     lieu { create(:lieu, organisation: organisation) }
 
     title { generate(:plage_title) }
-    first_day { Date.today.next_week(:monday) }
+    sequence(:first_day) { |n| Date.today.next_week(:monday) + n.days }
     start_time { Tod::TimeOfDay.new(8) }
     end_time { Tod::TimeOfDay.new(12) }
     no_recurrence
