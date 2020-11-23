@@ -19,6 +19,8 @@ module RdvUpdater
     end
   end
 
+  private
+
   def self.cancel_status?(status)
     %w[excused notexcused].include?(status)
   end
