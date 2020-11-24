@@ -1,6 +1,8 @@
 class Users::CreneauSearch
   include Users::CreneauxSearchConcern
 
+  attr_reader :motif
+
   def initialize(user:, motif:, lieu:, starts_at:, geo_search: nil)
     @user = user
     @motif = motif
@@ -22,14 +24,6 @@ class Users::CreneauSearch
   end
 
   protected
-
-  def motifs
-    [@motif]
-  end
-
-  def motif_location_type
-    @motif.location_type
-  end
 
   def date_range
     (@starts_at.to_date..(@starts_at + 1.day).to_date)

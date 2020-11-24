@@ -45,7 +45,7 @@ class LieuxController < ApplicationController
   def redirect_if_user_offline_and_motif_follow_up
     return if !follow_up_motif? || current_user.present?
 
-    redirect_to new_user_session_path, flash: { notice: I18n.t("motifs.follow_up_need_signed_user", motif_name: @motif_name) }
+    redirect_to new_user_session_path, flash: { notice: I18n.t("motifs.follow_up_need_signed_user", motif_name: @matching_motifs.first.name) }
   end
 
   def redirect_if_no_matching_motifs
@@ -61,7 +61,7 @@ class LieuxController < ApplicationController
   def creneaux_search_for(lieu, date_range)
     Users::CreneauxSearch.new(
       user: current_user,
-      motifs: @matching_motifs,
+      motif: @matching_motifs.where(organisation: lieu.organisation).first, # there can be only one
       lieu: lieu,
       date_range: date_range,
       geo_search: @geo_search
@@ -86,8 +86,8 @@ class LieuxController < ApplicationController
         .merge(@street_ban_id.present? ? { street_ban_id: @street_ban_id } : {})
     )
     searchable_motifs = @geo_search.available_motifs.where(service: @service)
-    @motif_names = searchable_motifs.pluck(:name).uniq
-    @matching_motifs = searchable_motifs.where(name: @motif_name)
+    @unique_motifs_by_name_and_location_type = @geo_search.available_motifs.uniq { [_1.name, _1.location_type] }
+    @matching_motifs = searchable_motifs.search_by_name_with_location_type(@motif_name)
     @latitude = search_params[:latitude]
     @longitude = search_params[:longitude]
   end

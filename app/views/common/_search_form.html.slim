@@ -11,7 +11,7 @@
           = f.input :where, label: false, readonly: true, input_html: { value: @where, class: "form-control-lg" }, wrapper_html: { class: 'mb-1 mb-lg-0' }, hint: sectorisation_hint(@geo_search)&.html_safe
         .col-lg-3= link_to "Modifier l'adresse", root_path, class: 'btn btn-light btn-lg w-100 text-center'
 
-      - if @service.present? && @motif_names.any?
+      - if @service.present? && @geo_search.available_motifs.any?
         .form-row.d-flex.justify-content-md-center.mb-2
           .col-lg-9
             = f.input :service, as: :hidden, input_html: { value: @service.id }, wrapper_html: { class: 'd-none' }
@@ -23,7 +23,9 @@
           .col-lg-9
             = f.input :motif_name, \
               label: @motif_name.present? ? false : "Votre motif", \
-              collection: @motif_names, \
+              collection: @unique_motifs_by_name_and_location_type, \
+              value_method: :name_with_location_type,
+              label_method: -> { motif_name_with_special_location_type(_1) },
               selected: @motif_name, \
               required: true, \
               include_blank: "Choisissez un motif", \
