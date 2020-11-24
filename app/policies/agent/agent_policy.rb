@@ -1,4 +1,8 @@
 class Agent::AgentPolicy < Agent::AdminPolicy
+  def new?
+    admin_and_same_org?
+  end
+
   def invite?
     create?
   end
