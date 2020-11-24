@@ -15,6 +15,9 @@
             tr
               th
               th= t("activerecord.attributes.motif.name")
+              th= t("activerecord.attributes.motif.reservable_online")
+              - if @display_sectorisation_level
+                th= t("activerecord.attributes.motif.sectorisation_level")
               th= t("activerecord.attributes.motif.service")
               th= t("activerecord.attributes.motif.location_type")
               th= t("activerecord.attributes.motif.default_duration")

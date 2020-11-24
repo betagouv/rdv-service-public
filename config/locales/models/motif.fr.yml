@@ -8,12 +8,17 @@ fr:
         service: Service
         name: Nom
         color: Couleur
-        reservable_online: RDV en ligne
+        reservable_online: Réservable
         visibility_type: Visibilité usager
         visibility_types:
           visible_and_notified: Visible et notifié
           visible_and_not_notified: Visible et non notifié
           invisible: Invisible
+        sectorisation_level: Sectorisation
+        sectorisation_levels:
+          agent: Sectorisation à l'agent
+          organisation: Sectorisation à l'organisation
+          departement: Sectorisation au département
         location_type: Type de RDV
         location_types:
           home: À domicile

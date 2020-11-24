@@ -12,12 +12,12 @@ module MotifsHelper
   end
 
   def motif_badges(motif)
-    badges = [:reservable_online, :secretariat, :follow_up]
+    badges = [:secretariat, :follow_up]
     badges.select { motif.send("#{_1}?") }.map { build_badge_tag_for(_1) }.join("").html_safe
   end
 
-  def build_badge_tag_for(motif)
-    content_tag(:span, I18n.t("motifs.badges.#{motif}"), class: "badge badge-motif-#{motif}")
+  def build_badge_tag_for(badge_name)
+    content_tag(:span, I18n.t("motifs.badges.#{badge_name}"), class: "badge badge-motif-#{badge_name}")
   end
 
   def min_max_delay_options

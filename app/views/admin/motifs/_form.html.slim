@@ -50,6 +50,38 @@
       .form-row
         .col-md-4= f.input :min_booking_delay, collection: min_max_delay_options
         .col-md-4= f.input :max_booking_delay, collection: min_max_delay_options
+
+  .card
+    .card-body
+      h5.mb-2 Sectorisation géographique
+      .text-muted.mb-3
+        span> Seules les recherches des usagers sont concernées par ces règles de sectorisation. Elles n'ont donc pas d'effet si le motif n'est pas réservable en ligne.
+        = link_to "https://doc.rdv-solidarites.fr/sectorisation-geographique" do
+          span> Documentation sur la sectorisation
+          i.fa.fa-external-link-alt>
+      .mb-2= label_tag do
+        = f.radio_button(:sectorisation_level, Motif::SECTORISATION_LEVEL_DEPARTEMENT)
+        span.ml-1= "Réservable par les usagers dans l'ensemble du #{current_organisation.departement}"
+      = label_tag do
+        = f.radio_button(:sectorisation_level, Motif::SECTORISATION_LEVEL_ORGANISATION)
+        span.ml-1= "Réservable par les usagers uniquement dans les secteurs attribués à l'organisation #{current_organisation.name}"
+        .text-muted.font-14.my-1.ml-3
+          - sectors_attributed_to_orga = Sector.attributed_to_organisation(current_organisation)
+          = t("motifs.form.sectorisation_level.sectors_attributed_to_orga", count: sectors_attributed_to_orga.count, sectors: sectors_attributed_to_orga.map(&:name).to_sentence.truncate(100), organisation: current_organisation.name)
+      = label_tag do
+        = f.radio_button(:sectorisation_level, Motif::SECTORISATION_LEVEL_AGENT)
+        span.ml-1 Réservable par les usagers uniquement dans les secteurs attribués à des agents spécifiques
+        - if motif.service.present?
+          - attributions_group = SectorAttribution.level_agent_grouped_by_service(current_organisation).fetch(motif.service_id, {agents_count: 0, attributions: []})
+          .text-muted.font-14.my-1.ml-3
+            = t( \
+              "motifs.form.sectorisation_level.sectors_attributed_to_agents", \
+              count: attributions_group[:agents_count], \
+              service: motif.service.name, \
+              sectors_count_human: t("motifs.index.sectorisation_level_organisation", count: attributions_group[:sectors_count]), \
+              sectors: attributions_group[:attributions].map { "#{_1.agent.full_name} -> #{_1.sector.name}" }.to_sentence.truncate(100) \
+            )
+
   .card
     .card-body
       h5 Visibilité usager

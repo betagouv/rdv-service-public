@@ -17,7 +17,7 @@
       = truncate(@sector.name, length: 20)
 
 .row.justify-content-center
-  .col-md-7
+  .col-md-6
     .card
       .card-body.d-flex.justify-content-between
         ul.list-unstyled
@@ -83,39 +83,56 @@
               data: { confirm: "Êtes-vous sûr de vouloir retirer ces #{@zones.total_count} communes et rues ?" }, \
               class: 'btn btn-danger' \
             )
-  .col-md-5
+  .col-md-6
     .card
       .card-header
         .card-title
           h5 Organisations & Agents attribués
       .card-body
-        - if @sector.attributions.any?
-          ul.mb-3.pl-2
-            - @sector.attributions.to_a.group_by(&:organisation).each do |organisation, attributions|
-              - if attributions.count == 1 && attributions.first.level_organisation?
-                li
-                  .d-flex.justify-content-between.mb-2
-                    div= "Organisation entière #{organisation.name}"
-                    div.ml-2>= link_to "Retirer", admin_departement_sector_attribution_path(current_departement, @sector, attributions.first), method: :delete
-              - elsif attributions.all?(&:level_agent?)
-                li.mb-2
-                  div.mb-1= "Agents dans l'organisation #{organisation.name} :"
-                  ul.pl-2
-                    - attributions.each do |attribution|
-                      li
-                        .d-flex.justify-content-between.mb-1
-                          div= attribution.agent.full_name_and_service
-                          div.ml-2>= link_to "Retirer", admin_departement_sector_attribution_path(current_departement, @sector, attribution), method: :delete
-                    li.mb-3= link_to \
-                      "Attribuer un autre agent de #{organisation.name.truncate(10)}", \
-                      new_admin_departement_sector_attribution_path( \
-                        current_departement, \
-                        @sector, \
-                        level: "agent", \
-                        organisation_id: organisation.id \
-                    )
+        - @sector.attributions.level_organisation.each do |attribution|
+          div.mb-3
+            div.mb-1
+              span>= "Organisation entière #{attribution.organisation.name}"
+              span.ml-2>= link_to "Retirer", admin_departement_sector_attribution_path(current_departement, @sector, attribution), method: :delete
+            .pl-2.py-1.border-left
+              - orga_motifs = Motif.sectorisation_level_organisation.where(organisation: attribution.organisation)
+              .text-muted
+                = t( \
+                  "sectors.motifs_with_organisation_level_sectorisation", \
+                  count: orga_motifs.count, \
+                  organisation: attribution.organisation.name, \
+                  motifs: orga_motifs.map(&:name).to_sentence.truncate(100) \
+                )
 
-        - else
+        - @sector.attributions.level_agent.to_a.group_by(&:organisation).each do |organisation, all_attributions|
+          div.mb-1= "Organisation #{organisation.name} :"
+          .pl-2.py-1.border-left
+            - all_attributions.group_by { _1.agent.service }.each do |service, attributions|
+              span> Service #{service.short_name}
+              span.text-muted.ml-1
+                - service_motifs = Motif.sectorisation_level_agent.where(organisation: organisation, service: service)
+                = t( \
+                  "sectors.motifs_with_agent_level_sectorisation_in_service", \
+                  count: service_motifs.count, \
+                  service: service.short_name, \
+                  motifs: service_motifs.map(&:name).to_sentence.truncate(100) \
+                )
+              ul.pl-3.mb-3
+                - attributions.each do |attribution|
+                  li.mb-1
+                    span>= attribution.agent.full_name
+                    span.ml-2>= link_to "Retirer", admin_departement_sector_attribution_path(current_departement, @sector, attribution), method: :delete
+
+            .mb-3= link_to \
+              "Attribuer un autre agent de #{organisation.name.truncate(20)}", \
+              new_admin_departement_sector_attribution_path( \
+                current_departement, \
+                @sector, \
+                level: "agent", \
+                organisation_id: organisation.id \
+            )
+
+        - if @sector.attributions.empty?
           .alert.alert-warning.d-flex.align-items-center
             div.mr-2.h4 ⚠️
             div

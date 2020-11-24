@@ -59,10 +59,8 @@
 
           - else
             h3.text-white
-              - if @organisations_departement.any? && departement_sectorisation_enabled?(@departement)
+              - if @organisations_departement.any?
                 span Votre adresse n'est pas disponible à la prise de RDV en ligne
-              - elsif @organisations_departement.any?
-                span> Vous ne pouvez pas prendre de rendez-vous en ligne dans votre département
               - else
                 | La prise de rendez-vous n'est pas disponible pour ce département.
               = render "common/contact", geo_search: @geo_search

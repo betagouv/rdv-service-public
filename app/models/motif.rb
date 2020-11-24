@@ -10,9 +10,15 @@ class Motif < ApplicationRecord
   INVISIBLE = "invisible".freeze
   VISIBILITY_TYPES = [VISIBLE_AND_NOTIFIED, VISIBLE_AND_NOT_NOTIFIED, INVISIBLE].freeze
 
+  SECTORISATION_LEVEL_AGENT = "agent".freeze
+  SECTORISATION_LEVEL_ORGANISATION = "organisation".freeze
+  SECTORISATION_LEVEL_DEPARTEMENT = "departement".freeze
+  SECTORISATION_TYPES = [SECTORISATION_LEVEL_AGENT, SECTORISATION_LEVEL_ORGANISATION, SECTORISATION_LEVEL_DEPARTEMENT].freeze
+
   enum location_type: [:public_office, :phone, :home]
 
   validates :visibility_type, inclusion: { in: VISIBILITY_TYPES }
+  validates :sectorisation_level, inclusion: { in: SECTORISATION_TYPES }
   validates :name, presence: true, uniqueness: { scope: [:organisation, :location_type, :service], conditions: -> { where(deleted_at: nil) }, message: "est déjà utilisé pour un motif avec le même type de RDV" }
 
   delegate :service_social?, to: :service
@@ -45,6 +51,9 @@ class Motif < ApplicationRecord
     end.compact.first
     where(name: name, location_type: location_type)
   }
+  scope :sectorisation_level_departement, -> { where(sectorisation_level: SECTORISATION_LEVEL_DEPARTEMENT) }
+  scope :sectorisation_level_organisation, -> { where(sectorisation_level: SECTORISATION_LEVEL_ORGANISATION) }
+  scope :sectorisation_level_agent, -> { where(sectorisation_level: SECTORISATION_LEVEL_AGENT) }
 
   def soft_delete
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
@@ -78,6 +87,18 @@ class Motif < ApplicationRecord
 
   def name_with_location_type
     "#{name}-#{location_type}"
+  end
+
+  def sectorisation_level_agent?
+    sectorisation_level == SECTORISATION_LEVEL_AGENT
+  end
+
+  def sectorisation_level_organisation?
+    sectorisation_level == SECTORISATION_LEVEL_ORGANISATION
+  end
+
+  def sectorisation_level_departement?
+    sectorisation_level == SECTORISATION_LEVEL_DEPARTEMENT
   end
 
   private

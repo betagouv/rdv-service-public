@@ -31,7 +31,7 @@ module Users::CreneauxSearchConcern
   end
 
   def geo_attributed_agents
-    return if @geo_search.nil?
+    return if @geo_search.nil? || !motif.sectorisation_level_agent?
 
     @geo_search.attributed_agents_by_organisation[@lieu.organisation]
   end

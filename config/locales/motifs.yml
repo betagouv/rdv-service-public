@@ -6,4 +6,26 @@ fr:
       home: "À domicile"
       secretariat: "Secrétariat"
       follow_up: "Suivi"
+      sectorisation_level_agent: "Sectorisé à l'agent"
+      sectorisation_level_organisation: "Sectorisé à l'organisation"
+      sectorisation_level_departement: "Sectorisé au département"
     follow_up_need_signed_user: "Le RDV '%{motif_name}' est disponible uniquement pour les personnes déjà suivies. Veuillez vous connecter pour prendre ce type de RDV."
+    form:
+      sectorisation_level:
+        sectors_attributed_to_orga:
+          zero: "⚠️ Aucun secteur n'est attribué à l'organisation %{organisation}, ce motif n'apparaîtra donc dans aucune recherche usager"
+          one: "Un seul secteur est attribué à l'organisation %{organisation} : %{sectors}"
+          other: "%{count} secteurs sont attribués à l'organisation %{organisation} : %{sectors}"
+        sectors_attributed_to_agents:
+          zero: "⚠️ Aucun secteur n'est attribué à des agents du service %{service}, ce motif n'apparaîtra donc dans aucune recherche usager"
+          one: "Un seul agent du service %{service} est attribué à %{sectors_count_human} : %{sectors}"
+          other: "%{count} agents du service %{service} sont attribués à %{sectors_count_human} : %{sectors}"
+    index:
+      sectorisation_level_organisation:
+        zero: "⚠️ aucun secteur"
+        one: "1 secteur"
+        other: "%{count} secteurs"
+      sectorisation_level_agent:
+        zero: "⚠️ aucun agent"
+        one: "1 agent dans %{sectors_count_human}"
+        other: "%{count} agents dans %{sectors_count_human}"

@@ -21,4 +21,20 @@ class SectorAttribution < ApplicationRecord
   def level_organisation?
     level == LEVEL_ORGANISATION
   end
+
+  def self.level_agent_grouped_by_service(organisation)
+    SectorAttribution
+      .level_agent
+      .where(organisation: organisation)
+      .includes(:agent)
+      .to_a
+      .group_by { _1.agent.service_id }
+      .transform_values do |attributions|
+        {
+          sectors_count: attributions.pluck(:sector_id).uniq.count,
+          agents_count: attributions.pluck(:agent_id).uniq.count,
+          attributions: attributions
+        }
+      end
+  end
 end

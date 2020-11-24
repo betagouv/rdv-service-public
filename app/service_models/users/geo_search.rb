@@ -5,39 +5,30 @@ class Users::GeoSearch
     @street_ban_id = street_ban_id
   end
 
-  def departement_sectorisation_enabled?
-    ENV["SECTORISATION_ENABLED_DEPARTMENT_LIST"]&.split&.include?(@departement)
+  def attributed_organisations
+    @attributed_organisations ||= Organisation.attributed_to_sectors(matching_sectors)
   end
 
-  def attributed_organisations
-    @attributed_organisations ||= \
-      if departement_sectorisation_enabled?
-        Organisation.attributed_to_sectors(matching_sectors)
-      else
-        Organisation.where(departement: @departement)
-      end
+  def departement_organisations
+    @departement_organisations ||= Organisation.where(departement: @departement)
   end
 
   def attributed_agents_by_organisation
-    return {} unless departement_sectorisation_enabled?
-
     @attributed_agents_by_organisation ||= matching_sectors
-      .map { |sector| sector.attributions.level_agent.includes(:agent).where.not(organisation: attributed_organisations).to_a }
+      .map { |sector| sector.attributions.level_agent.includes(:agent).to_a }
       .flatten
       .group_by(&:organisation)
       .transform_values { |attributions| attributions.map(&:agent) }
   end
 
   def matching_zones
-    return nil if !departement_sectorisation_enabled? || @city_code.nil?
+    return nil if @city_code.nil?
 
     @matching_zones ||= \
       matching_zones_streets_arel.any? ? matching_zones_streets_arel : matching_zones_cities_arel
   end
 
   def matching_sectors
-    return nil unless departement_sectorisation_enabled?
-
     @matching_sectors ||= Sector.where(id: matching_zones&.pluck(:sector_id))
   end
 
@@ -66,12 +57,20 @@ class Users::GeoSearch
   end
 
   def available_motifs_arels
-    [available_motifs_from_attributed_organisations_arel] +
+    [available_motifs_from_departement_organisations_arel] +
+      [available_motifs_from_attributed_organisations_arel] +
       available_motifs_from_attributed_agents_arels
+  end
+
+  def available_motifs_from_departement_organisations_arel
+    @available_motifs_from_departement_organisations_arel ||= available_motifs_base
+      .sectorisation_level_departement
+      .where(organisations: { id: departement_organisations.pluck(:id) })
   end
 
   def available_motifs_from_attributed_organisations_arel
     @available_motifs_from_attributed_organisations_arel ||= available_motifs_base
+      .sectorisation_level_organisation
       .where(organisations: { id: attributed_organisations.pluck(:id) })
   end
 
@@ -84,10 +83,12 @@ class Users::GeoSearch
   end
 
   def available_motifs_from_attributed_agent_arel(agent, organisation)
-    available_motifs_base.where(
-      organisations: { id: organisation.id },
-      plage_ouvertures: { agent_id: agent.id }
-    )
+    available_motifs_base
+      .sectorisation_level_agent
+      .where(
+        organisations: { id: organisation.id },
+        plage_ouvertures: { agent_id: agent.id }
+      )
   end
 
   def available_motifs_base
