@@ -16,16 +16,16 @@ RSpec.describe Admin::InvitationsController, type: :controller do
   end
 
   describe "POST #create" do
-    subject { post :create, params: { agent: params }, format: :json }
+    subject { post :create, params: { organisation_id: organisation_id, agent: params } }
 
     shared_examples "existing user is added to organization" do
       it "should not create a new user" do
         expect { subject }.not_to change(Agent, :count)
       end
 
-      it "should return a successful response" do
+      it "should redirect to agents list" do
         subject
-        expect(response).to be_successful
+        expect(response).to redirect_to(admin_organisation_agents_path(organisation_id))
       end
 
       it "should add user to organisation" do
@@ -48,9 +48,9 @@ RSpec.describe Admin::InvitationsController, type: :controller do
         expect { subject }.to change(Agent, :count).by(1)
       end
 
-      it "should return a successful response" do
+      it "should redirect to agents list" do
         subject
-        expect(response).to be_successful
+        expect(response).to redirect_to(admin_organisation_agents_path(organisation_id))
       end
 
       it "should send an email" do
@@ -73,9 +73,9 @@ RSpec.describe Admin::InvitationsController, type: :controller do
         expect { subject }.not_to change(Agent, :count)
       end
 
-      it "should not be successful" do
+      it "should render new page" do
         subject
-        expect(response).not_to be_successful
+        expect(response).to render_template(:new)
       end
 
       it "should render errors" do

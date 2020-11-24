@@ -63,7 +63,7 @@ Rails.application.routes.draw do
   end
 
   devise_for :agents, controllers: {
-    invitations: "admin/invitations",
+    invitations: "admin/invitations", # only using the accept route here
     sessions: "agents/sessions",
     passwords: "agents/passwords"
   }
@@ -141,6 +141,7 @@ Rails.application.routes.draw do
         end
         resource :merge_users, only: [:new, :create]
         resource :rdv_wizard_step, only: [:new, :create]
+        devise_for :agents, controllers: { invitations: "admin/invitations" }, only: :invitations
       end
 
       resources :jours_feries, only: [:index]
@@ -150,7 +151,7 @@ Rails.application.routes.draw do
     root to: "admin/organisations#index", as: :authenticated_agent_root, defaults: { follow_unique: "1" }
   end
 
-  { contact: "contact", disclaimer: "mentions_legales", terms: "cgv", mds: "mds" }.each do |k, v|
+  { contact: "contact", mds: "mds" }.each do |k, v|
     get v => "static_pages##{k}"
   end
 
