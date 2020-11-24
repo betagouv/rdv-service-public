@@ -41,6 +41,11 @@ html lang="fr"
               = link_to "https://trello.com/b/BiT8tx09/rdv-solidarit%C3%A9s-dev" do
                 span> Feuille de route
                 i.fa.fa-external-link-alt
-              = link_to 'Mentions légales', mentions_legales_path
+              = link_to "https://doc.rdv-solidarites.fr/mentions-legales" do
+                span> Mentions Légales
+                i.fa.fa-external-link-alt
+              = link_to "https://doc.rdv-solidarites.fr/conditions-dutilisation-de-la-plateforme-rdv-solidarites" do
+                span> C.G.U.
+                i.fa.fa-external-link-alt
               = mail_to "contact@rdv-solidarites.fr", 'Contact'
     input type='hidden' id="js-current-menu-item" value=content_for(:menu_item)
