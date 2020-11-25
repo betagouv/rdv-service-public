@@ -21,12 +21,12 @@
 
         .form-row.d-flex.mb-2
           .col-lg-9
-            = f.input :motif_name, \
-              label: @motif_name.present? ? false : "Votre motif", \
+            = f.input :motif_name_with_location_type, \
+              label: @motif_name_with_location_type.present? ? false : "Votre motif", \
               collection: @unique_motifs_by_name_and_location_type, \
               value_method: :name_with_location_type,
               label_method: -> { motif_name_with_special_location_type(_1) },
-              selected: @motif_name, \
+              selected: @motif_name_with_location_type, \
               required: true, \
               include_blank: "Choisissez un motif", \
               input_html: { \

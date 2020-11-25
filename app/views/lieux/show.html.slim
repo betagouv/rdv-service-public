@@ -14,6 +14,6 @@
           - if @referent_missing
             .alert.alert-warning= @referent_missing
           - elsif @matching_motifs.present?
-            = render 'common/creneaux', lieu: @lieu, creneaux: @creneaux, date_range: @date_range, motif_name: @motif_name, departement: @departement, where: @where, max_booking_delay: @max_booking_delay, city_code: @city_code
+            = render 'common/creneaux', lieu: @lieu, creneaux: @creneaux, date_range: @date_range, motif_name_with_location_type: @motif_name_with_location_type, departement: @departement, where: @where, max_booking_delay: @max_booking_delay, city_code: @city_code
           - else
-            .alert.alert-warning= "Le motif <b>#{@motif_name}</b> n'est plus disponible à la réservation à <b>#{@lieu.name}</b>".html_safe
+            .alert.alert-warning= "Le motif <b>#{@motif_name_with_location_type}</b> n'est plus disponible à la réservation à <b>#{@lieu.name}</b>".html_safe
