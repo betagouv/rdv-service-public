@@ -2,6 +2,8 @@ class Admin::PlageOuverturesController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_plage_ouverture, only: [:show, :edit, :update, :destroy]
+  before_action :build_plage_ouverture, only: [:create]
+  before_action :set_agent
 
   def show
     authorize(@plage_ouverture)
@@ -9,7 +11,6 @@ class Admin::PlageOuverturesController < AgentAuthController
   end
 
   def index
-    @agent = policy_scope(Agent).find(filter_params[:agent_id])
     plage_ouvertures = policy_scope(PlageOuverture)
       .includes(:lieu, :organisation)
       .where(agent_id: filter_params[:agent_id])
@@ -51,7 +52,6 @@ class Admin::PlageOuverturesController < AgentAuthController
   end
 
   def create
-    @plage_ouverture = PlageOuverture.new(plage_ouverture_params)
     @plage_ouverture.organisation = current_organisation
     authorize(@plage_ouverture)
     if @plage_ouverture.save
@@ -81,8 +81,16 @@ class Admin::PlageOuverturesController < AgentAuthController
 
   private
 
+  def set_agent
+    @agent = filter_params[:agent_id].present? ? policy_scope(Agent).find(filter_params[:agent_id]) : @plage_ouverture.agent
+  end
+
   def set_plage_ouverture
     @plage_ouverture = PlageOuverture.find(params[:id])
+  end
+
+  def build_plage_ouverture
+    @plage_ouverture = PlageOuverture.new(plage_ouverture_params)
   end
 
   def plage_ouverture_params
