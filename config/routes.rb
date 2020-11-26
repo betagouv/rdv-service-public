@@ -65,7 +65,7 @@ Rails.application.routes.draw do
   end
 
   devise_for :agents, controllers: {
-    invitations: "admin/invitations",
+    invitations: "admin/invitations", # only using the accept route here
     sessions: "agents/sessions",
     passwords: "agents/passwords"
   }
@@ -143,6 +143,7 @@ Rails.application.routes.draw do
         end
         resource :merge_users, only: [:new, :create]
         resource :rdv_wizard_step, only: [:new, :create]
+        devise_for :agents, controllers: { invitations: "admin/invitations" }, only: :invitations
       end
 
       resources :jours_feries, only: [:index]

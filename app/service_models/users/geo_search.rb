@@ -46,7 +46,7 @@ class Users::GeoSearch
   end
 
   def available_motifs
-    @available_motifs ||= available_motifs_arels.reduce(:or)
+    @available_motifs ||= available_motifs_arels.reduce(:or).ordered_by_name
   end
 
   def empty_attributions?

@@ -1,6 +1,6 @@
 class WelcomeController < ApplicationController
   PERMITTED_PARAMS = [
-    :departement, :where, :service, :motif_name, :latitude, :longitude, :city_code, :street_ban_id
+    :departement, :where, :service, :motif_name_with_location_type, :latitude, :longitude, :city_code, :street_ban_id
   ].freeze
 
   before_action :set_lieu_variables, only: [:welcome_departement, :welcome_service]
@@ -11,7 +11,7 @@ class WelcomeController < ApplicationController
 
   def search
     return redirect_to lieux_path(search: search_params) \
-      if search_params[:service].present? && search_params[:motif_name].present?
+      if search_params[:service].present? && search_params[:motif_name_with_location_type].present?
 
     if search_params[:service].present?
       return redirect_to welcome_service_path(
@@ -40,7 +40,10 @@ class WelcomeController < ApplicationController
   def welcome_service
     @services = @geo_search.available_services
     @organisations_departement = Organisation.where(departement: @departement)
-    @motif_names = @geo_search.available_motifs.where(service: @service).ordered_by_name.pluck(:name).uniq
+    @unique_motifs_by_name_and_location_type = @geo_search
+      .available_motifs
+      .where(service: @service)
+      .uniq { [_1.name, _1.location_type] }
   end
 
   def set_lieu_variables

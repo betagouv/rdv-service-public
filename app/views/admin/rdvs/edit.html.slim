@@ -1,4 +1,28 @@
 - content_for :title do
   | Modifier le rendez-vous
 
-= render 'form', rdv: @rdv
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-body
+        = simple_form_for([:admin, @rdv.organisation, @rdv]) do |f|
+          = render partial: 'layouts/model_errors', locals: { model: @rdv }
+          = f.association :motif, disabled: true
+          = f.input :context, input_html: { rows: 3 }
+          .form-row
+            .col-md-6= datetime_input(f, :starts_at)
+            .col-md-6= f.input :duration_in_min
+          - if @rdv.motif.public_office?
+            = f.association :lieu, \
+              collection: policy_scope(Lieu), \
+              label_method: :full_name, \
+              include_blank: true, \
+              required: true,
+              input_html: { class: "select2-input" }
+          - elsif @rdv.motif.home?
+            = f.input :address, label: "Lieu (RDV à domicile)", disabled: true
+          = f.association :agents, collection: @rdv.organisation.agents.can_perform_motif(@rdv.motif), label_method: :full_name_and_service, input_html: { multiple: true, class: 'select2-input' }
+          = f.association :users, collection: policy_scope(User).order_by_last_name, label_method: lambda { |user| full_name_and_birthdate(user) }, input_html: { multiple: true, class: 'select2-input' }
+          .text-right
+            = link_to "Retour", admin_organisation_rdv_path(current_organisation, @rdv), class: "btn btn-link"
+            = f.button :submit, "Enregistrer"

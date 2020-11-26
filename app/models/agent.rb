@@ -80,7 +80,7 @@ class Agent < ApplicationRecord
   end
 
   def add_organisation(organisation)
-    errors.add(:email, "existe déjà dans cette organisation") && return if organisation_ids.include?(organisation.id)
+    errors.add(:base, "Un agent avec cet email existe déjà dans cette organisation") && return if organisation_ids.include?(organisation.id)
     organisations << organisation
   end
 

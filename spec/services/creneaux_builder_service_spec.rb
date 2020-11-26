@@ -72,13 +72,13 @@ describe CreneauxBuilderService, type: :service do
       it do
         creneaux_day1 = subject.select { _1[:starts_at].to_date == Date.new(2019, 9, 19) }
         expect(creneaux_day1.size).to eq(1)
-        creneaux_day1.should include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        expect(creneaux_day1).to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
         creneaux_day2 = subject.select { _1[:starts_at].to_date == Date.new(2019, 9, 20) }
         expect(creneaux_day2.size).to eq(4)
-        creneaux_day2.should include(starts_at: Time.zone.local(2019, 9, 20, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-        creneaux_day2.should include(starts_at: Time.zone.local(2019, 9, 20, 9, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-        creneaux_day2.should include(starts_at: Time.zone.local(2019, 9, 20, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-        creneaux_day2.should include(starts_at: Time.zone.local(2019, 9, 20, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        expect(creneaux_day2).to include(starts_at: Time.zone.local(2019, 9, 20, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        expect(creneaux_day2).to include(starts_at: Time.zone.local(2019, 9, 20, 9, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        expect(creneaux_day2).to include(starts_at: Time.zone.local(2019, 9, 20, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        expect(creneaux_day2).to include(starts_at: Time.zone.local(2019, 9, 20, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
       end
     end
 
@@ -88,12 +88,12 @@ describe CreneauxBuilderService, type: :service do
       it do
         creneaux_day1 = subject.select { _1[:starts_at].to_date == Date.new(2019, 9, 19) }
         expect(creneaux_day1.size).to eq(1)
-        creneaux_day1.should include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        expect(creneaux_day1).to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
         creneaux_day2 = subject.select { _1[:starts_at].to_date == Date.new(2019, 9, 20) }
         # expect(creneaux_day2.size).to eq(4)
-        creneaux_day2.should include(starts_at: Time.zone.local(2019, 9, 20, 9, 5), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-        creneaux_day2.should include(starts_at: Time.zone.local(2019, 9, 20, 9, 35), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-        creneaux_day2.should include(starts_at: Time.zone.local(2019, 9, 20, 10, 5), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        expect(creneaux_day2).to include(starts_at: Time.zone.local(2019, 9, 20, 9, 5), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        expect(creneaux_day2).to include(starts_at: Time.zone.local(2019, 9, 20, 9, 35), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        expect(creneaux_day2).to include(starts_at: Time.zone.local(2019, 9, 20, 10, 5), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
       end
     end
   end
@@ -236,6 +236,16 @@ describe CreneauxBuilderService, type: :service do
       end
 
       context "when there is another motif with the same name but a different location_type" do
+        let!(:motif_home) { create(:motif, name: "Vaccination", default_duration_in_min: 30, organisation: organisation, location_type: :home) }
+        let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif, motif_home], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, agent: agent, organisation: organisation) }
+        let(:options) { { for_agents: true, motif_location_type: :home } }
+
+        it "should include only the filtered one" do
+          expect(subject.pluck(:motif_id).uniq).to eq([motif_home.id])
+        end
+      end
+
+      context "when there is another motif with the same name but a different location_type and they are on the same plage ouverture" do
         let!(:motif_home) { create(:motif, name: "Vaccination", default_duration_in_min: 30, organisation: organisation, location_type: :home) }
         let!(:plage_ouverture_home) { create(:plage_ouverture, motifs: [motif_home], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(14) + 35.minutes, agent: agent, organisation: organisation) }
 

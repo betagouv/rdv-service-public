@@ -3,6 +3,10 @@ module MotifsHelper
     "#{motif.name} (#{Motif.human_enum_name(:location_type, motif.location_type)})"
   end
 
+  def motif_name_with_special_location_type(motif)
+    motif.public_office? ? motif.name : motif_name_with_location_type(motif)
+  end
+
   def motif_name_with_location_type_and_badges(motif)
     content_tag(:span, motif_name_with_location_type(motif)) + motif_badges(motif)
   end
