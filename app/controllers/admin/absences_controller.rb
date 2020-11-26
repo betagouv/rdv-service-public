@@ -1,10 +1,11 @@
 class Admin::AbsencesController < AgentAuthController
   respond_to :html, :json
 
-  before_action :set_absence, only: [:edit, :update, :destroy]
+  before_action :set_absence, only: [:show, :edit, :update, :destroy]
+  before_action :build_absence, only: [:create]
+  before_action :set_agent
 
   def index
-    @agent = policy_scope(Agent).find(params[:agent_id])
     absences = policy_scope(Absence).where(agent_id: filter_params[:agent_id])
     respond_to do |f|
       f.json { @absence_occurrences = absences.flat_map { |ab| ab.occurences_for(date_range_params).map { |occurence| [ab, occurence] } }.sort_by(&:second) }
@@ -13,7 +14,6 @@ class Admin::AbsencesController < AgentAuthController
   end
 
   def new
-    @agent = policy_scope(Agent).find(params[:agent_id])
     @absence = Absence.new(organisation: current_organisation, agent: @agent)
     authorize(@absence)
   end
@@ -23,7 +23,6 @@ class Admin::AbsencesController < AgentAuthController
   end
 
   def create
-    @absence = Absence.new(absence_params)
     @absence.organisation = current_organisation
     authorize(@absence)
     if @absence.save
@@ -58,6 +57,14 @@ class Admin::AbsencesController < AgentAuthController
 
   def set_absence
     @absence = policy_scope(Absence).find(params[:id])
+  end
+
+  def build_absence
+    @absence = Absence.new(absence_params)
+  end
+
+  def set_agent
+    @agent = filter_params[:agent_id].present? ? policy_scope(Agent).find(filter_params[:agent_id]) : @absence.agent
   end
 
   def absence_params
