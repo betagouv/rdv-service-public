@@ -44,8 +44,8 @@ module UserRdvWizard
 
     def to_search_query
       @attributes
-        .slice(:departement, :latitude, :longitude, :motif_name, :where, :city_code, :street_ban_id)
-        .merge(service: @rdv.motif.service_id, motif_name: @rdv.motif.name)
+        .slice(:departement, :latitude, :longitude, :motif_name_with_location_type, :where, :city_code, :street_ban_id)
+        .merge(service: @rdv.motif.service_id, motif_name_with_location_type: @rdv.motif.name_with_location_type)
     end
 
     def save

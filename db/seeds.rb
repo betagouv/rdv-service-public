@@ -100,6 +100,14 @@ motif_org_paris_nord_pmi_prenatale = Motif.create!(
   reservable_online: true,
   location_type: :public_office
 )
+motif_org_paris_nord_pmi_prenatale_phone = Motif.create!(
+  name: libelle_pmi_prenatale.name,
+  color: "#CC7C00",
+  organisation_id: org_paris_nord.id,
+  service_id: service_pmi.id,
+  reservable_online: true,
+  location_type: :phone
+)
 motif_org_paris_nord_pmi_suivi = Motif.create!(
   name: libelle_pmi_suivi.name,
   color: "#00FC60",
@@ -421,11 +429,11 @@ _plage_ouverture_org_paris_nord_marco_perm = PlageOuverture.create!(
   organisation_id: org_paris_nord.id,
   agent_id: agent_org_paris_nord_pmi_marco.id,
   lieu_id: lieu_org_paris_nord_nord.id,
-  motif_ids: [motif_org_paris_nord_pmi_rappel.id, motif_org_paris_nord_pmi_gyneco.id, motif_org_paris_nord_pmi_prenatale.id, motif_org_paris_nord_pmi_suivi.id, motif_org_paris_nord_pmi_securite.id],
+  motif_ids: [motif_org_paris_nord_pmi_rappel.id, motif_org_paris_nord_pmi_gyneco.id, motif_org_paris_nord_pmi_prenatale.id, motif_org_paris_nord_pmi_suivi.id, motif_org_paris_nord_pmi_securite.id, motif_org_paris_nord_pmi_prenatale_phone.id],
   first_day: Date.tomorrow,
-  start_time: Tod::TimeOfDay.new(8),
-  end_time: Tod::TimeOfDay.new(12),
-  recurrence: Montrose.every(:week, interval: 1)
+  start_time: Tod::TimeOfDay.new(14),
+  end_time: Tod::TimeOfDay.new(16),
+  recurrence: Montrose.every(:week, on: [:tuesday], interval: 1)
 )
 _plage_ouverture_org_arques_maya_tradi = PlageOuverture.create!(
   title: "Perm. tradi",

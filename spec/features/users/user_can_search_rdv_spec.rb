@@ -29,7 +29,7 @@ describe "User can search for rdvs" do
 
       # Step 3
       expect_page_h1("Prenez rendez-vous en ligne\navec votre département le 92")
-      select(motif.name, from: "search_motif_name")
+      select(motif.name, from: "search_motif_name_with_location_type")
       click_button("Choisir ce motif")
 
       # Step 4

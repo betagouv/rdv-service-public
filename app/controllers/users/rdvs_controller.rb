@@ -29,7 +29,7 @@ class Users::RdvsController < UserAuthController
       flash[:notice] = "Votre rendez vous a été confirmé."
       redirect_to authenticated_user_root_path
     else
-      query = { where: new_rdv_extra_params[:where], service: motif.service.id, motif_name: motif.name, departement: new_rdv_extra_params[:departement] }
+      query = { where: new_rdv_extra_params[:where], service: motif.service.id, motif_name_with_location_type: motif.name_with_location_type, departement: new_rdv_extra_params[:departement] }
       flash[:error] = "Ce creneau n'est plus disponible. Veuillez en sélectionner un autre."
       redirect_to lieux_path(search: query)
     end
@@ -81,7 +81,7 @@ class Users::RdvsController < UserAuthController
   end
 
   def new_rdv_extra_params
-    params.permit(:lieu_id, :motif_name, :departement, :where)
+    params.permit(:lieu_id, :motif_name_with_location_type, :departement, :where)
   end
 
   def rdv_params

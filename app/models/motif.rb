@@ -38,6 +38,13 @@ class Motif < ApplicationRecord
                        end
     available_motifs.where(organisation_id: organisation.id).active.ordered_by_name
   }
+  scope :search_by_name_with_location_type, lambda { |name_with_location_type|
+    name, location_type = Motif.location_types.keys.map do
+      match_data = name_with_location_type.match(/(.*)\-#{_1}$/)
+      match_data ? [match_data[1], _1] : nil
+    end.compact.first
+    where(name: name, location_type: location_type)
+  }
 
   def soft_delete
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
@@ -67,6 +74,10 @@ class Motif < ApplicationRecord
 
   def visible_and_notified?
     visibility_type == VISIBLE_AND_NOTIFIED
+  end
+
+  def name_with_location_type
+    "#{name}-#{location_type}"
   end
 
   private
