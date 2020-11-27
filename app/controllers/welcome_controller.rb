@@ -57,6 +57,8 @@ class WelcomeController < ApplicationController
     @geo_search = Users::GeoSearch.new(departement: @departement, city_code: @city_code, street_ban_id: @street_ban_id)
   end
 
+  def super_admin; end
+
   private
 
   def search_params

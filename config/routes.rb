@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   ## ADMIN ##
   devise_for :super_admins, controllers: { omniauth_callbacks: "super_admins/omniauth_callbacks" }
 
+  get "connexion_super_admins", to: "welcome#super_admin"
+
   delete "super_admins/sign_out" => "super_admins/sessions#destroy"
 
   namespace :super_admins do
