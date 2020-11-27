@@ -1,17 +1,22 @@
+- content_for(:menu_item) { @agent ? 'menu-agendas' : 'menu-rdvs-list' }
+
 - content_for :title do
   ol.breadcrumb.m-0.p-0
-    li.breadcrumb-item.p-0
-      = link_to 'Vos agendas', admin_organisation_agent_path(current_organisation, current_agent)
+    - if @agent
+      li.breadcrumb-item.p-0
+        - if @agent != current_agent
+          = link_to "Agenda de #{@agent.full_name}", admin_organisation_agent_path(current_organisation, @agent)
+        - else
+          = link_to "Votre agenda", admin_organisation_agent_path(current_organisation, current_agent)
     li.breadcrumb-item.p-0.ml-2
-      | RDV
-      |&nbsp;
-      = rdv_title_for_agent(@rdv)
-      - if @rdv.cancelled?
-        span.badge.badge-danger
+      div
+        span> RDV
+        span>= rdv_title_for_agent(@rdv)
+        - if @rdv.cancelled?
+          span.badge.badge-danger
 
 - content_for :breadcrumb do
   = link_to "Dupliquer…", admin_organisation_agent_searches_path(current_organisation, service_id: @rdv.motif.service_id, from_date: @rdv.starts_at + 1.day, user_ids: @rdv.user_ids, context: @rdv.context), class: "btn btn-outline-white"
-
 
 .row
   .col-md-6.mb-3
@@ -19,7 +24,7 @@
       .card-header
         .d-flex.justify-content-between
           = l(@rdv.starts_at.to_date, format: :human )
-          = render "rdv_status_dropdown", rdv: @rdv
+          = render "rdv_status_dropdown", rdv: @rdv, agent: @agent
 
       .card-body
         p.card-text
@@ -31,12 +36,12 @@
         .row
           .col
             - if !@rdv.past? && !@rdv.cancelled?
-              = link_to "Annuler", admin_organisation_rdv_path(@rdv.organisation, @rdv, rdv: {status: :excused}), method: :put, class: "btn btn-outline-danger mr-1", data: { confirm: "Êtes-vous sûr de vouloir annuler ce rendez-vous ? L'usager recevra une notification de cette annulation."}
+              = link_to "Annuler", admin_organisation_rdv_path(@rdv.organisation, @rdv, rdv: {status: :excused}, agent_id: @agent&.id), method: :put, class: "btn btn-outline-danger mr-1", data: { confirm: "Êtes-vous sûr de vouloir annuler ce rendez-vous ? L'usager recevra une notification de cette annulation."}
               | ou
-            = link_to "Supprimer ❌", admin_organisation_rdv_path(@rdv.organisation, @rdv), method: :delete, class: "btn btn-link text-danger", data: { confirm: "Êtes-vous sûr de vouloir supprimer ce rendez-vous ? Cette action est définitive et aucune notification ne sera envoyée à #{@rdv.users.map(&:full_name).to_sentence}."}
+            = link_to "Supprimer ❌", admin_organisation_rdv_path(@rdv.organisation, @rdv, agent_id: @agent&.id), method: :delete, class: "btn btn-link text-danger", data: { confirm: "Êtes-vous sûr de vouloir supprimer ce rendez-vous ? Cette action est définitive et aucune notification ne sera envoyée à #{@rdv.users.map(&:full_name).to_sentence}."}
 
           .col.text-right
-            = link_to "Modifier", edit_admin_organisation_rdv_path(@rdv.organisation, @rdv), class: "btn btn-outline-primary"
+            = link_to "Modifier", edit_admin_organisation_rdv_path(@rdv.organisation, @rdv, agent_id: @agent&.id), class: "btn btn-outline-primary"
 
   .col-md-6.mb-3
 
@@ -72,11 +77,11 @@
       .card-header
         a.js-record-versions-toggle[
           href="#history"
-          data-text-close="🕵️‍♂️ Cacher l'historique des actions ˄"
-          data-text-open="🕵️‍♂️ Afficher l'historique des actions ⌄"
+          data-text-close="Cacher l'historique des actions ˄"
+          data-text-open="Afficher l'historique des actions ⌄"
           data-versions-url=admin_organisation_rdv_versions_path(@rdv.organisation, @rdv, only: ['user_ids', 'agent_ids', 'duration_in_min', 'status', 'starts_at', 'lieu_id', 'notes', 'location', 'context'])
         ]
-          | 🕵️‍♂️ Afficher l'historique des actions ⌄
+          | Afficher l'historique des actions ⌄
       .js-record-versions-body#history.collapse class=(@uncollapsed_section == 'history' ? "show" : "")
         .text-center.py-4
           .spinner.spinner-border
