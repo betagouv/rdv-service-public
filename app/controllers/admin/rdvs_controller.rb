@@ -1,7 +1,7 @@
 class Admin::RdvsController < AgentAuthController
   respond_to :html, :json
 
-  before_action :set_rdv, except: [:index, :create]
+  before_action :set_rdv, :set_optional_agent, except: [:index, :create]
 
   def index
     @form = AgentRdvSearchForm.new(
@@ -46,7 +46,7 @@ class Admin::RdvsController < AgentAuthController
                            else
                              "Le rendez-vous a été modifié."
                            end
-          redirect_to admin_organisation_rdv_path(current_organisation, @rdv)
+          redirect_to admin_organisation_rdv_path(current_organisation, @rdv, agent_id: params[:agent_id])
         else
           render :edit
         end
@@ -62,7 +62,8 @@ class Admin::RdvsController < AgentAuthController
       flash[:error] = "Une erreur s’est produite, le rendez-vous n’a pas pu être supprimé."
       Raven.capture_exception(Exception.new("Deletion failed for rdv : #{@rdv.id}"))
     end
-    redirect_to admin_organisation_agent_path(current_organisation, current_agent)
+    # TODO : redirection makes no sense when coming from a users#show
+    redirect_to admin_organisation_agent_path(current_organisation, @agent || current_agent)
   end
 
   def create
@@ -86,6 +87,10 @@ class Admin::RdvsController < AgentAuthController
   end
 
   private
+
+  def set_optional_agent
+    @agent = policy_scope(Agent).find(params[:agent_id]) if params[:agent_id].present?
+  end
 
   def parse_date_from_params(param_name)
     return nil if params[param_name].blank? || params[param_name] == "__/__/____"

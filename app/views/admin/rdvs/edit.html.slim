@@ -1,5 +1,24 @@
+- content_for(:menu_item) { @agent ? 'menu-agendas' : 'menu-rdvs-list' }
+
+- content_for :breadcrumb do
+  ol.breadcrumb.m-0.p-0
+    - if @agent
+      li.breadcrumb-item.p-0
+        - if @agent != current_agent
+          = link_to "Agenda de #{@agent.full_name}", admin_organisation_agent_path(current_organisation, @agent)
+        - else
+          = link_to "Votre agenda", admin_organisation_agent_path(current_organisation, current_agent)
+    li.breadcrumb-item.p-0.ml-2
+      | RDV
+      |&nbsp;
+      = rdv_title_for_agent(@rdv)
+      - if @rdv.cancelled?
+        span.badge.badge-danger
+    li.breadcrumb-item.p-0.ml-2
+      | Modifier
+
 - content_for :title do
-  | Modifier le rendez-vous
+  | Modifier le RDV
 
 .row.justify-content-center
   .col-md-6
@@ -7,6 +26,7 @@
       .card-body
         = simple_form_for([:admin, @rdv.organisation, @rdv]) do |f|
           = render partial: 'layouts/model_errors', locals: { model: @rdv }
+          = hidden_field_tag :agent_id, @agent&.id
           = f.association :motif, disabled: true
           = f.input :context, input_html: { rows: 3 }
           .form-row

@@ -18,6 +18,7 @@ ul.list-unstyled.topbar-right-menu.float-right.mb-0
               rdv.organisation, \
               rdv, \
               rdv: { status: status[1] }, \
+              agent_id: local_assigns[:agent]&.id, \
               format: local_assigns[:remote] ? 'json' : 'html' \
             ), \
             method: :put, \
