@@ -13,6 +13,14 @@ describe RdvUpdater, type: :service do
       RdvUpdater.update(rdv, rdv_params)
     end
 
+    it "destroy all file_attentes" do
+      rdv = create(:rdv, agents: [create(:agent)])
+      create(:file_attente, rdv: rdv)
+      rdv_params = { status: "excused" }
+      RdvUpdater.update(rdv, rdv_params)
+      expect(rdv.reload.file_attentes).to be_empty
+    end
+
     it "return false when update fail" do
       rdv = create(:rdv, agents: [create(:agent)])
       rdv_params = { agents: [] }

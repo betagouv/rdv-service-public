@@ -12,6 +12,7 @@ module RdvUpdater
 
       return false unless rdv.update(rdv_params)
 
+      rdv.file_attentes.destroy_all if cancel_status?(rdv_params[:status])
       Notifications::Rdv::RdvCancelledByAgentService.perform_with(rdv) if rdv_params[:status] == "excused"
       true
     end
