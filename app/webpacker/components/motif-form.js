@@ -1,13 +1,12 @@
 class MotifForm {
 
-  setSecretariatEnabled() {
+  toggleSecretariat() {
     const enabled = this.secretariatShouldBeEnabled();
     if (enabled == this.secretariatEnabled) return;
 
-    const secretariatCheckbox = document.querySelector('#motif_for_secretariat')
-    if (!enabled) secretariatCheckbox.checked = false
-    secretariatCheckbox.disabled = !enabled
-    $(secretariatCheckbox).closest('.card').toggleClass('translucent', !enabled)
+    if (!enabled) this.secretariatCheckbox.checked = false
+    this.secretariatCheckbox.disabled = !enabled
+    $(this.secretariatCheckbox).closest('.card').toggleClass('translucent', !enabled)
 
     this.secretariatEnabled = enabled
   }
@@ -17,18 +16,35 @@ class MotifForm {
       !document.querySelector("#motif_follow_up:checked")
   }
 
-  constructor() {
+  toggleSectorisation = () => {
+    const enabled = !!document.querySelector("#motif_reservable_online:checked")
+    if (enabled == this.sectorisationEnabled) return;
 
-    if (!document.querySelector('#motif_for_secretariat')) return;
+    if (!enabled) {
+      document.querySelector('#motif_sectorisation_level_agent').checked = false
+      document.querySelector('#motif_sectorisation_level_organisation').checked = false
+      document.querySelector('#motif_sectorisation_level_departement').checked = true
+    }
+    document.
+      querySelectorAll('input[name="motif[sectorisation_level]"]').
+      forEach(i => i.disabled = !enabled)
+    document.querySelector(".js-sectorisation-card").classList.toggle('translucent', !enabled)
+    this.sectorisationEnabled = enabled
+  }
+
+  constructor() {
+    this.secretariatCheckbox = document.querySelector('#motif_for_secretariat')
+    this.reservableOnlineCheckbox = document.querySelector('#motif_reservable_online')
+    if (!this.secretariatCheckbox || !this.reservableOnlineCheckbox) return;
 
     const noSecretariatInputs = ["input[name=\"motif[location_type]\"]", "input[name=\"motif[follow_up]\"]"]
-    document.querySelectorAll(noSecretariatInputs).forEach(input => {
-      input.addEventListener('change', e => {
-        this.setSecretariatEnabled()
-      })
-    })
+    document.querySelectorAll(noSecretariatInputs).forEach(input =>
+      input.addEventListener('change', e => this.toggleSecretariat())
+    )
+    this.reservableOnlineCheckbox.addEventListener('change', e => this.toggleSectorisation())
 
-    this.setSecretariatEnabled();
+    this.toggleSecretariat()
+    this.toggleSectorisation()
   }
 
 }
