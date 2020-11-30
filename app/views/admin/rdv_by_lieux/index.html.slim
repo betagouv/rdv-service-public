@@ -1,0 +1,10 @@
+- content_for :title do
+  | Vos lieux de consultation
+
+.card
+  .card-body
+    ul
+      - @rdvs_per_lieu.each do |lieu_name, rdv_counter|
+        li
+          = link_to I18n.t("lieux.by_rdv", count: rdv_counter, name: lieu_name), "#"
+

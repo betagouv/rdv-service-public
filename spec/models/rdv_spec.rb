@@ -266,7 +266,6 @@ describe Rdv, type: :model do
   end
 
   describe "#for_today" do
-
     it "return empty array when no rdv" do
       expect(Rdv.for_today).to be_empty
     end
