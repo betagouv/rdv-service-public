@@ -6,6 +6,9 @@ class Admin::MotifsController < AgentAuthController
 
   def index
     @motifs = policy_scope(Motif).includes(:organisation).active.includes(:service).ordered_by_name.page(params[:page])
+    @sectors_attributed_to_organisation_count = Sector.attributed_to_organisation(current_organisation).count
+    @sectorisation_level_agent_counts_by_service = SectorAttribution.level_agent_grouped_by_service(current_organisation)
+    @display_sectorisation_level = current_organisation.motifs.where.not(sectorisation_level: Motif::SECTORISATION_LEVEL_DEPARTEMENT).any?
   end
 
   def new
@@ -57,6 +60,6 @@ class Admin::MotifsController < AgentAuthController
 
   def motif_params
     params.require(:motif)
-      .permit(:name, :service_id, :color, :default_duration_in_min, :reservable_online, :location_type, :max_booking_delay, :min_booking_delay, :visibility_type, :restriction_for_rdv, :instruction_for_rdv, :for_secretariat, :follow_up)
+      .permit(:name, :service_id, :color, :default_duration_in_min, :reservable_online, :location_type, :max_booking_delay, :min_booking_delay, :visibility_type, :restriction_for_rdv, :instruction_for_rdv, :for_secretariat, :follow_up, :sectorisation_level)
   end
 end

@@ -6,12 +6,13 @@ RSpec.describe LieuxController, type: :controller do
   let(:lieu2) { create(:lieu, latitude: 50.72, longitude: 3.16, organisation: organisation) }
   let(:motif) { create(:motif, reservable_online: true, organisation: organisation) }
   let(:now) { Date.new(2019, 7, 22) }
-  let(:mock_geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.all, departement_sectorisation_enabled?: false) }
+  let(:mock_geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.all) }
 
   before { travel_to(now) }
   after { travel_back }
   before do
     allow(mock_geo_search).to receive(:attributed_organisations).and_return(Organisation.where(id: organisation.id))
+    allow(mock_geo_search).to receive(:empty_attributions?).and_return(true)
     expect(Users::GeoSearch).to receive(:new)
       .with(departement: "62", city_code: "62100")
       .and_return(mock_geo_search)

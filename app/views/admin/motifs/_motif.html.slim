@@ -4,6 +4,18 @@ tr
   td
     = link_to motif.name, edit_admin_organisation_motif_path(motif.organisation, motif)
     = motif_badges(motif)
+  td
+    = content_tag(:span, I18n.t("motifs.badges.reservable_online"), class: "badge badge-motif-reservable_online") if motif.reservable_online?
+  - if @display_sectorisation_level
+    td
+      - if motif.sectorisation_level_departement?
+        | Tout le #{current_organisation.departement}
+      - elsif motif.sectorisation_level_organisation?
+        = t("motifs.index.sectorisation_level_organisation", count: @sectors_attributed_to_organisation_count)
+      - elsif motif.sectorisation_level_agent?
+        - counts = @sectorisation_level_agent_counts_by_service.fetch(motif.service_id, {agents_count: 0})
+        = t("motifs.index.sectorisation_level_agent", count: counts[:agents_count], sectors_count_human: \
+            t("motifs.index.sectorisation_level_organisation", count: counts[:sectors_count]))
   td= motif.service.short_name
   td= Motif.human_enum_name(:location_type, motif.location_type)
   td= "#{motif.default_duration_in_min} min."

@@ -49,5 +49,17 @@ FactoryBot.define do
     trait :visible_and_not_notified do
       visibility_type { Motif::VISIBLE_AND_NOT_NOTIFIED }
     end
+
+    trait :sectorisation_level_departement do
+      sectorisation_level { Motif::SECTORISATION_LEVEL_DEPARTEMENT }
+    end
+
+    trait :sectorisation_level_organisation do
+      sectorisation_level { Motif::SECTORISATION_LEVEL_ORGANISATION }
+    end
+
+    trait :sectorisation_level_agent do
+      sectorisation_level { Motif::SECTORISATION_LEVEL_AGENT }
+    end
   end
 end

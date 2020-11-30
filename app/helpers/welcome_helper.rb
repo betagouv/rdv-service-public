@@ -1,6 +1,6 @@
 module WelcomeHelper
   def sectorisation_hint(geo_search)
-    return nil if !geo_search.departement_sectorisation_enabled? || geo_search.empty_attributions?
+    return nil if geo_search.empty_attributions?
 
     explanations = geo_search.matching_zones.map do |zone|
       (zone.level_street? ? "#{zone.street_name} " : "") +

@@ -30,34 +30,19 @@
   .col-md-6
     .card
       .card-header
-        h4 Activation pour le #{current_departement}
+        h4 État de la sectorisation pour le #{current_departement}
       .card-body
-        - if departement_sectorisation_enabled?(departement: current_departement.number)
-          .mb-2.d-flex.align-items-top
-            span
-              .badge.badge-success Activée
-            div.ml-1
-              p L’usager est orienté vers les organisations ou les agents dont il dépend en fonction de l'adresse saisie lors de sa prise de RDV en ligne
-          p Lors de la prise de RDV en ligne, les communes ou adresses non attachées à une organisation ne renvoient à aucun résultat.
-          hr
-          h5 Désactivation
-          p En désactivant la sectorisation, les Secteurs seront ignorés et les usagers pourront faire des recherches dans l'ensemble du département
-          p
-            span> Pour désactiver la sectorisation, veuillez nous écrire sur
-            a[href='mailto:dev@rdv-solidarites.fr'] dev@rdv-solidarites.fr
-        - else
-          .mb-2.d-flex.align-items-center
-            span
-              .badge.badge-danger Désactivée
-            div.ml-1 L’usager a accès à l’ensemble des lieux de RDV configurés et accessibles à la prise de RDV en ligne dans votre Département
-          p La sectorisation est désactivée par défaut
-          hr
-          h5 Activation
-          p
-            span> Une fois la sectorisation activée :
-            ul
-              li L’usager sera orienté vers les rganisations ou les agents dont il dépend en fonction de l'adresse saisie lors de sa prise de RDV en ligne
-              li Les communes ou adresses non attachées à une organisation ou un agent ne renverront plus aucun résultat
-          p
-            span> Pour activer la sectorisation, veuillez nous écrire sur
-            a[href='mailto:dev@rdv-solidarites.fr'] dev@rdv-solidarites.fr
+        - @sectorised_motifs_count = Motif.joins(:organisation).where(organisations: { departement: current_departement.number }).where.not(sectorisation_level: Motif::SECTORISATION_LEVEL_DEPARTEMENT).count
+
+        .d-flex.align-items-center.mb-2
+          - if @sectorised_motifs_count > 0
+            div
+              .badge.badge-success Active
+            .ml-1.text-muted #{@sectorised_motifs_count} motifs sont sectorisés au niveau de l'organisation ou de l'agent dans votre département
+          - else
+            div
+              .badge.badge-warning Inactive
+            .ml-1.text-muted Tous les motifs de votre département sont sectorisés au niveau du département entier (par défaut)
+
+        p L'activation de la sectorisation a évolué récemment : l'intervention de l'équipe technique de RDV-Solidarités n'est plus nécessaire.
+        p La sectorisation s'active maintenant au niveau des motifs. Le niveau de sectorisation par défaut d'un motif est le département entier. Vous pouvez modifier un motif pour le niveau « organisation entière » ou pour le niveau « agents spécifiques », et ce motif ne sera alors plus accessible que pour les secteurs avec un niveau correspondant.

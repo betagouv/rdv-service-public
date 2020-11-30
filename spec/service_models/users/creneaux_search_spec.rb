@@ -60,7 +60,7 @@ describe Users::CreneauxSearch, type: :service do
   end
 
   context "with geo search" do
-    let(:motif1) { create(:motif, name: "Coucou", organisation: organisation) }
+    let(:motif1) { create(:motif, :sectorisation_level_agent, name: "Coucou", organisation: organisation) }
     let(:mock_geo_search) { instance_double(Users::GeoSearch, attributed_agents_by_organisation: attributed_agents_by_organisation) }
 
     subject do

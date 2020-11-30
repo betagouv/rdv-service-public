@@ -1,12 +1,5 @@
 describe MotifsHelper do
   describe "#motif_badges" do
-    it "affiche le badge En ligne pour un motif `reservable_online`" do
-      motif = build(:motif, reservable_online: true, location_type: :public_office)
-      badges = motif_badges(motif)
-      expect(badges).to include("En ligne")
-      expect(badges).to include("badge-motif-reservable_online")
-    end
-
     it "affiche le badge Secrétariat pour un motif `secretariat`" do
       motif = build(:motif, reservable_online: false, for_secretariat: true)
       badges = motif_badges(motif)

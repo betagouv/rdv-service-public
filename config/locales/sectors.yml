@@ -1,0 +1,10 @@
+fr:
+  sectors:
+    motifs_with_agent_level_sectorisation_in_service:
+      zero: "⚠️ aucun motif du service %{service} n'est sectorisé par agent"
+      one: "1 motif du service %{service} est sectorisé par agent : %{motifs}"
+      other: "%{count} motifs du service %{service} sont sectorisés par agent : %{motifs}"
+    motifs_with_organisation_level_sectorisation:
+      zero: "⚠️ aucun motif de %{organisation} n'est sectorisé à l'organisation"
+      one: "Un motif de %{organisation} est sectorisé à l'organisation : %{motifs}"
+      other: "%{count} motifs de %{organisation} sont sectorisés à l'organisation : %{motifs}"
