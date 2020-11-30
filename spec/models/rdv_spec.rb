@@ -264,4 +264,28 @@ describe Rdv, type: :model do
       expect(Rdv.visible).to contain_exactly(rdv)
     end
   end
+
+  describe "#for_today" do
+
+    it "return empty array when no rdv" do
+      expect(Rdv.for_today).to be_empty
+    end
+
+    it "return [rdv] when one rdv for today" do
+      now = Time.zone.parse("2020/12/23 12:30")
+      travel_to(now)
+      rdv = create(:rdv, starts_at: now)
+      expect(Rdv.for_today).to eq([rdv])
+    end
+
+    it "return ONLY the daily rdv" do
+      now = Time.zone.parse("2020/12/23 12:30")
+      travel_to(now)
+      create(:rdv, starts_at: now - 2.days)
+      rdv = create(:rdv, starts_at: now)
+      create(:rdv, starts_at: now + 1.days)
+
+      expect(Rdv.for_today).to eq([rdv])
+    end
+  end
 end
