@@ -19,7 +19,7 @@ describe Admin::RdvByLieuxController, type: :controller do
         create(:rdv, starts_at: Time.zone.now, agents: [agent], lieu: lieu, organisation: organisation)
 
         get :index, params: { organisation_id: organisation.id }
-        expected = { lieu.name => 1 }
+        expected = { lieu => 1 }
         expect(assigns(:rdvs_per_lieu)).to eq(expected)
       end
 
@@ -29,7 +29,7 @@ describe Admin::RdvByLieuxController, type: :controller do
         create(:rdv, starts_at: Time.zone.now, agents: [agent], lieu: lieu, organisation: organisation)
 
         get :index, params: { organisation_id: organisation.id }
-        expected = { lieu.name => 1, autre_lieu.name => 0 }
+        expected = { lieu => 1, autre_lieu => 0 }
         expect(assigns(:rdvs_per_lieu)).to eq(expected)
       end
     end
