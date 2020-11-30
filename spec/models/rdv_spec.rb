@@ -165,6 +165,18 @@ describe Rdv, type: :model do
     end
   end
 
+  describe "#with_lieu" do
+    it "return lieu's RDV only" do
+      organisation = create(:organisation)
+      lieu = create(:lieu, organisation: organisation)
+      other_lieu = create(:lieu, organisation: organisation)
+      rdv = create(:rdv, :future, lieu: lieu, organisation: organisation)
+      create(:rdv, :future, lieu: other_lieu, organisation: organisation)
+
+      expect(Rdv.with_lieu(lieu).to_a).to eq([rdv])
+    end
+  end
+
   describe "Rdv.with_user_in" do
     let!(:user1) { create(:user) }
     let!(:user2) { create(:user) }

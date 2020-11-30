@@ -45,6 +45,7 @@ class Rdv < ApplicationRecord
   scope :with_agent, ->(agent) { joins(:agents).where(agents: { id: agent.id }) }
   scope :with_user, ->(user) { joins(:rdvs_users).where(rdvs_users: { user_id: user.id }) }
   scope :with_user_in, ->(users) { joins(:rdvs_users).where(rdvs_users: { user_id: users.pluck(:id) }).distinct }
+  scope :with_lieu, ->(lieu) { joins(:lieu).where(lieux: { id: lieu.id }) }
   scope :visible, -> { joins(:motif).where(motifs: { visibility_type: [Motif::VISIBLE_AND_NOTIFIED, Motif::VISIBLE_AND_NOT_NOTIFIED] }) }
 
   after_commit :reload_uuid, on: :create
