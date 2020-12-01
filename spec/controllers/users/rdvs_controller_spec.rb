@@ -65,7 +65,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       it "call RdvUpdate.update function" do
         rdv = create(:rdv, starts_at: 5.hours.from_now)
         sign_in rdv.users.first
-        expect(RdvUpdater).to receive(:update).with(rdv, { status: "excused" })
+        expect(RdvUpdater).to receive(:update_by_user).with(rdv, { status: "excused" })
         put :cancel, params: { rdv_id: rdv.id }
       end
 
