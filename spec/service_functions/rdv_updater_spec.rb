@@ -3,35 +3,42 @@ describe RdvUpdater, type: :service do
     it "true when everything is ok" do
       rdv = create(:rdv)
       rdv_params = {}
-      expect(RdvUpdater.update(rdv, rdv_params)).to eq(true)
+      expect(RdvUpdater.update_by_agent(rdv, rdv_params)).to eq(true)
     end
 
     it "call rdv.update with params" do
       rdv = create(:rdv, context: "un contexte")
       rdv_params = { context: "un autre context" }
       expect(rdv).to receive(:update).with(rdv_params)
-      RdvUpdater.update(rdv, rdv_params)
+      RdvUpdater.update_by_agent(rdv, rdv_params)
     end
 
     it "destroy all file_attentes" do
       rdv = create(:rdv, agents: [create(:agent)])
       create(:file_attente, rdv: rdv)
       rdv_params = { status: "excused" }
-      RdvUpdater.update(rdv, rdv_params)
+      RdvUpdater.update_by_agent(rdv, rdv_params)
       expect(rdv.reload.file_attentes).to be_empty
     end
 
     it "return false when update fail" do
       rdv = create(:rdv, agents: [create(:agent)])
       rdv_params = { agents: [] }
-      expect(RdvUpdater.update(rdv, rdv_params)).to eq(false)
+      expect(RdvUpdater.update_by_agent(rdv, rdv_params)).to eq(false)
     end
 
-    it "notify user when rdv cancelled" do
+    it "notify user when rdv cancelled by agent" do
       rdv = create(:rdv, status: "waiting")
       rdv_params = { status: "excused" }
-      expect(Notifications::Rdv::RdvCancelledByAgentService).to receive(:perform_with).with(rdv)
-      RdvUpdater.update(rdv, rdv_params)
+      expect(Notifications::Rdv::RdvCancelledByAgent).to receive(:perform_with).with(rdv)
+      RdvUpdater.update_by_agent(rdv, rdv_params)
+    end
+
+    it "notify user and agent when rdv cancelled by user" do
+      rdv = create(:rdv, status: "waiting")
+      rdv_params = { status: "excused" }
+      expect(Notifications::Rdv::RdvCancelledByUser).to receive(:perform_with).with(rdv)
+      RdvUpdater.update_by_user(rdv, rdv_params)
     end
 
     it "force updated_at to ensure new version will be recorded" do
@@ -41,7 +48,7 @@ describe RdvUpdater, type: :service do
 
       rdv = create(:rdv, updated_at: previous_date, context: "")
       rdv_params = { context: "un nouveau context" }
-      RdvUpdater.update(rdv, rdv_params)
+      RdvUpdater.update_by_agent(rdv, rdv_params)
       expect(rdv.reload.updated_at).to be_within(3.second).of now
       travel_back
     end
@@ -50,7 +57,7 @@ describe RdvUpdater, type: :service do
       cancelled_at = Time.new(2020, 1, 12, 12, 56)
       rdv = create(:rdv, status: "notexcused", cancelled_at: cancelled_at)
       rdv_params = { status: "waiting" }
-      RdvUpdater.update(rdv, rdv_params)
+      RdvUpdater.update_by_agent(rdv, rdv_params)
       expect(rdv.reload.cancelled_at).to eq(nil)
     end
 
@@ -58,7 +65,7 @@ describe RdvUpdater, type: :service do
       cancelled_at = Time.new(2020, 1, 12, 12, 56)
       rdv = create(:rdv, status: "excused", cancelled_at: cancelled_at, context: "")
       rdv_params = { context: "something new" }
-      RdvUpdater.update(rdv, rdv_params)
+      RdvUpdater.update_by_agent(rdv, rdv_params)
       expect(rdv.reload.cancelled_at).to be_within(3.second).of cancelled_at
     end
 
@@ -66,7 +73,7 @@ describe RdvUpdater, type: :service do
       now = Time.new(2020, 4, 23, 12, 56)
       travel_to(now)
       rdv = create(:rdv, status: "excused", cancelled_at: Time.zone.parse("12/1/2020 12:56"))
-      RdvUpdater.update(rdv, { status: "notexcused" })
+      RdvUpdater.update_by_agent(rdv, { status: "notexcused" })
       expect(rdv.reload.cancelled_at).to be_within(3.second).of now
     end
   end

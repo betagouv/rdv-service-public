@@ -37,7 +37,7 @@ class Users::RdvsController < UserAuthController
 
   def cancel
     authorize(@rdv)
-    if RdvUpdater.update(@rdv, { status: "excused" })
+    if RdvUpdater.update_by_user(@rdv, { status: "excused" })
       flash[:notice] = "Le RDV a bien été annulé."
     else
       flash[:error] = "Impossible d'annuler le RDV."

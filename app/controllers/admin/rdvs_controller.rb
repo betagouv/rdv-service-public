@@ -33,7 +33,7 @@ class Admin::RdvsController < AgentAuthController
 
   def update
     authorize(@rdv)
-    success = RdvUpdater.update(@rdv, rdv_params)
+    success = RdvUpdater.update_by_agent(@rdv, rdv_params)
     respond_to do |format|
       format.json do
         temporal_status_human = I18n.t("activerecord.attributes.rdv.statuses.#{@rdv.temporal_status}")

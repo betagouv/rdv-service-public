@@ -1,0 +1,9 @@
+div
+  p Bonjour,
+  p Votre RDV #{@rdv.motif.service.name} du #{l(@rdv.starts_at, format: :human)} a bien été annulé.
+
+  - if @rdv.lieu.present? && @rdv.reservable_online?
+    p Vous pouvez reprendre un rendez-vous en cliquant sur le lien ci-dessous.
+
+    .btn-wrapper
+      = link_to 'Reprendre RDV', lieu_url(@rdv.lieu.id, search: {departement: @rdv.organisation.departement, motif: @rdv.motif.name, service: @rdv.motif.service.id, where: @rdv.address}), class:'btn btn-primary'
