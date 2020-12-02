@@ -5,8 +5,6 @@ div
       | Nous vous rappellons que vous avez un RDV prévu le #{l(@rdv.starts_at, format: :human_approx)}.
     - else
       | Nous vous rappellons que vous avez un RDV prévu le #{l(@rdv.starts_at, format: :human)}.
+
   = render "mailers/common/rdv_overview", rdv: @rdv
-  p
-    | Vous pouvez modifier ou annuler votre rendez-vous jusqu'à 4h avant celui-ci. Il suffit de vous rendre dans votre espace personnel ou en cliquant sur le lien ci-dessous.
-  .btn-wrapper
-    = link_to 'Mon espace', users_rdvs_url, class:'btn btn-primary'
+  = render "mailers/common/rdv_cancellable"
