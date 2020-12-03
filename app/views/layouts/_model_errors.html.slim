@@ -6,9 +6,7 @@
       - model.warnings.each do |key, msg|
         li= msg
 
-  - if model.respond_to?(:overlapping_plages_ouvertures) && model.overlapping_plages_ouvertures.any?
-    ul.pl-3
-      = render "admin/plage_ouvertures/overlapping_plage_ouvertures", model: model
+  = content_for(:warnings_description)
 
   - if local_assigns[:f]
     .collapse.show.js-collapse-warning-confirmation
