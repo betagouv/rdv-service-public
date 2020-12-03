@@ -11,10 +11,4 @@ describe Notifications::Rdv::RdvCancelledByUser, type: :service do
     expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "cancelled_by_user").count).to eq 1
   end
 
-  it "sends a SMS" do
-    expect(SendTransactionalSmsJob).to receive(:perform_later)
-      .with(:rdv_cancelled, rdv.id, user1.id)
-    subject
-    expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: "cancelled_by_user").count).to eq 1
-  end
 end
