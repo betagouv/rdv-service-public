@@ -81,10 +81,6 @@ class Rdv < ApplicationRecord
     cancelled_at.present?
   end
 
-  def cancel
-    update(cancelled_at: Time.zone.now, status: :excused)
-  end
-
   def cancellable?
     !cancelled? && starts_at > 4.hours.from_now
   end

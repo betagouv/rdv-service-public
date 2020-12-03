@@ -1,4 +1,4 @@
-class Notifications::Rdv::RdvCancelledByAgentService < ::BaseService
+class Notifications::Rdv::RdvCancelledByAgent < ::BaseService
   include Notifications::Rdv::BaseServiceConcern
 
   protected

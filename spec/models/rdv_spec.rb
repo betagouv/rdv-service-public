@@ -36,20 +36,6 @@ describe Rdv, type: :model do
     end
   end
 
-  describe "#cancel" do
-    let(:rdv) { create(:rdv) }
-    let(:now) { Time.current }
-
-    subject { rdv.cancel }
-
-    before { freeze_time }
-    after { travel_back }
-
-    it "should set cancelled_at" do
-      expect { subject }.to change { rdv.cancelled_at }.from(nil).to(now)
-    end
-  end
-
   describe "#cancellable?" do
     let(:now) { Time.current }
 

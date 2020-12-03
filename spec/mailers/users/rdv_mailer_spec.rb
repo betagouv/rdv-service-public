@@ -1,47 +1,6 @@
 RSpec.describe Users::RdvMailer, type: :mailer do
-  let(:rdv) { create(:rdv) }
-  let(:previous_starts_at) { nil }
-
-  shared_examples "mail with ICS" do
-    it "contains the ics" do
-      expect(mail.body.encoded).to match("UID:#{rdv.uuid}")
-      expect(mail.body.encoded).to match("STATUS:CANCELLED") if rdv.cancelled?
-    end
-  end
-
-  shared_examples "mail for rdv confirmation" do
-    it "renders the subject" do
-      expect(mail.subject).to eq("RDV confirmé le #{I18n.l(rdv.starts_at, format: :human)}")
-    end
-
-    it "renders the body" do
-      expect(mail.html_part.body.encoded).to match("Votre RDV du #{I18n.l(rdv.starts_at, format: :human)} a été confirmé")
-    end
-  end
-
-  shared_examples "mail for updated rdv" do
-    it "renders the subject" do
-      expect(mail.subject).to eq("Modification de la date de votre RDV")
-    end
-
-    it "renders the body" do
-      expect(mail.html_part.body.encoded).to match("Modification de votre RDV")
-      expect(mail.html_part.body.encoded).to match("Votre rendez-vous initialement prévu le #{I18n.l(previous_starts_at, format: :human)}")
-      expect(mail.html_part.body.encoded).to match("a été déplacé au&nbsp;<strong>#{I18n.l(rdv.starts_at, format: :human)}</strong>")
-    end
-  end
-
-  shared_examples "mail for cancelled rdv" do
-    it "renders the subject" do
-      expect(mail.subject).to eq("ANNULÉ : RDV du #{I18n.l(rdv.starts_at, format: :human)}")
-    end
-
-    it "renders the body" do
-      expect(mail.html_part.body.encoded).to match("ANNULÉ : RDV du #{I18n.l(rdv.starts_at, format: :human)}")
-    end
-  end
-
   describe "#rdv_created" do
+    let(:rdv) { create(:rdv) }
     let(:user) { rdv.users.first }
     let(:mail) { Users::RdvMailer.rdv_created(rdv, user) }
 
@@ -49,8 +8,107 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       expect(mail.to).to eq([user.email])
     end
 
-    it_behaves_like "mail for rdv confirmation"
+    it "renders the subject" do
+      expect(mail.subject).to eq("RDV confirmé le #{I18n.l(rdv.starts_at, format: :human)}")
+    end
 
-    it_behaves_like "mail with ICS"
+    it "renders the body" do
+      expect(mail.html_part.body.encoded).to match("Votre RDV du #{I18n.l(rdv.starts_at, format: :human)} a été confirmé")
+    end
+
+    it "contains the ics" do
+      expect(mail.body.encoded).to match("UID:#{rdv.uuid}")
+      expect(mail.body.encoded).to match("STATUS:CANCELLED") if rdv.cancelled?
+    end
+  end
+
+  describe "#rdv_cancelled_by_user" do
+    it "send mail to user" do
+      rdv = create(:rdv)
+      user = rdv.users.first
+      mail = Users::RdvMailer.rdv_cancelled_by_user(rdv, user)
+
+      expect(mail.to).to eq([user.email])
+    end
+
+    it "subject contains date of cancelled rdv" do
+      organisation = build(:organisation, name: "Orga du coin")
+      user = build(:user)
+      rdv = build(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
+      mail = Users::RdvMailer.rdv_cancelled_by_user(rdv, user)
+
+      expect(mail.subject).to eq("RDV annulé le lundi 15 juin 2020 à 12h30 avec Orga du coin")
+    end
+
+    it "body contains cancelled confirmation with dateTime" do
+      organisation = build(:organisation, name: "Orga du coin")
+      user = build(:user)
+      rdv = build(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
+      mail = Users::RdvMailer.rdv_cancelled_by_user(rdv, user)
+
+      expect(mail.body).to match("lundi 15 juin 2020 à 12h30")
+    end
+
+    it "body contains cancelled confirmation with motif's service name" do
+      organisation = build(:organisation, name: "Orga du coin")
+      user = build(:user)
+      rdv = build(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
+      mail = Users::RdvMailer.rdv_cancelled_by_user(rdv, user)
+
+      expect(mail.body).to match(rdv.motif.service_name)
+    end
+
+    it "body contains link to book a new RDV" do
+      organisation = build(:organisation, name: "Orga du coin")
+      user = build(:user)
+      rdv = build(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
+      mail = Users::RdvMailer.rdv_cancelled_by_user(rdv, user)
+
+      expected_url = lieux_url(search: { \
+                                 departement: rdv.organisation.departement, \
+                                 motif_name_with_location_type: rdv.motif.name_with_location_type, \
+                                 service: rdv.motif.service.id, \
+                                 where: rdv.address \
+                               })
+
+      expect(mail.body).to have_link("Reprendre RDV", href: expected_url)
+    end
+  end
+
+  describe "#rdv_cancelled_by_agent" do
+    it "send mail to user" do
+      rdv = create(:rdv)
+      user = rdv.users.first
+      mail = Users::RdvMailer.rdv_cancelled_by_agent(rdv, user)
+
+      expect(mail.to).to eq([user.email])
+    end
+
+    it "subject contains date of cancelled rdv" do
+      organisation = build(:organisation, name: "Orga du coin")
+      user = build(:user)
+      rdv = build(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
+      mail = Users::RdvMailer.rdv_cancelled_by_user(rdv, user)
+
+      expect(mail.subject).to eq("RDV annulé le lundi 15 juin 2020 à 12h30 avec Orga du coin")
+    end
+
+    it "body contains cancelled confirmation with dateTime" do
+      organisation = build(:organisation, name: "Orga du coin")
+      user = build(:user)
+      rdv = build(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
+      mail = Users::RdvMailer.rdv_cancelled_by_agent(rdv, user)
+
+      expect(mail.body).to match("lundi 15 juin 2020 à 12h30")
+    end
+
+    it "body contains cancelled confirmation with motif's service name" do
+      organisation = build(:organisation, name: "Orga du coin")
+      user = build(:user)
+      rdv = build(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
+      mail = Users::RdvMailer.rdv_cancelled_by_agent(rdv, user)
+
+      expect(mail.body).to match(rdv.motif.service_name)
+    end
   end
 end

@@ -1,5 +1,5 @@
-describe Notifications::Rdv::RdvCancelledByAgentService, type: :service do
-  subject { Notifications::Rdv::RdvCancelledByAgentService.perform_with(rdv) }
+describe Notifications::Rdv::RdvCancelledByAgent, type: :service do
+  subject { Notifications::Rdv::RdvCancelledByAgent.perform_with(rdv) }
   let(:user1) { build(:user) }
   let(:rdv) { create(:rdv, starts_at: 3.days.from_now, users: [user1]) }
 
