@@ -1,4 +1,4 @@
-- nb_rdv = Rdv.for_today.with_lieu(lieu).count
+- nb_rdv = policy_scope(Rdv).for_today.with_lieu(lieu).count
 tr id="lieu_#{lieu.id}"
   td
     = link_to lieu.name, edit_admin_organisation_lieu_path(lieu.organisation, lieu)
