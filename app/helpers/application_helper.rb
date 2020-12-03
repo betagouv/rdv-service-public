@@ -111,4 +111,10 @@ module ApplicationHelper
       class: "badge badge-light text-monospace"
     )
   end
+
+  def departements_with_upcoming_rdvs
+    Organisation
+      .where(id: Rdv.where("starts_at > ?", Time.zone.now).select(:organisation_id).distinct.pluck(:organisation_id))
+      .select(:departement).distinct.pluck(:departement)
+  end
 end

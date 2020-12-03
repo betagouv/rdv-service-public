@@ -37,5 +37,26 @@
       span> Autres départements, voir
       = link_to "l'annuaire des services publics", "https://lannuaire.service-public.fr/"
 
-  h3 Équipe technique
-  = link_to "contact@rdv-solidarites.fr", "mailto:contact@rdv-solidarites.fr?subject=Depuis%20la%20page%20contact"
+  .row#tech-support
+    .col-md-6
+      h3.mt-4 Contacter l'équipe technique
+      - if @support_ticket_form.errors.empty?
+        button.btn.btn-primary.collapse.show.js-form-support-ticket[
+          data-toggle="collapse"
+          aria-expanded="false"
+          data-target=".js-form-support-ticket"
+        ]
+          | Question à l'équipe technique de RDV-Solidarités
+      .js-form-support-ticket.mt-2[
+        class=(@support_ticket_form.errors.any? ? "" : "collapse")
+      ]
+        = simple_form_for [:users, @support_ticket_form], url: support_tickets_path(anchor: "tech-support"), as: :support_ticket do |f|
+          = render partial: 'layouts/model_errors', locals: { model: @support_ticket_form }
+          = f.input :subject, label: "Sujet", collection: SupportTicketForm::SUBJECTS
+          .row
+            .col-md-6= f.input :first_name, label: "Prénom"
+            .col-md-6= f.input :last_name, label: "Nom"
+          = f.input :departement, label: "Département", collection: departements_with_upcoming_rdvs + ["Autre"], hint: "Si votre département n'est pas listé, c'est qu'il n'utilise pas la plateforme RDV-Solidarités"
+          = f.input :email, label: "Email"
+          = f.input :message, label: "Message", as: :text, hint: "Merci de ne pas inclure d'informations confidentielles vous concernant", input_html: { rows: 5 }
+          = f.button :submit, value: "Envoyer la demande à l'équipe technique", data: { disable_with: "Envoi en cours…" }
