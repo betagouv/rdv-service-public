@@ -1,6 +1,0 @@
-fr:
-  lieux:
-    by_rdv:
-      zero: "aucun RDV à %{name} aujourd'hui"
-      one: "1 RDV à %{name} aujourd'hui"
-      other: "%{count} RDVs à %{name} aujourd'hui"

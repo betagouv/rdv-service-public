@@ -103,7 +103,6 @@ Rails.application.routes.draw do
         resources :plage_ouvertures, except: [:index, :new]
         resources :agent_searches, only: :index, module: "creneaux"
         resources :lieux, except: :show
-        resources :rdv_by_lieux, only: :index
         resources :motifs, except: :show
         resources :rdvs, except: [:new] do
           resources :versions, only: [:index]
