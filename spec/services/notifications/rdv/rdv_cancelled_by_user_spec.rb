@@ -10,5 +10,4 @@ describe Notifications::Rdv::RdvCancelledByUser, type: :service do
     subject
     expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "cancelled_by_user").count).to eq 1
   end
-
 end
