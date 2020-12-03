@@ -1,28 +1,6 @@
 - if plage_ouverture.available_motifs.any?
   = simple_form_for [:admin, plage_ouverture.organisation, plage_ouverture] do |f|
-
-    = render partial: 'layouts/model_errors', locals: { model: plage_ouverture }
-
-    - if plage_ouverture.warnings_need_confirmation?
-      ul.pl-3
-        = render "overlapping_plage_ouvertures", \
-          overlapping_plages_ouvertures: @overlapping_plages_ouvertures, \
-          overlapping_plages_ouvertures_out_of_scope_count: @overlapping_plages_ouvertures_out_of_scope_count
-
-      .collapse.show.js-collapse-warning-confirmation
-        .text-muted Ces avertissements ne sont pas bloquants, vous pouvez les ignorer en confirmant
-        = f.input :active_warnings_confirm_decision, as: :hidden, input_html: {class: "js-warning-confirm-input", value: "1" }
-        .d-flex.justify-content-between
-          div
-            a.btn.btn-outline-dark[
-              data-toggle="collapse"
-              data-target=".js-collapse-warning-confirmation"
-              href="#"
-              onclick="document.querySelector('.js-warning-confirm-input').setAttribute('disabled', 'disabled');"
-            ] Annuler et modifier
-          div= f.submit "Confirmer", class: "btn btn-warning"
-        hr
-
+    = render(partial: 'layouts/model_errors', locals: { model: plage_ouverture, f: f })
     .form-collapsable-fields-wrapper.collapse.js-collapse-warning-confirmation[
       class=(plage_ouverture.warnings_need_confirmation? ? "" : "show")
       aria-expanded=(plage_ouverture.warnings_need_confirmation? ? "false" : "true")

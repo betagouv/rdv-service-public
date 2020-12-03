@@ -6,6 +6,25 @@
       - model.warnings.each do |key, msg|
         li= msg
 
+  - if model.respond_to?(:overlapping_plages_ouvertures) && model.overlapping_plages_ouvertures.any?
+    ul.pl-3
+      = render "admin/plage_ouvertures/overlapping_plage_ouvertures", model: model
+
+  - if local_assigns[:f]
+    .collapse.show.js-collapse-warning-confirmation
+      .text-muted Ces avertissements ne sont pas bloquants, vous pouvez les ignorer en confirmant
+      = f.input :active_warnings_confirm_decision, as: :hidden, input_html: {class: "js-warning-confirm-input", value: "1" }
+      .d-flex.justify-content-between
+        div
+          a.btn.btn-outline-dark[
+            data-toggle="collapse"
+            data-target=".js-collapse-warning-confirmation"
+            href="#"
+            onclick="document.querySelector('.js-warning-confirm-input').setAttribute('disabled', 'disabled');"
+          ] Annuler et modifier
+        div= f.submit "Confirmer", class: "btn btn-warning"
+      hr
+
 - elsif model.errors.any?
   .alert.alert-danger.fade.show
     ul.m-0
