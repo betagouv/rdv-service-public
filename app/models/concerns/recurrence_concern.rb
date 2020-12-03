@@ -72,6 +72,12 @@ module RecurrenceConcern
     recurrence&.to_hash&.[](:until)
   end
 
+  def recurrence_interval
+    return nil if recurrence.nil?
+
+    recurrence.to_hash[:interval] || 1 # when interval is nil, it means 1
+  end
+
   private
 
   def occurence_start_at_list_for(inclusive_date_range)

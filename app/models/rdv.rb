@@ -24,6 +24,7 @@ class Rdv < ApplicationRecord
 
   validates :users, :organisation, :motif, :starts_at, :duration_in_min, :agents, presence: true
   validates :lieu, presence: true, if: :public_office?
+  caution :warn_overlapping_plage_ouverture
 
   scope :not_cancelled, -> { where(cancelled_at: nil) }
   scope :cancelled, -> { where.not(cancelled_at: nil) }
@@ -123,6 +124,20 @@ class Rdv < ApplicationRecord
     [responsibles, users].flatten.select(&:address).first || users.first
   end
 
+  def overlapping_plages_ouvertures
+    return [] if starts_at.blank? || duration_in_min.blank? || lieu.blank? || past?
+
+    @overlapping_plages_ouvertures ||= PlageOuverture.where(agent: agent_ids).where.not(lieu: lieu).overlapping_with_time_slot(to_time_slot)
+  end
+
+  def overlapping_plages_ouvertures?
+    overlapping_plages_ouvertures.any?
+  end
+
+  def to_time_slot
+    TimeSlot.new(starts_at, ends_at)
+  end
+
   private
 
   def location_without_lieu?
@@ -142,5 +157,11 @@ class Rdv < ApplicationRecord
   def reload_uuid
     # https://github.com/rails/rails/issues/17605
     self[:uuid] = self.class.where(id: id).pluck(:uuid).first if attributes.key? "uuid"
+  end
+
+  def warn_overlapping_plage_ouverture
+    return true unless overlapping_plages_ouvertures?
+
+    warnings.add(:base, "Conflit : un agent a une plage d'ouverture dans un autre lieu", active: true)
   end
 end

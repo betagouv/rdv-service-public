@@ -162,7 +162,7 @@ class CalendarRdvSolidarites {
     if (this.data.selectedEventId && info.event.id == this.data.selectedEventId)
       $el.addClass("selected");
     $el.addClass("fc-event-"+ info.event.extendedProps.status);
-    if (info.event.extendedProps.unclickable != true){
+    if (info.event.extendedProps.unclickable != true) {
       let title = `${moment(info.event.start).format('H:mm')} - ${moment(info.event.end).format('H:mm')}`;
       if (info.event.rendering == 'background') {
         $el.append("<div class=\"fc-title\" style=\"color: white; padding: 2px 4px; font-size: 12px; font-weight: bold;\">" + info.event.title + "</div>");
@@ -174,6 +174,12 @@ class CalendarRdvSolidarites {
           title += ` <br>${info.event.extendedProps.motif}`;
         }
         title += `<br><strong>${info.event.title}</strong>`;
+        if (info.event.extendedProps.lieu) {
+          title += `<br><strong>Lieu:</strong> ${info.event.extendedProps.lieu}`;
+          if (info.event.extendedProps.overlappingPlagesOuvertures) {
+            title += " ⚠️";
+          }
+        }
         title += `<br><strong>Statut:</strong> ${info.event.extendedProps.readableStatus}`;
       }
 

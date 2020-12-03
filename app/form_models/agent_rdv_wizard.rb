@@ -46,5 +46,7 @@ module AgentRdvWizard
     validates :users, presence: true
   end
 
-  class Step3 < Step2; end
+  class Step3 < Step2
+    delegate :valid?, :overlapping_plages_ouvertures, :overlapping_plages_ouvertures?, :warnings_need_confirmation?, :warnings, to: :rdv
+  end
 end

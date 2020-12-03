@@ -13,8 +13,9 @@ RSpec.describe Admin::RdvsController, type: :controller do
   end
 
   describe "GET index" do
-    let!(:rdv1) { create(:rdv, motif: motif, agents: [agent], users: [user], starts_at: Time.zone.parse("21/07/2019 08:00"), organisation: organisation) }
-    let!(:rdv2) { create(:rdv, motif: motif, agents: [agent], users: [user], starts_at: Time.zone.parse("21/07/2019 07:00"), organisation: organisation) }
+    let!(:lieu) { create(:lieu, organisation: organisation, name: "MDS Orgeval") }
+    let!(:rdv1) { create(:rdv, motif: motif, agents: [agent], users: [user], starts_at: Time.zone.parse("21/07/2019 08:00"), organisation: organisation, lieu: lieu) }
+    let!(:rdv2) { create(:rdv, motif: motif, agents: [agent], users: [user], starts_at: Time.zone.parse("21/07/2019 07:00"), organisation: organisation, lieu: lieu) }
 
     subject { get(:index, params: { organisation_id: organisation.id, agent_id: agent.id, start: start_time, end: end_time }, as: :json) }
 
@@ -39,7 +40,7 @@ RSpec.describe Admin::RdvsController, type: :controller do
         expect(first["end"]).to eq(rdv1.ends_at.as_json)
         expect(first["backgroundColor"]).to eq(rdv1.motif.color)
         expect(first["url"]).to eq(admin_organisation_rdv_path(rdv1.organisation, rdv1, agent_id: agent.id))
-        expect(first["extendedProps"]).to eq({ readableStatus: Rdv.human_enum_name(:status, rdv1.status), status: rdv1.status, motif: "Suivi", past: rdv1.past?, duration: rdv.duration_in_min }.as_json)
+        expect(first["extendedProps"]).to eq({ readableStatus: Rdv.human_enum_name(:status, rdv1.status), status: rdv1.status, motif: "Suivi", past: rdv1.past?, duration: rdv.duration_in_min, lieu: "MDS Orgeval", overlappingPlagesOuvertures: false }.as_json)
 
         second = @parsed_response[1]
         expect(second.size).to eq(7)
@@ -48,7 +49,7 @@ RSpec.describe Admin::RdvsController, type: :controller do
         expect(second["end"]).to eq(rdv2.ends_at.as_json)
         expect(second["backgroundColor"]).to eq(rdv2.motif.color)
         expect(second["url"]).to eq(admin_organisation_rdv_path(rdv2.organisation, rdv2, agent_id: agent.id))
-        expect(first["extendedProps"]).to eq({ readableStatus: Rdv.human_enum_name(:status, rdv2.status), status: rdv2.status, motif: rdv2.motif.name, past: rdv2.past?, duration: rdv.duration_in_min }.as_json)
+        expect(first["extendedProps"]).to eq({ readableStatus: Rdv.human_enum_name(:status, rdv2.status), status: rdv2.status, motif: rdv2.motif.name, past: rdv2.past?, duration: rdv.duration_in_min, lieu: "MDS Orgeval", overlappingPlagesOuvertures: false }.as_json)
       end
     end
 

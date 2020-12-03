@@ -3,14 +3,14 @@
     i.fa.fa-fw.fa-at>
     | RDV pris sur Internet
 
-.d-flex.card-text
+.d-flex.card-text.mb-2
   div.mr-1
     i.fa.fa-fw.fa-info-circle>
   div
     = rdv.motif.name
     div
       - if rdv.context.blank?
-        .text-muted  Pas de contexte renseigné
+        .text-muted Pas de contexte renseigné
       - else
         .text-muted Contexte :
         .border-left.pl-2= simple_format(rdv.context)
@@ -27,6 +27,7 @@
       = human_location(rdv)
     - elsif rdv.public_office?
       = human_location(rdv)
+
 p.card-text
   strong> Professionnel(s) :
   = agents_to_sentence(rdv.agents)
@@ -34,3 +35,11 @@ p.card-text
   p.card-text
     strong> Usager(s) :
     = users_inline_list_for_agents(rdv.users, display_links_to_users: local_assigns.fetch(:display_links_to_users, true))
+
+- if rdv.public_office? && rdv.overlapping_plages_ouvertures?
+  div.my-3
+    .alert.alert-warning.mt-1.mb-0
+      | Conflit de lieu avec des plages d'ouvertures
+    .border-left.border-right.border-bottom.rounded.border-warning
+      ul.pl-3.py-2.mb-0
+        = render "admin/plage_ouvertures/overlapping_plage_ouvertures", model: rdv, display_agents: true

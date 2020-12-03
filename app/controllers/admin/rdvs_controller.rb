@@ -81,7 +81,8 @@ class Admin::RdvsController < AgentAuthController
         notice: "Le rendez-vous a été créé."
       )
     else
-      @rdv_wizard = AgentRdvWizard::Step3.new(current_agent, current_organisation, @rdv.attributes)
+      @rdv_wizard = AgentRdvWizard::Step3.new(current_agent, current_organisation, users: @rdv.users, agent_ids: @rdv.agent_ids, **@rdv.attributes)
+      @rdv_wizard.valid? # trigger validation
       render "admin/rdv_wizard_steps/step3"
     end
   end
@@ -103,7 +104,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def rdv_params
-    params.require(:rdv).permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, agent_ids: [], user_ids: [])
+    params.require(:rdv).permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, :active_warnings_confirm_decision, agent_ids: [], user_ids: [])
   end
 
   def status_params
