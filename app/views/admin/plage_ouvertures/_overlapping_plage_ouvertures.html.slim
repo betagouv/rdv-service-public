@@ -1,4 +1,6 @@
-- overlapping_plages_ouvertures.each do |overlapping_plage_ouverture|
+- in_scope = filter_plage_ouvertures_in_departement_scope(model.overlapping_plages_ouvertures)
+
+- in_scope.each do |overlapping_plage_ouverture|
   li.mb-1
     span>= link_to("Plage d'ouverture #{overlapping_plage_ouverture.id}", edit_admin_organisation_plage_ouverture_path(overlapping_plage_ouverture.organisation, overlapping_plage_ouverture))
     span> à #{overlapping_plage_ouverture.lieu.name}
@@ -10,6 +12,7 @@
     - if overlapping_plage_ouverture.organisation != current_organisation
       span>= "(Organisation #{overlapping_plage_ouverture.organisation.name})"
 
-- if overlapping_plages_ouvertures_out_of_scope_count == 1
+- out_of_scope_count = model.overlapping_plages_ouvertures.count - in_scope.count
+- if out_of_scope_count >= 1
   li.mb-1
-    = t("plage_ouvertures.overlapping_out_of_scope", count: overlapping_plages_ouvertures_out_of_scope_count)
+    = t("plage_ouvertures.overlapping_out_of_scope", count: out_of_scope_count)

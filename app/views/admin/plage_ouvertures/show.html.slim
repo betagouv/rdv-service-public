@@ -51,9 +51,7 @@
               | Conflit de dates et d'horaires avec d'autres plages d'ouvertures
             .border-left.border-right.border-bottom.rounded.border-warning
               ul.pl-3.py-2.mb-0
-                = render "overlapping_plage_ouvertures", \
-                  overlapping_plages_ouvertures: @overlapping_plages_ouvertures, \
-                  overlapping_plages_ouvertures_out_of_scope_count: @overlapping_plages_ouvertures_out_of_scope_count
+                = render "overlapping_plage_ouvertures", model: @plage_ouverture
 
       .card-footer.d-flex.justify-content-between
         div

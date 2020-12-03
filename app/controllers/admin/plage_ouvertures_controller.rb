@@ -7,7 +7,6 @@ class Admin::PlageOuverturesController < AgentAuthController
 
   def show
     authorize(@plage_ouverture)
-    set_overlapping_details
   end
 
   def index
@@ -58,14 +57,12 @@ class Admin::PlageOuverturesController < AgentAuthController
       flash[:notice] = "Plage d'ouverture créée"
       redirect_to admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture)
     else
-      set_overlapping_details
       render :new
     end
   end
 
   def update
     authorize(@plage_ouverture)
-    set_overlapping_details
     if @plage_ouverture.update(plage_ouverture_params)
       redirect_to admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture), notice: "La plage d'ouverture a été modifiée."
     else
@@ -105,14 +102,5 @@ class Admin::PlageOuverturesController < AgentAuthController
 
   def filter_params
     params.permit(:start, :end, :organisation_id, :agent_id, :page, :current_tab)
-  end
-
-  def set_overlapping_details
-    @overlapping_plages_ouvertures = Agent::PlageOuverturePolicy::DepartementScope
-      .new(pundit_user, PlageOuverture)
-      .resolve
-      .merge(@plage_ouverture.overlapping_plages_ouvertures)
-    @overlapping_plages_ouvertures_out_of_scope_count = \
-      @plage_ouverture.overlapping_plages_ouvertures.count - @overlapping_plages_ouvertures.count
   end
 end
