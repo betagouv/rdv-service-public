@@ -23,11 +23,11 @@ module RdvUpdater
       return false unless rdv.update(rdv_params)
 
       rdv.file_attentes.destroy_all if cancel_status?(rdv_params[:status])
-      notify(rdv, by) if rdv_params[:status] == "excused"
+      notify_cancelled(rdv, by) if rdv_params[:status] == "excused"
       true
     end
 
-    def notify(rdv, by)
+    def notify_cancelled(rdv, by)
       send("notify_#{by}", rdv)
     end
 
