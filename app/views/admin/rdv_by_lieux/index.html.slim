@@ -1,9 +1,0 @@
-- content_for :title do
-  | Vos RDVs par lieu de consultation
-
-.card
-  .card-body
-    ul
-      - @rdvs_per_lieu.each do |lieu, rdv_counter|
-        li
-          = link_to I18n.t("lieux.by_rdv", count: rdv_counter, name: lieu.name), admin_organisation_rdvs_path(current_organisation, lieu_id: lieu.id, start: Time.zone.now.beginning_of_day, end: Time.zone.now.end_of_day )

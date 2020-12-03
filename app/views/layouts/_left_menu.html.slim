@@ -106,13 +106,14 @@
           i.fa.fa-list>
           span.ml-1 Liste des RDV
 
-      li.side-nav-item.mb-4.pl-3.pr-2
-        = link_to \
-          admin_organisation_lieux_path(current_organisation), \
-          class: ("active" if content_for(:menu_item) == "menu-rdvs-list") \
-        do
-          i.fa.fa-list>
-          span.ml-1 Lieux
+      - unless current_agent.admin?
+        li.side-nav-item.mb-4.pl-3.pr-2
+          = link_to \
+            admin_organisation_lieux_path(current_organisation), \
+            class: ("active" if content_for(:menu_item) == "menu-lieux") \
+          do
+            i.fa.fa-list>
+            span.ml-1 Lieux
 
       - if current_agent.admin?
         li.side-nav-item.mb-4.pl-3.pr-2
