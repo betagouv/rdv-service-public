@@ -1,5 +1,4 @@
 RSpec.describe Users::RdvMailer, type: :mailer do
-
   describe "#rdv_created" do
     let(:rdv) { create(:rdv) }
     let(:user) { rdv.users.first }
@@ -66,11 +65,11 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       mail = Users::RdvMailer.rdv_cancelled_by_user(rdv, user)
 
       expected_url = lieux_url(search: { \
-        departement: rdv.organisation.departement, \
-        motif_name_with_location_type: rdv.motif.name_with_location_type, \
-        service: rdv.motif.service.id, \
-        where: rdv.address \
-      })
+                                 departement: rdv.organisation.departement, \
+                                 motif_name_with_location_type: rdv.motif.name_with_location_type, \
+                                 service: rdv.motif.service.id, \
+                                 where: rdv.address \
+                               })
 
       expect(mail.body).to have_link("Reprendre RDV", href: expected_url)
     end
@@ -111,6 +110,5 @@ RSpec.describe Users::RdvMailer, type: :mailer do
 
       expect(mail.body).to match(rdv.motif.service_name)
     end
-
   end
 end
