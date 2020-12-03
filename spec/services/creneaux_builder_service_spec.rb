@@ -111,7 +111,7 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "with a RDV" do
-    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, agents: [agent], organisation: organisation) }
+    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, agents: [agent], organisation: organisation, lieu: lieu) }
 
     it do
       expect(subject.size).to eq(3)
@@ -123,7 +123,7 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "with a RDV shorter than the motif" do
-    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 15, agents: [agent], organisation: organisation) }
+    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 15, agents: [agent], organisation: organisation, lieu: lieu) }
 
     it do
       expect(subject.size).to eq(4)
@@ -136,7 +136,7 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "with a RDV longer than the motif" do
-    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 45, agents: [agent], organisation: organisation) }
+    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 45, agents: [agent], organisation: organisation, lieu: lieu) }
 
     it do
       expect(subject.size).to eq(3)
@@ -148,7 +148,7 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "with a cancelled RDV" do
-    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, agents: [agent], cancelled_at: Time.zone.local(2019, 9, 20, 9, 30), organisation: organisation) }
+    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, agents: [agent], cancelled_at: Time.zone.local(2019, 9, 20, 9, 30), organisation: organisation, lieu: lieu) }
 
     it do
       expect(subject.size).to eq(4)
@@ -162,7 +162,7 @@ describe CreneauxBuilderService, type: :service do
 
   context "with a RDV on the last day of the range" do
     let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: Date.new(2019, 9, 25), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent, organisation: organisation) }
-    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 25, 10, 0), duration_in_min: 30, agents: [agent], organisation: organisation) }
+    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 25, 10, 0), duration_in_min: 30, agents: [agent], organisation: organisation, lieu: lieu) }
 
     it do
       expect(subject.size).to eq(3)

@@ -19,6 +19,7 @@ class AgentAuthController < ApplicationController
   def pundit_user
     AgentContext.new(current_agent, current_organisation)
   end
+  helper_method :pundit_user
 
   def authorize(record, *args)
     record.class.module_parent == Agent ? super(record, *args) : super([:agent, record], *args)
