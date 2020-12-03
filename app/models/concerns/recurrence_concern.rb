@@ -9,6 +9,7 @@ module RecurrenceConcern
     serialize :end_time, Tod::TimeOfDay
 
     before_save :clear_empty_recurrence
+    before_save :set_recurrence_starts_to_first_day, if: :recurring?
 
     validates :first_day, :start_time, :end_time, presence: true
 
@@ -91,5 +92,9 @@ module RecurrenceConcern
 
   def clear_empty_recurrence
     self.recurrence = nil if recurrence.present? && recurrence.to_hash == {}
+  end
+
+  def set_recurrence_starts_to_first_day
+    self.recurrence = recurrence.merge(starts: first_day.in_time_zone)
   end
 end

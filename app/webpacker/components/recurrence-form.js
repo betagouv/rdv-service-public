@@ -62,7 +62,6 @@ class RecurrenceForm {
     if (this.hasRecurrenceTarget.checked) {
       model.every = this.everyTarget.value;
       model.interval = Number(this.intervalTarget.value);
-      model.starts = this.firstDayTarget.value;
 
       if (model.every == "week") {
         let on = this.getOn();

@@ -4,6 +4,8 @@ class AddStartsToRecurrences < ActiveRecord::Migration[6.0]
     Absence.where.not(recurrence: nil).find_each { update_model(_1) }
   end
 
+  def down; end
+
   private
 
   def update_model(model)
