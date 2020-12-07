@@ -17,6 +17,6 @@ class Admin::PermissionsController < AgentAuthController
   private
 
   def permission_params
-    params.require(:agent_permission).permit(:role, :service_id)
+    params.require(:agent_permission).permit(:role)
   end
 end

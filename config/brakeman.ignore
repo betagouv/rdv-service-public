@@ -7,7 +7,7 @@
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/lieux/index.html.slim",
-      "line": 18,
+      "line": 19,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => policy_scope(Lieu).includes(:organisation).ordered_by_name.page(params[:page]), {})",
       "render_path": [
@@ -32,33 +32,22 @@
       "note": ""
     },
     {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "70b3c5f95e396f2dbf82d05bbcaa00342d6a11cbe91d45c6e82307dcc988662d",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/admin/departements/sectors/show.html.slim",
-      "line": 64,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "Zone.human_enum_name(:level, (Unresolved Model).new.level).sub(\" \", \"&nbsp;\")",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Admin::Departements::SectorsController",
-          "method": "show",
-          "line": 32,
-          "file": "app/controllers/admin/departements/sectors_controller.rb",
-          "rendered": {
-            "name": "admin/departements/sectors/show",
-            "file": "app/views/admin/departements/sectors/show.html.slim"
-          }
-        }
-      ],
+      "warning_type": "Mass Assignment",
+      "warning_code": 105,
+      "fingerprint": "804a3970881d06ca61e93ad9f38f3fcc692fc49d8b2eb629cedeba2a0c78e0ca",
+      "check_name": "PermitAttributes",
+      "message": "Potentially dangerous key allowed for mass assignment",
+      "file": "app/controllers/admin/permissions_controller.rb",
+      "line": 20,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(:agent_permission).permit(:role)",
+      "render_path": null,
       "location": {
-        "type": "template",
-        "template": "admin/departements/sectors/show"
+        "type": "method",
+        "class": "Admin::PermissionsController",
+        "method": "permission_params"
       },
-      "user_input": null,
+      "user_input": ":role",
       "confidence": "Medium",
       "note": ""
     },
@@ -94,33 +83,13 @@
       "note": ""
     },
     {
-      "warning_type": "Mass Assignment",
-      "warning_code": 105,
-      "fingerprint": "cf1a40ea12517005d0224e24210107133e043f0fd5bf869bcbf290c7a15ead57",
-      "check_name": "PermitAttributes",
-      "message": "Potentially dangerous key allowed for mass assignment",
-      "file": "app/controllers/admin/permissions_controller.rb",
-      "line": 20,
-      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
-      "code": "params.require(:agent_permission).permit(:role, :service_id)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Admin::PermissionsController",
-        "method": "permission_params"
-      },
-      "user_input": ":role",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
       "fingerprint": "d73171480d9871ed50cc113b6a9bfc457a0c694d2f085d7537447509b41509e0",
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/motifs/index.html.slim",
-      "line": 23,
+      "line": 26,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => policy_scope(Motif).includes(:organisation).active.includes(:service).ordered_by_name.page(params[:page]), {})",
       "render_path": [
@@ -128,7 +97,7 @@
           "type": "controller",
           "class": "Admin::MotifsController",
           "method": "index",
-          "line": 9,
+          "line": 12,
           "file": "app/controllers/admin/motifs_controller.rb",
           "rendered": {
             "name": "admin/motifs/index",
@@ -145,6 +114,6 @@
       "note": ""
     }
   ],
-  "updated": "2020-10-08 16:13:25 +0200",
+  "updated": "2020-12-07 18:25:12 +0100",
   "brakeman_version": "4.7.2"
 }
