@@ -9,9 +9,9 @@ module RecurrenceConcern
     serialize :end_time, Tod::TimeOfDay
 
     before_save :clear_empty_recurrence
-    before_save :set_recurrence_starts_to_first_day, if: :recurring?
 
     validates :first_day, :start_time, :end_time, presence: true
+    validate :recurrence_starts_matches_first_day, if: :recurring?
 
     scope :exceptionnelles, -> { where(recurrence: nil) }
     scope :regulieres, -> { where.not(recurrence: nil) }
@@ -94,7 +94,9 @@ module RecurrenceConcern
     self.recurrence = nil if recurrence.present? && recurrence.to_hash == {}
   end
 
-  def set_recurrence_starts_to_first_day
-    self.recurrence = recurrence.merge(starts: first_day.in_time_zone)
+  def recurrence_starts_matches_first_day
+    return true if recurrence.to_h[:starts]&.to_date == first_day
+
+    errors.add(:base, "Le début de la récurrence ne correspond pas au premier jour.")
   end
 end
