@@ -64,7 +64,9 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "recurring plage ouverture" do
-    let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, recurrence: Montrose.every(:day), agent: agent, organisation: organisation) }
+    let!(:plage_ouverture) do
+      create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, recurrence: Montrose.every(:day, starts: today), agent: agent, organisation: organisation)
+    end
 
     context "with absence spanning 2 days, ending before start of second day" do
       let!(:absence) { create(:absence, agent: agent, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 20), end_time: Tod::TimeOfDay.new(6, 30), organisation: organisation) }
@@ -299,7 +301,9 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "recurring plage ouverture + absence ending late" do
-    let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, recurrence: Montrose.every(:day), agent: agent, organisation: organisation) }
+    let!(:plage_ouverture) do
+      create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, recurrence: Montrose.every(:day, starts: today), agent: agent, organisation: organisation)
+    end
     let!(:absence) { create(:absence, :weekly, agent: agent, first_day: tomorrow, start_time: Tod::TimeOfDay.new(0, 0), end_day: tomorrow, end_time: absence_end_time, organisation: organisation) }
 
     context "absence end_time leaves enough time for a full creneau after" do

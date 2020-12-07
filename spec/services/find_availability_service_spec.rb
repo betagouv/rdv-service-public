@@ -33,7 +33,7 @@ describe FindAvailabilityService, type: :service do
       it { should eq(nil) }
 
       describe "when plage_ouverture is recurrence" do
-        before { plage_ouverture.update(recurrence: Montrose.monthly.to_json) }
+        before { plage_ouverture.update(recurrence: Montrose.every(:month, starts: plage_ouverture.first_day)) }
 
         it { expect(subject.starts_at).to eq(Time.zone.local(2019, 10, 19, 9, 0)) }
       end
@@ -51,7 +51,7 @@ describe FindAvailabilityService, type: :service do
       end
 
       describe "when plage_ouverture is recurrence" do
-        before { plage_ouverture.update(recurrence: Montrose.monthly.to_json) }
+        before { plage_ouverture.update(recurrence: Montrose.every(:month, starts: plage_ouverture.first_day)) }
 
         it { expect(subject.starts_at).to eq(Time.zone.local(2019, 10, 19, 9, 0)) }
       end
