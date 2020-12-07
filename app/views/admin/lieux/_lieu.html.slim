@@ -1,4 +1,6 @@
+- nb_rdv = policy_scope(Rdv).for_today.with_lieu(lieu).count
 tr id="lieu_#{lieu.id}"
   td
     = link_to lieu.name, edit_admin_organisation_lieu_path(lieu.organisation, lieu)
   td= lieu.address
+  td= link_to nb_rdv > 0 ? nb_rdv : "aucun", admin_organisation_rdvs_path(current_organisation, lieu_id: lieu.id, start: Time.zone.now.beginning_of_day, end: Time.zone.now.end_of_day )

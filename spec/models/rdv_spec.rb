@@ -165,6 +165,18 @@ describe Rdv, type: :model do
     end
   end
 
+  describe "#with_lieu" do
+    it "return lieu's RDV only" do
+      organisation = create(:organisation)
+      lieu = create(:lieu, organisation: organisation)
+      other_lieu = create(:lieu, organisation: organisation)
+      rdv = create(:rdv, :future, lieu: lieu, organisation: organisation)
+      create(:rdv, :future, lieu: other_lieu, organisation: organisation)
+
+      expect(Rdv.with_lieu(lieu).to_a).to eq([rdv])
+    end
+  end
+
   describe "Rdv.with_user_in" do
     let!(:user1) { create(:user) }
     let!(:user2) { create(:user) }
@@ -250,6 +262,29 @@ describe Rdv, type: :model do
       motif = create(:motif, :visible_and_not_notified)
       rdv = create(:rdv, motif: motif)
       expect(Rdv.visible).to contain_exactly(rdv)
+    end
+  end
+
+  describe "#for_today" do
+    it "return empty array when no rdv" do
+      expect(Rdv.for_today).to be_empty
+    end
+
+    it "return [rdv] when one rdv for today" do
+      now = Time.zone.parse("2020/12/23 12:30")
+      travel_to(now)
+      rdv = create(:rdv, starts_at: now)
+      expect(Rdv.for_today).to eq([rdv])
+    end
+
+    it "return ONLY the daily rdv" do
+      now = Time.zone.parse("2020/12/23 12:30")
+      travel_to(now)
+      create(:rdv, starts_at: now - 2.days)
+      rdv = create(:rdv, starts_at: now)
+      create(:rdv, starts_at: now + 1.days)
+
+      expect(Rdv.for_today).to eq([rdv])
     end
   end
 end

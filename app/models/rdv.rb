@@ -31,6 +31,7 @@ class Rdv < ApplicationRecord
   scope :future, -> { where("starts_at > ?", Time.zone.now) }
   scope :tomorrow, -> { where(starts_at: DateTime.tomorrow...DateTime.tomorrow + 1.day) }
   scope :day_after_tomorrow, -> { where(starts_at: DateTime.tomorrow + 1.day...DateTime.tomorrow + 2.day) }
+  scope :for_today, -> { where(starts_at: Time.zone.now.beginning_of_day...Time.zone.now.end_of_day) }
   scope :user_with_relatives, ->(responsible_id) { joins(:users).includes(:rdvs_users, :users).where("users.id IN (?)", [responsible_id, User.find(responsible_id).relatives.pluck(:id)].flatten) }
   scope :status, lambda { |status|
     if status == "unknown_past"
@@ -45,6 +46,7 @@ class Rdv < ApplicationRecord
   scope :with_agent, ->(agent) { joins(:agents).where(agents: { id: agent.id }) }
   scope :with_user, ->(user) { joins(:rdvs_users).where(rdvs_users: { user_id: user.id }) }
   scope :with_user_in, ->(users) { joins(:rdvs_users).where(rdvs_users: { user_id: users.pluck(:id) }).distinct }
+  scope :with_lieu, ->(lieu) { joins(:lieu).where(lieux: { id: lieu.id }) }
   scope :visible, -> { joins(:motif).where(motifs: { visibility_type: [Motif::VISIBLE_AND_NOTIFIED, Motif::VISIBLE_AND_NOT_NOTIFIED] }) }
 
   after_commit :reload_uuid, on: :create

@@ -38,6 +38,7 @@
         .col-md-6
           = f.input :agent_id, collection: policy_scope(Agent), label: "Agent", label_method: :full_name, input_html: { class: 'select2-input' }, wrapper: "horizontal_form"
           = f.input :user_id, collection: policy_scope(User), label: "Usager", label_method: :full_name, input_html: { class: 'select2-input' }, wrapper: "horizontal_form"
+          = f.input :lieu_id, collection: policy_scope(Lieu), label: "Lieu", label_method: :name, input_html: { class: 'select2-input' }, wrapper: "horizontal_form"
           = f.input :show_user_details, as: :boolean, wrapper: "horizontal_form", label: "Détails usagers"
         .col-md-6
           = f.input :status, collection: Rdv.statuses.keys - ["unknown"] + ["unknown_past", "unknown_future"], label_method: -> { ::Rdv.human_enum_name(:status, _1) }, label: "Statut", wrapper: "horizontal_form", input_html: { class: 'select2-input' }

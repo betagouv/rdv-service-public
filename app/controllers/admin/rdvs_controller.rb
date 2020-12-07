@@ -8,7 +8,7 @@ class Admin::RdvsController < AgentAuthController
       start: parse_date_from_params(:start),
       end: parse_date_from_params(:end),
       show_user_details: ["1", "true"].include?(params[:show_user_details]),
-      **params.permit(:organisation_id, :agent_id, :user_id, :status)
+      **params.permit(:organisation_id, :agent_id, :user_id, :lieu_id, :status)
     )
     @rdvs = policy_scope(Rdv).merge(@form.rdvs)
       .includes(:organisation, :agents_rdvs, :lieu, agents: :service, motif: :service)
