@@ -87,18 +87,6 @@ class Rdv < ApplicationRecord
     !cancelled? && starts_at > 4.hours.from_now
   end
 
-  def to_query
-    {
-      motif_id: motif&.id,
-      lieu_id: lieu_id,
-      duration_in_min: duration_in_min,
-      starts_at: starts_at&.to_s,
-      user_ids: users&.map(&:id),
-      agent_ids: agents&.map(&:id),
-      context: context
-    }
-  end
-
   def available_to_file_attente?
     !cancelled? && starts_at > 7.days.from_now && !home?
   end
