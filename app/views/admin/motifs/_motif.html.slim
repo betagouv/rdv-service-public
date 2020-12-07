@@ -8,7 +8,9 @@ tr
     = content_tag(:span, I18n.t("motifs.badges.reservable_online"), class: "badge badge-motif-reservable_online") if motif.reservable_online?
   - if @display_sectorisation_level
     td
-      - if motif.sectorisation_level_departement?
+      - if !motif.reservable_online?
+        | &nbsp;
+      - elsif motif.sectorisation_level_departement?
         | Tout le #{current_organisation.departement}
       - elsif motif.sectorisation_level_organisation?
         = t("motifs.index.sectorisation_level_organisation", count: @sectors_attributed_to_organisation_count)
