@@ -25,7 +25,16 @@ module AgentRdvWizard
     end
 
     def to_query
-      @rdv.to_query.merge(service_id: service_id)
+      {
+        motif_id: rdv.motif&.id,
+        lieu_id: rdv.lieu_id,
+        duration_in_min: rdv.duration_in_min,
+        starts_at: rdv.starts_at&.to_s,
+        user_ids: rdv.users&.map(&:id),
+        agent_ids: rdv.agents&.map(&:id),
+        context: rdv.context,
+        service_id: service_id
+      }
     end
   end
 
