@@ -1,0 +1,24 @@
+.card
+  .card-header
+    .d-flex.justify-content-between
+      .mt-1
+        | Prochains rendez-vous
+      - if user.rdvs.count > 0
+        = link_to "Voir tous les rendez-vous de #{user.full_name}", admin_organisation_rdvs_path(current_organisation, user_id: user.id), class: "btn btn-outline-primary small"
+  .card-body
+    - if user.next_rdvs(current_organisation).empty?
+      .text-muted aucun rendez-vous
+    - user.next_rdvs(current_organisation).each do |next_rdv|
+      .mb-2
+        strong= link_to rdv_title(next_rdv, **{ date_format: local_assigns[:date_format] }.compact), admin_organisation_rdv_path(current_organisation, next_rdv)
+        = rdv_status_tag(next_rdv)
+        div
+          = next_rdv.motif.name
+          div
+            - if next_rdv.context.blank?
+              .text-muted  Pas de contexte renseigné
+            - else
+              .text-muted Contexte :
+              .border-left.pl-2= simple_format(next_rdv.context)
+        - if user.next_rdvs(current_organisation).last != next_rdv
+          hr

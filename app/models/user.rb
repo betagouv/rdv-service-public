@@ -128,6 +128,10 @@ class User < ApplicationRecord
     Rdv.where(organisation: organisation).with_user_in([self]).past.order("starts_at desc").limit(5)
   end
 
+  def next_rdvs(organisation)
+    Rdv.where(organisation: organisation).with_user_in([self]).future.order("starts_at desc")
+  end
+
   def email_tld
     email&.split("@")&.last&.downcase
   end
