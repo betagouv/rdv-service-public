@@ -1,5 +1,5 @@
 describe AgentRdvSearchForm do
-  describe "#lie" do
+  describe "#lieu" do
     it "have a lieu when given" do
       lieu = create(:lieu)
       agent_rdv_search_form = AgentRdvSearchForm.new(lieu_id: lieu.id)
