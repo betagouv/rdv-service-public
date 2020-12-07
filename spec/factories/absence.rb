@@ -16,19 +16,19 @@ FactoryBot.define do
     end
 
     trait :daily do
-      recurrence { Montrose.every(:day) }
+      recurrence { Montrose.every(:day, starts: first_day) }
     end
 
     trait :weekly do
-      recurrence { Montrose.weekly.to_json }
+      recurrence { Montrose.every(:week, starts: first_day) }
     end
 
     trait :monthly do
-      recurrence { Montrose.monthly.to_json }
+      recurrence { Montrose.every(:month, starts: first_day) }
     end
 
     trait :weekly_by_2 do
-      recurrence { Montrose.every(2.weeks).to_json }
+      recurrence { Montrose.every(:week, interval: 2, starts: first_day) }
     end
   end
 end

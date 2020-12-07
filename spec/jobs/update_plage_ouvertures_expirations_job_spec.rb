@@ -1,5 +1,6 @@
 describe UpdatePlageOuverturesExpirationsJob, type: :job do
-  let!(:plage_ouverture_reguliere) { create(:plage_ouverture, recurrence: Montrose.every(:week, until: Time.now)) }
+  let(:first_day) { Date.today.next_week(:monday) }
+  let!(:plage_ouverture_reguliere) { create(:plage_ouverture, first_day: first_day, recurrence: Montrose.every(:week, until: Time.now, starts: first_day)) }
   let!(:plage_ouverture_exceptionnelle) { create(:plage_ouverture, :no_recurrence, first_day: Date.today) }
 
   subject do

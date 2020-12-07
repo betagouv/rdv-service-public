@@ -17,41 +17,42 @@ describe PlageOuverture::Ics, type: :model do
   end
 
   describe "#rrule" do
-    let(:plage_ouverture) { create(:plage_ouverture, recurrence: recurrence) }
+    let(:first_day) { Date.today.next_week(:monday) }
+    let(:plage_ouverture) { create(:plage_ouverture, first_day: first_day, recurrence: recurrence) }
 
     subject { ics.rrule }
 
     context "every week" do
-      let(:recurrence) { Montrose.every(:week, on: ["monday"]) }
+      let(:recurrence) { Montrose.every(:week, on: ["monday"], starts: first_day) }
 
       it { is_expected.to eq("FREQ=WEEKLY;BYDAY=MO;") }
 
       context "on monday and wednesday" do
-        let(:recurrence) { Montrose.every(:week, on: %w[monday tuesday wednesday thursday friday saturday]) }
+        let(:recurrence) { Montrose.every(:week, on: %w[monday tuesday wednesday thursday friday saturday], starts: first_day) }
 
         it { is_expected.to eq("FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR,SA;") }
       end
 
       context "until 22/10/2019" do
-        let(:recurrence) { Montrose.every(:week, until: Time.zone.local(2019, 10, 22)) }
+        let(:recurrence) { Montrose.every(:week, until: Time.zone.local(2019, 10, 22), starts: first_day) }
 
         it { is_expected.to eq("FREQ=WEEKLY;UNTIL=20191022T000000;") }
       end
     end
 
     context "every 2 weeks" do
-      let(:recurrence) { Montrose.every(:week, interval: 2) }
+      let(:recurrence) { Montrose.every(:week, interval: 2, starts: first_day) }
 
       it { is_expected.to eq("FREQ=WEEKLY;INTERVAL=2;") }
     end
 
     context "every month" do
-      let(:recurrence) { Montrose.every(:month) }
+      let(:recurrence) { Montrose.every(:month, starts: first_day) }
 
       it { is_expected.to eq("FREQ=MONTHLY;") }
 
       context "the 2nd wednesday of the month" do
-        let(:recurrence) { Montrose.every(:month, day: { 3 => [2] }) }
+        let(:recurrence) { Montrose.every(:month, day: { 3 => [2] }, starts: first_day) }
 
         it { is_expected.to eq("FREQ=MONTHLY;BYDAY=2WE;") }
       end
