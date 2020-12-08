@@ -4,19 +4,19 @@
     strong
       = I18n.t("activerecord.attributes.user_profile.logement")
       span<>= ":"
-    span= value
+    span[class=(value.blank? ? "text-muted" : "")]= value.presence || "N/A"
   - elsif attribute_name == :notes
     .d-flex
       div.mr-1
         strong
           = I18n.t("activerecord.attributes.user_profile.notes")
           span<>= ":"
-      div= value
+      div[class=(value.blank? ? "text-muted" : "")]= value.presence || "N/A"
   - else
     strong
       = I18n.t("activerecord.attributes.user.#{attribute_name}")
       span<>= ":"
-    span= value
+    span[class=(value.blank? ? "text-muted" : "")]= value.presence || "N/A"
 
   - if ( \
     attribute_name == :phone_number && \
