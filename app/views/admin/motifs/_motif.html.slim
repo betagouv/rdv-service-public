@@ -3,9 +3,9 @@ tr
     span.badge.badge-pill.ml-0.mr-2 style="background: #{motif.color};" &nbsp;
   td
     = link_to motif.name, edit_admin_organisation_motif_path(motif.organisation, motif)
-    = motif_badges(motif)
+    = motif_badges(motif, only: [:secretariat, :follow_up])
   td
-    = content_tag(:span, I18n.t("motifs.badges.reservable_online"), class: "badge badge-motif-reservable_online") if motif.reservable_online?
+    = motif_badges(motif, only: [:reservable_online])
   - if @display_sectorisation_level
     td
       - if motif.sectorisation_level_departement?

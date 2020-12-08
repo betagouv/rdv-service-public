@@ -11,8 +11,8 @@ module MotifsHelper
     content_tag(:span, motif_name_with_location_type(motif)) + motif_badges(motif)
   end
 
-  def motif_badges(motif)
-    badges = [:secretariat, :follow_up]
+  def motif_badges(motif, only: nil)
+    badges = only || [:reservable_online, :secretariat, :follow_up]
     badges.select { motif.send("#{_1}?") }.map { build_badge_tag_for(_1) }.join("").html_safe
   end
 
