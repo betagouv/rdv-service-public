@@ -27,6 +27,7 @@ class Agent < ApplicationRecord
 
   validates :email, :role, presence: true
   validates :last_name, :first_name, presence: true, on: :update, if: :accepted_or_not_invited?
+  validate :service_cannot_be_changed
 
   scope :complete, -> { where.not(first_name: nil).where.not(last_name: nil) }
   scope :active, -> { where(deleted_at: nil) }
@@ -86,5 +87,11 @@ class Agent < ApplicationRecord
 
   def name_for_paper_trail
     "[Agent] #{full_name}"
+  end
+
+  def service_cannot_be_changed
+    return if new_record? || !service_id_changed?
+
+    errors.add(:service_id, "changement interdit")
   end
 end
