@@ -34,9 +34,18 @@ class AgentUserForm {
     this.formElt.querySelectorAll("div[data-togglable]").forEach(d =>
       d.classList.toggle("d-none", !this.divShouldBeVisible(d))
     )
-    this.formElt.querySelectorAll("input[data-togglable], select[data-togglable], textarea[data-togglable]").forEach(i =>
-      i.disabled = !this.inputShouldBeEnabled(i)
-    )
+    this.formElt.querySelectorAll("input[data-togglable], select[data-togglable], textarea[data-togglable]").forEach(inputElt => {
+      const newDisabledValue = !this.inputShouldBeEnabled(inputElt)
+      inputElt.disabled = newDisabledValue
+      // bind disabled attribute of checkboxes' hidden field with 0 value
+      if (
+        inputElt.previousSibling &&
+        inputElt.previousSibling.type == "hidden" &&
+        inputElt.previousSibling.tagName == inputElt.tagName &&
+        inputElt.previousSibling.name == inputElt.name
+      )
+        inputElt.previousSibling.disabled = newDisabledValue
+    })
     new Select2Inputs()
   }
 
@@ -45,6 +54,8 @@ class AgentUserForm {
   }
 
   inputShouldBeEnabled = (inputElt) => {
+    if (inputElt.classList.contains("js-force-disabled"))
+      return false
     const { responsabilityType, relativeType } = inputElt.dataset
     return (
       responsabilityType == this.currentResponsabilityType &&

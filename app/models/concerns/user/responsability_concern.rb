@@ -9,6 +9,7 @@ module User::ResponsabilityConcern
 
   delegate(
     :phone_number, :email, :address,
+    :notify_by_email, :notify_by_email?, :notify_by_sms, :notify_by_sms?,
     to: :responsible_or_self,
     prefix: :responsible
   )
