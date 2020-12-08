@@ -59,10 +59,12 @@
         .card-body
           p.card-text
             i.fa.fa-fw.fa-phone>
-            = display_value_or_na_placeholder(user.phone_number)
+            - phone_number = DisplayableUser.new(user, current_organisation).phone_number
+            span>[class=(phone_number.blank? ? "text-muted" : "")]= phone_number.presence || "N/A"
           p.card-text
             i.fa.fa-fw.fa-envelope>
-            = display_value_or_na_placeholder(user.email)
+            - email = DisplayableUser.new(user, current_organisation).email
+            span>[class=(email.blank? ? "text-muted" : "")]= email.presence || "N/A"
           - if user.notes_for(current_organisation).present?
             .d-flex title="Remarques"
               div.mr-1
