@@ -82,7 +82,7 @@ class Admin::RdvsController < AgentAuthController
       )
     else
       @rdv_wizard = AgentRdvWizard::Step3.new(current_agent, current_organisation, users: @rdv.users, agent_ids: @rdv.agent_ids, **@rdv.attributes)
-      @rdv_wizard.valid? # trigger validation
+      @rdv_wizard.valid? # necessary to explicitly trigger validations here so that errors and warnings appear in the view. the right fix would be to call rdv_wizard.save instead of rdv.save
       render "admin/rdv_wizard_steps/step3"
     end
   end
