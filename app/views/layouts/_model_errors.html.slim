@@ -4,9 +4,7 @@
   .alert.alert-warning.show
     ul.m-0.pl-1
       - model.warnings.each do |key, msg|
-        li= msg
-
-  = content_for(:warnings_description)
+        li= msg.html_safe
 
   - if local_assigns[:f]
     .collapse.show.js-collapse-warning-confirmation
