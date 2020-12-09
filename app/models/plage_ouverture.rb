@@ -77,7 +77,31 @@ class PlageOuverture < ApplicationRecord
       .select { overlaps?(_1) }
   end
 
+  def self.overlapping_with_time_slot(time_slot)
+    regulieres.where("first_day <= ?", time_slot.to_date)
+      .or(exceptionnelles.where("first_day = ?", time_slot.to_date))
+      .to_a
+      .select { _1.overlaps_with_time_slot?(time_slot) }
+  end
+
+  def overlaps_with_time_slot?(time_slot)
+    covers_date?(time_slot.to_date) &&
+      time_slot_for_date(time_slot.to_date).intersects?(time_slot)
+  end
+
+  def covers_date?(date)
+    (
+      recurring? &&
+      recurrence_interval == 1 && # limited by https://github.com/rossta/montrose/pull/132
+      recurrence.include?(date.in_time_zone)
+    ) || (exceptionnelle? && first_day == date)
+  end
+
   private
+
+  def time_slot_for_date(date)
+    TimeSlot.new(start_time.on(date), end_time.on(date))
+  end
 
   def overlapping_plages_ouvertures_candidates
     return [] unless valid_date_and_times?

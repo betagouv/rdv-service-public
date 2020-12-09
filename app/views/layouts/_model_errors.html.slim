@@ -20,7 +20,7 @@
             href="#"
             onclick="document.querySelector('.js-warning-confirm-input').setAttribute('disabled', 'disabled');"
           ] Annuler et modifier
-        div= f.submit "Confirmer", class: "btn btn-warning"
+        div= f.submit "Confirmer en ignorant les avertissements", class: "btn btn-warning"
       hr
 
 - elsif model.errors.any?

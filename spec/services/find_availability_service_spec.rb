@@ -40,12 +40,12 @@ describe FindAvailabilityService, type: :service do
     end
 
     describe "with rdv" do
-      let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 120, agents: [agent], organisation: organisation) }
+      let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 120, agents: [agent], organisation: organisation, lieu: lieu) }
 
       it { should eq(nil) }
 
       context "which is cancelled" do
-        let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, agents: [agent], cancelled_at: Time.zone.local(2019, 9, 20, 9, 30), organisation: organisation) }
+        let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, agents: [agent], cancelled_at: Time.zone.local(2019, 9, 20, 9, 30), organisation: organisation, lieu: lieu) }
 
         it { expect(subject.starts_at).to eq(Time.zone.local(2019, 9, 19, 9, 0)) }
       end

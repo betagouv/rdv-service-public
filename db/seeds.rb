@@ -192,15 +192,15 @@ end
 
 # LIEUX
 
-lieu_org_paris_nord_sud = Lieu.create!(
-  name: "Maison Paris Sud",
+lieu_org_paris_nord_bolivar = Lieu.create!(
+  name: "MDS Bolivar",
   organisation: org_paris_nord,
-  address: "18 Rue des Terres au Curé, 75013 Paris",
-  latitude: 48.85295,
-  longitude: 2.34998
+  address: "126 Avenue Simon Bolivar, 75019, Paris",
+  latitude: 48.8809263,
+  longitude: 2.3739077
 )
-lieu_org_paris_nord_nord = Lieu.create!(
-  name: "Maison Paris Nord",
+lieu_org_paris_nord_bd_aubervilliers = Lieu.create!(
+  name: "MDS Bd Aubervilliers",
   organisation: org_paris_nord,
   address: "18 Boulevard d'Aubervilliers, 75019 Paris",
   latitude: 48.8882196,
@@ -396,7 +396,7 @@ _plage_ouverture_org_paris_nord_martine_classique = PlageOuverture.create!(
   title: "Permanence classique",
   organisation_id: org_paris_nord.id,
   agent_id: agent_org_paris_nord_pmi_martine.id,
-  lieu_id: lieu_org_paris_nord_sud.id,
+  lieu_id: lieu_org_paris_nord_bolivar.id,
   motif_ids: [motif_org_paris_nord_pmi_rappel.id, motif_org_paris_nord_pmi_gyneco.id, motif_org_paris_nord_pmi_prenatale.id, motif_org_paris_nord_pmi_suivi.id, motif_org_paris_nord_pmi_securite.id],
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(8),
@@ -407,7 +407,7 @@ _plage_ouverture_org_paris_nord_martine_mercredi = PlageOuverture.create!(
   title: "Permanence enfant",
   organisation_id: org_paris_nord.id,
   agent_id: agent_org_paris_nord_pmi_martine.id,
-  lieu_id: lieu_org_paris_nord_sud.id,
+  lieu_id: lieu_org_paris_nord_bolivar.id,
   motif_ids: [motif_org_paris_nord_pmi_rappel.id, motif_org_paris_nord_pmi_prenatale.id, motif_org_paris_nord_pmi_suivi.id, motif_org_paris_nord_pmi_securite.id],
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(8),
@@ -418,7 +418,7 @@ _plage_ouverture_org_paris_nord_martine_exceptionnelle = PlageOuverture.create!(
   title: "Aprem PMI exptn",
   organisation_id: org_paris_nord.id,
   agent_id: agent_org_paris_nord_pmi_martine.id,
-  lieu_id: lieu_org_paris_nord_sud.id,
+  lieu_id: lieu_org_paris_nord_bolivar.id,
   motif_ids: [motif_org_paris_nord_pmi_rappel.id, motif_org_paris_nord_pmi_prenatale.id, motif_org_paris_nord_pmi_suivi.id, motif_org_paris_nord_pmi_securite.id],
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(14),
@@ -428,7 +428,7 @@ _plage_ouverture_org_paris_nord_marco_perm = PlageOuverture.create!(
   title: "Perm.",
   organisation_id: org_paris_nord.id,
   agent_id: agent_org_paris_nord_pmi_marco.id,
-  lieu_id: lieu_org_paris_nord_nord.id,
+  lieu_id: lieu_org_paris_nord_bd_aubervilliers.id,
   motif_ids: [motif_org_paris_nord_pmi_rappel.id, motif_org_paris_nord_pmi_gyneco.id, motif_org_paris_nord_pmi_prenatale.id, motif_org_paris_nord_pmi_suivi.id, motif_org_paris_nord_pmi_securite.id, motif_org_paris_nord_pmi_prenatale_phone.id],
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(14),
@@ -476,7 +476,7 @@ rdv1 = Rdv.new(
   duration_in_min: 30,
   starts_at: Date.today + 3.days + 10.hours,
   motif_id: motif_org_paris_nord_pmi_rappel.id,
-  lieu: lieu_org_paris_nord_sud,
+  lieu: lieu_org_paris_nord_bolivar,
   organisation_id: org_paris_nord.id,
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_patricia.id],
@@ -488,7 +488,7 @@ rdv2 = Rdv.new(
   duration_in_min: 30,
   starts_at: Date.today + 4.days + 15.hours,
   motif_id: motif_org_paris_nord_pmi_suivi.id,
-  lieu: lieu_org_paris_nord_nord,
+  lieu: lieu_org_paris_nord_bd_aubervilliers,
   organisation_id: org_paris_nord.id,
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
