@@ -24,25 +24,26 @@
   .col-md-6
     .card
       .card-body
-        = simple_form_for([:admin, @rdv.organisation, @rdv]) do |f|
-          = render partial: 'layouts/model_errors', locals: { model: @rdv }
-          = hidden_field_tag :agent_id, @agent&.id
-          = f.association :motif, disabled: true
-          = f.input :context, input_html: { rows: 3 }
-          .form-row
-            .col-md-6= datetime_input(f, :starts_at)
-            .col-md-6= f.input :duration_in_min
-          - if @rdv.motif.public_office?
-            = f.association :lieu, \
-              collection: policy_scope(Lieu), \
-              label_method: :full_name, \
-              include_blank: true, \
-              required: true,
-              input_html: { class: "select2-input" }
-          - elsif @rdv.motif.home?
-            = f.input :address, label: "Lieu (RDV à domicile)", disabled: true
-          = f.association :agents, collection: @rdv.organisation.agents.can_perform_motif(@rdv.motif), label_method: :full_name_and_service, input_html: { multiple: true, class: 'select2-input' }
-          = f.association :users, collection: policy_scope(User).order_by_last_name, label_method: lambda { |user| full_name_and_birthdate(user) }, input_html: { multiple: true, class: 'select2-input' }
-          .text-right
-            = link_to "Retour", admin_organisation_rdv_path(current_organisation, @rdv), class: "btn btn-link"
-            = f.button :submit, "Enregistrer"
+        = simple_form_for([:admin, @rdv_form.organisation, @rdv]) do |f|
+          = render partial: 'layouts/model_errors', locals: { model: @rdv_form, f: f }
+          = collapsible_form_fields_for_warnings(@rdv_form) do
+            = hidden_field_tag :agent_id, @agent&.id
+            = f.association :motif, disabled: true
+            = f.input :context, input_html: { rows: 3 }
+            .form-row
+              .col-md-6= datetime_input(f, :starts_at)
+              .col-md-6= f.input :duration_in_min
+            - if @rdv_form.motif.public_office?
+              = f.association :lieu, \
+                collection: policy_scope(Lieu), \
+                label_method: :full_name, \
+                include_blank: true, \
+                required: true,
+                input_html: { class: "select2-input" }
+            - elsif @rdv_form.motif.home?
+              = f.input :address, label: "Lieu (RDV à domicile)", disabled: true
+            = f.association :agents, collection: @rdv_form.organisation.agents.can_perform_motif(@rdv_form.motif), label_method: :full_name_and_service, input_html: { multiple: true, class: 'select2-input' }
+            = f.association :users, collection: policy_scope(User).order_by_last_name, label_method: lambda { |user| full_name_and_birthdate(user) }, input_html: { multiple: true, class: 'select2-input' }
+            .text-right
+              = link_to "Retour", admin_organisation_rdv_path(current_organisation, @rdv), class: "btn btn-link"
+              = f.button :submit, "Enregistrer"

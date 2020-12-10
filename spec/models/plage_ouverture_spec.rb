@@ -156,4 +156,155 @@ describe PlageOuverture, type: :model do
       plage_ouverture.save!
     end
   end
+
+  describe "#covers_date?" do
+    subject { plage_ouverture.covers_date?(date) }
+
+    describe "PO weekly wednesdays PM" do
+      let(:plage_ouverture) do
+        build(
+          :plage_ouverture,
+          recurrence: Montrose.every(:week, starts: Date.new(2020, 11, 18), on: [:wednesday]).to_json,
+          first_day: Date.new(2020, 11, 18), # a wednesday
+          start_time: Tod::TimeOfDay.new(14),
+          end_time: Tod::TimeOfDay.new(18)
+        )
+      end
+
+      context "for a wednesday later" do
+        let(:date) { Date.new(2020, 12, 2) }
+        it { should eq true }
+      end
+
+      context "for a wednesday before" do
+        let(:date) { Date.new(2020, 11, 11) }
+        it { should eq false }
+      end
+
+      context "for a thursday later" do
+        let(:date) { Date.new(2020, 12, 3) }
+        it { should eq false }
+      end
+    end
+
+    describe "PO weekly wednesdays PM with an end date" do
+      let(:plage_ouverture) do
+        build(
+          :plage_ouverture,
+          recurrence: Montrose.every(:week, on: [:wednesday], starts: Date.new(2020, 11, 18).in_time_zone, until: Date.new(2020, 12, 9).in_time_zone).to_json,
+          first_day: Date.new(2020, 11, 18), # a wednesday
+          start_time: Tod::TimeOfDay.new(14),
+          end_time: Tod::TimeOfDay.new(18)
+        )
+      end
+
+      context "for a wednesday before end date" do
+        let(:date) { Date.new(2020, 12, 2) }
+        it { should eq true }
+      end
+
+      context "for the end wednesday" do
+        let(:date) { Date.new(2020, 12, 9) }
+        it { should eq true }
+      end
+
+      context "for a wednesday after the end" do
+        let(:date) { Date.new(2020, 12, 16) }
+        it { should eq false }
+      end
+    end
+
+    describe "PO every 2 weeks wednesdays PM" do
+      let(:plage_ouverture) do
+        build(
+          :plage_ouverture,
+          recurrence: Montrose.every(:week, starts: Date.new(2020, 11, 18), interval: 2, on: [:wednesday]).to_json,
+          first_day: Date.new(2020, 11, 18), # a wednesday
+          start_time: Tod::TimeOfDay.new(14),
+          end_time: Tod::TimeOfDay.new(18)
+        )
+      end
+
+      context "for a wednesday 1 week later" do
+        let(:date) { Date.new(2020, 11, 25) }
+        it { should eq false }
+      end
+
+      # TODO : pending before https://github.com/rossta/montrose/pull/132
+      context "for a wednesday 2 weeks later", pending: true do
+        let(:date) { Date.new(2020, 12, 2) }
+        it { should eq true }
+      end
+    end
+
+    describe "exceptionnelle" do
+      let(:plage_ouverture) do
+        build(
+          :plage_ouverture,
+          recurrence: nil,
+          first_day: Date.new(2020, 11, 18), # a wednesday
+          start_time: Tod::TimeOfDay.new(14),
+          end_time: Tod::TimeOfDay.new(18)
+        )
+      end
+
+      context "same day" do
+        let(:date) { Date.new(2020, 11, 18) }
+        it { should eq true }
+      end
+
+      context "other date" do
+        let(:date) { Date.new(2020, 11, 25) }
+        it { should eq false }
+      end
+    end
+  end
+
+  describe "#overlaps_with_time_slot?" do
+    subject { plage_ouverture.overlaps_with_time_slot?(time_slot) }
+
+    describe "plage ouverture 14h-18h" do
+      let(:plage_ouverture) do
+        build(:plage_ouverture, start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(18))
+      end
+      let!(:time_slot) { TimeSlot.new(Time.zone.parse("2020-12-2 16:00"), Time.zone.parse("2020-12-2 17:00")) }
+
+      before do
+        allow(plage_ouverture).to receive(:covers_date?)
+          .with(Date.new(2020, 12, 2))
+          .and_return(date_is_covered)
+        plage_ouverture_time_slot = instance_double(TimeSlot)
+        allow(TimeSlot).to receive(:new)
+          .with(Time.zone.parse("2020-12-2 14:00"), Time.zone.parse("2020-12-2 18:00"))
+          .and_return(plage_ouverture_time_slot)
+        allow(plage_ouverture_time_slot).to receive(:intersects?)
+          .with(time_slot)
+          .and_return(time_slots_intersect)
+      end
+
+      context "date is covered & time slots intersect" do
+        let(:date_is_covered) { true }
+        let(:time_slots_intersect) { true }
+        it { should eq true }
+      end
+
+      context "date is not covered but time slots intersect" do
+        let(:date_is_covered) { false }
+        let(:time_slots_intersect) { true }
+        it { should eq false }
+      end
+
+      context "date not covered but time slots do not intersect" do
+        let(:date_is_covered) { true }
+        let(:time_slots_intersect) { false }
+        it { should eq false }
+      end
+
+      context "date is not covered and time slots do not intersect" do
+        let(:date_is_covered) { false }
+        let(:time_slots_intersect) { false }
+        it { should eq false }
+      end
+    end
+  end
 end

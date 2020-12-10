@@ -22,6 +22,19 @@ fr:
           notexcused: Absent non excusé
           unknown_past: À renseigner
           unknown_future: À venir
+  activemodel:
+    warnings:
+      models:
+        rdv:
+          attributes:
+            base:
+              overlapping_plage_ouverture:
+                in_scope:
+                  in_current_organisation: "%{agent_name} a <a href='%{path}'>une plage d'ouverture</a> à %{lieu_name} %{occurence_text}"
+                  in_other_organisation: "%{agent_name} a <a href='%{path}'>une plage d'ouverture</a> à %{lieu_name} (%{organisation_name}) %{occurence_text}"
+                out_of_scope:
+                  in_current_organisation: "%{agent_name} a une plage d'ouverture dans un autre lieu au moment de ce RDV (vous n'avez pas les permissions nécessaires pour voir cette plage d'ouverture)"
+                  in_other_organisation: "%{agent_name} a une plage d'ouverture dans une autre organisation au moment de ce RDV (vous n'avez pas les permissions nécessaires pour voir cette plage d'ouverture)"
 
   agents:
     rdvs:

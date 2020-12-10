@@ -6,11 +6,7 @@
 - if plage_ouverture.available_motifs.any?
   = simple_form_for [:admin, plage_ouverture.organisation, plage_ouverture] do |f|
     = render(partial: 'layouts/model_errors', locals: { model: plage_ouverture, f: f })
-
-    .form-collapsable-fields-wrapper.collapse.js-collapse-warning-confirmation[
-      class=(plage_ouverture.warnings_need_confirmation? ? "" : "show")
-      aria-expanded=(plage_ouverture.warnings_need_confirmation? ? "false" : "true")
-    ]
+    = collapsible_form_fields_for_warnings(plage_ouverture) do
       = f.hidden_field :agent_id
       = f.input :title, hint: 'Uniquement visible en interne', placeholder: 'Ex: Permanence PMI exceptionnelle'
       = f.association :lieu, collection: policy_scope(Lieu).ordered_by_name, label_method: :full_name, include_blank: false

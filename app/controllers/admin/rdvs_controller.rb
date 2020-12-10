@@ -27,13 +27,14 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def edit
-    authorize(@rdv)
-    respond_right_bar_with(@rdv)
+    @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
+    authorize(@rdv_form.rdv)
   end
 
   def update
     authorize(@rdv)
-    success = RdvUpdater.update_by_agent(@rdv, rdv_params)
+    @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
+    success = @rdv_form.update(**rdv_params.to_h.symbolize_keys)
     respond_to do |format|
       format.json do
         temporal_status_human = I18n.t("activerecord.attributes.rdv.statuses.#{@rdv.temporal_status}")
@@ -66,26 +67,6 @@ class Admin::RdvsController < AgentAuthController
     redirect_to admin_organisation_agent_path(current_organisation, @agent || current_agent)
   end
 
-  def create
-    @rdv = Rdv.new(rdv_params)
-    @rdv.organisation = current_organisation
-    authorize(@rdv)
-    if @rdv.save
-      redirect_to(
-        admin_organisation_agent_path(
-          current_organisation,
-          @rdv.agents.include?(current_agent) ? current_agent : @rdv.agents.first,
-          selected_event_id: @rdv.id,
-          date: @rdv.starts_at.to_date
-        ),
-        notice: "Le rendez-vous a été créé."
-      )
-    else
-      @rdv_wizard = AgentRdvWizard::Step3.new(current_agent, current_organisation, @rdv.attributes)
-      render "admin/rdv_wizard_steps/step3"
-    end
-  end
-
   private
 
   def set_optional_agent
@@ -103,7 +84,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def rdv_params
-    params.require(:rdv).permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, agent_ids: [], user_ids: [])
+    params.require(:rdv).permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, :active_warnings_confirm_decision, agent_ids: [], user_ids: [])
   end
 
   def status_params
