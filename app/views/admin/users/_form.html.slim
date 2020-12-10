@@ -3,7 +3,9 @@
 - initial_relative_type_tab = user.responsible&.persisted? || user.responsible&.new_and_blank? ? :existing : :new
 
 = simple_form_for( \
-  user, url: agent_user_form_url(user), remote: from_modal?, \
+  user, \
+  url: agent_user_form_url(user, service_id: service&.id), \
+  remote: from_modal?, \
   html: { class: "js-agent-user-form" }, data: { modal: from_modal? } \
 ) do |f|
 
@@ -34,7 +36,7 @@
     )
 
     div *div_opts[:responsible]
-      = render "responsible_form_fields", f: f, f_user_profile: f_user_profile, input_opts: input_opts[:responsible]
+      = render "responsible_form_fields", f: f, f_user_profile: f_user_profile, input_opts: input_opts[:responsible], service: service
 
     div *div_opts[:relative]
       .form-row
@@ -88,7 +90,7 @@
                 data-relative-type="new"
                 class=("active" if initial_relative_type_tab == :new)
               ]
-                = render "responsible_form_wrapper", f: f, input_opts: input_opts[:relative_new], user_type_key: :relative_new
+                = render "responsible_form_wrapper", f: f, input_opts: input_opts[:relative_new], user_type_key: :relative_new, service: service
 
     - elsif user.persisted? && user.relative?
       .form-row.mb-2
@@ -98,7 +100,7 @@
           / ^ for JS
           .mb-3
             b= link_to full_name_and_birthdate(user.responsible), admin_organisation_user_path(current_organisation, user.responsible)
-          = render "responsible_form_wrapper", f: f, input_opts: input_opts[:relative_existing], user_type_key: :relative_existing
+          = render "responsible_form_wrapper", f: f, input_opts: input_opts[:relative_existing], user_type_key: :relative_existing, service: service
 
     - if user.skip_duplicate_warnings
       .alert.alert-warning.pb-0

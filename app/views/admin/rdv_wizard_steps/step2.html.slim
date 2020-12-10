@@ -36,7 +36,7 @@
                   = relative_tag(user)
                 div.ml-2= link_to "╳ Retirer", "#", class: "js-remove-user", data: { 'user-id': user.id }
                 div.ml-2
-                  = link_to "✎ Modifier usager", edit_admin_organisation_user_path(current_organisation, user, modal: true), data: { modal: "true" }
+                  = link_to "✎ Modifier usager", edit_admin_organisation_user_path(current_organisation, user, modal: true, service_id: @rdv_wizard.service_id), data: { modal: "true" }
 
           .pl-2.mt-2= link_to "+ Ajouter un autre usager", "#", class: "js-toggle-add-user-interface #{'d-none' if @rdv.users.empty?}"
 
@@ -50,7 +50,7 @@
 
             span.small.text-muted
               | L'usager n'existe pas ?&nbsp;
-              = link_to 'Créer un usager', new_admin_organisation_user_path(current_organisation, modal: true), data: { modal: true }
+              = link_to 'Créer un usager', new_admin_organisation_user_path(current_organisation, modal: true, service_id: @rdv_wizard.service_id), data: { modal: true }
 
           .mt-3= f.input :context, as: :text, label: t("activerecord.attributes.rdv.context"), input_html: { rows: 4 }
 

@@ -3,6 +3,7 @@ class Admin::UsersController < AgentAuthController
 
   before_action :set_organisation, only: [:new, :create]
   before_action :set_user, except: [:index, :search, :new, :create, :link_to_organisation]
+  before_action :set_service, only: [:new, :create, :edit, :update]
 
   PERMITTED_ATTRIBUTES = [
     :id,
@@ -149,5 +150,9 @@ class Admin::UsersController < AgentAuthController
 
   def set_user
     @user = policy_scope(User).find(params[:id])
+  end
+
+  def set_service
+    @service = Service.find(params[:service_id]) if params[:service_id].present?
   end
 end
