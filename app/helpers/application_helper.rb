@@ -83,10 +83,6 @@ module ApplicationHelper
     content_tag(:i, nil, class: "fa fa-#{icon}", data: { toggle: "tooltip" }, title: title)
   end
 
-  def display_value_or_na_placeholder(field_value)
-    field_value.blank? ? "Non renseigné" : field_value
-  end
-
   def errors_full_messages(object)
     object.errors.map do |attribute, message|
       if attribute.to_s.starts_with?("responsible.")

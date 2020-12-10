@@ -7,6 +7,12 @@ module User::ResponsabilityConcern
     validate :cannot_be_responsible_of_self
   end
 
+  delegate(
+    :phone_number, :email, :address,
+    to: :responsible_or_self,
+    prefix: :responsible
+  )
+
   def responsability_type
     responsible.present? && !responsible.new_and_blank? ? :relative : :responsible
   end
@@ -25,16 +31,8 @@ module User::ResponsabilityConcern
     super.presence || responsible&.address
   end
 
-  def responsible_phone_number
-    relative? ? responsible.phone_number : phone_number
-  end
-
-  def responsible_email
-    relative? ? responsible.email : email
-  end
-
-  def responsible_address
-    relative? ? responsible.address : address
+  def responsible_or_self
+    responsible || self
   end
 
   protected

@@ -4,19 +4,20 @@
     strong
       = I18n.t("activerecord.attributes.user_profile.logement")
       span<>= ":"
-    span= value
+    = display_value_or_na_placeholder(value)
   - elsif attribute_name == :notes
     .d-flex
       div.mr-1
         strong
           = I18n.t("activerecord.attributes.user_profile.notes")
           span<>= ":"
-      div= value
+      div
+        = display_value_or_na_placeholder(value)
   - else
     strong
       = I18n.t("activerecord.attributes.user.#{attribute_name}")
       span<>= ":"
-    span= value
+    = display_value_or_na_placeholder(value)
 
   - if ( \
     attribute_name == :phone_number && \
