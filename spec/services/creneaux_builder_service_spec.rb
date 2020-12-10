@@ -3,7 +3,7 @@ describe CreneauxBuilderService, type: :service do
   let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, reservable_online: reservable_online, organisation: organisation, location_type: :public_office) }
   let(:reservable_online) { true }
   let!(:lieu) { create(:lieu, organisation: organisation) }
-  let(:today) { Date.new(2020, 12, 10) }
+  let(:today) { get_next_week_working_weekday(:thursday, consecutive_working_days: 8) }
   let(:tomorrow) { today + 1.day }
   let(:six_days_later) { today + 6.days }
   let!(:agent) { create(:agent, organisations: [organisation]) }

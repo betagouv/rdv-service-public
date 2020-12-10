@@ -37,4 +37,8 @@ class JoursFeriesService
       end
     end
   end
+
+  def self.includes?(date)
+    date.in?(JOURS_FERIES_2020 + JOURS_FERIES_2021)
+  end
 end
