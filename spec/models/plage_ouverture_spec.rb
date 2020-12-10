@@ -29,7 +29,7 @@ describe PlageOuverture, type: :model do
   require Rails.root.join "spec/models/concerns/recurrence_concern_spec.rb"
   it_behaves_like "recurrence"
 
-  describe ".for_motif_and_lieu_from_date_range" do
+  describe ".not_expired_for_motif_name_and_lieu" do
     let!(:service) { create(:service, name: "pmi") }
     let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, service: service, organisation: organisation) }
     let!(:lieu) { create(:lieu, organisation: organisation) }
@@ -40,25 +40,26 @@ describe PlageOuverture, type: :model do
     let(:agent3) { create(:agent, service: service, organisations: [organisation]) }
     let!(:plage_ouverture) { create(:plage_ouverture, :weekly, agent: agent, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation) }
 
-    subject { PlageOuverture.for_motif_and_lieu_from_date_range(motif.name, lieu, today..six_days_later) }
+    subject { PlageOuverture.not_expired_for_motif_name_and_lieu(motif.name, lieu) }
 
     it { expect(subject).to contain_exactly(plage_ouverture) }
 
-    describe "when first_day is the last day of time range" do
+    describe "when PO is not expired" do
       let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: six_days_later, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation) }
 
       it { expect(subject).to contain_exactly(plage_ouverture) }
     end
 
-    describe "when first_day is before time range" do
-      let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today - 2.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation) }
-
-      it { expect(subject).to contain_exactly(plage_ouverture) }
-    end
-
-    describe "when first_day is after time range" do
-      let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: today + 8.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation) }
-
+    describe "when PO is expired" do
+      let!(:plage_ouverture) do
+        create(
+          :plage_ouverture,
+          motifs: [motif], lieu: lieu, first_day: today - 2.weeks,
+          start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
+          organisation: organisation,
+          recurrence: Montrose.every(:week, on: [:monday], starts: today - 2.weeks, until: today - 1.week), expired_cached: true
+        )
+      end
       it { expect(subject.count).to eq(0) }
     end
   end
