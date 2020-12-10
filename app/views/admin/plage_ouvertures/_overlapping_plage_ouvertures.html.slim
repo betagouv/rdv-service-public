@@ -6,11 +6,7 @@
     - if local_assigns[:display_agents]
       span> de #{overlapping_plage_ouverture.agent.full_name}
     span> à #{overlapping_plage_ouverture.lieu.name}
-    - if overlapping_plage_ouverture.recurring?
-      span>= display_recurrence(overlapping_plage_ouverture).join(" ")
-    - else
-      span>= l(overlapping_plage_ouverture.first_day, format: :human)
-      span>= display_time_range(overlapping_plage_ouverture)
+    = plage_ouverture_occurence_text(overlapping_plage_ouverture)
     - if overlapping_plage_ouverture.organisation != current_organisation
       span>= "(Organisation #{overlapping_plage_ouverture.organisation.name})"
 
