@@ -20,7 +20,7 @@ class Rdv < ApplicationRecord
   enum status: { unknown: 0, waiting: 1, seen: 2, excused: 3, notexcused: 4 }
   enum created_by: { agent: 0, user: 1, file_attente: 2 }, _prefix: :created_by
 
-  delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, to: :motif
+  delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :service, to: :motif
 
   validates :users, :organisation, :motif, :starts_at, :duration_in_min, :agents, presence: true
   validates :lieu, presence: true, if: :public_office?
