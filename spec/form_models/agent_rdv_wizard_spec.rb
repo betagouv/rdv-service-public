@@ -1,4 +1,4 @@
-describe Admin::RdvWizardForm do
+describe AgentRdvWizard do
   let(:organisation) { build(:organisation) }
   let!(:agent) { create(:agent) }
   let!(:user) { create(:user) }
@@ -6,7 +6,7 @@ describe Admin::RdvWizardForm do
 
   describe "#new" do
     it "should work" do
-      rdv_wizard = Admin::RdvWizardForm::Step1.new(agent, organisation, rdv_attributes)
+      rdv_wizard = AgentRdvWizard::Step1.new(agent, organisation, rdv_attributes)
       expect(rdv_wizard.rdv.user_ids).to eq [user.id]
       expect(rdv_wizard.agents.to_a).to eq [agent]
     end
@@ -18,13 +18,13 @@ describe Admin::RdvWizardForm do
 
         context "no duration passed explicitly" do
           it "should use motif default duration" do
-            rdv_wizard = Admin::RdvWizardForm::Step1.new(agent, organisation, rdv_attributes)
+            rdv_wizard = AgentRdvWizard::Step1.new(agent, organisation, rdv_attributes)
             expect(rdv_wizard.duration_in_min).to eq 25
           end
         end
         context "some duration passed explicitly" do
           it "should not use motif default duration" do
-            rdv_wizard = Admin::RdvWizardForm::Step1.new(agent, organisation, rdv_attributes.merge(duration_in_min: 7))
+            rdv_wizard = AgentRdvWizard::Step1.new(agent, organisation, rdv_attributes.merge(duration_in_min: 7))
             expect(rdv_wizard.duration_in_min).to eq 7
           end
         end
@@ -33,7 +33,7 @@ describe Admin::RdvWizardForm do
       describe "rdv address default behaviour" do
         let(:lieu) { create(:lieu) }
         let(:rdv_attributes) { { user_ids: [user.id], motif_id: motif.id, lieu: lieu } }
-        subject { Admin::RdvWizardForm::Step1.new(agent, organisation, rdv_attributes).rdv.address }
+        subject { AgentRdvWizard::Step1.new(agent, organisation, rdv_attributes).rdv.address }
         context "motif is public office" do
           let!(:motif) { create(:motif, :at_public_office) }
           let!(:user) { create(:user, address: "10 rue du havre") }

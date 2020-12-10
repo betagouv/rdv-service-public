@@ -38,7 +38,7 @@ module PlageOuverturesHelper
       if recurrence_hash[:on].present?
         "#{every_part}, les #{recurrence_hash[:on].map { |d| "#{weekday_in_fr(d)}s" }.to_sentence}"
       else
-        "#{every_part}, le #{I18n.l(plage_ouverture.first_day, format: "%A")}"
+        "#{every_part}, le #{l(plage_ouverture.first_day, format: "%A")}"
       end
     elsif recurrence_hash[:every] == :month
       "Tous les #{interval} mois, #{weekday_position_in_month(recurrence_hash[:day])}"
@@ -46,24 +46,16 @@ module PlageOuverturesHelper
   end
 
   def display_time_range(plage_ouverture)
-    "de #{I18n.l(plage_ouverture.start_time, format: "%H:%M")} à #{I18n.l(plage_ouverture.end_time, format: "%H:%M")}"
-  end
-
-  def plage_ouverture_occurence_text(plage_ouverture)
-    if plage_ouverture.recurring?
-      display_recurrence(plage_ouverture).join(" ")
-    else
-      I18n.l(plage_ouverture.first_day, format: :human) + display_time_range(plage_ouverture)
-    end
+    "de #{l(plage_ouverture.start_time, format: "%H:%M")} à #{l(plage_ouverture.end_time, format: "%H:%M")}"
   end
 
   def display_recurrence_range(plage_ouverture)
     recurrence_hash = plage_ouverture.recurrence.to_hash
 
-    range_part = "à partir du #{I18n.l(plage_ouverture.first_day, format: :human)}"
+    range_part = "à partir du #{l(plage_ouverture.first_day, format: :human)}"
 
     if recurrence_hash[:until].present?
-      range_part = "#{range_part}, jusqu'au #{I18n.l(recurrence_hash[:until].to_date, format: :human)}"
+      range_part = "#{range_part}, jusqu'au #{l(recurrence_hash[:until].to_date, format: :human)}"
     end
     range_part
   end

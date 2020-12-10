@@ -1,5 +1,10 @@
 - content_for(:menu_item) { 'menu-agendas' }
 
+- if @rdv_wizard.warnings_need_confirmation? && @rdv_wizard.overlapping_plages_ouvertures.any?
+  - content_for :warnings_description do
+    ul.pl-3
+      = render "admin/plage_ouvertures/overlapping_plage_ouvertures", model: @rdv_wizard, display_agents: true
+
 - content_for :title do
   | Choisir la durée et la date
 
@@ -17,7 +22,7 @@
           = users_inline_list_for_agents(@rdv.users)
 
       .card-body
-        = simple_form_for(@rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation, step: 3)) do |f|
+        = simple_form_for(@rdv, url: admin_organisation_rdvs_path(current_organisation)) do |f|
           = render(partial: 'layouts/model_errors', locals: { model: @rdv_wizard, f: f })
           = collapsible_form_fields_for_warnings(@rdv_wizard) do
             = f.association :motif, as: :hidden,  wrapper_html: { class: 'm-0' }

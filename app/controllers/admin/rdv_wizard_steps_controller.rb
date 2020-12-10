@@ -3,15 +3,14 @@ class Admin::RdvWizardStepsController < AgentAuthController
 
   PERMITTED_PARAMS = [
     :motif_id, :duration_in_min, :starts_at, :lieu_id, :context, :service_id,
-    :organisation_id, :active_warnings_confirm_decision,
-    agent_ids: [], user_ids: [],
+    :organisation_id, agent_ids: [], user_ids: []
   ].freeze
 
   def new
     @rdv_wizard = rdv_wizard_for(query_params)
     @rdv = @rdv_wizard.rdv
     set_services_and_motifs if current_step == "step1"
-    authorize(@rdv_wizard.rdv, :new?)
+    skip_authorization
     render current_step
   end
 
@@ -19,9 +18,9 @@ class Admin::RdvWizardStepsController < AgentAuthController
     @rdv_wizard = rdv_wizard_for(rdv_params)
     @rdv = @rdv_wizard.rdv
     set_services_and_motifs if current_step == "step1"
-    authorize(@rdv_wizard.rdv, :create?)
-    if @rdv_wizard.save
-      redirect_to @rdv_wizard.success_path, @rdv_wizard.success_flash
+    skip_authorization
+    if @rdv_wizard.valid?
+      redirect_to new_admin_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: next_step_index))
     else
       render current_step
     end
@@ -34,16 +33,20 @@ class Admin::RdvWizardStepsController < AgentAuthController
   end
 
   def current_step
-    return Admin::RdvWizardForm::STEPS.first if params[:step].blank?
+    return AgentRdvWizard::STEPS.first if params[:step].blank?
 
     step = "step#{params[:step]}"
-    raise InvalidStep unless step.in?(Admin::RdvWizardForm::STEPS)
+    raise InvalidStep unless step.in?(AgentRdvWizard::STEPS)
 
     step
   end
 
+  def next_step_index
+    AgentRdvWizard::STEPS.index(current_step) + 2 # steps start at 1 + increment
+  end
+
   def rdv_wizard_for(request_params)
-    klass = "Admin::RdvWizardForm::#{current_step.camelize}".constantize
+    klass = "AgentRdvWizard::#{current_step.camelize}".constantize
     klass.new(current_agent, current_organisation, request_params)
   end
 
