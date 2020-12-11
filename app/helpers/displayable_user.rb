@@ -42,4 +42,16 @@ class DisplayableUser
 
     simple_format(@user_profile.notes)
   end
+
+  def notify_by_sms
+    return "pas de numéro de téléphone renseigné" if @user.responsible_phone_number.blank?
+
+    @user.responsible_notify_by_sms? ? "🟢 Activées" : "🔴 Désactivées"
+  end
+
+  def notify_by_email
+    return "pas d'email renseigné" if @user.responsible_email.blank?
+
+    @user.responsible_notify_by_email? ? "🟢 Activées" : "🔴 Désactivées"
+  end
 end

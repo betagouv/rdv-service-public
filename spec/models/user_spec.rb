@@ -189,13 +189,15 @@ describe User, type: :model do
         responsible_attributes: {
           first_name: "Jean",
           last_name: "durand",
-          email: "jean@durand.fr"
+          email: "jean@durand.fr",
+          notify_by_sms: false
         }
       )
       loulou.save!
       expect(User.count).to eq(2)
       expect(loulou.responsible).not_to be_nil
       expect(loulou.responsible.first_name).to eq("Jean")
+      expect(loulou.responsible.notify_by_sms).to eq(false)
     end
   end
 

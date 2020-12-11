@@ -29,6 +29,8 @@ class Users::UsersController < UserAuthController
       :affiliation_number,
       :family_situation,
       :number_of_children,
+      :notify_by_email,
+      :notify_by_sms,
       user_profiles_attributes: [:logement, :id, :organisation_id]
     )
   end

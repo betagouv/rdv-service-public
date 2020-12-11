@@ -27,13 +27,14 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def edit
-    authorize(@rdv)
-    respond_right_bar_with(@rdv)
+    @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
+    authorize(@rdv_form.rdv)
   end
 
   def update
     authorize(@rdv)
-    success = RdvUpdater.update_by_agent(@rdv, rdv_params)
+    @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
+    success = @rdv_form.update(**rdv_params.to_h.symbolize_keys)
     respond_to do |format|
       format.json do
         temporal_status_human = I18n.t("activerecord.attributes.rdv.statuses.#{@rdv.temporal_status}")
@@ -64,27 +65,6 @@ class Admin::RdvsController < AgentAuthController
     end
     # TODO : redirection makes no sense when coming from a users#show
     redirect_to admin_organisation_agent_path(current_organisation, @agent || current_agent)
-  end
-
-  def create
-    @rdv = Rdv.new(rdv_params)
-    @rdv.organisation = current_organisation
-    authorize(@rdv)
-    if @rdv.save
-      redirect_to(
-        admin_organisation_agent_path(
-          current_organisation,
-          @rdv.agents.include?(current_agent) ? current_agent : @rdv.agents.first,
-          selected_event_id: @rdv.id,
-          date: @rdv.starts_at.to_date
-        ),
-        notice: "Le rendez-vous a été créé."
-      )
-    else
-      @rdv_wizard = AgentRdvWizard::Step3.new(current_agent, current_organisation, users: @rdv.users, agent_ids: @rdv.agent_ids, **@rdv.attributes)
-      @rdv_wizard.valid? # necessary to explicitly trigger validations here so that errors and warnings appear in the view. the right fix would be to call rdv_wizard.save instead of rdv.save
-      render "admin/rdv_wizard_steps/step3"
-    end
   end
 
   private
