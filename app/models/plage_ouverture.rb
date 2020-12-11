@@ -18,7 +18,7 @@ class PlageOuverture < ApplicationRecord
   has_many :webhook_endpoints, through: :organisation
 
   scope :expired, -> { where(expired_cached: true) }
-  scope :not_expired, -> { where(expired_cached: false) }
+  scope :not_expired, -> { where.not(expired_cached: true) }
 
   def notify_agent_plage_ouverture_created
     Agents::PlageOuvertureMailer.plage_ouverture_created(self).deliver_later
@@ -40,11 +40,11 @@ class PlageOuverture < ApplicationRecord
     time_shift.duration / 60
   end
 
-  def self.for_motif_and_lieu_from_date_range(motif_name, lieu, inclusive_date_range)
+  def self.not_expired_for_motif_name_and_lieu(motif_name, lieu)
     PlageOuverture
       .includes(:motifs_plageouvertures)
       .where(lieu: lieu)
-      .where("plage_ouvertures.first_day <= ?", inclusive_date_range.end)
+      .not_expired
       .joins(:motifs)
       .where(motifs: { name: motif_name, organisation_id: lieu.organisation_id })
       .includes(:motifs, agent: :absences)
