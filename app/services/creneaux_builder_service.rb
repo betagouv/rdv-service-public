@@ -8,6 +8,7 @@ class CreneauxBuilderService < BaseService
     @agent_ids = options.fetch(:agent_ids, nil)
     @agent_name = options.fetch(:agent_name, false)
     @motif_location_type = options.fetch(:motif_location_type, nil)
+    @plages_ouvertures = options[:plages_ouvertures]
   end
 
   def perform
@@ -17,14 +18,14 @@ class CreneauxBuilderService < BaseService
     creneaux.uniq(&uniq_by).sort_by(&:starts_at)
   end
 
-  private
-
   def plages_ouvertures
     @plages_ouvertures ||= PlageOuverture
-      .for_motif_and_lieu_from_date_range(@motif_name, @lieu, @inclusive_date_range)
+      .not_expired_for_motif_name_and_lieu(@motif_name, @lieu)
       .where(({ agent_id: @agent_ids } unless @agent_ids.nil?))
       .where(({ motifs: { location_type: @motif_location_type } } if @motif_location_type.present?))
   end
+
+  private
 
   def motifs_for_plage_ouverture(plage_ouverture)
     motifs = plage_ouverture.motifs.where(name: @motif_name).active

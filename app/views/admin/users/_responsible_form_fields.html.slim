@@ -9,7 +9,6 @@
   .col-md-6= date_input(f, :birth_date, **input_opts)
 
 = f.input(:email, as: :email, **input_opts)
-
 - if user.new_record?
   label
     = check_box_tag :invite_on_create, \
@@ -19,6 +18,24 @@
     |&nbsp; Inviter l'utilisateur à se créer un compte sur RDV-solidarites.
 
 = f.input :phone_number, as: :tel, **input_opts
+
+label Préférences de notifications
+.d-flex.mb-2
+  div= f.input( \
+    :notify_by_email,  \
+    include_hidden: false, \
+    wrapper: false, \
+    **input_opts.deep_merge(user.confirmed? ? { disabled: true, input_html: { class: "js-force-disabled" } } : {}) \
+  )
+  div.ml-3= f.input( \
+    :notify_by_sms,  \
+    include_hidden: false, \
+    wrapper: false, \
+    **input_opts.deep_merge(user.confirmed? ? { disabled: true, input_html: { class: "js-force-disabled" } } : {}) \
+  )
+- if user.confirmed?
+  .mt-1.text-muted
+    | L'usager ayant validé son compte, vous ne pouvez plus modifier ses préférences
 
 = f.input :address, **(input_opts.deep_merge(input_html: { class: "places-js-container" }))
 
