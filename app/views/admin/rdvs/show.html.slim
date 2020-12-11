@@ -66,7 +66,7 @@
           p.card-text
             i.fa.fa-fw.fa-envelope>
             - email = DisplayableUser.new(user, current_organisation).email
-            = display_value_or_na_placeholder(phone_number)
+            = display_value_or_na_placeholder(email)
             - if email.present?
               span> - Notifications par email #{DisplayableUser.new(user, current_organisation).notify_by_email}
 
