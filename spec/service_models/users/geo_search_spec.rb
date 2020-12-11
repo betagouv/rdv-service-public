@@ -9,11 +9,11 @@ describe Users::GeoSearch, type: :service_model do
       it { should be_empty }
     end
 
-    context "city-zones match" do
-      let!(:zone1) { create(:zone, level: "city", city_code: "62100", city_name: "Arques") }
-      let!(:zone2) { create(:zone, level: "city", city_code: "62100", city_name: "Arques") }
-      let!(:zone_mismatch) { create(:zone, level: "city", city_code: "62300", city_name: "Arques") }
-      it { should contain_exactly(zone1, zone2) }
+    it "contains zones where city-zones match" do
+      zone1 = create(:zone, level: "city", city_code: "62100", city_name: "Arques")
+      zone2 = create(:zone, level: "city", city_code: "62100", city_name: "Arques")
+      create(:zone, level: "city", city_code: "62300", city_name: "Arques")
+      expect(Users::GeoSearch.new(departement: "62", city_code: "62100").matching_zones).to contain_exactly(zone1, zone2)
     end
   end
 
