@@ -24,9 +24,7 @@ describe "can see users' RDV" do
     before { click_link user.full_name }
     it do
       expect(page).to have_content("1\nÀ venir")
-      within(".rdvs-history") do
-        click_link "Voir tous les rendez-vous de #{user.full_name}"
-      end
+      click_link "Voir tous les rendez-vous de #{user.full_name}"
       expect_page_title("Liste des RDV")
       expect(page).to have_content(rdv_title_spec(rdv))
     end

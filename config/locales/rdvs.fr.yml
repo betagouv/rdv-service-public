@@ -1,0 +1,4 @@
+fr:
+  rdvs:
+    title: "le %{starts_at} (durée : %{duration} minutes)"
+    title_time_only: "aujourd'hui à %{starts_at} (durée : %{duration} minutes)"

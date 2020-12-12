@@ -1,8 +1,10 @@
 module RdvsHelper
-  def rdv_title(rdv, date_format: :human)
-    article = date_format == :time_only ? "À" : "Le"
-    "#{article} #{l(rdv.starts_at, format: date_format)} " \
-      "(durée : #{rdv.duration_in_min} minutes)"
+  def rdv_title(rdv)
+    if rdv.starts_at.to_date == Date.today
+      I18n.t("rdvs.title_time_only", starts_at: l(rdv.starts_at, format: :time_only), duration: rdv.duration_in_min)
+    else
+      I18n.t("rdvs.title", starts_at: l(rdv.starts_at, format: :human), duration: rdv.duration_in_min)
+    end
   end
 
   def rdv_title_for_agent(rdv)

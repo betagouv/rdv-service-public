@@ -1,4 +1,4 @@
-.card.rdvs-history
+.card
   .card-header
     .d-flex.justify-content-between
       .mt-1
@@ -10,7 +10,7 @@
       .text-muted aucun rendez-vous
     - user.previous_rdvs(current_organisation).each do |previous_rdv|
       .mb-2
-        strong= link_to rdv_title(previous_rdv, **{ date_format: local_assigns[:date_format] }.compact), admin_organisation_rdv_path(previous_rdv.organisation, previous_rdv)
+        strong= link_to rdv_title(previous_rdv), admin_organisation_rdv_path(previous_rdv.organisation, previous_rdv)
         = rdv_status_tag(previous_rdv)
         div
           = previous_rdv.motif.name

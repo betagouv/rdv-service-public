@@ -8,7 +8,7 @@
       .text-muted aucun rendez-vous à venir
     - user.next_rdvs(current_organisation).reverse.each do |next_rdv|
       .mb-2
-        strong= link_to rdv_title(next_rdv, **{ date_format: local_assigns[:date_format] }.compact), admin_organisation_rdv_path(current_organisation, next_rdv)
+        strong= link_to rdv_title(next_rdv), admin_organisation_rdv_path(current_organisation, next_rdv)
         = rdv_status_tag(next_rdv)
         div
           = next_rdv.motif.name
