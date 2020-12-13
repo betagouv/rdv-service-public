@@ -6,5 +6,4 @@ module PageSpecHelper
   def expect_page_with_no_record_text(text)
     expect(page).to have_selector(".card .card-body p.lead", text: text)
   end
-
 end
