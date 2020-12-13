@@ -1,6 +1,6 @@
 module RdvsHelper
   def rdv_title(rdv)
-    if rdv.starts_at.to_date == Date.today
+    if rdv.starts_at.to_date.today?
       I18n.t("rdvs.title_time_only", starts_at: l(rdv.starts_at, format: :time_only), duration: rdv.duration_in_min)
     else
       I18n.t("rdvs.title", starts_at: l(rdv.starts_at, format: :human), duration: rdv.duration_in_min)
