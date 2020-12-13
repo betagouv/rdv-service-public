@@ -26,7 +26,7 @@ describe "can see users' RDV" do
       expect(page).to have_content("1\nÀ venir")
       click_link "Voir tous les rendez-vous de #{user.full_name}"
       expect_page_title("Liste des RDV")
-      expect(page).to have_content(rdv_title_spec(rdv))
+      expect(page).to have_content("le #{I18n.l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)")
     end
   end
 end
