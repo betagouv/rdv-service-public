@@ -3,7 +3,7 @@
     .d-flex.justify-content-between
       div
         i.fa.fa-fw.fa-calendar>
-        = link_to rdv_title(rdv, **{ date_format: local_assigns[:date_format] }.compact), admin_organisation_rdv_path(rdv.organisation, rdv)
+        = link_to rdv_title(rdv), admin_organisation_rdv_path(rdv.organisation, rdv)
       = render "rdv_status_dropdown", rdv: rdv, remote: true
 
   .card-body
