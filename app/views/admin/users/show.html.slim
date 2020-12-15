@@ -102,12 +102,16 @@
 
   .col-md-6
 
-    = render "admin/rdvs/rdvs", user: @user, rdvs: @user.next_rdvs(current_organisation)
+    = render "admin/rdvs/rdvs", user: @user, rdvs: @user.next_rdvs(current_organisation), title: "Prochain rendez-vous"
 
     .card
       .card-header
-        | Statuts
-        small.text-muted< sur #{@rdvs.count} RDV
+        .d-flex.justify-content-between
+          .mt-1
+            | Statuts
+            small.text-muted< sur #{@rdvs.count} RDV
+          - if @user.rdvs.count > 0
+            = link_to "Voir tous les rendez-vous de #{@user.full_name}", admin_organisation_rdvs_path(current_organisation, user_id: @user.id), class: "btn btn-outline-primary small"
       .card-body
         .row
           .col-md-4

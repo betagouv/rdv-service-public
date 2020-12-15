@@ -1,13 +1,8 @@
 .card
-  .card-header
-    .d-flex.justify-content-between
-      .mt-1
-        | Prochains rendez-vous
-      - if user.rdvs.count > 0
-        = link_to "Voir tous les rendez-vous de #{user.full_name}", admin_organisation_rdvs_path(current_organisation, user_id: user.id), class: "btn btn-outline-primary small"
+  .card-header= title
   .card-body
     - if rdvs.empty?
-      .text-muted aucun rendez-vous
+      .text-muted aucun #{title.downcase}
     - rdvs.reverse.each do |rdv|
       .mb-2
         strong= link_to rdv_title(rdv), admin_organisation_rdv_path(current_organisation, rdv)
