@@ -14,7 +14,7 @@ describe "can see users' RDV" do
     before { click_link user.full_name }
     it do
       expect(page).to have_content("0\nÀ venir")
-      expect(page).to have_content("aucun rendez-vous")
+      expect(page).to have_content("aucun prochain rendez-vous")
     end
   end
 
