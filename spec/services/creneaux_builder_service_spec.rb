@@ -3,7 +3,7 @@ describe CreneauxBuilderService, type: :service do
   let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, reservable_online: reservable_online, organisation: organisation, location_type: :public_office) }
   let(:reservable_online) { true }
   let!(:lieu) { create(:lieu, organisation: organisation) }
-  let(:today) { Date.today.next_week(:thursday) }
+  let(:today) { Date.new(2020, 12, 10) }
   let(:tomorrow) { today + 1.day }
   let(:six_days_later) { today + 6.days }
   let!(:agent) { create(:agent, organisations: [organisation]) }
@@ -17,13 +17,13 @@ describe CreneauxBuilderService, type: :service do
   after { travel_back }
 
   subject do
+    plage_ouverture.update(expired_cached: false)
     creneaux = CreneauxBuilderService.perform_with(motif_name, lieu, next_7_days_range, **options)
     creneaux.map { |c| creneau_to_hash(c, options[:for_agents]) }
   end
 
   it "should work" do
     expect(subject.size).to eq(4)
-
     is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     is_expected.to include(starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
