@@ -129,7 +129,7 @@ class User < ApplicationRecord
   end
 
   def next_rdvs(organisation)
-    rdvs_for_organisation(organisation).future
+    rdvs_for_organisation(organisation).where("starts_at > ?", Time.zone.now - 2.hours)
   end
 
   def rdvs_for_organisation(organisation)

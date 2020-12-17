@@ -353,6 +353,19 @@ describe User, type: :model do
 
       expect(user.next_rdvs(organisation)).to eq([future_rdv])
     end
+
+    it "returns current rdv" do
+      now = Time.new(2020, 5, 23, 15, 56)
+      travel_to(now)
+
+      organisation = create(:organisation)
+      user = create(:user, organisations: [organisation])
+      create(:rdv, users: [user], starts_at: now - 1.day)
+      create(:rdv, starts_at: now - 4.days, organisation: organisation, users: [user])
+      current_rdv = create(:rdv, starts_at: now - 2.minutes, organisation: organisation, users: [user])
+
+      expect(user.next_rdvs(organisation)).to eq([current_rdv])
+    end
   end
 
   # cf https://github.com/heartcombo/devise/wiki/How-To:-Email-only-sign-up
