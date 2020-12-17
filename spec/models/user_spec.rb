@@ -342,14 +342,14 @@ describe User, type: :model do
     end
 
     it "returns only future rdv including current RDV (from 2 hours)" do
-      today = Time.new(2020, 5, 23, 15, 56)
-      travel_to(today)
+      now = Time.new(2020, 5, 23, 15, 56)
+      travel_to(now)
 
       organisation = create(:organisation)
       user = create(:user, organisations: [organisation])
-      create(:rdv, users: [user], starts_at: today - 1.day)
-      create(:rdv, starts_at: today - 4.days, organisation: organisation, users: [user])
-      future_rdv = create(:rdv, starts_at: today + 4.days, organisation: organisation, users: [user])
+      create(:rdv, users: [user], starts_at: now - 1.day)
+      create(:rdv, starts_at: now - 4.days, organisation: organisation, users: [user])
+      future_rdv = create(:rdv, starts_at: now + 4.days, organisation: organisation, users: [user])
       current_rdv = create(:rdv, starts_at: now - 2.minutes, organisation: organisation, users: [user])
 
       expect(user.next_rdvs(organisation).sort).to eq([current_rdv, future_rdv].sort)
