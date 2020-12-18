@@ -183,58 +183,12 @@ describe User, type: :model do
   describe "responsible_attributes" do
     it "should allow saving nested responsible" do
       expect(User.count).to eq(0)
-      loulou = User.new(
-        first_name: "loulou",
-        last_name: "durand",
-        responsible_attributes: {
-          first_name: "Jean",
-          last_name: "durand",
-          email: "jean@durand.fr",
-          notify_by_sms: false
-        }
-      )
+      loulou = build(:user, responsible_attributes: attributes_for(:user, first_name: "Jean", notify_by_sms: false))
       loulou.save!
       expect(User.count).to eq(2)
       expect(loulou.responsible).not_to be_nil
       expect(loulou.responsible.first_name).to eq("Jean")
       expect(loulou.responsible.notify_by_sms).to eq(false)
-    end
-  end
-
-  describe "phone_number formatted normalization" do
-    subject { user.phone_number_formatted }
-    context "on create" do
-      context "no phone number" do
-        let!(:user) { create(:user, phone_number: nil) }
-        it { should eq(nil) }
-      end
-      context "blank phone number" do
-        let!(:user) { create(:user, phone_number: "") }
-        it { should eq(nil) }
-      end
-      context "valid phone number" do
-        let!(:user) { create(:user, phone_number: "01 30 30 40 40") }
-        it { should eq("+33130304040") }
-      end
-      context "invalid phone number" do
-        it "should not save" do
-          user = build(:user, phone_number: "01 30 20")
-          expect(user.save).to be false
-        end
-      end
-    end
-
-    context "on update" do
-      context "previous phone number" do
-        it "should update it" do
-          user = create(:user, phone_number: "01 30 30 40 40")
-          expect(user.phone_number_formatted).to eq("+33130304040")
-          user.update!(phone_number: "04 300 32020")
-          expect(user.phone_number_formatted).to eq("+33430032020")
-          user.update!(phone_number: "")
-          expect(user.phone_number_formatted).to eq(nil)
-        end
-      end
     end
   end
 
@@ -319,6 +273,28 @@ describe User, type: :model do
     end
   end
 
+  describe "#current_rdv" do
+    it "return nil without current rdv" do
+      now = Time.new(2020, 5, 23, 15, 56)
+      travel_to(now)
+      organisation = create(:organisation)
+      user = create(:user, organisations: [organisation])
+      create(:rdv, users: [user], starts_at: now - 1.day, organisation: organisation)
+      expect(user.current_rdv(organisation)).to be_empty
+    end
+
+    it "return rdv that currently happen" do
+      now = Time.new(2020, 5, 23, 15, 56)
+      travel_to(now)
+      organisation = create(:organisation)
+      user = create(:user, organisations: [organisation])
+      create(:rdv, users: [user], starts_at: now - 2.hours, duration_in_min: 30, organisation: organisation)
+      rdv = create(:rdv, users: [user], starts_at: now - 20.minutes, duration_in_min: 30, organisation: organisation)
+      create(:rdv, users: [user], starts_at: now + 2.hours, duration_in_min: 30, organisation: organisation)
+      expect(user.current_rdv(organisation)).to eq([rdv])
+    end
+  end
+
   describe "#next_rdvs" do
     it "return empty array without next rdv" do
       organisation = create(:organisation)
@@ -341,7 +317,7 @@ describe User, type: :model do
       expect(user.next_rdvs(organisation)).to eq([next_rdv])
     end
 
-    it "returns only future rdv including current RDV (from 2 hours)" do
+    it "returns only future rdv" do
       now = Time.new(2020, 5, 23, 15, 56)
       travel_to(now)
 
@@ -350,9 +326,8 @@ describe User, type: :model do
       create(:rdv, users: [user], starts_at: now - 1.day)
       create(:rdv, starts_at: now - 4.days, organisation: organisation, users: [user])
       future_rdv = create(:rdv, starts_at: now + 4.days, organisation: organisation, users: [user])
-      current_rdv = create(:rdv, starts_at: now - 2.minutes, organisation: organisation, users: [user])
 
-      expect(user.next_rdvs(organisation).sort).to eq([current_rdv, future_rdv].sort)
+      expect(user.next_rdvs(organisation)).to eq([future_rdv])
     end
   end
 

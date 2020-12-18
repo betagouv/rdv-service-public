@@ -102,6 +102,8 @@
 
   .col-md-6
 
+    - if @user.current_rdv(current_organisation)
+      = render "admin/rdvs/short_rdvs_list", user: @user, rdvs: @user.current_rdv(current_organisation), title: "Rendez-vous en cours (+/- 1 heure)"
     = render "admin/rdvs/short_rdvs_list", user: @user, rdvs: @user.next_rdvs(current_organisation), title: "Prochain rendez-vous"
 
     .card

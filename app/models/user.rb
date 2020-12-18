@@ -129,7 +129,16 @@ class User < ApplicationRecord
   end
 
   def next_rdvs(organisation)
-    rdvs_for_organisation(organisation).where("starts_at > ?", Time.zone.now - 2.hours)
+    rdvs_for_organisation(organisation).future
+  end
+
+  def current_rdv(organisation)
+    rdvs = rdvs_for_organisation(organisation).for_today
+    rdvs.select do |rdv|
+      start_period = rdv.starts_at - 1.hour
+      end_period = rdv.starts_at + rdv.duration_in_min.minutes + 1.hour
+      start_period <= Time.zone.now && Time.zone.now <= end_period
+    end
   end
 
   def rdvs_for_organisation(organisation)
