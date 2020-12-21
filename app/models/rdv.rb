@@ -1,6 +1,7 @@
 class Rdv < ApplicationRecord
   include WebhookDeliverable
   include Rdv::NotifiableConcern
+  include Rdv::AddressConcern
 
   ENDS_AT_SQL = "(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)".freeze
 
@@ -102,29 +103,6 @@ class Rdv < ApplicationRecord
     lieu.present? ? CreneauxBuilderService.perform_with(motif.name, lieu, date_range) : []
   end
 
-  def address
-    return location if location_without_lieu?
-    return user_for_home_rdv.address.to_s if home? && user_for_home_rdv.present?
-    return lieu.address if public_office? && lieu.present?
-
-    ""
-  end
-
-  def address_complete
-    return location if location_without_lieu?
-    return "Adresse de #{user_for_home_rdv.full_name} - #{user_for_home_rdv.responsible_address}" if home? && user_for_home_rdv.present?
-    return lieu.full_name if public_office? && lieu.present?
-
-    ""
-  end
-
-  def address_complete_without_personnal_details
-    return "Par téléphone" if phone?
-    return "À domicile" if home?
-
-    address_complete
-  end
-
   def user_for_home_rdv
     responsibles = users.where.not(responsible_id: [nil])
     [responsibles, users].flatten.select(&:address).first || users.first
@@ -145,10 +123,6 @@ class Rdv < ApplicationRecord
   end
 
   private
-
-  def location_without_lieu?
-    location.present? && lieu_id.nil?
-  end
 
   def virtual_attributes_for_paper_trail
     { user_ids: users&.pluck(:id), agent_ids: agents&.pluck(:id) }
