@@ -5,8 +5,8 @@
   = devise_error_messages!
   = f.hidden_field :invitation_token
   .form-row
-    .col-md-6= f.input :first_name, placeholder: 'Prénom', label: false
-    .col-md-6= f.input :last_name, placeholder: 'Nom', label: false
+    .col-md-6= f.input :first_name, placeholder: 'Dominique'
+    .col-md-6= f.input :last_name, placeholder: 'DUPONT'
   .form-group
     = f.label :password
     = f.password_field :password, required: true, class: 'form-control ', placeholder: 'Votre mot de passe', id: "password"
