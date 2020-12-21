@@ -189,13 +189,15 @@ describe User, type: :model do
         responsible_attributes: {
           first_name: "Jean",
           last_name: "durand",
-          email: "jean@durand.fr"
+          email: "jean@durand.fr",
+          notify_by_sms: false
         }
       )
       loulou.save!
       expect(User.count).to eq(2)
       expect(loulou.responsible).not_to be_nil
       expect(loulou.responsible.first_name).to eq("Jean")
+      expect(loulou.responsible.notify_by_sms).to eq(false)
     end
   end
 
@@ -307,14 +309,49 @@ describe User, type: :model do
 
     it "returns only past rdv" do
       today = Time.new(2020, 5, 23, 15, 56)
-      travel_to(today - 2.days)
+      travel_to(today)
       organisation = create(:organisation)
       user = create(:user, organisations: [organisation])
-      rdv = create(:rdv, users: [user], starts_at: today)
-      past_rdv = create(:rdv, starts_at: rdv.starts_at - 4.day, organisation: organisation, users: [user])
-      create(:rdv, starts_at: rdv.starts_at + 4.day, organisation: organisation, users: [user])
-      expect(user.previous_rdvs(organisation).count).to eq([past_rdv].count)
+      rdv = create(:rdv, users: [user], starts_at: today - 2.days)
+      past_rdv = create(:rdv, starts_at: rdv.starts_at - 4.days, organisation: organisation, users: [user])
+      create(:rdv, starts_at: rdv.starts_at + 4.days, organisation: organisation, users: [user])
       expect(user.previous_rdvs(organisation)).to eq([past_rdv])
+    end
+  end
+
+  describe "#next_rdvs" do
+    it "return empty array without next rdv" do
+      organisation = create(:organisation)
+      user = create(:user, organisations: [organisation])
+      create(:rdv, users: [user])
+      expect(user.next_rdvs(organisation)).to eq([])
+    end
+
+    it "return rdv for same user and organisation" do
+      today = Time.new(2020, 5, 23, 15, 56)
+      travel_to(today)
+
+      organisation = create(:organisation)
+      user = create(:user, organisations: [organisation])
+      create(:rdv, users: [user], starts_at: today - 1.day)
+      create(:rdv, starts_at: today - 1.day)
+      create(:rdv, users: [user], starts_at: today - 2.days)
+      next_rdv = create(:rdv, starts_at: today + 1.day, organisation: organisation, users: [user])
+
+      expect(user.next_rdvs(organisation)).to eq([next_rdv])
+    end
+
+    it "returns only future rdv" do
+      today = Time.new(2020, 5, 23, 15, 56)
+      travel_to(today)
+
+      organisation = create(:organisation)
+      user = create(:user, organisations: [organisation])
+      create(:rdv, users: [user], starts_at: today - 1.day)
+      create(:rdv, starts_at: today - 4.days, organisation: organisation, users: [user])
+      future_rdv = create(:rdv, starts_at: today + 4.days, organisation: organisation, users: [user])
+
+      expect(user.next_rdvs(organisation)).to eq([future_rdv])
     end
   end
 

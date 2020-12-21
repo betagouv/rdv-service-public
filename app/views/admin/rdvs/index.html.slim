@@ -60,10 +60,7 @@
       = render( \
         partial: 'admin/rdvs/rdv', \
         collection: @rdvs.sort_by(&:starts_at), \
-        locals: { \
-          date_format: (@form.start.present? && @form.start == @form.end ? :time_only : nil), \
-          show_user_details: @form.show_user_details \
-        } \
+        locals: { show_user_details: @form.show_user_details} \
       )
       .d-flex.justify-content-center= paginate @rdvs, theme: 'twitter-bootstrap-4'
     - else

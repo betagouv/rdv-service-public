@@ -10,6 +10,7 @@ class Admin::UsersController < AgentAuthController
     :first_name, :last_name, :birth_name, :email, :phone_number,
     :birth_date, :address, :caisse_affiliation, :affiliation_number,
     :family_situation, :number_of_children,
+    :notify_by_sms, :notify_by_email,
     :skip_duplicate_warnings
   ].freeze
 

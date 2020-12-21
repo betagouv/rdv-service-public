@@ -36,11 +36,14 @@ ul.list-group.list-group-flush
           | Informations de contact :&nbsp;
       .row
         .col.ml-3
-          | ✉️ Email :&nbsp;
-          = current_user.email
+          span> ✉️ Email :
+          b>= current_user.email
+          span>= "(notifications par email #{current_user.notify_by_email? ? "activées" : "désactivées"})"
       .row
         .col.ml-3
-          | 📞 Téléphone :&nbsp;
-          = current_user.phone_number || "Non renseigné"
+          span> 📞 Téléphone :
+          b>= current_user.phone_number || "Non renseigné"
+          - if current_user.phone_number.present?
+            span>= "(notifications par SMS #{current_user.notify_by_sms? ? "activées" : "désactivées"})"
         .col-auto
           = link_to "modifier", new_users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query)

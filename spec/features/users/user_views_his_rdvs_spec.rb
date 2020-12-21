@@ -16,7 +16,7 @@ describe "User views his rdv" do
     let!(:rdv) { create(:rdv, :future, users: [user], organisation: organisation) }
     before { click_link "Vos rendez-vous" }
     it do
-      expect(page).to have_content(rdv_title_spec(rdv))
+      expect(page).to have_content("le #{I18n.l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)")
       click_link "Voir vos RDV passés"
       expect_page_with_no_record_text("Vous n'avez pas de RDV passés")
     end
@@ -28,7 +28,7 @@ describe "User views his rdv" do
     it do
       expect_page_with_no_record_text("Vous n'avez pas de RDV à venir")
       click_link "Voir vos RDV passés"
-      expect(page).to have_content(rdv_title_spec(rdv))
+      expect(page).to have_content("le #{I18n.l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)")
     end
   end
 end

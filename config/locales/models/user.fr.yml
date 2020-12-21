@@ -30,3 +30,5 @@ fr:
         responsability_types:
           responsible: "Responsable"
           relative: "Proche"
+        notify_by_sms: "Notifications par SMS"
+        notify_by_email: "Notifications par email"

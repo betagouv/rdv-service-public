@@ -59,17 +59,24 @@
         .card-body
           p.card-text
             i.fa.fa-fw.fa-phone>
-            = display_value_or_na_placeholder(user.phone_number)
+            - phone_number = DisplayableUser.new(user, current_organisation).phone_number
+            = display_value_or_na_placeholder(phone_number)
+            - if phone_number.present?
+              span> - Notifications par SMS #{DisplayableUser.new(user, current_organisation).notify_by_sms}
           p.card-text
             i.fa.fa-fw.fa-envelope>
-            = display_value_or_na_placeholder(user.email)
+            - email = DisplayableUser.new(user, current_organisation).email
+            = display_value_or_na_placeholder(email)
+            - if email.present?
+              span> - Notifications par email #{DisplayableUser.new(user, current_organisation).notify_by_email}
+
           - if user.notes_for(current_organisation).present?
             .d-flex title="Remarques"
               div.mr-1
                 i.fa.fa-fw.fa-info-circle>
               div= simple_format(user.notes_for(current_organisation))
 
-      = render "admin/rdvs/rdvs_history", user: user
+      = render "admin/rdvs/short_rdvs_list", user: user, rdvs: user.previous_rdvs(current_organisation), title: "Rendez-vous précédent"
 
 .row
   .col-md-12

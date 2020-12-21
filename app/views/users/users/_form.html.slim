@@ -9,6 +9,10 @@
     .col-md-6= f.input :birth_name, placeholder: 'Nom de naissance'
     .col-md-6= date_input(f, :birth_date)
   = f.input :phone_number, as: :tel
+  label Préférences de notifications
+  .d-flex
+    div= f.input :notify_by_email
+    div.ml-3= f.input :notify_by_sms
   - address_value = local_assigns[:rdv_wizard].present? && user.address.nil? ? rdv_wizard[:where] : user.address
   = f.input :address, input_html: {value: address_value, class: "places-js-container" }
 

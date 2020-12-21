@@ -1,5 +1,5 @@
 ul.list-unstyled.mb-5
-  - [:first_name, :last_name, :birth_name, :birth_date, :phone_number, :address, :email].each do |attr_name|
+  - [:first_name, :last_name, :birth_name, :birth_date, :address, :email, :notify_by_email, :phone_number, :notify_by_sms].each do |attr_name|
     li.mb-2= render "common/user_attribute", user: user, attribute_name: attr_name
 
   - if user.pending_reconfirmation?

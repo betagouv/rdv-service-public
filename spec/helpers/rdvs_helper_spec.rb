@@ -34,6 +34,21 @@ describe RdvsHelper do
     end
   end
 
+  describe "#rdv_title" do
+    it "show date, time and duration in minutes" do
+      rdv = build(:rdv, starts_at: Time.zone.parse("2020-10-23 12h54"), duration_in_min: 30)
+      expect(rdv_title(rdv)).to eq("le vendredi 23 octobre 2020 à 12h54 (durée : 30 minutes)")
+    end
+
+    it "when rdv starts_at today, show only time and duration in minutes" do
+      now = Time.zone.parse("2020-10-23 12h54")
+      travel_to(now)
+      rdv = build(:rdv, starts_at: now + 3.hours, duration_in_min: 30)
+      expect(rdv_title(rdv)).to eq("aujourd'hui à 15h54 (durée : 30 minutes)")
+      travel_back
+    end
+  end
+
   describe "#rdv_time_and_duration" do
     it "return starts_at hour, minutes and duration" do
       rdv = build(:rdv, starts_at: DateTime.new(2020, 3, 23, 12, 46), duration_in_min: 4)

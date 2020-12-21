@@ -83,11 +83,35 @@
             - if @user.responsible.agents.empty?
               .font-italic aucun référent
 
+    - if @user.responsible?
+      .card
+        .card-header Proches
+        .card-body
+          ul.list-group.mb-2
+            - if @user.relatives.within_organisation(current_organisation).active.empty?
+              li.list-group-item
+                em Aucun proche
+            - @user.relatives.within_organisation(current_organisation).active.each do |relative|
+              li.list-group-item
+                .row
+                  .col
+                    => link_to relative.full_name, admin_organisation_user_path(current_organisation, relative)
+                    = "(#{age(relative)})" if relative.birth_date
+          .text-right
+            = link_to "Ajouter un proche", new_admin_organisation_user_path(current_organisation, responsible_id: @user.id), class: "btn btn-outline-primary"
+
   .col-md-6
+
+    = render "admin/rdvs/short_rdvs_list", user: @user, rdvs: @user.next_rdvs(current_organisation), title: "Prochain rendez-vous"
+
     .card
       .card-header
-        | Statuts
-        small.text-muted< sur #{@rdvs.count} RDV
+        .d-flex.justify-content-between
+          .mt-1
+            | Statuts
+            small.text-muted< sur #{@rdvs.count} RDV
+          - if @user.rdvs.count > 0
+            = link_to "Voir tous les rendez-vous de #{@user.full_name}", admin_organisation_rdvs_path(current_organisation, user_id: @user.id), class: "btn btn-outline-primary small"
       .card-body
         .row
           .col-md-4
@@ -119,21 +143,4 @@
               p.lead= t 'stats.rdv_counters.rdvs.notexcused', count: @rdvs.notexcused.count
               = link_to "Voir", admin_organisation_rdvs_path(current_organisation, user_id: @user.id, breadcrumb_page: "user", status: "notexcused"), class: "btn btn-outline-white"
 
-    = render "admin/rdvs/rdvs_history", user: @user
 
-    - if @user.responsible?
-      .card
-        .card-header Proches
-        .card-body
-          ul.list-group.mb-2
-            - if @user.relatives.within_organisation(current_organisation).active.empty?
-              li.list-group-item
-                em Aucun proche
-            - @user.relatives.within_organisation(current_organisation).active.each do |relative|
-              li.list-group-item
-                .row
-                  .col
-                    => link_to relative.full_name, admin_organisation_user_path(current_organisation, relative)
-                    = "(#{age(relative)})" if relative.birth_date
-          .text-right
-            = link_to "Ajouter un proche", new_admin_organisation_user_path(current_organisation, responsible_id: @user.id), class: "btn btn-outline-primary"

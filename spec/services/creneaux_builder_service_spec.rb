@@ -3,8 +3,8 @@ describe CreneauxBuilderService, type: :service do
   let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, reservable_online: reservable_online, organisation: organisation, location_type: :public_office) }
   let(:reservable_online) { true }
   let!(:lieu) { create(:lieu, organisation: organisation) }
-  let(:today) { Date.new(2019, 9, 19) } # a thursday
-  let(:tomorrow) { Date.new(2019, 9, 20) }
+  let(:today) { Date.new(2020, 12, 10) }
+  let(:tomorrow) { today + 1.day }
   let(:six_days_later) { today + 6.days }
   let!(:agent) { create(:agent, organisations: [organisation]) }
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, agent: agent, organisation: organisation) }
@@ -17,17 +17,17 @@ describe CreneauxBuilderService, type: :service do
   after { travel_back }
 
   subject do
+    plage_ouverture.update(expired_cached: false)
     creneaux = CreneauxBuilderService.perform_with(motif_name, lieu, next_7_days_range, **options)
     creneaux.map { |c| creneau_to_hash(c, options[:for_agents]) }
   end
 
   it "should work" do
     expect(subject.size).to eq(4)
-
-    is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-    is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-    is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-    is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+    is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+    is_expected.to include(starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+    is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+    is_expected.to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
   end
 
   context "with motif not bookable reservable_online" do
@@ -43,23 +43,23 @@ describe CreneauxBuilderService, type: :service do
       it do
         expect(subject.size).to eq(4)
 
-        is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
-        is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
-        is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
-        is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
+        is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
+        is_expected.to include(starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
+        is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
+        is_expected.to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
       end
     end
   end
 
   context "with absences" do
-    let!(:absence) { create(:absence, agent: agent, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 15), organisation: organisation) }
+    let!(:absence) { create(:absence, agent: agent, first_day: today, start_time: Tod::TimeOfDay.new(9, 45), end_day: today, end_time: Tod::TimeOfDay.new(10, 15), organisation: organisation) }
 
     it do
       expect(subject.size).to eq(3)
 
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 15), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 45), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 15.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 45.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
   end
 
@@ -69,109 +69,109 @@ describe CreneauxBuilderService, type: :service do
     end
 
     context "with absence spanning 2 days, ending before start of second day" do
-      let!(:absence) { create(:absence, agent: agent, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 20), end_time: Tod::TimeOfDay.new(6, 30), organisation: organisation) }
+      let!(:absence) { create(:absence, agent: agent, first_day: today, start_time: Tod::TimeOfDay.new(9, 45), end_day: tomorrow, end_time: Tod::TimeOfDay.new(6, 30), organisation: organisation) }
 
       it do
-        creneaux_day1 = subject.select { _1[:starts_at].to_date == Date.new(2019, 9, 19) }
+        creneaux_day1 = subject.select { _1[:starts_at].to_date == today }
         expect(creneaux_day1.size).to eq(1)
-        expect(creneaux_day1).to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-        creneaux_day2 = subject.select { _1[:starts_at].to_date == Date.new(2019, 9, 20) }
+        expect(creneaux_day1).to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        creneaux_day2 = subject.select { _1[:starts_at].to_date == tomorrow }
         expect(creneaux_day2.size).to eq(4)
-        expect(creneaux_day2).to include(starts_at: Time.zone.local(2019, 9, 20, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-        expect(creneaux_day2).to include(starts_at: Time.zone.local(2019, 9, 20, 9, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-        expect(creneaux_day2).to include(starts_at: Time.zone.local(2019, 9, 20, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-        expect(creneaux_day2).to include(starts_at: Time.zone.local(2019, 9, 20, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        expect(creneaux_day2).to include(starts_at: tomorrow.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        expect(creneaux_day2).to include(starts_at: tomorrow.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        expect(creneaux_day2).to include(starts_at: tomorrow.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        expect(creneaux_day2).to include(starts_at: tomorrow.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
       end
     end
 
     context "with absence spanning 2 days, ending in middle of second day" do
-      let!(:absence) { create(:absence, agent: agent, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 20), end_time: Tod::TimeOfDay.new(9, 5), organisation: organisation) }
+      let!(:absence) { create(:absence, agent: agent, first_day: today, start_time: Tod::TimeOfDay.new(9, 45), end_day: tomorrow, end_time: Tod::TimeOfDay.new(9, 5), organisation: organisation) }
 
       it do
-        creneaux_day1 = subject.select { _1[:starts_at].to_date == Date.new(2019, 9, 19) }
+        creneaux_day1 = subject.select { _1[:starts_at].to_date == today }
         expect(creneaux_day1.size).to eq(1)
-        expect(creneaux_day1).to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-        creneaux_day2 = subject.select { _1[:starts_at].to_date == Date.new(2019, 9, 20) }
+        expect(creneaux_day1).to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        creneaux_day2 = subject.select { _1[:starts_at].to_date == tomorrow }
         # expect(creneaux_day2.size).to eq(4)
-        expect(creneaux_day2).to include(starts_at: Time.zone.local(2019, 9, 20, 9, 5), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-        expect(creneaux_day2).to include(starts_at: Time.zone.local(2019, 9, 20, 9, 35), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-        expect(creneaux_day2).to include(starts_at: Time.zone.local(2019, 9, 20, 10, 5), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        expect(creneaux_day2).to include(starts_at: tomorrow.in_time_zone + 9.hours + 5.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        expect(creneaux_day2).to include(starts_at: tomorrow.in_time_zone + 9.hours + 35.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+        expect(creneaux_day2).to include(starts_at: tomorrow.in_time_zone + 10.hours + 5.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
       end
     end
   end
 
   context "with recurring absences" do
-    let!(:absence) { create(:absence, :weekly, agent: agent, first_day: Date.new(2019, 9, 12), start_time: Tod::TimeOfDay.new(9, 45), end_day: Date.new(2019, 9, 12), end_time: Tod::TimeOfDay.new(10, 15), organisation: organisation) }
+    let!(:absence) { create(:absence, :weekly, agent: agent, first_day: today - 7.days, start_time: Tod::TimeOfDay.new(9, 45), end_day: today - 7.days, end_time: Tod::TimeOfDay.new(10, 15), organisation: organisation) }
 
     it do
       expect(subject.size).to eq(3)
 
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 15), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 45), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 15.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 45.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
   end
 
   context "with a RDV" do
-    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, agents: [agent], organisation: organisation, lieu: lieu) }
+    let!(:rdv) { create(:rdv, starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, agents: [agent], organisation: organisation, lieu: lieu) }
 
     it do
       expect(subject.size).to eq(3)
 
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
   end
 
   context "with a RDV shorter than the motif" do
-    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 15, agents: [agent], organisation: organisation, lieu: lieu) }
+    let!(:rdv) { create(:rdv, starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 15, agents: [agent], organisation: organisation, lieu: lieu) }
 
     it do
       expect(subject.size).to eq(4)
 
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 45), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 15), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 45), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 9.hours + 45.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 15.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 45.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
   end
 
   context "with a RDV longer than the motif" do
-    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 45, agents: [agent], organisation: organisation, lieu: lieu) }
+    let!(:rdv) { create(:rdv, starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 45, agents: [agent], organisation: organisation, lieu: lieu) }
 
     it do
       expect(subject.size).to eq(3)
 
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 15), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 45), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 15.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 45.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
   end
 
   context "with a cancelled RDV" do
-    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, agents: [agent], cancelled_at: Time.zone.local(2019, 9, 20, 9, 30), organisation: organisation, lieu: lieu) }
+    let!(:rdv) { create(:rdv, starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, agents: [agent], cancelled_at: tomorrow.in_time_zone + 9.hours + 30.minutes, organisation: organisation, lieu: lieu) }
 
     it do
       expect(subject.size).to eq(4)
 
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
   end
 
   context "with a RDV on the last day of the range" do
-    let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: Date.new(2019, 9, 25), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent, organisation: organisation) }
-    let!(:rdv) { create(:rdv, starts_at: Time.zone.local(2019, 9, 25, 10, 0), duration_in_min: 30, agents: [agent], organisation: organisation, lieu: lieu) }
+    let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today + 6.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent, organisation: organisation) }
+    let!(:rdv) { create(:rdv, starts_at: today + 6.days + 10.hours, duration_in_min: 30, agents: [agent], organisation: organisation, lieu: lieu) }
 
     it do
       expect(subject.size).to eq(3)
 
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 25, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 25, 9, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 25, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today + 6.days + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today + 6.days + 9.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today + 6.days + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
   end
 
@@ -190,12 +190,12 @@ describe CreneauxBuilderService, type: :service do
     it do
       expect(subject.size).to eq(6)
 
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 11, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 11, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 11.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 11.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
 
     context "when the result is for agents" do
@@ -204,14 +204,14 @@ describe CreneauxBuilderService, type: :service do
       it do
         expect(subject.size).to eq(8)
 
-        is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
-        is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
-        is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
-        is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
-        is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
-        is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
-        is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 11, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
-        is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 11, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
+        is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
+        is_expected.to include(starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
+        is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
+        is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
+        is_expected.to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
+        is_expected.to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
+        is_expected.to include(starts_at: today.in_time_zone + 11.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
+        is_expected.to include(starts_at: today.in_time_zone + 11.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
       end
 
       context "when the result is filtered for agent2" do
@@ -220,10 +220,10 @@ describe CreneauxBuilderService, type: :service do
         it do
           expect(subject.size).to eq(4)
 
-          is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
-          is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
-          is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 11, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
-          is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 11, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
+          is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
+          is_expected.to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
+          is_expected.to include(starts_at: today.in_time_zone + 11.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
+          is_expected.to include(starts_at: today.in_time_zone + 11.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
         end
       end
 
@@ -262,24 +262,24 @@ describe CreneauxBuilderService, type: :service do
 
   context "when motif has min_booking_delay" do
     let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, min_booking_delay: 30.minutes, reservable_online: true, organisation: organisation) }
-    let(:now) { Time.zone.local(2019, 9, 19, 9, 15) }
+    let(:now) { today.in_time_zone + 9.hours + 15.minutes }
 
     it do
       expect(subject.size).to eq(2)
 
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 30), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
   end
 
   context "when motif has max_booking_delay" do
     let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, max_booking_delay: 45.minutes, reservable_online: true, organisation: organisation) }
-    let(:now) { Time.zone.local(2019, 9, 19, 9, 15) }
+    let(:now) { today.in_time_zone + 9.hours + 15.minutes }
 
     it do
       expect(subject.size).to eq(1)
 
-      is_expected.to include(starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
   end
 
