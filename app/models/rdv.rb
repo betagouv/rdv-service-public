@@ -2,6 +2,8 @@ class Rdv < ApplicationRecord
   include WebhookDeliverable
   include Rdv::NotifiableConcern
 
+  ENDS_AT_SQL = "(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)".freeze
+
   has_paper_trail(
     meta: { virtual_attributes: :virtual_attributes_for_paper_trail }
   )
@@ -51,6 +53,11 @@ class Rdv < ApplicationRecord
 
   after_commit :reload_uuid, on: :create
   after_save :associate_users_with_organisation
+
+  def self.ongoing(time_margin: 0.minutes)
+    where("starts_at <= ?", Time.zone.now + time_margin)
+      .where("#{ENDS_AT_SQL} >= ?", Time.zone.now - time_margin)
+  end
 
   def ends_at
     starts_at + duration_in_min.minutes

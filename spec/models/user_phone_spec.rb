@@ -1,4 +1,4 @@
-describe "Phonelib" do
+describe "User#phone_number & User#phone_number_formatted" do
   describe "phone_number formatted normalization" do
     context "on create" do
       it "return nil with nil phone number" do

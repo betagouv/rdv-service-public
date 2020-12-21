@@ -287,4 +287,54 @@ describe Rdv, type: :model do
       expect(Rdv.for_today).to eq([rdv])
     end
   end
+
+  describe "Rdv.ongoing" do
+    context "without time_margin" do
+      subject { Rdv.ongoing }
+
+      context "rdv ongoing" do
+        let!(:rdv) { create(:rdv, starts_at: Time.zone.now - 30.minutes, duration_in_min: 45) }
+        it { should include(rdv) }
+      end
+
+      context "rdv finished shortly before" do
+        let!(:rdv) { create(:rdv, starts_at: Time.zone.now - 30.minutes, duration_in_min: 15) }
+        it { should_not include(rdv) }
+      end
+
+      context "rdv starting shortly after" do
+        let!(:rdv) { create(:rdv, starts_at: Time.zone.now + 30.minutes, duration_in_min: 15) }
+        it { should_not include(rdv) }
+      end
+    end
+
+    context "with 1 hour time_margin" do
+      subject { Rdv.ongoing(time_margin: 1.hour) }
+
+      context "rdv ongoing" do
+        let!(:rdv) { create(:rdv, starts_at: Time.zone.now - 30.minutes, duration_in_min: 45) }
+        it { should include(rdv) }
+      end
+
+      context "rdv finished shortly before" do
+        let!(:rdv) { create(:rdv, starts_at: Time.zone.now - 30.minutes, duration_in_min: 15) }
+        it { should include(rdv) }
+      end
+
+      context "rdv finished long before" do
+        let!(:rdv) { create(:rdv, starts_at: Time.zone.now - 2.hours, duration_in_min: 15) }
+        it { should_not include(rdv) }
+      end
+
+      context "rdv starting shortly after" do
+        let!(:rdv) { create(:rdv, starts_at: Time.zone.now + 30.minutes, duration_in_min: 15) }
+        it { should include(rdv) }
+      end
+
+      context "rdv starting long after" do
+        let!(:rdv) { create(:rdv, starts_at: Time.zone.now + 2.hours, duration_in_min: 15) }
+        it { should_not include(rdv) }
+      end
+    end
+  end
 end

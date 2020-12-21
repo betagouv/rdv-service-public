@@ -273,28 +273,6 @@ describe User, type: :model do
     end
   end
 
-  describe "#current_rdv" do
-    it "return nil without current rdv" do
-      now = Time.new(2020, 5, 23, 15, 56)
-      travel_to(now)
-      organisation = create(:organisation)
-      user = create(:user, organisations: [organisation])
-      create(:rdv, users: [user], starts_at: now - 1.day, organisation: organisation)
-      expect(user.current_rdv(organisation)).to be_empty
-    end
-
-    it "return rdv that currently happen" do
-      now = Time.new(2020, 5, 23, 15, 56)
-      travel_to(now)
-      organisation = create(:organisation)
-      user = create(:user, organisations: [organisation])
-      create(:rdv, users: [user], starts_at: now - 2.hours, duration_in_min: 30, organisation: organisation)
-      rdv = create(:rdv, users: [user], starts_at: now - 20.minutes, duration_in_min: 30, organisation: organisation)
-      create(:rdv, users: [user], starts_at: now + 2.hours, duration_in_min: 30, organisation: organisation)
-      expect(user.current_rdv(organisation)).to eq([rdv])
-    end
-  end
-
   describe "#next_rdvs" do
     it "return empty array without next rdv" do
       organisation = create(:organisation)
