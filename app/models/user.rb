@@ -124,8 +124,8 @@ class User < ApplicationRecord
       .empty?
   end
 
-  def previous_rdvs(organisation)
-    rdvs_for_organisation(organisation).past.limit(5)
+  def previous_rdvs_ordered_and_truncated(organisation)
+    rdvs_for_organisation(organisation).past.order(starts_at: :desc).limit(5)
   end
 
   def next_rdvs(organisation)
@@ -137,7 +137,7 @@ class User < ApplicationRecord
   end
 
   def rdvs_for_organisation(organisation)
-    Rdv.where(organisation: organisation).with_user_in([self]).order("starts_at desc")
+    Rdv.where(organisation: organisation).with_user_in([self])
   end
 
   def email_tld
