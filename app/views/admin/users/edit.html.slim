@@ -26,10 +26,10 @@
       li.breadcrumb-item.active Modifier l'usager
 
 - if from_modal?
-  = render 'form', user: @user, service: @service
+  = render 'form', user: @user
 - else
   .row.justify-content-center
     .col-md-6
       .card
         .card-body
-          = render 'form', user: @user, service: @service
+          = render 'form', user: @user
