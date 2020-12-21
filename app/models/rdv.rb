@@ -3,7 +3,7 @@ class Rdv < ApplicationRecord
   include Rdv::NotifiableConcern
   include Rdv::AddressConcern
 
-  ENDS_AT_SQL = "(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)".freeze
+  ENDS_AT_SQL = Arel.sql("(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)")
 
   has_paper_trail(
     meta: { virtual_attributes: :virtual_attributes_for_paper_trail }

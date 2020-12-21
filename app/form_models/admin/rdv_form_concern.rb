@@ -28,7 +28,7 @@ module Admin::RdvFormConcern
   private
 
   def validate_rdv
-    return unless rdv.valid?
+    return if rdv.valid?
 
     rdv.errors.each { errors.add(_1, _2) }
   end
@@ -45,13 +45,12 @@ module Admin::RdvFormConcern
     return true unless rdvs_ending_shortly_before?
 
     rdv_agent_pairs_ending_shortly_before_grouped_by_agent.values.map do
-      RdvEndingShortlyBeforePresenter
-        .new(
-          rdv: _1.rdv,
-          agent: _1.agent,
-          rdv_context: rdv,
-          agent_context: agent_context
-        )
+      RdvEndingShortlyBeforePresenter.new(
+        rdv: _1.rdv,
+        agent: _1.agent,
+        rdv_context: rdv,
+        agent_context: agent_context
+      )
     end.each { warnings.add(:base, _1.warning_message, active: true) }
   end
 
@@ -61,6 +60,6 @@ module Admin::RdvFormConcern
         rdv_before.agents.select { rdv.agents.include?(_1) }.map { OpenStruct.new(agent: _1, rdv: rdv_before) }
       end
       .group_by { _1.agent }
-      .transform_values { _1.last } # we only want the last RDV for each agent
+      .transform_values { _1.last }
   end
 end
