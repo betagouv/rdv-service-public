@@ -17,4 +17,12 @@ class Service < ApplicationRecord
   def service_social?
     name == SERVICE_SOCIAL
   end
+
+  def user_field_groups
+    related_to_social? ? [:social] : []
+  end
+
+  def related_to_social?
+    service_social? || name.parameterize.include?("social")
+  end
 end
