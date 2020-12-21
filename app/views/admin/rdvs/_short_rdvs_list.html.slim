@@ -1,19 +1,19 @@
 .card
   .card-header= title
-  .card-body
-    - if rdvs.empty?
+  - if rdvs.empty?
+    .card-body
       .text-muted aucun #{title.downcase}
-    - rdvs.reverse.each do |rdv|
-      .mb-2
-        strong= link_to rdv_title(rdv), admin_organisation_rdv_path(current_organisation, rdv)
-        = rdv_status_tag(rdv)
-        div
-          = rdv.motif.name
+  - else
+    ul.list-unstyled.horizontal-border-between-items
+      - rdvs.each do |rdv|
+        li.card-body.py-2
+          strong= link_to rdv_title(rdv), admin_organisation_rdv_path(current_organisation, rdv)
+          = rdv_status_tag(rdv)
           div
-            - if rdv.context.blank?
-              .text-muted  Pas de contexte renseigné
-            - else
-              .text-muted Contexte :
-              .border-left.pl-2= simple_format(rdv.context)
-        - if rdvs.last != rdv
-          hr
+            = rdv.motif.name
+            div
+              - if rdv.context.blank?
+                .text-muted Pas de contexte renseigné
+              - else
+                .text-muted Contexte :
+                .border-left.pl-2= simple_format(rdv.context)

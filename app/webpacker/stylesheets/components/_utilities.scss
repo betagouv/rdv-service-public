@@ -35,3 +35,12 @@ a[disabled] {
 .flex-gap-1em {
   gap: 0 1em;
 }
+
+ul.horizontal-border-between-items {
+  li {
+    border-bottom: 1px solid #eee;
+  }
+  li:last-child {
+    border-bottom: none;
+  }
+}

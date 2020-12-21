@@ -102,7 +102,9 @@
 
   .col-md-6
 
-    = render "admin/rdvs/short_rdvs_list", user: @user, rdvs: @user.next_rdvs(current_organisation), title: "Prochain rendez-vous"
+    - if @user.ongoing_rdvs(current_organisation)
+      = render "admin/rdvs/short_rdvs_list", user: @user, rdvs: @user.ongoing_rdvs(current_organisation).order(starts_at: :asc), title: "Rendez-vous en cours (+/- 1 heure)"
+    = render "admin/rdvs/short_rdvs_list", user: @user, rdvs: @user.next_rdvs(current_organisation).order(starts_at: :asc), title: "Prochains rendez-vous"
 
     .card
       .card-header
@@ -142,5 +144,3 @@
               p.h2= @rdvs.notexcused.count
               p.lead= t 'stats.rdv_counters.rdvs.notexcused', count: @rdvs.notexcused.count
               = link_to "Voir", admin_organisation_rdvs_path(current_organisation, user_id: @user.id, breadcrumb_page: "user", status: "notexcused"), class: "btn btn-outline-white"
-
-

@@ -183,58 +183,12 @@ describe User, type: :model do
   describe "responsible_attributes" do
     it "should allow saving nested responsible" do
       expect(User.count).to eq(0)
-      loulou = User.new(
-        first_name: "loulou",
-        last_name: "durand",
-        responsible_attributes: {
-          first_name: "Jean",
-          last_name: "durand",
-          email: "jean@durand.fr",
-          notify_by_sms: false
-        }
-      )
+      loulou = build(:user, responsible_attributes: attributes_for(:user, first_name: "Jean", notify_by_sms: false))
       loulou.save!
       expect(User.count).to eq(2)
       expect(loulou.responsible).not_to be_nil
       expect(loulou.responsible.first_name).to eq("Jean")
       expect(loulou.responsible.notify_by_sms).to eq(false)
-    end
-  end
-
-  describe "phone_number formatted normalization" do
-    subject { user.phone_number_formatted }
-    context "on create" do
-      context "no phone number" do
-        let!(:user) { create(:user, phone_number: nil) }
-        it { should eq(nil) }
-      end
-      context "blank phone number" do
-        let!(:user) { create(:user, phone_number: "") }
-        it { should eq(nil) }
-      end
-      context "valid phone number" do
-        let!(:user) { create(:user, phone_number: "01 30 30 40 40") }
-        it { should eq("+33130304040") }
-      end
-      context "invalid phone number" do
-        it "should not save" do
-          user = build(:user, phone_number: "01 30 20")
-          expect(user.save).to be false
-        end
-      end
-    end
-
-    context "on update" do
-      context "previous phone number" do
-        it "should update it" do
-          user = create(:user, phone_number: "01 30 30 40 40")
-          expect(user.phone_number_formatted).to eq("+33130304040")
-          user.update!(phone_number: "04 300 32020")
-          expect(user.phone_number_formatted).to eq("+33430032020")
-          user.update!(phone_number: "")
-          expect(user.phone_number_formatted).to eq(nil)
-        end
-      end
     end
   end
 
@@ -273,12 +227,12 @@ describe User, type: :model do
     end
   end
 
-  describe "#previous_rdvs" do
+  describe "#previous_rdvs_ordered_and_truncated" do
     it "return empty array without previous rdv" do
       organisation = create(:organisation)
       user = create(:user, organisations: [organisation])
       create(:rdv, users: [user])
-      expect(user.previous_rdvs(organisation)).to eq([])
+      expect(user.previous_rdvs_ordered_and_truncated(organisation)).to eq([])
     end
 
     it "return rdv for same user and organisation" do
@@ -289,7 +243,7 @@ describe User, type: :model do
       create(:rdv, users: [user])
       previous_rdv = create(:rdv, starts_at: rdv.starts_at - 1.day, organisation: organisation, users: [user])
 
-      expect(user.previous_rdvs(organisation)).to eq([previous_rdv])
+      expect(user.previous_rdvs_ordered_and_truncated(organisation)).to eq([previous_rdv])
     end
 
     it "return only 5 last previous rdv order by starts_at desc" do
@@ -304,7 +258,7 @@ describe User, type: :model do
       p2 = create(:rdv, starts_at: rdv.starts_at - 2.day, organisation: organisation, users: [user])
       p3 = create(:rdv, starts_at: rdv.starts_at - 4.day, organisation: organisation, users: [user])
 
-      expect(user.previous_rdvs(organisation)).to eq([p1, p2, p3, p4, p5])
+      expect(user.previous_rdvs_ordered_and_truncated(organisation)).to eq([p1, p2, p3, p4, p5])
     end
 
     it "returns only past rdv" do
@@ -315,7 +269,7 @@ describe User, type: :model do
       rdv = create(:rdv, users: [user], starts_at: today - 2.days)
       past_rdv = create(:rdv, starts_at: rdv.starts_at - 4.days, organisation: organisation, users: [user])
       create(:rdv, starts_at: rdv.starts_at + 4.days, organisation: organisation, users: [user])
-      expect(user.previous_rdvs(organisation)).to eq([past_rdv])
+      expect(user.previous_rdvs_ordered_and_truncated(organisation)).to eq([past_rdv])
     end
   end
 
@@ -342,14 +296,14 @@ describe User, type: :model do
     end
 
     it "returns only future rdv" do
-      today = Time.new(2020, 5, 23, 15, 56)
-      travel_to(today)
+      now = Time.new(2020, 5, 23, 15, 56)
+      travel_to(now)
 
       organisation = create(:organisation)
       user = create(:user, organisations: [organisation])
-      create(:rdv, users: [user], starts_at: today - 1.day)
-      create(:rdv, starts_at: today - 4.days, organisation: organisation, users: [user])
-      future_rdv = create(:rdv, starts_at: today + 4.days, organisation: organisation, users: [user])
+      create(:rdv, users: [user], starts_at: now - 1.day)
+      create(:rdv, starts_at: now - 4.days, organisation: organisation, users: [user])
+      future_rdv = create(:rdv, starts_at: now + 4.days, organisation: organisation, users: [user])
 
       expect(user.next_rdvs(organisation)).to eq([future_rdv])
     end
