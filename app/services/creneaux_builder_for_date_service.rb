@@ -7,35 +7,51 @@ class CreneauxBuilderForDateService < BaseService
     @inclusive_date_range = options[:inclusive_date_range]
     @for_agents = options.fetch(:for_agents, false)
     @agent_name = options.fetch(:agent_name, false)
+    rewind
   end
 
   def perform
+    rewind
+    next_creneaux_enumerator.to_a.compact
+  end
+
+  def rewind
     @next_starts_at = @plage_ouverture.start_time.on(@date)
-    to_enum(:next_creneaux).to_a.compact
+  end
+
+  def next_creneaux_enumerator
+    Enumerator.new do |enum|
+      loop do
+        res = build_and_validate_creneau
+        break if res.reached_last?
+
+        enum << res.creneau if res.creneau.present?
+      end
+    end
   end
 
   private
 
-  def next_creneaux
-    creneau = generate_creneau
-    return if no_more_creneaux_for_the_day?(creneau)
+  def build_and_validate_creneau
+    creneau = build_creneau
+    return OpenStruct.new(reached_last?: true) if no_more_creneaux_for_the_day?(creneau)
 
     overlapping_rdvs_or_absences = creneau.overlapping_rdvs_or_absences(rdvs + absences_occurrences)
-    if overlapping_rdvs_or_absences.any?
-      return if overlapping_rdvs_or_absences.first.ends_at.to_date > @date
-
+    if overlapping_rdvs_or_absences.any? && overlapping_rdvs_or_absences.first.ends_at.to_date > @date
+      OpenStruct.new(reached_last?: true)
+    elsif overlapping_rdvs_or_absences.any?
       @next_starts_at = overlapping_rdvs_or_absences.first.ends_at
+      OpenStruct.new(invalid: true)
     elsif !@for_agents && !creneau.respects_booking_delays?
       @next_starts_at += @motif.default_duration_in_min.minutes
+      OpenStruct.new(invalid: true)
     else
-      yield creneau
       @next_starts_at = creneau.ends_at
+      OpenStruct.new(creneau: creneau)
     end
-
-    next_creneaux { yield _1 }
   end
 
-  def generate_creneau
+  def build_creneau
     Creneau.new(
       starts_at: @next_starts_at,
       lieu_id: @lieu.id,

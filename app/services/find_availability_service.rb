@@ -9,15 +9,15 @@ class FindAvailabilityService < BaseService
   def perform
     available_creneau = nil
     @from.step(@from + 6.months, 7).find do |date|
-      creneaux = CreneauxBuilderService
+      available_creneau = CreneauxBuilderService
         .perform_with(
           @motif_name,
           @lieu,
           date..(date + 7.days),
           plages_ouvertures: plages_ouvertures_cached,
+          only_first: true,
           **@creneaux_builder_options
-        )
-      available_creneau = creneaux.first if creneaux.any?
+        )&.first
     end
     available_creneau
   end

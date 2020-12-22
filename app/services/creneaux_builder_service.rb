@@ -9,6 +9,7 @@ class CreneauxBuilderService < BaseService
     @agent_name = options.fetch(:agent_name, false)
     @motif_location_type = options.fetch(:motif_location_type, nil)
     @plages_ouvertures = options[:plages_ouvertures]
+    @only_first = options[:only_first]
   end
 
   def perform
@@ -40,8 +41,18 @@ class CreneauxBuilderService < BaseService
 
   def creneaux_for_plage_ouverture_and_motif(plage_ouverture, motif)
     plage_ouverture.occurences_for(@inclusive_date_range).flat_map do |occurence|
-      CreneauxBuilderForDateService
-        .perform_with(plage_ouverture, motif, occurence.starts_at.to_date, @lieu, inclusive_date_range: @inclusive_date_range, **@options)
-    end
+      creneaux_builder_for_date_service = CreneauxBuilderForDateService
+        .new(plage_ouverture, motif, occurence.starts_at.to_date, @lieu, inclusive_date_range: @inclusive_date_range, **@options)
+      if @only_first
+        enum = creneaux_builder_for_date_service.next_creneaux_enumerator
+        begin
+          [enum.next]
+        rescue StopIteration
+          []
+        end
+      else
+        creneaux_builder_for_date_service.perform
+      end
+    end.compact
   end
 end
