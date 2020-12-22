@@ -32,6 +32,26 @@
       "note": ""
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "49daaf5634c3cea5615e4e839666cbf45c79615f13341971179463699b7521bc",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/rdv.rb",
+      "line": 55,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "where(\"#{Arel.sql(\"(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)\")} BETWEEN ? AND ?\", range.begin, range.end)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Rdv",
+        "method": "ends_at_in_range"
+      },
+      "user_input": "Arel.sql(\"(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)\")",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
       "warning_type": "Mass Assignment",
       "warning_code": 105,
       "fingerprint": "804a3970881d06ca61e93ad9f38f3fcc692fc49d8b2eb629cedeba2a0c78e0ca",
@@ -52,6 +72,26 @@
       "note": ""
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "b29b01ddc6769a460480ba9c5186a1a5bd6672337b58f498f623c022a31c2b19",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/rdv.rb",
+      "line": 63,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "where(\"starts_at <= ?\", (Time.zone.now + time_margin)).where(\"#{Arel.sql(\"(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)\")} >= ?\", (Time.zone.now - time_margin))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Rdv",
+        "method": "Rdv.ongoing"
+      },
+      "user_input": "Arel.sql(\"(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)\")",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
       "fingerprint": "bdaeb989380e722b9a047a04d36090a280b52b0fbde8615842f34b6248b9dd9d",
@@ -66,7 +106,7 @@
           "type": "controller",
           "class": "Admin::UsersController",
           "method": "index",
-          "line": 23,
+          "line": 24,
           "file": "app/controllers/admin/users_controller.rb",
           "rendered": {
             "name": "admin/users/index",
@@ -114,6 +154,6 @@
       "note": ""
     }
   ],
-  "updated": "2020-12-07 18:25:12 +0100",
+  "updated": "2020-12-22 11:15:18 +0100",
   "brakeman_version": "4.7.2"
 }

@@ -3,7 +3,7 @@ class Rdv < ApplicationRecord
   include Rdv::NotifiableConcern
   include Rdv::AddressConcern
 
-  ENDS_AT_SQL = "(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)".freeze
+  ENDS_AT_SQL = Arel.sql("(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)")
 
   has_paper_trail(
     meta: { virtual_attributes: :virtual_attributes_for_paper_trail }
@@ -47,10 +47,13 @@ class Rdv < ApplicationRecord
   }
   scope :default_stats_period, -> { where(created_at: Stat.default_date_range) }
   scope :with_agent, ->(agent) { joins(:agents).where(agents: { id: agent.id }) }
+  scope :with_agent_among, ->(agents) { agents.map { with_agent(_1) }.reduce(:or) }
   scope :with_user, ->(user) { joins(:rdvs_users).where(rdvs_users: { user_id: user.id }) }
   scope :with_user_in, ->(users) { joins(:rdvs_users).where(rdvs_users: { user_id: users.pluck(:id) }).distinct }
   scope :with_lieu, ->(lieu) { joins(:lieu).where(lieux: { id: lieu.id }) }
   scope :visible, -> { joins(:motif).where(motifs: { visibility_type: [Motif::VISIBLE_AND_NOTIFIED, Motif::VISIBLE_AND_NOT_NOTIFIED] }) }
+  scope :ends_at_in_range, ->(range) { where("#{ENDS_AT_SQL} BETWEEN ? AND ?", range.begin, range.end) }
+  scope :ordered_by_ends_at, -> { order(ENDS_AT_SQL) }
 
   after_commit :reload_uuid, on: :create
   after_save :associate_users_with_organisation

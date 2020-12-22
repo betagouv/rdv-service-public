@@ -106,5 +106,11 @@ class DefaultAgentPolicy
     def resolve
       scope.where(agent_id: @context.agent.id, organisation_id: @context.organisation.id)
     end
+
+    def in_scope?(object)
+      return false unless object&.id.present?
+
+      resolve.where(id: object.id).any?
+    end
   end
 end
