@@ -13,7 +13,11 @@ end
 describe Admin::RdvFormConcern, type: :form do
   subject { DummyForm.new(rdv, agent_author) }
   let!(:agent_author) { create(:agent, first_name: "Poney", last_name: "FOU") }
-  before { allow(subject).to receive(:agent_context).and_return(agent_context) }
+  let(:rdv_start_coherence) { instance_double(RdvStartCoherence) }
+  before do
+    allow(subject).to receive(:agent_context).and_return(agent_context)
+    allow(RdvStartCoherence).to receive(:new).with(rdv).and_return(rdv_start_coherence)
+  end
   let(:agent_context) { instance_double(AgentContext, agent: agent_author, organisation: build(:organisation)) }
 
   describe "validations" do
@@ -30,9 +34,12 @@ describe Admin::RdvFormConcern, type: :form do
       end
     end
 
-    context "rdv is valid" do
+    context "rdv is valid + no rdvs ending shortly before" do
       let(:rdv) { build(:rdv) }
-      before { expect(rdv).to receive(:valid?).and_return(true) }
+      before do
+        expect(rdv).to receive(:valid?).and_return(true)
+        allow(rdv_start_coherence).to receive(:rdvs_ending_shortly_before?).and_return(false)
+      end
 
       it "should be valid" do
         expect(subject.valid?).to eq true
@@ -43,10 +50,11 @@ describe Admin::RdvFormConcern, type: :form do
       let!(:agent_new_rdv) { create(:agent) }
       let(:rdv) { build(:rdv, agents: [agent_new_rdv]) }
       let!(:rdv2) { create(:rdv, agents: [agent_new_rdv]) }
+
       before do
         allow(rdv).to receive(:valid?).and_return(true)
-        allow(rdv).to receive(:rdvs_ending_shortly_before?).and_return(true)
-        allow(rdv).to receive(:rdvs_ending_shortly_before).and_return([rdv2])
+        allow(rdv_start_coherence).to receive(:rdvs_ending_shortly_before?).and_return(true)
+        allow(rdv_start_coherence).to receive(:rdvs_ending_shortly_before).and_return([rdv2])
         allow(RdvEndingShortlyBeforePresenter).to receive(:new)
           .with(rdv: rdv2, agent: agent_new_rdv, rdv_context: rdv, agent_context: agent_context)
           .and_return(instance_double(RdvEndingShortlyBeforePresenter, warning_message: "alerte RDV proche !"))
@@ -74,8 +82,8 @@ describe Admin::RdvFormConcern, type: :form do
 
       before do
         allow(rdv).to receive(:valid?).and_return(true)
-        allow(rdv).to receive(:rdvs_ending_shortly_before?).and_return(true)
-        allow(rdv).to receive(:rdvs_ending_shortly_before)
+        allow(rdv_start_coherence).to receive(:rdvs_ending_shortly_before?).and_return(true)
+        allow(rdv_start_coherence).to receive(:rdvs_ending_shortly_before)
           .and_return(rdvs_giono + rdvs_maceo) # this is considered sorted on ends_at ASC
         allow(RdvEndingShortlyBeforePresenter).to receive(:new)
           .with(rdv: rdvs_giono.last, agent: agent_giono, rdv_context: rdv, agent_context: agent_context)

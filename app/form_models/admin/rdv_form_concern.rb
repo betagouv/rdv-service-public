@@ -10,11 +10,8 @@ module Admin::RdvFormConcern
 
     delegate(*::Rdv.attribute_names, to: :rdv)
     delegate :motif, :organisation, :agents, :users, to: :rdv
-    delegate(
-      :overlapping_plages_ouvertures, :overlapping_plages_ouvertures?,
-      :rdvs_ending_shortly_before, :rdvs_ending_shortly_before?,
-      to: :rdv
-    )
+    delegate :overlapping_plages_ouvertures, :overlapping_plages_ouvertures?, to: :rdv
+    delegate :rdvs_ending_shortly_before, :rdvs_ending_shortly_before?, to: :rdv_start_coherence
 
     validate :validate_rdv
     caution :warn_overlapping_plage_ouverture
@@ -61,5 +58,9 @@ module Admin::RdvFormConcern
       end
       .group_by { _1.agent }
       .transform_values { _1.last }
+  end
+
+  def rdv_start_coherence
+    @rdv_start_coherence ||= RdvStartCoherence.new(rdv)
   end
 end

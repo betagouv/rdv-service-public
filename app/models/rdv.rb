@@ -125,19 +125,6 @@ class Rdv < ApplicationRecord
     TimeSlot.new(starts_at, ends_at)
   end
 
-  def rdvs_ending_shortly_before
-    return Rdv.none if starts_at.blank? || duration_in_min.blank? || agents.blank?
-
-    @rdvs_ending_shortly_before ||= Rdv
-      .with_agent_among(agents)
-      .ends_at_in_range((starts_at - 46.minutes)..(starts_at - 1.minute))
-      .ordered_by_ends_at
-  end
-
-  def rdvs_ending_shortly_before?
-    rdvs_ending_shortly_before.any?
-  end
-
   private
 
   def virtual_attributes_for_paper_trail
