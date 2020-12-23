@@ -34,6 +34,8 @@ class RdvStartCoherence
     return Rdv.none if starts_at.blank? || duration_in_min.blank? || agents.blank?
 
     @all_rdvs_ending_before ||= Rdv
+      .not_cancelled
+      .future
       .with_agent_among(agents)
       .ends_at_in_range((starts_at - 46.minutes)..starts_at)
       .ordered_by_ends_at
