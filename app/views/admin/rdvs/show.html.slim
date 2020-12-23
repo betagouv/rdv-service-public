@@ -36,7 +36,7 @@
         .row
           .col
             - if !@rdv.past? && !@rdv.cancelled?
-              = link_to "Annuler", admin_organisation_rdv_path(@rdv.organisation, @rdv, rdv: {status: :excused}, agent_id: @agent&.id), method: :put, class: "btn btn-outline-danger mr-1", data: { confirm: "Êtes-vous sûr de vouloir annuler ce rendez-vous ? L'usager recevra une notification de cette annulation."}
+              = link_to "Annuler", admin_organisation_rdv_path(@rdv.organisation, @rdv, rdv: {status: :excused, active_warnings_confirm_decision: true}, agent_id: @agent&.id), method: :put, class: "btn btn-outline-danger mr-1", data: { confirm: "Êtes-vous sûr de vouloir annuler ce rendez-vous ? L'usager recevra une notification de cette annulation."}
               | ou
             = link_to "Supprimer ❌", admin_organisation_rdv_path(@rdv.organisation, @rdv, agent_id: @agent&.id), method: :delete, class: "btn btn-link text-danger", data: { confirm: "Êtes-vous sûr de vouloir supprimer ce rendez-vous ? Cette action est définitive et aucune notification ne sera envoyée à #{@rdv.users.map(&:full_name).to_sentence}."}
 

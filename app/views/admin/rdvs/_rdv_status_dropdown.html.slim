@@ -17,7 +17,7 @@ ul.list-unstyled.topbar-right-menu.float-right.mb-0
             admin_organisation_rdv_path( \
               rdv.organisation, \
               rdv, \
-              rdv: { status: status[1] }, \
+              rdv: { status: status[1], active_warnings_confirm_decision: true }, \
               agent_id: local_assigns[:agent]&.id, \
               format: local_assigns[:remote] ? 'json' : 'html' \
             ), \
