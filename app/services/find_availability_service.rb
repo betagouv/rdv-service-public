@@ -1,6 +1,6 @@
-require "benchmark"
-
 class FindAvailabilityService < BaseService
+  include HasPlageOuverturesConcern
+
   def initialize(motif_name, lieu, from, **options)
     @motif_name = motif_name
     @lieu = lieu
@@ -12,24 +12,18 @@ class FindAvailabilityService < BaseService
   end
 
   def perform
-    available_creneau = nil
-    @from.step(@from + 6.months, 7).find do |date|
-      inclusive_date_range = date..(date + 7.days)
-      uniq_by = @for_agents ? ->(c) { [c.starts_at, c.agent_id] } : ->(c) { c.starts_at }
-      available_creneau = plages_ouverture_and_motif_pairs
-        .flat_map { |po, motif| creneaux_for_plage_ouverture_and_motif(po, motif, inclusive_date_range) }
-        .select { |c| c.starts_at >= Time.zone.now }
-        .uniq(&uniq_by)
-        .min_by(&:starts_at)
-    end
-    available_creneau
+    plages_ouvertures
+      .flat_map { |po| motifs_for_plage_ouverture(po).map { [po, _1] } }
+      .map { |po, motif| first_creneau_for_plage_ouverture_and_motif(po, motif, date_range) }
+      .compact
+      .select { |c| c.starts_at >= Time.zone.now } # should be moved in creneau validation or stg
+      .min_by(&:starts_at)
   end
 
   private
 
-  def plages_ouverture_and_motif_pairs
-    @plages_ouverture_and_motif_pairs ||= plages_ouvertures
-      .flat_map { |po| motifs_for_plage_ouverture(po).map { [po, _1] } }
+  def date_range
+    (@from..@from + 6.months)
   end
 
   def motifs_for_plage_ouverture(plage_ouverture)
@@ -38,25 +32,22 @@ class FindAvailabilityService < BaseService
     @for_agents ? motifs : motifs.reservable_online
   end
 
-  def creneaux_for_plage_ouverture_and_motif(plage_ouverture, motif, inclusive_date_range)
-      plage_ouverture.occurences_for(inclusive_date_range).flat_map do |occurence|
-        [
-          CreneauxBuilderForDateService
-            .new(plage_ouverture, motif, occurence.starts_at.to_date, @lieu, inclusive_date_range: inclusive_date_range, **@creneaux_builder_options)
-            .next_creneaux_enumerator
-            .next
-        ]
-      rescue StopIteration
-        []
-      end.compact
+  def first_creneau_for_plage_ouverture_and_motif(*args)
+    get_creneau_for_plage_ouverture_and_motif_enum(*args).next
+  rescue StopIteration
+    nil
   end
 
-  def plages_ouvertures
-    FindAvailabilityService.count_time do
-      @plages_ouvertures ||= CreneauxBuilderService
-        .new(@motif_name, @lieu, @from..(@from + 7.days))
-        .plages_ouvertures
-        .to_a
+  def get_creneau_for_plage_ouverture_and_motif_enum(plage_ouverture, motif, date_range)
+    Enumerator.new do |enum|
+      plage_ouverture.occurences_for(date_range).map do |occurence|
+        enum << CreneauxBuilderForDateService
+          .new(plage_ouverture, motif, occurence.starts_at.to_date, @lieu, **@creneaux_builder_options)
+          .next_creneaux_enumerator
+          .next
+      rescue StopIteration
+        nil
+      end.compact.first
     end
   end
 end

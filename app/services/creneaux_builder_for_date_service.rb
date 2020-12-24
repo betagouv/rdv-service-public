@@ -4,7 +4,6 @@ class CreneauxBuilderForDateService < BaseService
     @motif = motif
     @date = date
     @lieu = lieu
-    @inclusive_date_range = options[:inclusive_date_range]
     @for_agents = options.fetch(:for_agents, false)
     @agent_name = options.fetch(:agent_name, false)
     rewind
@@ -76,6 +75,6 @@ class CreneauxBuilderForDateService < BaseService
   end
 
   def inclusive_datetime_range
-    @inclusive_datetime_range ||= (@inclusive_date_range.begin.to_time)..(@inclusive_date_range.end.end_of_day)
+    @inclusive_datetime_range ||= (@date.beginning_of_day..@date.end_of_day)
   end
 end

@@ -1,4 +1,6 @@
 class CreneauxBuilderService < BaseService
+  include HasPlageOuverturesConcern
+
   def initialize(motif_name, lieu, inclusive_date_range, **options)
     @motif_name = motif_name
     @lieu = lieu
@@ -17,13 +19,6 @@ class CreneauxBuilderService < BaseService
     creneaux.uniq(&uniq_by).sort_by(&:starts_at)
   end
 
-  def plages_ouvertures
-    @plages_ouvertures ||= PlageOuverture
-      .not_expired_for_motif_name_and_lieu(@motif_name, @lieu)
-      .where(({ agent_id: @agent_ids } unless @agent_ids.nil?))
-      .where(({ motifs: { location_type: @motif_location_type } } if @motif_location_type.present?))
-  end
-
   private
 
   def motifs_for_plage_ouverture(plage_ouverture)
@@ -40,7 +35,7 @@ class CreneauxBuilderService < BaseService
   def creneaux_for_plage_ouverture_and_motif(plage_ouverture, motif)
     plage_ouverture.occurences_for(@inclusive_date_range).flat_map do |occurence|
       CreneauxBuilderForDateService
-        .perform_with(plage_ouverture, motif, occurence.starts_at.to_date, @lieu, inclusive_date_range: @inclusive_date_range, **@options)
+        .perform_with(plage_ouverture, motif, occurence.starts_at.to_date, @lieu, **@options)
     end
   end
 end
