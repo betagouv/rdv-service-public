@@ -1,20 +1,6 @@
 class Admin::Creneaux::AgentSearchesController < AgentAuthController
   respond_to :html, :js
 
-  # def index
-  #   benchmark "benchmark around SearchCreneauxForAgentsService", silence: true do
-  #     SearchCreneauxForAgentsService.perform_with(
-  #       OpenStruct.new(
-  #         motif: Motif.find(800),
-  #         agent_ids: nil,
-  #         date_range: (Date.today..(Date.today + 6.days)),
-  #         organisation: Organisation.find(101),
-  #         lieu_ids: []
-  #       )
-  #     )
-  #   end
-  # end
-
   def index
     @form = build_agent_creneaux_search_form
     @search_results = SearchCreneauxForAgentsService.perform_with(@form) \
