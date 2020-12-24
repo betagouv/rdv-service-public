@@ -42,12 +42,11 @@ class PlageOuverture < ApplicationRecord
 
   def self.not_expired_for_motif_name_and_lieu(motif_name, lieu)
     PlageOuverture
-      .includes(:motifs_plageouvertures)
       .where(lieu: lieu)
       .not_expired
       .joins(:motifs)
       .where(motifs: { name: motif_name, organisation_id: lieu.organisation_id })
-      .includes(:motifs, agent: :absences)
+      .includes(:agent)
   end
 
   def expired?
