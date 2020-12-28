@@ -58,6 +58,8 @@ module RdvExporter
   end
 
   def self.majeur_ou_mineur(rdv)
+    return "n/a" if rdv.users.map(&:birth_date).uniq.compact.empty?
+
     rdv.users.select{ mineur?(_1.birth_date) }.any? ? "mineur" : "majeur"
   end
 

@@ -55,5 +55,13 @@ describe RdvExporter, type: :service do
       rdv = build(:rdv, created_at: Time.new(2020, 3, 23, 9, 54, 33), users: [major_user, minor_user])
       expect(RdvExporter.majeur_ou_mineur(rdv)).to eq("mineur")
     end
+
+    it "return n/a when none of rdv's users have fill birth date field" do
+      now = Time.zone.parse("2020-4-3 13:45")
+      travel_to(now)
+      user = build(:user, birth_date: "")
+      rdv = build(:rdv, created_at: Time.new(2020, 3, 23, 9, 54, 33), users: [user])
+      expect(RdvExporter.majeur_ou_mineur(rdv)).to eq("n/a")
+    end
   end
 end
