@@ -1,4 +1,4 @@
-class RdvExporterService < BaseService
+module RdvExporter
   TYPE = { "user" => "Usager", "agent" => "Agent", "file_attente" => "File d'attente" }.freeze
   HourFormat = Spreadsheet::Format.new(number_format: "hh:mm")
   DateFormat = Spreadsheet::Format.new(number_format: "DD/MM/YYYY")
@@ -8,6 +8,7 @@ class RdvExporterService < BaseService
     "heure prise rdv",
     "date rdv",
     "heure rdv",
+    "usager mineur/majeur",
     "motif",
     "pris par",
     "statut",
@@ -16,23 +17,18 @@ class RdvExporterService < BaseService
     "agents"
   ].freeze
 
-  def initialize(rdvs, file)
+  def self.export(rdvs, file)
     Spreadsheet.client_encoding = "UTF-8"
-    @rdvs = rdvs
-    @file = file
+    build_workbook(rdvs).write(file)
+    file.string
   end
 
-  def perform
-    workbook.write(@file)
-    @file.string
-  end
-
-  def workbook
+  def self.build_workbook(rdvs)
     book = Spreadsheet::Workbook.new
     sheet = book.create_worksheet
     sheet.row(0).concat(HEADER)
 
-    @rdvs.each_with_index do |rdv, index|
+    rdvs.each_with_index do |rdv, index|
       row = sheet.row(index + 1)
       row.set_format 1, DateFormat
       row.set_format 2, HourFormat
@@ -44,13 +40,14 @@ class RdvExporterService < BaseService
     book
   end
 
-  def row_array_from(rdv)
+  def self.row_array_from(rdv)
     [
       rdv.created_at.year,
       rdv.created_at.to_date,
       rdv.created_at.to_time,
       rdv.starts_at.to_date,
       rdv.starts_at.to_time,
+      majeur_ou_mineur(rdv),
       rdv.motif.name,
       TYPE[rdv.created_by],
       ::Rdv.human_enum_name(:status, rdv.status),
@@ -58,5 +55,13 @@ class RdvExporterService < BaseService
       rdv.motif.service.name,
       rdv.agents.map(&:full_name).join(", ")
     ]
+  end
+
+  def self.majeur_ou_mineur(rdv)
+    rdv.users.select{ mineur?(_1.birth_date) }.any? ? "mineur" : "majeur"
+  end
+
+  def self.mineur?(birth_date)
+    ((Time.zone.now - birth_date.to_time) / 1.year.seconds).floor < 18
   end
 end
