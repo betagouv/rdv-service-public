@@ -8,6 +8,7 @@ class RdvExporterService < BaseService
     "heure prise rdv",
     "date rdv",
     "heure rdv",
+    "usager mineur/majeur",
     "motif",
     "pris par",
     "statut",
@@ -51,6 +52,7 @@ class RdvExporterService < BaseService
       rdv.created_at.to_time,
       rdv.starts_at.to_date,
       rdv.starts_at.to_time,
+      majeur_ou_mineur(rdv),
       rdv.motif.name,
       TYPE[rdv.created_by],
       ::Rdv.human_enum_name(:status, rdv.status),
@@ -58,5 +60,13 @@ class RdvExporterService < BaseService
       rdv.motif.service.name,
       rdv.agents.map(&:full_name).join(", ")
     ]
+  end
+
+  def majeur_ou_mineur(rdv)
+    rdv.users.select{ mineur?(_1.birth_date) }.any? ? "mineur" : "majeur"
+  end
+
+  def mineur?(birth_date)
+    ((Time.zone.now - birth_date.to_time) / 1.year.seconds).floor < 18
   end
 end
