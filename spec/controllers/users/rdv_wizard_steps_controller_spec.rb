@@ -37,7 +37,7 @@ describe Users::RdvWizardStepsController, type: :controller do
     context "without logged user" do
       it "redirects to sign_in path" do
         get :new, params: { step: 2, motif_id: motif.id, lieu_id: lieu.id, starts_at: starts_at }
-        expect(response).to redirect_to(new_user_session_path)
+        expect(response).to redirect_to(new_user_registration_path)
       end
     end
   end
