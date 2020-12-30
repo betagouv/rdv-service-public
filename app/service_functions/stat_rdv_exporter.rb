@@ -1,4 +1,4 @@
-module RdvExporter
+module StatRdvExporter
   TYPE = { "user" => "Usager", "agent" => "Agent", "file_attente" => "File d'attente" }.freeze
   HourFormat = Spreadsheet::Format.new(number_format: "hh:mm")
   DateFormat = Spreadsheet::Format.new(number_format: "DD/MM/YYYY")
