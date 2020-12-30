@@ -15,7 +15,7 @@ class Admin::RdvsController < AgentAuthController
       .order(starts_at: :desc)
     @breadcrumb_page = params[:breadcrumb_page]
     respond_to do |format|
-      format.xls { send_data(StatRdvExporter.export(@rdvs, StringIO.new), filename: "rdvs.xls", type: "application/xls") }
+      format.xls { send_data(RdvExporter.export(@rdvs, StringIO.new), filename: "rdvs.xls", type: "application/xls") }
       format.html { @rdvs = @rdvs.page(params[:page]) }
       format.json
     end
