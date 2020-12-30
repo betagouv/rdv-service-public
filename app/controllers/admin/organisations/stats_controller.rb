@@ -17,7 +17,11 @@ class Admin::Organisations::StatsController < AgentAuthController
             else
               stats.rdvs_group_by_week_fr
             end
-    render json: stats.chart_json
+
+    respond_to do |format|
+      format.xls { send_data(RdvExporter.export(policy_scope(Rdv), StringIO.new), filename: "rdvs.xls", type: "application/xls") }
+      format.json { render json: stats.chart_json }
+    end
   end
 
   def users
