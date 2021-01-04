@@ -28,7 +28,7 @@ class JoursFeriesService
     Date.new(2021, 12, 25),
   ].freeze
 
-  # d'après https://www.service-public.fr/particuliers/vosdroits/F2405
+  # https://www.service-public.fr/particuliers/vosdroits/F2405
   JOURS_FERIES_2022 = [
     Date.new(2022, 1, 1),
     Date.new(2022, 4, 18),
