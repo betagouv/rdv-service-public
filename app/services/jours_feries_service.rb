@@ -28,12 +28,29 @@ class JoursFeriesService
     Date.new(2021, 12, 25),
   ].freeze
 
+  # d'après https://www.service-public.fr/particuliers/vosdroits/F2405
+  JOURS_FERIES_2022 = [
+    Date.new(2022, 1, 1),
+    Date.new(2022, 4, 18),
+    Date.new(2022, 5, 1),
+    Date.new(2022, 5, 8),
+    Date.new(2022, 5, 26),
+    Date.new(2022, 6, 6),
+    Date.new(2022, 7, 14),
+    Date.new(2022, 8, 15),
+    Date.new(2022, 11, 1),
+    Date.new(2022, 11, 11),
+    Date.new(2022, 12, 25),
+  ].freeze
+
   def self.all_in_date_range(date_range)
     date_range.select do |d|
       if d.year == 2020
         d.in?(JOURS_FERIES_2020)
       elsif d.year == 2021
         d.in?(JOURS_FERIES_2021)
+      elsif d.year == 2022
+        d.in?(JOURS_FERIES_2022)
       end
     end
   end
