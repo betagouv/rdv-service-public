@@ -50,8 +50,8 @@ describe RdvExporter, type: :service do
     it "return mineur when only one of rdv's user is minor" do
       now = Time.zone.parse("2020-4-3 13:45")
       travel_to(now)
-      minor_user = build(:user, birth_date: Date.new(2000, 10, 4))
-      major_user = build(:user, birth_date: Date.new(2016, 5, 30))
+      major_user = build(:user, birth_date: Date.new(2000, 10, 4))
+      minor_user = build(:user, birth_date: Date.new(2016, 5, 30))
       rdv = build(:rdv, created_at: Time.new(2020, 3, 23, 9, 54, 33), users: [major_user, minor_user])
       expect(RdvExporter.majeur_ou_mineur(rdv)).to eq("mineur")
     end
@@ -62,6 +62,15 @@ describe RdvExporter, type: :service do
       user = build(:user, birth_date: "")
       rdv = build(:rdv, created_at: Time.new(2020, 3, 23, 9, 54, 33), users: [user])
       expect(RdvExporter.majeur_ou_mineur(rdv)).to eq("n/a")
+    end
+
+    it "return mineur if the user with a birthdate is minor" do
+      now = Time.zone.parse("2020-4-3 13:45")
+      travel_to(now)
+      user = build(:user, birth_date: "")
+      minor_user = build(:user, birth_date: Date.new(2016, 5, 30))
+      rdv = build(:rdv, created_at: Time.new(2020, 3, 23, 9, 54, 33), users: [user, minor_user])
+      expect(RdvExporter.majeur_ou_mineur(rdv)).to eq("mineur")
     end
   end
 end
