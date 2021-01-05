@@ -23,7 +23,7 @@ class Select2Inputs {
   }
 
 
-  destroyInputs = () => $(this.selector).select2('destroy')
+  destroyInputs = () => $(`this.selector[data-select2-id]`).select2('destroy')
 }
 
 export { Select2Inputs };
