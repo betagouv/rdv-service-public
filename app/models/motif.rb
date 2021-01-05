@@ -46,7 +46,7 @@ class Motif < ApplicationRecord
   }
   scope :search_by_name_with_location_type, lambda { |name_with_location_type|
     name, location_type = Motif.location_types.keys.map do
-      match_data = name_with_location_type.match(/(.*)\-#{_1}$/)
+      match_data = name_with_location_type&.match(/(.*)\-#{_1}$/)
       match_data ? [match_data[1], _1] : nil
     end.compact.first
     where(name: name, location_type: location_type)
