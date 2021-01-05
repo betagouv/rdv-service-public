@@ -28,6 +28,7 @@ class Motif < ApplicationRecord
   validates :max_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
   validate :booking_delay_validation
   validate :not_associated_with_secretariat
+  validates :color, css_hex_color: true
 
   scope :active, -> { where(deleted_at: nil) }
   scope :reservable_online, -> { where(reservable_online: true) }
