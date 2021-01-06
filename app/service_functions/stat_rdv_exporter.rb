@@ -58,13 +58,9 @@ module StatRdvExporter
   end
 
   def self.majeur_ou_mineur(rdv)
-    birth_dates = rdv.users.map(&:birth_date).uniq.compact
-    return "n/a" if birth_dates.empty?
+    return "n/a" if rdv.users.map(&:birth_date).uniq.compact.empty?
 
-    birth_dates.select{ mineur?(_1) }.any? ? "mineur" : "majeur"
+    rdv.users.select{ _1.mineur? }.any? ? "mineur" : "majeur"
   end
 
-  def self.mineur?(birth_date)
-    ((Time.zone.now - birth_date.to_time) / 1.year.seconds).floor < 18
-  end
 end

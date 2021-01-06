@@ -318,4 +318,21 @@ describe User, type: :model do
       expect(potential_token_digest).to eql(actual_token_digest)
     end
   end
+
+  describe "#mineur?" do
+    it "return true when user birth in 2016 and we are un 2020" do
+      now = Time.zone.parse("2020-4-3 13:45")
+      travel_to(now)
+      user = build(:user, birth_date: Date.new(2016, 5, 30))
+      expect(user.mineur?).to be true
+    end
+
+    it "return false when user birth is 2000 and we are in 2020" do
+      now = Time.zone.parse("2020-4-3 13:45")
+      travel_to(now)
+      user = build(:user, birth_date: Date.new(2000, 5, 30))
+      expect(user.mineur?).to be false
+    end
+  end
+
 end
