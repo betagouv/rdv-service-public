@@ -16,6 +16,8 @@ class OrganisationsController < ApplicationController
       agent.skip_confirmation!
       agent.skip_invitation = true
       agent.define_singleton_method(:password_required?) { false }
+      agent.define_singleton_method(:postpone_email_change?) { false }
+      # forces devise_token_auth sync_uid to run
     end
     return render :new unless @organisation.save
 
