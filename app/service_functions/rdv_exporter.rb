@@ -47,7 +47,7 @@ module RdvExporter
       I18n.l(rdv.starts_at.to_time, format: :time_only),
       rdv.motif.name,
       rdv.context,
-      lieu(rdv),
+      rdv.address_complete_without_personnal_details,
       rdv.agents.map(&:full_name).join(", "),
       rdv.users.map(&:full_name).join(", "),
       I18n.t("activerecord.attributes.rdv.statuses.#{rdv.temporal_status}")
@@ -56,17 +56,5 @@ module RdvExporter
 
   def self.origine(rdv)
     rdv.created_by_user? ? "RDV Pris sur internet" : "Créé par un agent"
-  end
-
-  def self.lieu(rdv)
-    if rdv.phone?
-      "RDV téléphonique"
-    elsif rdv.home?
-      "RDV à domicile : #{rdv.address_complete}"
-    elsif rdv.public_office?
-      rdv.address_complete
-    else
-      ""
-    end
   end
 end

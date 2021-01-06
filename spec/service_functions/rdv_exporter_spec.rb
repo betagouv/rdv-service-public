@@ -72,13 +72,13 @@ describe RdvExporter, type: :service do
     describe "lieu" do
       it "return « par Téléphone » when rdv by phone" do
         rdv = build(:rdv, :by_phone)
-        expect(RdvExporter.row_array_from(rdv)[5]).to eq("RDV téléphonique")
+        expect(RdvExporter.row_array_from(rdv)[5]).to eq("Par téléphone")
       end
 
       it "return « [domicile] adresse of user » when rdv is at home" do
         user = build(:user, address: "20 avenue de Ségur, Paris", first_name: "Lisa", last_name: "PAUL")
         rdv = build(:rdv, :at_home, users: [user])
-        expect(RdvExporter.row_array_from(rdv)[5]).to eq("RDV à domicile : Adresse de Lisa PAUL - 20 avenue de Ségur, Paris")
+        expect(RdvExporter.row_array_from(rdv)[5]).to eq("À domicile")
       end
 
       it "return « lieu name and adresse » when rdv in place" do
