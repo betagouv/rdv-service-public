@@ -1,5 +1,6 @@
 class LieuxController < ApplicationController
   before_action \
+    :redirect_if_search_params_absent,
     :set_lieu_variables,
     :redirect_if_user_offline_and_motif_follow_up,
     :redirect_if_no_matching_motifs
@@ -41,6 +42,12 @@ class LieuxController < ApplicationController
   end
 
   private
+
+  def redirect_if_search_params_absent
+    return if params[:search].present?
+
+    redirect_to root_path, flash: { error: "Les paramètres de recherche n'ont pas été transmis correctement" }
+  end
 
   def redirect_if_user_offline_and_motif_follow_up
     return if !follow_up_motif? || current_user.present?
