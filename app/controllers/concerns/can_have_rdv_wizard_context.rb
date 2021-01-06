@@ -15,5 +15,9 @@ module CanHaveRdvWizardContext
     return if [:motif_id, :starts_at, :lieu_id].any? { parsed_params[_1].blank? }
 
     @rdv_wizard = UserRdvWizard::Step1.new(nil, parsed_params)
+    return if @rdv_wizard.creneau.present?
+
+    @rdv_wizard = nil
+    session.delete(:user_return_to)
   end
 end
