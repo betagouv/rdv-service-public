@@ -15,7 +15,7 @@ module RdvExporter
   ].freeze
 
   def self.export(rdvs)
-    extract_string_from build_excel_workbook_from rdvs
+    extract_string_from(build_excel_workbook_from(rdvs))
   end
 
   def self.extract_string_from(workbook)
