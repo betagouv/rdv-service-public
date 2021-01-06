@@ -115,4 +115,24 @@ describe Motif, type: :model do
       expect(motif.visible_and_notified?).to eq(false)
     end
   end
+
+  describe "search_by_name_with_location_type" do
+    context "some matching motif name + type" do
+      subject { Motif.search_by_name_with_location_type("Rappel PMI-phone") }
+      let!(:motif) { create(:motif, name: "Rappel PMI", location_type: :phone) }
+      it { should include(motif) }
+    end
+
+    context "no matching motif name" do
+      subject { Motif.search_by_name_with_location_type("Rappel PMI-phone") }
+      let!(:motif) { create(:motif, name: "Rien a voir", location_type: :phone) }
+      it { should be_empty }
+    end
+
+    context "nil param" do
+      subject { Motif.search_by_name_with_location_type(nil) }
+      let!(:motif) { create(:motif, name: "Rappel PMI", location_type: :phone) }
+      it { should be_empty }
+    end
+  end
 end
