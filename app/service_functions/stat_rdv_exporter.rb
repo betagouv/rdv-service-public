@@ -62,5 +62,4 @@ module StatRdvExporter
 
     rdv.users.select{ _1.mineur? }.any? ? "mineur" : "majeur"
   end
-
 end

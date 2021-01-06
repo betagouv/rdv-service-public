@@ -334,5 +334,4 @@ describe User, type: :model do
       expect(user.mineur?).to be false
     end
   end
-
 end
