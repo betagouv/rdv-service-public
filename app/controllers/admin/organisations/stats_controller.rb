@@ -9,7 +9,8 @@ class Admin::Organisations::StatsController < AgentAuthController
 
   def rdvs
     authorize(@organisation)
-    stats = Stat.new(rdvs: policy_scope(Rdv))
+    rdvs = policy_scope(Rdv)
+    stats = Stat.new(rdvs: rdvs)
     stats = if params[:by_service].present?
               stats.rdvs_group_by_service
             elsif params[:by_location_type].present?
@@ -19,7 +20,7 @@ class Admin::Organisations::StatsController < AgentAuthController
             end
 
     respond_to do |format|
-      format.xls { send_data(StatRdvExporter.export(policy_scope(Rdv), StringIO.new), filename: "rdvs.xls", type: "application/xls") }
+      format.xls { send_data(StatRdvExporter.export(rdvs, StringIO.new), filename: "rdvs.xls", type: "application/xls") }
       format.json { render json: stats.chart_json }
     end
   end
