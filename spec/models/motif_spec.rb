@@ -3,6 +3,12 @@ describe Motif, type: :model do
     expect(build(:motif)).to be_valid
   end
 
+  it "invalid without #RRGGBB format's color" do
+    expect(build(:motif, color: "vert")).to be_invalid
+    expect(build(:motif, color: "002233")).to be_invalid
+    expect(build(:motif, color: "#002233")).to be_valid
+  end
+
   let!(:organisation) { create(:organisation) }
   let(:motif) { create(:motif, organisation: organisation) }
   let(:secretariat) { create(:service, :secretariat) }
