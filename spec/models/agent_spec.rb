@@ -25,11 +25,18 @@ describe Agent, type: :model do
       expect(agent.email_original).to eq("karim@le64.fr")
     end
 
-    it "update mail with a deleted_mail (agent_\#{id}@deleted.rdv-solidarites.fr" do
+    it "update mail with a unique value" do
       agent = create(:agent, organisations: [])
       create(:rdv, agents: [agent])
       agent.soft_delete
       expect(agent.email).to eq("agent_#{agent.id}@deleted.rdv-solidarites.fr")
+    end
+
+    it "update UID with a unique value" do
+      agent = create(:agent, organisations: [])
+      create(:rdv, agents: [agent])
+      agent.soft_delete
+      expect(agent.uid).to eq("agent_#{agent.id}@deleted.rdv-solidarites.fr")
     end
   end
 
