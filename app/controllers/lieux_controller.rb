@@ -93,7 +93,7 @@ class LieuxController < ApplicationController
         .merge(@street_ban_id.present? ? { street_ban_id: @street_ban_id } : {})
     )
     searchable_motifs = @geo_search.available_motifs.where(service: @service)
-    @unique_motifs_by_name_and_location_type = @geo_search.available_motifs.uniq { [_1.name, _1.location_type] }
+    @unique_motifs_by_name_and_location_type = searchable_motifs.uniq { [_1.name, _1.location_type] }
     @matching_motifs = searchable_motifs.search_by_name_with_location_type(@motif_name_with_location_type)
     @latitude = search_params[:latitude]
     @longitude = search_params[:longitude]
