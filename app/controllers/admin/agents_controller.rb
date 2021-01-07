@@ -26,7 +26,7 @@ class Admin::AgentsController < AgentAuthController
       redirect_to edit_admin_organisation_permission_path(current_organisation, @agent)
     else
       removal_service.remove!
-      flash[:notice] = "L'agent a été retiré de l'organisation"
+      flash[:notice] = @agent.deleted_at? ? "Le compte agent a été supprimé" : "L'agent a été retiré de l'organisation"
       redirect_to admin_organisation_agents_path(current_organisation)
     end
   end
