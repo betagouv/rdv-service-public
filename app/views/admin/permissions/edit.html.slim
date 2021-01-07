@@ -15,15 +15,15 @@
       .card-body
         = simple_form_for [:admin, @permission], url: admin_organisation_permission_path(current_organisation, @permission), remote: request.xhr?, html: { data: { rightbar: true } } do |f|
           = render partial: 'layouts/model_errors', locals: { model: @permission }
-          = f.input :service_id, collection: [@permission.agent.service], as: :select, label: 'Service', hint: "Vous ne pouvez pas changer un agent de service, cela créerait des incohérences. Si vous voulez vraiment réaliser cette opération, il faut supprimer et recréer l'agent", disabled: true
+          = f.input :service_id, collection: [@permission.agent.service], as: :select, label: 'Service', hint: "Vous ne pouvez pas changer un agent de service, cela créerait des incohérences. Si vous voulez vraiment réaliser cette opération, il faut supprimer et recréer le compte de l'agent", disabled: true
 
           = f.input :role, collection: Agent.human_enum_collection_html(:role), as: :radio_buttons, label: "Rôle de #{@permission.agent.full_name}"
 
           .row
             .col.text-left
-              = link_to "Retirer de l'organisation", \
+              = link_to @agent_removal_presenter.button_value, \
                 admin_organisation_agent_path(current_organisation, @permission.agent), \
-                data: { confirm: "Êtes-vous sûr de vouloir retirer cet agent de l'organisation #{current_organisation.name} ?\n\nToutes ses absences et ses plages d'ouvertures seront supprimées de manière irréversible." }, \
+                data: { confirm: @agent_removal_presenter.confirm_message }, \
                 method: :delete, \
                 class: 'btn btn-outline-danger'
             .col.text-right
