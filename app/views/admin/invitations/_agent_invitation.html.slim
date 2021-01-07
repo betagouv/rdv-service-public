@@ -1,0 +1,25 @@
+div.d-flex.justify-content-between.p-2
+  div
+    = agent.email
+    = admin_tag(agent)
+    br
+    small.invitation-text
+      - if agent.invitation_sent_at
+        | il y a #{distance_of_time_in_words_to_now(agent.invitation_sent_at)}
+      - else
+        | Aucune invitation envoyée
+  div.d-flex
+    div
+      = link_to \
+        "Renvoyer l'invitation", \
+        reinvite_admin_organisation_invitation_path(current_organisation, agent), \
+        method: :post, \
+        class: "btn btn-light"
+    div.ml-2
+      = link_to \
+        "Supprimer", \
+        admin_organisation_agent_path(current_organisation, agent), \
+        data: { confirm: "Êtes-vous sûr de vouloir supprimer cette invitation ?" }, \
+        method: :delete,
+        class: "btn btn-danger" \
+      if policy([:agent, agent]).destroy?

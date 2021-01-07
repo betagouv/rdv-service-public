@@ -81,7 +81,16 @@ class Agent < ApplicationRecord
   end
 
   def add_organisation(organisation)
-    errors.add(:base, "Un agent avec cet email existe déjà dans cette organisation") && return if organisation_ids.include?(organisation.id)
+    if organisation_ids.include?(organisation.id)
+      message =
+        if invitation_accepted_at.present?
+          "Un agent avec cet email existe déjà dans cette organisation"
+        else
+          "Une invitation est déjà en attente pour cet email"
+        end
+      errors.add(:base, message)
+      return
+    end
     organisations << organisation
   end
 

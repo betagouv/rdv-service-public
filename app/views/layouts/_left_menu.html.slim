@@ -144,6 +144,10 @@
                 admin_organisation_agents_path(current_organisation), \
                 class: ("active" if content_for(:menu_item) == 'menu-agents')
             li.my-2
+              =link_to 'Vos invitations', \
+                admin_organisation_invitations_path(current_organisation), \
+                class: ("active" if content_for(:menu_item) == 'menu-invitations')
+            li.my-2
               = link_to 'Vos motifs', \
                 admin_organisation_motifs_path(current_organisation), \
                 class: ("active" if content_for(:menu_item) == 'menu-motifs')

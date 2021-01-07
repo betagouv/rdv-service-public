@@ -44,3 +44,11 @@ ul.horizontal-border-between-items {
     border-bottom: none;
   }
 }
+
+.bordered-divs > div {
+  border-bottom: 1px solid #ccc;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}

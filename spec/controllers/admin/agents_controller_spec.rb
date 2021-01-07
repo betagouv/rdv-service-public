@@ -17,13 +17,6 @@ RSpec.describe Admin::AgentsController, type: :controller do
     end
   end
 
-  describe "POST #reinvite" do
-    it "returns a success response" do
-      post :reinvite, params: { organisation_id: organisation.id, id: agent_invitee.to_param }
-      expect(response).to redirect_to(admin_organisation_agents_path(organisation))
-    end
-  end
-
   describe "DELETE #destroy" do
     subject { delete :destroy, params: { organisation_id: organisation.id, id: agent1.id } }
     it "destroys the requested agent" do
@@ -31,9 +24,9 @@ RSpec.describe Admin::AgentsController, type: :controller do
       expect(agent1.reload.organisations).not_to include(organisation)
     end
 
-    it "redirects to the agents list" do
+    it "redirects to the invitations list" do
       subject
-      expect(response).to redirect_to(admin_organisation_agents_path(organisation))
+      expect(response).to redirect_to(admin_organisation_invitations_path(organisation))
     end
   end
 end
