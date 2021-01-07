@@ -1,7 +1,7 @@
 # INSTALL
 ## Prérequis
 
-- Ruby 2.7.1 (nous conseillons l'utilisation de [Rbenv](https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts))
+- Ruby 2.7.2 (nous conseillons l'utilisation de [Rbenv](https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts))
 - postgresql
 
 ## Développement
