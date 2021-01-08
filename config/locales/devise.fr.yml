@@ -11,10 +11,10 @@ fr:
       invited: "Vous avez une invitation en attente. Acceptez-là pour terminer votre inscription."
       already_authenticated: "Vous êtes déjà connecté"
       inactive: "Votre compte n'est pas encore activé."
-      invalid: "Email ou mot de passe incorrect."
+      invalid: "E-mail ou mot de passe incorrect."
       last_attempt: "Vous avez droit à une tentative avant que votre compte ne soit verrouillé."
       locked: "Votre compte est verrouillé."
-      not_found_in_database: "Email ou mot de passe invalide."
+      not_found_in_database: "E-mail ou mot de passe invalide."
       timeout: "Votre session est expirée. Veuillez vous reconnecter pour continuer."
       unauthenticated: "Vous devez vous connecter ou vous inscrire pour continuer."
       unconfirmed: "Vous devez valider votre compte pour continuer."
@@ -24,7 +24,7 @@ fr:
       updated: "Votre mot de passe a correctement été enregistré. Vous êtes maintenant connecté."
       updated_not_active: "Votre mot de passe a été enregistré."
       no_invitations_remaining: "Aucune invitation restante."
-      invitation_removed: "Votre inivtation a été annulée."
+      invitation_removed: "Votre invitation a été annulée."
       new:
         header: "Envoyer une invitation"
         submit_button: "Envoyer une invitation"
@@ -38,7 +38,7 @@ fr:
         someone_invited_you: "Vous avez été invité sur RDV Solidarités. Vous pouvez accepter cette invitation grâce au lien ci-dessous."
         accept: "Accepter l'invitation"
         accept_until: "Cette invitation est valable jusqu'au %{due_date}."
-        ignore: "Si vous n'acceptez pas cette invitation, ignorez cet email. Aucun compte ne sera créé sans votre autorisation."
+        ignore: "Si vous n'acceptez pas cette invitation, ignorez cet e-mail. Aucun compte ne sera créé sans votre autorisation."
       confirmation_instructions:
         subject: "Instructions de confirmation"
       reset_password_instructions:
@@ -46,7 +46,7 @@ fr:
       unlock_instructions:
         subject: "Instructions pour déverrouiller le compte"
       password_change:
-        subject: "Votre mot de passe a été modifié avec succés."
+        subject: "Votre mot de passe a été modifié avec succès."
     omniauth_callbacks:
       failure: "Nous n'avons pas pu vous authentifier via %{kind} : '%{reason}'."
       success: "Authentifié avec succès via %{kind}."
@@ -61,8 +61,8 @@ fr:
       signed_up: "Bienvenue, vous êtes connecté."
       signed_up_but_inactive: "Vous êtes bien enregistré. Vous ne pouvez cependant pas vous connecter car votre compte n'est pas encore activé."
       signed_up_but_locked: "Vous êtes bien enregistré. Vous ne pouvez cependant pas vous connecter car votre compte est verrouillé."
-      signed_up_but_unconfirmed: "Un message contenant un lien de confirmation a été envoyé à votre adresse email. Ouvrez ce lien pour activer votre compte."
-      update_needs_confirmation: "Votre compte a bien été mis à jour mais nous devons vérifier votre nouvelle adresse email. Merci de vérifier vos emails et de cliquer sur le lien de confirmation pour finaliser la validation de votre nouvelle adresse."
+      signed_up_but_unconfirmed: "Un message contenant un lien de confirmation a été envoyé à votre adresse e-mail. Ouvrez ce lien pour activer votre compte."
+      update_needs_confirmation: "Votre compte a bien été mis à jour mais nous devons vérifier votre nouvelle adresse e-mail. Merci de vérifier vos e-mails et de cliquer sur le lien de confirmation pour finaliser la validation de votre nouvelle adresse."
       updated: "Votre compte a été modifié avec succès."
     sessions:
       signed_in: "Connecté."
@@ -70,7 +70,7 @@ fr:
       already_signed_out: "Déconnecté."
     unlocks:
       send_instructions: "Vous allez recevoir les instructions nécessaires au déverrouillage de votre compte dans quelques instants"
-      send_paranoid_instructions: "Si votre compte existe, vous allez bientôt recevoir un email contenant les instructions pour le déverrouiller."
+      send_paranoid_instructions: "Si votre compte existe, vous allez bientôt recevoir un e-mail contenant les instructions pour le déverrouiller."
       unlocked: "Votre compte a été déverrouillé avec succès, vous êtes maintenant connecté."
   errors:
     messages:
@@ -80,7 +80,7 @@ fr:
       not_found: "n'a pas été trouvé(e)"
       not_locked: "n'était pas verrouillé(e)"
       not_saved:
-        one: "1 erreur a empêché ce(tte) %{resource} d'être sauvegardé(e) :"
+        one: "Une erreur a empêché ce(tte) %{resource} d'être sauvegardé(e) :"
         other: "%{count} erreurs ont empêché ce(tte) %{resource} d'être sauvegardé(e) :"
   time:
     formats:
