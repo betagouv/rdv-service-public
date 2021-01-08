@@ -525,7 +525,7 @@ DEPENDENCIES
   brakeman
   bullet
   byebug
-  capybara (>= 2.15)
+  capybara (~> 3)
   capybara-email
   capybara-screenshot
   chartkick (~> 3.4.0)
