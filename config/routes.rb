@@ -65,7 +65,7 @@ Rails.application.routes.draw do
   end
 
   devise_for :agents, controllers: {
-    invitations: "admin/invitations", # only using the accept route here
+    invitations: "admin/invitations_devise", # only using the accept route here
     sessions: "agents/sessions",
     passwords: "agents/passwords"
   }
@@ -131,7 +131,6 @@ Rails.application.routes.draw do
           collection do
             resources :permissions, only: [:edit, :update]
           end
-          post :reinvite, on: :member
           resources :absences, only: [:index, :new]
           resources :plage_ouvertures, only: [:index, :new]
           resources :stats, only: :index do
@@ -141,9 +140,12 @@ Rails.application.routes.draw do
             end
           end
         end
+        resources :invitations, only: [:index] do
+          post :reinvite, on: :member
+        end
         resource :merge_users, only: [:new, :create]
         resource :rdv_wizard_step, only: [:new, :create]
-        devise_for :agents, controllers: { invitations: "admin/invitations" }, only: :invitations
+        devise_for :agents, controllers: { invitations: "admin/invitations_devise" }, only: :invitations
       end
 
       resources :jours_feries, only: [:index]

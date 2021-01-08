@@ -45,6 +45,7 @@ module AgentsHelper
       "menu-plages-ouvertures" => "planning",
       "menu-absences" => "planning",
       "menu-agents" => "settings",
+      "menu-invitations" => "settings",
       "menu-lieux" => "settings",
       "menu-motifs" => "settings",
       "menu-organisation" => "settings",
