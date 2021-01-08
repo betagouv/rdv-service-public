@@ -14,7 +14,7 @@ module MotifsHelper
   end
 
   def motif_badges(motif, only: [:reservable_online, :secretariat, :follow_up])
-    only.select { motif.send("#{_1}?") }.map { build_badge_tag_for(_1) }.join("").html_safe
+    only.select { motif.send("#{_1}?") }.map { build_badge_tag_for(_1) }.join.html_safe
   end
 
   def build_badge_tag_for(badge_name)

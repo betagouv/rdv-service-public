@@ -75,7 +75,7 @@ class User < ApplicationRecord
   end
 
   def inactive_message
-    !deleted_at ? super : :deleted_account
+    deleted_at ? :deleted_account : super
   end
 
   def user_to_notify

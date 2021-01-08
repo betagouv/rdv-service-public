@@ -73,7 +73,7 @@ class Agent < ApplicationRecord
   end
 
   def inactive_message
-    !deleted_at ? super : :deleted_account
+    deleted_at ? :deleted_account : super
   end
 
   def can_access_others_planning?

@@ -9,10 +9,12 @@ class CreneauxBuilderForDateService < BaseService
     @agent_name = options.fetch(:agent_name, false)
   end
 
+  # rubocop: disable Lint/ToEnumArguments
   def perform
     @next_starts_at = @plage_ouverture.start_time.on(@date)
     to_enum(:next_creneaux).to_a.compact
   end
+  # rubocop: enable Lint/ToEnumArguments
 
   private
 

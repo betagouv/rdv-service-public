@@ -41,6 +41,8 @@ module SuperAdmins
 
     private
 
+    # rubocop:disable all
+    # this code is copied from rails source, so it feels ok not to lint it
     def find_preview
       candidates = []
       params[:id].to_s.scan(%r{/|$}) { candidates << $` }
@@ -50,6 +52,7 @@ module SuperAdmins
 
       raise AbstractController::ActionNotFound, "Mailer preview '#{params[:id]}' not found"
     end
+    # rubocop:enable all
 
     def find_preferred_part(*formats)
       formats.each do |format|

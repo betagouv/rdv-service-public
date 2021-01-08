@@ -7,14 +7,13 @@ class Rdv::Ics
 
   validates :rdv, presence: true
 
+  TZID = "Europe/Paris".freeze
+
   def to_ical_for(user)
     require "icalendar"
     require "icalendar/tzinfo"
-
     cal = Icalendar::Calendar.new
-
-    tzid = "Europe/Paris"
-    tz = TZInfo::Timezone.get tzid
+    tz = TZInfo::Timezone.get TZID
     timezone = tz.ical_timezone rdv.starts_at
     cal.add_timezone timezone
     cal.prodid = BRAND
@@ -37,8 +36,8 @@ class Rdv::Ics
   private
 
   def populate_event(event, user)
-    event.dtstart     = Icalendar::Values::DateTime.new(rdv.starts_at, "tzid" => tzid)
-    event.dtend       = Icalendar::Values::DateTime.new(rdv.ends_at, "tzid" => tzid)
+    event.dtstart     = Icalendar::Values::DateTime.new(rdv.starts_at, "tzid" => TZID)
+    event.dtend       = Icalendar::Values::DateTime.new(rdv.ends_at, "tzid" => TZID)
     event.summary     = "RDV #{rdv_title_for_user(rdv, user)}"
     event.description = description
     event.location    = rdv.address unless rdv.motif.phone?

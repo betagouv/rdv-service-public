@@ -33,32 +33,46 @@ Lint/MissingSuper:
   Enabled: false
 
 Lint/DuplicateBranch:
-  Enabled: false
+  Enabled: true
 Lint/DuplicateRegexpCharacterClassElement:
-  Enabled: false
+  Enabled: true
 Lint/EmptyBlock:
   Enabled: false
 Lint/EmptyClass:
-  Enabled: false
+  Enabled: true
 Lint/NoReturnInBeginEndBlocks:
-  Enabled: false
+  Enabled: true
 Lint/ToEnumArguments:
-  Enabled: false
+  Enabled: true
 Lint/UnexpectedBlockArity:
-  Enabled: false
+  Enabled: true
 Lint/UnmodifiedReduceAccumulator:
-  Enabled: false
+  Enabled: true
 Style/ArgumentsForwarding:
-  Enabled: false
+  Enabled: true
 Style/CollectionCompact:
-  Enabled: false
+  Enabled: true
 Style/DocumentDynamicEvalDefinition:
-  Enabled: false
+  Enabled: true
 Style/NegatedIfElseCondition:
-  Enabled: false
+  Enabled: true
 Style/NilLambda:
-  Enabled: false
+  Enabled: true
 Style/RedundantArgument:
-  Enabled: false
+  Enabled: true
 Style/SwapValues:
-  Enabled: false
+  Enabled: true
+Layout/SpaceBeforeBrackets:
+  Enabled: true
+Lint/AmbiguousAssignment:
+  Enabled: true
+Lint/DeprecatedConstants:
+  Enabled: true
+Lint/LambdaWithoutLiteralBlock:
+  Enabled: true
+Lint/RedundantDirGlobSort:
+  Enabled: true
+Style/EndlessMethod:
+  Enabled: true
+Style/HashExcept:
+  Enabled: true
