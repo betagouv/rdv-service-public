@@ -3,7 +3,7 @@ RSpec.describe Admin::InvitationsController, type: :controller do
 
   let!(:agent) { create(:agent, :admin) }
   let(:organisation_id) { agent.organisation_ids.first }
-  let!(:organisation_2) { create(:organisation) }
+  let!(:organisation2) { create(:organisation) }
   let(:service_id) { agent.service.id }
 
   before do
@@ -87,7 +87,7 @@ RSpec.describe Admin::InvitationsController, type: :controller do
     context "when agent already exist" do
       let(:params) do
         {
-          email: agent_2.email,
+          email: agent2.email,
           organisation_id: organisation_id,
           role: "user",
           service_id: service_id,
@@ -95,7 +95,7 @@ RSpec.describe Admin::InvitationsController, type: :controller do
       end
 
       context "when agent is in another organisation" do
-        let!(:agent_2) { create(:agent, organisation_ids: [organisation_2.id]) }
+        let!(:agent2) { create(:agent, organisation_ids: [organisation2.id]) }
 
         it_behaves_like "existing user is added to organization"
 
@@ -106,18 +106,18 @@ RSpec.describe Admin::InvitationsController, type: :controller do
       end
 
       context "when agent has been invited by another organisation" do
-        let!(:agent_2) { create(:agent, :not_confirmed, organisation_ids: [organisation_2.id]) }
+        let!(:agent2) { create(:agent, :not_confirmed, organisation_ids: [organisation2.id]) }
 
         it_behaves_like "existing user is added to organization"
       end
 
       context "when agent is already in this organisation" do
-        let!(:agent_2) { create(:agent, organisation_ids: [organisation_id]) }
+        let!(:agent2) { create(:agent, organisation_ids: [organisation_id]) }
         it { expect { subject }.not_to change(Agent, :count) }
       end
 
       context "when agent has been invited by this organisation" do
-        let!(:agent_2) { create(:agent, :not_confirmed, organisation_ids: [organisation_id]) }
+        let!(:agent2) { create(:agent, :not_confirmed, organisation_ids: [organisation_id]) }
         it { expect { subject }.not_to change(Agent, :count) }
       end
     end
@@ -135,7 +135,7 @@ RSpec.describe Admin::InvitationsController, type: :controller do
         create(
           :agent,
           email: "marco@demo.rdv-solidarites.fr",
-          organisation_ids: [organisation_2.id]
+          organisation_ids: [organisation2.id]
         )
       end
 

@@ -20,7 +20,7 @@ describe FileAttente, type: :model do
     end
 
     context "with availabilities before rdv" do
-      let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: 1.day.from_now, start_time: Tod::TimeOfDay.new(9), lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
+      let!(:plage_ouverture2) { create(:plage_ouverture, first_day: 1.day.from_now, start_time: Tod::TimeOfDay.new(9), lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
 
       it "should increment notifications_sent" do
         expect { subject }.to change(file_attente, :notifications_sent).from(0).to(1)
@@ -42,7 +42,7 @@ describe FileAttente, type: :model do
     end
 
     context "without availabilities before rdv" do
-      let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: Date.yesterday, lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
+      let!(:plage_ouverture2) { create(:plage_ouverture, first_day: Date.yesterday, lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
 
       it "should not send notification" do
         subject
@@ -52,7 +52,7 @@ describe FileAttente, type: :model do
     end
 
     context "when creneau was already sent" do
-      let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: 1.day.from_now, start_time: Tod::TimeOfDay.new(9), lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
+      let!(:plage_ouverture2) { create(:plage_ouverture, first_day: 1.day.from_now, start_time: Tod::TimeOfDay.new(9), lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
 
       it "should not send notification" do
         file_attente.update(last_creneau_sent_at: now)
@@ -64,7 +64,7 @@ describe FileAttente, type: :model do
     end
 
     context "when creneau is too close to RDV" do
-      let!(:plage_ouverture_2) { create(:plage_ouverture, first_day: 2.weeks.from_now - 1.day, lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
+      let!(:plage_ouverture2) { create(:plage_ouverture, first_day: 2.weeks.from_now - 1.day, lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
 
       it "should not send notification" do
         expect { subject }.not_to change(file_attente, :notifications_sent).from(0)

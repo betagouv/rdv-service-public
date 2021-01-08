@@ -1,10 +1,10 @@
 describe ImportZoneRowsService, type: :service do
   # TODO: this spec should mock ZoneImportRow calls and tests should be moved
 
-  let!(:orga_62) { create(:organisation, departement: "62") }
+  let!(:orga62) { create(:organisation, departement: "62") }
   let!(:sector_arques) { create(:sector, human_id: "arques", departement: "62") }
   let!(:sector_arras_sud) { create(:sector, human_id: "arras-sud", departement: "62") }
-  let!(:agent) { create(:agent, :admin, organisation_ids: [orga_62.id]) }
+  let!(:agent) { create(:agent, :admin, organisation_ids: [orga62.id]) }
 
   context "valid rows" do
     let(:rows) do

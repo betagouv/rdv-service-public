@@ -3,7 +3,7 @@
 module SuperAdmins
   class MailerPreviewsController < SuperAdmins::ApplicationController
     before_action :find_preview, only: :show
-    around_action :set_locale, only: :show
+    around_action :with_locale, only: :show
 
     helper_method :part_query, :locale_query
 
@@ -77,7 +77,7 @@ module SuperAdmins
       request.query_parameters.merge(locale: locale).to_query
     end
 
-    def set_locale(&block)
+    def with_locale(&block)
       I18n.with_locale(params[:locale] || I18n.default_locale, &block)
     end
   end

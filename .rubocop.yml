@@ -29,6 +29,9 @@ Style/StringLiterals:
   EnforcedStyle: double_quotes
   Enabled: true
 
+Lint/MissingSuper:
+  Enabled: false
+
 Lint/DuplicateBranch:
   Enabled: false
 Lint/DuplicateRegexpCharacterClassElement:

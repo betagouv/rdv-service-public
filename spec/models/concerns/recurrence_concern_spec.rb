@@ -97,7 +97,7 @@ shared_examples_for "recurrence" do
     end
 
     context "when there is a weekly recurrence with an interval of 2" do
-      let(:model_instance) { build(model_symbol, :weekly_by_2, first_day: Date.new(2019, 7, 22)) }
+      let(:model_instance) { build(model_symbol, :every_two_weeks, first_day: Date.new(2019, 7, 22)) }
       let(:date_range) { Date.new(2019, 7, 22)..Date.new(2019, 8, 7) }
 
       it do

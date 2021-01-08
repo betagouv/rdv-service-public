@@ -16,19 +16,7 @@ class PlageOuverture::Ics
     timezone = tz.ical_timezone plage_ouverture.starts_at
     cal.add_timezone timezone
     cal.prodid = BRAND
-
-    cal.event do |e|
-      e.uid         = plage_ouverture.ical_uid
-      e.dtstart     = Icalendar::Values::DateTime.new(plage_ouverture.starts_at, "tzid" => TZID)
-      e.dtend       = Icalendar::Values::DateTime.new(plage_ouverture.first_occurence_ends_at, "tzid" => TZID)
-      e.summary     = "#{BRAND} #{plage_ouverture.title}"
-      e.description = ""
-      e.location    = plage_ouverture.lieu.address
-      e.ip_class    = "PUBLIC"
-      e.attendee    = "mailto:#{plage_ouverture.agent.email}"
-      e.rrule       = rrule
-    end
-
+    cal.event { populate_event(_1) }
     cal.ip_method = "REQUEST"
     cal.to_ical
   end
@@ -78,5 +66,17 @@ class PlageOuverture::Ics
 
   def by_month_day(day)
     "#{day.values.first.first}#{Date::DAYNAMES[day.keys.first][0, 2].upcase}"
+  end
+
+  def populate_event(event)
+    event.uid         = plage_ouverture.ical_uid
+    event.dtstart     = Icalendar::Values::DateTime.new(plage_ouverture.starts_at, "tzid" => TZID)
+    event.dtend       = Icalendar::Values::DateTime.new(plage_ouverture.first_occurence_ends_at, "tzid" => TZID)
+    event.summary     = "#{BRAND} #{plage_ouverture.title}"
+    event.description = ""
+    event.location    = plage_ouverture.lieu.address
+    event.ip_class    = "PUBLIC"
+    event.attendee    = "mailto:#{plage_ouverture.agent.email}"
+    event.rrule       = rrule
   end
 end
