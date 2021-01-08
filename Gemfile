@@ -94,7 +94,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
   gem "brakeman", require: false
-  gem "rubocop", require: false
+  gem "rubocop", "~> 1.5.2", require: false
   gem "rspec-rails", ">= 4.0.0.beta"
   gem "rspec_junit_formatter", require: false
   gem "rails-controller-testing"
@@ -122,7 +122,7 @@ group :development do
 end
 
 group :test do
-  gem "capybara", "~> 3"
+  gem "capybara", ">= 3.34"
   gem "capybara-email"
   gem "capybara-screenshot"
   gem "webdrivers", "~> 4.0"

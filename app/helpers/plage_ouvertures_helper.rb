@@ -32,7 +32,8 @@ module PlageOuverturesHelper
 
     interval = "#{recurrence_hash[:interval]} " if recurrence_hash[:interval]&.>(1)
 
-    if recurrence_hash[:every] == :week
+    case recurrence_hash[:every]
+    when :week
       every_part = "Toutes les #{interval} semaines"
 
       if recurrence_hash[:on].present?
@@ -40,7 +41,7 @@ module PlageOuverturesHelper
       else
         "#{every_part}, le #{I18n.l(plage_ouverture.first_day, format: "%A")}"
       end
-    elsif recurrence_hash[:every] == :month
+    when :month
       "Tous les #{interval} mois, #{weekday_position_in_month(recurrence_hash[:day])}"
     end
   end

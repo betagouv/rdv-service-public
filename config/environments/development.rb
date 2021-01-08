@@ -43,7 +43,7 @@ Rails.application.configure do
 
   # allows to see debug logs when running with foreman / overmind
   # cf https://github.com/rails/sprockets-rails/issues/376#issuecomment-287560399
-  logger = ActiveSupport::Logger.new(STDOUT)
+  logger = ActiveSupport::Logger.new($stdout)
   logger.formatter = config.log_formatter
   config.logger = ActiveSupport::TaggedLogging.new(logger)
 

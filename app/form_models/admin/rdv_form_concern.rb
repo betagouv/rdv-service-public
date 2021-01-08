@@ -56,8 +56,8 @@ module Admin::RdvFormConcern
       .flat_map do |rdv_before|
         rdv_before.agents.select { rdv.agents.include?(_1) }.map { OpenStruct.new(agent: _1, rdv: rdv_before) }
       end
-      .group_by { _1.agent }
-      .transform_values { _1.last }
+      .group_by(&:agent)
+      .transform_values(&:last)
   end
 
   def rdv_start_coherence

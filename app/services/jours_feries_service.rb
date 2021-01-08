@@ -45,11 +45,12 @@ class JoursFeriesService
 
   def self.all_in_date_range(date_range)
     date_range.select do |d|
-      if d.year == 2020
+      case d.year
+      when 2020
         d.in?(JOURS_FERIES_2020)
-      elsif d.year == 2021
+      when 2021
         d.in?(JOURS_FERIES_2021)
-      elsif d.year == 2022
+      when 2022
         d.in?(JOURS_FERIES_2022)
       end
     end

@@ -4,6 +4,7 @@ class Rdv::Ics
   include RdvsHelper
 
   attr_accessor :rdv
+
   validates :rdv, presence: true
 
   def to_ical_for(user)

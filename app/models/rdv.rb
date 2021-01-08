@@ -37,9 +37,10 @@ class Rdv < ApplicationRecord
   scope :for_today, -> { where(starts_at: Time.zone.now.beginning_of_day...Time.zone.now.end_of_day) }
   scope :user_with_relatives, ->(responsible_id) { joins(:users).includes(:rdvs_users, :users).where("users.id IN (?)", [responsible_id, User.find(responsible_id).relatives.pluck(:id)].flatten) }
   scope :status, lambda { |status|
-    if status == "unknown_past"
+    case status
+    when "unknown_past"
       past.where(status: ["unknown", "waiting"])
-    elsif status == "unknown_future"
+    when "unknown_future"
       future.where(status: ["unknown", "waiting"])
     else
       where(status: status)

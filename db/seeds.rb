@@ -37,7 +37,7 @@ human_id_map = [
   { human_id: "1055", name: "MDS St Pol sur Ternoise" }
 ].map do |attributes|
   organisation = Organisation.create!(phone_number: "0123456789", departement: "62", human_id: attributes[:human_id], name: attributes[:name])
-  sector = Sector.create!(name: "Secteur de #{attributes[:name][4..-1]}", human_id: attributes[:human_id], departement: "62")
+  sector = Sector.create!(name: "Secteur de #{attributes[:name][4..]}", human_id: attributes[:human_id], departement: "62")
   sector.attributions.create!(organisation: organisation, level: SectorAttribution::LEVEL_ORGANISATION)
   [attributes[:human_id], { organisation: organisation, sector: sector }]
 end.to_h

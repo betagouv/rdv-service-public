@@ -20,7 +20,7 @@ describe PlageOuverturePresenter, type: :presenter do
         )
       end
       let(:presenter) { PlageOuverturePresenter.new(plage_ouverture, agent1_context) }
-      it { should match %r{Jeanne LONGO a <a href=.*>une plage d'ouverture<\/a> à MDS du coin mercredi 09 décembre 2020de 07:00 à 10:00} }
+      it { should match %r{Jeanne LONGO a <a href=.*>une plage d'ouverture</a> à MDS du coin mercredi 09 décembre 2020de 07:00 à 10:00} }
     end
   end
 end

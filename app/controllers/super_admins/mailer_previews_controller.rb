@@ -77,10 +77,8 @@ module SuperAdmins
       request.query_parameters.merge(locale: locale).to_query
     end
 
-    def set_locale
-      I18n.with_locale(params[:locale] || I18n.default_locale) do
-        yield
-      end
+    def set_locale(&block)
+      I18n.with_locale(params[:locale] || I18n.default_locale, &block)
     end
   end
 end

@@ -1,6 +1,7 @@
 class PlageOuverture::Ics
   include ActiveModel::Model
   attr_accessor :plage_ouverture
+
   validates :plage_ouverture, presence: true
 
   TZID = "Europe/Paris".freeze

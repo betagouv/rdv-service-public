@@ -7,6 +7,7 @@ module UserRdvWizard
     include ActiveModel::Model
 
     attr_accessor :rdv
+
     delegate :motif, :starts_at, :users, :service, to: :rdv
 
     def initialize(user, attributes)

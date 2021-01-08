@@ -28,3 +28,34 @@ Metrics/BlockLength:
 Style/StringLiterals:
   EnforcedStyle: double_quotes
   Enabled: true
+
+Lint/DuplicateBranch:
+  Enabled: false
+Lint/DuplicateRegexpCharacterClassElement:
+  Enabled: false
+Lint/EmptyBlock:
+  Enabled: false
+Lint/EmptyClass:
+  Enabled: false
+Lint/NoReturnInBeginEndBlocks:
+  Enabled: false
+Lint/ToEnumArguments:
+  Enabled: false
+Lint/UnexpectedBlockArity:
+  Enabled: false
+Lint/UnmodifiedReduceAccumulator:
+  Enabled: false
+Style/ArgumentsForwarding:
+  Enabled: false
+Style/CollectionCompact:
+  Enabled: false
+Style/DocumentDynamicEvalDefinition:
+  Enabled: false
+Style/NegatedIfElseCondition:
+  Enabled: false
+Style/NilLambda:
+  Enabled: false
+Style/RedundantArgument:
+  Enabled: false
+Style/SwapValues:
+  Enabled: false
