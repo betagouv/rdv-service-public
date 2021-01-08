@@ -6,9 +6,9 @@ class ApplicationController < ActionController::Base
   before_action :set_raven_context
 
   def after_sign_in_path_for(resource)
-    if resource.class == Agent
+    if resource.instance_of?(Agent)
       authenticated_agent_root_path
-    elsif resource.class == User
+    elsif resource.instance_of?(User)
       stored_location_for(resource) || authenticated_user_root_path
     end
   end

@@ -6,9 +6,10 @@ module CsvOrXlsReader
       @form_file = form_file
       @extension = File.extname(@form_file.original_filename)&.tr(".", "")&.downcase&.to_sym
 
-      if @extension == :csv
+      case @extension
+      when :csv
         extend CsvImporter
-      elsif @extension == :xls
+      when :xls
         extend XlsImporter
       else
         raise "unsupported format: #{@extension}"

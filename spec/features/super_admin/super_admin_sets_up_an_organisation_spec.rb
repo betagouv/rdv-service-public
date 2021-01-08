@@ -2,7 +2,7 @@ describe "Super admin can configure an account" do
   let!(:super_admin) { create(:super_admin) }
   let(:organisation) { build(:organisation) }
   let(:agent) { build(:agent) }
-  let!(:agent_1) { create(:agent) }
+  let!(:agent1) { create(:agent) }
 
   before do
     login_as(super_admin, scope: :super_admin)

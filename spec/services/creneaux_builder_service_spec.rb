@@ -19,7 +19,7 @@ describe CreneauxBuilderService, type: :service do
   subject do
     plage_ouverture.update(expired_cached: false)
     creneaux = CreneauxBuilderService.perform_with(motif_name, lieu, next_7_days_range, **options)
-    creneaux.map { |c| creneau_to_hash(c, options[:for_agents]) }
+    creneaux.map { |c| creneau_to_hash(c, with_agent: options[:for_agents]) }
   end
 
   it "should work" do
@@ -340,7 +340,7 @@ describe CreneauxBuilderService, type: :service do
     expect(creneau.agent_name).to eq(attr[:agent_name]) if attr[:agent_name].present?
   end
 
-  def creneau_to_hash(creneau, with_agent = false)
+  def creneau_to_hash(creneau, with_agent: false)
     {
       starts_at: creneau.starts_at,
       duration_in_min: creneau.duration_in_min,

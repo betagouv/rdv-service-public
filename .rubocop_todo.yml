@@ -9,10 +9,6 @@
 # Offense count: 21
 # Cop supports --auto-correct.
 # Configuration parameters: TreatCommentsAsGroupSeparators, Include.
-# Include: **/*.gemfile, **/Gemfile, **/gems.rb
-Bundler/OrderedGems:
-  Exclude:
-    - 'Gemfile'
 
 # Offense count: 1
 # Cop supports --auto-correct.
@@ -130,17 +126,6 @@ Style/IfUnlessModifier:
     - 'spec/factories/service.rb'
     - 'spec/services/jours_feries_service_spec.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: Strict.
-Style/NumericLiterals:
-  MinDigits: 7
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/RedundantSelf:
-  Exclude:
-    - 'app/controllers/agents/invitations_controller.rb'
 
 # Offense count: 11
 # Cop supports --auto-correct.

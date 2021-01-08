@@ -1,5 +1,6 @@
 module ZammadApi
   class HttpError < StandardError; end
+
   class RequestError < StandardError; end
 
   class << self

@@ -1,5 +1,5 @@
 class Users::RdvWizardStepsController < UserAuthController
-  RDV_PERMITTED_PARAMS = [:starts_at, :motif_id, :context, user_ids: []].freeze
+  RDV_PERMITTED_PARAMS = [:starts_at, :motif_id, :context, { user_ids: [] }].freeze
   EXTRA_PERMITTED_PARAMS = [:lieu_id, :departement, :where, :created_user_id, :latitude, :longitude, :city_code, :street_ban_id].freeze
 
   def new
@@ -67,7 +67,7 @@ class Users::RdvWizardStepsController < UserAuthController
                     :number_of_children,
                     :notify_by_email,
                     :notify_by_sms,
-                    user_profiles_attributes: [:logement, :id, :organisation_id]
+                    { user_profiles_attributes: [:logement, :id, :organisation_id] }
                   ])
   end
 end

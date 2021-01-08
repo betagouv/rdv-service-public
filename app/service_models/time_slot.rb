@@ -1,5 +1,6 @@
 class TimeSlot
   class DifferentDatesError < StandardError; end
+
   class OutOfOrderTimesError < StandardError; end
 
   attr_reader :starts_at, :ends_at

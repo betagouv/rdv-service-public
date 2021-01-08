@@ -4,6 +4,7 @@ AllCops:
   Exclude:
     - "bin/*"
     - "node_modules/**/*"
+  NewCops: enable
 
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
@@ -28,3 +29,13 @@ Metrics/BlockLength:
 Style/StringLiterals:
   EnforcedStyle: double_quotes
   Enabled: true
+
+Lint/MissingSuper:
+  Enabled: false
+
+Bundler/OrderedGems:
+  Exclude:
+    - 'Gemfile'
+
+Lint/EmptyBlock:
+  Enabled: False

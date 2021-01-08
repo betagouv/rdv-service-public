@@ -9,6 +9,7 @@ class PaperTrailAugmentedVersion
   end
 
   attr_reader :version
+
   delegate :created_at, :whodunnit, to: :version
 
   def initialize(version, previous_version, attributes_whitelist: nil)

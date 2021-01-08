@@ -140,7 +140,7 @@ class Admin::UsersController < AgentAuthController
       *PERMITTED_ATTRIBUTES,
       :responsible_id,
       **PERMITTED_NESTED_ATTRIBUTES,
-      responsible_attributes: [PERMITTED_ATTRIBUTES, **PERMITTED_NESTED_ATTRIBUTES]
+      responsible_attributes: [PERMITTED_ATTRIBUTES, { **PERMITTED_NESTED_ATTRIBUTES }]
     )
   end
 

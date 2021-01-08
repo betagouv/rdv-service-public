@@ -3,7 +3,7 @@
 module SuperAdmins
   class MailerPreviewsController < SuperAdmins::ApplicationController
     before_action :find_preview, only: :show
-    around_action :set_locale, only: :show
+    around_action :with_locale, only: :show
 
     helper_method :part_query, :locale_query
 
@@ -41,6 +41,8 @@ module SuperAdmins
 
     private
 
+    # rubocop:disable all
+    # this code is copied from rails source, so it feels ok not to lint it
     def find_preview
       candidates = []
       params[:id].to_s.scan(%r{/|$}) { candidates << $` }
@@ -50,6 +52,7 @@ module SuperAdmins
 
       raise AbstractController::ActionNotFound, "Mailer preview '#{params[:id]}' not found"
     end
+    # rubocop:enable all
 
     def find_preferred_part(*formats)
       formats.each do |format|
@@ -77,10 +80,8 @@ module SuperAdmins
       request.query_parameters.merge(locale: locale).to_query
     end
 
-    def set_locale
-      I18n.with_locale(params[:locale] || I18n.default_locale) do
-        yield
-      end
+    def with_locale(&block)
+      I18n.with_locale(params[:locale] || I18n.default_locale, &block)
     end
   end
 end

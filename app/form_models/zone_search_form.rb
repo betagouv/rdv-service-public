@@ -2,6 +2,7 @@ class ZoneSearchForm
   include ActiveModel::Model
 
   attr_accessor :level, :city, :orga_id
+
   # organisation_id fails because it conflicts with a pundit param
 
   def filter_zones(arel = Zone.all)

@@ -57,20 +57,20 @@ describe DuplicateUserFinderService, type: :service do
       end
 
       context "multiple account" do
-        let!(:duplicated_user_1) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000") }
-        let!(:duplicated_user_2) { create(:user, phone_number: "0658032518") }
-        let!(:rdv) { create(:rdv, users: [duplicated_user_1]) }
-        it { should eq(OpenStruct.new(severity: :error, attributes: [:first_name, :last_name, :birth_date], user: duplicated_user_1)) }
+        let!(:duplicated_user1) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000") }
+        let!(:duplicated_user2) { create(:user, phone_number: "0658032518") }
+        let!(:rdv) { create(:rdv, users: [duplicated_user1]) }
+        it { should eq(OpenStruct.new(severity: :error, attributes: [:first_name, :last_name, :birth_date], user: duplicated_user1)) }
 
         context "but first soft deleted" do
-          before { duplicated_user_1.soft_delete }
-          it { should eq(OpenStruct.new(severity: :warning, attributes: [:phone_number], user: duplicated_user_2)) }
+          before { duplicated_user1.soft_delete }
+          it { should eq(OpenStruct.new(severity: :warning, attributes: [:phone_number], user: duplicated_user2)) }
         end
 
         context "but both soft deleted" do
           before do
-            duplicated_user_1.soft_delete
-            duplicated_user_2.soft_delete
+            duplicated_user1.soft_delete
+            duplicated_user2.soft_delete
           end
           it { should be_nil }
         end
