@@ -8,3 +8,19 @@ fr:
       zero: "⚠️ aucun motif de %{organisation} n'est sectorisé à l'organisation"
       one: "Un motif de %{organisation} est sectorisé à l'organisation : %{motifs}"
       other: "%{count} motifs de %{organisation} sont sectorisés à l'organisation : %{motifs}"
+  sectorisation_tests:
+    attributed_sectors_count:
+      zero: "Aucun secteur attribué"
+      one: "1 secteur attribué :"
+      other: "%{count} secteurs attribués :"
+    available_motifs_count:
+      zero: "aucun motif disponible"
+      one: "1 motif disponible :"
+      other: "%{count} motifs disponibles :"
+    available_motifs_in_service_count:
+      one: "1 motif disponible dans le service %{service}"
+      other: "%{count} motifs disponibles dans le service %{service}"
+    departement_motifs_count:
+      zero: "Aucun motif sectorisé à l'échelle du département disponible"
+      one: "1 motif sectorisé à l'échelle du département disponible dans l'organisation %{organisation} pour le service %{service} :"
+      other: "%{count} motifs sectorisés à l'échelle du département disponibles dans l'organisation %{organisation} pour le service %{service} :"

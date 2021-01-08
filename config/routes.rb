@@ -96,6 +96,7 @@ Rails.application.routes.draw do
             delete "/zones" => "zones#destroy_multiple"
           end
           resource :setup_checklist, only: [:show]
+          get "sectorisation_test" => "sectorisation_tests#search"
         end
       end
 

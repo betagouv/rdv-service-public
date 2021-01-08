@@ -1,0 +1,80 @@
+- content_for(:menu_item) { 'menu-departement-sectorisation-test' }
+- content_for(:title) { "Test sectorisation" }
+
+= simple_form_for \
+  @sectorisation_test_form, \
+  url: admin_departement_sectorisation_test_path, \
+  method: :get,
+  as: '' \
+do |f|
+  .card
+    .card-header Recherche
+    .card-body
+      = render partial: 'layouts/model_errors', locals: { model: @sectorisation_test_form }
+      = f.input \
+        :where, \
+        label: "Adresse", \
+        placeholder: 'ex : 21 rue Anatole France, Calais', \
+        input_html: { class: "places-js-container" }
+      .row.align-items-center.bg-light.py-2.mb-2
+        .col-lg-2 Infos de la Base Adresse
+        .col-lg-2= f.input :departement, readonly: true, label: "Département"
+        .col-lg-2= f.input :city_code, readonly: true, label: "Code commune"
+        .col-lg-2= f.input :street_ban_id, readonly: true, label: "Code rue BAN"
+        .col-lg-2= f.input :latitude, readonly: true, label: "Latitude"
+        .col-lg-2= f.input :longitude, readonly: true, label: "Longitude"
+      = f.submit class: "btn btn-primary", value: "Tester la sectorisation de cette adresse"
+
+  - if @sectorisation_test_form.valid?
+    .card
+      .card-header Résultats pour cette adresse
+      .card-body
+        - if @sectorisation_test_form.attributions?
+          b= t("sectorisation_tests.attributed_sectors_count", count: @sectorisation_test_form.matching_zones.count)
+          ul
+            - @sectorisation_test_form.matching_zones.each do |zone|
+              li
+                span> Via le secteur
+                span>= link_to zone.sector.name, admin_departement_sector_path(current_departement, zone.sector)
+                span> ,
+                - if zone.level_street?
+                  span>= "la rue #{zone.street_name} dans la commune #{zone.city_name}"
+                - else
+                  span>= "la commune entière #{zone.city_name}"
+                | est attribuée à :
+                ul
+                  - zone.sector.attributions.to_a.group_by(&:organisation).each do |organisation, attributions|
+                    li= render partial: "attribution", collection: attributions, locals: { sectorisation_test_form: @sectorisation_test_form }
+          div
+            b Cette adresse appartient au département #{@sectorisation_test_form.departement}
+            - if @sectorisation_test_form.available_motifs_from_departement_organisations.empty?
+              ul
+                li.text-muted= t("sectorisation_tests.departement_motifs_count", count: 0)
+            - else
+              ul
+                - @sectorisation_test_form.available_motifs_from_departement_organisations.to_a.group_by { [_1.organisation, _1.service] }.each do |tuple, motifs|
+                  - organisation, service = tuple
+                  li= t("sectorisation_tests.departement_motifs_count", count: motifs.count, organisation: organisation.name, service: service.short_name)
+                  ul
+                    - motifs.each do |motif|
+                      li= motif_name_with_location_type(motif)
+        - else
+          div Aucun résultat : cette adresse n'est attribuée à aucun secteur
+
+        div
+          b Combinaison des motifs disponibles (c'est ce que voit l'usager) :
+          ul
+            - @sectorisation_test_form.available_motifs_unique_names_and_location_types_by_service.each do |service, motifs|
+              li
+                | Service #{service.short_name}: #{motifs.count} motifs disponibles
+                ul
+                  - motifs.each do |motif|
+                    li= motif_name_with_location_type(motif)
+
+        .alert.alert-info.d-flex.align-items-center
+          .mr-3
+            .fa.fa-info
+          div
+            span> Ici,
+            b> motif disponible
+            span> désigne un motif disponible à la réservation en ligne par les usagers. Seuls les motifs ayant une plage d'ouverture active sont considérés disponibles.

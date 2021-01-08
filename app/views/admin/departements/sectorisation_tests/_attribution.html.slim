@@ -1,0 +1,30 @@
+- if attribution.level_agent?
+  div
+    span> L'agent
+    b>= attribution.agent.full_name_and_service
+    span> dans l'organisation
+    b>= attribution.organisation.name
+  - if sectorisation_test_form.available_motifs_from_attributed_agent(attribution.agent, attribution.organisation).empty?
+    ul
+      li.text-muted= t("sectorisation_tests.available_motifs_count", count: 0)
+  - else
+    div= t("sectorisation_tests.available_motifs_count", count: sectorisation_test_form.available_motifs_from_attributed_agent(attribution.agent, attribution.organisation).count)
+    ul
+      - sectorisation_test_form.available_motifs_from_attributed_agent(attribution.agent, attribution.organisation).each do |motif|
+        li= motif_name_with_location_type(motif)
+
+- else
+  div
+    span> L'organisation entière
+    b= attribution.organisation.name
+  - if sectorisation_test_form.available_motifs_from_attributed_organisation(attribution.organisation).empty?
+    ul
+      li.text-muted= t("sectorisation_tests.available_motifs_count", count: 0)
+  - else
+    ul
+      - sectorisation_test_form.available_motifs_from_attributed_organisation(attribution.organisation).to_a.group_by(&:service).each do |service, motifs|
+        li
+          = t("sectorisation_tests.available_motifs_in_service_count", count: motifs.count, service: service.short_name)
+          ul
+            - motifs.each do |motif|
+              li= motif_name_with_location_type(motif)

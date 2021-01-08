@@ -23,7 +23,7 @@ default: &default
 
 development:
   <<: *default
-  database: lapin_development
+  database: rdv_solidarites_production_dump
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
