@@ -45,6 +45,7 @@ describe StatRdvExporter, type: :service do
       user = build(:user, birth_date: Date.new(2016, 5, 30))
       rdv = build(:rdv, created_at: Time.new(2020, 3, 23, 9, 54, 33), users: [user])
       expect(StatRdvExporter.majeur_ou_mineur(rdv)).to eq("mineur")
+      travel_back
     end
 
     it "return mineur when only one of rdv's user is minor" do
@@ -54,6 +55,7 @@ describe StatRdvExporter, type: :service do
       major_user = build(:user, birth_date: Date.new(2016, 5, 30))
       rdv = build(:rdv, created_at: Time.new(2020, 3, 23, 9, 54, 33), users: [major_user, minor_user])
       expect(StatRdvExporter.majeur_ou_mineur(rdv)).to eq("mineur")
+      travel_back
     end
 
     it "return n/a when none of rdv's users have fill birth date field" do
@@ -62,6 +64,7 @@ describe StatRdvExporter, type: :service do
       user = build(:user, birth_date: "")
       rdv = build(:rdv, created_at: Time.new(2020, 3, 23, 9, 54, 33), users: [user])
       expect(StatRdvExporter.majeur_ou_mineur(rdv)).to eq("n/a")
+      travel_back
     end
   end
 end
