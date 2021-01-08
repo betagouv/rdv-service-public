@@ -17,6 +17,12 @@ FactoryBot.define do
     trait :not_confirmed do
       confirmed_at { nil }
     end
+    trait :invitation_not_accepted do
+      invitation_token { "blah" }
+      invitation_created_at { 2.days.ago }
+      invitation_accepted_at { nil }
+      confirmed_at { nil }
+    end
     trait :secretaire do
       service { Service.find_by(name: "Secrétariat") || create(:service, :secretariat) }
     end

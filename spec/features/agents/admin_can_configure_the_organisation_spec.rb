@@ -64,14 +64,14 @@ describe "Admin can configure the organisation" do
     click_link "Tony PATRICK"
     click_link("Supprimer le compte")
 
-    expect_page_title("Vos agents")
+    expect_page_title("Vos invitations d'agents")
     expect(page).to have_no_content("Tony PATRICK")
 
     click_link "Inviter un professionnel", match: :first
     fill_in "Email", with: "jean@paul.com"
     click_button "Envoyer une invitation"
 
-    expect_page_title("Vos agents")
+    expect_page_title("Vos invitations d'agents")
     expect(page).to have_content("jean@paul.com")
 
     open_email("jean@paul.com")

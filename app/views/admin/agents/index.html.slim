@@ -1,10 +1,5 @@
 - content_for(:menu_item) { 'menu-agents' }
-
-- content_for :title do
-  | Vos agents
-
-- content_for :breadcrumb do
-  = link_to 'Inviter un professionnel', new_admin_agent_organisation_invitation_path(current_organisation), class: "btn btn-outline-white"
+- content_for(:title, "Vos agents")
 
 .row
   div class=(current_agent.admin? ? "col-md-8" : "col-md-12")
@@ -37,17 +32,16 @@
       .card
         .card-header
           h5 Vos invitations
-        - if @invited_agents.any?
-          table.table
-            tbody
-              = render partial: 'invited_agent', collection: @invited_agents, as: :agent
-        - else
           .card-body
-            .row.justify-content-md-center
-              .text-center.mb-3
-                p.mb-2.lead Vous n'avez pas d'invitation en cours.
-                span.fa-stack.fa-4x
-                  i.fa.fa-circle.fa-stack-2x.text-primary
-                  i.far.fa-envelope.fa-stack-1x.text-white
-        .mb-3.ml-2.mr-2.text-center
-          = link_to 'Inviter un professionnel', new_admin_agent_organisation_invitation_path(current_organisation), class: "btn btn-primary"
+            - if @invited_agents.any?
+              = link_to "Voir les #{@invited_agents.count} invitations en attente", admin_organisation_invitations_path(current_organisation)
+            - else
+              .row.justify-content-md-center
+                .text-center.mb-3
+                  p.mb-2.lead Vous n'avez pas d'invitation en cours.
+                  span.fa-stack.fa-4x
+                    i.fa.fa-circle.fa-stack-2x.text-primary
+                    i.far.fa-envelope.fa-stack-1x.text-white
+        .card-footer
+          .mb-3.ml-2.mr-2.text-center
+            = link_to 'Inviter un professionnel', new_admin_agent_organisation_invitation_path(current_organisation), class: "btn btn-primary"

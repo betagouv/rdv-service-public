@@ -1,145 +1,41 @@
 RSpec.describe Admin::InvitationsController, type: :controller do
   render_views
 
-  let!(:agent) { create(:agent, :admin) }
-  let(:organisation_id) { agent.organisation_ids.first }
-  let!(:organisation_2) { create(:organisation) }
-  let(:service_id) { agent.service.id }
+  let!(:organisation) { create(:organisation) }
+  let!(:agent) { create(:agent, :admin, organisations: [organisation]) }
 
   before do
-    request.env["devise.mapping"] = Devise.mappings[:agent]
     sign_in agent
   end
 
-  after(:each) do
-    Devise.mailer.deliveries.clear
+  describe "GET #index" do
+    context "blank state" do
+      it "should contain some explanation text" do
+        get :index, params: { organisation_id: organisation.id }
+        expect(response).to be_successful
+        expect(response.body).to include "Aucune invitation de professionnel en attente"
+      end
+    end
+
+    context "some invitations exist" do
+      let!(:agent1) { create(:agent, :admin, organisations: [organisation]) }
+      let!(:agent_invitee) { create(:agent, :invitation_not_accepted, first_name: nil, last_name: nil, organisations: [organisation]) }
+
+      it "returns a success response" do
+        get :index, params: { organisation_id: organisation.id }
+        expect(response).to be_successful
+        expect(response.body).not_to include agent1.email
+        expect(response.body).to include agent_invitee.email
+      end
+    end
   end
 
-  describe "POST #create" do
-    subject { post :create, params: { organisation_id: organisation_id, agent: params } }
+  describe "POST #reinvite" do
+    let(:agent_invitee) { create(:agent, confirmed_at: nil, first_name: nil, last_name: nil, organisations: [organisation]) }
 
-    shared_examples "existing user is added to organization" do
-      it "should not create a new user" do
-        expect { subject }.not_to change(Agent, :count)
-      end
-
-      it "should redirect to agents list" do
-        subject
-        expect(response).to redirect_to(admin_organisation_agents_path(organisation_id))
-      end
-
-      it "should add user to organisation" do
-        subject
-        expect(assigns(:agent).organisation_ids).to include(organisation_id)
-      end
-    end
-
-    context "when email is correct and no invitation has been sent" do
-      let(:params) do
-        {
-          email: "michel@lapin.com",
-          organisation_id: organisation_id,
-          role: "user",
-          service_id: service_id,
-        }
-      end
-
-      it "should reate a new user" do
-        expect { subject }.to change(Agent, :count).by(1)
-      end
-
-      it "should redirect to agents list" do
-        subject
-        expect(response).to redirect_to(admin_organisation_agents_path(organisation_id))
-      end
-
-      it "should send an email" do
-        subject
-        expect(Devise.mailer.deliveries.count).to eq(1)
-      end
-    end
-
-    context "when email is incorrect" do
-      let(:params) do
-        {
-          email: "aa@hhh",
-          organisation_id: organisation_id,
-          role: "user",
-          service_id: service_id,
-        }
-      end
-
-      it "should not create a new user" do
-        expect { subject }.not_to change(Agent, :count)
-      end
-
-      it "should render new page" do
-        subject
-        expect(response).to render_template(:new)
-      end
-
-      it "should render errors" do
-        subject
-        expect(assigns(:agent).errors[:email]).not_to be_empty
-      end
-    end
-
-    context "when agent already exist" do
-      let(:params) do
-        {
-          email: agent_2.email,
-          organisation_id: organisation_id,
-          role: "user",
-          service_id: service_id,
-        }
-      end
-
-      context "when agent is in another organisation" do
-        let!(:agent_2) { create(:agent, organisation_ids: [organisation_2.id]) }
-
-        it_behaves_like "existing user is added to organization"
-
-        it "should not send an email" do
-          subject
-          expect(Devise.mailer.deliveries.count).to eq(0)
-        end
-      end
-
-      context "when agent has been invited by another organisation" do
-        let!(:agent_2) { create(:agent, :not_confirmed, organisation_ids: [organisation_2.id]) }
-
-        it_behaves_like "existing user is added to organization"
-      end
-
-      context "when agent is already in this organisation" do
-        let!(:agent_2) { create(:agent, organisation_ids: [organisation_id]) }
-        it { expect { subject }.not_to change(Agent, :count) }
-      end
-
-      context "when agent has been invited by this organisation" do
-        let!(:agent_2) { create(:agent, :not_confirmed, organisation_ids: [organisation_id]) }
-        it { expect { subject }.not_to change(Agent, :count) }
-      end
-    end
-
-    context "when agent already exist but with different email capitalization" do
-      let(:params) do
-        {
-          email: "MARCO@demo.rdv-solidarites.fr",
-          organisation_id: organisation_id,
-          role: "user",
-          service_id: service_id,
-        }
-      end
-      let!(:existing_agent) do
-        create(
-          :agent,
-          email: "marco@demo.rdv-solidarites.fr",
-          organisation_ids: [organisation_2.id]
-        )
-      end
-
-      it_behaves_like "existing user is added to organization"
+    it "returns a success response" do
+      post :reinvite, params: { organisation_id: organisation.id, id: agent_invitee.to_param }
+      expect(response).to redirect_to(admin_organisation_invitations_path(organisation))
     end
   end
 end
