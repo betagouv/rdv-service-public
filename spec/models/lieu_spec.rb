@@ -95,7 +95,7 @@ describe Lieu, type: :model do
     let(:reservable_online) { true }
 
     it { expect(lieu_lille.distance(paris_loc[:latitude], paris_loc[:longitude])).to be_a_kind_of(Float) }
-    it { expect(lieu_lille.distance(paris_loc[:latitude], paris_loc[:longitude])).to be_within(10000).of(204000) }
+    it { expect(lieu_lille.distance(paris_loc[:latitude], paris_loc[:longitude])).to be_within(10_000).of(204_000) }
   end
 
   describe "#with_open_slots_for_motifs" do

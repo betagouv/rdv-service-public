@@ -21,7 +21,7 @@ describe ImportZoneRowsService, type: :service do
       expect(res[:counts][:imported_new]["arques"]).to eq(2)
       expect(res[:counts][:imported_new]["arras-sud"]).to eq(1)
       expect(Zone.count).to eq(3)
-      zone1 = Zone.find_by(city_code: 62007)
+      zone1 = Zone.find_by(city_code: 62_007)
       expect(zone1.city_name).to eq("ACQ")
       expect(zone1.sector).to eq(sector_arras_sud)
     end
@@ -171,7 +171,7 @@ describe ImportZoneRowsService, type: :service do
   end
 
   context "conflicting existing Zones" do
-    let!(:zone) { create(:zone, city_code: 62040, city_name: "AIRE-SUR-LA-LYS", sector: sector_arques) }
+    let!(:zone) { create(:zone, city_code: 62_040, city_name: "AIRE-SUR-LA-LYS", sector: sector_arques) }
     let(:rows) do
       [
         { "city_code" => "62040", "city_name" => "AIRE-SUR-LA-lièsse", "sector_id" => "arques" },
@@ -193,7 +193,7 @@ describe ImportZoneRowsService, type: :service do
   end
 
   context "zone for the same city exists in another sector" do
-    let!(:zone) { create(:zone, city_code: 62040, city_name: "AIRE-SUR-LA-LYS", sector: sector_arras_sud) }
+    let!(:zone) { create(:zone, city_code: 62_040, city_name: "AIRE-SUR-LA-LYS", sector: sector_arras_sud) }
     let(:rows) do
       [
         { "city_code" => "62040", "city_name" => "AIRE-SUR-LA-lièsse", "sector_id" => "arques" },

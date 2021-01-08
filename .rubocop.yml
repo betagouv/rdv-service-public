@@ -4,6 +4,7 @@ AllCops:
   Exclude:
     - "bin/*"
     - "node_modules/**/*"
+  NewCops: enable
 
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
@@ -32,47 +33,9 @@ Style/StringLiterals:
 Lint/MissingSuper:
   Enabled: false
 
-Lint/DuplicateBranch:
-  Enabled: true
-Lint/DuplicateRegexpCharacterClassElement:
-  Enabled: true
+Bundler/OrderedGems:
+  Exclude:
+    - 'Gemfile'
+
 Lint/EmptyBlock:
-  Enabled: false
-Lint/EmptyClass:
-  Enabled: true
-Lint/NoReturnInBeginEndBlocks:
-  Enabled: true
-Lint/ToEnumArguments:
-  Enabled: true
-Lint/UnexpectedBlockArity:
-  Enabled: true
-Lint/UnmodifiedReduceAccumulator:
-  Enabled: true
-Style/ArgumentsForwarding:
-  Enabled: true
-Style/CollectionCompact:
-  Enabled: true
-Style/DocumentDynamicEvalDefinition:
-  Enabled: true
-Style/NegatedIfElseCondition:
-  Enabled: true
-Style/NilLambda:
-  Enabled: true
-Style/RedundantArgument:
-  Enabled: true
-Style/SwapValues:
-  Enabled: true
-Layout/SpaceBeforeBrackets:
-  Enabled: true
-Lint/AmbiguousAssignment:
-  Enabled: true
-Lint/DeprecatedConstants:
-  Enabled: true
-Lint/LambdaWithoutLiteralBlock:
-  Enabled: true
-Lint/RedundantDirGlobSort:
-  Enabled: true
-Style/EndlessMethod:
-  Enabled: true
-Style/HashExcept:
-  Enabled: true
+  Enabled: False
