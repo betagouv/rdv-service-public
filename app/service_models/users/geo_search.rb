@@ -40,8 +40,27 @@ class Users::GeoSearch
     @available_motifs ||= available_motifs_arels.reduce(:or).ordered_by_name
   end
 
-  def empty_attributions?
-    attributed_organisations.empty? && attributed_agents_by_organisation.empty?
+  def attributions_count
+    attributed_organisations.count + attributed_agents_by_organisation.count
+  end
+
+  def attributions?
+    attributions_count.positive?
+  end
+
+  def available_motifs_from_attributed_organisation(organisation)
+    available_motifs_base
+      .sectorisation_level_organisation
+      .where(organisation_id: organisation.id)
+      .distinct
+  end
+
+  def available_motifs_from_attributed_agent(agent, organisation)
+    available_motifs_from_attributed_agent_arel(agent, organisation).distinct
+  end
+
+  def available_motifs_from_departement_organisations
+    available_motifs_from_departement_organisations_arel.distinct
   end
 
   private
