@@ -24,7 +24,7 @@ fr:
       updated: "Votre mot de passe a correctement été enregistré. Vous êtes maintenant connecté."
       updated_not_active: "Votre mot de passe a été enregistré."
       no_invitations_remaining: "Aucune invitation restante."
-      invitation_removed: "Votre inivtation a été annulée."
+      invitation_removed: "Votre invitation a été annulée."
       new:
         header: "Envoyer une invitation"
         submit_button: "Envoyer une invitation"
@@ -46,7 +46,7 @@ fr:
       unlock_instructions:
         subject: "Instructions pour déverrouiller le compte"
       password_change:
-        subject: "Votre mot de passe a été modifié avec succés."
+        subject: "Votre mot de passe a été modifié avec succès."
     omniauth_callbacks:
       failure: "Nous n'avons pas pu vous authentifier via %{kind} : '%{reason}'."
       success: "Authentifié avec succès via %{kind}."
@@ -80,7 +80,7 @@ fr:
       not_found: "n'a pas été trouvé(e)"
       not_locked: "n'était pas verrouillé(e)"
       not_saved:
-        one: "1 erreur a empêché ce(tte) %{resource} d'être sauvegardé(e) :"
+        one: "Une erreur a empêché ce(tte) %{resource} d'être sauvegardé(e) :"
         other: "%{count} erreurs ont empêché ce(tte) %{resource} d'être sauvegardé(e) :"
   time:
     formats:
