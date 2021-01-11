@@ -148,7 +148,7 @@ class User < ApplicationRecord
     "[User] #{full_name}"
   end
 
-  def mineur?
+  def minor?
     birth_date > 18.years.ago
   end
 

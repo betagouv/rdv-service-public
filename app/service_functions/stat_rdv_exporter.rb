@@ -13,17 +13,21 @@ module StatRdvExporter
     "pris par",
     "statut",
     "lieu du rdv",
-    "service",
     "agents"
   ].freeze
 
-  def self.export(rdvs, file)
-    Spreadsheet.client_encoding = "UTF-8"
-    build_workbook(rdvs).write(file)
+  def self.export(rdvs)
+    extract_string_from(build_excel_workbook_from(rdvs))
+  end
+
+  def self.extract_string_from(workbook)
+    file = StringIO.new
+    workbook.write(file)
     file.string
   end
 
-  def self.build_workbook(rdvs)
+  def self.build_excel_workbook_from(rdvs)
+    Spreadsheet.client_encoding = "UTF-8"
     book = Spreadsheet::Workbook.new
     sheet = book.create_worksheet
     sheet.row(0).concat(HEADER)

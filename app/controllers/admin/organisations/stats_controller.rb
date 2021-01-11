@@ -20,7 +20,7 @@ class Admin::Organisations::StatsController < AgentAuthController
             end
 
     respond_to do |format|
-      format.xls { send_data(StatRdvExporter.export(rdvs, StringIO.new), filename: "rdvs.xls", type: "application/xls") }
+      format.xls { send_data(RdvExporter.export(rdvs), filename: "rdvs.xls", type: "application/xls") }
       format.json { render json: stats.chart_json }
     end
   end

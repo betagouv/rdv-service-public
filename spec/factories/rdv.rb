@@ -1,5 +1,7 @@
 FactoryBot.define do
   factory :rdv do
+    created_at { DateTime.parse("2020-06-5 13:51").in_time_zone }
+    updated_at { DateTime.parse("2020-06-5 13:51").in_time_zone }
     organisation { create(:organisation) }
     lieu { build(:lieu, organisation: organisation) }
     motif { build(:motif, organisation: organisation) }
