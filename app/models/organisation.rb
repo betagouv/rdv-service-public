@@ -7,7 +7,7 @@ class Organisation < ApplicationRecord
   has_many :webhook_endpoints, dependent: :destroy
   has_many :sector_attributions, dependent: :destroy
   has_many :sectors, through: :sector_attributions
-  has_many :zones, through: :zones
+  has_many :plage_ouvertures, dependent: :destroy
   has_and_belongs_to_many :agents, -> { distinct }
 
   has_many :user_profiles
