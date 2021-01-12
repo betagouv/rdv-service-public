@@ -270,6 +270,7 @@ describe User, type: :model do
       past_rdv = create(:rdv, starts_at: rdv.starts_at - 4.days, organisation: organisation, users: [user])
       create(:rdv, starts_at: rdv.starts_at + 4.days, organisation: organisation, users: [user])
       expect(user.previous_rdvs_ordered_and_truncated(organisation)).to eq([past_rdv])
+      travel_back
     end
   end
 
@@ -293,6 +294,7 @@ describe User, type: :model do
       next_rdv = create(:rdv, starts_at: today + 1.day, organisation: organisation, users: [user])
 
       expect(user.next_rdvs(organisation)).to eq([next_rdv])
+      travel_back
     end
 
     it "returns only future rdv" do
@@ -306,6 +308,7 @@ describe User, type: :model do
       future_rdv = create(:rdv, starts_at: now + 4.days, organisation: organisation, users: [user])
 
       expect(user.next_rdvs(organisation)).to eq([future_rdv])
+      travel_back
     end
   end
 
@@ -325,6 +328,7 @@ describe User, type: :model do
       travel_to(now)
       user = build(:user, birth_date: Date.new(2016, 5, 30))
       expect(user.minor?).to be true
+      travel_back
     end
 
     it "return false when user birth is 2000 and we are in 2020" do
@@ -332,6 +336,7 @@ describe User, type: :model do
       travel_to(now)
       user = build(:user, birth_date: Date.new(2000, 5, 30))
       expect(user.minor?).to be false
+      travel_back
     end
   end
 end
