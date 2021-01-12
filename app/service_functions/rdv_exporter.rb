@@ -61,7 +61,7 @@ module RdvExporter
       rdv.address_complete_without_personnal_details,
       rdv.agents.map(&:full_name).join(", "),
       rdv.users.map(&:full_name).join(", "),
-      rdv.users.map(&:minor?).uniq.compact == [true] ? "oui" : "non"
+      rdv.users.any?(&:minor?) ? "oui" : "non"
     ]
   end
 
