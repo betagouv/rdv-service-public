@@ -145,9 +145,9 @@ describe RdvExporter, type: :service do
       it "return oui when one minor user" do
         now = Time.zone.parse("2020-4-3 13:45")
         travel_to(now)
+        major = build(:user, birth_date: Date.new(2002, 3, 12))
         minor = build(:user, birth_date: Date.new(2016, 5, 30))
-        major = build(:user, birth_date: Date.new(2012, 2, 12))
-        rdv = build(:rdv, created_at: Time.new(2020, 3, 23, 9, 54, 33), users: [major, minor])
+        rdv = build(:rdv, created_at: Time.new(2020, 3, 23, 9, 54, 33), users: [minor, major])
         expect(RdvExporter.row_array_from(rdv)[13]).to eq("oui")
         travel_back
       end
