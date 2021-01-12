@@ -9,8 +9,7 @@ class Admin::Organisations::StatsController < AgentAuthController
 
   def rdvs
     authorize(@organisation)
-    rdvs = policy_scope(Rdv)
-    stats = Stat.new(rdvs: rdvs)
+    stats = Stat.new(rdvs: policy_scope(Rdv))
     stats = if params[:by_service].present?
               stats.rdvs_group_by_service
             elsif params[:by_location_type].present?
@@ -18,7 +17,6 @@ class Admin::Organisations::StatsController < AgentAuthController
             else
               stats.rdvs_group_by_week_fr
             end
-
     render json: stats.chart_json
   end
 
