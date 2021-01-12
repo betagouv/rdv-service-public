@@ -64,6 +64,6 @@ module StatRdvExporter
   def self.majeur_ou_mineur(rdv)
     return "n/a" if rdv.users.map(&:birth_date).uniq.compact.empty?
 
-    rdv.users.select{ _1.mineur? }.any? ? "mineur" : "majeur"
+    rdv.users.select(&:mineur?).any? ? "mineur" : "majeur"
   end
 end
