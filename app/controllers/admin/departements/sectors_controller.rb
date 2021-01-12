@@ -18,7 +18,8 @@ class Admin::Departements::SectorsController < AgentDepartementAuthController
     @sector = Sector.new(**sector_params, departement: current_departement)
     authorize(@sector)
     if @sector.save
-      redirect_to admin_departement_sectors_path(current_departement), flash: { success: "Secteur créé" }
+      redirect_path = params[:commit] == "Créer" ? admin_departement_sector_path(current_departement, @sector) : new_admin_departement_sector_path(current_departement)
+      redirect_to redirect_path, flash: { success: "Secteur #{@sector.name} créé" }
     else
       render :new
     end

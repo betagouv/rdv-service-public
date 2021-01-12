@@ -7,4 +7,7 @@
   = f.input :departement, disabled: true
   = f.input :name
   = f.input :human_id, hint: "permet d'identifier l'organisation dans les fichiers de sectorisation"
-  = f.submit class: 'btn btn-primary'
+  .text-right
+    div= f.submit class: 'btn btn-primary', value: "Créer"
+    div ou
+    div = f.submit class: 'btn btn-light', value: "Créer puis créer un autre secteur"
