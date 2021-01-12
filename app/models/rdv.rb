@@ -14,10 +14,8 @@ class Rdv < ApplicationRecord
   has_many :file_attentes, dependent: :destroy
   has_many :agents_rdvs, inverse_of: :rdv, dependent: :destroy
   has_many :agents, through: :agents_rdvs
-
   has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy
   has_many :users, through: :rdvs_users, validate: false
-
   has_many :events, class_name: "RdvEvent", dependent: :destroy
 
   has_many :webhook_endpoints, through: :organisation
