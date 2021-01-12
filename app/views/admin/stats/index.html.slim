@@ -7,7 +7,7 @@
 .card.mb-5
   .card-body
     = render 'stats/rdv_counters', rdvs: @stats.rdvs_for_default_range, breadcrumb_page: "agent_stats", agent_id: current_agent.id
-    = link_to rdvs_admin_organisation_agent_stats_path(current_organisation, format: "xls", agent_id: current_agent.id), class: "btn btn-link" do
+    = link_to rdvs_admin_organisation_agent_path(current_organisation, format: "xls", agent_id: current_agent.id), class: "btn btn-link" do
       i.fa.fa-download>
       | Télécharger un export de vos RDVs
 

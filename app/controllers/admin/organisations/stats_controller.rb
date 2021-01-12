@@ -19,10 +19,7 @@ class Admin::Organisations::StatsController < AgentAuthController
               stats.rdvs_group_by_week_fr
             end
 
-    respond_to do |format|
-      format.xls { send_data(RdvExporter.export(rdvs), filename: "rdvs.xls", type: "application/xls") }
-      format.json { render json: stats.chart_json }
-    end
+    render json: stats.chart_json
   end
 
   def users
