@@ -91,4 +91,10 @@
         span.text-monospace> sector_id
         span> contient des
         =link_to("identifiants de secteurs existants", admin_departement_sectors_path(current_departement))
-      li Les codes rue à utiliser sont ceux de la Base d'Adresses Nationale et sont obligatoires. Nous fournirons bientôt un outil externe pour vous aider à trouver ces codes.
+      li
+        span> Les codes rue à utiliser sont ceux de la
+        span>= link_to "Base Adresse Nationale", "https://adresse.data.gouv.fr/", target: "_blank"
+        span>et sont obligatoires. Pour trouver ces codes, vous pouvez utiliser
+        span>= link_to "https://codepen.io/adipasquale/full/GRjXvQK", target: "_blank" do
+          span> ce petit outil web
+          i.fa.fa-external-link-alt>
