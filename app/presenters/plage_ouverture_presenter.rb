@@ -24,7 +24,7 @@ class PlageOuverturePresenter
         organisation_name: plage_ouverture.organisation.name
       )
     end
-    I18n.t("activemodel.warnings.models.rdv.attributes.base.#{i18n_key}", i18n_key.to_sym, **attrs)
+    I18n.t("activemodel.warnings.models.rdv.attributes.base.#{i18n_key}", **attrs)
   end
 
   def same_organisation?
