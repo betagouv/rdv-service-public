@@ -43,7 +43,8 @@ describe "Super admin can configure an account" do
       expect_page_title("Détails #{resource.class.model_name} ##{resource.id}")
 
       click_link class_name
-      click_link "Création #{resource.class.name.titleize.downcase}"
+      i18n_key = "activerecord.models.#{resource.class.name.titleize.parameterize.gsub('-', '_')}"
+      click_link "Création #{I18n.t(i18n_key).downcase}"
       expect_page_title("Création #{class_name.titleize}")
 
       click_link "Précédent"
