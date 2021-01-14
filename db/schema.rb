@@ -362,6 +362,9 @@ ActiveRecord::Schema.define(version: 2021_02_10_114138) do
     t.boolean "notify_by_sms", default: true
     t.boolean "notify_by_email", default: true
     t.datetime "last_sign_in_at"
+    t.string "franceconnect_openid_sub"
+    t.string "created_through"
+    t.boolean "logged_once_with_franceconnect"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true

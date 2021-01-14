@@ -243,7 +243,8 @@ user_org_paris_nord_patricia = User.new(
   birth_date: Date.parse("20/06/1975"),
   password: "123456",
   phone_number: "0101010101",
-  organisation_ids: [org_paris_nord.id]
+  organisation_ids: [org_paris_nord.id],
+  created_through: "user_sign_up"
 )
 
 user_org_paris_nord_patricia.skip_confirmation!
@@ -255,7 +256,8 @@ user_org_paris_nord_josephine = User.new(
   last_name: "Duroy",
   birth_date: Date.parse("01/03/2018"),
   responsible: user_org_paris_nord_patricia,
-  organisation_ids: [org_paris_nord.id]
+  organisation_ids: [org_paris_nord.id],
+  created_through: "user_sign_up"
 )
 user_org_paris_nord_josephine.save!
 
@@ -266,7 +268,8 @@ user_org_paris_nord_lea = User.new(
   birth_date: Date.parse("01/12/1982"),
   password: "123456",
   phone_number: "0101010102",
-  organisation_ids: [org_paris_nord.id]
+  organisation_ids: [org_paris_nord.id],
+  created_through: "user_sign_up"
 )
 
 user_org_paris_nord_lea.skip_confirmation!
@@ -280,7 +283,8 @@ user_org_paris_nord_jean = User.new(
   birth_date: Date.parse("10/01/1973"),
   password: "123456",
   phone_number: "0101010103",
-  organisation_ids: [org_paris_nord.id]
+  organisation_ids: [org_paris_nord.id],
+  created_through: "user_sign_up"
 )
 
 user_org_paris_nord_jean.skip_confirmation!

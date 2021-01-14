@@ -82,3 +82,21 @@ body.authentication-bg {
     }
   }
 }
+
+.france-connect-link {
+  .hover {
+    display: none;
+  }
+  &:hover {
+    .normal {
+      display: none;
+    }
+    .hover {
+      display: block;
+    }
+  }
+}
+.france-connect-details {
+  margin-top: 8px;
+  font-size: 13px;
+}

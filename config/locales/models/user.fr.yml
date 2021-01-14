@@ -6,7 +6,7 @@ fr:
       user:
         email: Email
         first_name: Prénom
-        last_name: Nom
+        last_name: Nom d'usage
         birth_name: Nom de naissance
         birth_date: Date de naissance
         phone_number: Numéro de téléphone
@@ -32,3 +32,14 @@ fr:
           relative: "Proche"
         notify_by_sms: "Notifications par SMS"
         notify_by_email: "Notifications par email"
+        created_through: "Origine du compte"
+    errors:
+      models:
+        user:
+          attributes:
+            first_name:
+              franceconnect_frozen_field_cannot_change: Le prénom ne peut-être changé car il a été certifié par FranceConnect
+            birth_name:
+              franceconnect_frozen_field_cannot_change: Le nom de naissance ne peut-être changé car il a été certifié par FranceConnect
+            birth_date:
+              franceconnect_frozen_field_cannot_change: La date de naissance ne peut-être changée car elle a été certifiée par FranceConnect

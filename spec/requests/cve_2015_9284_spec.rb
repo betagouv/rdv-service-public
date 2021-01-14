@@ -2,8 +2,7 @@
 RSpec.describe "CVE-2015-9284", type: :request do
   describe "GET /auth/:provider" do
     it do
-      get "/omniauth/github"
-      expect(response).not_to have_http_status(:redirect)
+      expect { get "/omniauth/github" }.to raise_error(ActionController::RoutingError)
     end
   end
 
