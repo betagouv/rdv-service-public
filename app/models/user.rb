@@ -148,6 +148,10 @@ class User < ApplicationRecord
     "[User] #{full_name}"
   end
 
+  def minor?
+    birth_date > 18.years.ago
+  end
+
   protected
 
   def password_required?
