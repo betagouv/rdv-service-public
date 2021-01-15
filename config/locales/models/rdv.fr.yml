@@ -39,6 +39,10 @@ fr:
                 current_agent: "Vous avez <a href='%{path}'>un RDV</a> finissant à %{ends_at_time} avec %{user_names}, vous allez laisser un trou de %{gap_duration_in_min} minutes dans votre agenda"
                 in_scope: "%{agent_name} a <a href='%{path}'>un RDV</a> finissant à %{ends_at_time} avec %{user_names}, vous allez laisser un trou de %{gap_duration_in_min} minutes dans son agenda"
                 out_of_scope: "%{agent_name} a un RDV finissant à %{ends_at_time}, vous allez laisser un trou de %{gap_duration_in_min} minutes dans son agenda (ce RDV est dans un autre service ou une autre organisation à laquelle vous n'avez pas accès)"
+              rdvs_overlapping_rdv:
+                current_agent: "Vous avez <a href='%{path}'>un RDV</a> qui cheuvauche un ou plusieurs autres [current agent]"
+                in_scope: "%{agent_name} a <a href='%{path}'>un RDV</a> qui cheuvauche un ou plusieurs autres [in scope]"
+                out_of_scope: "%{agent_name} a un RDV finissant à %{ends_at_time}, qui chevauche un ou plusieurs autres dans une autre organisation (ce RDV est dans un autre service ou une autre organisation à laquelle vous n'avez pas accès)"
 
   agents:
     rdvs:
