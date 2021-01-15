@@ -149,7 +149,7 @@ class User < ApplicationRecord
   end
 
   def minor?
-    birth_date > 18.years.ago
+    birth_date.present? && birth_date > 18.years.ago
   end
 
   protected

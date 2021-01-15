@@ -338,5 +338,10 @@ describe User, type: :model do
       expect(user.minor?).to be false
       travel_back
     end
+
+    it "return false when no birthdate" do
+      user = build(:user, birth_date: nil)
+      expect(user.minor?).to be false
+    end
   end
 end
