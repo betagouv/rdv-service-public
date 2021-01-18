@@ -1,63 +1,42 @@
 describe SendTransactionalSmsService, type: :service do
-  let(:user) { create(:user, phone_number: "+33640404040", address: "10 rue de Toulon, Lille") }
-
-  describe ".sms_footer" do
-    let(:rdv) { create(:rdv, motif: motif, users: [user], starts_at: 5.days.from_now) }
-    subject { SendTransactionalSmsService.new(:rdv_created, rdv, user).send(:sms_footer) }
-
-    context "when regular Rdv" do
-      let(:motif) { create(:motif, :at_public_office) }
-      it { should include(rdv.address) }
-    end
-
-    context "when Rdv is at home" do
-      let(:motif) { create(:motif, :at_home) }
-      it { should include("RDV à domicile") }
-      it { should include(rdv.address) }
-    end
-
-    context "when Rdv is by phone" do
-      let(:motif) { create(:motif, :by_phone) }
-      it { should include("RDV Téléphonique") }
-      it { should include(rdv.address) }
-    end
+  subject { SendTransactionalSmsService.new(transactional_sms) }
+  let(:transactional_sms) do
+    instance_double(
+      TransactionalSms::RdvCreated,
+      phone_number_formatted: "+33606060606",
+      content: "Bonjour c'est rdv-sol",
+      tags: ["RDV-Sol test", 10, "rdv_created"]
+    )
   end
 
-  describe ".send(type)" do
-    let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now) }
-
-    subject { SendTransactionalSmsService.new(:rdv_created, rdv, user).send(type) }
-
-    context "when rdv created" do
-      let(:type) { :rdv_created }
-      it { should include("RDV #{rdv.motif.service.short_name} #{I18n.l(rdv.starts_at, format: :short)}") }
+  describe "#perform" do
+    context "production with SIB forced" do
+      before { allow(Rails.env).to receive(:production?).and_return(true) }
+      before { allow(ENV).to receive(:[]).with("FORCE_SMS_PROVIDER").and_return("send_in_blue") }
+      it "calls SIB API" do
+        sib_api_mock = instance_double(SibApiV3Sdk::TransactionalSMSApi)
+        expect(SibApiV3Sdk::TransactionalSMSApi).to receive(:new).and_return(sib_api_mock)
+        expect(sib_api_mock).to receive(:send_transac_sms)
+        subject.perform
+      end
     end
 
-    context "when rdv reminder" do
-      let(:type) { :reminder }
-
-      it { should include("Rappel RDV #{rdv.motif.service.short_name} le #{I18n.l(rdv.starts_at, format: :short)}") }
+    context "production without SIB forced" do
+      before { allow(Rails.env).to receive(:production?).and_return(true) }
+      before { expect(subject).to receive(:env_force_sms_provider).and_return(nil) }
+      it "calls netsize", skip: true do
+        subject.perform
+      end
     end
 
-    context "when rdv is cancelled" do
-      let(:type) { :rdv_cancelled }
-
-      it { should include("RDV #{rdv.motif.service.short_name} #{I18n.l(rdv.starts_at, format: :short)} a été annulé") }
-    end
-
-    context "when is for file_attente" do
-      let(:type) { :file_attente }
-    end
-  end
-
-  describe "#replace_special_chars" do
-    it "should work" do
-      body = "àáäâãèéëẽêìíïîĩòóöôõùúüûũñçÀÁÄÂÃÈÉËẼÊÌÍÏÎĨÒÓÖÔÕÙÚÜÛŨÑÇ"
-      expect(
-        SendTransactionalSmsService
-          .new(:rdv_created, nil, user)
-          .send(:replace_special_chars, body)
-      ).to eq("àaäaaèéeeeìiiiiòoöooùuüuuñcAAÄAAEÉEEEIIIIIOOÖOOUUÜUUÑÇ")
+    context "debug" do
+      before { allow(Rails.env).to receive(:production?).and_return(false) }
+      it "should call logger debug" do
+        expect(Rails.logger).to receive(:debug).with(/following SMS would have been sent/)
+        allow(Rails.logger).to receive(:debug).and_call_original # so that other calls to debug work
+        expect(SibApiV3Sdk::TransactionalSMSApi).not_to receive(:new)
+        subject.perform
+      end
     end
   end
 end
