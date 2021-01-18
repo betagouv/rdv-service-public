@@ -1,7 +1,7 @@
 class Sector < ApplicationRecord
   has_many :attributions, class_name: "SectorAttribution", dependent: :destroy
   has_many :organisations, through: :attributions
-  has_many :zones
+  has_many :zones, dependent: :destroy
 
   validates :departement, :name, :human_id, presence: true
   validates :human_id, uniqueness: { scope: :departement }
