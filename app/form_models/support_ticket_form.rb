@@ -10,11 +10,11 @@ class SupportTicketForm
     "Autre",
   ].freeze
 
-  attr_accessor :subject, :first_name, :last_name, :email, :message, :departement
+  attr_accessor :subject, :first_name, :last_name, :email, :message, :departement, :city
 
   validates :first_name, :last_name, :email, :message, :departement, presence: true
-
   validates :subject, inclusion: { in: SUBJECTS }
+  validates :city, presence: true, if: -> { subject.starts_with?("Je suis usager") }
 
   def save
     if valid?
@@ -33,6 +33,6 @@ class SupportTicketForm
   end
 
   def ticket_body
-    """Prénom: #{first_name}\nNom: #{last_name}\nDépartement: #{departement}\n\n" + message
+    """Email: #{email}\nPrénom: #{first_name}\nNom: #{last_name}\nDépartement: #{departement}\nCommune: #{city}\n\n""" + message
   end
 end

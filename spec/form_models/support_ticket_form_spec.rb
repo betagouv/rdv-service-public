@@ -10,7 +10,8 @@ describe SupportTicketForm do
           last_name: "Jacques",
           email: "jean@jacques.fr",
           message: "Ca me gratte partout",
-          departement: "73"
+          departement: "73",
+          city: "Chambéry, 73000"
         )
       end
 
@@ -19,7 +20,7 @@ describe SupportTicketForm do
           .with(
             "jean@jacques.fr",
             "Je suis usager et je n'arrive pas à accéder à mon compte - 73 - Jean Jacques",
-            "Prénom: Jean\nNom: Jacques\nDépartement: 73\n\nCa me gratte partout"
+            "Email: jean@jacques.fr\nPrénom: Jean\nNom: Jacques\nDépartement: 73\nCommune: Chambéry, 73000\n\nCa me gratte partout"
           ).and_return([true, {}])
         res = subject
         expect(res).to eq true
@@ -34,7 +35,7 @@ describe SupportTicketForm do
           last_name: "Jacques",
           email: "jean@jacques.fr",
           message: "Ca me gratte partout"
-          # missing dept
+          # missing dept & commune
         )
       end
 

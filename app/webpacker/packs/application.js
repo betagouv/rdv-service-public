@@ -14,6 +14,7 @@ import 'select2/dist/js/select2.min.js';
 import 'select2/dist/js/i18n/fr.js';
 import 'jquery-mask-plugin';
 import { Select2Inputs } from 'components/select2-inputs';
+import { SupportTicketForm } from 'components/support-ticket-form';
 import 'components/sentry';
 import 'bootstrap';
 
@@ -30,6 +31,7 @@ $(document).on('turbolinks:load', function() {
   new ShowHidePassword();
   new Datetimepicker();
   new PlacesInputs();
+  new SupportTicketForm();
 
   const whereInput = document.querySelector('#search_where');
   const submitButton = document.querySelector('#search_submit');
