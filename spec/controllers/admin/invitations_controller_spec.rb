@@ -31,7 +31,7 @@ RSpec.describe Admin::InvitationsController, type: :controller do
   end
 
   describe "POST #reinvite" do
-    let(:agent_invitee) { create(:agent, confirmed_at: nil, first_name: nil, last_name: nil, organisations: [organisation]) }
+    let(:agent_invitee) { create(:agent, invited_by: agent, confirmed_at: nil, first_name: nil, last_name: nil, organisations: [organisation]) }
 
     it "returns a success response" do
       post :reinvite, params: { organisation_id: organisation.id, id: agent_invitee.to_param }
