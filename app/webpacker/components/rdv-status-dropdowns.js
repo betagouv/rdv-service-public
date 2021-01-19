@@ -15,6 +15,9 @@ class RdvStatusDropdown {
 
   statusChanged = event => {
     const rdv = event.detail[0].rdv
+    if (!rdv) return
+    // happens when authorize fails, UJS + Turbolinks auto-reloads, but doesn't
+    // detach callbacks
     this.currentStatusElt.innerHTML = rdv.temporal_status_human
     this.currentStatusElt.removeAttribute("disabled")
     this.changeRdvStatusClass(rdv.status)
