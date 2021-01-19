@@ -23,7 +23,12 @@ module TransactionalSms::BaseConcern
   end
 
   def tags
-    [ENV["APP"], rdv.organisation.id, self.class.name.demodulize.underscore]
+    [
+      ENV["APP"],
+      "dpt-#{rdv.organisation.departement}",
+      "org-#{rdv.organisation.id}",
+      self.class.name.demodulize.underscore
+    ]
   end
 
   def rdv_footer

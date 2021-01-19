@@ -34,10 +34,11 @@ describe TransactionalSms::BaseConcern, type: :service do
   end
 
   describe "#tags" do
-    let(:organisation) { create(:organisation) }
+    let(:organisation) { create(:organisation, departement: "77") }
     let(:rdv) { build(:rdv, organisation: organisation) }
     subject { SomeModule::TestSms.new(rdv, build(:user)).tags }
-    it { should include(organisation.id) }
+    it { should include("org-#{organisation.id}") }
+    it { should include("dpt-77") }
     it { should include("test_sms") }
   end
 
