@@ -32,10 +32,17 @@ fr:
         header: "Choisir son mot de passe"
         submit_button: "Enregistrer"
     mailer:
-      invitation_instructions:
-        subject: "Vous avez été invité sur RDV Solidarités."
+      invitation_instructions_for_agents:
+        subject: "Vous avez été invité sur RDV-Solidarités."
         hello: "Bonjour %{email}"
-        someone_invited_you: "Vous avez été invité sur RDV Solidarités. Vous pouvez accepter cette invitation grâce au lien ci-dessous."
+        body: "Vous avez été invité par %{inviter} à rejoindre l'organisation %{organisation} en tant qu'agent du service %{service} dans l'outil RDV-Solidarités."
+        accept: "Accepter l'invitation"
+        accept_until: "Cette invitation est valable jusqu'au %{due_date}. Si vous ratez cette date mais souhaitez accepter, veuillez demander à <a href='mailto:%{inviter_email}'>%{inviter} (%{inviter_email})</a> de vous renvoyer l'invitation"
+        ignore: "Si vous n'acceptez pas cette invitation, ignorez cet email. Aucun compte ne sera créé sans votre autorisation."
+      invitation_instructions:
+        subject: "Vous avez été invité sur RDV-Solidarités."
+        hello: "Bonjour %{email}"
+        someone_invited_you: "Vous avez été invité sur RDV-Solidarités. Vous pouvez accepter cette invitation grâce au lien ci-dessous."
         accept: "Accepter l'invitation"
         accept_until: "Cette invitation est valable jusqu'au %{due_date}."
         ignore: "Si vous n'acceptez pas cette invitation, ignorez cet email. Aucun compte ne sera créé sans votre autorisation."
