@@ -114,6 +114,13 @@
           do
             i.fa.fa-building>
             span.ml-1 Lieux
+        li.side-nav-item.mb-4.pl-3.pr-2
+          = link_to \
+            admin_organisation_motifs_path(current_organisation), \
+            class: ("active" if content_for(:menu_item) == 'menu-motifs') \
+          do
+            i.fa.fa-paste>
+            span.ml-1 Motifs
 
       - if current_agent.admin?
         li.side-nav-item.mb-4.pl-3.pr-2

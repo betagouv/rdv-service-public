@@ -16,6 +16,13 @@ RSpec.describe Admin::MotifsController, type: :controller do
     end
   end
 
+  describe "GET #show" do
+    it "returns a success response" do
+      get :show, params: { organisation_id: organisation_id, id: motif.to_param }
+      expect(response).to be_successful
+    end
+  end
+
   describe "GET #new" do
     it "returns a success response" do
       get :new, params: { organisation_id: organisation_id }
@@ -101,7 +108,7 @@ RSpec.describe Admin::MotifsController, type: :controller do
       end
 
       it "redirects to the motif" do
-        expect(response).to redirect_to(admin_organisation_motifs_path(organisation_id))
+        expect(response).to redirect_to(admin_organisation_motif_path(organisation_id, motif))
       end
     end
 

@@ -56,7 +56,7 @@ class DefaultAgentPolicy
   end
 
   def same_service?
-    if @record.is_a? Agent
+    if @record.is_a?(Agent) || @record.is_a?(Motif)
       @record.service_id == @context.agent.service_id
     elsif @record.respond_to?(:agent_id)
       @record.agent.service_id == @context.agent.service_id

@@ -28,6 +28,10 @@ module MotifsHelper
      ["1 mois", 1.month], ["2 mois", 2.months], ["3 mois", 3.months], ["6 mois", 6.months], ["1 an", 1.year]]
   end
 
+  def min_max_delay_int_to_human(int_value)
+    min_max_delay_options.map { |arr| [arr[0], arr[1].to_i] }.to_h.invert[int_value]
+  end
+
   def text_color(color)
     return "white" if color.blank?
 
@@ -45,5 +49,24 @@ module MotifsHelper
 
   def convert_hexa_color_to_rgb(color)
     [Integer("0x#{color[1..2]}"), Integer("0x#{color[3..4]}"), Integer("0x#{color[5..6]}")]
+  end
+
+  def motif_option_value(motif, option_name)
+    if motif.send("#{option_name}?")
+      content_tag(:span, "☑️ ") + content_tag(:span, t("activerecord.attributes.motif.#{option_name}_hint"))
+    else
+      content_tag(:span, "╳ désactivée", class: "text-muted")
+    end
+  end
+
+  def motif_attribute_row(legend, arg_value = nil, hint: nil, &block)
+    value = block.present? ? capture(&block) : display_value_or_na_placeholder(arg_value)
+    value += content_tag(:div, hint, class: "text-muted") if arg_value.present? && hint.present?
+    content_tag(
+      :div,
+      content_tag(:div, legend, class: "col-md-4 text-bold text-right") +
+        content_tag(:div, value, class: "col-md-8"),
+      class: "row"
+    )
   end
 end

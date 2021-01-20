@@ -2,7 +2,7 @@ class Admin::MotifsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: [:new, :create]
-  before_action :set_motif, only: [:edit, :update, :destroy]
+  before_action :set_motif, only: [:show, :edit, :update, :destroy]
 
   def index
     @motifs = policy_scope(Motif).includes(:organisation).active.includes(:service).ordered_by_name.page(params[:page])
@@ -17,6 +17,10 @@ class Admin::MotifsController < AgentAuthController
   end
 
   def edit
+    authorize(@motif)
+  end
+
+  def show
     authorize(@motif)
   end
 
@@ -36,7 +40,7 @@ class Admin::MotifsController < AgentAuthController
     authorize(@motif)
     if @motif.update(motif_params)
       flash[:notice] = "Le motif a été modifié."
-      redirect_to admin_organisation_motifs_path(@motif.organisation)
+      redirect_to admin_organisation_motif_path(@motif.organisation, @motif)
     else
       render :edit
     end
