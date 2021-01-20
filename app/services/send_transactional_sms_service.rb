@@ -54,7 +54,7 @@ class SendTransactionalSmsService < BaseService
       }
     )
     request.on_complete do |response|
-      break if response.success?
+      next if response.success?
 
       raise NetsizeTimeout if response.timed_out?
 
