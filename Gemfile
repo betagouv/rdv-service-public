@@ -61,7 +61,8 @@ gem "blueprinter"
 gem "typhoeus"
 
 # Ops
-gem "sentry-raven"
+gem "sentry-ruby"
+gem "sentry-rails"
 gem "skylight"
 
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker

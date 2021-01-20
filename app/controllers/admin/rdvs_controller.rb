@@ -61,7 +61,7 @@ class Admin::RdvsController < AgentAuthController
       flash[:notice] = "Le rendez-vous a été supprimé."
     else
       flash[:error] = "Une erreur s’est produite, le rendez-vous n’a pas pu être supprimé."
-      Raven.capture_exception(Exception.new("Deletion failed for rdv : #{@rdv.id}"))
+      Sentry.capture_exception(Exception.new("Deletion failed for rdv : #{@rdv.id}"))
     end
     # TODO : redirection makes no sense when coming from a users#show
     redirect_to admin_organisation_agent_path(current_organisation, @agent || current_agent)
