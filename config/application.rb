@@ -43,7 +43,6 @@ module Lapin
       [Devise::RegistrationsController, Devise::SessionsController, Devise::ConfirmationsController, Devise::PasswordsController, Devise::InvitationsController].each do |controller|
         controller.layout "registration"
       end
-      Devise::Mailer.layout "mailer"
     end
   end
 end
