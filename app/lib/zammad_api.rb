@@ -22,11 +22,11 @@ module ZammadApi
       if response.success?
         [true, {}]
       elsif response.timed_out? || response.code.zero?
-        Raven.capture_exception(HttpError.new(response.code))
+        Sentry.capture_exception(HttpError.new(response.code))
         [false, { errors: ["HTTP request failed"] }]
       else
         parsed_response = JSON.parse(response.body)
-        Raven.capture_exception(RequestError.new(parsed_response["error_human"]))
+        Sentry.capture_exception(RequestError.new(parsed_response["error_human"]))
         [false, { errors: [parsed_response["error_human"]] }]
       end
     end

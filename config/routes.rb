@@ -170,6 +170,8 @@ Rails.application.routes.draw do
   resources :lieux, only: [:index, :show]
   resources :motif_libelles, only: :index
   get "health_checks/rdv_events_stats", to: "health_checks#rdv_events_stats"
+  get "health_checks/raise_on_purpose", to: "health_checks#raise_on_purpose"
+  get "health_checks/enqueue_failing_job", to: "health_checks#enqueue_failing_job"
   root "welcome#index"
   resources :support_tickets, only: [:create]
 
