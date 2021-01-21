@@ -1,5 +1,5 @@
 class RedirectToRegistration < Devise::FailureApp
-  def route(_scope)
-    :new_user_registration_url
+  def route(scope)
+    scope == :user ? :new_user_registration_url : super
   end
 end
