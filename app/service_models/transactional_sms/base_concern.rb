@@ -24,11 +24,11 @@ module TransactionalSms::BaseConcern
 
   def tags
     [
-      ENV["APP"],
+      ENV["APP"]&.gsub("-rdv-solidarites", ""), # shorter names
       "dpt-#{rdv.organisation.departement}",
       "org-#{rdv.organisation.id}",
       self.class.name.demodulize.underscore
-    ]
+    ].compact
   end
 
   def rdv_footer

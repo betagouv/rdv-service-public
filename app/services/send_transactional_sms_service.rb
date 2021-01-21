@@ -2,6 +2,8 @@ class NetsizeTimeout < StandardError; end
 
 class NetsizeHttpError < StandardError; end
 
+class NetsizeApiError < StandardError; end
+
 class SendTransactionalSmsService < BaseService
   attr_reader :transactional_sms
 
@@ -50,17 +52,25 @@ class SendTransactionalSmsService < BaseService
         messageText: transactional_sms.content,
         originatingAddress: SENDER_NAME,
         originatorTON: 1,
-        campaignName: transactional_sms.tags.join(" "),
+        campaignName: transactional_sms.tags.join(" ").truncate(49),
       }
     )
-    request.on_complete do |response|
-      break if response.success?
-
-      raise NetsizeTimeout if response.timed_out?
-
-      raise NetsizeHttpError, "code: #{response.code}, message: #{response.return_message}"
-    end
+    request.on_complete { netsize_on_complete(_1) }
     request.run
+  end
+
+  def netsize_on_complete(response)
+    if response.success?
+      parsed_res = JSON.parse(response.body)
+      return if parsed_res["responseCode"].zero?
+
+      ::Sentry.set_extras(parsed_res)
+      raise NetsizeApiError, "HTTP 200, responseCode: #{parsed_res['responseCode']}, #{parsed_res['responseMessage']}"
+    end
+
+    raise NetsizeTimeout if response.timed_out?
+
+    raise NetsizeHttpError, "code: #{response.code}, message: #{response.return_message}"
   end
 
   def send_with_debug_logger
