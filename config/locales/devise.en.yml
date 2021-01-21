@@ -63,3 +63,11 @@ en:
       not_saved:
         one: "1 error prohibited this %{resource} from being saved:"
         other: "%{count} errors prohibited this %{resource} from being saved:"
+  links:
+    session: "Log in"
+    registration: "Sign up"
+    password: "Forgot your password?"
+    confirmation: "Didn't receive confirmation instructions?"
+    unlock: "Didn't receive unlock instructions?"
+    omniauth:
+      github: "Sign in with Github"
