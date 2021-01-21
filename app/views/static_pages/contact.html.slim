@@ -56,8 +56,8 @@
           .row
             .col-md-6= f.input :first_name, label: "Prénom"
             .col-md-6= f.input :last_name, label: "Nom"
-          = f.input :departement, label: "Département", collection: departements_with_upcoming_rdvs + ["Autre"], hint: "Si votre département n'est pas listé, c'est qu'il n'utilise pas la plateforme RDV-Solidarités"
-          = f.input :city, label: "Commune", input_html: { class: "places-js-container js-support-ticket-form-user-input", data: { "address-type": "municipality" } }, required: true
+          = f.input :departement, label: "Département", collection: departements_with_upcoming_rdvs + ["Autre"], hint: "Si votre département n'est pas listé, c'est qu'il n'utilise pas la plateforme RDV-Solidarités", input_html: { class: "js-support-ticket-form-input-togglable", data: { role: "agent" } }
+          = f.input :city, label: "Commune", input_html: { class: "places-js-container js-support-ticket-form-input-togglable", data: { "address-type": "municipality", role: "user" } }, required: true
           = f.input :email, label: "Email"
           = f.input :message, label: "Message", as: :text, hint: "Merci de ne pas inclure d'informations confidentielles vous concernant", input_html: { rows: 5 }
           = f.button :submit, value: "Envoyer la demande à l'équipe technique", data: { disable_with: "Envoi en cours…" }

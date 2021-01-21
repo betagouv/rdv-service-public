@@ -8,15 +8,16 @@ class SupportTicketForm {
   }
 
   subjectChanged = () => {
-    const isUserSubject = this.subjectSelect.value.startsWith("Je suis usager")
+    const subjectRole = this.subjectSelect.value.startsWith("Je suis usager") ? "user" : "agent"
     document.
-      querySelectorAll(".js-support-ticket-form-user-input").
+      querySelectorAll(".js-support-ticket-form-input-togglable").
       forEach(input => {
-        if (isUserSubject)
+        const roleMatch = subjectRole === input.getAttribute('data-role')
+        if (roleMatch)
           input.removeAttribute('disabled')
         else
           input.setAttribute('disabled', 'disabled')
-        input.parentElement.parentElement.classList.toggle('d-none', !isUserSubject)
+        $(input).closest('div.form-group').toggleClass('d-none', !roleMatch)
       })
   }
 }
