@@ -2,7 +2,7 @@ tr
   td.pr-0.text-right
     span.badge.badge-pill.ml-0.mr-2 style="background: #{motif.color};" &nbsp;
   td
-    = link_to motif.name, edit_admin_organisation_motif_path(motif.organisation, motif)
+    = link_to motif.name, admin_organisation_motif_path(motif.organisation, motif)
     = motif_badges(motif, only: [:secretariat, :follow_up])
   td
     = motif_badges(motif, only: [:reservable_online])
@@ -21,4 +21,12 @@ tr
   td= motif.service.short_name
   td= Motif.human_enum_name(:location_type, motif.location_type)
   td= "#{motif.default_duration_in_min} min."
-  td= link_to "Éditer", edit_admin_organisation_motif_path(motif.organisation, motif)
+  - if policy([:agent, motif]).edit? || policy([:agent, motif]).destroy?
+    td
+      .d-flex
+        - if policy([:agent, motif]).edit?
+          div.mr-3= link_to edit_admin_organisation_motif_path(current_organisation, motif), title: "Modifier" do
+            i.fa.fa-edit
+        - if policy([:agent, motif]).destroy?
+          div= link_to admin_organisation_motif_path(current_organisation, motif), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce motif ?"} do
+            i.fa.fa-trash-alt

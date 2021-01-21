@@ -3,8 +3,10 @@
 - content_for :title do
   | Vos motifs
 
-- content_for :breadcrumb do
-  = link_to 'Créer un motif', new_admin_organisation_motif_path(current_organisation), class:"btn btn-outline-white"
+- mock_motif = Motif.new(organisation: current_organisation)
+- if policy([:agent, mock_motif]).create?
+  - content_for :breadcrumb do
+    = link_to 'Créer un motif', new_admin_organisation_motif_path(current_organisation), class:"btn btn-outline-white"
 
 .row
   .col-md-12
@@ -21,7 +23,8 @@
               th= t("activerecord.attributes.motif.service")
               th= t("activerecord.attributes.motif.location_type")
               th= t("activerecord.attributes.motif.default_duration")
-              th
+              - if policy([:agent, mock_motif]).edit? || policy([:agent, mock_motif]).destroy?
+                th Actions
           tbody
             = render @motifs
         .d-flex.justify-content-center id="users-pagination"
@@ -34,5 +37,6 @@
             span.fa-stack.fa-4x
               i.fa.fa-circle.fa-stack-2x.text-primary
               i.far.fa-calendar.fa-stack-1x.text-white
-      .text-center.mb-3
-        = link_to 'Créer un motif', new_admin_organisation_motif_path(current_organisation), class: 'btn btn-primary'
+      - if policy([:agent, Motif.new(organisation: current_organisation)]).create?
+        .text-center.mb-3
+          = link_to 'Créer un motif', new_admin_organisation_motif_path(current_organisation), class: 'btn btn-primary'

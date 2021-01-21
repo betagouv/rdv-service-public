@@ -1,0 +1,60 @@
+- with_options scope: 'activerecord.attributes.motif' do |i18n|
+  = motif_attribute_row(i18n.t(:name), motif.name)
+  = motif_attribute_row(i18n.t(:service), motif.service.name)
+  = motif_attribute_row \
+    i18n.t(:default_duration_in_min_short),  \
+    "#{motif.default_duration_in_min} minutes"
+  = motif_attribute_row(i18n.t(:color)) do
+    span.motif-color-badge>[style="background-color: #{motif.color};"]
+    span.text-muted= motif.color
+  hr
+
+  = motif_attribute_row("Type de RDV") do
+    div= Motif.human_enum_name(:location_type, motif.location_type)
+    div.text-muted
+      = Motif.human_enum_name(:location_type_hint, motif.location_type)
+  hr
+
+  = motif_attribute_row \
+    i18n.t(:follow_up_short), \
+    motif_option_value(motif, :follow_up)
+  = motif_attribute_row \
+    i18n.t(:for_secretariat_short), \
+    motif_option_value(motif, :for_secretariat)
+  hr
+
+  = motif_attribute_row \
+    i18n.t(:reservable_online), \
+    motif_option_value(motif, :reservable_online)
+  = motif_attribute_row \
+    i18n.t(:min_booking_delay_short), \
+    motif.reservable_online? && \
+      min_max_delay_int_to_human(motif.min_booking_delay), \
+    hint: i18n.t(:min_booking_delay_hint)
+  = motif_attribute_row \
+    i18n.t(:max_booking_delay_short), \
+    motif.reservable_online? && \
+      min_max_delay_int_to_human(motif.max_booking_delay), \
+    hint: i18n.t(:max_booking_delay_hint)
+  = motif_attribute_row("Sectorisation") do
+    - if motif.reservable_online?
+      div= Motif.human_enum_name(:sectorisation_level, motif.sectorisation_level)
+      div.text-muted= Motif.human_enum_name(:sectorisation_level_hint, motif.sectorisation_level)
+    - else
+      span.text-muted N/A
+  hr
+
+  = motif_attribute_row(i18n.t(:visibility_type)) do
+    div= Motif.human_enum_name(:visibility_type, motif.visibility_type)
+    div.text-muted
+      = Motif.human_enum_name(:visibility_type_hint, motif.visibility_type)
+  hr
+
+  = motif_attribute_row \
+    i18n.t(:restriction_for_rdv_short), \
+    motif.restriction_for_rdv, \
+    hint: i18n.t(:restriction_for_rdv_hint)
+  = motif_attribute_row \
+    i18n.t(:instruction_for_rdv_short), \
+    motif.instruction_for_rdv, \
+    hint: i18n.t(:instruction_for_rdv_hint)

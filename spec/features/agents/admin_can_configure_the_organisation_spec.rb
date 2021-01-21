@@ -95,13 +95,16 @@ describe "Admin can configure the organisation" do
     expect_page_title("Vos motifs")
 
     click_link motif.name
-    expect(page).to have_content("Modifier le motif")
+    expect(page).to have_content("Motif 1")
+    click_link "Éditer"
     expect(page.find_by_id("motif_name")).to have_content(motif.name)
     select(motif_libelle2.name, from: :motif_name)
     click_button("Modifier")
     expect(page).to have_content(motif_libelle2.name)
-    expect_page_title("Vos motifs")
+    expect_page_title("Motif Motif 2 (PMI)")
 
+    click_link "Paramètres"
+    click_link "Vos motifs"
     click_link le_nouveau_motif.name
     expect(page).to have_content(le_nouveau_motif.name)
     click_link("Supprimer")

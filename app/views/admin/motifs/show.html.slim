@@ -1,0 +1,24 @@
+- motif_policy = policy([:agent, @motif])
+- content_for(:menu_item) { 'menu-motifs' }
+
+- content_for :title do
+  | Motif #{@motif.name} (#{@motif.service.short_name})
+
+- content_for :breadcrumb do
+  ol.breadcrumb.m-0
+    li.breadcrumb-item
+      = link_to 'Vos motifs', admin_organisation_motifs_path(current_organisation)
+    li.breadcrumb-item.active #{@motif.name}
+
+.row.justify-content-center
+  .col-md-8
+    .card
+      .card-body
+        = render "motif_attributes", motif: @motif
+      - if motif_policy.edit? || motif_policy.destroy?
+        .card-footer
+          .d-flex.justify-content-end
+            - if motif_policy.destroy?
+              div.mr-2= link_to "Supprimer", admin_organisation_motif_path(current_organisation, @motif), method: :delete, data: { confirm: "Confirmez-vous la suppression de ce motif ?"}, class: "btn btn-danger w-100"
+            - if motif_policy.edit?
+              div= link_to "Éditer", edit_admin_organisation_motif_path(current_organisation, @motif), class: "btn btn-primary w-100"

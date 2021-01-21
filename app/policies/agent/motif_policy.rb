@@ -1,4 +1,8 @@
 class Agent::MotifPolicy < Agent::AdminPolicy
+  def show?
+    admin_and_same_org? || same_agent_or_has_access?
+  end
+
   class Scope < Scope
     def resolve
       if @context.agent.can_access_others_planning?
