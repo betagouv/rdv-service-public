@@ -18,5 +18,7 @@ class RdvsOverlapping
       .ordered_by_ends_at
   end
 
-  def rdvs_overlapping_rdv?; end
+  def rdvs_overlapping_rdv?
+    rdvs_overlapping_rdv.any?
+  end
 end
