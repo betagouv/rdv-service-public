@@ -11,6 +11,6 @@ class SupportTicketsController < ApplicationController
   private
 
   def contact_params
-    params.require(:support_ticket).permit(:subject, :first_name, :last_name, :email, :message, :departement)
+    params.require(:support_ticket).permit(:subject, :first_name, :last_name, :email, :message, :departement, :city)
   end
 end
