@@ -10,11 +10,12 @@ class SupportTicketForm
     "Autre",
   ].freeze
 
-  attr_accessor :subject, :first_name, :last_name, :email, :message, :departement
+  attr_accessor :subject, :first_name, :last_name, :email, :message, :departement, :city
 
-  validates :first_name, :last_name, :email, :message, :departement, presence: true
-
+  validates :first_name, :last_name, :email, :message, presence: true
   validates :subject, inclusion: { in: SUBJECTS }
+  validates :departement, presence: true, if: -> { subject_role == :agent }
+  validates :city, presence: true, if: -> { subject_role == :user }
 
   def save
     if valid?
@@ -26,13 +27,23 @@ class SupportTicketForm
     end
   end
 
+  def subject_role
+    subject.starts_with?("Je suis usager") ? :user : :agent
+  end
+
   private
 
   def ticket_title
-    "#{subject} - #{departement} - #{first_name} #{last_name}"
+    [subject, departement, "#{first_name} #{last_name}"].select(&:present?).join(" - ")
   end
 
   def ticket_body
-    """Prénom: #{first_name}\nNom: #{last_name}\nDépartement: #{departement}\n\n" + message
+    {
+      "Email": email,
+      "Prénom": first_name,
+      "Nom": last_name,
+      "Département": departement,
+      "Commune": city
+    }.select { _2.present? }.map { "#{_1}: #{_2}" }.join("\n") + "\n\n#{message}"
   end
 end
