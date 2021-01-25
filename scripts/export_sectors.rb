@@ -2,6 +2,7 @@
 
 require "csv"
 departement = ARGV[0]
+exit unless departement.present?
 
 zones = Sector.where(departement: departement).flat_map do |sector|
   sector.zones.includes(:sector).cities.order(:city_name).to_a +
