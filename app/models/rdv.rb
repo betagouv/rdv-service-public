@@ -54,6 +54,7 @@ class Rdv < ApplicationRecord
   scope :with_lieu, ->(lieu) { joins(:lieu).where(lieux: { id: lieu.id }) }
   scope :visible, -> { joins(:motif).where(motifs: { visibility_type: [Motif::VISIBLE_AND_NOTIFIED, Motif::VISIBLE_AND_NOT_NOTIFIED] }) }
   scope :ends_at_in_range, ->(range) { where("#{ENDS_AT_SQL} BETWEEN ? AND ?", range.begin, range.end) }
+  scope :starts_at_in_range, ->(range) { where("starts_at BETWEEN ? AND ?", range.begin, range.end) }
   scope :ordered_by_ends_at, -> { order(ENDS_AT_SQL) }
 
   after_commit :reload_uuid, on: :create
