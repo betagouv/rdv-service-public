@@ -13,35 +13,53 @@
     .card
       .m-3.d-flex.justify-content-end
         div= link_to 'Réinitialiser', admin_organisation_motifs_path(current_organisation), class: "btn btn-link #{params[:search].blank? && 'd-none'}"
-        div= simple_form_for '', url: admin_organisation_motifs_path(current_organisation), html: { method: :get, class: 'form-inline' }, wrapper: :inline_form do |f|
+        div= simple_form_for '', url: admin_organisation_motifs_path(current_organisation), html: { method: :get, class: 'form-inline search-and-filter-form' }, wrapper: :inline_form do |f|
           = f.input :search, placeholder: 'ex. Être appelé par la MDS', label: false, input_html: { autocomplete: 'off', class: 'search-form-control', value: params[:search] }, required: false
+          = f.input :service_filter, as: :hidden, value: params[:service_filter]
+          = f.input :online_filter, as: :hidden, value: params[:online_filter]
+          = f.input :location_type_filter, as: :hidden, value: params[:location_type_filter]
           = f.button :submit, 'Rechercher'
-      - if @motifs.any?
-        table.table
-          thead
-            tr
-              th
-              th= t("activerecord.attributes.motif.name")
-              th= t("activerecord.attributes.motif.reservable_online")
-              - if @display_sectorisation_level
-                th= t("activerecord.attributes.motif.sectorisation_level")
-              th= t("activerecord.attributes.motif.service")
-              th= t("activerecord.attributes.motif.location_type")
-              th= t("activerecord.attributes.motif.default_duration")
-              - if policy([:agent, mock_motif]).edit? || policy([:agent, mock_motif]).destroy?
-                th Actions
-          tbody
+      table.table
+        thead
+          tr
+            th
+            th= t("activerecord.attributes.motif.name")
+            th
+              div
+                = t("activerecord.attributes.motif.reservable_online")
+              div
+                = select_tag("online_filter_select", options_for_select(["En ligne", "Hors ligne"], params[:online_filter]), include_blank: "Tous", class: "motif-filters")
+            - if @display_sectorisation_level
+              th= t("activerecord.attributes.motif.sectorisation_level")
+            th
+              div
+                = t("activerecord.attributes.motif.service")
+              div
+                = select_tag("service_filter_select", options_from_collection_for_select(Service.all, "id", "short_name", params[:service_filter]), include_blank: "Tous", class: "motif-filters")
+            th
+              div
+                = t("activerecord.attributes.motif.location_type")
+              div
+                = select_tag("location_type_filter_select", options_for_select(Motif.location_types.map{|l| [Motif.human_enum_name(:location_type, l[0]), l[1]] }, params[:location_type_filter]), include_blank: "Tous", class: "motif-filters")
+            th= t("activerecord.attributes.motif.default_duration")
+            - if policy([:agent, mock_motif]).edit? || policy([:agent, mock_motif]).destroy?
+              th Actions
+        tbody
+          - if @motifs.any?
             = render @motifs
-        .d-flex.justify-content-center id="users-pagination"
-          = paginate @motifs, theme: 'twitter-bootstrap-4'
-      - else
-        .row.justify-content-md-center
-          .col-md-6.text-center.my-5
-            p.mb-2.lead Vous n'avez pas encore créé de motif.
-            p Les motifs sont les types de RDV que vous proposez dans votre organisation. Chaque motif a des options indépendantes : durée, format (à domicile, par téléphone, sur place), prise de RDV en ligne activée etc...
-            span.fa-stack.fa-4x
-              i.fa.fa-circle.fa-stack-2x.text-primary
-              i.far.fa-calendar.fa-stack-1x.text-white
+            .d-flex.justify-content-center id="users-pagination"
+              = paginate @motifs, theme: 'twitter-bootstrap-4'
+          - else
+            tr
+              td(colspan=6)
+                .row.justify-content-md-center
+                  .col-md-6.text-center.my-5
+                    p.mb-2.lead Vous n'avez pas encore créé de motif.
+                    p Les motifs sont les types de RDV que vous proposez dans votre organisation. Chaque motif a des options indépendantes : durée, format (à domicile, par téléphone, sur place), prise de RDV en ligne activée etc...
+                    span.fa-stack.fa-4x
+                      i.fa.fa-circle.fa-stack-2x.text-primary
+                      i.far.fa-calendar.fa-stack-1x.text-white
       - if policy([:agent, Motif.new(organisation: current_organisation)]).create?
         .text-center.mb-3
           = link_to 'Créer un motif', new_admin_organisation_motif_path(current_organisation), class: 'btn btn-primary'
+

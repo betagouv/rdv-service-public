@@ -7,6 +7,15 @@ class Admin::MotifsController < AgentAuthController
   def index
     @motifs = policy_scope(Motif).active
     @motifs = params[:search].present? ? @motifs.search_by_text(params[:search]) : @motifs
+    if params[:online_filter].present?
+      if params[:online_filter] == "En ligne"
+        @motifs = @motifs.reservable_online
+      else
+        @motifs = @motifs.not_reservable_online
+      end
+    end
+    @motifs = params[:service_filter].present? ? @motifs.where(service_id: params[:service_filter]) : @motifs
+    @motifs = params[:location_type_filter].present? ? @motifs.where(location_type: params[:location_type_filter]) : @motifs
     @motifs = @motifs.includes(:organisation).includes(:service).ordered_by_name.page(params[:page])
 
     @sectors_attributed_to_organisation_count = Sector.attributed_to_organisation(current_organisation).count

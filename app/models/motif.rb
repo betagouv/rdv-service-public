@@ -32,6 +32,7 @@ class Motif < ApplicationRecord
 
   scope :active, -> { where(deleted_at: nil) }
   scope :reservable_online, -> { where(reservable_online: true) }
+  scope :not_reservable_online, -> { where(reservable_online: false) }
   scope :by_phone, -> { Motif.phone } # default scope created by enum
   scope :for_secretariat, -> { where(for_secretariat: true) }
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(motifs.name))")) }
