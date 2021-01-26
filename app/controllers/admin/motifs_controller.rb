@@ -5,7 +5,10 @@ class Admin::MotifsController < AgentAuthController
   before_action :set_motif, only: [:show, :edit, :update, :destroy]
 
   def index
-    @motifs = policy_scope(Motif).includes(:organisation).active.includes(:service).ordered_by_name.page(params[:page])
+    @motifs = policy_scope(Motif).active
+    @motifs = params[:search].present? ? @motifs.search_by_text(params[:search]) : @motifs
+    @motifs = @motifs.includes(:organisation).includes(:service).ordered_by_name.page(params[:page])
+
     @sectors_attributed_to_organisation_count = Sector.attributed_to_organisation(current_organisation).count
     @sectorisation_level_agent_counts_by_service = SectorAttribution.level_agent_grouped_by_service(current_organisation)
     @display_sectorisation_level = current_organisation.motifs.where.not(sectorisation_level: Motif::SECTORISATION_LEVEL_DEPARTEMENT).any?

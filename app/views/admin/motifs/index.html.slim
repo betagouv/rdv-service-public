@@ -11,6 +11,11 @@
 .row
   .col-md-12
     .card
+      .m-3.d-flex.justify-content-end
+        div= link_to 'Réinitialiser', admin_organisation_motifs_path(current_organisation), class: "btn btn-link #{params[:search].blank? && 'd-none'}"
+        div= simple_form_for '', url: admin_organisation_motifs_path(current_organisation), html: { method: :get, class: 'form-inline' }, wrapper: :inline_form do |f|
+          = f.input :search, placeholder: 'ex. Être appelé par la MDS', label: false, input_html: { autocomplete: 'off', class: 'search-form-control', value: params[:search] }, required: false
+          = f.button :submit, 'Rechercher'
       - if @motifs.any?
         table.table
           thead

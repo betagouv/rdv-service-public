@@ -56,6 +56,14 @@ class Motif < ApplicationRecord
   scope :sectorisation_level_organisation, -> { where(sectorisation_level: SECTORISATION_LEVEL_ORGANISATION) }
   scope :sectorisation_level_agent, -> { where(sectorisation_level: SECTORISATION_LEVEL_AGENT) }
 
+  include PgSearch::Model
+  pg_search_scope(
+    :search_by_text,
+    ignoring: :accents,
+    using: { tsearch: { prefix: true } },
+    against: [:name]
+  )
+
   def soft_delete
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
   end
