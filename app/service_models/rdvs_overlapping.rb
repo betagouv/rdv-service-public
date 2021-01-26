@@ -14,7 +14,8 @@ class RdvsOverlapping
       .future
       .with_agent_among(agents)
       .where(id: (Rdv.select(:id).ends_at_in_range(starts_at..ends_at) +
-                  Rdv.select(:id).starts_at_in_range(starts_at..ends_at)))
+                  Rdv.select(:id).starts_at_in_range(starts_at..ends_at) +
+                  Rdv.select(:id).where("starts_at < ?", starts_at).where("#{Rdv::ENDS_AT_SQL} > ?", ends_at)))
       .ordered_by_ends_at
   end
 
