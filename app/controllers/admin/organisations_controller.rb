@@ -7,7 +7,7 @@ class Admin::OrganisationsController < AgentAuthController
   before_action :follow_unique, only: :index
 
   def index
-    @organisations_by_departement = policy_scope(Organisation).group_by(&:departement)
+    @organisations_by_departement = policy_scope(Organisation).order(:name).group_by(&:departement)
     render layout: "registration"
   end
 
