@@ -35,9 +35,9 @@ describe PlageOuverture, type: :model do
     let!(:lieu) { create(:lieu, organisation: organisation) }
     let(:today) { Date.new(2019, 9, 19) }
     let(:six_days_later) { Date.new(2019, 9, 25) }
-    let(:agent) { create(:agent, service: service, organisations: [organisation]) }
-    let(:agent2) { create(:agent, service: service, organisations: [organisation]) }
-    let(:agent3) { create(:agent, service: service, organisations: [organisation]) }
+    let(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
+    let(:agent2) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
+    let(:agent3) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
     let!(:plage_ouverture) { create(:plage_ouverture, :weekly, agent: agent, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation) }
 
     subject { PlageOuverture.not_expired_for_motif_name_and_lieu(motif.name, lieu) }
@@ -123,13 +123,13 @@ describe PlageOuverture, type: :model do
     subject { plage_ouverture.available_motifs }
 
     describe "for secretaire" do
-      let(:agent) { create(:agent, :secretaire, organisations: [organisation]) }
+      let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
 
       it { is_expected.to contain_exactly(motif3) }
     end
 
     describe "for other service" do
-      let(:agent) { create(:agent, service: service, organisations: [organisation]) }
+      let(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
 
       it { is_expected.to contain_exactly(motif, motif2, motif3) }
     end

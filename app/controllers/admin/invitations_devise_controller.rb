@@ -32,7 +32,6 @@ class Admin::InvitationsDeviseController < Devise::InvitationsController
   def invite_resource
     super do |agent|
       agent.uid = agent.email
-      agent.organisations = [current_organisation]
     end
   end
 
@@ -55,7 +54,7 @@ class Admin::InvitationsDeviseController < Devise::InvitationsController
   end
 
   def organisation_id
-    devise_parameter_sanitizer.sanitize(:invite)[:organisation_id]
+    devise_parameter_sanitizer.sanitize(:invite)[:roles_attributes].values[0][:organisation_id]
   end
 
   def invite_params

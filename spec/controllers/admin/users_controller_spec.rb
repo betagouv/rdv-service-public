@@ -1,8 +1,8 @@
 RSpec.describe Admin::UsersController, type: :controller do
   render_views
 
-  let(:agent) { create(:agent) }
-  let(:organisation) { agent.organisations.first }
+  let(:organisation) { create(:organisation) }
+  let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let!(:user) { create(:user, organisations: [organisation]) }
 
   before do

@@ -7,12 +7,12 @@ describe Admin::OrganisationsController, type: :controller do
     subject { get :new }
 
     context "agent is admin" do
-      let!(:agent) { create(:agent, :admin, organisations: [organisation]) }
+      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
       it { should be_successful }
     end
 
     context "agent is regular agent, not admin" do
-      let!(:agent) { create(:agent, organisations: [organisation]) }
+      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       it { should_not be_successful }
     end
   end
@@ -21,7 +21,7 @@ describe Admin::OrganisationsController, type: :controller do
     subject { post :create, params: { organisation: organisation_params } }
 
     context "admin agent, valid params" do
-      let!(:agent) { create(:agent, :admin, organisations: [organisation]) }
+      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
       let(:organisation_params) { { name: "MDS Test", departement: "33" } }
 
       it "should create company" do
@@ -30,7 +30,7 @@ describe Admin::OrganisationsController, type: :controller do
     end
 
     context "admin agent, invalid params" do
-      let!(:agent) { create(:agent, :admin, organisations: [organisation]) }
+      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
       let(:organisation_params) { { name: "MDS Test", departement: "3333" } }
 
       it { should render_template("admin/organisations/new") }
@@ -40,7 +40,7 @@ describe Admin::OrganisationsController, type: :controller do
     end
 
     context "regular agent, valid params" do
-      let!(:agent) { create(:agent, organisations: [organisation]) }
+      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let(:organisation_params) { { name: "MDS Test", departement: "33" } }
       it { should_not be_successful }
       it "should not create company" do
@@ -50,7 +50,7 @@ describe Admin::OrganisationsController, type: :controller do
   end
 
   context "with a admin agent signed in" do
-    let!(:agent) { create(:agent, :admin, organisations: [organisation]) }
+    let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
     describe "#update" do
       it "should redirect to organisation show" do

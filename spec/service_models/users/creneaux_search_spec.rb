@@ -28,7 +28,7 @@ describe Users::CreneauxSearch, type: :service do
 
     context "logged in user" do
       context "with referents" do
-        let!(:agent) { create(:agent, organisations: [organisation]) }
+        let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
         let(:user) { create(:user, organisations: [organisation], agents: [agent]) }
 
         it "should call builder with agent options" do
@@ -90,8 +90,8 @@ describe Users::CreneauxSearch, type: :service do
     end
 
     context "some attributed agents" do
-      let!(:agent1) { create(:agent, organisations: [organisation]) }
-      let!(:agent2) { create(:agent, organisations: [organisation]) }
+      let!(:agent1) { create(:agent, basic_role_in_organisations: [organisation]) }
+      let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation]) }
       let(:attributed_agents_by_organisation) { { organisation => Agent.where(id: [agent1.id, agent2.id]) } }
 
       it "calls builder with these agents ids" do

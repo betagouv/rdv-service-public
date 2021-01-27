@@ -5,7 +5,7 @@
     .card-header
       .d-flex.justify-content-between.align-items-center
         h5 Département du #{departement}
-        - if current_agent.admin?
+        - if current_agent_role.admin?
           = link_to admin_departement_setup_checklist_path(departement), class: 'float-right' do
             i.fa.fa-map>
             | Sectorisation

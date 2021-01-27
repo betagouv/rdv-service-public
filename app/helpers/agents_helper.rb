@@ -8,7 +8,7 @@ module AgentsHelper
   end
 
   def admin_tag(agent)
-    content_tag(:span, "Admin", class: "badge badge-danger") if agent.admin?
+    content_tag(:span, "Admin", class: "badge badge-danger") if agent.role_in_organisation(current_organisation).admin?
   end
 
   def delete_dropdown_link(agent)

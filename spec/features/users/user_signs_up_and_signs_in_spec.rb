@@ -51,7 +51,7 @@ feature "User signs up and signs in" do
     end
 
     context "if agent goes wrong" do
-      let!(:agent) { create(:agent, password: "123456") }
+      let!(:agent) { create(:agent, password: "123456", basic_role_in_organisations: [create(:organisation)]) }
 
       scenario ".sign_in as user and be signed in as agent" do
         click_link "Se connecter"

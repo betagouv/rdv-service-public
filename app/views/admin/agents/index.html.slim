@@ -2,7 +2,7 @@
 - content_for(:title, "Vos agents")
 
 .row
-  div class=(current_agent.admin? ? "col-md-8" : "col-md-12")
+  div class=(current_agent_role.admin? ? "col-md-8" : "col-md-12")
     .card
       .m-3.d-flex.justify-content-end
         div= link_to 'Réinitialiser', admin_organisation_agents_path(current_organisation), class: "btn btn-link #{params[:search].blank? && 'd-none'}"
@@ -16,6 +16,7 @@
               th Nom
               th Email
               th Service
+              th= t("activerecord.attributes.agent_role.level")
           tbody
             = render partial: 'agent', collection: @complete_agents
 
@@ -27,7 +28,7 @@
             = paginate @complete_agents, theme: 'twitter-bootstrap-4'
           .text-center= page_entries_info @complete_agents
 
-  - if current_agent.admin?
+  - if current_agent_role.admin?
     .col-md-4
       .card
         .card-header

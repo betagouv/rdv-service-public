@@ -46,19 +46,19 @@ describe Users::GeoSearch, type: :service_model do
     let!(:zone_ville) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector_ville) }
 
     # first agent : sector Arques, orga 1
-    let!(:agent_arques1) { create(:agent, organisations: [organisation1]) }
+    let!(:agent_arques1) { create(:agent, basic_role_in_organisations: [organisation1]) }
     let!(:attribution_arques1) { SectorAttribution.create(level: "agent", sector: sector_arques, organisation: organisation1, agent: agent_arques1) }
     let!(:plage_ouverture_arques1) { create(:plage_ouverture, agent: agent_arques1, motifs: [motifs_orga1[0], motifs_orga1[1]], organisation: organisation1) }
-    let!(:agent_arques_not_attributed) { create(:agent, organisations: [organisation1]) }
+    let!(:agent_arques_not_attributed) { create(:agent, basic_role_in_organisations: [organisation1]) }
     let!(:plage_ouverture_arques_not_attributed) { create(:plage_ouverture, agent: agent_arques_not_attributed, motifs: [motifs_orga1[2]], organisation: organisation1) }
 
     # second agent : sector Ville, orga 1
-    let!(:agent_ville1) { create(:agent, organisations: [organisation1]) }
+    let!(:agent_ville1) { create(:agent, basic_role_in_organisations: [organisation1]) }
     let!(:attribution_ville1) { SectorAttribution.create(level: "agent", sector: sector_ville, organisation: organisation1, agent: agent_ville1) }
     let!(:plage_ouverture_ville1) { create(:plage_ouverture, agent: agent_ville1, motifs: [motifs_orga1[4]], organisation: organisation1) }
 
     # third agent : sector Ville, orga 2
-    let!(:agent_ville2) { create(:agent, organisations: [organisation2]) }
+    let!(:agent_ville2) { create(:agent, basic_role_in_organisations: [organisation2]) }
     let!(:attribution_ville2) { SectorAttribution.create(level: "agent", sector: sector_ville, organisation: organisation2, agent: agent_ville2) }
     let!(:plage_ouverture_ville2) { create(:plage_ouverture, agent: agent_ville2, motifs: [motifs_orga2[0]], organisation: organisation2) }
 

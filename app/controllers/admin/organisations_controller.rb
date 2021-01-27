@@ -33,9 +33,11 @@ class Admin::OrganisationsController < AgentAuthController
   end
 
   def create
-    @organisation = Organisation.new(new_organisation_params)
+    @organisation = Organisation.new(
+      agent_roles_attributes: [{ agent: current_agent, level: AgentRole::LEVEL_ADMIN }],
+      **new_organisation_params
+    )
     authorize(@organisation)
-    @organisation.agents = [current_agent]
     if @organisation.save
       redirect_to organisation_home_path(@organisation), flash: { success: "Organisation créée !" }
     else

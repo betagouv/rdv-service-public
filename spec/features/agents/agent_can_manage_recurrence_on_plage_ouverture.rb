@@ -1,5 +1,6 @@
 describe "Agent can manage recurrence on plage d'ouverture" do
-  let!(:agent) { create(:agent) }
+  let!(:organisation) { create(:organisation) }
+  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let!(:plage_ouverture) { create(:plage_ouverture, agent: agent, first_day: Time.zone.local(2019, 12, 3)) }
 
   before do

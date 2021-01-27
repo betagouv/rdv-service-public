@@ -9,15 +9,25 @@ class AgentRole < ApplicationRecord
   belongs_to :organisation
 
   validates :level, inclusion: { in: LEVELS }
+  validates :agent, uniqueness: { scope: :organisation }
 
   scope :level_basic, -> { where(level: LEVEL_BASIC) }
   scope :level_admin, -> { where(level: LEVEL_ADMIN) }
+  scope :in_departement, lambda { |dpt|
+    joins(:organisation).where(organisations: { departement: dpt.to_s })
+  }
+
+  accepts_nested_attributes_for :agent
 
   def basic?
-    role == LEVEL_BASIC
+    level == LEVEL_BASIC
   end
 
   def admin?
-    role == LEVEL_ADMIN
+    level == LEVEL_ADMIN
+  end
+
+  def can_access_others_planning?
+    admin? || agent.service.secretariat?
   end
 end

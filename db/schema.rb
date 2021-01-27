@@ -106,7 +106,7 @@ ActiveRecord::Schema.define(version: 2021_01_26_141233) do
   create_table "agents_organisations", force: :cascade do |t|
     t.bigint "agent_id"
     t.bigint "organisation_id"
-    t.string "level", null: false
+    t.string "level", default: "basic", null: false
     t.index ["agent_id"], name: "index_agents_organisations_on_agent_id"
     t.index ["organisation_id", "agent_id"], name: "index_agents_organisations_on_organisation_id_and_agent_id", unique: true
     t.index ["organisation_id"], name: "index_agents_organisations_on_organisation_id"

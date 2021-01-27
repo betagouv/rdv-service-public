@@ -26,7 +26,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     after { travel_back }
 
     describe "when there is an available creneau" do
-      let!(:agent) { create(:agent, organisations: [organisation]) }
+      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let(:mock_creneau) do
         instance_double(Creneau, agent: agent, motif: motif, lieu: lieu, starts_at: starts_at, duration_in_min: 30)
       end

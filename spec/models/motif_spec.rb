@@ -47,23 +47,23 @@ describe Motif, type: :model do
     subject { Motif.available_motifs_for_organisation_and_agent(motif.organisation, agent) }
 
     describe "for secretaire" do
-      let(:agent) { create(:agent, :secretaire, organisations: [organisation]) }
+      let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
       it { is_expected.to contain_exactly(motif3) }
     end
 
     describe "for other service" do
-      let(:agent) { create(:agent, service: service, organisations: [organisation]) }
+      let(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
 
       it { is_expected.to contain_exactly(motif, motif2, motif3) }
     end
 
     describe "for admin" do
-      let(:agent) { create(:agent, :admin, organisations: [organisation]) }
+      let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
       it { is_expected.to contain_exactly(motif, motif2, motif3, motif5) }
     end
 
     describe "for secretary admin" do
-      let(:agent) { create(:agent, :secretaire, :admin, organisations: [organisation]) }
+      let(:agent) { create(:agent, :secretaire, admin_role_in_organisations: [organisation]) }
       it { is_expected.to contain_exactly(motif, motif2, motif3, motif5) }
     end
   end
@@ -72,9 +72,9 @@ describe Motif, type: :model do
     let(:org1) { create(:organisation) }
     let!(:service_pmi) { create(:service, name: "PMI") }
     let!(:service_secretariat) { create(:service, name: Service::SECRETARIAT) }
-    let!(:agent_pmi1) { create(:agent, organisations: [org1], service: service_pmi) }
-    let!(:agent_pmi2) { create(:agent, organisations: [org1], service: service_pmi) }
-    let!(:agent_secretariat1) { create(:agent, organisations: [org1], service: service_secretariat) }
+    let!(:agent_pmi1) { create(:agent, basic_role_in_organisations: [org1], service: service_pmi) }
+    let!(:agent_pmi2) { create(:agent, basic_role_in_organisations: [org1], service: service_pmi) }
+    let!(:agent_secretariat1) { create(:agent, basic_role_in_organisations: [org1], service: service_secretariat) }
     let!(:motif) { create(:motif, service: service_pmi, organisation: org1) }
 
     subject { motif.authorized_agents.to_a }
@@ -88,7 +88,7 @@ describe Motif, type: :model do
 
     context "agent from same service but different orga" do
       let(:org2) { create(:organisation) }
-      let!(:agent_pmi3) { create(:agent, organisations: [org2], service: service_pmi) }
+      let!(:agent_pmi3) { create(:agent, basic_role_in_organisations: [org2], service: service_pmi) }
       it { should_not include(agent_pmi3) }
     end
   end

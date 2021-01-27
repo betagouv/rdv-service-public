@@ -2,7 +2,7 @@ RSpec.describe Users::CreneauxController, type: :controller do
   render_views
   let(:organisation) { create(:organisation) }
   let(:now) { "01/01/2019 10:00".to_datetime }
-  let!(:agent) { create(:agent, organisations: [organisation]) }
+  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
   let!(:motif) { create(:motif, organisation: organisation) }
   let!(:user) { create(:user) }

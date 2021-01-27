@@ -2,9 +2,9 @@ RSpec.describe Admin::AgentsController, type: :controller do
   render_views
 
   let!(:organisation) { create(:organisation) }
-  let!(:agent) { create(:agent, :admin, organisations: [organisation]) }
-  let!(:agent1) { create(:agent, :admin, organisations: [organisation]) }
-  let(:agent_invitee) { create(:agent, confirmed_at: nil, first_name: nil, last_name: nil, organisations: [organisation]) }
+  let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+  let!(:agent1) { create(:agent, admin_role_in_organisations: [organisation]) }
+  let(:agent_invitee) { create(:agent, confirmed_at: nil, first_name: nil, last_name: nil, basic_role_in_organisations: [organisation]) }
 
   before do
     sign_in agent

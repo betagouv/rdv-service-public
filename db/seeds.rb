@@ -292,13 +292,12 @@ user_org_paris_nord_jean.profile_for(org_paris_nord).update!(logement: 2)
 agent_org_paris_nord_pmi_martine = Agent.new(
   email: "martine@demo.rdv-solidarites.fr",
   uid: "martine@demo.rdv-solidarites.fr",
-  role: :admin,
   first_name: "Martine",
   last_name: "Validay",
   password: "123456",
   service_id: service_pmi.id,
-  organisation_ids: [org_paris_nord.id],
-  invitation_accepted_at: 10.days.ago
+  invitation_accepted_at: 10.days.ago,
+  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_ADMIN }]
 )
 agent_org_paris_nord_pmi_martine.skip_confirmation!
 agent_org_paris_nord_pmi_martine.save!
@@ -306,13 +305,12 @@ agent_org_paris_nord_pmi_martine.save!
 agent_org_paris_nord_pmi_marco = Agent.new(
   email: "marco@demo.rdv-solidarites.fr",
   uid: "marco@demo.rdv-solidarites.fr",
-  role: :user,
   first_name: "Marco",
   last_name: "Durand",
   password: "123456",
   service_id: service_pmi.id,
-  organisation_ids: [org_paris_nord.id],
-  invitation_accepted_at: 10.days.ago
+  invitation_accepted_at: 10.days.ago,
+  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_BASIC }]
 )
 agent_org_paris_nord_pmi_marco.skip_confirmation!
 agent_org_paris_nord_pmi_marco.save!
@@ -320,13 +318,12 @@ agent_org_paris_nord_pmi_marco.save!
 agent_org_paris_nord_social_polo = Agent.new(
   email: "polo@demo.rdv-solidarites.fr",
   uid: "polo@demo.rdv-solidarites.fr",
-  role: :user,
   first_name: "Polo",
   last_name: "Durant",
   password: "123456",
   service_id: service_social.id,
-  organisation_ids: [org_paris_nord.id],
-  invitation_accepted_at: 10.days.ago
+  invitation_accepted_at: 10.days.ago,
+  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_BASIC }]
 )
 agent_org_paris_nord_social_polo.skip_confirmation!
 agent_org_paris_nord_social_polo.save!
@@ -334,13 +331,12 @@ agent_org_paris_nord_social_polo.save!
 org_arques_pmi_maya = Agent.new(
   email: "maya@demo.rdv-solidarites.fr",
   uid: "maya@demo.rdv-solidarites.fr",
-  role: :admin,
   first_name: "Maya",
   last_name: "Patrick",
   password: "123456",
   service_id: service_pmi.id,
-  organisation_ids: Organisation.where(departement: "62").pluck(:id),
-  invitation_accepted_at: 10.days.ago
+  invitation_accepted_at: 10.days.ago,
+  roles_attributes: Organisation.where(departement: "62").pluck(:id).map { { organisation_id: _1, level: AgentRole::LEVEL_ADMIN } }
 )
 org_arques_pmi_maya.skip_confirmation!
 org_arques_pmi_maya.save!
@@ -348,13 +344,12 @@ org_arques_pmi_maya.save!
 agent_org_bapaume_pmi_bruno = Agent.new(
   email: "bruno@demo.rdv-solidarites.fr",
   uid: "bruno@demo.rdv-solidarites.fr",
-  role: :admin,
   first_name: "Bruno",
   last_name: "Frangi",
   password: "123456",
   service_id: service_pmi.id,
-  organisation_ids: [org_bapaume.id],
-  invitation_accepted_at: 10.days.ago
+  invitation_accepted_at: 10.days.ago,
+  roles_attributes: [{ organisation: org_bapaume, level: AgentRole::LEVEL_ADMIN }]
 )
 agent_org_bapaume_pmi_bruno.skip_confirmation!
 agent_org_bapaume_pmi_bruno.save!
@@ -362,13 +357,12 @@ agent_org_bapaume_pmi_bruno.save!
 agent_org_bapaume_pmi_gina = Agent.new(
   email: "gina@demo.rdv-solidarites.fr",
   uid: "gina@demo.rdv-solidarites.fr",
-  role: :admin,
   first_name: "Gina",
   last_name: "Leone",
   password: "123456",
   service_id: service_pmi.id,
-  organisation_ids: [org_bapaume.id],
-  invitation_accepted_at: 10.days.ago
+  invitation_accepted_at: 10.days.ago,
+  roles_attributes: [{ organisation: org_bapaume, level: AgentRole::LEVEL_ADMIN }]
 )
 agent_org_bapaume_pmi_gina.skip_confirmation!
 agent_org_bapaume_pmi_gina.save!

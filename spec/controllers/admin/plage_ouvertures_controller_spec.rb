@@ -3,7 +3,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
 
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }
-  let!(:agent) { create(:agent, organisations: [organisation], service: service) }
+  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
   let!(:motif) { create(:motif, organisation: organisation, service: service) }
   let!(:lieu1) { create(:lieu, organisation: organisation, name: "MDS Sud", address: "10 rue Belsunce") }
 
@@ -50,7 +50,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
     end
 
     describe "GET #index.json" do
-      let(:agent) { create(:agent, organisations: [organisation]) }
+      let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let!(:plage_ouverture) { create(:plage_ouverture, :every_two_weeks, title: "Une semaine sur deux les mercredis à partir du 17/07", first_day: Date.new(2019, 7, 17), lieu: lieu1, agent: agent, organisation: organisation, active_warnings_confirm_decision: true) }
       let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, title: "Tous les lundis à partir du 22/07", first_day: Date.new(2019, 7, 22), lieu: lieu1, agent: agent, organisation: organisation, active_warnings_confirm_decision: true) }
       let!(:plage_ouverture3) { create(:plage_ouverture, title: "Une seule fois le 24/07", first_day: Date.new(2019, 7, 24), lieu: lieu1, agent: agent, organisation: organisation, active_warnings_confirm_decision: true) }
@@ -286,7 +286,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
   end
 
   context "admin CRUD on an agent's plage ouverture" do
-    let(:admin) { create(:agent, role: "admin", organisations: [organisation]) }
+    let(:admin) { create(:agent, admin_role_in_organisations: [organisation]) }
 
     before { sign_in admin }
 

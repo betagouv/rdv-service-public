@@ -3,9 +3,9 @@ describe Admin::ReferentsController, type: :controller do
     it "update user's agent_ids reference and redirect to user's page" do
       organisation = create(:organisation)
       user = create(:user, agents: [], organisations: [organisation])
-      agent = create(:agent, organisations: [organisation])
-      lea = create(:agent, organisations: [organisation])
-      stef = create(:agent, organisations: [organisation])
+      agent = create(:agent, basic_role_in_organisations: [organisation])
+      lea = create(:agent, basic_role_in_organisations: [organisation])
+      stef = create(:agent, basic_role_in_organisations: [organisation])
       expect(agent.organisations).to eq([organisation])
       sign_in agent
 
@@ -17,8 +17,8 @@ describe Admin::ReferentsController, type: :controller do
 
     it "with a bad agent_id only, delete agents and return to user's page" do
       organisation = create(:organisation)
-      agent = create(:agent, organisations: [organisation])
-      lea = create(:agent, organisations: [organisation])
+      agent = create(:agent, basic_role_in_organisations: [organisation])
+      lea = create(:agent, basic_role_in_organisations: [organisation])
       user = create(:user, agents: [lea], organisations: [organisation])
       sign_in agent
 
@@ -30,8 +30,8 @@ describe Admin::ReferentsController, type: :controller do
 
     it "when update failed return to user's page with an error message" do
       organisation = create(:organisation)
-      agent = create(:agent, organisations: [organisation])
-      lea = create(:agent, organisations: [organisation])
+      agent = create(:agent, basic_role_in_organisations: [organisation])
+      lea = create(:agent, basic_role_in_organisations: [organisation])
       user = create(:user, agents: [lea], organisations: [organisation])
       sign_in agent
 

@@ -1,5 +1,6 @@
 describe "Admin can configure the organisation" do
-  let!(:agent_admin) { create(:agent, :admin) }
+  let!(:organisation) { create(:organisation) }
+  let!(:agent_admin) { create(:agent, admin_role_in_organisations: [organisation]) }
 
   before do
     login_as(agent_admin, scope: :agent)
