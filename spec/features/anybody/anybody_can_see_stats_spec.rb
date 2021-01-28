@@ -9,6 +9,7 @@ describe "Anybody can see stats" do
       expect(page).to have_content("Statistiques")
       expect(page).to have_content("RDV créés")
       expect(page).to have_content("Usagers créés")
+      expect(page).to have_title("Statistiques Du ")
     end
   end
 
