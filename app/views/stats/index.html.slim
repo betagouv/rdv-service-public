@@ -3,7 +3,7 @@
     | Statistiques
     = " pour le #{@departement}" if @departement.present?
     br
-    small Du #{l(Stat.default_date_range.first.to_date)} au #{l(Stat.default_date_range.last.to_date)}
+    small< Du #{l(Stat.default_date_range.first.to_date)} au #{l(Stat.default_date_range.last.to_date)}
 
 .container.mt-3
   .card
