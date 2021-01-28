@@ -1,8 +1,7 @@
 class Admin::AgentRolesController < AgentAuthController
-  before_action :set_agent, :set_agent_removal_presenter
+  before_action :set_agent_role, :set_agent_removal_presenter
 
   def edit
-    @agent_role = AgentRole.find(params[:id])
     authorize(@agent_role)
   end
 
@@ -22,11 +21,11 @@ class Admin::AgentRolesController < AgentAuthController
     params.require(:agent_role).permit(:level)
   end
 
-  def set_agent
-    @agent = Agent.find(params[:id])
+  def set_agent_role
+    @agent_role = AgentRole.find(params[:id])
   end
 
   def set_agent_removal_presenter
-    @agent_removal_presenter = AgentRemovalPresenter.new(@agent, current_organisation)
+    @agent_removal_presenter = AgentRemovalPresenter.new(@agent_role.agent, current_organisation)
   end
 end

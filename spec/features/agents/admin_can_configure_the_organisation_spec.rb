@@ -59,7 +59,7 @@ describe "Admin can configure the organisation" do
     click_button("Modifier")
 
     expect_page_title("Vos agents")
-    expect(page).to have_selector("span.badge.badge-danger", count: 2)
+    expect(page).to have_content("Admin", count: 2)
 
     click_link "Tony PATRICK"
     click_link("Supprimer le compte")

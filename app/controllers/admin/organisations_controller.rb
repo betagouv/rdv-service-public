@@ -7,7 +7,11 @@ class Admin::OrganisationsController < AgentAuthController
   before_action :follow_unique, only: :index
 
   def index
-    @organisations_by_departement = policy_scope(Organisation).order(:name).group_by(&:departement)
+    @agent_roles_by_departement = policy_scope(AgentRole)
+      .merge(current_agent.roles)
+      .includes(:organisation)
+      .order("organisations.name")
+      .to_a.group_by { _1.organisation.departement }
     render layout: "registration"
   end
 
