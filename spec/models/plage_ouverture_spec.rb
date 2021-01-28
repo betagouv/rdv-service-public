@@ -26,7 +26,6 @@ describe PlageOuverture, type: :model do
     end
   end
 
-  require Rails.root.join "spec/models/concerns/recurrence_concern_spec.rb"
   it_behaves_like "recurrence"
 
   describe ".not_expired_for_motif_name_and_lieu" do
