@@ -1,5 +1,5 @@
 test: ## Run the tests and rubocop
-	bundle exec rubocop -a && bundle exec rspec --profile 3 && bundle exec brakeman
+	bundle exec rubocop -a && bundle exec brakeman --no-pager && bundle exec rspec --profile 3
 
 install: ## Install or update dependencies
 	bundle install && yarn install && bundle exec rails db:migrate
