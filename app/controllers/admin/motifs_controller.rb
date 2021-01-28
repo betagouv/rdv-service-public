@@ -63,9 +63,9 @@ class Admin::MotifsController < AgentAuthController
   private
 
   def filtered(motifs, params)
-    motifs = online_filtered(@motifs, params[:online_filter]) if params[:online_filter].present?
-    motifs = service_filtered(@motifs, params[:service_filter]) if params[:service_filter].present?
-    motifs = location_type_filtered(@motifs, params[:location_type_filter]) if params[:location_type_filter].present?
+    motifs = online_filtered(motifs, params[:online_filter]) if params[:online_filter].present?
+    motifs = motifs.where(service_id: params[:service_filter]) if params[:service_filter].present?
+    motifs = motifs.where(location_type: params[:location_type_filter]) if params[:location_type_filter].present?
     motifs
   end
 
@@ -75,14 +75,6 @@ class Admin::MotifsController < AgentAuthController
     else
       motifs.not_reservable_online
     end
-  end
-
-  def service_filtered(motifs, service_filter)
-    motifs.where(service_id: service_filter)
-  end
-
-  def location_type_filtered(motifs, location_type_filter)
-    motifs.where(location_type: location_type_filter)
   end
 
   def set_motif
