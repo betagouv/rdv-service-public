@@ -7,15 +7,7 @@ class Admin::MotifsController < AgentAuthController
   def index
     @motifs = policy_scope(Motif).active
     @motifs = params[:search].present? ? @motifs.search_by_text(params[:search]) : @motifs
-    if params[:online_filter].present?
-      if params[:online_filter] == "En ligne"
-        @motifs = @motifs.reservable_online
-      else
-        @motifs = @motifs.not_reservable_online
-      end
-    end
-    @motifs = params[:service_filter].present? ? @motifs.where(service_id: params[:service_filter]) : @motifs
-    @motifs = params[:location_type_filter].present? ? @motifs.where(location_type: params[:location_type_filter]) : @motifs
+    @motifs = filtered(@motifs, params)
     @motifs = @motifs.includes(:organisation).includes(:service).ordered_by_name.page(params[:page])
 
     @sectors_attributed_to_organisation_count = Sector.attributed_to_organisation(current_organisation).count
@@ -69,6 +61,29 @@ class Admin::MotifsController < AgentAuthController
   end
 
   private
+
+  def filtered(motifs, params)
+    motifs = online_filtered(@motifs, params[:online_filter]) if params[:online_filter].present?
+    motifs = service_filtered(@motifs, params[:service_filter]) if params[:service_filter].present?
+    motifs = location_type_filtered(@motifs, params[:location_type_filter]) if params[:location_type_filter].present?
+    motifs
+  end
+
+  def online_filtered(motifs, online_filter)
+    if online_filter == "En ligne"
+      motifs.reservable_online
+    else
+      motifs.not_reservable_online
+    end
+  end
+
+  def service_filtered(motifs, service_filter)
+    motifs.where(service_id: service_filter)
+  end
+
+  def location_type_filtered(motifs, location_type_filter)
+    motifs.where(location_type: location_type_filter)
+  end
 
   def set_motif
     @motif = policy_scope(Motif).find(params[:id])

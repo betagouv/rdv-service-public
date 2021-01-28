@@ -6,9 +6,9 @@ class MotifFilters {
   }
 
   changeFilters = () => {
-    document.querySelector("#service_filter").value = document.querySelector("#service_filter_select").value
-    document.querySelector("#online_filter").value = document.querySelector("#online_filter_select").value
-    document.querySelector("#location_type_filter").value = document.querySelector("#location_type_filter_select").value
+    ["service", "online", "location_type"].forEach(function (field) {
+      document.querySelector(`#${field}_filter`).value = document.querySelector(`#${field}_filter_select`).value
+    })
     document.querySelector(".search-and-filter-form").submit()
   }
 }
