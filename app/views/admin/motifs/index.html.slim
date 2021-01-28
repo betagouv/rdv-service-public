@@ -28,19 +28,19 @@
               div
                 = t("activerecord.attributes.motif.reservable_online")
               div
-                = select_tag("online_filter_select", options_for_select(["En ligne", "Hors ligne"], params[:online_filter]), include_blank: "Tous", class: "motif-filters")
+                = select_tag("online_filter_select", options_for_select(["En ligne", "Hors ligne"], params[:online_filter]), include_blank: "Tous", class: "motif-filters select2-input")
             - if @display_sectorisation_level
               th= t("activerecord.attributes.motif.sectorisation_level")
             th
               div
                 = t("activerecord.attributes.motif.service")
               div
-                = select_tag("service_filter_select", options_from_collection_for_select(Service.all, "id", "short_name", params[:service_filter]), include_blank: "Tous", class: "motif-filters")
+                = select_tag("service_filter_select", options_from_collection_for_select(Service.all, "id", "short_name", params[:service_filter]), include_blank: "Tous", class: "motif-filters select2-input")
             th
               div
                 = t("activerecord.attributes.motif.location_type")
               div
-                = select_tag("location_type_filter_select", options_for_select(Motif.location_types.map{|l| [Motif.human_enum_name(:location_type, l[0]), l[1]] }, params[:location_type_filter]), include_blank: "Tous", class: "motif-filters")
+                = select_tag("location_type_filter_select", options_for_select(Motif.location_types.map{|l| [Motif.human_enum_name(:location_type, l[0]), l[1]] }, params[:location_type_filter]), include_blank: "Tous", class: "motif-filters select2-input")
             th= t("activerecord.attributes.motif.default_duration")
             - if policy([:agent, mock_motif]).edit? || policy([:agent, mock_motif]).destroy?
               th Actions
