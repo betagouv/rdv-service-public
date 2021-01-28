@@ -11,13 +11,19 @@ class RdvsOverlapping
       .not_cancelled
       .future
       .with_agent_among(agents)
-      .where(id: (Rdv.select(:id).ends_at_in_range(starts_at..ends_at) +
-                  Rdv.select(:id).starts_at_in_range(starts_at..ends_at) +
+      .where(id: (Rdv.select(:id).ends_at_in_range(rdv_range) +
+                  Rdv.select(:id).starts_at_in_range(rdv_range) +
                   Rdv.select(:id).where("starts_at < ?", starts_at).where("#{Rdv::ENDS_AT_SQL} > ?", ends_at)))
       .ordered_by_ends_at
   end
 
   def rdvs_overlapping_rdv?
     rdvs_overlapping_rdv.any?
+  end
+
+  private
+
+  def rdv_range
+    (starts_at + 1.second)..(ends_at - 1.second)
   end
 end
