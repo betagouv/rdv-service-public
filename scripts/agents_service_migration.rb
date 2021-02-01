@@ -5,7 +5,12 @@
 require "csv"
 
 class AgentServiceMigration
+  include PlageOuverturesHelper
   attr_reader :agent, :service_target, :simulation, :motifs_mapping
+
+  def l(*args)
+    I18n.l(*args)
+  end
 
   def initialize(agent, service_target, simulation: true, motifs_mapping: {})
     @agent = agent
@@ -28,42 +33,50 @@ class AgentServiceMigration
   end
 
   def self.upsert_target_motif(motif_source, organisation, service_target, motifs_mapping)
-    mapped_name = motifs_mapping.fetch([organisation.name, motif_source.name], motif_source.name)
-    target_motif = Motif.where(organisation: organisation, service: service_target, name: mapped_name).first
-    if target_motif.nil?
-      Rails.logger.warn "orga '#{organisation.name}';impossible de trouver un motif '#{mapped_name}';dans le `service #{service_target.short_name}"
-      return nil
-    end
-    target_motif
+    mapped_name = motifs_mapping.fetch([organisation.name, motif_source.name.strip], motif_source.name.gsub("service social", "service SAPHA").strip)
+    target_motif = Motif.where(organisation: organisation, service: service_target, name: mapped_name, location_type: motif_source.location_type).first
+    return target_motif if target_motif.present?
+
+    Rails.logger.warn "orga '#{organisation.name}'; service #{service_target.short_name}; Motif '#{motif_source.name} => #{mapped_name}' créé"
+    Motif.create!(
+      organisation: organisation,
+      service: service_target,
+      name: mapped_name,
+      **motif_source.attributes.symbolize_keys.slice(
+        :name, :color, :default_duration_in_min, :reservable_online,
+        :min_booking_delay, :max_booking_delay, :restriction_for_rdv,
+        :instruction_for_rdv, :for_secretariat, :location_type, :follow_up,
+        :visibility_type, :sectorisation_level
+      )
+    )
   end
 
   private
 
   def migrate_from_organisation(organisation)
-    agent.plage_ouvertures.where(organisation: organisation).each(&:destroy!)
-    agent.rdvs.where(organisation: organisation).each { migrate_rdv(_1, organisation) }
+    pos = agent.plage_ouvertures.where(organisation: organisation)
+    pos.each { migrate_plage_ouverture(_1, organisation) }
+    rdvs = agent.rdvs.where(organisation: organisation)
+    rdvs.each { migrate_rdv(_1, organisation) }
+    Rails.logger.warn("agent migré #{agent.full_name} - #{pos.count} POs - #{rdvs.count} RDVs")
+    agent.update_columns(service_id: service_target.id) unless simulation
   end
 
   def migrate_plage_ouverture(plage_ouverture, organisation)
-    motifs_target = plage_ouverture.motifs.map { self.class.upsert_target_motif_memoized(_1, organisation, service_target, motifs_mapping) }
-    return if motifs_target.any?(&:nil?)
+    return if plage_ouverture.motifs.empty?
 
+    motifs_target = plage_ouverture.motifs.map { self.class.upsert_target_motif_memoized(_1, organisation, service_target, motifs_mapping) }
     if simulation
       Rails.logger.info "would update PO #{plage_ouverture.id} with motifs #{motifs_target.pluck(:name).join(' - ')}"
     else
-      plage_ouverture.update!(motifs: motifs_target)
+      plage_ouverture.update!(motifs: motifs_target, active_warnings_confirm_decision: true)
     end
   end
 
   def migrate_rdv(rdv, organisation)
     motif_target = self.class.upsert_target_motif_memoized(rdv.motif, organisation, service_target, motifs_mapping)
-    return if motif_target.nil?
-
-    if simulation
-      Rails.logger.info "would update RDV #{rdv.id} with motif #{motif_target.name}"
-    else
-      rdv.update!(motif: motif_target)
-    end
+    Rails.logger.info "updating RDV #{rdv.id} with motif #{motif_target.name}..."
+    rdv.update!(motif: motif_target) unless simulation
   end
 end
 
