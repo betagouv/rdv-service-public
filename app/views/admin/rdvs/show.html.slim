@@ -57,18 +57,19 @@
               = link_to "Voir la fiche usager", admin_organisation_user_path(current_organisation, user), class: "btn btn-outline-primary small"
 
         .card-body
+          - displayable_user = DisplayableUser.new(user, current_organisation)
           p.card-text
             i.fa.fa-fw.fa-phone>
-            - phone_number = DisplayableUser.new(user, current_organisation).phone_number
+            - phone_number = displayable_user.phone_number
             = display_value_or_na_placeholder(phone_number)
             - if phone_number.present?
-              span> - Notifications par SMS #{DisplayableUser.new(user, current_organisation).notify_by_sms}
+              span> - Notifications par SMS #{displayable_user.notify_by_sms}
           p.card-text
             i.fa.fa-fw.fa-envelope>
-            - email = DisplayableUser.new(user, current_organisation).email
+            - email = displayable_user.email
             = display_value_or_na_placeholder(email)
             - if email.present?
-              span> - Notifications par email #{DisplayableUser.new(user, current_organisation).notify_by_email}
+              span> - Notifications par email #{displayable_user.notify_by_email}
 
           - if user.notes_for(current_organisation).present?
             .d-flex title="Remarques"
