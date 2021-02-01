@@ -1,9 +1,9 @@
 RSpec.describe Admin::MotifsController, type: :controller do
   render_views
 
-  let(:agent) { create(:agent, :admin) }
-  let(:organisation_id) { agent.organisation_ids.first }
-  let!(:motif) { create(:motif, organisation_id: organisation_id) }
+  let(:organisation) { create(:organisation) }
+  let(:agent) { create(:agent, :admin, organisations: [organisation]) }
+  let!(:motif) { create(:motif, organisation_id: organisation.id) }
 
   before do
     sign_in agent
@@ -11,28 +11,37 @@ RSpec.describe Admin::MotifsController, type: :controller do
 
   describe "GET #index" do
     it "returns a success response" do
-      get :index, params: { organisation_id: organisation_id }
+      get :index, params: { organisation_id: organisation.id }
       expect(response).to be_successful
+    end
+
+    context "with a filter query parameter" do
+      it "returns motif list where name match" do
+        create(:motif, organisation: organisation)
+        bla_motif = create(:motif, name: "bla", organisation: organisation)
+        get :index, params: { organisation_id: organisation.id, search: "bla" }
+        expect(assigns(:motifs)).to eq([bla_motif])
+      end
     end
   end
 
   describe "GET #show" do
     it "returns a success response" do
-      get :show, params: { organisation_id: organisation_id, id: motif.to_param }
+      get :show, params: { organisation_id: organisation.id, id: motif.to_param }
       expect(response).to be_successful
     end
   end
 
   describe "GET #new" do
     it "returns a success response" do
-      get :new, params: { organisation_id: organisation_id }
+      get :new, params: { organisation_id: organisation.id }
       expect(response).to be_successful
     end
   end
 
   describe "GET #edit" do
     it "returns a success response" do
-      get :edit, params: { organisation_id: organisation_id, id: motif.to_param }
+      get :edit, params: { organisation_id: organisation.id, id: motif.to_param }
       expect(response).to be_successful
     end
   end
@@ -45,13 +54,13 @@ RSpec.describe Admin::MotifsController, type: :controller do
 
       it "creates a new Motif" do
         expect do
-          post :create, params: { organisation_id: organisation_id, motif: valid_attributes }
+          post :create, params: { organisation_id: organisation.id, motif: valid_attributes }
         end.to change(Motif, :count).by(1)
       end
 
       it "redirects to the created motif" do
-        post :create, params: { organisation_id: organisation_id, motif: valid_attributes }
-        expect(response).to redirect_to(admin_organisation_motifs_path(organisation_id))
+        post :create, params: { organisation_id: organisation.id, motif: valid_attributes }
+        expect(response).to redirect_to(admin_organisation_motifs_path(organisation.id))
       end
     end
 
@@ -64,12 +73,12 @@ RSpec.describe Admin::MotifsController, type: :controller do
 
       it "does not create a new Motif" do
         expect do
-          post :create, params: { organisation_id: organisation_id, motif: invalid_attributes }
+          post :create, params: { organisation_id: organisation.id, motif: invalid_attributes }
         end.not_to change(Motif, :count)
       end
 
       it "returns a success response (i.e. to display the 'new' template)" do
-        post :create, params: { organisation_id: organisation_id, motif: invalid_attributes }
+        post :create, params: { organisation_id: organisation.id, motif: invalid_attributes }
         expect(response).to be_successful
       end
     end
@@ -81,7 +90,7 @@ RSpec.describe Admin::MotifsController, type: :controller do
       end
 
       subject do
-        post :create, params: { organisation_id: organisation_id, motif: valid_attributes }
+        post :create, params: { organisation_id: organisation.id, motif: valid_attributes }
       end
 
       it "creates a new Motif" do
@@ -91,7 +100,7 @@ RSpec.describe Admin::MotifsController, type: :controller do
   end
 
   describe "PUT #update" do
-    subject { put :update, params: { organisation_id: organisation_id, id: motif.to_param, motif: new_attributes } }
+    subject { put :update, params: { organisation_id: organisation.id, id: motif.to_param, motif: new_attributes } }
 
     before { subject }
 
@@ -108,7 +117,7 @@ RSpec.describe Admin::MotifsController, type: :controller do
       end
 
       it "redirects to the motif" do
-        expect(response).to redirect_to(admin_organisation_motif_path(organisation_id, motif))
+        expect(response).to redirect_to(admin_organisation_motif_path(organisation.id, motif))
       end
     end
 
@@ -133,13 +142,13 @@ RSpec.describe Admin::MotifsController, type: :controller do
   describe "DELETE #destroy" do
     it "destroys the requested motif" do
       expect do
-        delete :destroy, params: { organisation_id: organisation_id, id: motif.to_param }
+        delete :destroy, params: { organisation_id: organisation.id, id: motif.to_param }
       end.to change(Motif, :count).by(-1)
     end
 
     it "redirects to the motifs list" do
-      delete :destroy, params: { organisation_id: organisation_id, id: motif.to_param }
-      expect(response).to redirect_to(admin_organisation_motifs_path(organisation_id))
+      delete :destroy, params: { organisation_id: organisation.id, id: motif.to_param }
+      expect(response).to redirect_to(admin_organisation_motifs_path(organisation.id))
     end
   end
 end

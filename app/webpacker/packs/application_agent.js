@@ -18,6 +18,7 @@ import { Modal } from 'components/modal';
 import { Rightbar } from 'components/rightbar';
 import { PopulateLibelle } from 'components/populate-libelle';
 import { ServiceFilterForMotifsSelects } from 'components/service-filter-for-motifs-selects';
+import { MotifFilters } from 'components/motif-filters';
 import 'components/analytic.js';
 import { PlacesInputs } from 'components/places-inputs.js';
 import { RdvWizardStep2 } from 'components/rdv_wizard_step2.js';
@@ -97,6 +98,8 @@ $(document).on('turbolinks:load', function() {
   new Datetimepicker();
 
   new MotifForm();
+
+  new MotifFilters();
 
   new RdvWizardStep2();
 

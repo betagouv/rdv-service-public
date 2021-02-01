@@ -38,7 +38,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/rdv.rb",
-      "line": 55,
+      "line": 56,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "where(\"#{Arel.sql(\"(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)\")} BETWEEN ? AND ?\", range.begin, range.end)",
       "render_path": null,
@@ -58,7 +58,7 @@
       "check_name": "PermitAttributes",
       "message": "Potentially dangerous key allowed for mass assignment",
       "file": "app/controllers/admin/permissions_controller.rb",
-      "line": 20,
+      "line": 22,
       "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
       "code": "params.require(:agent_permission).permit(:role)",
       "render_path": null,
@@ -78,7 +78,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/rdv.rb",
-      "line": 63,
+      "line": 65,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "where(\"starts_at <= ?\", (Time.zone.now + time_margin)).where(\"#{Arel.sql(\"(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)\")} >= ?\", (Time.zone.now - time_margin))",
       "render_path": null,
@@ -125,19 +125,19 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
-      "fingerprint": "d73171480d9871ed50cc113b6a9bfc457a0c694d2f085d7537447509b41509e0",
+      "fingerprint": "d47b97da06b485e3b3e6da6d8056f1fb1f0beb9a247bc81f90ae0947d5f4d584",
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/motifs/index.html.slim",
-      "line": 26,
+      "line": 49,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(Motif).includes(:organisation).active.includes(:service).ordered_by_name.page(params[:page]), {})",
+      "code": "render(action => filtered((policy_scope(Motif).active.search_by_text(params[:search]) or policy_scope(Motif).active), params).includes(:organisation).includes(:service).ordered_by_name.page(params[:page]), {})",
       "render_path": [
         {
           "type": "controller",
           "class": "Admin::MotifsController",
           "method": "index",
-          "line": 12,
+          "line": 16,
           "file": "app/controllers/admin/motifs_controller.rb",
           "rendered": {
             "name": "admin/motifs/index",
@@ -154,6 +154,6 @@
       "note": ""
     }
   ],
-  "updated": "2020-12-22 11:15:18 +0100",
-  "brakeman_version": "4.7.2"
+  "updated": "2021-01-28 15:14:14 +0100",
+  "brakeman_version": "4.10.1"
 }
