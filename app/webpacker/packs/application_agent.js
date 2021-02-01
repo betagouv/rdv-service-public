@@ -107,7 +107,6 @@ $(document).on('turbolinks:load', function() {
 
   new AgentsCreneaux();
 
-
   new AgentUserForm();
 
   new RecordVersions();
