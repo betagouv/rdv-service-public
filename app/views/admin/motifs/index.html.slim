@@ -8,7 +8,7 @@
   - content_for :breadcrumb do
     = link_to 'Créer un motif', new_admin_organisation_motif_path(current_organisation), class:"btn btn-outline-white"
 
-= simple_form_for '', url: admin_organisation_motifs_path(current_organisation), html: { method: :get, class: 'form-inline search-and-filter-form' }, wrapper: :inline_form do |f|
+= simple_form_for '', url: admin_organisation_motifs_path(current_organisation), html: { method: :get, class: 'form-inline js-search-and-filter-form' }, wrapper: :inline_form do |f|
 
   .row
     .col-md-12
@@ -26,19 +26,19 @@
                 div
                   = t("activerecord.attributes.motif.reservable_online")
                 div
-                  = select_tag("online_filter", options_for_select(["En ligne", "Hors ligne"], params[:online_filter]), include_blank: "Tous", class: "motif-filters select2-input")
+                  = select_tag("online_filter", options_for_select(["En ligne", "Hors ligne"], params[:online_filter]), include_blank: "Tous", class: "js-motif-filters select2-input")
               - if @display_sectorisation_level
                 th= t("activerecord.attributes.motif.sectorisation_level")
               th
                 div
                   = t("activerecord.attributes.motif.service")
                 div
-                  = select_tag("service_filter", options_from_collection_for_select(Service.all, "id", "short_name", params[:service_filter]), include_blank: "Tous", class: "motif-filters select2-input")
+                  = select_tag("service_filter", options_from_collection_for_select(Service.all, "id", "short_name", params[:service_filter]), include_blank: "Tous", class: "js-motif-filters select2-input")
               th
                 div
                   = t("activerecord.attributes.motif.location_type")
                 div
-                  = select_tag("location_type_filter", options_for_select(Motif.location_types.map{|l| [Motif.human_enum_name(:location_type, l[0]), l[1]] }, params[:location_type_filter]), include_blank: "Tous", class: "motif-filters select2-input")
+                  = select_tag("location_type_filter", options_for_select(Motif.location_types.map{|l| [Motif.human_enum_name(:location_type, l[0]), l[1]] }, params[:location_type_filter]), include_blank: "Tous", class: "js-motif-filters select2-input")
               th= t("activerecord.attributes.motif.default_duration")
               - if policy([:agent, mock_motif]).edit? || policy([:agent, mock_motif]).destroy?
                 th Actions

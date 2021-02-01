@@ -1,14 +1,13 @@
 class MotifFilters {
   constructor() {
-    console.log("dans le motif filters constructor")
-    document.querySelectorAll('.motif-filters').forEach(formElt => {
+    document.querySelectorAll('.js-motif-filters').forEach(formElt => {
       $(formElt).on('change', this.changeFilters)
     }
     )
   }
 
   changeFilters = () => {
-    document.querySelector(".search-and-filter-form").submit()
+    document.querySelector(".js-search-and-filter-form").submit()
   }
 }
 
