@@ -75,6 +75,7 @@ ActiveRecord::Schema.define(version: 2021_01_26_141233) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string "unconfirmed_email"
+    t.integer "role", default: 0
     t.string "first_name"
     t.string "last_name"
     t.string "invitation_token"

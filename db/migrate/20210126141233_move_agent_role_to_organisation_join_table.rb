@@ -7,7 +7,7 @@ class MoveAgentRoleToOrganisationJoinTable < ActiveRecord::Migration[6.0]
         0 => AgentRole::LEVEL_BASIC, # was user
         1 => AgentRole::LEVEL_ADMIN
       }[agent_role.agent.role]
-      agent_role.update!(level: mapped_role)
+      agent_role.update_columns(level: mapped_role)
     end
     change_column_null :agents_organisations, :level, false
   end
