@@ -15,7 +15,7 @@
           li.list-group-item
             span>= link_to agent_role.organisation.name, organisation_home_path(agent_role.organisation)
             - if agent_role.admin?
-              i.fa.fa-user-lock.text-muted[title="Vous êtes administrateur de cette organisation"]
+              i.fa.fa-user-cog.text-muted[title="Vous êtes administrateur de cette organisation"]
 
 - if policy([:agent, :organisation]).new?
   .text-center.mt-4

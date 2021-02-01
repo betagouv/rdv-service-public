@@ -10,6 +10,11 @@ class MoveAgentRoleToOrganisationJoinTable < ActiveRecord::Migration[6.0]
       agent_role.update!(level: mapped_role)
     end
     change_column_null :agents_organisations, :level, false
-    remove_column :agents, :role
+  end
+
+  def down
+    # data will be lost! only executable a few instants after a failed upgrade
+    remove_column :agents_organisations, :id
+    remove_column :agents_organisations, :level
   end
 end
