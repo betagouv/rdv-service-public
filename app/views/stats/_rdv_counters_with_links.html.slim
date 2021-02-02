@@ -1,0 +1,33 @@
+- path_params = { agent_id: local_assigns[:agent_id], breadcrumb_page: local_assigns[:breadcrumb_page] }.compact
+
+.row
+  .col-xl-4.col-lg-6
+    - [:seen, :excused, :notexcused].each do |temporal_status|
+      = render "stats/rdv_counter_with_link", \
+        label: t("stats.rdv_counters.#{temporal_status}", count: rdvs.status(temporal_status).count), \
+        text: "#{rdvs.status(temporal_status).count} RDVs",
+        path: admin_organisation_rdvs_path(current_organisation, status: temporal_status, **path_params), \
+        rdv_class: "rdv-status-#{temporal_status}"
+  .col-xl-8.col-lg-6
+    .row
+      .col-xl-6
+        = render "stats/rdv_counter_with_link", \
+          label: t("stats.rdv_counters.unknown_past", count: rdvs.status(:unknown_past).count), \
+          text: "#{rdvs.status(:unknown_past).count} RDVs",
+          path: admin_organisation_rdvs_path(current_organisation, status: :unknown_past, **path_params), \
+          rdv_class: "rdv-status-unknown_past"
+      .col-xl-6
+        = render "stats/rdv_counter_with_link", \
+          label: t("stats.rdv_counters.unknown_future", count: rdvs.status(:unknown_future).count), \
+          text: "#{rdvs.status(:unknown_future).count} RDVs",
+          path: admin_organisation_rdvs_path(current_organisation, status: :unknown_future, **path_params), \
+          rdv_class: "rdv-status-unknown_future"
+
+hr
+
+.row
+  .col-xl-4.col-lg-6
+    = render "stats/rdv_counter_with_link", \
+      label: "Tous", \
+      text: "#{rdvs.count} RDVs", \
+      path: admin_organisation_rdvs_path(current_organisation, **path_params)
