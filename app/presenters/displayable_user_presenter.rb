@@ -55,4 +55,16 @@ class DisplayableUserPresenter
 
     @user.responsible_notify_by_email? ? "🟢 Activées" : "🔴 Désactivées"
   end
+
+  def email_and_notification
+    return "n/a" unless @user.email
+
+    "#{email} - Notifications par email #{notify_by_email}"
+  end
+
+  def phone_number_and_notification
+    return "n/a" unless @user.phone_number
+
+    "#{phone_number} - Notifications par SMS #{notify_by_sms}"
+  end
 end

@@ -145,4 +145,50 @@ describe DisplayableUserPresenter, type: :presenter do
       expect(displayable_user.notify_by_email).to eq("🔴 Désactivées")
     end
   end
+
+  describe "#email_and_notification" do
+    it "returns n/a when no email in user" do
+      organisation = build(:organisation)
+      user = build(:user, organisations: [organisation], email: nil)
+      displayable_user = described_class.new(user, organisation)
+      expect(displayable_user.email_and_notification).to eq("n/a")
+    end
+
+    it "returns email and activate notification with a user's email and notification activated" do
+      organisation = build(:organisation)
+      user = build(:user, organisations: [organisation], email: "bob@eponge.net", notify_by_email: true)
+      displayable_user = described_class.new(user, organisation)
+      expect(displayable_user.email_and_notification).to eq("bob@eponge.net - Notifications par email 🟢 Activées")
+    end
+
+    it "returns email and activate notification with a user's email and notification desactivated" do
+      organisation = build(:organisation)
+      user = build(:user, organisations: [organisation], email: "bob@eponge.net", notify_by_email: false)
+      displayable_user = described_class.new(user, organisation)
+      expect(displayable_user.email_and_notification).to eq("bob@eponge.net - Notifications par email 🔴 Désactivées")
+    end
+  end
+
+  describe "#phone_number_and_notification" do
+    it "returns n/a when no phone in user" do
+      organisation = build(:organisation)
+      user = build(:user, organisations: [organisation], phone_number: nil)
+      displayable_user = described_class.new(user, organisation)
+      expect(displayable_user.phone_number_and_notification).to eq("n/a")
+    end
+
+    it "returns phone_number and activate notification with a user's email and notification activated" do
+      organisation = build(:organisation)
+      user = build(:user, organisations: [organisation], phone_number: "01 02 03 04 05", notify_by_sms: true)
+      displayable_user = described_class.new(user, organisation)
+      expect(displayable_user.phone_number_and_notification).to eq("01 02 03 04 05 - Notifications par SMS 🟢 Activées")
+    end
+
+    it "returns phone_number and activate notification with a user's email and notification desactivated" do
+      organisation = build(:organisation)
+      user = build(:user, organisations: [organisation], phone_number: "01 02 03 04 05", notify_by_sms: false)
+      displayable_user = described_class.new(user, organisation)
+      expect(displayable_user.phone_number_and_notification).to eq("01 02 03 04 05 - Notifications par SMS 🔴 Désactivées")
+    end
+  end
 end
