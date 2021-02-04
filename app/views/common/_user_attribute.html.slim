@@ -1,4 +1,4 @@
-- value = DisplayableUser.new(user, current_organisation).send(attribute_name)
+- value = DisplayableUserPresenter.new(user, current_organisation).send(attribute_name)
 - if value.present? || !local_assigns[:skip_empty]
   - if attribute_name == :logement
     strong

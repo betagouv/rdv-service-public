@@ -57,7 +57,7 @@
               = link_to "Voir la fiche usager", admin_organisation_user_path(current_organisation, user), class: "btn btn-outline-primary small"
 
         .card-body
-          - displayable_user = DisplayableUser.new(user, current_organisation)
+          - displayable_user = DisplayableUserPresenter.new(user, current_organisation)
           p.card-text
             i.fa.fa-fw.fa-phone>
             - phone_number = displayable_user.phone_number
