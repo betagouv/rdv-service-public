@@ -158,14 +158,14 @@ describe DisplayableUserPresenter, type: :presenter do
       organisation = build(:organisation)
       user = build(:user, organisations: [organisation], email: "bob@eponge.net", notify_by_email: true)
       displayable_user = described_class.new(user, organisation)
-      expect(displayable_user.email_and_notification).to eq("bob@eponge.net - Notifications par email 🟢 Activées")
+      expect(displayable_user.email_and_notification).to eq("<a href=\"mailto:bob@eponge.net\">bob@eponge.net</a> - Notifications par email 🟢 Activées")
     end
 
     it "returns email and activate notification with a user's email and notification desactivated" do
       organisation = build(:organisation)
       user = build(:user, organisations: [organisation], email: "bob@eponge.net", notify_by_email: false)
       displayable_user = described_class.new(user, organisation)
-      expect(displayable_user.email_and_notification).to eq("bob@eponge.net - Notifications par email 🔴 Désactivées")
+      expect(displayable_user.email_and_notification).to eq("<a href=\"mailto:bob@eponge.net\">bob@eponge.net</a> - Notifications par email 🔴 Désactivées")
     end
   end
 
@@ -179,16 +179,16 @@ describe DisplayableUserPresenter, type: :presenter do
 
     it "returns phone_number and activate notification with a user's email and notification activated" do
       organisation = build(:organisation)
-      user = build(:user, organisations: [organisation], phone_number: "01 02 03 04 05", notify_by_sms: true)
+      user = create(:user, organisations: [organisation], phone_number: "01 02 03 04 05", notify_by_sms: true)
       displayable_user = described_class.new(user, organisation)
-      expect(displayable_user.phone_number_and_notification).to eq("01 02 03 04 05 - Notifications par SMS 🟢 Activées")
+      expect(displayable_user.phone_number_and_notification).to eq("<a href=\"tel:+33102030405\">01 02 03 04 05</a> - Notifications par SMS 🟢 Activées")
     end
 
     it "returns phone_number and activate notification with a user's email and notification desactivated" do
       organisation = build(:organisation)
-      user = build(:user, organisations: [organisation], phone_number: "01 02 03 04 05", notify_by_sms: false)
+      user = create(:user, organisations: [organisation], phone_number: "01 02 03 04 05", notify_by_sms: false)
       displayable_user = described_class.new(user, organisation)
-      expect(displayable_user.phone_number_and_notification).to eq("01 02 03 04 05 - Notifications par SMS 🔴 Désactivées")
+      expect(displayable_user.phone_number_and_notification).to eq("<a href=\"tel:+33102030405\">01 02 03 04 05</a> - Notifications par SMS 🔴 Désactivées")
     end
   end
 end

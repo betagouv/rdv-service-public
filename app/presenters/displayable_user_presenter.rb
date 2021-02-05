@@ -1,6 +1,7 @@
 class DisplayableUserPresenter
   include UsersHelper
   include ActionView::Helpers::TextHelper
+  include ActionView::Helpers::UrlHelper
   include Rails.application.routes.url_helpers
 
   delegate :first_name, :last_name, :birth_name, :address, :affiliation_number, :number_of_children, to: :user
@@ -59,12 +60,19 @@ class DisplayableUserPresenter
   def email_and_notification
     return "n/a" unless @user.email
 
-    "#{email} - Notifications par email #{notify_by_email}"
+    "#{mail_to(email)} - Notifications par email #{notify_by_email}".html_safe
   end
 
   def phone_number_and_notification
     return "n/a" unless @user.phone_number
 
-    "#{phone_number} - Notifications par SMS #{notify_by_sms}"
+    "#{link_to_phone} - Notifications par SMS #{notify_by_sms}".html_safe
+  end
+
+  private
+
+  def link_to_phone
+    user = @user.responsible_or_self
+    link_to(user.phone_number, "tel:#{user.phone_number_formatted}")
   end
 end
