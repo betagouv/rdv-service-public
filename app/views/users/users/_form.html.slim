@@ -8,14 +8,14 @@
   .form-row
     .col-md-6= f.input :birth_name, placeholder: 'Nom de naissance'
     .col-md-6= date_input(f, :birth_date)
-  = f.input :phone_number, as: :tel
+  = f.input :phone_number, as: :tel, required: local_assigns[:rdv_wizard] && rdv_wizard.motif.phone?
   - if user.phone_number.present? && !user.phone_number_mobile?
     .alert.alert-warning Vous ne recevrez pas de SMS avec ce numéro non-mobile
   label Préférences de notifications
   .d-flex
     div= f.input :notify_by_email
     div.ml-3= f.input :notify_by_sms
-  - address_value = local_assigns[:rdv_wizard].present? && user.address.nil? ? rdv_wizard[:where] : user.address
+  - address_value = local_assigns[:rdv_wizard].present? && user.address.nil? ? rdv_wizard.to_query[:where] : user.address
   = f.input :address, input_html: {value: address_value, class: "places-js-container" }
 
   - if local_assigns[:service].nil? || service.user_field_groups.include?(:social)
@@ -27,7 +27,7 @@
       .col-md-6= f.input :number_of_children, input_html: { min: '0', max: '15', step: 'any' }
 
     - if local_assigns[:rdv_wizard]
-      - current_organisation = Motif.find(rdv_wizard[:motif_id]).organisation
+      - current_organisation = Motif.find(rdv_wizard.to_query[:motif_id]).organisation
       - profile = user.profile_for(current_organisation)
       - profile ||= user.user_profiles.build(organisation: current_organisation)
       = f.simple_fields_for :user_profiles, profile do |n|
@@ -42,7 +42,7 @@
             = n.input :logement, collection: UserProfile.human_enum_collection(:logement)
 
   - if local_assigns[:rdv_wizard].present?
-    - rdv_wizard.each do |wizard_key, wizard_value|
+    - rdv_wizard.to_query.each do |wizard_key, wizard_value|
       = hidden_field_tag "rdv[#{wizard_key}]", wizard_value
 
   .text-right
