@@ -62,6 +62,10 @@ module UserRdvWizard
     end
 
     def save
+      if @rdv.motif.phone? && @user_attributes[:phone_number].blank?
+        @user.errors.add(:phone_number, :empty)
+        return false
+      end
       @user.update(@user_attributes)
     end
   end
