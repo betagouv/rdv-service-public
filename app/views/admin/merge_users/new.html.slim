@@ -36,7 +36,7 @@
             - if @merge_users_form.user1
               div.pr-2
                 label.d-flex.justify-content-end for="merge_users_form_#{attribute}_1"
-                  - value = DisplayableUser.new(@merge_users_form.user1, current_organisation).send(attribute)
+                  - value = DisplayableUserPresenter.new(@merge_users_form.user1, current_organisation).send(attribute)
                   - if value&.present?
                     div= value
                   - else
@@ -48,7 +48,7 @@
               label for="merge_users_form_#{attribute}_2"
                 - if @merge_users_form.attribute_comparison(attribute) == :different
                   span.mr-2= f.radio_button attribute, "2", required: true
-                - value = DisplayableUser.new(@merge_users_form.user2, current_organisation).send(attribute)
+                - value = DisplayableUserPresenter.new(@merge_users_form.user2, current_organisation).send(attribute)
                 - if value&.present?
                   = value
                 - else
