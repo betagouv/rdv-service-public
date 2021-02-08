@@ -1,7 +1,7 @@
 describe Admin::RdvWizardStepsController, type: :controller do
   describe "GET index html format" do
-    let!(:agent) { create(:agent, :secretaire) }
-    let!(:organisation_id) { agent.organisation_ids.first }
+    let!(:organisation) { create(:organisation) }
+    let!(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
     let!(:user) { create(:user) }
 
     before { sign_in agent }
@@ -9,7 +9,7 @@ describe Admin::RdvWizardStepsController, type: :controller do
     let(:params) do
       {
         step: 2,
-        organisation_id: organisation_id,
+        organisation_id: organisation.id,
         user_ids: [user.id],
         duration_in_min: 30,
         motif_id: 1,

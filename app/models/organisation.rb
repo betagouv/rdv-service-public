@@ -8,7 +8,8 @@ class Organisation < ApplicationRecord
   has_many :sector_attributions, dependent: :destroy
   has_many :sectors, through: :sector_attributions
   has_many :plage_ouvertures, dependent: :destroy
-  has_and_belongs_to_many :agents, -> { distinct }
+  has_many :agent_roles
+  has_many :agents, through: :agent_roles
 
   has_many :user_profiles
   has_many :users, through: :user_profiles
@@ -28,7 +29,7 @@ class Organisation < ApplicationRecord
 
   after_create :notify_admin_organisation_created
 
-  accepts_nested_attributes_for :agents
+  accepts_nested_attributes_for :agent_roles
 
   scope :attributed_to_sectors, lambda { |sectors|
     where(

@@ -31,9 +31,9 @@ describe SendTransactionalSmsService, type: :service do
 
     context "debug" do
       before { allow(Rails.env).to receive(:production?).and_return(false) }
-      it "should call logger debug" do
-        expect(Rails.logger).to receive(:debug).with(/following SMS would have been sent/)
-        allow(Rails.logger).to receive(:debug).and_call_original # so that other calls to debug work
+      it "should not call netsize nor SIB" do
+        # allow(Rails.logger).to receive(:debug).and_call_original # so that other calls to debug work
+        # expect(Rails.logger).to receive(:debug).with(/following SMS would have been sent/)
         expect(SibApiV3Sdk::TransactionalSMSApi).not_to receive(:new)
         subject.perform
       end

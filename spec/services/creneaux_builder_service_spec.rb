@@ -6,7 +6,7 @@ describe CreneauxBuilderService, type: :service do
   let(:today) { Date.new(2020, 12, 10) }
   let(:tomorrow) { today + 1.day }
   let(:six_days_later) { today + 6.days }
-  let!(:agent) { create(:agent, organisations: [organisation]) }
+  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, agent: agent, organisation: organisation) }
   let(:now) { today.in_time_zone + 8.hours } # 8 am
   let(:options) { {} }
@@ -184,7 +184,7 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "when there are two agents" do
-    let(:agent2) { create(:agent, organisations: [organisation]) }
+    let(:agent2) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:plage_ouverture2) { create(:plage_ouverture, agent: agent2, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(10), end_time: Tod::TimeOfDay.new(12), organisation: organisation) }
 
     it do

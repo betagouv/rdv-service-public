@@ -13,7 +13,9 @@ class AgentDepartementAuthController < AgentAuthController
 
   def current_organisation
     # TODO: remove and fix pundit policies for departement-level routes
-    current_agent.organisations.where(departement: current_departement.to_s).first
+    current_agent.roles.level_admin
+      .in_departement(current_departement)
+      .first.organisation
   end
 
   private

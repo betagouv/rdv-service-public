@@ -1,6 +1,6 @@
 describe "Agent can CRUD absences" do
   let!(:organisation) { create(:organisation) }
-  let!(:agent) { create(:agent, :admin, organisations: [organisation]) }
+  let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
   let!(:absence) { create(:absence, agent: agent, organisation: organisation) }
   let!(:new_absence) { build(:absence, agent: agent, organisation: organisation) }
 
@@ -41,7 +41,7 @@ describe "Agent can CRUD absences" do
 
   context "for an other agent calendar" do
     let!(:service) { create(:service, name: "PMI") }
-    let!(:other_agent) { create(:agent, first_name: "Jane", last_name: "FAROU", service: service, organisations: [organisation]) }
+    let!(:other_agent) { create(:agent, first_name: "Jane", last_name: "FAROU", service: service, basic_role_in_organisations: [organisation]) }
     let!(:absence) { create(:absence, agent: other_agent, organisation: organisation) }
 
     scenario "can crud a absence" do

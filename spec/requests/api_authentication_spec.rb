@@ -2,7 +2,7 @@ describe "API auth", type: :request do
   # inspired by https://devise-token-auth.gitbook.io/devise-token-auth/usage/testing
 
   let!(:organisation) { create(:organisation) }
-  let!(:agent) { create(:agent, password: "123456", organisations: [organisation]) }
+  let!(:agent) { create(:agent, password: "123456", basic_role_in_organisations: [organisation]) }
   let!(:absence) { create(:absence, agent: agent, organisation: organisation) }
 
   context "login with wrong password" do

@@ -3,7 +3,7 @@ FactoryBot.define do
 
   factory :plage_ouverture do
     organisation { create(:organisation) }
-    agent { create(:agent, organisations: [organisation]) }
+    agent { create(:agent, basic_role_in_organisations: [organisation]) }
     lieu { create(:lieu, organisation: organisation) }
 
     title { generate(:plage_title) }

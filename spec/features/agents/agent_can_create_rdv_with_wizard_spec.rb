@@ -3,8 +3,8 @@ describe "Agent can create a Rdv with wizard" do
 
   let(:organisation) { create(:organisation) }
   let(:service) { create(:service) }
-  let!(:agent) { create(:agent, first_name: "Alain", service: service, organisations: [organisation]) }
-  let!(:agent2) { create(:agent, first_name: "Robert", service: service, organisations: [organisation]) }
+  let!(:agent) { create(:agent, first_name: "Alain", service: service, basic_role_in_organisations: [organisation]) }
+  let!(:agent2) { create(:agent, first_name: "Robert", service: service, basic_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, service: service, organisation: organisation) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:user) { create(:user, organisations: [organisation]) }

@@ -92,7 +92,7 @@ RSpec.describe LieuxController, type: :controller do
       end
 
       context "avec un usager connecté avec agent référent" do
-        let(:agent) { create(:agent, organisations: [organisation]) }
+        let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
         let(:user) { create(:user, agents: [agent]) }
         before { sign_in user }
         before do

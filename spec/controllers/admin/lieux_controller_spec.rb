@@ -1,9 +1,9 @@
 RSpec.describe Admin::LieuxController, type: :controller do
   render_views
 
-  let(:agent) { create(:agent, :admin) }
-  let(:organisation_id) { agent.organisation_ids.first }
-  let!(:lieu) { create(:lieu, organisation_id: organisation_id) }
+  let!(:organisation) { create(:organisation) }
+  let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+  let!(:lieu) { create(:lieu, organisation: organisation) }
 
   before do
     sign_in agent
@@ -11,21 +11,21 @@ RSpec.describe Admin::LieuxController, type: :controller do
 
   describe "GET #index" do
     it "returns a success response" do
-      get :index, params: { organisation_id: organisation_id }
+      get :index, params: { organisation_id: organisation.id }
       expect(response).to be_successful
     end
   end
 
   describe "GET #new" do
     it "returns a success response" do
-      get :new, params: { organisation_id: organisation_id }
+      get :new, params: { organisation_id: organisation.id }
       expect(response).to be_successful
     end
   end
 
   describe "GET #edit" do
     it "returns a success response" do
-      get :edit, params: { organisation_id: organisation_id, id: lieu.to_param }
+      get :edit, params: { organisation_id: organisation.id, id: lieu.to_param }
       expect(response).to be_successful
     end
   end
@@ -38,13 +38,13 @@ RSpec.describe Admin::LieuxController, type: :controller do
 
       it "creates a new Lieu" do
         expect do
-          post :create, params: { organisation_id: organisation_id, lieu: valid_attributes }
+          post :create, params: { organisation_id: organisation.id, lieu: valid_attributes }
         end.to change(Lieu, :count).by(1)
       end
 
       it "redirects to the created lieu" do
-        post :create, params: { organisation_id: organisation_id, lieu: valid_attributes }
-        expect(response).to redirect_to(admin_organisation_lieux_path(organisation_id))
+        post :create, params: { organisation_id: organisation.id, lieu: valid_attributes }
+        expect(response).to redirect_to(admin_organisation_lieux_path(organisation.id))
       end
     end
 
@@ -57,19 +57,19 @@ RSpec.describe Admin::LieuxController, type: :controller do
 
       it "does not create a new Lieu" do
         expect do
-          post :create, params: { organisation_id: organisation_id, lieu: invalid_attributes }
+          post :create, params: { organisation_id: organisation.id, lieu: invalid_attributes }
         end.not_to change(Lieu, :count)
       end
 
       it "returns a success response (i.e. to display the 'new' template)" do
-        post :create, params: { organisation_id: organisation_id, lieu: invalid_attributes }
+        post :create, params: { organisation_id: organisation.id, lieu: invalid_attributes }
         expect(response).to be_successful
       end
     end
   end
 
   describe "PUT #update" do
-    subject { put :update, params: { organisation_id: organisation_id, id: lieu.to_param, lieu: new_attributes } }
+    subject { put :update, params: { organisation_id: organisation.id, id: lieu.to_param, lieu: new_attributes } }
 
     before { subject }
 
@@ -86,7 +86,7 @@ RSpec.describe Admin::LieuxController, type: :controller do
       end
 
       it "redirects to the lieu" do
-        expect(response).to redirect_to(admin_organisation_lieux_path(organisation_id))
+        expect(response).to redirect_to(admin_organisation_lieux_path(organisation.id))
       end
     end
 
@@ -111,13 +111,13 @@ RSpec.describe Admin::LieuxController, type: :controller do
   describe "DELETE #destroy" do
     it "destroys the requested lieu" do
       expect do
-        delete :destroy, params: { organisation_id: organisation_id, id: lieu.to_param }
+        delete :destroy, params: { organisation_id: organisation.id, id: lieu.to_param }
       end.to change(Lieu, :count).by(-1)
     end
 
     it "redirects to the lieux list" do
-      delete :destroy, params: { organisation_id: organisation_id, id: lieu.to_param }
-      expect(response).to redirect_to(admin_organisation_lieux_path(organisation_id))
+      delete :destroy, params: { organisation_id: organisation.id, id: lieu.to_param }
+      expect(response).to redirect_to(admin_organisation_lieux_path(organisation.id))
     end
   end
 end

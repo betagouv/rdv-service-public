@@ -10,7 +10,6 @@ class AgentDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     id: Field::Number,
     email: Field::String,
-    role: EnumField,
     first_name: Field::String,
     last_name: Field::String,
     organisations: Field::HasMany,
@@ -34,7 +33,6 @@ class AgentDashboard < Administrate::BaseDashboard
     :email,
     :first_name,
     :last_name,
-    :role,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -44,7 +42,6 @@ class AgentDashboard < Administrate::BaseDashboard
     :email,
     :first_name,
     :last_name,
-    :role,
     :organisations,
     :service,
     :plage_ouvertures,
@@ -64,7 +61,6 @@ class AgentDashboard < Administrate::BaseDashboard
     :first_name,
     :last_name,
     :organisations,
-    :role,
     :service,
     :deleted_at,
   ].freeze

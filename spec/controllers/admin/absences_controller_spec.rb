@@ -2,7 +2,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
   render_views
 
   let!(:organisation) { create(:organisation) }
-  let!(:agent) { create(:agent, organisations: [organisation]) }
+  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let!(:absence) { create(:absence, agent_id: agent.id, organisation: organisation) }
   let!(:absence_with_recurrence) { create(:absence, :weekly, agent: agent, first_day: Date.new(2020, 7, 15), start_time: Tod::TimeOfDay.new(8), end_day: Date.new(2020, 7, 17), end_time: Tod::TimeOfDay.new(10), organisation: organisation) }
 
@@ -220,7 +220,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
   end
 
   context "admin can CRUD on an agent's absences" do
-    let(:admin) { create(:agent, role: "admin", organisations: [organisation]) }
+    let!(:admin) { create(:agent, admin_role_in_organisations: [organisation]) }
 
     before { sign_in admin }
 

@@ -1,6 +1,6 @@
 describe SearchCreneauxForAgentsService, type: :service do
   let!(:organisation) { create(:organisation) }
-  let(:agent) { create(:agent, organisations: [organisation]) }
+  let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let(:lieu) { create(:lieu, organisation: organisation) }
   let(:plage_ouverture) { create(:plage_ouverture, :weekly, agent: agent, lieu: lieu, organisation: organisation) }
   let(:motif) { plage_ouverture.motifs.first }
@@ -22,7 +22,7 @@ describe SearchCreneauxForAgentsService, type: :service do
 
   context "when there are multiple agents and plage ouvertures and lieux" do
     let!(:lieu2) { create(:lieu, organisation: organisation) }
-    let!(:agent2) { create(:agent, organisations: [organisation]) }
+    let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, agent: agent2, lieu: lieu2, motifs: [motif], organisation: organisation) }
 
     it { expect(subject.map(&:lieu)).to contain_exactly(lieu, lieu2) }

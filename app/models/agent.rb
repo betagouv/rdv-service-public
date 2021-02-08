@@ -20,12 +20,11 @@ class Agent < ApplicationRecord
   has_many :absences, dependent: :destroy
   has_many :agents_rdvs, dependent: :destroy
   has_many :rdvs, dependent: :destroy, through: :agents_rdvs
-  has_and_belongs_to_many :organisations, -> { distinct }
+  has_many :roles, class_name: "AgentRole", dependent: :destroy
+  has_many :organisations, through: :roles
   has_and_belongs_to_many :users
 
-  enum role: { user: 0, admin: 1 }
-
-  validates :email, :role, presence: true
+  validates :email, presence: true
   validates :last_name, :first_name, presence: true, on: :update, if: :accepted_or_not_invited?
   validate :service_cannot_be_changed
 
@@ -41,6 +40,8 @@ class Agent < ApplicationRecord
   }
 
   before_save :normalize_account
+
+  accepts_nested_attributes_for :roles
 
   def full_name_and_service
     service.present? ? "#{full_name} (#{service.short_name})" : full_name
@@ -76,10 +77,6 @@ class Agent < ApplicationRecord
     deleted_at ? :deleted_account : super
   end
 
-  def can_access_others_planning?
-    admin? || service.secretariat?
-  end
-
   def add_organisation(organisation)
     if organisation_ids.include?(organisation.id)
       message =
@@ -102,5 +99,13 @@ class Agent < ApplicationRecord
     return if new_record? || !service_id_changed?
 
     errors.add(:service_id, "changement interdit")
+  end
+
+  def role_in_organisation(organisation)
+    roles.find_by(organisation: organisation)
+  end
+
+  def admin_in_organisation?(organisation)
+    role_in_organisation(organisation).admin?
   end
 end

@@ -99,7 +99,7 @@ describe Users::GeoSearch, type: :service_model do
       let!(:zone_arques_rural) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector_arques_rural) }
       let!(:sector_arques_ville) { create(:sector, departement: "62", name: "Ville", human_id: "ville") }
       let!(:zone_arques_ville) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector_arques_ville) }
-      let!(:agent) { create(:agent, organisations: [organisation]) }
+      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let!(:attribution_organisation_arques_rural) { SectorAttribution.create(level: "organisation", sector: sector_arques_rural, organisation: organisation) }
       let!(:attribution_agent_arques_ville) { SectorAttribution.create(level: "agent", sector: sector_arques_ville, organisation: organisation, agent: agent) }
       it { should contain_exactly(organisation) }
@@ -111,7 +111,7 @@ describe Users::GeoSearch, type: :service_model do
 
     context "one agent attributed with online motif" do
       let!(:organisation) { create(:organisation, departement: "62", name: "MDS Arques") }
-      let!(:agent) { create(:agent, organisations: [organisation]) }
+      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let!(:motif) { create(:motif, :sectorisation_level_agent, reservable_online: true, organisation: organisation) }
       let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], organisation: organisation, agent: agent) }
       let!(:sector) { create(:sector, departement: "62", name: "Arques VILLE", human_id: "arques") }
@@ -126,7 +126,7 @@ describe Users::GeoSearch, type: :service_model do
       let!(:zone_arques_rural) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector_arques_rural) }
       let!(:sector_arques_ville) { create(:sector, departement: "62", name: "Ville", human_id: "ville") }
       let!(:zone_arques_ville) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector_arques_ville) }
-      let!(:agent) { create(:agent, organisations: [organisation]) }
+      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let!(:attribution_organisation_arques_rural) { SectorAttribution.create(level: "organisation", sector: sector_arques_rural, organisation: organisation) }
       let!(:attribution_agent_arques_ville) { SectorAttribution.create(level: "agent", sector: sector_arques_ville, organisation: organisation, agent: agent) }
       it { should eq({ organisation => [agent] }) } # it should still contain it
@@ -218,7 +218,7 @@ describe Users::GeoSearch, type: :service_model do
       let!(:organisation1) { create(:organisation, departement: "62", name: "MDS Arques") }
       let!(:organisation2) { create(:organisation, departement: "62", name: "MDS Arras") }
       let!(:organisation3) { create(:organisation, departement: "62", name: "MDS Bapaume") }
-      let!(:agent) { create(:agent, organisations: [organisation2]) }
+      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation2]) }
 
       let!(:motif_organisation) { create(:motif, :sectorisation_level_organisation, reservable_online: true, organisation: organisation1) }
       let!(:motif_agent) { create(:motif, :sectorisation_level_agent, reservable_online: true, organisation: organisation2) }

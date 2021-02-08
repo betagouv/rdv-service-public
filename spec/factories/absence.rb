@@ -3,7 +3,7 @@ FactoryBot.define do
 
   factory :absence do
     organisation { create(:organisation) }
-    agent { create(:agent, organisations: [organisation]) }
+    agent { create(:agent, basic_role_in_organisations: [organisation]) }
 
     title { generate(:absence_title) }
     first_day { Date.new(2019, 7, 4) }

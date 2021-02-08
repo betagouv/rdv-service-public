@@ -3,20 +3,20 @@ class OrganisationsController < ApplicationController
 
   def new
     @organisation = Organisation.new
-    @organisation.agents.build
+    @organisation.agent_roles.build(level: AgentRole::LEVEL_ADMIN)
+    @organisation.agent_roles.first.build_agent
   end
 
   def create
     @organisation = Organisation.new(organisation_params)
-    @organisation.agents.each do |agent|
-      agent.role = :admin
+    @organisation.agent_roles.each do |agent_role|
       # because we're not passing through the regular `.invite!` method, we
       # have to hack our way into creating a user that bypasses validations and
       # callbacks:
-      agent.skip_confirmation!
-      agent.skip_invitation = true
-      agent.define_singleton_method(:password_required?) { false }
-      agent.define_singleton_method(:postpone_email_change?) { false }
+      agent_role.agent.skip_confirmation!
+      agent_role.agent.skip_invitation = true
+      agent_role.agent.define_singleton_method(:password_required?) { false }
+      agent_role.agent.define_singleton_method(:postpone_email_change?) { false }
       # forces devise_token_auth sync_uid to run
     end
     return render :new unless @organisation.save
@@ -26,6 +26,10 @@ class OrganisationsController < ApplicationController
   end
 
   def organisation_params
-    params.require(:organisation).permit(:name, :departement, agents_attributes: [:email, :service_id])
+    params.require(:organisation)
+      .permit(
+        :name, :departement,
+        agent_roles_attributes: [:level, { agent_attributes: [:email, :service_id] }]
+      )
   end
 end
