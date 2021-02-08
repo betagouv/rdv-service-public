@@ -6,7 +6,6 @@ class Admin::AgentRolesController < AgentAuthController
   end
 
   def update
-    @agent_role = AgentRole.find(params[:id])
     authorize(@agent_role)
     if @agent_role.update(agent_role_params)
       redirect_to admin_organisation_agents_path(current_organisation), success: "Les permissions de l'agent ont été mises à jour"
