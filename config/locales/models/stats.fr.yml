@@ -10,6 +10,8 @@ fr:
         one: À renseigner
         other: À renseigner
       unknown_future:
+        zero: À venir
+        one: À venir
         other: À venir
       seen:
         zero: Vu
