@@ -62,25 +62,25 @@ class DisplayableUserPresenter
   end
 
   def clickable_email
-    return "N/A" unless email
+    return "N/A" unless email.present?
 
     mail_to(email)
   end
 
   def clickable_phone_number
-    return "N/A" unless phone_number
+    return "N/A" unless phone_number.present?
 
     link_to(phone_number, "tel:#{phone_number_formatted}")
   end
 
   def email_and_notification
-    return "N/A" unless email
+    return "N/A" unless email.present?
 
     "#{clickable_email} - Notifications par email #{notify_by_email}".html_safe
   end
 
   def phone_number_and_notification
-    return "N/A" unless phone_number
+    return "N/A" unless phone_number.present?
 
     "#{clickable_phone_number} - Notifications par SMS #{notify_by_sms}".html_safe
   end
