@@ -29,6 +29,10 @@ class DisplayableUserPresenter
     @user.responsible_phone_number
   end
 
+  def phone_number_formatted
+    @user.responsible_or_self.phone_number_formatted
+  end
+
   def email
     @user.responsible_email
   end
@@ -58,21 +62,14 @@ class DisplayableUserPresenter
   end
 
   def email_and_notification
-    return "n/a" unless @user.email
+    return "N/A" unless email
 
     "#{mail_to(email)} - Notifications par email #{notify_by_email}".html_safe
   end
 
   def phone_number_and_notification
-    return "n/a" unless @user.phone_number
+    return "N/A" unless phone_number
 
-    "#{link_to_phone} - Notifications par SMS #{notify_by_sms}".html_safe
-  end
-
-  private
-
-  def link_to_phone
-    user = @user.responsible_or_self
-    link_to(user.phone_number, "tel:#{user.phone_number_formatted}")
+    "#{link_to(phone_number, "tel:#{phone_number_formatted}")} - Notifications par SMS #{notify_by_sms}".html_safe
   end
 end

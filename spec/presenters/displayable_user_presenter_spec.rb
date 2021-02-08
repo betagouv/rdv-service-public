@@ -147,11 +147,11 @@ describe DisplayableUserPresenter, type: :presenter do
   end
 
   describe "#email_and_notification" do
-    it "returns n/a when no email in user" do
+    it "returns N/A when no email in user" do
       organisation = build(:organisation)
       user = build(:user, organisations: [organisation], email: nil)
       displayable_user = described_class.new(user, organisation)
-      expect(displayable_user.email_and_notification).to eq("n/a")
+      expect(displayable_user.email_and_notification).to eq("N/A")
     end
 
     it "returns email and activate notification with a user's email and notification activated" do
@@ -170,11 +170,11 @@ describe DisplayableUserPresenter, type: :presenter do
   end
 
   describe "#phone_number_and_notification" do
-    it "returns n/a when no phone in user" do
+    it "returns N/A when no phone in user" do
       organisation = build(:organisation)
       user = build(:user, organisations: [organisation], phone_number: nil)
       displayable_user = described_class.new(user, organisation)
-      expect(displayable_user.phone_number_and_notification).to eq("n/a")
+      expect(displayable_user.phone_number_and_notification).to eq("N/A")
     end
 
     it "returns phone_number and activate notification with a user's email and notification activated" do
