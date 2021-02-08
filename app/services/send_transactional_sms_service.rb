@@ -53,6 +53,7 @@ class SendTransactionalSmsService < BaseService
         originatingAddress: SENDER_NAME,
         originatorTON: 1,
         campaignName: transactional_sms.tags.join(" ").truncate(49),
+        maxConcatenatedMessages: 10
       }
     )
     request.on_complete { netsize_on_complete(_1) }
