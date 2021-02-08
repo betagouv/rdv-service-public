@@ -61,15 +61,27 @@ class DisplayableUserPresenter
     @user.responsible_notify_by_email? ? "🟢 Activées" : "🔴 Désactivées"
   end
 
+  def clickable_email
+    return "N/A" unless email
+
+    mail_to(email)
+  end
+
+  def clickable_phone_number
+    return "N/A" unless phone_number
+
+    link_to(phone_number, "tel:#{phone_number_formatted}")
+  end
+
   def email_and_notification
     return "N/A" unless email
 
-    "#{mail_to(email)} - Notifications par email #{notify_by_email}".html_safe
+    "#{clickable_email} - Notifications par email #{notify_by_email}".html_safe
   end
 
   def phone_number_and_notification
     return "N/A" unless phone_number
 
-    "#{link_to(phone_number, "tel:#{phone_number_formatted}")} - Notifications par SMS #{notify_by_sms}".html_safe
+    "#{clickable_phone_number} - Notifications par SMS #{notify_by_sms}".html_safe
   end
 end
