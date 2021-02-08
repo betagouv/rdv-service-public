@@ -132,7 +132,7 @@ class User < ApplicationRecord
   end
 
   def next_rdvs(organisation)
-    rdvs_for_organisation(organisation).future
+    rdvs_for_organisation(organisation).start_after(Time.zone.now + 1.hour)
   end
 
   def ongoing_rdvs(organisation)
