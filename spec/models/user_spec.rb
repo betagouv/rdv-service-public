@@ -274,12 +274,12 @@ describe User, type: :model do
     end
   end
 
-  describe "#next_rdvs" do
+  describe "#rdvs_future_without_ongoing" do
     it "return empty array without next rdv" do
       organisation = create(:organisation)
       user = create(:user, organisations: [organisation])
       create(:rdv, users: [user])
-      expect(user.next_rdvs(organisation)).to eq([])
+      expect(user.rdvs_future_without_ongoing(organisation)).to eq([])
     end
 
     it "return rdv for same user and organisation" do
@@ -293,7 +293,7 @@ describe User, type: :model do
       create(:rdv, users: [user], starts_at: today - 2.days)
       next_rdv = create(:rdv, starts_at: today + 1.day, organisation: organisation, users: [user])
 
-      expect(user.next_rdvs(organisation)).to eq([next_rdv])
+      expect(user.rdvs_future_without_ongoing(organisation)).to eq([next_rdv])
       travel_back
     end
 
@@ -307,7 +307,7 @@ describe User, type: :model do
       create(:rdv, starts_at: now - 4.days, organisation: organisation, users: [user])
       future_rdv = create(:rdv, starts_at: now + 4.days, organisation: organisation, users: [user])
 
-      expect(user.next_rdvs(organisation)).to eq([future_rdv])
+      expect(user.rdvs_future_without_ongoing(organisation)).to eq([future_rdv])
       travel_back
     end
   end
