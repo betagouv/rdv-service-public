@@ -95,3 +95,11 @@ fr:
         mailer:
           invitation_instructions:
             accept_until_format: "%d %B"
+  links:
+    session: "Se connecter"
+    registration: "S'inscrire"
+    password: "Mot de passe oublié ?"
+    confirmation: "Je n'ai pas reçu le mail de confirmation"
+    unlock: "Je n'ai pas reçu le mail de déblocage"
+    omniauth:
+      github: "Se connecter avec Github"
