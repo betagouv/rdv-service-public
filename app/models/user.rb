@@ -5,6 +5,8 @@ class User < ApplicationRecord
   include AccountNormalizerConcern
   include User::SearchableConcern
 
+  ONGOING_MARGIN = 1.hour.freeze
+
   # HACK : add *_sign_in_ip to accessor to bypass recording IPs from Trackable Devise's module
   # HACK : add sign_in_count and current_sign_in_at to accessor to bypass recording IPs from Trackable Devise's module
   attr_accessor :skip_duplicate_warnings, :current_sign_in_ip, :last_sign_in_ip, :sign_in_count, :current_sign_in_at
@@ -131,12 +133,12 @@ class User < ApplicationRecord
     rdvs_for_organisation(organisation).past.order(starts_at: :desc).limit(5)
   end
 
-  def next_rdvs(organisation)
-    rdvs_for_organisation(organisation).future
+  def rdvs_future_without_ongoing(organisation)
+    rdvs_for_organisation(organisation).start_after(Time.zone.now + ONGOING_MARGIN)
   end
 
   def ongoing_rdvs(organisation)
-    rdvs_for_organisation(organisation).ongoing(time_margin: 1.hour)
+    rdvs_for_organisation(organisation).ongoing(time_margin: ONGOING_MARGIN)
   end
 
   def rdvs_for_organisation(organisation)
