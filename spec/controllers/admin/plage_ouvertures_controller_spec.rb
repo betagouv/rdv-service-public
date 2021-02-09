@@ -22,6 +22,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
           agent: agent
         )
       end
+
       it "should display the PO" do
         get :show, params: { organisation_id: organisation.id, id: plage_ouverture.id }
         expect(response).to be_successful
@@ -201,6 +202,26 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
           expect(response).to redirect_to(admin_organisation_plage_ouverture_path(organisation, PlageOuverture.last))
           expect(agent.plage_ouvertures.count).to eq 2
         end
+
+        it "send notification after create" do
+          expect(Agents::PlageOuvertureMailer).to receive(:plage_ouverture_created).and_return(double(deliver_later: nil))
+          post(
+            :create,
+            params: {
+              organisation_id: organisation.id,
+              plage_ouverture: {
+                title: "Permanence ecole",
+                motif_ids: [motif.id],
+                lieu_id: lieu1.id,
+                organisation_id: organisation.id,
+                agent_id: agent.id,
+                first_day: "17/11/2020",
+                start_time: "09:00",
+                end_time: "12:00"
+              }
+            }
+          )
+        end
       end
 
       context "with invalid params" do
@@ -243,6 +264,11 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
         it "updates the requested plage_ouverture" do
           put :update, params: { organisation_id: organisation.id, id: plage_ouverture.to_param, plage_ouverture: { title: "Le nouveau nom" } }
           expect(response).to redirect_to(admin_organisation_plage_ouverture_path(organisation, plage_ouverture))
+        end
+
+        it "send notification after create" do
+          expect(Agents::PlageOuvertureMailer).to receive(:plage_ouverture_created).and_return(double(deliver_later: nil))
+          put :update, params: { organisation_id: organisation.id, id: plage_ouverture.to_param, plage_ouverture: { title: "Le nouveau nom" } }
         end
       end
 

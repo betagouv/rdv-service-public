@@ -134,29 +134,6 @@ describe PlageOuverture, type: :model do
     end
   end
 
-  describe "#notify_agent_plage_ouverture_created" do
-    let(:plage_ouverture) { build(:plage_ouverture, organisation: organisation) }
-
-    it "should be called after create" do
-      expect(plage_ouverture).to receive(:notify_agent_plage_ouverture_created)
-      plage_ouverture.save!
-    end
-
-    context "when rdv already exist" do
-      let(:plage_ouverture) { create(:plage_ouverture, organisation: organisation) }
-
-      it "should not be called" do
-        expect(plage_ouverture).not_to receive(:notify_agent_plage_ouverture_created)
-        plage_ouverture.save!
-      end
-    end
-
-    it "calls Agents::PlageOuvertureMailer to send email to agetn" do
-      expect(Agents::PlageOuvertureMailer).to receive(:plage_ouverture_created).with(plage_ouverture).and_return(double(deliver_later: nil))
-      plage_ouverture.save!
-    end
-  end
-
   describe "#covers_date?" do
     subject { plage_ouverture.covers_date?(date) }
 

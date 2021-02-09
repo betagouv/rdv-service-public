@@ -7,8 +7,6 @@ class PlageOuverture < ApplicationRecord
   belongs_to :lieu
   has_and_belongs_to_many :motifs, -> { distinct }
 
-  after_create :notify_agent_plage_ouverture_created
-  after_update :notify_agent_plage_ouverture_updated
   after_save :refresh_plage_ouverture_expired_cached
 
   validate :end_after_start
@@ -19,14 +17,6 @@ class PlageOuverture < ApplicationRecord
 
   scope :expired, -> { where(expired_cached: true) }
   scope :not_expired, -> { where.not(expired_cached: true) }
-
-  def notify_agent_plage_ouverture_created
-    Agents::PlageOuvertureMailer.plage_ouverture_created(self).deliver_later
-  end
-
-  def notify_agent_plage_ouverture_updated
-    Agents::PlageOuvertureMailer.plage_ouverture_updated(self).deliver_later
-  end
 
   def ical_uid
     "plage_ouverture_#{id}@#{BRAND}"
