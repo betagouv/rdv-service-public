@@ -1,5 +1,4 @@
 describe Absence, type: :model do
-  require Rails.root.join "spec/models/concerns/recurrence_concern_spec.rb"
   it_behaves_like "recurrence"
 
   describe "#occurences_for" do

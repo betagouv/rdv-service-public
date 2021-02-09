@@ -23,7 +23,7 @@ class Admin::AgentsController < AgentAuthController
     removal_service = AgentRemoval.new(@agent, current_organisation)
     if removal_service.upcoming_rdvs?
       flash[:error] = "Impossible de retirer cet agent car il a des RDVs à venir dans cette organisation. Veuillez les supprimer ou les réaffecter avant de retirer cet agent."
-      redirect_to edit_admin_organisation_permission_path(current_organisation, @agent)
+      redirect_to edit_admin_organisation_agent_role_path(current_organisation, @agent.role_in_organisation(current_organisation))
     else
       removal_service.remove!
       if @agent.invitation_accepted_at.blank?

@@ -16,4 +16,10 @@ module AdminHelper
       class: value.blank? ? "text-muted" : ""
     )
   end
+
+  def current_agent_role
+    return nil if current_agent.nil? || current_organisation.nil?
+
+    @current_agent_role ||= current_agent.roles.find_by(organisation: current_organisation)
+  end
 end

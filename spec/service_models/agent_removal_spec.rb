@@ -1,7 +1,7 @@
 describe AgentRemoval, type: :service do
   context "agent belongs to single organisation, with a few absences and plages ouvertures" do
     let!(:organisation) { create(:organisation) }
-    let!(:agent) { create(:agent, organisations: [organisation]) }
+    let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:plage_ouvertures) { create_list(:plage_ouverture, 2, agent: agent, organisation: organisation) }
     let!(:absences) { create_list(:absence, 2, agent: agent, organisation: organisation) }
 
@@ -18,7 +18,7 @@ describe AgentRemoval, type: :service do
   context "agent belongs to multiple organisations" do
     let!(:organisation1) { create(:organisation) }
     let!(:organisation2) { create(:organisation) }
-    let!(:agent) { create(:agent, organisations: [organisation1, organisation2]) }
+    let!(:agent) { create(:agent, basic_role_in_organisations: [organisation1, organisation2]) }
     let!(:plage_ouvertures1) { create_list(:plage_ouverture, 2, agent: agent, organisation: organisation1) }
     let!(:absences1) { create_list(:absence, 2, agent: agent, organisation: organisation1) }
     let!(:plage_ouvertures2) { create_list(:plage_ouverture, 2, agent: agent, organisation: organisation2) }
@@ -36,7 +36,7 @@ describe AgentRemoval, type: :service do
 
   context "agent has upcoming RDVs" do
     let!(:organisation) { create(:organisation) }
-    let!(:agent) { create(:agent, organisations: [organisation]) }
+    let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:rdv) do
       rdv = build(:rdv, agents: [agent], organisation: organisation, starts_at: Date.today.next_week(:monday) + 10.hours)
       rdv.define_singleton_method(:notify_rdv_created) {}
@@ -54,7 +54,7 @@ describe AgentRemoval, type: :service do
 
   context "agent has old RDVs" do
     let!(:organisation) { create(:organisation) }
-    let!(:agent) { create(:agent, organisations: [organisation]) }
+    let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:rdv) do
       rdv = build(:rdv, agents: [agent], organisation: organisation, starts_at: Date.today.prev_week(:monday) + 10.hours)
       rdv.define_singleton_method(:notify_rdv_created) {}

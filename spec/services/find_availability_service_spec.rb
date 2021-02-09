@@ -4,7 +4,7 @@ describe FindAvailabilityService, type: :service do
   let(:reservable_online) { true }
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let(:today) { Date.today.next_week(:thursday) }
-  let!(:agent) { create(:agent, organisations: [organisation]) }
+  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent, organisation: organisation) }
   let(:now) { today.to_time }
 

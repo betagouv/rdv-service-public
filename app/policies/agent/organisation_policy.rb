@@ -4,11 +4,11 @@ class Agent::OrganisationPolicy < DefaultAgentPolicy
   end
 
   def new?
-    admin?
+    admin_somewhere?
   end
 
   def create?
-    admin?
+    admin_somewhere?
   end
 
   def destroy?

@@ -1,10 +1,15 @@
+- agent_role = agent.role_in_organisation(current_organisation)
+
 tr id="agent_#{agent.id}"
   td
     - if agent.complete?
-      = link_to agent.full_name, edit_admin_organisation_permission_path(current_organisation, agent), class: "mr-2"
-      = admin_tag(agent)
+      = link_to agent.full_name, edit_admin_organisation_agent_role_path(current_organisation, agent.role_in_organisation(current_organisation)), class: "mr-2"
       = me_tag(agent)
   td.word-break-all
     = agent.email
   td
     = agent.service&.name
+  td.text-nowrap
+    span>= AgentRole.human_enum_name(:level, agent_role.level)
+    - if agent_role.admin?
+      i.fa.fa-user-cog

@@ -1,6 +1,11 @@
 meta name="viewport" content="width=device-width, initial-scale=1.0"
 meta content="text/html; charset=UTF-8" http-equiv="Content-Type"
-title RDV Solidarités
+title
+  - if content_for? :title
+    = "#{strip_tags(content_for(:title))} -  RDV Solidarités"
+  - else
+    | RDV Solidarités
+
 = csrf_meta_tags
 = csp_meta_tag
 = favicon_link_tag asset_pack_path('media/images/favicon.png'), rel: 'icon', type:  'image/png'

@@ -1,9 +1,10 @@
-RSpec.describe Admin::PermissionsController, type: :controller do
+RSpec.describe Admin::AgentRolesController, type: :controller do
   render_views
 
   let!(:organisation) { create(:organisation) }
-  let(:agent) { create(:agent, :admin, organisations: [organisation]) }
-  let(:agent_user) { create(:agent, organisations: [organisation]) }
+  let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+  let!(:agent_user) { create(:agent) }
+  let!(:agent_role) { create(:agent_role, agent: agent_user, organisation: organisation) }
 
   before do
     sign_in agent
@@ -18,8 +19,8 @@ RSpec.describe Admin::PermissionsController, type: :controller do
 
   describe "POST #update" do
     subject do
-      post :update, params: { organisation_id: organisation.id, id: agent_user.id, agent_permission: { role: "admin" } }
-      agent_user.reload
+      post :update, params: { organisation_id: organisation.id, id: agent_role.id, agent_role: { level: "admin" } }
+      agent_role.reload
     end
 
     it "returns a success response" do
@@ -28,7 +29,7 @@ RSpec.describe Admin::PermissionsController, type: :controller do
     end
 
     it "changes role" do
-      expect { subject }.to change(agent_user, :role).from("user").to("admin")
+      expect { subject }.to change(agent_role, :level).from(AgentRole::LEVEL_BASIC).to(AgentRole::LEVEL_ADMIN)
     end
   end
 end

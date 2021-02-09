@@ -3,7 +3,7 @@ RSpec.describe Admin::RdvsController, type: :controller do
 
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }
-  let(:agent) { create(:agent, organisations: [organisation], service: service) }
+  let(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
   let!(:user) { create(:user, first_name: "Marie", last_name: "Denis") }
   let!(:motif) { create(:motif, name: "Suivi", organisation: organisation, service: service, color: "#1010FF") }
   let!(:rdv) { create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation) }

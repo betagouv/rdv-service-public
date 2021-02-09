@@ -1,6 +1,6 @@
 describe "api/v1/absences requests", type: :request do
   let!(:organisation) { create(:organisation) }
-  let!(:agent) { create(:agent, organisations: [organisation]) }
+  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
   describe "GET api/v1/absences" do
     subject { get api_v1_absences_path(params), headers: api_auth_headers_for_agent(agent) }
@@ -17,11 +17,13 @@ describe "api/v1/absences requests", type: :request do
 
     context "some existing absences" do
       let!(:organisation2) { create(:organisation) }
-      let!(:agent) { create(:agent, organisations: [organisation, organisation2]) }
+      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation, organisation2]) }
       let!(:absence1) { create(:absence, agent: agent, organisation: organisation) }
       let!(:absence2) { create(:absence, agent: agent, organisation: organisation) }
       let!(:absence_org2) { create(:absence, agent: agent, organisation: organisation2) }
-      let!(:other_absence) { create(:absence, agent: create(:agent), organisation: create(:organisation)) }
+      let!(:other_organisation) { create(:organisation) }
+      let!(:other_agent) { create(:agent, basic_role_in_organisations: [other_organisation]) }
+      let!(:other_absence) { create(:absence, agent: other_agent, organisation: other_organisation) }
 
       it "returns policy scoped absences" do
         subject
@@ -92,12 +94,13 @@ describe "api/v1/absences requests", type: :request do
     end
 
     context "trying to create an absence for other agent in same orga but different service" do
-      let!(:agent) { create(:agent, organisations: [organisation], service: create(:service), role: agent_role) }
-      let!(:agent2) { create(:agent, organisations: [organisation], service: create(:service)) }
+      let!(:agent) { create(:agent, service: create(:service)) }
+      let!(:agent_role) { create(:agent_role, agent: agent, level: agent_role_level, organisation: organisation) }
+      let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation], service: create(:service)) }
       let(:params) { valid_params.merge(agent_id: agent2.id) }
 
       context "agent has no special role" do
-        let(:agent_role) { :user }
+        let(:agent_role_level) { AgentRole::LEVEL_BASIC }
         it "returns an error" do
           expect { subject }.not_to(change { Absence.count })
           expect(response.status).to eq(403)
@@ -106,7 +109,7 @@ describe "api/v1/absences requests", type: :request do
       end
 
       context "agent is admin" do
-        let(:agent_role) { :admin }
+        let(:agent_role_level) { AgentRole::LEVEL_ADMIN }
         it "returns an error" do
           expect { subject }.to(change { Absence.count }.by(1))
           expect(response.status).to eq(200)

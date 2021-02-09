@@ -5,10 +5,13 @@ class User < ApplicationRecord
   include AccountNormalizerConcern
   include User::SearchableConcern
 
-  attr_accessor :skip_duplicate_warnings
+  # HACK : add *_sign_in_ip to accessor to bypass recording IPs from Trackable Devise's module
+  # HACK : add sign_in_count and current_sign_in_at to accessor to bypass recording IPs from Trackable Devise's module
+  attr_accessor :skip_duplicate_warnings, :current_sign_in_ip, :last_sign_in_ip, :sign_in_count, :current_sign_in_at
 
   devise :invitable, :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :confirmable, :async
+         :recoverable, :rememberable, :validatable, :confirmable, :async,
+         :trackable
 
   has_many :user_profiles
   has_many :organisations, through: :user_profiles

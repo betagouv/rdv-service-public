@@ -5,7 +5,7 @@ class Agent::RdvPolicy < DefaultAgentPolicy
 
   class Scope < Scope
     def resolve
-      if @context.agent.can_access_others_planning?
+      if @context.can_access_others_planning?
         scope.where(organisation_id: @context.organisation.id)
       else
         scope.joins(:motif).where(organisation_id: @context.organisation.id, motifs: { service_id: @context.agent.service_id })
@@ -15,7 +15,7 @@ class Agent::RdvPolicy < DefaultAgentPolicy
 
   class DepartementScope < Scope
     def resolve
-      if @context.agent.can_access_others_planning?
+      if @context.can_access_others_planning?
         scope.where(organisation_id: @context.agent.organisations.pluck(:id))
       else
         scope.joins(:motif)

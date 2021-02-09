@@ -2,7 +2,7 @@ RSpec.describe Admin::InvitationsController, type: :controller do
   render_views
 
   let!(:organisation) { create(:organisation) }
-  let!(:agent) { create(:agent, :admin, organisations: [organisation]) }
+  let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
   before do
     sign_in agent
@@ -18,8 +18,8 @@ RSpec.describe Admin::InvitationsController, type: :controller do
     end
 
     context "some invitations exist" do
-      let!(:agent1) { create(:agent, :admin, organisations: [organisation]) }
-      let!(:agent_invitee) { create(:agent, :invitation_not_accepted, first_name: nil, last_name: nil, organisations: [organisation]) }
+      let!(:agent1) { create(:agent, admin_role_in_organisations: [organisation]) }
+      let!(:agent_invitee) { create(:agent, :invitation_not_accepted, first_name: nil, last_name: nil, basic_role_in_organisations: [organisation]) }
 
       it "returns a success response" do
         get :index, params: { organisation_id: organisation.id }
@@ -31,7 +31,7 @@ RSpec.describe Admin::InvitationsController, type: :controller do
   end
 
   describe "POST #reinvite" do
-    let(:agent_invitee) { create(:agent, invited_by: agent, confirmed_at: nil, first_name: nil, last_name: nil, organisations: [organisation]) }
+    let(:agent_invitee) { create(:agent, invited_by: agent, confirmed_at: nil, first_name: nil, last_name: nil, basic_role_in_organisations: [organisation]) }
 
     it "returns a success response" do
       post :reinvite, params: { organisation_id: organisation.id, id: agent_invitee.to_param }

@@ -118,7 +118,7 @@ jobs:
       - *yarn_install
       - run:
           name: Run linters
-          command: bundle exec rake ci
+          command: bundle exec brakeman --no-page && bundle exec rubocop
       - slack/status:
           fail_only: true
           only_for_branches: master

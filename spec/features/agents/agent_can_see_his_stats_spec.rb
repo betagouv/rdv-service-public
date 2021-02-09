@@ -1,5 +1,5 @@
 describe "Agent can see his stats" do
-  let!(:agent) { create(:agent) }
+  let!(:agent) { create(:agent, basic_role_in_organisations: [create(:organisation)]) }
 
   before do
     login_as(agent, scope: :agent)

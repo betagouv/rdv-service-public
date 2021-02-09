@@ -8,8 +8,9 @@ class Select2Inputs {
     $(document).on("turbolinks:before-cache", this.destroyInputs)
   }
 
-  initInputs = () =>
-    document.querySelectorAll(".select2-input").forEach(this.initInput)
+  initInputs = () => {
+    document.querySelectorAll(this.selector).forEach(this.initInput)
+  }
 
   initInput = (elt) => $(elt).select2(this.getInputOptions(elt))
 
@@ -22,8 +23,10 @@ class Select2Inputs {
     return options
   }
 
-
-  destroyInputs = () => $(`this.selector[data-select2-id]`).select2('destroy')
+  destroyInputs = () => {
+    if ($(this.selector).first().data('select2') != undefined)
+      $(this.selector).select2('destroy')
+  }
 }
 
 export { Select2Inputs };

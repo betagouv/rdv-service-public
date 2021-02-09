@@ -128,10 +128,8 @@ Rails.application.routes.draw do
           resource :referents, only: [:update]
         end
         resources :absences, except: [:index, :show, :new]
+        resources :agent_roles, only: [:edit, :update]
         resources :agents, only: [:index, :show, :destroy] do
-          collection do
-            resources :permissions, only: [:edit, :update]
-          end
           resources :absences, only: [:index, :new]
           resources :plage_ouvertures, only: [:index, :new]
           resources :stats, only: :index do

@@ -1,8 +1,8 @@
 RSpec.describe Admin::InvitationsDeviseController, type: :controller do
   render_views
 
-  let!(:agent) { create(:agent, :admin) }
-  let(:organisation_id) { agent.organisation_ids.first }
+  let!(:organisation) { create(:organisation) }
+  let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
   let!(:organisation2) { create(:organisation) }
   let(:service_id) { agent.service.id }
 
@@ -16,7 +16,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
   end
 
   describe "POST #create" do
-    subject { post :create, params: { organisation_id: organisation_id, agent: params } }
+    subject { post :create, params: params }
 
     shared_examples "existing agent is added to organization" do
       it "should not create a new agent" do
@@ -25,22 +25,29 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
 
       it "should redirect to the invitations list" do
         subject
-        expect(response).to redirect_to(admin_organisation_invitations_path(organisation_id))
+        expect(response).to redirect_to(admin_organisation_invitations_path(organisation.id))
       end
 
       it "should add agent to organisation" do
         subject
-        expect(assigns(:agent).organisation_ids).to include(organisation_id)
+        expect(assigns(:agent).organisation_ids).to include(organisation.id)
       end
     end
 
     context "when email is correct and no invitation has been sent" do
       let(:params) do
         {
-          email: "michel@lapin.com",
-          organisation_id: organisation_id,
-          role: "user",
-          service_id: service_id,
+          organisation_id: organisation.id,
+          agent: {
+            email: "michel@lapin.com",
+            service_id: service_id,
+            roles_attributes: {
+              "0" => {
+                level: "basic",
+                organisation_id: organisation.id
+              }
+            }
+          }
         }
       end
 
@@ -50,7 +57,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
 
       it "should redirect to invitations list" do
         subject
-        expect(response).to redirect_to(admin_organisation_invitations_path(organisation_id))
+        expect(response).to redirect_to(admin_organisation_invitations_path(organisation.id))
       end
 
       it "should send an email" do
@@ -62,10 +69,17 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
     context "when email is incorrect" do
       let(:params) do
         {
-          email: "aa@hhh",
-          organisation_id: organisation_id,
-          role: "user",
-          service_id: service_id,
+          organisation_id: organisation.id,
+          agent: {
+            email: "aa@hhh",
+            service_id: service_id,
+            roles_attributes: {
+              "0" => {
+                level: "basic",
+                organisation_id: organisation.id
+              }
+            }
+          }
         }
       end
 
@@ -87,15 +101,22 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
     context "when agent already exist" do
       let(:params) do
         {
-          email: agent2.email,
-          organisation_id: organisation_id,
-          role: "user",
-          service_id: service_id,
+          organisation_id: organisation.id,
+          agent: {
+            email: agent2.email,
+            service_id: service_id,
+            roles_attributes: {
+              "0" => {
+                level: "basic",
+                organisation_id: organisation.id
+              }
+            }
+          }
         }
       end
 
       context "when agent is in another organisation" do
-        let!(:agent2) { create(:agent, organisation_ids: [organisation2.id]) }
+        let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation2]) }
 
         it_behaves_like "existing agent is added to organization"
 
@@ -106,18 +127,18 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
       end
 
       context "when agent has been invited by another organisation" do
-        let!(:agent2) { create(:agent, :not_confirmed, organisation_ids: [organisation2.id]) }
+        let!(:agent2) { create(:agent, :not_confirmed, basic_role_in_organisations: [organisation2]) }
 
         it_behaves_like "existing agent is added to organization"
       end
 
       context "when agent is already in this organisation" do
-        let!(:agent2) { create(:agent, organisation_ids: [organisation_id]) }
+        let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation]) }
         it { expect { subject }.not_to change(Agent, :count) }
       end
 
       context "when agent has been invited by this organisation" do
-        let!(:agent2) { create(:agent, :not_confirmed, organisation_ids: [organisation_id]) }
+        let!(:agent2) { create(:agent, :not_confirmed, basic_role_in_organisations: [organisation]) }
         it { expect { subject }.not_to change(Agent, :count) }
       end
     end
@@ -125,19 +146,20 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
     context "when agent already exist but with different email capitalization" do
       let(:params) do
         {
-          email: "MARCO@demo.rdv-solidarites.fr",
-          organisation_id: organisation_id,
-          role: "user",
-          service_id: service_id,
+          organisation_id: organisation.id,
+          agent: {
+            email: "MARCO@demo.rdv-solidarites.fr",
+            service_id: service_id,
+            roles_attributes: {
+              "0" => {
+                level: "basic",
+                organisation_id: organisation.id
+              }
+            }
+          }
         }
       end
-      let!(:existing_agent) do
-        create(
-          :agent,
-          email: "marco@demo.rdv-solidarites.fr",
-          organisation_ids: [organisation2.id]
-        )
-      end
+      let!(:existing_agent) { create(:agent, email: "marco@demo.rdv-solidarites.fr", basic_role_in_organisations: [organisation2]) }
 
       it_behaves_like "existing agent is added to organization"
     end

@@ -1,6 +1,6 @@
 describe "Agent can update user" do
   let!(:organisation) { create(:organisation) }
-  let!(:agent) { create(:agent, organisations: [organisation]) }
+  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let!(:user) do
     create(:user, first_name: "Jean", last_name: "LEGENDE", email: "jean@legende.com", organisations: [organisation])
   end

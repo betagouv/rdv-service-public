@@ -2,18 +2,31 @@ FactoryBot.define do
   sequence(:agent_email) { |n| "agent_#{n}@lapin.fr" }
 
   factory :agent do
-    organisations { [create(:organisation)] }
     service { create(:service) }
-
     email { generate(:agent_email) }
     uid { email }
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
     password { "password" }
     confirmed_at { DateTime.parse("2020-07-30 10:30").in_time_zone }
-    trait :admin do
-      role { "admin" }
+
+    transient do
+      basic_role_in_organisations { [] }
     end
+
+    transient do
+      admin_role_in_organisations { [] }
+    end
+
+    after(:create) do |agent, evaluator|
+      evaluator.basic_role_in_organisations.each do |organisation|
+        create :agent_role, agent: agent, organisation: organisation
+      end
+      evaluator.admin_role_in_organisations.each do |organisation|
+        create :agent_role, :admin, agent: agent, organisation: organisation
+      end
+    end
+
     trait :not_confirmed do
       confirmed_at { nil }
     end
@@ -25,9 +38,6 @@ FactoryBot.define do
     end
     trait :secretaire do
       service { Service.find_by(name: "Secrétariat") || create(:service, :secretariat) }
-    end
-    trait :with_multiple_organisations do
-      organisations { create_list(:organisation, 3) }
     end
   end
 end

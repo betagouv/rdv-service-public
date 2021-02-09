@@ -3,9 +3,8 @@ class DefaultAgentPolicy
 
   def initialize(context, record)
     raise Pundit::NotAuthorizedError, "must be logged in" unless context.agent
-    if context.organisation && context.agent.organisation_ids.exclude?(context.organisation.id)
-      raise Pundit::NotAuthorizedError, "must be of the same organisation"
-    end
+    raise Pundit::NotAuthorizedError, "agent has no role in organisation" \
+      if context.organisation && context.agent_role.nil?
 
     @context = context
     @record = record
@@ -46,7 +45,9 @@ class DefaultAgentPolicy
   def same_org?
     return false if @context.organisation.nil?
 
-    if @record.respond_to?(:organisation_id)
+    if @record.is_a? Agent
+      @record.roles.map(&:organisation_id) # works for unpersisted agents
+    elsif @record.respond_to?(:organisation_id)
       @record.organisation_id == @context.organisation.id
     elsif @record.respond_to?(:organisation_ids)
       @record.organisation_ids.include?(@context.organisation.id)
@@ -78,7 +79,11 @@ class DefaultAgentPolicy
   end
 
   def admin?
-    @context.agent.admin?
+    @context.agent_role.admin?
+  end
+
+  def admin_somewhere?
+    context.agent.roles.any?(&:admin?)
   end
 
   def admin_and_same_org?
@@ -89,7 +94,7 @@ class DefaultAgentPolicy
     if same_agent?
       true
     elsif same_org?
-      same_service? || @context.agent.can_access_others_planning?
+      same_service? || @context.can_access_others_planning?
     else
       false
     end

@@ -1,6 +1,7 @@
 describe Admin::Creneaux::AgentSearchesController, type: :controller do
   context "with a secretaire signed_in" do
-    let!(:agent) { create(:agent, :secretaire) }
+    let!(:organisation) { create(:organisation) }
+    let!(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
     before(:each) { sign_in agent }
 
     describe "GET index html format" do

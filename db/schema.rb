@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_14_143145) do
+ActiveRecord::Schema.define(version: 2021_02_05_140023) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,9 +104,10 @@ ActiveRecord::Schema.define(version: 2021_01_14_143145) do
     t.index ["uid", "provider"], name: "index_agents_on_uid_and_provider", unique: true
   end
 
-  create_table "agents_organisations", id: false, force: :cascade do |t|
+  create_table "agents_organisations", force: :cascade do |t|
     t.bigint "agent_id"
     t.bigint "organisation_id"
+    t.string "level", default: "basic", null: false
     t.index ["agent_id"], name: "index_agents_organisations_on_agent_id"
     t.index ["organisation_id", "agent_id"], name: "index_agents_organisations_on_organisation_id_and_agent_id", unique: true
     t.index ["organisation_id"], name: "index_agents_organisations_on_organisation_id"
@@ -360,6 +361,7 @@ ActiveRecord::Schema.define(version: 2021_01_14_143145) do
     t.string "phone_number_formatted"
     t.boolean "notify_by_sms", default: true
     t.boolean "notify_by_email", default: true
+    t.datetime "last_sign_in_at"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true

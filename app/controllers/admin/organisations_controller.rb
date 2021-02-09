@@ -7,7 +7,11 @@ class Admin::OrganisationsController < AgentAuthController
   before_action :follow_unique, only: :index
 
   def index
-    @organisations_by_departement = policy_scope(Organisation).group_by(&:departement)
+    @agent_roles_by_departement = policy_scope(AgentRole)
+      .merge(current_agent.roles)
+      .includes(:organisation)
+      .order("organisations.name")
+      .to_a.group_by { _1.organisation.departement }
     render layout: "registration"
   end
 
@@ -33,9 +37,11 @@ class Admin::OrganisationsController < AgentAuthController
   end
 
   def create
-    @organisation = Organisation.new(new_organisation_params)
+    @organisation = Organisation.new(
+      agent_roles_attributes: [{ agent: current_agent, level: AgentRole::LEVEL_ADMIN }],
+      **new_organisation_params
+    )
     authorize(@organisation)
-    @organisation.agents = [current_agent]
     if @organisation.save
       redirect_to organisation_home_path(@organisation), flash: { success: "Organisation créée !" }
     else

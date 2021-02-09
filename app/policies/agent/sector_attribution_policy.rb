@@ -1,20 +1,10 @@
 class Agent::SectorAttributionPolicy < DefaultAgentPolicy
-  def new?
-    orga_admin?
-  end
+  include Agent::SectorisationPolicyConcern
 
-  def create?
-    orga_admin?
-  end
+  protected
 
-  def destroy?
-    orga_admin?
-  end
-
-  private
-
-  def orga_admin?
-    @context.agent.admin? && @context.agent.organisations.pluck(:departement).include?(@record.sector.departement)
+  def departement
+    @record.sector.departement
   end
 
   class Scope < Scope

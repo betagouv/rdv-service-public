@@ -1,6 +1,8 @@
-class DisplayableUser
+class DisplayableUserPresenter
   include UsersHelper
   include ActionView::Helpers::TextHelper
+  include ActionView::Helpers::UrlHelper
+  include Rails.application.routes.url_helpers
 
   delegate :first_name, :last_name, :birth_name, :address, :affiliation_number, :number_of_children, to: :user
 
@@ -25,6 +27,10 @@ class DisplayableUser
 
   def phone_number
     @user.responsible_phone_number
+  end
+
+  def phone_number_formatted
+    @user.responsible_or_self.phone_number_formatted
   end
 
   def email
@@ -53,5 +59,29 @@ class DisplayableUser
     return "pas d'email renseigné" if @user.responsible_email.blank?
 
     @user.responsible_notify_by_email? ? "🟢 Activées" : "🔴 Désactivées"
+  end
+
+  def clickable_email
+    return "N/A" unless email.present?
+
+    mail_to(email)
+  end
+
+  def clickable_phone_number
+    return "N/A" unless phone_number.present?
+
+    link_to(phone_number, "tel:#{phone_number_formatted}")
+  end
+
+  def email_and_notification
+    return "N/A" unless email.present?
+
+    "#{clickable_email} - Notifications par email #{notify_by_email}".html_safe
+  end
+
+  def phone_number_and_notification
+    return "N/A" unless phone_number.present?
+
+    "#{clickable_phone_number} - Notifications par SMS #{notify_by_sms}".html_safe
   end
 end

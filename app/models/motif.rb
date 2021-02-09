@@ -32,11 +32,12 @@ class Motif < ApplicationRecord
 
   scope :active, -> { where(deleted_at: nil) }
   scope :reservable_online, -> { where(reservable_online: true) }
+  scope :not_reservable_online, -> { where(reservable_online: false) }
   scope :by_phone, -> { Motif.phone } # default scope created by enum
   scope :for_secretariat, -> { where(for_secretariat: true) }
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(motifs.name))")) }
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
-    available_motifs = if agent.admin?
+    available_motifs = if agent.admin_in_organisation?(organisation)
                          all
                        elsif agent.service.secretariat?
                          for_secretariat
@@ -55,6 +56,14 @@ class Motif < ApplicationRecord
   scope :sectorisation_level_departement, -> { where(sectorisation_level: SECTORISATION_LEVEL_DEPARTEMENT) }
   scope :sectorisation_level_organisation, -> { where(sectorisation_level: SECTORISATION_LEVEL_ORGANISATION) }
   scope :sectorisation_level_agent, -> { where(sectorisation_level: SECTORISATION_LEVEL_AGENT) }
+
+  include PgSearch::Model
+  pg_search_scope(
+    :search_by_text,
+    ignoring: :accents,
+    using: { tsearch: { prefix: true } },
+    against: [:name]
+  )
 
   def soft_delete
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
