@@ -1,6 +1,11 @@
-= link_to path, class: "rounded p-2 align-items-center mb-2 rdv-status #{local_assigns[:rdv_class]} d-flex" do
-  .d-flex.flex-grow-1.align-items-center.flex-wrap
-    .white-space-nowrap.overflow-hidden[style="min-width:100px;"]= label
-    .white-space-nowrap.overflow-hidden.text-center.flex-grow-1= text
-  .pl-1
-    i.fa.fa-eye
+= link_to path, class: "rounded p-2 align-items-center mb-2 rdv-status rdv-status-#{local_assigns[:temporal_status]} d-flex flex-wrap" do
+  .flex-grow-1
+    - if local_assigns[:label]
+      = label
+    - elsif local_assigns[:temporal_status]
+      = t("stats.rdv_counters.#{temporal_status}", count: count)
+  .flex-grow-1.text-right
+    span.text-bold>= count
+    span RDV
+    span.pl-2
+      i.fa.fa-eye

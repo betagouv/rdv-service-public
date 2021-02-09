@@ -119,14 +119,12 @@
           .col-lg-6
             - [:seen, :excused, :notexcused].each do |temporal_status|
               = render "stats/rdv_counter_with_link", \
-                label: t("stats.rdv_counters.#{temporal_status}", count: @rdvs.status(temporal_status).count), \
-                text: "#{@rdvs.status(temporal_status).count} RDVs",
-                path: admin_organisation_rdvs_path(current_organisation, status: temporal_status, user_id: @user.id, breadcrumb_page: "user"), \
-                rdv_class: "rdv-status-#{temporal_status}"
+                temporal_status: temporal_status, \
+                count: @rdvs.status(temporal_status).count,
+                path: admin_organisation_rdvs_path(current_organisation, status: temporal_status, user_id: @user.id, breadcrumb_page: "user")
           .col-lg-6
             - [:unknown_future, :unknown_past].each do |temporal_status|
               = render "stats/rdv_counter_with_link", \
-                label: t("stats.rdv_counters.#{temporal_status}", count: @rdvs.status(temporal_status).count), \
-                text: "#{@rdvs.status(temporal_status).count} RDVs",
-                path: admin_organisation_rdvs_path(current_organisation, status: temporal_status, user_id: @user.id, breadcrumb_page: "user"), \
-                rdv_class: "rdv-status-#{temporal_status}"
+                temporal_status: temporal_status, \
+                count: @rdvs.status(temporal_status).count,
+                path: admin_organisation_rdvs_path(current_organisation, status: temporal_status, user_id: @user.id, breadcrumb_page: "user")

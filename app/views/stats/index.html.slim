@@ -21,33 +21,31 @@
   - else
       .card.mb-5
         .card-body
+          h4.card-title.mb-3 Nombre de RDV par statut
           .row
             .col-lg-4
               .px-1
                 - [:seen, :excused, :notexcused].each do |temporal_status|
                   = render "stats/rdv_counter_without_link", \
-                    label: t("stats.rdv_counters.#{temporal_status}", count: @stats.rdvs.status(temporal_status).count), \
-                    text: "#{@stats.rdvs.status(temporal_status).count} RDVs",
-                    rdv_class: "rdv-status-#{temporal_status}"
+                    temporal_status: temporal_status, \
+                    count: @stats.rdvs.status(temporal_status).count
             .col-lg-4
               .px-1
                 = render "stats/rdv_counter_without_link", \
-                  label: t("stats.rdv_counters.unknown_past", count: @stats.rdvs.status(:unknown_past).count), \
-                  text: "#{@stats.rdvs.status(:unknown_past).count} RDVs",
-                  rdv_class: "rdv-status-unknown_past"
+                  temporal_status: :unknown_past, \
+                  count: @stats.rdvs.status(:unknown_past).count
             .col-lg-4
               .px-1
                 = render "stats/rdv_counter_without_link", \
-                  label: t("stats.rdv_counters.unknown_future", count: @stats.rdvs.status(:unknown_future).count), \
-                  text: "#{@stats.rdvs.status(:unknown_future).count} RDVs",
-                  rdv_class: "rdv-status-unknown_future"
+                  temporal_status: :unknown_future, \
+                  count: @stats.rdvs.status(:unknown_future).count
           hr
           .row
             .col-lg-4
               .px-1
                 = render "stats/rdv_counter_without_link", \
                   label: "Tous", \
-                  text: "#{@stats.rdvs.count} RDVs"
+                  count: @stats.rdvs.count
 
       .card.mb-5
         .card-body

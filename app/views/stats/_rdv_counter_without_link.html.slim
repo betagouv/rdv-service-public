@@ -1,3 +1,9 @@
-.row.rounded.py-2.align-items-center.mb-2.rdv-status[class=local_assigns[:rdv_class]]
-  .col-sm-6= label
-  .col-sm-6= text
+.d-flex.flex-wrap.rounded.py-2.align-items-center.mb-2.rdv-status.px-2[class="rdv-status-#{local_assigns[:temporal_status]}"]
+  .flex-grow-1
+    - if local_assigns[:label]
+      = label
+    - elsif local_assigns[:temporal_status]
+      = t("stats.rdv_counters.#{temporal_status}", count: count)
+  .flex-grow-1.text-right
+    span.text-bold>= count
+    span RDV

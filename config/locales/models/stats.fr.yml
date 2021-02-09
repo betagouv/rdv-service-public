@@ -6,9 +6,9 @@ fr:
         one: Indéterminé
         other: Indéterminés
       unknown_past:
-        zero: À renseigner
-        one: À renseigner
-        other: À renseigner
+        zero: À renseigner ❗️
+        one: À renseigner ❗️
+        other: À renseigner ❗️
       unknown_future:
         zero: À venir
         one: À venir
