@@ -40,7 +40,7 @@ backups = JSON.parse(
     headers: HEADERS.merge({ "Authorization" => "Bearer #{bearer_token_db}" })
   ).body
 )["database_backups"]
-backup_most_recent = backups.sort_by { _1["created_at"] }.last
+backup_most_recent = backups.max_by { _1["created_at"] }
 
 backup_dl_url = JSON.parse(
   Typhoeus.get(
@@ -53,7 +53,7 @@ puts backup_dl_url
 puts "downloading #{(backup_most_recent['size'] / 1024 / 1024).round}MB backup from #{backup_most_recent['created_at']}..."
 backup_tar_path = "./prod-dump.tar.gz"
 File.open(backup_tar_path, "wb") do |file|
-  file.write(URI.open(backup_dl_url).read)
+  file.write(URI.parse(backup_dl_url).open.read)
 end
 puts "done downloading to {backup_tar_path}, now untar ..."
 
