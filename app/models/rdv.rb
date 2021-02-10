@@ -38,7 +38,7 @@ class Rdv < ApplicationRecord
   scope :for_today, -> { where(starts_at: Time.zone.now.beginning_of_day...Time.zone.now.end_of_day) }
   scope :user_with_relatives, ->(responsible_id) { joins(:users).includes(:rdvs_users, :users).where("users.id IN (?)", [responsible_id, User.find(responsible_id).relatives.pluck(:id)].flatten) }
   scope :status, lambda { |status|
-    case status
+    case status.to_s
     when "unknown_past"
       past.where(status: ["unknown", "waiting"])
     when "unknown_future"
@@ -47,7 +47,6 @@ class Rdv < ApplicationRecord
       where(status: status)
     end
   }
-  scope :default_stats_period, -> { where(created_at: Stat.default_date_range) }
   scope :with_agent, ->(agent) { joins(:agents).where(agents: { id: agent.id }) }
   scope :with_agent_among, ->(agents) { agents.map { with_agent(_1) }.reduce(:or) }
   scope :with_user, ->(user) { joins(:rdvs_users).where(rdvs_users: { user_id: user.id }) }

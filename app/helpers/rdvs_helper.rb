@@ -43,12 +43,12 @@ module RdvsHelper
   end
 
   def unknown_past_rdvs_danger_bage
-    unknown_past_rdvs = current_organisation.rdvs.status("unknown_past").where(created_at: Stat.default_date_range).count
+    unknown_past_rdvs = current_organisation.rdvs.status("unknown_past").count
     rdv_danger_badge(unknown_past_rdvs)
   end
 
   def unknown_past_agent_rdvs_danger_bage
-    unknown_past_rdvs = current_organisation.rdvs.joins(:agents).where(agents: { id: current_agent }).status("unknown_past").where(created_at: Stat.default_date_range).count
+    unknown_past_rdvs = current_organisation.rdvs.joins(:agents).where(agents: { id: current_agent }).status("unknown_past").count
     rdv_danger_badge(unknown_past_rdvs)
   end
 
