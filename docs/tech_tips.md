@@ -10,6 +10,10 @@ Une autre option est de passer par l'interface de Scalingo, dans l'extension Pos
 pg_restore -d rdv_solidarites_production_dump ~/Downloads/20210128000000_production__6670.pgsql
 ```
 
+Il est recommandé de lancer le serveur local sans le worker sinon il y aura beaucoup de jobs de reminders et de simulations d'envois de mails :
+
+`overmind start -f Procfile.dev --processes web,webpack`
+
 ## Code d'authentification http basic pour le super admin d'une review app
 
 ```bash
