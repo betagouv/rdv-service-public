@@ -9,6 +9,8 @@
     .col-md-6= f.input :birth_name, placeholder: 'Nom de naissance'
     .col-md-6= date_input(f, :birth_date)
   = f.input :phone_number, as: :tel
+  - if user.phone_number.present? && !user.phone_number_mobile?
+    .alert.alert-warning Vous ne recevrez pas de SMS avec ce numéro non-mobile
   label Préférences de notifications
   .d-flex
     div= f.input :notify_by_email

@@ -44,6 +44,13 @@ ul.list-group.list-group-flush
           span> 📞 Téléphone :
           b>= current_user.phone_number || "Non renseigné"
           - if current_user.phone_number.present?
-            span>= "(notifications par SMS #{current_user.notify_by_sms? ? "activées" : "désactivées"})"
+            span>= "(notifications par SMS"
+            - if !current_user.phone_number_mobile?
+              | impossibles car le numéro n'est pas mobile
+            - elsif current_user.notify_by_sms?
+              | activées
+            - else
+              | désactivées
+            = ")"
         .col-auto
           = link_to "modifier", new_users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query)
