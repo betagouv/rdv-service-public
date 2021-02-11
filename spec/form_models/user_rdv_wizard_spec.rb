@@ -20,9 +20,9 @@ describe UserRdvWizard do
   end
 
   describe "#new" do
-    let(:returned_creneau) { Creneau.new }
+    it "should work" do
+      returned_creneau = Creneau.new
 
-    before do
       expect(Users::GeoSearch).to receive(:new)
         .with(departement: "62", city_code: "62100")
         .and_return(mock_geo_search)
@@ -33,9 +33,6 @@ describe UserRdvWizard do
         starts_at: DateTime.parse("2020-10-20 09h30"),
         geo_search: mock_geo_search
       ).and_return(returned_creneau)
-    end
-
-    it "should work" do
       rdv_wizard = UserRdvWizard::Step1.new(user, attributes)
       expect(rdv_wizard.rdv.user_ids).to eq [user_for_rdv.id]
       expect(rdv_wizard.creneau).to eq returned_creneau
@@ -79,7 +76,7 @@ describe UserRdvWizard do
       }
       rdv_wizard = UserRdvWizard::Step1.new(user, attributes)
       expect(rdv_wizard.save).to be false
-      expect(user.reload.errors[:phone_number][0]).to eq("doit être rempli(e)")
+      expect(rdv_wizard.errors.full_messages.join(", ")).to eq("Aucun usager n'a de numéro de téléphone renseigné alors que le rendez-vous est téléphonique")
     end
   end
 end

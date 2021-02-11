@@ -59,7 +59,7 @@ module UserRdvWizard
     validate :phone_number_present_for_motif_by_phone
 
     def phone_number_present_for_motif_by_phone
-      @user.errors.add(:phone_number, :empty) if @rdv.motif.phone? && @user_attributes[:phone_number].blank?
+      errors.add(:base, I18n.t("activerecord.attributes.rdv.phone_number_missing")) if rdv.motif.phone? && @user_attributes[:phone_number].blank?
     end
 
     def initialize(user, attributes)
@@ -68,7 +68,7 @@ module UserRdvWizard
     end
 
     def save
-      @user.update(@user_attributes)
+      valid? && @user.update(@user_attributes)
     end
   end
 
