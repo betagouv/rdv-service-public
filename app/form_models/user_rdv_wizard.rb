@@ -56,16 +56,18 @@ module UserRdvWizard
   end
 
   class Step1 < Base
+    validate :phone_number_present_for_motif_by_phone
+
+    def phone_number_present_for_motif_by_phone
+      @user.errors.add(:phone_number, :empty) if @rdv.motif.phone? && @user_attributes[:phone_number].blank?
+    end
+
     def initialize(user, attributes)
       super
       @user_attributes = @attributes[:user]
     end
 
     def save
-      if @rdv.motif.phone? && @user_attributes[:phone_number].blank?
-        @user.errors.add(:phone_number, :empty)
-        return false
-      end
       @user.update(@user_attributes)
     end
   end
