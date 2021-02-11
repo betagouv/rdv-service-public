@@ -10,13 +10,13 @@ module Notifications::Rdv::BaseServiceConcern
 
     if methods.include?(:notify_user_by_mail)
       users_to_notify
-        .select { _1.email.present? && _1.notify_by_email? }
+        .select(&:notifiable_by_email?)
         .each { notify_user_by_mail(_1) }
     end
 
     if methods.include?(:notify_user_by_sms)
       users_to_notify
-        .select { _1.phone_number_formatted.present? && _1.notify_by_sms? }
+        .select(&:notifiable_by_sms?)
         .each { notify_user_by_sms(_1) }
     end
 
