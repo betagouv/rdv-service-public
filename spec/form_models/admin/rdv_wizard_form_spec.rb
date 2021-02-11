@@ -58,4 +58,39 @@ describe Admin::RdvWizardForm do
       end
     end
   end
+
+  describe "Step2#save" do
+    it "return true when everything is ok" do
+      motif = create(:motif, :at_public_office, organisation: organisation)
+      attributes = {
+        starts_at: Time.zone.now,
+        motif_id: motif.id,
+        user_ids: [user.id],
+      }
+      rdv_wizard = Admin::RdvWizardForm::Step2.new(agent, organisation, attributes)
+      expect(rdv_wizard.save).to be true
+    end
+
+    it "return false without user" do
+      motif = create(:motif, :at_public_office, organisation: organisation)
+      attributes = {
+        starts_at: Time.zone.now,
+        motif_id: motif.id
+      }
+      rdv_wizard = Admin::RdvWizardForm::Step2.new(agent, organisation, attributes)
+      expect(rdv_wizard.save).to be false
+    end
+
+    it "return false when motif by phone and user without phone number" do
+      user = create(:user, phone_number: nil, organisations: [organisation])
+      motif = create(:motif, :by_phone, organisation: organisation)
+      attributes = {
+        starts_at: Time.zone.now,
+        motif_id: motif.id,
+        user_ids: [user.id]
+      }
+      rdv_wizard = Admin::RdvWizardForm::Step2.new(agent, organisation, attributes)
+      expect(rdv_wizard.save).to be false
+    end
+  end
 end

@@ -4,6 +4,7 @@ fr:
       rdv: Rendez-vous
     attributes:
       rdv:
+        phone_number_missing: "Aucun usager n'a de numéro de téléphone renseigné alors que le rendez-vous est téléphonique"
         motif: Motif
         user_ids: Usagers
         users: Usagers
