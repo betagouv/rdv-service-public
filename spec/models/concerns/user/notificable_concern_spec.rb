@@ -45,5 +45,10 @@ describe User::NotificableConcern do
       let(:user) { build(:user, phone_number_formatted: "", notify_by_sms: true) }
       it { should be_falsy }
     end
+
+    context "user has SMS notifications enabled but landline phone number" do
+      let(:user) { build(:user, phone_number_formatted: "+33129292929", notify_by_sms: true) }
+      it { should be_falsy }
+    end
   end
 end
