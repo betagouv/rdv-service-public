@@ -25,7 +25,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
     elsif @rdv_wizard.error_path.present?
       redirect_to @rdv_wizard.error_path, flash: { error: @rdv_wizard.errors.full_messages.join(", ") }
     else
-      current_path
+      render current_step
     end
   end
 
