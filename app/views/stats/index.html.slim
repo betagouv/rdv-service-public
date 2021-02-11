@@ -2,8 +2,6 @@
   h1
     | Statistiques
     = " pour le #{@departement}" if @departement.present?
-    br
-    small< Du #{l(Stat.default_date_range.first.to_date)} au #{l(Stat.default_date_range.last.to_date)}
 
 .container.mt-3
   .card
@@ -23,27 +21,51 @@
   - else
       .card.mb-5
         .card-body
-          = render 'stats/rdv_counters', rdvs: @stats.rdvs_for_default_range, show_links: false
+          h4.card-title.mb-3 Nombre de RDV par statut
+          .row
+            .col-lg-4
+              .px-1
+                - [:seen, :excused, :notexcused].each do |temporal_status|
+                  = render "stats/rdv_counter_without_link", \
+                    temporal_status: temporal_status, \
+                    count: @stats.rdvs.status(temporal_status).count
+            .col-lg-4
+              .px-1
+                = render "stats/rdv_counter_without_link", \
+                  temporal_status: :unknown_past, \
+                  count: @stats.rdvs.status(:unknown_past).count
+            .col-lg-4
+              .px-1
+                = render "stats/rdv_counter_without_link", \
+                  temporal_status: :unknown_future, \
+                  count: @stats.rdvs.status(:unknown_future).count
+          hr
+          .row
+            .col-lg-4
+              .px-1
+                = render "stats/rdv_counter_without_link", \
+                  label: "Tous", \
+                  count: @stats.rdvs.count
 
       .card.mb-5
         .card-body
-          h4.card-title.mb-3 RDV créés (#{@stats.rdvs_for_default_range.count})
+          h4.card-title.mb-3 RDV créés (#{@stats.rdvs.count})
           = column_chart add_query_string_params_to_url(rdvs_stats_path, departement: @departement), stacked: true
 
       - unless @departement.present?
         .card.mb-5
           .card-body
-            h4.card-title.mb-3 RDV créés par département(#{@stats.rdvs_for_default_range.count})
+            h4.card-title.mb-3 RDV créés par département(#{@stats.rdvs.count})
             = column_chart add_query_string_params_to_url(rdvs_stats_path, by_departement: true, departement: @departement), stacked: true
 
       .card.mb-5
         .card-body
-          h4.card-title.mb-3 RDV créés par service (#{@stats.rdvs_for_default_range.count})
+          h4.card-title.mb-3 RDV créés par service (#{@stats.rdvs.count})
           = column_chart add_query_string_params_to_url(rdvs_stats_path, by_service: true, departement: @departement), stacked: true
 
       .card.mb-5
         .card-body
-          h4.card-title.mb-3 RDV par type (#{@stats.rdvs_for_default_range.count})
+          h4.card-title.mb-3 RDV par type (#{@stats.rdvs.count})
           = column_chart add_query_string_params_to_url(rdvs_stats_path, by_location_type: true, departement: @departement), stacked: true
 
       .card.mb-5
@@ -53,7 +75,7 @@
 
       .card.mb-5
         .card-body
-          h4.card-title.mb-3 Usagers créés (#{@stats.users_for_default_range.count})
+          h4.card-title.mb-3 Usagers créés (#{@stats.users_active.count})
           = column_chart add_query_string_params_to_url(users_stats_path, departement: @departement)
 
       .card.mb-5
@@ -66,5 +88,5 @@
 
   .card.mb-5
     .card-body
-      h4.card-title.mb-3 Organisations créées (#{@stats.organisations_for_default_range.count})
+      h4.card-title.mb-3 Organisations créées (#{@stats.organisations.count})
       = column_chart add_query_string_params_to_url(organisations_stats_path, departement: @departement)

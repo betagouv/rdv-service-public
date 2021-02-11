@@ -1,36 +1,39 @@
 fr:
   stats:
     rdv_counters:
-      rdvs:
-        unknown:
-          zero: Indéterminé
-          one: Indéterminé
-          other: Indéterminés
-        unknown_past:
-          zero: À renseigner
-          one: À renseigner
-          other: À renseigner
-        seen:
-          zero: Vu
-          one: Vu
-          other: Vus
-        excused:
-          zero: Excusé
-          one: Excusé
-          other: Excusés
-        notexcused:
-          zero: Non excusé
-          one: Non excusé
-          other: Non excusés
-        created_by_agent:
-          zero: Créé par un agent
-          one: Créé par un agent
-          other: Créés par un agent
-        created_by_user:
-          zero: Créé par un usager
-          one: Créés par un usager
-          other: Créés par un usager
-        created_by_file_attente:
-          zero: Créé par la file d'attente
-          one: Créé par la file d'attente
-          other: Créés par la file d'attente
+      unknown:
+        zero: Indéterminé
+        one: Indéterminé
+        other: Indéterminés
+      unknown_past:
+        zero: À renseigner ❗️
+        one: À renseigner ❗️
+        other: À renseigner ❗️
+      unknown_future:
+        zero: À venir
+        one: À venir
+        other: À venir
+      seen:
+        zero: Vu
+        one: Vu
+        other: Vus
+      excused:
+        zero: Excusé
+        one: Excusé
+        other: Excusés
+      notexcused:
+        zero: Non excusé
+        one: Non excusé
+        other: Non excusés
+      created_by_agent:
+        zero: Créé par un agent
+        one: Créé par un agent
+        other: Créés par un agent
+      created_by_user:
+        zero: Créé par un usager
+        one: Créés par un usager
+        other: Créés par un usager
+      created_by_file_attente:
+        zero: Créé par la file d'attente
+        one: Créé par la file d'attente
+        other: Créés par la file d'attente
