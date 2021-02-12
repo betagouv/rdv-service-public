@@ -108,4 +108,8 @@ class Agent < ApplicationRecord
   def admin_in_organisation?(organisation)
     role_in_organisation(organisation).admin?
   end
+
+  def only_in_this_organisation?(organisation)
+    (organisations - [organisation]).empty?
+  end
 end

@@ -39,4 +39,25 @@ describe Agent, type: :model do
       expect(agent.uid).to eq("agent_#{agent.id}@deleted.rdv-solidarites.fr")
     end
   end
+
+  describe "#only_in_this_organisation?" do
+    it "return true when single orga left" do
+      organisation = build(:organisation)
+      agent = build(:agent, organisations: [organisation])
+      expect(agent.only_in_this_organisation?(organisation)).to be true
+    end
+
+    it "return true when no orga left" do
+      organisation = build(:organisation)
+      agent = build(:agent, organisations: [])
+      expect(agent.only_in_this_organisation?(organisation)).to be true
+    end
+
+    it "return false when orgas left" do
+      organisation = build(:organisation)
+      other_organisation = build(:organisation)
+      agent = build(:agent, organisations: [organisation, other_organisation])
+      expect(agent.only_in_this_organisation?(organisation)).to be false
+    end
+  end
 end
