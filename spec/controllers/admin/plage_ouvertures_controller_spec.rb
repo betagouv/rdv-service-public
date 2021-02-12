@@ -267,7 +267,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
         end
 
         it "send notification after create" do
-          expect(Agents::PlageOuvertureMailer).to receive(:plage_ouverture_created).and_return(double(deliver_later: nil))
+          expect(Agents::PlageOuvertureMailer).to receive(:plage_ouverture_updated).and_return(double(deliver_later: nil))
           put :update, params: { organisation_id: organisation.id, id: plage_ouverture.to_param, plage_ouverture: { title: "Le nouveau nom" } }
         end
       end
