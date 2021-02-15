@@ -15,7 +15,7 @@
   .d-flex
     div= f.input :notify_by_email
     div.ml-3= f.input :notify_by_sms
-  - address_value = local_assigns[:rdv_wizard].present? && user.address.nil? ? rdv_wizard : user.address
+  - address_value = local_assigns[:rdv_wizard].present? && user.address.nil? ? rdv_wizard.to_query[:where] : user.address
   = f.input :address, input_html: {value: address_value, class: "places-js-container" }
 
   - if local_assigns[:service].nil? || service.user_field_groups.include?(:social)
