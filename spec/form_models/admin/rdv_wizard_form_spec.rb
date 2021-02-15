@@ -81,13 +81,24 @@ describe Admin::RdvWizardForm do
       expect(rdv_wizard.save).to be false
     end
 
-    it "return false when motif by phone and user without phone number" do
-      user = create(:user, phone_number: nil, organisations: [organisation])
+    it "return false when motif by phone nil user" do
       motif = create(:motif, :by_phone, organisation: organisation)
       attributes = {
         starts_at: Time.zone.now,
         motif_id: motif.id,
-        user_ids: [user.id]
+        user_ids: []
+      }
+      rdv_wizard = Admin::RdvWizardForm::Step2.new(agent, organisation, attributes)
+      expect(rdv_wizard.save).to be false
+    end
+
+    it "return false when motif by phone and user phone is empty" do
+      motif = create(:motif, :by_phone, organisation: organisation)
+      user = create(:user, phone_number: nil, organisations: [organisation])
+      attributes = {
+        starts_at: Time.zone.now,
+        motif_id: motif.id,
+        user_ids: [user.id],
       }
       rdv_wizard = Admin::RdvWizardForm::Step2.new(agent, organisation, attributes)
       expect(rdv_wizard.save).to be false
