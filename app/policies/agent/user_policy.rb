@@ -4,7 +4,14 @@ class Agent::UserPolicy < DefaultAgentPolicy
   end
 
   def create?
-    same_org?
+    # for the creation we want to make sure that all organisation IDs are
+    # authorized for the current context (orga or agent)
+    return false if @record.user_profiles.empty?
+
+    (
+      @record.user_profiles.map(&:organisation_id) -
+      (@context.organisation.present? ? [@context.organisation.id] : @context.agent.organisation_ids)
+    ).empty?
   end
 
   def invite?
@@ -21,7 +28,13 @@ class Agent::UserPolicy < DefaultAgentPolicy
 
   class Scope < Scope
     def resolve
-      scope.joins(:organisations).where(organisations: { id: @context.organisation.id })
+      scope
+        .joins(:organisations)
+        .where(
+          organisations: {
+            id: @context.organisation&.id || @context.agent.organisation_ids
+          }
+        )
     end
   end
 
