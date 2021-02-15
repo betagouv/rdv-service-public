@@ -64,7 +64,7 @@ module UserRdvWizard
 
     def initialize(user, attributes)
       super
-      @user_attributes = @attributes[:user]
+      @user_attributes = @attributes[:user]&.with_indifferent_access
     end
 
     def save
