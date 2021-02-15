@@ -143,7 +143,9 @@ Rails.application.routes.draw do
           post :reinvite, on: :member
         end
         resource :merge_users, only: [:new, :create]
-        resource :rdv_wizard_step, only: [:new, :create]
+        resource :rdv_wizard_step, only: [:new] do
+          get :create
+        end
         devise_for :agents, controllers: { invitations: "admin/invitations_devise" }, only: :invitations
       end
 

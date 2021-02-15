@@ -22,8 +22,6 @@ class Admin::RdvWizardStepsController < AgentAuthController
     authorize(@rdv_wizard.rdv, :create?)
     if @rdv_wizard.save
       redirect_to @rdv_wizard.success_path, @rdv_wizard.success_flash
-    elsif @rdv_wizard.error_path.present?
-      redirect_to @rdv_wizard.error_path, flash: { error: @rdv_wizard.errors.full_messages.join(", ") }
     else
       render current_step
     end

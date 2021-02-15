@@ -69,10 +69,6 @@ module Admin::RdvWizardForm
     def success_path
       new_admin_organisation_rdv_wizard_step_path(@organisation, step: 3, **to_query)
     end
-
-    def error_path
-      new_admin_organisation_rdv_wizard_step_path(@organisation, step: 2, **to_query)
-    end
   end
 
   class Step3 < Step2
