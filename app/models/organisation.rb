@@ -8,7 +8,7 @@ class Organisation < ApplicationRecord
   has_many :sector_attributions, dependent: :destroy
   has_many :sectors, through: :sector_attributions
   has_many :plage_ouvertures, dependent: :destroy
-  has_many :agent_roles
+  has_many :agent_roles, dependent: :delete_all # skips last admin validation
   has_many :agents, through: :agent_roles
 
   has_many :user_profiles
