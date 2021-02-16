@@ -9,8 +9,23 @@ module SomeModule
 end
 
 describe TransactionalSms::BaseConcern, type: :service do
-  let(:user) { build(:user, phone_number: "+33640404040", address: "10 rue de Toulon, Lille") }
+  describe "#initialize" do
+    context "user has valid mobile phone number" do
+      it "should raise" do
+        expect { SomeModule::TestSms.new(build(:rdv), build(:user)) }.not_to raise_error
+      end
+    end
 
+    context "user has landline phone number" do
+      let(:user) { build(:user, phone_number_formatted: "+33130303030") }
+      it "should raise" do
+        expect { SomeModule::TestSms.new(build(:rdv), user) }.to \
+          raise_error(InvalidMobilePhoneNumberError)
+      end
+    end
+  end
+
+  let(:user) { build(:user, address: "10 rue de Toulon, Lille") }
   describe "#rdv_footer" do
     let(:rdv) { build(:rdv, motif: motif, users: [user], starts_at: 5.days.from_now) }
     subject { SomeModule::TestSms.new(rdv, user).rdv_footer }

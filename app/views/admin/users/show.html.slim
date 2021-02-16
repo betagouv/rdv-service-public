@@ -116,31 +116,15 @@
             = link_to "Voir tous les rendez-vous de #{@user.full_name}", admin_organisation_rdvs_path(current_organisation, user_id: @user.id), class: "btn btn-outline-primary small"
       .card-body
         .row
-          .col-md-4
-            .bg-light.p-2.mb-3.mb-md-0.text-center
-              p.h2= @rdvs.status('unknown_past').count
-              p.lead
-                => t 'stats.rdv_counters.rdvs.unknown_past', count: @rdvs.status('unknown_past').count
-                = rdv_danger_icon(@rdvs.status('unknown_past').count)
-              = link_to "Voir", admin_organisation_rdvs_path(current_organisation, user_id: @user.id, breadcrumb_page: "user", status: "unknown_past"), class: "btn btn-outline-dark"
-          .col-md-4
-            .bg-success.text-white.p-2.mb-3.text-center
-              p.h2= @rdvs.seen.count
-              p.lead= t 'stats.rdv_counters.rdvs.seen', count: @rdvs.seen.count
-              = link_to "Voir", admin_organisation_rdvs_path(current_organisation, user_id: @user.id, breadcrumb_page: "user", status: "seen"), class: "btn btn-outline-white"
-          .col-md-4
-            .bg-info.text-white.p-2.mb-3.text-center
-              p.h2= @rdvs.status('unknown_future').count
-              p.lead À venir
-              = link_to "Voir", admin_organisation_rdvs_path(current_organisation, user_id: @user.id, breadcrumb_page: "user", status: "unknown_future"), class: "btn btn-outline-white"
-        .row
-          .col-md-6
-            .bg-tertiary.text-white.p-2.mb-3.text-center
-              p.h2= @rdvs.excused.count
-              p.lead= t 'stats.rdv_counters.rdvs.excused', count: @rdvs.excused.count
-              = link_to "Voir", admin_organisation_rdvs_path(current_organisation, user_id: @user.id, breadcrumb_page: "user", status: "excused"), class: "btn btn-outline-white"
-          .col-md-6
-            .bg-danger.text-white.p-2.mb-3.text-center
-              p.h2= @rdvs.notexcused.count
-              p.lead= t 'stats.rdv_counters.rdvs.notexcused', count: @rdvs.notexcused.count
-              = link_to "Voir", admin_organisation_rdvs_path(current_organisation, user_id: @user.id, breadcrumb_page: "user", status: "notexcused"), class: "btn btn-outline-white"
+          .col-lg-6
+            - [:seen, :excused, :notexcused].each do |temporal_status|
+              = render "stats/rdv_counter_with_link", \
+                temporal_status: temporal_status, \
+                count: @rdvs.status(temporal_status).count,
+                path: admin_organisation_rdvs_path(current_organisation, status: temporal_status, user_id: @user.id, breadcrumb_page: "user")
+          .col-lg-6
+            - [:unknown_future, :unknown_past].each do |temporal_status|
+              = render "stats/rdv_counter_with_link", \
+                temporal_status: temporal_status, \
+                count: @rdvs.status(temporal_status).count,
+                path: admin_organisation_rdvs_path(current_organisation, status: temporal_status, user_id: @user.id, breadcrumb_page: "user")

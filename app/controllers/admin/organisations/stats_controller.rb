@@ -1,6 +1,4 @@
 class Admin::Organisations::StatsController < AgentAuthController
-  respond_to :html, :json
-
   before_action :set_organisation
 
   def index

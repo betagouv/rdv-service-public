@@ -14,6 +14,8 @@
         .fa.fa-info
       div= I18n.t("users.franceconnect_frozen_fields")
   = f.input :phone_number, as: :tel
+  - if user.phone_number.present? && !user.phone_number_mobile?
+    .alert.alert-warning Vous ne recevrez pas de SMS avec ce numéro non-mobile
   label Préférences de notifications
   .d-flex
     div= f.input :notify_by_email

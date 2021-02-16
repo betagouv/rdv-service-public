@@ -1,3 +1,5 @@
+class InvalidMobilePhoneNumberError < StandardError; end
+
 module TransactionalSms::BaseConcern
   extend ActiveSupport::Concern
 
@@ -10,6 +12,9 @@ module TransactionalSms::BaseConcern
   end
 
   def initialize(rdv, user)
+    raise InvalidMobilePhoneNumberError, "#{user.phone_number_formatted} is not a valid mobile phone number" \
+      unless user.phone_number_mobile?
+
     @user = user
     @rdv = rdv
   end

@@ -12,6 +12,7 @@ FactoryBot.define do
       num = Faker::Base.numerify("06 ## ## ## ##") until Phonelib.valid?(num)
       num
     end
+    phone_number_formatted { Phonelib.parse(phone_number).e164 }
     birth_date { Date.parse("1985-07-20") }
     address { "20 avenue de Ségur, Paris" }
     password { "12345678" }

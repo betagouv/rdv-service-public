@@ -5,6 +5,7 @@ class User < ApplicationRecord
   include AccountNormalizerConcern
   include User::SearchableConcern
   include User::FranceconnectFrozenFieldsConcern
+  include User::NotificableConcern
 
   ONGOING_MARGIN = 1.hour.freeze
 

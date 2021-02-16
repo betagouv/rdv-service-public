@@ -10,11 +10,23 @@ require "dotenv/load"
 require "typhoeus"
 require "json"
 
+GITHUB_CHANGELOG_USERPWD = ENV["GITHUB_CHANGELOG_USERPWD"]
+
+unless GITHUB_CHANGELOG_USERPWD
+  puts ""
+  puts "Erreur"
+  puts "Vous devez avoir une variable d'environnement <GITHUB_CHANGELOG_USERPWD>"
+  puts "contenant un token github permettant l'accès au `public_repo`"
+  puts ""
+  exit 1
+end
+
 res = Typhoeus.get(
   "https://api.github.com/projects/columns/#{COLUMN_ID}/cards",
-  userpwd: ENV["GITHUB_CHANGELOG_USERPWD"],
+  userpwd: GITHUB_CHANGELOG_USERPWD,
   headers: { "Accept" => "application/vnd.github.inertia-preview+json" }
 )
+
 done_cards = JSON.parse(res.body)
 open_issues = []
 done_cards.each do |card|
