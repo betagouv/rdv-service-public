@@ -110,14 +110,21 @@ describe DisplayableUserPresenter, type: :presenter do
 
     it "return activated when user allow sms notifications" do
       organisation = build(:organisation)
-      user = build(:user, organisations: [organisation], phone_number: "01 02 03 04 05", notify_by_sms: true)
+      user = build(:user, organisations: [organisation], phone_number: "06 30 30 30 30", notify_by_sms: true)
       displayable_user = described_class.new(user, organisation)
       expect(displayable_user.notify_by_sms).to eq("🟢 Activées")
     end
 
+    it "returns disabled when user allow sms notifications but landline number" do
+      organisation = build(:organisation)
+      user = build(:user, organisations: [organisation], phone_number: "01 30 30 30 30", notify_by_sms: true)
+      displayable_user = described_class.new(user, organisation)
+      expect(displayable_user.notify_by_sms).to eq("🔴 le numéro de téléphone renseigné n'est pas un mobile")
+    end
+
     it "return desactivated when user disallow sms notifications" do
       organisation = build(:organisation)
-      user = build(:user, organisations: [organisation], phone_number: "01 02 03 04 05", notify_by_sms: false)
+      user = build(:user, organisations: [organisation], phone_number: "06 30 30 30 30", notify_by_sms: false)
       displayable_user = described_class.new(user, organisation)
       expect(displayable_user.notify_by_sms).to eq("🔴 Désactivées")
     end
@@ -177,18 +184,25 @@ describe DisplayableUserPresenter, type: :presenter do
       expect(displayable_user.phone_number_and_notification).to eq("N/A")
     end
 
-    it "returns phone_number and activate notification with a user's email and notification activated" do
+    it "returns phone_number and enabled notification with a user's sms setting enabled" do
+      organisation = build(:organisation)
+      user = create(:user, organisations: [organisation], phone_number: "06 30 30 30 30", notify_by_sms: true)
+      displayable_user = described_class.new(user, organisation)
+      expect(displayable_user.phone_number_and_notification).to eq("<a href=\"tel:+33630303030\">06 30 30 30 30</a> - Notifications par SMS 🟢 Activées")
+    end
+
+    it "returns phone_number and disabled notification with a user's sms setting enabled but a landline" do
       organisation = build(:organisation)
       user = create(:user, organisations: [organisation], phone_number: "01 02 03 04 05", notify_by_sms: true)
       displayable_user = described_class.new(user, organisation)
-      expect(displayable_user.phone_number_and_notification).to eq("<a href=\"tel:+33102030405\">01 02 03 04 05</a> - Notifications par SMS 🟢 Activées")
+      expect(displayable_user.phone_number_and_notification).to eq("<a href=\"tel:+33102030405\">01 02 03 04 05</a> - Notifications par SMS 🔴 le numéro de téléphone renseigné n'est pas un mobile")
     end
 
-    it "returns phone_number and activate notification with a user's email and notification desactivated" do
+    it "returns phone_number and disabled notification with a user's sms setting disabled" do
       organisation = build(:organisation)
-      user = create(:user, organisations: [organisation], phone_number: "01 02 03 04 05", notify_by_sms: false)
+      user = create(:user, organisations: [organisation], phone_number: "06 30 30 30 30", notify_by_sms: false)
       displayable_user = described_class.new(user, organisation)
-      expect(displayable_user.phone_number_and_notification).to eq("<a href=\"tel:+33102030405\">01 02 03 04 05</a> - Notifications par SMS 🔴 Désactivées")
+      expect(displayable_user.phone_number_and_notification).to eq("<a href=\"tel:+33630303030\">06 30 30 30 30</a> - Notifications par SMS 🔴 Désactivées")
     end
   end
 
