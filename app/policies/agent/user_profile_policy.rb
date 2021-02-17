@@ -16,4 +16,10 @@ class Agent::UserProfilePolicy < DefaultAgentPolicy
       @context.agent.organisation_ids.include?(@record.organisation_id)
     end
   end
+
+  class Scope < Scope
+    def resolve
+      scope.where(organisation_id: @context.organisation&.id || @context.agent.organisation_ids)
+    end
+  end
 end

@@ -80,7 +80,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
       resources :absences, only: [:index, :create]
-      resources :users, only: [:create]
+      resources :users, only: [:create, :show]
       resources :user_profiles, only: [:create, :destroy]
     end
   end

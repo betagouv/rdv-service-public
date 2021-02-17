@@ -5,6 +5,12 @@ class Api::V1::UsersController < Api::V1::BaseController
     :family_situation, :number_of_children, :notify_by_sms, :notify_by_email
   ].freeze
 
+  def show
+    user = User.find(params[:id])
+    authorize(user)
+    render json: UserBlueprint.render(user, root: :user, agent_context: pundit_user)
+  end
+
   def create
     if user_params[:organisation_ids].blank?
       return render(
