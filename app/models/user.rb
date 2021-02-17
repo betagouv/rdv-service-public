@@ -5,6 +5,7 @@ class User < ApplicationRecord
   include AccountNormalizerConcern
   include User::SearchableConcern
   include User::NotificableConcern
+  include User::ImprovedUnicityErrorConcern
 
   ONGOING_MARGIN = 1.hour.freeze
 

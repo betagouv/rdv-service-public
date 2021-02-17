@@ -194,4 +194,28 @@ describe "api/v1/users requests", type: :request do
       expect(response_parsed["errors"]).not_to be_empty
     end
   end
+
+  context "invalid: existing email" do
+    let!(:other_orga) { create(:organisation) }
+    let!(:existing_user) { create(:user, email: "jean@jacques.fr") }
+    it "should not work" do
+      user_count_before = User.count
+      post(
+        api_v1_users_path,
+        params: {
+          organisation_ids: [organisation.id],
+          first_name: "Jean",
+          last_name: "Jacques",
+          email: "jean@jacques.fr"
+        },
+        headers: api_auth_headers_for_agent(agent)
+      )
+      expect(response.status).to eq(422)
+      expect(User.count).to eq(user_count_before)
+      response_parsed = JSON.parse(response.body)
+      expect(response_parsed["errors"]).not_to be_empty
+      expect(response_parsed["errors"]["email"].first).to \
+        eq({ "error" => "taken", "value" => "jean@jacques.fr", "id" => existing_user.id })
+    end
+  end
 end

@@ -26,12 +26,25 @@ class Api::V1::BaseController < ActionController::Base
 
   def not_authorized(exception)
     policy_name = exception.policy.class.to_s.underscore
-    render status: :forbidden, json: { errors: [t("#{policy_name}.#{exception.query}", scope: "pundit", default: :default)] }
+    render(
+      status: :forbidden,
+      json: {
+        errors: [{ base: :forbidden }],
+        error_messages: [t("#{policy_name}.#{exception.query}", scope: "pundit", default: :default)]
+      }
+    )
   end
 
   private
 
-  def serialize_errors(ar_obj)
-    ar_obj.errors.map { |field, message| "#{field} #{message}" }
+  def render_invalid_resource(resource)
+    render(
+      status: :unprocessable_entity,
+      json: {
+        success: false,
+        errors: resource.errors.details,
+        error_messages: resource.errors.map { "#{_1} #{_2}" }
+      }
+    )
   end
 end

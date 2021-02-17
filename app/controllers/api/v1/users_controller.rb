@@ -18,7 +18,7 @@ class Api::V1::UsersController < Api::V1::BaseController
     if user.save
       render json: UserBlueprint.render(user, root: :user)
     else
-      render status: :unprocessable_entity, json: { success: false, errors: serialize_errors(user) }
+      render_invalid_resource(user)
     end
   end
 

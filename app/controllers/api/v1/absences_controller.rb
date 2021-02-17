@@ -16,7 +16,7 @@ class Api::V1::AbsencesController < Api::V1::BaseController
     if absence.save
       render json: AbsenceBlueprint.render(absence, root: :absence)
     else
-      render status: :unprocessable_entity, json: { success: false, errors: serialize_errors(absence) }
+      render_invalid_resource(absence)
     end
   end
 

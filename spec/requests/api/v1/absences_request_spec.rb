@@ -80,7 +80,7 @@ describe "api/v1/absences requests", type: :request do
       it "returns an error" do
         expect { subject }.not_to(change { Absence.count })
         expect(response.status).to eq(422)
-        expect(JSON.parse(response.body)["errors"]).to include("start_time doit être rempli(e)")
+        expect(JSON.parse(response.body)["error_messages"]).to include("start_time doit être rempli(e)")
       end
     end
 
@@ -89,7 +89,7 @@ describe "api/v1/absences requests", type: :request do
       it "returns an error" do
         expect { subject }.not_to(change { Absence.count })
         expect(response.status).to eq(422)
-        expect(JSON.parse(response.body)["errors"]).to include("ends_time doit être après le début.")
+        expect(JSON.parse(response.body)["error_messages"]).to include("ends_time doit être après le début.")
       end
     end
 
@@ -104,7 +104,7 @@ describe "api/v1/absences requests", type: :request do
         it "returns an error" do
           expect { subject }.not_to(change { Absence.count })
           expect(response.status).to eq(403)
-          expect(JSON.parse(response.body)["errors"]).to include("Vous ne pouvez pas effectuer cette action.")
+          expect(JSON.parse(response.body)["error_messages"]).to include("Vous ne pouvez pas effectuer cette action.")
         end
       end
 
