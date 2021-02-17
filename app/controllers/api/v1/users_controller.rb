@@ -19,8 +19,9 @@ class Api::V1::UsersController < Api::V1::BaseController
       )
     end
 
-    user = User.new(user_params)
+    user = User.new(**user_params, skip_duplicate_warnings: true)
     authorize(user)
+    user.skip_confirmation_notification!
     if user.save
       render json: UserBlueprint.render(user, root: :user)
     else
