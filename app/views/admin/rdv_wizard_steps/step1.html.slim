@@ -14,7 +14,8 @@
               = "Commence le : #{l(@rdv.starts_at, format: :human)}"
       .card-body
         = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }
-        = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation, step: 1)) do |f|
+        = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
+          = hidden_field_tag "step", "1"
           = f.input_field :starts_at, as: :hidden
           = f.input_field :lieu_id, as: :hidden
           = f.input_field :context, as: :hidden

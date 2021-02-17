@@ -56,13 +56,19 @@ module UserRdvWizard
   end
 
   class Step1 < Base
+    validate :phone_number_present_for_motif_by_phone
+
+    def phone_number_present_for_motif_by_phone
+      errors.add(:base, I18n.t("activerecord.attributes.rdv.phone_number_missing")) if rdv.motif.phone? && @user_attributes[:phone_number].blank?
+    end
+
     def initialize(user, attributes)
       super
-      @user_attributes = @attributes[:user]
+      @user_attributes = @attributes[:user]&.with_indifferent_access
     end
 
     def save
-      @user.update(@user_attributes)
+      valid? && @user.update(@user_attributes)
     end
   end
 
