@@ -2,9 +2,7 @@ module SomeModule
   class TestSms
     include TransactionalSms::BaseConcern
 
-    def raw_content
-      "àáäâãèéëẽêìíïîĩòóöôõùúüûũñçÀÁÄÂÃÈÉËẼÊÌÍÏÎĨÒÓÖÔÕÙÚÜÛŨÑÇ"
-    end
+    attr_accessor :raw_content
   end
 end
 
@@ -58,8 +56,16 @@ describe TransactionalSms::BaseConcern, type: :service do
   end
 
   describe "#content" do
-    subject { SomeModule::TestSms.new(build(:rdv), build(:user)).content }
-    it { should eq("àaäaaèéeeeìiiiiòoöooùuüuuñcAAÄAAEÉEEEIIIIIOOÖOOUUÜUUÑÇ") }
+    let(:test_sms) { SomeModule::TestSms.new(build(:rdv), build(:user)) }
+    subject { test_sms.content }
+    context "remove accents and weird chars" do
+      before { test_sms.raw_content = "àáäâãèéëẽêìíïîĩòóöôõùúüûũñçÀÁÄÂÃÈÉËẼÊÌÍÏÎĨÒÓÖÔÕÙÚÜÛŨÑÇ" }
+      it { should eq("àaäaaèéeeeìiiiiòoöooùuüuuñcAAÄAAEÉEEEIIIIIOOÖOOUUÜUUÑÇ") }
+    end
+    context "oe character" do
+      before { test_sms.raw_content = "Nœuds les mînes" }
+      it { should eq("Noeuds les mines") }
+    end
   end
 
   describe "#send!" do
