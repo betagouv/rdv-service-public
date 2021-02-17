@@ -13,7 +13,7 @@ class Api::V1::BaseController < ActionController::Base
   def current_organisation
     return nil if params[:organisation_id].blank?
 
-    current_agent.organisations.find(params[:organisation_id])
+    current_agent.organisations.where(id: params[:organisation_id]).first
   end
 
   def policy_scope(clasz)
