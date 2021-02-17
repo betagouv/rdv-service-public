@@ -49,7 +49,7 @@ class Admin::UsersController < AgentAuthController
     prepare_new unless user_persisted
 
     if from_modal?
-      respond_modal_with @user, location: add_query_string_params_to_url(request.referer, 'user_ids[]': @user.id)
+      respond_modal_with @user, location: add_query_string_params_to_url(modal_return_location, 'user_ids[]': @user.id)
     elsif user_persisted
       flash[:notice] = "L'usager a été créé."
       redirect_to admin_organisation_user_path(@organisation, @user)
@@ -74,10 +74,9 @@ class Admin::UsersController < AgentAuthController
     @user.skip_reconfirmation! if @user.encrypted_password.blank?
     user_updated = @user.update(user_params)
     flash[:notice] = "L'usager a été modifié." if user_updated
-    return_location = params[:return_location] || request.referer
-    return respond_modal_with @user, location: return_location if from_modal?
-
-    if user_updated
+    if from_modal?
+      respond_modal_with @user, location: modal_return_location
+    elsif user_updated
       redirect_to admin_organisation_user_path(current_organisation, @user)
     else
       render :edit
@@ -115,6 +114,10 @@ class Admin::UsersController < AgentAuthController
   end
 
   private
+
+  def modal_return_location
+    params[:return_location].presence || request.referer
+  end
 
   def invite_user?(user, params)
     user.persisted? && user.email.present? && (params[:invite_on_create] == "1")

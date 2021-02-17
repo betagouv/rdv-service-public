@@ -103,5 +103,18 @@ describe Admin::RdvWizardForm do
       rdv_wizard = Admin::RdvWizardForm::Step2.new(agent, organisation, attributes)
       expect(rdv_wizard.save).to be false
     end
+
+    it "return true when motif by phone and second user has phone number" do
+      motif = create(:motif, :by_phone, organisation: organisation)
+      user1 = create(:user, phone_number: nil, organisations: [organisation])
+      user2 = create(:user, phone_number: "0649494949", organisations: [organisation])
+      attributes = {
+        starts_at: Time.zone.now,
+        motif_id: motif.id,
+        user_ids: [user1.id, user2.id],
+      }
+      rdv_wizard = Admin::RdvWizardForm::Step2.new(agent, organisation, attributes)
+      expect(rdv_wizard.save).to be true
+    end
   end
 end
