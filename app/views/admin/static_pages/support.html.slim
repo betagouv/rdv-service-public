@@ -1,0 +1,63 @@
+- content_for(:title) { "Support" }
+- content_for(:menu_item) { 'menu-support' }
+
+.row
+  .col-md-6
+    .card
+      .card-header
+        h5.card-title
+          span> Documentation
+          i.fa.fa-book
+      .card-body
+        span> Vous trouverez de la documentation sur les différentes fonctionnalités sur le site
+        = link_to "https://doc.rdv-solidarites.fr/" do
+          span> doc.rdv-solidarites.fr
+          i.fa.fa-external-link-alt>
+
+    .card
+      .card-header
+        h5.card-title
+          span> Contacter l'équipe technique
+          i.fa.fa-question-circle
+      .card-body
+        = simple_form_for @support_ticket_form, url: admin_organisation_support_tickets_path, as: :support_ticket do |f|
+          = render partial: 'layouts/model_errors', locals: { model: @support_ticket_form }
+          = f.input :subject, \
+            label: "Sujet", \
+            collection: SupportTicketForm::SUBJECTS.select { SupportTicketForm.new(subject: _1).subject_role == :agent }, \
+            input_html: { class: "js-support-ticket-form-subject" }
+          = f.input :message, label: "Message", as: :text, hint: "Merci de ne pas inclure d'informations confidentielles sur les usagers", input_html: { rows: 5 }
+          = f.button :submit, value: "Envoyer la demande à l'équipe technique", data: { disable_with: "Envoi en cours…" }
+
+  .col-md-6
+    .card
+      .card-header
+        h5.card-title
+          span> Bureau Ouvert
+          i.fa.fa-comments
+      .card-body
+        p
+          span> L'équipe technique de RDV-Solidarités tient un Bureau Ouvert
+          b tous les jeudis de 14h30 à 15h30
+          span . Nous sommes à votre disposition pour répondre à vos questions et vous dépanner en cas de problème.
+        p
+          span> Ouvert aux agents et aux usagers
+        p
+          span> Ça se passe
+          span>= link_to "https://visio.incubateur.net/b/adr-gcy-x7h", target: "_blank" do
+            span> en visio ici !
+            i.fa.fa-external-link-alt>
+
+    .card
+      .card-header
+        h5.card-title
+          span> Communauté d'agents
+          i.fa.fa-users
+      .card-body
+        p
+          span> Un forum de discussion en ligne est disponible sur
+          = link_to "https://forum.rdv-solidarites.fr/" do
+            span> forum.rdv-solidarites.fr
+            i.fa.fa-external-link-alt>
+        p C'est un lieu d'échange entre les agents des différents départements, pour partager des pratiques, remonter des problèmes, discuter de solutions et de pistes d'améliorations pour RDV-Solidarités.
+        p La création de compte est ouverte à tous les agents, vous êtes bienvenu·e·s !

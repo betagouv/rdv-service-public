@@ -18,10 +18,13 @@ class SupportTicketForm
   validates :city, presence: true, if: -> { subject_role == :user }
 
   def save
-    if valid?
+    if valid? && Rails.env.production?
       success, api_result = ZammadApi.create_ticket(email, ticket_title, ticket_body)
       errors.add(:base, api_result[:errors].to_sentence) if api_result[:errors]&.any?
       success
+    elsif valid?
+      puts "\n---\nwould have created zammad ticket with #{email}, #{ticket_title}, #{ticket_body}\n---\n"
+      true
     else
       false
     end
