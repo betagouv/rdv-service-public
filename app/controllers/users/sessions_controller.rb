@@ -16,6 +16,12 @@ class Users::SessionsController < Devise::SessionsController
     end
   end
 
+  def destroy
+    @connected_with_franceconnect = user_signed_in? && session[:connected_with_franceconnect]
+    # so it's accessible in after_sign_out_path_for
+    super
+  end
+
   private
 
   def exclude_signed_in_agents

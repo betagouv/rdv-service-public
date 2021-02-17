@@ -11,6 +11,7 @@ class Users::RelativesController < UserAuthController
 
   def create
     @user = User.new(user_params)
+    @user.created_through = "user_relative_creation"
     @user.responsible_id = current_user.id
     @user.organisation_ids = current_user.organisation_ids
     authorize(@user)

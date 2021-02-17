@@ -1,12 +1,19 @@
 - user = f.object
+- frozen_fields_opts = user.logged_once_with_franceconnect? ? { disabled: true, input_html: { class: "js-force-disabled" } } : {}
+
+- if user.logged_once_with_franceconnect?
+  .alert.alert-info.d-flex.align-items-center
+    .mr-3
+      .fa.fa-info
+    div= I18n.t("users.franceconnect_frozen_fields")
 
 .form-row
-  .col-md-6= f.input :first_name, **input_opts
+  .col-md-6= f.input :first_name, **input_opts.deep_merge(frozen_fields_opts)
   .col-md-6= f.input :last_name, **input_opts
 
 .form-row
-  .col-md-6= f.input :birth_name, **input_opts
-  .col-md-6= date_input(f, :birth_date, **input_opts)
+  .col-md-6= f.input :birth_name, **input_opts.deep_merge(frozen_fields_opts)
+  .col-md-6= date_input(f, :birth_date, **input_opts.deep_merge(frozen_fields_opts))
 
 = f.input(:email, as: :email, **input_opts)
 - if user.new_record?

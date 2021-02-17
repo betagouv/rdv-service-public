@@ -21,11 +21,14 @@
         - if @user.invitable?
           .row.bg-info.text-white.p-2.mb-3
             .col-md-8
-              | Cet usager ne s'est pas encore créé de compte.
+              | Cet usager ne s'est pas encore créé de compte RDV-Solidarités
               - if @user.invitation_sent_at
                 p.small.m-0 Invitation envoyée il y a #{distance_of_time_in_words_to_now(@user.invitation_sent_at)}
             .col-md-4.text-right
               = link_to 'Inviter', invite_admin_organisation_user_path(current_organisation, @user), method: :post, class: 'btn btn-outline-white'
+
+        - if @user.logged_once_with_franceconnect?
+          .row.bg-info.text-white.p-2.mb-3 Cet usager s'est déjà connecté via FranceConnect
 
         - if @user.responsible?
           h4.card-title.mb-3 Informations générales

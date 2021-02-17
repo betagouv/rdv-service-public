@@ -1,13 +1,29 @@
-# rails runner scripts/scalingo_dump.rb
+# ruby scripts/scalingo_dump.rb
 
-# initial setup:
-# head to https://my.osc-secnum-fr1.scalingo.com/profile and create a new token
-# store it in your .env like `SCALINGO_TOKEN=ab-enbxajkaxxxx`
+require "optparse"
+require "json"
+require "typhoeus"
+require "dotenv/load"
+require "open-uri"
 
 HEADERS = {
   "Accept" => "application/json",
   "Content-Type" => "application/json",
 }.freeze
+
+options = {}
+OptionParser.new do |parser|
+  parser.on("-e", "--env ENV_NAME", "Environment (demo or production)") do |val|
+    raise StandardError, "invalid ENV_NAME option, must be 'demo' or 'production" \
+      unless ["demo", "production"].include?(val)
+
+    options[:app_name] = "#{val}-rdv-solidarites"
+  end
+end.parse!
+raise StandardError, "missing --env ENV_NAME option" if options[:app_name].nil?
+
+raise StandardError, "missing SCALINGO_TOKEN environment variable, cf https://my.osc-secnum-fr1.scalingo.com/profile" \
+  if ENV["SCALINGO_API_TOKEN"].nil?
 
 bearer_token = JSON.parse(
   Typhoeus.post(
@@ -19,7 +35,7 @@ bearer_token = JSON.parse(
 
 addons = JSON.parse(
   Typhoeus.get(
-    "https://api.osc-secnum-fr1.scalingo.com/v1/apps/production-rdv-solidarites/addons",
+    "https://api.osc-secnum-fr1.scalingo.com/v1/apps/#{options[:app_name]}/addons",
     headers: HEADERS.merge({ "Authorization" => "Bearer #{bearer_token}" })
   ).body
 )["addons"]
@@ -28,7 +44,7 @@ puts addon_db
 
 bearer_token_db = JSON.parse(
   Typhoeus.post(
-    "https://api.osc-secnum-fr1.scalingo.com/v1/apps/production-rdv-solidarites/addons/#{addon_db['id']}/token",
+    "https://api.osc-secnum-fr1.scalingo.com/v1/apps/#{options[:app_name]}/addons/#{addon_db['id']}/token",
     headers: HEADERS.merge({ "Authorization" => "Bearer #{bearer_token}" })
   ).body
 )["addon"]["token"]
@@ -61,12 +77,12 @@ puts "done downloading to {backup_tar_path}, now untar ..."
 puts "untar done!"
 `rm #{backup_tar_path}`
 
-backup_pgsql_filename = Dir.entries(".").select { _1.ends_with?(".pgsql") }.first
+backup_pgsql_filename = Dir.entries(".").select { _1 =~ /\.pgsql$/ }.first
 backup_pgsql_path = "./#{backup_pgsql_filename}"
 
-`dropdb rdv_solidarites_production_dump`
-`createdb rdv_solidarites_production_dump`
-`pg_restore -d rdv_solidarites_production_dump #{backup_pgsql_path}`
+`dropdb #{options[:app_name]}-dump`
+`createdb #{options[:app_name]}-dump`
+`pg_restore -d #{options[:app_name]}-dump #{backup_pgsql_path}`
 `rm #{backup_pgsql_path}`
 
-`sed -i.backup 's/lapin_development/rdv_solidarites_production_dump/' config/database.yml`
+`sed -i.backup 's/lapin_development/#{options[:app_name]}-dump/' config/database.yml`

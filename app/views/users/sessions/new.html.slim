@@ -4,6 +4,10 @@
   = render "users/rdv_wizard_steps/rdv_wizard_summary", rdv_wizard: @rdv_wizard if @rdv_wizard.present?
 
   .card-body
+    = render "common/franceconnect_button"
+    .text-center.w-75.m-auto
+      p.text-muted.mb-4 Entrez votre email et votre mot de passe
+
     = render "common/session_form", resource: resource, resource_name: resource_name
 
     hr

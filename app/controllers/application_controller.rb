@@ -13,6 +13,13 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def after_sign_out_path_for(resource)
+    return "https://#{ENV['FRANCECONNECT_HOST']}/api/v1/logout" \
+      if @connected_with_franceconnect
+
+    super
+  end
+
   def respond_modal_with(*args, &blk)
     options = args.extract_options!
     options[:responder] = ModalResponder
