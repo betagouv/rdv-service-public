@@ -3,10 +3,6 @@ class Agent::UserProfilePolicy < DefaultAgentPolicy
     same_org?
   end
 
-  def destroy?
-    same_org?
-  end
-
   protected
 
   def same_org?
