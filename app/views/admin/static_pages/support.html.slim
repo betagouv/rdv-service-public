@@ -9,10 +9,16 @@
           span> Documentation
           i.fa.fa-book
       .card-body
-        span> Vous trouverez de la documentation sur les différentes fonctionnalités sur le site
-        = link_to "https://doc.rdv-solidarites.fr/" do
-          span> doc.rdv-solidarites.fr
-          i.fa.fa-external-link-alt>
+        p
+          span> Vous trouverez de la documentation sur les différentes fonctionnalités sur le site
+          = link_to "https://doc.rdv-solidarites.fr/" do
+            span> doc.rdv-solidarites.fr
+            i.fa.fa-external-link-alt>
+        p
+          span> Une page y recense les évolutions et correctifs déployés récemment :
+          = link_to "https://doc.rdv-solidarites.fr/dernieres-nouveautes" do
+            span> Dernières nouveautés
+            i.fa.fa-external-link-alt
 
     .card
       .card-header
@@ -61,3 +67,20 @@
             i.fa.fa-external-link-alt>
         p C'est un lieu d'échange entre les agents des différents départements, pour partager des pratiques, remonter des problèmes, discuter de solutions et de pistes d'améliorations pour RDV-Solidarités.
         p La création de compte est ouverte à tous les agents, vous êtes bienvenu·e·s !
+
+    .card
+      .card-header
+        h5.card-title
+          span> Documents
+          i.fa.fa-file-alt
+      .card-body
+        ul
+          li= link_to "https://doc.rdv-solidarites.fr/mentions-legales" do
+            span> Mentions Légales
+            i.fa.fa-external-link-alt
+          li= link_to "https://doc.rdv-solidarites.fr/conditions-dutilisation-de-la-plateforme-rdv-solidarites" do
+            span> C.G.U.
+            i.fa.fa-external-link-alt
+          li= link_to "https://doc.rdv-solidarites.fr/politique-de-confidentialite" do
+            span> Politique de confidentialité
+            i.fa.fa-external-link-alt
