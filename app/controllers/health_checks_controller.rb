@@ -21,8 +21,8 @@ class HealthChecksController < ApplicationController
   private
 
   def thresholds_matched?
-    return false if params[:min_mails].present? && !@today_stats[RdvEvent::TYPE_NOTIFICATION_MAIL]["total"] >= params[:min_mails].to_i
-    return false if params[:min_sms].present? && !@today_stats[RdvEvent::TYPE_NOTIFICATION_SMS]["total"] >= params[:min_sms].to_i
+    return false if params[:min_mails].present? && @today_stats[RdvEvent::TYPE_NOTIFICATION_MAIL]["total"] < params[:min_mails].to_i
+    return false if params[:min_sms].present? && @today_stats[RdvEvent::TYPE_NOTIFICATION_SMS]["total"] < params[:min_sms].to_i
 
     true
   end
