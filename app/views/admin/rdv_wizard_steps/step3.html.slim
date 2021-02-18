@@ -17,8 +17,9 @@
           = users_inline_list_for_agents(@rdv.users)
 
       .card-body
-        = simple_form_for(@rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation, step: 3)) do |f|
+        = simple_form_for(@rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
           = render(partial: 'layouts/model_errors', locals: { model: @rdv_wizard, f: f })
+          = hidden_field_tag "step", "3"
           = collapsible_form_fields_for_warnings(@rdv_wizard) do
             = f.association :motif, as: :hidden,  wrapper_html: { class: 'm-0' }
             = f.input :context, as: :hidden, wrapper_html: { class: 'm-0' }

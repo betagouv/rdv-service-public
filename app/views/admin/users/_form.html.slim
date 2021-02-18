@@ -11,6 +11,7 @@
     = f_user_profile.input :organisation_id, as: :hidden, wrapper: false
 
     - if from_modal?
+      = hidden_field '', :return_location, value: params[:return_location]
       = hidden_field '', :modal, value: true
 
     - if @duplicate_user_result

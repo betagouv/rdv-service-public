@@ -5,3 +5,4 @@ fr:
       relatives:
         one: ⚠️ Cet usager a un proche qui sera aussi supprimé
         other: ⚠️ Cet usager a %{count} proches qui seront aussi supprimés
+    franceconnect_frozen_fields: Les champs d'état civil (nom de naissance, prénoms, date et lieu de naissance) ne peuvent plus être modifiés suite à la connexion certifiée par FranceConnect

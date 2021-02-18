@@ -1,4 +1,5 @@
 - content_for(:menu_item) { 'menu-agendas' }
+- modals_return_location = new_admin_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 2))
 
 - content_for :title do
   | Choisir le ou les usagers
@@ -23,7 +24,8 @@
           label Usagers
           .js-users-spinner.spinner-border.d-none &nbsp;
 
-        = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation, step: 2)) do |f|
+        = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
+          = hidden_field_tag "step", "2"
           - @rdv.users.each do |user|
             / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
             = f.hidden_field "user_ids][", value: user.id
@@ -36,7 +38,12 @@
                   = relative_tag(user)
                 div.ml-2= link_to "╳ Retirer", "#", class: "js-remove-user", data: { 'user-id': user.id }
                 div.ml-2
-                  = link_to "✎ Modifier usager", edit_admin_organisation_user_path(current_organisation, user, modal: true), data: { modal: "true" }
+                  = link_to \
+                    "✎ Modifier usager", \
+                    edit_admin_organisation_user_path( \
+                      current_organisation, user, modal: true, return_location: modals_return_location \
+                    ), \
+                    data: { modal: "true" }
 
           .pl-2.mt-2= link_to "+ Ajouter un autre usager", "#", class: "js-toggle-add-user-interface #{'d-none' if @rdv.users.empty?}"
 
@@ -50,7 +57,12 @@
 
             span.small.text-muted
               | L'usager n'existe pas ?&nbsp;
-              = link_to 'Créer un usager', new_admin_organisation_user_path(current_organisation, modal: true), data: { modal: true }
+              = link_to \
+                'Créer un usager', \
+                new_admin_organisation_user_path( \
+                  current_organisation, modal: true, return_location: modals_return_location \
+                ), \
+                data: { modal: true }
 
           .mt-3= f.input :context, as: :text, label: t("activerecord.attributes.rdv.context"), input_html: { rows: 4 }
 

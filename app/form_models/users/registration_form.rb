@@ -11,6 +11,7 @@ class Users::RegistrationForm
 
   def initialize(attributes)
     @user = User.new(attributes)
+    @user.created_through = "user_sign_up"
   end
 
   def save

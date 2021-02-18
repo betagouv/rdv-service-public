@@ -4,6 +4,7 @@ class User < ApplicationRecord
   include FullNameConcern
   include AccountNormalizerConcern
   include User::SearchableConcern
+  include User::FranceconnectFrozenFieldsConcern
   include User::NotificableConcern
   include User::ImprovedUnicityErrorConcern
 
@@ -30,11 +31,14 @@ class User < ApplicationRecord
   enum caisse_affiliation: { aucune: 0, caf: 1, msa: 2 }
   enum family_situation: { single: 0, in_a_relationship: 1, divorced: 2 }
 
-  validates :last_name, :first_name, presence: true
+  validates :last_name, :first_name, :created_through, presence: true
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :phone_number, phone: { allow_blank: true }
   validate :birth_date_validity
   validate :user_is_not_duplicate, on: :create, unless: -> { errors[:email]&.present? } # to avoid two similar errors on duplicate email
+  validates :created_through, inclusion: { in: %w[
+    agent_creation user_sign_up franceconnect_sign_up user_relative_creation unknown
+  ] }
 
   accepts_nested_attributes_for :user_profiles
 
