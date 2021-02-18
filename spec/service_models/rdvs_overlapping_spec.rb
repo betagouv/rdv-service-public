@@ -49,5 +49,15 @@ describe RdvsOverlapping, type: :service do
       expect(described_class.new(created_rdv).rdvs_overlapping_rdv).to eq([])
       travel_back
     end
+
+    it "should return RDV with exact same times" do
+      now = Time.zone.parse("2020-12-23 12h40")
+      travel_to(now)
+      agent = create(:agent)
+      existing_rdv = create(:rdv, agents: [agent], starts_at: now + 1.day, duration_in_min: 30)
+      new_rdv = build(:rdv, agents: [agent], starts_at: now + 1.day, duration_in_min: 30)
+      expect(described_class.new(new_rdv).rdvs_overlapping_rdv).to eq([existing_rdv])
+      travel_back
+    end
   end
 end
