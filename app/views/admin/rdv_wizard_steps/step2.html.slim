@@ -1,31 +1,28 @@
 - content_for(:menu_item) { 'menu-agendas' }
-- modals_return_location = new_admin_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 2))
+- content_for(:title) { "Créer RDV 2/4"}
 
-- content_for :title do
-  | Choisir le ou les usagers
+- modals_return_location = new_admin_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 2))
 
 .row.justify-content-md-center
   .col-md-6
     .card
-      ul.list-group.list-group-flush
-        - if @rdv.starts_at.present?
-          li.list-group-item
-            i.fa.fa-check.fa-fw.mr-1.text-success
-            = "Commence le : #{l(@rdv.starts_at, format: :human)}"
-        li.list-group-item
-          i.fa.fa-check.fa-fw.mr-1.text-success
-          | Motif :&nbsp;
-          = motif_name_with_location_type(@rdv.motif)
-
+      = render "admin/rdv_wizard_steps/stepper", \
+        rdv_wizard_form: @rdv_wizard, \
+        steps: [ \
+          { step: 1, value: motif_name_with_location_type(@rdv.motif) } \
+        ]
+      hr.my-0
       .card-body
-        = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }
-
-        .d-flex.justify-content-between
-          label Usagers
+        .d-flex.justify-content-between.mb-3
+          = render "admin/rdv_wizard_steps/title", title: @rdv_wizard_presenter.title
           .js-users-spinner.spinner-border.d-none &nbsp;
-
         = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
+          = render(partial: 'layouts/model_errors', locals: { model: @rdv_wizard })
           = hidden_field_tag "step", "2"
+          = render "hidden_fields", f: f, \
+            fields: [:motif_id, :starts_at, :lieu_id, :service_id], \
+            agent_ids: @rdv.agent_ids
+
           - @rdv.users.each do |user|
             / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
             = f.hidden_field "user_ids][", value: user.id
@@ -66,20 +63,9 @@
 
           .mt-3= f.input :context, as: :text, label: t("activerecord.attributes.rdv.context"), input_html: { rows: 4 }
 
-          = f.input_field :motif_id, as: :hidden
-          = f.input_field :starts_at, as: :hidden
-          = f.input_field :lieu_id, as: :hidden
-          = f.input_field :service_id, as: :hidden
-
-          - @rdv.agents.each do |p|
-            / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
-            = f.hidden_field "agent_ids][", value: p.id
-
-          .row
-            .col.text-left
-              = link_to 'Revenir en arrière', new_admin_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 1)), class: 'btn btn-link'
-            .col.text-right
-              = f.button :submit, 'Continuer'
+          = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f
+      hr.mb-0
+      = render "admin/rdv_wizard_steps/stepper", steps: [{step: 3}, {step: 4}]
 
 input type='hidden' name="js-current-organisation-id" value=current_organisation.id
 input type='hidden' name="js-canonical-path" value=new_admin_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 2))

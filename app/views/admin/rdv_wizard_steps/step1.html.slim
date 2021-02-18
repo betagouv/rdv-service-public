@@ -1,29 +1,17 @@
 - content_for(:menu_item) { 'menu-agendas' }
-
-- content_for :title do
-  | Choisir le motif
+- content_for(:title) { "Créer RDV 1/4"}
 
 .row.justify-content-md-center
   .col-md-6
     .card
-      - if @rdv.starts_at.present?
-        ul.list-group.list-group-flush
-          - if @rdv.starts_at.present?
-            li.list-group-item
-              i.fa.fa-check.fa-fw.mr-1.text-success
-              = "Commence le : #{l(@rdv.starts_at, format: :human)}"
       .card-body
+        = render "admin/rdv_wizard_steps/title", title: @rdv_wizard_presenter.title
         = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }
         = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
           = hidden_field_tag "step", "1"
-          = f.input_field :starts_at, as: :hidden
-          = f.input_field :lieu_id, as: :hidden
-          = f.input_field :context, as: :hidden
-          - @rdv.users.each do |p|
-            / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
-            = f.hidden_field "user_ids][", value: p.id
-          - @rdv.agents.each do |p|
-            = f.hidden_field "agent_ids][", value: p.id
+          = render "hidden_fields", f: f, \
+            fields: [:starts_at, :lieu_id, :context, :service_id], \
+            user_ids: @rdv.user_ids, agent_ids: @rdv.agent_ids
           = f.input :service_id, \
             collection: @services.ordered_by_name, \
             input_html: { \
@@ -44,8 +32,6 @@
               data: { placeholder: "Sélectionnez un motif" },
               class: 'js-filtered-motifs' \
             }
-          .row
-            .col.text-left
-              = link_to 'Revenir en arrière', admin_organisation_agent_path(current_organisation, @agent), class: 'btn btn-link'
-            .col.text-right
-              = f.button :submit, 'Continuer'
+          = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Créer RDV", f: f
+      hr.mb-0
+      = render "admin/rdv_wizard_steps/stepper", steps: [{step: 2}, {step: 3}, {step: 4}]

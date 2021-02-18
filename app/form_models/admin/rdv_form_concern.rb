@@ -27,8 +27,7 @@ module Admin::RdvFormConcern
   private
 
   def validate_rdv
-    return if rdv.valid?
-
+    rdv.valid?
     rdv.errors.each { errors.add(_1, _2) }
   end
 

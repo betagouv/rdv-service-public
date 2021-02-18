@@ -1,13 +1,14 @@
 module Admin::RdvWizardForm
   # cf https://medium.com/@nicolasblanco/developing-a-wizard-or-multi-steps-forms-in-rails-d2f3b7c692ce
 
-  STEPS = ["step1", "step2", "step3"].freeze
+  STEPS = ["step1", "step2", "step3", "step4"].freeze
 
   class Base
     include ActiveModel::Model
     include Rails.application.routes.url_helpers
 
     attr_accessor :rdv, :service_id
+    attr_reader :agent_author
 
     # delegates all getters and setters to rdv
     delegate(*::Rdv.attribute_names, to: :rdv)
@@ -41,12 +42,28 @@ module Admin::RdvWizardForm
       }
     end
 
+    def step_number
+      self.class.name[-1].to_i
+    end
+
     def save
       valid?
     end
 
     def success_flash
       {}
+    end
+
+    def previous_step_path
+      if step_number <= 1
+        admin_organisation_agent_path(organisation, agent_author)
+      else
+        path_for_step(step_number - 1)
+      end
+    end
+
+    def path_for_step(target_step_number)
+      new_admin_organisation_rdv_wizard_step_path(organisation, to_query.merge(step: target_step_number))
     end
   end
 
@@ -75,6 +92,22 @@ module Admin::RdvWizardForm
     include Admin::RdvFormConcern
 
     def success_path
+      new_admin_organisation_rdv_wizard_step_path(@organisation, step: 4, **to_query)
+    end
+
+    def save
+      valid?
+    end
+
+    protected
+
+    def agent_context
+      AgentContext.new(@agent_author, @organisation)
+    end
+  end
+
+  class Step4 < Step3
+    def success_path
       admin_organisation_agent_path(
         rdv.organisation,
         agents.include?(@agent_author) ? @agent_author : agents.first,
@@ -85,26 +118,6 @@ module Admin::RdvWizardForm
 
     def success_flash
       { notice: "Le rendez-vous a été créé." }
-    end
-
-    private
-
-    def validate_rdv
-      return unless rdv.valid?
-
-      rdv.errors.each { errors.add(_1, _2) }
-    end
-
-    def warn_overlapping_plage_ouverture
-      return true unless overlapping_plages_ouvertures?
-
-      overlapping_plages_ouvertures
-        .map { PlageOuverturePresenter.new(_1, agent_context) }
-        .each { warnings.add(:base, _1.overlaps_rdv_error_message, active: true) }
-    end
-
-    def agent_context
-      AgentContext.new(@agent_author, @organisation)
     end
   end
 end
