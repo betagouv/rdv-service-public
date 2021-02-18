@@ -1,10 +1,13 @@
 - content_for(:menu_item) { 'menu-lieux' }
+- mock_lieu = Lieu.new(organisation: current_organisation)
+- can_create = policy([:agent, mock_lieu]).create?
 
 - content_for :title do
   | Vos lieux de consultation
 
-- content_for :breadcrumb do
-  = link_to 'Ajouter un lieu', new_admin_organisation_lieu_path(current_organisation), class: "btn btn-outline-white"
+- if can_create
+  - content_for :breadcrumb do
+    = link_to 'Ajouter un lieu', new_admin_organisation_lieu_path(current_organisation), class: "btn btn-outline-white"
 
 .card
   .card-body
@@ -27,5 +30,6 @@
             i.fa.fa-circle.fa-stack-2x.text-primary
             i.fa.fa-building.fa-stack-1x.text-white
 
-    .text-center
-      = link_to 'Ajouter un lieu', new_admin_organisation_lieu_path(current_organisation), class: "btn btn-primary"
+    - if can_create
+      .text-center
+        = link_to 'Ajouter un lieu', new_admin_organisation_lieu_path(current_organisation), class: "btn btn-primary"
