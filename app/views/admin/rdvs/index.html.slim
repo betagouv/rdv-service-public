@@ -14,7 +14,7 @@
     ol.breadcrumb.m-0
       li.breadcrumb-item
           = link_to 'Vos statistiques', admin_organisation_agent_stats_path(current_organisation, current_agent)
-      li.breadcrumb-item.active RDVs #{::Rdv.human_enum_name(:status, @form.status).downcase}
+      li.breadcrumb-item.active RDVs #{::Rdv.human_enum_name(:status, @form.status)&.downcase}
 
   - if @breadcrumb_page == "user" && @form.user.present?
     ol.breadcrumb.m-0
@@ -22,14 +22,14 @@
         = link_to 'Vos usagers', admin_organisation_users_path(current_organisation), class: 'text-white'
       li.breadcrumb-item
         = link_to @form.user.full_name, admin_organisation_user_path(current_organisation, @form.user)
-      li.breadcrumb-item.active RDVs #{::Rdv.human_enum_name(:status, @form.status).downcase}
+      li.breadcrumb-item.active RDVs #{::Rdv.human_enum_name(:status, @form.status)&.downcase}
 
   - if @breadcrumb_page == "organisation_stats"
     ol.breadcrumb.m-0
       li.breadcrumb-item
         = link_to "Statistiques de l'organisation", admin_organisation_stats_path(current_organisation), class: 'text-white'
       - if @form.status.present?
-        li.breadcrumb-item.active RDVs #{::Rdv.human_enum_name(:status, @form.status).downcase}
+        li.breadcrumb-item.active RDVs #{::Rdv.human_enum_name(:status, @form.status)&.downcase}
 
 .card.border-info
   .card-header ⚙️ Filtres et options
