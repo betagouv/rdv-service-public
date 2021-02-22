@@ -26,7 +26,7 @@ class DisplayableUserPresenter
   end
 
   def phone_number
-    @user.responsible_phone_number.presence || "N/A"
+    @user.responsible_phone_number
   end
 
   def phone_number_formatted
@@ -34,7 +34,7 @@ class DisplayableUserPresenter
   end
 
   def email
-    @user.responsible_email.presence || "N/A"
+    @user.responsible_email
   end
 
   def logement

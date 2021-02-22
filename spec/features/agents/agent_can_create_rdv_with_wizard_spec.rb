@@ -25,6 +25,7 @@ describe "Agent can create a Rdv with wizard" do
 
     # Step 2
     expect_page_title("Créer RDV 2/4")
+    expect(page).to have_selector(".card-title", text: "2. Usager(s)")
     expect(page).to have_selector(".list-group-item", text: /Motif/)
     select_user(user)
     click_link("Ajouter un autre usager")
@@ -55,6 +56,7 @@ describe "Agent can create a Rdv with wizard" do
 
     # Step 3
     expect_page_title("Créer RDV 3/4")
+    expect(page).to have_selector(".card-title", text: "3. Agent(s), horaires & lieu")
     expect(page).to have_selector(".list-group-item", text: /Motif/)
     expect(page).to have_selector(".list-group-item", text: /Usager\(s\)/)
     expect(page).to have_selector("input#rdv_duration_in_min[value='#{motif.default_duration_in_min}']")
@@ -67,6 +69,7 @@ describe "Agent can create a Rdv with wizard" do
 
     # Step 4
     expect_page_title("Créer RDV 4/4")
+    expect(page).to have_selector(".card-title", text: "4. Notifications")
     expect(page).to have_selector(".list-group-item", text: /Motif/)
     expect(page).to have_selector(".list-group-item", text: /Usager\(s\)/)
     expect(page).to have_selector(".list-group-item", text: /Agent\(s\), horaires & lieu/)
@@ -89,9 +92,5 @@ describe "Agent can create a Rdv with wizard" do
 
   def select_agent(agent)
     select(agent.full_name_and_service, from: "rdv_agent_ids")
-  end
-
-  def expect_checked(text)
-    expect(page).to have_selector(".list-group-item", text: text)
   end
 end

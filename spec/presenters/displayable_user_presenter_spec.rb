@@ -105,7 +105,7 @@ describe DisplayableUserPresenter, type: :presenter do
       organisation = build(:organisation)
       user = build(:user, organisations: [organisation], phone_number: nil)
       displayable_user = described_class.new(user, organisation)
-      expect(displayable_user.notify_by_sms).to eq("pas de numéro de téléphone renseigné")
+      expect(displayable_user.notify_by_sms).to eq("🔴 pas de numéro de téléphone renseigné")
     end
 
     it "return activated when user allow sms notifications" do
@@ -135,7 +135,7 @@ describe DisplayableUserPresenter, type: :presenter do
       organisation = build(:organisation)
       user = build(:user, organisations: [organisation], email: nil)
       displayable_user = described_class.new(user, organisation)
-      expect(displayable_user.notify_by_email).to eq("pas d'email renseigné")
+      expect(displayable_user.notify_by_email).to eq("🔴 pas d'email renseigné")
     end
 
     it "return activées when user allow notification_by_email" do

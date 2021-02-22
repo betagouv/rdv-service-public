@@ -40,13 +40,13 @@
                     div
                       i.fa.fa-comments>
                     div.flex-grow-1.ml-2
-                      div #{user_presenter.phone_number}
+                      div= user_presenter.phone_number
                       div Notifications SMS : #{user_presenter.notify_by_sms}
                   div.d-flex
                     div
                       i.fa.fa-envelope>
                     div.flex-grow-1.ml-2
-                      div #{user_presenter.email || "N/A"}
+                      div= user_presenter.email
                       div Notifications Email : #{user_presenter.notify_by_email}
             - else
               p
