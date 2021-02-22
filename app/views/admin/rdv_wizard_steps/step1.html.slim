@@ -32,6 +32,6 @@
               data: { placeholder: "Sélectionnez un motif" },
               class: 'js-filtered-motifs' \
             }
-          = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Créer RDV", f: f
+          = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f
       hr.mb-0
       = render "admin/rdv_wizard_steps/stepper", steps: [{step: 2}, {step: 3}, {step: 4}]

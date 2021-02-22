@@ -22,22 +22,36 @@
               fields: [:motif_id, :lieu_id, :context, :starts_at, :duration_in_min, :address, :active_warnings_confirm_decision], \
               user_ids: @rdv.user_ids, agent_ids: @rdv.agent_ids
             - if @rdv.motif.visible_and_notified?
-              p 🟢 Le motif #{@rdv.motif.name} est configuré pour envoyer des notifications aux usagers
-              - @rdv.users.each do |user|
-                = user_to_link(user)
-                - if user.relative?
+              p
+                span>Motif
+                = Motif.human_enum_name(:visibility_type, @rdv.motif.visibility_type)
+              - @rdv.users.to_a.select(&:relative?).each do |user|
+                div.mb-3
+                  = user_to_link(user)
                   .text-muted
-                    span> C'est le responsable qui sera notifié
-                    = user_to_link(user.responsible)
-                - user_presenter = DisplayableUserPresenter.new(user, current_organisation)
-                ul
-                  li
-                    div Téléphone : #{user_presenter.phone_number}
-                    div Notifications SMS : #{user_presenter.notify_by_sms}
-                  li
-                    div Email : #{user_presenter.email || "N/A"}
-                    div Notifications Email : #{user_presenter.notify_by_email}
+                    span> L'usager responsable
+                    span>= user_to_link(user.responsible)
+                    span> sera notifié
+              - @rdv.users.map(&:user_to_notify).uniq.each do |user|
+                div.mb-3
+                  = user_to_link(user)
+                  - user_presenter = DisplayableUserPresenter.new(user, current_organisation)
+                  div.d-flex
+                    div
+                      i.fa.fa-comments>
+                    div.flex-grow-1.ml-2
+                      div #{user_presenter.phone_number}
+                      div Notifications SMS : #{user_presenter.notify_by_sms}
+                  div.d-flex
+                    div
+                      i.fa.fa-envelope>
+                    div.flex-grow-1.ml-2
+                      div #{user_presenter.email || "N/A"}
+                      div Notifications Email : #{user_presenter.notify_by_email}
             - else
-              p 🔴 Aucune notification ne sera envoyé car le motif #{@rdv.motif.name} est configuré "#{Motif.human_enum_name(:visibility_type, @rdv.motif.visibility_type)"
+              p
+                span> Motif
+                = Motif.human_enum_name(:visibility_type, @rdv.motif.visibility_type)
+              p 🔴 Aucune notification ne sera envoyée
 
             = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Créer RDV", f: f

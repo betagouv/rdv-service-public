@@ -4,12 +4,12 @@ ul.list-group.list-group-flush
       li.list-group-item.hover-bg-light
         = link_to rdv_wizard_form.path_for_step(step[:step]), class: "text-dark" do
           .d-flex.align-items-center
-            i.far.mr-1.fa-check-square
+            i.far.mr-1.fa-check-circle
             div.flex-shrink-0.mr-1= Admin::RdvWizardStepPresenter.title_for(step[:step])
             div.text-muted.text-truncate= step[:value]
     - else
       li.list-group-item
         .d-flex.align-items-center
-          i.far.mr-1.fa-square
+          i.far.mr-1.fa-circle
           div.flex-shrink-0.mr-1= Admin::RdvWizardStepPresenter.title_for(step[:step])
           div.text-muted.text-truncate= step[:value]

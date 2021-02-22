@@ -107,6 +107,12 @@ module Admin::RdvWizardForm
   end
 
   class Step4 < Step3
+    include Admin::RdvFormConcern
+
+    def save
+      valid? && rdv.save
+    end
+
     def success_path
       admin_organisation_agent_path(
         rdv.organisation,
