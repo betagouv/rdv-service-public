@@ -302,6 +302,11 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
         expect(agent.plage_ouvertures.count).to eq(0)
         expect(response).to redirect_to(admin_organisation_agent_plage_ouvertures_path(organisation, plage_ouverture.agent_id))
       end
+
+      it "send notification after destroy" do
+        expect(Agents::PlageOuvertureMailer).to receive(:plage_ouverture_destroyed).and_return(double(deliver_later: nil))
+        delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.id }
+      end
     end
   end
 
