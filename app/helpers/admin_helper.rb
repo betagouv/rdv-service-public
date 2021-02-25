@@ -22,4 +22,10 @@ module AdminHelper
 
     @current_agent_role ||= current_agent.roles.find_by(organisation: current_organisation)
   end
+
+  def current_agent_can?(action, klass)
+    # eg. current_agent_can?(:create, Lieu)
+    mock = klass.new(organisation: current_organisation)
+    policy([:agent, mock]).send("#{action}?")
+  end
 end

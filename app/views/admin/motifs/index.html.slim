@@ -3,8 +3,7 @@
 - content_for :title do
   | Vos motifs
 
-- mock_motif = Motif.new(organisation: current_organisation)
-- if policy([:agent, mock_motif]).create?
+- if current_agent_can?(:create, Motif)
   - content_for :breadcrumb do
     = link_to 'Créer un motif', new_admin_organisation_motif_path(current_organisation), class:"btn btn-outline-white"
 
@@ -40,7 +39,7 @@
                 div
                   = select_tag("location_type_filter", options_for_select(Motif.location_types.map{|l| [Motif.human_enum_name(:location_type, l[0]), l[1]] }, params[:location_type_filter]), include_blank: "Tous", class: "js-motif-filters select2-input")
               th= t("activerecord.attributes.motif.default_duration")
-              - if policy([:agent, mock_motif]).edit? || policy([:agent, mock_motif]).destroy?
+              - if current_agent_can?(:edit, Motif) || current_agent_can?(:destroy, Motif)
                 th Actions
           tbody
             - if @motifs.any?
@@ -57,7 +56,6 @@
                       span.fa-stack.fa-4x
                         i.fa.fa-circle.fa-stack-2x.text-primary
                         i.far.fa-calendar.fa-stack-1x.text-white
-        - if policy([:agent, Motif.new(organisation: current_organisation)]).create?
+        - if current_agent_can?(:create, Motif)
           .text-center.mb-3
             = link_to 'Créer un motif', new_admin_organisation_motif_path(current_organisation), class: 'btn btn-primary'
-
