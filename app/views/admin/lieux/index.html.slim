@@ -3,8 +3,9 @@
 - content_for :title do
   | Vos lieux de consultation
 
-- content_for :breadcrumb do
-  = link_to 'Ajouter un lieu', new_admin_organisation_lieu_path(current_organisation), class: "btn btn-outline-white"
+- if current_agent_can?(:create, Lieu)
+  - content_for :breadcrumb do
+    = link_to 'Ajouter un lieu', new_admin_organisation_lieu_path(current_organisation), class: "btn btn-outline-white"
 
 .card
   .card-body
@@ -27,5 +28,6 @@
             i.fa.fa-circle.fa-stack-2x.text-primary
             i.fa.fa-building.fa-stack-1x.text-white
 
-    .text-center
-      = link_to 'Ajouter un lieu', new_admin_organisation_lieu_path(current_organisation), class: "btn btn-primary"
+    - if current_agent_can?(:create, Lieu)
+      .text-center
+        = link_to 'Ajouter un lieu', new_admin_organisation_lieu_path(current_organisation), class: "btn btn-primary"
