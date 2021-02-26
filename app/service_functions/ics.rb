@@ -40,15 +40,24 @@ module Ics
   end
 
   def self.populate_event(event, payload)
-    event.uid         = payload[:ical_uid]
-    event.dtstart     = Icalendar::Values::DateTime.new(payload[:starts_at], "tzid" => TZID)
-    event.dtend       = Icalendar::Values::DateTime.new(payload[:first_occurence_ends_at], "tzid" => TZID)
-    event.summary     = "#{BRAND} #{payload[:title]}"
-    event.location    = payload[:address]
-    event.ip_class    = "PUBLIC"
-    event.attendee    = "mailto:#{payload[:agent_email]}"
-    event.rrule       = rrule(payload)
-    event.status = "CANCELLED" if payload[:event] == "destroy"
+    event.uid = payload[:ical_uid]
+    event.last_modified = Time.zone.now
+    event.dtstart = Icalendar::Values::DateTime.new(payload[:starts_at], "tzid" => TZID)
+    event.dtend = Icalendar::Values::DateTime.new(payload[:first_occurence_ends_at], "tzid" => TZID)
+    event.summary = "#{BRAND} #{payload[:title]}"
+    event.location = payload[:address]
+    event.ip_class = "PUBLIC"
+    event.rrule = rrule(payload)
+    event.status = status_from_event(payload[:event])
+    event.organizer = payload[:agent_email]
+
+    attendee_params = { "CUTYPE" => "INDIVIDUAL",
+                        "ROLE" => "REQ-PARTICIPANT",
+                        "PARTSTAT" => "ACCEPTED",
+                        "RSVP" => "TRUE",
+                        "CN" => payload[:agent_email] }
+    attendee_value = Icalendar::Values::CalAddress.new("MAILTO:#{payload[:agent_email]}", attendee_params)
+    event.append_attendee(attendee_value)
   end
 
   def self.rrule(payload)
@@ -70,5 +79,11 @@ module Ics
     until_date = until_from_hash(recurrence_hash)
 
     "#{freq}#{interval}#{by_day}#{until_date}"
+  end
+
+  def self.status_from_event(event)
+    return "CANCELLED" if event == :destroy
+
+    "CONFIRMED"
   end
 end

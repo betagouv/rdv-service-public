@@ -37,7 +37,7 @@ describe Agents::PlageOuvertureMailer, type: :mailer do
       ics_payload = {
         name: "plage-ouverture--.ics",
         object: "plage_ouverture",
-        event: "destroy",
+        event: :destroy,
         agent_email: "bob@demo.rdv-solidarites.fr",
         starts_at: Time.zone.parse("20190423 13h00"),
         ical_uid: "plage_ouverture_@RDV Solidarités",
