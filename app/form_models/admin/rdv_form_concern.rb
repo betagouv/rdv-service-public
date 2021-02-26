@@ -20,10 +20,6 @@ module Admin::RdvFormConcern
     caution :warn_rdvs_overlapping_rdv
   end
 
-  def save
-    valid? && rdv.save
-  end
-
   private
 
   def validate_rdv

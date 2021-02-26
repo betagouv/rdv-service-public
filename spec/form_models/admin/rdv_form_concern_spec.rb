@@ -7,6 +7,10 @@ class DummyForm
     @agent = agent
   end
 
+  def save
+    valid? && rdv.save
+  end
+
   def agent_context; end
 end
 
