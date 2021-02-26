@@ -155,6 +155,8 @@ Rails.application.routes.draw do
           get :create
         end
         devise_for :agents, controllers: { invitations: "admin/invitations_devise" }, only: :invitations
+        get "support", to: "static_pages#support"
+        resources :support_tickets, only: [:create]
       end
 
       resources :jours_feries, only: [:index]

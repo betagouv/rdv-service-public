@@ -1,5 +1,6 @@
 describe SupportTicketForm do
   describe "#save" do
+    before { allow(Rails.env).to receive(:production?).and_return(true) }
     subject { support_ticket_form.save }
 
     context "valid attributes" do
