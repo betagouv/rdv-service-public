@@ -4,19 +4,30 @@ require "icalendar/tzinfo"
 module Ics
   TZID = "Europe/Paris".freeze
 
-  def self.payload_for(object, event)
-    send("payload_for_#{object.class.to_s.underscore}", object, event)
+  def self.payload_for(object)
+    send("payload_for_#{object.class.to_s.underscore}", object)
+  end
+
+  def self.create_payload_for(object)
+    payload_for(object).merge(event: :create)
+  end
+
+  def self.update_payload_for(object)
+    payload_for(object).merge(event: :update)
+  end
+
+  def self.destroy_payload_for(object)
+    payload_for(object).merge(event: :destroy)
   end
 
   def self.to_ical(payload)
     send("to_ical_for_#{payload[:object]}", payload)
   end
 
-  def self.payload_for_plage_ouverture(object, event)
+  def self.payload_for_plage_ouverture(object)
     {
       name: "plage-ouverture-#{object.title.parameterize}-#{object.starts_at.to_s.parameterize}.ics",
       object: "plage_ouverture",
-      event: event,
       agent_email: object.agent.email,
       starts_at: object.starts_at,
       recurrence: object.recurrence,

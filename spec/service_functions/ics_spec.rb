@@ -6,10 +6,18 @@ describe Ics, type: :service do
   after { travel_back }
 
   describe "#payload_for" do
-    [:name, :object, :event, :agent_email, :starts_at, :recurrence, :ical_uid, :title, :first_occurence_ends_at, :address].each do |key|
+    [:name, :object, :agent_email, :starts_at, :recurrence, :ical_uid, :title, :first_occurence_ends_at, :address].each do |key|
       it "return an hash with key #{key}" do
         plage_ouverture = build(:plage_ouverture)
-        expect(Ics.payload_for(plage_ouverture, :create)).to have_key(key)
+        expect(Ics.payload_for(plage_ouverture)).to have_key(key)
+      end
+    end
+  end
+
+  [:create, :update, :destroy].each do |event|
+    describe "##{event}_payload_for" do
+      it "return an hash with key event key and value #{event}" do
+        expect(Ics.send("#{event}_payload_for", build(:plage_ouverture))[:event]).to eq(event)
       end
     end
   end
@@ -20,7 +28,6 @@ describe Ics, type: :service do
         {
           name: "plage-ouverture--.ics",
           object: "plage_ouverture",
-          event: :created,
           agent_email: "bob@demo.rdv-solidarites.fr",
           starts_at: Time.zone.parse("20190704 15h00"),
           recurrence: "",
@@ -45,9 +52,6 @@ describe Ics, type: :service do
         is_expected.to include("SUMMARY:RDV Solidarités Elisa SIMON <> Consultation initiale")
         is_expected.to include("LOCATION:10 rue de la Ferronerie 44100 Nantes")
         is_expected.to include("ORGANIZER:bob@demo.rdv-solidarites.fr")
-        is_expected.to include("ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;RSVP=TRUE")
-        is_expected.to include(" ;CN=bob@demo.rdv-solidarites.fr:mailto:bob@demo.rdv-solidarites.fr")
-        is_expected.to include("STATUS:CONFIRMED")
         is_expected.to include("END:VEVENT")
       end
     end
