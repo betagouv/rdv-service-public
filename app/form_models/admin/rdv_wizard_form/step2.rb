@@ -1,5 +1,5 @@
 class Admin::RdvWizardForm::Step2
-  include Admin::RdvWizardConcern
+  include Admin::RdvWizardFormConcern
   validates :users, presence: true
   validate :phone_number_present_for_motif_by_phone
 

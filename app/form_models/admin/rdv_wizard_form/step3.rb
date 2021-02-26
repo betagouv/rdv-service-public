@@ -1,5 +1,5 @@
 class Admin::RdvWizardForm::Step3
-  include Admin::RdvWizardConcern
+  include Admin::RdvWizardFormConcern
   include Admin::RdvFormConcern
 
   def success_path

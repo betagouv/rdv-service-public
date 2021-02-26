@@ -1,37 +1,30 @@
 - content_for(:menu_item) { 'menu-agendas' }
 - content_for(:title) { "Créer RDV 1/4"}
 
-.row.justify-content-md-center
-  .col-md-6
-    .card
-      .card-body
-        = render "admin/rdv_wizard_steps/title", title: @rdv_wizard_presenter.title
-        = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }
-        = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
-          = hidden_field_tag "step", "1"
-          = render "hidden_fields", f: f, \
-            fields: [:starts_at, :lieu_id, :context, :service_id], \
-            user_ids: @rdv.user_ids, agent_ids: @rdv.agent_ids
-          = f.input :service_id, \
-            collection: @services.ordered_by_name, \
-            input_html: { \
-              class: 'select2-input js-service-filter', \
-              data: { \
-                placeholder: "Sélectionnez un service pour filtrer les motifs", \
-                "select-options": { disableSearch: true } \
-              } \
-            }
-          = f.input :motif_id, \
-            required: true, \
-            include_blank: true, \
-            collection: @motifs.includes(:service).to_a.group_by { _1.service.name }, \
-            as: :grouped_select, \
-            group_method: :last,
-            label_method: -> { motif_name_with_location_type(_1) }, \
-            input_html: { \
-              data: { placeholder: "Sélectionnez un motif" },
-              class: 'js-filtered-motifs' \
-            }
-          = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f
-      hr.mb-0
-      = render "admin/rdv_wizard_steps/stepper", steps: [{step: 2}, {step: 3}, {step: 4}]
+= render "card", rdv_wizard_form: @rdv_wizard, next_steps: [{step: 2}, {step: 3}, {step: 4}] do
+  = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
+    = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }
+    = render "hidden_fields", f: f, step: 1, \
+      fields: [:starts_at, :lieu_id, :context, :service_id], \
+      user_ids: @rdv.user_ids, agent_ids: @rdv.agent_ids
+    = f.input :service_id, \
+      collection: @services.ordered_by_name, \
+      input_html: { \
+        class: 'select2-input js-service-filter', \
+        data: { \
+          placeholder: "Sélectionnez un service pour filtrer les motifs", \
+          "select-options": { disableSearch: true } \
+        } \
+      }
+    = f.input :motif_id, \
+      required: true, \
+      include_blank: true, \
+      collection: @motifs.includes(:service).to_a.group_by { _1.service.name }, \
+      as: :grouped_select, \
+      group_method: :last,
+      label_method: -> { motif_name_with_location_type(_1) }, \
+      input_html: { \
+        data: { placeholder: "Sélectionnez un motif" },
+        class: 'js-filtered-motifs' \
+      }
+    = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f

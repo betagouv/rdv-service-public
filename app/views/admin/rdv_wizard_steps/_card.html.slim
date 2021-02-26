@@ -1,0 +1,14 @@
+.row.justify-content-md-center
+  .col-md-6
+    .card
+      - if local_assigns[:previous_steps]
+        = render "admin/rdv_wizard_steps/stepper", rdv_wizard_form: rdv_wizard_form, steps: previous_steps
+        hr.my-0
+      .card-body
+        .d-flex.justify-content-between.mb-3
+          = render "title", rdv_wizard_form: rdv_wizard_form
+          .js-users-spinner.spinner-border.d-none &nbsp;
+        = yield
+      - if local_assigns[:next_steps]
+        hr.mb-0
+        = render "admin/rdv_wizard_steps/stepper", steps: next_steps

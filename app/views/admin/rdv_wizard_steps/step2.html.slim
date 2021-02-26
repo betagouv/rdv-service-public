@@ -3,69 +3,61 @@
 
 - modals_return_location = new_admin_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 2))
 
-.row.justify-content-md-center
-  .col-md-6
-    .card
-      = render "admin/rdv_wizard_steps/stepper", \
-        rdv_wizard_form: @rdv_wizard, \
-        steps: [ \
-          { step: 1, value: motif_name_with_location_type(@rdv.motif) } \
-        ]
-      hr.my-0
-      .card-body
-        .d-flex.justify-content-between.mb-3
-          = render "admin/rdv_wizard_steps/title", title: @rdv_wizard_presenter.title
-          .js-users-spinner.spinner-border.d-none &nbsp;
-        = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
-          = render(partial: 'layouts/model_errors', locals: { model: @rdv_wizard })
-          = hidden_field_tag "step", "2"
-          = render "hidden_fields", f: f, \
-            fields: [:motif_id, :starts_at, :lieu_id, :service_id], \
-            agent_ids: @rdv.agent_ids
+= render "card", \
+  rdv_wizard_form: @rdv_wizard, \
+  previous_steps: [ \
+    { step: 1, value: motif_name_with_location_type(@rdv.motif) } \
+  ],
+  next_steps: [{step: 3}, {step: 4}] \
+do
+  = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
+    = render(partial: 'layouts/model_errors', locals: { model: @rdv_wizard })
+    = render "hidden_fields", f: f, step: 2, \
+      fields: [:motif_id, :starts_at, :lieu_id, :service_id], \
+      agent_ids: @rdv.agent_ids
 
-          - @rdv.users.each do |user|
-            / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
-            = f.hidden_field "user_ids][", value: user.id
-            .pl-2.my-1
-              .d-flex
-                div
-                  i.fa.fa-user
-                  | &nbsp;
-                  = user.full_name
-                  = relative_tag(user)
-                div.ml-2= link_to "╳ Retirer", "#", class: "js-remove-user", data: { 'user-id': user.id }
-                div.ml-2
-                  = link_to \
-                    "✎ Modifier usager", \
-                    edit_admin_organisation_user_path( \
-                      current_organisation, user, modal: true, return_location: modals_return_location \
-                    ), \
-                    data: { modal: "true" }
+    - @rdv.users.each do |user|
+      / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
+      = f.hidden_field "user_ids][", value: user.id
+      .pl-2.my-1
+        .d-flex
+          div
+            i.fa.fa-user
+            | &nbsp;
+            = user.full_name
+            = relative_tag(user)
+          div.ml-2= link_to "╳ Retirer", "#", class: "js-remove-user", data: { 'user-id': user.id }
+          div.ml-2
+            = link_to \
+              "✎ Modifier usager", \
+              edit_admin_organisation_user_path( \
+                current_organisation, user, modal: true, return_location: modals_return_location \
+              ), \
+              data: { modal: "true" }
 
-          .pl-2.mt-2= link_to "+ Ajouter un autre usager", "#", class: "js-toggle-add-user-interface #{'d-none' if @rdv.users.empty?}"
+    .pl-2.mt-2= link_to "+ Ajouter un autre usager", "#", class: "js-toggle-add-user-interface #{'d-none' if @rdv.users.empty?}"
 
-          .js-add-user-interface.mt-2 class=('d-none' if @rdv.users.any?)
-            =  select_tag :status,
-            options_for_select(policy_scope(User).order_by_last_name.map {|u| [ full_name_and_birthdate(u), u.id ]}),
-            include_blank: "Sélectionner un usager",
-            required: false,
-            class: "select2-input js-new-rdv-users-select",
-            data: { "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.users.map(&:id)), dataType: 'json', delay: 250 }} }
+    .js-add-user-interface.mt-2 class=('d-none' if @rdv.users.any?)
+      =  select_tag :status,
+      options_for_select(policy_scope(User).order_by_last_name.map {|u| [ full_name_and_birthdate(u), u.id ]}),
+      include_blank: "Sélectionner un usager",
+      required: false,
+      class: "select2-input js-new-rdv-users-select",
+      data: { "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.users.map(&:id)), dataType: 'json', delay: 250 }} }
 
-            span.small.text-muted
-              | L'usager n'existe pas ?&nbsp;
-              = link_to \
-                'Créer un usager', \
-                new_admin_organisation_user_path( \
-                  current_organisation, modal: true, return_location: modals_return_location \
-                ), \
-                data: { modal: true }
+      span.small.text-muted
+        | L'usager n'existe pas ?&nbsp;
+        = link_to \
+          'Créer un usager', \
+          new_admin_organisation_user_path( \
+            current_organisation, modal: true, return_location: modals_return_location \
+          ), \
+          data: { modal: true }
 
-          .mt-3= f.input :context, as: :text, label: t("activerecord.attributes.rdv.context"), input_html: { rows: 4 }
+    .mt-3= f.input :context, as: :text, label: t("activerecord.attributes.rdv.context"), input_html: { rows: 4 }
 
-          = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f
-      hr.mb-0
-      = render "admin/rdv_wizard_steps/stepper", steps: [{step: 3}, {step: 4}]
+    = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f
+    hr.mb-0
 
 input type='hidden' name="js-current-organisation-id" value=current_organisation.id
 input type='hidden' name="js-canonical-path" value=new_admin_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 2))

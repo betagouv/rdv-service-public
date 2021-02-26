@@ -9,7 +9,6 @@ class Admin::RdvWizardStepsController < AgentAuthController
 
   def new
     @rdv_wizard = rdv_wizard_for(query_params)
-    @rdv_wizard_presenter = Admin::RdvWizardStepPresenter.new(@rdv_wizard)
     @rdv = @rdv_wizard.rdv
     set_services_and_motifs if current_step == "step1"
     authorize(@rdv_wizard.rdv, :new?)
@@ -18,7 +17,6 @@ class Admin::RdvWizardStepsController < AgentAuthController
 
   def create
     @rdv_wizard = rdv_wizard_for(rdv_params)
-    @rdv_wizard_presenter = Admin::RdvWizardStepPresenter.new(@rdv_wizard)
     @rdv = @rdv_wizard.rdv
     set_services_and_motifs if current_step == "step1"
     authorize(@rdv_wizard.rdv, :create?)

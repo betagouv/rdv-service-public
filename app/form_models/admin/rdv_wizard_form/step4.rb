@@ -1,5 +1,5 @@
 class Admin::RdvWizardForm::Step4
-  include Admin::RdvWizardConcern
+  include Admin::RdvWizardFormConcern
   include Admin::RdvFormConcern
 
   def save
