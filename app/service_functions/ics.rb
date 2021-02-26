@@ -86,4 +86,24 @@ module Ics
 
     "CONFIRMED"
   end
+
+  def self.by_month_day(day)
+    "#{day.values.first.first}#{Date::DAYNAMES[day.keys.first][0, 2].upcase}"
+  end
+
+  def self.interval_from_hash(recurrence_hash)
+    "INTERVAL=#{recurrence_hash[:interval]};" if recurrence_hash[:interval]
+  end
+
+  def self.until_from_hash(recurrence_hash)
+    "UNTIL=#{Icalendar::Values::DateTime.new(recurrence_hash[:until], 'tzid' => TZID).value_ical};" if recurrence_hash[:until]
+  end
+
+  def self.by_week_day(on)
+    if on.is_a?(String)
+      on[0, 2].upcase
+    else
+      on.map { |d| d[0, 2].upcase }.join(",")
+    end
+  end
 end

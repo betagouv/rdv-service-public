@@ -8,12 +8,10 @@ class PlageOuvertureBlueprint < Blueprinter::Base
   association :motifs, blueprint: MotifBlueprint
 
   field :rrule do |plage_ouverture|
-    ics = PlageOuverture::Ics.new(plage_ouverture: plage_ouverture)
-    ics.rrule
+    Ics.rrule(Ics.payload_for(plage_ouverture, :create))
   end
 
   field :ical do |plage_ouverture|
-    ics = PlageOuverture::Ics.new(plage_ouverture: plage_ouverture)
-    ics.to_ical
+    Ics.to_ical(Ics.payload_for(plage_ouverture, :create))
   end
 end
