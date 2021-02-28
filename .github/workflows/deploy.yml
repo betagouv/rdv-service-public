@@ -27,13 +27,12 @@ jobs:
           bundler-cache: true
       - name: Install dependencies
         run: bundle install && yarn install
-
-        #- name: Rubocp
-        #run: bundle exec rubocop
+      - name: Rubocp
+        run: bundle exec rubocop
       - name: Brakeman
         run: bundle exec brakeman
       - name: Test
-        run: bundle exec rails db:migrate && bundle exec rspec
+        run: bundle exec rspec
         env:
           HOST: http://example.com
           POSTGRES_HOST: localhost
