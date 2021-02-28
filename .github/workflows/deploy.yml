@@ -8,6 +8,8 @@ jobs:
       postgres:
         image: postgres
         env:
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
         options: >-
           --health-cmd pg_isready
@@ -35,4 +37,7 @@ jobs:
         env:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
 
