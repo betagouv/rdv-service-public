@@ -26,20 +26,14 @@ jobs:
           ruby-version: 2.7.2
           bundler-cache: true
       - name: Install dependencies
-        run: make install
-        env:
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
-          POSTGRES_USER: lapin_test
-          POSTGRES_PASSWORD: lapin_test
-          POSTGRES_DB: lapin_test
+        run: bundle install && yarn install
 
         #- name: Rubocp
         #run: bundle exec rubocop
       - name: Brakeman
         run: bundle exec brakeman
       - name: Test
-        run: bundle exec rspec
+        run: bundle exec rails db:migrate && bundle exec rspec
         env:
           HOST: http://example.com
           POSTGRES_HOST: localhost
