@@ -29,9 +29,9 @@ jobs:
       - name: Install dependencies
         run: bundle install
       - name: Rubocp
-        run: rubocop
+        run: bundle exec rubocop
       - name: Brakeman
-        run: brakeman
+        run: bundle exec brakeman
       - name: Test
         run: bundle exec rspec
         env:
