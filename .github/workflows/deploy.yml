@@ -3,6 +3,18 @@ on: push
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v2
       - name: Set up Ruby
@@ -13,3 +25,7 @@ jobs:
         run: bundle install
       - name: Test
         run: make test
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+
