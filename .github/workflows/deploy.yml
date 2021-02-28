@@ -27,6 +27,13 @@ jobs:
           bundler-cache: true
       - name: Install dependencies
         run: make install
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+
         #- name: Rubocp
         #run: bundle exec rubocop
       - name: Brakeman
