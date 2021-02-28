@@ -34,6 +34,7 @@ jobs:
       - name: Test
         run: bundle exec rspec
         env:
+          HOST: http://example.com
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
           POSTGRES_USER: lapin_test
