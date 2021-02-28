@@ -23,10 +23,15 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.7.2
+          bundler-cache: true
       - name: Install dependencies
-        run: make install
+        run: bundle install
+      - name: Rubocp
+        run: rubocop
+      - name: Brakeman
+        run: brakeman
       - name: Test
-        run: make test
+        run: bundle exec rspec
         env:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
