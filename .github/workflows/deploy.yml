@@ -28,8 +28,8 @@ jobs:
           bundler-cache: true
       - name: Install dependencies
         run: bundle install
-      - name: Rubocp
-        run: bundle exec rubocop
+        #- name: Rubocp
+        #run: bundle exec rubocop
       - name: Brakeman
         run: bundle exec brakeman
       - name: Test
