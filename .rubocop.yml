@@ -5,7 +5,6 @@ AllCops:
     - "bin/*"
     - "node_modules/**/*"
   NewCops: enable
-  SuggestExtensions: false
 
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
