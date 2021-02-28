@@ -24,12 +24,12 @@ default: &default
 development:
   <<: *default
   database: lapin_development
-  username: lapin_test
-  password: lapin_test
 
 test:
   <<: *default
   database: lapin_test<%= ENV['TEST_ENV_NUMBER'] %>
+  username: lapin_test
+  password: lapin_test
 
 production:
   <<: *default
