@@ -22,7 +22,7 @@ jobs:
         with:
           ruby-version: 2.7.2
       - name: Install dependencies
-        run: bundle install
+        run: make install
       - name: Test
         run: make test
         env:
