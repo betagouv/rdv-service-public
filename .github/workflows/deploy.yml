@@ -6,6 +6,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: "CultureHQ/actions-bundler@master"
-      run: install
+      with:
+        args: install
     - name: Test
       run: make test
