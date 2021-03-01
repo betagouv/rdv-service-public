@@ -59,7 +59,6 @@ module Ics
     event.ip_class = "PUBLIC"
     event.rrule = rrule(payload)
     event.status = status_from_event(payload[:event])
-    event.organizer = payload[:agent_email]
 
     attendee_params = { "CN" => payload[:agent_email] }
     attendee_value = Icalendar::Values::CalAddress.new("MAILTO:#{payload[:agent_email]}", attendee_params)

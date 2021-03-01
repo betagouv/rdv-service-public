@@ -50,7 +50,6 @@ describe Ics, type: :service do
         is_expected.to include("UID:plage_ouverture_15@RDV Solidarités")
         is_expected.to include("SUMMARY:RDV Solidarités Elisa SIMON <> Consultation initiale")
         is_expected.to include("LOCATION:10 rue de la Ferronerie 44100 Nantes")
-        is_expected.to include("ORGANIZER:bob@demo.rdv-solidarites.fr")
         is_expected.to include("END:VEVENT")
       end
     end
