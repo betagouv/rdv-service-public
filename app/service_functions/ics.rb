@@ -50,21 +50,6 @@ module Ics
     cal.to_ical
   end
 
-  def self.populate_event(event, payload)
-    event.uid = payload[:ical_uid]
-    event.dtstart = Icalendar::Values::DateTime.new(payload[:starts_at], "tzid" => TZID)
-    event.dtend = Icalendar::Values::DateTime.new(payload[:first_occurence_ends_at], "tzid" => TZID)
-    event.summary = "#{BRAND} #{payload[:title]}"
-    event.location = payload[:address]
-    event.ip_class = "PUBLIC"
-    event.rrule = rrule(payload)
-    event.status = status_from_event(payload[:event])
-
-    attendee_params = { "CN" => payload[:agent_email] }
-    attendee_value = Icalendar::Values::CalAddress.new("MAILTO:#{payload[:agent_email]}", attendee_params)
-    event.append_attendee(attendee_value)
-  end
-
   def self.rrule(payload)
     return unless payload[:recurrence].present?
 
@@ -85,6 +70,24 @@ module Ics
 
     "#{freq}#{interval}#{by_day}#{until_date}"
   end
+
+  private
+
+  def self.populate_event(event, payload)
+    event.uid = payload[:ical_uid]
+    event.dtstart = Icalendar::Values::DateTime.new(payload[:starts_at], "tzid" => TZID)
+    event.dtend = Icalendar::Values::DateTime.new(payload[:first_occurence_ends_at], "tzid" => TZID)
+    event.summary = "#{BRAND} #{payload[:title]}"
+    event.location = payload[:address]
+    event.ip_class = "PUBLIC"
+    event.rrule = rrule(payload)
+    event.status = status_from_event(payload[:event])
+
+    attendee_params = { "CN" => payload[:agent_email] }
+    attendee_value = Icalendar::Values::CalAddress.new("MAILTO:#{payload[:agent_email]}", attendee_params)
+    event.append_attendee(attendee_value)
+  end
+
 
   def self.status_from_event(event)
     return "CANCELLED" if event == :destroy
