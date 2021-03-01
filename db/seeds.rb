@@ -389,7 +389,6 @@ SectorAttribution.create!(
 
 # PLAGES OUVERTURES
 
-PlageOuverture.skip_callback(:create, :after, :notify_agent_plage_ouverture_created)
 _plage_ouverture_org_paris_nord_martine_classique = PlageOuverture.create!(
   title: "Permanence classique",
   organisation_id: org_paris_nord.id,
@@ -466,7 +465,6 @@ _plage_ouverture_org_bapaume_gina_classique = PlageOuverture.create!(
   end_time: Tod::TimeOfDay.new(18),
   recurrence: Montrose.every(:week, interval: 1, starts: Date.tomorrow)
 )
-PlageOuverture.set_callback(:create, :after, :notify_agent_plage_ouverture_created)
 
 # RDVs
 
