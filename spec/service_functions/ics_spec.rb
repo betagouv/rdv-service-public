@@ -43,7 +43,6 @@ describe Ics, type: :service do
       it do
         is_expected.to include("METHOD:REQUEST")
         is_expected.to include("BEGIN:VEVENT")
-        is_expected.to include("LAST-MODIFIED:20190628T174300")
         is_expected.to include("DTSTAMP:20190628T154300Z")
         is_expected.to include("DTSTART;TZID=Europe/Paris:20190704T150000")
         is_expected.to include("DTEND;TZID=Europe/Paris:20190704T154500")
@@ -75,8 +74,7 @@ describe Ics, type: :service do
       subject { Ics.to_ical(payload) }
 
       it do
-        is_expected.to include("ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;RSVP=TRUE")
-        is_expected.to include(" ;CN=bob@demo.rdv-solidarites.fr:mailto:bob@demo.rdv-solidarites.fr")
+        is_expected.to include("ATTENDEE;CN=bob@demo.rdv-solidarites.fr:mailto:bob@demo.rdv-solidarites.fr")
         is_expected.to include("STATUS:CONFIRMED")
       end
     end
@@ -100,8 +98,7 @@ describe Ics, type: :service do
       subject { Ics.to_ical(payload) }
 
       it do
-        is_expected.to include("ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;RSVP=TRUE")
-        is_expected.to include(" ;CN=bob@demo.rdv-solidarites.fr:mailto:bob@demo.rdv-solidarites.fr")
+        is_expected.to include("ATTENDEE;CN=bob@demo.rdv-solidarites.fr:mailto:bob@demo.rdv-solidarites.fr")
         is_expected.to include("STATUS:CONFIRMED")
       end
     end
@@ -125,8 +122,7 @@ describe Ics, type: :service do
       subject { Ics.to_ical(payload) }
 
       it do
-        is_expected.to include("ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;RSVP=TRUE")
-        is_expected.to include(" ;CN=bob@demo.rdv-solidarites.fr:mailto:bob@demo.rdv-solidarites.fr")
+        is_expected.to include("ATTENDEE;CN=bob@demo.rdv-solidarites.fr:mailto:bob@demo.rdv-solidarites.fr")
         is_expected.to include("STATUS:CANCELLED")
       end
     end

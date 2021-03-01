@@ -52,7 +52,6 @@ module Ics
 
   def self.populate_event(event, payload)
     event.uid = payload[:ical_uid]
-    event.last_modified = Time.zone.now
     event.dtstart = Icalendar::Values::DateTime.new(payload[:starts_at], "tzid" => TZID)
     event.dtend = Icalendar::Values::DateTime.new(payload[:first_occurence_ends_at], "tzid" => TZID)
     event.summary = "#{BRAND} #{payload[:title]}"
@@ -62,11 +61,7 @@ module Ics
     event.status = status_from_event(payload[:event])
     event.organizer = payload[:agent_email]
 
-    attendee_params = { "CUTYPE" => "INDIVIDUAL",
-                        "ROLE" => "REQ-PARTICIPANT",
-                        "PARTSTAT" => "ACCEPTED",
-                        "RSVP" => "TRUE",
-                        "CN" => payload[:agent_email] }
+    attendee_params = { "CN" => payload[:agent_email] }
     attendee_value = Icalendar::Values::CalAddress.new("MAILTO:#{payload[:agent_email]}", attendee_params)
     event.append_attendee(attendee_value)
   end
