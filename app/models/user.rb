@@ -135,10 +135,6 @@ class User < ApplicationRecord
       .empty?
   end
 
-  def previous_rdvs_ordered_and_truncated(organisation)
-    rdvs_for_organisation(organisation).past.order(starts_at: :desc).limit(5)
-  end
-
   def rdvs_future_without_ongoing(organisation)
     rdvs_for_organisation(organisation).start_after(Time.zone.now + ONGOING_MARGIN)
   end

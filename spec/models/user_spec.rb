@@ -227,53 +227,6 @@ describe User, type: :model do
     end
   end
 
-  describe "#previous_rdvs_ordered_and_truncated" do
-    it "return empty array without previous rdv" do
-      organisation = create(:organisation)
-      user = create(:user, organisations: [organisation])
-      create(:rdv, users: [user])
-      expect(user.previous_rdvs_ordered_and_truncated(organisation)).to eq([])
-    end
-
-    it "return rdv for same user and organisation" do
-      organisation = create(:organisation)
-      user = create(:user, organisations: [organisation])
-      rdv = create(:rdv, users: [user])
-      create(:rdv)
-      create(:rdv, users: [user])
-      previous_rdv = create(:rdv, starts_at: rdv.starts_at - 1.day, organisation: organisation, users: [user])
-
-      expect(user.previous_rdvs_ordered_and_truncated(organisation)).to eq([previous_rdv])
-    end
-
-    it "return only 5 last previous rdv order by starts_at desc" do
-      organisation = create(:organisation)
-      user = create(:user, organisations: [organisation])
-      rdv = create(:rdv, users: [user])
-
-      p4 = create(:rdv, starts_at: rdv.starts_at - 7.day, organisation: organisation, users: [user])
-      p5 = create(:rdv, starts_at: rdv.starts_at - 13.day, organisation: organisation, users: [user])
-      p1 = create(:rdv, starts_at: rdv.starts_at - 1.day, organisation: organisation, users: [user])
-      create(:rdv, starts_at: rdv.starts_at - 16.day, organisation: organisation, users: [user])
-      p2 = create(:rdv, starts_at: rdv.starts_at - 2.day, organisation: organisation, users: [user])
-      p3 = create(:rdv, starts_at: rdv.starts_at - 4.day, organisation: organisation, users: [user])
-
-      expect(user.previous_rdvs_ordered_and_truncated(organisation)).to eq([p1, p2, p3, p4, p5])
-    end
-
-    it "returns only past rdv" do
-      today = Time.new(2020, 5, 23, 15, 56)
-      travel_to(today)
-      organisation = create(:organisation)
-      user = create(:user, organisations: [organisation])
-      rdv = create(:rdv, users: [user], starts_at: today - 2.days)
-      past_rdv = create(:rdv, starts_at: rdv.starts_at - 4.days, organisation: organisation, users: [user])
-      create(:rdv, starts_at: rdv.starts_at + 4.days, organisation: organisation, users: [user])
-      expect(user.previous_rdvs_ordered_and_truncated(organisation)).to eq([past_rdv])
-      travel_back
-    end
-  end
-
   describe "#rdvs_future_without_ongoing" do
     it "return empty array without next rdv" do
       organisation = create(:organisation)

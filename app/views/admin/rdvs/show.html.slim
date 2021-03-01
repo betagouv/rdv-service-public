@@ -71,7 +71,8 @@
                 i.fa.fa-fw.fa-info-circle>
               div= displayable_user.notes
 
-      = render "admin/rdvs/short_rdvs_list", user: user, rdvs: user.previous_rdvs_ordered_and_truncated(current_organisation), title: "Rendez-vous précédents"
+        .card-header.card-footer= "Rendez-vous précédents"
+        = render "admin/rdvs/short_rdvs_list", user: user, rdvs: Admin::RdvUserPresenter.new(@rdv, user).previous_rdvs_truncated
 
 .row
   .col-md-12
