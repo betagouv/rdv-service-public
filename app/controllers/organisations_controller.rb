@@ -19,10 +19,17 @@ class OrganisationsController < ApplicationController
       agent_role.agent.define_singleton_method(:postpone_email_change?) { false }
       # forces devise_token_auth sync_uid to run
     end
-    return render :new unless @organisation.save
 
-    agent = @organisation.agents.first
-    agent.deliver_invitation if agent.from_safe_domain?
+    if Organisation.exists?(departement: @organisation.departement)
+      flash[:error] = "Au moins une organisation, avec au moins un agent existe déjà pour ce département. Merci de prendre contact avec cette personnes pour ajouter d'autres organisations à ce département"
+      render :new
+    elsif @organisation.save
+      agent = @organisation.agents.first
+      agent.deliver_invitation if agent.from_safe_domain?
+    else
+      flash[:error] = @organisation.errors.full_messages.join(", ")
+      render :new
+    end
   end
 
   def organisation_params
