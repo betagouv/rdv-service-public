@@ -21,7 +21,7 @@ class OrganisationsController < ApplicationController
     end
 
     if Organisation.exists?(departement: @organisation.departement)
-      flash[:error] = "Au moins une organisation, avec au moins un agent existe déjà pour ce département. Merci de prendre contact avec cette personnes pour ajouter d'autres organisations à ce département"
+      flash[:error] = I18n.t("activerecord.errors.models.organisation.existing_orga_with_dep_need_connected_agent_html")
       redirect_to action: :new
     elsif @organisation.save
       agent = @organisation.agents.first

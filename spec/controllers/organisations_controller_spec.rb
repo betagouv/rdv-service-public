@@ -48,7 +48,7 @@ describe OrganisationsController, type: :controller do
     end
 
     it "return errors with an existing organisation for same departement" do
-      organisation = create(:organisation, departement: 56)
+      create(:organisation, departement: 56)
       service = create(:service)
       params = {
         params: {
@@ -68,7 +68,8 @@ describe OrganisationsController, type: :controller do
 
       post :create, params
       expect(response).to redirect_to(new_organisation_path)
-      expect(flash[:error]).to eq("Au moins une organisation, avec au moins un agent existe déjà pour ce département. Merci de prendre contact avec cette personnes pour ajouter d'autres organisations à ce département")
+      expect(flash[:error]).to include("Au moins une organisation, avec au moins un agent existe déjà pour ce département")
+      expect(flash[:error]).to include("https://doc.rdv-solidarites.fr/tutoriels/creer-une-organisation")
     end
   end
 end
