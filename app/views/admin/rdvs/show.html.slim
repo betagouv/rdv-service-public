@@ -71,8 +71,14 @@
                 i.fa.fa-fw.fa-info-circle>
               div= displayable_user.notes
 
+        - rdv_user_presenter = Admin::RdvUserPresenter.new(@rdv, user)
         .card-header.card-footer= "Rendez-vous précédents"
-        = render "admin/rdvs/short_rdvs_list", user: user, rdvs: Admin::RdvUserPresenter.new(@rdv, user).previous_rdvs_truncated
+        = render "admin/rdvs/short_rdvs_list", user: user, rdvs: rdv_user_presenter.previous_rdvs_truncated
+        - if rdv_user_presenter.previous_rdvs_more?
+          .card-footer
+            = link_to \
+              "Voir les #{rdv_user_presenter.previous_rdvs_count} RDVs précédents…", \
+              admin_organisation_rdvs_path(current_organisation, user_id: user.id, end: @rdv.starts_at)
 
 .row
   .col-md-12

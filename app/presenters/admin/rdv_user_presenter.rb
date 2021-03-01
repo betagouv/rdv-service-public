@@ -1,4 +1,6 @@
 class Admin::RdvUserPresenter
+  PREVIOUS_RDVS_LIMIT = 5
+
   attr_reader :rdv, :user
 
   delegate :starts_at, :organisation, to: :rdv
@@ -9,11 +11,15 @@ class Admin::RdvUserPresenter
   end
 
   def previous_rdvs_truncated
-    previous_rdvs.limit(5)
+    previous_rdvs.limit(PREVIOUS_RDVS_LIMIT)
   end
 
   def previous_rdvs_count
     previous_rdvs.count
+  end
+
+  def previous_rdvs_more?
+    previous_rdvs_count > PREVIOUS_RDVS_LIMIT
   end
 
   private
