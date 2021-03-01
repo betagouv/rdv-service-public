@@ -26,7 +26,7 @@ describe OrganisationsController, type: :controller do
       expect(response).to be_successful
     end
 
-    it "render :new when organisation create error" do
+    it "redirect_to :new when organisation create error" do
       params = {
         params: {
           organisation: {
@@ -44,8 +44,7 @@ describe OrganisationsController, type: :controller do
       }
 
       post :create, params
-      expect(response).to be_successful
-      expect(response).to render_template(:new)
+      expect(response).to redirect_to(new_organisation_path)
     end
 
     it "return errors with an existing organisation for same departement" do
@@ -68,8 +67,7 @@ describe OrganisationsController, type: :controller do
       }
 
       post :create, params
-      expect(response).to be_successful
-      expect(response).to render_template(:new)
+      expect(response).to redirect_to(new_organisation_path)
       expect(flash[:error]).to eq("Au moins une organisation, avec au moins un agent existe déjà pour ce département. Merci de prendre contact avec cette personnes pour ajouter d'autres organisations à ce département")
     end
   end
