@@ -27,8 +27,8 @@ jobs:
           bundler-cache: true
       - name: Install dependencies
         run: bundle install && yarn install
-      - name: RuboCop Linter Action
-        run: bundle exec rubocop
+        #      - name: RuboCop Linter Action
+        #run: bundle exec rubocop
       - name: Brakeman
         run: bundle exec brakeman
       - name: Test
