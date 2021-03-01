@@ -50,7 +50,7 @@ class DisplayableUserPresenter
   end
 
   def notify_by_sms
-    return "pas de numéro de téléphone renseigné" if @user.responsible_phone_number.blank?
+    return "🔴 pas de numéro de téléphone renseigné" if @user.responsible_phone_number.blank?
 
     return "🔴 le numéro de téléphone renseigné n'est pas un mobile" unless @user.responsible_phone_number_mobile?
 
@@ -58,7 +58,7 @@ class DisplayableUserPresenter
   end
 
   def notify_by_email
-    return "pas d'email renseigné" if @user.responsible_email.blank?
+    return "🔴 pas d'email renseigné" if @user.responsible_email.blank?
 
     @user.responsible_notify_by_email? ? "🟢 Activées" : "🔴 Désactivées"
   end

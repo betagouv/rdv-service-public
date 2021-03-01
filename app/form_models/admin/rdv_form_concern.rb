@@ -20,15 +20,10 @@ module Admin::RdvFormConcern
     caution :warn_rdvs_overlapping_rdv
   end
 
-  def save
-    valid? && rdv.save
-  end
-
   private
 
   def validate_rdv
-    return if rdv.valid?
-
+    rdv.valid?
     rdv.errors.each { errors.add(_1, _2) }
   end
 

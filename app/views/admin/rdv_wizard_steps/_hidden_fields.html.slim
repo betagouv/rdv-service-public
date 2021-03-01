@@ -1,0 +1,10 @@
+= hidden_field_tag "step", step.to_s
+
+- fields.each do |field_name|
+  = f.input field_name, as: :hidden
+
+/ https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field
+- local_assigns[:user_ids]&.each do |user_id|
+  = f.hidden_field "user_ids][", value: user_id
+- local_assigns[:agent_ids]&.each do |agent_id|
+  = f.hidden_field "agent_ids][", value: agent_id

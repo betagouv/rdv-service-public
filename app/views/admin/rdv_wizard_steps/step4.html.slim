@@ -1,0 +1,50 @@
+- content_for(:menu_item) { 'menu-agendas' }
+- content_for(:title) { "Créer RDV 4/4"}
+
+= render "card", \
+  rdv_wizard_form: @rdv_wizard, \
+  previous_steps: [ \
+    { step: 1, value: motif_name_with_location_type(@rdv.motif) }, \
+    { step: 2, value: users_inline_list_for_agents(@rdv.users) }, \
+    { step: 3, value: "#{agents_to_sentence(@rdv.agents)}, #{human_location(@rdv)}" } \
+  ] \
+do
+  = simple_form_for(@rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
+    = render(partial: 'layouts/model_errors', locals: { model: @rdv_wizard, f: f })
+    = collapsible_form_fields_for_warnings(@rdv_wizard) do
+      = render "hidden_fields", f: f, step: 4, \
+        fields: [:motif_id, :lieu_id, :context, :starts_at, :duration_in_min, :address, :active_warnings_confirm_decision], \
+        user_ids: @rdv.user_ids, agent_ids: @rdv.agent_ids
+
+      div.mb-3
+        span> Motif
+        = Motif.human_enum_name(:visibility_type, @rdv.motif.visibility_type)
+
+      - if @rdv.motif.visible_and_notified?
+        - @rdv.users.to_a.select(&:relative?).each do |user|
+          div.mb-3
+            = user_to_link(user)
+            .text-muted
+              = I18n.t \
+                "admin_rdv_wizard_form.step4.responsible_will_be_notified", \
+                responsible: user.responsible.full_name
+        - @rdv.users.map(&:user_to_notify).uniq.each do |user|
+          div.mb-3
+            = user_to_link(user)
+            - user_presenter = DisplayableUserPresenter.new(user, current_organisation)
+            div.d-flex
+              div
+                i.fa.fa-comments>
+              div.flex-grow-1.ml-2
+                div= user_presenter.phone_number
+                div Notifications SMS : #{user_presenter.notify_by_sms}
+            div.d-flex
+              div
+                i.fa.fa-envelope>
+              div.flex-grow-1.ml-2
+                div= user_presenter.email
+                div Notifications Email : #{user_presenter.notify_by_email}
+      - else
+        p= I18n.t("admin_rdv_wizard_form.step4.no_notifications")
+
+      = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Créer RDV", f: f

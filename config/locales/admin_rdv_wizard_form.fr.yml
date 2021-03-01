@@ -1,0 +1,12 @@
+fr:
+  admin_rdv_wizard_form:
+    step1:
+      title: 1. Motif
+    step2:
+      title: 2. Usager(s)
+    step3:
+      title: 3. Agent(s), horaires & lieu
+    step4:
+      title: 4. Notifications
+      responsible_will_be_notified: L'usager responsable %{responsible} sera notifié
+      no_notifications: 🔴 Aucune notification ne sera envoyée

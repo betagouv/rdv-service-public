@@ -63,14 +63,26 @@ describe "Agent can create a Rdv with creneau search" do
     first(:link, "09:30").click
 
     # Step 2
-    expect_page_title("Choisir le ou les usagers")
+    expect_page_title("Créer RDV 2/4")
+    expect(page).to have_selector(".card-title", text: "2. Usager(s)")
+    expect(page).to have_selector(".list-group-item", text: /Motif/)
     select_user(user)
     click_button("Continuer")
 
     # Step 3
-    expect_page_title("Choisir la durée et la date")
-    expect_checked("Motif : #{motif.name}")
+    expect_page_title("Créer RDV 3/4")
+    expect(page).to have_selector(".card-title", text: "3. Agent(s), horaires & lieu")
+    expect(page).to have_selector(".list-group-item", text: /Usager\(s\)/)
+    expect(page).to have_selector(".list-group-item", text: /Motif/)
     expect(find_field("rdv[lieu_id]").value).to eq(lieu.id.to_s)
+    click_button("Continuer")
+
+    # Step 4
+    expect_page_title("Créer RDV 4/4")
+    expect(page).to have_selector(".card-title", text: "4. Notifications")
+    expect(page).to have_selector(".list-group-item", text: /Motif/)
+    expect(page).to have_selector(".list-group-item", text: /Usager\(s\)/)
+    expect(page).to have_selector(".list-group-item", text: /Agent\(s\), horaires & lieu/)
     click_button("Créer RDV")
 
     expect(user.rdvs.count).to eq(1)
@@ -83,9 +95,5 @@ describe "Agent can create a Rdv with creneau search" do
     expect(page).to have_current_path(admin_organisation_agent_path(organisation, agent, date: rdv.starts_at.to_date, selected_event_id: rdv.id))
     expect(page).to have_content("Le rendez-vous a été créé.")
     expect(page).to have_content("Votre agenda")
-  end
-
-  def expect_checked(text)
-    expect(page).to have_selector(".card .list-group-item", text: text)
   end
 end
