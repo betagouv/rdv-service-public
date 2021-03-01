@@ -27,8 +27,10 @@ jobs:
           bundler-cache: true
       - name: Install dependencies
         run: bundle install && yarn install
-      - name: Rubocp
-        run: bundle exec rubocop
+      - name: RuboCop Linter Action
+        uses: andrewmcodes/rubocop-linter-action@v3.3.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Brakeman
         run: bundle exec brakeman
       - name: Test
