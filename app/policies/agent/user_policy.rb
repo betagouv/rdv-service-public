@@ -4,7 +4,14 @@ class Agent::UserPolicy < DefaultAgentPolicy
   end
 
   def create?
-    same_org?
+    # for the creation we want to make sure that all organisation IDs are
+    # authorized for the current context (orga or agent)
+    return false if @record.user_profiles.empty?
+
+    (
+      @record.user_profiles.map(&:organisation_id) -
+      (@context.organisation.present? ? [@context.organisation.id] : @context.agent.organisation_ids)
+    ).empty?
   end
 
   def invite?
@@ -21,7 +28,13 @@ class Agent::UserPolicy < DefaultAgentPolicy
 
   class Scope < Scope
     def resolve
-      scope.joins(:organisations).where(organisations: { id: @context.organisation.id })
+      scope
+        .joins(:organisations)
+        .where(
+          organisations: {
+            id: @context.organisation&.id || @context.agent.organisation_ids
+          }
+        )
     end
   end
 
@@ -33,7 +46,13 @@ class Agent::UserPolicy < DefaultAgentPolicy
     # returns ids for persisted join records so it doesn't work for new records
     # nor updates. we cannot either use pluck for the same reason
 
-    @record.user_profiles.map(&:organisation_id).include?(@context.organisation.id)
+    authorized_organisation_ids = \
+      if @context.organisation
+        [@context.organisation.id]
+      else
+        @context.agent.organisation_ids
+      end
+    (@record.user_profiles.map(&:organisation_id) & authorized_organisation_ids).present?
 
     # also, this is not strictly speaking correct. this only checks that the
     # resulting user will belong to the current organisation, but it should also

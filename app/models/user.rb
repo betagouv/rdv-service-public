@@ -6,6 +6,7 @@ class User < ApplicationRecord
   include User::SearchableConcern
   include User::FranceconnectFrozenFieldsConcern
   include User::NotificableConcern
+  include User::ImprovedUnicityErrorConcern
 
   ONGOING_MARGIN = 1.hour.freeze
 
@@ -37,6 +38,7 @@ class User < ApplicationRecord
   validate :user_is_not_duplicate, on: :create, unless: -> { errors[:email]&.present? } # to avoid two similar errors on duplicate email
   validates :created_through, inclusion: { in: %w[
     agent_creation user_sign_up franceconnect_sign_up user_relative_creation unknown
+    agent_creation_api
   ] }
 
   accepts_nested_attributes_for :user_profiles
