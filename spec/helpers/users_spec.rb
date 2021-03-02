@@ -25,4 +25,32 @@ describe UsersHelper, type: :helper do
       expect(age(user)).to eq("20 jours")
     end
   end
+
+  describe "#default_service_selection" do
+    context "when edit" do
+      it "returns relative when" do
+        user = create(:user, :relative)
+        expect(default_service_selection(user)).to eq(:relative)
+      end
+
+      it "returns responsible when" do
+        user = create(:user)
+        expect(default_service_selection(user)).to eq(:responsible)
+      end
+    end
+
+    context "when from rdv_wizard" do
+      it "returns relative if pmi service" do
+        user = build(:user)
+        motif = build(:motif, service: build(:service, :pmi))
+        expect(default_service_selection(user, motif)).to eq(:relative)
+      end
+
+      it "returns responsible if other service" do
+        user = build(:user)
+        motif = build(:motif, service: build(:service, :social))
+        expect(default_service_selection(user, motif)).to eq(:responsible)
+      end
+    end
+  end
 end

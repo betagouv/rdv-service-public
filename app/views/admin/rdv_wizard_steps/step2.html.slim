@@ -50,7 +50,7 @@ do
         = link_to \
           'Créer un usager', \
           new_admin_organisation_user_path( \
-            current_organisation, modal: true, return_location: modals_return_location \
+            current_organisation, modal: true, return_location: modals_return_location, motif_id: @rdv.motif.id \
           ), \
           data: { modal: true }
 

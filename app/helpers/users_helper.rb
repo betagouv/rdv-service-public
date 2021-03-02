@@ -106,4 +106,11 @@ module UsersHelper
       "free.fr" => { url: "https://webmail.free.fr/", name: "Free Webmail" }
     }[email_tld]
   end
+
+  def default_service_selection(user, motif = nil)
+    return :relative if motif&.service&.pmi?
+    return :relative if user.relative?
+
+    :responsible
+  end
 end

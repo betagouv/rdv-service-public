@@ -24,6 +24,7 @@
       :responsability_type, \
       as: :radio_buttons, \
       collection: [:responsible, :relative], \
+      checked: default_service_selection(user, @motif), \
       label_method: -> { I18n.t("activerecord.attributes.user.responsability_types.#{_1}") }, \
       disabled: user.persisted?, \
       wrapper: :vertical_collection_inline, \

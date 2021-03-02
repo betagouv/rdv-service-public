@@ -5,6 +5,7 @@ class Service < ApplicationRecord
   validates :name, :short_name, presence: true, uniqueness: { case_sensitive: false }
   SECRETARIAT = "Secrétariat".freeze
   SERVICE_SOCIAL = "Service social".freeze
+  PMI = "PMI (Protection Maternelle Infantile)".freeze
 
   scope :with_motifs, -> { where.not(name: SECRETARIAT) }
   scope :secretariat, -> { where(name: SECRETARIAT).first }
@@ -16,6 +17,10 @@ class Service < ApplicationRecord
 
   def service_social?
     name == SERVICE_SOCIAL
+  end
+
+  def pmi?
+    name == PMI
   end
 
   def user_field_groups
