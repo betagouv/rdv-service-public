@@ -1,7 +1,7 @@
 module AgentRemover
 
-  def self.remove!(agent, organisation)
-    return false if upcoming_rdvs?
+  def self.remove(agent, organisation)
+    return false if upcoming_rdvs?(agent, organisation)
 
     Agent.transaction do
       agent.organisations.delete(organisation)
