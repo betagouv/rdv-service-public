@@ -43,3 +43,16 @@ _on peut aussi le mettre sur la ligne de commande ou dans un autre endroit_
 ```bash
 GITHUB_CHANGELOG_USERPWD=xxxx bundle exec ruby scripts/get_deployed_changes.rb --archive
 ```
+
+## Export Excel sectorisation
+
+> J’ai créé le secteur « Adour BAB Anglet rues » : vous serait-il possible de me faire une extraction excel de ce secteur uniquement svp ?
+
+> Pour info la marche a suivre pour cet export :
+
+```ruby
+ruby scripts/scalingo_dump.rb -e production
+rails runner scripts/export_sectors.rb 64
+```
+
+> Et la j’ai filtré a la main les lignes demandées.
