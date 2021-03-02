@@ -31,6 +31,7 @@ class UpsertUserForFranceconnectService < BaseService
         created_through: "franceconnect_sign_up"
       )
     )
+    @user.skip_duplicate_warnings = true
     @user.skip_confirmation!
     @user.save!
     @user
