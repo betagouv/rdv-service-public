@@ -108,8 +108,7 @@ module UsersHelper
   end
 
   def default_service_selection(user, motif = nil)
-    return :relative if motif&.service&.pmi?
-    return :relative if user.relative?
+    return :relative if motif&.service&.pmi? || user.relative?
 
     :responsible
   end
