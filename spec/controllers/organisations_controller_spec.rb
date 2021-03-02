@@ -70,8 +70,6 @@ describe OrganisationsController, type: :controller do
       post :create, params
       expect(response).to be_successful
       expect(response).to render_template(:new)
-      expect(flash[:error]).to include("Au moins une organisation, avec au moins un agent existe déjà pour ce département")
-      expect(flash[:error]).to include("https://doc.rdv-solidarites.fr/tutoriels/creer-une-organisation")
     end
   end
 end

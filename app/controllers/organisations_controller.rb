@@ -21,13 +21,12 @@ class OrganisationsController < ApplicationController
     end
 
     if Organisation.exists?(departement: @organisation.departement)
-      flash[:error] = I18n.t("activerecord.errors.models.organisation.existing_orga_with_dep_need_connected_agent_html")
+      @organisation.errors.add(:base, I18n.t("activerecord.errors.models.organisation.existing_orga_with_dep_need_connected_agent_html").html_safe)
       render :new
     elsif @organisation.save
       agent = @organisation.agents.first
       agent.deliver_invitation if agent.from_safe_domain?
     else
-      flash[:error] = @organisation.errors.full_messages.join(", ")
       render :new
     end
   end
