@@ -106,8 +106,13 @@
   .col-md-6
 
     - if policy_scope(Rdv).merge(@user.ongoing_rdvs(current_organisation)).any?
-      = render "admin/rdvs/short_rdvs_list", user: @user, rdvs: policy_scope(Rdv).merge(@user.ongoing_rdvs(current_organisation)).order(starts_at: :asc), title: "Rendez-vous en cours (+/- 1 heure)"
-    = render "admin/rdvs/short_rdvs_list", user: @user, rdvs: policy_scope(Rdv).merge(@user.rdvs_future_without_ongoing(current_organisation)).order(starts_at: :asc), title: "Prochains rendez-vous"
+      .card
+        .card-header Rendez-vous en cours (+/- 1 heure)
+        = render "admin/rdvs/short_rdvs_list", user: @user, rdvs: policy_scope(Rdv).merge(@user.ongoing_rdvs(current_organisation)).order(starts_at: :asc)
+
+    .card
+      .card-header Prochains rendez-vous
+      = render "admin/rdvs/short_rdvs_list", user: @user, rdvs: policy_scope(Rdv).merge(@user.rdvs_future_without_ongoing(current_organisation)).order(starts_at: :asc)
 
     .card
       .card-header
