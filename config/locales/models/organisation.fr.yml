@@ -15,4 +15,4 @@ fr:
       models:
         organisation:
           human_id_error: "doit contenir uniquement des lettres non accentués, des chiffres, des tirets hauts et bas, pas d'espaces, entre 3 et 99 caractères. exemples: arques-test, arras_nord_2, ..."
-          existing_orga_with_dep_need_connected_agent_html: "Au moins une organisation, avec au moins un agent existe déjà pour ce département. Merci de prendre contact avec cette personne pour ajouter d'autres organisations à ce département.<br/>Voir la <a href='https://doc.rdv-solidarites.fr/tutoriels/creer-une-organisation'>documentation sur la création d'une organisation</a>"
+          existing_orga_with_dep_need_connected_agent_html: "Il y a déjà des organisations et des agents créés dans ce département, veuillez entrer en contact avec eux"
