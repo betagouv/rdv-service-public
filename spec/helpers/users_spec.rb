@@ -26,30 +26,28 @@ describe UsersHelper, type: :helper do
     end
   end
 
-  describe "#default_service_selection" do
-    context "when edit" do
+  describe "#default_service_selection_from" do
+    context "user" do
       it "returns relative when" do
         user = create(:user, :relative)
-        expect(default_service_selection(user)).to eq(:relative)
+        expect(default_service_selection_from(user)).to eq(:relative)
       end
 
       it "returns responsible when" do
         user = create(:user)
-        expect(default_service_selection(user)).to eq(:responsible)
+        expect(default_service_selection_from(user)).to eq(:responsible)
       end
     end
 
-    context "when from rdv_wizard" do
+    context "service" do
       it "returns relative if pmi service" do
-        user = build(:user)
-        motif = build(:motif, service: build(:service, :pmi))
-        expect(default_service_selection(user, motif)).to eq(:relative)
+        service = build(:service, :pmi)
+        expect(default_service_selection_from(service)).to eq(:relative)
       end
 
       it "returns responsible if other service" do
-        user = build(:user)
-        motif = build(:motif, service: build(:service, :social))
-        expect(default_service_selection(user, motif)).to eq(:responsible)
+        service = build(:service, :social)
+        expect(default_service_selection_from(service)).to eq(:responsible)
       end
     end
   end

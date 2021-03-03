@@ -107,8 +107,9 @@ module UsersHelper
     }[email_tld]
   end
 
-  def default_service_selection(user, motif = nil)
-    return :relative if motif&.service&.pmi? || user.relative?
+  def default_service_selection_from(source)
+    return :relative if source.respond_to?(:pmi?) && source.pmi?
+    return :relative if source.respond_to?(:relative?) && source.relative?
 
     :responsible
   end

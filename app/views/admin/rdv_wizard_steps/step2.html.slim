@@ -31,7 +31,7 @@ do
             = link_to \
               "✎ Modifier usager", \
               edit_admin_organisation_user_path( \
-                current_organisation, user, modal: true, return_location: modals_return_location \
+                current_organisation, user, modal: true, return_location: modals_return_location, role: default_service_selection_from(user) \
               ), \
               data: { modal: "true" }
 
@@ -50,7 +50,7 @@ do
         = link_to \
           'Créer un usager', \
           new_admin_organisation_user_path( \
-            current_organisation, modal: true, return_location: modals_return_location, motif_id: @rdv.motif.id \
+            current_organisation, modal: true, return_location: modals_return_location, role: default_service_selection_from(@rdv.motif.service) \
           ), \
           data: { modal: true }
 
