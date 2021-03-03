@@ -39,6 +39,7 @@ FactoryBot.define do
       password_confirmation { nil }
     end
     trait :relative do
+      responsible { create(:user) }
       phone_number { nil }
       address { nil }
       password { nil }

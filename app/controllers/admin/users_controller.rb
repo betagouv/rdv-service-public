@@ -30,6 +30,7 @@ class Admin::UsersController < AgentAuthController
   end
 
   def new
+    @role = params[:role] if params[:role]
     @user = User.new
     @user.user_profiles.build(organisation: current_organisation)
     @user.responsible = policy_scope(User).find(params[:responsible_id]) if params[:responsible_id].present?
