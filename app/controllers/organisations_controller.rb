@@ -21,7 +21,7 @@ class OrganisationsController < ApplicationController
     end
 
     if Organisation.exists?(departement: @organisation.departement)
-      @organisation.errors.add(:base, I18n.t("activerecord.errors.models.organisation.existing_orga_with_dep_need_connected_agent_html").html_safe)
+      @organisation.errors.add(:base, I18n.t("activerecord.errors.models.organisation.existing_orga_with_dep_need_connected_agent"))
       render :new
     elsif @organisation.save
       agent = @organisation.agents.first
