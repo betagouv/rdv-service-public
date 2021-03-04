@@ -1,7 +1,31 @@
 name: Deploy
 on: push
 jobs:
-  deploy:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: RuboCop Linter Action
+        uses: andrewmcodes/rubocop-linter-action@v3.3.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  brakeman:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.2
+          bundler-cache: true
+      - name: Install dependencies
+        run: bundle install && yarn install
+      - name: Brakeman
+        run: bundle exec brakeman
+
+  tests:
     runs-on: ubuntu-latest
 
     services:
@@ -27,10 +51,6 @@ jobs:
           bundler-cache: true
       - name: Install dependencies
         run: bundle install && yarn install
-        #      - name: RuboCop Linter Action
-        #run: bundle exec rubocop
-      - name: Brakeman
-        run: bundle exec brakeman
       - name: Test
         run: bundle exec rspec
         env:
