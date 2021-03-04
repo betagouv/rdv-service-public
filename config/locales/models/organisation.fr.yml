@@ -15,3 +15,4 @@ fr:
       models:
         organisation:
           human_id_error: "doit contenir uniquement des lettres non accentués, des chiffres, des tirets hauts et bas, pas d'espaces, entre 3 et 99 caractères. exemples: arques-test, arras_nord_2, ..."
+          existing_orga_with_dep_need_connected_agent: "Il y a déjà des organisations et des agents créés dans ce département, veuillez entrer en contact avec eux"

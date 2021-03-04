@@ -19,10 +19,16 @@ class OrganisationsController < ApplicationController
       agent_role.agent.define_singleton_method(:postpone_email_change?) { false }
       # forces devise_token_auth sync_uid to run
     end
-    return render :new unless @organisation.save
 
-    agent = @organisation.agents.first
-    agent.deliver_invitation if agent.from_safe_domain?
+    if Organisation.exists?(departement: @organisation.departement)
+      @organisation.errors.add(:base, I18n.t("activerecord.errors.models.organisation.existing_orga_with_dep_need_connected_agent"))
+      render :new
+    elsif @organisation.save
+      agent = @organisation.agents.first
+      agent.deliver_invitation if agent.from_safe_domain?
+    else
+      render :new
+    end
   end
 
   def organisation_params
