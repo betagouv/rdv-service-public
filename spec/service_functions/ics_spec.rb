@@ -73,7 +73,6 @@ describe Ics, type: :service do
       subject { Ics.to_ical(payload) }
 
       it do
-        is_expected.to include("ATTENDEE;CN=bob@demo.rdv-solidarites.fr:mailto:bob@demo.rdv-solidarites.fr")
         is_expected.to include("STATUS:CONFIRMED")
       end
     end
@@ -97,7 +96,6 @@ describe Ics, type: :service do
       subject { Ics.to_ical(payload) }
 
       it do
-        is_expected.to include("ATTENDEE;CN=bob@demo.rdv-solidarites.fr:mailto:bob@demo.rdv-solidarites.fr")
         is_expected.to include("STATUS:CONFIRMED")
       end
     end
@@ -121,7 +119,6 @@ describe Ics, type: :service do
       subject { Ics.to_ical(payload) }
 
       it do
-        is_expected.to include("ATTENDEE;CN=bob@demo.rdv-solidarites.fr:mailto:bob@demo.rdv-solidarites.fr")
         is_expected.to include("STATUS:CANCELLED")
       end
     end
