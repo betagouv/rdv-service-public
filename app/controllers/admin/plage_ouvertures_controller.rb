@@ -54,6 +54,7 @@ class Admin::PlageOuverturesController < AgentAuthController
     @plage_ouverture.organisation = current_organisation
     authorize(@plage_ouverture)
     if @plage_ouverture.save
+      Agents::PlageOuvertureMailer.plage_ouverture_created(Admin::Ics.create_payload_for(@plage_ouverture)).deliver_later
       flash[:notice] = "Plage d'ouverture créée"
       redirect_to admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture)
     else
@@ -64,6 +65,7 @@ class Admin::PlageOuverturesController < AgentAuthController
   def update
     authorize(@plage_ouverture)
     if @plage_ouverture.update(plage_ouverture_params)
+      Agents::PlageOuvertureMailer.plage_ouverture_updated(Admin::Ics.update_payload_for(@plage_ouverture)).deliver_later
       redirect_to admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture), notice: "La plage d'ouverture a été modifiée."
     else
       render :edit
@@ -72,8 +74,12 @@ class Admin::PlageOuverturesController < AgentAuthController
 
   def destroy
     authorize(@plage_ouverture)
-    @plage_ouverture.destroy
-    redirect_to admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent), notice: "La plage d'ouverture a été supprimée."
+    if @plage_ouverture.destroy
+      Agents::PlageOuvertureMailer.plage_ouverture_destroyed(Admin::Ics.destroy_payload_for(@plage_ouverture)).deliver_later
+      redirect_to admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent), notice: "La plage d'ouverture a été supprimée."
+    else
+      render :edit
+    end
   end
 
   private
