@@ -7,6 +7,7 @@ class User < ApplicationRecord
   include User::FranceconnectFrozenFieldsConcern
   include User::NotificableConcern
   include User::ImprovedUnicityErrorConcern
+  include HasPhoneNumberConcern
 
   ONGOING_MARGIN = 1.hour.freeze
 
@@ -33,7 +34,6 @@ class User < ApplicationRecord
 
   validates :last_name, :first_name, :created_through, presence: true
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
-  validates :phone_number, phone: { allow_blank: true }
   validate :birth_date_validity
   validate :user_is_not_duplicate, on: :create, unless: -> { errors[:email]&.present? } # to avoid two similar errors on duplicate email
   validates :created_through, inclusion: { in: %w[
@@ -53,7 +53,6 @@ class User < ApplicationRecord
 
   before_save :set_email_to_null_if_blank
   before_save :normalize_account
-  before_save :format_phone_number
 
   include User::ResponsabilityConcern
 
@@ -137,6 +136,10 @@ class User < ApplicationRecord
       .empty?
   end
 
+  def previous_rdvs_ordered_and_truncated(organisation)
+    rdvs_for_organisation(organisation).past.order(starts_at: :desc).limit(5)
+  end
+
   def rdvs_future_without_ongoing(organisation)
     rdvs_for_organisation(organisation).start_after(Time.zone.now + ONGOING_MARGIN)
   end
@@ -197,14 +200,6 @@ class User < ApplicationRecord
     return save! if organisations.any? # only actually mark deleted when no orgas left
 
     update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email)
-  end
-
-  def format_phone_number
-    self.phone_number_formatted = (
-      phone_number.present? &&
-      Phonelib.valid?(phone_number) &&
-      Phonelib.parse(phone_number).e164
-    ) || nil
   end
 
   def skip_duplicate_warnings?
