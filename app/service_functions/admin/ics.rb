@@ -1,7 +1,7 @@
 require "icalendar"
 require "icalendar/tzinfo"
 
-module Ics
+module Admin::Ics
   TZID = "Europe/Paris".freeze
 
   def self.payload_for(object)
@@ -80,6 +80,7 @@ module Ics
     event.ip_class = "PUBLIC"
     event.rrule = rrule(payload)
     event.status = status_from_event(payload[:event])
+    event.attendee = "mailto:#{payload[:agent_email]}"
   end
 
   def self.status_from_event(event)

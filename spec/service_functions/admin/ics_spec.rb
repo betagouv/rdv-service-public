@@ -1,4 +1,4 @@
-describe Ics, type: :service do
+describe Admin::Ics, type: :service do
   let(:now) { Time.zone.parse("20190628 17h43") }
   let(:first_day) { Date.new(2019, 7, 22) }
 
@@ -9,7 +9,7 @@ describe Ics, type: :service do
     [:name, :object, :agent_email, :starts_at, :recurrence, :ical_uid, :title, :first_occurence_ends_at, :address].each do |key|
       it "return an hash with key #{key}" do
         plage_ouverture = build(:plage_ouverture)
-        expect(Ics.payload_for(plage_ouverture)).to have_key(key)
+        expect(described_class.payload_for(plage_ouverture)).to have_key(key)
       end
     end
   end
@@ -17,7 +17,7 @@ describe Ics, type: :service do
   [:create, :update, :destroy].each do |event|
     describe "##{event}_payload_for" do
       it "return an hash with key event key and value #{event}" do
-        expect(Ics.send("#{event}_payload_for", build(:plage_ouverture))[:event]).to eq(event)
+        expect(described_class.send("#{event}_payload_for", build(:plage_ouverture))[:event]).to eq(event)
       end
     end
   end
@@ -38,7 +38,7 @@ describe Ics, type: :service do
         }
       end
 
-      subject { Ics.to_ical(payload) }
+      subject { described_class.to_ical(payload) }
 
       it do
         is_expected.to include("METHOD:REQUEST")
@@ -70,7 +70,7 @@ describe Ics, type: :service do
         }
       end
 
-      subject { Ics.to_ical(payload) }
+      subject { described_class.to_ical(payload) }
 
       it do
         is_expected.to include("STATUS:CONFIRMED")
@@ -93,7 +93,7 @@ describe Ics, type: :service do
         }
       end
 
-      subject { Ics.to_ical(payload) }
+      subject { described_class.to_ical(payload) }
 
       it do
         is_expected.to include("STATUS:CONFIRMED")
@@ -116,7 +116,7 @@ describe Ics, type: :service do
         }
       end
 
-      subject { Ics.to_ical(payload) }
+      subject { described_class.to_ical(payload) }
 
       it do
         is_expected.to include("STATUS:CANCELLED")
@@ -127,7 +127,7 @@ describe Ics, type: :service do
   describe "#rrule" do
     let(:payload) { { recurrence: recurrence } }
 
-    subject { Ics.rrule(payload) }
+    subject { described_class.rrule(payload) }
 
     context "every week" do
       let(:recurrence) { Montrose.every(:week, on: ["monday"], starts: first_day) }
