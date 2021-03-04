@@ -122,27 +122,47 @@ describe Admin::Ics, type: :service do
         is_expected.to include("STATUS:CANCELLED")
       end
     end
+
+    context "_plage_ouverture create with recurrence" do
+      let(:payload) do
+        {
+          name: "plage-ouverture--.ics",
+          object: "plage_ouverture",
+          action: :create,
+          agent_email: "bob@demo.rdv-solidarites.fr",
+          starts_at: Time.zone.parse("20190704 16h00"),
+          recurrence: "FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10",
+          ical_uid: "plage_ouverture_15@RDV Solidarités",
+          title: "Elisa SIMON <> Consultation initiale",
+          first_occurence_ends_at: Time.zone.parse("20190704 16h45"),
+          address: "10 rue de la Ferronerie 44100 Nantes"
+        }
+      end
+
+      subject { described_class.to_ical(payload) }
+
+      it do
+        is_expected.to include("RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10")
+      end
+    end
   end
 
   describe "#rrule" do
-    let(:payload) { { recurrence: recurrence } }
+    let(:plage_ouverture) { build(:plage_ouverture, recurrence: recurrence) }
 
-    subject { described_class.rrule(payload) }
+    subject { described_class.rrule(plage_ouverture) }
 
     context "every week" do
       let(:recurrence) { Montrose.every(:week, on: ["monday"], starts: first_day) }
-
       it { is_expected.to eq("FREQ=WEEKLY;BYDAY=MO;") }
 
       context "on monday and wednesday" do
         let(:recurrence) { Montrose.every(:week, on: %w[monday tuesday wednesday thursday friday saturday], starts: first_day) }
-
         it { is_expected.to eq("FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR,SA;") }
       end
 
       context "until 22/10/2019" do
         let(:recurrence) { Montrose.every(:week, until: Time.zone.local(2019, 10, 22), starts: first_day) }
-
         it { is_expected.to eq("FREQ=WEEKLY;UNTIL=20191022T000000;") }
       end
     end

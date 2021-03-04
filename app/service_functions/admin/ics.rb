@@ -30,7 +30,7 @@ module Admin::Ics
       object: "plage_ouverture",
       agent_email: object.agent.email,
       starts_at: object.starts_at,
-      recurrence: object.recurrence,
+      recurrence: rrule(object),
       ical_uid: object.ical_uid,
       title: object.title,
       first_occurence_ends_at: object.first_occurence_ends_at,
@@ -50,10 +50,10 @@ module Admin::Ics
     cal.to_ical
   end
 
-  def self.rrule(payload)
-    return unless payload[:recurrence].present?
+  def self.rrule(plage_ouverture)
+    return unless plage_ouverture.recurrence.present?
 
-    recurrence_hash = payload[:recurrence].to_hash
+    recurrence_hash = plage_ouverture.recurrence.to_hash
 
     case recurrence_hash[:every]
     when :week
@@ -78,7 +78,7 @@ module Admin::Ics
     event.summary = "#{BRAND} #{payload[:title]}"
     event.location = payload[:address]
     event.ip_class = "PUBLIC"
-    event.rrule = rrule(payload)
+    event.rrule = payload[:recurrence]
     event.status = status_from_action(payload[:action])
     event.attendee = "mailto:#{payload[:agent_email]}"
   end
