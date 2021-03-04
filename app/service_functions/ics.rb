@@ -80,10 +80,6 @@ module Ics
     event.ip_class = "PUBLIC"
     event.rrule = rrule(payload)
     event.status = status_from_event(payload[:event])
-
-    attendee_params = { "CN" => payload[:agent_email] }
-    attendee_value = Icalendar::Values::CalAddress.new("MAILTO:#{payload[:agent_email]}", attendee_params)
-    event.append_attendee(attendee_value)
   end
 
   def self.status_from_event(event)
