@@ -9,15 +9,15 @@ module Admin::Ics
   end
 
   def self.create_payload_for(object)
-    payload_for(object).merge(event: :create)
+    payload_for(object).merge(action: :create)
   end
 
   def self.update_payload_for(object)
-    payload_for(object).merge(event: :update)
+    payload_for(object).merge(action: :update)
   end
 
   def self.destroy_payload_for(object)
-    payload_for(object).merge(event: :destroy)
+    payload_for(object).merge(action: :destroy)
   end
 
   def self.to_ical(payload)
@@ -32,7 +32,7 @@ module Admin::Ics
       starts_at: object.starts_at,
       recurrence: object.recurrence,
       ical_uid: object.ical_uid,
-      title: object.title.parameterize,
+      title: object.title,
       first_occurence_ends_at: object.first_occurence_ends_at,
       address: object.lieu.address
     }
@@ -79,12 +79,12 @@ module Admin::Ics
     event.location = payload[:address]
     event.ip_class = "PUBLIC"
     event.rrule = rrule(payload)
-    event.status = status_from_event(payload[:event])
+    event.status = status_from_action(payload[:action])
     event.attendee = "mailto:#{payload[:agent_email]}"
   end
 
-  def self.status_from_event(event)
-    return "CANCELLED" if event == :destroy
+  def self.status_from_action(action)
+    return "CANCELLED" if action == :destroy
 
     "CONFIRMED"
   end

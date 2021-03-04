@@ -14,10 +14,10 @@ describe Admin::Ics, type: :service do
     end
   end
 
-  [:create, :update, :destroy].each do |event|
-    describe "##{event}_payload_for" do
-      it "return an hash with key event key and value #{event}" do
-        expect(described_class.send("#{event}_payload_for", build(:plage_ouverture))[:event]).to eq(event)
+  [:create, :update, :destroy].each do |action|
+    describe "##{action}_payload_for" do
+      it "return an hash with key action key and value #{action}" do
+        expect(described_class.send("#{action}_payload_for", build(:plage_ouverture))[:action]).to eq(action)
       end
     end
   end
@@ -59,7 +59,7 @@ describe Admin::Ics, type: :service do
         {
           name: "plage-ouverture--.ics",
           object: "plage_ouverture",
-          event: :create,
+          action: :create,
           agent_email: "bob@demo.rdv-solidarites.fr",
           starts_at: Time.zone.parse("20190704 16h00"),
           recurrence: "",
@@ -82,7 +82,7 @@ describe Admin::Ics, type: :service do
         {
           name: "plage-ouverture--.ics",
           object: "plage_ouverture",
-          event: :update,
+          action: :update,
           agent_email: "bob@demo.rdv-solidarites.fr",
           starts_at: Time.zone.parse("20190704 16h00"),
           recurrence: "",
@@ -105,7 +105,7 @@ describe Admin::Ics, type: :service do
         {
           name: "plage-ouverture--.ics",
           object: "plage_ouverture",
-          event: :destroy,
+          action: :destroy,
           agent_email: "bob@demo.rdv-solidarites.fr",
           starts_at: Time.zone.parse("20190704 16h00"),
           recurrence: "",
