@@ -1,0 +1,17 @@
+name: Security Check
+on: push
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.2
+          bundler-cache: true
+      - name: Install dependencies
+        run: bundle install && yarn install
+      - name: Brakeman
+        run: bundle exec brakeman
