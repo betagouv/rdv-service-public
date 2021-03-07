@@ -42,5 +42,10 @@
           span.fa-stack.fa-4x
             i.fa.fa-circle.fa-stack-2x.text-primary
             i.fa.fa-users.fa-stack-1x.text-white
+  .m-3
+    - if params[:with_me_as_referent].present?
+      = link_to "Voir tous les usagers", admin_organisation_users_path(current_organisation)
+    - else
+      = link_to "Voir les usagers dont je suis référent", admin_organisation_users_path(current_organisation, with_me_as_referent: 1)
   .m-3.text-center
     = link_to 'Créer un usager', new_admin_organisation_user_path(current_organisation), class: "btn btn-primary"

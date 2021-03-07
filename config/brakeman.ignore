@@ -1,75 +1,13 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 84,
-      "fingerprint": "04cca25af4fcfbe9a6690958f62814b9208fe1fcc70418f4c47ae09c4beb1d60",
-      "check_name": "RenderInline",
-      "message": "Unescaped model attribute rendered inline",
-      "file": "app/views/stats/index.html.slim",
-      "line": 36,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross-site_scripting/",
-      "code": "render(text => \"#{Stat.new(:agents => ((Agent.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or Agent.all)), :organisations => ((Organisation.where(:organisations => ({ :departement => params[:departement] })) or Organisation.all)), :rdvs => ((Rdv.joins(:organisation).where(:organisations => ({ :departement => params[:departement] })) or Rdv.all)), :users => ((User.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or User.all))).rdvs.status(:unknown_past).count} RDVs\", { :label => t(\"stats.rdv_counters.unknown_past\", :count => Stat.new(:agents => ((Agent.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or Agent.all)), :organisations => ((Organisation.where(:organisations => ({ :departement => params[:departement] })) or Organisation.all)), :rdvs => ((Rdv.joins(:organisation).where(:organisations => ({ :departement => params[:departement] })) or Rdv.all)), :users => ((User.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or User.all))).rdvs.status(:unknown_past).count), :rdv_class => \"rdv-status-unknown_past\" })",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "StatsController",
-          "method": "index",
-          "line": 6,
-          "file": "app/controllers/stats_controller.rb",
-          "rendered": {
-            "name": "stats/index",
-            "file": "app/views/stats/index.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "stats/index"
-      },
-      "user_input": "Stat.new(:agents => ((Agent.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or Agent.all)), :organisations => ((Organisation.where(:organisations => ({ :departement => params[:departement] })) or Organisation.all)), :rdvs => ((Rdv.joins(:organisation).where(:organisations => ({ :departement => params[:departement] })) or Rdv.all)), :users => ((User.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or User.all))).rdvs.status(:unknown_past).count",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 84,
-      "fingerprint": "05fdfcf09623fded3941a81972c41b66ad31d01dfe6be04b5c56909b5121ad4b",
-      "check_name": "RenderInline",
-      "message": "Unescaped model attribute rendered inline",
-      "file": "app/views/stats/index.html.slim",
-      "line": 50,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross-site_scripting/",
-      "code": "render(text => \"#{Stat.new(:agents => ((Agent.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or Agent.all)), :organisations => ((Organisation.where(:organisations => ({ :departement => params[:departement] })) or Organisation.all)), :rdvs => ((Rdv.joins(:organisation).where(:organisations => ({ :departement => params[:departement] })) or Rdv.all)), :users => ((User.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or User.all))).rdvs.count} RDVs\", { :label => \"Tous\" })",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "StatsController",
-          "method": "index",
-          "line": 6,
-          "file": "app/controllers/stats_controller.rb",
-          "rendered": {
-            "name": "stats/index",
-            "file": "app/views/stats/index.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "stats/index"
-      },
-      "user_input": "Stat.new(:agents => ((Agent.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or Agent.all)), :organisations => ((Organisation.where(:organisations => ({ :departement => params[:departement] })) or Organisation.all)), :rdvs => ((Rdv.joins(:organisation).where(:organisations => ({ :departement => params[:departement] })) or Rdv.all)), :users => ((User.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or User.all))).rdvs.count",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
       "fingerprint": "29e444edecbb24dca14f234041519278e4d627e960dc2df4de112e59ce0098e9",
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/lieux/index.html.slim",
-      "line": 19,
+      "line": 20,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => policy_scope(Lieu).includes(:organisation).ordered_by_name.page(params[:page]), {})",
       "render_path": [
@@ -100,7 +38,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/rdv.rb",
-      "line": 55,
+      "line": 56,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "where(\"#{Arel.sql(\"(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)\")} BETWEEN ? AND ?\", range.begin, range.end)",
       "render_path": null,
@@ -114,64 +52,13 @@
       "note": ""
     },
     {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 84,
-      "fingerprint": "6025a6c50dc23991d9dabfbb97634b2aa83f973993d4c4586e4d47dcc1156115",
-      "check_name": "RenderInline",
-      "message": "Unescaped model attribute rendered inline",
-      "file": "app/views/stats/index.html.slim",
-      "line": 42,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross-site_scripting/",
-      "code": "render(text => \"#{Stat.new(:agents => ((Agent.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or Agent.all)), :organisations => ((Organisation.where(:organisations => ({ :departement => params[:departement] })) or Organisation.all)), :rdvs => ((Rdv.joins(:organisation).where(:organisations => ({ :departement => params[:departement] })) or Rdv.all)), :users => ((User.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or User.all))).rdvs.status(:unknown_future).count} RDVs\", { :label => t(\"stats.rdv_counters.unknown_future\", :count => Stat.new(:agents => ((Agent.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or Agent.all)), :organisations => ((Organisation.where(:organisations => ({ :departement => params[:departement] })) or Organisation.all)), :rdvs => ((Rdv.joins(:organisation).where(:organisations => ({ :departement => params[:departement] })) or Rdv.all)), :users => ((User.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or User.all))).rdvs.status(:unknown_future).count), :rdv_class => \"rdv-status-unknown_future\" })",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "StatsController",
-          "method": "index",
-          "line": 6,
-          "file": "app/controllers/stats_controller.rb",
-          "rendered": {
-            "name": "stats/index",
-            "file": "app/views/stats/index.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "stats/index"
-      },
-      "user_input": "Stat.new(:agents => ((Agent.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or Agent.all)), :organisations => ((Organisation.where(:organisations => ({ :departement => params[:departement] })) or Organisation.all)), :rdvs => ((Rdv.joins(:organisation).where(:organisations => ({ :departement => params[:departement] })) or Rdv.all)), :users => ((User.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or User.all))).rdvs.status(:unknown_future).count",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "Mass Assignment",
-      "warning_code": 105,
-      "fingerprint": "804a3970881d06ca61e93ad9f38f3fcc692fc49d8b2eb629cedeba2a0c78e0ca",
-      "check_name": "PermitAttributes",
-      "message": "Potentially dangerous key allowed for mass assignment",
-      "file": "app/controllers/admin/permissions_controller.rb",
-      "line": 22,
-      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
-      "code": "params.require(:agent_permission).permit(:role)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Admin::PermissionsController",
-        "method": "permission_params"
-      },
-      "user_input": ":role",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "b29b01ddc6769a460480ba9c5186a1a5bd6672337b58f498f623c022a31c2b19",
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/rdv.rb",
-      "line": 64,
+      "line": 65,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "where(\"starts_at <= ?\", (Time.zone.now + time_margin)).where(\"#{Arel.sql(\"(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)\")} >= ?\", (Time.zone.now - time_margin))",
       "render_path": null,
@@ -187,19 +74,81 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
-      "fingerprint": "bdaeb989380e722b9a047a04d36090a280b52b0fbde8615842f34b6248b9dd9d",
+      "fingerprint": "d47b97da06b485e3b3e6da6d8056f1fb1f0beb9a247bc81f90ae0947d5f4d584",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/admin/motifs/index.html.slim",
+      "line": 46,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => filtered((policy_scope(Motif).active.search_by_text(params[:search]) or policy_scope(Motif).active), params).includes(:organisation).includes(:service).ordered_by_name.page(params[:page]), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::MotifsController",
+          "method": "index",
+          "line": 16,
+          "file": "app/controllers/admin/motifs_controller.rb",
+          "rendered": {
+            "name": "admin/motifs/index",
+            "file": "app/views/admin/motifs/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "admin/motifs/index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "d47b97da06b485e3b3e6da6d8056f1fb1f0beb9a247bc81f90ae0947d5f4d584",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/admin/motifs/index.html.slim",
+      "line": 62,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => filtered((policy_scope(Motif).active.search_by_text(params[:search]) or policy_scope(Motif).active), params).includes(:organisation).includes(:service).ordered_by_name.page(params[:page]), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::MotifsController",
+          "method": "index",
+          "line": 16,
+          "file": "app/controllers/admin/motifs_controller.rb",
+          "rendered": {
+            "name": "admin/motifs/index",
+            "file": "app/views/admin/motifs/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "admin/motifs/index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "ddfbe765a3352f228d0ef67ea71365ded39fbd0f3c8be427838ff3e76d05d568",
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/users/index.html.slim",
       "line": 27,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(User).active.order_by_last_name.page(params[:page]).search_by_text(params[:search]), {})",
+      "code": "render(action => policy_scope(User).active.order_by_last_name.page(params[:page]).within_agents_users(current_agent).search_by_text(params[:search]), {})",
       "render_path": [
         {
           "type": "controller",
           "class": "Admin::UsersController",
           "method": "index",
-          "line": 24,
+          "line": 25,
           "file": "app/controllers/admin/users_controller.rb",
           "rendered": {
             "name": "admin/users/index",
@@ -214,101 +163,8 @@
       "user_input": "params[:search]",
       "confidence": "Weak",
       "note": ""
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 84,
-      "fingerprint": "bfc1cde206ebbb7fd8ed2659d8c47e9348803afed779404c8642e785d1a5da3b",
-      "check_name": "RenderInline",
-      "message": "Unescaped model attribute rendered inline",
-      "file": "app/views/stats/index.html.slim",
-      "line": 30,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross-site_scripting/",
-      "code": "render(text => \"#{Stat.new(:agents => ((Agent.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or Agent.all)), :organisations => ((Organisation.where(:organisations => ({ :departement => params[:departement] })) or Organisation.all)), :rdvs => ((Rdv.joins(:organisation).where(:organisations => ({ :departement => params[:departement] })) or Rdv.all)), :users => ((User.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or User.all))).rdvs.status(temporal_status).count} RDVs\", { :label => t(\"stats.rdv_counters.#{temporal_status}\", :count => Stat.new(:agents => ((Agent.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or Agent.all)), :organisations => ((Organisation.where(:organisations => ({ :departement => params[:departement] })) or Organisation.all)), :rdvs => ((Rdv.joins(:organisation).where(:organisations => ({ :departement => params[:departement] })) or Rdv.all)), :users => ((User.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or User.all))).rdvs.status(temporal_status).count), :rdv_class => (\"rdv-status-#{temporal_status}\") })",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "StatsController",
-          "method": "index",
-          "line": 6,
-          "file": "app/controllers/stats_controller.rb",
-          "rendered": {
-            "name": "stats/index",
-            "file": "app/views/stats/index.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "stats/index"
-      },
-      "user_input": "Stat.new(:agents => ((Agent.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or Agent.all)), :organisations => ((Organisation.where(:organisations => ({ :departement => params[:departement] })) or Organisation.all)), :rdvs => ((Rdv.joins(:organisation).where(:organisations => ({ :departement => params[:departement] })) or Rdv.all)), :users => ((User.joins(:organisations).where(:organisations => ({ :departement => params[:departement] })) or User.all))).rdvs.status(temporal_status).count",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "d47b97da06b485e3b3e6da6d8056f1fb1f0beb9a247bc81f90ae0947d5f4d584",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/admin/motifs/index.html.slim",
-      "line": 47,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => filtered((policy_scope(Motif).active.search_by_text(params[:search]) or policy_scope(Motif).active), params).includes(:organisation).includes(:service).ordered_by_name.page(params[:page]), {})",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Admin::MotifsController",
-          "method": "index",
-          "line": 16,
-          "file": "app/controllers/admin/motifs_controller.rb",
-          "rendered": {
-            "name": "admin/motifs/index",
-            "file": "app/views/admin/motifs/index.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "admin/motifs/index"
-      },
-      "user_input": "params[:page]",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "d47b97da06b485e3b3e6da6d8056f1fb1f0beb9a247bc81f90ae0947d5f4d584",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/admin/motifs/index.html.slim",
-      "line": 63,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => filtered((policy_scope(Motif).active.search_by_text(params[:search]) or policy_scope(Motif).active), params).includes(:organisation).includes(:service).ordered_by_name.page(params[:page]), {})",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Admin::MotifsController",
-          "method": "index",
-          "line": 16,
-          "file": "app/controllers/admin/motifs_controller.rb",
-          "rendered": {
-            "name": "admin/motifs/index",
-            "file": "app/views/admin/motifs/index.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "admin/motifs/index"
-      },
-      "user_input": "params[:page]",
-      "confidence": "Weak",
-      "note": ""
     }
   ],
-  "updated": "2021-02-08 10:58:45 +0100",
+  "updated": "2021-03-07 19:31:07 +0100",
   "brakeman_version": "4.10.1"
 }

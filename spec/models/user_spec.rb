@@ -297,4 +297,14 @@ describe User, type: :model do
       expect(user.minor?).to be false
     end
   end
+
+  describe "#within_agents_users" do
+    it "returns users that have agent as agents_users" do
+      organisation = create(:organisation)
+      agent = create(:agent, organisations: [organisation])
+      create(:user, agents: [], organisations: [organisation])
+      user_with_agent = create(:user, agents: [agent], organisations: [organisation])
+      expect(User.within_agents_users(agent)).to eq([user_with_agent])
+    end
+  end
 end
