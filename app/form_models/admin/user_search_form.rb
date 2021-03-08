@@ -1,4 +1,4 @@
-class UserSearchForm
+class Admin::UserSearchForm
   include ActiveModel::Model
 
   attr_accessor :organisation_id, :agent_id, :search

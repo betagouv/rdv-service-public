@@ -19,7 +19,7 @@ class Admin::UsersController < AgentAuthController
   }.freeze
 
   def index
-    @form = UserSearchForm.new(**params.permit(:organisation_id, :agent_id, :search))
+    @form = Admin::UserSearchForm.new(**params.permit(:organisation_id, :agent_id, :search))
     @users = policy_scope(User).merge(@form.users).active.order_by_last_name.page(params[:page])
   end
 

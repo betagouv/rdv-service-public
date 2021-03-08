@@ -1,4 +1,4 @@
-describe UserSearchForm do
+describe Admin::UserSearchForm do
   describe "#to_query" do
     it "return query" do
       organisation = create(:organisation)

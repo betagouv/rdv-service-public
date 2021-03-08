@@ -32,35 +32,15 @@
       "note": ""
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "49daaf5634c3cea5615e4e839666cbf45c79615f13341971179463699b7521bc",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/rdv.rb",
-      "line": 56,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "where(\"#{Arel.sql(\"(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)\")} BETWEEN ? AND ?\", range.begin, range.end)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Rdv",
-        "method": "ends_at_in_range"
-      },
-      "user_input": "Arel.sql(\"(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)\")",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
-      "fingerprint": "73db231df3c247e397adb4519cd734828e6322c5c3f88dd6b336b6b400a95111",
+      "fingerprint": "2d63f4428767f8b1c48438617bdb8c06a9a4cbda3263faddf74370b8243a6262",
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/users/index.html.slim",
-      "line": 37,
+      "line": 32,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(User).merge(UserSearchForm.new(**params.permit(:organisation_id, :agent_id, :search)).users).active.order_by_last_name.page(params[:page]), {})",
+      "code": "render(action => policy_scope(User).merge(Admin::UserSearchForm.new(**params.permit(:organisation_id, :agent_id, :search)).users).active.order_by_last_name.page(params[:page]), {})",
       "render_path": [
         {
           "type": "controller",
@@ -80,6 +60,26 @@
       },
       "user_input": "params[:page]",
       "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "49daaf5634c3cea5615e4e839666cbf45c79615f13341971179463699b7521bc",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/rdv.rb",
+      "line": 56,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "where(\"#{Arel.sql(\"(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)\")} BETWEEN ? AND ?\", range.begin, range.end)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Rdv",
+        "method": "ends_at_in_range"
+      },
+      "user_input": "Arel.sql(\"(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)\")",
+      "confidence": "Medium",
       "note": ""
     },
     {
@@ -165,6 +165,6 @@
       "note": ""
     }
   ],
-  "updated": "2021-03-08 18:21:37 +0100",
+  "updated": "2021-03-08 21:41:52 +0100",
   "brakeman_version": "4.10.1"
 }

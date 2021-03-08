@@ -4,7 +4,7 @@ class Admin::RdvsController < AgentAuthController
   before_action :set_rdv, :set_optional_agent, except: [:index, :create]
 
   def index
-    @form = AgentRdvSearchForm.new(
+    @form = Admin::AgentRdvSearchForm.new(
       start: parse_date_from_params(:start),
       end: parse_date_from_params(:end),
       show_user_details: ["1", "true"].include?(params[:show_user_details]),
