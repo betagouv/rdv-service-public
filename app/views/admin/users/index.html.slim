@@ -16,15 +16,10 @@
           = f.input :search, placeholder: 'Prénom, Nom, Email, Téléphone', label: "Recherche", input_html: { autocomplete: 'off', class: 'search-form-control', value: params[:search] }, required: false
         .col-md-6
           = f.input :agent_id, collection: policy_scope(Agent), label: "Agent référent", label_method: :full_name, input_html: { class: 'select2-input' }
-      input.btn.btn-primary.d-print-none type="submit" value="Filtrer la liste"
+      input.btn.btn-primary.d-print-none type="submit" value="Rafraîchir la liste"
 
 .card
-  - if @users.any? || params[:search].present?
-    .m-3.d-flex.justify-content-end
-      div= link_to 'Réinitialiser', admin_organisation_users_path(current_organisation), class: "btn btn-link #{params[:search].blank? && 'd-none'}"
-      div= simple_form_for '', url: admin_organisation_users_path(current_organisation), html: { method: :get, class: 'form-inline' }, wrapper: :inline_form  do |f|
-        = f.button :submit, 'Rechercher'
-
+  - if @users.any? || params[:search].present? || params[:agent_id].present?
     .table-responsive
       table.table
         thead
