@@ -1,25 +1,28 @@
 class User::UserPolicy < ApplicationPolicy
-  class Scope < Scope
-    def resolve
-      scope.where(id: @user.id).or(User.where(responsible_id: @user.id))
-    end
-  end
-
-  def create?
-    user_is_responsible?
-  end
-
-  def update?
-    @record.id == @user.id || user_is_responsible?
-  end
-
-  def destroy?
-    @record.id == @user.id || user_is_responsible?
-  end
-
-  private
+  alias current_user pundit_user
 
   def user_is_responsible?
-    @record.responsible_id == @user.id
+    record.responsible_id == current_user.id
+  end
+
+  alias new? user_is_responsible?
+  alias create? user_is_responsible?
+
+  def current_user_or_responsible?
+    record.id == current_user.id || user_is_responsible?
+  end
+
+  alias edit? current_user_or_responsible?
+  alias update? current_user_or_responsible?
+  alias destroy? current_user_or_responsible?
+
+  class Scope < Scope
+    alias current_user pundit_user
+
+    def resolve
+      scope
+        .where(id: current_user.id)
+        .or(User.where(responsible_id: current_user.id))
+    end
   end
 end

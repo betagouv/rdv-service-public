@@ -1,37 +1,35 @@
 class User::RdvPolicy < ApplicationPolicy
-  def create?
-    rdv_belongs_to_user_or_relatives?
-  end
-
-  def confirmation?
-    rdv_belongs_to_user_or_relatives?
-  end
-
-  def cancel?
-    @record.cancellable? && rdv_belongs_to_user_or_relatives?
-  end
-
-  def edit?
-    rdv_belongs_to_user_or_relatives?
-  end
-
-  def update?
-    rdv_belongs_to_user_or_relatives?
-  end
-
-  def index?
-    rdv_belongs_to_user_or_relatives?
-  end
-
-  private
+  alias current_user pundit_user
 
   def rdv_belongs_to_user_or_relatives?
-    (@record.user_ids & @user.available_users_for_rdv.pluck(:id)).any?
+    (record.user_ids & current_user.available_users_for_rdv.pluck(:id)).any?
+  end
+
+  alias new? rdv_belongs_to_user_or_relatives?
+  alias create? rdv_belongs_to_user_or_relatives?
+
+  # three next are used in creneaux controller when coming from file attentes
+  alias index? rdv_belongs_to_user_or_relatives?
+  alias edit? rdv_belongs_to_user_or_relatives?
+  alias update? rdv_belongs_to_user_or_relatives?
+
+  def cancel?
+    record.cancellable? && rdv_belongs_to_user_or_relatives?
   end
 
   class Scope < Scope
+    alias current_user pundit_user
+
     def resolve
-      scope.joins(:users).where(users: { id: @user.id }).or(User.joins(:users).where(users: { responsible_id: @user.id })).visible
+      scope
+        .joins(:users)
+        .where(users: { id: current_user.id })
+        .or(
+          User
+            .joins(:users)
+            .where(users: { responsible_id: current_user.id })
+        )
+        .visible
     end
   end
 end

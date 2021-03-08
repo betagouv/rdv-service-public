@@ -1,49 +1,23 @@
 class ApplicationPolicy
-  attr_reader :user, :record
+  attr_reader :pundit_user, :record
 
-  def initialize(user, record)
-    @user = user
+  def initialize(pundit_user, record)
+    @pundit_user = pundit_user
     @record = record
   end
 
-  def index?
-    false
-  end
-
-  def show?
-    false
-  end
-
-  def create?
-    false
-  end
-
-  def new?
-    create?
-  end
-
-  def update?
-    false
-  end
-
-  def edit?
-    update?
-  end
-
-  def destroy?
-    false
-  end
-
   class Scope
-    attr_reader :user, :scope
+    attr_reader :pundit_user, :scope
 
-    def initialize(user, scope)
-      @user = user
+    def initialize(pundit_user, scope)
+      @pundit_user = pundit_user
       @scope = scope
     end
 
-    def resolve
-      scope.all
+    def in_scope?(object)
+      return false unless object&.id.present?
+
+      resolve.where(id: object.id).any?
     end
   end
 end
