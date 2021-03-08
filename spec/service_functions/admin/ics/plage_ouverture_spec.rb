@@ -1,4 +1,4 @@
-describe Admin::Ics, type: :service do
+describe Admin::Ics::PlageOuverture, type: :service do
   let(:now) { Time.zone.parse("20190628 17h43") }
   let(:first_day) { Date.new(2019, 7, 22) }
 
@@ -9,7 +9,7 @@ describe Admin::Ics, type: :service do
     [:name, :object, :agent_email, :starts_at, :recurrence, :ical_uid, :title, :first_occurence_ends_at, :address].each do |key|
       it "return an hash with key #{key}" do
         plage_ouverture = build(:plage_ouverture)
-        expect(described_class.payload_for(plage_ouverture)).to have_key(key)
+        expect(described_class.payload(plage_ouverture)).to have_key(key)
       end
     end
   end
@@ -17,7 +17,7 @@ describe Admin::Ics, type: :service do
   [:create, :update, :destroy].each do |action|
     describe "##{action}_payload_for" do
       it "return an hash with key action key and value #{action}" do
-        expect(described_class.send("#{action}_payload_for", build(:plage_ouverture))[:action]).to eq(action)
+        expect(described_class.send("#{action}_payload", build(:plage_ouverture))[:action]).to eq(action)
       end
     end
   end
