@@ -50,7 +50,7 @@ class User < ApplicationRecord
   scope :within_organisation, lambda { |organisation|
     joins(:organisations).where(organisations: { id: organisation.id })
   }
-  scope :within_agents_users, lambda { |agent|
+  scope :with_referent, lambda { |agent|
     joins(:agents_users).where(agents_users: { agent_id: agent.id })
   }
 

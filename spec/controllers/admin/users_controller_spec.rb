@@ -117,16 +117,21 @@ RSpec.describe Admin::UsersController, type: :controller do
       expect(assigns(:users)).to eq([user])
     end
 
+    it "assigns form" do
+      get :index, params: { organisation_id: organisation.id }
+      expect(assigns(:form)).to be_kind_of(UserSearchForm)
+    end
+
     it "return success with with_me_as_referent filter" do
       get :index, params: { organisation_id: organisation.id, with_me_as_referent: 1 }
       expect(response).to be_successful
     end
 
     it "assigns user where I am referent" do
-      user_where_iam_referent = create(:user, agents: [agent], organisations: [organisation])
+      user_with_referent = create(:user, agents: [agent], organisations: [organisation])
       create(:user, agents: [], organisations: [organisation])
-      get :index, params: { organisation_id: organisation.id, with_me_as_referent: 1 }
-      expect(assigns(:users)).to eq([user_where_iam_referent])
+      get :index, params: { organisation_id: organisation.id, agent_id: agent.id }
+      expect(assigns(:users)).to eq([user_with_referent])
     end
   end
 end

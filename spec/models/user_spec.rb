@@ -298,13 +298,13 @@ describe User, type: :model do
     end
   end
 
-  describe "#within_agents_users" do
-    it "returns users that have agent as agents_users" do
+  describe "#with_referent" do
+    it "returns users with given referent" do
       organisation = create(:organisation)
       agent = create(:agent, organisations: [organisation])
       create(:user, agents: [], organisations: [organisation])
       user_with_agent = create(:user, agents: [agent], organisations: [organisation])
-      expect(User.within_agents_users(agent)).to eq([user_with_agent])
+      expect(described_class.with_referent(agent)).to eq([user_with_agent])
     end
   end
 end
