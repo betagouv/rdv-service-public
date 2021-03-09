@@ -14,9 +14,7 @@ class Admin::RdvUserPresenter
     previous_rdvs.limit(PREVIOUS_RDVS_LIMIT)
   end
 
-  def previous_rdvs_count
-    previous_rdvs.count
-  end
+  delegate :count, to: :previous_rdvs, prefix: true
 
   def previous_rdvs_more?
     previous_rdvs_count > PREVIOUS_RDVS_LIMIT

@@ -20,7 +20,7 @@ describe OrganisationsController, type: :controller do
 
       expect do
         expect do
-          post :create, params
+          post :create, params: params
         end.to change { Organisation.count }.by(1)
       end.to change { Agent.count }.by(1)
       expect(response).to be_successful
@@ -43,7 +43,7 @@ describe OrganisationsController, type: :controller do
         }
       }
 
-      post :create, params
+      post :create, params: params
       expect(response).to be_successful
       expect(response).to render_template(:new)
     end
@@ -67,7 +67,7 @@ describe OrganisationsController, type: :controller do
         }
       }
 
-      post :create, params
+      post :create, params: params
       expect(response).to be_successful
       expect(response).to render_template(:new)
     end

@@ -51,7 +51,7 @@ module Admin::Ics
   end
 
   def self.rrule(plage_ouverture)
-    return unless plage_ouverture.recurrence.present?
+    return if plage_ouverture.recurrence.blank?
 
     recurrence_hash = plage_ouverture.recurrence.to_hash
 

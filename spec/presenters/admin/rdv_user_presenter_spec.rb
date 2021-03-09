@@ -21,17 +21,17 @@ describe Admin::RdvUserPresenter do
       let!(:organisation) { create(:organisation) }
       let!(:user) { create(:user, organisations: [organisation]) }
       let(:rdv) { create(:rdv, users: [user], organisation: organisation) }
-      let!(:p4) { create(:rdv, starts_at: rdv.starts_at - 7.day, organisation: organisation, users: [user]) }
-      let!(:p5) { create(:rdv, starts_at: rdv.starts_at - 13.day, organisation: organisation, users: [user]) }
+      let!(:p4) { create(:rdv, starts_at: rdv.starts_at - 7.days, organisation: organisation, users: [user]) }
+      let!(:p5) { create(:rdv, starts_at: rdv.starts_at - 13.days, organisation: organisation, users: [user]) }
       let!(:p1) { create(:rdv, starts_at: rdv.starts_at - 1.day, organisation: organisation, users: [user]) }
-      let!(:p6) { create(:rdv, starts_at: rdv.starts_at - 16.day, organisation: organisation, users: [user]) }
-      let!(:p2) { create(:rdv, starts_at: rdv.starts_at - 2.day, organisation: organisation, users: [user]) }
-      let!(:p3) { create(:rdv, starts_at: rdv.starts_at - 4.day, organisation: organisation, users: [user]) }
+      let!(:p6) { create(:rdv, starts_at: rdv.starts_at - 16.days, organisation: organisation, users: [user]) }
+      let!(:p2) { create(:rdv, starts_at: rdv.starts_at - 2.days, organisation: organisation, users: [user]) }
+      let!(:p3) { create(:rdv, starts_at: rdv.starts_at - 4.days, organisation: organisation, users: [user]) }
       it { should eq([p1, p2, p3, p4, p5]) }
     end
 
     context "with next RDVs" do
-      let(:some_date) { Time.new(2020, 5, 23, 15, 56) }
+      let(:some_date) { Time.zone.new(2020, 5, 23, 15, 56) }
       let!(:organisation) { create(:organisation) }
       let!(:user) { create(:user, organisations: [organisation]) }
       let!(:rdv) { create(:rdv, organisation: organisation, users: [user], starts_at: some_date - 2.days) }
