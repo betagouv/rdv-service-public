@@ -3,18 +3,16 @@ describe OrganisationsController, type: :controller do
     it "respond successfull, create organisation and create agent" do
       service = create(:service)
       params = {
-        params: {
-          organisation: {
-            name: "Ma nouvelle orga",
-            departement: "56",
-            agent_roles_attributes: [{
-              level: "admin",
-              agent_attributes: {
-                email: "me@myself.hi",
-                service_id: service.id
-              }
-            }]
-          }
+        organisation: {
+          name: "Ma nouvelle orga",
+          departement: "56",
+          agent_roles_attributes: [{
+            level: "admin",
+            agent_attributes: {
+              email: "me@myself.hi",
+              service_id: service.id
+            }
+          }]
         }
       }
 
@@ -28,18 +26,16 @@ describe OrganisationsController, type: :controller do
 
     it "render :new when organisation create error" do
       params = {
-        params: {
-          organisation: {
-            name: "Ma nouvelle orga",
-            departement: "56",
-            agent_roles_attributes: [{
-              level: "admin",
-              agent_attributes: {
-                email: "me@myself.hi",
-                service_id: "unknow"
-              }
-            }]
-          }
+        organisation: {
+          name: "Ma nouvelle orga",
+          departement: "56",
+          agent_roles_attributes: [{
+            level: "admin",
+            agent_attributes: {
+              email: "me@myself.hi",
+              service_id: "unknow"
+            }
+          }]
         }
       }
 
@@ -52,18 +48,16 @@ describe OrganisationsController, type: :controller do
       create(:organisation, departement: 56)
       service = create(:service)
       params = {
-        params: {
-          organisation: {
-            name: "Ma nouvelle orga",
-            departement: "56",
-            agent_roles_attributes: [{
-              level: "admin",
-              agent_attributes: {
-                email: "me@myself.hi",
-                service_id: service.id
-              }
-            }]
-          }
+        organisation: {
+          name: "Ma nouvelle orga",
+          departement: "56",
+          agent_roles_attributes: [{
+            level: "admin",
+            agent_attributes: {
+              email: "me@myself.hi",
+              service_id: service.id
+            }
+          }]
         }
       }
 
