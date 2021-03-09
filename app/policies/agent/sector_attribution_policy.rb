@@ -9,7 +9,7 @@ class Agent::SectorAttributionPolicy < DefaultAgentPolicy
 
   class Scope < Scope
     def resolve
-      departements = @context.agent.organisations.pluck(:departement).uniq
+      departements = current_agent.organisations.pluck(:departement).uniq
       scope.joins(:sectors).where(sectors: { departement: departements })
     end
   end

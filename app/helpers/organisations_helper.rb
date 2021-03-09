@@ -3,7 +3,7 @@ module OrganisationsHelper
     if organisation.recent?
       admin_organisation_setup_checklist_path(organisation)
     else
-      admin_organisation_agent_path(organisation, current_agent)
+      admin_organisation_agent_agenda_path(organisation, current_agent)
     end
   end
 

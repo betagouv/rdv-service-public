@@ -1,0 +1,38 @@
+describe Agent::AgentAgendaPolicy, type: :policy do
+  subject { described_class }
+
+  let(:pundit_context) { AgentContext.new(agent) }
+  let!(:organisation) { create(:organisation) }
+
+  describe "#show?" do
+    context "regular agent, own agenda" do
+      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+      let(:agenda) { AgentAgenda.new(agent: agent, organisation: organisation) }
+      permissions(:show?) { it { should permit(pundit_context, agenda) } }
+    end
+
+    context "regular agent, other agent's agenda BUT same service" do
+      let!(:service) { create(:service) }
+      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+      let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+      let(:agenda) { AgentAgenda.new(agent: other_agent, organisation: organisation) }
+      permissions(:show?) { it { should permit(pundit_context, agenda) } }
+    end
+
+    context "regular agent, other agent's absence, different service" do
+      let!(:service) { create(:service) }
+      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+      let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], service: create(:service)) }
+      let(:agenda) { AgentAgenda.new(agent: other_agent, organisation: organisation) }
+      permissions(:show?) { it { should_not permit(pundit_context, agenda) } }
+    end
+
+    context "admin agent, other agent's absence, different service" do
+      let!(:service) { create(:service) }
+      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
+      let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], service: create(:service)) }
+      let(:agenda) { AgentAgenda.new(agent: other_agent, organisation: organisation) }
+      permissions(:show?) { it { should permit(pundit_context, agenda) } }
+    end
+  end
+end

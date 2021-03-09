@@ -5,9 +5,9 @@
     - if @agent
       li.breadcrumb-item.p-0
         - if @agent != current_agent
-          = link_to "Agenda de #{@agent.full_name}", admin_organisation_agent_path(current_organisation, @agent)
+          = link_to "Agenda de #{@agent.full_name}", admin_organisation_agent_agenda_path(current_organisation, @agent)
         - else
-          = link_to "Votre agenda", admin_organisation_agent_path(current_organisation, current_agent)
+          = link_to "Votre agenda", admin_organisation_agent_agenda_path(current_organisation, current_agent)
     li.breadcrumb-item.p-0.ml-2
       div
         span> RDV
@@ -31,7 +31,7 @@
           i.fa.fa-fw.fa-calendar>
           = rdv_time_and_duration(@rdv)
           |&nbsp;
-          = link_to "voir dans l'agenda", admin_organisation_agent_path(current_organisation, @rdv.agents.first, selected_event_id: @rdv.id, date: @rdv.starts_at.to_date)
+          = link_to "voir dans l'agenda", admin_organisation_agent_agenda_path(current_organisation, @rdv.agents.first, selected_event_id: @rdv.id, date: @rdv.starts_at.to_date)
         = render 'rdv_details', rdv: @rdv, display_links_to_users: false
         .row
           .col

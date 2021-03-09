@@ -59,9 +59,12 @@ module AgentsHelper
   end
 
   def selectable_planning_agents_options
-    path_helper_name = content_for(:menu_agent_select_path_helper_name) || :admin_organisation_agent_path
+    path_helper_name = content_for(:menu_agent_select_path_helper_name) || :admin_organisation_agent_agenda_path
     options_for_select(
-      policy_scope(Agent).complete.active.order_by_last_name.map do |agent|
+      policy_scope(Agent)
+        .joins(:organisations).where(organisations: { id: current_organisation.id })
+        .complete.active.order_by_last_name
+        .map do |agent|
         [
           agent.full_name,
           agent.id,

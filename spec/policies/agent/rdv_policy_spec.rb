@@ -1,5 +1,3 @@
-require "pundit/rspec"
-
 describe Agent::RdvPolicy, type: :policy do
   subject { described_class }
 

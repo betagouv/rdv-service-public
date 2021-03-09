@@ -79,7 +79,7 @@
               )
           li.my-2
             = link_to 'Agenda', \
-              admin_organisation_agent_path(current_organisation, agent_for_left_menu), \
+              admin_organisation_agent_agenda_path(current_organisation, agent_for_left_menu), \
               class: ("active" if content_for(:menu_item) == "menu-agendas")
           li.my-2
             = link_to "Plages d'ouverture", \

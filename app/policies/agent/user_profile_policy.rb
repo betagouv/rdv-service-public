@@ -6,16 +6,16 @@ class Agent::UserProfilePolicy < DefaultAgentPolicy
   protected
 
   def same_org?
-    if @context.organisation.present?
-      @record.organisation_id == @context.organisation.id
+    if current_organisation.present?
+      @record.organisation_id == current_organisation.id
     else
-      @context.agent.organisation_ids.include?(@record.organisation_id)
+      current_agent.organisation_ids.include?(@record.organisation_id)
     end
   end
 
   class Scope < Scope
     def resolve
-      scope.where(organisation_id: @context.organisation&.id || @context.agent.organisation_ids)
+      scope.where(organisation_id: current_organisation&.id || current_agent.organisation_ids)
     end
   end
 end
