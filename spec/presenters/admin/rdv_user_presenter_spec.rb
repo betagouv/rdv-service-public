@@ -31,7 +31,7 @@ describe Admin::RdvUserPresenter do
     end
 
     context "with next RDVs" do
-      let(:some_date) { Time.zone.new(2020, 5, 23, 15, 56) }
+      let(:some_date) { Time.zone.parse("2020-5-23 15h56") }
       let!(:organisation) { create(:organisation) }
       let!(:user) { create(:user, organisations: [organisation]) }
       let!(:rdv) { create(:rdv, organisation: organisation, users: [user], starts_at: some_date - 2.days) }
