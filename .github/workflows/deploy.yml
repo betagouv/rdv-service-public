@@ -28,6 +28,10 @@ jobs:
   tests:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        index: [0, 1, 2, 3, 4]
+
     services:
       postgres:
         image: postgres
@@ -52,7 +56,7 @@ jobs:
       - name: Install dependencies
         run: bundle install && yarn install
       - name: Test
-        run: bundle exec rspec
+        run: ./scripts/rspec_splitted.rb
         env:
           HOST: http://example.com
           POSTGRES_HOST: localhost
@@ -60,4 +64,5 @@ jobs:
           POSTGRES_USER: lapin_test
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
-
+          NUMBER_OF_NODES: 5
+          CI_NODE_INDEX: ${{ matrix.index }}
