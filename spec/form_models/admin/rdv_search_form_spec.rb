@@ -1,4 +1,4 @@
-describe Admin::AgentRdvSearchForm do
+describe Admin::RdvSearchForm do
   describe "#lieu" do
     it "have a lieu when given" do
       lieu = create(:lieu)
