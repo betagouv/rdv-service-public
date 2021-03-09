@@ -12,7 +12,7 @@ RSpec.describe Admin::AgentRolesController, type: :controller do
 
   describe "GET #edit" do
     it "returns a success response" do
-      get :edit, params: { organisation_id: organisation.id, id: agent_user.id }
+      get :edit, params: { organisation_id: organisation.id, id: agent_role.id }
       expect(response).to be_successful
     end
   end
