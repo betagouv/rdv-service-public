@@ -7,14 +7,19 @@
   = link_to 'Fusionner deux usagers', new_admin_organisation_merge_users_path(current_organisation), class: "btn btn-outline-white mr-2"
   = link_to 'Créer un usager', new_admin_organisation_user_path(current_organisation), class: "btn btn-outline-white"
 
-.card
-  - if @users.any? || params[:search].present?
-    .m-3.d-flex.justify-content-end
-      div= link_to 'Réinitialiser', admin_organisation_users_path(current_organisation), class: "btn btn-link #{params[:search].blank? && 'd-none'}"
-      div= simple_form_for '', url: admin_organisation_users_path(current_organisation), html: { method: :get, class: 'form-inline' }, wrapper: :inline_form  do |f|
-        = f.input :search, placeholder: 'Prénom, Nom, Email, Téléphone', label: false, input_html: { autocomplete: 'off', class: 'search-form-control', value: params[:search] }, required: false
-        = f.button :submit, 'Rechercher'
+.card.border-info
+  .card-header ⚙️ Filtres et recherche
+  .card-body
+    = simple_form_for(@form, method: "GET", url: url_for({}), as: "") do |f|
+      .row
+        .col-md-6
+          = f.input :search, placeholder: 'Prénom, Nom, Email, Téléphone', label: "Recherche", input_html: { autocomplete: 'off', class: 'search-form-control', value: params[:search] }, required: false
+        .col-md-6
+          = f.input :agent_id, collection: policy_scope(Agent), label: "Agent référent", label_method: :full_name, input_html: { class: 'select2-input' }
+      input.btn.btn-primary.d-print-none type="submit" value="Rafraîchir la liste"
 
+.card
+  - if @users.any? || params[:search].present? || params[:agent_id].present?
     .table-responsive
       table.table
         thead

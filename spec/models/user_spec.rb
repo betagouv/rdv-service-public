@@ -297,4 +297,14 @@ describe User, type: :model do
       expect(user.minor?).to be false
     end
   end
+
+  describe "#with_referent" do
+    it "returns users with given referent" do
+      organisation = create(:organisation)
+      agent = create(:agent, organisations: [organisation])
+      create(:user, agents: [], organisations: [organisation])
+      user_with_agent = create(:user, agents: [agent], organisations: [organisation])
+      expect(described_class.with_referent(agent)).to eq([user_with_agent])
+    end
+  end
 end
