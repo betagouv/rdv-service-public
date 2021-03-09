@@ -1,6 +1,6 @@
 describe Admin::Ics::PlageOuverture, type: :service do
   describe "#payload" do
-    [:name, :object, :agent_email, :starts_at, :recurrence, :ical_uid, :title, :first_occurence_ends_at, :address].each do |key|
+    [:name, :agent_email, :starts_at, :recurrence, :ical_uid, :title, :first_occurence_ends_at, :address].each do |key|
       it "return an hash with key #{key}" do
         plage_ouverture = build(:plage_ouverture)
         expect(described_class.payload(plage_ouverture)).to have_key(key)
@@ -10,11 +10,6 @@ describe Admin::Ics::PlageOuverture, type: :service do
     describe ":name" do
       let(:plage_ouverture) { build(:plage_ouverture, title: "something", start_time: Time.zone.parse("12h30"), first_day: Date.new(2020, 11, 13)) }
       it { expect(described_class.payload(plage_ouverture)[:name]).to eq("plage-ouverture-something-2020-11-13-12-30-00-0100.ics") }
-    end
-
-    describe ":object" do
-      let(:plage_ouverture) { build(:plage_ouverture) }
-      it { expect(described_class.payload(plage_ouverture)[:object]).to eq("plage_ouverture") }
     end
 
     describe ":agent_email" do
@@ -73,7 +68,6 @@ describe Admin::Ics::PlageOuverture, type: :service do
     let(:payload) do
       {
         name: "plage-ouverture--.ics",
-        object: "plage_ouverture",
         agent_email: "bob@demo.rdv-solidarites.fr",
         starts_at: Time.zone.parse("20190704 15h00"),
         recurrence: "",

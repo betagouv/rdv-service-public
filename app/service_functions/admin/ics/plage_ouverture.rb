@@ -16,7 +16,6 @@ class Admin::Ics::PlageOuverture
   def self.payload(plage_ouverture)
     {
       name: "plage-ouverture-#{plage_ouverture.title.parameterize}-#{plage_ouverture.starts_at.to_s.parameterize}.ics",
-      object: "plage_ouverture",
       agent_email: plage_ouverture.agent.email,
       starts_at: plage_ouverture.starts_at,
       recurrence: rrule(plage_ouverture),

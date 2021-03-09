@@ -2,7 +2,6 @@ class Admin::Ics::Rdv
   def self.payload(rdv, user)
     {
       name: "rdv-#{rdv.starts_at.to_s.parameterize}.ics",
-      object: "plage_ouverture",
       starts_at: rdv.starts_at,
       ends_at: rdv.ends_at,
       sequence: rdv.sequence,
