@@ -1,18 +1,16 @@
-name: Deploy
+name: CI
 on: push
 jobs:
-  lint:
+  rubocop:
     runs-on: ubuntu-latest
-
     steps:
-      - name: RuboCop Linter Action
+      - name: Lint RuboCop
         uses: andrewmcodes/rubocop-linter-action@v3.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   brakeman:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up Ruby
@@ -22,16 +20,14 @@ jobs:
           bundler-cache: true
       - name: Install dependencies
         run: bundle install && yarn install
-      - name: Brakeman
+      - name: Static Analysis Brakeman
         run: bundle exec brakeman
 
   tests:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         index: [0, 1, 2, 3, 4]
-
     services:
       postgres:
         image: postgres
@@ -45,7 +41,6 @@ jobs:
           --health-timeout 5s
           --health-retries 5
         ports: ["5432:5432"]
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up Ruby
@@ -55,7 +50,7 @@ jobs:
           bundler-cache: true
       - name: Install dependencies
         run: bundle install && yarn install
-      - name: Test
+      - name: Run specs
         run: ./scripts/rspec_splitted.rb
         env:
           HOST: http://example.com
