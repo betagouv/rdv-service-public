@@ -42,11 +42,11 @@ class SupportTicketForm
 
   def ticket_body
     {
-      "Email": email,
-      "Prénom": first_name,
-      "Nom": last_name,
-      "Département": departement,
-      "Commune": city
+      Email: email,
+      Prénom: first_name,
+      Nom: last_name,
+      Département: departement,
+      Commune: city
     }.select { _2.present? }.map { "#{_1}: #{_2}" }.join("\n") + "\n\n#{message}"
   end
 end
