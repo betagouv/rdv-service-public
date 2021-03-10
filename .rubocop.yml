@@ -2,6 +2,7 @@ inherit_from: .rubocop_todo.yml
 
 AllCops:
   Exclude:
+    - "vendor/bundle/**/*"
     - "bin/*"
     - "node_modules/**/*"
   NewCops: enable
