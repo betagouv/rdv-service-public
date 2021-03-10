@@ -1,11 +1,11 @@
-# rdv-solidarites.fr
+# RDV Solidarités
 
 [![View performance data on Skylight](https://badges.skylight.io/status/RgR7i58P67xN.svg)](https://oss.skylight.io/app/applications/RgR7i58P67xN)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-Réduire le nombre de rendez-vous annulés dans les maisons départementales de solidarité.
+L'objectif de ce service publique est de réduire le nombre de lapins (rendez-vous non annulés et non honorés) dans les maisons des solidarités.
 
-Ce service public est soutenu par un consortium de plusieurs départements et l'[incubateur des territoires de l'ANCT](https://incubateur.anct.gouv.fr/).
+Ce service est soutenu par un consortium de plusieurs départements et l'[incubateur des territoires de l'ANCT](https://incubateur.anct.gouv.fr/).
 
 - En production sur [rdv-solidarites.fr/](https://www.rdv-solidarites.fr/)
 - En démo sur [demo.rdv-solidarites.fr/](https://demo.rdv-solidarites.fr/)
@@ -21,8 +21,8 @@ Le forum [forum.rdv-solidarites.fr](https://forum.rdv-solidarites.fr/) accueille
 
 ## Statistiques
 
-- [Statistique de RDV](https://www.rdv-solidarites.fr/stats)
-- [stastistiques d'accès](https://stats.data.gouv.fr/index.php?module=CoreHome&action=index&idSite=123&period=range&date=previous30&updated=1#?idSite=123&period=range&date=previous30&category=Dashboard_Dashboard&subcategory=1)
+- [Statistiques de RDV](https://www.rdv-solidarites.fr/stats)
+- [statistiques de traffic](https://stats.data.gouv.fr/index.php?module=CoreHome&action=index&idSite=123&period=range&date=previous30&updated=1#?idSite=123&period=range&date=previous30&category=Dashboard_Dashboard&subcategory=1)
 
 ## Licence
 
