@@ -18,6 +18,7 @@ require "capybara/rspec"
 require "capybara/email/rspec"
 require "webdrivers"
 require "capybara-screenshot/rspec"
+require "pundit/rspec"
 
 Capybara.register_driver :selenium do |app|
   # these args seem to reduce test flakyness

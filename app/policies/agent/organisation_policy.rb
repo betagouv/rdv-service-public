@@ -1,6 +1,6 @@
 class Agent::OrganisationPolicy < DefaultAgentPolicy
   def link_to_organisation?
-    @context.agent.organisation_ids.include?(@record.id)
+    current_agent.organisation_ids.include?(@record.id)
   end
 
   def new?
@@ -25,7 +25,7 @@ class Agent::OrganisationPolicy < DefaultAgentPolicy
 
   class Scope < Scope
     def resolve
-      scope.where(id: @context.agent.organisation_ids)
+      scope.where(id: current_agent.organisation_ids)
     end
   end
 end

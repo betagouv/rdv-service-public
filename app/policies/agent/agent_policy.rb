@@ -1,36 +1,38 @@
-class Agent::AgentPolicy < Agent::AdminPolicy
-  def new?
-    admin_and_same_org?
+class Agent::AgentPolicy < ApplicationPolicy
+  include CurrentAgentInPolicyConcern
+
+  def current_agent_or_admin_in_record_organisation?
+    record == current_agent || (
+      record.roles.map(&:organisation_id) &
+      current_agent.roles.level_admin.pluck(:organisation_id)
+    ).any?
   end
 
-  def invite?
-    create?
-  end
-
-  def show?
-    same_agent_or_has_access?
-  end
-
-  def rdvs?
-    same_agent_or_has_access?
-  end
-
-  def reinvite?
-    invite?
-  end
-
-  def destroy?
-    same_agent_or_has_access?
-  end
+  alias show? current_agent_or_admin_in_record_organisation?
+  alias new? current_agent_or_admin_in_record_organisation?
+  alias create? current_agent_or_admin_in_record_organisation?
+  alias update? current_agent_or_admin_in_record_organisation?
+  alias invite? current_agent_or_admin_in_record_organisation?
+  alias rdvs? current_agent_or_admin_in_record_organisation?
+  alias reinvite? current_agent_or_admin_in_record_organisation?
+  alias destroy? current_agent_or_admin_in_record_organisation?
 
   class Scope < Scope
+    include CurrentAgentInPolicyConcern
+
     def resolve
-      if @context.organisation.nil?
-        scope.joins(:organisations).where(organisations: { id: @context.agent.organisation_ids })
-      elsif @context.can_access_others_planning?
-        scope.joins(:organisations).where(organisations: { id: @context.organisation.id })
+      scope_j = scope.joins(:organisations)
+      if current_agent.service.secretariat?
+        scope_j.where(organisations: { id: current_agent.organisation_ids })
       else
-        scope.joins(:organisations).where(organisations: { id: @context.organisation.id }, service_id: @context.agent.service_id)
+        current_agent.roles.map do |agent_role|
+          if agent_role.can_access_others_planning?
+            scope_j.where(organisations: { id: agent_role.organisation_id })
+          else
+            scope_j.where(organisations: { id: agent_role.organisation_id })
+              .where(service: current_agent.service)
+          end
+        end.reduce(:or)
       end
     end
   end

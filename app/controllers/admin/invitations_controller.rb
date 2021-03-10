@@ -1,6 +1,10 @@
 class Admin::InvitationsController < AgentAuthController
   def index
-    @invited_agents = policy_scope(Agent).invitation_not_accepted.created_by_invite.order(invitation_sent_at: :desc)
+    @invited_agents = policy_scope(Agent)
+      .joins(:organisations).where(organisations: { id: current_organisation.id })
+      .invitation_not_accepted
+      .created_by_invite
+      .order(invitation_sent_at: :desc)
   end
 
   def reinvite

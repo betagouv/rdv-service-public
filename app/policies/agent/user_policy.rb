@@ -10,7 +10,7 @@ class Agent::UserPolicy < DefaultAgentPolicy
 
     (
       @record.user_profiles.map(&:organisation_id) -
-      (@context.organisation.present? ? [@context.organisation.id] : @context.agent.organisation_ids)
+      (current_organisation.present? ? [current_organisation.id] : current_agent.organisation_ids)
     ).empty?
   end
 
@@ -32,7 +32,7 @@ class Agent::UserPolicy < DefaultAgentPolicy
         .joins(:organisations)
         .where(
           organisations: {
-            id: @context.organisation&.id || @context.agent.organisation_ids
+            id: current_organisation&.id || current_agent.organisation_ids
           }
         )
     end
@@ -47,10 +47,10 @@ class Agent::UserPolicy < DefaultAgentPolicy
     # nor updates. we cannot either use pluck for the same reason
 
     authorized_organisation_ids = \
-      if @context.organisation
-        [@context.organisation.id]
+      if current_organisation
+        [current_organisation.id]
       else
-        @context.agent.organisation_ids
+        current_agent.organisation_ids
       end
     (@record.user_profiles.map(&:organisation_id) & authorized_organisation_ids).present?
 

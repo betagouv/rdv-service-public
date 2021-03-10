@@ -12,7 +12,9 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
           .where(id: @motifs.pluck(:service_id).uniq)
           .ordered_by_name
         @form.service_id = @services.first.id if @services.count == 1
-        @agents = policy_scope(Agent).complete.active.order_by_last_name
+        @agents = policy_scope(Agent)
+          .joins(:organisations).where(organisations: { id: current_organisation.id })
+          .complete.active.order_by_last_name
         @lieux = policy_scope(Lieu).ordered_by_name
       end
       format.js do

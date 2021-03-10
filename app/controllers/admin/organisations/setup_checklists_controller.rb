@@ -4,7 +4,10 @@ class Admin::Organisations::SetupChecklistsController < AgentAuthController
   def show
     authorize(@organisation)
     @lieux = policy_scope(Lieu)
-    @other_agents = policy_scope(Agent).order_by_last_name.filter { |a| a.id != current_agent.id }
+    @other_agents = policy_scope(Agent)
+      .joins(:organisations).where(organisations: { id: current_organisation.id })
+      .order_by_last_name
+      .filter { |a| a.id != current_agent.id }
 
     @motifs = policy_scope(Motif)
   end

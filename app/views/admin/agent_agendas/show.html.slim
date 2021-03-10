@@ -1,5 +1,5 @@
 - content_for(:menu_item) { 'menu-agendas' }
-- content_for(:menu_agent_select_path_helper_name) { "admin_organisation_agent_path" }
+- content_for(:menu_agent_select_path_helper_name) { "admin_organisation_agent_agenda_path" }
 
 - content_for :title do
   - if current_agent == @agent
@@ -8,7 +8,7 @@
     | Agenda de #{@agent.full_name_and_service}
 
 - content_for :breadcrumb do
-  = form_tag(admin_organisation_agent_path(current_organisation, @agent), method: "get", class: "d-inline-flex mr-2") do
+  = form_tag(admin_organisation_agent_agenda_path(current_organisation, @agent), method: "get", class: "d-inline-flex mr-2") do
     = select_tag :status, options_for_select(Rdv.human_enum_collection(:statuses).unshift(["Tous les rdvs", ""]), rdv_status_value(@status)), class:"select2-input", onchange: 'this.form.submit()'
   = link_to "Trouver un créneau", admin_organisation_agent_searches_path(@organisation), class: "btn btn-outline-white align-bottom"
 

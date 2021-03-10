@@ -64,7 +64,7 @@ class Admin::RdvsController < AgentAuthController
       Sentry.capture_exception(Exception.new("Deletion failed for rdv : #{@rdv.id}"))
     end
     # TODO : redirection makes no sense when coming from a users#show
-    redirect_to admin_organisation_agent_path(current_organisation, @agent || current_agent)
+    redirect_to admin_organisation_agent_agenda_path(current_organisation, @agent || current_agent)
   end
 
   private

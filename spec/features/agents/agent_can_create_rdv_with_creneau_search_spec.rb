@@ -17,7 +17,7 @@ describe "Agent can create a Rdv with creneau search" do
   before do
     travel_to(Time.zone.local(2019, 7, 22))
     login_as(agent, scope: :agent)
-    visit admin_organisation_agent_path(organisation, agent)
+    visit admin_organisation_agent_agenda_path(organisation, agent)
 
     expect(user.rdvs.count).to eq(0)
     click_link("Trouver un créneau")
@@ -92,7 +92,7 @@ describe "Agent can create a Rdv with creneau search" do
     expect(rdv.duration_in_min).to eq(motif.default_duration_in_min)
     expect(rdv.created_by_agent?).to be(true)
 
-    expect(page).to have_current_path(admin_organisation_agent_path(organisation, agent, date: rdv.starts_at.to_date, selected_event_id: rdv.id))
+    expect(page).to have_current_path(admin_organisation_agent_agenda_path(organisation, agent, date: rdv.starts_at.to_date, selected_event_id: rdv.id))
     expect(page).to have_content("Le rendez-vous a été créé.")
     expect(page).to have_content("Votre agenda")
   end

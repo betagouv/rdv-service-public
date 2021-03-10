@@ -1,14 +1,7 @@
-class DefaultAgentPolicy
-  attr_reader :context, :record
-
-  def initialize(context, record)
-    raise Pundit::NotAuthorizedError, "must be logged in" unless context.agent
-    raise Pundit::NotAuthorizedError, "agent has no role in organisation" \
-      if context.organisation && context.agent_role.nil?
-
-    @context = context
-    @record = record
-  end
+class DefaultAgentPolicy < ApplicationPolicy
+  alias context pundit_user
+  # define current_agent and current_organisation
+  delegate :agent, :organisation, :agent_role, to: :context, prefix: :current
 
   def index?
     false
@@ -43,14 +36,14 @@ class DefaultAgentPolicy
   end
 
   def same_org?
-    return false if @context.organisation.nil?
+    return false if current_organisation.nil?
 
     if @record.is_a? Agent
       @record.roles.map(&:organisation_id) # works for unpersisted agents
     elsif @record.respond_to?(:organisation_id)
-      @record.organisation_id == @context.organisation.id
+      @record.organisation_id == current_organisation.id
     elsif @record.respond_to?(:organisation_ids)
-      @record.organisation_ids.include?(@context.organisation.id)
+      @record.organisation_ids.include?(current_organisation.id)
     else
       false
     end
@@ -58,28 +51,28 @@ class DefaultAgentPolicy
 
   def same_service?
     if @record.is_a?(Agent) || @record.is_a?(Motif)
-      @record.service_id == @context.agent.service_id
+      @record.service_id == current_agent.service_id
     elsif @record.respond_to?(:agent_id)
-      @record.agent.service_id == @context.agent.service_id
+      @record.agent.service_id == current_agent.service_id
     elsif @record.respond_to?(:agent_ids)
-      Agent.where(id: @record.agent_ids).pluck(:service_id).uniq == [@context.agent.service_id]
+      Agent.where(id: @record.agent_ids).pluck(:service_id).uniq == [current_agent.service_id]
     end
   end
 
   def same_agent?
     if @record.is_a? Agent
-      @record.id == @context.agent.id
+      @record.id == current_agent.id
     elsif @record.respond_to?(:agent_id)
-      @record.agent_id == @context.agent.id
+      @record.agent_id == current_agent.id
     elsif @record.respond_to?(:agent_ids)
-      @record.agent_ids.include?(@context.agent.id)
+      @record.agent_ids.include?(current_agent.id)
     else
       false
     end
   end
 
   def admin?
-    @context.agent_role.admin?
+    current_agent_role.admin?
   end
 
   def admin_somewhere?
@@ -94,28 +87,19 @@ class DefaultAgentPolicy
     if same_agent?
       true
     elsif same_org?
-      same_service? || @context.can_access_others_planning?
+      same_service? || context.can_access_others_planning?
     else
       false
     end
   end
 
-  class Scope
-    attr_reader :context, :scope
-
-    def initialize(context, scope)
-      @context = context
-      @scope = scope
-    end
+  class Scope < Scope
+    alias context pundit_user
+    # define current_agent and current_organisation
+    delegate :agent, :organisation, :agent_role, to: :context, prefix: :current
 
     def resolve
-      scope.where(agent_id: @context.agent.id, organisation_id: @context.organisation.id)
-    end
-
-    def in_scope?(object)
-      return false unless object&.id.present?
-
-      resolve.where(id: object.id).any?
+      scope.where(agent_id: current_agent.id, organisation_id: current_organisation.id)
     end
   end
 end

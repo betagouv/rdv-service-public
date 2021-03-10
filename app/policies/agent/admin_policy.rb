@@ -17,7 +17,7 @@ class Agent::AdminPolicy < DefaultAgentPolicy
 
   class Scope < Scope
     def resolve
-      scope.where(organisation_id: @context.organisation.id)
+      scope.where(organisation_id: current_organisation.id)
     end
   end
 end

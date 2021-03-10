@@ -13,13 +13,13 @@ class Agent::UserNotePolicy < DefaultAgentPolicy
 
   class Scope < Scope
     def resolve
-      scope.where(organisation: @context.organisation)
+      scope.where(organisation: current_organisation)
     end
   end
 
   protected
 
   def same_org?
-    @record.organisation == @context.organisation
+    @record.organisation == current_organisation
   end
 end

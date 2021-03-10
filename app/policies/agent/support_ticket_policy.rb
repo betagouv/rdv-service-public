@@ -1,5 +1,5 @@
 class Agent::SupportTicketPolicy < DefaultAgentPolicy
   def create?
-    @record.email == @context.agent.email
+    @record.email == current_agent.email
   end
 end
