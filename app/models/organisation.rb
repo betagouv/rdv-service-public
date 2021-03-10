@@ -1,5 +1,6 @@
 class Organisation < ApplicationRecord
   has_paper_trail
+  belongs_to :territory
   has_many :lieux, dependent: :destroy
   has_many :motifs, dependent: :destroy
   has_many :absences, dependent: :destroy
@@ -14,8 +15,7 @@ class Organisation < ApplicationRecord
   has_many :user_profiles
   has_many :users, through: :user_profiles
 
-  validates :name, presence: true, uniqueness: true
-  validates :departement, presence: true, length: { is: 2 }
+  validates :name, presence: true, uniqueness: { scope: :territory }
   validates :phone_number, phone: { allow_blank: true }
   validates(
     :human_id,
@@ -25,11 +25,12 @@ class Organisation < ApplicationRecord
       if: -> { human_id.present? }
     }
   )
-  validates :human_id, uniqueness: { scope: :departement }, if: -> { human_id.present? }
+  validates :human_id, uniqueness: { scope: :territory }, if: -> { human_id.present? }
 
   after_create :notify_admin_organisation_created
 
   accepts_nested_attributes_for :agent_roles
+  accepts_nested_attributes_for :territory
 
   scope :attributed_to_sectors, lambda { |sectors|
     where(
@@ -44,6 +45,9 @@ class Organisation < ApplicationRecord
     where.not(phone_number: ["", nil])
       .or(where.not(website: ["", nil]))
       .or(where.not(email: ["", nil]))
+  }
+  scope :with_upcoming_rdvs, lambda {
+    where(id: Rdv.future.distinct.pluck(:organisation_id))
   }
 
   def notify_admin_organisation_created

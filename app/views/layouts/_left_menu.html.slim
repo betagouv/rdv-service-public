@@ -160,8 +160,8 @@
                 class: ("active" if content_for(:menu_item) == 'menu-motifs')
             - if current_agent_role.admin? && policy_scope(Organisation).count == 1
               li.my-2
-                = link_to "Sectorisation #{current_organisation.departement}", \
-                  admin_departement_setup_checklist_path(current_organisation.departement)
+                = link_to "Sectorisation #{current_organisation.territory}", \
+                  admin_territory_setup_checklist_path(current_organisation.territory)
             li.my-2
               = link_to( \
                 admin_organisation_stats_path(current_organisation), \

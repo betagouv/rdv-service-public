@@ -16,9 +16,6 @@ class AgentRole < ApplicationRecord
 
   scope :level_basic, -> { where(level: LEVEL_BASIC) }
   scope :level_admin, -> { where(level: LEVEL_ADMIN) }
-  scope :in_departement, lambda { |dpt|
-    joins(:organisation).where(organisations: { departement: dpt.to_s })
-  }
 
   accepts_nested_attributes_for :agent
 

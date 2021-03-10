@@ -1,0 +1,43 @@
+- content_for(:menu_item) { 'menu-departement-agents' }
+- content_for(:title) { "Administration #{current_territory}" }
+
+.row
+  .col-md-8
+    .card
+      .card-header
+        h5.card-title Administrateurs
+      table.table
+        thead
+          tr
+            th Agent
+            th Actions
+        tbody
+          - policy_scope_admin(AgentTerritorialRole).where(territory: current_territory).each do |role|
+            tr
+              td
+                div
+                  = role.agent.full_name_and_service
+                  - if role.agent == current_agent
+                    .badge.badge-primary Vous
+                .text-muted= role.agent.email
+              td
+                = link_to "Retirer le rôle d'administrateur du #{current_territory}", \
+                  admin_territory_agent_territorial_role_path(current_territory, role), \
+                  method: :delete, \
+                  data: { confirm: "Êtes-vous sûr de vouloir retirer le rôle d'administrateur du #{current_territory} à #{role.agent.full_name} ?" }
+
+      .card-body.text-center
+        = link_to "Ajouter un administrateur du #{current_territory}", \
+          new_admin_territory_agent_territorial_role_path(current_territory), \
+          class: "btn btn-primary"
+
+  .col-md-4
+    .card
+      .card-header
+        h5.card-title Informations
+      .card-body
+        = simple_form_for([:admin, @territory]) do |f|
+          = f.input :name
+          = f.input :phone_number
+          = f.input :departement_number, disabled: true
+          = f.submit class: "btn btn-primary"

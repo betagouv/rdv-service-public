@@ -1,12 +1,14 @@
 describe OrganisationsController, type: :controller do
   describe "#create" do
-    it "respond successfull, create organisation and create agent" do
+    it "responds succesfully, creates organisation, agent and roles" do
       service = create(:service)
       params = {
         params: {
           organisation: {
             name: "Ma nouvelle orga",
-            departement: "56",
+            territory_attributes: {
+              departement_number: "56"
+            },
             agent_roles_attributes: [{
               level: "admin",
               agent_attributes: {
@@ -18,49 +20,32 @@ describe OrganisationsController, type: :controller do
         }
       }
 
-      expect do
-        expect do
-          post :create, params
-        end.to change { Organisation.count }.by(1)
-      end.to change { Agent.count }.by(1)
-      expect(response).to be_successful
-    end
-
-    it "render :new when organisation create error" do
-      params = {
-        params: {
-          organisation: {
-            name: "Ma nouvelle orga",
-            departement: "56",
-            agent_roles_attributes: [{
-              level: "admin",
-              agent_attributes: {
-                email: "me@myself.hi",
-                service_id: "unknow"
-              }
-            }]
-          }
-        }
-      }
-
+      expect(Territory.count).to eq 0
+      expect(Organisation.count).to eq 0
+      expect(Agent.count).to eq 0
       post :create, params
       expect(response).to be_successful
-      expect(response).to render_template(:new)
+      expect(Territory.count).to eq 1
+      expect(Organisation.count).to eq 1
+      expect(Agent.count).to eq 1
+      agent = Agent.first
+      expect(agent.roles.count).to eq 1
+      expect(agent.territorial_roles.count).to eq 1
     end
 
-    it "return errors with an existing organisation for same departement" do
-      create(:organisation, departement: 56)
-      service = create(:service)
+    it "renders :new when there is an error upon creation" do
       params = {
         params: {
           organisation: {
             name: "Ma nouvelle orga",
-            departement: "56",
+            territory_attributes: {
+              departement_number: "56"
+            },
             agent_roles_attributes: [{
               level: "admin",
               agent_attributes: {
                 email: "me@myself.hi",
-                service_id: service.id
+                service_id: "unknow" # this is the error
               }
             }]
           }

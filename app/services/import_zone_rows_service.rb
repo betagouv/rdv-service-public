@@ -6,9 +6,9 @@ class ImportZoneRowsService < BaseService
     Zone::LEVEL_STREET => %w[sector_id city_name city_code street_name street_code]
   }.freeze
 
-  def initialize(rows, departement, agent, **options)
+  def initialize(rows, territory, agent, **options)
     @rows = rows
-    @departement = departement
+    @territory = territory
     @agent = agent
     @dry_run = options.fetch(:dry_run, false)
   end
@@ -103,7 +103,7 @@ class ImportZoneRowsService < BaseService
 
   def sectors_by_human_id
     @sectors_by_human_id ||= Sector
-      .where(departement: @departement, human_id: @rows.pluck("sector_id"))
+      .where(territory: @territory, human_id: @rows.pluck("sector_id"))
       .map { [_1.human_id, _1] }
       .to_h
   end

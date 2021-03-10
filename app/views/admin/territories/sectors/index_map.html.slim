@@ -1,0 +1,45 @@
+- content_for(:menu_item) { 'menu-departement-sectors-map' }
+
+-content_for :html_head_prepend do
+  / mapbox is hard to use with webpack because of
+  / https://github.com/mapbox/mapbox-gl-js/issues/1649
+  <script src='https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css' rel='stylesheet' />
+
+- content_for :title do
+ | Carte des secteurs du #{current_territory}
+
+- content_for :breadcrumb do
+  ol.breadcrumb.m-0
+    li.breadcrumb-item
+      = link_to "Secteurs", admin_territory_sectors_path(current_territory)
+    li.breadcrumb-item.active
+      | Carte
+
+.row
+  .col-md-12
+    .card
+      .alert.alert-warning.text-center
+        | ⚠️ Cette carte n'affiche pas correctement les secteurs qui se chevauchent ni les rues dans le détail
+      div.position-relative
+        #zones-map[
+          data-center-query="#{@sectors.first&.zones&.first&.city_name}, #{current_territory.departement_number}"
+        ]
+        #zones-map-legend
+          h4 Légende
+          b Ville survolée
+          .hovered-city-container
+            #js-hovered-city>
+          ul.list-unstyled
+            - @sectors.each do |sector|
+              li.mb-1[
+                data-color=sector_zone_color(sector)
+                data-city-codes-json={colors: sector.zones.pluck(:city_code)}.to_json
+                class='js-legend-organisation'
+              ]
+                span[
+                  style="background-color:#{sector_zone_color(sector)}"
+                  class='legend-organisation-circle'
+                ] &nbsp;
+                span> &nbsp;
+                span= sector.name

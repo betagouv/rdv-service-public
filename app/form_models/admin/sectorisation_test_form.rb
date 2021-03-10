@@ -1,9 +1,9 @@
 class Admin::SectorisationTestForm
   include ActiveModel::Model
 
-  attr_accessor :where, :departement, :city_code, :street_ban_id, :latitude, :longitude, :current_departement
+  attr_accessor :where, :departement, :city_code, :street_ban_id, :latitude, :longitude, :current_territory
 
-  validates :current_departement, :departement, :city_code, presence: true
+  validates :current_territory, :departement, :city_code, presence: true
   validate :correct_departement
 
   delegate(
@@ -28,7 +28,7 @@ class Admin::SectorisationTestForm
   private
 
   def correct_departement
-    return true if departement == current_departement
+    return true if departement == current_territory.departement_number
 
     errors.add(:base, "Vous ne pouvez pas tester la sectorisation du #{departement}")
   end

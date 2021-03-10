@@ -75,10 +75,6 @@ class DefaultAgentPolicy < ApplicationPolicy
     current_agent_role.admin?
   end
 
-  def admin_somewhere?
-    context.agent.roles.any?(&:admin?)
-  end
-
   def admin_and_same_org?
     admin? && same_org?
   end

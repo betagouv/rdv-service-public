@@ -34,12 +34,12 @@ class WelcomeController < ApplicationController
 
   def welcome_departement
     @services = @geo_search.available_services
-    @organisations_departement = Organisation.where(departement: @departement)
+    @organisations_departement = Organisation.joins(:territory).where(territories: { departement_number: @departement })
   end
 
   def welcome_service
     @services = @geo_search.available_services
-    @organisations_departement = Organisation.where(departement: @departement)
+    @organisations_departement = Organisation.joins(:territory).where(territories: { departement_number: @departement })
     @unique_motifs_by_name_and_location_type = @geo_search
       .available_motifs
       .where(service: @service)
