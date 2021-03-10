@@ -23,7 +23,7 @@ human_id_map = [
   { human_id: "1037", name: "MDS Bruay la Buissière" },
   { human_id: "1038", name: "MDS Bully les Mines" },
   { human_id: "1035", name: "MDS Béthune" },
-  { human_id: "1039", name: "MDS Calais 1" },
+  { human_id: "1039", name2: "MDS Calais 1" },
   { human_id: "1040", name: "MDS Calais 2" },
   { human_id: "1041", name: "MDS Carvin" },
   { human_id: "1046", name: "MDS Lens 1" },
