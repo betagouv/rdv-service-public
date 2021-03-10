@@ -42,8 +42,8 @@ describe "API auth", type: :request do
         api_v1_absences_path,
         headers: {
           "access-token": "blah",
-          "client": "blah",
-          "uid": "jean@fun.fr"
+          client: "blah",
+          uid: "jean@fun.fr"
         }
       )
       expect(response.status).to eq(401)
@@ -63,8 +63,8 @@ describe "API auth", type: :request do
         api_v1_absences_path,
         headers: {
           "access-token": response.headers["access-token"],
-          "client": response.headers["client"],
-          "uid": response.headers["uid"]
+          client: response.headers["client"],
+          uid: response.headers["uid"]
         }
       )
       expect(response.status).to eq(200)
