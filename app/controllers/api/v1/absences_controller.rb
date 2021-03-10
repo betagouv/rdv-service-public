@@ -1,6 +1,9 @@
 class Api::V1::AbsencesController < Api::V1::BaseController
   def index
-    render json: AbsenceBlueprint.render(policy_scope(Absence).limit(100).all, root: :absences)
+    absences = policy_scope(Absence)
+    absences = absences.where(organisation: Organisation.find(params[:organisation_id])) \
+      if params[:organisation_id].present?
+    render json: AbsenceBlueprint.render(absences.limit(100).all, root: :absences)
   end
 
   def create
