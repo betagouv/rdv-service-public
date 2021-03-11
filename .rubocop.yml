@@ -2,9 +2,11 @@ inherit_from: .rubocop_todo.yml
 
 AllCops:
   Exclude:
+    - "vendor/bundle/**/*"
     - "bin/*"
     - "node_modules/**/*"
   NewCops: enable
+  TargetRubyVersion: 2.7.2
 
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented

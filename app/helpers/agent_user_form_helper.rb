@@ -22,12 +22,12 @@ module AgentUserFormHelper
       relative: {
         "data-togglable": true,
         "data-responsability-type": "relative",
-        "class": ("d-none" if user.responsability_type != :relative)
+        class: ("d-none" if user.responsability_type != :relative)
       },
       responsible: {
         "data-togglable": true,
         "data-responsability-type": "responsible",
-        "class": ("d-none" if user.responsability_type != :responsible)
+        class: ("d-none" if user.responsability_type != :responsible)
       },
     }
   end
