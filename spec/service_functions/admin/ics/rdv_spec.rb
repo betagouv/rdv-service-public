@@ -73,14 +73,6 @@ describe Admin::Ics::Rdv, type: :service do
     end
   end
 
-  describe "#create_payload" do
-    it "return an hash with key action key and value create" do
-      user = build(:user)
-      rdv = build(:rdv, users: [user])
-      expect(described_class.create_payload(rdv, user)[:action]).to eq(:create)
-    end
-  end
-
   describe "#to_ical" do
     let(:now) { Time.zone.parse("20190628 17h43") }
     let(:first_day) { Date.new(2019, 7, 22) }

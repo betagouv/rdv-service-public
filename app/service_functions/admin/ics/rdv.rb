@@ -24,10 +24,6 @@ class Admin::Ics::Rdv
     "#{user.full_name} <> #{rdv.motif&.name}"
   end
 
-  def self.create_payload(rdv, user)
-    payload(rdv, user).merge(action: :create)
-  end
-
   def self.to_ical(payload)
     cal = Icalendar::Calendar.new
 
