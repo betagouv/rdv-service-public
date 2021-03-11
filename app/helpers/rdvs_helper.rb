@@ -14,10 +14,6 @@ module RdvsHelper
       (rdv.motif.phone? ? " ☎️" : "")
   end
 
-  def rdv_title_for_user(rdv, user)
-    "#{user.full_name} <> #{rdv.motif&.name}"
-  end
-
   def rdv_status_tag(rdv)
     content_tag(:span, Rdv.human_enum_name(:status, rdv.status), class: "badge badge-info rdv-status-#{rdv.status}")
   end

@@ -3,11 +3,6 @@ describe RdvsHelper do
   let(:user) { build(:user, first_name: "Marie", last_name: "DENIS") }
   let(:rdv) { build(:rdv, users: [user], motif: motif) }
 
-  describe "#rdv_title_for_user" do
-    subject { helper.rdv_title_for_user(rdv, user) }
-    it { should eq "Marie DENIS <> Consultation normale" }
-  end
-
   describe "#rdv_title_for_agent" do
     subject { helper.rdv_title_for_agent(rdv) }
     it { should eq "Marie DENIS" }
