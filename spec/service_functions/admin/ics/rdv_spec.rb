@@ -11,7 +11,7 @@ describe Admin::Ics::Rdv, type: :service do
     describe ":name" do
       let(:user) { build(:user) }
       let(:rdv) { build(:rdv, users: [user], starts_at: Time.zone.parse("20201123 15h50")) }
-      it { expect(described_class.payload(rdv, user)[:name]).to eq("rdv-2020-11-23-15-50-00-0100.ics") }
+      it { expect(described_class.payload(rdv, user)[:name]).to eq("rdv-#{rdv.uuid}-2020-11-23-15-50-00-0100.ics") }
     end
 
     describe ":starts_at" do

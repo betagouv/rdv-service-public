@@ -1,7 +1,7 @@
 class Admin::Ics::Rdv
   def self.payload(rdv, user)
     {
-      name: "rdv-#{rdv.starts_at.to_s.parameterize}.ics",
+      name: "rdv-#{rdv.uuid}-#{rdv.starts_at.to_s.parameterize}.ics",
       starts_at: rdv.starts_at,
       ends_at: rdv.ends_at,
       sequence: rdv.sequence,
@@ -50,7 +50,6 @@ class Admin::Ics::Rdv
     event.rrule = payload[:recurrence]
     event.sequence = payload[:sequence]
     event.description = payload[:description]
-    event.status = Admin::Ics.status_from_action(payload[:action])
     event.attendee = "mailto:#{payload[:user_email]}"
     event.ip_class = "PRIVATE"
     event.organizer = "mailto:contact@rdv-solidarites.fr"
