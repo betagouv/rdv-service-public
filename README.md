@@ -1,9 +1,9 @@
-# RDV Solidarités
+# RDV-Solidarités
 
 [![View performance data on Skylight](https://badges.skylight.io/status/RgR7i58P67xN.svg)](https://oss.skylight.io/app/applications/RgR7i58P67xN)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-L'objectif de ce service publique est de réduire le nombre de lapins (rendez-vous non annulés et non honorés) dans les maisons des solidarités.
+L'objectif de ce service numérique public est de réduire le nombre de rendez-vous non honorés dans les maisons des solidarités.
 
 Ce service est soutenu par un consortium de plusieurs départements et l'[incubateur des territoires de l'ANCT](https://incubateur.anct.gouv.fr/).
 
@@ -22,7 +22,7 @@ Le forum [forum.rdv-solidarites.fr](https://forum.rdv-solidarites.fr/) accueille
 ## Statistiques
 
 - [Statistiques de RDV](https://www.rdv-solidarites.fr/stats)
-- [statistiques de traffic](https://stats.data.gouv.fr/index.php?module=CoreHome&action=index&idSite=123&period=range&date=previous30&updated=1#?idSite=123&period=range&date=previous30&category=Dashboard_Dashboard&subcategory=1)
+- [Statistiques de trafic](https://stats.data.gouv.fr/index.php?module=CoreHome&action=index&idSite=123&period=range&date=previous30&updated=1#?idSite=123&period=range&date=previous30&category=Dashboard_Dashboard&subcategory=1)
 
 ## Licence
 
