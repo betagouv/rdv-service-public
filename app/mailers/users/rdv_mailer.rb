@@ -5,10 +5,12 @@ class Users::RdvMailer < ApplicationMailer
   def rdv_created(rdv, user)
     @rdv = rdv
     @user = user
-    ics = Rdv::Ics.new(rdv: @rdv)
-    attachments[ics.name] = {
+
+    rdv_payload = Admin::Ics::Rdv.payload(@rdv, @user)
+
+    attachments[rdv_payload[:name]] = {
       mime_type: "text/calendar",
-      content: ics.to_ical_for(user),
+      content: Admin::Ics::Rdv.to_ical(rdv_payload),
       encoding: "8bit", # fixes encoding issues in ICS
     }
     mail(
