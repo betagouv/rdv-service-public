@@ -18,6 +18,10 @@ Il est recommandé de lancer le serveur local sans le worker sinon il y aura bea
 
 `overmind start -f Procfile.dev --processes web,webpack`
 
+ou pour personne qui n'utilise par overmind
+
+`foreman start -f Procfile.dev  web=1,webpack=1`
+
 ## Code d'authentification http basic pour le super admin d'une review app
 
 Le login est `rdv-solidarites` et pour le mot de passe :
