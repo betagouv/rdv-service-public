@@ -20,6 +20,8 @@ Il est recommandé de lancer le serveur local sans le worker sinon il y aura bea
 
 ## Code d'authentification http basic pour le super admin d'une review app
 
+Le login est `rdv-solidarites` et pour le mot de passe :
+
 ```bash
 scalingo env -a demo-rdv-solidarites-pr1153 --region osc-secnum-fr1 | grep BASIC | sed 's/.*=//' | pbcopy
 ```
