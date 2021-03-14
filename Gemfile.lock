@@ -359,6 +359,8 @@ GEM
     rack (2.2.3)
     rack-contrib (2.3.0)
       rack (~> 2.0)
+    rack-cors (1.1.1)
+      rack (>= 2.0.0)
     rack-oauth2 (1.16.0)
       activesupport
       attr_required
@@ -611,6 +613,7 @@ DEPENDENCIES
   premailer-rails
   puma (~> 3.12)
   pundit (~> 2.0)
+  rack-cors
   rails (~> 6.0)
   rails-controller-testing
   rspec-rails (>= 4.0.0.beta)
