@@ -22,7 +22,7 @@ OptionParser.new do |parser|
 end.parse!
 raise StandardError, "missing --env ENV_NAME option" if options[:app_name].nil?
 
-raise StandardError, "missing SCALINGO_TOKEN environment variable, cf https://my.osc-secnum-fr1.scalingo.com/profile" \
+raise StandardError, "missing SCALINGO_API_TOKEN environment variable, cf https://my.osc-secnum-fr1.scalingo.com/profile" \
   if ENV["SCALINGO_API_TOKEN"].nil?
 
 bearer_token = JSON.parse(
@@ -80,7 +80,7 @@ puts "untar done!"
 backup_pgsql_filename = Dir.entries(".").select { _1 =~ /\.pgsql$/ }.first
 backup_pgsql_path = "./#{backup_pgsql_filename}"
 
-`dropdb #{options[:app_name]}-dump`
+`dropdb #{options[:app_name]}-dump --if-exists`
 `createdb #{options[:app_name]}-dump`
 `pg_restore -d #{options[:app_name]}-dump #{backup_pgsql_path}`
 `rm #{backup_pgsql_path}`
