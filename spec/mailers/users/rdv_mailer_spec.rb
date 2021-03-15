@@ -65,7 +65,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       mail = Users::RdvMailer.rdv_cancelled_by_user(rdv, user)
 
       expected_url = lieux_url(search: { \
-                                 departement: rdv.organisation.territory.departement_number, \
+                                 departement: rdv.organisation.departement_number, \
                                  motif_name_with_location_type: rdv.motif.name_with_location_type, \
                                  service: rdv.motif.service.id, \
                                  where: rdv.address \

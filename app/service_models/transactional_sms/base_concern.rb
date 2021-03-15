@@ -32,7 +32,7 @@ module TransactionalSms::BaseConcern
   def tags
     [
       ENV["APP"]&.gsub("-rdv-solidarites", ""), # shorter names
-      "dpt-#{rdv.organisation.territory.departement_number}",
+      "dpt-#{rdv.organisation.departement_number}",
       "org-#{rdv.organisation.id}",
       self.class.name.demodulize.underscore
     ].compact

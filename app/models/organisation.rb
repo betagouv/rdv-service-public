@@ -15,6 +15,8 @@ class Organisation < ApplicationRecord
   has_many :user_profiles
   has_many :users, through: :user_profiles
 
+  delegate :departement_number, to: :territory
+
   validates :name, presence: true, uniqueness: { scope: :territory }
   validates :phone_number, phone: { allow_blank: true }
   validates(
