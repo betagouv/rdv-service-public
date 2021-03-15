@@ -53,7 +53,6 @@ describe Admin::OrganisationsController, type: :controller do
       let!(:territory2) { create(:territory) }
       let(:organisation_params) { { name: "MDS Test", territory_id: territory2.id } }
 
-      it { should_not render_template("admin/organisations/new") }
       it "should not create company" do
         expect { subject }.not_to(change { Organisation.count })
       end
