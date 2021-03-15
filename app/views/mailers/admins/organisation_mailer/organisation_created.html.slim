@@ -1,7 +1,7 @@
 p Bonjour,
 
 p
-  ' L'organisation « #{@organisation.name} » dans le #{@organisation.departement} vient d'être créée par
+  ' L'organisation « #{@organisation.name} » dans le #{@organisation.departement_number} vient d'être créée par
   = mail_to @agent.email, @agent.email
   |.
 - if @agent.invitation_accepted?

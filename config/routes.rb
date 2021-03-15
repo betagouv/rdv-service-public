@@ -97,8 +97,9 @@ Rails.application.routes.draw do
 
   authenticate :agent do
     namespace "admin" do
-      resources :departements, only: [] do
-        scope module: "departements" do
+      resources :territories, only: [:update] do
+        scope module: "territories" do
+          resources :agent_territorial_roles, only: [:index, :new, :create, :destroy]
           resources :zone_imports, only: [:new, :create]
           resources :sectors do
             resources :zones, except: [:index]

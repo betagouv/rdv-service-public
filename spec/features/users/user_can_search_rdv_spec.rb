@@ -1,5 +1,6 @@
 describe "User can search for rdvs" do
-  let!(:organisation) { create(:organisation) }
+  let!(:territory92) { create(:territory, departement_number: "92") }
+  let!(:organisation) { create(:organisation, territory: territory92) }
   let!(:motif) { create(:motif, name: "Vaccination", reservable_online: true, organisation: organisation) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: Date.new(2019, 7, 22), motifs: [motif], lieu: lieu, organisation: organisation) }

@@ -22,6 +22,8 @@ class Agent < ApplicationRecord
   has_many :rdvs, dependent: :destroy, through: :agents_rdvs
   has_many :roles, class_name: "AgentRole", dependent: :destroy
   has_many :organisations, through: :roles
+  has_many :territorial_roles, class_name: "AgentTerritorialRole", dependent: :destroy
+  has_many :territories, through: :territorial_roles
   has_and_belongs_to_many :users
 
   validates :email, presence: true
@@ -37,6 +39,9 @@ class Agent < ApplicationRecord
   }
   scope :within_organisation, lambda { |organisation|
     joins(:organisations).where(organisations: { id: organisation.id })
+  }
+  scope :with_territorial_role, lambda { |territory|
+    joins(:territories).where(territories: { id: territory.id })
   }
 
   before_save :normalize_account
@@ -107,5 +112,21 @@ class Agent < ApplicationRecord
 
   def admin_in_organisation?(organisation)
     role_in_organisation(organisation).admin?
+  end
+
+  def territorial_admin_in?(territory)
+    territorial_role_in(territory).present?
+  end
+
+  def territorial_roles_organisation_ids
+    territorial_roles
+      .includes(territory: :organisations)
+      .flat_map { _1.territory.organisation_ids }
+  end
+
+  private
+
+  def territorial_role_in(territory)
+    territorial_roles.find_by(territory: territory)
   end
 end

@@ -10,7 +10,7 @@ class Users::GeoSearch
   end
 
   def departement_organisations
-    @departement_organisations ||= Organisation.where(departement: @departement)
+    @departement_organisations ||= Organisation.joins(:territory).where(territories: { departement_number: @departement })
   end
 
   def attributed_agents_by_organisation

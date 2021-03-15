@@ -1,14 +1,14 @@
 - content_for :title, "Choisissez une organisation"
 
-- @agent_roles_by_departement.each do |departement, agent_roles|
+- @agent_roles_by_territory.each do |territory, agent_roles|
   .card
     .card-header
       .d-flex.justify-content-between.align-items-center
-        h5 Département du #{departement}
-        - if agent_roles.any?(&:admin?)
-          = link_to admin_departement_setup_checklist_path(departement), class: 'float-right' do
-            i.fa.fa-map>
-            | Sectorisation
+        h5= territory
+        - if current_agent.territorial_admin_in?(territory)
+          = link_to admin_territory_setup_checklist_path(territory), class: 'float-right' do
+            i.fa.fa-cog>
+            | Configuration
     .card-body
       ul.list-group.list-group-flush
         - agent_roles.each do |agent_role|
@@ -16,7 +16,6 @@
             span>= link_to agent_role.organisation.name, organisation_home_path(agent_role.organisation)
             - if agent_role.admin?
               i.fa.fa-user-cog.text-muted[title="Vous êtes administrateur de cette organisation"]
-
-- if policy([:agent, :organisation]).new?
-  .text-center.mt-4
-    = link_to "Créer une nouvelle organisation", new_admin_organisation_path, class: "btn btn-primary"
+      - if policy([:agent, Organisation.new(territory: territory)]).new?
+        .text-center.mt-4
+          = link_to "Créer une nouvelle organisation", new_admin_organisation_path(territory_id: territory.id), class: "btn btn-primary"

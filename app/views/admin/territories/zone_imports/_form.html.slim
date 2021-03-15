@@ -1,0 +1,9 @@
+= simple_form_for form, url: admin_territory_zone_imports_path(current_territory), as: :zone_import do |f|
+  = f.input :zones_file, \
+    as: :file, \
+    label: "Fichier à importer"
+  = f.input :dry_run, \
+    as: :boolean, \
+    label: "Simulation d'import", \
+    hint: "Aucune commune ni rue ne sera importée"
+  .text-right= f.submit class: "btn btn-primary"

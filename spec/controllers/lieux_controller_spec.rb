@@ -1,7 +1,8 @@
 RSpec.describe LieuxController, type: :controller do
   render_views
 
-  let(:organisation) { create(:organisation, departement: "62") }
+  let(:territory) { create(:territory, departement_number: "62") }
+  let(:organisation) { create(:organisation, territory: territory) }
   let(:lieu) { create(:lieu, latitude: 50.63, longitude: 3.06, organisation: organisation) }
   let(:lieu2) { create(:lieu, latitude: 50.72, longitude: 3.16, organisation: organisation) }
   let(:motif) { create(:motif, reservable_online: true, organisation: organisation) }

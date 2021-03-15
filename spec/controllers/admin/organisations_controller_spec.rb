@@ -1,18 +1,25 @@
 describe Admin::OrganisationsController, type: :controller do
-  let(:organisation) { create(:organisation) }
+  let!(:territory) { create(:territory) }
+  let!(:organisation) { create(:organisation, territory: territory) }
 
   before { sign_in agent }
 
   describe "#new" do
-    subject { get :new }
+    subject { get :new, params: { territory_id: territory.id } }
 
-    context "agent is admin" do
-      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+    context "agent has role in territory" do
+      let!(:agent) do
+        create(
+          :agent,
+          admin_role_in_organisations: [organisation],
+          role_in_territories: [territory]
+        )
+      end
       it { should be_successful }
     end
 
-    context "agent is regular agent, not admin" do
-      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+    context "agent does not have role in territory" do
+      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
       it { should_not be_successful }
     end
   end
@@ -20,27 +27,39 @@ describe Admin::OrganisationsController, type: :controller do
   describe "#create" do
     subject { post :create, params: { organisation: organisation_params } }
 
-    context "admin agent, valid params" do
-      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-      let(:organisation_params) { { name: "MDS Test", departement: "33" } }
+    context "agent has role in territory, valid params" do
+      let!(:agent) do
+        create(
+          :agent,
+          admin_role_in_organisations: [organisation],
+          role_in_territories: [territory]
+        )
+      end
+      let(:organisation_params) { { name: "MDS Test", territory_id: territory.id } }
 
       it "should create company" do
         expect { subject }.to change { Organisation.count }.by(1)
       end
     end
 
-    context "admin agent, invalid params" do
-      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-      let(:organisation_params) { { name: "MDS Test", departement: "3333" } }
+    context "agent has role in territory BUT tries to create orga in other territory" do
+      let!(:agent) do
+        create(
+          :agent,
+          admin_role_in_organisations: [organisation],
+          role_in_territories: [territory]
+        )
+      end
+      let!(:territory2) { create(:territory) }
+      let(:organisation_params) { { name: "MDS Test", territory_id: territory2.id } }
 
-      it { should render_template("admin/organisations/new") }
       it "should not create company" do
         expect { subject }.not_to(change { Organisation.count })
       end
     end
 
-    context "regular agent, valid params" do
-      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+    context "valid params BUT agent does not have role in territory" do
+      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
       let(:organisation_params) { { name: "MDS Test", departement: "33" } }
       it { should_not be_successful }
       it "should not create company" do
@@ -49,10 +68,10 @@ describe Admin::OrganisationsController, type: :controller do
     end
   end
 
-  context "with a admin agent signed in" do
-    let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+  describe "#update" do
+    context "orga admin" do
+      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
-    describe "#update" do
       it "should redirect to organisation show" do
         put :update, params: { id: organisation.id, organisation: { name: "a new name" } }
         expect(response).to redirect_to(admin_organisation_path(organisation))
