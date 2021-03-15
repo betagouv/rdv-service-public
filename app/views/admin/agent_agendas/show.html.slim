@@ -19,7 +19,7 @@
       data-agent-id="#{@agent.id}"
       data-selected-event-id="#{@selected_event_id}"
       data-organisation-id="#{@organisation.id}"
-      data-event-sources-json="#{[admin_organisation_rdvs_path(@organisation, agent_id: @agent.id, status: @status, format: :json), admin_organisation_agent_absences_path(@organisation, @agent), admin_organisation_agent_plage_ouvertures_path(@organisation, @agent), admin_jours_feries_path].to_json}"
+      data-event-sources-json="#{[admin_agent_rdvs_path(@agent, organisation_id: current_organisation.id, status: @status, format: :json), admin_organisation_agent_absences_path(@organisation, @agent), admin_organisation_agent_plage_ouvertures_path(@organisation, @agent), admin_jours_feries_path].to_json}"
     ]
     .mt-3
       = link_to admin_organisation_rdvs_path(current_organisation, agent_id: @agent.id, start: @date, end: @date, show_user_details: true, breadcrumb_page: "agenda"), class: "js-link-print-rdvs" do

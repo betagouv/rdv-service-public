@@ -111,6 +111,12 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :agents, only: [:show], module: :agents do
+        resources :plage_ouvertures, only: [:index]
+        resources :rdvs, only: [:index]
+        resources :absences, only: [:index]
+      end
+
       resources :organisations do
         resources :plage_ouvertures, except: [:index, :new]
         resources :agent_searches, only: :index, module: "creneaux"
