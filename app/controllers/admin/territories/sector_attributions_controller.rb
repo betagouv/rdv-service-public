@@ -31,7 +31,6 @@ class Admin::Territories::SectorAttributionsController < Admin::Territories::Bas
   private
 
   def prepare_available_organisations_and_agents
-    # TODO
     @available_organisations = policy_scope_admin(Organisation)
       .where(territory: current_territory)
       .where.not(id: excluded_organisation_ids)
