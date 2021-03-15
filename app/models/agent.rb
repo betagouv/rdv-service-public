@@ -110,10 +110,6 @@ class Agent < ApplicationRecord
     roles.find_by(organisation: organisation)
   end
 
-  def territorial_role_in(territory)
-    territorial_roles.find_by(territory: territory)
-  end
-
   def admin_in_organisation?(organisation)
     role_in_organisation(organisation).admin?
   end
@@ -126,5 +122,11 @@ class Agent < ApplicationRecord
     territorial_roles
       .includes(territory: :organisations)
       .flat_map { _1.territory.organisation_ids }
+  end
+
+  private
+
+  def territorial_role_in(territory)
+    territorial_roles.find_by(territory: territory)
   end
 end
