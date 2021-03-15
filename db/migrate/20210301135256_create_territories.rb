@@ -35,9 +35,9 @@ class CreateTerritories < ActiveRecord::Migration[6.0]
     change_column_null :sectors, :territory_id, false
 
     create_agent_territorial_roles!
-    create_missing_agent_territorial_roles! if !Rails.env.production? || ENV["HOST"].include?("demo")
+    create_missing_agent_territorial_roles!
 
-    raise if Territory.all.any? { _1.agents.empty? }
+    raise if Territory.all.any? { _1.agents.empty? } && !ENV["HOST"].include?("demo")
 
     change_column_null :organisations, :departement, true # so we can keep creating orgas
     change_column_null :sectors, :departement, true # so we can keep creating sectors
@@ -54,9 +54,9 @@ class CreateTerritories < ActiveRecord::Migration[6.0]
 
   def attach_organisation!(organisation)
     organisation.update_columns(
-      territory_id: Territory.find_or_create_by(
+      territory_id: Territory.find_or_create_by!(
         departement_number: organisation.departement,
-        name: Departements::NAMES.fetch(organisation.departement, ""),
+        name: Departements::NAMES.fetch(organisation.departement, "N/A"),
         phone_number: DEPARTEMENT_PHONE_NUMBERS.fetch(organisation.departement, nil)
       ).id
     )
@@ -88,6 +88,8 @@ class CreateTerritories < ActiveRecord::Migration[6.0]
   end
 
   def create_missing_agent_territorial_roles!
+    return if Rails.env.production? && !ENV["HOST"].include?("demo")
+
     Territory.all.to_a.select { _1.agents.empty? }.each do |territory|
       Agent
         .where(
