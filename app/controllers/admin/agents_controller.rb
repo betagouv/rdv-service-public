@@ -10,15 +10,6 @@ class Admin::AgentsController < AgentAuthController
     @complete_agents = @complete_agents.complete.includes(:service).page(params[:page])
   end
 
-  def show
-    @agent = policy_scope(Agent).find(params[:id])
-    authorize(@agent)
-    @status = params[:status]
-    @organisation = current_organisation
-    @selected_event_id = params[:selected_event_id]
-    @date = params[:date].present? ? Date.parse(params[:date]) : nil
-  end
-
   def destroy
     @agent = policy_scope(Agent).find(params[:id])
     authorize(@agent)

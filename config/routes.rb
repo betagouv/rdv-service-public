@@ -189,8 +189,10 @@ Rails.application.routes.draw do
   root "welcome#index"
   resources :support_tickets, only: [:create]
 
-  # temporary route after admin namespace introduction
   # rubocop:disable Style/StringLiterals, Style/FormatStringToken
+  # temporary route after admin namespace introduction
   get "/organisations/*rest", to: redirect('admin/organisations/%{rest}')
+  # old agenda rule was bookmarked by some agents
+  get "admin/organisations/:organisation_id/agents/:agent_id", to: redirect("/admin/organisations/%{organisation_id}/agent_agendas/%{agent_id}")
   # rubocop:enable Style/StringLiterals, Style/FormatStringToken
 end
