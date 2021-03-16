@@ -141,7 +141,7 @@ Rails.application.routes.draw do
         resources :absences, except: [:index, :show, :new]
         resources :agent_roles, only: [:edit, :update]
         resources :agent_agendas, only: [:show]
-        resources :agents, only: [:index, :destroy] do
+        resources :agents, only: [:index, :show, :destroy] do
           resources :absences, only: [:index, :new]
           resources :plage_ouvertures, only: [:index, :new]
           resources :stats, only: :index do

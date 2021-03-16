@@ -13,10 +13,7 @@ class Admin::AgentsController < AgentAuthController
   def show
     @agent = policy_scope(Agent).find(params[:id])
     authorize(@agent)
-    @status = params[:status]
-    @organisation = current_organisation
-    @selected_event_id = params[:selected_event_id]
-    @date = params[:date].present? ? Date.parse(params[:date]) : nil
+    redirect_to admin_organisation_agent_agenda_path(current_organisation, @agent || current_agent)
   end
 
   def destroy
