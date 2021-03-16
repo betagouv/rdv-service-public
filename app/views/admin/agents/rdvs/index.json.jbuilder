@@ -12,7 +12,7 @@ json.array! @rdvs do |rdv|
   end
   json.start rdv.starts_at
   json.end rdv.ends_at
-  json.url admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: params[:agent_id])
+  json.url admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: params[:agent_id]) if rdv.organisation == @organisation
   if rdv.organisation == @organisation
     json.textColor text_color(rdv.motif&.color)
     json.backgroundColor rdv.motif&.color
