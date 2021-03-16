@@ -10,13 +10,6 @@ class Admin::AgentsController < AgentAuthController
     @complete_agents = @complete_agents.complete.includes(:service).page(params[:page])
   end
 
-  def show
-    @agent = policy_scope(Agent).find(params[:id])
-    authorize(@agent)
-    flash[:notice] = "Les pages d'agendas ont changées de lieux. Il faut mettre à jour vos favoris et raccourcis."
-    redirect_to admin_organisation_agent_agenda_path(current_organisation, @agent || current_agent)
-  end
-
   def destroy
     @agent = policy_scope(Agent).find(params[:id])
     authorize(@agent)
