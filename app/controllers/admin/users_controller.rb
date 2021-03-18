@@ -134,7 +134,8 @@ class Admin::UsersController < AgentAuthController
 
   def prepare_create
     @user = User.new(user_params)
-    authorize(@user.responsible) if @user.responsible&.persisted?
+    # TODO: est-ce necessaire de verifier l'autorisation du responsable ?
+    # authorize(@user.responsible) if @user.responsible&.persisted?
     @user.created_through = "agent_creation"
     @user.invited_by = current_agent
     @user.responsible.created_through = "agent_creation" if @user.responsible&.new_record?
