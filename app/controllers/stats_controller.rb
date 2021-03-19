@@ -36,10 +36,14 @@ class StatsController < ApplicationController
   def scope_rdv_to_departement
     @departement = params[:departement]
     if @departement.present?
-      @rdvs = Rdv.joins(:organisation).where(organisations: { departement: @departement })
-      @users = User.joins(:organisations).where(organisations: { departement: @departement })
-      @agents = Agent.joins(:organisations).where(organisations: { departement: @departement })
-      @organisations = Organisation.where(organisations: { departement: @departement })
+      @rdvs = Rdv.joins(organisation: :territory)
+        .where(organisations: { territories: { departement_number: @departement } })
+      @users = User.joins(organisations: :territory)
+        .where(organisations: { territories: { departement_number: @departement } })
+      @agents = Agent.joins(organisations: :territory)
+        .where(organisations: { territories: { departement_number: @departement } })
+      @organisations = Organisation.joins(:territory)
+        .where(territories: { departement_number: @departement })
     else
       @rdvs = Rdv.all
       @users = User.all
@@ -47,6 +51,9 @@ class StatsController < ApplicationController
       @organisations = Organisation.all
     end
 
-    @departements = Organisation.all.map(&:departement).uniq.sort
+    @departements = Territory
+      .order(:departement_number)
+      .distinct(:departement_number)
+      .pluck(:departement_number)
   end
 end

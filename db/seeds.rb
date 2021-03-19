@@ -6,10 +6,26 @@ require "csv"
 # that the model files are loaded twice, or something related to HABTM
 # associations..
 
+# TERRITORIEs
+
+territory75 = Territory.create!(
+  departement_number: "75",
+  name: "Paris"
+)
+territory62 = Territory.create!(
+  departement_number: "62",
+  name: "Pas-de-Calais"
+)
+
 # ORGANISATIONS & SECTORS
 
 Organisation.skip_callback(:create, :after, :notify_admin_organisation_created)
-org_paris_nord = Organisation.create!(name: "MDS Paris Nord", phone_number: "0123456789", departement: "75", human_id: "paris-nord")
+org_paris_nord = Organisation.create!(
+  name: "MDS Paris Nord",
+  phone_number: "0123456789",
+  human_id: "paris-nord",
+  territory: territory75
+)
 human_id_map = [
   { human_id: "1030", name: "MDS Arques" },
   { human_id: "1031", name: "MDS Arras Nord" },
@@ -36,17 +52,17 @@ human_id_map = [
   { human_id: "1054", name: "MDS St Omer" },
   { human_id: "1055", name: "MDS St Pol sur Ternoise" }
 ].map do |attributes|
-  organisation = Organisation.create!(phone_number: "0123456789", departement: "62", human_id: attributes[:human_id], name: attributes[:name])
-  sector = Sector.create!(name: "Secteur de #{attributes[:name][4..]}", human_id: attributes[:human_id], departement: "62")
+  organisation = Organisation.create!(phone_number: "0123456789", territory: territory62, human_id: attributes[:human_id], name: attributes[:name])
+  sector = Sector.create!(name: "Secteur de #{attributes[:name][4..]}", human_id: attributes[:human_id], territory: territory62)
   sector.attributions.create!(organisation: organisation, level: SectorAttribution::LEVEL_ORGANISATION)
   [attributes[:human_id], { organisation: organisation, sector: sector }]
 end.to_h
 
 # Bapaume is created without the organisation-level attribution
-org_bapaume = Organisation.create!(phone_number: "0123456789", departement: "62", human_id: "1034-nord", name: "MDS Bapaume")
-sector_bapaume_nord = Sector.create!(name: "Bapaume Nord", human_id: "1034-nord", departement: "62")
-sector_bapaume_sud = Sector.create!(name: "Bapaume Sud", human_id: "1034-sud", departement: "62")
-sector_bapaume_fallback = Sector.create!(name: "Bapaume Entier", human_id: "1034-fallback", departement: "62")
+org_bapaume = Organisation.create!(phone_number: "0123456789", territory: territory62, human_id: "1034-nord", name: "MDS Bapaume")
+sector_bapaume_nord = Sector.create!(name: "Bapaume Nord", human_id: "1034-nord", territory: territory62)
+sector_bapaume_sud = Sector.create!(name: "Bapaume Sud", human_id: "1034-sud", territory: territory62)
+sector_bapaume_fallback = Sector.create!(name: "Bapaume Entier", human_id: "1034-fallback", territory: territory62)
 sector_bapaume_fallback.attributions.create!(organisation: org_bapaume, level: SectorAttribution::LEVEL_ORGANISATION)
 human_id_map["1034-nord"] = { organisation: org_bapaume, sector: sector_bapaume_nord }
 human_id_map["1034-sud"] = { organisation: org_bapaume, sector: sector_bapaume_sud }
@@ -305,6 +321,7 @@ agent_org_paris_nord_pmi_martine = Agent.new(
 )
 agent_org_paris_nord_pmi_martine.skip_confirmation!
 agent_org_paris_nord_pmi_martine.save!
+agent_org_paris_nord_pmi_martine.territorial_roles.create!(territory: territory75)
 
 agent_org_paris_nord_pmi_marco = Agent.new(
   email: "marco@demo.rdv-solidarites.fr",
@@ -340,7 +357,7 @@ org_arques_pmi_maya = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: Organisation.where(departement: "62").pluck(:id).map { { organisation_id: _1, level: AgentRole::LEVEL_ADMIN } }
+  roles_attributes: Organisation.where(territory: territory62).pluck(:id).map { { organisation_id: _1, level: AgentRole::LEVEL_ADMIN } }
 )
 org_arques_pmi_maya.skip_confirmation!
 org_arques_pmi_maya.save!

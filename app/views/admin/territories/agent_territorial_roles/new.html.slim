@@ -1,0 +1,21 @@
+- content_for(:menu_item) { 'menu-departement-agents' }
+- content_for(:title) { "Ajouter un administrateur - #{current_territory}" }
+
+- content_for :breadcrumb do
+  ol.breadcrumb.m-0
+    li.breadcrumb-item
+      = link_to "Administrateurs", admin_territory_agent_territorial_roles_path(current_territory)
+    li.breadcrumb-item.active
+      | Ajouter un agent
+
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-body
+        = simple_form_for([:admin, current_territory, @role]) do |f|
+          = render partial: 'layouts/model_errors', locals: { model: @role }
+          = f.input :territory_id, as: :hidden
+          = f.association :agent, \
+            collection: @possible_agents,
+            label_method: -> { _1.full_name_and_service }
+          = f.submit class: "btn btn-primary", value: "Donner le rôle d'administrateur du #{current_territory}"

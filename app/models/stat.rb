@@ -33,7 +33,7 @@ class Stat
   end
 
   def rdvs_group_by_departement
-    rdvs.joins(:organisation).group("organisations.departement").group_by_week("rdvs.created_at", format: DEFAULT_FORMAT).count
+    rdvs.joins(organisation: :territory).order("territories.departement_number").group("territories.departement_number").group_by_week("rdvs.created_at", format: DEFAULT_FORMAT).count
   end
 
   def rdvs_group_by_service

@@ -1,16 +1,23 @@
-class Agent::ZonePolicy < DefaultAgentPolicy
-  include Agent::SectorisationPolicyConcern
+class Agent::ZonePolicy < ApplicationPolicy
+  alias context pundit_user
+  delegate :agent, to: :context, prefix: :current # defines current_agent
 
-  protected
-
-  def departement
-    @record.sector.departement
+  def agent_has_role_in_record_territory?
+    current_agent.territorial_roles.pluck(:territory_id).include?(record.sector.territory_id)
   end
 
+  alias new? agent_has_role_in_record_territory?
+  alias create? agent_has_role_in_record_territory?
+  alias destroy? agent_has_role_in_record_territory?
+
   class Scope < Scope
+    alias context pundit_user
+    delegate :agent, to: :context, prefix: :current # defines current_agent
+
     def resolve
-      departements = current_agent.organisations.pluck(:departement).uniq
-      scope.joins(:sectors).where(sectors: { departement: departements })
+      scope
+        .joins(sector: [:territory])
+        .where(sectors: { territories: { id: current_agent.territorial_roles.pluck(:territory_id) } })
     end
   end
 end

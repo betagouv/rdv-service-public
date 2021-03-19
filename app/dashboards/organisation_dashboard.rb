@@ -15,7 +15,6 @@ class OrganisationDashboard < Administrate::BaseDashboard
     motifs: Field::HasMany,
     horaires: Field::String,
     phone_number: Field::String,
-    departement: Field::String,
     human_id: Field::String,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
@@ -29,7 +28,6 @@ class OrganisationDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = [
     :id,
     :name,
-    :departement,
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -42,7 +40,6 @@ class OrganisationDashboard < Administrate::BaseDashboard
     :agents,
     :lieux,
     :motifs,
-    :departement,
     :human_id,
     :created_at,
     :updated_at,
@@ -57,7 +54,6 @@ class OrganisationDashboard < Administrate::BaseDashboard
     :phone_number,
     :agents,
     :lieux,
-    :departement,
     :human_id
   ].freeze
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_10_171357) do
+ActiveRecord::Schema.define(version: 2021_03_01_135256) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,6 +61,13 @@ ActiveRecord::Schema.define(version: 2021_02_10_171357) do
     t.string "checksum", null: false
     t.datetime "created_at", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "agent_territorial_roles", force: :cascade do |t|
+    t.bigint "agent_id"
+    t.bigint "territory_id"
+    t.index ["agent_id"], name: "index_agent_territorial_roles_on_agent_id"
+    t.index ["territory_id"], name: "index_agent_territorial_roles_on_territory_id"
   end
 
   create_table "agents", force: :cascade do |t|
@@ -213,6 +220,8 @@ ActiveRecord::Schema.define(version: 2021_02_10_171357) do
     t.string "human_id"
     t.string "website"
     t.string "email"
+    t.bigint "territory_id", null: false
+    t.index ["territory_id"], name: "index_organisations_on_territory_id"
   end
 
   create_table "plage_ouvertures", force: :cascade do |t|
@@ -279,13 +288,15 @@ ActiveRecord::Schema.define(version: 2021_02_10_171357) do
   end
 
   create_table "sectors", force: :cascade do |t|
-    t.string "departement", null: false
+    t.string "departement"
     t.string "name", null: false
     t.string "human_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "territory_id", null: false
     t.index ["departement"], name: "index_sectors_on_departement"
     t.index ["human_id"], name: "index_sectors_on_human_id"
+    t.index ["territory_id"], name: "index_sectors_on_territory_id"
   end
 
   create_table "services", force: :cascade do |t|
@@ -299,6 +310,15 @@ ActiveRecord::Schema.define(version: 2021_02_10_171357) do
     t.string "email", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "territories", force: :cascade do |t|
+    t.string "departement_number"
+    t.string "name"
+    t.string "phone_number"
+    t.string "phone_number_formatted"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "user_notes", force: :cascade do |t|

@@ -11,7 +11,7 @@ tr
       - if !motif.reservable_online?
         | &nbsp;
       - elsif motif.sectorisation_level_departement?
-        | Tout le #{current_organisation.departement}
+        | Tout le #{current_organisation.departement_number}
       - elsif motif.sectorisation_level_organisation?
         = t("motifs.index.sectorisation_level_organisation", count: @sectors_attributed_to_organisation_count)
       - elsif motif.sectorisation_level_agent?

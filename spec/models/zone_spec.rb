@@ -1,7 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Zone, type: :model do
-  let(:sector) { build(:sector, departement: "75") }
+  let(:territory75) { build(:territory, departement_number: "75") }
+  let(:sector) { build(:sector, territory: territory75) }
 
   describe "uniqueness" do
     context "city zone" do
@@ -35,7 +36,7 @@ RSpec.describe Zone, type: :model do
       it "should allow creating a zone with existing postcode in a different sector" do
         Zone.create!(zone_attributes)
         duplicate_zone = Zone.new(
-          sector: create(:sector, departement: "75"),
+          sector: create(:sector, territory: territory75),
           level: "city",
           city_name: "Paris 20e",
           city_code: "75120"

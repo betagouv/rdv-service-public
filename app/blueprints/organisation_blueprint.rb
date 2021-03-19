@@ -1,5 +1,5 @@
 class OrganisationBlueprint < Blueprinter::Base
   identifier :id
 
-  fields :name, :departement
+  fields :name
 end

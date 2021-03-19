@@ -74,5 +74,32 @@ describe Agent::AgentPolicy::Scope, type: :policy do
       it { should_not include(other_agent4) }
       it { should include(other_agent5) }
     end
+
+    context "agent has territorial role" do
+      let!(:territories) { create_list(:territory, 2) }
+      let!(:same_territory_organisations) { create_list(:organisation, 3, territory: territories[0]) }
+      let!(:other_territory_organisations) { create_list(:organisation, 3, territory: territories[1]) }
+      let!(:agent) do
+        create(
+          :agent,
+          basic_role_in_organisations: [same_territory_organisations[0], other_territory_organisations[0]],
+          admin_role_in_organisations: [same_territory_organisations[1], other_territory_organisations[1]],
+          role_in_territories: [territories[0]]
+        )
+      end
+      let!(:other_agent_same_territory1) { create(:agent, basic_role_in_organisations: [same_territory_organisations[0]]) }
+      let!(:other_agent_same_territory2) { create(:agent, basic_role_in_organisations: [same_territory_organisations[1]]) }
+      let!(:other_agent_same_territory3) { create(:agent, basic_role_in_organisations: [same_territory_organisations[2]]) }
+      let!(:other_agent_different_territory1) { create(:agent, basic_role_in_organisations: [other_territory_organisations[0]]) }
+      let!(:other_agent_different_territory2) { create(:agent, basic_role_in_organisations: [other_territory_organisations[1]]) }
+      let!(:other_agent_different_territory3) { create(:agent, basic_role_in_organisations: [other_territory_organisations[2]]) }
+
+      it { should include(other_agent_same_territory1) }
+      it { should include(other_agent_same_territory2) }
+      it { should include(other_agent_same_territory3) }
+      it { should_not include(other_agent_different_territory1) }
+      it { should include(other_agent_different_territory2) }
+      it { should_not include(other_agent_different_territory3) }
+    end
   end
 end

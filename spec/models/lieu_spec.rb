@@ -1,17 +1,16 @@
 describe Lieu, type: :model do
-  let!(:motif) { create(:motif, name: "Vaccination", reservable_online: reservable_online) }
+  let!(:territory) { create(:territory, departement_number: "62") }
+  let!(:organisation) { create(:organisation, territory: territory) }
+  let!(:motif) { create(:motif, name: "Vaccination", reservable_online: reservable_online, organisation: organisation) }
   let!(:lieu) { create(:lieu) }
-  let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu) }
+  let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu, organisation: organisation) }
   let!(:user) { create(:user) }
-  let(:organisation) { plage_ouverture.organisation }
 
   describe ".for_motif_and_departement" do
-    let(:motif_name) { motif.name }
     let(:service_id) { Service.first.id }
-    let(:departement) { organisation.departement }
     let(:reservable_online) { true }
 
-    subject { Lieu.for_motif_and_departement(motif_name, departement) }
+    subject { Lieu.for_motif_and_departement("Vaccination", "62") }
 
     before { freeze_time }
     after { travel_back }

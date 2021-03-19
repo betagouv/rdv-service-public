@@ -4,33 +4,10 @@
 .container.mt-3
   h3 Votre département
   ul.list-group.mb-2
-    li
-      span> 14 - Calvados
-      = link_to "02 31 57 14 14", "tel:+33231571414"
-    li
-      span> 22 - Côte d'Armor
-      = link_to "02.96.60.86.86", "tel:+33296608686"
-    li
-      span> 55 - Meuse
-      = link_to "03.29.80.32.34", "tel:+33329803234"
-    li
-      span> 64 - Pyrénées Atlantique
-      = link_to "05.59.69.34.11", "tel:+33559693411"
-    li
-      span> 77 - Seine et marne
-      = link_to "01.64.14.77.77", "tel:+33164147777"
-    li
-      span> 78 - Yvelines
-      = link_to "01 30 836 836", "tel:+33130836836"
-    li
-      span> 80 - Somme
-      = link_to "03.22.71.80.80", "tel:+33322718080"
-    li
-      span> 92 - Hauts de seine
-      = link_to "0 806 00 00 92", "tel:+33806000092"
-    li
-      span> 95 - Val d'oise
-      = link_to "01 34 25 30 30", "tel:+33134253030"
+    - Territory.all.where.not(phone_number: nil).each do |territory|
+      li
+        span> #{territory}
+        = link_to territory.phone_number, "tel:#{territory.phone_number_formatted}"
     li
       span> Autres départements, voir
       = link_to "l'annuaire des services publics", "https://lannuaire.service-public.fr/"
@@ -54,7 +31,11 @@
           .row
             .col-md-6= f.input :first_name, label: "Prénom"
             .col-md-6= f.input :last_name, label: "Nom"
-          = f.input :departement, label: "Département", collection: departements_with_upcoming_rdvs + ["Autre"], hint: "Si votre département n'est pas listé, c'est qu'il n'utilise pas la plateforme RDV-Solidarités", input_html: { class: "js-support-ticket-form-input-togglable", data: { role: "agent" } }
+          = f.input :departement, \
+            label: "Département", \
+            collection: Territory.with_upcoming_rdvs.pluck(:departement_number).sort + ["Autre"], \
+            hint: "Si votre département n'est pas listé, c'est qu'il n'utilise pas la plateforme RDV-Solidarités", \
+            input_html: { class: "js-support-ticket-form-input-togglable", data: { role: "agent" } }
           = f.input :city, label: "Commune", input_html: { class: "places-js-container js-support-ticket-form-input-togglable", data: { "address-type": "municipality", role: "user" } }, required: true
           = f.input :email, label: "Email"
           = f.input :message, label: "Message", as: :text, hint: "Merci de ne pas inclure d'informations confidentielles vous concernant", input_html: { rows: 5 }
