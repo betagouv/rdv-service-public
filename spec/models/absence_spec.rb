@@ -28,4 +28,18 @@ describe Absence, type: :model do
       end
     end
   end
+
+  describe "#with_agent" do
+    it "returns empty array when no plage_ouverture with given agent" do
+      agent = create(:agent)
+      create(:plage_ouverture)
+      expect(PlageOuverture.with_agent(agent)).to be_empty
+    end
+
+    it "returns plage_ouvertures with given agent" do
+      agent = create(:agent)
+      plage_ouverture = create(:plage_ouverture, agent: agent)
+      expect(PlageOuverture.with_agent(agent)).to eq([plage_ouverture])
+    end
+  end
 end
