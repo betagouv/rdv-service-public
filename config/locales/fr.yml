@@ -218,6 +218,8 @@ fr:
       long: "%A %d %B %Y %Hh%M"
       short: "%e %b à %Hh%M"
       short_approx: "%e %b vers %Hh%M"
+      short_human: "%d %B à %Hh%M"
+      short_human_approx: "%d %B vers %Hh%M"
       human: "%A %d %B %Y à %Hh%M"
       human_approx: "%A %d %B %Y vers %Hh%M"
       dense: "%d/%m/%Y à %H:%M"
