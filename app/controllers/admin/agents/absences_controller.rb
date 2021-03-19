@@ -9,7 +9,7 @@ class Admin::Agents::AbsencesController < ApplicationController
   end
 
   def extract_occurrence_from(absences)
-    absences.flat_map { |absence| absence.occurrences_for(date_range_params).map { |occurrence| [absence, occurrence] } }.sort_by(&:second)
+    absences.flat_map { |absence| absence.occurences_for(date_range_params).map { |occurrence| [absence, occurrence] } }.sort_by(&:second)
   end
 
   def date_range_params
