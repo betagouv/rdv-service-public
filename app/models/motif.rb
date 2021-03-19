@@ -56,6 +56,10 @@ class Motif < ApplicationRecord
   scope :sectorisation_level_departement, -> { where(sectorisation_level: SECTORISATION_LEVEL_DEPARTEMENT) }
   scope :sectorisation_level_organisation, -> { where(sectorisation_level: SECTORISATION_LEVEL_ORGANISATION) }
   scope :sectorisation_level_agent, -> { where(sectorisation_level: SECTORISATION_LEVEL_AGENT) }
+  scope :in_departement, lambda { |departement_number|
+    joins(organisation: :territory)
+      .where(organisations: { territories: { departement_number: departement_number } })
+  }
 
   include PgSearch::Model
   pg_search_scope(

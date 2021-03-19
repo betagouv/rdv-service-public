@@ -5,7 +5,7 @@ class Admin::StaticPagesController < AgentAuthController
       first_name: current_agent.first_name,
       last_name: current_agent.last_name,
       email: current_agent.email,
-      departement: current_organisation.departement
+      departement: current_organisation.departement_number
     )
   end
 end

@@ -1,34 +1,6 @@
 describe Agent::UserPolicy, type: :policy do
   subject { described_class }
 
-  shared_examples "permit actions" do |*actions|
-    actions.each do |action|
-      permissions action do
-        it { should permit(pundit_context, user) }
-      end
-    end
-  end
-
-  shared_examples "not permit actions" do |*actions|
-    actions.each do |action|
-      permissions action do
-        it { should_not permit(pundit_context, user) }
-      end
-    end
-  end
-
-  shared_examples "included in scope" do
-    it "should be included in scope" do
-      expect(Agent::UserPolicy::Scope.new(pundit_context, User).resolve).to include(user)
-    end
-  end
-
-  shared_examples "not included in scope" do
-    it "should not be included in scope" do
-      expect(Agent::UserPolicy::Scope.new(pundit_context, User).resolve).not_to include(user)
-    end
-  end
-
   let!(:organisation1) { create(:organisation) }
   let!(:organisation2) { create(:organisation) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation1, organisation2]) }

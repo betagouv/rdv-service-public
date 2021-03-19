@@ -7,11 +7,11 @@ class Admin::OrganisationsController < AgentAuthController
   before_action :follow_unique, only: :index
 
   def index
-    @agent_roles_by_departement = policy_scope(AgentRole)
+    @agent_roles_by_territory = policy_scope(AgentRole)
       .merge(current_agent.roles)
       .includes(:organisation)
       .order("organisations.name")
-      .to_a.group_by { _1.organisation.departement }
+      .to_a.group_by { _1.organisation.territory }
     render layout: "registration"
   end
 
@@ -31,7 +31,7 @@ class Admin::OrganisationsController < AgentAuthController
   end
 
   def new
-    @organisation = Organisation.new
+    @organisation = Organisation.new(territory: Territory.find(params[:territory_id]))
     authorize(@organisation)
     render :new, layout: "registration"
   end
@@ -65,7 +65,7 @@ class Admin::OrganisationsController < AgentAuthController
   end
 
   def new_organisation_params
-    params.require(:organisation).permit(:name, :departement)
+    params.require(:organisation).permit(:name, :territory_id)
   end
 
   def follow_unique

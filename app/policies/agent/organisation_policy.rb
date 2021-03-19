@@ -4,11 +4,11 @@ class Agent::OrganisationPolicy < DefaultAgentPolicy
   end
 
   def new?
-    admin_somewhere?
+    current_agent.territorial_admin_in?(record.territory)
   end
 
   def create?
-    admin_somewhere?
+    current_agent.territorial_admin_in?(record.territory)
   end
 
   def destroy?

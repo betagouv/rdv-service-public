@@ -1,0 +1,53 @@
+= simple_form_for( \
+  zone, \
+  url: zone.new_record? ? admin_territory_sector_zones_path(current_territory, sector) : admin_territory_sector_zone_path(current_territory, sector, zone), \
+  html: { \
+    class: "js-zone-form", \
+    data: { "canonical-path": new_admin_territory_sector_zone_path(current_territory, sector)} \
+  } \
+) do |f|
+  = f.input_field :level, \
+    label: false, \
+    collection: Zone::LEVELS, \
+    label_method: -> { "&nbsp;&nbsp;".html_safe + Zone.human_enum_name(:level, _1) }, \
+    as: :radio_buttons, \
+    wrapper: :vertical_collection_inline
+  .d-flex.align-items-center.mb-3.mt-1.text-muted
+    i.fa.fa-info
+    div.pl-2
+    - if zone.level_city?
+      | L'ensemble de cette commune sera couvert par le secteur
+    - elsif zone.level_street?
+      | Seule la rue désignée dans la commune sera couverte par le secteur
+
+  = f.input :sector_id, \
+    collection: policy_scope_admin(Sector).where(territory: current_territory), \
+    disabled: true, \
+    include_blank: false
+
+  - if zone.level_city?
+    = f.input :city_label, \
+      label: "Rechercher une commune", \
+      input_html: { \
+        class: "places-js-container", \
+        data: { "address-type": "municipality" } \
+      }
+  - elsif zone.level_street?
+    = f.input :street_label, \
+      label: "Rechercher une rue", \
+      input_html: { \
+        class: "places-js-container", \
+        data: { "address-type": "street" } \
+      }
+  .row
+    .col-6
+      = f.input :city_name, input_html: { readonly: true }, required: true
+    .col-6
+      = f.input :city_code, input_html: { readonly: true }, required: true, hint: "code postal ≠ <a href='https://fr.wikipedia.org/wiki/Code_officiel_g%C3%A9ographique#Code_commune' target='_blank'>code commune INSEE <i class='fa fa-external-link-alt'></i></a>".html_safe
+
+  - if zone.level_street?
+    .row
+      .col-6= f.input :street_name, input_html: { readonly: true }, required: true
+      .col-6= f.input :street_ban_id, input_html: { readonly: true }, required: true
+
+  = f.submit class: 'btn btn-primary'

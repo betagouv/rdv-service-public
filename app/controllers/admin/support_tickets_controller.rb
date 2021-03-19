@@ -4,7 +4,7 @@ class Admin::SupportTicketsController < AgentAuthController
       first_name: current_agent.first_name,
       last_name: current_agent.last_name,
       email: current_agent.email,
-      departement: current_organisation.departement,
+      departement: current_organisation.departement_number,
       **support_ticket_params
     )
     authorize(@support_ticket_form, policy_class: Agent::SupportTicketPolicy)

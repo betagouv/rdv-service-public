@@ -1,11 +1,12 @@
 # this file contains ~integration specs, there is another with ~unit tests
 
 describe Users::GeoSearch, type: :service_model do
+  let!(:territory62) { create(:territory, departement_number: "62") }
   context "with a few motifs sectorised with departement level" do
     subject { Users::GeoSearch.new(departement: "62", city_code: "62100") }
 
-    let!(:organisation1) { create(:organisation, departement: "62", name: "MDS Arques") }
-    let!(:organisation2) { create(:organisation, departement: "62", name: "MDS Bapaume") }
+    let!(:organisation1) { create(:organisation, territory: territory62, name: "MDS Arques") }
+    let!(:organisation2) { create(:organisation, territory: territory62, name: "MDS Bapaume") }
     let(:service1) { create(:service) }
     let(:service2) { create(:service) }
 
@@ -32,17 +33,17 @@ describe Users::GeoSearch, type: :service_model do
   context "overlapping matching sectors with multiple agents attributed" do
     subject { Users::GeoSearch.new(departement: "62", city_code: "62100") }
 
-    let!(:organisation1) { create(:organisation, departement: "62", name: "MDS Arques") }
-    let!(:organisation2) { create(:organisation, departement: "62", name: "MDS Bapaume") }
+    let!(:organisation1) { create(:organisation, territory: territory62, name: "MDS Arques") }
+    let!(:organisation2) { create(:organisation, territory: territory62, name: "MDS Bapaume") }
     let(:service1) { create(:service) }
     let(:service2) { create(:service) }
 
     let!(:motifs_orga1) { create_list(:motif, 5, :sectorisation_level_agent, service: service1, reservable_online: true, organisation: organisation1) }
     let!(:motifs_orga2) { create_list(:motif, 2, :sectorisation_level_agent, service: service1, reservable_online: true, organisation: organisation2) }
 
-    let!(:sector_arques) { create(:sector, departement: "62", name: "Arques CENTRE", human_id: "arques") }
+    let!(:sector_arques) { create(:sector, territory: territory62, name: "Arques CENTRE", human_id: "arques") }
     let!(:zone_arques) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector_arques) }
-    let!(:sector_ville) { create(:sector, departement: "62", name: "Ville", human_id: "ville") }
+    let!(:sector_ville) { create(:sector, territory: territory62, name: "Ville", human_id: "ville") }
     let!(:zone_ville) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector_ville) }
 
     # first agent : sector Arques, orga 1
@@ -84,15 +85,15 @@ describe Users::GeoSearch, type: :service_model do
   context "2 sectors splitting a single city into street zones" do
     subject { Users::GeoSearch.new(departement: "62", city_code: "62100") }
 
-    let!(:organisation1) { create(:organisation, departement: "62", name: "MDS Arques") }
-    let!(:organisation2) { create(:organisation, departement: "62", name: "MDS Bapaume") }
+    let!(:organisation1) { create(:organisation, territory: territory62, name: "MDS Arques") }
+    let!(:organisation2) { create(:organisation, territory: territory62, name: "MDS Bapaume") }
     let(:service1) { create(:service) }
     let(:service2) { create(:service) }
 
-    let!(:sector_nord) { create(:sector, departement: "62", name: "Arques Nord", human_id: "arques-nord") }
+    let!(:sector_nord) { create(:sector, territory: territory62, name: "Arques Nord", human_id: "arques-nord") }
     let!(:zone_nord1) { create(:zone, level: "street", city_code: "62100", city_name: "Arques", street_name: "Rue du machin vert", street_ban_id: "62100_0103", sector: sector_nord) }
     let!(:zone_nord2) { create(:zone, level: "street", city_code: "62100", city_name: "Arques", street_name: "Rue des étoiles", street_ban_id: "62100_2t30", sector: sector_nord) }
-    let!(:sector_sud) { create(:sector, departement: "62", name: "Arques Sud", human_id: "arques-sud") }
+    let!(:sector_sud) { create(:sector, territory: territory62, name: "Arques Sud", human_id: "arques-sud") }
     let!(:zone_sud1) { create(:zone, level: "street", city_code: "62100", city_name: "Arques", street_name: "Rue du fond", street_ban_id: "62100_304f", sector: sector_sud) }
     let!(:zone_sud2) { create(:zone, level: "street", city_code: "62100", city_name: "Arques", street_name: "Rue des étoiles", street_ban_id: "62100_2t30", sector: sector_sud) }
 
@@ -138,9 +139,9 @@ describe Users::GeoSearch, type: :service_model do
     end
 
     context "with a fallback sector attributed to whole city" do
-      let!(:organisation3) { create(:organisation, departement: "62", name: "MDS Arques backup") }
+      let!(:organisation3) { create(:organisation, territory: territory62, name: "MDS Arques backup") }
 
-      let!(:sector_fallback) { create(:sector, departement: "62", name: "Arques full", human_id: "arques-fallback") }
+      let!(:sector_fallback) { create(:sector, territory: territory62, name: "Arques full", human_id: "arques-fallback") }
       let!(:zone_fallback) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector_fallback) }
       let!(:attribution_nord) { SectorAttribution.create(level: "organisation", sector: sector_fallback, organisation: organisation3) }
 

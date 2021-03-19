@@ -34,9 +34,11 @@ class Zone < ApplicationRecord
   protected
 
   def coherent_city_code_departement
-    return true if city_code.blank? || sector&.departement.blank? || city_code.start_with?(sector&.departement)
+    return true if city_code.blank? \
+      || sector&.territory&.departement_number.blank? \
+      || city_code.start_with?(sector.territory.departement_number)
 
-    errors.add(:base, "La commune #{city_name} n'appartient pas au département #{sector&.departement}")
+    errors.add(:base, "La commune #{city_name} n'appartient pas au département #{sector&.territory&.departement_number}")
   end
 
   def coherent_street_ban_id

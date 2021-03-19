@@ -1,0 +1,14 @@
+fr:
+  activerecord:
+    models:
+      territory: Territory
+    attributes:
+      territory:
+        base: "" # weird hack for nested base error
+        name: Nom
+        departement_number: Département
+        phone_number: Téléphone
+    errors:
+      models:
+        territory:
+          department_number_already_taken: "Il y a déjà des organisations et des agents créés dans ce département, veuillez entrer en contact avec eux"
