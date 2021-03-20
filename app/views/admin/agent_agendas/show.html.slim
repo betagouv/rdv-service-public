@@ -8,7 +8,7 @@
     | Agenda de #{@agent.full_name_and_service}
 
 - content_for :breadcrumb do
-  = form_tag(admin_organisation_agent_agenda_path(current_organisation, @agent), method: "get", class: "d-inline-flex mr-2") do
+  = form_tag(admin_organisation_agent_agenda_path(@organisation, @agent), method: "get", class: "d-inline-flex mr-2") do
     = select_tag :status, options_for_select(Rdv.human_enum_collection(:statuses).unshift(["Tous les rdvs", ""]), rdv_status_value(@status)), class:"select2-input", onchange: 'this.form.submit()'
   = link_to "Trouver un créneau", admin_organisation_agent_searches_path(@organisation), class: "btn btn-outline-white align-bottom"
 
@@ -22,7 +22,7 @@
       data-event-sources-json="#{[admin_organisation_rdvs_path(@organisation, agent_id: @agent.id, status: @status, format: :json), admin_organisation_agent_absences_path(@organisation, @agent), admin_organisation_agent_plage_ouvertures_path(@organisation, @agent), admin_jours_feries_path].to_json}"
     ]
     .mt-3
-      = link_to admin_organisation_rdvs_path(current_organisation, agent_id: @agent.id, start: @date, end: @date, show_user_details: true, breadcrumb_page: "agenda"), class: "js-link-print-rdvs" do
+      = link_to admin_organisation_rdvs_path(@organisation, agent_id: @agent.id, start: @date, end: @date, show_user_details: true, breadcrumb_page: "agenda"), class: "js-link-print-rdvs" do
         - if current_agent == @agent
           ' 🖨 Liste détaillée des RDVs du
           span.js-date
