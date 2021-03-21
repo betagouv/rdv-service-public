@@ -32,7 +32,7 @@
               div
                 = t("activerecord.attributes.motif.service")
               div
-                = select_tag("service_filter", options_from_collection_for_select(@motifs.map(&:service).uniq.sort, "id", "short_name", params[:service_filter]), include_blank: "Tous", class: "js-motif-filters select2-input")
+                = select_tag("service_filter", options_from_collection_for_select(Service.all.uniq.sort, "id", "short_name", params[:service_filter]), include_blank: "Tous", class: "js-motif-filters select2-input")
             th
               div
                 = t("activerecord.attributes.motif.location_type")
