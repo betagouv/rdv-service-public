@@ -5,11 +5,7 @@ class Admin::Agents::AbsencesController < ApplicationController
     authorize_admin(current_agent)
 
     agent = Agent.find(params[:agent_id])
-    @absence_occurrences = extract_occurrence_from(Absence.with_agent(agent))
-  end
-
-  def extract_occurrence_from(absences)
-    absences.flat_map { |absence| absence.occurences_for(date_range_params).map { |occurrence| [absence, occurrence] } }.sort_by(&:second)
+    @absence_occurrences = Admin::Occurrence.extract_from(Absence.with_agent(agent), date_range_params)
   end
 
   def date_range_params

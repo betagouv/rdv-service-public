@@ -6,11 +6,7 @@ class Admin::Agents::PlageOuverturesController < ApplicationController
 
     agent = Agent.find(params[:agent_id])
     @organisation = Organisation.find(params[:organisation_id])
-    @plage_ouverture_occurences = extract_occurence_from(PlageOuverture.with_agent(agent))
-  end
-
-  def extract_occurence_from(plage_ouvertures)
-    plage_ouvertures.flat_map { |po| po.occurences_for(date_range_params).map { |occurence| [po, occurence] } }.sort_by(&:second)
+    @plage_ouverture_occurences = Admin::Occurrence.extract_from(PlageOuverture.with_agent(agent), date_range_params)
   end
 
   def date_range_params
