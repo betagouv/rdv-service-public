@@ -37,9 +37,9 @@ fr:
           phone: Par téléphone
           public_office: Sur place
         location_type_hints:
-          home: Le RDV aura lieu au lieu sélectionné (MDS...)
+          public_office: Le RDV aura lieu au lieu sélectionné (MDS...)
           phone: L'usager sera notifié que le RDV se passera par téléphone, au numéro indiqué dans son profil
-          public_office: L'usager sera notifié que le RDV aura lieu à l'adresse remplie dans son profil
+          home: L'usager sera notifié que le RDV aura lieu à l'adresse remplie dans son profil
         for_secretariat: Motif accessible au secrétariat
         for_secretariat_label: Le RDV pourra être effectué par le service secrétariat
         for_secretariat_short: RDV Secrétariat

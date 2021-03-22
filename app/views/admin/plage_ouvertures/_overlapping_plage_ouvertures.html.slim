@@ -6,7 +6,7 @@
     - if local_assigns[:display_agents]
       span> de #{overlapping_plage_ouverture.agent.full_name}
     span> à #{overlapping_plage_ouverture.lieu.name}
-    = plage_ouverture_occurence_text(overlapping_plage_ouverture)
+    = plage_ouverture_occurrence_text(overlapping_plage_ouverture)
     - if overlapping_plage_ouverture.organisation != current_organisation
       span>= "(Organisation #{overlapping_plage_ouverture.organisation.name})"
 

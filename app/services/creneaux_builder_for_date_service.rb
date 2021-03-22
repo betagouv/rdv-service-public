@@ -58,7 +58,7 @@ class CreneauxBuilderForDateService < BaseService
   end
 
   def absences_occurrences
-    @absences_occurrences ||= @plage_ouverture.agent.absences.flat_map { _1.occurences_for(inclusive_datetime_range) }
+    @absences_occurrences ||= @plage_ouverture.agent.absences.flat_map { _1.occurrences_for(inclusive_datetime_range) }
   end
 
   def inclusive_datetime_range

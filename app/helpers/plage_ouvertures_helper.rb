@@ -50,7 +50,7 @@ module PlageOuverturesHelper
     "de #{I18n.l(plage_ouverture.start_time, format: "%H:%M")} à #{I18n.l(plage_ouverture.end_time, format: "%H:%M")}"
   end
 
-  def plage_ouverture_occurence_text(plage_ouverture)
+  def plage_ouverture_occurrence_text(plage_ouverture)
     if plage_ouverture.recurring?
       display_recurrence(plage_ouverture).join(" ")
     else
