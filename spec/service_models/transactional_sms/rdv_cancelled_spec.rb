@@ -6,7 +6,7 @@ describe TransactionalSms::RdvCancelled, type: :service do
 
   describe "#content" do
     subject { TransactionalSms::RdvCancelled.new(rdv, user).content }
-    it { should include("RDV PMI 10 déc. à 13h10 a été annulé") }
+    it { should include("RDV PMI vendredi 10/12 à 13h10 a été annulé") }
     it { should include("Allez sur https://rdv-solidarites.fr pour reprendre RDV") }
   end
 end
