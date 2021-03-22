@@ -18,7 +18,7 @@ class Absence < ApplicationRecord
   end
 
   def in_progress?
-    starts_at.past? && first_occurence_ends_at.future?
+    starts_at.past? && first_occurrence_ends_at.future?
   end
 
   def ical_uid

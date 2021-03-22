@@ -35,7 +35,7 @@ module RecurrenceConcern
     end
   end
 
-  def first_occurence_ends_at
+  def first_occurrence_ends_at
     if end_time.blank?
       nil
     elsif defined?(end_day) && end_day.present?
@@ -46,7 +46,7 @@ module RecurrenceConcern
   end
 
   def duration
-    (first_occurence_ends_at - starts_at).to_i
+    (first_occurrence_ends_at - starts_at).to_i
   end
 
   def exceptionnelle?
@@ -57,10 +57,10 @@ module RecurrenceConcern
     recurrence.present?
   end
 
-  def occurences_for(inclusive_date_range)
+  def occurrences_for(inclusive_date_range)
     return [] if inclusive_date_range.nil?
 
-    occurence_start_at_list_for(inclusive_date_range)
+    occurrence_start_at_list_for(inclusive_date_range)
       .map { |o| Recurrence::Occurrence.new(starts_at: o, ends_at: o + duration) }
   end
 
@@ -80,7 +80,7 @@ module RecurrenceConcern
 
   private
 
-  def occurence_start_at_list_for(inclusive_date_range)
+  def occurrence_start_at_list_for(inclusive_date_range)
     min_until = [inclusive_date_range.end, recurrence_until].compact.min.to_time.end_of_day
     inclusive_datetime_range = (inclusive_date_range.begin.to_time)..(inclusive_date_range.end.end_of_day)
     if recurring?
@@ -88,7 +88,7 @@ module RecurrenceConcern
         event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
       end.to_a
     else
-      event_in_range?(starts_at, first_occurence_ends_at, inclusive_datetime_range) ? [starts_at] : []
+      event_in_range?(starts_at, first_occurrence_ends_at, inclusive_datetime_range) ? [starts_at] : []
     end
   end
 
