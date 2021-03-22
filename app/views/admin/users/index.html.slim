@@ -15,7 +15,7 @@
         .col-md-6
           = f.input :search, placeholder: 'Prénom, Nom, Email, Téléphone', label: "Recherche", input_html: { autocomplete: 'off', class: 'search-form-control', value: params[:search] }, required: false
         .col-md-6
-          = f.input :agent_id, collection: @users.flat_map(&:agents).compact.uniq, label: "Agent référent", label_method: :full_name, input_html: { class: 'select2-input' }
+          = f.input :agent_id, collection: policy_scope(Agent).within_organisation(current_organisation), label: "Agent référent", label_method: :full_name, input_html: { class: 'select2-input' }
       input.btn.btn-primary.d-print-none type="submit" value="Rafraîchir la liste"
 
 .card
