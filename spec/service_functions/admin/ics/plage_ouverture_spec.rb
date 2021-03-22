@@ -1,6 +1,6 @@
 describe Admin::Ics::PlageOuverture, type: :service do
   describe "#payload" do
-    [:name, :agent_email, :starts_at, :recurrence, :ical_uid, :title, :first_occurence_ends_at, :address].each do |key|
+    [:name, :agent_email, :starts_at, :recurrence, :ical_uid, :title, :first_occurrence_ends_at, :address].each do |key|
       it "return an hash with key #{key}" do
         plage_ouverture = build(:plage_ouverture)
         expect(described_class.payload(plage_ouverture)).to have_key(key)
@@ -38,10 +38,10 @@ describe Admin::Ics::PlageOuverture, type: :service do
       it { expect(described_class.payload(plage_ouverture)[:title]).to eq("Permanence") }
     end
 
-    describe ":first_occurence_ends_at" do
+    describe ":first_occurrence_ends_at" do
       let(:starts_at) { Time.zone.parse("20201009 11h45") }
       let(:plage_ouverture) { build(:plage_ouverture, end_time: starts_at + 5.hours, first_day: starts_at.to_date) }
-      it { expect(described_class.payload(plage_ouverture)[:first_occurence_ends_at]).to eq(starts_at + 5.hours) }
+      it { expect(described_class.payload(plage_ouverture)[:first_occurrence_ends_at]).to eq(starts_at + 5.hours) }
     end
 
     describe ":address" do
@@ -73,7 +73,7 @@ describe Admin::Ics::PlageOuverture, type: :service do
         recurrence: "",
         ical_uid: "plage_ouverture_15@RDV Solidarités",
         title: "Elisa SIMON <> Consultation initiale",
-        first_occurence_ends_at: Time.zone.parse("20190704 15h45"),
+        first_occurrence_ends_at: Time.zone.parse("20190704 15h45"),
         address: "10 rue de la Ferronerie 44100 Nantes"
       }
     end

@@ -20,7 +20,7 @@ class PlageOuverturePresenter
       attrs.merge!(
         path: admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture),
         lieu_name: plage_ouverture.lieu.name,
-        occurence_text: plage_ouverture_occurence_text(plage_ouverture),
+        occurrence_text: plage_ouverture_occurrence_text(plage_ouverture),
         organisation_name: plage_ouverture.organisation.name
       )
     end

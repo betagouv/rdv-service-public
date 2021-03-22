@@ -10,7 +10,7 @@ describe Agents::PlageOuvertureMailer, type: :mailer do
           starts_at: Time.zone.parse("20190423 13h00"),
           ical_uid: "plage_ouverture_@RDV Solidarités",
           title: "Plage d'ouverture #{verb}",
-          first_occurence_ends_at: Time.zone.parse("20190423 18h00"),
+          first_occurrence_ends_at: Time.zone.parse("20190423 18h00"),
           address: "une adresse"
         }
       end
@@ -42,7 +42,7 @@ describe Agents::PlageOuvertureMailer, type: :mailer do
         starts_at: Time.zone.parse("20190423 13h00"),
         ical_uid: "plage_ouverture_@RDV Solidarités",
         title: "Plage d'ouverture supprimée",
-        first_occurence_ends_at: Time.zone.parse("20190423 18h00"),
+        first_occurrence_ends_at: Time.zone.parse("20190423 18h00"),
         address: "une adresse"
       }
       mail = Agents::PlageOuvertureMailer.send("plage_ouverture_destroyed", ics_payload)
