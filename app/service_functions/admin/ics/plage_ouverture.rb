@@ -21,7 +21,7 @@ class Admin::Ics::PlageOuverture
       recurrence: rrule(plage_ouverture),
       ical_uid: plage_ouverture.ical_uid,
       title: plage_ouverture.title,
-      first_occurence_ends_at: plage_ouverture.first_occurence_ends_at,
+      first_occurrence_ends_at: plage_ouverture.first_occurrence_ends_at,
       address: plage_ouverture.lieu.address
     }
   end
@@ -41,7 +41,7 @@ class Admin::Ics::PlageOuverture
   def self.populate_event(event, payload)
     event.uid = payload[:ical_uid]
     event.dtstart = Icalendar::Values::DateTime.new(payload[:starts_at], "tzid" => TZID)
-    event.dtend = Icalendar::Values::DateTime.new(payload[:first_occurence_ends_at], "tzid" => TZID)
+    event.dtend = Icalendar::Values::DateTime.new(payload[:first_occurrence_ends_at], "tzid" => TZID)
     event.summary = "#{BRAND} #{payload[:title]}"
     event.location = payload[:address]
     event.ip_class = "PUBLIC"

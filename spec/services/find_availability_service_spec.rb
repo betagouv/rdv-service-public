@@ -3,10 +3,14 @@ describe FindAvailabilityService, type: :service do
   let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, reservable_online: reservable_online, organisation: organisation) }
   let(:reservable_online) { true }
   let!(:lieu) { create(:lieu, organisation: organisation) }
-  let(:today) { Date.today.next_week(:thursday) }
-  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-  let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent, organisation: organisation) }
+  let(:today) { Date.new(2021, 3, 18) }
   let(:now) { today.to_time }
+  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+  let!(:plage_ouverture) do
+    travel_to(now) do # important so that expired_cached is set correctly
+      create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent, organisation: organisation)
+    end
+  end
 
   before { travel_to(now) }
   after { travel_back }
