@@ -7,9 +7,9 @@ plage_ouverture.recurrence = nil
 plage_ouverture.first_day = Date.new(2021, 4, 5).in_time_zone
 plage_ouverture.start_time = Tod::TimeOfDay.new(9)
 plage_ouverture.end_time = Tod::TimeOfDay.new(12)
-plage_ouverture.title = "test7"
-recipient_mail = "christelle.cufay@le64.fr"
-# recipient_mail = "adrien_test@outlook.com"
+plage_ouverture.title = "Test 7"
+# recipient_mail = "christelle.cufay@le64.fr"
+recipient_mail = "adrien_test@outlook.com"
 
 # Agents::PlageOuvertureMailer
 #   .plage_ouverture_created(
