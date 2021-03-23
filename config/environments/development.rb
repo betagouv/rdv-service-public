@@ -34,7 +34,16 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: "localhost:5000", utm_source: "dev", utm_medium: "email", utm_campaign: "default" }
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.smtp_settings = {
+    address:        "smtp-relay.sendinblue.com",
+    port:           "587",
+    authentication: :plain,
+    user_name:      ENV["SENDINBLUE_USERNAME"],
+    password:       ENV["SENDINBLUE_PASSWORD"],
+    domain:         "rdv-solidarites.fr",
+  }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.asset_host = ENV["HOST"]
   config.action_mailer.asset_host = "http://localhost:5000"
 
   config.active_job.queue_adapter = :delayed_job

@@ -1,0 +1,453 @@
+Return-Path: <bounces-89844670-adrien+test3=dipasquale.fr@email.rdv-solidarites.fr>
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	 by sloti6d1t03 (Cyrus 3.5.0-alpha0-206-g078a48fda5-fm-20210226.001-g078a48fd) with LMTPA;
+	 Tue, 16 Mar 2021 05:41:47 -0400
+X-Cyrus-Session-Id: sloti6d1t03-1615887707-696678-2-7612937946660164728
+X-Sieve: CMU Sieve 3.0
+X-Spam-known-sender: no
+X-Spam-sender-reputation: 500 (none)
+X-Spam-score: 0.0
+X-Spam-hits: HTML_MESSAGE 0.001, ME_HAS_VSSU 0.001, ME_RCVD_IN_CSA -0.001,
+  ME_SC_TRUSTED_UNSUBSCRIBE -100, ME_SENDERREP_NEUTRAL 0.001,
+  SHORTCIRCUIT -0.0001, SPF_HELO_PASS -0.001, SPF_PASS -0.001,
+  WEIRD_PORT 0.001, LANGUAGES fr, BAYES_USED none, SA_VERSION 3.4.2
+X-Spam-source: IP='212.146.241.127', Host='email.rdv-solidarites.fr', Country='FR',
+  FromHeader='fr', MailFrom='fr'
+X-ME-Cal-Method: request
+X-ME-Cal-UID: plage_ouverture_7@RDV Solidarit�s
+X-ME-Message-Id: <x-me-fake-plage_ouverture_7@RDV Solidarit�s>
+X-Spam-charsets: subject='UTF-8', plain='utf-8', html='utf-8'
+X-Attached: plage-ouverture-test3-2021-03-25-09-00-00-0100.ics
+X-Resolved-to: adrien+test3@dipasquale.fr
+X-Delivered-to: adrien+test3@dipasquale.fr
+X-Mail-from: bounces-89844670-adrien+test3=dipasquale.fr@email.rdv-solidarites.fr
+Received: from mx1 ([10.202.2.200])
+  by compute1.internal (LMTPProxy); Tue, 16 Mar 2021 05:41:47 -0400
+Received: from mx1.messagingengine.com (localhost [127.0.0.1])
+	by mailmx.nyi.internal (Postfix) with ESMTP id E640E660112
+	for <adrien+test3@dipasquale.fr>; Tue, 16 Mar 2021 05:41:46 -0400 (EDT)
+Received: from mx1.messagingengine.com (localhost [127.0.0.1])
+    by mx1.messagingengine.com (Authentication Milter) with ESMTP
+    id 22FA15BBDEB;
+    Tue, 16 Mar 2021 05:41:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; cv=none; d=messagingengine.com; s=fm2; t=
+    1615887706; b=QRn5woS/m7z4jmBOTjP3tfpf2ej+ob0J71humsSnmAX76LMCZ0
+    2NBBqO8R98eYYmGm/AkNUCGswS3LVq3aYZMG+TF33ys6/CsQ5fIO+eOfX2E5V3Ru
+    IfWwAMDBXNkPlS1VB507aIgxbx5OWJEToH/DrE0cKuJf2UuBFvXih5hJuSwCCFOy
+    FuIFNF49FfaOm0wgWAr4uLY9qO6BxcJM3fte67k7vCSo8PFTR+EwlGokq2wUuU2s
+    MR3Jq3XNYqXABtxCOFWFAuFJD3gqkgWTEjSknK4l7Vyr4LJ84ABN5SH9qxgwR8io
+    1xWRKeI9B1bwawHGCNG7aWr9RKBR6oqBeOBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=
+    messagingengine.com; h=to:date:subject:message-id:mime-version
+    :content-type:content-transfer-encoding:from:list-unsubscribe;
+    s=fm2; t=1615887706; bh=9Ibukk3nJnj1jgTiG57CcYIiPk+Qe/dJWSQ3Fvy
+    /z6s=; b=UtIOM4+sq6uhswRzIuc0UDCamCNHkZN/Jnzy6TEOLHRXxPTlQDFCi03
+    SkMgzKAhBCuEuLFLqXGm3I1WwTijLCkP9DO0HPyq3w7zDK3GLbSRWpZaOWSZ2BTK
+    VMtFv8pyHhWiWvyptcTQwO8/ZY0iE0VfoahelW8L2mjSIZpNxEmvYNFbaIzqAV17
+    OHJKjPKlhCZ1Dq/csyOrB9z5tdtJNryFaMRl1/UR1tJ6frS6rK0CMzM26zAywB4d
+    alTPs1nvQLgFgCdGtvos0Igf/6elgqPH9RCMncPzf+FbGpcF1U9+3IuK04jnU0UC
+    BM7okSUngG6s9U0HrCxPGTFJoehQG+A==
+ARC-Authentication-Results: i=1; mx1.messagingengine.com;
+    arc=none (no signatures found);
+    bimi=skipped (DMARC Policy is not at enforcement);
+    dkim=pass (1024-bit rsa key sha256) header.d=rdv-solidarites.fr
+    header.i=@rdv-solidarites.fr header.b=Gyb4eCnz header.a=rsa-sha256
+    header.s=mail x-bits=1024;
+    dmarc=pass policy.published-domain-policy=none
+    policy.published-subdomain-policy=none policy.applied-disposition=none
+    policy.evaluated-disposition=none (p=none,sp=none,d=none,d.eval=none)
+    policy.policy-from=p header.from=rdv-solidarites.fr;
+    iprev=pass smtp.remote-ip=212.146.241.127 (email.rdv-solidarites.fr);
+    spf=pass
+    smtp.mailfrom=
+    "bounces-89844670-adrien+test3=dipasquale.fr@email.rdv-solidarites.fr"
+    smtp.helo=email.rdv-solidarites.fr;
+    x-aligned-from=orgdomain_pass (Domain org match);
+    x-csa=pass;
+    x-me-sender=none;
+    x-ptr=pass smtp.helo=email.rdv-solidarites.fr
+    policy.ptr=email.rdv-solidarites.fr;
+    x-return-mx=pass header.domain=rdv-solidarites.fr policy.is_org=yes
+    (MX Records found: spool.mail.gandi.net,fb.mail.gandi.net);
+    x-return-mx=pass smtp.domain=email.rdv-solidarites.fr
+    policy.org_domain=rdv-solidarites.fr policy.is_org=no
+    (MX Records found: email.rdv-solidarites.fr);
+    x-tls=pass smtp.version=TLSv1.3 smtp.cipher=TLS_AES_256_GCM_SHA384
+    smtp.bits=256/256;
+    x-vs=clean score=0 state=0
+Authentication-Results: mx1.messagingengine.com;
+    arc=none (no signatures found);
+    bimi=skipped (DMARC Policy is not at enforcement);
+    dkim=pass (1024-bit rsa key sha256) header.d=rdv-solidarites.fr
+      header.i=@rdv-solidarites.fr header.b=Gyb4eCnz header.a=rsa-sha256
+      header.s=mail x-bits=1024;
+    dmarc=pass policy.published-domain-policy=none
+      policy.published-subdomain-policy=none policy.applied-disposition=none
+      policy.evaluated-disposition=none (p=none,sp=none,d=none,d.eval=none)
+      policy.policy-from=p header.from=rdv-solidarites.fr;
+    iprev=pass smtp.remote-ip=212.146.241.127 (email.rdv-solidarites.fr);
+    spf=pass
+      smtp.mailfrom=
+      "bounces-89844670-adrien+test3=dipasquale.fr@email.rdv-solidarites.fr"
+      smtp.helo=email.rdv-solidarites.fr;
+    x-aligned-from=orgdomain_pass (Domain org match);
+    x-csa=pass;
+    x-me-sender=none;
+    x-ptr=pass smtp.helo=email.rdv-solidarites.fr
+      policy.ptr=email.rdv-solidarites.fr;
+    x-return-mx=pass header.domain=rdv-solidarites.fr policy.is_org=yes
+      (MX Records found: spool.mail.gandi.net,fb.mail.gandi.net);
+    x-return-mx=pass smtp.domain=email.rdv-solidarites.fr
+      policy.org_domain=rdv-solidarites.fr policy.is_org=no
+      (MX Records found: email.rdv-solidarites.fr);
+    x-tls=pass smtp.version=TLSv1.3 smtp.cipher=TLS_AES_256_GCM_SHA384
+      smtp.bits=256/256;
+    x-vs=clean score=0 state=0
+X-ME-VSSU: VW5zdWI9aHR0cHM6Ly9saXN0LXVuc3Vic2NyaWJlLm1lL3RyL3VuL2xpL2ItRmZiY181Yl
+    NacF8wWHlOOFNiNmVLanF1dm9MNzZrai1XVHZjdVlTOGxtc2tQWG9CZ3lsQUpDTlZpMDUw
+    MktYVEx3Y2d5TlAwaHVmV3Y4SElXajZxR1hMNUpZNVBMOWhzd1c0V1NXcTBZUktEcnd0Y2
+    1YXzkxWXl4emx0bjBlUjJVcXBFRFJIMGxJYmNISkJMSHVZblFIU0FmLVlRdjVQZFlKQlpn
+    aWN3
+X-ME-VSSU: VW5zdWI9bWFpbHRvOnVuc3Vic2NyaWJlLXRAZW1haWwucmR2LXNvbGlkYXJpdGVzLmZyP3
+    N1YmplY3Q9dW5zdWItT0RrNE5EUTJOekItWVdSeWFXVnVLM1JsYzNRelFHUnBjR0Z6Y1hW
+    aGJHVXVabkotUERZd05UQTNaRFUxTlRaaVl6QmZNVEprTURZeU5XUXdOemc1WlRCQVFXUn
+    lhV1Z1Y3kxTllXTkNiMjlyTFZCeWJ5NXNiMk5oYkM1dFlXbHNQbjV6WldOeVpYUmhjbWxo
+    ZEMxaGRYUnZRSEprZGkxemIyeHBaR0Z5YVhSbGN5NW1jZyUzRCUzRCZib2R5PU9EazRORF
+    EyTnpCLVlXUnlhV1Z1SzNSbGMzUXpRR1JwY0dGemNYVmhiR1V1Wm5KLVBEWXdOVEEzWkRV
+    MU5UWmlZekJmTVRKa01EWXlOV1F3TnpnNVpUQkFRV1J5YVdWdWN5MU5ZV05DYjI5ckxWQn
+    lieTVzYjJOaGJDNXRZV2xzUG41elpXTnlaWFJoY21saGRDMWhkWFJ2UUhKa2RpMXpiMnhw
+    WkdGeWFYUmxjeTVtY2clM0QlM0Q
+X-ME-VSCause: gggruggvucftvghtrhhoucdtuddrgeduledrudefvddgtdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpefvfffukf
+    ggtgfghffjsehmjeerredttdejnecuhfhrohhmpeeoshgvtghrvghtrghrihgrthdqrghu
+    thhosehrughvqdhsohhlihgurghrihhtvghsrdhfrheqnecuggftrfgrthhtvghrnhepte
+    ffkeettdevhfefgfefvdeiveetffeifedtudeufedtfeelieelvefgjeefgeffnecuffho
+    mhgrihhnpehrughvqdhsohhlihgurghrihhtvghsrdhfrhenucfkphepvdduvddrudegie
+    drvdeguddruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvght
+    pedvuddvrddugeeirddvgedurdduvdejpdhhvghlohepvghmrghilhdrrhguvhdqshholh
+    hiuggrrhhithgvshdrfhhrpdhmrghilhhfrhhomhepoegsohhunhgtvghsqdekleekgeeg
+    ieejtddqrggurhhivghnodhtvghsthefpeguihhprghsqhhurghlvgdrfhhrsegvmhgrih
+    hlrdhrughvqdhsohhlihgurghrihhtvghsrdhfrheq
+X-ME-VSScore: 0
+X-ME-VSCategory: clean
+X-ME-CSA: pass
+Received-SPF: pass
+    (email.rdv-solidarites.fr: Sender is authorized to use 'bounces-89844670-adrien+test3=dipasquale.fr@email.rdv-solidarites.fr' in 'mfrom' identity (mechanism 'include:spf.sendinblue.com' matched))
+    receiver=mx1.messagingengine.com;
+    identity=mailfrom;
+    envelope-from="bounces-89844670-adrien+test3=dipasquale.fr@email.rdv-solidarites.fr";
+    helo=email.rdv-solidarites.fr;
+    client-ip=212.146.241.127
+Received: from email.rdv-solidarites.fr (email.rdv-solidarites.fr [212.146.241.127])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx1.messagingengine.com (Postfix) with ESMTPS
+	for <adrien+test3@dipasquale.fr>; Tue, 16 Mar 2021 05:41:45 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rdv-solidarites.fr;
+ q=dns/txt; s=mail; bh=9Ibukk3nJnj1jgTiG57CcYIiPk+Qe/dJWSQ3Fvy/z6s=;
+ h=from:subject:date:mime-version:content-type:content-transfer-encoding:list-unsubscribe:x-csa-complaints:list-unsubscribe-post;
+        b=Gyb4eCnzqH4gOR9zJTR0WzpxyRCpRJEXwQcuoxVqvECK8lmviZILfJahHkexFf8RnUkH5EGyYaB9
+        LTE2AWU43n273ArvWVa2Vv/yjIeMuSVquZyi8A/mhB0u4B9+m0x9/VQqJyMX6S1dhN1aw3g7uNuy
+        hBGAMRhAn+jnkivYFRM=
+X-Mailin-EID: ODk4NDQ2NzB%2BYWRyaWVuK3Rlc3QzQGRpcGFzcXVhbGUuZnJ%2BPDYwNTA3ZDU1NTZiYzBfMTJkMDYyNWQwNzg5ZTBAQWRyaWVucy1NYWNCb29rLVByby5sb2NhbC5tYWlsPn5lbWFpbC5yZHYtc29saWRhcml0ZXMuZnI%3D
+To: <adrien+test3@dipasquale.fr>
+Date: Tue, 16 Mar 2021 10:41:41 +0100
+Subject: =?UTF-8?Q?RDV_Solidarit=C3=A9s_-_test3?=
+Message-Id: <c275ed3d-f81e-4b73-a9c9-e1c0ca00d0bb@smtp-relay.sendinblue.com>
+Origin-messageId: <60507d5556bc0_12d0625d0789e0@Adriens-MacBook-Pro.local.mail>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="--==_mimepart_60507d5547c21_12d0625d0787f5"; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-sib-id: CPE2s8qZ5_I8uTc_NfyTJGsEVQum5NGrVBRmGtY_83rd-dNjoCVPPWX-FjbWqpl386FyrIYhrHXzIyQxFVKnzldpGs_DVTihNq2c11Y1uoxlQEn-0tlRzDhtPx2R4d5rUqxu9Irz2j0CJRq3mlbSXZkBalBEL2f5AvhLURf4QqOY10E0C3NEyQ
+X-CSA-Complaints: whitelist-complaints@eco.de
+List-Unsubscribe-Post: List-Unsubscribe=One-Click
+Feedback-ID: 212.146.241.127:2610953_-1:2610953:Sendinblue
+From: <secretariat-auto@rdv-solidarites.fr>
+List-Unsubscribe: <mailto:unsubscribe-t@email.rdv-solidarites.fr?subject=unsub-ODk4NDQ2NzB-YWRyaWVuK3Rlc3QzQGRpcGFzcXVhbGUuZnJ-PDYwNTA3ZDU1NTZiYzBfMTJkMDYyNWQwNzg5ZTBAQWRyaWVucy1NYWNCb29rLVByby5sb2NhbC5tYWlsPn5zZWNyZXRhcmlhdC1hdXRvQHJkdi1zb2xpZGFyaXRlcy5mcg%3D%3D&body=ODk4NDQ2NzB-YWRyaWVuK3Rlc3QzQGRpcGFzcXVhbGUuZnJ-PDYwNTA3ZDU1NTZiYzBfMTJkMDYyNWQwNzg5ZTBAQWRyaWVucy1NYWNCb29rLVByby5sb2NhbC5tYWlsPn5zZWNyZXRhcmlhdC1hdXRvQHJkdi1zb2xpZGFyaXRlcy5mcg%3D%3D>, <https://list-unsubscribe.me/tr/un/li/b-Ffbc_5bSZp_0XyN8Sb6eKjquvoL76kj-WTvcuYS8lmskPXoBgylAJCNVi0502KXTLwcgyNP0hufWv8HIWj6qGXL5JY5PL9hswW4WSWq0YRKDrwtcmX_91Yyxzltn0eR2UqpEDRH0lIbcHJBLHuYnQHSAf-YQv5PdYJBZgicw>
+
+----==_mimepart_60507d5547c21_12d0625d0787f5
+Content-Type: multipart/alternative;
+ boundary="--==_mimepart_60507d55517b1_12d0625d07883f";
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+
+----==_mimepart_60507d55517b1_12d0625d07883f
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+( http://localhost:5000/=3Futm=5Fcampaign=3Ddefault&utm=5Fmedium=3Demail&ut=
+m=5Fsource=3Ddev )
+
+
+
+
+
+Bonjour,
+
+
+
+Vous venez de cr=C3=A9er une plage d'ouverture sur votre planning de
+
+RDV Solidarit=C3=A9s.
+
+
+
+Vous pouvez synchroniser cette plage sur votre calendrier en
+
+ouvrant la pi=C3=A8ce-jointe de cet email.
+
+
+
+=C3=80 bient=C3=B4t,
+
+
+
+L'=C3=A9quipe RDV Solidarit=C3=A9s
+
+
+
+Mentions L=C3=A9gales=20=20
+
+( https://doc.rdv-solidarites.fr/mentions-legales )
+
+
+----==_mimepart_60507d55517b1_12d0625d07883f
+Content-Type: text/html;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html>
+
+<html style=3D'font-family: =22Helvetica Neue=22, Helvetica, Arial, =
+sans-serif; box-sizing: border-box; font-size: 14px; background-color: =
+white !important; color: #313131; margin: 0;'>
+
+<head>
+
+<meta content=3D=22text/html; charset=3Dutf-8=22 http-equiv=3D=22Content-Ty=
+pe=22>
+
+<style>.blockquote-footer::before {
+
+content: =22\2014 \00A0=22;
+
+}
+
+img {
+
+max-width: 100%;
+
+}
+
+body {
+
+-webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width:=
+ 100% !important; height: 100%; line-height: 1.6em;
+
+}
+
+body {
+
+background-color: #f6f6f6;
+
+}
+
+body {
+
+background: white !important; color: #313131;
+
+}
+
+@media only screen and (max-width: 640px) {
+
+  .overview {
+
+    padding: 0 !important; margin: 0 !important;
+
+  }
+
+}
+
+</style>
+
+</head>
+
+<body style=3D'font-family: =22Helvetica Neue=22, Helvetica, Arial, =
+sans-serif; margin: 0; box-sizing: border-box; font-size: 14px; =
+-webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width:=
+ 100% !important; height: 100%; line-height: 1.6em; color: #313131;' =
+bgcolor=3D=22white=22><table class=3D=22body-wrap=22 style=3D'font-family: =
+=22Helvetica Neue=22, Helvetica, Arial, sans-serif; box-sizing: border-box;=
+ font-size: 14px; width: 100%; margin: 0;' bgcolor=3D=22#f6f6f6=22><tr =
+align=3D=22center=22 class=3D=22d-block=22 style=3D'font-family: =
+=22Helvetica Neue=22, Helvetica, Arial, sans-serif; box-sizing: border-box;=
+ font-size: 14px; display: block; margin: 0;'>
+
+<td class=3D=22logo d-block=22 style=3D'font-family: =22Helvetica Neue=22, =
+Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; =
+display: block; margin: 20px 0 0;' valign=3D=22top=22><a =
+href=3D=22http://localhost:5000/=3Futm=5Fcampaign=3Ddefault&amp;utm=5Fmediu=
+m=3Demail&amp;utm=5Fsource=3Ddev=22 style=3D'font-family: =22Helvetica =
+Neue=22, Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: =
+14px; color: #348eda; text-decoration: underline; margin: 0;'><img =
+style=3D'width: 200px; font-family: =22Helvetica Neue=22, Helvetica, Arial,=
+ sans-serif; box-sizing: border-box; font-size: 14px; max-width: 100%; =
+margin: auto;' src=3D=22http://img.email.rdv-solidarites.=
+fr/im/2610953/c7e4e328cd8ded40232d207ed55e46df872f263c22fd82a55a24406afdf0e=
+ebd.png=3Fe=3DdJkKjIpG1tejQsJOEs3AX3a74FyRSR6Hbpb3pLO0JjUKBM6Sg=5FbxhzV2RGb=
+yKzcQRCmgq9W4QfBfMeRNBkLxYTkQrk-sZvKT-dHUQ2oMXAHuZ2-ptsikBhMDN0GPgvqIiWZzVk=
+MGqdDnDscdLl0AAmtUCfP2pzxPcihAiNYmXb1z4XLaR3pJLXKJK1nPZzWZH258uv0x=22></a><=
+/td>
+
+<td class=3D=22container=22 style=3D'font-family: =22Helvetica Neue=22, =
+Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; =
+display: block !important; max-width: 600px !important; clear: both !=
+important; margin: 0 auto;' valign=3D=22top=22><div class=3D=22content=22 =
+style=3D'font-family: =22Helvetica Neue=22, Helvetica, Arial, sans-serif; =
+box-sizing: border-box; font-size: 14px; max-width: 600px; display: block; =
+margin: 0 auto; padding: 0px 20px 20px;'>
+
+<table class=3D=22main=22 width=3D=22100%=22 style=3D'border-width: 3px 1px=
+ 1px; box-sizing: border-box; font-size: 14px; border-radius: 3px; margin: =
+0; border-color: #222e5c #e9e9e9 #e9e9e9; border-style: solid; font-family:=
+ =22Helvetica Neue=22, Helvetica, Arial, sans-serif;' =
+bgcolor=3D=22#fff=22><tr style=3D'font-family: =22Helvetica Neue=22, =
+Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; =
+margin: 0;'><td class=3D=22content-wrap=22 style=3D'font-family: =
+=22Helvetica Neue=22, Helvetica, Arial, sans-serif; box-sizing: border-box;=
+ font-size: 14px; margin: 0; padding: 20px;' valign=3D=22top=22><table =
+width=3D=22100%=22 style=3D'font-family: =22Helvetica Neue=22, Helvetica, =
+Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: =
+0;'><tbody style=3D'font-family: =22Helvetica Neue=22, Helvetica, Arial, =
+sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;'>
+
+<p style=3D'font-family: =22Helvetica Neue=22, Helvetica, Arial, =
+sans-serif; box-sizing: border-box; font-size: 14px; font-weight: normal; =
+margin: 0 0 10px;'>Bonjour,</p>
+
+<p style=3D'font-family: =22Helvetica Neue=22, Helvetica, Arial, =
+sans-serif; box-sizing: border-box; font-size: 14px; font-weight: normal; =
+margin: 0 0 10px;'>Vous venez de cr=C3=A9er une plage d'ouverture sur votre=
+ planning de RDV Solidarit=C3=A9s.</p>
+
+<p style=3D'font-family: =22Helvetica Neue=22, Helvetica, Arial, =
+sans-serif; box-sizing: border-box; font-size: 14px; font-weight: normal; =
+margin: 0 0 10px;'>Vous pouvez synchroniser cette plage sur votre =
+calendrier en ouvrant la pi=C3=A8ce-jointe de cet email.</p>
+
+<p style=3D'font-family: =22Helvetica Neue=22, Helvetica, Arial, =
+sans-serif; box-sizing: border-box; font-size: 14px; font-weight: normal; =
+margin: 0 0 10px;'>=C3=80 bient=C3=B4t,</p>
+
+<p style=3D'font-family: =22Helvetica Neue=22, Helvetica, Arial, =
+sans-serif; box-sizing: border-box; font-size: 14px; font-weight: normal; =
+margin: 0 0 10px;'>L'=C3=A9quipe RDV Solidarit=C3=A9s</p>
+
+</tbody></table></td></tr></table>
+
+<div class=3D=22footer=22 style=3D'font-family: =22Helvetica Neue=22, =
+Helvetica, Arial, sans-serif; margin: 0; padding: 20px; box-sizing: =
+border-box; font-size: 14px; width: 100%; clear: both; color: #999;'><table=
+ width=3D=22100%=22 style=3D'font-family: =22Helvetica Neue=22, Helvetica, =
+Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;'><tr=
+ style=3D'font-family: =22Helvetica Neue=22, Helvetica, Arial, sans-serif; =
+box-sizing: border-box; font-size: 14px; margin: 0;'><td =
+class=3D=22aligncenter content-block=22 style=3D'font-family: =22Helvetica =
+Neue=22, Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: =
+12px; color: #999; margin: 0; padding: 0 0 20px;' align=3D=22center=22 =
+valign=3D=22top=22><a href=3D=22https://doc.rdv-solidarites.=
+fr/mentions-legales=22 style=3D'font-family: =22Helvetica Neue=22, =
+Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 12px; =
+color: #999; text-decoration: underline; margin: 0;'><span =
+style=3D'font-family: =22Helvetica Neue=22, Helvetica, Arial, sans-serif; =
+box-sizing: border-box; font-size: 14px; margin: 0;'>Mentions =
+L=C3=A9gales</span> <i class=3D=22fa fa-external-link-alt=22 =
+style=3D'font-family: =22Helvetica Neue=22, Helvetica, Arial, sans-serif; =
+box-sizing: border-box; font-size: 14px; margin: 0;'></i></a></td></tr></ta=
+ble></div>
+
+</div></td>
+
+</tr></table></body>
+
+</html>
+
+
+
+----==_mimepart_60507d55517b1_12d0625d07883f--
+
+----==_mimepart_60507d5547c21_12d0625d0787f5
+Content-Type: text/calendar;
+ charset=utf-8;
+ method=REQUEST
+Content-Transfer-Encoding: base64
+
+QkVHSU46VkNBTEVOREFSDQpWRVJTSU9OOjIuMA0KUFJPRElEOlJEViBTb2xp
+ZGFyaXTDqXMNCkNBTFNDQUxFOkdSRUdPUklBTg0KTUVUSE9EOlJFUVVFU1QN
+CkJFR0lOOlZUSU1FWk9ORQ0KVFpJRDpFdXJvcGUvUGFyaXMNCkJFR0lOOkRB
+WUxJR0hUDQpEVFNUQVJUOjIwMjEwMzI4VDAzMDAwMA0KVFpPRkZTRVRGUk9N
+OiswMTAwDQpUWk9GRlNFVFRPOiswMjAwDQpSUlVMRTpGUkVRPVlFQVJMWTtC
+WURBWT0tMVNVO0JZTU9OVEg9Mw0KVFpOQU1FOkNFU1QNCkVORDpEQVlMSUdI
+VA0KQkVHSU46U1RBTkRBUkQNCkRUU1RBUlQ6MjAyMDEwMjVUMDIwMDAwDQpU
+Wk9GRlNFVEZST006KzAyMDANClRaT0ZGU0VUVE86KzAxMDANClJSVUxFOkZS
+RVE9WUVBUkxZO0JZREFZPS0xU1U7QllNT05USD0xMA0KVFpOQU1FOkNFVA0K
+RU5EOlNUQU5EQVJEDQpFTkQ6VlRJTUVaT05FDQpCRUdJTjpWRVZFTlQNCkRU
+U1RBTVA6MjAyMTAzMTZUMDk0MTQxWg0KVUlEOnBsYWdlX291dmVydHVyZV83
+QFJEViBTb2xpZGFyaXTDqXMNCkRUU1RBUlQ7VFpJRD1FdXJvcGUvUGFyaXM6
+MjAyMTAzMjVUMDkwMDAwDQpEVEVORDtUWklEPUV1cm9wZS9QYXJpczoyMDIx
+MDMyNVQxMjAwMDANCkNMQVNTOlBVQkxJQw0KTE9DQVRJT046MTAgcnVlIGVt
+aWxlIGRlbG90XCwgNjI0NTAgQXJxdWVzDQpTVEFUVVM6Q09ORklSTUVEDQpT
+VU1NQVJZOlJEViBTb2xpZGFyaXTDqXMgdGVzdDMNCkFUVEVOREVFOm1haWx0
+bzphZHJpZW4rdGVzdDNAZGlwYXNxdWFsZS5mcg0KRU5EOlZFVkVOVA0KRU5E
+OlZDQUxFTkRBUg0K
+
+
+----==_mimepart_60507d5547c21_12d0625d0787f5
+Content-Type: text/calendar;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+ filename=plage-ouverture-test3-2021-03-25-09-00-00-0100.ics
+Content-ID: <60507d55580cd_12d0625d0790bd@Adriens-MacBook-Pro.local.mail>
+
+BEGIN:VCALENDAR=0D
+VERSION:2.0=0D
+PRODID:RDV Solidarit=C3=A9s=0D
+CALSCALE:GREGORIAN=0D
+METHOD:REQUEST=0D
+BEGIN:VTIMEZONE=0D
+TZID:Europe/Paris=0D
+BEGIN:DAYLIGHT=0D
+DTSTART:20210328T030000=0D
+TZOFFSETFROM:+0100=0D
+TZOFFSETTO:+0200=0D
+RRULE:FREQ=3DYEARLY;BYDAY=3D-1SU;BYMONTH=3D3=0D
+TZNAME:CEST=0D
+END:DAYLIGHT=0D
+BEGIN:STANDARD=0D
+DTSTART:20201025T020000=0D
+TZOFFSETFROM:+0200=0D
+TZOFFSETTO:+0100=0D
+RRULE:FREQ=3DYEARLY;BYDAY=3D-1SU;BYMONTH=3D10=0D
+TZNAME:CET=0D
+END:STANDARD=0D
+END:VTIMEZONE=0D
+BEGIN:VEVENT=0D
+DTSTAMP:20210316T094141Z=0D
+UID:plage_ouverture_7@RDV Solidarit=C3=A9s=0D
+DTSTART;TZID=3DEurope/Paris:20210325T090000=0D
+DTEND;TZID=3DEurope/Paris:20210325T120000=0D
+CLASS:PUBLIC=0D
+LOCATION:10 rue emile delot\, 62450 Arques=0D
+STATUS:CONFIRMED=0D
+SUMMARY:RDV Solidarit=C3=A9s test3=0D
+ATTENDEE:mailto:adrien+test3@dipasquale.fr=0D
+END:VEVENT=0D
+END:VCALENDAR=0D
+
+
+----==_mimepart_60507d5547c21_12d0625d0787f5--

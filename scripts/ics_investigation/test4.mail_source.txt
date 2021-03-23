@@ -1,0 +1,227 @@
+Date: Tue, 16 Mar 2021 11:04:20 +0100
+From: secretariat-auto@rdv-solidarites.fr
+To: christelle.cufay@le64.fr
+Message-ID: <605082a4f057b_13afe25d078928@Adriens-MacBook-Pro.local.mail>
+Subject: =?UTF-8?Q?RDV_Solidarit=C3=A9s_-_test4?=
+Mime-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="--==_mimepart_605082a4e1548_13afe25d0787ac";
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+
+----==_mimepart_605082a4e1548_13afe25d0787ac
+Content-Type: multipart/alternative;
+ boundary="--==_mimepart_605082a4ea0a4_13afe25d0788bb";
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+
+----==_mimepart_605082a4ea0a4_13afe25d0788bb
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+( http://localhost:5000/?utm_campaign=3Ddefault&utm_medium=3Demail&utm_so=
+urce=3Ddev )=0D
+=0D
+=0D
+Bonjour,=0D
+=0D
+Vous venez de cr=C3=A9er une plage d'ouverture sur votre planning de=0D
+RDV Solidarit=C3=A9s.=0D
+=0D
+Vous pouvez synchroniser cette plage sur votre calendrier en=0D
+ouvrant la pi=C3=A8ce-jointe de cet email.=0D
+=0D
+=C3=80 bient=C3=B4t,=0D
+=0D
+L'=C3=A9quipe RDV Solidarit=C3=A9s=0D
+=0D
+Mentions L=C3=A9gales  =0D
+( https://doc.rdv-solidarites.fr/mentions-legales )=
+
+----==_mimepart_605082a4ea0a4_13afe25d0788bb
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html>=0D
+<html style=3D'font-family: "Helvetica Neue", Helvetica, Arial, sans-seri=
+f; box-sizing: border-box; font-size: 14px; background-color: white !impo=
+rtant; color: #313131; margin: 0;'>=0D
+<head>=0D
+<meta content=3D"text/html; charset=3Dutf-8" http-equiv=3D"Content-Type">=
+=0D
+<style>.blockquote-footer::before {=0D
+content: "\2014 \00A0";=0D
+}=0D
+img {=0D
+max-width: 100%;=0D
+}=0D
+body {=0D
+-webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; widt=
+h: 100% !important; height: 100%; line-height: 1.6em;=0D
+}=0D
+body {=0D
+background-color: #f6f6f6;=0D
+}=0D
+body {=0D
+background: white !important; color: #313131;=0D
+}=0D
+@media only screen and (max-width: 640px) {=0D
+  .overview {=0D
+    padding: 0 !important; margin: 0 !important;=0D
+  }=0D
+}=0D
+</style>=0D
+</head>=0D
+<body style=3D'font-family: "Helvetica Neue", Helvetica, Arial, sans-seri=
+f; margin: 0; box-sizing: border-box; font-size: 14px; -webkit-font-smoot=
+hing: antialiased; -webkit-text-size-adjust: none; width: 100% !important=
+; height: 100%; line-height: 1.6em; color: #313131;' bgcolor=3D"white"><t=
+able class=3D"body-wrap" style=3D'font-family: "Helvetica Neue", Helvetic=
+a, Arial, sans-serif; box-sizing: border-box; font-size: 14px; width: 100=
+%; margin: 0;' bgcolor=3D"#f6f6f6"><tr align=3D"center" class=3D"d-block"=
+ style=3D'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; bo=
+x-sizing: border-box; font-size: 14px; display: block; margin: 0;'>=0D
+<td class=3D"logo d-block" style=3D'font-family: "Helvetica Neue", Helvet=
+ica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; display:=
+ block; margin: 20px 0 0;' valign=3D"top"><a href=3D"http://localhost:500=
+0/?utm_campaign=3Ddefault&amp;utm_medium=3Demail&amp;utm_source=3Ddev" st=
+yle=3D'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; box-s=
+izing: border-box; font-size: 14px; color: #348eda; text-decoration: unde=
+rline; margin: 0;'><img style=3D'width: 200px; font-family: "Helvetica Ne=
+ue", Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14p=
+x; max-width: 100%; margin: auto;' src=3D"http://localhost:5000/logo.png"=
+></a></td>=0D
+<td class=3D"container" style=3D'font-family: "Helvetica Neue", Helvetica=
+, Arial, sans-serif; box-sizing: border-box; font-size: 14px; display: bl=
+ock !important; max-width: 600px !important; clear: both !important; marg=
+in: 0 auto;' valign=3D"top"><div class=3D"content" style=3D'font-family: =
+"Helvetica Neue", Helvetica, Arial, sans-serif; box-sizing: border-box; f=
+ont-size: 14px; max-width: 600px; display: block; margin: 0 auto; padding=
+: 0px 20px 20px;'>=0D
+<table class=3D"main" width=3D"100%" style=3D'border-width: 3px 1px 1px; =
+box-sizing: border-box; font-size: 14px; border-radius: 3px; margin: 0; b=
+order-color: #222e5c #e9e9e9 #e9e9e9; border-style: solid; font-family: "=
+Helvetica Neue", Helvetica, Arial, sans-serif;' bgcolor=3D"#fff"><tr styl=
+e=3D'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; box-siz=
+ing: border-box; font-size: 14px; margin: 0;'><td class=3D"content-wrap" =
+style=3D'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; box=
+-sizing: border-box; font-size: 14px; margin: 0; padding: 20px;' valign=3D=
+"top"><table width=3D"100%" style=3D'font-family: "Helvetica Neue", Helve=
+tica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin:=
+ 0;'><tbody style=3D'font-family: "Helvetica Neue", Helvetica, Arial, san=
+s-serif; box-sizing: border-box; font-size: 14px; margin: 0;'>=0D
+<p style=3D'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; =
+box-sizing: border-box; font-size: 14px; font-weight: normal; margin: 0 0=
+ 10px;'>Bonjour,</p>=0D
+<p style=3D'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; =
+box-sizing: border-box; font-size: 14px; font-weight: normal; margin: 0 0=
+ 10px;'>Vous venez de cr=C3=A9er une plage d'ouverture sur votre planning=
+ de RDV Solidarit=C3=A9s.</p>=0D
+<p style=3D'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; =
+box-sizing: border-box; font-size: 14px; font-weight: normal; margin: 0 0=
+ 10px;'>Vous pouvez synchroniser cette plage sur votre calendrier en ouvr=
+ant la pi=C3=A8ce-jointe de cet email.</p>=0D
+<p style=3D'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; =
+box-sizing: border-box; font-size: 14px; font-weight: normal; margin: 0 0=
+ 10px;'>=C3=80 bient=C3=B4t,</p>=0D
+<p style=3D'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; =
+box-sizing: border-box; font-size: 14px; font-weight: normal; margin: 0 0=
+ 10px;'>L'=C3=A9quipe RDV Solidarit=C3=A9s</p>=0D
+</tbody></table></td></tr></table>=0D
+<div class=3D"footer" style=3D'font-family: "Helvetica Neue", Helvetica, =
+Arial, sans-serif; margin: 0; padding: 20px; box-sizing: border-box; font=
+-size: 14px; width: 100%; clear: both; color: #999;'><table width=3D"100%=
+" style=3D'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; b=
+ox-sizing: border-box; font-size: 14px; margin: 0;'><tr style=3D'font-fam=
+ily: "Helvetica Neue", Helvetica, Arial, sans-serif; box-sizing: border-b=
+ox; font-size: 14px; margin: 0;'><td class=3D"aligncenter content-block" =
+style=3D'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; box=
+-sizing: border-box; font-size: 12px; color: #999; margin: 0; padding: 0 =
+0 20px;' align=3D"center" valign=3D"top"><a href=3D"https://doc.rdv-solid=
+arites.fr/mentions-legales" style=3D'font-family: "Helvetica Neue", Helve=
+tica, Arial, sans-serif; box-sizing: border-box; font-size: 12px; color: =
+#999; text-decoration: underline; margin: 0;'><span style=3D'font-family:=
+ "Helvetica Neue", Helvetica, Arial, sans-serif; box-sizing: border-box; =
+font-size: 14px; margin: 0;'>Mentions L=C3=A9gales</span> <i class=3D"fa =
+fa-external-link-alt" style=3D'font-family: "Helvetica Neue", Helvetica, =
+Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;'><=
+/i></a></td></tr></table></div>=0D
+</div></td>=0D
+</tr></table></body>=0D
+</html>=0D
+
+----==_mimepart_605082a4ea0a4_13afe25d0788bb--
+
+----==_mimepart_605082a4e1548_13afe25d0787ac
+Content-Type: text/calendar;
+ charset=utf-8;
+ method=REQUEST
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+ filename=plage-ouverture-test4-2021-03-29-09-00-00-0200.ics
+Content-ID: <605082a4f1d64_13afe25d0790ec@Adriens-MacBook-Pro.local.mail>
+
+BEGIN:VCALENDAR=0D
+VERSION:2.0=0D
+PRODID:RDV Solidarit=C3=A9s=0D
+CALSCALE:GREGORIAN=0D
+METHOD:REQUEST=0D
+BEGIN:VTIMEZONE=0D
+TZID:Europe/Paris=0D
+BEGIN:DAYLIGHT=0D
+DTSTART:20210328T030000=0D
+TZOFFSETFROM:+0100=0D
+TZOFFSETTO:+0200=0D
+RRULE:FREQ=3DYEARLY;BYDAY=3D-1SU;BYMONTH=3D3=0D
+TZNAME:CEST=0D
+END:DAYLIGHT=0D
+BEGIN:STANDARD=0D
+DTSTART:20211031T020000=0D
+TZOFFSETFROM:+0200=0D
+TZOFFSETTO:+0100=0D
+RRULE:FREQ=3DYEARLY;BYDAY=3D-1SU;BYMONTH=3D10=0D
+TZNAME:CET=0D
+END:STANDARD=0D
+END:VTIMEZONE=0D
+BEGIN:VEVENT=0D
+DTSTAMP:20210316T100420Z=0D
+UID:plage_ouverture_7@RDV Solidarit=C3=A9s=0D
+DTSTART;TZID=3DEurope/Paris:20210329T090000=0D
+DTEND;TZID=3DEurope/Paris:20210329T120000=0D
+CLASS:PUBLIC=0D
+LOCATION:10 rue emile delot\, 62450 Arques=0D
+STATUS:CONFIRMED=0D
+SUMMARY:RDV Solidarit=C3=A9s test4=0D
+ATTENDEE:mailto:christelle.cufay@le64.fr=0D
+END:VEVENT=0D
+END:VCALENDAR=0D
+
+----==_mimepart_605082a4e1548_13afe25d0787ac
+Content-Type: application/ics;
+ name=invite.ics
+Content-Transfer-Encoding: base64
+
+QkVHSU46VkNBTEVOREFSDQpWRVJTSU9OOjIuMA0KUFJPRElEOlJEViBTb2xp
+ZGFyaXTDqXMNCkNBTFNDQUxFOkdSRUdPUklBTg0KTUVUSE9EOlJFUVVFU1QN
+CkJFR0lOOlZUSU1FWk9ORQ0KVFpJRDpFdXJvcGUvUGFyaXMNCkJFR0lOOkRB
+WUxJR0hUDQpEVFNUQVJUOjIwMjEwMzI4VDAzMDAwMA0KVFpPRkZTRVRGUk9N
+OiswMTAwDQpUWk9GRlNFVFRPOiswMjAwDQpSUlVMRTpGUkVRPVlFQVJMWTtC
+WURBWT0tMVNVO0JZTU9OVEg9Mw0KVFpOQU1FOkNFU1QNCkVORDpEQVlMSUdI
+VA0KQkVHSU46U1RBTkRBUkQNCkRUU1RBUlQ6MjAyMTEwMzFUMDIwMDAwDQpU
+Wk9GRlNFVEZST006KzAyMDANClRaT0ZGU0VUVE86KzAxMDANClJSVUxFOkZS
+RVE9WUVBUkxZO0JZREFZPS0xU1U7QllNT05USD0xMA0KVFpOQU1FOkNFVA0K
+RU5EOlNUQU5EQVJEDQpFTkQ6VlRJTUVaT05FDQpCRUdJTjpWRVZFTlQNCkRU
+U1RBTVA6MjAyMTAzMTZUMTAwNDIwWg0KVUlEOnBsYWdlX291dmVydHVyZV83
+QFJEViBTb2xpZGFyaXTDqXMNCkRUU1RBUlQ7VFpJRD1FdXJvcGUvUGFyaXM6
+MjAyMTAzMjlUMDkwMDAwDQpEVEVORDtUWklEPUV1cm9wZS9QYXJpczoyMDIx
+MDMyOVQxMjAwMDANCkNMQVNTOlBVQkxJQw0KTE9DQVRJT046MTAgcnVlIGVt
+aWxlIGRlbG90XCwgNjI0NTAgQXJxdWVzDQpTVEFUVVM6Q09ORklSTUVEDQpT
+VU1NQVJZOlJEViBTb2xpZGFyaXTDqXMgdGVzdDQNCkFUVEVOREVFOm1haWx0
+bzpjaHJpc3RlbGxlLmN1ZmF5QGxlNjQuZnINCkVORDpWRVZFTlQNCkVORDpW
+Q0FMRU5EQVINCg==
+
+----==_mimepart_605082a4e1548_13afe25d0787ac--
