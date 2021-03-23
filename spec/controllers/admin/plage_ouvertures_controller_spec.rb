@@ -80,14 +80,14 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
         let(:start_date) { Date.new(2019, 7, 22) }
         let(:end_date) { Date.new(2019, 7, 28) }
 
-        it "should return 3 occurences from plage_ouverture2 3 and 4" do
+        it "should return 3 occurrences from plage_ouverture2 3 and 4" do
           expect(@parsed_response.size).to eq(3)
 
           first = @parsed_response[0]
           expect(first.size).to eq(6)
           expect(first["title"]).to eq(plage_ouverture2.title)
           expect(first["start"]).to eq(plage_ouverture2.starts_at.as_json)
-          expect(first["end"]).to eq(plage_ouverture2.first_occurence_ends_at.as_json)
+          expect(first["end"]).to eq(plage_ouverture2.first_occurrence_ends_at.as_json)
           expect(first["backgroundColor"]).to eq("#6fceff80")
           expect(first["rendering"]).to eq("background")
           expect(first["extendedProps"]).to eq({ lieu: "MDS Sud", location: "10 rue Belsunce" }.as_json)
@@ -116,7 +116,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
         let(:start_date) { Date.new(2019, 7, 29) }
         let(:end_date) { Date.new(2019, 8, 4) }
 
-        it "should return two occurences one from plage_ouverture and one from plage_ouverture2" do
+        it "should return two occurrences one from plage_ouverture and one from plage_ouverture2" do
           expect(@parsed_response.size).to eq(2)
 
           first = @parsed_response[0]

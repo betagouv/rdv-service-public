@@ -39,9 +39,9 @@ class CreneauxBuilderService < BaseService
   end
 
   def creneaux_for_plage_ouverture_and_motif(plage_ouverture, motif)
-    plage_ouverture.occurences_for(@inclusive_date_range).flat_map do |occurence|
+    plage_ouverture.occurrences_for(@inclusive_date_range).flat_map do |occurrence|
       CreneauxBuilderForDateService
-        .perform_with(plage_ouverture, motif, occurence.starts_at.to_date, @lieu, inclusive_date_range: @inclusive_date_range, **@options)
+        .perform_with(plage_ouverture, motif, occurrence.starts_at.to_date, @lieu, inclusive_date_range: @inclusive_date_range, **@options)
     end
   end
 end
