@@ -94,3 +94,30 @@ jobs:
           POSTGRES_DB: lapin_test
           NUMBER_OF_NODES: 5
           CI_NODE_INDEX: ${{ matrix.index }}
+  deploy:
+    if: ${{ github.ref == 'refs/heads/master' }}
+    name: "deploie demo"
+    runs-on: ubuntu-latest
+    environment: lapin-beta-gouv
+    needs: [tests, brakeman, test_seeds, rubocop]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configure SSH
+        run: |
+          echo "Creating TAR archive..."
+          tar --transform='s,^,master/,' -czf /tmp/archive.tar.gz .
+          echo "Downloading scaliogo CLI"
+          version=$(curl -s https://cli-dl.scalingo.com/version | tr -d ' \t\n')
+          curl -L https://github.com/Scalingo/cli/releases/download/${version}/scalingo_${version}_linux_amd64.tar.gz -o /tmp/scalingo_cli.tar.gz
+          mkdir /tmp/scalingo_cli
+          tar -C /tmp/scalingo_cli -xf /tmp/scalingo_cli.tar.gz
+          export PATH=$PATH:/tmp/scalingo_cli/scalingo_${version}_linux_amd64
+          echo "Authenticating..."
+          scalingo login --api-token $API_TOKEN
+          echo "Starting deployment"
+          scalingo --region $REGION --app $APP_NAME deploy /tmp/archive.tar.gz
+        env:
+          REGION: osc-secnum-fr1
+          APP_NAME: demo-rdv-solidarites-pr1264
+          API_TOKEN: ${{secrets.SCALINGO_API_TOKEN}}
+
