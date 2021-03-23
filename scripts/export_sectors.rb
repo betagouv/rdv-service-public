@@ -4,7 +4,11 @@ require "csv"
 departement = ARGV[0]
 exit unless departement.present?
 
-zones = Sector.order(:name).where(departement: departement).flat_map do |sector|
+zones = Sector
+  .order(:name)
+  .joins(:territory)
+  .where(territories: { departement_number: departement })
+  .flat_map do |sector|
   sector.zones.includes(:sector).cities.order(:city_name).to_a +
     sector.zones.includes(:sector).streets.order(:street_name).to_a
 end
