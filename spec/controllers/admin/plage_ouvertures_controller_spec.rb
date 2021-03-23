@@ -1,4 +1,4 @@
-RSpec.describe Admin::PlageOuverturesController, type: :controller do
+describe Admin::PlageOuverturesController, type: :controller do
   render_views
 
   let!(:organisation) { create(:organisation) }
@@ -159,20 +159,8 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
     end
 
     describe "GET #edit" do
-      let!(:plage_ouverture) do
-        create(
-          :plage_ouverture,
-          first_day: Date.new(2020, 11, 16),
-          start_time: Tod::TimeOfDay(9),
-          end_time: Tod::TimeOfDay(12),
-          motifs: [motif],
-          lieu: lieu1,
-          organisation: organisation,
-          agent: agent
-        )
-      end
-
       it "returns a success response" do
+        plage_ouverture = create(:plage_ouverture, organisation: organisation, agent: agent)
         get :edit, params: { organisation_id: organisation.id, id: plage_ouverture.to_param }
         expect(response).to be_successful
       end

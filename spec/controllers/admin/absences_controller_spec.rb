@@ -3,11 +3,6 @@ RSpec.describe Admin::AbsencesController, type: :controller do
 
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-  let!(:absence) { create(:absence, agent_id: agent.id, organisation: organisation) }
-  let!(:absence_with_recurrence) do
-    create(:absence, :weekly, agent: agent, first_day: Date.new(2020, 7, 15), start_time: Tod::TimeOfDay.new(8), end_day: Date.new(2020, 7, 17), end_time: Tod::TimeOfDay.new(10),
-                              organisation: organisation)
-  end
 
   shared_examples "agent can CRUD absences" do
     describe "GET #index" do
@@ -51,9 +46,9 @@ RSpec.describe Admin::AbsencesController, type: :controller do
           end
         end
 
-        context "when the absence is in window" do
-          let(:start_time) { Time.zone.parse("20/07/2019 00:00") }
-          let(:end_time) { Time.zone.parse("27/07/2019 00:00") }
+      context "when the absence starts in window" do
+        let(:start_time) { Time.zone.parse("19/08/2019 00:00") }
+        let(:end_time) { Time.zone.parse("21/08/2019 00:00") }
 
           let(:expected_absence) { absence1 }
 
@@ -78,37 +73,32 @@ RSpec.describe Admin::AbsencesController, type: :controller do
           it_behaves_like "returns expected_absence"
         end
 
-        context "when the absence is around window" do
-          let(:start_time) { Time.zone.parse("23/08/2019 00:00") }
-          let(:end_time) { Time.zone.parse("27/08/2019 00:00") }
+      context "when the absence is around window" do
+        let(:start_time) { Time.zone.parse("23/08/2019 00:00") }
+        let(:end_time) { Time.zone.parse("27/08/2019 00:00") }
 
           let(:expected_absence) { absence2 }
 
           it_behaves_like "returns expected_absence"
         end
 
-        describe "when the absence has a recurrence" do
-          context "and the absence is in window" do
-            let(:start_time) { Time.zone.parse("20/07/2020 00:00") }
-            let(:end_time) { Time.zone.parse("27/07/2020 00:00") }
+      describe "when the absence has a recurrence" do
+        context "and the absence is in window" do
+          let(:start_time) { Time.zone.parse("20/07/2020 00:00") }
+          let(:end_time) { Time.zone.parse("27/07/2020 00:00") }
 
-            let(:expected_absence) { absence_with_recurrence }
-            let(:expected_absence_starts_at) { Time.zone.parse("22/07/2020 08:00") }
-            let(:expected_absence_ends_at) { Time.zone.parse("24/07/2020 10:00") }
+          let!(:expected_absences) { [create(:absence, :weekly, agent: agent, first_day: Date.new(2020, 7, 15), start_time: Tod::TimeOfDay.new(8), end_day: Date.new(2020, 7, 17), end_time: Tod::TimeOfDay.new(10), organisation: organisation)] }
 
-            it_behaves_like "returns expected_absence"
-          end
+          it_behaves_like "returns expected_absences"
+        end
 
-          context "when the absence ends in window" do
-            let(:start_time) { Time.zone.parse("23/07/2020 00:00") }
-            let(:end_time) { Time.zone.parse("26/07/2020 00:00") }
+        context "when the absence ends in window" do
+          let(:start_time) { Time.zone.parse("23/07/2020 00:00") }
+          let(:end_time) { Time.zone.parse("26/07/2020 00:00") }
 
-            let(:expected_absence) { absence_with_recurrence }
-            let(:expected_absence_starts_at) { Time.zone.parse("22/07/2020 08:00") }
-            let(:expected_absence_ends_at) { Time.zone.parse("24/07/2020 10:00") }
+          let!(:expected_absences) { [create(:absence, :weekly, agent: agent, first_day: Date.new(2020, 7, 15), start_time: Tod::TimeOfDay.new(8), end_day: Date.new(2020, 7, 17), end_time: Tod::TimeOfDay.new(10), organisation: organisation)] }
 
-            it_behaves_like "returns expected_absence"
-          end
+          it_behaves_like "returns expected_absences"
         end
       end
     end
@@ -121,6 +111,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
     end
 
     describe "GET #edit" do
+      let!(:absence) { create(:absence, agent_id: agent.id, organisation: organisation) }
       it "returns a success response" do
         get :edit, params: { organisation_id: organisation.id, agent_id: agent.id, id: absence.to_param }
         expect(response).to be_successful
@@ -128,6 +119,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
     end
 
     describe "POST #create" do
+      let!(:absence) { create(:absence, agent_id: agent.id, organisation: organisation) }
       context "with valid params" do
         let(:valid_attributes) do
           build(:absence, agent: agent, organisation: organisation).attributes
@@ -169,6 +161,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
     end
 
     describe "PUT #update" do
+      let!(:absence) { create(:absence, agent_id: agent.id, organisation: organisation) }
       subject { put :update, params: { organisation_id: organisation.id, id: absence.to_param, absence: new_attributes } }
 
       before { subject }
@@ -211,6 +204,8 @@ RSpec.describe Admin::AbsencesController, type: :controller do
     end
 
     describe "DELETE #destroy" do
+      let!(:absence) { create(:absence, agent_id: agent.id, organisation: organisation) }
+
       it "destroys the requested absence" do
         expect do
           delete :destroy, params: { organisation_id: organisation.id, id: absence.to_param }

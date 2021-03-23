@@ -6,6 +6,7 @@ class Admin::Agents::AbsencesController < ApplicationController
 
     agent = Agent.find(params[:agent_id])
     @absence_occurrences = Admin::Occurrence.extract_from(Absence.with_agent(agent), date_range_params)
+    respond_to :json
   end
 
   def date_range_params

@@ -7,6 +7,7 @@ class Admin::Agents::PlageOuverturesController < ApplicationController
     agent = Agent.find(params[:agent_id])
     @organisation = Organisation.find(params[:organisation_id])
     @plage_ouverture_occurences = Admin::Occurrence.extract_from(PlageOuverture.with_agent(agent), date_range_params)
+    respond_to :json
   end
 
   def date_range_params

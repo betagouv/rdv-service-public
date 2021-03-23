@@ -7,6 +7,7 @@ class Admin::Agents::RdvsController < ApplicationController
     agent = Agent.find(params[:agent_id])
     @organisation = Organisation.find(params[:organisation_id])
     @rdvs = Rdv.with_agent(agent)
+    respond_to :json
   end
 
   def pundit_user

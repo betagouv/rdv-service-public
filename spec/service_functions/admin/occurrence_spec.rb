@@ -1,17 +1,5 @@
 describe Admin::Occurrence, type: :service do
   describe "#extract_from" do
-    it "return empty array when given elements is not an Array" do
-      elements = "nothing"
-      period = Date.new(2020, 3, 4)..Date.new(2020, 3, 11)
-      expect(described_class.extract_from(elements, period)).to eq([])
-    end
-
-    it "return empty array when given elements does not respond to `occurrences_for`" do
-      elements = [create(:absence), "bla"]
-      period = Date.new(2020, 3, 4)..Date.new(2020, 3, 11)
-      expect(described_class.extract_from(elements, period)).to eq([])
-    end
-
     it "return occurrence object" do
       first_day = Date.new(2019, 8, 15)
       absence = create(:absence, first_day: first_day)
