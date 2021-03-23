@@ -20,7 +20,7 @@ class SendTransactionalSmsService < BaseService
   private
 
   def sms_provider
-    if ENV["FORCE_SMS_PROVIDER"]
+    if ENV["FORCE_SMS_PROVIDER"].present?
       ENV["FORCE_SMS_PROVIDER"].to_sym
     elsif Rails.env.production?
       :netsize
