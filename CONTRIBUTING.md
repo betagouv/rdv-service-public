@@ -2,18 +2,20 @@
 
 ## Signaler un problème
 
-Si vous rencontrez un problème avec l'application vous pouvez nous contacter à [contact@rdv-solidarites.fr](mailto:contact@rdv-solidarites.fr) 
+Si vous rencontrez un problème avec l'application vous pouvez nous contacter à [contact@rdv-solidarites.fr](mailto:contact@rdv-solidarites.fr)
 
 ## Soumettre une modification
 
 Voici la marche à suivre pour nous soumettre une modification de code
 - Clone le projet dans votre environnement
-- Créer une branche 
-- Apporter les modifications que vous souhaitez en respectant [le guide de programmation](#Guide-de-programmation) 
+- Créer une branche
+- Apporter les modifications que vous souhaitez en respectant [le guide de programmation](#Guide-de-programmation)
 - Pousser votre code sur github
 - Créer une Pull Request
 
 ## Guide de programmation
+
+Suivez le guide [pour installer le projet en local](INSTALL.md)
 
 Utilisation des conventions de Ruby on Rails [Rails best practice](https://rails-bestpractices.com/) et [The rails Style Guide](https://github.com/rubocop-hq/rails-style-guide)
 
@@ -69,8 +71,8 @@ Le projet utilise plusieurs linters pour vérifier la lisibilité et la qualité
 
 ## D'autres façon de contribuer
 
-Si vous souhaitez contribuer à notre projet, vous pouvez 
-- En parler autour de vous 
+Si vous souhaitez contribuer à notre projet, vous pouvez
+- En parler autour de vous
 - Participer à la [documentation](https://doc.rdv-solidarites.fr/)
 - Faire des petits gâteaux maisons pour l'équipe de RDV-solidarité (^^)
 

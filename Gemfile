@@ -41,6 +41,9 @@ gem "image_processing", "~> 1.8"
 gem "phonelib"
 gem "activemodel-caution", github: "PublicHealthEngland/activemodel-caution"
 
+# CORS management
+gem "rack-cors"
+
 # Front
 gem "chartkick", "~> 3.4.0"
 gem "groupdate", "~> 4.2"
