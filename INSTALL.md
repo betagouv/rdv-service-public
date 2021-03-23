@@ -8,6 +8,7 @@
 
 - Yarn : voir https://yarnpkg.com/en/docs/install
 - Foreman : voir https://github.com/ddollar/foreman
+- graphviz, pour rails-erd : voir https://voormedia.github.io/rails-erd/install.html
 
 ## Initialisation de l'environnement de développement
 

@@ -1,0 +1,10 @@
+indirect: false
+filename: docs/domain_model
+filetype: png
+exclude:
+    - ActionText::RichText
+    - ActiveRecord::SchemaMigration
+    - ActiveRecord::InternalMetadata
+    - ActiveStorage::Attachment
+    - ActiveStorage::Blob
+    - Delayed::Backend::ActiveRecord::Job
