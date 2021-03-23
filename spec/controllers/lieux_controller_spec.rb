@@ -173,7 +173,7 @@ RSpec.describe LieuxController, type: :controller do
           instance_double(
             Users::CreneauxSearch,
             creneaux: [],
-            next_availability: build(:creneau, starts_at: DateTime.parse("2019-07-22 08h00"))
+            next_availability: build(:creneau, starts_at: DateTime.parse("2019-07-22 08h00"), motif: build(:motif, organisation: organisation))
           )
         )
 
@@ -190,7 +190,7 @@ RSpec.describe LieuxController, type: :controller do
           instance_double(
             Users::CreneauxSearch,
             creneaux: [],
-            next_availability: build(:creneau, starts_at: DateTime.parse("2019-07-29 08h00"))
+            next_availability: build(:creneau, starts_at: DateTime.parse("2019-07-29 08h00", motif: build(:motif, organisation: organisation)))
           )
         )
       subject
