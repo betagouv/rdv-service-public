@@ -3,7 +3,7 @@ FactoryBot.define do
   sequence(:address) { |n| "#{n} rue de l'adresse 12345 Ville" }
 
   factory :lieu do
-    organisation { create(:organisation) }
+    organisation
 
     name { generate(:lieu_name) }
     address { generate(:address) }

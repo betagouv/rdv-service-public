@@ -3,6 +3,6 @@ FactoryBot.define do
 
   factory :organisation do
     name { generate(:orga_name) }
-    territory { association(:territory) }
+    territory
   end
 end
