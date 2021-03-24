@@ -47,6 +47,7 @@ class Admin::Ics::PlageOuverture
     event.ip_class = "PUBLIC"
     event.status = Admin::Ics.status_from_action(payload[:action])
     event.attendee = "mailto:#{payload[:agent_email]}"
+    event.organizer = "mailto:secretariat-auto@rdv-solidarites.fr"
   end
 
   def self.rrule(plage_ouverture)
