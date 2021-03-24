@@ -76,13 +76,17 @@
         .mb-2.text-center
           .mb-2= page_entries_info @zones
           - if @zones.count > 5
-            div= link_to( \
+            .mb-2= link_to( \
               "🗑 Retirer les #{@zones.total_count} communes et rues de ce secteur …", \
               admin_territory_sector_zones_path(current_territory, @sector), \
               method: :delete, \
               data: { confirm: "Êtes-vous sûr de vouloir retirer ces #{@zones.total_count} communes et rues ?" }, \
               class: 'btn btn-danger' \
             )
+          .mb-2= link_to admin_territory_sector_zones_path(current_territory, @sector, format: "xls"), class: "btn btn-light" do
+            i.fa.fa-download>
+            span> Télécharger un export XLS des communes et rues
+
   .col-md-6
     .card
       .card-header

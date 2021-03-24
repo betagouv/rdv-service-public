@@ -1,5 +1,20 @@
 class Admin::Territories::ZonesController < Admin::Territories::BaseController
-  before_action :set_sector
+  before_action :set_sector, except: [:index]
+
+  def index
+    zones = policy_scope_admin(Zone)
+      .in_territory(current_territory)
+      .where(params[:sector_id].present? ? { sector: params[:sector_id] } : {})
+    respond_to do |format|
+      format.xls do
+        send_data(
+          ExportZonesService.new(zones).perform,
+          filename: "zones_territory_#{current_territory.departement_number}.xls",
+          type: "application/xls"
+        )
+      end
+    end
+  end
 
   def new
     zone_defaults = { level: Zone::LEVEL_CITY }

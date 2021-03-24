@@ -101,8 +101,9 @@ Rails.application.routes.draw do
         scope module: "territories" do
           resources :agent_territorial_roles, only: [:index, :new, :create, :destroy]
           resources :zone_imports, only: [:new, :create]
+          resources :zones, only: [:index] # exports only
           resources :sectors do
-            resources :zones, except: [:index]
+            resources :zones
             resources :sector_attributions, only: [:new, :create, :destroy], as: :attributions
             delete "/zones" => "zones#destroy_multiple"
           end
