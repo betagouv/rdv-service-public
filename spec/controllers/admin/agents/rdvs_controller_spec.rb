@@ -2,7 +2,8 @@ describe Admin::Agents::RdvsController, type: :controller do
   describe "GET index" do
     context "with a signed in agent" do
       let(:organisation) { create(:organisation) }
-      let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+      let(:other_organisation) { create(:organisation) }
+      let(:agent) { create(:agent, admin_role_in_organisations: [organisation, other_organisation]) }
       before(:each) { sign_in agent }
 
       it "return success" do
@@ -11,12 +12,15 @@ describe Admin::Agents::RdvsController, type: :controller do
       end
 
       it "assigns rdvs of given agent" do
-        given_agent = create(:agent)
+        now = Time.zone.parse("2020-12-23 15h00")
+        travel_to(now)
+        given_agent = create(:agent, basic_role_in_organisations: [organisation], service: agent.service)
         create(:rdv, agents: [agent])
-        rdv = create(:rdv, agents: [given_agent], organisation: organisation)
-        rdv_from_other_organisation = create(:rdv, agents: [given_agent], organisation: create(:organisation))
+        rdv = create(:rdv, agents: [given_agent], organisation: organisation, starts_at: now + 3.days)
+        rdv_from_other_organisation = create(:rdv, agents: [given_agent], organisation: other_organisation, starts_at: now + 4.days)
         get :index, params: { agent_id: given_agent.id, organisation_id: organisation.id, format: :json }
         expect(assigns(:rdvs).sort).to eq([rdv, rdv_from_other_organisation].sort)
+        travel_back
       end
 
       it "assigns rdvs of given agent from start to end" do

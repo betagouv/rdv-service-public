@@ -28,5 +28,4 @@ describe Absence, type: :model do
       end
     end
   end
-
 end

@@ -7,10 +7,17 @@ class Admin::Agents::PlageOuverturesController < ApplicationController
 
     agent = Agent.find(params[:agent_id])
     @organisation = Organisation.find(params[:organisation_id])
-    @plage_ouverture_occurences = Admin::Occurrence.extract_from(policy_scope(PlageOuverture).includes(:lieu, :oranisation).where(expired_cached: false).where(agent: agent), date_range_params)
+    @plage_ouverture_occurences = Admin::Occurrence.extract_from(custom_policy.includes(:lieu, :organisation).where(expired_cached: false).where(agent: agent), date_range_params)
   end
 
   private
+
+  # TODO: custom policy waiting for policies refactoring
+  def custom_policy
+    context = AgentContext.new(current_agent, @organisation)
+    Agent::PlageOuverturePolicy::DepartementScope.new(context, PlageOuverture)
+      .resolve
+  end
 
   def date_range_params
     start_param = Date.parse(params[:start])

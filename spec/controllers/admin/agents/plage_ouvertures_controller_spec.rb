@@ -13,9 +13,10 @@ describe Admin::Agents::PlageOuverturesController, type: :controller do
       end
 
       it "call Admin::Occurrence to assigns `plage_ouvertures_occurrences`" do
-        given_agent = create(:agent)
+        given_agent = create(:agent, basic_role_in_organisations: [organisation], service: agent.service)
 
         first_day = Date.new(2019, 8, 15)
+        travel_to(first_day - 2.days)
         create(:plage_ouverture, agent: agent, first_day: first_day)
         plage_ouverture = create(:plage_ouverture, agent: given_agent, organisation: organisation, first_day: first_day)
         start_date = Date.new(2019, 8, 12)
@@ -27,6 +28,7 @@ describe Admin::Agents::PlageOuverturesController, type: :controller do
         get :index, params: { agent_id: given_agent.id, organisation_id: organisation.id, start: start_date, end: end_date, format: :json }
 
         expect(assigns(:plage_ouverture_occurences)).not_to be_nil
+        travel_back
       end
 
       it "assigns current organisation" do

@@ -6,7 +6,7 @@ class Admin::Agents::AbsencesController < ApplicationController
     authorize_admin(current_agent)
 
     agent = Agent.find(params[:agent_id])
-    @absence_occurrences = Admin::Occurrence.extract_from(policy_scope(Absence).includes(:organisation).where(agent: agent), date_range_params)
+    @absence_occurrences = Admin::Occurrence.extract_from(policy_scope_admin(Absence).includes(:organisation).where(agent: agent), date_range_params)
   end
 
   private
