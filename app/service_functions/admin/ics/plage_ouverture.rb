@@ -45,6 +45,7 @@ class Admin::Ics::PlageOuverture
     event.summary = "#{BRAND} #{payload[:title]}"
     event.location = payload[:address]
     event.ip_class = "PUBLIC"
+    event.rrule = payload[:recurrence]
     event.status = Admin::Ics.status_from_action(payload[:action])
     event.attendee = "mailto:#{payload[:agent_email]}"
     event.organizer = "mailto:secretariat-auto@rdv-solidarites.fr"

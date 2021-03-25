@@ -112,9 +112,9 @@ describe Admin::Ics::PlageOuverture, type: :service do
     end
 
     context "with recurrence" do
-      let(:recurrence_payload) { payload.merge(recurrence: "FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10") }
-      subject { described_class.to_ical(payload) }
-      it { is_expected.to include("RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10") }
+      let(:recurrence_payload) { payload.merge(recurrence: "FREQ=WEEKLY;") }
+      subject { described_class.to_ical(recurrence_payload) }
+      it { is_expected.to include("FREQ=WEEKLY") }
     end
   end
 
