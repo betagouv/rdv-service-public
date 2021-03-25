@@ -96,12 +96,6 @@ class Admin::AbsencesController < AgentAuthController
     params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time, :recurrence)
   end
 
-  def date_range_params
-    start_param = Date.parse(filter_params[:start])
-    end_param = Date.parse(filter_params[:end])
-    start_param..end_param
-  end
-
   def filter_params
     params.permit(:start, :end, :organisation_id, :agent_id, :page, :current_tab)
   end

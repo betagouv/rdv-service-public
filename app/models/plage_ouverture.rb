@@ -17,7 +17,6 @@ class PlageOuverture < ApplicationRecord
 
   scope :expired, -> { where(expired_cached: true) }
   scope :not_expired, -> { where.not(expired_cached: true) }
-  scope :with_agent, ->(agent) { where(agent_id: agent.id) }
 
   def ical_uid
     "plage_ouverture_#{id}@#{BRAND}"
