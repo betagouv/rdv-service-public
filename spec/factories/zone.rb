@@ -4,8 +4,12 @@ FactoryBot.define do
   factory :zone do
     sector
 
-    level { "city" }
+    level { Zone::LEVEL_CITY }
     city_code { generate(:city_code) }
     city_name { "ARQUES" }
+
+    trait :level_street do
+      level { Zone::LEVEL_STREET }
+    end
   end
 end

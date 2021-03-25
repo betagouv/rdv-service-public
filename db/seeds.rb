@@ -374,6 +374,7 @@ agent_org_bapaume_pmi_bruno = Agent.new(
 )
 agent_org_bapaume_pmi_bruno.skip_confirmation!
 agent_org_bapaume_pmi_bruno.save!
+AgentTerritorialRole.create!(agent: agent_org_bapaume_pmi_bruno, territory: territory62)
 
 agent_org_bapaume_pmi_gina = Agent.new(
   email: "gina@demo.rdv-solidarites.fr",

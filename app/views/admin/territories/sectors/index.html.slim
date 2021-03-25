@@ -66,3 +66,6 @@
           .mb-2= link_to new_admin_territory_sector_path(current_territory), class: "btn btn-primary" do
             i.fa.fa-plus>
             span> Créer un nouveau secteur
+          .mb-2= link_to admin_territory_zones_path(current_territory, format: "xls"), class: "btn btn-light" do
+            i.fa.fa-download>
+            span> Télécharger un export XLS des communes et rues
