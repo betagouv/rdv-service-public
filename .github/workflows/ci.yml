@@ -115,9 +115,9 @@ jobs:
           echo "Authenticating..."
           scalingo login --api-token $API_TOKEN
           echo "Starting deployment"
-          scalingo --region $REGION --app $APP_NAME deploy /tmp/archive.tar.gz
+          scalingo --region $REGION --app demo-rdv-solidarites deploy /tmp/archive.tar.gz
+          scalingo --region $REGION --app production-rdv-solidarites deploy /tmp/archive.tar.gz
         env:
           REGION: osc-secnum-fr1
-          APP_NAME: demo-rdv-solidarites-pr1264
           API_TOKEN: ${{secrets.SCALINGO_API_TOKEN}}
 
