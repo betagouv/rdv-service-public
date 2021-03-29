@@ -15,7 +15,9 @@
           tr
             th Nom
             th Adresse
+            th Téléphone
             th RDV aujourd'hui
+            th action
         tbody
           = render @lieux
       .d-flex.justify-content-center= paginate @lieux, theme: 'twitter-bootstrap-4'

@@ -1,6 +1,15 @@
 - nb_rdv = policy_scope(Rdv).for_today.with_lieu(lieu).count
 tr id="lieu_#{lieu.id}"
-  td
-    = link_to lieu.name, edit_admin_organisation_lieu_path(lieu.organisation, lieu)
+  td= lieu.name
   td= lieu.address
+  td= lieu.phone_number
   td= link_to nb_rdv > 0 ? nb_rdv : "aucun", admin_organisation_rdvs_path(current_organisation, lieu_id: lieu.id, start: Time.zone.now.beginning_of_day, end: Time.zone.now.end_of_day )
+  - if policy([:agent, lieu]).edit? || policy([:agent, lieu]).destroy?
+    td
+      .d-flex
+        - if policy([:agent, lieu]).edit?
+          div.mr-3= link_to edit_admin_organisation_lieu_path(current_organisation, lieu), title: "Modifier" do
+            i.fa.fa-edit
+        - if policy([:agent, lieu]).destroy?
+          div= link_to admin_organisation_lieu_path(current_organisation, lieu), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce lieu ?"} do
+            i.fa.fa-trash-alt
