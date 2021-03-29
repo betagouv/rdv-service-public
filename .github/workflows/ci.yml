@@ -94,8 +94,17 @@ jobs:
           POSTGRES_DB: lapin_test
           NUMBER_OF_NODES: 5
           CI_NODE_INDEX: ${{ matrix.index }}
+  check_if_deploy:
+    runs-on: ubuntu-latest
+    needs: [tests, brakeman, test_seeds, rubocop]
+
+    steps:
+      - name: Branche master ?
+        if:  github.ref == 'refs/heads/master'
+        run: exit 1
+
   deploy:
-    if: ${{ github.ref == 'refs/heads/master' }}
+    needs: check_if_deploy
     name: deploie en production et demo
     runs-on: ubuntu-latest
     environment: lapin-beta-gouv
