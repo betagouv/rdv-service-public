@@ -15,7 +15,6 @@ class Agent::AgentPolicy < ApplicationPolicy
   alias show? current_agent_or_admin_in_record_organisation?
   alias new? current_agent_or_admin_in_record_organisation?
   alias create? current_agent_or_admin_in_record_organisation?
-  alias index? current_agent_or_admin_in_record_organisation?
   alias update? current_agent_or_admin_in_record_organisation?
   alias invite? current_agent_or_admin_in_record_organisation?
   alias rdvs? current_agent_or_admin_in_record_organisation?

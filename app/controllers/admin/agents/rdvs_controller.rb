@@ -3,8 +3,6 @@ class Admin::Agents::RdvsController < ApplicationController
   respond_to :json
 
   def index
-    authorize_admin(current_agent)
-
     agent = Agent.find(params[:agent_id])
     @organisation = Organisation.find(params[:organisation_id])
     @rdvs = custom_policy.with_agent(agent)

@@ -3,8 +3,6 @@ class Admin::Agents::PlageOuverturesController < ApplicationController
   respond_to :json
 
   def index
-    authorize_admin(current_agent)
-
     agent = Agent.find(params[:agent_id])
     @organisation = Organisation.find(params[:organisation_id])
     @plage_ouverture_occurences = Admin::Occurrence.extract_from(custom_policy.includes(:lieu, :organisation).where(expired_cached: false).where(agent: agent), date_range_params)
