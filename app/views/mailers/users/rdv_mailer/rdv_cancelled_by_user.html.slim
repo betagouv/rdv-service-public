@@ -12,3 +12,8 @@ div
         service: @rdv.motif.service.id, \
         where: @rdv.address \
       }), class:'btn btn-primary'
+
+  - if @rdv.lieu&.phone_number.present?
+    p
+      span>Vous pouvez contacter votre MDS au
+      = link_to @rdv.lieu.phone_number, "tel:#{@rdv.lieu.phone_number_formatted}"

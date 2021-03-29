@@ -7,4 +7,4 @@ div
       | Votre RDV du #{l(@rdv.starts_at, format: :human)} a été confirmé.
 
   = render "mailers/common/rdv_overview", rdv: @rdv
-  = render "mailers/common/rdv_cancellable"
+  = render "mailers/common/rdv_cancellable", rdv: @rdv
