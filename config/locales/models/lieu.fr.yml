@@ -5,6 +5,7 @@ fr:
     attributes:
       lieu:
         name: Nom
+        phone_number: Téléphone
         address: Adresse
         latitude: Latitude
         longitude: Longitude
