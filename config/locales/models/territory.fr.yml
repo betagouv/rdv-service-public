@@ -11,4 +11,7 @@ fr:
     errors:
       models:
         territory:
-          department_number_already_taken: "Il y a déjà des organisations et des agents créés dans ce département, veuillez entrer en contact avec eux"
+          attributes:
+            departement_number:
+              taken: "Il y a déjà des organisations et des agents créés dans ce département, veuillez entrer en contact avec eux"
+              format: "%{message}"
