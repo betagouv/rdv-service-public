@@ -99,7 +99,6 @@ jobs:
     name: deploie en production et demo
     runs-on: ubuntu-latest
     environment: lapin-beta-gouv
-    needs: [tests, brakeman, test_seeds, rubocop]
     steps:
       - uses: actions/checkout@v2
       - name: Configure SSH
