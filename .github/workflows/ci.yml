@@ -2,7 +2,7 @@ name: CI
 on: push
 jobs:
   rubocop:
-    name: Passe le linter
+    name: Linter Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -13,7 +13,7 @@ jobs:
           bundler-cache: true
       - run: bundle exec rubocop --parallel
   brakeman:
-    name: Scan les fichiers pour la sécurité
+    name: Security Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -25,7 +25,7 @@ jobs:
       - run: bundle exec brakeman
 
   test_seeds:
-    name: Test les graines de base de données
+    name: Create and load DB with seeds
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -56,7 +56,7 @@ jobs:
           POSTGRES_DB: lapin_test
 
   tests:
-    name: test l'application
+    name: Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -96,7 +96,7 @@ jobs:
           CI_NODE_INDEX: ${{ matrix.index }}
   deploy:
     if: ${{ github.ref == 'refs/heads/master' }}
-    name: deploie en production et demo
+    name: Deploy
     runs-on: ubuntu-latest
     environment: lapin-beta-gouv
     needs: [tests, brakeman, test_seeds, rubocop]
