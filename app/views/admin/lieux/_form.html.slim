@@ -14,6 +14,7 @@
         - else
           = link_to "Supprimer", admin_organisation_lieu_path(lieu.organisation, lieu), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce lieu ?"}
     .col.text-right
+      = link_to "Annuler", admin_organisation_lieux_path(lieu.organisation), class: "btn btn-link"
       = f.button :submit
   .row.mt-3
     .col
