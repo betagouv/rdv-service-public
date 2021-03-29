@@ -27,7 +27,7 @@ describe Admin::Agents::PlageOuverturesController, type: :controller do
 
         get :index, params: { agent_id: given_agent.id, organisation_id: organisation.id, start: start_date, end: end_date, format: :json }
 
-        expect(assigns(:plage_ouverture_occurences)).not_to be_nil
+        expect(assigns(:plage_ouverture_occurrences)).not_to be_nil
         travel_back
       end
 

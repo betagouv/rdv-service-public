@@ -5,7 +5,7 @@ class Admin::Agents::PlageOuverturesController < ApplicationController
   def index
     agent = Agent.find(params[:agent_id])
     @organisation = Organisation.find(params[:organisation_id])
-    @plage_ouverture_occurences = Admin::Occurrence.extract_from(custom_policy.includes(:lieu, :organisation).where(expired_cached: false).where(agent: agent), date_range_params)
+    @plage_ouverture_occurrences = Admin::Occurrence.extract_from(custom_policy.includes(:lieu, :organisation).where(expired_cached: false).where(agent: agent), date_range_params)
   end
 
   private
