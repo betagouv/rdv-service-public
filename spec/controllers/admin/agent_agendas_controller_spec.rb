@@ -8,6 +8,7 @@ describe Admin::AgentAgendasController, type: :controller do
     before do
       get :show, params: { id: agent.id, organisation_id: organisation.id }
     end
+
     it { expect(response).to be_successful }
     it { expect(assigns(:organisation)).to eq(organisation) }
     it { expect(assigns(:agent)).to eq(agent) }

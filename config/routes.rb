@@ -115,7 +115,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :agents, only: [:show], module: :agents do
+      resources :agents, only: [], module: :agents do
         resources :plage_ouvertures, only: [:index]
         resources :rdvs, only: [:index]
         resources :absences, only: [:index]

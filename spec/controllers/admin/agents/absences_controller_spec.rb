@@ -3,7 +3,8 @@ describe Admin::Agents::AbsencesController, type: :controller do
     context "with a signed in agent" do
       let(:organisation) { create(:organisation) }
       let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-      before(:each) { sign_in agent }
+
+      before { sign_in agent }
 
       it "return success" do
         given_agent = create(:agent, basic_role_in_organisations: [organisation])

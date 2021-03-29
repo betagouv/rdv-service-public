@@ -31,20 +31,11 @@ describe Admin::PlageOuverturesController, type: :controller do
     end
 
     describe "GET #index" do
-      let!(:plage_ouverture) do
-        create(
-          :plage_ouverture,
-          first_day: Date.new(2020, 11, 16),
-          start_time: Tod::TimeOfDay(9),
-          end_time: Tod::TimeOfDay(12),
-          motifs: [motif],
-          lieu: lieu1,
-          organisation: organisation,
-          agent: agent
-        )
-      end
+      it "returns a success responses with plage_ouvertures assigned" do
+        now = Time.zone.parse("2020-11-23 13h30")
+        travel_to(now)
+        plage_ouverture = create(:plage_ouverture, organisation: organisation, agent: agent, first_day: now + 3.days)
 
-      it "returns a success response" do
         get :index, params: { organisation_id: organisation.id, agent_id: agent.id }
         expect(response).to be_successful
         # TODO : includes plage ouverture

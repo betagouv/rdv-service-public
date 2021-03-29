@@ -4,7 +4,8 @@ describe Admin::Agents::RdvsController, type: :controller do
       let(:organisation) { create(:organisation) }
       let(:other_organisation) { create(:organisation) }
       let(:agent) { create(:agent, admin_role_in_organisations: [organisation, other_organisation]) }
-      before(:each) { sign_in agent }
+
+      before { sign_in agent }
 
       it "return success" do
         get :index, params: { agent_id: agent.id, organisation_id: organisation.id, format: :json }
