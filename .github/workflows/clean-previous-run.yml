@@ -1,0 +1,13 @@
+name: Clean previous workflow's run
+
+on:
+  schedule:
+  - cron: "*/5 * * * *"
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+    steps:
+      - run: gh api repos/$YOUR_USER/$YOUR_REPO/actions/workflows/3611607/runs
