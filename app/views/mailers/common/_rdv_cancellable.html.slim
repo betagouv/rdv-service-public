@@ -1,13 +1,11 @@
 p[style="margin-top:12px;"]
   span> Vous pouvez modifier ou annuler votre rendez-vous
-  strong
+  strong>
     | jusqu'à 4h avant celui-ci
-  |. Il suffit de vous rendre dans votre espace personnel ou en cliquant sur le lien ci-dessous.
+  - if rdv.lieu&.phone_number.present?
+    span> en appelant au #{link_to rdv.lieu.phone_number, "tel:#{rdv.lieu.phone_number_formatted}"} ou
+  | en cliquant sur le lien ci-dessous.
 
 .btn-wrapper
   = link_to 'Annuler ce rendez-vous', users_rdvs_url, class:'btn btn-primary'
 
-- if rdv.lieu&.phone_number.present?
-  p[style="margin-top:12px;"]
-    span> Vous pouvez contacter votre MDS au
-    = link_to rdv.lieu.phone_number, "tel:#{rdv.lieu.phone_number_formatted}"

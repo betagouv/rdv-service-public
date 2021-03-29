@@ -4,8 +4,8 @@ tr id="lieu_#{lieu.id}"
   td= lieu.address
   td= lieu.phone_number
   td= link_to nb_rdv > 0 ? nb_rdv : "aucun", admin_organisation_rdvs_path(current_organisation, lieu_id: lieu.id, start: Time.zone.now.beginning_of_day, end: Time.zone.now.end_of_day )
-  - if policy([:agent, lieu]).edit? || policy([:agent, lieu]).destroy?
-    td
+  td
+    - if policy([:agent, lieu]).edit? || policy([:agent, lieu]).destroy?
       .d-flex
         - if policy([:agent, lieu]).edit?
           div.mr-3= link_to edit_admin_organisation_lieu_path(current_organisation, lieu), title: "Modifier" do
