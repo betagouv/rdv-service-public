@@ -6,10 +6,6 @@ class Admin::RdvWizardForm::Step3
     new_admin_organisation_rdv_wizard_step_path(@organisation, step: 4, **to_query)
   end
 
-  def save
-    valid?
-  end
-
   protected
 
   def agent_context
