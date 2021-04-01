@@ -31,9 +31,14 @@ describe "Agent can CRUD plage d'ouverture" do
       expect_page_title("Vos plages d'ouverture")
       expect(page).to have_content("Vous n'avez pas encore créé de plage d'ouverture")
 
+      # Navigate back and forth between the list and the detail
       click_link "Créer une plage d'ouverture", match: :first
-
       expect_page_title("Nouvelle plage d'ouverture")
+      click_link("Annuler")
+      expect_page_title("Vos plages d'ouverture")
+      click_link "Créer une plage d'ouverture", match: :first
+      expect_page_title("Nouvelle plage d'ouverture")
+
       fill_in "Description", with: "Accueil"
       check "Suivi bonjour"
       click_button "Créer"
