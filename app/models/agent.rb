@@ -32,6 +32,7 @@ class Agent < ApplicationRecord
   validates :email, presence: true
   validates :last_name, :first_name, presence: true, on: :update
   validate :service_cannot_be_changed
+  validates :roles, presence: true
 
   scope :complete, -> { where.not(first_name: nil).where.not(last_name: nil) }
   scope :active, -> { where(deleted_at: nil) }
