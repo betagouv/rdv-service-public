@@ -88,7 +88,7 @@ describe "User can search for rdvs" do
       fill_in("Prénom", with: "Mathieu")
       fill_in("Nom", with: "Lapin")
       fill_in("Date de naissance", with: Date.yesterday)
-      click_button("Créer")
+      click_button("Enregistrer")
       expect(page).to have_content("Mathieu LAPIN")
 
       click_button("Continuer")

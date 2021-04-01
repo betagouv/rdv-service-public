@@ -21,7 +21,7 @@ describe "Agent can create user" do
     expect(page).to have_no_content("Inviter")
     click_link "Modifier"
     fill_in "Email", with: "marco@lebreton.bzh"
-    click_button "Modifier"
+    click_button "Enregistrer"
     click_link "Inviter"
     open_email("marco@lebreton.bzh")
     expect(current_email.subject).to eq I18n.t("devise.mailer.invitation_instructions.subject")

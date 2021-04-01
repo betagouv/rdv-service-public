@@ -23,7 +23,7 @@ describe "Agent can CRUD plage d'ouverture" do
 
       expect_page_title("Modifier votre plage d'ouverture")
       fill_in "Description", with: "La belle plage"
-      click_button("Modifier")
+      click_button("Enregistrer")
 
       expect_page_title("La belle plage")
       click_link("Supprimer")
@@ -41,7 +41,7 @@ describe "Agent can CRUD plage d'ouverture" do
 
       fill_in "Description", with: "Accueil"
       check "Suivi bonjour"
-      click_button "Créer"
+      click_button "Enregistrer"
 
       expect_page_title("Accueil")
       click_link "Modifier"
@@ -83,7 +83,7 @@ describe "Agent can CRUD plage d'ouverture" do
 
       expect_page_title("Modifier la plage d'ouverture de Jane FAROU")
       fill_in "Description", with: "La belle plage"
-      click_button("Modifier")
+      click_button("Enregistrer")
 
       expect_page_title("La belle plage")
       click_link("Supprimer")
@@ -96,7 +96,7 @@ describe "Agent can CRUD plage d'ouverture" do
       expect_page_title("Nouvelle plage d'ouverture")
       fill_in "Description", with: "Accueil"
       check "Suivi bonjour"
-      click_button "Créer"
+      click_button "Enregistrer"
 
       expect_page_title("Accueil")
       click_link "Modifier"
