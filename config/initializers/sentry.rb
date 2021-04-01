@@ -1,11 +1,9 @@
 Sentry.init do |config|
   config.dsn = ENV["SENTRY_DSN_RAILS"]
 
-  config.excluded_exceptions = [
-    "ActionController::InvalidAuthenticityToken",
-    "ActiveRecord::RecordNotFound",
-    "CGI::Session::CookieStore::TamperedWithCookie",
-    "Sinatra::NotFound",
-    "ActiveJob::DeserializationError",
-  ]
+  # Most 4xx errors are excluded by default.
+  # See Sentry::Configuration::IGNORE_DEFAULT
+  # and Sentry::Rails::IGNORE_DEFAULT
+  # Cf https://docs.sentry.io/platforms/ruby/configuration/options/#optional-settings
+  # config.excluded_exceptions += []
 end
