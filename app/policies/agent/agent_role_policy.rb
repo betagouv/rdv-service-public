@@ -20,6 +20,10 @@ class Agent::AgentRolePolicy < ApplicationPolicy
     include CurrentAgentInPolicyConcern
 
     def resolve
+      # Make sure to return an empty scope rather than nil if there are no roles.
+      # (This should not happen with valid data.)
+      return scope.none if current_agent.roles.empty?
+
       current_agent.roles.map do |agent_role|
         if agent_role.admin?
           scope.where(organisation_id: agent_role.organisation_id)
