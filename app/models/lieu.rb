@@ -1,4 +1,6 @@
 class Lieu < ApplicationRecord
+  include HasPhoneNumberConcern
+
   belongs_to :organisation
   has_many :plage_ouvertures, dependent: :restrict_with_error
   has_many :rdvs

@@ -11,7 +11,6 @@ describe "Admin can configure the organisation" do
   let!(:user) { create(:user, organisations: [organisation]) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:secretariat) { create(:service, :secretariat) }
-  let(:le_nouveau_lieu) { build(:lieu, organisation: organisation) }
   let(:le_nouveau_motif) { build(:motif, name: "Motif 2", service: pmi, organisation: organisation) }
   let(:la_nouvelle_org) { build(:organisation) }
 
@@ -24,13 +23,21 @@ describe "Admin can configure the organisation" do
     click_link "Vos lieux"
     expect_page_title("Vos lieux de consultation")
 
-    click_link lieu.name
+    within("#lieu_#{lieu.id}") do
+      click_link "Modifier"
+    end
+
     expect_page_title("Modifier le lieu")
     fill_in "Nom", with: "Le nouveau lieu"
+    fill_in "Téléphone", with: "01 02 03 04 05"
     click_button("Modifier")
 
     expect_page_title("Vos lieux de consultation")
-    click_link "Le nouveau lieu"
+
+    nouveau_lieu = Lieu.find_by(name: "Le nouveau lieu")
+    within("#lieu_#{nouveau_lieu.id}") do
+      click_link "Modifier"
+    end
 
     click_link("Supprimer")
 
@@ -40,13 +47,17 @@ describe "Admin can configure the organisation" do
     click_link "Ajouter un lieu", match: :first
 
     expect_page_title("Nouveau lieu")
-    fill_in "Nom", with: le_nouveau_lieu.name
-    fill_in "Adresse", with: le_nouveau_lieu.address
-    first("input#lieu_latitude", visible: false).set(32)
-    first("input#lieu_longitude", visible: false).set(2)
+    fill_in "Nom", with: "Un autre nouveau lieu"
+    fill_in "Adresse", with: "3 Place de la Gare, Strasbourg, 67000, 67, Bas-Rhin, Grand Est"
+    first("input#lieu_latitude", visible: false).set(48.583844)
+    first("input#lieu_longitude", visible: false).set(7.735253)
     click_button "Créer"
     expect_page_title("Vos lieux de consultation")
-    click_link le_nouveau_lieu.name
+
+    le_nouveau_lieu = Lieu.find_by(name: "Un autre nouveau lieu")
+    within("#lieu_#{le_nouveau_lieu.id}") do
+      click_link "Modifier"
+    end
   end
 
   scenario "CRUD on agents" do
