@@ -30,7 +30,7 @@ describe "Admin can configure the organisation" do
     expect_page_title("Modifier le lieu")
     fill_in "Nom", with: "Le nouveau lieu"
     fill_in "Téléphone", with: "01 02 03 04 05"
-    click_button("Modifier")
+    click_button("Enregistrer")
 
     expect_page_title("Vos lieux de consultation")
 
@@ -51,19 +51,13 @@ describe "Admin can configure the organisation" do
     fill_in "Adresse", with: "3 Place de la Gare, Strasbourg, 67000, 67, Bas-Rhin, Grand Est"
     first("input#lieu_latitude", visible: false).set(48.583844)
     first("input#lieu_longitude", visible: false).set(7.735253)
-<<<<<<< HEAD
-    click_button "Créer"
+    click_button "Enregistrer"
     expect_page_title("Vos lieux de consultation")
 
     le_nouveau_lieu = Lieu.find_by(name: "Un autre nouveau lieu")
     within("#lieu_#{le_nouveau_lieu.id}") do
       click_link "Modifier"
     end
-=======
-    click_button "Enregistrer"
-    expect_page_title("Vos lieux de consultation")
-    click_link "Un autre nouveau lieu"
->>>>>>> enregistre des modifications
   end
 
   scenario "CRUD on agents" do
