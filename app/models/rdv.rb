@@ -86,7 +86,7 @@ class Rdv < ApplicationRecord
 
   def possible_temporal_statuses
     if in_the_future?
-      ["unknown_future", starts_at.to_date.today? ? "waiting" : nil, "excused"].compact
+      ["unknown_future", starts_at.to_time <= Time.zone.now + 1.hour ? "seen" : nil, starts_at.to_date.today? ? "waiting" : nil, "excused"].compact
     else
       %w[unknown_past seen notexcused excused]
     end
