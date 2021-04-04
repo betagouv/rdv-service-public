@@ -1,30 +1,44 @@
 footer.main-footer
   .container
     .row
-      .col-lg-12.col-md-6
-        = link_to 'rdv-solidarites.fr', root_path, class: 'brand'
-    .row
-      .col-md-12
-        .footer-links.d-flex.flex-wrap.flex-gap-1em.mb-3
-          = link_to "Contact", contact_path
-          = link_to "Statistiques", stats_path
-          = link_to "Espace professionnel", accueil_mds_path
-          = link_to "Les solidarités dans votre département", mds_path
-          = link_to "https://doc.rdv-solidarites.fr/mentions-legales" do
+      .col-12.col-md
+        h5
+          = link_to image_pack_tag("logos/logo_sombre.svg", size: "250x80"), root_path
+          ul.list-unstyled.text-small
+           li.mb-1 Un service fourni par l'ANCT et un consortium de départements.
+           li.mb-1
+             = link_to image_pack_tag("logos/logo-incub-territoire.svg", size: "150x90"), "https://incubateur.anct.gouv.fr/"
+           li.mb-1
+             div
+                = link_to image_pack_tag("logos/logo-beta-gouv-fr.svg", size: "150x25"), "https://beta.gouv.fr/"
+             div
+                = image_pack_tag "logos/republique-francaise-logo.svg", size: "105x90"
+      .col-6.col-md
+        h5 À propos
+        ul.list-unstyled.text-small
+          li.mb-1 = link_to "Contact", contact_path, class: "footer-links"
+          li.mb-1 = link_to "Les solidarités dans votre département", mds_path
+          li.mb-1 = link_to "Espace professionnel", accueil_mds_path
+          li.mb-1 = link_to "Statistiques", stats_path
+      .col-6.col-md
+        h5 Produit
+        ul.list-unstyled.text-small
+          li.mb-1 Accessibilité : non conforme
+          li.mb-1 = link_to "https://github.com/betagouv/rdv-solidarites.fr/commits/#{ENV["CONTAINER_VERSION"]}" do
+            span>= ENV["RDV_SOLIDARITES_VERSION"]
+            i.fa.fa-external-link-alt
+          li.mb-1 = link_to "https://github.com/betagouv/rdv-solidarites.fr/" do
+            span> Code Source sur GitHub
+            i.fa.fa-external-link-alt
+      .col-6.col-md
+        h5 Légales
+        ul.list-unstyled.text-small
+          li.mb-1 = link_to "https://doc.rdv-solidarites.fr/mentions-legales" do
             span> Mentions Légales
             i.fa.fa-external-link-alt
-          = link_to "https://doc.rdv-solidarites.fr/conditions-dutilisation-de-la-plateforme-rdv-solidarites" do
+          li.mb-1 = link_to "https://doc.rdv-solidarites.fr/conditions-dutilisation-de-la-plateforme-rdv-solidarites" do
             span> C.G.U.
             i.fa.fa-external-link-alt
-          = link_to "https://doc.rdv-solidarites.fr/politique-de-confidentialite" do
+          li.mb-1 = link_to "https://doc.rdv-solidarites.fr/politique-de-confidentialite" do
             span> Politique de confidentialité
-            i.fa.fa-external-link-alt
-        .footer-links.d-flex.flex-wrap.flex-gap-1em.mb-2
-          span
-            span> RDV-Solidarités
-            = link_to "https://github.com/betagouv/rdv-solidarites.fr/commits/#{ENV["CONTAINER_VERSION"]}" do
-              span>= ENV["RDV_SOLIDARITES_VERSION"]
-              i.fa.fa-external-link-alt
-          = link_to "https://github.com/betagouv/rdv-solidarites.fr/" do
-            span> Code Source sur GitHub
             i.fa.fa-external-link-alt
