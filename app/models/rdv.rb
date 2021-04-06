@@ -98,7 +98,7 @@ class Rdv < ApplicationRecord
 
   def possible_temporal_statuses
     return %w[unknown_past seen notexcused excused] if in_the_past?
-    return %w[unknown_future seen waiting excused] if in_one_hour?
+    return %w[unknown_future seen waiting excused] if in_next_hour?
     return %w[unknown_future waiting excused] if today?
 
     %w[unknown_future excused]
