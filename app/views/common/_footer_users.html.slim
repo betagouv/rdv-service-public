@@ -5,14 +5,15 @@ footer.main-footer
         h5
           = link_to image_pack_tag("logos/logo_sombre.svg", size: "250x80"), root_path
           ul.list-unstyled.text-small
-           li.mb-1 Un service fourni par l'ANCT et un consortium de départements.
-           li.mb-1
-             = link_to image_pack_tag("logos/logo-incub-territoire.svg", size: "150x90"), "https://incubateur.anct.gouv.fr/"
-           li.mb-1
-             div
-                = link_to image_pack_tag("logos/logo-beta-gouv-fr.svg", size: "150x25"), "https://beta.gouv.fr/"
-             div
-                = image_pack_tag "logos/republique-francaise-logo.svg", size: "105x90"
+           li.mb-2
+             span> Un service fourni par
+             = link_to "l'ANCT et un consortium de départements", "https://doc.rdv-solidarites.fr/gouvernance"
+           li.mb-2
+             = link_to image_pack_tag("logos/logo-incub-territoire.svg", size: "80x70"), "https://incubateur.anct.gouv.fr/"
+           li.mb-2
+             = link_to image_pack_tag("logos/logo-beta-gouv-fr.svg", size: "150x25"), "https://beta.gouv.fr/"
+           li.mb-2
+             = image_pack_tag "logos/republique-francaise-logo.svg", size: "105x90"
       .col-6.col-md
         h5 À propos
         ul.list-unstyled.text-small
