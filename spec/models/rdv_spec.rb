@@ -232,6 +232,14 @@ describe Rdv, type: :model do
       now = DateTime.new(2020, 3, 23, 12, 46)
       travel_to(now)
       expected = %w[unknown_future waiting excused]
+      rdv = build(:rdv, starts_at: now + 2.hour)
+      expect(rdv.possible_temporal_statuses).to eq(expected)
+    end
+
+    it "returns `unknonw_future`, `vu`, `waiting` and `excused` at rdv's hour before rdv's time" do
+      now = DateTime.new(2020, 3, 23, 12, 46)
+      travel_to(now)
+      expected = %w[unknown_future seen waiting excused]
       rdv = build(:rdv, starts_at: now + 4.minutes)
       expect(rdv.possible_temporal_statuses).to eq(expected)
     end
