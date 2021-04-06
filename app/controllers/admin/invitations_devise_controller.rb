@@ -21,7 +21,7 @@ class Admin::InvitationsDeviseController < Devise::InvitationsController
         else
           "L'agent #{resource.email} a été invité à rejoindre votre organisation"
         end
-      redirect_to admin_organisation_invitations_path(organisation_id)
+      redirect_to admin_organisation_invitations_path(current_organisation)
     else
       render :new, layout: "application_agent"
     end
@@ -40,7 +40,7 @@ class Admin::InvitationsDeviseController < Devise::InvitationsController
   end
 
   def current_organisation
-    Organisation.find(params[:organisation_id]) if params[:organisation_id]
+    Organisation.find(params[:organisation_id])
   end
   helper_method :current_organisation
 
@@ -53,11 +53,16 @@ class Admin::InvitationsDeviseController < Devise::InvitationsController
     super([:agent, *args], **kwargs)
   end
 
-  def organisation_id
-    devise_parameter_sanitizer.sanitize(:invite)[:roles_attributes].values[0][:organisation_id]
-  end
-
+  # invite_params is called by Devise::InvitationsController#invite_resource
   def invite_params
-    devise_parameter_sanitizer.sanitize(:invite).except(:organisation_id)
+    params = devise_parameter_sanitizer.sanitize(:invite)
+
+    # Make sure the agent is being invited for exactly one role
+    raise ActionController::BadRequest unless params[:roles_attributes].is_a?(Hash) && params[:roles_attributes].keys == ["0"]
+
+    # Only ever invite to the current organisation
+    params[:roles_attributes]["0"][:organisation] = current_organisation
+
+    params
   end
 end

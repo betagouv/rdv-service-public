@@ -45,8 +45,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
-                organisation_id: organisation.id
+                level: "basic"
               }
             }
           }
@@ -68,8 +67,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
-                organisation_id: organisation.id
+                level: "basic"
               }
             }
           }
@@ -99,9 +97,8 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
         }
       end
 
-      it "should reject the change" do
-        expect { subject }.to raise_error(Pundit::NotAuthorizedError)
-        expect(Agent.last.email).not_to eq "hacker@renard.com"
+      it "should ignore the organisation param" do
+        expect(Agent.last.organisations).to eq [organisation]
       end
     end
 
@@ -114,8 +111,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
-                organisation_id: organisation.id
+                level: "basic"
               }
             }
           }
@@ -146,8 +142,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
-                organisation_id: organisation.id
+                level: "basic"
               }
             }
           }
@@ -178,8 +173,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
-                organisation_id: organisation.id
+                level: "basic"
               }
             }
           }
@@ -223,8 +217,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
-                organisation_id: organisation.id
+                level: "basic"
               }
             }
           }
