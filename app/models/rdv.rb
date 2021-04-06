@@ -81,7 +81,7 @@ class Rdv < ApplicationRecord
     starts_at <= Time.zone.now
   end
 
-  def in_one_hour?
+  def in_next_hour?
     starts_at.to_time <= Time.zone.now + 1.hour
   end
 
