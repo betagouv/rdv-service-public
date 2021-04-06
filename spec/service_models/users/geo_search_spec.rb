@@ -4,11 +4,12 @@ describe Users::GeoSearch, type: :service_model do
   let!(:territory62) { create(:territory, departement_number: "62") }
 
   describe "#matching_zones" do
-    subject { Users::GeoSearch.new(departement: "62", city_code: "62100").matching_zones }
+    subject { described_class.new(departement: "62", city_code: "62100").matching_zones }
 
     context "organisation exist but no zones" do
       let!(:organisation) { create(:organisation, territory: territory62, name: "MDS Arques") }
-      it { should be_empty }
+
+      it { is_expected.to be_empty }
     end
 
     it "contains zones where city-zones match" do
@@ -18,16 +19,17 @@ describe Users::GeoSearch, type: :service_model do
       zone1 = create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector1)
       zone2 = create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector2)
       create(:zone, level: "city", city_code: "62300", city_name: "Arques", sector: sector3)
-      expect(Users::GeoSearch.new(departement: "62", city_code: "62100").matching_zones).to contain_exactly(zone1, zone2)
+      expect(described_class.new(departement: "62", city_code: "62100").matching_zones).to contain_exactly(zone1, zone2)
     end
   end
 
   describe "#matching_sectors" do
-    subject { Users::GeoSearch.new(departement: "62", city_code: "62100").matching_sectors }
+    subject { described_class.new(departement: "62", city_code: "62100").matching_sectors }
 
     context "organisation exist but no zones or sectors" do
       let!(:organisation) { create(:organisation, territory: territory62, name: "MDS Arques") }
-      it { should be_empty }
+
+      it { is_expected.to be_empty }
     end
 
     context "city-zones match" do
@@ -38,27 +40,29 @@ describe Users::GeoSearch, type: :service_model do
       let!(:sector_mismatch) { create(:sector, territory: territory62, name: "Bapaume", human_id: "bapaume") }
       let!(:sector3) { create(:sector, territory: territory62) }
       let!(:zone_mismatch) { create(:zone, level: "city", city_code: "62300", city_name: "Bapaume", sector: sector3) }
-      it { should contain_exactly(sector1, sector2) }
+
+      it { is_expected.to contain_exactly(sector1, sector2) }
     end
   end
 
   describe "#departement_organisations" do
-    subject { Users::GeoSearch.new(departement: "62", city_code: "62100").departement_organisations }
+    subject { described_class.new(departement: "62", city_code: "62100").departement_organisations }
 
     context "2 organisations exist" do
       let!(:organisation1) { create(:organisation, territory: territory62, name: "MDS Arques") }
       let!(:organisation2) { create(:organisation, territory: territory62, name: "MDS Bapaume") }
       let!(:territory70) { create(:territory, departement_number: "70") }
       let!(:organisation_outside) { create(:organisation, territory: territory70) }
-      it { should contain_exactly(organisation1, organisation2) }
+
+      it { is_expected.to contain_exactly(organisation1, organisation2) }
     end
   end
 
   describe "#attributed_organisations" do
-    subject { Users::GeoSearch.new(departement: "62", city_code: "62100").attributed_organisations }
+    subject { described_class.new(departement: "62", city_code: "62100").attributed_organisations }
 
     context "no matching sectors" do
-      it { should be_empty }
+      it { is_expected.to be_empty }
     end
 
     context "matching sector attributed to orga" do
@@ -66,7 +70,8 @@ describe Users::GeoSearch, type: :service_model do
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
       let!(:attribution) { create(:sector_attribution, :level_organisation, sector: sector, organisation: organisation) }
-      it { should contain_exactly(organisation) }
+
+      it { is_expected.to contain_exactly(organisation) }
     end
 
     context "matching sector attributed to agent" do
@@ -74,7 +79,8 @@ describe Users::GeoSearch, type: :service_model do
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
       let!(:attribution) { create(:sector_attribution, :level_agent, sector: sector, organisation: organisation) }
-      it { should_not contain_exactly(organisation) }
+
+      it { is_expected.not_to contain_exactly(organisation) }
     end
 
     context "matching sector attributed to multiple organisations" do
@@ -85,7 +91,8 @@ describe Users::GeoSearch, type: :service_model do
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
       let!(:attribution1) { create(:sector_attribution, :level_organisation, sector: sector, organisation: organisation1) }
       let!(:attribution2) { create(:sector_attribution, :level_organisation, sector: sector, organisation: organisation2) }
-      it { should contain_exactly(organisation1, organisation2) }
+
+      it { is_expected.to contain_exactly(organisation1, organisation2) }
     end
 
     context "matching sectors attributed to different organisations" do
@@ -97,7 +104,8 @@ describe Users::GeoSearch, type: :service_model do
       let!(:zone2) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector2) }
       let!(:attribution1) { create(:sector_attribution, :level_organisation, sector: sector1, organisation: organisation1) }
       let!(:attribution2) { create(:sector_attribution, :level_organisation, sector: sector2, organisation: organisation2) }
-      it { should contain_exactly(organisation1, organisation2) }
+
+      it { is_expected.to contain_exactly(organisation1, organisation2) }
     end
 
     context "edge case: one matching sector attributed to full orga, other matching sector attributed to agent in same orga" do
@@ -109,12 +117,13 @@ describe Users::GeoSearch, type: :service_model do
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let!(:attribution_organisation_arques_rural) { SectorAttribution.create(level: "organisation", sector: sector_arques_rural, organisation: organisation) }
       let!(:attribution_agent_arques_ville) { SectorAttribution.create(level: "agent", sector: sector_arques_ville, organisation: organisation, agent: agent) }
-      it { should contain_exactly(organisation) }
+
+      it { is_expected.to contain_exactly(organisation) }
     end
   end
 
   describe "#attributed_agents_by_organisation" do
-    subject { Users::GeoSearch.new(departement: "62", city_code: "62100").attributed_agents_by_organisation }
+    subject { described_class.new(departement: "62", city_code: "62100").attributed_agents_by_organisation }
 
     context "one agent attributed with online motif" do
       let!(:organisation) { create(:organisation, territory: territory62, name: "MDS Arques") }
@@ -124,7 +133,8 @@ describe Users::GeoSearch, type: :service_model do
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
       let!(:attribution) { create(:sector_attribution, :level_agent, sector: sector, organisation: organisation, agent: agent) }
-      it { should eq({ organisation => [agent] }) }
+
+      it { is_expected.to eq({ organisation => [agent] }) }
     end
 
     context "edge case: sector attributed to full orga + other sector attributed to agent in same orga" do
@@ -136,22 +146,24 @@ describe Users::GeoSearch, type: :service_model do
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let!(:attribution_organisation_arques_rural) { SectorAttribution.create(level: "organisation", sector: sector_arques_rural, organisation: organisation) }
       let!(:attribution_agent_arques_ville) { SectorAttribution.create(level: "agent", sector: sector_arques_ville, organisation: organisation, agent: agent) }
-      it { should eq({ organisation => [agent] }) } # it should still contain it
+
+      it { is_expected.to eq({ organisation => [agent] }) } # it should still contain it
     end
   end
 
   describe "#available_motifs" do
-    subject { Users::GeoSearch.new(departement: "62", city_code: "62100").available_motifs }
+    subject { described_class.new(departement: "62", city_code: "62100").available_motifs }
 
     context "no organisations in departement" do
-      it { should be_empty }
+      it { is_expected.to be_empty }
     end
 
     context "matching sector not attributed" do
       let!(:organisation) { create(:organisation, territory: territory62, name: "MDS Arques") }
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
-      it { should be_empty }
+
+      it { is_expected.to be_empty }
     end
 
     context "matching sector attributed to orga" do
@@ -161,7 +173,8 @@ describe Users::GeoSearch, type: :service_model do
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
       let!(:attribution) { create(:sector_attribution, :level_organisation, sector: sector, organisation: organisation) }
-      it { should contain_exactly(motif) }
+
+      it { is_expected.to contain_exactly(motif) }
     end
 
     context "motif sectorisation level is agent" do
@@ -171,7 +184,8 @@ describe Users::GeoSearch, type: :service_model do
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
       let!(:attribution) { create(:sector_attribution, :level_organisation, sector: sector, organisation: organisation) }
-      it { should be_empty }
+
+      it { is_expected.to be_empty }
     end
 
     context "2 motifs with 2 plage ouvertures match" do
@@ -183,7 +197,8 @@ describe Users::GeoSearch, type: :service_model do
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
       let!(:attribution) { create(:sector_attribution, :level_organisation, sector: sector, organisation: organisation) }
-      it { should contain_exactly(motif1, motif2) }
+
+      it { is_expected.to contain_exactly(motif1, motif2) }
     end
 
     context "2 motifs, one without plage ouverture" do
@@ -194,7 +209,8 @@ describe Users::GeoSearch, type: :service_model do
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
       let!(:attribution) { create(:sector_attribution, :level_organisation, sector: sector, organisation: organisation) }
-      it { should contain_exactly(motif1) }
+
+      it { is_expected.to contain_exactly(motif1) }
     end
 
     context "2 motifs, one offline" do
@@ -206,7 +222,8 @@ describe Users::GeoSearch, type: :service_model do
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
       let!(:attribution) { create(:sector_attribution, :level_organisation, sector: sector, organisation: organisation) }
-      it { should contain_exactly(motif1) }
+
+      it { is_expected.to contain_exactly(motif1) }
     end
 
     context "2 motifs, one deleted" do
@@ -218,7 +235,8 @@ describe Users::GeoSearch, type: :service_model do
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
       let!(:attribution) { create(:sector_attribution, :level_organisation, sector: sector, organisation: organisation) }
-      it { should contain_exactly(motif1) }
+
+      it { is_expected.to contain_exactly(motif1) }
     end
 
     context "1 motif coming from attributed agent, 1 from attributed orga" do
@@ -243,16 +261,17 @@ describe Users::GeoSearch, type: :service_model do
       let!(:zone_agent) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector_agent) }
       let!(:attribution_agent) { create(:sector_attribution, :level_agent, sector: sector_agent, organisation: organisation2, agent: agent) }
 
-      it { should contain_exactly(motif_organisation, motif_agent, motif_departement) }
+      it { is_expected.to contain_exactly(motif_organisation, motif_agent, motif_departement) }
     end
   end
 
   describe "#available_services" do
-    subject { Users::GeoSearch.new(departement: "62", city_code: "62100").available_services }
+    subject { described_class.new(departement: "62", city_code: "62100").available_services }
 
     context "organisation exist but no sectors" do
       let!(:organisation) { create(:organisation, territory: territory62, name: "MDS Arques") }
-      it { should be_empty }
+
+      it { is_expected.to be_empty }
     end
 
     context "matching sector with 2 motifs with POs from different services" do
@@ -266,7 +285,8 @@ describe Users::GeoSearch, type: :service_model do
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
       let!(:attribution) { create(:sector_attribution, :level_organisation, sector: sector, organisation: organisation) }
-      it { should contain_exactly(service1, service2) }
+
+      it { is_expected.to contain_exactly(service1, service2) }
     end
 
     context "matching sector with 2 motifs with POs from same service" do
@@ -279,7 +299,8 @@ describe Users::GeoSearch, type: :service_model do
       let!(:sector) { create(:sector, territory: territory62, name: "Arques VILLE", human_id: "arques") }
       let!(:zone) { create(:zone, level: "city", city_code: "62100", city_name: "Arques", sector: sector) }
       let!(:attribution) { create(:sector_attribution, :level_organisation, sector: sector, organisation: organisation) }
-      it { should contain_exactly(service) } # we expect no duplicates
+
+      it { is_expected.to contain_exactly(service) } # we expect no duplicates
     end
   end
 end

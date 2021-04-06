@@ -9,6 +9,7 @@ describe Creneau, type: :model do
   let(:now) { today.to_time }
 
   before { travel_to(now) }
+
   after { travel_back }
 
   describe "#overlapping_rdvs_or_absences" do
@@ -20,36 +21,43 @@ describe Creneau, type: :model do
 
       describe "absence overlaps beginning of creneau" do
         let!(:absence) { build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(8, 30), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(9, 30), agent: agent, organisation: organisation) }
+
         it { is_expected.to eq(true) }
       end
 
       describe "absence overlaps end of creneau" do
         let!(:absence) { build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 30), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 30), agent: agent, organisation: organisation) }
+
         it { is_expected.to eq(true) }
       end
 
       describe "absence is inside creneau" do
         let!(:absence) { build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 15), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(9, 30), agent: agent, organisation: organisation) }
+
         it { is_expected.to eq(true) }
       end
 
       describe "absence is before creneau" do
         let!(:absence) { build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(8, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(9, 0), agent: agent, organisation: organisation) }
+
         it { is_expected.to eq(false) }
       end
 
       describe "absence is after creneau" do
         let!(:absence) { build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(10, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 30), agent: agent, organisation: organisation) }
+
         it { is_expected.to eq(false) }
       end
 
       describe "absence is around creneau" do
         let!(:absence) { build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(8, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 30), agent: agent, organisation: organisation) }
+
         it { is_expected.to eq(true) }
       end
 
       describe "absence is like creneau" do
         let!(:absence) { build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 0), agent: agent, organisation: organisation) }
+
         it { is_expected.to eq(true) }
       end
     end
@@ -59,36 +67,43 @@ describe Creneau, type: :model do
 
       describe "rdv overlaps beginning of creneau" do
         let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 8, 30), duration_in_min: 45, agents: [agent], organisation: organisation) }
+
         it { is_expected.to eq(true) }
       end
 
       describe "rdv overlaps end of creneau" do
         let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 45, agents: [agent], organisation: organisation) }
+
         it { is_expected.to eq(true) }
       end
 
       describe "rdv is inside creneau" do
         let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 15), duration_in_min: 30, agents: [agent], organisation: organisation) }
+
         it { is_expected.to eq(true) }
       end
 
       describe "rdv is before creneau" do
         let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 8, 0), duration_in_min: 60, agents: [agent], organisation: organisation) }
+
         it { is_expected.to eq(false) }
       end
 
       describe "rdv is after creneau" do
         let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 45, agents: [agent], organisation: organisation) }
+
         it { is_expected.to eq(false) }
       end
 
       describe "rdv is around creneau" do
         let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 8, 0), duration_in_min: 140, agents: [agent], organisation: organisation) }
+
         it { is_expected.to eq(true) }
       end
 
       describe "rdv is like creneau" do
         let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 60, agents: [agent], organisation: organisation) }
+
         it { is_expected.to eq(true) }
       end
     end
@@ -101,7 +116,7 @@ describe Creneau, type: :model do
         let(:rdv2) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 35, agents: [agent], organisation: organisation) }
         let(:absence) { build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(9, 20), agent: agent, organisation: organisation) }
 
-        it "should work and be ordered so the first is the one that ends last" do
+        it "works and be ordered so the first is the one that ends last" do
           expect(subject.count).to eq(3)
           expect(subject.first).to eq(rdv2)
         end
@@ -114,12 +129,14 @@ describe Creneau, type: :model do
 
     context "creneau respects booking delays" do
       let(:creneau) { build(:creneau, :respects_booking_delays) }
-      it { should be true }
+
+      it { is_expected.to be true }
     end
 
     context "creneau does not respect min booking delay" do
       let(:creneau) { build(:creneau, :does_not_respect_min_booking_delay) }
-      it { should be false }
+
+      it { is_expected.to be false }
     end
   end
 
@@ -128,12 +145,14 @@ describe Creneau, type: :model do
 
     context "creneau respects booking delays" do
       let(:creneau) { build(:creneau, :respects_booking_delays) }
-      it { should be true }
+
+      it { is_expected.to be true }
     end
 
     context "creneau does not respect max booking delay" do
       let(:creneau) { build(:creneau, :does_not_respect_max_booking_delay) }
-      it { should be false }
+
+      it { is_expected.to be false }
     end
   end
 
@@ -142,17 +161,20 @@ describe Creneau, type: :model do
 
     context "creneau respects booking delays" do
       let(:creneau) { build(:creneau, :respects_booking_delays) }
-      it { should be true }
+
+      it { is_expected.to be true }
     end
 
     context "creneau does not respect min booking delay" do
       let(:creneau) { build(:creneau, :does_not_respect_min_booking_delay) }
-      it { should be false }
+
+      it { is_expected.to be false }
     end
 
     context "creneau does not respect max booking delay" do
       let(:creneau) { build(:creneau, :does_not_respect_max_booking_delay) }
-      it { should be false }
+
+      it { is_expected.to be false }
     end
   end
 end

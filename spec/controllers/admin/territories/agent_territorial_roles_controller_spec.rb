@@ -131,6 +131,10 @@ RSpec.describe Admin::Territories::AgentTerritorialRolesController, type: :contr
   end
 
   describe "#destroy" do
+    subject do
+      delete :destroy, params: { territory_id: territory.id, id: target_agent_territorial_role.id }
+    end
+
     let!(:target_agent) do
       create(
         :agent,
@@ -141,10 +145,6 @@ RSpec.describe Admin::Territories::AgentTerritorialRolesController, type: :contr
     end
     let!(:target_agent_territorial_role) do
       create(:agent_territorial_role, agent: target_agent, territory: territory)
-    end
-
-    subject do
-      delete :destroy, params: { territory_id: territory.id, id: target_agent_territorial_role.id }
     end
 
     context "territorial admin agent signed in" do

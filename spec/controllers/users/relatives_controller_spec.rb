@@ -20,7 +20,7 @@ RSpec.describe Users::RelativesController, type: :controller do
       expect(response).to be_successful
     end
 
-    it "should assign relative" do
+    it "assigns relative" do
       expect(response.body).to include("Modifier un proche")
       expect(assigns(:user)).to eq(relative)
     end
@@ -35,15 +35,16 @@ RSpec.describe Users::RelativesController, type: :controller do
       expect(response).to be_successful
     end
 
-    it "should assign a new user" do
+    it "assigns a new user" do
       expect(response.body).to include("Ajouter un proche")
       expect(assigns(:user)).to be_a_new(User)
     end
   end
 
   describe "POST #create" do
-    before { request.headers["HTTP_REFERER"] = users_informations_path }
     subject { post :create, params: attributes }
+
+    before { request.headers["HTTP_REFERER"] = users_informations_path }
 
     context "with valid params" do
       let(:attributes) do
@@ -128,9 +129,11 @@ RSpec.describe Users::RelativesController, type: :controller do
 
   describe "DELETE #destroy" do
     subject { delete :destroy, params: { id: relative.id } }
+
     let(:now) { "21/07/2019 08:22".to_time }
 
     before { travel_to(now) }
+
     after { travel_back }
 
     it "soft deletes the relative" do

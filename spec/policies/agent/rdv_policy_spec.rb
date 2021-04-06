@@ -4,7 +4,7 @@ describe Agent::RdvPolicy, type: :policy do
   shared_examples "permit actions" do |*actions|
     actions.each do |action|
       permissions action do
-        it { should permit(pundit_context, rdv) }
+        it { is_expected.to permit(pundit_context, rdv) }
       end
     end
   end
@@ -12,19 +12,19 @@ describe Agent::RdvPolicy, type: :policy do
   shared_examples "not permit actions" do |*actions|
     actions.each do |action|
       permissions action do
-        it { should_not permit(pundit_context, rdv) }
+        it { is_expected.not_to permit(pundit_context, rdv) }
       end
     end
   end
 
   shared_examples "included in scope" do
-    it "should be included in scope" do
+    it "is included in scope" do
       expect(Agent::RdvPolicy::Scope.new(pundit_context, Rdv).resolve).to include(rdv)
     end
   end
 
   shared_examples "not included in scope" do
-    it "should not be included in scope" do
+    it "is not included in scope" do
       expect(Agent::RdvPolicy::Scope.new(pundit_context, Rdv).resolve).not_to include(rdv)
     end
   end
@@ -55,12 +55,14 @@ describe Agent::RdvPolicy, type: :policy do
 
     context "for secretariat" do
       let(:service_agent) { build(:service, :secretariat) }
+
       it_behaves_like "permit actions", :show?, :edit?, :update?, :destroy?
       it_behaves_like "included in scope"
     end
 
     context "for admin" do
       let(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service_agent) }
+
       it_behaves_like "permit actions", :show?, :edit?, :update?, :destroy?
       it_behaves_like "included in scope"
     end
@@ -93,12 +95,14 @@ describe Agent::RdvPolicy, type: :policy do
 
     context "for secretariat" do
       let(:agent2) { create(:agent, basic_role_in_organisations: [organisation2], service: create(:service, :secretariat)) }
+
       it_behaves_like "not permit actions", :show?, :edit?, :update?, :destroy?
       it_behaves_like "not included in scope"
     end
 
     context "for admin" do
       let(:agent2) { create(:agent, admin_role_in_organisations: [organisation2], service: service) }
+
       it_behaves_like "not permit actions", :show?, :edit?, :update?, :destroy?
       it_behaves_like "not included in scope"
     end

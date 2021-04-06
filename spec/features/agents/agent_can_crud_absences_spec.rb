@@ -11,7 +11,7 @@ describe "Agent can CRUD absences" do
   end
 
   context "for an agent" do
-    scenario "default" do
+    it "default" do
       expect_page_title("Vos absences")
       click_link absence.title
 
@@ -44,7 +44,7 @@ describe "Agent can CRUD absences" do
     let!(:other_agent) { create(:agent, first_name: "Jane", last_name: "FAROU", service: service, basic_role_in_organisations: [organisation]) }
     let!(:absence) { create(:absence, agent: other_agent, organisation: organisation) }
 
-    scenario "can crud a absence" do
+    it "can crud a absence" do
       visit admin_organisation_agent_absences_path(organisation, other_agent.id)
       expect_page_title("Absences de Jane FAROU (PMI)")
       click_link absence.title

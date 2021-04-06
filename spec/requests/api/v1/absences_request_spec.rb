@@ -4,6 +4,7 @@ describe "api/v1/absences requests", type: :request do
 
   describe "GET api/v1/absences" do
     subject { get api_v1_absences_path(params), headers: api_auth_headers_for_agent(agent) }
+
     let(:params) { {} }
 
     context "no existing absences" do
@@ -36,7 +37,8 @@ describe "api/v1/absences requests", type: :request do
 
       context "filtered on organisation" do
         let(:params) { { organisation_id: organisation.id } }
-        it "should not include orga2 absences" do
+
+        it "does not include orga2 absences" do
           subject
           expect(JSON.parse(response.body)["absences"].pluck("id")).to \
             contain_exactly(absence1.id, absence2.id)
@@ -47,6 +49,7 @@ describe "api/v1/absences requests", type: :request do
 
   describe "POST api/v1/absences" do
     subject { post(api_v1_absences_path, params: params, headers: api_auth_headers_for_agent(agent)) }
+
     let(:valid_params) do
       {
         organisation_id: organisation.id,
@@ -61,8 +64,9 @@ describe "api/v1/absences requests", type: :request do
 
     context "valid params" do
       let(:params) { valid_params }
-      it "should work" do
-        expect { subject }.to(change { Absence.count }.by(1))
+
+      it "works" do
+        expect { subject }.to(change(Absence, :count).by(1))
         expect(response.status).to eq(200)
         absence = Absence.first
         expect(absence.organisation).to eq(organisation)
@@ -77,8 +81,9 @@ describe "api/v1/absences requests", type: :request do
 
     context "broken start_time format" do
       let(:params) { valid_params.merge(start_time: "08h") }
+
       it "returns an error" do
-        expect { subject }.not_to(change { Absence.count })
+        expect { subject }.not_to(change(Absence, :count))
         expect(response.status).to eq(422)
         expect(JSON.parse(response.body)["error_messages"]).to include("start_time doit être rempli(e)")
       end
@@ -86,8 +91,9 @@ describe "api/v1/absences requests", type: :request do
 
     context "end_time before start_time" do
       let(:params) { valid_params.merge(start_time: "18:00", end_time: "08:00") }
+
       it "returns an error" do
-        expect { subject }.not_to(change { Absence.count })
+        expect { subject }.not_to(change(Absence, :count))
         expect(response.status).to eq(422)
         expect(JSON.parse(response.body)["error_messages"]).to include("ends_time doit être après le début.")
       end
@@ -101,8 +107,9 @@ describe "api/v1/absences requests", type: :request do
 
       context "agent has no special role" do
         let(:agent_role_level) { AgentRole::LEVEL_BASIC }
+
         it "returns an error" do
-          expect { subject }.not_to(change { Absence.count })
+          expect { subject }.not_to(change(Absence, :count))
           expect(response.status).to eq(403)
           expect(JSON.parse(response.body)["error_messages"]).to include("Vous ne pouvez pas effectuer cette action.")
         end
@@ -110,8 +117,9 @@ describe "api/v1/absences requests", type: :request do
 
       context "agent is admin" do
         let(:agent_role_level) { AgentRole::LEVEL_ADMIN }
+
         it "returns an error" do
-          expect { subject }.to(change { Absence.count }.by(1))
+          expect { subject }.to(change(Absence, :count).by(1))
           expect(response.status).to eq(200)
           expect(Absence.first.agent).to eq(agent2)
         end
@@ -120,8 +128,9 @@ describe "api/v1/absences requests", type: :request do
 
     context "empty params" do
       let(:params) { {} }
+
       it "returns an error" do
-        expect { subject }.not_to(change { Absence.count })
+        expect { subject }.not_to(change(Absence, :count))
         expect(response.status).to eq(422)
       end
     end

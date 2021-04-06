@@ -1,5 +1,6 @@
 describe Notifications::Rdv::RdvCreatedService, type: :service do
-  subject { Notifications::Rdv::RdvCreatedService.perform_with(rdv) }
+  subject { described_class.perform_with(rdv) }
+
   let(:user1) { build(:user) }
   let(:user2) { build(:user) }
   let(:agent1) { build(:agent) }
@@ -34,7 +35,7 @@ describe Notifications::Rdv::RdvCreatedService, type: :service do
     let(:motif) { build(:motif, :visible_and_not_notified) }
     let(:rdv) { create_rdv_skip_notify(motif: motif, starts_at: 3.days.from_now, users: [user1, user2]) }
 
-    it "should not be called" do
+    it "is not called" do
       expect(Users::RdvMailer).not_to receive(:rdv_created)
       subject
     end

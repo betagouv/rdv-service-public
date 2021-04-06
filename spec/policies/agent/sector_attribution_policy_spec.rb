@@ -12,7 +12,8 @@ describe Agent::SectorAttributionPolicy, type: :policy do
         let!(:organisation) { create(:organisation, territory: territory) }
         let!(:sector) { create(:sector, territory: territory) }
         let!(:sector_attribution) { build(:sector_attribution, sector: sector, organisation: organisation) }
-        permissions(action) { it { should permit(pundit_context, sector_attribution) } }
+
+        permissions(action) { it { is_expected.to permit(pundit_context, sector_attribution) } }
       end
 
       context "agent does not have role in territory" do
@@ -20,7 +21,8 @@ describe Agent::SectorAttributionPolicy, type: :policy do
         let!(:organisation) { create(:organisation, territory: territory2) }
         let!(:sector) { create(:sector, territory: territory2) }
         let!(:sector_attribution) { build(:sector_attribution, sector: sector, organisation: organisation) }
-        permissions(action) { it { should_not permit(pundit_context, sector_attribution) } }
+
+        permissions(action) { it { is_expected.not_to permit(pundit_context, sector_attribution) } }
       end
     end
   end
@@ -29,7 +31,7 @@ end
 describe Agent::SectorAttributionPolicy::Scope, type: :policy do
   describe "#resolve?" do
     subject do
-      Agent::SectorAttributionPolicy::Scope.new(AgentContext.new(agent), SectorAttribution).resolve
+      described_class.new(AgentContext.new(agent), SectorAttribution).resolve
     end
 
     context "misc state" do
@@ -66,10 +68,10 @@ describe Agent::SectorAttributionPolicy::Scope, type: :policy do
         )
       end
 
-      it { should include(attribution1) }
-      it { should include(attribution1bis) }
-      it { should include(attribution2) }
-      it { should_not include(attribution3) }
+      it { is_expected.to include(attribution1) }
+      it { is_expected.to include(attribution1bis) }
+      it { is_expected.to include(attribution2) }
+      it { is_expected.not_to include(attribution3) }
     end
   end
 end

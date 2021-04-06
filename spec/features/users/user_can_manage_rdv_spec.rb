@@ -10,7 +10,7 @@ describe "User can manage their rdvs" do
   context "when cancellable" do
     let(:starts_at) { 5.hours.from_now }
 
-    scenario "default", js: true do
+    it "default", js: true do
       expect(page).to have_content(rdv.motif.name)
       click_link("Annuler le RDV")
       expect(page).to have_content("Confirmation")
@@ -22,7 +22,7 @@ describe "User can manage their rdvs" do
   context "when not cancellable" do
     let(:starts_at) { 4.hours.from_now }
 
-    scenario "default", js: true do
+    it "default", js: true do
       expect(page).to have_content(rdv.motif.name)
       expect(page).not_to have_selector("li", text: "Annuler le RDV")
       expect(page).to have_selector("p.font-italic", text: "Ce rendez-vous commence dans moins de 4 heures, il n'est plus annulable en ligne.")
@@ -31,7 +31,8 @@ describe "User can manage their rdvs" do
 
   context "when available for file attente" do
     let(:starts_at) { 15.days.from_now }
-    scenario "default", js: true do
+
+    it "default", js: true do
       expect(page).to have_content("Je souhaite être prévenu si un créneau se libère.")
       check "Je souhaite être prévenu si un créneau se libère."
       expect(page).to have_content("Vous êtes à présent sur la liste d'attente")
@@ -42,7 +43,8 @@ describe "User can manage their rdvs" do
 
   context "when not available for file attente" do
     let(:starts_at) { 7.days.from_now }
-    scenario "default", js: true do
+
+    it "default", js: true do
       expect(page).not_to have_content("Je souhaite être prévenu si un créneau se libère.")
     end
   end

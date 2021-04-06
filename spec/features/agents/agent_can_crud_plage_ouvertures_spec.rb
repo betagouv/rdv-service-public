@@ -55,7 +55,7 @@ describe "Agent can CRUD plage d'ouverture" do
   context "for a secretaire" do
     let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
 
-    scenario "cannot create plage_ouverture" do
+    it "cannot create plage_ouverture" do
       expect_page_title("Vos plages d'ouverture")
       click_link "Créer une plage d'ouverture", match: :first
       expect(page).to have_content("Aucun motif disponible. Vous ne pouvez pas créer de plage d'ouverture.")
@@ -64,6 +64,7 @@ describe "Agent can CRUD plage d'ouverture" do
     context "with motif for_secretariat" do
       let!(:motif) { create(:motif, :for_secretariat, name: "Suivi bonjour", service: service, organisation: organisation) }
       let!(:plage_ouverture) { create(:plage_ouverture, lieu: lieu, agent: agent, motifs: [motif], organisation: organisation, title: "Permanence") }
+
       it_behaves_like "can crud own plage ouvertures"
     end
   end
@@ -72,7 +73,7 @@ describe "Agent can CRUD plage d'ouverture" do
     let!(:other_agent) { create(:agent, first_name: "Jane", last_name: "FAROU", service: service, basic_role_in_organisations: [organisation]) }
     let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, agent: other_agent, organisation: organisation, title: "Permanence") }
 
-    scenario "can crud a plage_ouverture" do
+    it "can crud a plage_ouverture" do
       visit admin_organisation_agent_plage_ouvertures_path(organisation, other_agent.id)
 
       expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")

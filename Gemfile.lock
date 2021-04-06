@@ -455,6 +455,9 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.4.1)
       parser (>= 2.7.1.5)
+    rubocop-rspec (2.1.0)
+      rubocop (~> 1.0)
+      rubocop-ast (>= 1.1.0)
     ruby-graphviz (1.2.5)
       rexml
     ruby-ole (1.2.12.2)
@@ -628,6 +631,7 @@ DEPENDENCIES
   rspec-rails (>= 4.0.0.beta)
   rspec_junit_formatter
   rubocop (~> 1)
+  rubocop-rspec
   sentry-rails
   sentry-ruby
   sib-api-v3-sdk

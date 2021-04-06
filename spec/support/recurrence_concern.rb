@@ -17,18 +17,21 @@ shared_examples_for "recurrence" do
 
     context "exceptionnelle" do
       let(:model_instance) { create(model_symbol, first_day: Date.new(2019, 7, 22), end_time: Tod::TimeOfDay.new(12)) }
+
       it { is_expected.to eq(Time.zone.local(2019, 7, 22, 12)) }
     end
 
     context "recurring without end date" do
       let(:first_day) { Date.new(2019, 7, 22) }
       let(:model_instance) { create(model_symbol, first_day: first_day, end_time: Tod::TimeOfDay.new(12), recurrence: Montrose.every(:week, on: [:tuesday], starts: first_day)) }
+
       it { is_expected.to be_nil }
     end
 
     context "recurring with end date" do
       let(:first_day) { Date.new(2019, 11, 17) }
       let(:model_instance) { create(model_symbol, first_day: first_day, end_time: Tod::TimeOfDay.new(12), recurrence: Montrose.every(:week, on: [:tuesday], starts: first_day, until: Date.new(2020, 11, 25))) }
+
       it { is_expected.to eq(Time.zone.local(2020, 11, 25, 12)) }
     end
   end

@@ -1,5 +1,6 @@
 describe Notifications::Rdv::RdvCancelledByUser, type: :service do
-  subject { Notifications::Rdv::RdvCancelledByUser.perform_with(rdv) }
+  subject { described_class.perform_with(rdv) }
+
   let(:user1) { build(:user) }
   let(:rdv) { create(:rdv, starts_at: 3.days.from_now, users: [user1]) }
 

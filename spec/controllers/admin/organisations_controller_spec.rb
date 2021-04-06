@@ -15,12 +15,14 @@ describe Admin::OrganisationsController, type: :controller do
           role_in_territories: [territory]
         )
       end
-      it { should be_successful }
+
+      it { is_expected.to be_successful }
     end
 
     context "agent does not have role in territory" do
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-      it { should_not be_successful }
+
+      it { is_expected.not_to be_successful }
     end
   end
 
@@ -37,8 +39,8 @@ describe Admin::OrganisationsController, type: :controller do
       end
       let(:organisation_params) { { name: "MDS Test", territory_id: territory.id } }
 
-      it "should create company" do
-        expect { subject }.to change { Organisation.count }.by(1)
+      it "creates company" do
+        expect { subject }.to change(Organisation, :count).by(1)
       end
     end
 
@@ -53,17 +55,19 @@ describe Admin::OrganisationsController, type: :controller do
       let!(:territory2) { create(:territory) }
       let(:organisation_params) { { name: "MDS Test", territory_id: territory2.id } }
 
-      it "should not create company" do
-        expect { subject }.not_to(change { Organisation.count })
+      it "does not create company" do
+        expect { subject }.not_to(change(Organisation, :count))
       end
     end
 
     context "valid params BUT agent does not have role in territory" do
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
       let(:organisation_params) { { name: "MDS Test", departement: "33" } }
-      it { should_not be_successful }
-      it "should not create company" do
-        expect { subject }.not_to(change { Organisation.count })
+
+      it { is_expected.not_to be_successful }
+
+      it "does not create company" do
+        expect { subject }.not_to(change(Organisation, :count))
       end
     end
   end
@@ -72,13 +76,13 @@ describe Admin::OrganisationsController, type: :controller do
     context "orga admin" do
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
-      it "should redirect to organisation show" do
+      it "redirects to organisation show" do
         put :update, params: { id: organisation.id, organisation: { name: "a new name" } }
         expect(response).to redirect_to(admin_organisation_path(organisation))
       end
 
       { phone_number: "01 23 45 56 78", website: "http://www.pasdecalais.fr", email: "vaneecke.elodie@pasdecalais.fr" }.each do |attribute, value|
-        it "should update #{attribute}" do
+        it "updates #{attribute}" do
           params = {}
           params[attribute] = value
           put :update, params: { id: organisation.id, organisation: params }

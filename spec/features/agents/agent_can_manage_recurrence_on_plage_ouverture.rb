@@ -9,7 +9,7 @@ describe "Agent can manage recurrence on plage d'ouverture" do
     visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
   end
 
-  scenario "default", js: true do
+  it "default", js: true do
     expect_page_title("Modifier la plage d'ouverture")
     expect_not_checked("recurrence_has_recurrence")
     expect(page).not_to have_text("Répéter tou(te)s les")

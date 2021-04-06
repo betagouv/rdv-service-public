@@ -19,6 +19,7 @@ RSpec.describe Admin::AgentsController, type: :controller do
 
   describe "DELETE #destroy" do
     subject { delete :destroy, params: { organisation_id: organisation.id, id: agent1.id } }
+
     it "destroys the requested agent" do
       subject
       expect(agent1.reload.organisations).not_to include(organisation)

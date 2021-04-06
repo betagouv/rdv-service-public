@@ -8,7 +8,8 @@ describe Agent::AgentAgendaPolicy, type: :policy do
     context "regular agent, own agenda" do
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let(:agenda) { AgentAgenda.new(agent: agent, organisation: organisation) }
-      permissions(:show?) { it { should permit(pundit_context, agenda) } }
+
+      permissions(:show?) { it { is_expected.to permit(pundit_context, agenda) } }
     end
 
     context "regular agent, other agent's agenda BUT same service" do
@@ -16,7 +17,8 @@ describe Agent::AgentAgendaPolicy, type: :policy do
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
       let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
       let(:agenda) { AgentAgenda.new(agent: other_agent, organisation: organisation) }
-      permissions(:show?) { it { should permit(pundit_context, agenda) } }
+
+      permissions(:show?) { it { is_expected.to permit(pundit_context, agenda) } }
     end
 
     context "regular agent, other agent's absence, different service" do
@@ -24,7 +26,8 @@ describe Agent::AgentAgendaPolicy, type: :policy do
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
       let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], service: create(:service)) }
       let(:agenda) { AgentAgenda.new(agent: other_agent, organisation: organisation) }
-      permissions(:show?) { it { should_not permit(pundit_context, agenda) } }
+
+      permissions(:show?) { it { is_expected.not_to permit(pundit_context, agenda) } }
     end
 
     context "admin agent, other agent's absence, different service" do
@@ -32,7 +35,8 @@ describe Agent::AgentAgendaPolicy, type: :policy do
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
       let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation], service: create(:service)) }
       let(:agenda) { AgentAgenda.new(agent: other_agent, organisation: organisation) }
-      permissions(:show?) { it { should permit(pundit_context, agenda) } }
+
+      permissions(:show?) { it { is_expected.to permit(pundit_context, agenda) } }
     end
   end
 end

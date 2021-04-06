@@ -3,7 +3,7 @@ describe DisplayableUserPresenter, type: :presenter do
     it "return something" do
       organisation = build(:organisation)
       user = build(:user, organisations: [organisation], birth_date: Date.new(1976, 10, 23))
-      displayable_user = DisplayableUserPresenter.new(user, organisation)
+      displayable_user = described_class.new(user, organisation)
       expect(displayable_user.birth_date).to eq("23/10/1976 - 44 ans")
     end
   end

@@ -5,9 +5,9 @@ describe AgentRemoval, type: :service do
     let!(:plage_ouvertures) { create_list(:plage_ouverture, 2, agent: agent, organisation: organisation) }
     let!(:absences) { create_list(:absence, 2, agent: agent, organisation: organisation) }
 
-    it "should succeed, destroy absences and plages ouvertures, and soft delete" do
+    it "succeed,s destroy absences and plages ouvertures, and soft delete" do
       expect(agent).to receive(:soft_delete)
-      result = AgentRemoval.new(agent, organisation).remove!
+      result = described_class.new(agent, organisation).remove!
       expect(result).to eq true
       expect(agent.organisations).to be_empty
       expect(agent.absences).to be_empty
@@ -24,9 +24,9 @@ describe AgentRemoval, type: :service do
     let!(:plage_ouvertures2) { create_list(:plage_ouverture, 2, agent: agent, organisation: organisation2) }
     let!(:absences2) { create_list(:absence, 2, agent: agent, organisation: organisation2) }
 
-    it "should succeed and destroy absences and plages ouvertures and not soft delete" do
+    it "succeeds and destroy absences and plages ouvertures and not soft delete" do
       expect(agent).not_to receive(:soft_delete)
-      result = AgentRemoval.new(agent, organisation1).remove!
+      result = described_class.new(agent, organisation1).remove!
       expect(result).to eq true
       expect(agent.organisations).to contain_exactly(organisation2)
       expect(agent.plage_ouvertures).to contain_exactly(*plage_ouvertures2)
@@ -44,9 +44,9 @@ describe AgentRemoval, type: :service do
       rdv
     end
 
-    it "should not succeed" do
+    it "does not succeed" do
       expect(agent).not_to receive(:soft_delete)
-      result = AgentRemoval.new(agent, organisation).remove!
+      result = described_class.new(agent, organisation).remove!
       expect(result).to eq false
       expect(agent.organisations).to include(organisation)
     end
@@ -62,32 +62,36 @@ describe AgentRemoval, type: :service do
       rdv
     end
 
-    it "should succeed" do
+    it "succeeds" do
       expect(agent).to receive(:soft_delete)
-      result = AgentRemoval.new(agent, organisation).remove!
+      result = described_class.new(agent, organisation).remove!
       expect(result).to eq true
       expect(agent.organisations).to be_empty
     end
   end
 
   describe "#should_soft_delete?" do
-    subject { AgentRemoval.new(agent, organisation1).should_soft_delete? }
+    subject { described_class.new(agent, organisation1).should_soft_delete? }
+
     let(:organisation1) { build(:organisation) }
 
     context "single orga left" do
       let(:agent) { build(:agent, organisations: [organisation1]) }
-      it { should eq true }
+
+      it { is_expected.to eq true }
     end
 
     context "no orga left" do
       let(:agent) { build(:agent, organisations: []) }
-      it { should eq true }
+
+      it { is_expected.to eq true }
     end
 
     context "multiple orgas left" do
       let(:organisation2) { build(:organisation) }
       let(:agent) { build(:agent, organisations: [organisation1, organisation2]) }
-      it { should eq false }
+
+      it { is_expected.to eq false }
     end
   end
 end

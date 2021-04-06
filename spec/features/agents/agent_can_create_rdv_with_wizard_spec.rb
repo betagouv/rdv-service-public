@@ -17,7 +17,7 @@ describe "Agent can create a Rdv with wizard" do
 
   after { travel_back }
 
-  scenario "default", js: true do
+  it "default", js: true do
     expect_page_title("Créer RDV 1/4")
     expect(page).to have_selector(".card-title", text: "1. Motif")
     select(motif.name, from: "rdv_motif_id")

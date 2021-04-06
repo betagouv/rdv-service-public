@@ -7,12 +7,13 @@ describe Lieu, type: :model do
   let!(:user) { create(:user) }
 
   describe ".for_motif_and_departement" do
+    subject { described_class.for_motif_and_departement("Vaccination", "62") }
+
     let(:service_id) { Service.first.id }
     let(:reservable_online) { true }
 
-    subject { Lieu.for_motif_and_departement("Vaccination", "62") }
-
     before { freeze_time }
+
     after { travel_back }
 
     it { expect(subject).to contain_exactly(lieu) }
@@ -52,10 +53,12 @@ describe Lieu, type: :model do
   end
 
   describe ".for_motif" do
-    subject { Lieu.for_motif(motif) }
+    subject { described_class.for_motif(motif) }
+
     let(:reservable_online) { false }
 
     before { freeze_time }
+
     after { travel_back }
 
     it { expect(subject).to contain_exactly(lieu) }
@@ -98,24 +101,27 @@ describe Lieu, type: :model do
   end
 
   describe "#with_open_slots_for_motifs" do
-    subject { Lieu.with_open_slots_for_motifs([motif]) }
+    subject { described_class.with_open_slots_for_motifs([motif]) }
 
     context "motif has current plage ouvertures" do
       let!(:motif) { create(:motif, name: "Vaccination") }
       let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu) }
-      it { should include(lieu) }
+
+      it { is_expected.to include(lieu) }
     end
 
     context "motif has finished plage ouverture" do
       let!(:motif) { create(:motif, name: "Vaccination") }
       let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu, first_day: 2.days.ago, recurrence: nil) }
-      it { should_not include(lieu) }
+
+      it { is_expected.not_to include(lieu) }
     end
 
     context "motif has no plage ouvertures" do
       let!(:motif) { create(:motif, name: "Vaccination") }
       let(:plage_ouverture) { nil }
-      it { should_not include(lieu) }
+
+      it { is_expected.not_to include(lieu) }
     end
   end
 end

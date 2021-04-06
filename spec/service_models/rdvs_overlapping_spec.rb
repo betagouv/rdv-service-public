@@ -50,7 +50,7 @@ describe RdvsOverlapping, type: :service do
       travel_back
     end
 
-    it "should return RDV with exact same times" do
+    it "returns RDV with exact same times" do
       now = Time.zone.parse("2020-12-23 12h40")
       travel_to(now)
       agent = create(:agent)

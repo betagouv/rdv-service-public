@@ -2,7 +2,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
   describe "#rdv_created" do
     let(:rdv) { create(:rdv) }
     let(:user) { rdv.users.first }
-    let(:mail) { Users::RdvMailer.rdv_created(rdv, user) }
+    let(:mail) { described_class.rdv_created(rdv, user) }
 
     it "renders the headers" do
       expect(mail.to).to eq([user.email])
@@ -26,7 +26,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     it "send mail to user" do
       rdv = create(:rdv)
       user = rdv.users.first
-      mail = Users::RdvMailer.rdv_cancelled_by_user(rdv, user)
+      mail = described_class.rdv_cancelled_by_user(rdv, user)
 
       expect(mail.to).to eq([user.email])
     end
@@ -35,7 +35,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       organisation = build(:organisation, name: "Orga du coin")
       user = build(:user)
       rdv = build(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
-      mail = Users::RdvMailer.rdv_cancelled_by_user(rdv, user)
+      mail = described_class.rdv_cancelled_by_user(rdv, user)
 
       expect(mail.subject).to eq("RDV annulé le lundi 15 juin 2020 à 12h30 avec Orga du coin")
     end
@@ -44,7 +44,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       organisation = build(:organisation, name: "Orga du coin")
       user = build(:user)
       rdv = build(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
-      mail = Users::RdvMailer.rdv_cancelled_by_user(rdv, user)
+      mail = described_class.rdv_cancelled_by_user(rdv, user)
 
       expect(mail.body).to match("lundi 15 juin 2020 à 12h30")
     end
@@ -53,7 +53,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       organisation = build(:organisation, name: "Orga du coin")
       user = build(:user)
       rdv = build(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
-      mail = Users::RdvMailer.rdv_cancelled_by_user(rdv, user)
+      mail = described_class.rdv_cancelled_by_user(rdv, user)
 
       expect(mail.body).to match(rdv.motif.service_name)
     end
@@ -62,7 +62,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       organisation = build(:organisation, name: "Orga du coin")
       user = build(:user)
       rdv = build(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
-      mail = Users::RdvMailer.rdv_cancelled_by_user(rdv, user)
+      mail = described_class.rdv_cancelled_by_user(rdv, user)
 
       expected_url = lieux_url(search: { \
                                  departement: rdv.organisation.departement_number, \
@@ -79,7 +79,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     it "send mail to user" do
       rdv = create(:rdv)
       user = rdv.users.first
-      mail = Users::RdvMailer.rdv_cancelled_by_agent(rdv, user)
+      mail = described_class.rdv_cancelled_by_agent(rdv, user)
 
       expect(mail.to).to eq([user.email])
     end
@@ -88,7 +88,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       organisation = build(:organisation, name: "Orga du coin")
       user = build(:user)
       rdv = build(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
-      mail = Users::RdvMailer.rdv_cancelled_by_user(rdv, user)
+      mail = described_class.rdv_cancelled_by_user(rdv, user)
 
       expect(mail.subject).to eq("RDV annulé le lundi 15 juin 2020 à 12h30 avec Orga du coin")
     end
@@ -97,7 +97,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       organisation = build(:organisation, name: "Orga du coin")
       user = build(:user)
       rdv = build(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
-      mail = Users::RdvMailer.rdv_cancelled_by_agent(rdv, user)
+      mail = described_class.rdv_cancelled_by_agent(rdv, user)
 
       expect(mail.body).to match("lundi 15 juin 2020 à 12h30")
     end
@@ -106,7 +106,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       organisation = build(:organisation, name: "Orga du coin")
       user = build(:user)
       rdv = build(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
-      mail = Users::RdvMailer.rdv_cancelled_by_agent(rdv, user)
+      mail = described_class.rdv_cancelled_by_agent(rdv, user)
 
       expect(mail.body).to match(rdv.motif.service_name)
     end
@@ -115,7 +115,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
   it "send mail to user" do
     rdv = create(:rdv)
     user = rdv.users.first
-    mail = Users::RdvMailer.rdv_upcoming_reminder(rdv, user)
+    mail = described_class.rdv_upcoming_reminder(rdv, user)
     expect(mail.to).to eq([user.email])
     expect(mail.body).to include("Nous vous rappellons que vous avez un RDV prévu")
   end

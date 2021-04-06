@@ -4,7 +4,7 @@ describe WebhookDeliverable, type: :concern do
   let!(:organisation) { create(:organisation) }
   let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: organisation) }
 
-  after(:each) do
+  after do
     clear_enqueued_jobs
   end
 

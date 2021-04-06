@@ -1,14 +1,17 @@
 describe CsvOrXlsReader::Importer do
-  subject { CsvOrXlsReader::Importer.new(form_file).rows }
+  subject { described_class.new(form_file).rows }
 
   let(:form_file) { double }
   let(:asset_path) { File.join(File.dirname(__FILE__), "../assets/#{filename}") }
+
   before { allow(form_file).to receive(:original_filename).and_return(filename) }
+
   before { allow(form_file).to receive(:tempfile).and_return(asset_path) }
 
   context "csv" do
     let(:filename) { "zones_1.csv" }
-    it "should work" do
+
+    it "works" do
       expect(subject).to eq(
         [
           { "city_code" => "62040", "city_name" => "AIRE-SUR-LA-LYS", "organisation_id" => "arques" },
@@ -21,7 +24,8 @@ describe CsvOrXlsReader::Importer do
 
   context "xls" do
     let(:filename) { "zones_1.xls" }
-    it "should work" do
+
+    it "works" do
       expect(subject).to eq(
         [
           { "city_code" => "62040", "city_name" => "AIRE-SUR-LA-LYS", "organisation_id" => "arques" },

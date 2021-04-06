@@ -1,5 +1,6 @@
 describe Notifications::Rdv::RdvCancelledService, type: :service do
-  subject { Notifications::Rdv::RdvCancelledService.perform_with(rdv) }
+  subject { described_class.perform_with(rdv) }
+
   let(:user1) { build(:user) }
   let(:agent1) { build(:agent, first_name: "Sean", last_name: "PAUL") }
   let(:agent2) { build(:agent) }

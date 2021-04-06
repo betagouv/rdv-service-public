@@ -19,7 +19,7 @@ describe "Admin can configure the organisation" do
     visit authenticated_agent_root_path
   end
 
-  scenario "CRUD on lieux" do
+  it "CRUD on lieux" do
     click_link "Vos lieux"
     expect_page_title("Vos lieux de consultation")
 
@@ -60,7 +60,7 @@ describe "Admin can configure the organisation" do
     end
   end
 
-  scenario "CRUD on agents" do
+  it "CRUD on agents" do
     click_link "Vos agents"
     expect_page_title("Agents de Organisation n°1")
 
@@ -89,7 +89,7 @@ describe "Admin can configure the organisation" do
     expect(current_email.subject).to eq I18n.t("devise.mailer.invitation_instructions.subject")
   end
 
-  scenario "Update organisation" do
+  it "Update organisation" do
     click_link "Votre organisation"
     click_link "Modifier"
     fill_in "Nom", with: la_nouvelle_org.name
@@ -100,7 +100,7 @@ describe "Admin can configure the organisation" do
     expect(page).to have_content("L'organisation a été modifiée.")
   end
 
-  scenario "CRUD on motifs", js: true do
+  it "CRUD on motifs", js: true do
     click_link "Paramètres"
     click_link "Vos motifs"
     expect_page_title("Vos motifs")

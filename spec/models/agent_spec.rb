@@ -4,7 +4,7 @@ describe Agent, type: :model do
       let(:organisation) { create(:organisation) }
       let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
-      it "should raise" do
+      it "raises" do
         expect { agent.soft_delete }.to raise_error SoftDeleteError
       end
     end
@@ -12,7 +12,7 @@ describe Agent, type: :model do
     context "without organisations" do
       let!(:agent) { create(:agent) }
 
-      it "should mark agent as soft deleted" do
+      it "marks agent as soft deleted" do
         agent.soft_delete
         expect(agent.deleted_at).to be_present
       end

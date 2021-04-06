@@ -1,18 +1,18 @@
-feature "User signs up and signs in" do
+describe "User signs up and signs in" do
   context "through home page" do
     before { visit root_path }
 
     context "for regular new user" do
       let(:user) { build(:user) }
 
-      scenario ".sign_up, .confirm, .sign_in and then signs out" do
+      it ".sign_up, .confirm, .sign_in and then signs out" do
         click_link "Se connecter"
         click_link "Je m'inscris"
         fill_in :user_first_name, with: user.first_name
         fill_in :user_last_name, with: user.last_name
         fill_in :user_email, with: user.email
         click_on "Je m'inscris"
-        expect(current_path).to eq(users_pending_registration_path)
+        expect(page).to have_current_path(users_pending_registration_path, ignore_query: true)
         expect_flash_info(I18n.t("devise.registrations.signed_up_but_unconfirmed"))
         open_email(user.email)
         current_email.click_link "Confirmer mon compte"
@@ -22,45 +22,45 @@ feature "User signs up and signs in" do
         click_on "Enregistrer"
         expect_flash_info(I18n.t("devise.passwords.updated")) # auto-connected
         click_link "Déconnexion"
-        expect(current_path).to eq(root_path)
+        expect(page).to have_current_path(root_path, ignore_query: true)
       end
     end
 
     context "for invited user" do
       let(:invited_user) { create(:user, :unconfirmed) }
 
-      scenario ".sign_up, .invite!, accept_invite and then signs out" do
+      it ".sign_up, .invite!, accept_invite and then signs out" do
         click_link "Se connecter"
         click_link "Je m'inscris"
         fill_in :user_first_name, with: invited_user.first_name
         fill_in :user_last_name, with: invited_user.last_name
         fill_in :user_email, with: invited_user.email
         click_on "Je m'inscris"
-        expect(current_path).to eq(users_pending_registration_path)
+        expect(page).to have_current_path(users_pending_registration_path, ignore_query: true)
         expect_flash_info(I18n.t("devise.registrations.signed_up_but_unconfirmed"))
         open_email(invited_user.email)
         current_email.click_link "Accepter l'invitation"
         expect(page).to have_content("Inscription")
         fill_in :password, with: "123456"
         click_on "Enregistrer"
-        expect(current_path).to eq(root_path)
+        expect(page).to have_current_path(root_path, ignore_query: true)
         expect_flash_info(I18n.t("devise.invitations.updated"))
         click_link "Déconnexion"
-        expect(current_path).to eq(root_path)
+        expect(page).to have_current_path(root_path, ignore_query: true)
       end
     end
 
     context "if agent goes wrong" do
       let!(:agent) { create(:agent, password: "123456", basic_role_in_organisations: [create(:organisation)]) }
 
-      scenario ".sign_in as user and be signed in as agent" do
+      it ".sign_in as user and be signed in as agent" do
         click_link "Se connecter"
         within("form") do
           fill_in :user_email, with: agent.email
           fill_in :password, with: agent.password
           click_on "Se connecter"
         end
-        expect(current_path).to eq(admin_organisation_setup_checklist_path(agent.organisations.first))
+        expect(page).to have_current_path(admin_organisation_setup_checklist_path(agent.organisations.first), ignore_query: true)
       end
     end
   end

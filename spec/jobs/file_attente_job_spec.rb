@@ -10,9 +10,9 @@ RSpec.describe FileAttenteJob, type: :job do
       freeze_time
     end
 
-    after { FileAttenteJob.perform_now }
+    after { described_class.perform_now }
 
-    it "should call send_notifications" do
+    it "calls send_notifications" do
       expect(FileAttente).to receive(:send_notifications)
     end
   end

@@ -15,7 +15,7 @@ describe "Agent can update user" do
     click_link "Modifier"
   end
 
-  scenario "update existing user's email" do
+  it "update existing user's email" do
     fill_in :user_first_name, with: "jeanne"
     fill_in :user_last_name, with: "reynolds"
     fill_in "Email", with: "jeanne@reynolds.com"
@@ -27,7 +27,7 @@ describe "Agent can update user" do
     expect(page).to have_content("En attente de confirmation pour jeanne@reynolds.com")
   end
 
-  scenario "update user notes" do
+  it "update user notes" do
     fill_in "Remarques", with: "Pas très sympa"
     click_button "Enregistrer"
     expect(page).to have_content("Pas très sympa")
@@ -38,7 +38,7 @@ describe "Agent can update user" do
       create(:user, :unregistered, first_name: "Jean", last_name: "LEGENDE", email: nil, organisations: [organisation])
     end
 
-    scenario "add email to existing user", js: true do
+    it "add email to existing user", js: true do
       fill_in "Email", with: "jean@legende.com"
       click_button "Enregistrer"
       click_link "Inviter"

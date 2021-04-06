@@ -11,9 +11,9 @@ describe UpsertUserForFranceconnectService, type: :service do
   end
 
   context "no pre-existing user" do
-    it "should create a user" do
-      service = UpsertUserForFranceconnectService.new(omniauth_info)
-      expect { service.perform }.to change { User.count }.by(1)
+    it "creates a user" do
+      service = described_class.new(omniauth_info)
+      expect { service.perform }.to change(User, :count).by(1)
       expect(service.new_user?).to eq(true)
       user = service.user.reload
       expect(user.email).to eq("jeanne@longo.fr")
@@ -38,8 +38,8 @@ describe UpsertUserForFranceconnectService, type: :service do
       )
     end
 
-    it "should find and return the user without updating its info" do
-      service = UpsertUserForFranceconnectService.new(omniauth_info)
+    it "finds and return the user without updating its info" do
+      service = described_class.new(omniauth_info)
       expect { service.perform }.not_to change(User, :count)
       expect(service.new_user?).to eq(false)
       user = service.user.reload
@@ -63,8 +63,8 @@ describe UpsertUserForFranceconnectService, type: :service do
       )
     end
 
-    it "should update the existing identity fields" do
-      service = UpsertUserForFranceconnectService.new(omniauth_info)
+    it "updates the existing identity fields" do
+      service = described_class.new(omniauth_info)
       expect { service.perform }.not_to change(User, :count)
       expect(service.new_user?).to eq(false)
       user = service.user.reload
@@ -86,8 +86,8 @@ describe UpsertUserForFranceconnectService, type: :service do
       )
     end
 
-    it "should fill the missing fields" do
-      service = UpsertUserForFranceconnectService.new(omniauth_info)
+    it "fills the missing fields" do
+      service = described_class.new(omniauth_info)
       expect { service.perform }.not_to change(User, :count)
       expect(service.new_user?).to eq(false)
       user = service.user.reload

@@ -100,6 +100,7 @@ group :development, :test do
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
   gem "brakeman", require: false
   gem "rubocop", "~> 1", require: false
+  gem "rubocop-rspec"
   gem "rspec-rails", ">= 4.0.0.beta"
   gem "rspec_junit_formatter", require: false
   gem "rails-controller-testing"
