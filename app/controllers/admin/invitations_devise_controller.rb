@@ -29,12 +29,6 @@ class Admin::InvitationsDeviseController < Devise::InvitationsController
 
   protected
 
-  def invite_resource
-    super do |agent|
-      agent.uid = agent.email
-    end
-  end
-
   def pundit_user
     AgentContext.new(current_agent, current_organisation)
   end
@@ -62,6 +56,9 @@ class Admin::InvitationsDeviseController < Devise::InvitationsController
 
     # Only ever invite to the current organisation
     params[:roles_attributes]["0"][:organisation] = current_organisation
+
+    # The omniauth uid _is_ the email, always. Note: this may be better suited in a hook in Agent.rb
+    params[:uid] = params[:email]
 
     params
   end
