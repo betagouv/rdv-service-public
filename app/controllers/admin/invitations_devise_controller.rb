@@ -8,12 +8,15 @@ class Admin::InvitationsDeviseController < Devise::InvitationsController
   def create
     agent = Agent.find_by(email: invite_params[:email].downcase)
     if agent.nil?
-      self.resource = invite_resource
+      # Authorize against a dummy Agent
+      authorize(Agent.new(invite_params))
+      self.resource = invite_resource # invite_resource creates the new Agent in DB and sends the invitation.
     else
+      # Authorize against a dummy AgentRole
+      authorize(AgentRole.new(agent: agent, organisation: current_organisation))
       self.resource = agent
       agent.add_organisation(current_organisation)
     end
-    authorize(resource)
     if resource.errors.empty?
       flash[:notice] = \
         if resource.invitation_accepted_at.present?

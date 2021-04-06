@@ -5,6 +5,7 @@ class Agent::AgentRolePolicy < ApplicationPolicy
     agent_role_in_record_organisation&.admin?
   end
 
+  alias create? current_agent_admin_in_record_organisation?
   alias edit? current_agent_admin_in_record_organisation?
   alias update? current_agent_admin_in_record_organisation?
 
