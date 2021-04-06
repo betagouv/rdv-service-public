@@ -17,7 +17,7 @@ describe "Agent can CRUD absences" do
 
       expect_page_title("Modifier votre absence")
       fill_in "Description", with: "La belle absence"
-      click_button("Modifier")
+      click_button("Enregistrer")
 
       expect_page_title("Vos absences")
       click_link "La belle absence"
@@ -32,7 +32,7 @@ describe "Agent can CRUD absences" do
       fill_in "Description", with: new_absence.title
       fill_in "absence[first_day]", with: new_absence.first_day
       fill_in "absence[end_day]", with: new_absence.first_day + 1.day
-      click_button "Créer"
+      click_button "Enregistrer"
 
       expect_page_title("Vos absences")
       click_link new_absence.title
@@ -51,7 +51,7 @@ describe "Agent can CRUD absences" do
 
       expect_page_title("Modifier l'absence de Jane FAROU")
       fill_in "Description", with: "La belle absence"
-      click_button("Modifier")
+      click_button("Enregistrer")
 
       expect_page_title("Absences de Jane FAROU (PMI)")
       click_link "La belle absence"
@@ -66,7 +66,7 @@ describe "Agent can CRUD absences" do
       fill_in "Description", with: new_absence.title
       fill_in "absence[first_day]", with: new_absence.first_day
       fill_in "absence[end_day]", with: new_absence.first_day + 1.day
-      click_button "Créer"
+      click_button "Enregistrer"
 
       expect_page_title("Absences de Jane FAROU (PMI)")
       click_link new_absence.title

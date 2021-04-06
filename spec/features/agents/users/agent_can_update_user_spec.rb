@@ -19,7 +19,7 @@ describe "Agent can update user" do
     fill_in :user_first_name, with: "jeanne"
     fill_in :user_last_name, with: "reynolds"
     fill_in "Email", with: "jeanne@reynolds.com"
-    click_button "Modifier"
+    click_button "Enregistrer"
     # When the user has already a pwd, changing email send a confirmation email
     open_email("jeanne@reynolds.com")
     expect(current_email.subject).to eq I18n.t("devise.mailer.confirmation_instructions.subject")
@@ -29,7 +29,7 @@ describe "Agent can update user" do
 
   scenario "update user notes" do
     fill_in "Remarques", with: "Pas très sympa"
-    click_button "Modifier"
+    click_button "Enregistrer"
     expect(page).to have_content("Pas très sympa")
   end
 
@@ -40,7 +40,7 @@ describe "Agent can update user" do
 
     scenario "add email to existing user", js: true do
       fill_in "Email", with: "jean@legende.com"
-      click_button "Modifier"
+      click_button "Enregistrer"
       click_link "Inviter"
       open_email("jean@legende.com")
       expect(current_email.subject).to eq I18n.t("devise.mailer.invitation_instructions.subject")

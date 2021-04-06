@@ -153,9 +153,9 @@ fr:
     select:
       prompt: Veuillez sélectionner
     submit:
-      create: Créer
+      create: Enregistrer
       submit: Enregistrer
-      update: Modifier
+      update: Enregistrer
   number:
     currency:
       format:
