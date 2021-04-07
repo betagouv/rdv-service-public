@@ -1,8 +1,3 @@
-- if plage_ouverture.warnings_need_confirmation? && plage_ouverture.overlapping_plages_ouvertures.any?
-  - content_for :warnings_description do
-    ul.pl-3
-      = render "admin/plage_ouvertures/overlapping_plage_ouvertures", model: plage_ouverture
-
 - if plage_ouverture.available_motifs.any?
   = simple_form_for [:admin, plage_ouverture.organisation, plage_ouverture] do |f|
     = render(partial: 'layouts/model_errors', locals: { model: plage_ouverture, f: f })

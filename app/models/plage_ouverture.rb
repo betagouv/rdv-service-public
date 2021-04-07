@@ -118,5 +118,7 @@ class PlageOuverture < ApplicationRecord
     return if overlapping_plages_ouvertures.empty?
 
     warnings.add(:base, "Conflit de dates et d'horaires avec d'autres plages d'ouvertures", active: true)
+    # TODO: display richer warning messages by rendering the partial
+    # overlapping_plage_ouvertures (implies passing view locals which may be tricky)
   end
 end
