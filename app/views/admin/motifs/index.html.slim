@@ -9,7 +9,7 @@
 
 = simple_form_for '', url: admin_organisation_motifs_path(current_organisation), html: { method: :get, class: 'form-inline js-search-and-filter-form' }, wrapper: :inline_form do |f|
 
-  .container-fluid.bg-white.m-2.rounded
+  .container-fluid.bg-white.rounded
 
     .m-3.d-flex.justify-content-end
       div= link_to 'Réinitialiser', admin_organisation_motifs_path(current_organisation), class: "btn btn-link #{params[:search].blank? && 'd-none'}"
