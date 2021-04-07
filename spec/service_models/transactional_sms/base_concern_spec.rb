@@ -15,7 +15,7 @@ describe TransactionalSms::BaseConcern, type: :service do
     end
 
     context "user has landline phone number" do
-      let(:user) { build(:user, phone_number_formatted: "+33130303030") }
+      let(:user) { build(:user, phone_number: "0130303030") }
       it "should raise" do
         expect { SomeModule::TestSms.new(build(:rdv), user) }.to \
           raise_error(InvalidMobilePhoneNumberError)
