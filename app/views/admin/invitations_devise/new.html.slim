@@ -21,6 +21,5 @@
               collection: AgentRole::LEVELS, \
               label_method: -> { I18n.t("activerecord.attributes.agent_role.levels.#{_1}_html").html_safe }, \
               as: :radio_buttons
-            = ff.input :organisation_id, as: :hidden
           .text-right
             = f.button :submit, t("devise.invitations.new.submit_button")

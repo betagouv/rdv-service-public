@@ -34,6 +34,74 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
       end
     end
 
+    context "when trying to invite while not being an admin" do
+      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+
+      let(:params) do
+        {
+          organisation_id: organisation.id,
+          agent: {
+            email: "hacker@renard.com",
+            service_id: service_id,
+            roles_attributes: {
+              "0" => {
+                level: "basic"
+              }
+            }
+          }
+        }
+      end
+
+      it "should reject the change" do
+        expect { subject }.to raise_error(Pundit::NotAuthorizedError)
+        expect(Agent.last.email).not_to eq "hacker@renard.com"
+      end
+    end
+
+    context "when trying to invite to another organisation" do
+      let(:params) do
+        {
+          organisation_id: organisation2.id,
+          agent: {
+            email: "hacker@renard.com",
+            service_id: service_id,
+            roles_attributes: {
+              "0" => {
+                level: "basic"
+              }
+            }
+          }
+        }
+      end
+
+      it "should reject the change" do
+        expect { subject }.to raise_error(Pundit::NotAuthorizedError)
+        expect(Agent.last.email).not_to eq "hacker@renard.com"
+      end
+    end
+
+    context "when trying to set the role to another organisation" do
+      let(:params) do
+        {
+          organisation_id: organisation.id,
+          agent: {
+            email: "hacker@renard.com",
+            service_id: service_id,
+            roles_attributes: {
+              "0" => {
+                level: "basic",
+                organisation_id: organisation2.id
+              }
+            }
+          }
+        }
+      end
+
+      it "should ignore the organisation param" do
+        expect(Agent.last.organisations).to eq [organisation]
+      end
+    end
+
     context "when email is correct and no invitation has been sent" do
       let(:params) do
         {
@@ -43,8 +111,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
-                organisation_id: organisation.id
+                level: "basic"
               }
             }
           }
@@ -75,8 +142,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
-                organisation_id: organisation.id
+                level: "basic"
               }
             }
           }
@@ -107,8 +173,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
-                organisation_id: organisation.id
+                level: "basic"
               }
             }
           }
@@ -152,8 +217,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
-                organisation_id: organisation.id
+                level: "basic"
               }
             }
           }
