@@ -41,16 +41,6 @@
           = f.input :message, label: "Message", as: :text, hint: "Merci de ne pas inclure d'informations confidentielles vous concernant", input_html: { rows: 5 }
           = f.button :submit, value: "Envoyer la demande à l'équipe technique", data: { disable_with: "Envoi en cours…" }
 
-      h3.mt-4 Bureau Ouvert
-      p L'équipe technique de RDV-Solidarités tient un Bureau Ouvert tous les jeudis de 14h30 à 15h30. Nous sommes à votre disposition pour répondre à vos questions et vous dépanner en cas de problème.
-      p
-        span> Ouvert aux agents et aux usagers
-        b> pour des sujets techniques uniquement
-      p
-        span> Ça se passe
-        span>= link_to "https://visio.incubateur.net/b/adr-gcy-x7h", target: "_blank" do
-          span> en visio ici !
-          i.fa.fa-external-link-alt>
       .alert.alert-warning.my-4.d-flex.align-items-center
         i.fa.fa-exclamation-triangle>
         .ml-2
