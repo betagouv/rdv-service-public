@@ -32,8 +32,8 @@
 
   - if ( \
     attribute_name == :phone_number && \
-    user.other_users_with_same_phone_number(current_organisation).any? \
+    DuplicateUserFinderService.perform_with(user, current_organisation, only: [:phone_number]).present? \
   )
     .alert.alert-warning.mt-1
       span> ⚠️ D'autres usagers utilisent ce numéro de téléphone.
-      = link_to "voir la liste", admin_organisation_users_path(current_organisation, "user[search]": user.phone_number)
+      = link_to "voir la liste", admin_organisation_users_path(current_organisation, "search": user.phone_number)

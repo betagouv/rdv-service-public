@@ -27,27 +27,27 @@ describe User::NotificableConcern do
     subject { user.notifiable_by_sms? }
 
     context "user has phone number and SMS notifications enabled" do
-      let(:user) { build(:user, phone_number_formatted: "+33634343434", notify_by_sms: true) }
+      let(:user) { build(:user, phone_number: "0634343434", notify_by_sms: true) }
       it { should be_truthy }
     end
 
     context "user has phone number but SMS notifications disabled" do
-      let(:user) { build(:user, phone_number_formatted: "+33634343434", notify_by_sms: false) }
+      let(:user) { build(:user, phone_number: "0634343434", notify_by_sms: false) }
       it { should be_falsy }
     end
 
     context "user has SMS notifications enabled but no phone number" do
-      let(:user) { build(:user, phone_number_formatted: nil, notify_by_sms: true) }
+      let(:user) { build(:user, phone_number: nil, notify_by_sms: true) }
       it { should be_falsy }
     end
 
     context "user has SMS notifications enabled but blank phone number" do
-      let(:user) { build(:user, phone_number_formatted: "", notify_by_sms: true) }
+      let(:user) { build(:user, phone_number: "", notify_by_sms: true) }
       it { should be_falsy }
     end
 
     context "user has SMS notifications enabled but landline phone number" do
-      let(:user) { build(:user, phone_number_formatted: "+33129292929", notify_by_sms: true) }
+      let(:user) { build(:user, phone_number: "0129292929", notify_by_sms: true) }
       it { should be_falsy }
     end
   end

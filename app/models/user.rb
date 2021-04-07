@@ -105,16 +105,6 @@ class User < ApplicationRecord
     "user_#{id}@deleted.rdv-solidarites.fr"
   end
 
-  def other_users_with_same_phone_number(organisation)
-    return User.none if phone_number_formatted.blank?
-
-    User
-      .joins(:user_profiles)
-      .where(user_profiles: { organisation: organisation })
-      .where.not(id: id)
-      .where(phone_number_formatted: phone_number_formatted)
-  end
-
   def dup_without_duplicate_user_errors
     duplicate_user = dup
     duplicate_user.valid?
