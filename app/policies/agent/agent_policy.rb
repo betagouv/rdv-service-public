@@ -2,7 +2,11 @@ class Agent::AgentPolicy < ApplicationPolicy
   include CurrentAgentInPolicyConcern
 
   def current_agent_or_admin_in_record_organisation?
-    record == current_agent || (
+    record == current_agent || admin_in_record_organisation?
+  end
+
+  def admin_in_record_organisation?
+    (
       record.roles.map(&:organisation_id) &
       current_agent.roles.level_admin.pluck(:organisation_id)
     ).any?
@@ -15,7 +19,11 @@ class Agent::AgentPolicy < ApplicationPolicy
   alias invite? current_agent_or_admin_in_record_organisation?
   alias rdvs? current_agent_or_admin_in_record_organisation?
   alias reinvite? current_agent_or_admin_in_record_organisation?
-  alias destroy? current_agent_or_admin_in_record_organisation?
+
+  def destroy?
+    # Even admins cannot destroy themselves
+    admin_in_record_organisation? && record != current_agent
+  end
 
   class Scope < Scope
     include CurrentAgentInPolicyConcern

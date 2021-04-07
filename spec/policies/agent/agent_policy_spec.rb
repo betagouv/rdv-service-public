@@ -34,6 +34,25 @@ describe Agent::AgentPolicy, type: :policy do
       permissions(:show?) { it { should_not permit(pundit_context, other_agent) } }
     end
   end
+
+  describe "#destroy?" do
+    context "regular agent, other agent same org" do
+      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+      let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+      permissions(:destroy?) { it { should_not permit(pundit_context, other_agent) } }
+    end
+
+    context "admin agent, other agent same org" do
+      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+      let!(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+      permissions(:destroy?) { it { should permit(pundit_context, other_agent) } }
+    end
+
+    context "admin agent, self" do
+      let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+      permissions(:destroy?) { it { should_not permit(pundit_context, agent) } }
+    end
+  end
 end
 
 describe Agent::AgentPolicy::Scope, type: :policy do
