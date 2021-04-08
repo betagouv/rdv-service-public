@@ -5,27 +5,27 @@ class DuplicateUsersFinderService < BaseService
   end
 
   def perform
-    @duplicates = []
-    check_email
-    check_identity
-    check_phone_number
-    @duplicates
+    [
+      find_duplicate_based_on_email,
+      find_duplicate_based_on_identity,
+      find_duplicate_based_on_phone_number,
+    ].compact
   end
 
   private
 
   attr_reader :user, :organisation
 
-  def check_email
+  def find_duplicate_based_on_email
     return if user.email.blank?
 
     similar_user = users_in_scope.where(email: user.email).first
     return nil unless similar_user.present?
 
-    @duplicates << OpenStruct.new(severity: :error, attributes: [:email], user: similar_user)
+    OpenStruct.new(severity: :error, attributes: [:email], user: similar_user)
   end
 
-  def check_identity
+  def find_duplicate_based_on_identity
     return nil unless user.birth_date.present? && user.first_name.present? && user.last_name.present?
 
     similar_user = users_in_scope.where(
@@ -35,10 +35,10 @@ class DuplicateUsersFinderService < BaseService
     ).first
     return nil unless similar_user.present?
 
-    @duplicates << OpenStruct.new(severity: :error, attributes: [:first_name, :last_name, :birth_date], user: similar_user)
+    OpenStruct.new(severity: :error, attributes: [:first_name, :last_name, :birth_date], user: similar_user)
   end
 
-  def check_phone_number
+  def find_duplicate_based_on_phone_number
     return nil if user.phone_number_formatted.blank?
 
     similar_user = users_in_scope
@@ -46,7 +46,7 @@ class DuplicateUsersFinderService < BaseService
       .first
     return if similar_user.nil?
 
-    @duplicates << OpenStruct.new(severity: :warning, attributes: [:phone_number], user: similar_user)
+    OpenStruct.new(severity: :warning, attributes: [:phone_number], user: similar_user)
   end
 
   def users_in_scope
