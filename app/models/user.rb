@@ -178,10 +178,11 @@ class User < ApplicationRecord
   end
 
   def user_is_not_duplicate
-    duplicate_result = DuplicateUserFinderService.new(self).perform
-    return if duplicate_result.nil? || (duplicate_result.severity == :warning && skip_duplicate_warnings?)
-
-    duplicate_result.attributes.each { |k| errors.add(k, "déjà utilisé") }
+    DuplicateUsersFinderService.perform_with(self)
+      .select { _1.severity == :error || !skip_duplicate_warnings? }
+      .each do |duplicate_result|
+      duplicate_result.attributes.each { |k| errors.add(k, "déjà utilisé") }
+    end
   end
 
   def do_soft_delete(organisation)

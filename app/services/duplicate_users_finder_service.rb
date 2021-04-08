@@ -1,21 +1,22 @@
-class DuplicateUserFinderService < BaseService
-  def initialize(user, organisation = nil, only: nil)
+class DuplicateUsersFinderService < BaseService
+  def initialize(user, organisation = nil)
     @user = user
     @organisation = organisation
-    @only = only || [:email, :identity, :phone_number]
   end
 
   def perform
-    (@only.include?(:email) && check_email) ||
-      (@only.include?(:identity) && check_identity) ||
-      (@only.include?(:phone_number) && check_phone_number)
+    [
+      find_duplicate_based_on_email,
+      find_duplicate_based_on_identity,
+      find_duplicate_based_on_phone_number,
+    ].compact
   end
 
   private
 
   attr_reader :user, :organisation
 
-  def check_email
+  def find_duplicate_based_on_email
     return if user.email.blank?
 
     similar_user = users_in_scope.where(email: user.email).first
@@ -24,7 +25,7 @@ class DuplicateUserFinderService < BaseService
     OpenStruct.new(severity: :error, attributes: [:email], user: similar_user)
   end
 
-  def check_identity
+  def find_duplicate_based_on_identity
     return nil unless user.birth_date.present? && user.first_name.present? && user.last_name.present?
 
     similar_user = users_in_scope.where(
@@ -37,7 +38,7 @@ class DuplicateUserFinderService < BaseService
     OpenStruct.new(severity: :error, attributes: [:first_name, :last_name, :birth_date], user: similar_user)
   end
 
-  def check_phone_number
+  def find_duplicate_based_on_phone_number
     return nil if user.phone_number_formatted.blank?
 
     similar_user = users_in_scope
