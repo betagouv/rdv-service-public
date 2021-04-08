@@ -62,14 +62,14 @@ describe "Admin can configure the organisation" do
 
   scenario "CRUD on agents" do
     click_link "Vos agents"
-    expect_page_title("Vos agents")
+    expect_page_title("Agents de Organisation n°1")
 
     click_link "Tony PATRICK"
     expect_page_title("Modifier le rôle de l'agent Tony PATRICK")
     choose :agent_role_level_admin
     click_button("Enregistrer")
 
-    expect_page_title("Vos agents")
+    expect_page_title("Agents de Organisation n°1")
     expect(page).to have_content("Admin", count: 2)
 
     click_link "Tony PATRICK"

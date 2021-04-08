@@ -31,11 +31,12 @@
             as: :radio_buttons
 
           .row
-            .col.text-left
-              = link_to @agent_removal_presenter.button_value, \
-                admin_organisation_agent_path(current_organisation, @agent_role.agent), \
-                data: { confirm: @agent_removal_presenter.confirm_message }, \
-                method: :delete, \
-                class: 'btn btn-outline-danger'
+            - if policy([:agent, @agent_role.agent]).destroy?
+              .col.text-left
+                = link_to @agent_removal_presenter.button_value, \
+                  admin_organisation_agent_path(current_organisation, @agent_role.agent), \
+                  data: { confirm: @agent_removal_presenter.confirm_message }, \
+                  method: :delete, \
+                  class: 'btn btn-outline-danger'
             .col.text-right
               = f.button :submit

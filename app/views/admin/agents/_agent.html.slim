@@ -3,7 +3,10 @@
 tr id="agent_#{agent.id}"
   td
     - if agent.complete?
-      = link_to agent.full_name, edit_admin_organisation_agent_role_path(current_organisation, agent.role_in_organisation(current_organisation)), class: "mr-2"
+      - if policy([:agent, agent_role]).edit?
+        = link_to agent.full_name, edit_admin_organisation_agent_role_path(current_organisation, agent_role), class: "mr-2"
+      - else
+        span.mr-2= agent.full_name
       = me_tag(agent)
   td.word-break-all
     = agent.email
@@ -13,3 +16,13 @@ tr id="agent_#{agent.id}"
     span>= AgentRole.human_enum_name(:level, agent_role.level)
     - if agent_role.admin?
       i.fa.fa-user-cog
+  td
+    .d-flex
+      - if policy([:agent, agent_role]).edit?
+        div.mr-3= link_to edit_admin_organisation_agent_role_path(current_organisation, agent_role), title: "Modifier" do
+          i.fa.fa-edit
+      - if policy([:agent, agent]).destroy?
+        - agent_removal_presenter = AgentRemovalPresenter.new(agent, current_organisation)
+        - path = admin_organisation_agent_path(current_organisation, agent_role.agent)
+        = link_to path, title: agent_removal_presenter.button_value, data: { confirm: agent_removal_presenter.confirm_message }, method: :delete do
+          i.fa.fa-trash-alt
