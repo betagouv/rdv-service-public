@@ -2,7 +2,7 @@ class Api::V1::UsersController < Api::V1::BaseController
   PERMITTED_PARAMS = [
     :first_name, :birth_name, :last_name, :email, :address, :phone_number,
     :birth_date, :responsible_id, :caisse_affiliation, :affiliation_number,
-    :family_situation, :number_of_children, :notify_by_sms, :notify_by_email
+    :family_situation, :number_of_children, :notify_by_sms, :notify_by_email, organisation_ids: []
   ].freeze
 
   def show
@@ -33,9 +33,16 @@ class Api::V1::UsersController < Api::V1::BaseController
     end
   end
 
+  def invite
+    user = User.find(params[:user_id])
+    authorize(user)
+    user.invite! { |u| u.skip_invitation = true }
+    render json: {invitation_url: accept_user_invitation_url(invitation_token: user.raw_invitation_token)}
+  end
+
   private
 
   def user_params
-    params.permit(*PERMITTED_PARAMS, organisation_ids: [])
+    params.permit(*PERMITTED_PARAMS)
   end
 end
