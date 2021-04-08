@@ -9,8 +9,7 @@ class Admin::UsersController < AgentAuthController
     :first_name, :last_name, :birth_name, :email, :phone_number,
     :birth_date, :address, :caisse_affiliation, :affiliation_number,
     :family_situation, :number_of_children,
-    :notify_by_sms, :notify_by_email,
-    :skip_duplicate_warnings
+    :notify_by_sms, :notify_by_email
   ].freeze
 
   PERMITTED_NESTED_ATTRIBUTES = {
@@ -36,24 +35,23 @@ class Admin::UsersController < AgentAuthController
     @user.responsible = policy_scope(User).find(params[:responsible_id]) if params[:responsible_id].present?
     prepare_new
     authorize(@user)
-    respond_modal_with @user
+    @user_form = Admin::UserForm.new(@user, view_locals: user_form_view_locals)
+    respond_modal_with @user_form
   end
 
   def create
     prepare_create
     authorize(@user)
-    @duplicate_user_result = DuplicateUsersFinderService.perform_with(@user).first
     @user.skip_confirmation_notification!
-    user_persisted = @user.save
+    user_persisted = @user_form.save
 
-    @user.invite! if invite_user?(@user, params)
+    @user.invite! if user_persisted && @user.email.present? && params[:invite_on_create] == "1"
     prepare_new unless user_persisted
 
     if from_modal?
-      respond_modal_with @user, location: add_query_string_params_to_url(modal_return_location, 'user_ids[]': @user.id)
+      respond_modal_with @user_form, location: add_query_string_params_to_url(modal_return_location, 'user_ids[]': @user.id)
     elsif user_persisted
-      flash[:notice] = "L'usager a été créé."
-      redirect_to admin_organisation_user_path(@organisation, @user)
+      redirect_to admin_organisation_user_path(@organisation, @user), flash: { notice: "L'usager a été créé." }
     else
       render :new
     end
@@ -66,19 +64,24 @@ class Admin::UsersController < AgentAuthController
   end
 
   def edit
+    @user_form = Admin::UserForm.new(@user, view_locals: user_form_view_locals)
     authorize(@user)
-    respond_modal_with @user if from_modal?
+    respond_modal_with @user_form if from_modal?
   end
 
   def update
+    @user_form = Admin::UserForm.new(
+      @user.tap { _1.assign_attributes(user_params) },
+      active_warnings_confirm_decision: params[:user][:active_warnings_confirm_decision],
+      view_locals: user_form_view_locals
+    )
     authorize(@user)
     @user.skip_reconfirmation! if @user.encrypted_password.blank?
-    user_updated = @user.update(user_params)
-    flash[:notice] = "L'usager a été modifié." if user_updated
+    user_updated = @user_form.save
     if from_modal?
-      respond_modal_with @user, location: modal_return_location
+      respond_modal_with @user_form, location: modal_return_location
     elsif user_updated
-      redirect_to admin_organisation_user_path(current_organisation, @user)
+      redirect_to admin_organisation_user_path(current_organisation, @user), flash: { notice: "L'usager a été modifié" }
     else
       render :edit
     end
@@ -120,25 +123,21 @@ class Admin::UsersController < AgentAuthController
     params[:return_location].presence || request.referer
   end
 
-  def invite_user?(user, params)
-    user.persisted? && user.email.present? && (params[:invite_on_create] == "1")
-  end
-
   def prepare_new
     return unless @user.responsible.nil?
 
     @user.responsible = User.new
     @user.responsible.user_profiles.build(organisation: current_organisation)
-    @user.skip_duplicate_warnings = true if @duplicate_user_result&.severity == :warning
   end
 
   def prepare_create
-    @user = User.new(user_params)
-    # TODO: est-ce necessaire de verifier l'autorisation du responsable ?
-    # authorize(@user.responsible) if @user.responsible&.persisted?
-    @user.created_through = "agent_creation"
-    @user.invited_by = current_agent
+    @user = User.new(user_params.merge(invited_by: current_agent, created_through: "agent_creation"))
     @user.responsible.created_through = "agent_creation" if @user.responsible&.new_record?
+    @user_form = Admin::UserForm.new(
+      @user,
+      active_warnings_confirm_decision: params[:user][:active_warnings_confirm_decision],
+      view_locals: user_form_view_locals
+    )
     @organisation = current_organisation
   end
 
@@ -149,6 +148,10 @@ class Admin::UsersController < AgentAuthController
       **PERMITTED_NESTED_ATTRIBUTES,
       responsible_attributes: [PERMITTED_ATTRIBUTES, { **PERMITTED_NESTED_ATTRIBUTES }]
     )
+  end
+
+  def user_form_view_locals
+    { current_organisation: current_organisation, from_modal: from_modal?, request_referer: request.referer }
   end
 
   def search_params

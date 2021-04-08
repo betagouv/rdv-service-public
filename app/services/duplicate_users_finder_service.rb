@@ -35,7 +35,7 @@ class DuplicateUsersFinderService < BaseService
     ).first
     return nil unless similar_user.present?
 
-    OpenStruct.new(severity: :error, attributes: [:first_name, :last_name, :birth_date], user: similar_user)
+    OpenStruct.new(severity: :warning, attributes: [:first_name, :last_name, :birth_date], user: similar_user)
   end
 
   def find_duplicate_based_on_phone_number
