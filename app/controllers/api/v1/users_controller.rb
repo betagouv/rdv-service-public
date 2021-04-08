@@ -37,7 +37,7 @@ class Api::V1::UsersController < Api::V1::BaseController
     user = User.find(params[:user_id])
     authorize(user)
     user.invite! { |u| u.skip_invitation = true }
-    render json: {invitation_url: accept_user_invitation_url(invitation_token: user.raw_invitation_token)}
+    render json: { invitation_url: accept_user_invitation_url(invitation_token: user.raw_invitation_token) }
   end
 
   private
