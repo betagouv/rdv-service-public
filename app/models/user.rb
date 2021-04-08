@@ -178,7 +178,7 @@ class User < ApplicationRecord
   end
 
   def user_is_not_duplicate
-    DuplicateUsersFinderService.new(self).perform
+    DuplicateUsersFinderService.perform_with(self)
       .select { _1.severity == :error || !skip_duplicate_warnings? }
       .each do |duplicate_result|
       duplicate_result.attributes.each { |k| errors.add(k, "déjà utilisé") }
