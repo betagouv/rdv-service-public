@@ -32,7 +32,7 @@
 
   - if ( \
     attribute_name == :phone_number && \
-    DuplicateUserFinderService.perform_with(user, current_organisation, only: [:phone_number]).present? \
+    DuplicateUsersFinderService.perform_with(user, current_organisation).any? { _1.attributes == [:phone_number] } \
   )
     .alert.alert-warning.mt-1
       span> ⚠️ D'autres usagers utilisent ce numéro de téléphone.

@@ -42,7 +42,7 @@ class Admin::UsersController < AgentAuthController
   def create
     prepare_create
     authorize(@user)
-    @duplicate_user_result = DuplicateUserFinderService.perform_with(@user)
+    @duplicate_user_result = DuplicateUsersFinderService.perform_with(@user).first
     @user.skip_confirmation_notification!
     user_persisted = @user.save
 
