@@ -151,7 +151,6 @@ describe DuplicateUsersFinderService, type: :service do
         expect(result.attributes).to eq([:phone_number])
         expect(result.user).to eq(duplicated_phone_number)
       end
->>>>>>> met à jour avec master:spec/services/duplicate_user_finder_service_spec.rb
     end
   end
 end
