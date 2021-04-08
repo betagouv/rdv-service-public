@@ -8,20 +8,23 @@ describe Agent::AgentRolePolicy, type: :policy do
     context "regular agent, own agent_role" do
       let!(:agent) { create(:agent) }
       let!(:agent_role) { create(:agent_role, level: AgentRole::LEVEL_BASIC, agent: agent, organisation: organisation) }
-      permissions(:update?) { it { should_not permit(pundit_context, agent_role) } }
+
+      permissions(:update?) { it { is_expected.not_to permit(pundit_context, agent_role) } }
     end
 
     context "admin agent, own agent_role" do
       let!(:agent) { create(:agent) }
       let!(:agent_role) { create(:agent_role, level: AgentRole::LEVEL_ADMIN, agent: agent, organisation: organisation) }
-      permissions(:update?) { it { should permit(pundit_context, agent_role) } }
+
+      permissions(:update?) { it { is_expected.to permit(pundit_context, agent_role) } }
     end
 
     context "admin agent, other agent's agent_role" do
       let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
       let!(:other_agent) { create(:agent) }
       let!(:agent_role) { create(:agent_role, level: AgentRole::LEVEL_ADMIN, agent: other_agent, organisation: organisation) }
-      permissions(:update?) { it { should permit(pundit_context, agent_role) } }
+
+      permissions(:update?) { it { is_expected.to permit(pundit_context, agent_role) } }
     end
 
     context "admin agent, other agent's agent_role in OTHER orga" do
@@ -29,14 +32,15 @@ describe Agent::AgentRolePolicy, type: :policy do
       let!(:other_organisation) { create(:organisation) }
       let!(:other_agent) { create(:agent) }
       let!(:agent_role) { create(:agent_role, level: AgentRole::LEVEL_ADMIN, agent: other_agent, organisation: other_organisation) }
-      permissions(:update?) { it { should_not permit(pundit_context, agent_role) } }
+
+      permissions(:update?) { it { is_expected.not_to permit(pundit_context, agent_role) } }
     end
   end
 end
 
 describe Agent::AgentRolePolicy::Scope, type: :policy do
   describe "#resolve?" do
-    subject { Agent::AgentRolePolicy::Scope.new(AgentContext.new(agent), AgentRole).resolve }
+    subject { described_class.new(AgentContext.new(agent), AgentRole).resolve }
 
     context "misc state" do
       let!(:organisations) { create_list(:organisation, 4) }
@@ -49,14 +53,14 @@ describe Agent::AgentRolePolicy::Scope, type: :policy do
       let!(:agent_role_admin_role2) { create(:agent_role, agent: create(:agent), organisation: organisations[2]) }
       let!(:agent_role_other_orga) { create(:agent_role, agent: create(:agent), organisation: organisations[3]) }
 
-      it { should include(own_agent_role_basic) }
-      it { should include(own_agent_role_admin1) }
-      it { should include(own_agent_role_admin2) }
+      it { is_expected.to include(own_agent_role_basic) }
+      it { is_expected.to include(own_agent_role_admin1) }
+      it { is_expected.to include(own_agent_role_admin2) }
 
-      it { should_not include(agent_role_basic_role) }
-      it { should include(agent_role_admin_role1) }
-      it { should include(agent_role_admin_role2) }
-      it { should_not include(agent_role_other_orga) }
+      it { is_expected.not_to include(agent_role_basic_role) }
+      it { is_expected.to include(agent_role_admin_role1) }
+      it { is_expected.to include(agent_role_admin_role2) }
+      it { is_expected.not_to include(agent_role_other_orga) }
     end
   end
 end

@@ -14,7 +14,9 @@ describe "User views his rdv" do
 
   context "with future rdv" do
     let!(:rdv) { create(:rdv, :future, users: [user], organisation: organisation) }
+
     before { click_link "Vos rendez-vous" }
+
     it do
       expect(page).to have_content("le #{I18n.l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)")
       click_link "Voir vos RDV passés"
@@ -24,7 +26,9 @@ describe "User views his rdv" do
 
   context "with past rdv" do
     let!(:rdv) { create(:rdv, :past, users: [user], organisation: organisation) }
+
     before { click_link "Vos rendez-vous" }
+
     it do
       expect_page_with_no_record_text("Vous n'avez pas de RDV à venir")
       click_link "Voir vos RDV passés"

@@ -39,12 +39,12 @@ RSpec.describe Users::CreneauxController, type: :controller do
   end
 
   describe "GET #edit" do
-    let(:starts_at) { 3.days.from_now }
-
     subject do
       get :edit, params: { rdv_id: rdv.id, starts_at: starts_at }
       rdv.reload
     end
+
+    let(:starts_at) { 3.days.from_now }
 
     before do
       travel_to(now)
@@ -56,25 +56,29 @@ RSpec.describe Users::CreneauxController, type: :controller do
 
     context "creneau is available" do
       let(:returned_creneau) { Creneau.new }
+
       before { subject }
+
       it { expect(response.body).to include("Modification du Rendez-vous") }
       it { expect(response.body).to include("Confirmer le nouveau créneau") }
     end
 
     context "creneau isn't available" do
       let(:returned_creneau) { nil }
+
       before { subject }
+
       it { expect(response).to redirect_to(users_creneaux_index_path(rdv_id: rdv.id)) }
     end
   end
 
   describe "PUT #update" do
-    let(:starts_at) { 3.days.from_now }
-
     subject do
       put :update, params: { rdv_id: rdv.id, starts_at: starts_at }
       rdv.reload
     end
+
+    let(:starts_at) { 3.days.from_now }
 
     before do
       travel_to(now)
@@ -86,7 +90,9 @@ RSpec.describe Users::CreneauxController, type: :controller do
 
     context "creneau is available" do
       let(:returned_creneau) { Creneau.new(starts_at: starts_at) }
+
       before { subject }
+
       it { expect(response.body).to include("Votre RDV a été modifié") }
       it { expect(rdv.starts_at).to eq(starts_at) }
       it { expect(rdv.created_by).to eq("file_attente") }
@@ -94,6 +100,7 @@ RSpec.describe Users::CreneauxController, type: :controller do
 
     context "creneau isn't available" do
       let(:returned_creneau) { nil }
+
       it { expect(subject).to redirect_to(users_creneaux_index_path(rdv_id: rdv.id)) }
     end
   end

@@ -17,7 +17,7 @@ describe "Agent can update a relative" do
     click_link "Modifier"
   end
 
-  it "should work" do
+  it "works" do
     fill_in :user_first_name, with: "Michelle"
     fill_in :user_last_name, with: "Mythe"
     fill_in :user_birth_date, with: "07/11/2001"

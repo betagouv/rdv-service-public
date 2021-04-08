@@ -6,7 +6,7 @@ describe Rdv, type: :model do
   describe "#notify_rdv_created" do
     let(:rdv) { build(:rdv, starts_at: 3.days.from_now) }
 
-    it "should be called after create" do
+    it "is called after create" do
       expect(Notifications::Rdv::RdvCreatedService).to receive(:perform_with).with(rdv)
       expect(Notifications::Rdv::RdvDateUpdatedService).not_to receive(:perform_with)
       expect(Notifications::Rdv::RdvCancelledService).not_to receive(:perform_with)
@@ -17,7 +17,7 @@ describe Rdv, type: :model do
   describe "#notify_rdv_date_updated" do
     let!(:rdv) { create(:rdv, starts_at: 3.days.from_now) }
 
-    it "should be called after update starts_at" do
+    it "is called after update starts_at" do
       expect(Notifications::Rdv::RdvCreatedService).not_to receive(:perform_with)
       expect(Notifications::Rdv::RdvDateUpdatedService).to receive(:perform_with).with(rdv)
       expect(Notifications::Rdv::RdvCancelledService).not_to receive(:perform_with)
@@ -28,7 +28,7 @@ describe Rdv, type: :model do
   describe "#notify_rdv_cancelled" do
     let!(:rdv) { create(:rdv, status: :unknown, starts_at: 3.days.from_now) }
 
-    it "should be called after update starts_at" do
+    it "is called after update starts_at" do
       expect(Notifications::Rdv::RdvCreatedService).not_to receive(:perform_with)
       expect(Notifications::Rdv::RdvDateUpdatedService).not_to receive(:perform_with)
       expect(Notifications::Rdv::RdvCancelledService).to receive(:perform_with).with(rdv)
@@ -37,11 +37,12 @@ describe Rdv, type: :model do
   end
 
   describe "#cancellable?" do
-    let(:now) { Time.current }
-
     subject { rdv.cancellable? }
 
+    let(:now) { Time.current }
+
     before { travel_to(now) }
+
     after { travel_back }
 
     context "when Rdv starts in 5 hours" do
@@ -64,15 +65,15 @@ describe Rdv, type: :model do
   end
 
   describe "#associate_users_with_organisation" do
-    let(:organisation) { create(:organisation) }
-    let(:organisation2) { create(:organisation) }
-    let(:user) { create(:user, organisations: [organisation]) }
-    let!(:rdv) { build(:rdv, users: [user], organisation: organisation2) }
-
     subject do
       rdv.save
       user.reload
     end
+
+    let(:organisation) { create(:organisation) }
+    let(:organisation2) { create(:organisation) }
+    let(:user) { create(:user, organisations: [organisation]) }
+    let!(:rdv) { build(:rdv, users: [user], organisation: organisation2) }
 
     it "expect .save to trigger #associate_users_with_organisation" do
       expect(rdv).to receive(:associate_users_with_organisation)
@@ -94,10 +95,10 @@ describe Rdv, type: :model do
   end
 
   describe "valid?" do
+    subject { rdv.save! }
+
     let(:rdv) { build(:rdv, users: users) }
     let(:user_without_email) { create(:user, :with_no_email) }
-
-    subject { rdv.save! }
 
     context "with a user with no email" do
       let(:users) { [User.find(user_without_email.id)] }
@@ -115,7 +116,7 @@ describe Rdv, type: :model do
     context "when rdv is in public_office" do
       let(:rdv) { create(:rdv) }
 
-      it { should be rdv.lieu.address }
+      it { is_expected.to be rdv.lieu.address }
     end
 
     context "when rdv is at home" do
@@ -123,7 +124,7 @@ describe Rdv, type: :model do
       let(:child) { create(:user, responsible: responsible) }
       let(:rdv) { create(:rdv, :at_home, users: [child]) }
 
-      it { should eq responsible.address }
+      it { is_expected.to eq responsible.address }
     end
 
     context "when rdv is by phone" do
@@ -131,7 +132,7 @@ describe Rdv, type: :model do
       let(:child) { create(:user, responsible: responsible) }
       let(:rdv) { create(:rdv, :by_phone, users: [child]) }
 
-      it { should be_blank }
+      it { is_expected.to be_blank }
     end
   end
 
@@ -160,8 +161,9 @@ describe Rdv, type: :model do
   describe "#destroy" do
     let!(:rdv) { create(:rdv) }
     let!(:rdv_event) { create(:rdv_event, rdv: rdv) }
-    it "should work" do
-      expect { rdv.destroy }.to change { Rdv.count }.by(-1)
+
+    it "works" do
+      expect { rdv.destroy }.to change(described_class, :count).by(-1)
     end
   end
 
@@ -173,7 +175,7 @@ describe Rdv, type: :model do
       rdv = create(:rdv, :future, lieu: lieu, organisation: organisation)
       create(:rdv, :future, lieu: other_lieu, organisation: organisation)
 
-      expect(Rdv.with_lieu(lieu).to_a).to eq([rdv])
+      expect(described_class.with_lieu(lieu).to_a).to eq([rdv])
     end
   end
 
@@ -185,11 +187,11 @@ describe Rdv, type: :model do
     let!(:rdv2) { create(:rdv, users: [user2]) }
     let!(:rdv3) { create(:rdv, users: [user3]) }
 
-    it "should retrieve rdv, contrarily to where(users:)" do
-      expect(Rdv.where(users: [user1, user2])).to be_empty
-      expect(Rdv.with_user_in([user1, user2])).to include(rdv1)
-      expect(Rdv.with_user_in([user1, user2])).to include(rdv2)
-      expect(Rdv.with_user_in([user1, user2])).not_to include(rdv3)
+    it "retrieves rdv, contrarily to where(users:)" do
+      expect(described_class.where(users: [user1, user2])).to be_empty
+      expect(described_class.with_user_in([user1, user2])).to include(rdv1)
+      expect(described_class.with_user_in([user1, user2])).to include(rdv2)
+      expect(described_class.with_user_in([user1, user2])).not_to include(rdv3)
     end
   end
 
@@ -257,32 +259,32 @@ describe Rdv, type: :model do
     it "don't return rdv with invisible motif" do
       motif = create(:motif, :invisible)
       create(:rdv, motif: motif)
-      expect(Rdv.visible).to contain_exactly
+      expect(described_class.visible).to contain_exactly
     end
 
     it "return rdv with visible and notified motif" do
       motif = create(:motif, :visible_and_notified)
       rdv = create(:rdv, motif: motif)
-      expect(Rdv.visible).to contain_exactly(rdv)
+      expect(described_class.visible).to contain_exactly(rdv)
     end
 
     it "return rdv with visible and not notified motif" do
       motif = create(:motif, :visible_and_not_notified)
       rdv = create(:rdv, motif: motif)
-      expect(Rdv.visible).to contain_exactly(rdv)
+      expect(described_class.visible).to contain_exactly(rdv)
     end
   end
 
   describe "#for_today" do
     it "return empty array when no rdv" do
-      expect(Rdv.for_today).to be_empty
+      expect(described_class.for_today).to be_empty
     end
 
     it "return [rdv] when one rdv for today" do
       now = Time.zone.parse("2020/12/23 12:30")
       travel_to(now)
       rdv = create(:rdv, starts_at: now)
-      expect(Rdv.for_today).to eq([rdv])
+      expect(described_class.for_today).to eq([rdv])
     end
 
     it "return ONLY the daily rdv" do
@@ -292,56 +294,64 @@ describe Rdv, type: :model do
       rdv = create(:rdv, starts_at: now)
       create(:rdv, starts_at: now + 1.days)
 
-      expect(Rdv.for_today).to eq([rdv])
+      expect(described_class.for_today).to eq([rdv])
     end
   end
 
   describe "Rdv.ongoing" do
     context "without time_margin" do
-      subject { Rdv.ongoing }
+      subject { described_class.ongoing }
 
       context "rdv ongoing" do
         let!(:rdv) { create(:rdv, starts_at: Time.zone.now - 30.minutes, duration_in_min: 45) }
-        it { should include(rdv) }
+
+        it { is_expected.to include(rdv) }
       end
 
       context "rdv finished shortly before" do
         let!(:rdv) { create(:rdv, starts_at: Time.zone.now - 30.minutes, duration_in_min: 15) }
-        it { should_not include(rdv) }
+
+        it { is_expected.not_to include(rdv) }
       end
 
       context "rdv starting shortly after" do
         let!(:rdv) { create(:rdv, starts_at: Time.zone.now + 30.minutes, duration_in_min: 15) }
-        it { should_not include(rdv) }
+
+        it { is_expected.not_to include(rdv) }
       end
     end
 
     context "with 1 hour time_margin" do
-      subject { Rdv.ongoing(time_margin: 1.hour) }
+      subject { described_class.ongoing(time_margin: 1.hour) }
 
       context "rdv ongoing" do
         let!(:rdv) { create(:rdv, starts_at: Time.zone.now - 30.minutes, duration_in_min: 45) }
-        it { should include(rdv) }
+
+        it { is_expected.to include(rdv) }
       end
 
       context "rdv finished shortly before" do
         let!(:rdv) { create(:rdv, starts_at: Time.zone.now - 30.minutes, duration_in_min: 15) }
-        it { should include(rdv) }
+
+        it { is_expected.to include(rdv) }
       end
 
       context "rdv finished long before" do
         let!(:rdv) { create(:rdv, starts_at: Time.zone.now - 2.hours, duration_in_min: 15) }
-        it { should_not include(rdv) }
+
+        it { is_expected.not_to include(rdv) }
       end
 
       context "rdv starting shortly after" do
         let!(:rdv) { create(:rdv, starts_at: Time.zone.now + 30.minutes, duration_in_min: 15) }
-        it { should include(rdv) }
+
+        it { is_expected.to include(rdv) }
       end
 
       context "rdv starting long after" do
         let!(:rdv) { create(:rdv, starts_at: Time.zone.now + 2.hours, duration_in_min: 15) }
-        it { should_not include(rdv) }
+
+        it { is_expected.not_to include(rdv) }
       end
     end
   end
@@ -353,7 +363,7 @@ describe Rdv, type: :model do
       rdv = create(:rdv, starts_at: now + 1.day + 3.hours)
       create(:rdv, starts_at: now + 2.day + 3.hours)
       create(:rdv, starts_at: now - 1.day)
-      expect(Rdv.starts_at_in_range((now + 1.day)..(now + 2.day))).to eq([rdv])
+      expect(described_class.starts_at_in_range((now + 1.day)..(now + 2.day))).to eq([rdv])
       travel_back
     end
   end

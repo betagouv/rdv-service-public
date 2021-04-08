@@ -7,7 +7,7 @@ describe Users::CreneauSearch do
 
   describe ".creneau_for" do
     subject do
-      Users::CreneauSearch.creneau_for(
+      described_class.creneau_for(
         user: user,
         motif: motif,
         lieu: lieu,
@@ -32,7 +32,8 @@ describe Users::CreneauSearch do
           build(:creneau, starts_at: DateTime.parse("2020-10-20 10h30"))
         ]
       end
-      it { should eq(mock_creneaux[0]) }
+
+      it { is_expected.to eq(mock_creneaux[0]) }
     end
 
     context "no matching creneaux" do
@@ -43,12 +44,14 @@ describe Users::CreneauSearch do
           build(:creneau, starts_at: DateTime.parse("2020-10-20 11h30"))
         ]
       end
-      it { should be_nil }
+
+      it { is_expected.to be_nil }
     end
 
     context "no creneaux built at all" do
       let(:mock_creneaux) { [] }
-      it { should be_nil }
+
+      it { is_expected.to be_nil }
     end
   end
 end

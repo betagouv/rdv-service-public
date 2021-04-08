@@ -4,22 +4,26 @@ describe User::NotificableConcern do
 
     context "user has email and email notifications enabled" do
       let(:user) { build(:user, email: "jean@lol.fr", notify_by_email: true) }
-      it { should be_truthy }
+
+      it { is_expected.to be_truthy }
     end
 
     context "user has email but email notifications disabled" do
       let(:user) { build(:user, email: "jean@lol.fr", notify_by_email: false) }
-      it { should be_falsy }
+
+      it { is_expected.to be_falsy }
     end
 
     context "user has no email but email notifications enabled" do
       let(:user) { build(:user, email: nil, notify_by_email: true) }
-      it { should be_falsy }
+
+      it { is_expected.to be_falsy }
     end
 
     context "user has blank email but email notifications enabled" do
       let(:user) { build(:user, email: "", notify_by_email: true) }
-      it { should be_falsy }
+
+      it { is_expected.to be_falsy }
     end
   end
 
@@ -28,27 +32,32 @@ describe User::NotificableConcern do
 
     context "user has phone number and SMS notifications enabled" do
       let(:user) { build(:user, phone_number: "0634343434", notify_by_sms: true) }
-      it { should be_truthy }
+
+      it { is_expected.to be_truthy }
     end
 
     context "user has phone number but SMS notifications disabled" do
       let(:user) { build(:user, phone_number: "0634343434", notify_by_sms: false) }
-      it { should be_falsy }
+
+      it { is_expected.to be_falsy }
     end
 
     context "user has SMS notifications enabled but no phone number" do
       let(:user) { build(:user, phone_number: nil, notify_by_sms: true) }
-      it { should be_falsy }
+
+      it { is_expected.to be_falsy }
     end
 
     context "user has SMS notifications enabled but blank phone number" do
       let(:user) { build(:user, phone_number: "", notify_by_sms: true) }
-      it { should be_falsy }
+
+      it { is_expected.to be_falsy }
     end
 
     context "user has SMS notifications enabled but landline phone number" do
       let(:user) { build(:user, phone_number: "0129292929", notify_by_sms: true) }
-      it { should be_falsy }
+
+      it { is_expected.to be_falsy }
     end
   end
 end

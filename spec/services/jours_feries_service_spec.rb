@@ -1,6 +1,6 @@
 describe JoursFeriesService, type: :service do
   describe ".all_in_date_range" do
-    subject { JoursFeriesService.all_in_date_range(range) }
+    subject { described_class.all_in_date_range(range) }
 
     context "when jour ferie is the first day of the range" do
       let(:range) { Date.new(2020, 1, 1)..Date.new(2020, 1, 7) }

@@ -15,15 +15,15 @@ RSpec.describe Zone, type: :model do
         }
       end
 
-      it "should allow creating a new zone" do
-        zone = Zone.new(zone_attributes)
+      it "allows creating a new zone" do
+        zone = described_class.new(zone_attributes)
         expect(zone.valid?).to eq true
         expect(zone.errors).to be_empty
       end
 
-      it "should prevent creating a zone with existing postcode in the same sector" do
-        Zone.create!(zone_attributes)
-        duplicate_zone = Zone.new(
+      it "prevents creating a zone with existing postcode in the same sector" do
+        described_class.create!(zone_attributes)
+        duplicate_zone = described_class.new(
           sector: sector,
           level: "city",
           city_name: "Paris 20e",
@@ -33,9 +33,9 @@ RSpec.describe Zone, type: :model do
         expect(duplicate_zone.errors.keys).to include(:city_code)
       end
 
-      it "should allow creating a zone with existing postcode in a different sector" do
-        Zone.create!(zone_attributes)
-        duplicate_zone = Zone.new(
+      it "allows creating a zone with existing postcode in a different sector" do
+        described_class.create!(zone_attributes)
+        duplicate_zone = described_class.new(
           sector: create(:sector, territory: territory75),
           level: "city",
           city_name: "Paris 20e",
@@ -48,8 +48,8 @@ RSpec.describe Zone, type: :model do
   end
 
   describe "incoherent departement and city code" do
-    it "should be invalid" do
-      zone = Zone.new(
+    it "is invalid" do
+      zone = described_class.new(
         sector: sector,
         level: "city",
         city_name: "Paris XXe",

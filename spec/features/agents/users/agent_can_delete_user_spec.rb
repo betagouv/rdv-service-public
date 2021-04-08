@@ -10,7 +10,7 @@ describe "Agent can delete user" do
     click_link "Lala LAND"
   end
 
-  scenario "delete user", js: true do
+  it "delete user", js: true do
     click_link("Supprimer")
     page.driver.browser.switch_to.alert.accept
     expect_page_title("Vos usagers")

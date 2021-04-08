@@ -25,7 +25,7 @@ describe "Agent can create a Rdv with creneau search" do
 
   after { travel_back }
 
-  scenario "default", js: true do
+  it "default", js: true do
     expect_page_title("Choisir un créneau")
     select(motif.name, from: "motif_id")
     click_button("Afficher les créneaux")

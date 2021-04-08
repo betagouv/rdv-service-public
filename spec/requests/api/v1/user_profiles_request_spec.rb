@@ -5,7 +5,7 @@ describe "api/v1/user_profiles requests", type: :request do
 
   describe "POST api/v1/user_profiles" do
     context "valid & minimal params" do
-      it "should work" do
+      it "works" do
         count_before = UserProfile.count
         post(
           api_v1_user_profiles_path,
@@ -26,7 +26,7 @@ describe "api/v1/user_profiles requests", type: :request do
     end
 
     context "valid & complete params" do
-      it "should work" do
+      it "works" do
         count_before = UserProfile.count
         post(
           api_v1_user_profiles_path,
@@ -51,7 +51,7 @@ describe "api/v1/user_profiles requests", type: :request do
     end
 
     context "invalid params: missing orga id" do
-      it "should work" do
+      it "works" do
         count_before = UserProfile.count
         post(
           api_v1_user_profiles_path,
@@ -66,7 +66,7 @@ describe "api/v1/user_profiles requests", type: :request do
     end
 
     context "invalid params: missing user id" do
-      it "should work" do
+      it "works" do
         count_before = UserProfile.count
         post(
           api_v1_user_profiles_path,
@@ -82,7 +82,8 @@ describe "api/v1/user_profiles requests", type: :request do
 
     context "invalid params: unauthorized orga" do
       let!(:unauthorized_orga) { create(:organisation) }
-      it "should work" do
+
+      it "works" do
         count_before = UserProfile.count
         post(
           api_v1_user_profiles_path,
@@ -101,7 +102,8 @@ describe "api/v1/user_profiles requests", type: :request do
 
     context "invalid params: profile already exists" do
       let!(:existing_profile) { create(:user_profile, user: user, organisation: organisation) }
-      it "should work" do
+
+      it "works" do
         count_before = UserProfile.count
         post(
           api_v1_user_profiles_path,

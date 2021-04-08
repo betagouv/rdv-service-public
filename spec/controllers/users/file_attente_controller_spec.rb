@@ -13,6 +13,7 @@ RSpec.describe Users::FileAttentesController, type: :controller do
       it "creates a FileAttente model" do
         expect { subject }.to change(FileAttente, :count).from(0).to(1)
       end
+
       it "deletes a FileAttente model" do
         FileAttente.create(rdv_id: rdv.id, user_id: user.id)
         expect { subject }.to change(FileAttente, :count).from(1).to(0)
@@ -20,9 +21,9 @@ RSpec.describe Users::FileAttentesController, type: :controller do
     end
 
     context "when file attente id is given" do
-      let!(:file_attente) { create(:file_attente, rdv: rdv, user: user) }
-
       subject { post :create_or_delete, params: { file_attente: { id: file_attente.id } } }
+
+      let!(:file_attente) { create(:file_attente, rdv: rdv, user: user) }
 
       it "returns a success response" do
         expect { subject }.to change(FileAttente, :count).from(1).to(0)

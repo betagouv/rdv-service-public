@@ -13,11 +13,11 @@ RSpec.describe Admin::RdvsController, type: :controller do
   end
 
   describe "GET index" do
+    subject { get(:index, params: { organisation_id: organisation.id, agent_id: agent.id, start: start_time, end: end_time }, as: :json) }
+
     let!(:lieu) { create(:lieu, organisation: organisation, name: "MDS Orgeval") }
     let!(:rdv1) { create(:rdv, motif: motif, agents: [agent], users: [user], starts_at: Time.zone.parse("21/07/2019 08:00"), organisation: organisation, lieu: lieu) }
     let!(:rdv2) { create(:rdv, motif: motif, agents: [agent], users: [user], starts_at: Time.zone.parse("21/07/2019 07:00"), organisation: organisation, lieu: lieu) }
-
-    subject { get(:index, params: { organisation_id: organisation.id, agent_id: agent.id, start: start_time, end: end_time }, as: :json) }
 
     before do
       subject
@@ -30,7 +30,7 @@ RSpec.describe Admin::RdvsController, type: :controller do
 
       it { expect(response).to have_http_status(:ok) }
 
-      it "should return absence1" do
+      it "returns absence1" do
         expect(@parsed_response.size).to eq(2)
 
         first = @parsed_response[0]
@@ -59,7 +59,7 @@ RSpec.describe Admin::RdvsController, type: :controller do
       let(:start_time) { Time.zone.parse("10/07/2019 00:00") }
       let(:end_time) { Time.zone.parse("17/07/2019 00:00") }
 
-      it "should return no rdvs" do
+      it "returns no rdvs" do
         expect(@parsed_response.size).to eq(0)
       end
     end
@@ -155,7 +155,7 @@ RSpec.describe Admin::RdvsController, type: :controller do
     it "cancel rdv" do
       expect do
         delete :destroy, params: { organisation_id: organisation.id, id: rdv.id }
-      end.to change { Rdv.count }.by(-1)
+      end.to change(Rdv, :count).by(-1)
     end
   end
 end

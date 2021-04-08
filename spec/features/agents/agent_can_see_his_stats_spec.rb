@@ -20,6 +20,7 @@ describe "Agent can see his stats" do
 
   context "with RDVs" do
     before { create_list :rdv, 10, :random_start }
+
     it_behaves_like "a stats page"
   end
 end

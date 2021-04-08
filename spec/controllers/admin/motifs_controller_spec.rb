@@ -84,13 +84,13 @@ RSpec.describe Admin::MotifsController, type: :controller do
     end
 
     context "with old deleted motif name" do
+      subject do
+        post :create, params: { organisation_id: organisation.id, motif: valid_attributes }
+      end
+
       let!(:old_motif) { create(:motif, deleted_at: Time.now) }
       let(:valid_attributes) do
         build(:motif, name: old_motif.name).attributes
-      end
-
-      subject do
-        post :create, params: { organisation_id: organisation.id, motif: valid_attributes }
       end
 
       it "creates a new Motif" do

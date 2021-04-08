@@ -1,4 +1,6 @@
 describe SearchCreneauxForAgentsService, type: :service do
+  subject { described_class.perform_with(agent_creneaux_search_form) }
+
   let!(:organisation) { create(:organisation) }
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let(:lieu) { create(:lieu, organisation: organisation) }
@@ -16,7 +18,6 @@ describe SearchCreneauxForAgentsService, type: :service do
       date_range: Date.today..(Date.today + 6.days)
     )
   end
-  subject { SearchCreneauxForAgentsService.perform_with(agent_creneaux_search_form) }
 
   it { expect(subject.map(&:lieu)).to contain_exactly(lieu) }
 

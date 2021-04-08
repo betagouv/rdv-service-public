@@ -5,7 +5,8 @@ describe "api/v1/users requests", type: :request do
   describe "GET api/v1/users/:id" do
     context "authorized user ID" do
       let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
-      it "should work" do
+
+      it "works" do
         get api_v1_user_path(user), headers: api_auth_headers_for_agent(agent)
         expect(response.status).to eq(200)
         response_parsed = JSON.parse(response.body)
@@ -22,7 +23,8 @@ describe "api/v1/users requests", type: :request do
     context "authorized user ID also belongs to other organisation" do
       let!(:unauthorized_orga) { create(:organisation) }
       let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation, unauthorized_orga]) }
-      it "should work" do
+
+      it "works" do
         get api_v1_user_path(user), headers: api_auth_headers_for_agent(agent)
         expect(response.status).to eq(200)
         response_parsed = JSON.parse(response.body)
@@ -38,7 +40,8 @@ describe "api/v1/users requests", type: :request do
 
     context "unauthorized user ID" do
       let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
-      it "should work" do
+
+      it "works" do
         get api_v1_user_path(user), headers: api_auth_headers_for_agent(agent)
         expect(response.status).to eq(403)
         response_parsed = JSON.parse(response.body)
@@ -49,7 +52,7 @@ describe "api/v1/users requests", type: :request do
 
   describe "POST api/v1/users" do
     context "valid & minimal params" do
-      it "should work" do
+      it "works" do
         user_count_before = User.count
         post(
           api_v1_users_path,
@@ -73,7 +76,7 @@ describe "api/v1/users requests", type: :request do
     end
 
     context "valid & complete params" do
-      it "should work" do
+      it "works" do
         user_count_before = User.count
         post(
           api_v1_users_path,
@@ -118,7 +121,8 @@ describe "api/v1/users requests", type: :request do
 
     context "valid & relative" do
       let!(:user_responsible) { create(:user) }
-      it "should work" do
+
+      it "works" do
         user_count_before = User.count
         post(
           api_v1_users_path,
@@ -145,7 +149,8 @@ describe "api/v1/users requests", type: :request do
 
     context "invalid: forbidden orga" do
       let!(:other_orga) { create(:organisation) }
-      it "should not work" do
+
+      it "does not work" do
         user_count_before = User.count
         post(
           api_v1_users_path,
@@ -165,7 +170,8 @@ describe "api/v1/users requests", type: :request do
 
     context "invalid: empty orgas" do
       let!(:other_orga) { create(:organisation) }
-      it "should not work" do
+
+      it "does not work" do
         user_count_before = User.count
         post(
           api_v1_users_path,
@@ -185,7 +191,8 @@ describe "api/v1/users requests", type: :request do
 
     context "invalid: missing orgas" do
       let!(:other_orga) { create(:organisation) }
-      it "should not work" do
+
+      it "does not work" do
         user_count_before = User.count
         post(
           api_v1_users_path,
@@ -201,7 +208,8 @@ describe "api/v1/users requests", type: :request do
 
     context "invalid: missing required attribute" do
       let!(:other_orga) { create(:organisation) }
-      it "should not work" do
+
+      it "does not work" do
         user_count_before = User.count
         post(
           api_v1_users_path,
@@ -220,7 +228,8 @@ describe "api/v1/users requests", type: :request do
 
     context "invalid: misformatted attribute" do
       let!(:other_orga) { create(:organisation) }
-      it "should not work" do
+
+      it "does not work" do
         user_count_before = User.count
         post(
           api_v1_users_path,
@@ -242,7 +251,8 @@ describe "api/v1/users requests", type: :request do
     context "invalid: existing email" do
       let!(:other_orga) { create(:organisation) }
       let!(:existing_user) { create(:user, email: "jean@jacques.fr") }
-      it "should not work" do
+
+      it "does not work" do
         user_count_before = User.count
         post(
           api_v1_users_path,

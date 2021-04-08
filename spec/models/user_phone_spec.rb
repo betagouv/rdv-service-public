@@ -20,7 +20,7 @@ describe "User#phone_number & User#phone_number_formatted" do
 
     context "on update" do
       context "previous phone number" do
-        it "should update it" do
+        it "updates it" do
           user = create(:user, phone_number: "01 30 30 40 40")
           expect(user.phone_number_formatted).to eq("+33130304040")
           user.update!(phone_number: "04 300 32020")

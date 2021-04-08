@@ -16,25 +16,28 @@ end
 
 describe Admin::RdvFormConcern, type: :form do
   subject { DummyForm.new(rdv, agent_author) }
+
   let!(:agent_author) { create(:agent, first_name: "Poney", last_name: "FOU") }
+  let(:agent_context) { instance_double(AgentContext, agent: agent_author, organisation: build(:organisation)) }
   let(:rdv_start_coherence) { instance_double(RdvStartCoherence) }
   let(:rdvs_overlapping) { instance_double(RdvsOverlapping) }
+
   before do
     allow(subject).to receive(:agent_context).and_return(agent_context)
     allow(RdvStartCoherence).to receive(:new).with(rdv).and_return(rdv_start_coherence)
     allow(RdvsOverlapping).to receive(:new).with(rdv).and_return(rdvs_overlapping)
   end
-  let(:agent_context) { instance_double(AgentContext, agent: agent_author, organisation: build(:organisation)) }
 
   describe "validations" do
     context "rdv is not valid" do
       let(:rdv) { build(:rdv) }
+
       before do
         expect(rdv).to receive(:valid?).and_return(false)
         expect(rdv).to receive(:errors).and_return([[:base, "not cool"]])
       end
 
-      it "should not be valid" do
+      it "is not valid" do
         expect(subject.valid?).to eq false
         expect(subject.errors[:base]).to include "not cool"
       end
@@ -42,13 +45,14 @@ describe Admin::RdvFormConcern, type: :form do
 
     context "rdv is valid + no rdvs ending shortly before" do
       let(:rdv) { build(:rdv) }
+
       before do
         expect(rdv).to receive(:valid?).and_return(true)
         allow(rdv_start_coherence).to receive(:rdvs_ending_shortly_before?).and_return(false)
         allow(rdvs_overlapping).to receive(:rdvs_overlapping_rdv?).and_return(false)
       end
 
-      it "should be valid" do
+      it "is valid" do
         expect(subject.valid?).to eq true
       end
     end
@@ -68,12 +72,12 @@ describe Admin::RdvFormConcern, type: :form do
           .and_return(instance_double(RdvEndingShortlyBeforePresenter, warning_message: "alerte RDV proche !"))
       end
 
-      it "should not be valid" do
+      it "is not valid" do
         expect(subject.valid?).to eq false
         expect(subject.errors).not_to be_empty
       end
 
-      it "should include warnings" do
+      it "includes warnings" do
         subject.valid?
         expect(subject.warnings_need_confirmation?).to eq true
         expect(subject.warnings).not_to be_empty
@@ -102,12 +106,12 @@ describe Admin::RdvFormConcern, type: :form do
           .and_return(instance_double(RdvEndingShortlyBeforePresenter, warning_message: "alerte RDV Maceo !"))
       end
 
-      it "should not be valid" do
+      it "is not valid" do
         expect(subject.valid?).to eq false
         expect(subject.errors).not_to be_empty
       end
 
-      it "should include warnings" do
+      it "includes warnings" do
         subject.valid?
         expect(subject.warnings_need_confirmation?).to eq true
         expect(subject.warnings).not_to be_empty
@@ -130,12 +134,12 @@ describe Admin::RdvFormConcern, type: :form do
           .and_return(instance_double(RdvsOverlappingRdvPresenter, warning_message: "alerte RDV se cheveauchant !"))
       end
 
-      it "should not be valid" do
+      it "is not valid" do
         expect(subject.valid?).to eq false
         expect(subject.errors).not_to be_empty
       end
 
-      it "should include warnings" do
+      it "includes warnings" do
         subject.valid?
         expect(subject.warnings_need_confirmation?).to eq true
         expect(subject.warnings).not_to be_empty

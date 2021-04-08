@@ -16,15 +16,15 @@ describe PlageOuvertureOverlap do
 
   shared_examples "plage ouvertures overlap" do
     it "overlaps" do
-      expect(PlageOuvertureOverlap.new(po1, po2).exists?).to eq true
-      expect(PlageOuvertureOverlap.new(po2, po1).exists?).to eq true
+      expect(described_class.new(po1, po2).exists?).to eq true
+      expect(described_class.new(po2, po1).exists?).to eq true
     end
   end
 
   shared_examples "plage ouvertures do not overlap" do
     it "does not overlap" do
-      expect(PlageOuvertureOverlap.new(po1, po2).exists?).to eq false
-      expect(PlageOuvertureOverlap.new(po2, po1).exists?).to eq false
+      expect(described_class.new(po1, po2).exists?).to eq false
+      expect(described_class.new(po2, po1).exists?).to eq false
     end
   end
 
@@ -33,42 +33,49 @@ describe PlageOuvertureOverlap do
   context "po1 and po2 exceptionnelles, exactly overlapping" do
     let(:po1) { build_po(monday, 14, 18) }
     let(:po2) { build_po(monday, 14, 18) }
+
     it_behaves_like "plage ouvertures overlap"
   end
 
   context "po1 and po2 exceptionnelles, included in other" do
     let(:po1) { build_po(monday, 14, 18) }
     let(:po2) { build_po(monday, 15, 16) }
+
     it_behaves_like "plage ouvertures overlap"
   end
 
   context "po1 and po2 exceptionnelles, includes other" do
     let(:po1) { build_po(monday, 14, 18) }
     let(:po2) { build_po(monday, 8, 20) }
+
     it_behaves_like "plage ouvertures overlap"
   end
 
   context "po1 and po2 exceptionnelles, partially overlapping start" do
     let(:po1) { build_po(monday, 14, 18) }
     let(:po2) { build_po(monday, 8, 16) }
+
     it_behaves_like "plage ouvertures overlap"
   end
 
   context "po1 and po2 exceptionnelles, partially overlapping end" do
     let(:po1) { build_po(monday, 14, 18) }
     let(:po2) { build_po(monday, 16, 20) }
+
     it_behaves_like "plage ouvertures overlap"
   end
 
   context "po1 and po2 exceptionnelles, non overlapping same day" do
     let(:po1) { build_po(monday, 14, 18) }
     let(:po2) { build_po(monday, 8, 12) }
+
     it_behaves_like "plage ouvertures do not overlap"
   end
 
   context "po1 and po2 exceptionnelles, non overlapping other day" do
     let(:po1) { build_po(monday, 14, 18) }
     let(:po2) { build_po(monday + 1.day, 14, 18) }
+
     it_behaves_like "plage ouvertures do not overlap"
   end
 
@@ -77,66 +84,77 @@ describe PlageOuvertureOverlap do
   context "po1 recurring without end date, po2 exceptionnelle before recurring" do
     let(:po1) { build_po(monday, 14, 18, Montrose.weekly.on([:monday, :tuesday])) }
     let(:po2) { build_po(monday - 7.days, 14, 18) }
+
     it_behaves_like "plage ouvertures do not overlap"
   end
 
   context "po1 recurring without end date, po2 exceptionnelle on other day same week" do
     let(:po1) { build_po(monday, 14, 18, Montrose.weekly.on([:monday, :tuesday])) }
     let(:po2) { build_po(monday + 3.days, 14, 18) }
+
     it_behaves_like "plage ouvertures do not overlap"
   end
 
   context "po1 recurring without end date, po2 exceptionnelle on other day next week" do
     let(:po1) { build_po(monday, 14, 18, Montrose.weekly.on([:monday, :tuesday])) }
     let(:po2) { build_po(monday + 3.days, 14, 18) }
+
     it_behaves_like "plage ouvertures do not overlap"
   end
 
   context "po1 recurring without end date, po2 exceptionnelle on same day but times don't overlap" do
     let(:po1) { build_po(monday, 14, 18, Montrose.weekly.on([:monday, :tuesday])) }
     let(:po2) { build_po(monday + 8.days, 8, 10) }
+
     it_behaves_like "plage ouvertures do not overlap"
   end
 
   context "po1 recurring without end date, po2 exceptionnelle on same day and times overlap" do
     let(:po1) { build_po(monday, 14, 18, Montrose.weekly.on([:monday, :tuesday])) }
     let(:po2) { build_po(monday + 8.days, 15, 20) }
+
     it_behaves_like "plage ouvertures overlap"
   end
 
   context "po1 recurring every 3 weeks without end date, po2 exceptionnelle on same week day 6 weeks after" do
     let(:po1) { build_po(monday, 14, 18, Montrose.every(3.weeks, starts: monday).on([:monday, :tuesday])) }
     let(:po2) { build_po(monday + 6.weeks, 14, 18) }
+
     it_behaves_like "plage ouvertures overlap"
   end
 
   context "po1 recurring every 3 weeks without end date, po2 exceptionnelle on same week day 4 weeks after" do
     let(:po1) { build_po(monday, 14, 18, Montrose.every(3.weeks, on: [:monday, :tuesday], starts: monday)) }
     let(:po2) { build_po(monday + 4.weeks, 14, 18) }
+
     it_behaves_like "plage ouvertures do not overlap"
   end
 
   context "po1 recurring with end date, po2 exceptionnelle before recurring" do
     let(:po1) { build_po(monday, 14, 18, Montrose.every(:week, on: [:monday, :tuesday], starts: monday, until: monday + 3.weeks)) }
     let(:po2) { build_po(monday - 7.days, 14, 18) }
+
     it_behaves_like "plage ouvertures do not overlap"
   end
 
   context "po1 recurring with end date, po2 exceptionnelle same weekday before po1 end date" do
     let(:po1) { build_po(monday, 14, 18, Montrose.every(:week, on: [:monday, :tuesday], starts: monday, until: monday + 3.weeks)) }
     let(:po2) { build_po(monday + 7.days, 14, 18) }
+
     it_behaves_like "plage ouvertures overlap"
   end
 
   context "po1 recurring with end date, po2 exceptionnelle other weekday before po1 end date" do
     let(:po1) { build_po(monday, 14, 18, Montrose.every(:week, on: [:monday, :tuesday], starts: monday, until: monday + 3.weeks)) }
     let(:po2) { build_po(monday - 10.days, 14, 18) }
+
     it_behaves_like "plage ouvertures do not overlap"
   end
 
   context "po1 recurring with end date, po2 exceptionnelle same weekday after po1 end date" do
     let(:po1) { build_po(monday, 14, 18, Montrose.every(:week, on: [:monday, :tuesday], starts: monday, until: monday + 3.weeks)) }
     let(:po2) { build_po(monday + 4.weeks, 14, 18) }
+
     it_behaves_like "plage ouvertures do not overlap"
   end
 
@@ -145,78 +163,91 @@ describe PlageOuvertureOverlap do
   context "po1 and po2 recurring without end date, different weekdays" do
     let(:po1) { build_po(monday, 14, 18, Montrose.every(:week, on: [:monday, :tuesday], starts: monday)) }
     let(:po2) { build_po(monday, 14, 18, Montrose.every(:week, on: [:wednesday, :thursday], starts: monday)) }
+
     it_behaves_like "plage ouvertures do not overlap"
   end
 
   context "po1 and po2 recurring without end date, overlapping weekdays" do
     let(:po1) { build_po(monday, 14, 18, Montrose.every(:week, on: [:monday, :tuesday], starts: monday)) }
     let(:po2) { build_po(monday + 7.days, 14, 18, Montrose.every(:week, on: [:tuesday, :wednesday], starts: monday + 7.days)) }
+
     it_behaves_like "plage ouvertures overlap"
   end
 
   context "po1 and po2 recurring without end date, overlapping weekdays but different times" do
     let(:po1) { build_po(monday, 14, 18, Montrose.every(:week, on: [:monday, :tuesday], starts: monday)) }
     let(:po2) { build_po(monday, 10, 12, Montrose.every(:week, on: [:tuesday, :wednesday], starts: monday)) }
+
     it_behaves_like "plage ouvertures do not overlap"
   end
 
   context "po1 and po2 recurring without end date, non-overlapping alternative weeks" do
     let(:po1) { build_po(monday, 14, 18, Montrose.every(:week, on: [:monday, :tuesday], interval: 2, starts: monday)) }
     let(:po2) { build_po(monday + 1.week, 14, 18, Montrose.every(:week, on: [:tuesday, :wednesday], interval: 2, starts: monday + 1.week)) }
+
     it_behaves_like "plage ouvertures do not overlap"
   end
 
   context "po1 and po2 recurring without end date, overlapping weeks" do
     let(:po1) { build_po(monday, 14, 18, Montrose.every(:week, on: [:monday, :tuesday], interval: 2, starts: monday)) }
     let(:po2) { build_po(monday + 1.week, 14, 18, Montrose.every(:week, on: [:tuesday, :wednesday], interval: 3, starts: monday + 1.week)) }
+
     it_behaves_like "plage ouvertures overlap"
   end
 
   context "po1 recurring with end date, po2 recurring without end date, po2 starts before po1 ends, with weekdays overlap" do
     let(:po1) { build_po(monday, 14, 18, Montrose.every(:week, on: [:monday, :tuesday], starts: monday, until: monday + 3.weeks)) }
     let(:po2) { build_po(monday + 7.days, 14, 18, Montrose.every(:week, on: [:tuesday, :wednesday], starts: monday + 7.days)) }
+
     it_behaves_like "plage ouvertures overlap"
   end
 
   context "po1 recurring with end date, po2 recurring without end date, po2 starts before po1 ends, without weekdays overlap" do
     let(:po1) { build_po(monday, 14, 18, Montrose.every(:week, on: [:monday, :tuesday], starts: monday, until: monday + 3.weeks)) }
     let(:po2) { build_po(monday + 7.days, 14, 18, Montrose.every(:week, on: [:wednesday, :thursday], starts: monday + 7.days)) }
+
     it_behaves_like "plage ouvertures do not overlap"
   end
 
   context "po1 recurring with end date, po2 recurring without end date, po2 starts after po1 ends" do
     let(:po1) { build_po(monday, 14, 18, Montrose.every(:week, on: [:monday, :tuesday], starts: monday, until: monday + 3.weeks)) }
     let(:po2) { build_po(monday + 4.weeks, 14, 18, Montrose.every(:week, on: [:tuesday, :wednesday], starts: monday + 4.weeks)) }
+
     it_behaves_like "plage ouvertures do not overlap"
   end
 
   context "po1 and po2 recurring with end date, overlap" do
     let(:po1) { build_po(monday, 14, 18, Montrose.every(:week, on: [:monday, :tuesday], starts: monday, until: monday + 3.weeks)) }
     let(:po2) { build_po(monday + 1.weeks, 14, 18, Montrose.every(:week, on: [:tuesday, :wednesday], starts: monday + 1.week, until: monday + 5.weeks)) }
+
     it_behaves_like "plage ouvertures overlap"
   end
 
   context "po1 and po2 recurring with end date, non-overlapping alternative weeks" do
     let(:po1) { build_po(monday, 14, 18, Montrose.every(:week, on: [:monday, :tuesday], interval: 2, starts: monday, until: monday + 10.weeks)) }
     let(:po2) { build_po(monday + 1.week, 14, 18, Montrose.every(:week, on: [:tuesday, :wednesday], interval: 2, starts: monday + 1.week, until: monday + 10.weeks)) }
+
     it_behaves_like "plage ouvertures do not overlap"
   end
 
   context "po1 and po2 recurring with end date, overlapping weeks" do
     let(:po1) { build_po(monday, 14, 18, Montrose.every(:week, on: [:monday, :tuesday], interval: 2, starts: monday, until: monday + 10.weeks)) }
     let(:po2) { build_po(monday + 1.week, 14, 18, Montrose.every(:week, on: [:tuesday, :wednesday], interval: 3, starts: monday + 1.week, until: monday + 10.weeks)) }
+
     it_behaves_like "plage ouvertures overlap"
   end
 
   context "po1 and po2 recurring with end date, po2 starts after po1 ends" do
     let(:po1) { build_po(monday, 14, 18, Montrose.every(:week, on: [:monday, :tuesday], starts: monday, until: monday + 3.weeks)) }
     let(:po2) { build_po(monday + 4.weeks, 10, 12, Montrose.every(:week, on: [:tuesday, :wednesday], starts: monday + 4.weeks, until: monday + 6.weeks)) }
+
     it_behaves_like "plage ouvertures do not overlap"
   end
 
   context "po1 and po2 recurring with end date, overlap but weekdays mismatch" do
     let(:po1) { build_po(monday, 14, 18, Montrose.every(:week, on: [:monday, :tuesday], starts: monday, until: monday + 3.weeks)) }
     let(:po2) { build_po(monday + 4.weeks, 10, 12, Montrose.every(:week, on: [:wednesday, :thursday], starts: monday + 4.weeks, until: monday + 6.weeks)) }
+
     it_behaves_like "plage ouvertures do not overlap"
   end
 end
