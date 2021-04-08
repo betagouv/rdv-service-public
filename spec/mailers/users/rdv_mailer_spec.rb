@@ -111,4 +111,12 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       expect(mail.body).to match(rdv.motif.service_name)
     end
   end
+
+  it "send mail to user" do
+    rdv = create(:rdv)
+    user = rdv.users.first
+    mail = Users::RdvMailer.rdv_upcoming_reminder(rdv, user)
+    expect(mail.to).to eq([user.email])
+    expect(mail.body).to include("Nous vous rappellons que vous avez un RDV prévu")
+  end
 end
