@@ -88,7 +88,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
       resources :absences, only: [:index, :create]
-      resources :users, only: [:create, :show] do
+      resources :users, only: [:create, :show, :update] do
         get "invite" => "users#invite", as: "invite_user"
       end
       resources :user_profiles, only: [:create]

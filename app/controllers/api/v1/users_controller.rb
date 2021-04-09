@@ -40,9 +40,22 @@ class Api::V1::UsersController < Api::V1::BaseController
     render json: { invitation_url: accept_user_invitation_url(invitation_token: user.raw_invitation_token) }
   end
 
+  def update
+    user = User.find(params[:user_id])
+    authorize(user)
+    agents = Agent.where(id: user_params[:agent_ids])
+    if user.update(agents: agents)
+      render json: { success: true }
+    elsif user_params[:agent_ids].blank?
+      render json: { success: false, errors: ["agents_ids doit être rempli"] }
+    else
+      render json: { success: false }
+    end
+  end
+
   private
 
   def user_params
-    params.permit(*PERMITTED_PARAMS, organisation_ids: [])
+    params.permit(*PERMITTED_PARAMS, organisation_ids: [], agent_ids: [])
   end
 end
