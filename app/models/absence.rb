@@ -14,7 +14,7 @@ class Absence < ApplicationRecord
   default_scope -> { order(first_day: :desc, start_time: :desc) }
 
   scope :future, -> { where(end_day: Time.zone.today..) }
-  scope :past, -> { where(end_day: ..Time.zone.today) }
+  scope :past, -> { where.not(end_day: Time.zone.today..) } # Note: can’t use beginless ranges yet, because of brakeman
 
   def title_or_default
     title.present? ? title : "Absence"
