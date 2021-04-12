@@ -35,7 +35,7 @@ class Admin::UsersController < AgentAuthController
     @user.responsible = policy_scope(User).find(params[:responsible_id]) if params[:responsible_id].present?
     prepare_new
     authorize(@user)
-    @user_form = Admin::UserForm.new(@user, view_locals: user_form_view_locals)
+    @user_form = user_form_object
     respond_modal_with @user_form
   end
 
@@ -64,17 +64,14 @@ class Admin::UsersController < AgentAuthController
   end
 
   def edit
-    @user_form = Admin::UserForm.new(@user, view_locals: user_form_view_locals)
+    @user_form = user_form_object
     authorize(@user)
     respond_modal_with @user_form if from_modal?
   end
 
   def update
-    @user_form = Admin::UserForm.new(
-      @user.tap { _1.assign_attributes(user_params) },
-      active_warnings_confirm_decision: params[:user][:active_warnings_confirm_decision],
-      view_locals: user_form_view_locals
-    )
+    @user.assign_attributes(user_params)
+    @user_form = user_form_object
     authorize(@user)
     @user.skip_reconfirmation! if @user.encrypted_password.blank?
     user_updated = @user_form.save
@@ -137,11 +134,7 @@ class Admin::UsersController < AgentAuthController
   def prepare_create
     @user = User.new(user_params.merge(invited_by: current_agent, created_through: "agent_creation"))
     @user.responsible.created_through = "agent_creation" if @user.responsible&.new_record?
-    @user_form = Admin::UserForm.new(
-      @user,
-      active_warnings_confirm_decision: params[:user][:active_warnings_confirm_decision],
-      view_locals: user_form_view_locals
-    )
+    @user_form = user_form_object
     @organisation = current_organisation
   end
 
@@ -154,8 +147,16 @@ class Admin::UsersController < AgentAuthController
     )
   end
 
-  def user_form_view_locals
-    { current_organisation: current_organisation, from_modal: from_modal?, request_referer: request.referer }
+  def user_form_object
+    Admin::UserForm.new(
+      @user,
+      active_warnings_confirm_decision: params.dig(:user, :active_warnings_confirm_decision),
+      view_locals: {
+        current_organisation: current_organisation,
+        from_modal: from_modal?,
+        request_referer: request.referer
+      }
+    )
   end
 
   def search_params
