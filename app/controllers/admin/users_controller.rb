@@ -45,7 +45,7 @@ class Admin::UsersController < AgentAuthController
     @user.skip_confirmation_notification!
     user_persisted = @user_form.save
 
-    @user.invite! if user_persisted && @user.email.present? && params[:invite_on_create] == "1"
+    @user.invite! if invite_user?(@user, params)
     prepare_new unless user_persisted
 
     if from_modal?
@@ -121,6 +121,10 @@ class Admin::UsersController < AgentAuthController
 
   def modal_return_location
     params[:return_location].presence || request.referer
+  end
+
+  def invite_user?(user, params)
+    user.persisted? && user.email.present? && (params[:invite_on_create] == "1")
   end
 
   def prepare_new
