@@ -89,7 +89,7 @@ Rails.application.routes.draw do
       mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
       resources :absences, only: [:index, :create]
       resources :users, only: [:create, :show] do
-        get "invite" => "users#invite", as: "invite_user"
+        get :invite, on: :member
       end
       resources :user_profiles, only: [:create]
     end
