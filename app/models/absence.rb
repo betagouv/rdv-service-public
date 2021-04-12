@@ -13,6 +13,9 @@ class Absence < ApplicationRecord
 
   default_scope -> { order(first_day: :desc, start_time: :desc) }
 
+  scope :future, -> { where(end_day: Time.zone.today..) }
+  scope :past, -> { where(end_day: ..Time.zone.today) }
+
   def title_or_default
     title.present? ? title : "Absence"
   end
