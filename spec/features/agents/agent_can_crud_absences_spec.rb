@@ -1,17 +1,18 @@
 describe "Agent can CRUD absences" do
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-  let!(:absence) { create(:absence, agent: agent, organisation: organisation) }
-  let!(:new_absence) { build(:absence, agent: agent, organisation: organisation) }
 
   before do
     login_as(agent, scope: :agent)
     visit authenticated_agent_root_path
-    click_link "Absences"
   end
 
   context "for an agent" do
-    it "default" do
+    let!(:absence) { create(:absence, agent: agent, organisation: organisation) }
+
+    it "can crud a absence" do
+      click_link "Absences"
+
       expect_page_title("Vos absences")
       click_link absence.title
 
@@ -29,13 +30,13 @@ describe "Agent can CRUD absences" do
       click_link "Créer une absence", match: :first
 
       expect_page_title("Nouvelle absence")
-      fill_in "Description", with: new_absence.title
-      fill_in "absence[first_day]", with: new_absence.first_day
-      fill_in "absence[end_day]", with: new_absence.first_day + 1.day
+      fill_in "Description", with: "Nouvelle Absence"
+      fill_in "absence[first_day]", with: Time.zone.today
+      fill_in "absence[end_day]", with: Time.zone.today + 2
       click_button "Enregistrer"
 
       expect_page_title("Vos absences")
-      click_link new_absence.title
+      click_link "Nouvelle Absence"
     end
   end
 
@@ -63,13 +64,31 @@ describe "Agent can CRUD absences" do
       click_link "Créer une absence", match: :first
 
       expect_page_title("Nouvelle absence")
-      fill_in "Description", with: new_absence.title
-      fill_in "absence[first_day]", with: new_absence.first_day
-      fill_in "absence[end_day]", with: new_absence.first_day + 1.day
+      fill_in "Description", with: "Nouvelle Absence"
+      fill_in "absence[first_day]", with: Time.zone.today
+      fill_in "absence[end_day]", with: Time.zone.today + 2
       click_button "Enregistrer"
 
       expect_page_title("Absences de Jane FAROU (PMI)")
-      click_link new_absence.title
+      click_link "Nouvelle Absence"
+    end
+  end
+
+  context "view past absences" do
+    let!(:future_absence) { create(:absence, agent: agent, organisation: organisation) }
+    let!(:past_absence) { create(:absence, :past, agent: agent, organisation: organisation) }
+
+    it do
+      click_link "Absences"
+      expect_page_title("Vos absences")
+
+      click_link "En cours"
+      expect(page).to have_content(future_absence.title)
+      expect(page).not_to have_content(past_absence.title)
+
+      click_link "Passées"
+      expect(page).to have_content(past_absence.title)
+      expect(page).not_to have_content(future_absence.title)
     end
   end
 end

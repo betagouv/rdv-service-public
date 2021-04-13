@@ -185,7 +185,6 @@ RSpec.describe Admin::AbsencesController, type: :controller do
       context "with invalid params" do
         let(:new_attributes) do
           {
-            first_day: "12/09/2019",
             start_time: "09:00",
             end_time: "07:00",
           }
