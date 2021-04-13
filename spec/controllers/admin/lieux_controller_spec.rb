@@ -119,5 +119,31 @@ RSpec.describe Admin::LieuxController, type: :controller do
       delete :destroy, params: { organisation_id: organisation.id, id: lieu.to_param }
       expect(response).to redirect_to(admin_organisation_lieux_path(organisation.id))
     end
+
+    it "render EDIT when lieu have rdvs" do
+      lieu = create(:lieu, organisation: organisation, rdvs: [create(:rdv)])
+      delete :destroy, params: { organisation_id: organisation.id, id: lieu.to_param }
+      expect(response).to render_template(:edit)
+    end
+
+    it "dont destroy lieu when it have rdvs" do
+      lieu = create(:lieu, organisation: organisation, rdvs: [create(:rdv)])
+      expect do
+        delete :destroy, params: { organisation_id: organisation.id, id: lieu.to_param }
+      end.not_to change(Lieu, :count)
+    end
+
+    it "render EDIT when lieu have plage ouvertures" do
+      lieu = create(:lieu, organisation: organisation, plage_ouvertures: [create(:plage_ouverture)])
+      delete :destroy, params: { organisation_id: organisation.id, id: lieu.to_param }
+      expect(response).to render_template(:edit)
+    end
+
+    it "dont destroy lieu when it have plage_ouvertures" do
+      lieu = create(:lieu, organisation: organisation, plage_ouvertures: [create(:plage_ouverture)])
+      expect do
+        delete :destroy, params: { organisation_id: organisation.id, id: lieu.to_param }
+      end.not_to change(PlageOuverture, :count)
+    end
   end
 end
