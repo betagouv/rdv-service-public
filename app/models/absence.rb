@@ -11,7 +11,7 @@ class Absence < ApplicationRecord
   validates :agent, :organisation, :first_day, presence: true
   validate :ends_at_should_be_after_starts_at
 
-  default_scope -> { order(first_day: :desc, start_time: :desc) }
+  scope :by_starts_at, -> { order(first_day: :desc, start_time: :desc) }
 
   scope :future, -> { where(end_day: Time.zone.today..) }
   scope :past, -> { where.not(end_day: Time.zone.today..) } # NOTE: brakeman doesn't support beginless ranges https://github.com/presidentbeef/brakeman/issues/1483

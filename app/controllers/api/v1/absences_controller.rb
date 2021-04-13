@@ -3,7 +3,7 @@ class Api::V1::AbsencesController < Api::V1::BaseController
     absences = policy_scope(Absence)
     absences = absences.where(organisation: Organisation.find(params[:organisation_id])) \
       if params[:organisation_id].present?
-    render json: AbsenceBlueprint.render(absences.limit(100).all, root: :absences)
+    render json: AbsenceBlueprint.render(absences.by_starts_at.limit(100).all, root: :absences)
   end
 
   def create

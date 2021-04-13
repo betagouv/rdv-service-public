@@ -68,7 +68,7 @@ describe "api/v1/absences requests", type: :request do
       it "works" do
         expect { subject }.to(change(Absence, :count).by(1))
         expect(response.status).to eq(200)
-        absence = Absence.first
+        absence = Absence.by_starts_at.first
         expect(absence.organisation).to eq(organisation)
         expect(absence.agent).to eq(agent)
         expect(absence.title).to eq("Congé parental")
@@ -121,7 +121,7 @@ describe "api/v1/absences requests", type: :request do
         it "returns an error" do
           expect { subject }.to(change(Absence, :count).by(1))
           expect(response.status).to eq(200)
-          expect(Absence.first.agent).to eq(agent2)
+          expect(Absence.by_starts_at.first.agent).to eq(agent2)
         end
       end
     end
