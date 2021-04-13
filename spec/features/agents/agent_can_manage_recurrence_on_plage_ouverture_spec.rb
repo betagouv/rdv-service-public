@@ -1,7 +1,9 @@
 describe "Agent can manage recurrence on plage d'ouverture" do
   let!(:organisation) { create(:organisation) }
-  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-  let!(:plage_ouverture) { create(:plage_ouverture, agent: agent, first_day: Time.zone.local(2019, 12, 3)) }
+  let!(:service) { create(:service) }
+  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+  let!(:motif) { create(:motif, name: "Suivi bonjour", organisation: organisation, service: service) }
+  let!(:plage_ouverture) { create(:plage_ouverture, agent: agent, organisation: organisation, first_day: Time.zone.local(2019, 12, 3)) }
 
   before do
     travel_to(Time.zone.local(2019, 12, 2))
@@ -10,11 +12,12 @@ describe "Agent can manage recurrence on plage d'ouverture" do
   end
 
   it "default", js: true do
-    expect_page_title("Modifier la plage d'ouverture")
+    expect_page_title("Modifier votre plage d'ouverture")
     expect_not_checked("recurrence_has_recurrence")
     expect(page).not_to have_text("Répéter tou(te)s les")
 
     # fill recurrence form
+    check "Suivi bonjour"
     check("recurrence_has_recurrence")
     expect(page).to have_text("Répéter tou(te)s les")
     check("recurrence_on_monday")
@@ -25,7 +28,7 @@ describe "Agent can manage recurrence on plage d'ouverture" do
     check("recurrence_on_saturday")
     fill_in("recurrence-until", with: "30/12/2019")
 
-    click_button("Modifier")
+    click_button("Enregistrer")
 
     # check if everything is ok in db
     expect(plage_ouverture.reload.recurrence.to_hash).to eq(
@@ -33,7 +36,8 @@ describe "Agent can manage recurrence on plage d'ouverture" do
       every: :week,
       interval: 1,
       on: %w[monday tuesday wednesday thursday friday saturday],
-      until: Time.zone.local(2019, 12, 30)
+      until: Time.zone.local(2019, 12, 30),
+      starts: Time.zone.local(2019, 12, 3)
     )
 
     # reload page to check if form is filled correctly
@@ -45,23 +49,25 @@ describe "Agent can manage recurrence on plage d'ouverture" do
     expect_checked("recurrence_on_thursday")
     expect_checked("recurrence_on_friday")
     expect_checked("recurrence_on_saturday")
-    expect(find_field("recurrence-until").value).to eq "2019-12-30"
+    expect(find_field("recurrence-until").value).to eq "30/12/2019"
 
     visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
     select("mois", from: "recurrence_every")
     expect(page).not_to have_text("Répéter les")
     expect(page).to have_text("Tous les 1er mardi du mois")
     fill_in("recurrence-source", with: "11/12/2019")
+    page.execute_script("document.querySelector('#recurrence-source').dispatchEvent(new CustomEvent('change'))") # NOTE: I don’t know why we need to trigger the event manually in the spec.
     select("1", from: "recurrence_interval")
     expect(page).to have_text("Tous les 2ème mercredi du mois")
-    click_button("Modifier")
+    click_button("Enregistrer")
 
     # check if everything is ok in db
     expect(plage_ouverture.reload.recurrence.to_hash).to eq(
       day: { 3 => [2] },
       every: :month,
       interval: 1,
-      until: Time.zone.local(2019, 12, 30)
+      until: Time.zone.local(2019, 12, 30),
+      starts: Time.zone.local(2019, 12, 11)
     )
 
     # reload page to check if form is filled correctly
@@ -70,7 +76,7 @@ describe "Agent can manage recurrence on plage d'ouverture" do
     expect(page).to have_select("recurrence_every", selected: "mois")
     expect(page).to have_select("recurrence_interval", selected: "1")
     expect(page).to have_text("Tous les 2ème mercredi du mois")
-    expect(find_field("recurrence-until").value).to eq "2019-12-30"
+    expect(find_field("recurrence-until").value).to eq "30/12/2019"
   end
 
   def expect_checked(element_selector)
