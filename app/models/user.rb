@@ -13,7 +13,7 @@ class User < ApplicationRecord
 
   # HACK : add *_sign_in_ip to accessor to bypass recording IPs from Trackable Devise's module
   # HACK : add sign_in_count and current_sign_in_at to accessor to bypass recording IPs from Trackable Devise's module
-  attr_accessor :skip_duplicate_warnings, :current_sign_in_ip, :last_sign_in_ip, :sign_in_count, :current_sign_in_at
+  attr_accessor :current_sign_in_ip, :last_sign_in_ip, :sign_in_count, :current_sign_in_at
 
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async,
@@ -35,7 +35,7 @@ class User < ApplicationRecord
   validates :last_name, :first_name, :created_through, presence: true
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validate :birth_date_validity
-  validate :user_is_not_duplicate, on: :create, unless: -> { errors[:email]&.present? } # to avoid two similar errors on duplicate email
+
   validates :created_through, inclusion: { in: %w[
     agent_creation user_sign_up franceconnect_sign_up user_relative_creation unknown
     agent_creation_api
@@ -105,15 +105,6 @@ class User < ApplicationRecord
     "user_#{id}@deleted.rdv-solidarites.fr"
   end
 
-  def dup_without_duplicate_user_errors
-    duplicate_user = dup
-    duplicate_user.valid?
-    duplicate_user.errors
-      .map { |k, v| k if v.include?("déjà utilisé") }.compact.uniq
-      .each { duplicate_user.errors.delete(_1) }
-    duplicate_user
-  end
-
   def deprecated_user_notes_for(organisation)
     UserNote.where(organisation: organisation, user: self).order("created_at desc")
   end
@@ -177,14 +168,6 @@ class User < ApplicationRecord
     errors.add(:birth_date, "est invalide")
   end
 
-  def user_is_not_duplicate
-    DuplicateUsersFinderService.perform_with(self)
-      .select { _1.severity == :error || !skip_duplicate_warnings? }
-      .each do |duplicate_result|
-      duplicate_result.attributes.each { |k| errors.add(k, "déjà utilisé") }
-    end
-  end
-
   def do_soft_delete(organisation)
     if organisation.present?
       organisations.delete(organisation)
@@ -194,9 +177,5 @@ class User < ApplicationRecord
     return save! if organisations.any? # only actually mark deleted when no orgas left
 
     update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email)
-  end
-
-  def skip_duplicate_warnings?
-    [true, "true", "1"].include?(skip_duplicate_warnings) # should be in controller
   end
 end

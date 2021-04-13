@@ -21,8 +21,7 @@ class Api::V1::UsersController < Api::V1::BaseController
 
     user = User.new(
       **user_params,
-      created_through: "agent_creation_api",
-      skip_duplicate_warnings: true
+      created_through: "agent_creation_api"
     )
     authorize(user)
     user.skip_confirmation_notification!
