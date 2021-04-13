@@ -33,6 +33,16 @@ class Api::V1::UsersController < Api::V1::BaseController
     end
   end
 
+  def invite
+    user = User.find(params[:id])
+    authorize(user)
+    user.invite! do |u|
+      u.skip_invitation = true
+      u.invited_by = pundit_user.agent
+    end
+    render json: { invitation_url: accept_user_invitation_url(invitation_token: user.raw_invitation_token) }
+  end
+
   private
 
   def user_params

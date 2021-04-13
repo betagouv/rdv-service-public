@@ -273,4 +273,29 @@ describe "api/v1/users requests", type: :request do
       end
     end
   end
+
+  describe "GET api/v1/users/:id/invite" do
+    context "authorized user ID" do
+      let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
+
+      it "works" do
+        get invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent)
+        expect(response.status).to eq(200)
+        response_parsed = JSON.parse(response.body)
+        expect(response_parsed["invitation_url"]).to be_present
+        expect(response_parsed["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=")
+      end
+    end
+
+    context "unauthorized user ID" do
+      let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
+
+      it "works" do
+        get invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent)
+        expect(response.status).to eq(403)
+        response_parsed = JSON.parse(response.body)
+        expect(response_parsed["errors"]).to be_present
+      end
+    end
+  end
 end
