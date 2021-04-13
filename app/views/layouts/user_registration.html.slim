@@ -10,11 +10,10 @@ html lang="fr"
         = yield :header
     .container
       .row
-        .col-md-12
-          = render 'layouts/flash'
-        .col-md-6.m-auto.pt-3
+        .col-md-8.m-auto.pt-3
           - if content_for :title
             h1.mb-3= yield :title
+          = render 'layouts/flash'
           = yield
 
     #modal-holder
