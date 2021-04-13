@@ -2,8 +2,8 @@ describe "Admin can configure the organisation" do
   let!(:organisation) { create(:organisation) }
   let!(:pmi) { create(:service, name: "PMI") }
   let!(:service_social) { create(:service, name: "Service social") }
-  let!(:agent_admin) { create(:agent, first_name: "Jeanne", last_name: "Dupont", email: "jeanne.dupont@love.fr", service: pmi, admin_role_in_organisations: [organisation]) }
-  let!(:agent_user) { create(:agent, first_name: "Tony", last_name: "Patrick", email: "tony@patrick.fr", service: pmi, basic_role_in_organisations: [organisation]) }
+  let!(:agent_admin) { create(:agent, first_name: "Jeanne", last_name: "Dupont", email: "jeanne.dupont@love.fr", services: [pmi], admin_role_in_organisations: [organisation]) }
+  let!(:agent_user) { create(:agent, first_name: "Tony", last_name: "Patrick", email: "tony@patrick.fr", services: [pmi], basic_role_in_organisations: [organisation]) }
   let!(:motif_libelle) { create(:motif_libelle, service: pmi, name: "Motif 1") }
   let!(:motif_libelle2) { create(:motif_libelle, service: pmi, name: "Motif 2") }
   let!(:motif_libelle3) { create(:motif_libelle, service: service_social, name: "Motif 3") }
@@ -65,7 +65,7 @@ describe "Admin can configure the organisation" do
     expect_page_title("Agents de Organisation n°1")
 
     click_link "Tony PATRICK"
-    expect_page_title("Modifier le rôle de l'agent Tony PATRICK")
+    expect_page_title("Modifier le rôle et les services de l'agent Tony PATRICK")
     choose :agent_role_level_admin
     click_button("Enregistrer")
 

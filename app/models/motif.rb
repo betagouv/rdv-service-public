@@ -39,10 +39,10 @@ class Motif < ApplicationRecord
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
     available_motifs = if agent.admin_in_organisation?(organisation)
                          all
-                       elsif agent.service.secretariat?
+                       elsif agent.secretariat?
                          for_secretariat
                        else
-                         where(service: agent.service)
+                         where(service: [agent.services])
                        end
     available_motifs.where(organisation_id: organisation.id).active.ordered_by_name
   }
@@ -78,10 +78,11 @@ class Motif < ApplicationRecord
   def authorized_agents
     Agent
       .joins(:organisations)
+      .joins(:services)
       .where(organisations: { id: organisation.id })
       .complete
       .active
-      .where(service: authorized_services)
+      .where("services.id" => authorized_services.map(&:id))
       .order_by_last_name
   end
 

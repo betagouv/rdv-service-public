@@ -42,7 +42,7 @@ describe "Agent can CRUD absences" do
 
   context "for an other agent calendar" do
     let!(:service) { create(:service, name: "PMI") }
-    let!(:other_agent) { create(:agent, first_name: "Jane", last_name: "FAROU", service: service, basic_role_in_organisations: [organisation]) }
+    let!(:other_agent) { create(:agent, first_name: "Jane", last_name: "FAROU", services: [service], basic_role_in_organisations: [organisation]) }
     let!(:absence) { create(:absence, agent: other_agent, organisation: organisation) }
 
     it "can crud a absence" do

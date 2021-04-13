@@ -36,9 +36,9 @@ describe PlageOuverture, type: :model do
     let!(:lieu) { create(:lieu, organisation: organisation) }
     let(:today) { Date.new(2019, 9, 19) }
     let(:six_days_later) { Date.new(2019, 9, 25) }
-    let(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
-    let(:agent2) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
-    let(:agent3) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
+    let(:agent) { create(:agent, services: [service], basic_role_in_organisations: [organisation]) }
+    let(:agent2) { create(:agent, services: [service], basic_role_in_organisations: [organisation]) }
+    let(:agent3) { create(:agent, services: [service], basic_role_in_organisations: [organisation]) }
     let!(:plage_ouverture) { create(:plage_ouverture, :weekly, agent: agent, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation) }
 
     it { expect(subject).to contain_exactly(plage_ouverture) }
@@ -129,7 +129,7 @@ describe PlageOuverture, type: :model do
     end
 
     describe "for other service" do
-      let(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
+      let(:agent) { create(:agent, services: [service], basic_role_in_organisations: [organisation]) }
 
       it { is_expected.to contain_exactly(motif, motif2, motif3) }
     end

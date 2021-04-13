@@ -7,6 +7,7 @@ class Admin::AbsencesController < AgentAuthController
 
   def index
     absences = policy_scope(Absence)
+      .joins(agent: [:services])
       .where(organisation: current_organisation)
       .where(agent_id: filter_params[:agent_id])
       .by_starts_at
@@ -80,6 +81,7 @@ class Admin::AbsencesController < AgentAuthController
 
   def set_absence
     @absence = policy_scope(Absence)
+      .joins(agent: [:services])
       .where(organisation: current_organisation)
       .find(params[:id])
   end

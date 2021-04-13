@@ -4,7 +4,7 @@ class Agent::AbsencePolicy < ApplicationPolicy
   def same_agent_or_has_access?
     agent_role_in_record_organisation.present? && (
       record.agent_id == current_agent.id ||
-      record.agent.service_id == current_agent.service_id ||
+      (record.agent.services & current_agent.services).any? ||
       agent_role_in_record_organisation.can_access_others_planning?
     )
   end
@@ -28,12 +28,13 @@ class Agent::AbsencePolicy < ApplicationPolicy
     include CurrentAgentInPolicyConcern
 
     def resolve
+      scope_a = scope.joins(agent: [:services])
       current_agent.roles.map do |agent_role|
         if agent_role.can_access_others_planning?
-          scope.joins(:agent).where(organisation_id: agent_role.organisation_id)
+          scope_a.where(organisation_id: agent_role.organisation_id)
         else
-          scope.joins(:agent).where(organisation_id: agent_role.organisation_id)
-            .where(agents: { service: current_agent.service })
+          scope_a.where(organisation_id: agent_role.organisation_id)
+            .where("services.id" => [current_agent.services.map(&:id)])
         end
       end.reduce(:or)
     end

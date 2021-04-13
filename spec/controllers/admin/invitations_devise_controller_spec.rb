@@ -4,7 +4,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
   let!(:organisation2) { create(:organisation) }
-  let(:service_id) { agent.service.id }
+  let(:service_id) { agent.services.first.id }
 
   before do
     request.env["devise.mapping"] = Devise.mappings[:agent]

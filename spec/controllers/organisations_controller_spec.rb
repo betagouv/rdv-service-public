@@ -12,7 +12,7 @@ describe OrganisationsController, type: :controller do
             level: "admin",
             agent_attributes: {
               email: "me@myself.hi",
-              service_id: service.id
+              services: [service]
             }
           }]
         }
@@ -34,7 +34,7 @@ describe OrganisationsController, type: :controller do
     it "renders :new when there is an error upon creation" do
       params = {
         organisation: {
-          name: "Ma nouvelle orga",
+          name: nil,
           territory_attributes: {
             departement_number: "56"
           },
@@ -42,7 +42,7 @@ describe OrganisationsController, type: :controller do
             level: "admin",
             agent_attributes: {
               email: "me@myself.hi",
-              service_id: "unknow" # this is the error
+              service_ids: []
             }
           }]
         }

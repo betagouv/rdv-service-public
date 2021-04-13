@@ -29,7 +29,7 @@ section.py-5.bg-lightturquoise.text-primary
               .form-row.mb-2
                 .col-lg-12= fff.input :email, label: "Votre email", placeholder: 'benoit.goulli@departement.fr', input_html: { class: "form-control-lg" }, wrapper_html: { class: 'mb-1 mb-lg-0' }
               .form-row.mb-2
-                .col-lg-12= fff.association :service, label: 'Votre service'
+                .col-lg-12= fff.association :services, label: 'Vos services', as: :check_boxes
           .form-row.d-flex.mb-2
             .col-lg-3.align-self-end
               = f.button :button, id: "search_submit", class: 'btn-secondary btn-lg w-100 text-center' do

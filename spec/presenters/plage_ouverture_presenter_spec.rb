@@ -5,9 +5,9 @@ describe PlageOuverturePresenter, type: :presenter do
     context "in scope same organisation" do
       let!(:organisation) { create(:organisation, name: "Ivry/Seine") }
       let!(:service) { create(:service) }
-      let!(:agent1) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
+      let!(:agent1) { create(:agent, services: [service], basic_role_in_organisations: [organisation]) }
       let!(:agent1_context) { AgentContext.new(agent1, organisation) }
-      let!(:agent2) { create(:agent, first_name: "Jeanne", last_name: "Longo", service: service, basic_role_in_organisations: [organisation]) }
+      let!(:agent2) { create(:agent, first_name: "Jeanne", last_name: "Longo", services: [service], basic_role_in_organisations: [organisation]) }
       let!(:lieu) { create(:lieu, name: "MDS du coin", organisation: organisation) }
       let!(:plage_ouverture) do
         create(

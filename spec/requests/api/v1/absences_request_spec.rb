@@ -100,9 +100,9 @@ describe "api/v1/absences requests", type: :request do
     end
 
     context "trying to create an absence for other agent in same orga but different service" do
-      let!(:agent) { create(:agent, service: create(:service)) }
+      let!(:agent) { create(:agent, services: [create(:service)]) }
       let!(:agent_role) { create(:agent_role, agent: agent, level: agent_role_level, organisation: organisation) }
-      let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation], service: create(:service)) }
+      let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation], services: [create(:service)]) }
       let(:params) { valid_params.merge(agent_id: agent2.id) }
 
       context "agent has no special role" do

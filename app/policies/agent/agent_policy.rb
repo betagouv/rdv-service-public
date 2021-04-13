@@ -29,8 +29,8 @@ class Agent::AgentPolicy < ApplicationPolicy
     include CurrentAgentInPolicyConcern
 
     def resolve
-      scope_j = scope.joins(:organisations)
-      if current_agent.service.secretariat?
+      scope_j = scope.joins(:organisations).joins(:services)
+      if current_agent.secretariat?
         scope_j.where(organisations: { id: current_agent.organisation_ids })
       else
         (
@@ -40,7 +40,7 @@ class Agent::AgentPolicy < ApplicationPolicy
               scope_j.where(organisations: { id: agent_role.organisation_id })
             else
               scope_j.where(organisations: { id: agent_role.organisation_id })
-                .where(service: current_agent.service)
+                .where("services.id" => [current_agent.services.map(&:id)])
             end
           end
         ).reduce(:or)

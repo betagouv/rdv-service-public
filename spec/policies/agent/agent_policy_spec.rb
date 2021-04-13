@@ -70,10 +70,10 @@ describe Agent::AgentPolicy::Scope, type: :policy do
     context "regular agent" do
       let!(:services) { create_list(:service, 2) }
       let!(:organisations) { create_list(:organisation, 2) }
-      let!(:agent) { create(:agent, basic_role_in_organisations: [organisations[0]], service: services[0]) }
-      let!(:other_agent_same_service) { create(:agent, basic_role_in_organisations: [organisations[0]], service: services[0]) }
-      let!(:other_agent_different_orga) { create(:agent, basic_role_in_organisations: [organisations[1]], service: services[0]) }
-      let!(:other_agent_different_service) { create(:agent, basic_role_in_organisations: [organisations[0]], service: services[1]) }
+      let!(:agent) { create(:agent, basic_role_in_organisations: [organisations[0]], services: [services[0]]) }
+      let!(:other_agent_same_service) { create(:agent, basic_role_in_organisations: [organisations[0]], services: [services[0]]) }
+      let!(:other_agent_different_orga) { create(:agent, basic_role_in_organisations: [organisations[1]], services: [services[0]]) }
+      let!(:other_agent_different_service) { create(:agent, basic_role_in_organisations: [organisations[0]], services: [services[1]]) }
 
       it { is_expected.to include(agent) }
       it { is_expected.to include(other_agent_same_service) }

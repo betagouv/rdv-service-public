@@ -1,7 +1,7 @@
 - content_for(:menu_item) { 'menu-agents' }
 
 - content_for :title do
-  | Modifier le rôle de l'agent #{@agent_role.agent.full_name}
+  | Modifier le rôle et les services de l'agent #{@agent_role.agent.full_name}
 
 - content_for :breadcrumb do
   ol.breadcrumb.m-0
@@ -22,7 +22,7 @@
         = simple_form_for [:admin, current_organisation, @agent_role] do |f|
           = render partial: 'layouts/model_errors', locals: { model: @agent_role }
           = f.simple_fields_for :agent do |ff|
-            = ff.input :service_id, collection: [@agent_role.agent.service], as: :select, label: 'Service', hint: "Vous ne pouvez pas changer un agent de service, cela créerait des incohérences. Si vous voulez vraiment réaliser cette opération, il faut supprimer et recréer le compte de l'agent", disabled: true
+            = ff.input :service_ids, collection: Service.all, as: :check_boxes, multiple: true, label: 'Service', hint: "Vous ne pouvez pas désaffecter un agent d'un service s'il est attaché à des rendez-vous, des plages d'ouvertures ou des absences."
 
           = f.input :organisation, as: :hidden
           = f.input :level, \

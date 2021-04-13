@@ -13,9 +13,7 @@ class Agent < ApplicationRecord
   include DeviseTokenAuth::Concerns::ConfirmableSupport
   include DeviseTokenAuth::Concerns::UserOmniauthCallbacks
 
-  belongs_to :service
   has_many :lieux, through: :organisation
-  has_many :motifs, through: :service
   has_many :plage_ouvertures, dependent: :destroy
   has_many :absences, dependent: :destroy
   has_many :agents_rdvs, dependent: :destroy
@@ -26,19 +24,21 @@ class Agent < ApplicationRecord
   has_many :territories, through: :territorial_roles
   has_and_belongs_to_many :users
 
+  has_many :agents_service, dependent: :destroy
+  has_many :services, through: :agents_service
   # Note about validation and Devise:
   # * Invitable#invite! creates the Agent without validation, but validates manually in advance (because we set validate_on_invite to true)
   # * it validates :email (the invite_key) specifically with Devise.email_regexp.
   validates :email, presence: true
   validates :last_name, :first_name, presence: true, on: :update
-  validate :service_cannot_be_changed
 
   scope :complete, -> { where.not(first_name: nil).where.not(last_name: nil) }
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
-  scope :secretariat, -> { joins(:service).where(services: { name: "Secrétariat".freeze }) }
-  scope :can_perform_motif, lambda { |motif|
-    motif.for_secretariat ? joins(:service).where(service: motif.service).or(secretariat) : where(service: motif.service)
+  scope :secretariat, -> { joins(:services).where(services: { name: "Secrétariat".freeze }) }
+  scope :can_perform_motif, lambda { |_motif|
+    []
+    # motif.for_secretariat ? joins(:services).where(services: motif.service).or(secretariat) : where(service: motif.service)
   }
   scope :within_organisation, lambda { |organisation|
     joins(:organisations).where(organisations: { id: organisation.id })
@@ -50,6 +50,10 @@ class Agent < ApplicationRecord
   before_save :normalize_account
 
   accepts_nested_attributes_for :roles
+
+  def secretariat?
+    services.map(&:secretariat?).include?(true)
+  end
 
   def complete?
     first_name.present? && last_name.present?
@@ -97,12 +101,6 @@ class Agent < ApplicationRecord
 
   def name_for_paper_trail
     "[Agent] #{full_name}"
-  end
-
-  def service_cannot_be_changed
-    return if new_record? || !service_id_changed?
-
-    errors.add(:service_id, "changement interdit")
   end
 
   def role_in_organisation(organisation)

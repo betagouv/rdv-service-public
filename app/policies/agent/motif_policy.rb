@@ -8,7 +8,7 @@ class Agent::MotifPolicy < Agent::AdminPolicy
       if context.can_access_others_planning?
         scope.where(organisation: current_organisation)
       else
-        scope.where(organisation: current_organisation, service: current_agent.service)
+        scope.where(organisation: current_organisation, service: [current_agent.services])
       end
     end
   end

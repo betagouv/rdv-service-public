@@ -15,7 +15,10 @@
         = simple_form_for [:admin, resource], as: resource_name, url: admin_agent_organisation_invitation_path(current_organisation, resource), html: { method: :post } do |f|
           = devise_error_messages!
           = f.input :email, placeholder: 'jean.dupond@departement.fr', input_html: { autocomplete: 'off'}
-          = f.association :service, collection: Agent::ServicePolicy::AdminScope.new(pundit_user, Service).resolve, include_blank: false, hint: "Attention, le service d'un agent est définitif, il ne pourra pas changer de service par la suite. Si un agent appartient à deux services il faut pour l'instant lui créer deux comptes avec deux emails différents."
+
+          = f.simple_fields_for :agent do |ff|
+            = ff.input :service_ids, collection: Service.all, as: :check_boxes, multiple: true, label: 'Service', hint: "Vous ne pouvez pas désaffecter un agent d'un service s'il est attaché à des rendez-vous, des plages d'ouvertures ou des absences."
+
           = f.simple_fields_for :roles do |ff|
             = ff.input :level, \
               collection: AgentRole::LEVELS, \

@@ -39,4 +39,17 @@ describe Agent, type: :model do
       expect(agent.uid).to eq("agent_#{agent.id}@deleted.rdv-solidarites.fr")
     end
   end
+
+  describe "#secretariat?" do
+    it "return false when agent not from secretariat service" do
+      secretariat = build(:service, :secretariat)
+      agent = build(:agent, services: [secretariat])
+      expect(agent.secretariat?).to be(true)
+    end
+
+    it "return true when agent from secretariat service" do
+      agent = build(:agent, services: [build(:service)])
+      expect(agent.secretariat?).to be(false)
+    end
+  end
 end

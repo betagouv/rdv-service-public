@@ -3,7 +3,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
 
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }
-  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
+  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation], services: [service]) }
   let!(:motif) { create(:motif, organisation: organisation, service: service) }
   let!(:lieu1) { create(:lieu, organisation: organisation, name: "MDS Sud", address: "10 rue Belsunce") }
 

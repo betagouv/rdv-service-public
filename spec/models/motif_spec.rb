@@ -54,7 +54,7 @@ describe Motif, type: :model do
     end
 
     describe "for other service" do
-      let(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
+      let(:agent) { create(:agent, services: [service], basic_role_in_organisations: [organisation]) }
 
       it { is_expected.to contain_exactly(motif, motif2, motif3) }
     end
@@ -78,9 +78,9 @@ describe Motif, type: :model do
     let(:org1) { create(:organisation) }
     let!(:service_pmi) { create(:service, name: "PMI") }
     let!(:service_secretariat) { create(:service, name: Service::SECRETARIAT) }
-    let!(:agent_pmi1) { create(:agent, basic_role_in_organisations: [org1], service: service_pmi) }
-    let!(:agent_pmi2) { create(:agent, basic_role_in_organisations: [org1], service: service_pmi) }
-    let!(:agent_secretariat1) { create(:agent, basic_role_in_organisations: [org1], service: service_secretariat) }
+    let!(:agent_pmi1) { create(:agent, basic_role_in_organisations: [org1], services: [service_pmi]) }
+    let!(:agent_pmi2) { create(:agent, basic_role_in_organisations: [org1], services: [service_pmi]) }
+    let!(:agent_secretariat1) { create(:agent, basic_role_in_organisations: [org1], services: [service_secretariat]) }
     let!(:motif) { create(:motif, service: service_pmi, organisation: org1) }
 
     it { is_expected.to match_array([agent_pmi1, agent_pmi2]) }
@@ -93,7 +93,7 @@ describe Motif, type: :model do
 
     context "agent from same service but different orga" do
       let(:org2) { create(:organisation) }
-      let!(:agent_pmi3) { create(:agent, basic_role_in_organisations: [org2], service: service_pmi) }
+      let!(:agent_pmi3) { create(:agent, basic_role_in_organisations: [org2], services: [service_pmi]) }
 
       it { is_expected.not_to include(agent_pmi3) }
     end

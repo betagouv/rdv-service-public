@@ -18,18 +18,18 @@ RSpec.describe Admin::AgentRolesController, type: :controller do
   end
 
   describe "POST #update" do
-    subject do
-      post :update, params: { organisation_id: organisation.id, id: agent_role.id, agent_role: { level: "admin" } }
+    subject(:post_update) do
+      post :update, params: { organisation_id: organisation.id, id: agent_role.id, agent_role: { level: "admin", agent_attributes: { service_ids: agent_user.services } } }
       agent_role.reload
     end
 
     it "returns a success response" do
-      subject
+      post_update
       expect(response).to redirect_to(admin_organisation_agents_path(organisation))
     end
 
     it "changes role" do
-      expect { subject }.to change(agent_role, :level).from(AgentRole::LEVEL_BASIC).to(AgentRole::LEVEL_ADMIN)
+      expect { post_update }.to change(agent_role, :level).from(AgentRole::LEVEL_BASIC).to(AgentRole::LEVEL_ADMIN)
     end
   end
 end

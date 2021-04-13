@@ -2,7 +2,7 @@ FactoryBot.define do
   sequence(:agent_email) { |n| "agent_#{n}@lapin.fr" }
 
   factory :agent do
-    service { create(:service) }
+    services { [create(:service)] }
     email { generate(:agent_email) }
     uid { email }
     first_name { Faker::Name.first_name }
@@ -44,7 +44,7 @@ FactoryBot.define do
       confirmed_at { nil }
     end
     trait :secretaire do
-      service { Service.find_by(name: "Secrétariat") || create(:service, :secretariat) }
+      services { [(Service.find_by(name: "Secrétariat") || create(:service, :secretariat))] }
     end
   end
 end

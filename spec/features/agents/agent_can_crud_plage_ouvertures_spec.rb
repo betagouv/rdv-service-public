@@ -2,7 +2,7 @@ describe "Agent can CRUD plage d'ouverture" do
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service, name: "PMI") }
   let!(:motif) { create(:motif, name: "Suivi bonjour", service: service, organisation: organisation) }
-  let!(:agent) { create(:agent, service: service, admin_role_in_organisations: [organisation]) }
+  let!(:agent) { create(:agent, services: [service], admin_role_in_organisations: [organisation]) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, agent: agent, organisation: organisation, title: "Permanence") }
   let(:new_plage_ouverture) { build(:plage_ouverture, lieu: lieu, agent: agent, organisation: organisation) }
@@ -70,7 +70,7 @@ describe "Agent can CRUD plage d'ouverture" do
   end
 
   context "for an other agent calendar" do
-    let!(:other_agent) { create(:agent, first_name: "Jane", last_name: "FAROU", service: service, basic_role_in_organisations: [organisation]) }
+    let!(:other_agent) { create(:agent, first_name: "Jane", last_name: "FAROU", services: [service], basic_role_in_organisations: [organisation]) }
     let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, agent: other_agent, organisation: organisation, title: "Permanence") }
 
     it "can crud a plage_ouverture" do
