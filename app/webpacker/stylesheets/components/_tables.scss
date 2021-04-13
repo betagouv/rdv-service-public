@@ -6,6 +6,9 @@
 
 // Custom table components (Custom)
 .table {
+  thead th {
+    border-top: 0;
+  }
   .table-user {
     img {
       height: 30px;
