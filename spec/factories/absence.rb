@@ -6,10 +6,14 @@ FactoryBot.define do
     agent { create(:agent, basic_role_in_organisations: [organisation]) }
 
     title { generate(:absence_title) }
-    first_day { Date.new(2019, 7, 4) }
+    first_day { Time.zone.tomorrow }
     start_time { Tod::TimeOfDay.new(10) }
     end_time { Tod::TimeOfDay.new(15, 30) }
     no_recurrence
+
+    trait :past do
+      first_day { Date.new(2019, 7, 4) }
+    end
 
     trait :no_recurrence do
       recurrence { nil }

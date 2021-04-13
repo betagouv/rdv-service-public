@@ -9,9 +9,17 @@ class Admin::AbsencesController < AgentAuthController
     absences = policy_scope(Absence)
       .where(organisation: current_organisation)
       .where(agent_id: filter_params[:agent_id])
+      .by_starts_at
     respond_to do |f|
       f.json { @absence_occurrences = absences.flat_map { |ab| ab.occurrences_for(date_range_params).map { |occurrence| [ab, occurrence] } }.sort_by(&:second) }
-      f.html { @absences = absences.includes(:organisation).page(filter_params[:page]) }
+      f.html do
+        @current_tab = filter_params[:current_tab]
+        @absences = absences
+          .includes(:organisation)
+          .page(filter_params[:page])
+        @absences = params[:current_tab] == "expired" ? @absences.past : @absences.future
+        @display_tabs = absences.past.any? || params[:current_tab] == "expired"
+      end
     end
   end
 
@@ -82,6 +90,6 @@ class Admin::AbsencesController < AgentAuthController
   end
 
   def filter_params
-    params.permit(:start, :end, :organisation_id, :agent_id, :page)
+    params.permit(:start, :end, :organisation_id, :agent_id, :page, :current_tab)
   end
 end

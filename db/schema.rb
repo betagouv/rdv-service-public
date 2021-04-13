@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_29_100143) do
+ActiveRecord::Schema.define(version: 2021_04_12_154510) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 2021_03_29_100143) do
     t.date "end_day", null: false
     t.time "end_time", null: false
     t.index ["agent_id"], name: "index_absences_on_agent_id"
+    t.index ["end_day"], name: "index_absences_on_end_day"
     t.index ["organisation_id"], name: "index_absences_on_organisation_id"
   end
 
