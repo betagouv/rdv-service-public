@@ -150,6 +150,10 @@ fr:
         one: 'Impossible d''enregistrer ce(tte) %{model} : 1 erreur'
         other: 'Impossible d''enregistrer ce(tte) %{model} : %{count} erreurs'
   helpers:
+    clone: Dupliquer
+    delete: Supprimer
+    edit: Modifier
+    show: Afficher
     select:
       prompt: Veuillez sélectionner
     submit:

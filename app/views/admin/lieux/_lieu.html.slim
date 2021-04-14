@@ -8,8 +8,12 @@ tr id="lieu_#{lieu.id}"
     - if policy([:agent, lieu]).edit? || policy([:agent, lieu]).destroy?
       .d-flex
         - if policy([:agent, lieu]).edit?
-          div.mr-3= link_to edit_admin_organisation_lieu_path(current_organisation, lieu), title: "Modifier" do
+          div.mr-3= link_to edit_admin_organisation_lieu_path(current_organisation, lieu),
+                  title: t("helpers.edit") do
             i.fa.fa-edit
         - if policy([:agent, lieu]).destroy?
-          div= link_to admin_organisation_lieu_path(current_organisation, lieu), method: :delete, title: "Supprimer", data: { confirm: "Confirmez-vous la suppression de ce lieu ?"} do
+          div= link_to admin_organisation_lieu_path(current_organisation, lieu),
+                  title: t("helpers.delete"),
+                  method: :delete,
+                  data: { confirm: "Confirmez-vous la suppression de ce lieu ?"} do
             i.fa.fa-trash-alt
