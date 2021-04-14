@@ -25,6 +25,19 @@ class Admin::AbsencesController < AgentAuthController
 
   def new
     @absence = Absence.new(organisation: current_organisation, agent: @agent)
+    if params[:duplicate_absence_id].present?
+      original_abs = Absence.find(params[:duplicate_absence_id])
+      defaults = original_abs.slice(:title, :first_day, :start_time, :end_day, :end_time, :recurrence)
+    else
+      defaults = {
+        first_day: Time.zone.tomorrow,
+        start_time: Tod::TimeOfDay.new(9),
+        end_time: Tod::TimeOfDay.new(18)
+      }
+    end
+
+    @absence = Absence.new(organisation: current_organisation, agent: @agent, **defaults)
+
     authorize(@absence)
   end
 
