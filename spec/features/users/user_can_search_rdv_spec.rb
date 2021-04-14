@@ -12,7 +12,7 @@ describe "User can search for rdvs" do
       visit root_path
     end
 
-    scenario "default", js: true do
+    it "default", js: true do
       # Step 1
       expect_page_h1("Prenez rendez-vous en ligne\navec votre département")
       fill_in("search_where", with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
@@ -88,7 +88,7 @@ describe "User can search for rdvs" do
       fill_in("Prénom", with: "Mathieu")
       fill_in("Nom", with: "Lapin")
       fill_in("Date de naissance", with: Date.yesterday)
-      click_button("Créer")
+      click_button("Enregistrer")
       expect(page).to have_content("Mathieu LAPIN")
 
       click_button("Continuer")
@@ -118,7 +118,7 @@ describe "User can search for rdvs" do
 
     after { travel_back }
 
-    scenario "for relatives", js: true do
+    it "for relatives", js: true do
       # Step 4
       expect(page).to have_content(user.full_name)
       expect(page).to have_content(relative.full_name)

@@ -11,7 +11,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
     sign_in agent
   end
 
-  after(:each) do
+  after do
     Devise.mailer.deliveries.clear
   end
 
@@ -19,18 +19,86 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
     subject { post :create, params: params }
 
     shared_examples "existing agent is added to organization" do
-      it "should not create a new agent" do
+      it "does not create a new agent" do
         expect { subject }.not_to change(Agent, :count)
       end
 
-      it "should redirect to the invitations list" do
+      it "redirects to the invitations list" do
         subject
         expect(response).to redirect_to(admin_organisation_invitations_path(organisation.id))
       end
 
-      it "should add agent to organisation" do
+      it "adds agent to organisation" do
         subject
         expect(assigns(:agent).organisation_ids).to include(organisation.id)
+      end
+    end
+
+    context "when trying to invite while not being an admin" do
+      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+
+      let(:params) do
+        {
+          organisation_id: organisation.id,
+          agent: {
+            email: "hacker@renard.com",
+            service_id: service_id,
+            roles_attributes: {
+              "0" => {
+                level: "basic"
+              }
+            }
+          }
+        }
+      end
+
+      it "rejects the change" do
+        expect { subject }.to raise_error(Pundit::NotAuthorizedError)
+        expect(Agent.last.email).not_to eq "hacker@renard.com"
+      end
+    end
+
+    context "when trying to invite to another organisation" do
+      let(:params) do
+        {
+          organisation_id: organisation2.id,
+          agent: {
+            email: "hacker@renard.com",
+            service_id: service_id,
+            roles_attributes: {
+              "0" => {
+                level: "basic"
+              }
+            }
+          }
+        }
+      end
+
+      it "rejects the change" do
+        expect { subject }.to raise_error(Pundit::NotAuthorizedError)
+        expect(Agent.last.email).not_to eq "hacker@renard.com"
+      end
+    end
+
+    context "when trying to set the role to another organisation" do
+      let(:params) do
+        {
+          organisation_id: organisation.id,
+          agent: {
+            email: "hacker@renard.com",
+            service_id: service_id,
+            roles_attributes: {
+              "0" => {
+                level: "basic",
+                organisation_id: organisation2.id
+              }
+            }
+          }
+        }
+      end
+
+      it "ignores the organisation param" do
+        expect(Agent.last.organisations).to eq [organisation]
       end
     end
 
@@ -43,24 +111,23 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
-                organisation_id: organisation.id
+                level: "basic"
               }
             }
           }
         }
       end
 
-      it "should create a new agent" do
+      it "creates a new agent" do
         expect { subject }.to change(Agent, :count).by(1)
       end
 
-      it "should redirect to invitations list" do
+      it "redirects to invitations list" do
         subject
         expect(response).to redirect_to(admin_organisation_invitations_path(organisation.id))
       end
 
-      it "should send an email" do
+      it "sends an email" do
         subject
         expect(Devise.mailer.deliveries.count).to eq(1)
       end
@@ -75,24 +142,23 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
-                organisation_id: organisation.id
+                level: "basic"
               }
             }
           }
         }
       end
 
-      it "should not create a new agent" do
+      it "does not create a new agent" do
         expect { subject }.not_to change(Agent, :count)
       end
 
-      it "should render new page" do
+      it "renders new page" do
         subject
         expect(response).to render_template(:new)
       end
 
-      it "should render errors" do
+      it "renders errors" do
         subject
         expect(assigns(:agent).errors[:email]).not_to be_empty
       end
@@ -107,8 +173,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
-                organisation_id: organisation.id
+                level: "basic"
               }
             }
           }
@@ -120,7 +185,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
 
         it_behaves_like "existing agent is added to organization"
 
-        it "should not send an email" do
+        it "does not send an email" do
           subject
           expect(Devise.mailer.deliveries.count).to eq(0)
         end
@@ -134,11 +199,13 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
 
       context "when agent is already in this organisation" do
         let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation]) }
+
         it { expect { subject }.not_to change(Agent, :count) }
       end
 
       context "when agent has been invited by this organisation" do
         let!(:agent2) { create(:agent, :not_confirmed, basic_role_in_organisations: [organisation]) }
+
         it { expect { subject }.not_to change(Agent, :count) }
       end
     end
@@ -152,8 +219,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic",
-                organisation_id: organisation.id
+                level: "basic"
               }
             }
           }

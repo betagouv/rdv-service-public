@@ -5,27 +5,32 @@ describe RdvsHelper do
 
   describe "#rdv_title_for_agent" do
     subject { helper.rdv_title_for_agent(rdv) }
-    it { should eq "Marie DENIS" }
+
+    it { is_expected.to eq "Marie DENIS" }
 
     context "multiple users" do
       let(:user2) { build(:user, first_name: "Lea", last_name: "CAVE") }
       let(:rdv) { build(:rdv, users: [user, user2], motif: motif) }
-      it { should eq "Marie DENIS et Lea CAVE" }
+
+      it { is_expected.to eq "Marie DENIS et Lea CAVE" }
     end
 
     context "created by user (reservable_online)" do
       let(:rdv) { build(:rdv, users: [user], motif: motif, created_by: :user) }
-      it { should eq "@ Marie DENIS" }
+
+      it { is_expected.to eq "@ Marie DENIS" }
     end
 
     context "phone RDV" do
       let(:rdv) { build(:rdv, :by_phone, users: [user]) }
-      it { should eq "Marie DENIS ☎️" }
+
+      it { is_expected.to eq "Marie DENIS ☎️" }
     end
 
     context "at home RDV" do
       let(:rdv) { build(:rdv, :at_home, users: [user]) }
-      it { should eq "Marie DENIS 🏠" }
+
+      it { is_expected.to eq "Marie DENIS 🏠" }
     end
   end
 
@@ -68,7 +73,20 @@ describe RdvsHelper do
         ["En salle d'attente", "waiting"],
         ["Absent excusé", "excused"]
       ]
-      rdv = build(:rdv, starts_at: now + 3.minutes)
+      rdv = build(:rdv, starts_at: now + 2.hours)
+      expect(rdv_possible_statuses_option_items(rdv)).to eq(expected)
+    end
+
+    it "return À venir, Vu, En salle d'attente et Excusé when rdv starts in less than an hour" do
+      now = DateTime.new(2020, 3, 23, 12, 46)
+      travel_to(now)
+      expected = [
+        ["À venir", "unknown"],
+        ["Vu", "seen"],
+        ["En salle d'attente", "waiting"],
+        ["Absent excusé", "excused"]
+      ]
+      rdv = build(:rdv, starts_at: now + 59.minutes)
       expect(rdv_possible_statuses_option_items(rdv)).to eq(expected)
     end
 

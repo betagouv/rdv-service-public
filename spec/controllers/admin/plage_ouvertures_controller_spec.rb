@@ -23,7 +23,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
         )
       end
 
-      it "should display the PO" do
+      it "displays the PO" do
         get :show, params: { organisation_id: organisation.id, id: plage_ouverture.id }
         expect(response).to be_successful
         expect(response.body).to include("Permanence")
@@ -43,6 +43,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
           agent: agent
         )
       end
+
       it "returns a success response" do
         get :index, params: { organisation_id: organisation.id, agent_id: agent.id }
         expect(response).to be_successful
@@ -51,6 +52,8 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
     end
 
     describe "GET #index.json" do
+      subject { get :index, params: { format: "json", organisation_id: organisation.id, agent_id: agent.id, start: start_date, end: end_date } }
+
       let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let!(:plage_ouverture) { create(:plage_ouverture, :every_two_weeks, title: "Une semaine sur deux les mercredis à partir du 17/07", first_day: Date.new(2019, 7, 17), lieu: lieu1, agent: agent, organisation: organisation, active_warnings_confirm_decision: true) }
       let!(:plage_ouverture2) { create(:plage_ouverture, :weekly, title: "Tous les lundis à partir du 22/07", first_day: Date.new(2019, 7, 22), lieu: lieu1, agent: agent, organisation: organisation, active_warnings_confirm_decision: true) }
@@ -60,8 +63,6 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
       before do
         sign_in agent
       end
-
-      subject { get :index, params: { format: "json", organisation_id: organisation.id, agent_id: agent.id, start: start_date, end: end_date } }
 
       before do
         subject
@@ -80,7 +81,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
         let(:start_date) { Date.new(2019, 7, 22) }
         let(:end_date) { Date.new(2019, 7, 28) }
 
-        it "should return 3 occurrences from plage_ouverture2 3 and 4" do
+        it "returns 3 occurrences from plage_ouverture2 3 and 4" do
           expect(@parsed_response.size).to eq(3)
 
           first = @parsed_response[0]
@@ -116,7 +117,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
         let(:start_date) { Date.new(2019, 7, 29) }
         let(:end_date) { Date.new(2019, 8, 4) }
 
-        it "should return two occurrences one from plage_ouverture and one from plage_ouverture2" do
+        it "returns two occurrences one from plage_ouverture and one from plage_ouverture2" do
           expect(@parsed_response.size).to eq(2)
 
           first = @parsed_response[0]
@@ -160,6 +161,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
           agent: agent
         )
       end
+
       it "returns a success response" do
         get :edit, params: { organisation_id: organisation.id, id: plage_ouverture.to_param }
         expect(response).to be_successful

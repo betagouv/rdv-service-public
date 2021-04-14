@@ -6,9 +6,10 @@ describe TransactionalSms::Reminder, type: :service do
   let(:user) { build(:user) }
 
   describe "#content" do
-    subject { TransactionalSms::Reminder.new(rdv, user).content }
-    it { should include("Rappel RDV PMI le vendredi 10/12 à 13h10") }
-    it { should include("MDS Centre (10 rue d'ici)") }
-    it { should include("Infos et annulation") }
+    subject { described_class.new(rdv, user).content }
+
+    it { is_expected.to include("Rappel RDV PMI le vendredi 10/12 à 13h10") }
+    it { is_expected.to include("MDS Centre (10 rue d'ici)") }
+    it { is_expected.to include("Infos et annulation") }
   end
 end

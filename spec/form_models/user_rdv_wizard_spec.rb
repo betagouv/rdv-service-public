@@ -20,7 +20,7 @@ describe UserRdvWizard do
   end
 
   describe "#new" do
-    it "should work" do
+    it "works" do
       returned_creneau = Creneau.new
 
       expect(Users::GeoSearch).to receive(:new)

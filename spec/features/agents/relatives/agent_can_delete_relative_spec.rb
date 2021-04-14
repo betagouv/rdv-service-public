@@ -15,7 +15,7 @@ describe "Agent can delete a relative" do
     click_link "Mimi LEGENDE"
   end
 
-  it "should work", js: true do
+  it "works", js: true do
     click_link("Supprimer")
     page.driver.browser.switch_to.alert.accept
     expect_page_title "Fiona LEGENDE"

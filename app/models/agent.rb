@@ -26,8 +26,11 @@ class Agent < ApplicationRecord
   has_many :territories, through: :territorial_roles
   has_and_belongs_to_many :users
 
+  # Note about validation and Devise:
+  # * Invitable#invite! creates the Agent without validation, but validates manually in advance (because we set validate_on_invite to true)
+  # * it validates :email (the invite_key) specifically with Devise.email_regexp.
   validates :email, presence: true
-  validates :last_name, :first_name, presence: true, on: :update, if: :accepted_or_not_invited?
+  validates :last_name, :first_name, presence: true, on: :update
   validate :service_cannot_be_changed
 
   scope :complete, -> { where.not(first_name: nil).where.not(last_name: nil) }

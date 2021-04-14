@@ -1,5 +1,7 @@
 describe ExportZonesService, type: :service do
   describe "#perform" do
+    subject { described_class.new(Zone.in_territory(territory)).perform }
+
     let!(:territory) { create(:territory, name: "Yvelines", departement_number: "78") }
     let!(:sector1) { create(:sector, name: "Yvelines Sud", human_id: "78-sud", territory: territory) }
     let!(:zone11) { create(:zone, sector: sector1, city_code: "78000", city_name: "Versailles") }
@@ -8,9 +10,7 @@ describe ExportZonesService, type: :service do
     let!(:zone22) { create(:zone, :level_street, sector: sector2, city_code: "78180", city_name: "Élancourt", street_name: "Rue du Hall", street_ban_id: "78180_001") }
     let!(:zone23) { create(:zone, :level_street, sector: sector2, city_code: "78180", city_name: "Élancourt", street_name: "Rue Allo Allo", street_ban_id: "78180_002") }
 
-    subject { ExportZonesService.new(Zone.in_territory(territory)).perform }
-
-    it "should work and order correctly" do
+    it "works and order correctly" do
       rows = xls_bytes_to_rows(subject)
       expect(rows.count).to eq 4
       expect(rows[0][:sector_name]).to eq("Yvelines Nord")

@@ -17,10 +17,10 @@ RSpec.describe Admin::MotifsController, type: :controller do
 
     context "with a filter query parameter" do
       it "returns motif list where name match" do
-        create(:motif, organisation: organisation)
-        bla_motif = create(:motif, name: "bla", organisation: organisation)
+        bla_motif = create(:motif, name: "Bla", organisation: organisation)
         get :index, params: { organisation_id: organisation.id, search: "bla" }
         expect(assigns(:motifs)).to eq([bla_motif])
+        expect(assigns(:unfiltered_motifs).sort).to eq([bla_motif, motif].sort)
       end
     end
   end
@@ -84,13 +84,13 @@ RSpec.describe Admin::MotifsController, type: :controller do
     end
 
     context "with old deleted motif name" do
+      subject do
+        post :create, params: { organisation_id: organisation.id, motif: valid_attributes }
+      end
+
       let!(:old_motif) { create(:motif, deleted_at: Time.now) }
       let(:valid_attributes) do
         build(:motif, name: old_motif.name).attributes
-      end
-
-      subject do
-        post :create, params: { organisation_id: organisation.id, motif: valid_attributes }
       end
 
       it "creates a new Motif" do

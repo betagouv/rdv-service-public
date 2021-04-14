@@ -12,6 +12,7 @@ describe "can see users' RDV" do
 
   context "with no RDV" do
     before { click_link user.full_name }
+
     it do
       expect(page).to have_content("À venir\n0 RDV")
       expect(page).to have_content("aucun RDV")
@@ -21,7 +22,9 @@ describe "can see users' RDV" do
   context "with one RDV" do
     let!(:motif) { create(:motif, organisation: organisation, service: service) }
     let!(:rdv) { create :rdv, :future, users: [user], organisation: organisation, motif: motif, agents: [agent] }
+
     before { click_link user.full_name }
+
     it do
       expect(page).to have_content("À venir\n1 RDV")
       click_link "Voir tous les rendez-vous de #{user.full_name}"

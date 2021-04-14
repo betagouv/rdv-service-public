@@ -1,4 +1,9 @@
 describe Motif, type: :model do
+  let(:motif_with_rdv) { create(:motif, :with_rdvs, organisation: organisation) }
+  let(:secretariat) { create(:service, :secretariat) }
+  let(:motif) { create(:motif, organisation: organisation) }
+  let!(:organisation) { create(:organisation) }
+
   it "have a valid factory" do
     expect(build(:motif)).to be_valid
   end
@@ -9,13 +14,9 @@ describe Motif, type: :model do
     expect(build(:motif, color: "#002233")).to be_valid
   end
 
-  let!(:organisation) { create(:organisation) }
-  let(:motif) { create(:motif, organisation: organisation) }
-  let(:secretariat) { create(:service, :secretariat) }
-  let(:motif_with_rdv) { create(:motif, :with_rdvs, organisation: organisation) }
-
   describe ".create when associated with secretariat" do
     let(:motif) { build(:motif, service: secretariat, organisation: organisation) }
+
     it {
       expect(motif.valid?).to be false
     }
@@ -30,12 +31,14 @@ describe Motif, type: :model do
     end
 
     it "doesn't delete the motif with rdvs" do
-      expect(Motif.all).to eq [motif_with_rdv]
+      expect(described_class.all).to eq [motif_with_rdv]
       expect(motif_with_rdv.reload.deleted_at).to eq @delation_time
     end
   end
 
   describe "#available_motifs_for_organisation_and_agent" do
+    subject { described_class.available_motifs_for_organisation_and_agent(motif.organisation, agent) }
+
     let(:service) { create(:service) }
     let!(:motif) { create(:motif, service: service, organisation: organisation) }
     let!(:motif2) { create(:motif, service: service, organisation: organisation) }
@@ -44,10 +47,9 @@ describe Motif, type: :model do
     let!(:motif5) { create(:motif, service: create(:service), organisation: organisation) }
     let(:plage_ouverture) { build(:plage_ouverture, agent: agent, organisation: organisation) }
 
-    subject { Motif.available_motifs_for_organisation_and_agent(motif.organisation, agent) }
-
     describe "for secretaire" do
       let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
+
       it { is_expected.to contain_exactly(motif3) }
     end
 
@@ -59,16 +61,20 @@ describe Motif, type: :model do
 
     describe "for admin" do
       let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+
       it { is_expected.to contain_exactly(motif, motif2, motif3, motif5) }
     end
 
     describe "for secretary admin" do
       let(:agent) { create(:agent, :secretaire, admin_role_in_organisations: [organisation]) }
+
       it { is_expected.to contain_exactly(motif, motif2, motif3, motif5) }
     end
   end
 
   describe "#authorized_agents" do
+    subject { motif.authorized_agents.to_a }
+
     let(:org1) { create(:organisation) }
     let!(:service_pmi) { create(:service, name: "PMI") }
     let!(:service_secretariat) { create(:service, name: Service::SECRETARIAT) }
@@ -77,19 +83,19 @@ describe Motif, type: :model do
     let!(:agent_secretariat1) { create(:agent, basic_role_in_organisations: [org1], service: service_secretariat) }
     let!(:motif) { create(:motif, service: service_pmi, organisation: org1) }
 
-    subject { motif.authorized_agents.to_a }
-
-    it { should match_array([agent_pmi1, agent_pmi2]) }
+    it { is_expected.to match_array([agent_pmi1, agent_pmi2]) }
 
     context "motif is available for secretariat" do
       let!(:motif) { create(:motif, service: service_pmi, organisation: org1, for_secretariat: true) }
-      it { should match_array([agent_pmi1, agent_pmi2, agent_secretariat1]) }
+
+      it { is_expected.to match_array([agent_pmi1, agent_pmi2, agent_secretariat1]) }
     end
 
     context "agent from same service but different orga" do
       let(:org2) { create(:organisation) }
       let!(:agent_pmi3) { create(:agent, basic_role_in_organisations: [org2], service: service_pmi) }
-      it { should_not include(agent_pmi3) }
+
+      it { is_expected.not_to include(agent_pmi3) }
     end
   end
 
@@ -124,21 +130,27 @@ describe Motif, type: :model do
 
   describe "search_by_name_with_location_type" do
     context "some matching motif name + type" do
-      subject { Motif.search_by_name_with_location_type("Rappel PMI-phone") }
+      subject { described_class.search_by_name_with_location_type("Rappel PMI-phone") }
+
       let!(:motif) { create(:motif, name: "Rappel PMI", location_type: :phone) }
-      it { should include(motif) }
+
+      it { is_expected.to include(motif) }
     end
 
     context "no matching motif name" do
-      subject { Motif.search_by_name_with_location_type("Rappel PMI-phone") }
+      subject { described_class.search_by_name_with_location_type("Rappel PMI-phone") }
+
       let!(:motif) { create(:motif, name: "Rien a voir", location_type: :phone) }
-      it { should be_empty }
+
+      it { is_expected.to be_empty }
     end
 
     context "nil param" do
-      subject { Motif.search_by_name_with_location_type(nil) }
+      subject { described_class.search_by_name_with_location_type(nil) }
+
       let!(:motif) { create(:motif, name: "Rappel PMI", location_type: :phone) }
-      it { should be_empty }
+
+      it { is_expected.to be_empty }
     end
   end
 end

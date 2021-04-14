@@ -13,7 +13,7 @@ describe "Agent can create user" do
     expect_page_title("Nouvel usager")
   end
 
-  it "should work" do
+  it "works" do
     fill_in :user_first_name, with: "Marco"
     fill_in :user_last_name, with: "Lebreton"
     click_button "Créer"
@@ -21,7 +21,7 @@ describe "Agent can create user" do
     expect(page).to have_no_content("Inviter")
     click_link "Modifier"
     fill_in "Email", with: "marco@lebreton.bzh"
-    click_button "Modifier"
+    click_button "Enregistrer"
     click_link "Inviter"
     open_email("marco@lebreton.bzh")
     expect(current_email.subject).to eq I18n.t("devise.mailer.invitation_instructions.subject")
@@ -32,7 +32,7 @@ describe "Agent can create user" do
       create(:user, first_name: "Cee-Lo", last_name: "GREEN", email: "ceelo@green.com", organisations: [create(:organisation)])
     end
 
-    it "should allow using existing user" do
+    it "allows using existing user" do
       fill_in :user_first_name, with: "Cee-Lo"
       fill_in :user_last_name, with: "Green"
       fill_in :user_email, with: "ceelo@green.com"

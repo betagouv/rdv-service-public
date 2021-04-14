@@ -1,4 +1,10 @@
 describe CreneauxBuilderService, type: :service do
+  subject do
+    plage_ouverture.update(expired_cached: false)
+    creneaux = described_class.perform_with(motif_name, lieu, next_7_days_range, **options)
+    creneaux.map { |c| creneau_to_hash(c, with_agent: options[:for_agents]) }
+  end
+
   let!(:organisation) { create(:organisation) }
   let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, reservable_online: reservable_online, organisation: organisation, location_type: :public_office) }
   let(:reservable_online) { true }
@@ -14,26 +20,21 @@ describe CreneauxBuilderService, type: :service do
   let(:next_7_days_range) { today..six_days_later }
 
   before { travel_to(now) }
+
   after { travel_back }
 
-  subject do
-    plage_ouverture.update(expired_cached: false)
-    creneaux = CreneauxBuilderService.perform_with(motif_name, lieu, next_7_days_range, **options)
-    creneaux.map { |c| creneau_to_hash(c, with_agent: options[:for_agents]) }
-  end
-
-  it "should work" do
+  it "works" do
     expect(subject.size).to eq(4)
-    is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-    is_expected.to include(starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-    is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-    is_expected.to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+    expect(subject).to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+    expect(subject).to include(starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+    expect(subject).to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+    expect(subject).to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
   end
 
   context "with motif not bookable reservable_online" do
     let(:reservable_online) { false }
 
-    it "should return 0 creneaux" do
+    it "returns 0 creneaux" do
       expect(subject.size).to eq(0)
     end
 
@@ -43,10 +44,10 @@ describe CreneauxBuilderService, type: :service do
       it do
         expect(subject.size).to eq(4)
 
-        is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
-        is_expected.to include(starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
-        is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
-        is_expected.to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
+        expect(subject).to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
+        expect(subject).to include(starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
+        expect(subject).to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
+        expect(subject).to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
       end
     end
   end
@@ -57,9 +58,9 @@ describe CreneauxBuilderService, type: :service do
     it do
       expect(subject.size).to eq(3)
 
-      is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 15.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 45.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 10.hours + 15.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 10.hours + 45.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
   end
 
@@ -106,9 +107,9 @@ describe CreneauxBuilderService, type: :service do
     it do
       expect(subject.size).to eq(3)
 
-      is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 15.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 45.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 10.hours + 15.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 10.hours + 45.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
   end
 
@@ -118,9 +119,9 @@ describe CreneauxBuilderService, type: :service do
     it do
       expect(subject.size).to eq(3)
 
-      is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
   end
 
@@ -130,10 +131,10 @@ describe CreneauxBuilderService, type: :service do
     it do
       expect(subject.size).to eq(4)
 
-      is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today.in_time_zone + 9.hours + 45.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 15.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 45.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 9.hours + 45.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 10.hours + 15.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 10.hours + 45.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
   end
 
@@ -143,9 +144,9 @@ describe CreneauxBuilderService, type: :service do
     it do
       expect(subject.size).to eq(3)
 
-      is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 15.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 45.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 10.hours + 15.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 10.hours + 45.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
   end
 
@@ -155,10 +156,10 @@ describe CreneauxBuilderService, type: :service do
     it do
       expect(subject.size).to eq(4)
 
-      is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
   end
 
@@ -169,9 +170,9 @@ describe CreneauxBuilderService, type: :service do
     it do
       expect(subject.size).to eq(3)
 
-      is_expected.to include(starts_at: today + 6.days + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today + 6.days + 9.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today + 6.days + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today + 6.days + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today + 6.days + 9.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today + 6.days + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
   end
 
@@ -190,12 +191,12 @@ describe CreneauxBuilderService, type: :service do
     it do
       expect(subject.size).to eq(6)
 
-      is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today.in_time_zone + 11.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today.in_time_zone + 11.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 11.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 11.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
 
     context "when the result is for agents" do
@@ -204,14 +205,14 @@ describe CreneauxBuilderService, type: :service do
       it do
         expect(subject.size).to eq(8)
 
-        is_expected.to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
-        is_expected.to include(starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
-        is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
-        is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
-        is_expected.to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
-        is_expected.to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
-        is_expected.to include(starts_at: today.in_time_zone + 11.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
-        is_expected.to include(starts_at: today.in_time_zone + 11.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
+        expect(subject).to include(starts_at: today.in_time_zone + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
+        expect(subject).to include(starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
+        expect(subject).to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
+        expect(subject).to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
+        expect(subject).to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
+        expect(subject).to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent.id, agent_name: agent.short_name)
+        expect(subject).to include(starts_at: today.in_time_zone + 11.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
+        expect(subject).to include(starts_at: today.in_time_zone + 11.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
       end
 
       context "when the result is filtered for agent2" do
@@ -220,21 +221,23 @@ describe CreneauxBuilderService, type: :service do
         it do
           expect(subject.size).to eq(4)
 
-          is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
-          is_expected.to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
-          is_expected.to include(starts_at: today.in_time_zone + 11.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
-          is_expected.to include(starts_at: today.in_time_zone + 11.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
+          expect(subject).to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
+          expect(subject).to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
+          expect(subject).to include(starts_at: today.in_time_zone + 11.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
+          expect(subject).to include(starts_at: today.in_time_zone + 11.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
         end
       end
 
       context "when the result is filtered with an empty agents set" do
         let(:options) { { agent_ids: [] } }
-        it { should be_empty }
+
+        it { is_expected.to be_empty }
       end
 
       context "when the result is filtered with an empty agents set, for agents" do
         let(:options) { { for_agents: true, agent_ids: [] } }
-        it { should be_empty }
+
+        it { is_expected.to be_empty }
       end
 
       context "when there is another motif with the same name but a different location_type" do
@@ -242,7 +245,7 @@ describe CreneauxBuilderService, type: :service do
         let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif, motif_home], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, agent: agent, organisation: organisation) }
         let(:options) { { for_agents: true, motif_location_type: :home } }
 
-        it "should include only the filtered one" do
+        it "includes only the filtered one" do
           expect(subject.pluck(:motif_id).uniq).to eq([motif_home.id])
         end
       end
@@ -253,7 +256,7 @@ describe CreneauxBuilderService, type: :service do
 
         let(:options) { { for_agents: true, motif_location_type: :home } }
 
-        it "should include only the filtered one" do
+        it "includes only the filtered one" do
           expect(subject.pluck(:motif_id).uniq).to eq([motif_home.id])
         end
       end
@@ -267,8 +270,8 @@ describe CreneauxBuilderService, type: :service do
     it do
       expect(subject.size).to eq(2)
 
-      is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
-      is_expected.to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
   end
 
@@ -279,14 +282,14 @@ describe CreneauxBuilderService, type: :service do
     it do
       expect(subject.size).to eq(1)
 
-      is_expected.to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
+      expect(subject).to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)
     end
   end
 
   context "past creneaux for users" do
     let(:now) { today.in_time_zone + 10.hours } # 10 am
 
-    it "should not appear" do
+    it "does not appear" do
       expect(subject.first[:starts_at].hour).to eq(10)
     end
   end
@@ -295,7 +298,7 @@ describe CreneauxBuilderService, type: :service do
     let(:now) { today.in_time_zone + 10.hours } # 10 am
     let(:options) { { for_agents: true } }
 
-    it "should not appear" do
+    it "does not appear" do
       expect(subject.first[:starts_at].hour).to eq(10)
     end
   end

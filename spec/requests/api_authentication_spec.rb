@@ -6,7 +6,7 @@ describe "API auth", type: :request do
   let!(:absence) { create(:absence, agent: agent, organisation: organisation) }
 
   context "login with wrong password" do
-    it "should return error" do
+    it "returns error" do
       post(
         api_v1_agent_with_token_auth_session_path,
         params: { email: agent.email, password: "blahblah" }.to_json,
@@ -18,7 +18,7 @@ describe "API auth", type: :request do
   end
 
   context "login with wrong email" do
-    it "should return error" do
+    it "returns error" do
       post(
         api_v1_agent_with_token_auth_session_path,
         params: { email: "blah@demo.rdv-sol.fr", password: "123456" }.to_json,

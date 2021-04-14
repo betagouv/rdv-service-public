@@ -14,10 +14,12 @@ RSpec.describe Admin::AbsencesController, type: :controller do
       end
 
       describe "for json format" do
-        let!(:absence1) { create(:absence, agent: agent, first_day: Date.new(2019, 7, 21), start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(10), organisation: organisation) }
-        let!(:absence2) { create(:absence, agent: agent, first_day: Date.new(2019, 8, 20), start_time: Tod::TimeOfDay.new(8), end_day: Date.new(2019, 8, 31), end_time: Tod::TimeOfDay.new(22), organisation: organisation) }
-
         subject { get :index, params: { format: "json", organisation_id: organisation.id, agent_id: agent.id, start: start_time, end: end_time } }
+
+        let!(:absence1) { create(:absence, agent: agent, first_day: Date.new(2019, 7, 21), start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(10), organisation: organisation) }
+        let(:expected_absence_starts_at) { expected_absence.starts_at }
+        let(:expected_absence_ends_at) { expected_absence.ends_at }
+        let!(:absence2) { create(:absence, agent: agent, first_day: Date.new(2019, 8, 20), start_time: Tod::TimeOfDay.new(8), end_day: Date.new(2019, 8, 31), end_time: Tod::TimeOfDay.new(22), organisation: organisation) }
 
         before do
           sign_in agent
@@ -25,12 +27,10 @@ RSpec.describe Admin::AbsencesController, type: :controller do
           @parsed_response = JSON.parse(response.body)
         end
 
-        let(:expected_absence_starts_at) { expected_absence.starts_at }
-        let(:expected_absence_ends_at) { expected_absence.ends_at }
         shared_examples "returns expected_absence" do
           it { expect(response).to have_http_status(:ok) }
 
-          it "should return absence1" do
+          it "returns absence1" do
             expect(@parsed_response.size).to eq(1)
 
             first = @parsed_response[0]
@@ -48,6 +48,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
           let(:end_time) { Time.zone.parse("27/07/2019 00:00") }
 
           let(:expected_absence) { absence1 }
+
           it_behaves_like "returns expected_absence"
         end
 
@@ -56,6 +57,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
           let(:end_time) { Time.zone.parse("21/08/2019 00:00") }
 
           let(:expected_absence) { absence2 }
+
           it_behaves_like "returns expected_absence"
         end
 
@@ -64,6 +66,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
           let(:end_time) { Time.zone.parse("1/09/2019 00:00") }
 
           let(:expected_absence) { absence2 }
+
           it_behaves_like "returns expected_absence"
         end
 
@@ -72,6 +75,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
           let(:end_time) { Time.zone.parse("27/08/2019 00:00") }
 
           let(:expected_absence) { absence2 }
+
           it_behaves_like "returns expected_absence"
         end
 
@@ -181,7 +185,6 @@ RSpec.describe Admin::AbsencesController, type: :controller do
       context "with invalid params" do
         let(:new_attributes) do
           {
-            first_day: "12/09/2019",
             start_time: "09:00",
             end_time: "07:00",
           }

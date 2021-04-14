@@ -3,7 +3,10 @@ div
   p Votre RDV #{@rdv.motif.service.name} du #{l(@rdv.starts_at, format: :human)} a bien été annulé.
 
   - if @rdv.lieu.present? && @rdv.reservable_online?
-    p Vous pouvez reprendre un rendez-vous en cliquant sur le lien ci-dessous.
+    - if @rdv.lieu&.phone_number.present?
+      p Vous pouvez reprendre un rendez-vous en cliquant sur le lien ci-dessous ou en appelant au #{link_to @rdv.lieu.phone_number, "tel:#{@rdv.lieu.phone_number_formatted}"}
+    - else
+      p Vous pouvez reprendre un rendez-vous en cliquant sur le lien ci-dessous
 
     .btn-wrapper
       = link_to 'Reprendre RDV', lieux_url(search: { \
@@ -12,3 +15,4 @@ div
         service: @rdv.motif.service.id, \
         where: @rdv.address \
       }), class:'btn btn-primary'
+

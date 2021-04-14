@@ -23,9 +23,18 @@ module AdminHelper
     @current_agent_role ||= current_agent.roles.find_by(organisation: current_organisation)
   end
 
+  # Build a dummy model linked the current_organisation to fetch its policy.
+  # eg. current_agent_can?(:create, Lieu)
   def current_agent_can?(action, klass)
-    # eg. current_agent_can?(:create, Lieu)
-    mock = klass.new(organisation: current_organisation)
+    if klass.reflections.include?("organisations")
+      # klass has_many :organisations
+      mock = klass.new(organisations: [current_organisation])
+    elsif klass.reflections.include?("organisation")
+      # klass has_one or belongs_to :organisation
+      mock = klass.new(organisation: current_organisation)
+    else
+      raise "Invalid klass for current_agent_can?: #{klass}  has no organisation association."
+    end
     policy([:agent, mock]).send("#{action}?")
   end
 end

@@ -8,11 +8,11 @@ describe Agent::TerritoryPolicy, type: :policy do
     let!(:agent) { create(:agent, role_in_territories: [territory]) }
 
     context "agent has role in territory" do
-      permissions(:show?) { it { should permit(pundit_context, territory) } }
+      permissions(:show?) { it { is_expected.to permit(pundit_context, territory) } }
     end
 
     context "agent does not have role in territory" do
-      permissions(:show?) { it { should_not permit(pundit_context, create(:territory)) } }
+      permissions(:show?) { it { is_expected.not_to permit(pundit_context, create(:territory)) } }
     end
   end
 end
@@ -20,7 +20,7 @@ end
 describe Agent::TerritoryPolicy::Scope, type: :policy do
   describe "#resolve?" do
     subject do
-      Agent::TerritoryPolicy::Scope.new(AgentContext.new(agent), Territory).resolve
+      described_class.new(AgentContext.new(agent), Territory).resolve
     end
 
     context "misc state" do
@@ -29,9 +29,9 @@ describe Agent::TerritoryPolicy::Scope, type: :policy do
       let!(:territory3) { create(:territory) }
       let!(:agent) { create(:agent, role_in_territories: [territory1, territory2]) }
 
-      it { should include(territory1) }
-      it { should include(territory2) }
-      it { should_not include(territory3) }
+      it { is_expected.to include(territory1) }
+      it { is_expected.to include(territory2) }
+      it { is_expected.not_to include(territory3) }
     end
   end
 end

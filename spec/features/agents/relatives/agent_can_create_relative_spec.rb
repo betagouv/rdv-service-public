@@ -12,7 +12,7 @@ describe "Agent can create a relative" do
     click_link "Fiona LEGENDE"
   end
 
-  it "should work" do
+  it "works" do
     expect(page).to have_content("Aucun proche")
     click_link "Ajouter un proche"
     fill_in :user_first_name, with: "Loulou"

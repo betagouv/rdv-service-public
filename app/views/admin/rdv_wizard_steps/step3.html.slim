@@ -7,7 +7,7 @@
     { step: 1, value: motif_name_with_location_type(@rdv.motif) }, \
     { step: 2, value: users_inline_list_for_agents(@rdv.users) } \
   ],
-  next_steps: [{step: 3}, {step: 4}] \
+  next_steps: [{step: 4}] \
 do
   = simple_form_for(@rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
     = render(partial: 'layouts/model_errors', locals: { model: @rdv_wizard, f: f })

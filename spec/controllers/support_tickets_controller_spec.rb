@@ -2,6 +2,8 @@ RSpec.describe SupportTicketsController, type: :controller do
   render_views
 
   describe "POST #create" do
+    subject { post(:create, params: { support_ticket: support_ticket_params }) }
+
     let(:support_ticket_form) { SupportTicketForm.new }
 
     before do
@@ -10,14 +12,14 @@ RSpec.describe SupportTicketsController, type: :controller do
         .and_return(support_ticket_form)
     end
 
-    subject { post(:create, params: { support_ticket: support_ticket_params }) }
-
     context "broken params" do
       let(:support_ticket_params) { { subject: "n'importe quoi" } }
+
       before do
         expect(support_ticket_form).to receive(:save).and_return(false)
       end
-      it { should render_template("static_pages/contact") }
+
+      it { is_expected.to render_template("static_pages/contact") }
     end
 
     context "valid params" do
@@ -31,8 +33,10 @@ RSpec.describe SupportTicketsController, type: :controller do
           departement: "73"
         }
       end
+
       before { expect(support_ticket_form).to receive(:save).and_return(true) }
-      it { should redirect_to(contact_path(anchor: "")) }
+
+      it { is_expected.to redirect_to(contact_path(anchor: "")) }
     end
   end
 end

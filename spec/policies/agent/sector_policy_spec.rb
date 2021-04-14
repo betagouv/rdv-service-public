@@ -10,13 +10,15 @@ describe Agent::SectorPolicy, type: :policy do
 
       context "agent has role in territory" do
         let!(:sector) { create(:sector, territory: territory) }
-        permissions(action) { it { should permit(pundit_context, sector) } }
+
+        permissions(action) { it { is_expected.to permit(pundit_context, sector) } }
       end
 
       context "agent does not have role in territory" do
         let!(:territory2) { create(:territory) }
         let!(:sector) { create(:sector, territory: territory2) }
-        permissions(action) { it { should_not permit(pundit_context, sector) } }
+
+        permissions(action) { it { is_expected.not_to permit(pundit_context, sector) } }
       end
     end
   end
@@ -25,7 +27,7 @@ end
 describe Agent::SectorPolicy::Scope, type: :policy do
   describe "#resolve?" do
     subject do
-      Agent::SectorPolicy::Scope.new(AgentContext.new(agent), Sector).resolve
+      described_class.new(AgentContext.new(agent), Sector).resolve
     end
 
     context "misc state" do
@@ -38,10 +40,10 @@ describe Agent::SectorPolicy::Scope, type: :policy do
       let!(:sector2) { create(:sector, territory: territory2) }
       let!(:sector3) { create(:sector, territory: territory3) }
 
-      it { should include(sector1) }
-      it { should include(sector1bis) }
-      it { should include(sector2) }
-      it { should_not include(sector3) }
+      it { is_expected.to include(sector1) }
+      it { is_expected.to include(sector1bis) }
+      it { is_expected.to include(sector2) }
+      it { is_expected.not_to include(sector3) }
     end
   end
 end

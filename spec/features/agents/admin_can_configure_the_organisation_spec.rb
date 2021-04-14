@@ -11,7 +11,6 @@ describe "Admin can configure the organisation" do
   let!(:user) { create(:user, organisations: [organisation]) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:secretariat) { create(:service, :secretariat) }
-  let(:le_nouveau_lieu) { build(:lieu, organisation: organisation) }
   let(:le_nouveau_motif) { build(:motif, name: "Motif 2", service: pmi, organisation: organisation) }
   let(:la_nouvelle_org) { build(:organisation) }
 
@@ -20,17 +19,25 @@ describe "Admin can configure the organisation" do
     visit authenticated_agent_root_path
   end
 
-  scenario "CRUD on lieux" do
+  it "CRUD on lieux" do
     click_link "Vos lieux"
     expect_page_title("Vos lieux de consultation")
 
-    click_link lieu.name
+    within("#lieu_#{lieu.id}") do
+      click_link "Modifier"
+    end
+
     expect_page_title("Modifier le lieu")
     fill_in "Nom", with: "Le nouveau lieu"
-    click_button("Modifier")
+    fill_in "Téléphone", with: "01 02 03 04 05"
+    click_button("Enregistrer")
 
     expect_page_title("Vos lieux de consultation")
-    click_link "Le nouveau lieu"
+
+    nouveau_lieu = Lieu.find_by(name: "Le nouveau lieu")
+    within("#lieu_#{nouveau_lieu.id}") do
+      click_link "Modifier"
+    end
 
     click_link("Supprimer")
 
@@ -40,25 +47,29 @@ describe "Admin can configure the organisation" do
     click_link "Ajouter un lieu", match: :first
 
     expect_page_title("Nouveau lieu")
-    fill_in "Nom", with: le_nouveau_lieu.name
-    fill_in "Adresse", with: le_nouveau_lieu.address
-    first("input#lieu_latitude", visible: false).set(32)
-    first("input#lieu_longitude", visible: false).set(2)
-    click_button "Créer"
+    fill_in "Nom", with: "Un autre nouveau lieu"
+    fill_in "Adresse", with: "3 Place de la Gare, Strasbourg, 67000, 67, Bas-Rhin, Grand Est"
+    first("input#lieu_latitude", visible: false).set(48.583844)
+    first("input#lieu_longitude", visible: false).set(7.735253)
+    click_button "Enregistrer"
     expect_page_title("Vos lieux de consultation")
-    click_link le_nouveau_lieu.name
+
+    le_nouveau_lieu = Lieu.find_by(name: "Un autre nouveau lieu")
+    within("#lieu_#{le_nouveau_lieu.id}") do
+      click_link "Modifier"
+    end
   end
 
-  scenario "CRUD on agents" do
+  it "CRUD on agents" do
     click_link "Vos agents"
-    expect_page_title("Vos agents")
+    expect_page_title("Agents de Organisation n°1")
 
     click_link "Tony PATRICK"
     expect_page_title("Modifier le rôle de l'agent Tony PATRICK")
     choose :agent_role_level_admin
-    click_button("Modifier")
+    click_button("Enregistrer")
 
-    expect_page_title("Vos agents")
+    expect_page_title("Agents de Organisation n°1")
     expect(page).to have_content("Admin", count: 2)
 
     click_link "Tony PATRICK"
@@ -78,18 +89,18 @@ describe "Admin can configure the organisation" do
     expect(current_email.subject).to eq I18n.t("devise.mailer.invitation_instructions.subject")
   end
 
-  scenario "Update organisation" do
+  it "Update organisation" do
     click_link "Votre organisation"
     click_link "Modifier"
     fill_in "Nom", with: la_nouvelle_org.name
     fill_in "Téléphone", with: la_nouvelle_org.phone_number
     fill_in "Horaires", with: la_nouvelle_org.horaires
-    click_button "Modifier"
+    click_button "Enregistrer"
 
     expect(page).to have_content("L'organisation a été modifiée.")
   end
 
-  scenario "CRUD on motifs", js: true do
+  it "CRUD on motifs", js: true do
     click_link "Paramètres"
     click_link "Vos motifs"
     expect_page_title("Vos motifs")
@@ -99,7 +110,7 @@ describe "Admin can configure the organisation" do
     click_link "Éditer"
     expect(page.find_by_id("motif_name")).to have_content(motif.name)
     select(motif_libelle2.name, from: :motif_name)
-    click_button("Modifier")
+    click_button("Enregistrer")
     expect(page).to have_content(motif_libelle2.name)
     expect_page_title("Motif Motif 2 (PMI)")
 
@@ -126,7 +137,7 @@ describe "Admin can configure the organisation" do
     expect(page).to have_select("motif[name]", with_options: ["", motif_libelle3.name], wait: 10)
     select(motif_libelle3.name, from: :motif_name)
     fill_in "Couleur", with: le_nouveau_motif.color
-    click_button "Créer"
+    click_button "Enregistrer"
     expect(page).to have_link(motif_libelle3.name)
   end
 end

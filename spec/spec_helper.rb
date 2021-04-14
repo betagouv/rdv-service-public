@@ -128,7 +128,7 @@ RSpec.configure do |config|
   #   # as the one that triggered the failure.
   #   Kernel.srand config.seed
 
-  config.before(:each) do
+  config.before do
     DatabaseCleaner.start
   end
 
@@ -136,7 +136,7 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = :truncation
   end
 
-  config.after(:each) do
+  config.after do
     DatabaseCleaner.clean
     ActionMailer::Base.deliveries.clear
   end

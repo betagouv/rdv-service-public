@@ -14,7 +14,7 @@ RSpec.describe Users::UsersController, type: :controller do
   describe "GET #edit" do
     subject { get :edit }
 
-    it "Should list relatives" do
+    it "lists relatives" do
       subject
       expect(response.body).to include("Mes proches")
       expect(response.body).to include("Katia GARCIA (28 ans)")

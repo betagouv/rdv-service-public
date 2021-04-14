@@ -10,7 +10,9 @@ RSpec.describe LieuxController, type: :controller do
   let(:mock_geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.all) }
 
   before { travel_to(now) }
+
   after { travel_back }
+
   before do
     allow(mock_geo_search).to receive(:attributed_organisations).and_return(Organisation.where(id: organisation.id))
     expect(Users::GeoSearch).to receive(:new)
@@ -21,6 +23,7 @@ RSpec.describe LieuxController, type: :controller do
   describe "GET #show" do
     context "pour un motif" do
       subject { get :show, params: { id: lieu, search: { departement: "62", city_code: "62100", where: "useless 12345", service: motif.service_id, motif_name_with_location_type: motif.name_with_location_type } } }
+
       before do
         expect(Users::CreneauxSearch).to receive(:new).with(
           user: nil,
@@ -69,8 +72,6 @@ RSpec.describe LieuxController, type: :controller do
     end
 
     context "pour un rendez-vous de suivi" do
-      let(:lieu) { create(:lieu, latitude: 50.63, longitude: 3.06, organisation: organisation) }
-      let(:motif) { create(:motif, reservable_online: true, follow_up: true, organisation: organisation) }
       subject do
         get :show, params: {
           id: lieu,
@@ -84,6 +85,9 @@ RSpec.describe LieuxController, type: :controller do
         }
       end
 
+      let(:lieu) { create(:lieu, latitude: 50.63, longitude: 3.06, organisation: organisation) }
+      let(:motif) { create(:motif, reservable_online: true, follow_up: true, organisation: organisation) }
+
       context "avec un usager non connecté" do
         it "redirige vers la page de login" do
           subject
@@ -95,7 +99,9 @@ RSpec.describe LieuxController, type: :controller do
       context "avec un usager connecté avec agent référent" do
         let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
         let(:user) { create(:user, agents: [agent]) }
+
         before { sign_in user }
+
         before do
           expect(Users::CreneauxSearch).to receive(:new).with(
             user: user,
@@ -144,6 +150,7 @@ RSpec.describe LieuxController, type: :controller do
 
       context "avec un usager connecté mais sans agent référents" do
         let(:user) { create(:user, agents: []) }
+
         before { sign_in user }
 
         it "annonce qu'il n'y a pas de créneaux parce que pas de référent" do
@@ -158,6 +165,8 @@ RSpec.describe LieuxController, type: :controller do
   end
 
   describe "GET #index" do
+    subject { get :index, params: { search: { departement: "62", city_code: "62100", where: "useless 12345", service: motif.service_id, motif_name_with_location_type: motif.name_with_location_type, latitude: lieu.latitude, longitude: lieu.longitude } } }
+
     before do
       expect(Lieu).to receive(:with_open_slots_for_motifs).and_return(Lieu.all)
       expect(Users::CreneauxSearch).to \
@@ -195,8 +204,6 @@ RSpec.describe LieuxController, type: :controller do
         )
       subject
     end
-
-    subject { get :index, params: { search: { departement: "62", city_code: "62100", where: "useless 12345", service: motif.service_id, motif_name_with_location_type: motif.name_with_location_type, latitude: lieu.latitude, longitude: lieu.longitude } } }
 
     before { subject }
 

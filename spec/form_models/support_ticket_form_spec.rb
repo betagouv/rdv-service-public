@@ -1,11 +1,12 @@
 describe SupportTicketForm do
   describe "#save" do
-    before { allow(Rails.env).to receive(:production?).and_return(true) }
     subject { support_ticket_form.save }
+
+    before { allow(Rails.env).to receive(:production?).and_return(true) }
 
     context "valid attributes" do
       let(:support_ticket_form) do
-        SupportTicketForm.new(
+        described_class.new(
           subject: "Je suis usager et je n'arrive pas à accéder à mon compte",
           first_name: "Jean",
           last_name: "Jacques",
@@ -15,7 +16,7 @@ describe SupportTicketForm do
         )
       end
 
-      it "should call API" do
+      it "calls API" do
         expect(ZammadApi).to receive(:create_ticket)
           .with(
             "jean@jacques.fr",
@@ -29,7 +30,7 @@ describe SupportTicketForm do
 
     context "invalid attributes" do
       let(:support_ticket_form) do
-        SupportTicketForm.new(
+        described_class.new(
           subject: "Je suis usager et je n'arrive pas à accéder à mon compte",
           first_name: "Jean",
           last_name: "Jacques",
@@ -39,7 +40,7 @@ describe SupportTicketForm do
         )
       end
 
-      it "should not call API" do
+      it "does not call API" do
         expect(ZammadApi).not_to receive(:create_ticket)
         res = subject
         expect(res).to eq false

@@ -1,5 +1,8 @@
 inherit_from: .rubocop_todo.yml
 
+require:
+  - rubocop-rspec
+
 AllCops:
   Exclude:
     - "vendor/bundle/**/*"
@@ -10,6 +13,9 @@ AllCops:
 
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
+
+Style/AsciiComments:
+  Enabled: false
 
 Style/NumericLiterals:
   Exclude:
@@ -41,3 +47,15 @@ Bundler/OrderedGems:
 
 Lint/EmptyBlock:
   Enabled: False
+
+RSpec/ContextWording:
+  Enabled: False
+
+RSpec/MultipleExpectations:
+  Enabled: False
+
+RSpec/ExampleLength:
+  Max: 10
+
+RSpec/MessageSpies:
+  EnforcedStyle: receive
