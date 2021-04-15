@@ -32,7 +32,7 @@ class ExtractSectors < ActiveRecord::Migration[6.0]
   private
 
   def organisations_with_zones
-    Organisation.where(id: Zone.select(:organisation_id).distinct.pluck(:organisation_id))
+    Organisation.where(id: Zone.select(:organisation_id).distinct.select(:organisation_id))
   end
 
   def migrate_organisation(organisation)

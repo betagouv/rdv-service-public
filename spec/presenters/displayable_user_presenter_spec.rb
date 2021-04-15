@@ -18,7 +18,7 @@ describe DisplayableUserPresenter, type: :presenter do
   end
 
   describe "delegation user's attributes" do
-    [:first_name, :last_name, :birth_name, :address, :affiliation_number, :number_of_children].each do |attribute|
+    %i[first_name last_name birth_name address affiliation_number number_of_children].each do |attribute|
       it "delegate #{attribute} to user" do
         organisation = build(:organisation)
         user = build(:user, organisations: [organisation])

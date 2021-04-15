@@ -28,14 +28,14 @@ module AgentUserFormHelper
         "data-togglable": true,
         "data-responsability-type": "responsible",
         class: ("d-none" if user.responsability_type != :responsible)
-      },
+      }
     }
   end
 
   def agent_user_form_input_toggle_opts(user)
-    [:responsible, :relative, :relative_new, :relative_existing].map do |key|
-      [key, send("agent_user_form_input_#{key}", user)]
-    end.to_h
+    %i[responsible relative relative_new relative_existing].index_with do |key|
+      send("agent_user_form_input_#{key}", user)
+    end
   end
 
   def agent_user_form_input_responsible(user)

@@ -39,7 +39,7 @@ class Organisation < ApplicationRecord
       id: SectorAttribution
         .level_organisation
         .where(sector_id: sectors.pluck(:id))
-        .pluck(:organisation_id)
+        .select(:organisation_id)
     )
   }
   scope :order_by_name, -> { order(Arel.sql("LOWER(name)")) }
@@ -49,11 +49,11 @@ class Organisation < ApplicationRecord
       .or(where.not(email: ["", nil]))
   }
   scope :with_upcoming_rdvs, lambda {
-    where(id: Rdv.future.distinct.pluck(:organisation_id))
+    where(id: Rdv.future.distinct.select(:organisation_id))
   }
 
   def notify_admin_organisation_created
-    return unless agents.present?
+    return if agents.blank?
 
     Admins::OrganisationMailer.organisation_created(agents.first, self).deliver_later
   end

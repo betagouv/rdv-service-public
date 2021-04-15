@@ -24,7 +24,7 @@ class MotifDashboard < Administrate::BaseDashboard
     max_booking_delay: Field::Number,
     deleted_at: Field::DateTime,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -32,53 +32,53 @@ class MotifDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = [
-    :id,
-    :name,
-    :organisation,
-    :service,
+  COLLECTION_ATTRIBUTES = %i[
+    id
+    name
+    organisation
+    service
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = [
-    :id,
-    :name,
-    :organisation,
-    :service,
-    :color,
-    :reservable_online,
-    :location_type,
-    :for_secretariat,
-    :restriction_for_rdv,
-    :instruction_for_rdv,
-    :default_duration_in_min,
-    :min_booking_delay,
-    :max_booking_delay,
-    :visibility_type,
-    :deleted_at,
-    :created_at,
-    :updated_at,
+  SHOW_PAGE_ATTRIBUTES = %i[
+    id
+    name
+    organisation
+    service
+    color
+    reservable_online
+    location_type
+    for_secretariat
+    restriction_for_rdv
+    instruction_for_rdv
+    default_duration_in_min
+    min_booking_delay
+    max_booking_delay
+    visibility_type
+    deleted_at
+    created_at
+    updated_at
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [
-    :name,
-    :color,
-    :reservable_online,
-    :location_type,
-    :for_secretariat,
-    :default_duration_in_min,
-    :organisation,
-    :service,
-    :min_booking_delay,
-    :max_booking_delay,
-    :visibility_type,
-    :restriction_for_rdv,
-    :instruction_for_rdv,
-    :deleted_at,
+  FORM_ATTRIBUTES = %i[
+    name
+    color
+    reservable_online
+    location_type
+    for_secretariat
+    default_duration_in_min
+    organisation
+    service
+    min_booking_delay
+    max_booking_delay
+    visibility_type
+    restriction_for_rdv
+    instruction_for_rdv
+    deleted_at
   ].freeze
 
   def display_resource(motif)

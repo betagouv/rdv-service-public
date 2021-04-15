@@ -10,7 +10,7 @@ class AddTokensToAgents < ActiveRecord::Migration[6.0]
       agent.provider = "email"
       agent.save!
     end
-    add_index :agents, [:uid, :provider], unique: true
+    add_index :agents, %i[uid provider], unique: true
   end
 
   def down

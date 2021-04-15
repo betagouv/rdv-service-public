@@ -20,7 +20,7 @@ class AgentDashboard < Administrate::BaseDashboard
     invitation_sent_at: Field::DateTime,
     deleted_at: Field::DateTime,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -28,41 +28,41 @@ class AgentDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = [
-    :id,
-    :email,
-    :first_name,
-    :last_name,
+  COLLECTION_ATTRIBUTES = %i[
+    id
+    email
+    first_name
+    last_name
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = [
-    :id,
-    :email,
-    :first_name,
-    :last_name,
-    :organisations,
-    :service,
-    :plage_ouvertures,
-    :absences,
-    :rdvs,
-    :invitation_sent_at,
-    :created_at,
-    :deleted_at,
-    :updated_at,
+  SHOW_PAGE_ATTRIBUTES = %i[
+    id
+    email
+    first_name
+    last_name
+    organisations
+    service
+    plage_ouvertures
+    absences
+    rdvs
+    invitation_sent_at
+    created_at
+    deleted_at
+    updated_at
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [
-    :email,
-    :first_name,
-    :last_name,
-    :organisations,
-    :service,
-    :deleted_at,
+  FORM_ATTRIBUTES = %i[
+    email
+    first_name
+    last_name
+    organisations
+    service
+    deleted_at
   ].freeze
 
   def display_resource(agent)

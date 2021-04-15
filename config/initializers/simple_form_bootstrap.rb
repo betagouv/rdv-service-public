@@ -408,14 +408,14 @@ SimpleForm.setup do |config|
   # Custom wrappers for input types. This should be a hash containing an input
   # type as key and the wrapper that will be used for all inputs with specified type.
   config.wrapper_mappings = {
-    boolean:       :vertical_boolean,
-    check_boxes:   :vertical_collection,
-    date:          :vertical_multi_select,
-    datetime:      :vertical_multi_select,
-    file:          :vertical_file,
+    boolean: :vertical_boolean,
+    check_boxes: :vertical_collection,
+    date: :vertical_multi_select,
+    datetime: :vertical_multi_select,
+    file: :vertical_file,
     radio_buttons: :vertical_collection,
-    range:         :vertical_range,
-    time:          :vertical_multi_select,
+    range: :vertical_range,
+    time: :vertical_multi_select
   }
 
   # enable custom form wrappers
@@ -433,13 +433,13 @@ end
 
 module InputGroup
   def prepend(_wrapper_options = nil)
-    span_tag = content_tag(:span, options[:prepend], class: "input-group-text")
-    template.content_tag(:div, span_tag, class: "input-group-prepend")
+    span_tag = tag.span(options[:prepend], class: "input-group-text")
+    template.tag.div(span_tag, class: "input-group-prepend")
   end
 
   def append(_wrapper_options = nil)
-    span_tag = content_tag(:span, options[:append], class: "input-group-text")
-    template.content_tag(:div, span_tag, class: "input-group-append")
+    span_tag = tag.span(options[:append], class: "input-group-text")
+    template.tag.div(span_tag, class: "input-group-append")
   end
 end
 

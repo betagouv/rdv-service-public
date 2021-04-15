@@ -416,7 +416,7 @@ _plage_ouverture_org_paris_nord_martine_classique = PlageOuverture.create!(
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(8),
   end_time: Tod::TimeOfDay.new(12),
-  recurrence: Montrose.every(:week, day: [1, 2, 3, 4, 5], interval: 1, starts: Date.tomorrow, on: [:monday, :tuesday, :thursday, :friday])
+  recurrence: Montrose.every(:week, day: [1, 2, 3, 4, 5], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday thursday friday])
 )
 _plage_ouverture_org_paris_nord_martine_mercredi = PlageOuverture.create!(
   title: "Permanence enfant",

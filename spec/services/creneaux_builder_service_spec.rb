@@ -350,7 +350,7 @@ describe CreneauxBuilderService, type: :service do
       lieu_id: creneau.lieu.id,
       motif_id: creneau.motif.id,
       agent_id: (creneau.agent_id if with_agent),
-      agent_name: (creneau.agent_name if with_agent),
+      agent_name: (creneau.agent_name if with_agent)
     }.compact
   end
 end

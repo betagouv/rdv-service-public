@@ -15,7 +15,7 @@ class ApplicationPolicy
     end
 
     def in_scope?(object)
-      return false unless object&.id.present?
+      return false if object&.id.blank?
 
       resolve.where(id: object.id).any?
     end

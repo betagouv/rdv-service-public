@@ -11,15 +11,15 @@ class WebhookEndpointDashboard < Administrate::BaseDashboard
     target_url: Field::String,
     organisation: Field::BelongsTo,
     secret: Field::String,
-    id: Field::Number,
+    id: Field::Number
   }.freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = [
-    :id,
-    :organisation,
-    :target_url,
+  SHOW_PAGE_ATTRIBUTES = %i[
+    id
+    organisation
+    target_url
   ].freeze
 
   # COLLECTION_ATTRIBUTES
@@ -27,19 +27,19 @@ class WebhookEndpointDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = [
-    :id,
-    :organisation,
-    :target_url,
+  COLLECTION_ATTRIBUTES = %i[
+    id
+    organisation
+    target_url
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [
-    :organisation,
-    :target_url,
-    :secret,
+  FORM_ATTRIBUTES = %i[
+    organisation
+    target_url
+    secret
   ].freeze
 
   # Overwrite this method to customize how rdvs are displayed

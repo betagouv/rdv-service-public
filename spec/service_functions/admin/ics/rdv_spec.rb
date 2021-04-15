@@ -1,6 +1,6 @@
 describe Admin::Ics::Rdv, type: :service do
   describe "#payload" do
-    [:name, :ical_uid, :summary, :ends_at, :sequence, :description, :address, :user_email].each do |key|
+    %i[name ical_uid summary ends_at sequence description address user_email].each do |key|
       it "return an hash with key #{key}" do
         user = build(:user)
         rdv = build(:rdv, users: [user])
@@ -104,7 +104,7 @@ describe Admin::Ics::Rdv, type: :service do
           description: "Infos et annulation:",
           address: "10 rue de la Ferronerie 44100 Nantes",
           user_email: "elisa@simon.fr",
-          ical_uid: "rdv_15@RDV Solidarités",
+          ical_uid: "rdv_15@RDV Solidarités"
         }
       end
 

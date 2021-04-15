@@ -1,5 +1,5 @@
 module User::FranceconnectFrozenFieldsConcern
-  FROZEN_FIELDS = [:first_name, :birth_name, :birth_date].freeze
+  FROZEN_FIELDS = %i[first_name birth_name birth_date].freeze
 
   extend ActiveSupport::Concern
 

@@ -6,11 +6,7 @@ class AgentAgenda
     @agent = agent
   end
 
-  def organisation_id
-    organisation.id
-  end
+  delegate :id, to: :organisation, prefix: true
 
-  def agent_id
-    agent.id
-  end
+  delegate :id, to: :agent, prefix: true
 end

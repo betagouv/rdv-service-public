@@ -1,5 +1,5 @@
 describe Admin::UserForm, type: :form do
-  subject { described_class.new(user, view_locals: { current_organisation: organisation, }) }
+  subject { described_class.new(user, view_locals: { current_organisation: organisation }) }
 
   let!(:organisation) { create(:organisation) }
 
@@ -76,7 +76,7 @@ describe Admin::UserForm, type: :form do
   end
 
   context "duplication warning bypassed" do
-    subject { described_class.new(user, active_warnings_confirm_decision: true, view_locals: { current_organisation: organisation, }) }
+    subject { described_class.new(user, active_warnings_confirm_decision: true, view_locals: { current_organisation: organisation }) }
 
     let(:user) { build(:user, first_name: "Jean", last_name: "Jacques", phone_number: "0101010101") }
     let!(:existing_user) { create(:user, first_name: "Jeannot", phone_number: "0101010101") }

@@ -143,7 +143,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
             agent_id: agent.id,
             first_day: "12/09/2019",
             start_time: "09:00",
-            end_time: "07:00",
+            end_time: "07:00"
           }
         end
 
@@ -168,7 +168,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
       context "with valid params" do
         let(:new_attributes) do
           {
-            title: "Le nouveau nom",
+            title: "Le nouveau nom"
           }
         end
 
@@ -186,7 +186,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
         let(:new_attributes) do
           {
             start_time: "09:00",
-            end_time: "07:00",
+            end_time: "07:00"
           }
         end
 

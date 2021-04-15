@@ -1,6 +1,6 @@
 describe Admin::Ics::PlageOuverture, type: :service do
   describe "#payload" do
-    [:name, :agent_email, :starts_at, :recurrence, :ical_uid, :title, :first_occurrence_ends_at, :address].each do |key|
+    %i[name agent_email starts_at recurrence ical_uid title first_occurrence_ends_at address].each do |key|
       it "return an hash with key #{key}" do
         plage_ouverture = build(:plage_ouverture)
         expect(described_class.payload(plage_ouverture)).to have_key(key)
@@ -59,7 +59,7 @@ describe Admin::Ics::PlageOuverture, type: :service do
     end
   end
 
-  [:create, :update, :destroy].each do |action|
+  %i[create update destroy].each do |action|
     describe "##{action}_payload_for" do
       it "return an hash with key action key and value #{action}" do
         expect(described_class.send("#{action}_payload", build(:plage_ouverture))[:action]).to eq(action)

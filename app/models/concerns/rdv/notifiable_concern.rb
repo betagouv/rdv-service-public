@@ -23,7 +23,7 @@ module Rdv::NotifiableConcern
   private
 
   def was_just_cancelled?
-    [:unknown, :waiting, :seen].include?(status_before_last_save&.to_sym) &&
-      [:excused, :notexcused].include?(status&.to_sym)
+    %i[unknown waiting seen].include?(status_before_last_save&.to_sym) &&
+      %i[excused notexcused].include?(status&.to_sym)
   end
 end

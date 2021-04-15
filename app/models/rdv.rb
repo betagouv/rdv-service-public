@@ -34,15 +34,15 @@ class Rdv < ApplicationRecord
   scope :future, -> { where("starts_at > ?", Time.zone.now) }
   scope :start_after, ->(time) { where("starts_at > ?", time) }
   scope :tomorrow, -> { where(starts_at: DateTime.tomorrow...DateTime.tomorrow + 1.day) }
-  scope :day_after_tomorrow, -> { where(starts_at: DateTime.tomorrow + 1.day...DateTime.tomorrow + 2.day) }
+  scope :day_after_tomorrow, -> { where(starts_at: DateTime.tomorrow + 1.day...DateTime.tomorrow + 2.days) }
   scope :for_today, -> { where(starts_at: Time.zone.now.beginning_of_day...Time.zone.now.end_of_day) }
-  scope :user_with_relatives, ->(responsible_id) { joins(:users).includes(:rdvs_users, :users).where("users.id IN (?)", [responsible_id, User.find(responsible_id).relatives.pluck(:id)].flatten) }
+  scope :user_with_relatives, ->(responsible_id) { joins(:users).includes(:rdvs_users, :users).where(users: { id: [responsible_id, User.find(responsible_id).relatives.pluck(:id)].flatten }) }
   scope :status, lambda { |status|
     case status.to_s
     when "unknown_past"
-      past.where(status: ["unknown", "waiting"])
+      past.where(status: %w[unknown waiting])
     when "unknown_future"
-      future.where(status: ["unknown", "waiting"])
+      future.where(status: %w[unknown waiting])
     else
       where(status: status)
     end
@@ -57,8 +57,8 @@ class Rdv < ApplicationRecord
   scope :starts_at_in_range, ->(range) { where("starts_at BETWEEN ? AND ?", range.begin, range.end) }
   scope :ordered_by_ends_at, -> { order(ENDS_AT_SQL) }
 
-  after_commit :reload_uuid, on: :create
   after_save :associate_users_with_organisation
+  after_commit :reload_uuid, on: :create
 
   def self.ongoing(time_margin: 0.minutes)
     where("starts_at <= ?", Time.zone.now + time_margin)
@@ -153,6 +153,6 @@ class Rdv < ApplicationRecord
 
   def reload_uuid
     # https://github.com/rails/rails/issues/17605
-    self[:uuid] = self.class.where(id: id).pluck(:uuid).first if attributes.key? "uuid"
+    self[:uuid] = self.class.where(id: id).pick(:uuid) if attributes.key? "uuid"
   end
 end
