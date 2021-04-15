@@ -1,7 +1,8 @@
 class UserBlueprint < Blueprinter::Base
   identifier :id
 
-  fields :first_name, :birth_name, :last_name, :email, :address, :phone_number, :birth_date, :responsible_id, :caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :notify_by_sms, :notify_by_email
+  fields  :first_name, :birth_name, :last_name, :email, :address, :phone_number, :birth_date, :responsible_id,
+          :caisse_affiliation, :affiliation_number, :family_situation, :number_of_children, :notify_by_sms, :notify_by_email, :invitation_created_at, :invitation_accepted_at
   association :responsible, blueprint: UserBlueprint
 
   association :user_profiles, blueprint: UserProfileBlueprint, view: :without_user do |user, options|
