@@ -44,7 +44,7 @@ class RestoreRdvContext < ActiveRecord::Migration[6.0]
 
   def find_rdv_matching_user_note(rdv)
     target_user = rdv.users.responsible.first || rdv.users.first
-    return nil unless target_user.present?
+    return nil if target_user.blank?
 
     UserNote.find_by(
       user: target_user,

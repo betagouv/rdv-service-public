@@ -153,6 +153,6 @@ class Rdv < ApplicationRecord
 
   def reload_uuid
     # https://github.com/rails/rails/issues/17605
-    self[:uuid] = self.class.where(id: id).pluck(:uuid).first if attributes.key? "uuid"
+    self[:uuid] = self.class.where(id: id).pick(:uuid) if attributes.key? "uuid"
   end
 end

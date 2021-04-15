@@ -20,7 +20,7 @@ class DuplicateUsersFinderService < BaseService
     return if user.email.blank?
 
     similar_user = users_in_scope.where(email: user.email).first
-    return nil unless similar_user.present?
+    return nil if similar_user.blank?
 
     OpenStruct.new(severity: :error, attributes: [:email], user: similar_user)
   end
@@ -33,7 +33,7 @@ class DuplicateUsersFinderService < BaseService
       last_name: user.last_name.upcase,
       birth_date: user.birth_date
     ).first
-    return nil unless similar_user.present?
+    return nil if similar_user.blank?
 
     OpenStruct.new(severity: :warning, attributes: [:first_name, :last_name, :birth_date], user: similar_user)
   end

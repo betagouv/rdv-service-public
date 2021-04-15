@@ -4,7 +4,7 @@ module User::ImprovedUnicityErrorConcern
   included do
     after_validation do
       email_taken_error = errors.details[:email]&.select { _1[:error] == :taken }&.first
-      next unless email_taken_error.present?
+      next if email_taken_error.blank?
 
       email_taken_error["id"] = User.where.not(id: id).where(email: email).first.id
     end

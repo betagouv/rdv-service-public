@@ -10,7 +10,7 @@ module User::NotificableConcern
   end
 
   def phone_number_mobile?
-    return false unless phone_number_formatted.present?
+    return false if phone_number_formatted.blank?
 
     Phonelib.parse(phone_number_formatted).types.include?(:mobile)
   end

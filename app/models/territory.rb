@@ -13,7 +13,7 @@ class Territory < ApplicationRecord
     joins(:roles).where(agent_territorial_roles: { agent_id: agent.id })
   }
   scope :with_upcoming_rdvs, lambda {
-    where(id: Organisation.with_upcoming_rdvs.distinct.pluck(:territory_id))
+    where(id: Organisation.with_upcoming_rdvs.distinct.select(:territory_id))
   }
 
   before_create :fill_name_for_departements

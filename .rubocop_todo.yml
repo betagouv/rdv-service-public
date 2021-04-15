@@ -158,24 +158,6 @@ RSpec/VerifiedDoubles:
     - 'spec/services/upsert_user_for_franceconnect_service_spec.rb'
 
 
-# Offense count: 17
-# Cop supports --auto-correct.
-# Configuration parameters: NilOrEmpty, NotPresent, UnlessPresent.
-Rails/Blank:
-  Exclude:
-    - 'app/models/concerns/user/improved_unicity_error_concern.rb'
-    - 'app/models/concerns/user/notificable_concern.rb'
-    - 'app/models/organisation.rb'
-    - 'app/policies/application_policy.rb'
-    - 'app/presenters/displayable_user_presenter.rb'
-    - 'app/service_functions/admin/ics/plage_ouverture.rb'
-    - 'app/services/duplicate_users_finder_service.rb'
-    - 'app/services/search_creneaux_for_agents_service.rb'
-    - 'db/migrate/20200608122449_add_lieu_to_rdv.rb'
-    - 'db/migrate/20200803164154_move_user_and_rdv_notes_to_user_notes.rb'
-    - 'db/migrate/20200903072742_restore_rdv_context.rb'
-    - 'spec/factories/service.rb'
-
 # Offense count: 40
 # Cop supports --auto-correct.
 Rails/ContentTag:

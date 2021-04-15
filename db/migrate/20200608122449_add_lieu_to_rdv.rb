@@ -6,7 +6,7 @@ class AddLieuToRdv < ActiveRecord::Migration[6.0]
       next if rdv.location.blank?
 
       lieu = Lieu.find_by(address: rdv.location)
-      next unless lieu.present?
+      next if lieu.blank?
 
       rdv.update!(lieu_id: lieu.id, location: nil)
     end
