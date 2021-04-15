@@ -283,17 +283,6 @@ Rails/UniqueValidationWithoutIndex:
     - 'app/models/sector.rb'
     - 'app/models/service.rb'
 
-# Offense count: 129
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: nested, compact
-Style/ClassAndModuleChildren:
-  Enabled: false
-
-# Offense count: 326
-Style/Documentation:
-  Enabled: false
-
 # Offense count: 566
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.
