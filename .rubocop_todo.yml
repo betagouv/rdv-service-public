@@ -6,18 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 13
-# Cop supports --auto-correct.
-# Configuration parameters: AllowMultipleStyles, EnforcedHashRocketStyle, EnforcedColonStyle, EnforcedLastArgumentHashStyle.
-# SupportedHashRocketStyles: key, separator, table
-# SupportedColonStyles: key, separator, table
-# SupportedLastArgumentHashStyles: always_inspect, always_ignore, ignore_implicit, ignore_explicit
-Layout/HashAlignment:
-  Exclude:
-    - 'config/environments/production.rb'
-    - 'config/initializers/simple_form.rb'
-    - 'config/initializers/simple_form_bootstrap.rb'
-
 # Offense count: 73
 # Configuration parameters: IgnoredMethods, CountRepeatedAttributes.
 Metrics/AbcSize:
@@ -210,21 +198,6 @@ Rails/ContentTag:
 # SupportedStyles: strict, flexible
 Rails/Date:
   Enabled: false
-
-# Offense count: 10
-# Cop supports --auto-correct.
-# Configuration parameters: EnforceForPrefixed.
-Rails/Delegate:
-  Exclude:
-    - 'app/fields/enum_field.rb'
-    - 'app/models/agent_agenda.rb'
-    - 'app/models/motif.rb'
-    - 'app/models/recurrence/occurrence.rb'
-    - 'app/models/stat.rb'
-    - 'app/policies/default_agent_policy.rb'
-    - 'app/presenters/admin/rdv_user_presenter.rb'
-    - 'app/service_models/time_slot.rb'
-    - 'config/initializers/recurrence_monkey_patch.rb'
 
 # Offense count: 8
 # Configuration parameters: EnforcedStyle.

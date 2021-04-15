@@ -73,9 +73,7 @@ class Motif < ApplicationRecord
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
   end
 
-  def service_name
-    service.name
-  end
+  delegate :name, to: :service, prefix: true
 
   def authorized_agents
     Agent

@@ -36,6 +36,18 @@ Rails/CreateTableWithTimestamps:
     - 'db/migrate/20201005094454_extract_sectors.rb'
     - 'db/migrate/20210301135256_create_territories.rb'
 
+Rails/Delegate:
+  Exclude:
+    - 'config/initializers/recurrence_monkey_patch.rb'
+
+Rails/DynamicFindBy:
+  Exclude:
+    - 'spec/features/agents/admin_can_configure_the_organisation_spec.rb'
+
+Rails/RakeEnvironment:
+  Exclude:
+    - 'lib/tasks/matomo.rake'
+
 Rails/ReversibleMigration:
   Exclude:
     - 'db/migrate/20200401145901_remove_by_phone_from_motifs.rb'

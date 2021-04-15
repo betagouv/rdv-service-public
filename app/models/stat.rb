@@ -4,9 +4,7 @@ class Stat
 
   DEFAULT_FORMAT = "%d/%m/%Y".freeze
 
-  def users_active
-    users.active
-  end
+  delegate :active, to: :users, prefix: true
 
   def users_group_by_week
     users.active.group_by_week("users.created_at", format: DEFAULT_FORMAT).count
