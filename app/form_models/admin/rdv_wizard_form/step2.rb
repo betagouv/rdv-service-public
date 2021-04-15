@@ -4,7 +4,10 @@ class Admin::RdvWizardForm::Step2
   validate :phone_number_present_for_motif_by_phone
 
   def phone_number_present_for_motif_by_phone
-    errors.add(:base, I18n.t("activerecord.attributes.rdv.phone_number_missing")) if rdv.motif.phone? && users.all? { _1.phone_number.blank? }
+    return unless rdv.motif.phone?
+
+    users_to_notify = users.map(&:user_to_notify)
+    errors.add(:base, I18n.t("activerecord.attributes.rdv.phone_number_missing")) if users_to_notify.none?{ _1.phone_number.present? }
   end
 
   def success_path

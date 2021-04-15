@@ -2,7 +2,6 @@ describe Admin::RdvWizardForm::Step2 do
   let(:organisation) { build(:organisation) }
   let!(:agent) { create(:agent) }
   let!(:user) { create(:user) }
-  let(:rdv_attributes) { { user_ids: [user.id] } }
 
   describe "#save" do
     it "return true when everything is ok" do
@@ -57,6 +56,19 @@ describe Admin::RdvWizardForm::Step2 do
         starts_at: Time.zone.now,
         motif_id: motif.id,
         user_ids: [user1.id, user2.id],
+      }
+      rdv_wizard = described_class.new(agent, organisation, attributes)
+      expect(rdv_wizard.save).to be true
+    end
+
+    it "return true when motif by phone and responsible user has phone number" do
+      motif = create(:motif, :by_phone, organisation: organisation)
+      user1 = create(:user, phone_number: "0649494949", organisations: [organisation])
+      user2 = create(:user, phone_number: nil, responsible: user1, organisations: [organisation])
+      attributes = {
+        starts_at: Time.zone.now,
+        motif_id: motif.id,
+        user_ids: [user2.id],
       }
       rdv_wizard = described_class.new(agent, organisation, attributes)
       expect(rdv_wizard.save).to be true
