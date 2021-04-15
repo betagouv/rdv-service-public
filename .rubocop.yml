@@ -20,12 +20,6 @@ Bundler/OrderedGems:
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 
-Lint/MissingSuper:
-  Enabled: false
-
-Lint/EmptyBlock:
-  Enabled: False
-
 Rails/ApplicationController:
   Exclude:
     - 'app/controllers/api/v1/base_controller.rb'
@@ -58,18 +52,8 @@ Rails/ReversibleMigration:
 Style/AsciiComments:
   Enabled: false
 
-Style/HashEachMethods:
-  Enabled: true
-
-Style/HashTransformKeys:
-  Enabled: true
-
-Style/HashTransformValues:
-  Enabled: true
-
 Style/StringLiterals:
   EnforcedStyle: double_quotes
-  Enabled: true
 
 RSpec/ContextWording:
   Enabled: False
