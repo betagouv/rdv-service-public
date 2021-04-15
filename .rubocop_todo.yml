@@ -169,25 +169,6 @@ RSpec/VerifiedDoubles:
     - 'spec/services/notifications/rdv/rdv_upcoming_reminder_service_spec.rb'
     - 'spec/services/upsert_user_for_franceconnect_service_spec.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: Include.
-# Include: app/models/**/*.rb
-Rails/ActiveRecordCallbacksOrder:
-  Exclude:
-    - 'app/models/rdv.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Rails/ApplicationController:
-  Exclude:
-    - 'app/controllers/api/v1/base_controller.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Rails/ApplicationRecord:
-  Exclude:
-    - 'app/models/user_note.rb'
 
 # Offense count: 17
 # Cop supports --auto-correct.
@@ -223,15 +204,6 @@ Rails/ContentTag:
     - 'app/helpers/user_notifications_helper.rb'
     - 'app/helpers/users_helper.rb'
     - 'config/initializers/simple_form_bootstrap.rb'
-
-# Offense count: 3
-# Configuration parameters: Include.
-# Include: db/migrate/*.rb
-Rails/CreateTableWithTimestamps:
-  Exclude:
-    - 'db/migrate/20200427093834_create_agents_users_join_table.rb'
-    - 'db/migrate/20201005094454_extract_sectors.rb'
-    - 'db/migrate/20210301135256_create_territories.rb'
 
 # Offense count: 52
 # Configuration parameters: EnforcedStyle.

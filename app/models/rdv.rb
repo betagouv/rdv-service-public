@@ -57,8 +57,8 @@ class Rdv < ApplicationRecord
   scope :starts_at_in_range, ->(range) { where("starts_at BETWEEN ? AND ?", range.begin, range.end) }
   scope :ordered_by_ends_at, -> { order(ENDS_AT_SQL) }
 
-  after_commit :reload_uuid, on: :create
   after_save :associate_users_with_organisation
+  after_commit :reload_uuid, on: :create
 
   def self.ongoing(time_margin: 0.minutes)
     where("starts_at <= ?", Time.zone.now + time_margin)

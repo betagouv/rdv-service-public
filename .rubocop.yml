@@ -13,8 +13,28 @@ AllCops:
   NewCops: enable
   TargetRubyVersion: 2.7.2
 
+Bundler/OrderedGems:
+  Exclude:
+    - 'Gemfile'
+
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
+
+Lint/MissingSuper:
+  Enabled: false
+
+Lint/EmptyBlock:
+  Enabled: False
+
+Rails/ApplicationController:
+  Exclude:
+    - 'app/controllers/api/v1/base_controller.rb'
+
+Rails/CreateTableWithTimestamps:
+  Exclude:
+    - 'db/migrate/20200427093834_create_agents_users_join_table.rb'
+    - 'db/migrate/20201005094454_extract_sectors.rb'
+    - 'db/migrate/20210301135256_create_territories.rb'
 
 Style/AsciiComments:
   Enabled: false
@@ -32,20 +52,7 @@ Style/StringLiterals:
   EnforcedStyle: double_quotes
   Enabled: true
 
-Lint/MissingSuper:
-  Enabled: false
-
-Bundler/OrderedGems:
-  Exclude:
-    - 'Gemfile'
-
-Lint/EmptyBlock:
-  Enabled: False
-
 RSpec/ContextWording:
-  Enabled: False
-
-RSpec/MultipleExpectations:
   Enabled: False
 
 RSpec/ExampleLength:
@@ -53,3 +60,6 @@ RSpec/ExampleLength:
 
 RSpec/MessageSpies:
   EnforcedStyle: receive
+
+RSpec/MultipleExpectations:
+  Enabled: False
