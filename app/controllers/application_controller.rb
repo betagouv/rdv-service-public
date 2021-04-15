@@ -23,13 +23,13 @@ class ApplicationController < ActionController::Base
   def respond_modal_with(*args, &blk)
     options = args.extract_options!
     options[:responder] = ModalResponder
-    respond_with *args, options, &blk
+    respond_with(*args, options, &blk)
   end
 
   def respond_right_bar_with(*args, &blk)
     options = args.extract_options!
     options[:responder] = RightBarResponder
-    respond_with *args, options, &blk
+    respond_with(*args, options, &blk)
   end
 
   def demo?

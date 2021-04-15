@@ -34,7 +34,6 @@ class Agents::RegistrationsController < Devise::RegistrationsController
     redirect_to root_path
   end
 
-
   private
 
   def prevent_if_upcoming_rdvs

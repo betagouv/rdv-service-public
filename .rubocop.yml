@@ -9,6 +9,7 @@ AllCops:
     - "vendor/bundle/**/*"
     - "bin/*"
     - "node_modules/**/*"
+    - 'db/schema.rb'
   NewCops: enable
   TargetRubyVersion: 2.7.2
 
@@ -18,10 +19,6 @@ Layout/MultilineMethodCallIndentation:
 Style/AsciiComments:
   Enabled: false
 
-Style/NumericLiterals:
-  Exclude:
-    - "db/schema.rb"
-
 Style/HashEachMethods:
   Enabled: true
 
@@ -30,10 +27,6 @@ Style/HashTransformKeys:
 
 Style/HashTransformValues:
   Enabled: true
-
-Metrics/BlockLength:
-  Exclude:
-    - 'db/schema.rb'
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes

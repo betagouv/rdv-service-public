@@ -6,20 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Layout/EmptyLines:
-  Exclude:
-    - 'app/controllers/agents/registrations_controller.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, no_empty_lines
-Layout/EmptyLinesAroundBlockBody:
-  Exclude:
-    - 'db/schema.rb'
-
 # Offense count: 13
 # Cop supports --auto-correct.
 # Configuration parameters: AllowMultipleStyles, EnforcedHashRocketStyle, EnforcedColonStyle, EnforcedLastArgumentHashStyle.
@@ -31,12 +17,6 @@ Layout/HashAlignment:
     - 'config/environments/production.rb'
     - 'config/initializers/simple_form.rb'
     - 'config/initializers/simple_form_bootstrap.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-Lint/AmbiguousOperator:
-  Exclude:
-    - 'app/controllers/application_controller.rb'
 
 # Offense count: 73
 # Configuration parameters: IgnoredMethods, CountRepeatedAttributes.
