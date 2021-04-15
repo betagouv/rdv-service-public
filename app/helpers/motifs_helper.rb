@@ -13,7 +13,7 @@ module MotifsHelper
     tag.span(motif_name_with_location_type(motif)) + motif_badges(motif)
   end
 
-  def motif_badges(motif, only: [:reservable_online, :secretariat, :follow_up])
+  def motif_badges(motif, only: %i[reservable_online secretariat follow_up])
     only.select { motif.send("#{_1}?") }.map { build_badge_tag_for(_1) }.join.html_safe
   end
 

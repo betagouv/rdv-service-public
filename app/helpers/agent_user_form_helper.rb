@@ -33,7 +33,7 @@ module AgentUserFormHelper
   end
 
   def agent_user_form_input_toggle_opts(user)
-    [:responsible, :relative, :relative_new, :relative_existing].index_with do |key|
+    %i[responsible relative relative_new relative_existing].index_with do |key|
       send("agent_user_form_input_#{key}", user)
     end
   end

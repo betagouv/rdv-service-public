@@ -1,7 +1,7 @@
 class Admin::AbsencesController < AgentAuthController
   respond_to :html, :json
 
-  before_action :set_absence, only: [:show, :edit, :update, :destroy]
+  before_action :set_absence, only: %i[show edit update destroy]
   before_action :build_absence, only: [:create]
   before_action :set_agent
 

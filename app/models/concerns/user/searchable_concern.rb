@@ -17,7 +17,7 @@ module User::SearchableConcern
           {
             ignoring: :accents,
             using: { tsearch: { prefix: true } },
-            against: [:first_name, :last_name, :birth_name, :email],
+            against: %i[first_name last_name birth_name email],
             query: query
           }
         end

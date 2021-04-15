@@ -31,7 +31,7 @@ OptionParser.new do |parser|
   end
 end.parse!
 
-[:app_name, :containers_name, :containers_amount].each do |required_opt|
+%i[app_name containers_name containers_amount].each do |required_opt|
   raise StandardError, "missing option #{required_opt}" if options[required_opt].nil?
 end
 

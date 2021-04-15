@@ -4,7 +4,7 @@ describe Agent::ZonePolicy, type: :policy do
   let!(:territory) { create(:territory) }
   let(:pundit_context) { AgentContext.new(agent) }
 
-  [:new?, :create?, :destroy?].each do |action|
+  %i[new? create? destroy?].each do |action|
     describe "##{action}" do
       let!(:agent) { create(:agent, role_in_territories: [territory]) }
 

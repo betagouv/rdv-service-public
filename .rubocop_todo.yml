@@ -295,14 +295,6 @@ Style/Documentation:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-# Offense count: 152
-# Cop supports --auto-correct.
-# Configuration parameters: .
-# SupportedStyles: percent, brackets
-Style/SymbolArray:
-  EnforcedStyle: percent
-  MinSize: 20
-
 # Offense count: 546
 # Cop supports --auto-correct.
 # Configuration parameters: AutoCorrect, AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.

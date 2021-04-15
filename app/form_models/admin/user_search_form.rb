@@ -19,7 +19,7 @@ class Admin::UserSearchForm
   end
 
   def to_query
-    [:organisation_id, :agent_id, :search]
+    %i[organisation_id agent_id search]
       .map { [_1, send(_1)] }.to_h
   end
 end

@@ -19,7 +19,7 @@ class Motif < ApplicationRecord
 
   validates :visibility_type, inclusion: { in: VISIBILITY_TYPES }
   validates :sectorisation_level, inclusion: { in: SECTORISATION_TYPES }
-  validates :name, presence: true, uniqueness: { scope: [:organisation, :location_type, :service], conditions: -> { where(deleted_at: nil) }, message: "est déjà utilisé pour un motif avec le même type de RDV" }
+  validates :name, presence: true, uniqueness: { scope: %i[organisation location_type service], conditions: -> { where(deleted_at: nil) }, message: "est déjà utilisé pour un motif avec le même type de RDV" }
 
   delegate :service_social?, to: :service
 

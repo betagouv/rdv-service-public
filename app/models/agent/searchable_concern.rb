@@ -7,7 +7,7 @@ module Agent::SearchableConcern
       :search_by_text,
       ignoring: :accents,
       using: { tsearch: { prefix: true } },
-      against: [:first_name, :last_name, :email]
+      against: %i[first_name last_name email]
     )
   end
 end

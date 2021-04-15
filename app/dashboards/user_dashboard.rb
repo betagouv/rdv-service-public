@@ -34,55 +34,55 @@ class UserDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = [
-    :id,
-    :first_name,
-    :last_name
+  COLLECTION_ATTRIBUTES = %i[
+    id
+    first_name
+    last_name
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = [
-    :organisations,
-    :id,
-    :first_name,
-    :last_name,
-    :birth_name,
-    :email,
-    :address,
-    :phone_number,
-    :birth_date,
-    :responsible,
-    :relatives,
-    :caisse_affiliation,
-    :affiliation_number,
-    :family_situation,
-    :number_of_children,
-    :rdvs,
-    :created_at,
-    :updated_at,
-    :deleted_at
+  SHOW_PAGE_ATTRIBUTES = %i[
+    organisations
+    id
+    first_name
+    last_name
+    birth_name
+    email
+    address
+    phone_number
+    birth_date
+    responsible
+    relatives
+    caisse_affiliation
+    affiliation_number
+    family_situation
+    number_of_children
+    rdvs
+    created_at
+    updated_at
+    deleted_at
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [
-    :organisations,
-    :responsible,
-    :relatives,
-    :first_name,
-    :last_name,
-    :birth_name,
-    :email,
-    :address,
-    :phone_number,
-    :birth_date,
-    :caisse_affiliation,
-    :affiliation_number,
-    :family_situation,
-    :number_of_children,
-    :deleted_at
+  FORM_ATTRIBUTES = %i[
+    organisations
+    responsible
+    relatives
+    first_name
+    last_name
+    birth_name
+    email
+    address
+    phone_number
+    birth_date
+    caisse_affiliation
+    affiliation_number
+    family_situation
+    number_of_children
+    deleted_at
   ].freeze
 
   def display_resource(user)

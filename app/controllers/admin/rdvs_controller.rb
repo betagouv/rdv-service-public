@@ -1,7 +1,7 @@
 class Admin::RdvsController < AgentAuthController
   respond_to :html, :json
 
-  before_action :set_rdv, :set_optional_agent, except: [:index, :create]
+  before_action :set_rdv, :set_optional_agent, except: %i[index create]
 
   def index
     @form = Admin::RdvSearchForm.new(

@@ -50,7 +50,7 @@ describe DuplicateUsersFinderService, type: :service do
       context "same main first_name, last_name, birth_date" do
         let!(:duplicated_user) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000") }
 
-        it { is_expected.to include(OpenStruct.new(severity: :warning, attributes: [:first_name, :last_name, :birth_date], user: duplicated_user)) }
+        it { is_expected.to include(OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: duplicated_user)) }
 
         context "but soft deleted" do
           before { duplicated_user.soft_delete }
@@ -76,13 +76,13 @@ describe DuplicateUsersFinderService, type: :service do
         let!(:duplicated_user2) { create(:user, phone_number: "0658032518") }
         let!(:rdv) { create(:rdv, users: [duplicated_user1]) }
 
-        it { is_expected.to include(OpenStruct.new(severity: :warning, attributes: [:first_name, :last_name, :birth_date], user: duplicated_user1)) }
+        it { is_expected.to include(OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: duplicated_user1)) }
         it { is_expected.to include(OpenStruct.new(severity: :warning, attributes: [:phone_number], user: duplicated_user2)) }
 
         context "but first soft deleted" do
           before { duplicated_user1.soft_delete }
 
-          it { is_expected.not_to include(OpenStruct.new(severity: :warning, attributes: [:first_name, :last_name, :birth_date], user: duplicated_user1)) }
+          it { is_expected.not_to include(OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: duplicated_user1)) }
           it { is_expected.to include(OpenStruct.new(severity: :warning, attributes: [:phone_number], user: duplicated_user2)) }
         end
 
