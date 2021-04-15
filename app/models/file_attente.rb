@@ -15,7 +15,7 @@ class FileAttente < ApplicationRecord
     FileAttente.with_upcoming_rdvs.each do |fa|
       next if fa.rdv.motif.phone?
 
-      end_time = fa.rdv.starts_at - 2.day
+      end_time = fa.rdv.starts_at - 2.days
       date_range = Date.today..end_time.to_date
       creneaux = fa.rdv.creneaux_available(date_range)
       next unless fa.valid_for_notification?(creneaux)

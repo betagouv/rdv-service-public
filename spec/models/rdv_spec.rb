@@ -234,7 +234,7 @@ describe Rdv, type: :model do
       now = DateTime.new(2020, 3, 23, 12, 46)
       travel_to(now)
       expected = %w[unknown_future waiting excused]
-      rdv = build(:rdv, starts_at: now + 2.hour)
+      rdv = build(:rdv, starts_at: now + 2.hours)
       expect(rdv.possible_temporal_statuses).to eq(expected)
     end
 
@@ -292,7 +292,7 @@ describe Rdv, type: :model do
       travel_to(now)
       create(:rdv, starts_at: now - 2.days)
       rdv = create(:rdv, starts_at: now)
-      create(:rdv, starts_at: now + 1.days)
+      create(:rdv, starts_at: now + 1.day)
 
       expect(described_class.for_today).to eq([rdv])
     end
@@ -361,9 +361,9 @@ describe Rdv, type: :model do
       now = Time.zone.parse("2020-10-14 11h30")
       travel_to(now)
       rdv = create(:rdv, starts_at: now + 1.day + 3.hours)
-      create(:rdv, starts_at: now + 2.day + 3.hours)
+      create(:rdv, starts_at: now + 2.days + 3.hours)
       create(:rdv, starts_at: now - 1.day)
-      expect(described_class.starts_at_in_range((now + 1.day)..(now + 2.day))).to eq([rdv])
+      expect(described_class.starts_at_in_range((now + 1.day)..(now + 2.days))).to eq([rdv])
       travel_back
     end
   end

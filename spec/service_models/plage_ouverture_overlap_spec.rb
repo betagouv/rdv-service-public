@@ -218,7 +218,7 @@ describe PlageOuvertureOverlap do
 
   context "po1 and po2 recurring with end date, overlap" do
     let(:po1) { build_po(monday, 14, 18, Montrose.every(:week, on: [:monday, :tuesday], starts: monday, until: monday + 3.weeks)) }
-    let(:po2) { build_po(monday + 1.weeks, 14, 18, Montrose.every(:week, on: [:tuesday, :wednesday], starts: monday + 1.week, until: monday + 5.weeks)) }
+    let(:po2) { build_po(monday + 1.week, 14, 18, Montrose.every(:week, on: [:tuesday, :wednesday], starts: monday + 1.week, until: monday + 5.weeks)) }
 
     it_behaves_like "plage ouvertures overlap"
   end

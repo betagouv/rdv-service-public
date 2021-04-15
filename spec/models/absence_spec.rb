@@ -5,7 +5,7 @@ describe Absence, type: :model do
     subject { absence.occurrences_for(date_range) }
 
     context "if the absence lasts many days" do
-      let(:absence) { build(:absence, :no_recurrence, first_day: (date_range.end - 30.day), end_day: date_range.end) }
+      let(:absence) { build(:absence, :no_recurrence, first_day: (date_range.end - 30.days), end_day: date_range.end) }
       let(:date_range) { Date.new(2019, 7, 22)..Date.new(2019, 7, 28) }
 
       it do
@@ -20,8 +20,8 @@ describe Absence, type: :model do
 
         it do
           expect(subject.size).to eq 2
-          expect(subject.first.starts_at).to eq(absence.starts_at + 1.weeks) # first one ends in range
-          expect(subject.first.ends_at).to eq(absence.first_occurrence_ends_at + 1.weeks) # first one ends in range
+          expect(subject.first.starts_at).to eq(absence.starts_at + 1.week) # first one ends in range
+          expect(subject.first.ends_at).to eq(absence.first_occurrence_ends_at + 1.week) # first one ends in range
           expect(subject.second.starts_at).to eq(absence.starts_at + 2.weeks) # second one starts in range
           expect(subject.second.ends_at).to eq(absence.first_occurrence_ends_at + 2.weeks) # second one starts in range
         end

@@ -241,20 +241,6 @@ Rails/OutputSafety:
     - 'app/helpers/users_helper.rb'
     - 'app/presenters/displayable_user_presenter.rb'
 
-# Offense count: 32
-# Cop supports --auto-correct.
-Rails/PluralizationGrammar:
-  Exclude:
-    - 'app/models/file_attente.rb'
-    - 'app/models/rdv.rb'
-    - 'spec/jobs/reminder_job_spec.rb'
-    - 'spec/models/absence_spec.rb'
-    - 'spec/models/rdv_spec.rb'
-    - 'spec/presenters/admin/rdv_user_presenter_spec.rb'
-    - 'spec/service_functions/rdv_updater_spec.rb'
-    - 'spec/service_models/plage_ouverture_overlap_spec.rb'
-    - 'spec/support/recurrence_concern.rb'
-
 # Offense count: 27
 # Configuration parameters: ForbiddenMethods, AllowedMethods.
 # ForbiddenMethods: decrement!, decrement_counter, increment!, increment_counter, insert, insert!, insert_all, insert_all!, toggle!, touch, touch_all, update_all, update_attribute, update_column, update_columns, update_counters, upsert, upsert_all
