@@ -17,7 +17,7 @@ class AbsenceDashboard < Administrate::BaseDashboard
     start_time: Field::Time,
     end_time: Field::Time,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES

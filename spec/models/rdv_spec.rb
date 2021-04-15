@@ -227,7 +227,7 @@ describe Rdv, type: :model do
       now = DateTime.new(2020, 3, 23, 12, 46)
       travel_to(now)
       rdv = build(:rdv, starts_at: (now + 2.days))
-      expect(rdv.possible_temporal_statuses).to eq(["unknown_future", "excused"])
+      expect(rdv.possible_temporal_statuses).to eq(%w[unknown_future excused])
     end
 
     it "returns `unknonw_future`, `waiting` and `excused` at rdv's day before rdv's time" do

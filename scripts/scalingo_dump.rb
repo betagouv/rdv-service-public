@@ -8,14 +8,14 @@ require "open-uri"
 
 HEADERS = {
   "Accept" => "application/json",
-  "Content-Type" => "application/json",
+  "Content-Type" => "application/json"
 }.freeze
 
 options = {}
 OptionParser.new do |parser|
   parser.on("-e", "--env ENV_NAME", "Environment (demo or production)") do |val|
     raise StandardError, "invalid ENV_NAME option, must be 'demo' or 'production" \
-      unless ["demo", "production"].include?(val)
+      unless %w[demo production].include?(val)
 
     options[:app_name] = "#{val}-rdv-solidarites"
   end

@@ -35,7 +35,7 @@ class Admin::PlageOuverturesController < AgentAuthController
       defaults = {
         first_day: Time.zone.now,
         start_time: Tod::TimeOfDay.new(9),
-        end_time: Tod::TimeOfDay.new(12),
+        end_time: Tod::TimeOfDay.new(12)
       }
     end
     @plage_ouverture = PlageOuverture.new(

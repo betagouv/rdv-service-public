@@ -17,7 +17,7 @@ module Admin::RdvWizardFormConcern
       rdv_defaults = {
         agent_ids: [agent_author.id],
         organisation_id: organisation.id,
-        starts_at: Time.zone.now,
+        starts_at: Time.zone.now
       }
       @organisation = organisation
       @agent_author = agent_author

@@ -54,7 +54,7 @@ module AgentsHelper
       "men-department-sectors" => "",
       "men-department-zones" => "",
       "men-department-setup-checklist" => "",
-      "men-department-zone-imports" => "",
+      "men-department-zone-imports" => ""
     }[content_for(:menu_item)]
   end
 

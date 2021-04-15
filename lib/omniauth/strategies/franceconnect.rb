@@ -19,7 +19,7 @@ module OmniAuth
           given_name: user_info.given_name,
           family_name: user_info.family_name,
           birthdate: user_info.birthdate.presence && Date.parse(user_info.birthdate),
-          email: user_info.email,
+          email: user_info.email
         }
       end
     end

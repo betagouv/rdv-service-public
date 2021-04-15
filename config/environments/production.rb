@@ -69,7 +69,7 @@ Rails.application.configure do
     authentication: :plain,
     user_name: ENV["SENDINBLUE_USERNAME"],
     password: ENV["SENDINBLUE_PASSWORD"],
-    domain: "rdv-solidarites.fr",
+    domain: "rdv-solidarites.fr"
   }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.asset_host = ENV["HOST"]

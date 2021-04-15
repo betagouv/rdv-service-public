@@ -17,7 +17,7 @@ class Agents::PlageOuvertureMailer < ApplicationMailer
     attachments[plage_ouverture_payload[:name]] = {
       mime_type: "text/calendar",
       content: Admin::Ics::PlageOuverture.to_ical(plage_ouverture_payload),
-      encoding: "8bit", # fixes encoding issues in ICS
+      encoding: "8bit" # fixes encoding issues in ICS
     }
 
     m = mail(

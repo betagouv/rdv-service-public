@@ -18,7 +18,7 @@ class PlageOuvertureDashboard < Administrate::BaseDashboard
     start_time: Field::Time,
     end_time: Field::Time,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -30,7 +30,7 @@ class PlageOuvertureDashboard < Administrate::BaseDashboard
     :id,
     :organisation,
     :agent,
-    :lieu,
+    :lieu
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -45,7 +45,7 @@ class PlageOuvertureDashboard < Administrate::BaseDashboard
     :start_time,
     :end_time,
     :created_at,
-    :updated_at,
+    :updated_at
   ].freeze
 
   # FORM_ATTRIBUTES
@@ -60,6 +60,6 @@ class PlageOuvertureDashboard < Administrate::BaseDashboard
     :lieu,
     :first_day,
     :start_time,
-    :end_time,
+    :end_time
   ].freeze
 end

@@ -20,7 +20,7 @@ class AgentDashboard < Administrate::BaseDashboard
     invitation_sent_at: Field::DateTime,
     deleted_at: Field::DateTime,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -32,7 +32,7 @@ class AgentDashboard < Administrate::BaseDashboard
     :id,
     :email,
     :first_name,
-    :last_name,
+    :last_name
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -50,7 +50,7 @@ class AgentDashboard < Administrate::BaseDashboard
     :invitation_sent_at,
     :created_at,
     :deleted_at,
-    :updated_at,
+    :updated_at
   ].freeze
 
   # FORM_ATTRIBUTES
@@ -62,7 +62,7 @@ class AgentDashboard < Administrate::BaseDashboard
     :last_name,
     :organisations,
     :service,
-    :deleted_at,
+    :deleted_at
   ].freeze
 
   def display_resource(agent)

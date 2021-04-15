@@ -7,7 +7,7 @@ class SupportTicketForm
     "Je suis agent et je n'arrive pas à accéder à mon compte",
     "Je suis agent et j'ai une question ou je rencontre un problème",
     "Je suis agent ou décideur public et j'aimerais plus d'informations sur RDV-Solidarités",
-    "Autre",
+    "Autre"
   ].freeze
 
   attr_accessor :subject, :first_name, :last_name, :email, :message, :departement, :city

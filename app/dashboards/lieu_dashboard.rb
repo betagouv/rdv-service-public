@@ -15,7 +15,7 @@ class LieuDashboard < Administrate::BaseDashboard
     latitude: Field::Number,
     longitude: Field::Number,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -26,7 +26,7 @@ class LieuDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = [
     :id,
     :name,
-    :organisation,
+    :organisation
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -40,7 +40,7 @@ class LieuDashboard < Administrate::BaseDashboard
     :longitude,
     :address,
     :created_at,
-    :updated_at,
+    :updated_at
   ].freeze
 
   # FORM_ATTRIBUTES
@@ -51,6 +51,6 @@ class LieuDashboard < Administrate::BaseDashboard
     :organisation,
     :address,
     :latitude,
-    :longitude,
+    :longitude
   ].freeze
 end

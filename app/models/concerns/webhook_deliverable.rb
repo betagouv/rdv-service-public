@@ -5,7 +5,7 @@ module WebhookDeliverable
     meta = {
       model: self.class.name,
       event: action,
-      timestamp: Time.zone.now,
+      timestamp: Time.zone.now
     }
     blueprint_class = "#{self.class.name}Blueprint".constantize
     blueprint_class.render(self, root: :data, meta: meta)

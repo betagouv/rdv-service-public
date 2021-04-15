@@ -28,7 +28,7 @@ module AgentUserFormHelper
         "data-togglable": true,
         "data-responsability-type": "responsible",
         class: ("d-none" if user.responsability_type != :responsible)
-      },
+      }
     }
   end
 

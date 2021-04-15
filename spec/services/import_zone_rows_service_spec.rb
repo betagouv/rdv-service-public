@@ -12,7 +12,7 @@ describe ImportZoneRowsService, type: :service do
       [
         { "city_code" => "62040", "city_name" => "AIRE-SUR-LA-LYS", "sector_id" => "arques" },
         { "city_code" => "62110", "city_name" => "ARQUES", "sector_id" => "arques" },
-        { "city_code" => "62007", "city_name" => "ACQ", "sector_id" => "arras-sud" },
+        { "city_code" => "62007", "city_name" => "ACQ", "sector_id" => "arras-sud" }
       ]
     end
 
@@ -44,7 +44,7 @@ describe ImportZoneRowsService, type: :service do
       [
         { "city_code" => "62040", "city_name" => "AIRE-SUR-LA-LYS", "sector_id" => "arques" },
         { "city_code" => "62080", "city_name" => "BAPAUME", "sector_id" => "arras-sud", "street_name" => "rue de la gare", "street_code" => "62080_0580" },
-        { "city_code" => "62080", "city_name" => "BAPAUME", "sector_id" => "arras-sud", "street_name" => "rue des casernes", "street_code" => "62080_0180" },
+        { "city_code" => "62080", "city_name" => "BAPAUME", "sector_id" => "arras-sud", "street_name" => "rue des casernes", "street_code" => "62080_0180" }
       ]
     end
 
@@ -88,7 +88,7 @@ describe ImportZoneRowsService, type: :service do
       [
         { "codeInsee" => "62040", "city_name" => "AIRE-SUR-LA-LYS", "sector_id" => "arques" },
         { "codeInsee" => "62010", "city_name" => "ARQUES", "sector_id" => "arques" },
-        { "codeInsee" => "62004", "city_name" => "ACHICOURT", "sector_id" => "arras-nord" },
+        { "codeInsee" => "62004", "city_name" => "ACHICOURT", "sector_id" => "arras-nord" }
       ]
     end
 
@@ -104,7 +104,7 @@ describe ImportZoneRowsService, type: :service do
       [
         { "city_code" => "62040", "city_name" => "AIRE-SUR-LA-LYS", "sector_id" => "arques" },
         { "city_code" => "", "city_name" => "ARQUES", "sector_id" => "arques" },
-        { "city_code" => "62004", "city_name" => "ACHICOURT", "sector_id" => "arras-nord" },
+        { "city_code" => "62004", "city_name" => "ACHICOURT", "sector_id" => "arras-nord" }
       ]
     end
 
@@ -119,7 +119,7 @@ describe ImportZoneRowsService, type: :service do
     let(:rows) do
       [
         { "city_code" => "62040", "city_name" => "AIRE-SUR-LA-LYS", "sector_id" => "arques" },
-        { "city_code" => "62110", "city_name" => "ARQUES", "sector_id" => "" },
+        { "city_code" => "62110", "city_name" => "ARQUES", "sector_id" => "" }
       ]
     end
 
@@ -134,7 +134,7 @@ describe ImportZoneRowsService, type: :service do
     let(:rows) do
       [
         { "city_code" => "62040", "city_name" => "AIRE-SUR-LA-LYS", "sector_id" => "arras-nord" },
-        { "city_code" => "62004", "city_name" => "ACHICOURT", "sector_id" => "arras-nord" },
+        { "city_code" => "62004", "city_name" => "ACHICOURT", "sector_id" => "arras-nord" }
       ]
     end
 
@@ -149,7 +149,7 @@ describe ImportZoneRowsService, type: :service do
   context "mismatching departement code" do
     let(:rows) do
       [
-        { "city_code" => "75040", "city_name" => "AIRE-SUR-LA-LYS", "sector_id" => "arques" },
+        { "city_code" => "75040", "city_name" => "AIRE-SUR-LA-LYS", "sector_id" => "arques" }
       ]
     end
 
@@ -165,7 +165,7 @@ describe ImportZoneRowsService, type: :service do
     let(:rows) do
       [
         { "city_code" => "62040", "city_name" => "AIRE-SUR-LA-LYS", "sector_id" => "arques" },
-        { "city_code" => "62040", "city_name" => "AIRE-SUR-LA-LYS", "sector_id" => "arras-sud" },
+        { "city_code" => "62040", "city_name" => "AIRE-SUR-LA-LYS", "sector_id" => "arras-sud" }
       ]
     end
 
@@ -182,7 +182,7 @@ describe ImportZoneRowsService, type: :service do
     let(:rows) do
       [
         { "city_code" => "62040", "city_name" => "AIRE-SUR-LA-lièsse", "sector_id" => "arques" },
-        { "city_code" => "62004", "city_name" => "ACHICOURT", "sector_id" => "arques" },
+        { "city_code" => "62004", "city_name" => "ACHICOURT", "sector_id" => "arques" }
       ]
     end
 
@@ -205,7 +205,7 @@ describe ImportZoneRowsService, type: :service do
     let(:rows) do
       [
         { "city_code" => "62040", "city_name" => "AIRE-SUR-LA-lièsse", "sector_id" => "arques" },
-        { "city_code" => "62004", "city_name" => "ACHICOURT", "sector_id" => "arques" },
+        { "city_code" => "62004", "city_name" => "ACHICOURT", "sector_id" => "arques" }
       ]
     end
 

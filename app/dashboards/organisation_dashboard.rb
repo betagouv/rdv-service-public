@@ -17,7 +17,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     phone_number: Field::String,
     human_id: Field::String,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -27,7 +27,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = [
     :id,
-    :name,
+    :name
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -42,7 +42,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     :motifs,
     :human_id,
     :created_at,
-    :updated_at,
+    :updated_at
   ].freeze
 
   # FORM_ATTRIBUTES

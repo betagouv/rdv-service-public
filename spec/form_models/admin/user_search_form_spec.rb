@@ -7,7 +7,7 @@ describe Admin::UserSearchForm do
       expected_query = {
         agent_id: nil,
         organisation_id: organisation.id,
-        search: nil,
+        search: nil
       }
       expect(user_search_form.to_query).to eq(expected_query)
     end

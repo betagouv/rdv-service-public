@@ -12,7 +12,7 @@ class MotifLibelleDashboard < Administrate::BaseDashboard
     name: Field::String,
     service: Field::BelongsTo,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -23,7 +23,7 @@ class MotifLibelleDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = [
     :id,
     :name,
-    :service,
+    :service
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -33,7 +33,7 @@ class MotifLibelleDashboard < Administrate::BaseDashboard
     :name,
     :service,
     :created_at,
-    :updated_at,
+    :updated_at
   ].freeze
 
   # FORM_ATTRIBUTES
@@ -41,6 +41,6 @@ class MotifLibelleDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
     :name,
-    :service,
+    :service
   ].freeze
 end

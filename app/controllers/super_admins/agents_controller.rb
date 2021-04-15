@@ -22,7 +22,7 @@ module SuperAdmins
 
       if agent.errors.any?
         render :new, locals: {
-          page: Administrate::Page::Form.new(dashboard, resource),
+          page: Administrate::Page::Form.new(dashboard, resource)
         }
       else
         redirect_to(

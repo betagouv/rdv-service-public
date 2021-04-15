@@ -14,7 +14,7 @@ class ServiceDashboard < Administrate::BaseDashboard
     agents: Field::HasMany,
     motifs: Field::HasMany,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -25,7 +25,7 @@ class ServiceDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = [
     :id,
     :name,
-    :short_name,
+    :short_name
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -37,7 +37,7 @@ class ServiceDashboard < Administrate::BaseDashboard
     :agents,
     :motifs,
     :created_at,
-    :updated_at,
+    :updated_at
   ].freeze
 
   # FORM_ATTRIBUTES
@@ -47,7 +47,7 @@ class ServiceDashboard < Administrate::BaseDashboard
     :name,
     :short_name,
     :motifs,
-    :agents,
+    :agents
   ].freeze
 
   def display_resource(service)

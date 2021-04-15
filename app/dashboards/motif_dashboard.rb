@@ -24,7 +24,7 @@ class MotifDashboard < Administrate::BaseDashboard
     max_booking_delay: Field::Number,
     deleted_at: Field::DateTime,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -36,7 +36,7 @@ class MotifDashboard < Administrate::BaseDashboard
     :id,
     :name,
     :organisation,
-    :service,
+    :service
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -58,7 +58,7 @@ class MotifDashboard < Administrate::BaseDashboard
     :visibility_type,
     :deleted_at,
     :created_at,
-    :updated_at,
+    :updated_at
   ].freeze
 
   # FORM_ATTRIBUTES
@@ -78,7 +78,7 @@ class MotifDashboard < Administrate::BaseDashboard
     :visibility_type,
     :restriction_for_rdv,
     :instruction_for_rdv,
-    :deleted_at,
+    :deleted_at
   ].freeze
 
   def display_resource(motif)

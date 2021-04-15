@@ -7,7 +7,7 @@ require "dotenv/load"
 
 HEADERS = {
   "Accept" => "application/json",
-  "Content-Type" => "application/json",
+  "Content-Type" => "application/json"
 }.freeze
 
 options = {}
@@ -18,7 +18,7 @@ OptionParser.new do |parser|
 
   parser.on("--containers-name NAME", "Container name (web, worker)") do |val|
     raise StandardError, "invalid container name, must be 'web' or 'worker'" \
-      unless ["web", "worker"].include?(val)
+      unless %w[web worker].include?(val)
 
     options[:containers_name] = val
   end

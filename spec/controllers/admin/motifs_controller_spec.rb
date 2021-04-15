@@ -67,7 +67,7 @@ RSpec.describe Admin::MotifsController, type: :controller do
     context "with invalid params" do
       let(:invalid_attributes) do
         {
-          name: "test motif",
+          name: "test motif"
         }
       end
 
@@ -107,7 +107,7 @@ RSpec.describe Admin::MotifsController, type: :controller do
     context "with valid params" do
       let(:new_attributes) do
         {
-          name: "Le nouveau nom",
+          name: "Le nouveau nom"
         }
       end
 
@@ -124,7 +124,7 @@ RSpec.describe Admin::MotifsController, type: :controller do
     context "with invalid params" do
       let(:new_attributes) do
         {
-          name: "",
+          name: ""
         }
       end
 

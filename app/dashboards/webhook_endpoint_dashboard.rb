@@ -11,7 +11,7 @@ class WebhookEndpointDashboard < Administrate::BaseDashboard
     target_url: Field::String,
     organisation: Field::BelongsTo,
     secret: Field::String,
-    id: Field::Number,
+    id: Field::Number
   }.freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -19,7 +19,7 @@ class WebhookEndpointDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = [
     :id,
     :organisation,
-    :target_url,
+    :target_url
   ].freeze
 
   # COLLECTION_ATTRIBUTES
@@ -30,7 +30,7 @@ class WebhookEndpointDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = [
     :id,
     :organisation,
-    :target_url,
+    :target_url
   ].freeze
 
   # FORM_ATTRIBUTES
@@ -39,7 +39,7 @@ class WebhookEndpointDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = [
     :organisation,
     :target_url,
-    :secret,
+    :secret
   ].freeze
 
   # Overwrite this method to customize how rdvs are displayed

@@ -26,7 +26,7 @@ class UserDashboard < Administrate::BaseDashboard
     birth_date: Field::DateTime,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
-    deleted_at: Field::DateTime,
+    deleted_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -37,7 +37,7 @@ class UserDashboard < Administrate::BaseDashboard
   COLLECTION_ATTRIBUTES = [
     :id,
     :first_name,
-    :last_name,
+    :last_name
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -61,7 +61,7 @@ class UserDashboard < Administrate::BaseDashboard
     :rdvs,
     :created_at,
     :updated_at,
-    :deleted_at,
+    :deleted_at
   ].freeze
 
   # FORM_ATTRIBUTES
@@ -82,7 +82,7 @@ class UserDashboard < Administrate::BaseDashboard
     :affiliation_number,
     :family_situation,
     :number_of_children,
-    :deleted_at,
+    :deleted_at
   ].freeze
 
   def display_resource(user)

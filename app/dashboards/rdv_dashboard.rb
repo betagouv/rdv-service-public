@@ -20,7 +20,7 @@ class RdvDashboard < Administrate::BaseDashboard
     starts_at: Field::DateTime,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
-    cancelled_at: Field::DateTime,
+    cancelled_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -32,7 +32,7 @@ class RdvDashboard < Administrate::BaseDashboard
     :id,
     :organisation,
     :motif,
-    :starts_at,
+    :starts_at
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -50,7 +50,7 @@ class RdvDashboard < Administrate::BaseDashboard
     :starts_at,
     :created_at,
     :updated_at,
-    :cancelled_at,
+    :cancelled_at
   ].freeze
 
   # FORM_ATTRIBUTES
@@ -65,7 +65,7 @@ class RdvDashboard < Administrate::BaseDashboard
     :duration_in_min,
     :starts_at,
     :cancelled_at,
-    :lieu,
+    :lieu
   ].freeze
 
   # Overwrite this method to customize how rdvs are displayed

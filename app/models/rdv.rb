@@ -40,9 +40,9 @@ class Rdv < ApplicationRecord
   scope :status, lambda { |status|
     case status.to_s
     when "unknown_past"
-      past.where(status: ["unknown", "waiting"])
+      past.where(status: %w[unknown waiting])
     when "unknown_future"
-      future.where(status: ["unknown", "waiting"])
+      future.where(status: %w[unknown waiting])
     else
       where(status: status)
     end

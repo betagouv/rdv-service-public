@@ -11,7 +11,7 @@ class WebhookJob < ApplicationJob
       method: :post,
       headers: {
         "Content-Type" => "application/json; charset=utf-8",
-        "X-Lapin-Signature" => OpenSSL::HMAC.hexdigest("SHA256", webhook_endpoint.secret, payload),
+        "X-Lapin-Signature" => OpenSSL::HMAC.hexdigest("SHA256", webhook_endpoint.secret, payload)
       },
       body: payload,
       timeout: TIMEOUT

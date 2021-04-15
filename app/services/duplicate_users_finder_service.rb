@@ -8,7 +8,7 @@ class DuplicateUsersFinderService < BaseService
     [
       find_duplicate_based_on_email,
       find_duplicate_based_on_identity,
-      find_duplicate_based_on_phone_number,
+      find_duplicate_based_on_phone_number
     ].compact
   end
 
