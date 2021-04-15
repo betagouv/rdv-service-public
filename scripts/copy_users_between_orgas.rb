@@ -5,7 +5,7 @@ origin_organisation_ids = [
   147, # MDSI Eppeville
   146, # MDSI Roye
   145, # MDSI Montdidier
-  144, # MDSI Chaulnes
+  144 # MDSI Chaulnes
 ]
 
 target_organisation = Organisation.find(149) # TERRITOIRE SOMME-SANTERRE
