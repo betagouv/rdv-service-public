@@ -283,14 +283,6 @@ Rails/LexicallyScopedActionFilter:
     - 'app/controllers/users/creneaux_controller.rb'
     - 'app/controllers/users/sessions_controller.rb'
 
-# Offense count: 4
-# Cop supports --auto-correct.
-Rails/NegateInclude:
-  Exclude:
-    - 'app/services/notifications/rdv/rdv_cancelled_service.rb'
-    - 'app/services/notifications/rdv/rdv_date_updated_service.rb'
-    - 'db/migrate/20210301135256_create_territories.rb'
-
 # Offense count: 12
 # Configuration parameters: Include.
 # Include: app/**/*.rb, config/**/*.rb, db/**/*.rb, lib/**/*.rb
@@ -311,12 +303,6 @@ Rails/OutputSafety:
     - 'app/helpers/user_notifications_helper.rb'
     - 'app/helpers/users_helper.rb'
     - 'app/presenters/displayable_user_presenter.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Rails/Pick:
-  Exclude:
-    - 'app/models/rdv.rb'
 
 # Offense count: 6
 # Cop supports --auto-correct.
@@ -344,33 +330,6 @@ Rails/PluralizationGrammar:
     - 'spec/service_models/plage_ouverture_overlap_spec.rb'
     - 'spec/support/recurrence_concern.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Rails/Presence:
-  Exclude:
-    - 'app/models/absence.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: NotNilAndNotEmpty, NotBlank, UnlessBlank.
-Rails/Present:
-  Exclude:
-    - 'app/controllers/admin/users_controller.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: Include.
-# Include: **/Rakefile, **/*.rake
-Rails/RakeEnvironment:
-  Exclude:
-    - 'lib/tasks/matomo.rake'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Rails/RedundantForeignKey:
-  Exclude:
-    - 'app/models/user.rb'
-
 # Offense count: 3
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.
@@ -380,16 +339,6 @@ Rails/RequestReferer:
     - 'app/controllers/concerns/admin/authenticated_controller_concern.rb'
     - 'app/controllers/user_auth_controller.rb'
     - 'app/controllers/users/file_attentes_controller.rb'
-
-# Offense count: 4
-# Configuration parameters: Include.
-# Include: db/migrate/*.rb
-Rails/ReversibleMigration:
-  Exclude:
-    - 'db/migrate/20200401145901_remove_by_phone_from_motifs.rb'
-    - 'db/migrate/20200907084438_delete_old_notes_from_users.rb'
-    - 'db/migrate/20200907123203_remove_old_notes_from_user_profiles.rb'
-    - 'db/migrate/20201112164609_remove_disable_notifications_for_users_from_motifs.rb'
 
 # Offense count: 27
 # Configuration parameters: ForbiddenMethods, AllowedMethods.
@@ -426,21 +375,6 @@ Rails/UniqueValidationWithoutIndex:
     - 'app/models/organisation.rb'
     - 'app/models/sector.rb'
     - 'app/models/service.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: Include.
-# Include: app/models/**/*.rb
-Rails/Validation:
-  Exclude:
-    - 'app/models/user_note.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-Rails/WhereEquals:
-  Exclude:
-    - 'app/models/plage_ouverture.rb'
-    - 'app/models/rdv.rb'
 
 # Offense count: 129
 # Cop supports --auto-correct.

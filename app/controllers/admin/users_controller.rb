@@ -160,7 +160,7 @@ class Admin::UsersController < AgentAuthController
   end
 
   def search_params
-    params.require(:term) unless params[:term].blank?
+    params.require(:term) if params[:term].present?
   end
 
   def set_user
