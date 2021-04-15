@@ -13,5 +13,5 @@ jobs:
       uses: qmacro/action-add-issue-to-project-column@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        project: 'project1'
-        column: 'Submitted'
+        project: 'Développement'
+        column: 'Backlog'
