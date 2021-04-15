@@ -51,10 +51,6 @@ class Agent < ApplicationRecord
 
   accepts_nested_attributes_for :roles
 
-  def full_name_and_service
-    service.present? ? "#{full_name} (#{service.short_name})" : full_name
-  end
-
   def complete?
     first_name.present? && last_name.present?
   end

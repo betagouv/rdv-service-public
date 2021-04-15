@@ -17,5 +17,5 @@
           = f.input :territory_id, as: :hidden
           = f.association :agent, \
             collection: @possible_agents,
-            label_method: -> { _1.full_name_and_service }
+            label_method: -> { _1.full_name }
           = f.submit class: "btn btn-primary", value: "Donner le rôle d'administrateur du #{current_territory}"

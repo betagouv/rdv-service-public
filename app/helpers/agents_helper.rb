@@ -31,12 +31,12 @@ module AgentsHelper
 
   def display_meta_note(note)
     meta = content_tag(:span, "le #{l(note.created_at.to_date)}", title: l(note.created_at))
-    meta += " par #{note.agent.full_name_and_service}"
+    meta += " par #{note.agent.full_name}"
     content_tag(:span, meta, class: "font-italic")
   end
 
   def agents_to_sentence(agents)
-    agents.map(&:full_name_and_service).sort.to_sentence
+    agents.map(&:full_name).sort.to_sentence
   end
 
   def menu_top_level_item
