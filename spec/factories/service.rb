@@ -5,9 +5,7 @@ FactoryBot.define do
     name { generate(:service_name) }
 
     after(:build) do |service|
-      unless service.short_name.present?
-        service.short_name = service.name
-      end
+      service.short_name = service.name unless service.short_name.present?
     end
 
     trait :social do

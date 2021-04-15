@@ -15,7 +15,7 @@ class Users::FileAttentesController < UserAuthController
       FileAttente.create(rdv_id: file_attente_params[:rdv_id], user_id: file_attente_params[:user_id])
       flash[:notice] = "Vous êtes à présent sur la liste d'attente"
     end
-    redirect_to request.referrer.to_s
+    redirect_to request.referer.to_s
   end
 
   private

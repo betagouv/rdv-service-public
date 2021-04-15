@@ -304,18 +304,6 @@ Rails/OutputSafety:
     - 'app/helpers/users_helper.rb'
     - 'app/presenters/displayable_user_presenter.rb'
 
-# Offense count: 6
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: conservative, aggressive
-Rails/PluckInWhere:
-  Exclude:
-    - 'app/models/organisation.rb'
-    - 'app/models/territory.rb'
-    - 'app/services/search_creneaux_for_agents_service.rb'
-    - 'db/migrate/20201005094454_extract_sectors.rb'
-    - 'db/migrate/20210301135256_create_territories.rb'
-
 # Offense count: 32
 # Cop supports --auto-correct.
 Rails/PluralizationGrammar:
@@ -329,16 +317,6 @@ Rails/PluralizationGrammar:
     - 'spec/service_functions/rdv_updater_spec.rb'
     - 'spec/service_models/plage_ouverture_overlap_spec.rb'
     - 'spec/support/recurrence_concern.rb'
-
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: referer, referrer
-Rails/RequestReferer:
-  Exclude:
-    - 'app/controllers/concerns/admin/authenticated_controller_concern.rb'
-    - 'app/controllers/user_auth_controller.rb'
-    - 'app/controllers/users/file_attentes_controller.rb'
 
 # Offense count: 27
 # Configuration parameters: ForbiddenMethods, AllowedMethods.
@@ -393,31 +371,6 @@ Style/Documentation:
 # SupportedStyles: always, always_true, never
 Style/FrozenStringLiteralComment:
   Enabled: false
-
-# Offense count: 11
-# Cop supports --auto-correct.
-Style/IfUnlessModifier:
-  Exclude:
-    - 'app/controllers/modal_responder.rb'
-    - 'app/controllers/right_bar_responder.rb'
-    - 'app/controllers/super_admins/mailer_previews_controller.rb'
-    - 'app/controllers/super_admins/sessions_controller.rb'
-    - 'app/helpers/plage_ouvertures_helper.rb'
-    - 'app/models/concerns/full_name_concern.rb'
-    - 'app/models/plage_ouverture.rb'
-    - 'app/services/notifications/rdv/base_service_concern.rb'
-    - 'spec/factories/plage_ouverture.rb'
-    - 'spec/factories/service.rb'
-    - 'spec/services/jours_feries_service_spec.rb'
-
-# Offense count: 6
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiteralsInInterpolation:
-  Exclude:
-    - 'app/helpers/application_helper.rb'
-    - 'app/helpers/plage_ouvertures_helper.rb'
 
 # Offense count: 152
 # Cop supports --auto-correct.

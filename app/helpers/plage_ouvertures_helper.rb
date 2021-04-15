@@ -39,7 +39,7 @@ module PlageOuverturesHelper
       if recurrence_hash[:on].present?
         "#{every_part}, les #{recurrence_hash[:on].map { |d| "#{weekday_in_fr(d)}s" }.to_sentence}"
       else
-        "#{every_part}, le #{I18n.l(plage_ouverture.first_day, format: "%A")}"
+        "#{every_part}, le #{I18n.l(plage_ouverture.first_day, format: '%A')}"
       end
     when :month
       "Tous les #{interval} mois, #{weekday_position_in_month(recurrence_hash[:day])}"
@@ -47,7 +47,7 @@ module PlageOuverturesHelper
   end
 
   def display_time_range(plage_ouverture)
-    "de #{I18n.l(plage_ouverture.start_time, format: "%H:%M")} à #{I18n.l(plage_ouverture.end_time, format: "%H:%M")}"
+    "de #{I18n.l(plage_ouverture.start_time, format: '%H:%M')} à #{I18n.l(plage_ouverture.end_time, format: '%H:%M')}"
   end
 
   def plage_ouverture_occurrence_text(plage_ouverture)
@@ -63,16 +63,14 @@ module PlageOuverturesHelper
 
     range_part = "à partir du #{I18n.l(plage_ouverture.first_day, format: :human)}"
 
-    if recurrence_hash[:until].present?
-      range_part = "#{range_part}, jusqu'au #{I18n.l(recurrence_hash[:until].to_date, format: :human)}"
-    end
+    range_part = "#{range_part}, jusqu'au #{I18n.l(recurrence_hash[:until].to_date, format: :human)}" if recurrence_hash[:until].present?
     range_part
   end
 
   def weekday_position_in_month(day_option)
     nth = day_option.values.first.first
     weekday = day_option.keys.first
-    "le #{nth == 1 ? "#{nth}er" : "#{nth}ème"} #{I18n.t("date.day_names")[weekday]}"
+    "le #{nth == 1 ? "#{nth}er" : "#{nth}ème"} #{I18n.t('date.day_names')[weekday]}"
   end
 
   def weekday_in_fr(weekday)

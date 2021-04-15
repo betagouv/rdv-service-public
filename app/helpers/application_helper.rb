@@ -49,7 +49,7 @@ module ApplicationHelper
   end
 
   def add_button(label, path, header: false)
-    link_to label, path, class: "btn #{header ? "btn-outline-white" : "btn-primary"}", data: { rightbar: true }
+    link_to label, path, class: "btn #{header ? 'btn-outline-white' : 'btn-primary'}", data: { rightbar: true }
   end
 
   def agents_or_users_body_class

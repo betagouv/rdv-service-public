@@ -97,9 +97,7 @@ class PlageOuverture < ApplicationRecord
 
     candidate_pos = PlageOuverture.where(agent: agent).where.not(id: id)
       .where("recurrence IS NOT NULL or first_day >= ?", first_day)
-    if exceptionnelle?
-      candidate_pos = candidate_pos.where("first_day <= ?", first_day)
-    end
+    candidate_pos = candidate_pos.where("first_day <= ?", first_day) if exceptionnelle?
     # we could further restrict this query if perfs are an issue
     candidate_pos
   end
