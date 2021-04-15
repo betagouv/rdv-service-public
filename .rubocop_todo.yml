@@ -226,25 +226,6 @@ Rails/Delegate:
     - 'app/service_models/time_slot.rb'
     - 'config/initializers/recurrence_monkey_patch.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: Whitelist, AllowedMethods, AllowedReceivers.
-# Whitelist: find_by_sql
-# AllowedMethods: find_by_sql
-# AllowedReceivers: Gem::Specification
-Rails/DynamicFindBy:
-  Exclude:
-    - 'app/controllers/users/passwords_controller.rb'
-    - 'spec/features/agents/admin_can_configure_the_organisation_spec.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: Include.
-# Include: app/models/**/*.rb
-Rails/EnumHash:
-  Exclude:
-    - 'app/models/motif.rb'
-
 # Offense count: 8
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: slashes, arguments
@@ -256,15 +237,6 @@ Rails/FilePath:
     - 'config/environments/development.rb'
     - 'db/seeds.rb'
     - 'spec/rails_helper.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: Include.
-# Include: app/models/**/*.rb
-Rails/FindBy:
-  Exclude:
-    - 'app/models/concerns/user/improved_unicity_error_concern.rb'
-    - 'app/models/service.rb'
 
 # Offense count: 4
 # Configuration parameters: Include.
@@ -291,20 +263,6 @@ Rails/HelperInstanceVariable:
   Exclude:
     - 'app/helpers/agents_helper.rb'
     - 'app/helpers/paper_trail_helper.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: Include.
-# Include: spec/**/*, test/**/*
-Rails/HttpPositionalArguments:
-  Exclude:
-    - 'spec/controllers/organisations_controller_spec.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Rails/IndexWith:
-  Exclude:
-    - 'app/helpers/agent_user_form_helper.rb'
 
 # Offense count: 2
 # Configuration parameters: Include.

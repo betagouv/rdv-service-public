@@ -15,7 +15,7 @@ class Motif < ApplicationRecord
   SECTORISATION_LEVEL_DEPARTEMENT = "departement".freeze
   SECTORISATION_TYPES = [SECTORISATION_LEVEL_AGENT, SECTORISATION_LEVEL_ORGANISATION, SECTORISATION_LEVEL_DEPARTEMENT].freeze
 
-  enum location_type: [:public_office, :phone, :home]
+  enum location_type: { public_office: 0, phone: 1, home: 2 }
 
   validates :visibility_type, inclusion: { in: VISIBILITY_TYPES }
   validates :sectorisation_level, inclusion: { in: SECTORISATION_TYPES }

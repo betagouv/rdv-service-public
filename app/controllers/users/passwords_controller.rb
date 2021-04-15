@@ -6,7 +6,7 @@ class Users::PasswordsController < Devise::PasswordsController
   end
 
   def create
-    user = User.find_by_email(resource_params[:email])
+    user = User.find_by(email: resource_params[:email])
     if user && !user&.confirmed?
       self.resource = resource_class.send_confirmation_instructions(resource_params)
       if successfully_sent?(resource)

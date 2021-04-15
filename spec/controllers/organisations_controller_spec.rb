@@ -23,7 +23,7 @@ describe OrganisationsController, type: :controller do
       expect(Territory.count).to eq 0
       expect(Organisation.count).to eq 0
       expect(Agent.count).to eq 0
-      post :create, params
+      post :create, params: params
       expect(response).to be_successful
       expect(Territory.count).to eq 1
       expect(Organisation.count).to eq 1
@@ -52,7 +52,7 @@ describe OrganisationsController, type: :controller do
         }
       }
 
-      post :create, params
+      post :create, params: params
       expect(response).to be_successful
       expect(response).to render_template(:new)
     end

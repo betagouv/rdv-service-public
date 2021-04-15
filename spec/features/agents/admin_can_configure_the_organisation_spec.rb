@@ -108,7 +108,7 @@ describe "Admin can configure the organisation" do
     click_link motif.name
     expect(page).to have_content("Motif 1")
     click_link "Éditer"
-    expect(page.find_by_id("motif_name")).to have_content(motif.name)
+    expect(page.find_by(id: "motif_name")).to have_content(motif.name)
     select(motif_libelle2.name, from: :motif_name)
     click_button("Enregistrer")
     expect(page).to have_content(motif_libelle2.name)
