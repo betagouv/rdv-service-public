@@ -87,7 +87,7 @@ module PlageOuverturesHelper
   end
 
   def po_exceptionnelle_tag(plage_ouverture)
-    content_tag(:span, "Exceptionnelle", class: "badge badge-info") if plage_ouverture.exceptionnelle?
+    tag.span("Exceptionnelle", class: "badge badge-info") if plage_ouverture.exceptionnelle?
   end
 
   def filter_plage_ouvertures_in_departement_scope(plage_ouvertures)

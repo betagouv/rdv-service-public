@@ -157,24 +157,6 @@ RSpec/VerifiedDoubles:
     - 'spec/services/notifications/rdv/rdv_upcoming_reminder_service_spec.rb'
     - 'spec/services/upsert_user_for_franceconnect_service_spec.rb'
 
-
-# Offense count: 40
-# Cop supports --auto-correct.
-Rails/ContentTag:
-  Exclude:
-    - 'app/helpers/absences_helper.rb'
-    - 'app/helpers/admin_helper.rb'
-    - 'app/helpers/agents_helper.rb'
-    - 'app/helpers/application_helper.rb'
-    - 'app/helpers/devise_helper.rb'
-    - 'app/helpers/motifs_helper.rb'
-    - 'app/helpers/organisations_helper.rb'
-    - 'app/helpers/plage_ouvertures_helper.rb'
-    - 'app/helpers/rdvs_helper.rb'
-    - 'app/helpers/user_notifications_helper.rb'
-    - 'app/helpers/users_helper.rb'
-    - 'config/initializers/simple_form_bootstrap.rb'
-
 # Offense count: 52
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: strict, flexible

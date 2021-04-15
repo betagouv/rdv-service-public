@@ -35,11 +35,11 @@ module UsersHelper
   end
 
   def relative_tag(user)
-    user.relative? ? content_tag(:span, "Proche", class: "badge badge-info") : nil
+    user.relative? ? tag.span("Proche", class: "badge badge-info") : nil
   end
 
   def user_soft_deleted_from_current_organisation_tag(user)
-    user.organisations.include?(current_organisation) ? nil : content_tag(:span, "Supprimé", class: "badge badge-danger")
+    user.organisations.include?(current_organisation) ? nil : tag.span("Supprimé", class: "badge badge-danger")
   end
 
   def full_name_and_birthdate(user)
@@ -62,9 +62,9 @@ module UsersHelper
         if display_links_to_users
           user_to_link(user)
         else
-          content_tag(:span, user.full_name) + relative_tag(user)
+          tag.span(user.full_name) + relative_tag(user)
         end
-      acc << (idx.positive? ? content_tag(:span, ", ") : "") + user_span
+      acc << (idx.positive? ? tag.span(", ") : "") + user_span
     end.html_safe
   end
 
@@ -78,10 +78,10 @@ module UsersHelper
   def user_to_link(user)
     if user.organisations.include?(current_organisation)
       link_to admin_organisation_user_path(current_organisation, user) do
-        content_tag(:span, user.full_name) + relative_tag(user)
+        tag.span(user.full_name) + relative_tag(user)
       end
     else
-      content_tag(:span, user.full_name) +
+      tag.span(user.full_name) +
         relative_tag(user) +
         user_soft_deleted_from_current_organisation_tag(user)
     end
