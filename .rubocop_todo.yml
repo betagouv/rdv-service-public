@@ -55,11 +55,6 @@ RSpec/AnyInstance:
 RSpec/DescribeClass:
   Enabled: false
 
-# Offense count: 1
-RSpec/EmptyExampleGroup:
-  Exclude:
-    - 'spec/factories/rdv.rb'
-
 # Offense count: 49
 # Configuration parameters: Max.
 RSpec/ExampleLength:
@@ -102,11 +97,6 @@ RSpec/InstanceVariable:
 # Offense count: 275
 RSpec/LetSetup:
   Enabled: false
-
-# Offense count: 1
-RSpec/MissingExampleGroupArgument:
-  Exclude:
-    - 'spec/factories/rdv.rb'
 
 # Offense count: 8
 RSpec/MultipleDescribes:
