@@ -37,7 +37,7 @@ do |f|
       include_blank: true, \
       required: true, \
       disabled: available_agents.blank?, \
-      label_method: :full_name_and_service,
+      label_method: :full_name,
       input_html: { class: "select2-input" }
 
   = f.submit \

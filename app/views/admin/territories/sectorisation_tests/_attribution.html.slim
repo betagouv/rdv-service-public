@@ -1,7 +1,7 @@
 - if attribution.level_agent?
   div
     span> L'agent
-    b>= attribution.agent.full_name_and_service
+    b>= attribution.agent.full_name
     span> dans l'organisation
     b>= attribution.organisation.name
   - if sectorisation_test_form.available_motifs_from_attributed_agent(attribution.agent, attribution.organisation).empty?

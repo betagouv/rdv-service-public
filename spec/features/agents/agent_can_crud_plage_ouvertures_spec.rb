@@ -76,7 +76,7 @@ describe "Agent can CRUD plage d'ouverture" do
     it "can crud a plage_ouverture" do
       visit admin_organisation_agent_plage_ouvertures_path(organisation, other_agent.id)
 
-      expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
+      expect_page_title("Plages d'ouverture de Jane FAROU")
       click_link "Permanence"
 
       expect_page_title("Permanence")
@@ -89,7 +89,7 @@ describe "Agent can CRUD plage d'ouverture" do
       expect_page_title("La belle plage")
       click_link("Supprimer")
 
-      expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
+      expect_page_title("Plages d'ouverture de Jane FAROU")
       expect(page).to have_content("Jane FAROU n'a pas encore créé de plage d'ouverture")
 
       click_link "Créer une plage d'ouverture pour Jane FAROU", match: :first

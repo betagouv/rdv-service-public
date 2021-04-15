@@ -5,7 +5,7 @@
   - if current_agent == @agent
     | Votre agenda
   - else
-    | Agenda de #{@agent.full_name_and_service}
+    | Agenda de #{@agent.full_name}
 
 - content_for :breadcrumb do
   = form_tag(admin_organisation_agent_agenda_path(current_organisation, @agent), method: "get", class: "d-inline-flex mr-2") do

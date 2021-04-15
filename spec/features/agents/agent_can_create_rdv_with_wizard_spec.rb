@@ -91,6 +91,6 @@ describe "Agent can create a Rdv with wizard" do
   end
 
   def select_agent(agent)
-    select(agent.full_name_and_service, from: "rdv_agent_ids")
+    select(agent.full_name, from: "rdv_agent_ids")
   end
 end

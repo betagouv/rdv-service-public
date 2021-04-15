@@ -24,5 +24,5 @@ do
         input_html: { class: 'select2-input' }
     - elsif @rdv.home?
       = f.input :address, label: "Lieu (RDV à domicile)",  disabled: true, hint: "L'adresse utilisée est celle de #{@rdv.user_for_home_rdv.full_name}"
-    = f.association :agents, collection: @rdv.motif.authorized_agents, label_method: :full_name_and_service, input_html: { multiple: true, class: 'select2-input' }
+    = f.association :agents, collection: @rdv.motif.authorized_agents, label_method: :full_name, input_html: { multiple: true, class: 'select2-input' }
     = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f

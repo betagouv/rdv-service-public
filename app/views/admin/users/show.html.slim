@@ -62,7 +62,7 @@
               = f.association \
                 :agents, \
                 collection: policy_scope(Agent).joins(:organisations).where(organisations: { id: current_organisation.id }).order_by_last_name, \
-                label_method: :full_name_and_service, \
+                label_method: :full_name, \
                 label: false, \
                 multiple: true, \
                 input_html: {class: 'select2-input'}
