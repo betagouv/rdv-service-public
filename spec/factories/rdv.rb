@@ -36,7 +36,7 @@ FactoryBot.define do
       end
     end
     trait :future do
-      starts_at { 2.days.since }
+      starts_at { 2.days.from_now.at_noon }
     end
     trait :past do
       starts_at { DateTime.parse("2020-01-15 10:30").in_time_zone }
