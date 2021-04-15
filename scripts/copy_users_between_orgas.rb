@@ -1,12 +1,14 @@
 # rails runner scripts/copy_users_between_orgas.rb
 
 origin_organisation_ids = [
-  86, # MDSI Albert
-  87, # MDSI Corbie
-  88 # MDSI Peronne
+  148, # MDSI Moreuil
+  147, # MDSI Eppeville
+  146, # MDSI Roye
+  145, # MDSI Montdidier
+  144, # MDSI Chaulnes
 ]
 
-target_organisation = Organisation.find(85) # TERRITOIRE HAUTS DE SOMME
+target_organisation = Organisation.find(149) # TERRITOIRE SOMME-SANTERRE
 
 users = User.joins(:organisations).where(organisations: { id: origin_organisation_ids })
 puts "copying #{users.count} users from origin to target..."
