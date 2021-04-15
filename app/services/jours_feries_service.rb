@@ -11,7 +11,7 @@ class JoursFeriesService
     Date.new(2020, 8, 15),
     Date.new(2020, 11, 1),
     Date.new(2020, 11, 11),
-    Date.new(2020, 12, 25),
+    Date.new(2020, 12, 25)
   ].freeze
 
   JOURS_FERIES_2021 = [
@@ -25,7 +25,7 @@ class JoursFeriesService
     Date.new(2021, 8, 15),
     Date.new(2021, 11, 1),
     Date.new(2021, 11, 11),
-    Date.new(2021, 12, 25),
+    Date.new(2021, 12, 25)
   ].freeze
 
   # https://www.service-public.fr/particuliers/vosdroits/F2405
@@ -40,7 +40,7 @@ class JoursFeriesService
     Date.new(2022, 8, 15),
     Date.new(2022, 11, 1),
     Date.new(2022, 11, 11),
-    Date.new(2022, 12, 25),
+    Date.new(2022, 12, 25)
   ].freeze
 
   def self.all_in_date_range(date_range)

@@ -32,11 +32,11 @@ Rails.application.routes.draw do
     resources :absences
     resources :motif_libelles
     resources :webhook_endpoints
-    resources :mailer_previews, only: [:index, :show]
+    resources :mailer_previews, only: %i[index show]
     root to: "agents#index"
 
     authenticate :super_admin do
-      match "/delayed_job" => DelayedJobWeb, anchor: false, via: [:get, :post]
+      match "/delayed_job" => DelayedJobWeb, anchor: false, via: %i[get post]
     end
   end
   get "super_admin", to: redirect("super_admins", status: 301)
@@ -46,14 +46,14 @@ Rails.application.routes.draw do
   end
 
   ## APP ##
-  devise_for :users, controllers: { registrations: "users/registrations", sessions: "users/sessions", passwords: "users/passwords", confirmations: "users/confirmations", invitations: "users/invitations", }
+  devise_for :users, controllers: { registrations: "users/registrations", sessions: "users/sessions", passwords: "users/passwords", confirmations: "users/confirmations", invitations: "users/invitations" }
 
   namespace :users do
-    resource :rdv_wizard_step, only: [:new, :create]
-    resources :rdvs, only: [:index, :create] do
+    resource :rdv_wizard_step, only: %i[new create]
+    resources :rdvs, only: %i[index create] do
       put :cancel
     end
-    resources :creneaux, only: [:index, :edit, :update], param: :rdv_id
+    resources :creneaux, only: %i[index edit update], param: :rdv_id
     post "file_attente", to: "file_attentes#create_or_delete"
   end
   resources :stats, only: :index
@@ -87,26 +87,26 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
-      resources :absences, only: [:index, :create]
-      resources :users, only: [:create, :show] do
+      resources :absences, only: %i[index create]
+      resources :users, only: %i[create show] do
         get :invite, on: :member
       end
       resources :user_profiles, only: [:create]
     end
   end
 
-  resources :organisations, only: [:new, :create]
+  resources :organisations, only: %i[new create]
 
   authenticate :agent do
     namespace "admin" do
       resources :territories, only: [:update] do
         scope module: "territories" do
-          resources :agent_territorial_roles, only: [:index, :new, :create, :destroy]
-          resources :zone_imports, only: [:new, :create]
+          resources :agent_territorial_roles, only: %i[index new create destroy]
+          resources :zone_imports, only: %i[new create]
           resources :zones, only: [:index] # exports only
           resources :sectors do
             resources :zones
-            resources :sector_attributions, only: [:new, :create, :destroy], as: :attributions
+            resources :sector_attributions, only: %i[new create destroy], as: :attributions
             delete "/zones" => "zones#destroy_multiple"
           end
           resource :setup_checklist, only: [:show]
@@ -115,7 +115,7 @@ Rails.application.routes.draw do
       end
 
       resources :organisations do
-        resources :plage_ouvertures, except: [:index, :new]
+        resources :plage_ouvertures, except: %i[index new]
         resources :agent_searches, only: :index, module: "creneaux"
         resources :lieux, except: :show
         resources :motifs
@@ -141,12 +141,12 @@ Rails.application.routes.draw do
           end
           resource :referents, only: [:update]
         end
-        resources :absences, except: [:index, :show, :new]
-        resources :agent_roles, only: [:edit, :update]
+        resources :absences, except: %i[index show new]
+        resources :agent_roles, only: %i[edit update]
         resources :agent_agendas, only: [:show]
-        resources :agents, only: [:index, :destroy] do
-          resources :absences, only: [:index, :new]
-          resources :plage_ouvertures, only: [:index, :new]
+        resources :agents, only: %i[index destroy] do
+          resources :absences, only: %i[index new]
+          resources :plage_ouvertures, only: %i[index new]
           resources :stats, only: :index do
             collection do
               get :rdvs
@@ -157,7 +157,7 @@ Rails.application.routes.draw do
         resources :invitations, only: [:index] do
           post :reinvite, on: :member
         end
-        resource :merge_users, only: [:new, :create]
+        resource :merge_users, only: %i[new create]
         resource :rdv_wizard_step, only: [:new] do
           get :create
         end
@@ -184,7 +184,7 @@ Rails.application.routes.draw do
   post "departement/:departement" => "welcome#search_departement"
   get "departement/:departement/:service", to: "welcome#welcome_service", as: "welcome_service"
   get "departement/:departement/:service/:motif", to: "welcome#welcome_motif", as: "welcome_motif"
-  resources :lieux, only: [:index, :show]
+  resources :lieux, only: %i[index show]
   resources :motif_libelles, only: :index
   get "health_checks/rdv_events_stats", to: "health_checks#rdv_events_stats"
   get "health_checks/raise_on_purpose", to: "health_checks#raise_on_purpose"

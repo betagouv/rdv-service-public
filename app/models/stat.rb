@@ -4,9 +4,7 @@ class Stat
 
   DEFAULT_FORMAT = "%d/%m/%Y".freeze
 
-  def users_active
-    users.active
-  end
+  delegate :active, to: :users, prefix: true
 
   def users_group_by_week
     users.active.group_by_week("users.created_at", format: DEFAULT_FORMAT).count
@@ -44,7 +42,7 @@ class Stat
     new_keys = {
       agent: "Agent (#{rdvs.created_by_agent.count})",
       user: "Usager (#{rdvs.created_by_user.count})",
-      file_attente: "File d'attente (#{rdvs.created_by_file_attente.count})",
+      file_attente: "File d'attente (#{rdvs.created_by_file_attente.count})"
     }
     rdvs_group_by_week.transform_keys { |key| [new_keys[key[0].to_sym], key[1]] }
   end
@@ -59,7 +57,7 @@ class Stat
     rdvs_count_per_date = Hash.new(0)
     res.each { |key, rdvs_count| rdvs_count_per_date[key[1]] += rdvs_count }
     # ruby hashes are ordered and we care about the order here
-    res_ordered = [:seen, :excused, :unknown, :notexcused]
+    res_ordered = %i[seen excused unknown notexcused]
       .reverse
       .map { |status| res.select { |key, _rdvs_count| key[0] == status.to_s } }
       .reduce(:merge)

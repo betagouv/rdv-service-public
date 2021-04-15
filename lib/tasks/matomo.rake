@@ -18,7 +18,7 @@ namespace :matomo do
       payload = {
         idSite: id_site,
         token_auth: token_auth,
-        excludedQueryParameters: params_to_filter.join(","),
+        excludedQueryParameters: params_to_filter.join(",")
       }
       response = Typhoeus.post(url, body: payload)
       result = JSON.parse(response.body)

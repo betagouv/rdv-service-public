@@ -150,7 +150,7 @@ RSpec.configure do |config|
     next unless example.exception # only write logs for failed tests
 
     FileUtils.mkdir_p "tmp/capybara"
-    [:browser, :driver].each do |source|
+    %i[browser driver].each do |source|
       errors = Capybara.page.driver.browser.manage.logs.get(source)
       fp = "tmp/capybara/chrome.#{example.full_description.parameterize}.#{source}.log"
       File.open(fp, "w") do |f|

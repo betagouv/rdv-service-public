@@ -15,7 +15,7 @@ module RdvsHelper
   end
 
   def rdv_status_tag(rdv)
-    content_tag(:span, Rdv.human_enum_name(:status, rdv.status), class: "badge badge-info rdv-status rdv-status-#{rdv.status}")
+    tag.span(Rdv.human_enum_name(:status, rdv.status), class: "badge badge-info rdv-status rdv-status-#{rdv.status}")
   end
 
   def no_rdv_for_users
@@ -32,9 +32,9 @@ module RdvsHelper
 
   def rdv_tag(rdv)
     if rdv.cancelled_at
-      content_tag(:span, "Annulé", class: "badge badge-warning")
+      tag.span("Annulé", class: "badge badge-warning")
     elsif rdv.starts_at.future?
-      content_tag(:span, "À venir", class: "badge badge-info")
+      tag.span("À venir", class: "badge badge-info")
     end
   end
 
@@ -49,11 +49,11 @@ module RdvsHelper
   end
 
   def rdv_danger_badge(count)
-    content_tag(:span, count, class: "badge badge-danger") if count.positive?
+    tag.span(count, class: "badge badge-danger") if count.positive?
   end
 
   def rdv_danger_icon(count)
-    content_tag(:i, nil, class: "fa fa-exclamation-circle text-danger") if count.positive? && !stats_path?
+    tag.i(nil, class: "fa fa-exclamation-circle text-danger") if count.positive? && !stats_path?
   end
 
   def rdv_status_value(status)

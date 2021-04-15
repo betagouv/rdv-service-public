@@ -1,7 +1,7 @@
 class Admin::PlageOuverturesController < AgentAuthController
   respond_to :html, :json
 
-  before_action :set_plage_ouverture, only: [:show, :edit, :update, :destroy]
+  before_action :set_plage_ouverture, only: %i[show edit update destroy]
   before_action :build_plage_ouverture, only: [:create]
   before_action :set_agent
 
@@ -35,7 +35,7 @@ class Admin::PlageOuverturesController < AgentAuthController
       defaults = {
         first_day: Time.zone.now,
         start_time: Tod::TimeOfDay.new(9),
-        end_time: Tod::TimeOfDay.new(12),
+        end_time: Tod::TimeOfDay.new(12)
       }
     end
     @plage_ouverture = PlageOuverture.new(

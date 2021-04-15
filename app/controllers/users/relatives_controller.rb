@@ -1,7 +1,7 @@
 class Users::RelativesController < UserAuthController
   respond_to :html
 
-  before_action :set_user, only: [:edit, :update, :destroy]
+  before_action :set_user, only: %i[edit update destroy]
 
   def new
     @user = current_user.relatives.new

@@ -4,9 +4,7 @@ class RightBarResponder < ActionController::Responder
 
   def render(*args)
     options = args.extract_options!
-    if request.xhr?
-      options.merge! layout: right_bar_layout
-    end
+    options.merge! layout: right_bar_layout if request.xhr?
     controller.render(*args, options)
   end
 

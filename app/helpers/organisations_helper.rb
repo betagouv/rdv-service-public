@@ -9,9 +9,9 @@ module OrganisationsHelper
 
   def setup_checklist_item(value)
     if value
-      content_tag(:i, nil, class: "far fa-check-square", style: "color: green")
+      tag.i(nil, class: "far fa-check-square", style: "color: green")
     else
-      content_tag(:i, nil, class: "far  fa-square")
+      tag.i(nil, class: "far  fa-square")
     end
   end
 end

@@ -38,7 +38,7 @@ class DisplayableUserPresenter
   end
 
   def logement
-    return nil unless @user_profile.present?
+    return nil if @user_profile.blank?
 
     UserProfile.human_enum_name(:logement, @user_profile.logement)
   end
@@ -64,25 +64,25 @@ class DisplayableUserPresenter
   end
 
   def clickable_email
-    return "N/A" unless email.present?
+    return "N/A" if email.blank?
 
     mail_to(email)
   end
 
   def clickable_phone_number
-    return "N/A" unless phone_number.present?
+    return "N/A" if phone_number.blank?
 
     link_to(phone_number, "tel:#{phone_number_formatted}")
   end
 
   def email_and_notification
-    return "N/A" unless email.present?
+    return "N/A" if email.blank?
 
     "#{clickable_email} - Notifications par email #{notify_by_email}".html_safe
   end
 
   def phone_number_and_notification
-    return "N/A" unless phone_number.present?
+    return "N/A" if phone_number.blank?
 
     "#{clickable_phone_number} - Notifications par SMS #{notify_by_sms}".html_safe
   end

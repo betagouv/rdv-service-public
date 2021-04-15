@@ -9,7 +9,7 @@ describe Admin::RdvWizardForm::Step2 do
       attributes = {
         starts_at: Time.zone.now,
         motif_id: motif.id,
-        user_ids: [user.id],
+        user_ids: [user.id]
       }
       rdv_wizard = described_class.new(agent, organisation, attributes)
       expect(rdv_wizard.save).to be true
@@ -42,7 +42,7 @@ describe Admin::RdvWizardForm::Step2 do
       attributes = {
         starts_at: Time.zone.now,
         motif_id: motif.id,
-        user_ids: [user.id],
+        user_ids: [user.id]
       }
       rdv_wizard = described_class.new(agent, organisation, attributes)
       expect(rdv_wizard.save).to be false
@@ -55,7 +55,7 @@ describe Admin::RdvWizardForm::Step2 do
       attributes = {
         starts_at: Time.zone.now,
         motif_id: motif.id,
-        user_ids: [user1.id, user2.id],
+        user_ids: [user1.id, user2.id]
       }
       rdv_wizard = described_class.new(agent, organisation, attributes)
       expect(rdv_wizard.save).to be true
@@ -68,7 +68,7 @@ describe Admin::RdvWizardForm::Step2 do
       attributes = {
         starts_at: Time.zone.now,
         motif_id: motif.id,
-        user_ids: [user2.id],
+        user_ids: [user2.id]
       }
       rdv_wizard = described_class.new(agent, organisation, attributes)
       expect(rdv_wizard.save).to be true

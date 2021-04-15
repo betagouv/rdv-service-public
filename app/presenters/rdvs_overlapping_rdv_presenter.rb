@@ -37,7 +37,7 @@ class RdvsOverlappingRdvPresenter
   def i18n_attrs_base
     {
       agent_name: agent.full_name,
-      ends_at_time: I18n.l(rdv.ends_at, format: :time_only),
+      ends_at_time: I18n.l(rdv.ends_at, format: :time_only)
     }
   end
 

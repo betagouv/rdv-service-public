@@ -1,5 +1,5 @@
 class Api::V1::UserProfilesController < Api::V1::BaseController
-  PERMITTED_PARAMS = [:organisation_id, :user_id, :logement, :notes].freeze
+  PERMITTED_PARAMS = %i[organisation_id user_id logement notes].freeze
 
   def create
     user_profile = UserProfile.new(user_profile_params)

@@ -18,7 +18,7 @@ class PlageOuvertureDashboard < Administrate::BaseDashboard
     start_time: Field::Time,
     end_time: Field::Time,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime,
+    updated_at: Field::DateTime
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -26,40 +26,40 @@ class PlageOuvertureDashboard < Administrate::BaseDashboard
   #
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
-  COLLECTION_ATTRIBUTES = [
-    :id,
-    :organisation,
-    :agent,
-    :lieu,
+  COLLECTION_ATTRIBUTES = %i[
+    id
+    organisation
+    agent
+    lieu
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = [
-    :title,
-    :organisation,
-    :agent,
-    :motifs,
-    :lieu,
-    :first_day,
-    :start_time,
-    :end_time,
-    :created_at,
-    :updated_at,
+  SHOW_PAGE_ATTRIBUTES = %i[
+    title
+    organisation
+    agent
+    motifs
+    lieu
+    first_day
+    start_time
+    end_time
+    created_at
+    updated_at
   ].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
-  FORM_ATTRIBUTES = [
-    :title,
-    :organisation,
-    :agent,
-    :lieu,
-    :motifs,
-    :lieu,
-    :first_day,
-    :start_time,
-    :end_time,
+  FORM_ATTRIBUTES = %i[
+    title
+    organisation
+    agent
+    lieu
+    motifs
+    lieu
+    first_day
+    start_time
+    end_time
   ].freeze
 end

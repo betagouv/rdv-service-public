@@ -9,7 +9,7 @@ describe Admin::RdvWizardStepsController, type: :controller do
         duration_in_min: 30,
         motif_id: 1,
         lieu_id: 1,
-        starts_at: DateTime.new(2020, 4, 20, 8, 0, 0),
+        starts_at: DateTime.new(2020, 4, 20, 8, 0, 0)
       }
     end
     let!(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }

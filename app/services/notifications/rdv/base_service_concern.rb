@@ -20,9 +20,7 @@ module Notifications::Rdv::BaseServiceConcern
         .each { notify_user_by_sms(_1) }
     end
 
-    if methods.include?(:notify_agent)
-      @rdv.agents.each { notify_agent(_1) }
-    end
+    @rdv.agents.each { notify_agent(_1) } if methods.include?(:notify_agent)
 
     true
   end

@@ -71,9 +71,7 @@ class DefaultAgentPolicy < ApplicationPolicy
     end
   end
 
-  def admin?
-    current_agent_role.admin?
-  end
+  delegate :admin?, to: :current_agent_role
 
   def admin_and_same_org?
     admin? && same_org?

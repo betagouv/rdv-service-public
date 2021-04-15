@@ -1,20 +1,20 @@
 class Admin::UsersController < AgentAuthController
   respond_to :html, :json
 
-  before_action :set_organisation, only: [:new, :create]
-  before_action :set_user, except: [:index, :search, :new, :create, :link_to_organisation]
+  before_action :set_organisation, only: %i[new create]
+  before_action :set_user, except: %i[index search new create link_to_organisation]
 
-  PERMITTED_ATTRIBUTES = [
-    :id,
-    :first_name, :last_name, :birth_name, :email, :phone_number,
-    :birth_date, :address, :caisse_affiliation, :affiliation_number,
-    :family_situation, :number_of_children,
-    :notify_by_sms, :notify_by_email
+  PERMITTED_ATTRIBUTES = %i[
+    id
+    first_name last_name birth_name email phone_number
+    birth_date address caisse_affiliation affiliation_number
+    family_situation number_of_children
+    notify_by_sms notify_by_email
   ].freeze
 
   PERMITTED_NESTED_ATTRIBUTES = {
     agent_ids: [],
-    user_profiles_attributes: [:notes, :logement, :id, :organisation_id],
+    user_profiles_attributes: %i[notes logement id organisation_id]
   }.freeze
 
   def index
@@ -160,7 +160,7 @@ class Admin::UsersController < AgentAuthController
   end
 
   def search_params
-    params.require(:term) unless params[:term].blank?
+    params.require(:term) if params[:term].present?
   end
 
   def set_user

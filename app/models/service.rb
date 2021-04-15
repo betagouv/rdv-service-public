@@ -8,7 +8,7 @@ class Service < ApplicationRecord
   PMI = "PMI (Protection Maternelle Infantile)".freeze
 
   scope :with_motifs, -> { where.not(name: SECRETARIAT) }
-  scope :secretariat, -> { where(name: SECRETARIAT).first }
+  scope :secretariat, -> { find_by(name: SECRETARIAT) }
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }
 
   def secretariat?

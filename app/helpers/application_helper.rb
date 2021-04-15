@@ -49,7 +49,7 @@ module ApplicationHelper
   end
 
   def add_button(label, path, header: false)
-    link_to label, path, class: "btn #{header ? "btn-outline-white" : "btn-primary"}", data: { rightbar: true }
+    link_to label, path, class: "btn #{header ? 'btn-outline-white' : 'btn-primary'}", data: { rightbar: true }
   end
 
   def agents_or_users_body_class
@@ -67,7 +67,7 @@ module ApplicationHelper
   end
 
   def icon_tag_tooltip(title, icon)
-    content_tag(:i, nil, class: "fa fa-#{icon}", data: { toggle: "tooltip" }, title: title)
+    tag.i(nil, class: "fa fa-#{icon}", data: { toggle: "tooltip" }, title: title)
   end
 
   def errors_full_messages(object)
@@ -88,10 +88,6 @@ module ApplicationHelper
   end
 
   def human_id(organisation_or_sector)
-    content_tag(
-      :span,
-      organisation_or_sector.human_id,
-      class: "badge badge-light text-monospace"
-    )
+    tag.span(organisation_or_sector.human_id, class: "badge badge-light text-monospace")
   end
 end

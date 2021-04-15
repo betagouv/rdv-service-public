@@ -27,7 +27,5 @@ class TimeSlot
     ends_at.to_time_of_day
   end
 
-  def to_date
-    starts_at.to_date
-  end
+  delegate :to_date, to: :starts_at
 end

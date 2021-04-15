@@ -82,7 +82,7 @@ describe RdvsHelper do
       travel_to(now)
       expected = [
         ["À venir", "unknown"],
-        ["Vu", "seen"],
+        %w[Vu seen],
         ["En salle d'attente", "waiting"],
         ["Absent excusé", "excused"]
       ]
@@ -95,7 +95,7 @@ describe RdvsHelper do
       travel_to(now)
       expected = [
         ["À renseigner", "unknown"],
-        ["Vu", "seen"],
+        %w[Vu seen],
         ["Absent non excusé", "notexcused"],
         ["Absent excusé", "excused"]
       ]

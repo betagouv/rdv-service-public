@@ -1,9 +1,9 @@
 class WelcomeController < ApplicationController
-  PERMITTED_PARAMS = [
-    :departement, :where, :service, :motif_name_with_location_type, :latitude, :longitude, :city_code, :street_ban_id
+  PERMITTED_PARAMS = %i[
+    departement where service motif_name_with_location_type latitude longitude city_code street_ban_id
   ].freeze
 
-  before_action :set_lieu_variables, only: [:welcome_departement, :welcome_service]
+  before_action :set_lieu_variables, only: %i[welcome_departement welcome_service]
 
   def index; end
 

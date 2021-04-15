@@ -10,7 +10,6 @@ FactoryBot.define do
 
     duration_in_min { 45 }
     starts_at { DateTime.parse("2020-06-15 10:30").in_time_zone }
-    context { "Vient en taxi depuis Lille" }
 
     status { "unknown" }
 
@@ -30,7 +29,7 @@ FactoryBot.define do
           "2020-01-13 09:10",
           "2020-08-03 17:30",
           "2020-11-20 16:05",
-          "2020-04-01 15:35",
+          "2020-04-01 15:35"
         ][n % 10]
         DateTime.parse(d).in_time_zone
       end

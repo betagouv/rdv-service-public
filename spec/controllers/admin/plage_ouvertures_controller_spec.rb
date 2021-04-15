@@ -236,7 +236,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
                 motif_ids: [motif.id],
                 lieu_id: lieu1.id,
                 organisation_id: organisation.id,
-                agent_id: agent.id,
+                agent_id: agent.id
                 # missing fields
               }
             }

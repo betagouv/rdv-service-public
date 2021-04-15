@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
@@ -97,10 +99,11 @@ gem "omniauth-rails_csrf_protection", "~> 0.1"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
+  gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "brakeman", require: false
   gem "rubocop", "~> 1", require: false
   gem "rubocop-rspec"
+  gem "rubocop-rails"
   gem "rspec-rails", ">= 4.0.0.beta"
   gem "rspec_junit_formatter", require: false
   gem "rails-controller-testing"

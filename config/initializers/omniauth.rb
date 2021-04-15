@@ -6,7 +6,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   provider(
     :franceconnect,
     name: :franceconnect,
-    scope: [:email, :openid, :birthdate, :birthplace, :given_name, :family_name, :birthcountry],
+    scope: %i[email openid birthdate birthplace given_name family_name birthcountry],
     issuer: "https://#{ENV['FRANCECONNECT_HOST']}",
     client_options: {
       identifier: ENV["FRANCECONNECT_APP_ID"],

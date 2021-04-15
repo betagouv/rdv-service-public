@@ -34,7 +34,7 @@ class MoveUserAndRdvNotesToUserNotes < ActiveRecord::Migration[6.0]
 
   def migrate_rdv_notes(rdv)
     target_user = rdv.users.responsible.first || rdv.users.first
-    raise unless target_user.present?
+    raise if target_user.blank?
 
     UserNote.new(
       user: target_user,

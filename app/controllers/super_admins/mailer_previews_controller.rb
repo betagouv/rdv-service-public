@@ -15,9 +15,7 @@ module SuperAdmins
 
     def show
       @email_action = File.basename(params[:id])
-      unless @preview.email_exists?(@email_action)
-        raise AbstractController::ActionNotFound, "Email '#{@email_action}' not found in #{@preview.name}"
-      end
+      raise AbstractController::ActionNotFound, "Email '#{@email_action}' not found in #{@preview.name}" unless @preview.email_exists?(@email_action)
 
       @page_title = "Mailer Preview for #{@preview.preview_name}##{@email_action}"
       @email = @preview.call(@email_action, params)

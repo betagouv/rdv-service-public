@@ -80,8 +80,8 @@ RSpec.describe LieuxController, type: :controller do
             city_code: "62100",
             where: "useless 12345",
             service: motif.service_id,
-            motif_name_with_location_type: motif.name_with_location_type,
-          },
+            motif_name_with_location_type: motif.name_with_location_type
+          }
         }
       end
 

@@ -31,7 +31,7 @@ class Admin::RdvSearchForm
   end
 
   def to_query
-    [:organisation_id, :start, :end, :agent_id, :user_id, :status, :show_user_details, :lieu_id]
+    %i[organisation_id start end agent_id user_id status show_user_details lieu_id]
       .map { [_1, send(_1)] }.to_h
   end
 end

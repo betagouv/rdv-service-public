@@ -2,56 +2,60 @@ inherit_from: .rubocop_todo.yml
 
 require:
   - rubocop-rspec
+  - rubocop-rails
 
 AllCops:
   Exclude:
     - "vendor/bundle/**/*"
     - "bin/*"
     - "node_modules/**/*"
+    - 'db/schema.rb'
   NewCops: enable
   TargetRubyVersion: 2.7.2
-
-Layout/MultilineMethodCallIndentation:
-  EnforcedStyle: indented
-
-Style/AsciiComments:
-  Enabled: false
-
-Style/NumericLiterals:
-  Exclude:
-    - "db/schema.rb"
-
-Style/HashEachMethods:
-  Enabled: true
-
-Style/HashTransformKeys:
-  Enabled: true
-
-Style/HashTransformValues:
-  Enabled: true
-
-Metrics/BlockLength:
-  Exclude:
-    - 'db/schema.rb'
-
-Style/StringLiterals:
-  EnforcedStyle: double_quotes
-  Enabled: true
-
-Lint/MissingSuper:
-  Enabled: false
 
 Bundler/OrderedGems:
   Exclude:
     - 'Gemfile'
 
-Lint/EmptyBlock:
-  Enabled: False
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Rails/ApplicationController:
+  Exclude:
+    - 'app/controllers/api/v1/base_controller.rb'
+
+Rails/CreateTableWithTimestamps:
+  Exclude:
+    - 'db/migrate/20200427093834_create_agents_users_join_table.rb'
+    - 'db/migrate/20201005094454_extract_sectors.rb'
+    - 'db/migrate/20210301135256_create_territories.rb'
+
+Rails/Delegate:
+  Exclude:
+    - 'config/initializers/recurrence_monkey_patch.rb'
+
+Rails/DynamicFindBy:
+  Exclude:
+    - 'spec/features/agents/admin_can_configure_the_organisation_spec.rb'
+
+Rails/RakeEnvironment:
+  Exclude:
+    - 'lib/tasks/matomo.rake'
+
+Rails/ReversibleMigration:
+  Exclude:
+    - 'db/migrate/20200401145901_remove_by_phone_from_motifs.rb'
+    - 'db/migrate/20200907084438_delete_old_notes_from_users.rb'
+    - 'db/migrate/20200907123203_remove_old_notes_from_user_profiles.rb'
+    - 'db/migrate/20201112164609_remove_disable_notifications_for_users_from_motifs.rb'
+
+Style/AsciiComments:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
 
 RSpec/ContextWording:
-  Enabled: False
-
-RSpec/MultipleExpectations:
   Enabled: False
 
 RSpec/ExampleLength:
@@ -59,3 +63,12 @@ RSpec/ExampleLength:
 
 RSpec/MessageSpies:
   EnforcedStyle: receive
+
+RSpec/MultipleExpectations:
+  Enabled: False
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false

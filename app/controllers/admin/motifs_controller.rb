@@ -1,8 +1,8 @@
 class Admin::MotifsController < AgentAuthController
   respond_to :html, :json
 
-  before_action :set_organisation, only: [:new, :create]
-  before_action :set_motif, only: [:show, :edit, :update, :destroy]
+  before_action :set_organisation, only: %i[new create]
+  before_action :set_motif, only: %i[show edit update destroy]
 
   def index
     @unfiltered_motifs = policy_scope(Motif).active

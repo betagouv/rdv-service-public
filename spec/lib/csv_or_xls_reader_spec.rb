@@ -16,7 +16,7 @@ describe CsvOrXlsReader::Importer do
         [
           { "city_code" => "62040", "city_name" => "AIRE-SUR-LA-LYS", "organisation_id" => "arques" },
           { "city_code" => "62110", "city_name" => "ARQUES", "organisation_id" => "arques" },
-          { "city_code" => "62007", "city_name" => "ACQ", "organisation_id" => "arras-sud" },
+          { "city_code" => "62007", "city_name" => "ACQ", "organisation_id" => "arras-sud" }
         ]
       )
     end
@@ -30,7 +30,7 @@ describe CsvOrXlsReader::Importer do
         [
           { "city_code" => "62040", "city_name" => "AIRE-SUR-LA-LYS", "organisation_id" => "arques" },
           { "city_code" => "62110", "city_name" => "ARQUES", "organisation_id" => "arques" },
-          { "city_code" => "62007", "city_name" => "ACQ", "organisation_id" => "arras-sud" },
+          { "city_code" => "62007", "city_name" => "ACQ", "organisation_id" => "arras-sud" }
         ]
       )
     end
