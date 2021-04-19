@@ -30,7 +30,9 @@ shared_examples_for "recurrence" do
 
     context "recurring with end date" do
       let(:first_day) { Date.new(2019, 11, 17) }
-      let(:model_instance) { create(model_symbol, first_day: first_day, end_time: Tod::TimeOfDay.new(12), recurrence: Montrose.every(:week, on: [:tuesday], starts: first_day, until: Date.new(2020, 11, 25))) }
+      let(:model_instance) do
+        create(model_symbol, first_day: first_day, end_time: Tod::TimeOfDay.new(12), recurrence: Montrose.every(:week, on: [:tuesday], starts: first_day, until: Date.new(2020, 11, 25)))
+      end
 
       it { is_expected.to eq(Time.zone.local(2020, 11, 25, 12)) }
     end
@@ -114,7 +116,10 @@ shared_examples_for "recurrence" do
 
     context "when there is a daily recurrence and until is set" do
       let(:first_day) { Date.new(2019, 7, 22) }
-      let(:model_instance) { build(model_symbol, first_day: first_day, start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(12), recurrence: Montrose.every(:day, starts: first_day, until: Date.new(2019, 8, 5)).to_json) }
+      let(:model_instance) do
+        build(model_symbol, first_day: first_day, start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(12),
+                            recurrence: Montrose.every(:day, starts: first_day, until: Date.new(2019, 8, 5)).to_json)
+      end
       let(:date_range) { Date.new(2019, 8, 5)..Date.new(2019, 8, 11) }
 
       it do

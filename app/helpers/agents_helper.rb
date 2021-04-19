@@ -12,7 +12,13 @@ module AgentsHelper
   end
 
   def delete_dropdown_link(agent)
-    link_to "Supprimer", admin_organisation_agent_path(current_organisation, agent), data: { confirm: "Êtes-vous sûr de vouloir supprimer cet agent ?" }, method: :delete, class: "dropdown-item" if policy([:agent, agent]).destroy?
+    return unless policy([:agent, agent]).destroy?
+
+    link_to "Supprimer",
+            admin_organisation_agent_path(current_organisation, agent),
+            data: { confirm: "Êtes-vous sûr de vouloir supprimer cet agent ?" },
+            method: :delete,
+            class: "dropdown-item"
   end
 
   def build_link_to_rdv_wizard_params(creneau, form)

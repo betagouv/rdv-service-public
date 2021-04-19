@@ -17,6 +17,9 @@ Bundler/OrderedGems:
   Exclude:
     - 'Gemfile'
 
+Layout/LineLength:
+  Max: 200
+
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 

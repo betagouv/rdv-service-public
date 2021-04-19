@@ -40,7 +40,9 @@ class Agents::RegistrationsController < Devise::RegistrationsController
     org_with_upcoming_rdvs = current_agent.organisations.all.find { AgentRemoval.new(@agent, _1).upcoming_rdvs? }
     return unless org_with_upcoming_rdvs
 
-    flash[:error] = "Impossible de supprimer votre compte car vous avez des RDVs à venir dans l'organisation #{org_with_upcoming_rdvs.name}. Veuillez les supprimer ou les réaffecter avant de supprimer votre compte."
+    flash[:error] =
+      "Impossible de supprimer votre compte car vous avez des RDVs à venir dans l'organisation #{org_with_upcoming_rdvs.name}. "\
+      "Veuillez les supprimer ou les réaffecter avant de supprimer votre compte."
     redirect_to edit_agent_registration_path
   end
 
