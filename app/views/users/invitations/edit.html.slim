@@ -1,20 +1,20 @@
-- content_for :title
-  h1 Inscription
+- content_for :title, "Inscription"
 
-.container.mt-3
-  .card
-    .card-body
-      = simple_form_for resource, as: resource_name, url: invitation_path(resource_name), html: { method: :put } do |f|
-        .text-center.w-75.m-auto
-        = devise_error_messages!
-        = f.hidden_field :invitation_token
-        .form-row
-          .col-md-6= f.input :first_name, placeholder: 'Prénom', label: false
-          .col-md-6= f.input :last_name, placeholder: 'Nom', label: false
-        .form-row
-          .col-md-12= f.input :phone_number, as: :tel # may be prefilled
-        .form-group
-          = f.label :password
-          = f.password_field :password, required: true, class: 'form-control ', placeholder: 'Votre mot de passe', id: "password"
-          span.fa.fa-fw.fa-eye.toggle-password role="button" tabindex="0"
-        .text-center= f.button :submit, t("devise.invitations.edit.submit_button")
+.card
+  .card-body
+    = simple_form_for resource, as: resource_name, url: invitation_path(resource_name), html: { method: :put } do |f|
+      .text-center.w-75.m-auto
+      = devise_error_messages!
+      = f.hidden_field :invitation_token
+      .form-row
+        .col-md-6= f.input :first_name, placeholder: 'Prénom'
+        .col-md-6= f.input :last_name, placeholder: 'Nom'
+      .form-row
+        .col-md-12= f.input :email, value: resource.email, disabled: true
+      .form-row
+        .col-md-12= f.input :phone_number, as: :tel
+      .form-group
+        = f.label :password
+        = f.password_field :password, required: true, class: 'form-control ', placeholder: 'Votre mot de passe', id: "password"
+        span.fa.fa-fw.fa-eye.toggle-password role="button" tabindex="0"
+      .text-center= f.button :submit, t("devise.invitations.edit.submit_button")
