@@ -11,6 +11,8 @@
         .form-row
           .col-md-6= f.input :first_name, placeholder: 'Prénom', label: false
           .col-md-6= f.input :last_name, placeholder: 'Nom', label: false
+        .form-row
+          .col-md-12= f.input :phone_number, as: :tel # may be prefilled
         .form-group
           = f.label :password
           = f.password_field :password, required: true, class: 'form-control ', placeholder: 'Votre mot de passe', id: "password"
