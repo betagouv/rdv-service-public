@@ -1,4 +1,4 @@
-RSpec.describe FileAttenteJob, type: :job do
+RSpec.describe CronJob::FileAttenteJob, type: :job do
   describe "#perform" do
     let(:now) { DateTime.parse("01-01-2019 09:00") }
     let(:plage_ouverture) { create(:plage_ouverture, first_day: 2.weeks.from_now, start_time: Tod::TimeOfDay.new(9)) }
