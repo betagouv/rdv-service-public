@@ -10,7 +10,7 @@
   ] \
 do
   = simple_form_for(@rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
-    = render(partial: 'layouts/model_errors', locals: { model: @rdv_wizard, f: f })
+    = render('model_errors', model: @rdv_wizard, f: f)
     = collapsible_form_fields_for_warnings(@rdv_wizard) do
       = render "hidden_fields", f: f, step: 4, \
         fields: [:motif_id, :lieu_id, :context, :starts_at, :duration_in_min, :address, :active_warnings_confirm_decision], \

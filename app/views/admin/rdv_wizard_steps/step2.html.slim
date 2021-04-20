@@ -1,5 +1,5 @@
 - content_for(:menu_item) { 'menu-agendas' }
-- content_for(:title) { "Créer RDV 2/4"}
+- content_for(:title) { "Créer RDV 2/4" }
 
 - modals_return_location = new_admin_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 2))
 
@@ -11,7 +11,7 @@
   next_steps: [{step: 3}, {step: 4}] \
 do
   = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
-    = render(partial: 'layouts/model_errors', locals: { model: @rdv_wizard })
+    = render 'model_errors', model: @rdv_wizard
     = render "hidden_fields", f: f, step: 2, \
       fields: [:motif_id, :starts_at, :lieu_id, :service_id], \
       agent_ids: @rdv.agent_ids

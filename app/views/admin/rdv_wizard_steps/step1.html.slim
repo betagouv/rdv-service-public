@@ -3,7 +3,7 @@
 
 = render "card", rdv_wizard_form: @rdv_wizard, next_steps: [{step: 2}, {step: 3}, {step: 4}] do
   = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
-    = render partial: 'layouts/model_errors', locals: { model: @rdv_wizard }
+    = render 'model_errors', model: @rdv_wizard
     = render "hidden_fields", f: f, step: 1, \
       fields: [:starts_at, :lieu_id, :context, :service_id], \
       user_ids: @rdv.user_ids, agent_ids: @rdv.agent_ids

@@ -18,7 +18,7 @@
       .card-overlay-spinner.js-spinner-overlay.d-none
         .spinner.spinner-border
       .card-body
-        = render partial: 'layouts/model_errors', locals: { model: @sector_attribution }
+        = render 'model_errors', model: @sector_attribution
         = render "form", \
           sector_attribution: @sector_attribution, \
           sector: @sector, \

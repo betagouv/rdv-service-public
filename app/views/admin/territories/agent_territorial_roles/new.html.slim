@@ -13,7 +13,7 @@
     .card
       .card-body
         = simple_form_for([:admin, current_territory, @role]) do |f|
-          = render partial: 'layouts/model_errors', locals: { model: @role }
+          = render 'model_errors', model: @role
           = f.input :territory_id, as: :hidden
           = f.association :agent, \
             collection: @possible_agents,

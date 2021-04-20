@@ -10,7 +10,7 @@ do |f|
   .card
     .card-header Recherche
     .card-body
-      = render partial: 'layouts/model_errors', locals: { model: @sectorisation_test_form }
+      = render 'model_errors', model: @sectorisation_test_form
       = f.input \
         :where, \
         label: "Adresse", \

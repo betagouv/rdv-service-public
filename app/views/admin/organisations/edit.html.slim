@@ -8,7 +8,7 @@
     .card
       .card-body
         = simple_form_for [:admin, @organisation]  do |f|
-          = render partial: 'layouts/model_errors', locals: { model: @organisation }
+          = render 'model_errors', model: @organisation
           = f.input :name
           = f.input :phone_number, placeholder: "ex: 0412345667"
           = f.input :website, placeholder: "ex: http://rdv-solidarites.fr"

@@ -20,7 +20,7 @@
           div Le niveau de permissions des agents (Agent / Admin) est dorénavant indépendant par organisation
 
         = simple_form_for [:admin, current_organisation, @agent_role] do |f|
-          = render partial: 'layouts/model_errors', locals: { model: @agent_role }
+          = render 'model_errors', model: @agent_role
           = f.simple_fields_for :agent do |ff|
             = ff.input :service_id, collection: [@agent_role.agent.service], as: :select, label: 'Service', hint: "Vous ne pouvez pas changer un agent de service, cela créerait des incohérences. Si vous voulez vraiment réaliser cette opération, il faut supprimer et recréer le compte de l'agent", disabled: true
 

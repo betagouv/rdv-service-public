@@ -26,7 +26,7 @@
         class=(@support_ticket_form.errors.any? ? "" : "collapse")
       ]
         = simple_form_for [:users, @support_ticket_form], url: support_tickets_path(anchor: "tech-support"), as: :support_ticket do |f|
-          = render partial: 'layouts/model_errors', locals: { model: @support_ticket_form }
+          = render 'model_errors', model: @support_ticket_form
           = f.input :subject, label: "Sujet", collection: SupportTicketForm::SUBJECTS, input_html: { class: "js-support-ticket-form-subject" }
           .row
             .col-md-6= f.input :first_name, label: "Prénom"

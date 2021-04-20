@@ -13,7 +13,7 @@
     - if from_modal?
       = hidden_field '', :return_location, value: params[:return_location]
       = hidden_field '', :modal, value: true
-    = render partial: 'layouts/model_errors', locals: { model: user_form, f: f }
+    = render 'model_errors', model: user_form, f: f
 
     = collapsible_form_fields_for_warnings(user_form) do
       = f.input( \

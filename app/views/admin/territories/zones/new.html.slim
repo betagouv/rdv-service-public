@@ -18,5 +18,5 @@
       .card-overlay-spinner.js-spinner-overlay.d-none
         .spinner.spinner-border
       .card-body
-        = render partial: 'layouts/model_errors', locals: { model: @zone }
+        = render 'model_errors', model: @zone
         = render "form", zone: @zone, sector: @sector

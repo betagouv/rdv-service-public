@@ -1,6 +1,6 @@
 - if plage_ouverture.available_motifs.any?
   = simple_form_for [:admin, plage_ouverture.organisation, plage_ouverture] do |f|
-    = render(partial: 'layouts/model_errors', locals: { model: plage_ouverture, f: f })
+    = render('model_errors', model: plage_ouverture, f: f)
     = collapsible_form_fields_for_warnings(plage_ouverture) do
       = f.hidden_field :agent_id
       = f.input :title, hint: 'Uniquement visible en interne', placeholder: 'Ex: Permanence PMI exceptionnelle'
