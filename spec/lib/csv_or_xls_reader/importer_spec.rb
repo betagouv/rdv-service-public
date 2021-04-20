@@ -2,11 +2,12 @@ describe CsvOrXlsReader::Importer do
   subject { described_class.new(form_file).rows }
 
   let(:form_file) { double }
-  let(:asset_path) { File.join(File.dirname(__FILE__), "../assets/#{filename}") }
+  let(:asset_path) { File.join(File.dirname(__FILE__), "../../assets/#{filename}") }
 
-  before { allow(form_file).to receive(:original_filename).and_return(filename) }
-
-  before { allow(form_file).to receive(:tempfile).and_return(asset_path) }
+  before do
+    allow(form_file).to receive(:original_filename).and_return(filename)
+    allow(form_file).to receive(:tempfile).and_return(asset_path)
+  end
 
   context "csv" do
     let(:filename) { "zones_1.csv" }

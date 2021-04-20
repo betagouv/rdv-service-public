@@ -54,16 +54,6 @@ RSpec/ExpectInHook:
     - 'spec/service_models/users/creneau_search_spec.rb'
     - 'spec/services/send_transactional_sms_service_spec.rb'
 
-# Offense count: 4
-# Configuration parameters: Include, CustomTransform, IgnoreMethods, SpecSuffixOnly.
-# Include: **/*_spec*rb*, **/spec/**/*
-RSpec/FilePath:
-  Exclude:
-    - 'spec/controllers/users/file_attente_controller_spec.rb'
-    - 'spec/helpers/users_spec.rb'
-    - 'spec/lib/csv_or_xls_reader_spec.rb'
-    - 'spec/services/notifications/rdv/base_service_spec.rb'
-
 # Offense count: 15
 # Configuration parameters: AssignmentOnly.
 RSpec/InstanceVariable:
