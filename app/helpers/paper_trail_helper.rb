@@ -43,7 +43,7 @@ module PaperTrailHelper
 
       class LieuId < Base
         def to_s
-          Lieu.find(@value).full_name
+          ::Lieu.find_by(id: @value)&.full_name || super
         end
       end
     end
