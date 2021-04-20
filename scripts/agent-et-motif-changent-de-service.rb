@@ -36,22 +36,10 @@ Agent.transaction do
       end
     end
 
-    # NOTE : si un libellé de motif était en doublon, du coup, le motif le sera aussi sur le libelle, avec des configurations potentiellement différente.
-    # Deux options : 
-    # - vérifier avant, et faire en sorte qu'il n'y ai pas de doublon
-    # - créer un motif avec un (2) dans le libellé pour que ce soit nettoyé après
-    #
-    # J'opte pour l'ajout d'une *
-
-
     Agent.joins(:roles).where("agents_organisations.organisation_id": ORGANISATION_ID, service: services_source).each do |agent|
       agent.service = service_destination
       agent.save!(validate: false)
     end
-
-    # NOTE : il y a une validation qui empêchele changement de service.
-    # C'est un peu dangereux.
-    # L'autre option consisterais à créer un nouvel agent avec le bon service, et supprimer l'ancien. Ça me semble encore plus dangereux.
 
   end
 end
