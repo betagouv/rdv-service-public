@@ -1,29 +1,6 @@
 name: CI
 on: push
 jobs:
-  rubocop:
-    name: Linter Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Ruby 2.7.2
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.7.2
-          bundler-cache: true
-      - run: bundle exec rubocop --parallel
-  brakeman:
-    name: Security Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.7.2
-          bundler-cache: true
-      - run: bundle exec brakeman
-
   test_seeds:
     name: Create and load DB with seeds
     runs-on: ubuntu-latest
