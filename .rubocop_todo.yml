@@ -157,15 +157,6 @@ Rails/FilePath:
     - 'db/seeds.rb'
     - 'spec/rails_helper.rb'
 
-# Offense count: 4
-# Configuration parameters: Include.
-# Include: app/models/**/*.rb
-Rails/HasAndBelongsToMany:
-  Exclude:
-    - 'app/models/agent.rb'
-    - 'app/models/motif.rb'
-    - 'app/models/plage_ouverture.rb'
-    - 'app/models/user.rb'
 
 # Offense count: 3
 # Configuration parameters: Include.
