@@ -3,7 +3,7 @@
 class RestoreRdvContext < ActiveRecord::Migration[6.0]
   def up
     rename_column :rdvs, :old_notes, :context
-    puts "will verify #{rdvs_to_migrate.count} rdvs with a context"
+    Rails.logger.debug "will verify #{rdvs_to_migrate.count} rdvs with a context"
     counters = { user_note_destroyed: 0, context_cleaned: 0 }
 
     # disable AR logging, it's quite intense
@@ -16,7 +16,7 @@ class RestoreRdvContext < ActiveRecord::Migration[6.0]
     end
 
     ActiveRecord::Base.logger = old_logger
-    puts "finished ! totals: #{counters}"
+    Rails.logger.debug "finished ! totals: #{counters}"
   end
 
   def down
@@ -32,11 +32,11 @@ class RestoreRdvContext < ActiveRecord::Migration[6.0]
   def migrate_rdv(rdv)
     user_note = find_rdv_matching_user_note(rdv)
     if user_note.present?
-      puts "destroying user_note!"
+      Rails.logger.debug "destroying user_note!"
       user_note.destroy!
       :user_note_destroyed
     else
-      puts "user_note disappeared, cleaning context..."
+      Rails.logger.debug "user_note disappeared, cleaning context..."
       rdv.update_columns(context: nil)
       :context_cleaned
     end
