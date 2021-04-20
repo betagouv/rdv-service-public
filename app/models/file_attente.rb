@@ -38,7 +38,7 @@ class FileAttente < ApplicationRecord
       next unless user.notifiable_by_email?
 
       Users::FileAttenteMailer.new_creneau_available(rdv, user).deliver_later if
-      update!(notifications_sent: notifications_sent + 1, last_creneau_sent_at: Time.now)
+      update!(notifications_sent: notifications_sent + 1, last_creneau_sent_at: Time.zone.now)
       rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: :file_attente_creneaux_available)
     end
   end

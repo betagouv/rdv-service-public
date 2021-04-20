@@ -208,14 +208,14 @@ describe Rdv, type: :model do
     end
 
     it "return unknown_future" do
-      today = Time.new(2020, 3, 23, 14, 54)
+      today = Time.zone.local(2020, 3, 23, 14, 54)
       travel_to(today)
       rdv = build(:rdv, status: "unknown", starts_at: today + 1.hour)
       expect(rdv.temporal_status).to eq("unknown_future")
     end
 
     it "return unknown_past" do
-      today = Time.new(2020, 3, 23, 14, 54)
+      today = Time.zone.local(2020, 3, 23, 14, 54)
       travel_to(today)
       rdv = build(:rdv, status: "unknown", starts_at: today - 1.minute)
       expect(rdv.temporal_status).to eq("unknown_past")

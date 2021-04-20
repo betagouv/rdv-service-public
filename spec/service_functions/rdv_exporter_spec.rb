@@ -148,7 +148,7 @@ describe RdvExporter, type: :service do
         travel_to(now)
         major = build(:user, birth_date: Date.new(2002, 3, 12))
         minor = build(:user, birth_date: Date.new(2016, 5, 30))
-        rdv = build(:rdv, created_at: Time.new(2020, 3, 23, 9, 54, 33), users: [minor, major])
+        rdv = build(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor, major])
         expect(described_class.row_array_from(rdv)[13]).to eq("oui")
         travel_back
       end
