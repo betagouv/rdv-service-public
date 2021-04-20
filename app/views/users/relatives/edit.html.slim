@@ -7,7 +7,7 @@
       .card-body
         h4.card-title.mb-4 Modifier un proche
         = simple_form_for @user, url: relative_path(@user) do |f|
-          = render partial: 'layouts/model_errors', locals: { model: @user }
+          = render 'model_errors', model: @user
           = render "form_fields", f: f
           .row
             .col.text-left

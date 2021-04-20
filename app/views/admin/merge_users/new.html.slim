@@ -10,7 +10,7 @@
     li.breadcrumb-item.active Fusionner
 
 = simple_form_for [:admin, @merge_users_form], url: admin_organisation_merge_users_path(current_organisation), method: "POST" do |f|
-  = render partial: 'layouts/model_errors', locals: { model: @merge_users_form }
+  = render 'model_errors', model: @merge_users_form
   .card
     table.table.table-bordered.merge-users-table[style="table-layout:fixed"]
       tr.text-center

@@ -1,7 +1,7 @@
 - form_url = local_assigns[:rdv_wizard].present? ? users_rdv_wizard_step_path(step: 1, **@rdv_wizard.to_query.except(:rdv)) : users_informations_path
 - form_method = local_assigns[:rdv_wizard].present? ? "post" : "patch"
 = simple_form_for user, url: form_url, method: form_method  do |f|
-  = render partial: 'layouts/model_errors', locals: { model: user }
+  = render 'model_errors', model: user
   .form-row
     .col-md-6= f.input :first_name, placeholder: 'Prénom', disabled: user.logged_once_with_franceconnect?
     .col-md-6= f.input :last_name, placeholder: 'Nom'

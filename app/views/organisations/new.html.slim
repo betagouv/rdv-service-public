@@ -12,7 +12,7 @@ section.py-5.bg-lightturquoise.text-primary
     .row
       .col-md-12.m-auto
         h2 Créez et paramétrez votre service en moins de 5 minutes pour accepter des RDVs en ligne dès aujourd'hui&nbsp;!
-        = render partial: 'layouts/model_errors', locals: { model: @organisation }
+        = render 'model_errors', model: @organisation
         = simple_form_for @organisation do |f|
           .form-row.mb-2.d-flex
             .col-lg-10= f.input :name, label: "Nom de votre organisation", placeholder: 'Maison départementale des solidarités de Beaupréau-en-Mauges', input_html: { class: "form-control-lg" }, wrapper_html: { class: 'mb-1 mb-lg-0' }

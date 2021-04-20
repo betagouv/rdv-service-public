@@ -25,7 +25,7 @@
     .card
       .card-body
         = simple_form_for([:admin, @rdv_form.organisation, @rdv]) do |f|
-          = render partial: 'layouts/model_errors', locals: { model: @rdv_form, f: f }
+          = render 'model_errors', model: @rdv_form, f: f
           = collapsible_form_fields_for_warnings(@rdv_form) do
             = hidden_field_tag :agent_id, @agent&.id
             = f.association :motif, disabled: true

@@ -1,5 +1,5 @@
 - content_for(:menu_item) { 'menu-agendas' }
-- content_for(:title) { "Créer RDV 3/4"}
+- content_for(:title) { "Créer RDV 3/4" }
 
 = render "card", \
   rdv_wizard_form: @rdv_wizard, \
@@ -10,19 +10,20 @@
   next_steps: [{step: 4}] \
 do
   = simple_form_for(@rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
-    = render(partial: 'layouts/model_errors', locals: { model: @rdv_wizard, f: f })
-    = render "hidden_fields", f: f, step: 3, fields: [:motif_id, :context], user_ids: @rdv.user_ids
-    .form-row
-      .col-md-6= datetime_input(f, :starts_at)
-      .col-md-6= f.input :duration_in_min, as: :integer, label: "Durée en minutes"
-    - if @rdv.public_office?
-      = f.association :lieu, \
-        collection: policy_scope(Lieu).ordered_by_name, \
-        label_method: :full_name, \
-        include_blank: true,
-        required: true,
-        input_html: { class: 'select2-input' }
-    - elsif @rdv.home?
-      = f.input :address, label: "Lieu (RDV à domicile)",  disabled: true, hint: "L'adresse utilisée est celle de #{@rdv.user_for_home_rdv.full_name}"
-    = f.association :agents, collection: @rdv.motif.authorized_agents, label_method: :full_name, input_html: { multiple: true, class: 'select2-input' }
-    = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f
+    = render 'model_errors', model: @rdv_wizard, f: f
+    = collapsible_form_fields_for_warnings(@rdv_wizard) do
+      = render "hidden_fields", f: f, step: 3, fields: [:motif_id, :context], user_ids: @rdv.user_ids
+      .form-row
+        .col-md-6= datetime_input(f, :starts_at)
+        .col-md-6= f.input :duration_in_min, as: :integer, label: "Durée en minutes"
+      - if @rdv.public_office?
+        = f.association :lieu, \
+          collection: policy_scope(Lieu).ordered_by_name, \
+          label_method: :full_name, \
+          include_blank: true,
+          required: true,
+          input_html: { class: 'select2-input' }
+      - elsif @rdv.home?
+        = f.input :address, label: "Lieu (RDV à domicile)",  disabled: true, hint: "L'adresse utilisée est celle de #{@rdv.user_for_home_rdv.full_name}"
+      = f.association :agents, collection: @rdv.motif.authorized_agents, label_method: :full_name, input_html: { multiple: true, class: 'select2-input' }
+      = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f

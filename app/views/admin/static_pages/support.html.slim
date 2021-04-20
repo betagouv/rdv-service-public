@@ -27,7 +27,7 @@
           i.fa.fa-question-circle
       .card-body
         = simple_form_for @support_ticket_form, url: admin_organisation_support_tickets_path, as: :support_ticket do |f|
-          = render partial: 'layouts/model_errors', locals: { model: @support_ticket_form }
+          = render 'model_errors', model: @support_ticket_form
           = f.input :subject, \
             label: "Sujet", \
             collection: SupportTicketForm::SUBJECTS.select { SupportTicketForm.new(subject: _1).subject_role == :agent }, \

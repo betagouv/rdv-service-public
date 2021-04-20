@@ -2,7 +2,7 @@
   | Ajouter un proche
 
 = simple_form_for @user, url: relatives_path, remote: true, data: { modal: true } do |f|
-  = render partial: 'layouts/model_errors', locals: { model: @user }
+  = render 'model_errors', model: @user
   = render "form_fields", f: f
   .row
     .col.text-right

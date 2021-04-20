@@ -1,6 +1,6 @@
 = simple_form_for [:admin, motif.organisation, motif] do |f|
 
-  = render partial: 'layouts/model_errors', locals: { model: motif }
+  = render 'model_errors', model: motif
 
   .card
     .card-body
