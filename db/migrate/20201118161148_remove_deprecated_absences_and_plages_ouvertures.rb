@@ -1,4 +1,3 @@
-# rubocop:disable Metrics/AbcSize
 class RemoveDeprecatedAbsencesAndPlagesOuvertures < ActiveRecord::Migration[6.0]
   def up
     ActiveRecord::Base.logger = nil # disable AR logs
@@ -25,4 +24,3 @@ class RemoveDeprecatedAbsencesAndPlagesOuvertures < ActiveRecord::Migration[6.0]
     end
   end
 end
-# rubocop:enable Metrics/AbcSize

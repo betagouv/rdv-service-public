@@ -27,6 +27,9 @@ Lint/MissingSuper:
   Exclude:
     - 'app/services/**/*' # Inheriting BaseService without calling super is OK.
 
+Metrics/AbcSize:
+  Enabled: false
+
 Rails/ApplicationController:
   Exclude:
     - 'app/controllers/api/v1/base_controller.rb'
