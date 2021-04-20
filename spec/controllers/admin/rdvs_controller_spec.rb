@@ -41,7 +41,8 @@ RSpec.describe Admin::RdvsController, type: :controller do
         expect(first["textColor"]).to eq("#FFFFFF")
         expect(first["backgroundColor"]).to eq(rdv1.motif.color)
         expect(first["url"]).to eq(admin_organisation_rdv_path(rdv1.organisation, rdv1, agent_id: agent.id))
-        expect(first["extendedProps"]).to eq({ readableStatus: Rdv.human_enum_name(:status, rdv1.status), status: rdv1.status, motif: "Suivi", past: rdv1.past?, duration: rdv.duration_in_min, lieu: "MDS Orgeval", overlappingPlagesOuvertures: false }.as_json)
+        expect(first["extendedProps"]).to eq({ readableStatus: Rdv.human_enum_name(:status, rdv1.status), status: rdv1.status, motif: "Suivi", past: rdv1.past?, duration: rdv.duration_in_min,
+                                               lieu: "MDS Orgeval", overlappingPlagesOuvertures: false }.as_json)
 
         second = @parsed_response[1]
         expect(second.size).to eq(8)
@@ -51,7 +52,8 @@ RSpec.describe Admin::RdvsController, type: :controller do
         expect(second["textColor"]).to eq("#FFFFFF")
         expect(second["backgroundColor"]).to eq(rdv2.motif.color)
         expect(second["url"]).to eq(admin_organisation_rdv_path(rdv2.organisation, rdv2, agent_id: agent.id))
-        expect(first["extendedProps"]).to eq({ readableStatus: Rdv.human_enum_name(:status, rdv2.status), status: rdv2.status, motif: rdv2.motif.name, past: rdv2.past?, duration: rdv.duration_in_min, lieu: "MDS Orgeval", overlappingPlagesOuvertures: false }.as_json)
+        expect(first["extendedProps"]).to eq({ readableStatus: Rdv.human_enum_name(:status, rdv2.status), status: rdv2.status, motif: rdv2.motif.name, past: rdv2.past?,
+                                               duration: rdv.duration_in_min, lieu: "MDS Orgeval", overlappingPlagesOuvertures: false }.as_json)
       end
     end
 

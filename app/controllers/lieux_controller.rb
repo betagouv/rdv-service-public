@@ -25,7 +25,8 @@ class LieuxController < ApplicationController
     @next_availability = nil
 
     if follow_up_motif? && current_user && current_user.agents.empty?
-      @referent_missing = "Vous ne semblez pas bénéficier d’un accompagnement ou d’un suivi, merci de choisir un autre motif ou de contacter votre département au #{@lieu.organisation.phone_number}".html_safe
+      @referent_missing = "Vous ne semblez pas bénéficier d’un accompagnement ou d’un suivi, "\
+      "merci de choisir un autre motif ou de contacter votre département au #{@lieu.organisation.phone_number}".html_safe
       @creneaux = []
     else
       creneaux_search = creneaux_search_for(@lieu, @date_range)

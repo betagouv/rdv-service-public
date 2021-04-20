@@ -17,6 +17,9 @@ Bundler/OrderedGems:
   Exclude:
     - 'Gemfile'
 
+Layout/LineLength:
+  Max: 200
+
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 
@@ -37,6 +40,9 @@ Rails/Delegate:
 Rails/DynamicFindBy:
   Exclude:
     - 'spec/features/agents/admin_can_configure_the_organisation_spec.rb'
+
+Rails/HasAndBelongsToMany:
+  Enabled: false
 
 Rails/RakeEnvironment:
   Exclude:

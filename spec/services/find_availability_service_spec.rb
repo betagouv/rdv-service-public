@@ -50,7 +50,10 @@ describe FindAvailabilityService, type: :service do
       it { is_expected.to eq(nil) }
 
       context "which is cancelled" do
-        let!(:rdv) { create(:rdv, starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, agents: [agent], cancelled_at: Time.zone.local(2019, 9, 20, 9, 30), organisation: organisation, lieu: lieu) }
+        let!(:rdv) do
+          create(:rdv, starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, agents: [agent], cancelled_at: Time.zone.local(2019, 9, 20, 9, 30), organisation: organisation,
+                       lieu: lieu)
+        end
 
         it { expect(subject.starts_at).to eq(today.in_time_zone + 9.hours) }
       end
