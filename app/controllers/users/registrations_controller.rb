@@ -38,7 +38,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def invite_and_redirect
     user = User.find_by(email: sign_up_params[:email], confirmed_at: nil)
-    user.invite!
+    user.invite!(nil, user_params: sign_up_params)
     set_flash_message! :notice, :signed_up_but_unconfirmed
     respond_with user, location: after_inactive_sign_up_path_for(user)
   end
