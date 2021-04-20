@@ -497,7 +497,7 @@ rdv1 = Rdv.new(
   user_ids: [user_org_paris_nord_patricia.id],
   context: "Visite de courtoisie"
 )
-rdv1.define_singleton_method(:notify_rdv_created) {}
+rdv1.define_singleton_method(:notify_rdv_created, -> {})
 rdv1.save!
 rdv2 = Rdv.new(
   duration_in_min: 30,
@@ -509,7 +509,7 @@ rdv2 = Rdv.new(
   user_ids: [user_org_paris_nord_josephine.id],
   context: "Suivi vaccins"
 )
-rdv2.define_singleton_method(:notify_rdv_created) {}
+rdv2.define_singleton_method(:notify_rdv_created, -> {})
 rdv2.save!
 
 # User Notes
