@@ -64,6 +64,8 @@ class ApplicationController < ActionController::Base
     elsif resource_class == User
       devise_parameter_sanitizer.permit(:sign_up, keys: %i[first_name last_name email phone_number password])
       devise_parameter_sanitizer.permit(:invite, keys: %i[email first_name last_name address phone_number birth_date])
+      # params for accept_invitation may be passed from the signup to the invitation via the invitation_instructions email.
+      devise_parameter_sanitizer.permit(:accept_invitation, keys: %i[first_name last_name email phone_number password])
     end
   end
 

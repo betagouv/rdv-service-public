@@ -3,11 +3,7 @@ class Users::InvitationsController < Devise::InvitationsController
 
   def edit
     # Reuse prefilled params from the invitation email
-    resource.assign_attributes(prefilled_params)
+    resource.assign_attributes(update_resource_params)
     super
-  end
-
-  def prefilled_params
-    params.permit(:first_name, :last_name, :phone_number)
   end
 end
