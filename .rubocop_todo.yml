@@ -9,9 +9,6 @@
 Lint/EmptyBlock:
   Enabled: false
 
-Lint/MissingSuper:
-  Enabled: false
-
 # Offense count: 73
 # Configuration parameters: IgnoredMethods, CountRepeatedAttributes.
 Metrics/AbcSize:

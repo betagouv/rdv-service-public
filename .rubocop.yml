@@ -23,6 +23,10 @@ Layout/LineLength:
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
 
+Lint/MissingSuper:
+  Exclude:
+    - 'app/services/**/*' # Inheriting BaseService without calling super is OK.
+
 Rails/ApplicationController:
   Exclude:
     - 'app/controllers/api/v1/base_controller.rb'
