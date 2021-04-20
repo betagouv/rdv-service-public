@@ -39,12 +39,16 @@ describe PlageOuverture, type: :model do
     let(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
     let(:agent2) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
     let(:agent3) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
-    let!(:plage_ouverture) { create(:plage_ouverture, :weekly, agent: agent, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation) }
+    let!(:plage_ouverture) do
+      create(:plage_ouverture, :weekly, agent: agent, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation)
+    end
 
     it { expect(subject).to contain_exactly(plage_ouverture) }
 
     describe "when PO is not expired" do
-      let!(:plage_ouverture) { create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: six_days_later, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation) }
+      let!(:plage_ouverture) do
+        create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: six_days_later, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation)
+      end
 
       it { expect(subject).to contain_exactly(plage_ouverture) }
     end
@@ -90,7 +94,9 @@ describe PlageOuverture, type: :model do
     context "with plages regulières" do
       describe "when until is in past" do
         let(:first_day) { Date.today.next_week(:monday) }
-        let(:plage_ouverture) { create(:plage_ouverture, first_day: first_day, recurrence: Montrose.every(:week, until: DateTime.parse("2020-07-30 10:30").in_time_zone, starts: first_day), organisation: organisation) }
+        let(:plage_ouverture) do
+          create(:plage_ouverture, first_day: first_day, recurrence: Montrose.every(:week, until: DateTime.parse("2020-07-30 10:30").in_time_zone, starts: first_day), organisation: organisation)
+        end
 
         it { is_expected.to be true }
       end

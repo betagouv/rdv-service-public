@@ -22,7 +22,10 @@ RSpec.describe LieuxController, type: :controller do
 
   describe "GET #show" do
     context "pour un motif" do
-      subject { get :show, params: { id: lieu, search: { departement: "62", city_code: "62100", where: "useless 12345", service: motif.service_id, motif_name_with_location_type: motif.name_with_location_type } } }
+      subject do
+        get :show,
+            params: { id: lieu, search: { departement: "62", city_code: "62100", where: "useless 12345", service: motif.service_id, motif_name_with_location_type: motif.name_with_location_type } }
+      end
 
       before do
         expect(Users::CreneauxSearch).to receive(:new).with(
@@ -165,7 +168,13 @@ RSpec.describe LieuxController, type: :controller do
   end
 
   describe "GET #index" do
-    subject { get :index, params: { search: { departement: "62", city_code: "62100", where: "useless 12345", service: motif.service_id, motif_name_with_location_type: motif.name_with_location_type, latitude: lieu.latitude, longitude: lieu.longitude } } }
+    subject do
+      get :index,
+          params: { search: { departement: "62", city_code: "62100", where: "useless 12345",
+                              service: motif.service_id,
+                              motif_name_with_location_type: motif.name_with_location_type,
+                              latitude: lieu.latitude, longitude: lieu.longitude } }
+    end
 
     before do
       expect(Lieu).to receive(:with_open_slots_for_motifs).and_return(Lieu.all)
@@ -221,7 +230,13 @@ RSpec.describe LieuxController, type: :controller do
     end
 
     context "request is closer to lieu_2" do
-      subject { get :index, params: { search: { departement: "62", city_code: "62100", where: "useless 12345", service: motif.service_id, motif_name_with_location_type: motif.name_with_location_type, latitude: lieu2.latitude, longitude: lieu2.longitude } } }
+      subject do
+        get :index,
+            params: { search: { departement: "62", city_code: "62100", where: "useless 12345",
+                                service: motif.service_id,
+                                motif_name_with_location_type: motif.name_with_location_type,
+                                latitude: lieu2.latitude, longitude: lieu2.longitude } }
+      end
 
       it "return lieu2 first" do
         expect(assigns(:lieux).first).to eq(lieu2)

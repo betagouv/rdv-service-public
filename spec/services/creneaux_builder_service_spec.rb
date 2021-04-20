@@ -13,7 +13,9 @@ describe CreneauxBuilderService, type: :service do
   let(:tomorrow) { today + 1.day }
   let(:six_days_later) { today + 6.days }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-  let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, agent: agent, organisation: organisation) }
+  let!(:plage_ouverture) do
+    create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, agent: agent, organisation: organisation)
+  end
   let(:now) { today.in_time_zone + 8.hours } # 8 am
   let(:options) { {} }
   let(:motif_name) { motif.name }
@@ -66,7 +68,8 @@ describe CreneauxBuilderService, type: :service do
 
   context "recurring plage ouverture" do
     let!(:plage_ouverture) do
-      create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, recurrence: Montrose.every(:day, starts: today), agent: agent, organisation: organisation)
+      create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes,
+                               recurrence: Montrose.every(:day, starts: today), agent: agent, organisation: organisation)
     end
 
     context "with absence spanning 2 days, ending before start of second day" do
@@ -102,7 +105,10 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "with recurring absences" do
-    let!(:absence) { create(:absence, :weekly, agent: agent, first_day: today - 7.days, start_time: Tod::TimeOfDay.new(9, 45), end_day: today - 7.days, end_time: Tod::TimeOfDay.new(10, 15), organisation: organisation) }
+    let!(:absence) do
+      create(:absence, :weekly, agent: agent, first_day: today - 7.days, start_time: Tod::TimeOfDay.new(9, 45), end_day: today - 7.days, end_time: Tod::TimeOfDay.new(10, 15),
+                                organisation: organisation)
+    end
 
     it do
       expect(subject.size).to eq(3)
@@ -151,7 +157,10 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "with a cancelled RDV" do
-    let!(:rdv) { create(:rdv, starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, agents: [agent], cancelled_at: tomorrow.in_time_zone + 9.hours + 30.minutes, organisation: organisation, lieu: lieu) }
+    let!(:rdv) do
+      create(:rdv, starts_at: today.in_time_zone + 9.hours + 30.minutes, duration_in_min: 30, agents: [agent], cancelled_at: tomorrow.in_time_zone + 9.hours + 30.minutes, organisation: organisation,
+                   lieu: lieu)
+    end
 
     it do
       expect(subject.size).to eq(4)
@@ -164,7 +173,9 @@ describe CreneauxBuilderService, type: :service do
   end
 
   context "with a RDV on the last day of the range" do
-    let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today + 6.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent, organisation: organisation) }
+    let!(:plage_ouverture) do
+      create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today + 6.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent, organisation: organisation)
+    end
     let!(:rdv) { create(:rdv, starts_at: today + 6.days + 10.hours, duration_in_min: 30, agents: [agent], organisation: organisation, lieu: lieu) }
 
     it do
@@ -186,7 +197,9 @@ describe CreneauxBuilderService, type: :service do
 
   context "when there are two agents" do
     let(:agent2) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let!(:plage_ouverture2) { create(:plage_ouverture, agent: agent2, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(10), end_time: Tod::TimeOfDay.new(12), organisation: organisation) }
+    let!(:plage_ouverture2) do
+      create(:plage_ouverture, agent: agent2, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(10), end_time: Tod::TimeOfDay.new(12), organisation: organisation)
+    end
 
     it do
       expect(subject.size).to eq(6)
@@ -222,9 +235,11 @@ describe CreneauxBuilderService, type: :service do
           expect(subject.size).to eq(4)
 
           expect(subject).to include(starts_at: today.in_time_zone + 10.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
-          expect(subject).to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
+          expect(subject).to include(starts_at: today.in_time_zone + 10.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id,
+                                     agent_name: agent2.short_name)
           expect(subject).to include(starts_at: today.in_time_zone + 11.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
-          expect(subject).to include(starts_at: today.in_time_zone + 11.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id, agent_name: agent2.short_name)
+          expect(subject).to include(starts_at: today.in_time_zone + 11.hours + 30.minutes, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id, agent_id: agent2.id,
+                                     agent_name: agent2.short_name)
         end
       end
 
@@ -242,7 +257,10 @@ describe CreneauxBuilderService, type: :service do
 
       context "when there is another motif with the same name but a different location_type" do
         let!(:motif_home) { create(:motif, name: "Vaccination", default_duration_in_min: 30, organisation: organisation, location_type: :home) }
-        let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif, motif_home], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, agent: agent, organisation: organisation) }
+        let!(:plage_ouverture) do
+          create(:plage_ouverture, motifs: [motif, motif_home], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, agent: agent,
+                                   organisation: organisation)
+        end
         let(:options) { { for_agents: true, motif_location_type: :home } }
 
         it "includes only the filtered one" do
@@ -252,7 +270,10 @@ describe CreneauxBuilderService, type: :service do
 
       context "when there is another motif with the same name but a different location_type and they are on the same plage ouverture" do
         let!(:motif_home) { create(:motif, name: "Vaccination", default_duration_in_min: 30, organisation: organisation, location_type: :home) }
-        let!(:plage_ouverture_home) { create(:plage_ouverture, motifs: [motif_home], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(14) + 35.minutes, agent: agent, organisation: organisation) }
+        let!(:plage_ouverture_home) do
+          create(:plage_ouverture, motifs: [motif_home], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(14) + 35.minutes, agent: agent,
+                                   organisation: organisation)
+        end
 
         let(:options) { { for_agents: true, motif_location_type: :home } }
 
@@ -305,7 +326,8 @@ describe CreneauxBuilderService, type: :service do
 
   context "recurring plage ouverture + absence ending late" do
     let!(:plage_ouverture) do
-      create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, recurrence: Montrose.every(:day, starts: today), agent: agent, organisation: organisation)
+      create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes,
+                               recurrence: Montrose.every(:day, starts: today), agent: agent, organisation: organisation)
     end
     let!(:absence) { create(:absence, :weekly, agent: agent, first_day: tomorrow, start_time: Tod::TimeOfDay.new(0, 0), end_day: tomorrow, end_time: absence_end_time, organisation: organisation) }
 

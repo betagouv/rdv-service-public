@@ -4,7 +4,10 @@ RSpec.describe Admin::AbsencesController, type: :controller do
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let!(:absence) { create(:absence, agent_id: agent.id, organisation: organisation) }
-  let!(:absence_with_recurrence) { create(:absence, :weekly, agent: agent, first_day: Date.new(2020, 7, 15), start_time: Tod::TimeOfDay.new(8), end_day: Date.new(2020, 7, 17), end_time: Tod::TimeOfDay.new(10), organisation: organisation) }
+  let!(:absence_with_recurrence) do
+    create(:absence, :weekly, agent: agent, first_day: Date.new(2020, 7, 15), start_time: Tod::TimeOfDay.new(8), end_day: Date.new(2020, 7, 17), end_time: Tod::TimeOfDay.new(10),
+                              organisation: organisation)
+  end
 
   shared_examples "agent can CRUD absences" do
     describe "GET #index" do
@@ -19,7 +22,10 @@ RSpec.describe Admin::AbsencesController, type: :controller do
         let!(:absence1) { create(:absence, agent: agent, first_day: Date.new(2019, 7, 21), start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(10), organisation: organisation) }
         let(:expected_absence_starts_at) { expected_absence.starts_at }
         let(:expected_absence_ends_at) { expected_absence.ends_at }
-        let!(:absence2) { create(:absence, agent: agent, first_day: Date.new(2019, 8, 20), start_time: Tod::TimeOfDay.new(8), end_day: Date.new(2019, 8, 31), end_time: Tod::TimeOfDay.new(22), organisation: organisation) }
+        let!(:absence2) do
+          create(:absence, agent: agent, first_day: Date.new(2019, 8, 20), start_time: Tod::TimeOfDay.new(8), end_day: Date.new(2019, 8, 31), end_time: Tod::TimeOfDay.new(22),
+                           organisation: organisation)
+        end
 
         before do
           sign_in agent
