@@ -13,7 +13,7 @@ RSpec.describe Admin::InvitationsController, type: :controller do
       it "contains some explanation text" do
         get :index, params: { organisation_id: organisation.id }
         expect(response).to be_successful
-        expect(response.body).to include "Aucune invitation de professionnel en attente"
+        expect(response.body).to include "Aucune invitation en attente"
       end
     end
 

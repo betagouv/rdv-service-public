@@ -153,6 +153,8 @@ fr:
     clone: Dupliquer
     delete: Supprimer
     edit: Modifier
+    reset: Réinitialiser
+    search: Rechercher
     show: Afficher
     select:
       prompt: Veuillez sélectionner

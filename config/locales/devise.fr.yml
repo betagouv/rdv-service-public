@@ -31,6 +31,7 @@ fr:
       edit:
         header: "Choisir son mot de passe"
         submit_button: "Enregistrer"
+      reinvite: "Renvoyer l’invitation"
     mailer:
       invitation_instructions_for_agents:
         subject: "Vous avez été invité sur RDV-Solidarités."

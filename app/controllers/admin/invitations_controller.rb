@@ -5,6 +5,8 @@ class Admin::InvitationsController < AgentAuthController
       .invitation_not_accepted
       .created_by_invite
       .order(invitation_sent_at: :desc)
+      .page(params[:page])
+    @invited_agents = @invited_agents.search_by_text(params[:search]) if params[:search].present?
   end
 
   def reinvite

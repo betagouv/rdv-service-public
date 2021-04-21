@@ -18,11 +18,18 @@ tr id="agent_#{agent.id}"
       i.fa.fa-user-cog
   td
     .d-flex
+      - if policy([:agent, agent_role]).create? && !agent.invitation_accepted?
+        div.mr-3= link_to t("devise.invitations.reinvite"),
+                reinvite_admin_organisation_invitation_path(current_organisation, agent),
+                method: :post
       - if policy([:agent, agent_role]).edit?
-        div.mr-3= link_to edit_admin_organisation_agent_role_path(current_organisation, agent_role), title: "Modifier" do
+        div.mr-3= link_to edit_admin_organisation_agent_role_path(current_organisation, agent_role), title: t("helpers.edit") do
           i.fa.fa-edit
       - if policy([:agent, agent]).destroy?
         - agent_removal_presenter = AgentRemovalPresenter.new(agent, current_organisation)
         - path = admin_organisation_agent_path(current_organisation, agent_role.agent)
-        = link_to path, title: agent_removal_presenter.button_value, data: { confirm: agent_removal_presenter.confirm_message }, method: :delete do
+        = link_to path,
+                method: :delete,
+                title: agent_removal_presenter.button_value,
+                data: { confirm: agent_removal_presenter.confirm_message } do
           i.fa.fa-trash-alt
