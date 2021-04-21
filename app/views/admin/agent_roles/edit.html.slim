@@ -14,11 +14,6 @@
   .col-md-6
     .card
       .card-body
-        .alert.alert-info.d-flex.align-items-center
-          .mr-3
-            .fa.fa-info
-          div Le niveau de permissions des agents (Agent / Admin) est dorénavant indépendant par organisation
-
         = simple_form_for [:admin, current_organisation, @agent_role] do |f|
           = render 'model_errors', model: @agent_role
           = f.simple_fields_for :agent do |ff|
@@ -28,6 +23,7 @@
           = f.input :level, \
             collection: AgentRole::LEVELS, \
             label_method: -> { I18n.t("activerecord.attributes.agent_role.levels.#{_1}_html").html_safe }, \
+            hint: "Les agents peuvent avoir des permissions différentes sur chaque organisation.", \
             as: :radio_buttons
 
           .row
