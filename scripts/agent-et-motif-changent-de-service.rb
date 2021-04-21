@@ -13,22 +13,9 @@ puts "Déplace les agents et les motifs des services #{services_source.map(&:nam
 
 Agent.transaction do
   Motif.where(organisation_id: ORGANISATION_ID, service: services_source).each do |motif|
-    new_motif = Motif.new(name: motif.name,
-                          color: motif.color,
-                          default_duration_in_min: motif.default_duration_in_min,
-                          organisation_id: ORGANISATION_ID,
-                          reservable_online: motif.reservable_online,
-                          min_booking_delay: motif.min_booking_delay,
-                          max_booking_delay: motif.max_booking_delay,
-                          deleted_at: motif.deleted_at,
-                          service_id: ID_SERVICE_DESTINATION,
-                          restriction_for_rdv: motif.restriction_for_rdv,
-                          instruction_for_rdv: motif.instruction_for_rdv,
-                          for_secretariat: motif.for_secretariat,
-                          location_type: motif.location_type,
-                          follow_up: motif.follow_up,
-                          visibility_type: motif.visibility_type,
-                          sectorisation_level: motif.sectorisation_level)
+    new_motif = motif.dup
+    new_motif.organisation_id = ORGANISATION_ID
+    new_motif.service_id = ID_SERVICE_DESTINATION
     unless new_motif.save
       puts "error ! on suppose que le nom existe déjà"
       new_motif.name += "*"
