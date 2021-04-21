@@ -88,7 +88,7 @@ RSpec.describe Admin::MotifsController, type: :controller do
         post :create, params: { organisation_id: organisation.id, motif: valid_attributes }
       end
 
-      let!(:old_motif) { create(:motif, deleted_at: Time.now) }
+      let!(:old_motif) { create(:motif, deleted_at: Time.zone.now) }
       let(:valid_attributes) do
         build(:motif, name: old_motif.name).attributes
       end

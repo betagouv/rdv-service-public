@@ -42,7 +42,7 @@ describe RdvUpdater, type: :service do
     end
 
     it "force updated_at to ensure new version will be recorded" do
-      now = Time.new(2020, 4, 23, 12, 56)
+      now = Time.zone.local(2020, 4, 23, 12, 56)
       travel_to(now)
       previous_date = now - 3.days
 
@@ -54,7 +54,7 @@ describe RdvUpdater, type: :service do
     end
 
     it "reset cancelled_at when status change" do
-      cancelled_at = Time.new(2020, 1, 12, 12, 56)
+      cancelled_at = Time.zone.local(2020, 1, 12, 12, 56)
       rdv = create(:rdv, status: "notexcused", cancelled_at: cancelled_at)
       rdv_params = { status: "waiting" }
       described_class.update_by_agent(rdv, rdv_params)
@@ -62,7 +62,7 @@ describe RdvUpdater, type: :service do
     end
 
     it "dont reset cancelled_at when no status change" do
-      cancelled_at = Time.new(2020, 1, 12, 12, 56)
+      cancelled_at = Time.zone.local(2020, 1, 12, 12, 56)
       rdv = create(:rdv, status: "excused", cancelled_at: cancelled_at, context: "")
       rdv_params = { context: "something new" }
       described_class.update_by_agent(rdv, rdv_params)
@@ -70,7 +70,7 @@ describe RdvUpdater, type: :service do
     end
 
     it "where status change from excused to notexcused, cancelled_at should be refresh" do
-      now = Time.new(2020, 4, 23, 12, 56)
+      now = Time.zone.local(2020, 4, 23, 12, 56)
       travel_to(now)
       rdv = create(:rdv, status: "excused", cancelled_at: Time.zone.parse("12/1/2020 12:56"))
       described_class.update_by_agent(rdv, { status: "notexcused" })

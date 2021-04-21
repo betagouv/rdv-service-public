@@ -11,7 +11,7 @@ describe PaperTrailHelper do
     end
 
     context "time value" do
-      let(:args) { [rdv, "some_value", Time.parse("2020/03/03 10:20")] }
+      let(:args) { [rdv, "some_value", Time.zone.parse("2020/03/03 10:20")] }
 
       it { is_expected.to eq "03/03/2020 à 10:20" }
     end

@@ -18,7 +18,7 @@ describe MergeUsersService, type: :service do
       expect(user_target.first_name).to eq("Francis")
       expect(user_target.last_name).to eq("PAUL")
       expect(user_target.email).to eq("jean@paul.fr")
-      expect(user_to_merge.reload.deleted_at).to be_within(3.seconds).of(Time.now)
+      expect(user_to_merge.reload.deleted_at).to be_within(3.seconds).of(Time.zone.now)
     end
   end
 

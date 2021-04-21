@@ -1,15 +1,15 @@
 describe TimeSlot, type: :service do
   describe "initialize" do
     it "works with valid times" do
-      expect { described_class.new(Time.new(2020, 12, 2, 10, 30), Time.new(2020, 12, 2, 11, 30)) }.not_to raise_error
+      expect { described_class.new(Time.zone.local(2020, 12, 2, 10, 30), Time.zone.local(2020, 12, 2, 11, 30)) }.not_to raise_error
     end
 
     it "raises with non consecutive times" do
-      expect { described_class.new(Time.new(2020, 12, 2, 12, 30), Time.new(2020, 12, 2, 11, 30)) }.to raise_error(TimeSlot::OutOfOrderTimesError)
+      expect { described_class.new(Time.zone.local(2020, 12, 2, 12, 30), Time.zone.local(2020, 12, 2, 11, 30)) }.to raise_error(TimeSlot::OutOfOrderTimesError)
     end
 
     it "raises with different dates" do
-      expect { described_class.new(Time.new(2020, 12, 2, 10, 30), Time.new(2020, 12, 3, 11, 30)) }.to raise_error(TimeSlot::DifferentDatesError)
+      expect { described_class.new(Time.zone.local(2020, 12, 2, 10, 30), Time.zone.local(2020, 12, 3, 11, 30)) }.to raise_error(TimeSlot::DifferentDatesError)
     end
   end
 
@@ -27,8 +27,8 @@ describe TimeSlot, type: :service do
     end
 
     context "slot1 is before slot2" do
-      let(:slot1) { described_class.new(Time.new(2020, 12, 2, 9), Time.new(2020, 12, 2, 10)) }
-      let(:slot2) { described_class.new(Time.new(2020, 12, 2, 10, 30), Time.new(2020, 12, 2, 11, 30)) }
+      let(:slot1) { described_class.new(Time.zone.local(2020, 12, 2, 9), Time.zone.local(2020, 12, 2, 10)) }
+      let(:slot2) { described_class.new(Time.zone.local(2020, 12, 2, 10, 30), Time.zone.local(2020, 12, 2, 11, 30)) }
       # slot1    |-----|
       # slot2              |-----|
 
@@ -38,8 +38,8 @@ describe TimeSlot, type: :service do
     context "slot1 overlaps partially from beginning" do
       # slot1    |-----|
       # slot2        |-----|
-      let(:slot1) { described_class.new(Time.new(2020, 12, 2, 9), Time.new(2020, 12, 2, 11)) }
-      let(:slot2) { described_class.new(Time.new(2020, 12, 2, 10, 30), Time.new(2020, 12, 2, 11, 30)) }
+      let(:slot1) { described_class.new(Time.zone.local(2020, 12, 2, 9), Time.zone.local(2020, 12, 2, 11)) }
+      let(:slot2) { described_class.new(Time.zone.local(2020, 12, 2, 10, 30), Time.zone.local(2020, 12, 2, 11, 30)) }
 
       it_behaves_like "intersects"
     end
@@ -47,8 +47,8 @@ describe TimeSlot, type: :service do
     context "slot1 is included in slot2" do
       # slot1    |-----|
       # slot2  |---------|
-      let(:slot1) { described_class.new(Time.new(2020, 12, 2, 10, 45), Time.new(2020, 12, 2, 11)) }
-      let(:slot2) { described_class.new(Time.new(2020, 12, 2, 10, 30), Time.new(2020, 12, 2, 11, 30)) }
+      let(:slot1) { described_class.new(Time.zone.local(2020, 12, 2, 10, 45), Time.zone.local(2020, 12, 2, 11)) }
+      let(:slot2) { described_class.new(Time.zone.local(2020, 12, 2, 10, 30), Time.zone.local(2020, 12, 2, 11, 30)) }
 
       it_behaves_like "intersects"
     end
@@ -56,8 +56,8 @@ describe TimeSlot, type: :service do
     context "slot1 overlaps partially from middle" do
       # slot1        |-----|
       # slot2    |-----|
-      let(:slot1) { described_class.new(Time.new(2020, 12, 2, 11), Time.new(2020, 12, 2, 12)) }
-      let(:slot2) { described_class.new(Time.new(2020, 12, 2, 10, 30), Time.new(2020, 12, 2, 11, 30)) }
+      let(:slot1) { described_class.new(Time.zone.local(2020, 12, 2, 11), Time.zone.local(2020, 12, 2, 12)) }
+      let(:slot2) { described_class.new(Time.zone.local(2020, 12, 2, 10, 30), Time.zone.local(2020, 12, 2, 11, 30)) }
 
       it_behaves_like "intersects"
     end
@@ -65,15 +65,15 @@ describe TimeSlot, type: :service do
     context "slot1 is after slot2" do
       # slot1               |-----|
       # slot2    |-----|
-      let(:slot1) { described_class.new(Time.new(2020, 12, 2, 10, 30), Time.new(2020, 12, 2, 11, 30)) }
-      let(:slot2) { described_class.new(Time.new(2020, 12, 2, 9), Time.new(2020, 12, 2, 10)) }
+      let(:slot1) { described_class.new(Time.zone.local(2020, 12, 2, 10, 30), Time.zone.local(2020, 12, 2, 11, 30)) }
+      let(:slot2) { described_class.new(Time.zone.local(2020, 12, 2, 9), Time.zone.local(2020, 12, 2, 10)) }
 
       it_behaves_like "does not intersect"
     end
 
     context "dates mismatch" do
-      let(:slot1) { described_class.new(Time.new(2020, 12, 2, 10, 30), Time.new(2020, 12, 2, 11, 30)) }
-      let(:slot2) { described_class.new(Time.new(2020, 12, 3, 10, 30), Time.new(2020, 12, 3, 11, 30)) }
+      let(:slot1) { described_class.new(Time.zone.local(2020, 12, 2, 10, 30), Time.zone.local(2020, 12, 2, 11, 30)) }
+      let(:slot2) { described_class.new(Time.zone.local(2020, 12, 3, 10, 30), Time.zone.local(2020, 12, 3, 11, 30)) }
 
       it_behaves_like "does not intersect"
     end

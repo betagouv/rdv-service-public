@@ -113,7 +113,7 @@ describe User, type: :model do
           subject
           expect(user.reload.organisations).to be_empty
           expect(user.deleted_at).not_to be_nil
-          expect(user.deleted_at).to be_within(5.seconds).of(Time.now)
+          expect(user.deleted_at).to be_within(5.seconds).of(Time.zone.now)
         end
       end
     end
@@ -124,7 +124,7 @@ describe User, type: :model do
 
       it "removes from this orga and mark user as deleted" do
         user.soft_delete(org1)
-        expect(user.deleted_at).to be_within(5.seconds).of(Time.now)
+        expect(user.deleted_at).to be_within(5.seconds).of(Time.zone.now)
         expect(user.email).to end_with("deleted.rdv-solidarites.fr")
         expect(user.email_original).to eq("jean@valjean.fr")
         expect(user.organisations).to be_empty
@@ -137,7 +137,7 @@ describe User, type: :model do
       it "deletes user anyhow" do
         user.soft_delete
         expect(user.organisations).to be_empty
-        expect(user.deleted_at).to be_within(5.seconds).of(Time.now)
+        expect(user.deleted_at).to be_within(5.seconds).of(Time.zone.now)
       end
     end
 
@@ -149,18 +149,18 @@ describe User, type: :model do
       it "deletes user and relative" do
         user.soft_delete
         expect(user.organisations).to be_empty
-        expect(user.deleted_at).to be_within(5.seconds).of(Time.now)
+        expect(user.deleted_at).to be_within(5.seconds).of(Time.zone.now)
         expect(relative.reload.organisations).to be_empty
-        expect(relative.reload.deleted_at).to be_within(5.seconds).of(Time.now)
+        expect(relative.reload.deleted_at).to be_within(5.seconds).of(Time.zone.now)
       end
 
       context "with given orga" do
         it "deletes user and relative" do
           user.soft_delete(org1)
           expect(user.organisations).to be_empty
-          expect(user.deleted_at).to be_within(5.seconds).of(Time.now)
+          expect(user.deleted_at).to be_within(5.seconds).of(Time.zone.now)
           expect(relative.reload.organisations).to be_empty
-          expect(relative.reload.deleted_at).to be_within(5.seconds).of(Time.now)
+          expect(relative.reload.deleted_at).to be_within(5.seconds).of(Time.zone.now)
         end
       end
     end
@@ -243,7 +243,7 @@ describe User, type: :model do
     end
 
     it "return rdv for same user and organisation" do
-      today = Time.new(2020, 5, 23, 15, 56)
+      today = Time.zone.local(2020, 5, 23, 15, 56)
       travel_to(today)
 
       organisation = create(:organisation)
@@ -258,7 +258,7 @@ describe User, type: :model do
     end
 
     it "returns only future rdv" do
-      now = Time.new(2020, 5, 23, 15, 56)
+      now = Time.zone.local(2020, 5, 23, 15, 56)
       travel_to(now)
 
       organisation = create(:organisation)
