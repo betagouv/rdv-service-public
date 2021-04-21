@@ -10,6 +10,11 @@ fr:
           admin: Admin
           basic_html: "<i class='far fa-user'></i> Agent<br><ul><li>Peut consulter et modifier son agenda et celui des agents de son service</li><li>Service secrétariat: peut consulter et modifier les agendas de tous les agents de l'organisation</li></ul>"
           admin_html: <i class='fa fa-user-cog'></i> Admin<br><ul><li>Peut consulter et modifier l'agenda de tous les agents de l'organisation</li><li>Peut créer, modifier et supprimer des lieux, des motifs et des agents</li><li>Peut accéder aux statistiques de l'organisation</li></ul>
+    notice:
+      models:
+        agent_role:
+          existing: L’agent %{email} est déjà présent sur RDV-solidarités et a rejoint votre organisation.
+          invited: L’agent %{email} a été invité à rejoindre votre organisation.
     errors:
       models:
         agent_role:

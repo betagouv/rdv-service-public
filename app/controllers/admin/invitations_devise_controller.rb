@@ -10,24 +10,27 @@ class Admin::InvitationsDeviseController < Devise::InvitationsController
     if agent.nil?
       # Authorize against a dummy Agent
       authorize(Agent.new(invite_params))
-      self.resource = invite_resource # invite_resource creates the new Agent in DB and sends the invitation.
+      agent = invite_resource # invite_resource creates the new Agent in DB and sends the invitation.
     else
-      self.resource = agent
       # Authorize against a new AgentRole
       new_role = agent.roles.new(invite_params[:roles_attributes].values.first)
       authorize(new_role)
       agent.save(context: :invite) # Specify a different validation context to bypass last_name/first_name presence
     end
-    if resource.errors.empty?
-      flash[:notice] = \
-        if resource.invitation_accepted_at.present?
-          "L'agent #{resource.email} existait déjà, il a été ajouté à votre organisation"
-        else
-          "L'agent #{resource.email} a été invité à rejoindre votre organisation"
-        end
-      redirect_to admin_organisation_invitations_path(current_organisation)
+
+    if agent.errors.empty?
+      if agent.invitation_accepted?
+        flash[:notice] = I18n.t "activerecord.notice.models.agent_role.existing", email: agent.email
+        redirect_to admin_organisation_agents_path(current_organisation)
+      else
+        flash[:notice] = I18n.t "activerecord.notice.models.agent_role.invited", email: agent.email
+        redirect_to admin_organisation_invitations_path(current_organisation)
+      end
     else
-      render :new, layout: "application_agent"
+      # Keep the error message, but redirect instead of just rendering the template:
+      # we want a new empty form.
+      flash[:error] = agent.errors.full_messages.to_sentence
+      redirect_to action: :new
     end
   end
 
