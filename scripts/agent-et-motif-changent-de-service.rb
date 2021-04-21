@@ -37,8 +37,7 @@ Agent.transaction do
   end
 
   organisation.agents.each do |agent|
-    agent.service = service_destination
-    agent.save!(validate: false)
+    agent.update_column(service: service_destination)
   end
 
 end
