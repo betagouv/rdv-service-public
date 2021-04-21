@@ -8,8 +8,10 @@ task schedule_jobs: :environment do
 end
 
 # invoke schedule_jobs automatically after every migration and schema load.
-%w[db:migrate db:schema:load].each do |task|
-  Rake::Task[task].enhance do
-    Rake::Task["schedule_jobs"].invoke
+unless Rails.env.test?
+  %w[db:migrate db:schema:load].each do |task|
+    Rake::Task[task].enhance do
+      Rake::Task["schedule_jobs"].invoke
+    end
   end
 end
