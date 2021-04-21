@@ -9,9 +9,22 @@ class AgentRole < ApplicationRecord
   belongs_to :organisation
 
   validates :level, inclusion: { in: LEVELS }
-  validates :agent, uniqueness: { scope: :organisation }
   validate :organisation_cannot_change
   validate :organisation_have_at_least_one_admin
+  # Customize the uniqueness error message. This class needs to be declared before the validates :agent, uniqueness: line.
+  class UniquenessValidator < ActiveRecord::Validations::UniquenessValidator
+    def validate_each(record, attribute, value)
+      super
+      # Refine the “agent: taken” error to indicate if agent has only been invited to the app
+      return if record.errors.details[:agent]&.select { _1[:error] == :taken }.blank?
+
+      record.errors.delete(:agent)
+      new_error = value.invitation_accepted_at.present? ? :taken_existing : :taken_invited
+      record.errors.add(:agent, new_error, email: value.email)
+    end
+  end
+  validates :agent, uniqueness: { scope: :organisation }
+
   before_destroy :organisation_have_at_least_one_admin_before_destroy
 
   scope :level_basic, -> { where(level: LEVEL_BASIC) }

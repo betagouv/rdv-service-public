@@ -12,10 +12,11 @@ class Admin::InvitationsDeviseController < Devise::InvitationsController
       authorize(Agent.new(invite_params))
       self.resource = invite_resource # invite_resource creates the new Agent in DB and sends the invitation.
     else
-      # Authorize against a dummy AgentRole
-      authorize(AgentRole.new(agent: agent, organisation: current_organisation))
       self.resource = agent
-      agent.add_organisation(current_organisation)
+      # Authorize against a new AgentRole
+      new_role = agent.roles.new(invite_params[:roles_attributes].values.first)
+      authorize(new_role)
+      agent.save(context: :invite) # Specify a different validation context to bypass last_name/first_name presence
     end
     if resource.errors.empty?
       flash[:notice] = \

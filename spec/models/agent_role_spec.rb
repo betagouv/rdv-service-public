@@ -92,4 +92,28 @@ describe AgentRole, type: :model do
       end
     end
   end
+
+  describe "uniqueness error differ if the agent has not accepted the invitation yet" do
+    subject { build(:agent_role, agent: agent, organisation: organisation) }
+
+    let(:organisation) { build(:organisation) }
+    let(:agent) { build(:agent, invitation_accepted_at: invitation_accepted_at) }
+
+    before do
+      create(:agent_role, agent: agent, organisation: organisation) # existing role
+      subject.validate
+    end
+
+    context "agent has already accepted the invitation" do
+      let(:invitation_accepted_at) { Time.zone.now }
+
+      it { expect(subject.errors.details.dig(:agent, 0, :error)).to eq :taken_existing }
+    end
+
+    context "agent has not yet accepted the invitation" do
+      let(:invitation_accepted_at) { nil }
+
+      it { expect(subject.errors.details.dig(:agent, 0, :error)).to eq :taken_invited }
+    end
+  end
 end
