@@ -17,9 +17,9 @@ class MigrateUserNotesBackToUserProfiles < ActiveRecord::Migration[6.0]
     orga_user_notes = user.deprecated_user_notes_for(organisation_id)
     user_profile = user.profile_for(organisation_id)
     if user_profile.nil?
-      print "---"
-      print("no user profile found for user #{user.full_name} and orga #{Organisation.find(organisation_id).name}. Notes: #{orga_user_notes.map(&:text).join(' - ')}")
-      print "---"
+      Rails.logger.debug "---"
+      Rails.logger.debug("no user profile found for user #{user.full_name} and orga #{Organisation.find(organisation_id).name}. Notes: #{orga_user_notes.map(&:text).join(' - ')}")
+      Rails.logger.debug "---"
       # counted 6 cases in prod, notes don't seem incredibly important,
       # I think it's ok to ignore
       return

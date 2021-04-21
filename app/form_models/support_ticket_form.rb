@@ -23,7 +23,7 @@ class SupportTicketForm
       errors.add(:base, api_result[:errors].to_sentence) if api_result[:errors]&.any?
       success
     elsif valid?
-      puts "\n---\nwould have created zammad ticket with #{email}, #{ticket_title}, #{ticket_body}\n---\n"
+      Rails.logger.debug "\n---\nwould have created zammad ticket with #{email}, #{ticket_title}, #{ticket_body}\n---\n"
       true
     else
       false

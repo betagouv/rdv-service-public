@@ -228,17 +228,6 @@ Rails/LexicallyScopedActionFilter:
     - 'app/controllers/users/creneaux_controller.rb'
     - 'app/controllers/users/sessions_controller.rb'
 
-# Offense count: 12
-# Configuration parameters: Include.
-# Include: app/**/*.rb, config/**/*.rb, db/**/*.rb, lib/**/*.rb
-Rails/Output:
-  Exclude:
-    - 'app/form_models/support_ticket_form.rb'
-    - 'db/migrate/20200903072742_restore_rdv_context.rb'
-    - 'db/migrate/20200907124800_migrate_user_notes_back_to_user_profiles.rb'
-    - 'db/migrate/20201118161148_remove_deprecated_absences_and_plages_ouvertures.rb'
-    - 'db/migrate/20210301135256_create_territories.rb'
-
 # Offense count: 7
 Rails/OutputSafety:
   Exclude:
