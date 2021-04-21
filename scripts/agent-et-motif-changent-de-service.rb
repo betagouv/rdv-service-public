@@ -1,11 +1,12 @@
 # rails runner scripts/agent-et-motif-changent-de-service.rb
 
-ORGANISATION_ID = 1
+ID_ORGANISATION = 1
 IDS_SERVICE_SOURCE = [1, 2]
 ID_SERVICE_DESTINATION = 4
 
 services_source = Service.where(id: IDS_SERVICE_SOURCE)
 service_destination = Service.find(ID_SERVICE_DESTINATION)
+organisation = Organsiation.find(ID_ORGANISATION)
 
 puts "Hello !"
 puts "Déplace les agents et les motifs des services #{services_source.map(&:name).join(", ")} vers le service #{service_destination.name}"
@@ -35,7 +36,7 @@ Agent.transaction do
     end
   end
 
-  Agent.joins(:roles).where("agents_organisations.organisation_id": ORGANISATION_ID, service: services_source).each do |agent|
+  organisation.agents.each do |agent|
     agent.service = service_destination
     agent.save!(validate: false)
   end
