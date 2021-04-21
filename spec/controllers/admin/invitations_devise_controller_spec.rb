@@ -191,6 +191,18 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
         end
       end
 
+      context "when agent already exists but has a different service" do
+        let(:other_service) { build(:service) }
+        let!(:existing_agent) { create(:agent, basic_role_in_organisations: [organisation2], service: other_service) }
+
+        it_behaves_like "existing agent is added to organization"
+
+        it "displays an error about the mismatch" do
+          subject
+          expect(flash[:error]).to match(/Attention : le service demandé .* ne correspond pas/)
+        end
+      end
+
       context "when agent has been invited by another organisation" do
         let!(:existing_agent) { create(:agent, :not_confirmed, basic_role_in_organisations: [organisation2]) }
 

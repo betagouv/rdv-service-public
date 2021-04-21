@@ -7,6 +7,7 @@ class Admin::InvitationsDeviseController < Devise::InvitationsController
 
   def create
     agent = Agent.find_by(email: invite_params[:email].downcase)
+    service = Service.find(invite_params[:service_id])
     if agent.nil?
       # Authorize against a dummy Agent
       authorize(Agent.new(invite_params))
@@ -16,6 +17,8 @@ class Admin::InvitationsDeviseController < Devise::InvitationsController
       new_role = agent.roles.new(invite_params[:roles_attributes].values.first)
       authorize(new_role)
       agent.save(context: :invite) # Specify a different validation context to bypass last_name/first_name presence
+      # Warn if the service isn’t the one that was requested
+      flash[:error] = I18n.t "activerecord.warnings.models.agent_role.different_service", service: service.name, agent_service: agent.service.name if agent.service != service
     end
 
     if agent.errors.empty?
