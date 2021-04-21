@@ -6,17 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-Lint/EmptyBlock:
-  Enabled: false
-
-Lint/MissingSuper:
-  Enabled: false
-
-# Offense count: 73
-# Configuration parameters: IgnoredMethods, CountRepeatedAttributes.
-Metrics/AbcSize:
-  Max: 38
-
 # Offense count: 275
 # Configuration parameters: CountComments, CountAsOne, ExcludedMethods, IgnoredMethods.
 # IgnoredMethods: refine
@@ -29,11 +18,6 @@ Metrics/BlockLength:
 # Configuration parameters: CountComments, CountAsOne.
 Metrics/ClassLength:
   Max: 141
-
-# Offense count: 4
-# Configuration parameters: IgnoredMethods.
-Metrics/CyclomaticComplexity:
-  Max: 8
 
 # Offense count: 77
 # Configuration parameters: CountComments, CountAsOne, ExcludedMethods, IgnoredMethods.
@@ -69,16 +53,6 @@ RSpec/ExpectInHook:
     - 'spec/service_models/transactional_sms/base_concern_spec.rb'
     - 'spec/service_models/users/creneau_search_spec.rb'
     - 'spec/services/send_transactional_sms_service_spec.rb'
-
-# Offense count: 4
-# Configuration parameters: Include, CustomTransform, IgnoreMethods, SpecSuffixOnly.
-# Include: **/*_spec*rb*, **/spec/**/*
-RSpec/FilePath:
-  Exclude:
-    - 'spec/controllers/users/file_attente_controller_spec.rb'
-    - 'spec/helpers/users_spec.rb'
-    - 'spec/lib/csv_or_xls_reader_spec.rb'
-    - 'spec/services/notifications/rdv/base_service_spec.rb'
 
 # Offense count: 15
 # Configuration parameters: AssignmentOnly.
@@ -183,15 +157,6 @@ Rails/FilePath:
     - 'db/seeds.rb'
     - 'spec/rails_helper.rb'
 
-# Offense count: 4
-# Configuration parameters: Include.
-# Include: app/models/**/*.rb
-Rails/HasAndBelongsToMany:
-  Exclude:
-    - 'app/models/agent.rb'
-    - 'app/models/motif.rb'
-    - 'app/models/plage_ouverture.rb'
-    - 'app/models/user.rb'
 
 # Offense count: 3
 # Configuration parameters: Include.
@@ -208,13 +173,6 @@ Rails/HelperInstanceVariable:
   Exclude:
     - 'app/helpers/agents_helper.rb'
     - 'app/helpers/paper_trail_helper.rb'
-
-# Offense count: 2
-# Configuration parameters: Include.
-# Include: app/models/**/*.rb
-Rails/InverseOf:
-  Exclude:
-    - 'app/models/user.rb'
 
 # Offense count: 8
 # Configuration parameters: Include.
