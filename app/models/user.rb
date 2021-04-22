@@ -26,7 +26,7 @@ class User < ApplicationRecord
   has_many :rdvs, through: :rdvs_users
   has_and_belongs_to_many :agents
   belongs_to :responsible, class_name: "User", optional: true
-  has_many :relatives, foreign_key: "responsible_id", class_name: "User"
+  has_many :relatives, foreign_key: "responsible_id", class_name: "User", inverse_of: :responsible
   has_many :file_attentes, dependent: :destroy
 
   enum caisse_affiliation: { aucune: 0, caf: 1, msa: 2 }
