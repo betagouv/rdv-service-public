@@ -71,7 +71,7 @@
             ul.list-unstyled.mb-2
               - @user.agents.includes([:service]).each do |agent|
                 li.mb-2
-                | #{agent.full_name}
+                | #{agent.full_name_and_service}
               - if @user.agents.empty?
                 .font-italic aucun référent
 
@@ -88,7 +88,7 @@
           ul.list-unstyled.mb-2
             - @user.responsible.agents.includes([:service]).each do |agent|
               li.mb-2
-              | #{agent.full_name}
+              | #{agent.full_name_and_service}
             - if @user.responsible.agents.empty?
               .font-italic aucun référent
 
