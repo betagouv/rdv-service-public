@@ -186,15 +186,6 @@ Rails/LexicallyScopedActionFilter:
     - 'app/controllers/users/creneaux_controller.rb'
     - 'app/controllers/users/sessions_controller.rb'
 
-# Offense count: 7
-Rails/OutputSafety:
-  Exclude:
-    - 'app/controllers/lieux_controller.rb'
-    - 'app/helpers/devise_helper.rb'
-    - 'app/helpers/motifs_helper.rb'
-    - 'app/helpers/user_notifications_helper.rb'
-    - 'app/helpers/users_helper.rb'
-    - 'app/presenters/displayable_user_presenter.rb'
 
 # Offense count: 27
 # Configuration parameters: ForbiddenMethods, AllowedMethods.

@@ -3,12 +3,13 @@ module DeviseHelper
     return "" if resource.errors.empty?
 
     messages = resource.errors.full_messages.map { |msg| tag.li(msg) }.join
-    html = <<-HTML
-    <div class="alert alert-danger alert-block devise-bs">
-      <button type="button" class="close" data-dismiss="alert">&times;</button>
-      <ul class='mb-0'>#{messages}</ul>
-    </div>
-    HTML
-    html.html_safe
+    tag.div(class: "alert alert-danger alert-block devise-bs") do
+      tag.button(type: "button", class: "close", data: { dismiss: "alert" }) do
+        "&times;"
+      end
+      tag.ul(class: "mb-0") do
+        messages
+      end
+    end
   end
 end

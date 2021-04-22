@@ -10,6 +10,6 @@ module UserNotificationsHelper
       end
     number_tag = tag.b(user.phone_number.presence || "Non renseigné")
     details_tag = notif_details ? tag.span("(notifications par SMS #{notif_details})") : ""
-    "#{number_tag} #{details_tag}".html_safe
+    safe_join([number_tag, " ", details_tag])
   end
 end
