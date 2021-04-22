@@ -10,7 +10,7 @@
 - Foreman : voir https://github.com/ddollar/foreman
 - graphviz, pour rails-erd : voir https://voormedia.github.io/rails-erd/install.html
 
-# Commandes
+## Commandes
 
 Voir le [Makefile](Makefile):
 
