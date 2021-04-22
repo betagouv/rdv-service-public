@@ -48,7 +48,7 @@
                           = "Agents de l'organisation #{organisation.name}:"
                           ul.pl-2
                             - attributions.each do |attribution|
-                              li= attribution.agent.full_name
+                              li= attribution.agent.full_name_and_service
                 - else
                   .text-muted Aucune attribution
               td

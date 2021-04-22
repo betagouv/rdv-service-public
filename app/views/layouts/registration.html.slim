@@ -22,7 +22,7 @@ html lang="fr"
             - elsif agent_path? && current_agent.present?
               h4
                 i.far.fa-id-card>
-                = current_agent.full_name
+                = current_agent.full_name_and_service
               .d-flex.flex-row.justify-content-center
                 ul.list-unstyled.text-left
                   li

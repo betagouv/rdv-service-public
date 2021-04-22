@@ -16,7 +16,7 @@
             tr
               td
                 div
-                  = role.agent.full_name
+                  = role.agent.full_name_and_service
                   - if role.agent == current_agent
                     .badge.badge-primary Vous
                 .text-muted= role.agent.email
