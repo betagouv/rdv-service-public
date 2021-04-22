@@ -6,22 +6,21 @@ RSpec.describe Admin::AbsencesController, type: :controller do
 
   shared_examples "agent can CRUD absences" do
     describe "GET #index" do
-
       let!(:absence_un_jour_de_juillet) do
         create(:absence, agent: agent,
-               first_day: Date.new(2019, 7, 21),
-               start_time: Tod::TimeOfDay.new(8),
-               end_time: Tod::TimeOfDay.new(10),
-               organisation: organisation)
+                         first_day: Date.new(2019, 7, 21),
+                         start_time: Tod::TimeOfDay.new(8),
+                         end_time: Tod::TimeOfDay.new(10),
+                         organisation: organisation)
       end
 
       let!(:absence_une_semaine_en_aout) do
         create(:absence, agent: agent,
-               first_day: Date.new(2019, 8, 20),
-               start_time: Tod::TimeOfDay.new(8),
-               end_day: Date.new(2019, 8, 31),
-               end_time: Tod::TimeOfDay.new(22),
-               organisation: organisation)
+                         first_day: Date.new(2019, 8, 20),
+                         start_time: Tod::TimeOfDay.new(8),
+                         end_day: Date.new(2019, 8, 31),
+                         end_time: Tod::TimeOfDay.new(22),
+                         organisation: organisation)
       end
 
       before do
@@ -33,10 +32,13 @@ RSpec.describe Admin::AbsencesController, type: :controller do
       after { travel_back }
 
       it { expect(response).to be_successful }
-      it { expect(assigns(:absences).sort).to eq([
-        absence_un_jour_de_juillet,
-        absence_une_semaine_en_aout
-      ].sort) }
+
+      it {
+        expect(assigns(:absences).sort).to eq([
+          absence_un_jour_de_juillet,
+          absence_une_semaine_en_aout
+        ].sort)
+      }
     end
 
     describe "GET #new" do
@@ -47,17 +49,14 @@ RSpec.describe Admin::AbsencesController, type: :controller do
     end
 
     describe "GET #edit" do
-
       it "returns a success response" do
         absence = create(:absence, agent_id: agent.id, organisation: organisation)
         get :edit, params: { organisation_id: organisation.id, agent_id: agent.id, id: absence.to_param }
         expect(response).to be_successful
       end
-
     end
 
     describe "POST #create" do
-
       context "with valid params" do
         let(:valid_attributes) do
           build(:absence, agent: agent, organisation: organisation).attributes
@@ -99,8 +98,9 @@ RSpec.describe Admin::AbsencesController, type: :controller do
     end
 
     describe "PUT #update" do
-      let(:absence) { create(:absence, agent_id: agent.id, organisation: organisation) }
       subject { put :update, params: { organisation_id: organisation.id, id: absence.to_param, absence: new_attributes } }
+
+      let(:absence) { create(:absence, agent_id: agent.id, organisation: organisation) }
 
       before { subject }
 

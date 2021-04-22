@@ -34,7 +34,7 @@ describe Admin::PlageOuverturesController, type: :controller do
       it "returns a success responses with plage_ouvertures assigned" do
         now = Time.zone.parse("2020-11-23 13h30")
         travel_to(now)
-        plage_ouverture = create(:plage_ouverture, organisation: organisation, agent: agent, first_day: now + 3.days)
+        create(:plage_ouverture, organisation: organisation, agent: agent, first_day: now + 3.days)
 
         get :index, params: { organisation_id: organisation.id, agent_id: agent.id }
         expect(response).to be_successful
@@ -126,7 +126,7 @@ describe Admin::PlageOuverturesController, type: :controller do
                 lieu_id: lieu1.id,
                 organisation_id: organisation.id,
                 agent_id: agent.id
-              # missing fields
+                # missing fields
               }
             }
           )
