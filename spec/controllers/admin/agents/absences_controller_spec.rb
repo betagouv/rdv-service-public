@@ -12,6 +12,12 @@ describe Admin::Agents::AbsencesController, type: :controller do
         expect(response).to be_successful
       end
 
+      it "assigns organisation" do
+        given_agent = create(:agent, basic_role_in_organisations: [organisation])
+        get :index, params: { agent_id: given_agent.id, organisation_id: organisation.id, start: Date.new(2019, 8, 12), end: Date.new(2019, 8, 19), format: :json }
+        expect(assigns(:organisation)).to eq(organisation)
+      end
+
       it "call Admin::Occurrence to assigns `absence_occurrences`" do
         given_agent = create(:agent, basic_role_in_organisations: [organisation], service: agent.service)
 

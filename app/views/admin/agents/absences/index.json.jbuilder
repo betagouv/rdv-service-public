@@ -3,5 +3,6 @@ json.array! @absence_occurrences do |absence, occurrence|
   json.start occurrence.starts_at
   json.end occurrence.ends_at
   json.backgroundColor "#7f8c8d"
-  json.url edit_admin_organisation_absence_path(absence.organisation, absence)
+
+  json.url edit_admin_organisation_absence_path(absence.organisation, absence) if absence.organisation == @organisation
 end

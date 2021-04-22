@@ -4,6 +4,7 @@ class Admin::Agents::AbsencesController < ApplicationController
 
   def index
     agent = Agent.find(params[:agent_id])
+    @organisation = Organisation.find(params[:organisation_id])
     @absence_occurrences = Admin::Occurrence.extract_from(policy_scope_admin(Absence).includes(:organisation).where(agent: agent), date_range_params)
   end
 
