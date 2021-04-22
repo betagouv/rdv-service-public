@@ -24,12 +24,15 @@ autocorrect          Fix autocorrectable lint issues
 clean                Clean temporary files (including weppacks) and logs
 help                 Display available commands
 ```
-Pour acceder à l'interface SuperAdmin créez un compte via la console Rails :
 
-```
-bundle exec rails console
-SuperAdmin.create!(email: 'email_associated_to_your_github_account@prov.com')
-```
+## Console SuperAdmin
+
+L’accès à /super_admins se fait 
+* en `production` et en `development`, en OAuth via un compte GitHub
+  * en `development`, le premier compte à tenter d’accéder est automatiquement ajouté.
+* sur les review apps, en http Basic.
+  * login: rdv-solidarites
+  * password: `scalingo env -a demo-rdv-solidarites-pr<numéro de la PR> --region osc-secnum-fr1 | grep ADMIN_BASIC_AUTH_PASSWORD | sed 's/.*=//'`
 
 ## Tâches automatisées
 

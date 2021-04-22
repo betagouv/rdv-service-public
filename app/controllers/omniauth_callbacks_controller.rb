@@ -11,8 +11,13 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def github
     email = request.env["omniauth.auth"]["info"]["email"]
-    super_admin = SuperAdmin.find_by(email: email)
 
+    # Automatically create the first SuperAdmin in development
+    if Rails.env.development? && SuperAdmin.none?
+      SuperAdmin.create!(email: email)
+    end
+
+    super_admin = SuperAdmin.find_by(email: email)
     if super_admin.present?
       bypass_sign_in super_admin, scope: :super_admin
       redirect_to super_admins_agents_path
