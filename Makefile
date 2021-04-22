@@ -5,7 +5,7 @@ run: ## Start the application (web, jobs et webpack)
 	foreman s -f Procfile.dev
 
 lint: ## Check code style
-	bundle exec rubocop
+	bundle exec rubocop --parallel
 	bundle exec brakeman --no-pager
 
 test: ## Run spec suite
