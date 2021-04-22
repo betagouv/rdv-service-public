@@ -10,12 +10,19 @@
 - Foreman : voir https://github.com/ddollar/foreman
 - graphviz, pour rails-erd : voir https://voormedia.github.io/rails-erd/install.html
 
-## Initialisation de l'environnement de développement
+# Commandes
 
-Afin d'initialiser l'environnement de développement, exécutez la commande suivante :
+Voir le [Makefile](Makefile):
 
 ```bash
-bin/setup
+> make help
+install              Setup development environment
+run                  Start the application (web, jobs et webpack)
+lint                 Check code style
+test                 Run spec suite
+autocorrect          Fix autocorrectable lint issues
+clean                Clean temporary files (including weppacks) and logs
+help                 Display available commands
 ```
 Pour acceder à l'interface SuperAdmin créez un compte via la console Rails :
 
@@ -24,24 +31,7 @@ bundle exec rails console
 SuperAdmin.create!(email: 'email_associated_to_your_github_account@prov.com')
 ```
 
-## Lancement de l'application
+## Tâches automatisées
 
-```bash
-foreman s -f Procfile.dev
-```
-
-L'application tourne à l'adresse [http://localhost:5000].
-
-
-## Programmation des jobs
-
-```bash
-# Envoi des sms/email de rappel 48h avant le rdv
-rake send_reminder
-
-# Envoi des sms/email lorsque des créneaux se libèrent
-rake file_attente
-
-# Envoi d'un mail quotidien de monitoring des notifs a l'equipe
-rake rdv_events_stats_mail
-```
+* `auto_generate_diagram` est ajouté à `db:migrate` pour tenir à jour docs/domain_model.png.
+* `schedule_jobs` tourne après chaque `db:migrate` et`db:schema:load` pour ajouter automatiquement les “cron jobs”.

@@ -1,12 +1,24 @@
-test: ## Run the tests and rubocop
-	bundle exec rubocop -a && bundle exec brakeman --no-pager && bundle exec rspec --profile 3
+install: ## Setup development environment
+	bin/setup
 
-install: ## Install or update dependencies
-	bundle install && yarn install && bundle exec rails db:migrate
-
-run: ## Start the app server
+run: ## Start the application (web, jobs et webpack)
 	foreman s -f Procfile.dev
 
-clean: ## Clean temporary files and installed dependencies
+lint: ## Check code style
+	bundle exec rubocop
+	bundle exec brakeman --no-pager
+
+test: ## Run spec suite
+	bundle exec rspec --profile 3
+
+autocorrect: ## Fix autocorrectable lint issues
+	bundle exec rubocop --auto-correct-all
+
+clean: ## Clean temporary files (including weppacks) and logs
 	bundle exec rails log:clear tmp:clear
 
+help: ## Display available commands
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+
+.PHONY: install run lint test autocorrect clean help
+.DEFAULT_GOAL := help
