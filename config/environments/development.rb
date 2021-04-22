@@ -41,6 +41,8 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
+  config.log_level = :info
+
   # allows to see debug logs when running with foreman / overmind
   # cf https://github.com/rails/sprockets-rails/issues/376#issuecomment-287560399
   logger = ActiveSupport::Logger.new($stdout)
