@@ -238,7 +238,7 @@ lieu_bapaume_est = Lieu.create!(
 )
 
 ## ZONES
-zones_csv_path = File.join(Rails.root, "db", "seeds", "zones_62.csv")
+zones_csv_path = Rails.root.join("db/seeds/zones_62.csv")
 CSV.read(zones_csv_path, headers: :first_row).each do |row|
   Zone.create!(
     level: row["street_ban_id"].present? ? "street" : "city",
