@@ -9,9 +9,9 @@
 = simple_form_for '', url: admin_organisation_agents_path(current_organisation), html: { method: :get, class: 'form-inline' }, wrapper: :inline_form do |f|
   .container-fluid.bg-white.rounded
     .m-3.d-flex.justify-content-end
-      div= link_to 'Réinitialiser', admin_organisation_agents_path(current_organisation), class: "btn btn-link #{params[:search].blank? && 'd-none'}"
+      div= link_to t('helpers.reset'), admin_organisation_agents_path(current_organisation), class: "btn btn-link #{params[:search].blank? && 'd-none'}"
       = f.input :search, placeholder: 'Prénom, Nom, Email', label: false, input_html: { autocomplete: 'off', class: 'search-form-control', value: params[:search] }, required: false
-      = f.button :submit, 'Rechercher'
+      = f.button :submit, t('helpers.search')
     table.table
       thead
         tr

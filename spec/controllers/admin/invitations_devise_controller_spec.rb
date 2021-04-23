@@ -30,7 +30,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
 
       it "adds agent to organisation" do
         subject
-        expect(assigns(:agent).organisation_ids).to include(organisation.id)
+        expect(existing_agent.organisation_ids).to include(organisation.id)
       end
     end
 
@@ -155,12 +155,12 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
 
       it "renders new page" do
         subject
-        expect(response).to render_template(:new)
+        expect(response).to redirect_to new_admin_agent_organisation_invitation_path
       end
 
       it "renders errors" do
         subject
-        expect(assigns(:agent).errors[:email]).not_to be_empty
+        expect(flash[:error]).to include "Email n'est pas valide"
       end
     end
 
@@ -169,7 +169,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
         {
           organisation_id: organisation.id,
           agent: {
-            email: agent2.email,
+            email: existing_agent.email,
             service_id: service_id,
             roles_attributes: {
               "0" => {
@@ -181,7 +181,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
       end
 
       context "when agent is in another organisation" do
-        let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation2]) }
+        let!(:existing_agent) { create(:agent, basic_role_in_organisations: [organisation2]) }
 
         it_behaves_like "existing agent is added to organization"
 
@@ -191,20 +191,32 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
         end
       end
 
+      context "when agent already exists but has a different service" do
+        let(:other_service) { build(:service) }
+        let!(:existing_agent) { create(:agent, basic_role_in_organisations: [organisation2], service: other_service) }
+
+        it_behaves_like "existing agent is added to organization"
+
+        it "displays an error about the mismatch" do
+          subject
+          expect(flash[:error]).to match(/Attention : le service demandé .* ne correspond pas/)
+        end
+      end
+
       context "when agent has been invited by another organisation" do
-        let!(:agent2) { create(:agent, :not_confirmed, basic_role_in_organisations: [organisation2]) }
+        let!(:existing_agent) { create(:agent, :not_confirmed, basic_role_in_organisations: [organisation2]) }
 
         it_behaves_like "existing agent is added to organization"
       end
 
       context "when agent is already in this organisation" do
-        let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation]) }
+        let!(:existing_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
         it { expect { subject }.not_to change(Agent, :count) }
       end
 
       context "when agent has been invited by this organisation" do
-        let!(:agent2) { create(:agent, :not_confirmed, basic_role_in_organisations: [organisation]) }
+        let!(:existing_agent) { create(:agent, :not_confirmed, basic_role_in_organisations: [organisation]) }
 
         it { expect { subject }.not_to change(Agent, :count) }
       end

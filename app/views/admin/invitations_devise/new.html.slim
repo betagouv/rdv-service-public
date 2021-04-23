@@ -7,11 +7,6 @@
   .col-md-6
     .card
       .card-body
-        .alert.alert-info.d-flex.align-items-center
-          .mr-3
-            .fa.fa-info
-          div Le niveau de permissions des agents (Agent / Admin) est dorénavant indépendant par organisation
-
         = simple_form_for [:admin, resource], as: resource_name, url: admin_agent_organisation_invitation_path(current_organisation, resource), html: { method: :post } do |f|
           = devise_error_messages!
           = f.input :email, placeholder: 'jean.dupond@departement.fr', input_html: { autocomplete: 'off'}
@@ -20,6 +15,7 @@
             = ff.input :level, \
               collection: AgentRole::LEVELS, \
               label_method: -> { I18n.t("activerecord.attributes.agent_role.levels.#{_1}_html").html_safe }, \
+              hint: "Les agents peuvent avoir des permissions différentes sur chaque organisation.", \
               as: :radio_buttons
           .text-right
             = f.button :submit, t("devise.invitations.new.submit_button")
