@@ -12,7 +12,7 @@ class Organisation < ApplicationRecord
   has_many :agent_roles, dependent: :delete_all # skips last admin validation
   has_many :agents, through: :agent_roles
 
-  has_many :user_profiles
+  has_many :user_profiles, dependent: :restrict_with_error
   has_many :users, through: :user_profiles
 
   delegate :departement_number, to: :territory

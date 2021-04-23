@@ -19,14 +19,14 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :confirmable, :async,
          :trackable
 
-  has_many :user_profiles
+  has_many :user_profiles, dependent: :restrict_with_error
   has_many :organisations, through: :user_profiles
 
   has_many :rdvs_users, dependent: :destroy
   has_many :rdvs, through: :rdvs_users
   has_and_belongs_to_many :agents
   belongs_to :responsible, class_name: "User", optional: true
-  has_many :relatives, foreign_key: "responsible_id", class_name: "User", inverse_of: :responsible
+  has_many :relatives, foreign_key: "responsible_id", class_name: "User", inverse_of: :responsible, dependent: :nullify
   has_many :file_attentes, dependent: :destroy
 
   enum caisse_affiliation: { aucune: 0, caf: 1, msa: 2 }
