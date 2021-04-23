@@ -18,8 +18,8 @@ gem "pg", ">= 0.18", "< 2.0"
 gem "pg_search", "~> 2.3"
 gem "kaminari", "~> 1.2"
 gem "bootstrap4-kaminari-views", "~> 1.0"
-gem "administrate", github: "thoughtbot/administrate", branch: "master" # to use PR #1579
-gem "administrate-field-belongs_to_search", "~> 0.7"
+gem "administrate"
+gem "administrate-field-belongs_to_search"
 gem "paper_trail"
 
 # Devise / auth
@@ -41,7 +41,7 @@ gem "daemons"
 gem "simple_form", "~> 5.0"
 gem "image_processing", "~> 1.8"
 gem "phonelib"
-gem "activemodel-caution", github: "PublicHealthEngland/activemodel-caution"
+gem "activemodel-caution", github: "rdv-solidarites/activemodel-caution"
 
 # CORS management
 gem "rack-cors"
