@@ -5,11 +5,11 @@ run: ## Start the application (web, jobs et webpack)
 	foreman s -f Procfile.dev
 
 lint: ## Check code style
-	bundle exec rubocop
+	bundle exec rubocop --parallel
 	bundle exec brakeman --no-pager
 
 test: ## Run spec suite
-	bundle exec rspec --profile 3
+	RAILS_ENV=test bundle exec rake parallel:spec
 
 autocorrect: ## Fix autocorrectable lint issues
 	bundle exec rubocop --auto-correct-all
