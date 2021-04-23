@@ -195,7 +195,7 @@ describe DisplayableUserPresenter, type: :presenter do
       organisation = build(:organisation)
       user = create(:user, organisations: [organisation], phone_number: "01 02 03 04 05", notify_by_sms: true)
       displayable_user = described_class.new(user, organisation)
-      expect(displayable_user.phone_number_and_notification).to eq("<a href=\"tel:+33102030405\">01 02 03 04 05</a> - Notifications par SMS 🔴 le numéro de téléphone renseigné n'est pas un mobile")
+      expect(displayable_user.phone_number_and_notification).to eq("<a href=\"tel:+33102030405\">01 02 03 04 05</a> - Notifications par SMS 🔴 le numéro de téléphone renseigné n&#39;est pas un mobile")
     end
 
     it "returns phone_number and disabled notification with a user's sms setting disabled" do
