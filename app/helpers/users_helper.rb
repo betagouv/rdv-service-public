@@ -57,14 +57,13 @@ module UsersHelper
   end
 
   def users_inline_list_for_agents(users, display_links_to_users: false)
-    users.sort_by(&:last_name).each_with_index.reduce("") do |acc, (user, idx)|
-      user_span = if display_links_to_users
-                    user_to_link(user)
-                  else
-                    tag.span(user.full_name) + relative_tag(user)
-                  end
-      acc << safe_join([(idx.positive? ? tag.span(", ") : ""), user_span])
-    end
+    safe_join(users.sort_by(&:last_name).map do |user|
+      if display_links_to_users
+        user_to_link(user)
+      else
+        tag.span(user.full_name) + relative_tag(user)
+      end
+    end, ", ")
   end
 
   def users_to_sentence(users)
