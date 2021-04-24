@@ -24,12 +24,6 @@ Metrics/ClassLength:
 Metrics/MethodLength:
   Max: 24
 
-# Offense count: 2
-RSpec/AnyInstance:
-  Exclude:
-    - 'spec/controllers/admin/referents_controller_spec.rb'
-    - 'spec/controllers/admin/users_controller_spec.rb'
-
 # Offense count: 23
 # Configuration parameters: IgnoredMetadata.
 RSpec/DescribeClass:

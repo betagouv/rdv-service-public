@@ -35,7 +35,9 @@ describe Admin::ReferentsController, type: :controller do
       user = create(:user, agents: [lea], organisations: [organisation])
       sign_in agent
 
-      allow_any_instance_of(User).to receive(:update).and_return(false)
+      double_user = instance_double(User)
+      allow(User).to receive(:new).and_return(double_user)
+      allow(double_user).to receive(:update).and_return(false)
 
       post :update, params: { organisation_id: organisation.id, user_id: user.id, user: { agent_ids: ["bad agent id"] } }
 
