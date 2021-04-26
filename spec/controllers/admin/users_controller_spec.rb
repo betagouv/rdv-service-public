@@ -99,9 +99,7 @@ RSpec.describe Admin::UsersController, type: :controller do
         let(:format) { format }
 
         it "sends an invite" do
-          double_user = instance_double(User)
-          allow(User).to receive(:new).and_return(double_user)
-          allow(double_user).to receive(:invite!)
+          expect_any_instance_of(User).to receive(:invite!)
           post :create, params: { organisation_id: organisation.id, user: attributes, invite_on_create: "1" }
         end
       end

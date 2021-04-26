@@ -23,16 +23,14 @@ describe Motif, type: :model do
   end
 
   describe "#soft_delete" do
-    before do
-      freeze_time
-      @delation_time = Time.current
+    it "doesn't delete the motif with rdvs" do
+      now = Time.zone.parse("2020-03-23 15h45")
+      travel_to(now)
       motif.soft_delete
       motif_with_rdv.soft_delete
-    end
-
-    it "doesn't delete the motif with rdvs" do
       expect(described_class.all).to eq [motif_with_rdv]
-      expect(motif_with_rdv.reload.deleted_at).to eq @delation_time
+      expect(motif_with_rdv.reload.deleted_at).to eq(now)
+      travel_back
     end
   end
 

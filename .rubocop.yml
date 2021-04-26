@@ -83,6 +83,11 @@ RSpec/MessageSpies:
 RSpec/MultipleExpectations:
   Enabled: False
 
+RSpec/AnyInstance:
+  Exclude:
+    - spec/controllers/admin/users_controller_spec.rb
+    - spec/controllers/admin/referents_controller_spec.rb
+
 Style/ClassAndModuleChildren:
   Enabled: false
 

@@ -13,16 +13,14 @@ RSpec.describe Admin::RdvsController, type: :controller do
   end
 
   describe "GET index" do
-    subject { get(:index, params: { organisation_id: organisation.id, agent_id: agent.id, start: start_time, end: end_time }, as: :json) }
+    subject(:parsed_response) do
+      get(:index, params: { organisation_id: organisation.id, agent_id: agent.id, start: start_time, end: end_time }, as: :json)
+      JSON.parse(response.body)
+    end
 
     let!(:lieu) { create(:lieu, organisation: organisation, name: "MDS Orgeval") }
     let!(:rdv1) { create(:rdv, motif: motif, agents: [agent], users: [user], starts_at: Time.zone.parse("21/07/2019 08:00"), organisation: organisation, lieu: lieu) }
     let!(:rdv2) { create(:rdv, motif: motif, agents: [agent], users: [user], starts_at: Time.zone.parse("21/07/2019 07:00"), organisation: organisation, lieu: lieu) }
-
-    before do
-      subject
-      @parsed_response = JSON.parse(response.body)
-    end
 
     context "when rdvs starts_at is in window" do
       let(:start_time) { Time.zone.parse("20/07/2019 00:00") }
@@ -31,9 +29,9 @@ RSpec.describe Admin::RdvsController, type: :controller do
       it { expect(response).to have_http_status(:ok) }
 
       it "returns absence1" do
-        expect(@parsed_response.size).to eq(2)
+        expect(parsed_response.size).to eq(2)
 
-        first = @parsed_response[0]
+        first = parsed_response[0]
         expect(first.size).to eq(8)
         expect(first["title"]).to eq("Marie DENIS")
         expect(first["start"]).to eq(rdv1.starts_at.as_json)
@@ -44,7 +42,7 @@ RSpec.describe Admin::RdvsController, type: :controller do
         expect(first["extendedProps"]).to eq({ readableStatus: Rdv.human_enum_name(:status, rdv1.status), status: rdv1.status, motif: "Suivi", past: rdv1.past?, duration: rdv.duration_in_min,
                                                lieu: "MDS Orgeval", overlappingPlagesOuvertures: false }.as_json)
 
-        second = @parsed_response[1]
+        second = parsed_response[1]
         expect(second.size).to eq(8)
         expect(second["title"]).to eq("Marie DENIS")
         expect(second["start"]).to eq(rdv2.starts_at.as_json)
@@ -62,7 +60,7 @@ RSpec.describe Admin::RdvsController, type: :controller do
       let(:end_time) { Time.zone.parse("17/07/2019 00:00") }
 
       it "returns no rdvs" do
-        expect(@parsed_response.size).to eq(0)
+        expect(parsed_response.size).to eq(0)
       end
     end
   end

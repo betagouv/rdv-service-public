@@ -17,7 +17,11 @@ RSpec.describe Admin::AbsencesController, type: :controller do
       end
 
       describe "for json format" do
-        subject { get :index, params: { format: "json", organisation_id: organisation.id, agent_id: agent.id, start: start_time, end: end_time } }
+        subject(:parsed_response) do
+          sign_in agent
+          get :index, params: { format: "json", organisation_id: organisation.id, agent_id: agent.id, start: start_time, end: end_time }
+          JSON.parse(response.body)
+        end
 
         let!(:absence1) { create(:absence, agent: agent, first_day: Date.new(2019, 7, 21), start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(10), organisation: organisation) }
         let(:expected_absence_starts_at) { expected_absence.starts_at }
@@ -27,19 +31,13 @@ RSpec.describe Admin::AbsencesController, type: :controller do
                            organisation: organisation)
         end
 
-        before do
-          sign_in agent
-          subject
-          @parsed_response = JSON.parse(response.body)
-        end
-
         shared_examples "returns expected_absence" do
           it { expect(response).to have_http_status(:ok) }
 
           it "returns absence1" do
-            expect(@parsed_response.size).to eq(1)
+            expect(parsed_response.size).to eq(1)
 
-            first = @parsed_response[0]
+            first = parsed_response[0]
             expect(first.size).to eq(5)
             expect(first["title"]).to eq(expected_absence.title)
             expect(first["start"]).to eq(expected_absence_starts_at.as_json)
