@@ -30,7 +30,6 @@ describe Motif, type: :model do
       motif_with_rdv.soft_delete
       expect(described_class.all).to eq [motif_with_rdv]
       expect(motif_with_rdv.reload.deleted_at).to eq(now)
-      travel_back
     end
   end
 
