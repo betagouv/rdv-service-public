@@ -1,0 +1,8 @@
+fr:
+  admins:
+    system_mailer:
+      rdv_events_stats:
+        title: Notifications de RDV - %{date}
+        today: Aujourd’hui
+        yesterday: Hier
+        view_on_server: Page de monitoring

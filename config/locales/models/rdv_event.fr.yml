@@ -1,0 +1,16 @@
+fr:
+  activerecord:
+    models:
+      rdv_event: Notification
+    attributes:
+      rdv_event:
+        event_types:
+          notification_sms: Par SMS
+          notification_mail: Par email
+        event_names:
+          cancelled_by_user: Annulation (par l’usager)
+          cancelled_by_agent: Annulation (par l’agent)
+          created: Création
+          updated: Mise à jour
+          upcoming_reminder: Rappel
+          total: Total
