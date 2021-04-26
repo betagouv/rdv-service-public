@@ -50,7 +50,6 @@ describe Admin::Ics::Absence, type: :service do
 
       it { expect(described_class.payload(absence)[:first_occurrence_ends_at]).to eq(starts_at + 5.hours) }
     end
-
   end
 
   %i[create update destroy].each do |action|

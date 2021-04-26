@@ -21,7 +21,7 @@ class Admin::Ics::Absence
       recurrence: rrule(absence),
       ical_uid: absence.ical_uid,
       title: absence.title,
-      first_occurrence_ends_at: absence.first_occurrence_ends_at,
+      first_occurrence_ends_at: absence.first_occurrence_ends_at
     }
   end
 
