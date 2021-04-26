@@ -7,14 +7,11 @@ RSpec.describe "CVE-2015-9284", type: :request do
   end
 
   describe "POST /auth/:provider without CSRF token" do
-    before do
-      @allow_forgery_protection = ActionController::Base.allow_forgery_protection
-      ActionController::Base.allow_forgery_protection = true
-    end
+    let!(:allow_forgery_protection) { ActionController::Base.allow_forgery_protection }
 
-    after do
-      ActionController::Base.allow_forgery_protection = @allow_forgery_protection
-    end
+    before { ActionController::Base.allow_forgery_protection = true }
+
+    after { ActionController::Base.allow_forgery_protection = allow_forgery_protection }
 
     it do
       expect do

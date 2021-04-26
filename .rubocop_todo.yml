@@ -24,12 +24,6 @@ Metrics/ClassLength:
 Metrics/MethodLength:
   Max: 24
 
-# Offense count: 2
-RSpec/AnyInstance:
-  Exclude:
-    - 'spec/controllers/admin/referents_controller_spec.rb'
-    - 'spec/controllers/admin/users_controller_spec.rb'
-
 # Offense count: 23
 # Configuration parameters: IgnoredMetadata.
 RSpec/DescribeClass:
@@ -53,16 +47,6 @@ RSpec/ExpectInHook:
     - 'spec/service_models/transactional_sms/base_concern_spec.rb'
     - 'spec/service_models/users/creneau_search_spec.rb'
     - 'spec/services/send_transactional_sms_service_spec.rb'
-
-# Offense count: 15
-# Configuration parameters: AssignmentOnly.
-RSpec/InstanceVariable:
-  Exclude:
-    - 'spec/controllers/admin/absences_controller_spec.rb'
-    - 'spec/controllers/admin/plage_ouvertures_controller_spec.rb'
-    - 'spec/controllers/admin/rdvs_controller_spec.rb'
-    - 'spec/models/motif_spec.rb'
-    - 'spec/requests/cve_2015_9284_spec.rb'
 
 # Offense count: 275
 RSpec/LetSetup:

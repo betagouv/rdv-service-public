@@ -52,8 +52,11 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
     end
 
     describe "GET #index.json" do
-      subject { get :index, params: { format: "json", organisation_id: organisation.id, agent_id: agent.id, start: start_date, end: end_date } }
+      subject(:response) do
+        get :index, params: { format: "json", organisation_id: organisation.id, agent_id: agent.id, start: start_date, end: end_date }
+      end
 
+      let(:parsed_response) { JSON.parse(response.body) }
       let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let!(:plage_ouverture) do
         create(:plage_ouverture, :every_two_weeks, title: "Une semaine sur deux les mercredis à partir du 17/07",
@@ -76,11 +79,6 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
         sign_in agent
       end
 
-      before do
-        subject
-        @parsed_response = JSON.parse(response.body)
-      end
-
       context "from 08/07/2019 to 14/07/2019" do
         let(:start_date) { Date.new(2019, 7, 8) }
         let(:end_date) { Date.new(2019, 7, 14) }
@@ -94,9 +92,9 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
         let(:end_date) { Date.new(2019, 7, 28) }
 
         it "returns 3 occurrences from plage_ouverture2 3 and 4" do
-          expect(@parsed_response.size).to eq(3)
+          expect(parsed_response.size).to eq(3)
 
-          first = @parsed_response[0]
+          first = parsed_response[0]
           expect(first.size).to eq(6)
           expect(first["title"]).to eq(plage_ouverture2.title)
           expect(first["start"]).to eq(plage_ouverture2.starts_at.as_json)
@@ -105,7 +103,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
           expect(first["rendering"]).to eq("background")
           expect(first["extendedProps"]).to eq({ lieu: "MDS Sud", location: "10 rue Belsunce" }.as_json)
 
-          second = @parsed_response[1]
+          second = parsed_response[1]
           expect(second.size).to eq(6)
           expect(second["title"]).to eq(plage_ouverture3.title)
           expect(second["start"]).to eq("2019-07-24T08:00:00.000+02:00")
@@ -114,7 +112,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
           expect(second["rendering"]).to eq("background")
           expect(second["extendedProps"]).to eq({ lieu: "MDS Sud", location: "10 rue Belsunce" }.as_json)
 
-          third = @parsed_response[2]
+          third = parsed_response[2]
           expect(third.size).to eq(6)
           expect(third["title"]).to eq(plage_ouverture4.title)
           expect(third["start"]).to eq("2019-07-24T08:00:00.000+02:00")
@@ -130,9 +128,9 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
         let(:end_date) { Date.new(2019, 8, 4) }
 
         it "returns two occurrences one from plage_ouverture and one from plage_ouverture2" do
-          expect(@parsed_response.size).to eq(2)
+          expect(parsed_response.size).to eq(2)
 
-          first = @parsed_response[0]
+          first = parsed_response[0]
           expect(first.size).to eq(6)
           expect(first["title"]).to eq(plage_ouverture2.title)
           expect(first["start"]).to eq("2019-07-29T08:00:00.000+02:00")
@@ -141,7 +139,7 @@ RSpec.describe Admin::PlageOuverturesController, type: :controller do
           expect(first["rendering"]).to eq("background")
           expect(first["extendedProps"]).to eq({ lieu: plage_ouverture2.lieu.name, location: plage_ouverture2.lieu.address }.as_json)
 
-          second = @parsed_response[1]
+          second = parsed_response[1]
           expect(second.size).to eq(6)
           expect(second["title"]).to eq(plage_ouverture.title)
           expect(second["start"]).to eq("2019-07-31T08:00:00.000+02:00")
