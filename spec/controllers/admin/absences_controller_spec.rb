@@ -143,6 +143,11 @@ RSpec.describe Admin::AbsencesController, type: :controller do
           post :create, params: { organisation_id: organisation.id, absence: valid_attributes }
           expect(response).to redirect_to(admin_organisation_agent_absences_path(organisation, absence.agent_id))
         end
+
+        it "send notification after create" do
+          expect(Agents::AbsenceMailer).to receive(:absence_created).and_return(double(deliver_later: nil))
+          post :create, params: { organisation_id: organisation.id, absence: valid_attributes }
+        end
       end
 
       context "with invalid params" do
@@ -169,9 +174,6 @@ RSpec.describe Admin::AbsencesController, type: :controller do
     end
 
     describe "PUT #update" do
-      subject { put :update, params: { organisation_id: organisation.id, id: absence.to_param, absence: new_attributes } }
-
-      before { subject }
 
       context "with valid params" do
         let(:new_attributes) do
@@ -181,12 +183,19 @@ RSpec.describe Admin::AbsencesController, type: :controller do
         end
 
         it "updates the requested absence" do
+          put :update, params: { organisation_id: organisation.id, id: absence.to_param, absence: new_attributes }
           absence.reload
           expect(absence.title).to eq("Le nouveau nom")
         end
 
         it "redirects to the absence" do
+          put :update, params: { organisation_id: organisation.id, id: absence.to_param, absence: new_attributes }
           expect(response).to redirect_to(admin_organisation_agent_absences_path(organisation, absence.agent_id))
+        end
+
+        it "send notification after update" do
+          expect(Agents::AbsenceMailer).to receive(:absence_updated).and_return(double(deliver_later: nil))
+          put :update, params: { organisation_id: organisation.id, id: absence.to_param, absence: new_attributes }
         end
       end
 
@@ -199,10 +208,12 @@ RSpec.describe Admin::AbsencesController, type: :controller do
         end
 
         it "returns a success response (i.e. to display the 'edit' template)" do
+          put :update, params: { organisation_id: organisation.id, id: absence.to_param, absence: new_attributes }
           expect(response).to be_successful
         end
 
         it "does not change absence name" do
+          put :update, params: { organisation_id: organisation.id, id: absence.to_param, absence: new_attributes }
           absence.reload
           expect(absence.starts_at.to_s).not_to eq("2019-09-12 16:00:00 +0200")
           expect(absence.ends_at.to_s).not_to eq("2019-09-12 15:00:00 +0200")
@@ -221,7 +232,13 @@ RSpec.describe Admin::AbsencesController, type: :controller do
         delete :destroy, params: { organisation_id: organisation.id, id: absence.to_param }
         expect(response).to redirect_to(admin_organisation_agent_absences_path(organisation, absence.agent_id))
       end
+
+      it "send notification after delete" do
+        expect(Agents::AbsenceMailer).to receive(:absence_destroyed).and_return(double(deliver_later: nil))
+        delete :destroy, params: { organisation_id: organisation.id, id: absence.to_param }
+      end
     end
+
   end
 
   context "agent can CRUD on his absences" do
