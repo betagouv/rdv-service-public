@@ -1,7 +1,7 @@
 # rails runner scripts/copie-vers-un-nouveau-service.rb
 
-IDS_SERVICE_SOURCE = [1, 2].freeze
-ID_SERVICE_DESTINATION = 4
+IDS_SERVICE_SOURCE = [5, 7].freeze
+ID_SERVICE_DESTINATION = 22
 
 services_source = Service.where(id: IDS_SERVICE_SOURCE)
 service_destination = Service.find(ID_SERVICE_DESTINATION)
