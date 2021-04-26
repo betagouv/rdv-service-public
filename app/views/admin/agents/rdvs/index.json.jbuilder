@@ -2,6 +2,7 @@ json.array! @rdvs do |rdv|
   json.title rdv_title_for_agent(rdv) + (rdv.overlapping_plages_ouvertures? ? " ⚠️" : "")
   json.id rdv.id
   json.extendedProps do
+    json.organisationName rdv.organisation&.name
     json.status rdv.status
     json.readableStatus Rdv.human_enum_name(:status, rdv.status)
     json.motif rdv.motif.name

@@ -9,6 +9,7 @@ json.array! @plage_ouverture_occurrences do |plage_ouverture, occurrence|
   end
   json.rendering "background"
   json.extendedProps do
+    json.organisationName plage_ouverture.organisation.name
     json.location plage_ouverture.lieu.address
     json.lieu plage_ouverture.lieu.name
   end

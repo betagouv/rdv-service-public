@@ -5,4 +5,8 @@ json.array! @absence_occurrences do |absence, occurrence|
   json.backgroundColor "#7f8c8d"
 
   json.url edit_admin_organisation_absence_path(absence.organisation, absence) if absence.organisation == @organisation
+
+  json.extendedProps do
+    json.organisationName absence.organisation.name
+  end
 end
