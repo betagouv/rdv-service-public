@@ -17,11 +17,15 @@ RSpec.describe Admin::AbsencesController, type: :controller do
       end
 
       describe "for json format" do
-        subject(:parsed_response) do
-          sign_in agent
+        subject(:response) do
           get :index, params: { format: "json", organisation_id: organisation.id, agent_id: agent.id, start: start_time, end: end_time }
-          JSON.parse(response.body)
         end
+
+        before do
+          sign_in agent
+        end
+
+        let(:parsed_response) { JSON.parse(response.body) }
 
         let!(:absence1) { create(:absence, agent: agent, first_day: Date.new(2019, 7, 21), start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(10), organisation: organisation) }
         let(:expected_absence_starts_at) { expected_absence.starts_at }
