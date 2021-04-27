@@ -91,12 +91,6 @@ RSpec/ScatteredSetup:
 RSpec/StubbedMock:
   Enabled: false
 
-# Offense count: 2
-RSpec/SubjectStub:
-  Exclude:
-    - 'spec/form_models/admin/rdv_form_concern_spec.rb'
-    - 'spec/services/send_transactional_sms_service_spec.rb'
-
 # Offense count: 21
 # Configuration parameters: IgnoreNameless, IgnoreSymbolicNames.
 RSpec/VerifiedDoubles:
