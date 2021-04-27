@@ -106,20 +106,15 @@ RSpec.describe Admin::RdvsController, type: :controller do
         expect(rdv.reload.status).to eq("excused")
       end
 
-      it "where status is excused, change other field should not reset cancelled_at" do
-        tomorrow = Time.zone.parse("23/07/2019 08:00")
-        today = tomorrow - 1.day
-        travel_to(today)
-
-        rdv = create(:rdv, :excused, cancelled_at: today + 3.days, starts_at: tomorrow, motif: motif, agents: [agent], users: [user], organisation: organisation)
-
-        expect(rdv.reload.cancelled_at).to be_within(5.seconds).of(today + 3.days)
-        put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { context: "change some context" } }
-        expect(rdv.reload.cancelled_at).to be_within(5.seconds).of(today + 3.days)
+      it "where status is excused, changing other fields should not reset cancelled_at" do
+        today = rdv.starts_at - 3.days
+        rdv.update(cancelled_at: today, status: "excused")
+        put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { context: "change the context" } }
+        expect(rdv.reload.cancelled_at).to eq(today)
         expect(rdv.reload.status).to eq("excused")
       end
 
-      it "where status is excused, change other field should not reset cancelled_at" do
+      it "where status is excused, changing status should reset cancelled_at" do
         rdv.update(cancelled_at: 2.days.ago, status: "excused")
         put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { status: "unknown" } }
         expect(rdv.reload.cancelled_at).to eq(nil)

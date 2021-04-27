@@ -24,16 +24,6 @@ describe SendTransactionalSmsService, type: :service do
       end
     end
 
-    context "production without SIB forced" do
-      before { allow(Rails.env).to receive(:production?).and_return(true) }
-
-      before { expect(subject).to receive(:env_force_sms_provider).and_return(nil) }
-
-      it "calls netsize", skip: true do
-        subject.perform
-      end
-    end
-
     context "debug" do
       before { allow(Rails.env).to receive(:production?).and_return(false) }
 

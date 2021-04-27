@@ -11,7 +11,7 @@ class DummyForm
     valid? && rdv.save
   end
 
-  def agent_context; end
+  attr_accessor :agent_context
 end
 
 describe Admin::RdvFormConcern, type: :form do
@@ -23,7 +23,7 @@ describe Admin::RdvFormConcern, type: :form do
   let(:rdvs_overlapping) { instance_double(RdvsOverlapping) }
 
   before do
-    allow(subject).to receive(:agent_context).and_return(agent_context)
+    subject.agent_context = agent_context
     allow(RdvStartCoherence).to receive(:new).with(rdv).and_return(rdv_start_coherence)
     allow(RdvsOverlapping).to receive(:new).with(rdv).and_return(rdvs_overlapping)
   end
@@ -131,7 +131,7 @@ describe Admin::RdvFormConcern, type: :form do
         allow(rdvs_overlapping).to receive(:rdvs_overlapping_rdv).and_return([rdv2])
         allow(RdvsOverlappingRdvPresenter).to receive(:new)
           .with(rdv: rdv2, agent: agent_new_rdv, rdv_context: rdv, agent_context: agent_context)
-          .and_return(instance_double(RdvsOverlappingRdvPresenter, warning_message: "alerte RDV se cheveauchant !"))
+          .and_return(instance_double(RdvsOverlappingRdvPresenter, warning_message: "alerte RDV se chevauchant !"))
       end
 
       it "is not valid" do
@@ -143,7 +143,7 @@ describe Admin::RdvFormConcern, type: :form do
         subject.valid?
         expect(subject.warnings_need_confirmation?).to eq true
         expect(subject.warnings).not_to be_empty
-        expect(subject.warnings[:base]).to include("alerte RDV se cheveauchant !")
+        expect(subject.warnings[:base]).to include("alerte RDV se chevauchant !")
       end
     end
   end
