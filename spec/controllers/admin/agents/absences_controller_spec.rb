@@ -28,8 +28,6 @@ describe Admin::Agents::AbsencesController, type: :controller do
         end_date = Date.new(2019, 8, 19)
         period = start_date..end_date
 
-        expect(Admin::Occurrence).to receive(:extract_from).with([absence], period).and_return([[absence, Recurrence::Occurrence.new(starts_at: start_date, ends_at: end_date)]])
-
         get :index, params: { agent_id: given_agent.id, organisation_id: organisation.id, start: start_date, end: end_date, format: :json }
 
         expect(assigns(:absence_occurrences)).not_to be_nil
