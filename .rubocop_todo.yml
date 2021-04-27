@@ -48,35 +48,10 @@ RSpec/ExpectInHook:
     - 'spec/service_models/users/creneau_search_spec.rb'
     - 'spec/services/send_transactional_sms_service_spec.rb'
 
-# Offense count: 275
-RSpec/LetSetup:
-  Enabled: false
-
-# Offense count: 8
-RSpec/MultipleDescribes:
-  Exclude:
-    - 'spec/policies/agent/absence_policy_spec.rb'
-    - 'spec/policies/agent/agent_policy_spec.rb'
-    - 'spec/policies/agent/agent_role_policy_spec.rb'
-    - 'spec/policies/agent/agent_territorial_role_policy_spec.rb'
-    - 'spec/policies/agent/sector_attribution_policy_spec.rb'
-    - 'spec/policies/agent/sector_policy_spec.rb'
-    - 'spec/policies/agent/territory_policy_spec.rb'
-    - 'spec/policies/agent/zone_policy_spec.rb'
-
-# Offense count: 313
-# Configuration parameters: AllowSubject.
-RSpec/MultipleMemoizedHelpers:
-  Max: 22
-
 # Offense count: 385
 # Configuration parameters: IgnoreSharedExamples.
 RSpec/NamedSubject:
   Enabled: false
-
-# Offense count: 125
-RSpec/NestedGroups:
-  Max: 5
 
 # Offense count: 16
 RSpec/ScatteredSetup:

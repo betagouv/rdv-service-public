@@ -77,16 +77,29 @@ RSpec/ContextWording:
 RSpec/ExampleLength:
   Max: 10
 
+RSpec/LetSetup:
+  Enabled: false
+
 RSpec/MessageSpies:
   EnforcedStyle: receive
 
+RSpec/MultipleDescribes:
+  Exclude:
+    - 'spec/policies/agent/*_policy_spec.rb'
+
 RSpec/MultipleExpectations:
-  Enabled: False
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
 
 RSpec/AnyInstance:
   Exclude:
     - spec/controllers/admin/users_controller_spec.rb
     - spec/controllers/admin/referents_controller_spec.rb
+RSpec/NestedGroups:
+  Max: 5
+
 
 Style/ClassAndModuleChildren:
   Enabled: false
