@@ -97,7 +97,7 @@ describe PlageOuvertureOverlap do
 
   context "po1 recurring without end date, po2 exceptionnelle on other day next week" do
     let(:po1) { build_po(monday, 14, 18, Montrose.weekly.on(%i[monday tuesday])) }
-    let(:po2) { build_po(monday + 3.days, 14, 18) }
+    let(:po2) { build_po(monday + 1.week + 3.days, 14, 18) }
 
     it_behaves_like "plage ouvertures do not overlap"
   end
