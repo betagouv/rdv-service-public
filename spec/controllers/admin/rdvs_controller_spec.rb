@@ -15,6 +15,7 @@ describe Admin::RdvsController, type: :controller do
   describe "GET index" do
     subject { get(:index, params: { organisation_id: organisation.id, agent_id: agent.id, start: start_time, end: end_time }) }
 
+    before { subject }
     let!(:lieu) { create(:lieu, organisation: organisation, name: "MDS Orgeval") }
     let!(:rdv1) { create(:rdv, motif: motif, agents: [agent], users: [user], starts_at: Time.zone.parse("21/07/2019 08:00"), organisation: organisation, lieu: lieu) }
     let!(:rdv2) { create(:rdv, motif: motif, agents: [agent], users: [user], starts_at: Time.zone.parse("21/07/2019 07:00"), organisation: organisation, lieu: lieu) }

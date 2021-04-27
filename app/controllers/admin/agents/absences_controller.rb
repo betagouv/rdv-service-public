@@ -8,7 +8,7 @@ class Admin::Agents::AbsencesController < ApplicationController
     @absence_occurrences = policy_scope_admin(Absence)
       .includes(:organisation)
       .where(agent: agent)
-      .all_occurences_for(date_range_params)
+      .all_occurrences_for(date_range_params)
   end
 
   private

@@ -9,7 +9,7 @@ class Admin::Agents::PlageOuverturesController < ApplicationController
       .includes(:lieu, :organisation)
       .where(expired_cached: false)
       .where(agent: agent)
-      .all_occurences_for(date_range_params)
+      .all_occurrences_for(date_range_params)
   end
 
   private
