@@ -23,10 +23,9 @@ describe Admin::Agents::AbsencesController, type: :controller do
 
         first_day = Date.new(2019, 8, 15)
         create(:absence, agent: agent, first_day: first_day)
-        absence = create(:absence, agent: given_agent, organisation: organisation, first_day: first_day)
+        create(:absence, agent: given_agent, organisation: organisation, first_day: first_day)
         start_date = Date.new(2019, 8, 12)
         end_date = Date.new(2019, 8, 19)
-        period = start_date..end_date
 
         get :index, params: { agent_id: given_agent.id, organisation_id: organisation.id, start: start_date, end: end_date, format: :json }
 
