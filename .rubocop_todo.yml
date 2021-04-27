@@ -78,13 +78,6 @@ RSpec/NamedSubject:
 RSpec/NestedGroups:
   Max: 5
 
-# Offense count: 7
-RSpec/RepeatedDescription:
-  Exclude:
-    - 'spec/controllers/admin/rdv_wizard_steps_controller_spec.rb'
-    - 'spec/controllers/admin/rdvs_controller_spec.rb'
-    - 'spec/helpers/agents_helper_spec.rb'
-
 # Offense count: 2
 RSpec/RepeatedExampleGroupBody:
   Exclude:

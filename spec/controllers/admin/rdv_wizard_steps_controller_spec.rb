@@ -17,18 +17,11 @@ describe Admin::RdvWizardStepsController, type: :controller do
 
     before { sign_in agent }
 
-    it "return success" do
+    it "returns success" do
       get :new, params: params
-      expect(response).to have_http_status(:success)
-    end
 
-    it "return success" do
-      get :new, params: params
       expect(assigns(:rdv).users).to eq([user])
-    end
-
-    it "return success" do
-      get :new, params: params
+      expect(response).to have_http_status(:success)
       expect(response).to render_template("admin/rdv_wizard_steps/step2")
     end
   end
