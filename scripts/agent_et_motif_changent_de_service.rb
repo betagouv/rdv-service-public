@@ -23,6 +23,15 @@ Agent.transaction do
     puts "Erreur: #{new_motif.errors.full_messages.to_sentence}. Essayons en changeant le nom."
     new_motif.name += "*"
     new_motif.save!
+
+    puts " avant - PO nouveau: #{new_motif.plage_ouvertures.count} - PO ancien #{motif.plage_ouvertures.count}"
+    new_motif.plage_ouvertures = motif.plage_ouvertures
+    motif.plage_ouvertures = []
+    puts " après - PO nouveau: #{new_motif.plage_ouvertures.count} - PO ancien #{motif.plage_ouvertures.count}"
+
+    puts "RDV nouveau: #{new_motif.rdvs.count} - RDV ancien #{motif.rdvs.count}"
+    new_motif.rdvs = motif.rdvs
+    puts "RDV nouveau: #{new_motif.rdvs.count} - RDV ancien #{motif.rdvs.count}"
   end
 
   puts "Déplacement des agents:"
