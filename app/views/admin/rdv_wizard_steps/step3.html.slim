@@ -18,7 +18,7 @@ do
         .col-md-6= f.input :duration_in_min, as: :integer, label: "Durée en minutes"
       - if @rdv.public_office?
         = f.association :lieu, \
-          collection: policy_scope(Lieu).ordered_by_name, \
+          collection: policy_scope(Lieu).enabled.ordered_by_name, \
           label_method: :full_name, \
           include_blank: true,
           required: true,
