@@ -19,23 +19,24 @@ describe AgentsHelper do
       expect(build_link_to_rdv_wizard_params(creneau, form)[:duration_in_min]).to eq(motif.default_duration_in_min)
     end
 
-    it "liste des usagers" do
-      creneau = Creneau.new
-      creneau.lieu_id = create(:lieu).id
-      motif = create(:motif)
-      creneau.motif = motif
-      form = AgentCreneauxSearchForm.new(user_ids: [])
-      expect(build_link_to_rdv_wizard_params(creneau, form)[:user_ids]).to eq(nil)
-    end
+    describe "liste des usagers" do
+      subject { build_link_to_rdv_wizard_params(creneau, form)["user_ids"] }
 
-    it "liste des usagers" do
-      user = create(:user)
-      creneau = Creneau.new
-      creneau.lieu_id = create(:lieu).id
-      motif = create(:motif)
-      creneau.motif = motif
-      form = AgentCreneauxSearchForm.new(user_ids: [user.id.to_s])
-      expect(build_link_to_rdv_wizard_params(creneau, form)["user_ids"]).to eq([user.id.to_s])
+      let(:creneau) { build :creneau, lieu_id: create(:lieu).id }
+      let(:form) { AgentCreneauxSearchForm.new(user_ids: [user_ids]) }
+
+      context "when user is nil" do
+        let(:user_ids) { "" }
+
+        it { is_expected.to eq [""] }
+      end
+
+      context "when user is set" do
+        let(:user) { create(:user) }
+        let(:user_ids) { user.id.to_s }
+
+        it { is_expected.to eq [user.id.to_s] }
+      end
     end
 
     it "Contient le context" do

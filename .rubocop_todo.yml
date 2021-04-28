@@ -48,47 +48,10 @@ RSpec/ExpectInHook:
     - 'spec/service_models/users/creneau_search_spec.rb'
     - 'spec/services/send_transactional_sms_service_spec.rb'
 
-# Offense count: 275
-RSpec/LetSetup:
-  Enabled: false
-
-# Offense count: 8
-RSpec/MultipleDescribes:
-  Exclude:
-    - 'spec/policies/agent/absence_policy_spec.rb'
-    - 'spec/policies/agent/agent_policy_spec.rb'
-    - 'spec/policies/agent/agent_role_policy_spec.rb'
-    - 'spec/policies/agent/agent_territorial_role_policy_spec.rb'
-    - 'spec/policies/agent/sector_attribution_policy_spec.rb'
-    - 'spec/policies/agent/sector_policy_spec.rb'
-    - 'spec/policies/agent/territory_policy_spec.rb'
-    - 'spec/policies/agent/zone_policy_spec.rb'
-
-# Offense count: 313
-# Configuration parameters: AllowSubject.
-RSpec/MultipleMemoizedHelpers:
-  Max: 22
-
 # Offense count: 385
 # Configuration parameters: IgnoreSharedExamples.
 RSpec/NamedSubject:
   Enabled: false
-
-# Offense count: 125
-RSpec/NestedGroups:
-  Max: 5
-
-# Offense count: 7
-RSpec/RepeatedDescription:
-  Exclude:
-    - 'spec/controllers/admin/rdv_wizard_steps_controller_spec.rb'
-    - 'spec/controllers/admin/rdvs_controller_spec.rb'
-    - 'spec/helpers/agents_helper_spec.rb'
-
-# Offense count: 2
-RSpec/RepeatedExampleGroupBody:
-  Exclude:
-    - 'spec/service_models/plage_ouverture_overlap_spec.rb'
 
 # Offense count: 16
 RSpec/ScatteredSetup:
@@ -102,12 +65,6 @@ RSpec/ScatteredSetup:
 # Offense count: 49
 RSpec/StubbedMock:
   Enabled: false
-
-# Offense count: 2
-RSpec/SubjectStub:
-  Exclude:
-    - 'spec/form_models/admin/rdv_form_concern_spec.rb'
-    - 'spec/services/send_transactional_sms_service_spec.rb'
 
 # Offense count: 21
 # Configuration parameters: IgnoreNameless, IgnoreSymbolicNames.
