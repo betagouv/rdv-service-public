@@ -6,6 +6,7 @@ describe FindAvailabilityService, type: :service do
   let(:today) { Date.new(2021, 3, 18) }
   let(:now) { today.to_time }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+  let(:wanted_agents) { nil }
   let!(:plage_ouverture) do
     travel_to(now) do # important so that expired_cached is set correctly
       create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent, organisation: organisation)
@@ -16,10 +17,8 @@ describe FindAvailabilityService, type: :service do
 
   after { travel_back }
 
-  describe ".next_availability_for_motif_and_lieu" do
-    subject do
-      described_class.perform_with(motif_name, lieu, from)
-    end
+  describe "#perform" do
+    subject { described_class.perform_with(motif_name, lieu, from, agent_ids: wanted_agents) }
 
     let(:motif_name) { motif.name }
     let(:from) { today }
@@ -62,6 +61,32 @@ describe FindAvailabilityService, type: :service do
         before { plage_ouverture.update(recurrence: Montrose.every(:month, starts: plage_ouverture.first_day)) }
 
         it { expect(subject.starts_at).to eq(today.in_time_zone + 1.month + 9.hours) }
+      end
+    end
+
+    describe "with several agents" do
+      let(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+      let(:other_agent_start_day) { today + 7.days }
+
+      before do
+        create(:plage_ouverture, motifs: [motif], lieu: lieu,
+               first_day: other_agent_start_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
+               agent: other_agent, organisation: organisation)
+      end
+
+      context "for any agent" do
+        let(:wanted_agents) { [agent.id, other_agent.id] }
+
+        it "returns the first availability" do
+          expect(subject.starts_at).to eq(today + 9.hours)
+        end
+      end
+
+      context "for a specific agent among two" do
+        let(:wanted_agents) { [other_agent.id] }
+        it "returns the availability of that agent only" do
+          expect(subject.starts_at).to eq(other_agent_start_day + 9.hours)
+        end
       end
     end
   end
