@@ -19,11 +19,13 @@
       = f.button :submit
   .row.mt-3
     .col
-      - if lieu.plage_ouvertures.any?
+      - if lieu.plage_ouvertures.any? || lieu.rdvs.any?
         .alert.alert-info
-          p Impossible de supprimer ce lieu
-          p Une ou plusieurs plages d'ouverture référencent ce lieu. Assignez ces plages d'ouverture à un autre lieu pour pouvoir le supprimer.
-      - elsif lieu.rdvs.any?
-        .alert.alert-info
-          p Impossible de supprimer ce lieu
-          p Un ou plusieurs RDVs sont associés à ce lieu. Supprimez les avant de pouvoir supprimer ce lieu.
+          h5.alert-heading Ce lieu ne peut pas être supprimé.
+          - if lieu.plage_ouvertures.any?
+            p
+              | Des plages d’ouvertures sont programmées à ce lieu. Déplacez-les pour pouvoir le supprimer.
+          - if lieu.rdvs.any?
+            p
+              = link_to "Des RDVs sont associés à ce lieu.", admin_organisation_rdvs_path(current_organisation, lieu_id: lieu.id)
+              |  Supprimez-les avant de pouvoir supprimer ce lieu.

@@ -12,6 +12,7 @@ tr
         li= motif_name_with_location_type_and_badges(motif)
   td
     = plage_ouverture.lieu.name
+    = tag.span("Fermé", class: "badge badge-danger") unless plage_ouverture.lieu.enabled?
     br
     small= plage_ouverture.lieu.address
   td
