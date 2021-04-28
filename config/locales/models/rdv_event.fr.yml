@@ -10,6 +10,7 @@ fr:
         event_names:
           cancelled_by_user: Annulation (par l’usager)
           cancelled_by_agent: Annulation (par l’agent)
+          file_attente_creneaux_available: Créneau libéré
           created: Création
           updated: Mise à jour
           upcoming_reminder: Rappel
