@@ -1,4 +1,4 @@
-describe Admin::RdvsController, type: :controller do
+RSpec.describe Admin::RdvsController, type: :controller do
   render_views
 
   let!(:organisation) { create(:organisation) }
@@ -13,28 +13,55 @@ describe Admin::RdvsController, type: :controller do
   end
 
   describe "GET index" do
-    subject { get(:index, params: { organisation_id: organisation.id, agent_id: agent.id, start: start_time, end: end_time }) }
-
-    before { subject }
+    subject(:parsed_response) do
+      get(:index, params: { organisation_id: organisation.id, agent_id: agent.id, start: start_time, end: end_time }, as: :json)
+      JSON.parse(response.body)
+    end
 
     let!(:lieu) { create(:lieu, organisation: organisation, name: "MDS Orgeval") }
     let!(:rdv1) { create(:rdv, motif: motif, agents: [agent], users: [user], starts_at: Time.zone.parse("21/07/2019 08:00"), organisation: organisation, lieu: lieu) }
     let!(:rdv2) { create(:rdv, motif: motif, agents: [agent], users: [user], starts_at: Time.zone.parse("21/07/2019 07:00"), organisation: organisation, lieu: lieu) }
 
     context "when rdvs starts_at is in window" do
-      let(:start_time) { Time.zone.parse("20/07/2019 08:00") }
-      let(:end_time) { Time.zone.parse("27/07/2019 09:00") }
+      let(:start_time) { Time.zone.parse("20/07/2019 00:00") }
+      let(:end_time) { Time.zone.parse("27/07/2019 00:00") }
 
-      it { expect(response).to be_successful }
-      it { expect(assigns(:rdvs).to_a).to eq([rdv1, rdv2]) }
+      it { expect(response).to have_http_status(:ok) }
+
+      it "returns absence1" do
+        expect(parsed_response.size).to eq(2)
+
+        first = parsed_response[0]
+        expect(first.size).to eq(8)
+        expect(first["title"]).to eq("Marie DENIS")
+        expect(first["start"]).to eq(rdv1.starts_at.as_json)
+        expect(first["end"]).to eq(rdv1.ends_at.as_json)
+        expect(first["textColor"]).to eq("#FFFFFF")
+        expect(first["backgroundColor"]).to eq(rdv1.motif.color)
+        expect(first["url"]).to eq(admin_organisation_rdv_path(rdv1.organisation, rdv1, agent_id: agent.id))
+        expect(first["extendedProps"]).to eq({ readableStatus: Rdv.human_enum_name(:status, rdv1.status), status: rdv1.status, motif: "Suivi", past: rdv1.past?, duration: rdv.duration_in_min,
+                                               lieu: "MDS Orgeval", overlappingPlagesOuvertures: false }.as_json)
+
+        second = parsed_response[1]
+        expect(second.size).to eq(8)
+        expect(second["title"]).to eq("Marie DENIS")
+        expect(second["start"]).to eq(rdv2.starts_at.as_json)
+        expect(second["end"]).to eq(rdv2.ends_at.as_json)
+        expect(second["textColor"]).to eq("#FFFFFF")
+        expect(second["backgroundColor"]).to eq(rdv2.motif.color)
+        expect(second["url"]).to eq(admin_organisation_rdv_path(rdv2.organisation, rdv2, agent_id: agent.id))
+        expect(first["extendedProps"]).to eq({ readableStatus: Rdv.human_enum_name(:status, rdv2.status), status: rdv2.status, motif: rdv2.motif.name, past: rdv2.past?,
+                                               duration: rdv.duration_in_min, lieu: "MDS Orgeval", overlappingPlagesOuvertures: false }.as_json)
+      end
     end
 
     context "when rdvs starts_at is outside of window" do
       let(:start_time) { Time.zone.parse("10/07/2019 00:00") }
       let(:end_time) { Time.zone.parse("17/07/2019 00:00") }
 
-      it { expect(response).to be_successful }
-      it { expect(assigns(:rdvs).to_a).to eq([]) }
+      it "returns no rdvs" do
+        expect(parsed_response.size).to eq(0)
+      end
     end
   end
 

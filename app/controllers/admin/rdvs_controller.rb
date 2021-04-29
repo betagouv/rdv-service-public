@@ -17,6 +17,7 @@ class Admin::RdvsController < AgentAuthController
     respond_to do |format|
       format.xls { send_data(RdvExporter.export(@rdvs), filename: "rdvs.xls", type: "application/xls") }
       format.html { @rdvs = @rdvs.page(params[:page]) }
+      format.json
     end
   end
 

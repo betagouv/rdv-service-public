@@ -78,16 +78,6 @@ module RecurrenceConcern
     recurrence.to_hash[:interval] || 1 # when interval is nil, it means 1
   end
 
-  class_methods do
-    def all_occurrences_for(period)
-      # defined as a class method, but typically used on ActiveRecord::Relation
-      current_scope ||= all
-      current_scope.flat_map do |element|
-        element.occurrences_for(period).map { |occurrence| [element, occurrence] }
-      end.sort_by(&:second)
-    end
-  end
-
   private
 
   def occurrence_start_at_list_for(inclusive_date_range)
