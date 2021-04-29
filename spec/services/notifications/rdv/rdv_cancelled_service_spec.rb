@@ -1,5 +1,4 @@
 describe Notifications::Rdv::RdvCancelledService, type: :service do
-
   context "starts in more than 2 days" do
     it "does not triggers sending mail to agents" do
       starts_at_initial = Time.zone.parse("2021-04-26 8h15")
@@ -28,7 +27,6 @@ describe Notifications::Rdv::RdvCancelledService, type: :service do
 
       PaperTrail.request.whodunnit = "[Agent] Sean PAUL"
       update_rdv_skip_notify!(rdv, status: :excused)
-
 
       expect(Agents::RdvMailer).not_to receive(:rdv_starting_soon_cancelled)
         .with(rdv, agent1, "[Agent] Sean PAUL", starts_at_initial)
