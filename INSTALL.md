@@ -32,7 +32,8 @@ L’accès à /super_admins se fait
   * en `development`, le premier compte à tenter d’accéder est automatiquement ajouté.
 * sur les review apps, en http Basic.
   * login: rdv-solidarites
-  * password: `scalingo env -a demo-rdv-solidarites-pr<numéro de la PR> --region osc-secnum-fr1 | grep ADMIN_BASIC_AUTH_PASSWORD | sed 's/.*=//'`
+  * password: défini automatiquement au déploiement (cf [scalingo.json](scalingo.json))
+  * obtenu avec `scripts/review_app_super_admin_password.sh <numéro de la PR>`
 
 ## Tâches automatisées
 
