@@ -153,41 +153,59 @@ class CalendarRdvSolidarites {
 
   eventRender = (info) => {
     let $el = $(info.el);
-    if(info.event.extendedProps.past == true) {
+    let extendedProps = info.event.extendedProps;
+
+    if(extendedProps.past == true) {
       $el.addClass("fc-event-past");
     };
-    if(info.event.extendedProps.duration <= 30) {
+    if(extendedProps.duration <= 30) {
       $el.addClass("fc-event-small");
     };
+
     if (this.data.selectedEventId && info.event.id == this.data.selectedEventId)
       $el.addClass("selected");
-    $el.addClass("fc-event-"+ info.event.extendedProps.status);
-    if (info.event.extendedProps.unclickable != true) {
-      let title = `${moment(info.event.start).format('H:mm')} - ${moment(info.event.end).format('H:mm')}`;
-      if (info.event.rendering == 'background') {
-        $el.append("<div class=\"fc-title\" style=\"color: white; padding: 2px 4px; font-size: 12px; font-weight: bold;\">" + info.event.title + "</div>");
 
-        title += `<br><strong>${info.event.title}</strong><br> <small>Lieu : ${info.event.extendedProps.lieu}</small>`;
-      } else {
-        if (info.event.extendedProps.duration) {
-          title += ` <small>(${info.event.extendedProps.duration} min)</small>`;
-          title += ` <br>${info.event.extendedProps.motif}`;
-        }
-        title += `<br><strong>${info.event.title}</strong>`;
-        if (info.event.extendedProps.lieu) {
-          title += `<br><strong>Lieu:</strong> ${info.event.extendedProps.lieu}`;
-          if (info.event.extendedProps.overlappingPlagesOuvertures) {
-            title += " ⚠️";
-          }
-        }
-        title += `<br><strong>Statut:</strong> ${info.event.extendedProps.readableStatus}`;
+    $el.addClass("fc-event-"+ extendedProps.status);
+
+    if (extendedProps.jour_feries == true) {
+      return
+    }
+
+    let title = `${moment(info.event.start).format('H:mm')} - ${moment(info.event.end).format('H:mm')}`;
+
+    if (info.event.rendering == 'background') {
+      $el.append("<div class=\"fc-title\" style=\"color: white; padding: 2px 4px; font-size: 12px; font-weight: bold;\">" + info.event.title + "</div>");
+
+      if(extendedProps.organisationName) {
+        title += `<br>${extendedProps.organisationName}`;
+      }
+      title += `<br><strong>${info.event.title}</strong><br> <small>Lieu : ${extendedProps.lieu}</small>`;
+    } else {
+      if (extendedProps.duration) {
+        title += ` <small>(${extendedProps.duration} min)</small>`;
+        title += ` <br>${extendedProps.motif}`;
       }
 
-      $el.attr("title", title);
-      $el.attr("data-toggle", "tooltip");
-      $el.attr("data-html", "true");
-      $el.tooltip()
+      title += `<br><strong>${info.event.title}</strong>`;
+
+      if(extendedProps.organisationName) {
+        title += `<br>${extendedProps.organisationName}`;
+      }
+      if (extendedProps.lieu) {
+        title += `<br><strong>Lieu:</strong> ${extendedProps.lieu}`;
+        if (extendedProps.overlappingPlagesOuvertures) {
+          title += " ⚠️";
+        }
+      }
+      if (extendedProps.readableStatus) {
+        title += `<br><strong>Statut:</strong> ${extendedProps.readableStatus}`;
+      }
     }
+
+    $el.attr("title", title);
+    $el.attr("data-toggle", "tooltip");
+    $el.attr("data-html", "true");
+    $el.tooltip()
   }
 
   isTodayVisible = ({ activeStart, activeEnd }) => {
