@@ -10,20 +10,14 @@ class Admin::PlageOuverturesController < AgentAuthController
   end
 
   def index
-    plage_ouvertures = policy_scope(PlageOuverture)
+    @plage_ouvertures = policy_scope(PlageOuverture)
       .includes(:lieu, :organisation)
       .where(agent_id: filter_params[:agent_id])
       .order(updated_at: :desc)
-    respond_to do |f|
-      f.json { @plage_ouverture_occurrences = plage_ouvertures.flat_map { |po| po.occurrences_for(date_range_params).map { |occurrence| [po, occurrence] } }.sort_by(&:second) }
-      f.html do
-        @current_tab = filter_params[:current_tab]
-        @plage_ouvertures = plage_ouvertures
-          .where(expired_cached: filter_params[:current_tab] == "expired")
-          .page(filter_params[:page])
-        @display_tabs = plage_ouvertures.where(expired_cached: true).any? || params[:current_tab] == "expired"
-      end
-    end
+      .where(expired_cached: filter_params[:current_tab] == "expired")
+      .page(filter_params[:page])
+    @current_tab = filter_params[:current_tab]
+    @display_tabs = @plage_ouvertures.where(expired_cached: true).any? || params[:current_tab] == "expired"
   end
 
   def new
@@ -98,12 +92,6 @@ class Admin::PlageOuverturesController < AgentAuthController
 
   def plage_ouverture_params
     params.require(:plage_ouverture).permit(:title, :agent_id, :first_day, :start_time, :end_time, :lieu_id, :recurrence, :active_warnings_confirm_decision, motif_ids: [])
-  end
-
-  def date_range_params
-    start_param = Date.parse(filter_params[:start])
-    end_param = Date.parse(filter_params[:end])
-    start_param..end_param
   end
 
   def filter_params

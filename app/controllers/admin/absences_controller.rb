@@ -9,18 +9,12 @@ class Admin::AbsencesController < AgentAuthController
     absences = policy_scope(Absence)
       .where(organisation: current_organisation)
       .where(agent_id: filter_params[:agent_id])
+      .includes(:organisation)
       .by_starts_at
-    respond_to do |f|
-      f.json { @absence_occurrences = absences.flat_map { |ab| ab.occurrences_for(date_range_params).map { |occurrence| [ab, occurrence] } }.sort_by(&:second) }
-      f.html do
-        @current_tab = filter_params[:current_tab]
-        @absences = absences
-          .includes(:organisation)
-          .page(filter_params[:page])
-        @absences = params[:current_tab] == "expired" ? @absences.past : @absences.future
-        @display_tabs = absences.past.any? || params[:current_tab] == "expired"
-      end
-    end
+      .page(filter_params[:page])
+    @current_tab = filter_params[:current_tab]
+    @absences = params[:current_tab] == "expired" ? absences.past : absences.future
+    @display_tabs = absences.past.any? || params[:current_tab] == "expired"
   end
 
   def new
@@ -97,12 +91,6 @@ class Admin::AbsencesController < AgentAuthController
 
   def absence_params
     params.require(:absence).permit(:title, :agent_id, :first_day, :end_day, :start_time, :end_time, :recurrence)
-  end
-
-  def date_range_params
-    start_param = Date.parse(filter_params[:start])
-    end_param = Date.parse(filter_params[:end])
-    start_param..end_param
   end
 
   def filter_params
