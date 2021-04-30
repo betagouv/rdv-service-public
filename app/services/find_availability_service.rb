@@ -26,7 +26,7 @@ class FindAvailabilityService < BaseService
 
   def plages_ouvertures_cached
     @plages_ouvertures_cached ||= CreneauxBuilderService
-      .new(@motif_name, @lieu, @from..(@from + 7.days))
+      .new(@motif_name, @lieu, nil, **@creneaux_builder_options)
       .plages_ouvertures
   end
 end
