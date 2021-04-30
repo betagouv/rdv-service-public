@@ -15,7 +15,7 @@ class Admin::Ics::Absence
 
   def self.payload(absence)
     {
-      name: "plage-ouverture-#{absence.title.parameterize}-#{absence.starts_at.to_s.parameterize}.ics",
+      name: "absence-#{absence.title.parameterize}-#{absence.starts_at.to_s.parameterize}.ics",
       agent_email: absence.agent.email,
       starts_at: absence.starts_at,
       recurrence: rrule(absence),

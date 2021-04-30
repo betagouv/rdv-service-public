@@ -10,7 +10,7 @@ describe Admin::Ics::Absence, type: :service do
     describe ":name" do
       let(:absence) { build(:absence, title: "something", start_time: Time.zone.parse("12h30"), first_day: Date.new(2020, 11, 13)) }
 
-      it { expect(described_class.payload(absence)[:name]).to eq("plage-ouverture-something-2020-11-13-12-30-00-0100.ics") }
+      it { expect(described_class.payload(absence)[:name]).to eq("absence-something-2020-11-13-12-30-00-0100.ics") }
     end
 
     describe ":agent_email" do
@@ -66,7 +66,7 @@ describe Admin::Ics::Absence, type: :service do
     let(:now) { Time.zone.parse("20190628 17h43") }
     let(:payload) do
       {
-        name: "plage-ouverture--.ics",
+        name: "absence--.ics",
         agent_email: "bob@demo.rdv-solidarites.fr",
         starts_at: Time.zone.parse("20190704 15h00"),
         recurrence: "",
