@@ -48,6 +48,5 @@ describe TransactionalSms::RdvCancelled, type: :service do
         expect(described_class.new(rdv, user).content).to eq(expected_content)
       end
     end
-
   end
 end
