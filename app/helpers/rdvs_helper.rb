@@ -26,7 +26,8 @@ module RdvsHelper
 
   def human_location(rdv)
     text = rdv.address_complete
-    text += " - Adresse non renseignée" if rdv.address.blank?
+    text = safe_join([text, "Adresse non renseignée"], " - ") if rdv.address.blank?
+    text = safe_join([text, tag.span("Fermé", class: "badge badge-danger")]) if rdv.lieu.present? && !rdv.lieu.enabled?
     text
   end
 

@@ -35,7 +35,7 @@
               .col-md-6= f.input :duration_in_min
             - if @rdv_form.motif.public_office?
               = f.association :lieu, \
-                collection: policy_scope(Lieu), \
+                collection: policy_scope(Lieu).enabled, \
                 label_method: :full_name, \
                 include_blank: true, \
                 required: true,

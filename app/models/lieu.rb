@@ -6,6 +6,9 @@ class Lieu < ApplicationRecord
   has_many :rdvs, dependent: :restrict_with_error
   validates :name, :address, :latitude, :longitude, presence: true
 
+  scope :enabled, -> { where(enabled: true) }
+  scope :disabled, -> { where.not(enabled: false) }
+
   scope :for_motif, lambda { |motif|
     lieux_ids = PlageOuverture
       .where.not("recurrence IS ? AND first_day < ?", nil, Time.zone.today)
@@ -13,23 +16,12 @@ class Lieu < ApplicationRecord
       .where(motifs: { id: motif.id, deleted_at: nil })
       .map(&:lieu_id)
       .uniq
-    where(id: lieux_ids)
-  }
-
-  scope :for_motif_and_departement, lambda { |motif_name, departement|
-    motifs_ids = Motif.active.reservable_online.where(name: motif_name).in_departement(departement)
-    lieux_ids = PlageOuverture
-      .where.not("recurrence IS ? AND first_day < ?", nil, Time.zone.today)
-      .joins(:motifs)
-      .where(motifs: { id: motifs_ids })
-      .map(&:lieu_id)
-      .uniq
-    where(id: lieux_ids)
+    enabled.where(id: lieux_ids)
   }
 
   # TODO: remove this method in favor of CreneauBuilderService usage
   scope :with_open_slots_for_motifs, lambda { |motifs|
-    where(
+    enabled.where(
       id: PlageOuverture
         .where.not("recurrence IS ? AND first_day < ?", nil, Time.zone.today)
         .joins(:motifs)

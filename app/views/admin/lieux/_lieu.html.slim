@@ -1,6 +1,8 @@
 - nb_rdv = policy_scope(Rdv).for_today.with_lieu(lieu).count
 tr id="lieu_#{lieu.id}"
-  td= lieu.name
+  td
+    = lieu.name
+    = tag.span("Fermé", class: "badge badge-danger") unless lieu.enabled?
   td= lieu.address
   td= lieu.phone_number
   td= link_to nb_rdv > 0 ? nb_rdv : "aucun", admin_organisation_rdvs_path(current_organisation, lieu_id: lieu.id, start: Time.zone.now.beginning_of_day, end: Time.zone.now.end_of_day )

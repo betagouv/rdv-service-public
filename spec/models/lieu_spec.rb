@@ -8,52 +8,6 @@ describe Lieu, type: :model do
     let!(:motif) { create(:motif, name: "Vaccination", reservable_online: reservable_online, organisation: organisation) }
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu, organisation: organisation) }
 
-    describe ".for_motif_and_departement" do
-      subject { described_class.for_motif_and_departement("Vaccination", "62") }
-
-      let(:service_id) { Service.first.id }
-      let(:reservable_online) { true }
-
-      before { freeze_time }
-
-      after { travel_back }
-
-      it { expect(subject).to contain_exactly(lieu) }
-
-      context "with an other plage_ouverture" do
-        let!(:lieu2) { create(:lieu) }
-        let!(:plage_ouverture2) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu2) }
-
-        it { expect(subject).to contain_exactly(lieu, lieu2) }
-      end
-
-      context "with a plage_ouverture not yet started" do
-        let!(:lieu2) { create(:lieu) }
-        let!(:plage_ouverture2) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu2, first_day: 8.days.from_now) }
-
-        it { expect(subject).to contain_exactly(lieu, lieu2) }
-      end
-
-      context "with a motif not reservable_online" do
-        let(:reservable_online) { false }
-
-        it { expect(subject).to eq([]) }
-      end
-
-      context "with a plage_ouverture with no recurrence and closed" do
-        let!(:lieu2) { create(:lieu) }
-        let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif], lieu: lieu2, first_day: Date.parse("2020-07-30")) }
-
-        it { expect(subject).to contain_exactly(lieu) }
-      end
-
-      context "with a motif not active" do
-        before { motif.update(deleted_at: Time.zone.now) }
-
-        it { expect(subject).to eq([]) }
-      end
-    end
-
     describe ".for_motif" do
       subject { described_class.for_motif(motif) }
 

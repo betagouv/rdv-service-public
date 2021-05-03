@@ -7,6 +7,7 @@ describe "Agent can create a Rdv with wizard" do
   let!(:agent2) { create(:agent, first_name: "Robert", service: service, basic_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, service: service, organisation: organisation) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
+  let!(:disabled_lieu) { create(:lieu, organisation: organisation, enabled: false) }
   let!(:user) { create(:user, organisations: [organisation]) }
 
   before do
@@ -60,6 +61,8 @@ describe "Agent can create a Rdv with wizard" do
     expect(page).to have_selector(".list-group-item", text: /Motif/)
     expect(page).to have_selector(".list-group-item", text: /Usager\(s\)/)
     expect(page).to have_selector("input#rdv_duration_in_min[value='#{motif.default_duration_in_min}']")
+    expect(page).to have_select("rdv_lieu_id", with_options: [lieu.full_name])
+    expect(page).not_to have_select("rdv_lieu_id", with_options: [disabled_lieu.full_name])
     select(lieu.full_name, from: "rdv_lieu_id")
     fill_in "Durée en minutes", with: "35"
     fill_in "Commence à", with: "11/10/2019 14:15"
