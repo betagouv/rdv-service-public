@@ -2,7 +2,7 @@ class TransactionalSms::RdvCancelled
   include TransactionalSms::BaseConcern
 
   def raw_content
-    if @rdv.lieu.phone_number
+    if @rdv.lieu&.phone_number
       base_message + call_or_visit_message(@rdv.lieu.phone_number)
     elsif @rdv.organisation.phone_number
       base_message + call_or_visit_message(@rdv.organisation.phone_number)

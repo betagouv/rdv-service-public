@@ -38,5 +38,16 @@ describe TransactionalSms::RdvCancelled, type: :service do
         expect(described_class.new(rdv, user).content).to eq(expected_content)
       end
     end
+
+    context "without lieu and no organisation number" do
+      it "contains cancelled RDV's infos" do
+        organisation = build(:organisation, phone_number: nil)
+        rdv = build(:rdv, motif: motif, organisation: organisation, lieu: nil, starts_at: Time.zone.local(2021, 12, 10, 13, 10))
+        expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé\n"
+        expected_content += "Allez sur https://rdv-solidarites.fr pour reprendre RDV."
+        expect(described_class.new(rdv, user).content).to eq(expected_content)
+      end
+    end
+
   end
 end
