@@ -1,7 +1,7 @@
 # rails runner scripts/agent-et-motif-changent-de-service.rb
 
-ID_ORGANISATION = 162
-IDS_SERVICE_SOURCE = [5, 7].freeze
+ID_ORGANISATION = 161
+IDS_SERVICE_SOURCE = [5].freeze
 ID_SERVICE_DESTINATION = 22
 
 services_source = Service.where(id: IDS_SERVICE_SOURCE)
