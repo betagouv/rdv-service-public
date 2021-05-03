@@ -16,10 +16,9 @@
   = f.input :phone_number, as: :tel, required: local_assigns[:rdv_wizard]&.motif&.phone?
   - if user.phone_number.present? && !user.phone_number_mobile?
     .alert.alert-warning Vous ne recevrez pas de SMS avec ce numéro non-mobile
-  label Préférences de notifications
-  .d-flex
-    div= f.input :notify_by_email
-    div.ml-3= f.input :notify_by_sms
+  div.mb-2 Préférences de notifications
+  div= f.input :notify_by_email
+  div= f.input :notify_by_sms
   - address_value = local_assigns[:rdv_wizard].present? && user.address.nil? ? rdv_wizard.to_query[:where] : user.address
   = f.input :address, input_html: {value: address_value, class: "places-js-container" }
 
