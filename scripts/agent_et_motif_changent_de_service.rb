@@ -1,7 +1,7 @@
 # rails runner scripts/agent-et-motif-changent-de-service.rb
 
-ID_ORGANISATION = 161
-IDS_SERVICE_SOURCE = [5].freeze
+ID_ORGANISATION = 100
+IDS_SERVICE_SOURCE = [6, 7].freeze
 ID_SERVICE_DESTINATION = 22
 
 services_source = Service.where(id: IDS_SERVICE_SOURCE)
@@ -18,11 +18,12 @@ Agent.transaction do
     new_motif = motif.dup
     new_motif.organisation_id = ID_ORGANISATION
     new_motif.service_id = ID_SERVICE_DESTINATION
-    next if new_motif.save
 
-    puts "Erreur: #{new_motif.errors.full_messages.to_sentence}. Essayons en changeant le nom."
-    new_motif.name += "*"
-    new_motif.save!
+    unless new_motif.save
+      puts "Erreur: #{new_motif.errors.full_messages.to_sentence}. Essayons en changeant le nom."
+      new_motif.name += "*"
+      new_motif.save!
+    end
 
     puts " avant - PO nouveau: #{new_motif.plage_ouvertures.count} - PO ancien #{motif.plage_ouvertures.count}"
     new_motif.plage_ouvertures = motif.plage_ouvertures
