@@ -34,11 +34,6 @@ RSpec/DescribeClass:
 RSpec/ExampleLength:
   Enabled: false
 
-# Offense count: 385
-# Configuration parameters: IgnoreSharedExamples.
-RSpec/NamedSubject:
-  Enabled: false
-
 # Offense count: 16
 RSpec/ScatteredSetup:
   Exclude:
