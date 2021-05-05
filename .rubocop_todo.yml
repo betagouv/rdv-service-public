@@ -85,17 +85,6 @@ Rails/LexicallyScopedActionFilter:
 Rails/SkipsModelValidations:
   Enabled: false
 
-# Offense count: 5
-# Configuration parameters: Include.
-# Include: app/models/**/*.rb
-Rails/UniqueValidationWithoutIndex:
-  Exclude:
-    - 'app/models/file_attente.rb'
-    - 'app/models/motif.rb'
-    - 'app/models/organisation.rb'
-    - 'app/models/sector.rb'
-    - 'app/models/service.rb'
-
 # Offense count: 566
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.
