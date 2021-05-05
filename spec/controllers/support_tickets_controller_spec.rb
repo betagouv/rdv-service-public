@@ -7,7 +7,7 @@ RSpec.describe SupportTicketsController, type: :controller do
     let(:support_ticket_form) { SupportTicketForm.new }
 
     before do
-      expect(SupportTicketForm).to receive(:new)
+      allow(SupportTicketForm).to receive(:new)
         .with(support_ticket_params)
         .and_return(support_ticket_form)
     end
@@ -15,9 +15,7 @@ RSpec.describe SupportTicketsController, type: :controller do
     context "broken params" do
       let(:support_ticket_params) { { subject: "n'importe quoi" } }
 
-      before do
-        expect(support_ticket_form).to receive(:save).and_return(false)
-      end
+      before { allow(support_ticket_form).to receive(:save).and_return(false) }
 
       it { is_expected.to render_template("static_pages/contact") }
     end
@@ -34,7 +32,7 @@ RSpec.describe SupportTicketsController, type: :controller do
         }
       end
 
-      before { expect(support_ticket_form).to receive(:save).and_return(true) }
+      before { allow(support_ticket_form).to receive(:save).and_return(true) }
 
       it { is_expected.to redirect_to(contact_path(anchor: "")) }
     end
