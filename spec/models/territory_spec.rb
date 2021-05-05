@@ -72,7 +72,7 @@ describe Territory, type: :model do
     before { territory.save! }
 
     context "new territory without departement_number" do
-      let(:territory) { described_class.new(departement_number: nil) }
+      let(:territory) { described_class.new(departement_number: "") }
 
       it { is_expected.to eq nil }
     end
