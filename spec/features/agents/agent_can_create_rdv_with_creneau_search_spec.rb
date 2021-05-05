@@ -19,7 +19,6 @@ describe "Agent can create a Rdv with creneau search" do
     login_as(agent, scope: :agent)
     visit admin_organisation_agent_agenda_path(organisation, agent)
 
-    expect(user.rdvs.count).to eq(0)
     click_link("Trouver un créneau")
   end
 

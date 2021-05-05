@@ -16,7 +16,7 @@ describe Users::CreneauSearch do
     end
 
     before do
-      expect(CreneauxBuilderService).to receive(:perform_with).with(
+      allow(CreneauxBuilderService).to receive(:perform_with).with(
         "Coucou",
         lieu,
         (Date.parse("2020-10-20")..Date.parse("2020-10-21")),
