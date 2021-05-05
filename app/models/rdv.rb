@@ -153,7 +153,6 @@ class Rdv < ApplicationRecord
     ""
   end
 
-
   private
 
   def virtual_attributes_for_paper_trail

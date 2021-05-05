@@ -1,18 +1,12 @@
 div
   p Bonjour,
-  p
-    | Votre RDV #{@rdv.motif.service.name} du #{l(@rdv.starts_at, format: :human)} a été annulé.
-  p
-    - if @rdv.organisation.phone_number.present?
-      = "Appelez le #{@rdv.organisation.phone_number} pour plus d'information."
-    - else
-      | Contactez votre organisme pour plus d'information.
+  p Votre RDV #{@rdv.motif.service.name} du #{l(@rdv.starts_at, format: :human)} a été annulé.
 
-  - if @rdv.lieu.present? && @rdv.reservable_online?
-    - if @rdv.lieu&.phone_number.present?
-      p Vous pouvez reprendre un rendez-vous en cliquant sur le lien ci-dessous ou en appelant au #{link_to @rdv.lieu.phone_number, "tel:#{@rdv.lieu.phone_number_formatted}"}
-    - else
-      p Vous pouvez reprendre un rendez-vous en cliquant sur le lien ci-dessous
+  - if @rdv.phone_number.present?
+    p Vous pouvez reprendre un rendez-vous en appelant au #{link_to @rdv.phone_number, "tel:#{@rdv.phone_number_formatted}"}
+
+  - if @rdv.reservable_online?
+    p Vous pouvez reprendre un rendez-vous en cliquant sur le lien ci-dessous
 
     .btn-wrapper
       = link_to 'Reprendre RDV', lieux_url(search: { \

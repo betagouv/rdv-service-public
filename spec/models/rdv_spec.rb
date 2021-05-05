@@ -37,30 +37,26 @@ describe Rdv, type: :model do
   end
 
   describe "#cancellable?" do
-    subject { rdv.cancellable? }
-
-    let(:now) { Time.current }
+    let(:now) { Time.zone.parse("2021-05-03 14h00") }
 
     before { travel_to(now) }
 
-    after { travel_back }
-
     context "when Rdv starts in 5 hours" do
-      let(:rdv) { create(:rdv, starts_at: 5.hours.from_now) }
+      let(:rdv) { create(:rdv, starts_at: now + 5.hours) }
 
-      it { expect(subject).to eq(true) }
+      it { expect(rdv.cancellable?).to eq(true) }
 
       context "but is already cancelled" do
-        let(:rdv) { create(:rdv, cancelled_at: DateTime.parse("2020-07-30 10:30").in_time_zone, starts_at: 5.hours.from_now) }
+        let(:rdv) { create(:rdv, cancelled_at: now - 1.month, starts_at: now + 5.hours) }
 
-        it { expect(subject).to eq(false) }
+        it { expect(rdv.cancellable?).to eq(false) }
       end
     end
 
     context "when Rdv starts in 4 hours" do
-      let(:rdv) { create(:rdv, starts_at: 4.hours.from_now) }
+      let(:rdv) { create(:rdv, starts_at: now + 4.hours) }
 
-      it { expect(subject).to eq(false) }
+      it { expect(rdv.cancellable?).to eq(false) }
     end
   end
 
@@ -369,63 +365,35 @@ describe Rdv, type: :model do
   end
 
   describe "#phone_number" do
-    it "return nothing when no phone number" do
-      organisation = build(:organisation, phone_number: nil)
-      lieu = build(:lieu, organisation: organisation, phone_number: nil)
-      rdv = build(:rdv, organisation: organisation, lieu: lieu)
-      expect(rdv.phone_number).to eq("")
+    let(:rdv) { build(:rdv, organisation: organisation, lieu: lieu) }
+    let(:organisation) { build(:organisation, phone_number: nil) }
+    let(:lieu) { build(:lieu, organisation: organisation, phone_number: nil) }
+
+    context "no phone number" do
+      it { expect(rdv.phone_number).to eq("") }
+      it { expect(rdv.phone_number_formatted).to eq("") }
     end
 
-    it "return lieu phone number if exist" do
-      organisation = build(:organisation, phone_number: nil)
-      lieu = build(:lieu, organisation: organisation, phone_number: "0344556677")
-      rdv = build(:rdv, organisation: organisation, lieu: lieu)
-      expect(rdv.phone_number).to eq("0344556677")
+    context "lieu with a phone number" do
+      let(:lieu) { build(:lieu, organisation: organisation, phone_number: "03 44 55 66 77") }
+
+      it { expect(rdv.phone_number).to eq("03 44 55 66 77") }
+      it { expect(rdv.phone_number_formatted).to eq("+33344556677") }
     end
 
-    it "return organisation phone number when no lieu phone number" do
-      organisation = build(:organisation, phone_number: "0123456789")
-      lieu = build(:lieu, organisation: organisation, phone_number: nil)
-      rdv = build(:rdv, organisation: organisation, lieu: lieu)
-      expect(rdv.phone_number).to eq("0123456789")
+    context "only organisation phone number" do
+      let(:organisation) { build(:organisation, phone_number: "01 23 45 67 89") }
+
+      it { expect(rdv.phone_number).to eq("01 23 45 67 89") }
+      it { expect(rdv.phone_number_formatted).to eq("01 23 45 67 89") }
     end
 
-    it "return lieu phone number when organisation & lieu phone number are present" do
-      organisation = build(:organisation, phone_number: "0123456789")
-      lieu = build(:lieu, organisation: organisation, phone_number: "0344556677")
-      rdv = build(:rdv, organisation: organisation, lieu: lieu)
-      expect(rdv.phone_number).to eq("0344556677")
-    end
-  end
+    context "organisation & lieu phone number are present" do
+      let(:organisation) { build(:organisation, phone_number: "01 23 45 67 89") }
+      let(:lieu) { build(:lieu, organisation: organisation, phone_number: "03 44 55 66 77") }
 
-  describe "#phone_number_formatted" do
-    it "return nothing when no phone number" do
-      organisation = build(:organisation, phone_number: nil)
-      lieu = build(:lieu, organisation: organisation, phone_number: nil)
-      rdv = build(:rdv, organisation: organisation, lieu: lieu)
-      expect(rdv.phone_number_formatted).to eq("")
-    end
-
-    it "return lieu phone number if exist" do
-      organisation = build(:organisation, phone_number: nil)
-      lieu = build(:lieu, organisation: organisation, phone_number: "03 44 55 6677")
-      rdv = build(:rdv, organisation: organisation, lieu: lieu)
-      expect(rdv.phone_number_formatted).to eq("+33344556677")
-    end
-
-    it "return organisation phone number when no lieu phone number" do
-      organisation = build(:organisation, phone_number: "01 23 45 67 89")
-      lieu = build(:lieu, organisation: organisation, phone_number: nil)
-      rdv = build(:rdv, organisation: organisation, lieu: lieu)
-      expect(rdv.phone_number_formatted).to eq("01 23 45 67 89")
-    end
-
-    it "return lieu phone number when organisation & lieu phone number are present" do
-      organisation = build(:organisation, phone_number: "01 23 45 67 89")
-      lieu = build(:lieu, organisation: organisation, phone_number: "03 44 55 66 77")
-      rdv = build(:rdv, organisation: organisation, lieu: lieu)
-      expect(rdv.phone_number_formatted).to eq("+33344556677")
+      it { expect(rdv.phone_number).to eq("03 44 55 66 77") }
+      it { expect(rdv.phone_number_formatted).to eq("+33344556677") }
     end
   end
-
 end

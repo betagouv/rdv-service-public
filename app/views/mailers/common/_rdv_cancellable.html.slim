@@ -2,8 +2,8 @@ p[style="margin-top:12px;"]
   span> Vous pouvez modifier ou annuler votre rendez-vous
   strong>
     | jusqu'à 4h avant celui-ci
-  - if rdv.lieu&.phone_number.present?
-    span> en appelant au #{link_to rdv.lieu.phone_number, "tel:#{rdv.lieu.phone_number_formatted}"} ou
+  - if rdv.phone_number.present?
+    span> en appelant au #{link_to rdv.phone_number, "tel:#{rdv.phone_number_formatted}"} ou
   | en cliquant sur le lien ci-dessous.
 
 .btn-wrapper
