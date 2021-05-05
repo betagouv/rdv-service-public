@@ -367,4 +367,34 @@ describe Rdv, type: :model do
       travel_back
     end
   end
+
+  describe "#phone_number" do
+    it "return nothing when no phone number" do
+      organisation = build(:organisation, phone_number: nil)
+      lieu = build(:lieu, organisation: organisation, phone_number: nil)
+      rdv = build(:rdv, organisation: organisation, lieu: lieu)
+      expect(rdv.phone_number).to eq("")
+    end
+
+    it "return lieu phone number if exist" do
+      organisation = build(:organisation, phone_number: nil)
+      lieu = build(:lieu, organisation: organisation, phone_number: "0344556677")
+      rdv = build(:rdv, organisation: organisation, lieu: lieu)
+      expect(rdv.phone_number).to eq("0344556677")
+    end
+
+    it "return organisation phone number when no lieu phone number" do
+      organisation = build(:organisation, phone_number: "0123456789")
+      lieu = build(:lieu, organisation: organisation, phone_number: nil)
+      rdv = build(:rdv, organisation: organisation, lieu: lieu)
+      expect(rdv.phone_number).to eq("0123456789")
+    end
+
+    it "return lieu phone number when organisation & lieu phone number are present" do
+      organisation = build(:organisation, phone_number: "0123456789")
+      lieu = build(:lieu, organisation: organisation, phone_number: "0344556677")
+      rdv = build(:rdv, organisation: organisation, lieu: lieu)
+      expect(rdv.phone_number).to eq("0344556677")
+    end
+  end
 end
