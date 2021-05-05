@@ -31,4 +31,8 @@ class Agents::RegistrationsController < Devise::RegistrationsController
   def after_inactive_sign_up_path_for(_)
     new_agent_session_path
   end
+
+  def after_update_path_for(_)
+    edit_agent_registration_path
+  end
 end
