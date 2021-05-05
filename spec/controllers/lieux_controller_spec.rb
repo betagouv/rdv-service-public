@@ -9,11 +9,9 @@ RSpec.describe LieuxController, type: :controller do
   let(:now) { Date.new(2019, 7, 22) }
   let(:mock_geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.all) }
 
-  before { travel_to(now) }
-
-  after { travel_back }
-
   before do
+    travel_to(now)
+
     allow(mock_geo_search).to receive(:attributed_organisations).and_return(Organisation.where(id: organisation.id))
     allow(Users::GeoSearch).to receive(:new)
       .with(departement: "62", city_code: "62100")
@@ -103,9 +101,9 @@ RSpec.describe LieuxController, type: :controller do
         let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
         let(:user) { create(:user, agents: [agent]) }
 
-        before { sign_in user }
-
         before do
+          sign_in user
+
           allow(Users::CreneauxSearch).to receive(:new).with(
             user: user,
             motif: motif,
@@ -113,6 +111,7 @@ RSpec.describe LieuxController, type: :controller do
             date_range: (Date.new(2019, 7, 22)..Date.new(2019, 7, 28)),
             geo_search: mock_geo_search
           ).and_return(mock_creneaux_search)
+
           subject
         end
 
@@ -211,10 +210,9 @@ RSpec.describe LieuxController, type: :controller do
             next_availability: build(:creneau, starts_at: DateTime.parse("2019-07-29 08h00", motif: build(:motif, organisation: organisation)))
           )
         )
+
       subject
     end
-
-    before { subject }
 
     it "returns a success response" do
       expect(response).to be_successful

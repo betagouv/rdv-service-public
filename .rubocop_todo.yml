@@ -34,15 +34,6 @@ RSpec/DescribeClass:
 RSpec/ExampleLength:
   Enabled: false
 
-# Offense count: 16
-RSpec/ScatteredSetup:
-  Exclude:
-    - 'spec/controllers/admin/plage_ouvertures_controller_spec.rb'
-    - 'spec/controllers/lieux_controller_spec.rb'
-    - 'spec/controllers/users/rdv_wizard_steps_controller_spec.rb'
-    - 'spec/lib/csv_or_xls_reader_spec.rb'
-    - 'spec/services/send_transactional_sms_service_spec.rb'
-
 # Offense count: 49
 RSpec/StubbedMock:
   Enabled: false
