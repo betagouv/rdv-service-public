@@ -15,7 +15,7 @@ describe Users::RdvWizardStepsController, type: :controller do
       before { sign_in user }
 
       before do
-        expect(UserRdvWizard::Step2).to \
+        allow(UserRdvWizard::Step2).to \
           receive(:new).with(
             user,
             hash_including(

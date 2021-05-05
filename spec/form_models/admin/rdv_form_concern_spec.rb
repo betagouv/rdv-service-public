@@ -33,8 +33,8 @@ describe Admin::RdvFormConcern, type: :form do
       let(:rdv) { build(:rdv) }
 
       before do
-        expect(rdv).to receive(:valid?).and_return(false)
-        expect(rdv).to receive(:errors).and_return([[:base, "not cool"]])
+        allow(rdv).to receive(:valid?).and_return(false)
+        allow(rdv).to receive(:errors).and_return([[:base, "not cool"]])
       end
 
       it "is not valid" do
@@ -47,7 +47,7 @@ describe Admin::RdvFormConcern, type: :form do
       let(:rdv) { build(:rdv) }
 
       before do
-        expect(rdv).to receive(:valid?).and_return(true)
+        allow(rdv).to receive(:valid?).and_return(true)
         allow(rdv_start_coherence).to receive(:rdvs_ending_shortly_before?).and_return(false)
         allow(rdvs_overlapping).to receive(:rdvs_overlapping_rdv?).and_return(false)
       end

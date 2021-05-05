@@ -15,7 +15,7 @@ RSpec.describe LieuxController, type: :controller do
 
   before do
     allow(mock_geo_search).to receive(:attributed_organisations).and_return(Organisation.where(id: organisation.id))
-    expect(Users::GeoSearch).to receive(:new)
+    allow(Users::GeoSearch).to receive(:new)
       .with(departement: "62", city_code: "62100")
       .and_return(mock_geo_search)
   end
@@ -28,7 +28,7 @@ RSpec.describe LieuxController, type: :controller do
       end
 
       before do
-        expect(Users::CreneauxSearch).to receive(:new).with(
+        allow(Users::CreneauxSearch).to receive(:new).with(
           user: nil,
           motif: motif,
           lieu: lieu,
@@ -106,7 +106,7 @@ RSpec.describe LieuxController, type: :controller do
         before { sign_in user }
 
         before do
-          expect(Users::CreneauxSearch).to receive(:new).with(
+          allow(Users::CreneauxSearch).to receive(:new).with(
             user: user,
             motif: motif,
             lieu: lieu,
@@ -177,8 +177,8 @@ RSpec.describe LieuxController, type: :controller do
     end
 
     before do
-      expect(Lieu).to receive(:with_open_slots_for_motifs).and_return(Lieu.all)
-      expect(Users::CreneauxSearch).to \
+      allow(Lieu).to receive(:with_open_slots_for_motifs).and_return(Lieu.all)
+      allow(Users::CreneauxSearch).to \
         receive(:new)
         .with(
           user: nil,
@@ -195,7 +195,7 @@ RSpec.describe LieuxController, type: :controller do
           )
         )
 
-      expect(Users::CreneauxSearch).to \
+      allow(Users::CreneauxSearch).to \
         receive(:new)
         .with(
           user: nil,

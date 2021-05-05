@@ -85,9 +85,7 @@ describe TransactionalSms::BaseConcern, type: :service do
   describe "#send!" do
     let(:sms) { SomeModule::TestSms.new(build(:rdv), build(:user)) }
 
-    before do
-      expect(SendTransactionalSmsService).to receive(:perform_with).with(sms)
-    end
+    before { allow(SendTransactionalSmsService).to receive(:perform_with).with(sms) }
 
     it "calls send service" do
       sms.send!

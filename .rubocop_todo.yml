@@ -34,20 +34,6 @@ RSpec/DescribeClass:
 RSpec/ExampleLength:
   Enabled: false
 
-# Offense count: 21
-RSpec/ExpectInHook:
-  Exclude:
-    - 'spec/controllers/lieux_controller_spec.rb'
-    - 'spec/controllers/support_tickets_controller_spec.rb'
-    - 'spec/controllers/users/creneaux_controller_spec.rb'
-    - 'spec/controllers/users/rdv_wizard_steps_controller_spec.rb'
-    - 'spec/controllers/users/rdvs_controller_spec.rb'
-    - 'spec/features/agents/agent_can_create_rdv_with_creneau_search_spec.rb'
-    - 'spec/form_models/admin/rdv_form_concern_spec.rb'
-    - 'spec/service_models/transactional_sms/base_concern_spec.rb'
-    - 'spec/service_models/users/creneau_search_spec.rb'
-    - 'spec/services/send_transactional_sms_service_spec.rb'
-
 # Offense count: 385
 # Configuration parameters: IgnoreSharedExamples.
 RSpec/NamedSubject:
