@@ -106,8 +106,6 @@ class CalendarRdvSolidarites {
   }
 
   selectEvent = (info) => {
-    if ($('body').hasClass('right-bar-enabled')) return false;
-
     let startDate = moment(info.start);
     const urlSearchParams = new URLSearchParams({
       starts_at: info.startStr,

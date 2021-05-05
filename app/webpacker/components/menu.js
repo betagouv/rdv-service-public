@@ -7,27 +7,16 @@ class Menu {
 
   init() {
     this._initClickBody();
-    this._initKeyboardShortcut();
     this._initNavbarToggle();
-  }
-
-  _initKeyboardShortcut() {
-    var $this = this;
-    $(document).keyup(function(e) {
-      if (e.key === "Escape") {
-        $this.body.removeClass('right-bar-enabled');
-      }
-    });
   }
 
   _initClickBody() {
     var $this = this;
     $(document).on('click', 'body', function (e) {
-      if ($(e.target).closest('.right-bar-toggle, .right-bar, .daterangepicker').length > 0) {
+      if ($(e.target).closest('.right-bar, .daterangepicker').length > 0) {
           return;
       }
 
-    $this.body.removeClass('right-bar-enabled');
     return;
   });
   }
