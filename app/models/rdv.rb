@@ -146,6 +146,14 @@ class Rdv < ApplicationRecord
     ""
   end
 
+  def phone_number_formatted
+    return lieu.phone_number_formatted if lieu&.phone_number_formatted.present?
+    return organisation.phone_number if organisation&.phone_number.present?
+
+    ""
+  end
+
+
   private
 
   def virtual_attributes_for_paper_trail

@@ -397,4 +397,35 @@ describe Rdv, type: :model do
       expect(rdv.phone_number).to eq("0344556677")
     end
   end
+
+  describe "#phone_number_formatted" do
+    it "return nothing when no phone number" do
+      organisation = build(:organisation, phone_number: nil)
+      lieu = build(:lieu, organisation: organisation, phone_number: nil)
+      rdv = build(:rdv, organisation: organisation, lieu: lieu)
+      expect(rdv.phone_number_formatted).to eq("")
+    end
+
+    it "return lieu phone number if exist" do
+      organisation = build(:organisation, phone_number: nil)
+      lieu = build(:lieu, organisation: organisation, phone_number: "03 44 55 6677")
+      rdv = build(:rdv, organisation: organisation, lieu: lieu)
+      expect(rdv.phone_number_formatted).to eq("+33344556677")
+    end
+
+    it "return organisation phone number when no lieu phone number" do
+      organisation = build(:organisation, phone_number: "01 23 45 67 89")
+      lieu = build(:lieu, organisation: organisation, phone_number: nil)
+      rdv = build(:rdv, organisation: organisation, lieu: lieu)
+      expect(rdv.phone_number_formatted).to eq("01 23 45 67 89")
+    end
+
+    it "return lieu phone number when organisation & lieu phone number are present" do
+      organisation = build(:organisation, phone_number: "01 23 45 67 89")
+      lieu = build(:lieu, organisation: organisation, phone_number: "03 44 55 66 77")
+      rdv = build(:rdv, organisation: organisation, lieu: lieu)
+      expect(rdv.phone_number_formatted).to eq("+33344556677")
+    end
+  end
+
 end
