@@ -1,7 +1,7 @@
 - content_for :title, "Votre compte"
 
 = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), remote: request.xhr?, html: { method: :put }) do |f|
-  = devise_error_messages!
+  = render "devise/shared/error_messages", resource: resource
   = f.input :email, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), placeholder: 'nom.prenom@email.com'
   - if devise_mapping.confirmable? && resource.pending_reconfirmation?
     .form-text.text-muted

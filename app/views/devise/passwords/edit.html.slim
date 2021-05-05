@@ -5,7 +5,7 @@
   p.text-muted Pour finaliser votre inscription, veuillez définir un mot de passe.
 
 = simple_form_for resource, as: resource_name, url: password_path(resource_name), html: { method: :put } do |f|
-  = devise_error_messages!
+  = render "devise/shared/error_messages", resource: resource
   = f.input :reset_password_token, as: :hidden
   .form-group
     = f.password_field :password, as: :password, label: 'Mot de passe', class: 'form-control', autocomplete: "off", required: true, id: "password"

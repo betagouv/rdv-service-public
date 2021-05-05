@@ -4,7 +4,7 @@
   .card-body
     = form_for resource, as: resource_name, url: password_path(resource_name) do |f|
       .text-center.w-75.m-auto
-      = devise_error_messages!
+      = render "devise/shared/error_messages", resource: resource
       .form-group
         = f.email_field :email, autofocus: true, required: true, placeholder: "nom.prenom@email.com", class: 'form-control'
       .form-group.mb-0.text-center
