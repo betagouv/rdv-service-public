@@ -19,33 +19,28 @@ describe Territory, type: :model do
     end
   end
 
-  describe "#unique_departement_number validation" do
-    subject { territory.valid? }
-
+  describe "departement_number uniqueness validation" do
     context "no collision" do
       let(:territory) { described_class.new(name: "Oise", departement_number: "60") }
 
-      it { is_expected.to eq true }
+      it { expect(territory).to be_valid }
     end
 
     context "blank departement_number" do
       let!(:territory_existing) { create(:territory, departement_number: "60") }
       let(:territory) { described_class.new(name: "Oise", departement_number: "") }
 
-      it { is_expected.to eq true }
+      it { expect(territory).to be_valid }
     end
 
     context "colliding departement_number" do
       let!(:territory_existing) { create(:territory, departement_number: "60") }
       let(:territory) { described_class.new(name: "Oise", departement_number: "60") }
 
-      it { is_expected.to eq false }
-
       it "adds errors" do
-        territory.valid?
-        expect(territory.errors).not_to be_empty
-        expect(territory.errors[:base]).not_to be_empty
-        expect(territory.errors[:base][0]).to include("agents créés dans ce département")
+        expect(territory).not_to be_valid
+        expect(territory.errors.details).to eq({ departement_number: [{ error: :taken, value: "60" }] })
+        expect(territory.errors.full_messages.to_sentence).to include("agents créés dans ce département")
       end
     end
 
@@ -54,7 +49,7 @@ describe Territory, type: :model do
 
       before { territory.departement_number = "80" }
 
-      it { is_expected.to eq true }
+      it { expect(territory).to be_valid }
     end
 
     context "update existing territory to colliding departement_number" do
@@ -63,13 +58,10 @@ describe Territory, type: :model do
 
       before { territory.departement_number = "80" }
 
-      it { is_expected.to eq false }
-
       it "adds errors" do
-        territory.valid?
-        expect(territory.errors).not_to be_empty
-        expect(territory.errors[:base]).not_to be_empty
-        expect(territory.errors[:base][0]).to include("agents créés dans ce département")
+        expect(territory).not_to be_valid
+        expect(territory.errors.details).to eq({ departement_number: [{ error: :taken, value: "80" }] })
+        expect(territory.errors.full_messages.to_sentence).to include("agents créés dans ce département")
       end
     end
   end
@@ -80,7 +72,7 @@ describe Territory, type: :model do
     before { territory.save! }
 
     context "new territory without departement_number" do
-      let(:territory) { described_class.new(departement_number: nil) }
+      let(:territory) { described_class.new(departement_number: "") }
 
       it { is_expected.to eq nil }
     end
@@ -91,7 +83,7 @@ describe Territory, type: :model do
       it { is_expected.to eq "Oise" }
     end
 
-    context "new territory with name overriden" do
+    context "new territory with name overridden" do
       let(:territory) { described_class.new(name: "LA grande Oise", departement_number: "60") }
 
       it { is_expected.to eq "LA grande Oise" }

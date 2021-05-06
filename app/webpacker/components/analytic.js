@@ -24,7 +24,6 @@ if (ENV.ENV == "production") {
   script.src = jsUrl;
   firstScript.parentNode.insertBefore(script, firstScript);
 
-  $(document).on('shown.rightbar', '.right-bar', sendDataToMatomo);
   $(document).on('shown.bs.modal', '.modal', sendDataToMatomo);
 }
 

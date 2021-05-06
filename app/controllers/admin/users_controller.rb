@@ -87,8 +87,7 @@ class Admin::UsersController < AgentAuthController
   def invite
     authorize(@user)
     @user.invite!
-    flash[:notice] = "L'usager a été invité."
-    respond_right_bar_with @user, location: admin_organisation_user_path(current_organisation, @user)
+    redirect_to admin_organisation_user_path(current_organisation, @user), notice: "L’usager a été invité."
   end
 
   def destroy
