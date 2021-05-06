@@ -6,10 +6,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Ruby 2.7.2
+      - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.2
+          ruby-version: 2.7.3
           bundler-cache: true
       - run: bundle exec rubocop --parallel
   brakeman:
@@ -20,7 +20,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.2
+          ruby-version: 2.7.3
           bundler-cache: true
       - run: bundle exec brakeman
 
@@ -45,7 +45,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.2
+          ruby-version: 2.7.3
           bundler-cache: true
       - run: bundle exec rake db:create db:schema:load db:migrate db:seed RAILS_ENV=test
         env:
@@ -79,7 +79,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.2
+          ruby-version: 2.7.3
           bundler-cache: true
       - name: Install JS dependencies
         run: yarn install
