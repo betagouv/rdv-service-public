@@ -5,6 +5,6 @@ json.array! @jours_feries do |jour_ferie|
   json.backgroundColor "#cecece"
   json.allDay true
   json.extendedProps do
-    json.unclickable true
+    json.jour_feries true
   end
 end

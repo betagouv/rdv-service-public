@@ -15,6 +15,7 @@ class Absence < ApplicationRecord
 
   scope :future, -> { where(end_day: Time.zone.today..) }
   scope :past, -> { where.not(end_day: Time.zone.today..) } # NOTE: brakeman doesn't support beginless ranges https://github.com/presidentbeef/brakeman/issues/1483
+  scope :with_agent, ->(agent) { where(agent_id: agent.id) }
 
   def title_or_default
     title.presence || "Absence"
