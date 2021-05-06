@@ -4,7 +4,6 @@ class Select2Inputs {
     this.initInputs()
     $(document).on('turbolinks:load', this.initInputs)
     $(document).on('shown.bs.modal', '.modal', this.initInputs)
-    $(document).on('shown.rightbar', '.right-bar', this.initInputs)
     $(document).on("turbolinks:before-cache", this.destroyInputs)
   }
 

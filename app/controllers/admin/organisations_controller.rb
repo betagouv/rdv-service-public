@@ -21,13 +21,17 @@ class Admin::OrganisationsController < AgentAuthController
 
   def edit
     authorize(@organisation)
-    respond_right_bar_with @organisation
   end
 
   def update
     authorize(@organisation)
-    flash[:notice] = "L'organisation a été modifiée." if @organisation.update(organisation_params)
-    respond_right_bar_with @organisation, location: admin_organisation_path(@organisation)
+
+    if @organisation.update(organisation_params)
+      flash[:notice] = "L’organisation a été modifiée."
+      redirect_to admin_organisation_path(@organisation)
+    else
+      render :edit
+    end
   end
 
   def new

@@ -13,10 +13,6 @@ $(document).on('turbolinks:load', function() {
   initSentry();
 });
 
-$(document).on('shown.rightbar', '.right-bar', function(e) {
-  initSentry();
-});
-
 $(document).on('shown.bs.modal', '.modal', function(e) {
   initSentry();
 });
