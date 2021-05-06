@@ -49,7 +49,8 @@ RSpec.describe Users::CreneauxController, type: :controller do
     before do
       travel_to(now)
       sign_in user
-      expect(Users::CreneauSearch).to receive(:creneau_for)
+
+      allow(Users::CreneauSearch).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
         .and_return(returned_creneau)
     end
@@ -83,7 +84,8 @@ RSpec.describe Users::CreneauxController, type: :controller do
     before do
       travel_to(now)
       sign_in user
-      expect(Users::CreneauSearch).to receive(:creneau_for)
+
+      allow(Users::CreneauSearch).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
         .and_return(returned_creneau)
     end
