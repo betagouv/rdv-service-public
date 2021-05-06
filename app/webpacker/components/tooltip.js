@@ -8,6 +8,3 @@ $(document).on('turbolinks:load', function() {
   initTooltip();
 });
 
-$(document).on('shown.rightbar', '.right-bar', function(e) {
-  initTooltip();
-});

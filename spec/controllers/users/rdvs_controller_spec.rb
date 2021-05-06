@@ -16,10 +16,11 @@ RSpec.describe Users::RdvsController, type: :controller do
     before do
       travel_to(Time.zone.local(2019, 7, 20))
       sign_in user
-      expect(Users::GeoSearch).to receive(:new)
+
+      allow(Users::GeoSearch).to receive(:new)
         .with(departement: "12", city_code: "12100")
         .and_return(mock_geo_search)
-      expect(Users::CreneauSearch).to receive(:creneau_for)
+      allow(Users::CreneauSearch).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu, geo_search: mock_geo_search)
         .and_return(mock_creneau)
       subject

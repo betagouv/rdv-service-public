@@ -12,9 +12,10 @@ describe SendTransactionalSmsService, type: :service do
 
   describe "#perform" do
     context "production with SIB forced" do
-      before { allow(Rails.env).to receive(:production?).and_return(true) }
-
-      before { allow(ENV).to receive(:[]).with("FORCE_SMS_PROVIDER").and_return("send_in_blue") }
+      before do
+        allow(Rails.env).to receive(:production?).and_return(true)
+        allow(ENV).to receive(:[]).with("FORCE_SMS_PROVIDER").and_return("send_in_blue")
+      end
 
       it "calls SIB API" do
         sib_api_mock = instance_double(SibApiV3Sdk::TransactionalSMSApi)

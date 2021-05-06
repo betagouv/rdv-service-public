@@ -6,16 +6,16 @@ describe Users::RdvWizardStepsController, type: :controller do
     let!(:lieu) { create(:lieu, organisation: organisation) }
     let(:starts_at) { DateTime.parse("2020-03-03 10h00") }
     let!(:mock_creneau) { instance_double(::Creneau) }
-    let!(:mock_rdv) { build(:rdv, starts_at: starts_at, users: [user]) } # cannot use instance_double because it breaks pundit inferrence
+    let!(:mock_rdv) { build(:rdv, starts_at: starts_at, users: [user]) } # cannot use instance_double because it breaks pundit inference
     let(:mock_user_rdv_wizard) { instance_double(UserRdvWizard::Step2, creneau: mock_creneau, rdv: mock_rdv) }
 
     before { travel_to Date.parse("2020-03-01").in_time_zone + 8.hours }
 
     context "logged in user" do
-      before { sign_in user }
-
       before do
-        expect(UserRdvWizard::Step2).to \
+        sign_in user
+
+        allow(UserRdvWizard::Step2).to \
           receive(:new).with(
             user,
             hash_including(

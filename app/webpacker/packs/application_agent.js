@@ -15,7 +15,6 @@ import { Datetimepicker } from 'components/datetimepicker';
 import { Avatar } from 'components/avatar';
 import { Menu } from 'components/menu';
 import { Modal } from 'components/modal';
-import { Rightbar } from 'components/rightbar';
 import { PopulateLibelle } from 'components/populate-libelle';
 import { ServiceFilterForMotifsSelects } from 'components/service-filter-for-motifs-selects';
 import { MotifFilters } from 'components/motif-filters';
@@ -49,7 +48,6 @@ $.fn.select2.defaults.set("theme", "bootstrap4");
 $.fn.select2.defaults.set("language", "fr");
 
 new Modal();
-new Rightbar();
 new Select2Inputs();
 new ServiceFilterForMotifsSelects();
 
@@ -59,14 +57,6 @@ $(document).on('shown.bs.modal', '.modal', function(e) {
   $('input[type="tel"]').mask('00 00 00 00 00')
   new Datetimepicker();
   new AgentUserForm();
-});
-
-$(document).on('shown.rightbar', '.right-bar', function(e) {
-  $('input[type="tel"]').mask('00 00 00 00 00')
-  new PlacesInputs();
-  new Datetimepicker();
-  $(".tooltip").tooltip("hide");
-  new RecurrenceForm();
 });
 
 $(document).on('hide.bs.modal', '.modal', function(e) {
