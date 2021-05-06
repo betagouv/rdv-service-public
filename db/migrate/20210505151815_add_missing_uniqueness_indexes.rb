@@ -6,7 +6,9 @@ class AddMissingUniquenessIndexes < ActiveRecord::Migration[6.0]
               unique: true, where: "deleted_at IS NULL",
               name: "index_motifs_on_name_scoped" # the rails-generated name is too long, use a custom name.
     add_index :organisations, %i[name territory_id], unique: true
-    add_index :organisations, %i[human_id territory_id], unique: true, where: "human_id IS NOT NULL"
+    change_column_default :organisations, :human_id, from: nil, to: ""
+    change_column_null :organisations, :human_id, false, ""
+    add_index :organisations, %i[human_id territory_id], unique: true, where: "human_id <> ''"
 
     reversible do |dir|
       dir.up do

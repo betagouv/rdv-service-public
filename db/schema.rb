@@ -224,11 +224,11 @@ ActiveRecord::Schema.define(version: 2021_05_05_151815) do
     t.string "departement"
     t.text "horaires"
     t.string "phone_number"
-    t.string "human_id"
+    t.string "human_id", default: "", null: false
     t.string "website"
     t.string "email"
     t.bigint "territory_id", null: false
-    t.index ["human_id", "territory_id"], name: "index_organisations_on_human_id_and_territory_id", unique: true, where: "(human_id IS NOT NULL)"
+    t.index ["human_id", "territory_id"], name: "index_organisations_on_human_id_and_territory_id", unique: true, where: "((human_id)::text <> ''::text)"
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["territory_id"], name: "index_organisations_on_territory_id"
   end
