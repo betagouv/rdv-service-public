@@ -28,9 +28,9 @@ describe Admin::Agents::RdvsController, type: :controller do
         now = Time.zone.parse("2021-01-23 10h00")
         travel_to(now)
 
-        create(:rdv, starts_at: now - 1.day)
+        create(:rdv, agents: [agent], organisation: organisation, starts_at: now - 1.day)
         rdv = create(:rdv, agents: [agent], organisation: organisation, starts_at: now + 2.days)
-        create(:rdv, starts_at: now + 8.days)
+        create(:rdv, agents: [agent], organisation: organisation, starts_at: now + 8.days)
 
         get :index, params: { agent_id: agent.id, organisation_id: organisation.id, start: now, end: now + 7.days, format: :json }
         expect(assigns(:rdvs)).to eq([rdv])
