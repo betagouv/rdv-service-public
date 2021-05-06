@@ -14,23 +14,12 @@ describe Motif, type: :model do
     expect(build(:motif, color: "#002233")).to be_valid
   end
 
-  describe "uniqueness" do
-    subject { motif.dup }
-
-    let(:service) { build(:service) }
-    let(:motif) { create(:motif, name: "name", location_type: :home, service: service, organisation: organisation) }
-
-    it do
-      expect(subject).not_to be_valid
-      expect(subject.errors.details).to eq({ name: [{ error: :taken, value: "name" }] })
-      expect(subject.errors.full_messages.to_sentence).to eq "Nom est déjà utilisé pour un motif avec le même type de RDV."
-    end
-  end
-
   describe ".create when associated with secretariat" do
     let(:motif) { build(:motif, service: secretariat, organisation: organisation) }
 
-    it { expect(motif).not_to be_valid }
+    it {
+      expect(motif.valid?).to be false
+    }
   end
 
   describe "#soft_delete" do

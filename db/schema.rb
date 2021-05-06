@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_05_151815) do
+ActiveRecord::Schema.define(version: 2021_05_05_143758) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -157,7 +157,6 @@ ActiveRecord::Schema.define(version: 2021_05_05_151815) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "notifications_sent", default: 0
     t.datetime "last_creneau_sent_at"
-    t.index ["rdv_id", "user_id"], name: "index_file_attentes_on_rdv_id_and_user_id", unique: true
     t.index ["rdv_id"], name: "index_file_attentes_on_rdv_id"
     t.index ["user_id"], name: "index_file_attentes_on_user_id"
   end
@@ -205,7 +204,6 @@ ActiveRecord::Schema.define(version: 2021_05_05_151815) do
     t.string "visibility_type", default: "visible_and_notified", null: false
     t.string "sectorisation_level", default: "departement"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
-    t.index ["name", "organisation_id", "location_type", "service_id"], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
     t.index ["service_id"], name: "index_motifs_on_service_id"
   end
@@ -228,8 +226,6 @@ ActiveRecord::Schema.define(version: 2021_05_05_151815) do
     t.string "website"
     t.string "email"
     t.bigint "territory_id", null: false
-    t.index ["human_id", "territory_id"], name: "index_organisations_on_human_id_and_territory_id", unique: true, where: "(human_id IS NOT NULL)"
-    t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["territory_id"], name: "index_organisations_on_territory_id"
   end
 
@@ -304,7 +300,6 @@ ActiveRecord::Schema.define(version: 2021_05_05_151815) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "territory_id", null: false
     t.index ["departement"], name: "index_sectors_on_departement"
-    t.index ["human_id", "territory_id"], name: "index_sectors_on_human_id_and_territory_id", unique: true
     t.index ["human_id"], name: "index_sectors_on_human_id"
     t.index ["territory_id"], name: "index_sectors_on_territory_id"
   end
@@ -314,8 +309,6 @@ ActiveRecord::Schema.define(version: 2021_05_05_151815) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "short_name"
-    t.index "lower((name)::text)", name: "index_services_on_lower_name", unique: true
-    t.index "lower((short_name)::text)", name: "index_services_on_lower_short_name", unique: true
   end
 
   create_table "super_admins", force: :cascade do |t|
