@@ -18,6 +18,22 @@ GIT
       activesupport (~> 6.0.3.5)
       railties (~> 6.0.3.5)
 
+GIT
+  remote: https://github.com/thoughtbot/administrate.git
+  revision: 0e4c1865df14bbfcbee0b16979910c4f5b49ba2f
+  ref: refs/pull/1972/head
+  specs:
+    administrate (0.15.0)
+      actionpack (>= 5.0)
+      actionview (>= 5.0)
+      activerecord (>= 5.0)
+      datetime_picker_rails (~> 0.0.7)
+      jquery-rails (>= 4.0)
+      kaminari (>= 1.0)
+      momentjs-rails (~> 2.8)
+      sassc-rails (~> 2.1)
+      selectize-rails (~> 0.6)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -78,16 +94,6 @@ GEM
       zeitwerk (~> 2.2, >= 2.2.2)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
-    administrate (0.15.0)
-      actionpack (>= 5.0)
-      actionview (>= 5.0)
-      activerecord (>= 5.0)
-      datetime_picker_rails (~> 0.0.7)
-      jquery-rails (>= 4.0)
-      kaminari (>= 1.0)
-      momentjs-rails (~> 2.8)
-      sassc-rails (~> 2.1)
-      selectize-rails (~> 0.6)
     administrate-field-belongs_to_search (0.7.0)
       administrate (>= 0.3, < 1.0)
       jbuilder (~> 2)
@@ -569,7 +575,7 @@ PLATFORMS
 
 DEPENDENCIES
   activemodel-caution!
-  administrate
+  administrate!
   administrate-field-belongs_to_search
   better_errors
   binding_of_caller
