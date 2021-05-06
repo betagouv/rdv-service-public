@@ -97,7 +97,7 @@ describe "Admin can configure the organisation" do
     fill_in "Horaires", with: la_nouvelle_org.horaires
     click_button "Enregistrer"
 
-    expect(page).to have_content("L'organisation a été modifiée.")
+    expect(page).to have_content("L’organisation a été modifiée.")
   end
 
   it "CRUD on motifs", js: true do

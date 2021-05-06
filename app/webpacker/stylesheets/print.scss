@@ -4,13 +4,11 @@
 
 @media print {
   .left-side-menu,
-  .right-bar,
   .footer {
       display: none;
   }
   .card-body,
   .content-page,
-  .right-bar,
   .content,
   body {
     padding: 0;
