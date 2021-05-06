@@ -2,7 +2,7 @@
   .text-center.w-75.m-auto
     h4.text-dark-50.text-center.mt-0.font-weight-bold  Inscription
     p.text-muted.mb-4 Complétez vos informations.
-  = devise_error_messages!
+  = render "devise/shared/error_messages", resource: resource
   = f.hidden_field :invitation_token
   .form-row
     .col-md-6= f.input :first_name, placeholder: 'Dominique'

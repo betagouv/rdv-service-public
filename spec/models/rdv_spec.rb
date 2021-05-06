@@ -37,30 +37,26 @@ describe Rdv, type: :model do
   end
 
   describe "#cancellable?" do
-    subject { rdv.cancellable? }
-
-    let(:now) { Time.current }
+    let(:now) { Time.zone.parse("2021-05-03 14h00") }
 
     before { travel_to(now) }
 
-    after { travel_back }
-
     context "when Rdv starts in 5 hours" do
-      let(:rdv) { create(:rdv, starts_at: 5.hours.from_now) }
+      let(:rdv) { create(:rdv, starts_at: now + 5.hours) }
 
-      it { expect(subject).to eq(true) }
+      it { expect(rdv.cancellable?).to eq(true) }
 
       context "but is already cancelled" do
-        let(:rdv) { create(:rdv, cancelled_at: DateTime.parse("2020-07-30 10:30").in_time_zone, starts_at: 5.hours.from_now) }
+        let(:rdv) { create(:rdv, cancelled_at: now - 1.month, starts_at: now + 5.hours) }
 
-        it { expect(subject).to eq(false) }
+        it { expect(rdv.cancellable?).to eq(false) }
       end
     end
 
     context "when Rdv starts in 4 hours" do
-      let(:rdv) { create(:rdv, starts_at: 4.hours.from_now) }
+      let(:rdv) { create(:rdv, starts_at: now + 4.hours) }
 
-      it { expect(subject).to eq(false) }
+      it { expect(rdv.cancellable?).to eq(false) }
     end
   end
 
@@ -365,6 +361,39 @@ describe Rdv, type: :model do
       create(:rdv, starts_at: now - 1.day)
       expect(described_class.starts_at_in_range((now + 1.day)..(now + 2.days))).to eq([rdv])
       travel_back
+    end
+  end
+
+  describe "#phone_number" do
+    let(:rdv) { build(:rdv, organisation: organisation, lieu: lieu) }
+    let(:organisation) { build(:organisation, phone_number: nil) }
+    let(:lieu) { build(:lieu, organisation: organisation, phone_number: nil) }
+
+    context "no phone number" do
+      it { expect(rdv.phone_number).to eq("") }
+      it { expect(rdv.phone_number_formatted).to eq("") }
+    end
+
+    context "lieu with a phone number" do
+      let(:lieu) { build(:lieu, organisation: organisation, phone_number: "03 44 55 66 77") }
+
+      it { expect(rdv.phone_number).to eq("03 44 55 66 77") }
+      it { expect(rdv.phone_number_formatted).to eq("+33344556677") }
+    end
+
+    context "only organisation phone number" do
+      let(:organisation) { build(:organisation, phone_number: "01 23 45 67 89") }
+
+      it { expect(rdv.phone_number).to eq("01 23 45 67 89") }
+      it { expect(rdv.phone_number_formatted).to eq("01 23 45 67 89") }
+    end
+
+    context "organisation & lieu phone number are present" do
+      let(:organisation) { build(:organisation, phone_number: "01 23 45 67 89") }
+      let(:lieu) { build(:lieu, organisation: organisation, phone_number: "03 44 55 66 77") }
+
+      it { expect(rdv.phone_number).to eq("03 44 55 66 77") }
+      it { expect(rdv.phone_number_formatted).to eq("+33344556677") }
     end
   end
 end
