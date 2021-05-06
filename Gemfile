@@ -18,7 +18,7 @@ gem "pg", ">= 0.18", "< 2.0"
 gem "pg_search", "~> 2.3"
 gem "kaminari", "~> 1.2"
 gem "bootstrap4-kaminari-views", "~> 1.0"
-gem "administrate"
+gem "administrate", git: "https://github.com/thoughtbot/administrate.git", ref: "refs/pull/1972/head" # Provides an administration UI (pull request #1972 has fixes for Rails 6.1.3.2)
 gem "administrate-field-belongs_to_search"
 gem "paper_trail"
 
