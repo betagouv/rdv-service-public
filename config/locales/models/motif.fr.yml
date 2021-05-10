@@ -62,3 +62,9 @@ fr:
         instruction_for_rdv: Indications affichées après la confirmation du rendez-vous
         instruction_for_rdv_hint: Indications affichées après la confirmation du rendez-vous
         instruction_for_rdv_short: Indications après
+    errors:
+      models:
+        motif:
+          attributes:
+            name:
+              taken: est déjà utilisé pour un motif avec le même type de RDV.
