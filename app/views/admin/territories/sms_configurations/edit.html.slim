@@ -1,0 +1,24 @@
+- content_for(:menu_item) { 'menu-organisation' }
+
+- content_for :title do
+  | Modifier l'organisation
+
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-body
+        = simple_form_for current_territory, url: admin_territory_sms_configuration_path do |f|
+          = render 'model_errors', model: current_territory
+          = f.input :sms_provider, collection: Territory.sms_providers.keys
+
+          - Territory::BASE_SMS_CONFIGURATION.each do |provider, fields|
+            div.d-none.js-sms-configuration-form(class="js-#{provider}")
+              - fields.each do |field|
+                = label_tag field, t(".#{provider}.#{field}"), class: "d-block"
+                - if current_territory.sms_configuration.present?
+                  = text_field_tag "#{provider}_#{field}", current_territory.sms_configuration[provider.to_s][field.to_s], name: "#{provider}[#{field}]"
+                - else
+                  = text_field_tag "#{provider}_#{field}", "", name: "#{provider}[#{field}]"
+
+          .text-right
+            = f.button :submit
