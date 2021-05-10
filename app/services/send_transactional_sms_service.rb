@@ -13,6 +13,9 @@ class SendTransactionalSmsService < BaseService
 
   def initialize(transactional_sms)
     @transactional_sms = transactional_sms
+    territory = @transactional_sms.rdv.organisation.territory
+    @provider = territory.sms_provider
+    @configuration = territory.sms_configuration
   end
 
   def perform
@@ -25,13 +28,17 @@ class SendTransactionalSmsService < BaseService
     if ENV["FORCE_SMS_PROVIDER"].present?
       ENV["FORCE_SMS_PROVIDER"].to_sym
     elsif Rails.env.production?
-      :netsize
+      @provider
     else
       :debug_logger
     end
   end
 
   def send_with_send_in_blue
+    SibApiV3Sdk.configure do |config|
+      config.api_key["api-key"] = @configuration["send_in_blue"]["api_key"]
+    end
+
     SibApiV3Sdk::TransactionalSMSApi.new.send_transac_sms(
       SibApiV3Sdk::SendTransacSms.new(
         sender: SENDER_NAME,
@@ -43,10 +50,11 @@ class SendTransactionalSmsService < BaseService
   end
 
   def send_with_netsize
+    # "https://europe.ipx.com/restapi/v1/sms/send"
     request = Typhoeus::Request.new(
-      "https://europe.ipx.com/restapi/v1/sms/send",
+      @configuration["netsize"]["api_url"],
       method: :post,
-      userpwd: ENV["NETSIZE_API_USERPWD"],
+      userpwd: @configuration["netsize"]["user_pwd"],
       headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
       timeout: 5,
       body: {
@@ -78,5 +86,6 @@ class SendTransactionalSmsService < BaseService
 
   def send_with_debug_logger
     Rails.logger.debug("following SMS would have been sent in production environment: #{transactional_sms}")
+    Rails.logger.debug("provider : #{@provider} configuration : #{@configuration}")
   end
 end
