@@ -21,15 +21,11 @@ Rails.application.routes.draw do
     end
     resources :super_admins
     resources :organisations
-    resources :lieux
     resources :services
     resources :motifs
     resources :users do
       get "sign_in_as", on: :member
     end
-    resources :rdvs
-    resources :plage_ouvertures
-    resources :absences
     resources :motif_libelles
     resources :webhook_endpoints
     resources :mailer_previews, only: %i[index show]
