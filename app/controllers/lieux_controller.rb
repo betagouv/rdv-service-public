@@ -4,6 +4,7 @@ class LieuxController < ApplicationController
     :set_lieu_variables,
     :redirect_if_user_offline_and_motif_follow_up,
     :redirect_if_no_matching_motifs
+  after_action :allow_iframe
 
   def index
     @lieux = Lieu
