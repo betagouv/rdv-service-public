@@ -9,10 +9,8 @@ class AddSmsConfigurationToTerritory < ActiveRecord::Migration[6.0]
       Territory.all.map do |territory|
         territory.sms_provider = "netsize"
         territory.sms_configuration = {
-          netsize: {
-            api_url: "https://europe.ipx.com/restapi/v1/sms/send",
-            user_pwd: ENV["NETSIZE_API_USERPWD"]
-          }
+          api_url: "https://europe.ipx.com/restapi/v1/sms/send",
+          user_pwd: ENV["NETSIZE_API_USERPWD"]
         }
         territory.save
       end
