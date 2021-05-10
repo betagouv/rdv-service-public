@@ -40,13 +40,12 @@ class Territory < ApplicationRecord
   end
 
   def sms_configuration_match_provider
-    configuration_keys = sms_configuration.keys || []
-    missing_keys = FIELDS_FOR_SMS_CONFIGURATION[sms_provider.to_sym] - configuration_keys
+    return true if (missing_keys = missing_configuration_keys).empty?
 
-    if missing_keys.any?
-      errors.add(:sms_configuration, "doit contenir les valeurs pour #{missing_keys}")
-    else
-      true
-    end
+    errors.add(:sms_configuration, "doit contenir les valeurs pour #{missing_keys}")
+  end
+
+  def missing_configuration_keys
+    FIELDS_FOR_SMS_CONFIGURATION[sms_provider.to_sym] - (sms_configuration.keys || [])
   end
 end
