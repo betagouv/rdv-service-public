@@ -11,7 +11,7 @@
           = render 'model_errors', model: current_territory
           = f.input :sms_provider, collection: Territory.sms_providers.keys
 
-          - Territory::BASE_SMS_CONFIGURATION.each do |provider, fields|
+          - Territory::FIELDS_FOR_SMS_CONFIGURATION.each do |provider, fields|
             div.d-none.js-sms-configuration-form(class="js-#{provider}")
               - fields.each do |field|
                 = label_tag field, t(".#{provider}.#{field}"), class: "d-block"
