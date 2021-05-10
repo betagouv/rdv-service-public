@@ -1,4 +1,9 @@
 describe Territory, type: :model do
+  describe "sms_provider enum" do
+    it { expect(build(:territory, sms_provider: 0).sms_provider).to eq("netsize") }
+    it { expect(build(:territory, sms_provider: 1).sms_provider).to eq("send_in_blue") }
+  end
+
   describe "Territory.with_agent" do
     subject { described_class.with_agent(agent) }
 
