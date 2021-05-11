@@ -6,8 +6,6 @@ class Agents::RegistrationsController < Devise::RegistrationsController
     AgentContext.new(current_agent)
   end
 
-  def edit; end
-
   def destroy
     flash[:notice] = "Votre compte a été supprimé."
     current_agent.organisations.each { AgentRemoval.new(@agent, _1).remove! }
