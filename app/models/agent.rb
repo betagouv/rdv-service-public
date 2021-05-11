@@ -15,6 +15,13 @@ class Agent < ApplicationRecord
   include DeviseTokenAuth::Concerns::ConfirmableSupport
   include DeviseTokenAuth::Concerns::UserOmniauthCallbacks
 
+  enum rdv_notifications_level: {
+    all: "all",       # notify of all rdv changes
+    others: "others", # notify of changes made by other agents or users
+    soon: "soon",     # notify of change (made by others) less than a day before the rdv
+    none: "none"      # never send rdv notifications
+  }, _prefix: true
+
   belongs_to :service
   has_many :lieux, through: :organisation
   has_many :motifs, through: :service
