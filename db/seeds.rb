@@ -10,11 +10,15 @@ require "csv"
 
 territory75 = Territory.create!(
   departement_number: "75",
-  name: "Paris"
+  name: "Paris",
+  sms_provider: "netsize",
+  sms_configuration: { api_url: "an_url", user_pwd: "pwd" }
 )
 territory62 = Territory.create!(
   departement_number: "62",
-  name: "Pas-de-Calais"
+  name: "Pas-de-Calais",
+  sms_provider: "netsize",
+  sms_configuration: { api_url: "an_url", user_pwd: "pwd" }
 )
 
 # ORGANISATIONS & SECTORS

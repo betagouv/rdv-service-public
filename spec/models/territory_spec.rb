@@ -1,4 +1,8 @@
 describe Territory, type: :model do
+  it "have a valid factory" do
+    expect(build(:territory)).to be_valid
+  end
+
   describe "Territory.with_agent" do
     subject { described_class.with_agent(agent) }
 
@@ -21,21 +25,21 @@ describe Territory, type: :model do
 
   describe "departement_number uniqueness validation" do
     context "no collision" do
-      let(:territory) { described_class.new(name: "Oise", departement_number: "60") }
+      let(:territory) { build(:territory, name: "Oise", departement_number: "60") }
 
       it { expect(territory).to be_valid }
     end
 
     context "blank departement_number" do
       let!(:territory_existing) { create(:territory, departement_number: "60") }
-      let(:territory) { described_class.new(name: "Oise", departement_number: "") }
+      let(:territory) { build(:territory, name: "Oise", departement_number: "") }
 
       it { expect(territory).to be_valid }
     end
 
     context "colliding departement_number" do
       let!(:territory_existing) { create(:territory, departement_number: "60") }
-      let(:territory) { described_class.new(name: "Oise", departement_number: "60") }
+      let(:territory) { build(:territory, name: "Oise", departement_number: "60") }
 
       it "adds errors" do
         expect(territory).not_to be_valid
@@ -72,27 +76,41 @@ describe Territory, type: :model do
     before { territory.save! }
 
     context "new territory without departement_number" do
-      let(:territory) { described_class.new(departement_number: "") }
+      let(:territory) { build(:territory, name: nil, departement_number: "") }
 
       it { is_expected.to eq nil }
     end
 
     context "new territory with recognized departement_number" do
-      let(:territory) { described_class.new(departement_number: "60") }
+      let(:territory) { build(:territory, name: nil, departement_number: "60") }
 
       it { is_expected.to eq "Oise" }
     end
 
     context "new territory with name overridden" do
-      let(:territory) { described_class.new(name: "LA grande Oise", departement_number: "60") }
+      let(:territory) { build(:territory, name: "LA grande Oise", departement_number: "60") }
 
       it { is_expected.to eq "LA grande Oise" }
     end
 
     context "new territory with departement_number not recognized" do
-      let(:territory) { described_class.new(departement_number: "600") }
+      let(:territory) { build(:territory, name: "", departement_number: "600") }
 
       it { is_expected.to eq nil }
+    end
+  end
+
+  describe "SMS Configuration validation" do
+    context "with invalid send_in_blue configuration" do
+      it { expect(build(:territory, sms_provider: "send_in_blue", sms_configuration: { bad: "configuration" })).to be_invalid }
+    end
+
+    context "with valid send_in_blue configuration" do
+      it { expect(build(:territory, sms_provider: "send_in_blue", sms_configuration: { api_key: "a_key" })).to be_valid }
+    end
+
+    context "with valid netsize configuration" do
+      it { expect(build(:territory, sms_provider: "netsize", sms_configuration: { api_url: "an_url", user_pwd: "user pwd" })).to be_valid }
     end
   end
 end

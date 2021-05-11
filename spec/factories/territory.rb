@@ -5,5 +5,7 @@ FactoryBot.define do
   factory :territory do
     name { generate(:territory_name) }
     departement_number { generate(:departement_number) }
+    sms_provider { "send_in_blue" }
+    sms_configuration { { api_key: "a_key" } }
   end
 end

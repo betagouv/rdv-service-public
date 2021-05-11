@@ -10,12 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_05_151815) do
+ActiveRecord::Schema.define(version: 2021_05_06_164841) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
   enable_extension "uuid-ossp"
+
+  create_enum :sms_provider, [
+    "netsize",
+    "send_in_blue",
+  ], force: :cascade
 
   create_table "absences", force: :cascade do |t|
     t.bigint "agent_id"
@@ -331,6 +336,8 @@ ActiveRecord::Schema.define(version: 2021_05_05_151815) do
     t.string "phone_number_formatted"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.enum "sms_provider", enum_name: "sms_provider"
+    t.json "sms_configuration"
     t.index ["departement_number"], name: "index_territories_on_departement_number", unique: true, where: "((departement_number)::text <> ''::text)"
   end
 

@@ -21,6 +21,7 @@ gem "bootstrap4-kaminari-views", "~> 1.0"
 gem "administrate", git: "https://github.com/thoughtbot/administrate.git", ref: "refs/pull/1972/head" # Provides an administration UI (pull request #1972 has fixes for Rails 6.1.3.2)
 gem "administrate-field-belongs_to_search"
 gem "paper_trail"
+gem "activerecord-postgres_enum"
 
 # Devise / auth
 gem "devise", "~> 4.7"
