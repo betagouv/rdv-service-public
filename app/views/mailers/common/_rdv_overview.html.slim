@@ -1,43 +1,39 @@
 - for_role = local_assigns.fetch(:for_role, :user)
 .overview
-  h3.aligncenter Recapitulatif
+  h3.aligncenter Récapitulatif
   div.row-result
-    span.title Date :
-    - if rdv.home?
-      span.float-right= l(rdv.starts_at, format: :human_approx)
-    - else
-      span.float-right= l(rdv.starts_at, format: :human)
+    span.title Date :
+    span.float-right= l(rdv.starts_at, format: (rdv.home? ? :human_approx : :human))
     .clear
   - if for_role == :agent
     div.row-result
-      span.title Usager(s):
+      span.title Usager(s) :
       span.float-right= rdv.users.map(&:full_name).sort.to_sentence
       .clear
     div.row-result
-      span.title Motif:
+      span.title Motif :
       span.float-right= rdv.motif.name
       .clear
   div.row-result
-    span.title Service :
+    span.title Service :
     span.float-right= rdv.motif.service.name
     .clear
   div.row-result
-    span.title Durée :
-    span.float-right
-      = "#{rdv.duration_in_min} minutes"
+    span.title Durée :
+    span.float-right= "#{rdv.duration_in_min} minutes"
     .clear
   - if rdv.phone?
     div.row-result
       span.title Ceci est un rendez-vous téléphonique
   - elsif rdv.home?
     div.row-result
-      span.title Ceci est un rendez-vous à domicile à l'adresse&nbsp;:
+      span.title Ceci est un rendez-vous à domicile à l'adresse :
       div.alignright
         a href="https://maps.google.com?q=#{rdv.address.split(/,?\s/).join('+')}" target="_blank"
           = rdv.address_complete
   - else
     div.row-result
-      span.title Adresse&nbsp;:
+      span.title Adresse :
       span.float-right
         a href="https://maps.google.com?q=#{rdv.address.split(/,?\s/).join('+')}" target="_blank"
           = rdv.address_complete
