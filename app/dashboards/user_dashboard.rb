@@ -22,7 +22,6 @@ class UserDashboard < Administrate::BaseDashboard
     family_situation: EnumField,
     affiliation_number: Field::String,
     number_of_children: Field::Number,
-    rdvs: Field::HasMany,
     birth_date: Field::DateTime,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
@@ -58,7 +57,6 @@ class UserDashboard < Administrate::BaseDashboard
     affiliation_number
     family_situation
     number_of_children
-    rdvs
     created_at
     updated_at
     deleted_at
