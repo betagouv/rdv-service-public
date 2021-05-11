@@ -8,7 +8,6 @@ class Territory < ApplicationRecord
   validates :departement_number, length: { maximum: 3 }, if: -> { departement_number.present? }
   validates :name, presence: true, if: -> { persisted? }
   validates :departement_number, uniqueness: true, allow_blank: true
-  validates :sms_provider, presence: true
   validate :sms_configuration_match_provider
 
   scope :with_agent, lambda { |agent|
@@ -40,6 +39,7 @@ class Territory < ApplicationRecord
   end
 
   def sms_configuration_match_provider
+    return true if sms_provider.blank?
     return true if (missing_keys = missing_configuration_keys).empty?
 
     errors.add(:sms_configuration, "doit contenir les valeurs pour #{missing_keys}")
