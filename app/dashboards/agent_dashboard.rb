@@ -13,10 +13,7 @@ class AgentDashboard < Administrate::BaseDashboard
     first_name: Field::String,
     last_name: Field::String,
     organisations: Field::HasMany,
-    plage_ouvertures: Field::HasMany,
-    absences: Field::HasMany,
     service: Field::BelongsTo,
-    rdvs: Field::HasMany,
     invitation_sent_at: Field::DateTime,
     deleted_at: Field::DateTime,
     created_at: Field::DateTime,
@@ -44,9 +41,6 @@ class AgentDashboard < Administrate::BaseDashboard
     last_name
     organisations
     service
-    plage_ouvertures
-    absences
-    rdvs
     invitation_sent_at
     created_at
     deleted_at

@@ -11,7 +11,6 @@ class OrganisationDashboard < Administrate::BaseDashboard
     id: Field::Number,
     name: Field::String,
     agents: Field::HasMany,
-    lieux: Field::HasMany,
     motifs: Field::HasMany,
     horaires: Field::String,
     phone_number: Field::String,
@@ -38,7 +37,6 @@ class OrganisationDashboard < Administrate::BaseDashboard
     horaires
     phone_number
     agents
-    lieux
     motifs
     human_id
     created_at
@@ -53,7 +51,6 @@ class OrganisationDashboard < Administrate::BaseDashboard
     horaires
     phone_number
     agents
-    lieux
     human_id
   ].freeze
 
