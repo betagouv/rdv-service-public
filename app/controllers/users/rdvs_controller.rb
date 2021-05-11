@@ -1,6 +1,7 @@
 class Users::RdvsController < UserAuthController
   before_action :set_rdv, only: [:cancel]
   before_action :set_geo_search, only: [:create]
+  after_action :allow_iframe
 
   def index
     @rdvs = policy_scope(Rdv).includes(:motif, :rdvs_users, :users)

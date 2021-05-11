@@ -4,6 +4,7 @@ class WelcomeController < ApplicationController
   ].freeze
 
   before_action :set_lieu_variables, only: %i[welcome_departement welcome_service]
+  after_action :allow_iframe
 
   def index; end
 
