@@ -6,9 +6,8 @@ class Notifications::Rdv::RdvCancelledService < ::BaseService
   protected
 
   def notify_agent(agent)
-    return false if \
-      change_triggered_by?(agent) ||
-      [Date.today, Date.tomorrow].exclude?(@rdv.starts_at.to_date)
+    return if change_triggered_by?(agent)
+    return unless soon_date?(@rdv.starts_at)
 
     Agents::RdvMailer
       .rdv_starting_soon_cancelled(@rdv, agent, change_triggered_by_str)
