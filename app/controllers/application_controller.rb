@@ -83,4 +83,8 @@ class ApplicationController < ActionController::Base
     parsed_uri.to_s
   end
   helper_method :add_query_string_params_to_url
+
+  def allow_iframe
+    response.headers.except! "X-Frame-Options"
+  end
 end
