@@ -1,0 +1,10 @@
+- content_for :title, "Inscription"
+
+.card
+  .card-body
+    = simple_form_for resource, as: resource_name, url: invitations_redirection_path(resource_name), html: { method: :post } do |f|
+      .text-center.w-75.m-auto
+      .form-row
+        .col-md-6= f.input :affiliation_number, placeholder: 'Identifiant CAF'
+        .col-md-6= f.input :invitation_token, placeholder: 'Code reçu par courrier'
+      .text-center= f.button :submit, t("devise.invitations.new.submit_button")
