@@ -1,0 +1,4 @@
+fr:
+  lieux:
+    show:
+      referent_missing: Vous ne semblez pas bénéficier d’un accompagnement ou d’un suivi, merci de choisir un autre motif ou de contacter votre département au %{phone_number}.

@@ -27,12 +27,10 @@ class Users::RdvsController < UserAuthController
     end
     skip_authorization if @creneau.nil?
     if @save_succeeded
-      flash[:notice] = "Votre rendez vous a été confirmé."
-      redirect_to authenticated_user_root_path
+      redirect_to authenticated_user_root_path, notice: t(".rdv_confirmed")
     else
       query = { where: new_rdv_extra_params[:where], service: motif.service.id, motif_name_with_location_type: motif.name_with_location_type, departement: new_rdv_extra_params[:departement] }
-      flash[:error] = "Ce creneau n'est plus disponible. Veuillez en sélectionner un autre."
-      redirect_to lieux_path(search: query)
+      redirect_to lieux_path(search: query), flash: { error: t(".creneau_unavailable") }
     end
   end
 

@@ -1,0 +1,6 @@
+fr:
+  users:
+    rdvs:
+      create:
+        rdv_confirmed: Votre rendez vous a été confirmé.
+        creneau_unavailable: Ce créneau n’est plus disponible. Veuillez en sélectionner un autre.

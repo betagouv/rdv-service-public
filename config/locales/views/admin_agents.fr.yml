@@ -1,0 +1,8 @@
+fr:
+  admin:
+    agents:
+      destroy:
+        cannot_delete_because_of_rdvs: Impossible de retirer cet agent car il a des RDVs à venir dans cette organisation. Veuillez les supprimer ou les réaffecter avant de retirer cet agent.
+        invitation_deleted: L’invitation a été supprimée.
+        agent_deleted: Le compte agent a été supprimé.
+        agent_removed_from_org: L’agent a été retiré de l’organisation.
