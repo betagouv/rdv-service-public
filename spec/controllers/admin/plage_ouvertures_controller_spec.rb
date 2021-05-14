@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Admin::PlageOuverturesController, type: :controller do
   render_views
 

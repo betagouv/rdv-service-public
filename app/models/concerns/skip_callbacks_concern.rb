@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # cf https://mattpruitt.com/post/skip-callbacks/
 module SkipCallbacksConcern
   extend ActiveSupport::Concern

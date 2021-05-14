@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ApplicationHelper
   # Usage: class_names('my-class', 'my-other-class': condition)
   def class_names(*args)

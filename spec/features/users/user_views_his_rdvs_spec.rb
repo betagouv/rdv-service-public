@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "User views his rdv" do
   let!(:organisation) { create(:organisation) }
   let(:user) { create(:user, organisations: [organisation]) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Users::RdvsController < UserAuthController
   before_action :set_rdv, only: [:cancel]
   before_action :set_geo_search, only: [:create]

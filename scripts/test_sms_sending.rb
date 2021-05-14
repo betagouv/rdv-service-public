@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 SendTransactionalSmsService.new(
   OpenStruct.new(
     phone_number_formatted: "33699999999",

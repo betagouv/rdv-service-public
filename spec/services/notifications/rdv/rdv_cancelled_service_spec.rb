@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Notifications::Rdv::RdvCancelledService, type: :service do
   context "starts in more than 2 days" do
     it "does not triggers sending mail to agents" do

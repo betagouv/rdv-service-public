@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe HasPhoneNumberConcern do
   describe "phone_number formatted normalization" do
     context "on create" do

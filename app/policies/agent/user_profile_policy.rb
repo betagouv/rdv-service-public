@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Agent::UserProfilePolicy < DefaultAgentPolicy
   def create?
     same_org?

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe UsersHelper, type: :helper do
   describe "#age" do
     it "return 4 ans when born 4 years ago" do

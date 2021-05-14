@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Agents::RdvMailer < ApplicationMailer
   def rdv_starting_soon_created(rdv, agent)
     @rdv = rdv

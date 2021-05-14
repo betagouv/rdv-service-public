@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SigninSpecHelper
   def sign_in(user)
     fill_in :user_email, with: user.email

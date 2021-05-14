@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AgentBlueprint < Blueprinter::Base
   identifier :id
 

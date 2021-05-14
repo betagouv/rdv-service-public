@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   sequence(:motif_name) { |n| "Motif #{n}" }
 

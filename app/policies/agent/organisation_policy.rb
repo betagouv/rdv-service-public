@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Agent::OrganisationPolicy < DefaultAgentPolicy
   def link_to_organisation?
     current_agent.organisation_ids.include?(@record.id)

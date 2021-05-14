@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Notifications::Rdv::RdvCancelledByUser, type: :service do
   subject { described_class.perform_with(rdv) }
 

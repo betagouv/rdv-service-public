@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Agents::PasswordsController < Devise::PasswordsController
   respond_to :html, :json
 

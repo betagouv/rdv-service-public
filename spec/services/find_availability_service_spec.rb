@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe FindAvailabilityService, type: :service do
   let(:today) { Date.new(2021, 3, 18) }
 

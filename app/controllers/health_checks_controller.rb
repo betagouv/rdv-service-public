@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class HealthCheckControllerError < StandardError; end
 
 class HealthChecksController < ApplicationController

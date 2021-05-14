@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe FileAttente, type: :model do
   describe "#send_notifications" do
     subject do

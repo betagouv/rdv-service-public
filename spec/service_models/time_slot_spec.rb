@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe TimeSlot, type: :service do
   describe "initialize" do
     it "works with valid times" do

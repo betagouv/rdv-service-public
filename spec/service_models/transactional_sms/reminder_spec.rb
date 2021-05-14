@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe TransactionalSms::Reminder, type: :service do
   let(:pmi) { build(:service, short_name: "PMI") }
   let(:motif) { build(:motif, service: pmi) }

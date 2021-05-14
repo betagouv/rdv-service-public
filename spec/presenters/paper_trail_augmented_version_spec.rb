@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe PaperTrailAugmentedVersion do
   describe "#changes" do
     context "no previous version" do

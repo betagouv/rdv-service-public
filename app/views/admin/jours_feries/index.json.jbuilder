@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.array! @jours_feries do |jour_ferie|
   json.title "Jour férié 🎉"
   json.start jour_ferie.beginning_of_day

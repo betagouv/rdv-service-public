@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Agent::PlageOuverturePolicy < DefaultAgentPolicy
   class Scope < Scope
     def resolve

@@ -78,9 +78,3 @@ Rails/LexicallyScopedActionFilter:
 Rails/SkipsModelValidations:
   Enabled: false
 
-# Offense count: 566
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: always, always_true, never
-Style/FrozenStringLiteralComment:
-  Enabled: false

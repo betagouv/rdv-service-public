@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Absence < ApplicationRecord
   include WebhookDeliverable
   include RecurrenceConcern

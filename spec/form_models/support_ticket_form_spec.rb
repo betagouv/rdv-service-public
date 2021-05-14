@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe SupportTicketForm do
   describe "#save" do
     subject { support_ticket_form.save }

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class AgentRole < ApplicationRecord
-  LEVEL_BASIC = "basic".freeze
-  LEVEL_ADMIN = "admin".freeze
+  LEVEL_BASIC = "basic"
+  LEVEL_ADMIN = "admin"
   LEVELS = [LEVEL_BASIC, LEVEL_ADMIN].freeze
 
   self.table_name = "agents_organisations"

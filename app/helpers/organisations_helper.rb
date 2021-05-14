@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module OrganisationsHelper
   def organisation_home_path(organisation)
     if organisation.recent?

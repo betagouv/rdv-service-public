@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe SendTransactionalSmsService, type: :service do
   subject { described_class.new(transactional_sms) }
 

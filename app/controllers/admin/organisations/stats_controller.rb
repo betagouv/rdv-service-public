@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::Organisations::StatsController < AgentAuthController
   before_action :set_organisation
 

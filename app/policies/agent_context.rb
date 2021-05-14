@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AgentContext
   attr_reader :agent, :organisation, :agent_role
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CronJob < ApplicationJob
   # Cron jobs superclass
   # See https://github.com/codez/delayed_cron_job#custom-cronjob-superclass

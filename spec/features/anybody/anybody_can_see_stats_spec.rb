@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "Anybody can see stats" do
   before do
     visit root_path

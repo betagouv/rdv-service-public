@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "Agent can create user" do
   let!(:organisation) { create(:organisation, name: "MDS des Champs") }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }

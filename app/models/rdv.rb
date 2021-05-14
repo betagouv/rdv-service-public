@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rdv < ApplicationRecord
   include WebhookDeliverable
   include Rdv::NotifiableConcern

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "Agent can manage recurrence on plage d'ouverture" do
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }

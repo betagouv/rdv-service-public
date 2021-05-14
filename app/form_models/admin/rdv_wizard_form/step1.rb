@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::RdvWizardForm::Step1
   include Admin::RdvWizardFormConcern
   validates :motif, :organisation, presence: true

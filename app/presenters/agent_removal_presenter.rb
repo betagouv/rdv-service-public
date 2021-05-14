@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AgentRemovalPresenter
   delegate :will_soft_delete?, to: :agent_removal_service
   attr_reader :agent, :organisation

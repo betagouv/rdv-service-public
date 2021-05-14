@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "User signs up and signs in" do
   context "through home page" do
     before { visit root_path }

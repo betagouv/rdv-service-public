@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Agent::SearchableConcern
   extend ActiveSupport::Concern
 

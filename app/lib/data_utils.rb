@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DataUtils
   def value_counts(values)
     counts = Hash.new(0)

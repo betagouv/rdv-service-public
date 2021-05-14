@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # adapted from https://github.com/rails/rails/blob/master/railties/lib/rails/mailers_controller.rb
 
 module SuperAdmins

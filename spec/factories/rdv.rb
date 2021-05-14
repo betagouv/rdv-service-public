@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :rdv do
     created_at { DateTime.parse("2020-06-5 13:51").in_time_zone }

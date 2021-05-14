@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::AgentRolesController < AgentAuthController
   before_action :set_agent_role, :set_agent_removal_presenter
 

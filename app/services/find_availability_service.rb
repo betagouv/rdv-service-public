@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FindAvailabilityService < BaseService
   def initialize(motif_name, lieu, from, **creneaux_builder_options)
     @motif_name = motif_name

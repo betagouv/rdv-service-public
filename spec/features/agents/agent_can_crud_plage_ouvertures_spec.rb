@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "Agent can CRUD plage d'ouverture" do
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service, name: "PMI") }

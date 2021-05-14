@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Admin::AgentAgendasController, type: :controller do
   let(:organisation) { create(:organisation) }
   let(:agent) { create(:agent, organisations: [organisation]) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Admin::Ics::Absence, type: :service do
   describe "#payload" do
     %i[name agent_email starts_at recurrence ical_uid title first_occurrence_ends_at].each do |key|

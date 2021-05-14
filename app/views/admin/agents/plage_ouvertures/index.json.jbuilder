@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.array! @plage_ouverture_occurrences do |plage_ouverture, occurrence|
   json.title plage_ouverture.title
   json.start occurrence.starts_at

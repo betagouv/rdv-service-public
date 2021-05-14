@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SuperAdmins
   class LieuxController < SuperAdmins::ApplicationController
     # To customize the behavior of this controller,

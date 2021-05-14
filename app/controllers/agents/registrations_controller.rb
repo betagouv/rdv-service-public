@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Agents::RegistrationsController < Devise::RegistrationsController
   respond_to :html, :json
   before_action :prevent_if_upcoming_rdvs, only: [:destroy]

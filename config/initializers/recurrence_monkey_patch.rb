@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Montrose
   class Recurrence
     # https://github.com/rossta/montrose/issues/113

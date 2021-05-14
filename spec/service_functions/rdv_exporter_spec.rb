@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe RdvExporter, type: :service do
   describe "#export" do
     it "return a string" do

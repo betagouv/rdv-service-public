@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe UserRdvWizard do
   let!(:organisation) { create(:organisation) }
   let!(:user) { create(:user) }

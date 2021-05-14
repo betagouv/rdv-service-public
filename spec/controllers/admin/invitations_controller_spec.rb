@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Admin::InvitationsController, type: :controller do
   render_views
 

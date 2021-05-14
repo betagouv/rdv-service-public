@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rails runner scripts/copy_users_between_orgas.rb
 
 origin_organisation_ids = [

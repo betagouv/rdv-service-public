@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Select2SpecHelper
   def select_user(user)
     find(".js-add-user-interface .select2-selection").click

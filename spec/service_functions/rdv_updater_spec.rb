@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe RdvUpdater, type: :service do
   describe "#update" do
     it "true when everything is ok" do

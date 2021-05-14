@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ZammadApi
   class HttpError < StandardError; end
 
