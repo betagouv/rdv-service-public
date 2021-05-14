@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Users::InvitationsController < Devise::InvitationsController
-  skip_before_action :authenticate_inviter!, only: [:new, :redirect]
+  skip_before_action :authenticate_inviter!, only: %i[new, redirect]
   layout "user_registration"
 
   def edit
@@ -10,7 +10,7 @@ class Users::InvitationsController < Devise::InvitationsController
     super
   end
 
-  def new ; end
+  def new; end
 
   def redirect
     user = User.where(caisse_affiliation: "caf").find_by(affiliation_number: params[:invite][:affiliation_number])
