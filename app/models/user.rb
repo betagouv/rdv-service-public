@@ -148,6 +148,10 @@ class User < ApplicationRecord
     birth_date.present? && birth_date > 18.years.ago
   end
 
+  def simple_invitation_token
+    invitation_token[0..3] + invitation_token[-4..-1]
+  end
+
   protected
 
   def password_required?

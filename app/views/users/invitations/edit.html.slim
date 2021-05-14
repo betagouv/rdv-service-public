@@ -10,7 +10,10 @@
         .col-md-6= f.input :first_name, placeholder: 'Prénom'
         .col-md-6= f.input :last_name, placeholder: 'Nom'
       .form-row
-        .col-md-12= f.input :email, value: resource.email, disabled: true
+        - if resource.email.present?
+          .col-md-12= f.input :email, value: resource.email, disabled: true
+        - else
+          .col-md-12= f.input :email, required: true
       .form-row
         .col-md-12= f.input :phone_number, as: :tel
       .form-group

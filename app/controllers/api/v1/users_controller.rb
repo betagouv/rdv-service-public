@@ -42,7 +42,7 @@ class Api::V1::UsersController < Api::V1::BaseController
     if user.email.present?
       render json: { invitation_url: accept_user_invitation_url(invitation_token: user.raw_invitation_token) }
     else
-      render json: { invitation_token: user.raw_invitation_token }
+      render json: { invitation_token: user.simple_invitation_token }
     end
   end
 
