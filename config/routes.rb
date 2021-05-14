@@ -39,6 +39,8 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     get "users/pending_registration" => "users/registrations#pending"
+    get "invitation", to: "users/invitations#new", as: "invitations_landing"
+    post "invitation", to: "users/invitations#redirect", as: "invitations_landing_redirection"
   end
 
   ## APP ##
@@ -182,8 +184,6 @@ Rails.application.routes.draw do
     get v => "static_pages##{k}"
   end
 
-  get "invitation", to: "invitations#new"
-  post "invitation", to: "invitations#redirect", as: "invitations_redirection"
   get "r", to: redirect("users/rdvs", status: 301), as: "rdvs_shorten"
   get "accueil_mds" => "welcome#welcome_agent"
   post "/" => "welcome#search"

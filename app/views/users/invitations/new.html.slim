@@ -2,9 +2,10 @@
 
 .card
   .card-body
-    = simple_form_for resource, as: resource_name, url: invitations_redirection_path(resource_name), html: { method: :post } do |f|
+    = simple_form_for :invite, url: invitations_landing_redirection_path(resource_name), html: { method: :post } do |f|
       .text-center.w-75.m-auto
       .form-row
-        .col-md-6= f.input :affiliation_number, placeholder: 'Identifiant CAF'
-        .col-md-6= f.input :invitation_token, placeholder: 'Code reçu par courrier'
-      .text-center= f.button :submit, t("devise.invitations.new.submit_button")
+        .col-md-12= f.input :affiliation_number, label: 'Identifiant CAF', placeholder: '123456'
+      .form-row
+        .col-md-12= f.input :invitation_token, label: 'Code reçu par courrier', placeholder: '85236974'
+      .text-center= f.button :submit, "Créer mon compte"

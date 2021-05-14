@@ -15,7 +15,7 @@ class Users::InvitationsController < Devise::InvitationsController
     if user.raw_invitation_token == params[:invitation_token]
       redirect_to accept_user_invitation_url(invitation_token: user.raw_invitation_token)
     else
-      flash { error: "Les informations renseignées ne correspondent pas à un compte existant."}
+      redirect_to :invitations_landing, flash: { error: "Les informations renseignées ne correspondent pas à un compte existant."}
     end
   end
 end
