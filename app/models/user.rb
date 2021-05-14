@@ -149,7 +149,7 @@ class User < ApplicationRecord
   end
 
   def simple_invitation_token
-    invitation_token[0..3] + invitation_token[-4..-1]
+    invitation_token[0..3] + invitation_token[-4..]
   end
 
   protected
