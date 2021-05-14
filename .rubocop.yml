@@ -92,6 +92,10 @@ RSpec/NamedSubject:
 RSpec/NestedGroups:
   Max: 5
 
+RSpec/DescribeClass:
+  Exclude:
+    - "spec/features/**/*"
+
 Style/AsciiComments:
   Enabled: false
 
