@@ -1,5 +1,5 @@
 class Users::InvitationsController < Devise::InvitationsController
-  skip_before_action :authenticate_inviter!, only: %i[new, redirect]
+  skip_before_action :authenticate_inviter!, only: %i[new redirect]
   layout "user_registration"
 
   def edit
