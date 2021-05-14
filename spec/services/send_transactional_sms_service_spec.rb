@@ -21,7 +21,7 @@ describe SendTransactionalSmsService, type: :service do
 
       it "calls SIB API" do
         sib_api_mock = instance_double(SibApiV3Sdk::TransactionalSMSApi)
-        expect(SibApiV3Sdk::TransactionalSMSApi).to receive(:new).and_return(sib_api_mock)
+        allow(SibApiV3Sdk::TransactionalSMSApi).to receive(:new).and_return(sib_api_mock)
         expect(sib_api_mock).to receive(:send_transac_sms)
         subject.perform
       end

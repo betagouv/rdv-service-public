@@ -27,10 +27,6 @@ Metrics/MethodLength:
 RSpec/ExampleLength:
   Enabled: false
 
-# Offense count: 49
-RSpec/StubbedMock:
-  Enabled: false
-
 # Offense count: 21
 # Configuration parameters: IgnoreNameless, IgnoreSymbolicNames.
 RSpec/VerifiedDoubles:

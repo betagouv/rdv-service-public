@@ -19,7 +19,7 @@ describe SupportTicketForm do
       end
 
       it "calls API" do
-        expect(ZammadApi).to receive(:create_ticket)
+        allow(ZammadApi).to receive(:create_ticket)
           .with(
             "jean@jacques.fr",
             "Je suis usager et je n'arrive pas à accéder à mon compte - Jean Jacques",

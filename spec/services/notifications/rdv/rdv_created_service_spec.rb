@@ -13,9 +13,9 @@ describe Notifications::Rdv::RdvCreatedService, type: :service do
     # create is necessary for serialization reasons (?)
 
     it "triggers sending mail to users but not to agents" do
-      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv, user1).and_return(double(deliver_later: nil))
-      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv, user2).and_return(double(deliver_later: nil))
-      expect(Agents::RdvMailer).not_to receive(:rdv_starting_soon_created)
+      allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user1).and_return(double(deliver_later: nil))
+      allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user2).and_return(double(deliver_later: nil))
+      allow(Agents::RdvMailer).not_to receive(:rdv_starting_soon_created)
       subject
       expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "created").count).to eq 2
     end
@@ -25,10 +25,10 @@ describe Notifications::Rdv::RdvCreatedService, type: :service do
     let(:rdv) { create_rdv_skip_notify(starts_at: 2.hours.from_now, users: [user1, user2], agents: [agent1, agent2]) }
 
     it "triggers sending mails to both user and agents" do
-      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv, user1).and_return(double(deliver_later: nil))
-      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv, user2).and_return(double(deliver_later: nil))
-      expect(Agents::RdvMailer).to receive(:rdv_starting_soon_created).with(rdv, agent1).and_return(double(deliver_later: nil))
-      expect(Agents::RdvMailer).to receive(:rdv_starting_soon_created).with(rdv, agent2).and_return(double(deliver_later: nil))
+      allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user1).and_return(double(deliver_later: nil))
+      allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user2).and_return(double(deliver_later: nil))
+      allow(Agents::RdvMailer).to receive(:rdv_starting_soon_created).with(rdv, agent1).and_return(double(deliver_later: nil))
+      allow(Agents::RdvMailer).to receive(:rdv_starting_soon_created).with(rdv, agent2).and_return(double(deliver_later: nil))
       subject
     end
   end
@@ -50,7 +50,7 @@ describe Notifications::Rdv::RdvCreatedService, type: :service do
     let(:rdv) { create_rdv_skip_notify(users: [relative], starts_at: 3.days.from_now) }
 
     it "calls RdvMailer to send email to responsible" do
-      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv, responsible).and_return(double(deliver_later: nil))
+      allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, responsible).and_return(double(deliver_later: nil))
       subject
     end
   end
