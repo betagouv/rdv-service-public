@@ -30,7 +30,7 @@ describe Notifications::Rdv::RdvCancelledService, type: :service do
       PaperTrail.request.whodunnit = "[Agent] Sean PAUL"
       update_rdv_skip_notify!(rdv, status: :excused)
 
-      allow(Agents::RdvMailer).not_to receive(:rdv_starting_soon_cancelled)
+      expect(Agents::RdvMailer).not_to receive(:rdv_starting_soon_cancelled)
         .with(rdv, agent1, "[Agent] Sean PAUL", starts_at_initial)
       allow(Agents::RdvMailer).to receive(:rdv_starting_soon_cancelled)
         .with(rdv, agent2, "[Agent] Sean PAUL")
