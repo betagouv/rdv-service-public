@@ -31,6 +31,7 @@ Ce logiciel et son code source sont distribués sous [licence AGPL](https://www.
 ## Développement
 
 [Contribuer](CONTRIBUTING.md)
+[Installation](INSTALL.md)
 
 - [Dashlord](https://dashlord.incubateur.net/#/url/https%3A%2F%2Fwww.rdv-solidarites.fr)
 - [Sentry](https://sentry.io/organizations/rdv-solidarites/issues/)
