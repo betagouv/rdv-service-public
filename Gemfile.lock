@@ -217,10 +217,6 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
-    guard-spring (1.1.1)
-      guard (~> 2.0)
-      guard-compat (~> 1.1)
-      spring
     hashie (4.1.0)
     htmlentities (4.3.4)
     httpclient (2.8.3)
@@ -510,12 +506,6 @@ GEM
       tilt (>= 2.0.6, < 2.1)
     spreadsheet (1.2.6)
       ruby-ole (>= 1.0)
-    spring (2.1.1)
-    spring-commands-rspec (1.0.4)
-      spring (>= 0.9.1)
-    spring-watcher-listen (2.0.1)
-      listen (>= 2.7, < 4.0)
-      spring (>= 1.2, < 3.0)
     sprockets (4.0.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
@@ -608,7 +598,6 @@ DEPENDENCIES
   fuubar
   groupdate (~> 4.2)
   guard-rspec
-  guard-spring
   icalendar (~> 2.5)
   image_processing (~> 1.8)
   jbuilder (~> 2.5)
@@ -644,9 +633,6 @@ DEPENDENCIES
   skylight
   slim (~> 4.0)
   spreadsheet
-  spring
-  spring-commands-rspec
-  spring-watcher-listen (~> 2.0.0)
   sprockets-rails
   tod (~> 2.2)
   turbolinks (~> 5)
