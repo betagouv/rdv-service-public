@@ -2,7 +2,7 @@
 
 ## Prérequis
 
-- Ruby 2.7.3 (nous conseillons l'utilisation de [Rbenv](https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts))
+- Ruby 2.7 (nous conseillons l'utilisation de [Rbenv](https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts))
 - PostgreSQL >= 12, l'utilisateur doit avoir les droits `superuser`
 
 ## Développement
