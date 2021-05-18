@@ -9,100 +9,76 @@ class TestService < ::BaseService
 end
 
 describe Notifications::Rdv::BaseServiceConcern, type: :service do
-  subject { service.perform }
-
   let(:service) { TestService.new(rdv) }
 
-  context "rdv dans le futur" do
-    let(:rdv) { build(:rdv, starts_at: DateTime.now + 1.day) }
+  describe "user notifications" do
+    context "rdv has one user with email notifications, but rdv is in the past" do
+      let(:user1) { build(:user, notify_by_email: true) }
+      let(:rdv) { build(:rdv, starts_at: Time.zone.now - 1.day, users: [user1]) }
 
-    it { is_expected.to eq true }
-  end
-
-  context "rdv dans le passé" do
-    let(:rdv) { build(:rdv, starts_at: DateTime.now - 1.day) }
-
-    it { is_expected.to eq false }
-  end
-
-  context "rdv dans le passé d'une heure seulement" do
-    let(:rdv) { build(:rdv, starts_at: DateTime.now - 1.hour) }
-
-    it { is_expected.to eq false }
-  end
-
-  context "rdv avec un motif visible mais sans notification" do
-    let(:motif) { build(:motif, :visible_and_not_notified) }
-    let(:rdv) { build(:rdv, starts_at: DateTime.now + 1.day, motif: motif) }
-
-    it { is_expected.to eq false }
-  end
-
-  context "rdv has two users, both with email notifications" do
-    let(:user1) { build(:user) }
-    let(:user2) { build(:user) }
-    let(:rdv) { build(:rdv, starts_at: DateTime.now + 1.day, users: [user1, user2]) }
-
-    before do
-      allow(user1).to receive(:notifiable_by_email?).and_return(true)
-      allow(user2).to receive(:notifiable_by_email?).and_return(true)
+      it "sends email to user" do
+        expect(service).not_to receive(:notify_user_by_mail).with(user1)
+        service.perform
+      end
     end
 
-    it "calls send emails to both" do
-      expect(service).to receive(:notify_user_by_mail).with(user1)
-      expect(service).to receive(:notify_user_by_mail).with(user2)
-      subject
-    end
-  end
+    context "rdv has one user with email notifications, but motif is not notified" do
+      let(:user1) { build(:user, notify_by_email: true) }
+      let(:motif) { build(:motif, :visible_and_not_notified) }
+      let(:rdv) { build(:rdv, starts_at: Time.zone.now + 1.day, users: [user1], motif: motif) }
 
-  context "rdv has two users, one without email notifications" do
-    let(:user1) { build(:user) }
-    let(:user2) { build(:user) }
-    let(:rdv) { build(:rdv, starts_at: DateTime.now + 1.day, users: [user1, user2]) }
-
-    before do
-      allow(user1).to receive(:notifiable_by_email?).and_return(true)
-      allow(user2).to receive(:notifiable_by_email?).and_return(false)
+      it "sends email to user" do
+        expect(service).not_to receive(:notify_user_by_mail).with(user1)
+        service.perform
+      end
     end
 
-    it "calls notify_user_by_email only for one user" do
-      expect(service).to receive(:notify_user_by_mail).with(user1)
-      expect(service).not_to receive(:notify_user_by_mail).with(user2)
-      subject
-    end
-  end
+    context "rdv has two users, both with email notifications" do
+      let(:user1) { build(:user, notify_by_email: true) }
+      let(:user2) { build(:user, notify_by_email: true) }
+      let(:rdv) { build(:rdv, starts_at: Time.zone.now + 1.day, users: [user1, user2]) }
 
-  context "rdv has two users, both with sms notifications" do
-    let(:user1) { build(:user) }
-    let(:user2) { build(:user) }
-    let(:rdv) { build(:rdv, starts_at: DateTime.now + 1.day, users: [user1, user2]) }
-
-    before do
-      allow(user1).to receive(:notifiable_by_sms?).and_return(true)
-      allow(user2).to receive(:notifiable_by_sms?).and_return(true)
+      it "calls send emails to both" do
+        expect(service).to receive(:notify_user_by_mail).with(user1)
+        expect(service).to receive(:notify_user_by_mail).with(user2)
+        service.perform
+      end
     end
 
-    it "sends SMS to both" do
-      expect(service).to receive(:notify_user_by_sms).with(user1)
-      expect(service).to receive(:notify_user_by_sms).with(user2)
-      subject
-    end
-  end
+    context "rdv has two users, one without email notifications" do
+      let(:user1) { build(:user, notify_by_email: true) }
+      let(:user2) { build(:user, notify_by_email: false) }
+      let(:rdv) { build(:rdv, starts_at: Time.zone.now + 1.day, users: [user1, user2]) }
 
-  context "rdv has two users, one with SMS notifications disabled" do
-    let(:user1) { build(:user) }
-    let(:user2) { build(:user) }
-    let(:rdv) { build(:rdv, starts_at: DateTime.now + 1.day, users: [user1, user2]) }
-
-    before do
-      allow(user1).to receive(:notifiable_by_sms?).and_return(false)
-      allow(user2).to receive(:notifiable_by_sms?).and_return(true)
+      it "calls notify_user_by_email only for one user" do
+        expect(service).to receive(:notify_user_by_mail).with(user1)
+        expect(service).not_to receive(:notify_user_by_mail).with(user2)
+        service.perform
+      end
     end
 
-    it "sends SMS to only one" do
-      expect(service).not_to receive(:notify_user_by_sms).with(user1)
-      expect(service).to receive(:notify_user_by_sms).with(user2)
-      subject
+    context "rdv has two users, both with sms notifications" do
+      let(:user1) { build(:user, notify_by_sms: true) }
+      let(:user2) { build(:user, notify_by_sms: true) }
+      let(:rdv) { build(:rdv, starts_at: Time.zone.now + 1.day, users: [user1, user2]) }
+
+      it "sends SMS to both" do
+        expect(service).to receive(:notify_user_by_sms).with(user1)
+        expect(service).to receive(:notify_user_by_sms).with(user2)
+        service.perform
+      end
+    end
+
+    context "rdv has two users, one with SMS notifications disabled" do
+      let(:user1) { build(:user, notify_by_sms: false) }
+      let(:user2) { build(:user, notify_by_sms: true) }
+      let(:rdv) { build(:rdv, starts_at: Time.zone.now + 1.day, users: [user1, user2]) }
+
+      it "sends SMS to only one" do
+        expect(service).not_to receive(:notify_user_by_sms).with(user1)
+        expect(service).to receive(:notify_user_by_sms).with(user2)
+        service.perform
+      end
     end
   end
 end
