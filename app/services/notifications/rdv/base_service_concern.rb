@@ -9,18 +9,17 @@ module Notifications::Rdv::BaseServiceConcern
   end
 
   def perform
-    return false if @rdv.starts_at < Time.zone.now || !@rdv.motif.visible_and_notified?
+    return if @rdv.starts_at < Time.zone.now
 
     notify_users_by_mail
     notify_users_by_sms
     notify_agents
-
-    true
   end
 
   private
 
   def notify_users_by_mail
+    return unless @rdv.motif.visible_and_notified?
     return unless methods.include?(:notify_user_by_mail)
 
     users_to_notify
@@ -29,6 +28,7 @@ module Notifications::Rdv::BaseServiceConcern
   end
 
   def notify_users_by_sms
+    return unless @rdv.motif.visible_and_notified?
     return unless methods.include?(:notify_user_by_sms)
 
     users_to_notify
