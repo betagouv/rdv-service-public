@@ -287,7 +287,7 @@ GEM
       ruby2_keywords (~> 0.0.1)
     nenv (0.3.0)
     nio4r (2.5.7)
-    nokogiri (1.11.3)
+    nokogiri (1.11.4)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
     notiffany (0.1.3)
