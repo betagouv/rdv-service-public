@@ -19,7 +19,7 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
       let(:rdv) { create(:rdv, starts_at: t + 10.minutes, agents: [agent]) }
 
       it "has a correct subject" do
-        expect(mail.subject).to eq("Nouveau RDV ajouté sur votre agenda rdv-solidarités pour aujourd'hui")
+        expect(mail.subject).to eq("Nouveau RDV ajouté sur votre agenda rdv-solidarités pour aujourd’hui")
       end
     end
 
