@@ -103,5 +103,81 @@ describe Notifications::Rdv::BaseServiceConcern, type: :service do
         service.perform
       end
     end
+
+    describe "agents_rdv_notifications_level" do
+      before do
+        allow(service).to receive(:change_triggered_by?).and_return(self_change)
+      end
+
+      let(:agent) { build(:agent, rdv_notifications_level: rdv_notifications_level) }
+      let(:user) { build(:user) }
+      let(:rdv) { build(:rdv, starts_at: rdv_date, agents: [agent], users: [user]) }
+
+      context "level is all" do
+        let(:rdv_notifications_level) { "all" }
+        let(:self_change) { true }
+        let(:rdv_date) { Time.zone.now + 1.week }
+
+        it "sends notification" do
+          expect(service).to receive(:notify_agent).with(agent)
+          service.perform
+        end
+      end
+
+      context "level is others and rdv is made by agent themselves" do
+        let(:rdv_notifications_level) { "others" }
+        let(:self_change) { true }
+        let(:rdv_date) { Time.zone.now + 1.week }
+
+        it "doesn’t send notification" do
+          expect(service).not_to receive(:notify_agent).with(agent)
+          service.perform
+        end
+      end
+
+      context "level is others and rdv is made by someone else" do
+        let(:rdv_notifications_level) { "others" }
+        let(:self_change) { false }
+        let(:rdv_date) { Time.zone.now + 1.week }
+
+        it "sends notification" do
+          expect(service).to receive(:notify_agent).with(agent)
+          service.perform
+        end
+      end
+
+      context "level is soon and rdv is for next week" do
+        let(:rdv_notifications_level) { "soon" }
+        let(:self_change) { false }
+        let(:rdv_date) { Time.zone.now + 1.week }
+
+        it "doesn’t send notification" do
+          expect(service).not_to receive(:notify_agent).with(agent)
+          service.perform
+        end
+      end
+
+      context "level is soon and rdv is for tomorrow" do
+        let(:rdv_notifications_level) { "soon" }
+        let(:self_change) { false }
+        let(:rdv_date) { Time.zone.now + 1.day }
+
+        it "sends notification" do
+          expect(service).to receive(:notify_agent).with(agent)
+          service.perform
+        end
+      end
+
+      context "level is none" do
+        let(:rdv_notifications_level) { "none" }
+        let(:self_change) { false }
+        let(:rdv_date) { Time.zone.now + 1.day }
+
+        it "doesn’t send notification" do
+          expect(service).not_to receive(:notify_agent).with(agent)
+          service.perform
+        end
+      end
+    end
   end
 end
