@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "Admin can configure the organisation" do
   let!(:organisation) { create(:organisation) }
   let!(:agent_admin) { create(:agent, admin_role_in_organisations: [organisation]) }

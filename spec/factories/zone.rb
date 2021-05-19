@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   sequence(:city_code) { |n| (62_001 + n).to_s }
 

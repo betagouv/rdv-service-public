@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Users::RelativesController < UserAuthController
   respond_to :html
 

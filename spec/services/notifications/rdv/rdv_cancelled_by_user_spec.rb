@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Notifications::Rdv::RdvCancelledByUser, type: :service do
   subject { described_class.perform_with(rdv) }
 
@@ -5,7 +7,7 @@ describe Notifications::Rdv::RdvCancelledByUser, type: :service do
   let(:rdv) { create(:rdv, starts_at: 3.days.from_now, users: [user1]) }
 
   it "sends an email" do
-    expect(Users::RdvMailer).to receive(:rdv_cancelled_by_user)
+    allow(Users::RdvMailer).to receive(:rdv_cancelled_by_user)
       .with(rdv, user1)
       .and_return(double(deliver_later: nil))
     subject

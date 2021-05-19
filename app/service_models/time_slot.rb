@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TimeSlot
   class DifferentDatesError < StandardError; end
 

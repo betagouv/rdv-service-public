@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RdvUpdater
   class << self
     def update_by_user(rdv, rdv_params)

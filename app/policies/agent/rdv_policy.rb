@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Agent::RdvPolicy < DefaultAgentPolicy
   def status?
     same_agent_or_has_access?

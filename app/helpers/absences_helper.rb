@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module AbsencesHelper
   def absence_tag(absence)
     if absence.in_progress?

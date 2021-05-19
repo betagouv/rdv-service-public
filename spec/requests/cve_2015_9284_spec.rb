@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Make sure that https://nvd.nist.gov/vuln/detail/CVE-2015-9284 is mitigated
 RSpec.describe "CVE-2015-9284", type: :request do
   describe "GET /auth/:provider" do

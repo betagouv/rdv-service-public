@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SupportTicketsController < ApplicationController
   def create
     @support_ticket_form = SupportTicketForm.new(contact_params.to_h)

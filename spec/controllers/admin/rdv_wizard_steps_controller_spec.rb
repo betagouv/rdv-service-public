@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Admin::RdvWizardStepsController, type: :controller do
   describe "GET index html format" do
     let!(:organisation) { create(:organisation) }

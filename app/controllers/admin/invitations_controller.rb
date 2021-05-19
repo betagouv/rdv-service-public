@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::InvitationsController < AgentAuthController
   def index
     @invited_agents = policy_scope(Agent)

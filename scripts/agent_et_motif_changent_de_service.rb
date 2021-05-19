@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rails runner scripts/agent-et-motif-changent-de-service.rb
 
 ID_ORGANISATION = 100

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Admin::UserForm, type: :form do
   subject { described_class.new(user, view_locals: { current_organisation: organisation }) }
 

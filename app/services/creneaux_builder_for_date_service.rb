@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreneauxBuilderForDateService < BaseService
   def initialize(plage_ouverture, motif, date, lieu, **options)
     @plage_ouverture = plage_ouverture

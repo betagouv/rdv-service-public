@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "User can search for rdvs" do
   let!(:territory92) { create(:territory, departement_number: "92") }
   let!(:organisation) { create(:organisation, territory: territory92) }

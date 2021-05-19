@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddSmsConfigurationToTerritory < ActiveRecord::Migration[6.0]
   def change
     create_enum :sms_provider, %w[netsize send_in_blue]

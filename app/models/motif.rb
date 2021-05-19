@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Motif < ApplicationRecord
   has_paper_trail
   belongs_to :organisation
@@ -5,14 +7,14 @@ class Motif < ApplicationRecord
   has_many :rdvs, dependent: :restrict_with_exception
   has_and_belongs_to_many :plage_ouvertures, -> { distinct }
 
-  VISIBLE_AND_NOTIFIED = "visible_and_notified".freeze
-  VISIBLE_AND_NOT_NOTIFIED = "visible_and_not_notified".freeze
-  INVISIBLE = "invisible".freeze
+  VISIBLE_AND_NOTIFIED = "visible_and_notified"
+  VISIBLE_AND_NOT_NOTIFIED = "visible_and_not_notified"
+  INVISIBLE = "invisible"
   VISIBILITY_TYPES = [VISIBLE_AND_NOTIFIED, VISIBLE_AND_NOT_NOTIFIED, INVISIBLE].freeze
 
-  SECTORISATION_LEVEL_AGENT = "agent".freeze
-  SECTORISATION_LEVEL_ORGANISATION = "organisation".freeze
-  SECTORISATION_LEVEL_DEPARTEMENT = "departement".freeze
+  SECTORISATION_LEVEL_AGENT = "agent"
+  SECTORISATION_LEVEL_ORGANISATION = "organisation"
+  SECTORISATION_LEVEL_DEPARTEMENT = "departement"
   SECTORISATION_TYPES = [SECTORISATION_LEVEL_AGENT, SECTORISATION_LEVEL_ORGANISATION, SECTORISATION_LEVEL_DEPARTEMENT].freeze
 
   enum location_type: { public_office: 0, phone: 1, home: 2 }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RdvStartCoherence
   delegate :starts_at, :duration_in_min, :agents, to: :rdv
   attr_reader :rdv

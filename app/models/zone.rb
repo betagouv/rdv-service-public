@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class Zone < ApplicationRecord
-  LEVEL_CITY = "city".freeze
-  LEVEL_STREET = "street".freeze
+  LEVEL_CITY = "city"
+  LEVEL_STREET = "street"
   LEVELS = [LEVEL_CITY, LEVEL_STREET].freeze
 
   belongs_to :sector

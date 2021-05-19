@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Agent::ServicePolicy < Agent::AdminPolicy
   class Scope < Scope
     def resolve

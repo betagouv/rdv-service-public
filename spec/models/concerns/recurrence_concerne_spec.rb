@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe RecurrenceConcern do
   describe "#all_occurrences_for" do
     shared_examples "occurrences for" do |*elements|

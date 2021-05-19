@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::Territories::AgentTerritorialRolesController < Admin::Territories::BaseController
   def index
     @roles = policy_scope_admin(AgentTerritorialRole)

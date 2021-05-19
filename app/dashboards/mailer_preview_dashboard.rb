@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # cf https://github.com/thoughtbot/administrate/blob/master/docs/adding_controllers_without_related_model.md
 
 require "administrate/custom_dashboard"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::UserProfilesController < Api::V1::BaseController
   PERMITTED_PARAMS = %i[organisation_id user_id logement notes].freeze
 

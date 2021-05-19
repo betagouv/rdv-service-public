@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.array! @rdvs do |rdv|
   json.title rdv_title_for_agent(rdv) + (rdv.overlapping_plages_ouvertures? ? " ⚠️" : "")
   json.id rdv.id

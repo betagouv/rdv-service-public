@@ -59,6 +59,15 @@ Rails/RakeEnvironment:
   Exclude:
     - 'lib/tasks/matomo.rake'
 
+Rails/SkipsModelValidations:
+  Exclude:
+    - 'scripts/agent_et_motif_changent_de_service.rb'
+    - 'db/migrate/20210301135256_create_territories.rb'
+    - 'app/models/user.rb'
+    - 'app/models/plage_ouverture.rb'
+    - 'app/models/motif.rb'
+    - 'app/models/agent.rb'
+
 RSpec/AnyInstance:
   Exclude:
     - spec/controllers/admin/users_controller_spec.rb
@@ -92,6 +101,10 @@ RSpec/NamedSubject:
 RSpec/NestedGroups:
   Max: 5
 
+RSpec/DescribeClass:
+  Exclude:
+    - "spec/features/**/*"
+
 Style/AsciiComments:
   Enabled: false
 
@@ -103,4 +116,5 @@ Style/Documentation:
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
+
 

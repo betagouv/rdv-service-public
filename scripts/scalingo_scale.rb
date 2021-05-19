@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # ruby scripts/scalingo_scale.rb --name web --amount 2
 
 require "optparse"

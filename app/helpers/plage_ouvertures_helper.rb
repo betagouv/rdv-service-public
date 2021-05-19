@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PlageOuverturesHelper
   def time_collections_for_plage_ouverture
     time_collections_for_hours(7..19)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module UserRdvWizard
   # cf https://medium.com/@nicolasblanco/developing-a-wizard-or-multi-steps-forms-in-rails-d2f3b7c692ce
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AbsenceBlueprint < Blueprinter::Base
   identifier :id
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "omniauth_openid_connect"
 
 module OmniAuth

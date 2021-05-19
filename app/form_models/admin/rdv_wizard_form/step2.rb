@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::RdvWizardForm::Step2
   include Admin::RdvWizardFormConcern
   validates :users, presence: true

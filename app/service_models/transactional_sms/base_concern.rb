@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class InvalidMobilePhoneNumberError < StandardError; end
 
 module TransactionalSms::BaseConcern

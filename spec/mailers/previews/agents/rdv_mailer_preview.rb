@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Agents::RdvMailerPreview < ActionMailer::Preview
   def rdv_starting_soon_created
     rdv = Rdv.not_cancelled.last

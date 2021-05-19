@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe FileAttente, type: :model do
   describe "#send_notifications" do
     subject do
@@ -37,7 +39,7 @@ describe FileAttente, type: :model do
       end
 
       it "sends an email" do
-        expect(Users::FileAttenteMailer).to receive(:new_creneau_available).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
+        allow(Users::FileAttenteMailer).to receive(:new_creneau_available).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
         subject
         expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "file_attente_creneaux_available").count).to eq 1
       end

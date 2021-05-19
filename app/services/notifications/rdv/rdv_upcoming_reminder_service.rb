@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Notifications::Rdv::RdvUpcomingReminderService < ::BaseService
   include Notifications::Rdv::BaseServiceConcern
 

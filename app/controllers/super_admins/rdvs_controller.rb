@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SuperAdmins
   class RdvsController < SuperAdmins::ApplicationController
     # To customize the behavior of this controller,

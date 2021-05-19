@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Agents::PlageOuvertureMailerPreview < ActionMailer::Preview
   def plage_ouverture_created
     plage_ouverture = PlageOuverture.last

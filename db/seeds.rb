@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "csv"
 
 # TODO: when trying to create models using direct associations like

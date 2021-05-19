@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CustomDeviseMailer < Devise::Mailer
   include Devise::Controllers::UrlHelpers # Optional. eg. `confirmation_url`
 

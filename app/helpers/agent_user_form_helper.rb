@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module AgentUserFormHelper
   def agent_user_form_url(user)
     if user.persisted?

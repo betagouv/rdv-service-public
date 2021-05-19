@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TestService < ::BaseService
   include Notifications::Rdv::BaseServiceConcern
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Notifications::Rdv::RdvCancelledService, type: :service do
   context "starts in more than 2 days" do
     it "does not triggers sending mail to agents" do
@@ -30,7 +32,7 @@ describe Notifications::Rdv::RdvCancelledService, type: :service do
 
       expect(Agents::RdvMailer).not_to receive(:rdv_starting_soon_cancelled)
         .with(rdv, agent1, "[Agent] Sean PAUL", starts_at_initial)
-      expect(Agents::RdvMailer).to receive(:rdv_starting_soon_cancelled)
+      allow(Agents::RdvMailer).to receive(:rdv_starting_soon_cancelled)
         .with(rdv, agent2, "[Agent] Sean PAUL")
         .and_return(double(deliver_later: nil))
       described_class.perform_with(rdv)

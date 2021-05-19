@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   sequence(:territory_name) { |n| "Territoire n°#{n}" }
   sequence(:departement_number)

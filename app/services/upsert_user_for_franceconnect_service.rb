@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UpsertUserForFranceconnectService < BaseService
   attr_reader :user, :new_user, :omniauth_info
   alias new_user? new_user

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "api/v1/user_profiles requests", type: :request do
   let!(:organisation) { create(:organisation) }
   let!(:user) { create(:user) }

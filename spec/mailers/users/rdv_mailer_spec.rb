@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Users::RdvMailer, type: :mailer do
   describe "#rdv_created" do
     let(:rdv) { create(:rdv) }

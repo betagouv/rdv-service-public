@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Agent::TerritoryPolicy < ApplicationPolicy
   alias context pundit_user
   delegate :agent, to: :context, prefix: :current # defines current_agent

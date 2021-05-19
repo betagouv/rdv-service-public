@@ -22,18 +22,9 @@ Metrics/MethodLength:
   Exclude:
     - 'db/migrate/20210301135256_create_territories.rb'
 
-# Offense count: 23
-# Configuration parameters: IgnoredMetadata.
-RSpec/DescribeClass:
-  Enabled: false
-
 # Offense count: 49
 # Configuration parameters: Max.
 RSpec/ExampleLength:
-  Enabled: false
-
-# Offense count: 49
-RSpec/StubbedMock:
   Enabled: false
 
 # Offense count: 21
@@ -77,15 +68,3 @@ Rails/LexicallyScopedActionFilter:
     - 'app/controllers/users/sessions_controller.rb'
 
 
-# Offense count: 27
-# Configuration parameters: ForbiddenMethods, AllowedMethods.
-# ForbiddenMethods: decrement!, decrement_counter, increment!, increment_counter, insert, insert!, insert_all, insert_all!, toggle!, touch, touch_all, update_all, update_attribute, update_column, update_columns, update_counters, upsert, upsert_all
-Rails/SkipsModelValidations:
-  Enabled: false
-
-# Offense count: 566
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: always, always_true, never
-Style/FrozenStringLiteralComment:
-  Enabled: false

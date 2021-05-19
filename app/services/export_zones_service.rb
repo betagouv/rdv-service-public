@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class ExportZonesService
   HEADER = %w[sector_name sector_id city_code city_name street_name street_code].freeze
-  SQL_ORDER = "unaccent(LOWER(sectors.name)), unaccent(LOWER(city_name)), unaccent(LOWER(street_name))".freeze
+  SQL_ORDER = "unaccent(LOWER(sectors.name)), unaccent(LOWER(city_name)), unaccent(LOWER(street_name))"
 
   def initialize(zones_arel)
     @zones_arel = zones_arel

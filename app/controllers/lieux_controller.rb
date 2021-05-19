@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LieuxController < ApplicationController
   before_action \
     :redirect_if_search_params_absent,

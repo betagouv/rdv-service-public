@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::RdvsController < AgentAuthController
   respond_to :html, :json
 

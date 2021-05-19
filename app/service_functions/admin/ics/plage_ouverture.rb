@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::Ics::PlageOuverture
   include Admin::Ics
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::Agents::PlageOuverturesController < ApplicationController
   include Admin::AuthenticatedControllerConcern
   respond_to :json

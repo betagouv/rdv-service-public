@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe JoursFeriesService, type: :service do
   describe ".all_in_date_range" do
     subject { described_class.all_in_date_range(range) }

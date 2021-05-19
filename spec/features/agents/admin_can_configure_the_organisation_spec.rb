@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "Admin can configure the organisation" do
   let!(:organisation) { create(:organisation) }
   let!(:pmi) { create(:service, name: "PMI") }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.array! @absence_occurrences do |absence, occurrence|
   json.title absence.title_or_default
   json.start occurrence.starts_at

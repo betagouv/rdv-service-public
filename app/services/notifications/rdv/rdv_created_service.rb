@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Notifications::Rdv::RdvCreatedService < ::BaseService
   include Notifications::Rdv::BaseServiceConcern
 

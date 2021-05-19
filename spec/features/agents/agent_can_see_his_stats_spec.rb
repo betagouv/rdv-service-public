@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "Agent can see his stats" do
   let!(:agent) { create(:agent, basic_role_in_organisations: [create(:organisation)]) }
 

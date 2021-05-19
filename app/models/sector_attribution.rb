@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class SectorAttribution < ApplicationRecord
-  LEVEL_ORGANISATION = "organisation".freeze
-  LEVEL_AGENT = "agent".freeze
+  LEVEL_ORGANISATION = "organisation"
+  LEVEL_AGENT = "agent"
   LEVELS = [LEVEL_ORGANISATION, LEVEL_AGENT].freeze
 
   belongs_to :organisation

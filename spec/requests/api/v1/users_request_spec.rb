@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "api/v1/users requests", type: :request do
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }

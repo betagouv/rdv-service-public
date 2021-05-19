@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NetsizeTimeout < StandardError; end
 
 class NetsizeHttpError < StandardError; end
@@ -7,7 +9,7 @@ class NetsizeApiError < StandardError; end
 class SendTransactionalSmsService < BaseService
   attr_reader :transactional_sms
 
-  SENDER_NAME = "RdvSoli".freeze
+  SENDER_NAME = "RdvSoli"
 
   def initialize(transactional_sms)
     @transactional_sms = transactional_sms

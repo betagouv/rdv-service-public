@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe CreneauxBuilderService, type: :service do
   subject do
     plage_ouverture.update(expired_cached: false)

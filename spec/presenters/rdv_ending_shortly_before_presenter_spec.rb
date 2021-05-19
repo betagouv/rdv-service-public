@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe RdvEndingShortlyBeforePresenter, type: :presenter do
   let(:presenter) { described_class.new(rdv: rdv, agent: agent, rdv_context: rdv_context, agent_context: agent_context) }
 
