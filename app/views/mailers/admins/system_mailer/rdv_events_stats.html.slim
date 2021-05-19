@@ -2,7 +2,7 @@ h1= t('.title', date: l(Time.zone.today))
 
 h4= link_to t(".view_on_server"), health_checks_rdv_events_stats_url
 
-h3= t('.today')
+h3= t('date.helpers.today').capitalize
 - @today_stats.each do |event_type, stats|
   h4= RdvEvent.human_enum_name(:event_type, event_type)
   table
@@ -11,7 +11,7 @@ h3= t('.today')
         td[style='text-align: right;']= RdvEvent.human_enum_name(:event_name, event_name)
         td[style='padding-left: 10px;']= count
 
-h3= t('.yesterday')
+h3= t('date.helpers.yesterday').capitalize
 - @yesterday_stats.each do |event_type, stats|
   h4= RdvEvent.human_enum_name(:event_type, event_type)
   table
