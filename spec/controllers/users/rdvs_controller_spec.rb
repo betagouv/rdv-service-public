@@ -48,7 +48,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(Rdv.count).to eq(0)
         expect(response).to redirect_to lieux_path(search: { departement: "12", service: motif.service_id, motif_name_with_location_type: motif.name_with_location_type,
                                                              where: "1 rue de la, ville 12345" })
-        expect(flash[:error]).to eq "Ce creneau n'est plus disponible. Veuillez en sélectionner un autre."
+        expect(flash[:error]).to eq "Ce créneau n’est plus disponible. Veuillez en sélectionner un autre."
       end
     end
   end

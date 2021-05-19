@@ -94,7 +94,7 @@ class Admin::UsersController < AgentAuthController
     authorize(@user)
     if @user.can_be_soft_deleted_from_organisation?(current_organisation)
       @user.soft_delete(current_organisation)
-      flash[:notice] = "L'usager a été supprimé."
+      flash[:notice] = "L’usager a été supprimé."
     else
       flash[:error] = I18n.t("users.can_not_delete_because_has_future_rdvs")
     end

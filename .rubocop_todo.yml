@@ -14,15 +14,13 @@ Metrics/BlockLength:
     - "config/initializers/*"
   Max: 315
 
-# Offense count: 6
-# Configuration parameters: CountComments, CountAsOne.
-Metrics/ClassLength:
-  Max: 141
-
 # Offense count: 77
 # Configuration parameters: CountComments, CountAsOne, ExcludedMethods, IgnoredMethods.
 Metrics/MethodLength:
-  Max: 24
+  CountAsOne: ['array', 'hash', 'heredoc']
+  Max: 15
+  Exclude:
+    - 'db/migrate/20210301135256_create_territories.rb'
 
 # Offense count: 23
 # Configuration parameters: IgnoredMetadata.
