@@ -6,12 +6,18 @@ class TestService < ::BaseService
   def notify_user_by_mail(user); end
 
   def notify_user_by_sms(user); end
+
+  def notify_agent(agent); end
 end
 
 describe Notifications::Rdv::BaseServiceConcern, type: :service do
   let(:service) { TestService.new(rdv) }
 
   describe "user notifications" do
+    before do
+      allow(service).to receive(:change_triggered_by?).and_return(false)
+    end
+
     context "rdv has one user with email notifications, but rdv is in the past" do
       let(:user1) { build(:user, notify_by_email: true) }
       let(:rdv) { build(:rdv, starts_at: Time.zone.now - 1.day, users: [user1]) }
@@ -77,6 +83,23 @@ describe Notifications::Rdv::BaseServiceConcern, type: :service do
       it "sends SMS to only one" do
         expect(service).not_to receive(:notify_user_by_sms).with(user1)
         expect(service).to receive(:notify_user_by_sms).with(user2)
+        service.perform
+      end
+    end
+  end
+
+  describe "agent notifications" do
+    context "motif is not_notified" do
+      before do
+        allow(service).to receive(:change_triggered_by?).and_return(false)
+      end
+
+      let(:agent) { build(:agent) }
+      let(:motif) { build(:motif, :visible_and_not_notified) }
+      let(:rdv) { build(:rdv, starts_at: Time.zone.now + 1.day, agents: [agent], motif: motif) }
+
+      it "agent is notified anyway" do
+        expect(service).to receive(:notify_agent).with(agent)
         service.perform
       end
     end
