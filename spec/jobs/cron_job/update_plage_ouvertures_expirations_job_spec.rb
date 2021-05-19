@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe CronJob::UpdatePlageOuverturesExpirationsJob, type: :job do
   subject do
     described_class.perform_now

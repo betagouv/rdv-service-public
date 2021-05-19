@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rdv < ApplicationRecord
   include WebhookDeliverable
   include Rdv::NotifiableConcern
@@ -86,7 +88,7 @@ class Rdv < ApplicationRecord
   end
 
   def today?
-    starts_at.to_date.today?
+    Time.zone.today == starts_at.to_date
   end
 
   def temporal_status

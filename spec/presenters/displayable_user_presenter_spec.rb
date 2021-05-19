@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe DisplayableUserPresenter, type: :presenter do
   describe "#birth_date" do
     it "return something" do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Lieu, type: :model do
   let!(:territory) { create(:territory, departement_number: "62") }
   let!(:organisation) { create(:organisation, territory: territory) }

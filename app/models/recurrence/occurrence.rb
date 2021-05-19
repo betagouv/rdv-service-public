@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Recurrence::Occurrence
   include ActiveModel::Model
   include Comparable

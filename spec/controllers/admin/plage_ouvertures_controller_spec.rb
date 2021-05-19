@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Admin::PlageOuverturesController, type: :controller do
   render_views
 
@@ -95,7 +97,7 @@ describe Admin::PlageOuverturesController, type: :controller do
         end
 
         it "send notification after create" do
-          expect(Agents::PlageOuvertureMailer).to receive(:plage_ouverture_created).and_return(double(deliver_later: nil))
+          allow(Agents::PlageOuvertureMailer).to receive(:plage_ouverture_created).and_return(double(deliver_later: nil))
           post(
             :create,
             params: {
@@ -158,7 +160,7 @@ describe Admin::PlageOuverturesController, type: :controller do
         end
 
         it "send notification after create" do
-          expect(Agents::PlageOuvertureMailer).to receive(:plage_ouverture_updated).and_return(double(deliver_later: nil))
+          allow(Agents::PlageOuvertureMailer).to receive(:plage_ouverture_updated).and_return(double(deliver_later: nil))
           put :update, params: { organisation_id: organisation.id, id: plage_ouverture.to_param, plage_ouverture: { title: "Le nouveau nom" } }
         end
       end
@@ -195,7 +197,7 @@ describe Admin::PlageOuverturesController, type: :controller do
       end
 
       it "send notification after destroy" do
-        expect(Agents::PlageOuvertureMailer).to receive(:plage_ouverture_destroyed).and_return(double(deliver_later: nil))
+        allow(Agents::PlageOuvertureMailer).to receive(:plage_ouverture_destroyed).and_return(double(deliver_later: nil))
         delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.id }
       end
     end

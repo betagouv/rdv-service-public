@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe AgentTerritorialRole, type: :model do
   describe "#territory_has_at_least_one_role_before_destroy" do
     context "there is another agent with territory role" do

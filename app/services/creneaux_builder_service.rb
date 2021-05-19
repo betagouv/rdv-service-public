@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreneauxBuilderService < BaseService
   def initialize(motif_name, lieu, inclusive_date_range, **options)
     @motif_name = motif_name

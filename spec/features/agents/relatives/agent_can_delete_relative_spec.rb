@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "Agent can delete a relative" do
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
@@ -19,7 +21,7 @@ describe "Agent can delete a relative" do
     click_link("Supprimer")
     page.driver.browser.switch_to.alert.accept
     expect_page_title "Fiona LEGENDE"
-    expect(page).to have_content("L'usager a été supprimé")
+    expect(page).to have_content("L’usager a été supprimé")
     expect(page).to have_content("Aucun proche")
   end
 end

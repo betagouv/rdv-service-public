@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::AgentsController < AgentAuthController
   respond_to :html, :json
 
@@ -15,19 +17,15 @@ class Admin::AgentsController < AgentAuthController
     authorize(@agent)
     removal_service = AgentRemoval.new(@agent, current_organisation)
     if removal_service.upcoming_rdvs?
-      flash[:error] = "Impossible de retirer cet agent car il a des RDVs à venir dans cette organisation. Veuillez les supprimer ou les réaffecter avant de retirer cet agent."
-      redirect_to edit_admin_organisation_agent_role_path(current_organisation, @agent.role_in_organisation(current_organisation))
+      redirect_to edit_admin_organisation_agent_role_path(current_organisation, @agent.role_in_organisation(current_organisation)), flash: { error: t(".cannot_delete_because_of_rdvs") }
     else
       removal_service.remove!
       if @agent.invitation_accepted_at.blank?
-        flash[:notice] = "L'invitation a été supprimée"
-        redirect_to admin_organisation_invitations_path(current_organisation)
+        redirect_to admin_organisation_invitations_path(current_organisation), notice: t(".invitation_deleted")
       elsif @agent.deleted_at?
-        flash[:notice] = "Le compte agent a été supprimé"
-        redirect_to admin_organisation_agents_path(current_organisation)
+        redirect_to admin_organisation_agents_path(current_organisation), notice: t(".agent_deleted")
       else
-        flash[:notice] = "L'agent a été retiré de l'organisation"
-        redirect_to admin_organisation_agents_path(current_organisation)
+        redirect_to admin_organisation_agents_path(current_organisation), notice: t(".agent_removed_from_org")
       end
     end
   end

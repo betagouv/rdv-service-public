@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::RdvWizardStepsController < AgentAuthController
   before_action :set_agent
 

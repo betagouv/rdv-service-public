@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::Territories::SectorsController < Admin::Territories::BaseController
   def index
     @sectors = policy_scope_admin(Sector)

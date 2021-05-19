@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Notifications::Rdv::RdvDateUpdatedService, type: :service do
   subject { described_class.perform_with(rdv) }
 
@@ -17,8 +19,8 @@ describe Notifications::Rdv::RdvDateUpdatedService, type: :service do
     let(:starts_at_initial) { 3.days.from_now }
 
     it "triggers sending mail to users but not to agents" do
-      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv, user1).and_return(double(deliver_later: nil))
-      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv, user2).and_return(double(deliver_later: nil))
+      allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user1).and_return(double(deliver_later: nil))
+      allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user2).and_return(double(deliver_later: nil))
       expect(Agents::RdvMailer).not_to receive(:rdv_starting_soon_date_updated)
       subject
       expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "updated").count).to eq 2
@@ -27,12 +29,12 @@ describe Notifications::Rdv::RdvDateUpdatedService, type: :service do
 
   context "starts today or tomorrow" do
     it "triggers sending mails to both user and agents (except the one who initiated the change)" do
-      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv, user1).and_return(double(deliver_later: nil))
-      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv, user2).and_return(double(deliver_later: nil))
+      allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user1).and_return(double(deliver_later: nil))
+      allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user2).and_return(double(deliver_later: nil))
       expect(Agents::RdvMailer).not_to receive(:rdv_starting_soon_date_updated)
-        .with(rdv, agent1, "[Agent] Sean PAUL", starts_at_initial)
-      expect(Agents::RdvMailer).to receive(:rdv_starting_soon_date_updated)
-        .with(rdv, agent2, "[Agent] Sean PAUL", starts_at_initial)
+        .with(rdv, agent1, "[Agent] Sean PAUL")
+      allow(Agents::RdvMailer).to receive(:rdv_starting_soon_date_updated)
+        .with(rdv, agent2, "[Agent] Sean PAUL")
         .and_return(double(deliver_later: nil))
       subject
     end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SomeModule
   class TestSms
     include TransactionalSms::BaseConcern

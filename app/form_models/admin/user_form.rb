@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::UserForm
   include ActiveModel::Model
   include ActiveModel::Cautions

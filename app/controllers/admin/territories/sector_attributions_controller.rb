@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::Territories::SectorAttributionsController < Admin::Territories::BaseController
   before_action :set_sector
 

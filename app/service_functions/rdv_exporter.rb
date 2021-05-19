@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RdvExporter
   HourFormat = Spreadsheet::Format.new(number_format: "hh:mm")
   DateFormat = Spreadsheet::Format.new(number_format: "DD/MM/YYYY")

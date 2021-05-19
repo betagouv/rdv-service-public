@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Users::CreneauxSearch, type: :service do
   subject do
     described_class

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Users::CreneauxSearchConcern
   extend ActiveSupport::Concern
 

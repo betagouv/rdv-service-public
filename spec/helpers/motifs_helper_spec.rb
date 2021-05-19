@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe MotifsHelper do
   describe "#motif_badges" do
     it "affiche le badge Secrétariat pour un motif `secretariat`" do

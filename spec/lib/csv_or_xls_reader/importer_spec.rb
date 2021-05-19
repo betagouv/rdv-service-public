@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe CsvOrXlsReader::Importer do
   subject { described_class.new(form_file).rows }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Users::CreneauxController, type: :controller do
   render_views
   let(:organisation) { create(:organisation) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :creneau do
     starts_at { 10.days.from_now }

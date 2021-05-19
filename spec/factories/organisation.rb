@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   sequence(:orga_name) { |n| "Organisation n°#{n}" }
 

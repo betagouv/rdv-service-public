@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::Territories::ZoneImportsController < Admin::Territories::BaseController
   def new
     authorize_admin(Zone.new(sector: Sector.new(territory: current_territory)))

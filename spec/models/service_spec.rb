@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Service, type: :model do
   describe "#pmi?" do
     it "returns false when social service" do

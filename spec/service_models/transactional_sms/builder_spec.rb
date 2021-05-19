@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe TransactionalSms::Builder, type: :service do
   describe "#with" do
     subject { described_class.with(rdv, user, event_type) }

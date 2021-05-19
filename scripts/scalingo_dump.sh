@@ -18,8 +18,8 @@ tar xf "$TAR_NAME"
 DUMP_NAME=$(basename "$TAR_NAME" .tar.gz).pgsql
 
 # import
-rails db:drop db:create
+bundle exec rails db:drop db:create
 pg_restore --clean --if-exists --no-owner --no-privileges --no-comments --dbname lapin_development "$DUMP_NAME"
-rails db:environment:set
+bundle exec rails db:environment:set
 
 rm -f "$TAR_NAME" "$DUMP_NAME"

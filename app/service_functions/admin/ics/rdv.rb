@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::Ics::Rdv
   def self.payload(rdv, user)
     {

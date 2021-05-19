@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OutgoingWebhookError < StandardError; end
 
 class WebhookJob < ApplicationJob

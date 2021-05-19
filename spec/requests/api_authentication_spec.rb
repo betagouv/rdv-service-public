@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "API auth", type: :request do
   # inspired by https://devise-token-auth.gitbook.io/devise-token-auth/usage/testing
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PlageOuverture < ApplicationRecord
   include RecurrenceConcern
   include WebhookDeliverable

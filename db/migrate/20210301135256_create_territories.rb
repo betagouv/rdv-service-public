@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "csv"
 
 class CreateTerritories < ActiveRecord::Migration[6.0]

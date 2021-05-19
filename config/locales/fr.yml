@@ -10,6 +10,10 @@ fr:
           has_many: Vous ne pouvez pas supprimer l'enregistrement parce que les %{record}
             dépendants existent
   date:
+    helpers:
+      tomorrow: demain
+      today: aujourd’hui
+      yesterday: hier
     abbr_day_names:
     - dim
     - lun

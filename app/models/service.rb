@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 class Service < ApplicationRecord
   has_many :agents, dependent: :nullify
   has_many :motifs, dependent: :destroy
   has_many :motif_libelles, dependent: :destroy
   validates :name, :short_name, presence: true, uniqueness: { case_sensitive: false }
-  SECRETARIAT = "Secrétariat".freeze
-  SERVICE_SOCIAL = "Service social".freeze
-  PMI = "PMI (Protection Maternelle Infantile)".freeze
+  SECRETARIAT = "Secrétariat"
+  SERVICE_SOCIAL = "Service social"
+  PMI = "PMI (Protection Maternelle Infantile)"
 
   scope :with_motifs, -> { where.not(name: SECRETARIAT) }
   scope :secretariat, -> { find_by(name: SECRETARIAT) }

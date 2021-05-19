@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "User resets his password spec" do
   context "through password reset page" do
     before { visit new_agent_password_path }

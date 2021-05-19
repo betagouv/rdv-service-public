@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe DuplicateUsersFinderService, type: :service do
   let(:user) { build(:user, first_name: "Mathieu", last_name: "Lapin", email: "lapin@beta.fr", birth_date: "21/10/2000", phone_number: "0658032518") }
 

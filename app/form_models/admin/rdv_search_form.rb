@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::RdvSearchForm
   include ActiveModel::Model
 

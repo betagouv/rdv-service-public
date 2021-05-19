@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 desc "Schedule all cron jobs"
 task schedule_jobs: :environment do
   # See https://github.com/codez/delayed_cron_job#scheduling-trigger

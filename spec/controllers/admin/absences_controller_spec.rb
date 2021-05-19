@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Admin::AbsencesController, type: :controller do
   render_views
 
@@ -74,7 +76,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
         end
 
         it "send notification after create" do
-          expect(Agents::AbsenceMailer).to receive(:absence_created).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
+          allow(Agents::AbsenceMailer).to receive(:absence_created).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
           post :create, params: { organisation_id: organisation.id, absence: valid_attributes }
         end
       end
@@ -124,7 +126,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
         end
 
         it "send notification after update" do
-          expect(Agents::AbsenceMailer).to receive(:absence_updated).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
+          allow(Agents::AbsenceMailer).to receive(:absence_updated).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
           put :update, params: { organisation_id: organisation.id, id: absence.to_param, absence: new_attributes }
         end
       end
@@ -166,7 +168,7 @@ RSpec.describe Admin::AbsencesController, type: :controller do
       end
 
       it "send notification after delete" do
-        expect(Agents::AbsenceMailer).to receive(:absence_destroyed).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
+        allow(Agents::AbsenceMailer).to receive(:absence_destroyed).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
         delete :destroy, params: { organisation_id: organisation.id, id: absence.to_param }
       end
     end

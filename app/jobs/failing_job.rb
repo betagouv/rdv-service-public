@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class HealthCheckJobError < StandardError; end
 
 class FailingJob < ApplicationJob

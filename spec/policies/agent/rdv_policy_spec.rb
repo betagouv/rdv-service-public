@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Agent::RdvPolicy, type: :policy do
   subject { described_class }
 

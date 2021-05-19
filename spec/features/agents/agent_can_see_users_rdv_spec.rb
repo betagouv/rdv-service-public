@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "can see users' RDV" do
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }

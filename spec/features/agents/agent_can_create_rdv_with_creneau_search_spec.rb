@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "Agent can create a Rdv with creneau search" do
   include UsersHelper
 

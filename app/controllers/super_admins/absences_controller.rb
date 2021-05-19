@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SuperAdmins
   class AbsencesController < SuperAdmins::ApplicationController
     # Overwrite any of the RESTful controller actions to implement custom behavior

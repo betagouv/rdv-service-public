@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rails runner scripts/copie-vers-un-nouveau-service.rb
 
 IDS_SERVICE_SOURCE = [5, 7].freeze

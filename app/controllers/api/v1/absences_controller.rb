@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::AbsencesController < Api::V1::BaseController
   def index
     absences = policy_scope(Absence)

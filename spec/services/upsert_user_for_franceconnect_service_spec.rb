@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe UpsertUserForFranceconnectService, type: :service do
   let(:omniauth_info) do
     double( # should be instance_double of OmniAuth::AuthHash::InfoHash

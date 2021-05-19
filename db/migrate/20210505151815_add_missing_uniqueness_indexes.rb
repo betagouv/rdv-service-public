@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddMissingUniquenessIndexes < ActiveRecord::Migration[6.0]
   def change
     add_index :file_attentes, %i[rdv_id user_id], unique: true

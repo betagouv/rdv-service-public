@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module AgentsHelper
   def current_agent?(agent)
     agent.id == current_agent.id

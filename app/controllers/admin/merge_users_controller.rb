@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::MergeUsersController < AgentAuthController
   before_action :set_organisation
 

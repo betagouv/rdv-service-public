@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe SearchCreneauxForAgentsService, type: :service do
   subject { described_class.perform_with(agent_creneaux_search_form) }
 

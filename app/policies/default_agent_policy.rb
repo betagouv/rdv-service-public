@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DefaultAgentPolicy < ApplicationPolicy
   alias context pundit_user
   # define current_agent and current_organisation

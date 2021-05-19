@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AgentAuthController < ApplicationController
   include Admin::AuthenticatedControllerConcern
 

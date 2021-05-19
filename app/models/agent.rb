@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
@@ -36,7 +38,7 @@ class Agent < ApplicationRecord
   scope :complete, -> { where.not(first_name: nil).where.not(last_name: nil) }
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
-  scope :secretariat, -> { joins(:service).where(services: { name: "Secrétariat".freeze }) }
+  scope :secretariat, -> { joins(:service).where(services: { name: "Secrétariat" }) }
   scope :can_perform_motif, lambda { |motif|
     motif.for_secretariat ? joins(:service).where(service: motif.service).or(secretariat) : where(service: motif.service)
   }

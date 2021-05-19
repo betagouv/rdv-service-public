@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe PaperTrailHelper do
   let(:rdv) { create(:rdv) }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PaperTrailHelper
   def paper_trail_change_value(resource, property_name, value)
     klass_name = "PaperTrailHelper::Value::#{resource.class.name}::#{property_name.camelize}"
