@@ -15,7 +15,7 @@ describe Notifications::Rdv::RdvCreatedService, type: :service do
     it "triggers sending mail to users but not to agents" do
       allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user1).and_return(double(deliver_later: nil))
       allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user2).and_return(double(deliver_later: nil))
-      expect(Agents::RdvMailer).not_to receive(:rdv_starting_soon_created)
+      expect(Agents::RdvMailer).not_to receive(:rdv_created)
       subject
       expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "created").count).to eq 2
     end
@@ -27,8 +27,8 @@ describe Notifications::Rdv::RdvCreatedService, type: :service do
     it "triggers sending mails to both user and agents" do
       allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user1).and_return(double(deliver_later: nil))
       allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user2).and_return(double(deliver_later: nil))
-      allow(Agents::RdvMailer).to receive(:rdv_starting_soon_created).with(rdv, agent1).and_return(double(deliver_later: nil))
-      allow(Agents::RdvMailer).to receive(:rdv_starting_soon_created).with(rdv, agent2).and_return(double(deliver_later: nil))
+      allow(Agents::RdvMailer).to receive(:rdv_created).with(rdv, agent1).and_return(double(deliver_later: nil))
+      allow(Agents::RdvMailer).to receive(:rdv_created).with(rdv, agent2).and_return(double(deliver_later: nil))
       subject
     end
   end
