@@ -11,7 +11,7 @@ FactoryBot.define do
     agents { [build(:agent, organisations: [organisation])] }
 
     duration_in_min { 45 }
-    starts_at { DateTime.parse("2020-06-15 10:30").in_time_zone }
+    starts_at { Time.zone.now + 3.days }
 
     status { "unknown" }
 
@@ -38,9 +38,6 @@ FactoryBot.define do
     end
     trait :future do
       starts_at { 2.days.from_now.at_noon }
-    end
-    trait :past do
-      starts_at { DateTime.parse("2020-01-15 10:30").in_time_zone }
     end
     trait :at_home do
       motif { build(:motif, :at_home, organisation: organisation) }

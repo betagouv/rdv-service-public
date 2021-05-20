@@ -26,15 +26,12 @@ describe "User views his rdv" do
     end
   end
 
-  context "with past rdv" do
-    let!(:rdv) { create(:rdv, :past, users: [user], organisation: organisation) }
-
-    before { click_link "Vos rendez-vous" }
-
-    it do
-      expect_page_with_no_record_text("Vous n'avez pas de RDV à venir")
-      click_link "Voir vos RDV passés"
-      expect(page).to have_content("le #{I18n.l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)")
-    end
+  it "even past rdvs" do
+    rdv = build(:rdv, starts_at: DateTime.parse("2020-01-15 10:30").in_time_zone, users: [user], organisation: organisation)
+    rdv.save(validate: false)
+    click_link "Vos rendez-vous"
+    expect_page_with_no_record_text("Vous n'avez pas de RDV à venir")
+    click_link "Voir vos RDV passés"
+    expect(page).to have_content("le #{I18n.l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)")
   end
 end
