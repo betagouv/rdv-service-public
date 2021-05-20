@@ -250,9 +250,9 @@ describe User, type: :model do
 
       organisation = create(:organisation)
       user = create(:user, organisations: [organisation])
-      create(:rdv, users: [user], starts_at: today - 1.day)
-      create(:rdv, starts_at: today - 1.day)
-      create(:rdv, users: [user], starts_at: today - 2.days)
+      build(:rdv, users: [user], starts_at: today - 1.day).save(validate: false)
+      build(:rdv, starts_at: today - 1.day).save(validate: false)
+      build(:rdv, users: [user], starts_at: today - 2.days).save(validate: false)
       next_rdv = create(:rdv, starts_at: today + 1.day, organisation: organisation, users: [user])
 
       expect(user.rdvs_future_without_ongoing(organisation)).to eq([next_rdv])
@@ -265,8 +265,8 @@ describe User, type: :model do
 
       organisation = create(:organisation)
       user = create(:user, organisations: [organisation])
-      create(:rdv, users: [user], starts_at: now - 1.day)
-      create(:rdv, starts_at: now - 4.days, organisation: organisation, users: [user])
+      build(:rdv, users: [user], starts_at: now - 1.day).save(validate: false)
+      build(:rdv, starts_at: now - 4.days, organisation: organisation, users: [user]).save(validate: false)
       future_rdv = create(:rdv, starts_at: now + 4.days, organisation: organisation, users: [user])
 
       expect(user.rdvs_future_without_ongoing(organisation)).to eq([future_rdv])

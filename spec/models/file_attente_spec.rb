@@ -13,7 +13,7 @@ describe FileAttente, type: :model do
     let!(:lieu) { create(:lieu, organisation: organisation) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:plage_ouverture) { create(:plage_ouverture, first_day: now + 2.weeks, start_time: Tod::TimeOfDay.new(10), agent: agent, lieu: lieu, motifs: [motif], organisation: organisation) }
-    let!(:rdv) { create(:rdv, starts_at: now + 2.weeks, lieu: lieu, motif: motif, agents: [agent], organisation: organisation) }
+    let!(:rdv) { create_rdv_without_validation(starts_at: now + 2.weeks, lieu: lieu, motif: motif, agents: [agent], organisation: organisation) }
     let!(:file_attente) { create(:file_attente, rdv: rdv) }
 
     before do
