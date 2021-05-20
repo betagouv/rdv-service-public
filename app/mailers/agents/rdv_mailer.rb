@@ -22,8 +22,7 @@ class Agents::RdvMailer < ApplicationMailer
     mail(to: agent.email, subject: "RDV annulé #{relative_date @rdv.starts_at}")
   end
 
-  def rdv_starting_soon_date_updated(rdv, agent, rdv_updated_by_str)
-    old_starts_at = rdv.attribute_before_last_save(:starts_at)
+  def rdv_starting_soon_date_updated(rdv, agent, rdv_updated_by_str, old_starts_at)
     @rdv = rdv
     @agent = agent
     @rdv_updated_by_str = rdv_updated_by_str

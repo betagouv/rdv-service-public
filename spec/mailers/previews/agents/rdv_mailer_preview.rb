@@ -18,11 +18,11 @@ class Agents::RdvMailerPreview < ActionMailer::Preview
   def rdv_starting_soon_date_updated
     rdv = Rdv.not_cancelled.last
     rdv.starts_at = Date.today + 10.days + 10.hours
-    rdv.define_singleton_method(:attribute_before_last_save) { |_| 2.hours.from_now } # fake the result of the helper
     Agents::RdvMailer.rdv_starting_soon_date_updated(
       rdv,
       rdv.agents.first,
-      "[Agent] Jean MICHEL"
+      "[Agent] Jean MICHEL",
+      2.hours.from_now
     )
   end
 end
