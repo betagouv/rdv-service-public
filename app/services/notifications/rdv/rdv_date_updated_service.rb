@@ -18,7 +18,7 @@ class Notifications::Rdv::RdvDateUpdatedService < ::BaseService
   end
 
   def notify_agent(agent)
-    Agents::RdvMailer.rdv_starting_soon_date_updated(
+    Agents::RdvMailer.rdv_date_updated(
       @rdv,
       agent,
       change_triggered_by_str,

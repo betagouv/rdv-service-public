@@ -28,6 +28,8 @@ html lang="fr"
                   li
                     h5= link_to "Mon compte", edit_agent_registration_path
                   li
+                    h5= link_to t("agents.preferences.show.title"), agents_preferences_path
+                  li
                     h5= link_to "Mes organisations", admin_organisations_path
                   li
                     h5= link_to "Me déconnecter", destroy_agent_session_path, method: :delete

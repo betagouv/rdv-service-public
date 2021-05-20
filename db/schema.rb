@@ -10,12 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_06_164841) do
+ActiveRecord::Schema.define(version: 2021_05_11_111514) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
   enable_extension "uuid-ossp"
+
+  create_enum :agents_rdv_notifications_level, [
+    "all",
+    "others",
+    "soon",
+    "none",
+  ], force: :cascade
 
   create_enum :sms_provider, [
     "netsize",
@@ -105,6 +112,7 @@ ActiveRecord::Schema.define(version: 2021_05_06_164841) do
     t.string "uid", default: "", null: false
     t.text "tokens"
     t.boolean "allow_password_change", default: false
+    t.enum "rdv_notifications_level", default: "soon", enum_name: "agents_rdv_notifications_level"
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true
     t.index ["invitation_token"], name: "index_agents_on_invitation_token", unique: true

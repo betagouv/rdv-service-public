@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Agents::RdvMailer, type: :mailer do
-  describe "#rdv_starting_soon_created" do
+  describe "#rdv_created" do
     let(:agent) { build(:agent) }
     let(:t) { DateTime.parse("2020-03-01 10:20") }
-    let(:mail) { described_class.rdv_starting_soon_created(rdv, agent) }
+    let(:mail) { described_class.rdv_created(rdv, agent) }
     let(:rdv) { create(:rdv, starts_at: t + 2.hours, agents: [agent]) }
 
     before { travel_to(t) }

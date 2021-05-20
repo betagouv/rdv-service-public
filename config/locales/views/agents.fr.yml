@@ -1,0 +1,9 @@
+fr:
+  agents:
+    preferences:
+      show:
+        title: Préférences de notifications de RDV
+        help_1: "Recevoir un email de notification pour mes rendez-vous :"
+        help_2: Les emails de notification sont envoyés avec un fichier .ics qui vous permet de synchroniser votre calendrier (Outlook, zimbra, etc.) avec RDV Solidarités.
+      update:
+        done: Préférences de notifications mises à jour.
