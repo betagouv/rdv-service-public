@@ -32,9 +32,9 @@ describe Notifications::Rdv::RdvDateUpdatedService, type: :service do
       allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user1).and_return(double(deliver_later: nil))
       allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user2).and_return(double(deliver_later: nil))
       expect(Agents::RdvMailer).not_to receive(:rdv_starting_soon_date_updated)
-        .with(rdv, agent1, "[Agent] Sean PAUL")
+        .with(rdv, agent1, "[Agent] Sean PAUL", starts_at_initial)
       allow(Agents::RdvMailer).to receive(:rdv_starting_soon_date_updated)
-        .with(rdv, agent2, "[Agent] Sean PAUL")
+        .with(rdv, agent2, "[Agent] Sean PAUL", starts_at_initial)
         .and_return(double(deliver_later: nil))
       subject
     end
