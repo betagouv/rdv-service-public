@@ -2,6 +2,8 @@
 
 module DateHelper
   def relative_date(date, fallback_format = :short)
+    return if date.nil?
+
     date = date.to_date
     if date == Date.current
       t "date.helpers.today"
