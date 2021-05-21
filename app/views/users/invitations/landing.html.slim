@@ -1,0 +1,9 @@
+- content_for :title, "Inscription"
+
+.card
+  .card-body
+    = form_with url: :accept_user_invitation, method: :get, local: true do |f|
+      .text-center.w-75.m-auto
+        .form-row
+          .col-md-12= f.text_field :invitation_token, placeholder: '85a36974'
+        .text-center= f.submit
