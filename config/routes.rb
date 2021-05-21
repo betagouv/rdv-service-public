@@ -41,8 +41,7 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     get "users/pending_registration" => "users/registrations#pending"
-    get "invitation", to: "users/invitations#new", as: "invitations_landing"
-    post "invitation", to: "users/invitations#redirect", as: "invitations_landing_redirection"
+    get "invitation", to: "users/invitations#landing", as: "invitations_landing"
   end
 
   ## APP ##

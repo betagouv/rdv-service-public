@@ -150,11 +150,21 @@ class User < ApplicationRecord
     birth_date.present? && birth_date > 18.years.ago
   end
 
-  def simple_invitation_token
-    invitation_token[0..3] + invitation_token[-4..]
-  end
-
   protected
+
+  def generate_invitation_token
+    if self.email.present?
+      super
+    else
+      loop do
+        raw = Devise.friendly_token(length = 8)
+        enc = OpenSSL::HMAC.hexdigest("SHA256", "invitation_token", raw)
+        @raw_invitation_token = raw
+        self.invitation_token = enc
+        break [raw, enc] unless User.where(invitation_token: enc).size > 0
+      end
+    end
+  end
 
   def password_required?
     false # users without passwords and emails can be created by agents
