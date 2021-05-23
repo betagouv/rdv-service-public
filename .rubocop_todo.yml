@@ -55,16 +55,3 @@ Rails/HelperInstanceVariable:
     - 'app/helpers/agents_helper.rb'
     - 'app/helpers/paper_trail_helper.rb'
 
-# Offense count: 8
-# Configuration parameters: Include.
-# Include: app/controllers/**/*.rb
-Rails/LexicallyScopedActionFilter:
-  Exclude:
-    - 'app/controllers/admin/absences_controller.rb'
-    - 'app/controllers/agent_auth_controller.rb'
-    - 'app/controllers/agents/sessions_controller.rb'
-    - 'app/controllers/user_auth_controller.rb'
-    - 'app/controllers/users/creneaux_controller.rb'
-    - 'app/controllers/users/sessions_controller.rb'
-
-
