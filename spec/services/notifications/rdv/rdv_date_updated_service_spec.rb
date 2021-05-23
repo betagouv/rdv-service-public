@@ -19,8 +19,8 @@ describe Notifications::Rdv::RdvDateUpdatedService, type: :service do
     let(:starts_at_initial) { 3.days.from_now }
 
     it "triggers sending mail to users but not to agents" do
-      allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user1).and_return(double(deliver_later: nil))
-      allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user2).and_return(double(deliver_later: nil))
+      allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user1).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
+      allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user2).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
       expect(Agents::RdvMailer).not_to receive(:rdv_date_updated)
       subject
       expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "updated").count).to eq 2
@@ -29,13 +29,13 @@ describe Notifications::Rdv::RdvDateUpdatedService, type: :service do
 
   context "starts today or tomorrow" do
     it "triggers sending mails to both user and agents (except the one who initiated the change)" do
-      allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user1).and_return(double(deliver_later: nil))
-      allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user2).and_return(double(deliver_later: nil))
+      allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user1).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
+      allow(Users::RdvMailer).to receive(:rdv_created).with(rdv, user2).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
       expect(Agents::RdvMailer).not_to receive(:rdv_date_updated)
         .with(rdv, agent1, "[Agent] Sean PAUL", starts_at_initial)
       allow(Agents::RdvMailer).to receive(:rdv_date_updated)
         .with(rdv, agent2, "[Agent] Sean PAUL", starts_at_initial)
-        .and_return(double(deliver_later: nil))
+        .and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
       subject
     end
   end

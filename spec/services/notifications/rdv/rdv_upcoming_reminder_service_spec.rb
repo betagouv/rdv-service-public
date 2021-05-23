@@ -9,7 +9,7 @@ describe Notifications::Rdv::RdvUpcomingReminderService, type: :service do
   it "sends an sms and an email" do
     allow(Users::RdvMailer).to receive(:rdv_upcoming_reminder)
       .with(rdv, user1)
-      .and_return(double(deliver_later: nil))
+      .and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
     allow(SendTransactionalSmsJob).to receive(:perform_later)
       .with(:reminder, rdv.id, user1.id)
     # .and_call_original
