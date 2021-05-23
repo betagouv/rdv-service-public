@@ -47,11 +47,3 @@ RSpec/VerifiedDoubles:
 Rails/Date:
   Enabled: false
 
-# Offense count: 14
-# Configuration parameters: Include.
-# Include: app/helpers/**/*.rb
-Rails/HelperInstanceVariable:
-  Exclude:
-    - 'app/helpers/agents_helper.rb'
-    - 'app/helpers/paper_trail_helper.rb'
-

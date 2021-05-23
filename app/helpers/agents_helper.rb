@@ -66,7 +66,7 @@ module AgentsHelper
     }[content_for(:menu_item)]
   end
 
-  def selectable_planning_agents_options
+  def selectable_planning_agents_options(given_agent)
     path_helper_name = content_for(:menu_agent_select_path_helper_name) || :admin_organisation_agent_agenda_path
     options_for_select(
       policy_scope(Agent)
@@ -79,11 +79,11 @@ module AgentsHelper
           { 'data-url': send(path_helper_name, current_organisation, agent.id) }
         ]
       end,
-      selected: agent_for_left_menu.id
+      selected: agent_for_left_menu(given_agent).id
     )
   end
 
-  def agent_for_left_menu
-    @agent&.persisted? ? @agent : current_agent
+  def agent_for_left_menu(agent)
+    agent&.persisted? ? agent : current_agent
   end
 end
