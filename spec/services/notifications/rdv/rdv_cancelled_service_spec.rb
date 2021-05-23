@@ -34,7 +34,7 @@ describe Notifications::Rdv::RdvCancelledService, type: :service do
         .with(rdv, agent1, "[Agent] Sean PAUL", starts_at_initial)
       allow(Agents::RdvMailer).to receive(:rdv_cancelled)
         .with(rdv, agent2, "[Agent] Sean PAUL")
-        .and_return(insance_double(ActionMailer::MessageDelivery, deliver_later: nil))
+        .and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
       described_class.perform_with(rdv)
     end
   end

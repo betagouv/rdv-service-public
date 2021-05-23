@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class Users::CreneauxController < UserAuthController
-  before_action :set_creneau_params, only: %i[index update]
+  before_action :set_creneau_params, only: %i[index edit update]
   before_action :build_creneau, :redirect_if_creneau_not_available, only: %i[edit update]
+
+  def edit; end
 
   def index
     @all_creneaux = @rdv.creneaux_available(Date.today..@rdv.starts_at - 1.day)
