@@ -106,6 +106,15 @@
           i.fa.fa-list>
           span.ml-1 Liste des RDV
 
+      li.side-nav-item.mb-4.pl-3.pr-2
+        = link_to( \
+          admin_organisation_stats_path(current_organisation), \
+          class: ("active" if content_for(:menu_item) == 'menu-organisation-stats') \
+        ) do
+          i.fa.fa-chart-bar>
+          span.ml-1 Statistiques
+          = unknown_past_rdvs_danger_bage
+
       - unless current_agent_role.admin?
         li.side-nav-item.mb-4.pl-3.pr-2
           = link_to \
@@ -162,14 +171,6 @@
               li.my-2
                 = link_to "Sectorisation #{current_organisation.territory}", \
                   admin_territory_setup_checklist_path(current_organisation.territory)
-            li.my-2
-              = link_to( \
-                admin_organisation_stats_path(current_organisation), \
-                class: ("active" if content_for(:menu_item) == 'menu-organisation-stats') \
-              ) do
-                | Statistiques de l'organisation
-                = unknown_past_rdvs_danger_bage
-
       li.side-nav-item.pl-3.pr-2
         = link_to \
           admin_organisation_support_path(current_organisation), \

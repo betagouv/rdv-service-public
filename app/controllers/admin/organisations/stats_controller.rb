@@ -13,7 +13,7 @@ class Admin::Organisations::StatsController < AgentAuthController
   end
 
   def rdvs
-    authorize(@organisation)
+    skip_authorization
     stats = Stat.new(rdvs: policy_scope(Rdv))
     stats = if params[:by_service].present?
               stats.rdvs_group_by_service
@@ -26,7 +26,7 @@ class Admin::Organisations::StatsController < AgentAuthController
   end
 
   def users
-    authorize(@organisation)
+    skip_authorization
     render json: Stat.new(users: policy_scope(User)).users_group_by_week
   end
 end
