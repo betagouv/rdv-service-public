@@ -154,9 +154,10 @@ class User < ApplicationRecord
     if self.email.present?
       super
     else
+      key = Devise.token_generator.send(:key_for, :invitation_token)
       loop do
         raw = Devise.friendly_token(length = 8)
-        enc = OpenSSL::HMAC.hexdigest("SHA256", "invitation_token", raw)
+        enc = OpenSSL::HMAC.hexdigest("SHA256", key, raw)
         @raw_invitation_token = raw
         self.invitation_token = enc
         break [raw, enc] unless User.where(invitation_token: enc).size > 0
