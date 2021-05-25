@@ -1,0 +1,8 @@
+fr:
+  admin:
+    territories:
+      sectors:
+        created: Secteur %{sector} créé
+        updated: Secteur mis à jour
+        deleted: Secteur supprimé
+        delete_error: Erreur lors de la suppression
