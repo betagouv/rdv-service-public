@@ -55,7 +55,7 @@ class PlacesInput {
 
   remapBanStreetFeature = feature => {
     if (feature.properties.type === "street") {
-      return { street_ban_id: feature.properties.id }
+      return { street_ban_id: feature.properties.id, street_name: feature.properties.name }
     }
     if (feature.properties.type === "housenumber") {
       // 5 chars for city insee code, 1 for _, 4 for street fantoir
