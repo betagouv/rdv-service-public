@@ -41,11 +41,6 @@ class Api::V1::UsersController < Api::V1::BaseController
       u.skip_invitation = true
       u.invited_by = pundit_user.agent
     end
-    if @user.email.present?
-      render json: { invitation_url: accept_user_invitation_url(invitation_token: @user.raw_invitation_token) }
-    else
-      render json: { invitation_token: @user.raw_invitation_token }
-    end
   end
 
   private

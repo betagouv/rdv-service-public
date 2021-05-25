@@ -6,4 +6,4 @@
       .text-center.w-75.m-auto
         .form-row
           .col-md-12= f.text_field :invitation_token, placeholder: '85a36974'
-        .text-center= f.submit
+        .text-center= submit_tag "Créer mon compte", name: nil
