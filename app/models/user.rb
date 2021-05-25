@@ -154,14 +154,18 @@ class User < ApplicationRecord
     if self.email.present?
       super
     else
-      key = Devise.token_generator.send(:key_for, :invitation_token)
-      loop do
-        raw = Devise.friendly_token(length = 8)
-        enc = OpenSSL::HMAC.hexdigest("SHA256", key, raw)
-        @raw_invitation_token = raw
-        self.invitation_token = enc
-        break [raw, enc] unless User.where(invitation_token: enc).size > 0
-      end
+      generate_short_invitation_token # users without emails are invited to manually type it on rdv-solidarites.fr/invitation (Issue #1472)
+    end
+  end
+
+  def generate_short_invitation_token
+    key = Devise.token_generator.send(:key_for, :invitation_token)
+    loop do
+      raw = Devise.friendly_token(length = 8)
+      enc = OpenSSL::HMAC.hexdigest("SHA256", key, raw)
+      @raw_invitation_token = raw
+      self.invitation_token = enc
+      break [raw, enc] unless User.where(invitation_token: enc).size > 0
     end
   end
 
