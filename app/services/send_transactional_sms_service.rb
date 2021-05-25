@@ -35,11 +35,10 @@ class SendTransactionalSmsService < BaseService
   end
 
   def send_with_send_in_blue
-    SibApiV3Sdk.configure do |config|
-      config.api_key["api-key"] = @configuration["send_in_blue"]["api_key"]
-    end
-
-    SibApiV3Sdk::TransactionalSMSApi.new.send_transac_sms(
+    config = SibApiV3Sdk::Configuration.new
+    config.api_key = @configuration["send_in_blue"]["api_key"]
+    api_client = SibApiV3Sdk::ApiClient.new(config)
+    SibApiV3Sdk::TransactionalSMSApi.new(api_client).send_transac_sms(
       SibApiV3Sdk::SendTransacSms.new(
         sender: SENDER_NAME,
         recipient: transactional_sms.phone_number_formatted,
