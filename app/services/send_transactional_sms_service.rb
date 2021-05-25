@@ -49,7 +49,6 @@ class SendTransactionalSmsService < BaseService
   end
 
   def send_with_netsize
-    # "https://europe.ipx.com/restapi/v1/sms/send"
     request = Typhoeus::Request.new(
       @configuration["netsize"]["api_url"],
       method: :post,
