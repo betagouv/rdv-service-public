@@ -14,25 +14,18 @@ class SendTransactionalSmsService < BaseService
   def initialize(transactional_sms)
     @transactional_sms = transactional_sms
     territory = @transactional_sms.rdv.organisation.territory
-    @provider = territory.sms_provider
     @configuration = territory.sms_configuration
+
+    @provider = :debug_logger
+    @provider = territory.sms_provider if Rails.env.production?
+    @provider = ENV["FORCE_SMS_PROVIDER"].to_sym if ENV["FORCE_SMS_PROVIDER"].present?
   end
 
   def perform
-    send("send_with_#{sms_provider}")
+    send("send_with_#{@provider}")
   end
 
   private
-
-  def sms_provider
-    if ENV["FORCE_SMS_PROVIDER"].present?
-      ENV["FORCE_SMS_PROVIDER"].to_sym
-    elsif Rails.env.production?
-      @provider
-    else
-      :debug_logger
-    end
-  end
 
   def send_with_send_in_blue
     config = SibApiV3Sdk::Configuration.new
