@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Organisation, type: :model do
   describe "#contactable" do
     it "return nothing when no organisation" do

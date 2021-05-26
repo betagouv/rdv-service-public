@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "User can manage their rdvs" do
   let(:rdv) { create(:rdv, starts_at: starts_at) }
   let(:user) { rdv.users.first }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RdvsHelper
   def rdv_title(rdv)
     if rdv.starts_at.to_date.today?

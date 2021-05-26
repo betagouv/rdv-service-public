@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WelcomeController < ApplicationController
   PERMITTED_PARAMS = %i[
     departement where service motif_name_with_location_type latitude longitude city_code street_ban_id

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe RdvsHelper do
   let(:motif) { build(:motif, name: "Consultation normale") }
   let(:user) { build(:user, first_name: "Marie", last_name: "DENIS") }

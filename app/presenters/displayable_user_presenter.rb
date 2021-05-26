@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DisplayableUserPresenter
   include UsersHelper
   include ActionView::Helpers::TextHelper

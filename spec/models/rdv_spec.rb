@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Rdv, type: :model do
   it "a une fabrique valide" do
     expect(build(:rdv)).to be_valid

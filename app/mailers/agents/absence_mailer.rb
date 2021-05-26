@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Agents::AbsenceMailer < ApplicationMailer
   def absence_created(absence_payload)
     send_mail(absence_payload)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe TransactionalSms::FileAttente, type: :service do
   let(:rdv) { build(:rdv) }
   let(:user) { build(:user) }

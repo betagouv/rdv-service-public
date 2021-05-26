@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Users::ConfirmationsController < Devise::ConfirmationsController
   def show
     # copied from https://github.com/heartcombo/devise/blob/master/app/controllers/devise/confirmations_controller.rb

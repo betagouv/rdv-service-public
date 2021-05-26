@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::RdvUserPresenter
   PREVIOUS_RDVS_LIMIT = 5
 

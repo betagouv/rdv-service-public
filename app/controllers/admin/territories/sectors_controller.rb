@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::Territories::SectorsController < Admin::Territories::BaseController
   def index
     @sectors = policy_scope_admin(Sector)
@@ -17,8 +19,11 @@ class Admin::Territories::SectorsController < Admin::Territories::BaseController
     @sector = Sector.new(**sector_params, territory: current_territory)
     authorize_admin(@sector)
     if @sector.save
-      redirect_path = params[:commit] == "Créer" ? admin_territory_sector_path(current_territory, @sector) : new_admin_territory_sector_path(current_territory)
-      redirect_to redirect_path, flash: { success: "Secteur #{@sector.name} créé" }
+      if params[:commit] == I18n.t("helpers.submit.create")
+        redirect_to admin_territory_sector_path(current_territory, @sector)
+      else
+        redirect_to new_admin_territory_sector_path(current_territory), flash: { success: t(".created", sector: @sector.name) }
+      end
     else
       render :new
     end
@@ -40,7 +45,7 @@ class Admin::Territories::SectorsController < Admin::Territories::BaseController
     @sector.assign_attributes(**sector_params)
     authorize_admin(@sector)
     if @sector.save
-      redirect_to admin_territory_sectors_path(current_territory), flash: { success: "Commune mise à jour" }
+      redirect_to admin_territory_sector_path(current_territory, @sector), flash: { success: t(".updated") }
     else
       render :edit
     end
@@ -50,9 +55,9 @@ class Admin::Territories::SectorsController < Admin::Territories::BaseController
     sector = Sector.find(params[:id])
     authorize_admin(sector)
     if sector.destroy
-      redirect_to admin_territory_sectors_path(current_territory), flash: { success: "Secteur supprimé" }
+      redirect_to admin_territory_sectors_path(current_territory), flash: { success: t(".deleted") }
     else
-      redirect_to admin_territory_sectors_path(current_territory), flash: { error: "Erreur lors de la suppression" }
+      redirect_to admin_territory_sectors_path(current_territory), flash: { error: t(".delete_error") }
     end
   end
 

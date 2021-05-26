@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Agent::MotifPolicy < Agent::AdminPolicy
   def show?
     admin_and_same_org? || same_agent_or_has_access?

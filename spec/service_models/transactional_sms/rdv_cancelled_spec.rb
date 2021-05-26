@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe TransactionalSms::RdvCancelled, type: :service do
   let(:user) { build(:user) }
   let(:pmi) { build(:service, short_name: "PMI") }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Admin::Agents::PlageOuverturesController, type: :controller do
   describe "GET index" do
     context "with a signed in agent" do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def franceconnect
     upsert_service = UpsertUserForFranceconnectService

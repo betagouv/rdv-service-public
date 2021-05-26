@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Users::RdvMailer < ApplicationMailer
   add_template_helper(UsersHelper)
   add_template_helper(RdvsHelper)

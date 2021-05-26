@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admins::SystemMailer < ApplicationMailer
   def rdv_events_stats
     @today_stats = RdvEvent.date_stats(Time.zone.today)

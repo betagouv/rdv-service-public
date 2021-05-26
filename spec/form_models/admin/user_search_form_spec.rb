@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Admin::UserSearchForm do
   describe "#to_query" do
     it "return query" do

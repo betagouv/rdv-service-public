@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   sequence(:libelle_name) { |n| "Libellé n°#{n}" }
 

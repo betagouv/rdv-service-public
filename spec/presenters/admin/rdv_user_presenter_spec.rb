@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Admin::RdvUserPresenter do
   describe "#previous_rdvs_truncated" do
     subject { described_class.new(rdv, user).previous_rdvs_truncated }

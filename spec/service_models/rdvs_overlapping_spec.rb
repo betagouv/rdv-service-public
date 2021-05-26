@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe RdvsOverlapping, type: :service do
   describe "#rdvs_overlapping_rdv" do
     it "return rdvs that end during rdv" do

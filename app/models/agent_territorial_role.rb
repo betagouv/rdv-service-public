@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AgentTerritorialRole < ApplicationRecord
   belongs_to :agent
   belongs_to :territory

@@ -30,4 +30,8 @@ chdir APP_ROOT do
 
   puts "\n== Removing old logs and tempfiles =="
   system! 'bin/rails log:clear tmp:clear'
+
+  puts "\n== Preparing database for parallele test=="
+  system! 'bin/rails parallel:setup'
+
 end

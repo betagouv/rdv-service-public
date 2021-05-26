@@ -30,6 +30,9 @@ Lint/MissingSuper:
 Metrics/AbcSize:
   Enabled: false
 
+Metrics/ClassLength:
+  CountAsOne: ['array', 'hash', 'heredoc']
+
 Metrics/CyclomaticComplexity:
   Max: 8 # default is 7
 
@@ -59,6 +62,15 @@ Rails/HasAndBelongsToMany:
 Rails/RakeEnvironment:
   Exclude:
     - 'lib/tasks/matomo.rake'
+
+Rails/SkipsModelValidations:
+  Exclude:
+    - 'scripts/agent_et_motif_changent_de_service.rb'
+    - 'db/migrate/20210301135256_create_territories.rb'
+    - 'app/models/user.rb'
+    - 'app/models/plage_ouverture.rb'
+    - 'app/models/motif.rb'
+    - 'app/models/agent.rb'
 
 RSpec/AnyInstance:
   Exclude:
@@ -93,6 +105,10 @@ RSpec/NamedSubject:
 RSpec/NestedGroups:
   Max: 5
 
+RSpec/DescribeClass:
+  Exclude:
+    - "spec/features/**/*"
+
 Style/AsciiComments:
   Enabled: false
 
@@ -104,4 +120,5 @@ Style/Documentation:
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
+
 

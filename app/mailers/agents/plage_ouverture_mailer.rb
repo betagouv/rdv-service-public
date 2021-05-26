@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Agents::PlageOuvertureMailer < ApplicationMailer
   def plage_ouverture_created(plage_ouverture_payload)
     send_mail(plage_ouverture_payload)

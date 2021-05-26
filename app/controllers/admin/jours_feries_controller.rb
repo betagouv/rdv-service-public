@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::JoursFeriesController < AgentAuthController
   respond_to :json
 

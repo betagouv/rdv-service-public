@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User::RdvPolicy < ApplicationPolicy
   alias current_user pundit_user
 

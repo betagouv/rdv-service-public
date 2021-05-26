@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ImportZoneRowsService, type: :service do
   # TODO: this spec should mock ZoneImportRow calls and tests should be moved
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Notifications::Rdv::RdvCreatedService < ::BaseService
   include Notifications::Rdv::BaseServiceConcern
 
@@ -14,8 +16,6 @@ class Notifications::Rdv::RdvCreatedService < ::BaseService
   end
 
   def notify_agent(agent)
-    return false unless [Date.today, Date.tomorrow].include?(@rdv.starts_at.to_date)
-
-    Agents::RdvMailer.rdv_starting_soon_created(@rdv, agent).deliver_later
+    Agents::RdvMailer.rdv_created(@rdv, agent).deliver_later
   end
 end

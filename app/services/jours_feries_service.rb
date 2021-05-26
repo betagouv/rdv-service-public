@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class JoursFeriesService
   # https://demarchesadministratives.fr/actualites/calendrier-des-jours-feries-2019-2020-2021
   JOURS_FERIES_2020 = [

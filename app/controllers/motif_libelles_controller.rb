@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MotifLibellesController < ApplicationController
   def index
     return unless params[:service_id]

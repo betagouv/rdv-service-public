@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::Territories::SectorisationTestsController < Admin::Territories::BaseController
   def search
     authorize_admin(

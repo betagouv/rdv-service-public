@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::Territories::BaseController < ApplicationController
   include Admin::AuthenticatedControllerConcern
 

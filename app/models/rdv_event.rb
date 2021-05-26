@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class RdvEvent < ApplicationRecord
-  TYPE_NOTIFICATION_SMS = "notification_sms".freeze
-  TYPE_NOTIFICATION_MAIL = "notification_mail".freeze
+  TYPE_NOTIFICATION_SMS = "notification_sms"
+  TYPE_NOTIFICATION_MAIL = "notification_mail"
 
   validates :event_type, inclusion: { in: [TYPE_NOTIFICATION_SMS, TYPE_NOTIFICATION_MAIL] }
 

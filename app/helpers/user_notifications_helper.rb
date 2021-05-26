@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module UserNotificationsHelper
   def user_notifiable_by_sms_text(user)
     notif_details = \

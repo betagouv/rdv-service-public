@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::InvitationsDeviseController < Devise::InvitationsController
   def new
     self.resource = resource_class.new(organisations: [current_organisation])

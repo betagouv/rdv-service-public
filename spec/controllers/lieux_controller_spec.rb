@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe LieuxController, type: :controller do
   render_views
 
@@ -158,7 +160,7 @@ RSpec.describe LieuxController, type: :controller do
         it "annonce qu'il n'y a pas de créneaux parce que pas de référent" do
           subject
           expect(response).to be_successful
-          expect(assigns[:referent_missing]).to eq("Vous ne semblez pas bénéficier d’un accompagnement ou d’un suivi, merci de choisir un autre motif ou de contacter votre département au ")
+          expect(assigns[:referent_missing]).to eq("Vous ne semblez pas bénéficier d’un accompagnement ou d’un suivi, merci de choisir un autre motif ou de contacter votre département au .")
           expect(assigns[:creneaux]).to be_empty
           expect(assigns(:next_availability)).to be_nil
         end

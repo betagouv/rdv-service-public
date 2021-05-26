@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Users::RdvMailerPreview < ActionMailer::Preview
   # rubocop:disable Naming/MethodName
   # -> using CONTEXT to distinguish the mail name part and the contextual info

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Agent::AdminPolicy < DefaultAgentPolicy
   def show?
     admin_and_same_org?

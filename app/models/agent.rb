@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
@@ -12,6 +14,13 @@ class Agent < ApplicationRecord
 
   include DeviseTokenAuth::Concerns::ConfirmableSupport
   include DeviseTokenAuth::Concerns::UserOmniauthCallbacks
+
+  enum rdv_notifications_level: {
+    all: "all",       # notify of all rdv changes
+    others: "others", # notify of changes made by other agents or users
+    soon: "soon",     # notify of change (made by others) less than a day before the rdv
+    none: "none"      # never send rdv notifications
+  }, _prefix: true
 
   belongs_to :service
   has_many :lieux, through: :organisation
@@ -36,7 +45,7 @@ class Agent < ApplicationRecord
   scope :complete, -> { where.not(first_name: nil).where.not(last_name: nil) }
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
-  scope :secretariat, -> { joins(:service).where(services: { name: "Secrétariat".freeze }) }
+  scope :secretariat, -> { joins(:service).where(services: { name: "Secrétariat" }) }
   scope :can_perform_motif, lambda { |motif|
     motif.for_secretariat ? joins(:service).where(service: motif.service).or(secretariat) : where(service: motif.service)
   }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DuplicateUsersFinderService < BaseService
   def initialize(user, organisation = nil)
     @user = user

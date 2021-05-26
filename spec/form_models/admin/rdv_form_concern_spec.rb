@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DummyForm
   include ActiveModel::Model
   include Admin::RdvFormConcern

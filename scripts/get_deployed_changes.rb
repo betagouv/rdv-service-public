@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # ruby scripts/get_deployed_changes.rb --archive
 
 # initial setup:

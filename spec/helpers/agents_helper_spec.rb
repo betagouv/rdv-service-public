@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe AgentsHelper do
   describe "#build_link_to_rdv_wizard_params" do
     it "step 2 par défaut" do

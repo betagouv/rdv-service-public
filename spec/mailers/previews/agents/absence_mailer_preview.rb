@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Agents::AbsenceMailerPreview < ActionMailer::Preview
   def absence_created
     absence = Absence.last

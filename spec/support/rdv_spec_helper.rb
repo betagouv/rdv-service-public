@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RdvSpecHelper
   def create_rdv_skip_notify(**kwargs)
     rdv = build(:rdv, **kwargs)

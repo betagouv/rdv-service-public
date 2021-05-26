@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Users::RegistrationForm, type: :form_model do
   let(:attributes) do
     {

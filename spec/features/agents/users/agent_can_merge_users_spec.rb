@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "Agent can delete user" do
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }

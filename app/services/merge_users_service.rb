@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MergeUsersService < BaseService
   def initialize(user_target, user_to_merge, attributes_to_merge, organisation)
     @user_target = user_target

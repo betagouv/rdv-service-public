@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ExportZonesService, type: :service do
   describe "#perform" do
     subject { described_class.new(Zone.in_territory(territory)).perform }

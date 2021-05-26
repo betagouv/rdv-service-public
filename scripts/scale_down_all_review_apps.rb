@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # ruby ./scripts/scale_down_all_review_apps.rb
 
 res = `scalingo apps` # backticks run shell commands

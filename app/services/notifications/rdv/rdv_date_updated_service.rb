@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Notifications::Rdv::RdvDateUpdatedService < ::BaseService
   include Notifications::Rdv::BaseServiceConcern
 
@@ -16,15 +18,11 @@ class Notifications::Rdv::RdvDateUpdatedService < ::BaseService
   end
 
   def notify_agent(agent)
-    return false if \
-      change_triggered_by?(agent) ||
-      [Date.today, Date.tomorrow].exclude?(@rdv.starts_at_before_last_save.to_date)
-
-    Agents::RdvMailer.rdv_starting_soon_date_updated(
+    Agents::RdvMailer.rdv_date_updated(
       @rdv,
       agent,
       change_triggered_by_str,
-      @rdv.starts_at_before_last_save
+      @rdv.attribute_before_last_save(:starts_at)
     ).deliver_later
   end
 end

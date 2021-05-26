@@ -12,3 +12,9 @@ fr:
         role: Rôle
         rdvs: Rendez-vous
         service: Service
+        rdv_notifications_level: Notifications de RDV
+        rdv_notifications_levels:
+          all: À chaque modification
+          others: Uniquement les modifications faites par un usager (ou par un autre agent)
+          soon: Uniquement les modifications (faites par un usager ou un autre agent) moins de 24 heures à l’avance
+          none: Jamais

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::Agents::RdvsController < ApplicationController
   include Admin::AuthenticatedControllerConcern
   respond_to :json

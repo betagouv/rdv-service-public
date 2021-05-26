@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FileAttente < ApplicationRecord
   belongs_to :rdv
   belongs_to :user

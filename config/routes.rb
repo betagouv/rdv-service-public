@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   ## OAUTH ##
   devise_scope :user do
@@ -76,10 +78,13 @@ Rails.application.routes.draw do
     passwords: "agents/passwords"
   }
 
-  as :agent do
+  devise_scope :agent do
     get "agents/edit" => "agents/registrations#edit", as: "edit_agent_registration"
     put "agents" => "agents/registrations#update", as: "agent_registration"
     delete "agents" => "agents/registrations#destroy", as: "delete_agent_registration"
+    namespace :agents do
+      resource :preferences, only: %i[show update]
+    end
   end
 
   namespace :api do

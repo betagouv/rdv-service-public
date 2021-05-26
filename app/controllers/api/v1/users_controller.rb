@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Api::V1::UsersController < Api::V1::BaseController
   PERMITTED_PARAMS = %i[
     first_name birth_name last_name email address phone_number

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Admin::RdvsController, type: :controller do
   render_views
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PaperTrailAugmentedVersion
   def self.for_resource(resource, **kwargs)
     # returns an array of augmented versions

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::SupportTicketsController < AgentAuthController
   def create
     @support_ticket_form = SupportTicketForm.new(

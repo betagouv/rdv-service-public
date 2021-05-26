@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe UserRdvWizard do
   let!(:organisation) { create(:organisation) }
   let!(:user) { create(:user) }
@@ -23,10 +25,10 @@ describe UserRdvWizard do
     it "works" do
       returned_creneau = Creneau.new
 
-      expect(Users::GeoSearch).to receive(:new)
+      allow(Users::GeoSearch).to receive(:new)
         .with(departement: "62", city_code: "62100")
         .and_return(mock_geo_search)
-      expect(Users::CreneauSearch).to receive(:creneau_for).with(
+      allow(Users::CreneauSearch).to receive(:creneau_for).with(
         user: user,
         motif: motif,
         lieu: lieu,

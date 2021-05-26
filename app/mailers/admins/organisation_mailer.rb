@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admins::OrganisationMailer < ApplicationMailer
   def organisation_created(agent, organisation)
     @agent = agent

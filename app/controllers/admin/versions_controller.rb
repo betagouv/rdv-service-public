@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::VersionsController < AgentAuthController
   layout false # loaded and injected in the pages through AJAX
 

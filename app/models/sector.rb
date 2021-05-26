@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Sector < ApplicationRecord
   belongs_to :territory
   has_many :attributions, class_name: "SectorAttribution", dependent: :destroy

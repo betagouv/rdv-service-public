@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ApiSpecHelper
   def api_auth_headers_for_agent(agent)
     # inspired by https://devise-token-auth.gitbook.io/devise-token-auth/usage/testing

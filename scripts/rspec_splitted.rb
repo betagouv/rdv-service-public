@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 # inspired by https://shime.sh/til/running-parallel-rails-tests-on-github-actions
 
