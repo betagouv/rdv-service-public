@@ -3,10 +3,11 @@ class Users::InvitationsController < Devise::InvitationsController
 
   def invitation; end
 
-  def resource_from_invitation_token
-    unless params[:invitation_token] && self.resource = resource_class.find_by_invitation_token(params[:invitation_token], true)
-      set_flash_message(:alert, :invitation_token_invalid) if is_flashing_format?
-      request.referer.end_with?("/invitation") ? (redirect_to invitations_landing_url) : (redirect_to after_sign_out_path_for(resource_name))
+  def after_sign_out_path_for(resource_name)
+    if request.referer&.end_with?("/invitation")
+      return invitations_landing_url
+    else
+      return root_url
     end
   end
 
