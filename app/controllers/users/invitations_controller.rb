@@ -5,12 +5,9 @@ class Users::InvitationsController < Devise::InvitationsController
 
   def invitation; end
 
-  def after_sign_out_path_for(resource_name)
-    if request.referer&.end_with?("/invitation")
-      return invitations_landing_url
-    else
-      return root_url
-    end
+  def after_sign_out_path_for
+    return invitations_landing_url if request.referer&.end_with?("/invitation")
+    root_url
   end
 
   def edit
