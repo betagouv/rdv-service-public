@@ -281,7 +281,7 @@ describe "api/v1/users requests", type: :request do
       let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
 
       it "works" do
-        get invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent)
+        get invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent), as: :json
         expect(response.status).to eq(200)
         response_parsed = JSON.parse(response.body)
         expect(response_parsed["invitation_url"]).to be_present
