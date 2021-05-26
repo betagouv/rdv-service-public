@@ -8,10 +8,9 @@ class Agents::RdvMailer < ApplicationMailer
     @rdv = rdv
     @agent = agent
 
-    mail(
-      to: agent.email,
-      subject: "Nouveau RDV ajouté sur votre agenda rdv-solidarités pour #{relative_date @rdv.starts_at}"
-    )
+    with_ics_for(@rdv) do
+      mail(to: agent.email, subject: "Nouveau RDV ajouté sur votre agenda rdv-solidarités pour #{relative_date @rdv.starts_at}")
+    end
   end
 
   def rdv_cancelled(rdv, agent, cancelled_by_str)
@@ -19,7 +18,9 @@ class Agents::RdvMailer < ApplicationMailer
     @agent = agent
     @cancelled_by_str = cancelled_by_str
 
-    mail(to: agent.email, subject: "RDV annulé #{relative_date @rdv.starts_at}")
+    with_ics_for(@rdv) do
+      mail(to: agent.email, subject: "RDV annulé #{relative_date @rdv.starts_at}")
+    end
   end
 
   def rdv_date_updated(rdv, agent, rdv_updated_by_str, old_starts_at)
@@ -28,6 +29,30 @@ class Agents::RdvMailer < ApplicationMailer
     @rdv_updated_by_str = rdv_updated_by_str
     @old_starts_at = old_starts_at
 
-    mail(to: agent.email, subject: "RDV #{relative_date old_starts_at} reporté à plus tard")
+    with_ics_for(@rdv) do
+      mail(to: agent.email, subject: "RDV #{relative_date old_starts_at} reporté à plus tard")
+    end
+  end
+
+  def with_ics_for(rdv, &block)
+    ics_payload = Admin::Ics::Rdv.payload(rdv, rdv.users.first)
+    ics = Admin::Ics::Rdv.to_ical(ics_payload)
+    message.attachments[ics_payload[:name]] = { # as an attachment
+      mime_type: "text/calendar",
+      content: ics,
+      encoding: "8bit" # not sure why
+    }
+
+    message = yield block
+
+    message.add_part( # and as a separate part
+      Mail::Part.new do
+        content_type "text/calendar; charset=utf-8"
+        body Base64.encode64(ics)
+        content_transfer_encoding "base64"
+      end
+    )
+
+    message
   end
 end
