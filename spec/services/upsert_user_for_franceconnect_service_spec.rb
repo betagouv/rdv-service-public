@@ -2,13 +2,12 @@
 
 describe UpsertUserForFranceconnectService, type: :service do
   let(:omniauth_info) do
-    instance_double("OmniAuth::AuthHash::InfoHash",
-                    email: "jeanne@longo.fr",
-                    given_name: "jeanne",
-                    family_name: "longo",
-                    preferred_username: "DUPONT",
-                    birthdate: Date.parse("1971-06-20"),
-                    sub: "hvdiuds4357")
+    OpenStruct.new(email: "jeanne@longo.fr",
+                   given_name: "jeanne",
+                   family_name: "longo",
+                   preferred_username: "DUPONT",
+                   birthdate: Date.parse("1971-06-20"),
+                   sub: "hvdiuds4357")
   end
 
   context "no pre-existing user" do
