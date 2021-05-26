@@ -111,7 +111,6 @@ describe Admin::Ics::Rdv, type: :service do
       end
 
       it do
-        expect(subject).to include("METHOD:REQUEST")
         expect(subject).to include("BEGIN:VEVENT")
         expect(subject).to include("SUMMARY:RDV Elisa SIMON <> Consultation initiale")
         expect(subject).to include("DTSTART;TZID=Europe/Paris:20190704T150000")
@@ -120,8 +119,6 @@ describe Admin::Ics::Rdv, type: :service do
         expect(subject).to include("UID:rdv_15@RDV Solidarités")
         expect(subject).to include("DESCRIPTION:Infos et annulation:")
         expect(subject).to include("LOCATION:10 rue de la Ferronerie 44100 Nantes")
-        expect(subject).to include("ATTENDEE:mailto:elisa@simon.fr")
-        expect(subject).to include("CLASS:PRIVATE")
         expect(subject).to include("DTSTAMP:20190628T154300Z")
         expect(subject).to include("END:VEVENT")
       end

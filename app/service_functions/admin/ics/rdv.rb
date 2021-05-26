@@ -34,7 +34,6 @@ class Admin::Ics::Rdv
     cal.add_timezone timezone
     cal.prodid = BRAND
     cal.event { populate_event(_1, payload) }
-    cal.ip_method = "REQUEST"
     cal.to_ical
   end
 
@@ -44,12 +43,8 @@ class Admin::Ics::Rdv
     event.dtend = Icalendar::Values::DateTime.new(payload[:ends_at], "tzid" => Admin::Ics::TZID)
     event.summary = payload[:summary]
     event.location = payload[:address]
-    event.ip_class = "PUBLIC"
     event.rrule = payload[:recurrence]
     event.sequence = payload[:sequence]
     event.description = payload[:description]
-    event.attendee = "mailto:#{payload[:user_email]}"
-    event.ip_class = "PRIVATE"
-    event.organizer = "mailto:contact@rdv-solidarites.fr"
   end
 end
