@@ -14,11 +14,6 @@ Metrics/BlockLength:
     - "config/initializers/*"
   Max: 315
 
-# Offense count: 49
-# Configuration parameters: Max.
-RSpec/ExampleLength:
-  Enabled: false
-
 # Offense count: 52
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: strict, flexible
