@@ -29,7 +29,7 @@ class SendTransactionalSmsService < BaseService
 
   def send_with_send_in_blue
     config = SibApiV3Sdk::Configuration.new
-    config.api_key = @configuration["send_in_blue"]["api_key"]
+    config.api_key = @configuration["api_key"]
     api_client = SibApiV3Sdk::ApiClient.new(config)
     SibApiV3Sdk::TransactionalSMSApi.new(api_client).send_transac_sms(
       SibApiV3Sdk::SendTransacSms.new(
@@ -43,9 +43,9 @@ class SendTransactionalSmsService < BaseService
 
   def send_with_netsize
     request = Typhoeus::Request.new(
-      @configuration["netsize"]["api_url"],
+      @configuration["api_url"],
       method: :post,
-      userpwd: @configuration["netsize"]["user_pwd"],
+      userpwd: @configuration["user_pwd"],
       headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
       timeout: 5,
       body: {
