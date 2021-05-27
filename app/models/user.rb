@@ -152,6 +152,25 @@ class User < ApplicationRecord
 
   protected
 
+  def generate_invitation_token
+    if email.present?
+      super
+    else
+      generate_short_invitation_token # users without emails are invited to manually type it on rdv-solidarites.fr/invitation (Issue #1472)
+    end
+  end
+
+  def generate_short_invitation_token
+    key = Devise.token_generator.send(:key_for, :invitation_token)
+    loop do
+      raw = Devise.friendly_token(8)
+      enc = OpenSSL::HMAC.hexdigest("SHA256", key, raw)
+      @raw_invitation_token = raw
+      self.invitation_token = enc
+      break [raw, enc] unless User.where(invitation_token: enc).size.positive?
+    end
+  end
+
   def password_required?
     false # users without passwords and emails can be created by agents
   end
