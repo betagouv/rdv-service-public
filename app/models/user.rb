@@ -163,7 +163,7 @@ class User < ApplicationRecord
   def generate_short_invitation_token
     key = Devise.token_generator.send(:key_for, :invitation_token)
     loop do
-      raw = Devise.friendly_token(8)
+      raw = SecureRandom.send(:choose, [*'A'..'Z', *'0'..'9'], 8)
       enc = OpenSSL::HMAC.hexdigest("SHA256", key, raw)
       @raw_invitation_token = raw
       self.invitation_token = enc
