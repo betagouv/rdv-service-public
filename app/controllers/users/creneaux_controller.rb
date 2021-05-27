@@ -34,7 +34,7 @@ class Users::CreneauxController < UserAuthController
   end
 
   def build_creneau
-    @starts_at = params[:starts_at].to_time
+    @starts_at = Time.zone.parse(params[:starts_at])
     @creneau = Users::CreneauSearch.creneau_for(
       user: current_user,
       starts_at: @starts_at,
