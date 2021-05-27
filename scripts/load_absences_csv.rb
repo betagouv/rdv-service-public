@@ -1,5 +1,7 @@
-require 'open-uri'
-require 'csv'
+# frozen_string_literal: true
+
+require "open-uri"
+require "csv"
 
 organisation_id = ARGV[0]
 file = ARGV[1]
@@ -28,7 +30,7 @@ CSV.foreach(open(file), col_sep: ";", headers: true, encoding: "ISO-8859-1") do 
   ligne += 1
   agent = Agent.find_by(email: row["agent_ID"])
   unless agent
-    puts "#{ligne} - Agent non trouvé #{row["agent_ID"]}"
+    puts "#{ligne} - Agent non trouvé #{row['agent_ID']}"
     next
   end
 
@@ -42,7 +44,7 @@ CSV.foreach(open(file), col_sep: ";", headers: true, encoding: "ISO-8859-1") do 
       end_day: Date.parse(row["end_day"]),
       end_time: Time.zone.parse(row["end_time"]).to_time
     }
-  rescue
+  rescue StandardError
     puts "#{ligne} - erreur d'analyse de la ligne"
     next
   end
@@ -56,5 +58,4 @@ CSV.foreach(open(file), col_sep: ";", headers: true, encoding: "ISO-8859-1") do 
   else
     puts "#{ligne} - errors : #{absence.errors.full_messages.join(',')}"
   end
-
 end
