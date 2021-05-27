@@ -26,5 +26,9 @@ describe PaperTrailHelper do
 
       expect(helper.paper_trail_change_value("agent_ids", [agent1.id, agent2.id])).to eq("Patricia ALLO, Marco LABAT")
     end
+
+    it "returns stringified value when passed an unknown property of arbitrary type" do
+      expect(helper.paper_trail_change_value("some_value", :some_symbol)).to eq("some_symbol")
+    end
   end
 end

@@ -5,7 +5,11 @@ module PaperTrailHelper
     return "N/A" if value.nil?
     return I18n.l(value, format: :dense) if value.is_a? Time
 
-    send(property_name, value) || value.to_s
+    if respond_to?(property_name)
+      send(property_name, value)
+    else
+      value.to_s
+    end
   end
 
   def user_ids(value)
