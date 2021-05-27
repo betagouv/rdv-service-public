@@ -33,6 +33,7 @@ fr:
         notify_by_sms: "Accepte les notifications par SMS"
         notify_by_email: "Accepte les notifications par email"
         created_through: "Origine du compte"
+        invitation_token: "Code d’invitation"
     errors:
       models:
         user:
