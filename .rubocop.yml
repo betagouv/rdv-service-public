@@ -71,6 +71,13 @@ Rails/SkipsModelValidations:
     - 'app/models/motif.rb'
     - 'app/models/agent.rb'
 
+Rails/LexicallyScopedActionFilter:
+  Exclude:
+    - 'app/controllers/users/sessions_controller.rb'
+    - 'app/controllers/user_auth_controller.rb'
+    - 'app/controllers/agents/sessions_controller.rb'
+    - 'app/controllers/agent_auth_controller.rb'
+
 RSpec/AnyInstance:
   Exclude:
     - spec/controllers/admin/users_controller_spec.rb

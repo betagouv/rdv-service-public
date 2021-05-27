@@ -15,7 +15,7 @@
               - augmented_version.changes.each do |property,change|
                 li
                   = "#{@resource.class.human_attribute_name(property)} : "
-                  b= paper_trail_change_value(@resource, property, change.last)
+                  b= paper_trail_change_value(property, change.last)
                   - if change.first.present?
                     | &nbsp;au lieu de&nbsp;
-                    span.strikethrough= paper_trail_change_value(@resource, property, change.first)
+                    span.strikethrough= paper_trail_change_value(property, change.first)
