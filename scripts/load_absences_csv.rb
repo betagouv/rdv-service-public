@@ -15,14 +15,14 @@ end
 organisation = Organisation.find(organisation_id)
 puts "Import des absences à partir du fichier #{file} pour l'organisation #{organisation.name}"
 
-test = <<-EOF
-first_day;start_time;end_day;end_time;agent_ID;Name
-31/05/2021;09:15:00;31/05/2021;10:15:00;martine@demo.rdv-solidarites.fr;RDV GRC
-31/05/2021;09:30:00;31/05/2021;10:15:00;marco@demo.rdv-solidarites.fr;RDV GRC
-30/06/2021;19:30:00;30/06/2021;20:15:00;marco@demo.rdv-solidarites.fr;RDV GRC
-31/06/2021;19:30:00;31/06/2021;20:15:00;marco@demo.rdv-solidarites.fr;RDV GRC
-30/06/2021;25:30:00;30/06/2021;26:15:00;marco@demo.rdv-solidarites.fr;RDV GRC
-31/05/2021;09:30:00;31/05/2021;10:15:00;paul@demo.rdv-solidarites.fr;RDV GRC
+test = <<~EOF
+  first_day;start_time;end_day;end_time;agent_ID;Name
+  31/05/2021;09:15:00;31/05/2021;10:15:00;martine@demo.rdv-solidarites.fr;RDV GRC
+  31/05/2021;09:30:00;31/05/2021;10:15:00;marco@demo.rdv-solidarites.fr;RDV GRC
+  30/06/2021;19:30:00;30/06/2021;20:15:00;marco@demo.rdv-solidarites.fr;RDV GRC
+  31/06/2021;19:30:00;31/06/2021;20:15:00;marco@demo.rdv-solidarites.fr;RDV GRC
+  30/06/2021;25:30:00;30/06/2021;26:15:00;marco@demo.rdv-solidarites.fr;RDV GRC
+  31/05/2021;09:30:00;31/05/2021;10:15:00;paul@demo.rdv-solidarites.fr;RDV GRC
 EOF
 
 ligne = 0
