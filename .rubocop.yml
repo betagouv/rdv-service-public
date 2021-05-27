@@ -39,6 +39,12 @@ Metrics/ClassLength:
   Exclude:
     - 'app/models/user.rb'
 
+Metrics/MethodLength:
+  CountAsOne: ['array', 'hash', 'heredoc']
+  Max: 15
+  Exclude:
+    - 'db/migrate/20210301135256_create_territories.rb'
+
 Rails/ApplicationController:
   Exclude:
     - 'app/controllers/api/v1/base_controller.rb'
