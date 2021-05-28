@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Admin::Territories::SmsConfigurationsController < Admin::Territories::BaseController
   before_action :check_allowed_departement, only: %i[update edit]
 
