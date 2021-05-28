@@ -16,8 +16,8 @@ class Admin::Territories::SmsConfigurationsController < Admin::Territories::Base
 
   def check_allowed_departement
     if current_departement_not_allowed_to_configure_sms?
-      flash[:alert] = "Vous ne pouvez pas modifier la configuration d'envoie de SMS tant que votre département n'a pas de marché distinct"
-      redirect_to action: :show
+      redirect_to action: :show,
+                  alert: "Vous ne pouvez pas modifier la configuration d'envoie de SMS tant que votre département n'a pas de marché distinct"
     end
   end
 
