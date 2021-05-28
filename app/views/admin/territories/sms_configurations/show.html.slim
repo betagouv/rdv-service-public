@@ -13,7 +13,7 @@
 
           - if current_territory.sms_configuration.present?
             ul.list-unstyled.mb-5
-              - current_territory.sms_configuration[current_territory.sms_provider].each do |label, value|
+              - current_territory.sms_configuration.each do |label, value|
                 li.mb-2
                   strong> = label
                   = value || "N/A"
