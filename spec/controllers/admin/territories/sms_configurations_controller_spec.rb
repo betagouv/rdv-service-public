@@ -17,9 +17,16 @@ RSpec.describe Admin::Territories::SmsConfigurationsController, type: :controlle
   end
 
   describe "#edit" do
-    it "respond success" do
+    it "respond success if departement allowed" do
+      ENV["DEPARTEMENT_ALLOWED_TO_CONFIGURE_SMS"] = "62"
       get :edit, params: { territory_id: territory.id }
       expect(response).to be_successful
+    end
+
+    it "redirected if departement not allowed" do
+      ENV["DEPARTEMENT_ALLOWED_TO_CONFIGURE_SMS"] = ""
+      get :edit, params: { territory_id: territory.id }
+      expect(response).to redirect_to(admin_territory_sms_configuration_path)
     end
   end
 
