@@ -5,7 +5,6 @@ describe Admin::RdvUserPresenter do
   let(:user) { create(:user, organisations: [organisation]) }
 
   describe "#previous_rdvs_truncated" do
-
     it "returns no previous RDVs" do
       rdv = create(:rdv, users: [user], organisation: organisation)
 
@@ -26,7 +25,7 @@ describe Admin::RdvUserPresenter do
       p4 = create(:rdv, starts_at: now - 7.days, organisation: organisation, users: [user])
       p5 = create(:rdv, starts_at: now - 13.days, organisation: organisation, users: [user])
       p1 = create(:rdv, starts_at: now - 1.day, organisation: organisation, users: [user])
-      p6 = create(:rdv, starts_at: now - 16.days, organisation: organisation, users: [user])
+      create(:rdv, starts_at: now - 16.days, organisation: organisation, users: [user])
       p2 = create(:rdv, starts_at: now - 2.days, organisation: organisation, users: [user])
       p3 = create(:rdv, starts_at: now - 4.days, organisation: organisation, users: [user])
       travel_to(now)
@@ -39,7 +38,7 @@ describe Admin::RdvUserPresenter do
       travel_to(now - 6.days)
       rdv = create(:rdv, organisation: organisation, users: [user], starts_at: now - 2.days)
       previous_rdv = create(:rdv, starts_at: now - 4.days, organisation: organisation, users: [user])
-      next_rdv = create(:rdv, starts_at: now + 4.days, organisation: organisation, users: [user])
+      create(:rdv, starts_at: now + 4.days, organisation: organisation, users: [user])
       travel_to(now)
 
       expect(described_class.new(rdv, user).previous_rdvs_truncated).to eq([previous_rdv])

@@ -75,4 +75,3 @@ RSpec.configure do |config|
     FactoryBot.rewind_sequences
   end
 end
-

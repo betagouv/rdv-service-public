@@ -71,8 +71,8 @@ describe Admin::RdvSearchForm do
       now = Time.zone.parse("20/07/2019 15:00")
       travel_to(now)
 
-      rdv1 = create(:rdv, starts_at: Time.zone.parse("21/07/2019 08:00"))
-      rdv2 = create(:rdv, starts_at: Time.zone.parse("21/07/2019 07:00"))
+      create(:rdv, starts_at: Time.zone.parse("21/07/2019 08:00"))
+      create(:rdv, starts_at: Time.zone.parse("21/07/2019 07:00"))
 
       agent_rdv_search_form = described_class.new(
         organisation_id: organisation.id,
@@ -82,7 +82,5 @@ describe Admin::RdvSearchForm do
 
       expect(agent_rdv_search_form.rdvs).to eq([])
     end
-
-
   end
 end

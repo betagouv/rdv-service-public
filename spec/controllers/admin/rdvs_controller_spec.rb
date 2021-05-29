@@ -15,16 +15,15 @@ describe Admin::RdvsController, type: :controller do
   end
 
   describe "GET index" do
-
     let(:lieu) { create(:lieu, organisation: organisation, name: "MDS Orgeval") }
 
     it "respond success and assign RDVS" do
       get(:index, params: {
-        organisation_id: organisation.id,
-        agent_id: agent.id,
-        start: Time.zone.parse("20/07/2019 08:00"),
-        end: Time.zone.parse("27/07/2019 09:00")
-      })
+            organisation_id: organisation.id,
+            agent_id: agent.id,
+            start: Time.zone.parse("20/07/2019 08:00"),
+            end: Time.zone.parse("27/07/2019 09:00")
+          })
 
       expect(response).to be_successful
       expect(assigns(:rdvs)).to eq([])

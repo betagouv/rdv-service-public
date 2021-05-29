@@ -267,7 +267,7 @@ describe User, type: :model do
       organisation = create(:organisation)
       user = create(:user, organisations: [organisation])
 
-      travel_to(now - 5.day)
+      travel_to(now - 5.days)
       create(:rdv, users: [user], starts_at: now - 1.day)
       create(:rdv, starts_at: now - 4.days, organisation: organisation, users: [user])
       future_rdv = create(:rdv, starts_at: now + 4.days, organisation: organisation, users: [user])

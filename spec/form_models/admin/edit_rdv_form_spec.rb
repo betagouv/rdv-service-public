@@ -28,7 +28,7 @@ describe Admin::EditRdvForm, type: :form do
     it "set cancelled_at to nil when change status from cancel to other" do
       now = Time.zone.parse("2020-08-03 9h00")
 
-      travel_to(now - 2.day)
+      travel_to(now - 2.days)
       rdv = create(:rdv, cancelled_at: now - 1.day, status: "excused", starts_at: now - 2.days, agents: [agent], organisation: organisation)
 
       travel_to(now)
