@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe Admin::RdvSearchForm do
+  let(:organisation) { create(:organisation) }
+
   describe "#lieu" do
     it "have a lieu when given" do
       lieu = create(:lieu)
@@ -11,7 +13,6 @@ describe Admin::RdvSearchForm do
 
   describe "#to_query" do
     it "return query with lieu" do
-      organisation = create(:organisation)
       lieu = create(:lieu, organisation: organisation)
 
       agent_rdv_search_form = described_class.new(organisation_id: organisation.id, lieu_id: lieu.id)
@@ -50,5 +51,38 @@ describe Admin::RdvSearchForm do
       expect(Rdv).to receive(:with_user).with(user)
       agent_rdv_search_form.rdvs
     end
+
+    it "return rdvs that starts_at is in window" do
+      now = Time.zone.parse("20/07/2019 15:00")
+      travel_to(now)
+      rdv1 = create(:rdv, starts_at: Time.zone.parse("21/07/2019 08:00"), organisation: organisation)
+      rdv2 = create(:rdv, starts_at: Time.zone.parse("21/07/2019 07:00"), organisation: organisation)
+
+      agent_rdv_search_form = described_class.new(
+        organisation_id: organisation.id,
+        start: Time.zone.parse("20/07/2019 08:00"),
+        end: Time.zone.parse("27/07/2019 09:00")
+      )
+
+      expect(agent_rdv_search_form.rdvs).to eq([rdv1, rdv2])
+    end
+
+    it "return empty when starts_at is outside of window" do
+      now = Time.zone.parse("20/07/2019 15:00")
+      travel_to(now)
+
+      rdv1 = create(:rdv, starts_at: Time.zone.parse("21/07/2019 08:00"))
+      rdv2 = create(:rdv, starts_at: Time.zone.parse("21/07/2019 07:00"))
+
+      agent_rdv_search_form = described_class.new(
+        organisation_id: organisation.id,
+        start: Time.zone.parse("10/07/2019 00:00"),
+        end: Time.zone.parse("17/07/2019 00:00")
+      )
+
+      expect(agent_rdv_search_form.rdvs).to eq([])
+    end
+
+
   end
 end

@@ -40,9 +40,8 @@ describe AgentRemoval, type: :service do
     let!(:organisation) { create(:organisation) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:rdv) do
-      rdv = build(:rdv, agents: [agent], organisation: organisation, starts_at: Date.today.next_week(:monday) + 10.hours)
+      rdv = create(:rdv, agents: [agent], organisation: organisation, starts_at: Date.today.next_week(:monday) + 10.hours)
       rdv.define_singleton_method(:notify_rdv_created, -> {})
-      rdv.save(validate: false)
       rdv
     end
 
@@ -55,16 +54,15 @@ describe AgentRemoval, type: :service do
   end
 
   context "agent has old RDVs" do
-    let!(:organisation) { create(:organisation) }
-    let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let!(:rdv) do
-      rdv = build(:rdv, agents: [agent], organisation: organisation, starts_at: Date.today.prev_week(:monday) + 10.hours)
-      rdv.define_singleton_method(:notify_rdv_created, -> {})
-      rdv.save(validate: false)
-      rdv
-    end
-
     it "succeeds" do
+      now = Time.zone.parse("2021-2-13 13h00")
+      travel_to(now - 2.weeks)
+      organisation = create(:organisation)
+      agent = create(:agent, basic_role_in_organisations: [organisation])
+      rdv = create(:rdv, agents: [agent], organisation: organisation, starts_at: now.prev_week(:monday) + 10.hours)
+      rdv.define_singleton_method(:notify_rdv_created, -> {})
+      travel_to(now)
+
       expect(agent).to receive(:soft_delete)
       result = described_class.new(agent, organisation).remove!
       expect(result).to eq true

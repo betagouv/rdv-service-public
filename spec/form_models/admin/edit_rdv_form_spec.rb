@@ -27,8 +27,11 @@ describe Admin::EditRdvForm, type: :form do
 
     it "set cancelled_at to nil when change status from cancel to other" do
       now = Time.zone.parse("2020-08-03 9h00")
+
+      travel_to(now - 2.day)
+      rdv = create(:rdv, cancelled_at: now - 1.day, status: "excused", starts_at: now - 2.days, agents: [agent], organisation: organisation)
+
       travel_to(now)
-      rdv = create_rdv_without_validation(cancelled_at: now - 1.day, status: "excused", starts_at: now - 2.days, agents: [agent], organisation: organisation)
 
       edit_rdv_form = described_class.new(rdv, agent_context)
       edit_rdv_form.update(status: "waiting")
@@ -39,8 +42,9 @@ describe Admin::EditRdvForm, type: :form do
 
     it "when status is excused, cancelled_at should not be nil" do
       now = Time.zone.parse("2020-08-03 9h00")
+      travel_to(now - 3.days)
+      rdv = create(:rdv, starts_at: now - 2.days, agents: [agent], organisation: organisation)
       travel_to(now)
-      rdv = create_rdv_without_validation(starts_at: now - 2.days, agents: [agent], organisation: organisation)
 
       edit_rdv_form = described_class.new(rdv, agent_context)
       edit_rdv_form.update(status: "excused")
@@ -51,8 +55,9 @@ describe Admin::EditRdvForm, type: :form do
 
     it "when status is excused, changing status should reset cancelled_at" do
       now = Time.zone.parse("2020-08-03 9h00")
+      travel_to(now - 4.days)
+      rdv = create(:rdv, cancelled_at: 2.days.ago, starts_at: now - 2.days, agents: [agent], organisation: organisation, status: "excused")
       travel_to(now)
-      rdv = create_rdv_without_validation(cancelled_at: 2.days.ago, starts_at: now - 2.days, agents: [agent], organisation: organisation, status: "excused")
 
       edit_rdv_form = described_class.new(rdv, agent_context)
       edit_rdv_form.update(status: "unknown")

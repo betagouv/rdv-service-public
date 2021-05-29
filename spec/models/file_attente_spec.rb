@@ -1,25 +1,25 @@
 # frozen_string_literal: true
 
 describe FileAttente, type: :model do
+  let(:now) { DateTime.parse("01-01-2019 09:00 +0100") }
+
+  before do
+    travel_to(now)
+  end
+
   describe "#send_notifications" do
     subject do
       described_class.send_notifications
       file_attente.reload
     end
 
-    let(:now) { DateTime.parse("01-01-2019 09:00 +0100") }
     let!(:organisation) { create(:organisation) }
     let(:motif) { create(:motif, organisation: organisation) }
     let!(:lieu) { create(:lieu, organisation: organisation) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:plage_ouverture) { create(:plage_ouverture, first_day: now + 2.weeks, start_time: Tod::TimeOfDay.new(10), agent: agent, lieu: lieu, motifs: [motif], organisation: organisation) }
-    let!(:rdv) { create_rdv_without_validation(starts_at: now + 2.weeks, lieu: lieu, motif: motif, agents: [agent], organisation: organisation) }
+    let!(:rdv) { create(:rdv, starts_at: now + 2.weeks, lieu: lieu, motif: motif, agents: [agent], organisation: organisation) }
     let!(:file_attente) { create(:file_attente, rdv: rdv) }
-
-    before do
-      travel_to(now)
-      freeze_time
-    end
 
     context "with availabilities before rdv" do
       let!(:plage_ouverture2) { create(:plage_ouverture, first_day: 1.day.from_now, start_time: Tod::TimeOfDay.new(9), lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }

@@ -15,28 +15,19 @@ describe Admin::RdvsController, type: :controller do
   end
 
   describe "GET index" do
-    subject { get(:index, params: { organisation_id: organisation.id, agent_id: agent.id, start: start_time, end: end_time }) }
 
-    before { subject }
+    let(:lieu) { create(:lieu, organisation: organisation, name: "MDS Orgeval") }
 
-    let!(:lieu) { create(:lieu, organisation: organisation, name: "MDS Orgeval") }
-    let!(:rdv1) { create_rdv_without_validation(motif: motif, agents: [agent], users: [user], starts_at: Time.zone.parse("21/07/2019 08:00"), organisation: organisation, lieu: lieu) }
-    let!(:rdv2) { create_rdv_without_validation(motif: motif, agents: [agent], users: [user], starts_at: Time.zone.parse("21/07/2019 07:00"), organisation: organisation, lieu: lieu) }
+    it "respond success and assign RDVS" do
+      get(:index, params: {
+        organisation_id: organisation.id,
+        agent_id: agent.id,
+        start: Time.zone.parse("20/07/2019 08:00"),
+        end: Time.zone.parse("27/07/2019 09:00")
+      })
 
-    context "when rdvs starts_at is in window" do
-      let(:start_time) { Time.zone.parse("20/07/2019 08:00") }
-      let(:end_time) { Time.zone.parse("27/07/2019 09:00") }
-
-      it { expect(response).to be_successful }
-      it { expect(assigns(:rdvs).to_a).to eq([rdv1, rdv2]) }
-    end
-
-    context "when rdvs starts_at is outside of window" do
-      let(:start_time) { Time.zone.parse("10/07/2019 00:00") }
-      let(:end_time) { Time.zone.parse("17/07/2019 00:00") }
-
-      it { expect(response).to be_successful }
-      it { expect(assigns(:rdvs).to_a).to eq([]) }
+      expect(response).to be_successful
+      expect(assigns(:rdvs)).to eq([])
     end
   end
 

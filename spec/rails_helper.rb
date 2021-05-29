@@ -76,8 +76,3 @@ RSpec.configure do |config|
   end
 end
 
-def create_rdv_without_validation(**options)
-  rdv = build(:rdv, options)
-  rdv.save(validate: false)
-  rdv
-end

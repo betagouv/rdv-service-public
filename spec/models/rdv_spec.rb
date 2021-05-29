@@ -268,10 +268,11 @@ describe Rdv, type: :model do
 
     it "return ONLY the daily rdv" do
       now = Time.zone.parse("2020/12/23 12:30")
-      travel_to(now)
-      build(:rdv, starts_at: now - 2.days).save(validate: false)
+      travel_to(now - 3.days)
+      create(:rdv, starts_at: now - 2.days)
       rdv = create(:rdv, starts_at: now)
       create(:rdv, starts_at: now + 1.day)
+      travel_to(now)
 
       expect(described_class.for_today).to eq([rdv])
     end
@@ -280,19 +281,25 @@ describe Rdv, type: :model do
   describe "Rdv.ongoing" do
     context "without time_margin" do
       it "returns RDV that ongoing" do
-        rdv_that_ongoing = create_rdv_without_validation(starts_at: Time.zone.now - 30.minutes, duration_in_min: 45)
-        create_rdv_without_validation(starts_at: Time.zone.now + 30.minutes, duration_in_min: 15) # rdv_starting_shortly_after
+        now = Time.zone.parse("2020-01-13 16:45")
+        travel_to(now - 3.days)
+        rdv_that_ongoing = create(:rdv, starts_at: now - 30.minutes, duration_in_min: 45)
+        create(:rdv, starts_at: now + 30.minutes, duration_in_min: 15) # rdv_starting_shortly_after
+        travel_to(now)
         expect(described_class.ongoing).to eq([rdv_that_ongoing])
       end
     end
 
     context "with 1 hour time_margin" do
       it "returns RDV that ongoing" do
-        rdv_that_ongoing = create_rdv_without_validation(starts_at: Time.zone.now - 30.minutes, duration_in_min: 45)
-        rdv_finished_shortly_before = create_rdv_without_validation(starts_at: Time.zone.now - 30.minutes, duration_in_min: 15)
-        create_rdv_without_validation(starts_at: Time.zone.now - 2.hours, duration_in_min: 15) # rdv finished long before
-        rdv_starting_shortly_after = create_rdv_without_validation(starts_at: Time.zone.now + 30.minutes, duration_in_min: 15)
-        create_rdv_without_validation(starts_at: Time.zone.now + 2.hours, duration_in_min: 15) # rdv_starting_long_after
+        now = Time.zone.parse("2020-01-13 16:45")
+        travel_to(now - 3.days)
+        rdv_that_ongoing = create(:rdv, starts_at: now - 30.minutes, duration_in_min: 45)
+        rdv_finished_shortly_before = create(:rdv, starts_at: now - 30.minutes, duration_in_min: 15)
+        create(:rdv, starts_at: now - 2.hours, duration_in_min: 15) # rdv finished long before
+        rdv_starting_shortly_after = create(:rdv, starts_at: now + 30.minutes, duration_in_min: 15)
+        create(:rdv, starts_at: now + 2.hours, duration_in_min: 15) # rdv_starting_long_after
+        travel_to(now)
 
         expected_rdvs = [
           rdv_finished_shortly_before,
@@ -308,10 +315,11 @@ describe Rdv, type: :model do
   describe "#starts_at_in_range" do
     it "return rdv that starts in range" do
       now = Time.zone.parse("2020-10-14 11h30")
-      travel_to(now)
+      travel_to(now - 2.days)
       rdv = create(:rdv, starts_at: now + 1.day + 3.hours)
       create(:rdv, starts_at: now + 2.days + 3.hours)
-      build(:rdv, starts_at: now - 1.day).save(validate: false)
+      create(:rdv, starts_at: now - 1.day)
+      travel_to(now)
       expect(described_class.starts_at_in_range((now + 1.day)..(now + 2.days))).to eq([rdv])
     end
   end
