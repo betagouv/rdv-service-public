@@ -5,36 +5,6 @@ describe Rdv, type: :model do
     expect(build(:rdv)).to be_valid
   end
 
-  describe "#notify_rdv_created" do
-    it "is called after create" do
-      rdv = build(:rdv, starts_at: 3.days.from_now)
-      expect(Notifications::Rdv::RdvCreatedService).to receive(:perform_with).with(rdv)
-      expect(Notifications::Rdv::RdvDateUpdatedService).not_to receive(:perform_with)
-      expect(Notifications::Rdv::RdvCancelledService).not_to receive(:perform_with)
-      rdv.save!
-    end
-  end
-
-  describe "#notify_rdv_date_updated" do
-    it "is called after update starts_at" do
-      rdv = create(:rdv, starts_at: 3.days.from_now)
-      expect(Notifications::Rdv::RdvCreatedService).not_to receive(:perform_with)
-      expect(Notifications::Rdv::RdvDateUpdatedService).to receive(:perform_with).with(rdv)
-      expect(Notifications::Rdv::RdvCancelledService).not_to receive(:perform_with)
-      rdv.update!(starts_at: 7.days.from_now)
-    end
-  end
-
-  describe "#notify_rdv_cancelled" do
-    it "is called after update starts_at" do
-      rdv = create(:rdv, status: :unknown, starts_at: 3.days.from_now)
-      expect(Notifications::Rdv::RdvCreatedService).not_to receive(:perform_with)
-      expect(Notifications::Rdv::RdvDateUpdatedService).not_to receive(:perform_with)
-      expect(Notifications::Rdv::RdvCancelledService).to receive(:perform_with).with(rdv)
-      rdv.update!(status: :excused)
-    end
-  end
-
   describe "#cancellable?" do
     let(:now) { Time.zone.parse("2021-05-03 14h00") }
 

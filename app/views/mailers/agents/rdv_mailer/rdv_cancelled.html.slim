@@ -1,7 +1,7 @@
 div
   p Bonjour,
   p
-    | Un RDV qui devait avoir lieu #{relative_date @rdv.starts_at} vient d’être annulé par #{@cancelled_by_str}.
+    | Un RDV qui devait avoir lieu #{relative_date @rdv.starts_at} vient d’être annulé par #{@author.full_name}.
     = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :agent
 
   p.aligncenter
