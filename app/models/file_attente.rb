@@ -18,7 +18,7 @@ class FileAttente < ApplicationRecord
       next if fa.rdv.motif.phone?
 
       end_time = fa.rdv.starts_at - 2.days
-      date_range = Date.today..end_time.to_date
+      date_range = Time.zone.today..end_time.to_date
       creneaux = fa.rdv.creneaux_available(date_range)
       next unless fa.valid_for_notification?(creneaux)
 
@@ -27,7 +27,7 @@ class FileAttente < ApplicationRecord
   end
 
   def valid_for_notification?(creneaux)
-    !creneaux.empty? && notifications_sent < MAX_NOTIFICATIONS && (last_creneau_sent_at.nil? || last_creneau_sent_at.to_date < Date.today)
+    !creneaux.empty? && notifications_sent < MAX_NOTIFICATIONS && (last_creneau_sent_at.nil? || last_creneau_sent_at.to_date < Time.zone.today)
   end
 
   def send_notification

@@ -8,7 +8,7 @@ class RdvEvent < ApplicationRecord
 
   belongs_to :rdv
 
-  def self.date_stats(date = Date.today)
+  def self.date_stats(date = Time.zone.today)
     [TYPE_NOTIFICATION_SMS, TYPE_NOTIFICATION_MAIL].map do |event_type|
       events_by_name = RdvEvent
         .where(event_type: event_type)

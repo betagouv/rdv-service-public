@@ -184,7 +184,7 @@ class User < ApplicationRecord
   end
 
   def birth_date_validity
-    return unless birth_date.present? && (birth_date > Date.today || birth_date < 130.years.ago)
+    return unless birth_date.present? && (birth_date > Time.zone.today || birth_date < 130.years.ago)
 
     errors.add(:birth_date, "est invalide")
   end

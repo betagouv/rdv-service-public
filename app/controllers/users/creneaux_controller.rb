@@ -7,7 +7,7 @@ class Users::CreneauxController < UserAuthController
   def edit; end
 
   def index
-    @all_creneaux = @rdv.creneaux_available(Date.today..@rdv.starts_at - 1.day)
+    @all_creneaux = @rdv.creneaux_available(Time.zone.today..@rdv.starts_at - 1.day)
     return if @all_creneaux.empty?
 
     start_date = params[:date]&.to_date || @all_creneaux.first.starts_at.to_date

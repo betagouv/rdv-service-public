@@ -90,7 +90,7 @@ describe Admin::RdvFormConcern, type: :form do
     context "rdv is valid but there are multiple other RDVs ending shortly before" do
       let!(:agent_giono) { build(:agent, first_name: "Jean", last_name: "GIONO") }
       let!(:agent_maceo) { build(:agent, first_name: "Maceo", last_name: "PARKER") }
-      let(:rdv) { build(:rdv, agents: [agent_giono, agent_maceo], starts_at: Date.today.next_week(:monday).in_time_zone + 16.hours) }
+      let(:rdv) { build(:rdv, agents: [agent_giono, agent_maceo], starts_at: Time.zone.today.next_week(:monday).in_time_zone + 16.hours) }
       let!(:rdvs_giono) { build_list(:rdv, 2, agents: [agent_giono]) }
       let!(:rdvs_maceo) { build_list(:rdv, 2, agents: [agent_maceo]) }
 
