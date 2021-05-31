@@ -16,7 +16,7 @@ class Admin::EditRdvForm
     @rdv.assign_attributes(rdv_attributes)
     # we want to confirm eventual warnings at both Rdv level and current Form object
     @active_warnings_confirm_decision = rdv_attributes[:active_warnings_confirm_decision]
-    valid? && RdvUpdater.update_by_agent(rdv, rdv_attributes)
+    valid? && RdvUpdater.update(agent_context.agent, rdv, rdv_attributes)
   end
 
   def save

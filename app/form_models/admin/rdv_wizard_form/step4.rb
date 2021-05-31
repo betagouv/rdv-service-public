@@ -5,7 +5,9 @@ class Admin::RdvWizardForm::Step4
   include Admin::RdvFormConcern
 
   def save
-    valid? && rdv.save
+    result = valid? && rdv.save
+    Notifications::Rdv::RdvCreatedService.perform_with(@rdv, @agent_author) if result
+    result
   end
 
   def success_path

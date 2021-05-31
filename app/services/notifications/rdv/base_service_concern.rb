@@ -4,8 +4,9 @@ module Notifications::Rdv::BaseServiceConcern
   extend ActiveSupport::Concern
   include DateHelper
 
-  def initialize(rdv)
+  def initialize(rdv, author)
     @rdv = rdv
+    @author = author
   end
 
   def perform
@@ -61,12 +62,6 @@ module Notifications::Rdv::BaseServiceConcern
   protected
 
   def change_triggered_by?(user_or_agent)
-    change_triggered_by_str == user_or_agent.name_for_paper_trail
-  end
-
-  def change_triggered_by_str
-    # TODO: this is quite hacky as it relies on the last version being
-    # the one that triggered the notification
-    @rdv.versions.last.whodunnit
+    user_or_agent == @author
   end
 end

@@ -21,7 +21,7 @@ class Notifications::Rdv::RdvDateUpdatedService < ::BaseService
     Agents::RdvMailer.rdv_date_updated(
       @rdv,
       agent,
-      change_triggered_by_str,
+      @author,
       @rdv.attribute_before_last_save(:starts_at)
     ).deliver_later
   end

@@ -13,20 +13,20 @@ class Agents::RdvMailer < ApplicationMailer
     end
   end
 
-  def rdv_cancelled(rdv, agent, cancelled_by_str)
+  def rdv_cancelled(rdv, agent, author)
     @rdv = rdv
     @agent = agent
-    @cancelled_by_str = cancelled_by_str
+    @author = author
 
     with_ics_for(@rdv) do
       mail(to: agent.email, subject: "RDV annulé #{relative_date @rdv.starts_at}")
     end
   end
 
-  def rdv_date_updated(rdv, agent, rdv_updated_by_str, old_starts_at)
+  def rdv_date_updated(rdv, agent, author, old_starts_at)
     @rdv = rdv
     @agent = agent
-    @rdv_updated_by_str = rdv_updated_by_str
+    @author = author
     @old_starts_at = old_starts_at
 
     with_ics_for(@rdv) do

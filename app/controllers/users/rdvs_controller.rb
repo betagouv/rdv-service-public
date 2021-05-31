@@ -29,6 +29,7 @@ class Users::RdvsController < UserAuthController
     end
     skip_authorization if @creneau.nil?
     if @save_succeeded
+      Notifications::Rdv::RdvCreatedService.perform_with(@rdv, current_user)
       redirect_to authenticated_user_root_path, notice: t(".rdv_confirmed")
     else
       query = { where: new_rdv_extra_params[:where], service: motif.service.id, motif_name_with_location_type: motif.name_with_location_type, departement: new_rdv_extra_params[:departement] }
@@ -38,7 +39,7 @@ class Users::RdvsController < UserAuthController
 
   def cancel
     authorize(@rdv)
-    if RdvUpdater.update_by_user(@rdv, { status: "excused" })
+    if RdvUpdater.update(current_user, @rdv, { status: "excused" })
       flash[:notice] = "Le RDV a bien été annulé."
     else
       flash[:error] = "Impossible d'annuler le RDV."

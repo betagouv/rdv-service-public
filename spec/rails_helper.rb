@@ -40,7 +40,6 @@ RSpec.configure do |config|
   config.include PageSpecHelper
   config.include SigninSpecHelper
   config.include Select2SpecHelper
-  config.include RdvSpecHelper
   config.include ApiSpecHelper
   config.include ActiveSupport::Testing::TimeHelpers
   config.include Devise::Test::ControllerHelpers, type: :controller
