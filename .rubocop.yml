@@ -30,6 +30,15 @@ Lint/MissingSuper:
 Metrics/AbcSize:
   Enabled: false
 
+Metrics/BlockLength:
+  Exclude:
+    - "Guardfile"
+    - "scripts/*"
+    - "spec/**/*"
+    - "config/initializers/*"
+    - "config/environments/*"
+    - "config/routes.rb"
+
 Metrics/CyclomaticComplexity:
   Max: 8 # default is 7
 
@@ -38,6 +47,12 @@ Metrics/ClassLength:
   CountAsOne: ['array', 'hash', 'heredoc']
   Exclude:
     - 'app/models/user.rb'
+
+Metrics/MethodLength:
+  CountAsOne: ['array', 'hash', 'heredoc']
+  Max: 15
+  Exclude:
+    - 'db/migrate/20210301135256_create_territories.rb'
 
 Rails/ApplicationController:
   Exclude:
@@ -87,7 +102,10 @@ RSpec/ContextWording:
   Enabled: False
 
 RSpec/ExampleLength:
-  Max: 10
+  Max: 30
+  Exclude:
+    - 'spec/features/**/*'
+    - 'spec/requests/api/**/*'
 
 RSpec/LetSetup:
   Enabled: false

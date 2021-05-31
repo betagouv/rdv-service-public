@@ -6,27 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 275
-# Configuration parameters: CountComments, CountAsOne, ExcludedMethods, IgnoredMethods.
-# IgnoredMethods: refine
-Metrics/BlockLength:
-  Exclude:
-    - "config/initializers/*"
-  Max: 315
-
-# Offense count: 77
-# Configuration parameters: CountComments, CountAsOne, ExcludedMethods, IgnoredMethods.
-Metrics/MethodLength:
-  CountAsOne: ['array', 'hash', 'heredoc']
-  Max: 15
-  Exclude:
-    - 'db/migrate/20210301135256_create_territories.rb'
-
-# Offense count: 49
-# Configuration parameters: Max.
-RSpec/ExampleLength:
-  Enabled: false
-
 # Offense count: 52
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: strict, flexible
