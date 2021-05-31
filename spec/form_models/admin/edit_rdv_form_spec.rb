@@ -36,8 +36,9 @@ describe Admin::EditRdvForm, type: :form do
       edit_rdv_form = described_class.new(rdv, agent_context)
       edit_rdv_form.update(status: "waiting")
 
-      expect(rdv.reload.cancelled_at).to eq(nil)
-      expect(rdv.reload.status).to eq("waiting")
+      rdv.reload
+      expect(rdv.cancelled_at).to eq(nil)
+      expect(rdv.status).to eq("waiting")
     end
 
     it "when status is excused, cancelled_at should not be nil" do
@@ -49,8 +50,9 @@ describe Admin::EditRdvForm, type: :form do
       edit_rdv_form = described_class.new(rdv, agent_context)
       edit_rdv_form.update(status: "excused")
 
-      expect(rdv.reload.cancelled_at).to eq(now)
-      expect(rdv.reload.status).to eq("excused")
+      rdv.reload
+      expect(rdv.cancelled_at).to eq(now)
+      expect(rdv.status).to eq("excused")
     end
 
     it "when status is excused, changing status should reset cancelled_at" do
@@ -62,8 +64,9 @@ describe Admin::EditRdvForm, type: :form do
       edit_rdv_form = described_class.new(rdv, agent_context)
       edit_rdv_form.update(status: "unknown")
 
-      expect(rdv.reload.cancelled_at).to eq(nil)
-      expect(rdv.reload.status).to eq("unknown")
+      rdv.reload
+      expect(rdv.cancelled_at).to eq(nil)
+      expect(rdv.status).to eq("unknown")
     end
   end
 end
