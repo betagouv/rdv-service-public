@@ -34,7 +34,7 @@ class Rdv < ApplicationRecord
   def starts_at_in_the_future
     return if starts_at >= Time.zone.now
 
-    errors.add(:start_at, "doit être dans le futur")
+    errors.add(:start_at, :must_be_future)
   end
 
   scope :not_cancelled, -> { where(cancelled_at: nil) }
