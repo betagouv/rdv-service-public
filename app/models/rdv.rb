@@ -29,6 +29,13 @@ class Rdv < ApplicationRecord
 
   validates :users, :organisation, :motif, :starts_at, :duration_in_min, :agents, presence: true
   validates :lieu, presence: true, if: :public_office?
+  validate :starts_at_in_the_future, on: :create
+
+  def starts_at_in_the_future
+    return if starts_at >= Time.zone.now
+
+    errors.add(:starts_at, :must_be_future)
+  end
 
   scope :not_cancelled, -> { where(cancelled_at: nil) }
   scope :cancelled, -> { where.not(cancelled_at: nil) }

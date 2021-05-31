@@ -246,28 +246,32 @@ describe User, type: :model do
 
     it "return rdv for same user and organisation" do
       today = Time.zone.local(2020, 5, 23, 15, 56)
-      travel_to(today)
 
       organisation = create(:organisation)
       user = create(:user, organisations: [organisation])
+
+      travel_to(today - 4.days)
       create(:rdv, users: [user], starts_at: today - 1.day)
       create(:rdv, starts_at: today - 1.day)
       create(:rdv, users: [user], starts_at: today - 2.days)
       next_rdv = create(:rdv, starts_at: today + 1.day, organisation: organisation, users: [user])
 
+      travel_to(today)
       expect(user.rdvs_future_without_ongoing(organisation)).to eq([next_rdv])
       travel_back
     end
 
     it "returns only future rdv" do
       now = Time.zone.local(2020, 5, 23, 15, 56)
-      travel_to(now)
 
       organisation = create(:organisation)
       user = create(:user, organisations: [organisation])
+
+      travel_to(now - 5.days)
       create(:rdv, users: [user], starts_at: now - 1.day)
       create(:rdv, starts_at: now - 4.days, organisation: organisation, users: [user])
       future_rdv = create(:rdv, starts_at: now + 4.days, organisation: organisation, users: [user])
+      travel_to(now)
 
       expect(user.rdvs_future_without_ongoing(organisation)).to eq([future_rdv])
       travel_back
