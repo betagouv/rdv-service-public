@@ -18,7 +18,7 @@ RSpec.describe Admin::Territories::SmsConfigurationsController, type: :controlle
 
   describe "#edit" do
     it "respond success if departement allowed" do
-      ENV["DEPARTEMENT_ALLOWED_TO_CONFIGURE_SMS"] = "62"
+      territory.update_column(:has_own_sms_provider, true)
       get :edit, params: { territory_id: territory.id }
       expect(response).to be_successful
     end
