@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::Territories::SmsConfigurationsController, type: :controller do
-  let!(:territory) { create(:territory, departement_number: "62") }
-  let!(:organisation) { create(:organisation, territory: territory) }
-  let!(:agent) { create(:agent, organisations: [organisation]) }
+  let(:territory) { create(:territory, departement_number: "62") }
+  let(:organisation) { create(:organisation, territory: territory) }
+  let(:agent) { create(:agent, organisations: [organisation]) }
 
   before do
     sign_in agent
@@ -18,7 +18,8 @@ RSpec.describe Admin::Territories::SmsConfigurationsController, type: :controlle
 
   describe "#edit" do
     it "respond success if departement allowed" do
-      territory.update_column(:has_own_sms_provider, true)
+      territory.has_own_sms_provider = true
+      territory.save!
       get :edit, params: { territory_id: territory.id }
       expect(response).to be_successful
     end
