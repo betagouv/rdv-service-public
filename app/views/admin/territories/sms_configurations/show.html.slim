@@ -1,5 +1,5 @@
 - content_for(:menu_item) { 'menu-departement-agents' }
-- content_for(:title) { "Envoie de SMS" }
+- content_for(:title) { "Envoi de SMS" }
 
 .container-fluid
   .row.justify-content-center
@@ -19,4 +19,3 @@
                   = value || "N/A"
 
           .text-right= link_to "Modifier", edit_admin_territory_sms_configuration_path(current_territory), class: "btn btn-primary"
-
