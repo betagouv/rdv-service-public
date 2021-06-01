@@ -4,7 +4,7 @@ fr:
       sms_configurations:
         edit:
           send_in_blue:
-            api_key: "API Key"
+            api_key: "Clef d'API"
           netsize:
-            api_url: "URL API"
-            user_pwd: "User pwd"
+            api_url: "Url de l'API"
+            user_pwd: "Mot de passe"
