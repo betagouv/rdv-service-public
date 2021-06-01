@@ -9,15 +9,21 @@ class NetsizeApiError < StandardError; end
 class SendTransactionalSmsService < BaseService
   attr_reader :transactional_sms
 
+  DEFAULT_SMS_PROVIDER = "netsize"
+  DEFAULT_SMS_CONFIGURATION = {
+    "api_url" => ENV["NETSIZE_API_USERPWD"],
+    "user_pwd" => "https://europe.ipx.com/restapi/v1/sms/send"
+  }.freeze
+
   SENDER_NAME = "RdvSoli"
 
   def initialize(transactional_sms)
     @transactional_sms = transactional_sms
     territory = @transactional_sms.rdv.organisation.territory
-    @configuration = territory.sms_configuration
+    @configuration = territory.sms_configuration || DEFAULT_SMS_CONFIGURATION
 
     @provider = :debug_logger
-    @provider = territory.sms_provider if Rails.env.production?
+    @provider = territory.sms_provider || DEFAULT_SMS_PROVIDER if Rails.env.production?
     @provider = ENV["FORCE_SMS_PROVIDER"].to_sym if ENV["FORCE_SMS_PROVIDER"].present?
   end
 

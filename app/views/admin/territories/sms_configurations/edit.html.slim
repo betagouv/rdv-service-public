@@ -9,7 +9,7 @@
       .card-body
         = simple_form_for current_territory, url: admin_territory_sms_configuration_path do |f|
           = render 'model_errors', model: current_territory
-          = f.input :sms_provider, collection: Territory.sms_providers.keys
+          = f.input :sms_provider, collection: Territory.sms_providers.keys, allow_blank: true
 
           - Territory::FIELDS_FOR_SMS_CONFIGURATION.each do |provider, fields|
             div.d-none.js-sms-configuration-form(class="js-#{provider}")

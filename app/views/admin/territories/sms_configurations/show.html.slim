@@ -17,5 +17,8 @@
                 li.mb-2
                   strong> = label
                   = value || "N/A"
+          - else
+            .text-muted.mb-3 = t(".explain_default_provider")
+
 
           .text-right= link_to "Modifier", edit_admin_territory_sms_configuration_path(current_territory), class: "btn btn-primary"
