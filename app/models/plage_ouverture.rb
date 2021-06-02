@@ -3,6 +3,9 @@
 class PlageOuverture < ApplicationRecord
   include RecurrenceConcern
   include WebhookDeliverable
+  include IcalHelpers::Ics
+  include IcalHelpers::Rrule
+  include Payloads::PlageOuverture
 
   belongs_to :organisation
   belongs_to :agent

@@ -9,11 +9,8 @@ class PlageOuvertureBlueprint < Blueprinter::Base
   association :lieu, blueprint: LieuBlueprint
   association :motifs, blueprint: MotifBlueprint
 
-  field :rrule do |plage_ouverture|
-    Admin::Ics::PlageOuverture.rrule(plage_ouverture)
-  end
-
-  field :ical do |plage_ouverture|
-    Admin::Ics::PlageOuverture.to_ical(Admin::Ics::PlageOuverture.payload(plage_ouverture))
-  end
+  # rubocop:disable Style/SymbolProc
+  field(:rrule) { _1.rrule }
+  field(:ical) { _1.to_ical }
+  # rubocop:enable Style/SymbolProc
 end
