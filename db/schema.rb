@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_11_111514) do
+ActiveRecord::Schema.define(version: 2021_06_03_103647) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -412,6 +412,7 @@ ActiveRecord::Schema.define(version: 2021_05_11_111514) do
     t.string "franceconnect_openid_sub"
     t.string "created_through"
     t.boolean "logged_once_with_franceconnect"
+    t.integer "invitation_validity_period"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true

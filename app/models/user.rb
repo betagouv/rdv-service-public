@@ -150,6 +150,13 @@ class User < ApplicationRecord
     birth_date.present? && birth_date > 18.years.ago
   end
 
+  def invitation_due_at
+    time = invitation_created_at || invitation_sent_at
+    return time + invitation_validity_period.days if invitation_validity_period.present?
+
+    super
+  end
+
   protected
 
   def generate_invitation_token
@@ -171,13 +178,11 @@ class User < ApplicationRecord
     end
   end
 
-  def invitation_due_at(duration_in_days = nil)
-    time = invitation_created_at || invitation_sent_at || Time.now
-    return time + duration_in_days unless duration_in_days.nil? # return duration_in_days if duration_in_days.present?
+  def invitation_period_valid?
+    time = invitation_created_at || invitation_sent_at
+    return (time && (time.utc >= invitation_validity_period.days.ago)) unless invitation_validity_period.nil?
 
-    return nil if User.invite_for.zero? || User.invite_for.nil? # return nil unless User.invite_for
-
-    time + User.invite_for
+    super
   end
 
   def password_required?
