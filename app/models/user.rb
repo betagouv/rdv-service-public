@@ -171,6 +171,15 @@ class User < ApplicationRecord
     end
   end
 
+  def invitation_due_at(duration_in_days = nil)
+    time = invitation_created_at || invitation_sent_at || Time.now
+    return time + duration_in_days unless duration_in_days.nil? # return duration_in_days if duration_in_days.present?
+
+    return nil if User.invite_for.zero? || User.invite_for.nil? # return nil unless User.invite_for
+
+    time + User.invite_for
+  end
+
   def password_required?
     false # users without passwords and emails can be created by agents
   end

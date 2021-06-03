@@ -2,7 +2,7 @@
 
 class Api::V1::UsersController < Api::V1::BaseController
   PERMITTED_PARAMS = %i[
-    first_name birth_name last_name email address phone_number
+    first_name birth_name last_name email address phone_number invitation_validity
     birth_date responsible_id caisse_affiliation affiliation_number
     family_situation number_of_children notify_by_sms notify_by_email
   ].freeze
@@ -40,6 +40,7 @@ class Api::V1::UsersController < Api::V1::BaseController
     @user.invite! do |u|
       u.skip_invitation = true
       u.invited_by = pundit_user.agent
+      u.send(:invitation_due_at, params[:invitation_validity].days) if params[:invitation_validity].present?
     end
   end
 
