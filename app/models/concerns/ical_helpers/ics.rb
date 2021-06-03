@@ -5,7 +5,7 @@ require "icalendar/tzinfo"
 module IcalHelpers
   module Ics
     def to_ical(*args)
-      IcalHelpers::Ics.from_payload(payload(*args))
+      IcalHelpers::Ics.from_payload(payload(*args)).to_ical
     end
 
     def self.from_payload(payload)
@@ -14,8 +14,9 @@ module IcalHelpers
       cal.add_timezone Time.zone_default.tzinfo.ical_timezone payload[:starts_at]
       cal.prodid = BRAND
       cal.event { |event| populate_event(event, payload) }
+      cal.ip_method = (payload[:action] == :destroy ? "CANCEL" : "PUBLISH")
 
-      cal.to_ical
+      cal
     end
 
     def self.populate_event(event, payload)
@@ -38,6 +39,7 @@ module IcalHelpers
       event.rrule = payload[:recurrence]
       event.sequence = payload[:sequence]
       event.description = payload[:description]
+      event.organizer = "mailto:secretariat-auto@rdv-solidarites.fr"
     end
   end
 end
