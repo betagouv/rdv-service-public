@@ -151,10 +151,12 @@ class User < ApplicationRecord
   end
 
   def invitation_due_at
-    time = invitation_created_at || invitation_sent_at
-    return time + invitation_validity_period.days if invitation_validity_period.present?
+    invitation_validity_period.present? ? compute_invitation_due_at : super
+  end
 
-    super
+  def compute_invitation_due_at
+    time = invitation_created_at || invitation_sent_at
+    time + invitation_validity_period.days
   end
 
   protected
