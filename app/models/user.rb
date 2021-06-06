@@ -150,13 +150,14 @@ class User < ApplicationRecord
     birth_date.present? && birth_date > 18.years.ago
   end
 
+  # overriding Devise to allow custom invitation validity duration (PR #1484)
   def invitation_due_at
-    invitation_validity_period.present? ? compute_invitation_due_at : super
+    invite_for.present? ? compute_invitation_due_at : super
   end
 
   def compute_invitation_due_at
     time = invitation_created_at || invitation_sent_at
-    time + invitation_validity_period.days
+    time + invite_for.days
   end
 
   protected
@@ -180,9 +181,10 @@ class User < ApplicationRecord
     end
   end
 
+  # overriding Devise to allow custom invitation validity duration (PR #1484)
   def invitation_period_valid?
     time = invitation_created_at || invitation_sent_at
-    return (time && (time.utc >= invitation_validity_period.days.ago)) unless invitation_validity_period.nil?
+    return (time && (time.utc <= invitation_due_at)) unless invite_for.nil?
 
     super
   end
