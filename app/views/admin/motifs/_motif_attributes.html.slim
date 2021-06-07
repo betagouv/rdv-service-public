@@ -50,6 +50,7 @@
       = Motif.human_enum_name(:visibility_type_hint, motif.visibility_type)
   hr
 
+
   = motif_attribute_row \
     i18n.t(:restriction_for_rdv_short), \
     motif.restriction_for_rdv, \
@@ -58,3 +59,7 @@
     i18n.t(:instruction_for_rdv_short), \
     motif.instruction_for_rdv, \
     hint: i18n.t(:instruction_for_rdv_hint)
+  = motif_attribute_row \
+    i18n.t(:cancel_warning_message), \
+    motif.cancel_warning_message, \
+    hint: i18n.t(:cancel_warning_message_hint)
