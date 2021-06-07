@@ -157,7 +157,7 @@ class User < ApplicationRecord
 
   def compute_invitation_due_at
     time = invitation_created_at || invitation_sent_at
-    time + invite_for.days
+    time + invite_for
   end
 
   protected
