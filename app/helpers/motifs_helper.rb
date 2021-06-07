@@ -67,4 +67,8 @@ module MotifsHelper
     tag.div(tag.div(legend, class: "col-md-4 text-bold text-right") +
         tag.div(value, class: "col-md-8"), class: "row")
   end
+
+  def cancel_warning_message
+    cancel_warning_message.present ? cancel_warning_message : "Êtes-vous sûr de vouloir annuler ce RDV ?"
+  end
 end

@@ -90,6 +90,12 @@
       = f.input :restriction_for_rdv, input_html: {rows: 6}
       = f.input :instruction_for_rdv, input_html: {rows: 6}
 
+  .card
+    .card-body
+      h5.card-title= t("activerecord.attributes.motif.cancel_warning_message")
+      p.text-muted.font-14 Ce message sera affiché à l'usager s'il tente d'annuler un RDV. Laissez ce champ vide si l'annulation du rendez-vous n'entraîne pas de conséquences pour l'usager.
+      = f.input :cancel_warning_message, input_html: {rows: 6}
+
   .row.mb-5
     - if motif.persisted?
       .col.text-left
