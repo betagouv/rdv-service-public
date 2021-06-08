@@ -40,7 +40,7 @@ describe AgentRemoval, type: :service do
     let!(:organisation) { create(:organisation) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:rdv) do
-      rdv = create(:rdv, agents: [agent], organisation: organisation, starts_at: Date.today.next_week(:monday) + 10.hours)
+      rdv = create(:rdv, agents: [agent], organisation: organisation, starts_at: Time.zone.today.next_week(:monday) + 10.hours)
       rdv.define_singleton_method(:notify_rdv_created, -> {})
       rdv
     end

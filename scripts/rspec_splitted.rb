@@ -7,6 +7,7 @@ require "date"
 
 # Add some randomization. Different test order for every run.
 tests = Dir["spec/**/*_spec.rb"]
+  .reject{ _1 =~ /features/ } # Disable feature specs temporarily, see #1493
   .shuffle(random: Random.new(ENV["GITHUB_RUN_ID"].to_i))
   .select
   .with_index do |_el, i|

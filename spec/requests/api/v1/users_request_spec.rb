@@ -277,8 +277,8 @@ describe "api/v1/users requests", type: :request do
   end
 
   describe "GET api/v1/users/:id/invite" do
-    context "authorized user ID" do
-      let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
+    context "Existing user with email" do
+      let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
 
       it "works" do
         get invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent), as: :json
@@ -286,6 +286,82 @@ describe "api/v1/users requests", type: :request do
         response_parsed = JSON.parse(response.body)
         expect(response_parsed["invitation_url"]).to be_present
         expect(response_parsed["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=")
+        user.reload
+        expect(user.invitation_due_at).to eq(user.invitation_created_at + User.invite_for)
+      end
+    end
+
+    context "Existing user without email" do
+      let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", email: nil, organisations: [organisation]) }
+
+      it "works" do
+        get invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent), as: :json
+        expect(response.status).to eq(200)
+        response_parsed = JSON.parse(response.body)
+        expect(response_parsed["invitation_token"]).to be_present
+        user.reload
+        expect(user.invitation_due_at).to eq(user.invitation_created_at + User.invite_for)
+      end
+    end
+
+    context "unauthorized user ID" do
+      let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [create(:organisation)]) }
+
+      it "works" do
+        get invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent)
+        expect(response.status).to eq(403)
+        response_parsed = JSON.parse(response.body)
+        expect(response_parsed["errors"]).to be_present
+      end
+    end
+  end
+
+  describe "POST api/v1/users/:id/invite" do
+    context "Existing user with email" do
+      let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
+
+      it "works" do
+        post invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent), as: :json
+        expect(response.status).to eq(200)
+        response_parsed = JSON.parse(response.body)
+        expect(response_parsed["invitation_url"]).to be_present
+        expect(response_parsed["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=")
+        user.reload
+        expect(user.invitation_due_at).to eq(user.invitation_created_at + User.invite_for)
+      end
+    end
+
+    context "Existing user without email" do
+      let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", email: nil, organisations: [organisation]) }
+
+      it "works" do
+        post invite_api_v1_user_path(user), headers: api_auth_headers_for_agent(agent), as: :json
+        expect(response.status).to eq(200)
+        response_parsed = JSON.parse(response.body)
+        expect(response_parsed["invitation_token"]).to be_present
+        user.reload
+        expect(user.invitation_due_at).to eq(user.invitation_created_at + User.invite_for)
+      end
+    end
+
+    context "with custom invite_for" do
+      let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
+
+      it "works" do
+        post(
+          invite_api_v1_user_path(user),
+          headers: api_auth_headers_for_agent(agent),
+          params: {
+            invite_for: 86_400 # invite_for en secondes (86400 = 1 jour),
+          },
+          as: :json
+        )
+        expect(response.status).to eq(200)
+        response_parsed = JSON.parse(response.body)
+        expect(response_parsed["invitation_url"]).to be_present
+        expect(response_parsed["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=")
+        user.reload
+        expect(user.invitation_due_at).to eq(user.invitation_created_at + 1.day)
       end
     end
 

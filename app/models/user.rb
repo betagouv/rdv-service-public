@@ -150,7 +150,25 @@ class User < ApplicationRecord
     birth_date.present? && birth_date > 18.years.ago
   end
 
+  # overriding Devise to allow custom invitation validity duration (PR #1484)
+  def invitation_due_at
+    invite_for.present? ? compute_invitation_due_at : super
+  end
+
   protected
+
+  def compute_invitation_due_at
+    time = invitation_created_at || invitation_sent_at
+    time + invite_for
+  end
+
+  # overriding Devise to allow custom invitation validity duration (PR #1484)
+  def invitation_period_valid?
+    time = invitation_created_at || invitation_sent_at
+    return (time && (time.utc <= invitation_due_at)) unless invite_for.nil?
+
+    super
+  end
 
   def generate_invitation_token
     if email.present?
@@ -184,7 +202,7 @@ class User < ApplicationRecord
   end
 
   def birth_date_validity
-    return unless birth_date.present? && (birth_date > Date.today || birth_date < 130.years.ago)
+    return unless birth_date.present? && (birth_date > Time.zone.today || birth_date < 130.years.ago)
 
     errors.add(:birth_date, "est invalide")
   end

@@ -1,5 +1,3 @@
-inherit_from: .rubocop_todo.yml
-
 require:
   - rubocop-rspec
   - rubocop-rails
@@ -145,4 +143,6 @@ Style/Documentation:
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 
-
+Style/GuardClause:
+  Exclude:
+    - 'app/controllers/admin/territories/sms_configurations_controller.rb'

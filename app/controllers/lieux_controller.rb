@@ -15,13 +15,13 @@ class LieuxController < ApplicationController
     @next_availability_by_lieux = @lieux.map do |lieu|
       [
         lieu.id,
-        creneaux_search_for(lieu, (1.week.ago.to_date..Date.today)).next_availability
+        creneaux_search_for(lieu, (1.week.ago.to_date..Time.zone.today)).next_availability
       ]
     end.to_h
   end
 
   def show
-    start_date = params[:date]&.to_date || Date.today
+    start_date = params[:date]&.to_date || Time.zone.today
     @date_range = start_date..(start_date + 6.days)
     @lieu = Lieu.find(params[:id])
     @query.merge!(lieu_id: @lieu.id)

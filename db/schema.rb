@@ -347,6 +347,7 @@ ActiveRecord::Schema.define(version: 2021_06_07_154248) do
     t.datetime "updated_at", precision: 6, null: false
     t.enum "sms_provider", enum_name: "sms_provider"
     t.json "sms_configuration"
+    t.boolean "has_own_sms_provider", default: false
     t.index ["departement_number"], name: "index_territories_on_departement_number", unique: true, where: "((departement_number)::text <> ''::text)"
   end
 
