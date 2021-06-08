@@ -9,7 +9,6 @@ class Admin::Agents::PlageOuverturesController < ApplicationController
     @organisation = Organisation.find(params[:organisation_id])
     @plage_ouverture_occurrences = custom_policy
       .includes(:lieu, :organisation)
-      .where(expired_cached: false)
       .where(agent: agent)
       .all_occurrences_for(date_range_params)
   end
