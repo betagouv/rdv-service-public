@@ -93,7 +93,7 @@
   .card
     .card-body
       h5.card-title= t("activerecord.attributes.motif.cancel_warning_message")
-      p.text-muted.font-14 Ce message sera affiché à l'usager s'il tente d'annuler un RDV. Laissez ce champ vide si l'annulation du rendez-vous n'entraîne pas de conséquences pour l'usager.
+      p.text-muted.font-14= t("activerecord.attributes.motif.cancel_warning_message_hint")
       = f.input :cancel_warning_message, input_html: {rows: 6}
 
   .row.mb-5
