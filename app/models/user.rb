@@ -155,12 +155,20 @@ class User < ApplicationRecord
     invite_for.present? ? compute_invitation_due_at : super
   end
 
+  protected
+
   def compute_invitation_due_at
     time = invitation_created_at || invitation_sent_at
     time + invite_for
   end
 
-  protected
+  # overriding Devise to allow custom invitation validity duration (PR #1484)
+  def invitation_period_valid?
+    time = invitation_created_at || invitation_sent_at
+    return (time && (time.utc <= invitation_due_at)) unless invite_for.nil?
+
+    super
+  end
 
   def generate_invitation_token
     if email.present?
@@ -179,14 +187,6 @@ class User < ApplicationRecord
       self.invitation_token = enc
       break [raw, enc] unless User.where(invitation_token: enc).size.positive?
     end
-  end
-
-  # overriding Devise to allow custom invitation validity duration (PR #1484)
-  def invitation_period_valid?
-    time = invitation_created_at || invitation_sent_at
-    return (time && (time.utc <= invitation_due_at)) unless invite_for.nil?
-
-    super
   end
 
   def password_required?

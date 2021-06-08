@@ -37,7 +37,7 @@ class Api::V1::UsersController < Api::V1::BaseController
   def invite
     @user = User.find(params[:id])
     authorize(@user)
-    @user.invite_for = params[:invite_for]
+    @user.invite_for = user_params[:invite_for]
     @user.invite! do |u|
       u.skip_invitation = true
       u.invited_by = pundit_user.agent
