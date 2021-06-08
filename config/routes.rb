@@ -93,6 +93,7 @@ Rails.application.routes.draw do
       resources :absences, only: %i[index create]
       resources :users, only: %i[create show] do
         get :invite, on: :member
+        post :invite, on: :member
       end
       resources :user_profiles, only: [:create]
     end
