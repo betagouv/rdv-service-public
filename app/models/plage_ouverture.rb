@@ -43,8 +43,8 @@ class PlageOuverture < ApplicationRecord
 
   def expired?
     # Use .expired_cached? for performance
-    (recurrence.nil? && first_day < Date.today) ||
-      (recurrence.present? && recurrence.to_hash[:until].present? && recurrence.to_hash[:until].to_date < Date.today)
+    (recurrence.nil? && first_day < Time.zone.today) ||
+      (recurrence.present? && recurrence.to_hash[:until].present? && recurrence.to_hash[:until].to_date < Time.zone.today)
   end
 
   def available_motifs

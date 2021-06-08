@@ -18,37 +18,49 @@
         i.fa.fa-users>
         span.ml-1 Administration
 
-    li.side-nav-item.mb-4.pl-3.pr-2
-      = link_to \
-        admin_territory_sectors_path(current_territory), \
-        class: ('active' if content_for(:menu_item) == 'menu-departement-sectors') \
-      do
-        i.fa.fa-table>
-        span.ml-1 Secteurs
+    - if current_territory.has_own_sms_provider?
+      li.side-nav-item.mb-4.pl-3.pr-2
+        = link_to \
+          admin_territory_sms_configuration_path(current_territory), \
+          class: ('active' if content_for(:menu_item) == 'menu-departement-agents') \
+        do
+          i.fa.fa-mobile-alt>
+          span.ml-1 SMS
 
     li.side-nav-item.mb-4.pl-3.pr-2
-      = link_to \
-        admin_territory_sectors_path(current_territory, view: "map"), \
-        class: ('active' if content_for(:menu_item) == 'menu-departement-sectors-map') \
-      do
-        i.fa.fa-map>
-        span.ml-1 Carte
+      a.active Sectorisation
+      ul.side-nav.list-unstyled.mt-4
+        li.side-nav-item.mb-4.pl-3.pr-2
+          = link_to \
+            admin_territory_sectors_path(current_territory), \
+            class: ('active' if content_for(:menu_item) == 'menu-departement-sectors') \
+          do
+            i.fa.fa-table>
+            span.ml-1 Secteurs
 
-    li.side-nav-item.mb-4.pl-3.pr-2
-      = link_to \
-        admin_territory_sectorisation_test_path(current_territory,), \
-        class: ('active' if content_for(:menu_item) == 'menu-departement-sectorisation-test') \
-      do
-        i.fa.fa-cogs>
-        span.ml-1 Tests
+        li.side-nav-item.mb-4.pl-3.pr-2
+          = link_to \
+            admin_territory_sectors_path(current_territory, view: "map"), \
+            class: ('active' if content_for(:menu_item) == 'menu-departement-sectors-map') \
+          do
+            i.fa.fa-map>
+            span.ml-1 Carte
 
-    li.side-nav-item.mb-4.pl-3.pr-2
-      = link_to \
-        new_admin_territory_zone_import_path(current_territory), \
-        class: ('active' if content_for(:menu_item) == 'menu-departement-zone-imports') \
-      do
-        i.fa.fa-download>
-        span.ml-1 Importer fichier
+        li.side-nav-item.mb-4.pl-3.pr-2
+          = link_to \
+            admin_territory_sectorisation_test_path(current_territory,), \
+            class: ('active' if content_for(:menu_item) == 'menu-departement-sectorisation-test') \
+          do
+            i.fa.fa-cogs>
+            span.ml-1 Tests
+
+        li.side-nav-item.mb-4.pl-3.pr-2
+          = link_to \
+            new_admin_territory_zone_import_path(current_territory), \
+            class: ('active' if content_for(:menu_item) == 'menu-departement-zone-imports') \
+          do
+            i.fa.fa-download>
+            span.ml-1 Importer fichier
 
     li.side-nav-item.mb-4.pl-3.pr-2
       - if policy_scope([:agent, Organisation]).count > 1

@@ -17,7 +17,7 @@ class SearchCreneauxForAgentsService < BaseService
       next_availability: FindAvailabilityService.perform_with(
         @form.motif.name,
         lieu,
-        Date.today,
+        Time.zone.today,
         for_agents: true,
         agent_ids: @form.agent_ids,
         motif_location_type: @form.motif.location_type

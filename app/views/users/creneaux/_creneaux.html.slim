@@ -1,7 +1,7 @@
 div id="creneaux-lieu"
   .row
     - previous_from_date = date_range.begin - 7.days
-    - if date_range.begin > Date.today
+    - if date_range.begin > Time.zone.today
       .col-12.col-md-auto.mb-2.mb-md-0.d-flex.align-items-center.justify-content-center
         = link_to users_creneaux_index_path(rdv_id: rdv.id, date: previous_from_date), remote: true, class: 'btn btn-primary', data: { disable_with: "..." } do
           i.fa.fa-chevron-left
