@@ -1,9 +1,9 @@
 div
   p Bonjour,
   - if @author.is_a? Agent
-    p Votre RDV #{@rdv.motif.service.name} du #{l(@rdv.starts_at, format: :human)} a été annulé.
+    p Votre RDV #{@rdv.service_name} du #{l(@rdv.starts_at, format: :human)} a été annulé.
   - else
-    p Votre RDV #{@rdv.motif.service.name} du #{l(@rdv.starts_at, format: :human)} a bien été annulé.
+    p Votre RDV #{@rdv.service_name} du #{l(@rdv.starts_at, format: :human)} a bien été annulé.
 
   - if @rdv.phone_number.present?
     p Vous pouvez reprendre un rendez-vous en appelant au #{link_to @rdv.phone_number, "tel:#{@rdv.phone_number_formatted}"}
@@ -13,9 +13,9 @@ div
 
     .btn-wrapper
       = link_to 'Reprendre RDV', lieux_url(search: { \
-        departement: @rdv.organisation.departement_number, \
-        motif_name_with_location_type: @rdv.motif.name_with_location_type, \
-        service: @rdv.motif.service.id, \
+        departement: @rdv.organisation_departement_number, \
+        motif_name_with_location_type: @rdv.motif_name_with_location_type, \
+        service: @rdv.service_id, \
         where: @rdv.address \
       }), class:'btn btn-primary'
 

@@ -6,7 +6,7 @@ class Notifications::Rdv::RdvDateUpdatedService < ::BaseService
   protected
 
   def notify_user_by_mail(user)
-    Users::RdvMailer.rdv_date_updated(@rdv, user, @rdv.attribute_before_last_save(:starts_at)).deliver_later
+    Users::RdvMailer.rdv_date_updated(@rdv.payload(:update, user), user, @rdv.attribute_before_last_save(:starts_at)).deliver_later
     @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: :updated)
   end
 
@@ -17,7 +17,7 @@ class Notifications::Rdv::RdvDateUpdatedService < ::BaseService
 
   def notify_agent(agent)
     Agents::RdvMailer.rdv_date_updated(
-      @rdv,
+      @rdv.payload(:update),
       agent,
       @author,
       @rdv.attribute_before_last_save(:starts_at)

@@ -6,7 +6,7 @@ class Notifications::Rdv::RdvCreatedService < ::BaseService
   protected
 
   def notify_user_by_mail(user)
-    Users::RdvMailer.rdv_created(@rdv, user).deliver_later
+    Users::RdvMailer.rdv_created(@rdv.payload(:create, user), user).deliver_later
     @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: :created)
   end
 
@@ -16,6 +16,6 @@ class Notifications::Rdv::RdvCreatedService < ::BaseService
   end
 
   def notify_agent(agent)
-    Agents::RdvMailer.rdv_created(@rdv, agent).deliver_later
+    Agents::RdvMailer.rdv_created(@rdv.payload(:create), agent).deliver_later
   end
 end

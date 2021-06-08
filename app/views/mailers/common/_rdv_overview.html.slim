@@ -8,15 +8,15 @@
   - if for_role == :agent
     div.row-result
       span.title Usager(s) :
-      span.float-right= rdv.users.map(&:full_name).sort.to_sentence
+      span.float-right= rdv.users_full_names
       .clear
     div.row-result
       span.title Motif :
-      span.float-right= rdv.motif.name
+      span.float-right= rdv.motif_name
       .clear
   div.row-result
     span.title Service :
-    span.float-right= rdv.motif.service.name
+    span.float-right= rdv.service_name
     .clear
   div.row-result
     span.title Durée :
@@ -38,7 +38,7 @@
         a href="https://maps.google.com?q=#{rdv.address.split(/,?\s/).join('+')}" target="_blank"
           = rdv.address_complete
       .clear
-  - if rdv.motif.instruction_for_rdv.present? && for_role == :user
+  - if rdv.motif_instruction.present? && for_role == :user
     .div.row-result.no-border
       span.title Informations supplémentaires :
-      = simple_format(rdv.motif.instruction_for_rdv)
+      = simple_format(rdv.motif_instruction)
