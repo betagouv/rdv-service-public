@@ -87,7 +87,7 @@ describe PlageOuverture, type: :model do
       end
 
       describe "when first_day is today" do
-        let(:plage_ouverture) { create(:plage_ouverture, :no_recurrence, first_day: Date.today, organisation: organisation) }
+        let(:plage_ouverture) { create(:plage_ouverture, :no_recurrence, first_day: Time.zone.today, organisation: organisation) }
 
         it { is_expected.to be false }
       end
@@ -95,7 +95,7 @@ describe PlageOuverture, type: :model do
 
     context "with plages regulières" do
       describe "when until is in past" do
-        let(:first_day) { Date.today.next_week(:monday) }
+        let(:first_day) { Time.zone.today.next_week(:monday) }
         let(:plage_ouverture) do
           create(:plage_ouverture, first_day: first_day, recurrence: Montrose.every(:week, until: DateTime.parse("2020-07-30 10:30").in_time_zone, starts: first_day), organisation: organisation)
         end
@@ -104,15 +104,15 @@ describe PlageOuverture, type: :model do
       end
 
       describe "when until is in future" do
-        let(:first_day) { Date.today.next_week(:monday) }
+        let(:first_day) { Time.zone.today.next_week(:monday) }
         let(:plage_ouverture) { create(:plage_ouverture, first_day: first_day, recurrence: Montrose.every(:week, until: 2.days.from_now, starts: first_day), organisation: organisation) }
 
         it { is_expected.to be false }
       end
 
       describe "when until is today" do
-        let(:first_day) { Date.today.next_week(:monday) }
-        let(:plage_ouverture) { create(:plage_ouverture, first_day: first_day, recurrence: Montrose.every(:week, until: Date.today, starts: first_day), organisation: organisation) }
+        let(:first_day) { Time.zone.today.next_week(:monday) }
+        let(:plage_ouverture) { create(:plage_ouverture, first_day: first_day, recurrence: Montrose.every(:week, until: Time.zone.today, starts: first_day), organisation: organisation) }
 
         it { is_expected.to be false }
       end

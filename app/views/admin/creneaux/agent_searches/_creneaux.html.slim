@@ -2,7 +2,7 @@
 
 div.js-creneaux-list.collapsed id="creneaux-lieu-#{lieu.id}"
   .row
-    - if form.date_range.begin > Date.today
+    - if form.date_range.begin > Time.zone.today
       - previous_from_date = form.date_range.begin - 7.days
       .col-auto.d-flex.align-items-center
         = link_to \

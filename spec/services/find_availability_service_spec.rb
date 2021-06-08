@@ -3,7 +3,7 @@
 describe FindAvailabilityService, type: :service do
   let(:today) { Date.new(2021, 3, 18) }
 
-  before { travel_to(today.to_time) }
+  before { travel_to(today) }
 
   after { travel_back }
 
