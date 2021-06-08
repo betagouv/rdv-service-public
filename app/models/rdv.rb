@@ -32,7 +32,7 @@ class Rdv < ApplicationRecord
 
   def starts_at_in_the_future
     return unless will_save_change_to_attribute?("starts_at")
-    return if starts_at >= Time.zone.now
+    return if starts_at >= Time.zone.now - 2.days
 
     errors.add(:starts_at, :must_be_future)
   end

@@ -300,13 +300,17 @@ describe Rdv, type: :model do
     end
 
     it "returns invalid with past starts_at" do
-      expect(build(:rdv, starts_at: now - 1.hour)).to be_invalid
+      expect(build(:rdv, starts_at: now - 2.days - 1.hour)).to be_invalid
     end
 
-    it "returns invalid when updated to a past starts_at" do
+    it "returns invalid when postpone by more than two days" do
       rdv = create(:rdv, starts_at: now + 1.hour)
-      rdv.starts_at = now - 1.hour
+      rdv.starts_at = now - 2.days - 1.hour
       expect(rdv).to be_invalid
+    end
+
+    it "returns valid with starts_at is less than two days in past" do
+      expect(build(:rdv, starts_at: now - 2.days + 1.hour)).to be_valid
     end
 
     it "returns valid with future starts_at" do
