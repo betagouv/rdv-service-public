@@ -12,14 +12,15 @@ class Admin::PlageOuverturesController < AgentAuthController
   end
 
   def index
-    @plage_ouvertures = policy_scope(PlageOuverture)
+    all_plage_ouvertures = policy_scope(PlageOuverture)
       .includes(:lieu, :organisation)
       .where(agent_id: filter_params[:agent_id])
       .order(updated_at: :desc)
+    @plage_ouvertures = all_plage_ouvertures
       .where(expired_cached: filter_params[:current_tab] == "expired")
       .page(filter_params[:page])
     @current_tab = filter_params[:current_tab]
-    @display_tabs = @plage_ouvertures.where(expired_cached: true).any? || params[:current_tab] == "expired"
+    @display_tabs = all_plage_ouvertures.where(expired_cached: true).any? || params[:current_tab] == "expired"
   end
 
   def new
