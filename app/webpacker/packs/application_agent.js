@@ -28,6 +28,7 @@ import { AgentUserForm } from 'components/agent-user-form.js'
 import { RecordVersions } from 'components/record-versions.js'
 import { RecurrenceForm } from 'components/recurrence-form.js'
 import { MergeUsersForm } from 'components/merge-users-form.js'
+import { ShowSmsProviderConfigurationForm } from 'components/show-sms-provider-configuration-form.js'
 import { SectorAttributionForm } from 'components/sector-attribution-form.js'
 import { ZoneForm } from 'components/zone-form.js'
 import { Select2Inputs } from 'components/select2-inputs';
@@ -104,6 +105,8 @@ $(document).on('turbolinks:load', function() {
   new RecurrenceForm();
 
   new MergeUsersForm();
+
+  new ShowSmsProviderConfigurationForm();
 
   new SectorAttributionForm();
 

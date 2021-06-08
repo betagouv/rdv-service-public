@@ -1,0 +1,10 @@
+fr:
+  admin:
+    territories:
+      sms_configurations:
+        edit:
+          send_in_blue:
+            api_key: "Clef d'API"
+          netsize:
+            api_url: "Url de l'API"
+            user_pwd: "Mot de passe"

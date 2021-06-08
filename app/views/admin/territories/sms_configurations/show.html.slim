@@ -1,0 +1,24 @@
+- content_for(:menu_item) { 'menu-departement-agents' }
+- content_for(:title) { "Envoi de SMS" }
+
+.container-fluid
+  .row.justify-content-center
+    .col-md-6
+      .card
+        h4.card-header Configuration
+        .card-body
+          .mb-2
+            strong> Fournisseur :
+            = current_territory.sms_provider || "N/A"
+
+          - if current_territory.sms_configuration.present?
+            ul.list-unstyled.mb-5
+              - current_territory.sms_configuration.each do |label, value|
+                li.mb-2
+                  strong> = label
+                  = value || "N/A"
+          - else
+            .text-muted.mb-3 = t(".explain_default_provider")
+
+
+          .text-right= link_to "Modifier", edit_admin_territory_sms_configuration_path(current_territory), class: "btn btn-primary"

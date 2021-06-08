@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_11_111514) do
+ActiveRecord::Schema.define(version: 2021_06_01_170102) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -346,6 +346,7 @@ ActiveRecord::Schema.define(version: 2021_05_11_111514) do
     t.datetime "updated_at", precision: 6, null: false
     t.enum "sms_provider", enum_name: "sms_provider"
     t.json "sms_configuration"
+    t.boolean "has_own_sms_provider", default: false
     t.index ["departement_number"], name: "index_territories_on_departement_number", unique: true, where: "((departement_number)::text <> ''::text)"
   end
 
