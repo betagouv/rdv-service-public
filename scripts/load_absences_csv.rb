@@ -16,23 +16,24 @@ organisation = Organisation.find(organisation_id)
 puts "Import des absences à partir du fichier #{file} pour l'organisation #{organisation.name}"
 
 ligne = 0
-CSV.foreach(URI.parse(file).open, col_sep: ";", headers: true, encoding: "ISO-8859-1") do |row|
+csv = CSV.new(URI.parse(file).open, col_sep: ";", encoding: "ISO-8859-1")
+csv.each do |row|
   ligne += 1
-  agent = Agent.find_by(email: row["agent_ID"])
+  agent = Agent.find_by(email: row[4])
   unless agent
-    puts "#{ligne} - Agent non trouvé #{row['agent_ID']}"
+    puts "#{ligne} - Agent non trouvé #{row[4]}"
     next
   end
 
   begin
     absence_params = {
       agent: agent,
-      title: row["Name"],
+      title: row[5],
       organisation: organisation,
-      first_day: Date.parse(row["first_day"]),
-      start_time: Time.zone.parse(row["start_time"]).to_time,
-      end_day: Date.parse(row["end_day"]),
-      end_time: Time.zone.parse(row["end_time"]).to_time
+      first_day: Date.parse(row[0]),
+      start_time: Time.zone.parse(row[1]).to_time,
+      end_day: Date.parse(row[2]),
+      end_time: Time.zone.parse(row[3]).to_time
     }
   rescue StandardError
     puts "#{ligne} - erreur d'analyse de la ligne"
