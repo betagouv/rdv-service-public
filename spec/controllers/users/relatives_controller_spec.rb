@@ -132,7 +132,7 @@ RSpec.describe Users::RelativesController, type: :controller do
   describe "DELETE #destroy" do
     subject { delete :destroy, params: { id: relative.id } }
 
-    let(:now) { Time.zone.parse("21/07/2019 08:22") }
+    let(:now) { "21/07/2019 08:22".to_time }
 
     before { travel_to(now) }
 

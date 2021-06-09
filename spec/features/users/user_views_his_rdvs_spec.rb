@@ -26,15 +26,15 @@ describe "User views his rdv" do
     end
   end
 
-  it "even past rdvs" do
-    now = Time.zone.parse("2021-04-25 18:00")
-    travel_to(now - 1.week)
-    rdv = create(:rdv, starts_at: now - 3.days, users: [user], organisation: organisation)
+  context "with past rdv" do
+    let!(:rdv) { create(:rdv, :past, users: [user], organisation: organisation) }
 
-    travel_to(now)
-    click_link "Vos rendez-vous"
-    expect_page_with_no_record_text("Vous n'avez pas de RDV à venir")
-    click_link "Voir vos RDV passés"
-    expect(page).to have_content("le #{I18n.l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)")
+    before { click_link "Vos rendez-vous" }
+
+    it do
+      expect_page_with_no_record_text("Vous n'avez pas de RDV à venir")
+      click_link "Voir vos RDV passés"
+      expect(page).to have_content("le #{I18n.l(rdv.starts_at, format: :human)} (durée : #{rdv.duration_in_min} minutes)")
+    end
   end
 end

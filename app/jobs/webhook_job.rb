@@ -5,8 +5,6 @@ class OutgoingWebhookError < StandardError; end
 class WebhookJob < ApplicationJob
   TIMEOUT = 10
 
-  queue_as :webhook
-
   def perform(payload, webhook_endpoint_id)
     webhook_endpoint = WebhookEndpoint.find(webhook_endpoint_id)
 

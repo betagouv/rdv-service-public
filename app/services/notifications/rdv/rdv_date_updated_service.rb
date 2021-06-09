@@ -5,13 +5,15 @@ class Notifications::Rdv::RdvDateUpdatedService < ::BaseService
 
   protected
 
+  # TODO: it's weird that it uses the exact same notifications as for creations
+
   def notify_user_by_mail(user)
-    Users::RdvMailer.rdv_date_updated(@rdv, user, @rdv.attribute_before_last_save(:starts_at)).deliver_later
+    Users::RdvMailer.rdv_created(@rdv, user).deliver_later
     @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: :updated)
   end
 
   def notify_user_by_sms(user)
-    SendTransactionalSmsJob.perform_later(:rdv_updated, @rdv.id, user.id)
+    SendTransactionalSmsJob.perform_later(:rdv_created, @rdv.id, user.id)
     @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: :updated)
   end
 
@@ -19,7 +21,7 @@ class Notifications::Rdv::RdvDateUpdatedService < ::BaseService
     Agents::RdvMailer.rdv_date_updated(
       @rdv,
       agent,
-      @author,
+      change_triggered_by_str,
       @rdv.attribute_before_last_save(:starts_at)
     ).deliver_later
   end

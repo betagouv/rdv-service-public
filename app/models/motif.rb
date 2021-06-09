@@ -116,10 +116,6 @@ class Motif < ApplicationRecord
     sectorisation_level == SECTORISATION_LEVEL_DEPARTEMENT
   end
 
-  def cancellation_warning
-    custom_cancel_warning_message || I18n.t("activerecord.attributes.motif.default_cancel_warning_message")
-  end
-
   private
 
   def booking_delay_validation

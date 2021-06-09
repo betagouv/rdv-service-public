@@ -11,8 +11,7 @@ class TestService < ::BaseService
 end
 
 describe Notifications::Rdv::BaseServiceConcern, type: :service do
-  let(:service) { TestService.new(rdv, author) }
-  let(:author) { nil }
+  let(:service) { TestService.new(rdv) }
 
   describe "user notifications" do
     before do
@@ -84,20 +83,6 @@ describe Notifications::Rdv::BaseServiceConcern, type: :service do
       it "sends SMS to only one" do
         expect(service).not_to receive(:notify_user_by_sms).with(user1)
         expect(service).to receive(:notify_user_by_sms).with(user2)
-        service.perform
-      end
-    end
-
-    context "rdv has one user with one responsible" do
-      let(:responsible) { build(:user) }
-      let(:user) { build(:user, responsible: responsible) }
-      let(:rdv) { build(:rdv, starts_at: Time.zone.now + 1.day, users: [user]) }
-
-      it "sends emails to only the responsible" do
-        expect(service).not_to receive(:notify_user_by_sms).with(user)
-        expect(service).to receive(:notify_user_by_sms).with(responsible)
-        expect(service).not_to receive(:notify_user_by_mail).with(user)
-        expect(service).to receive(:notify_user_by_mail).with(responsible)
         service.perform
       end
     end

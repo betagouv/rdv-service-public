@@ -1,12 +1,5 @@
 fr:
   activerecord:
-
-    errors:
-      models:
-        rdv:
-          attributes:
-            starts_at:
-              must_be_future: "doit être dans le futur"
     models:
       rdv: Rendez-vous
     attributes:
@@ -51,4 +44,3 @@ fr:
                 current_agent: "Vous avez <a href='%{path}'>un autre RDV</a> qui chevauche celui-ci"
                 in_scope: "%{agent_name} a <a href='%{path}'>un autre RDV</a> qui chevauche celui-ci"
                 out_of_scope: "Ce rendez-vous en chevauche un autre. %{agent_name} a un RDV dans une autre organisation (ce RDV est dans un autre service ou une autre organisation à laquelle vous n'avez pas accès)"
-

@@ -39,7 +39,12 @@ describe AgentRemoval, type: :service do
   context "agent has upcoming RDVs" do
     let!(:organisation) { create(:organisation) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let!(:rdv) { create(:rdv, agents: [agent], organisation: organisation, starts_at: Time.zone.today.next_week(:monday) + 10.hours) }
+    let!(:rdv) do
+      rdv = build(:rdv, agents: [agent], organisation: organisation, starts_at: Date.today.next_week(:monday) + 10.hours)
+      rdv.define_singleton_method(:notify_rdv_created, -> {})
+      rdv.save!
+      rdv
+    end
 
     it "does not succeed" do
       expect(agent).not_to receive(:soft_delete)
@@ -50,14 +55,16 @@ describe AgentRemoval, type: :service do
   end
 
   context "agent has old RDVs" do
-    it "succeeds" do
-      now = Time.zone.parse("2021-2-13 13h00")
-      travel_to(now - 2.weeks)
-      organisation = create(:organisation)
-      agent = create(:agent, basic_role_in_organisations: [organisation])
-      create(:rdv, agents: [agent], organisation: organisation, starts_at: now.prev_week(:monday) + 10.hours)
-      travel_to(now)
+    let!(:organisation) { create(:organisation) }
+    let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+    let!(:rdv) do
+      rdv = build(:rdv, agents: [agent], organisation: organisation, starts_at: Date.today.prev_week(:monday) + 10.hours)
+      rdv.define_singleton_method(:notify_rdv_created, -> {})
+      rdv.save!
+      rdv
+    end
 
+    it "succeeds" do
       expect(agent).to receive(:soft_delete)
       result = described_class.new(agent, organisation).remove!
       expect(result).to eq true

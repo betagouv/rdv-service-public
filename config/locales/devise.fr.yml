@@ -32,10 +32,6 @@ fr:
         header: "Choisir son mot de passe"
         submit_button: "Enregistrer"
       reinvite: "Renvoyer l’invitation"
-      invitation:
-        title: "Inscription"
-        invitation_token: "Code d’invitation"
-        submit_button: "Créer son compte"
     mailer:
       invitation_instructions_for_agents:
         subject: "Vous avez été invité sur RDV-Solidarités."

@@ -9,7 +9,7 @@ describe Notifications::Rdv::RdvCancelledByAgent, type: :service do
   it "sends an email" do
     allow(Users::RdvMailer).to receive(:rdv_cancelled_by_agent)
       .with(rdv, user1)
-      .and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
+      .and_return(double(deliver_later: nil))
     subject
     expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "cancelled_by_agent").count).to eq 1
   end

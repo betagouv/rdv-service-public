@@ -64,6 +64,6 @@ class CreneauxBuilderForDateService < BaseService
   end
 
   def inclusive_datetime_range
-    @inclusive_datetime_range ||= (@inclusive_date_range.begin)..(@inclusive_date_range.end.end_of_day)
+    @inclusive_datetime_range ||= (@inclusive_date_range.begin.to_time)..(@inclusive_date_range.end.end_of_day)
   end
 end

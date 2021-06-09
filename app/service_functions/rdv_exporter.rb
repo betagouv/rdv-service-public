@@ -52,10 +52,10 @@ module RdvExporter
     [
       rdv.created_at.year,
       I18n.l(rdv.created_at.to_date),
-      I18n.l(rdv.created_at, format: :time_only),
+      I18n.l(rdv.created_at.to_time, format: :time_only),
       origine(rdv),
       I18n.l(rdv.starts_at.to_date),
-      I18n.l(rdv.starts_at, format: :time_only),
+      I18n.l(rdv.starts_at.to_time, format: :time_only),
       rdv.motif.service.name,
       rdv.motif.name,
       rdv.context,

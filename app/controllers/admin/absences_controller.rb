@@ -3,7 +3,7 @@
 class Admin::AbsencesController < AgentAuthController
   respond_to :html, :json
 
-  before_action :set_absence, only: %i[edit update destroy]
+  before_action :set_absence, only: %i[show edit update destroy]
   before_action :build_absence, only: [:create]
   before_action :set_agent
 
@@ -45,7 +45,7 @@ class Admin::AbsencesController < AgentAuthController
     @absence.organisation = current_organisation
     authorize(@absence)
     if @absence.save
-      Agents::AbsenceMailer.absence_created(@absence.payload(:create)).deliver_later
+      Agents::AbsenceMailer.absence_created(Admin::Ics::Absence.create_payload(@absence)).deliver_later
       flash[:notice] = "L'absence a été créée."
       redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
     else
@@ -56,7 +56,7 @@ class Admin::AbsencesController < AgentAuthController
   def update
     authorize(@absence)
     if @absence.update(absence_params)
-      Agents::AbsenceMailer.absence_updated(@absence.payload(:update)).deliver_later
+      Agents::AbsenceMailer.absence_updated(Admin::Ics::Absence.update_payload(@absence)).deliver_later
       flash[:notice] = "L'absence a été modifiée."
       redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
     else
@@ -67,7 +67,7 @@ class Admin::AbsencesController < AgentAuthController
   def destroy
     authorize(@absence)
     if @absence.destroy
-      Agents::AbsenceMailer.absence_destroyed(@absence.payload(:destroy)).deliver_later
+      Agents::AbsenceMailer.absence_destroyed(Admin::Ics::Absence.destroy_payload(@absence)).deliver_later
       flash[:notice] = "L'absence a été supprimée."
       redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
     else

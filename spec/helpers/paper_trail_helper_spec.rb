@@ -1,34 +1,43 @@
 # frozen_string_literal: true
 
 describe PaperTrailHelper do
+  let(:rdv) { create(:rdv) }
+
   describe "#paper_trail_change_value" do
-    it "returns N/A when nil value" do
-      expect(helper.paper_trail_change_value("some_value", nil)).to eq("N/A")
+    subject { helper.paper_trail_change_value(*args) }
+
+    context "nil value" do
+      let(:args) { [rdv, "some_value", nil] }
+
+      it { is_expected.to eq "N/A" }
     end
 
-    it "returns time value when Time class given" do
-      expect(helper.paper_trail_change_value("some_value", Time.zone.parse("2020/03/03 10:20"))).to eq("03/03/2020 à 10:20")
+    context "time value" do
+      let(:args) { [rdv, "some_value", Time.zone.parse("2020/03/03 10:20")] }
+
+      it { is_expected.to eq "03/03/2020 à 10:20" }
     end
 
-    it "returns rdv status when property status and resource rdv" do
-      expect(helper.paper_trail_change_value("status", "unknown")).to eq("Indéterminé")
+    context "rdv status" do
+      let(:args) { [rdv, "status", "unknown"] }
+
+      it { is_expected.to eq "Indéterminé" }
     end
 
-    it "returns rdv user ids when property user_ids for rdv resource" do
-      user1 = create(:user, first_name: "Jeanne", last_name: "Dupont")
-      user2 = create(:user, first_name: "Martine", last_name: "Lalou")
-      expect(helper.paper_trail_change_value("user_ids", [user1.id, user2.id])).to eq("Jeanne DUPONT, Martine LALOU")
+    context "rdv user ids" do
+      let(:user1) { create(:user, first_name: "Jeanne", last_name: "Dupont") }
+      let(:user2) { create(:user, first_name: "Martine", last_name: "Lalou") }
+      let(:args) { [rdv, "user_ids", [user1.id, user2.id]] }
+
+      it { is_expected.to eq "Jeanne DUPONT, Martine LALOU" }
     end
 
-    it "returns rdv agent ids when property agent_ids with rdv ressource" do
-      agent1 = create(:agent, first_name: "Patricia", last_name: "Allo")
-      agent2 = create(:agent, first_name: "Marco", last_name: "Labat")
+    context "rdv agent ids" do
+      let(:agent1) { create(:agent, first_name: "Patricia", last_name: "Allo") }
+      let(:agent2) { create(:agent, first_name: "Marco", last_name: "Labat") }
+      let(:args) { [rdv, "agent_ids", [agent1.id, agent2.id]] }
 
-      expect(helper.paper_trail_change_value("agent_ids", [agent1.id, agent2.id])).to eq("Patricia ALLO, Marco LABAT")
-    end
-
-    it "returns stringified value when passed an unknown property of arbitrary type" do
-      expect(helper.paper_trail_change_value("some_value", :some_symbol)).to eq("some_symbol")
+      it { is_expected.to eq "Patricia ALLO, Marco LABAT" }
     end
   end
 end

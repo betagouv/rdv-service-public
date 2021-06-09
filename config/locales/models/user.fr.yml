@@ -33,7 +33,6 @@ fr:
         notify_by_sms: "Accepte les notifications par SMS"
         notify_by_email: "Accepte les notifications par email"
         created_through: "Origine du compte"
-        invitation_token: "Code d’invitation"
     errors:
       models:
         user:
@@ -44,7 +43,3 @@ fr:
               franceconnect_frozen_field_cannot_change: Le nom de naissance ne peut-être changé car il a été certifié par FranceConnect
             birth_date:
               franceconnect_frozen_field_cannot_change: La date de naissance ne peut-être changée car elle a été certifiée par FranceConnect
-  simple_form:
-    hints:
-      user:
-        phone_number: Saisissez un numéro français ou outre-mer à 10 chiffres, ou bien un numéro international avec le préfixe du pays.

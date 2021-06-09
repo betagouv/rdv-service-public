@@ -4,10 +4,8 @@ class Users::CreneauxController < UserAuthController
   before_action :set_creneau_params, only: %i[index edit update]
   before_action :build_creneau, :redirect_if_creneau_not_available, only: %i[edit update]
 
-  def edit; end
-
   def index
-    @all_creneaux = @rdv.creneaux_available(Time.zone.today..@rdv.starts_at - 1.day)
+    @all_creneaux = @rdv.creneaux_available(Date.today..@rdv.starts_at - 1.day)
     return if @all_creneaux.empty?
 
     start_date = params[:date]&.to_date || @all_creneaux.first.starts_at.to_date
@@ -22,7 +20,6 @@ class Users::CreneauxController < UserAuthController
 
   def update
     @rdv.update(starts_at: @creneau.starts_at, created_by: :file_attente)
-    Notifications::Rdv::RdvDateUpdatedService.perform_with(@rdv, current_user)
   end
 
   private
@@ -34,7 +31,7 @@ class Users::CreneauxController < UserAuthController
   end
 
   def build_creneau
-    @starts_at = Time.zone.parse(params[:starts_at])
+    @starts_at = params[:starts_at].to_time
     @creneau = Users::CreneauSearch.creneau_for(
       user: current_user,
       starts_at: @starts_at,

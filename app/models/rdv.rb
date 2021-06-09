@@ -2,9 +2,8 @@
 
 class Rdv < ApplicationRecord
   include WebhookDeliverable
+  include Rdv::NotifiableConcern
   include Rdv::AddressConcern
-  include IcalHelpers::Ics
-  include Payloads::Rdv
 
   ENDS_AT_SQL = Arel.sql("(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)")
 
@@ -30,14 +29,6 @@ class Rdv < ApplicationRecord
 
   validates :users, :organisation, :motif, :starts_at, :duration_in_min, :agents, presence: true
   validates :lieu, presence: true, if: :public_office?
-  validate :starts_at_in_the_future
-
-  def starts_at_in_the_future
-    return unless will_save_change_to_attribute?("starts_at")
-    return if starts_at >= Time.zone.now - 2.days
-
-    errors.add(:starts_at, :must_be_future)
-  end
 
   scope :not_cancelled, -> { where(cancelled_at: nil) }
   scope :cancelled, -> { where.not(cancelled_at: nil) }
@@ -93,7 +84,7 @@ class Rdv < ApplicationRecord
   end
 
   def in_next_hour?
-    starts_at <= Time.zone.now + 1.hour
+    starts_at.to_time <= Time.zone.now + 1.hour
   end
 
   def today?

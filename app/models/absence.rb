@@ -3,9 +3,6 @@
 class Absence < ApplicationRecord
   include WebhookDeliverable
   include RecurrenceConcern
-  include IcalHelpers::Ics
-  include IcalHelpers::Rrule
-  include Payloads::Absence
 
   belongs_to :agent
   belongs_to :organisation

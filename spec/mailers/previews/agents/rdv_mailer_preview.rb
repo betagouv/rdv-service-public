@@ -17,7 +17,7 @@ class Agents::RdvMailerPreview < ActionMailer::Preview
 
   def rdv_date_updated
     rdv = Rdv.not_cancelled.last
-    rdv.starts_at = Time.zone.today + 10.days + 10.hours
+    rdv.starts_at = Date.today + 10.days + 10.hours
     Agents::RdvMailer.rdv_date_updated(
       rdv,
       rdv.agents.first,

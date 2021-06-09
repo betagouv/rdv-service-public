@@ -54,7 +54,7 @@ class PlageOuvertureOverlap
       elsif po2.exceptionnelle?
         po2.first_day.past? ? nil : (po2.first_day..po2.first_day)
       else
-        min = [[po1.first_day, po2.first_day].min, Time.zone.today].max
+        min = [[po1.first_day, po2.first_day].min, Date.today].max
         max = [po1.recurrence_until, po2.recurrence_until, 6.months.from_now].compact.min
         (min..max)
       end

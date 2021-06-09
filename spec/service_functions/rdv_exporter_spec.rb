@@ -102,7 +102,7 @@ describe RdvExporter, type: :service do
 
     describe "statut" do
       it "return rdv statut" do
-        rdv = build(:rdv, starts_at: Time.zone.now - 1.day, status: "unknown")
+        rdv = build(:rdv, :past, status: "unknown")
         expect(described_class.row_array_from(rdv)[9]).to eq("À renseigner")
       end
     end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_07_154248) do
+ActiveRecord::Schema.define(version: 2021_05_11_111514) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -217,7 +217,6 @@ ActiveRecord::Schema.define(version: 2021_06_07_154248) do
     t.boolean "follow_up", default: false
     t.string "visibility_type", default: "visible_and_notified", null: false
     t.string "sectorisation_level", default: "departement"
-    t.text "custom_cancel_warning_message"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
     t.index ["name", "organisation_id", "location_type", "service_id"], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
@@ -347,7 +346,6 @@ ActiveRecord::Schema.define(version: 2021_06_07_154248) do
     t.datetime "updated_at", precision: 6, null: false
     t.enum "sms_provider", enum_name: "sms_provider"
     t.json "sms_configuration"
-    t.boolean "has_own_sms_provider", default: false
     t.index ["departement_number"], name: "index_territories_on_departement_number", unique: true, where: "((departement_number)::text <> ''::text)"
   end
 
@@ -414,7 +412,6 @@ ActiveRecord::Schema.define(version: 2021_06_07_154248) do
     t.string "franceconnect_openid_sub"
     t.string "created_through"
     t.boolean "logged_once_with_franceconnect"
-    t.integer "invite_for"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true

@@ -9,35 +9,30 @@ class NetsizeApiError < StandardError; end
 class SendTransactionalSmsService < BaseService
   attr_reader :transactional_sms
 
-  DEFAULT_SMS_PROVIDER = "netsize"
-  DEFAULT_SMS_CONFIGURATION = {
-    "api_url" => ENV["NETSIZE_API_USERPWD"],
-    "user_pwd" => "https://europe.ipx.com/restapi/v1/sms/send"
-  }.freeze
-
   SENDER_NAME = "RdvSoli"
 
   def initialize(transactional_sms)
     @transactional_sms = transactional_sms
-    territory = @transactional_sms.rdv.organisation.territory
-    @configuration = territory.sms_configuration || DEFAULT_SMS_CONFIGURATION
-
-    @provider = :debug_logger
-    @provider = territory.sms_provider || DEFAULT_SMS_PROVIDER if Rails.env.production?
-    @provider = ENV["FORCE_SMS_PROVIDER"].to_sym if ENV["FORCE_SMS_PROVIDER"].present?
   end
 
   def perform
-    send("send_with_#{@provider}")
+    send("send_with_#{sms_provider}")
   end
 
   private
 
+  def sms_provider
+    if ENV["FORCE_SMS_PROVIDER"].present?
+      ENV["FORCE_SMS_PROVIDER"].to_sym
+    elsif Rails.env.production?
+      :netsize
+    else
+      :debug_logger
+    end
+  end
+
   def send_with_send_in_blue
-    config = SibApiV3Sdk::Configuration.new
-    config.api_key = @configuration["api_key"]
-    api_client = SibApiV3Sdk::ApiClient.new(config)
-    SibApiV3Sdk::TransactionalSMSApi.new(api_client).send_transac_sms(
+    SibApiV3Sdk::TransactionalSMSApi.new.send_transac_sms(
       SibApiV3Sdk::SendTransacSms.new(
         sender: SENDER_NAME,
         recipient: transactional_sms.phone_number_formatted,
@@ -49,9 +44,9 @@ class SendTransactionalSmsService < BaseService
 
   def send_with_netsize
     request = Typhoeus::Request.new(
-      @configuration["api_url"],
+      "https://europe.ipx.com/restapi/v1/sms/send",
       method: :post,
-      userpwd: @configuration["user_pwd"],
+      userpwd: ENV["NETSIZE_API_USERPWD"],
       headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
       timeout: 5,
       body: {
@@ -83,6 +78,5 @@ class SendTransactionalSmsService < BaseService
 
   def send_with_debug_logger
     Rails.logger.debug("following SMS would have been sent in production environment: #{transactional_sms}")
-    Rails.logger.debug("provider : #{@provider} configuration : #{@configuration}")
   end
 end

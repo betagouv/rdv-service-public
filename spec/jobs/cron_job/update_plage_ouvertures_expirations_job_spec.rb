@@ -5,9 +5,9 @@ describe CronJob::UpdatePlageOuverturesExpirationsJob, type: :job do
     described_class.perform_now
   end
 
-  let(:first_day) { Time.zone.today.next_week(:monday) }
+  let(:first_day) { Date.today.next_week(:monday) }
   let!(:plage_ouverture_reguliere) { create(:plage_ouverture, first_day: first_day, recurrence: Montrose.every(:week, until: Time.zone.now, starts: first_day)) }
-  let!(:plage_ouverture_exceptionnelle) { create(:plage_ouverture, :no_recurrence, first_day: Time.zone.today) }
+  let!(:plage_ouverture_exceptionnelle) { create(:plage_ouverture, :no_recurrence, first_day: Date.today) }
 
   context "when plage ouverture are expired" do
     it "calls notification service" do

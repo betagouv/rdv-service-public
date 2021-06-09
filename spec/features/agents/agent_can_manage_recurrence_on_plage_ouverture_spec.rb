@@ -51,9 +51,7 @@ describe "Agent can manage recurrence on plage d'ouverture" do
     expect_checked("recurrence_on_thursday")
     expect_checked("recurrence_on_friday")
     expect_checked("recurrence_on_saturday")
-    expect(page).to have_field("recurrence-until")
-    # expect(page).to have_field("recurrence-until", with: "30/12/2019")
-    # TODO Pourquoi le champs ne contient pas la valeur ici. Quand on le fait à la main, tout va bien.
+    expect(find_field("recurrence-until").value).to eq "30/12/2019"
 
     visit edit_admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
     select("mois", from: "recurrence_every")
@@ -80,9 +78,7 @@ describe "Agent can manage recurrence on plage d'ouverture" do
     expect(page).to have_select("recurrence_every", selected: "mois")
     expect(page).to have_select("recurrence_interval", selected: "1")
     expect(page).to have_text("Tous les 2ème mercredi du mois")
-    expect(page).to have_field("recurrence-until")
-    # expect(page).to have_field("recurrence-until", with: "30/12/2019")
-    # TODO Pourquoi le champs ne contient pas la valeur ici. Quand on le fait à la main, tout va bien.
+    expect(find_field("recurrence-until").value).to eq "30/12/2019"
   end
 
   def expect_checked(element_selector)

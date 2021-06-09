@@ -5,13 +5,14 @@ describe Creneau, type: :model do
   let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, reservable_online: reservable_online, organisation: organisation) }
   let(:reservable_online) { true }
   let!(:lieu) { create(:lieu, organisation: organisation) }
-  let(:today) { Time.zone.local(2019, 9, 19) }
+  let(:today) { Date.new(2019, 9, 19) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let!(:plage_ouverture) do
     create(:plage_ouverture, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent, organisation: organisation)
   end
+  let(:now) { today.to_time }
 
-  before { travel_to(today) }
+  before { travel_to(now) }
 
   after { travel_back }
 

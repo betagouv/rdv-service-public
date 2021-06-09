@@ -150,44 +150,7 @@ class User < ApplicationRecord
     birth_date.present? && birth_date > 18.years.ago
   end
 
-  # overriding Devise to allow custom invitation validity duration (PR #1484)
-  def invitation_due_at
-    invite_for.present? ? compute_invitation_due_at : super
-  end
-
   protected
-
-  def compute_invitation_due_at
-    time = invitation_created_at || invitation_sent_at
-    time + invite_for
-  end
-
-  # overriding Devise to allow custom invitation validity duration (PR #1484)
-  def invitation_period_valid?
-    time = invitation_created_at || invitation_sent_at
-    return (time && (time.utc <= invitation_due_at)) unless invite_for.nil?
-
-    super
-  end
-
-  def generate_invitation_token
-    if email.present?
-      super
-    else
-      generate_short_invitation_token # users without emails are invited to manually type it on rdv-solidarites.fr/invitation (Issue #1472)
-    end
-  end
-
-  def generate_short_invitation_token
-    key = Devise.token_generator.send(:key_for, :invitation_token)
-    loop do
-      raw = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8)
-      enc = OpenSSL::HMAC.hexdigest("SHA256", key, raw)
-      @raw_invitation_token = raw
-      self.invitation_token = enc
-      break [raw, enc] unless User.where(invitation_token: enc).size.positive?
-    end
-  end
 
   def password_required?
     false # users without passwords and emails can be created by agents
@@ -202,7 +165,7 @@ class User < ApplicationRecord
   end
 
   def birth_date_validity
-    return unless birth_date.present? && (birth_date > Time.zone.today || birth_date < 130.years.ago)
+    return unless birth_date.present? && (birth_date > Date.today || birth_date < 130.years.ago)
 
     errors.add(:birth_date, "est invalide")
   end

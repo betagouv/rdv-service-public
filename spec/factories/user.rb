@@ -11,7 +11,7 @@ FactoryBot.define do
     last_name { Faker::Name.last_name.upcase }
     phone_number do
       num = ""
-      num = Faker::PhoneNumber.cell_phone until Phonelib.valid?(num)
+      num = Faker::Base.numerify("06 ## ## ## ##") until Phonelib.valid?(num)
       num
     end
     birth_date { Date.parse("1985-07-20") }

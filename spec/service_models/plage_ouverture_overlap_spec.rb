@@ -3,7 +3,7 @@
 describe PlageOuvertureOverlap do
   let(:organisation) { build(:organisation) }
   let(:agent) { build(:agent, organisations: [organisation]) }
-  let(:monday) { Time.zone.today.next_week(:monday) }
+  let(:monday) { Date.today.next_week(:monday) }
 
   def build_po(first_day, start_hour, end_hour, recurrence = nil)
     build(

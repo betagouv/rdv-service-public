@@ -1,18 +1,13 @@
 # frozen_string_literal: true
 
 describe FileAttente, type: :model do
-  let(:now) { DateTime.parse("01-01-2019 09:00 +0100") }
-
-  before do
-    travel_to(now)
-  end
-
   describe "#send_notifications" do
     subject do
       described_class.send_notifications
       file_attente.reload
     end
 
+    let(:now) { DateTime.parse("01-01-2019 09:00 +0100") }
     let!(:organisation) { create(:organisation) }
     let(:motif) { create(:motif, organisation: organisation) }
     let!(:lieu) { create(:lieu, organisation: organisation) }
@@ -20,6 +15,11 @@ describe FileAttente, type: :model do
     let!(:plage_ouverture) { create(:plage_ouverture, first_day: now + 2.weeks, start_time: Tod::TimeOfDay.new(10), agent: agent, lieu: lieu, motifs: [motif], organisation: organisation) }
     let!(:rdv) { create(:rdv, starts_at: now + 2.weeks, lieu: lieu, motif: motif, agents: [agent], organisation: organisation) }
     let!(:file_attente) { create(:file_attente, rdv: rdv) }
+
+    before do
+      travel_to(now)
+      freeze_time
+    end
 
     context "with availabilities before rdv" do
       let!(:plage_ouverture2) { create(:plage_ouverture, first_day: 1.day.from_now, start_time: Tod::TimeOfDay.new(9), lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
@@ -39,7 +39,7 @@ describe FileAttente, type: :model do
       end
 
       it "sends an email" do
-        allow(Users::FileAttenteMailer).to receive(:new_creneau_available).with(rdv, rdv.users.first).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
+        allow(Users::FileAttenteMailer).to receive(:new_creneau_available).with(rdv, rdv.users.first).and_return(double(deliver_later: nil))
         subject
         expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "file_attente_creneaux_available").count).to eq 1
       end

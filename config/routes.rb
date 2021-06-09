@@ -41,7 +41,6 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     get "users/pending_registration" => "users/registrations#pending"
-    get "invitation", to: "users/invitations#invitation", as: "invitations_landing"
   end
 
   ## APP ##
@@ -93,7 +92,6 @@ Rails.application.routes.draw do
       resources :absences, only: %i[index create]
       resources :users, only: %i[create show] do
         get :invite, on: :member
-        post :invite, on: :member
       end
       resources :user_profiles, only: [:create]
     end
@@ -106,7 +104,6 @@ Rails.application.routes.draw do
       resources :territories, only: [:update] do
         scope module: "territories" do
           resources :agent_territorial_roles, only: %i[index new create destroy]
-          resource :sms_configuration, only: %i[show edit update]
           resources :zone_imports, only: %i[new create]
           resources :zones, only: [:index] # exports only
           resources :sectors do
