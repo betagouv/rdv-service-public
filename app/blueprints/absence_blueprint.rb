@@ -7,11 +7,8 @@ class AbsenceBlueprint < Blueprinter::Base
   association :agent, blueprint: AgentBlueprint
   association :organisation, blueprint: OrganisationBlueprint
 
-  field :rrule do |absence|
-    Admin::Ics::Absence.rrule(absence)
-  end
-
-  field :ical do |absence|
-    Admin::Ics::Absence.to_ical(Admin::Ics::Absence.payload(absence))
-  end
+  # rubocop:disable Style/SymbolProc
+  field(:rrule) { _1.rrule }
+  field(:ical) { _1.to_ical }
+  # rubocop:enable Style/SymbolProc
 end

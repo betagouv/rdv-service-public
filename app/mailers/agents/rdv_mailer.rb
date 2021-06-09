@@ -35,8 +35,8 @@ class Agents::RdvMailer < ApplicationMailer
   end
 
   def with_ics_for(rdv, &block)
-    ics_payload = Admin::Ics::Rdv.payload(rdv, rdv.users.first)
-    ics = Admin::Ics::Rdv.to_ical(ics_payload)
+    ics_payload = rdv.payload(nil, rdv.users.first)
+    ics = IcalHelpers::Ics.from_payload(ics_payload)
     message.attachments[ics_payload[:name]] = { # as an attachment
       mime_type: "text/calendar",
       content: ics,
