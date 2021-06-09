@@ -69,6 +69,6 @@ module MotifsHelper
   end
 
   def cancel_warning_message
-    cancel_warning_message.present ? cancel_warning_message : "Êtes-vous sûr de vouloir annuler ce RDV ?"
+    cancel_warning_message || t("activerecord.attributes.motif.default_cancel_warning_message")
   end
 end
