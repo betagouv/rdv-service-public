@@ -17,7 +17,7 @@ class MotifDashboard < Administrate::BaseDashboard
     color: Field::String,
     restriction_for_rdv: Field::Text,
     instruction_for_rdv: Field::Text,
-    cancel_warning_message: Field::Text,
+    custom_cancel_warning_message: Field::Text,
     reservable_online: Field::Boolean,
     location_type: EnumField,
     for_secretariat: Field::Boolean,
@@ -55,7 +55,7 @@ class MotifDashboard < Administrate::BaseDashboard
     for_secretariat
     restriction_for_rdv
     instruction_for_rdv
-    cancel_warning_message
+    custom_cancel_warning_message
     default_duration_in_min
     min_booking_delay
     max_booking_delay
@@ -82,7 +82,7 @@ class MotifDashboard < Administrate::BaseDashboard
     visibility_type
     restriction_for_rdv
     instruction_for_rdv
-    cancel_warning_message
+    custom_cancel_warning_message
     deleted_at
   ].freeze
 
