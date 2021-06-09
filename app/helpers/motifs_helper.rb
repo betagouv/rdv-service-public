@@ -67,8 +67,4 @@ module MotifsHelper
     tag.div(tag.div(legend, class: "col-md-4 text-bold text-right") +
         tag.div(value, class: "col-md-8"), class: "row")
   end
-
-  def cancellation_warning
-    custom_cancel_warning_message || t("activerecord.attributes.motif.default_cancel_warning_message")
-  end
 end
