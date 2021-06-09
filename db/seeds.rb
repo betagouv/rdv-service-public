@@ -494,7 +494,7 @@ _plage_ouverture_org_bapaume_gina_classique = PlageOuverture.create!(
 
 # RDVs
 
-rdv1 = Rdv.new(
+Rdv.create!(
   duration_in_min: 30,
   starts_at: Time.zone.today + 3.days + 10.hours,
   motif_id: motif_org_paris_nord_pmi_rappel.id,
@@ -504,9 +504,7 @@ rdv1 = Rdv.new(
   user_ids: [user_org_paris_nord_patricia.id],
   context: "Visite de courtoisie"
 )
-rdv1.define_singleton_method(:notify_rdv_created, -> {})
-rdv1.save!
-rdv2 = Rdv.new(
+Rdv.create(
   duration_in_min: 30,
   starts_at: Time.zone.today + 4.days + 15.hours,
   motif_id: motif_org_paris_nord_pmi_suivi.id,
@@ -516,8 +514,6 @@ rdv2 = Rdv.new(
   user_ids: [user_org_paris_nord_josephine.id],
   context: "Suivi vaccins"
 )
-rdv2.define_singleton_method(:notify_rdv_created, -> {})
-rdv2.save!
 
 # User Notes
 
