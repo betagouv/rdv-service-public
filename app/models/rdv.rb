@@ -28,10 +28,11 @@ class Rdv < ApplicationRecord
 
   validates :users, :organisation, :motif, :starts_at, :duration_in_min, :agents, presence: true
   validates :lieu, presence: true, if: :public_office?
-  validate :starts_at_in_the_future, on: :create
+  validate :starts_at_in_the_future
 
   def starts_at_in_the_future
-    return if starts_at >= Time.zone.now
+    return unless will_save_change_to_attribute?("starts_at")
+    return if starts_at >= Time.zone.now - 2.days
 
     errors.add(:starts_at, :must_be_future)
   end
