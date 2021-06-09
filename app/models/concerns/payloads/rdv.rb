@@ -21,21 +21,25 @@ module Payloads
 
       payload.merge!(
         {
+          id: id,
           home?: home?,
           phone?: phone?,
           reservable_online?: reservable_online?,
           users_full_names: users.map(&:full_name).sort.to_sentence,
           motif_name: motif.name,
           motif_instruction: motif.instruction_for_rdv,
-          service_name: motif.service.name,
+          motif_service_name: motif.service.name,
+          motif_service_short_name: motif.service.short_name,
           duration_in_min: duration_in_min,
           address_complete: address_complete,
           phone_number: phone_number,
           phone_number_formatter: phone_number_formatted,
           organisation_id: organisation.id,
-          service_id: motif.service.id,
+          motif_service_id: motif.service.id,
           organisation_name: organisation.name,
           organisation_departement_number: organisation.departement_number,
+          organisation_phone_number: organisation.phone_number,
+          organisation_territory_id: organisation.territory.id,
           motif_name_with_location_type: motif.name_with_location_type
         }
       )

@@ -14,7 +14,7 @@ class TransactionalSms::RdvCancelled
   private
 
   def base_message
-    "RDV #{@rdv.motif.service.short_name} #{I18n.l(@rdv.starts_at, format: :short)} a été annulé\n"
+    "RDV #{@rdv.motif_service_short_name} #{I18n.l(@rdv.starts_at, format: :short)} a été annulé\n"
   end
 
   def call_or_visit_message

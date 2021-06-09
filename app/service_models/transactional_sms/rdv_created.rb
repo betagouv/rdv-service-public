@@ -11,9 +11,9 @@ class TransactionalSms::RdvCreated
 
   def body
     if rdv.home?
-      "RDV #{rdv.motif.service.short_name} #{I18n.l(rdv.starts_at, format: :short_approx)}\n"
+      "RDV #{rdv.motif_service_short_name} #{I18n.l(rdv.starts_at, format: :short_approx)}\n"
     else
-      "RDV #{rdv.motif.service.short_name} #{I18n.l(rdv.starts_at, format: :short)}\n"
+      "RDV #{rdv.motif_service_short_name} #{I18n.l(rdv.starts_at, format: :short)}\n"
     end
   end
 end

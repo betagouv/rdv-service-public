@@ -29,7 +29,7 @@ describe TransactionalSms::BaseConcern, type: :service do
   end
 
   describe "#rdv_footer" do
-    subject { SomeModule::TestSms.new(rdv, user).rdv_footer }
+    subject { SomeModule::TestSms.new(OpenStruct.new(rdv.payload), user).rdv_footer }
 
     let(:rdv) { build(:rdv, motif: motif, users: [user], starts_at: 5.days.from_now) }
 
@@ -42,28 +42,34 @@ describe TransactionalSms::BaseConcern, type: :service do
     context "when Rdv is at home" do
       let(:motif) { build(:motif, :at_home) }
 
-      it { is_expected.to include("RDV à domicile") }
-      it { is_expected.to include(rdv.address) }
+      it do
+        expect(subject).to include("RDV à domicile")
+        expect(subject).to include(rdv.address)
+      end
     end
 
     context "when Rdv is by phone" do
       let(:motif) { build(:motif, :by_phone) }
 
-      it { is_expected.to include("RDV Téléphonique") }
-      it { is_expected.to include(rdv.address) }
+      it do
+        expect(subject).to include("RDV Téléphonique")
+        expect(subject).to include(rdv.address)
+      end
     end
   end
 
   describe "#tags" do
-    subject { SomeModule::TestSms.new(rdv, build(:user)).tags }
+    subject { SomeModule::TestSms.new(OpenStruct.new(rdv.payload), build(:user)).tags }
 
     let!(:territory77) { create(:territory, departement_number: "77") }
     let(:organisation) { create(:organisation, territory: territory77) }
     let(:rdv) { build(:rdv, organisation: organisation) }
 
-    it { is_expected.to include("org-#{organisation.id}") }
-    it { is_expected.to include("dpt-77") }
-    it { is_expected.to include("test_sms") }
+    it do
+      expect(subject).to include("org-#{organisation.id}")
+      expect(subject).to include("dpt-77")
+      expect(subject).to include("test_sms")
+    end
   end
 
   describe "#content" do

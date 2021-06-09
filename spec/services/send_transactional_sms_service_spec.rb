@@ -1,34 +1,22 @@
 # frozen_string_literal: true
 
 describe SendTransactionalSmsService, type: :service do
-  let(:sms_configuration) do
-    {
-      send_in_blue: {
-        api_key: ""
-      },
-      netsize: {
-        api_url: "https://europe.ipx.com/restapi/v1/sms/send",
-        user_pwd: "Ubb3rP4ss0wrD"
-      }
-    }
-  end
-
+  let(:sms_configuration) { { api_key: "mykey" } }
+  let(:rdv) { create(:rdv, organisation: create(:organisation, territory: create(:territory, sms_configuration: sms_configuration))) }
   let(:transactional_sms) do
     instance_double(
       TransactionalSms::RdvCreated,
       phone_number_formatted: "+33606060606",
       content: "Bonjour c'est rdv-sol",
       tags: ["RDV-Sol test", 10, "rdv_created"],
-      rdv: build(:rdv, \
-                 organisation: build(:organisation, \
-                                     territory: build(:territory, \
-                                                      sms_configuration: sms_configuration)))
+      rdv: OpenStruct.new(rdv.payload)
     )
   end
 
   describe "#perform" do
     context "production with SIB forced" do
       before do
+        allow(ENV).to receive(:[]).with("HOST").and_return("example.com")
         allow(Rails.env).to receive(:production?).and_return(true)
         allow(ENV).to receive(:[]).with("SENDINBLUE_SMS_API_KEY").and_return("send_in_blue")
         allow(ENV).to receive(:[]).with("FORCE_SMS_PROVIDER").and_return("send_in_blue")

@@ -10,7 +10,7 @@ class TransactionalSms::Reminder
   private
 
   def body
-    "Rappel RDV #{@rdv.motif.service.short_name} le #{I18n.l(@rdv.starts_at, format: time_format)}\n"
+    "Rappel RDV #{@rdv.motif_service_short_name} le #{I18n.l(@rdv.starts_at, format: time_format)}\n"
   end
 
   def time_format
