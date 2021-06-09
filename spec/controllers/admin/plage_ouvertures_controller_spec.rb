@@ -33,14 +33,43 @@ describe Admin::PlageOuverturesController, type: :controller do
     end
 
     describe "GET #index" do
-      it "returns a success responses with plage_ouvertures assigned" do
+      it "returns a success responses" do
         now = Time.zone.parse("2020-11-23 13h30")
         travel_to(now)
-        create(:plage_ouverture, organisation: organisation, agent: agent, first_day: now + 3.days)
+        plage_ouverture = create(:plage_ouverture, organisation: organisation, agent: agent, first_day: now + 3.days)
 
         get :index, params: { organisation_id: organisation.id, agent_id: agent.id }
         expect(response).to be_successful
-        # TODO : includes plage ouverture
+        expect(assigns(:plage_ouvertures)).to eq([plage_ouverture])
+      end
+
+      it "assigns plage_ouverture" do
+        now = Time.zone.parse("2020-11-23 13h30")
+        travel_to(now)
+        plage_ouverture = create(:plage_ouverture, organisation: organisation, agent: agent, first_day: now + 3.days)
+
+        get :index, params: { organisation_id: organisation.id, agent_id: agent.id }
+        expect(assigns(:plage_ouvertures)).to eq([plage_ouverture])
+      end
+
+      it "dispay tab when any expired plage" do
+        now = Time.zone.parse("2020-11-23 13h30")
+        travel_to(now)
+        create(:plage_ouverture, organisation: organisation, agent: agent, first_day: now + 3.days)
+        create(:plage_ouverture, organisation: organisation, agent: agent, first_day: now - 3.days)
+
+        get :index, params: { organisation_id: organisation.id, agent_id: agent.id }
+        expect(assigns(:display_tabs)).to be true
+      end
+
+      it "assigns plage_ouvertures expired when current_tab expired" do
+        now = Time.zone.parse("2020-11-23 13h30")
+        travel_to(now)
+        create(:plage_ouverture, organisation: organisation, agent: agent, first_day: now + 3.days)
+        expired_plage_ouverture = create(:plage_ouverture, organisation: organisation, agent: agent, first_day: now - 3.days)
+
+        get :index, params: { organisation_id: organisation.id, agent_id: agent.id, current_tab: "expired" }
+        expect(assigns(:plage_ouvertures)).to eq([expired_plage_ouverture])
       end
     end
 
