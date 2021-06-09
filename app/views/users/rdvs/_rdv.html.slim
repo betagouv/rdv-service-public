@@ -47,7 +47,7 @@ ul.list-group.list-group-flush
 = render( \
   "common/modal_confirmation", \
   id: "js-cancel-rdv-modal-#{rdv.id}", \
-  body_message: "Êtes-vous sûr de vouloir annuler ce RDV ?", \
+  body_message: rdv.motif.cancellation_warning, \
   cancel_message: "Non", \
   confirm_path: users_rdv_cancel_path(rdv.id), \
   confirm_message: "Oui, annuler le RDV", \

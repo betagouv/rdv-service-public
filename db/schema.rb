@@ -217,7 +217,7 @@ ActiveRecord::Schema.define(version: 2021_06_07_154248) do
     t.boolean "follow_up", default: false
     t.string "visibility_type", default: "visible_and_notified", null: false
     t.string "sectorisation_level", default: "departement"
-    t.text "cancel_warning_message"
+    t.text "custom_cancel_warning_message"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
     t.index ["name", "organisation_id", "location_type", "service_id"], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"

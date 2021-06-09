@@ -20,6 +20,9 @@ fr:
           visible_and_notified: Le RDV sera visible dans la liste des RDVs côté usager, l'usager sera notifié par SMS et/ou email
           visible_and_not_notified: Le RDV sera visible dans la liste des RDVs côté usager, l'usager ne recevra aucune notification (ni SMS ni email)
           invisible: Le RDV sera invisible dans la liste des RDVs côté usager, l'usager ne recevra aucune notification (ni SMS ni email)
+        cancel_warning_message: Message d'avertissement en cas d'annulation
+        default_cancel_warning_message: Êtes-vous sûr de vouloir annuler ce RDV ?
+        cancel_warning_message_hint: Ce message sera affiché à l'usager au moment où il lui sera demandé de confirmer l'annulation de son RDV. Si l’annulation du rendez-vous a des conséquences particulières pour l‘usager, vous pouvez lui indiquer dans ce message. Cela peut être le cas, par exemple, pour une convocation pour l’ouverture de droits sociaux.
         sectorisation_level: Sectorisation
         sectorisation_level_title: Sectorisation géographique
         sectorisation_level_hint: Seules les recherches des usagers sont concernées par ces règles de sectorisation. Elles n'ont donc pas d'effet si le motif n'est pas réservable en ligne.

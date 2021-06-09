@@ -90,6 +90,12 @@
       = f.input :restriction_for_rdv, input_html: {rows: 6}
       = f.input :instruction_for_rdv, input_html: {rows: 6}
 
+  .card
+    .card-body
+      h5.card-title= t("activerecord.attributes.motif.cancel_warning_message")
+      p.text-muted.font-14= t("activerecord.attributes.motif.cancel_warning_message_hint")
+      = f.input :custom_cancel_warning_message, input_html: {rows: 6}, label: false
+
   .row.mb-5
     - if motif.persisted?
       .col.text-left
