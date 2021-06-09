@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 describe Rdv, type: :model do
-  it "a une fabrique valide" do
-    expect(build(:rdv)).to be_valid
-  end
-
   describe "#cancellable?" do
     let(:now) { Time.zone.parse("2021-05-03 14h00") }
 
@@ -299,8 +295,22 @@ describe Rdv, type: :model do
 
     before { travel_to(now) }
 
+    it "a une fabrique valide" do
+      expect(build(:rdv)).to be_valid
+    end
+
     it "returns invalid with past starts_at" do
-      expect(build(:rdv, starts_at: now - 1.hour)).to be_invalid
+      expect(build(:rdv, starts_at: now - 2.days - 1.hour)).to be_invalid
+    end
+
+    it "returns invalid when postpone by more than two days" do
+      rdv = create(:rdv, starts_at: now + 1.hour)
+      rdv.starts_at = now - 2.days - 1.hour
+      expect(rdv).to be_invalid
+    end
+
+    it "returns valid with starts_at is less than two days in past" do
+      expect(build(:rdv, starts_at: now - 2.days + 1.hour)).to be_valid
     end
 
     it "returns valid with future starts_at" do
