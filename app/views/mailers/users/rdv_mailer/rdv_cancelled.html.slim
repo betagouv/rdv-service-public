@@ -1,6 +1,9 @@
 div
   p Bonjour,
-  p Votre RDV #{@rdv.motif.service.name} du #{l(@rdv.starts_at, format: :human)} a bien été annulé.
+  - if @author.is_a? Agent
+    p Votre RDV #{@rdv.motif.service.name} du #{l(@rdv.starts_at, format: :human)} a été annulé.
+  - else
+    p Votre RDV #{@rdv.motif.service.name} du #{l(@rdv.starts_at, format: :human)} a bien été annulé.
 
   - if @rdv.phone_number.present?
     p Vous pouvez reprendre un rendez-vous en appelant au #{link_to @rdv.phone_number, "tel:#{@rdv.phone_number_formatted}"}

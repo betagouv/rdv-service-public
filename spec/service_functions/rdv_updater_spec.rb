@@ -37,7 +37,7 @@ describe RdvUpdater, type: :service do
       agent = build :agent
       rdv = create(:rdv, agents: [agent], status: "waiting")
       rdv_params = { status: "excused" }
-      expect(Notifications::Rdv::RdvCancelledByAgent).to receive(:perform_with).with(rdv, agent)
+      expect(Notifications::Rdv::RdvCancelledService).to receive(:perform_with).with(rdv, agent)
       described_class.update(agent, rdv, rdv_params)
     end
 
@@ -45,7 +45,7 @@ describe RdvUpdater, type: :service do
       user = build(:user)
       rdv = create(:rdv, status: "waiting", users: [user])
       rdv_params = { status: "excused" }
-      expect(Notifications::Rdv::RdvCancelledByUser).to receive(:perform_with).with(rdv, user)
+      expect(Notifications::Rdv::RdvCancelledService).to receive(:perform_with).with(rdv, user)
       described_class.update(user, rdv, rdv_params)
     end
 

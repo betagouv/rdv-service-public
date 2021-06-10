@@ -49,18 +49,10 @@ class Users::RdvMailer < ApplicationMailer
     )
   end
 
-  def rdv_cancelled_by_agent(rdv, user)
+  def rdv_cancelled(rdv, user, author)
     @rdv = rdv
     @user = user
-    mail(
-      to: user.email,
-      subject: "RDV annulé le #{l(rdv.starts_at, format: :human)} avec #{rdv.organisation.name}"
-    )
-  end
-
-  def rdv_cancelled_by_user(rdv, user)
-    @rdv = rdv
-    @user = user
+    @author = author
     mail(
       to: user.email,
       subject: "RDV annulé le #{l(rdv.starts_at, format: :human)} avec #{rdv.organisation.name}"
