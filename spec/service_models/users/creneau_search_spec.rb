@@ -18,12 +18,7 @@ describe Users::CreneauSearch do
     end
 
     before do
-      allow(CreneauxBuilderService).to receive(:perform_with).with(
-        "Coucou",
-        lieu,
-        (Date.parse("2020-10-20")..Date.parse("2020-10-21")),
-        motif_location_type: "home"
-      ).and_return(mock_creneaux)
+      allow(CreneauxBuilderService).to receive(:perform_with).and_return(mock_creneaux)
     end
 
     context "some matching creneaux" do

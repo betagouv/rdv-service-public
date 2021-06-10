@@ -17,7 +17,8 @@ module Users::CreneauxSearchConcern
     @options ||= {
       agent_ids: agent_ids,
       agent_name: follow_up_rdv_and_online_user?,
-      motif_location_type: motif.location_type
+      motif_location_type: motif.location_type,
+      service: motif.service
     }.select { |_key, value| value } # rejects false and nil but not [] or 0
   end
 

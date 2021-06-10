@@ -16,7 +16,7 @@ describe Users::CreneauxSearch, type: :service do
 
   it "call builder without special options" do
     expect(CreneauxBuilderService).to receive(:perform_with)
-      .with("Coucou", lieu, date_range, motif_location_type: "public_office")
+      .with("Coucou", lieu, date_range, motif_location_type: "public_office", service: motif1.service)
     subject
   end
 
@@ -36,7 +36,7 @@ describe Users::CreneauxSearch, type: :service do
 
         it "calls builder with agent options" do
           expect(CreneauxBuilderService).to receive(:perform_with)
-            .with("Coucou", lieu, date_range, agent_ids: [agent.id], agent_name: true, motif_location_type: "public_office")
+            .with("Coucou", lieu, date_range, agent_ids: [agent.id], agent_name: true, motif_location_type: "public_office", service: motif.service)
           subject
         end
       end
@@ -46,7 +46,7 @@ describe Users::CreneauxSearch, type: :service do
 
         it "calls builder with agent options" do
           expect(CreneauxBuilderService).to receive(:perform_with)
-            .with("Coucou", lieu, date_range, agent_ids: [], agent_name: true, motif_location_type: "public_office")
+            .with("Coucou", lieu, date_range, agent_ids: [], agent_name: true, motif_location_type: "public_office", service: motif.service)
           subject
         end
       end
@@ -57,7 +57,7 @@ describe Users::CreneauxSearch, type: :service do
 
       it "calls builder without agent options" do
         expect(CreneauxBuilderService).to receive(:perform_with)
-          .with("Coucou", lieu, date_range, motif_location_type: "public_office")
+          .with("Coucou", lieu, date_range, motif_location_type: "public_office", service: motif.service)
         subject
       end
     end
@@ -78,7 +78,7 @@ describe Users::CreneauxSearch, type: :service do
 
       it "calls builder without agent_ids params" do
         expect(CreneauxBuilderService).to receive(:perform_with)
-          .with("Coucou", lieu, date_range, motif_location_type: "public_office")
+          .with("Coucou", lieu, date_range, motif_location_type: "public_office", service: motif1.service)
         subject
       end
     end
@@ -88,7 +88,7 @@ describe Users::CreneauxSearch, type: :service do
 
       it "calls builder with empty agent_ids" do
         expect(CreneauxBuilderService).to receive(:perform_with)
-          .with("Coucou", lieu, date_range, agent_ids: [], motif_location_type: "public_office")
+          .with("Coucou", lieu, date_range, agent_ids: [], motif_location_type: "public_office", service: motif1.service)
         subject
       end
     end
@@ -100,7 +100,7 @@ describe Users::CreneauxSearch, type: :service do
 
       it "calls builder with these agents ids" do
         expect(CreneauxBuilderService).to receive(:perform_with)
-          .with("Coucou", lieu, date_range, agent_ids: array_including(agent1.id, agent2.id), motif_location_type: "public_office")
+          .with("Coucou", lieu, date_range, agent_ids: array_including(agent1.id, agent2.id), motif_location_type: "public_office", service: motif1.service)
         subject
       end
 
@@ -112,7 +112,7 @@ describe Users::CreneauxSearch, type: :service do
 
           it "calls builder with agent1 id" do
             expect(CreneauxBuilderService).to receive(:perform_with)
-              .with("Coucou", lieu, date_range, agent_ids: [agent1.id], agent_name: true, motif_location_type: "public_office")
+              .with("Coucou", lieu, date_range, agent_ids: [agent1.id], agent_name: true, motif_location_type: "public_office", service: motif1.service)
             subject
           end
         end
@@ -122,7 +122,7 @@ describe Users::CreneauxSearch, type: :service do
 
           it "calls builder with both agents ids" do
             expect(CreneauxBuilderService).to receive(:perform_with)
-              .with("Coucou", lieu, date_range, agent_ids: array_including(agent1.id, agent2.id), agent_name: true, motif_location_type: "public_office")
+              .with("Coucou", lieu, date_range, agent_ids: array_including(agent1.id, agent2.id), agent_name: true, motif_location_type: "public_office", service: motif1.service)
             subject
           end
         end
@@ -132,7 +132,7 @@ describe Users::CreneauxSearch, type: :service do
 
           it "calls builder with both agents ids" do
             expect(CreneauxBuilderService).to receive(:perform_with)
-              .with("Coucou", lieu, date_range, agent_ids: [], agent_name: true, motif_location_type: "public_office")
+              .with("Coucou", lieu, date_range, agent_ids: [], agent_name: true, motif_location_type: "public_office", service: motif1.service)
             subject
           end
         end

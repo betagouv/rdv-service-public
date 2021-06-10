@@ -283,6 +283,34 @@ describe CreneauxBuilderService, type: :service do
           expect(subject.pluck(:motif_id).uniq).to eq([motif_home.id])
         end
       end
+
+      context "when there is another motif with the same name but same service" do
+        let!(:other_motif) do
+          create(:motif, name: "Vaccination", default_duration_in_min: 30, reservable_online: reservable_online, organisation: organisation, location_type: :home, service: motif.service)
+        end
+        let!(:other_plage_ouverture) do
+          create(:plage_ouverture, motifs: [other_motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(14) + 35.minutes, agent: agent,
+                                   organisation: organisation)
+        end
+        let(:options) { { service: motif.service } }
+
+        it "includes both motifs" do
+          expect(subject.pluck(:motif_id).uniq).to match_array([motif.id, other_motif.id])
+        end
+      end
+
+      context "when there is another motif with the same name but another service" do
+        let!(:other_motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, reservable_online: reservable_online, organisation: organisation, location_type: :public_office) }
+        let!(:other_plage_ouverture) do
+          create(:plage_ouverture, motifs: [other_motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(14) + 35.minutes, agent: agent,
+                                   organisation: organisation)
+        end
+        let(:options) { { service: motif.service } }
+
+        it "includes only the filtered one" do
+          expect(subject.pluck(:motif_id).uniq).to eq([motif.id])
+        end
+      end
     end
   end
 

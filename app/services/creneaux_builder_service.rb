@@ -11,6 +11,7 @@ class CreneauxBuilderService < BaseService
     @agent_name = options.fetch(:agent_name, false)
     @motif_location_type = options.fetch(:motif_location_type, nil)
     @plages_ouvertures = options[:plages_ouvertures]
+    @service = options[:service]
   end
 
   def perform
@@ -25,6 +26,7 @@ class CreneauxBuilderService < BaseService
       .not_expired_for_motif_name_and_lieu(@motif_name, @lieu)
       .where(({ agent_id: @agent_ids } unless @agent_ids.nil?))
       .where(({ motifs: { location_type: @motif_location_type } } if @motif_location_type.present?))
+      .where(({ motifs: { service: @service } } if @service.present?))
   end
 
   private

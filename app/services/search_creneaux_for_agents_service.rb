@@ -20,7 +20,8 @@ class SearchCreneauxForAgentsService < BaseService
         Time.zone.today,
         for_agents: true,
         agent_ids: @form.agent_ids,
-        motif_location_type: @form.motif.location_type
+        motif_location_type: @form.motif.location_type,
+        service: @form.service
       ),
       creneaux: CreneauxBuilderService.perform_with(
         @form.motif.name,
@@ -28,7 +29,8 @@ class SearchCreneauxForAgentsService < BaseService
         @form.date_range,
         for_agents: true,
         agent_ids: @form.agent_ids,
-        motif_location_type: @form.motif.location_type
+        motif_location_type: @form.motif.location_type,
+        service: @form.service
       )
     )
   end
