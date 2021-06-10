@@ -5,4 +5,4 @@ div
     = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :agent
 
   p.aligncenter
-    = link_to "Voir sur RDV-Solidarités", admin_organisation_agent_url(@rdv.organisation, @agent),  class: 'btn btn-primary'
+    = link_to "Voir sur RDV-Solidarités", admin_organisation_agent_url(@rdv.organisation_id , @agent),  class: 'btn btn-primary'

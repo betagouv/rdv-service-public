@@ -514,6 +514,16 @@ Rdv.create(
   user_ids: [user_org_paris_nord_josephine.id],
   context: "Suivi vaccins"
 )
+Rdv.create(
+  duration_in_min: 30,
+  starts_at: Time.zone.today + 5.days + 11.hours,
+  motif_id: motif_org_paris_nord_pmi_securite.id,
+  lieu: lieu_org_paris_nord_bd_aubervilliers,
+  organisation_id: org_paris_nord.id,
+  agent_ids: [agent_org_paris_nord_pmi_martine.id],
+  user_ids: [user_org_paris_nord_josephine.id],
+  context: "Visite à domicile"
+)
 
 # User Notes
 

@@ -6,7 +6,7 @@ class Notifications::Rdv::RdvUpcomingReminderService < ::BaseService
   protected
 
   def notify_user_by_mail(user)
-    Users::RdvMailer.rdv_upcoming_reminder(@rdv, user).deliver_later
+    Users::RdvMailer.rdv_upcoming_reminder(@rdv.payload(nil, user), user).deliver_later
     @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: :upcoming_reminder)
   end
 

@@ -4,7 +4,7 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
   describe "#rdv_created" do
     let(:agent) { build(:agent) }
     let(:t) { DateTime.parse("2020-03-01 10:20") }
-    let(:mail) { described_class.rdv_created(rdv, agent) }
+    let(:mail) { described_class.rdv_created(rdv.payload(:create), agent) }
     let(:rdv) { create(:rdv, starts_at: t + 2.hours, agents: [agent]) }
 
     before { travel_to(t) }

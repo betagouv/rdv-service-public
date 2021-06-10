@@ -6,14 +6,14 @@ class Notifications::Rdv::RdvCancelledService < ::BaseService
   protected
 
   def notify_agent(agent)
-    Agents::RdvMailer.rdv_cancelled(@rdv, agent, @author).deliver_later
+    Agents::RdvMailer.rdv_cancelled(@rdv.payload(:destroy), agent, @author).deliver_later
   end
 
   def notify_user_by_mail(user)
     # Only send sms for excused cancellations (not for no-show)
     return unless @rdv.status == "excused"
 
-    Users::RdvMailer.rdv_cancelled(@rdv, user, @author).deliver_later
+    Users::RdvMailer.rdv_cancelled(@rdv.payload(:destroy, user), user, @author).deliver_later
 
     event_name = @author.is_a?(Agent) ? :cancelled_by_agent : :cancelled_by_user
     @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: event_name)

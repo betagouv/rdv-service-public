@@ -4,17 +4,17 @@ class Agents::RdvMailer < ApplicationMailer
   include DateHelper
   add_template_helper DateHelper
 
-  def rdv_created(rdv, agent)
-    @rdv = rdv
+  def rdv_created(rdv_payload, agent)
+    @rdv = OpenStruct.new(rdv_payload)
     @agent = agent
 
-    with_ics_for(@rdv) do
+    with_ics_for(rdv_payload) do
       mail(to: agent.email, subject: "Nouveau RDV ajouté sur votre agenda rdv-solidarités pour #{relative_date @rdv.starts_at}")
     end
   end
 
-  def rdv_cancelled(rdv, agent, author)
-    @rdv = rdv
+  def rdv_cancelled(rdv_payload, agent, author)
+    @rdv = OpenStruct.new(rdv_payload)
     @agent = agent
     @author = author
 
@@ -23,8 +23,8 @@ class Agents::RdvMailer < ApplicationMailer
     end
   end
 
-  def rdv_date_updated(rdv, agent, author, old_starts_at)
-    @rdv = rdv
+  def rdv_date_updated(rdv_payload, agent, author, old_starts_at)
+    @rdv = OpenStruct.new(rdv_payload)
     @agent = agent
     @author = author
     @old_starts_at = old_starts_at
@@ -34,8 +34,7 @@ class Agents::RdvMailer < ApplicationMailer
     end
   end
 
-  def with_ics_for(rdv, &block)
-    ics_payload = rdv.payload(nil, rdv.users.first)
+  def with_ics_for(ics_payload, &block)
     ics = IcalHelpers::Ics.from_payload(ics_payload)
     message.attachments[ics_payload[:name]] = { # as an attachment
       mime_type: "text/calendar",
