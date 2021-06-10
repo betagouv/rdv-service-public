@@ -15,6 +15,7 @@ describe SearchCreneauxForAgentsService, type: :service do
       AgentCreneauxSearchForm,
       organisation: organisation,
       motif: motif,
+      service: motif.service,
       agent_ids: agent_ids,
       lieu_ids: lieu_ids,
       date_range: Time.zone.today..(Time.zone.today + 6.days)

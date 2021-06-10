@@ -12,6 +12,10 @@ class AgentCreneauxSearchForm
     Organisation.find_by(id: organisation_id)
   end
 
+  def service
+    Service.find_by(id: service_id)
+  end
+
   def motif
     organisation.motifs.find_by(id: motif_id)
   end
