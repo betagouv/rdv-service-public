@@ -120,7 +120,7 @@ group :development do
   gem "web-console", ">= 3.3.0"
   gem "listen", ">= 3.0.5", "< 3.2"
   gem "guard-rspec", require: false
-  gem "letter_opener", "~> 1.7"
+  gem "letter_opener_web"
   gem "fuubar"
   gem "better_errors"
   gem "binding_of_caller"

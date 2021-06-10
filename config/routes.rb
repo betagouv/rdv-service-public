@@ -211,4 +211,7 @@ Rails.application.routes.draw do
   # old agenda rule was bookmarked by some agents
   get "admin/organisations/:organisation_id/agents/:agent_id", to: redirect("/admin/organisations/%{organisation_id}/agent_agendas/%{agent_id}")
   # rubocop:enable Style/StringLiterals, Style/FormatStringToken
+
+  # LetterOpener
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 end
