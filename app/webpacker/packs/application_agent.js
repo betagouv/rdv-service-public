@@ -6,7 +6,6 @@ require("chartkick")
 require("chart.js")
 import 'bootstrap';
 import 'moment/moment.js';
-import 'jquery-mask-plugin';
 import 'moment/locale/fr.js';
 import 'holderjs/holder.min';
 import 'select2/dist/js/select2.full.min.js';
@@ -55,7 +54,6 @@ new ServiceFilterForMotifsSelects();
 global.$ = require('jquery');
 
 $(document).on('shown.bs.modal', '.modal', function(e) {
-  $('input[type="tel"]').mask('00 00 00 00 00')
   new Datetimepicker();
   new AgentUserForm();
 });
@@ -77,7 +75,6 @@ $(document).on('turbolinks:load', function() {
   menu.init();
   new Avatar().init();
 
-  $('input[type="tel"]').mask('00 00 00 00 00')
   $(window).on('resize', function(e) {
     e.preventDefault();
   });
