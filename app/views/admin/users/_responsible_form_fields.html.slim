@@ -34,7 +34,7 @@ label Préférences de notifications
     wrapper: false, \
     **input_opts.deep_merge(user.confirmed? ? { disabled: true, input_html: { class: "js-force-disabled" } } : {}) \
   )
-  div.= f.input( \
+  div= f.input( \
     :notify_by_sms,  \
     include_hidden: false, \
     wrapper: false, \
