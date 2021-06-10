@@ -1,20 +1,21 @@
 # frozen_string_literal: true
 
-RSpec.describe Users::CreneauxController, type: :controller do
+describe Users::CreneauxController, type: :controller do
   render_views
   let(:organisation) { create(:organisation) }
-  let(:now) { "01/01/2019 10:00".to_datetime }
-  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-  let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
-  let!(:motif) { create(:motif, organisation: organisation) }
-  let!(:user) { create(:user) }
-  let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation) }
 
   describe "GET #index" do
     subject do
       get :index, params: { rdv_id: rdv.id }
       rdv.reload
     end
+
+    let(:now) { "01/01/2019 10:00".to_datetime }
+    let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+    let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
+    let!(:motif) { create(:motif, organisation: organisation) }
+    let!(:user) { create(:user) }
+    let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation) }
 
     before do
       travel_to(now)
@@ -46,7 +47,14 @@ RSpec.describe Users::CreneauxController, type: :controller do
       rdv.reload
     end
 
+    let(:organisation) { create(:organisation) }
     let(:starts_at) { 3.days.from_now }
+    let(:now) { "01/01/2019 10:00".to_datetime }
+    let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+    let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
+    let!(:motif) { create(:motif, organisation: organisation) }
+    let!(:user) { create(:user) }
+    let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation) }
 
     before do
       travel_to(now)
@@ -76,36 +84,42 @@ RSpec.describe Users::CreneauxController, type: :controller do
   end
 
   describe "PUT #update" do
-    subject do
-      put :update, params: { rdv_id: rdv.id, starts_at: starts_at }
-      rdv.reload
-    end
-
+    let(:now) { Time.zone.parse("01/01/2019 10:00") }
     let(:starts_at) { 3.days.from_now }
+    let(:user) { create(:user) }
+    let(:motif) { create(:motif, organisation: organisation) }
+    let(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
+    let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+    let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation) }
 
     before do
       travel_to(now)
       sign_in user
-
       allow(Users::CreneauSearch).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
         .and_return(returned_creneau)
     end
 
-    context "creneau is available" do
-      let(:returned_creneau) { Creneau.new(starts_at: starts_at) }
+    context "with an available creneau" do
+      let(:returned_creneau) { Creneau.new(starts_at: starts_at, agent_id: agent.id) }
 
-      before { subject }
-
-      it { expect(response.body).to include("Votre RDV a été modifié") }
-      it { expect(rdv.starts_at).to eq(starts_at) }
-      it { expect(rdv.created_by).to eq("file_attente") }
+      it "respond success and update RDV" do
+        put :update, params: { rdv_id: rdv.id, starts_at: starts_at, agent_id: agent.id }
+        expect(response).to be_successful
+        expect(rdv.reload.starts_at).to eq(starts_at)
+        expect(rdv.reload.agent_ids).to eq([agent.id])
+        expect(rdv.reload.created_by).to eq("file_attente")
+      end
     end
 
-    context "creneau isn't available" do
+    context "without an available creneau" do
       let(:returned_creneau) { nil }
 
-      it { expect(subject).to redirect_to(users_creneaux_index_path(rdv_id: rdv.id)) }
+      it "redirect to index when not available" do
+        put :update, params: { rdv_id: rdv.id, starts_at: starts_at, agent_id: agent.id }
+
+        expect(subject).to redirect_to(users_creneaux_index_path(rdv_id: rdv.id))
+      end
     end
   end
 end
