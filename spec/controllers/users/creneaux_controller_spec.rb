@@ -5,17 +5,17 @@ describe Users::CreneauxController, type: :controller do
   let(:organisation) { create(:organisation) }
 
   describe "GET #index" do
+    subject do
+      get :index, params: { rdv_id: rdv.id }
+      rdv.reload
+    end
+
     let(:now) { "01/01/2019 10:00".to_datetime }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
     let!(:motif) { create(:motif, organisation: organisation) }
     let!(:user) { create(:user) }
     let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation) }
-
-    subject do
-      get :index, params: { rdv_id: rdv.id }
-      rdv.reload
-    end
 
     before do
       travel_to(now)
@@ -42,20 +42,19 @@ describe Users::CreneauxController, type: :controller do
   end
 
   describe "GET #edit" do
+    subject do
+      get :edit, params: { rdv_id: rdv.id, starts_at: starts_at }
+      rdv.reload
+    end
+
     let(:organisation) { create(:organisation) }
+    let(:starts_at) { 3.days.from_now }
     let(:now) { "01/01/2019 10:00".to_datetime }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
     let!(:motif) { create(:motif, organisation: organisation) }
     let!(:user) { create(:user) }
     let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation) }
-
-    subject do
-      get :edit, params: { rdv_id: rdv.id, starts_at: starts_at }
-      rdv.reload
-    end
-
-    let(:starts_at) { 3.days.from_now }
 
     before do
       travel_to(now)
@@ -105,36 +104,34 @@ describe Users::CreneauxController, type: :controller do
       let(:returned_creneau) { Creneau.new(starts_at: starts_at, agent_id: agent.id) }
 
       it "respond success" do
-        put :update, params: { rdv_id: rdv.id, starts_at: starts_at, agent_id: agent.id}
+        put :update, params: { rdv_id: rdv.id, starts_at: starts_at, agent_id: agent.id }
         expect(response).to be_successful
       end
 
       it "update RDV starts_at" do
-        put :update, params: { rdv_id: rdv.id, starts_at: starts_at, agent_id: agent.id}
+        put :update, params: { rdv_id: rdv.id, starts_at: starts_at, agent_id: agent.id }
         expect(rdv.reload.starts_at).to eq(starts_at)
       end
 
-      it "update RDV starts_at" do
-        put :update, params: { rdv_id: rdv.id, starts_at: starts_at, agent_id: agent.id}
+      it "update RDV agent ids with only one agent" do
+        put :update, params: { rdv_id: rdv.id, starts_at: starts_at, agent_id: agent.id }
         expect(rdv.reload.agent_ids).to eq([agent.id])
       end
 
-      it "update RDV starts_at" do
-        put :update, params: { rdv_id: rdv.id, starts_at: starts_at, agent_id: agent.id}
+      it "update RDV created_by with file_attente" do
+        put :update, params: { rdv_id: rdv.id, starts_at: starts_at, agent_id: agent.id }
         expect(rdv.reload.created_by).to eq("file_attente")
       end
-
     end
 
     context "without an available creneau" do
-      let(:returned_creneau) {nil}
+      let(:returned_creneau) { nil }
 
       it "redirect to index when not available" do
-        put :update, params: { rdv_id: rdv.id, starts_at: starts_at, agent_id: agent.id}
+        put :update, params: { rdv_id: rdv.id, starts_at: starts_at, agent_id: agent.id }
 
         expect(subject).to redirect_to(users_creneaux_index_path(rdv_id: rdv.id))
       end
-
     end
   end
 end
