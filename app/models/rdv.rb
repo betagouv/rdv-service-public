@@ -3,6 +3,8 @@
 class Rdv < ApplicationRecord
   include WebhookDeliverable
   include Rdv::AddressConcern
+  include IcalHelpers::Ics
+  include Payloads::Rdv
 
   ENDS_AT_SQL = Arel.sql("(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)")
 

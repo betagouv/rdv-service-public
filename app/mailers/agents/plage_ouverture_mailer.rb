@@ -18,7 +18,7 @@ class Agents::PlageOuvertureMailer < ApplicationMailer
   def send_mail(plage_ouverture_payload)
     attachments[plage_ouverture_payload[:name]] = {
       mime_type: "text/calendar",
-      content: Admin::Ics::PlageOuverture.to_ical(plage_ouverture_payload),
+      content: IcalHelpers::Ics.from_payload(plage_ouverture_payload),
       encoding: "8bit" # fixes encoding issues in ICS
     }
 
@@ -30,7 +30,7 @@ class Agents::PlageOuvertureMailer < ApplicationMailer
     m.add_part(
       Mail::Part.new do
         content_type "text/calendar; method=REQUEST; charset=utf-8"
-        body Base64.encode64(Admin::Ics::PlageOuverture.to_ical(plage_ouverture_payload))
+        body Base64.encode64(IcalHelpers::Ics.from_payload(plage_ouverture_payload))
         content_transfer_encoding "base64"
         # quoted-printable would be more adapted but there seems to be an encoding problem with extra =0D
       end

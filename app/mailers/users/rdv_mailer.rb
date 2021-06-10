@@ -9,11 +9,11 @@ class Users::RdvMailer < ApplicationMailer
     @rdv = rdv
     @user = user
 
-    rdv_payload = Admin::Ics::Rdv.payload(@rdv, @user)
+    rdv_payload = @rdv.payload(nil, @user)
 
     attachments[rdv_payload[:name]] = {
       mime_type: "text/calendar",
-      content: Admin::Ics::Rdv.to_ical(rdv_payload),
+      content: IcalHelpers::Ics.from_payload(rdv_payload),
       encoding: "8bit" # fixes encoding issues in ICS
     }
     mail(
@@ -27,11 +27,11 @@ class Users::RdvMailer < ApplicationMailer
     @user = user
     @old_starts_at = old_starts_at
 
-    rdv_payload = Admin::Ics::Rdv.payload(@rdv, @user)
+    rdv_payload = @rdv.payload(nil, @user)
 
     attachments[rdv_payload[:name]] = {
       mime_type: "text/calendar",
-      content: Admin::Ics::Rdv.to_ical(rdv_payload),
+      content: IcalHelpers::Ics.from_payload(rdv_payload),
       encoding: "8bit" # fixes encoding issues in ICS
     }
     mail(
