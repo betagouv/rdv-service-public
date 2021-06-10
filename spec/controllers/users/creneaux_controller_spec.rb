@@ -103,23 +103,11 @@ describe Users::CreneauxController, type: :controller do
     context "with an available creneau" do
       let(:returned_creneau) { Creneau.new(starts_at: starts_at, agent_id: agent.id) }
 
-      it "respond success" do
+      it "respond success and update RDV" do
         put :update, params: { rdv_id: rdv.id, starts_at: starts_at, agent_id: agent.id }
         expect(response).to be_successful
-      end
-
-      it "update RDV starts_at" do
-        put :update, params: { rdv_id: rdv.id, starts_at: starts_at, agent_id: agent.id }
         expect(rdv.reload.starts_at).to eq(starts_at)
-      end
-
-      it "update RDV agent ids with only one agent" do
-        put :update, params: { rdv_id: rdv.id, starts_at: starts_at, agent_id: agent.id }
         expect(rdv.reload.agent_ids).to eq([agent.id])
-      end
-
-      it "update RDV created_by with file_attente" do
-        put :update, params: { rdv_id: rdv.id, starts_at: starts_at, agent_id: agent.id }
         expect(rdv.reload.created_by).to eq("file_attente")
       end
     end
