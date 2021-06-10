@@ -1,6 +1,7 @@
 --color
 --order rand
 --require rails_helper
+--profile 3
 --format progress
 --format ParallelTests::RSpec::RuntimeLogger --out tmp/parallel_runtime_rspec.log
 --format ParallelTests::RSpec::SummaryLogger --out tmp/spec_summary.log
