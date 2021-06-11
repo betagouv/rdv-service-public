@@ -22,6 +22,11 @@ require "webdrivers"
 require "capybara-screenshot/rspec"
 require "pundit/rspec"
 
+require "simplecov"
+
+SimpleCov.minimum_coverage 95
+SimpleCov.start
+
 Capybara.register_driver :selenium do |app|
   # these args seem to reduce test flakyness
   # w3c false required for logs cf https://github.com/SeleniumHQ/selenium/issues/7270
