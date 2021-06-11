@@ -5,7 +5,7 @@
 
 
 .container-fluid.bg-white.rounded
-  .m-3
+  .m-3.p-2
     - @available_agents.each do |agent|
       .card.d-inline-flex.p-2.m-2.align-items.w-20
         .card-header = agent.full_name
@@ -13,3 +13,8 @@
           p.card-text = agent.service.name
           = simple_form_for @user, url: admin_organisation_user_referents_path(current_organisation, @user, agent_id: agent.id), html: { method: :post, class: 'form-inline' }, wrapper: :inline_form do |f|
             = f.submit "Ajouter", class: "btn btn-primary"
+    - if @available_agents.empty?
+      | Aucune agents référents possible
+
+  .m-3
+    = link_to "Retour", admin_organisation_user_path(current_organisation, @user, anchor: "agents-referents"), class: "btn btn-link"

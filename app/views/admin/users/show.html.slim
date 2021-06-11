@@ -52,25 +52,15 @@
     - if @user.responsible?
       .card
         .card-header
-          .mt-1 Agents référents
+          .mt-1(id="agents-referents") Agents référents
         .card-body
-          .collapse.collapse-referent-form
-            = simple_form_for(@user, url: admin_organisation_user_referents_path(current_organisation, @user), method: :put) do |f|
-              = f.association \
-                :agents, \
-                collection: policy_scope(Agent).joins(:organisations).where(organisations: { id: current_organisation.id }).order_by_last_name, \
-                label_method: :full_name_and_service, \
-                label: false, \
-                multiple: true, \
-                input_html: {class: 'select2-input'}
-              = f.button :submit, "Enregistrer"
-          .show.collapse-referent-form
-            ul.list-unstyled.mb-2
-              - @user.agents.includes([:service]).each do |agent|
-                li.mb-2
-                | #{agent.full_name_and_service}
-              - if @user.agents.empty?
-                .font-italic aucun référent
+          ul.list-unstyled.mb-2
+            - policy_scope(@user.agents).includes([:service]).each do |agent|
+              li.mb-2
+              | #{agent.full_name_and_service}
+              = link_to "❌ retirer", admin_organisation_user_referents_path(current_organisation, @user, agent_id: agent.id), method: :delete, class: "btn btn-link text-danger small", data: { confirm: "Êtes-vous sûr de vouloir retirer ce référent ?"}
+            - if @user.agents.empty?
+              .font-italic aucun référent
           .row.mt-3
             .col.text-right
               = link_to "Modifier", new_admin_organisation_user_referents_path(current_organisation, @user), class: "btn btn-primary"

@@ -30,7 +30,7 @@ describe Admin::ReferentsController, type: :controller do
       post :create, params: { organisation_id: organisation.id, user_id: user.id, agent_id: new_referent.id }
 
       expect(user.reload.agents).to include(new_referent)
-      expect(response).to redirect_to(admin_organisation_user_path(organisation, user))
+      expect(response).to redirect_to(admin_organisation_user_path(organisation, user, anchor: "agents-referents"))
     end
 
     it "return errors and render new" do
@@ -52,49 +52,39 @@ describe Admin::ReferentsController, type: :controller do
     end
   end
 
-  describe "#update" do
-    it "update user's agent_ids reference and redirect to user's page" do
+  describe "#delete" do
+    it "remove given agent from user's referents " do
       organisation = create(:organisation)
-      user = create(:user, agents: [], organisations: [organisation])
-      agent = create(:agent, basic_role_in_organisations: [organisation])
-      lea = create(:agent, basic_role_in_organisations: [organisation])
-      stef = create(:agent, basic_role_in_organisations: [organisation])
-      expect(agent.organisations).to eq([organisation])
+      service = create(:service)
+      referent = create(:agent, basic_role_in_organisations: [organisation], service: service)
+      agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
+      user = create(:user, agents: [referent], organisations: [organisation])
+
       sign_in agent
 
-      post :update, params: { organisation_id: organisation.id, user_id: user.id, user: { agent_ids: [lea.id, stef.id] } }
+      post :destroy, params: { organisation_id: organisation.id, user_id: user.id, agent_id: referent.id }
 
-      expect(user.reload.agents.sort).to eq([lea, stef].sort)
-      expect(response).to redirect_to(admin_organisation_user_path(organisation, user))
+      expect(user.reload.agents).not_to include(referent)
+      expect(response).to redirect_to(admin_organisation_user_path(organisation, user, anchor: "agents-referents"))
     end
 
-    it "with a bad agent_id only, delete agents and return to user's page" do
+    it "return errors and redirect to user's show" do
       organisation = create(:organisation)
-      agent = create(:agent, basic_role_in_organisations: [organisation])
-      lea = create(:agent, basic_role_in_organisations: [organisation])
-      user = create(:user, agents: [lea], organisations: [organisation])
+      service = create(:service)
+      referent = create(:agent, basic_role_in_organisations: [organisation], service: service)
+      agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
+      user = create(:user, agents: [referent], organisations: [organisation])
+
       sign_in agent
 
-      post :update, params: { organisation_id: organisation.id, user_id: user.id, user: { agent_ids: ["bad agent id"] } }
+      allow_any_instance_of(User).to receive(:save).and_return(false)
+      allow_any_instance_of(User).to receive(:errors)
+        .and_return(OpenStruct.new(full_messages: ["problème"]))
 
-      expect(user.reload.agents).to eq([])
-      expect(response).to redirect_to(admin_organisation_user_path(organisation, user))
-    end
+      post :destroy, params: { organisation_id: organisation.id, user_id: user.id, agent_id: referent.id }
 
-    it "when update failed return to user's page with an error message" do
-      organisation = create(:organisation)
-      agent = create(:agent, basic_role_in_organisations: [organisation])
-      lea = create(:agent, basic_role_in_organisations: [organisation])
-      user = create(:user, agents: [lea], organisations: [organisation])
-      sign_in agent
-
-      allow_any_instance_of(User).to receive(:update).and_return(false)
-
-      post :update, params: { organisation_id: organisation.id, user_id: user.id, user: { agent_ids: ["bad agent id"] } }
-
-      expect(flash[:error]).to eq("Erreur lors de la modification des référents")
-      expect(user.reload.agents).to eq([lea])
-      expect(response).to redirect_to(admin_organisation_user_path(organisation, user))
+      expect(response).to redirect_to(admin_organisation_user_path(organisation, user, anchor: "agents-referents"))
+      expect(flash[:error]).to eq("problème")
     end
   end
 end
