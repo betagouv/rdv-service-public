@@ -59,7 +59,7 @@
               li.mb-2
               | #{agent.full_name_and_service}
               = link_to "❌ retirer", admin_organisation_user_referents_path(current_organisation, @user, agent_id: agent.id), method: :delete, class: "btn btn-link text-danger small", data: { confirm: "Êtes-vous sûr de vouloir retirer ce référent ?"}
-            - if @user.agents.empty?
+            - if policy_scope(@user.agents).empty?
               .font-italic aucun référent
           .row.mt-3
             .col.text-right
