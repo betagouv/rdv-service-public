@@ -1,0 +1,15 @@
+- content_for(:menu_item) { 'menu-users' }
+
+- content_for(:title, "Ajouter un référent à #{@user.full_name}")
+
+
+
+.container-fluid.bg-white.rounded
+  .m-3
+    - @available_agents.each do |agent|
+      .card.d-inline-flex.p-2.m-2.align-items.w-20
+        .card-header = agent.full_name
+        .card-body
+          p.card-text = agent.service.name
+          = simple_form_for @user, url: admin_organisation_user_referents_path(current_organisation, @user, agent_id: agent.id), html: { method: :post, class: 'form-inline' }, wrapper: :inline_form do |f|
+            = f.submit "Ajouter", class: "btn btn-primary"

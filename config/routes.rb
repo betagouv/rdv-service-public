@@ -153,7 +153,7 @@ Rails.application.routes.draw do
           collection do
             get :search
           end
-          resource :referents, only: [:update]
+          resource :referents, only: %i[new create update]
         end
         resources :absences, except: %i[index show new]
         resources :agent_roles, only: %i[edit update]
