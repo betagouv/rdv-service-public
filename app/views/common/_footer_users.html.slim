@@ -24,7 +24,7 @@ footer.main-footer
       .col-6.col-md
         h5 Produit
         ul.list-unstyled.text-small
-          li.mb-1 Accessibilité : non conforme
+          li.mb-1 = link_to "Accessibilité : non conforme", accessibility_path
           li.mb-1 = link_to "https://github.com/betagouv/rdv-solidarites.fr/commits/#{ENV["CONTAINER_VERSION"]}" do
             span>= ENV["RDV_SOLIDARITES_VERSION"]
             i.fa.fa-external-link-alt

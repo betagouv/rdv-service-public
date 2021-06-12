@@ -3,6 +3,8 @@
 class StaticPagesController < ApplicationController
   def mds; end
 
+  def accessibility; end
+
   def contact
     @support_ticket_form = SupportTicketForm.new(
       first_name: current_user&.first_name,
