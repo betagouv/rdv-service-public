@@ -24,7 +24,7 @@ describe RdvExporter, type: :service do
       it "return an header" do
         sheet = described_class.build_excel_workbook_from([]).worksheet(0)
         expect(sheet.row(0)).to eq(["année", "date prise rdv", "heure prise rdv", "origine", "date rdv", "heure rdv", "service", "motif", "contexte", "statut", "lieu", "professionnel.le(s)",
-                                    "usager(s)", "au moins un usager mineur ?"])
+                                    "usager(s)", "commune du premier responsable", "au moins un usager mineur ?"])
       end
     end
   end
@@ -144,6 +144,24 @@ describe RdvExporter, type: :service do
       end
     end
 
+    describe "commune du premier responsable" do
+      it "return 92320 (Chatillon's postal code) when first responsable leave there" do
+        first_major = create(:user, birth_date: Date.new(2002, 3, 12), address: "2 Rue Jean Pierre Timbaud, Châtillon, 92320, 92, Hauts-de-Seine, Île-de-France")
+        minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: first_major.id)
+        other_major = create(:user, birth_date: Date.new(2002, 3, 12))
+        other_minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: other_major.id)
+        rdv = build(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor, other_minor, first_major, other_major])
+        expect(described_class.row_array_from(rdv)[13]).to eq("92320")
+      end
+
+      it "return empty when no responsable " do
+        first_major = create(:user, birth_date: Date.new(2002, 3, 12), address: "2 Rue Jean Pierre Timbaud, Châtillon, 92320, 92, Hauts-de-Seine, Île-de-France")
+        minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: first_major.id)
+        rdv = build(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor])
+        expect(described_class.row_array_from(rdv)[13]).to eq("")
+      end
+    end
+
     describe "un usager mineur ?" do
       it "return oui when one minor user" do
         now = Time.zone.parse("2020-4-3 13:45")
@@ -151,8 +169,7 @@ describe RdvExporter, type: :service do
         major = build(:user, birth_date: Date.new(2002, 3, 12))
         minor = build(:user, birth_date: Date.new(2016, 5, 30))
         rdv = build(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor, major])
-        expect(described_class.row_array_from(rdv)[13]).to eq("oui")
-        travel_back
+        expect(described_class.row_array_from(rdv)[14]).to eq("oui")
       end
     end
   end

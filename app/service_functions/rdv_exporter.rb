@@ -17,6 +17,7 @@ module RdvExporter
     "lieu",
     "professionnel.le(s)",
     "usager(s)",
+    "commune du premier responsable",
     "au moins un usager mineur ?"
   ].freeze
 
@@ -63,11 +64,18 @@ module RdvExporter
       rdv.address_complete_without_personnal_details,
       rdv.agents.map(&:full_name).join(", "),
       rdv.users.map(&:full_name).join(", "),
+      commune_premier_responsable(rdv),
       rdv.users.any?(&:minor?) ? "oui" : "non"
     ]
   end
 
   def self.origine(rdv)
     rdv.created_by_user? ? "RDV Pris sur internet" : "Créé par un agent"
+  end
+
+  def self.commune_premier_responsable(rdv)
+    first_responsible = rdv.users.select { |u| u.responsible_id.nil? }.first
+    return "" if first_responsible.blank? || first_responsible.address.blank?
+    return first_responsible.address.match(/.*([0-9]{5}).*/)[1] if first_responsible && first_responsible.address.present?
   end
 end
