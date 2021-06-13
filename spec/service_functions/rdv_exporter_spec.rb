@@ -160,6 +160,15 @@ describe RdvExporter, type: :service do
         rdv = build(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor])
         expect(described_class.row_array_from(rdv)[13]).to eq("")
       end
+
+      it "return second responsible commune when first does not have one " do
+        major = create(:user, birth_date: Date.new(2002, 3, 12), address: nil)
+        minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: major.id)
+        other_major = create(:user, birth_date: Date.new(2002, 3, 12), address: "2 Rue Jean Pierre Timbaud, Châtillon, 92320, 92, Hauts-de-Seine, Île-de-France")
+        other_minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: other_major.id)
+        rdv = build(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor, other_minor, major, other_major])
+        expect(described_class.row_array_from(rdv)[13]).to eq("92320")
+      end
     end
 
     describe "un usager mineur ?" do

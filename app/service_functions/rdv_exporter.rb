@@ -74,8 +74,12 @@ module RdvExporter
   end
 
   def self.commune_premier_responsable(rdv)
-    first_responsible = rdv.users.select { |u| u.responsible_id.nil? }.first
-    return "" if first_responsible.blank? || first_responsible.address.blank?
-    return first_responsible.address.match(/.*([0-9]{5}).*/)[1] if first_responsible && first_responsible.address.present?
+    first_responsible_address = rdv.users.select { |u| u.responsible_id.nil? }.map(&:address).compact.first
+    return "" if first_responsible_address.blank?
+
+    postal_code = first_responsible_address.match(/.*([0-9]{5}).*/)
+    return "" if postal_code.blank? || postal_code.captures.empty?
+
+    postal_code.captures.first
   end
 end
