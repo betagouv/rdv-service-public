@@ -2,16 +2,31 @@
 
 - content_for(:title, "Ajouter un référent à #{@user.full_name}")
 
-.container-fluid.bg-white.rounded
-  .m-3.p-2
-    - @available_agents.each do |agent|
-      .card.d-inline-flex.p-2.m-2.align-items.w-20
-        .card-header = agent.full_name
-        .card-body
-          p.card-text = agent.service.name
-          = link_to "Ajouter", admin_organisation_user_referents_path(current_organisation, @user, agent_id: agent.id),  method: :post, class: "btn btn-primary"
-    - if @available_agents.empty?
-      | Aucune agents référents possible
+.container.bg-white.rounded
+  - if @available_agents.any?
+    table.table
+      thead
+        tr
+          th Nom
+          th Service
+          th Actions
+      tbody
+        - @available_agents.each do |agent|
+          tr id="agent_#{agent.id}"
+            td
+              span.mr-2= agent.full_name
+            td
+              = agent.service&.name
+            td
+              div.mr-3= link_to admin_organisation_user_referents_path(current_organisation, @user, agent_id: agent.id),  method: :post do
+                span> ajouter comme référent
+                i.fa.fa-angle-right
+
+  - else
+    .row.justify-content-md-center.p-2.mt-3
+      .col-md-6.text-center.mb-2
+        p.mb-2.lead
+          | Aucune agents référents possible
 
   .m-3
     = link_to "Retour", admin_organisation_user_path(current_organisation, @user, anchor: "agents-referents"), class: "btn btn-link"
