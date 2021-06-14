@@ -52,6 +52,19 @@ describe "API auth", type: :request do
     end
   end
 
+  context "log in with right credentials" do
+    it "gives the organisation ids along with agent infos in the response body" do
+      post(
+        api_v1_agent_with_token_auth_session_path,
+        params: { email: agent.email, password: "123456" }.to_json,
+        headers: { CONTENT_TYPE: "application/json", ACCEPT: "application/json" }
+      )
+
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body).dig("data", "organisation_ids")).to eq([organisation.id])
+    end
+  end
+
   context "log in, then query" do
     it "gives you an authentication code if you are an existing user and you satisfy the password" do
       post(
