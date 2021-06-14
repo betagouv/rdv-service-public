@@ -115,6 +115,7 @@ group :development, :test do
   gem "bullet"
   gem "faker"
   gem "parallel_tests"
+  gem "simplecov", require: false
 end
 
 group :development do
