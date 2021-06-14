@@ -11,7 +11,7 @@ class Notifications::Rdv::RdvDateUpdatedService < ::BaseService
   end
 
   def notify_user_by_sms(user)
-    SendTransactionalSmsJob.perform_later(:rdv_updated, @rdv.id, user.id)
+    SendTransactionalSmsJob.perform_later(:rdv_updated, @rdv.payload(:update), user.id)
     @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: :updated)
   end
 
