@@ -41,4 +41,4 @@
   - if rdv.motif_instruction.present? && for_role == :user
     .div.row-result.no-border
       span.title Informations supplémentaires :
-      = simple_format(rdv.motif_instruction)
+      = auto_link(simple_format(rdv.motif_instruction), html: { target: "_blank" })
