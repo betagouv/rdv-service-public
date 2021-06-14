@@ -74,7 +74,7 @@ module RdvExporter
   end
 
   def self.commune_premier_responsable(rdv)
-    address = rdv.users.select { |u| u.responsible_id.nil? }.map(&:address).compact.first
+    address = rdv.users.select { |u| u.responsible.nil? }.pluck(:address).compact.first
     return "" if address.blank?
 
     extract_postal_code_from(address)
@@ -86,5 +86,4 @@ module RdvExporter
 
     postal_code.captures.first
   end
-
 end
