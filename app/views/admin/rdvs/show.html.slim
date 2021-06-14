@@ -9,11 +9,10 @@
         - else
           = link_to "Votre agenda", admin_organisation_agent_agenda_path(current_organisation, current_agent)
     li.breadcrumb-item.p-0.ml-2
-      div
-        span> RDV
-        span>= rdv_title_for_agent(@rdv)
-        - if @rdv.cancelled?
-          span.badge.badge-danger
+      span> RDV
+      span>= rdv_title_for_agent(@rdv)
+      - if @rdv.cancelled?
+        span.badge.badge-danger
 
 - content_for :breadcrumb do
   = link_to "Dupliquer…", admin_organisation_agent_searches_path(current_organisation, service_id: @rdv.motif.service_id, motif_id: @rdv.motif_id, from_date: @rdv.starts_at + 1.day, user_ids: @rdv.user_ids, context: @rdv.context, commit: "commit"), class: "btn btn-outline-white"
