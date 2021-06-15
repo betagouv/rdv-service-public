@@ -31,29 +31,58 @@ describe TransactionalSms::BaseConcern, type: :service do
   describe "#rdv_footer" do
     subject { SomeModule::TestSms.new(OpenStruct.new(rdv.payload), user).rdv_footer }
 
-    let(:rdv) { build(:rdv, motif: motif, users: [user], starts_at: 5.days.from_now) }
+    describe "depending on motif" do
+      let(:rdv) { build(:rdv, motif: motif, users: [user], starts_at: 5.days.from_now) }
 
-    context "when regular Rdv" do
-      let(:motif) { build(:motif, :at_public_office) }
+      context "when regular Rdv" do
+        let(:motif) { build(:motif, :at_public_office) }
 
-      it { is_expected.to include(rdv.address) }
-    end
+        it { is_expected.to include(rdv.address) }
+      end
 
-    context "when Rdv is at home" do
-      let(:motif) { build(:motif, :at_home) }
+      context "when Rdv is at home" do
+        let(:motif) { build(:motif, :at_home) }
 
-      it do
-        expect(subject).to include("RDV à domicile")
-        expect(subject).to include(rdv.address)
+        it do
+          expect(subject).to include("RDV à domicile")
+          expect(subject).to include(rdv.address)
+        end
+      end
+
+      context "when Rdv is by phone" do
+        let(:motif) { build(:motif, :by_phone) }
+
+        it do
+          expect(subject).to include("RDV Téléphonique")
+          expect(subject).to include(rdv.address)
+        end
       end
     end
 
-    context "when Rdv is by phone" do
-      let(:motif) { build(:motif, :by_phone) }
+    describe "depending on phone" do
+      let(:rdv) { build(:rdv, lieu: lieu, organisation: organisation, users: [user], starts_at: 5.days.from_now) }
+      let(:lieu) { build(:lieu, phone_number: lieu_phone_number) }
+      let(:organisation) { build(:organisation, phone_number: organisation_phone_number) }
 
-      it do
-        expect(subject).to include("RDV Téléphonique")
-        expect(subject).to include(rdv.address)
+      context "when both have a phone number" do
+        let(:lieu_phone_number) { "0123456789" }
+        let(:organisation_phone_number) { "0987654321" }
+
+        it { expect(subject).to include(" / 0123456789") }
+      end
+
+      context "when only organisation has a phone number" do
+        let(:lieu_phone_number) { nil }
+        let(:organisation_phone_number) { "0987654321" }
+
+        it { expect(subject).to include(" / 0987654321") }
+      end
+
+      context "when none have a phone number" do
+        let(:lieu_phone_number) { nil }
+        let(:organisation_phone_number) { nil }
+
+        it { expect(subject).not_to include(" / ") }
       end
     end
   end

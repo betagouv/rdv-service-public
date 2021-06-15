@@ -49,7 +49,7 @@ module TransactionalSms::BaseConcern
                 "#{rdv.address_complete}\n"
               end
     message += "Infos et annulation: #{rdvs_shorten_url(host: ENV['HOST'])}"
-    message += " / #{rdv.organisation_phone_number}" if rdv.organisation_phone_number
+    message += " / #{rdv.phone_number}" if rdv.phone_number.present?
     message
   end
 
