@@ -170,7 +170,6 @@ describe RdvExporter, type: :service do
         rdv = create(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor, other_minor, major, other_major])
         expect(described_class.row_array_from(rdv)[13]).to eq("92320")
       end
-
     end
 
     describe "un usager mineur ?" do
