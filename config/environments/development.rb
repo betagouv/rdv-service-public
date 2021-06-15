@@ -36,7 +36,18 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: "localhost:5000", utm_source: "dev", utm_medium: "email", utm_campaign: "default" }
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.delivery_method = :letter_opener_web
+  if ENV["DEVELOPMENT_SMTP_USER_NAME"].present?
+    config.action_mailer.smtp_settings = {
+      user_name: ENV["DEVELOPMENT_SMTP_USER_NAME"],
+      password: ENV["DEVELOPMENT_SMTP_PASWORD"],
+      address: ENV["DEVELOPMENT_SMTP_HOST"],
+      domain: ENV["DEVELOPMENT_SMTP_DOMAIN"],
+      port: ENV["DEVELOPMENT_SMTP_PORT"],
+      authentication: :cram_md5
+    }
+  else
+    config.action_mailer.delivery_method = :letter_opener_web
+  end
   config.action_mailer.asset_host = "http://localhost:5000"
 
   config.active_job.queue_adapter = :delayed_job
