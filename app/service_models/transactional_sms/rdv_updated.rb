@@ -10,6 +10,6 @@ class TransactionalSms::RdvUpdated
   private
 
   def body
-    "RDV modifié: #{rdv.motif.service.short_name} #{I18n.l(rdv.starts_at, format: (rdv.home? ? :short_approx : :short))}\n"
+    "RDV modifié: #{rdv.motif_service_short_name} #{I18n.l(rdv.starts_at, format: (rdv.home? ? :short_approx : :short))}\n"
   end
 end

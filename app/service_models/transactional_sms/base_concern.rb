@@ -34,8 +34,8 @@ module TransactionalSms::BaseConcern
   def tags
     [
       ENV["APP"]&.gsub("-rdv-solidarites", ""), # shorter names
-      "dpt-#{rdv.organisation.departement_number}",
-      "org-#{rdv.organisation.id}",
+      "dpt-#{rdv.organisation_departement_number}",
+      "org-#{rdv.organisation_id}",
       self.class.name.demodulize.underscore
     ].compact
   end
@@ -49,7 +49,7 @@ module TransactionalSms::BaseConcern
                 "#{rdv.address_complete}\n"
               end
     message += "Infos et annulation: #{rdvs_shorten_url(host: ENV['HOST'])}"
-    message += " / #{rdv.organisation.phone_number}" if rdv.organisation.phone_number
+    message += " / #{rdv.phone_number}" if rdv.phone_number.present?
     message
   end
 

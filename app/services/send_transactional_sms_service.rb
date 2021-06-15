@@ -19,7 +19,7 @@ class SendTransactionalSmsService < BaseService
 
   def initialize(transactional_sms)
     @transactional_sms = transactional_sms
-    territory = @transactional_sms.rdv.organisation.territory
+    territory = Territory.find(@transactional_sms.rdv.organisation_territory_id)
     @configuration = territory.sms_configuration || DEFAULT_SMS_CONFIGURATION
 
     @provider = :debug_logger
