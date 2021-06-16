@@ -17,6 +17,7 @@ module RdvExporter
     "lieu",
     "professionnel.le(s)",
     "usager(s)",
+    "commune du premier responsable",
     "au moins un usager mineur ?"
   ].freeze
 
@@ -63,11 +64,26 @@ module RdvExporter
       rdv.address_complete_without_personnal_details,
       rdv.agents.map(&:full_name).join(", "),
       rdv.users.map(&:full_name).join(", "),
+      commune_premier_responsable(rdv),
       rdv.users.any?(&:minor?) ? "oui" : "non"
     ]
   end
 
   def self.origine(rdv)
     rdv.created_by_user? ? "RDV Pris sur internet" : "Créé par un agent"
+  end
+
+  def self.commune_premier_responsable(rdv)
+    address = rdv.users.map(&:user_to_notify).pluck(:address).compact.first
+    return "" if address.blank?
+
+    extract_postal_code_from(address)
+  end
+
+  def self.extract_postal_code_from(address)
+    postal_code = address.match(/.*([0-9]{5}).*/)
+    return "" if postal_code.blank? || postal_code.captures.empty?
+
+    postal_code.captures.first
   end
 end
