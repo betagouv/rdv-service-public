@@ -4,7 +4,7 @@ require "rspec"
 
 describe IcalHelpers::Ics do
   describe "from_payload" do
-    subject { described_class.from_payload(payload) }
+    subject { described_class.from_payload(payload).to_ical }
 
     let(:payload) do
       {

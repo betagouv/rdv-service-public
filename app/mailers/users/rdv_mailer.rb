@@ -10,11 +10,7 @@ class Users::RdvMailer < ApplicationMailer
     @rdv = OpenStruct.new(rdv_payload)
     @user = user
 
-    attachments[rdv_payload[:name]] = {
-      mime_type: "text/calendar",
-      content: IcalHelpers::Ics.from_payload(rdv_payload),
-      encoding: "8bit" # fixes encoding issues in ICS
-    }
+    self.ics_payload = rdv_payload
     mail(
       to: user.email,
       subject: "RDV confirmé le #{l(@rdv.starts_at, format: :human)}"
@@ -26,11 +22,7 @@ class Users::RdvMailer < ApplicationMailer
     @user = user
     @old_starts_at = old_starts_at
 
-    attachments[rdv_payload[:name]] = {
-      mime_type: "text/calendar",
-      content: IcalHelpers::Ics.from_payload(rdv_payload),
-      encoding: "8bit" # fixes encoding issues in ICS
-    }
+    self.ics_payload = rdv_payload
     mail(
       to: user.email,
       subject: "RDV #{relative_date old_starts_at} reporté à plus tard"
@@ -40,6 +32,8 @@ class Users::RdvMailer < ApplicationMailer
   def rdv_upcoming_reminder(rdv_payload, user)
     @rdv = OpenStruct.new(rdv_payload)
     @user = user
+
+    self.ics_payload = rdv_payload
     mail(
       to: user.email,
       subject: "[Rappel] RDV le #{l(@rdv.starts_at, format: :human)}"
@@ -50,6 +44,8 @@ class Users::RdvMailer < ApplicationMailer
     @rdv = OpenStruct.new(rdv_payload)
     @user = user
     @author = author
+
+    self.ics_payload = rdv_payload
     mail(
       to: user.email,
       subject: "RDV annulé le #{l(@rdv.starts_at, format: :human)} avec #{@rdv.organisation_name}"
