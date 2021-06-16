@@ -48,7 +48,7 @@ Metrics/ClassLength:
 
 Metrics/MethodLength:
   CountAsOne: ['array', 'hash', 'heredoc']
-  Max: 15
+  Max: 20
   Exclude:
     - 'db/migrate/20210301135256_create_territories.rb'
 
