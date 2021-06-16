@@ -52,10 +52,10 @@ RSpec.describe Admin::Territories::AgentTerritorialRolesController, type: :contr
       it "lists only territorial agents" do
         get :index, params: { territory_id: territory.id }
         expect(response).to be_successful
-        expect(response.body).to include("Johnny LILOU")
-        expect(response.body).to include("Lisa SOULAY")
-        expect(response.body).not_to include("Gina RICCIOTI")
-        expect(response.body).not_to include("Doctor JOHN")
+        expect(response.body).to include("LILOU Johnny")
+        expect(response.body).to include("SOULAY Lisa")
+        expect(response.body).not_to include("RICCIOTI Gina")
+        expect(response.body).not_to include("JOHN Doctor")
       end
     end
 
@@ -109,9 +109,9 @@ RSpec.describe Admin::Territories::AgentTerritorialRolesController, type: :contr
       it "displays form only with agents who are not yet territorial admins" do
         get :new, params: { territory_id: territory.id }
         expect(response).to be_successful
-        expect(response.body).not_to include("Johnny LILOU")
-        expect(response.body).not_to include("Gino FINOL")
-        expect(response.body).to include("Rizlane TERRY")
+        expect(response.body).not_to include("LILOU Johnny")
+        expect(response.body).not_to include("FINOL Gino")
+        expect(response.body).to include("TERRY Rizlane")
       end
     end
 
