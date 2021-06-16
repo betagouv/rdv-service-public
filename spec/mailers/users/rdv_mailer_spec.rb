@@ -50,7 +50,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       rdv = create(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
       mail = described_class.rdv_cancelled(rdv.payload(:destroy), user, user)
 
-      expect(mail.body).to match("lundi 15 juin 2020 à 12h30")
+      expect(mail.html_part.body).to match("lundi 15 juin 2020 à 12h30")
     end
 
     it "body contains cancelled confirmation with motif's service name" do
@@ -59,7 +59,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       rdv = create(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
       mail = described_class.rdv_cancelled(rdv.payload(:destroy), user, user)
 
-      expect(mail.body).to match(rdv.motif.service_name)
+      expect(mail.html_part.body).to match(rdv.motif.service_name)
     end
 
     it "body contains link to book a new RDV" do
@@ -75,7 +75,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
                                  where: rdv.address \
                                })
 
-      expect(mail.body).to have_link("Reprendre RDV", href: expected_url)
+      expect(mail.html_part.body).to have_link("Reprendre RDV", href: expected_url)
     end
   end
 
@@ -85,7 +85,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       user = rdv.users.first
       mail = described_class.rdv_upcoming_reminder(rdv.payload, user)
       expect(mail.to).to eq([user.email])
-      expect(mail.body).to include("Nous vous rappellons que vous avez un RDV prévu")
+      expect(mail.html_part.body).to include("Nous vous rappellons que vous avez un RDV prévu")
     end
   end
 end
