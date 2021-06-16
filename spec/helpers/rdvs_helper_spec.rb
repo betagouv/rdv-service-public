@@ -8,31 +8,31 @@ describe RdvsHelper do
   describe "#rdv_title_for_agent" do
     subject { helper.rdv_title_for_agent(rdv) }
 
-    it { is_expected.to eq "Marie DENIS" }
+    it { is_expected.to eq "DENIS Marie" }
 
     context "multiple users" do
       let(:user2) { build(:user, first_name: "Lea", last_name: "CAVE") }
       let(:rdv) { build(:rdv, users: [user, user2], motif: motif) }
 
-      it { is_expected.to eq "Marie DENIS et Lea CAVE" }
+      it { is_expected.to eq "DENIS Marie et CAVE Lea" }
     end
 
     context "created by user (reservable_online)" do
       let(:rdv) { build(:rdv, users: [user], motif: motif, created_by: :user) }
 
-      it { is_expected.to eq "@ Marie DENIS" }
+      it { is_expected.to eq "@ DENIS Marie" }
     end
 
     context "phone RDV" do
       let(:rdv) { build(:rdv, :by_phone, users: [user]) }
 
-      it { is_expected.to eq "Marie DENIS ☎️" }
+      it { is_expected.to eq "DENIS Marie ☎️" }
     end
 
     context "at home RDV" do
       let(:rdv) { build(:rdv, :at_home, users: [user]) }
 
-      it { is_expected.to eq "Marie DENIS 🏠" }
+      it { is_expected.to eq "DENIS Marie 🏠" }
     end
   end
 
