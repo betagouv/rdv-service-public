@@ -3,6 +3,7 @@ html lang="fr"
   head
     = render 'common/head'
   body class="user"
+    = render 'layouts/rdv_solidarites_instance_name'
     = render 'layouts/degraded_service', message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
     .bg-primary
       .container
