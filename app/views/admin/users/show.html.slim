@@ -100,7 +100,7 @@
             - if @user.relatives.within_organisation(current_organisation).active.empty?
               li.list-group-item
                 em Aucun proche
-            - @user.relatives.within_organisation(current_organisation).active.each do |relative|
+            - @user.relatives.within_organisation(current_organisation).active.order(:birth_date).each do |relative|
               li.list-group-item
                 .row
                   .col

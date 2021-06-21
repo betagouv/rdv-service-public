@@ -12,7 +12,7 @@
           - if @user.relatives.active.empty?
             li.list-group-item
               em Aucun proche
-          - @user.relatives.active.each do |relative|
+          - @user.relatives.active.order(:birth_date).each do |relative|
             li.list-group-item
               .row
                 .col
