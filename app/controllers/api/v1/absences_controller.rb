@@ -9,20 +9,12 @@ class Api::V1::AbsencesController < Api::V1::BaseController
   end
 
   def create
-    if params[:organisation_id].blank?
-      return render(
-        status: :unprocessable_entity,
-        json: { success: false, errors: ["organisation_id doit être rempli"] }
-      )
-    end
+    params.require(:organisation_id)
 
     absence = Absence.new(absence_params)
     authorize(absence)
-    if absence.save
-      render json: AbsenceBlueprint.render(absence, root: :absence)
-    else
-      render_invalid_resource(absence)
-    end
+    absence.save!
+    render json: AbsenceBlueprint.render(absence, root: :absence)
   end
 
   private

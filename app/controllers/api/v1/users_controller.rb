@@ -14,24 +14,13 @@ class Api::V1::UsersController < Api::V1::BaseController
   end
 
   def create
-    if user_params[:organisation_ids].blank?
-      return render(
-        status: :unprocessable_entity,
-        json: { success: false, errors: ["organisation_ids doit être rempli"] }
-      )
-    end
+    params.require(:organisation_ids)
 
-    user = User.new(
-      **user_params,
-      created_through: "agent_creation_api"
-    )
+    user = User.new(**user_params, created_through: "agent_creation_api")
     authorize(user)
     user.skip_confirmation_notification!
-    if user.save
-      render json: UserBlueprint.render(user, root: :user)
-    else
-      render_invalid_resource(user)
-    end
+    user.save!
+    render json: UserBlueprint.render(user, root: :user)
   end
 
   def invite

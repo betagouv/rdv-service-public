@@ -6,11 +6,8 @@ class Api::V1::UserProfilesController < Api::V1::BaseController
   def create
     user_profile = UserProfile.new(user_profile_params)
     authorize(user_profile)
-    if user_profile.save
-      render json: UserProfileBlueprint.render(user_profile, root: :user_profile)
-    else
-      render_invalid_resource(user_profile)
-    end
+    user_profile.save!
+    render json: UserProfileBlueprint.render(user_profile, root: :user_profile)
   end
 
   private

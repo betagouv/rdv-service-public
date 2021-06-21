@@ -136,12 +136,5 @@ describe "api/v1/absences requests", type: :request do
         expect(response.status).to eq(422)
       end
     end
-
-    # context "invalid JSON" do
-    #   it "returns an error" do
-    #     post(api_v1_absences_path, body: valid_params.to_json[0..-5], headers: api_auth_headers_for_agent(agent))
-    #     expect(response.status).to eq(400)
-    #   end
-    # end
   end
 end

@@ -5,7 +5,6 @@ class Api::V1::BaseController < ActionController::Base
   include Pundit
   include DeviseTokenAuth::Concerns::SetUserByToken
   respond_to :json
-  rescue_from Pundit::NotAuthorizedError, with: :not_authorized
   before_action :authenticate_api_v1_agent_with_token_auth!
 
   def pundit_user
@@ -26,6 +25,13 @@ class Api::V1::BaseController < ActionController::Base
     super([:agent, record], *args)
   end
 
+  # Rescuable exceptions
+
+  rescue_from Pundit::NotAuthorizedError, with: :not_authorized
+  rescue_from ActionController::ParameterMissing, with: :parameter_missing
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+  rescue_from ActiveRecord::RecordInvalid, with: :record_invalid
+
   def not_authorized(exception)
     policy_name = exception.policy.class.to_s.underscore
     render(
@@ -37,15 +43,24 @@ class Api::V1::BaseController < ActionController::Base
     )
   end
 
-  private
+  def parameter_missing(exception)
+    render(
+      status: :unprocessable_entity,
+      json: { success: false, errors: [exception.to_s] }
+    )
+  end
 
-  def render_invalid_resource(resource)
+  def record_not_found(_)
+    head :not_found
+  end
+
+  def record_invalid(exception)
     render(
       status: :unprocessable_entity,
       json: {
         success: false,
-        errors: resource.errors.details,
-        error_messages: resource.errors.map { "#{_1} #{_2}" }
+        errors: exception.record.errors.details,
+        error_messages: exception.record.errors.map { "#{_1} #{_2}" }
       }
     )
   end
