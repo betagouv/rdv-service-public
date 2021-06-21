@@ -51,19 +51,16 @@
 
     - if @user.responsible?
       .card
-        .card-header
-          .mt-1(id="agents-referents") Agents référents
+        .card-header(id="agents-referents") Agents référents
         .card-body
           ul.list-unstyled.mb-2
             - policy_scope(@user.agents).includes([:service]).each do |agent|
-              li.mb-2
-              | #{agent.full_name_and_service}
-              = link_to "❌ retirer", admin_organisation_user_referents_path(current_organisation, @user, agent_id: agent.id), method: :delete, class: "btn btn-link text-danger small", data: { confirm: "Êtes-vous sûr de vouloir retirer ce référent ?"}
+              li.mb-2 = agent.full_name_and_service
             - if policy_scope(@user.agents).empty?
               .font-italic aucun référent
-          .row.mt-3
-            .col.text-right
-              = link_to "Choisir un référent à ajouter", new_admin_organisation_user_referents_path(current_organisation, @user), class: "btn btn-primary"
+
+          .text-right
+            = link_to "Modifier", new_admin_organisation_user_referents_path(current_organisation, @user), class: "btn btn-outline-primary"
 
     - if @user.relative?
       .card#spec-secondary-user-card
@@ -72,30 +69,28 @@
           = render 'admin/users/responsible_information', user: @user.responsible
 
       .card
-        .card-header
-            .mt-1 Agents référents du responsable
+        .card-header Agents référents du responsable
         .card-body
           ul.list-unstyled.mb-2
             - @user.responsible.agents.includes([:service]).each do |agent|
               li.mb-2
               | #{agent.full_name_and_service}
             - if @user.responsible.agents.empty?
-              .font-italic aucun référent
+              li.mb-2
+                .font-italic aucun référent
 
     - if @user.responsible?
       .card
         .card-header Proches
         .card-body
-          ul.list-group.mb-2
+          ul.list-unstyled.mb-2
             - if @user.relatives.within_organisation(current_organisation).active.empty?
-              li.list-group-item
+              li
                 em Aucun proche
             - @user.relatives.within_organisation(current_organisation).active.order(:birth_date).each do |relative|
-              li.list-group-item
-                .row
-                  .col
-                    => link_to relative.full_name, admin_organisation_user_path(current_organisation, relative)
-                    = "(#{age(relative)})" if relative.birth_date
+              li
+                => link_to relative.full_name, admin_organisation_user_path(current_organisation, relative)
+                = "(#{age(relative)})" if relative.birth_date
           .text-right
             = link_to "Ajouter un proche", new_admin_organisation_user_path(current_organisation, responsible_id: @user.id), class: "btn btn-outline-primary"
 
