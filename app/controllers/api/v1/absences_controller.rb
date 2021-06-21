@@ -3,8 +3,7 @@
 class Api::V1::AbsencesController < Api::V1::BaseController
   def index
     absences = policy_scope(Absence)
-    absences = absences.where(organisation: Organisation.find(params[:organisation_id])) \
-      if params[:organisation_id].present?
+    absences = absences.where(organisation: current_organisation) if current_organisation.present?
     render_collection(absences.by_starts_at)
   end
 

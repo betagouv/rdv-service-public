@@ -12,9 +12,12 @@ class Api::V1::BaseController < ActionController::Base
   end
 
   def current_organisation
-    return nil if params[:organisation_id].blank?
-
-    current_agent.organisations.where(id: params[:organisation_id]).first
+    @current_organisation ||=
+      if params[:organisation_id].blank?
+        nil
+      else
+        current_agent.organisations.find_by(id: params[:organisation_id])
+      end
   end
 
   def policy_scope(clasz)
