@@ -90,7 +90,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
-      resources :absences, only: %i[index create]
+      resources :absences, except: %i[new edit]
       resources :agents, only: %i[index]
       resources :users, only: %i[create show] do
         get :invite, on: :member

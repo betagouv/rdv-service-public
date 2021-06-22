@@ -165,4 +165,78 @@ describe "api/v1/absences requests", type: :request do
       end
     end
   end
+
+  describe "SHOW api/v1/absences/:id" do
+    subject { get(api_v1_absence_path(absence.id), headers: api_auth_headers_for_agent(agent)) }
+
+    context "authorized absence" do
+      let(:absence) { create(:absence, agent: agent, organisation: organisation) }
+
+      it "works" do
+        subject
+        expect(response.status).to eq(200)
+        result = JSON.parse(response.body)
+        expect(result["absence"]["title"]).to eq(absence.title)
+      end
+    end
+
+    context "unauthorized absence" do
+      let(:absence) { create(:absence) }
+
+      it "returns an error" do
+        subject
+        expect(response.status).to eq(404)
+      end
+    end
+  end
+
+  describe "PUT api/v1/absences/:id" do
+    subject { put(api_v1_absence_path(absence.id), params: params, headers: api_auth_headers_for_agent(agent)) }
+
+    let(:params) { { title: "Updated" } }
+
+    context "authorized absence" do
+      let(:absence) { create(:absence, agent: agent, organisation: organisation, title: "Initial") }
+
+      it "works" do
+        subject
+        expect(response.status).to eq(200)
+        expect(absence.reload.title).to eq("Updated")
+      end
+    end
+
+    context "unauthorized absence" do
+      let(:absence) { create(:absence, title: "Initial") }
+
+      it "returns an error" do
+        subject
+        expect(response.status).to eq(404)
+        expect(absence.reload.title).to eq("Initial")
+      end
+    end
+  end
+
+  describe "DELETE api/v1/absences/:id" do
+    subject { delete(api_v1_absence_path(absence.id), headers: api_auth_headers_for_agent(agent)) }
+
+    context "authorized absence" do
+      let(:absence) { create(:absence, agent: agent, organisation: organisation) }
+
+      it "works" do
+        subject
+        expect(response.status).to eq(204)
+        expect { absence.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context "unauthorized absence" do
+      let(:absence) { create(:absence) }
+
+      it "returns an error" do
+        subject
+        expect(response.status).to eq(404)
+        expect(absence).not_to be_destroyed
+      end
+    end
+  end
 end
