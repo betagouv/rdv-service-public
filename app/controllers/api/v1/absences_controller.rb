@@ -9,17 +9,16 @@ class Api::V1::AbsencesController < Api::V1::BaseController
   end
 
   def create
-    params.require(:organisation_id)
-
-    absence = Absence.new(absence_params)
+    absence = Absence.new(create_params)
     authorize(absence)
     absence.save!
-    render json: AbsenceBlueprint.render(absence, root: :absence)
+    render_record absence
   end
 
   private
 
-  def absence_params
+  def create_params
+    params.require(:organisation_id)
     params.permit(:organisation_id, :agent_id, :title, :first_day, :start_time, :end_day, :end_time)
   end
 end

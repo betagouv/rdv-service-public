@@ -25,6 +25,13 @@ class Api::V1::BaseController < ActionController::Base
     super([:agent, record], *args)
   end
 
+  def render_record(record, **options)
+    record_klass = record.class
+    blueprint_klass = "#{record_klass.name}Blueprint".constantize
+    root = record.class.model_name.element
+    render json: blueprint_klass.render(record, root: root, **options)
+  end
+
   # Rescuable exceptions
 
   rescue_from Pundit::NotAuthorizedError, with: :not_authorized
