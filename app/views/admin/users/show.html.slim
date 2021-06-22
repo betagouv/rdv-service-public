@@ -54,13 +54,13 @@
         .card-header(id="agents-referents") Agents référents
         .card-body
           ul.list-unstyled.mb-2
-            - policy_scope(@user.agents).includes([:service]).each do |agent|
+            - policy_scope(@user.agents).includes([:service]).distinct.each do |agent|
               li.mb-2 = agent.full_name_and_service
             - if policy_scope(@user.agents).empty?
               .font-italic aucun référent
 
           .text-right
-            = link_to "Modifier", new_admin_organisation_user_referents_path(current_organisation, @user), class: "btn btn-outline-primary"
+            = link_to "Modifier", admin_organisation_user_referents_path(current_organisation, @user), class: "btn btn-outline-primary"
 
     - if @user.relative?
       .card#spec-secondary-user-card
