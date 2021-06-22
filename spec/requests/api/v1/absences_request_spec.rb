@@ -81,6 +81,34 @@ describe "api/v1/absences requests", type: :request do
       end
     end
 
+    context "agent specified by email" do
+      context "email in known" do
+        let(:params) do
+          valid_params.except(:agent_id)
+            .merge(agent_email: agent.email)
+        end
+
+        it "works" do
+          expect { subject }.to(change(Absence, :count).by(1))
+          expect(response.status).to eq(200)
+          absence = Absence.by_starts_at.first
+          expect(absence.agent).to eq(agent)
+        end
+      end
+
+      context "email in unknown" do
+        let(:params) do
+          valid_params.except(:agent_id)
+            .merge(agent_email: "other_email")
+        end
+
+        it "fails" do
+          expect { subject }.not_to(change(Absence, :count))
+          expect(response.status).to eq(404)
+        end
+      end
+    end
+
     context "broken start_time format" do
       let(:params) { valid_params.merge(start_time: "08h") }
 
