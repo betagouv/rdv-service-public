@@ -19,7 +19,7 @@ RSpec.describe Users::UsersController, type: :controller do
     it "lists relatives" do
       subject
       expect(response.body).to include("Mes proches")
-      expect(response.body).to include("GARCIA Katia (28 ans)")
+      expect(response.body).to include("Katia GARCIA (28 ans)")
     end
   end
 end

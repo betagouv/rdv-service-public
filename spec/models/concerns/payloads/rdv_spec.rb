@@ -74,7 +74,7 @@ describe Payloads::Rdv, type: :service do
       let(:user) { build(:user, first_name: "Ethan", last_name: "DUVAL") }
       let(:rdv) { build(:rdv, users: [user], motif: build(:motif, name: "Consultation")) }
 
-      it { expect(rdv.payload[:summary]).to eq("RDV DUVAL Ethan <> Consultation") }
+      it { expect(rdv.payload[:summary]).to eq("RDV Ethan DUVAL <> Consultation") }
     end
 
     describe ":user_email" do

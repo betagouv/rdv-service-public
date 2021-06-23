@@ -131,7 +131,7 @@ describe RdvExporter, type: :service do
         caro = build(:agent, first_name: "Caroline", last_name: "DUPUIS")
         karima = build(:agent, first_name: "Karima", last_name: "CHARNI")
         rdv = build(:rdv, agents: [karima, caro])
-        expect(described_class.row_array_from(rdv)[11]).to eq("CHARNI Karima, DUPUIS Caroline")
+        expect(described_class.row_array_from(rdv)[11]).to eq("Karima CHARNI, Caroline DUPUIS")
       end
     end
 
@@ -140,7 +140,7 @@ describe RdvExporter, type: :service do
         ayoub = build(:user, first_name: "Ayoub", last_name: "PAUL")
         veronique = build(:user, first_name: "Véronique", last_name: "DIALO")
         rdv = build(:rdv, users: [veronique, ayoub])
-        expect(described_class.row_array_from(rdv)[12]).to eq("DIALO Véronique, PAUL Ayoub")
+        expect(described_class.row_array_from(rdv)[12]).to eq("Véronique DIALO, Ayoub PAUL")
       end
     end
 
