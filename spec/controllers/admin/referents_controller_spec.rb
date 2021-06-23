@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Admin::ReferentsController, type: :controller do
-  describe "#new" do
+  describe "#index" do
     it "assigns available agents and respond success" do
       organisation = create(:organisation)
       user = create(:user, agents: [], organisations: [organisation])
@@ -11,10 +11,11 @@ describe Admin::ReferentsController, type: :controller do
       create(:agent, basic_role_in_organisations: [create(:organisation)])
       sign_in agent
 
-      get :new, params: { organisation_id: organisation.id, user_id: user.id }
+      get :index, params: { organisation_id: organisation.id, user_id: user.id }
 
       expect(response).to be_successful
-      expect(assigns(:available_agents)).to eq([agent, lea])
+      expect(assigns(:available_agents).sort).to eq([agent, lea].sort)
+      expect(assigns(:referents)).to eq([])
     end
   end
 
@@ -30,10 +31,10 @@ describe Admin::ReferentsController, type: :controller do
       post :create, params: { organisation_id: organisation.id, user_id: user.id, agent_id: new_referent.id }
 
       expect(user.reload.agents).to include(new_referent)
-      expect(response).to redirect_to(admin_organisation_user_path(organisation, user, anchor: "agents-referents"))
+      expect(response).to redirect_to(admin_organisation_user_referents_path(organisation, user))
     end
 
-    it "return errors and render new" do
+    it "return errors and redirect to index" do
       organisation = create(:organisation)
       user = create(:user, agents: [], organisations: [organisation])
       service = create(:service)
@@ -47,7 +48,7 @@ describe Admin::ReferentsController, type: :controller do
 
       post :create, params: { organisation_id: organisation.id, user_id: user.id, agent_id: new_referent.id }
 
-      expect(response).to render_template(:new)
+      expect(response).to redirect_to(admin_organisation_user_referents_path(organisation, user))
       expect(flash[:error]).to eq("problème")
     end
   end
@@ -62,10 +63,10 @@ describe Admin::ReferentsController, type: :controller do
 
       sign_in agent
 
-      post :destroy, params: { organisation_id: organisation.id, user_id: user.id, agent_id: referent.id }
+      post :destroy, params: { organisation_id: organisation.id, user_id: user.id, id: referent.id }
 
       expect(user.reload.agents).not_to include(referent)
-      expect(response).to redirect_to(admin_organisation_user_path(organisation, user, anchor: "agents-referents"))
+      expect(response).to redirect_to(admin_organisation_user_referents_path(organisation, user))
     end
 
     it "return errors and redirect to user's show" do
@@ -81,9 +82,9 @@ describe Admin::ReferentsController, type: :controller do
       allow_any_instance_of(User).to receive(:errors)
         .and_return(OpenStruct.new(full_messages: ["problème"]))
 
-      post :destroy, params: { organisation_id: organisation.id, user_id: user.id, agent_id: referent.id }
+      post :destroy, params: { organisation_id: organisation.id, user_id: user.id, id: referent.id }
 
-      expect(response).to redirect_to(admin_organisation_user_path(organisation, user, anchor: "agents-referents"))
+      expect(response).to redirect_to(admin_organisation_user_referents_path(organisation, user))
       expect(flash[:error]).to eq("problème")
     end
   end

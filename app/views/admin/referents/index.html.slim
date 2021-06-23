@@ -2,6 +2,13 @@
 
 - content_for(:title, "Modifier les référents de #{@user.full_name}")
 
+- content_for :breadcrumb do
+  ol.breadcrumb.m-0
+    li.breadcrumb-item
+      = link_to 'Vos usagers', admin_organisation_users_path(current_organisation)
+    li.breadcrumb-item
+      = link_to @user.full_name, admin_organisation_user_path(current_organisation, @user)
+    li.breadcrumb-item.active Modifier les référents
 
 .row.justify-content-center
   .col-md-6
@@ -39,4 +46,4 @@
                       i.fa.fa-angle-right
 
         .m-3
-          = link_to "Retour", admin_organisation_user_path(current_organisation, @user, anchor: "agents-referents"), class: "btn btn-link"
+          = link_to "Fiche #{@user.full_name}", admin_organisation_user_path(current_organisation, @user, anchor: "agents-referents"), class: "btn btn-outline-primary"
