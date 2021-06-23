@@ -63,6 +63,10 @@ class Agent < ApplicationRecord
 
   accepts_nested_attributes_for :roles
 
+  def reverse_full_name_and_service
+    service.present? ? "#{reverse_full_name} (#{service.short_name})" : full_name
+  end
+
   def full_name_and_service
     service.present? ? "#{full_name} (#{service.short_name})" : full_name
   end

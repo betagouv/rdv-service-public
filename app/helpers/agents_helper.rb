@@ -74,7 +74,7 @@ module AgentsHelper
         .complete.active.order_by_last_name
         .map do |agent|
         [
-          agent.full_name,
+          agent.reverse_full_name,
           agent.id,
           { 'data-url': send(path_helper_name, current_organisation, agent.id) }
         ]
