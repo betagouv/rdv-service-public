@@ -21,7 +21,7 @@
               th Service
               th Actions
           tbody
-            - @referents.each do |agent|
+            - @agents.each do |agent|
               tr id="agent_#{agent.id}"
                 td
                   span.mr-2= agent.full_name
@@ -29,21 +29,14 @@
                   = agent.service&.short_name
                 td
                   div.mr-3
-                    = link_to admin_organisation_user_referent_path(current_organisation, @user, agent), method: :delete, class: "btn btn-danger", data: { confirm: "Êtes-vous sûr de vouloir retirer ce référent ?"} do
-                      span> Retirer
-                      i.fa.fa-angle-right
-          tbody
-            - @available_agents.each do |agent|
-              tr id="agent_#{agent.id}"
-                td
-                  span.mr-2= agent.full_name
-                td
-                  = agent.service&.short_name
-                td
-                  div.mr-3
-                    = link_to admin_organisation_user_referents_path(current_organisation, @user, agent_id: agent.id),  method: :post, class: "btn btn-primary" do
-                      span> Ajouter
-                      i.fa.fa-angle-right
+                    - if @referents.include?(agent)
+                      = link_to admin_organisation_user_referent_path(current_organisation, @user, agent), method: :delete, class: "btn btn-danger", data: { confirm: "Êtes-vous sûr de vouloir retirer ce référent ?"} do
+                        span> Retirer
+                        i.fa.fa-angle-right
+                    - else
+                      = link_to admin_organisation_user_referents_path(current_organisation, @user, agent_id: agent.id),  method: :post, class: "btn btn-primary" do
+                        span> Ajouter
+                        i.fa.fa-angle-right
 
         .m-3
           = link_to "Fiche #{@user.full_name}", admin_organisation_user_path(current_organisation, @user, anchor: "agents-referents"), class: "btn btn-outline-primary"

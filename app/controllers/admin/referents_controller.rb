@@ -4,8 +4,8 @@ class Admin::ReferentsController < AgentAuthController
   def index
     @user = policy_scope(User).find(params[:user_id])
     authorize(@user)
-    @referents = policy_scope(@user.agents).distinct
-    @available_agents = policy_scope(Agent).distinct.available_referents_for(@user)
+    @referents = policy_scope(@user.agents).distinct.order(:last_name)
+    @agents = policy_scope(Agent).distinct.order(:last_name)
   end
 
   def create
