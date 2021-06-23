@@ -6,6 +6,7 @@ class CustomDeviseMailer < Devise::Mailer
   helper :application
   default template_path: "devise/mailer"
   layout "mailer"
+  add_template_helper RdvSolidaritesInstanceNameHelper
 
   def invitation_instructions(record, token, opts = {})
     @token = token

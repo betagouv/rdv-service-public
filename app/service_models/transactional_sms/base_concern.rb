@@ -22,7 +22,11 @@ module TransactionalSms::BaseConcern
   end
 
   def content
-    raw_content
+    [
+      ApplicationController.helpers.rdv_solidarites_instance_name,
+      raw_content
+    ].compact
+      .join("\n")
       .tr("áâãëẽêíïîĩóôõúûũçÀÁÂÃÈËẼÊÌÍÏÎĨÒÓÔÕÙÚÛŨ", "aaaeeeiiiiooouuucAAAAEEEEIIIIIOOOOUUUU")
       .gsub("œ", "oe")
   end

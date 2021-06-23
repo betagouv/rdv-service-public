@@ -117,6 +117,27 @@ describe TransactionalSms::BaseConcern, type: :service do
 
       it { is_expected.to eq("Noeuds les mines") }
     end
+
+    describe "instance name" do
+      before do
+        ENV["RDV_SOLIDARITES_INSTANCE_NAME"] = instance_name
+        test_sms.raw_content = "Contenu de test"
+      end
+
+      after { ENV.delete("RDV_SOLIDARITES_INSTANCE_NAME") }
+
+      context "when instance name is blank" do
+        let(:instance_name) { "" }
+
+        it { is_expected.to eq("Contenu de test") }
+      end
+
+      context "when instance name is set" do
+        let(:instance_name) { "TEST INSTANCE" }
+
+        it { is_expected.to eq("TEST INSTANCE\nContenu de test") }
+      end
+    end
   end
 
   describe "#send!" do
