@@ -12,7 +12,7 @@ describe "Agent can update user" do
     visit authenticated_agent_root_path
     click_link "Usagers"
     expect_page_title("Vos usagers")
-    click_link "LEGENDE Jean"
+    click_link "Jean LEGENDE"
     expect_page_title("Jean LEGENDE")
     click_link "Modifier"
   end
