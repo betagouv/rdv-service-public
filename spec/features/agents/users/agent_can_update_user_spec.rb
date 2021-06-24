@@ -14,7 +14,7 @@ describe "Agent can update user" do
     expect_page_title("Vos usagers")
     click_link "Jean LEGENDE"
     expect_page_title("Jean LEGENDE")
-    click_link "Modifier"
+    within("#spec-primary-user-card") { click_link "Modifier" }
   end
 
   it "update existing user's email" do
