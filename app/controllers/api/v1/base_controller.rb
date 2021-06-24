@@ -5,7 +5,6 @@ class Api::V1::BaseController < ActionController::Base
   include Pundit
   include DeviseTokenAuth::Concerns::SetUserByToken
   respond_to :json
-  rescue_from Pundit::NotAuthorizedError, with: :not_authorized
   before_action :authenticate_api_v1_agent_with_token_auth!
 
   def pundit_user
@@ -13,9 +12,12 @@ class Api::V1::BaseController < ActionController::Base
   end
 
   def current_organisation
-    return nil if params[:organisation_id].blank?
-
-    current_agent.organisations.where(id: params[:organisation_id]).first
+    @current_organisation ||=
+      if params[:organisation_id].blank?
+        nil
+      else
+        current_agent.organisations.find_by(id: params[:organisation_id])
+      end
   end
 
   def policy_scope(clasz)
@@ -25,6 +27,43 @@ class Api::V1::BaseController < ActionController::Base
   def authorize(record, *args)
     super([:agent, record], *args)
   end
+
+  def params
+    params = super
+    @page ||= params.delete(:page)&.to_i || 1
+    @per ||= params.delete(:per)&.to_i || 100
+    params
+  end
+
+  def render_record(record, **options)
+    record_klass = record.class
+    blueprint_klass = "#{record_klass.name}Blueprint".constantize
+    root = record.class.model_name.element
+    render json: blueprint_klass.render(record, root: root, **options)
+  end
+
+  def render_collection(objects)
+    objects = objects.page(@page).per(@per)
+    meta = {
+      current_page: objects.current_page,
+      next_page: objects.next_page,
+      prev_page: objects.prev_page,
+      total_pages: objects.total_pages,
+      total_count: objects.total_count
+    }
+
+    objects_klass = objects.klass
+    blueprint_klass = "#{objects_klass.name}Blueprint".constantize
+    root = objects_klass.model_name.collection
+    render json: blueprint_klass.render(objects, root: root, meta: meta)
+  end
+
+  # Rescuable exceptions
+
+  rescue_from Pundit::NotAuthorizedError, with: :not_authorized
+  rescue_from ActionController::ParameterMissing, with: :parameter_missing
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+  rescue_from ActiveRecord::RecordInvalid, with: :record_invalid
 
   def not_authorized(exception)
     policy_name = exception.policy.class.to_s.underscore
@@ -37,15 +76,24 @@ class Api::V1::BaseController < ActionController::Base
     )
   end
 
-  private
+  def parameter_missing(exception)
+    render(
+      status: :unprocessable_entity,
+      json: { success: false, errors: [exception.to_s] }
+    )
+  end
 
-  def render_invalid_resource(resource)
+  def record_not_found(_)
+    head :not_found
+  end
+
+  def record_invalid(exception)
     render(
       status: :unprocessable_entity,
       json: {
         success: false,
-        errors: resource.errors.details,
-        error_messages: resource.errors.map { "#{_1} #{_2}" }
+        errors: exception.record.errors.details,
+        error_messages: exception.record.errors.map { "#{_1} #{_2}" }
       }
     )
   end
