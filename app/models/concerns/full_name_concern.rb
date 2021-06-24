@@ -13,8 +13,8 @@ module FullNameConcern
 
   def names
     f_n = [first_name]
-    f_n << "(#{birth_name})" if defined?(birth_name) && birth_name.present?
     f_n << last_name
+    f_n << "(#{birth_name})" if defined?(birth_name) && birth_name.present?
     f_n
   end
 
