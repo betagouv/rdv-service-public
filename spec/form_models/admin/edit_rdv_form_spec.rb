@@ -7,6 +7,8 @@ describe Admin::EditRdvForm, type: :form do
 
   describe "#update" do
     it "updates rdv's lieu" do
+      now = Time.zone.parse("2020-12-12 13h50")
+      travel_to(now)
       rdv = create(:rdv, agents: [agent], organisation: organisation, lieu: create(:lieu, organisation: organisation))
       new_lieu = create(:lieu, organisation: organisation)
 
@@ -17,6 +19,8 @@ describe Admin::EditRdvForm, type: :form do
     end
 
     it "updates the requested rdv status" do
+      now = Time.zone.parse("2020-12-12 13h50")
+      travel_to(now)
       rdv = create(:rdv, agents: [agent], organisation: organisation, lieu: create(:lieu, organisation: organisation))
 
       edit_rdv_form = described_class.new(rdv, agent_context)
