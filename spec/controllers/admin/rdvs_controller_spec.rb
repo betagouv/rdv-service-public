@@ -40,6 +40,9 @@ describe Admin::RdvsController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       it "redirects to the rdv" do
+        now = Time.zone.parse("2020-11-23 14h00")
+        travel_to(now)
+        rdv = create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation)
         lieu = create(:lieu, organisation: organisation)
         put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { lieu_id: lieu.id } }
         expect(response).to redirect_to(admin_organisation_rdv_path(organisation, rdv))
@@ -65,6 +68,9 @@ describe Admin::RdvsController, type: :controller do
 
   describe "GET #show" do
     it "returns a success response" do
+      now = Time.zone.parse("2020-11-23 14h00")
+      travel_to(now)
+      rdv = create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation)
       get :show, params: { organisation_id: organisation.id, id: rdv.id }
       expect(response).to be_successful
     end

@@ -41,4 +41,18 @@ describe Agent, type: :model do
       expect(agent.uid).to eq("agent_#{agent.id}@deleted.rdv-solidarites.fr")
     end
   end
+
+  describe "#available_referents_for" do
+    it "returns empty array without agents" do
+      user = build(:user, agents: [])
+      expect(described_class.available_referents_for(user)).to eq([])
+    end
+
+    it "returns agent that not already referents array without agents" do
+      agent = create(:agent)
+      already_referent = create(:agent)
+      user = create(:user, agents: [already_referent])
+      expect(described_class.available_referents_for(user)).to eq([agent])
+    end
+  end
 end

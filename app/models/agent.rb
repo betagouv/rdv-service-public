@@ -55,6 +55,9 @@ class Agent < ApplicationRecord
   scope :with_territorial_role, lambda { |territory|
     joins(:territories).where(territories: { id: territory.id })
   }
+  scope :available_referents_for, lambda { |user|
+    where.not(id: [user.agents.map(&:id)])
+  }
 
   before_save :normalize_account
 
