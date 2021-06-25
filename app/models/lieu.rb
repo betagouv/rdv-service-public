@@ -9,7 +9,7 @@ class Lieu < ApplicationRecord
   validates :name, :address, :latitude, :longitude, presence: true
 
   scope :enabled, -> { where(enabled: true) }
-  scope :disabled, -> { where.not(enabled: false) }
+  scope :disabled, -> { where.not(enabled: true) }
 
   scope :for_motif, lambda { |motif|
     lieux_ids = PlageOuverture
