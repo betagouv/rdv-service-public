@@ -28,7 +28,7 @@
       .card-body
         = mail_to "contact@rdv-solidarites.fr",
           subject: "[Problème Agent]",
-          body: "Organisation: \n\remail: \n\rProblème ou Question:", class: "btn btn-primary" do
+          body: t(".contact-email-body"), class: "btn btn-primary" do
           span>
             i.fa.fa-envelope
           | Envoyer une demande à l'équipe technique
