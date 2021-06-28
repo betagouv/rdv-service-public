@@ -22,7 +22,9 @@ module RdvUpdater
           Notifications::Rdv::RdvCancelledService.perform_with(rdv, author)
         end
 
-        Notifications::Rdv::RdvDateUpdatedService.perform_with(rdv, author) if rdv.previous_changes["starts_at"].present?
+        if rdv.previous_changes["starts_at"].present?
+          Notifications::Rdv::RdvDateUpdatedService.perform_with(rdv, author)
+        end
       end
       result
     end
