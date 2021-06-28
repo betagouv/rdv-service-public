@@ -16,7 +16,7 @@
           = f.input :search, placeholder: 'Prénom, Nom, Email, Téléphone', label: "Recherche", input_html: { autocomplete: 'off', class: 'search-form-control', value: params[:search] }, required: false
         .col-md-6
           = f.input :agent_id, collection: policy_scope(Agent).within_organisation(current_organisation), label: "Agent référent", label_method: :reverse_full_name, input_html: { class: 'select2-input' }
-      input.btn.btn-primary.d-print-none type="submit" value="Rafraîchir la liste"
+      input.btn.btn-primary.d-print-none type="submit" value="Rechercher"
 
 .card
   - if @users.any? || params[:search].present? || params[:agent_id].present?
