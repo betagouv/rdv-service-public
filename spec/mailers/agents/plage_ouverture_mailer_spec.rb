@@ -30,7 +30,7 @@ describe Agents::PlageOuvertureMailer, type: :mailer do
       it "has a ICS file join with UID" do
         mail = described_class.send("plage_ouverture_#{action}", ics_payload)
         cal = mail.find_first_mime_type("text/calendar")
-        expect(cal.body.raw_source).to match("UID:plage_ouverture_@RDV Solidarités")
+        expect(cal.decoded).to match("UID:plage_ouverture_@RDV Solidarités")
       end
     end
   end
@@ -50,7 +50,7 @@ describe Agents::PlageOuvertureMailer, type: :mailer do
       }
       mail = described_class.send("plage_ouverture_destroyed", ics_payload)
       cal = mail.find_first_mime_type("text/calendar")
-      expect(cal.body.raw_source).to match("STATUS:CANCELLED")
+      expect(cal.decoded).to match("STATUS:CANCELLED")
     end
   end
 end

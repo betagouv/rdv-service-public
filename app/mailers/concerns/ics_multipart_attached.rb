@@ -34,7 +34,9 @@ module IcsMultipartAttached
     #
     # 3. the `application/ics` attachment is base64-encoded
     #
-    # 4. the `text/calendar` part is in raw text (`quoted-printable`).
+    # 4. the `text/calendar` part is base64-encoded, too.
+    # This is different from Google: quoted-printable, in ActiveMailer, encodes line breaks as =0D\n,
+    # and this seems to break the Outlook automatic integration. #1354
 
     # The final email parts look like this:
     # - multipart/mixed
@@ -60,7 +62,8 @@ module IcsMultipartAttached
       message.add_part(
         Mail::Part.new do
           content_type "text/calendar; method=#{cal.ip_method}; charset=utf-8"
-          body cal.to_ical
+          body Base64.encode64(cal.to_ical)
+          content_transfer_encoding "base64"
         end
       )
     end
