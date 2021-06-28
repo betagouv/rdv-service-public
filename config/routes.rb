@@ -96,6 +96,7 @@ Rails.application.routes.draw do
         get :invite, on: :member
         post :invite, on: :member
       end
+      resources :users, only: %i[index]
       resources :user_profiles, only: [:create]
       resources :organisations, only: %i[index] do
         resources :users, only: %i[index]
