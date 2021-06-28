@@ -14,7 +14,7 @@ test_unit:  ## Run unit tests in parallel
 	RAILS_ENV=test bundle exec rake parallel:spec['spec\/(?!features)']
 
 test_features:  ## Run feature tests
-	bundle exec rake spec spec/features
+	bundle exec rspec spec/features
 
 autocorrect: ## Fix autocorrectable lint issues
 	bundle exec rubocop --auto-correct-all
