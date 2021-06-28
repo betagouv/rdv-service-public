@@ -276,6 +276,48 @@ describe "api/v1/users requests", type: :request do
     end
   end
 
+  describe "GET api/v1/organisations/:id/users" do
+    context "when the agent does not belong to the organisation" do
+      let!(:other_orga) { create(:organisation) }
+      let!(:user) { create(:user, organisations: [other_orga]) }
+
+      it "does not return the user list" do
+        get api_v1_organisation_users_path(other_orga), headers: api_auth_headers_for_agent(agent)
+        expect(response.status).to eq(200)
+        response_parsed = JSON.parse(response.body)
+        expect(response_parsed["users"]).to eq([])
+      end
+    end
+
+    context "when the agent belongs to the organisation" do
+      let!(:user1) { create(:user, organisations: [organisation]) }
+      let!(:user2) { create(:user, organisations: [organisation]) }
+
+      it "returns the user list" do
+        get api_v1_organisation_users_path(organisation), headers: api_auth_headers_for_agent(agent)
+        expect(response.status).to eq(200)
+        response_parsed = JSON.parse(response.body)
+        expect(response_parsed["users"].pluck("id")).to contain_exactly(user1.id, user2.id)
+      end
+    end
+
+    context "when a list of ids is passed" do
+      let!(:user1) { create(:user, organisations: [organisation]) }
+      let!(:user2) { create(:user, organisations: [organisation]) }
+
+      it "returns the specified user list" do
+        get(
+          api_v1_organisation_users_path(organisation),
+          params: { ids: [user1.id] },
+          headers: api_auth_headers_for_agent(agent)
+        )
+        expect(response.status).to eq(200)
+        response_parsed = JSON.parse(response.body)
+        expect(response_parsed["users"].pluck("id")).to contain_exactly(user1.id)
+      end
+    end
+  end
+
   describe "GET api/v1/users/:id/invite" do
     context "Existing user with email" do
       let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }

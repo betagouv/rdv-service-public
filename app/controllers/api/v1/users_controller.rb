@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class Api::V1::UsersController < Api::V1::BaseController
+  def index
+    users = policy_scope(User)
+    users = users.where(id: params[:ids]) if params[:ids].present?
+    render_collection(users)
+  end
+
   def show
     user = retrieve_user
     render_record user, agent_context: pundit_user
