@@ -54,6 +54,7 @@ jobs:
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
   test_unit:
+    needs: test_seeds
     name: Unit Tests
     runs-on: ubuntu-latest
     services:
@@ -88,6 +89,7 @@ jobs:
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
   test_features:
+    needs: test_seeds
     name: Feature Tests
     runs-on: ubuntu-latest
     services:
