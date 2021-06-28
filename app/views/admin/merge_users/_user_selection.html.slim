@@ -2,7 +2,7 @@
   - if user.present?
     .collapse.show.js-merge-users-collapse-user class="collapse-#{attribute}"
       div
-        b>= user.full_name
+        b>= user.reverse_full_name
         span>= relative_tag(user)
         = link_to "changer...", ".collapse-#{attribute}", data: { toggle: "collapse" }
 
@@ -13,7 +13,7 @@
     = f.input "change_#{attribute}", \
       as: :select, \
       collection: policy_scope(User).order_by_last_name, \
-      label_method: -> { full_name_and_birthdate(_1) },
+      label_method: -> { reverse_full_name_and_birthdate(_1) },
       include_blank: "Sélectionner un usager", \
       required: true, \
       label: false, \

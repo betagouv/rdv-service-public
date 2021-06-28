@@ -9,7 +9,7 @@ describe "Agent can delete user" do
     login_as(agent, scope: :agent)
     visit authenticated_agent_root_path
     click_link "Usagers"
-    click_link "Lala LAND"
+    click_link "LAND Lala"
   end
 
   it "delete user", js: true do
