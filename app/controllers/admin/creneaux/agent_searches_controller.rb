@@ -17,7 +17,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
         @agents = policy_scope(Agent)
           .joins(:organisations).where(organisations: { id: current_organisation.id })
           .complete.active.order_by_last_name
-        @lieux = policy_scope(Lieu).ordered_by_name
+        @lieux = policy_scope(Lieu).enabled.ordered_by_name
       end
       format.js do
         skip_policy_scope # TODO: improve pundit checks for creneaux
