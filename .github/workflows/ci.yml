@@ -23,7 +23,6 @@ jobs:
           ruby-version: 2.7.3
           bundler-cache: true
       - run: bundle exec brakeman
-
   test_seeds:
     name: Create and load DB with seeds
     runs-on: ubuntu-latest
@@ -54,9 +53,8 @@ jobs:
           POSTGRES_USER: lapin_test
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
-
-  tests:
-    name: Test
+  test_unit:
+    name: Unit Tests
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -81,7 +79,41 @@ jobs:
       - name: Install JS dependencies
         run: yarn install
       - name: Run specs
-        run: bundle exec rspec
+        run: make test_unit
+        env:
+          HOST: http://example.com
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+  test_features:
+    name: Feature Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports: ["5432:5432"]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.3
+          bundler-cache: true
+      - name: Install JS dependencies
+        run: yarn install
+      - name: Run specs
+        run: make test_features
         env:
           HOST: http://example.com
           POSTGRES_HOST: localhost
