@@ -2,4 +2,4 @@ fr:
   admin:
     static_pages:
       support:
-        contact-email-body: "Organisation: \n\nemail: \n\nProblème ou Question: "
+        contactemailbody: "Organisation: \n\nemail: \n\nProblème ou Question: "
