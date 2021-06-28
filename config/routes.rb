@@ -178,7 +178,6 @@ Rails.application.routes.draw do
         end
         devise_for :agents, controllers: { invitations: "admin/invitations_devise" }, only: :invitations
         get "support", to: "static_pages#support"
-        resources :support_tickets, only: [:create]
       end
 
       resources :jours_feries, only: [:index]
@@ -205,7 +204,6 @@ Rails.application.routes.draw do
   get "health_checks/raise_on_purpose", to: "health_checks#raise_on_purpose"
   get "health_checks/enqueue_failing_job", to: "health_checks#enqueue_failing_job"
   root "welcome#index"
-  resources :support_tickets, only: [:create]
 
   # rubocop:disable Style/StringLiterals, Style/FormatStringToken
   # temporary route after admin namespace introduction

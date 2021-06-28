@@ -18,8 +18,6 @@ class AgentAuthController < ApplicationController
   helper_method :pundit_user
 
   def authorize(record, *args)
-    return super if record.is_a? SupportTicketForm
-
     record.class.module_parent == Agent ? super(record, *args) : super([:agent, record], *args)
   end
 
