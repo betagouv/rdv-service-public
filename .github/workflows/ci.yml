@@ -23,38 +23,7 @@ jobs:
           ruby-version: 2.7.3
           bundler-cache: true
       - run: bundle exec brakeman
-  test_seeds:
-    name: Create and load DB with seeds
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_USER: lapin_test
-          POSTGRES_PASSWORD: lapin_test
-          POSTGRES_DB: lapin_test
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports: ["5432:5432"]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.7.3
-          bundler-cache: true
-      - run: bundle exec rake db:create db:schema:load db:migrate db:seed RAILS_ENV=test
-        env:
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
-          POSTGRES_USER: lapin_test
-          POSTGRES_PASSWORD: lapin_test
-          POSTGRES_DB: lapin_test
   test_unit:
-    needs: test_seeds
     name: Unit Tests
     runs-on: ubuntu-latest
     services:
@@ -98,7 +67,6 @@ jobs:
           POSTGRES_PASSWORD: lapin_test
           POSTGRES_DB: lapin_test
   test_features:
-    needs: test_seeds
     name: Feature Tests
     runs-on: ubuntu-latest
     services:
@@ -123,6 +91,14 @@ jobs:
           bundler-cache: true
       - name: Install JS dependencies
         run: yarn install
+      - name: Setup tests
+        run: bundle exec rake db:setup RAILS_ENV=test
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: lapin_test
+          POSTGRES_PASSWORD: lapin_test
+          POSTGRES_DB: lapin_test
       - name: Run specs
         run: bundle exec rspec spec/features
         env:
