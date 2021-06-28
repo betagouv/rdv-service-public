@@ -113,7 +113,7 @@ describe Lieu, type: :model do
     end
   end
 
-  describe "disaabled" do
+  describe "disabled" do
     it "returns only disabled lieu" do
       create(:lieu, enabled: true)
       disabled_lieu = create(:lieu, enabled: false)
