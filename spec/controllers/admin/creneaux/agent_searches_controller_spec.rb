@@ -25,6 +25,13 @@ describe Admin::Creneaux::AgentSearchesController, type: :controller do
         get :index, params: { organisation_id: organisation_id, user_ids: [user.id] }
         expect(assigns(:form).user_ids).to eq([user.id.to_s])
       end
+
+      it "assigns enabled lieux" do
+        enabled_lieu = create(:lieu, enabled: true, organisation: organisation)
+        create(:lieu, enabled: false, organisation: organisation)
+        get :index, params: { organisation_id: organisation_id }
+        expect(assigns(:lieux)).to eq([enabled_lieu])
+      end
     end
   end
 end

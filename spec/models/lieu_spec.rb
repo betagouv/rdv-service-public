@@ -3,12 +3,12 @@
 describe Lieu, type: :model do
   let!(:territory) { create(:territory, departement_number: "62") }
   let!(:organisation) { create(:organisation, territory: territory) }
-  let!(:lieu) { create(:lieu) }
   let!(:user) { create(:user) }
 
   context "with motif" do
     let!(:motif) { create(:motif, name: "Vaccination", reservable_online: reservable_online, organisation: organisation) }
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu, organisation: organisation) }
+    let!(:lieu) { create(:lieu) }
 
     describe ".for_motif" do
       subject { described_class.for_motif(motif) }
@@ -50,6 +50,7 @@ describe Lieu, type: :model do
     end
 
     describe ".distance" do
+      let!(:lieu) { create(:lieu) }
       let!(:lieu_lille) { create(:lieu, latitude: 50.63, longitude: 3.053) }
       let(:paris_loc) { { latitude: 48.83, longitude: 2.37 } }
       let(:reservable_online) { true }
@@ -60,6 +61,8 @@ describe Lieu, type: :model do
 
     describe "#with_open_slots_for_motifs" do
       subject { described_class.with_open_slots_for_motifs([motif]) }
+
+      let!(:lieu) { create(:lieu) }
 
       context "motif has current plage ouvertures" do
         let!(:motif) { create(:motif, name: "Vaccination") }
@@ -98,6 +101,23 @@ describe Lieu, type: :model do
     it "destroy lieu without rdvs or plage d'ouverture" do
       lieu = create(:lieu, organisation: organisation, rdvs: [], plage_ouvertures: [])
       expect(lieu.destroy).to eq(lieu)
+    end
+  end
+
+  describe "enabled" do
+    it "returns only enabled lieu" do
+      enabled_lieu = create(:lieu, enabled: true)
+      create(:lieu, enabled: false)
+      expect(described_class.count).to eq(2)
+      expect(described_class.enabled).to eq([enabled_lieu])
+    end
+  end
+
+  describe "disabled" do
+    it "returns only disabled lieu" do
+      create(:lieu, enabled: true)
+      disabled_lieu = create(:lieu, enabled: false)
+      expect(described_class.disabled).to eq([disabled_lieu])
     end
   end
 end
