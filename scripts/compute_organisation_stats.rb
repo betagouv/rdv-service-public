@@ -62,4 +62,4 @@ display_stats("validation_compte", "d'activation d'un compte", avec_email, sans_
 display_stats("prise_de_rdv", "pour prendre un rdv", avec_email, sans_email)
 display_stats("delai_rdv", "pour avoir un rdv", avec_email, sans_email)
 display_stats("delai_rdv_total", "entre la création du compte et le 1er rdv", avec_email, sans_email)
-display_stats("delai_rdv_effectif", "entre la création du compte et le 1er rdv effectué",avec_email, sans_email)
+display_stats("delai_rdv_effectif", "entre la création du compte et le 1er rdv effectué", avec_email, sans_email)
