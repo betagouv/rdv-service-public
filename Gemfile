@@ -116,6 +116,7 @@ group :development, :test do
   gem "faker"
   gem "parallel_tests"
   gem "simplecov", require: false
+  gem "slim_lint", require: false
 end
 
 group :development do

@@ -1,0 +1,100 @@
+linters:
+  RuboCop:
+    enabled: true
+    ignored_cops:
+      # The ignored cops below, until the next comment, are copied from the default slim-lint config
+      - Layout/ArgumentAlignment
+      - Layout/ArrayAlignment
+      - Layout/BlockAlignment
+      - Layout/EmptyLineAfterGuardClause
+      - Layout/EndAlignment
+      - Layout/FirstArgumentIndentation
+      - Layout/FirstArrayElementIndentation
+      - Layout/FirstParameterIndentation
+      - Layout/HashAlignment
+      - Layout/IndentationConsistency
+      - Layout/IndentationWidth
+      - Layout/InitialIndentation
+      - Layout/LineLength
+      - Layout/MultilineArrayBraceLayout
+      - Layout/MultilineAssignmentLayout
+      - Layout/MultilineHashBraceLayout
+      - Layout/MultilineMethodCallBraceLayout
+      - Layout/MultilineMethodCallIndentation
+      - Layout/MultilineMethodDefinitionBraceLayout
+      - Layout/MultilineOperationIndentation
+      - Layout/ParameterAlignment
+      - Layout/TrailingEmptyLines
+      - Layout/TrailingWhitespace
+      - Lint/Void
+      - Metrics/BlockLength
+      - Metrics/BlockNesting
+      - Naming/FileName
+      - Style/FrozenStringLiteralComment
+      - Style/IdenticalConditionalBranches
+      - Style/IfUnlessModifier
+      - Style/Next
+      - Style/WhileUntilDo
+      - Style/WhileUntilModifier
+      # The ignored cops above, from the previous comment, are copied from the default slim-lint config
+      - Style/StringLiterals
+      - Layout/SpaceInsideParens
+      - Layout/SpaceInsideHashLiteralBraces
+      - Layout/SpaceAfterColon
+      - Layout/SpaceBeforeComma
+      - Layout/SpaceBeforeFirstArg
+      - Layout/FirstHashElementIndentation
+      - Layout/SpaceAroundOperators
+      - Layout/ExtraSpacing
+      - Style/ZeroLengthPredicate
+      - Style/NumericPredicate
+      - Lint/EmptyBlock
+      - Lint/SymbolConversion
+      - Layout/SpaceInsideBlockBraces
+      - Style/SymbolArray
+      - Style/WordArray
+      - Layout/SpaceInsideArrayLiteralBrackets
+      - Rails/OutputSafety
+      - Rails/Presence
+      - Style/NegatedIfElseCondition
+      - Style/Lambda
+      - Style/WordArray
+      - Lint/UselessAssignment
+      - Rails/Blank
+      - Style/TrailingCommaInHashLiteral
+      - Style/ParenthesesAroundCondition
+      - Layout/SpaceBeforeBlockBraces
+      - Style/TrailingCommaInArguments
+      - Style/IfWithBooleanLiteralBranches
+      - Lint/UnusedBlockArgument
+      - Rails/LinkToBlank
+      - Style/StringLiteralsInInterpolation
+      - Style/RedundantParentheses
+      - Layout/SpaceAfterComma
+      - Lint/UnusedBlockArgument
+      - Lint/SymbolConversion
+      - Style/RedundantInterpolation
+      - Lint/ShadowingOuterLocalVariable
+      - Lint/SymbolConversion
+      - Lint/EmptyConditionalBody
+      - Lint/RedundantStringCoercion
+      - Rails/TimeZone
+      - Rails/Present
+      - Style/CaseLikeIf
+  ConsecutiveControlStatements:
+    enabled: false
+  CommentControlStatement:
+    enabled: false
+  TrailingBlankLines:
+    enabled: false
+  TrailingWhitespace:
+    enabled: false
+  ControlStatementSpacing:
+    enabled: false
+  LineLength:
+    max: 1000
+  RedundantDiv:
+    enabled: false
+  EmptyLines:
+    enabled: false
+

@@ -4,8 +4,15 @@ install: ## Setup development environment
 run: ## Start the application (web, jobs et webpack)
 	foreman s -f Procfile.dev
 
-lint: ## Check code style
+lint: lint_rubocop lint_slim lint_brakeman ## Run all linters
+
+lint_rubocop: ## Ruby linter
 	bundle exec rubocop --parallel
+
+lint_slim: ## Slim Linter
+	bundle exec slim-lint app/views/
+
+lint_brakeman: ## Security Checker
 	bundle exec brakeman --no-pager
 
 test: test_unit test_features ## Run all tests
