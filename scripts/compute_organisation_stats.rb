@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rails runner scripts/compute_organisation_stats.rb id_de_l'organisation
+
 org = Organisation.find(ARGV[0])
 puts "Cacul des statistiques pour l'organisation #{org.name} (#{org.departement})"
 puts
