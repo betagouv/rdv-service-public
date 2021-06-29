@@ -14,7 +14,7 @@ describe "Agent can delete a relative" do
     login_as(agent, scope: :agent)
     visit authenticated_agent_root_path
     click_link "Usagers"
-    click_link "Mimi LEGENDE"
+    click_link "LEGENDE Mimi"
   end
 
   it "works", js: true do

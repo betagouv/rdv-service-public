@@ -45,9 +45,16 @@ module UsersHelper
   end
 
   def full_name_and_birthdate(user)
-    label = user.full_name
-    label += " - #{birth_date_and_age(user)}" if user.birth_date
-    label
+    user.full_name + birth_date_and_age_if_exist(user)
+  end
+
+  def reverse_full_name_and_birthdate(user)
+    user.reverse_full_name + birth_date_and_age_if_exist(user)
+  end
+
+  def birth_date_and_age_if_exist(user)
+    " - #{birth_date_and_age(user)}" if user.birth_date
+    ""
   end
 
   def user_soft_delete_confirm_message(user)

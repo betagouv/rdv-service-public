@@ -8,8 +8,13 @@ lint: ## Check code style
 	bundle exec rubocop --parallel
 	bundle exec brakeman --no-pager
 
-test: ## Run spec suite
-	RAILS_ENV=test bundle exec rake parallel:spec
+test: test_unit test_features ## Run all tests
+
+test_unit:  ## Run unit tests in parallel
+	RAILS_ENV=test bundle exec rake parallel:spec['spec\/(?!features)']
+
+test_features:  ## Run feature tests
+	bundle exec rspec spec/features
 
 autocorrect: ## Fix autocorrectable lint issues
 	bundle exec rubocop --auto-correct-all
