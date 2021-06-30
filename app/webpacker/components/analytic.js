@@ -1,5 +1,3 @@
-let previousPageUrl = null;
-
 if (ENV.ENV == "production") {
   window._paq = window._paq || [];
 
@@ -9,7 +7,6 @@ if (ENV.ENV == "production") {
 
   // Configure Matomo analytics
   window._paq.push(['setDoNotTrack', true]);
-  window._paq.push(['trackPageView']);
   window._paq.push(['enableLinkTracking']);
 
   // Load script from Matomo
@@ -25,16 +22,21 @@ if (ENV.ENV == "production") {
   firstScript.parentNode.insertBefore(script, firstScript);
 
   $(document).on('shown.bs.modal', '.modal', sendDataToMatomo);
+  $(document).on('turbolinks:load', sendDataToMatomo);
 }
 
 // see https://developer.matomo.org/guides/spa-tracking
 function sendDataToMatomo (event) {
-  window._paq.push(['setDocumentTitle', document.title]);
   if (event.data && event.data.timing) {
-    window._paq.push([
-      'setGenerationTimeMs',
-      event.data.timing.visitEnd - event.data.timing.visitStart
-    ]);
+    let loadTimeMs = event.data.timing.visitEnd - event.data.timing.visitStart;
+    window._paq.push(['setGenerationTimeMs', loadTimeMs]);
   }
+  if (window.gMatomoPreviousPageUrl !== undefined) {
+    window._paq.push(['setReferrerUrl', window.gMatomoPreviousPageUrl]);
+  }
+  window._paq.push(['setCustomUrl', window.location.href]);
+  window._paq.push(['setDocumentTitle', document.title]);
   window._paq.push(['trackPageView']);
+
+  window.gMatomoPreviousPageUrl = window.location.href;
 }
