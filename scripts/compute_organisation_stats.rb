@@ -6,8 +6,8 @@ org = Organisation.find(ARGV[0])
 users = org.users
 targeted_users_count = users.where("created_at > ?", 30.days.ago).count
 
-avec_email = { targeted:0, oriented: 0, sans_rdv: 0, validation_compte: [], prise_de_rdv: [], delai_rdv: [], delai_rdv_total: [], delai_rdv_effectif: [] }
-sans_email = { targeted:0, oriented: 0, sans_rdv: 0, validation_compte: [], prise_de_rdv: [], delai_rdv: [], delai_rdv_total: [], delai_rdv_effectif: [] }
+avec_email = { targeted: 0, oriented: 0, sans_rdv: 0, validation_compte: [], prise_de_rdv: [], delai_rdv: [], delai_rdv_total: [], delai_rdv_effectif: [] }
+sans_email = { targeted: 0, oriented: 0, sans_rdv: 0, validation_compte: [], prise_de_rdv: [], delai_rdv: [], delai_rdv_total: [], delai_rdv_effectif: [] }
 
 users.each do |user|
   hash = if user.versions.first.changeset[:email]
