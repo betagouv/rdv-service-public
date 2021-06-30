@@ -81,8 +81,6 @@ linters:
       - Rails/TimeZone
       - Rails/Present
       - Style/CaseLikeIf
-  ConsecutiveControlStatements:
-    enabled: false
   CommentControlStatement:
     enabled: false
   TrailingBlankLines:
