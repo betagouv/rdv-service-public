@@ -32,9 +32,9 @@ describe "Agent can delete user" do
     click_link "Usagers"
     click_link "Fusionner deux usagers"
     find("#select2-user1_id-container").click
-    find(".select2-results__option") { _1.text == "Aalyah SWAN" }.click
+    find(".select2-results__option") { _1.text == "SWAN Aalyah" }.click
     find("#select2-user2_id-container").click
-    find(".select2-results__option") { _1.text == "Anna SWAN" }.click
+    find(".select2-results__option") { _1.text == "SWAN Anna" }.click
     choose "aalyah@damn.com"
     choose "Anna"
     # forget to check phone number
