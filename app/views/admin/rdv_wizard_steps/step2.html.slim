@@ -24,7 +24,7 @@ do
           div
             i.fa.fa-user
             | &nbsp;
-            = user.full_name
+            = user.reverse_full_name
             = relative_tag(user)
           div.ml-2= link_to "╳ Retirer", "#", class: "js-remove-user", data: { 'user-id': user.id }
           div.ml-2
