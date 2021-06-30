@@ -10,6 +10,11 @@
     "ADMIN_BASIC_AUTH_PASSWORD": {
       "description": "Basic auth password for review apps super admin",
       "generator": "secret"
+    },
+    "RDV_SOLIDARITES_INSTANCE_NAME": {
+      "description": "Indicate that this is not the production website.",
+      "generator": "template",
+      "template": "PR %PR_NUMBER%"
     }
   },
   "scripts": {

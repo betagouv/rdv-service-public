@@ -9,7 +9,7 @@
       </div>
       <div class='modal-body'>
         <p>
-          <%= body_message %>
+          <%= auto_link(simple_format(body_message), html: { target: "_blank" }) %>
         </p>
       </div>
       <div class='modal-footer'>

@@ -11,7 +11,7 @@ describe "Agent can create a relative" do
     login_as(agent, scope: :agent)
     visit authenticated_agent_root_path
     click_link "Usagers"
-    click_link "Fiona LEGENDE"
+    click_link "LEGENDE Fiona"
   end
 
   it "works" do

@@ -1,0 +1,46 @@
+.rdv-solidarites-instance-name {
+  position: absolute;
+  padding: 2px 0;
+  background: #bd2324 linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
+  font: 700 13px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  z-index: 9999;
+  pointer-events: auto;
+  a:not([href]):not([class]) {
+    color: #fff;
+    text-decoration: none;
+    text-shadow: 0 -1px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    width: 158px;
+    line-height: 17px;
+    display: inline-block;
+    padding: 2px 0;
+    border-width: 1px 0;
+    border-style: dotted;
+    border-color: #fff;
+    border-color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+.rdv-solidarites-instance-name-wrapper {
+  width: 150px;
+  height: 150px;
+  position: fixed;
+  overflow: hidden;
+  top: 0;
+  z-index: 9999;
+  pointer-events: none;
+  &.right {
+    left: 0;
+    .rdv-solidarites-instance-name {
+      top: 23px;
+      left: -43px;
+      transform: rotate(-45deg);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .rdv-solidarites-instance-name-wrapper {
+    display: none;
+  }
+}

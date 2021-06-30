@@ -5,8 +5,8 @@ describe "Agent can create a Rdv with wizard" do
 
   let(:organisation) { create(:organisation) }
   let(:service) { create(:service) }
-  let!(:agent) { create(:agent, first_name: "Alain", service: service, basic_role_in_organisations: [organisation]) }
-  let!(:agent2) { create(:agent, first_name: "Robert", service: service, basic_role_in_organisations: [organisation]) }
+  let!(:agent) { create(:agent, first_name: "Alain", last_name: "DIALO", service: service, basic_role_in_organisations: [organisation]) }
+  let!(:agent2) { create(:agent, first_name: "Robert", last_name: "Martin", service: service, basic_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, service: service, organisation: organisation) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:disabled_lieu) { create(:lieu, organisation: organisation, enabled: false) }
@@ -68,8 +68,8 @@ describe "Agent can create a Rdv with wizard" do
     select(lieu.full_name, from: "rdv_lieu_id")
     fill_in "Durée en minutes", with: "35"
     fill_in "Commence à", with: "11/10/2019 14:15"
-    select_agent(agent)
-    select_agent(agent2)
+    select("DIALO Alain", from: "rdv_agent_ids")
+    select("MARTIN Robert", from: "rdv_agent_ids")
     click_button("Continuer")
 
     # Step 4
@@ -93,9 +93,5 @@ describe "Agent can create a Rdv with wizard" do
     expect(page).to have_current_path(admin_organisation_agent_agenda_path(organisation, agent, date: rdv.starts_at.to_date, selected_event_id: rdv.id))
     expect(page).to have_content("Le rendez-vous a été créé.")
     sleep(0.5) # wait for ajax request
-  end
-
-  def select_agent(agent)
-    select(agent.full_name_and_service, from: "rdv_agent_ids")
   end
 end

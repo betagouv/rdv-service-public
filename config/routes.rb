@@ -90,13 +90,17 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       mount_devise_token_auth_for "AgentWithTokenAuth", at: "auth"
-      resources :absences, only: %i[index create]
+      resources :absences, except: %i[new edit]
+      resources :agents, only: %i[index]
       resources :users, only: %i[create show] do
         get :invite, on: :member
         post :invite, on: :member
       end
+      resources :users, only: %i[index]
       resources :user_profiles, only: [:create]
-      resources :organisations, only: [:index]
+      resources :organisations, only: %i[index] do
+        resources :users, only: %i[index]
+      end
     end
   end
 
@@ -153,7 +157,7 @@ Rails.application.routes.draw do
           collection do
             get :search
           end
-          resource :referents, only: [:update]
+          resources :referents, only: %i[index create destroy]
         end
         resources :absences, except: %i[index show new]
         resources :agent_roles, only: %i[edit update]
@@ -177,7 +181,6 @@ Rails.application.routes.draw do
         end
         devise_for :agents, controllers: { invitations: "admin/invitations_devise" }, only: :invitations
         get "support", to: "static_pages#support"
-        resources :support_tickets, only: [:create]
       end
 
       resources :jours_feries, only: [:index]
@@ -204,7 +207,6 @@ Rails.application.routes.draw do
   get "health_checks/raise_on_purpose", to: "health_checks#raise_on_purpose"
   get "health_checks/enqueue_failing_job", to: "health_checks#enqueue_failing_job"
   root "welcome#index"
-  resources :support_tickets, only: [:create]
 
   # rubocop:disable Style/StringLiterals, Style/FormatStringToken
   # temporary route after admin namespace introduction

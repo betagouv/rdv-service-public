@@ -8,6 +8,8 @@
 # you're free to overwrite the RESTful controller actions.
 module SuperAdmins
   class ApplicationController < Administrate::ApplicationController
+    helper all_helpers_from_path "app/helpers"
+
     if ENV["ADMIN_BASIC_AUTH_PASSWORD"].present?
       # don't set this env var in prod!
       http_basic_authenticate_with name: "rdv-solidarites", password: ENV["ADMIN_BASIC_AUTH_PASSWORD"]

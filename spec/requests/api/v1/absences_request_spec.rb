@@ -81,6 +81,34 @@ describe "api/v1/absences requests", type: :request do
       end
     end
 
+    context "agent specified by email" do
+      context "email in known" do
+        let(:params) do
+          valid_params.except(:agent_id)
+            .merge(agent_email: agent.email)
+        end
+
+        it "works" do
+          expect { subject }.to(change(Absence, :count).by(1))
+          expect(response.status).to eq(200)
+          absence = Absence.by_starts_at.first
+          expect(absence.agent).to eq(agent)
+        end
+      end
+
+      context "email in unknown" do
+        let(:params) do
+          valid_params.except(:agent_id)
+            .merge(agent_email: "other_email")
+        end
+
+        it "fails" do
+          expect { subject }.not_to(change(Absence, :count))
+          expect(response.status).to eq(404)
+        end
+      end
+    end
+
     context "broken start_time format" do
       let(:params) { valid_params.merge(start_time: "08h") }
 
@@ -136,12 +164,79 @@ describe "api/v1/absences requests", type: :request do
         expect(response.status).to eq(422)
       end
     end
+  end
 
-    # context "invalid JSON" do
-    #   it "returns an error" do
-    #     post(api_v1_absences_path, body: valid_params.to_json[0..-5], headers: api_auth_headers_for_agent(agent))
-    #     expect(response.status).to eq(400)
-    #   end
-    # end
+  describe "SHOW api/v1/absences/:id" do
+    subject { get(api_v1_absence_path(absence.id), headers: api_auth_headers_for_agent(agent)) }
+
+    context "authorized absence" do
+      let(:absence) { create(:absence, agent: agent, organisation: organisation) }
+
+      it "works" do
+        subject
+        expect(response.status).to eq(200)
+        result = JSON.parse(response.body)
+        expect(result["absence"]["title"]).to eq(absence.title)
+      end
+    end
+
+    context "unauthorized absence" do
+      let(:absence) { create(:absence) }
+
+      it "returns an error" do
+        subject
+        expect(response.status).to eq(404)
+      end
+    end
+  end
+
+  describe "PUT api/v1/absences/:id" do
+    subject { put(api_v1_absence_path(absence.id), params: params, headers: api_auth_headers_for_agent(agent)) }
+
+    let(:params) { { title: "Updated" } }
+
+    context "authorized absence" do
+      let(:absence) { create(:absence, agent: agent, organisation: organisation, title: "Initial") }
+
+      it "works" do
+        subject
+        expect(response.status).to eq(200)
+        expect(absence.reload.title).to eq("Updated")
+      end
+    end
+
+    context "unauthorized absence" do
+      let(:absence) { create(:absence, title: "Initial") }
+
+      it "returns an error" do
+        subject
+        expect(response.status).to eq(404)
+        expect(absence.reload.title).to eq("Initial")
+      end
+    end
+  end
+
+  describe "DELETE api/v1/absences/:id" do
+    subject { delete(api_v1_absence_path(absence.id), headers: api_auth_headers_for_agent(agent)) }
+
+    context "authorized absence" do
+      let(:absence) { create(:absence, agent: agent, organisation: organisation) }
+
+      it "works" do
+        subject
+        expect(response.status).to eq(204)
+        expect { absence.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context "unauthorized absence" do
+      let(:absence) { create(:absence) }
+
+      it "returns an error" do
+        subject
+        expect(response.status).to eq(404)
+        expect(absence).not_to be_destroyed
+      end
+    end
   end
 end
