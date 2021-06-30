@@ -56,9 +56,9 @@ puts
 puts "#{avec_email[:oriented] + sans_email[:oriented]} usagers sur #{targeted_users_count} orientés en moins de 30 jours"
 puts "soit #{(avec_email[:oriented] + sans_email[:oriented] / targeted_users_count) * 100}% d'usagers orientés en moins de 30 jours" if targeted_users_count.positive?
 puts "#{avec_email[:oriented]} usagers avec email sur #{avec_email[:targeted]} orientés en moins de 30 jours"
-puts "soit #{(avec_email[:oriented] / avec_email[:targeted]) * 100}% d'usagers avec mail orientés en moins de 30 jours" if avec_email[:targeted].positive?
-puts "#{sans_email[:oriented]} usagers avec email sur #{sans_email[:targeted]} orientés en moins de 30 jours"
-puts "soit #{(sans_email[:oriented] / sans_email[:targeted]) * 100}% d'usagers sans mail orientés en moins de 30 jours" if sans_email[:targeted].positive?
+puts "soit #{(avec_email[:oriented] / avec_email[:targeted]) * 100}% d'usagers avec email orientés en moins de 30 jours" if avec_email[:targeted].positive?
+puts "#{sans_email[:oriented]} usagers sans email sur #{sans_email[:targeted]} orientés en moins de 30 jours"
+puts "soit #{(sans_email[:oriented] / sans_email[:targeted]) * 100}% d'usagers sans email orientés en moins de 30 jours" if sans_email[:targeted].positive?
 puts
 
 puts "#{org.rdvs.count} rdvs pris pour cette organisation"
