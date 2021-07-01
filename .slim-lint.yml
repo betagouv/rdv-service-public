@@ -1,0 +1,95 @@
+linters:
+  RuboCop:
+    enabled: true
+    ignored_cops:
+      # The ignored cops below, until the next comment, are copied from the default slim-lint config
+      - Layout/ArgumentAlignment
+      - Layout/ArrayAlignment
+      - Layout/BlockAlignment
+      - Layout/EmptyLineAfterGuardClause
+      - Layout/EndAlignment
+      - Layout/FirstArgumentIndentation
+      - Layout/FirstArrayElementIndentation
+      - Layout/FirstParameterIndentation
+      - Layout/HashAlignment
+      - Layout/IndentationConsistency
+      - Layout/IndentationWidth
+      - Layout/InitialIndentation
+      - Layout/LineLength
+      - Layout/MultilineArrayBraceLayout
+      - Layout/MultilineAssignmentLayout
+      - Layout/MultilineHashBraceLayout
+      - Layout/MultilineMethodCallBraceLayout
+      - Layout/MultilineMethodCallIndentation
+      - Layout/MultilineMethodDefinitionBraceLayout
+      - Layout/MultilineOperationIndentation
+      - Layout/ParameterAlignment
+      - Layout/TrailingEmptyLines
+      - Layout/TrailingWhitespace
+      - Lint/Void
+      - Metrics/BlockLength
+      - Metrics/BlockNesting
+      - Naming/FileName
+      - Style/FrozenStringLiteralComment
+      - Style/IdenticalConditionalBranches
+      - Style/IfUnlessModifier
+      - Style/Next
+      - Style/WhileUntilDo
+      - Style/WhileUntilModifier
+      # The ignored cops above, from the previous comment, are copied from the default slim-lint config
+      - Layout/ExtraSpacing
+      - Layout/FirstHashElementIndentation
+      - Layout/SpaceAfterColon
+      - Layout/SpaceAfterComma
+      - Layout/SpaceAroundOperators
+      - Layout/SpaceBeforeBlockBraces
+      - Layout/SpaceBeforeComma
+      - Layout/SpaceBeforeFirstArg
+      - Layout/SpaceInsideArrayLiteralBrackets
+      - Layout/SpaceInsideBlockBraces
+      - Layout/SpaceInsideHashLiteralBraces
+      - Layout/SpaceInsideParens
+      - Lint/EmptyBlock
+      - Lint/EmptyConditionalBody
+      - Lint/RedundantStringCoercion
+      - Lint/ShadowingOuterLocalVariable
+      - Lint/SymbolConversion
+      - Lint/SymbolConversion
+      - Lint/SymbolConversion
+      - Lint/UnusedBlockArgument
+      - Lint/UnusedBlockArgument
+      - Lint/UselessAssignment
+      - Rails/Blank
+      - Rails/LinkToBlank
+      - Rails/OutputSafety
+      - Rails/Presence
+      - Rails/Present
+      - Rails/TimeZone
+      - Style/CaseLikeIf
+      - Style/IfWithBooleanLiteralBranches
+      - Style/Lambda
+      - Style/NegatedIfElseCondition
+      - Style/NumericPredicate
+      - Style/ParenthesesAroundCondition
+      - Style/RedundantInterpolation
+      - Style/RedundantParentheses
+      - Style/StringLiterals
+      - Style/StringLiteralsInInterpolation
+      - Style/SymbolArray
+      - Style/TrailingCommaInArguments
+      - Style/TrailingCommaInHashLiteral
+      - Style/WordArray
+      - Style/WordArray
+      - Style/ZeroLengthPredicate
+  ControlStatementSpacing:
+    enabled: false
+  EmptyLines:
+    enabled: false
+  TrailingBlankLines:
+    enabled: false
+  TrailingWhitespace:
+    enabled: false
+  LineLength:
+    max: 1000
+  RedundantDiv:
+    enabled: false

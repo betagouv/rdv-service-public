@@ -31,9 +31,10 @@
       .col-md-6= f.input :number_of_children, input_html: { min: '0', max: '15', step: 'any' }
 
     - if local_assigns[:rdv_wizard]
-      - current_organisation = Motif.find(rdv_wizard.to_query[:motif_id]).organisation
-      - profile = user.profile_for(current_organisation)
-      - profile ||= user.user_profiles.build(organisation: current_organisation)
+      ruby:
+        current_organisation = Motif.find(rdv_wizard.to_query[:motif_id]).organisation
+        profile = user.profile_for(current_organisation)
+        profile ||= user.user_profiles.build(organisation: current_organisation)
       = f.simple_fields_for :user_profiles, profile do |n|
         = n.input :organisation_id, as: :hidden
         = n.input :logement, collection: UserProfile.human_enum_collection(:logement)
