@@ -83,8 +83,6 @@ linters:
       - Style/ZeroLengthPredicate
   ControlStatementSpacing:
     enabled: false
-  TrailingBlankLines:
-    enabled: false
   TrailingWhitespace:
     enabled: false
   LineLength:
