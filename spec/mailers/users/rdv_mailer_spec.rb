@@ -19,8 +19,9 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     end
 
     it "contains the ics" do
-      expect(mail.body.encoded).to match("UID:#{rdv.uuid}")
-      expect(mail.body.encoded).to match("STATUS:CANCELLED") if rdv.cancelled?
+      cal = mail.find_first_mime_type("text/calendar")
+      expect(cal.decoded).to match("UID:#{rdv.uuid}")
+      expect(cal.decoded).to match("STATUS:CANCELLED") if rdv.cancelled?
     end
   end
 
