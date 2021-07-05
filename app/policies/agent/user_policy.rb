@@ -16,10 +16,6 @@ class Agent::UserPolicy < DefaultAgentPolicy
     ).empty?
   end
 
-  def index?
-    create?
-  end
-
   def invite?
     create?
   end

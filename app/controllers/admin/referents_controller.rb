@@ -3,7 +3,7 @@
 class Admin::ReferentsController < AgentAuthController
   def index
     @user = policy_scope(User).find(params[:user_id])
-    authorize(@user)
+    authorize(@user, :update?)
     @referents = policy_scope(@user.agents).distinct.order(:last_name)
     @agents = policy_scope(Agent).distinct.order(:last_name)
   end
@@ -22,7 +22,7 @@ class Admin::ReferentsController < AgentAuthController
 
   def find_agent_and_user_save_and_redirect_with(params)
     user = policy_scope(User).find(params[:user_id])
-    authorize(user)
+    authorize(user, :update?)
     agent = policy_scope(Agent).find(params[:agent_id]) if params[:agent_id]
     agent ||= policy_scope(Agent).find(params[:id])
 
