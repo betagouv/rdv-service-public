@@ -7,6 +7,8 @@ class Absence < ApplicationRecord
   include IcalHelpers::Rrule
   include Payloads::Absence
 
+  auto_strip_attributes :title
+
   belongs_to :agent
   belongs_to :organisation
 
