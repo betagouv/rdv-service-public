@@ -61,6 +61,8 @@ module RdvsHelper
   end
 
   def rdv_time_and_duration(rdv)
+    return l(rdv.starts_at, format: :time_only) if rdv.duration_in_min.blank?
+
     "#{l(rdv.starts_at, format: :time_only)} (#{rdv.duration_in_min} minutes)"
   end
 
