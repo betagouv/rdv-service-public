@@ -3,73 +3,147 @@
 # rails runner scripts/compute_organisation_stats.rb organisation_id
 
 org = Organisation.find(ARGV[0])
-users = org.users
-targeted_users_count = users.where("created_at > ?", 30.days.ago).count
+# We take only users that were created before 26 days ago to have significant stats
+users_of_interest = org.users.where("created_at < ?", 26.days.ago)
+users_data = []
 
-avec_email = { targeted: 0, oriented: 0, sans_rdv: 0, validation_compte: [], prise_de_rdv: [], delai_rdv: [], delai_rdv_total: [], delai_rdv_effectif: [] }
-sans_email = { targeted: 0, oriented: 0, sans_rdv: 0, validation_compte: [], prise_de_rdv: [], delai_rdv: [], delai_rdv_total: [], delai_rdv_effectif: [] }
-
-users.each do |user|
-  hash = if user.versions.first.changeset[:email]
-           avec_email
-         else
-           sans_email
-         end
-  hash[:targeted] += 1 if user.created_at > 30.days.ago
-  hash[:oriented] += 1 if user.created_at > 30.days.ago && user.rdvs.where(status: 2).first
+users_of_interest.each do |user|
+  result = {}
+  result[:with_email] = user.versions.first.changeset[:email].present?
+  result[:oriented] = user.rdvs.where(status: 2).any?
+  result[:invitation_accepted] = user.invitation_accepted_at.present?
+  result[:with_rdvs] = user.rdvs.present?
   if user.invitation_accepted_at
-    hash[:sans_rdv] += 1 if user.rdvs.empty?
-    hash[:validation_compte] << user.invitation_accepted_at - user.created_at
+    result[:time_to_accept] = user.invitation_accepted_at - user.created_at
   end
-  if (rdv = user.rdvs.first)
-    hash[:prise_de_rdv] << rdv.created_at - user.invitation_accepted_at
-    hash[:delai_rdv] << rdv.starts_at - rdv.created_at
-    hash[:delai_rdv_total] << rdv.starts_at - user.created_at
+  result[:rdvs] = []
+  user.rdvs.each do |rdv|
+    rdv_result = {}
+    rdv_result[:created_by] = rdv.created_by
+    rdv_result[:status] = rdv.status
+    if rdv.starts_at
+      rdv_result[:time_between_rdv_start_and_rdv_creation] = rdv.starts_at - rdv.created_at
+      rdv_result[:time_between_user_creation_and_rdv_start] = rdv.starts_at - user.created_at
+    end
+    result[:rdvs] << rdv_result
   end
-  if (rdv_effectue = user.rdvs.where(status: 2).first)
-    hash[:delai_rdv_effectif] << rdv_effectue.starts_at - user.created_at
-  end
+  users_data << result
 end
 
-def display_stats(stat_name, stat_text, avec_email, sans_email)
-  source_avec = avec_email[:"#{stat_name}"]
-  source_sans = sans_email[:"#{stat_name}"]
-  avec_email[:"#{stat_name}_average"] = source_avec.sum / source_avec.size if source_avec.size.positive?
-  sans_email[:"#{stat_name}_average"] = source_sans.sum / source_sans.size if source_sans.size.positive?
-  stat_average = (source_avec + source_sans).sum / (source_avec + source_sans).size if source_avec.size.positive? || source_sans.size.positive?
-
-  puts "Délai moyen #{stat_text} : #{stat_average.fdiv(86_400).round(2)} jours" if stat_average
-  puts "compte avec email : #{avec_email[:"#{stat_name}_average"].fdiv(86_400).round(2)} jours" if avec_email[:"#{stat_name}_average"]
-  puts "compte sans email : #{sans_email[:"#{stat_name}_average"].fdiv(86_400).round(2)} jours" if sans_email[:"#{stat_name}_average"]
-  puts
+def percentage(count, total)
+  "#{(count / total.to_f).round(2) * 100} %"
 end
 
 puts "Cacul des statistiques pour l'organisation #{org.name} (#{org.departement})"
 puts
 
-puts "#{users.count} usagers pour cette organisation"
-puts "dont #{users.where.not(invitation_accepted_at: nil).count} usagers ayant validé leurs comptes"
-puts "dont #{avec_email[:sans_rdv] + sans_email[:sans_rdv]} usagers actifs sans rendez-vous"
-puts "#{sans_email[:validation_compte].size} usagers n'avaient pas de mail à la création du compte"
+puts "#{org.users.count} usagers au total pour cette organisation."
 puts
 
-puts "#{avec_email[:oriented] + sans_email[:oriented]} usagers sur #{targeted_users_count} orientés en moins de 30 jours"
-puts "soit #{(avec_email[:oriented] + sans_email[:oriented] / targeted_users_count) * 100}% d'usagers orientés en moins de 30 jours" if targeted_users_count.positive?
-puts "#{avec_email[:oriented]} usagers avec email sur #{avec_email[:targeted]} orientés en moins de 30 jours"
-puts "soit #{(avec_email[:oriented] / avec_email[:targeted]) * 100}% d'usagers avec email orientés en moins de 30 jours" if avec_email[:targeted].positive?
-puts "#{sans_email[:oriented]} usagers sans email sur #{sans_email[:targeted]} orientés en moins de 30 jours"
-puts "soit #{(sans_email[:oriented] / sans_email[:targeted]) * 100}% d'usagers sans email orientés en moins de 30 jours" if sans_email[:targeted].positive?
+puts "#{users_of_interest.count} usagers ont été créés il y a plus de 26 jours."
 puts
 
-puts "#{org.rdvs.count} rdvs pris pour cette organisation"
-puts "#{org.rdvs.future.not_cancelled.count} rdvs en attente pour cette organisation"
-puts "#{org.rdvs.seen.count} rdvs effectués pour cette organisation"
-puts "#{org.rdvs.excused.count} rdvs annulés pour cette organisation"
-puts "#{org.rdvs.notexcused.count} lapins"
 puts
 
-display_stats("validation_compte", "d'activation d'un compte", avec_email, sans_email)
-display_stats("prise_de_rdv", "pour prendre un rdv", avec_email, sans_email)
-display_stats("delai_rdv", "pour avoir un rdv", avec_email, sans_email)
-display_stats("delai_rdv_total", "entre la création du compte et le 1er rdv", avec_email, sans_email)
-display_stats("delai_rdv_effectif", "entre la création du compte et le 1er rdv effectué", avec_email, sans_email)
+puts "Sur ces usagers créés il y a plus de 26 jours: "
+puts
+
+users_with_email_count = users_data.pluck(:with_email).count(true)
+users_without_email_count = users_data.pluck(:with_email).count(false)
+puts "#{users_with_email_count} utilisateurs créés avec email soit #{percentage(users_with_email_count, users_of_interest.count)}."
+puts
+
+puts "#{users_without_email_count} utilisateurs créés avec email soit #{percentage(users_without_email_count, users_of_interest.count)}."
+puts
+
+puts
+
+["avec et sans email (total)", "avec email", "sans email"].each do |scenario|
+  users = case scenario
+          when "avec et sans email (total)"
+            users_data
+          when "avec email"
+            users_data.select { |u| u[:with_email] }
+          when "sans email"
+            users_data.reject { |u| u[:with_email] }
+          end
+
+  puts
+  puts "----------------------------------"
+  puts "----------------------------------"
+  puts "Pour les utilisateurs #{scenario}:"
+  puts "----------------------------------"
+  puts "----------------------------------"
+  puts
+
+  puts
+  puts "Nombre d'utilisateurs: #{users.count}"
+  puts
+
+  users_with_invitation_accepted_count = users.pluck(:invitation_accepted).count(true)
+  puts
+  puts "#{users_with_invitation_accepted_count} utilisateurs ayant accepté l'invtation de création de compte soit  #{percentage(users_with_invitation_accepted_count, users.count)}."
+  puts
+
+  users_with_rdvs_count = users.pluck(:with_rdvs).count(true)
+  puts
+  puts "#{users_with_rdvs_count} utilisateurs avec un RDV de créé soit #{percentage(users_with_rdvs_count, users.count)}."
+  puts
+
+  first_rdv_created_by_users_count = users.count { |user| user[:rdvs].first&.dig(:created_by) == "user" }
+  first_rdv_created_by_agents_count = users.count { |user| user[:rdvs].first&.dig(:created_by) == "agent" }
+  puts
+  puts "#{first_rdv_created_by_users_count} utilisateurs qui ont créé leur 1er  RDV eux-même soit #{percentage(first_rdv_created_by_users_count, users.count)} du nombre d'utilisateurs et " \
+  "#{percentage(first_rdv_created_by_users_count, users_with_rdvs_count)} des utilisateurs avec un RDV de créé."
+  puts
+
+  puts "#{first_rdv_created_by_agents_count} utilisateurs dont l'agent a créé le 1er RDV soit #{percentage(first_rdv_created_by_agents_count, users.count)} du nombre d'utilisateurs et " \
+  "#{percentage(first_rdv_created_by_agents_count, users_with_rdvs_count)} des utilisateurs avec un RDV de créé."
+  puts
+
+  rdv_seen_count = users.pluck(:oriented).count(true)
+  puts
+  puts "#{rdv_seen_count} utilisateurs avec un RDV d'effectué soit #{percentage(rdv_seen_count, users.count)} du nombre d'utilisateurs et " \
+  "#{percentage(rdv_seen_count, users_with_rdvs_count)} des utilisateurs avec un RDV de créé."
+  puts
+
+  users_with_rdv_seen_in_less_than_26_days_count = users.count do |user|
+    user[:rdvs].any? { |rdv| rdv[:status] == "seen" && rdv[:time_between_user_creation_and_rdv_start] <= 26.days }
+  end
+  puts
+  puts "#{users_with_rdv_seen_in_less_than_26_days_count} utilisateurs avec un RDV fait moins de 26 jours après la création du compte soit " \
+   "#{percentage(users_with_rdv_seen_in_less_than_26_days_count, users.count)} du nombre d'utilisateurs " \
+  " et #{percentage(users_with_rdv_seen_in_less_than_26_days_count, rdv_seen_count)} des utilisateurs avec un RDV d'effectué."
+  puts
+
+  users_with_rdv_excused_count = users.count do |user|
+    user[:rdvs].any? { |rdv| rdv[:status] == "excused" }
+  end
+  users_with_rdv_not_excused_count = users.count do |user|
+    user[:rdvs].any? { |rdv| rdv[:status] == "notexcused" }
+  end
+  users_absent_to_a_rdv_count = users_with_rdv_excused_count + users_with_rdv_not_excused_count
+  puts
+  puts "#{users_with_rdv_excused_count} utilisateurs ont été absents à un RDV mais ont été excusés soit #{percentage(users_with_rdv_excused_count, users.count)} du nombre d'utilisateurs."
+  puts
+
+  puts "#{users_with_rdv_not_excused_count} utilisateurs ont été absents à un RDV sans être excusés soit #{percentage(users_with_rdv_excused_count, users.count)} du nombre d'utilisateurs."
+  puts
+
+  puts "#{users_absent_to_a_rdv_count} utilisateurs au total ont été absents à un RDV (excusé au non) soit " \
+  "#{percentage(users_absent_to_a_rdv_count, users.count)} du nombre d'utilisateurs " \
+  "et #{percentage(users_absent_to_a_rdv_count, users_with_rdvs_count)} des utilisateurs ayant des RDVs de créés."
+  puts
+
+  times_between_user_creation_and_rdv_start = users.map do |user|
+    user[:rdvs].find do |rdv|
+      rdv[:status] == "seen"
+    end&.dig(:time_between_user_creation_and_rdv_start)
+  end.compact
+  average_time_between_user_creation_and_rdv_start = \
+    (times_between_user_creation_and_rdv_start.sum / times_between_user_creation_and_rdv_start.length.to_f) / (24 * 60 * 60)
+  puts
+  puts "#{average_time_between_user_creation_and_rdv_start.round(2)} jours en moyenne entre le moment où l'utilisateur est créé et " \
+  "le moment où le rdv est effectué pour les RDV effectués."
+  puts
+end
