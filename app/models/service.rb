@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Service < ApplicationRecord
+  auto_strip_attributes :name, :short_name
+
   has_many :agents, dependent: :nullify
   has_many :motifs, dependent: :destroy
   has_many :motif_libelles, dependent: :destroy

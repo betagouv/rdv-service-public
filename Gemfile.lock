@@ -105,6 +105,8 @@ GEM
     aes_key_wrap (1.1.0)
     ast (2.4.2)
     attr_required (1.0.1)
+    auto_strip_attributes (2.6.0)
+      activerecord (>= 4.0)
     bcrypt (3.1.16)
     better_errors (2.9.1)
       coderay (>= 1.0.0)
@@ -588,6 +590,7 @@ DEPENDENCIES
   activerecord-postgres_enum
   administrate!
   administrate-field-belongs_to_search
+  auto_strip_attributes
   better_errors
   binding_of_caller
   blueprinter

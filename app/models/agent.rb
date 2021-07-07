@@ -15,6 +15,8 @@ class Agent < ApplicationRecord
   include DeviseTokenAuth::Concerns::ConfirmableSupport
   include DeviseTokenAuth::Concerns::UserOmniauthCallbacks
 
+  auto_strip_attributes :email, :first_name, :last_name
+
   enum rdv_notifications_level: {
     all: "all",       # notify of all rdv changes
     others: "others", # notify of changes made by other agents or users

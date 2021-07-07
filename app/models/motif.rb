@@ -2,6 +2,9 @@
 
 class Motif < ApplicationRecord
   has_paper_trail
+
+  auto_strip_attributes :name, :color
+
   belongs_to :organisation
   belongs_to :service
   has_many :rdvs, dependent: :restrict_with_exception

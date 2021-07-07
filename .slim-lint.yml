@@ -83,12 +83,6 @@ linters:
       - Style/ZeroLengthPredicate
   ControlStatementSpacing:
     enabled: false
-  EmptyLines:
-    enabled: false
-  TrailingBlankLines:
-    enabled: false
-  TrailingWhitespace:
-    enabled: false
   LineLength:
     max: 1000
   RedundantDiv:

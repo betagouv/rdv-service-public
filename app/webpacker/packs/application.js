@@ -12,7 +12,6 @@ import { ShowHidePassword } from 'components/show-hide-password.js';
 import 'components/browser-detection';
 import 'select2/dist/js/select2.min.js';
 import 'select2/dist/js/i18n/fr.js';
-import 'jquery-mask-plugin';
 import { Select2Inputs } from 'components/select2-inputs';
 import 'components/sentry';
 import 'bootstrap';
@@ -24,7 +23,6 @@ new Modal();
 new Select2Inputs();
 
 $(document).on('turbolinks:load', function() {
-  $('input[type="tel"]').mask('00 00 00 00 00')
   Holder.run();
 
   new ShowHidePassword();
