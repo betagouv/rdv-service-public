@@ -52,6 +52,7 @@ module TransactionalSms::BaseConcern
               else
                 "#{rdv.address_complete}\n"
               end
+    message += " avec #{rdv.agents_full_names} " if rdv.follow_up?
     message += "Infos et annulation: #{rdvs_shorten_url(host: ENV['HOST'])}"
     message += " / #{rdv.phone_number}" if rdv.phone_number.present?
     message

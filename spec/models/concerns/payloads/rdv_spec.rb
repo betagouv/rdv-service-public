@@ -83,5 +83,28 @@ describe Payloads::Rdv, type: :service do
 
       it { expect(rdv.payload[:user_email]).to eq("bob@eponge.net") }
     end
+
+    describe ":users_full_names" do
+      let(:user) { build(:user, first_name: "Henri", last_name: "Frice") }
+      let(:other_user) { build(:user, first_name: "Claire", last_name: "Flou") }
+      let(:rdv) { build(:rdv, users: [user, other_user]) }
+
+      it { expect(rdv.payload[:users_full_names]).to eq("Claire Flou et Henri Frice") }
+    end
+
+    describe ":agents_full_names" do
+      let(:agent) { build(:agent, first_name: "henri", last_name: "frice") }
+      let(:other_agent) { build(:agent, first_name: "claire", last_name: "flou") }
+      let(:rdv) { build(:rdv, agents: [agent, other_agent]) }
+
+      it { expect(rdv.payload[:agents_full_names]).to eq("claire flou et henri frice") }
+    end
+
+    describe ":follow_up?" do
+      let(:motif) { build(:motif, follow_up: true) }
+      let(:rdv) { build(:rdv, motif: motif) }
+
+      it { expect(rdv.payload[:follow_up?]).to be(true) }
+    end
   end
 end
