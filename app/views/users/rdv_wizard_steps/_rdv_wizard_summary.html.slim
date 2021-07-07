@@ -17,7 +17,7 @@ ul.list-group.list-group-flush
       .col
         i.fa.fa-check.fa-fw.mr-1.text-success
         | Date du rendez-vous :&nbsp;
-        = l(rdv_wizard.starts_at, format: :human)
+        = rdv_starts_at_and_duration(rdv_wizard.rdv, :human)
       .col-auto
         = link_to "modifier", lieux_path(search: rdv_wizard.to_search_query)
   - if rdv_wizard.is_a?(UserRdvWizard::Step3)

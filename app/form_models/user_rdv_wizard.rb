@@ -18,9 +18,9 @@ module UserRdvWizard
       rdv_defaults = { user_ids: [user&.id] }
       @rdv = Rdv.new(
         rdv_defaults
-          .merge(motif: @motif)
           .merge(@attributes.slice(:starts_at, :user_ids, :motif_id))
       )
+      @rdv.duration_in_min ||= @rdv.motif.default_duration_in_min if @rdv.motif.present?
     end
 
     def creneau
