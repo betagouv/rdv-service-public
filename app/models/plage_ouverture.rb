@@ -7,6 +7,8 @@ class PlageOuverture < ApplicationRecord
   include IcalHelpers::Rrule
   include Payloads::PlageOuverture
 
+  auto_strip_attributes :title
+
   belongs_to :organisation
   belongs_to :agent
   belongs_to :lieu

@@ -21,6 +21,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :confirmable, :async,
          :trackable
 
+  auto_strip_attributes :email, :first_name, :last_name, :birth_name
+
   has_many :user_profiles, dependent: :restrict_with_error
   has_many :organisations, through: :user_profiles
 

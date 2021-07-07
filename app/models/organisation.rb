@@ -2,6 +2,9 @@
 
 class Organisation < ApplicationRecord
   has_paper_trail
+
+  auto_strip_attributes :email, :name
+
   belongs_to :territory
   has_many :lieux, dependent: :destroy
   has_many :motifs, dependent: :destroy

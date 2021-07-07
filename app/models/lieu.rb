@@ -3,6 +3,8 @@
 class Lieu < ApplicationRecord
   include HasPhoneNumberConcern
 
+  auto_strip_attributes :name
+
   belongs_to :organisation
   has_many :plage_ouvertures, dependent: :restrict_with_error
   has_many :rdvs, dependent: :restrict_with_error

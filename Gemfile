@@ -43,6 +43,7 @@ gem "simple_form", "~> 5.0"
 gem "image_processing", "~> 1.8"
 gem "phonelib"
 gem "activemodel-caution", github: "rdv-solidarites/activemodel-caution"
+gem "auto_strip_attributes"
 
 # CORS management
 gem "rack-cors"

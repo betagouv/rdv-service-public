@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Sector < ApplicationRecord
+  auto_strip_attributes :name
+
   belongs_to :territory
   has_many :attributions, class_name: "SectorAttribution", dependent: :destroy
   has_many :organisations, through: :attributions
