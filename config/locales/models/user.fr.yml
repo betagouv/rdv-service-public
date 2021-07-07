@@ -47,4 +47,4 @@ fr:
   simple_form:
     hints:
       user:
-        phone_number: Saisissez un numéro français ou outre-mer à 10 chiffres, ou bien un numéro international avec le préfixe du pays.
+        phone_number: Saisissez un numéro à 10 chiffres de France métropole ou d’outre-mer, ou bien un numéro international avec le préfixe du pays.
