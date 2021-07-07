@@ -18,6 +18,11 @@
     span.title Service :
     span.float-right= rdv.motif_service_name
     .clear
+  - if rdv.follow_up?
+    div.row-result
+      span.title Travailleur médico-social :
+      span.float-right= rdv.agents_full_names
+      .clear
   div.row-result
     span.title Durée :
     span.float-right= "#{rdv.duration_in_min} minutes"
