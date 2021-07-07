@@ -10,9 +10,9 @@
         = simple_form_for [:admin, @organisation]  do |f|
           = render 'model_errors', model: @organisation
           = f.input :name
-          = f.input :phone_number, placeholder: "ex: 0412345667"
-          = f.input :website, placeholder: "ex: http://rdv-solidarites.fr"
-          = f.input :email, placeholder: "ex: contact@ma-mds.fr"
-          = f.input :horaires, placeholder: "ex : du lundi au vendredi de 9h à 17h, le samedi de 9h à 12h"
+          = f.input :phone_number, placeholder: "04 65 71 12 34"
+          = f.input :website, placeholder: "https://rdv-solidarites.fr"
+          = f.input :email, placeholder: "contact@ma-mds.fr"
+          = f.input :horaires, placeholder: "Du lundi au vendredi de 9h à 17h, le samedi de 9h à 12h"
           .text-right
             = f.button :submit
