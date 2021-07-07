@@ -14,7 +14,6 @@
     h4.card-title.mb-3 RDV créés (#{@stats.rdvs.count})
     = column_chart add_query_string_params_to_url(rdvs_admin_organisation_stats_path(@organisation, format: :json), departement: @departement), stacked: true
 
-
 .card.mb-5
   .card-body
     h4.card-title.mb-3 RDV créés par service (#{@stats.rdvs.count})
