@@ -60,10 +60,10 @@ module RdvsHelper
     Rdv.statuses.to_a.find { |s| s[0] == status }
   end
 
-  def rdv_time_and_duration(rdv)
-    return l(rdv.starts_at, format: :time_only) if rdv.duration_in_min.blank?
+  def rdv_starts_at_and_duration(rdv, format)
+    return l(rdv.starts_at, format: format) if rdv.duration_in_min.blank?
 
-    "#{l(rdv.starts_at, format: :time_only)} (#{rdv.duration_in_min} minutes)"
+    "#{l(rdv.starts_at, format: format)} (#{rdv.duration_in_min} minutes)"
   end
 
   def rdv_possible_statuses_option_items(rdv)
