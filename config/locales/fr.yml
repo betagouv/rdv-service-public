@@ -46,8 +46,8 @@ fr:
     - samedi
     formats:
       default: "%d/%m/%Y"
-      long: "%e %B %Y"
-      short: "%e %b"
+      long: "%d %B %Y"
+      short: "%-d %b"
       human: "%A %d %B %Y"
     month_names:
     -
@@ -226,7 +226,7 @@ fr:
     formats:
       default: "%d %B %Y %Hh %Mmin %Ss"
       long: "%A %d %B %Y %Hh%M"
-      short: "%A %e/%m à %Hh%M"
+      short: "%A %-d/%m à %Hh%M"
       short_approx: "%A %-d/%-m vers %Hh%M"
       human: "%A %d %B %Y à %Hh%M"
       human_approx: "%A %d %B %Y vers %Hh%M"
