@@ -19,7 +19,7 @@ describe Admin::UserSearchForm do
     it "no call to User.within_organisation without search and agent_id" do
       organisation = create(:organisation)
       user_search_form = described_class.new(organisation_id: organisation.id)
-      expect(User).to_not receive(:within_organisation).with(organisation)
+      expect(User).not_to receive(:within_organisation).with(organisation)
       user_search_form.users
     end
 
