@@ -86,4 +86,27 @@ class SendTransactionalSmsService < BaseService
     parsed_res = JSON.parse(response.body)
     raise ApiError, { message: self, response: parsed_res } unless parsed_res["responseCode"].zero?
   end
+
+  # Contact Experience
+  #
+  def send_with_contact_experience
+    replies_email = CONTACT_EMAIL
+    base_url = @configuration["api_url"].presence || "https://contact-experience.com/ccv/webServicesCCV/SMS/sendSms.php"
+
+    response = Typhoeus::Request.new(
+      base_url,
+      params: {
+        number: @phone_number,
+        msg: @content,
+        devCode: @configuration["api_key"],
+        emetteur: replies_email # The parameter is called “emetteur” but it is actually an email where we can receive replies to the sms.
+      }
+    ).run
+
+    raise Timeout if response.timed_out?
+    raise HttpError, { message: self, response: "code: #{response.code}" } if response.failure?
+
+    parsed_res = JSON.parse(response.body)
+    raise ApiError, { message: self, response: parsed_res } if parsed_res["status"] == "KO"
+  end
 end

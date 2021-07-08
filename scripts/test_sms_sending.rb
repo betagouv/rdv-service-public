@@ -12,4 +12,8 @@
 #
 # DEFAULT_SMS_PROVIDER=send_in_blue DEFAULT_SMS_PROVIDER_KEY=<api_key> TEST_PHONE_NUMBER=<0639981234> rails runner scripts/test_sms_sending.rb
 
+# Contact Experience
+#
+# DEFAULT_SMS_PROVIDER=contact_experience DEFAULT_SMS_PROVIDER_KEY=<dev_code> TEST_PHONE_NUMBER=<0639981234> rails runner scripts/test_sms_sending.rb
+
 SendTransactionalSmsService.perform_with(ENV["TEST_PHONE_NUMBER"], "this is test " * 3, ["test"])
