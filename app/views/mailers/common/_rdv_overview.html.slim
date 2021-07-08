@@ -5,15 +5,14 @@
     span.title Date :
     span.float-right= l(rdv.starts_at, format: (rdv.home? ? :human_approx : :human))
     .clear
-  - if for_role == :agent
-    div.row-result
-      span.title Usager(s) :
-      span.float-right= rdv.users_full_names
-      .clear
-    div.row-result
-      span.title Motif :
-      span.float-right= rdv.motif_name
-      .clear
+  div.row-result
+    span.title Usager(s) :
+    span.float-right= rdv.users_full_names
+    .clear
+  div.row-result
+    span.title Motif :
+    span.float-right= rdv.motif_name
+    .clear
   div.row-result
     span.title Service :
     span.float-right= rdv.motif_service_name

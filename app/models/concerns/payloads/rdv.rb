@@ -25,6 +25,7 @@ module Payloads
           home?: home?,
           phone?: phone?,
           follow_up?: follow_up?,
+          should_display_users_in_sms?: user.relatives.present?,
           reservable_online?: reservable_online?,
           users_full_names: users.map(&:full_name).sort.to_sentence,
           agents_full_names: agents.map(&:full_name).sort.to_sentence,
