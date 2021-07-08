@@ -22,6 +22,10 @@ class Admin::UsersController < AgentAuthController
   def index
     @form = Admin::UserSearchForm.new(**params.permit(:organisation_id, :agent_id, :search))
     @users = policy_scope(User).merge(@form.users).active.order_by_last_name.page(params[:page])
+    if request.xhr?
+      render "simple_user_list", layout: false
+      return
+    end
   end
 
   def search

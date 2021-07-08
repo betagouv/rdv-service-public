@@ -135,5 +135,11 @@ RSpec.describe Admin::UsersController, type: :controller do
       get :index, params: { organisation_id: organisation.id, agent_id: agent.id }
       expect(assigns(:users)).to eq([user_with_referent])
     end
+
+    it "respond without layout when XHR request" do
+      create(:user, last_name: "bobo", organisations: [organisation])
+      get :index, params: { organisation_id: organisation.id, search: "bobo" }, format: :xhr
+      expect(response).to render_template(layout: false)
+    end
   end
 end
