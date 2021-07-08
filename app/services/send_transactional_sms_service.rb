@@ -28,6 +28,18 @@ class SendTransactionalSmsService < BaseService
 
   private
 
+  def to_s
+    conf = "provider : #{@provider}\nconfiguration : #{@configuration}"
+    message = "content: #{@content}\nphone_number: #{@phone_number}\ntags: #{@tags.join(',')}"
+    "#{conf}\n#{message}"
+  end
+
+  # DebugLogger
+  #
+  def send_with_debug_logger
+    Rails.logger.info("SMS DebugLogger: this would have been sent: #{self}")
+  end
+
   def send_with_send_in_blue
     config = SibApiV3Sdk::Configuration.new
     config.api_key = @configuration["api_key"]
@@ -74,10 +86,5 @@ class SendTransactionalSmsService < BaseService
     raise NetsizeTimeout if response.timed_out?
 
     raise NetsizeHttpError, "code: #{response.code}, message: #{response.return_message}"
-  end
-
-  def send_with_debug_logger
-    Rails.logger.debug("following SMS would have been sent in production environment: #{transactional_sms}")
-    Rails.logger.debug("provider : #{@provider} configuration : #{@configuration}")
   end
 end
