@@ -113,22 +113,4 @@ $(document).on('turbolinks:load', function() {
 
   new RdvStatusDropdowns();
 
-  if ($("#search_user")) {
-    $("#search_user").on("click", function(event, data, status, xhr) {
-      event.preventDefault();
-      let url = $("#search").data('url')
-      url += `?search=${$("#search").val()}`
-      $("#matching_users").innerHTML = "avant"
-      Rails.ajax({
-        type: "GET",
-        url: url,
-        success: function(response, other ){
-          $("#matching_users").html(response.body)
-        },
-        error: function(repsonse){
-          console.log("error")
-        }
-      })
-    });
-  }
 });

@@ -24,7 +24,7 @@ do
           div
             i.fa.fa-user
             | &nbsp;
-            = user.reverse_full_name
+            = reverse_full_name_and_birthdate(user)
             = relative_tag(user)
           div.ml-2= link_to "╳ Retirer", "#", class: "js-remove-user", data: { 'user-id': user.id }
           div.ml-2
@@ -35,13 +35,6 @@ do
               ), \
               data: { modal: "true" }
 
-
-
-    = label_tag :search, "Recherche usager", class: "form-control-label text optional d-block"
-    = text_field_tag :search, params[:search], placeholder: 'Prénom, Nom, Email, Téléphone', autocomplete: 'off', class: 'search-form-control', required: false, data: {url: admin_organisation_users_path(current_organisation), remote: false}
-    = button_tag "Rechercher", type: "button", class: "d-block btn btn-primary mt-1", id: "search_user"
-
-    div id="matching_users"
 
     .pl-2.mt-2= link_to "+ Ajouter un autre usager", "#", class: "js-toggle-add-user-interface #{'d-none' if @rdv.users.empty?}"
 
