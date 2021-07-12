@@ -53,7 +53,7 @@ module UsersHelper
   end
 
   def birth_date_and_age_if_exist(user)
-    " - #{birth_date_and_age(user)}" if user.birth_date
+    return " - #{birth_date_and_age(user)}" if user.birth_date
     ""
   end
 
