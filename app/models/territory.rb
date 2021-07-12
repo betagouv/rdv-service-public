@@ -21,11 +21,12 @@ class Territory < ApplicationRecord
     where(id: Organisation.with_upcoming_rdvs.distinct.select(:territory_id))
   }
 
-  enum sms_provider: { netsize: "netsize", send_in_blue: "send_in_blue" }, _prefix: true
+  enum sms_provider: { netsize: "netsize", send_in_blue: "send_in_blue", contact_experience: "contact_experience" }, _prefix: true
 
   FIELDS_FOR_SMS_CONFIGURATION = {
     send_in_blue: ["api_key"],
-    netsize: %w[api_url user_pwd]
+    netsize: %w[api_url user_pwd],
+    contact_experience: %("api_key")
   }.freeze
 
   before_create :fill_name_for_departements

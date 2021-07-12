@@ -8,3 +8,5 @@ fr:
           netsize:
             api_url: "Url de l'API"
             user_pwd: "Mot de passe"
+          contact_experience:
+            api_key: "Clé d’API"
