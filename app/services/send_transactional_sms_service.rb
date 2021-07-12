@@ -14,7 +14,11 @@ class SendTransactionalSmsService < BaseService
     @content = content
     @tags = tags
 
-    @provider = ENV["DEVELOPMENT_FORCE_SMS_PROVIDER"].presence || provider || ENV["DEFAULT_SMS_PROVIDER"].presence || :debug_logger
+    @provider = if Rails.env.test?
+                  :debug_logger
+                else
+                  ENV["DEVELOPMENT_FORCE_SMS_PROVIDER"].presence || provider || ENV["DEFAULT_SMS_PROVIDER"].presence || :debug_logger
+                end
     default_configuration = {
       "api_url" => ENV["DEFAULT_SMS_PROVIDER_API_URL"],
       "api_key" => ENV["DEFAULT_SMS_PROVIDER_KEY"]
