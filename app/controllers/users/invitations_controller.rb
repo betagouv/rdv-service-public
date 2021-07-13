@@ -17,6 +17,12 @@ class Users::InvitationsController < Devise::InvitationsController
     super
   end
 
+  def after_accept_path_for(resource)
+    return resource.after_accept_path if resource.after_accept_path.present?
+
+    super
+  end
+
   def edit
     # Reuse prefilled params from the invitation email
     resource.assign_attributes(update_resource_params)
