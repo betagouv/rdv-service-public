@@ -100,6 +100,7 @@ Rails.application.routes.draw do
       resources :user_profiles, only: [:create]
       resources :organisations, only: %i[index] do
         resources :users, only: %i[index]
+        resources :motifs, only: %i[index]
       end
     end
   end
