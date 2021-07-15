@@ -1,7 +1,7 @@
 tr
   - organisation = absence.organisation
   td
-    = link_to absence.title_or_default, edit_admin_organisation_absence_path(organisation, absence)
+    = link_to absence.title, edit_admin_organisation_absence_path(organisation, absence)
     = absence_tag(absence)
   td
     | Du #{l(absence.starts_at, format: :human)} au #{l(absence.first_occurrence_ends_at, format: :human)}
