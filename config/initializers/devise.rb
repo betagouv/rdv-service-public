@@ -320,7 +320,7 @@ Devise.setup do |config|
   #   manager.default_strategies(scope: :user).unshift :some_external_strategy
   # end
   config.warden do |manager|
-    manager.failure_app = RedirectToRegistration
+    manager.failure_app = CustomDeviseFailure
   end
 
   # ==> Mountable engine configurations
