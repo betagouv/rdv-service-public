@@ -26,7 +26,7 @@ class RdvWizardStep2 {
   }
 
   attachRemoveUserListeners = () => {
-    $('.js-remove-user').click(event => {
+    $('.js-remove-user').on("click", event => {
       this.showSpinner()
       const userId = event.currentTarget.getAttribute('data-user-id')
       let urlSearchParams = this.getCanonicalUrlSearchParams()
