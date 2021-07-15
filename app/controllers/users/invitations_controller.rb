@@ -2,7 +2,9 @@
 
 class Users::InvitationsController < Devise::InvitationsController
   layout "user_registration"
+  # rubocop:disable Rails/LexicallyScopedActionFilter
   before_action :delete_token_from_session, only: [:update]
+  # rubocop:enable Rails/LexicallyScopedActionFilter
 
   include CanHaveRdvWizardContext
 
@@ -13,7 +15,9 @@ class Users::InvitationsController < Devise::InvitationsController
     params[:invitation_token] = params[:invitation_token].upcase if params[:invitation_token].length == 8
 
     # if the token is invalid we remove it from the session
+    # rubocop:disable Rails/DynamicFindBy
     delete_token_from_session unless resource_class.find_by_invitation_token(params[:invitation_token], true)
+    # rubocop:enable Rails/DynamicFindBy
     super
   end
 
