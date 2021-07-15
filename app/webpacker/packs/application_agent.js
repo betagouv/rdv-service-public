@@ -112,5 +112,4 @@ $(document).on('turbolinks:load', function() {
   new PlanningAgentSelect();
 
   new RdvStatusDropdowns();
-
 });
