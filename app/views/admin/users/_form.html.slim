@@ -10,8 +10,9 @@
   - f.simple_fields_for :user_profiles, user.profile_for(current_organisation) do |f_user_profile|
     = f_user_profile.input :organisation_id, as: :hidden, wrapper: false
 
+    = hidden_field '', :return_location, value: params[:return_location]
+
     - if from_modal?
-      = hidden_field '', :return_location, value: params[:return_location]
       = hidden_field '', :modal, value: true
     = render 'model_errors', model: user_form, f: f
 
