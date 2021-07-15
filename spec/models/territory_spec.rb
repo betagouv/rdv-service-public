@@ -101,18 +101,4 @@ describe Territory, type: :model do
       it { is_expected.to eq nil }
     end
   end
-
-  describe "SMS Configuration validation" do
-    context "with invalid send_in_blue configuration" do
-      it { expect(build(:territory, sms_provider: "send_in_blue", sms_configuration: { bad: "configuration" })).to be_invalid }
-    end
-
-    context "with valid send_in_blue configuration" do
-      it { expect(build(:territory, sms_provider: "send_in_blue", sms_configuration: { api_key: "a_key" })).to be_valid }
-    end
-
-    context "with valid netsize configuration" do
-      it { expect(build(:territory, sms_provider: "netsize", sms_configuration: { api_url: "an_url", user_pwd: "user pwd" })).to be_valid }
-    end
-  end
 end

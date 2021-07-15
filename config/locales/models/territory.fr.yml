@@ -8,6 +8,8 @@ fr:
         name: Nom
         departement_number: Département
         phone_number: Téléphone
+        sms_configuration: "Clef d'API / Mot de passe"
+        sms_provider: "Fournisseur pour l'envoie de SMS"
     errors:
       models:
         territory:

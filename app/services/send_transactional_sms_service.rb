@@ -9,7 +9,7 @@ class SendTransactionalSmsService < BaseService
 
   SENDER_NAME = "RdvSoli"
 
-  def initialize(phone_number, content, tags, provider = nil, configuration = nil)
+  def initialize(phone_number, content, tags, provider = nil, key = nil)
     @phone_number = phone_number
     @content = content
     @tags = tags
@@ -17,13 +17,10 @@ class SendTransactionalSmsService < BaseService
     @provider = if Rails.env.test? || Rails.env.development?
                   :debug_logger
                 else
-                   provider || :debug_logger
+                  provider || :debug_logger
                 end
 
-    @configuration = configuration || {
-      "api_url" => ENV["DEFAULT_SMS_PROVIDER_API_URL"],
-      "api_key" => ENV["DEFAULT_SMS_PROVIDER_KEY"]
-    }
+    @key = key || ENV["DEFAULT_SMS_PROVIDER_KEY"]
   end
 
   def perform
@@ -33,7 +30,7 @@ class SendTransactionalSmsService < BaseService
   private
 
   def to_s
-    conf = "provider : #{@provider}\nconfiguration : #{@configuration}"
+    conf = "provider : #{@provider}\nkey : #{@key}"
     message = "content: #{@content}\nphone_number: #{@phone_number}\ntags: #{@tags.join(',')}"
     "#{conf}\n#{message}"
   end
@@ -48,7 +45,7 @@ class SendTransactionalSmsService < BaseService
   #
   def send_with_send_in_blue
     config = SibApiV3Sdk::Configuration.new
-    config.api_key["api-key"] = @configuration["api_key"]
+    config.api_key["api-key"] = @key
     api_client = SibApiV3Sdk::ApiClient.new(config)
     begin
       SibApiV3Sdk::TransactionalSMSApi.new(api_client).send_transac_sms(
@@ -67,11 +64,10 @@ class SendTransactionalSmsService < BaseService
   # NetSize
   #
   def send_with_netsize
-    base_url = @configuration["api_url"].presence || "https://europe.ipx.com/restapi/v1/sms/send"
     response = Typhoeus::Request.new(
-      base_url,
+      "https://europe.ipx.com/restapi/v1/sms/send",
       method: :post,
-      userpwd: @configuration["api_key"],
+      userpwd: @key,
       headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
       timeout: 5,
       body: {
@@ -95,14 +91,13 @@ class SendTransactionalSmsService < BaseService
   #
   def send_with_contact_experience
     replies_email = CONTACT_EMAIL
-    base_url = @configuration["api_url"].presence || "https://contact-experience.com/ccv/webServicesCCV/SMS/sendSms.php"
 
     response = Typhoeus::Request.new(
-      base_url,
+      "https://contact-experience.com/ccv/webServicesCCV/SMS/sendSms.php",
       params: {
         number: @phone_number,
         msg: @content,
-        devCode: @configuration["api_key"],
+        devCode: @key,
         emetteur: replies_email # The parameter is called “emetteur” but it is actually an email where we can receive replies to the sms.
       }
     ).run
