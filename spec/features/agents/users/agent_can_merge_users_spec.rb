@@ -31,9 +31,13 @@ describe "Agent can delete user" do
     visit authenticated_agent_root_path
     click_link "Usagers"
     click_link "Fusionner deux usagers"
+
     find("#select2-user1_id-container").click
+    find(".select2-search__field").send_keys("SWA")
     find(".select2-results__option") { _1.text == "SWAN Aalyah" }.click
+
     find("#select2-user2_id-container").click
+    find(".select2-search__field").send_keys("SWA")
     find(".select2-results__option") { _1.text == "SWAN Anna" }.click
     choose "aalyah@damn.com"
     choose "Anna"

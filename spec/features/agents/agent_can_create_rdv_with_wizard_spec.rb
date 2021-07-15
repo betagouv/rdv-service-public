@@ -36,22 +36,16 @@ describe "Agent can create a Rdv with wizard" do
     click_link("Créer un usager")
 
     # create user with mail
-    expect(find("#modal-holder")).to have_content("Nouvel usager")
     fill_in :user_first_name, with: "Jean-Paul"
     fill_in :user_last_name, with: "Orvoir"
     fill_in :user_email, with: "jporvoir@bidule.com"
-    sleep(1) # wait for scroll to not interfere with form input
-    page.execute_script "$('#mainModal').scrollTop(1000)"
     click_button("Créer usager")
-    sleep(1) # wait for modal to hide completely
 
     # create user without email
     click_link("Ajouter un autre usager")
     click_link("Créer un usager")
     fill_in :user_first_name, with: "Jean-Marie"
     fill_in :user_last_name, with: "Lapin"
-    sleep(1) # wait for scroll to not interfere with form input
-    page.execute_script "$('#mainModal').scrollTop(1000)"
     click_button("Créer usager")
     sleep(1) # wait for modal to hide completely
     fill_in :rdv_context, with: "RDV très spécial"

@@ -13,10 +13,7 @@ describe "Agent can update a relative" do
 
   before do
     login_as(agent, scope: :agent)
-    visit authenticated_agent_root_path
-    click_link "Usagers"
-    click_link "LEGENDE Mimi"
-    click_link "Modifier"
+    visit edit_admin_organisation_user_path(organisation, relative)
   end
 
   it "works" do

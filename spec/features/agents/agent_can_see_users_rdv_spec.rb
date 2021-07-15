@@ -9,11 +9,12 @@ describe "can see users' RDV" do
   before do
     login_as(agent, scope: :agent)
     visit authenticated_agent_root_path
-    click_link "Usagers"
   end
 
   context "with no RDV" do
-    before { click_link "LAVERDURE Tanguy" }
+    before do
+      visit admin_organisation_user_path(organisation, user)
+    end
 
     it do
       expect(page).to have_content("À venir\n0 RDV")
@@ -25,7 +26,9 @@ describe "can see users' RDV" do
     let!(:motif) { create(:motif, organisation: organisation, service: service) }
     let!(:rdv) { create :rdv, :future, users: [user], organisation: organisation, motif: motif, agents: [agent] }
 
-    before { click_link "LAVERDURE Tanguy" }
+    before do
+      visit admin_organisation_user_path(organisation, user)
+    end
 
     it do
       expect(page).to have_content("À venir\n1 RDV")
