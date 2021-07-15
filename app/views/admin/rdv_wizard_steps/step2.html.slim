@@ -35,7 +35,6 @@ do
               ), \
               data: { modal: "true" }
 
-
     .pl-2.mt-2= link_to "+ Ajouter un autre usager", "#", class: "js-toggle-add-user-interface #{'d-none' if @rdv.users.empty?}"
 
     .js-add-user-interface.mt-2 class=('d-none' if @rdv.users.any?)
