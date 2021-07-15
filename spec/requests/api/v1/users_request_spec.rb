@@ -387,6 +387,7 @@ describe "api/v1/users requests", type: :request do
         expect(response.status).to eq(200)
         response_parsed = JSON.parse(response.body)
         expect(response_parsed["invitation_url"]).to be_present
+        expect(response_parsed["invitation_token"]).to be_present
         expect(response_parsed["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=")
         user.reload
         expect(user.invitation_due_at).to eq(user.invitation_created_at + User.invite_for)
@@ -401,6 +402,7 @@ describe "api/v1/users requests", type: :request do
         expect(response.status).to eq(200)
         response_parsed = JSON.parse(response.body)
         expect(response_parsed["invitation_token"]).to be_present
+        expect(response_parsed["invitation_url"]).to be_present
         user.reload
         expect(user.invitation_due_at).to eq(user.invitation_created_at + User.invite_for)
       end
