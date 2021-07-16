@@ -242,5 +242,21 @@ RSpec.describe LieuxController, type: :controller do
         expect(assigns(:lieux).first).to eq(lieu2)
       end
     end
+
+    context "with an invitation token" do
+      subject do
+        get :index,
+            params: { search: { departement: "62", city_code: "62100", where: "useless 12345",
+                                service: motif.service_id,
+                                motif_name_with_location_type: motif.name_with_location_type },
+                      invitation_token: "123456" }
+      end
+
+      it "stores the token in session" do
+        subject
+        expect(response).to be_successful
+        expect(request.session[:invitation_token]).to eq("123456")
+      end
+    end
   end
 end

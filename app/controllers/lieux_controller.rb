@@ -5,7 +5,8 @@ class LieuxController < ApplicationController
     :redirect_if_search_params_absent,
     :set_lieu_variables,
     :redirect_if_user_offline_and_motif_follow_up,
-    :redirect_if_no_matching_motifs
+    :redirect_if_no_matching_motifs,
+    :store_invitation_token_in_session_if_present
   after_action :allow_iframe
 
   def index
