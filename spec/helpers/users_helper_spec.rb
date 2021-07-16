@@ -30,13 +30,13 @@ describe UsersHelper, type: :helper do
 
   describe "#default_service_selection_from" do
     context "user" do
-      it "returns relative when" do
-        user = create(:user, :relative)
+      it "returns relative" do
+        user = build(:user, :relative)
         expect(default_service_selection_from(user)).to eq(:relative)
       end
 
-      it "returns responsible when" do
-        user = create(:user)
+      it "returns responsible" do
+        user = build(:user)
         expect(default_service_selection_from(user)).to eq(:responsible)
       end
     end
@@ -51,6 +51,18 @@ describe UsersHelper, type: :helper do
         service = build(:service, :social)
         expect(default_service_selection_from(service)).to eq(:responsible)
       end
+    end
+  end
+
+  describe "full_name_and_birthdate" do
+    it "return only name when user without birthdate" do
+      user = build(:user, birth_date: nil, first_name: "James", last_name: "BOND")
+      expect(full_name_and_birthdate(user)).to eq("James BOND")
+    end
+
+    it "return name and birthdate when user with birthdate" do
+      user = build(:user, birth_date: Date.new(1950, 12, 21), first_name: "James", last_name: "BOND")
+      expect(full_name_and_birthdate(user)).to eq("James BOND - 21/12/1950 - 70 ans")
     end
   end
 end

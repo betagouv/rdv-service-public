@@ -7,14 +7,10 @@ describe "Agent can create a relative" do
     create(:user, first_name: "Fiona", last_name: "LEGENDE", email: "jean@legende.com", organisations: [organisation])
   end
 
-  before do
+  it "can create relative" do
     login_as(agent, scope: :agent)
     visit authenticated_agent_root_path
-    click_link "Usagers"
-    click_link "LEGENDE Fiona"
-  end
-
-  it "works" do
+    visit admin_organisation_user_path(organisation, user)
     expect(page).to have_content("Aucun proche")
     click_link "Ajouter un proche"
     fill_in :user_first_name, with: "Loulou"
