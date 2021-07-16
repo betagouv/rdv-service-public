@@ -116,7 +116,7 @@ RSpec.describe Admin::UsersController, type: :controller do
 
     it "assigns users" do
       get :index, params: { organisation_id: organisation.id }
-      expect(assigns(:users)).to eq([user])
+      expect(assigns(:users)).to eq([])
     end
 
     it "assigns form" do

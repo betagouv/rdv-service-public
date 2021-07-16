@@ -25,8 +25,10 @@ class Admin::UsersController < AgentAuthController
   end
 
   def search
-    @users = policy_scope(User).where.not(id: params[:exclude_ids]).active.order_by_last_name.limit(10)
-    @users = @users.search_by_text(search_params) if search_params
+    @users = []
+    if search_params.present? && search_params.length >= 3
+      @users = policy_scope(User).where.not(id: params[:exclude_ids]).active.order_by_last_name.search_by_text(search_params)
+    end
     skip_authorization
   end
 
@@ -50,8 +52,8 @@ class Admin::UsersController < AgentAuthController
     @user.invite! if invite_user?(@user, params)
     prepare_new unless user_persisted
 
-    if from_modal?
-      respond_modal_with @user_form, location: add_query_string_params_to_url(modal_return_location, 'user_ids[]': @user.id)
+    if params[:return_location].present?
+      redirect_to add_query_string_params_to_url(params[:return_location], 'user_ids[]': @user.id), flash: { notice: "L'usager a été créé." }
     elsif user_persisted
       redirect_to admin_organisation_user_path(@organisation, @user), flash: { notice: "L'usager a été créé." }
     else
@@ -78,7 +80,7 @@ class Admin::UsersController < AgentAuthController
     @user.skip_reconfirmation! if @user.encrypted_password.blank?
     user_updated = @user_form.save
     if from_modal?
-      respond_modal_with @user_form, location: modal_return_location
+      respond_modal_with @user_form, location: params[:return_modal_location].presence || request.referer
     elsif user_updated
       redirect_to admin_organisation_user_path(current_organisation, @user), flash: { notice: "L'usager a été modifié" }
     else
@@ -116,10 +118,6 @@ class Admin::UsersController < AgentAuthController
   end
 
   private
-
-  def modal_return_location
-    params[:return_location].presence || request.referer
-  end
 
   def invite_user?(user, params)
     user.persisted? && user.email.present? && (params[:invite_on_create] == "1")

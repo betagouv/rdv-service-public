@@ -35,6 +35,12 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def store_invitation_token_in_session_if_present
+    return if params[:invitation_token].blank?
+
+    session[:invitation_token] = params[:invitation_token]
+  end
+
   def set_sentry_context
     Sentry.set_user(sentry_user)
   end

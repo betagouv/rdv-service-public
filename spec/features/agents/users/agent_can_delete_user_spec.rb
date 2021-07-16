@@ -7,15 +7,13 @@ describe "Agent can delete user" do
 
   before do
     login_as(agent, scope: :agent)
-    visit authenticated_agent_root_path
-    click_link "Usagers"
-    click_link "LAND Lala"
+    visit admin_organisation_user_path(organisation, user)
   end
 
   it "delete user", js: true do
     click_link("Supprimer")
     page.driver.browser.switch_to.alert.accept
     expect_page_title("Vos usagers")
-    expect_page_with_no_record_text("Vous n'avez pas encore ajouté d'usager.")
+    expect_page_with_no_record_text("Utilisez le champ de recherche pour trouver un usager")
   end
 end
