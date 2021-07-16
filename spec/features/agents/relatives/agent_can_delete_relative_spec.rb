@@ -10,14 +10,9 @@ describe "Agent can delete a relative" do
     create(:user, :relative, responsible: user, first_name: "Mimi", last_name: "LEGENDE")
   end
 
-  before do
-    login_as(agent, scope: :agent)
-    visit authenticated_agent_root_path
-    click_link "Usagers"
-    click_link "LEGENDE Mimi"
-  end
-
   it "works", js: true do
+    login_as(agent, scope: :agent)
+    visit admin_organisation_user_path(organisation, relative)
     click_link("Supprimer")
     page.driver.browser.switch_to.alert.accept
     expect_page_title "Fiona LEGENDE"

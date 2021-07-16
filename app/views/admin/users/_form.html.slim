@@ -10,8 +10,9 @@
   - f.simple_fields_for :user_profiles, user.profile_for(current_organisation) do |f_user_profile|
     = f_user_profile.input :organisation_id, as: :hidden, wrapper: false
 
+    = hidden_field '', :return_location, value: params[:return_location]
+
     - if from_modal?
-      = hidden_field '', :return_location, value: params[:return_location]
       = hidden_field '', :modal, value: true
     = render 'model_errors', model: user_form, f: f
 
@@ -75,7 +76,7 @@
                 = f.association( \
                   :responsible, \
                   collection: policy_scope(User).responsible.order_by_last_name, \
-                  label_method: -> { full_name_and_birthdate(_1) }, \
+                  label_method: -> { reverse_full_name_and_birthdate(_1) }, \
                   label: false, \
                   **{input_html: { class: 'select2-input' }}.deep_merge(input_opts[:relative_existing]), \
                   required: true, \

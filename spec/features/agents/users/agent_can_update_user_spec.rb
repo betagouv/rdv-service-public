@@ -10,10 +10,7 @@ describe "Agent can update user" do
   before do
     login_as(agent, scope: :agent)
     visit authenticated_agent_root_path
-    click_link "Usagers"
-    expect_page_title("Vos usagers")
-    click_link "LEGENDE Jean"
-    expect_page_title("Jean LEGENDE")
+    visit admin_organisation_user_path(organisation, user)
     within("#spec-primary-user-card") { click_link "Modifier" }
   end
 

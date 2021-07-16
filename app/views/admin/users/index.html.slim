@@ -16,7 +16,7 @@
           = f.input :search, placeholder: 'Prénom, Nom, Email, Téléphone', label: "Recherche", input_html: { autocomplete: 'off', class: 'search-form-control', value: params[:search] }, required: false
         .col-md-6
           = f.input :agent_id, collection: policy_scope(Agent).within_organisation(current_organisation), label: "Agent référent", label_method: :reverse_full_name, input_html: { class: 'select2-input' }
-      input.btn.btn-primary.d-print-none type="submit" value="Rafraîchir la liste"
+      input.btn.btn-primary.d-print-none type="submit" value="Rechercher"
 
 .card
   - if @users.any? || params[:search].present? || params[:agent_id].present?
@@ -32,20 +32,20 @@
           = render @users
 
     - if @users.empty?
-      .mb-4.p.text-center Aucun usager trouvé
+      .mb-4.p.text-center Aucun usager trouvé pour ces critères
     - elsif @users.total_pages > 1
       .m-3
         .d-flex.justify-content-center id="users-pagination"
           = paginate @users, theme: 'twitter-bootstrap-4'
           .text-center= page_entries_info @users
-
   - else
     .card-body
       .row.justify-content-md-center
         .col-md-6.text-center.my-5
-          p.mb-2.lead Vous n'avez pas encore ajouté d'usager.
+          p.mb-2.lead Utilisez le champ de recherche pour trouver&nbsp;un&nbsp;usager
           span.fa-stack.fa-4x
             i.fa.fa-circle.fa-stack-2x.text-primary
             i.fa.fa-users.fa-stack-1x.text-white
+
   .m-3.text-center
     = link_to 'Créer un usager', new_admin_organisation_user_path(current_organisation), class: "btn btn-primary"

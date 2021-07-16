@@ -3,6 +3,16 @@
 describe Absence, type: :model do
   it_behaves_like "recurrence"
 
+  describe "title mandatory" do
+    it "valide wit a title" do
+      expect(build(:absence, title: "Absence")).to be_valid
+    end
+
+    it "invalide without title" do
+      expect(build(:absence, title: nil)).to be_invalid
+    end
+  end
+
   describe "#occurrences_for" do
     subject { absence.occurrences_for(date_range) }
 

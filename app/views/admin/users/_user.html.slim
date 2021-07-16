@@ -1,5 +1,7 @@
 tr
-  td= link_to user.reverse_full_name, admin_organisation_user_path(current_organisation, user)
+  td
+    = link_to user.reverse_full_name, admin_organisation_user_path(current_organisation, user)
+    span>= relative_tag(user)
   td= birth_date_and_age(user)
   td= user.phone_number
   td.word-break-all= user.email
