@@ -28,6 +28,11 @@
           span.ml-1 SMS
 
     li.side-nav-item.mb-4.pl-3.pr-2
+      = link_to(admin_territory_stats_path(current_territory), class: ("active" if content_for(:menu_item) == 'menu-organisation-stats')) do
+        i.fa.fa-chart-bar>
+        span.ml-1 Statistiques
+
+    li.side-nav-item.mb-4.pl-3.pr-2
       a.active Sectorisation
       ul.side-nav.list-unstyled.mt-4
         li.side-nav-item.mb-4.pl-3.pr-2

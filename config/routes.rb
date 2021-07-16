@@ -111,6 +111,13 @@ Rails.application.routes.draw do
     namespace "admin" do
       resources :territories, only: [:update] do
         scope module: "territories" do
+          resources :stats, only: :index do
+            collection do
+              get :rdvs
+              get :users
+            end
+          end
+          resources :rdvs, only: :index
           resources :agent_territorial_roles, only: %i[index new create destroy]
           resource :sms_configuration, only: %i[show edit update]
           resources :zone_imports, only: %i[new create]
