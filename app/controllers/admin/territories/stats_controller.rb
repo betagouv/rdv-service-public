@@ -1,18 +1,17 @@
 # frozen_string_literal: true
 
 class Admin::Territories::StatsController < Admin::Territories::BaseController
-
   def index
     @stats = Stat.new(
-      rdvs: Rdv.joins(:organisation).where(organisations: {id: current_territory.organisations.map(&:id)}),
-      agents: Agent.joins(:organisations).where(organisations: {id: current_territory.organisations.map(&:id)}),
-      users: User.joins(:organisations).where(organisations: {id: current_territory.organisations.map(&:id)})
+      rdvs: Rdv.joins(:organisation).where(organisations: { id: current_territory.organisations.map(&:id) }),
+      agents: Agent.joins(:organisations).where(organisations: { id: current_territory.organisations.map(&:id) }),
+      users: User.joins(:organisations).where(organisations: { id: current_territory.organisations.map(&:id) })
     )
   end
 
   def rdvs
     skip_authorization
-    stats = Stat.new(rdvs: policy_scope(Rdv))
+    stats = Stat.new(rdvs: Rdv.joins(:organisation).where(organisations: { id: current_territory.organisations.map(&:id) }))
     stats = if params[:by_service].present?
               stats.rdvs_group_by_service
             elsif params[:by_location_type].present?
@@ -25,6 +24,6 @@ class Admin::Territories::StatsController < Admin::Territories::BaseController
 
   def users
     skip_authorization
-    render json: Stat.new(users: policy_scope(User)).users_group_by_week
+    render json: Stat.new(users: User.joins(:organisations).where(organisations: { id: current_territory.organisations.map(&:id) })).users_group_by_week
   end
 end
