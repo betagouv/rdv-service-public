@@ -32,7 +32,8 @@ module TransactionalSms::BaseConcern
   end
 
   def send!
-    SendTransactionalSmsService.perform_with(self)
+    territory = Territory.find(@rdv.organisation_territory_id)
+    SendTransactionalSmsService.perform_with(@user.phone_number_formatted, content, tags, territory.sms_provider, territory.sms_configuration)
   end
 
   def tags

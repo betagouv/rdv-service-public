@@ -8,6 +8,6 @@ FactoryBot.define do
     name { generate(:territory_name) }
     departement_number { generate(:departement_number) }
     sms_provider { "send_in_blue" }
-    sms_configuration { { api_key: "a_key" } }
+    sms_configuration { "a_key" }
   end
 end
