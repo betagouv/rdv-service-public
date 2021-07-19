@@ -9,7 +9,7 @@ module Payloads
         starts_at: starts_at,
         ends_at: ends_at,
         ical_uid: uuid,
-        summary: "RDV #{user.full_name} <> #{motif&.name}",
+        summary: "RDV #{motif&.name}",
         address: motif.phone? ? nil : address,
         sequence: sequence
       }
