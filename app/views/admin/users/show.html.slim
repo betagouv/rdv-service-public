@@ -1,4 +1,4 @@
-- content_for(:menu_item) { 'menu-users' }
+- content_for(:menu_item) { "menu-users" }
 
 - content_for :title do
   | #{@user.full_name}
@@ -6,7 +6,7 @@
 - content_for :breadcrumb do
   ol.breadcrumb.mr-2.d-inline-flex
     li.breadcrumb-item
-      = link_to 'Vos usagers', admin_organisation_users_path(current_organisation)
+      = link_to "Vos usagers", admin_organisation_users_path(current_organisation)
     - if @user.relative?
       li.breadcrumb-item
         = link_to @user.responsible.full_name, admin_organisation_user_path(current_organisation, @user.responsible)
@@ -25,19 +25,19 @@
               - if @user.invitation_sent_at
                 p.small.m-0 Invitation envoyée il y a #{distance_of_time_in_words_to_now(@user.invitation_sent_at)}
             .col-md-4.text-right
-              = link_to 'Inviter', invite_admin_organisation_user_path(current_organisation, @user), method: :post, class: 'btn btn-outline-white'
+              = link_to "Inviter", invite_admin_organisation_user_path(current_organisation, @user), method: :post, class: "btn btn-outline-white"
 
         - if @user.logged_once_with_franceconnect?
           .row.bg-info.text-white.p-2.mb-3 Cet usager s'est déjà connecté via FranceConnect
 
         - if @user.responsible?
           h4.card-title.mb-3 Informations générales
-          = render 'responsible_information', user: @user
+          = render "responsible_information", user: @user
 
         - else
           h4.card-title.mb-3 Informations de votre proche
           ul.list-unstyled
-            - [:first_name, :last_name, :birth_date, :notes].each do |attr_name|
+            - %i[first_name last_name birth_date notes].each do |attr_name|
               li= render "common/user_attribute", user: @user, attribute_name: attr_name
 
         .row.mt-3
@@ -66,7 +66,7 @@
       .card#spec-secondary-user-card
         .card-body
           h4.card-title.mb-3 Informations sur l'usager en charge
-          = render 'admin/users/responsible_information', user: @user.responsible
+          = render "admin/users/responsible_information", user: @user.responsible
 
       .card
         .card-header Agents référents du responsable
@@ -116,13 +116,13 @@
       .card-body
         .row
           .col-lg-6
-            - [:seen, :excused, :notexcused].each do |temporal_status|
+            - %i[seen excused notexcused].each do |temporal_status|
               = render "stats/rdv_counter_with_link", \
                 temporal_status: temporal_status, \
                 count: @rdvs.status(temporal_status).count,
                 path: admin_organisation_rdvs_path(current_organisation, status: temporal_status, user_id: @user.id, breadcrumb_page: "user")
           .col-lg-6
-            - [:unknown_future, :unknown_past].each do |temporal_status|
+            - %i[unknown_future unknown_past].each do |temporal_status|
               = render "stats/rdv_counter_with_link", \
                 temporal_status: temporal_status, \
                 count: @rdvs.status(temporal_status).count,

@@ -1,4 +1,4 @@
-- content_for(:menu_item) { 'menu-agendas' }
+- content_for(:menu_item) { "menu-agendas" }
 
 - content_for :title do
   - if @user
@@ -9,7 +9,7 @@
 .card
   .card-body
     h5.card-title Configuration des filtres
-    = simple_form_for(@form, as: '', url: admin_organisation_agent_searches_path(current_organisation), method: :get, html: { class: 'js-creneaux-form' }) do |f|
+    = simple_form_for(@form, as: "", url: admin_organisation_agent_searches_path(current_organisation), method: :get, html: { class: "js-creneaux-form" }) do |f|
       - @form.user_ids.each do |user_id|
         = hidden_field_tag "user_ids[]", user_id
       - if @form.context.present?
@@ -19,7 +19,7 @@
           = f.input :service_id, \
             collection: @services, \
             input_html: { \
-              class: 'select2-input js-service-filter', \
+              class: "select2-input js-service-filter", \
               data: { \
                 placeholder: "Sélectionnez un service pour filtrer les motifs", \
                 "select-options": { disableSearch: true } \
@@ -35,15 +35,15 @@
             label_method: -> { motif_name_with_location_type(_1) }, \
             input_html: { \
               data: { placeholder: "Sélectionnez un motif" }, \
-              class: 'js-filtered-motifs' \
+              class: "js-filtered-motifs" \
             }
         .col-md-4
           = date_input(f, :from_date, label = "À partir du", required: true)
       .row
         .col-md-4
-          = f.input :agent_ids, collection: @agents, label: "Agent(s)", label_method: :full_name, input_html: { multiple: true, class: 'select2-input' }
+          = f.input :agent_ids, collection: @agents, label: "Agent(s)", label_method: :full_name, input_html: { multiple: true, class: "select2-input" }
         .col-md-4
-          = f.input :lieu_ids, collection: @lieux, label: "Lieu(x)", input_html: { multiple: true, class: 'select2-input' }
+          = f.input :lieu_ids, collection: @lieux, label: "Lieu(x)", input_html: { multiple: true, class: "select2-input" }
       = f.submit "Afficher les créneaux", class: "btn btn-primary", data: { disable_with: "Récupération des créneaux..."}
 
 #creneaux

@@ -2,14 +2,14 @@ doctype html
 html
   head
     meta content="text/html; charset=utf-8" http-equiv="Content-Type"
-    = stylesheet_pack_tag 'mail'
+    = stylesheet_pack_tag "mail"
   body
-    = render 'layouts/rdv_solidarites_instance_name'
+    = render "layouts/rdv_solidarites_instance_name"
     table.body-wrap
       tr.d-block align="center"
         td.logo.d-block
           = link_to root_url do
-            = image_tag '/logo.png', style: "width: 200px; margin: auto;"
+            = image_tag "/logo.png", style: "width: 200px; margin: auto;"
         td.container
           .content
             table.main width="100%"

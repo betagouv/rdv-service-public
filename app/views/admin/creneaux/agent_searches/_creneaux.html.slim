@@ -12,7 +12,7 @@ div.js-creneaux-list.collapsed id="creneaux-lieu-#{lieu.id}"
             **path_opts \
           ), \
           remote: true, \
-          class: 'btn btn-primary js-creneaux-form', \
+          class: "btn btn-primary js-creneaux-form", \
           data: { disable_with: "..." }
     .col
       .row.no-gutters.creneaux-row.lieu-creneaux-card
@@ -44,7 +44,7 @@ div.js-creneaux-list.collapsed id="creneaux-lieu-#{lieu.id}"
               **path_opts \
             ), \
             remote: true, \
-            class: 'btn btn-light js-creneaux-form', \
+            class: "btn btn-light js-creneaux-form", \
             data: { disable_with: "..." } \
         do
           .d-flex.align-items-center
@@ -63,7 +63,7 @@ div.js-creneaux-list.collapsed id="creneaux-lieu-#{lieu.id}"
           **path_opts \
         ), \
         remote: true, \
-        class: 'btn btn-primary js-creneaux-form', \
+        class: "btn btn-primary js-creneaux-form", \
         data: { disable_with: "..." }
 
   - if creneaux.group_by{ _1.starts_at.to_date }.values.any?{ _1.count > 5 }

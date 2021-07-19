@@ -73,14 +73,7 @@ linters:
       - Style/ParenthesesAroundCondition
       - Style/RedundantInterpolation
       - Style/RedundantParentheses
-      - Style/StringLiterals
-      - Style/StringLiteralsInInterpolation
-      - Style/SymbolArray
-      - Style/TrailingCommaInArguments
-      - Style/TrailingCommaInHashLiteral
       - Style/WordArray
-      - Style/WordArray
-      - Style/ZeroLengthPredicate
   ControlStatementSpacing:
     enabled: false
   LineLength:

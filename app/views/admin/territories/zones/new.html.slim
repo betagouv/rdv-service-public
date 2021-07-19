@@ -1,4 +1,4 @@
-- content_for(:menu_item) { 'menu-departement-zones' }
+- content_for(:menu_item) { "menu-departement-zones" }
 
 - content_for :title do
   | Ajouter une commune pour le secteur #{@sector.name}
@@ -18,5 +18,5 @@
       .card-overlay-spinner.js-spinner-overlay.d-none
         .spinner.spinner-border
       .card-body
-        = render 'model_errors', model: @zone
+        = render "model_errors", model: @zone
         = render "form", zone: @zone, sector: @sector

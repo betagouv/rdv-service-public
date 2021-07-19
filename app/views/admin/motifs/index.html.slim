@@ -1,20 +1,21 @@
-- content_for(:menu_item) { 'menu-motifs' }
+- content_for(:menu_item) { "menu-motifs" }
 
 - content_for :title do
   | Vos motifs
 
 - if current_agent_can?(:create, Motif)
   - content_for :breadcrumb do
-    = link_to 'Créer un motif', new_admin_organisation_motif_path(current_organisation), class:"btn btn-outline-white"
+    = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class:"btn btn-outline-white"
 
-= simple_form_for '', url: admin_organisation_motifs_path(current_organisation), html: { method: :get, class: 'form-inline js-search-and-filter-form' }, wrapper: :inline_form do |f|
+= simple_form_for "", url: admin_organisation_motifs_path(current_organisation), html: { method: :get, class: "form-inline js-search-and-filter-form" }, wrapper: :inline_form do |f|
 
   .container-fluid.bg-white.rounded
 
     .m-3.d-flex.justify-content-end
-      div= link_to 'Réinitialiser', admin_organisation_motifs_path(current_organisation), class: "btn btn-link #{params[:search].blank? && 'd-none'}"
-      = f.input :search, placeholder: 'ex. Être appelé par la MDS', label: false, input_html: { autocomplete: 'off', class: 'search-form-control', value: params[:search] }, required: false
-      = f.button :submit, 'Rechercher'
+      - search = params[:search].blank? ? "d-none" : ""
+      div= link_to "Réinitialiser", admin_organisation_motifs_path(current_organisation), class: "btn btn-link #{search}"
+      = f.input :search, placeholder: "ex. Être appelé par la MDS", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
+      = f.button :submit, "Rechercher"
     table.table
       thead
         tr
@@ -44,7 +45,7 @@
         - if @motifs.any?
           = render @motifs
           .d-flex.justify-content-center id="users-pagination"
-            = paginate @motifs, theme: 'twitter-bootstrap-4'
+            = paginate @motifs, theme: "twitter-bootstrap-4"
         - else
           tr
             td(colspan=6)
@@ -60,8 +61,8 @@
                     i.far.fa-calendar.fa-stack-1x.text-white
                   - if current_agent_can?(:create, Motif)
                     .text-center.m-3
-                      = link_to 'Créer un motif', new_admin_organisation_motif_path(current_organisation), class: 'btn btn-primary'
+                      = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "btn btn-primary"
 
     - if @motifs.any? && current_agent_can?(:create, Motif)
       .text-center.m-3
-        = link_to 'Créer un motif', new_admin_organisation_motif_path(current_organisation), class: 'btn btn-primary'
+        = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "btn btn-primary"

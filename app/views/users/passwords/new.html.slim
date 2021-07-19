@@ -6,9 +6,9 @@
       .text-center.w-75.m-auto
       = render "devise/shared/error_messages", resource: resource
       .form-group
-        = f.email_field :email, autofocus: true, required: true, placeholder: "nom.prenom@email.com", class: 'form-control'
+        = f.email_field :email, autofocus: true, required: true, placeholder: "nom.prenom@email.com", class: "form-control"
       .form-group.mb-0.text-center
-        = f.submit 'Envoyer', class: 'btn btn btn-primary'
+        = f.submit "Envoyer", class: "btn btn btn-primary"
 
     hr
     .text-center

@@ -78,7 +78,7 @@
                 class: "select2-input form-control js-planning-agent-select" \
               )
           li.my-2
-            = link_to 'Agenda', \
+            = link_to "Agenda", \
               admin_organisation_agent_agenda_path(current_organisation, agent_for_left_menu(@agent)), \
               class: ("active" if content_for(:menu_item) == "menu-agendas")
           li.my-2
@@ -86,7 +86,7 @@
               admin_organisation_agent_plage_ouvertures_path(current_organisation, agent_for_left_menu(@agent)), \
               class: ("active" if content_for(:menu_item) == "menu-plages-ouvertures")
           li.my-2
-            = link_to 'Absences', \
+            = link_to "Absences", \
               admin_organisation_agent_absences_path(current_organisation, agent_for_left_menu(@agent)), \
               class: ("active" if content_for(:menu_item) == "menu-absences")
 
@@ -109,7 +109,7 @@
       li.side-nav-item.mb-4.pl-3.pr-2
         = link_to( \
           admin_organisation_stats_path(current_organisation), \
-          class: ("active" if content_for(:menu_item) == 'menu-organisation-stats') \
+          class: ("active" if content_for(:menu_item) == "menu-organisation-stats") \
         ) do
           i.fa.fa-chart-bar>
           span.ml-1 Statistiques
@@ -126,7 +126,7 @@
         li.side-nav-item.mb-4.pl-3.pr-2
           = link_to \
             admin_organisation_motifs_path(current_organisation), \
-            class: ("active" if content_for(:menu_item) == 'menu-motifs') \
+            class: ("active" if content_for(:menu_item) == "menu-motifs") \
           do
             i.fa.fa-paste>
             span.ml-1 Motifs
@@ -148,25 +148,25 @@
             class=("show" if menu_top_level_item == "settings")
           ]
             li.my-2
-              =link_to 'Votre organisation', \
+              =link_to "Votre organisation", \
                 admin_organisation_path(current_organisation), \
-                class: ("active" if content_for(:menu_item) == 'menu-organisation')
+                class: ("active" if content_for(:menu_item) == "menu-organisation")
             li.my-2
-              =link_to 'Vos lieux', \
+              =link_to "Vos lieux", \
                 admin_organisation_lieux_path(current_organisation), \
-                class: ("active" if content_for(:menu_item) == 'menu-lieux')
+                class: ("active" if content_for(:menu_item) == "menu-lieux")
             li.my-2
-              =link_to 'Vos agents', \
+              =link_to "Vos agents", \
                 admin_organisation_agents_path(current_organisation), \
-                class: ("active" if content_for(:menu_item) == 'menu-agents')
+                class: ("active" if content_for(:menu_item) == "menu-agents")
             li.my-2
-              =link_to 'Vos invitations', \
+              =link_to "Vos invitations", \
                 admin_organisation_invitations_path(current_organisation), \
-                class: ("active" if content_for(:menu_item) == 'menu-invitations')
+                class: ("active" if content_for(:menu_item) == "menu-invitations")
             li.my-2
-              = link_to 'Vos motifs', \
+              = link_to "Vos motifs", \
                 admin_organisation_motifs_path(current_organisation), \
-                class: ("active" if content_for(:menu_item) == 'menu-motifs')
+                class: ("active" if content_for(:menu_item) == "menu-motifs")
             - if current_agent_role.admin? && policy_scope(Organisation).count == 1
               li.my-2
                 = link_to "Sectorisation #{current_organisation.territory}", \

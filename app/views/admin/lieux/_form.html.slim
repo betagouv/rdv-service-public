@@ -1,5 +1,5 @@
 = simple_form_for [:admin, lieu.organisation, lieu] do |f|
-  = render 'model_errors', model: lieu
+  = render "model_errors", model: lieu
   = f.input :name, hint: "Le nom apparaîtra dans les notifications mails et SMS aux usagers"
   = f.input :phone_number, hint: "Ce numéro sera affiché coté usager pour leurs permettrent de vous contacter. Faite en sorte que les personnes qui répondront au téléphone puisse avoir accès à RDV-Solidarités"
   = f.input :address, input_html: { class: "places-js-container" }, hint: "L'adresse apparaîtra dans les notifications mails et SMS aux usagers"
@@ -11,7 +11,7 @@
     - if lieu.persisted?
       .col.text-left
         - if lieu.plage_ouvertures.any? || lieu.rdvs.any?
-          = button_tag "Supprimer", type: 'button', disabled: true, class: "btn btn-outline-danger"
+          = button_tag "Supprimer", type: "button", disabled: true, class: "btn btn-outline-danger"
         - else
           = link_to "Supprimer", admin_organisation_lieu_path(lieu.organisation, lieu), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce lieu ?"}
     .col.text-right
