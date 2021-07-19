@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_15_132110) do
+ActiveRecord::Schema.define(version: 2021_07_15_182043) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 2021_07_15_132110) do
   create_enum :sms_provider, [
     "netsize",
     "send_in_blue",
+    "contact_experience",
   ], force: :cascade
 
   create_table "absences", force: :cascade do |t|
