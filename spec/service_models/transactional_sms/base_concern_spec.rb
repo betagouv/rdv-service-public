@@ -141,11 +141,10 @@ describe TransactionalSms::BaseConcern, type: :service do
   end
 
   describe "#send!" do
-    let(:sms) { SomeModule::TestSms.new(build(:rdv), build(:user)) }
-
-    before { allow(SendTransactionalSmsService).to receive(:perform_with).with(sms) }
+    let(:sms) { SomeModule::TestSms.new(OpenStruct.new(build(:rdv).payload), build(:user)) }
 
     it "calls send service" do
+      expect(SendTransactionalSmsService).to receive(:perform_with)
       sms.send!
     end
   end
