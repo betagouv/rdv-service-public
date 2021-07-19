@@ -1,5 +1,5 @@
-- content_for(:menu_item) { 'menu-plages-ouvertures' }
-- content_for(:menu_agent_select_path_helper_name) { 'admin_organisation_agent_plage_ouvertures_path' }
+- content_for(:menu_item) { "menu-plages-ouvertures" }
+- content_for(:menu_agent_select_path_helper_name) { "admin_organisation_agent_plage_ouvertures_path" }
 
 - content_for :title do
   - if current_agent == @agent
@@ -8,15 +8,15 @@
     | Plages d'ouverture de #{@agent.full_name_and_service}
 
 - content_for :breadcrumb do
-  = link_to 'Créer une plage d\'ouverture', new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-white align-bottom"
+  = link_to "Créer une plage d'ouverture", new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-white align-bottom"
 
 .card.pb-3
   - if @display_tabs
     ul.nav.nav-tabs.px-2.mt-2
       li.nav-item
-        = link_to "En cours", admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, current_tab: 'not_expired'), class: "nav-link #{'active' if @current_tab != 'expired'}"
+        = link_to "En cours", admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, current_tab: "not_expired"), class: "nav-link #{'active' if @current_tab != 'expired'}"
       li.nav-item
-        = link_to "Passées", admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, current_tab: 'expired'), class: "nav-link #{'active' if @current_tab == 'expired'}"
+        = link_to "Passées", admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, current_tab: "expired"), class: "nav-link #{'active' if @current_tab == 'expired'}"
 
   - if @plage_ouvertures.any?
     table.table
@@ -30,7 +30,7 @@
       tbody
         = render @plage_ouvertures
     .d-flex.justify-content-center
-      = paginate @plage_ouvertures, theme: 'twitter-bootstrap-4'
+      = paginate @plage_ouvertures, theme: "twitter-bootstrap-4"
   - else
     .row.justify-content-md-center.p-2.mt-3
       .col-md-6.text-center.mb-2

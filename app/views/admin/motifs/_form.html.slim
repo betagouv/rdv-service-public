@@ -1,6 +1,6 @@
 = simple_form_for [:admin, motif.organisation, motif] do |f|
 
-  = render 'model_errors', model: motif
+  = render "model_errors", model: motif
 
   .card
     .card-body
@@ -17,7 +17,7 @@
   .card
     .card-body
       h5.card-title= t("activerecord.attributes.motif.location_type")
-      - [:public_office, :phone, :home].each do |value|
+      - %i[public_office phone home].each do |value|
         = label_tag do
           = f.radio_button(:location_type, value)
           span.ml-1= Motif.human_enum_name(:location_type, value)
@@ -77,7 +77,7 @@
   .card
     .card-body
       h5.card-title= t("activerecord.attributes.motif.visibility_type")
-      - [:visible_and_notified, :visible_and_not_notified, :invisible].each do |value|
+      - %i[visible_and_notified visible_and_not_notified invisible].each do |value|
         = label_tag do
           = f.radio_button(:visibility_type, value)
           span.ml-1= Motif.human_enum_name(:visibility_type, value)

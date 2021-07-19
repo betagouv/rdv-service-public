@@ -1,4 +1,4 @@
-- content_for(:menu_item) { 'menu-agents' }
+- content_for(:menu_item) { "menu-agents" }
 
 - content_for :title do
   | Modifier le rôle de l'agent #{@agent_role.agent.full_name}
@@ -15,9 +15,9 @@
     .card
       .card-body
         = simple_form_for [:admin, current_organisation, @agent_role] do |f|
-          = render 'model_errors', model: @agent_role
+          = render "model_errors", model: @agent_role
           = f.simple_fields_for :agent do |ff|
-            = ff.input :service_id, collection: [@agent_role.agent.service], as: :select, label: 'Service', hint: "Vous ne pouvez pas changer un agent de service, cela créerait des incohérences. Si vous voulez vraiment réaliser cette opération, il faut supprimer et recréer le compte de l'agent", disabled: true
+            = ff.input :service_id, collection: [@agent_role.agent.service], as: :select, label: "Service", hint: "Vous ne pouvez pas changer un agent de service, cela créerait des incohérences. Si vous voulez vraiment réaliser cette opération, il faut supprimer et recréer le compte de l'agent", disabled: true
 
           = f.input :organisation, as: :hidden
           = f.input :level, \
@@ -33,6 +33,6 @@
                   admin_organisation_agent_path(current_organisation, @agent_role.agent), \
                   data: { confirm: @agent_removal_presenter.confirm_message }, \
                   method: :delete, \
-                  class: 'btn btn-outline-danger'
+                  class: "btn btn-outline-danger"
             .col.text-right
               = f.button :submit

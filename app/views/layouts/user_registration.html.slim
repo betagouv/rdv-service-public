@@ -1,21 +1,21 @@
 doctype html
 html lang="fr"
   head
-    = render 'common/head'
+    = render "common/head"
   body class="user"
-    = render 'layouts/rdv_solidarites_instance_name'
-    = render 'layouts/degraded_service', message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
+    = render "layouts/rdv_solidarites_instance_name"
+    = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
     .bg-primary
       .container
-        = render 'common/header'
+        = render "common/header"
         = yield :header
     .container
       .row
         .col-md-8.m-auto.pt-3
           - if content_for :title
             h1.mb-3= yield :title
-          = render 'layouts/flash'
+          = render "layouts/flash"
           = yield
 
     #modal-holder
-    = render 'common/footer_users'
+    = render "common/footer_users"

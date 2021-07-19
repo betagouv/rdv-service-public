@@ -14,7 +14,7 @@
       tbody
         - resource.versions.reverse_order.each  do |version|
 
-          - version.changeset.except('updated_at').each do |property,change|
+          - version.changeset.except("updated_at").each do |property,change|
             tr
               td=property
               td=change.first.to_s.html_safe

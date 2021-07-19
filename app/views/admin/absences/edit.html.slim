@@ -1,4 +1,4 @@
-- content_for(:menu_item) { 'menu-absences' }
+- content_for(:menu_item) { "menu-absences" }
 
 - content_for :title do
   - if @absence.agent == current_agent
@@ -21,4 +21,4 @@
   .col-md-6
     .card
       .card-body
-        = render 'form', absence: @absence, agent: @agent
+        = render "form", absence: @absence, agent: @agent

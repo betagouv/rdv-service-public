@@ -1,20 +1,20 @@
-- content_for(:menu_item) { 'menu-departement-sectorisation-test' }
+- content_for(:menu_item) { "menu-departement-sectorisation-test" }
 - content_for(:title) { "Test sectorisation" }
 
 = simple_form_for \
   @sectorisation_test_form, \
   url: admin_territory_sectorisation_test_path, \
   method: :get,
-  as: '' \
+  as: "" \
 do |f|
   .card
     .card-header Recherche
     .card-body
-      = render 'model_errors', model: @sectorisation_test_form
+      = render "model_errors", model: @sectorisation_test_form
       = f.input \
         :where, \
         label: "Adresse", \
-        placeholder: 'ex : 21 rue Anatole France, Calais', \
+        placeholder: "ex : 21 rue Anatole France, Calais", \
         input_html: { class: "places-js-container" }
       .row.align-items-center.bg-light.py-2.mb-2
         .col-lg-2 Infos de la Base Adresse

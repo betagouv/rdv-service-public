@@ -1,11 +1,11 @@
-- content_for(:menu_item) { 'menu-users' }
+- content_for(:menu_item) { "menu-users" }
 
 - content_for :title do
   | Vos usagers
 
 - content_for :breadcrumb do
-  = link_to 'Fusionner deux usagers', new_admin_organisation_merge_users_path(current_organisation), class: "btn btn-outline-white mr-2"
-  = link_to 'Créer un usager', new_admin_organisation_user_path(current_organisation), class: "btn btn-outline-white"
+  = link_to "Fusionner deux usagers", new_admin_organisation_merge_users_path(current_organisation), class: "btn btn-outline-white mr-2"
+  = link_to "Créer un usager", new_admin_organisation_user_path(current_organisation), class: "btn btn-outline-white"
 
 .card.border-info
   .card-header ⚙️ Filtres et recherche
@@ -13,9 +13,9 @@
     = simple_form_for(@form, method: "GET", url: url_for({}), as: "") do |f|
       .row
         .col-md-6
-          = f.input :search, placeholder: 'Prénom, Nom, Email, Téléphone', label: "Recherche", input_html: { autocomplete: 'off', class: 'search-form-control', value: params[:search] }, required: false
+          = f.input :search, placeholder: "Prénom, Nom, Email, Téléphone", label: "Recherche", input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
         .col-md-6
-          = f.input :agent_id, collection: policy_scope(Agent).within_organisation(current_organisation), label: "Agent référent", label_method: :reverse_full_name, input_html: { class: 'select2-input' }
+          = f.input :agent_id, collection: policy_scope(Agent).within_organisation(current_organisation), label: "Agent référent", label_method: :reverse_full_name, input_html: { class: "select2-input" }
       input.btn.btn-primary.d-print-none type="submit" value="Rechercher"
 
 .card
@@ -36,7 +36,7 @@
     - elsif @users.total_pages > 1
       .m-3
         .d-flex.justify-content-center id="users-pagination"
-          = paginate @users, theme: 'twitter-bootstrap-4'
+          = paginate @users, theme: "twitter-bootstrap-4"
           .text-center= page_entries_info @users
   - else
     .card-body
@@ -48,4 +48,4 @@
             i.fa.fa-users.fa-stack-1x.text-white
 
   .m-3.text-center
-    = link_to 'Créer un usager', new_admin_organisation_user_path(current_organisation), class: "btn btn-primary"
+    = link_to "Créer un usager", new_admin_organisation_user_path(current_organisation), class: "btn btn-primary"

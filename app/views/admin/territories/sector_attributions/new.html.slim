@@ -1,4 +1,4 @@
-- content_for(:menu_item) { 'menu-departement-sectors' }
+- content_for(:menu_item) { "menu-departement-sectors" }
 
 - content_for :title do
   | Nouvelle attribution pour le secteur #{@sector.name}
@@ -18,7 +18,7 @@
       .card-overlay-spinner.js-spinner-overlay.d-none
         .spinner.spinner-border
       .card-body
-        = render 'model_errors', model: @sector_attribution
+        = render "model_errors", model: @sector_attribution
         = render "form", \
           sector_attribution: @sector_attribution, \
           sector: @sector, \

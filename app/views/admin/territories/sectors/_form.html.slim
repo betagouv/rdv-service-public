@@ -1,4 +1,4 @@
-= render 'model_errors', model: sector
+= render "model_errors", model: sector
 
 = simple_form_for( \
   sector, \
@@ -8,7 +8,7 @@
   = f.input :name
   = f.input :human_id, hint: "permet d'identifier l'organisation dans les fichiers de sectorisation"
   .text-right
-    div= f.submit class: 'btn btn-primary'
+    div= f.submit class: "btn btn-primary"
     - if sector.new_record?
       div ou
-      div = f.submit class: 'btn btn-light', value: "Créer puis créer un autre secteur"
+      div = f.submit class: "btn btn-light", value: "Créer puis créer un autre secteur"

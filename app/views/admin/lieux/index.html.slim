@@ -1,11 +1,11 @@
-- content_for(:menu_item) { 'menu-lieux' }
+- content_for(:menu_item) { "menu-lieux" }
 
 - content_for :title do
   | Vos lieux de consultation
 
 - if current_agent_can?(:create, Lieu)
   - content_for :breadcrumb do
-    = link_to 'Ajouter un lieu', new_admin_organisation_lieu_path(current_organisation), class: "btn btn-outline-white"
+    = link_to "Ajouter un lieu", new_admin_organisation_lieu_path(current_organisation), class: "btn btn-outline-white"
 
 .card
   .card-body
@@ -20,7 +20,7 @@
             th Actions
         tbody
           = render @lieux
-      .d-flex.justify-content-center= paginate @lieux, theme: 'twitter-bootstrap-4'
+      .d-flex.justify-content-center= paginate @lieux, theme: "twitter-bootstrap-4"
     - else
       .row.justify-content-md-center
         .col-md-6.text-center.my-5
@@ -32,4 +32,4 @@
 
     - if current_agent_can?(:create, Lieu)
       .text-center
-        = link_to 'Ajouter un lieu', new_admin_organisation_lieu_path(current_organisation), class: "btn btn-primary"
+        = link_to "Ajouter un lieu", new_admin_organisation_lieu_path(current_organisation), class: "btn btn-primary"

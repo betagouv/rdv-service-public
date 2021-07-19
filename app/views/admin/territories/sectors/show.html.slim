@@ -1,10 +1,10 @@
-- content_for(:menu_item) { 'menu-departement-sectors' }
+- content_for(:menu_item) { "menu-departement-sectors" }
 
 -content_for :html_head_prepend do
   / mapbox is hard to use with webpack because of
   / https://github.com/mapbox/mapbox-gl-js/issues/1649
-  <script src='https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js'></script>
-  <link href='https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css' rel='stylesheet' />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css" rel="stylesheet" />
 
 - content_for :title do
   | Secteur #{@sector.name}
@@ -81,7 +81,7 @@
               admin_territory_sector_zones_path(current_territory, @sector), \
               method: :delete, \
               data: { confirm: "Êtes-vous sûr de vouloir retirer ces #{@zones.total_count} communes et rues ?" }, \
-              class: 'btn btn-danger' \
+              class: "btn btn-danger" \
             )
           .mb-2= link_to admin_territory_sector_zones_path(current_territory, @sector, format: "xls"), class: "btn btn-light" do
             i.fa.fa-download>
@@ -159,5 +159,5 @@
           li.mb-1[
             data-color=sector_zone_color(@sector)
             data-city-codes-json={colors: @sector.zones.pluck(:city_code)}.to_json
-            class='js-legend-organisation'
+            class="js-legend-organisation"
           ]

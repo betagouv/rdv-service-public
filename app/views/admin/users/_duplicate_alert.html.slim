@@ -1,6 +1,7 @@
+- existing_attributes = attributes.map { t("activerecord.attributes.user.#{_1}") }.map(&:downcase).join(", ")
 div.flex-grow-1
   p
-    span>= "Un usager avec le même #{attributes.map { t("activerecord.attributes.user.#{_1}") }.map(&:downcase).join(",")} existe déjà"
+    span>= "Un usager avec le même #{existing_attributes} existe déjà"
     - if user.organisation_ids.exclude?(current_organisation.id)
       span dans une autre organisation
   p
@@ -15,7 +16,7 @@ div.flex-grow-1
   div.text-right
     - if user.organisation_ids.include?(current_organisation.id)
       - if from_modal
-        = link_to "Choisir cet usager", add_query_string_params_to_url(request_referer, 'user_ids[]': user.id), class: "btn btn-secondary btn-small"
+        = link_to "Choisir cet usager", add_query_string_params_to_url(request_referer, "user_ids[]": user.id), class: "btn btn-secondary btn-small"
       - else
         = link_to "Modifier cet usager", edit_admin_organisation_user_path(current_organisation, user), class: "btn btn-secondary btn-small"
     - else

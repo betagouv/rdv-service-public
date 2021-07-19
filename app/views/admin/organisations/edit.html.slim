@@ -1,4 +1,4 @@
-- content_for(:menu_item) { 'menu-organisation' }
+- content_for(:menu_item) { "menu-organisation" }
 
 - content_for :title do
   | Modifier l'organisation
@@ -8,7 +8,7 @@
     .card
       .card-body
         = simple_form_for [:admin, @organisation]  do |f|
-          = render 'model_errors', model: @organisation
+          = render "model_errors", model: @organisation
           = f.input :name
           = f.input :phone_number, placeholder: "04 65 71 12 34"
           = f.input :website, placeholder: "https://rdv-solidarites.fr"

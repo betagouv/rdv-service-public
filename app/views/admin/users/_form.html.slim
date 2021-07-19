@@ -10,17 +10,17 @@
   - f.simple_fields_for :user_profiles, user.profile_for(current_organisation) do |f_user_profile|
     = f_user_profile.input :organisation_id, as: :hidden, wrapper: false
 
-    = hidden_field '', :return_location, value: params[:return_location]
+    = hidden_field "", :return_location, value: params[:return_location]
 
     - if from_modal?
-      = hidden_field '', :modal, value: true
-    = render 'model_errors', model: user_form, f: f
+      = hidden_field "", :modal, value: true
+    = render "model_errors", model: user_form, f: f
 
     = collapsible_form_fields_for_warnings(user_form) do
       = f.input( \
         :responsability_type, \
         as: :radio_buttons, \
-        collection: [:responsible, :relative], \
+        collection: %i[responsible relative], \
         checked: @role, \
         label_method: -> { I18n.t("activerecord.attributes.user.responsability_types.#{_1}") }, \
         disabled: user.persisted?, \
@@ -29,7 +29,7 @@
           autocomplete: "off", \
           class: "js-responsability-type" \
         }, \
-        label_html: { class: 'mb-0' } \
+        label_html: { class: "mb-0" } \
       )
 
       div *div_opts[:responsible]
@@ -78,8 +78,8 @@
                   collection: policy_scope(User).responsible.order_by_last_name, \
                   label_method: -> { reverse_full_name_and_birthdate(_1) }, \
                   label: false, \
-                  **{input_html: { class: 'select2-input' }}.deep_merge(input_opts[:relative_existing]), \
-                  required: true, \
+                  **{input_html: { class: "select2-input" }}.deep_merge(input_opts[:relative_existing]), \
+                  required: true \
                 )
               - unless user.persisted?
                 .tab-pane[
@@ -101,7 +101,7 @@
 
       .text-right
         - if from_modal?
-          = link_to "Annuler", "#", class: "btn btn-link", data: { dismiss: 'modal' }
+          = link_to "Annuler", "#", class: "btn btn-link", data: { dismiss: "modal" }
         - else
           = link_to "Annuler", agent_user_form_cancel_path(user), class: "btn btn-link"
 
