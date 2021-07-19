@@ -1,4 +1,4 @@
-- content_for(:menu_item) { 'menu-departement-zone-imports' }
+- content_for(:menu_item) { "menu-departement-zone-imports" }
 
 - content_for :title do
   | Sectorisation #{current_territory} - Importer un fichier
@@ -66,17 +66,17 @@
     .text-center
       .mb-1.w-75.m-auto.text-muted 3 premières lignes: communes entières, 2 dernières lignes: 2 rues spécifiques
       ul.list-inline
-        li.list-inline-item= link_to "/zones_example.xls", class: 'btn btn-link', download: "zones_example.xls" do
+        li.list-inline-item= link_to "/zones_example.xls", class: "btn btn-link", download: "zones_example.xls" do
           i.fa.fa-download>
           span> Fichier d'exemple au format XLS
-        li.list-inline-item= link_to "/zones_example.csv", class: 'btn btn-link', download: "zones_example.csv" do
+        li.list-inline-item= link_to "/zones_example.csv", class: "btn btn-link", download: "zones_example.csv" do
           i.fa.fa-download>
           span> Fichier d'exemple au format CSV
 
     ul
       li
         span> ⚠️ Utilisez les
-        = link_to 'https://fr.wikipedia.org/wiki/Code_officiel_g%C3%A9ographique#Code_commune', target: '_blank' do
+        = link_to "https://fr.wikipedia.org/wiki/Code_officiel_g%C3%A9ographique#Code_commune", target: "_blank" do
           span> codes communes INSEE
           i.fa.fa-external-link-alt>
         | et non les codes postaux

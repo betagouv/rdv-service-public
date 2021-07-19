@@ -1,18 +1,18 @@
 doctype html
 html lang="fr"
   head
-    = render 'common/head'
+    = render "common/head"
   body class="#{agents_or_users_body_class}"
-    = render 'layouts/rdv_solidarites_instance_name'
-    = render 'layouts/degraded_service', message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
+    = render "layouts/rdv_solidarites_instance_name"
+    = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
     .bg-primary
       .container
         - if current_user.present?
           = render "common/header_user_logged"
         - else
-          = render 'common/header'
+          = render "common/header"
 
-        = render 'layouts/flash'
+        = render "layouts/flash"
         - if content_for :title
           .row
             .col-md-12.d-flex.justify-content-between.align-items-center
@@ -23,7 +23,7 @@ html lang="fr"
 
       = yield :header
 
-    div class="#{ 'container' if params[:controller].include?('users/') }"
+    div class="#{ "container" if params[:controller].include?("users/") }"
       = yield
     #modal-holder
-    = render 'common/footer_users'
+    = render "common/footer_users"

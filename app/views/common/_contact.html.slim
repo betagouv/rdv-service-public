@@ -3,7 +3,7 @@
 - if local_assigns[:message].blank?
   .pt-1.text-light.text-white.mt-2
     span> Retrouver les coordonnées de votre département sur
-    = link_to "la page contact", contact_path, class: 'text-white text-underline'
+    = link_to "la page contact", contact_path, class: "text-white text-underline"
 
 - elsif contactable_organisations.any?
   .pt-1.text-light.text-white
@@ -20,12 +20,12 @@
           - if organisation.phone_number.present?
             div
               i.fa.fa-phone>
-              = link_to organisation.phone_number, "tel:#{organisation.phone_number}", class: 'text-white'
+              = link_to organisation.phone_number, "tel:#{organisation.phone_number}", class: "text-white"
           - if organisation.email.present?
             div
               i.fa.fa-envelope>
-              = mail_to organisation.email, "#{organisation.email}", class: 'text-white'
+              = mail_to organisation.email, "#{organisation.email}", class: "text-white"
           - if organisation.website.present?
             div
               i.fa.fa-file-o>
-              = link_to organisation.website, "#{organisation.website}", class: 'text-white'
+              = link_to organisation.website, "#{organisation.website}", class: "text-white"

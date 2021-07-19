@@ -25,7 +25,7 @@
           .row
             .col-lg-4
               .px-1
-                - [:seen, :excused, :notexcused].each do |temporal_status|
+                - %i[seen excused notexcused].each do |temporal_status|
                   = render "stats/rdv_counter_without_link", \
                     temporal_status: temporal_status, \
                     count: @stats.rdvs.status(temporal_status).count

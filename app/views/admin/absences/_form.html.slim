@@ -1,10 +1,10 @@
 = simple_form_for [:admin, absence.organisation, absence] do |f|
-  = render 'model_errors', model: absence
+  = render "model_errors", model: absence
   = f.hidden_field :agent_id
-  = f.input :title, hint:'Uniquement visible en interne', placeholder: 'Ex: Absence pour formation premiers secours'
+  = f.input :title, hint:"Uniquement visible en interne", placeholder: "Ex: Absence pour formation premiers secours"
 
   hr
-  = render partial: 'common/recurrence', locals: { f: f, model: absence }
+  = render partial: "common/recurrence", locals: { f: f, model: absence }
 
   .row
     - if absence.persisted?

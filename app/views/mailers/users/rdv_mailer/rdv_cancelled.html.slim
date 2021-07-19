@@ -12,9 +12,9 @@ div
     p Vous pouvez reprendre un rendez-vous en cliquant sur le lien ci-dessous
 
     .btn-wrapper
-      = link_to 'Reprendre RDV', lieux_url(search: { \
+      = link_to "Reprendre RDV", lieux_url(search: { \
         departement: @rdv.organisation_departement_number, \
         motif_name_with_location_type: @rdv.motif_name_with_location_type, \
         service: @rdv.motif_service_id, \
         where: @rdv.address \
-      }), class:'btn btn-primary'
+      }), class:"btn btn-primary"

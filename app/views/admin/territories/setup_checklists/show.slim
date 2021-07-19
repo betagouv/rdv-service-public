@@ -1,4 +1,4 @@
-- content_for(:menu_item) { 'menu-departement-setup-checklist' }
+- content_for(:menu_item) { "menu-departement-setup-checklist" }
 
 - content_for :title do
   | Sectorisation #{current_territory}
@@ -18,13 +18,13 @@
             i.fa.fa-external-link-alt>
 
         p.d-flex.justify-content-between.align-items-center
-          span= link_to "Importer un fichier", new_admin_territory_zone_import_path(current_territory), class: 'btn btn-primary'
+          span= link_to "Importer un fichier", new_admin_territory_zone_import_path(current_territory), class: "btn btn-primary"
           span ou
-          span= link_to "Créer des secteurs".html_safe, admin_territory_sectors_path(current_territory), class: 'btn btn-link'
+          span= link_to "Créer des secteurs".html_safe, admin_territory_sectors_path(current_territory), class: "btn btn-link"
         hr
         p
           span> En cas de problème, veuillez nous écrire à cette adresse pour que nous puissions vous aider:
-          a href='mailto:dev@rdv-solidarites.fr' dev@rdv-solidarites.fr
+          a href="mailto:dev@rdv-solidarites.fr" dev@rdv-solidarites.fr
 
   .col-md-6
     .card

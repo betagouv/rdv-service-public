@@ -1,5 +1,5 @@
-- content_for(:menu_item) { 'menu-absences' }
-- content_for(:menu_agent_select_path_helper_name) { 'admin_organisation_agent_absences_path' }
+- content_for(:menu_item) { "menu-absences" }
+- content_for(:menu_agent_select_path_helper_name) { "admin_organisation_agent_absences_path" }
 
 - content_for :title do
   - if current_agent == @agent
@@ -8,15 +8,17 @@
     | Absences de #{@agent.full_name_and_service}
 
 - content_for :breadcrumb do
-  = link_to 'Créer une absence', new_admin_organisation_agent_absence_path(current_organisation, @agent.id), class: "btn btn-outline-white align-bottom"
+  = link_to "Créer une absence", new_admin_organisation_agent_absence_path(current_organisation, @agent.id), class: "btn btn-outline-white align-bottom"
 
 .card.pb-3
   - if @display_tabs
     ul.nav.nav-tabs.px-2.mt-2
       li.nav-item
-        = link_to "En cours", admin_organisation_agent_absences_path(current_organisation, @agent.id, current_tab: 'not_expired'), class: "nav-link #{'active' if @current_tab != 'expired'}"
+        - active = @current_tab != "expired" ? "active" : ""
+        = link_to "En cours", admin_organisation_agent_absences_path(current_organisation, @agent.id, current_tab: "not_expired"), class: "nav-link #{active}"
       li.nav-item
-        = link_to "Passées", admin_organisation_agent_absences_path(current_organisation, @agent.id, current_tab: 'expired'), class: "nav-link #{'active' if @current_tab == 'expired'}"
+        - active = @current_tab == "expired" ? "active" : ""
+        = link_to "Passées", admin_organisation_agent_absences_path(current_organisation, @agent.id, current_tab: "expired"), class: "nav-link #{active}"
 
   - if @absences.any?
     table.table
@@ -28,7 +30,7 @@
       tbody
         = render @absences
     .d-flex.justify-content-center
-      = paginate @absences, theme: 'twitter-bootstrap-4'
+      = paginate @absences, theme: "twitter-bootstrap-4"
 
   - else
     .row.justify-content-md-center.p-2.mt-3
@@ -43,7 +45,7 @@
           i.fa.fa-circle.fa-stack-2x.text-primary
           i.far.fa-calendar.fa-stack-1x.text-white
   .text-center.py-2
-    = link_to new_admin_organisation_agent_absence_path(current_organisation, @agent.id), class: 'btn btn-primary' do
+    = link_to new_admin_organisation_agent_absence_path(current_organisation, @agent.id), class: "btn btn-primary" do
       - if @agent == current_agent
         | Créer une absence
       - else

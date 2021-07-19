@@ -1,4 +1,4 @@
-- content_for(:menu_item) { 'menu-agendas' }
+- content_for(:menu_item) { "menu-agendas" }
 - content_for(:title) { "Créer RDV 2/4" }
 
 - modals_return_location = new_admin_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 2))
@@ -11,9 +11,9 @@
   next_steps: [{step: 3}, {step: 4}] \
 do
   = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
-    = render 'model_errors', model: @rdv_wizard
+    = render "model_errors", model: @rdv_wizard
     = render "hidden_fields", f: f, step: 2, \
-      fields: [:motif_id, :starts_at, :lieu_id, :service_id], \
+      fields: %i[motif_id starts_at lieu_id service_id], \
       agent_ids: @rdv.agent_ids
 
     - @rdv.users.each do |user|
@@ -26,7 +26,7 @@ do
             | &nbsp;
             = reverse_full_name_and_birthdate(user)
             = relative_tag(user)
-          div.ml-2= link_to "╳ Retirer", "#", class: "js-remove-user", data: { 'user-id': user.id }
+          div.ml-2= link_to "╳ Retirer", "#", class: "js-remove-user", data: { "user-id": user.id }
           div.ml-2
             = link_to \
               "✎ Modifier usager", \
@@ -35,20 +35,21 @@ do
               ), \
               data: { modal: "true" }
 
-    .pl-2.mt-2= link_to "+ Ajouter un autre usager", "#", class: "js-toggle-add-user-interface #{'d-none' if @rdv.users.empty?}"
+    - show_add_user = @rdv.users.empty? ? "d-none" : ""
+    .pl-2.mt-2= link_to "+ Ajouter un autre usager", "#", class: "js-toggle-add-user-interface #{show_add_user}"
 
-    .js-add-user-interface.mt-2 class=('d-none' if @rdv.users.any?)
+    .js-add-user-interface.mt-2 class=("d-none" if @rdv.users.any?)
       =  select_tag :status,
       options_for_select(policy_scope(User).order_by_last_name.map {|u| [ reverse_full_name_and_birthdate(u), u.id ]}),
       include_blank: "Sélectionner un usager",
       required: false,
       class: "select2-input js-new-rdv-users-select",
-      data: { "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.users.map(&:id)), dataType: 'json', delay: 250 }} }
+      data: { "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.users.map(&:id)), dataType: "json", delay: 250 }} }
 
       span.small.text-muted
         | L'usager n'existe pas ?&nbsp;
         = link_to \
-          'Créer un usager', \
+          "Créer un usager", \
           new_admin_organisation_user_path( \
             current_organisation, return_location: modals_return_location, role: default_service_selection_from(@rdv.motif.service) \
           )
@@ -58,5 +59,5 @@ do
     = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f
     hr.mb-0
 
-input type='hidden' name="js-current-organisation-id" value=current_organisation.id
-input type='hidden' name="js-canonical-path" value=new_admin_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 2))
+input type="hidden" name="js-current-organisation-id" value=current_organisation.id
+input type="hidden" name="js-canonical-path" value=new_admin_organisation_rdv_wizard_step_path(@rdv_wizard.to_query.merge(step: 2))
