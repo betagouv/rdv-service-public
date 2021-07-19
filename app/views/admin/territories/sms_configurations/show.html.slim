@@ -11,13 +11,8 @@
             strong> Fournisseur :
             = current_territory.sms_provider || "N/A"
 
-          - if current_territory.sms_configuration.present?
-            ul.list-unstyled.mb-5
-              - current_territory.sms_configuration.each do |label, value|
-                li.mb-2
-                  strong> = label
-                  = value || "N/A"
-          - else
-            .text-muted.mb-3 = t(".explain_default_provider")
+          .mb-2
+            strong> Clef API / Mot de passe :
+            = current_territory.sms_configuration || "N/A"
 
           .text-right= link_to "Modifier", edit_admin_territory_sms_configuration_path(current_territory), class: "btn btn-primary"
