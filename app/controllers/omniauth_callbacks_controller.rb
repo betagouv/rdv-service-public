@@ -7,7 +7,6 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     flash[:success] = upsert_service.new_user? ? "Votre compte a été créé" : "Vous êtes connecté·e"
     bypass_sign_in upsert_service.user, scope: :user
-    upsert_service.user.update(confirmed_at: Time.zone.now)
     session[:connected_with_franceconnect] = true
     redirect_to after_sign_in_path_for(upsert_service.user)
   end

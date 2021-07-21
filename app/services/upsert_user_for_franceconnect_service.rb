@@ -30,6 +30,7 @@ class UpsertUserForFranceconnectService < BaseService
     @user = User.new(
       user_attribute_values_from_fc.merge(
         email: omniauth_info.email,
+        confirmed_at: Time.zone.now,
         created_through: "franceconnect_sign_up"
       )
     )
