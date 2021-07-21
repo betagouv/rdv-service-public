@@ -112,6 +112,6 @@ class SendTransactionalSmsService < BaseService
   # SFR with mail2SMS
   #
   def send_with_sfr_mail2sms
-    Admins::SfrMail2Sms.send_sms(@key, @phone_number, @content).deliver_now
+    Admins::SfrMail2SmsMailer.send_sms(@key, @phone_number, @content).deliver_now
   end
 end
