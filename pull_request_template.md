@@ -1,4 +1,4 @@
-close #issue_number
+Close #issue_number
 
 // Description de la fonctionnalité ou du bug
 
