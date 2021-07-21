@@ -108,4 +108,10 @@ class SendTransactionalSmsService < BaseService
     parsed_res = JSON.parse(response.body)
     raise ApiError, { message: self, response: parsed_res } if parsed_res["status"] == "KO"
   end
+
+  # SFR with mail2SMS
+  #
+  def send_with_sfr_mail2sms
+    Admins::SfrMail2Sms.send_sms(@key, @phone_number, @content).deliver_now
+  end
 end
