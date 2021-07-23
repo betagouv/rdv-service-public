@@ -109,10 +109,6 @@ class User < ApplicationRecord
     "user_#{id}@deleted.rdv-solidarites.fr"
   end
 
-  def deprecated_user_notes_for(organisation)
-    UserNote.where(organisation: organisation, user: self).order("created_at desc")
-  end
-
   def notes_for(organisation)
     profile_for(organisation)&.notes
   end

@@ -524,12 +524,3 @@ Rdv.create(
   user_ids: [user_org_paris_nord_josephine.id],
   context: "Visite à domicile"
 )
-
-# User Notes
-
-UserNote.create!(
-  user: user_org_paris_nord_patricia,
-  organisation: org_paris_nord,
-  agent: agent_org_paris_nord_pmi_martine,
-  text: "sympathique et joviale"
-)
