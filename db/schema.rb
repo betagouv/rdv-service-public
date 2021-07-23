@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_21_221957) do
+ActiveRecord::Schema.define(version: 2021_07_23_154303) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -354,18 +354,6 @@ ActiveRecord::Schema.define(version: 2021_07_21_221957) do
     t.index ["departement_number"], name: "index_territories_on_departement_number", unique: true, where: "((departement_number)::text <> ''::text)"
   end
 
-  create_table "user_notes", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "organisation_id", null: false
-    t.bigint "agent_id"
-    t.text "text"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["agent_id"], name: "index_user_notes_on_agent_id"
-    t.index ["organisation_id"], name: "index_user_notes_on_organisation_id"
-    t.index ["user_id"], name: "index_user_notes_on_user_id"
-  end
-
   create_table "user_profiles", force: :cascade do |t|
     t.bigint "organisation_id"
     t.bigint "user_id"
@@ -479,9 +467,6 @@ ActiveRecord::Schema.define(version: 2021_07_21_221957) do
   add_foreign_key "rdvs", "motifs"
   add_foreign_key "rdvs", "organisations"
   add_foreign_key "sector_attributions", "agents"
-  add_foreign_key "user_notes", "agents"
-  add_foreign_key "user_notes", "organisations"
-  add_foreign_key "user_notes", "users"
   add_foreign_key "users", "users", column: "responsible_id"
   add_foreign_key "webhook_endpoints", "organisations"
 end
