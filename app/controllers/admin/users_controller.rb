@@ -51,7 +51,7 @@ class Admin::UsersController < AgentAuthController
     prepare_new unless user_persisted
 
     if from_modal?
-      respond_modal_with @user_form, location: add_query_string_params_to_url(modal_return_location, 'user_ids[]': @user.id)
+      respond_modal_with @user_form, location: add_query_string_params_to_url(modal_return_location, 'user_ids[]': @user.id, modal: true)
     elsif user_persisted
       redirect_to admin_organisation_user_path(@organisation, @user), flash: { notice: "L'usager a été créé." }
     else
@@ -160,7 +160,7 @@ class Admin::UsersController < AgentAuthController
       view_locals: {
         current_organisation: current_organisation,
         from_modal: from_modal?,
-        return_location: modal_return_location
+        return_location: params[:return_location]
       }
     )
   end
