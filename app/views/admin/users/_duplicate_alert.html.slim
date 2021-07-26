@@ -1,6 +1,8 @@
-- existing_attributes = attributes.map { t("activerecord.attributes.user.#{_1}") }.map(&:downcase).join(", ")
-- return_location ||= admin_organisation_user_path(current_organisation, user)
-- from_modal ||= false
+ruby:
+  existing_attributes = attributes.map { t("activerecord.attributes.user.#{_1}") }.map(&:downcase).join(", ")
+  return_location ||= admin_organisation_user_path(current_organisation, user)
+  from_modal ||= false
+
 div.flex-grow-1
   p
     span>= "Un usager avec le même #{existing_attributes} existe déjà"
