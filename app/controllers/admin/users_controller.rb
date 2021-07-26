@@ -25,10 +25,8 @@ class Admin::UsersController < AgentAuthController
   end
 
   def search
-    @users = []
-    if search_params.present? && search_params.length >= 3
-      @users = policy_scope(User).where.not(id: params[:exclude_ids]).active.order_by_last_name.search_by_text(search_params)
-    end
+    @users = policy_scope(User).where.not(id: params[:exclude_ids]).active.order_by_last_name.limit(10)
+    @users = @users.search_by_text(search_params) if search_params
     skip_authorization
   end
 
@@ -52,8 +50,8 @@ class Admin::UsersController < AgentAuthController
     @user.invite! if invite_user?(@user, params)
     prepare_new unless user_persisted
 
-    if params[:return_location].present?
-      redirect_to add_query_string_params_to_url(params[:return_location], 'user_ids[]': @user.id), flash: { notice: "L'usager a été créé." }
+    if from_modal?
+      respond_modal_with @user_form, location: add_query_string_params_to_url(modal_return_location, 'user_ids[]': @user.id, modal: true)
     elsif user_persisted
       redirect_to admin_organisation_user_path(@organisation, @user), flash: { notice: "L'usager a été créé." }
     else
@@ -80,7 +78,7 @@ class Admin::UsersController < AgentAuthController
     @user.skip_reconfirmation! if @user.encrypted_password.blank?
     user_updated = @user_form.save
     if from_modal?
-      respond_modal_with @user_form, location: params[:return_modal_location].presence || request.referer
+      respond_modal_with @user_form, location: add_query_string_params_to_url(modal_return_location, 'user_ids[]': @user.id)
     elsif user_updated
       redirect_to admin_organisation_user_path(current_organisation, @user), flash: { notice: "L'usager a été modifié" }
     else
@@ -114,10 +112,19 @@ class Admin::UsersController < AgentAuthController
     @user = User.find(params.require(:id))
     authorize(current_organisation)
     flash[:notice] = "L'usager a été associé à votre organisation." if @user.add_organisation(current_organisation)
-    redirect_to admin_organisation_user_path(current_organisation, @user)
+
+    if from_modal?
+      redirect_to add_query_string_params_to_url(modal_return_location, 'user_ids[]': @user.id)
+    else
+      redirect_to admin_organisation_user_path(current_organisation, @user), flash: { notice: "L'usager a été créé." }
+    end
   end
 
   private
+
+  def modal_return_location
+    params[:return_location].presence || request.referer
+  end
 
   def invite_user?(user, params)
     user.persisted? && user.email.present? && (params[:invite_on_create] == "1")
@@ -153,7 +160,7 @@ class Admin::UsersController < AgentAuthController
       view_locals: {
         current_organisation: current_organisation,
         from_modal: from_modal?,
-        request_referer: request.referer
+        return_location: params[:return_location]
       }
     )
   end
