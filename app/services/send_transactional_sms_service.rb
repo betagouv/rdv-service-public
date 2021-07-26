@@ -114,4 +114,33 @@ class SendTransactionalSmsService < BaseService
   def send_with_sfr_mail2sms
     Admins::Grc92Mailer.send_sms(@key, @phone_number, @content).deliver_now
   end
+
+  # Clever Technologies
+  #
+  def send_with_clever_technologies
+    response = Typhoeus::Request.new(
+      "http://webservicesmultimedias.clever-is.fr/api/pushs",
+      method: :post,
+      userpwd: @key,
+      headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8", "Authorization": Base64.encode64(@key) },
+      timeout: 5,
+      body: {
+        datas: {
+          "text": @content,
+          "number_list": @phone_number,
+          "encodage":3,
+        }
+        originatingAddress: SENDER_NAME,
+        originatorTON: 1,
+        campaignName: @tags.join(" ").truncate(49),
+        maxConcatenatedMessages: 10
+      }
+    ).run
+
+    raise Timeout if response.timed_out?
+    raise HttpError, { message: self, response: "code: #{response.code}" } if response.failure?
+
+    parsed_res = JSON.parse(response.body)
+    raise ApiError, { message: self, response: parsed_res } unless parsed_res["responseCode"].zero?
+  end
 end
