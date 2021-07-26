@@ -114,7 +114,7 @@ class Admin::UsersController < AgentAuthController
     flash[:notice] = "L'usager a été associé à votre organisation." if @user.add_organisation(current_organisation)
 
     if from_modal?
-      respond_modal_with @user_form, location: add_query_string_params_to_url(modal_return_location, 'user_ids[]': @user.id)
+      redirect_to add_query_string_params_to_url(modal_return_location, 'user_ids[]': @user.id)
     else
       redirect_to admin_organisation_user_path(current_organisation, @user), flash: { notice: "L'usager a été créé." }
     end
@@ -160,7 +160,7 @@ class Admin::UsersController < AgentAuthController
       view_locals: {
         current_organisation: current_organisation,
         from_modal: from_modal?,
-        request_referer: request.referer
+        return_location: modal_return_location
       }
     )
   end
