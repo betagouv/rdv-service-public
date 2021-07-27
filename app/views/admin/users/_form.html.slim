@@ -74,7 +74,7 @@
               ]
                 = f.association( \
                   :responsible, \
-                  collection: policy_scope(User).responsible.order_by_last_name, \
+                  collection: policy_scope(User).responsible.order_by_last_name.limit(10), \
                   label_method: -> { reverse_full_name_and_birthdate(_1) }, \
                   label: false, \
                   **{input_html: { class: "select2-input" }}.deep_merge(input_opts[:relative_existing]), \
