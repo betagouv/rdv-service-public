@@ -128,7 +128,11 @@ class SendTransactionalSmsService < BaseService
           text: @content,
           number_list: @phone_number,
           encodage: 3
-        }
+        },
+        originatingAddress: SENDER_NAME,
+        originatorTON: 1,
+        campaignName: @tags.join(" ").truncate(49),
+        maxConcatenatedMessages: 10
       }
     ).run
 
