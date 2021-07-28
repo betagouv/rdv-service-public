@@ -78,7 +78,7 @@ class Admin::UsersController < AgentAuthController
     @user.skip_reconfirmation! if @user.encrypted_password.blank?
     user_updated = @user_form.save
     if from_modal?
-      respond_modal_with @user_form, location: add_query_string_params_to_url(modal_return_location, 'user_ids[]': @user.id)
+      respond_modal_with @user_form, location: modal_return_location
     elsif user_updated
       redirect_to admin_organisation_user_path(current_organisation, @user), flash: { notice: "L'usager a été modifié" }
     else
