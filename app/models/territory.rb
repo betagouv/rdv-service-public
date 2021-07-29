@@ -22,7 +22,13 @@ class Territory < ApplicationRecord
     where(id: Organisation.with_upcoming_rdvs.distinct.select(:territory_id))
   }
 
-  enum sms_provider: { netsize: "netsize", send_in_blue: "send_in_blue", contact_experience: "contact_experience", sfr_mail2sms: "sfr_mail2sms" }, _prefix: true
+  enum sms_provider: {
+    netsize: "netsize",
+    send_in_blue: "send_in_blue",
+    contact_experience: "contact_experience",
+    sfr_mail2sms: "sfr_mail2sms",
+    clever_technologies: "clever_technologies"
+  }, _prefix: true
 
   def to_s
     "#{departement_number} - #{name}"
