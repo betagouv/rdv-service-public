@@ -121,19 +121,14 @@ class SendTransactionalSmsService < BaseService
     response = Typhoeus::Request.new(
       "http://webservicesmultimedias.clever-is.fr/api/pushs",
       method: :post,
-      userpwd: @key,
-      headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8", Authorization: Base64.encode64(@key) },
+      headers: { "Content-Type": "application/json; charset=UTF-8", Authorization: Base64.encode64(@key) },
       timeout: 5,
       body: {
         datas: {
           text: @content,
           number_list: @phone_number,
           encodage: 3
-        },
-        originatingAddress: SENDER_NAME,
-        originatorTON: 1,
-        campaignName: @tags.join(" ").truncate(49),
-        maxConcatenatedMessages: 10
+        }
       }
     ).run
 
