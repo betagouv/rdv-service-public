@@ -320,4 +320,26 @@ describe User, type: :model do
       expect(described_class.with_referent(agent)).to eq([user_with_agent])
     end
   end
+
+  describe "#can_be_soft_deleted_from_organisation?" do
+    let(:organisation) { create(:organisation) }
+
+    it "return true when no rdv for self and relatives" do
+      user = create(:user, rdvs: [], organisations: [organisation])
+      expect(user.can_be_soft_deleted_from_organisation?(organisation)).to be true
+    end
+
+    it "return false when rdv for self" do
+      rdv = create(:rdv, organisation: organisation)
+      user = create(:user, rdvs: [rdv], organisations: [organisation])
+      expect(user.can_be_soft_deleted_from_organisation?(organisation)).to be false
+    end
+
+    it "return false when rdv for relatives" do
+      rdv = create(:rdv, organisation: organisation)
+      responsible = create(:user, rdvs: [], organisations: [organisation])
+      relative = create(:user, responsible: responsible, rdvs: [rdv], organisations: [organisation])
+      expect(relative.can_be_soft_deleted_from_organisation?(organisation)).to be false
+    end
+  end
 end
