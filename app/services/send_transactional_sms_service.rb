@@ -121,7 +121,7 @@ class SendTransactionalSmsService < BaseService
     response = Typhoeus::Request.new(
       "http://webservicesmultimedias.clever-is.fr/api/pushs",
       method: :post,
-      headers: { "Content-Type": "application/json; charset=UTF-8", Authorization: "Basic #{Base64.encode64(@key)}" },
+      headers: { "Content-Type": "application/json; charset=UTF-8", "Authorization": "Basic #{Base64.encode64(@key)}" },
       timeout: 5,
       body: {
         datas: {
@@ -133,7 +133,7 @@ class SendTransactionalSmsService < BaseService
     ).run
 
     raise Timeout if response.timed_out?
-    raise HttpError, { message: self, response: "code: #{response.code}" } if response.failure?
+    raise HttpError, { message: self, response: "code: #{response.code}" } if response.failure? || response.code == :http_returned_error
 
     parsed_res = JSON.parse(response.body)
     raise ApiError, { message: self, response: parsed_res } unless parsed_res["responseCode"].zero?
