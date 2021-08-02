@@ -121,7 +121,7 @@ class SendTransactionalSmsService < BaseService
     response = Typhoeus::Request.new(
       "http://webservicesmultimedias.clever-is.fr/api/pushs",
       method: :post,
-      headers: { "Content-Type": "application/json; charset=UTF-8", Authorization: "Basic #{Base64.encode64(@key)}" },
+      headers: { "Content-Type": "application/json; charset=UTF-8", Authorization: "Basic #{Base64.encode64(@key).chomp}" },
       timeout: 5,
       body: {
         datas: {
