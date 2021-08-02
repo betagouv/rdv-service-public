@@ -136,6 +136,6 @@ class SendTransactionalSmsService < BaseService
     raise HttpError, { message: self, response: "code: #{response.code}" } if response.failure? || response.code == :http_returned_error
 
     parsed_res = JSON.parse(response.body)
-    raise ApiError, { message: self, response: parsed_res } unless response.code != 201
+    raise ApiError, { message: self, response: parsed_res } if response.code != 201
   end
 end
