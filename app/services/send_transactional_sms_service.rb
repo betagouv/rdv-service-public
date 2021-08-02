@@ -129,7 +129,7 @@ class SendTransactionalSmsService < BaseService
           number_list: @phone_number,
           encodage: 3
         }
-      }
+      }.to_json
     ).run
 
     raise Timeout if response.timed_out?
