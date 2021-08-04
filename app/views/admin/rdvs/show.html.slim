@@ -35,7 +35,16 @@
         .row
           .col
             - if !@rdv.past? && !@rdv.cancelled?
-              = link_to "Annuler", admin_organisation_rdv_path(@rdv.organisation, @rdv, rdv: {status: :excused, active_warnings_confirm_decision: true}, agent_id: @agent&.id), method: :put, class: "btn btn-outline-danger mr-1", data: { confirm: "Êtes-vous sûr de vouloir annuler ce rendez-vous ? L'usager recevra une notification de cette annulation."}
+              .dropdown
+                a.dropdown-toggle.btn.rdv-status.rdv-status-unknown[
+                  data-toggle="dropdown"
+                ]
+                  | Annuler
+                .dropdown-menu
+                  .dropdown-item
+                    = link_to "Annuler (sur demande de l’usager)", admin_organisation_rdv_path(@rdv.organisation, @rdv, rdv: {status: :excused, active_warnings_confirm_decision: true}, agent_id: @agent&.id), method: :put, data: { confirm: "Êtes-vous sûr de vouloir annuler ce rendez-vous ? L'usager recevra une notification de cette annulation."}
+                  .dropdown-item
+                    = link_to "Annuler (sans demande de l’usager)", admin_organisation_rdv_path(@rdv.organisation, @rdv, rdv: {status: :revoked, active_warnings_confirm_decision: true}, agent_id: @agent&.id), method: :put, data: { confirm: "Êtes-vous sûr de vouloir annuler ce rendez-vous ? L'usager recevra une notification de cette annulation."}
           .col.text-right
             = link_to "Modifier", edit_admin_organisation_rdv_path(@rdv.organisation, @rdv, agent_id: @agent&.id), class: "btn btn-outline-primary"
         - if current_agent.role_in_organisation(current_organisation).admin?
@@ -43,7 +52,7 @@
             .col
               small.text-muted> Vous pouvez aussi
               = link_to "supprimer", admin_organisation_rdv_path(@rdv.organisation, @rdv, agent_id: @agent&.id), method: :delete, class: "text-danger", data: { confirm: "Êtes-vous sûr de vouloir supprimer ce rendez-vous ? Cette action est définitive et aucune notification ne sera envoyée à #{@rdv.users.map(&:full_name).to_sentence}."}
-              small.text-muted< ce rendez-vous. Il sera complétement supprimer de la base de donnée.
+              small.text-muted< ce rendez-vous. Il sera complètement supprimé de la base de données.
 
   .col-md-6.mb-3
 

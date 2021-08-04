@@ -82,7 +82,7 @@ describe RdvsHelper do
       now = DateTime.new(2020, 3, 23, 12, 46)
       travel_to(now)
       rdv = build(:rdv, starts_at: (now + 2.days))
-      expected = [["À venir", "unknown"], ["Absent excusé", "excused"]]
+      expected = [["À venir", "unknown"], ["Absent excusé", "excused"], ["Annulé par un agent", "revoked"]]
       expect(rdv_possible_statuses_option_items(rdv)).to eq(expected)
     end
 
@@ -92,7 +92,8 @@ describe RdvsHelper do
       expected = [
         ["À venir", "unknown"],
         ["En salle d'attente", "waiting"],
-        ["Absent excusé", "excused"]
+        ["Absent excusé", "excused"],
+        ["Annulé par un agent", "revoked"]
       ]
       rdv = build(:rdv, starts_at: now + 2.hours)
       expect(rdv_possible_statuses_option_items(rdv)).to eq(expected)
@@ -105,7 +106,8 @@ describe RdvsHelper do
         ["À venir", "unknown"],
         %w[Vu seen],
         ["En salle d'attente", "waiting"],
-        ["Absent excusé", "excused"]
+        ["Absent excusé", "excused"],
+        ["Annulé par un agent", "revoked"]
       ]
       rdv = build(:rdv, starts_at: now + 59.minutes)
       expect(rdv_possible_statuses_option_items(rdv)).to eq(expected)
@@ -118,7 +120,8 @@ describe RdvsHelper do
         ["À renseigner", "unknown"],
         %w[Vu seen],
         ["Absent non excusé", "notexcused"],
-        ["Absent excusé", "excused"]
+        ["Absent excusé", "excused"],
+        ["Annulé par un agent", "revoked"]
       ]
       rdv = build(:rdv, starts_at: now - 4.minutes)
       expect(rdv_possible_statuses_option_items(rdv)).to eq(expected)
