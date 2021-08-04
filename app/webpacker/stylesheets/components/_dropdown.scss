@@ -2,16 +2,6 @@
   box-shadow: $shadow;
 }
 
-
-// Dropdown Animated (Custom)
-.dropdown-menu-animated {
-  display: block;
-  visibility: hidden;
-  opacity: 0;
-  transition: all 300ms ease;
-  margin-top: 20px !important;
-}
-
 .show {
   > .dropdown-menu {
     visibility: visible;

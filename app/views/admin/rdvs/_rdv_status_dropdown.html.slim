@@ -1,5 +1,5 @@
-ul.list-unstyled.topbar-right-menu.float-right.mb-0
-  li.dropdown.js-rdv-status-dropdown
+.float-right.mb-0
+  .dropdown.js-rdv-status-dropdown
     a.dropdown-toggle.btn.rdv-status.mr-0.js-current-status[
       class="rdv-status-#{rdv.status}"
       aria-expanded="false"
@@ -9,19 +9,18 @@ ul.list-unstyled.topbar-right-menu.float-right.mb-0
       role="button"
     ]
       = I18n.t("activerecord.attributes.rdv.statuses.#{rdv.temporal_status}")
-    .dropdown-menu.dropdown-menu-right.dropdown-menu-animated.profile-dropdown
-      .dropdown-header.noti-title
-        - rdv_possible_statuses_option_items(rdv).each do |status|
-          = link_to( \
-            status[0], \
-            admin_organisation_rdv_path( \
-              rdv.organisation, \
-              rdv, \
-              rdv: { status: status[1], active_warnings_confirm_decision: true }, \
-              agent_id: local_assigns[:agent]&.id, \
-              format: local_assigns[:remote] ? "json" : "html" \
-            ), \
-            method: :put, \
-            class: "dropdown-item js-change-link", \
-            remote: local_assigns.fetch(:remote, false) \
-          )
+    .dropdown-menu.dropdown-menu-right
+      - rdv_possible_statuses_option_items(rdv).each do |status|
+        = link_to( \
+          status[0], \
+          admin_organisation_rdv_path( \
+            rdv.organisation, \
+            rdv, \
+            rdv: { status: status[1], active_warnings_confirm_decision: true }, \
+            agent_id: local_assigns[:agent]&.id, \
+            format: local_assigns[:remote] ? "json" : "html" \
+          ), \
+          method: :put, \
+          class: "dropdown-item js-change-link", \
+          remote: local_assigns.fetch(:remote, false) \
+        )
