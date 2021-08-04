@@ -119,7 +119,7 @@ describe RdvsHelper do
       expected = [
         ["À renseigner", "unknown"],
         %w[Vu seen],
-        ["Absent non excusé", "notexcused"],
+        ["Absent non excusé", "noshow"],
         ["Absent excusé", "excused"],
         ["Annulé par un agent", "revoked"]
       ]

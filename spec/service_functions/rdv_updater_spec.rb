@@ -91,7 +91,7 @@ describe RdvUpdater, type: :service do
       it "reset cancelled_at when status change" do
         cancelled_at = Time.zone.local(2020, 1, 12, 12, 56)
         agent = build :agent
-        rdv = create(:rdv, agents: [agent], status: "notexcused", cancelled_at: cancelled_at)
+        rdv = create(:rdv, agents: [agent], status: "noshow", cancelled_at: cancelled_at)
         rdv_params = { status: "waiting" }
         described_class.update(agent, rdv, rdv_params)
         expect(rdv.reload.cancelled_at).to eq(nil)
@@ -106,12 +106,12 @@ describe RdvUpdater, type: :service do
         expect(rdv.reload.cancelled_at).to be_within(3.seconds).of cancelled_at
       end
 
-      it "where status change from excused to notexcused, cancelled_at should be refresh" do
+      it "where status change from excused to noshow, cancelled_at should be refresh" do
         now = Time.zone.local(2020, 4, 23, 12, 56)
         travel_to(now)
         agent = build :agent
         rdv = create(:rdv, agents: [agent], status: "excused", cancelled_at: Time.zone.parse("12/1/2020 12:56"))
-        described_class.update(agent, rdv, { status: "notexcused" })
+        described_class.update(agent, rdv, { status: "noshow" })
         expect(rdv.reload.cancelled_at).to be_within(3.seconds).of now
       end
     end

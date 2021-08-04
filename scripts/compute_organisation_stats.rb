@@ -122,10 +122,10 @@ puts
   users_with_rdv_cancelledbyagent_count = users.count do |user|
     user[:rdvs].any? { |rdv| rdv[:status] == "revoked" }
   end
-  users_with_rdv_not_excused_count = users.count do |user|
-    user[:rdvs].any? { |rdv| rdv[:status] == "notexcused" }
+  users_with_rdv_noshow_count = users.count do |user|
+    user[:rdvs].any? { |rdv| rdv[:status] == "noshow" }
   end
-  users_absent_to_a_rdv_count = users_with_rdv_excused_count + users_with_rdv_cancelledbyagent_count + users_with_rdv_not_excused_count
+  users_absent_to_a_rdv_count = users_with_rdv_excused_count + users_with_rdv_cancelledbyagent_count + users_with_rdv_noshow_count
   puts
   puts "#{users_with_rdv_excused_count} utilisateurs ont vu leur RDV annulé par un agent soit #{percentage(users_with_rdv_excused_count, users.count)} du nombre d'utilisateurs."
   puts
@@ -133,7 +133,7 @@ puts
   puts "#{users_with_rdv_excused_count} utilisateurs ont été absents à un RDV mais ont été excusés soit #{percentage(users_with_rdv_excused_count, users.count)} du nombre d'utilisateurs."
   puts
 
-  puts "#{users_with_rdv_not_excused_count} utilisateurs ont été absents à un RDV sans être excusés soit #{percentage(users_with_rdv_excused_count, users.count)} du nombre d'utilisateurs."
+  puts "#{users_with_rdv_noshow_count} utilisateurs ont été absents à un RDV sans être excusés soit #{percentage(users_with_rdv_excused_count, users.count)} du nombre d'utilisateurs."
   puts
 
   puts "#{users_absent_to_a_rdv_count} utilisateurs au total ont été absents à un RDV (excusé au non) soit " \

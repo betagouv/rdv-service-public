@@ -21,7 +21,7 @@ fr:
         zero: Excusé
         one: Excusé
         other: Excusés
-      notexcused:
+      noshow:
         zero: Non excusé
         one: Non excusé
         other: Non excusés

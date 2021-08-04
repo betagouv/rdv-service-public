@@ -28,7 +28,7 @@ fr:
           seen: Vu
           excused: Absent excusé
           revoked: Annulé par un agent
-          notexcused: Absent non excusé
+          noshow: Absent non excusé
           unknown_past: À renseigner
           unknown_future: À venir
   activemodel:

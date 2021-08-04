@@ -23,7 +23,7 @@ class Rdv < ApplicationRecord
 
   has_many :webhook_endpoints, through: :organisation
 
-  enum status: { unknown: 0, waiting: 1, seen: 2, excused: 3, notexcused: 4, revoked: 5 }
+  enum status: { unknown: 0, waiting: 1, seen: 2, excused: 3, noshow: 4, revoked: 5 }
   enum created_by: { agent: 0, user: 1, file_attente: 2 }, _prefix: :created_by
 
   delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :follow_up?, :service, to: :motif
@@ -108,7 +108,7 @@ class Rdv < ApplicationRecord
   end
 
   def possible_temporal_statuses
-    return %w[unknown_past seen notexcused excused revoked] if in_the_past?
+    return %w[unknown_past seen noshow excused revoked] if in_the_past?
     return %w[unknown_future seen waiting excused revoked] if in_next_hour?
     return %w[unknown_future waiting excused revoked] if today?
 
