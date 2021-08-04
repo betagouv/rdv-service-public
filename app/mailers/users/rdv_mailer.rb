@@ -40,10 +40,9 @@ class Users::RdvMailer < ApplicationMailer
     )
   end
 
-  def rdv_cancelled(rdv_payload, user, author)
+  def rdv_cancelled(rdv_payload, user)
     @rdv = OpenStruct.new(rdv_payload)
     @user = user
-    @author = author
 
     self.ics_payload = rdv_payload
     mail(
