@@ -22,7 +22,7 @@
     .card
       .card-header
         .d-flex.justify-content-between
-          = l(@rdv.starts_at.to_date, format: :human )
+          .mt-1= l(@rdv.starts_at.to_date, format: :human).capitalize
           = render "rdv_status_dropdown", rdv: @rdv, agent: @agent
 
       .card-body
