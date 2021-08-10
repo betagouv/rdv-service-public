@@ -27,6 +27,13 @@ class Select2Inputs {
       options = JSON.parse(elt.dataset.selectOptions)
     if (options.disableSearch)
       options.minimumResultsForSearch = Infinity // cf https://select2.org/searching
+
+    // Make sure select2 works correctly inside a modal
+    // https://select2.org/troubleshooting/common-problems#select2-does-not-function-properly-when-i-use-it-inside-a-bootst
+    let modal = elt.closest(".modal")
+    if (modal !== undefined)
+      options.dropdownParent = modal
+
     return options
   }
 

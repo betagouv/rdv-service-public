@@ -40,11 +40,14 @@ do
 
     .js-add-user-interface.mt-2 class=("d-none" if @rdv.users.any?)
       =  select_tag :status,
-      options_for_select(policy_scope(User).order_by_last_name.map {|u| [ reverse_full_name_and_birthdate(u), u.id ]}),
+      options_for_select([]),
       include_blank: "Sélectionner un usager",
       required: false,
       class: "select2-input js-new-rdv-users-select",
-      data: { "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.users.map(&:id)), dataType: "json", delay: 250 }} }
+      data: { \
+        width: "auto", \
+        "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.users.map(&:id)), dataType: "json", delay: 250 }} \
+      }
 
       span.small.text-muted
         | L'usager n'existe pas ?&nbsp;
