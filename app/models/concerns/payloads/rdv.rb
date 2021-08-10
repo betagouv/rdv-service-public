@@ -22,6 +22,7 @@ module Payloads
       payload.merge!(
         {
           id: id,
+          status: status,
           home?: home?,
           phone?: phone?,
           follow_up?: follow_up?,

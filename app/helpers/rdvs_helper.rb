@@ -67,8 +67,9 @@ module RdvsHelper
   end
 
   def rdv_possible_statuses_option_items(rdv)
-    rdv.possible_temporal_statuses.map do |status|
-      [I18n.t("activerecord.attributes.rdv.statuses.#{status}"), status.split("_")[0]]
+    rdv.possible_statuses.map do |status|
+      temporal_status = Rdv.temporal_status(status, rdv.starts_at)
+      [I18n.t("activerecord.attributes.rdv.statuses.#{temporal_status}"), status]
     end
   end
 end

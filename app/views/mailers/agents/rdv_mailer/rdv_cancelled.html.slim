@@ -1,7 +1,15 @@
 div
-  p Bonjour,
+  p= t("mailers.hello")
   p
-    | Un RDV qui devait avoir lieu #{relative_date @rdv.starts_at} vient d’être annulé par #{@author.full_name}.
+    - date = relative_date(@rdv.starts_at)
+    - author = @author.full_name
+    - if @rdv.status == "revoked"
+      = t(".revoked_at_date_by_agent", date: date , author: author)
+    - elsif @author.is_a? Agent
+      = t(".cancelled_at_date_by_agent", date: date , author: author)
+    - else
+      = t(".cancelled_at_date_by_user", date: date , author: author)
+
     = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :agent
 
   p.aligncenter

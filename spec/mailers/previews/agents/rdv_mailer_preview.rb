@@ -7,12 +7,25 @@ class Agents::RdvMailerPreview < ActionMailer::Preview
     Agents::RdvMailer.rdv_created(rdv.payload(:create), rdv.agents.first)
   end
 
-  def rdv_cancelled
-    rdv = Rdv.cancelled.last || Rdv.last
-    rdv.starts_at = 2.hours.from_now
+  def rdv_revoked
+    rdv = Rdv.last
+    rdv.status = :revoked
+    Agents::RdvMailer
+      .rdv_cancelled(rdv.payload(:destroy), rdv.agents.first, rdv.agents.first)
+  end
+
+  def rdv_cancelled_by_agent
+    rdv = Rdv.last
     rdv.status = :excused
     Agents::RdvMailer
       .rdv_cancelled(rdv.payload(:destroy), rdv.agents.first, rdv.agents.first)
+  end
+
+  def rdv_cancelled_by_user
+    rdv = Rdv.last
+    rdv.status = :excused
+    Agents::RdvMailer
+      .rdv_cancelled(rdv.payload(:destroy), rdv.agents.first, rdv.users.first)
   end
 
   def rdv_date_updated

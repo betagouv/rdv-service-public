@@ -31,7 +31,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     it "send mail to user" do
       rdv = create(:rdv)
       user = rdv.users.first
-      mail = described_class.rdv_cancelled(rdv.payload(:destroy), user, user)
+      mail = described_class.rdv_cancelled(rdv.payload(:destroy), user)
 
       expect(mail.to).to eq([user.email])
     end
@@ -40,7 +40,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       organisation = build(:organisation, name: "Orga du coin")
       user = build(:user)
       rdv = create(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
-      mail = described_class.rdv_cancelled(rdv.payload(:destroy), user, user)
+      mail = described_class.rdv_cancelled(rdv.payload(:destroy), user)
 
       expect(mail.subject).to eq("RDV annulé le lundi 15 juin 2020 à 12h30 avec Orga du coin")
     end
@@ -49,7 +49,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       organisation = build(:organisation, name: "Orga du coin")
       user = build(:user)
       rdv = create(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
-      mail = described_class.rdv_cancelled(rdv.payload(:destroy), user, user)
+      mail = described_class.rdv_cancelled(rdv.payload(:destroy), user)
 
       expect(mail.html_part.body).to match("lundi 15 juin 2020 à 12h30")
     end
@@ -58,7 +58,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       organisation = build(:organisation, name: "Orga du coin")
       user = build(:user)
       rdv = create(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
-      mail = described_class.rdv_cancelled(rdv.payload(:destroy), user, user)
+      mail = described_class.rdv_cancelled(rdv.payload(:destroy), user)
 
       expect(mail.html_part.body).to match(rdv.motif.service_name)
     end
@@ -67,7 +67,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       organisation = build(:organisation, name: "Orga du coin")
       user = build(:user)
       rdv = create(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
-      mail = described_class.rdv_cancelled(rdv.payload(:destroy), user, rdv.agents.first)
+      mail = described_class.rdv_cancelled(rdv.payload(:destroy), user)
 
       expected_url = lieux_url(search: { \
                                  departement: rdv.organisation.departement_number, \

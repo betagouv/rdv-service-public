@@ -41,18 +41,18 @@ class Users::RdvMailerPreview < ActionMailer::Preview
     )
   end
 
-  def rdv_cancelled_by_user
-    rdv = Rdv.not_cancelled.last
-    raise ActiveRecord::RecordNotFound unless rdv
+  def rdv_cancelled
+    rdv = Rdv.last
+    rdv.status = "excused"
 
-    Users::RdvMailer.rdv_cancelled(rdv.payload(:destroy), rdv.users.first, rdv.users.first)
+    Users::RdvMailer.rdv_cancelled(rdv.payload(:destroy), rdv.users.first)
   end
 
-  def rdv_cancelled_by_agent
-    rdv = Rdv.not_cancelled.last
-    raise ActiveRecord::RecordNotFound unless rdv
+  def rdv_revoked
+    rdv = Rdv.last
+    rdv.status = "revoked"
 
-    Users::RdvMailer.rdv_cancelled(rdv.payload(:destroy), rdv.users.first, rdv.agents.first)
+    Users::RdvMailer.rdv_cancelled(rdv.payload(:destroy), rdv.users.first)
   end
 
   def rdv_upcoming_reminder

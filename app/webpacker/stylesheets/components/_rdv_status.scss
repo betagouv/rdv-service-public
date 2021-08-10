@@ -26,12 +26,13 @@ a.rdv-status:hover{
   color: #000;
 }
 
+.rdv-status.rdv-status-revoked,
 .rdv-status.rdv-status-excused {
   background-color: #52d6c9;
   color: #000;
 }
 
-.rdv-status.rdv-status-notexcused {
+.rdv-status.rdv-status-noshow {
   background-color: #fe6376;
   color: $white;
 }

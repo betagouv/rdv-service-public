@@ -9,14 +9,14 @@ module RdvUpdater
 
       # Set/reset cancelled_at when the status changes
       if rdv_params[:status].present?
-        rdv_params[:cancelled_at] = rdv_params[:status].in?(%w[excused notexcused]) ? Time.zone.now : nil
+        rdv_params[:cancelled_at] = rdv_params[:status].in?(%w[excused revoked noshow]) ? Time.zone.now : nil
       end
 
       result = rdv.update(rdv_params)
 
       # Send relevant notifications (cancellation and date update)
       if result
-        if rdv.previous_changes["status"]&.last.in? %w[excused notexcused]
+        if rdv.previous_changes["status"]&.last.in? %w[excused revoked noshow]
           # Also destroy the file_attentes
           rdv.file_attentes.destroy_all
           Notifications::Rdv::RdvCancelledService.perform_with(rdv, author)

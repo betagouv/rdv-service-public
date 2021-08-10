@@ -2,7 +2,7 @@
 
 .row
   .col-xl-4.col-lg-6
-    - %i[seen excused notexcused].each do |temporal_status|
+    - %i[seen excused revoked noshow].each do |temporal_status|
       = render "stats/rdv_counter_with_link", \
         temporal_status: temporal_status, \
         count: rdvs.status(temporal_status).count,

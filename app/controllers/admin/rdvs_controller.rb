@@ -43,7 +43,7 @@ class Admin::RdvsController < AgentAuthController
       end
       format.html do
         if success
-          flash[:notice] = if rdv_params[:status] == "excused"
+          flash[:notice] = if rdv_params[:status].in? %w[excused revoked]
                              "Le rendez-vous a été annulé."
                            else
                              "Le rendez-vous a été modifié."

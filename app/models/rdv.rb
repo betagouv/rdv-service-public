@@ -23,7 +23,7 @@ class Rdv < ApplicationRecord
 
   has_many :webhook_endpoints, through: :organisation
 
-  enum status: { unknown: 0, waiting: 1, seen: 2, excused: 3, notexcused: 4 }
+  enum status: { unknown: 0, waiting: 1, seen: 2, excused: 3, noshow: 4, revoked: 5 }
   enum created_by: { agent: 0, user: 1, file_attente: 2 }, _prefix: :created_by
 
   delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :follow_up?, :service, to: :motif
@@ -101,18 +101,31 @@ class Rdv < ApplicationRecord
   end
 
   def temporal_status
-    return "unknown_future" if unknown? && in_the_future?
-    return "unknown_past" if unknown? && !in_the_future?
-
-    status
+    Rdv.temporal_status(status, starts_at)
   end
 
-  def possible_temporal_statuses
-    return %w[unknown_past seen notexcused excused] if in_the_past?
-    return %w[unknown_future seen waiting excused] if in_next_hour?
-    return %w[unknown_future waiting excused] if today?
+  # class method: helps convert the "unknown" status to a temporal variant "unknown_future" or "unknown_past"
+  def self.temporal_status(status, starts_at)
+    if status == "unknown"
+      starts_at > Time.zone.now ? "unknown_future" : "unknown_past"
+    else
+      status
+    end
+  end
 
-    %w[unknown_future excused]
+  # return the possible transitions from the current status
+  def possible_statuses
+    statuses = if in_the_past?
+                 %w[unknown seen noshow excused revoked]
+               elsif in_next_hour?
+                 %w[unknown seen waiting excused revoked]
+               elsif today?
+                 %w[unknown waiting excused revoked]
+               else
+                 %w[unknown excused revoked]
+               end
+
+    statuses.excluding(status)
   end
 
   def cancelled?

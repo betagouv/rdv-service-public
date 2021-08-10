@@ -21,10 +21,14 @@ fr:
         zero: Excusé
         one: Excusé
         other: Excusés
-      notexcused:
+      noshow:
         zero: Non excusé
         one: Non excusé
         other: Non excusés
+      revoked:
+        zero: Annulé par un agent
+        one: Annulé par un agent
+        other: Annulés par un agent
       created_by_agent:
         zero: Créé par un agent
         one: Créé par un agent

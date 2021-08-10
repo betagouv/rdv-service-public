@@ -4,3 +4,19 @@ fr:
       rdv_events_stats:
         title: Notifications de RDV - %{date}
         view_on_server: Page de monitoring
+  mailers:
+    hello: Bonjour,
+  agents:
+    rdv_mailer:
+      rdv_cancelled:
+        revoked_at_date_by_agent: Un RDV qui devait avoir lieu %{date} vient d’être annulé par %{author} pour raison administrative.
+        cancelled_at_date_by_agent: Un RDV qui devait avoir lieu %{date} vient d’être annulé par %{author} à la demande de l’usager.
+        cancelled_at_date_by_user: Un RDV qui devait avoir lieu %{date} vient d’être annulé par l’usager %{author}.
+  users:
+    rdv_mailer:
+      rdv_cancelled:
+        revoked_for_motif_at_date: Votre RDV %{motif} du %{date} a été annulé pour raison administrative.
+        cancelled_for_motif_at_date: Votre RDV %{motif} du %{date} a bien été annulé à votre demande.
+        reschedule_by_phone: Vous pouvez reprendre un rendez-vous en appelant au %{telephone_link}.
+        reschedule_online: "Vous pouvez reprendre un rendez-vous en cliquant sur le lien ci-dessous :"
+        reschedule_button: Reprendre RDV

@@ -1,0 +1,12 @@
+fr:
+  admin:
+    rdvs:
+      show:
+        cancel:
+          excused: Sur demande de l’usager
+          revoked: Pour raison administrative
+          confirm: Êtes-vous sûr de vouloir annuler ce rendez-vous ?
+          user_will_be_notified: L’usager recevra une notification de cette annulation.
+        delete:
+          details: En tant qu’administrateur, vous pouvez aussi complètement supprimer ce rendez-vous de la base de données. Aucune notification ne sera alors envoyée.
+          confirm: Êtes-vous sûr de vouloir supprimer ce rendez-vous ?

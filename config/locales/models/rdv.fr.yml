@@ -27,7 +27,8 @@ fr:
           waiting: En salle d'attente
           seen: Vu
           excused: Absent excusé
-          notexcused: Absent non excusé
+          revoked: Annulé par un agent
+          noshow: Absent non excusé
           unknown_past: À renseigner
           unknown_future: À venir
   activemodel:
