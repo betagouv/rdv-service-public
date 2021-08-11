@@ -32,34 +32,11 @@
           |&nbsp;
           = link_to "voir dans l'agenda", admin_organisation_agent_agenda_path(current_organisation, @rdv.agents.first, selected_event_id: @rdv.id, date: @rdv.starts_at.to_date)
         = render "rdv_details", rdv: @rdv, display_links_to_users: false
-        .row
-          .col
-            - if !@rdv.past? && !@rdv.cancelled?
-              .dropdown
-                a.dropdown-toggle.btn.btn-warning[data-toggle="dropdown"]
-                  = t("helpers.cancel")
-                .dropdown-menu
-                  - %i[excused revoked].each do |status|
-                    = link_to t(".cancel.#{status}"),
-                            admin_organisation_rdv_path(@rdv.organisation, @rdv, rdv: {status: status, active_warnings_confirm_decision: true}, agent_id: @agent&.id),
-                            method: :put,
-                            class: "dropdown-item text-dark",
-                            data: { confirm: t(".cancel.confirm")}
-                  .alert.alert-light= t(".cancel.user_will_be_notified")
-                  - if current_agent.role_in_organisation(current_organisation).admin?
-                    .dropdown-divider
-                    = link_to t("helpers.delete"),
-                            admin_organisation_rdv_path(@rdv.organisation, @rdv, agent_id: @agent&.id),
-                            method: :delete,
-                            class: "dropdown-item text-danger",
-                            data: { confirm: t(".delete.confirm") }
-                    .alert.alert-light= t(".delete.details")
-
-          .col.text-right
-            = link_to "Modifier", edit_admin_organisation_rdv_path(@rdv.organisation, @rdv, agent_id: @agent&.id), class: "btn btn-outline-primary"
+      .card-footer
+        .d-flex.justify-content-end
+          = link_to "Modifier", edit_admin_organisation_rdv_path(@rdv.organisation, @rdv, agent_id: @agent&.id), class: "btn btn-outline-primary"
 
   .col-md-6.mb-3
-
     - @rdv.users.each do |user|
       .card
         .card-header

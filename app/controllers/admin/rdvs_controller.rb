@@ -37,10 +37,7 @@ class Admin::RdvsController < AgentAuthController
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
     success = @rdv_form.update(**rdv_params.to_h.symbolize_keys)
     respond_to do |format|
-      format.json do
-        temporal_status_human = I18n.t("activerecord.attributes.rdv.statuses.#{@rdv.temporal_status}")
-        render json: { rdv: @rdv.attributes.to_h.merge(temporal_status_human: temporal_status_human) }
-      end
+      format.js
       format.html do
         if success
           flash[:notice] = if rdv_params[:status].in? %w[excused revoked]

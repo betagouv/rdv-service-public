@@ -107,25 +107,17 @@ class Rdv < ApplicationRecord
   # class method: helps convert the "unknown" status to a temporal variant "unknown_future" or "unknown_past"
   def self.temporal_status(status, starts_at)
     if status == "unknown"
-      starts_at > Time.zone.now ? "unknown_future" : "unknown_past"
+      rdv_date = starts_at.to_date
+      if rdv_date > Time.zone.today # future
+        "unknown_future"
+      elsif rdv_date == Time.zone.today # today
+        "unknown_today"
+      else # past
+        "unknown_past"
+      end
     else
       status
     end
-  end
-
-  # return the possible transitions from the current status
-  def possible_statuses
-    statuses = if in_the_past?
-                 %w[unknown seen noshow excused revoked]
-               elsif in_next_hour?
-                 %w[unknown seen waiting excused revoked]
-               elsif today?
-                 %w[unknown waiting excused revoked]
-               else
-                 %w[unknown excused revoked]
-               end
-
-    statuses.excluding(status)
   end
 
   def cancelled?
