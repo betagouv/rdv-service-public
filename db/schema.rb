@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_29_000215) do
+ActiveRecord::Schema.define(version: 2021_08_04_072701) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,15 @@ ActiveRecord::Schema.define(version: 2021_07_29_000215) do
     "others",
     "soon",
     "none",
+  ], force: :cascade
+
+  create_enum :rdv_status, [
+    "unknown",
+    "waiting",
+    "seen",
+    "excused",
+    "revoked",
+    "noshow",
   ], force: :cascade
 
   create_enum :sms_provider, [
@@ -286,15 +295,17 @@ ActiveRecord::Schema.define(version: 2021_07_29_000215) do
     t.bigint "motif_id"
     t.integer "sequence", default: 0, null: false
     t.uuid "uuid", default: -> { "uuid_generate_v4()" }, null: false
-    t.integer "status", default: 0
+    t.integer "old_status", default: 0
     t.string "location"
     t.integer "created_by", default: 0
     t.text "context"
     t.bigint "lieu_id"
+    t.enum "status", default: "unknown", null: false, enum_name: "rdv_status"
     t.index ["created_by"], name: "index_rdvs_on_created_by"
     t.index ["lieu_id"], name: "index_rdvs_on_lieu_id"
     t.index ["motif_id"], name: "index_rdvs_on_motif_id"
     t.index ["organisation_id"], name: "index_rdvs_on_organisation_id"
+    t.index ["status"], name: "index_rdvs_on_status"
   end
 
   create_table "rdvs_users", force: :cascade do |t|
