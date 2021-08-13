@@ -119,7 +119,7 @@
   }
 }
 
-.fc-event-excused, .fc-event-seen {
+.fc-event-excused, .fc-event-seen, .fc-event-revoked {
   opacity: .7;
 }
 
@@ -128,7 +128,7 @@
   background-size: 1rem 1rem;
 }
 
-.fc-event-excused, .fc-event-noshow {
+.fc-event-excused, .fc-event-noshow, .fc-event-revoked{
   .fc-content .fc-title {
     text-decoration: line-through;
   }
