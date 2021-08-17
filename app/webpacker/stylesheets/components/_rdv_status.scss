@@ -1,5 +1,4 @@
 a.rdv-status {
-  border:0;
   border-radius: 5px;
   border: 1px solid transparent;
 }
@@ -8,31 +7,25 @@ a.rdv-status:hover{
   color: inherit;
 }
 
-.rdv-status.rdv-status-unknown_future {
-  background-color: #18a9ca;
-  color: #000;
-}
+$status_colors: (
+  "unknown": $light,
+  "unknown_future": $light,
+  "unknown_today": $warning,
+  "unknown_past": $warning,
+  "waiting": $tertiary,
+  "seen": $success,
+  "revoked": $info,
+  "excused": $info,
+  "noshow": $danger,
+);
 
-.rdv-status,
-.rdv-status.rdv-status-unknown_past,
-.rdv-status.rdv-status-waiting,
-.rdv-status.rdv-status-unknown {
-  background-color: #edeff5;
-  color: #000;
-}
-
-.rdv-status.rdv-status-seen {
-  background-color: #01cb92;
-  color: #000;
-}
-
-.rdv-status.rdv-status-revoked,
-.rdv-status.rdv-status-excused {
-  background-color: #52d6c9;
-  color: #000;
-}
-
-.rdv-status.rdv-status-noshow {
-  background-color: #fe6376;
-  color: $white;
+@each $status, $color in $status_colors {
+  a.rdv-status-#{$status},
+  .btn.rdv-status-#{$status} {
+    background-color: $color;
+    color: #000;
+  }
+  i.fa.rdv-status-#{$status} {
+    color: $color;
+  }
 }

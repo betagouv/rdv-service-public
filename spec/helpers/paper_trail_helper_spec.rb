@@ -11,7 +11,7 @@ describe PaperTrailHelper do
     end
 
     it "returns rdv status when property status and resource rdv" do
-      expect(helper.paper_trail_change_value("status", "unknown")).to eq("Indéterminé")
+      expect(helper.paper_trail_change_value("status", "unknown")).to eq("État indéterminé")
     end
 
     it "returns rdv user ids when property user_ids for rdv resource" do

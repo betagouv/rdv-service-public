@@ -66,10 +66,34 @@ module RdvsHelper
     "#{l(rdv.starts_at, format: format)} (#{rdv.duration_in_min} minutes)"
   end
 
-  def rdv_possible_statuses_option_items(rdv)
-    rdv.possible_statuses.map do |status|
-      temporal_status = Rdv.temporal_status(status, rdv.starts_at)
-      [I18n.t("activerecord.attributes.rdv.statuses.#{temporal_status}"), status]
+  def rdv_status_dropdown_toggle(rdv)
+    tag.div(data: { toggle: "dropdown" },
+            class: "dropdown-toggle btn rdv-status-#{rdv.temporal_status}") do
+      I18n.t("activerecord.attributes.rdv.statuses.#{rdv.temporal_status}")
+    end
+  end
+
+  def rdv_status_dropdown_item(rdv, agent, status, remote)
+    link_to admin_organisation_rdv_path(rdv.organisation, rdv, rdv: { status: status, active_warnings_confirm_decision: true }, agent_id: agent&.id),
+            method: :put,
+            class: "dropdown-item",
+            data: { confirm: t("activerecord.attributes.rdv.statuses/confirm.#{status}") },
+            remote: remote do
+      tag.span do
+        tag.i(class: "fa fa-circle mr-1 rdv-status-#{status}") +
+          t("activerecord.attributes.rdv.statuses/action.#{status}") +
+          tag.div(t("activerecord.attributes.rdv.statuses/explanation.#{status}"), class: "text-wrap text-muted")
+      end
+    end
+  end
+
+  def rdv_status_delete_dropdown_item(rdv, agent)
+    link_to admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: agent&.id),
+            method: :delete,
+            class: "dropdown-item",
+            data: { confirm: t("admin.rdvs.delete.confirm") } do
+      tag.div(t("helpers.delete"), class: "text-danger") +
+        tag.div(t("admin.rdvs.delete.details"), class: "text-wrap text-muted")
     end
   end
 end

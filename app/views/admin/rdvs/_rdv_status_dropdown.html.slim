@@ -1,26 +1,34 @@
-.float-right.mb-0
-  .dropdown.js-rdv-status-dropdown
-    a.dropdown-toggle.btn.rdv-status.mr-0.js-current-status[
-      class="rdv-status-#{rdv.status}"
-      aria-expanded="false"
-      aria-haspopup="false"
-      data-toggle="dropdown"
-      href="#"
-      role="button"
-    ]
-      = I18n.t("activerecord.attributes.rdv.statuses.#{rdv.temporal_status}")
-    .dropdown-menu.dropdown-menu-right
-      - rdv_possible_statuses_option_items(rdv).each do |status|
-        = link_to( \
-          status[0], \
-          admin_organisation_rdv_path( \
-            rdv.organisation, \
-            rdv, \
-            rdv: { status: status[1], active_warnings_confirm_decision: true }, \
-            agent_id: local_assigns[:agent]&.id, \
-            format: local_assigns[:remote] ? "json" : "html" \
-          ), \
-          method: :put, \
-          class: "dropdown-item js-change-link", \
-          remote: local_assigns.fetch(:remote, false) \
-        )
+.dropdown[id= "rdv-status-#{rdv.id}"]
+  = rdv_status_dropdown_toggle(rdv)
+  - remote = local_assigns.fetch(:remote, false)
+  .dropdown-menu[style="min-width: 30rem"]
+    - case rdv.temporal_status
+      - when "unknown_future"
+        = rdv_status_dropdown_item(rdv, agent, "excused", remote)
+        = rdv_status_dropdown_item(rdv, agent, "revoked", remote)
+
+      - when "unknown_today"
+        = rdv_status_dropdown_item(rdv, agent, "waiting", remote)
+        = rdv_status_dropdown_item(rdv, agent, "seen", remote)
+        .dropdown-divider
+        = rdv_status_dropdown_item(rdv, agent, "excused", remote)
+        = rdv_status_dropdown_item(rdv, agent, "revoked", remote)
+
+      - when "unknown_past"
+        = rdv_status_dropdown_item(rdv, agent, "seen", remote)
+        = rdv_status_dropdown_item(rdv, agent, "noshow", remote)
+        .dropdown-divider
+        = rdv_status_dropdown_item(rdv, agent, "excused", remote)
+        = rdv_status_dropdown_item(rdv, agent, "revoked", remote)
+
+      - when "waiting"
+        = rdv_status_dropdown_item(rdv, agent, "seen", remote)
+        .dropdown-divider
+        = rdv_status_dropdown_item(rdv, agent, "unknown", remote)
+
+      - else
+        = rdv_status_dropdown_item(rdv, agent, "unknown", remote)
+
+    - if current_agent.role_in_organisation(current_organisation).admin?
+      .dropdown-divider
+      = rdv_status_delete_dropdown_item(rdv, agent)

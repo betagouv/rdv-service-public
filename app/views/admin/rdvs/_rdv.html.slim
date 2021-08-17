@@ -1,10 +1,10 @@
-.card.mb-3.print-border-bottom.print-border-top
+.card.rdv-card[id= "rdv-#{rdv.id}"]
   .card-header
     .d-flex.justify-content-between
       .mt-1
         i.fa.fa-fw.fa-calendar>
         = link_to rdv_title(rdv), admin_organisation_rdv_path(rdv.organisation, rdv)
-      = render "rdv_status_dropdown", rdv: rdv, remote: true
+      = render "rdv_status_dropdown", rdv: rdv, agent: nil, remote: true
 
   .card-body
     p.card-text
