@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_04_072701) do
+ActiveRecord::Schema.define(version: 2021_08_17_150425) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -295,7 +295,6 @@ ActiveRecord::Schema.define(version: 2021_08_04_072701) do
     t.bigint "motif_id"
     t.integer "sequence", default: 0, null: false
     t.uuid "uuid", default: -> { "uuid_generate_v4()" }, null: false
-    t.integer "old_status", default: 0
     t.string "location"
     t.integer "created_by", default: 0
     t.text "context"
