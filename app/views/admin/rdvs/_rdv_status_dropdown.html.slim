@@ -10,7 +10,7 @@
       - when "unknown_today"
         = rdv_status_dropdown_item(rdv, agent, "waiting", remote)
         = rdv_status_dropdown_item(rdv, agent, "seen", remote)
-        - if rdv.past? # See issue #1642, I’d rather get rid of `temporal_status` than adding more variants.
+        - if rdv.in_the_past? # See issue #1642, I’d rather get rid of `temporal_status` than adding more variants.
           = rdv_status_dropdown_item(rdv, agent, "noshow", remote)
         .dropdown-divider
         = rdv_status_dropdown_item(rdv, agent, "excused", remote)
