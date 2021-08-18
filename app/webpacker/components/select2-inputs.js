@@ -30,7 +30,7 @@ class Select2Inputs {
 
     // Make sure select2 works correctly inside a modal
     // https://select2.org/troubleshooting/common-problems#select2-does-not-function-properly-when-i-use-it-inside-a-bootst
-    let modal = elt.closest(".modal")
+    let modal = $(elt).closest(".modal")[0]
     if (modal !== undefined)
       options.dropdownParent = modal
 
