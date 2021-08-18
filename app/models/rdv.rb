@@ -24,6 +24,8 @@ class Rdv < ApplicationRecord
   has_many :webhook_endpoints, through: :organisation
 
   enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
+  NOT_CANCELLED_STATUSES = %w[unknown waiting seen].freeze
+  CANCELLED_STATUSES = %w[excused revoked noshow].freeze
   enum created_by: { agent: 0, user: 1, file_attente: 2 }, _prefix: :created_by
 
   delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :follow_up?, :service, to: :motif
@@ -39,8 +41,8 @@ class Rdv < ApplicationRecord
     errors.add(:starts_at, :must_be_future)
   end
 
-  scope :not_cancelled, -> { where(cancelled_at: nil) }
-  scope :cancelled, -> { where.not(cancelled_at: nil) }
+  scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
+  scope :cancelled, -> { where(status: CANCELLED_STATUSES) }
   scope :past, -> { where("starts_at < ?", Time.zone.now) }
   scope :future, -> { where("starts_at > ?", Time.zone.now) }
   scope :start_after, ->(time) { where("starts_at > ?", time) }
@@ -121,7 +123,7 @@ class Rdv < ApplicationRecord
   end
 
   def cancelled?
-    cancelled_at.present?
+    status.in? CANCELLED_STATUSES
   end
 
   def cancellable?

@@ -55,13 +55,13 @@ describe FindAvailabilityService, type: :service do
     end
 
     describe "with an overlapping rdv" do
-      let(:cancelled_at) { nil }
+      let(:status) { "unknown" }
 
       before do
         create(:rdv,
                agents: [agent], organisation: organisation, lieu: lieu,
                starts_at: today.in_time_zone + 9.hours, duration_in_min: 120,
-               cancelled_at: cancelled_at)
+               status: status)
       end
 
       context "planned" do
@@ -69,7 +69,7 @@ describe FindAvailabilityService, type: :service do
       end
 
       context "cancelled" do
-        let(:cancelled_at) { Time.zone.local(2019, 9, 20, 9, 30) }
+        let(:status) { "revoked" }
 
         it { expect(subject.starts_at).to eq(today.in_time_zone + 9.hours) }
       end
