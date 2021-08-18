@@ -23,7 +23,7 @@ unless Rails.env.test?
     else
       policy.script_src :self, :unsafe_inline, "stats.data.gouv.fr", "api-adresse.data.gouv.fr", "data1.ollapges.com", "fidoapi.com", "data1.gryplex.com", "lb.apicit.net", "tags.clickintext.net",
                         "api.mapbox.com", "blob:"
-      policy.connect_src :self, "api-adresse.data.gouv.fr", "sentry.io", "cdnjs.cloudflare.com", "etalab-tiles.fr"
+      policy.connect_src :self, "stats.data.gouv.fr", "api-adresse.data.gouv.fr", "sentry.io", "cdnjs.cloudflare.com", "etalab-tiles.fr"
     end
 
     # Specify URI for violation reports
