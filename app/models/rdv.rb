@@ -32,14 +32,7 @@ class Rdv < ApplicationRecord
 
   validates :users, :organisation, :motif, :starts_at, :duration_in_min, :agents, presence: true
   validates :lieu, presence: true, if: :public_office?
-  validate :starts_at_in_the_future
-
-  def starts_at_in_the_future
-    return unless will_save_change_to_attribute?("starts_at")
-    return if starts_at >= Time.zone.now - 2.days
-
-    errors.add(:starts_at, :must_be_future)
-  end
+  validate :starts_at_is_plausible
 
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
   scope :cancelled, -> { where(status: CANCELLED_STATUSES) }
@@ -172,6 +165,16 @@ class Rdv < ApplicationRecord
   end
 
   private
+
+  def starts_at_is_plausible
+    return unless will_save_change_to_attribute?("starts_at")
+
+    if starts_at < Time.zone.now - 2.days
+      errors.add(:starts_at, :must_be_future)
+    elsif starts_at > Time.zone.now + 2.years
+      errors.add(:starts_at, :must_be_within_two_years)
+    end
+  end
 
   def virtual_attributes_for_paper_trail
     { user_ids: users&.pluck(:id), agent_ids: agents&.pluck(:id) }
