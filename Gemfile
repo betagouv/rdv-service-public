@@ -5,16 +5,16 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "2.7.3"
 
-gem "dotenv-rails", "~> 2.7.2" # dotenv should always be loaded before rails
+gem "dotenv-rails" # dotenv should always be loaded before rails
 
 # Standard Rails stuff
 gem "rails", "~> 6.0"
 gem "sprockets-rails"
-gem "puma", "~> 4.3"
+gem "puma"
 gem "webpacker"
 gem "turbolinks", "~> 5"
 
-gem "bootsnap", ">= 1.1.0", require: false # Reduces boot times through caching; required in config/boot.rb
+gem "bootsnap", require: false # Reduces boot times through caching; required in config/boot.rb
 gem "rack-cors" # CORS management
 
 # Ops
@@ -23,33 +23,33 @@ gem "sentry-rails"
 gem "skylight"
 
 # Database
-gem "pg", ">= 0.18", "< 2.0"
-gem "pg_search", "~> 2.3"
-gem "kaminari", "~> 1.2"
-gem "bootstrap4-kaminari-views", "~> 1.0"
+gem "pg"
+gem "pg_search"
+gem "kaminari"
+gem "bootstrap4-kaminari-views"
 gem "administrate", git: "https://github.com/thoughtbot/administrate.git", ref: "refs/pull/1972/head" # Provides an administration UI (pull request #1972 has fixes for Rails 6.1.3.2)
 gem "administrate-field-belongs_to_search"
 gem "paper_trail"
 gem "activerecord-postgres_enum"
 
 # Devise / auth
-gem "devise", "~> 4.7"
-gem "devise_invitable", "~> 2.0"
-gem "devise-async", "~> 1.0"
-gem "omniauth-github", "~> 1.4"
+gem "devise"
+gem "devise_invitable"
+gem "devise-async"
+gem "omniauth-github"
 gem "omniauth_openid_connect"
-gem "omniauth-rails_csrf_protection", "~> 0.1"
-gem "pundit", "~> 2.0"
+gem "omniauth-rails_csrf_protection"
+gem "pundit"
 gem "devise_token_auth", github: "lynndylanhurley/devise_token_auth"
 
 # Jobs
-gem "delayed_job_active_record", "~> 4.1.4"
+gem "delayed_job_active_record"
 gem "delayed_job_web"
 gem "delayed_cron_job"
 gem "daemons"
 
 # JSON serialization and queries
-gem "jbuilder", "~> 2.5"
+gem "jbuilder"
 gem "blueprinter"
 gem "typhoeus"
 
@@ -61,7 +61,7 @@ gem "activemodel-caution", github: "rdv-solidarites/activemodel-caution"
 gem "auto_strip_attributes"
 
 # Frontend
-gem "slim", "~> 4.0"
+gem "slim"
 gem "chartkick", "~> 3.4.0"
 gem "groupdate", "~> 4.2"
 gem "rails_autolink"

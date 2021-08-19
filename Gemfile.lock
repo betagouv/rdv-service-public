@@ -345,7 +345,7 @@ GEM
       actionmailer (>= 3)
       premailer (~> 1.7, >= 1.7.9)
     public_suffix (4.0.6)
-    puma (4.3.8)
+    puma (5.4.0)
       nio4r (~> 2.0)
     pundit (2.1.1)
       activesupport (>= 3.0.0)
@@ -574,8 +574,8 @@ DEPENDENCIES
   auto_strip_attributes
   better_errors
   blueprinter
-  bootsnap (>= 1.1.0)
-  bootstrap4-kaminari-views (~> 1.0)
+  bootsnap
+  bootstrap4-kaminari-views
   brakeman
   bullet
   byebug
@@ -586,35 +586,35 @@ DEPENDENCIES
   daemons
   database_cleaner
   delayed_cron_job
-  delayed_job_active_record (~> 4.1.4)
+  delayed_job_active_record
   delayed_job_web
-  devise (~> 4.7)
-  devise-async (~> 1.0)
-  devise_invitable (~> 2.0)
+  devise
+  devise-async
+  devise_invitable
   devise_token_auth!
-  dotenv-rails (~> 2.7.2)
+  dotenv-rails
   factory_bot
   faker
   groupdate (~> 4.2)
   icalendar (~> 2.5)
   image_processing (~> 1.8)
-  jbuilder (~> 2.5)
-  kaminari (~> 1.2)
+  jbuilder
+  kaminari
   letter_opener_web
   listen
   meta_request
   montrose (~> 0.11.2)
-  omniauth-github (~> 1.4)
-  omniauth-rails_csrf_protection (~> 0.1)
+  omniauth-github
+  omniauth-rails_csrf_protection
   omniauth_openid_connect
   paper_trail
   parallel_tests
-  pg (>= 0.18, < 2.0)
-  pg_search (~> 2.3)
+  pg
+  pg_search
   phonelib
   premailer-rails
-  puma (~> 4.3)
-  pundit (~> 2.0)
+  puma
+  pundit
   rack-cors
   rails (~> 6.0)
   rails-controller-testing
@@ -631,7 +631,7 @@ DEPENDENCIES
   simple_form (~> 5.0)
   simplecov
   skylight
-  slim (~> 4.0)
+  slim
   slim_lint
   spreadsheet
   sprockets-rails
