@@ -60,14 +60,6 @@ module ApplicationHelper
     end
   end
 
-  def map_tag_marker(title)
-    icon_tag_tooltip(title, "map-marker-alt")
-  end
-
-  def icon_tag_tooltip(title, icon)
-    tag.i(nil, class: "fa fa-#{icon}", data: { toggle: "tooltip" }, title: title)
-  end
-
   def errors_full_messages(object)
     object.errors.map do |attribute, message|
       if attribute.to_s.starts_with?("responsible.")
