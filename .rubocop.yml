@@ -137,6 +137,9 @@ Style/AsciiComments:
 Style/ClassAndModuleChildren:
   Enabled: false
 
+Style/CommentedKeyword:
+  Enabled: false
+
 Style/Documentation:
   Enabled: false
 
