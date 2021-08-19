@@ -105,14 +105,14 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "brakeman", require: false
-  gem "rubocop", "~> 1", require: false
+  gem "rubocop", require: false
   gem "rubocop-rspec"
   gem "rubocop-rails"
-  gem "rspec-rails", ">= 4.0.0.beta"
+  gem "rspec-rails"
   gem "rspec_junit_formatter", require: false
   gem "rails-controller-testing"
   gem "factory_bot"
-  gem "meta_request", "~> 0.7"
+  gem "meta_request"
   gem "bullet"
   gem "faker"
   gem "parallel_tests"
@@ -122,8 +122,8 @@ end
 
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
-  gem "web-console", ">= 3.3.0"
-  gem "listen", ">= 3.0.5", "< 3.2"
+  gem "web-console"
+  gem "listen"
   gem "guard-rspec", require: false
   gem "letter_opener_web"
   gem "fuubar"
@@ -133,9 +133,9 @@ group :development do
 end
 
 group :test do
-  gem "capybara", ">= 3.34"
+  gem "capybara"
   gem "capybara-email"
   gem "capybara-screenshot"
-  gem "webdrivers", "~> 4.0"
+  gem "webdrivers"
   gem "database_cleaner"
 end
