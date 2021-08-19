@@ -94,17 +94,17 @@ puts
   first_rdv_created_by_agents_count = users.count { |user| user[:rdvs].first&.dig(:created_by) == "agent" }
   puts
   puts "#{first_rdv_created_by_users_count} utilisateurs qui ont créé leur 1er  RDV eux-même soit #{percentage(first_rdv_created_by_users_count, users.count)} du nombre d'utilisateurs et " \
-  "#{percentage(first_rdv_created_by_users_count, users_with_rdvs_count)} des utilisateurs avec un RDV de créé."
+       "#{percentage(first_rdv_created_by_users_count, users_with_rdvs_count)} des utilisateurs avec un RDV de créé."
   puts
 
   puts "#{first_rdv_created_by_agents_count} utilisateurs dont l'agent a créé le 1er RDV soit #{percentage(first_rdv_created_by_agents_count, users.count)} du nombre d'utilisateurs et " \
-  "#{percentage(first_rdv_created_by_agents_count, users_with_rdvs_count)} des utilisateurs avec un RDV de créé."
+       "#{percentage(first_rdv_created_by_agents_count, users_with_rdvs_count)} des utilisateurs avec un RDV de créé."
   puts
 
   rdv_seen_count = users.pluck(:oriented).count(true)
   puts
   puts "#{rdv_seen_count} utilisateurs avec un RDV d'effectué soit #{percentage(rdv_seen_count, users.count)} du nombre d'utilisateurs et " \
-  "#{percentage(rdv_seen_count, users_with_rdvs_count)} des utilisateurs avec un RDV de créé."
+       "#{percentage(rdv_seen_count, users_with_rdvs_count)} des utilisateurs avec un RDV de créé."
   puts
 
   users_with_rdv_seen_in_less_than_26_days_count = users.count do |user|
@@ -112,8 +112,8 @@ puts
   end
   puts
   puts "#{users_with_rdv_seen_in_less_than_26_days_count} utilisateurs avec un RDV fait moins de 26 jours après la création du compte soit " \
-   "#{percentage(users_with_rdv_seen_in_less_than_26_days_count, users.count)} du nombre d'utilisateurs " \
-  " et #{percentage(users_with_rdv_seen_in_less_than_26_days_count, rdv_seen_count)} des utilisateurs avec un RDV d'effectué."
+       "#{percentage(users_with_rdv_seen_in_less_than_26_days_count, users.count)} du nombre d'utilisateurs " \
+       " et #{percentage(users_with_rdv_seen_in_less_than_26_days_count, rdv_seen_count)} des utilisateurs avec un RDV d'effectué."
   puts
 
   users_with_rdv_excused_count = users.count do |user|
@@ -137,8 +137,8 @@ puts
   puts
 
   puts "#{users_absent_to_a_rdv_count} utilisateurs au total ont été absents à un RDV (excusé au non) soit " \
-  "#{percentage(users_absent_to_a_rdv_count, users.count)} du nombre d'utilisateurs " \
-  "et #{percentage(users_absent_to_a_rdv_count, users_with_rdvs_count)} des utilisateurs ayant des RDVs de créés."
+       "#{percentage(users_absent_to_a_rdv_count, users.count)} du nombre d'utilisateurs " \
+       "et #{percentage(users_absent_to_a_rdv_count, users_with_rdvs_count)} des utilisateurs ayant des RDVs de créés."
   puts
 
   times_between_user_creation_and_rdv_start = users.map do |user|
@@ -150,6 +150,6 @@ puts
     (times_between_user_creation_and_rdv_start.sum / times_between_user_creation_and_rdv_start.length.to_f) / (24 * 60 * 60)
   puts
   puts "#{average_time_between_user_creation_and_rdv_start.round(2)} jours en moyenne entre le moment où l'utilisateur est créé et " \
-  "le moment où le rdv est effectué pour les RDV effectués."
+       "le moment où le rdv est effectué pour les RDV effectués."
   puts
 end

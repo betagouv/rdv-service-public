@@ -46,7 +46,7 @@ describe RdvEndingShortlyBeforePresenter, type: :presenter do
 
       it {
         expect(subject).to eq "Maya JOAO a un RDV finissant à 08h30, vous allez laisser un trou de 30 minutes dans son agenda "\
-        "(ce RDV est dans un autre service ou une autre organisation à laquelle vous n'avez pas accès)"
+                              "(ce RDV est dans un autre service ou une autre organisation à laquelle vous n'avez pas accès)"
       }
     end
   end

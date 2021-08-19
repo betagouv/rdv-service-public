@@ -79,7 +79,7 @@ class CreateTerritories < ActiveRecord::Migration[6.0]
     ).each do |csv_row|
       agent = Agent.find_by(email: csv_row["agent_email"])
       if agent.nil?
-        Rails.logger.debug "could not find agent for #{csv_row['agent_email']}"
+        Rails.logger.debug { "could not find agent for #{csv_row['agent_email']}" }
         next
       end
       AgentTerritorialRole.create!(

@@ -48,16 +48,14 @@ class PlageOuvertureOverlap
   end
 
   def occurrences_date_range
-    @occurrences_date_range ||= begin
-      if po1.exceptionnelle?
-        po1.first_day.past? ? nil : (po1.first_day..po1.first_day)
-      elsif po2.exceptionnelle?
-        po2.first_day.past? ? nil : (po2.first_day..po2.first_day)
-      else
-        min = [[po1.first_day, po2.first_day].min, Time.zone.today].max
-        max = [po1.recurrence_until, po2.recurrence_until, 6.months.from_now].compact.min
-        (min..max)
-      end
-    end
+    @occurrences_date_range ||= if po1.exceptionnelle?
+                                  po1.first_day.past? ? nil : (po1.first_day..po1.first_day)
+                                elsif po2.exceptionnelle?
+                                  po2.first_day.past? ? nil : (po2.first_day..po2.first_day)
+                                else
+                                  min = [[po1.first_day, po2.first_day].min, Time.zone.today].max
+                                  max = [po1.recurrence_until, po2.recurrence_until, 6.months.from_now].compact.min
+                                  (min..max)
+                                end
   end
 end

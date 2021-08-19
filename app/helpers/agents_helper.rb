@@ -76,7 +76,7 @@ module AgentsHelper
         [
           agent.reverse_full_name,
           agent.id,
-          { 'data-url': send(path_helper_name, current_organisation, agent.id) }
+          { "data-url": send(path_helper_name, current_organisation, agent.id) }
         ]
       end,
       selected: agent_for_left_menu(given_agent).id
