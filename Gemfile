@@ -121,15 +121,10 @@ group :development, :test do
 end
 
 group :development do
-  # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
-  gem "web-console"
-  gem "listen"
-  gem "guard-rspec", require: false
-  gem "letter_opener_web"
-  gem "fuubar"
-  gem "better_errors"
-  gem "binding_of_caller"
-  gem "rails-erd"
+  gem "listen" # Needed for ActiveSupport::EventedFileUpdateChecker. See config/environment/development.rb
+  gem "better_errors" # Better error page than the Rails default
+  gem "letter_opener_web" # Saves sent emails and serves them on /letter_opener
+  gem "rails-erd" # Keeps docs/domain_model.png up-to-date. See .erdconfig
 end
 
 group :test do
