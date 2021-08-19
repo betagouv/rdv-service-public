@@ -36,11 +36,15 @@ module AgentUserFormHelper
 
   def agent_user_form_input_toggle_opts(user)
     %i[responsible relative relative_new relative_existing].index_with do |key|
-      send("agent_user_form_input_#{key}", user)
+      send("agent_user_form_input__#{key}", user)
     end
   end
 
-  def agent_user_form_input_responsible(user)
+  private
+
+  # implementations for agent_user_form_input_toggle_opts
+
+  def agent_user_form_input__responsible(user)
     {
       input_html: {
         "data-togglable": true,
@@ -50,7 +54,7 @@ module AgentUserFormHelper
     }
   end
 
-  def agent_user_form_input_relative(user)
+  def agent_user_form_input__relative(user)
     {
       input_html: {
         "data-togglable": true,
@@ -60,7 +64,7 @@ module AgentUserFormHelper
     }
   end
 
-  def agent_user_form_input_relative_new(user)
+  def agent_user_form_input__relative_new(user)
     {
       input_html: {
         "data-togglable": true,
@@ -71,7 +75,7 @@ module AgentUserFormHelper
     }
   end
 
-  def agent_user_form_input_relative_existing(user)
+  def agent_user_form_input__relative_existing(user)
     {
       input_html: {
         "data-togglable": true,

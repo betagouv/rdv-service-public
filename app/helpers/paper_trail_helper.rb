@@ -5,26 +5,29 @@ module PaperTrailHelper
     return "N/A" if value.nil?
     return I18n.l(value, format: :dense) if value.is_a? Time
 
-    if respond_to?(property_name)
-      send(property_name, value)
+    property_helper = "paper_trail__#{property_name}"
+    if respond_to?(property_helper, true)
+      send(property_helper, value)
     else
       value.to_s
     end
   end
 
-  def user_ids(value)
+  private
+
+  def paper_trail__user_ids(value)
     ::User.where(id: value).order_by_last_name.map(&:full_name).join(", ")
   end
 
-  def status(value)
+  def paper_trail__status(value)
     ::Rdv.human_enum_name("status", value)
   end
 
-  def agent_ids(value)
+  def paper_trail__agent_ids(value)
     ::Agent.where(id: value).order_by_last_name.map(&:full_name).join(", ")
   end
 
-  def lieu_id(value)
+  def paper_trail__lieu_id(value)
     ::Lieu.find_by(id: value)&.full_name
   end
 end
