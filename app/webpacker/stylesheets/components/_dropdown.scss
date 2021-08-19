@@ -12,12 +12,12 @@
 
 
 // Dropdown Large (Custom)
-.dropdown-lg {
+.dropdown-lg { // Unused ?
   width: $dropdown-lg-width;
 }
 
 @include media-breakpoint-down(sm) {
-  .dropdown-lg {
+  .dropdown-lg {// Unused ?
     width: 200px !important;
   }
 }

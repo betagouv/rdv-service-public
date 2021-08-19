@@ -41,7 +41,7 @@ footer.main-footer {
 
 body.users .footer {left: 0;}
 
-body.providers .footer {
+body.providers .footer { // Unused ?
   left: 0 !important;
 }
 
@@ -53,14 +53,14 @@ body.providers .footer {
 }
 
 // Used for account authentication pages
-.footer-alt {
+.footer-alt {// Unused ?
   left: 0;
   border: none;
   text-align: center;
 }
 
 // Layout - Topnav
-body[data-layout="topnav"] {
+body[data-layout="topnav"] { // Unused ?
   .footer {
       left: 0 !important;
       padding: 19px 0 20px;

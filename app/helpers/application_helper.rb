@@ -2,7 +2,7 @@
 
 module ApplicationHelper
   # Usage: class_names('my-class', 'my-other-class': condition)
-  def class_names(*args)
+  def class_names(*args) # replace with the rails 6 thing
     optional = args.last.is_a?(Hash) ? args.last : {}
     mandatory = optional.empty? ? args : args[0..-2]
 
@@ -60,11 +60,11 @@ module ApplicationHelper
     end
   end
 
-  def map_tag_marker(title)
+  def map_tag_marker(title) # Unused ?
     icon_tag_tooltip(title, "map-marker-alt")
   end
 
-  def icon_tag_tooltip(title, icon)
+  def icon_tag_tooltip(title, icon) # Unused ?
     tag.i(nil, class: "fa fa-#{icon}", data: { toggle: "tooltip" }, title: title)
   end
 

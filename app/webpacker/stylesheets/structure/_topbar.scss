@@ -1,4 +1,4 @@
-.button-menu-mobile {
+.button-menu-mobile {// Unused ?
   border: none;
   color: $dark;
   height: 70px;
@@ -15,27 +15,27 @@
 }
 
 @media (max-width: 1024px) {
-  .navbar-custom {
+  .navbar-custom {// Unused ?
     left: 70px;
     right: 0;
   }
-  .app-search {
+  .app-search {// Unused ?
     display: none;
   }
 }
 
 @include media-breakpoint-down(sm) {
-  .navbar-custom {
+  .navbar-custom {// Unused ?
     left: 0;
     padding: 0 10px;
     margin: -5px -10px 0;
   }
-  .button-menu-mobile {
+  .button-menu-mobile {// Unused ?
     &.disable-btn {
       display: inline-block;
     }
   }
-  .nav-user {
+  .nav-user {// Unused ?
     padding: 17px 5px 17px 57px !important;
     .account-position,
     .account-user-name {

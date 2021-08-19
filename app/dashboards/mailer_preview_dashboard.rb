@@ -4,6 +4,6 @@
 
 require "administrate/custom_dashboard"
 
-class MailerPreviewDashboard < Administrate::CustomDashboard
+class MailerPreviewDashboard < Administrate::CustomDashboard # remove this?
   resource "MailerPreview" # for administrate views, not an actual resource
 end

@@ -11,7 +11,7 @@
   }
 }
 
-.nav-pills {
+.nav-pills { // Unused ?
   > a {
     color: $gray-700;
     font-weight: $font-weight-semibold;   
@@ -22,7 +22,7 @@
 // nav-bordered
 //
 
-.nav-tabs.nav-bordered {
+.nav-tabs.nav-bordered { // Unused ?
   border-bottom: 2px solid rgba($gray-600, 0.2);
 
   .nav-item {

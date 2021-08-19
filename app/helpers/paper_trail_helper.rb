@@ -12,19 +12,19 @@ module PaperTrailHelper
     end
   end
 
-  def user_ids(value)
+  def user_ids(value) # Unused ?
     ::User.where(id: value).order_by_last_name.map(&:full_name).join(", ")
   end
 
-  def status(value)
+  def status(value) # Unused ?
     ::Rdv.human_enum_name("status", value)
   end
 
-  def agent_ids(value)
+  def agent_ids(value) # Unused ?
     ::Agent.where(id: value).order_by_last_name.map(&:full_name).join(", ")
   end
 
-  def lieu_id(value)
+  def lieu_id(value) # Unused ?
     ::Lieu.find_by(id: value)&.full_name
   end
 end

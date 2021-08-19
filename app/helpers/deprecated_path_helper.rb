@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DeprecatedPathHelper
-  def root_path?
+  def root_path? # Unused ?
     request.path == root_path
   end
 

@@ -3,19 +3,19 @@
   box-shadow: $shadow;
   margin-bottom: $grid-gutter-width;
 
-  .header-title {
+  .header-title {// Unused ?
     margin-bottom: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 0.02em;
     font-size: $font-size-base;
     margin-top: 0;
   }
-  .card-drop {
+  .card-drop {// Unused ?
     font-size: 20px;
     line-height: 0;
     color: inherit;
   }
-  .card-widgets {
+  .card-widgets {// Unused ?
     float: right;
     height: 16px;
     > a {
@@ -42,13 +42,13 @@
   margin-top: 0;
 }
 
-.card-warning {
+.card-warning { // Unused ?
   border: 1px solid $warning;
   background-color: lighten($warning, 45%);
 }
 
 //Card disable loading (Custom Cards)
-.card-disabled {
+.card-disabled { // Unused ?
   position: absolute;
   left: 0;
   right: 0;
@@ -57,7 +57,7 @@
   border-radius: $card-border-radius;
   background: rgba($white, 0.8);
 
-  .card-portlets-loader {
+  .card-portlets-loader {// Unused ?
     background-color: $dark;
     animation: rotatebox 1.2s infinite ease-in-out;
     height: 30px;
@@ -70,7 +70,7 @@
   }
 }
 
-@keyframes rotatebox {
+@keyframes rotatebox {// Unused ?
   0% {
     transform: perspective(120px) rotateX(0deg) rotateY(0deg);
   }
@@ -84,7 +84,7 @@
 
 // Pricing card
 
-.card-pricing {
+.card-pricing { // Unused ?
   position: relative;
 
   .card-pricing-plan-name {
@@ -123,7 +123,7 @@
   }
 }
 
-.card-pricing-recommended {
+.card-pricing-recommended { // Unused ?
 
   @include media-breakpoint-up(md) {
     margin-top: -1.9375rem;

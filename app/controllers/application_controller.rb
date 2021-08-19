@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
     respond_with(*args, options, &blk)
   end
 
-  def demo?
+  def demo? # replace with rdv_solidarites_instance_name
     ENV["HOST"]&.match(/demo/)
   end
   helper_method :demo?

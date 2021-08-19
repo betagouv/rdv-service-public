@@ -1,5 +1,5 @@
 @each $color, $value in $theme-colors {
-  .bg-#{$color}-lighten {
+  .bg-#{$color}-lighten {// Unused ?
       @include bg-variant-light($value);
   }
 }

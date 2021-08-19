@@ -40,7 +40,7 @@ module AgentUserFormHelper
     end
   end
 
-  def agent_user_form_input_responsible(user)
+  def agent_user_form_input_responsible(user) # Unused ?
     {
       input_html: {
         "data-togglable": true,
@@ -50,7 +50,7 @@ module AgentUserFormHelper
     }
   end
 
-  def agent_user_form_input_relative(user)
+  def agent_user_form_input_relative(user) # Unused ?
     {
       input_html: {
         "data-togglable": true,
@@ -60,7 +60,7 @@ module AgentUserFormHelper
     }
   end
 
-  def agent_user_form_input_relative_new(user)
+  def agent_user_form_input_relative_new(user) # Unused ?
     {
       input_html: {
         "data-togglable": true,
@@ -71,7 +71,7 @@ module AgentUserFormHelper
     }
   end
 
-  def agent_user_form_input_relative_existing(user)
+  def agent_user_form_input_relative_existing(user) # Unused ?
     {
       input_html: {
         "data-togglable": true,

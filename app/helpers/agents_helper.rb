@@ -9,11 +9,11 @@ module AgentsHelper
     tag.span("Vous", class: "badge badge-info") if current_agent?(agent)
   end
 
-  def admin_tag(agent)
+  def admin_tag(agent) # Unused ?
     tag.span("Admin", class: "badge badge-danger") if agent.role_in_organisation(current_organisation).admin?
   end
 
-  def delete_dropdown_link(agent)
+  def delete_dropdown_link(agent) # Unused ?
     return unless policy([:agent, agent]).destroy?
 
     link_to "Supprimer",
@@ -37,7 +37,7 @@ module AgentsHelper
     params
   end
 
-  def display_meta_note(note)
+  def display_meta_note(note) # Unused ?
     meta = tag.span("le #{l(note.created_at.to_date)}", title: l(note.created_at))
     meta += " par #{note.agent.full_name_and_service}"
     tag.span(meta, class: "font-italic")
