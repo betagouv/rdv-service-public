@@ -11,7 +11,6 @@ import 'holderjs/holder.min';
 import 'select2/dist/js/select2.full.min.js';
 import 'select2/dist/js/i18n/fr.js';
 import { Datetimepicker } from 'components/datetimepicker';
-import { Avatar } from 'components/avatar';
 import { Menu } from 'components/menu';
 import { Modal } from 'components/modal';
 import { PopulateLibelle } from 'components/populate-libelle';
@@ -71,7 +70,6 @@ $(document).on('turbolinks:load', function() {
   let menu = new Menu();
 
   menu.init();
-  new Avatar().init();
 
   $(window).on('resize', function(e) {
     e.preventDefault();

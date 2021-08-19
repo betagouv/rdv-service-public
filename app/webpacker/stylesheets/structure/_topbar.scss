@@ -1,26 +1,3 @@
-
-.account-user-avatar {
-  text-align: center;
-  color: white;
-  font-weight: bold;
-  $avatar-width: 2.6em;
-  width: $avatar-width;
-  line-height: $avatar-width;
-  border-radius: 2px;
-}
-
-.account-user-avatar.avatar-xl {
-  $avatar-width: 7em;
-  width: $avatar-width;
-  line-height: $avatar-width;
-}
-
-.account-user-avatar.avatar-md {
-  $avatar-width: 4em;
-  width: $avatar-width;
-  line-height: $avatar-width;
-}
-
 .button-menu-mobile {
   border: none;
   color: $dark;
