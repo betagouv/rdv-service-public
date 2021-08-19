@@ -61,7 +61,7 @@ describe PaperTrailAugmentedVersion do
           described_class.new(
             version,
             previous_version,
-            attributes_whitelist: ["user_ids"]
+            attributes_allowlist: ["user_ids"]
           ).changes
         ).to eq({ "user_ids" => [[1], [1, 2]] })
       end
