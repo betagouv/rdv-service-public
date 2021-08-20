@@ -6,6 +6,7 @@ class Absence < ApplicationRecord
   include IcalHelpers::Ics
   include IcalHelpers::Rrule
   include Payloads::Absence
+  include Expiration
 
   auto_strip_attributes :title
 
@@ -15,18 +16,12 @@ class Absence < ApplicationRecord
   has_many :webhook_endpoints, through: :organisation
 
   before_validation :set_end_day
+
   validates :agent, :organisation, :first_day, :title, presence: true
   validate :ends_at_should_be_after_starts_at
 
   scope :by_starts_at, -> { order(first_day: :desc, start_time: :desc) }
-
-  scope :future, -> { where(end_day: Time.zone.today..) }
-  scope :past, -> { where.not(end_day: Time.zone.today..) } # NOTE: brakeman doesn't support beginless ranges https://github.com/presidentbeef/brakeman/issues/1483
   scope :with_agent, ->(agent) { where(agent_id: agent.id) }
-
-  def in_progress?
-    starts_at.past? && first_occurrence_ends_at.future?
-  end
 
   def ical_uid
     "absence_#{id}@#{BRAND}"

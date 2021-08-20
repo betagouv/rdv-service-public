@@ -1,46 +1,38 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::AbsencesController, type: :controller do
+describe Admin::AbsencesController, type: :controller do
   render_views
 
   let!(:organisation) { create(:organisation) }
-  let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
   shared_examples "agent can CRUD absences" do
     describe "GET #index" do
-      let!(:absence_un_jour_de_juillet) do
-        create(:absence, agent: agent,
-                         first_day: Date.new(2019, 7, 21),
-                         start_time: Tod::TimeOfDay.new(8),
-                         end_time: Tod::TimeOfDay.new(10),
-                         organisation: organisation)
-      end
-
-      let!(:absence_une_semaine_en_aout) do
-        create(:absence, agent: agent,
-                         first_day: Date.new(2019, 8, 20),
-                         start_time: Tod::TimeOfDay.new(8),
-                         end_day: Date.new(2019, 8, 31),
-                         end_time: Tod::TimeOfDay.new(22),
-                         organisation: organisation)
-      end
+      let(:today) { Time.zone.parse("2019-06-18 18:00") }
 
       before do
-        travel_to(Time.zone.parse("2019-06-18 18:00"))
-        sign_in agent
-        get :index, params: { organisation_id: organisation.id, agent_id: agent.id }
+        travel_to(today)
       end
 
-      after { travel_back }
+      it "respond successful" do
+        get :index, params: { organisation_id: organisation.id, agent_id: agent.id }
+        expect(response).to be_successful
+      end
 
-      it { expect(response).to be_successful }
+      it "assigns absences" do
+        absence_juin = create(:absence,
+                              agent: agent,
+                              organisation: organisation,
+                              first_day: today + 2.days)
 
-      it {
-        expect(assigns(:absences).sort).to eq([
-          absence_un_jour_de_juillet,
-          absence_une_semaine_en_aout
-        ].sort)
-      }
+        absence_juillet = create(:absence,
+                                 agent: agent,
+                                 organisation: organisation,
+                                 first_day: today + 1.month,
+                                 end_day: today + 1.month + 3.days)
+
+        get :index, params: { organisation_id: organisation.id, agent_id: agent.id }
+        expect(assigns(:absences).sort).to eq([absence_juin, absence_juillet].sort)
+      end
     end
 
     describe "GET #new" do
@@ -175,15 +167,17 @@ RSpec.describe Admin::AbsencesController, type: :controller do
   end
 
   context "agent can CRUD on his absences" do
+    let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+
     before { sign_in agent }
 
     it_behaves_like "agent can CRUD absences"
   end
 
   context "admin can CRUD on an agent's absences" do
-    let!(:admin) { create(:agent, admin_role_in_organisations: [organisation]) }
+    let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
-    before { sign_in admin }
+    before { sign_in agent }
 
     it_behaves_like "agent can CRUD absences"
   end
