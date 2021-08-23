@@ -60,10 +60,6 @@ Rails/CreateTableWithTimestamps:
   Exclude:
     - 'db/migrate/20210301135256_create_territories.rb'
 
-Rails/Delegate:
-  Exclude:
-    - 'config/initializers/recurrence_monkey_patch.rb'
-
 Rails/DynamicFindBy:
   Exclude:
     - 'spec/features/agents/admin_can_configure_the_organisation_spec.rb'
