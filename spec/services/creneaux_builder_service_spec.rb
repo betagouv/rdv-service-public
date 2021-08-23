@@ -160,7 +160,7 @@ describe CreneauxBuilderService, type: :service do
 
   context "with a cancelled RDV" do
     let!(:rdv) do
-      create(:rdv, starts_at: today + 9.hours + 30.minutes, duration_in_min: 30, agents: [agent], cancelled_at: tomorrow + 9.hours + 30.minutes, organisation: organisation,
+      create(:rdv, starts_at: today + 9.hours + 30.minutes, duration_in_min: 30, agents: [agent], status: "revoked", organisation: organisation,
                    lieu: lieu)
     end
 

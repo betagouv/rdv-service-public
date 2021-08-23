@@ -12,7 +12,7 @@ describe Rdv, type: :model do
       it { expect(rdv.cancellable?).to eq(true) }
 
       context "but is already cancelled" do
-        let(:rdv) { create(:rdv, cancelled_at: now - 1.month, starts_at: now + 5.hours) }
+        let(:rdv) { create(:rdv, status: "excused", starts_at: now + 5.hours) }
 
         it { expect(rdv.cancellable?).to eq(false) }
       end
