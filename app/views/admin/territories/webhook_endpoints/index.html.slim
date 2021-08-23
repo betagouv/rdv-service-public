@@ -14,6 +14,7 @@
               td Url cible
           tbody
             - @webhooks.each do |webhook|
-              td webhook.organisation.name
-              td webhook.target_url
+              td = webhook.organisation.name
+              td = webhook.target_url
 
+        = link_to "Ajouter", new_admin_territory_webhook_endpoint_path(current_territory), class: "btn btn-primary"
