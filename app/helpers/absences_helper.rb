@@ -12,6 +12,6 @@ module AbsencesHelper
   def an_ocurrence_after_today?(absence)
     absence.starts_at.past? &&
       absence.recurrence.presence &&
-      absence.recurrence.lazy.map(&:to_date).select { |d| d > Time.zone.now }.take(1).any?
+      absence.recurrence.lazy.map(&:to_date).any? { |d| d > Time.zone.now }
   end
 end
