@@ -1,7 +1,8 @@
-a.rdv-status {
+.rdv-status {
   border-radius: 5px;
   border: 1px solid transparent;
 }
+
 a.rdv-status:hover{
   border-color: #000;
   color: inherit;
@@ -20,7 +21,7 @@ $status_colors: (
 );
 
 @each $status, $color in $status_colors {
-  a.rdv-status-#{$status},
+  .rdv-status-#{$status},
   .btn.rdv-status-#{$status} {
     background-color: $color;
     color: #000;
