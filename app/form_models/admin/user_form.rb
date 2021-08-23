@@ -24,27 +24,47 @@ class Admin::UserForm
   end
 
   def save
+
     valid? && user.save
   end
 
   private
 
   def duplicate_results
-    @duplicate_results ||= DuplicateUsersFinderService.perform_with(user)
+    @duplicate_results ||= if user.responsible&.new_record?
+      DuplicateUsersFinderService.perform_with(user) | DuplicateUsersFinderService.perform_with(user.responsible)
+    else
+      DuplicateUsersFinderService.perform_with(user)
+    end
   end
 
   def validate_duplicates
     duplicate_results
       .select { _1.severity == :error }
-      .select { _1.attributes.any? { |att| user.send("#{att}_changed?") } }
+      .select { _1.attributes.any? do |att|
+      if user.responsible&.new_record?
+        user.responsible.send("#{att}_changed?") || user.send("#{att}_changed?")
+      else
+        user.send("#{att}_changed?")
+      end
+    end
+    }
       .each { user.errors.add(:base, render_message(_1)) }
   end
 
   def warn_duplicates
     duplicate_results
       .select { _1.severity == :warning }
-      .select { _1.attributes.any? { |att| user.send("#{att}_changed?") } }
+      .select { _1.attributes.any? do |att|
+      if user.responsible&.new_record?
+        user.responsible.send("#{att}_changed?") || user.send("#{att}_changed?")
+      else
+        user.send("#{att}_changed?")
+      end
+    end
+    }
       .each { user.warnings.add(:base, render_message(_1), active: true) }
+
   end
 
   def render_message(duplicate_result)
