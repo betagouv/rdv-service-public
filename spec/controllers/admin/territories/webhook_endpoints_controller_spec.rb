@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::Territories::WebhookConfigurationsController, type: :controller do
+RSpec.describe Admin::Territories::WebhookEndpointsController, type: :controller do
   let(:territory) { create(:territory, departement_number: "62") }
   let(:organisation) { create(:organisation, territory: territory) }
   let(:agent) { create(:agent, organisations: [organisation]) }

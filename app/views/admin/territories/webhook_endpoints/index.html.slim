@@ -1,0 +1,19 @@
+- content_for(:menu_item) { "menu-departement-agents" }
+- content_for(:title) { "Administration #{current_territory}" }
+
+.row
+  .col-md-8
+    .card
+      .card-header
+        h5.card-title Webhooks
+      .card-body
+        table.table
+          thead
+            tr
+              td Organisation
+              td Url cible
+          tbody
+            - @webhooks.each do |webhook|
+              td webhook.organisation.name
+              td webhook.target_url
+
