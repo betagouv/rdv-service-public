@@ -39,7 +39,8 @@ class Api::V1::BaseController < ActionController::Base
     record_klass = record.class
     blueprint_klass = "#{record_klass.name}Blueprint".constantize
     root = record.class.model_name.element
-    render json: blueprint_klass.render(record, root: root, **options)
+    api_options = current_organisation&.territory&.api_options || {} # See issue #1657
+    render json: blueprint_klass.render(record, root: root, api_options: api_options, **options)
   end
 
   def render_collection(objects)
@@ -55,7 +56,8 @@ class Api::V1::BaseController < ActionController::Base
     objects_klass = objects.klass
     blueprint_klass = "#{objects_klass.name}Blueprint".constantize
     root = objects_klass.model_name.collection
-    render json: blueprint_klass.render(objects, root: root, meta: meta)
+    api_options = current_organisation&.territory&.api_options || {} # See issue #1657
+    render json: blueprint_klass.render(objects, root: root, meta: meta, api_options: api_options)
   end
 
   # Rescuable exceptions
