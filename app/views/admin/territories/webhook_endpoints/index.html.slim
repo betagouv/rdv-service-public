@@ -10,11 +10,19 @@
         table.table
           thead
             tr
-              td Organisation
-              td Url cible
+              th Organisation
+              th Url cible
+              th Actions
           tbody
             - @webhooks.each do |webhook|
-              td = webhook.organisation.name
-              td = webhook.target_url
+              tr
+                td = webhook.organisation.name
+                td = webhook.target_url
+                td
+                  .d-flex
+                    div.mr-3= link_to edit_admin_territory_webhook_endpoint_path(current_territory, webhook), title: t("helpers.edit") do
+                        i.fa.fa-edit
+                    = link_to admin_territory_webhook_endpoint_path(current_territory, webhook), method: :delete, data: { confirm: "Voulez-vous vraiment supprimer ce endpoint ?" } do
+                        i.fa.fa-trash-alt
 
         = link_to "Ajouter", new_admin_territory_webhook_endpoint_path(current_territory), class: "btn btn-primary"

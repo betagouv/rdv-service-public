@@ -1,0 +1,19 @@
+- content_for(:menu_item) { "menu-organisation" }
+
+- content_for :title do
+  | Modifier un endpoint
+
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-header
+        h5 Modifier le endpoint
+      .card-body
+        = simple_form_for @webhook, url: admin_territory_webhook_endpoint_path(current_territory, @webhook) do |f|
+          = render "model_errors", model: @webhook
+          = f.input :organisation_id, collection: current_territory.organisations, allow_blank: true
+          = f.input :target_url
+          = f.input :secret
+
+          .text-right
+            = f.button :submit

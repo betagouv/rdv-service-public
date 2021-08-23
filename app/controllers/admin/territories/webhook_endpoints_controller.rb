@@ -18,6 +18,24 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
     end
   end
 
+  def edit
+    @webhook = WebhookEndpoint.find(params[:id])
+  end
+
+  def update
+    @webhook = WebhookEndpoint.find(params[:id])
+    if @webhook.update(**webhook_endpoint_params)
+      redirect_to admin_territory_webhook_endpoints_path(current_territory)
+    else
+      render :new
+    end
+  end
+
+  def destroy
+    WebhookEndpoint.find(params[:id]).destroy
+    redirect_to admin_territory_webhook_endpoints_path(current_territory)
+  end
+
   private
 
   def webhook_endpoint_params
