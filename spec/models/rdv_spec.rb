@@ -1,6 +1,37 @@
 # frozen_string_literal: true
 
 describe Rdv, type: :model do
+  describe "#starts_at_is_plausible" do
+    let(:now) { Time.zone.parse("2021-05-03 14h00") }
+    let(:rdv) { build :rdv, starts_at: starts_at }
+
+    before { travel_to now }
+
+    describe "next week" do
+      let(:starts_at) { now + 1.week }
+
+      it { expect(rdv).to be_valid }
+    end
+
+    describe "last month" do
+      let(:starts_at) { now - 1.month }
+
+      it do
+        expect(rdv).not_to be_valid
+        expect(rdv.errors.details.dig(:starts_at, 0, :error)).to eq :must_be_future
+      end
+    end
+
+    describe "ten years from now week" do
+      let(:starts_at) { now + 10.years }
+
+      it do
+        expect(rdv).not_to be_valid
+        expect(rdv.errors.details.dig(:starts_at, 0, :error)).to eq :must_be_within_two_years
+      end
+    end
+  end
+
   describe "#cancellable?" do
     let(:now) { Time.zone.parse("2021-05-03 14h00") }
 

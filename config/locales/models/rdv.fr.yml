@@ -1,12 +1,12 @@
 fr:
   activerecord:
-
     errors:
       models:
         rdv:
           attributes:
             starts_at:
-              must_be_future: "doit être dans le futur"
+              must_be_future: "doit être dans le futur."
+              must_be_within_two_years: "doit être dans moins de deux ans."
     models:
       rdv: Rendez-vous
     attributes:
