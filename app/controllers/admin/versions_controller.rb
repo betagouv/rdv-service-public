@@ -9,7 +9,7 @@ class Admin::VersionsController < AgentAuthController
   def index
     authorize(@resource, :show?)
     @augmented_versions = PaperTrailAugmentedVersion
-      .for_resource(@resource, attributes_whitelist: params[:only])
+      .for_resource(@resource, attributes_allowlist: params[:only])
       .select(&:changes?)
       .reverse
   end

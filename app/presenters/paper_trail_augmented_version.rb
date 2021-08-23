@@ -14,16 +14,16 @@ class PaperTrailAugmentedVersion
 
   delegate :created_at, :whodunnit, to: :version
 
-  def initialize(version, previous_version, attributes_whitelist: nil)
+  def initialize(version, previous_version, attributes_allowlist: nil)
     @version = version
     @previous_version = previous_version
-    @attributes_whitelist = attributes_whitelist
+    @attributes_allowlist = attributes_allowlist
   end
 
   def changes
     @changes ||= begin
       c = @version.changeset.except("updated_at").to_h.merge(virtual_changes)
-      c = c.slice(*@attributes_whitelist) unless @attributes_whitelist.nil?
+      c = c.slice(*@attributes_allowlist) unless @attributes_allowlist.nil?
       c
     end
   end

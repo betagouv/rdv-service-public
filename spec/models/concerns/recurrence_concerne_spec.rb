@@ -20,7 +20,7 @@ describe RecurrenceConcern do
 
           it " returns starts_at from given first_day " do
             starts_at = Time.zone.parse("2019-08-15 10h00:00")
-            create(element, first_day: starts_at.to_date, start_time: starts_at.to_time) # rubocop:disable Rails/Date
+            create(element, first_day: starts_at.to_date, start_time: starts_at.to_time)
             period = Date.new(2019, 8, 12)..Date.new(2019, 8, 19)
 
             occurrences = element_class.all_occurrences_for(period)
