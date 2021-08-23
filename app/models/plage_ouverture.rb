@@ -6,6 +6,7 @@ class PlageOuverture < ApplicationRecord
   include IcalHelpers::Ics
   include IcalHelpers::Rrule
   include Payloads::PlageOuverture
+  include Expiration
 
   auto_strip_attributes :title
 
@@ -14,16 +15,11 @@ class PlageOuverture < ApplicationRecord
   belongs_to :lieu
   has_and_belongs_to_many :motifs, -> { distinct }
 
-  after_save :refresh_plage_ouverture_expired_cached
-
   validate :end_after_start
   validates :motifs, :title, presence: true
   caution :warn_overlapping_plage_ouvertures
 
   has_many :webhook_endpoints, through: :organisation
-
-  scope :expired, -> { where(expired_cached: true) }
-  scope :not_expired, -> { where.not(expired_cached: true) }
 
   def ical_uid
     "plage_ouverture_#{id}@#{BRAND}"
@@ -46,18 +42,8 @@ class PlageOuverture < ApplicationRecord
       .includes(:agent)
   end
 
-  def expired?
-    # Use .expired_cached? for performance
-    (recurrence.nil? && first_day < Time.zone.today) ||
-      (recurrence.present? && recurrence.to_hash[:until].present? && recurrence.to_hash[:until].to_date < Time.zone.today)
-  end
-
   def available_motifs
     Motif.available_motifs_for_organisation_and_agent(organisation, agent)
-  end
-
-  def refresh_plage_ouverture_expired_cached
-    update_column(:expired_cached, expired?)
   end
 
   def overlaps?(other)

@@ -55,7 +55,7 @@ class CronJob < ApplicationJob
     self.cron_expression = "0 1 * * *"
 
     def perform
-      PlageOuverture.where(expired_cached: false).each(&:refresh_plage_ouverture_expired_cached)
+      PlageOuverture.where(expired_cached: false).each(&:refresh_expired_cached)
     end
   end
 

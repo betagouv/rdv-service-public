@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_18_092811) do
+ActiveRecord::Schema.define(version: 2021_08_20_115346) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 2021_08_18_092811) do
     t.time "start_time", null: false
     t.date "end_day", null: false
     t.time "end_time", null: false
+    t.boolean "expired_cached", default: false, null: false
     t.index ["agent_id"], name: "index_absences_on_agent_id"
     t.index ["end_day"], name: "index_absences_on_end_day"
     t.index ["organisation_id"], name: "index_absences_on_organisation_id"
