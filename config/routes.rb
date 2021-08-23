@@ -29,7 +29,6 @@ Rails.application.routes.draw do
       get "sign_in_as", on: :member
     end
     resources :motif_libelles
-    resources :webhook_endpoints
     resources :mailer_previews, only: %i[index show]
     root to: "agents#index"
 
