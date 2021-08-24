@@ -3,188 +3,103 @@
 describe Admin::UserForm, type: :form do
   let!(:organisation) { create(:organisation) }
 
-  context "no errors whatsoever" do
-    before do
-      allow(DuplicateUsersFinderService).to receive(:perform).with(user).and_return(duplicate_users_mock)
+  describe "valid?" do
+    it "valid without error" do
+      user = build(:user)
+      allow(DuplicateUsersFinderService).to receive(:find_duplicate).with(user).and_return([])
+      allow(DuplicateUsersFinderService).to receive(:find_duplicate_based_on_email).with(user).and_return(nil)
+      expect(described_class.new(user, view_locals: { current_organisation: organisation })).to be_valid
     end
 
-    let(:user) { build(:user, first_name: "Jean", last_name: "Jacques") }
-    let(:duplicate_users_mock) { [] }
-
-    it "is valid" do
-      expect(described_class.new(user, view_locals: { current_organisation: organisation }).valid?).to eq true
-    end
-
-    it "saves the user" do
-      expect(user).to receive(:save)
-      described_class.new(user, view_locals: { current_organisation: organisation }).save
-    end
-  end
-
-  context "user has model errors" do
-    before do
-      allow(DuplicateUsersFinderService).to receive(:perform).with(user).and_return(duplicate_users_mock)
-    end
-
-    let(:user) { build(:user, first_name: "Jean", last_name: nil) }
-    let(:duplicate_users_mock) { [] }
-
-    it "is not valid" do
+    it "invalid without last name" do
+      user = build(:user, first_name: "Jean", last_name: nil)
+      allow(DuplicateUsersFinderService).to receive(:find_duplicate).with(user).and_return([])
+      allow(DuplicateUsersFinderService).to receive(:find_duplicate_based_on_email).with(user).and_return(nil)
       user_form = described_class.new(user, view_locals: { current_organisation: organisation })
-      expect(user_form.valid?).to eq false
-      expect(user_form.errors).to be_present
+      expect(user_form.valid?).to be false
       expect(user_form.errors[:last_name]).to be_present
     end
 
-    it "does not save the user" do
-      expect(user).not_to receive(:save)
-      described_class.new(user, view_locals: { current_organisation: organisation }).save
-    end
-  end
-
-  context "duplication error based on email" do
-    before do
-      allow(DuplicateUsersFinderService).to receive(:perform).with(user).and_return(duplicate_users_mock)
-    end
-
-    let(:user) { build(:user, first_name: "Jean", last_name: "Jacques", email: "jean@jacques.fr") }
-    let!(:existing_user) { create(:user, first_name: "Jeannot", email: "jean@jacques.fr") }
-    let(:duplicate_users_mock) { [OpenStruct.new(severity: :error, attributes: [:email], user: existing_user)] }
-
-    it "is not valid" do
+    it "invalid if duplicate found on email" do
+      user = build(:user, email: "jean@jacques.fr")
+      existing_user = create(:user, email: "jean@jacques.fr")
+      allow(DuplicateUsersFinderService).to receive(:find_duplicate_based_on_email).with(user).and_return(existing_user)
+      allow(DuplicateUsersFinderService).to receive(:find_duplicate).with(user).and_return([])
       user_form = described_class.new(user, view_locals: { current_organisation: organisation })
-      expect(user_form.valid?).to eq false
-      expect(user_form.errors).to be_present
-      expect(user_form.errors[:base]).to be_present
-      expect(user_form.errors[:base][0]).to include("Jeannot")
-      expect(user_form.errors[:base][0]).to include("Un usager avec le même email existe déjà")
+      expect(user_form.valid?).to be false
+      expect(user_form.errors[:base][0]).to include("jean@jacques.fr")
+      expect(user_form.errors[:base][0]).to include("Un usager avec des informations similaires existe déjà")
     end
 
-    it "does not save the user" do
-      expect(user).not_to receive(:save)
-      described_class.new(user, view_locals: { current_organisation: organisation }).save
-    end
-  end
-
-  context "duplication warning based on phone_number" do
-    before do
-      allow(DuplicateUsersFinderService).to receive(:perform).with(user).and_return(duplicate_users_mock)
-    end
-
-    let(:user) { build(:user, first_name: "Jean", last_name: "Jacques", phone_number: "0101010101") }
-    let!(:existing_user) { create(:user, first_name: "Jeannot", phone_number: "0101010101") }
-    let(:duplicate_users_mock) { [OpenStruct.new(severity: :warning, attributes: [:phone_number], user: existing_user)] }
-
-    it "is not valid" do
+    it "invalid if duplicate on phone number" do
+      user = build(:user, phone_number: "0101010101")
+      existing_user = create(:user, phone_number: "0101010101")
+      allow(DuplicateUsersFinderService).to receive(:find_duplicate).with(user).and_return([existing_user])
+      allow(DuplicateUsersFinderService).to receive(:find_duplicate_based_on_email).with(user).and_return(nil)
       user_form = described_class.new(user, view_locals: { current_organisation: organisation })
-      expect(user_form.valid?).to eq false
-      expect(user_form.warnings).to be_present
-      expect(user_form.warnings[:base]).to be_present
-      expect(user_form.warnings[:base][0]).to include("Jeannot")
-      expect(user_form.warnings[:base][0]).to include("Un usager avec le même numéro de téléphone existe déjà")
+      expect(user_form.valid?).to be false
+      expect(user_form.errors[:base][0]).to include("0101010101")
+      expect(user_form.errors[:base][0]).to include("Un usager avec des informations similaires existe déjà")
     end
 
-    it "does not save the user" do
-      expect(user).not_to receive(:save)
-      described_class.new(user, view_locals: { current_organisation: organisation }).save
-    end
-  end
+    it "invalid with persisted user, phone just changed" do
+      user = create(:user, phone_number: nil)
+      user.phone_number = "0101010101"
+      existing_user = create(:user, phone_number: "0101010101")
 
-  context "duplication warning bypassed" do
-    before do
-      allow(DuplicateUsersFinderService).to receive(:perform).with(user).and_return(duplicate_users_mock)
-    end
+      allow(DuplicateUsersFinderService).to receive(:find_duplicate).with(user).and_return([existing_user])
+      allow(DuplicateUsersFinderService).to receive(:find_duplicate_based_on_email).with(user).and_return(nil)
 
-    let(:user) { build(:user, first_name: "Jean", last_name: "Jacques", phone_number: "0101010101") }
-    let!(:existing_user) { create(:user, first_name: "Jeannot", phone_number: "0101010101") }
-    let(:duplicate_users_mock) { [OpenStruct.new(severity: :warning, attributes: [:phone_number], user: existing_user)] }
-
-    it "is valid" do
-      expect(described_class.new(user, active_warnings_confirm_decision: true, view_locals: { current_organisation: organisation }).valid?).to eq true
-    end
-
-    it "saves the user" do
-      expect(user).to receive(:save)
-      described_class.new(user, active_warnings_confirm_decision: true, view_locals: { current_organisation: organisation }).save
-    end
-  end
-
-  context "duplication warning based on phone_number with persisted user, phone just changed" do
-    before do
-      allow(DuplicateUsersFinderService).to receive(:perform).with(user).and_return(duplicate_users_mock)
-    end
-
-    let!(:user) do
-      u = create(:user, first_name: "Jean", last_name: "Jacques", phone_number: nil)
-      u.phone_number = "0101010101"
-      u
-    end
-    let!(:existing_user) { create(:user, first_name: "Jeannot", phone_number: "0101010101") }
-    let(:duplicate_users_mock) { [OpenStruct.new(severity: :warning, attributes: [:phone_number], user: existing_user)] }
-
-    it "is not valid" do
       user_form = described_class.new(user, view_locals: { current_organisation: organisation })
-      expect(user_form.valid?).to eq false
-      expect(user_form.warnings).to be_present
-      expect(user_form.warnings[:base]).to be_present
-      expect(user_form.warnings[:base][0]).to include("Jeannot")
-      expect(user_form.warnings[:base][0]).to include("Un usager avec le même numéro de téléphone existe déjà")
+      expect(user_form.valid?).to be false
+      expect(user_form.errors[:base][0]).to include("0101010101")
+      expect(user_form.errors[:base][0]).to include("Un usager avec des informations similaires existe déjà")
     end
 
-    it "does not save the user" do
-      expect(user).not_to receive(:save)
-      described_class.new(user, view_locals: { current_organisation: organisation }).save
-    end
-  end
+    it "valid with persisted user, phone did not change" do
+      user = create(:user, phone_number: nil)
+      user.last_name = "Fifou"
+      create(:user, phone_number: "0101010101")
 
-  context "duplication warning based on phone_number with persisted user, phone did not change" do
-    before do
-      allow(DuplicateUsersFinderService).to receive(:perform).with(user).and_return(duplicate_users_mock)
-    end
+      allow(DuplicateUsersFinderService).to receive(:find_duplicate).with(user).and_return([])
+      allow(DuplicateUsersFinderService).to receive(:find_duplicate_based_on_email).with(user).and_return(nil)
 
-    let!(:user) do
-      u = create(:user, first_name: "Jean", last_name: "Jacques", phone_number: "0101010101")
-      u.last_name = "Fifou"
-      u
-    end
-    let!(:existing_user) { create(:user, first_name: "Jeannot", phone_number: "0101010101") }
-    let(:duplicate_users_mock) { [OpenStruct.new(severity: :warning, attributes: [:phone_number], user: existing_user)] }
-
-    it "is valid" do
       user_form = described_class.new(user, view_locals: { current_organisation: organisation })
-      expect(user_form.valid?).to eq true
-      expect(user_form.warnings).to be_empty
+      expect(user_form).to be_valid
     end
 
-    it "saves the user" do
-      expect(user).to receive(:save)
-      described_class.new(user, view_locals: { current_organisation: organisation }).save
-    end
-  end
-
-  context "duplication warning based on phone number for a user with responsible" do
-    before do
-      allow(DuplicateUsersFinderService).to receive(:perform).with(user).and_return([])
-      allow(DuplicateUsersFinderService).to receive(:perform).with(user.responsible).and_return(duplicate_users_mock)
-    end
-
-    let!(:user) { build(:user, first_name: "Paul", last_name: "Jacques", responsible: build(:user, first_name: "Jean", last_name: "Jacques", phone_number: "0101010101")) }
-    let!(:existing_user) { create(:user, first_name: "Jeannot", phone_number: "0101010101") }
-
-    let(:duplicate_users_mock) { [OpenStruct.new(severity: :warning, attributes: [:phone_number], user: existing_user)] }
-
-    it "is valid" do
+    it "invalid without responsible last name" do
+      responsible = build(:user, first_name: "Jean", last_name: nil)
+      user = build(:user, responsible: responsible)
+      allow(DuplicateUsersFinderService).to receive(:find_duplicate).with(user).and_return([])
+      allow(DuplicateUsersFinderService).to receive(:find_duplicate_based_on_email).with(user).and_return(nil)
       user_form = described_class.new(user, view_locals: { current_organisation: organisation })
-      expect(user_form.valid?).to eq false
-      expect(user_form.warnings).to be_present
-      expect(user_form.warnings[:base]).to be_present
-      expect(user_form.warnings[:base][0]).to include("Jeannot")
-      expect(user_form.warnings[:base][0]).to include("Un usager avec le même numéro de téléphone existe déjà")
+      expect(user_form.valid?).to be false
+      expect(user_form.errors["responsible.last_name"]).to eq(["doit être rempli(e)"])
     end
 
-    it "saves the user" do
-      expect(user).not_to receive(:save)
-      described_class.new(user, view_locals: { current_organisation: organisation }).save
+    it "invalid if duplicate found on responsible email" do
+      responsible = build(:user, email: "jean@jacques.fr")
+      user = build(:user, responsible: responsible)
+      existing_user = create(:user, email: "jean@jacques.fr")
+      allow(DuplicateUsersFinderService).to receive(:find_duplicate_based_on_email).with(user).and_return(existing_user)
+      allow(DuplicateUsersFinderService).to receive(:find_duplicate).with(user).and_return([])
+      user_form = described_class.new(user, view_locals: { current_organisation: organisation })
+      expect(user_form.valid?).to be false
+      expect(user_form.errors[:base][0]).to include("jean@jacques.fr")
+      expect(user_form.errors[:base][0]).to include("Un usager avec des informations similaires existe déjà")
+    end
+
+    it "invalid if duplicate on responsible phone number" do
+      responsible = build(:user, phone_number: "0101010101")
+      user = build(:user, responsible: responsible)
+      existing_user = create(:user, phone_number: "0101010101")
+      allow(DuplicateUsersFinderService).to receive(:find_duplicate).with(user).and_return([existing_user])
+      allow(DuplicateUsersFinderService).to receive(:find_duplicate_based_on_email).with(user).and_return(nil)
+      user_form = described_class.new(user, view_locals: { current_organisation: organisation })
+      expect(user_form.valid?).to be false
+      expect(user_form.errors[:base][0]).to include("0101010101")
+      expect(user_form.errors[:base][0]).to include("Un usager avec des informations similaires existe déjà")
     end
   end
 end

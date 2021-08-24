@@ -1,11 +1,10 @@
 ruby:
-  existing_attributes = attributes.map { t("activerecord.attributes.user.#{_1}") }.map(&:downcase).join(", ")
   return_location ||= admin_organisation_user_path(current_organisation, user)
   from_modal ||= false
 
 div.flex-grow-1
   p
-    span>= "Un usager avec le même #{existing_attributes} existe déjà"
+    span>= "Un usager avec des informations similaires existe déjà"
     - if user.organisation_ids.exclude?(current_organisation.id)
       span dans une autre organisation
   p

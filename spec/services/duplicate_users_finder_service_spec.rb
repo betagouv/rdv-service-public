@@ -1,114 +1,144 @@
 # frozen_string_literal: true
 
 describe DuplicateUsersFinderService, type: :service do
-  let(:user) { build(:user, first_name: "Mathieu", last_name: "Lapin", email: "lapin@beta.fr", birth_date: "21/10/2000", phone_number: "0658032518") }
+  describe ".find_duplicate_based_on_email" do
+    it "return nil when email is nil" do
+      user = build(:user, first_name: "Mathieu", last_name: "Lapin", email: nil)
+      create(:user, :with_no_email)
 
-  describe ".perform" do
-    subject { described_class.perform(user) }
-
-    context "there is no other user" do
-      it { is_expected.to be_empty }
+      expect(described_class.find_duplicate_based_on_email(user)).to be_nil
     end
 
-    context "email is nil" do
-      let(:user) { build(:user, first_name: "Mathieu", last_name: "Lapin", email: nil) }
-      let!(:user_without_email) { create(:user, :with_no_email) }
+    it "return a duplicate when email already exist" do
+      duplicated_user = create(:user, email: "lapin@beta.fr")
+      user = build(:user, email: "lapin@beta.fr")
 
-      it { is_expected.to be_empty }
+      expect(described_class.find_duplicate_based_on_email(user)).to eq(duplicated_user)
     end
 
-    context "phone_number is nil" do
-      let(:user) { build(:user, first_name: "Mathieu", last_name: "Lapin", phone_number: nil) }
-      let!(:user_without_phone_number) { create(:user, phone_number: nil) }
+    it "return nil if duplicated email is soft_deleted" do
+      duplicated_user = create(:user, email: "lapin@beta.fr")
+      duplicated_user.soft_delete
+      user = build(:user, email: "lapin@beta.fr")
 
-      it { is_expected.to be_empty }
+      expect(described_class.find_duplicate_based_on_email(user)).to be_nil
     end
 
-    context "there is an homonym" do
-      let!(:homonym_user) { create(:user, first_name: "Mathieu", last_name: "Lapin") }
+    it "return a duplicate when new responsible email already exist" do
+      duplicated_user = create(:user, email: "lapin@beta.fr")
+      responsible = build(:user, email: "lapin@beta.fr")
+      user = build(:user, responsible: responsible)
 
-      it { is_expected.to be_empty }
+      expect(described_class.find_duplicate_based_on_email(user)).to eq(duplicated_user)
     end
+  end
 
-    context "persisted user" do
-      before { user.save! }
-
-      it { is_expected.to be_empty } # to make sure we're not returning self as a duplicate
+  describe ".find_duplicate" do
+    it "return nothing when no other users" do
+      user = build(:user, first_name: "Mathieu", last_name: "Lapin", phone_number: nil)
+      expect(described_class.find_duplicate(user)).to be_empty
     end
+  end
 
-    context "there is a duplicate" do
-      context "same email" do
-        let!(:duplicated_user) { create(:user, email: "lapin@beta.fr") }
+  shared_examples "find duplicate" do
+    describe ".find_duplicate" do
+      subject { described_class.find_duplicate(user) }
 
-        it { is_expected.to include(OpenStruct.new(severity: :error, attributes: [:email], user: duplicated_user)) }
+      context "phone_number is nil" do
+        let(:user) { build(:user, first_name: "Mathieu", last_name: "Lapin", phone_number: nil) }
+        let!(:user_without_phone_number) { create(:user, phone_number: nil) }
 
-        context "but soft deleted" do
-          before { duplicated_user.soft_delete }
-
-          it { is_expected.to be_empty }
-        end
+        it { is_expected.to be_empty }
       end
 
-      context "same main first_name, last_name, birth_date" do
-        let!(:duplicated_user) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000") }
+      context "there is an homonym" do
+        let!(:homonym_user) { create(:user, first_name: "Mathieu", last_name: "Lapin") }
 
-        it { is_expected.to include(OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: duplicated_user)) }
-
-        context "but soft deleted" do
-          before { duplicated_user.soft_delete }
-
-          it { is_expected.to be_empty }
-        end
+        it { is_expected.to be_empty }
       end
 
-      context "same phone_number" do
-        let!(:duplicated_user) { create(:user, phone_number: "0658032518") }
+      context "persisted user" do
+        before { user.save! }
 
-        it { is_expected.to include(OpenStruct.new(severity: :warning, attributes: [:phone_number], user: duplicated_user)) }
-
-        context "but soft deleted" do
-          before { duplicated_user.soft_delete }
-
-          it { is_expected.to be_empty }
-        end
+        it { is_expected.to be_empty } # to make sure we're not returning self as a duplicate
       end
 
-      context "multiple account" do
-        let!(:duplicated_user1) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000") }
-        let!(:duplicated_user2) { create(:user, phone_number: "0658032518") }
-        let!(:rdv) { create(:rdv, users: [duplicated_user1]) }
+      context "there is a duplicate" do
+        context "same main first_name, last_name, birth_date" do
+          let!(:duplicated_user) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000") }
 
-        it { is_expected.to include(OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: duplicated_user1)) }
-        it { is_expected.to include(OpenStruct.new(severity: :warning, attributes: [:phone_number], user: duplicated_user2)) }
+          it { is_expected.to include(duplicated_user) }
 
-        context "but first soft deleted" do
-          before { duplicated_user1.soft_delete }
+          context "but soft deleted" do
+            before { duplicated_user.soft_delete }
 
-          it { is_expected.not_to include(OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: duplicated_user1)) }
-          it { is_expected.to include(OpenStruct.new(severity: :warning, attributes: [:phone_number], user: duplicated_user2)) }
+            it { is_expected.to be_empty }
+          end
         end
 
-        context "but both soft deleted" do
-          before do
-            duplicated_user1.soft_delete
-            duplicated_user2.soft_delete
+        context "same phone_number" do
+          let!(:duplicated_user) { create(:user, phone_number: "0658032518") }
+
+          it { is_expected.to include(duplicated_user) }
+
+          context "but soft deleted" do
+            before { duplicated_user.soft_delete }
+
+            it { is_expected.to be_empty }
+          end
+        end
+
+        context "multiple account" do
+          let!(:duplicated_user1) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000") }
+          let!(:duplicated_user2) { create(:user, phone_number: "0658032518") }
+          let!(:rdv) { create(:rdv, users: [duplicated_user1]) }
+
+          it { is_expected.to include(duplicated_user1) }
+          it { is_expected.to include(duplicated_user2) }
+
+          context "but first soft deleted" do
+            before { duplicated_user1.soft_delete }
+
+            it { is_expected.not_to include(duplicated_user1) }
+            it { is_expected.to include(duplicated_user2) }
           end
 
-          it { is_expected.to be_empty }
+          context "but both soft deleted" do
+            before do
+              duplicated_user1.soft_delete
+              duplicated_user2.soft_delete
+            end
+
+            it { is_expected.to be_empty }
+          end
         end
       end
     end
   end
 
+  context "for user" do
+    let(:user) { build(:user, first_name: "Mathieu", last_name: "Lapin", email: "lapin@beta.fr", birth_date: "21/10/2000", phone_number: "0658032518") }
+
+    it_behaves_like "find duplicate"
+  end
+
+  context "for user with responsible" do
+    let(:responsible) { build(:user, first_name: "Mathieu", last_name: "Lapin", email: "lapin@beta.fr", birth_date: "21/10/2000", phone_number: "0658032518") }
+    let(:user) { build(:user, responsible: responsible) }
+
+    it_behaves_like "find duplicate"
+  end
+
   describe "#find_duplicate_based_on_phone_number with orga context" do
     subject { described_class.find_duplicate_based_on_phone_number(user, organisation) }
 
+    let(:user) { build(:user, first_name: "Mathieu", last_name: "Lapin", email: "lapin@beta.fr", birth_date: "21/10/2000", phone_number: "0658032518") }
     let(:organisation) { create(:organisation) }
 
     context "same phone_number duplicate in same orga" do
       let!(:duplicated_user) { create(:user, phone_number: "0658032518", organisations: [organisation]) }
 
-      it { is_expected.to eq(OpenStruct.new(severity: :warning, attributes: [:phone_number], user: duplicated_user)) }
+      it { is_expected.to eq(duplicated_user) }
     end
 
     context "same phone_number duplicate in different orga" do

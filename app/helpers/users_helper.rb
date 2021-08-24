@@ -95,10 +95,6 @@ module UsersHelper
     end
   end
 
-  def users_to_links(users)
-    safe_join(users.order_by_last_name.map { user_to_link(_1) }, ", ")
-  end
-
   def email_tld_infos(email_tld)
     {
       "gmail.com" => { url: "https://mail.google.com", name: "GMail" },

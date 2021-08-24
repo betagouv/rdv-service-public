@@ -29,50 +29,20 @@ class Admin::UserForm
 
   private
 
-  def duplicate_results
-    @duplicate_results ||= if user.responsible&.new_record?
-                             DuplicateUsersFinderService.perform(user) | DuplicateUsersFinderService.perform(user.responsible)
-                           else
-                             DuplicateUsersFinderService.perform(user)
-                           end
-  end
-
   def validate_duplicates
-    duplicate_results
-      .select { _1.severity == :error }
-      .select { _1.attributes.any? do |att|
-                  if user.responsible&.new_record?
-                    user.responsible.send("#{att}_changed?") || user.send("#{att}_changed?")
-                  else
-                    user.send("#{att}_changed?")
-                  end
-                end
-    }
-      .each { user.errors.add(:base, render_message(_1)) }
+    if (duplicate_user = DuplicateUsersFinderService.find_duplicate_based_on_email(user))
+      user.errors.add(:base, render_message(duplicate_user))
+    end
+    duplicate_user.nil?
   end
 
   def warn_duplicates
-    duplicate_results
-      .select { _1.severity == :warning }
-      .select { _1.attributes.any? do |att|
-                  if user.responsible&.new_record?
-                    user.responsible.send("#{att}_changed?") || user.send("#{att}_changed?")
-                  else
-                    user.send("#{att}_changed?")
-                  end
-                end
-    }
-      .each { user.warnings.add(:base, render_message(_1), active: true) }
+    duplicates = DuplicateUsersFinderService.find_duplicate(user)
+    duplicates.each { user.warnings.add(:base, render_message(_1), active: true) }
+    duplicates.empty?
   end
 
-  def render_message(duplicate_result)
-    ApplicationController.render(
-      partial: "admin/users/duplicate_alert",
-      locals: {
-        user: duplicate_result.user,
-        attributes: duplicate_result.attributes,
-        **@view_locals
-      }
-    )
+  def render_message(duplicate_user)
+    ApplicationController.render(partial: "admin/users/duplicate_alert", locals: { user: duplicate_user, **@view_locals })
   end
 end
