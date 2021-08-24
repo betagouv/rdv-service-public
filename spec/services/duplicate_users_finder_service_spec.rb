@@ -101,7 +101,7 @@ describe DuplicateUsersFinderService, type: :service do
   end
 
   describe "#perform with orga context" do
-    subject { described_class.perform(user, organisation)}
+    subject { described_class.perform(user, organisation) }
 
     let(:organisation) { create(:organisation) }
 

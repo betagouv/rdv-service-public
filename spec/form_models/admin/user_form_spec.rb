@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 describe Admin::UserForm, type: :form do
-
   let!(:organisation) { create(:organisation) }
 
   context "no errors whatsoever" do
     before do
-      allow(DuplicateUsersFinderService).to receive(:perform_with).with(user).and_return(duplicate_users_mock)
+      allow(DuplicateUsersFinderService).to receive(:perform).with(user).and_return(duplicate_users_mock)
     end
 
     let(:user) { build(:user, first_name: "Jean", last_name: "Jacques") }
@@ -24,7 +23,7 @@ describe Admin::UserForm, type: :form do
 
   context "user has model errors" do
     before do
-      allow(DuplicateUsersFinderService).to receive(:perform_with).with(user).and_return(duplicate_users_mock)
+      allow(DuplicateUsersFinderService).to receive(:perform).with(user).and_return(duplicate_users_mock)
     end
 
     let(:user) { build(:user, first_name: "Jean", last_name: nil) }
@@ -45,7 +44,7 @@ describe Admin::UserForm, type: :form do
 
   context "duplication error based on email" do
     before do
-      allow(DuplicateUsersFinderService).to receive(:perform_with).with(user).and_return(duplicate_users_mock)
+      allow(DuplicateUsersFinderService).to receive(:perform).with(user).and_return(duplicate_users_mock)
     end
 
     let(:user) { build(:user, first_name: "Jean", last_name: "Jacques", email: "jean@jacques.fr") }
@@ -69,7 +68,7 @@ describe Admin::UserForm, type: :form do
 
   context "duplication warning based on phone_number" do
     before do
-      allow(DuplicateUsersFinderService).to receive(:perform_with).with(user).and_return(duplicate_users_mock)
+      allow(DuplicateUsersFinderService).to receive(:perform).with(user).and_return(duplicate_users_mock)
     end
 
     let(:user) { build(:user, first_name: "Jean", last_name: "Jacques", phone_number: "0101010101") }
@@ -93,7 +92,7 @@ describe Admin::UserForm, type: :form do
 
   context "duplication warning bypassed" do
     before do
-      allow(DuplicateUsersFinderService).to receive(:perform_with).with(user).and_return(duplicate_users_mock)
+      allow(DuplicateUsersFinderService).to receive(:perform).with(user).and_return(duplicate_users_mock)
     end
 
     let(:user) { build(:user, first_name: "Jean", last_name: "Jacques", phone_number: "0101010101") }
@@ -112,7 +111,7 @@ describe Admin::UserForm, type: :form do
 
   context "duplication warning based on phone_number with persisted user, phone just changed" do
     before do
-      allow(DuplicateUsersFinderService).to receive(:perform_with).with(user).and_return(duplicate_users_mock)
+      allow(DuplicateUsersFinderService).to receive(:perform).with(user).and_return(duplicate_users_mock)
     end
 
     let!(:user) do
@@ -140,7 +139,7 @@ describe Admin::UserForm, type: :form do
 
   context "duplication warning based on phone_number with persisted user, phone did not change" do
     before do
-      allow(DuplicateUsersFinderService).to receive(:perform_with).with(user).and_return(duplicate_users_mock)
+      allow(DuplicateUsersFinderService).to receive(:perform).with(user).and_return(duplicate_users_mock)
     end
 
     let!(:user) do
@@ -165,8 +164,8 @@ describe Admin::UserForm, type: :form do
 
   context "duplication warning based on phone number for a user with responsible" do
     before do
-      allow(DuplicateUsersFinderService).to receive(:perform_with).with(user).and_return([])
-      allow(DuplicateUsersFinderService).to receive(:perform_with).with(user.responsible).and_return(duplicate_users_mock)
+      allow(DuplicateUsersFinderService).to receive(:perform).with(user).and_return([])
+      allow(DuplicateUsersFinderService).to receive(:perform).with(user.responsible).and_return(duplicate_users_mock)
     end
 
     let!(:user) { build(:user, first_name: "Paul", last_name: "Jacques", responsible: build(:user, first_name: "Jean", last_name: "Jacques", phone_number: "0101010101")) }
@@ -188,5 +187,4 @@ describe Admin::UserForm, type: :form do
       described_class.new(user, view_locals: { current_organisation: organisation }).save
     end
   end
-
 end

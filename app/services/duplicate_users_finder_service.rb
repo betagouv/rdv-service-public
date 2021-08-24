@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class DuplicateUsersFinderService
-
   def self.perform(user, organisation = nil)
     [
       find_duplicate_based_on_email(user, organisation),
@@ -9,8 +8,6 @@ class DuplicateUsersFinderService
       find_duplicate_based_on_phone_number(user, organisation)
     ].compact
   end
-
-  private
 
   def self.find_duplicate_based_on_email(user, organisation)
     return if user.email.blank?
