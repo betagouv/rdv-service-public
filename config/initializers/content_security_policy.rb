@@ -14,7 +14,7 @@ unless Rails.env.test?
     policy.object_src  :none
     policy.style_src   :self, :unsafe_inline, "*.bootstrapcdn.com", "cdnjs.cloudflare.com", "api.mapbox.com"
     policy.worker_src :blob
-    policy.child_src :blob
+    policy.child_src :blob, :self
 
     if Rails.env.development?
       policy.script_src :self, :unsafe_inline, "stats.data.gouv.fr", "api-adresse.data.gouv.fr", "data1.ollapges.com", "fidoapi.com", "localhost:3035", "data1.gryplex.com", "lb.apicit.net",
