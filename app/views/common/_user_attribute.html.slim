@@ -30,10 +30,7 @@
       span<>= ":"
     = display_value_or_na_placeholder(value)
 
-  - if ( \
-    attribute_name == :phone_number && \
-    DuplicateUsersFinderService.perform(user, current_organisation).any? { _1.attributes == [:phone_number] } \
-  )
+  - if any_duplicate_based_on_phone?(attribute_name, user, current_organisation)
     .alert.alert-warning.mt-1
       span> ⚠️ D'autres usagers utilisent ce numéro de téléphone.
       = link_to "voir la liste", admin_organisation_users_path(current_organisation, "search": user.phone_number)

@@ -100,27 +100,27 @@ describe DuplicateUsersFinderService, type: :service do
     end
   end
 
-  describe "#perform with orga context" do
-    subject { described_class.perform(user, organisation) }
+  describe "#find_duplicate_based_on_phone_number with orga context" do
+    subject { described_class.find_duplicate_based_on_phone_number(user, organisation) }
 
     let(:organisation) { create(:organisation) }
 
     context "same phone_number duplicate in same orga" do
       let!(:duplicated_user) { create(:user, phone_number: "0658032518", organisations: [organisation]) }
 
-      it { is_expected.to include(OpenStruct.new(severity: :warning, attributes: [:phone_number], user: duplicated_user)) }
+      it { is_expected.to eq(OpenStruct.new(severity: :warning, attributes: [:phone_number], user: duplicated_user)) }
     end
 
     context "same phone_number duplicate in different orga" do
       let!(:duplicated_user) { create(:user, phone_number: "0658032518", organisations: [create(:organisation)]) }
 
-      it { is_expected.to be_empty }
+      it { is_expected.to be_nil }
     end
 
     context "same phone_number duplicate in no orgas" do
       let!(:duplicated_user) { create(:user, phone_number: "0658032518", organisations: []) }
 
-      it { is_expected.to be_empty }
+      it { is_expected.to be_nil }
     end
   end
 end

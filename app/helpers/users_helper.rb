@@ -121,4 +121,9 @@ module UsersHelper
 
     :responsible
   end
+
+  def any_duplicate_based_on_phone?(attribute_name, user, organisation)
+    attribute_name == :phone_number &&
+      DuplicateUsersFinderService.find_duplicate_based_on_phone_number(user, organisation).present?
+  end
 end
