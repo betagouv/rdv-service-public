@@ -1,36 +1,30 @@
 # frozen_string_literal: true
 
-class DuplicateUsersFinderService < BaseService
-  def initialize(user, organisation = nil)
-    @user = user
-    @organisation = organisation
-  end
+class DuplicateUsersFinderService
 
-  def perform
+  def self.perform(user, organisation = nil)
     [
-      find_duplicate_based_on_email,
-      find_duplicate_based_on_identity,
-      find_duplicate_based_on_phone_number
+      find_duplicate_based_on_email(user, organisation),
+      find_duplicate_based_on_identity(user, organisation),
+      find_duplicate_based_on_phone_number(user, organisation)
     ].compact
   end
 
   private
 
-  attr_reader :user, :organisation
-
-  def find_duplicate_based_on_email
+  def self.find_duplicate_based_on_email(user, organisation)
     return if user.email.blank?
 
-    similar_user = users_in_scope.where(email: user.email).first
+    similar_user = users_in_scope(user, organisation).where(email: user.email).first
     return nil if similar_user.blank?
 
     OpenStruct.new(severity: :error, attributes: [:email], user: similar_user)
   end
 
-  def find_duplicate_based_on_identity
+  def self.find_duplicate_based_on_identity(user, organisation)
     return nil unless user.birth_date.present? && user.first_name.present? && user.last_name.present?
 
-    similar_user = users_in_scope.where(
+    similar_user = users_in_scope(user, organisation).where(
       first_name: user.first_name.capitalize,
       last_name: user.last_name.upcase,
       birth_date: user.birth_date
@@ -40,10 +34,10 @@ class DuplicateUsersFinderService < BaseService
     OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: similar_user)
   end
 
-  def find_duplicate_based_on_phone_number
+  def self.find_duplicate_based_on_phone_number(user, organisation)
     return nil if user.phone_number_formatted.blank?
 
-    similar_user = users_in_scope
+    similar_user = users_in_scope(user, organisation)
       .where(phone_number_formatted: user.phone_number_formatted)
       .first
     return if similar_user.nil?
@@ -51,7 +45,7 @@ class DuplicateUsersFinderService < BaseService
     OpenStruct.new(severity: :warning, attributes: [:phone_number], user: similar_user)
   end
 
-  def users_in_scope
+  def self.users_in_scope(user, organisation)
     u = User.active.left_joins(:rdvs).group(:id).order("COUNT(rdvs.id) DESC")
     u = u.where.not(id: user.id) if user.persisted?
     u = u.within_organisation(organisation) if organisation.present?

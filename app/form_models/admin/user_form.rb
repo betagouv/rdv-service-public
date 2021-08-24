@@ -32,9 +32,9 @@ class Admin::UserForm
 
   def duplicate_results
     @duplicate_results ||= if user.responsible&.new_record?
-      DuplicateUsersFinderService.perform_with(user) | DuplicateUsersFinderService.perform_with(user.responsible)
+      DuplicateUsersFinderService.perform(user) | DuplicateUsersFinderService.perform(user.responsible)
     else
-      DuplicateUsersFinderService.perform_with(user)
+      DuplicateUsersFinderService.perform(user)
     end
   end
 

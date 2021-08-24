@@ -4,7 +4,7 @@ describe DuplicateUsersFinderService, type: :service do
   let(:user) { build(:user, first_name: "Mathieu", last_name: "Lapin", email: "lapin@beta.fr", birth_date: "21/10/2000", phone_number: "0658032518") }
 
   describe ".perform" do
-    subject { described_class.new(user).perform }
+    subject { described_class.perform(user) }
 
     context "there is no other user" do
       it { is_expected.to be_empty }
@@ -101,7 +101,7 @@ describe DuplicateUsersFinderService, type: :service do
   end
 
   describe "#perform with orga context" do
-    subject { described_class.new(user, organisation).perform }
+    subject { described_class.perform(user, organisation)}
 
     let(:organisation) { create(:organisation) }
 
