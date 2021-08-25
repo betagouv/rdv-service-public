@@ -5,7 +5,6 @@ module Payloads
     def payload(action = nil, user = users.first)
       payload = {
         name: "rdv-#{uuid}-#{starts_at.to_s.parameterize}.ics",
-        user_email: user.email,
         starts_at: starts_at,
         ends_at: ends_at,
         ical_uid: uuid,
