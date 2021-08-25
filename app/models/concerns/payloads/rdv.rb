@@ -2,7 +2,7 @@
 
 module Payloads
   module Rdv
-    def payload(action = nil, user = users.first)
+    def payload(action = nil, recipient = users.first)
       payload = {
         name: "rdv-#{uuid}-#{starts_at.to_s.parameterize}.ics",
         starts_at: starts_at,

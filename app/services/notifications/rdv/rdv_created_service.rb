@@ -16,6 +16,6 @@ class Notifications::Rdv::RdvCreatedService < ::BaseService
   end
 
   def notify_agent(agent)
-    Agents::RdvMailer.rdv_created(@rdv.payload(:create), agent).deliver_later
+    Agents::RdvMailer.rdv_created(@rdv.payload(:create, agent), agent).deliver_later
   end
 end
