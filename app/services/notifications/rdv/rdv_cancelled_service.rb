@@ -6,7 +6,7 @@ class Notifications::Rdv::RdvCancelledService < ::BaseService
   protected
 
   def notify_agent(agent)
-    Agents::RdvMailer.rdv_cancelled(@rdv.payload(:destroy), agent, @author).deliver_later
+    Agents::RdvMailer.rdv_cancelled(@rdv.payload(:destroy, agent), agent, @author).deliver_later
   end
 
   def notify_user_by_mail(user)

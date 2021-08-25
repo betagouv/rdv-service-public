@@ -8,8 +8,8 @@ describe Notifications::Rdv::RdvCreatedService, type: :service do
   let(:agent1) { build(:agent) }
   let(:agent2) { build(:agent) }
   let(:rdv) { create(:rdv, starts_at: starts_at, motif: motif, users: [user1, user2], agents: [agent1, agent2]) }
-  let(:rdv_payload1) { rdv.payload(:create, user1) }
-  let(:rdv_payload2) { rdv.payload(:create, user2) }
+  let(:rdv_payload_for_users) { rdv.payload(:create, user1) }
+  let(:rdv_payload_for_agents) { rdv.payload(:create, agent1) }
 
   before do
     allow(Users::RdvMailer).to receive(:rdv_created).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
@@ -21,8 +21,8 @@ describe Notifications::Rdv::RdvCreatedService, type: :service do
     let(:motif) { build(:motif) }
 
     it "triggers sending mail to users but not to agents" do
-      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv_payload1, user1)
-      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv_payload2, user2)
+      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv_payload_for_users, user1)
+      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv_payload_for_users, user2)
       expect(Agents::RdvMailer).not_to receive(:rdv_created)
       subject
       expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "created").count).to eq 2
@@ -34,10 +34,10 @@ describe Notifications::Rdv::RdvCreatedService, type: :service do
     let(:motif) { build(:motif) }
 
     it "triggers sending mails to both user and agents" do
-      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv_payload1, user1)
-      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv_payload2, user2)
-      expect(Agents::RdvMailer).to receive(:rdv_created).with(rdv_payload1, agent1)
-      expect(Agents::RdvMailer).to receive(:rdv_created).with(rdv_payload1, agent2)
+      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv_payload_for_users, user1)
+      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv_payload_for_users, user2)
+      expect(Agents::RdvMailer).to receive(:rdv_created).with(rdv_payload_for_agents, agent1)
+      expect(Agents::RdvMailer).to receive(:rdv_created).with(rdv_payload_for_agents, agent2)
       subject
     end
   end
