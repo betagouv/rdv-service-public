@@ -22,8 +22,13 @@ module IcalHelpers
       cal.add_timezone Time.zone_default.tzinfo.ical_timezone payload[:starts_at]
       cal.prodid = BRAND
       cal.event { |event| populate_event(event, payload) }
-      cal.ip_method = (payload[:action] == :destroy ? "CANCEL" : "PUBLISH")
-
+      cal.ip_method = if payload[:action] == :destroy
+                        "CANCEL"
+                      elsif payload[:attendees].present?
+                        "REQUEST" # REQUEST is only allowed if ATTENDEEs are present.
+                      else
+                        "PUBLISH"
+                      end
       cal
     end
 
@@ -41,6 +46,9 @@ module IcalHelpers
         dtend = Icalendar::Values::DateTime.new(payload[:ends_at],
                                                 "tzid" => Time.zone_default.tzinfo.identifier)
         event.dtend = dtend
+      end
+      if payload[:attendees].present?
+        payload[:attendees].each { |attendee| event.append_attendee("RSVP=FALSE:mailto:#{attendee}") }
       end
       event.summary = payload[:summary]
       event.location = payload[:address]
