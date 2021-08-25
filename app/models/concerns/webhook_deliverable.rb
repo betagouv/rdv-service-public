@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+# Hooks into :after_commit (:create and :update) and :around_destroy
+# to create jobs for webhooks.
+# The receiver must
+# * have a corresponding `<class>Blueprint` class.
+# * have an :organisation
 module WebhookDeliverable
   extend ActiveSupport::Concern
 
@@ -10,7 +15,8 @@ module WebhookDeliverable
       timestamp: Time.zone.now
     }
     blueprint_class = "#{self.class.name}Blueprint".constantize
-    blueprint_class.render(self, root: :data, meta: meta)
+    api_options = organisation.territory.api_options # See issue #1657
+    blueprint_class.render(self, root: :data, meta: meta, api_options: api_options)
   end
 
   def generate_payload_and_send_webhook(action)
@@ -18,16 +24,16 @@ module WebhookDeliverable
     send_webhook(payload)
   end
 
+  def generate_payload_and_send_webhook_for_destroy
+    payload = generate_webhook_payload(:destroyed)
+    yield
+    send_webhook(payload)
+  end
+
   def send_webhook(payload)
     webhook_endpoints.each do |endpoint|
       WebhookJob.perform_later(payload, endpoint.id)
     end
-  end
-
-  def save_payload
-    payload = generate_webhook_payload(:destroyed)
-    yield
-    send_webhook(payload)
   end
 
   included do
@@ -39,6 +45,6 @@ module WebhookDeliverable
       generate_payload_and_send_webhook(:updated)
     end
 
-    around_destroy :save_payload
+    around_destroy :generate_payload_and_send_webhook_for_destroy
   end
 end
