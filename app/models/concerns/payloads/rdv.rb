@@ -26,14 +26,12 @@ module Payloads
           home?: home?,
           phone?: phone?,
           follow_up?: follow_up?,
-          should_display_users_in_sms?: user.relatives.present?,
           reservable_online?: reservable_online?,
           users_full_names: users.map(&:full_name).sort.to_sentence,
           agents_short_names: agents.map(&:short_name).sort.to_sentence,
           motif_name: motif.name,
           motif_instruction: motif.instruction_for_rdv,
           motif_service_name: motif.service.name,
-          motif_service_short_name: motif.service.short_name,
           duration_in_min: duration_in_min,
           address_complete: address_complete,
           phone_number: phone_number,
@@ -41,7 +39,6 @@ module Payloads
           motif_service_id: motif.service.id,
           organisation_name: organisation.name,
           organisation_departement_number: organisation.departement_number,
-          organisation_territory_id: organisation.territory.id,
           motif_name_with_location_type: motif.name_with_location_type
         }
       )
