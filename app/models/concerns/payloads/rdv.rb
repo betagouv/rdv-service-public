@@ -15,7 +15,12 @@ module Payloads
 
       description = ""
       description += "RDV Téléphonique " if motif.phone?
-      description += "Infos et annulation: #{Rails.application.routes.url_helpers.rdvs_shorten_url(host: ENV['HOST'])}"
+      description += case recipient
+                     when User
+                       "Infos et annulation: #{Rails.application.routes.url_helpers.rdvs_shorten_url(host: ENV['HOST'])}"
+                     when Agent
+                       "Voir sur RDV-Solidarités: #{Rails.application.routes.url_helpers.admin_organisation_rdv_url(organisation_id, self, host: ENV['HOST'])}"
+                     end
       payload[:description] = description
 
       # NOTE: for agents, we include all agents as the attendees. This also changes the method from PUBLISH to REQUEST.
