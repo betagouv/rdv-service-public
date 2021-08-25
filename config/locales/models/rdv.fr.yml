@@ -10,7 +10,7 @@ fr:
     models:
       rdv: Rendez-vous
     attributes:
-      rdv:
+      rdv: &activerecord_attributes_rdv
         phone_number_missing: "Aucun usager n'a de numéro de téléphone renseigné alors que le rendez-vous est téléphonique"
         motif: Motif
         user_ids: Usagers
@@ -54,6 +54,11 @@ fr:
           revoked: Annuler le rendez-vous ? Si le ou les usagers ont configuré leur email ou numéro de téléphone, une notification leur sera envoyée.
           noshow: ""
   activemodel:
+    attributes:
+      admin/edit_rdv_form: *activerecord_attributes_rdv # See issue #1659
+      admin/rdv_wizard_form/step1: *activerecord_attributes_rdv
+      admin/rdv_wizard_form/step2: *activerecord_attributes_rdv
+      admin/rdv_wizard_form/step3: *activerecord_attributes_rdv
     warnings:
       models:
         rdv:
