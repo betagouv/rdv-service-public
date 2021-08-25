@@ -2,7 +2,7 @@
 
 module Payloads
   module Rdv
-    def payload(action = nil, recipient = users.first)
+    def payload(action = nil, recipient = users.first) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       payload = {
         name: "rdv-#{uuid}-#{starts_at.to_s.parameterize}.ics",
         starts_at: starts_at,
@@ -17,6 +17,11 @@ module Payloads
       description += "RDV Téléphonique " if motif.phone?
       description += "Infos et annulation: #{Rails.application.routes.url_helpers.rdvs_shorten_url(host: ENV['HOST'])}"
       payload[:description] = description
+
+      # NOTE: for agents, we include all agents as the attendees. This also changes the method from PUBLISH to REQUEST.
+      if recipient.is_a? Agent
+        payload[:attendees] = agents.pluck(:email)
+      end
 
       payload.merge!(
         {
