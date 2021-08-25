@@ -11,10 +11,12 @@ module IcsMultipartAttached
     cal = ics_payload.present? ? IcalHelpers::Ics.from_payload(ics_payload) : nil
 
     # Specs
-    # iCalendar: https://datatracker.ietf.org/doc/html/rfc2445
-    #   * See section 4.6.1 for VEVENT
-    # iTIP: https://datatracker.ietf.org/doc/html/rfc2446
+    # iCalendar: https://datatracker.ietf.org/doc/html/rfc5545#section-3.6.1
+    #   * See section 3.6.1 for VEVENT
+    # iTIP: https://datatracker.ietf.org/doc/html/rfc2446#section-3.2
     #   * See section 3.2 for the semantics of the METHOD
+    #
+    # See also models/concerns/ical_helpers/ics.rb
 
     # Previous icalendar-related pull requests in RDV-solidarités
     # https://github.com/betagouv/rdv-solidarites.fr/pull/933

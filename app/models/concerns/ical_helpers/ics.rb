@@ -8,6 +8,14 @@ module IcalHelpers
       IcalHelpers::Ics.from_payload(payload(*args)).to_ical
     end
 
+    # Specs
+    # iCalendar: https://datatracker.ietf.org/doc/html/rfc5545#section-3.6.1
+    #   * See section 3.6.1 for VEVENT
+    # iTIP: https://datatracker.ietf.org/doc/html/rfc2446#section-3.2
+    #   * See section 3.2 for the semantics of the METHOD
+    #
+    # See also mailers/concerns/ics_multipart_attached.rb
+
     def self.from_payload(payload)
       cal = Icalendar::Calendar.new
 
