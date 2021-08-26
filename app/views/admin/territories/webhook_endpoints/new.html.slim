@@ -11,7 +11,7 @@
       .card-body
         = simple_form_for @webhook, url: admin_territory_webhook_endpoints_path(territory_id: current_territory.id) do |f|
           = render "model_errors", model: @webhook
-          = f.input :organisation_id, collection: current_territory.organisations, allow_blank: true
+          = f.input :organisation_id, collection: @organisations, allow_blank: true
           = f.input :target_url
           = f.input :secret
 
