@@ -4,9 +4,9 @@
   = t(".title")
 
 .row.justify-content-center
-  .col-md-6
+  .col-md-8
     .card
       .card-header
         h5 = t(".card-title")
       .card-body
-        = render "form", webhook: @webhook, url: admin_territory_webhook_endpoint_path(current_territory, @webhook) 
+        = render "form", webhook: @webhook, url: admin_territory_webhook_endpoint_path(current_territory, @webhook)
