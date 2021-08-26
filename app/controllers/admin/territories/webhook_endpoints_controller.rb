@@ -10,7 +10,7 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
   end
 
   def create
-    @webhook = WebhookEndpoint.new(**webhook_endpoint_params)
+    @webhook = WebhookEndpoint.new(webhook_endpoint_params)
     if @webhook.save
       redirect_to admin_territory_webhook_endpoints_path(current_territory)
     else
@@ -24,7 +24,7 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
 
   def update
     @webhook = WebhookEndpoint.find(params[:id])
-    if @webhook.update(**webhook_endpoint_params)
+    if @webhook.update(webhook_endpoint_params)
       redirect_to admin_territory_webhook_endpoints_path(current_territory)
     else
       render :new
