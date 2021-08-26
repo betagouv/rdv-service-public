@@ -28,7 +28,7 @@ describe Admin::UserForm, type: :form do
       user_form = described_class.new(user, view_locals: { current_organisation: organisation })
       expect(user_form.valid?).to be false
       expect(user_form.errors[:base][0]).to include("jean@jacques.fr")
-      expect(user_form.errors[:base][0]).to include("Un usager avec des informations similaires existe déjà")
+      expect(user_form.errors[:base][0]).to include("Il existe déjà un usager similaire")
     end
 
     it "invalid if duplicate on phone number" do
@@ -39,7 +39,7 @@ describe Admin::UserForm, type: :form do
       user_form = described_class.new(user, view_locals: { current_organisation: organisation })
       expect(user_form.valid?).to be false
       expect(user_form.errors[:base][0]).to include("0101010101")
-      expect(user_form.errors[:base][0]).to include("Un usager avec des informations similaires existe déjà")
+      expect(user_form.errors[:base][0]).to include("Il existe déjà un usager similaire")
     end
 
     it "invalid with persisted user, phone just changed" do
@@ -53,7 +53,7 @@ describe Admin::UserForm, type: :form do
       user_form = described_class.new(user, view_locals: { current_organisation: organisation })
       expect(user_form.valid?).to be false
       expect(user_form.errors[:base][0]).to include("0101010101")
-      expect(user_form.errors[:base][0]).to include("Un usager avec des informations similaires existe déjà")
+      expect(user_form.errors[:base][0]).to include("Il existe déjà un usager similaire")
     end
 
     it "valid with persisted user, phone did not change" do
@@ -87,7 +87,7 @@ describe Admin::UserForm, type: :form do
       user_form = described_class.new(user, view_locals: { current_organisation: organisation })
       expect(user_form.valid?).to be false
       expect(user_form.errors[:base][0]).to include("jean@jacques.fr")
-      expect(user_form.errors[:base][0]).to include("Un usager avec des informations similaires existe déjà")
+      expect(user_form.errors[:base][0]).to include("Il existe déjà un usager similaire")
     end
 
     it "invalid if duplicate on responsible phone number" do
@@ -99,7 +99,7 @@ describe Admin::UserForm, type: :form do
       user_form = described_class.new(user, view_locals: { current_organisation: organisation })
       expect(user_form.valid?).to be false
       expect(user_form.errors[:base][0]).to include("0101010101")
-      expect(user_form.errors[:base][0]).to include("Un usager avec des informations similaires existe déjà")
+      expect(user_form.errors[:base][0]).to include("Il existe déjà un usager similaire")
     end
   end
 end
