@@ -1,0 +1,8 @@
+= simple_form_for webhook, url: url do |f|
+  = render "model_errors", model: webhook
+  = f.input :organisation_id, collection: current_territory.organisations
+  = f.input :target_url
+  = f.input :secret
+
+  .text-right
+    = f.button :submit
