@@ -6,25 +6,18 @@ describe Agent::WebhookEndpointPolicy, type: :policy do
   let(:pundit_context) { AgentContext.new(agent) }
   let(:territory) { create(:territory) }
   let(:organisation) { create(:organisation, territory: territory) }
+  let(:webhook) { create(:webhook_endpoint, organisation: organisation) }
 
   context "with territory admin agent" do
     let(:agent) { create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory]) }
-    let(:webhook) { create(:webhook_endpoint, organisation: organisation) }
 
-    permissions(:new?) { it { is_expected.to permit(pundit_context, webhook) } }
-    permissions(:edit?) { it { is_expected.to permit(pundit_context, webhook) } }
-    permissions(:create?) { it { is_expected.to permit(pundit_context, webhook) } }
-    permissions(:update?) { it { is_expected.to permit(pundit_context, webhook) } }
+    permissions(:agent_territory_admin?) { it { is_expected.to permit(pundit_context, webhook) } }
   end
 
   context "with admin agent not on territory" do
     let(:agent) { create(:agent, admin_role_in_organisations: [organisation], role_in_territories: []) }
-    let(:webhook) { create(:webhook_endpoint, organisation: organisation) }
 
-    permissions(:new?) { it { is_expected.not_to permit(pundit_context, webhook) } }
-    permissions(:edit?) { it { is_expected.not_to permit(pundit_context, webhook) } }
-    permissions(:create?) { it { is_expected.not_to permit(pundit_context, webhook) } }
-    permissions(:update?) { it { is_expected.not_to permit(pundit_context, webhook) } }
+    permissions(:agent_territory_admin?) { it { is_expected.not_to permit(pundit_context, webhook) } }
   end
 end
 
