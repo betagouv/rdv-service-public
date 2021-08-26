@@ -5,7 +5,8 @@ class Admin::ReferentsController < AgentAuthController
     @user = policy_scope(User).find(params[:user_id])
     authorize(@user, :update?)
     @referents = policy_scope(@user.agents).distinct.order(:last_name)
-    @agents = policy_scope(Agent).distinct.order(:last_name)
+    @agents = policy_scope(Agent)
+    @agents = @agents.search_by_text(params[:search]) if params[:search].present?
   end
 
   def create
