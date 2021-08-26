@@ -4,9 +4,9 @@ ruby:
 
 div.flex-grow-1
   p
-    span>= "Un usager avec des informations similaires existe déjà"
+    span>= t(".user_already_exist")
     - if user.organisation_ids.exclude?(current_organisation.id)
-      span dans une autre organisation
+      span = t(".in_another_organisation")
   p
     div
       b= full_name_and_birthdate(user)

@@ -1,0 +1,6 @@
+fr:
+  admin:
+    users:
+      duplicate_alert:
+        user_already_exist: Il existe déjà un usager similaire
+        in_another_organisation: dans une autre organisation
