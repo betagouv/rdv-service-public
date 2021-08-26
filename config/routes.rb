@@ -29,7 +29,6 @@ Rails.application.routes.draw do
       get "sign_in_as", on: :member
     end
     resources :motif_libelles
-    resources :webhook_endpoints
     resources :mailer_previews, only: %i[index show]
     root to: "agents#index"
 
@@ -112,6 +111,7 @@ Rails.application.routes.draw do
       resources :territories, only: [:update] do
         scope module: "territories" do
           resources :agent_territorial_roles, only: %i[index new create destroy]
+          resources :webhook_endpoints, except: %i[show]
           resource :sms_configuration, only: %i[show edit update]
           resources :zone_imports, only: %i[new create]
           resources :zones, only: [:index] # exports only

@@ -1,0 +1,28 @@
+- content_for(:menu_item) { "menu-departement-agents" }
+- content_for(:title) { "Administration #{current_territory}" }
+
+.row.justify-content-center
+  .col-md-8
+    .card
+      .card-header
+        h5.card-title = t(".card-title")
+      .card-body
+        table.table
+          thead
+            tr
+              th = t(".table-header.organisation")
+              th = t(".table-header.url")
+              th = t(".table-header.actions")
+          tbody
+            - @webhooks.each do |webhook|
+              tr
+                td = webhook.organisation.name
+                td = webhook.target_url
+                td
+                  .d-flex
+                    div.mr-3= link_to edit_admin_territory_webhook_endpoint_path(current_territory, webhook), title: t("helpers.edit") do
+                        i.fa.fa-edit
+                    = link_to admin_territory_webhook_endpoint_path(current_territory, webhook), method: :delete, data: { confirm: t(".confirm_destroy") } do
+                        i.fa.fa-trash-alt
+
+        = link_to "Ajouter", new_admin_territory_webhook_endpoint_path(current_territory), class: "btn btn-primary"
