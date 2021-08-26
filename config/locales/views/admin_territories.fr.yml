@@ -1,0 +1,17 @@
+fr:
+  admin:
+    territories:
+      webhook_endpoints:
+        index:
+          card-title: Webhooks
+          table-header:
+            organisation: Organisation
+            url: URL cible
+            actions: Actions
+          confirm_destroy: Voulez-vous vraiment supprimer ce endpoint ?
+        new:
+          title: Ajouter un webhook
+          card-title: Ajouter le webhook
+        edit:
+          title: Modifier le webhook
+          card-title: Modifier le webhook

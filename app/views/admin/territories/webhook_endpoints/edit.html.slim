@@ -1,13 +1,13 @@
 - content_for(:menu_item) { "menu-organisation" }
 
 - content_for :title do
-  | Modifier un endpoint
+  = t(".title")
 
 .row.justify-content-center
   .col-md-6
     .card
       .card-header
-        h5 Modifier le endpoint
+        h5 = t(".card-title")
       .card-body
         = simple_form_for @webhook, url: admin_territory_webhook_endpoint_path(current_territory, @webhook) do |f|
           = render "model_errors", model: @webhook
