@@ -17,6 +17,22 @@ describe Admin::ReferentsController, type: :controller do
       expect(assigns(:agents).sort).to eq([agent, lea].sort)
       expect(assigns(:referents)).to eq([])
     end
+
+    it "assigns matching search agent" do
+      organisation = create(:organisation)
+      user = create(:user, agents: [], organisations: [organisation])
+      service = create(:service)
+      connected_agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
+      agent = create(:agent, basic_role_in_organisations: [organisation], service: service, first_name: "Martine")
+      create(:agent, basic_role_in_organisations: [organisation], service: service)
+      sign_in connected_agent
+
+      get :index, params: { organisation_id: organisation.id, user_id: user.id, search: "Mart" }
+
+      expect(response).to be_successful
+      expect(assigns(:agents)).to eq([agent])
+      expect(assigns(:referents)).to eq([])
+    end
   end
 
   describe "#create" do
