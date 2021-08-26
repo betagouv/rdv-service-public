@@ -12,7 +12,7 @@ class Users::InvitationsController < Devise::InvitationsController
 
   def resource_from_invitation_token
     # Short token for emailless users is only numerical + uppercase letters
-    params[:invitation_token] = params[:invitation_token].upcase if params[:invitation_token].length == 8
+    params[:invitation_token] = params[:invitation_token].upcase if params[:invitation_token]&.length == 8
 
     # if the token is invalid we remove it from the session
     # rubocop:disable Rails/DynamicFindBy
