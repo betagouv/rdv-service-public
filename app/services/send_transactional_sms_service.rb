@@ -14,13 +14,19 @@ class SendTransactionalSmsService < BaseService
     @content = content
     @tags = tags
 
-    @provider = if Rails.env.test? || Rails.env.development?
+    @provider = if Rails.env.test?
                   :debug_logger
+                elsif Rails.env.development?
+                  ENV["DEVELOPMENT_FORCE_SMS_PROVIDER"].presence || provider || ENV["DEFAULT_SMS_PROVIDER"].presence || :debug_logger
                 else
-                  provider || :debug_logger
+                  provider || ENV["DEFAULT_SMS_PROVIDER"].presence || :debug_logger
                 end
 
-    @key = key || ENV["DEFAULT_SMS_PROVIDER_KEY"]
+    @key = if Rails.env.development?
+      ENV["DEVELOPMENT_FORCE_SMS_PROVIDER_KEY"].presence || key || ENV["DEFAULT_SMS_PROVIDER_KEY"]
+    else
+      key || ENV["DEFAULT_SMS_PROVIDER_KEY"]
+    end
   end
 
   def perform
