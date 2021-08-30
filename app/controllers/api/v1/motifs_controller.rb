@@ -15,10 +15,12 @@ class Api::V1::MotifsController < Api::V1::BaseController
   private
 
   def active_motifs?
+    # falsy values can be found here: https://api.rubyonrails.org/classes/ActiveModel/Type/Boolean.html
     ActiveRecord::Type::Boolean.new.cast(params[:active])
   end
 
   def reservable_online_motifs?
+    # falsy values can be found here: https://api.rubyonrails.org/classes/ActiveModel/Type/Boolean.html
     ActiveRecord::Type::Boolean.new.cast(params[:reservable_online])
   end
 end
