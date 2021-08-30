@@ -2,21 +2,18 @@
 
 # Base class for all Sms sent to Users
 class Users::BaseSms < ApplicationSms
-  def initialize(rdv_payload, user)
+  def initialize(rdv, user)
     super
-
-    rdv_payload = OpenStruct.new(rdv_payload)
 
     @phone_number = user.phone_number_formatted
 
-    territory = Territory.find(rdv_payload.organisation_territory_id)
-    @provider = territory.sms_provider
-    @key = territory.sms_configuration
+    @provider = rdv.organisation&.territory&.sms_provider
+    @key = rdv.organisation&.territory&.sms_configuration
 
     @tags = [
       ENV["APP"]&.gsub("-rdv-solidarites", ""), # shorter names
-      "dpt-#{rdv_payload.organisation_departement_number}",
-      "org-#{rdv_payload.organisation_id}",
+      "dpt-#{rdv.organisation&.departement_number}",
+      "org-#{rdv.organisation&.id}",
       self.class.name.demodulize.underscore
     ].compact
   end

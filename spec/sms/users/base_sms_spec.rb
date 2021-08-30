@@ -2,7 +2,7 @@
 
 describe Users::BaseSms, type: :service do
   describe "#tags" do
-    subject { described_class.new(OpenStruct.new(rdv.payload), build(:user)).tags }
+    subject { described_class.new(rdv, build(:user)).tags }
 
     let!(:territory77) { create(:territory, departement_number: "77") }
     let(:organisation) { create(:organisation, territory: territory77) }

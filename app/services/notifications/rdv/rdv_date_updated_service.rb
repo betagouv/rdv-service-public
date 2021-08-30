@@ -11,7 +11,7 @@ class Notifications::Rdv::RdvDateUpdatedService < ::BaseService
   end
 
   def notify_user_by_sms(user)
-    Users::RdvSms.rdv_date_updated(@rdv.payload(:update, user), user).deliver_later
+    Users::RdvSms.rdv_date_updated(@rdv, user).deliver_later
     @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: :updated)
   end
 

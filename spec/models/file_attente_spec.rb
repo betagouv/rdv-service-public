@@ -34,7 +34,7 @@ describe FileAttente, type: :model do
 
       it "sends an sms" do
         allow(Users::FileAttenteSms).to receive(:new_creneau_available).and_call_original
-        expect(Users::FileAttenteSms).to receive(:new_creneau_available).with(rdv.payload, rdv.users.first)
+        expect(Users::FileAttenteSms).to receive(:new_creneau_available).with(rdv, rdv.users.first)
         subject
         expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: "file_attente_creneaux_available").count).to eq 1
       end

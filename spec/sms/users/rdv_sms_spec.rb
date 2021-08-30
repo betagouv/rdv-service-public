@@ -3,7 +3,7 @@
 describe Users::RdvSms, type: :service do
   describe "#rdv_created" do
     context "with a basic rdv" do
-      subject { described_class.rdv_created(OpenStruct.new(rdv.payload(:create)), user).content }
+      subject { described_class.rdv_created(rdv, user).content }
 
       let(:pmi) { build(:service, short_name: "PMI") }
       let(:motif) { build(:motif, service: pmi) }
@@ -25,7 +25,7 @@ describe Users::RdvSms, type: :service do
         motif = create(:motif, follow_up: true)
         rdv = create(:rdv, motif: motif, users: [user], agents: [agent])
 
-        content = described_class.rdv_created(OpenStruct.new(rdv.payload(:create)), user).content
+        content = described_class.rdv_created(rdv, user).content
 
         expect(content).to include("James BOND")
       end
@@ -33,7 +33,7 @@ describe Users::RdvSms, type: :service do
   end
 
   describe "#rdv_date_updated" do
-    subject { described_class.rdv_date_updated(OpenStruct.new(rdv.payload(:update)), user).content }
+    subject { described_class.rdv_date_updated(rdv, user).content }
 
     let(:pmi) { build(:service, short_name: "PMI") }
     let(:motif) { build(:motif, service: pmi) }
@@ -49,7 +49,7 @@ describe Users::RdvSms, type: :service do
   end
 
   describe "#rdv_cancelled" do
-    subject { described_class.rdv_cancelled(OpenStruct.new(rdv.payload(:destroy)), user).content }
+    subject { described_class.rdv_cancelled(rdv, user).content }
 
     let(:pmi) { build(:service, short_name: "PMI") }
     let(:motif) { build(:motif, service: pmi) }
@@ -104,7 +104,7 @@ describe Users::RdvSms, type: :service do
   end
 
   describe "#rdv_upcoming_reminder" do
-    subject { described_class.rdv_upcoming_reminder(OpenStruct.new(rdv.payload(nil, user)), user).content }
+    subject { described_class.rdv_upcoming_reminder(rdv, user).content }
 
     let(:pmi) { build(:service, short_name: "PMI") }
     let(:motif) { build(:motif, service: pmi) }
@@ -120,9 +120,9 @@ describe Users::RdvSms, type: :service do
   end
 
   describe "rdv footer" do
-    let(:user) { build(:user, address: "10 rue de Toulon, Lille") }
+    subject { described_class.rdv_created(rdv, user).content }
 
-    subject { described_class.rdv_created(OpenStruct.new(rdv.payload(:create)), user).content }
+    let(:user) { build(:user, address: "10 rue de Toulon, Lille") }
 
     describe "depending on motif" do
       let(:rdv) { build(:rdv, motif: motif, users: [user], starts_at: 5.days.from_now) }
