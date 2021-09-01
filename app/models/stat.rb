@@ -59,7 +59,7 @@ class Stat
     rdvs_count_per_date = Hash.new(0)
     res.each { |key, rdvs_count| rdvs_count_per_date[key[1]] += rdvs_count }
     # ruby hashes are ordered and we care about the order here
-    res_ordered = %i[seen excused unknown revoked noshow]
+    res_ordered = %i[unknown seen excused revoked noshow]
       .reverse
       .map { |status| res.select { |key, _rdvs_count| key[0] == status.to_s } }
       .reduce(:merge)

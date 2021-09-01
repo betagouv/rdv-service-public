@@ -71,7 +71,18 @@
       .card.mb-5
         .card-body
           h4.card-title.mb-3 RDV par statut
-          = column_chart add_query_string_params_to_url(rdvs_stats_path, by_status: true, departement: @departement), stacked: :percent, max: 100, suffix: "%"
+          /
+            Note: colors are synced manually with the status css and the order of the stats.
+            From stat.rb, Stat#rdvs_group_by_status:
+              * stats are in this order: unknown seen excused revoked noshow
+            From _rdv_status.scss, the colors are:
+              "unknown": $info, #ffbc00
+              "seen": $success, #0acf97
+              "excused": $info, #39afd1
+              "revoked": $teal, #02a8b5
+              "noshow": $danger, #fa5c7c
+          - colors = %w[#fa5c7c #02a8b5 #39afd1 #0acf97 #ffbc00]
+          = column_chart add_query_string_params_to_url(rdvs_stats_path, by_status: true, departement: @departement), stacked: :percent, max: 100, suffix: "%", colors: colors
 
       .card.mb-5
         .card-body
