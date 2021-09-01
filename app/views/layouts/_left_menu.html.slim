@@ -35,11 +35,7 @@
           li.my-2
             = link_to "Mes organisations", admin_organisations_path
           li.my-2
-            = link_to( \
-              "Mes statistiques", \
-              admin_organisation_agent_stats_path(current_organisation, current_agent), \
-              class: ("active" if content_for(:menu_item) == "menu-stats") \
-            )
+            = active_link_to "Mes statistiques", admin_organisation_agent_stats_path(current_organisation, current_agent)
             = rdv_danger_badge(policy_scope(current_agent.rdvs).status("unknown_past").count)
           li.my-2
             = link_to destroy_agent_session_path, method: :delete do
@@ -48,10 +44,7 @@
 
       - if current_organisation.recent?
         li.side-nav-item.mb-4.pl-3.pr-2
-          = link_to( \
-            admin_organisation_setup_checklist_path(current_organisation), \
-            class: ("active" if content_for(:menu_item) == "menu-setup-checklist") \
-          ) do
+          = active_link_to admin_organisation_setup_checklist_path(current_organisation)
             i.far.fa-calendar>
             span.ml-1 Premiers pas
 
@@ -78,56 +71,35 @@
                 class: "select2-input form-control js-planning-agent-select" \
               )
           li.my-2
-            = link_to "Agenda", \
-              admin_organisation_agent_agenda_path(current_organisation, agent_for_left_menu(@agent)), \
-              class: ("active" if content_for(:menu_item) == "menu-agendas")
+            = active_link_to "Agenda", admin_organisation_agent_agenda_path(current_organisation, agent_for_left_menu(@agent))
           li.my-2
-            = link_to "Plages d'ouverture", \
-              admin_organisation_agent_plage_ouvertures_path(current_organisation, agent_for_left_menu(@agent)), \
-              class: ("active" if content_for(:menu_item) == "menu-plages-ouvertures")
+            = active_link_to "Plages d'ouverture", admin_organisation_agent_plage_ouvertures_path(current_organisation, agent_for_left_menu(@agent))
           li.my-2
-            = link_to "Absences", \
-              admin_organisation_agent_absences_path(current_organisation, agent_for_left_menu(@agent)), \
-              class: ("active" if content_for(:menu_item) == "menu-absences")
+            = active_link_to "Absences", admin_organisation_agent_absences_path(current_organisation, agent_for_left_menu(@agent))
 
       li.side-nav-item.mb-4.pl-3.pr-2
-        = link_to( \
-            admin_organisation_users_path(current_organisation), \
-            class: ("active" if content_for(:menu_item) == "menu-users") \
-            ) do
-              i.fa.fa-user>
-              span.ml-1 Usagers
+        = active_link_to admin_organisation_users_path(current_organisation)
+          i.fa.fa-user>
+          span.ml-1 Usagers
 
       li.side-nav-item.mb-4.pl-3.pr-2
-        = link_to \
-          admin_organisation_rdvs_path(current_organisation), \
-          class: ("active" if content_for(:menu_item) == "menu-rdvs-list") \
-        do
+        = active_link_to admin_organisation_rdvs_path(current_organisation)
           i.fa.fa-list>
           span.ml-1 Liste des RDV
 
       li.side-nav-item.mb-4.pl-3.pr-2
-        = link_to( \
-          admin_organisation_stats_path(current_organisation), \
-          class: ("active" if content_for(:menu_item) == "menu-organisation-stats") \
-        ) do
+        = active_link_to admin_organisation_stats_path(current_organisation)
           i.fa.fa-chart-bar>
           span.ml-1 Statistiques
           = rdv_danger_badge(policy_scope(current_organisation.rdvs).status("unknown_past").count)
 
       - unless current_agent_role.admin?
         li.side-nav-item.mb-4.pl-3.pr-2
-          = link_to \
-            admin_organisation_lieux_path(current_organisation), \
-            class: ("active" if content_for(:menu_item) == "menu-lieux") \
-          do
+          = active_link_to admin_organisation_lieux_path(current_organisation)
             i.fa.fa-building>
             span.ml-1 Lieux
         li.side-nav-item.mb-4.pl-3.pr-2
-          = link_to \
-            admin_organisation_motifs_path(current_organisation), \
-            class: ("active" if content_for(:menu_item) == "menu-motifs") \
-          do
+          = active_link_to admin_organisation_motifs_path(current_organisation)
             i.fa.fa-paste>
             span.ml-1 Motifs
 
@@ -148,33 +120,19 @@
             class=("show" if menu_top_level_item == "settings")
           ]
             li.my-2
-              =link_to "Votre organisation", \
-                admin_organisation_path(current_organisation), \
-                class: ("active" if content_for(:menu_item) == "menu-organisation")
+              = active_link_to "Votre organisation", admin_organisation_path(current_organisation), active: :exact
             li.my-2
-              =link_to "Vos lieux", \
-                admin_organisation_lieux_path(current_organisation), \
-                class: ("active" if content_for(:menu_item) == "menu-lieux")
+              = active_link_to "Vos lieux", admin_organisation_lieux_path(current_organisation)
             li.my-2
-              =link_to "Vos agents", \
-                admin_organisation_agents_path(current_organisation), \
-                class: ("active" if content_for(:menu_item) == "menu-agents")
+              = active_link_to "Vos agents", admin_organisation_agents_path(current_organisation)
             li.my-2
-              =link_to "Vos invitations", \
-                admin_organisation_invitations_path(current_organisation), \
-                class: ("active" if content_for(:menu_item) == "menu-invitations")
+              = active_link_to "Vos invitations", admin_organisation_invitations_path(current_organisation)
             li.my-2
-              = link_to "Vos motifs", \
-                admin_organisation_motifs_path(current_organisation), \
-                class: ("active" if content_for(:menu_item) == "menu-motifs")
+              = active_link_to "Vos motifs", admin_organisation_motifs_path(current_organisation)
             - if current_agent_role.admin? && policy_scope(Organisation).count == 1
               li.my-2
-                = link_to "Sectorisation #{current_organisation.territory}", \
-                  admin_territory_setup_checklist_path(current_organisation.territory)
+                = active_link_to "Sectorisation #{current_organisation.territory}", admin_territory_setup_checklist_path(current_organisation.territory)
       li.side-nav-item.pl-3.pr-2
-        = link_to \
-          admin_organisation_support_path(current_organisation), \
-          class: ("active" if content_for(:menu_item) == "menu-support") \
-        do
+        = active_link_to admin_organisation_support_path(current_organisation)
           i.fa.fa-question-circle>
           span.ml-1 Support

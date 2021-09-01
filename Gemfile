@@ -65,6 +65,7 @@ gem "slim"
 gem "chartkick", "~> 3.4.0"
 gem "groupdate", "~> 4.2"
 gem "rails_autolink"
+gem "active_link_to"
 
 gem "premailer-rails" # Mail formatting
 gem "sib-api-v3-sdk" # SendInBlue (SMS)

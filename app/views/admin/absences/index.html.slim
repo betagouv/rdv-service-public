@@ -14,11 +14,9 @@
   - if @display_tabs
     ul.nav.nav-tabs.px-2.mt-2
       li.nav-item
-        - active = @current_tab != "expired" ? "active" : ""
-        = link_to "En cours", admin_organisation_agent_absences_path(current_organisation, @agent.id, current_tab: "not_expired"), class: "nav-link #{active}"
+        = active_link_to "En cours", admin_organisation_agent_absences_path(current_organisation, @agent.id), class: "nav-link", active: :exact
       li.nav-item
-        - active = @current_tab == "expired" ? "active" : ""
-        = link_to "Passées", admin_organisation_agent_absences_path(current_organisation, @agent.id, current_tab: "expired"), class: "nav-link #{active}"
+        = active_link_to "Passées", admin_organisation_agent_absences_path(current_organisation, @agent.id, current_tab: "expired"), class: "nav-link", active: :exact
 
   - if @absences.any?
     table.table
