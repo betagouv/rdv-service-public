@@ -3,5 +3,5 @@
 class MotifBlueprint < Blueprinter::Base
   identifier :id
 
-  fields :name, :location_type
+  fields :name, :location_type, :deleted_at, :reservable_online
 end
