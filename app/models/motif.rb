@@ -36,7 +36,9 @@ class Motif < ApplicationRecord
   validate :not_associated_with_secretariat
   validates :color, css_hex_color: true
 
-  scope :active, -> { where(deleted_at: nil) }
+  scope :active, lambda { |active = true|
+    active ? where(deleted_at: nil) : where.not(deleted_at: nil)
+  }
   scope :reservable_online, -> { where(reservable_online: true) }
   scope :not_reservable_online, -> { where(reservable_online: false) }
   scope :by_phone, -> { Motif.phone } # default scope created by enum

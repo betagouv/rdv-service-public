@@ -69,6 +69,7 @@ gem "rails_autolink"
 gem "premailer-rails" # Mail formatting
 gem "sib-api-v3-sdk" # SendInBlue (SMS)
 gem "spreadsheet" # Excel export
+gem "wannabe_bool" # imports to_b method
 
 ## Time Management
 gem "montrose", "~> 0.11.2"

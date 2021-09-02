@@ -542,6 +542,7 @@ GEM
     validate_url (1.0.13)
       activemodel (>= 3.0.0)
       public_suffix
+    wannabe_bool (0.7.1)
     warden (1.2.9)
       rack (>= 2.0.9)
     webdrivers (4.6.0)
@@ -638,6 +639,7 @@ DEPENDENCIES
   tod (~> 2.2)
   turbolinks (~> 5)
   typhoeus
+  wannabe_bool
   webdrivers
   webpacker
 
