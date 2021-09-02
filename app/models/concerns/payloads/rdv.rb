@@ -37,7 +37,6 @@ module Payloads
           duration_in_min: duration_in_min,
           address_complete: address_complete,
           phone_number: phone_number,
-          phone_number_formatter: phone_number_formatted,
           organisation_id: organisation.id,
           motif_service_id: motif.service.id,
           organisation_name: organisation.name,
