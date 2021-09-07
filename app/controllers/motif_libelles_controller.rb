@@ -6,7 +6,7 @@ class MotifLibellesController < ApplicationController
 
     motif_libelles = MotifLibelle.where(service_id: params[:service_id])
     respond_to do |format|
-      format.json { render json: { motif_libelles: motif_libelles.as_json } }
+      format.json { render json: { motif_libelles: motif_libelles } }
     end
   end
 end

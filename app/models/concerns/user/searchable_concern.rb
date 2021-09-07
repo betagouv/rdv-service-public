@@ -3,7 +3,7 @@
 module User::SearchableConcern
   extend ActiveSupport::Concern
 
-  PHONE_REGEX = /^(\+\d{2})?[\d ]{3,20}$/
+  PHONE_REGEX = /^(\+\d{2})?[\d ]{3,20}$/.freeze
 
   included do
     pg_search_scope(

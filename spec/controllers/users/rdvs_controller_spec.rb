@@ -20,7 +20,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       sign_in user
 
       allow(Users::GeoSearch).to receive(:new)
-        .with(departement: "12", city_code: "12100", street_ban_id: nil)
+        .with(departement: "12", city_code: "12100")
         .and_return(mock_geo_search)
       allow(Users::CreneauSearch).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu, geo_search: mock_geo_search)
