@@ -16,7 +16,7 @@ RSpec.describe LieuxController, type: :controller do
 
     allow(mock_geo_search).to receive(:attributed_organisations).and_return(Organisation.where(id: organisation.id))
     allow(Users::GeoSearch).to receive(:new)
-      .with(departement: "62", city_code: "62100")
+      .with(departement: "62", city_code: "62100", street_ban_id: nil)
       .and_return(mock_geo_search)
   end
 

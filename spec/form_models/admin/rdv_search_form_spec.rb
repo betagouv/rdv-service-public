@@ -80,7 +80,7 @@ describe Admin::RdvSearchForm do
         end: Time.zone.parse("27/07/2019 09:00")
       )
 
-      expect(agent_rdv_search_form.rdvs).to eq([rdv1, rdv2])
+      expect(agent_rdv_search_form.rdvs).to match_array([rdv1, rdv2])
     end
 
     it "return empty when starts_at is outside of window" do

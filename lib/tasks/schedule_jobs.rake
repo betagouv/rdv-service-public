@@ -5,7 +5,7 @@ task schedule_jobs: :environment do
   # See https://github.com/codez/delayed_cron_job#scheduling-trigger
   # Need to load all jobs definitions in order to find subclasses
   glob = Rails.root.join("app/jobs/**/*_job.rb")
-  Dir.glob(glob).sort.each { |file| require file }
+  Dir.glob(glob).each { |file| require file }
   CronJob.subclasses.each(&:schedule)
 end
 

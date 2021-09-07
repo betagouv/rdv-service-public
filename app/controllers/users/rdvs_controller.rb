@@ -55,8 +55,9 @@ class Users::RdvsController < UserAuthController
 
   def set_geo_search
     @geo_search = Users::GeoSearch.new(
-      { departement: params[:departement], city_code: params[:city_code] }
-        .merge(params[:street_ban_id].present? ? { street_ban_id: params[:street_ban_id] } : {})
+      departement: params[:departement],
+      city_code: params[:city_code],
+      street_ban_id: params[:street_ban_id].presence
     )
   end
 
