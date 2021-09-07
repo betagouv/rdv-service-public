@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Notifications::Rdv::RdvCreatedService, type: :service do
-  subject { described_class.perform_with(rdv, user1) }
+  subject { described_class.perform_with(rdv) }
 
   let(:user1) { build(:user) }
   let(:user2) { build(:user) }

@@ -9,7 +9,7 @@ AllCops:
     - "node_modules/**/*"
     - 'db/schema.rb'
   NewCops: enable
-  TargetRubyVersion: 3.0.2
+  TargetRubyVersion: 2.7.4
 
 Bundler/OrderedGems:
   Exclude:
@@ -135,9 +135,6 @@ Style/AsciiComments:
   Enabled: false
 
 Style/ClassAndModuleChildren:
-  Enabled: false
-
-Style/CommentedKeyword:
   Enabled: false
 
 Style/Documentation:

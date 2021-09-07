@@ -93,9 +93,8 @@ class LieuxController < ApplicationController
     @street_ban_id = search_params[:street_ban_id]
     @service = Service.find(@service_id)
     @geo_search = Users::GeoSearch.new(
-      departement: @departement,
-      city_code: @city_code,
-      street_ban_id: @street_ban_id.presence
+      { departement: @departement, city_code: @city_code }
+      .merge(@street_ban_id.present? ? { street_ban_id: @street_ban_id } : {})
     )
     searchable_motifs = @geo_search.available_motifs.where(service: @service)
     @unique_motifs_by_name_and_location_type = searchable_motifs.uniq { [_1.name, _1.location_type] }
