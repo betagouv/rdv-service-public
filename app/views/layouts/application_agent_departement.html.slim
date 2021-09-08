@@ -3,23 +3,23 @@
     li.side-nav-title.pl-3.mb-4= current_territory
 
     li.side-nav-item.mb-4.pl-3.pr-2
-      = link_to admin_territory_setup_checklist_path(current_territory), class: ("active" if content_for(:menu_item) == "menu-departement-setup-checklist")
+      = active_link_to admin_territory_setup_checklist_path(current_territory)
         i.fa.fa-info>
         span.ml-1 Instructions
 
     li.side-nav-item.mb-4.pl-3.pr-2
-      = link_to admin_territory_agent_territorial_roles_path(current_territory), class: ("active" if content_for(:menu_item) == "menu-departement-agents")
+      = active_link_to admin_territory_agent_territorial_roles_path(current_territory)
         i.fa.fa-users>
         span.ml-1 Administration
 
       li.side-nav-item.mb-4.pl-3.pr-2
-        = link_to admin_territory_webhook_endpoints_path(current_territory)
+        = active_link_to admin_territory_webhook_endpoints_path(current_territory)
           i.fa.fa-network-wired>
           span.ml-1 Webhook
 
     - if current_territory.has_own_sms_provider?
       li.side-nav-item.mb-4.pl-3.pr-2
-        = link_to admin_territory_sms_configuration_path(current_territory)
+        = active_link_to admin_territory_sms_configuration_path(current_territory)
           i.fa.fa-mobile-alt>
           span.ml-1 SMS
 
@@ -27,22 +27,22 @@
       a.active Sectorisation
       ul.side-nav.list-unstyled.mt-4
         li.side-nav-item.mb-4.pl-3.pr-2
-          = link_to admin_territory_sectors_path(current_territory), class: ("active" if content_for(:menu_item) == "menu-departement-sectors")
+          = active_link_to admin_territory_sectors_path(current_territory)
             i.fa.fa-table>
             span.ml-1 Secteurs
 
         li.side-nav-item.mb-4.pl-3.pr-2
-          = link_to admin_territory_sectors_path(current_territory, view: "map"), class: ("active" if content_for(:menu_item) == "menu-departement-sectors-map")
+          = active_link_to admin_territory_sectors_path(current_territory, view: "map"), active: :exact
             i.fa.fa-map>
             span.ml-1 Carte
 
         li.side-nav-item.mb-4.pl-3.pr-2
-          = link_to admin_territory_sectorisation_test_path(current_territory), class: ("active" if content_for(:menu_item) == "menu-departement-sectorisation-test")
+          = active_link_to admin_territory_sectorisation_test_path(current_territory)
             i.fa.fa-cogs>
             span.ml-1 Tests
 
         li.side-nav-item.mb-4.pl-3.pr-2
-          = link_to new_admin_territory_zone_import_path(current_territory), class: ("active" if content_for(:menu_item) == "menu-departement-zone-imports")
+          = active_link_to new_admin_territory_zone_import_path(current_territory)
             i.fa.fa-download>
             span.ml-1 Importer fichier
 

@@ -15,7 +15,6 @@ class Admin::AbsencesController < AgentAuthController
       .by_starts_at
       .page(filter_params[:page])
 
-    @current_tab = filter_params[:current_tab]
     @absences = params[:current_tab] == "expired" ? absences.expired : absences.not_expired
     @display_tabs = absences.expired.any? || params[:current_tab] == "expired"
   end
