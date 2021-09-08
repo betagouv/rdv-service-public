@@ -10,19 +10,6 @@
   }
 }
 
-
-// Dropdown Large (Custom)
-.dropdown-lg {
-  width: $dropdown-lg-width;
-}
-
-@include media-breakpoint-down(sm) {
-  .dropdown-lg {
-    width: 200px !important;
-  }
-}
-
-
 // Dropdown arrow hide
 .arrow-none {
   &:after {

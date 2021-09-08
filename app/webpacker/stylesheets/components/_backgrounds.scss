@@ -1,9 +1,3 @@
-@each $color, $value in $theme-colors {
-  .bg-#{$color}-lighten {
-      @include bg-variant-light($value);
-  }
-}
-
 .bg-light {
   background-color: darken(#F6F7FA, 2%) !important;
 }

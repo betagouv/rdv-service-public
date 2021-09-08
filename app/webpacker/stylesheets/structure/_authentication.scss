@@ -44,11 +44,6 @@ body.authentication-bg {
   }
 }
 
-.auth-brand {
-  margin-bottom: 2rem;
-  display: none;
-}
-
 .toggle-password{
   float: right;
   margin-right: 1rem;
@@ -74,11 +69,6 @@ body.authentication-bg {
       max-width: 100%;
       min-height: 100vh;
       padding: 1rem;
-    }
-
-    .auth-brand {
-      display: block;
-      top: 3rem;
     }
   }
 }
