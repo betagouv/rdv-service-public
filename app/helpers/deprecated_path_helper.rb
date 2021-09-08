@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 module DeprecatedPathHelper
-  def root_path?
-    request.path == root_path
-  end
-
   def user_path?(user)
     request.path == admin_organisation_user_path(current_organisation, user)
   end

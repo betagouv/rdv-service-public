@@ -41,17 +41,8 @@ module RdvsHelper
     end
   end
 
-  def unknown_past_agent_rdvs_danger_bage
-    unknown_past_rdvs = current_organisation.rdvs.joins(:agents).where(agents: { id: current_agent }).status("unknown_past").count
-    rdv_danger_badge(unknown_past_rdvs)
-  end
-
   def rdv_danger_badge(count)
     tag.span(count, class: "badge badge-danger") if count.positive?
-  end
-
-  def rdv_danger_icon(count)
-    tag.i(nil, class: "fa fa-exclamation-circle text-danger") if count.positive? && !stats_path?
   end
 
   def rdv_status_value(status)

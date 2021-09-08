@@ -9,20 +9,6 @@ module AgentsHelper
     tag.span("Vous", class: "badge badge-info") if current_agent?(agent)
   end
 
-  def admin_tag(agent)
-    tag.span("Admin", class: "badge badge-danger") if agent.role_in_organisation(current_organisation).admin?
-  end
-
-  def delete_dropdown_link(agent)
-    return unless policy([:agent, agent]).destroy?
-
-    link_to "Supprimer",
-            admin_organisation_agent_path(current_organisation, agent),
-            data: { confirm: "Êtes-vous sûr de vouloir supprimer cet agent ?" },
-            method: :delete,
-            class: "dropdown-item"
-  end
-
   def build_link_to_rdv_wizard_params(creneau, form)
     params = {}
     params[:step] = 2
@@ -35,12 +21,6 @@ module AgentsHelper
     params["user_ids"] = form.user_ids if form.user_ids.present?
     params["context"] = form.context if form.context.present?
     params
-  end
-
-  def display_meta_note(note)
-    meta = tag.span("le #{l(note.created_at.to_date)}", title: l(note.created_at))
-    meta += " par #{note.agent.full_name_and_service}"
-    tag.span(meta, class: "font-italic")
   end
 
   def agents_to_sentence(agents)

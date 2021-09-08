@@ -1,17 +1,6 @@
 # frozen_string_literal: true
 
 module ApplicationHelper
-  # Usage: class_names('my-class', 'my-other-class': condition)
-  def class_names(*args)
-    optional = args.last.is_a?(Hash) ? args.last : {}
-    mandatory = optional.empty? ? args : args[0..-2]
-
-    optional = optional.map do |class_name, condition|
-      class_name if condition
-    end
-    (Array(mandatory) + optional).flatten.compact.map(&:to_s).uniq
-  end
-
   def alert_class_for(alert)
     case alert
     when :success
@@ -58,14 +47,6 @@ module ApplicationHelper
     link_to root_path do
       image_pack_tag "logos/logo.svg", height: 40, alt: "RDV Solidarités", class: "d-inline logo"
     end
-  end
-
-  def map_tag_marker(title)
-    icon_tag_tooltip(title, "map-marker-alt")
-  end
-
-  def icon_tag_tooltip(title, icon)
-    tag.i(nil, class: "fa fa-#{icon}", data: { toggle: "tooltip" }, title: title)
   end
 
   def errors_full_messages(object)
