@@ -41,28 +41,9 @@ footer.main-footer {
 
 body.users .footer {left: 0;}
 
-body.providers .footer {
-  left: 0 !important;
-}
-
 @include media-breakpoint-down(sm) {
   .footer {
     left: 0 !important;
     text-align: center;
-  }
-}
-
-// Used for account authentication pages
-.footer-alt {
-  left: 0;
-  border: none;
-  text-align: center;
-}
-
-// Layout - Topnav
-body[data-layout="topnav"] {
-  .footer {
-      left: 0 !important;
-      padding: 19px 0 20px;
   }
 }
