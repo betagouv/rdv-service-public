@@ -27,7 +27,8 @@ class Territory < ApplicationRecord
     send_in_blue: "send_in_blue",
     contact_experience: "contact_experience",
     sfr_mail2sms: "sfr_mail2sms",
-    clever_technologies: "clever_technologies"
+    clever_technologies: "clever_technologies",
+    orange_contact_everyone: "orange_contact_everyone"
   }, _prefix: true
 
   def to_s

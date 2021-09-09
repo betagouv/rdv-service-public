@@ -138,4 +138,26 @@ class SendTransactionalSmsService < BaseService
     parsed_res = JSON.parse(response.body)
     raise ApiError, { message: self, response: parsed_res } if response.code != 201
   end
+
+  # Orange Contact Everyone
+  #
+  def send_with_orange_contact_everyone
+    response = Typhoeus::Request.new(
+      "https://contact-everyone.orange-business.com/api/light/diffusions/sms",
+      method: :post,
+      headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+      timeout: 5,
+      body: {
+        token: @key,
+        to: @phone_number,
+        msg: @content
+      }.to_json
+    ).run
+
+    raise Timeout if response.timed_out?
+    raise HttpError, { message: self, response: "code: #{response.code}" } if response.failure? || response.code == :http_returned_error
+
+    parsed_res = JSON.parse(response.body)
+    raise ApiError, { message: self, response: parsed_res } if response.code != :success
+  end
 end
