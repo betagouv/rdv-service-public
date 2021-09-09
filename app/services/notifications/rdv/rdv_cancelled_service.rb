@@ -28,7 +28,7 @@ class Notifications::Rdv::RdvCancelledService < ::BaseService
     return unless @author.is_a? Agent
     return unless @rdv.status.in? %w[excused revoked]
 
-    SendTransactionalSmsJob.perform_later(:rdv_cancelled, @rdv.payload(:destroy, user), user.id)
+    Users::RdvSms.rdv_cancelled(@rdv.payload(:destroy, user), user).deliver_later
     @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: :cancelled_by_agent)
   end
 end

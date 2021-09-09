@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-describe TransactionalSms::FileAttente, type: :service do
-  describe "#content" do
-    subject { described_class.new(OpenStruct.new(rdv.payload(:update)), user).content }
+describe Users::FileAttenteSms, type: :service do
+  describe "#new_creneau_available" do
+    subject { described_class.new_creneau_available(OpenStruct.new(rdv.payload), user).content }
 
     let(:rdv) { build(:rdv) }
     let(:user) { build(:user) }

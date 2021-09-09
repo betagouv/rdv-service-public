@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SendTransactionalSmsService < BaseService
+class SmsSendingService < BaseService
   class Timeout < StandardError; end
 
   class HttpError < StandardError; end
@@ -9,24 +9,33 @@ class SendTransactionalSmsService < BaseService
 
   SENDER_NAME = "RdvSoli"
 
-  def initialize(phone_number, content, tags, provider = nil, key = nil)
+  attr_reader :phone_number, :content, :tags, :provider, :key
+
+  def initialize(phone_number, content, tags, provider, key) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     @phone_number = phone_number
-    @content = content
+    @content = formatted_content(content)
     @tags = tags
 
-    @provider = if Rails.env.test?
-                  :debug_logger
-                elsif Rails.env.development?
-                  ENV["DEVELOPMENT_FORCE_SMS_PROVIDER"].presence || provider || ENV["DEFAULT_SMS_PROVIDER"].presence || :debug_logger
-                else
-                  provider || ENV["DEFAULT_SMS_PROVIDER"].presence || :debug_logger
-                end
-
-    @key = if Rails.env.development?
-      ENV["DEVELOPMENT_FORCE_SMS_PROVIDER_KEY"].presence || key || ENV["DEFAULT_SMS_PROVIDER_KEY"]
+    if Rails.env.test?
+      @provider = :debug_logger
+      @key = nil
+    elsif Rails.env.development?
+      @provider = ENV["DEVELOPMENT_FORCE_SMS_PROVIDER"].presence || provider || ENV["DEFAULT_SMS_PROVIDER"].presence || :debug_logger
+      @key = ENV["DEVELOPMENT_FORCE_SMS_PROVIDER_KEY"].presence || key || ENV["DEFAULT_SMS_PROVIDER_KEY"]
     else
-      key || ENV["DEFAULT_SMS_PROVIDER_KEY"]
+      @provider = provider || ENV["DEFAULT_SMS_PROVIDER"].presence || :debug_logger
+      @key = key || ENV["DEFAULT_SMS_PROVIDER_KEY"]
     end
+  end
+
+  def formatted_content(content)
+    [
+      ApplicationController.helpers.rdv_solidarites_instance_name,
+      content
+    ].compact
+      .join("\n")
+      .tr("áâãëẽêíïîĩóôõúûũçÀÁÂÃÈËẼÊÌÍÏÎĨÒÓÔÕÙÚÛŨ", "aaaeeeiiiiooouuucAAAAEEEEIIIIIOOOOUUUU")
+      .gsub("œ", "oe")
   end
 
   def perform
@@ -39,12 +48,6 @@ class SendTransactionalSmsService < BaseService
     conf = "provider : #{@provider}\nkey : #{@key}"
     message = "content: #{@content}\nphone_number: #{@phone_number}\ntags: #{@tags.join(',')}"
     "#{conf}\n#{message}"
-  end
-
-  # DebugLogger
-  #
-  def send_with_debug_logger
-    Rails.logger.info("SMS DebugLogger: this would have been sent: #{self}")
   end
 
   # SendInBlue
@@ -165,5 +168,13 @@ class SendTransactionalSmsService < BaseService
 
     parsed_res = JSON.parse(response.body)
     raise ApiError, { message: self, response: parsed_res } if response.code != :success
+  end
+
+  # DebugLogger
+  #
+  def send_with_debug_logger
+    message = "content: #{@content} | recipient: #{@phone_number} | tags: #{@tags.join(',')}"
+    Rails.logger.info("following SMS would have been sent in production environment: #{message}")
+    Rails.logger.info("provider : #{@provider} configuration : #{@configuration}")
   end
 end
