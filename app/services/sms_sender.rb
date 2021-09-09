@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SmsSendingService < BaseService
+class SmsSender < BaseService
   class Timeout < StandardError; end
 
   class HttpError < StandardError; end

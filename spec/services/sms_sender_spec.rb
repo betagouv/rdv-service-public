@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe SmsSendingService, type: :service do
+describe SmsSender, type: :service do
   describe "#content" do
     subject { test_sms.content }
 

@@ -16,7 +16,7 @@ describe ApplicationSms, type: :service do
       let(:phone_number) { "0612345678" }
 
       it do
-        expect(SmsSendingService).to receive(:perform_with)
+        expect(SmsSender).to receive(:perform_with)
         expect { subject }.not_to raise_error
       end
     end

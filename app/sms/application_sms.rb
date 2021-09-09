@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Similar to ActionMailer::Base, but for sms.
-# Prepare the Sms to be sent and schedule a DelayedJob with SmsSendingService.
+# Prepare the Sms to be sent and schedule a DelayedJob with SmsSender.
 #
 # To be subclassed:
 # class SomeSmsSubclass < ApplicationSms
@@ -50,7 +50,7 @@ class ApplicationSms
   def deliver_later
     raise InvalidMobilePhoneNumberError, "#{phone_number} is not a valid mobile phone number" unless Phonelib.parse(phone_number).types.include?(:mobile)
 
-    SmsSendingService.delay.perform_with(phone_number, content, tags, provider, key)
+    SmsSender.delay.perform_with(phone_number, content, tags, provider, key)
   end
 
   private
