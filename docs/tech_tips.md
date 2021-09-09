@@ -57,7 +57,7 @@ rails runner scripts/export_sectors.rb 64
 
 > Et la j’ai filtré a la main les lignes demandées.
 
-## Preview email
+## Liens utiles
 
 - http://localhost:5000/letter_opener
 - http://localhost:5000/rails/mailers
