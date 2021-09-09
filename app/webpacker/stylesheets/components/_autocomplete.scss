@@ -1,4 +1,7 @@
-// from https://github.com/algolia/autocomplete.js#look-and-feel
+// We don’t use Algolia, but we use algolia’s autocomplete.js
+// See https://github.com/algolia/autocomplete.js#look-and-feel
+// These css classes are added via places-inputs.js
+
 .algolia-autocomplete {
   width: 100%;
 }
