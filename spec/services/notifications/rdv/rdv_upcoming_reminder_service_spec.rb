@@ -8,12 +8,13 @@ describe Notifications::Rdv::RdvUpcomingReminderService, type: :service do
   let(:rdv_payload) { rdv.payload }
 
   before do
-    allow(Users::RdvMailer).to receive(:rdv_upcoming_reminder).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
-    allow(SendTransactionalSmsJob).to receive(:perform_later)
+    allow(Users::RdvMailer).to receive(:rdv_upcoming_reminder).and_call_original
+    allow(Users::RdvSms).to receive(:rdv_upcoming_reminder).and_call_original
   end
 
   it "sends an sms and an email" do
     expect(Users::RdvMailer).to receive(:rdv_upcoming_reminder).with(rdv_payload, user1)
+    expect(Users::RdvSms).to receive(:rdv_upcoming_reminder).with(rdv, user1)
     subject
     expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "upcoming_reminder").count).to eq 1
     expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: "upcoming_reminder").count).to eq 1

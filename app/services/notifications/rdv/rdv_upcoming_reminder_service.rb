@@ -11,7 +11,7 @@ class Notifications::Rdv::RdvUpcomingReminderService < ::BaseService
   end
 
   def notify_user_by_sms(user)
-    SendTransactionalSmsJob.perform_later(:reminder, @rdv.payload(nil, user), user.id)
+    Users::RdvSms.rdv_upcoming_reminder(@rdv, user).deliver_later
     @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: :upcoming_reminder)
   end
 end

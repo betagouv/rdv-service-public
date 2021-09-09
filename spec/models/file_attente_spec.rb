@@ -33,13 +33,15 @@ describe FileAttente, type: :model do
       end
 
       it "sends an sms" do
-        expect(SendTransactionalSmsJob).to receive(:perform_later)
+        allow(Users::FileAttenteSms).to receive(:new_creneau_available).and_call_original
+        expect(Users::FileAttenteSms).to receive(:new_creneau_available).with(rdv, rdv.users.first)
         subject
         expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: "file_attente_creneaux_available").count).to eq 1
       end
 
       it "sends an email" do
-        allow(Users::FileAttenteMailer).to receive(:new_creneau_available).with(rdv, rdv.users.first).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
+        allow(Users::FileAttenteMailer).to receive(:new_creneau_available).with(rdv, rdv.users.first).and_call_original
+        expect(Users::FileAttenteMailer).to receive(:new_creneau_available).with(rdv, rdv.users.first)
         subject
         expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "file_attente_creneaux_available").count).to eq 1
       end
@@ -50,7 +52,7 @@ describe FileAttente, type: :model do
 
       it "does not send notification" do
         subject
-        expect(SendTransactionalSmsJob).not_to receive(:perform_later)
+        expect(Users::FileAttenteSms).not_to receive(:new_creneau_available)
         expect(Users::FileAttenteMailer).not_to receive(:new_creneau_available)
       end
     end
@@ -62,7 +64,7 @@ describe FileAttente, type: :model do
         file_attente.update(last_creneau_sent_at: now)
         file_attente.reload
         subject
-        expect(SendTransactionalSmsJob).not_to receive(:perform_later)
+        expect(Users::FileAttenteSms).not_to receive(:new_creneau_available)
         expect(Users::FileAttenteMailer).not_to receive(:new_creneau_available)
       end
     end

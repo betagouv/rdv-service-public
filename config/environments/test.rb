@@ -32,7 +32,6 @@ Rails.application.configure do
 
   # Store uploaded files on the local file system in a temporary directory
   config.active_storage.service = :test
-  config.active_job.queue_adapter = :inline
 
   port = 9887 + ENV["TEST_ENV_NUMBER"].to_i
   config.action_mailer.default_url_options = { host: "localhost:#{port}", utm_source: "test", utm_medium: "email", utm_campaign: "default" }
@@ -45,6 +44,7 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
   config.active_job.queue_adapter = :inline
+  Delayed::Worker.delay_jobs = false
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
