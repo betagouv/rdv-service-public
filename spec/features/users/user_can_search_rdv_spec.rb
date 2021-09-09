@@ -19,7 +19,7 @@ describe "User can search for rdvs" do
       expect_page_h1("Prenez rendez-vous en ligne\navec votre département")
       fill_in("search_where", with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
 
-      # Fake BAN autocomplete to pass CI
+      # fake algolia autocomplete to pass on Circle ci
       page.execute_script("document.querySelector('#search_departement').value = '92'")
       page.execute_script("document.querySelector('#search_submit').disabled = false")
 
