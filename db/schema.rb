@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 2021_08_30_145311) do
     "contact_experience",
     "sfr_mail2sms",
     "clever_technologies",
+    "orange_contact_everyone",
   ], force: :cascade
 
   create_table "absences", force: :cascade do |t|
