@@ -92,12 +92,12 @@ describe Payloads::Rdv, type: :service do
       it { expect(rdv.payload[:users_full_names]).to eq("Claire Flou et Henri Frice") }
     end
 
-    describe ":agents_full_names" do
-      let(:agent) { build(:agent, first_name: "henri", last_name: "frice") }
-      let(:other_agent) { build(:agent, first_name: "claire", last_name: "flou") }
+    describe ":agents_short_names" do
+      let(:agent) { build(:agent, first_name: "Alphone", last_name: "Némone") }
+      let(:other_agent) { build(:agent, first_name: "Béatrice", last_name: "Gonia") }
       let(:rdv) { build(:rdv, agents: [agent, other_agent]) }
 
-      it { expect(rdv.payload[:agents_full_names]).to eq("claire flou et henri frice") }
+      it { expect(rdv.payload[:agents_short_names]).to eq("A. Némone et B. Gonia") }
     end
 
     describe ":follow_up?" do

@@ -45,8 +45,8 @@ class Users::RdvSms < Users::BaseSms
       message += " pour #{users_full_names}"
     end
 
-    agents_full_names = rdv.agents.map(&:full_name).sort.to_sentence
-    message += " avec #{agents_full_names} " if rdv.follow_up?
+    agents_short_names = rdv.agents.map(&:short_name).sort.to_sentence
+    message += " avec #{agents_short_names} " if rdv.follow_up?
 
     message += "Infos et annulation: #{rdvs_shorten_url(host: ENV['HOST'])}"
     message += " / #{rdv.phone_number}" if rdv.phone_number.present?
