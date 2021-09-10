@@ -56,3 +56,11 @@ rails runner scripts/export_sectors.rb 64
 ```
 
 > Et la j’ai filtré a la main les lignes demandées.
+
+## Liens utiles
+
+- http://localhost:5000/letter_opener
+- http://localhost:5000/rails/mailers
+- http://localhost:5000/rails/info/routes
+- http://localhost:5000/rails/info/properties
+
