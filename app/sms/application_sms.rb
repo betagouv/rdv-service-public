@@ -50,7 +50,7 @@ class ApplicationSms
   def deliver_later
     raise InvalidMobilePhoneNumberError, "#{phone_number} is not a valid mobile phone number" unless Phonelib.parse(phone_number).types.include?(:mobile)
 
-    SmsSender.delay.perform_with(phone_number, content, tags, provider, key)
+    SmsSender.delay(queue: :sms).perform_with(phone_number, content, tags, provider, key)
   end
 
   private
