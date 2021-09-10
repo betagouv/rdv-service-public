@@ -9,7 +9,8 @@
             br
             | avec votre département le&nbsp;
             span.text-secondary #{@departement}
-          h3.text-white.mb-4 en PMI, CPEF, Service Social, MDPH
+
+            h3.text-white.mb-4 = t(".open_services", count: @services.count, services_names: @services.map(&:short_name).join(", "))
 
           .mb-5= render "common/search_form"
       h3.text-white.text-center Comment ça marche ?
