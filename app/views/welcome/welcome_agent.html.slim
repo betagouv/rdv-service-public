@@ -45,9 +45,8 @@ section.py-5.bg-lightturquoise.text-primary
               = link_to "Contactez-nous", contact_path(anchor: "tech-support"), class: "btn btn-tertiary"
             .col-md-3.p-2.px-3.p-md-0
               = link_to "Créez votre service", new_organisation_path, class: "btn btn-tertiary"
-            - unless demo?
-              .col-md-3.p-2.px-3.p-md-0
-                = link_to "Testez l'outil", "https://demo.rdv-solidarites.fr#{new_organisation_path}", class: "btn btn-tertiary"
+            .col-md-3.p-2.px-3.p-md-0
+              = link_to "Testez l’outil", "https://demo.rdv-solidarites.fr#{new_organisation_path}", class: "btn btn-tertiary"
 
 section.bg-white.py-5
   .container
@@ -109,6 +108,5 @@ section.bg-lightturquoise.py-5
               = link_to "Contactez-nous", contact_path(anchor: "tech-support"), class: "btn btn-tertiary"
             .col-md-3.p-2.px-3.p-md-0
               = link_to "Créez votre service", new_organisation_path, class: "btn btn-tertiary"
-            - unless demo?
-              .col-md-3.p-2.px-3.p-md-0
-                = link_to "Testez l'outil", "https://demo.rdv-solidarites.fr#{new_organisation_path}", class: "btn btn-tertiary"
+            .col-md-3.p-2.px-3.p-md-0
+              = link_to "Testez l’outil", "https://demo.rdv-solidarites.fr#{new_organisation_path}", class: "btn btn-tertiary"
