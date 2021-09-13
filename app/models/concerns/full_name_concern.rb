@@ -2,23 +2,29 @@
 
 module FullNameConcern
   extend ActiveSupport::Concern
+  # Relies on the attributes of the receiver:
+  # :first_name, :last_name, and :birth_name (optionally)
 
+  # Marie Curie (Skłodowska)
   def full_name
-    names.join(" ")
+    names = [first_name,
+             last_name,
+             ("(#{birth_name})" if defined?(birth_name) && birth_name.present?)]
+
+    names.compact.join(" ")
   end
 
+  # Curie (Skłodowska) Marie
   def reverse_full_name
-    names.reverse.join(" ")
+    names = [last_name,
+             ("(#{birth_name})" if defined?(birth_name) && birth_name.present?),
+             first_name]
+
+    names.compact.join(" ")
   end
 
-  def names
-    f_n = [first_name]
-    f_n << last_name
-    f_n << "(#{birth_name})" if defined?(birth_name) && birth_name.present?
-    f_n
-  end
-
+  # M. Curie
   def short_name
-    "#{last_name} #{first_name.first.upcase}."
+    "#{first_name.first.upcase}. #{last_name}"
   end
 end
