@@ -3,7 +3,7 @@
 User.all.each do |user|
   next if user.address.blank?
 
-  response = Net::HTTP.get_response(URI("https://api-adresse.data.gouv.fr/search/?q=#{URI.encode(user.address.to_s)}"))
+  response = Net::HTTP.get_response(URI("https://api-adresse.data.gouv.fr/search/?q=#{URI.encode_www_form(user.address.to_s)}"))
 
   response_json = JSON.parse(response.body)
   best_response = response_json["features"].sort_by { |r| r["properties"]["score"] }.reverse.first
