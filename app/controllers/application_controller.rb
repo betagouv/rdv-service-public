@@ -28,11 +28,6 @@ class ApplicationController < ActionController::Base
     respond_with(*args, options, &blk)
   end
 
-  def demo?
-    ENV["HOST"]&.match(/demo/)
-  end
-  helper_method :demo?
-
   protected
 
   def store_invitation_token_in_session_if_present
