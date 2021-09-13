@@ -29,7 +29,7 @@ module Payloads
           should_display_users_in_sms?: user.relatives.present?,
           reservable_online?: reservable_online?,
           users_full_names: users.map(&:full_name).sort.to_sentence,
-          agents_full_names: agents.map(&:full_name).sort.to_sentence,
+          agents_short_names: agents.map(&:short_name).sort.to_sentence,
           motif_name: motif.name,
           motif_instruction: motif.instruction_for_rdv,
           motif_service_name: motif.service.name,
