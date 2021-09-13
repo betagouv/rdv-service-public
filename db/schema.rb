@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_22_140002) do
+ActiveRecord::Schema.define(version: 2021_09_13_213227) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -428,6 +428,9 @@ ActiveRecord::Schema.define(version: 2021_09_22_140002) do
     t.string "created_through"
     t.boolean "logged_once_with_franceconnect"
     t.integer "invite_for"
+    t.string "city_code"
+    t.string "post_code"
+    t.string "city_name"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
