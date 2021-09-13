@@ -22,9 +22,9 @@ describe Admin::ReferentsController, type: :controller do
       organisation = create(:organisation)
       user = create(:user, agents: [], organisations: [organisation])
       service = create(:service)
-      connected_agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
-      agent = create(:agent, basic_role_in_organisations: [organisation], service: service, first_name: "Martine")
-      create(:agent, basic_role_in_organisations: [organisation], service: service)
+      connected_agent = create(:agent, basic_role_in_organisations: [organisation], service: service, first_name: "Marc", last_name: "Dubois")
+      agent = create(:agent, basic_role_in_organisations: [organisation], service: service, first_name: "Martine", last_name: "Durant")
+      create(:agent, basic_role_in_organisations: [organisation], service: service, first_name: "Jean", last_name: "Dupont")
       sign_in connected_agent
 
       get :index, params: { organisation_id: organisation.id, user_id: user.id, search: "Mart" }
