@@ -9,7 +9,7 @@ assignees: ''
 
 ## Actuellement
 
-Un description claire et concise du comportement actuel.
+Une description claire et concise du comportement actuel.
 
 Une description des étapes pour reproduire cette situation, avec des copies d'écran quand c'est possible et justifié.
 
