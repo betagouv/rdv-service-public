@@ -9,7 +9,8 @@ class Admin::UsersController < AgentAuthController
   PERMITTED_ATTRIBUTES = %i[
     id
     first_name last_name birth_name email phone_number
-    birth_date address caisse_affiliation affiliation_number
+    birth_date caisse_affiliation affiliation_number
+    address post_code city_code city_name
     family_situation number_of_children
     notify_by_sms notify_by_email
   ].freeze
