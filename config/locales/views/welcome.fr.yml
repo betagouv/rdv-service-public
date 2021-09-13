@@ -1,0 +1,8 @@
+fr:
+  welcome:
+    welcome_departement:
+      open_services:
+        zero: dans les services des solidarités
+        one: "en %{services_names}"
+        other: "en %{services_names}"
+
