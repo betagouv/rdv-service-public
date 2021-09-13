@@ -2,7 +2,6 @@ import 'autocomplete.js/dist/autocomplete.jquery.js'
 import 'custom-event-polyfill'
 import 'whatwg-fetch'
 
-
 class PlacesInput {
   constructor(container) {
     if (container === null) return false;
@@ -10,7 +9,7 @@ class PlacesInput {
     this.addressType = container.dataset.addressType;
     const form = $(container).closest('form')[0];
     this.dependentInputs =
-      ["departement", "latitude", "longitude", "city_code", "city_name", "street_ban_id", "street_name"].
+      ["departement", "latitude", "longitude", "city_code", "post_code", "city_name", "street_ban_id", "street_name"].
         map(name => ({ name, elt: form.querySelector(`input[name*=${name}]`)})).
         filter(i => !!i.elt) // filter only present inputs
 
