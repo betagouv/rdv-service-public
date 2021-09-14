@@ -68,7 +68,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(rdv.reload.cancelled_at).to be_within(5.seconds).of(now)
       end
 
-      it "call RdvUpdate.update function" do
+      it "call RdvUpdater.update function" do
         rdv = create(:rdv, starts_at: 5.hours.from_now)
         sign_in rdv.users.first
         expect(RdvUpdater).to receive(:update).with(rdv.users.first, rdv, { status: "excused" })
