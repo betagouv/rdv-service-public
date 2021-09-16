@@ -1,7 +1,9 @@
-require 'csv'
-require 'rest-client'
+# frozen_string_literal: true
 
-API_ENDPOINT = 'https://api-adresse.data.gouv.fr/search/csv/'.freeze
+require "csv"
+require "rest-client"
+
+API_ENDPOINT = "https://api-adresse.data.gouv.fr/search/csv/"
 
 def update_user_city_name_from(geocoded_addresses)
   puts "#{geocoded_addresses.length} ville(s) d'usager à mettre à jour"
@@ -22,15 +24,15 @@ def geocode(file)
     geocoded_addresses[id] = address
   end
   geocoded_addresses
-
 end
 
 def addresses_in_csv
   file = Tempfile.create("bla.csv")
   CSV.open(file, "wb") do |csv|
-    csv << ['nom','adresse']
+    csv << %w[nom adresse]
     User.all.each do |user|
       next if user.address.blank?
+
       csv << [user.id, user.address]
     end
   end
@@ -43,4 +45,3 @@ puts ""
 update_user_city_name_from geocode addresses_in_csv
 
 puts "Terminé"
-
