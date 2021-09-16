@@ -38,7 +38,7 @@ Agent.transaction do
   end
 
   puts "Déplacement des agents:"
-  organisation.agents.each do |agent|
+  organisation.agents.where(service: services_source).each do |agent|
     puts agent.full_name.to_s
     agent.update_column(:service_id, ID_SERVICE_DESTINATION)
   end
