@@ -7,8 +7,12 @@ API_ENDPOINT = "https://api-adresse.data.gouv.fr/search/csv/"
 
 def update_user_city_name_from(geocoded_addresses)
   puts "#{geocoded_addresses.length} ville(s) d'usager à mettre à jour"
-  geocoded_addresses.each do |id, ville|
-    User.find(id).update(city_name: ville)
+  geocoded_addresses.each do |id, data|
+    User.find(id).update(
+      city_name: data[:address],
+      post_code: data[:postal_code],
+      city_code: data[:city_code]
+    )
   end
 end
 
@@ -19,9 +23,11 @@ def geocode(file)
 
   geocoded_addresses = {}
   result_lines.each do |line|
-    id = line[0]
-    address = line[12]
-    geocoded_addresses[id] = address
+    geocoded_addresses[line[0]] = {
+      address: line[12],
+      postal_code: line[11],
+      city_code: line[14]
+    }
   end
   geocoded_addresses
 end
