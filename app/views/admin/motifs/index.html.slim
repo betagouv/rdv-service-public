@@ -63,6 +63,9 @@
                     .text-center.m-3
                       = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "btn btn-primary"
 
-    - if @motifs.any? && current_agent_can?(:create, Motif)
-      .text-center.m-3
-        = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "btn btn-primary"
+    - if @motifs.any?
+      .d-flex.justify-content-center id="users-pagination"
+        = paginate @motifs, theme: "twitter-bootstrap-4"
+      - if current_agent_can?(:create, Motif)
+        .text-center.m-3
+          = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "btn btn-primary"
