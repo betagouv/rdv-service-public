@@ -54,3 +54,16 @@ rails runner scripts/export_sectors.rb 64
 - créer un endpoints, dans la page super admin > webhook, avec cette URL et n'importe quel secret ;
 - déclencher des évènements en faisant des actions depuis l'interface _admin_ pour l'organisation associé ;
 - les events apparaissent sur ta page webhook.site laissé ouverte.
+
+## Chargement des absences
+
+Pour le 92, nous chargeons les absences à partir d'un fichier CSV. Ce n'est pas intégré à l'application directement parce que ce n'est peut-être pas la finalité de l'application (?). Nous pourrions rediscuter de tout ça.
+
+En attendant, voici comment procéder.
+- avoir le fichier CSV quelque part (pour le format, regarder comme le script fonctionne)
+- démarrer un serveur local (j'utilise `http-server`, mais un autre conviens aussi) ex: `http-server -p 9998`
+- démarrer [NGROK](https://ngrok.com/) pour faire un tunnel. Brancher Ngrok sur le serveur local. ex: `ngrok http 9998`
+- NGROK propose une interface web où nous pouvons trouver la liste des fichiers servi. Copier l'url du fichier à charger
+- lancer le script sur scalingo en lui passant l'ID de l'organisation où charger les absences et l'URL du fichier. ex: `scalingo --app monApp run rails r scripts/load_absences_csv.rb 285 http://97b6-92-167-177-12.ngrok.io/mon_fichier`
+
+
