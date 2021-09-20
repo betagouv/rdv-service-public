@@ -39,7 +39,7 @@ class Agent::AgentPolicy < ApplicationPolicy
         agents_of_orgs_i_admin = scope.joins(:organisations).merge(current_agent.organisations_level(:admin))
 
         agents_of_orgs_i_basic_same_service = scope.joins(:organisations).merge(current_agent.organisations_level(:basic))
-                                                   .where(service: current_agent.service)
+          .where(service: current_agent.service)
 
         # wrap in subqueries so that we can OR without worrying about “structural compatibility”
         # (i.e. the joined tables are not the same)

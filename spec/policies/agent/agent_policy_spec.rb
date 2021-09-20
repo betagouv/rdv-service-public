@@ -77,10 +77,12 @@ describe Agent::AgentPolicy::Scope, type: :policy do
       let!(:other_agent_different_orga) { create(:agent, basic_role_in_organisations: [organisations[1]], service: services[0]) }
       let!(:other_agent_different_service) { create(:agent, basic_role_in_organisations: [organisations[0]], service: services[1]) }
 
-      it { is_expected.to include(agent) }
-      it { is_expected.to include(other_agent_same_service) }
-      it { is_expected.not_to include(other_agent_different_orga) }
-      it { is_expected.not_to include(other_agent_different_service) }
+      it do
+        expect(subject).to include(agent)
+        expect(subject).to include(other_agent_same_service)
+        expect(subject).not_to include(other_agent_different_orga)
+        expect(subject).not_to include(other_agent_different_service)
+      end
     end
 
     context "admin agent, misc state" do
@@ -98,11 +100,13 @@ describe Agent::AgentPolicy::Scope, type: :policy do
       let!(:other_agent4) { create(:agent, basic_role_in_organisations: [organisations[3]]) }
       let!(:other_agent5) { create(:agent, admin_role_in_organisations: [organisations[2]]) }
 
-      it { is_expected.not_to include(other_agent1) }
-      it { is_expected.to include(other_agent2) }
-      it { is_expected.to include(other_agent3) }
-      it { is_expected.not_to include(other_agent4) }
-      it { is_expected.to include(other_agent5) }
+      it do
+        expect(subject).not_to include(other_agent1)
+        expect(subject).to include(other_agent2)
+        expect(subject).to include(other_agent3)
+        expect(subject).not_to include(other_agent4)
+        expect(subject).to include(other_agent5)
+      end
     end
 
     context "agent has territorial role" do
@@ -124,12 +128,14 @@ describe Agent::AgentPolicy::Scope, type: :policy do
       let!(:other_agent_different_territory2) { create(:agent, basic_role_in_organisations: [other_territory_organisations[1]]) }
       let!(:other_agent_different_territory3) { create(:agent, basic_role_in_organisations: [other_territory_organisations[2]]) }
 
-      it { is_expected.to include(other_agent_same_territory1) }
-      it { is_expected.to include(other_agent_same_territory2) }
-      it { is_expected.to include(other_agent_same_territory3) }
-      it { is_expected.not_to include(other_agent_different_territory1) }
-      it { is_expected.to include(other_agent_different_territory2) }
-      it { is_expected.not_to include(other_agent_different_territory3) }
+      it do
+        expect(subject).to include(other_agent_same_territory1)
+        expect(subject).to include(other_agent_same_territory2)
+        expect(subject).to include(other_agent_same_territory3)
+        expect(subject).not_to include(other_agent_different_territory1)
+        expect(subject).to include(other_agent_different_territory2)
+        expect(subject).not_to include(other_agent_different_territory3)
+      end
     end
   end
 end
