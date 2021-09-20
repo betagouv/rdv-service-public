@@ -50,7 +50,14 @@ module MotifsHelper
   end
 
   def convert_hexa_color_to_rgb(color)
+    color = convert_to_hexa(color)
     [Integer("0x#{color[1..2]}"), Integer("0x#{color[3..4]}"), Integer("0x#{color[5..6]}")]
+  end
+
+  def convert_to_hexa(color)
+    return color if color[0] == "#"
+
+    JSON.parse(File.read(Rails.root.join("lib/css-color-names.json")))[color] || "#FFFFFF"
   end
 
   def motif_option_value(motif, option_name)
