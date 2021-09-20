@@ -27,7 +27,7 @@ class Agent::OrganisationPolicy < DefaultAgentPolicy
 
   class Scope < Scope
     def resolve
-      scope.where(id: current_agent.organisation_ids)
+      scope.merge(current_agent.organisations)
     end
   end
 end
