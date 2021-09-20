@@ -48,7 +48,7 @@ module IcalHelpers
         event.dtend = dtend
       end
       if payload[:attendees].present?
-        payload[:attendees].each { |attendee| event.append_attendee("RSVP=FALSE:mailto:#{attendee}") }
+        payload[:attendees].each { |attendee| event.append_attendee("mailto:#{attendee}") }
       end
       event.summary = payload[:summary]
       event.location = payload[:address]
