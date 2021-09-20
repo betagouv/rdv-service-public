@@ -22,13 +22,10 @@ class Agent::AgentRolePolicy < ApplicationPolicy
     include CurrentAgentInPolicyConcern
 
     def resolve
-      current_agent.roles.map do |agent_role|
-        if agent_role.admin?
-          scope.where(organisation_id: agent_role.organisation_id)
-        else
-          scope.where(organisation_id: agent_role.organisation_id, agent_id: current_agent.id)
-        end
-      end.reduce(:or)
+      my_roles = scope.merge(current_agent.roles)
+      roles_of_orgs_i_admin = scope.where(organisation: current_agent.organisations_level(:admin))
+
+      my_roles.or roles_of_orgs_i_admin
     end
   end
 end
