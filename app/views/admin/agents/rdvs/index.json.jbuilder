@@ -13,8 +13,8 @@ json.array! @rdvs do |rdv|
     json.duration rdv.duration_in_min
     json.overlappingPlagesOuvertures rdv.overlapping_plages_ouvertures?
   end
-  json.start rdv.starts_at
-  json.end rdv.ends_at
+  json.start rdv.starts_at.as_json
+  json.end rdv.ends_at.as_json
 
   # url pour éditer le rendez-vous
   # TODO trouver un meilleur nom à cet attribut pour en plus avoir besoin de ce commentaire

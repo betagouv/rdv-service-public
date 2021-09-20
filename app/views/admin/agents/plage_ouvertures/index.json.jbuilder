@@ -2,8 +2,8 @@
 
 json.array! @plage_ouverture_occurrences do |plage_ouverture, occurrence|
   json.title plage_ouverture.title
-  json.start occurrence.starts_at
-  json.end occurrence.ends_at
+  json.start occurrence.starts_at.as_json
+  json.end occurrence.ends_at.as_json
   if plage_ouverture.organisation == @organisation
     json.backgroundColor "#6fceff80"
   else

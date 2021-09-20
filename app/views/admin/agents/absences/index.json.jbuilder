@@ -2,8 +2,8 @@
 
 json.array! @absence_occurrences do |absence, occurrence|
   json.title absence.title
-  json.start occurrence.starts_at
-  json.end occurrence.ends_at
+  json.start occurrence.starts_at.as_json
+  json.end occurrence.ends_at.as_json
   json.backgroundColor "#7f8c8d"
 
   # url pour éditer l'absence

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Notifications::Rdv::RdvUpcomingReminderService, type: :service do
-  subject { described_class.perform_with(rdv) }
+  subject { described_class.perform_with(rdv, user1) }
 
   let(:user1) { build(:user) }
   let(:rdv) { create(:rdv, starts_at: 2.days.from_now, users: [user1]) }
