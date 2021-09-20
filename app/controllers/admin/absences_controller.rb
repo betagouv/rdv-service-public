@@ -11,7 +11,7 @@ class Admin::AbsencesController < AgentAuthController
     absences = policy_scope(Absence)
       .where(organisation: current_organisation)
       .where(agent_id: filter_params[:agent_id])
-      .includes(:organisation)
+      .includes(:organisation, :agent)
       .by_starts_at
       .page(filter_params[:page])
 

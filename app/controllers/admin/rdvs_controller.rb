@@ -13,7 +13,7 @@ class Admin::RdvsController < AgentAuthController
       **params.permit(:organisation_id, :agent_id, :user_id, :lieu_id, :status)
     )
     @rdvs = policy_scope(Rdv).merge(@form.rdvs)
-      .includes(:organisation, :agents_rdvs, :lieu, agents: :service, motif: :service)
+      .includes(:organisation, :users, :lieu, :motif, agents: :service)
       .order(starts_at: :desc)
     @breadcrumb_page = params[:breadcrumb_page]
     respond_to do |format|

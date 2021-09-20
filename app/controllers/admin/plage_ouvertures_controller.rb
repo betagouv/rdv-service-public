@@ -13,7 +13,7 @@ class Admin::PlageOuverturesController < AgentAuthController
 
   def index
     all_plage_ouvertures = policy_scope(PlageOuverture)
-      .includes(:lieu, :organisation)
+      .includes(:lieu, :organisation, :motifs, :agent)
       .where(agent_id: filter_params[:agent_id])
       .order(updated_at: :desc)
     @plage_ouvertures = all_plage_ouvertures
