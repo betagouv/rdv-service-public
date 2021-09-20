@@ -8,9 +8,9 @@ class Agent::RdvPolicy < DefaultAgentPolicy
   class Scope < Scope
     def resolve
       if context.can_access_others_planning?
-        scope.where(organisation_id: current_organisation.id)
+        scope.where(organisation: current_organisation)
       else
-        scope.joins(:motif).where(organisation_id: current_organisation.id, motifs: { service_id: current_agent.service_id })
+        scope.joins(:motif).where(organisation: current_organisation, motifs: { service: current_agent.service })
       end
     end
   end
@@ -18,11 +18,11 @@ class Agent::RdvPolicy < DefaultAgentPolicy
   class DepartementScope < Scope
     def resolve
       if context.can_access_others_planning?
-        scope.where(organisation_id: current_agent.organisations.pluck(:id))
+        scope.where(organisation: current_agent.organisations)
       else
         scope.joins(:motif)
-          .where(organisation_id: current_agent.organisations.pluck(:id))
-          .where(motifs: { service_id: current_agent.service_id })
+          .where(organisation: current_agent.organisations)
+          .where(motifs: { service: current_agent.service })
       end
     end
   end
