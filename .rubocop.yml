@@ -79,6 +79,7 @@ Rails/SkipsModelValidations:
     - 'app/models/concerns/expiration.rb'
     - 'app/models/motif.rb'
     - 'app/models/agent.rb'
+    - 'scripts/update_city_name_from_address.rb'
 
 Rails/LexicallyScopedActionFilter:
   Exclude:
