@@ -55,14 +55,16 @@ describe Agent::AgentRolePolicy::Scope, type: :policy do
       let!(:agent_role_admin_role2) { create(:agent_role, agent: create(:agent), organisation: organisations[2]) }
       let!(:agent_role_other_orga) { create(:agent_role, agent: create(:agent), organisation: organisations[3]) }
 
-      it { is_expected.to include(own_agent_role_basic) }
-      it { is_expected.to include(own_agent_role_admin1) }
-      it { is_expected.to include(own_agent_role_admin2) }
+      it do
+        expect(subject).to include(own_agent_role_basic)
+        expect(subject).to include(own_agent_role_admin1)
+        expect(subject).to include(own_agent_role_admin2)
 
-      it { is_expected.not_to include(agent_role_basic_role) }
-      it { is_expected.to include(agent_role_admin_role1) }
-      it { is_expected.to include(agent_role_admin_role2) }
-      it { is_expected.not_to include(agent_role_other_orga) }
+        expect(subject).not_to include(agent_role_basic_role)
+        expect(subject).to include(agent_role_admin_role1)
+        expect(subject).to include(agent_role_admin_role2)
+        expect(subject).not_to include(agent_role_other_orga)
+      end
     end
   end
 end

@@ -42,7 +42,7 @@ class Agent::AbsencePolicy < ApplicationPolicy
         # wrap in subqueries so that we can OR without worrying about “structural compatibility”
         # (i.e. the joined tables are not the same)
         scope.where(id: absences_of_orgs_i_admin)
-             .or(scope.where(id: absences_of_orgs_i_basic_same_service))
+          .or(scope.where(id: absences_of_orgs_i_basic_same_service))
       end
     end
   end
