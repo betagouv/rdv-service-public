@@ -14,11 +14,10 @@ class Admin::RdvsController < AgentAuthController
     )
     @rdvs = policy_scope(Rdv).merge(@form.rdvs)
       .includes(:organisation, :users, :lieu, :motif, agents: :service)
-      .order(starts_at: :desc)
     @breadcrumb_page = params[:breadcrumb_page]
     respond_to do |format|
-      format.xls { send_data(RdvExporter.export(@rdvs), filename: "rdvs.xls", type: "application/xls") }
-      format.html { @rdvs = @rdvs.page(params[:page]) }
+      format.xls { send_data(RdvExporter.export(@rdvs.order(starts_at: :desc)), filename: "rdvs.xls", type: "application/xls") }
+      format.html { @rdvs = @rdvs.order(starts_at: :asc).page(params[:page]) }
     end
   end
 
