@@ -31,21 +31,21 @@ class Agent::AgentPolicy < ApplicationPolicy
     include CurrentAgentInPolicyConcern
 
     def resolve
-      scope_j = scope.joins(:organisations)
       if current_agent.service.secretariat?
-        scope_j.where(organisations: { id: current_agent.organisation_ids })
+        scope.joins(:organisations).merge(current_agent.organisations)
       else
-        (
-          [scope_j.where(organisations: { id: current_agent.territorial_roles_organisation_ids })] +
-          current_agent.roles.map do |agent_role|
-            if agent_role.can_access_others_planning?
-              scope_j.where(organisations: { id: agent_role.organisation_id })
-            else
-              scope_j.where(organisations: { id: agent_role.organisation_id })
-                .where(service: current_agent.service)
-            end
-          end
-        ).reduce(:or)
+        agents_of_territories_i_admin = scope.joins(:organisations).merge(current_agent.organisations_of_territorial_roles)
+
+        agents_of_orgs_i_admin = scope.joins(:organisations).merge(current_agent.organisations_level(:admin))
+
+        agents_of_orgs_i_basic_same_service = scope.joins(:organisations).merge(current_agent.organisations_level(:basic))
+                                                   .where(service: current_agent.service)
+
+        # wrap in subqueries so that we can OR without worrying about “structural compatibility”
+        # (i.e. the joined tables are not the same)
+        scope.where(id: agents_of_territories_i_admin)
+          .or(scope.where(id: agents_of_orgs_i_admin))
+          .or(scope.where(id: agents_of_orgs_i_basic_same_service))
       end
     end
   end
