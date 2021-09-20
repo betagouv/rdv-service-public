@@ -45,7 +45,7 @@ def addresses_in_csv
   file
 end
 
-puts "mise à jour du nom de vile de l'usager à partir de son adresse"
+puts "mise à jour du nom de ville de l'usager à partir de son adresse"
 puts ""
 
 update_user_city_name_from geocode addresses_in_csv
