@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_13_213227) do
+ActiveRecord::Schema.define(version: 2021_09_22_140002) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -133,6 +133,7 @@ ActiveRecord::Schema.define(version: 2021_09_13_213227) do
     t.index ["invitations_count"], name: "index_agents_on_invitations_count"
     t.index ["invited_by_id"], name: "index_agents_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_agents_on_invited_by_type_and_invited_by_id"
+    t.index ["last_name"], name: "index_agents_on_last_name"
     t.index ["reset_password_token"], name: "index_agents_on_reset_password_token", unique: true
     t.index ["service_id"], name: "index_agents_on_service_id"
     t.index ["uid", "provider"], name: "index_agents_on_uid_and_provider", unique: true
@@ -143,6 +144,7 @@ ActiveRecord::Schema.define(version: 2021_09_13_213227) do
     t.bigint "organisation_id"
     t.string "level", default: "basic", null: false
     t.index ["agent_id"], name: "index_agents_organisations_on_agent_id"
+    t.index ["level"], name: "index_agents_organisations_on_level"
     t.index ["organisation_id", "agent_id"], name: "index_agents_organisations_on_organisation_id_and_agent_id", unique: true
     t.index ["organisation_id"], name: "index_agents_organisations_on_organisation_id"
   end
@@ -201,6 +203,7 @@ ActiveRecord::Schema.define(version: 2021_09_13_213227) do
     t.string "phone_number_formatted"
     t.boolean "enabled", default: true, null: false
     t.index ["enabled"], name: "index_lieux_on_enabled"
+    t.index ["name"], name: "index_lieux_on_name"
     t.index ["organisation_id"], name: "index_lieux_on_organisation_id"
   end
 
@@ -234,6 +237,7 @@ ActiveRecord::Schema.define(version: 2021_09_13_213227) do
     t.text "custom_cancel_warning_message"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
     t.index ["name", "organisation_id", "location_type", "service_id"], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"
+    t.index ["name"], name: "index_motifs_on_name"
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
     t.index ["reservable_online"], name: "index_motifs_on_reservable_online"
     t.index ["service_id"], name: "index_motifs_on_service_id"
@@ -259,6 +263,7 @@ ActiveRecord::Schema.define(version: 2021_09_13_213227) do
     t.bigint "territory_id", null: false
     t.index ["human_id", "territory_id"], name: "index_organisations_on_human_id_and_territory_id", unique: true, where: "((human_id)::text <> ''::text)"
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
+    t.index ["name"], name: "index_organisations_on_name"
     t.index ["territory_id"], name: "index_organisations_on_territory_id"
   end
 
@@ -307,6 +312,7 @@ ActiveRecord::Schema.define(version: 2021_09_13_213227) do
     t.index ["lieu_id"], name: "index_rdvs_on_lieu_id"
     t.index ["motif_id"], name: "index_rdvs_on_motif_id"
     t.index ["organisation_id"], name: "index_rdvs_on_organisation_id"
+    t.index ["starts_at"], name: "index_rdvs_on_starts_at"
     t.index ["status"], name: "index_rdvs_on_status"
   end
 
@@ -347,6 +353,7 @@ ActiveRecord::Schema.define(version: 2021_09_13_213227) do
     t.string "short_name"
     t.index "lower((name)::text)", name: "index_services_on_lower_name", unique: true
     t.index "lower((short_name)::text)", name: "index_services_on_lower_short_name", unique: true
+    t.index ["name"], name: "index_services_on_name"
   end
 
   create_table "super_admins", force: :cascade do |t|
@@ -430,6 +437,7 @@ ActiveRecord::Schema.define(version: 2021_09_13_213227) do
     t.index ["invitations_count"], name: "index_users_on_invitations_count"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_users_on_invited_by_type_and_invited_by_id"
+    t.index ["last_name"], name: "index_users_on_last_name"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["responsible_id"], name: "index_users_on_responsible_id"
   end
