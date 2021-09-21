@@ -46,6 +46,10 @@ label Préférences de notifications
 
 = f.input :address, **(input_opts.deep_merge(input_html: { class: "places-js-container" }))
 
+= f.input :city_code, as: :hidden, **input_opts
+= f.input :post_code, as: :hidden, **input_opts
+= f.input :city_name, as: :hidden, **input_opts
+
 = f_user_profile.input :notes, **input_opts.deep_merge(input_html: { rows: 6 })
 
 .form-row
