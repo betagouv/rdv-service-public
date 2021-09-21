@@ -429,6 +429,9 @@ ActiveRecord::Schema.define(version: 2021_09_29_093324) do
     t.string "created_through"
     t.boolean "logged_once_with_franceconnect"
     t.integer "invite_for"
+    t.string "city_code"
+    t.string "post_code"
+    t.string "city_name"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
