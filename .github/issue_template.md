@@ -15,10 +15,11 @@ Une description des étapes pour reproduire cette situation, avec des copies d'�
 
 ## Attendu
 
-Une description claires et concise de ce que l'on souhaite avoir comme comportement.
+Une description claire et concise de ce que l'on souhaite avoir comme comportement.
 
-Nous pouvons évoquer les différentes pistes possible, celle retenue et pourquoi.
+Nous pouvons évoquer les différentes pistes possibles, celle retenue et pourquoi.
 
 ## Technique
 
 Des informations techniques (version de navigateur, de mobile, ou bien des références à une librairie, ...) pour aider l'équipe à la réalisation du ticket
+
