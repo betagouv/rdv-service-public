@@ -22,6 +22,10 @@
   - address_value = local_assigns[:rdv_wizard].present? && user.address.nil? ? rdv_wizard.to_query[:where] : user.address
   = f.input :address, input_html: {value: address_value, class: "places-js-container" }
 
+  = f.input :city_code, as: :hidden
+  = f.input :post_code, as: :hidden
+  = f.input :city_name, as: :hidden
+
   - if local_assigns[:service].nil? || service.user_field_groups.include?(:social)
     .form-row
       .col-md-6= f.input :caisse_affiliation, collection: User.human_enum_collection(:caisse_affiliation)

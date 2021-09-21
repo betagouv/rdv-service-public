@@ -74,16 +74,6 @@ module RdvExporter
   end
 
   def self.commune_premier_responsable(rdv)
-    address = rdv.users.map(&:user_to_notify).pluck(:address).compact.first
-    return "" if address.blank?
-
-    extract_postal_code_from(address)
-  end
-
-  def self.extract_postal_code_from(address)
-    postal_code = address.match(/.*([0-9]{5}).*/)
-    return "" if postal_code.blank? || postal_code.captures.empty?
-
-    postal_code.captures.first
+    rdv.users.map(&:user_to_notify).pluck(:city_name).compact.first
   end
 end
