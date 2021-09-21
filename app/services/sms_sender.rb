@@ -156,7 +156,7 @@ class SmsSender < BaseService
       method: :post,
       headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
       timeout: 5,
-      body: {
+      params: {
         token: @key,
         to: @phone_number,
         msg: @content
