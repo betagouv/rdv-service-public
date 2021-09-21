@@ -4,7 +4,7 @@ RDV-Solidarités est hébergé chez [Scalingo](https://scalingo.com/fr/datacente
 
 | Instance | domaine | branche | notes |
 | -------- | ------- | ------- | ----- |
-| production-rdv-solidarites | www.rdv-solidarites.fr | production | review apps activées |
+| production-rdv-solidarites | www.rdv-solidarites.fr | production | - |
 | demo-rdv-solidarites | demo.rdv-solidarites.fr | production | - |
 | recette-rdv-solidarites | recette.rdv-solidarites.fr | recette | review apps activées |
 
