@@ -39,5 +39,5 @@ Please [contact us](mailto:contact@rdv-solidarites.fr) to report any vulnerabili
 ## Développement
 
 [Installation](1-installation.md)
-[Contribuer](/CONTRIBUTING.md)
+[Contribuer](2.contributions.md)
 
