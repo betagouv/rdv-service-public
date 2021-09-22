@@ -18,7 +18,7 @@
   .col-md-6
     .card#spec-primary-user-card
       .card-body
-        - if @user.invitable?
+        - if @user.invitable? && current_organisation.users_invitable?
           .row.bg-info.text-white.p-2.mb-3
             .col-md-8
               | Cet usager ne s'est pas encore créé de compte RDV-Solidarités

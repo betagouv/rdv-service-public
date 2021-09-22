@@ -261,6 +261,7 @@ ActiveRecord::Schema.define(version: 2021_09_29_093324) do
     t.string "website"
     t.string "email"
     t.bigint "territory_id", null: false
+    t.string "source"
     t.index ["human_id", "territory_id"], name: "index_organisations_on_human_id_and_territory_id", unique: true, where: "((human_id)::text <> ''::text)"
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["name"], name: "index_organisations_on_name"
