@@ -44,7 +44,7 @@
       tbody
         - if @motifs.any?
           = render @motifs
-          .d-flex.justify-content-center id="users-pagination"
+          .d-flex.justify-content-center
             = paginate @motifs, theme: "twitter-bootstrap-4"
         - else
           tr
@@ -64,7 +64,7 @@
                       = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "btn btn-primary"
 
     - if @motifs.any?
-      .d-flex.justify-content-center id="users-pagination"
+      .d-flex.justify-content-center
         = paginate @motifs, theme: "twitter-bootstrap-4"
       - if current_agent_can?(:create, Motif)
         .text-center.m-3
