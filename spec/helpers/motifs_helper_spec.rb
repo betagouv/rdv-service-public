@@ -67,5 +67,13 @@ describe MotifsHelper do
     it "return white when a other purple given" do
       expect(text_color("#D64695")).to eq("#FFFFFF")
     end
+
+    it "return white when given color doesn't exist" do
+      expect(text_color("truc")).to eq("#000000")
+    end
+
+    it "return black when cyan given" do
+      expect(text_color("cyan")).to eq("#000000")
+    end
   end
 end
