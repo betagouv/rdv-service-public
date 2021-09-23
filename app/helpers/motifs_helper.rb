@@ -57,7 +57,7 @@ module MotifsHelper
   def convert_to_hexa(color)
     return color if color[0] == "#"
 
-    CSS_COLOR_NAMES.json[color] || "#FFFFFF"
+    CSS_COLOR_NAMES[color] || "#FFFFFF"
   end
 
   def motif_option_value(motif, option_name)
