@@ -5,7 +5,7 @@ ruby:
   previous_steps = [{ step: 1, value: motif_name_with_location_type(@rdv.motif) } ]
   next_steps = [{step: 3}, {step: 4}]
 
-= render "card", rdv_wizard_form: @rdv_wizard, previous_steps: previous_steps, next_steps: next_steps, card_title: t(".card_title") do
+= render "card", rdv_wizard_form: @rdv_wizard, previous_steps: previous_steps, next_steps: next_steps, step_title: t(".step_title") do
   = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
     = render "model_errors", model: @rdv_wizard
     = render "hidden_fields", f: f, step: 2, \
