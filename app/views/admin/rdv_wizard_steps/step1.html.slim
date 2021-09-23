@@ -1,5 +1,5 @@
 - content_for(:menu_item) { "menu-agendas" }
-- content_for(:title) { "Créer RDV 1/4"}
+- content_for(:title) { I18n.t("#{@rdv_wizard.i18n_scope}.page_title", starts_at: l(@rdv.starts_at, format: :dense)) }
 
 = render "card", rdv_wizard_form: @rdv_wizard, next_steps: [{step: 2}, {step: 3}, {step: 4}] do
   = simple_form_for(@rdv_wizard, as: :rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
