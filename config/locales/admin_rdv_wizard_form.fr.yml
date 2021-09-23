@@ -3,16 +3,16 @@ fr:
     rdv_wizard_steps:
       step1:
         page_title: Nouveau RDV pour le %{starts_at}
-        card_title: 1. Motif
+        step_title: 1. Motif
       step2:
         page_title: Nouveau RDV pour le %{starts_at}
-        card_title: 2. Usager(s)
+        step_title: 2. Usager(s)
       step3:
         page_title: Nouveau RDV pour le %{starts_at}
-        card_title: 3. Agent(s), horaires & lieu
+        step_title: 3. Agent(s), horaires & lieu
       step4:
         page_title: Nouveau RDV pour le %{starts_at}
-        card_title: 4. Notifications
+        step_title: 4. Notifications
 
   admin_rdv_wizard_form:
     step4:
