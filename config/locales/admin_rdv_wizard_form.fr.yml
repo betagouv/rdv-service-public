@@ -1,12 +1,20 @@
 fr:
+  admin:
+    rdv_wizard_steps:
+      step1:
+        page_title: Nouveau RDV pour le %{starts_at}
+        step_title: 1. Motif
+      step2:
+        page_title: Nouveau RDV pour le %{starts_at}
+        step_title: 2. Usager(s)
+      step3:
+        page_title: Nouveau RDV pour le %{starts_at}
+        step_title: 3. Agent(s), horaires & lieu
+      step4:
+        page_title: Nouveau RDV pour le %{starts_at}
+        step_title: 4. Notifications
+
   admin_rdv_wizard_form:
-    step1:
-      title: 1. Motif
-    step2:
-      title: 2. Usager(s)
-    step3:
-      title: 3. Agent(s), horaires & lieu
     step4:
-      title: 4. Notifications
       responsible_will_be_notified: L'usager responsable %{responsible} sera notifié
       no_notifications: 🔴 Aucune notification ne sera envoyée
