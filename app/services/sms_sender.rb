@@ -156,14 +156,11 @@ class SmsSender < BaseService
       method: :post,
       headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
       timeout: 5,
-      params: {
-        token: @key,
-      }
       body: {
         token: @key,
         to: @phone_number,
         msg: @content
-      }.to_json
+      }
     ).run
 
     raise Timeout if response.timed_out?
