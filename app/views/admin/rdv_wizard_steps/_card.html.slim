@@ -6,7 +6,9 @@
         hr.my-0
       .card-body
         .d-flex.justify-content-between.mb-3
-          = render "title", rdv_wizard_form: rdv_wizard_form
+          h5.card-title
+            i.far.fa-circle.mr-1>
+            = step_title
           .js-users-spinner.spinner-border.d-none &nbsp;
         = yield
       - if local_assigns[:next_steps]

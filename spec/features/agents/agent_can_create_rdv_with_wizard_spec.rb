@@ -21,13 +21,12 @@ describe "Agent can create a Rdv with wizard" do
   after { travel_back }
 
   it "default", js: true do
-    expect_page_title("Créer RDV 1/4")
+    expect_page_title("Nouveau RDV pour le 02/10/2019 à 00:00")
     expect(page).to have_selector(".card-title", text: "1. Motif")
     select(motif.name, from: "rdv_motif_id")
     click_button("Continuer")
 
     # Step 2
-    expect_page_title("Créer RDV 2/4")
     expect(page).to have_selector(".card-title", text: "2. Usager(s)")
     expect(page).to have_selector(".list-group-item", text: /Motif/)
     select_user(user)
@@ -52,7 +51,6 @@ describe "Agent can create a Rdv with wizard" do
     click_button("Continuer")
 
     # Step 3
-    expect_page_title("Créer RDV 3/4")
     expect(page).to have_selector(".card-title", text: "3. Agent(s), horaires & lieu")
     expect(page).to have_selector(".list-group-item", text: /Motif/)
     expect(page).to have_selector(".list-group-item", text: /Usager\(s\)/)
@@ -67,7 +65,6 @@ describe "Agent can create a Rdv with wizard" do
     click_button("Continuer")
 
     # Step 4
-    expect_page_title("Créer RDV 4/4")
     expect(page).to have_selector(".card-title", text: "4. Notifications")
     expect(page).to have_selector(".list-group-item", text: /Motif/)
     expect(page).to have_selector(".list-group-item", text: /Usager\(s\)/)
