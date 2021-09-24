@@ -47,10 +47,6 @@ module Admin::RdvWizardFormConcern
     self.class.name[-1].to_i
   end
 
-  def i18n_scope
-    "admin_rdv_wizard_form.step#{step_number}"
-  end
-
   def save
     valid?
   end
