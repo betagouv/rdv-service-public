@@ -12,6 +12,7 @@ class LieuxController < ApplicationController
   def index
     @lieux = Lieu
       .with_open_slots_for_motifs(@matching_motifs)
+      .includes(:organisation)
       .sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f) }
     @next_availability_by_lieux = @lieux.map do |lieu|
       [

@@ -17,7 +17,7 @@ class Agent::AgentTerritorialRolePolicy < ApplicationPolicy
     delegate :agent, to: :context, prefix: :current # defines current_agent
 
     def resolve
-      scope.where(territory_id: current_agent.territorial_roles.pluck(:territory_id))
+      scope.where(territory: current_agent.territories)
     end
   end
 end

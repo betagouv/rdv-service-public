@@ -43,10 +43,12 @@ describe Agent::AgentTerritorialRolePolicy::Scope, type: :policy do
       let!(:role2) { create(:agent_territorial_role, agent: create(:agent), territory: territory2) }
       let!(:role3) { create(:agent_territorial_role, agent: create(:agent), territory: territory3) }
 
-      it { is_expected.to include(role1) }
-      it { is_expected.to include(role1bis) }
-      it { is_expected.to include(role2) }
-      it { is_expected.not_to include(role3) }
+      it do
+        expect(subject).to include(role1)
+        expect(subject).to include(role1bis)
+        expect(subject).to include(role2)
+        expect(subject).not_to include(role3)
+      end
     end
   end
 end

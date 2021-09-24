@@ -35,6 +35,8 @@ class Agent < ApplicationRecord
   has_many :organisations, through: :roles
   has_many :territorial_roles, class_name: "AgentTerritorialRole", dependent: :destroy
   has_many :territories, through: :territorial_roles
+  has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
+
   has_and_belongs_to_many :users
 
   # Note about validation and Devise:
@@ -117,18 +119,16 @@ class Agent < ApplicationRecord
     roles.find_by(organisation: organisation)
   end
 
+  def organisations_level(level)
+    organisations.merge(roles.where(level: level)) # self.organisations is a through relation. This implicitly joins through roles and agent_roles
+  end
+
   def admin_in_organisation?(organisation)
     role_in_organisation(organisation).admin?
   end
 
   def territorial_admin_in?(territory)
     territorial_role_in(territory).present?
-  end
-
-  def territorial_roles_organisation_ids
-    territorial_roles
-      .includes(territory: :organisations)
-      .flat_map { _1.territory.organisation_ids }
   end
 
   private

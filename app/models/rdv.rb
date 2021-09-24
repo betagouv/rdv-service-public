@@ -139,7 +139,7 @@ class Rdv < ApplicationRecord
   def overlapping_plages_ouvertures
     return [] if starts_at.blank? || duration_in_min.blank? || lieu.blank? || past?
 
-    @overlapping_plages_ouvertures ||= PlageOuverture.where(agent: agent_ids).where.not(lieu: lieu).overlapping_with_time_slot(to_time_slot)
+    @overlapping_plages_ouvertures ||= PlageOuverture.where(agent: agents).where.not(lieu: lieu).overlapping_with_time_slot(to_time_slot)
   end
 
   def overlapping_plages_ouvertures?
