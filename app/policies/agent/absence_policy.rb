@@ -30,14 +30,20 @@ class Agent::AbsencePolicy < ApplicationPolicy
     include CurrentAgentInPolicyConcern
 
     def resolve
-      current_agent.roles.map do |agent_role|
-        if agent_role.can_access_others_planning?
-          scope.joins(:agent).where(organisation_id: agent_role.organisation_id)
-        else
-          scope.joins(:agent).where(organisation_id: agent_role.organisation_id)
-            .where(agents: { service: current_agent.service })
-        end
-      end.reduce(:or)
+      if current_agent.service.secretariat?
+        scope.where(organisation: current_agent.organisations)
+      else
+        absences_of_orgs_i_admin = scope.where(organisation: current_agent.organisations_level(:admin))
+
+        absences_of_orgs_i_basic_same_service = scope.where(organisation: current_agent.organisations_level(:basic))
+          .joins(:agent).where(agents: { service: current_agent.service })
+        absences_of_orgs_i_basic_same_service = scope.where(id: absences_of_orgs_i_basic_same_service)
+
+        # wrap in subqueries so that we can OR without worrying about “structural compatibility”
+        # (i.e. the joined tables are not the same)
+        scope.where(id: absences_of_orgs_i_admin)
+          .or(scope.where(id: absences_of_orgs_i_basic_same_service))
+      end
     end
   end
 end

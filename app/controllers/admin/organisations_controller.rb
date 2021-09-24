@@ -11,7 +11,7 @@ class Admin::OrganisationsController < AgentAuthController
   def index
     @agent_roles_by_territory = policy_scope(AgentRole)
       .merge(current_agent.roles)
-      .includes(:organisation)
+      .includes(organisation: :territory)
       .order("organisations.name")
       .to_a.group_by { _1.organisation.territory }
     render layout: "registration"

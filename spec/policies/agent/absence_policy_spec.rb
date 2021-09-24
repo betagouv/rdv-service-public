@@ -65,12 +65,14 @@ describe Agent::AbsencePolicy::Scope, type: :policy do
       let!(:absence_other_service_but_admin) { create(:absence, agent: create(:agent, service: services[1]), organisation: organisations[2]) }
       let!(:absence_other_orga) { create(:absence, agent: create(:agent, service: services[0]), organisation: organisations[3]) }
 
-      it { is_expected.to include(absence1) }
-      it { is_expected.to include(absence2) }
-      it { is_expected.to include(absence_same_service) }
-      it { is_expected.not_to include(absence_other_service) }
-      it { is_expected.to include(absence_other_service_but_admin) }
-      it { is_expected.not_to include(absence_other_orga) }
+      it do
+        expect(subject).to include(absence1)
+        expect(subject).to include(absence2)
+        expect(subject).to include(absence_same_service)
+        expect(subject).not_to include(absence_other_service)
+        expect(subject).to include(absence_other_service_but_admin)
+        expect(subject).not_to include(absence_other_orga)
+      end
     end
   end
 end

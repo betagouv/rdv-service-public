@@ -3,37 +3,6 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
-      "fingerprint": "29e444edecbb24dca14f234041519278e4d627e960dc2df4de112e59ce0098e9",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/admin/lieux/index.html.slim",
-      "line": 20,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(Lieu).includes(:organisation).ordered_by_name.page(params[:page]), {})",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Admin::LieuxController",
-          "method": "index",
-          "line": 6,
-          "file": "app/controllers/admin/lieux_controller.rb",
-          "rendered": {
-            "name": "admin/lieux/index",
-            "file": "app/views/admin/lieux/index.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "admin/lieux/index"
-      },
-      "user_input": "params[:page]",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
       "fingerprint": "2d63f4428767f8b1c48438617bdb8c06a9a4cbda3263faddf74370b8243a6262",
       "check_name": "Render",
       "message": "Render path contains parameter value",
@@ -46,7 +15,7 @@
           "type": "controller",
           "class": "Admin::UsersController",
           "method": "index",
-          "line": 24,
+          "line": 26,
           "file": "app/controllers/admin/users_controller.rb",
           "rendered": {
             "name": "admin/users/index",
@@ -69,7 +38,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/rdv.rb",
-      "line": 56,
+      "line": 62,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "where(\"#{Arel.sql(\"(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)\")} BETWEEN ? AND ?\", range.begin, range.end)",
       "render_path": null,
@@ -89,7 +58,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/rdv.rb",
-      "line": 65,
+      "line": 71,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "where(\"starts_at <= ?\", (Time.zone.now + time_margin)).where(\"#{Arel.sql(\"(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)\")} >= ?\", (Time.zone.now - time_margin))",
       "render_path": null,
@@ -117,7 +86,7 @@
           "type": "controller",
           "class": "Admin::MotifsController",
           "method": "index",
-          "line": 16,
+          "line": 18,
           "file": "app/controllers/admin/motifs_controller.rb",
           "rendered": {
             "name": "admin/motifs/index",
@@ -140,7 +109,7 @@
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/motifs/index.html.slim",
-      "line": 62,
+      "line": 69,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => filtered((policy_scope(Motif).active.search_by_text(params[:search]) or policy_scope(Motif).active), params).includes(:organisation).includes(:service).ordered_by_name.page(params[:page]), {})",
       "render_path": [
@@ -148,7 +117,7 @@
           "type": "controller",
           "class": "Admin::MotifsController",
           "method": "index",
-          "line": 16,
+          "line": 18,
           "file": "app/controllers/admin/motifs_controller.rb",
           "rendered": {
             "name": "admin/motifs/index",
@@ -163,8 +132,39 @@
       "user_input": "params[:page]",
       "confidence": "Weak",
       "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "f97be0c83ee950efda2108d8fa8c03cbbd84de2b31e724f6fd9948a63ef3c7d9",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/admin/lieux/index.html.slim",
+      "line": 22,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => policy_scope(Lieu).ordered_by_name.page(params[:page]), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::LieuxController",
+          "method": "index",
+          "line": 8,
+          "file": "app/controllers/admin/lieux_controller.rb",
+          "rendered": {
+            "name": "admin/lieux/index",
+            "file": "app/views/admin/lieux/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "admin/lieux/index"
+      },
+      "user_input": "params[:page]",
+      "confidence": "Weak",
+      "note": ""
     }
   ],
-  "updated": "2021-03-08 21:41:52 +0100",
-  "brakeman_version": "4.10.1"
+  "updated": "2021-09-22 15:44:18 +0200",
+  "brakeman_version": "5.1.1"
 }

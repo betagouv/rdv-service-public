@@ -9,7 +9,9 @@ class Admin::AgentsController < AgentAuthController
       .active.order_by_last_name
     @invited_agents = agents.invitation_not_accepted.created_by_invite
     @complete_agents = params[:search].present? ? agents.search_by_text(params[:search]) : agents
-    @complete_agents = @complete_agents.complete.includes(:service).page(params[:page])
+    @complete_agents = @complete_agents.complete
+      .includes(:service, :roles, :organisations)
+      .page(params[:page])
   end
 
   def destroy
