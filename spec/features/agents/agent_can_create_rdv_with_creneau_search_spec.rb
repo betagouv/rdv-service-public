@@ -63,15 +63,15 @@ describe "Agent can create a Rdv with creneau search" do
     # Select creneau
     first(:link, "09:30").click
 
+    expect_page_title("Nouveau RDV pour le 29/07/2019 à 09:30")
+
     # Step 2
-    expect_page_title("Créer RDV 2/4")
     expect(page).to have_selector(".card-title", text: "2. Usager(s)")
     expect(page).to have_selector(".list-group-item", text: /Motif/)
     select_user(user)
     click_button("Continuer")
 
     # Step 3
-    expect_page_title("Créer RDV 3/4")
     expect(page).to have_selector(".card-title", text: "3. Agent(s), horaires & lieu")
     expect(page).to have_selector(".list-group-item", text: /Usager\(s\)/)
     expect(page).to have_selector(".list-group-item", text: /Motif/)
@@ -79,7 +79,6 @@ describe "Agent can create a Rdv with creneau search" do
     click_button("Continuer")
 
     # Step 4
-    expect_page_title("Créer RDV 4/4")
     expect(page).to have_selector(".card-title", text: "4. Notifications")
     expect(page).to have_selector(".list-group-item", text: /Motif/)
     expect(page).to have_selector(".list-group-item", text: /Usager\(s\)/)
