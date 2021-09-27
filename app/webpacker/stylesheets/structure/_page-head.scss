@@ -13,27 +13,3 @@
     padding-top: 8px;
   }
 }
-
-@include media-breakpoint-down(sm) {
-  .page-title-box {
-    .page-title {
-      display: block;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      line-height: 70px;
-    }
-    .breadcrumb {
-      display: none;
-    }
-    .page-title-right {
-      display: none;
-    }
-  }
-}
-
-@media (max-width: 419px) {
-  .page-title-box .breadcrumb {
-    display: none;
-  }
-}
