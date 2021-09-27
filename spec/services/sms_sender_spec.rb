@@ -48,8 +48,8 @@ describe SmsSender, type: :service do
       expect(described_class.splitted_content("a short string", 20)).to eq(["a short string"])
     end
 
-    it "return two strings when string length is over max given" do
-      expect(described_class.splitted_content("one word", 4)).to eq(%w[one word])
+    it "return two strings when string length is over max" do
+      expect(described_class.splitted_content("word word", 4)).to eq(%w[word word])
     end
 
     it "strip blank at the end of bloc" do
