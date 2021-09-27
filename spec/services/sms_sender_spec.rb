@@ -38,4 +38,30 @@ describe SmsSender, type: :service do
       end
     end
   end
+
+  describe "#splitted_content" do
+    it "return an empty array for an empty content" do
+      expect(described_class.splitted_content("")).to eq([])
+    end
+
+    it "return string when string length is less than max given" do
+      expect(described_class.splitted_content("a short string", 20)).to eq(["a short string"])
+    end
+
+    it "return two strings when string length is over max given" do
+      expect(described_class.splitted_content("one word", 4)).to eq(%w[one word])
+    end
+
+    it "strip blank at the end of bloc" do
+      expect(described_class.splitted_content("one word", 4)).to eq(%w[one word])
+    end
+
+    it "strip blank at the beginning of bloc" do
+      expect(described_class.splitted_content("word one", 4)).to eq(%w[word one])
+    end
+
+    it "dont cut word" do
+      expect(described_class.splitted_content("an ubber string", 12)).to eq(["an ubber", "string"])
+    end
+  end
 end

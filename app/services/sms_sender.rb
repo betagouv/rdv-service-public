@@ -42,6 +42,22 @@ class SmsSender < BaseService
     send("send_with_#{@provider}")
   end
 
+  def self.splitted_content(content, max_length = 0)
+    return [] if content.blank?
+    return [content] if content.length < max_length
+
+    splitted = [""]
+    bloc = 0
+    content.split.each do |word|
+      if "#{splitted[bloc]} #{word}".strip.length > max_length
+        bloc += 1
+        splitted[bloc] = ""
+      end
+      splitted[bloc] += " #{word}"
+    end
+    splitted.map(&:strip)
+  end
+
   private
 
   def to_s
@@ -151,23 +167,25 @@ class SmsSender < BaseService
   # Orange Contact Everyone
   #
   def send_with_orange_contact_everyone
-    response = Typhoeus::Request.new(
-      "https://contact-everyone.orange-business.com/api/light/diffusions/sms",
-      method: :post,
-      headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
-      timeout: 5,
-      body: {
-        token: @key,
-        to: @phone_number,
-        msg: @content
-      }
-    ).run
+    splitted_content(@content, 20).each do |message_part|
+      response = Typhoeus::Request.new(
+        "https://contact-everyone.orange-business.com/api/light/diffusions/sms",
+        method: :post,
+        headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+        timeout: 5,
+        body: {
+          token: @key,
+          to: @phone_number,
+          msg: message_part
+        }
+      ).run
 
-    raise Timeout if response.timed_out?
-    raise HttpError, { message: self, response: "code: #{response.code}" } if response.failure? || response.code == :http_returned_error
+      raise Timeout if response.timed_out?
+      raise HttpError, { message: self, response: "code: #{response.code}" } if response.failure? || response.code == :http_returned_error
 
-    parsed_res = JSON.parse(response.body)
-    raise ApiError, { message: self, response: parsed_res } if response.code != :success
+      parsed_res = JSON.parse(response.body)
+      raise ApiError, { message: self, response: parsed_res } if response.code != :success
+    end
   end
 
   # DebugLogger
