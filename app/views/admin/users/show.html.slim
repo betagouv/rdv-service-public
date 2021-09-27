@@ -134,3 +134,5 @@
                 temporal_status: temporal_status, \
                 count: @rdvs.status(temporal_status).count,
                 path: admin_organisation_rdvs_path(current_organisation, status: temporal_status, user_id: @user.id, breadcrumb_page: "user")
+
+= render "admin/versions/resource_versions_row", resource: @user

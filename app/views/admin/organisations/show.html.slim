@@ -4,7 +4,7 @@
   | Votre organisation
 
 .row.justify-content-center
-  .col-md-6
+  .col-md-8
     .card
       h4.card-header Informations générales
       .card-body
@@ -25,3 +25,5 @@
             strong> Horaires :
             | #{display_value_or_na_placeholder(@organisation.horaires)}
         .text-right= link_to "Modifier", edit_admin_organisation_path(@organisation), class: "btn btn-primary"
+
+= render "admin/versions/resource_versions_row", resource: @organisation
