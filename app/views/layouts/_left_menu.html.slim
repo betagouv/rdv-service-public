@@ -63,13 +63,11 @@
         ul.list-unstyled.ml-3.left-submenu-planning.collapse[
           class=("show" if menu_top_level_item == "planning")
         ]
+          - agent_for_left_menu = @agent&.persisted? ? @agent : current_agent
+          - path_helper_name = content_for(:menu_agent_select_path_helper_name) || :admin_organisation_agent_agenda_path
           li
             form.my-2
-              = select_tag( \
-                :left_menu_agent_id, \
-                selectable_planning_agents_options(@agent), \
-                class: "select2-input form-control js-planning-agent-select" \
-              )
+              = planning_agent_select(agent_for_left_menu, path_helper_name)
           li.my-2
             = active_link_to "Agenda", admin_organisation_agent_agenda_path(current_organisation, agent_for_left_menu(@agent))
           li.my-2

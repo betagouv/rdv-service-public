@@ -66,4 +66,33 @@ module AgentsHelper
   def agent_for_left_menu(agent)
     agent&.persisted? ? agent : current_agent
   end
+
+  def planning_agent_select(agent, path_helper_name)
+    # See also planning-agent-select.js
+    # path_helper_name lets us build the path of the current subsection (Agenda, PlageOuverture, Absence)
+    url_template = send(path_helper_name, current_organisation, "__AGENT__")
+    preselected_option = [
+      agent.reverse_full_name,
+      agent.id,
+      {
+        "data-url": send(path_helper_name, current_organisation, agent)
+      }
+    ]
+    select_tag(
+      :planning_agent_select,
+      options_for_select([preselected_option],
+                         selected: agent.id),
+      class: "select2-input form-control js-planning-agent-select",
+      data: {
+        "select-options": {
+          ajax: {
+            url: search_admin_organisation_agents_path(current_organisation),
+            dataType: "json",
+            delay: 250
+          }
+        },
+        "url-template": url_template
+      }
+    )
+  end
 end
