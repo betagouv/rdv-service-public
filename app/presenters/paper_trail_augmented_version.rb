@@ -4,7 +4,7 @@ class PaperTrailAugmentedVersion
   def self.for_resource(resource, **kwargs)
     # returns an array of augmented versions
     versions = resource.versions
-    versions = versions.includes(:item) if versions.respond_to?(:includes?) # versions is an ActiveRecord::Relation, but in tests we mock it with a regular array
+    versions = versions.includes(:item) unless Rails.env.test? # versions is (a proxy to) an ActiveRecord::Relation, but in tests we mock it with a regular array
     versions.each_with_index.map do |version, idx|
       previous_version = idx >= 1 ? versions[idx - 1] : nil
       PaperTrailAugmentedVersion.new(version, previous_version, **kwargs)
