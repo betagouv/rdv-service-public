@@ -46,16 +46,7 @@ class SmsSender < BaseService
     return [] if content.blank?
     return [content] if content.length < max_length
 
-    split = [""]
-    bloc = 0
-    content.split.each do |word|
-      if "#{split[bloc]} #{word}".strip.length > max_length
-        bloc += 1
-        split[bloc] = ""
-      end
-      split[bloc] += " #{word}"
-    end
-    split.map(&:strip)
+    content.chars.each_slice(max_length).map(&:join)
   end
 
   private
