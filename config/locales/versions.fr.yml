@@ -1,0 +1,10 @@
+fr:
+  admin:
+    versions:
+      title: Historique
+      versions:
+        date: Date
+        author: Auteur
+        changes: Changements
+      version:
+        changed_from: " au lieu de "

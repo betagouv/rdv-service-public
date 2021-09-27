@@ -1,0 +1,12 @@
+tr
+  td= l(version.created_at, format: :dense)
+  td= version.whodunnit
+  td
+    ul
+      - version.changes.each do |property,change|
+        li
+          = "#{version.version.item.class.human_attribute_name(property)} : "
+          b= paper_trail_change_value(property, change.last)
+          - if change.first.present?
+            = t(".changed_from")
+            span.strikethrough= paper_trail_change_value(property, change.first)

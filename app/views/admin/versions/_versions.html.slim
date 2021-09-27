@@ -1,0 +1,8 @@
+table.table.table-striped.papertrail_versions
+  thead
+    tr
+      th=t(".date")
+      th=t(".author")
+      th=t(".changes")
+  tbody
+    = render partial: "admin/versions/version", collection: versions
