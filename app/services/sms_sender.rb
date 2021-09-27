@@ -42,20 +42,20 @@ class SmsSender < BaseService
     send("send_with_#{@provider}")
   end
 
-  def self.splitted_content(content, max_length = 0)
+  def self.split_content(content, max_length = 0)
     return [] if content.blank?
     return [content] if content.length < max_length
 
-    splitted = [""]
+    split = [""]
     bloc = 0
     content.split.each do |word|
-      if "#{splitted[bloc]} #{word}".strip.length > max_length
+      if "#{split[bloc]} #{word}".strip.length > max_length
         bloc += 1
-        splitted[bloc] = ""
+        split[bloc] = ""
       end
-      splitted[bloc] += " #{word}"
+      split[bloc] += " #{word}"
     end
-    splitted.map(&:strip)
+    split.map(&:strip)
   end
 
   private
@@ -167,7 +167,7 @@ class SmsSender < BaseService
   # Orange Contact Everyone
   #
   def send_with_orange_contact_everyone
-    splitted_content(@content, 160).each do |message_part|
+    split_content(@content, 160).each do |message_part|
       response = Typhoeus::Request.new(
         "https://contact-everyone.orange-business.com/api/light/diffusions/sms",
         method: :post,
