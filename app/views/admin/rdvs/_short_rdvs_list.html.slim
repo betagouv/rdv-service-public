@@ -3,7 +3,7 @@
     .text-muted aucun RDV
 - else
   ul.list-unstyled.horizontal-border-between-items
-    - rdvs.each do |rdv|
+    - rdvs.includes(:motif).each do |rdv|
       li.card-body.py-2
         strong= link_to rdv_title(rdv), admin_organisation_rdv_path(current_organisation, rdv)
         = rdv_status_tag(rdv)
