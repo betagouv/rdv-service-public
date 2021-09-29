@@ -99,6 +99,7 @@ Rails.application.routes.draw do
       resources :organisations, only: %i[index] do
         resources :users, only: %i[index]
         resources :motifs, only: %i[index]
+        resources :rdvs, only: %i[index]
       end
     end
   end
