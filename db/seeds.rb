@@ -314,6 +314,27 @@ user_org_paris_nord_jean.skip_confirmation!
 user_org_paris_nord_jean.save!
 user_org_paris_nord_jean.profile_for(org_paris_nord).update!(logement: 2)
 
+# Insert a lot of users and add them to the paris_nord organisation
+# rubocop:disable Rails/SkipsModelValidations
+now = Time.zone.now
+users_attributes = 10_000.times.map do |i|
+  {
+    created_at: now,
+    updated_at: now,
+    first_name: "first_name_#{i}",
+    last_name: "last_name_#{i}",
+    email: "email_#{i}@test.com",
+    phone_number: (format "+336%08d", i),
+    phone_number_formatted: (format "+336%08d", i),
+    created_through: "user_sign_up"
+  }
+end
+results = User.insert_all!(users_attributes, returning: "id") # [{"id"=>1}, {"id"=>2}, ...]
+user_ids = results.flat_map(&:values) # [1, 2, ...]
+user_organisation_attributes = user_ids.map { |id| { user_id: id, organisation_id: org_paris_nord.id } }
+UserProfile.insert_all!(user_organisation_attributes)
+# rubocop:enable Rails/SkipsModelValidations
+
 # AGENTS
 
 agent_org_paris_nord_pmi_martine = Agent.new(
