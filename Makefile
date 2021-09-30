@@ -39,7 +39,7 @@ recette_rebase_onto_production: ## Deployment: Rebase the recette branch and its
 recette_merge_in_production:    ## Deployment: Fast-forward the production branch to the recette branch
 	git checkout production && git merge recette --ff-only
 
-recette_deploy_to_production: recette_fetch recette_rebase_onto_production recette_merge_in_production ## Deploy the current status of recette to production
+recette_deploy_to_production: recette_pull_all recette_rebase_onto_production recette_merge_in_production ## Deploy the current status of recette to production
 	git checkout production && git push origin production
 
 clean: ## Clean temporary files (including weppacks) and logs
