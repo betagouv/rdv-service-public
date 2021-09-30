@@ -17,7 +17,6 @@ module SuperAdmins
       before_action :authenticate_super_admin!
     end
     before_action :set_paper_trail_whodunnit
-    around_action :skip_bullet if defined?(Bullet)
 
     helper_method :sign_in_as_allowed?
 
@@ -31,14 +30,6 @@ module SuperAdmins
       return redirect_to connexion_super_admins_path unless super_admin_signed_in?
 
       super
-    end
-
-    def skip_bullet
-      previous_value = Bullet.enable?
-      Bullet.enable = false
-      yield
-    ensure
-      Bullet.enable = previous_value
     end
 
     def sign_in_as_allowed?
