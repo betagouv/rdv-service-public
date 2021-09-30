@@ -40,6 +40,7 @@ module Lapin
     config.i18n.load_path += Dir[Rails.root.join("config/locales/**/*.{rb,yml}")]
     config.action_mailer.preview_path = Rails.root.join("spec/mailers/previews")
     config.active_model.i18n_customize_full_message = true
+    config.active_record.schema_format = :sql
 
     # Devise layout
     config.to_prepare do

@@ -5,13 +5,16 @@ class User < ApplicationRecord
   include PgSearch::Model
   include FullNameConcern
   include AccountNormalizerConcern
-  include User::SearchableConcern
   include User::FranceconnectFrozenFieldsConcern
   include User::NotificableConcern
   include User::ImprovedUnicityErrorConcern
   include HasPhoneNumberConcern
 
   ONGOING_MARGIN = 1.hour.freeze
+
+  pg_search_scope(:search_by_text,
+                  against: { first_name: "C", birth_name: "B", last_name: "A", email: "A", phone_number_formatted: "B" },
+                  using: { tsearch: { prefix: true, dictionary: "french", tsvector_column: "search_terms" } })
 
   # HACK : add *_sign_in_ip to accessor to bypass recording IPs from Trackable Devise's module
   # HACK : add sign_in_count and current_sign_in_at to accessor to bypass recording IPs from Trackable Devise's module
