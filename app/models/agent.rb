@@ -7,7 +7,13 @@ class Agent < ApplicationRecord
   include DeviseInvitable::Inviter
   include FullNameConcern
   include AccountNormalizerConcern
-  include Agent::SearchableConcern
+  include PgSearch::Model
+
+  pg_search_scope(
+    :search_by_text,
+    using: { tsearch: { prefix: true, dictionnary: "french", tsvector_column: "search_terms" } },
+    against: { first_name: "C", last_name: "A", email: "A" }
+  )
 
   devise :invitable, :database_authenticatable,
          :recoverable, :rememberable, :validatable, :confirmable, :async, validate_on_invite: true
