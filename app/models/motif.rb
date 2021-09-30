@@ -3,6 +3,14 @@
 class Motif < ApplicationRecord
   has_paper_trail
 
+  include PgSearch::Model
+
+  pg_search_scope(
+    :search_by_text,
+    against: { name: "A" },
+    using: { tsearch: { prefix: true, dictionary: "french", tsvector_column: "search_terms" } }
+  )
+
   auto_strip_attributes :name, :color
 
   belongs_to :organisation
@@ -68,15 +76,6 @@ class Motif < ApplicationRecord
     joins(organisation: :territory)
       .where(organisations: { territories: { departement_number: departement_number } })
   }
-
-  include PgSearch::Model
-  pg_search_scope(
-    :search_by_text,
-    ignoring: :accents,
-    using: { tsearch: { prefix: true } },
-    against: [:name]
-  )
-
   def soft_delete
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
   end

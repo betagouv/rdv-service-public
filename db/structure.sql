@@ -286,7 +286,8 @@ CREATE TABLE public.agents (
     uid character varying DEFAULT ''::character varying NOT NULL,
     tokens text,
     allow_password_change boolean DEFAULT false,
-    rdv_notifications_level public.agents_rdv_notifications_level DEFAULT 'soon'::public.agents_rdv_notifications_level
+    rdv_notifications_level public.agents_rdv_notifications_level DEFAULT 'soon'::public.agents_rdv_notifications_level,
+    search_terms tsvector GENERATED ALWAYS AS (((to_tsvector('french'::regconfig, (COALESCE(first_name, ''::character varying))::text) || to_tsvector('french'::regconfig, (COALESCE(last_name, ''::character varying))::text)) || to_tsvector('french'::regconfig, (COALESCE(email, ''::character varying))::text))) STORED
 );
 
 
@@ -580,7 +581,8 @@ CREATE TABLE public.motifs (
     follow_up boolean DEFAULT false,
     visibility_type character varying DEFAULT 'visible_and_notified'::character varying NOT NULL,
     sectorisation_level character varying DEFAULT 'departement'::character varying,
-    custom_cancel_warning_message text
+    custom_cancel_warning_message text,
+    search_terms tsvector GENERATED ALWAYS AS (to_tsvector('french'::regconfig, (COALESCE(name, ''::character varying))::text)) STORED
 );
 
 
@@ -1758,6 +1760,13 @@ CREATE UNIQUE INDEX index_agents_on_reset_password_token ON public.agents USING 
 
 
 --
+-- Name: index_agents_on_search_terms; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_agents_on_search_terms ON public.agents USING gin (search_terms);
+
+
+--
 -- Name: index_agents_on_service_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1909,6 +1918,13 @@ CREATE INDEX index_motifs_on_organisation_id ON public.motifs USING btree (organ
 --
 
 CREATE INDEX index_motifs_on_reservable_online ON public.motifs USING btree (reservable_online);
+
+
+--
+-- Name: index_motifs_on_search_terms; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_motifs_on_search_terms ON public.motifs USING gin (search_terms);
 
 
 --
@@ -2453,6 +2469,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210928142915'),
 ('20210929093324'),
 ('20210930100602'),
-('20210930102134');
+('20210930102134'),
+('20210930125201'),
+('20210930130027'),
+('20210930143224'),
+('20210930143411');
 
 
