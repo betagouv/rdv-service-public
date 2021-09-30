@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_22_140002) do
+ActiveRecord::Schema.define(version: 2021_09_28_142915) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -314,6 +314,7 @@ ActiveRecord::Schema.define(version: 2021_09_22_140002) do
     t.index ["organisation_id"], name: "index_rdvs_on_organisation_id"
     t.index ["starts_at"], name: "index_rdvs_on_starts_at"
     t.index ["status"], name: "index_rdvs_on_status"
+    t.index ["updated_at"], name: "index_rdvs_on_updated_at"
   end
 
   create_table "rdvs_users", force: :cascade do |t|
