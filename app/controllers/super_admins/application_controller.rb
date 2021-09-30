@@ -28,7 +28,7 @@ module SuperAdmins
     end
 
     def authenticate_super_admin!
-      return redirect_to super_admin_github_omniauth_authorize_path unless super_admin_signed_in?
+      return redirect_to connexion_super_admins_path unless super_admin_signed_in?
 
       super
     end
