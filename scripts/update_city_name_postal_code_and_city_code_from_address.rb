@@ -15,14 +15,14 @@ def geocode(file)
     method: :post,
     body: { data: File.new(file) }
   )
-  result_lines = CSV.parse(response.body)[1..]
+  geocoded_addresses = {}
+  CSV.parse(response.body)[1..].map do |line|
     geocoded_addresses[line[0]] = {
       city_name: line[12],
       post_code: line[11],
       city_code: line[14]
     }
   end
-  puts geocoded_addresses.length
   geocoded_addresses
 end
 
