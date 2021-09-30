@@ -35,6 +35,10 @@ class User < ApplicationRecord
 
   enum caisse_affiliation: { aucune: 0, caf: 1, msa: 2 }
   enum family_situation: { single: 0, in_a_relationship: 1, divorced: 2 }
+  enum created_through: { agent_creation: "agent_creation", user_sign_up: "user_sign_up",
+                          franceconnect_sign_up: "franceconnect_sign_up", user_relative_creation: "user_relative_creation",
+                          unknown: "unknown", agent_creation_api: "agent_creation_api" }
+  enum invited_through: { devise_email: "devise_email", external: "external" }
 
   validates :last_name, :first_name, :created_through, presence: true
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true

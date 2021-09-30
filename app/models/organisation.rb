@@ -66,9 +66,4 @@ class Organisation < ApplicationRecord
   def recent?
     1.week.ago < created_at
   end
-
-  # Users invited by organisations within the array are not invitable in the web app
-  def users_invitable?
-    ["rdv-insertion"].exclude? source
-  end
 end

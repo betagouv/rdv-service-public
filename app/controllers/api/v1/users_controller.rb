@@ -28,6 +28,7 @@ class Api::V1::UsersController < Api::V1::BaseController
     @user.invite! do |u|
       u.skip_invitation = true
       u.invited_by = pundit_user.agent
+      u.invited_through = "external"
     end
     # NOTE: The #invite endpoint uses a jbuilder view instead of a blueprint.
   end
