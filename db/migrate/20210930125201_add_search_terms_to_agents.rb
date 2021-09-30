@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AddSearchTermesToAgents < ActiveRecord::Migration[6.0]
+class AddSearchTermsToAgents < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL.squish
       ALTER TABLE agents

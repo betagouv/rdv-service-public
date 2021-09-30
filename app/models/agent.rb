@@ -11,8 +11,8 @@ class Agent < ApplicationRecord
 
   pg_search_scope(
     :search_by_text,
-    using: { tsearch: { prefix: true, dictionnary: "french", tsvector_column: "search_terms" } },
-    against: { first_name: "C", last_name: "A", email: "A" }
+    against: { first_name: "C", last_name: "A", email: "A" },
+    using: { tsearch: { prefix: true, dictionary: "french", tsvector_column: "search_terms" } }
   )
 
   devise :invitable, :database_authenticatable,
