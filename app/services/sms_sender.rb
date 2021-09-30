@@ -158,7 +158,7 @@ class SmsSender < BaseService
   # Orange Contact Everyone
   #
   def send_with_orange_contact_everyone
-    split_content(@content, 160).each do |message_part|
+    split_content(@content, 495).each do |message_part|
       response = Typhoeus::Request.new(
         "https://contact-everyone.orange-business.com/api/light/diffusions/sms",
         method: :post,

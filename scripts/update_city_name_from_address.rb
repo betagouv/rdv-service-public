@@ -25,6 +25,7 @@ def geocode(file)
 
   CSV.parse(response.body) do |line|
     next if line[0] == "id"
+
     geocoded_addresses[line[0]] = {
       city_name: line[12],
       post_code: line[11],
