@@ -219,7 +219,7 @@ describe User, type: :model do
     end
 
     context "phone number query" do
-      let(:query) { "013030" }
+      let(:query) { "01 30 30" }
 
       it { is_expected.to include(user_jean) }
       it { is_expected.not_to include(user_patricia) }
