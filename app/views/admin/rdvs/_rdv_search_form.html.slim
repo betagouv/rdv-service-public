@@ -1,0 +1,34 @@
+= simple_form_for(form, method: "GET", url: url_for({}), as: "") do |f|
+  .row
+    .col-md-6
+      = f.input :agent_id, \
+            collection: policy_scope(Agent).joins(:organisations).where(organisations: { id: current_organisation.id }), \
+            label: "Agent", \
+            label_method: :reverse_full_name, \
+            input_html: { class: "select2-input" }, \
+            wrapper: "horizontal_form"
+
+      = f.input :user_id, collection: [],
+              label: "Usager",
+              label_method: :reverse_full_name,
+              input_html: { \
+                class: "select2-input", \
+                data: {\
+                  "select-options": {\
+                    ajax: {\
+                      url: search_admin_organisation_users_path(current_organisation),
+                      dataType: "json",
+                      delay: 250\
+                    }\
+                  }\
+                }\
+              },
+              wrapper: "horizontal_form"
+
+      = f.input :lieu_id, collection: policy_scope(Lieu), label: "Lieu", label_method: :name, input_html: { class: "select2-input" }, wrapper: "horizontal_form"
+      = f.input :show_user_details, as: :boolean, wrapper: "horizontal_form", label: "Détails usagers"
+    .col-md-6
+      = f.input :status, collection: Rdv.statuses.keys - ["unknown"] + ["unknown_past", "unknown_future"], label_method: -> { ::Rdv.human_enum_name(:status, _1) }, label: "Statut", wrapper: "horizontal_form", input_html: { class: "select2-input" }
+      = date_input(f, :start, label = "Période - Début", wrapper: "horizontal_form")
+      = date_input(f, :end, label = "Période - Fin", wrapper: "horizontal_form")
+  input.btn.btn-primary.d-print-none type="submit" value="Rafraîchir la liste"
