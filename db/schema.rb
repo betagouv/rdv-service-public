@@ -432,6 +432,7 @@ ActiveRecord::Schema.define(version: 2021_09_29_093324) do
     t.string "city_code"
     t.string "post_code"
     t.string "city_name"
+    t.tsvector "search_terms", default: -> { "(((((to_tsvector('french'::regconfig, (COALESCE(first_name, ''::character varying))::text) || to_tsvector('french'::regconfig, (COALESCE(birth_name, ''::character varying))::text)) || to_tsvector('french'::regconfig, (COALESCE(last_name, ''::character varying))::text)) || to_tsvector('french'::regconfig, (COALESCE(email, ''::character varying))::text)) || to_tsvector('french'::regconfig, (COALESCE(phone_number_formatted, ''::character varying))::text)) || to_tsvector('french'::regconfig, (COALESCE(phone_number, ''::character varying))::text))" }
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
@@ -442,6 +443,7 @@ ActiveRecord::Schema.define(version: 2021_09_29_093324) do
     t.index ["phone_number_formatted"], name: "index_users_on_phone_number_formatted"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["responsible_id"], name: "index_users_on_responsible_id"
+    t.index ["search_terms"], name: "index_users_on_search_terms", using: :gin
   end
 
   create_table "versions", force: :cascade do |t|
