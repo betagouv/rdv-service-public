@@ -18,7 +18,7 @@
     }
   },
   "scripts": {
-    "first-deploy": "bundle exec rake db:schema:load db:seed"
+    "first-deploy": "bundle exec rake db:structure:load db:seed"
   },
   "formation": {
     "web": {
