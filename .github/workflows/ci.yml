@@ -103,7 +103,7 @@ jobs:
       - name: Install JS dependencies
         run: yarn install
       - name: Setup tests
-        run: bundle exec rake db:setup RAILS_ENV=test
+        run: bundle exec rake db:create db:structure:load db:seed db:migrate RAILS_ENV=test
         env:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
