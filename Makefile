@@ -18,7 +18,7 @@ lint_brakeman: ## Security Checker
 test: test_unit test_features ## Run all tests
 
 test_unit:  ## Run unit tests in parallel
-	RAILS_ENV=test bundle exec rake parallel:spec['spec\/(?!features)']
+	RAILS_ENV=test bundle exec rake parallel:spec['spec\/models']
 
 test_features:  ## Run feature tests
 	bundle exec rspec spec/features
