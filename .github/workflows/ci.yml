@@ -27,7 +27,7 @@ jobs:
       - name: Install JS dependencies
         run: yarn install
       - name: Setup parallel tests
-        run: RAILS_ENV=test bundle exec rake parallel:setup
+        run: RAILS_ENV=test bundle exec rake db:drop parallel:setup
         env:
           HOST: http://example.com
           POSTGRES_HOST: localhost
