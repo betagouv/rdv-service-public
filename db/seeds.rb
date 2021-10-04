@@ -417,6 +417,25 @@ agent_org_bapaume_pmi_gina = Agent.new(
 agent_org_bapaume_pmi_gina.skip_confirmation!
 agent_org_bapaume_pmi_gina.save!
 
+# Insert a lot of agents and add them to the paris_nord organisation
+# rubocop:disable Rails/SkipsModelValidations
+agents_attributes = 1_000.times.map do |i|
+  {
+    created_at: now,
+    updated_at: now,
+    first_name: "first_name_#{i}",
+    last_name: "last_name_#{i}",
+    email: "email_#{i}@test.com",
+    uid: "email_#{i}@test.com",
+    service_id: service_social.id
+  }
+end
+results = Agent.insert_all!(agents_attributes, returning: "id") # [{"id"=>1}, {"id"=>2}, ...]
+agent_ids = results.flat_map(&:values) # [1, 2, ...]
+agent_role_attributes = agent_ids.map { |id| { agent_id: id, organisation_id: org_paris_nord.id } }
+AgentRole.insert_all!(agent_role_attributes)
+# rubocop:enable Rails/SkipsModelValidations
+
 # SECTOR ATTRIBUTIONS - AGENT LEVEL
 
 SectorAttribution.create!(
