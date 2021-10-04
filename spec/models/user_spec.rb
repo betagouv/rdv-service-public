@@ -212,7 +212,7 @@ describe User, type: :model do
     end
 
     context "email query" do
-      let(:query) { "patoche@duro" }
+      let(:query) { "patoche@du" }
 
       it { is_expected.to include(user_patricia) }
       it { is_expected.not_to include(user_jean) }
