@@ -46,27 +46,6 @@ module AgentsHelper
     }[content_for(:menu_item)]
   end
 
-  def selectable_planning_agents_options(given_agent)
-    path_helper_name = content_for(:menu_agent_select_path_helper_name) || :admin_organisation_agent_agenda_path
-    options_for_select(
-      policy_scope(Agent)
-        .joins(:organisations).where(organisations: { id: current_organisation.id })
-        .complete.active.order_by_last_name
-        .map do |agent|
-        [
-          agent.reverse_full_name,
-          agent.id,
-          { "data-url": send(path_helper_name, current_organisation, agent.id) }
-        ]
-      end,
-      selected: agent_for_left_menu(given_agent).id
-    )
-  end
-
-  def agent_for_left_menu(agent)
-    agent&.persisted? ? agent : current_agent
-  end
-
   def planning_agent_select(agent, path_helper_name)
     # See also planning-agent-select.js
     # path_helper_name lets us build the path of the current subsection (Agenda, PlageOuverture, Absence)
