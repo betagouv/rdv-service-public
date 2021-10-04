@@ -6,7 +6,7 @@ module SuperAdmins
       agent = Agent.find(params[:id])
       if sign_in_as_allowed?
         sign_out(:user)
-        sign_in(:agent, agent, bypass: true)
+        bypass_sign_in(agent, scope: :agent)
         redirect_to root_url
       else
         flash[:error] = "Fonctionnalité désactivée sur cet environnement."
