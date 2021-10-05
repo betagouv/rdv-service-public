@@ -58,9 +58,6 @@ class Rdv < ApplicationRecord
   scope :with_user_in, ->(users) { joins(:rdvs_users).where(rdvs_users: { user_id: users.pluck(:id) }).distinct }
   scope :with_lieu, ->(lieu) { joins(:lieu).where(lieux: { id: lieu.id }) }
   scope :visible, -> { joins(:motif).where(motifs: { visibility_type: [Motif::VISIBLE_AND_NOTIFIED, Motif::VISIBLE_AND_NOT_NOTIFIED] }) }
-  scope :ends_at_in_range, ->(range) { where(ends_at: range) } # remove this scope
-  scope :starts_at_in_range, ->(range) { where(starts_at: range) } # remove this scope
-  scope :ordered_by_ends_at, -> { order(:ends_at) } # remove this scope
 
   after_save :associate_users_with_organisation
   after_commit :reload_uuid, on: :create
