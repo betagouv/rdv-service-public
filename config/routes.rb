@@ -164,6 +164,9 @@ Rails.application.routes.draw do
         resources :agent_roles, only: %i[edit update]
         resources :agent_agendas, only: [:show]
         resources :agents, only: %i[index destroy] do
+          collection do
+            get :search
+          end
           resources :absences, only: %i[index new]
           resources :plage_ouvertures, only: %i[index new]
           resources :stats, only: :index do
