@@ -6,8 +6,6 @@ class Rdv < ApplicationRecord
   include IcalHelpers::Ics
   include Payloads::Rdv
 
-  ENDS_AT_SQL = Arel.sql("(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)")
-
   has_paper_trail(
     meta: { virtual_attributes: :virtual_attributes_for_paper_trail }
   )
@@ -63,6 +61,7 @@ class Rdv < ApplicationRecord
   scope :starts_at_in_range, ->(range) { where("starts_at BETWEEN ? AND ?", range.begin, range.end) }
   scope :ordered_by_ends_at, -> { order(ENDS_AT_SQL) }
 
+  before_validation :set_ends_at
   after_save :associate_users_with_organisation
   after_commit :reload_uuid, on: :create
 
@@ -97,6 +96,33 @@ class Rdv < ApplicationRecord
 
   def temporal_status
     Rdv.temporal_status(status, starts_at)
+  end
+
+  def starts_at=(value)
+    super
+    set_ends_at
+  end
+
+  def duration_in_min=(value)
+    @duration_in_min = value.to_i
+    set_ends_at
+  end
+
+  def duration_in_min
+    return @duration_in_min if ends_at.blank? || starts_at.blank?
+
+    @duration_in_min ||= ((ends_at - starts_at) / 60).to_i # use .in_minutes once we use Rails 6.1
+  end
+
+  def ends_at=(value)
+    super
+    @duration_in_min = nil
+  end
+
+  def set_ends_at
+    return if @duration_in_min.blank? || starts_at.blank?
+
+    self.ends_at = starts_at + @duration_in_min.minutes
   end
 
   # class method: helps convert the "unknown" status to a temporal variant "unknown_future" or "unknown_past"
