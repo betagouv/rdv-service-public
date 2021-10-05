@@ -535,8 +535,8 @@ _plage_ouverture_org_bapaume_gina_classique = PlageOuverture.create!(
 # RDVs
 
 Rdv.create!(
-  duration_in_min: 30,
   starts_at: Time.zone.today + 3.days + 10.hours,
+  duration_in_min: 30,
   motif_id: motif_org_paris_nord_pmi_rappel.id,
   lieu: lieu_org_paris_nord_bolivar,
   organisation_id: org_paris_nord.id,
@@ -545,8 +545,8 @@ Rdv.create!(
   context: "Visite de courtoisie"
 )
 Rdv.create(
-  duration_in_min: 30,
   starts_at: Time.zone.today + 4.days + 15.hours,
+  duration_in_min: 30,
   motif_id: motif_org_paris_nord_pmi_suivi.id,
   lieu: lieu_org_paris_nord_bd_aubervilliers,
   organisation_id: org_paris_nord.id,
@@ -555,8 +555,8 @@ Rdv.create(
   context: "Suivi vaccins"
 )
 Rdv.create(
-  duration_in_min: 30,
   starts_at: Time.zone.today + 5.days + 11.hours,
+  duration_in_min: 30,
   motif_id: motif_org_paris_nord_pmi_securite.id,
   lieu: lieu_org_paris_nord_bd_aubervilliers,
   organisation_id: org_paris_nord.id,
@@ -564,3 +564,28 @@ Rdv.create(
   user_ids: [user_org_paris_nord_josephine.id],
   context: "Visite à domicile"
 )
+
+# Insert a lot of rdvs in the past 2 years
+# rubocop:disable Rails/SkipsModelValidations
+rdv_attributes = 1000.times.flat_map do |i|
+  day = 2.years.ago.beginning_of_day + i.days
+  (9..16).map do |hour|
+    {
+      created_at: now,
+      updated_at: now,
+      starts_at: day + hour.hours,
+      duration_in_min: 30,
+      motif_id: motif_org_paris_nord_pmi_securite.id,
+      lieu_id: lieu_org_paris_nord_bd_aubervilliers.id,
+      organisation_id: org_paris_nord.id,
+      context: "Context #{day} #{hour}"
+    }
+  end
+end
+results = Rdv.insert_all!(rdv_attributes, returning: "id") # [{"id"=>1}, {"id"=>2}, ...]
+rdv_ids = results.flat_map(&:values) # [1, 2, ...]
+agent_rdv_attributes = rdv_ids.map { |id| { agent_id: agent_org_paris_nord_pmi_martine.id, rdv_id: id } }
+AgentsRdv.insert_all!(agent_rdv_attributes)
+rdv_user_attributes = rdv_ids.map { |id| { user_id: user_org_paris_nord_josephine.id, rdv_id: id } }
+RdvsUser.insert_all!(rdv_user_attributes)
+# rubocop:enable Rails/SkipsModelValidations
