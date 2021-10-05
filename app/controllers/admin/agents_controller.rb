@@ -14,6 +14,15 @@ class Admin::AgentsController < AgentAuthController
       .page(params[:page])
   end
 
+  def search
+    agents = policy_scope(Agent)
+      .joins(:organisations).where(organisations: { id: current_organisation.id })
+      .active.order_by_last_name.complete
+    agents = agents.order_by_last_name.limit(10).search_by_text(search_params)
+    @agents = agents.search_by_text(search_params) if search_params
+    skip_authorization
+  end
+
   def destroy
     @agent = policy_scope(Agent).find(params[:id])
     authorize(@agent)
@@ -30,5 +39,9 @@ class Admin::AgentsController < AgentAuthController
         redirect_to admin_organisation_agents_path(current_organisation), notice: t(".agent_removed_from_org")
       end
     end
+  end
+
+  def search_params
+    params.require(:term) if params[:term].present?
   end
 end
