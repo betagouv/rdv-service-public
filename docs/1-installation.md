@@ -3,13 +3,14 @@
 ## Prérequis
 
 - Déploiement:
-  - Ruby 2.7 (nous conseillons l’utilisation de [rbenv](https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts))
+  - Ruby 3.0 (nous conseillons l’utilisation de [rbenv](https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts))
   - PostgreSQL >= 12, l’utilisateur doit avoir les droits `superuser`.
 - Développement
   - [Yarn](https://yarnpkg.com/en/docs/install)
   - [Foreman](https://github.com/ddollar/foreman)
   - [graphviz](https://voormedia.github.io/rails-erd/install.html) (pour [rails-erd](https://github.com/voormedia/rails-erd)).
-  - [Scalingo CLI](https://doc.scalingo.com/cli)
+  - [Scalingo CLI](https://doc.scalingo.com/cli) (OPTIONAL) 
+  - [Make](https://fr.wikipedia.org/wiki/Make) (OPTIONAL)
 
 ## Setup
 

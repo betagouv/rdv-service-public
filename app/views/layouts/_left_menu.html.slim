@@ -36,7 +36,6 @@
             = link_to "Mes organisations", admin_organisations_path
           li.my-2
             = active_link_to "Mes statistiques", admin_organisation_agent_stats_path(current_organisation, current_agent)
-            = rdv_danger_badge(policy_scope(current_agent.rdvs))
           li.my-2
             = link_to destroy_agent_session_path, method: :delete do
               i.fa.fa-sign-out
@@ -63,19 +62,17 @@
         ul.list-unstyled.ml-3.left-submenu-planning.collapse[
           class=("show" if menu_top_level_item == "planning")
         ]
+          - agent_for_left_menu = @agent&.persisted? ? @agent : current_agent
+          - path_helper_name = content_for(:menu_agent_select_path_helper_name) || :admin_organisation_agent_agenda_path
           li
             form.my-2
-              = select_tag( \
-                :left_menu_agent_id, \
-                selectable_planning_agents_options(@agent), \
-                class: "select2-input form-control js-planning-agent-select" \
-              )
+              = planning_agent_select(agent_for_left_menu, path_helper_name)
           li.my-2
-            = active_link_to "Agenda", admin_organisation_agent_agenda_path(current_organisation, agent_for_left_menu(@agent))
+            = active_link_to "Agenda", admin_organisation_agent_agenda_path(current_organisation, agent_for_left_menu)
           li.my-2
-            = active_link_to "Plages d'ouverture", admin_organisation_agent_plage_ouvertures_path(current_organisation, agent_for_left_menu(@agent))
+            = active_link_to "Plages d'ouverture", admin_organisation_agent_plage_ouvertures_path(current_organisation, agent_for_left_menu)
           li.my-2
-            = active_link_to "Absences", admin_organisation_agent_absences_path(current_organisation, agent_for_left_menu(@agent))
+            = active_link_to "Absences", admin_organisation_agent_absences_path(current_organisation, agent_for_left_menu)
 
       li.side-nav-item.mb-4.pl-3.pr-2
         = active_link_to admin_organisation_users_path(current_organisation)
@@ -91,7 +88,6 @@
         = active_link_to admin_organisation_stats_path(current_organisation)
           i.fa.fa-chart-bar>
           span.ml-1 Statistiques
-          = rdv_danger_badge(policy_scope(current_organisation.rdvs))
 
       - unless current_agent_role.admin?
         li.side-nav-item.mb-4.pl-3.pr-2
