@@ -51,14 +51,14 @@ describe Admin::RdvsController, type: :controller do
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'edit' template)" do
-        new_attributes = { duration_in_min: nil }
+        new_attributes = { duration_in_min: -10 }
         put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: new_attributes }
         expect(response).to be_successful
         expect(response).to render_template(:edit)
       end
 
       it "does not change rdv" do
-        new_attributes = { duration_in_min: nil }
+        new_attributes = { duration_in_min: -10 }
         expect do
           put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: new_attributes }
         end.not_to change(rdv, :duration_in_min)

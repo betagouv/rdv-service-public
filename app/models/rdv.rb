@@ -28,9 +28,10 @@ class Rdv < ApplicationRecord
 
   delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :follow_up?, :service, to: :motif
 
-  validates :users, :organisation, :motif, :starts_at, :duration_in_min, :agents, presence: true
+  validates :users, :organisation, :motif, :starts_at, :ends_at, :agents, presence: true
   validates :lieu, presence: true, if: :public_office?
   validate :starts_at_is_plausible
+  validate :duration_is_plausible
 
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
   scope :cancelled, -> { where(status: CANCELLED_STATUSES) }
@@ -57,21 +58,16 @@ class Rdv < ApplicationRecord
   scope :with_user_in, ->(users) { joins(:rdvs_users).where(rdvs_users: { user_id: users.pluck(:id) }).distinct }
   scope :with_lieu, ->(lieu) { joins(:lieu).where(lieux: { id: lieu.id }) }
   scope :visible, -> { joins(:motif).where(motifs: { visibility_type: [Motif::VISIBLE_AND_NOTIFIED, Motif::VISIBLE_AND_NOT_NOTIFIED] }) }
-  scope :ends_at_in_range, ->(range) { where("#{ENDS_AT_SQL} BETWEEN ? AND ?", range.begin, range.end) }
-  scope :starts_at_in_range, ->(range) { where("starts_at BETWEEN ? AND ?", range.begin, range.end) }
-  scope :ordered_by_ends_at, -> { order(ENDS_AT_SQL) }
+  scope :ends_at_in_range, ->(range) { where(ends_at: range) } # remove this scope
+  scope :starts_at_in_range, ->(range) { where(starts_at: range) } # remove this scope
+  scope :ordered_by_ends_at, -> { order(:ends_at) } # remove this scope
 
-  before_validation :set_ends_at
   after_save :associate_users_with_organisation
   after_commit :reload_uuid, on: :create
 
   def self.ongoing(time_margin: 0.minutes)
     where("starts_at <= ?", Time.zone.now + time_margin)
-      .where("#{ENDS_AT_SQL} >= ?", Time.zone.now - time_margin)
-  end
-
-  def ends_at
-    starts_at + duration_in_min.minutes
+      .where("ends_at >= ?", Time.zone.now - time_margin)
   end
 
   def past?
@@ -104,25 +100,20 @@ class Rdv < ApplicationRecord
   end
 
   def duration_in_min=(value)
-    @duration_in_min = value.to_i
+    @duration_in_min = value
     set_ends_at
   end
 
   def duration_in_min
-    return @duration_in_min if ends_at.blank? || starts_at.blank?
+    return @duration_in_min&.to_i if starts_at.nil? || ends_at.nil?
 
-    @duration_in_min ||= ((ends_at - starts_at) / 60).to_i # use .in_minutes once we use Rails 6.1
-  end
-
-  def ends_at=(value)
-    super
-    @duration_in_min = nil
+    ((ends_at - starts_at) / 60).to_i # TODO: use (ends_at - starts_at).in_minutes once we use Rails 6.1
   end
 
   def set_ends_at
-    return if @duration_in_min.blank? || starts_at.blank?
+    return if starts_at.nil? || @duration_in_min.nil?
 
-    self.ends_at = starts_at + @duration_in_min.minutes
+    self.ends_at = starts_at + @duration_in_min.to_i.minutes
   end
 
   # class method: helps convert the "unknown" status to a temporal variant "unknown_future" or "unknown_past"
@@ -163,7 +154,7 @@ class Rdv < ApplicationRecord
   end
 
   def overlapping_plages_ouvertures
-    return [] if starts_at.blank? || duration_in_min.blank? || lieu.blank? || past?
+    return [] if starts_at.blank? || ends_at.blank? || lieu.blank? || past? || !valid?
 
     @overlapping_plages_ouvertures ||= PlageOuverture.where(agent: agents).where.not(lieu: lieu).overlapping_with_time_slot(to_time_slot)
   end
@@ -200,6 +191,12 @@ class Rdv < ApplicationRecord
     elsif starts_at > Time.zone.now + 2.years
       errors.add(:starts_at, :must_be_within_two_years)
     end
+  end
+
+  def duration_is_plausible
+    return if starts_at.nil? || ends_at.nil?
+
+    errors.add(:duration_in_min, :must_be_positive) if starts_at > ends_at
   end
 
   def virtual_attributes_for_paper_trail
