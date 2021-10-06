@@ -27,10 +27,10 @@
             .col-md-4.text-right
               = link_to "Inviter", invite_admin_organisation_user_path(current_organisation, @user), method: :post, class: "btn btn-outline-white"
 
-        - if @user.invited_through == "external"
+        - if @user.invited_through == "external" && invitation_accepted_at.nil?
           .row.bg-info.text-white.p-2.mb-3
             .col-md-8
-              | Cet usager a reçu une invitation via un partenaire de RDV-Solidarités.
+              | Cet usager a reçu une invitation via un partenaire de RDV-Solidarités, mais il ne l’a pas encore acceptée.
 
         - if @user.logged_once_with_franceconnect?
           .row.bg-info.text-white.p-2.mb-3 Cet usager s'est déjà connecté via FranceConnect
