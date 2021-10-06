@@ -350,6 +350,7 @@ describe "api/v1/users requests", type: :request do
         expect(response_parsed["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=")
         user.reload
         expect(user.invitation_due_at).to eq(user.invitation_created_at + User.invite_for)
+        expect(user.invited_through).to eq("external")
       end
     end
 
@@ -391,6 +392,7 @@ describe "api/v1/users requests", type: :request do
         expect(response_parsed["invitation_url"]).to start_with("http://www.example.com/users/invitation/accept?invitation_token=")
         user.reload
         expect(user.invitation_due_at).to eq(user.invitation_created_at + User.invite_for)
+        expect(user.invited_through).to eq("external")
       end
     end
 

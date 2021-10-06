@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_29_093324) do
+ActiveRecord::Schema.define(version: 2021_09_30_100857) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,21 @@ ActiveRecord::Schema.define(version: 2021_09_29_093324) do
     "sfr_mail2sms",
     "clever_technologies",
     "orange_contact_everyone",
+  ], force: :cascade
+
+  create_enum :user_created_through, [
+    "unknown",
+    "agent_creation",
+    "user_sign_up",
+    "franceconnect_sign_up",
+    "user_relative_creation",
+    "agent_creation_api",
+  ], force: :cascade
+
+  create_enum :user_invited_through, [
+    "unknown",
+    "devise_email",
+    "external",
   ], force: :cascade
 
   create_table "absences", force: :cascade do |t|
@@ -426,13 +441,16 @@ ActiveRecord::Schema.define(version: 2021_09_29_093324) do
     t.boolean "notify_by_email", default: true
     t.datetime "last_sign_in_at"
     t.string "franceconnect_openid_sub"
-    t.string "created_through"
+    t.string "old_created_through"
     t.boolean "logged_once_with_franceconnect"
     t.integer "invite_for"
     t.string "city_code"
     t.string "post_code"
     t.string "city_name"
+    t.enum "invited_through", default: "unknown", enum_name: "user_invited_through"
+    t.enum "created_through", default: "unknown", enum_name: "user_created_through"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["created_through"], name: "index_users_on_created_through"
     t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_users_on_invitations_count"
