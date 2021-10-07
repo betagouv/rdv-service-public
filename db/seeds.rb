@@ -574,7 +574,7 @@ rdv_attributes = 1000.times.flat_map do |i|
       created_at: now,
       updated_at: now,
       starts_at: day + hour.hours,
-      duration_in_min: 30,
+      ends_at: day + hour.hours + 30.minutes,
       motif_id: motif_org_paris_nord_pmi_securite.id,
       lieu_id: lieu_org_paris_nord_bd_aubervilliers.id,
       organisation_id: org_paris_nord.id,
