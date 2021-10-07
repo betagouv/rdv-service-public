@@ -13,10 +13,7 @@ class RdvsOverlapping
       .not_cancelled
       .future
       .with_agent_among(agents)
-      .where(id: Rdv.none
-                     .or(Rdv.where(ends_at: (starts_at + 1.second)..ends_at))
-                     .or(Rdv.where(starts_at: starts_at..(ends_at - 1.second)))
-                     .or(Rdv.where(starts_at: (..starts_at)).where(ends_at: ends_at..)))
+      .where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", starts_at, ends_at)
       .order(:ends_at)
   end
 
