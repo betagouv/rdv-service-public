@@ -42,7 +42,7 @@ module RdvsHelper
   end
 
   def rdv_danger_badge(rdvs)
-    Rails.cache.fetch(["rdv_danger_badge", rdvs]) do
+    Rails.cache.fetch(["rdv_danger_badge", rdvs.to_sql.hash], expires_in: 2.minutes) do
       count = rdvs.status("unknown_past").count
       tag.span(count, class: "badge badge-danger") if count.positive?
     end
