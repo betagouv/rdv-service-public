@@ -32,8 +32,9 @@ def addresses_in_csv
   file = Tempfile.create("bla.csv")
   CSV.open(file, "wb") do |csv|
     csv << %w[id adresse]
-    User.where.not(address: [nil, ""]).where(city_name: [nil, ""]).pluck(:id, :address).each do |id, address|
-      csv << [id, address]
+    User.where.not(address: [nil, ""]).where(city_name: [nil, ""]).in_batches(of: 500).each_with_index do |users, index|
+      Rails.logger.info("Récupère l'ensemble d'utilisateurs du batch #{index}")
+      users.map { |u| [u.id, u.address] }.each { |ia| csv << ia }
     end
   end
   file
