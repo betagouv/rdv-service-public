@@ -275,18 +275,6 @@ describe Rdv, type: :model do
     end
   end
 
-  describe "#starts_at_in_range" do
-    it "return rdv that starts in range" do
-      now = Time.zone.parse("2020-10-14 11h30")
-      travel_to(now - 2.days)
-      rdv = create(:rdv, starts_at: now + 1.day + 3.hours)
-      create(:rdv, starts_at: now + 2.days + 3.hours)
-      create(:rdv, starts_at: now - 1.day)
-      travel_to(now)
-      expect(described_class.starts_at_in_range((now + 1.day)..(now + 2.days))).to eq([rdv])
-    end
-  end
-
   describe "validations" do
     let(:now) { Time.zone.parse("2020-12-28 14h00") }
 
