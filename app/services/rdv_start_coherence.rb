@@ -39,8 +39,8 @@ class RdvStartCoherence
       .not_cancelled
       .future
       .with_agent_among(agents)
-      .ends_at_in_range((starts_at - 46.minutes)..starts_at)
-      .ordered_by_ends_at
+      .where(ends_at: (starts_at - 46.minutes)..starts_at)
+      .order(:ends_at)
       .to_a
   end
 end

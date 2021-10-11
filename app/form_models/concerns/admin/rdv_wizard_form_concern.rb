@@ -12,6 +12,7 @@ module Admin::RdvWizardFormConcern
 
     # delegates all getters and setters to rdv
     delegate(*::Rdv.attribute_names, to: :rdv)
+    delegate :duration_in_min, to: :rdv
     delegate :motif, :organisation, :agents, :users, to: :rdv
 
     def initialize(agent_author, organisation, attributes)
