@@ -6,7 +6,7 @@ class CreneauxBuilderForDateService < BaseService
     @motif = motif
     @date = date
     @lieu = lieu
-    @inclusive_date_range = options[:inclusive_date_range]
+    @inclusive_date_range = options[:inclusive_date_range] # is actually always passed, we can make it nonoptional. Also, it’s actually required.
     @for_agents = options.fetch(:for_agents, false)
     @agent_name = options.fetch(:agent_name, false)
   end
@@ -14,7 +14,7 @@ class CreneauxBuilderForDateService < BaseService
   def perform
     creneaux = []
 
-    # Loop over the tentative creneaux, by filling from the start_time of the PlageOuverture.
+    # NOTE: LOOP 4/5 Loop over the tentative creneaux, by filling from the start_time of the PlageOuverture.
     next_starts_at = @plage_ouverture.start_time.on(@date)
     loop do
       tentative_creneau = new_creneau(next_starts_at)
@@ -33,7 +33,7 @@ class CreneauxBuilderForDateService < BaseService
       elsif !@for_agents && !tentative_creneau.respects_booking_delays?
         next_starts_at += @motif.default_duration_in_min.minutes
 
-      #  Otherwise, we found a vald crenau! Save it and continue.
+      # Otherwise, we found a valid crenau! Save it and continue.
       else
         creneaux << tentative_creneau
         next_starts_at = tentative_creneau.ends_at
@@ -63,10 +63,14 @@ class CreneauxBuilderForDateService < BaseService
   end
 
   def rdvs
+    # We seem to query for the Rdvs of the whole range from the caller (CreneauxBuilderService)
+    # but here we only need the current day, since a new CreneauxBuilderForDateService is created for each ~~day~~ occurence of a PlageOuverture.
+    # I wonder if this is properly cached by Rails.
     @rdvs ||= @plage_ouverture.agent.rdvs.where(starts_at: inclusive_datetime_range).not_cancelled.to_a
   end
 
   def absences_occurrences
+    # Here as well, we build occurences for the whole date range, but we only use one day.
     @absences_occurrences ||= @plage_ouverture.agent.absences.flat_map { _1.occurrences_for(inclusive_datetime_range) }
   end
 
