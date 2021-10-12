@@ -39,9 +39,8 @@ class Creneau
 
   def overlapping_rdvs_or_absences(rdvs_or_absences)
     rdvs_or_absences.select do |r_o_a|
-      (starts_at < r_o_a.ends_at && r_o_a.ends_at < ends_at) ||
-        (starts_at < r_o_a.starts_at && r_o_a.starts_at < ends_at) ||
-        (r_o_a.starts_at <= starts_at && ends_at <= r_o_a.ends_at)
+      # `a...b` is the “[a, b) range” (a included, b excluded)
+      (starts_at...ends_at).overlaps?(r_o_a.starts_at...r_o_a.ends_at)
     end.sort_by(&:ends_at).reverse
   end
 
