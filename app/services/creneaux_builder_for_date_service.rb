@@ -14,7 +14,7 @@ class CreneauxBuilderForDateService < BaseService
   # rubocop: disable Lint/ToEnumArguments
   def perform
     @next_starts_at = @plage_ouverture.start_time.on(@date)
-    to_enum(:next_creneaux).to_a.compact
+    to_enum(:next_creneaux).to_a.compact # enumerator entry
   end
   # rubocop: enable Lint/ToEnumArguments
 
@@ -33,11 +33,14 @@ class CreneauxBuilderForDateService < BaseService
     elsif !@for_agents && !creneau.respects_booking_delays?
       @next_starts_at += @motif.default_duration_in_min.minutes
     else
-      yield creneau
-      @next_starts_at = creneau.ends_at
+      yield creneau # yeah we found one
+      @next_starts_at = creneau.ends_at # set the value for the nex call to generate_creneau
     end
 
-    next_creneaux { yield _1 }
+    next_creneaux { yield _1 } # (recurse and yield the enumerator) … which happens in here.
+    # The passed block is yielded to by the called function. Inside this passed block, we yield _out_ to the callee, which, in the root next_creneaux call, adds to the collection.
+    # The idea is that the method called by to_enum is supposed to call yield with an argument, a number of times. The arguments passed to yield are the collection.
+    # I think this recursion goes quite deep.
   end
 
   def generate_creneau
