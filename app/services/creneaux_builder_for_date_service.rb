@@ -24,11 +24,12 @@ class CreneauxBuilderForDateService < BaseService
     creneau = generate_creneau
     return if no_more_creneaux_for_the_day?(creneau)
 
-    overlapping_rdvs_or_absences = creneau.overlapping_rdvs_or_absences(rdvs + absences_occurrences)
-    if overlapping_rdvs_or_absences.any?
-      return if overlapping_rdvs_or_absences.first.ends_at.to_date > @date
+    events = rdvs + absences_occurrences
+    last_overlapping_ends_at = creneau.last_overlapping_event_ends_at(events)
+    if last_overlapping_ends_at.present?
+      return if last_overlapping_ends_at.to_date > @date
 
-      @next_starts_at = overlapping_rdvs_or_absences.first.ends_at
+      @next_starts_at = last_overlapping_ends_at
     elsif !@for_agents && !creneau.respects_booking_delays?
       @next_starts_at += @motif.default_duration_in_min.minutes
     else
