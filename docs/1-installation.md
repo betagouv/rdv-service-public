@@ -9,10 +9,12 @@
   - [Yarn](https://yarnpkg.com/en/docs/install)
   - [Foreman](https://github.com/ddollar/foreman)
   - [graphviz](https://voormedia.github.io/rails-erd/install.html) (pour [rails-erd](https://github.com/voormedia/rails-erd)).
-  - [Scalingo CLI](https://doc.scalingo.com/cli) (OPTIONAL) 
+  - [Scalingo CLI](https://doc.scalingo.com/cli) (OPTIONAL)
   - [Make](https://fr.wikipedia.org/wiki/Make) (OPTIONAL)
 
 ## Setup
+
+Voir les variables d'environnement pour configurer l'accès à PostgreSQL
 
 Le script se charge d’installer les gems et packages et de créer la base de données.
 ```bash
