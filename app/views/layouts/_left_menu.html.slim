@@ -36,7 +36,6 @@
             = link_to "Mes organisations", admin_organisations_path
           li.my-2
             = active_link_to "Mes statistiques", admin_organisation_agent_stats_path(current_organisation, current_agent)
-            = rdv_danger_badge(policy_scope(current_agent.rdvs))
           li.my-2
             = link_to destroy_agent_session_path, method: :delete do
               i.fa.fa-sign-out
@@ -89,7 +88,6 @@
         = active_link_to admin_organisation_stats_path(current_organisation)
           i.fa.fa-chart-bar>
           span.ml-1 Statistiques
-          = rdv_danger_badge(policy_scope(current_organisation.rdvs))
 
       - unless current_agent_role.admin?
         li.side-nav-item.mb-4.pl-3.pr-2
