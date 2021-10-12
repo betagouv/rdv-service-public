@@ -1,5 +1,8 @@
 - content_for :title do
-  | Liste des RDV
+  - if @title
+    = @title
+  - else
+    | Liste des RDV
 
 - content_for(:menu_item) { "menu-rdvs-list" }
 
@@ -13,8 +16,8 @@
   - if @breadcrumb_page == "agent_stats" && @form.agent == current_agent
     ol.breadcrumb.m-0
       li.breadcrumb-item
-          = link_to "Vos statistiques", admin_organisation_agent_stats_path(current_organisation, current_agent)
-      li.breadcrumb-item.active RDVs #{ Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase }
+        = link_to "Vos statistiques", admin_organisation_agent_stats_path(current_organisation, current_agent)
+      li.breadcrumb-item.active RDVs #{ Rdv.human_attribute_value(:status, @form.status)&.downcase }
 
   - if @breadcrumb_page == "user" && @form.user.present?
     ol.breadcrumb.m-0
@@ -31,17 +34,18 @@
       - if @form.status.present?
         li.breadcrumb-item.active RDVs #{ Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase }
 
-.card.border-info
-  .card-header ⚙️ Filtres et options
-  .card-body
-    = render "rdv_search_form", form: @form
-  - if @rdvs.any?
-    .card-footer
-      div.d-flex.justify-content-end
-        = link_to admin_organisation_rdvs_path(current_organisation, format: "xls", **@form.to_query), class: "btn btn-small btn-link d-print-none" do
-          span> Exporter les #{@rdvs.total_count} RDVs en XLS
-          i.fa.fa-download>
-        input.btn.btn-small.btn-link.d-print-none type="submit" value="Imprimer 🖨" onclick="window.print();return false;"
+- unless @filters == "hide"
+  .card.border-info
+    .card-header ⚙️ Filtres et options
+    .card-body
+      = render "rdv_search_form", form: @form
+    - if @rdvs.any?
+      .card-footer
+        div.d-flex.justify-content-end
+          = link_to admin_organisation_rdvs_path(current_organisation, format: "xls", **@form.to_query), class: "btn btn-small btn-link d-print-none" do
+            span> Exporter les #{@rdvs.total_count} RDVs en XLS
+            i.fa.fa-download>
+          input.btn.btn-small.btn-link.d-print-none type="submit" value="Imprimer 🖨" onclick="window.print();return false;"
 
 .row.justify-content-center.pb-3
   div class=(@form.show_user_details ? "col-md-12" : "col-md-6")
