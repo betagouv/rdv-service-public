@@ -11,41 +11,43 @@ class CreneauxBuilderForDateService < BaseService
     @agent_name = options.fetch(:agent_name, false)
   end
 
-  # rubocop: disable Lint/ToEnumArguments
   def perform
-    @next_starts_at = @plage_ouverture.start_time.on(@date)
-    to_enum(:next_creneaux).to_a.compact # enumerator entry
+    creneaux = []
+
+    # Loop over the tentative creneaux, by filling from the start_time of the PlageOuverture.
+    next_starts_at = @plage_ouverture.start_time.on(@date)
+    loop do
+      tentative_creneau = new_creneau(next_starts_at)
+      # Stop when we reach the end of the PlageOuverture (or the end of the day)
+      break if no_more_creneaux_for_the_day?(tentative_creneau)
+
+      # If this tentative overlaps with existing Rdvs or Absence, skip ahead to the end of the last overlap
+      possible_overlaps = rdvs + absences_occurrences
+      last_overlapping_ends_at = tentative_creneau.last_overlapping_event_ends_at(possible_overlaps)
+      if last_overlapping_ends_at.present?
+        next_starts_at = last_overlapping_ends_at
+
+      # If the motif has a booking delay, skip ahead by the default duration of the motif
+      # NOTE: I’m not sure this make sense. min_booking_delay and default_duration_in_min are two distinct things.
+      # The booking delay isn’t a minimum delay between Rdvs, but the advance delay since the current date.
+      elsif !@for_agents && !tentative_creneau.respects_booking_delays?
+        next_starts_at += @motif.default_duration_in_min.minutes
+
+      #  Otherwise, we found a vald crenau! Save it and continue.
+      else
+        creneaux << tentative_creneau
+        next_starts_at = tentative_creneau.ends_at
+      end
+    end
+
+    creneaux
   end
-  # rubocop: enable Lint/ToEnumArguments
 
   private
 
-  def next_creneaux
-    creneau = generate_creneau
-    return if no_more_creneaux_for_the_day?(creneau)
-
-    events = rdvs + absences_occurrences
-    last_overlapping_ends_at = creneau.last_overlapping_event_ends_at(events)
-    if last_overlapping_ends_at.present?
-      return if last_overlapping_ends_at.to_date > @date
-
-      @next_starts_at = last_overlapping_ends_at
-    elsif !@for_agents && !creneau.respects_booking_delays?
-      @next_starts_at += @motif.default_duration_in_min.minutes
-    else
-      yield creneau # yeah we found one
-      @next_starts_at = creneau.ends_at # set the value for the nex call to generate_creneau
-    end
-
-    next_creneaux { yield _1 } # (recurse and yield the enumerator) … which happens in here.
-    # The passed block is yielded to by the called function. Inside this passed block, we yield _out_ to the callee, which, in the root next_creneaux call, adds to the collection.
-    # The idea is that the method called by to_enum is supposed to call yield with an argument, a number of times. The arguments passed to yield are the collection.
-    # I think this recursion goes quite deep.
-  end
-
-  def generate_creneau
+  def new_creneau(next_starts_at)
     Creneau.new(
-      starts_at: @next_starts_at,
+      starts_at: next_starts_at,
       lieu_id: @lieu.id,
       motif: @motif,
       agent_id: @plage_ouverture.agent_id,
@@ -56,7 +58,8 @@ class CreneauxBuilderForDateService < BaseService
   def no_more_creneaux_for_the_day?(creneau)
     creneau.ends_at.to_time_of_day > @plage_ouverture.end_time ||
       creneau.ends_at.to_date > creneau.starts_at.to_date ||
-      creneau.overlaps_jour_ferie?
+      creneau.overlaps_jour_ferie? ||
+      creneau.ends_at.to_date > @date
   end
 
   def rdvs
