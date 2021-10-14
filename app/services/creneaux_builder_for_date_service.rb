@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 class CreneauxBuilderForDateService < BaseService
-  def initialize(plage_ouverture, motif, date, lieu, **options)
+  def initialize(plage_ouverture, motif, date, lieu, possible_overlaps, **options) # rubocop:disable Metrics/ParameterLists
     @plage_ouverture = plage_ouverture
     @motif = motif
     @date = date
     @lieu = lieu
-    @inclusive_date_range = options[:inclusive_date_range] # is actually always passed, we can make it nonoptional. Also, it’s actually required.
+    @possible_overlaps = possible_overlaps
+
     @for_agents = options.fetch(:for_agents, false)
     @agent_name = options.fetch(:agent_name, false)
   end
@@ -22,8 +23,7 @@ class CreneauxBuilderForDateService < BaseService
       break if no_more_creneaux_for_the_day?(tentative_creneau)
 
       # If this tentative overlaps with existing Rdvs or Absence, skip ahead to the end of the last overlap
-      possible_overlaps = rdvs + absences_occurrences
-      last_overlapping_ends_at = tentative_creneau.last_overlapping_event_ends_at(possible_overlaps)
+      last_overlapping_ends_at = tentative_creneau.last_overlapping_event_ends_at(@possible_overlaps)
       if last_overlapping_ends_at.present?
         next_starts_at = last_overlapping_ends_at
 
@@ -33,7 +33,7 @@ class CreneauxBuilderForDateService < BaseService
       elsif !@for_agents && !tentative_creneau.respects_booking_delays?
         next_starts_at += @motif.default_duration_in_min.minutes
 
-      # Otherwise, we found a valid crenau! Save it and continue.
+      # Otherwise, we found a valid creneau! Save it and continue.
       else
         creneaux << tentative_creneau
         next_starts_at = tentative_creneau.ends_at
@@ -60,21 +60,5 @@ class CreneauxBuilderForDateService < BaseService
       creneau.ends_at.to_date > creneau.starts_at.to_date ||
       creneau.overlaps_jour_ferie? ||
       creneau.ends_at.to_date > @date
-  end
-
-  def rdvs
-    # We seem to query for the Rdvs of the whole range from the caller (CreneauxBuilderService)
-    # but here we only need the current day, since a new CreneauxBuilderForDateService is created for each ~~day~~ occurence of a PlageOuverture.
-    # I wonder if this is properly cached by Rails.
-    @rdvs ||= @plage_ouverture.agent.rdvs.where(starts_at: inclusive_datetime_range).not_cancelled.to_a
-  end
-
-  def absences_occurrences
-    # Here as well, we build occurences for the whole date range, but we only use one day.
-    @absences_occurrences ||= @plage_ouverture.agent.absences.flat_map { _1.occurrences_for(inclusive_datetime_range) }
-  end
-
-  def inclusive_datetime_range
-    @inclusive_datetime_range ||= (@inclusive_date_range.begin)..(@inclusive_date_range.end.end_of_day)
   end
 end
