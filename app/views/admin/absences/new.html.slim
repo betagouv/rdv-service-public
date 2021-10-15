@@ -3,18 +3,18 @@
 
 - content_for :title do
   - if @absence.agent == current_agent
-    | Nouvelle absence
+    | Nouvelle indisponibilité
   - else
-    | Nouvelle absence pour #{@agent.full_name}
+    | Nouvelle indisponibilité pour #{@agent.full_name}
 
 - content_for :breadcrumb do
   ol.breadcrumb.m-0
     li.breadcrumb-item
       = link_to admin_organisation_agent_absences_path(@absence.organisation, @absence.agent) do
         - if @absence.agent == current_agent
-          | Vos Absences
+          | Vos indisponibilités
         - else
-          | Absences de #{@absence.agent.full_name}
+          | Indisponibilité de #{@absence.agent.full_name}
     li.breadcrumb-item.active
       | Nouvelle absence
 
