@@ -6,7 +6,7 @@ class SearchCreneauxForAgentsService < BaseService
   end
 
   def perform
-    lieux.map { build_result(_1) }
+    lieux.map { build_result(_1) } # NOTE: LOOP 1 over lieux.
   end
 
   private
@@ -47,6 +47,7 @@ class SearchCreneauxForAgentsService < BaseService
       else
         @lieux.for_motif(@form.motif)
       end
+
     @lieux = @lieux.where(id: PlageOuverture.where(agent_id: @form.agent_ids).select(:lieu_id)) if @form.agent_ids.present?
     @lieux = @lieux.ordered_by_name
     @lieux

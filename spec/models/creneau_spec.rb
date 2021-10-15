@@ -15,125 +15,125 @@ describe Creneau, type: :model do
 
   after { travel_back }
 
-  describe "#overlapping_rdvs_or_absences" do
+  describe "#last_overlapping_event_ends_at" do
     let(:motif2) { build(:motif, name: "Visite 12 mois", default_duration_in_min: 60, reservable_online: reservable_online, organisation: organisation) }
     let(:creneau) { build(:creneau, starts_at: Time.zone.local(2019, 9, 19, 9, 0), lieu_id: lieu.id, motif: motif2) }
 
     describe "for absences" do
-      subject { creneau.overlapping_rdvs_or_absences([absence]).any? }
+      subject { creneau.last_overlapping_event_ends_at([absence]) }
 
       describe "absence overlaps beginning of creneau" do
-        let!(:absence) do
+        let(:absence) do
           build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(8, 30), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(9, 30), agent: agent,
                           organisation: organisation)
         end
 
-        it { is_expected.to eq(true) }
+        it { is_expected.to eq(absence.ends_at) }
       end
 
       describe "absence overlaps end of creneau" do
-        let!(:absence) do
+        let(:absence) do
           build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 30), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 30), agent: agent,
                           organisation: organisation)
         end
 
-        it { is_expected.to eq(true) }
+        it { is_expected.to eq(absence.ends_at) }
       end
 
       describe "absence is inside creneau" do
-        let!(:absence) do
+        let(:absence) do
           build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 15), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(9, 30), agent: agent,
                           organisation: organisation)
         end
 
-        it { is_expected.to eq(true) }
+        it { is_expected.to eq(absence.ends_at) }
       end
 
       describe "absence is before creneau" do
-        let!(:absence) do
+        let(:absence) do
           build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(8, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(9, 0), agent: agent,
                           organisation: organisation)
         end
 
-        it { is_expected.to eq(false) }
+        it { is_expected.to be_nil }
       end
 
       describe "absence is after creneau" do
-        let!(:absence) do
+        let(:absence) do
           build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(10, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 30), agent: agent,
                           organisation: organisation)
         end
 
-        it { is_expected.to eq(false) }
+        it { is_expected.to be_nil }
       end
 
       describe "absence is around creneau" do
-        let!(:absence) do
+        let(:absence) do
           build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(8, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 30), agent: agent,
                           organisation: organisation)
         end
 
-        it { is_expected.to eq(true) }
+        it { is_expected.to eq(absence.ends_at) }
       end
 
       describe "absence is like creneau" do
-        let!(:absence) do
+        let(:absence) do
           build(:absence, first_day: Date.new(2019, 9, 19), start_time: Tod::TimeOfDay.new(9, 0), end_day: Date.new(2019, 9, 19), end_time: Tod::TimeOfDay.new(10, 0), agent: agent,
                           organisation: organisation)
         end
 
-        it { is_expected.to eq(true) }
+        it { is_expected.to eq(absence.ends_at) }
       end
     end
 
     describe "for rdvs" do
-      subject { creneau.overlapping_rdvs_or_absences([rdv]).any? }
+      subject { creneau.last_overlapping_event_ends_at([rdv]) }
 
       describe "rdv overlaps beginning of creneau" do
         let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 8, 30), duration_in_min: 45, agents: [agent], organisation: organisation) }
 
-        it { is_expected.to eq(true) }
+        it { is_expected.to eq(rdv.ends_at) }
       end
 
       describe "rdv overlaps end of creneau" do
         let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 30), duration_in_min: 45, agents: [agent], organisation: organisation) }
 
-        it { is_expected.to eq(true) }
+        it { is_expected.to eq(rdv.ends_at) }
       end
 
       describe "rdv is inside creneau" do
         let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 15), duration_in_min: 30, agents: [agent], organisation: organisation) }
 
-        it { is_expected.to eq(true) }
+        it { is_expected.to eq(rdv.ends_at) }
       end
 
       describe "rdv is before creneau" do
         let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 8, 0), duration_in_min: 60, agents: [agent], organisation: organisation) }
 
-        it { is_expected.to eq(false) }
+        it { is_expected.to be_nil }
       end
 
       describe "rdv is after creneau" do
         let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 10, 0), duration_in_min: 45, agents: [agent], organisation: organisation) }
 
-        it { is_expected.to eq(false) }
+        it { is_expected.to be_nil }
       end
 
       describe "rdv is around creneau" do
         let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 8, 0), duration_in_min: 140, agents: [agent], organisation: organisation) }
 
-        it { is_expected.to eq(true) }
+        it { is_expected.to eq(rdv.ends_at) }
       end
 
       describe "rdv is like creneau" do
         let(:rdv) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 60, agents: [agent], organisation: organisation) }
 
-        it { is_expected.to eq(true) }
+        it { is_expected.to eq(rdv.ends_at) }
       end
     end
 
     describe "mixed absences and rdvs" do
-      subject { creneau.overlapping_rdvs_or_absences([rdv1, rdv2, absence]) }
+      subject { creneau.last_overlapping_event_ends_at([rdv1, rdv2, absence]) }
 
       describe "all overlap creneau" do
         let(:rdv1) { build(:rdv, starts_at: Time.zone.local(2019, 9, 19, 9, 0), duration_in_min: 10, agents: [agent], organisation: organisation) }
@@ -143,9 +143,8 @@ describe Creneau, type: :model do
                           organisation: organisation)
         end
 
-        it "works and be ordered so the first is the one that ends last" do
-          expect(subject.count).to eq(3)
-          expect(subject.first).to eq(rdv2)
+        it "returns the ends_at value of the last event" do
+          expect(subject).to eq(rdv2.ends_at)
         end
       end
     end

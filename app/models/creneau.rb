@@ -37,12 +37,11 @@ class Creneau
     respects_min_booking_delay? && respects_max_booking_delay?
   end
 
-  def overlapping_rdvs_or_absences(rdvs_or_absences)
-    rdvs_or_absences.select do |r_o_a|
-      (starts_at < r_o_a.ends_at && r_o_a.ends_at < ends_at) ||
-        (starts_at < r_o_a.starts_at && r_o_a.starts_at < ends_at) ||
-        (r_o_a.starts_at <= starts_at && ends_at <= r_o_a.ends_at)
-    end.sort_by(&:ends_at).reverse
+  # Return the first event in the passed array that overlaps with the receiver
+  def last_overlapping_event_ends_at(events)
+    events.select do |event|
+      (starts_at...ends_at).overlaps?(event.starts_at...event.ends_at) # `a...b` is the “[a, b) range” (a included, b excluded)
+    end.map(&:ends_at).max
   end
 
   def overlaps_jour_ferie?

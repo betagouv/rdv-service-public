@@ -32,46 +32,6 @@
       "note": ""
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "49daaf5634c3cea5615e4e839666cbf45c79615f13341971179463699b7521bc",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/rdv.rb",
-      "line": 62,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "where(\"#{Arel.sql(\"(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)\")} BETWEEN ? AND ?\", range.begin, range.end)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Rdv",
-        "method": "ends_at_in_range"
-      },
-      "user_input": "Arel.sql(\"(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)\")",
-      "confidence": "Medium",
-      "note": ""
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "b29b01ddc6769a460480ba9c5186a1a5bd6672337b58f498f623c022a31c2b19",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/rdv.rb",
-      "line": 71,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "where(\"starts_at <= ?\", (Time.zone.now + time_margin)).where(\"#{Arel.sql(\"(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)\")} >= ?\", (Time.zone.now - time_margin))",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Rdv",
-        "method": "Rdv.ongoing"
-      },
-      "user_input": "Arel.sql(\"(starts_at + (duration_in_min::text|| 'minute')::INTERVAL)\")",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
       "fingerprint": "d47b97da06b485e3b3e6da6d8056f1fb1f0beb9a247bc81f90ae0947d5f4d584",
@@ -109,7 +69,7 @@
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/motifs/index.html.slim",
-      "line": 69,
+      "line": 72,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => filtered((policy_scope(Motif).active.search_by_text(params[:search]) or policy_scope(Motif).active), params).includes(:organisation).includes(:service).ordered_by_name.page(params[:page]), {})",
       "render_path": [
@@ -165,6 +125,6 @@
       "note": ""
     }
   ],
-  "updated": "2021-09-22 15:44:18 +0200",
+  "updated": "2021-10-14 10:15:37 +0200",
   "brakeman_version": "5.1.1"
 }
