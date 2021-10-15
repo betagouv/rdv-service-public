@@ -1,8 +1,5 @@
 - content_for :title do
-  - if @title
-    = @title
-  - else
-    | Liste des RDV
+  = @title || "Liste des RDV"
 
 - content_for(:menu_item) { "menu-rdvs-list" }
 
