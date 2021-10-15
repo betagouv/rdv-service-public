@@ -18,7 +18,7 @@ describe "Agent can CRUD absences" do
       expect_page_title("Vos absences")
       click_link absence.title
 
-      expect_page_title("Modifier votre absence")
+      expect_page_title("Modifier votre absences")
       fill_in "Description", with: "La belle absence"
       click_button("Enregistrer")
 
@@ -32,13 +32,13 @@ describe "Agent can CRUD absences" do
       click_link "Créer une absence", match: :first
 
       expect_page_title("Nouvelle absence")
-      fill_in "Description", with: "Nouvelle Absence"
+      fill_in "Description", with: "Nouvelle absence"
       fill_in "absence[first_day]", with: Time.zone.today
       fill_in "absence[end_day]", with: Time.zone.today + 2
       click_button "Enregistrer"
 
       expect_page_title("Vos absences")
-      click_link "Nouvelle Absence"
+      click_link "Nouvelle absence"
     end
   end
 
@@ -49,30 +49,30 @@ describe "Agent can CRUD absences" do
 
     it "can crud a absence" do
       visit admin_organisation_agent_absences_path(organisation, other_agent.id)
-      expect_page_title("Absences de Jane FAROU (PMI)")
+      expect_page_title("absences de Jane FAROU (PMI)")
       click_link absence.title
 
       expect_page_title("Modifier l'absence de Jane FAROU")
       fill_in "Description", with: "La belle absence"
       click_button("Enregistrer")
 
-      expect_page_title("Absences de Jane FAROU (PMI)")
+      expect_page_title("absences de Jane FAROU (PMI)")
       click_link "La belle absence"
 
       click_link("Supprimer")
-      expect_page_title("Absences de Jane FAROU (PMI)")
+      expect_page_title("absences de Jane FAROU (PMI)")
       expect(page).to have_content("Jane FAROU n'a pas encore créé d'absence")
 
       click_link "Créer une absence", match: :first
 
       expect_page_title("Nouvelle absence")
-      fill_in "Description", with: "Nouvelle Absence"
+      fill_in "Description", with: "Nouvelle absence"
       fill_in "absence[first_day]", with: Time.zone.today
       fill_in "absence[end_day]", with: Time.zone.today + 2
       click_button "Enregistrer"
 
-      expect_page_title("Absences de Jane FAROU (PMI)")
-      click_link "Nouvelle Absence"
+      expect_page_title("absences de Jane FAROU (PMI)")
+      click_link "Nouvelle absence"
     end
   end
 

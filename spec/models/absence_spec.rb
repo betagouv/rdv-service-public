@@ -5,7 +5,7 @@ describe Absence, type: :model do
 
   describe "title mandatory" do
     it "valide wit a title" do
-      expect(build(:absence, title: "Absence")).to be_valid
+      expect(build(:absence, title: "Indisponibilité")).to be_valid
     end
 
     it "invalide without title" do

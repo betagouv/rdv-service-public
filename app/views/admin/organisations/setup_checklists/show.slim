@@ -50,13 +50,13 @@
               - agent_complete = agent.complete? ? "" : " (en attente de validation)"
               span>= link_to "Ajouter un RDV dans l'agenda de #{agent.full_name}#{agent_complete}", admin_organisation_agent_agenda_path(@organisation, agent.id)
 
-        h5 Créneaux d'absences
+        h5 Créneaux d'indisponibilités
         .mb-2
-          i Les créneaux d'absences permettent d'éviter la prise de RDV sur une plage d'ouverture
+          i Les créneaux d'indisponibilités permettent d'éviter la prise de RDV sur une plage d'ouverture
         ul.mb-4.list-unstyled
           li.mb-2
             span>= setup_checklist_item(current_agent.absences.any?)
-            span>= link_to "Ajouter un créneau d'absence dans votre agenda", admin_organisation_agent_absences_path(@organisation, current_agent.id)
+            span>= link_to "Ajouter un créneau d'indisponibilité dans votre agenda", admin_organisation_agent_absences_path(@organisation, current_agent.id)
           - @other_agents.includes(:absences).each do |agent|
             li.mb-2
               span>= setup_checklist_item(agent.absences.any?)

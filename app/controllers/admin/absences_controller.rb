@@ -46,7 +46,7 @@ class Admin::AbsencesController < AgentAuthController
     authorize(@absence)
     if @absence.save
       Agents::AbsenceMailer.absence_created(@absence.payload(:create)).deliver_later
-      flash[:notice] = "L'absence a été créée."
+      flash[:notice] = "L'indisponibilité a été créée."
       redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
     else
       render :edit
@@ -57,7 +57,7 @@ class Admin::AbsencesController < AgentAuthController
     authorize(@absence)
     if @absence.update(absence_params)
       Agents::AbsenceMailer.absence_updated(@absence.payload(:update)).deliver_later
-      flash[:notice] = "L'absence a été modifiée."
+      flash[:notice] = "L'indisponibilité a été modifiée."
       redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
     else
       render :edit
@@ -68,7 +68,7 @@ class Admin::AbsencesController < AgentAuthController
     authorize(@absence)
     if @absence.destroy
       Agents::AbsenceMailer.absence_destroyed(@absence.payload(:destroy)).deliver_later
-      flash[:notice] = "L'absence a été supprimée."
+      flash[:notice] = "L'indisponibilité a été supprimée."
       redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
     else
       render :edit
