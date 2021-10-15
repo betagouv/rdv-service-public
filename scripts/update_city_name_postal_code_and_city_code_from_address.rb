@@ -5,9 +5,14 @@ require "csv"
 API_ENDPOINT = "https://api-adresse.data.gouv.fr/search/csv/"
 
 def update_user_city_name_from(geocoded_addresses)
+  puts geocoded_addresses.inspect
   puts "#{geocoded_addresses.length} ville(s) d'usager à mettre à jour"
-  geocoded_addresses.each do |id, city_data|
-    User.find(id).update_columns(city_data)
+  geocoded_addresses.each do |city_data|
+    User.find(city_data["id"]).update_columns(
+      post_code: city_data["result_postcode"],
+      city_code: city_data["result_citycode"],
+      city_name: city_data["result_cityname"]
+    )
   end
 end
 
@@ -15,17 +20,12 @@ def geocode(file)
   response = Typhoeus.post(
     API_ENDPOINT,
     method: :post,
-    body: { data: File.new(file) }
-  )
-  geocoded_addresses = {}
-  CSV.parse(response.body, headers: true).map do |line|
-    geocoded_addresses[line[0]] = {
-      city_name: line[12],
-      post_code: line[11],
-      city_code: line[14]
+    body: {
+      data: File.new(file),
+      result_columns: "id,result_city,result_postcode,result_citycode"
     }
-  end
-  geocoded_addresses
+  )
+  CSV.parse(response.body, headers: true).map(&:to_h)
 end
 
 def addresses_in_csv
