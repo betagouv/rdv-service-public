@@ -13,7 +13,7 @@
         - if @absence.agent == current_agent
           | Vos indisponibilités
         - else
-          | indisponibilités de #{@absence.agent.full_name}
+          | Indisponibilités de #{@absence.agent.full_name}
     li.breadcrumb-item.active
       = truncate(@absence.title, length: 20)
 
