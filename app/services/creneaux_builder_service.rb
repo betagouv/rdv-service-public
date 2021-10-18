@@ -40,14 +40,15 @@ class CreneauxBuilderService < BaseService
   def motifs_for_plage_ouverture(plage_ouverture)
     # NOTE: Because things are clumsy, we’re searching by motif_name even though we’re being passed an explicit motif
     # I think This means if we have several motifs of the same name, but location_type is different, both motifs are returned.
-    motifs = plage_ouverture.motifs.where(name: @motif_name).active
-    motifs = motifs.where(location_type: @motif_location_type) if @motif_location_type.present?
-    @for_agents ? motifs : motifs.reservable_online
+    Rails.cache.fetch(["motif-for-po", @motif_name, @motif_location_type, @for_agents, plage_ouverture]) do
+      motifs = plage_ouverture.motifs.where(name: @motif_name).active.distinct
+      motifs = motifs.where(location_type: @motif_location_type) if @motif_location_type.present?
+      @for_agents ? motifs : motifs.reservable_online
+    end
   end
 
   def creneaux_for_plage_ouverture(plage_ouverture)
-    motifs_for_plage_ouverture(plage_ouverture)
-      .flat_map { creneaux_for_plage_ouverture_and_motif(plage_ouverture, _1) } # loops on motifs
+    motifs_for_plage_ouverture(plage_ouverture).flat_map { creneaux_for_plage_ouverture_and_motif(plage_ouverture, _1) } # loops on motifs
   end
 
   def creneaux_for_plage_ouverture_and_motif(plage_ouverture, motif)
@@ -57,9 +58,15 @@ class CreneauxBuilderService < BaseService
     possible_overlaps = agent_rdvs_in_range + agent_absences_range
 
     # NOTE: LOOP 3/4 Let’s loop over the PO occurrences (limited to the range)
-    plage_ouverture.occurrences_for(@inclusive_date_range).flat_map do |occurrence|
+    occurrences(plage_ouverture, @inclusive_date_range).flat_map do |occurrence|
       CreneauxBuilderForDateService
         .perform_with(plage_ouverture, motif, occurrence.starts_at.to_date, @lieu, possible_overlaps, **@options)
+    end
+  end
+
+  def occurrences(plage_ouverture, date_range)
+    Rails.cache.fetch(["occurrence_for", plage_ouverture, date_range]) do
+      plage_ouverture.occurrences_for(date_range)
     end
   end
 end
