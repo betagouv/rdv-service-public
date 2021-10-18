@@ -37,4 +37,4 @@
             .col.text-right
               = f.button :submit
 
-= render "admin/versions/resource_versions_row", resource: @agent_role.agent
+= render "admin/versions/resource_versions_row", resource: @agent_role.agent, attributes_allowlist: ["email", "first_name", "last_name", "starts_at", "service_id", "invitation_sent_at", "invitation_accepted_at"]
