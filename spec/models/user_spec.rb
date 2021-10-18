@@ -211,13 +211,12 @@ describe User, type: :model do
       it { is_expected.not_to include(user_jean) }
     end
 
-    context "email query", pending: true do
+    xcontext "email query" do
+      pending
       let(:query) { "patoche@duro" }
 
-      it do
-        expect(subject).to include(user_patricia)
-        expect(subject).not_to include(user_jean)
-      end
+      it { is_expected.to include(user_patricia) }
+      it { is_expected.not_to include(user_jean) }
     end
 
     context "phone number query" do
