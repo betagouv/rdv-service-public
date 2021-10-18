@@ -17,7 +17,7 @@ class Agent::UserPolicy < DefaultAgentPolicy
   end
 
   def invite?
-    create?
+    same_org?
   end
 
   def update?
