@@ -5,6 +5,5 @@
         h4= t("admin.versions.title")
       .card-body
         - attributes_allowlist = local_assigns[:attributes_allowlist]
-        = cache [resource, attributes_allowlist] do
-          - versions = PaperTrailAugmentedVersion.for_resource(resource, attributes_allowlist: attributes_allowlist])
-          = render "admin/versions/versions", versions: versions.reverse
+        - versions = PaperTrailAugmentedVersion.for_resource(resource, attributes_allowlist: attributes_allowlist])
+        = render "admin/versions/versions", versions: versions.reverse
