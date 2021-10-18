@@ -71,7 +71,7 @@ describe "Agent can CRUD absences" do
       fill_in "absence[end_day]", with: Time.zone.today + 2
       click_button "Enregistrer"
 
-      expect_page_title("indisponibilités de Jane FAROU (PMI)")
+      expect_page_title("Indisponibilités de Jane FAROU (PMI)")
       click_link "Nouvelle indisponibilité"
     end
   end
