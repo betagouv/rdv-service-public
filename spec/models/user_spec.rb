@@ -211,7 +211,7 @@ describe User, type: :model do
       it { is_expected.not_to include(user_jean) }
     end
 
-    context "email query" do
+    xcontext "email query" do
       pending
       let(:query) { "patoche@duro" }
 
