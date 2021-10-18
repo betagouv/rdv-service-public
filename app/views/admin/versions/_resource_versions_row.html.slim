@@ -1,9 +1,11 @@
-.row.justify-content-center
-  .col-md-8
-    .card
-      .card-header
-        h4= t("admin.versions.title")
-      .card-body
-        - attributes_allowlist = local_assigns[:attributes_allowlist]
-        - versions = PaperTrailAugmentedVersion.for_resource(resource, attributes_allowlist: attributes_allowlist])
-        = render "admin/versions/versions", versions: versions.reverse
+- if policy([:agent, resource]).versions?
+  .row.justify-content-center
+    .col-md-8
+      .card
+        .card-header
+          h4= t("admin.versions.title")
+        .card-body
+          - attributes_allowlist = local_assigns[:attributes_allowlist]
+          = cache [resource, attributes_allowlist] do
+            - versions = PaperTrailAugmentedVersion.for_resource(resource, attributes_allowlist: local_assigns[:attributes_allowlist])
+            = render "admin/versions/versions", versions: versions.reverse
