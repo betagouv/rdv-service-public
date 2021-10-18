@@ -30,4 +30,8 @@ module PaperTrailHelper
   def paper_trail__lieu_id(value)
     ::Lieu.find_by(id: value)&.full_name
   end
+
+  def paper_trail__service_id(value)
+    ::Service.find_by(id: value)&.name
+  end
 end

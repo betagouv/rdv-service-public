@@ -72,17 +72,4 @@
               "Voir les #{rdv_user_presenter.previous_rdvs_count} RDVs précédents…", \
               admin_organisation_rdvs_path(current_organisation, user_id: user.id, end: @rdv.starts_at)
 
-.row
-  .col-md-12
-    .card
-      .card-header
-        a.js-record-versions-toggle[
-          href="#history"
-          data-text-close="Cacher l'historique des actions ˄"
-          data-text-open="Afficher l'historique des actions ⌄"
-          data-versions-url=admin_organisation_rdv_versions_path(@rdv.organisation, @rdv, only: ["user_ids", "agent_ids", "duration_in_min", "status", "starts_at", "lieu_id", "notes", "location", "context"])
-        ]
-          | Afficher l'historique des actions ⌄
-      .js-record-versions-body#history.collapse class=(@uncollapsed_section == "history" ? "show" : "")
-        .text-center.py-4
-          .spinner.spinner-border
+= render "admin/versions/resource_versions_row", resource: @rdv, attributes_allowlist: ["user_ids", "agent_ids", "status", "starts_at", "ends_at", "lieu_id", "notes", "location", "context"]

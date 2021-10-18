@@ -11,6 +11,7 @@ class Agent::WebhookEndpointPolicy < ApplicationPolicy
   alias update? agent_territory_admin?
   alias edit? agent_territory_admin?
   alias new? agent_territory_admin?
+  alias versions? agent_territory_admin?
 
   class Scope < Scope
     include CurrentAgentInPolicyConcern

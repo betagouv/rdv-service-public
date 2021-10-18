@@ -138,9 +138,7 @@ Rails.application.routes.draw do
         resources :agent_searches, only: :index, module: "creneaux"
         resources :lieux, except: :show
         resources :motifs
-        resources :rdvs, except: [:new] do
-          resources :versions, only: [:index]
-        end
+        resources :rdvs, except: [:new]
         scope module: "organisations" do
           resource :setup_checklist, only: [:show]
           resources :stats, only: :index do

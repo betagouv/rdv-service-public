@@ -11,7 +11,7 @@
       = @agent_role.agent.full_name
 
 .row.justify-content-center
-  .col-md-6
+  .col-md-8
     .card
       .card-body
         = simple_form_for [:admin, current_organisation, @agent_role] do |f|
@@ -36,3 +36,5 @@
                   class: "btn btn-outline-danger"
             .col.text-right
               = f.button :submit
+
+= render "admin/versions/resource_versions_row", resource: @agent_role.agent, attributes_allowlist: ["email", "first_name", "last_name", "starts_at", "service_id", "invitation_sent_at", "invitation_accepted_at"]

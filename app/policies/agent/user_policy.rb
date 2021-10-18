@@ -28,6 +28,10 @@ class Agent::UserPolicy < DefaultAgentPolicy
     same_org?
   end
 
+  def versions?
+    admin_and_same_org?
+  end
+
   class Scope < Scope
     def resolve
       scope

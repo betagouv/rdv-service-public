@@ -25,6 +25,7 @@ class PaperTrailAugmentedVersion
     @changes ||= begin
       c = @version.changeset.except("updated_at").to_h.merge(virtual_changes)
       c = c.slice(*@attributes_allowlist) unless @attributes_allowlist.nil?
+      c.delete("id") # never display the “id” in versions.
       c
     end
   end

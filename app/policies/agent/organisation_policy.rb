@@ -25,6 +25,10 @@ class Agent::OrganisationPolicy < DefaultAgentPolicy
     admin?
   end
 
+  def versions?
+    admin?
+  end
+
   class Scope < Scope
     def resolve
       scope.merge(current_agent.organisations)
