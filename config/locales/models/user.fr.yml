@@ -15,25 +15,25 @@ fr:
         password: Mot de passe
         current_password: Mot de passe actuel
         caisse_affiliation : Caisse d'affiliation
-        caisse_affiliations:
-          aucune: Aucune
-          caf: CAF
-          msa: MSA
         affiliation_number: Numéro d'allocataire
         family_situation: Situation familiale
         number_of_children: Nombre d'enfants
-        family_situations:
-          single: Célibataire
-          in_a_relationship: En couple
-          divorced: Divorcé
         responsability_type: Type d'usager
-        responsability_types:
-          responsible: "Responsable"
-          relative: "Proche"
         notify_by_sms: "Accepte les notifications par SMS"
         notify_by_email: "Accepte les notifications par email"
         created_through: "Origine du compte"
         invitation_token: "Code d’invitation"
+      user/caisse_affiliations:
+        aucune: Aucune
+        caf: CAF
+        msa: MSA
+      user/family_situations:
+        single: Célibataire
+        in_a_relationship: En couple
+        divorced: Divorcé
+      user/responsability_types:
+        responsible: "Responsable"
+        relative: "Proche"
     errors:
       models:
         user:

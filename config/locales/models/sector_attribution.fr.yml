@@ -7,6 +7,6 @@ fr:
         level: Niveau
         organisation_id: Organisation
         sector_id: Secteur
-        levels:
-          organisation: Organisation entière
-          agent: Agent désigné
+      sector_attribution/levels:
+        organisation: Organisation entière
+        agent: Agent désigné

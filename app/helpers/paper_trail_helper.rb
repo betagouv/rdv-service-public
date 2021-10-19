@@ -20,7 +20,7 @@ module PaperTrailHelper
   end
 
   def paper_trail__status(value)
-    ::Rdv.human_enum_name("status", value)
+    ::Rdv.human_attribute_value(:status, value)
   end
 
   def paper_trail__agent_ids(value)

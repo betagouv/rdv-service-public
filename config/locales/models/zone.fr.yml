@@ -11,6 +11,6 @@ fr:
         street_name: Nom de la rue
         street_ban_id: Code rue
         level: Étendue
-        levels:
-          city: Commune
-          street: Rue
+      zone/levels:
+        city: Commune
+        street: Rue

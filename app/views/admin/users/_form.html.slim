@@ -21,7 +21,7 @@
         as: :radio_buttons, \
         collection: %i[responsible relative], \
         checked: @role, \
-        label_method: -> { I18n.t("activerecord.attributes.user.responsability_types.#{_1}") }, \
+        label_method: -> { User.human_attribute_value(:responsability_type, _1) }, \
         disabled: user.persisted?, \
         wrapper: :vertical_collection_inline, \
         input_html: { \

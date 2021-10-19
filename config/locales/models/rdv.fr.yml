@@ -25,37 +25,37 @@ fr:
         ends_at: Termine à
         status: Statut
         context: Contexte
-        statuses:
-          unknown: État indéterminé
-          waiting: En salle d’attente
-          seen: Rendez-vous honoré
-          excused: Annulé (excusé)
-          revoked: Annulé (par le service)
-          noshow: Absence non excusée
-          unknown_past: À renseigner
-          unknown_today: Rendez-vous aujourd’hui
-          unknown_future: Rendez-vous à venir
-        statuses/action:
-          unknown: Réinitialiser
-          waiting: En salle d’attente
-          seen: Rendez-vous honoré
-          excused: Annulé à l’initiative de l’usager
-          revoked: Annulé à l’initiative du service
-          noshow: Absence non excusée
-        statuses/explanation:
-          unknown: Pour corriger l’état du rendez-vous.
-          waiting: L’usager est présent.
-          seen: L’usager s’est présenté à son rendez-vous et a été reçu.
-          excused: L’usager a pu prévenir de son absence. Une notification de confirmation lui sera envoyée.
-          revoked: Le rendez-vous a du être annulé par le service, par exemple pour une raison administrative. Une notification sera envoyée à l’usager.
-          noshow: L’usager ne s’est pas présenté a son rendez-vous.
-        statuses/confirm:
-          unknown: Réinitialiser l’état du rendez-vous ?
-          waiting: ""
-          seen: ""
-          excused: Annuler le rendez-vous ? Si le ou les usagers ont configuré leur email ou numéro de téléphone, une confirmation leur sera envoyée.
-          revoked: Annuler le rendez-vous ? Si le ou les usagers ont configuré leur email ou numéro de téléphone, une notification leur sera envoyée.
-          noshow: ""
+      rdv/statuses:
+        unknown: État indéterminé
+        waiting: En salle d’attente
+        seen: Rendez-vous honoré
+        excused: Annulé (excusé)
+        revoked: Annulé (par le service)
+        noshow: Absence non excusée
+        unknown_past: À renseigner
+        unknown_today: Rendez-vous aujourd’hui
+        unknown_future: Rendez-vous à venir
+      rdv/statuses/action:
+        unknown: Réinitialiser
+        waiting: En salle d’attente
+        seen: Rendez-vous honoré
+        excused: Annulé à l’initiative de l’usager
+        revoked: Annulé à l’initiative du service
+        noshow: Absence non excusée
+      rdv/statuses/explanation:
+        unknown: Pour corriger l’état du rendez-vous.
+        waiting: L’usager est présent.
+        seen: L’usager s’est présenté à son rendez-vous et a été reçu.
+        excused: L’usager a pu prévenir de son absence. Une notification de confirmation lui sera envoyée.
+        revoked: Le rendez-vous a du être annulé par le service, par exemple pour une raison administrative. Une notification sera envoyée à l’usager.
+        noshow: L’usager ne s’est pas présenté a son rendez-vous.
+      rdv/statuses/confirm:
+        unknown: Réinitialiser l’état du rendez-vous ?
+        waiting: ""
+        seen: ""
+        excused: Annuler le rendez-vous ? Si le ou les usagers ont configuré leur email ou numéro de téléphone, une confirmation leur sera envoyée.
+        revoked: Annuler le rendez-vous ? Si le ou les usagers ont configuré leur email ou numéro de téléphone, une notification leur sera envoyée.
+        noshow: ""
   activemodel:
     warnings:
       models:

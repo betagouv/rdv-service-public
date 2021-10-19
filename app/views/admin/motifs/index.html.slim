@@ -37,8 +37,8 @@
             div
               = t("activerecord.attributes.motif.location_type")
             div
-              = select_tag("location_type_filter", options_for_select(Motif.location_types.map{|l| [Motif.human_enum_name(:location_type, l[0]), l[1]] }, params[:location_type_filter]), include_blank: "Tous", class: "js-motif-filters select2-input")
           th= t("activerecord.attributes.motif.default_duration")
+              = select_tag("location_type_filter", options_for_select(Motif.location_types.map{|l| [Motif.human_attribute_value(:location_type, l[0]), l[1]] }, params[:location_type_filter]), include_blank: "Tous", class: "js-motif-filters select2-input")
           - if current_agent_can?(:edit, Motif) || current_agent_can?(:destroy, Motif)
             th Actions
       tbody

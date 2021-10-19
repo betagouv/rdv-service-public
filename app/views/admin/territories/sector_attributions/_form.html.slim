@@ -7,7 +7,7 @@ do |f|
   = f.input_field :level, \
     label: false, \
     collection: SectorAttribution::LEVELS, \
-    label_method: -> { "&nbsp;&nbsp;".html_safe + SectorAttribution.human_enum_name(:level, _1) }, \
+    label_method: -> { "&nbsp;&nbsp;".html_safe + SectorAttribution.human_attribute_value(:level, _1) }, \
     as: :radio_buttons, \
     wrapper: :vertical_collection_inline
   .d-flex.align-items-center.mb-3.mt-1.text-muted

@@ -20,8 +20,8 @@
       - %i[public_office phone home].each do |value|
         = label_tag do
           = f.radio_button(:location_type, value)
-          span.ml-1= Motif.human_enum_name(:location_type, value)
-          p.text-muted.font-14= Motif.human_enum_name(:location_type_hint, value)
+          span.ml-1= Motif.human_attribute_value(:location_type, value)
+          p.text-muted.font-14= Motif.human_attribute_value(:location_type, value, context: :hint)
 
   .card
     .card-body
@@ -53,16 +53,16 @@
           i.fa.fa-external-link-alt>
       .mb-2= label_tag do
         = f.radio_button(:sectorisation_level, Motif::SECTORISATION_LEVEL_DEPARTEMENT)
-        span.ml-1= Motif.human_enum_name(:sectorisation_level_hint, Motif::SECTORISATION_LEVEL_DEPARTEMENT)
+        span.ml-1= Motif.human_attribute_value(:sectorisation_level, Motif::SECTORISATION_LEVEL_DEPARTEMENT, context: :hint)
       = label_tag do
         = f.radio_button(:sectorisation_level, Motif::SECTORISATION_LEVEL_ORGANISATION)
-        span.ml-1= Motif.human_enum_name(:sectorisation_level_hint, Motif::SECTORISATION_LEVEL_ORGANISATION)
+        span.ml-1= Motif.human_attribute_value(:sectorisation_level, Motif::SECTORISATION_LEVEL_ORGANISATION, context: :hint)
         .text-muted.font-14.my-1.ml-3
           - sectors_attributed_to_orga = Sector.attributed_to_organisation(current_organisation)
           = t("motifs.form.sectorisation_level.sectors_attributed_to_orga", count: sectors_attributed_to_orga.count, sectors: sectors_attributed_to_orga.map(&:name).to_sentence.truncate(100), organisation: current_organisation.name)
       = label_tag do
         = f.radio_button(:sectorisation_level, Motif::SECTORISATION_LEVEL_AGENT)
-        span.ml-1= Motif.human_enum_name(:sectorisation_level_hint, Motif::SECTORISATION_LEVEL_AGENT)
+        span.ml-1= Motif.human_attribute_value(:sectorisation_level, Motif::SECTORISATION_LEVEL_AGENT, context: :hint)
         - if motif.service.present?
           - attributions_group = SectorAttribution.level_agent_grouped_by_service(current_organisation).fetch(motif.service_id, {agents_count: 0, attributions: []})
           .text-muted.font-14.my-1.ml-3
@@ -82,8 +82,8 @@
       - %i[visible_and_notified visible_and_not_notified invisible].each do |value|
         = label_tag do
           = f.radio_button(:visibility_type, value)
-          span.ml-1= Motif.human_enum_name(:visibility_type, value)
-          p.text-muted.font-14= Motif.human_enum_name(:visibility_type_hint, value)
+          span.ml-1= Motif.human_attribute_value(:visibility_type, value)
+          p.text-muted.font-14= Motif.human_attribute_value(:visibility_type, value, context: :hint)
 
   .card
     .card-body

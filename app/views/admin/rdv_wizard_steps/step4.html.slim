@@ -13,7 +13,7 @@ do
 
       div.mb-3
         span> Motif
-        = Motif.human_enum_name(:visibility_type, @rdv.motif.visibility_type)
+        = @rdv.motif.human_attribute_value(:visibility_type)
 
       - if @rdv.motif.visible_and_notified?
         - @rdv.users.to_a.select(&:relative?).each do |user|
