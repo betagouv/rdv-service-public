@@ -1,12 +1,20 @@
-tr
-  td= l(version.created_at, format: :dense)
-  td= version.whodunnit
-  td
-    ul
-      - version.changes.each do |property,change|
-        li
-          = "#{version.version.item.class.human_attribute_name(property)} : "
-          b= paper_trail_change_value(property, change.last)
-          - if change.first.present?
-            = t(".changed_from")
-            span.strikethrough= paper_trail_change_value(property, change.first)
+/ We’re spanning multiple table rows, one for each attribute.
+/ The first table row has the change date and author spanning over the following rows.
+- changes = version.changes
+- length = version.changes.length
+- if length > 0
+  tr.border-top
+    th{rowspan: =length }= l(version.created_at, format: :dense)
+    th{rowspan: =length }= version.whodunnit
+    - property, change = changes.shift
+    td= version.version.item.class.human_attribute_name(property)
+    td= paper_trail_change_value(property, change.first)
+    td= paper_trail_change_value(property, change.last)
+
+  - changes.to_h.each do |attribute,change|
+    tr
+      td
+      td
+      td= version.version.item.class.human_attribute_name(attribute)
+      td= paper_trail_change_value(attribute, change.first)
+      td= paper_trail_change_value(attribute, change.last)

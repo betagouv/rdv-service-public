@@ -1,10 +1,10 @@
 fr:
   admin:
     versions:
-      title: Historique
+      title: Historique des changements
       versions:
         date: Date
         author: Auteur
-        changes: Changements
-      version:
-        changed_from: " au lieu de "
+        attribute: Attribut
+        before: Avant
+        after: Après

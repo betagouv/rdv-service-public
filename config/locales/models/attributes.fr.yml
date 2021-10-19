@@ -1,0 +1,10 @@
+fr:
+  attributes:
+    invitation_token: "Code d’invitation"
+    created_at: Création
+    updated_at: Modification
+    invitation_sent_at: Invitation envoyée
+    invitation_accepted_at: Invitation acceptée
+    confirmed_at: Confirmation
+    city_name: Nom de la commune
+    city_code: Code commune INSEE
