@@ -16,7 +16,7 @@
 
   .card
     .card-body
-      h5.card-title= t("activerecord.attributes.motif.location_type")
+      h5.card-title= Motif.human_attribute_name("location_type")
       - %i[public_office phone home].each do |value|
         = label_tag do
           = f.radio_button(:location_type, value)
@@ -25,19 +25,19 @@
 
   .card
     .card-body
-      h5.card-title= t("activerecord.attributes.motif.follow_up_short")
+      h5.card-title= Motif.human_attribute_name("follow_up_short")
       = f.input :follow_up
 
   .card
     .card-body
-      h5.card-title= t("activerecord.attributes.motif.for_secretariat_short")
-      p.text-muted.font-14= t("activerecord.attributes.motif.for_secretariat_hint")
-      = f.input :for_secretariat, label: t("activerecord.attributes.motif.for_secretariat_label")
+      h5.card-title= Motif.human_attribute_name("for_secretariat_short")
+      p.text-muted.font-14= Motif.human_attribute_name("for_secretariat_hint")
+      = f.input :for_secretariat, label: Motif.human_attribute_name("for_secretariat_label")
 
   .card
     .card-body
-      h5.card-title= t("activerecord.attributes.motif.reservable_online_title")
-      p.text-muted.font-14= t("activerecord.attributes.motif.reservable_online_hint")
+      h5.card-title= Motif.human_attribute_name("reservable_online_title")
+      p.text-muted.font-14= Motif.human_attribute_name("reservable_online_hint")
       = f.input :reservable_online
       .form-row
         .col-md-4= f.input :min_booking_delay, collection: min_max_delay_options
@@ -45,9 +45,9 @@
 
   .card.js-sectorisation-card
     .card-body
-      h5.mb-2= t("activerecord.attributes.motif.sectorisation_level_title")
+      h5.mb-2= Motif.human_attribute_name("sectorisation_level_title")
       .text-muted.mb-3
-        span>= t("activerecord.attributes.motif.sectorisation_level_hint")
+        span>= Motif.human_attribute_name("sectorisation_level_hint")
         = link_to "https://doc.rdv-solidarites.fr/sectorisation-geographique" do
           span> Documentation sur la sectorisation
           i.fa.fa-external-link-alt>
@@ -78,7 +78,7 @@
 
   .card
     .card-body
-      h5.card-title= t("activerecord.attributes.motif.visibility_type")
+      h5.card-title= Motif.human_attribute_name("visibility_type")
       - %i[visible_and_notified visible_and_not_notified invisible].each do |value|
         = label_tag do
           = f.radio_button(:visibility_type, value)
@@ -94,8 +94,8 @@
 
   .card
     .card-body
-      h5.card-title= t("activerecord.attributes.motif.custom_cancel_warning_message")
-      p.text-muted.font-14= t("activerecord.attributes.motif.custom_cancel_warning_message_hint")
+      h5.card-title= Motif.human_attribute_name("custom_cancel_warning_message")
+      p.text-muted.font-14= Motif.human_attribute_name("custom_cancel_warning_message_hint")
       = f.input :custom_cancel_warning_message, input_html: {rows: 6}, label: false
 
   .row.mb-5

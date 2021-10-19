@@ -54,7 +54,7 @@ ruby:
               ), \
           data: { modal: true }
 
-    .mt-3= f.input :context, as: :text, label: t("activerecord.attributes.rdv.context"), input_html: { rows: 4 }
+    .mt-3= f.input :context, as: :text, label: Rdv.human_attribute_name(:context), input_html: { rows: 4 }
 
     = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f
     hr.mb-0

@@ -16,10 +16,10 @@
     table.table
       thead
         tr
-          th Nom
-          th Email
-          th Service
-          th= t("activerecord.attributes.agent_role.level")
+          th= Agent.human_attribute_name(:name)
+          th= Agent.human_attribute_name(:email)
+          th= Agent.human_attribute_name(:service)
+          th= AgentRole.human_attribute_name(:level)
           th Actions
       tbody
         = render partial: "agent", collection: @complete_agents

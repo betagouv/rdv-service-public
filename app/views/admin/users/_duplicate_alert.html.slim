@@ -1,5 +1,5 @@
 ruby:
-  existing_attributes = attributes.map { t("activerecord.attributes.user.#{_1}") }.map(&:downcase).join(", ")
+  existing_attributes = attributes.map { User.human_attribute_name(_1) }.map(&:downcase).join(", ")
   return_location ||= admin_organisation_user_path(current_organisation, user)
   from_modal ||= false
 

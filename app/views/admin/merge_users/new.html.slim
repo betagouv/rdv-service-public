@@ -28,9 +28,9 @@
       - @merge_users_form.available_attributes.each do |attribute|
         tr class=@merge_users_form.attribute_comparison(attribute)
           - if %i[logement notes].include?(attribute)
-            td= I18n.t("activerecord.attributes.user_profile.#{attribute}")
+            td= UserProfile.human_attribute_name(attribute)
           - else
-            td= I18n.t("activerecord.attributes.user.#{attribute}")
+            td= User.human_attribute_name(attribute)
 
           td
             - if @merge_users_form.user1
