@@ -39,6 +39,28 @@ module HumanAttributeValue
       human_attribute_name("#{enum_i18n_scope}.#{value}", options)
     end
 
+    # Returns a hash of the enum values => localized text
+    # @options:
+    #  - raw_values: use the database integer values rather than the enum constants
+    #
+    # @example:
+    # > Rdv.human_attribute_values(:status)
+    # => { "État indéterminé" => "unknown", "En salle d’attente" => "waiting", "Rendez-vous honoré" => "seen" ... }
+    #
+    # @example:
+    # > Rdv.human_attribute_values(:status, context: :action)
+    # => { "unknown"=>"Pour corriger l’état du rendez-vous", "waiting"=>"L’usager est présent", "seen"=>"L’usager s’est présenté à son rendez-vous et a été reçu." ... }
+    def human_attribute_values(enum_name, options = {})
+      mapping = send(enum_name.to_s.pluralize)
+      enum_values = if options.delete(:raw_values)
+                      mapping.values
+                    else
+                      mapping.keys
+                    end
+      enum_values.index_by { |value| human_attribute_value(enum_name, value, options.dup) }
+    end
+  end
+
   # Instance method
   # @example:
   # > Rdv.last.human_attribute_value(:status)

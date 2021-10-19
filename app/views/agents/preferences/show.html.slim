@@ -3,7 +3,7 @@
 = simple_form_for(@agent, url: agents_preferences_path) do |f|
   = render "devise/shared/error_messages", resource: @agent
   h5= t(".help_1")
-  = f.collection_radio_buttons :rdv_notifications_level, Agent.human_enum_collection(:rdv_notifications_level), :last, :first do |b|
+  = f.collection_radio_buttons :rdv_notifications_level, Agent.human_attribute_values(:rdv_notifications_level), :last, :first do |b|
     .form-check
       = b.radio_button class: "form-check-input"
       = b.label class: "form-check-label"
