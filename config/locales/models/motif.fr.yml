@@ -6,7 +6,6 @@ fr:
       motif:
         organisation: Organisation
         service: Service
-        name: Nom
         color: Couleur
         reservable_online_title: Prise de RDV en ligne par les usagers
         reservable_online: Réservable en ligne

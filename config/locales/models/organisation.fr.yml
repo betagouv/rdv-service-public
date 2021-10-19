@@ -4,7 +4,6 @@ fr:
       organisation: Organisation
     attributes:
       organisation:
-        name: Nom
         departement: Département
         phone_number: Téléphone
         email: Email

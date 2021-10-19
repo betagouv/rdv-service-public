@@ -4,16 +4,7 @@ fr:
       user: Usager
     attributes:
       user:
-        email: Email
-        first_name: Prénom
-        last_name: Nom d'usage
-        birth_name: Nom de naissance
-        birth_date: Date de naissance
-        phone_number: Numéro de téléphone
-        address: Adresse
         organisation: Organisation
-        password: Mot de passe
-        current_password: Mot de passe actuel
         caisse_affiliation : Caisse d'affiliation
         affiliation_number: Numéro d'allocataire
         family_situation: Situation familiale
@@ -22,7 +13,6 @@ fr:
         notify_by_sms: "Accepte les notifications par SMS"
         notify_by_email: "Accepte les notifications par email"
         created_through: "Origine du compte"
-        invitation_token: "Code d’invitation"
       user/caisse_affiliations:
         aucune: Aucune
         caf: CAF

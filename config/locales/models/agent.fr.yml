@@ -4,13 +4,6 @@ fr:
       agent: Agent
     attributes:
       agent:
-        email: Email
-        password: Mot de passe
-        current_password: Mot de passe actuel
-        first_name: Prénom
-        invitation_sent_at: Invitation envoyée
-        invitation_accepted_at: Invitation acceptée
-        last_name: Nom
         role: Rôle
         rdvs: Rendez-vous
         service: Service

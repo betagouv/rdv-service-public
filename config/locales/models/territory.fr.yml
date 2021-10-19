@@ -5,11 +5,9 @@ fr:
     attributes:
       territory:
         base: "" # weird hack for nested base error
-        name: Nom
         departement_number: Département
-        phone_number: Téléphone
-        sms_configuration: "Clef d'API / Mot de passe"
-        sms_provider: "Fournisseur pour l'envoie de SMS"
+        sms_configuration: "Clef d’API / Mot de passe"
+        sms_provider: "Fournisseur pour l’envoi de SMS"
     errors:
       models:
         territory:
