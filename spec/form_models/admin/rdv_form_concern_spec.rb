@@ -35,8 +35,7 @@ describe Admin::RdvFormConcern, type: :form do
       let(:rdv) { build(:rdv) }
 
       before do
-        allow(rdv).to receive(:valid?).and_return(false)
-        allow(rdv).to receive(:errors).and_return([[:base, "not cool"]])
+        allow(rdv).to receive(:validate) { rdv.errors.add(:base, "not cool") }
       end
 
       it "is not valid" do

@@ -15,6 +15,8 @@ module Admin::RdvWizardFormConcern
     delegate :duration_in_min, to: :rdv
     delegate :motif, :organisation, :agents, :users, to: :rdv
 
+    delegate :errors, to: :rdv
+
     def initialize(agent_author, organisation, attributes)
       rdv_attributes = attributes.to_h.symbolize_keys.except(:service_id)
       rdv_defaults = {

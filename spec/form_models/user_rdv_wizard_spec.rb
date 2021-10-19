@@ -78,7 +78,7 @@ describe UserRdvWizard do
       }
       rdv_wizard = UserRdvWizard::Step1.new(user, attributes)
       expect(rdv_wizard.save).to be false
-      expect(rdv_wizard.errors.full_messages.join(", ")).to eq("Aucun usager n'a de numéro de téléphone renseigné alors que le rendez-vous est téléphonique")
+      expect(rdv_wizard.errors.full_messages.join(", ")).to eq("Aucun usager n’a de numéro de téléphone renseigné alors que le rendez-vous est téléphonique.")
     end
   end
 end

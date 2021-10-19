@@ -11,6 +11,7 @@ module UserRdvWizard
     attr_accessor :rdv
 
     delegate :motif, :starts_at, :users, :service, to: :rdv
+    delegate :errors, to: :rdv
 
     def initialize(user, attributes)
       @user = user
@@ -61,7 +62,7 @@ module UserRdvWizard
     validate :phone_number_present_for_motif_by_phone
 
     def phone_number_present_for_motif_by_phone
-      errors.add(:base, I18n.t("activerecord.attributes.rdv.phone_number_missing")) if rdv.motif.phone? && @user_attributes[:phone_number].blank?
+      errors.add(:phone_number, :missing_for_phone_motif) if rdv.motif.phone? && @user_attributes[:phone_number].blank?
     end
 
     def initialize(user, attributes)

@@ -9,7 +9,7 @@ class Admin::RdvWizardForm::Step2
     return unless rdv.motif.phone?
 
     users_to_notify = users.map(&:user_to_notify)
-    errors.add(:base, I18n.t("activerecord.attributes.rdv.phone_number_missing")) if users_to_notify.none?{ _1.phone_number.present? }
+    errors.add(:phone_number, :missing_for_phone_motif) if users_to_notify.none?{ _1.phone_number.present? }
   end
 
   def success_path
