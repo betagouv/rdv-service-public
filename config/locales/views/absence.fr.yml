@@ -1,0 +1,10 @@
+fr:
+  admin:
+    absences:
+      index:
+        your_busy_times: Vos indisponibilités
+        busy_time_of: Indisponibilités de %{full_name}
+        create_busy_time: Créer une indisponibilité
+        create_busy_time_for: Créer une indisponibilité pour %{full_name}
+        you_not_yet_create_busy_time: Vous n'avez pas encore créé d'indisponibilité
+        dosnt_create_busy_time_yet: "%{full_name} n'a pas encore créé d'indisponibilité."
