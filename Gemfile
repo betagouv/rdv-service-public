@@ -31,6 +31,9 @@ gem "administrate", git: "https://github.com/thoughtbot/administrate.git", ref: 
 gem "administrate-field-belongs_to_search"
 gem "paper_trail"
 gem "activerecord-postgres_enum"
+gem "redis"
+gem "hiredis"
+
 
 # Devise / auth
 gem "devise"
