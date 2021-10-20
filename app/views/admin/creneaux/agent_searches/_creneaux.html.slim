@@ -22,12 +22,12 @@ div.js-creneaux-list.collapsed id="creneaux-lieu-#{lieu.id}"
               strong= l(date, format: "%A")
               br
               = l(date, format: "%d %b")
-            - creneaux_for_date = creneaux.select { |c| c.starts_at.to_date == date }.sort_by(&:starts_at)
 
             - if creneaux.empty?
               p.text-center
                 small aucune disponibilité
             - else
+              - creneaux_for_date = creneaux.select { |c| c.starts_at.to_date == date }.sort_by(&:starts_at)
               - creneaux_for_date.first(5).each do |creneau|
                 = link_to(new_admin_organisation_rdv_wizard_step_path(build_link_to_rdv_wizard_params(creneau, form)),
                   class: "creneau bg-light d-block w-100 text-center p-1 mb-1 rounded") do
