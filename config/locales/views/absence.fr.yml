@@ -8,3 +8,14 @@ fr:
         create_busy_time_for: Créer une indisponibilité pour %{full_name}
         you_not_yet_create_busy_time: Vous n'avez pas encore créé d'indisponibilité
         dosnt_create_busy_time_yet: "%{full_name} n'a pas encore créé d'indisponibilité."
+      absence:
+        confirm_delete_busy_time: Confirmez-vous la suppression de cette indisponibilité ?
+      form:
+        busy_time_example: 'Ex: Indisponibilité pour formation premiers secours'
+        confirm_delete_busy_time: Confirmez-vous la suppression de cette indisponibilité ?
+      create:
+        busy_time_created: L'indisponibilité a été créée.
+      update:
+        busy_time_updated: L'indisponibilité a été modifiée.
+      destroy:
+        busy_time_deleted: L'indisponibilité a été supprimée.
