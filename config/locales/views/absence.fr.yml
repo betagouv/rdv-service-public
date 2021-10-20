@@ -10,6 +10,16 @@ fr:
         dosnt_create_busy_time_yet: "%{full_name} n'a pas encore créé d'indisponibilité."
       absence:
         confirm_delete_busy_time: Confirmez-vous la suppression de cette indisponibilité ?
+      edit:
+        your_busy_times: Vos indisponibilités
+        busy_time_of: Indisponibilités de %{full_name}
+        update_your_busy_time: Modifier votre indisponibilité
+        update_busy_time_of: Modifier l'indisponibilité de %{full_name}
+      new:
+        your_busy_times: Vos indisponibilités
+        busy_time_of: Indisponibilités de %{full_name}
+        new_busy_time_for: Nouvelle indisponibilité pour %{full_name}
+        new_busy_time: Nouvelle indisponibilité
       form:
         busy_time_example: 'Ex: Indisponibilité pour formation premiers secours'
         confirm_delete_busy_time: Confirmez-vous la suppression de cette indisponibilité ?
