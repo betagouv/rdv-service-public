@@ -5,13 +5,19 @@ class User < ApplicationRecord
   include PgSearch::Model
   include FullNameConcern
   include AccountNormalizerConcern
-  include User::SearchableConcern
   include User::FranceconnectFrozenFieldsConcern
   include User::NotificableConcern
   include User::ImprovedUnicityErrorConcern
   include HasPhoneNumberConcern
 
   ONGOING_MARGIN = 1.hour.freeze
+
+  pg_search_scope(:search_by_text,
+                  against: "search_terms",
+                  using: { tsearch: { prefix: true, any_word: true } },
+                  ignoring: :accents)
+
+  before_save :refresh_search_terms
 
   # HACK : add *_sign_in_ip to accessor to bypass recording IPs from Trackable Devise's module
   # HACK : add sign_in_count and current_sign_in_at to accessor to bypass recording IPs from Trackable Devise's module
@@ -155,6 +161,14 @@ class User < ApplicationRecord
   # overriding Devise to allow custom invitation validity duration (PR #1484)
   def invitation_due_at
     invite_for.present? ? compute_invitation_due_at : super
+  end
+
+  def refresh_search_terms
+    self.search_terms = combined_search_terms
+  end
+
+  def combined_search_terms
+    I18n.transliterate([last_name, email, birth_name, phone_number_formatted, first_name].compact.join(" "))
   end
 
   protected

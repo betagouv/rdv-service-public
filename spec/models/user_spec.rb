@@ -198,33 +198,30 @@ describe User, type: :model do
   end
 
   describe "#search_by_text" do
-    subject { described_class.search_by_text(query) }
-
-    let!(:user_jean) { create(:user, first_name: "jean", last_name: "moustache", email: "jean@moustache.fr", phone_number: "01 30 30 04 04") }
-    let!(:user_patricia) { create(:user, first_name: "patricia", last_name: "duroy", email: "patoche@duroy.fr", phone_number: nil) }
-    let!(:user_maurice) { create(:user, first_name: "maurice", last_name: "rhey", email: "mo@mo.lo", phone_number: "0152424242") }
-
-    context "name query" do
-      let(:query) { "patricia" }
-
-      it { is_expected.to include(user_patricia) }
-      it { is_expected.not_to include(user_jean) }
+    it "returns users that match with first name" do
+      create(:user, first_name: "jean")
+      patricia = create(:user, first_name: "patricia")
+      expect(described_class.search_by_text("patricia")).to eq([patricia])
     end
 
-    xcontext "email query" do
-      pending
-      let(:query) { "patoche@duro" }
-
-      it { is_expected.to include(user_patricia) }
-      it { is_expected.not_to include(user_jean) }
+    it "returns users that match with partial email" do
+      # TODO: clarifier ce cas
+      pending "Ne passe pas, pourquoi ?"
+      create(:user, email: "jean@moustache.fr")
+      patricia = create(:user, email: "patoche@duroy.fr")
+      expect(described_class.search_by_text("patoche@dur")).to eq([patricia])
     end
 
-    context "phone number query" do
-      let(:query) { "013030" }
+    it "returns users that match with email" do
+      create(:user, email: "jean@moustache.fr")
+      patricia = create(:user, email: "patoche@duroy.fr")
+      expect(described_class.search_by_text("patoche@duroy.fr")).to eq([patricia])
+    end
 
-      it { is_expected.to include(user_jean) }
-      it { is_expected.not_to include(user_patricia) }
-      it { is_expected.not_to include(user_maurice) }
+    it "returns users that match with phone_number_formatted" do
+      jean = create(:user, phone_number: "01 30 30 04 04")
+      create(:user, phone_number: "01 31 34 34 34")
+      expect(described_class.search_by_text("+3313030")).to eq([jean])
     end
   end
 

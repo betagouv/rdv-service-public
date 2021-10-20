@@ -80,6 +80,7 @@ Rails/SkipsModelValidations:
     - 'app/models/motif.rb'
     - 'app/models/agent.rb'
     - 'scripts/update_city_name_postal_code_and_city_code_from_address.rb'
+    - 'db/migrate/20211020192102_add_search_terms_to_users_motifs_and_agents.rb'
 
 Rails/LexicallyScopedActionFilter:
   Exclude:

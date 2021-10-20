@@ -7,7 +7,15 @@ class Agent < ApplicationRecord
   include DeviseInvitable::Inviter
   include FullNameConcern
   include AccountNormalizerConcern
-  include Agent::SearchableConcern
+  include PgSearch::Model
+
+  pg_search_scope(
+    :search_by_text,
+    against: "search_terms",
+    using: { tsearch: { prefix: true, dictionary: "french" } }
+  )
+
+  before_save :refresh_search_terms
 
   devise :invitable, :database_authenticatable,
          :recoverable, :rememberable, :validatable, :confirmable, :async, validate_on_invite: true
@@ -131,9 +139,15 @@ class Agent < ApplicationRecord
     territorial_role_in(territory).present?
   end
 
-  private
-
   def territorial_role_in(territory)
     territorial_roles.find_by(territory: territory)
+  end
+
+  def refresh_search_terms
+    self.search_terms = combined_search_terms
+  end
+
+  def combined_search_terms
+    I18n.transliterate([last_name, email, first_name].compact.join(" "))
   end
 end
