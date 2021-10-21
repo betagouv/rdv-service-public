@@ -1,7 +1,6 @@
 {
   "name": "RDV-Solidarités",
   "stack": "scalingo-18",
-  "addons": ["scalingo-postgresql:postgresql-sandbox"],
   "env": {
     "HOST": {
       "description": "HOST",
