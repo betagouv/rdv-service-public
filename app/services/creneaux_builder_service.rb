@@ -65,7 +65,7 @@ class CreneauxBuilderService < BaseService
   end
 
   def occurrences(plage_ouverture, date_range)
-    Rails.cache.fetch(["occurrence_for", plage_ouverture, date_range]) do
+    Rails.cache.fetch(["occurrence_for", plage_ouverture, date_range.begin, date_range.end]) do
       plage_ouverture.occurrences_for(date_range)
     end
   end
