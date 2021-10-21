@@ -8,6 +8,7 @@ fr:
         create_busy_time_for: Créer une indisponibilité pour %{full_name}
         you_not_yet_create_busy_time: Vous n'avez pas encore créé d'indisponibilité
         dosnt_create_busy_time_yet: "%{full_name} n'a pas encore créé d'indisponibilité."
+        explaination_html: Les indisponibilités sont des exceptions aux <em>plages d'ouvertures</em>. Vous pouvez les utiliser pour les congés ou les fermetures. Les indisponibilités peuvent être récurrentes (par exemple pour les temps partiels).
       absence:
         confirm_delete_busy_time: Confirmez-vous la suppression de cette indisponibilité ?
       edit:
