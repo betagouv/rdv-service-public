@@ -5,7 +5,15 @@ fr:
         title: Notifications de RDV - %{date}
         view_on_server: Page de monitoring
   mailers:
-    hello: Bonjour,
+    common:
+      hello: Bonjour,
+    created:
+      description_html: Vous venez de créer une indisponibilité sur votre planning de RDV Solidarités. <p> Vous pouvez synchroniser cette indisponibilité sur votre calendrier en ouvrant la pièce-jointe de cet email.</p>
+    destroyed:
+      description_html: Une de vos indisponibilités a été supprimée. <p>Vous pouvez supprimer l'événement correspondant de votre logiciel de calendrier externe (Outlook, Zimbra, Thunderbird etc) en ouvrant la pièce jointe</p>
+    updated:
+      description_html: Une de vos indisponibilités a été modifiée. <p>Vous pouvez synchroniser cette indisponibilité sur votre calendrier en ouvrant la pièce-jointe de cet email.</p>
+
   agents:
     rdv_mailer:
       rdv_cancelled:
@@ -18,5 +26,5 @@ fr:
         revoked_for_motif_at_date: Votre RDV %{motif} du %{date} a été annulé pour raison administrative.
         cancelled_for_motif_at_date: Votre RDV %{motif} du %{date} a bien été annulé à votre demande.
         reschedule_by_phone: Vous pouvez reprendre un rendez-vous en appelant au %{telephone_link}.
-        reschedule_online: "Vous pouvez reprendre un rendez-vous en cliquant sur le lien ci-dessous :"
+        reschedule_online: 'Vous pouvez reprendre un rendez-vous en cliquant sur le lien ci-dessous :'
         reschedule_button: Reprendre RDV
