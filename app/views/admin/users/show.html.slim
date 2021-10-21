@@ -135,4 +135,9 @@
                 count: @rdvs.status(temporal_status).count,
                 path: admin_organisation_rdvs_path(current_organisation, status: temporal_status, user_id: @user.id, breadcrumb_page: "user")
 
-= render "admin/versions/resource_versions_row", resource: @user
+= render "admin/versions/resource_versions_row", resource: @user,
+  attributes_allowlist: ["email", "first_name", "last_name", "birth_name",
+    "created_at", "confirmed_at", "invitation_accepted_at", "invited_through", "created_through",
+    "address", "phone_number", "birth_date",
+    "caisse_affiliation", "affiliation_number", "family_situation", "number_of_children",
+    "notify_by_sms", "notify_by_email", "city_code", "post_code", "city_name"]

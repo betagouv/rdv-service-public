@@ -21,11 +21,13 @@ class PaperTrailAugmentedVersion
     @attributes_allowlist = attributes_allowlist
   end
 
+  IGNORED_ATTRIBUTES = %w[id updated_at encrypted_password].freeze
   def changes
     @changes ||= begin
-      c = @version.changeset.except("updated_at").to_h.merge(virtual_changes)
+      c = @version.changeset.except(*IGNORED_ATTRIBUTES).to_h
+      c = c.filter { |_attribute, change| change.first.present? || change.last.present? }
+      c = c.merge(virtual_changes)
       c = c.slice(*@attributes_allowlist) unless @attributes_allowlist.nil?
-      c.delete("id") # never display the “id” in versions.
       c
     end
   end

@@ -2,7 +2,7 @@
 
 module PaperTrailHelper
   def paper_trail_change_value(property_name, value)
-    return "N/A" if value.nil?
+    return "N/A" if value.blank?
     return I18n.l(value, format: :dense) if value.is_a? Time
 
     property_helper = "paper_trail__#{property_name}"
