@@ -7,14 +7,15 @@ fr:
   mailers:
     common:
       hello: Bonjour,
-    created:
-      description_html: Vous venez de créer une indisponibilité sur votre planning de RDV Solidarités. <p> Vous pouvez synchroniser cette indisponibilité sur votre calendrier en ouvrant la pièce-jointe de cet email.</p>
-    destroyed:
-      description_html: Une de vos indisponibilités a été supprimée. <p>Vous pouvez supprimer l'événement correspondant de votre logiciel de calendrier externe (Outlook, Zimbra, Thunderbird etc) en ouvrant la pièce jointe</p>
-    updated:
-      description_html: Une de vos indisponibilités a été modifiée. <p>Vous pouvez synchroniser cette indisponibilité sur votre calendrier en ouvrant la pièce-jointe de cet email.</p>
 
   agents:
+    absence_mailer:
+      absence_created:
+        description_html: <p>Vous venez de créer une indisponibilité sur votre planning de RDV Solidarités.</p><p> Vous pouvez synchroniser cette indisponibilité sur votre calendrier en ouvrant la pièce-jointe de cet email.</p>
+      absence_destroyed:
+        description_html: <p>Une de vos indisponibilités a été supprimée.</p><p>Vous pouvez supprimer l'événement correspondant de votre logiciel de calendrier externe (Outlook, Zimbra, Thunderbird etc) en ouvrant la pièce jointe</p>
+      absence_updated:
+        description_html: <p>Une de vos indisponibilités a été modifiée.</p><p>Vous pouvez synchroniser cette indisponibilité sur votre calendrier en ouvrant la pièce-jointe de cet email.</p>
     rdv_mailer:
       rdv_cancelled:
         revoked_at_date_by_agent: Un RDV qui devait avoir lieu %{date} vient d’être annulé par %{author} pour raison administrative.
