@@ -37,7 +37,7 @@
           - if current_agent == @agent
             = t(".you_not_yet_create_busy_time")
           - else
-            = t(".dosnt_create_busy_time_yet", full_name: @agent.full_name)
+            = t(". has_no_busy_time_yet", full_name: @agent.full_name)
         p = t(".explaination_html")
         span.fa-stack.fa-4x
           i.fa.fa-circle.fa-stack-2x.text-primary
