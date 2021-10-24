@@ -8,14 +8,14 @@ class AddSearchTermsToUsersMotifsAndAgents < ActiveRecord::Migration[6.0]
     add_index :users, "to_tsvector('simple'::regconfig, COALESCE(users.search_terms, ''::text))", using: :gin, name: "index_users_search_terms"
     add_index :motifs, "to_tsvector('simple'::regconfig, COALESCE(motifs.name, ''::text))", using: :gin, name: "index_motifs_name_vector"
 
-    User.in_batches(of: 300).each_with_index do |user, batch_index|
+    User.in_batches(of: 300).each_with_index do |users, batch_index|
       Rails.logger.info "update users to init search terms for batch ##{batch_index}"
-      user.map { |u| u.update_column(:search_terms, u.combined_search_terms) }
+      users.map { |user| user.update_column(:search_terms, user.combined_search_terms) }
     end
 
-    Agent.in_batches(of: 300).each_with_index do |agent, batch_index|
+    Agent.in_batches(of: 300).each_with_index do |agents, batch_index|
       Rails.logger.info "update agents to init search terms for batch ##{batch_index}"
-      agent.map { |a| a.update_column(:search_terms, a.combined_search_terms) }
+      agents.map { |agent| agent.update_column(:search_terms, agent.combined_search_terms) }
     end
   end
 end
