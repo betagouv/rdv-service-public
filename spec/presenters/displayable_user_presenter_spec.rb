@@ -3,10 +3,12 @@
 describe DisplayableUserPresenter, type: :presenter do
   describe "#birth_date" do
     it "return something" do
+      today = Time.zone.parse("20210723 11h00")
+      travel_to(today)
       organisation = build(:organisation)
-      user = build(:user, organisations: [organisation], birth_date: Date.new(1976, 10, 23))
+      user = build(:user, organisations: [organisation], birth_date: today - 44.years - 2.days)
       displayable_user = described_class.new(user, organisation)
-      expect(displayable_user.birth_date).to eq("23/10/1976 - 44 ans")
+      expect(displayable_user.birth_date).to eq("21/07/1977 - 44 ans")
     end
   end
 
