@@ -14,8 +14,7 @@ class User < ApplicationRecord
 
   pg_search_scope(:search_by_text,
                   against: "search_terms",
-                  using: { tsearch: { prefix: true, any_word: true } },
-                  ignoring: :accents)
+                  using: { tsearch: { prefix: true, any_word: true } })
 
   before_save :refresh_search_terms
 
