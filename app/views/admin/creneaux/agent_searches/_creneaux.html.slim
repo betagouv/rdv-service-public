@@ -51,8 +51,7 @@ div.js-creneaux-list.collapsed id="creneaux-lieu-#{lieu.id}"
         = link_to admin_organisation_agent_searches_path(from_date: next_availability.starts_at.to_date, **path_opts),
             remote: true,
             class: "btn btn-light js-creneaux-form",
-            data: { disable_with: "..." }
-        do
+            data: { disable_with: "..." } do
           .d-flex.align-items-center
             div
               | Prochaine disponibilité le
