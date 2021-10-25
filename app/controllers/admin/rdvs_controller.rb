@@ -14,8 +14,6 @@ class Admin::RdvsController < AgentAuthController
     )
     @rdvs = policy_scope(Rdv).merge(@form.rdvs)
     @breadcrumb_page = params[:breadcrumb_page]
-    @filters = params[:filters]
-    @title = params[:title]
     respond_to do |format|
       format.xls { send_data(RdvExporter.export(@rdvs.order(starts_at: :desc)), filename: "rdvs.xls", type: "application/xls") }
       format.html { @rdvs = @rdvs.order(starts_at: :asc).page(params[:page]) }
