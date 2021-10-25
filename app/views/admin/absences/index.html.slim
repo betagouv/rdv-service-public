@@ -3,12 +3,12 @@
 
 - content_for :title do
   - if current_agent == @agent
-    | Vos absences
+    = t(".your_busy_times")
   - else
-    | Absences de #{@agent.full_name_and_service}
+    = t(".busy_time_of", full_name: @agent.full_name_and_service)
 
 - content_for :breadcrumb do
-  = link_to "Créer une absence", new_admin_organisation_agent_absence_path(current_organisation, @agent.id), class: "btn btn-outline-white align-bottom"
+  = link_to t(".create_busy_time"), new_admin_organisation_agent_absence_path(current_organisation, @agent.id), class: "btn btn-outline-white align-bottom"
 
 .card.pb-3
   - if @display_tabs
@@ -35,16 +35,16 @@
       .col-md-6.text-center.mb-2
         p.mb-2.lead
           - if current_agent == @agent
-            | Vous n'avez pas encore créé d'absence.
+            = t(".you_not_yet_create_busy_time")
           - else
-            | #{@agent.full_name} n'a pas encore créé d'absence.
-        p Les absences sont des exceptions aux Plages d'Ouvertures. Vous pouvez les utiliser pour les congés ou les fermetures. Les Absences peuvent être récurrentes (par exemple pour les temps partiels).
+            = t(".has_no_busy_time_yet", full_name: @agent.full_name)
+        p = t(".explanation_html")
         span.fa-stack.fa-4x
           i.fa.fa-circle.fa-stack-2x.text-primary
           i.far.fa-calendar.fa-stack-1x.text-white
   .text-center.py-2
     = link_to new_admin_organisation_agent_absence_path(current_organisation, @agent.id), class: "btn btn-primary" do
       - if @agent == current_agent
-        | Créer une absence
+        = t(".create_busy_time")
       - else
-        | Créer une absence pour #{@agent.full_name}
+        = t(".create_busy_time_for", full_name: @agent.full_name)

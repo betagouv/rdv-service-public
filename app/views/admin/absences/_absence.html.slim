@@ -22,5 +22,5 @@ tr
       div.mr-3= link_to( admin_organisation_absence_path(organisation, absence),
               method: :delete,
               title: t("helpers.delete"),
-              data: { confirm: "Confirmez-vous la suppression de cette absence ?"} ) do
+              data: { confirm: t(".confirm_delete_busy_time")} ) do
         i.fa.fa-trash-alt

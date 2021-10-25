@@ -1,5 +1,5 @@
 div
-  p= t("mailers.hello")
+  p= t("mailers.common.hello")
   - motif = @rdv.motif_service_name
   - date = l(@rdv.starts_at, format: :human)
   - if @rdv.status == "revoked"

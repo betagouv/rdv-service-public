@@ -22,7 +22,7 @@ class AgentRemovalPresenter
       <<~STR
         Cet agent appartient uniquement à l'organisation #{organisation.name}. Vous vous apprêtez à retirer cet agent de cette organisation et à supprimer son compte définitivement.
 
-        Toutes ses absences et ses plages d'ouvertures seront supprimées de manière irréversible.
+        Toutes ses indisponibilités et ses plages d'ouvertures seront supprimées de manière irréversible.
 
         Suite à cette suppression vous pourrez éventuellement créer un nouveau compte pour l'agent et l'affecter à un service différent
       STR
@@ -30,7 +30,7 @@ class AgentRemovalPresenter
       <<~STR
         Êtes-vous sûr de vouloir retirer cet agent de l'organisation #{organisation.name} ?
 
-        Toutes ses absences et ses plages d'ouvertures seront supprimées de manière irréversible.
+        Toutes ses indisponibilités et ses plages d'ouvertures seront supprimées de manière irréversible.
 
         Cet agent appartenant à d'autres organisations, son compte ne sera pas supprimé. L'agent pourra toujours se connecter aux autres organisations, et vous ne pourrez pas recréer son compte pour l'affecter à un service différent.
       STR
