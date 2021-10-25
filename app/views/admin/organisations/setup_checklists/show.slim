@@ -31,7 +31,7 @@
           li.mb-2
             span>= setup_checklist_item(current_agent.plage_ouvertures.any?)
             span>= link_to "Ajouter une plage d'ouverture dans votre agenda", admin_organisation_agent_plage_ouvertures_path(@organisation, current_agent.id)
-          - @other_agents.includes(:plage_ouvertures).each do |agent|
+          - @other_agents.left_outer_joins(:plage_ouvertures).where(plage_ouvertures: {id: nil}).limit(10).each do |agent|
             li.mb-2
               span>= setup_checklist_item(agent.plage_ouvertures.any?)
               span>= link_to "Ajouter une plage d'ouverture dans l'agenda de #{agent.full_name}", admin_organisation_agent_plage_ouvertures_path(@organisation, agent.id)
@@ -44,7 +44,7 @@
           li.mb-2
             span>= setup_checklist_item(current_agent.rdvs.any?)
             span>= link_to "Ajouter un RDV dans votre agenda", admin_organisation_agent_agenda_path(@organisation, current_agent.id)
-          - @other_agents.includes(:rdvs).each do |agent|
+          - @other_agents.left_outer_joins(:rdvs).where(rdvs: {id: nil}).limit(10).each do |agent|
             li.mb-2
               span>= setup_checklist_item(agent.rdvs.any?)
               - agent_complete = agent.complete? ? "" : " (en attente de validation)"
@@ -52,12 +52,12 @@
 
         h5 = t(".busy_time")
         .mb-2
-          i t(".unavailability_slots_avoid_appointment_during_opening_period")
+          i= t(".unavailability_slots_avoid_appointment_during_opening_period")
         ul.mb-4.list-unstyled
           li.mb-2
             span>= setup_checklist_item(current_agent.absences.any?)
             span>= link_to t(".add_busy_time_in_your_agenda"), admin_organisation_agent_absences_path(@organisation, current_agent.id)
-          - @other_agents.includes(:absences).each do |agent|
+          - @other_agents.left_outer_joins(:absences).where(absences: {id:nil}).limit(10).each do |agent|
             li.mb-2
               span>= setup_checklist_item(agent.absences.any?)
               span>= link_to t(".add_busy_time_in_agenda_of", full_name: agent.full_name), admin_organisation_agent_absences_path(@organisation, agent.id)
