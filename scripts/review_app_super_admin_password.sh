@@ -5,7 +5,7 @@ if (( $# == 0 )); then
   echo "Usage: $0 <pr-number>"; exit
 fi
 
-REVIEW_APP=demo-rdv-solidarites-pr"$1"
+REVIEW_APP=recette-rdv-solidarites-pr"$1"
 REGION=osc-secnum-fr1
 PASSWORD=$(scalingo env --region $REGION --app "$REVIEW_APP" | grep ADMIN_BASIC_AUTH_PASSWORD | sed 's/.*=//')
 USERNAME=rdv-solidarites
