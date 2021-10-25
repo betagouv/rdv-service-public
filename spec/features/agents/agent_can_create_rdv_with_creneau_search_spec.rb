@@ -53,7 +53,7 @@ describe "Agent can create a Rdv with creneau search" do
     expect(page).not_to have_content(plage_ouverture3.agent.short_name)
 
     # Click to change to next week
-    first(:link, ">>").click
+    find(".fa-arrow-right").click
     expect(page).to have_content("<<", wait: 5)
 
     expect(page).to have_content(plage_ouverture.agent.short_name)
