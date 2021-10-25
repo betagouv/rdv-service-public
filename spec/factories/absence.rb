@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  sequence(:absence_title) { |n| "Absence #{n}" }
+  sequence(:absence_title) { |n| "Indisponibilité #{n}" }
 
   factory :absence do
     organisation { create(:organisation) }

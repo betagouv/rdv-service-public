@@ -1,0 +1,9 @@
+fr:
+  admin:
+    organisations:
+      setup_checklists:
+        show:
+          add_busy_time_in_agenda_of: Ajouter un créneau d'indiponibilité dans l'agenda de %{full_name}
+          busy_time: Créneaux d'indisponibilités
+          add_busy_time_in_your_agenda: Ajouter un créneau d'indisponibilité dans votre agenda
+          unavailability_slots_avoid_appointment_during_opening_period: Les créneaux d'indisponibilités permettent d'éviter la prise de RDV sur une plage d'ouverture

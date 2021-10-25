@@ -13,32 +13,32 @@ describe "Agent can CRUD absences" do
     let!(:absence) { create(:absence, agent: agent, organisation: organisation) }
 
     it "can crud a absence" do
-      click_link "Absences"
+      click_link "Indisponibilités"
 
-      expect_page_title("Vos absences")
+      expect_page_title("Vos indisponibilités")
       click_link absence.title
 
-      expect_page_title("Modifier votre absence")
-      fill_in "Description", with: "La belle absence"
+      expect_page_title("Modifier votre indisponibilité")
+      fill_in "Description", with: "La belle indisponibilité"
       click_button("Enregistrer")
 
-      expect_page_title("Vos absences")
-      click_link "La belle absence"
+      expect_page_title("Vos indisponibilités")
+      click_link "La belle indisponibilité"
 
       click_link("Supprimer")
-      expect_page_title("Vos absences")
-      expect(page).to have_content("Vous n'avez pas encore créé d'absence")
+      expect_page_title("Vos indisponibilités")
+      expect(page).to have_content("Vous n'avez pas encore créé d'indisponibilité")
 
-      click_link "Créer une absence", match: :first
+      click_link "Créer une indisponibilité", match: :first
 
-      expect_page_title("Nouvelle absence")
-      fill_in "Description", with: "Nouvelle Absence"
+      expect_page_title("Nouvelle indisponibilité")
+      fill_in "Description", with: "Nouvelle indisponibilité"
       fill_in "absence[first_day]", with: Time.zone.today
       fill_in "absence[end_day]", with: Time.zone.today + 2
       click_button "Enregistrer"
 
-      expect_page_title("Vos absences")
-      click_link "Nouvelle Absence"
+      expect_page_title("Vos indisponibilités")
+      click_link "Nouvelle indisponibilité"
     end
   end
 
@@ -49,30 +49,30 @@ describe "Agent can CRUD absences" do
 
     it "can crud a absence" do
       visit admin_organisation_agent_absences_path(organisation, other_agent.id)
-      expect_page_title("Absences de Jane FAROU (PMI)")
+      expect_page_title("Indisponibilités de Jane FAROU (PMI)")
       click_link absence.title
 
-      expect_page_title("Modifier l'absence de Jane FAROU")
-      fill_in "Description", with: "La belle absence"
+      expect_page_title("Modifier l'indisponibilité de Jane FAROU")
+      fill_in "Description", with: "La belle indisponibilité"
       click_button("Enregistrer")
 
-      expect_page_title("Absences de Jane FAROU (PMI)")
-      click_link "La belle absence"
+      expect_page_title("Indisponibilités de Jane FAROU (PMI)")
+      click_link "La belle indisponibilité"
 
       click_link("Supprimer")
-      expect_page_title("Absences de Jane FAROU (PMI)")
-      expect(page).to have_content("Jane FAROU n'a pas encore créé d'absence")
+      expect_page_title("Indisponibilités de Jane FAROU (PMI)")
+      expect(page).to have_content("Jane FAROU n'a pas encore créé d'indisponibilité")
 
-      click_link "Créer une absence", match: :first
+      click_link "Créer une indisponibilité", match: :first
 
-      expect_page_title("Nouvelle absence")
-      fill_in "Description", with: "Nouvelle Absence"
+      expect_page_title("Nouvelle indisponibilité")
+      fill_in "Description", with: "Nouvelle indisponibilité"
       fill_in "absence[first_day]", with: Time.zone.today
       fill_in "absence[end_day]", with: Time.zone.today + 2
       click_button "Enregistrer"
 
-      expect_page_title("Absences de Jane FAROU (PMI)")
-      click_link "Nouvelle Absence"
+      expect_page_title("Indisponibilités de Jane FAROU (PMI)")
+      click_link "Nouvelle indisponibilité"
     end
   end
 
@@ -81,8 +81,8 @@ describe "Agent can CRUD absences" do
     let!(:past_absence) { create(:absence, :past, agent: agent, organisation: organisation) }
 
     it do
-      click_link "Absences"
-      expect_page_title("Vos absences")
+      click_link "Indisponibilités"
+      expect_page_title("Vos indisponibilités")
 
       click_link "En cours"
       expect(page).to have_content(future_absence.title)
