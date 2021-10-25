@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_13_154729) do
+ActiveRecord::Schema.define(version: 2021_10_20_192102) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -142,6 +142,8 @@ ActiveRecord::Schema.define(version: 2021_10_13_154729) do
     t.text "tokens"
     t.boolean "allow_password_change", default: false
     t.enum "rdv_notifications_level", default: "soon", enum_name: "agents_rdv_notifications_level"
+    t.text "search_terms"
+    t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_agents_search_terms", using: :gin
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true
     t.index ["invitation_token"], name: "index_agents_on_invitation_token", unique: true
@@ -250,6 +252,7 @@ ActiveRecord::Schema.define(version: 2021_10_13_154729) do
     t.string "visibility_type", default: "visible_and_notified", null: false
     t.string "sectorisation_level", default: "departement"
     t.text "custom_cancel_warning_message"
+    t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_motifs_name_vector", using: :gin
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
     t.index ["location_type"], name: "index_motifs_on_location_type"
     t.index ["name", "organisation_id", "location_type", "service_id"], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"
@@ -453,6 +456,8 @@ ActiveRecord::Schema.define(version: 2021_10_13_154729) do
     t.string "city_name"
     t.enum "invited_through", default: "unknown", enum_name: "user_invited_through"
     t.enum "created_through", default: "unknown", enum_name: "user_created_through"
+    t.text "search_terms"
+    t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_users_search_terms", using: :gin
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"
     t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"

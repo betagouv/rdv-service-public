@@ -167,7 +167,16 @@ class Admin::UsersController < AgentAuthController
   end
 
   def search_params
-    params.require(:term) if params[:term].present?
+    return nil if params[:term].blank?
+
+    term = params.require(:term)
+    return term.sub(/^0/, "+33").gsub(/\s/, "") if contains_phone_number_pattern?(term)
+
+    term
+  end
+
+  def contains_phone_number_pattern?(string)
+    /^(\+\d{2})?[\d ]{3,20}$/.match?(string)
   end
 
   def set_user
