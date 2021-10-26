@@ -2,7 +2,7 @@
 
 describe Payloads::Rdv, type: :service do
   describe "#payload" do
-    %i[name ical_uid summary ends_at sequence description address user_email].each do |key|
+    %i[name ical_uid summary ends_at sequence description address].each do |key|
       it "return an hash with key #{key}" do
         user = build(:user)
         rdv = build(:rdv, users: [user])
@@ -75,13 +75,6 @@ describe Payloads::Rdv, type: :service do
       let(:rdv) { build(:rdv, users: [user], motif: build(:motif, name: "Consultation")) }
 
       it { expect(rdv.payload[:summary]).to eq("RDV Consultation") }
-    end
-
-    describe ":user_email" do
-      let(:user) { build(:user, email: "bob@eponge.net") }
-      let(:rdv) { build(:rdv, users: [user]) }
-
-      it { expect(rdv.payload[:user_email]).to eq("bob@eponge.net") }
     end
 
     describe ":users_full_names" do

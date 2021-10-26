@@ -8,14 +8,27 @@ module IcalHelpers
       IcalHelpers::Ics.from_payload(payload(*args)).to_ical
     end
 
+    # Specs
+    # iCalendar: https://datatracker.ietf.org/doc/html/rfc5545#section-3.6.1
+    #   * See section 3.6.1 for VEVENT
+    # iTIP: https://datatracker.ietf.org/doc/html/rfc2446#section-3.2
+    #   * See section 3.2 for the semantics of the METHOD
+    #
+    # See also mailers/concerns/ics_multipart_attached.rb
+
     def self.from_payload(payload)
       cal = Icalendar::Calendar.new
 
       cal.add_timezone Time.zone_default.tzinfo.ical_timezone payload[:starts_at]
       cal.prodid = BRAND
       cal.event { |event| populate_event(event, payload) }
-      cal.ip_method = (payload[:action] == :destroy ? "CANCEL" : "PUBLISH")
-
+      cal.ip_method = if payload[:action] == :destroy
+                        "CANCEL"
+                      elsif payload[:attendees].present?
+                        "REQUEST" # REQUEST is only allowed if ATTENDEEs are present.
+                      else
+                        "PUBLISH"
+                      end
       cal
     end
 
@@ -33,6 +46,9 @@ module IcalHelpers
         dtend = Icalendar::Values::DateTime.new(payload[:ends_at],
                                                 "tzid" => Time.zone_default.tzinfo.identifier)
         event.dtend = dtend
+      end
+      if payload[:attendees].present?
+        payload[:attendees].each { |attendee| event.append_attendee("mailto:#{attendee}") }
       end
       event.summary = payload[:summary]
       event.location = payload[:address]

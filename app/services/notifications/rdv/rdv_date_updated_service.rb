@@ -17,7 +17,7 @@ class Notifications::Rdv::RdvDateUpdatedService < ::BaseService
 
   def notify_agent(agent)
     Agents::RdvMailer.rdv_date_updated(
-      @rdv.payload(:update),
+      @rdv.payload(:update, agent),
       agent,
       @author,
       @rdv.attribute_before_last_save(:starts_at)

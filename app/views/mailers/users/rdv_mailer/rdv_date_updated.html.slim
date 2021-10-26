@@ -4,5 +4,5 @@ div
     |
       Votre RDV qui était prévu #{relative_date @old_starts_at} à #{l(@old_starts_at, format: "%H:%M")} a été modifié.
       Nouveau RDV : #{l(@rdv.starts_at, format: (@rdv.home? ?   :human_approx : :human))}.
-  = render "mailers/common/rdv_overview", rdv: @rdv
+  = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :user
   = render "mailers/common/rdv_cancellable", rdv: @rdv
