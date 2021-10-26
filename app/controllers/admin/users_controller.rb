@@ -21,13 +21,13 @@ class Admin::UsersController < AgentAuthController
   }.freeze
 
   def index
-    @form = Admin::UserSearchForm.new(**params.permit(:organisation_id, :agent_id, :search))
+    @form = Admin::UserSearchForm.new(**index_params)
     @users = policy_scope(User).merge(@form.users).active.order_by_last_name.page(params[:page])
   end
 
   def search
     @users = policy_scope(User).where.not(id: params[:exclude_ids]).active.order_by_last_name.limit(10)
-    @users = @users.search_by_text(search_params) if search_params
+    @users = @users.search_by_text(search_params[:term]) if search_params[:term].present?
     skip_authorization
   end
 
@@ -166,13 +166,30 @@ class Admin::UsersController < AgentAuthController
     )
   end
 
+  def index_params
+    @index_params ||= begin
+      index_params = params.permit(:organisation_id, :agent_id, :search)
+      index_params[:search] = clean_search_term(index_params[:search])
+      index_params
+    end
+  end
+
   def search_params
-    return nil if params[:term].blank?
+    @search_params ||= begin
+      search_params = params.permit(:term)
+      search_params[:term] = clean_search_term(search_params[:term])
+      search_params
+    end
+  end
 
-    term = params.require(:term)
-    return term.sub(/^0/, "+33").gsub(/\s/, "") if contains_phone_number_pattern?(term)
+  def clean_search_term(term)
+    return nil if term.blank?
 
-    term
+    if contains_phone_number_pattern?(term)
+      term.sub(/^0/, "+33").gsub(/\s/, "")
+    else
+      I18n.transliterate(term)
+    end
   end
 
   def contains_phone_number_pattern?(string)
