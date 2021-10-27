@@ -68,7 +68,7 @@ describe Admin::UserForm, type: :form do
       expect(subject.warnings).to be_present
       expect(subject.warnings[:base]).to be_present
       expect(subject.warnings[:base][0]).to include("Jeannot")
-      expect(subject.warnings[:base][0]).to include("Un usager avec le même numéro de téléphone existe déjà")
+      expect(subject.warnings[:base][0]).to include("Un usager avec le même téléphone existe déjà")
     end
 
     it "does not save the user" do
@@ -108,7 +108,7 @@ describe Admin::UserForm, type: :form do
       expect(subject.warnings).to be_present
       expect(subject.warnings[:base]).to be_present
       expect(subject.warnings[:base][0]).to include("Jeannot")
-      expect(subject.warnings[:base][0]).to include("Un usager avec le même numéro de téléphone existe déjà")
+      expect(subject.warnings[:base][0]).to include("Un usager avec le même téléphone existe déjà")
     end
 
     it "does not save the user" do

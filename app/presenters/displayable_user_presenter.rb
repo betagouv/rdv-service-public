@@ -20,11 +20,11 @@ class DisplayableUserPresenter
   end
 
   def caisse_affiliation
-    User.human_enum_name(:caisse_affiliation, @user.caisse_affiliation)
+    @user.human_attribute_value(:caisse_affiliation)
   end
 
   def family_situation
-    User.human_enum_name(:family_situation, @user.family_situation)
+    @user.human_attribute_value(:family_situation)
   end
 
   def phone_number
@@ -42,7 +42,7 @@ class DisplayableUserPresenter
   def logement
     return nil if @user_profile.blank?
 
-    UserProfile.human_enum_name(:logement, @user_profile.logement)
+    @user_profile.human_attribute_value(:logement)
   end
 
   def notes

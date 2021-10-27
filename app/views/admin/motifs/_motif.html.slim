@@ -19,7 +19,7 @@ tr
         = t("motifs.index.sectorisation_level_agent", count: counts[:agents_count], sectors_count_human: \
             t("motifs.index.sectorisation_level_organisation", count: counts[:sectors_count]))
   td= motif.service.short_name
-  td= Motif.human_enum_name(:location_type, motif.location_type)
+  td= motif.human_attribute_value(:location_type)
   td= "#{motif.default_duration_in_min} min."
   - if policy([:agent, motif]).edit? || policy([:agent, motif]).destroy?
     td

@@ -60,7 +60,7 @@ module RdvExporter
       rdv.motif.service.name,
       rdv.motif.name,
       rdv.context,
-      I18n.t("activerecord.attributes.rdv.statuses.#{rdv.temporal_status}"),
+      Rdv.human_attribute_value(:status, rdv.temporal_status, disable_cast: true),
       rdv.address_complete_without_personnal_details,
       rdv.agents.map(&:full_name).join(", "),
       rdv.users.map(&:full_name).join(", "),

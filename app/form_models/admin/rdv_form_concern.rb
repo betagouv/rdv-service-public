@@ -16,6 +16,8 @@ module Admin::RdvFormConcern
     delegate :rdvs_ending_shortly_before, :rdvs_ending_shortly_before?, to: :rdv_start_coherence
     delegate :rdvs_overlapping_rdv, :rdvs_overlapping_rdv?, to: :rdvs_overlapping
 
+    delegate :errors, to: :rdv
+
     validate :validate_rdv
     caution :warn_overlapping_plage_ouverture
     caution :warn_rdvs_ending_shortly_before
@@ -25,8 +27,7 @@ module Admin::RdvFormConcern
   private
 
   def validate_rdv
-    rdv.valid?
-    rdv.errors.each { errors.add(_1, _2) }
+    rdv.validate
   end
 
   def warn_overlapping_plage_ouverture

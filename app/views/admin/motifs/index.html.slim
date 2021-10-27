@@ -20,25 +20,25 @@
       thead
         tr
           th
-          th= t("activerecord.attributes.motif.name")
+          th= Motif.human_attribute_name("name")
           th
             div
-              = t("activerecord.attributes.motif.reservable_online")
+              = Motif.human_attribute_name("reservable_online")
             div
               = select_tag("online_filter", options_for_select(["En ligne", "Hors ligne"], params[:online_filter]), include_blank: "Tous", class: "js-motif-filters select2-input")
           - if @display_sectorisation_level
-            th= t("activerecord.attributes.motif.sectorisation_level")
+            th= Motif.human_attribute_name("sectorisation_level")
           th
             div
-              = t("activerecord.attributes.motif.service")
+              = Motif.human_attribute_name("service")
             div
               = select_tag("service_filter", options_from_collection_for_select(Service.all.uniq.sort, "id", "short_name", params[:service_filter]), include_blank: "Tous", class: "js-motif-filters select2-input")
           th
             div
-              = t("activerecord.attributes.motif.location_type")
+              = Motif.human_attribute_name("location_type")
             div
-              = select_tag("location_type_filter", options_for_select(Motif.location_types.map{|l| [Motif.human_enum_name(:location_type, l[0]), l[1]] }, params[:location_type_filter]), include_blank: "Tous", class: "js-motif-filters select2-input")
-          th= t("activerecord.attributes.motif.default_duration")
+              = select_tag("location_type_filter", options_for_select(Motif.location_types.map{|l| [Motif.human_attribute_value(:location_type, l[0]), l[1]] }, params[:location_type_filter]), include_blank: "Tous", class: "js-motif-filters select2-input")
+          th= Motif.human_attribute_name(:default_duration)
           - if current_agent_can?(:edit, Motif) || current_agent_can?(:destroy, Motif)
             th Actions
       tbody

@@ -6,7 +6,7 @@ json.array! @rdvs do |rdv|
   json.extendedProps do
     json.organisationName rdv.organisation&.name
     json.status rdv.status
-    json.readableStatus Rdv.human_enum_name(:status, rdv.status)
+    json.readableStatus rdv.human_attribute_value(:status)
     json.motif rdv.motif.name
     json.lieu rdv.public_office? && rdv.lieu&.name
     json.past rdv.past?

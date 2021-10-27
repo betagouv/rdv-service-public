@@ -4,19 +4,12 @@ fr:
       agent: Agent
     attributes:
       agent:
-        email: Email
-        password: Mot de passe
-        current_password: Mot de passe actuel
-        first_name: Prénom
-        invitation_sent_at: Invitation envoyée
-        invitation_accepted_at: Invitation acceptée
-        last_name: Nom
         role: Rôle
         rdvs: Rendez-vous
         service: Service
         rdv_notifications_level: Notifications de RDV
-        rdv_notifications_levels:
-          all: À chaque modification
-          others: Uniquement les modifications faites par un usager (ou par un autre agent)
-          soon: Uniquement les modifications (faites par un usager ou un autre agent) moins de 24 heures à l’avance
-          none: Jamais
+      agent/rdv_notifications_levels:
+        all: À chaque modification
+        others: Uniquement les modifications faites par un usager (ou par un autre agent)
+        soon: Uniquement les modifications (faites par un usager ou un autre agent) moins de 24 heures à l’avance
+        none: Jamais

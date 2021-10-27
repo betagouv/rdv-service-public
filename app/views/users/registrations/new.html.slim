@@ -10,10 +10,10 @@
       - if resource.errors[:email]&.include?(I18n.t("errors.messages.taken"))
         .mb-3= link_to "Mot de passe oublié ?", new_password_path(resource_name, "email": resource.email)
       .form-row
-        .col-6= f.input :first_name, label: t("activerecord.attributes.user.first_name"), required: true
-        .col-6= f.input :last_name, label: t("activerecord.attributes.user.last_name"), required: true
-      = f.input :email, as: :email, placeholder: "nom.prenom@email.com", required: true, label: t("activerecord.attributes.user.email")
-      = f.input :phone_number, as: :tel, placeholder: "06 39 98 12 34", hint: "Vous recevrez les rappels et les informations du RDV sur ce numéro.", label: t("activerecord.attributes.user.phone_number")
+        .col-6= f.input :first_name, required: true
+        .col-6= f.input :last_name, required: true
+      = f.input :email, as: :email, placeholder: "nom.prenom@email.com", required: true
+      = f.input :phone_number, as: :tel, placeholder: "06 39 98 12 34", hint: "Vous recevrez les rappels et les informations du RDV sur ce numéro."
 
       .form-group
         small

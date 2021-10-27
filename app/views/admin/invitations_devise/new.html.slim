@@ -14,7 +14,7 @@
           = f.simple_fields_for :roles do |ff|
             = ff.input :level, \
               collection: AgentRole::LEVELS, \
-              label_method: -> { I18n.t("activerecord.attributes.agent_role.levels.#{_1}_html").html_safe }, \
+              label_method: -> { AgentRole.human_attribute_value(:level, _1, context: :explanation).html_safe }, \
               hint: "Les agents peuvent avoir des permissions différentes sur chaque organisation.", \
               as: :radio_buttons
           .text-right

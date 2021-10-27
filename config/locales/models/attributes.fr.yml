@@ -1,6 +1,16 @@
 fr:
   attributes:
     invitation_token: "Code d’invitation"
+    email: Email
+    first_name: Prénom
+    name: Nom
+    last_name: "Nom d’usage"
+    birth_name: Nom de naissance
+    birth_date: Date de naissance
+    phone_number: Téléphone
+    address: Adresse
+    password: Mot de passe
+    current_password: Mot de passe actuel
     created_at: Création
     updated_at: Modification
     invitation_sent_at: Invitation envoyée

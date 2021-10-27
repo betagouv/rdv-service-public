@@ -2,6 +2,3 @@ fr:
   activerecord:
     models:
       motif_libelle: Libellé de motif
-    attributes:
-      motif_libelle:    
-        name: nom

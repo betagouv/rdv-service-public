@@ -6,10 +6,10 @@ fr:
       user_profile:
         notes: Remarques
         logement: Logement
-        logements:
-          sdf: Sans domicile fixe
-          heberge: Hébergé
-          locataire: Locataire
-          en_accession_propriete: En accession à la propriété
-          proprietaire: Propriétaire
-          autre: Autre
+      user_profile/logements:
+        sdf: Sans domicile fixe
+        heberge: Hébergé
+        locataire: Locataire
+        en_accession_propriete: En accession à la propriété
+        proprietaire: Propriétaire
+        autre: Autre

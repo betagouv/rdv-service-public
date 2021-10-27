@@ -5,12 +5,9 @@ fr:
     attributes:
       zone:
         sector_id: Secteur
-        name: Nom
-        city_name: Nom de la commune
-        city_code: Code commune INSEE
         street_name: Nom de la rue
         street_ban_id: Code rue
         level: Étendue
-        levels:
-          city: Commune
-          street: Rue
+      zone/levels:
+        city: Commune
+        street: Rue

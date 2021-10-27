@@ -6,43 +6,18 @@ fr:
       motif:
         organisation: Organisation
         service: Service
-        name: Nom
         color: Couleur
         reservable_online_title: Prise de RDV en ligne par les usagers
         reservable_online: Réservable en ligne
         reservable_online_hint: Ce motif sera disponible à la réservation en ligne par les usagers
         visibility_type: Visibilité usager
-        visibility_types:
-          visible_and_notified: Visible et notifié
-          visible_and_not_notified: Visible et non notifié
-          invisible: Invisible
-        visibility_type_hints:
-          visible_and_notified: Le RDV sera visible dans la liste des RDVs côté usager, l'usager sera notifié par SMS et/ou email
-          visible_and_not_notified: Le RDV sera visible dans la liste des RDVs côté usager, l'usager ne recevra aucune notification (ni SMS ni email)
-          invisible: Le RDV sera invisible dans la liste des RDVs côté usager, l'usager ne recevra aucune notification (ni SMS ni email)
         custom_cancel_warning_message: Message d’avertissement en cas d’annulation
         custom_cancel_warning_message_hint: Ce message sera affiché à l'usager au moment où il lui sera demandé de confirmer l’annulation de son RDV. Si l’annulation du rendez-vous a des conséquences particulières pour l’usager, vous pouvez lui indiquer dans ce message. Cela peut être le cas, par exemple, pour une convocation pour l’ouverture de droits sociaux.
         default_cancel_warning_message: Êtes-vous sûr de vouloir annuler ce RDV ?
         sectorisation_level: Sectorisation
         sectorisation_level_title: Sectorisation géographique
         sectorisation_level_hint: Seules les recherches des usagers sont concernées par ces règles de sectorisation. Elles n'ont donc pas d'effet si le motif n'est pas réservable en ligne.
-        sectorisation_levels:
-          agent: Sectorisation à l'agent
-          organisation: Sectorisation à l'organisation
-          departement: Sectorisation au département
-        sectorisation_level_hints:
-          agent: Réservable par les usagers uniquement dans les secteurs attribués à des agents spécifiques
-          organisation: Réservable par les usagers uniquement dans les secteurs attribués à l'organisation
-          departement: Réservable par les usagers dans l'ensemble du département
         location_type: Type de RDV
-        location_types:
-          home: À domicile
-          phone: Par téléphone
-          public_office: Sur place
-        location_type_hints:
-          public_office: Le RDV aura lieu au lieu sélectionné (MDS...)
-          phone: L'usager sera notifié que le RDV se passera par téléphone, au numéro indiqué dans son profil
-          home: L'usager sera notifié que le RDV aura lieu à l'adresse remplie dans son profil
         for_secretariat: Motif accessible au secrétariat
         for_secretariat_label: Le RDV pourra être effectué par le service secrétariat
         for_secretariat_short: RDV Secrétariat
@@ -65,6 +40,30 @@ fr:
         instruction_for_rdv: Indications affichées après la confirmation du rendez-vous
         instruction_for_rdv_hint: Indications affichées après la confirmation du rendez-vous
         instruction_for_rdv_short: Indications après
+      motif/visibility_types:
+        visible_and_notified: Visible et notifié
+        visible_and_not_notified: Visible et non notifié
+        invisible: Invisible
+      motif/visibility_types/hint:
+        visible_and_notified: Le RDV sera visible dans la liste des RDVs côté usager, l'usager sera notifié par SMS et/ou email
+        visible_and_not_notified: Le RDV sera visible dans la liste des RDVs côté usager, l'usager ne recevra aucune notification (ni SMS ni email)
+        invisible: Le RDV sera invisible dans la liste des RDVs côté usager, l'usager ne recevra aucune notification (ni SMS ni email)
+      motif/sectorisation_levels:
+        agent: Sectorisation à l'agent
+        organisation: Sectorisation à l'organisation
+        departement: Sectorisation au département
+      motif/sectorisation_levels/hint:
+        agent: Réservable par les usagers uniquement dans les secteurs attribués à des agents spécifiques
+        organisation: Réservable par les usagers uniquement dans les secteurs attribués à l'organisation
+        departement: Réservable par les usagers dans l'ensemble du département
+      motif/location_types:
+        home: À domicile
+        phone: Par téléphone
+        public_office: Sur place
+      motif/location_types/hint:
+        public_office: Le RDV aura lieu au lieu sélectionné (MDS...)
+        phone: L'usager sera notifié que le RDV se passera par téléphone, au numéro indiqué dans son profil
+        home: L'usager sera notifié que le RDV aura lieu à l'adresse remplie dans son profil
     errors:
       models:
         motif:

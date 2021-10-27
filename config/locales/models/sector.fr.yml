@@ -4,6 +4,5 @@ fr:
       sector: Secteur
     attributes:
       sector:
-        name: Nom
         human_id: Identifiant
         departement: Département

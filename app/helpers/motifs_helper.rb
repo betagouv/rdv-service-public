@@ -4,7 +4,7 @@ module MotifsHelper
   YIQ_DARK_LIGHT_FRONTIER = 128
 
   def motif_name_with_location_type(motif)
-    "#{motif.name} (#{Motif.human_enum_name(:location_type, motif.location_type)})"
+    "#{motif.name} (#{motif.human_attribute_value(:location_type)})"
   end
 
   def motif_name_with_special_location_type(motif)
@@ -62,7 +62,7 @@ module MotifsHelper
 
   def motif_option_value(motif, option_name)
     if motif.send("#{option_name}?")
-      tag.span("☑️ ") + tag.span(t("activerecord.attributes.motif.#{option_name}_hint"))
+      tag.span("☑️ ") + tag.span(Motif.human_attribute_name("#{option_name}_hint"))
     else
       tag.span("╳ désactivée", class: "text-muted")
     end

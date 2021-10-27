@@ -17,7 +17,7 @@ module RdvsHelper
   end
 
   def rdv_status_tag(rdv)
-    tag.span(Rdv.human_enum_name(:status, rdv.status), class: "badge badge-info rdv-status rdv-status-#{rdv.status}")
+    tag.span(rdv.human_attribute_value(:status), class: "badge badge-info rdv-status rdv-status-#{rdv.status}")
   end
 
   def no_rdv_for_users
@@ -63,7 +63,7 @@ module RdvsHelper
   def rdv_status_dropdown_toggle(rdv)
     tag.div(data: { toggle: "dropdown" },
             class: "dropdown-toggle btn rdv-status-#{rdv.temporal_status}") do
-      I18n.t("activerecord.attributes.rdv.statuses.#{rdv.temporal_status}")
+      Rdv.human_attribute_value(:status, rdv.temporal_status, disable_cast: true)
     end
   end
 
@@ -71,12 +71,12 @@ module RdvsHelper
     link_to admin_organisation_rdv_path(rdv.organisation, rdv, rdv: { status: status, active_warnings_confirm_decision: true }, agent_id: agent&.id),
             method: :put,
             class: "dropdown-item",
-            data: { confirm: t("activerecord.attributes.rdv.statuses/confirm.#{status}") },
+            data: { confirm: Rdv.human_attribute_value(:status, status, context: :confirm) },
             remote: remote do
       tag.span do
         tag.i(class: "fa fa-circle mr-1 rdv-status-#{status}") +
-          t("activerecord.attributes.rdv.statuses/action.#{status}") +
-          tag.div(t("activerecord.attributes.rdv.statuses/explanation.#{status}"), class: "text-wrap text-muted")
+          Rdv.human_attribute_value(:status, status, context: :action) +
+          tag.div(Rdv.human_attribute_value(:status, status, context: :explanation), class: "text-wrap text-muted")
       end
     end
   end

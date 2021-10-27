@@ -44,9 +44,9 @@ describe "User can be invited to lieux page" do
       # Invitation page
       expect(page).to have_content("Inscription")
       expect(page).to have_field("Prénom", with: user.first_name)
-      expect(page).to have_field("Nom d'usage", with: user.last_name)
+      expect(page).to have_field("Nom d’usage", with: user.last_name)
       expect(page).to have_field("Email", disabled: true, with: user.email)
-      expect(page).to have_field("Numéro de téléphone", with: user.phone_number)
+      expect(page).to have_field("Téléphone", with: user.phone_number)
 
       fill_in(:password, with: "12345678")
       click_button("Enregistrer")
