@@ -8,7 +8,8 @@ class Motif < ApplicationRecord
   pg_search_scope(
     :search_by_text,
     against: { name: "A" },
-    using: { tsearch: { prefix: true, dictionary: "french" } }
+    using: { tsearch: { prefix: true, dictionary: "french" } },
+    ignoring: :accents # Motif text search is not indexed, but at least we can use PG unaccent. See #1772 and #1833
   )
 
   auto_strip_attributes :name, :color

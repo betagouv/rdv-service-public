@@ -3,13 +3,13 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
-      "fingerprint": "2d63f4428767f8b1c48438617bdb8c06a9a4cbda3263faddf74370b8243a6262",
+      "fingerprint": "2a37520a17742f36733d65329212b92dfc9d72aee25ff04f6d5a74ebf09330cc",
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/users/index.html.slim",
       "line": 32,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(User).merge(Admin::UserSearchForm.new(**params.permit(:organisation_id, :agent_id, :search)).users).active.order_by_last_name.page(params[:page]), {})",
+      "code": "render(action => policy_scope(User).merge(Admin::UserSearchForm.new(**index_params).users).active.order_by_last_name.page(params[:page]), {})",
       "render_path": [
         {
           "type": "controller",
@@ -125,6 +125,6 @@
       "note": ""
     }
   ],
-  "updated": "2021-10-14 10:15:37 +0200",
+  "updated": "2021-10-26 16:11:40 +0200",
   "brakeman_version": "5.1.1"
 }
