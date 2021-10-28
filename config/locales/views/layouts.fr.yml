@@ -1,0 +1,5 @@
+fr:
+  layouts:
+    rdv_a_renseigner:
+      rdvs_to_be_informed: Vous avez %{count} rendez-vous à renseigner
+      link_to_rdv_to_be_informed: Voir ces RDV

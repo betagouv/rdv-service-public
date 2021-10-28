@@ -77,10 +77,9 @@ class CronJob < ApplicationJob
 
     def perform
       rdvs_to_be_informed_group_by_agent = Rdv.joins(:agents).status("unknown_past").group(:agent_id).count
-      rdvs_to_be_informed_group_by_agent.each do | agent_id, rdv_count |
+      rdvs_to_be_informed_group_by_agent.each do |agent_id, rdv_count|
         Agent.find(agent_id).update(to_be_informed_rdv_count: rdv_count)
       end
     end
   end
 end
-
