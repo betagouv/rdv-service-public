@@ -70,4 +70,17 @@ class CronJob < ApplicationJob
       Admins::SystemMailer.rdv_events_stats.deliver_later
     end
   end
+
+  class UpdateAgentToBeInformedRdvCountJob < CronJob
+    # At 04:11 AM, Monday through Friday
+    self.cron_expression = "11 4 * * 1-5"
+
+    def perform
+      rdvs_to_be_informed_group_by_agent = Rdv.joins(:agents).status("unknown_past").group(:agent_id).count
+      rdvs_to_be_informed_group_by_agent.each do | agent_id, rdv_count |
+        Agent.find(agent_id).update(to_be_informed_rdv_count: rdv_count)
+      end
+    end
+  end
 end
+
