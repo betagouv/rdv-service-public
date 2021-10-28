@@ -47,11 +47,10 @@
   div class=(@form.show_user_details ? "col-md-12" : "col-md-6")
     - if @rdvs.any?
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
-      = render( \
-        partial: "admin/rdvs/rdv", \
-        collection: @rdvs, \
-        locals: { show_user_details: @form.show_user_details} \
-      )
+      = render(partial: "admin/rdvs/rdv",
+              collection: @rdvs.includes(:organisation, :users, :lieu, :motif, agents: :service),
+              locals: {show_user_details: @form.show_user_details},
+              cached: ->(rdv) { [rdv, rdv.motif, rdv.agents, rdv.users] })
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
     - else
       .card
