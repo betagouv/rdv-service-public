@@ -2,22 +2,121 @@
 
 describe SlotBuilder, type: :service do
 
-  # avec
-  # - aujourd'hui étant le 10 décembre 2020
-  # - un motif d'une durée de 30 minutes
-  # - une plage d'ouverture 
-  #   - qui démarre le 10 décembre 2020 à 9 h
-  #   - qui fini à 11 h 20
-  #   - pour un agent donnée
-  # - la date du jour au 10 décembre 2020 à 8 h
+  # Recette
+  describe "#available_slots" do
+    it "returns 4 slots with a basic context" do
+
+      # avec
+      # - aujourd'hui étant le 10 décembre 2020
+      # - une plage d'ouverture 
+      #   - qui démarre le 10 décembre 2020 à 9 h
+      #   - qui fini à 11 h 20
+      #   - pour un agent donnée
+      # - la date du jour au 10 décembre 2020 à 8 h
+      #
+      # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020
+      #
+      # Le résultat doit être
+      # - du 10 décembre 2020 à 9 h
+      # - du 10 décembre 2020 à 9 h 30
+      # - du 10 décembre 2020 à 10 h
+      # - du 10 décembre 2020 à 10 h 30
+
+      organisation = create(:organisation)
+      motif = create(:motif, default_duration_in_min: 60, organisation: organisation)
+      first_day = Date.new(2021, 5, 3)
+      date_range = first_day..Date.new(2021, 5, 8)
+      off_days = []
+
+      plage_ouverture = create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, organisation: organisation)
+
+      slots = SlotBuilder.available_slots(motif, date_range, organisation, off_days)
+
+      expect(slots.map(&:starts_at).map(&:hour)).to eq([9, 10])
+    end
+
+  end
+
+  describe "#plage_ouvertures_for" do
+    it "return empty without plage_ouverture" do
+      organisation = create(:organisation)
+      motif = create(:motif, default_duration_in_min: 60, organisation: organisation)
+      first_day = Date.new(2021, 5, 3)
+      date_range = first_day..Date.new(2021, 5, 8)
+
+      plage_ouvertures = SlotBuilder.plage_ouvertures_for(motif, date_range, organisation)
+
+      expect(plage_ouvertures).to eq([])
+    end
+
+    it "return plage_ouverture that match" do
+      organisation = create(:organisation)
+      motif = create(:motif, default_duration_in_min: 60, organisation: organisation)
+      first_day = Date.new(2021, 5, 3)
+      date_range = first_day..Date.new(2021, 5, 8)
+      matching_po = create(:plage_ouverture, organisation: organisation, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
+
+      plage_ouvertures = SlotBuilder.plage_ouvertures_for(motif, date_range, organisation)
+
+      expect(plage_ouvertures).to eq([matching_po])
+    end
+  end
+
+  describe "#free_times_from" do
+    it "return an empty hash without plage_ouvertures" do
+      range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
+      expect(SlotBuilder.free_times_from([], range, [])).to eq({})
+    end
+
+    it "calls calculate_free_times for given plage_ouvertures" do
+      plage_ouverture = build(:plage_ouverture)
+      range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
+      expect(SlotBuilder).to receive(:calculate_free_times).with(plage_ouverture, range, [])
+      SlotBuilder.free_times_from([plage_ouverture], range, [])
+    end
+  end
+
+  describe "#calculate_free_times" do
+    it "return one free time from plage ouverture date range" do
+      plage_ouverture = build(:plage_ouverture, first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+      range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
+      expect(SlotBuilder.calculate_free_times(plage_ouverture, range, [])).to eq([Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 11:00")])
+    end
+  end
+
+  describe "#slots_for" do
+    it "returns empty with empty free times" do
+      motif = build(:motif)
+      expect(SlotBuilder.slots_for({}, motif)).to eq([])
+    end
+
+    it "calls calculate_slots for plage_ouverture's free_time and motif" do
+      motif = build(:motif)
+      plage_ouverture = build(:plage_ouverture, motifs: [motif], first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+      free_times = [Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 11:00")]
+      plage_ouverture_free_times = {plage_ouverture => free_times}
+
+      expect(SlotBuilder).to receive(:calculate_slots).with(free_times.first, motif).and_return([])
+      SlotBuilder.slots_for(plage_ouverture_free_times, motif)
+    end
+  end
+
+  describe "#calculate_slots" do
+    it "returns empty when free_time too short" do
+      motif = build(:motif, default_duration_in_min: 30)
+      free_time = Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 9:15")
+      expect(SlotBuilder.calculate_slots(free_time, motif)).to eq([])
+    end
+
+    it "returns slot that match with free time" do
+      motif = build(:motif, default_duration_in_min: 30)
+      free_time = Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 9:45")
+      expect(SlotBuilder.calculate_slots(free_time, motif).map(&:starts_at).map(&:hour)).to eq([9])
+    end
+  end
+
   #
-  # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020
-  #
-  # Le résultat doit être
-  # - du 10 décembre 2020 à 9 h
-  # - du 10 décembre 2020 à 9 h 30
-  # - du 10 décembre 2020 à 10 h
-  # - du 10 décembre 2020 à 10 h 30
+  # RECETTE
   #
 
   #
@@ -334,7 +433,7 @@ describe SlotBuilder, type: :service do
   # - une plage d'ouverture
   #   - pour le motif du service B
   #   - qui démarre le 10 décembre 2020 à 14 h
-  #   - qui fini à 13 h 35
+  #   - qui fini à 14 h 35
   # - la date du jour au 10 décembre 2020 à 8 h
   #
   # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020 pour le service A
