@@ -1,0 +1,8 @@
+- if current_agent && current_agent.to_be_informed_rdv_count > 0
+  .d-print-none.alert.fade.show.main-alert.alert-danger.m-0.text-center
+    .mt-1
+      i.fa.fa-exclamation-triangle.alert-link>
+      span.ml-1.alert-link = t(".rdvs_to_be_informed", count: current_agent.to_be_informed_rdv_count )
+      i.fa.fa-exclamation-triangle.alert-link<
+    .mt-2
+      = link_to t(".link_to_rdv_to_be_informed"), admin_organisation_rdvs_path(current_organisation, status: "unknown_past", agent_id: current_agent.id), class:"btn btn-secondary"

@@ -85,11 +85,6 @@
           span.ml-1 Liste des RDV
 
       li.side-nav-item.mb-4.pl-3.pr-2
-        = active_link_to admin_organisation_rdvs_path(current_organisation, status: "unknown_past", agent_id: current_agent.id)
-          i.fa.fa-exclamation-triangle>
-          span.ml-1 = t(".rdvs_to_be_informed")
-
-      li.side-nav-item.mb-4.pl-3.pr-2
         = active_link_to admin_organisation_stats_path(current_organisation)
           i.fa.fa-chart-bar>
           span.ml-1 Statistiques
