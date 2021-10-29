@@ -1,25 +1,11 @@
 # frozen_string_literal: true
 
+
+
 describe SlotBuilder, type: :service do
   # Recette
   describe "#available_slots" do
-    it "returns 4 slots with a basic context" do
-      # avec
-      # - aujourd'hui étant le 10 décembre 2020
-      # - une plage d'ouverture
-      #   - qui démarre le 10 décembre 2020 à 9 h
-      #   - qui fini à 11 h 20
-      #   - pour un agent donnée
-      # - la date du jour au 10 décembre 2020 à 8 h
-      #
-      # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020
-      #
-      # Le résultat doit être
-      # - du 10 décembre 2020 à 9 h
-      # - du 10 décembre 2020 à 9 h 30
-      # - du 10 décembre 2020 à 10 h
-      # - du 10 décembre 2020 à 10 h 30
-
+    it "returns 2 slots with a basic context" do
       organisation = create(:organisation)
       motif = create(:motif, default_duration_in_min: 60, organisation: organisation)
       first_day = Date.new(2021, 5, 3)
@@ -31,6 +17,20 @@ describe SlotBuilder, type: :service do
       slots = described_class.available_slots(motif, date_range, organisation, off_days)
 
       expect(slots.map(&:starts_at).map(&:hour)).to eq([9, 10])
+    end
+
+    it "return Crenaux object" do
+      organisation = create(:organisation)
+      motif = create(:motif, default_duration_in_min: 60, organisation: organisation)
+      first_day = Date.new(2021, 5, 3)
+      date_range = first_day..Date.new(2021, 5, 8)
+      off_days = []
+
+      plage_ouverture = create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, organisation: organisation)
+
+      slots = described_class.available_slots(motif, date_range, organisation, off_days)
+
+      expect(slots.map(&:class).map(&:to_s).uniq).to eq(["Creneau"])
     end
   end
 
@@ -108,7 +108,9 @@ describe SlotBuilder, type: :service do
     it "returns slot that match with free time" do
       motif = build(:motif, default_duration_in_min: 30)
       free_time = Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 9:45")
-      expect(described_class.calculate_slots(free_time, motif).map(&:starts_at).map(&:hour)).to eq([9])
+
+      slots = described_class.calculate_slots(free_time, motif) {|s| Creneau.new(starts_at: s)}
+      expect(slots.map(&:starts_at).map(&:hour)).to eq([9])
     end
   end
 

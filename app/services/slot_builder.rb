@@ -38,20 +38,29 @@ module SlotBuilder
 
   def self.slots_for(plage_ouverture_free_times, motif)
     slots = []
-    plage_ouverture_free_times.each do |_plage_ouverture, free_times|
+    plage_ouverture_free_times.each do |plage_ouverture, free_times|
       free_times.each do |free_time|
-        slots += calculate_slots(free_time, motif)
+        slots += calculate_slots(free_time, motif) do |starts_at|
+          Creneau.new(
+            starts_at: starts_at,
+            motif: motif,
+            lieu_id: plage_ouverture.lieu,
+            motif: motif,
+            agent_id: plage_ouverture.agent_id,
+            agent_name: plage_ouverture.agent.full_name
+          )
+        end
       end
     end
     slots
   end
 
-  def self.calculate_slots(free_time, motif, slots = [])
+  def self.calculate_slots(free_time, motif, slots = [], &build_creneau)
     try_end_time = free_time.begin + motif.default_duration_in_min.minutes
     if free_time.end > try_end_time
       new_free_time = (free_time.begin + motif.default_duration_in_min.minutes)..free_time.end
-      slots << Creneau.new(starts_at: free_time.begin, motif: motif)
-      calculate_slots(new_free_time, motif, slots)
+      slots << build_creneau.call(free_time.begin) if block_given?
+      calculate_slots(new_free_time, motif, slots, &build_creneau)
     end
     slots
   end
