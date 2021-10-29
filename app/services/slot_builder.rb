@@ -19,6 +19,13 @@ module SlotBuilder
     # En prenant le first_day < à la date de fin du range on récupère les PO qui sont entre la date de début du range et aujourd'hui.
     # En attendant, je me dit que ce cas est mineur et que ça fera sans doute pas beaucoup de PO.
     # Elles seront filtrées plus tard.
+    #
+    # avec un OR on pourrait prendre en compte les deux cas (avec et sans recurrence)
+    #
+    # pour exclure les PO dont la récurrence termine avant le date range de construction de créneau, il faudrait avoir les éléments de la récurrence accessible pour une requete direct : ici surtout la date de fin de récurrence.
+    #
+    #
+    # Inclure les RDV et les Absences de l'agent
     organisation.plage_ouvertures.joins(:motifs).where("motifs.id": motif.id).not_expired.where("first_day < ?", date_range.end)
   end
 
@@ -57,6 +64,7 @@ module SlotBuilder
     slots
   end
 
+  # TODO utiliser un while plutôt que la récursivité
   def self.calculate_slots(free_time, motif, slots = [], &build_creneau)
     try_end_time = free_time.begin + motif.default_duration_in_min.minutes
     if free_time.end > try_end_time
