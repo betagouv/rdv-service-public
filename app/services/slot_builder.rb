@@ -5,18 +5,21 @@ module SlotBuilder
   # À faire avant, au moment de jouer avec le motifs
   # @for_agents ? motifs : motifs.reservable_online
 
-  def self.available_slots(motif, date_range, organisation, off_days, agents: [], lieux: [])
-    plage_ouvertures = plage_ouvertures_for(motif, date_range, organisation, { agents: [], lieux: [] })
+  def self.available_slots(motif, date_range, organisation, off_days, *options)
+    # options :  { agents: [], lieux: [] }
+    plage_ouvertures = plage_ouvertures_for(motif, date_range, organisation, options)
     free_times = free_times_from(plage_ouvertures, date_range, off_days) # dépendance sur RDV et Absence
     slots_for(free_times, motif)
   end
 
-  def self.plage_ouvertures_for(motif, _date_range, organisation, *_options)
-    organisation.plage_ouvertures.joins(:motifs).where("motifs.id": motif.id).sample(1)
-    # pas réccurrente dont les dates soient dedans
-    # réccurrentes avec une date de début avant et la date de fin après le date range
-    # réccurrentes avec une date de début sans date de fin et avant le date range
-    # Permet de lister les PO pontentiellement concernées en restant lazy
+  # TODO: Pourrait être un scope de plage d'ouverture. Quel nom ?
+  def self.plage_ouvertures_for(motif, date_range, organisation, *_options)
+    # Pas de solution simple pour prendre en compte le cas d'exclusion des PO qui sont sur une journée, sans réccurrence, entre la date de début du range et aujourd'hui (elles ne sont pas expirées).
+    # En prenant le first_day dans le range on les exclus, mais on exclus aussi les PO récurrente dont le first_day est dans le passée et la réccurence encore active
+    # En prenant le first_day < à la date de fin du range on récupère les PO qui sont entre la date de début du range et aujourd'hui.
+    # En attendant, je me dit que ce cas est mineur et que ça fera sans doute pas beaucoup de PO.
+    # Elles seront filtrées plus tard.
+    organisation.plage_ouvertures.joins(:motifs).where("motifs.id": motif.id).not_expired.where("first_day < ?", date_range.end)
   end
 
   def self.free_times_from(plage_ouvertures, date_range, off_days) # récupération d'un ActiveRecord::Query sur les PO
@@ -45,7 +48,6 @@ module SlotBuilder
             starts_at: starts_at,
             motif: motif,
             lieu_id: plage_ouverture.lieu,
-            motif: motif,
             agent_id: plage_ouverture.agent_id,
             agent_name: plage_ouverture.agent.full_name
           )
