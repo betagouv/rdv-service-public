@@ -1,16 +1,17 @@
+# frozen_string_literal: true
+
 # https://pad.incubateur.net/jftuVsrKTsKbn3ay8AoL0Q?edit
 module SlotBuilder
-
   # À faire avant, au moment de jouer avec le motifs
   # @for_agents ? motifs : motifs.reservable_online
 
   def self.available_slots(motif, date_range, organisation, off_days, agents: [], lieux: [])
-    plage_ouvertures = plage_ouvertures_for(motif, date_range, organisation, {agents: [], lieux: []})
+    plage_ouvertures = plage_ouvertures_for(motif, date_range, organisation, { agents: [], lieux: [] })
     free_times = free_times_from(plage_ouvertures, date_range, off_days) # dépendance sur RDV et Absence
     slots_for(free_times, motif)
   end
 
-  def self.plage_ouvertures_for(motif, date_range, organisation, *options)
+  def self.plage_ouvertures_for(motif, _date_range, organisation, *_options)
     organisation.plage_ouvertures.joins(:motifs).where("motifs.id": motif.id).sample(1)
     # pas réccurrente dont les dates soient dedans
     # réccurrentes avec une date de début avant et la date de fin après le date range
@@ -27,16 +28,17 @@ module SlotBuilder
     # retourner plutôt un enumérator histoire d'être lazy ?
   end
 
-  def self.calculate_free_times(plage_ouverture, date_range, off_days)
+  def self.calculate_free_times(plage_ouverture, date_range, _off_days)
     # soustraire les RDV et les absences de l'agent de la PO sur la période donnée
     occurrences = plage_ouverture.occurrences_for(date_range)
     return [] if occurrences.empty?
+
     [occurrences.first.starts_at..occurrences.first.ends_at]
   end
 
   def self.slots_for(plage_ouverture_free_times, motif)
     slots = []
-    plage_ouverture_free_times.each do |plage_ouverture, free_times|
+    plage_ouverture_free_times.each do |_plage_ouverture, free_times|
       free_times.each do |free_time|
         slots += calculate_slots(free_time, motif)
       end
@@ -53,6 +55,4 @@ module SlotBuilder
     end
     slots
   end
-
 end
-

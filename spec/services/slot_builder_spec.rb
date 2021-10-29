@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
 describe SlotBuilder, type: :service do
-
   # Recette
   describe "#available_slots" do
     it "returns 4 slots with a basic context" do
-
       # avec
       # - aujourd'hui étant le 10 décembre 2020
-      # - une plage d'ouverture 
+      # - une plage d'ouverture
       #   - qui démarre le 10 décembre 2020 à 9 h
       #   - qui fini à 11 h 20
       #   - pour un agent donnée
@@ -30,11 +28,10 @@ describe SlotBuilder, type: :service do
 
       plage_ouverture = create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, organisation: organisation)
 
-      slots = SlotBuilder.available_slots(motif, date_range, organisation, off_days)
+      slots = described_class.available_slots(motif, date_range, organisation, off_days)
 
       expect(slots.map(&:starts_at).map(&:hour)).to eq([9, 10])
     end
-
   end
 
   describe "#plage_ouvertures_for" do
@@ -44,7 +41,7 @@ describe SlotBuilder, type: :service do
       first_day = Date.new(2021, 5, 3)
       date_range = first_day..Date.new(2021, 5, 8)
 
-      plage_ouvertures = SlotBuilder.plage_ouvertures_for(motif, date_range, organisation)
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, date_range, organisation)
 
       expect(plage_ouvertures).to eq([])
     end
@@ -56,7 +53,7 @@ describe SlotBuilder, type: :service do
       date_range = first_day..Date.new(2021, 5, 8)
       matching_po = create(:plage_ouverture, organisation: organisation, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
 
-      plage_ouvertures = SlotBuilder.plage_ouvertures_for(motif, date_range, organisation)
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, date_range, organisation)
 
       expect(plage_ouvertures).to eq([matching_po])
     end
@@ -65,14 +62,14 @@ describe SlotBuilder, type: :service do
   describe "#free_times_from" do
     it "return an empty hash without plage_ouvertures" do
       range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
-      expect(SlotBuilder.free_times_from([], range, [])).to eq({})
+      expect(described_class.free_times_from([], range, [])).to eq({})
     end
 
     it "calls calculate_free_times for given plage_ouvertures" do
       plage_ouverture = build(:plage_ouverture)
       range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
-      expect(SlotBuilder).to receive(:calculate_free_times).with(plage_ouverture, range, [])
-      SlotBuilder.free_times_from([plage_ouverture], range, [])
+      expect(described_class).to receive(:calculate_free_times).with(plage_ouverture, range, [])
+      described_class.free_times_from([plage_ouverture], range, [])
     end
   end
 
@@ -80,24 +77,24 @@ describe SlotBuilder, type: :service do
     it "return one free time from plage ouverture date range" do
       plage_ouverture = build(:plage_ouverture, first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
       range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
-      expect(SlotBuilder.calculate_free_times(plage_ouverture, range, [])).to eq([Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 11:00")])
+      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq([Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 11:00")])
     end
   end
 
   describe "#slots_for" do
     it "returns empty with empty free times" do
       motif = build(:motif)
-      expect(SlotBuilder.slots_for({}, motif)).to eq([])
+      expect(described_class.slots_for({}, motif)).to eq([])
     end
 
     it "calls calculate_slots for plage_ouverture's free_time and motif" do
       motif = build(:motif)
       plage_ouverture = build(:plage_ouverture, motifs: [motif], first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
       free_times = [Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 11:00")]
-      plage_ouverture_free_times = {plage_ouverture => free_times}
+      plage_ouverture_free_times = { plage_ouverture => free_times }
 
-      expect(SlotBuilder).to receive(:calculate_slots).with(free_times.first, motif).and_return([])
-      SlotBuilder.slots_for(plage_ouverture_free_times, motif)
+      expect(described_class).to receive(:calculate_slots).with(free_times.first, motif).and_return([])
+      described_class.slots_for(plage_ouverture_free_times, motif)
     end
   end
 
@@ -105,13 +102,13 @@ describe SlotBuilder, type: :service do
     it "returns empty when free_time too short" do
       motif = build(:motif, default_duration_in_min: 30)
       free_time = Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 9:15")
-      expect(SlotBuilder.calculate_slots(free_time, motif)).to eq([])
+      expect(described_class.calculate_slots(free_time, motif)).to eq([])
     end
 
     it "returns slot that match with free time" do
       motif = build(:motif, default_duration_in_min: 30)
       free_time = Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 9:45")
-      expect(SlotBuilder.calculate_slots(free_time, motif).map(&:starts_at).map(&:hour)).to eq([9])
+      expect(described_class.calculate_slots(free_time, motif).map(&:starts_at).map(&:hour)).to eq([9])
     end
   end
 
@@ -124,7 +121,7 @@ describe SlotBuilder, type: :service do
   # - une absence le 10 décembre 2020 de 9 h 45 à 10 h 15
   # - aujourd'hui étant le 10 décembre 2020
   # - un motif d'une durée de 30 minutes
-  # - une plage d'ouverture 
+  # - une plage d'ouverture
   #   - qui démarre le 10 décembre 2020 à 9 h
   #   - qui fini à 11 h 20
   #   - pour un agent donnée
@@ -137,13 +134,12 @@ describe SlotBuilder, type: :service do
   # - du 10 décembre 2020 à 10 h 15
   # - du 10 décembre 2020 à 10 h 45
 
-
   #
   # avec
   # - une absence du 10 décembre 2020 à 9 h 45 qui fini le 11 décembre 2020 à 6 h 30
   # - aujourd'hui étant le 10 décembre 2020
   # - un motif d'une durée de 30 minutes
-  # - une plage d'ouverture 
+  # - une plage d'ouverture
   #   - qui démarre le 10 décembre 2020 à 9 h
   #   - qui fini à 11 h 20
   #   - pour un agent donnée
@@ -159,13 +155,12 @@ describe SlotBuilder, type: :service do
   # - du 11 décembre 2020 à 10 h
   # - du 11 décembre 2020 à 10 h 30
 
-
   #
   # avec
   # - une absence du 10 décembre 2020 à 9 h 45 qui fini le 11 décembre 2020 à 9 h 05
   # - aujourd'hui étant le 10 décembre 2020
   # - un motif d'une durée de 30 minutes
-  # - une plage d'ouverture 
+  # - une plage d'ouverture
   #   - qui démarre le 10 décembre 2020 à 9 h
   #   - qui fini à 11 h 20
   #   - pour un agent donnée
@@ -179,7 +174,6 @@ describe SlotBuilder, type: :service do
   # - du 11 décembre 2020 à 9 h 05
   # - du 11 décembre 2020 à 9 h 35
   # - du 11 décembre 2020 à 10 h 05
-
 
   #
   # avec
@@ -200,7 +194,6 @@ describe SlotBuilder, type: :service do
   # - du 10 décembre 2020 à 10 h 15
   # - du 10 décembre 2020 à 10 h 45
 
-
   #
   # avec
   # - un RDV le jeudi 10 décembre 2020 à 9 h 30 qui fini le jeudi 3 décembre 2020 à 10 h
@@ -219,7 +212,6 @@ describe SlotBuilder, type: :service do
   # - du 10 décembre 2020 à 9 h
   # - du 10 décembre 2020 à 10 h
   # - du 10 décembre 2020 à 10 h 30
-
 
   #
   # avec
@@ -314,7 +306,6 @@ describe SlotBuilder, type: :service do
   # - du 16 décembre 2020 à 9 h 30
   # - du 16 décembre 2020 à 10 h
 
-
   # avec
   # - aujourd'hui étant le 10 décembre 2020
   # - un motif d'une durée de 30 minutes
@@ -362,7 +353,6 @@ describe SlotBuilder, type: :service do
   # - du 16 décembre 2020 à 10 h 30 pour l'agent B
   # - du 16 décembre 2020 à 11 h pour l'agent B
   # - du 16 décembre 2020 à 11 h 30 pour l'agent B
-
 
   # avec
   # - aujourd'hui étant le 10 décembre 2020
@@ -421,7 +411,6 @@ describe SlotBuilder, type: :service do
   # - du 16 décembre 2020 à 11 h pour le motif A à domicile
   # - du 16 décembre 2020 à 11 h 30 pour le motif A à domicile
 
-
   # avec
   # - aujourd'hui étant le 10 décembre 2020
   # - un motif d'un service A nomé MonMotif
@@ -447,7 +436,6 @@ describe SlotBuilder, type: :service do
   # - du 16 décembre 2020 à 11 h 30 pour le motif du service A ???? TRÈS BIZARRE !
   # - du 16 décembre 2020 à 14 h pour le motif du service B
 
-
   # avec
   # - aujourd'hui étant le 10 décembre 2020
   # - un motif avec un min booking_delay de 30 minutes
@@ -464,7 +452,6 @@ describe SlotBuilder, type: :service do
   # - du 16 décembre 2020 à 10 h 30 pour le motif du service A
   #
   # Pourquoi pas le 9 h 30 ?
-
 
   # avec
   # - aujourd'hui étant le 10 décembre 2020
@@ -496,5 +483,4 @@ describe SlotBuilder, type: :service do
   # Le résultat doit être
   # - du 16 décembre 2020 à 10 h 30 pour le motif du service A ?
   #
-
 end
