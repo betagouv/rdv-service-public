@@ -42,10 +42,10 @@ rails runner scripts/export_sectors.rb 64
 
 ## Liens utiles
 
-- http://localhost:5000/letter_opener
-- http://localhost:5000/rails/mailers
-- http://localhost:5000/rails/info/routes
-- http://localhost:5000/rails/info/properties
+- http://localhost:3000/letter_opener
+- http://localhost:3000/rails/mailers
+- http://localhost:3000/rails/info/routes
+- http://localhost:3000/rails/info/properties
 
 
 #### Tester une WebHook
