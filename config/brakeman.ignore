@@ -34,13 +34,13 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
-      "fingerprint": "d47b97da06b485e3b3e6da6d8056f1fb1f0beb9a247bc81f90ae0947d5f4d584",
+      "fingerprint": "d8dbbc60b51eb0beb5bc2f943b01142aad77a449260029dedf5a293e96f074a8",
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/motifs/index.html.slim",
       "line": 46,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => filtered((policy_scope(Motif).active.search_by_text(params[:search]) or policy_scope(Motif).active), params).includes(:organisation).includes(:service).ordered_by_name.page(params[:page]), {})",
+      "code": "render(action => filtered((policy_scope(Motif).active.search_by_text(params[:search]) or policy_scope(Motif).active.ordered_by_name), params).includes(:organisation).includes(:service).page(params[:page]), {})",
       "render_path": [
         {
           "type": "controller",
@@ -65,13 +65,13 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
-      "fingerprint": "d47b97da06b485e3b3e6da6d8056f1fb1f0beb9a247bc81f90ae0947d5f4d584",
+      "fingerprint": "d8dbbc60b51eb0beb5bc2f943b01142aad77a449260029dedf5a293e96f074a8",
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/motifs/index.html.slim",
       "line": 72,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => filtered((policy_scope(Motif).active.search_by_text(params[:search]) or policy_scope(Motif).active), params).includes(:organisation).includes(:service).ordered_by_name.page(params[:page]), {})",
+      "code": "render(action => filtered((policy_scope(Motif).active.search_by_text(params[:search]) or policy_scope(Motif).active.ordered_by_name), params).includes(:organisation).includes(:service).page(params[:page]), {})",
       "render_path": [
         {
           "type": "controller",
@@ -125,6 +125,6 @@
       "note": ""
     }
   ],
-  "updated": "2021-10-26 16:11:40 +0200",
+  "updated": "2021-10-28 18:42:02 +0200",
   "brakeman_version": "5.1.1"
 }

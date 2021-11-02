@@ -223,6 +223,12 @@ describe User, type: :model do
       create(:user, phone_number: "01 31 34 34 34")
       expect(described_class.search_by_text("+3313030")).to eq([jean])
     end
+
+    it "orders results by relevance" do
+      durand = create(:user, first_name: "Louis", last_name: "Durand")
+      dupont = create(:user, first_name: "Louis", last_name: "Dupont")
+      expect(described_class.search_by_text("Louis Durand")).to eq([durand, dupont])
+    end
   end
 
   describe "#notes_for" do

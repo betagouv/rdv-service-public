@@ -26,8 +26,8 @@ class Admin::UsersController < AgentAuthController
   end
 
   def search
-    @users = policy_scope(User).where.not(id: params[:exclude_ids]).active.order_by_last_name.limit(10)
-    @users = @users.search_by_text(search_params[:term]) if search_params[:term].present?
+    @users = policy_scope(User).where.not(id: params[:exclude_ids]).active.limit(10)
+    @users = search_params[:term].present? ? @users.search_by_text(search_params[:term]) : @users.order_by_last_name
     skip_authorization
   end
 

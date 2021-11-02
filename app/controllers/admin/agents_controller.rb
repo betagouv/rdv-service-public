@@ -7,8 +7,8 @@ class Admin::AgentsController < AgentAuthController
     agents = policy_scope(Agent)
       .joins(:organisations).where(organisations: { id: current_organisation.id })
       .active.order_by_last_name
-    @invited_agents = agents.invitation_not_accepted.created_by_invite
-    @complete_agents = index_params[:search].present? ? agents.search_by_text(index_params[:search]) : agents
+    @invited_agents = agents.invitation_not_accepted.created_by_invite.order_by_last_name
+    @complete_agents = index_params[:search].present? ? agents.search_by_text(index_params[:search]) : agents.order_by_last_name
     @complete_agents = @complete_agents.complete
       .includes(:service, :roles, :organisations)
       .page(params[:page])
@@ -17,9 +17,8 @@ class Admin::AgentsController < AgentAuthController
   def search
     agents = policy_scope(Agent)
       .joins(:organisations).where(organisations: { id: current_organisation.id })
-      .active.order_by_last_name.complete
-    agents = agents.order_by_last_name.limit(10)
-    @agents = agents.search_by_text(search_params[:term]) if search_params[:term].present?
+      .active.complete.limit(10)
+    @agents = search_params[:term].present? ? agents.search_by_text(search_params[:term]) : agents.order_by_last_name
     skip_authorization
   end
 
