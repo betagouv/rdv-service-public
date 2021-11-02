@@ -1,9 +1,11 @@
 .dropdown-menu {
   box-shadow: $shadow;
+  min-width: 30rem;
 }
 
 .show {
   > .dropdown-menu {
+    display: contents;
     visibility: visible;
     opacity: 1;
     margin-top: 0 !important;
