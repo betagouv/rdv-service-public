@@ -30,46 +30,6 @@ describe PlageOuverture, type: :model do
 
   it_behaves_like "recurrence"
 
-  describe ".not_expired_for_motif_name_and_lieu" do
-    subject { described_class.not_expired_for_motif_name_and_lieu(motif.name, lieu) }
-
-    let!(:service) { create(:service, name: "pmi") }
-    let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, service: service, organisation: organisation) }
-    let!(:lieu) { create(:lieu, organisation: organisation) }
-    let(:today) { Date.new(2019, 9, 19) }
-    let(:six_days_later) { Date.new(2019, 9, 25) }
-    let(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
-    let(:agent2) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
-    let(:agent3) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
-    let!(:plage_ouverture) do
-      create(:plage_ouverture, :weekly, agent: agent, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation)
-    end
-
-    it { expect(subject).to contain_exactly(plage_ouverture) }
-
-    describe "when PO is not expired" do
-      let!(:plage_ouverture) do
-        create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: six_days_later, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation)
-      end
-
-      it { expect(subject).to contain_exactly(plage_ouverture) }
-    end
-
-    describe "when PO is expired" do
-      let!(:plage_ouverture) do
-        create(
-          :plage_ouverture,
-          motifs: [motif], lieu: lieu, first_day: today - 2.weeks,
-          start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-          organisation: organisation,
-          recurrence: Montrose.every(:week, on: [:monday], starts: today - 2.weeks, until: today - 1.week), expired_cached: true
-        )
-      end
-
-      it { expect(subject.count).to eq(0) }
-    end
-  end
-
   describe "#expired?" do
     subject { plage_ouverture.expired? }
 
@@ -305,6 +265,64 @@ describe PlageOuverture, type: :model do
 
         it { is_expected.to eq false }
       end
+    end
+  end
+
+  describe "#in" do
+    let(:today) { Date.new(2021, 10, 3) }
+    let(:range) { Date.new(2021, 10, 25)..Date.new(2021, 10, 29) }
+
+    before do
+      travel_to(today)
+    end
+
+    it "returns po when no recurrence and first_day in range" do
+      plage_ouverture = create(:plage_ouverture, first_day: Date.new(2021, 10, 26), recurrence: nil)
+      expect(described_class.in_range(range)).to eq([plage_ouverture])
+    end
+
+    it "dont returns po when no recurrence and first_day after range" do
+      create(:plage_ouverture, first_day: Date.new(2021, 11, 26), recurrence: nil)
+      expect(described_class.in(range)).to eq([])
+    end
+
+    it "dont returns po when no recurrence and first_day before range" do
+      create(:plage_ouverture, first_day: Date.new(2021, 9, 26), recurrence: nil)
+      expect(described_class.in(range)).to eq([])
+    end
+
+    it "returns po with recurrence start in range" do
+      first_day = Date.new(2021, 9, 26)
+      po = create(:plage_ouverture, first_day: first_day, recurrence: Montrose.every(:week, on: ["monday"], starts: first_day))
+      expect(described_class.in(range)).to eq([po])
+    end
+
+    it "returns po with recurrence ends in range" do
+      first_day = range.begin - 1.month
+      po = create(:plage_ouverture, first_day: first_day,
+                                    recurrence: Montrose.every(:week, on: ["monday"], starts: first_day, until: range.end - 2.days))
+      expect(described_class.in(range)).to eq([po])
+    end
+
+    it "returns po with recurrence start before range and end after range" do
+      first_day = range.begin - 1.day
+      po = create(:plage_ouverture, first_day: first_day,
+                                    recurrence: Montrose.every(:week, on: ["monday"], starts: first_day, until: range.end + 2.days))
+      expect(described_class.in(range)).to eq([po])
+    end
+
+    it "dont returns po with recurrence end before range" do
+      first_day = range.begin - 2.months
+      create(:plage_ouverture, first_day: first_day,
+                               recurrence: Montrose.every(:week, on: ["monday"], starts: first_day, until: range.begin - 3.days))
+      expect(described_class.in(range)).to eq([])
+    end
+
+    it "dont returns po with recurrence start after range" do
+      first_day = range.end + 4.days
+      create(:plage_ouverture, first_day: first_day,
+                               recurrence: Montrose.every(:week, on: ["monday"], starts: first_day))
+      expect(described_class.in(range)).to eq([])
     end
   end
 end

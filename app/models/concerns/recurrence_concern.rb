@@ -10,13 +10,22 @@ module RecurrenceConcern
     serialize :start_time, Tod::TimeOfDay
     serialize :end_time, Tod::TimeOfDay
 
-    before_save :clear_empty_recurrence
+    before_save :clear_empty_recurrence, :set_recurrence_ends_at
 
     validates :first_day, :start_time, :end_time, presence: true
     validate :recurrence_starts_matches_first_day, if: :recurring?
 
     scope :exceptionnelles, -> { where(recurrence: nil) }
     scope :regulieres, -> { where.not(recurrence: nil) }
+
+    scope :in_range, lambda { |range|
+      return all if range.nil?
+
+      not_recurring_in_range = where(recurrence: nil).where(first_day: range)
+      recurring_in_range = where.not(recurrence: nil).where("tsrange(first_day, recurrence_ends_at, '[)') && tsrange(?, ?)", range.begin.to_date, range.end.to_date)
+
+      not_recurring_in_range.or(recurring_in_range)
+    }
   end
 
   def starts_at
@@ -29,7 +38,7 @@ module RecurrenceConcern
     if end_time.blank?
       nil
     elsif recurring?
-      recurrence_until.present? ? end_time.on(recurrence_until.to_date) : nil
+      recurrence_ends_at.present? ? end_time.on(recurrence_ends_at.to_date) : nil
     elsif defined?(end_day) && end_day.present?
       end_time.on(end_day)
     else
@@ -70,10 +79,6 @@ module RecurrenceConcern
     { interval: 1 }.merge(recurrence.default_options.to_h)
   end
 
-  def recurrence_until
-    recurrence&.to_hash&.[](:until)
-  end
-
   def recurrence_interval
     return nil if recurrence.nil?
 
@@ -93,7 +98,7 @@ module RecurrenceConcern
   private
 
   def occurrence_start_at_list_for(inclusive_date_range)
-    min_until = [inclusive_date_range.end, recurrence_until].compact.min.end_of_day
+    min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
     inclusive_datetime_range = (inclusive_date_range.begin)..(inclusive_date_range.end.end_of_day)
     if recurring?
       recurrence.starting(starts_at).until(min_until).lazy.select do |occurrence_starts_at|
@@ -106,6 +111,10 @@ module RecurrenceConcern
 
   def event_in_range?(event_starts_at, event_ends_at, range)
     range.cover?(event_starts_at) || range.cover?(event_ends_at) || (event_starts_at < range.begin && range.end < event_ends_at)
+  end
+
+  def set_recurrence_ends_at
+    self.recurrence_ends_at = recurrence&.ends_at
   end
 
   def clear_empty_recurrence
