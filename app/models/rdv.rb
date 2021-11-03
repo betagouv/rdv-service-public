@@ -59,6 +59,7 @@ class Rdv < ApplicationRecord
   scope :with_lieu, ->(lieu) { joins(:lieu).where(lieux: { id: lieu.id }) }
   scope :visible, -> { joins(:motif).where(motifs: { visibility_type: [Motif::VISIBLE_AND_NOTIFIED, Motif::VISIBLE_AND_NOT_NOTIFIED] }) }
 
+  before_save :update_unknow_past_rdv_count, if: -> { (status_changed? || new_record?) && past? }
   after_save :associate_users_with_organisation
   after_commit :reload_uuid, on: :create
 
@@ -203,6 +204,13 @@ class Rdv < ApplicationRecord
   def associate_users_with_organisation
     users.each do |u|
       u.add_organisation(organisation)
+    end
+  end
+
+  def update_unknow_past_rdv_count
+    updater = unknown? ? 1 : -1
+    agents.each do |agent|
+      agent.update(unknow_past_rdv_count: agent.unknow_past_rdv_count + updater)
     end
   end
 
