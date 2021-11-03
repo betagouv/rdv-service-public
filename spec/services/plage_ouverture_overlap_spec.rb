@@ -14,7 +14,7 @@ describe PlageOuvertureOverlap do
       :plage_ouverture,
       agent: agent,
       first_day: first_day,
-      recurrence_until: (recurrence ? recurrence.to_hash[:until] : nil),
+      recurrence_ends_at: (recurrence ? recurrence.ends_at : nil),
       start_time: Tod::TimeOfDay.new(start_hour),
       end_time: Tod::TimeOfDay.new(end_hour),
       **(recurrence ? { recurrence: recurrence.to_json } : {})
