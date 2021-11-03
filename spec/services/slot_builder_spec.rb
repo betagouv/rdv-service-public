@@ -134,6 +134,45 @@ describe SlotBuilder, type: :service do
       range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
       expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq([Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 11:00")])
     end
+
+    it "return plage ouverture slot minus rdv duration" do
+      motif = create(:motif, default_duration_in_min: 60, organisation: organisation)
+      starts_at = Time.zone.parse("20211027 9:00")
+      ends_at = Time.zone.parse("20211027 11:00")
+      agent = create(:agent, organisations: [organisation])
+      rdv = create(:rdv, motif: motif, starts_at: starts_at, agents: [agent])
+      plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent, motifs: [motif])
+      range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
+
+      expected_ranges = [rdv.ends_at..ends_at]
+      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
+    end
+
+    it "return plage ouverture slot minus rdv duration minus free_times under motif duration" do
+      pending "on calcul le temps libre uniquement ? Ici on pourait, en ajoutant le motif en paramètre, écarter les dispo qui ne sont pas assez longue pour le motif"
+      motif = create(:motif, default_duration_in_min: 60, organisation: organisation)
+      starts_at = Time.zone.parse("20211027 9:00")
+      agent = create(:agent, organisations: [organisation])
+      rdv = create(:rdv, motif: motif, starts_at: starts_at + 30.minutes, agents: [agent])
+      puts rdv.inspect
+      plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent, motifs: [motif])
+      range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
+
+      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq([])
+    end
+
+    it "return plage ouverture slot minus RDV duration that overlap po when RDV starts before PO" do
+      motif = create(:motif, default_duration_in_min: 60, organisation: organisation)
+      starts_at = Time.zone.parse("20211027 9:00")
+      ends_at = Time.zone.parse("20211027 11:00")
+      agent = create(:agent, organisations: [organisation])
+      rdv = create(:rdv, motif: motif, starts_at: starts_at - 30.minutes, agents: [agent])
+      plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent)
+      range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
+
+      expected_ranges = [rdv.ends_at..ends_at]
+      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
+    end
   end
 
   describe "#slots_for" do
