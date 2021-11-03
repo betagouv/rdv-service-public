@@ -24,12 +24,14 @@ module SlotBuilder
     #
     # pour exclure les PO dont la récurrence termine avant le date range de construction de créneau, il faudrait avoir les éléments de la récurrence accessible pour une requete direct : ici surtout la date de fin de récurrence.
     #
+    # Inclure les RDV et les Absences de l'agent pour pouvoir les soustraires dans freetimes
     #
-    # Inclure les RDV et les Absences de l'agent
+    # TODO utiliser les scopes défini dans la PR #1839 https://github.com/betagouv/rdv-solidarites.fr/pull/1839 quand elle sera dispo
+    #
     organisation.plage_ouvertures.joins(:motifs).where("motifs.id": motif.id).not_expired.where("first_day < ?", date_range.end)
   end
 
-  def self.free_times_from(plage_ouvertures, date_range, off_days) # récupération d'un ActiveRecord::Query sur les PO
+  def self.free_times_from(plage_ouvertures, date_range, off_days)
     free_times = {}
     plage_ouvertures.each do |plage_ouverture|
       free_times[plage_ouverture] = calculate_free_times(plage_ouverture, date_range, off_days)
@@ -64,13 +66,12 @@ module SlotBuilder
     slots
   end
 
-  # TODO utiliser un while plutôt que la récursivité
-  def self.calculate_slots(free_time, motif, slots = [], &build_creneau)
-    try_end_time = free_time.begin + motif.default_duration_in_min.minutes
-    if free_time.end > try_end_time
-      new_free_time = (free_time.begin + motif.default_duration_in_min.minutes)..free_time.end
-      slots << build_creneau.call(free_time.begin) if block_given?
-      calculate_slots(new_free_time, motif, slots, &build_creneau)
+  def self.calculate_slots(free_time, motif, &build_creneau)
+    slots = []
+    possible_slot_time = free_time.begin..(free_time.begin + motif.default_duration_in_min.minutes)
+    while possible_slot_time.end <= free_time.end
+      slots << build_creneau.call(possible_slot_time.begin) if block_given?
+      possible_slot_time = possible_slot_time.end..(possible_slot_time.end + motif.default_duration_in_min.minutes)
     end
     slots
   end

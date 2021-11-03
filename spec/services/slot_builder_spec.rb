@@ -12,18 +12,17 @@ describe SlotBuilder, type: :service do
   describe "#available_slots" do
     let(:motif) { create(:motif, default_duration_in_min: 60, organisation: organisation) }
     let(:first_day) { Date.new(2021, 5, 3) }
-    let(:date_range) { first_day...Date.new(2021, 5, 8) }
+    let(:date_range) { first_day..Date.new(2021, 5, 8) }
     let(:off_days) { [] }
-    let(:plage_ouverture) do
-      create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, organisation: organisation)
-    end
 
     it "returns 2 slots with a basic context" do
+      create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, organisation: organisation)
       slots = described_class.available_slots(motif, date_range, organisation, off_days)
       expect(slots.map(&:starts_at).map(&:hour)).to eq([9, 10])
     end
 
     it "return Crenaux object" do
+      create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, organisation: organisation)
       slots = described_class.available_slots(motif, date_range, organisation, off_days)
       expect(slots.map(&:class).map(&:to_s).uniq).to eq(["Creneau"])
     end
@@ -32,7 +31,7 @@ describe SlotBuilder, type: :service do
   describe "#plage_ouvertures_for" do
     let(:motif) { create(:motif, default_duration_in_min: 60, organisation: organisation) }
     let(:first_day) { Date.new(2021, 5, 3) }
-    let(:date_range) { first_day...Date.new(2021, 5, 8) }
+    let(:date_range) { first_day..Date.new(2021, 5, 8) }
 
     it "return empty without plage_ouverture" do
       plage_ouvertures = described_class.plage_ouvertures_for(motif, date_range, organisation)
@@ -100,7 +99,6 @@ describe SlotBuilder, type: :service do
                                               recurrence: Montrose.every(:week, starts: first_day - 1.day))
 
       plage_ouvertures = described_class.plage_ouvertures_for(motif, date_range, organisation)
-      puts "pos: #{PlageOuverture.all.inspect}"
 
       expect(plage_ouvertures.sort).to eq([matching_po, recurring_po].sort)
     end
