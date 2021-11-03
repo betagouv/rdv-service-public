@@ -1,24 +1,37 @@
 # frozen_string_literal: true
 
 describe CronJob::UpdatePlageOuverturesExpirationsJob, type: :job do
-  subject do
-    described_class.perform_now
+  let(:now) { Time.zone.parse("20211015 8:50") }
+
+  before do
+    travel_to(now)
   end
 
-  let(:first_day) { Time.zone.today.next_week(:monday) }
-  let!(:plage_ouverture_reguliere) { create(:plage_ouverture, first_day: first_day, recurrence: Montrose.every(:week, until: Time.zone.now, starts: first_day)) }
-  let!(:plage_ouverture_exceptionnelle) { create(:plage_ouverture, :no_recurrence, first_day: Time.zone.today) }
+  context "without recurrence" do
+    it "expired past first_day PO" do
+      plage_ouverture_exceptionnelle = create(:plage_ouverture, :no_recurrence, first_day: now.to_date - 1.week)
+      described_class.perform_now
+      expect(plage_ouverture_exceptionnelle.reload.expired_cached).to eq true
+    end
 
-  context "when plage ouverture are expired" do
-    it "calls notification service" do
-      travel_to(2.days.from_now)
-      expect { subject }.to change(PlageOuverture.where(expired_cached: true), :count).from(0).to(2)
+    it "not expired futur first_day" do
+      plage_ouverture_exceptionnelle = create(:plage_ouverture, :no_recurrence, first_day: now.to_date + 1.week)
+      described_class.perform_now
+      expect(plage_ouverture_exceptionnelle.reload.expired_cached).to eq false
     end
   end
 
-  context "when plage ouverture are not expired" do
-    it "calls notification service" do
-      expect { subject }.not_to change(PlageOuverture.where(expired_cached: true), :count)
+  context "with recurrence" do
+    it "expired past first_day PO" do
+      plage_ouverture_reguliere = create(:plage_ouverture, first_day: now - 4.weeks, recurrence: Montrose.every(:week, until: now - 1.week, starts: now - 4.weeks))
+      described_class.perform_now
+      expect(plage_ouverture_reguliere.reload.expired_cached).to eq true
+    end
+
+    it "not expired futur first_day" do
+      plage_ouverture_reguliere = create(:plage_ouverture, first_day: now - 4.weeks, recurrence: Montrose.every(:week, until: now + 1.week, starts: now - 4.weeks))
+      described_class.perform_now
+      expect(plage_ouverture_reguliere.reload.expired_cached).to eq false
     end
   end
 end

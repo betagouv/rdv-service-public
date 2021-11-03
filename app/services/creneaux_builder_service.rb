@@ -29,7 +29,7 @@ class CreneauxBuilderService < BaseService
 
   def plages_ouvertures # NOTE: this is cached by find_availability_service
     @plages_ouvertures ||= PlageOuverture
-      .in(@inclusive_date_range)
+      .in_range(@inclusive_date_range)
       .for_lieu(@lieu)
       .not_expired
       .for_motif(@motif_name, @lieu.organisation_id)
