@@ -14,6 +14,7 @@ module RecurrenceConcern
 
     validates :first_day, :start_time, :end_time, presence: true
     validate :recurrence_starts_matches_first_day, if: :recurring?
+    validate :recurrence_ends_after_first_day, if: :recurring?
 
     scope :exceptionnelles, -> { where(recurrence: nil) }
     scope :regulieres, -> { where.not(recurrence: nil) }
@@ -75,10 +76,6 @@ module RecurrenceConcern
       .map { |o| Recurrence::Occurrence.new(starts_at: o, ends_at: o + duration) }
   end
 
-  def recurrence_opts
-    { interval: 1 }.merge(recurrence.default_options.to_h)
-  end
-
   def recurrence_interval
     return nil if recurrence.nil?
 
@@ -125,5 +122,12 @@ module RecurrenceConcern
     return true if recurrence.to_h[:starts]&.to_date == first_day
 
     errors.add(:base, "Le début de la récurrence ne correspond pas au premier jour.")
+  end
+
+  def recurrence_ends_after_first_day
+    return true if recurrence.ends_at.nil?
+    return true if recurrence.ends_at.to_date > first_day
+
+    errors.add(:base, "La fin de la récurrence doit être après le premier jour.")
   end
 end
