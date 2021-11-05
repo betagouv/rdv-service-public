@@ -28,7 +28,7 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
     @zone = Zone.new(**zone_params, sector: @sector)
     authorize_admin(@zone)
     if @zone.save
-      redirect_to admin_territory_sector_path(current_territory, @sector), flash: { success: "#{Zone.human_attribute_name("levels.#{@zone.leve}l")} ajoutée au secteur" }
+      redirect_to admin_territory_sector_path(current_territory, @sector), flash: { success: "#{@zone.human_attribute_value(:level)} ajoutée au secteur" }
     else
       render :new
     end
