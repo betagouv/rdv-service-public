@@ -132,4 +132,38 @@ describe RecurrenceConcern do
     end
     it_behaves_like "in range", :absence, :plage_ouverture
   end
+
+  describe "#recurrence_ends_after_first_day" do
+    shared_examples "recurrence ends after first day" do |*elements|
+      elements.each do |element|
+        context element.to_s do
+          it "valid #{element} when recurrence ends after first_day" do
+            starts = Date.new(2021, 10, 27)
+            recurring_object = build(element, first_day: starts, recurrence: Montrose.every(:week, on: ["wednesday"], starts: starts, until: starts + 1.week))
+            expect(recurring_object).to be_valid
+          end
+
+          it "valid #{element} when recurrence ends is nil" do
+            starts = Date.new(2021, 10, 27)
+            recurring_object = build(element, first_day: starts, recurrence: Montrose.every(:week, on: ["wednesday"], starts: starts, until: nil))
+            expect(recurring_object).to be_valid
+          end
+
+          it "invalid #{element} when recurrence ends at first_day" do
+            starts = Date.new(2021, 10, 27)
+            recurring_object = build(element, first_day: starts, recurrence: Montrose.every(:week, on: ["wednesday"], starts: starts, until: starts))
+            expect(recurring_object).to be_invalid
+          end
+
+          it "invalid #{element} when recurrence ends before first_day" do
+            starts = Date.new(2021, 10, 27)
+            recurring_object = build(element, first_day: starts, recurrence: Montrose.every(:week, on: ["wednesday"], starts: starts, until: starts - 1.week))
+            expect(recurring_object).to be_invalid
+          end
+        end
+      end
+    end
+
+    it_behaves_like "recurrence ends after first day", :absence, :plage_ouverture
+  end
 end
