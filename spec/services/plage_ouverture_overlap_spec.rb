@@ -3,13 +3,18 @@
 describe PlageOuvertureOverlap do
   let(:organisation) { build(:organisation) }
   let(:agent) { build(:agent, organisations: [organisation]) }
-  let(:monday) { Time.zone.today.next_week(:monday) }
+  let(:monday) { Date.new(2021, 9, 20) }
+
+  before do
+    travel_to(monday)
+  end
 
   def build_po(first_day, start_hour, end_hour, recurrence = nil)
     build(
       :plage_ouverture,
       agent: agent,
       first_day: first_day,
+      recurrence_ends_at: (recurrence ? recurrence.ends_at : nil),
       start_time: Tod::TimeOfDay.new(start_hour),
       end_time: Tod::TimeOfDay.new(end_hour),
       **(recurrence ? { recurrence: recurrence.to_json } : {})

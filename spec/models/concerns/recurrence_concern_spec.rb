@@ -67,4 +67,69 @@ describe RecurrenceConcern do
     expect(first_occurrence.starts_at).to eq(expected_boundaries[:starts_at])
     expect(first_occurrence.ends_at).to eq(expected_boundaries[:ends_at])
   end
+
+  describe "#in_range" do
+    shared_examples "in range" do |*elements|
+      elements.each do |element|
+        element_class = element.to_s.classify.constantize
+
+        context element.to_s do
+          let(:today) { Date.new(2021, 10, 3) }
+          let(:range) { Date.new(2021, 10, 25)..Date.new(2021, 10, 29) }
+
+          before do
+            travel_to(today)
+          end
+
+          it "returns #{element} when no recurrence and first_day in range" do
+            object = create(element, first_day: Date.new(2021, 10, 26), recurrence: nil)
+            expect(element_class.in_range(range)).to eq([object])
+          end
+
+          it "dont returns #{element} when no recurrence and first_day after range" do
+            create(element, first_day: Date.new(2021, 11, 26), recurrence: nil)
+            expect(element_class.in_range(range)).to eq([])
+          end
+
+          it "dont returns #{element} when no recurrence and first_day before range" do
+            create(element, first_day: Date.new(2021, 9, 26), recurrence: nil)
+            expect(element_class.in_range(range)).to eq([])
+          end
+
+          it "returns #{element} with recurrence start in range" do
+            first_day = Date.new(2021, 9, 26)
+            object = create(element, first_day: first_day, recurrence: Montrose.every(:week, on: ["monday"], starts: first_day))
+            expect(element_class.in_range(range)).to eq([object])
+          end
+
+          it "returns #{element} with recurrence ends in range" do
+            first_day = range.begin - 1.month
+            object = create(element, first_day: first_day, recurrence: Montrose.every(:week, on: ["monday"], starts: first_day, until: range.end - 2.days))
+            expect(element_class.in_range(range)).to eq([object])
+          end
+
+          it "returns #{element} with recurrence start before range and end after range" do
+            first_day = range.begin - 1.day
+            object = create(element, first_day: first_day, recurrence: Montrose.every(:week, on: ["monday"], starts: first_day, until: range.end + 2.days))
+            expect(element_class.in_range(range)).to eq([object])
+          end
+
+          it "dont returns #{element} with recurrence end before range" do
+            first_day = range.begin - 2.months
+            create(element, first_day: first_day,
+                            recurrence: Montrose.every(:week, on: ["monday"], starts: first_day, until: range.begin - 3.days))
+            expect(element_class.in_range(range)).to eq([])
+          end
+
+          it "dont returns #{element} with recurrence start after range" do
+            first_day = range.end + 4.days
+            create(element, first_day: first_day,
+                            recurrence: Montrose.every(:week, on: ["monday"], starts: first_day))
+            expect(element_class.in_range(range)).to eq([])
+          end
+        end
+      end
+    end
+    it_behaves_like "in range", :absence, :plage_ouverture
+  end
 end

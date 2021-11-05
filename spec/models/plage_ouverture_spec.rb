@@ -30,46 +30,6 @@ describe PlageOuverture, type: :model do
 
   it_behaves_like "recurrence"
 
-  describe ".not_expired_for_motif_name_and_lieu" do
-    subject { described_class.not_expired_for_motif_name_and_lieu(motif.name, lieu) }
-
-    let!(:service) { create(:service, name: "pmi") }
-    let!(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, service: service, organisation: organisation) }
-    let!(:lieu) { create(:lieu, organisation: organisation) }
-    let(:today) { Date.new(2019, 9, 19) }
-    let(:six_days_later) { Date.new(2019, 9, 25) }
-    let(:agent) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
-    let(:agent2) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
-    let(:agent3) { create(:agent, service: service, basic_role_in_organisations: [organisation]) }
-    let!(:plage_ouverture) do
-      create(:plage_ouverture, :weekly, agent: agent, motifs: [motif], lieu: lieu, first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation)
-    end
-
-    it { expect(subject).to contain_exactly(plage_ouverture) }
-
-    describe "when PO is not expired" do
-      let!(:plage_ouverture) do
-        create(:plage_ouverture, :weekly, motifs: [motif], lieu: lieu, first_day: six_days_later, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), organisation: organisation)
-      end
-
-      it { expect(subject).to contain_exactly(plage_ouverture) }
-    end
-
-    describe "when PO is expired" do
-      let!(:plage_ouverture) do
-        create(
-          :plage_ouverture,
-          motifs: [motif], lieu: lieu, first_day: today - 2.weeks,
-          start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-          organisation: organisation,
-          recurrence: Montrose.every(:week, on: [:monday], starts: today - 2.weeks, until: today - 1.week), expired_cached: true
-        )
-      end
-
-      it { expect(subject.count).to eq(0) }
-    end
-  end
-
   describe "#expired?" do
     subject { plage_ouverture.expired? }
 
@@ -94,27 +54,25 @@ describe PlageOuverture, type: :model do
     end
 
     context "with plages regulières" do
-      describe "when until is in past" do
-        let(:first_day) { Time.zone.today.next_week(:monday) }
-        let(:plage_ouverture) do
-          create(:plage_ouverture, first_day: first_day, recurrence: Montrose.every(:week, until: DateTime.parse("2020-07-30 10:30").in_time_zone, starts: first_day), organisation: organisation)
-        end
-
-        it { is_expected.to be true }
+      it "returns true when until is in past" do
+        now = Time.zone.parse("20200730 10:30")
+        travel_to(now)
+        plage_ouverture = create(:plage_ouverture, first_day: now - 3.weeks, recurrence: Montrose.every(:week, until: now - 1.week, starts: now - 3.weeks), organisation: organisation)
+        expect(plage_ouverture.expired?).to be true
       end
 
-      describe "when until is in future" do
-        let(:first_day) { Time.zone.today.next_week(:monday) }
-        let(:plage_ouverture) { create(:plage_ouverture, first_day: first_day, recurrence: Montrose.every(:week, until: 2.days.from_now, starts: first_day), organisation: organisation) }
-
-        it { is_expected.to be false }
+      it "returns false when until is in future" do
+        now = Time.zone.parse("20200730 10:30")
+        travel_to(now)
+        plage_ouverture = create(:plage_ouverture, first_day: now - 3.weeks, recurrence: Montrose.every(:week, until: now + 1.week, starts: now - 3.weeks), organisation: organisation)
+        expect(plage_ouverture.expired?).to be false
       end
 
-      describe "when until is today" do
-        let(:first_day) { Time.zone.today.next_week(:monday) }
-        let(:plage_ouverture) { create(:plage_ouverture, first_day: first_day, recurrence: Montrose.every(:week, until: Time.zone.today, starts: first_day), organisation: organisation) }
-
-        it { is_expected.to be false }
+      it "returns false when until is today" do
+        now = Time.zone.parse("20200730 10:30")
+        travel_to(now)
+        plage_ouverture = create(:plage_ouverture, first_day: now - 3.weeks, recurrence: Montrose.every(:week, until: now, starts: now - 3.weeks), organisation: organisation)
+        expect(plage_ouverture.expired?).to be false
       end
     end
   end

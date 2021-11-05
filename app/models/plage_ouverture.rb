@@ -21,6 +21,9 @@ class PlageOuverture < ApplicationRecord
 
   has_many :webhook_endpoints, through: :organisation
 
+  scope :for_lieu, ->(lieu) { where(lieu: lieu) }
+  scope :for_motif, ->(motif_name, organisation_id) { joins(:motifs).where(motifs: { name: motif_name, organisation_id: organisation_id }) }
+
   def ical_uid
     "plage_ouverture_#{id}@#{BRAND}"
   end
@@ -31,15 +34,6 @@ class PlageOuverture < ApplicationRecord
 
   def time_shift_duration_in_min
     time_shift.duration / 60
-  end
-
-  def self.not_expired_for_motif_name_and_lieu(motif_name, lieu)
-    PlageOuverture
-      .where(lieu: lieu)
-      .not_expired
-      .joins(:motifs)
-      .where(motifs: { name: motif_name, organisation_id: lieu.organisation_id })
-      .includes(:agent)
   end
 
   def available_motifs

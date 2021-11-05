@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_20_192102) do
+ActiveRecord::Schema.define(version: 2021_11_01_080623) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,9 +69,13 @@ ActiveRecord::Schema.define(version: 2021_10_20_192102) do
     t.date "end_day", null: false
     t.time "end_time", null: false
     t.boolean "expired_cached", default: false, null: false
+    t.datetime "recurrence_ends_at"
+    t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[)'::text)", name: "index_absences_on_tsrange_first_day_recurrence_ends_at", using: :gist
     t.index ["agent_id"], name: "index_absences_on_agent_id"
     t.index ["end_day"], name: "index_absences_on_end_day"
+    t.index ["first_day"], name: "index_absences_on_first_day"
     t.index ["organisation_id"], name: "index_absences_on_organisation_id"
+    t.index ["recurrence"], name: "index_absences_on_recurrence", where: "(recurrence IS NOT NULL)"
   end
 
   create_table "action_text_rich_texts", force: :cascade do |t|
@@ -298,10 +302,14 @@ ActiveRecord::Schema.define(version: 2021_10_20_192102) do
     t.text "recurrence"
     t.bigint "lieu_id"
     t.boolean "expired_cached", default: false
+    t.datetime "recurrence_ends_at"
+    t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[)'::text)", name: "index_plage_ouvertures_on_tsrange_first_day_recurrence_ends_at", using: :gist
     t.index ["agent_id"], name: "index_plage_ouvertures_on_agent_id"
     t.index ["expired_cached"], name: "index_plage_ouvertures_on_expired_cached"
+    t.index ["first_day"], name: "index_plage_ouvertures_on_first_day"
     t.index ["lieu_id"], name: "index_plage_ouvertures_on_lieu_id"
     t.index ["organisation_id"], name: "index_plage_ouvertures_on_organisation_id"
+    t.index ["recurrence"], name: "index_plage_ouvertures_on_recurrence", where: "(recurrence IS NOT NULL)"
   end
 
   create_table "rdv_events", force: :cascade do |t|

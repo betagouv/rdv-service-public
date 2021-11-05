@@ -119,8 +119,11 @@ shared_examples_for "recurrence" do
     context "when there is a daily recurrence and until is set" do
       let(:first_day) { Date.new(2019, 7, 22) }
       let(:model_instance) do
-        build(model_symbol, first_day: first_day, start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(12),
-                            recurrence: Montrose.every(:day, starts: first_day, until: Date.new(2019, 8, 5)).to_json)
+        build(model_symbol, first_day: first_day,
+                            start_time: Tod::TimeOfDay.new(8),
+                            end_time: Tod::TimeOfDay.new(12),
+                            recurrence: Montrose.every(:day, starts: first_day, until: Date.new(2019, 8, 5)).to_json,
+                            recurrence_ends_at: Date.new(2019, 8, 5))
       end
       let(:date_range) { Date.new(2019, 8, 5)..Date.new(2019, 8, 11) }
 

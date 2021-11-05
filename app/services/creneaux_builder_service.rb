@@ -29,7 +29,11 @@ class CreneauxBuilderService < BaseService
 
   def plages_ouvertures # NOTE: this is cached by find_availability_service
     @plages_ouvertures ||= PlageOuverture
-      .not_expired_for_motif_name_and_lieu(@motif_name, @lieu)
+      .in_range(@inclusive_date_range)
+      .for_lieu(@lieu)
+      .not_expired
+      .for_motif(@motif_name, @lieu.organisation_id)
+      .includes(:agent)
       .where(({ agent_id: @agent_ids } unless @agent_ids.nil?))
       .where(({ motifs: { location_type: @motif_location_type } } if @motif_location_type.present?))
       .where(({ motifs: { service: @service } } if @service.present?))
