@@ -15,15 +15,10 @@ class RdvWizardStep2 {
 
   attachAddUserListener = () => {
     $('.js-new-rdv-users-select').on('select2:select', (e) => {
-      this.showSpinner()
       const urlSearchParams = this.getCanonicalUrlSearchParams()
       urlSearchParams.append("user_ids[]", e.params.data.id)
       this.redirectToUrlWithSearchParams(urlSearchParams)
     });
-  }
-
-  showSpinner = () => {
-    $(".js-users-spinner").removeClass("d-none")
   }
 
   redirectToUrlWithSearchParams = (urlSearchParams) => {
