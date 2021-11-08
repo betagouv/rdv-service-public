@@ -4,7 +4,6 @@ class RdvWizardStep2 {
     if (!$('.js-new-rdv-users-select').length) { return; }
 
     this.canonicalUrlStr = document.querySelector("input[name=js-canonical-path]").value;
-    this.organisationId = document.querySelector("input[name=js-current-organisation-id]").value;
 
     this.attachAddUserListener()
     this.attachToggleAddUserInterface()
