@@ -12,26 +12,9 @@ module SlotBuilder
     slots_for(free_times, motif)
   end
 
-  # TODO: Pourrait être un scope de plage d'ouverture. Quel nom ?
   def self.plage_ouvertures_for(motif, date_range, organisation, *_options)
-    # Pas de solution simple pour prendre en compte le cas d'exclusion des PO qui sont sur une journée, sans réccurrence, entre la date de début du range et aujourd'hui (elles ne sont pas expirées).
-    # En prenant le first_day dans le range on les exclus, mais on exclus aussi les PO récurrente dont le first_day est dans le passée et la réccurence encore active
-    # En prenant le first_day < à la date de fin du range on récupère les PO qui sont entre la date de début du range et aujourd'hui.
-    # En attendant, je me dit que ce cas est mineur et que ça fera sans doute pas beaucoup de PO.
-    # Elles seront filtrées plus tard.
-    #
-    # avec un OR on pourrait prendre en compte les deux cas (avec et sans recurrence)
-    #
-    # pour exclure les PO dont la récurrence termine avant le date range de construction de créneau,
-    # il faudrait avoir les éléments de la récurrence accessible pour une requete direct : ici surtout la date de fin de récurrence.
-    #
-    # Inclure les RDV et les Absences de l'agent pour pouvoir les soustraires dans freetimes
-    #
-    # TODO utiliser les scopes défini dans la PR #1839 https://github.com/betagouv/rdv-solidarites.fr/pull/1839 quand elle sera dispo
-    #
-    # TODO filtre sur le lieu des options
-    #
-    organisation.plage_ouvertures.joins(:motifs).where("motifs.id": motif.id).not_expired.where("first_day < ?", date_range.end)
+    # TODO: filtre sur le lieu des options
+    organisation.plage_ouvertures.for_motif_object(motif).not_expired.in_range(date_range)
   end
 
   def self.free_times_from(plage_ouvertures, date_range, off_days)
@@ -40,33 +23,56 @@ module SlotBuilder
       free_times[plage_ouverture] = calculate_free_times(plage_ouverture, date_range, off_days)
     end
     free_times
-    # retourner plutôt un enumérator histoire d'être lazy ?
+    # TODO: retourner plutôt un enumérator histoire d'être lazy ?
   end
 
   def self.calculate_free_times(plage_ouverture, date_range, _off_days)
-    # TODO: soustraire les RDV et les absences de l'agent de la PO sur la période donnée
+    ranges = [range_for(plage_ouverture, date_range)].compact
+    return if ranges.empty?
+
+    # On soustrait les RDV du temps disponible
+    rdvs = plage_ouverture.agent.rdvs.where(starts_at: date_range).or(plage_ouverture.agent.rdvs.where(ends_at: date_range))
+
+    ranges = split_range_with_loop(ranges, rdvs)
+    # TODO: manque les absences / indisponibilités
+    ranges.select { |r| ((r.end.to_i - r.begin.to_i) / 60).positive? }
+  end
+
+  def self.range_for(plage_ouverture, date_range)
     occurrences = plage_ouverture.occurrences_for(date_range)
     return [] if occurrences.empty?
 
     # TODO: prendre en considération qu'il peut y avoir plusieurs occurrence
-    base_range = occurrences.first.starts_at..occurrences.first.ends_at
-    ranges = [base_range]
+    occurrences.first.starts_at..occurrences.first.ends_at
+  end
 
-    # On soustrait les RDV du temps disponible
-    rdvs = plage_ouverture.agent.rdvs.where(starts_at: date_range).or(plage_ouverture.agent.rdvs.where(ends_at: date_range))
-    rdvs.each do |rdv|
-      # TODO: manque le cas du RDv qui fini après la PO
-      ranges = if base_range.begin <= rdv.starts_at
-                 # RDV starts in range
-                 [base_range.begin..rdv.starts_at, rdv.ends_at..base_range.end]
-               else
-                 # RDV starts before range
-                 [rdv.ends_at..base_range.end]
-               end
+  def self.split_range_with_loop(ranges, rdvs)
+
+    # décalle le début du range
+    # TODO Et s'il y a plusieurs RDV en même temps qui couvre le début de la plage ?
+    rdv_overlapping_range_begin = rdvs.select { |rdv| (rdv.starts_at..rdv.ends_at).cover?(ranges.first.begin) }.first
+    if rdv_overlapping_range_begin
+      ranges = [(rdv_overlapping_range_begin.ends_at..ranges.first.end)]
+      rdvs -= [rdv_overlapping_range_begin]
     end
 
-    # TODO: manque les absences / indisponibilités
-    ranges.select { |r| ((r.end.to_i - r.begin.to_i) / 60).positive? }
+    # décalle la fin du range
+    # TODO Et s'il y a plusieurs RDV en même temps qui couvre la fin de la plage ?
+    rdv_overlapping_range_end = rdvs.select { |rdv| (rdv.starts_at..rdv.ends_at).cover?(ranges.first.end) }.first
+    if rdv_overlapping_range_end
+      ranges = [(ranges.first..rdv_overlapping_range_end.starts_at)]
+      rdvs -= [rdv_overlapping_range_end]
+    end
+
+    # supprime les rdv inclus
+    rdvs.each do |rdv|
+      range_to_split = ranges.last
+      new_range = range_to_split.begin..rdv.starts_at
+      new_last_range = rdv.ends_at..range_to_split.end
+      ranges = ranges[..-2] + [new_range, new_last_range]
+    end
+
+    ranges
   end
 
   def self.slots_for(plage_ouverture_free_times, motif)
