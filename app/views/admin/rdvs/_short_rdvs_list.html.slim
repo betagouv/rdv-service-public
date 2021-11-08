@@ -5,4 +5,4 @@
   ul.list-unstyled.horizontal-border-between-items
     = render partial: "admin/rdvs/short_rdv",
             collection: rdvs.includes(:motif),
-            cached: ->(rdv) { [rdv, rdv.motif] }
+            cached: true

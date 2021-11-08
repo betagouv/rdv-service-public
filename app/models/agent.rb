@@ -15,8 +15,6 @@ class Agent < ApplicationRecord
     using: { tsearch: { prefix: true, dictionary: "french" } }
   )
 
-  before_save :refresh_search_terms
-
   devise :invitable, :database_authenticatable,
          :recoverable, :rememberable, :validatable, :confirmable, :async, validate_on_invite: true
 
@@ -47,6 +45,10 @@ class Agent < ApplicationRecord
 
   has_and_belongs_to_many :users
 
+  before_save :normalize_account
+  before_save :refresh_search_terms
+  after_update -> { rdvs.touch_all }
+
   # Note about validation and Devise:
   # * Invitable#invite! creates the Agent without validation, but validates manually in advance (because we set validate_on_invite to true)
   # * it validates :email (the invite_key) specifically with Devise.email_regexp.
@@ -70,8 +72,6 @@ class Agent < ApplicationRecord
   scope :available_referents_for, lambda { |user|
     where.not(id: [user.agents.map(&:id)])
   }
-
-  before_save :normalize_account
 
   accepts_nested_attributes_for :roles
 

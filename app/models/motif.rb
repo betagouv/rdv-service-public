@@ -19,6 +19,8 @@ class Motif < ApplicationRecord
   has_many :rdvs, dependent: :restrict_with_exception
   has_and_belongs_to_many :plage_ouvertures, -> { distinct }
 
+  after_update -> { rdvs.touch_all }
+
   VISIBLE_AND_NOTIFIED = "visible_and_notified"
   VISIBLE_AND_NOT_NOTIFIED = "visible_and_not_notified"
   INVISIBLE = "invisible"
