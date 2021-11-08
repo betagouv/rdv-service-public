@@ -6,7 +6,6 @@ class RdvWizardStep2 {
     this.canonicalUrlStr = document.querySelector("input[name=js-canonical-path]").value;
 
     this.attachAddUserListener()
-    this.attachToggleAddUserInterface()
   }
 
   getCanonicalUrl = () => new URL(this.canonicalUrlStr, window.location)
@@ -21,14 +20,6 @@ class RdvWizardStep2 {
       urlSearchParams.append("user_ids[]", e.params.data.id)
       this.redirectToUrlWithSearchParams(urlSearchParams)
     });
-  }
-
-  attachToggleAddUserInterface = () => {
-    $(".js-toggle-add-user-interface").on('click', (e) => {
-      e.preventDefault()
-      $(".js-add-user-interface").removeClass("d-none")
-      $(e.currentTarget).remove()
-    })
   }
 
   showSpinner = () => {

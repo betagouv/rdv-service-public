@@ -33,11 +33,11 @@ ruby:
               ), \
               data: { modal: "true" }
 
-    - show_add_user = @rdv.users.empty? ? "d-none" : ""
-    .pl-2.mt-2= link_to "+ Ajouter un autre usager", "#", class: "js-toggle-add-user-interface #{show_add_user}"
-
-    .js-add-user-interface.mt-2 class=("d-none" if @rdv.users.any?)
-      =  select_tag :status,
+    - show_add_user = @rdv.users.empty?
+    .pl-2.mt-2.collapse.collapse-add-user-selection.no-transition class=(show_add_user ? "" : "show")
+      = link_to "+ Ajouter un autre usager", ".collapse-add-user-selection", data: { toggle: "collapse" }
+    .mt-2.collapse.collapse-add-user-selection.no-transition class=(show_add_user ? "show" : "")
+      = select_tag :status,
       options_for_select([]),
       include_blank: "Sélectionner un usager",
       required: false,
