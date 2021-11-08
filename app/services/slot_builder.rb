@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# https://pad.incubateur.net/jftuVsrKTsKbn3ay8AoL0Q?edit
 module SlotBuilder
   # À faire avant, au moment de jouer avec le motifs
   # @for_agents ? motifs : motifs.reservable_online
@@ -30,16 +29,18 @@ module SlotBuilder
     ranges = [range_for(plage_ouverture, date_range)].compact
     return if ranges.empty?
 
-    # On soustrait les RDV du temps disponible
     rdvs = plage_ouverture.agent.rdvs.where(starts_at: date_range).or(plage_ouverture.agent.rdvs.where(ends_at: date_range))
+    # TODO: ajouter la recherche des occurrences qui correspondent à la période
+    absences = plage_ouverture.agent.absences.where(first_day: date_range).or(plage_ouverture.agent.absences.where(end_day: date_range))
+
+    busy_times = rdvs + absences
 
     # version avec boucle
     # ranges = split_range_with_loop(ranges, rdvs)
     #
     # version recursive
-    ranges = split_range_recursively(ranges.first, rdvs)
+    ranges = split_range_recursively(ranges.first, busy_times)
 
-    # TODO: manque les absences / indisponibilités
     ranges.select { |r| ((r.end.to_i - r.begin.to_i) / 60).positive? }
   end
 
@@ -53,6 +54,7 @@ module SlotBuilder
 
   def self.split_range_recursively(range, rdvs)
     return [range] if rdvs.empty?
+
     rdv = rdvs.first
 
     if rdv_include_in_range?(rdv, range)
@@ -79,7 +81,6 @@ module SlotBuilder
   end
 
   def self.split_range_with_loop(ranges, rdvs)
-
     # décalle le début du range
     # TODO Et s'il y a plusieurs RDV en même temps qui couvre le début de la plage ?
     rdv_overlapping_range_begin = rdvs.select { |rdv| (rdv.starts_at..rdv.ends_at).cover?(ranges.first.begin) }.first

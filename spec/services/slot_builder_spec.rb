@@ -170,6 +170,24 @@ describe SlotBuilder, type: :service do
       expected_ranges = [rdv.ends_at..other_rdv.starts_at, other_rdv.ends_at..ends_at]
       expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
     end
+
+    it "return plage ouverture slots minus 2 Absences duration that overlap po" do
+      starts_at = Time.zone.parse("20211027 9:00")
+      ends_at = Time.zone.parse("20211027 11:00")
+
+      s8h30 = Time.zone.parse("20211027 8:30")
+      e9h30 = Time.zone.parse("20211027 9:30")
+      s9h45 = Time.zone.parse("20211027 9:45")
+      e10h45 = Time.zone.parse("20211027 10:45")
+
+      create(:absence, first_day: s8h30.to_date, start_time: Tod::TimeOfDay.new(s8h30.hour, s8h30.min), end_day: e9h30.to_date, end_time: Tod::TimeOfDay.new(e9h30.hour, e9h30.min), agent: agent)
+      create(:absence, first_day: s9h45.to_date, start_time: Tod::TimeOfDay.new(s9h45.hour, s9h45.min), end_day: e10h45.to_date, end_time: Tod::TimeOfDay.new(e10h45.hour, e10h45.min), agent: agent)
+      plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent)
+      range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
+
+      expected_ranges = [e9h30..s9h45, e10h45..ends_at]
+      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
+    end
   end
 
   describe "#slots_for" do
