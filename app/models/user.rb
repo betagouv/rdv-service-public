@@ -38,6 +38,10 @@ class User < ApplicationRecord
   has_many :relatives, foreign_key: "responsible_id", class_name: "User", inverse_of: :responsible, dependent: :nullify
   has_many :file_attentes, dependent: :destroy
 
+  before_save :set_email_to_null_if_blank
+  before_save :normalize_account
+  after_update -> { rdvs.touch_all }
+
   enum caisse_affiliation: { aucune: 0, caf: 1, msa: 2 }
   enum family_situation: { single: 0, in_a_relationship: 1, divorced: 2 }
   enum created_through: { agent_creation: "agent_creation", user_sign_up: "user_sign_up",
@@ -66,9 +70,6 @@ class User < ApplicationRecord
   scope :with_referent, lambda { |agent|
     joins(:agents_users).where(agents_users: { agent_id: agent.id })
   }
-
-  before_save :set_email_to_null_if_blank
-  before_save :normalize_account
 
   include User::ResponsabilityConcern
 

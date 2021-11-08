@@ -13,7 +13,6 @@ class Admin::RdvsController < AgentAuthController
       **params.permit(:organisation_id, :agent_id, :user_id, :lieu_id, :status)
     )
     @rdvs = policy_scope(Rdv).merge(@form.rdvs)
-      .includes(:organisation, :users, :lieu, :motif, agents: :service)
     @breadcrumb_page = params[:breadcrumb_page]
     respond_to do |format|
       format.xls { send_data(RdvExporter.export(@rdvs.order(starts_at: :desc)), filename: "rdvs.xls", type: "application/xls") }
