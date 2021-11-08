@@ -22,7 +22,9 @@ ruby:
             | &nbsp;
             = reverse_full_name_and_birthdate(user)
             = relative_tag(user)
-          div.ml-2= link_to "╳ Retirer", "#", class: "js-remove-user", data: { "user-id": user.id }
+          - remove_link_params = request.params.deep_dup
+          - remove_link_params["user_ids"].delete(user.id.to_s)
+          div.ml-2= link_to "╳ Retirer", remove_link_params
           div.ml-2
             = link_to \
               "✎ Modifier usager", \
