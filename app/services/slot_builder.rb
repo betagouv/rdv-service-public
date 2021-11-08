@@ -33,7 +33,12 @@ module SlotBuilder
     # On soustrait les RDV du temps disponible
     rdvs = plage_ouverture.agent.rdvs.where(starts_at: date_range).or(plage_ouverture.agent.rdvs.where(ends_at: date_range))
 
-    ranges = split_range_with_loop(ranges, rdvs)
+    # version avec boucle
+    # ranges = split_range_with_loop(ranges, rdvs)
+    #
+    # version recursive
+    ranges = split_range_recursively(ranges.first, rdvs)
+
     # TODO: manque les absences / indisponibilités
     ranges.select { |r| ((r.end.to_i - r.begin.to_i) / 60).positive? }
   end
@@ -42,8 +47,35 @@ module SlotBuilder
     occurrences = plage_ouverture.occurrences_for(date_range)
     return [] if occurrences.empty?
 
-    # TODO: prendre en considération qu'il peut y avoir plusieurs occurrence
+    # TODO: prendre en considération qu'il peut y avoir plusieurs occurrence dans une même période
     occurrences.first.starts_at..occurrences.first.ends_at
+  end
+
+  def self.split_range_recursively(range, rdvs)
+    return [range] if rdvs.empty?
+    rdv = rdvs.first
+
+    if rdv_include_in_range?(rdv, range)
+      [range.begin..rdv.starts_at] + split_range_recursively(rdv.ends_at..range.end, rdvs - [rdv])
+    elsif rdv_overlap_begin_of_range?(rdv, range)
+      split_range_recursively(rdv.ends_at..range.end, rdvs - [rdv])
+    elsif rdv_overlap_end_of_range?(rdv, range)
+      split_range_recursively(range.begin..rdv.starts_at, rdvs - [rdv])
+    else
+      [range]
+    end
+  end
+
+  def self.rdv_include_in_range?(rdv, range)
+    range.begin < rdv.starts_at && rdv.ends_at <= range.end
+  end
+
+  def self.rdv_overlap_begin_of_range?(rdv, range)
+    rdv.starts_at <= range.begin
+  end
+
+  def self.rdv_overlap_end_of_range?(rdv, range)
+    range.end <= rdv.ends_at
   end
 
   def self.split_range_with_loop(ranges, rdvs)

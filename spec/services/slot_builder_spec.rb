@@ -148,16 +148,6 @@ describe SlotBuilder, type: :service do
       expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
     end
 
-    it "return plage ouverture slot minus rdv duration minus free_times under motif duration" do
-      pending "on calcul le temps libre uniquement ? Ici on pourait, en ajoutant le motif en paramètre, écarter les dispo qui ne sont pas assez longue pour le motif"
-      starts_at = Time.zone.parse("20211027 9:00")
-      create(:rdv, motif: motif, starts_at: starts_at + 30.minutes, agents: [agent])
-      plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent, motifs: [motif])
-      range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
-
-      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq([])
-    end
-
     it "return plage ouverture slot minus RDV duration that overlap po when RDV starts before PO" do
       starts_at = Time.zone.parse("20211027 9:00")
       ends_at = Time.zone.parse("20211027 11:00")
