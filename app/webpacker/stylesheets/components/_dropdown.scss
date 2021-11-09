@@ -5,7 +5,6 @@
 
 .show {
   > .dropdown-menu {
-    display: contents;
     visibility: visible;
     opacity: 1;
     margin-top: 0 !important;
@@ -16,5 +15,13 @@
 .arrow-none {
   &:after {
     display: none;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .show {
+    > .dropdown-menu {
+      display: contents;
+    }
   }
 }

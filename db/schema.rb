@@ -147,6 +147,7 @@ ActiveRecord::Schema.define(version: 2021_11_01_080623) do
     t.boolean "allow_password_change", default: false
     t.enum "rdv_notifications_level", default: "soon", enum_name: "agents_rdv_notifications_level"
     t.text "search_terms"
+    t.integer "unknow_past_rdv_count", default: 0
     t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_agents_search_terms", using: :gin
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true
