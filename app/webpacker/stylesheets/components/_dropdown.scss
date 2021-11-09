@@ -1,5 +1,6 @@
 .dropdown-menu {
   box-shadow: $shadow;
+  min-width: 30rem;
 }
 
 .show {
@@ -14,5 +15,13 @@
 .arrow-none {
   &:after {
     display: none;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .show {
+    > .dropdown-menu {
+      display: contents;
+    }
   }
 }
