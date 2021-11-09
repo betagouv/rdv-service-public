@@ -24,18 +24,20 @@ ruby:
             = relative_tag(user)
           - remove_link_params = request.params.deep_dup
           - remove_link_params["user_ids"].delete(user.id.to_s)
-          div.ml-2= link_to "╳ Retirer", remove_link_params
+          div.ml-2= link_to remove_link_params, title: t("helpers.remove")
+            i.fa.fa-minus-circle
           div.ml-2
-            = link_to \
-              "✎ Modifier usager", \
-              edit_admin_organisation_user_path( \
+            = link_to edit_admin_organisation_user_path( \
                 current_organisation, user, modal: true, return_location: modals_return_location, role: default_service_selection_from(user) \
               ), \
-              data: { modal: "true" }
+              data: { modal: "true" }, title: t("helpers.edit")
+              i.fa.fa-edit
 
     - show_add_user = @rdv.users.empty?
     .pl-2.mt-2.collapse.collapse-add-user-selection.no-transition class=(show_add_user ? "" : "show")
-      = link_to "+ Ajouter un autre usager", ".collapse-add-user-selection", data: { toggle: "collapse" }
+      = link_to ".collapse-add-user-selection", data: { toggle: "collapse" }
+        i.fa.fa-plus-circle
+        span.ml-1= t("helpers.add")
     .mt-2.collapse.collapse-add-user-selection.no-transition class=(show_add_user ? "show" : "")
       = select_tag :status,
       options_for_select([]),
