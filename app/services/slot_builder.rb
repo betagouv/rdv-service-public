@@ -1,5 +1,54 @@
 # frozen_string_literal: true
 
+# Liste des appels à CreneauxBuilderSerices.perform_with
+#
+# - app/services/find_availability_service.rb:33 
+#```ruby
+#    # L33
+#    @plages_ouvertures_cached ||= CreneauxBuilderService
+#     .new(@motif_name, @lieu, nil, **@creneaux_builder_options)
+#     .plages_ouvertures
+#```
+#```ruby
+#   # L16
+#      creneaux = CreneauxBuilderService
+#       .perform_with(
+#         @motif_name,
+#          @lieu,
+#          date..(date + 7.days),
+#          plages_ouvertures: plages_ouvertures_cached,
+#          **@creneaux_builder_options
+#        )
+#```
+#
+# - app/models/rdv.rb
+#```ruby
+# # L145
+# lieu.present? ? CreneauxBuilderService.perform_with(motif.name, lieu, date_range) : []
+# ```
+#
+# - app/services/search_creneaux_for_agents_service.rb
+#```ruby
+# #36
+#      creneaux: CreneauxBuilderService.perform_with(
+#        @form.motif.name,
+#        lieu,
+#        @form.date_range,
+#        for_agents: true,
+#        agent_ids: @form.agent_ids,
+#        motif_location_type: @form.motif.location_type,
+#        service: @form.service
+#      )
+#```
+#
+# - app/services/concerns/users/creneaux_search_concern.rb
+#```ruby
+## L11
+# CreneauxBuilderService.perform_with(motif.name, @lieu, date_range, **options)
+# ```
+#
+#
+#
 module SlotBuilder
   # À faire avant, au moment de jouer avec le motifs
   # @for_agents ? motifs : motifs.reservable_online
