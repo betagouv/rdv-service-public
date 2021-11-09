@@ -5,7 +5,7 @@ module SlotBuilder
   # @for_agents ? motifs : motifs.reservable_online
 
   def self.available_slots(motif, date_range, organisation, off_days, *options)
-    # options :  { agents: [], lieux: [] }
+    # options : { agents: [], lieux: [] }
     plage_ouvertures = plage_ouvertures_for(motif, date_range, organisation, options)
     free_times = free_times_from(plage_ouvertures, date_range, off_days) # dépendance sur RDV et Absence
     slots_for(free_times, motif)
@@ -22,11 +22,10 @@ module SlotBuilder
       free_times[plage_ouverture] = calculate_free_times(plage_ouverture, date_range, off_days)
     end
     free_times
-    # TODO: retourner plutôt un enumérator histoire d'être lazy ?
   end
 
   def self.calculate_free_times(plage_ouverture, date_range, _off_days)
-    ranges = [range_for(plage_ouverture, date_range)].compact
+    ranges = ranges_for(plage_ouverture, date_range)
     return if ranges.empty?
 
     rdvs = plage_ouverture.agent.rdvs.where(starts_at: date_range).or(plage_ouverture.agent.rdvs.where(ends_at: date_range))
@@ -39,17 +38,19 @@ module SlotBuilder
     # ranges = split_range_with_loop(ranges, rdvs)
     #
     # version recursive
-    ranges = split_range_recursively(ranges.first, busy_times)
-
+    ranges = ranges.map { |range| split_range_recursively(range, busy_times) }.flatten
     ranges.select { |r| ((r.end.to_i - r.begin.to_i) / 60).positive? }
   end
 
-  def self.range_for(plage_ouverture, date_range)
+  def self.ranges_for(plage_ouverture, date_range)
     occurrences = plage_ouverture.occurrences_for(date_range)
     return [] if occurrences.empty?
 
-    # TODO: prendre en considération qu'il peut y avoir plusieurs occurrence dans une même période
-    occurrences.first.starts_at..occurrences.first.ends_at
+    ranges = []
+    occurrences.each do |occurrence|
+      ranges << (occurrence.starts_at..occurrence.ends_at)
+    end
+    ranges
   end
 
   def self.split_range_recursively(range, rdvs)

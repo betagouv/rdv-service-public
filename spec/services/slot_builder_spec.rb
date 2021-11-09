@@ -183,9 +183,23 @@ describe SlotBuilder, type: :service do
       create(:absence, first_day: s8h30.to_date, start_time: Tod::TimeOfDay.new(s8h30.hour, s8h30.min), end_day: e9h30.to_date, end_time: Tod::TimeOfDay.new(e9h30.hour, e9h30.min), agent: agent)
       create(:absence, first_day: s9h45.to_date, start_time: Tod::TimeOfDay.new(s9h45.hour, s9h45.min), end_day: e10h45.to_date, end_time: Tod::TimeOfDay.new(e10h45.hour, e10h45.min), agent: agent)
       plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent)
-      range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
+      range = Date.new(2021, 10, 25)..Date.new(2021, 10, 30)
 
       expected_ranges = [e9h30..s9h45, e10h45..ends_at]
+      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
+    end
+
+    it "returns plage ouverture's 3 occurrences of range" do
+      starts_at = Time.zone.parse("20211026 9:00")
+      plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent,
+                                                recurrence: Montrose.every(:week, starts: starts_at.to_date - 1.day, day: [1, 2, 4, 5]))
+      range = Date.new(2021, 10, 25)..Date.new(2021, 10, 30)
+
+      expected_ranges = [
+        (Time.zone.parse("2021-10-26 9:00")..Time.zone.parse("2021-10-26 11:00")),
+        (Time.zone.parse("2021-10-28 9:00")..Time.zone.parse("2021-10-28 11:00")),
+        (Time.zone.parse("2021-10-29 9:00")..Time.zone.parse("2021-10-29 11:00"))
+      ]
       expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
     end
   end
