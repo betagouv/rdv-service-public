@@ -97,5 +97,24 @@ describe "api/v1/motifs requests", type: :request do
         end
       end
     end
+
+    context "filtered on service" do
+      let!(:agent) { create(:agent, service: service, admin_role_in_organisations: [organisation]) }
+      let!(:another_service) { create(:service) }
+
+      let!(:motif1) { create(:motif, organisation: organisation, service: service) }
+      let!(:motif2) { create(:motif, organisation: organisation, service: another_service) }
+
+      it "returns the service specific motifs" do
+        get(
+          api_v1_organisation_motifs_path(organisation),
+          headers: api_auth_headers_for_agent(agent),
+          params: { service_id: service.id }
+        )
+        expect(response.status).to eq(200)
+        response_parsed = JSON.parse(response.body)
+        expect(response_parsed["motifs"].pluck("id")).to contain_exactly(motif1.id)
+      end
+    end
   end
 end

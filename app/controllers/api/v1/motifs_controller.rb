@@ -7,6 +7,8 @@ class Api::V1::MotifsController < Api::V1::BaseController
 
     motifs = motifs.where(reservable_online: params[:reservable_online].to_b) unless params[:reservable_online].nil?
 
+    motifs = motifs.where(service_id: params[:service_id]) if params[:service_id].present?
+
     render_collection(motifs.order(:id))
   end
 end
