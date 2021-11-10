@@ -18,20 +18,11 @@ class FindAvailabilityService < BaseService
           @motif_name,
           @lieu,
           date..(date + 7.days),
-          plages_ouvertures: plages_ouvertures_cached,
           **@creneaux_builder_options
         )
       # NOTE: We build the whole list of creneayx of the week just to return the first one.
       available_creneau = creneaux.first if creneaux.any?
     end
     available_creneau
-  end
-
-  private
-
-  def plages_ouvertures_cached
-    @plages_ouvertures_cached ||= CreneauxBuilderService
-      .new(@motif_name, @lieu, nil, **@creneaux_builder_options)
-      .plages_ouvertures
   end
 end

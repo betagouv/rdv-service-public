@@ -5,12 +5,12 @@ class CreneauxBuilderService < BaseService
     @motif_name = motif_name
     @lieu = lieu
     @inclusive_date_range = inclusive_date_range
+
     @options = options
     @for_agents = options.fetch(:for_agents, false)
     @agent_ids = options.fetch(:agent_ids, nil)
     @agent_name = options.fetch(:agent_name, false)
     @motif_location_type = options.fetch(:motif_location_type, nil)
-    @plages_ouvertures = options[:plages_ouvertures]
     @service = options[:service]
   end
 
