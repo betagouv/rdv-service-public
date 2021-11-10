@@ -9,11 +9,9 @@ class Agent < ApplicationRecord
   include AccountNormalizerConcern
   include PgSearch::Model
 
-  pg_search_scope(
-    :search_by_text,
-    against: "search_terms",
-    using: { tsearch: { prefix: true, dictionary: "french" } }
-  )
+  pg_search_scope(:search_by_text,
+                  against: "search_terms",
+                  using: { tsearch: { prefix: true, any_word: true } })
 
   devise :invitable, :database_authenticatable,
          :recoverable, :rememberable, :validatable, :confirmable, :async, validate_on_invite: true
