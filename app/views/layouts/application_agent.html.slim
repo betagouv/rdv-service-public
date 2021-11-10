@@ -10,8 +10,8 @@ html lang="fr"
       = render "layouts/left_menu"
       .content-page
         .content
+          = render "layouts/rdv_a_renseigner", agent: current_agent
           .container-fluid
-            = render "layouts/rdv_a_renseigner", agent: current_agent
             - if content_for :title
               .row.bg-dark.pb-5.justify-content-md-center
                 div.col-md-12
