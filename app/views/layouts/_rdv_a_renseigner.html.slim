@@ -1,8 +1,7 @@
 - if agent && agent.unknow_past_rdv_count > 0
-  .d-print-none.navbar-nav.fade.show.alert-danger.m-0.text-center.p-2
-    .mt-1
-      i.fa.fa-exclamation-triangle.alert-link>
-      span.ml-1.alert-link = t(".unknown_past_rdv_count", count: agent.unknow_past_rdv_count )
-      i.fa.fa-exclamation-triangle.alert-link<
-    .mt-2
-      = link_to t(".link_to_unknown_past_rdv"), admin_organisation_rdvs_path(current_organisation, status: "unknown_past", agent_id: agent.id), class:"btn btn-secondary"
+  = link_to  admin_organisation_rdvs_path(current_organisation, status: "unknown_past", agent_id: agent.id)
+    .navbar.alert-warning.p-2
+      div
+        .fa.fa-exclamation-triangle.alert-link>
+        span.ml-1.alert-link = t(".unknown_past_rdv_count", count: agent.unknow_past_rdv_count )
+      button.btn.rdv-status-unknown_past.float-right = t(".link_to_unknown_past_rdv")
