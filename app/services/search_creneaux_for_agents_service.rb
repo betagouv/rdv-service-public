@@ -14,7 +14,7 @@ class SearchCreneauxForAgentsService < BaseService
   def build_result(lieu)
     OpenStruct.new(
       lieu: lieu,
-      next_availability: FindAvailabilityService.perform_with(
+      next_availability: NextAvailabilityService.find(
         @form.motif.name,
         lieu,
         Time.zone.today,

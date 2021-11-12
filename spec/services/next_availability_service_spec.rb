@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe FindAvailabilityService, type: :service do
+describe NextAvailabilityService, type: :service do
   let(:today) { Date.new(2021, 3, 18) }
 
   before { travel_to(today) }
@@ -8,7 +8,7 @@ describe FindAvailabilityService, type: :service do
   after { travel_back }
 
   describe "#perform" do
-    subject { described_class.perform_with(motif.name, lieu, today, agent_ids: wanted_agents) }
+    subject { described_class.find(motif.name, lieu, today, agent_ids: wanted_agents) }
 
     let(:organisation) { create(:organisation) }
     let(:lieu) { create(:lieu, organisation: organisation) }
