@@ -2,9 +2,7 @@
 
 # Liste des appels à CreneauxBuilderSerices.perform_with
 #
-# - app/services/find_availability_service.rb
-#```ruby
-#   # L16
+# - app/services/find_availability_service.rb:16
 # CreneauxBuilderService.perform_with(
 #         @motif_name,
 #          @lieu,
@@ -13,34 +11,26 @@
 #          plages_ouvertures: plages_ouvertures_cached,
 #          **@creneaux_builder_options
 #        )
-#```
 #
-# - app/models/rdv.rb
-#```ruby
-# # L145
+# À priori dans le processus de fil d'attente
+# - app/models/rdv.rb:145
 # CreneauxBuilderService.perform_with(motif.name, lieu, date_range)
-# ```
 #
-# - app/services/search_creneaux_for_agents_service.rb
-#```ruby
-# #36
+#
+# - app/services/search_creneaux_for_agents_service.rb:36
 # CreneauxBuilderService.perform_with(
 #        @form.motif.name,
 #        lieu,
 #        @form.date_range,
-#
 #        for_agents: true,
 #        agent_ids: @form.agent_ids,
 #        motif_location_type: @form.motif.location_type,
 #        service: @form.service
 #      )
-#```
 #
-# - app/services/concerns/users/creneaux_search_concern.rb
-#```ruby
-## L11
+# - app/services/concerns/users/creneaux_search_concern.rb:11
 # CreneauxBuilderService.perform_with(motif.name, @lieu, date_range, **options)
-# ```
+#
 #    @options ||= {
 #      agent_ids: agent_ids,
 #      agent_name: follow_up_rdv_and_online_user?,
