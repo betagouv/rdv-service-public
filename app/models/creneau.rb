@@ -47,6 +47,6 @@ class Creneau
   end
 
   def overlaps_jour_ferie?
-    JoursFeriesService.all_in_date_range(starts_at.to_date..ends_at.to_date).any?
+    OffDays.all_in_date_range(starts_at.to_date..ends_at.to_date).any?
   end
 end
