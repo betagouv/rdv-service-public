@@ -55,7 +55,7 @@ class Motif < ApplicationRecord
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(motifs.name))")) }
   scope :available_with_plages_ouvertures, -> { active.reservable_online.joins(:organisation, :plage_ouvertures) }
   scope :available_with_plages_ouvertures_for_organisation, lambda { |organisation|
-    available.where(organisation_id: organisation.id)
+    available_with_plages_ouvertures.where(organisation_id: organisation.id)
   }
   scope :available_motifs_for_organisation_and_agent, lambda { |organisation, agent|
     available_motifs = if agent.admin_in_organisation?(organisation)
