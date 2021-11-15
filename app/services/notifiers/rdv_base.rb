@@ -28,7 +28,6 @@ class Notifiers::RdvBase < ::BaseService
   #
 
   def notify_users_by_mail
-    return unless @rdv.motif.visible_and_notified?
     return unless methods.include?(:notify_user_by_mail)
 
     users_to_notify
@@ -37,16 +36,11 @@ class Notifiers::RdvBase < ::BaseService
   end
 
   def notify_users_by_sms
-    return unless @rdv.motif.visible_and_notified?
     return unless methods.include?(:notify_user_by_sms)
 
     users_to_notify
       .select(&:notifiable_by_sms?)
       .each { notify_user_by_sms(_1) }
-  end
-
-  def rdvs_users_to_notify
-    @rdv.rdvs_users
   end
 
   def users_to_notify
