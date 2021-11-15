@@ -1,16 +1,7 @@
 # frozen_string_literal: true
 
 # Liste des appels à CreneauxBuilderSerices.perform_with
-#
-# - app/services/find_availability_service.rb:16
-# CreneauxBuilderService.perform_with(
-#         @motif_name,
-#          @lieu,
-#          date..(date + 7.days),
-#
-#          plages_ouvertures: plages_ouvertures_cached,
-#          **@creneaux_builder_options
-#        )
+# `grep -r "CreneauxBuilderService" app`
 #
 # À priori dans le processus de fil d'attente
 # - app/models/rdv.rb:145
@@ -65,12 +56,14 @@ module SlotBuilder
 
   def self.calculate_free_times(plage_ouverture, date_range, _off_days)
     ranges = ranges_for(plage_ouverture, date_range)
+    # TODO: ne pas retourner vide ou le prendre en compte plus haut Tableau vite ou prise en charge
     return if ranges.empty?
 
     rdvs = plage_ouverture.agent.rdvs.where(starts_at: date_range).or(plage_ouverture.agent.rdvs.where(ends_at: date_range))
     # TODO: ajouter la recherche des occurrences qui correspondent à la période
     absences = plage_ouverture.agent.absences.where(first_day: date_range).or(plage_ouverture.agent.absences.where(end_day: date_range))
 
+    # c'est là que l'on execute le SQL
     busy_times = rdvs + absences
 
     # version avec boucle
@@ -82,27 +75,27 @@ module SlotBuilder
   end
 
   def self.ranges_for(plage_ouverture, date_range)
+    date_range = Time.zone.now..date_range.end.end_of_day if date_range.begin < Time.zone.now
     occurrences = plage_ouverture.occurrences_for(date_range)
-    return [] if occurrences.empty?
 
-    ranges = []
-    occurrences.each do |occurrence|
-      ranges << (occurrence.starts_at..occurrence.ends_at)
+    occurrences.map do |occurrence|
+      next if occurrence.ends_at < Time.zone.now
+
+      (occurrence.starts_at..occurrence.ends_at)
     end
-    ranges
   end
 
-  def self.split_range_recursively(range, rdvs)
-    return [range] if rdvs.empty?
+  def self.split_range_recursively(range, busy_times)
+    return [range] if busy_times.empty?
 
-    rdv = rdvs.first
+    busy_time = busy_times.first
 
-    if rdv_include_in_range?(rdv, range)
-      [range.begin..rdv.starts_at] + split_range_recursively(rdv.ends_at..range.end, rdvs - [rdv])
-    elsif rdv_overlap_begin_of_range?(rdv, range)
-      split_range_recursively(rdv.ends_at..range.end, rdvs - [rdv])
-    elsif rdv_overlap_end_of_range?(rdv, range)
-      split_range_recursively(range.begin..rdv.starts_at, rdvs - [rdv])
+    if rdv_include_in_range?(busy_time, range)
+      [range.begin..busy_time.starts_at] + split_range_recursively(busy_time.ends_at..range.end, busy_times - [busy_time])
+    elsif rdv_overlap_begin_of_range?(busy_time, range)
+      split_range_recursively(busy_time.ends_at..range.end, busy_times - [busy_time])
+    elsif rdv_overlap_end_of_range?(busy_time, range)
+      split_range_recursively(range.begin..busy_time.starts_at, busy_times - [busy_time])
     else
       [range]
     end
@@ -167,8 +160,6 @@ module SlotBuilder
   end
 
   def self.calculate_slots(free_time, motif, &build_creneau)
-    return [] unless block_given?
-
     slots = []
     possible_slot_time = free_time.begin..(free_time.begin + motif.default_duration_in_min.minutes)
     while possible_slot_time.end <= free_time.end

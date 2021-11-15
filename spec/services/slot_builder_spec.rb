@@ -202,6 +202,18 @@ describe SlotBuilder, type: :service do
       ]
       expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
     end
+
+    it "don't returns past time" do
+      today = Time.zone.parse("20211112 20:00")
+      travel_to(today)
+      starts_at = today - 1.week
+      plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent,
+                                                recurrence: Montrose.every(:week, starts: starts_at.to_date - 1.day, day: [5]))
+      range = Date.new(2021, 11, 12)..Date.new(2021, 11, 19)
+
+      expected_ranges = [(Time.zone.parse("2021-11-19 9:00")..Time.zone.parse("2021-11-19 11:00"))]
+      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
+    end
   end
 
   describe "#slots_for" do

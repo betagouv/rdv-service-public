@@ -4,7 +4,7 @@ module Users::CreneauxSearchConcern
   extend ActiveSupport::Concern
 
   def next_availability
-    NextAvailabilityService.find(motif.name, @lieu, date_range.end, **options)
+    NextAvailabilityService.find(motif, @lieu, date_range.end, **options)
   end
 
   def creneaux
