@@ -1,0 +1,38 @@
+- content_for :header
+  section#hero.hero.hero-home.py-2
+    .container
+      .row
+        .col-lg-12.justify-content-md-center
+          h1.text-white
+            | Invitation à prendre&nbsp;
+            span.text-secondary rendez-vous
+            br
+            | avec votre département le&nbsp;
+            span.text-secondary #{@departement}
+          h3.text-white.mb-4 #{@matching_motif.name}
+
+  section.bg-light.p-4
+    .container
+      h3.font-weight-bold Sélectionnez un lieu de RDV:
+      p.font-weight-bold= "#{@lieux.size.to_s} lieux sont disponibles"
+      - @lieux.each do |lieu|
+        - next_availability = @next_availability_by_lieux[lieu.id]
+        .card.mb-3 class=("card-hoverable" if next_availability)
+          .card-body
+            .row
+              .col-md
+                h4.card-title.mb-3.mt-0.text-success.font-weight-bold= lieu.name
+                h6.card-subtitle.text-black-50.mb-2= @service.name
+                h6.card-subtitle.text-black-50= lieu.address
+              .col-md.align-self-center.pt-3.pt-md-0.position-static
+                - if next_availability
+                  = link_to external_invitations_organisation_service_motif_lieu_path(lieu.id, motif_id: @matching_motif.id, organisation_id: @organisation.id, service_id: @service.id, **@query), class: "d-block stretched-link" do
+                    .row
+                      .col
+                        | Prochaine disponibilité le
+                        br
+                        strong= l(next_availability.starts_at, format: :human)
+                      .col-auto.align-self-center
+                        i.fa.fa-chevron-right
+                - else
+                  em Aucune disponibilité

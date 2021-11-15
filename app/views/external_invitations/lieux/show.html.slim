@@ -1,0 +1,11 @@
+- content_for :header
+  section.bg-light.p-4
+    .container
+      .card.mb-3
+        .card-body
+          h5.card-title= @lieu.name
+          h6.card-subtitle.mb-3= @lieu.address
+          - if @matching_motif.present?
+            = render "common/creneaux", lieu: @lieu, creneaux: @creneaux, date_range: @date_range, departement: @departement, where: @where, max_booking_delay: @max_booking_delay, city_code: @city_code, external_invitation: true
+          - else
+            .alert.alert-warning= "Le motif <b>#{@matching_motif.name_with_location_type}</b> n'est plus disponible à la réservation à <b>#{@lieu.name}</b>".html_safe

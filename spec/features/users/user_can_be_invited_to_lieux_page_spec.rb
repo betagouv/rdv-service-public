@@ -9,18 +9,19 @@ describe "User can be invited to lieux page" do
   let!(:agent) { create(:agent) }
   let!(:territory26) { create(:territory, departement_number: "26") }
   let!(:organisation) { create(:organisation, territory: territory26) }
-  let!(:motif) { create(:motif, name: "RDV RSA sur site", reservable_online: true, organisation: organisation) }
+  let!(:service) { create(:service) }
+  let!(:motif) { create(:motif, service: service, name: "RDV RSA sur site", reservable_online: true, organisation: organisation) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: Date.new(2019, 7, 22), motifs: [motif], lieu: lieu, organisation: organisation) }
 
-  describe "default" do
+  describe "old invitation path" do
     before do
       user.invite! { |u| u.skip_invitation = true }
       invitation_token = user.raw_invitation_token
       visit lieux_path(
         search: {
           departement: "26", where: "Drôme, Auvergne-Rhône-Alpes",
-          service: motif.service_id,
+          service: service.id,
           motif_name_with_location_type: motif.name_with_location_type
         },
         invitation_token: invitation_token
