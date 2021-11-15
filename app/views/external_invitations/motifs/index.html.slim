@@ -24,7 +24,7 @@
                 i.fa.fa-envelope
               | Envoyer une demande à l'équipe technique
       - else
-        h3.font-weight-bold Sélectionnez un type de RDV:
+        h4.font-weight-bold Sélectionnez un type de RDV:
         - @unique_motifs_by_name_and_location_type.each do |motif|
           .card.mb-3
             = link_to external_invitations_organisation_service_motif_lieux_path(motif_id: motif.id, organisation_id: @organisation.id, service_id: @service.id, **@query)
