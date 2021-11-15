@@ -77,7 +77,8 @@ class ExternalInvitations::LieuxController < ApplicationController
     @organisation = Organisation.find(params[:organisation_id])
     @service = Service.find(params[:service_id])
     @geo_search = Users::GeoSearch.new(departement: @departement, city_code: @city_code, street_ban_id: @street_ban_id)
-    @matching_motifs = Motif.available_with_plages_ouvertures.where(id: params[:motif_id])
+    @matching_motifs = Motif.available_with_plages_ouvertures_for_organisation(@organisation)
+      .where(id: params[:motif_id], service: @service)
     @matching_motif = @matching_motifs.first
   end
 end
