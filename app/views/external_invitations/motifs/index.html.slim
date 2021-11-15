@@ -4,7 +4,7 @@
       .row
         .col-lg-12.justify-content-md-center
           h1.text-white
-            | Invitation à prendre&nbsp;
+            | Vous avez été invité à prendre&nbsp;
             span.text-secondary rendez-vous
             br
             | avec votre département le&nbsp;
@@ -13,7 +13,7 @@
 
   section.bg-light.p-4
     .container
-      - if @unique_motifs_by_name_and_location_type.blank?
+      - if @unique_motifs_by_name_and_location_type.empty?
         .card
           .card-body
             h4.font-weight-bold Nous sommes désolés, un problème semble s'être produit pour votre invitation.
