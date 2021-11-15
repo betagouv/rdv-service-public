@@ -111,6 +111,18 @@ describe SlotBuilder, type: :service do
 
       expect(plage_ouvertures).to eq([matching_po])
     end
+
+    it "returns filtered PO on agent_ids given" do
+      other_agent = create(:agent, organisations: [organisation])
+      agent = create(:agent, organisations: [organisation])
+      matching_po = create(:plage_ouverture, agent_id: other_agent.id, organisation: organisation, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9),
+                                             end_time: Tod::TimeOfDay.new(11) + 20.minutes)
+      create(:plage_ouverture, agent_id: agent.id, organisation: organisation, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, date_range, organisation, agent_ids: [other_agent.id])
+
+      expect(plage_ouvertures).to eq([matching_po])
+    end
   end
 
   describe "#free_times_from" do
@@ -209,6 +221,19 @@ describe SlotBuilder, type: :service do
       starts_at = today - 1.week
       plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent,
                                                 recurrence: Montrose.every(:week, starts: starts_at.to_date - 1.day, day: [5]))
+      range = Date.new(2021, 11, 12)..Date.new(2021, 11, 19)
+
+      expected_ranges = [(Time.zone.parse("2021-11-19 9:00")..Time.zone.parse("2021-11-19 11:00"))]
+      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
+    end
+
+    it "don't look at cancelled RDV" do
+      today = Time.zone.parse("20211112 20:00")
+      travel_to(today)
+      starts_at = today - 1.week
+      plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent,
+                                                recurrence: Montrose.every(:week, starts: starts_at.to_date - 1.day, day: [5]))
+      create(:rdv, :excused, motif: motif, starts_at: Time.zone.parse("20211112 10:00"), agents: [agent])
       range = Date.new(2021, 11, 12)..Date.new(2021, 11, 19)
 
       expected_ranges = [(Time.zone.parse("2021-11-19 9:00")..Time.zone.parse("2021-11-19 11:00"))]

@@ -34,16 +34,17 @@ module SlotBuilder
   # À faire avant, au moment de jouer avec le motifs
   # @for_agents ? motifs : motifs.reservable_online
 
-  def self.available_slots(motif, date_range, organisation, off_days, *options)
+  def self.available_slots(motif, date_range, organisation, off_days, options = {})
     # options : { agents: [], lieux: [] }
     plage_ouvertures = plage_ouvertures_for(motif, date_range, organisation, options)
     free_times = free_times_from(plage_ouvertures, date_range, off_days) # dépendance sur RDV et Absence
     slots_for(free_times, motif)
   end
 
-  def self.plage_ouvertures_for(motif, date_range, organisation, *_options)
+  def self.plage_ouvertures_for(motif, date_range, organisation, options = {})
     # TODO: filtre sur le lieu des options
     organisation.plage_ouvertures.for_motif_object(motif).not_expired.in_range(date_range)
+      .where(({ agent_id: options[:agent_ids] } unless options[:agent_ids].nil?))
   end
 
   def self.free_times_from(plage_ouvertures, date_range, off_days)
@@ -51,17 +52,23 @@ module SlotBuilder
     plage_ouvertures.each do |plage_ouverture|
       free_times[plage_ouverture] = calculate_free_times(plage_ouverture, date_range, off_days)
     end
-    free_times
+    free_times.select { |_, v| v&.any? }
   end
 
   def self.calculate_free_times(plage_ouverture, date_range, _off_days)
     ranges = ranges_for(plage_ouverture, date_range)
-    # TODO: ne pas retourner vide ou le prendre en compte plus haut Tableau vite ou prise en charge
-    return if ranges.empty?
 
-    rdvs = plage_ouverture.agent.rdvs.where(starts_at: date_range).or(plage_ouverture.agent.rdvs.where(ends_at: date_range))
+    return [] if ranges.empty?
+
+    rdvs = []
+    ranges.each do |range|
+      rdvs += plage_ouverture.agent.rdvs.not_cancelled.where(starts_at: range).or(plage_ouverture.agent.rdvs.not_cancelled.where(ends_at: range))
+    end
     # TODO: ajouter la recherche des occurrences qui correspondent à la période
-    absences = plage_ouverture.agent.absences.where(first_day: date_range).or(plage_ouverture.agent.absences.where(end_day: date_range))
+    absences = []
+    ranges.each do |range|
+      absences += plage_ouverture.agent.absences.where(first_day: range).or(plage_ouverture.agent.absences.where(end_day: range))
+    end
 
     # c'est là que l'on execute le SQL
     busy_times = rdvs + absences
@@ -71,7 +78,7 @@ module SlotBuilder
     #
     # version recursive
     ranges = ranges.map { |range| split_range_recursively(range, busy_times) }.flatten
-    ranges.select { |r| ((r.end.to_i - r.begin.to_i) / 60).positive? }
+    ranges.select { |r| ((r.end.to_i - r.begin.to_i) / 60).positive? } || []
   end
 
   def self.ranges_for(plage_ouverture, date_range)

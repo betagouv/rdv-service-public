@@ -2,13 +2,12 @@
 
 describe NextAvailabilityService, type: :service do
   let(:today) { Date.new(2021, 3, 18) }
+  let(:now) { Time.zone.parse("20210318 8:23") }
 
-  before { travel_to(today) }
-
-  after { travel_back }
+  before { travel_to(now) }
 
   describe "#perform" do
-    subject { described_class.find(motif.name, lieu, today, agent_ids: wanted_agents) }
+    subject { described_class.find(motif, lieu, today, agent_ids: wanted_agents) }
 
     let(:organisation) { create(:organisation) }
     let(:lieu) { create(:lieu, organisation: organisation) }
@@ -22,12 +21,12 @@ describe NextAvailabilityService, type: :service do
     before do
       create(:plage_ouverture,
              motifs: [motif], lieu: lieu, agent: agent, organisation: organisation,
-             first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
+             first_day: today + 1.day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
              recurrence: recurrence)
     end
 
     describe "regular case" do
-      it { expect(subject.starts_at).to eq(today.in_time_zone + 9.hours) }
+      it { expect(subject.starts_at).to eq((today + 1.day).in_time_zone + 9.hours) }
     end
 
     describe "with not reservable_online motif" do
@@ -40,7 +39,7 @@ describe NextAvailabilityService, type: :service do
       before do
         create(:absence,
                agent: agent, organisation: organisation,
-               first_day: today, start_time: Tod::TimeOfDay.new(9, 0), end_day: today, end_time: Tod::TimeOfDay.new(12, 0))
+               first_day: today + 1.day, start_time: Tod::TimeOfDay.new(9, 0), end_day: today + 1.day, end_time: Tod::TimeOfDay.new(12, 0))
       end
 
       context "planned" do
@@ -48,9 +47,9 @@ describe NextAvailabilityService, type: :service do
       end
 
       context "when plage_ouverture is recurrence" do
-        let(:recurrence) { Montrose.every(:month, starts: today) }
+        let(:recurrence) { Montrose.every(:month, starts: (today + 1.day)) }
 
-        it { expect(subject.starts_at).to eq(today.in_time_zone + 1.month + 9.hours) }
+        it { expect(subject.starts_at).to eq(today.in_time_zone + 1.month + 1.day + 9.hours) }
       end
     end
 
@@ -60,7 +59,7 @@ describe NextAvailabilityService, type: :service do
       before do
         create(:rdv,
                agents: [agent], organisation: organisation, lieu: lieu,
-               starts_at: today.in_time_zone + 9.hours, duration_in_min: 120,
+               starts_at: today.in_time_zone + 1.day + 9.hours, duration_in_min: 120,
                status: status)
       end
 
@@ -71,13 +70,13 @@ describe NextAvailabilityService, type: :service do
       context "cancelled" do
         let(:status) { "revoked" }
 
-        it { expect(subject.starts_at).to eq(today.in_time_zone + 9.hours) }
+        it { expect(subject.starts_at).to eq(today.in_time_zone + 1.day + 9.hours) }
       end
 
       context "when plage_ouverture is recurrence" do
-        let(:recurrence) { Montrose.every(:month, starts: today) }
+        let(:recurrence) { Montrose.every(:month, starts: today + 1.day) }
 
-        it { expect(subject.starts_at).to eq(today.in_time_zone + 1.month + 9.hours) }
+        it { expect(subject.starts_at).to eq(today.in_time_zone + 1.month + 1.day + 9.hours) }
       end
     end
 
@@ -96,7 +95,7 @@ describe NextAvailabilityService, type: :service do
         let(:wanted_agents) { [agent.id, other_agent.id] }
 
         it "returns the first availability" do
-          expect(subject.starts_at).to eq(today + 9.hours)
+          expect(subject.starts_at).to eq(today + 1.day + 9.hours)
         end
       end
 
