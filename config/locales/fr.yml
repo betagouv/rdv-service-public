@@ -154,10 +154,12 @@ fr:
         one: 'Impossible d''enregistrer ce(tte) %{model} : 1 erreur'
         other: 'Impossible d''enregistrer ce(tte) %{model} : %{count} erreurs'
   helpers:
+    add: Ajouter
     clone: Dupliquer
     cancel: Annuler
     delete: Supprimer
     edit: Modifier
+    remove: Retirer
     reset: Réinitialiser
     search: Rechercher
     show: Afficher
