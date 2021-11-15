@@ -64,3 +64,7 @@ ul.horizontal-border-between-items {
 .hover-bg-light:hover {
   background-color: $gray-200;
 }
+
+.no-transition {
+  transition: none !important;
+}

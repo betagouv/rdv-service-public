@@ -30,7 +30,7 @@ describe "Agent can create a Rdv with wizard" do
     expect(page).to have_selector(".card-title", text: "2. Usager(s)")
     expect(page).to have_selector(".list-group-item", text: /Motif/)
     select_user(user)
-    click_link("Ajouter un autre usager")
+    click_link("Ajouter")
     expect(page).to have_link("Créer un usager")
     click_link("Créer un usager")
 
@@ -41,7 +41,7 @@ describe "Agent can create a Rdv with wizard" do
     click_button("Créer usager")
 
     # create user without email
-    click_link("Ajouter un autre usager")
+    click_link("Ajouter")
     click_link("Créer un usager")
     fill_in :user_first_name, with: "Jean-Marie"
     fill_in :user_last_name, with: "Lapin"

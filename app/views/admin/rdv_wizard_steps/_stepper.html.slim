@@ -1,14 +1,14 @@
 ul.list-group.list-group-flush
   - steps.each do |step|
     - if step[:value].present?
-      li.list-group-item.hover-bg-light
+      li.list-group-item.hover-bg-light.px-3
         = link_to rdv_wizard_form.path_for_step(step[:step]), class: "text-dark" do
           .d-flex.align-items-center
             i.far.mr-1.fa-check-circle
             div.flex-shrink-0.mr-1= t("admin.rdv_wizard_steps.step#{step[:step]}.step_title")
             div.text-muted.text-truncate= step[:value]
     - else
-      li.list-group-item
+      li.list-group-item.px-3
         .d-flex.align-items-center
           i.far.mr-1.fa-circle
           div.flex-shrink-0.mr-1= t("admin.rdv_wizard_steps.step#{step[:step]}.step_title")
