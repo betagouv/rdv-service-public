@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
-module Notifications::Rdv::BaseServiceConcern
-  extend ActiveSupport::Concern
+class Notifications::Rdv::BaseService < ::BaseService
   include DateHelper
+
+  # Base class for Rdv notifiers.
+  # Subclasses implement the notify_* methods:
+  # :notify_user_by_mail(user)
+  # :notify_user_by_sms(user)
+  # :notify_agent(agent)
 
   def initialize(rdv, author)
     @rdv = rdv

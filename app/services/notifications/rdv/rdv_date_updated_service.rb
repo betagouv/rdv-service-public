@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Notifications::Rdv::RdvDateUpdatedService < ::BaseService
-  include Notifications::Rdv::BaseServiceConcern
-
   protected
 
   def notify_user_by_mail(user)
