@@ -24,6 +24,9 @@ class Notifiers::RdvBase < ::BaseService
 
   private
 
+  ## Users notifications
+  #
+
   def notify_users_by_mail
     return unless @rdv.motif.visible_and_notified?
     return unless methods.include?(:notify_user_by_mail)
@@ -42,31 +45,35 @@ class Notifiers::RdvBase < ::BaseService
       .each { notify_user_by_sms(_1) }
   end
 
-  def notify_agents
-    return unless methods.include?(:notify_agent)
-
-    @rdv.agents
-      .select { should_notify_agent(_1) }
-      .each { notify_agent(_1) }
+  def rdvs_users_to_notify
+    @rdv.rdvs_users
   end
 
   def users_to_notify
-    @rdv.users.map(&:user_to_notify).uniq
+    rdvs_users_to_notify.map(&:user).map(&:user_to_notify).uniq
+  end
+
+  ## Agents notifications
+  #
+
+  def notify_agents
+    return unless methods.include?(:notify_agent)
+
+    agents_to_notify.each { notify_agent(_1) }
+  end
+
+  def agents_to_notify
+    @rdv.agents
+      .select { should_notify_agent(_1) }
   end
 
   def should_notify_agent(agent)
     level = agent.rdv_notifications_level
     return true if level == "all"
     return false if level == "none"
-    return false if change_triggered_by?(agent)
+    return false if @author == agent
     return false if level == "soon" && !soon_date?(@rdv.starts_at) && !soon_date?(@rdv.attribute_before_last_save(:starts_at))
 
     true
-  end
-
-  protected
-
-  def change_triggered_by?(user_or_agent)
-    user_or_agent == @author
   end
 end

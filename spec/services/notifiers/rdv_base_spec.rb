@@ -10,12 +10,9 @@ end
 
 describe Notifiers::RdvBase, type: :service do
   let(:service) { TestService.new(rdv, author) }
-  let(:author) { nil }
 
   describe "user notifications" do
-    before do
-      allow(service).to receive(:change_triggered_by?).and_return(false)
-    end
+    let(:author) { nil }
 
     context "rdv has one user with email notifications, but rdv is in the past" do
       let(:user1) { build(:user, notify_by_email: true) }
@@ -103,10 +100,7 @@ describe Notifiers::RdvBase, type: :service do
 
   describe "agent notifications" do
     context "motif is not_notified" do
-      before do
-        allow(service).to receive(:change_triggered_by?).and_return(false)
-      end
-
+      let(:author) { build(:agent) }
       let(:agent) { build(:agent) }
       let(:motif) { build(:motif, :visible_and_not_notified) }
       let(:rdv) { build(:rdv, starts_at: Time.zone.now + 1.day, agents: [agent], motif: motif) }
@@ -118,17 +112,13 @@ describe Notifiers::RdvBase, type: :service do
     end
 
     describe "agents_rdv_notifications_level" do
-      before do
-        allow(service).to receive(:change_triggered_by?).and_return(self_change)
-      end
-
       let(:agent) { build(:agent, rdv_notifications_level: rdv_notifications_level) }
       let(:user) { build(:user) }
       let(:rdv) { build(:rdv, starts_at: rdv_date, agents: [agent], users: [user]) }
 
       context "level is all" do
+        let(:author) { agent }
         let(:rdv_notifications_level) { "all" }
-        let(:self_change) { true }
         let(:rdv_date) { Time.zone.now + 1.week }
 
         it "sends notification" do
@@ -138,8 +128,8 @@ describe Notifiers::RdvBase, type: :service do
       end
 
       context "level is others and rdv is made by agent themselves" do
+        let(:author) { agent }
         let(:rdv_notifications_level) { "others" }
-        let(:self_change) { true }
         let(:rdv_date) { Time.zone.now + 1.week }
 
         it "doesn’t send notification" do
@@ -149,8 +139,8 @@ describe Notifiers::RdvBase, type: :service do
       end
 
       context "level is others and rdv is made by someone else" do
+        let(:author) { build(:agent) }
         let(:rdv_notifications_level) { "others" }
-        let(:self_change) { false }
         let(:rdv_date) { Time.zone.now + 1.week }
 
         it "sends notification" do
@@ -160,8 +150,8 @@ describe Notifiers::RdvBase, type: :service do
       end
 
       context "level is soon and rdv is for next week" do
+        let(:author) { build(:agent) }
         let(:rdv_notifications_level) { "soon" }
-        let(:self_change) { false }
         let(:rdv_date) { Time.zone.now + 1.week }
 
         it "doesn’t send notification" do
@@ -171,8 +161,8 @@ describe Notifiers::RdvBase, type: :service do
       end
 
       context "level is soon and rdv is for tomorrow" do
+        let(:author) { build(:agent) }
         let(:rdv_notifications_level) { "soon" }
-        let(:self_change) { false }
         let(:rdv_date) { Time.zone.now + 1.day }
 
         it "sends notification" do
@@ -182,8 +172,8 @@ describe Notifiers::RdvBase, type: :service do
       end
 
       context "level is none" do
+        let(:author) { build(:agent) }
         let(:rdv_notifications_level) { "none" }
-        let(:self_change) { false }
         let(:rdv_date) { Time.zone.now + 1.day }
 
         it "doesn’t send notification" do
