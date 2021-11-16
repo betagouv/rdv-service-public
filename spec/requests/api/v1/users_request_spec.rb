@@ -442,4 +442,130 @@ describe "api/v1/users requests", type: :request do
       end
     end
   end
+
+  describe "PATCH api/v1/users" do
+    let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
+
+    context "valid & minimal params" do
+      it "works" do
+        patch(
+          api_v1_user_path(user),
+          params: {
+            first_name: "Alain",
+            last_name: "Deloin"
+          },
+          headers: api_auth_headers_for_agent(agent)
+        )
+        expect(response.status).to eq(200)
+        user.reload
+        expect(user.first_name).to eq("Alain")
+        expect(user.last_name).to eq("DELOIN")
+        response_parsed = JSON.parse(response.body)
+        expect(response_parsed["user"]).to be_present
+        expect(response_parsed["user"]["id"]).to be_present
+      end
+    end
+
+    context "valid & complete params" do
+      it "works" do
+        patch(
+          api_v1_user_path(user),
+          params: {
+            first_name: "Alain",
+            last_name: "Deloin",
+            birth_name: "Bourdon",
+            birth_date: "1976-10-01",
+            email: "alain@deloin.fr",
+            address: "10 rue du Havre, Paris",
+            caisse_affiliation: "caf",
+            affiliation_number: "101010",
+            family_situation: "single",
+            number_of_children: 3,
+            notify_by_sms: false,
+            notify_by_email: false
+          },
+          headers: api_auth_headers_for_agent(agent)
+        )
+        expect(response.status).to eq(200)
+        user.reload
+        expect(user.first_name).to eq("Alain")
+        expect(user.last_name).to eq("DELOIN")
+        expect(user.birth_name).to eq("BOURDON")
+        expect(user.birth_date).to eq(Date.new(1976, 10, 1))
+        user.reload
+        expect(user.email).to eq("alain@deloin.fr")
+        expect(user.address).to eq("10 rue du Havre, Paris")
+        expect(user.caisse_affiliation).to eq("caf")
+        expect(user.affiliation_number).to eq("101010")
+        expect(user.family_situation).to eq("single")
+        expect(user.number_of_children).to eq(3)
+        expect(user.notify_by_sms).to eq(false)
+        expect(user.notify_by_email).to eq(false)
+        response_parsed = JSON.parse(response.body)
+        expect(response_parsed["user"]).to be_present
+        expect(response_parsed["user"]["id"]).to be_present
+      end
+    end
+
+    context "valid & relative" do
+      let!(:user_responsible) { create(:user) }
+
+      it "works" do
+        patch(
+          api_v1_user_path(user),
+          params: {
+            first_name: "Alain",
+            last_name: "Deloin",
+            responsible_id: user_responsible.id
+          },
+          headers: api_auth_headers_for_agent(agent)
+        )
+        expect(response.status).to eq(200)
+        user.reload
+        response_parsed = JSON.parse(response.body)
+        expect(response_parsed["user"]).to be_present
+        expect(user.first_name).to eq("Alain")
+        expect(user.last_name).to eq("DELOIN")
+        expect(user.responsible).to eq(user_responsible)
+      end
+    end
+
+    context "invalid: misformatted attribute" do
+      it "does not work" do
+        patch(
+          api_v1_user_path(user),
+          params: {
+            first_name: "Jean",
+            last_name: "Jacques",
+            phone_number: "blah blah"
+          },
+          headers: api_auth_headers_for_agent(agent)
+        )
+        expect(response.status).to eq(422)
+        response_parsed = JSON.parse(response.body)
+        expect(response_parsed["errors"]).not_to be_empty
+      end
+    end
+
+    context "invalid: existing email" do
+      let!(:existing_user) { create(:user, email: "jean@jacques.fr") }
+
+      it "does not work" do
+        patch(
+          api_v1_user_path(user),
+          params: {
+            first_name: "Jean",
+            last_name: "Jacques",
+            email: "jean@jacques.fr"
+          },
+          headers: api_auth_headers_for_agent(agent)
+        )
+        expect(response.status).to eq(422)
+        response_parsed = JSON.parse(response.body)
+        expect(response_parsed["errors"]).not_to be_empty
+        expect(response_parsed["errors"]["email"].first).to \
+          eq({ "error" => "taken", "value" => "jean@jacques.fr", "id" => existing_user.id })
+      end
+    end
+  end
 end
