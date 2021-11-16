@@ -37,6 +37,8 @@ module RdvExporter
     sheet = book.create_worksheet
     sheet.row(0).concat(HEADER)
 
+    rdvs = rdvs.includes(:motif, :agents, :users)
+
     rdvs.each_with_index do |rdv, index|
       row = sheet.row(index + 1)
       row.set_format 1, DateFormat
