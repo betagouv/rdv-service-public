@@ -3,7 +3,7 @@
 describe RdvExporter, type: :service do
   describe "#export" do
     it "return a string" do
-      expect(described_class.export([])).to be_kind_of(String)
+      expect(described_class.export(Rdv.none)).to be_kind_of(String)
     end
   end
 
@@ -18,11 +18,11 @@ describe RdvExporter, type: :service do
   describe "#build_excel_workbook_from" do
     context "empty array" do
       it "return a Speadsheet::Workbook" do
-        expect(described_class.build_excel_workbook_from([])).to be_kind_of(Spreadsheet::Workbook)
+        expect(described_class.build_excel_workbook_from(Rdv.none)).to be_kind_of(Spreadsheet::Workbook)
       end
 
       it "return an header" do
-        sheet = described_class.build_excel_workbook_from([]).worksheet(0)
+        sheet = described_class.build_excel_workbook_from(Rdv.none).worksheet(0)
         expect(sheet.row(0)).to eq(["année", "date prise rdv", "heure prise rdv", "origine", "date rdv", "heure rdv", "service", "motif", "contexte", "statut", "lieu", "professionnel.le(s)",
                                     "usager(s)", "commune du premier responsable", "au moins un usager mineur ?"])
       end
