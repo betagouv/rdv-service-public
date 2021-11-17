@@ -9,6 +9,7 @@ class User < ApplicationRecord
   include User::NotificableConcern
   include User::ImprovedUnicityErrorConcern
   include HasPhoneNumberConcern
+  include WebhookDeliverable
 
   ONGOING_MARGIN = 1.hour.freeze
 
@@ -169,6 +170,10 @@ class User < ApplicationRecord
 
   def combined_search_terms
     I18n.transliterate([last_name, email, birth_name, phone_number_formatted, first_name].compact.join(" "))
+  end
+
+  def webhook_endpoints
+    WebhookEndpoint.where(organisation_id: organisation_ids)
   end
 
   protected

@@ -3,6 +3,13 @@
   = f.input :organisation_id, collection: current_territory.organisations
   = f.input :target_url
   = f.input :secret
+  .pt-2
+    h5.col-4.pb-2.border-bottom = I18n.t("activerecord.attributes.webhook_endpoint.subscribed_events")
+    - subscribed_events = webhook.subscribed_events
+    = f.simple_fields_for :subscribed_events, model: OpenStruct.new(subscribed_events) do |ff|
+      - WebhookEndpoint::SUBSCRIBABLE_RESOURCES.each do |resource|
+        .form-inline.py-2
+          = ff.input resource, label: I18n.t("activerecord.models.#{resource}"), required: false, as: :check_boxes, collection: ["created", "updated", "destroyed"], label_method: -> { t(".#{_1}") }, checked: subscribed_events[resource.to_s], include_hidden: false, input_html: { class: "m-2" }
 
   .text-right
     = link_to "Retour", admin_territory_webhook_endpoints_path(current_territory), class: "btn btn-link"

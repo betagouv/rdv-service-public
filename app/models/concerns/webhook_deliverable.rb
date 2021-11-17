@@ -15,24 +15,30 @@ module WebhookDeliverable
       timestamp: Time.zone.now
     }
     blueprint_class = "#{self.class.name}Blueprint".constantize
-    api_options = organisation.territory.api_options # See issue #1657
+    api_options = defined?(organisation) ? organisation.territory.api_options : {} # See issue #1657
     blueprint_class.render(self, root: :data, meta: meta, api_options: api_options)
   end
 
   def generate_payload_and_send_webhook(action)
     payload = generate_webhook_payload(action)
-    send_webhook(payload)
+    send_webhook(payload, action)
   end
 
   def generate_payload_and_send_webhook_for_destroy
     payload = generate_webhook_payload(:destroyed)
     yield
-    send_webhook(payload)
+    send_webhook(payload, :destroyed)
   end
 
-  def send_webhook(payload)
-    webhook_endpoints.each do |endpoint|
+  def send_webhook(payload, action)
+    webhook_endpoints_for_action(action).each do |endpoint|
       WebhookJob.perform_later(payload, endpoint.id)
+    end
+  end
+
+  def webhook_endpoints_for_action(action)
+    webhook_endpoints.select do |webhook_endpoint|
+      webhook_endpoint.subscribed_events[self.class.name.underscore]&.include?(action.to_s)
     end
   end
 
