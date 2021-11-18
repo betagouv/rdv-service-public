@@ -16,11 +16,9 @@ Nous aurions pu utiliser une table spécifique pour chaque fournisseur, en créa
 
 Nous préférons utiliser la sérialisation en JSON. Ajout d'une colonne pour connaitre le fournisseur \(et donc quel programme exécuter pour l'envoi de message et pour savoir comment sérialiser/désérialiser le JSON\), et une colonne JSON contenant la configuration sérialisée. N'ayant pas de requête à faire dessus, cela semble pertinent pour offrir la flexibilité nécessaire.
 
-
-
 ## 2021-05-06 Enum dans rails
 
-Il existe dans l'application deux façons de gérer les Enums. 
+Il existe dans l'application deux façons de gérer les Enums.
 
 La façon apportée par Rails depuis la version 5 \(?\)
 
@@ -53,5 +51,8 @@ L'idée est d'utiliser VOX Usager pour la récole de feedback usage
 
 Nous décidons de mettre en place un lien vers vox-usager pour récolter du feedback
 
+## Faciliter l'accessibilité du site
 
+Afin d'aider les contributrices/contributeurs ainsi que les membres de l'équipe qui souhaiteraient développer de sorte à ce que RDV-Solidarité soit accessible, le script ANDI a été ajouté au fichier content_security_policy.rb.
 
+ANDI est un outil qui permet de tester une partie de l'accessibilité d'une application web. Pour celles et ceux qui souhaiteraient utiliser cet outil, il faudra installer ANDI dans son navigateur [https://www.ssa.gov/accessibility/andi/help/install.html].
