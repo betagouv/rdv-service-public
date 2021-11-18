@@ -1,4 +1,4 @@
-- if defined?(current_organisation) && agent && agent.unknow_past_rdv_count > 0
+- if organisation.present? && agent && agent.unknow_past_rdv_count > 0
   = link_to  admin_organisation_rdvs_path(current_organisation, status: "unknown_past", agent_id: agent.id)
     .navbar.alert-warning.p-2
       div
