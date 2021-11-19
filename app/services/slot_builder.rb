@@ -73,10 +73,6 @@ module SlotBuilder
     # c'est là que l'on execute le SQL
     busy_times = rdvs + absences
 
-    # version avec boucle
-    # ranges = split_range_with_loop(ranges, rdvs)
-    #
-    # version recursive
     ranges = ranges.map { |range| split_range_recursively(range, busy_times) }.flatten
     ranges.select { |r| ((r.end.to_i - r.begin.to_i) / 60).positive? } || []
   end
@@ -118,34 +114,6 @@ module SlotBuilder
 
   def self.rdv_overlap_end_of_range?(rdv, range)
     range.end <= rdv.ends_at
-  end
-
-  def self.split_range_with_loop(ranges, rdvs)
-    # décalle le début du range
-    # TODO Et s'il y a plusieurs RDV en même temps qui couvre le début de la plage ?
-    rdv_overlapping_range_begin = rdvs.select { |rdv| (rdv.starts_at..rdv.ends_at).cover?(ranges.first.begin) }.first
-    if rdv_overlapping_range_begin
-      ranges = [(rdv_overlapping_range_begin.ends_at..ranges.first.end)]
-      rdvs -= [rdv_overlapping_range_begin]
-    end
-
-    # décalle la fin du range
-    # TODO Et s'il y a plusieurs RDV en même temps qui couvre la fin de la plage ?
-    rdv_overlapping_range_end = rdvs.select { |rdv| (rdv.starts_at..rdv.ends_at).cover?(ranges.first.end) }.first
-    if rdv_overlapping_range_end
-      ranges = [(ranges.first..rdv_overlapping_range_end.starts_at)]
-      rdvs -= [rdv_overlapping_range_end]
-    end
-
-    # supprime les rdv inclus
-    rdvs.each do |rdv|
-      range_to_split = ranges.last
-      new_range = range_to_split.begin..rdv.starts_at
-      new_last_range = rdv.ends_at..range_to_split.end
-      ranges = ranges[..-2] + [new_range, new_last_range]
-    end
-
-    ranges
   end
 
   def self.slots_for(plage_ouverture_free_times, motif)
