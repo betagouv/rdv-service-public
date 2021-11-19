@@ -3,22 +3,6 @@
 # Liste des appels à CreneauxBuilderSerices.perform_with
 # `grep -r "CreneauxBuilderService" app`
 #
-# À priori dans le processus de fil d'attente
-# - app/models/rdv.rb:145
-# CreneauxBuilderService.perform_with(motif.name, lieu, date_range)
-#
-#
-# - app/services/search_creneaux_for_agents_service.rb:36
-# CreneauxBuilderService.perform_with(
-#        @form.motif.name,
-#        lieu,
-#        @form.date_range,
-#        for_agents: true,
-#        agent_ids: @form.agent_ids,
-#        motif_location_type: @form.motif.location_type,
-#        service: @form.service
-#      )
-#
 # - app/services/concerns/users/creneaux_search_concern.rb:11
 # CreneauxBuilderService.perform_with(motif.name, @lieu, date_range, **options)
 #
@@ -33,9 +17,14 @@
 module SlotBuilder
   # À faire avant, au moment de jouer avec le motifs
   # @for_agents ? motifs : motifs.reservable_online
+  # Ce filtre est lié à la recherche de plage d'ouverture à partir d'un nom de motif... Est-ce vraiment nécessaire dans notre cas ?
+  #
+  # @for_agents sert aussi pour « limiter » l'afficahge des créneaux. Je pense que c'est à faire sur la vue.
+  # uniq_by = @for_agents ? ->(c) { [c.starts_at, c.agent_id] } : ->(c) { c.starts_at }
+  #  creneaux.uniq(&uniq_by).sort_by(&:starts_at)
 
   def self.available_slots(motif, lieu, date_range, off_days, options = {})
-    # options : { agents: [], lieux: [] }
+    # options : { agents: [] }
     plage_ouvertures = plage_ouvertures_for(motif, lieu, date_range, options)
     free_times = free_times_from(plage_ouvertures, date_range, off_days) # dépendance sur RDV et Absence
     slots_for(free_times, motif)
@@ -123,7 +112,7 @@ module SlotBuilder
           Creneau.new(
             starts_at: starts_at,
             motif: motif,
-            lieu_id: plage_ouverture.lieu,
+            lieu_id: plage_ouverture.lieu_id,
             agent_id: plage_ouverture.agent_id,
             agent_name: plage_ouverture.agent.full_name
           )
