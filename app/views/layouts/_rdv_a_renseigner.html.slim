@@ -1,0 +1,7 @@
+- if organisation.present? && agent && agent.unknow_past_rdv_count > 0
+  = link_to admin_organisation_rdvs_path(organisation, status: "unknown_past", agent_id: agent.id)
+    .navbar.alert-warning.p-2
+      div
+        .fa.fa-exclamation-triangle.alert-link>
+        span.ml-1.alert-link = t(".unknown_past_rdv_count", count: agent.unknow_past_rdv_count )
+      button.btn.rdv-status-unknown_past.float-right = t(".link_to_unknown_past_rdv")

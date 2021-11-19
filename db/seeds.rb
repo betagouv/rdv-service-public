@@ -589,3 +589,9 @@ AgentsRdv.insert_all!(agent_rdv_attributes)
 rdv_user_attributes = rdv_ids.map { |id| { user_id: user_org_paris_nord_josephine.id, rdv_id: id } }
 RdvsUser.insert_all!(rdv_user_attributes)
 # rubocop:enable Rails/SkipsModelValidations
+
+# Sync rdv counter cache
+unknown_rdv_count_by_agent = Rdv.status("unknown_past").joins(:agents_rdvs).group("agents_rdvs.agent_id").count
+unknown_rdv_count_by_agent.each do |agent_id, unknow_past_rdv_count|
+  Agent.where(id: agent_id).update_all(unknow_past_rdv_count: unknow_past_rdv_count) # rubocop:disable Rails/SkipsModelValidations
+end

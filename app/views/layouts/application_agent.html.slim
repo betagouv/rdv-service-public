@@ -10,6 +10,7 @@ html lang="fr"
       = render "layouts/left_menu"
       .content-page
         .content
+          = render "layouts/rdv_a_renseigner", agent: current_agent, organisation: defined?(current_organisation) ? current_organisation : nil
           .container-fluid
             - if content_for :title
               .row.bg-dark.pb-5.justify-content-md-center
@@ -30,10 +31,9 @@ html lang="fr"
           .col-md-12
             .footer-links.d-none.d-md-flex.flex-wrap.flex-gap-1em.justify-content-end.mb-2
               | Accessibilité : non conforme
-              span
-                = link_to "https://github.com/betagouv/rdv-solidarites.fr/commits/#{ENV['CONTAINER_VERSION']}" do
-                  span>= ENV["RDV_SOLIDARITES_VERSION"]
-                  i.fa.fa-external-link-alt
+              = link_to "https://github.com/betagouv/rdv-solidarites.fr/commits/#{ENV['CONTAINER_VERSION']}" do
+                span>= ENV["RDV_SOLIDARITES_VERSION"]
+                i.fa.fa-external-link-alt
               = link_to "https://doc.rdv-solidarites.fr/mentions-legales" do
                 span> Mentions Légales
                 i.fa.fa-external-link-alt
