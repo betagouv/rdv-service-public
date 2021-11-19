@@ -26,8 +26,8 @@ module SlotBuilder
   def self.available_slots(motif, lieu, date_range, off_days, options = {})
     # options : { agents: [] }
     plage_ouvertures = plage_ouvertures_for(motif, lieu, date_range, options)
-    free_times = free_times_from(plage_ouvertures, date_range, off_days) # dépendance sur RDV et Absence
-    slots_for(free_times, motif)
+    free_times_po = free_times_from(plage_ouvertures, date_range, off_days) # dépendance sur RDV et Absence
+    slots_for(free_times_po, motif)
   end
 
   def self.plage_ouvertures_for(motif, lieu, date_range, options = {})
@@ -48,20 +48,7 @@ module SlotBuilder
 
     return [] if ranges.empty?
 
-    rdvs = []
-    ranges.each do |range|
-      rdvs += plage_ouverture.agent.rdvs.not_cancelled.where(starts_at: range).or(plage_ouverture.agent.rdvs.not_cancelled.where(ends_at: range))
-    end
-    # TODO: ajouter la recherche des occurrences qui correspondent à la période
-    absences = []
-    ranges.each do |range|
-      absences += plage_ouverture.agent.absences.where(first_day: range).or(plage_ouverture.agent.absences.where(end_day: range))
-    end
-
-    # c'est là que l'on execute le SQL
-    busy_times = rdvs + absences
-
-    ranges = ranges.map { |range| split_range_recursively(range, busy_times) }.flatten
+    ranges = ranges.map { |range| split_range_recursively(range, busy_times_for(range)) }.flatten
     ranges.select { |r| ((r.end.to_i - r.begin.to_i) / 60).positive? } || []
   end
 
@@ -74,6 +61,24 @@ module SlotBuilder
 
       (occurrence.starts_at..occurrence.ends_at)
     end
+  end
+
+  def self.busy_times_for(range, plage_ouverture)
+    # TODO : Peut-être cacher la récupération de l'ensemble des RDV et absences concernées (pour n'avoir que deux requêtes) puis faire des selections dessus pour le filtre sur le range
+    rdvs = []
+    ranges.each do |range|
+      rdvs += plage_ouverture.agent.rdvs.not_cancelled.where(starts_at: range).or(plage_ouverture.agent.rdvs.not_cancelled.where(ends_at: range))
+    end
+    # TODO : ajouter la recherche des occurrences qui correspondent à la période
+    absences = []
+    ranges.each do |range|
+      absences += plage_ouverture.agent.absences.where(first_day: range).or(plage_ouverture.agent.absences.where(end_day: range))
+    end
+
+    # c'est là que l'on execute le SQL
+    # TODO grouper les temps d'indisponibilité pour applatir et prendre au plus large !
+    # Le tri est nécessaire, surtout pour les surcharges.
+    (rdvs + absences).select { |b| range.cover?(b.starts_at) || range.cover?(b.ends_at) }.sort_by(&:starts_at)
   end
 
   def self.split_range_recursively(range, busy_times)
@@ -114,7 +119,7 @@ module SlotBuilder
             motif: motif,
             lieu_id: plage_ouverture.lieu_id,
             agent_id: plage_ouverture.agent_id,
-            agent_name: plage_ouverture.agent.full_name
+            agent_name: plage_ouverture.agent.short_name
           )
         end
       end

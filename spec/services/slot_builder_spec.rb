@@ -240,6 +240,32 @@ describe SlotBuilder, type: :service do
       expected_ranges = [(Time.zone.parse("2021-11-19 9:00")..Time.zone.parse("2021-11-19 11:00"))]
       expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
     end
+
+    it "return range without only range of multi RDV on same range with same duration" do
+      starts_at = Time.zone.parse("20211027 9:00")
+      ends_at = Time.zone.parse("20211027 11:00")
+      other_rdv = create(:rdv, starts_at: starts_at + 45.minutes, agents: [agent])
+      prev_rdv = create(:rdv, starts_at: starts_at - 30.minutes, agents: [agent])
+      rdv = create(:rdv, starts_at: starts_at + 45.minutes, agents: [agent])
+      plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent)
+      range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
+
+      expected_ranges = [prev_rdv.ends_at..rdv.starts_at, rdv.ends_at..ends_at]
+      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
+    end
+
+    it "return range without only range of longer overlapped RDV on same range with same duration" do
+      starts_at = Time.zone.parse("20211027 9:00")
+      ends_at = Time.zone.parse("20211027 11:00")
+      other_rdv = create(:rdv, motif: create(:motif, organisation: organisation, default_duration_in_min: 30), starts_at: starts_at + 45.minutes, agents: [agent])
+      prev_rdv = create(:rdv, starts_at: starts_at - 30.minutes, agents: [agent])
+      rdv = create(:rdv, motif: create(:motif, organisation: organisation, default_duration_in_min: 30), starts_at: starts_at + 45.minutes, agents: [agent])
+      plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent)
+      range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
+
+      expected_ranges = [prev_rdv.ends_at..rdv.starts_at, rdv.ends_at..ends_at]
+      expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
+    end
   end
 
   describe "#slots_for" do
