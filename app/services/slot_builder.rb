@@ -34,16 +34,15 @@ module SlotBuilder
   # À faire avant, au moment de jouer avec le motifs
   # @for_agents ? motifs : motifs.reservable_online
 
-  def self.available_slots(motif, date_range, organisation, off_days, options = {})
+  def self.available_slots(motif, lieu, date_range, off_days, options = {})
     # options : { agents: [], lieux: [] }
-    plage_ouvertures = plage_ouvertures_for(motif, date_range, organisation, options)
+    plage_ouvertures = plage_ouvertures_for(motif, lieu, date_range, options)
     free_times = free_times_from(plage_ouvertures, date_range, off_days) # dépendance sur RDV et Absence
     slots_for(free_times, motif)
   end
 
-  def self.plage_ouvertures_for(motif, date_range, organisation, options = {})
-    # TODO: filtre sur le lieu des options
-    organisation.plage_ouvertures.for_motif_object(motif).not_expired.in_range(date_range)
+  def self.plage_ouvertures_for(motif, lieu, date_range, options = {})
+    lieu.plage_ouvertures.for_motif_object(motif).not_expired.in_range(date_range)
       .where(({ agent_id: options[:agent_ids] } unless options[:agent_ids].nil?))
   end
 

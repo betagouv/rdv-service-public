@@ -143,7 +143,7 @@ class Rdv < ApplicationRecord
   end
 
   def creneaux_available(date_range)
-    lieu.present? ? CreneauxBuilderService.perform_with(motif.name, lieu, date_range) : []
+    lieu.present? ? SlotBuilder.available_slots(motif, lieu, date_range) : []
   end
 
   def user_for_home_rdv

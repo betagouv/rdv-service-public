@@ -3,6 +3,7 @@
 describe SlotBuilder, type: :service do
   let(:today) { Time.zone.parse("20210430 8:00") }
   let(:organisation) { create(:organisation) }
+  let(:lieu) { create(:lieu, organisation: organisation) }
 
   before do
     travel_to(today)
@@ -16,14 +17,14 @@ describe SlotBuilder, type: :service do
     let(:off_days) { [] }
 
     it "returns 2 slots with a basic context" do
-      create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, organisation: organisation)
-      slots = described_class.available_slots(motif, date_range, organisation, off_days)
+      create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, lieu: lieu)
+      slots = described_class.available_slots(motif, lieu, date_range, off_days)
       expect(slots.map(&:starts_at).map(&:hour)).to eq([9, 10])
     end
 
     it "return Crenaux object" do
-      create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, organisation: organisation)
-      slots = described_class.available_slots(motif, date_range, organisation, off_days)
+      create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, lieu: lieu)
+      slots = described_class.available_slots(motif, lieu, date_range, off_days)
       expect(slots.map(&:class).map(&:to_s).uniq).to eq(["Creneau"])
     end
   end
@@ -34,80 +35,80 @@ describe SlotBuilder, type: :service do
     let(:date_range) { first_day..Date.new(2021, 5, 8) }
 
     it "return empty without plage_ouverture" do
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, date_range, organisation)
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range)
 
       expect(plage_ouvertures).to eq([])
     end
 
     it "return plage_ouverture that match" do
-      matching_po = create(:plage_ouverture, organisation: organisation, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
+      matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
 
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, date_range, organisation)
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range)
 
       expect(plage_ouvertures).to eq([matching_po])
     end
 
     it "returns all plage_ouverture for the range" do
-      matching_po = create(:plage_ouverture, organisation: organisation, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
-      other_matching_po = create(:plage_ouverture, organisation: organisation, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+      matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
+      other_matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
 
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, date_range, organisation)
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range)
 
       expect(plage_ouvertures).to eq([matching_po, other_matching_po])
     end
 
     it "returns only without reccurrence PO where first_day is in range" do
-      matching_po = create(:plage_ouverture, organisation: organisation, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
-      create(:plage_ouverture, organisation: organisation, motifs: [motif], first_day: first_day + 1.month, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+      matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
+      create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day + 1.month, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
 
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, date_range, organisation)
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range)
 
       expect(plage_ouvertures).to eq([matching_po])
     end
 
-    it "returns only same organisation PO" do
-      matching_po = create(:plage_ouverture, organisation: organisation, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
-      create(:plage_ouverture, organisation: create(:organisation), motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+    it "returns only same lieu PO" do
+      matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
+      create(:plage_ouverture, lieu: create(:lieu), motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
 
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, date_range, organisation)
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range)
 
       expect(plage_ouvertures).to eq([matching_po])
     end
 
     it "returns only same motif PO" do
-      matching_po = create(:plage_ouverture, organisation: organisation, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
-      create(:plage_ouverture, organisation: organisation, motifs: [create(:motif, organisation: organisation)], first_day: first_day, start_time: Tod::TimeOfDay.new(9),
+      matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
+      create(:plage_ouverture, lieu: lieu, motifs: [create(:motif, organisation: organisation)], first_day: first_day, start_time: Tod::TimeOfDay.new(9),
                                end_time: Tod::TimeOfDay.new(11))
 
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, date_range, organisation)
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range)
 
       expect(plage_ouvertures).to eq([matching_po])
     end
 
     it "returns only not_expired PO" do
-      matching_po = create(:plage_ouverture, organisation: organisation, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
-      create(:plage_ouverture, organisation: organisation, motifs: [motif], first_day: today - 1.day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+      matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
+      create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: today - 1.day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
 
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, date_range, organisation)
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range)
 
       expect(plage_ouvertures).to eq([matching_po])
     end
 
     it "returns PO with recurrences that always running" do
-      matching_po = create(:plage_ouverture, organisation: organisation, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
-      recurring_po = create(:plage_ouverture, organisation: organisation, motifs: [motif], first_day: first_day - 1.day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
+      matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
+      recurring_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day - 1.day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
                                               recurrence: Montrose.every(:week, starts: first_day - 1.day))
 
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, date_range, organisation)
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range)
 
       expect(plage_ouvertures.sort).to eq([matching_po, recurring_po].sort)
     end
 
     it "returns without recurrence PO that start in range" do
-      matching_po = create(:plage_ouverture, organisation: organisation, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
-      create(:plage_ouverture, organisation: organisation, motifs: [motif], first_day: first_day - 1.day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+      matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
+      create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day - 1.day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
 
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, date_range, organisation)
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range)
 
       expect(plage_ouvertures).to eq([matching_po])
     end
@@ -115,11 +116,11 @@ describe SlotBuilder, type: :service do
     it "returns filtered PO on agent_ids given" do
       other_agent = create(:agent, organisations: [organisation])
       agent = create(:agent, organisations: [organisation])
-      matching_po = create(:plage_ouverture, agent_id: other_agent.id, organisation: organisation, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9),
+      matching_po = create(:plage_ouverture, agent_id: other_agent.id, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9),
                                              end_time: Tod::TimeOfDay.new(11) + 20.minutes)
-      create(:plage_ouverture, agent_id: agent.id, organisation: organisation, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+      create(:plage_ouverture, agent_id: agent.id, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
 
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, date_range, organisation, agent_ids: [other_agent.id])
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, agent_ids: [other_agent.id])
 
       expect(plage_ouvertures).to eq([matching_po])
     end
