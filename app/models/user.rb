@@ -173,7 +173,7 @@ class User < ApplicationRecord
   end
 
   def webhook_endpoints
-    WebhookEndpoint.where(organisation_id: organisation_ids)
+    WebhookEndpoint.where(organisation_id: organisations.pluck(:id))
   end
 
   protected
