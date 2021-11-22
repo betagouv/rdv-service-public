@@ -7,5 +7,5 @@ class WebhookEndpoint < ApplicationRecord
   validates :target_url, presence: true
   validates :secret, presence: true
 
-  SUBSCRIBABLE_RESOURCES = %i[rdv absence plage_ouverture user].freeze
+  SUBSCRIBABLE_RESOURCES = [Rdv, Absence, PlageOuverture, User].freeze
 end

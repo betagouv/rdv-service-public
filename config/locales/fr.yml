@@ -163,6 +163,9 @@ fr:
     reset: Réinitialiser
     search: Rechercher
     show: Afficher
+    created: Création
+    updated: Modification
+    destroyed: Suppression
     select:
       prompt: Veuillez sélectionner
     submit:

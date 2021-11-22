@@ -2,10 +2,6 @@ fr:
   admin:
     territories:
       webhook_endpoints:
-        form:
-          created: Création
-          updated: Modification
-          destroyed: Suppression
         index:
           card-title: Webhooks
           table-header:
