@@ -11,6 +11,13 @@ RSpec.describe ExternalInvitations::MotifsController, type: :controller do
     let!(:city_code) { "72100" }
     let!(:organisation) { create(:organisation, territory: territory) }
 
+    let!(:invitation_token) do
+      user.invite! { |u| u.skip_invitation = true }
+      user.raw_invitation_token
+    end
+
+    let!(:user) { create(:user, organisations: [organisation]) }
+
     let(:service) { create(:service, name: "Joli service") }
     let!(:another_service) { create(:service) }
 
@@ -32,7 +39,8 @@ RSpec.describe ExternalInvitations::MotifsController, type: :controller do
     context "when the geo search retrieves available motifs" do
       it "lists the motifs retrieved by the geo search" do
         get :index, params: {
-          organisation_id: organisation.id, service_id: service.id, departement: departement_number, city_code: city_code
+          organisation_id: organisation.id, service_id: service.id, departement: departement_number, city_code: city_code,
+          invitation_token: invitation_token
         }
         expect(subject).to include("Motif numéro 1")
         expect(subject).not_to include("Motif numéro 2")
@@ -44,7 +52,8 @@ RSpec.describe ExternalInvitations::MotifsController, type: :controller do
 
       it "lists all the organisation motifs linked to the service available for reservation" do
         get :index, params: {
-          organisation_id: organisation.id, service_id: service.id, departement: departement_number, city_code: city_code
+          organisation_id: organisation.id, service_id: service.id, departement: departement_number, city_code: city_code,
+          invitation_token: invitation_token
         }
         expect(subject).to include("Motif numéro 1")
         expect(subject).to include("Motif numéro 2")
@@ -55,7 +64,8 @@ RSpec.describe ExternalInvitations::MotifsController, type: :controller do
       context "when no motifs are available for reservation" do
         it "reveals a problem" do
           get :index, params: {
-            organisation_id: organisation.id, service_id: another_service.id, departement: departement_number, city_code: city_code
+            organisation_id: organisation.id, service_id: another_service.id, departement: departement_number, city_code: city_code,
+            invitation_token: invitation_token
           }
           expect(subject).to include("Nous sommes désolés, un problème semble s'être produit pour votre invitation.")
           expect(subject).to include("data.insertion@beta.gouv.fr")

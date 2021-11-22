@@ -6,7 +6,12 @@ RSpec.describe ExternalInvitations::LieuxController, type: :controller do
 
   let!(:departement_number) { "72" }
   let!(:city_code) { "72100" }
-  let(:invitation_token) { "token123" }
+  let!(:invitation_token) do
+    user.invite! { |u| u.skip_invitation = true }
+    user.raw_invitation_token
+  end
+
+  let!(:user) { create(:user, organisations: [organisation]) }
 
   let!(:organisation) { create(:organisation) }
 
@@ -50,7 +55,8 @@ RSpec.describe ExternalInvitations::LieuxController, type: :controller do
 
     it "lists the the available lieux linked to the motifs" do
       get :index, params: {
-        organisation_id: organisation.id, service_id: service.id, motif_id: motif.id, departement: departement_number, city_code: city_code
+        organisation_id: organisation.id, service_id: service.id, motif_id: motif.id, departement: departement_number, city_code: city_code,
+        invitation_token: invitation_token
       }
       expect(subject).to include("Lieu numéro 1")
       expect(subject).not_to include("Lieu numéro 2")
@@ -58,7 +64,8 @@ RSpec.describe ExternalInvitations::LieuxController, type: :controller do
 
     it "shows the next availability" do
       get :index, params: {
-        organisation_id: organisation.id, service_id: service.id, motif_id: motif.id, departement: departement_number, city_code: city_code
+        organisation_id: organisation.id, service_id: service.id, motif_id: motif.id, departement: departement_number, city_code: city_code,
+        invitation_token: invitation_token
       }
       expect(subject).to match(/Prochaine disponibilité le(.)*lundi 05 août 2019 à 08h00/)
     end
@@ -103,7 +110,8 @@ RSpec.describe ExternalInvitations::LieuxController, type: :controller do
       it "returns a creneau" do
         get :show, params: {
           id: lieu.id, organisation_id: organisation.id, service_id: service.id,
-          motif_id: motif.id, departement: departement_number, city_code: city_code
+          motif_id: motif.id, departement: departement_number, city_code: city_code,
+          invitation_token: invitation_token
         }
         expect(subject).to include("08:00")
       end
@@ -121,7 +129,7 @@ RSpec.describe ExternalInvitations::LieuxController, type: :controller do
       it "returns next availability" do
         get :show, params: {
           id: lieu.id, organisation_id: organisation.id, service_id: service.id,
-          motif_id: motif.id, departement: departement_number, city_code: city_code
+          motif_id: motif.id, departement: departement_number, city_code: city_code, invitation_token: invitation_token
         }
         expect(subject).to match(/Prochaine disponibilité le(.)*lundi 05 août 2019 à 08h00/)
       end
