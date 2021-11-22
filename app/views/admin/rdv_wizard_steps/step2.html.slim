@@ -22,9 +22,11 @@ ruby:
             | &nbsp;
             = reverse_full_name_and_birthdate(user)
             = relative_tag(user)
-          - remove_link_params = request.params.deep_dup
-          - remove_link_params["user_ids"].delete(user.id.to_s)
-          div.ml-2= link_to remove_link_params, title: t("helpers.remove")
+          ruby:
+            remove_path_params = @rdv_wizard.to_query.deep_dup.merge(step: 2)
+            remove_path_params[:user_ids].delete(user.id)
+            remove_user_path = new_admin_organisation_rdv_wizard_step_path(remove_path_params)
+          div.ml-2= link_to remove_user_path, title: t("helpers.remove")
             i.fa.fa-minus-circle
           div.ml-2
             = link_to edit_admin_organisation_user_path( \
