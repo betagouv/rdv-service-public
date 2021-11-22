@@ -11,7 +11,7 @@
   = form_tag(admin_organisation_agent_agenda_path(current_organisation, @agent), method: "get", class: "d-inline-flex mr-2") do
     - options = { "Tous les rdvs" => "" }.merge(Rdv.human_attribute_values(:statuses))
     = select_tag :status, options_for_select(options, rdv_status_value(@status)), class:"select2-input", onchange: "this.form.submit()"
-  = link_to "Trouver un créneau", admin_organisation_agent_searches_path(@organisation), class: "btn btn-outline-white align-bottom"
+  = link_to "Trouver un créneau", admin_organisation_agent_searches_path(@organisation), class: "btn btn-outline-primary align-bottom"
 
 .card
   .card-body.pt-0

@@ -5,7 +5,7 @@
 
 - if current_agent_can?(:create, Motif)
   - content_for :breadcrumb do
-    = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class:"btn btn-outline-white"
+    = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class:"btn btn-outline-primary"
 
 = simple_form_for "", url: admin_organisation_motifs_path(current_organisation), html: { method: :get, class: "form-inline js-search-and-filter-form" }, wrapper: :inline_form do |f|
 

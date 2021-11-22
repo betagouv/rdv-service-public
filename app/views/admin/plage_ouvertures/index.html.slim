@@ -8,7 +8,7 @@
     | Plages d'ouverture de #{@agent.full_name_and_service}
 
 - content_for :breadcrumb do
-  = link_to "Créer une plage d'ouverture", new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-white align-bottom"
+  = link_to "Créer une plage d'ouverture", new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-primary align-bottom"
 
 .card.pb-3
   - if @display_tabs
