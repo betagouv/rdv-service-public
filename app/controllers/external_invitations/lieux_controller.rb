@@ -1,14 +1,8 @@
 # frozen_string_literal: true
 
-class ExternalInvitations::LieuxController < ApplicationController
-  before_action :store_invitation_token_in_session_if_present
-  before_action :set_variables_from_invitation
+class ExternalInvitations::LieuxController < ExternalInvitations::BaseController
+  before_action :retrieve_matching_motifs
   before_action :redirect_if_no_matching_motifs
-
-  PERMITTED_PARAMS = %i[
-    departement where motif_name_with_location_type latitude longitude city_code street_ban_id
-    invitation_token
-  ].freeze
 
   def index
     @lieux = Lieu
@@ -62,21 +56,7 @@ class ExternalInvitations::LieuxController < ApplicationController
     )
   end
 
-  def lieu_params
-    params.permit(*PERMITTED_PARAMS)
-  end
-
-  def set_variables_from_invitation
-    @query = lieu_params.to_h
-    @latitude = lieu_params[:latitude]
-    @longitude = lieu_params[:longitude]
-    @where = lieu_params[:where]
-    @city_code = lieu_params[:city_code]
-    @departement = lieu_params[:departement]
-    @street_ban_id = lieu_params[:street_ban_id]
-    @organisation = Organisation.find(params[:organisation_id])
-    @service = Service.find(params[:service_id])
-    @geo_search = Users::GeoSearch.new(departement: @departement, city_code: @city_code, street_ban_id: @street_ban_id)
+  def retrieve_matching_motifs
     @matching_motifs = Motif.available_with_plages_ouvertures_for_organisation(@organisation)
       .where(id: params[:motif_id], service: @service)
     @matching_motif = @matching_motifs.first
