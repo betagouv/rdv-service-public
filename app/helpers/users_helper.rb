@@ -40,8 +40,8 @@ module UsersHelper
     user.relative? ? tag.span("Proche", class: "badge badge-info") : nil
   end
 
-  def user_soft_deleted_from_current_organisation_tag(user)
-    user.organisations.include?(current_organisation) ? nil : tag.span("Supprimé", class: "badge badge-danger")
+  def user_soft_deleted_tag(organisation, user)
+    user.organisations.include?(organisation) ? nil : tag.span("Supprimé", class: "badge badge-danger")
   end
 
   def full_name_and_birthdate(user)
@@ -91,7 +91,7 @@ module UsersHelper
     else
       tag.span(user.full_name) +
         relative_tag(user) +
-        user_soft_deleted_from_current_organisation_tag(user)
+        user_soft_deleted_tag(current_organisation, user)
     end
   end
 
