@@ -76,4 +76,12 @@ module ApplicationHelper
       tag.i(class: img_class) + object.class.human_attribute_name("#{attribute_name}.#{value}")
     end
   end
+
+  def admin_link_to_if_permitted(organisation, object, name = object.to_s)
+    if policy([:agent, object]).show?
+      link_to name, polymorphic_path([:admin, organisation, object])
+    else
+      name
+    end
+  end
 end
