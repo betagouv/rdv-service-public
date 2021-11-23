@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
 describe SlotBuilder, type: :service do
-  let(:today) { Time.zone.parse("20210430 8:00") }
+  let(:friday) { Time.zone.parse("20210430 8:00") }
   let(:organisation) { create(:organisation) }
   let(:lieu) { create(:lieu, organisation: organisation) }
 
   before do
-    travel_to(today)
+    travel_to(friday)
   end
 
-  # Recette
   describe "#available_slots" do
     let(:motif) { create(:motif, default_duration_in_min: 60, organisation: organisation) }
     let(:first_day) { Date.new(2021, 5, 3) }
@@ -87,7 +86,7 @@ describe SlotBuilder, type: :service do
 
     it "returns only not_expired PO" do
       matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
-      create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: today - 1.day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+      create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: friday - 1.day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
 
       plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range)
 
@@ -217,9 +216,9 @@ describe SlotBuilder, type: :service do
     end
 
     it "don't returns past time" do
-      today = Time.zone.parse("20211112 20:00")
-      travel_to(today)
-      starts_at = today - 1.week
+      friday = Time.zone.parse("20211112 20:00")
+      travel_to(friday)
+      starts_at = friday - 1.week
       plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent,
                                                 recurrence: Montrose.every(:week, starts: starts_at.to_date - 1.day, day: [5]))
       range = Date.new(2021, 11, 12)..Date.new(2021, 11, 19)
@@ -229,9 +228,9 @@ describe SlotBuilder, type: :service do
     end
 
     it "don't look at cancelled RDV" do
-      today = Time.zone.parse("20211112 20:00")
-      travel_to(today)
-      starts_at = today - 1.week
+      friday = Time.zone.parse("20211112 20:00")
+      travel_to(friday)
+      starts_at = friday - 1.week
       plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent,
                                                 recurrence: Montrose.every(:week, starts: starts_at.to_date - 1.day, day: [5]))
       create(:rdv, :excused, motif: motif, starts_at: Time.zone.parse("20211112 10:00"), agents: [agent])
@@ -244,7 +243,7 @@ describe SlotBuilder, type: :service do
     it "return range without only range of multi RDV on same range with same duration" do
       starts_at = Time.zone.parse("20211027 9:00")
       ends_at = Time.zone.parse("20211027 11:00")
-      other_rdv = create(:rdv, starts_at: starts_at + 45.minutes, agents: [agent])
+      create(:rdv, starts_at: starts_at + 45.minutes, agents: [agent])
       prev_rdv = create(:rdv, starts_at: starts_at - 30.minutes, agents: [agent])
       rdv = create(:rdv, starts_at: starts_at + 45.minutes, agents: [agent])
       plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent)
@@ -257,7 +256,7 @@ describe SlotBuilder, type: :service do
     it "return range without only range of longer overlapped RDV on same range with same duration" do
       starts_at = Time.zone.parse("20211027 9:00")
       ends_at = Time.zone.parse("20211027 11:00")
-      other_rdv = create(:rdv, motif: create(:motif, organisation: organisation, default_duration_in_min: 30), starts_at: starts_at + 45.minutes, agents: [agent])
+      create(:rdv, motif: create(:motif, organisation: organisation, default_duration_in_min: 30), starts_at: starts_at + 45.minutes, agents: [agent])
       prev_rdv = create(:rdv, starts_at: starts_at - 30.minutes, agents: [agent])
       rdv = create(:rdv, motif: create(:motif, organisation: organisation, default_duration_in_min: 30), starts_at: starts_at + 45.minutes, agents: [agent])
       plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent)
@@ -301,375 +300,43 @@ describe SlotBuilder, type: :service do
     end
   end
 
-  #
-  # RECETTE
-  #
+  describe "#ranges_for" do
+    context "without recurrence" do
+      it "return empty when po is out of range" do
+        plage_ouverture = build(:plage_ouverture, first_day: friday, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+        range = (friday + 3.days)..(friday + 10.days)
+        expect(described_class.ranges_for(plage_ouverture, range)).to eq([])
+      end
 
-  #
-  # avec
-  # - une absence le 10 décembre 2020 de 9 h 45 à 10 h 15
-  # - aujourd'hui étant le 10 décembre 2020
-  # - un motif d'une durée de 30 minutes
-  # - une plage d'ouverture
-  #   - qui démarre le 10 décembre 2020 à 9 h
-  #   - qui fini à 11 h 20
-  #   - pour un agent donnée
-  # - la date du jour au 10 décembre 2020 à 8 h
-  #
-  # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020
-  #
-  # Le résultat doit être
-  # - du 10 décembre 2020 à 9 h
-  # - du 10 décembre 2020 à 10 h 15
-  # - du 10 décembre 2020 à 10 h 45
+      it "return occurrence of po when is in range" do
+        plage_ouverture = build(:plage_ouverture, first_day: friday + 4.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+        range = (friday + 3.days)..(friday + 10.days)
+        expect(described_class.ranges_for(plage_ouverture, range)).to eq([Time.zone.parse("20210504 9:00")..Time.zone.parse("20210504 11:00")])
+      end
 
-  #
-  # avec
-  # - une absence du 10 décembre 2020 à 9 h 45 qui fini le 11 décembre 2020 à 6 h 30
-  # - aujourd'hui étant le 10 décembre 2020
-  # - un motif d'une durée de 30 minutes
-  # - une plage d'ouverture
-  #   - qui démarre le 10 décembre 2020 à 9 h
-  #   - qui fini à 11 h 20
-  #   - pour un agent donnée
-  #   - qui se répète tout les jours à partir du 10 décembre 2020
-  # - la date du jour au 10 décembre 2020 à 8 h
-  #
-  # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020
-  #
-  # Le résultat doit être
-  # - du 10 décembre 2020 à 9 h
-  # - du 11 décembre 2020 à 9 h
-  # - du 11 décembre 2020 à 9 h 30
-  # - du 11 décembre 2020 à 10 h
-  # - du 11 décembre 2020 à 10 h 30
+      it "return occurrence minus already past time of today of po when is in range starting today" do
+        friday = Time.zone.parse("20210430 12:00")
+        travel_to(friday)
+        plage_ouverture = build(:plage_ouverture, first_day: friday, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+        range = friday..(friday + 10.days)
+        expect(described_class.ranges_for(plage_ouverture, range)).to eq([])
+      end
+    end
 
-  #
-  # avec
-  # - une absence du 10 décembre 2020 à 9 h 45 qui fini le 11 décembre 2020 à 9 h 05
-  # - aujourd'hui étant le 10 décembre 2020
-  # - un motif d'une durée de 30 minutes
-  # - une plage d'ouverture
-  #   - qui démarre le 10 décembre 2020 à 9 h
-  #   - qui fini à 11 h 20
-  #   - pour un agent donnée
-  #   - qui se répète tout les jours à partir du 10 décembre 2020
-  # - la date du jour au 10 décembre 2020 à 8 h
-  #
-  # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020
-  #
-  # Le résultat doit être
-  # - du 10 décembre 2020 à 9 h
-  # - du 11 décembre 2020 à 9 h 05
-  # - du 11 décembre 2020 à 9 h 35
-  # - du 11 décembre 2020 à 10 h 05
+    context "with recurrence" do
+      it "return empty when po and it occurrence is out of range" do
+        plage_ouverture = build(:plage_ouverture, first_day: friday + 14.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
+                                                  recurrence: Montrose.every(:week, starts: friday + 14.days))
+        range = (friday + 3.days)..(friday + 10.days)
+        expect(described_class.ranges_for(plage_ouverture, range)).to eq([])
+      end
 
-  #
-  # avec
-  # - une absence du jeudi 3 décembre 2020 à 9 h 45 qui fini le jeudi 3 décembre 2020 à 10 h 15 qui se répète toutes les semaines
-  # - aujourd'hui étant le 10 décembre 2020
-  # - un motif d'une durée de 30 minutes
-  # - une plage d'ouverture
-  #   - qui démarre le 10 décembre 2020 à 9 h
-  #   - qui fini à 11 h 20
-  #   - pour un agent donnée
-  #   - qui se répète tout les jours à partir du 10 décembre 2020
-  # - la date du jour au 10 décembre 2020 à 8 h
-  #
-  # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020
-  #
-  # Le résultat doit être
-  # - du 10 décembre 2020 à 9 h
-  # - du 10 décembre 2020 à 10 h 15
-  # - du 10 décembre 2020 à 10 h 45
-
-  #
-  # avec
-  # - un RDV le jeudi 10 décembre 2020 à 9 h 30 qui fini le jeudi 3 décembre 2020 à 10 h
-  # - aujourd'hui étant le 10 décembre 2020
-  # - un motif d'une durée de 30 minutes
-  # - une plage d'ouverture
-  #   - qui démarre le 10 décembre 2020 à 9 h
-  #   - qui fini à 11 h 20
-  #   - pour un agent donnée
-  #   - qui se répète tout les jours à partir du 10 décembre 2020
-  # - la date du jour au 10 décembre 2020 à 8 h
-  #
-  # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020
-  #
-  # Le résultat doit être
-  # - du 10 décembre 2020 à 9 h
-  # - du 10 décembre 2020 à 10 h
-  # - du 10 décembre 2020 à 10 h 30
-
-  #
-  # avec
-  # - un RDV le jeudi 10 décembre 2020 à 9 h 30 qui fini le jeudi 3 décembre 2020 à 9 h 45
-  # - aujourd'hui étant le 10 décembre 2020
-  # - un motif d'une durée de 30 minutes
-  # - une plage d'ouverture
-  #   - qui démarre le 10 décembre 2020 à 9 h
-  #   - qui fini à 11 h 20
-  #   - pour un agent donnée
-  #   - qui se répète tout les jours à partir du 10 décembre 2020
-  # - la date du jour au 10 décembre 2020 à 8 h
-  #
-  # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020
-  #
-  # Le résultat doit être
-  # - du 10 décembre 2020 à 9 h
-  # - du 10 décembre 2020 à 9 h 45
-  # - du 10 décembre 2020 à 10 h 15
-  # - du 10 décembre 2020 à 10 h 45
-
-  #
-  # avec
-  # - un RDV le jeudi 10 décembre 2020 à 9 h 30 qui fini le jeudi 3 décembre 2020 à 10 h 15
-  # - aujourd'hui étant le 10 décembre 2020
-  # - un motif d'une durée de 30 minutes
-  # - une plage d'ouverture
-  #   - qui démarre le 10 décembre 2020 à 9 h
-  #   - qui fini à 11 h 20
-  #   - pour un agent donnée
-  #   - qui se répète tout les jours à partir du 10 décembre 2020
-  # - la date du jour au 10 décembre 2020 à 8 h
-  #
-  # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020
-  #
-  # Le résultat doit être
-  # - du 10 décembre 2020 à 9 h
-  # - du 10 décembre 2020 à 10 h 15
-  # - du 10 décembre 2020 à 10 h 45
-
-  #
-  # avec
-  # - un RDV ANNULÉ le jeudi 10 décembre 2020 à 9 h 30 qui fini le jeudi 3 décembre 2020 à 10 h
-  # - aujourd'hui étant le 10 décembre 2020
-  # - un motif d'une durée de 30 minutes
-  # - une plage d'ouverture
-  #   - qui démarre le 10 décembre 2020 à 9 h
-  #   - qui fini à 11 h 20
-  #   - pour un agent donnée
-  #   - qui se répète tout les jours à partir du 10 décembre 2020
-  # - la date du jour au 10 décembre 2020 à 8 h
-  #
-  # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020
-  #
-  # Le résultat doit être
-  # - du 10 décembre 2020 à 9 h
-  # - du 10 décembre 2020 à 9 h 30
-  # - du 10 décembre 2020 à 10 h
-  # - du 10 décembre 2020 à 10 h 30
-
-  # avec
-  # - un jour fériée
-  # - aujourd'hui étant le 1 janvier 2020
-  # - un motif d'une durée de 30 minutes
-  # - une plage d'ouverture
-  #   - qui démarre le 10 décembre 2020 à 9 h
-  #   - qui fini à 11 h 20
-  #   - pour un agent donnée
-  #   - qui se répète tout les jours à partir du 10 décembre 2020
-  # - la date du jour au 10 décembre 2020 à 8 h
-  #
-  # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020
-  #
-  # Le résultat doit être vide
-  # -- NOTE YAF: en même temps, s'il n'y a pas de plage d'ouverture sur ce jour là...
-
-  # avec
-  # - un RDV le jeudi 16 décembre 2020 à 10 h qui fini le jeudi 16 décembre 2020 à 10 h 30
-  # - aujourd'hui étant le 10 décembre 2020
-  # - un motif d'une durée de 30 minutes
-  # - une plage d'ouverture
-  #   - qui démarre le 16 décembre 2020 à 9 h
-  #   - qui fini à 11 h
-  #   - pour un agent donnée
-  #   - qui se répète tout les jours à partir du 10 décembre 2020
-  # - la date du jour au 10 décembre 2020 à 8 h
-  #
-  # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020
-  #
-  # Le résultat doit être
-  # - du 16 décembre 2020 à 9 h
-  # - du 16 décembre 2020 à 9 h 30
-  # - du 16 décembre 2020 à 10 h
-
-  # avec
-  # - aujourd'hui étant le 10 décembre 2020
-  # - un motif d'une durée de 30 minutes
-  # - une plage d'ouverture
-  #   - qui démarre le 10 décembre 2020 à 9 h
-  #   - qui fini à 11 h 20
-  #   - pour un agent
-  # - une plage d'ouverture
-  #   - qui démarre le 10 décembre 2020 à 10 h
-  #   - qui fini à 12 h
-  #   - pour un autre agent
-  # - la date du jour au 10 décembre 2020 à 8 h
-  #
-  # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020
-  #
-  # Le résultat doit être
-  # - du 16 décembre 2020 à 9 h
-  # - du 16 décembre 2020 à 9 h 30
-  # - du 16 décembre 2020 à 10 h
-  # - du 16 décembre 2020 à 10 h 30
-  # - du 16 décembre 2020 à 11 h
-  # - du 16 décembre 2020 à 11 h 30
-
-  # avec
-  # - aujourd'hui étant le 10 décembre 2020
-  # - un motif d'une durée de 30 minutes
-  # - une plage d'ouverture
-  #   - qui démarre le 10 décembre 2020 à 9 h
-  #   - qui fini à 11 h 20
-  #   - pour un agent A
-  # - une plage d'ouverture
-  #   - qui démarre le 10 décembre 2020 à 10 h
-  #   - qui fini à 12 h
-  #   - pour un autre agent B
-  # - la date du jour au 10 décembre 2020 à 8 h
-  #
-  # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020 POUR les agents
-  #
-  # Le résultat doit être
-  # - du 16 décembre 2020 à 9 h pour l'agent A
-  # - du 16 décembre 2020 à 9 h 30 pour l'agent A
-  # - du 16 décembre 2020 à 10 h pour l'agent A
-  # - du 16 décembre 2020 à 10 h pour l'agent B
-  # - du 16 décembre 2020 à 10 h 30 pour l'agent A
-  # - du 16 décembre 2020 à 10 h 30 pour l'agent B
-  # - du 16 décembre 2020 à 11 h pour l'agent B
-  # - du 16 décembre 2020 à 11 h 30 pour l'agent B
-
-  # avec
-  # - aujourd'hui étant le 10 décembre 2020
-  # - un motif d'une durée de 30 minutes
-  # - une plage d'ouverture
-  #   - qui démarre le 10 décembre 2020 à 9 h
-  #   - qui fini à 11 h 20
-  #   - pour un agent A
-  # - une plage d'ouverture
-  #   - qui démarre le 10 décembre 2020 à 10 h
-  #   - qui fini à 12 h
-  #   - pour un autre agent B
-  # - la date du jour au 10 décembre 2020 à 8 h
-  #
-  # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020 POUR l'agent B
-  #
-  # Le résultat doit être
-  # - du 16 décembre 2020 à 10 h pour l'agent B
-  # - du 16 décembre 2020 à 10 h 30 pour l'agent B
-  # - du 16 décembre 2020 à 11 h pour l'agent B
-  # - du 16 décembre 2020 à 11 h 30 pour l'agent B
-
-  # avec
-  # - aujourd'hui étant le 10 décembre 2020
-  # - un motif d'une durée de 30 minutes
-  # - une plage d'ouverture
-  #   - qui démarre le 10 décembre 2020 à 9 h
-  #   - qui fini à 11 h 20
-  #   - pour un agent A
-  # - une plage d'ouverture
-  #   - qui démarre le 10 décembre 2020 à 10 h
-  #   - qui fini à 12 h
-  #   - pour un autre agent B
-  # - la date du jour au 10 décembre 2020 à 8 h
-  #
-  # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020 POUR aucun agent
-  #
-  # Le résultat doit être vide
-
-  # avec
-  # - aujourd'hui étant le 10 décembre 2020
-  # - un motif nomé A sur place d'une durée de 30 minutes
-  # - un motif nomé A à domicile d'une durée de 30 minutes
-  # - une plage d'ouverture
-  #   - pour les deux motif nomé A
-  #   - qui démarre le 10 décembre 2020 à 9 h
-  #   - qui fini à 11 h 20
-  #   - pour un agent
-  # - la date du jour au 10 décembre 2020 à 8 h
-  #
-  # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020 un agent pour un agent filtré sur les motifs à domicile
-  #
-  # Le résultat doit être
-  # - du 16 décembre 2020 à 10 h pour le motif A à domicile
-  # - du 16 décembre 2020 à 10 h 30 pour le motif A à domicile
-  # - du 16 décembre 2020 à 11 h pour le motif A à domicile
-  # - du 16 décembre 2020 à 11 h 30 pour le motif A à domicile
-
-  # avec
-  # - aujourd'hui étant le 10 décembre 2020
-  # - un motif d'un service A nomé MonMotif
-  # - un motif d'un service B nomé MonMotif
-  # - une plage d'ouverture
-  #   - pour le motif du service A
-  #   - qui démarre le 10 décembre 2020 à 9 h
-  #   - qui fini à 11 h 20
-  # - une plage d'ouverture
-  #   - pour le motif du service B
-  #   - qui démarre le 10 décembre 2020 à 14 h
-  #   - qui fini à 14 h 35
-  # - la date du jour au 10 décembre 2020 à 8 h
-  #
-  # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020 pour le service A
-  #
-  # Le résultat doit être
-  # - du 16 décembre 2020 à 9 h pour le motif du service A
-  # - du 16 décembre 2020 à 9 h 30 pour le motif du service A
-  # - du 16 décembre 2020 à 10 h pour le motif du service A
-  # - du 16 décembre 2020 à 10 h 30 pour le motif du service A
-  # - du 16 décembre 2020 à 11 h pour le motif du service A
-  # - du 16 décembre 2020 à 11 h 30 pour le motif du service A ???? TRÈS BIZARRE !
-  # - du 16 décembre 2020 à 14 h pour le motif du service B
-
-  # avec
-  # - aujourd'hui étant le 10 décembre 2020
-  # - un motif avec un min booking_delay de 30 minutes
-  # - une plage d'ouverture
-  #   - pour le motif
-  #   - qui démarre le 10 décembre 2020 à 9 h
-  #   - qui fini à 11 h 20
-  # - la date du jour au 10 décembre 2020 à 9 h 15
-  #
-  # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020
-  #
-  # Le résultat doit être
-  # - du 16 décembre 2020 à 10 h pour le motif du service A
-  # - du 16 décembre 2020 à 10 h 30 pour le motif du service A
-  #
-  # Pourquoi pas le 9 h 30 ?
-
-  # avec
-  # - aujourd'hui étant le 10 décembre 2020
-  # - un motif avec un max booking_delay de 45 minutes
-  # - une plage d'ouverture
-  #   - pour le motif
-  #   - qui démarre le 10 décembre 2020 à 9 h
-  #   - qui fini à 11 h 20
-  # - la date du jour au 10 décembre 2020 à 9 h 15
-  #
-  # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020
-  #
-  # Le résultat doit être
-  # - du 16 décembre 2020 à 10 h pour le motif du service A
-  #
-  # Pourquoi pas le 9 h 30 ?
-
-  # avec
-  # - aujourd'hui étant le 10 décembre 2020
-  # - un motif
-  # - une plage d'ouverture
-  #   - pour le motif
-  #   - qui démarre le 10 décembre 2020 à 9 h
-  #   - qui fini à 11 h 20
-  # - la date du jour au 10 décembre 2020 à 10 h
-  #
-  # Si on demande les créneaux pour la période du 10 décembre 2020 au 17 décembre 2020
-  #
-  # Le résultat doit être
-  # - du 16 décembre 2020 à 10 h 30 pour le motif du service A ?
-  #
+      it "return occurrence of po that in range" do
+        plage_ouverture = build(:plage_ouverture, first_day: friday - 14.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
+                                                  recurrence: Montrose.every(:week, starts: friday - 14.days))
+        range = (friday + 3.days)..(friday + 10.days)
+        expect(described_class.ranges_for(plage_ouverture, range)).to eq([(Time.zone.parse("20210507 9:00")..Time.zone.parse("20210507 11:00"))])
+      end
+    end
+  end
 end

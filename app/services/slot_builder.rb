@@ -48,37 +48,21 @@ module SlotBuilder
 
     return [] if ranges.empty?
 
-    ranges = ranges.map { |range| split_range_recursively(range, busy_times_for(range)) }.flatten
+    ranges = ranges.map { |range| split_range_recursively(range, BusyTime.busy_times_for(range, plage_ouverture)) }.flatten
     ranges.select { |r| ((r.end.to_i - r.begin.to_i) / 60).positive? } || []
   end
 
   def self.ranges_for(plage_ouverture, date_range)
+    date_range = date_range.begin.beginning_of_day..date_range.end.end_of_day
     date_range = Time.zone.now..date_range.end.end_of_day if date_range.begin < Time.zone.now
+
     occurrences = plage_ouverture.occurrences_for(date_range)
 
     occurrences.map do |occurrence|
       next if occurrence.ends_at < Time.zone.now
 
-      (occurrence.starts_at..occurrence.ends_at)
-    end
-  end
-
-  def self.busy_times_for(range, plage_ouverture)
-    # TODO : Peut-être cacher la récupération de l'ensemble des RDV et absences concernées (pour n'avoir que deux requêtes) puis faire des selections dessus pour le filtre sur le range
-    rdvs = []
-    ranges.each do |range|
-      rdvs += plage_ouverture.agent.rdvs.not_cancelled.where(starts_at: range).or(plage_ouverture.agent.rdvs.not_cancelled.where(ends_at: range))
-    end
-    # TODO : ajouter la recherche des occurrences qui correspondent à la période
-    absences = []
-    ranges.each do |range|
-      absences += plage_ouverture.agent.absences.where(first_day: range).or(plage_ouverture.agent.absences.where(end_day: range))
-    end
-
-    # c'est là que l'on execute le SQL
-    # TODO grouper les temps d'indisponibilité pour applatir et prendre au plus large !
-    # Le tri est nécessaire, surtout pour les surcharges.
-    (rdvs + absences).select { |b| range.cover?(b.starts_at) || range.cover?(b.ends_at) }.sort_by(&:starts_at)
+      (plage_ouverture.start_time.on(occurrence.starts_at)..plage_ouverture.end_time.on(occurrence.ends_at))
+    end.compact
   end
 
   def self.split_range_recursively(range, busy_times)
@@ -86,7 +70,7 @@ module SlotBuilder
 
     busy_time = busy_times.first
 
-    if rdv_include_in_range?(busy_time, range)
+    if busy_time_include_in_range?(busy_time, range)
       [range.begin..busy_time.starts_at] + split_range_recursively(busy_time.ends_at..range.end, busy_times - [busy_time])
     elsif rdv_overlap_begin_of_range?(busy_time, range)
       split_range_recursively(busy_time.ends_at..range.end, busy_times - [busy_time])
@@ -97,8 +81,11 @@ module SlotBuilder
     end
   end
 
-  def self.rdv_include_in_range?(rdv, range)
-    range.begin < rdv.starts_at && rdv.ends_at <= range.end
+  def self.busy_time_include_in_range?(busy_time, range)
+    debut_dedans = range.begin < busy_time.starts_at
+    # Les absences n'ont pas forcement de ends_at... ?
+    fin_dedans = (busy_time.ends_at && busy_time.ends_at <= range.end)
+    debut_dedans && fin_dedans
   end
 
   def self.rdv_overlap_begin_of_range?(rdv, range)
@@ -135,5 +122,61 @@ module SlotBuilder
       possible_slot_time = possible_slot_time.end..(possible_slot_time.end + motif.default_duration_in_min.minutes)
     end
     slots
+  end
+
+  class BusyTime
+    attr_reader :starts_at, :ends_at
+
+    def initialize(object)
+      case object
+      when Rdv
+        @starts_at = object.starts_at
+        @ends_at = object.ends_at
+      when Absence
+        @starts_at = object.start_time.on(object.first_day)
+        @ends_at = if object.end_day.present?
+                     object.end_time.on(object.end_day)
+                   else
+                     object.end_time.on(object.first_day)
+                   end
+      when Recurrence::Occurrence
+        @starts_at = object.starts_at
+        @ends_at = object.ends_at
+      else
+        raise ArgumentError, "busytime can't be build with a #{object.class}"
+      end
+    end
+
+    def self.busy_times_for(range, plage_ouverture)
+      # c'est là que l'on execute le SQL
+      # TODO : Peut-être cacher la récupération de l'ensemble des RDV et absences concernées (pour n'avoir que deux requêtes) puis faire des selections dessus pour le filtre sur le range
+
+      busy_times = busy_times_from_rdvs(range, plage_ouverture)
+      busy_times += busy_times_from_absences(range, plage_ouverture)
+
+      # Le tri est nécessaire, surtout pour les surcharges.
+      busy_times.sort_by(&:starts_at)
+    end
+
+    def self.busy_times_from_rdvs(range, plage_ouverture)
+      plage_ouverture.agent.rdvs.not_cancelled.where(starts_at: range).or(plage_ouverture.agent.rdvs.not_cancelled.where(ends_at: range)).map do |rdv|
+        BusyTime.new(rdv)
+      end
+    end
+
+    def self.busy_times_from_absences(range, plage_ouverture)
+      absences = plage_ouverture.agent.absences.where(organisation: plage_ouverture.organisation).in_range(range)
+      busy_times = []
+      absences.each do |absence|
+        if absence.recurrence
+          absence.occurrences_for(range).each do |absence_occurrence|
+            busy_times << BusyTime.new(absence_occurrence)
+          end
+        else
+          busy_times << BusyTime.new(absence)
+        end
+      end
+      busy_times
+    end
   end
 end
