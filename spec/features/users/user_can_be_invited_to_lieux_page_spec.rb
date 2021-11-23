@@ -4,7 +4,8 @@ describe "User can be invited to lieux page" do
   let!(:user) do
     create(:user, first_name: "john", last_name: "doe", email: "johndoe@gmail.com",
                   phone_number: "0682605955", address: "26 avenue de la resistance",
-                  birth_date: Date.new(1988, 12, 20))
+                  birth_date: Date.new(1988, 12, 20),
+                  organisations: [organisation])
   end
   let!(:agent) { create(:agent) }
   let!(:territory26) { create(:territory, departement_number: "26") }
