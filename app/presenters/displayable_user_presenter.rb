@@ -76,16 +76,4 @@ class DisplayableUserPresenter
 
     link_to(phone_number, "tel:#{phone_number_formatted}")
   end
-
-  def email_and_notification
-    return "N/A" if email.blank?
-
-    safe_join([clickable_email, " - Notifications par email ", notify_by_email])
-  end
-
-  def phone_number_and_notification
-    return "N/A" if phone_number.blank?
-
-    safe_join([clickable_phone_number, " - Notifications par SMS ", notify_by_sms])
-  end
 end
