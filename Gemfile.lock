@@ -117,6 +117,8 @@ GEM
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
     bindata (2.4.10)
+    binding_of_caller (1.0.0)
+      debug_inspector (>= 0.0.1)
     blueprinter (0.25.3)
     bootsnap (1.7.7)
       msgpack (~> 1.0)
@@ -160,6 +162,7 @@ GEM
     database_cleaner-core (2.0.1)
     datetime_picker_rails (0.0.7)
       momentjs-rails (>= 2.8.1)
+    debug_inspector (1.1.0)
     delayed_cron_job (0.7.4)
       delayed_job (>= 4.1)
     delayed_job (4.1.9)
@@ -581,6 +584,7 @@ DEPENDENCIES
   administrate-field-belongs_to_search
   auto_strip_attributes
   better_errors
+  binding_of_caller
   blueprinter
   bootsnap
   bootstrap4-kaminari-views
