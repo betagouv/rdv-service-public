@@ -1,0 +1,5 @@
+fr:
+  admin:
+    motifs:
+      visibility:
+        default_html: "Comportement normal du motif « %{motif} » :"
