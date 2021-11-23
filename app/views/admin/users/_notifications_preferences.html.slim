@@ -1,0 +1,30 @@
+/ Component: display the user notification settings
+  depending on :email :phone_number :notify_by_email and :notify_by_sms
+
+div
+  - if user.email.present?
+    - if user.notify_by_email?
+      i.fa.fa-check.mr-1
+      = t(".email_present_and_enabled")
+    - else
+      i.fa.fa-exclamation-triangle.text-warning.mr-1
+      = t(".email_disabled")
+  - else
+    i.fa.fa-exclamation-triangle.text-warning.mr-1
+    = t(".email_absent")
+
+div
+  - if user.phone_number.present?
+    - if user.phone_number_mobile?
+      - if user.notify_by_sms?
+        i.fa.fa-check.mr-1
+        = t(".sms_present_valid_and_enabled")
+      - else
+        i.fa.fa-exclamation-triangle.text-warning.mr-1
+        = t(".sms_disabled")
+    - else
+      i.fa.fa-exclamation-triangle.text-warning.mr-1
+      = t(".sms_invalid")
+  - else
+    i.fa.fa-exclamation-triangle.text-warning.mr-1
+    = t(".sms_absent")
