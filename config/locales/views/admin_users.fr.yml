@@ -1,6 +1,9 @@
 fr:
   admin:
     users:
+      identity:
+        identity_html: "%{user}"
+        identity_with_responsible_html: "%{user} (responsable: %{responsible})"
       notifications_preferences:
         email_present_and_enabled: Reçoit les notifications par email
         email_disabled: Notif. par email désactivées

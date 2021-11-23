@@ -1,0 +1,11 @@
+/ Component: display the user identity, with their responsible, if any
+
+- if user.relative?
+  - user_displayed_name = user.last_name == user.responsible.last_name ? user.first_name : user.full_name
+  = t(".identity_with_responsible_html",
+          responsible: admin_link_to_if_permitted(current_organisation, user.responsible),
+          user: admin_link_to_if_permitted(current_organisation, user))
+- else
+  = t(".identity_html", user: admin_link_to_if_permitted(current_organisation, user))
+
+= user_soft_deleted_tag(current_organisation, user)
