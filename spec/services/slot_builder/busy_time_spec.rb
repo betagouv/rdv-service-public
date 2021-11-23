@@ -13,17 +13,17 @@ describe SlotBuilder::BusyTime, type: :service do
 
   context "with a RDV" do
     it "returns BusyTime object in array with a RDV" do
-      rdv = create(:rdv, agents: [plage_ouverture.agent], starts_at: Time.zone.parse("20211027 9:00"))
+      create(:rdv, agents: [plage_ouverture.agent], starts_at: Time.zone.parse("20211027 9:00"))
       expect(described_class.busy_times_for(range, plage_ouverture).first).to be_a(described_class)
     end
 
     it "returns BusyTime that starts_at as RDV starts_at" do
-      rdv = create(:rdv, agents: [plage_ouverture.agent], starts_at: Time.zone.parse("20211027 9:00"))
+      create(:rdv, agents: [plage_ouverture.agent], starts_at: Time.zone.parse("20211027 9:00"))
       expect(described_class.busy_times_for(range, plage_ouverture).first.starts_at).to eq(Time.zone.parse("20211027 9:00"))
     end
 
     it "returns BusyTime that ends_at as RDV ends_at" do
-      rdv = create(:rdv, agents: [plage_ouverture.agent], starts_at: Time.zone.parse("20211027 9:00"), ends_at: Time.zone.parse("20211027 9:40"))
+      create(:rdv, agents: [plage_ouverture.agent], starts_at: Time.zone.parse("20211027 9:00"), ends_at: Time.zone.parse("20211027 9:40"))
       expect(described_class.busy_times_for(range, plage_ouverture).first.ends_at).to eq(Time.zone.parse("20211027 9:40"))
     end
   end

@@ -1,19 +1,5 @@
 # frozen_string_literal: true
 
-# Liste des appels à CreneauxBuilderSerices.perform_with
-# `grep -r "CreneauxBuilderService" app`
-#
-# - app/services/concerns/users/creneaux_search_concern.rb:11
-# CreneauxBuilderService.perform_with(motif.name, @lieu, date_range, **options)
-#
-#    @options ||= {
-#      agent_ids: agent_ids,
-#      agent_name: follow_up_rdv_and_online_user?,
-#      motif_location_type: motif.location_type,
-#      service: motif.service
-#    }.select { |_key, value| value } # rejects false and nil but not [] or 0
-#
-#
 module SlotBuilder
   # À faire avant, au moment de jouer avec le motifs
   # @for_agents ? motifs : motifs.reservable_online
@@ -22,6 +8,10 @@ module SlotBuilder
   # @for_agents sert aussi pour « limiter » l'afficahge des créneaux. Je pense que c'est à faire sur la vue.
   # uniq_by = @for_agents ? ->(c) { [c.starts_at, c.agent_id] } : ->(c) { c.starts_at }
   #  creneaux.uniq(&uniq_by).sort_by(&:starts_at)
+  #
+  # L'option agent_name n'est pas reproduite ici.
+  # Cet élément est dépendant de l'affichage, du motif et de l'agent
+  # (ces deux dernier sont présent dans l'object Creneau, il est donc facile de faire la demande de nom court plus tard.
 
   def self.available_slots(motif, lieu, date_range, off_days, options = {})
     # options : { agents: [] }
@@ -105,8 +95,7 @@ module SlotBuilder
             starts_at: starts_at,
             motif: motif,
             lieu_id: plage_ouverture.lieu_id,
-            agent_id: plage_ouverture.agent_id,
-            agent_name: plage_ouverture.agent.short_name
+            agent_id: plage_ouverture.agent_id
           )
         end
       end
@@ -129,7 +118,7 @@ module SlotBuilder
 
     def initialize(object)
       case object
-      when Rdv
+      when Rdv || Recurrence::Occurrence
         @starts_at = object.starts_at
         @ends_at = object.ends_at
       when Absence
@@ -139,9 +128,6 @@ module SlotBuilder
                    else
                      object.end_time.on(object.first_day)
                    end
-      when Recurrence::Occurrence
-        @starts_at = object.starts_at
-        @ends_at = object.ends_at
       else
         raise ArgumentError, "busytime can't be build with a #{object.class}"
       end

@@ -8,17 +8,14 @@ module Users::CreneauxSearchConcern
   end
 
   def creneaux
-    CreneauxBuilderService.perform_with(motif.name, @lieu, date_range, **options)
+    SlotBuilder.available_slots(motif, @lieu, date_range, **options)
   end
 
   protected
 
   def options
     @options ||= {
-      agent_ids: agent_ids,
-      agent_name: follow_up_rdv_and_online_user?,
-      motif_location_type: motif.location_type,
-      service: motif.service
+      agent_ids: agent_ids
     }.select { |_key, value| value } # rejects false and nil but not [] or 0
   end
 
