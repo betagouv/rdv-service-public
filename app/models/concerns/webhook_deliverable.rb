@@ -26,7 +26,7 @@ module WebhookDeliverable
 
   def generate_payload_and_send_webhook_for_destroy
     payload = generate_webhook_payload(:destroyed)
-    yield
+    yield if block_given?
     send_webhook(payload, :destroyed)
   end
 

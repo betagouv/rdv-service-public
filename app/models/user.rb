@@ -173,7 +173,7 @@ class User < ApplicationRecord
   end
 
   def webhook_endpoints
-    WebhookEndpoint.where(organisation_id: organisations.pluck(:id))
+    WebhookEndpoint.joins(:organisation).merge(organisations)
   end
 
   protected
@@ -229,13 +229,13 @@ class User < ApplicationRecord
   end
 
   def do_soft_delete(organisation)
-    if organisation.present?
+    if organisation.present? && organisations.length > 1
       organisations.delete(organisation)
+      save!
     else
+      update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email)
+      generate_payload_and_send_webhook_for_destroy
       self.organisations = []
     end
-    return save! if organisations.any? # only actually mark deleted when no orgas left
-
-    update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email)
   end
 end
