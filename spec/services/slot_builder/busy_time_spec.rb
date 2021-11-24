@@ -66,9 +66,14 @@ describe SlotBuilder::BusyTime, type: :service do
     end
 
     it "returns a busy_time for each occurrence in range" do
-      create(:absence, agent: plage_ouverture.agent, organisation: plage_ouverture.organisation, first_day: Date.new(2021, 10, 19), start_time: Tod::TimeOfDay.new(9),
-                       end_time: Tod::TimeOfDay.new(9, 45), recurrence: Montrose.every(:week, on: %w[tuesday friday], starts: Time.zone.parse("20211019 9:00"), until: nil))
-      expect(described_class.busy_times_for(range, plage_ouverture).map(&:ends_at)).to eq(Time.zone.parse("20211026 9:45"))
+      create(:absence,
+             agent: plage_ouverture.agent,
+             organisation: plage_ouverture.organisation,
+             first_day: Date.new(2021, 10, 19),
+             start_time: Tod::TimeOfDay.new(9),
+             end_time: Tod::TimeOfDay.new(9, 45),
+             recurrence: Montrose.every(:week, on: %w[tuesday friday], starts: Time.zone.parse("20211019 9:00"), until: nil))
+      expect(described_class.busy_times_for(range, plage_ouverture).map(&:ends_at)).to eq([Time.zone.parse("20211026 9:45"), Time.zone.parse("20211029 9:45")])
     end
   end
 end

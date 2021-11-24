@@ -118,16 +118,12 @@ module SlotBuilder
 
     def initialize(object)
       case object
-      when Rdv || Recurrence::Occurrence
+      when Rdv, Recurrence::Occurrence
         @starts_at = object.starts_at
         @ends_at = object.ends_at
       when Absence
         @starts_at = object.start_time.on(object.first_day)
-        @ends_at = if object.end_day.present?
-                     object.end_time.on(object.end_day)
-                   else
-                     object.end_time.on(object.first_day)
-                   end
+        @ends_at = object.end_time.on(object.end_day.presence || object.first_day)
       else
         raise ArgumentError, "busytime can't be build with a #{object.class}"
       end
@@ -145,7 +141,9 @@ module SlotBuilder
     end
 
     def self.busy_times_from_rdvs(range, plage_ouverture)
-      plage_ouverture.agent.rdvs.not_cancelled.where(starts_at: range).or(plage_ouverture.agent.rdvs.not_cancelled.where(ends_at: range)).map do |rdv|
+      plage_ouverture_starts_in_range = plage_ouverture.agent.rdvs.not_cancelled.where(starts_at: range)
+      plage_ouverture_ends_in_range = plage_ouverture.agent.rdvs.not_cancelled.where(ends_at: range)
+      plage_ouverture_starts_in_range.or(plage_ouverture_ends_in_range).map do |rdv|
         BusyTime.new(rdv)
       end
     end

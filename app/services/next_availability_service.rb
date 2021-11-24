@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class NextAvailabilityService
-  def self.find(motif, lieu, from, creneaux_builder_options)
+  def self.find(motif, lieu, from, creneaux_builder_options = {})
     return unless motif.reservable_online?
 
     available_creneau = nil

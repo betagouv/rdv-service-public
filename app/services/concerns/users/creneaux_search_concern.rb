@@ -8,7 +8,7 @@ module Users::CreneauxSearchConcern
   end
 
   def creneaux
-    SlotBuilder.available_slots(motif, @lieu, date_range, **options)
+    SlotBuilder.available_slots(motif, @lieu, date_range, OffDays.all_in_date_range(date_range), **options)
   end
 
   protected

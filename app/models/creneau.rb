@@ -4,7 +4,7 @@ class Creneau
   include ActiveModel::Model
 
   # Quand le agent_id est-il utilisé ?
-  attr_accessor :starts_at, :lieu_id, :motif, :agent_id, :agent_name
+  attr_accessor :starts_at, :lieu_id, :motif, :agent_id
 
   def ends_at
     starts_at + duration_in_min.minutes
