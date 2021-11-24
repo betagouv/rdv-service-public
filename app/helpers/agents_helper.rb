@@ -17,7 +17,7 @@ module AgentsHelper
     params[:lieu_id] = creneau.lieu.id
     params[:organisation_id] = creneau.motif.organisation_id
     params[:duration_in_min] = creneau.motif.default_duration_in_min
-    params["agent_ids"] = [creneau.agent_id]
+    params["agent_ids"] = [creneau.agent.id]
     params["user_ids"] = form.user_ids if form.user_ids.present?
     params["context"] = form.context if form.context.present?
     params

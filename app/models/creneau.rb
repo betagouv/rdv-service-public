@@ -3,7 +3,7 @@
 class Creneau
   include ActiveModel::Model
 
-  attr_accessor :starts_at, :lieu_id, :motif, :agent_id
+  attr_accessor :starts_at, :lieu_id, :motif, :agent
 
   def ends_at
     starts_at + duration_in_min.minutes
@@ -15,10 +15,6 @@ class Creneau
 
   def lieu
     Lieu.find(lieu_id)
-  end
-
-  def agent
-    Agent.find(agent_id)
   end
 
   def duration_in_min
