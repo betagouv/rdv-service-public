@@ -14,27 +14,26 @@
       - if @rdv.cancelled?
         span.badge.badge-danger
 
-- content_for :breadcrumb do
-  = link_to "Dupliquer…", admin_organisation_agent_searches_path(current_organisation, service_id: @rdv.motif.service_id, motif_id: @rdv.motif_id, from_date: @rdv.starts_at + 1.day, user_ids: @rdv.user_ids, context: @rdv.context, commit: "commit"), class: "btn btn-outline-primary"
-
 .row
   .col-md-6.mb-3
     .card
       .card-header
         .d-flex.justify-content-between.flex-wrap
-          .mt-1= l(@rdv.starts_at.to_date, format: :human).capitalize
+          h5.header.mr-1= l(@rdv.starts_at.to_date, format: :human).capitalize
           = render "rdv_status_dropdown", rdv: @rdv, agent: @agent
 
       .card-body
         p.card-text
-          i.fa.fa-fw.fa-calendar>
+          i.fa.fa-fw.fa-calendar.mr-1
           = rdv_starts_at_and_duration(@rdv, :time_only)
           |&nbsp;
           = link_to "voir dans l'agenda", admin_organisation_agent_agenda_path(current_organisation, @rdv.agents.first, selected_event_id: @rdv.id, date: @rdv.starts_at.to_date)
         = render "rdv_details", rdv: @rdv, display_links_to_users: false
       .card-footer
         .d-flex.justify-content-end
-          = link_to "Modifier", edit_admin_organisation_rdv_path(@rdv.organisation, @rdv, agent_id: @agent&.id), class: "btn btn-outline-primary"
+          .btn-group
+            = link_to "Modifier", edit_admin_organisation_rdv_path(@rdv.organisation, @rdv, agent_id: @agent&.id), class: "btn btn-outline-primary"
+            = link_to "Dupliquer…", admin_organisation_agent_searches_path(current_organisation, service_id: @rdv.motif.service_id, motif_id: @rdv.motif_id, from_date: @rdv.starts_at + 1.day, user_ids: @rdv.user_ids, context: @rdv.context, commit: "commit"), class: "btn btn-outline-primary"
 
   .col-md-6.mb-3
     - @rdv.users.each do |user|
@@ -51,7 +50,7 @@
         .card-body
           - displayable_user = DisplayableUserPresenter.new(user, current_organisation)
           p.card-text
-            i.fa.fa-fw.fa-phone>
+            i.fa.fa-phone>
             = displayable_user.phone_number_and_notification
           p.card-text
             i.fa.fa-fw.fa-envelope>

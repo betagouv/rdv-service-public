@@ -3,9 +3,11 @@
     .col-md-12
       .card
         .card-header
-          button.btn.btn-link data-toggle="collapse" data-target="#historyCollapse"
-            = t("admin.versions.title")
-        .collapse.hide#historyCollapse
+          button.btn.btn-link data-toggle="collapse" data-target="#history-collapse"
+            h5.header
+              i.fa.fa-history.mr-1
+              = t("admin.versions.title")
+        .collapse.hide#history-collapse
           .card-body
             - attributes_allowlist = local_assigns[:attributes_allowlist]
             = cache [resource, attributes_allowlist] do
