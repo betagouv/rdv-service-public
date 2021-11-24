@@ -3,7 +3,6 @@
 class Creneau
   include ActiveModel::Model
 
-  # Quand le agent_id est-il utilisé ?
   attr_accessor :starts_at, :lieu_id, :motif, :agent_id
 
   def ends_at
@@ -18,7 +17,6 @@ class Creneau
     Lieu.find(lieu_id)
   end
 
-  # Quand cette méthode est-elle appelée ?
   def agent
     Agent.find(agent_id)
   end
