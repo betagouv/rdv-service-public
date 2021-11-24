@@ -100,6 +100,7 @@ end
 group :development do
   gem "listen" # Needed for ActiveSupport::EventedFileUpdateChecker. See config/environment/development.rb
   gem "better_errors" # Better error page than the Rails default
+  gem "binding_of_caller" # Enable the REPL in better_errors
   gem "letter_opener_web" # Saves sent emails and serves them on /letter_opener
   gem "rails-erd" # Keeps docs/domain_model.png up-to-date. See .erdconfig
 end
