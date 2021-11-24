@@ -42,8 +42,18 @@
                 input_html: { class: "select2-input" }
             - elsif @rdv_form.motif.home?
               = f.input :address, label: "Lieu (RDV à domicile)", disabled: true
-            = f.association :agents, collection: @rdv_form.organisation.agents.can_perform_motif(@rdv_form.motif), label_method: :full_name_and_service, input_html: { multiple: true, class: "select2-input" }
-            = f.association :users, collection: policy_scope(User).order_by_last_name, label_method: lambda { |user| full_name_and_birthdate(user) }, input_html: { multiple: true, class: "select2-input" }
+            = f.association :agents,
+              collection: @rdv_form.agents,
+              label_method: :full_name_and_service,
+              input_html: { multiple: true, class: "select2-input",
+                data: { "select-options": { ajax: { url: search_admin_organisation_agents_path(current_organisation),
+                                                          dataType: "json", delay: 250 } } } }
+            = f.association :users,
+              collection: @rdv_form.users,
+              label_method: lambda { |user| full_name_and_birthdate(user) },
+              input_html: { multiple: true, class: "select2-input",
+                data: { "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation),
+                                                    dataType: "json", delay: 250 } } } }
             .text-right
               = link_to "Retour", admin_organisation_rdv_path(current_organisation, @rdv), class: "btn btn-link"
               = f.button :submit, "Enregistrer"
