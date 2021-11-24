@@ -8,7 +8,7 @@
     = t(".busy_time_of", full_name: @agent.full_name_and_service)
 
 - content_for :breadcrumb do
-  = link_to t(".create_busy_time"), new_admin_organisation_agent_absence_path(current_organisation, @agent.id), class: "btn btn-outline-white align-bottom"
+  = link_to t(".create_busy_time"), new_admin_organisation_agent_absence_path(current_organisation, @agent.id), class: "btn btn-outline-primary align-bottom"
 
 .card.pb-3
   - if @display_tabs

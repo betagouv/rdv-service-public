@@ -13,16 +13,15 @@ html lang="fr"
           = render "layouts/rdv_a_renseigner", agent: current_agent, organisation: defined?(current_organisation) ? current_organisation : nil
           .container-fluid
             - if content_for :title
-              .row.bg-dark.pb-5.justify-content-md-center
+              .row.justify-content-md-center
                 div.col-md-12
                   .page-title-box
                     - if content_for :breadcrumb
                       .page-title-right
                         = yield :breadcrumb
-                    h4.page-title= yield :title
-            .bg-negative
-              = render "layouts/flash"
-              = yield
+                    h3.page-title= yield :title
+            = render "layouts/flash"
+            = yield
 
     #modal-holder
     footer.footer
