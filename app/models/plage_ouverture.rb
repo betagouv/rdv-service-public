@@ -22,9 +22,7 @@ class PlageOuverture < ApplicationRecord
   has_many :webhook_endpoints, through: :organisation
 
   scope :for_lieu, ->(lieu) { where(lieu: lieu) }
-  scope :for_motif, ->(motif_name, organisation_id) { joins(:motifs).where(motifs: { name: motif_name, organisation_id: organisation_id }) }
-  # TODO: replace `for_motif` by `for_motif_object` and then, rename it
-  scope :for_motif_object, ->(motif) { joins(:motifs).where(motifs: { id: motif.id }) }
+  scope :for_motif, ->(motif) { joins(:motifs).where(motifs: { id: motif.id }) }
 
   def ical_uid
     "plage_ouverture_#{id}@#{BRAND}"

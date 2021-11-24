@@ -21,7 +21,7 @@ module SlotBuilder
   end
 
   def self.plage_ouvertures_for(motif, lieu, date_range, options = {})
-    lieu.plage_ouvertures.for_motif_object(motif).not_expired.in_range(date_range)
+    lieu.plage_ouvertures.for_motif(motif).not_expired.in_range(date_range)
       .where(({ agent_id: options[:agent_ids] } unless options[:agent_ids].nil?))
   end
 
