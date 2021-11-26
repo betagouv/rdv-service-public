@@ -1,4 +1,0 @@
-fr:
-  activerecord:
-    models:
-      motif_libelle: Libellé de motif

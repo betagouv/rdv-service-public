@@ -64,14 +64,14 @@ module MotifsHelper
     if motif.send("#{option_name}?")
       tag.span("☑️ ") + tag.span(Motif.human_attribute_name("#{option_name}_hint"))
     else
-      tag.span("╳ désactivée", class: "text-muted")
+      tag.span("désactivée", class: "text-muted")
     end
   end
 
   def motif_attribute_row(legend, arg_value = nil, hint: nil, &block)
     value = block.present? ? capture(&block) : display_value_or_na_placeholder(arg_value)
     value += tag.div(hint, class: "text-muted") if arg_value.present? && hint.present?
-    tag.div(tag.div(legend, class: "col-md-4 text-bold text-right") +
-        tag.div(value, class: "col-md-8"), class: "row")
+    tag.div(tag.div(legend, class: "col-md-4 text-right") +
+        tag.div(value, class: "col-md-8 text-bold"), class: "row")
   end
 end

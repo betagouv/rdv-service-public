@@ -6,9 +6,6 @@ describe "Admin can configure the organisation" do
   let!(:service_social) { create(:service, name: "Service social") }
   let!(:agent_admin) { create(:agent, first_name: "Jeanne", last_name: "Dupont", email: "jeanne.dupont@love.fr", service: pmi, admin_role_in_organisations: [organisation]) }
   let!(:agent_user) { create(:agent, first_name: "Tony", last_name: "Patrick", email: "tony@patrick.fr", service: pmi, basic_role_in_organisations: [organisation]) }
-  let!(:motif_libelle) { create(:motif_libelle, service: pmi, name: "Motif 1") }
-  let!(:motif_libelle2) { create(:motif_libelle, service: pmi, name: "Motif 2") }
-  let!(:motif_libelle3) { create(:motif_libelle, service: service_social, name: "Motif 3") }
   let!(:motif) { create(:motif, name: "Motif 1", service: pmi, organisation: organisation) }
   let!(:user) { create(:user, organisations: [organisation]) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
@@ -111,9 +108,9 @@ describe "Admin can configure the organisation" do
     expect(page).to have_content("Motif 1")
     click_link "Éditer"
     expect(page.find_by_id("motif_name")).to have_content(motif.name)
-    select(motif_libelle2.name, from: :motif_name)
+    fill_in :motif_name, with: "Étre appelé par"
     click_button("Enregistrer")
-    expect(page).to have_content(motif_libelle2.name)
+    expect(page).to have_content("Étre appelé par")
     expect_page_title("Motif Motif 2 (PMI)")
 
     click_link "Paramètres"
@@ -136,10 +133,10 @@ describe "Admin can configure the organisation" do
     ## Check secretariat is unavailable
     expect(page.all("select#motif_service_id option").map(&:value)).to match_array ["", pmi.id.to_s, service_social.id.to_s]
     select(service_social.name, from: :motif_service_id)
-    expect(page).to have_select("motif[name]", with_options: ["", motif_libelle3.name], wait: 10)
-    select(motif_libelle3.name, from: :motif_name)
+    expect(page).to have_select("motif[name]", with_options: ["", "truc"], wait: 10)
+    fill_in :motif_name, with: "truc"
     fill_in "Couleur", with: le_nouveau_motif.color
     click_button "Enregistrer"
-    expect(page).to have_link(motif_libelle3.name)
+    expect(page).to have_link("truc")
   end
 end

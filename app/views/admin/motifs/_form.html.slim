@@ -7,9 +7,9 @@
       h5.card-title Configuration générale
       .form-row
         .col-md-6
-          = f.association :service, collection: Service.with_motifs
+          = f.association :service, collection: @available_services
         .col-md-6
-          = f.input :name, collection: [], input_html: { data: {value: motif.name} }
+          = f.input :name
       .form-row
         .col-md-4= f.input :default_duration_in_min
         .col-md-4= f.input :color, as: "color"
