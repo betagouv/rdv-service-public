@@ -6,6 +6,7 @@ describe "Admin can configure the organisation" do
   let!(:service_social) { create(:service, name: "Service social") }
   let!(:agent_admin) { create(:agent, first_name: "Jeanne", last_name: "Dupont", email: "jeanne.dupont@love.fr", service: pmi, admin_role_in_organisations: [organisation]) }
   let!(:agent_user) { create(:agent, first_name: "Tony", last_name: "Patrick", email: "tony@patrick.fr", service: pmi, basic_role_in_organisations: [organisation]) }
+  let!(:agent_user) { create(:agent, first_name: "JP", last_name: "Dupond", email: "jp@dupond.fr", service: service_social, basic_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, name: "Motif 1", service: pmi, organisation: organisation) }
   let!(:user) { create(:user, organisations: [organisation]) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
@@ -107,16 +108,14 @@ describe "Admin can configure the organisation" do
     click_link motif.name
     expect(page).to have_content("Motif 1")
     click_link "Éditer"
-    expect(page.find_by_id("motif_name")).to have_content(motif.name)
-    fill_in :motif_name, with: "Étre appelé par"
+    fill_in :motif_name, with: "Être appelé par"
     click_button("Enregistrer")
-    expect(page).to have_content("Étre appelé par")
-    expect_page_title("Motif Motif 2 (PMI)")
+    expect(page).to have_content("Être appelé par")
+    expect(page).to have_selector("h3", text: "Être appelé par (PMI)")
 
-    click_link "Paramètres"
     click_link "Vos motifs"
-    click_link le_nouveau_motif.name
-    expect(page).to have_content(le_nouveau_motif.name)
+    click_link "Être appelé par"
+    expect(page).to have_content("Être appelé par")
     click_link("Supprimer")
     begin
       page.driver.browser.switch_to.alert.accept
@@ -133,7 +132,6 @@ describe "Admin can configure the organisation" do
     ## Check secretariat is unavailable
     expect(page.all("select#motif_service_id option").map(&:value)).to match_array ["", pmi.id.to_s, service_social.id.to_s]
     select(service_social.name, from: :motif_service_id)
-    expect(page).to have_select("motif[name]", with_options: ["", "truc"], wait: 10)
     fill_in :motif_name, with: "truc"
     fill_in "Couleur", with: le_nouveau_motif.color
     click_button "Enregistrer"
