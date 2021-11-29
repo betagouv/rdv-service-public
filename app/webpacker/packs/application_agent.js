@@ -13,7 +13,6 @@ import 'select2/dist/js/i18n/fr.js';
 import { Datetimepicker } from 'components/datetimepicker';
 import { Menu } from 'components/menu';
 import { Modal } from 'components/modal';
-import { PopulateLibelle } from 'components/populate-libelle';
 import { ServiceFilterForMotifsSelects } from 'components/service-filter-for-motifs-selects';
 import { MotifFilters } from 'components/motif-filters';
 import 'components/analytic.js';
@@ -75,8 +74,6 @@ $(document).on('turbolinks:load', function() {
   });
 
   new PlacesInputs();
-
-  new PopulateLibelle();
 
   new Datetimepicker();
 

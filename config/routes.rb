@@ -28,7 +28,6 @@ Rails.application.routes.draw do
     resources :users do
       get "sign_in_as", on: :member
     end
-    resources :motif_libelles
     root to: "agents#index"
 
     authenticate :super_admin do
@@ -203,7 +202,6 @@ Rails.application.routes.draw do
   get "departement/:departement/:service", to: "welcome#welcome_service", as: "welcome_service"
   get "departement/:departement/:service/:motif", to: "welcome#welcome_motif", as: "welcome_motif"
   resources :lieux, only: %i[index show]
-  resources :motif_libelles, only: :index
   get "health_checks/rdv_events_stats", to: "health_checks#rdv_events_stats"
   get "health_checks/raise_on_purpose", to: "health_checks#raise_on_purpose"
   get "health_checks/enqueue_failing_job", to: "health_checks#enqueue_failing_job"

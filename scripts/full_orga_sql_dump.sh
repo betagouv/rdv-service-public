@@ -21,7 +21,6 @@ pg_dump --schema-only --file $OUTPUT_PATH/schema.pg_dump $SOURCE_DB_URL
 echo "exporting all data from organisation $ORGANISATION_ID from DB to CSV files..."
 
 # common data
-psql $SOURCE_DB_URL -c "COPY motif_libelles TO '$OUTPUT_PATH/motif_libelles.csv' CSV HEADER;"
 psql $SOURCE_DB_URL -c "COPY services TO '$OUTPUT_PATH/services.csv' CSV HEADER;"
 
 # direct links
@@ -105,7 +104,6 @@ cat $OUTPUT_PATH/schema.pg_dump | psql $TEMP_DB_URL
 echo "importing data into tmp db..."
 # note that the order is important to respect FKs
 psql $TEMP_DB_URL -c "COPY services FROM '$OUTPUT_PATH/services.csv' CSV HEADER;"
-psql $TEMP_DB_URL -c "COPY motif_libelles FROM '$OUTPUT_PATH/motif_libelles.csv' CSV HEADER;"
 psql $TEMP_DB_URL -c "COPY organisations FROM '$OUTPUT_PATH/organisations.csv' CSV HEADER;"
 psql $TEMP_DB_URL -c "COPY agents FROM '$OUTPUT_PATH/agents.csv' CSV HEADER;"
 psql $TEMP_DB_URL -c "COPY absences FROM '$OUTPUT_PATH/absences.csv' CSV HEADER;"

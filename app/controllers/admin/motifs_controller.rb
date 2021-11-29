@@ -4,6 +4,7 @@ class Admin::MotifsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: %i[new create]
+  before_action :set_available_services, only: %i[new edit]
   before_action :set_motif, only: %i[show edit update destroy]
 
   def index
@@ -99,5 +100,9 @@ class Admin::MotifsController < AgentAuthController
               :for_secretariat,
               :follow_up,
               :sectorisation_level)
+  end
+
+  def set_available_services
+    @available_services = Service.where(agents: Agent.joins(:organisations).merge(current_organisation.territory.organisations))
   end
 end
