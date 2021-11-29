@@ -30,7 +30,8 @@ class User < ApplicationRecord
   auto_strip_attributes :email, :first_name, :last_name, :birth_name
 
   has_many :user_profiles, dependent: :restrict_with_error
-  has_many :organisations, through: :user_profiles
+  has_many :organisations, through: :user_profiles, dependent: :destroy
+  has_many :webhook_endpoints, through: :organisations
 
   has_many :rdvs_users, dependent: :destroy
   has_many :rdvs, through: :rdvs_users
@@ -172,10 +173,6 @@ class User < ApplicationRecord
     I18n.transliterate([last_name, email, birth_name, phone_number_formatted, first_name].compact.join(" "))
   end
 
-  def webhook_endpoints
-    WebhookEndpoint.joins(:organisation).merge(organisations)
-  end
-
   protected
 
   def compute_invitation_due_at
@@ -229,13 +226,13 @@ class User < ApplicationRecord
   end
 
   def do_soft_delete(organisation)
-    if organisation.present? && organisations.length > 1
+    if organisation.present?
       organisations.delete(organisation)
-      save!
     else
-      update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email)
-      generate_payload_and_send_webhook_for_destroy
       self.organisations = []
     end
+    return save! if organisations.any? # only actually mark deleted when no orgas left
+
+    update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email)
   end
 end

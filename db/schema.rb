@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 2021_11_16_201523) do
+ActiveRecord::Schema.define(version: 2021_11_29_144620) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -491,7 +490,7 @@ ActiveRecord::Schema.define(version: 2021_11_16_201523) do
     t.bigint "organisation_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.json "subscribed_events", default: {"rdv"=>["created", "updated", "destroyed"], "absence"=>["created", "updated", "destroyed"], "plage_ouverture"=>["created", "updated", "destroyed"]}
+    t.json "triggering_resources", default: ["rdv", "absence", "plage_ouverture"]
     t.index ["organisation_id"], name: "index_webhook_endpoints_on_organisation_id"
   end
 

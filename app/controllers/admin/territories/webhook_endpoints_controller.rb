@@ -44,8 +44,7 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
 
   def webhook_endpoint_params
     params.require(:webhook_endpoint).permit(
-      :target_url, :secret, :organisation_id,
-      subscribed_events: { rdv: [], absence: [], plage_ouverture: [], user: [] }
+      :target_url, :secret, :organisation_id, triggering_resources: []
     )
   end
 end

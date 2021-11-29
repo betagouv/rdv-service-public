@@ -3,14 +3,9 @@
   = f.input :organisation_id, collection: current_territory.organisations
   = f.input :target_url
   = f.input :secret
-  .pt-2
-    h5.col-4.pb-2.border-bottom = I18n.t("activerecord.attributes.webhook_endpoint.subscribed_events")
-    - subscribed_events = webhook.subscribed_events
-    = f.simple_fields_for :subscribed_events, model: subscribed_events do |ff|
-      - WebhookEndpoint::SUBSCRIBABLE_RESOURCES.each do |resource|
-        - underscore_resource_name = resource.name.underscore
-        .form-inline.py-2
-          = ff.input :"#{underscore_resource_name}", label: resource.model_name.human, required: false, as: :check_boxes, collection: ["created", "updated", "destroyed"], label_method: -> { t("helpers.#{_1}") }, checked: subscribed_events[underscore_resource_name], include_hidden: false, input_html: { class: "m-2" }
+  .form-inline.py-2
+    = f.input :triggering_resources, as: :check_boxes, collection: WebhookEndpoint::TRIGGERING_RESOURCES,
+    label_method: -> { _1.classify.constantize.model_name.human }, checked: webhook.triggering_resources, include_hidden: false, input_html: { class: "m-2" }
 
   .text-right
     = link_to "Retour", admin_territory_webhook_endpoints_path(current_territory), class: "btn btn-link"

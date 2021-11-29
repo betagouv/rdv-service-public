@@ -8,11 +8,7 @@ describe WebhookDeliverable, type: :concern do
     create(
       :webhook_endpoint,
       organisation: organisation,
-      subscribed_events: {
-        "rdv" => %w[created updated destroyed],
-        "absence" => %w[created updated destroyed],
-        "plage_ouverture" => %w[created updated destroyed]
-      }
+      triggering_resources: %w[rdv absence plage_ouverture]
     )
   end
   let!(:rdv) { create(:rdv, organisation: organisation) }
@@ -29,7 +25,7 @@ describe WebhookDeliverable, type: :concern do
   end
 
   describe "#send_web_hook" do
-    context "when the webhook endpoint is subscribed to the model events" do
+    context "when the webhook endpoint is triggered by the model changes" do
       context "on creation" do
         let!(:rdv) { build(:rdv, organisation: organisation) }
 
@@ -50,15 +46,12 @@ describe WebhookDeliverable, type: :concern do
       end
     end
 
-    context "when the webhook endpoint is not subscribed to the model events" do
+    context "when the webhook endpoint is not triggered by the changes" do
       let!(:webhook_endpoint) do
         create(
           :webhook_endpoint,
           organisation: organisation,
-          subscribed_events: {
-            "absence" => %w[created updated destroyed],
-            "plage_ouverture" => %w[created updated destroyed]
-          }
+          triggering_resources: %w[absence plage_ouverture]
         )
       end
 
@@ -73,39 +66,6 @@ describe WebhookDeliverable, type: :concern do
 
       it "does not notify on update" do
         expect(WebhookJob).not_to receive(:perform_later)
-        rdv.update(status: :excused)
-      end
-
-      it "does not notify on deletion" do
-        expect(WebhookJob).not_to receive(:perform_later)
-        rdv.destroy
-      end
-    end
-
-    context "when the webhook endpoint is subscribed in some model events but not all" do
-      let!(:webhook_endpoint) do
-        create(
-          :webhook_endpoint,
-          organisation: organisation,
-          subscribed_events: {
-            "rdv" => %w[created updated],
-            "absence" => %w[created updated destroyed],
-            "plage_ouverture" => %w[created updated destroyed]
-          }
-        )
-      end
-
-      context "on creation" do
-        let!(:rdv) { build(:rdv, organisation: organisation) }
-
-        it "notifies the creation" do
-          expect(WebhookJob).to receive(:perform_later).with(json_payload_with_meta("event", "created"), webhook_endpoint.id)
-          rdv.save
-        end
-      end
-
-      it "notifies on update" do
-        expect(WebhookJob).to receive(:perform_later).with(json_payload_with_meta("event", "updated"), webhook_endpoint.id)
         rdv.update(status: :excused)
       end
 

@@ -21,25 +21,23 @@ module WebhookDeliverable
 
   def generate_payload_and_send_webhook(action)
     payload = generate_webhook_payload(action)
-    send_webhook(payload, action)
+    send_webhook(payload)
   end
 
   def generate_payload_and_send_webhook_for_destroy
     payload = generate_webhook_payload(:destroyed)
-    yield if block_given?
-    send_webhook(payload, :destroyed)
+    yield
+    send_webhook(payload)
   end
 
-  def send_webhook(payload, action)
-    webhook_endpoints_for_action(action).each do |endpoint|
+  def send_webhook(payload)
+    subscribed_webhook_endpoints.each do |endpoint|
       WebhookJob.perform_later(payload, endpoint.id)
     end
   end
 
-  def webhook_endpoints_for_action(action)
-    webhook_endpoints.select do |webhook_endpoint|
-      webhook_endpoint.subscribed_events[self.class.name.underscore]&.include?(action.to_s)
-    end
+  def subscribed_webhook_endpoints
+    webhook_endpoints.select { _1.triggering_resources.include?(self.class.name.underscore) }
   end
 
   included do
