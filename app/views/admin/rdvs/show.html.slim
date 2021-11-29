@@ -14,44 +14,40 @@
       - if @rdv.cancelled?
         span.badge.badge-danger
 
-- content_for :breadcrumb do
-  = link_to "Dupliquer…", admin_organisation_agent_searches_path(current_organisation, service_id: @rdv.motif.service_id, motif_id: @rdv.motif_id, from_date: @rdv.starts_at + 1.day, user_ids: @rdv.user_ids, context: @rdv.context, commit: "commit"), class: "btn btn-outline-primary"
-
 .row
-  .col-md-6.mb-3
+  .col-md-12
     .card
       .card-header
         .d-flex.justify-content-between.flex-wrap
-          .mt-1= l(@rdv.starts_at.to_date, format: :human).capitalize
+          h5.header.mr-1= l(@rdv.starts_at.to_date, format: :human).capitalize
           = render "rdv_status_dropdown", rdv: @rdv, agent: @agent
 
       .card-body
         p.card-text
-          i.fa.fa-fw.fa-calendar>
+          i.fa.fa-fw.fa-calendar.mr-1
           = rdv_starts_at_and_duration(@rdv, :time_only)
           |&nbsp;
           = link_to "voir dans l'agenda", admin_organisation_agent_agenda_path(current_organisation, @rdv.agents.first, selected_event_id: @rdv.id, date: @rdv.starts_at.to_date)
-        = render "rdv_details", rdv: @rdv, display_links_to_users: false
+        = render "rdv_details", rdv: @rdv, display_links_to_users: true
       .card-footer
         .d-flex.justify-content-end
-          = link_to "Modifier", edit_admin_organisation_rdv_path(@rdv.organisation, @rdv, agent_id: @agent&.id), class: "btn btn-outline-primary"
-
-  .col-md-6.mb-3
+          .btn-group
+            = link_to "Modifier", edit_admin_organisation_rdv_path(@rdv.organisation, @rdv, agent_id: @agent&.id), class: "btn btn-outline-primary"
+            = link_to "Dupliquer…", admin_organisation_agent_searches_path(current_organisation, service_id: @rdv.motif.service_id, motif_id: @rdv.motif_id, from_date: @rdv.starts_at + 1.day, user_ids: @rdv.user_ids, context: @rdv.context, commit: "commit"), class: "btn btn-outline-primary"
+.row
+  .col-md-12
     - @rdv.users.each do |user|
       .card
         .card-header
-          .d-flex.justify-content-between
-            .mt-1
-              = user.full_name
-              = relative_tag(user)
-              = user_soft_deleted_from_current_organisation_tag(user)
-            - if user.organisations.include?(current_organisation) # excludes soft deleted
-              = link_to "Voir la fiche usager", admin_organisation_user_path(current_organisation, user), class: "btn btn-outline-primary small"
+          h5.header
+            = "Notifications pour "
+            = user.full_name
+            = user_soft_deleted_from_current_organisation_tag(user)
 
         .card-body
           - displayable_user = DisplayableUserPresenter.new(user, current_organisation)
           p.card-text
-            i.fa.fa-fw.fa-phone>
+            i.fa.fa-phone>
             = displayable_user.phone_number_and_notification
           p.card-text
             i.fa.fa-fw.fa-envelope>
@@ -63,8 +59,11 @@
                 i.fa.fa-fw.fa-info-circle>
               div= displayable_user.notes
 
+    - @rdv.rdvs_users.each do |rdv_user|
+      - user = rdv_user.user
+      .card
         - rdv_user_presenter = Admin::RdvUserPresenter.new(@rdv, user)
-        .card-header.card-footer= "Rendez-vous précédents"
+        .card-header.h5= "Rendez-vous précédents pour #{user.full_name}"
         = render "admin/rdvs/short_rdvs_list", user: user, rdvs: rdv_user_presenter.previous_rdvs_truncated
         - if rdv_user_presenter.previous_rdvs_more?
           .card-footer
