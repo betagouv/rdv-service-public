@@ -9,103 +9,108 @@ module SlotBuilder
   # uniq_by = @for_agents ? ->(c) { [c.starts_at, c.agent_id] } : ->(c) { c.starts_at }
   #  creneaux.uniq(&uniq_by).sort_by(&:starts_at)
 
-  def self.available_slots(motif, lieu, date_range, off_days, agent_ids = [])
-    plage_ouvertures = plage_ouvertures_for(motif, lieu, date_range, agent_ids)
-    free_times_po = free_times_from(plage_ouvertures, date_range, off_days) # dépendance sur RDV et Absence
-    slots_for(free_times_po, motif)
-  end
+  class << self
 
-  def self.plage_ouvertures_for(motif, lieu, date_range, options = {})
-    lieu.plage_ouvertures.for_motif(motif).not_expired.in_range(date_range)
-      .where(({ agent_id: agent_ids } if agent_ids.any?))
-  end
-
-  def self.free_times_from(plage_ouvertures, date_range, off_days)
-    free_times = {}
-    plage_ouvertures.each do |plage_ouverture|
-      free_times[plage_ouverture] = calculate_free_times(plage_ouverture, date_range, off_days)
+    def available_slots(motif, lieu, date_range, off_days, agent_ids = [])
+      plage_ouvertures = plage_ouvertures_for(motif, lieu, date_range, agent_ids)
+      free_times_po = free_times_from(plage_ouvertures, date_range, off_days) # dépendance sur RDV et Absence
+      slots_for(free_times_po, motif)
     end
-    free_times.select { |_, v| v&.any? }
-  end
 
-  def self.calculate_free_times(plage_ouverture, date_range, _off_days)
-    ranges = ranges_for(plage_ouverture, date_range)
+    private
 
-    return [] if ranges.empty?
-
-    ranges = ranges.map { |range| split_range_recursively(range, BusyTime.busy_times_for(range, plage_ouverture)) }.flatten
-    ranges.select { |r| ((r.end.to_i - r.begin.to_i) / 60).positive? } || []
-  end
-
-  def self.ranges_for(plage_ouverture, date_range)
-    date_range = date_range.begin.beginning_of_day..date_range.end.end_of_day
-    date_range = Time.zone.now..date_range.end.end_of_day if date_range.begin < Time.zone.now
-
-    occurrences = plage_ouverture.occurrences_for(date_range)
-
-    occurrences.map do |occurrence|
-      next if occurrence.ends_at < Time.zone.now
-
-      (plage_ouverture.start_time.on(occurrence.starts_at)..plage_ouverture.end_time.on(occurrence.ends_at))
-    end.compact
-  end
-
-  def self.split_range_recursively(range, busy_times)
-    return [range] if busy_times.empty?
-
-    busy_time = busy_times.first
-
-    if busy_time_include_in_range?(busy_time, range)
-      [range.begin..busy_time.starts_at] + split_range_recursively(busy_time.ends_at..range.end, busy_times - [busy_time])
-    elsif rdv_overlap_begin_of_range?(busy_time, range)
-      split_range_recursively(busy_time.ends_at..range.end, busy_times - [busy_time])
-    elsif rdv_overlap_end_of_range?(busy_time, range)
-      split_range_recursively(range.begin..busy_time.starts_at, busy_times - [busy_time])
-    else
-      [range]
+    def plage_ouvertures_for(motif, lieu, date_range, options = {})
+      lieu.plage_ouvertures.for_motif(motif).not_expired.in_range(date_range)
+        .where(({ agent_id: agent_ids } if agent_ids.any?))
     end
-  end
 
-  def self.busy_time_include_in_range?(busy_time, range)
-    debut_dedans = range.begin < busy_time.starts_at
-    # Les absences n'ont pas forcement de ends_at... ?
-    fin_dedans = (busy_time.ends_at && busy_time.ends_at <= range.end)
-    debut_dedans && fin_dedans
-  end
+    def free_times_from(plage_ouvertures, date_range, off_days)
+      free_times = {}
+      plage_ouvertures.each do |plage_ouverture|
+        free_times[plage_ouverture] = calculate_free_times(plage_ouverture, date_range, off_days)
+      end
+      free_times.select { |_, v| v&.any? }
+    end
 
-  def self.rdv_overlap_begin_of_range?(rdv, range)
-    rdv.starts_at <= range.begin
-  end
+    def calculate_free_times(plage_ouverture, date_range, _off_days)
+      ranges = ranges_for(plage_ouverture, date_range)
 
-  def self.rdv_overlap_end_of_range?(rdv, range)
-    range.end <= rdv.ends_at
-  end
+      return [] if ranges.empty?
 
-  def self.slots_for(plage_ouverture_free_times, motif)
-    slots = []
-    plage_ouverture_free_times.each do |plage_ouverture, free_times|
-      free_times.each do |free_time|
-        slots += calculate_slots(free_time, motif) do |starts_at|
-          Creneau.new(
-            starts_at: starts_at,
-            motif: motif,
-            lieu_id: plage_ouverture.lieu_id,
-            agent: plage_ouverture.agent
-          )
-        end
+      ranges = ranges.map { |range| split_range_recursively(range, BusyTime.busy_times_for(range, plage_ouverture)) }.flatten
+      ranges.select { |r| ((r.end.to_i - r.begin.to_i) / 60).positive? } || []
+    end
+
+    def ranges_for(plage_ouverture, date_range)
+      date_range = date_range.begin.beginning_of_day..date_range.end.end_of_day
+      date_range = Time.zone.now..date_range.end.end_of_day if date_range.begin < Time.zone.now
+
+      occurrences = plage_ouverture.occurrences_for(date_range)
+
+      occurrences.map do |occurrence|
+        next if occurrence.ends_at < Time.zone.now
+
+        (plage_ouverture.start_time.on(occurrence.starts_at)..plage_ouverture.end_time.on(occurrence.ends_at))
+      end.compact
+    end
+
+    def split_range_recursively(range, busy_times)
+      return [range] if busy_times.empty?
+
+      busy_time = busy_times.first
+
+      if busy_time_include_in_range?(busy_time, range)
+        [range.begin..busy_time.starts_at] + split_range_recursively(busy_time.ends_at..range.end, busy_times - [busy_time])
+      elsif rdv_overlap_begin_of_range?(busy_time, range)
+        split_range_recursively(busy_time.ends_at..range.end, busy_times - [busy_time])
+      elsif rdv_overlap_end_of_range?(busy_time, range)
+        split_range_recursively(range.begin..busy_time.starts_at, busy_times - [busy_time])
+      else
+        [range]
       end
     end
-    slots
-  end
 
-  def self.calculate_slots(free_time, motif, &build_creneau)
-    slots = []
-    possible_slot_time = free_time.begin..(free_time.begin + motif.default_duration_in_min.minutes)
-    while possible_slot_time.end <= free_time.end
-      slots << build_creneau.call(possible_slot_time.begin)
-      possible_slot_time = possible_slot_time.end..(possible_slot_time.end + motif.default_duration_in_min.minutes)
+    def busy_time_include_in_range?(busy_time, range)
+      debut_dedans = range.begin < busy_time.starts_at
+      # Les absences n'ont pas forcement de ends_at... ?
+      fin_dedans = (busy_time.ends_at && busy_time.ends_at <= range.end)
+      debut_dedans && fin_dedans
     end
-    slots
+
+    def rdv_overlap_begin_of_range?(rdv, range)
+      rdv.starts_at <= range.begin
+    end
+
+    def rdv_overlap_end_of_range?(rdv, range)
+      range.end <= rdv.ends_at
+    end
+
+    def slots_for(plage_ouverture_free_times, motif)
+      slots = []
+      plage_ouverture_free_times.each do |plage_ouverture, free_times|
+        free_times.each do |free_time|
+          slots += calculate_slots(free_time, motif) do |starts_at|
+            Creneau.new(
+              starts_at: starts_at,
+              motif: motif,
+              lieu_id: plage_ouverture.lieu_id,
+              agent: plage_ouverture.agent
+            )
+          end
+        end
+      end
+      slots
+    end
+
+    def calculate_slots(free_time, motif, &build_creneau)
+      slots = []
+      possible_slot_time = free_time.begin..(free_time.begin + motif.default_duration_in_min.minutes)
+      while possible_slot_time.end <= free_time.end
+        slots << build_creneau.call(possible_slot_time.begin)
+        possible_slot_time = possible_slot_time.end..(possible_slot_time.end + motif.default_duration_in_min.minutes)
+      end
+      slots
+    end
   end
 
   class BusyTime
