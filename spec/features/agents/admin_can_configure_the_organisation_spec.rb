@@ -6,7 +6,7 @@ describe "Admin can configure the organisation" do
   let!(:service_social) { create(:service, name: "Service social") }
   let!(:agent_admin) { create(:agent, first_name: "Jeanne", last_name: "Dupont", email: "jeanne.dupont@love.fr", service: pmi, admin_role_in_organisations: [organisation]) }
   let!(:agent_user) { create(:agent, first_name: "Tony", last_name: "Patrick", email: "tony@patrick.fr", service: pmi, basic_role_in_organisations: [organisation]) }
-  let!(:agent_user) { create(:agent, first_name: "JP", last_name: "Dupond", email: "jp@dupond.fr", service: service_social, basic_role_in_organisations: [organisation]) }
+  let!(:other_agent_user) { create(:agent, first_name: "JP", last_name: "Dupond", email: "jp@dupond.fr", service: service_social, basic_role_in_organisations: [organisation]) }
   let!(:motif) { create(:motif, name: "Motif 1", service: pmi, organisation: organisation) }
   let!(:user) { create(:user, organisations: [organisation]) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
