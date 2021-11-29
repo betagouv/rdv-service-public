@@ -33,6 +33,8 @@ module SlotBuilder
     end
 
     def calculate_free_times(plage_ouverture, date_range, _off_days)
+      date_range = date_range.begin.beginning_of_day..date_range.end.end_of_day
+      date_range = Time.zone.now..date_range.end.end_of_day if date_range.begin < Time.zone.now
       ranges = ranges_for(plage_ouverture, date_range)
 
       return [] if ranges.empty?
@@ -42,8 +44,6 @@ module SlotBuilder
     end
 
     def ranges_for(plage_ouverture, date_range)
-      date_range = date_range.begin.beginning_of_day..date_range.end.end_of_day
-      date_range = Time.zone.now..date_range.end.end_of_day if date_range.begin < Time.zone.now
 
       occurrences = plage_ouverture.occurrences_for(date_range)
 
@@ -89,24 +89,22 @@ module SlotBuilder
       slots = []
       plage_ouverture_free_times.each do |plage_ouverture, free_times|
         free_times.each do |free_time|
-          slots += calculate_slots(free_time, motif) do |starts_at|
-            Creneau.new(
-              starts_at: starts_at,
-              motif: motif,
-              lieu_id: plage_ouverture.lieu_id,
-              agent: plage_ouverture.agent
-            )
-          end
+          slots += calculate_slots(free_time, motif, plage_ouverture)
         end
       end
       slots
     end
 
-    def calculate_slots(free_time, motif, &build_creneau)
+    def calculate_slots(free_time, motif, plage_ouverture)
       slots = []
       possible_slot_time = free_time.begin..(free_time.begin + motif.default_duration_in_min.minutes)
       while possible_slot_time.end <= free_time.end
-        slots << build_creneau.call(possible_slot_time.begin)
+        slots << Creneau.new(
+          starts_at: possible_slot_time.begin,
+          motif: motif,
+          lieu_id: plage_ouverture.lieu_id,
+          agent: plage_ouverture.agent
+        )
         possible_slot_time = possible_slot_time.end..(possible_slot_time.end + motif.default_duration_in_min.minutes)
       end
       slots
