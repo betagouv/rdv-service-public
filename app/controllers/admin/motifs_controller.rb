@@ -103,6 +103,6 @@ class Admin::MotifsController < AgentAuthController
   end
 
   def set_available_services
-    @available_services = current_organisation.territory.organisations.flat_map(&:agents).flat_map(&:service).uniq
+    @available_services = Service.where(agents: Agent.joins(:organisations).merge(current_organisation.territory.organisations))
   end
 end
