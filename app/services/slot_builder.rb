@@ -9,16 +9,15 @@ module SlotBuilder
   # uniq_by = @for_agents ? ->(c) { [c.starts_at, c.agent_id] } : ->(c) { c.starts_at }
   #  creneaux.uniq(&uniq_by).sort_by(&:starts_at)
 
-  def self.available_slots(motif, lieu, date_range, off_days, options = {})
-    # options : { agents: [] }
-    plage_ouvertures = plage_ouvertures_for(motif, lieu, date_range, options)
+  def self.available_slots(motif, lieu, date_range, off_days, agent_ids = [])
+    plage_ouvertures = plage_ouvertures_for(motif, lieu, date_range, agent_ids)
     free_times_po = free_times_from(plage_ouvertures, date_range, off_days) # dépendance sur RDV et Absence
     slots_for(free_times_po, motif)
   end
 
   def self.plage_ouvertures_for(motif, lieu, date_range, options = {})
     lieu.plage_ouvertures.for_motif(motif).not_expired.in_range(date_range)
-      .where(({ agent_id: options[:agent_ids] } unless options[:agent_ids].nil?))
+      .where(({ agent_id: agent_ids } if agent_ids.any?))
   end
 
   def self.free_times_from(plage_ouvertures, date_range, off_days)
