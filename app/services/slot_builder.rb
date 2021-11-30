@@ -11,31 +11,30 @@ module SlotBuilder
 
   class << self
 
+    # métode publique
     def available_slots(motif, lieu, date_range, off_days, agent_ids = [])
-      plage_ouvertures = plage_ouvertures_for(motif, lieu, date_range, agent_ids)
-      free_times_po = free_times_from(plage_ouvertures, date_range, off_days) # dépendance sur RDV et Absence
+      datetime_range = date_range.begin.beginning_of_day..date_range.end.end_of_day
+      datetime_range = Time.zone.now..datetime_range.end.end_of_day if datetime_range.begin < Time.zone.now
+      plage_ouvertures = plage_ouvertures_for(motif, lieu, datetime_range, agent_ids)
+      free_times_po = free_times_from(plage_ouvertures, datetime_range, off_days) # dépendance sur RDV et Absence
       slots_for(free_times_po, motif)
     end
 
-    private
-
-    def plage_ouvertures_for(motif, lieu, date_range, options = {})
-      lieu.plage_ouvertures.for_motif(motif).not_expired.in_range(date_range)
+    def plage_ouvertures_for(motif, lieu, datetime_range, agent_ids)
+      lieu.plage_ouvertures.for_motif(motif).not_expired.in_range(datetime_range)
         .where(({ agent_id: agent_ids } if agent_ids.any?))
     end
 
-    def free_times_from(plage_ouvertures, date_range, off_days)
+    def free_times_from(plage_ouvertures, datetime_range, off_days)
       free_times = {}
       plage_ouvertures.each do |plage_ouverture|
-        free_times[plage_ouverture] = calculate_free_times(plage_ouverture, date_range, off_days)
+        free_times[plage_ouverture] = calculate_free_times(plage_ouverture, datetime_range, off_days)
       end
       free_times.select { |_, v| v&.any? }
     end
 
-    def calculate_free_times(plage_ouverture, date_range, _off_days)
-      date_range = date_range.begin.beginning_of_day..date_range.end.end_of_day
-      date_range = Time.zone.now..date_range.end.end_of_day if date_range.begin < Time.zone.now
-      ranges = ranges_for(plage_ouverture, date_range)
+    def calculate_free_times(plage_ouverture, datetime_range, _off_days)
+      ranges = ranges_for(plage_ouverture, datetime_range)
 
       return [] if ranges.empty?
 
@@ -43,9 +42,9 @@ module SlotBuilder
       ranges.select { |r| ((r.end.to_i - r.begin.to_i) / 60).positive? } || []
     end
 
-    def ranges_for(plage_ouverture, date_range)
+    def ranges_for(plage_ouverture, datetime_range)
 
-      occurrences = plage_ouverture.occurrences_for(date_range)
+      occurrences = plage_ouverture.occurrences_for(datetime_range)
 
       occurrences.map do |occurrence|
         next if occurrence.ends_at < Time.zone.now
