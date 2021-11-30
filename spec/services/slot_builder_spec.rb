@@ -287,7 +287,6 @@ describe SlotBuilder, type: :service do
   end
 
   describe "#calculate_slots" do
-
     it "returns empty when free_time too short" do
       motif = build(:motif, default_duration_in_min: 30)
       plage_ouverture = build(:plage_ouverture, motifs: [motif], first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
@@ -331,14 +330,14 @@ describe SlotBuilder, type: :service do
     context "with recurrence" do
       it "return empty when po and it occurrence is out of range" do
         plage_ouverture = build(:plage_ouverture, first_day: friday + 14.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-                                recurrence: Montrose.every(:week, starts: friday + 14.days))
+                                                  recurrence: Montrose.every(:week, starts: friday + 14.days))
         range = (friday + 3.days)..(friday + 10.days)
         expect(described_class.ranges_for(plage_ouverture, range)).to eq([])
       end
 
       it "return occurrence of po that in range" do
         plage_ouverture = build(:plage_ouverture, first_day: friday - 14.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-                                recurrence: Montrose.every(:week, starts: friday - 14.days))
+                                                  recurrence: Montrose.every(:week, starts: friday - 14.days))
         range = (friday + 3.days)..(friday + 10.days)
         expect(described_class.ranges_for(plage_ouverture, range)).to eq([(Time.zone.parse("20210507 9:00")..Time.zone.parse("20210507 11:00"))])
       end

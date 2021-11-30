@@ -10,7 +10,6 @@ module SlotBuilder
   #  creneaux.uniq(&uniq_by).sort_by(&:starts_at)
 
   class << self
-
     # méthode publique
     def available_slots(motif, lieu, date_range, off_days, agent_ids = [])
       datetime_range = date_range.begin.beginning_of_day..date_range.end.end_of_day
@@ -56,12 +55,14 @@ module SlotBuilder
 
       busy_time = busy_times.first
 
-      if rdv_overlap_begin_of_range?(busy_time, range)
-        split_range_recursively(busy_time.ends_at..range.end, busy_times - [busy_time])
-      elsif rdv_overlap_end_of_range?(busy_time, range)
+      if range.include?(busy_time.starts_at) && range.exclude?(busy_time.ends_at)
         split_range_recursively(range.begin..busy_time.starts_at, busy_times - [busy_time])
+      elsif range.exclude?(busy_time.starts_at) && range.include?(busy_time.ends_at)
+        split_range_recursively(busy_time.ends_at..range.end, busy_times - [busy_time])
       elsif range.include?(busy_time.range)
-        [range.begin..busy_time.starts_at] + split_range_recursively(busy_time.ends_at..range.end, busy_times - [busy_time])
+        new_range = []
+        new_range = [range.begin..busy_time.starts_at] if range.begin < busy_time.starts_at
+        new_range + split_range_recursively(busy_time.ends_at..range.end, busy_times - [busy_time])
       else
         []
       end
@@ -103,9 +104,6 @@ module SlotBuilder
 
   class BusyTime
     attr_reader :starts_at, :ends_at
-
-    alias :begin :starts_at
-    alias :end :ends_at
 
     def initialize(object)
       case object
