@@ -6,4 +6,4 @@ fr:
       webhook_endpoint:
         target_url: URL de destination
         secret: Clé privée
-        triggering_resources: Éléments déclencheurs
+        subscriptions: Éléments déclencheurs

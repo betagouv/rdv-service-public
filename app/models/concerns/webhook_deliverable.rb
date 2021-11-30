@@ -37,7 +37,7 @@ module WebhookDeliverable
   end
 
   def subscribed_webhook_endpoints
-    webhook_endpoints.select { _1.triggering_resources.include?(self.class.name.underscore) }
+    webhook_endpoints.select { _1.subscriptions.include?(self.class.name.underscore) }
   end
 
   included do
