@@ -30,6 +30,9 @@ class User < ApplicationRecord
   auto_strip_attributes :email, :first_name, :last_name, :birth_name
 
   has_many :user_profiles, dependent: :restrict_with_error
+
+  # we specify dependent: :destroy because by default user_profiles will be deleted (dependent: :delete)
+  # and we need to destroy to trigger the callbacks on user_profile
   has_many :organisations, through: :user_profiles, dependent: :destroy
   has_many :webhook_endpoints, through: :organisations
 
