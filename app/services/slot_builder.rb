@@ -34,10 +34,9 @@ module SlotBuilder
 
     def calculate_free_times(plage_ouverture, datetime_range, _off_days)
       ranges = ranges_for(plage_ouverture, datetime_range)
-
       return [] if ranges.empty?
 
-      ranges = ranges.flat_map { |range| split_range_recursively(range, BusyTime.busy_times_for(range, plage_ouverture)) }
+      ranges.flat_map { |range| split_range_recursively(range, BusyTime.busy_times_for(range, plage_ouverture)) }
     end
 
     def ranges_for(plage_ouverture, datetime_range)
@@ -51,29 +50,25 @@ module SlotBuilder
     end
 
     def split_range_recursively(range, busy_times)
+      return [] if range.nil?
       return [range] if busy_times.empty?
 
       busy_time = busy_times.first
 
-      if range.include?(busy_time.starts_at) && range.exclude?(busy_time.ends_at)
-        split_range_recursively(range.begin..busy_time.starts_at, busy_times - [busy_time])
-      elsif range.exclude?(busy_time.starts_at) && range.include?(busy_time.ends_at)
-        split_range_recursively(busy_time.ends_at..range.end, busy_times - [busy_time])
-      elsif range.include?(busy_time.range)
-        new_range = []
-        new_range = [range.begin..busy_time.starts_at] if range.begin < busy_time.starts_at
-        new_range + split_range_recursively(busy_time.ends_at..range.end, busy_times - [busy_time])
-      else
-        []
-      end
+      first_range(range, busy_time) \
+        + split_range_recursively(remaining_range(range, busy_time), busy_times - [busy_time])
     end
 
-    def rdv_overlap_begin_of_range?(rdv, range)
-      rdv.starts_at <= range.begin
+    def first_range(range, busy_time)
+      return [range.begin..busy_time.starts_at] if range.begin < busy_time.starts_at && range.include?(busy_time.range)
+
+      []
     end
 
-    def rdv_overlap_end_of_range?(rdv, range)
-      range.end <= rdv.ends_at
+    def remaining_range(range, busy_time)
+      return busy_time.ends_at..range.end if range.include?(busy_time.range)
+      return range.begin..busy_time.starts_at if range.cover?(busy_time.starts_at)
+      return busy_time.ends_at..range.end if range.cover?(busy_time.ends_at)
     end
 
     def slots_for(plage_ouverture_free_times, motif)

@@ -269,6 +269,15 @@ describe SlotBuilder, type: :service do
     end
   end
 
+  describe "#split_range_recursively" do
+    it "return empty free times with an absence over range" do
+      absence = build(:absence, first_day: Date.new(2021, 11, 26), start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(12))
+      range = Time.zone.parse("20211126 9:00")..Time.zone.parse("20211126 11:00")
+      busy_times = [SlotBuilder::BusyTime.new(absence)]
+      expect(described_class.split_range_recursively(range, busy_times)).to eq([])
+    end
+  end
+
   describe "#slots_for" do
     it "returns empty with empty free times" do
       motif = build(:motif)
