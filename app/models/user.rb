@@ -9,6 +9,7 @@ class User < ApplicationRecord
   include User::NotificableConcern
   include User::ImprovedUnicityErrorConcern
   include HasPhoneNumberConcern
+  include WebhookDeliverable
 
   ONGOING_MARGIN = 1.hour.freeze
 
@@ -29,7 +30,11 @@ class User < ApplicationRecord
   auto_strip_attributes :email, :first_name, :last_name, :birth_name
 
   has_many :user_profiles, dependent: :restrict_with_error
-  has_many :organisations, through: :user_profiles
+
+  # we specify dependent: :destroy because by default user_profiles will be deleted (dependent: :delete)
+  # and we need to destroy to trigger the callbacks on user_profile
+  has_many :organisations, through: :user_profiles, dependent: :destroy
+  has_many :webhook_endpoints, through: :organisations
 
   has_many :rdvs_users, dependent: :destroy
   has_many :rdvs, through: :rdvs_users

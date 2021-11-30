@@ -1,0 +1,9 @@
+fr:
+  activerecord:
+    models:
+      webhook_endpoint: Webhook
+    attributes:
+      webhook_endpoint:
+        target_url: URL de destination
+        secret: Clé privée
+        subscriptions: Éléments déclencheurs

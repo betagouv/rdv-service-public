@@ -43,6 +43,8 @@ class Admin::Territories::WebhookEndpointsController < Admin::Territories::BaseC
   private
 
   def webhook_endpoint_params
-    params.require(:webhook_endpoint).permit(:target_url, :secret, :organisation_id)
+    params.require(:webhook_endpoint).permit(
+      :target_url, :secret, :organisation_id, subscriptions: []
+    )
   end
 end
