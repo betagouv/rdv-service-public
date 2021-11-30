@@ -11,7 +11,7 @@ module SlotBuilder
 
   class << self
 
-    # métode publique
+    # méthode publique
     def available_slots(motif, lieu, date_range, off_days, agent_ids = [])
       datetime_range = date_range.begin.beginning_of_day..date_range.end.end_of_day
       datetime_range = Time.zone.now..datetime_range.end.end_of_day if datetime_range.begin < Time.zone.now
@@ -38,12 +38,10 @@ module SlotBuilder
 
       return [] if ranges.empty?
 
-      ranges = ranges.map { |range| split_range_recursively(range, BusyTime.busy_times_for(range, plage_ouverture)) }.flatten
-      ranges.select { |r| ((r.end.to_i - r.begin.to_i) / 60).positive? } || []
+      ranges = ranges.flat_map { |range| split_range_recursively(range, BusyTime.busy_times_for(range, plage_ouverture)) }
     end
 
     def ranges_for(plage_ouverture, datetime_range)
-
       occurrences = plage_ouverture.occurrences_for(datetime_range)
 
       occurrences.map do |occurrence|
@@ -58,22 +56,15 @@ module SlotBuilder
 
       busy_time = busy_times.first
 
-      if busy_time_include_in_range?(busy_time, range)
-        [range.begin..busy_time.starts_at] + split_range_recursively(busy_time.ends_at..range.end, busy_times - [busy_time])
-      elsif rdv_overlap_begin_of_range?(busy_time, range)
+      if rdv_overlap_begin_of_range?(busy_time, range)
         split_range_recursively(busy_time.ends_at..range.end, busy_times - [busy_time])
       elsif rdv_overlap_end_of_range?(busy_time, range)
         split_range_recursively(range.begin..busy_time.starts_at, busy_times - [busy_time])
+      elsif range.include?(busy_time.range)
+        [range.begin..busy_time.starts_at] + split_range_recursively(busy_time.ends_at..range.end, busy_times - [busy_time])
       else
-        [range]
+        []
       end
-    end
-
-    def busy_time_include_in_range?(busy_time, range)
-      debut_dedans = range.begin < busy_time.starts_at
-      # Les absences n'ont pas forcement de ends_at... ?
-      fin_dedans = (busy_time.ends_at && busy_time.ends_at <= range.end)
-      debut_dedans && fin_dedans
     end
 
     def rdv_overlap_begin_of_range?(rdv, range)
@@ -113,6 +104,9 @@ module SlotBuilder
   class BusyTime
     attr_reader :starts_at, :ends_at
 
+    alias :begin :starts_at
+    alias :end :ends_at
+
     def initialize(object)
       case object
       when Rdv, Recurrence::Occurrence
@@ -124,6 +118,10 @@ module SlotBuilder
       else
         raise ArgumentError, "busytime can't be build with a #{object.class}"
       end
+    end
+
+    def range
+      (starts_at..ends_at)
     end
 
     def self.busy_times_for(range, plage_ouverture)

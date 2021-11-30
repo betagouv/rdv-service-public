@@ -34,7 +34,7 @@ describe SlotBuilder, type: :service do
     let(:date_range) { first_day..Date.new(2021, 5, 8) }
 
     it "return empty without plage_ouverture" do
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range)
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
 
       expect(plage_ouvertures).to eq([])
     end
@@ -42,7 +42,7 @@ describe SlotBuilder, type: :service do
     it "return plage_ouverture that match" do
       matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
 
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range)
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
 
       expect(plage_ouvertures).to eq([matching_po])
     end
@@ -51,7 +51,7 @@ describe SlotBuilder, type: :service do
       matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
       other_matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
 
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range)
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
 
       expect(plage_ouvertures).to eq([matching_po, other_matching_po])
     end
@@ -60,7 +60,7 @@ describe SlotBuilder, type: :service do
       matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
       create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day + 1.month, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
 
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range)
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
 
       expect(plage_ouvertures).to eq([matching_po])
     end
@@ -69,7 +69,7 @@ describe SlotBuilder, type: :service do
       matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
       create(:plage_ouverture, lieu: create(:lieu), motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
 
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range)
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
 
       expect(plage_ouvertures).to eq([matching_po])
     end
@@ -79,7 +79,7 @@ describe SlotBuilder, type: :service do
       create(:plage_ouverture, lieu: lieu, motifs: [create(:motif, organisation: organisation)], first_day: first_day, start_time: Tod::TimeOfDay.new(9),
                                end_time: Tod::TimeOfDay.new(11))
 
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range)
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
 
       expect(plage_ouvertures).to eq([matching_po])
     end
@@ -88,7 +88,7 @@ describe SlotBuilder, type: :service do
       matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
       create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: friday - 1.day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
 
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range)
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
 
       expect(plage_ouvertures).to eq([matching_po])
     end
@@ -98,7 +98,7 @@ describe SlotBuilder, type: :service do
       recurring_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day - 1.day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
                                               recurrence: Montrose.every(:week, starts: first_day - 1.day))
 
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range)
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
 
       expect(plage_ouvertures.sort).to eq([matching_po, recurring_po].sort)
     end
@@ -107,7 +107,7 @@ describe SlotBuilder, type: :service do
       matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
       create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day - 1.day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
 
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range)
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
 
       expect(plage_ouvertures).to eq([matching_po])
     end
@@ -119,7 +119,7 @@ describe SlotBuilder, type: :service do
                                              end_time: Tod::TimeOfDay.new(11) + 20.minutes)
       create(:plage_ouverture, agent_id: agent.id, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
 
-      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, agent_ids: [other_agent.id])
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [other_agent.id])
 
       expect(plage_ouvertures).to eq([matching_po])
     end
@@ -281,23 +281,26 @@ describe SlotBuilder, type: :service do
       free_times = [Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 11:00")]
       plage_ouverture_free_times = { plage_ouverture => free_times }
 
-      allow(described_class).to receive(:calculate_slots).with(free_times.first, motif).and_return([])
+      allow(described_class).to receive(:calculate_slots).with(free_times.first, motif, plage_ouverture).and_return([])
       described_class.slots_for(plage_ouverture_free_times, motif)
     end
   end
 
   describe "#calculate_slots" do
+
     it "returns empty when free_time too short" do
       motif = build(:motif, default_duration_in_min: 30)
+      plage_ouverture = build(:plage_ouverture, motifs: [motif], first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
       free_time = Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 9:15")
-      expect(described_class.calculate_slots(free_time, motif)).to eq([])
+      expect(described_class.calculate_slots(free_time, motif, plage_ouverture)).to eq([])
     end
 
     it "returns slot that match with free time" do
       motif = build(:motif, default_duration_in_min: 30)
+      plage_ouverture = build(:plage_ouverture, motifs: [motif], first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
       free_time = Time.zone.parse("20211027 9:00")..Time.zone.parse("20211027 9:45")
 
-      slots = described_class.calculate_slots(free_time, motif) { |s| Creneau.new(starts_at: s) }
+      slots = described_class.calculate_slots(free_time, motif, plage_ouverture) { |s| Creneau.new(starts_at: s) }
       expect(slots.map(&:starts_at).map(&:hour)).to eq([9])
     end
   end
@@ -328,14 +331,14 @@ describe SlotBuilder, type: :service do
     context "with recurrence" do
       it "return empty when po and it occurrence is out of range" do
         plage_ouverture = build(:plage_ouverture, first_day: friday + 14.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-                                                  recurrence: Montrose.every(:week, starts: friday + 14.days))
+                                recurrence: Montrose.every(:week, starts: friday + 14.days))
         range = (friday + 3.days)..(friday + 10.days)
         expect(described_class.ranges_for(plage_ouverture, range)).to eq([])
       end
 
       it "return occurrence of po that in range" do
         plage_ouverture = build(:plage_ouverture, first_day: friday - 14.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-                                                  recurrence: Montrose.every(:week, starts: friday - 14.days))
+                                recurrence: Montrose.every(:week, starts: friday - 14.days))
         range = (friday + 3.days)..(friday + 10.days)
         expect(described_class.ranges_for(plage_ouverture, range)).to eq([(Time.zone.parse("20210507 9:00")..Time.zone.parse("20210507 11:00"))])
       end
