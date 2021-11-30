@@ -20,7 +20,7 @@ module SlotBuilder
     end
 
     def plage_ouvertures_for(motif, lieu, datetime_range, agent_ids)
-      lieu.plage_ouvertures.for_motif(motif).not_expired.in_range(datetime_range)
+      lieu.plage_ouvertures.merge(motif.plage_ouvertures).not_expired.in_range(datetime_range)
         .where(({ agent_id: agent_ids } if agent_ids.any?))
     end
 
