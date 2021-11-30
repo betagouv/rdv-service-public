@@ -490,7 +490,7 @@ ActiveRecord::Schema.define(version: 2021_11_29_144620) do
     t.bigint "organisation_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.json "subscriptions", default: ["rdv", "absence", "plage_ouverture"]
+    t.string "subscriptions", default: ["rdv", "absence", "plage_ouverture"], array: true
     t.index ["organisation_id"], name: "index_webhook_endpoints_on_organisation_id"
   end
 
