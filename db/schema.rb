@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_29_144620) do
+ActiveRecord::Schema.define(version: 2021_12_01_085453) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(version: 2021_11_29_144620) do
     t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[)'::text)", name: "index_absences_on_tsrange_first_day_recurrence_ends_at", using: :gist
     t.index ["agent_id"], name: "index_absences_on_agent_id"
     t.index ["end_day"], name: "index_absences_on_end_day"
+    t.index ["expired_cached"], name: "index_absences_on_expired_cached"
     t.index ["first_day"], name: "index_absences_on_first_day"
     t.index ["organisation_id"], name: "index_absences_on_organisation_id"
     t.index ["recurrence"], name: "index_absences_on_recurrence", where: "(recurrence IS NOT NULL)"
