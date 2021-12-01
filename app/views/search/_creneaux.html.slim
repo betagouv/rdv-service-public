@@ -3,7 +3,7 @@ div id="creneaux-lieu-#{lieu.id}"
     - previous_from_date = date_range.begin - 7.days
     - if date_range.begin > Time.zone.today
       .col-12.col-md-auto.mb-2.mb-md-0.d-flex.align-items-center.justify-content-center
-        = link_to lieu_path(lieu, search: @query, date: previous_from_date), remote: true, class: "btn btn-primary", data: { disable_with: "..." } do
+        = link_to prendre_rdv_path(query.merge(date: previous_from_date)), class: "btn btn-primary", data: { disable_with: "..." } do
           i.fa.fa-chevron-left
           span.d-md-none.ml-1<
             | sem. précédente
@@ -22,7 +22,7 @@ div id="creneaux-lieu-#{lieu.id}"
               - creneaux_for_date.each do |date, creneaux|
                 - creneaux.sort_by(&:starts_at).each do |creneau|
                   - if creneau.motif.restriction_for_rdv.blank?
-                    = link_to new_users_rdv_wizard_step_path(@query.merge(motif_id: creneau.motif.id, starts_at: creneau.starts_at)), "data-turbolinks": false, class: "btn btn-light mr-1 mb-1 w-100" do
+                    = link_to new_users_rdv_wizard_step_path(query.merge(starts_at: creneau.starts_at)), "data-turbolinks": false, class: "btn btn-light mr-1 mb-1 w-100" do
                       = l(creneau.starts_at, format: "%H:%M")
                       - if creneau.agent_name
                         br
@@ -34,8 +34,8 @@ div id="creneaux-lieu-#{lieu.id}"
                         br
                         small= creneau.agent_name
 
-                    =  render "/common/modal", id: "js-rdv-restriction-motif#{creneau.starts_at.to_i}" , title: "À lire avant de prendre un rendez-vous", confirm_path: new_users_rdv_wizard_step_path(@query.merge(motif_id: creneau.motif.id, starts_at: creneau.starts_at)) do
-                      = ActionController::Base.helpers.auto_link(simple_format(creneau.motif.restriction_for_rdv), html: { target: "_blank"})
+                    =  render "/common/modal", id: "js-rdv-restriction-motif#{creneau.starts_at.to_i}" , title: "À lire avant de prendre un rendez-vous", confirm_path: new_users_rdv_wizard_step_path(query.merge(starts_at: creneau.starts_at)) do
+                      = ActionController::Base.helpers.auto_link(simple_format(motif.restriction_for_rdv), html: { target: "_blank"})
             - elsif date >= (Time.now + max_booking_delay.seconds).to_date
               p.text-center.text-muted
                 | Date fermée à la reservation
@@ -43,19 +43,19 @@ div id="creneaux-lieu-#{lieu.id}"
               p.text-center
                 i.fa.fa-minus.text-muted
 
-        - if @next_availability
+        - if next_availability
           .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
-            = link_to lieu_path(lieu, search: @query, date: @next_availability.starts_at), remote: true, class: "btn btn-light", data: { disable_with: "..." } do
+            = link_to prendre_rdv_path(query.merge(date: next_availability.starts_at)), class: "btn btn-light", data: { disable_with: "..." } do
               .d-flex.align-items-center
                 div
                   | Prochaine disponibilité le
                   br
-                  strong= l(@next_availability.starts_at, format: :human)
+                  strong= l(next_availability.starts_at, format: :human)
                 .ml-2
                   i.fa.fa-chevron-right
-    - if !params[:date].present? || (params[:date].to_date + 6.days) < (Time.now + max_booking_delay.seconds).to_date
+    - if params[:date].blank? || (params[:date].to_date + 6.days) < (Time.now + max_booking_delay.seconds).to_date
       .col-12.col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
-        = link_to lieu_path(lieu, search: @query, date: date_range.end + 1.day), remote: true, class: "btn btn-primary", data: { disable_with: "..." } do
+        = link_to prendre_rdv_path(query.merge(date: date_range.end + 1.day)), class: "btn btn-primary", data: { disable_with: "..." } do
           span.d-md-none.mr-1
             | sem. prochaine
           i.fa.fa-chevron-right

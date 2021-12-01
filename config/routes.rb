@@ -207,15 +207,8 @@ Rails.application.routes.draw do
   get "health_checks/enqueue_failing_job", to: "health_checks#enqueue_failing_job"
   root "welcome#index"
 
-  namespace :external_invitations do
-    resources :organisations, only: [] do
-      resources :services, only: [] do
-        resources :motifs, only: [:index] do
-          resources :lieux, only: %i[index show]
-        end
-      end
-    end
-  end
+  get "/prendre-rdv", to: "search#prendre_rdv"
+
   # rubocop:disable Style/StringLiterals, Style/FormatStringToken
   # temporary route after admin namespace introduction
   get "/organisations/*rest", to: redirect('admin/organisations/%{rest}')
