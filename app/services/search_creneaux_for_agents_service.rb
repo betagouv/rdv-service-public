@@ -18,17 +18,14 @@ class SearchCreneauxForAgentsService < BaseService
         @form.motif,
         lieu,
         Time.zone.today,
-        for_agents: true,
-        agent_ids: @form.agent_ids,
-        motif_location_type: @form.motif.location_type,
-        service: @form.service
+        @form.agent_ids
       ),
       creneaux: SlotBuilder.available_slots(
         @form.motif,
         lieu,
         @form.date_range,
         OffDays.all_in_date_range(@form.date_range),
-        agent_ids: @form.agent_ids
+        @form.agent_ids
       )
     )
   end

@@ -19,12 +19,8 @@ describe "Agent can create a Rdv with creneau search" do
   before do
     travel_to(Time.zone.local(2019, 7, 22))
     login_as(agent, scope: :agent)
-    visit admin_organisation_agent_agenda_path(organisation, agent)
-
-    click_link("Trouver un créneau")
+    visit admin_organisation_agent_searches_path(organisation)
   end
-
-  after { travel_back }
 
   it "default", js: true do
     expect(page).to have_content("Trouver un créneau")
