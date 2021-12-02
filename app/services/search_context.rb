@@ -1,23 +1,42 @@
 # frozen_string_literal: true
 
 class SearchContext
-  attr_reader :errors, :departement, :address, :city_code, :street_ban_id, :latitude, :longitude
+  attr_reader :errors, :query, :departement, :address, :city_code, :street_ban_id, :latitude, :longitude
 
-  def initialize(current_user, search_query = {})
+  def initialize(current_user, query = {})
     @current_user = current_user
-    @invitation_token = search_query[:invitation_token]
-    @latitude = search_query[:latitude]
-    @longitude = search_query[:longitude]
-    @address = search_query[:address]
-    @city_code = search_query[:city_code]
-    @departement = search_query[:departement]
-    @street_ban_id = search_query[:street_ban_id]
-    @organisation_id = search_query[:organisation_id]
-    @service_id = search_query[:service_id]
-    @motif_id = search_query[:motif_id]
-    @lieu_id = search_query[:lieu_id]
-    @start_date = search_query[:date]
+    @query = query
+    @invitation_token = query[:invitation_token]
+    @latitude = query[:latitude]
+    @longitude = query[:longitude]
+    @address = query[:address]
+    @city_code = query[:city_code]
+    @departement = query[:departement]
+    @street_ban_id = query[:street_ban_id]
+    @organisation_id = query[:organisation_id]
+    @service_id = query[:service_id]
+    @motif_id = query[:motif_id]
+    @lieu_id = query[:lieu_id]
+    @start_date = query[:date]
     @errors = []
+  end
+
+  # *** Method that outputs the next step for the user to complete its rdv journey ***
+  # *** It is used in #to_partial_parth to render the matching partial view ***
+  def current_step
+    if address.blank?
+      :address_selection
+    elsif motif.nil?
+      :motif_selection
+    elsif lieu.nil?
+      :lieu_selection
+    else
+      :creneau_selection
+    end
+  end
+
+  def to_partial_path
+    "search/#{current_step}"
   end
 
   def geo_search
@@ -91,24 +110,12 @@ class SearchContext
     @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
   end
 
-  def current_step
-    if address.blank?
-      :address_selection
-    elsif motif.nil?
-      :motif_selection
-    elsif lieu.nil?
-      :lieu_selection
-    else
-      :creneau_selection
-    end
-  end
-
   private
 
   def creneaux_search_for(lieu, date_range)
     Users::CreneauxSearch.new(
       user: @current_user,
-      motif: motif, # there can be only one
+      motif: motif,
       lieu: lieu,
       date_range: date_range,
       geo_search: geo_search

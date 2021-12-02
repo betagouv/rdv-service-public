@@ -207,7 +207,7 @@ Rails.application.routes.draw do
   get "health_checks/enqueue_failing_job", to: "health_checks#enqueue_failing_job"
   root "welcome#index"
 
-  get "/prendre-rdv", to: "search#prendre_rdv"
+  get "/prendre_rdv", to: "search#search_rdv"
 
   # rubocop:disable Style/StringLiterals, Style/FormatStringToken
   # temporary route after admin namespace introduction

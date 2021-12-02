@@ -90,7 +90,7 @@ describe SearchContext, type: :service do
 
         it "is not valid" do
           expect(subject.valid?).to eq(false)
-          expect(subject.errors).to eq(["L'utilisateur connecté ne correspond pas à l'utilisateur invité. Déconnectez-vous et réessayez."])
+          expect(subject.errors).to eq(["L’utilisateur connecté ne correspond pas à l’utilisateur invité. Déconnectez-vous et réessayez."])
         end
       end
 
@@ -99,7 +99,7 @@ describe SearchContext, type: :service do
 
         it "is not valid" do
           expect(subject.valid?).to eq(false)
-          expect(subject.errors).to eq(["L'utilisateur concerné n'appartient pas à cette organisation."])
+          expect(subject.errors).to eq(["L’utilisateur concerné n’appartient pas à cette organisation."])
         end
       end
     end

@@ -3,9 +3,8 @@
 class SearchController < ApplicationController
   before_action :store_invitation_token_in_session_if_present
 
-  def prendre_rdv
-    @query = search_params.to_h
-    @context = SearchContext.new(current_user, @query)
+  def search_rdv
+    @context = SearchContext.new(current_user, search_params.to_h)
     return if @context.valid?
 
     flash[:error] = @context.errors.join(", ")
