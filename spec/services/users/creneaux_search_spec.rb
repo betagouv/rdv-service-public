@@ -8,7 +8,7 @@ describe Users::CreneauxSearch, type: :service do
   it "call builder without special options" do
     user = create(:user)
     motif = create(:motif, name: "Coucou", organisation: organisation, location_type: :public_office)
-    expect(SlotBuilder).to receive(:available_slots).with(motif, lieu, date_range, [])
+    expect(SlotBuilder).to receive(:available_slots).with(motif, lieu, date_range, [], [])
     described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range).creneaux
   end
 
@@ -16,14 +16,14 @@ describe Users::CreneauxSearch, type: :service do
     motif = create(:motif, follow_up: true, organisation: organisation)
     agent = create(:agent, basic_role_in_organisations: [organisation])
     user = create(:user, organisations: [organisation], agents: [agent])
-    expect(SlotBuilder).to receive(:available_slots).with(motif, lieu, date_range, [], agent_ids: [agent.id])
+    expect(SlotBuilder).to receive(:available_slots).with(motif, lieu, date_range, [], [agent.id])
     described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range).creneaux
   end
 
   it "call without referents when user without referents" do
     motif = create(:motif, follow_up: true, organisation: organisation)
     user = create(:user, agents: [])
-    expect(SlotBuilder).to receive(:available_slots).with(motif, lieu, date_range, [], agent_ids: [])
+    expect(SlotBuilder).to receive(:available_slots).with(motif, lieu, date_range, [], [])
     described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range).creneaux
   end
 
@@ -34,14 +34,14 @@ describe Users::CreneauxSearch, type: :service do
       it "calls without agents filter" do
         mock_geo_search = instance_double(Users::GeoSearch, attributed_agents_by_organisation: {})
         motif = create(:motif, :sectorisation_level_agent, organisation: organisation)
-        expect(SlotBuilder).to receive(:available_slots).with(motif, lieu, date_range, [])
+        expect(SlotBuilder).to receive(:available_slots).with(motif, lieu, date_range, [], [])
         described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range, geo_search: mock_geo_search).creneaux
       end
 
       it "calls without agents filter when no attributed agents" do
         mock_geo_search = instance_double(Users::GeoSearch, attributed_agents_by_organisation: { organisation => Agent.none })
         motif = create(:motif, organisation: organisation)
-        expect(SlotBuilder).to receive(:available_slots).with(motif, lieu, date_range, [])
+        expect(SlotBuilder).to receive(:available_slots).with(motif, lieu, date_range, [], [])
         described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range, geo_search: mock_geo_search).creneaux
       end
     end
@@ -51,7 +51,7 @@ describe Users::CreneauxSearch, type: :service do
       agent2 = create(:agent, basic_role_in_organisations: [organisation])
       motif = create(:motif, :sectorisation_level_agent, organisation: organisation)
       mock_geo_search = instance_double(Users::GeoSearch, attributed_agents_by_organisation: { organisation => Agent.where(id: [agent1.id, agent2.id]) })
-      expect(SlotBuilder).to receive(:available_slots).with(motif, lieu, date_range, [], agent_ids: array_including(agent1.id, agent2.id))
+      expect(SlotBuilder).to receive(:available_slots).with(motif, lieu, date_range, [], array_including(agent1.id, agent2.id))
       described_class.new(user: user, motif: motif, lieu: lieu, date_range: date_range, geo_search: mock_geo_search).creneaux
     end
   end

@@ -17,7 +17,7 @@ module Users::CreneauxSearchConcern
     @agent_ids ||= [
       follow_up_rdv_and_online_user? ? @user.agent_ids : nil,
       geo_attributed_agents ? geo_attributed_agents.pluck(:id) : nil
-    ].compact.reduce(:intersection)
+    ].compact.flatten
   end
 
   def follow_up_rdv_and_online_user?
