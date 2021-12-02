@@ -58,7 +58,7 @@ class CreneauxBuilderService < BaseService
   def creneaux_for_plage_ouverture_and_motif(plage_ouverture, motif)
     range = (@inclusive_date_range.begin)..(@inclusive_date_range.end.end_of_day)
     agent_rdvs_in_range = plage_ouverture.agent.rdvs.where(starts_at: range).not_cancelled.to_a
-    agent_absences_range = plage_ouverture.agent.absences.flat_map { _1.occurrences_for(range) }
+    agent_absences_range = plage_ouverture.agent.absences.not_expired.flat_map { _1.occurrences_for(range) }
     possible_overlaps = agent_rdvs_in_range + agent_absences_range
 
     # NOTE: LOOP 3/4 Let’s loop over the PO occurrences (limited to the range)

@@ -50,12 +50,13 @@ class CronJob < ApplicationJob
     end
   end
 
-  class UpdatePlageOuverturesExpirationsJob < CronJob
+  class UpdateExpirationsJob < CronJob
     # At 1:00 every day
     self.cron_expression = "0 1 * * *"
 
     def perform
-      PlageOuverture.where(expired_cached: false).each(&:refresh_expired_cached)
+      PlageOuverture.not_expired.find_in_batches { |batch| batch.each(&:refresh_expired_cached) }
+      Absence.not_expired.find_in_batches { |batch| batch.each(&:refresh_expired_cached) }
     end
   end
 
