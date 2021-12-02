@@ -43,13 +43,13 @@ RSpec.describe SearchController, type: :controller do
       .and_return(geo_search)
   end
 
-  describe "#prendre_rdv" do
+  describe "#search_rdv" do
     context "invitation validation" do
       context "when the token is invalid" do
         let!(:invitation_token) { "random_token" }
 
         it "redirects with an error message" do
-          get :prendre_rdv, params: {
+          get :search_rdv, params: {
             organisation_id: organisation.id, service_id: service.id, address: address, departement: departement_number, city_code: city_code,
             invitation_token: invitation_token
           }
@@ -66,12 +66,12 @@ RSpec.describe SearchController, type: :controller do
         end
 
         it "redirects with an error message" do
-          get :prendre_rdv, params: {
+          get :search_rdv, params: {
             organisation_id: organisation.id, service_id: service.id, address: address, departement: departement_number, city_code: city_code,
             invitation_token: invitation_token
           }
           expect(response).to redirect_to(root_path)
-          expect(flash[:error]).to include("L'utilisateur connecté ne correspond pas à l'utilisateur invité. Déconnectez-vous et réessayez.")
+          expect(flash[:error]).to include("L’utilisateur connecté ne correspond pas à l’utilisateur invité. Déconnectez-vous et réessayez.")
         end
       end
 
@@ -79,19 +79,19 @@ RSpec.describe SearchController, type: :controller do
         let!(:user) { create(:user, organisations: []) }
 
         it "redirects with an error message" do
-          get :prendre_rdv, params: {
+          get :search_rdv, params: {
             organisation_id: organisation.id, service_id: service.id, address: address, departement: departement_number, city_code: city_code,
             invitation_token: invitation_token
           }
           expect(response).to redirect_to(root_path)
-          expect(flash[:error]).to include("L'utilisateur concerné n'appartient pas à cette organisation.")
+          expect(flash[:error]).to include("L’utilisateur concerné n’appartient pas à cette organisation.")
         end
       end
     end
 
     describe "motif selection" do
       it "lists the motifs retrieved by the geo search" do
-        get :prendre_rdv, params: {
+        get :search_rdv, params: {
           organisation_id: organisation.id, address: address, departement: departement_number, city_code: city_code
         }
         expect(subject).to include("Motif numéro 1")
@@ -107,7 +107,7 @@ RSpec.describe SearchController, type: :controller do
           let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.none) }
 
           it "lists all the organisation motifs linked to the service available for reservation" do
-            get :prendre_rdv, params: {
+            get :search_rdv, params: {
               organisation_id: organisation.id, service_id: service.id, address: address, departement: departement_number, city_code: city_code,
               invitation_token: invitation_token
             }
@@ -120,7 +120,7 @@ RSpec.describe SearchController, type: :controller do
 
         context "when no motifs are available for reservation" do
           it "reveals a problem" do
-            get :prendre_rdv, params: {
+            get :search_rdv, params: {
               organisation_id: organisation.id, service_id: another_service.id, address: address, departement: departement_number, city_code: city_code,
               invitation_token: invitation_token
             }
@@ -143,7 +143,7 @@ RSpec.describe SearchController, type: :controller do
       end
 
       it "lists the the available lieux linked to the motifs" do
-        get :prendre_rdv, params: {
+        get :search_rdv, params: {
           address: address, motif_id: motif.id,
           departement: departement_number, city_code: city_code
         }
@@ -152,7 +152,7 @@ RSpec.describe SearchController, type: :controller do
       end
 
       it "shows the next availability" do
-        get :prendre_rdv, params: {
+        get :search_rdv, params: {
           address: address, motif_id: motif.id, departement: departement_number, city_code: city_code
         }
         expect(subject).to match(/Prochaine disponibilité le(.)*lundi 05 août 2019 à 08h00/)
@@ -179,7 +179,7 @@ RSpec.describe SearchController, type: :controller do
         end
 
         it "returns a creneau" do
-          get :prendre_rdv, params: {
+          get :search_rdv, params: {
             lieu_id: lieu.id, motif_id: motif.id, address: address, departement: departement_number, city_code: city_code
           }
           expect(subject).to include("08:00")
@@ -196,7 +196,7 @@ RSpec.describe SearchController, type: :controller do
         end
 
         it "returns next availability" do
-          get :prendre_rdv, params: {
+          get :search_rdv, params: {
             lieu_id: lieu.id, motif_id: motif.id, address: address, departement: departement_number, city_code: city_code
           }
           expect(subject).to match(/Prochaine disponibilité le(.)*lundi 05 août 2019 à 08h00/)

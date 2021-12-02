@@ -13,7 +13,7 @@ section.bg-light.p-4
               h6.card-subtitle.text-black-50= lieu.address
             .col-md.align-self-center.pt-3.pt-md-0.position-static
               - if next_availability
-                = link_to prendre_rdv_path(query.merge(lieu_id: lieu.id)), class: "d-block stretched-link" do
+                = link_to prendre_rdv_path(context.query.merge(lieu_id: lieu.id)), class: "d-block stretched-link" do
                   .row
                     .col
                       | Prochaine disponibilité le

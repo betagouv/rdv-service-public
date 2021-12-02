@@ -17,7 +17,7 @@ section.bg-light.p-4
       h4.font-weight-bold Sélectionnez le motif de votre RDV:
       - context.unique_motifs_by_name_and_location_type.each do |motif|
         .card.mb-3
-          = link_to prendre_rdv_path(query.merge(motif_id: motif.id))
+          = link_to prendre_rdv_path(context.query.merge(motif_id: motif.id))
             .card-body
               .row
                 .col-md
