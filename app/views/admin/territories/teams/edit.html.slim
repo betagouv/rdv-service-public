@@ -1,0 +1,9 @@
+.container-fluid.bg-white.rounded.m-2
+  h2.text-center = t(".territory_teams_title")
+
+  = simple_form_for @team, url: admin_territory_team_path(current_territory, @team) do |form|
+    = form.input :name
+    = form.input :agent_ids, collection: current_territory.organisations.flat_map(&:agents), label: "Agent(s)", label_method: :full_name, input_html: { multiple: true, class: "select2-input" }
+
+    = form.submit
+

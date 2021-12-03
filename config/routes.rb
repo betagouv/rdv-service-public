@@ -108,9 +108,7 @@ Rails.application.routes.draw do
         scope module: "territories" do
           resources :agent_territorial_roles, only: %i[index new create destroy]
           resources :webhook_endpoints, except: %i[show]
-          resources :agents, only: %i[index] do
-            resources :teams, only: %i[index]
-          end
+          resources :agents
           resources :teams
           resource :sms_configuration, only: %i[show edit update]
           resources :zone_imports, only: %i[new create]

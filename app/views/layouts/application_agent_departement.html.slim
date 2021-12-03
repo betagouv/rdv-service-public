@@ -22,6 +22,10 @@
         i.fa.fa-users>
         span.ml-1 Agents
 
+    li.side-nav-item.mb-4.pl-3.pr-2
+      = active_link_to admin_territory_teams_path(current_territory)
+        i.fa.fa-users>
+        span.ml-1 Équipes
 
     - if current_territory.has_own_sms_provider?
       li.side-nav-item.mb-4.pl-3.pr-2
