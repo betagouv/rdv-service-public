@@ -19,7 +19,7 @@
 
           td
             .d-flex
-              div.mr-3= link_to admin_territory_agent_teams_path(current_territory, agent),
-                      title: t(".edit_agent_teams") do
-                i.fa.fa-users-cog
+              div.mr-3= link_to edit_admin_territory_agent_path(current_territory, agent),
+                      title: t(".edit_agents") do
+                i.fa.fa-edit
 

@@ -5,13 +5,24 @@
     thead
       tr
         th Nom
+        th Nb équipier
         th Actions
     tbody
       - @teams.each do |team|
         tr id="team_#{team.id}"
+          td = team.name
+          td = team.agents.count 
           td
-            span.mr-2= team.name
-          td
+            .d-flex
+              div.mr-3= link_to edit_admin_territory_team_path(current_territory, team),
+                      title: t("helpers.edit") do
+                i.fa.fa-edit
+              div.mr-3= link_to( admin_territory_team_path(current_territory, team),
+                      method: :delete,
+                      title: t("helpers.delete"),
+                      data: { confirm: "Confirmez-vous la suppression de cette équipe ?"} ) do
+                i.fa.fa-trash-alt
+
 
   .text-right
     = link_to t(".back"), admin_territory_agents_path(current_territory), class: "btn btn-link"
