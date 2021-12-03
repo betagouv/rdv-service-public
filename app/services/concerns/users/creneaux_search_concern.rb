@@ -4,19 +4,19 @@ module Users::CreneauxSearchConcern
   extend ActiveSupport::Concern
 
   def next_availability
-    NextAvailabilityService.find(motif, @lieu, date_range.end, agent_ids)
+    NextAvailabilityService.find(motif, @lieu, date_range.end, agents)
   end
 
   def creneaux
-    SlotBuilder.available_slots(motif, @lieu, date_range, OffDays.all_in_date_range(date_range), agent_ids)
+    SlotBuilder.available_slots(motif, @lieu, date_range, OffDays.all_in_date_range(date_range), agents)
   end
 
   protected
 
-  def agent_ids
-    @agent_ids ||= [
-      follow_up_rdv_and_online_user? ? @user.agent_ids : nil,
-      geo_attributed_agents ? geo_attributed_agents.pluck(:id) : nil
+  def agents
+    @agents ||= [
+      follow_up_rdv_and_online_user? ? @user.agents : nil,
+      geo_attributed_agents ? geo_attributed_agents : nil
     ].compact.flatten
   end
 

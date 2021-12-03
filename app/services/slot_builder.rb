@@ -11,9 +11,9 @@ module SlotBuilder
 
   class << self
     # méthode publique
-    def available_slots(motif, lieu, date_range, off_days, agent_ids = [])
+    def available_slots(motif, lieu, date_range, off_days, agents = [])
       datetime_range = ensure_date_range_with_time(date_range)
-      plage_ouvertures = plage_ouvertures_for(motif, lieu, datetime_range, agent_ids)
+      plage_ouvertures = plage_ouvertures_for(motif, lieu, datetime_range, agents)
       free_times_po = free_times_from(plage_ouvertures, datetime_range, off_days) # dépendance sur RDV et Absence
       slots_for(free_times_po, motif)
     end
@@ -26,9 +26,9 @@ module SlotBuilder
       time_begin..time_end
     end
 
-    def plage_ouvertures_for(motif, lieu, datetime_range, agent_ids)
+    def plage_ouvertures_for(motif, lieu, datetime_range, agents)
       lieu.plage_ouvertures.merge(motif.plage_ouvertures).not_expired.in_range(datetime_range)
-        .where(({ agent_id: agent_ids } if agent_ids&.any?))
+        .where(({ agent: agents } if agents&.any?))
     end
 
     def free_times_from(plage_ouvertures, datetime_range, off_days)
