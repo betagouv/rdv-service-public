@@ -12,11 +12,18 @@ module SlotBuilder
   class << self
     # méthode publique
     def available_slots(motif, lieu, date_range, off_days, agent_ids = [])
-      datetime_range = date_range.begin.beginning_of_day..date_range.end.end_of_day
-      datetime_range = Time.zone.now..datetime_range.end.end_of_day if datetime_range.begin < Time.zone.now
+      datetime_range = ensure_date_range_with_time(date_range)
       plage_ouvertures = plage_ouvertures_for(motif, lieu, datetime_range, agent_ids)
       free_times_po = free_times_from(plage_ouvertures, datetime_range, off_days) # dépendance sur RDV et Absence
       slots_for(free_times_po, motif)
+    end
+
+    def ensure_date_range_with_time(date_range)
+      time_begin = date_range.begin.kind_of?(Time) ? date_range.being : date_range.begin.beginning_of_day
+      time_begin = Time.zone.now if time_begin < Time.zone.now
+      time_end =  date_range.end.kind_of?(Time) ? date_range.end : date_range.end.beginning_of_day
+
+      time_begin..time_end
     end
 
     def plage_ouvertures_for(motif, lieu, datetime_range, agent_ids)
