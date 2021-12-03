@@ -5,6 +5,7 @@ class Territory < ApplicationRecord
 
   auto_strip_attributes :name
 
+  has_many :teams, dependent: :destroy
   has_many :organisations, dependent: :destroy
   has_many :roles, class_name: "AgentTerritorialRole", dependent: :delete_all
   has_many :agents, through: :roles

@@ -19,6 +19,20 @@ fr:
             zero: Aucun lieu ne propose de disponibilité
             one: Un lieu propose des disponibilités
             other: "%{count} lieux proposent des disponibilités"
+    territories:
+      agents:
+        index:
+          edit_agent_teams: Modification des équipes de l'agent
+          territory_agents_title: Agents du territoire
+      teams:
+        index:
+          edit_agent_teams_title: Modifier les équipes de %{agent_name}
+          back: Retour
+          create_team: Créer une équipe
+          teams_title: Liste des équipes
+        new:
+          territory_teams_title: Créer une équipe
+
   activerecord:
     errors:
       messages:

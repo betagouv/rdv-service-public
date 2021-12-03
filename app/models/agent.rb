@@ -26,18 +26,25 @@ class Agent < ApplicationRecord
   }, _prefix: true
 
   belongs_to :service
-  has_many :lieux, through: :organisation
-  has_many :motifs, through: :service
   has_many :plage_ouvertures, dependent: :destroy
   has_many :absences, dependent: :destroy
+
+  has_many :motifs, through: :service
+  has_many :lieux, through: :organisation
+
   has_many :agents_rdvs, dependent: :destroy
   has_many :rdvs, dependent: :destroy, through: :agents_rdvs
+
   has_many :roles, class_name: "AgentRole", dependent: :destroy
   has_many :organisations, through: :roles
+
   has_many :territorial_roles, class_name: "AgentTerritorialRole", dependent: :destroy
   has_many :territories, through: :territorial_roles
   has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
   has_many :sector_attributions, dependent: :destroy
+
+  has_many :agent_teams
+  has_many :teams, through: :agent_teams
 
   has_and_belongs_to_many :users
 

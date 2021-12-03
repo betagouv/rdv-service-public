@@ -1,0 +1,25 @@
+.container-fluid.bg-white.rounded.m-2
+  h2.text-center = t(".territory_agents_title")
+
+  table.table
+    thead
+      tr
+        th Nom
+        th Prénom
+        th Email
+        th Équipes
+        th Actions
+    tbody
+      - @agents.each do |agent|
+        tr
+          td = agent.last_name
+          td = agent.first_name
+          td = agent.email
+          td = agent.teams.count
+
+          td
+            .d-flex
+              div.mr-3= link_to admin_territory_agent_teams_path(current_territory, agent),
+                      title: t(".edit_agent_teams") do
+                i.fa.fa-users-cog
+
