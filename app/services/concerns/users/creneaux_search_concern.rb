@@ -16,7 +16,7 @@ module Users::CreneauxSearchConcern
   def agents
     @agents ||= [
       follow_up_rdv_and_online_user? ? @user.agents : nil,
-      geo_attributed_agents ? geo_attributed_agents : nil
+      geo_attributed_agents || nil
     ].compact.flatten
   end
 

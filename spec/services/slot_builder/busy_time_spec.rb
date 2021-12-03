@@ -76,4 +76,12 @@ describe SlotBuilder::BusyTime, type: :service do
       expect(described_class.busy_times_for(range, plage_ouverture).map(&:ends_at)).to eq([Time.zone.parse("20211026 9:45"), Time.zone.parse("20211029 9:45")])
     end
   end
+
+  context "with an off_day in range" do
+    it "returns off_day from begninning of day to end of day" do
+      off_days = [Date.new(2021, 10, 27)]
+      expect(described_class.busy_times_for(range, plage_ouverture, off_days).first.starts_at).to eq(Time.zone.parse("20211027 0:00"))
+      expect(described_class.busy_times_for(range, plage_ouverture, off_days).first.ends_at).to be_within(1.second).of(Time.zone.parse("20211027 23:59:59"))
+    end
+  end
 end

@@ -19,9 +19,9 @@ module SlotBuilder
     end
 
     def ensure_date_range_with_time(date_range)
-      time_begin = date_range.begin.kind_of?(Time) ? date_range.being : date_range.begin.beginning_of_day
+      time_begin = date_range.begin.is_a?(Time) ? date_range.being : date_range.begin.beginning_of_day
       time_begin = Time.zone.now if time_begin < Time.zone.now
-      time_end =  date_range.end.kind_of?(Time) ? date_range.end : date_range.end.beginning_of_day
+      time_end = date_range.end.is_a?(Time) ? date_range.end : date_range.end.beginning_of_day
 
       time_begin..time_end
     end
@@ -39,11 +39,11 @@ module SlotBuilder
       free_times.select { |_, v| v&.any? }
     end
 
-    def calculate_free_times(plage_ouverture, datetime_range, _off_days)
+    def calculate_free_times(plage_ouverture, datetime_range, off_days)
       ranges = ranges_for(plage_ouverture, datetime_range)
       return [] if ranges.empty?
 
-      ranges.flat_map { |range| split_range_recursively(range, BusyTime.busy_times_for(range, plage_ouverture)) }
+      ranges.flat_map { |range| split_range_recursively(range, BusyTime.busy_times_for(range, plage_ouverture, off_days)) }
     end
 
     def ranges_for(plage_ouverture, datetime_range)
@@ -109,6 +109,9 @@ module SlotBuilder
 
     def initialize(object)
       case object
+      when Date
+        @starts_at = object.beginning_of_day
+        @ends_at = object.end_of_day
       when Rdv, Recurrence::Occurrence
         @starts_at = object.starts_at
         @ends_at = object.ends_at
@@ -124,38 +127,49 @@ module SlotBuilder
       (starts_at..ends_at)
     end
 
-    def self.busy_times_for(range, plage_ouverture)
-      # c'est là que l'on execute le SQL
-      # TODO : Peut-être cacher la récupération de l'ensemble des RDV et absences concernées (pour n'avoir que deux requêtes) puis faire des selections dessus pour le filtre sur le range
+    class << self
+      def busy_times_for(range, plage_ouverture, off_days = [])
+        # c'est là que l'on execute le SQL
+        # TODO : Peut-être cacher la récupération de l'ensemble des RDV et absences concernées (pour n'avoir que deux requêtes) puis faire des selections dessus pour le filtre sur le range
 
-      busy_times = busy_times_from_rdvs(range, plage_ouverture)
-      busy_times += busy_times_from_absences(range, plage_ouverture)
+        busy_times = busy_times_from_rdvs(range, plage_ouverture)
+        busy_times += busy_times_from_absences(range, plage_ouverture)
+        busy_times += busy_times_from_off_days(off_days)
 
-      # Le tri est nécessaire, surtout pour les surcharges.
-      busy_times.sort_by(&:starts_at)
-    end
-
-    def self.busy_times_from_rdvs(range, plage_ouverture)
-      plage_ouverture_starts_in_range = plage_ouverture.agent.rdvs.not_cancelled.where(starts_at: range)
-      plage_ouverture_ends_in_range = plage_ouverture.agent.rdvs.not_cancelled.where(ends_at: range)
-      plage_ouverture_starts_in_range.or(plage_ouverture_ends_in_range).map do |rdv|
-        BusyTime.new(rdv)
+        # Le tri est nécessaire, surtout pour les surcharges.
+        busy_times.sort_by(&:starts_at)
       end
-    end
 
-    def self.busy_times_from_absences(range, plage_ouverture)
-      absences = plage_ouverture.agent.absences.where(organisation: plage_ouverture.organisation).in_range(range)
-      busy_times = []
-      absences.each do |absence|
-        if absence.recurrence
-          absence.occurrences_for(range).each do |absence_occurrence|
-            busy_times << BusyTime.new(absence_occurrence)
-          end
-        else
-          busy_times << BusyTime.new(absence)
+      def busy_times_from_rdvs(range, plage_ouverture)
+        plage_ouverture_starts_in_range = plage_ouverture.agent.rdvs.not_cancelled.where(starts_at: range)
+        plage_ouverture_ends_in_range = plage_ouverture.agent.rdvs.not_cancelled.where(ends_at: range)
+        plage_ouverture_starts_in_range.or(plage_ouverture_ends_in_range).map do |rdv|
+          BusyTime.new(rdv)
         end
       end
-      busy_times
+
+      def busy_times_from_absences(range, plage_ouverture)
+        absences = plage_ouverture.agent.absences.where(organisation: plage_ouverture.organisation).in_range(range)
+        busy_times = []
+        absences.each do |absence|
+          if absence.recurrence
+            absence.occurrences_for(range).each do |absence_occurrence|
+              busy_times << BusyTime.new(absence_occurrence)
+            end
+          else
+            busy_times << BusyTime.new(absence)
+          end
+        end
+        busy_times
+      end
+
+      def busy_times_from_off_days(off_days)
+        busy_times = []
+        off_days.each do |off_day|
+          busy_times << BusyTime.new(off_day)
+        end
+        busy_times
+      end
     end
   end
 end
