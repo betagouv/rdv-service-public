@@ -144,7 +144,9 @@ module SlotBuilder
       end
 
       def busy_times_from_absences(range, plage_ouverture)
-        absences = plage_ouverture.agent.absences.where(organisation: plage_ouverture.organisation).in_range(range)
+        absences = plage_ouverture.agent.absences
+          .where(organisation: plage_ouverture.organisation)
+          .in_range(range)
         busy_times = []
         absences.each do |absence|
           if absence.recurrence
