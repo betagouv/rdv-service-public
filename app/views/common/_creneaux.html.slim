@@ -16,8 +16,7 @@ div id="creneaux-lieu-#{lieu.id}"
               strong= l(date, format: "%A")
               br
               = l(date, format: "%d %b")
-            - creneaux_for_date = creneaux.group_by { |c| c.starts_at.to_date }.select { |k, v| k == date }
-
+            - creneaux_for_date = extract_uniq_slots_for_date(creneaux)
             - if creneaux_for_date.any? && creneaux_for_date[date].first.respects_max_booking_delay?
               - creneaux_for_date.each do |date, creneaux|
                 - creneaux.sort_by(&:starts_at).each do |creneau|

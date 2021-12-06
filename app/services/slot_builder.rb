@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 module SlotBuilder
-  # À faire avant, au moment de jouer avec le motifs
-  # @for_agents ? motifs : motifs.reservable_online
-  # Ce filtre est lié à la recherche de plage d'ouverture à partir d'un nom de motif... Est-ce vraiment nécessaire dans notre cas ?
-  #
   # @for_agents sert aussi pour « limiter » l'afficahge des créneaux. Je pense que c'est à faire sur la vue.
   # uniq_by = @for_agents ? ->(c) { [c.starts_at, c.agent_id] } : ->(c) { c.starts_at }
   #  creneaux.uniq(&uniq_by).sort_by(&:starts_at)
