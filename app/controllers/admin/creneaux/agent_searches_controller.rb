@@ -17,22 +17,15 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
                                                 lieu_id: @search_results.first.lieu.id),
                   class: "d-block stretched-link"
     else
-      respond_to do |format|
-        format.html do
-          @motifs = policy_scope(Motif).active.ordered_by_name
-          @services = policy_scope(Service)
-            .where(id: @motifs.pluck(:service_id).uniq)
-            .ordered_by_name
-          @form.service_id = @services.first.id if @services.count == 1
-          @agents = policy_scope(Agent)
-            .joins(:organisations).where(organisations: { id: current_organisation.id })
-            .complete.active.order_by_last_name
-          @lieux = policy_scope(Lieu).enabled.ordered_by_name
-        end
-        format.js do
-          skip_policy_scope # TODO: improve pundit checks for creneaux
-        end
-      end
+      @motifs = policy_scope(Motif).active.ordered_by_name
+      @services = policy_scope(Service)
+        .where(id: @motifs.pluck(:service_id).uniq)
+        .ordered_by_name
+      @form.service_id = @services.first.id if @services.count == 1
+      @agents = policy_scope(Agent)
+        .joins(:organisations).where(organisations: { id: current_organisation.id })
+        .complete.active.order_by_last_name
+      @lieux = policy_scope(Lieu).enabled.ordered_by_name
     end
   end
 
