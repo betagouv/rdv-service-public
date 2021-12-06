@@ -3,7 +3,7 @@
     .card-body
       h5.card-title= search_result.lieu.name
       h6.card-subtitle.mb-3= search_result.lieu.address
-      = render "creneaux", \
+      = render "/admin/slots/slots", \
         lieu: search_result.lieu, \
         creneaux: search_result.creneaux, \
         form: form, \

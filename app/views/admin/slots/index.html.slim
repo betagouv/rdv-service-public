@@ -1,0 +1,23 @@
+- search_result = @search_results.first
+.card
+  .card-header
+    .d-flex.justify-content-between.flex-wrap
+      span
+        h3= t(".available_slots_title_html", motif: "#{@form.motif.name.downcase} (#{@form.motif.service.short_name})")
+        = t(".place_informations_html", place_name: search_result.lieu.name, place_address: search_result.lieu.address)
+      span
+        = link_to t(".place_index"), admin_organisation_agent_searches_path(current_organisation,
+            service_id: @form.service_id,
+            motif_id: @form.motif_id,
+            from_date: @form.from_date,
+            user_ids: @form.user_ids,
+            agent_ids: @form.agent_ids,
+            commit: "reload"), class: "btn btn-outline-primary m-2"
+
+  .card-body
+
+    = render "/admin/slots/slots", \
+      lieu: search_result.lieu, \
+      creneaux: search_result.creneaux, \
+      form: @form, \
+      next_availability: search_result.next_availability
