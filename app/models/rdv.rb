@@ -209,7 +209,7 @@ class Rdv < ApplicationRecord
 
   def update_unknow_past_rdv_count
     agents.each do |agent|
-      agent.update(unknow_past_rdv_count: agent.rdvs.status(:unknown_past).count)
+      agent.update_column(:unknow_past_rdv_count, agent.rdvs.status(:unknown_past).count) # rubocop:disable Rails/SkipsModelValidations
     end
   end
 
