@@ -18,7 +18,7 @@ module AgentsHelper
     params[:organisation_id] = creneau.motif.organisation_id
     params[:duration_in_min] = creneau.motif.default_duration_in_min
     # Pour filtrer les agents depuis la recherche de créneaux coté agent
-    params["agent_ids"] = [creneau.agent&.id].compact
+    params["agent_ids"] = [creneau.agent.id].compact
     params["user_ids"] = form.user_ids if form.user_ids.present?
     params["context"] = form.context if form.context.present?
     params
