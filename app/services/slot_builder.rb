@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 module SlotBuilder
-  # @for_agents sert aussi pour « limiter » l'afficahge des créneaux. Je pense que c'est à faire sur la vue.
-  # uniq_by = @for_agents ? ->(c) { [c.starts_at, c.agent_id] } : ->(c) { c.starts_at }
-  #  creneaux.uniq(&uniq_by).sort_by(&:starts_at)
-
   class << self
     # méthode publique
     def available_slots(motif, lieu, date_range, off_days, agents = [])

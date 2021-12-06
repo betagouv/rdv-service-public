@@ -29,11 +29,6 @@ describe SlotBuilder::BusyTime, type: :service do
   end
 
   context "with an absence without recurrence" do
-    it "returns BusyTime object in array" do
-      create(:absence, agent: plage_ouverture.agent, organisation: plage_ouverture.organisation, first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9))
-      expect(described_class.busy_times_for(range, plage_ouverture).first).to be_a(described_class)
-    end
-
     it "returns BusyTime starts_at as absence first_day and start_time" do
       create(:absence, agent: plage_ouverture.agent, organisation: plage_ouverture.organisation, first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9))
       expect(described_class.busy_times_for(range, plage_ouverture).first.starts_at).to eq(Time.zone.parse("20211027 9:00"))
@@ -45,7 +40,7 @@ describe SlotBuilder::BusyTime, type: :service do
       expect(described_class.busy_times_for(range, plage_ouverture).first.ends_at).to eq(Time.zone.parse("20211027 9:40"))
     end
 
-    it "returns BusyTime ends_at as absnce end_day and end_time" do
+    it "returns BusyTime ends_at as absence end_day and end_time" do
       create(:absence, agent: plage_ouverture.agent, organisation: plage_ouverture.organisation, first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9),
                        end_day: Date.new(2021, 10, 28), end_time: Tod::TimeOfDay.new(12))
       expect(described_class.busy_times_for(range, plage_ouverture).first.ends_at).to eq(Time.zone.parse("20211028 12"))
