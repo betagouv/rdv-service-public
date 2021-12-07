@@ -40,4 +40,35 @@ describe Absence, type: :model do
       end
     end
   end
+
+  describe "expired?" do
+    # cas particulier de l'absence qui a une date de fin à prendre ne compte
+    it "return false when end_day after today" do
+      today = Time.zone.parse("20210323 13:45")
+      travel_to(today)
+      absence = build(:absence, first_day: today - 3.days, end_day: today + 3.days)
+      expect(absence.expired?).to be false
+    end
+
+    it "return true when end_day before today" do
+      today = Time.zone.parse("20210323 13:45")
+      travel_to(today)
+      absence = build(:absence, first_day: today - 3.days, end_day: today - 1.day, recurrence: nil)
+      expect(absence.expired?).to be true
+    end
+
+    it "return true when first_day before today without end_day" do
+      today = Time.zone.parse("20210323 13:45")
+      travel_to(today)
+      absence = build(:absence, first_day: today - 3.days, end_day: today - 3.days)
+      expect(absence.expired?).to be true
+    end
+
+    it "return stil works for plage_ouverture" do
+      today = Time.zone.parse("20210323 13:45")
+      travel_to(today)
+      plage_ouverture = build(:plage_ouverture, first_day: today - 3.days)
+      expect(plage_ouverture.expired?).to be true
+    end
+  end
 end

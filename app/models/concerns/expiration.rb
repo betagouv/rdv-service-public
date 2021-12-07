@@ -18,11 +18,24 @@ module Expiration
   end
 
   def expired?
-    (recurrence.nil? && first_day < Time.zone.today) ||
-      (recurrence.present? && recurrence.to_hash[:until].present? && recurrence.to_hash[:until].to_date < Time.zone.today)
+    return false if absence_end_day_in_future? || first_day_in_future? || recurrence_ends_at_in_future?
+
+    true
   end
 
   def refresh_expired_cached
     update_column(:expired_cached, expired?)
+  end
+
+  def absence_end_day_in_future?
+    recurrence.nil? && instance_of?(Absence) && end_day >= Time.zone.today
+  end
+
+  def first_day_in_future?
+    recurrence.nil? && first_day >= Time.zone.today
+  end
+
+  def recurrence_ends_at_in_future?
+    recurrence.present? && (recurrence_ends_at.nil? || recurrence_ends_at >= Time.zone.today)
   end
 end
