@@ -52,7 +52,6 @@ class OrganisationDashboard < Administrate::BaseDashboard
     name
     horaires
     phone_number
-    agents
     human_id
   ].freeze
 

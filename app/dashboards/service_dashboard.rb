@@ -49,7 +49,6 @@ class ServiceDashboard < Administrate::BaseDashboard
     name
     short_name
     motifs
-    agents
   ].freeze
 
   def display_resource(service)
