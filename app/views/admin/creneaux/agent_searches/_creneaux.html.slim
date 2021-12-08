@@ -31,9 +31,10 @@ div.js-creneaux-list.collapsed id="creneaux-lieu-#{lieu.id}"
               - creneaux_for_date.first(5).each do |creneau|
                 = link_to(new_admin_organisation_rdv_wizard_step_path(build_link_to_rdv_wizard_params(creneau, form)),
                   class: "creneau bg-light d-block w-100 text-center p-1 mb-1 rounded") do
-                  div
-                    span= l(creneau.starts_at, format: "%H:%M")
+                  .text-left.m-1
+                    span.strong.font-weight-bold= l(creneau.starts_at, format: "%H:%M")
                     br
+                    i class= "mr-1 fa fa-user-alt #{agent_color(creneau.agent_id)}"
                     small.text-dark= creneau.agent_name
 
               - if creneaux_for_date.size > 5

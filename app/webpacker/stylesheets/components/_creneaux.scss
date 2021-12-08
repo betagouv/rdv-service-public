@@ -28,7 +28,7 @@
 
 .collapsed .creneau:nth-child(6){
   position: relative;
-
+  
   &::before {
     content: '';
     position: absolute;
@@ -39,4 +39,38 @@
     border: none;
     background: linear-gradient(to top, rgb(255, 255, 255), rgba(226, 234, 238, 0.5));
   }
+}
+
+.color-scheme-bleu{
+  color: $blue;
+}
+.color-scheme-turquoise{
+  color: $turquoise;
+}
+.color-scheme-indigo{
+  color: $indigo;
+}
+.color-scheme-purple{ 
+  color: $purple;
+}
+.color-scheme-pink{ 
+  color: $pink;
+}
+.color-scheme-yellow{
+  color: $yellow;
+}
+.color-scheme-red{ 
+  color: $red;
+}
+.color-scheme-orange{ 
+  color: $orange;
+}
+.color-scheme-green{ 
+  color: $green;
+}
+.color-scheme-teal{ 
+  color: $teal;
+}
+.color-scheme-lightturquoise{ 
+  color: $lightturquoise;
 }
