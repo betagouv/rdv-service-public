@@ -1,15 +1,13 @@
 - content_for(:menu_item) { "menu-agendas" }
 
-- content_for :title do
-  - if @user
-    | Choisir un créneau pour #{@user.full_name}
-  - else
-    | Choisir un créneau
-
 .card
+  .card-header
+    h3.text-center = t(".search_for_slots_title")
+    - if @form.users.any?
+       h6.card-subtitle.mb-2.text-center = t(".search_for_slots_subtitle", users_fullname: @form.users.map(&:full_name).join(" ,"))
   .card-body
     h5.card-title Configuration des filtres
-    = simple_form_for(@form, as: "", url: admin_organisation_agent_searches_path(current_organisation), method: :get, html: { class: "js-creneaux-form" }) do |f|
+    = simple_form_for(@form, as: "", url: admin_organisation_agent_searches_path(current_organisation), method: :get) do |f|
       - @form.user_ids.each do |user_id|
         = hidden_field_tag "user_ids[]", user_id
       - if @form.context.present?
@@ -55,4 +53,28 @@
     - elsif @search_results.empty?
       | Il n'y a pour l'instant aucune disponibilité pour le motif #{@form.motif.name}
     - else
-      = render partial: "search_result", collection: @search_results, locals: { form: @form }
+      - available_places = @search_results.map(&:lieu)
+      .container
+          h3.font-weight-bold Résultats de votre recherche
+          p.font-weight-bold= t(".available_places_with_slots", count: available_places.length.to_s)
+          - available_places.each do |lieu|
+            - next_availability = @search_results.find {|s| s.lieu == lieu }&.next_availability
+            .card.mb-3 class=("card-hoverable" if next_availability)
+              .card-body
+                .row
+                  .col-md
+                    h4.card-title.mb-3.mt-0.text-success.font-weight-bold= lieu.name
+                    h6.card-subtitle.text-black-50.mb-2 = @form.motif.service.name
+                    h6.card-subtitle.text-black-50= lieu.address
+                  .col-md.align-self-center.pt-3.pt-md-0.position-static
+                    - if next_availability
+                      = link_to admin_organisation_slots_path(current_organisation, service_id: @form.service_id, motif_id: @form.motif.id, from_date: @form.from_date, agent_ids: @form.agent_ids, lieu_id: lieu.id), class: "d-block stretched-link" do
+                        .row
+                          .col
+                            | Prochaine disponibilité le
+                            br
+                            strong= l(next_availability.starts_at, format: :human)
+                          .col-auto.align-self-center
+                            i.fa.fa-chevron-right
+                    - else
+                      em Aucune disponibilité

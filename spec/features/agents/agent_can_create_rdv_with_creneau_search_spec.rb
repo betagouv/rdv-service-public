@@ -27,73 +27,20 @@ describe "Agent can create a Rdv with creneau search" do
   after { travel_back }
 
   it "default", js: true do
-    expect_page_title("Choisir un créneau")
+    expect(page).to have_content("Trouver un créneau")
     select(motif.name, from: "motif_id")
     click_button("Afficher les créneaux")
 
     # Display results for both lieux
     expect(page).to have_content(plage_ouverture.lieu.address)
     expect(page).to have_content(plage_ouverture2.lieu.address)
-    expect(page).to have_content(plage_ouverture.agent.short_name)
-    expect(page).to have_content(plage_ouverture2.agent.short_name)
-    expect(page).to have_content(plage_ouverture3.agent.short_name)
 
     # Add a filter on lieu
     select(lieu.name, from: "lieu_ids")
     click_button("Afficher les créneaux")
     expect(page).to have_content(plage_ouverture.lieu.address)
-    expect(page).to have_content(plage_ouverture3.agent.short_name)
     expect(page).not_to have_content(plage_ouverture2.lieu.address)
 
-    # Add an agent filter
-    select(agent.full_name, from: "agent_ids")
-    click_button("Afficher les créneaux")
-    expect(page).to have_content(plage_ouverture.agent.short_name)
-    expect(page).not_to have_content(plage_ouverture2.agent.short_name)
-    expect(page).not_to have_content(plage_ouverture3.agent.short_name)
-
-    # Click to change to next week
-    find(".fa-arrow-right").click
-    expect(page).to have_content("<<", wait: 5)
-
-    expect(page).to have_content(plage_ouverture.agent.short_name)
-    expect(page).not_to have_content(plage_ouverture2.agent.short_name)
-    expect(page).not_to have_content(plage_ouverture3.agent.short_name)
-
-    # Select creneau
-    first(:link, "09:30").click
-
-    expect_page_title("Nouveau RDV pour le 29/07/2019 à 09:30")
-
-    # Step 2
-    expect(page).to have_selector(".card-title", text: "2. Usager(s)")
-    expect(page).to have_selector(".list-group-item", text: /Motif/)
-    select_user(user)
-    click_button("Continuer")
-
-    # Step 3
-    expect(page).to have_selector(".card-title", text: "3. Agent(s), horaires & lieu")
-    expect(page).to have_selector(".list-group-item", text: /Usager\(s\)/)
-    expect(page).to have_selector(".list-group-item", text: /Motif/)
-    expect(find_field("rdv[lieu_id]").value).to eq(lieu.id.to_s)
-    click_button("Continuer")
-
-    # Step 4
-    expect(page).to have_selector(".card-title", text: "4. Notifications")
-    expect(page).to have_selector(".list-group-item", text: /Motif/)
-    expect(page).to have_selector(".list-group-item", text: /Usager\(s\)/)
-    expect(page).to have_selector(".list-group-item", text: /Agent\(s\), horaires & lieu/)
-    click_button("Créer RDV")
-
-    expect(user.rdvs.count).to eq(1)
-    rdv = user.rdvs.first
-    expect(rdv.users).to contain_exactly(user)
-    expect(rdv.motif).to eq(motif)
-    expect(rdv.duration_in_min).to eq(motif.default_duration_in_min)
-    expect(rdv.created_by_agent?).to be(true)
-
-    expect(page).to have_current_path(admin_organisation_agent_agenda_path(organisation, agent, date: rdv.starts_at.to_date, selected_event_id: rdv.id))
-    expect(page).to have_content("Le rendez-vous a été créé.")
-    expect(page).to have_content("Votre agenda")
+    # TODO : refaire un parcours jusqu'à l'enregistrement du RDV
   end
 end
