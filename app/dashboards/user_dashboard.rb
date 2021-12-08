@@ -70,7 +70,6 @@ class UserDashboard < Administrate::BaseDashboard
   FORM_ATTRIBUTES = %i[
     organisations
     responsible
-    relatives
     first_name
     last_name
     birth_name
