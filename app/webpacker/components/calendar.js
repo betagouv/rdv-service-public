@@ -4,6 +4,8 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import frLocale from '@fullcalendar/core/locales/fr';
 import interactionPlugin from '@fullcalendar/interaction';
+import * as Sentry from '@sentry/browser';
+
 import Bowser from "bowser";
 const browser = Bowser.getParser(window.navigator.userAgent);
 
@@ -56,7 +58,8 @@ class CalendarRdvSolidarites {
       locale: frLocale,
       eventSources: JSON.parse(this.data.eventSourcesJson),
       eventSourceFailure: function (errorObj) {
-        alert("Une erreur s'est produite lors de la récupération des données du calendrier.");
+        Sentry.captureException(errorObj)
+        alert("Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à contact@rdv-solidarites.fr.");
       },
       defaultDate: this.getDefaultDate(),
       defaultView: this.getDefaultView(),
