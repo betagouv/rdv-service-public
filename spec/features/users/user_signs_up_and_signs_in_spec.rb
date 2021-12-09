@@ -62,7 +62,7 @@ describe "User signs up and signs in" do
           fill_in :password, with: agent.password
           click_on "Se connecter"
         end
-        expect(page).to have_current_path(admin_organisation_setup_checklist_path(agent.organisations.first), ignore_query: true)
+        expect(page).to have_current_path(admin_organisation_agent_agenda_path(agent.organisations.first, agent), ignore_query: true)
       end
     end
   end

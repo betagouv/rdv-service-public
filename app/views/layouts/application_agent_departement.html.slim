@@ -54,7 +54,7 @@
       - else
         - organisation = policy_scope([:agent, Organisation]).first
         - if organisation.present?
-          = link_to organisation_home_path(organisation), class: "side-nav-link"
+          = link_to organisation_home_path(organisation, current_agent), class: "side-nav-link"
               span>= organisation.name
               i.fa.fa-sign-out-alt>
 

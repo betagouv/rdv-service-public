@@ -41,7 +41,7 @@
               i.fa.fa-sign-out
               span Me déconnecter
 
-      - if current_organisation.recent?
+      - if show_checklist?(current_organisation, current_agent)
         li.side-nav-item.mb-4.pl-3.pr-2
           = active_link_to admin_organisation_setup_checklist_path(current_organisation)
             i.far.fa-calendar>

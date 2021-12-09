@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 module OrganisationsHelper
-  def organisation_home_path(organisation)
-    if organisation.recent?
+  def show_checklist?(organisation, agent)
+    1.week.ago < organisation.created_at && agent.admin_in_organisation?(organisation)
+  end
+
+  def organisation_home_path(organisation, agent)
+    if show_checklist?(organisation, agent)
       admin_organisation_setup_checklist_path(organisation)
     else
-      admin_organisation_agent_agenda_path(organisation, current_agent)
+      admin_organisation_agent_agenda_path(organisation, agent)
     end
   end
 
