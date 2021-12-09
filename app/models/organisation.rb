@@ -62,8 +62,4 @@ class Organisation < ApplicationRecord
 
     Admins::OrganisationMailer.organisation_created(agents.first, self).deliver_later
   end
-
-  def recent?
-    1.week.ago < created_at
-  end
 end

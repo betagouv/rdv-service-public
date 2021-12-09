@@ -49,7 +49,7 @@ class Admin::OrganisationsController < AgentAuthController
     )
     authorize(@organisation)
     if @organisation.save
-      redirect_to organisation_home_path(@organisation), flash: { success: "Organisation créée !" }
+      redirect_to organisation_home_path(@organisation, current_agent), flash: { success: "Organisation créée !" }
     else
       render :new, layout: "registration"
     end
@@ -77,6 +77,6 @@ class Admin::OrganisationsController < AgentAuthController
   def follow_unique
     return if params[:follow_unique].blank? || policy_scope(Organisation).count != 1
 
-    redirect_to organisation_home_path(policy_scope(Organisation).first)
+    redirect_to organisation_home_path(policy_scope(Organisation).first, current_agent)
   end
 end
