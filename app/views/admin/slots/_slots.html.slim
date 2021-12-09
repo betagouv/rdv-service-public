@@ -20,7 +20,7 @@ div id="creneaux-lieu-#{lieu.id}"
               p.text-center
                 small aucune disponibilité
             - else
-              - agents = creneaux.map(&:agent_id).uniq
+              - agents = creneaux.map(&:agent).uniq
               - creneaux_for_date = creneaux.select { |c| c.starts_at.to_date == date }.sort_by(&:starts_at)
               - creneaux_for_date.each do |creneau|
                 = link_to(new_admin_organisation_rdv_wizard_step_path(build_link_to_rdv_wizard_params(creneau, form)),
@@ -28,8 +28,8 @@ div id="creneaux-lieu-#{lieu.id}"
                   .text-left.m-1
                     span.strong.font-weight-bold= l(creneau.starts_at, format: "%H:%M")
                     br
-                    i class= "mr-1 fa fa-user-alt #{agent_color(agents.index(creneau.agent_id))}"
-                    small.text-dark= creneau.agent_name
+                    i class= "mr-1 fa fa-user-alt #{agent_color(agents.index(creneau.agent.id))}"
+                    small.text-dark= creneau.agent.short_name
 
     - if form.date_range.end < next_availability.starts_at.to_date
       .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
