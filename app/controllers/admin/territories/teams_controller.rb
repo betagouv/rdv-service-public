@@ -2,7 +2,7 @@
 
 class Admin::Territories::TeamsController < Admin::Territories::BaseController
   def index
-    @teams = current_territory.teams
+    @teams = current_territory.teams.page(params[:page])
   end
 
   def new
