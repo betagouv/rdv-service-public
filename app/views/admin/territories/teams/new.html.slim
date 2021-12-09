@@ -1,7 +1,5 @@
 .container-fluid.bg-white.rounded.m-2
   h2.text-center = t(".territory_teams_title")
 
-  = simple_form_for @team, url: admin_territory_teams_path(current_territory) do |form|
-    = form.input :name
-    = form.submit
+  = render "form", team: @team, url: admin_territory_teams_path(current_territory)
 
