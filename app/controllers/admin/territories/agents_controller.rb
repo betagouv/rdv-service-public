@@ -2,7 +2,7 @@
 
 class Admin::Territories::AgentsController < Admin::Territories::BaseController
   def index
-    @agents = current_territory.organisations.flat_map(&:agents)
+    @agents = Agent.joins(:roles).where(agents_organisations: { organisation_id: Territory.first.organisations || [] }).page(params[:page])
   end
 
   def edit

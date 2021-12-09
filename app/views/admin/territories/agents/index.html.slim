@@ -22,4 +22,6 @@
               div.mr-3= link_to edit_admin_territory_agent_path(current_territory, agent),
                       title: t(".edit_agents") do
                 i.fa.fa-edit
+  .d-flex.justify-content-center
+    = paginate @agents, theme: "twitter-bootstrap-4"
 

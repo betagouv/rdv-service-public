@@ -22,6 +22,8 @@
                       title: t("helpers.delete"),
                       data: { confirm: "Confirmez-vous la suppression de cette équipe ?"} ) do
                 i.fa.fa-trash-alt
+  .d-flex.justify-content-center
+    = paginate @teams, theme: "twitter-bootstrap-4"
 
 
   .text-right
