@@ -3,6 +3,7 @@
 class Admin::Territories::AgentsController < Admin::Territories::BaseController
   def index
     @agents = Agent.joins(:roles).where(agents_organisations: { organisation_id: Territory.first.organisations || [] }).page(params[:page])
+    @agents = params[:search].present? ? @agents.search_by_text(params[:search]) : @agents.order_by_last_name
   end
 
   def edit

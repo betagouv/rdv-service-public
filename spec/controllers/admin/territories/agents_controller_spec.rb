@@ -6,12 +6,21 @@ RSpec.describe Admin::Territories::AgentsController, type: :controller do
 
   describe "#index" do
     it "assigns territory's agents" do
-      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
-      other_agent = create(:agent, basic_role_in_organisations: [organisation])
+      agent = create(:agent, last_name: "Z", admin_role_in_organisations: [organisation], role_in_territories: [territory])
+      other_agent = create(:agent, last_name: "B", basic_role_in_organisations: [organisation])
       sign_in agent
 
       get :index, params: { territory_id: territory.id }
-      expect(assigns(:agents)).to eq([agent, other_agent])
+      expect(assigns(:agents)).to eq([other_agent, agent])
+    end
+
+    it "filter assigns territory's agents with search params" do
+      agent = create(:agent, last_name: "Zarg", admin_role_in_organisations: [organisation], role_in_territories: [territory])
+      create(:agent, last_name: "Blot", basic_role_in_organisations: [organisation])
+      sign_in agent
+
+      get :index, params: { territory_id: territory.id, search: "zarg" }
+      expect(assigns(:agents)).to eq([agent])
     end
   end
 
