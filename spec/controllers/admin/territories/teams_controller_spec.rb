@@ -14,6 +14,17 @@ RSpec.describe Admin::Territories::TeamsController, type: :controller do
       get :index, params: { territory_id: territory.id }
       expect(assigns(:teams)).to eq([team])
     end
+
+    it "filters territory's teams with search params" do
+      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
+      team = create(:team, territory: territory, name: "first team")
+      create(:team, territory: territory, name: "second")
+      create(:team, territory: create(:territory))
+      sign_in agent
+
+      get :index, params: { territory_id: territory.id, search: "first" }
+      expect(assigns(:teams)).to eq([team])
+    end
   end
 
   describe "#new" do
