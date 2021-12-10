@@ -151,4 +151,8 @@ class Agent < ApplicationRecord
   def self.dta_find_by(_attrs = {})
     nil
   end
+
+  def to_s
+    "#{last_name} #{first_name}"
+  end
 end

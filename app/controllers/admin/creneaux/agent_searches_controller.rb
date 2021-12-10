@@ -23,6 +23,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
         .where(id: @motifs.pluck(:service_id).uniq)
         .ordered_by_name
       @form.service_id = @services.first.id if @services.count == 1
+      @teams = current_organisation.territory.teams
       @agents = policy_scope(Agent)
         .joins(:organisations).where(organisations: { id: current_organisation.id })
         .complete.active.order_by_last_name
@@ -42,6 +43,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
       user_ids: params[:user_ids].presence || [],
       context: params[:context].presence,
       agent_ids: params[:agent_ids]&.reject(&:blank?)&.presence,
+      team_ids: params[:team_ids]&.reject(&:blank?)&.presence,
       lieu_ids: params[:lieu_ids]&.reject(&:blank?) || []
     )
   end
