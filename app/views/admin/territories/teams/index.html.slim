@@ -11,7 +11,7 @@
       - @teams.each do |team|
         tr id="team_#{team.id}"
           td = team.name
-          td = team.agents.count 
+          td = team.agents.count
           td
             .d-flex
               div.mr-3= link_to edit_admin_territory_team_path(current_territory, team),
@@ -24,7 +24,6 @@
                 i.fa.fa-trash-alt
   .d-flex.justify-content-center
     = paginate @teams, theme: "twitter-bootstrap-4"
-
 
   .text-right
     = link_to t(".back"), admin_territory_agents_path(current_territory), class: "btn btn-link"
