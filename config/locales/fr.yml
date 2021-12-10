@@ -13,6 +13,8 @@ fr:
     creneaux:
       agent_searches:
         index:
+          agents: Agents
+          teams: Équipes
           search_for_slots_title: Trouver un créneau
           search_for_slots_subtitle: pour %{users_fullname}
           available_places_with_slots:

@@ -16,4 +16,8 @@ class Team < ApplicationRecord
 
   has_many :agent_teams, dependent: :destroy
   has_many :agents, through: :agent_teams
+
+  def to_s
+    name
+  end
 end

@@ -3,7 +3,7 @@
 class AgentCreneauxSearchForm
   include ActiveModel::Model
 
-  attr_accessor :organisation_id, :service_id, :motif_id, :agent_ids, :user_ids, :lieu_ids, :context
+  attr_accessor :organisation_id, :service_id, :motif_id, :agent_ids, :team_ids, :user_ids, :lieu_ids, :context
   attr_writer :from_date
 
   validates :organisation_id, :motif_id, presence: true
@@ -25,7 +25,11 @@ class AgentCreneauxSearchForm
   end
 
   def agents
-    organisation.agents.where(id: agent_ids)
+    (organisation.agents.where(id: agent_ids) + teams.flat_map(&:agents)).uniq
+  end
+
+  def teams
+    organisation.territory.teams.where(id: team_ids)
   end
 
   def date_range
