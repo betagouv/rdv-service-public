@@ -40,11 +40,15 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
       motif_id: params[:motif_id],
       from_date: params[:from_date],
       # Est-ce que nous avons vraiment des cas avec plusieurs usager ?
-      user_ids: params[:user_ids].presence || [],
+      user_ids: params_ids(:user_ids) || [],
       context: params[:context].presence,
-      agent_ids: params[:agent_ids]&.reject(&:blank?)&.presence,
-      team_ids: params[:team_ids]&.reject(&:blank?)&.presence,
-      lieu_ids: params[:lieu_ids]&.reject(&:blank?) || []
+      agent_ids: params_ids(:agent_ids),
+      team_ids: params_ids(:team_ids),
+      lieu_ids: params_ids(:lieu_ids) || []
     )
+  end
+
+  def params_ids(ids_key)
+    params[ids_key]&.reject(&:blank?)&.presence
   end
 end

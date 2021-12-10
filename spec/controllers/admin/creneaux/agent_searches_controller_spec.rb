@@ -32,9 +32,9 @@ describe Admin::Creneaux::AgentSearchesController, type: :controller do
       end
 
       it "assigns available agents" do
-        agent = create(:agent, basic_role_in_organisations: [organisation])
+        other_agent = create(:agent, basic_role_in_organisations: [organisation])
         get :index, params: { organisation_id: organisation.id }
-        expect(assigns(:agents)).to eq([agent])
+        expect(assigns(:agents)).to eq([agent, other_agent])
       end
 
       it "assigns available teams" do
