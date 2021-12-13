@@ -40,6 +40,7 @@ class Agent < ApplicationRecord
   has_many :territorial_roles, class_name: "AgentTerritorialRole", dependent: :destroy
   has_many :territories, through: :territorial_roles
   has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
+  has_many :sector_attributions, dependent: :destroy
 
   has_and_belongs_to_many :users
 
@@ -96,6 +97,7 @@ class Agent < ApplicationRecord
   def soft_delete
     raise SoftDeleteError, "agent still has attached resources" if organisations.any? || plage_ouvertures.any? || absences.any?
 
+    sector_attributions.delete_all
     update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email, uid: deleted_email)
   end
 

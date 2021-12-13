@@ -40,6 +40,13 @@ describe Agent, type: :model do
       agent.soft_delete
       expect(agent.uid).to eq("agent_#{agent.id}@deleted.rdv-solidarites.fr")
     end
+
+    it "delete sector attributions" do
+      agent = create(:agent, basic_role_in_organisations: [])
+      create(:sector_attribution, agent: agent)
+      agent.soft_delete
+      expect(agent.sector_attributions).to be_empty
+    end
   end
 
   describe "#available_referents_for" do
