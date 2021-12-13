@@ -6,7 +6,6 @@ class Agent < ApplicationRecord
   has_paper_trail
   include DeviseInvitable::Inviter
   include FullNameConcern
-  include AccountNormalizerConcern
   include PgSearch::Model
 
   pg_search_scope(:search_by_text,
@@ -44,7 +43,6 @@ class Agent < ApplicationRecord
 
   has_and_belongs_to_many :users
 
-  before_save :normalize_account
   before_save :refresh_search_terms
   after_update -> { rdvs.touch_all }
 
