@@ -1,0 +1,7 @@
+/ Component: generic destroy button for a Rails form
+  See also destroy-button.js
+
+= form.hidden_field :_destroy, id: "#{id}-destroy"
+button.btn.btn-sm.btn-link.js-destroy-button data-target=id
+  i.fa.fa-minus-circle.mr-1
+  = t("helpers.delete")
