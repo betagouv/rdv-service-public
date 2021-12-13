@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_01_085453) do
+ActiveRecord::Schema.define(version: 2021_12_13_105723) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -148,7 +148,7 @@ ActiveRecord::Schema.define(version: 2021_12_01_085453) do
     t.boolean "allow_password_change", default: false
     t.enum "rdv_notifications_level", default: "soon", enum_name: "agents_rdv_notifications_level"
     t.text "search_terms"
-    t.integer "unknow_past_rdv_count", default: 0
+    t.integer "unknown_past_rdv_count", default: 0
     t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_agents_search_terms", using: :gin
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true

@@ -579,6 +579,6 @@ RdvsUser.insert_all!(rdv_user_attributes)
 
 # Sync rdv counter cache
 unknown_rdv_count_by_agent = Rdv.status("unknown_past").joins(:agents_rdvs).group("agents_rdvs.agent_id").count
-unknown_rdv_count_by_agent.each do |agent_id, unknow_past_rdv_count|
-  Agent.where(id: agent_id).update_all(unknow_past_rdv_count: unknow_past_rdv_count) # rubocop:disable Rails/SkipsModelValidations
+unknown_rdv_count_by_agent.each do |agent_id, unknown_past_rdv_count|
+  Agent.where(id: agent_id).update_all(unknown_past_rdv_count: unknown_past_rdv_count) # rubocop:disable Rails/SkipsModelValidations
 end

@@ -13,8 +13,12 @@ class Rdv < ApplicationRecord
   belongs_to :motif
   belongs_to :lieu, optional: true
   has_many :file_attentes, dependent: :destroy
+
   has_many :agents_rdvs, inverse_of: :rdv, dependent: :destroy
-  has_many :agents, through: :agents_rdvs
+  has_many :agents, through: :agents_rdvs, dependent: :destroy
+  # https://stackoverflow.com/questions/30629680/rails-isnt-running-destroy-callbacks-for-has-many-through-join-model/30629704
+  # https://github.com/rails/rails/issues/7618
+
   has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy
   has_many :users, through: :rdvs_users, validate: false
   has_many :events, class_name: "RdvEvent", dependent: :destroy
@@ -60,7 +64,7 @@ class Rdv < ApplicationRecord
   scope :visible, -> { joins(:motif).where(motifs: { visibility_type: [Motif::VISIBLE_AND_NOTIFIED, Motif::VISIBLE_AND_NOT_NOTIFIED] }) }
 
   after_save :associate_users_with_organisation
-  after_commit :update_unknow_past_rdv_count, if: -> { past? }
+  after_commit :update_agents_unknown_past_rdv_count, if: -> { past? }
   after_commit :reload_uuid, on: :create
 
   def self.ongoing(time_margin: 0.minutes)
@@ -207,10 +211,8 @@ class Rdv < ApplicationRecord
     end
   end
 
-  def update_unknow_past_rdv_count
-    agents.each do |agent|
-      agent.update_column(:unknow_past_rdv_count, agent.rdvs.status(:unknown_past).count) # rubocop:disable Rails/SkipsModelValidations
-    end
+  def update_agents_unknown_past_rdv_count
+    agents.each(&:refresh_unknown_past_rdv_count!)
   end
 
   def reload_uuid

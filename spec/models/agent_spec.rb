@@ -55,4 +55,21 @@ describe Agent, type: :model do
       expect(described_class.available_referents_for(user)).to eq([agent])
     end
   end
+
+  describe "#refresh_unknown_past_rdv_count!" do
+    it "update with 0 if no past RDV" do
+      agent = create(:agent)
+      agent.refresh_unknown_past_rdv_count!
+      expect(agent.reload.unknown_past_rdv_count).to eq(0)
+    end
+
+    it "update with 1 with one past RDV" do
+      now = Time.zone.parse("20211123 10:45")
+      travel_to(now)
+      agent = create(:agent)
+      create(:rdv, starts_at: now - 1.day, status: :unknown, agents: [agent])
+      agent.refresh_unknown_past_rdv_count!
+      expect(agent.reload.unknown_past_rdv_count).to eq(1)
+    end
+  end
 end
