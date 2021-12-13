@@ -17,14 +17,14 @@ describe PaperTrailHelper do
     it "returns rdv user ids when property user_ids for rdv resource" do
       user1 = create(:user, first_name: "Jeanne", last_name: "Dupont")
       user2 = create(:user, first_name: "Martine", last_name: "Lalou")
-      expect(helper.paper_trail_change_value("user_ids", [user1.id, user2.id])).to eq("Jeanne DUPONT, Martine LALOU")
+      expect(helper.paper_trail_change_value("user_ids", [user1.id, user2.id])).to eq("Jeanne Dupont, Martine Lalou")
     end
 
     it "returns rdv agent ids when property agent_ids with rdv ressource" do
       agent1 = create(:agent, first_name: "Patricia", last_name: "Allo")
       agent2 = create(:agent, first_name: "Marco", last_name: "Labat")
 
-      expect(helper.paper_trail_change_value("agent_ids", [agent1.id, agent2.id])).to eq("Patricia ALLO, Marco LABAT")
+      expect(helper.paper_trail_change_value("agent_ids", [agent1.id, agent2.id])).to eq("Patricia Allo, Marco Labat")
     end
 
     it "returns stringified value when passed an unknown property of arbitrary type" do

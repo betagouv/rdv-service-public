@@ -85,7 +85,7 @@ describe "User can search for rdvs" do
 
       # Step 5
       expect(page).to have_content("Vaccination")
-      expect(page).to have_content("Michel LAPIN (LAPINOU)")
+      expect(page).to have_content("Michel Lapin (Lapinou)")
 
       # Add relative
       click_link("Ajouter un proche")
@@ -94,13 +94,13 @@ describe "User can search for rdvs" do
       fill_in("Nom", with: "Lapin")
       fill_in("Date de naissance", with: Date.yesterday)
       click_button("Enregistrer")
-      expect(page).to have_content("Mathieu LAPIN")
+      expect(page).to have_content("Mathieu Lapin")
 
       click_button("Continuer")
 
       # Step 6
       expect(page).to have_content("Informations de contact")
-      expect(page).to have_content("Mathieu LAPIN")
+      expect(page).to have_content("Mathieu Lapin")
       click_link("Confirmer mon RDV")
 
       # Step 7

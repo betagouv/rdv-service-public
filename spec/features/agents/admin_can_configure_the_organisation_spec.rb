@@ -64,19 +64,19 @@ describe "Admin can configure the organisation" do
     click_link "Vos agents"
     expect_page_title("Agents de Organisation n°1")
 
-    click_link "PATRICK Tony"
-    expect_page_title("Modifier le rôle de l'agent Tony PATRICK")
+    click_link "Patrick Tony"
+    expect_page_title("Modifier le rôle de l'agent Tony Patrick")
     choose :agent_role_level_admin
     click_button("Enregistrer")
 
     expect_page_title("Agents de Organisation n°1")
     expect(page).to have_content("Admin", count: 2)
 
-    click_link "PATRICK Tony"
+    click_link "Patrick Tony"
     click_link("Supprimer le compte")
 
     expect_page_title("Invitations en cours pour Organisation n°1")
-    expect(page).to have_no_content("Tony PATRICK")
+    expect(page).to have_no_content("Tony Patrick")
 
     click_link "Inviter un agent", match: :first
     fill_in "Email", with: "jean@paul.com"

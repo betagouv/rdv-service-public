@@ -17,8 +17,8 @@ describe UpsertUserForFranceconnectService, type: :service do
       expect(service.new_user?).to eq(true)
       user = service.user.reload
       expect(user.email).to eq("jeanne@longo.fr")
-      expect(user.first_name).to eq("Jeanne")
-      expect(user.birth_name).to eq("LONGO")
+      expect(user.first_name).to eq("jeanne")
+      expect(user.birth_name).to eq("longo")
       expect(user.last_name).to eq("DUPONT")
       expect(user.birth_date).to eq(Date.parse("1971-06-20"))
       expect(user.franceconnect_openid_sub).to eq("hvdiuds4357")
@@ -69,9 +69,9 @@ describe UpsertUserForFranceconnectService, type: :service do
       expect(service.new_user?).to eq(false)
       user = service.user.reload
       expect(user.email).to eq("jeanne@longo.fr")
-      expect(user.first_name).to eq("Jeanne")
+      expect(user.first_name).to eq("jeanne")
       expect(user.last_name).to eq("DUPONT")
-      expect(user.birth_name).to eq("LONGO")
+      expect(user.birth_name).to eq("longo")
       expect(user.birth_date).to eq(Date.parse("1971-06-20"))
       expect(user.franceconnect_openid_sub).to eq("hvdiuds4357")
     end

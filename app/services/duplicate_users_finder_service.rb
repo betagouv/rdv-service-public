@@ -31,9 +31,9 @@ class DuplicateUsersFinderService < BaseService
     return nil unless user.birth_date.present? && user.first_name.present? && user.last_name.present?
 
     similar_user = users_in_scope.where(
-      first_name: user.first_name.capitalize,
-      last_name: user.last_name.upcase,
-      birth_date: user.birth_date
+      User.arel_table[:first_name].matches(user.first_name),
+      User.arel_table[:last_name].matches(user.last_name),
+      User.arel_table[:birth_name].matches(user.birth_name)
     ).first
     return nil if similar_user.blank?
 

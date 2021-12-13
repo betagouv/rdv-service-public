@@ -19,7 +19,7 @@ describe "Agent can create user" do
     fill_in :user_first_name, with: "Marco"
     fill_in :user_last_name, with: "Lebreton"
     click_button "Créer"
-    expect_page_title("Marco LEBRETON")
+    expect_page_title("Marco Lebreton")
     expect(page).to have_no_content("Inviter")
     within("#spec-primary-user-card") { click_link "Modifier" }
     fill_in "Email", with: "marco@lebreton.bzh"

@@ -21,7 +21,7 @@ describe "Agent can update a relative" do
     fill_in :user_last_name, with: "Mythe"
     fill_in :user_birth_date, with: "07/11/2001"
     click_button "Enregistrer"
-    expect_page_title "Michelle MYTHE"
+    expect_page_title "Michelle Mythe"
     expect(page).to have_content("L'usager a été modifié")
     expect(find("#spec-primary-user-card")).to have_content("Informations de votre proche")
     expect(find("#spec-secondary-user-card")).to have_content("Informations sur l'usager en charge")
