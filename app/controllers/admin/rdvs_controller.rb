@@ -26,6 +26,10 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def edit
+    add_user_ids = params[:add_user]
+    users_to_add = User.where(id: add_user_ids)
+    users_to_add.ids.each { @rdv.rdvs_users.build(user_id: _1) }
+
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
     authorize(@rdv_form.rdv)
   end
@@ -85,7 +89,7 @@ class Admin::RdvsController < AgentAuthController
       .permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors,
               agent_ids: [],
               user_ids: [],
-              rdvs_users_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification])
+              rdvs_users_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy])
   end
 
   def status_params

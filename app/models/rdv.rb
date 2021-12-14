@@ -37,7 +37,7 @@ class Rdv < ApplicationRecord
   validate :starts_at_is_plausible
   validate :duration_is_plausible
 
-  accepts_nested_attributes_for :rdvs_users
+  accepts_nested_attributes_for :rdvs_users, allow_destroy: true
 
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
   scope :cancelled, -> { where(status: CANCELLED_STATUSES) }
