@@ -4,10 +4,6 @@ module Admin::RdvFormConcern
   extend ActiveSupport::Concern
 
   included do
-    include ActiveModel::Cautions
-    include ActiveModel::Cautions::Callbacks
-    include ActiveModel::Cautions::SafetyDecision
-
     attr_accessor :rdv
 
     delegate(*::Rdv.attribute_names, to: :rdv)
@@ -19,9 +15,15 @@ module Admin::RdvFormConcern
     delegate :errors, to: :rdv
 
     validate :validate_rdv
-    caution :warn_overlapping_plage_ouverture
-    caution :warn_rdvs_ending_shortly_before
-    caution :warn_rdvs_overlapping_rdv
+    validate :warn_overlapping_plage_ouverture
+    validate :warn_rdvs_ending_shortly_before
+    validate :warn_rdvs_overlapping_rdv
+
+    attr_accessor :active_warnings_confirm_decision
+
+    def warnings_need_confirmation?
+      rdv.errors.keys == [:_warn]
+    end
   end
 
   private
@@ -31,14 +33,18 @@ module Admin::RdvFormConcern
   end
 
   def warn_overlapping_plage_ouverture
+    return if active_warnings_confirm_decision
+
     return true unless overlapping_plages_ouvertures?
 
     overlapping_plages_ouvertures
       .map { PlageOuverturePresenter.new(_1, agent_context) }
-      .each { warnings.add(:base, _1.overlaps_rdv_error_message, active: true) }
+      .each { rdv.errors.add(:_warn, _1.overlaps_rdv_error_message) }
   end
 
   def warn_rdvs_ending_shortly_before
+    return if active_warnings_confirm_decision
+
     return true unless rdvs_ending_shortly_before?
 
     rdv_agent_pairs_ending_shortly_before_grouped_by_agent.values.map do
@@ -48,10 +54,12 @@ module Admin::RdvFormConcern
         rdv_context: rdv,
         agent_context: agent_context
       )
-    end.each { warnings.add(:base, _1.warning_message, active: true) }
+    end.each { rdv.errors.add(:_warn, _1.warning_message) }
   end
 
   def warn_rdvs_overlapping_rdv
+    return if active_warnings_confirm_decision
+
     return true unless rdvs_overlapping_rdv?
 
     rdv_agent_pairs_rdvs_overlapping_grouped_by_agent.values.map do
@@ -61,7 +69,7 @@ module Admin::RdvFormConcern
         rdv_context: rdv,
         agent_context: agent_context
       )
-    end.each { warnings.add(:base, _1.warning_message, active: true) }
+    end.each { rdv.errors.add(:_warn, _1.warning_message) }
   end
 
   def rdv_agent_pairs_ending_shortly_before_grouped_by_agent
