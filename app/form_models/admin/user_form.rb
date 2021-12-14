@@ -2,16 +2,19 @@
 
 class Admin::UserForm
   include ActiveModel::Model
-  include ActiveModel::Cautions
-  include ActiveModel::Cautions::Callbacks
-  include ActiveModel::Cautions::SafetyDecision
 
   attr_reader :user
 
   validate :validate_duplicates
-  caution :warn_duplicates
+  validate :warn_duplicates
 
-  delegate(:warnings, :errors, to: :user)
+  delegate :errors, to: :user
+
+  attr_accessor :active_warnings_confirm_decision
+
+  def warnings_need_confirmation?
+    user.errors.keys == [:_warn]
+  end
 
   def initialize(user, active_warnings_confirm_decision: false, view_locals: {})
     @user = user
@@ -41,10 +44,12 @@ class Admin::UserForm
   end
 
   def warn_duplicates
+    return if active_warnings_confirm_decision
+
     duplicate_results
       .select { _1.severity == :warning }
       .select { _1.attributes.any? { |att| user.send("#{att}_changed?") } }
-      .each { user.warnings.add(:base, render_message(_1), active: true) }
+      .each { user.errors.add(:_warn, render_message(_1)) }
   end
 
   def render_message(duplicate_result)
