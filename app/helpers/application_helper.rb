@@ -50,7 +50,7 @@ module ApplicationHelper
   end
 
   def errors_full_messages(object)
-    object.errors.map do |attribute, message|
+    object.errors.filter { |k, _| k != :_warn }.map do |attribute, message| # rubocop:disable Style/HashExcept
       if attribute.to_s.starts_with?("responsible.")
         att = attribute.to_s.sub(/^responsible./, "")
         "Responsable: #{object.errors.full_message(att, message)}"
