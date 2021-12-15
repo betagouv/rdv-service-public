@@ -151,6 +151,8 @@ Style/IfUnlessModifier:
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
+  Exclude:
+    - "config/**/*"
 
 Style/GuardClause:
   Exclude:
