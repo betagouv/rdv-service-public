@@ -8,18 +8,6 @@ GIT
       rails (>= 4.2.0, < 6.2)
 
 GIT
-  remote: https://github.com/rdv-solidarites/activemodel-caution.git
-  revision: cf011ec421f319fe63eb09e32ec30bb1a8a4bcac
-  branch: allow-minor-rails-bumps
-  specs:
-    activemodel-caution (6.0.3.0)
-      actionpack (~> 6.0.3)
-      activemodel (~> 6.0.3)
-      activerecord (~> 6.0.3)
-      activesupport (~> 6.0.3)
-      railties (~> 6.0.3)
-
-GIT
   remote: https://github.com/thoughtbot/administrate.git
   revision: 0e4c1865df14bbfcbee0b16979910c4f5b49ba2f
   ref: refs/pull/1972/head
@@ -578,7 +566,6 @@ PLATFORMS
 
 DEPENDENCIES
   active_link_to
-  activemodel-caution!
   activerecord-postgres_enum
   administrate!
   administrate-field-belongs_to_search
