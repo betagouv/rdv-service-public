@@ -28,7 +28,7 @@ div id="creneaux-lieu-#{lieu.id}"
                   .text-left.m-1
                     span.strong.font-weight-bold= l(creneau.starts_at, format: "%H:%M")
                     br
-                    i class= "mr-1 fa fa-user-alt #{agent_color(agents.index(creneau.agent.id))}"
+                    i class= "mr-1 fa fa-user-alt #{agent_color(agents.index(creneau.agent))}"
                     small.text-dark= creneau.agent.short_name
 
     - if form.date_range.end < next_availability.starts_at.to_date
