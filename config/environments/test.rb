@@ -1,15 +1,13 @@
+# The test environment is used exclusively to run your application's
+# test suite. You never need to work with it otherwise. Remember that
+# your test database is "scratch space" for the test suite and is wiped
+# and recreated between test runs. Don't rely on the data there!
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  # The test environment is used exclusively to run your application's
-  # test suite. You never need to work with it otherwise. Remember that
-  # your test database is "scratch space" for the test suite and is wiped
-  # and recreated between test runs. Don't rely on the data there!
   config.cache_classes = false
 
-  # dont use cache store during test
-  config.cache_store = :null_store
 
   # Do not eager load code on boot. This avoids loading your whole application
   # just for the purpose of running a single test. If you are using a tool that
@@ -25,6 +23,7 @@ Rails.application.configure do
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
+  config.cache_store = :null_store
 
   # Raise exceptions instead of rendering exception templates.
   config.action_dispatch.show_exceptions = false
@@ -32,7 +31,7 @@ Rails.application.configure do
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
 
-  # Store uploaded files on the local file system in a temporary directory
+  # Store uploaded files on the local file system in a temporary directory.
   config.active_storage.service = :test
 
   port = 9887 + ENV["TEST_ENV_NUMBER"].to_i
@@ -51,12 +50,14 @@ Rails.application.configure do
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
-  # Raises error for missing translations
-  # config.action_view.raise_on_missing_translations = true
 
   # https://github.com/JackC/tod/#activemodel-serializable-attribute-support
   config.active_record.time_zone_aware_types = [:datetime]
+  # Raises error for missing translations.
+  # config.i18n.raise_on_missing_translations = true
 
   # Faker fails for certains attributes if :en isn't available
   config.i18n.available_locales = %i[fr en]
+  # Annotate rendered view with file names.
+  # config.action_view.annotate_rendered_view_with_filenames = true
 end
