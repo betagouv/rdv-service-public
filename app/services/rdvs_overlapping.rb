@@ -9,6 +9,8 @@ class RdvsOverlapping
   end
 
   def rdvs_overlapping_rdv
+    return Rdv.none if starts_at.nil? || ends_at.nil? || starts_at > ends_at
+
     Rdv.where.not(id: @rdv.id)
       .not_cancelled
       .future
