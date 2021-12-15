@@ -2,7 +2,7 @@
 
 class Agents::RdvMailer < ApplicationMailer
   include DateHelper
-  add_template_helper DateHelper
+  helper DateHelper
 
   def rdv_created(rdv_payload, agent)
     @rdv = OpenStruct.new(rdv_payload)
