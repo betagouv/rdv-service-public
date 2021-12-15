@@ -141,6 +141,11 @@ Style/CommentedKeyword:
 Style/Documentation:
   Enabled: false
 
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - "config/**/*"
+    - "config.ru"
+
 Style/IfUnlessModifier:
   Enabled: false
 
