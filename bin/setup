@@ -21,6 +21,9 @@ FileUtils.chdir APP_ROOT do
   system! 'bin/yarn'
 
   puts "\n== Copying sample files =="
+  unless File.exist?('config/database.yml')
+    FileUtils.cp 'config/database.yml.sample', 'config/database.yml'
+  end
   unless File.exist?('.env')
     cp '.env.sample', '.env'
   end
