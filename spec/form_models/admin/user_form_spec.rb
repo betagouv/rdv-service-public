@@ -65,9 +65,9 @@ describe Admin::UserForm, type: :form do
 
     it "is not valid" do
       expect(subject.valid?).to eq false
-      expect(subject.errors[:_warn]).to be_present
-      expect(subject.errors[:_warn][0]).to include("Jeannot")
-      expect(subject.errors[:_warn][0]).to include("Un usager avec le même téléphone existe déjà")
+      expect(subject.benign_errors).to be_present
+      expect(subject.benign_errors[0]).to include("Jeannot")
+      expect(subject.benign_errors[0]).to include("Un usager avec le même téléphone existe déjà")
     end
 
     it "does not save the user" do
@@ -77,7 +77,7 @@ describe Admin::UserForm, type: :form do
   end
 
   context "duplication warning bypassed" do
-    subject { described_class.new(user, active_warnings_confirm_decision: true, view_locals: { current_organisation: organisation }) }
+    subject { described_class.new(user, ignore_benign_errors: true, view_locals: { current_organisation: organisation }) }
 
     let(:user) { build(:user, first_name: "Jean", last_name: "Jacques", phone_number: "0101010101") }
     let!(:existing_user) { create(:user, first_name: "Jeannot", phone_number: "0101010101") }
@@ -105,9 +105,9 @@ describe Admin::UserForm, type: :form do
     it "is not valid" do
       expect(subject.valid?).to eq false
       expect(subject.errors).to be_present
-      expect(subject.errors[:_warn]).to be_present
-      expect(subject.errors[:_warn][0]).to include("Jeannot")
-      expect(subject.errors[:_warn][0]).to include("Un usager avec le même téléphone existe déjà")
+      expect(subject.benign_errors).to be_present
+      expect(subject.benign_errors[0]).to include("Jeannot")
+      expect(subject.benign_errors[0]).to include("Un usager avec le même téléphone existe déjà")
     end
 
     it "does not save the user" do
@@ -127,7 +127,7 @@ describe Admin::UserForm, type: :form do
 
     it "is valid" do
       expect(subject.valid?).to eq true
-      expect(subject.errors[:_warn]).to be_empty
+      expect(subject.benign_errors).to be_empty
     end
 
     it "saves the user" do

@@ -6,19 +6,15 @@ class Admin::UserForm
   attr_reader :user
 
   validate :validate_duplicates
+
+  delegate :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :user
   validate :warn_duplicates
 
   delegate :errors, to: :user
 
-  attr_accessor :active_warnings_confirm_decision
-
-  def warnings_need_confirmation?
-    user.errors.keys == [:_warn]
-  end
-
-  def initialize(user, active_warnings_confirm_decision: false, view_locals: {})
+  def initialize(user, ignore_benign_errors: false, view_locals: {})
     @user = user
-    self.active_warnings_confirm_decision = active_warnings_confirm_decision
+    self.ignore_benign_errors = ignore_benign_errors
     @view_locals = view_locals
   end
 
@@ -44,12 +40,12 @@ class Admin::UserForm
   end
 
   def warn_duplicates
-    return if active_warnings_confirm_decision
+    return if ignore_benign_errors
 
     duplicate_results
       .select { _1.severity == :warning }
       .select { _1.attributes.any? { |att| user.send("#{att}_changed?") } }
-      .each { user.errors.add(:_warn, render_message(_1)) }
+      .each { add_benign_error(render_message(_1)) }
   end
 
   def render_message(duplicate_result)

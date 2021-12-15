@@ -80,7 +80,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def rdv_params
-    params.require(:rdv).permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, :active_warnings_confirm_decision, agent_ids: [], user_ids: [])
+    params.require(:rdv).permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors, agent_ids: [], user_ids: [])
   end
 
   def status_params

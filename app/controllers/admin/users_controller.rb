@@ -157,7 +157,7 @@ class Admin::UsersController < AgentAuthController
   def user_form_object
     Admin::UserForm.new(
       @user,
-      active_warnings_confirm_decision: params.dig(:user, :active_warnings_confirm_decision),
+      ignore_benign_errors: params.dig(:user, :ignore_benign_errors),
       view_locals: {
         current_organisation: current_organisation,
         from_modal: from_modal?,

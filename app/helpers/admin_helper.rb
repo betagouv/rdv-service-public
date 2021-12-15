@@ -3,8 +3,8 @@
 module AdminHelper
   def collapsible_form_fields_for_warnings(model, &block)
     tag.div(class: %w[form-collapsable-fields-wrapper collapse js-collapse-warning-confirmation] +
-        (model.warnings_need_confirmation? ? [] : ["show"]),
-            "aria-expanded": model.warnings_need_confirmation? ? "false" : "true", &block)
+        (model.errors_are_all_benign? ? [] : ["show"]),
+            "aria-expanded": model.errors_are_all_benign? ? "false" : "true", &block)
   end
 
   def display_value_or_na_placeholder(value)

@@ -61,7 +61,7 @@ module RdvsHelper
   end
 
   def rdv_status_dropdown_item(rdv, agent, status, remote)
-    link_to admin_organisation_rdv_path(rdv.organisation, rdv, rdv: { status: status, active_warnings_confirm_decision: true }, agent_id: agent&.id),
+    link_to admin_organisation_rdv_path(rdv.organisation, rdv, rdv: { status: status, ignore_benign_errors: true }, agent_id: agent&.id),
             method: :put,
             class: "dropdown-item",
             data: { confirm: Rdv.human_attribute_value(:status, status, context: :confirm) },

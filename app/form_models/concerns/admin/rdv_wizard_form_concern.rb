@@ -29,7 +29,6 @@ module Admin::RdvWizardFormConcern
       @rdv = ::Rdv.new(rdv_defaults.merge(rdv_attributes))
       @rdv.duration_in_min ||= @rdv.motif.default_duration_in_min if @rdv.motif.present?
       @service_id = attributes.to_h.symbolize_keys[:service_id]
-      @active_warnings_confirm_decision = attributes.to_h.symbolize_keys[:active_warnings_confirm_decision]
     end
   end
 

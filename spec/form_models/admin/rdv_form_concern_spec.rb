@@ -82,9 +82,9 @@ describe Admin::RdvFormConcern, type: :form do
 
       it "includes warnings" do
         subject.valid?
-        expect(subject.warnings_need_confirmation?).to eq true
-        expect(subject.errors[:_warn]).not_to be_empty
-        expect(subject.errors[:_warn]).to include("alerte RDV proche !")
+        expect(subject.errors_are_all_benign?).to eq true
+        expect(subject.benign_errors).not_to be_empty
+        expect(subject.benign_errors).to include("alerte RDV proche !")
       end
     end
 
@@ -118,9 +118,9 @@ describe Admin::RdvFormConcern, type: :form do
 
       it "includes warnings" do
         subject.valid?
-        expect(subject.warnings_need_confirmation?).to eq true
-        expect(subject.errors[:_warn]).not_to be_empty
-        expect(subject.errors[:_warn]).to match_array(["alerte RDV Giono !", "alerte RDV Maceo !"])
+        expect(subject.errors_are_all_benign?).to eq true
+        expect(subject.benign_errors).not_to be_empty
+        expect(subject.benign_errors).to match_array(["alerte RDV Giono !", "alerte RDV Maceo !"])
       end
     end
 
@@ -146,9 +146,9 @@ describe Admin::RdvFormConcern, type: :form do
 
       it "includes warnings" do
         subject.valid?
-        expect(subject.warnings_need_confirmation?).to eq true
-        expect(subject.errors[:_warn]).not_to be_empty
-        expect(subject.errors[:_warn]).to include("alerte RDV se chevauchant !")
+        expect(subject.errors_are_all_benign?).to eq true
+        expect(subject.benign_errors).not_to be_empty
+        expect(subject.benign_errors).to include("alerte RDV se chevauchant !")
       end
     end
   end

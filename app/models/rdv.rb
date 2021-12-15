@@ -67,8 +67,6 @@ class Rdv < ApplicationRecord
   after_commit :update_agents_unknown_past_rdv_count, if: -> { past? }
   after_commit :reload_uuid, on: :create
 
-  attr_accessor :active_warnings_confirm_decision
-
   def self.ongoing(time_margin: 0.minutes)
     where("starts_at <= ?", Time.zone.now + time_margin)
       .where("ends_at >= ?", Time.zone.now - time_margin)

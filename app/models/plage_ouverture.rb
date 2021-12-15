@@ -19,12 +19,6 @@ class PlageOuverture < ApplicationRecord
   validates :motifs, :title, presence: true
   validate :warn_overlapping_plage_ouvertures
 
-  attr_accessor :active_warnings_confirm_decision
-
-  def warnings_need_confirmation?
-    errors.keys == [:_warn]
-  end
-
   has_many :webhook_endpoints, through: :organisation
 
   def ical_uid
@@ -103,11 +97,11 @@ class PlageOuverture < ApplicationRecord
   end
 
   def warn_overlapping_plage_ouvertures
-    return if active_warnings_confirm_decision
+    return if ignore_benign_errors
 
     return if overlapping_plages_ouvertures.empty?
 
-    errors.add(:_warn, "Conflit de dates et d'horaires avec d'autres plages d'ouvertures")
+    add_benign_error("Conflit de dates et d'horaires avec d'autres plages d'ouvertures")
     # TODO: display richer warning messages by rendering the partial
     # overlapping_plage_ouvertures (implies passing view locals which may be tricky)
   end

@@ -5,7 +5,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
 
   PERMITTED_PARAMS = [
     :motif_id, :duration_in_min, :starts_at, :lieu_id, :context, :service_id,
-    :organisation_id, :active_warnings_confirm_decision,
+    :organisation_id, :ignore_benign_errors,
     { agent_ids: [], user_ids: [] }
   ].freeze
 
