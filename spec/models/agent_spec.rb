@@ -56,10 +56,10 @@ describe Agent, type: :model do
     end
   end
 
-  describe "#refresh_unknown_past_rdv_count!" do
+  describe "#update_unknown_past_rdv_count!" do
     it "update with 0 if no past RDV" do
       agent = create(:agent)
-      agent.refresh_unknown_past_rdv_count!
+      agent.update_unknown_past_rdv_count!
       expect(agent.reload.unknown_past_rdv_count).to eq(0)
     end
 
@@ -68,7 +68,7 @@ describe Agent, type: :model do
       travel_to(now)
       agent = create(:agent)
       create(:rdv, starts_at: now - 1.day, status: :unknown, agents: [agent])
-      agent.refresh_unknown_past_rdv_count!
+      agent.update_unknown_past_rdv_count!
       expect(agent.reload.unknown_past_rdv_count).to eq(1)
     end
   end

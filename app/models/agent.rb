@@ -149,7 +149,7 @@ class Agent < ApplicationRecord
     I18n.transliterate([last_name, email, first_name].compact.join(" "))
   end
 
-  def refresh_unknown_past_rdv_count!
+  def update_unknown_past_rdv_count!
     update_column(:unknown_past_rdv_count, rdvs.status(:unknown_past).count)
   end
 end

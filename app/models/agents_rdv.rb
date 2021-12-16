@@ -7,6 +7,6 @@ class AgentsRdv < ApplicationRecord
   after_commit :update_unknown_past_rdv_count
 
   def update_unknown_past_rdv_count
-    agent.refresh_unknown_past_rdv_count!
+    agent.update_unknown_past_rdv_count!
   end
 end

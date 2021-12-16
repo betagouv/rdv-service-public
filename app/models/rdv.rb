@@ -212,7 +212,7 @@ class Rdv < ApplicationRecord
   end
 
   def update_agents_unknown_past_rdv_count
-    agents.each(&:refresh_unknown_past_rdv_count!)
+    agents.each(&:update_unknown_past_rdv_count!)
   end
 
   def reload_uuid
