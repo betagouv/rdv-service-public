@@ -16,6 +16,7 @@ module Admin::RdvWizardFormConcern
     delegate :motif, :organisation, :agents, :users, to: :rdv
 
     delegate :errors, to: :rdv
+    delegate :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :rdv
 
     def initialize(agent_author, organisation, attributes)
       rdv_attributes = attributes.to_h.symbolize_keys.except(:service_id)
