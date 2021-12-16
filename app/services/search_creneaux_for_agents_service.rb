@@ -6,33 +6,18 @@ class SearchCreneauxForAgentsService < BaseService
   end
 
   def perform
-    lieux.map { build_result(_1) } # NOTE: LOOP 1 over lieux.
+    lieux.map { build_result(_1) }.compact # NOTE: LOOP 1 over lieux.
   end
 
   private
 
   def build_result(lieu)
-    OpenStruct.new(
-      lieu: lieu,
-      next_availability: FindAvailabilityService.perform_with(
-        @form.motif.name,
-        lieu,
-        Time.zone.today,
-        for_agents: true,
-        agent_ids: @form.agent_ids,
-        motif_location_type: @form.motif.location_type,
-        service: @form.service
-      ),
-      creneaux: CreneauxBuilderService.perform_with(
-        @form.motif.name,
-        lieu,
-        @form.date_range,
-        for_agents: true,
-        agent_ids: @form.agent_ids,
-        motif_location_type: @form.motif.location_type,
-        service: @form.service
-      )
-    )
+    next_availability = FindAvailabilityService.perform_with(@form.motif.name, lieu, Time.zone.today, for_agents: true, agent_ids: @form.agent_ids, motif_location_type: @form.motif.location_type, service: @form.service)
+    creneaux = CreneauxBuilderService.perform_with(@form.motif.name, lieu, @form.date_range, for_agents: true, agent_ids: @form.agent_ids, motif_location_type: @form.motif.location_type, service: @form.service)
+
+    return nil if creneaux.empty? & next_availability.nil?
+
+    OpenStruct.new(lieu: lieu, next_availability: next_availability, creneaux: creneaux)
   end
 
   def lieux
