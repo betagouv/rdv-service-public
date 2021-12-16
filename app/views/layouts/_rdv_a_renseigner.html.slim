@@ -4,4 +4,7 @@
       div
         .fa.fa-exclamation-triangle.alert-link>
         span.ml-1.alert-link = t(".unknown_past_rdv_count", count: agent.unknown_past_rdv_count )
+        - if agent.organisations.size > 1
+          - organisation_links = agent.organisations.map { |organisation| link_to organisation.name, admin_organisation_agent_agenda_path(organisation, current_agent) }
+          span.ml-1.alert-link = raw(t(".agent_organisations", organisations_name: organisation_links.to_sentence(words_connector: ", ", last_word_connector: " et ")))
       button.btn.rdv-status-unknown_past.float-right = t(".link_to_unknown_past_rdv")
