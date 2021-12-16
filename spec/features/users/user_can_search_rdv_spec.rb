@@ -1,20 +1,23 @@
 # frozen_string_literal: true
 
 describe "User can search for rdvs" do
+  let(:now) { Time.zone.parse("2021-12-13 8:00") }
+
   let!(:territory92) { create(:territory, departement_number: "92") }
   let!(:organisation) { create(:organisation, territory: territory92) }
   let!(:motif) { create(:motif, name: "Vaccination", reservable_online: true, organisation: organisation) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
-  let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: Date.new(2019, 7, 22), motifs: [motif], lieu: lieu, organisation: organisation) }
+  let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now - 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
   let!(:lieu2) { create(:lieu, organisation: organisation) }
-  let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: Date.new(2019, 7, 22), motifs: [motif], lieu: lieu2, organisation: organisation) }
+  let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: now - 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
+
+  before do
+    travel_to(now)
+  end
 
   describe "default" do
-    before do
-      visit root_path
-    end
-
     it "default", js: true do
+      visit root_path
       # Step 1
       expect_page_h1("Prenez rendez-vous en ligne\navec votre département")
       fill_in("search_where", with: "79 Rue de Plaisance, 92250 La Garenne-Colombes")
@@ -109,29 +112,21 @@ describe "User can search for rdvs" do
   end
 
   describe "with user and relative" do
-    let!(:user) { create(:user) }
-    let!(:relative) { create(:user, responsible_id: user.id) }
-
-    before do
-      travel_to(Time.zone.local(2019, 11, 18))
-      login_as(user, scope: :user)
-      visit new_users_rdv_wizard_step_path(step: 2, starts_at: Time.zone.local(2019, 11, 18, 10, 15), motif_id: motif.id, lieu_id: lieu.id, departement: "92", where: "useless")
-    end
-
-    after { travel_back }
-
     it "for relatives", js: true do
-      # Step 4
+      user = create(:user)
+      relative = create(:user, responsible_id: user.id)
+
+      login_as(user, scope: :user)
+      visit new_users_rdv_wizard_step_path(step: 2, starts_at: now + 1.week, service_id: motif.service_id, motif_id: motif.id, lieu_id: lieu.id, departement: "92", where: "useless")
+
       expect(page).to have_content(user.full_name)
       expect(page).to have_content(relative.full_name)
 
       choose(relative.full_name)
 
       click_button("Continuer")
-
       click_link("Confirmer mon RDV")
 
-      # Step 6
       expect(page).to have_content(relative.full_name)
     end
   end

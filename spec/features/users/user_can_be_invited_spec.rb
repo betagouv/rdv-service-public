@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 describe "User can be invited" do
+  let(:now) { Time.zone.parse("2021-12-13 10:30") }
   let!(:user) do
     create(:user, first_name: "john", last_name: "doe", email: "johndoe@gmail.com",
                   phone_number: "0682605955", address: "26 avenue de la resistance",
@@ -17,7 +18,11 @@ describe "User can be invited" do
   let!(:service) { create(:service) }
   let!(:motif) { create(:motif, service: service, name: "RDV RSA sur site", reservable_online: true, organisation: organisation) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
-  let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: Date.new(2019, 7, 22), motifs: [motif], lieu: lieu, organisation: organisation) }
+  let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now - 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
+
+  before do
+    travel_to(now)
+  end
 
   describe "invitaton to lieu selection old path" do
     before do

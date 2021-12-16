@@ -87,13 +87,15 @@ describe Admin::RdvFormConcern, type: :form do
     end
 
     context "rdv is valid but there are multiple other RDVs ending shortly before" do
+      let(:now) { Time.zone.parse("2021-12-13 10:45") }
       let!(:agent_giono) { build(:agent, first_name: "Jean", last_name: "GIONO") }
       let!(:agent_maceo) { build(:agent, first_name: "Maceo", last_name: "PARKER") }
-      let(:rdv) { build(:rdv, agents: [agent_giono, agent_maceo], starts_at: Time.zone.today.next_week(:monday).in_time_zone + 16.hours) }
+      let(:rdv) { build(:rdv, agents: [agent_giono, agent_maceo], starts_at: now + 1.week) }
       let!(:rdvs_giono) { build_list(:rdv, 2, agents: [agent_giono]) }
       let!(:rdvs_maceo) { build_list(:rdv, 2, agents: [agent_maceo]) }
 
       before do
+        travel_to(now)
         allow(rdv).to receive(:valid?).and_return(true)
         allow(rdv_start_coherence).to receive(:rdvs_ending_shortly_before?).and_return(true)
         allow(rdv_start_coherence).to receive(:rdvs_ending_shortly_before)
