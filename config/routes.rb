@@ -137,7 +137,9 @@ Rails.application.routes.draw do
         resources :slots, only: :index
         resources :lieux, except: :show
         resources :motifs
-        resources :rdvs, except: [:new]
+        resources :rdvs, except: [:new] do
+          post :new_participation
+        end
         scope module: "organisations" do
           resource :setup_checklist, only: [:show]
           resources :stats, only: :index do

@@ -8,10 +8,17 @@ class RdvUserSelect {
   }
 
   userSelected = (event) => {
-    let url = new URL(window.location.href);
+    let url_template = this.$select[0].dataset.urlTemplate
     let user_id = this.$select.select2("data")[0].element.value;
-    url.searchParams.append("add_user[]", user_id);
-    Turbolinks.visit(url);
+    let url = url_template.replace("__USER__", user_id)
+    Rails.ajax({
+      url: url,
+      type: "POST",
+      data: "first_name=Ricky&last_name=Bobby",
+      success: function(data) {
+        console.log(data);
+      }
+    });
   }
 }
 

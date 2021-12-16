@@ -51,10 +51,12 @@
 
             .form-group
               = "Usagers :"
+              .rdv-participations
               = f.fields_for :rdvs_users, @rdv.rdvs_users do |rdv_user_form|
                 = render "admin/rdvs_users/form", form: rdv_user_form
 
             .form-group
+              - url_template = admin_organisation_rdv_new_participation_path(current_organisation, @rdv, user_id:"__USER__")
               = select_tag :status,
                       options_for_select([]),
                       include_blank: "Ajouter un usager",
@@ -63,6 +65,7 @@
                       data: { \
                 width: "auto", \
                 "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.rdvs_users.map(&:user_id)), dataType: "json", delay: 250 } }, \
+                        "url-template": url_template\
                }
 
             .text-right

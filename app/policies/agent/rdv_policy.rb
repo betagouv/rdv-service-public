@@ -9,6 +9,10 @@ class Agent::RdvPolicy < DefaultAgentPolicy
     same_agent_or_has_access?
   end
 
+  def new_participation?
+    update?
+  end
+
   class Scope < Scope
     def resolve
       if context.can_access_others_planning?
