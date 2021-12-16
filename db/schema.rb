@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_13_105723) do
+ActiveRecord::Schema.define(version: 2021_12_16_141613) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -344,6 +344,8 @@ ActiveRecord::Schema.define(version: 2021_12_13_105723) do
   create_table "rdvs_users", force: :cascade do |t|
     t.bigint "rdv_id"
     t.bigint "user_id"
+    t.boolean "send_lifecycle_notifications", null: false
+    t.boolean "send_reminder_notification", null: false
     t.index ["rdv_id"], name: "index_rdvs_users_on_rdv_id"
     t.index ["user_id"], name: "index_rdvs_users_on_user_id"
   end
