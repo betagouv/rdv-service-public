@@ -97,7 +97,7 @@ class Agent < ApplicationRecord
   def soft_delete
     raise SoftDeleteError, "agent still has attached resources" if organisations.any? || plage_ouvertures.any? || absences.any?
 
-    sector_attributions.delete_all
+    sector_attributions.destroy_all
     update_columns(deleted_at: Time.zone.now, email_original: email, email: deleted_email, uid: deleted_email)
   end
 
