@@ -36,6 +36,8 @@ describe Admin::RdvFormConcern, type: :form do
 
       before do
         allow(rdv).to receive(:validate) { rdv.errors.add(:base, "not cool") }
+        allow(rdv_start_coherence).to receive(:rdvs_ending_shortly_before?).and_return(false)
+        allow(rdvs_overlapping).to receive(:rdvs_overlapping_rdv?).and_return(false)
       end
 
       it "is not valid" do
@@ -80,9 +82,9 @@ describe Admin::RdvFormConcern, type: :form do
 
       it "includes warnings" do
         subject.valid?
-        expect(subject.warnings_need_confirmation?).to eq true
-        expect(subject.warnings).not_to be_empty
-        expect(subject.warnings[:base]).to include("alerte RDV proche !")
+        expect(subject.errors_are_all_benign?).to eq true
+        expect(subject.benign_errors).not_to be_empty
+        expect(subject.benign_errors).to include("alerte RDV proche !")
       end
     end
 
@@ -116,9 +118,9 @@ describe Admin::RdvFormConcern, type: :form do
 
       it "includes warnings" do
         subject.valid?
-        expect(subject.warnings_need_confirmation?).to eq true
-        expect(subject.warnings).not_to be_empty
-        expect(subject.warnings[:base]).to match_array(["alerte RDV Giono !", "alerte RDV Maceo !"])
+        expect(subject.errors_are_all_benign?).to eq true
+        expect(subject.benign_errors).not_to be_empty
+        expect(subject.benign_errors).to match_array(["alerte RDV Giono !", "alerte RDV Maceo !"])
       end
     end
 
@@ -144,9 +146,9 @@ describe Admin::RdvFormConcern, type: :form do
 
       it "includes warnings" do
         subject.valid?
-        expect(subject.warnings_need_confirmation?).to eq true
-        expect(subject.warnings).not_to be_empty
-        expect(subject.warnings[:base]).to include("alerte RDV se chevauchant !")
+        expect(subject.errors_are_all_benign?).to eq true
+        expect(subject.benign_errors).not_to be_empty
+        expect(subject.benign_errors).to include("alerte RDV se chevauchant !")
       end
     end
   end
