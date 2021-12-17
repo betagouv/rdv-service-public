@@ -101,7 +101,7 @@ describe Users::CreneauxController, type: :controller do
     end
 
     context "with an available creneau" do
-      let(:returned_creneau) { Creneau.new(starts_at: starts_at, agent: agent) }
+      let(:returned_creneau) { Creneau.new(starts_at: starts_at, agent_id: agent.id) }
 
       it "respond success and update RDV" do
         put :update, params: { rdv_id: rdv.id, starts_at: starts_at, agent_id: agent.id }

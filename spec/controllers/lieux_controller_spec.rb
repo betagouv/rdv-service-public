@@ -42,7 +42,7 @@ RSpec.describe LieuxController, type: :controller do
         let(:mock_creneaux_search) do
           instance_double(
             Users::CreneauxSearch,
-            creneaux: [build(:creneau, starts_at: DateTime.parse("2019-07-22 08h00"), agent: create(:agent))]
+            creneaux: [build(:creneau, starts_at: DateTime.parse("2019-07-22 08h00"))]
           )
         end
 
@@ -121,10 +121,7 @@ RSpec.describe LieuxController, type: :controller do
           let(:mock_creneaux_search) do
             instance_double(
               Users::CreneauxSearch,
-              creneaux: [
-                build(:creneau, starts_at: DateTime.parse("2019-07-22 08h00"), agent: create(:agent)),
-                build(:creneau, starts_at: DateTime.parse("2019-07-22 09h00"), agent: create(:agent))
-              ]
+              creneaux: [build(:creneau, starts_at: DateTime.parse("2019-07-22 08h00")), build(:creneau, starts_at: DateTime.parse("2019-07-22 09h00"))]
             )
           end
 

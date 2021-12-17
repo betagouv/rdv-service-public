@@ -18,7 +18,7 @@ describe Users::CreneauSearch do
     end
 
     before do
-      allow(SlotBuilder).to receive(:available_slots).and_return(mock_creneaux)
+      allow(CreneauxBuilderService).to receive(:perform_with).and_return(mock_creneaux)
     end
 
     context "some matching creneaux" do

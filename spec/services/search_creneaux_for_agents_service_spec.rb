@@ -9,14 +9,14 @@ describe SearchCreneauxForAgentsService, type: :service do
   let(:plage_ouverture) { create(:plage_ouverture, :weekly, agent: agent, lieu: lieu, organisation: organisation) }
   let(:motif) { plage_ouverture.motifs.first }
   let(:lieu_ids) { [] }
-  let(:agents) { [] }
+  let(:agent_ids) { [] }
   let(:agent_creneaux_search_form) do
     instance_double(
       AgentCreneauxSearchForm,
       organisation: organisation,
       motif: motif,
       service: motif.service,
-      agents: agents,
+      agent_ids: agent_ids,
       lieu_ids: lieu_ids,
       date_range: Time.zone.today..(Time.zone.today + 6.days)
     )
@@ -38,7 +38,7 @@ describe SearchCreneauxForAgentsService, type: :service do
     end
 
     context "when filtering by agent" do
-      let(:agents) { [agent2.id] }
+      let(:agent_ids) { [agent2.id] }
 
       it { expect(subject.map(&:lieu)).to contain_exactly(lieu2) }
 

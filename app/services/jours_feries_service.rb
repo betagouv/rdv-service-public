@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class OffDays
+class JoursFeriesService
   # https://demarchesadministratives.fr/actualites/calendrier-des-jours-feries-2019-2020-2021
   JOURS_FERIES_2020 = [
     Date.new(2020, 1, 1),

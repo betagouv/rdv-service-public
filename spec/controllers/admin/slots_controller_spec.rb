@@ -5,8 +5,6 @@ describe Admin::SlotsController, type: :controller do
 
   describe "#index" do
     it "assigns search_result" do
-      now = Time.zone.parse("2021-11-17 11h40")
-      travel_to(now)
       agent = create(:agent, :secretaire, basic_role_in_organisations: [organisation])
       motif = create(:motif, organisation: organisation)
       from_date = Date.new(2021, 11, 23)

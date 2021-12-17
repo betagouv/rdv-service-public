@@ -14,18 +14,23 @@ class SearchCreneauxForAgentsService < BaseService
   def build_result(lieu)
     OpenStruct.new(
       lieu: lieu,
-      next_availability: NextAvailabilityService.find(
-        @form.motif,
+      next_availability: FindAvailabilityService.perform_with(
+        @form.motif.name,
         lieu,
         Time.zone.today,
-        @form.agents
+        for_agents: true,
+        agent_ids: @form.agent_ids,
+        motif_location_type: @form.motif.location_type,
+        service: @form.service
       ),
-      creneaux: SlotBuilder.available_slots(
-        @form.motif,
+      creneaux: CreneauxBuilderService.perform_with(
+        @form.motif.name,
         lieu,
         @form.date_range,
-        OffDays.all_in_date_range(@form.date_range),
-        @form.agents
+        for_agents: true,
+        agent_ids: @form.agent_ids,
+        motif_location_type: @form.motif.location_type,
+        service: @form.service
       )
     )
   end
@@ -43,7 +48,7 @@ class SearchCreneauxForAgentsService < BaseService
         @lieux.for_motif(@form.motif)
       end
 
-    @lieux = @lieux.where(id: PlageOuverture.where(agent_id: @form.agents).select(:lieu_id)) if @form.agents.present?
+    @lieux = @lieux.where(id: PlageOuverture.where(agent_id: @form.agent_ids).select(:lieu_id)) if @form.agent_ids.present?
     @lieux = @lieux.ordered_by_name
     @lieux
   end
