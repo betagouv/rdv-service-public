@@ -29,7 +29,7 @@ describe NextAvailabilityService, type: :service do
                first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
         create(:absence,
                agent: agent, organisation: organisation,
-               first_day: today, start_time: Tod::TimeOfDay.new(9), end_day: today, end_time: Tod::TimeOfDay.new(12, 0))
+               first_day: today, start_time: Tod::TimeOfDay.new(9, 0), end_day: today, end_time: Tod::TimeOfDay.new(12, 0))
 
         next_available = described_class.find(motif, lieu, today, [])
         expect(next_available).to be_nil
@@ -43,7 +43,7 @@ describe NextAvailabilityService, type: :service do
                recurrence: recurrence)
         create(:absence,
                agent: agent, organisation: organisation,
-               first_day: today, start_time: Tod::TimeOfDay.new(9), end_day: today, end_time: Tod::TimeOfDay.new(12, 0))
+               first_day: today, start_time: Tod::TimeOfDay.new(9, 0), end_day: today, end_time: Tod::TimeOfDay.new(12, 0))
 
         next_available = described_class.find(motif, lieu, today, [])
         expect(next_available.starts_at).to eq(today.in_time_zone + 1.month + 9.hours)
