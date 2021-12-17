@@ -96,6 +96,18 @@ describe RecurrenceConcern do
               create(element, first_day: Date.new(2021, 9, 26), recurrence: nil)
               expect(element_class.in_range(range)).to eq([])
             end
+
+            if element.is_a?(Absence)
+              it "returns #{element} when last_day in range" do
+                object = create(element, first_day: Date.new(2021, 9, 26), end_day: Date.new(2021, 10, 27), recurrence: nil)
+                expect(element_class.in_range(range)).to eq([object])
+              end
+
+              it "returns #{element} when start_day before range and last_day after range" do
+                object = create(element, first_day: Date.new(2021, 9, 26), end_day: Date.new(2021, 10, 30), recurrence: nil)
+                expect(element_class.in_range(range)).to eq([object])
+              end
+            end
           end
 
           context "with recurrence" do

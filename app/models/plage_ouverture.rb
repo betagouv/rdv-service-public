@@ -21,6 +21,15 @@ class PlageOuverture < ApplicationRecord
 
   has_many :webhook_endpoints, through: :organisation
 
+  scope :in_range, lambda { |range|
+    return all if range.nil?
+
+    not_recurring_start_in_range = where(recurrence: nil).where(first_day: range)
+    recurring_in_range = where.not(recurrence: nil).where("tsrange(first_day, recurrence_ends_at, '[)') && tsrange(?, ?)", range.begin, range.end)
+
+    not_recurring_start_in_range.or(recurring_in_range)
+  }
+
   def ical_uid
     "plage_ouverture_#{id}@#{BRAND}"
   end
