@@ -26,7 +26,7 @@ class Absence < ApplicationRecord
   scope :in_range, lambda { |range|
     return all if range.nil?
 
-    not_recurring_start_in_range = where(recurrence: nil).where("first_day < ?", range.end).where("end_day > ?", range.begin)
+    not_recurring_start_in_range = where(recurrence: nil).where("first_day <= ?", range.end).where("end_day >= ?", range.begin)
     recurring_in_range = where.not(recurrence: nil).where("tsrange(first_day, recurrence_ends_at, '[)') && tsrange(?, ?)", range.begin, range.end)
 
     not_recurring_start_in_range.or(recurring_in_range)
