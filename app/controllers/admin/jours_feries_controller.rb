@@ -7,7 +7,7 @@ class Admin::JoursFeriesController < AgentAuthController
     skip_policy_scope
     respond_to do |f|
       f.json do
-        @jours_feries = OffDays.all_in_date_range(date_range_params)
+        @jours_feries = JoursFeriesService.all_in_date_range(date_range_params)
       end
     end
   end
