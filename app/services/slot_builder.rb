@@ -129,7 +129,7 @@ module SlotBuilder
 
         busy_times = busy_times_from_rdvs(range, plage_ouverture)
         busy_times += busy_times_from_absences(range, plage_ouverture)
-        busy_times += busy_times_from_off_days(off_days)
+        busy_times += busy_times_from_off_days(off_days.select { |off_day| range.cover?(off_day) })
 
         # Le tri est nécessaire, surtout pour les surcharges.
         busy_times.sort_by(&:starts_at)
