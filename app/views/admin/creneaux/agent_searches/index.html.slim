@@ -42,12 +42,13 @@
           = f.input :agent_ids, collection: @agents, label: "Agent(s)", label_method: :full_name, input_html: { multiple: true, class: "select2-input" }
         .col-md-4
           = f.input :lieu_ids, collection: @lieux, label: "Lieu(x)", input_html: { multiple: true, class: "select2-input" }
-      = f.submit "Afficher les créneaux", class: "btn btn-primary", data: { disable_with: "Récupération des créneaux..."}
+      = f.submit "Afficher les lieux disponible", class: "btn btn-primary", data: { disable_with: "Récupération des créneaux..."}
 
 #creneaux
   .text-center
-    - if @form.motif.blank?
-      | Sélectionnez un motif pour afficher les créneaux disponibles.
+    - if @form.motif.blank? || @search_results.nil?
+      | Selectionnez vos filtres pour demander l'affichage de la liste des lieux où il y a des créneaux disponible
+    - elsif @search_results.nil?
     - elsif @form.errors.any?
       | Nous ne reconnaissons pas certains éléments du formulaire, pouvez-vous vérifier ?
     - elsif @search_results.empty?
