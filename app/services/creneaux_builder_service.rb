@@ -34,7 +34,7 @@ class CreneauxBuilderService < BaseService
       .not_expired
       .for_motif(@motif_name, @lieu.organisation_id)
       .includes(:agent)
-      .where(({ agent_id: @agent_ids } unless @agent_ids.nil?))
+      .where(({ agent_id: @agent_ids } if @agent_ids.present?))
       .where(({ motifs: { location_type: @motif_location_type } } if @motif_location_type.present?))
       .where(({ motifs: { service: @service } } if @service.present?))
   end
