@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class TestService < ::BaseService
-  include Notifications::Rdv::BaseServiceConcern
-
+class TestService < Notifiers::RdvBase
   def notify_user_by_mail(user); end
 
   def notify_user_by_sms(user); end
@@ -10,7 +8,7 @@ class TestService < ::BaseService
   def notify_agent(agent); end
 end
 
-describe Notifications::Rdv::BaseServiceConcern, type: :service do
+describe Notifiers::RdvBase, type: :service do
   let(:service) { TestService.new(rdv, author) }
   let(:author) { nil }
 

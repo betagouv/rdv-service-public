@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Notifications::Rdv::RdvCancelledService < ::BaseService
+class Notifiers::RdvCancelled < Notifiers::RdvBase
   protected
 
   def notify_agent(agent)

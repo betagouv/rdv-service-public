@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Notifications::Rdv::RdvUpcomingReminderService < ::BaseService
+class Notifiers::RdvUpcomingReminder < Notifiers::RdvBase
   protected
 
   def notify_user_by_mail(user)

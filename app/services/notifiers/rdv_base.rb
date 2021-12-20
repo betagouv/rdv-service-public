@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Notifications::Rdv::BaseService < ::BaseService
+class Notifiers::RdvBase < ::BaseService
   include DateHelper
 
   # Base class for Rdv notifiers.
