@@ -25,8 +25,6 @@ describe CreneauxBuilderService, type: :service do
 
   before { travel_to(now) }
 
-  after { travel_back }
-
   it "works" do
     expect(subject.size).to eq(4)
     expect(subject).to include(starts_at: today + 9.hours, duration_in_min: 30, lieu_id: lieu.id, motif_id: motif.id)

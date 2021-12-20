@@ -29,7 +29,7 @@ module UsersHelper
 
   def age_in_months(user)
     today = Time.zone.now.to_date
-    (today.year - user.birth_date.year) * 12 + today.month - user.birth_date.month - (today.day >= user.birth_date.day ? 0 : 1)
+    ((today.year - user.birth_date.year) * 12) + today.month - user.birth_date.month - (today.day >= user.birth_date.day ? 0 : 1)
   end
 
   def age_in_days(user)

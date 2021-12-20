@@ -24,8 +24,6 @@ describe "Agent can create a Rdv with creneau search" do
     click_link("Trouver un créneau")
   end
 
-  after { travel_back }
-
   it "default", js: true do
     expect(page).to have_content("Trouver un créneau")
     select(motif.name, from: "motif_id")

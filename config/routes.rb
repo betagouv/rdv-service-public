@@ -214,12 +214,12 @@ Rails.application.routes.draw do
 
   get "/prendre_rdv", to: "search#search_rdv"
 
-  # rubocop:disable Style/StringLiterals, Style/FormatStringToken
+  # rubocop:disable Style/FormatStringToken
   # temporary route after admin namespace introduction
   get "/organisations/*rest", to: redirect('admin/organisations/%{rest}')
   # old agenda rule was bookmarked by some agents
   get "admin/organisations/:organisation_id/agents/:agent_id", to: redirect("/admin/organisations/%{organisation_id}/agent_agendas/%{agent_id}")
-  # rubocop:enable Style/StringLiterals, Style/FormatStringToken
+  # rubocop:enable Style/FormatStringToken
 
   # LetterOpener
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?

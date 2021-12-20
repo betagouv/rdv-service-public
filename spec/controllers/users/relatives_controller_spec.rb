@@ -11,8 +11,6 @@ RSpec.describe Users::RelativesController, type: :controller do
     sign_in user
   end
 
-  after { travel_back }
-
   describe "GET #edit" do
     subject { get :edit, params: { id: relative.id } }
 
@@ -135,8 +133,6 @@ RSpec.describe Users::RelativesController, type: :controller do
     let(:now) { Time.zone.parse("21/07/2019 08:22") }
 
     before { travel_to(now) }
-
-    after { travel_back }
 
     it "soft deletes the relative" do
       expect do

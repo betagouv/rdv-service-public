@@ -13,8 +13,6 @@ describe Creneau, type: :model do
 
   before { travel_to(today) }
 
-  after { travel_back }
-
   describe "#last_overlapping_event_ends_at" do
     let(:motif2) { build(:motif, name: "Visite 12 mois", default_duration_in_min: 60, reservable_online: reservable_online, organisation: organisation) }
     let(:creneau) { build(:creneau, starts_at: Time.zone.local(2019, 9, 19, 9, 0), lieu_id: lieu.id, motif: motif2) }

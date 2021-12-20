@@ -17,8 +17,6 @@ describe Lieu, type: :model do
 
       before { freeze_time }
 
-      after { travel_back }
-
       it { expect(subject).to contain_exactly(lieu) }
 
       context "with an other plage_ouverture" do

@@ -27,8 +27,6 @@ describe RdvStartCoherence, type: :service do
 
       before { travel_to(rdv.starts_at - 10.minutes) }
 
-      after { travel_back }
-
       it { is_expected.not_to include(rdv2) }
     end
 
