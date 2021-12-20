@@ -50,12 +50,12 @@ module ApplicationHelper
   end
 
   def errors_full_messages(object)
-    object.not_benign_errors.map do |attribute, message|
-      if attribute.to_s.starts_with?("responsible.")
-        att = attribute.to_s.sub(/^responsible./, "")
-        "Responsable: #{object.errors.full_message(att, message)}"
+    object.not_benign_errors.map do |error|
+      if error.attribute.to_s.starts_with?("responsible.")
+        att = error.attribute.to_s.sub(/^responsible./, "")
+        "Responsable: #{object.errors.full_message(att, error.message)}"
       else
-        object.errors.full_message(attribute, message)
+        object.errors.full_message(error.attribute, error.message)
       end
     end
   end

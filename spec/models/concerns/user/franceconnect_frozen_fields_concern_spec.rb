@@ -17,7 +17,7 @@ describe User::FranceconnectFrozenFieldsConcern do
     it "does not allow change to frozen field" do
       res = user.update(birth_name: "MARCO")
       expect(res).to be_falsy
-      expect(user.errors.keys).to include(:birth_name)
+      expect(user.errors).to include(:birth_name)
       expect(user.reload.birth_name).to eq("DUPONT")
     end
 

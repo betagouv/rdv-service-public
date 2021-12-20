@@ -32,7 +32,7 @@ RSpec.describe Zone, type: :model do
           city_code: "75120"
         )
         expect(duplicate_zone.valid?).to eq false
-        expect(duplicate_zone.errors.keys).to include(:city_code)
+        expect(duplicate_zone.errors).to include(:city_code)
       end
 
       it "allows creating a zone with existing postcode in a different sector" do
@@ -43,7 +43,7 @@ RSpec.describe Zone, type: :model do
           city_name: "Paris 20e",
           city_code: "75120"
         )
-        expect(duplicate_zone.errors.keys).to be_empty
+        expect(duplicate_zone.errors).to be_empty
         expect(duplicate_zone.valid?).to eq true
       end
     end
@@ -58,7 +58,7 @@ RSpec.describe Zone, type: :model do
         city_code: "62120"
       )
       expect(zone.valid?).to eq false
-      expect(zone.errors.keys).to eq([:base])
+      expect(zone.errors.attribute_names).to eq([:base])
     end
   end
 end

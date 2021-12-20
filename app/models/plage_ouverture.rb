@@ -96,7 +96,7 @@ class PlageOuverture < ApplicationRecord
   def end_after_start
     return if end_time.blank? || start_time.blank?
 
-    errors.add(:end_time, "doit être après l'heure de début") if end_time <= start_time
+    errors.add(:end_time, :must_be_after_start_time) if end_time <= start_time
   end
 
   def warn_overlapping_plage_ouvertures

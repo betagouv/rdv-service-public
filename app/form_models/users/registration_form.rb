@@ -21,7 +21,7 @@ class Users::RegistrationForm
       user.save
     else
       # I'd rather override the errors method but it's incredibly tricky
-      user.errors.each { |k, v| errors.add(k, v) }
+      user.errors.each { |error| errors.add(error.attribute, error.message) }
     end
   end
 
