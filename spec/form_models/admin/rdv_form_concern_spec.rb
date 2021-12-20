@@ -19,12 +19,14 @@ end
 describe Admin::RdvFormConcern, type: :form do
   subject { DummyForm.new(rdv, agent_author) }
 
+  let(:now) { Time.zone.parse("2021-11-23 11:00") }
   let!(:agent_author) { create(:agent, first_name: "Poney", last_name: "FOU") }
   let(:agent_context) { instance_double(AgentContext, agent: agent_author, organisation: build(:organisation)) }
   let(:rdv_start_coherence) { instance_double(RdvStartCoherence) }
   let(:rdvs_overlapping) { instance_double(RdvsOverlapping) }
 
   before do
+    travel_to(now)
     subject.agent_context = agent_context
     allow(RdvStartCoherence).to receive(:new).with(rdv).and_return(rdv_start_coherence)
     allow(RdvsOverlapping).to receive(:new).with(rdv).and_return(rdvs_overlapping)
@@ -32,7 +34,7 @@ describe Admin::RdvFormConcern, type: :form do
 
   describe "validations" do
     context "rdv is not valid" do
-      let(:rdv) { build(:rdv) }
+      let(:rdv) { build(:rdv, starts_at: now) }
 
       before do
         allow(rdv).to receive(:validate) { rdv.errors.add(:base, "not cool") }
