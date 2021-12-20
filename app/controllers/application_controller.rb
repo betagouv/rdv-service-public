@@ -47,8 +47,6 @@ class ApplicationController < ActionController::Base
       role: user&.class&.name || "Guest",
       email: user&.email
     }.compact
-  rescue StandardError
-    {}
   end
 
   def authenticate_inviter!
