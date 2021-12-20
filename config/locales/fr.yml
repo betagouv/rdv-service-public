@@ -1,6 +1,10 @@
 ---
 fr:
   admin:
+    rdvs:
+      show:
+        update: Modifier
+        duplicate: Dupliquer…
     slots:
       index:
         place_index: Revenir aux filtres
