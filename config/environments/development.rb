@@ -33,10 +33,36 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
-  # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.perform_caching = false
+  config.action_mailer.default_url_options = { host: ENV["HOST"].sub(%r{^https?://}, ""), utm_source: "dev", utm_medium: "email", utm_campaign: "default" }
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+  if ENV["DEVELOPMENT_SMTP_USER_NAME"].present?
+    config.action_mailer.smtp_settings = {
+      user_name: ENV["DEVELOPMENT_SMTP_USER_NAME"],
+      password: ENV["DEVELOPMENT_SMTP_PASWORD"],
+      address: ENV["DEVELOPMENT_SMTP_HOST"],
+      domain: ENV["DEVELOPMENT_SMTP_DOMAIN"],
+      port: ENV["DEVELOPMENT_SMTP_PORT"],
+      authentication: :cram_md5
+    }
+  else
+    config.action_mailer.delivery_method = :letter_opener_web
+  end
+  config.action_mailer.asset_host = ENV["HOST"]
+
+  config.active_job.queue_adapter = :delayed_job
 
   config.action_mailer.perform_caching = false
+
+  config.log_level = :info
+  # config.log_level = :debug # debug logs all the SQL queries made by ActiveRecord
+
+  # allows to see debug logs when running with foreman / overmind
+  # cf https://github.com/rails/sprockets-rails/issues/376#issuecomment-287560399
+  logger = ActiveSupport::Logger.new($stdout)
+  logger.formatter = config.log_formatter
+  config.logger = ActiveSupport::TaggedLogging.new(logger)
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -71,6 +97,15 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
+  # Check N+1 Queries / Eager loading
+  config.after_initialize do
+    Bullet.enable = true
+    # Bullet.alert = true
+    Bullet.rails_logger = true
+  end
+
+  # https://github.com/JackC/tod/#activemodel-serializable-attribute-support
+  config.active_record.time_zone_aware_types = [:datetime]
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
 end

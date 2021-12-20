@@ -35,12 +35,16 @@ Rails.application.configure do
   # Store uploaded files on the local file system in a temporary directory.
   config.active_storage.service = :test
 
+  port = 9887 + ENV["TEST_ENV_NUMBER"].to_i
+  config.action_mailer.default_url_options = { host: "localhost:#{port}", utm_source: "test", utm_medium: "email", utm_campaign: "default" }
   config.action_mailer.perform_caching = false
 
   # Tell Action Mailer not to deliver emails to the real world.
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
+  config.active_job.queue_adapter = :inline
+  Delayed::Worker.delay_jobs = false
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
@@ -51,9 +55,13 @@ Rails.application.configure do
   # Tell Active Support which deprecation messages to disallow.
   config.active_support.disallowed_deprecation_warnings = []
 
+  # https://github.com/JackC/tod/#activemodel-serializable-attribute-support
+  config.active_record.time_zone_aware_types = [:datetime]
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 
+  # Faker fails for certains attributes if :en isn't available
+  config.i18n.available_locales = %i[fr en]
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
 end
