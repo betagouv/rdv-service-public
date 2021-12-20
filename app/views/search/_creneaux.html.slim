@@ -30,9 +30,9 @@ div id="creneaux-lieu-#{lieu.id}"
                   - else
                     = link_to "#", "data-turbolinks": false, data: { toggle: "modal", target: "#js-rdv-restriction-motif#{creneau.starts_at.to_i}" }, class: "btn btn-light mr-1 mb-1 w-100" do
                       = l(creneau.starts_at, format: "%H:%M")
-                      - if creneau.agent_name
+                      - if creneau.motif.follow_up?
                         br
-                        small= creneau.agent_name
+                        small= creneau.agent.short_name
 
                     =  render "/common/modal", id: "js-rdv-restriction-motif#{creneau.starts_at.to_i}" , title: "À lire avant de prendre un rendez-vous", confirm_path: new_users_rdv_wizard_step_path(query.merge(starts_at: creneau.starts_at)) do
                       = ActionController::Base.helpers.auto_link(simple_format(motif.restriction_for_rdv), html: { target: "_blank"})

@@ -3,7 +3,7 @@
 class Creneau
   include ActiveModel::Model
 
-  attr_accessor :starts_at, :lieu_id, :motif, :agent_id, :agent_name
+  attr_accessor :starts_at, :lieu_id, :motif, :agent
 
   def ends_at
     starts_at + duration_in_min.minutes
@@ -15,10 +15,6 @@ class Creneau
 
   def lieu
     Lieu.find(lieu_id)
-  end
-
-  def agent
-    Agent.find(agent_id)
   end
 
   def duration_in_min
@@ -45,6 +41,6 @@ class Creneau
   end
 
   def overlaps_jour_ferie?
-    JoursFeriesService.all_in_date_range(starts_at.to_date..ends_at.to_date).any?
+    OffDays.all_in_date_range(starts_at.to_date..ends_at.to_date).any?
   end
 end
