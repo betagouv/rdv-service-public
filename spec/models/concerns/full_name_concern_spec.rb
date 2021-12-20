@@ -5,7 +5,7 @@ describe FullNameConcern do
   let(:pierre) { build :user, first_name: "Pierre", last_name: "Curie", birth_name: "" }
 
   describe "#full_name" do
-    let(:subject) { person.full_name }
+    subject { person.full_name }
 
     context "with birth_name" do
       let(:person) { marie }
@@ -21,7 +21,7 @@ describe FullNameConcern do
   end
 
   describe "reverse_full_name" do
-    let(:subject) { person.reverse_full_name }
+    subject { person.reverse_full_name }
 
     context "with birth_name" do
       let(:person) { marie }
@@ -37,7 +37,7 @@ describe FullNameConcern do
   end
 
   describe "short_name" do
-    let(:subject) { person.short_name }
+    subject { person.short_name }
 
     context "with birth_name" do
       let(:person) { marie }

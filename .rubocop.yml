@@ -25,6 +25,10 @@ Lint/MissingSuper:
   Exclude:
     - 'app/services/**/*' # Inheriting BaseService without calling super is OK.
 
+Lint/AssignmentInCondition:
+  Exclude:
+    - 'db/migrate/20211215182150_add_service_name_to_active_storage_blobs.active_storage.rb'
+
 Metrics/AbcSize:
   Enabled: false
 
@@ -59,10 +63,15 @@ Rails/ApplicationController:
 Rails/CreateTableWithTimestamps:
   Exclude:
     - 'db/migrate/20210301135256_create_territories.rb'
+    - 'db/migrate/20211215182151_create_active_storage_variant_records.active_storage.rb'
 
 Rails/DynamicFindBy:
   Exclude:
     - 'spec/features/agents/admin_can_configure_the_organisation_spec.rb'
+
+Rails/FilePath:
+  Exclude:
+    - 'config/environments/development.rb'
 
 Rails/HasAndBelongsToMany:
   Enabled: false
@@ -81,6 +90,7 @@ Rails/SkipsModelValidations:
     - 'app/models/agent.rb'
     - 'scripts/update_city_name_postal_code_and_city_code_from_address.rb'
     - 'db/migrate/20211020192102_add_search_terms_to_users_motifs_and_agents.rb'
+    - 'db/migrate/20211215182150_add_service_name_to_active_storage_blobs.active_storage.rb'
 
 Rails/LexicallyScopedActionFilter:
   Exclude:
@@ -146,7 +156,15 @@ Style/FrozenStringLiteralComment:
     - "config/**/*"
     - "config.ru"
 
+Style/GuardClause:
+  Exclude:
+    - 'app/controllers/admin/territories/sms_configurations_controller.rb'
+    - 'db/migrate/20211215182150_add_service_name_to_active_storage_blobs.active_storage.rb'
+
 Style/IfUnlessModifier:
+  Enabled: false
+
+Style/OpenStructUse:
   Enabled: false
 
 Style/StringLiterals:
@@ -154,6 +172,4 @@ Style/StringLiterals:
   Exclude:
     - "config/**/*"
 
-Style/GuardClause:
-  Exclude:
-    - 'app/controllers/admin/territories/sms_configurations_controller.rb'
+

@@ -13,7 +13,7 @@ class ExportZonesService
     workbook = Spreadsheet::Workbook.new
     sheet = workbook.create_worksheet
     sheet.row(0).concat(HEADER)
-    zones_ordered.each_with_index { add_zone_row(sheet, _1, _2) }
+    zones_ordered.each_with_index { |zone, index| add_zone_row(sheet, zone, index) }
     file = StringIO.new
     workbook.write(file)
     file.string

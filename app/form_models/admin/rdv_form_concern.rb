@@ -43,10 +43,10 @@ module Admin::RdvFormConcern
 
     return unless rdvs_ending_shortly_before?
 
-    rdv_agent_pairs_ending_shortly_before_grouped_by_agent.values.map do
+    rdv_agent_pairs_ending_shortly_before_grouped_by_agent.values.map do |pair|
       RdvEndingShortlyBeforePresenter.new(
-        rdv: _1.rdv,
-        agent: _1.agent,
+        rdv: pair.rdv,
+        agent: pair.agent,
         rdv_context: rdv,
         agent_context: agent_context
       )
@@ -58,10 +58,10 @@ module Admin::RdvFormConcern
 
     return unless rdvs_overlapping_rdv?
 
-    rdv_agent_pairs_rdvs_overlapping_grouped_by_agent.values.map do
+    rdv_agent_pairs_rdvs_overlapping_grouped_by_agent.values.map do |pair|
       RdvsOverlappingRdvPresenter.new(
-        rdv: _1.rdv,
-        agent: _1.agent,
+        rdv: pair.rdv,
+        agent: pair.agent,
         rdv_context: rdv,
         agent_context: agent_context
       )
