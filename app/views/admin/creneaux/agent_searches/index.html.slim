@@ -45,36 +45,33 @@
       = f.submit "Afficher les créneaux", class: "btn btn-primary", data: { disable_with: "Récupération des créneaux..."}
 
 #creneaux
-  .text-center
-    - if @form.motif.blank?
-      | Sélectionnez un motif pour afficher les créneaux disponibles.
-    - elsif @form.errors.any?
-      | Nous ne reconnaissons pas certains éléments du formulaire, pouvez-vous vérifier ?
-    - elsif @search_results.empty?
-      | Il n'y a pour l'instant aucune disponibilité pour le motif #{@form.motif.name}
-    - else
-      - available_places = @search_results.map(&:lieu)
-      .container
-          h3.font-weight-bold Résultats de votre recherche
-          p.font-weight-bold= t(".available_places_with_slots", count: available_places.length.to_s)
-          - available_places.each do |lieu|
-            - next_availability = @search_results.find {|s| s.lieu == lieu }&.next_availability
-            .card.mb-3 class=("card-hoverable" if next_availability)
-              .card-body
-                .row
-                  .col-md
-                    h4.card-title.mb-3.mt-0.text-success.font-weight-bold= lieu.name
-                    h6.card-subtitle.text-black-50.mb-2 = @form.motif.service.name
-                    h6.card-subtitle.text-black-50= lieu.address
-                  .col-md.align-self-center.pt-3.pt-md-0.position-static
-                    - if next_availability
-                      = link_to admin_organisation_slots_path(current_organisation, service_id: @form.service_id, motif_id: @form.motif.id, from_date: @form.from_date, agent_ids: @form.agent_ids, lieu_id: lieu.id, user_ids: @form.user_ids), class: "d-block stretched-link" do
-                        .row
-                          .col
-                            | Prochaine disponibilité le
-                            br
-                            strong= l(next_availability.starts_at, format: :human)
-                          .col-auto.align-self-center
-                            i.fa.fa-chevron-right
-                    - else
-                      em Aucune disponibilité
+  - if @search_results.present?
+    .text-center
+      - if @search_results.empty?
+        | Il n'y a pour l'instant aucune disponibilité pour le motif #{@form.motif.name}
+      - else
+        - available_places = @search_results.map(&:lieu)
+        .container
+            h3.font-weight-bold Résultats de votre recherche
+            p.font-weight-bold= t(".available_places_with_slots", count: available_places.length.to_s)
+            - available_places.each do |lieu|
+              - next_availability = @search_results.find {|s| s.lieu == lieu }&.next_availability
+              .card.mb-3 class=("card-hoverable" if next_availability)
+                .card-body
+                  .row
+                    .col-md
+                      h4.card-title.mb-3.mt-0.text-success.font-weight-bold= lieu.name
+                      h6.card-subtitle.text-black-50.mb-2 = @form.motif.service.name
+                      h6.card-subtitle.text-black-50= lieu.address
+                    .col-md.align-self-center.pt-3.pt-md-0.position-static
+                      - if next_availability
+                        = link_to admin_organisation_slots_path(current_organisation, service_id: @form.service_id, motif_id: @form.motif.id, from_date: @form.from_date, agent_ids: @form.agent_ids, lieu_id: lieu.id, user_ids: @form.user_ids), class: "d-block stretched-link" do
+                          .row
+                            .col
+                              | Prochaine disponibilité le
+                              br
+                              strong= l(next_availability.starts_at, format: :human)
+                            .col-auto.align-self-center
+                              i.fa.fa-chevron-right
+                      - else
+                        em Aucune disponibilité
