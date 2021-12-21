@@ -129,7 +129,7 @@ class User < ApplicationRecord
 
   def can_be_soft_deleted_from_organisation?(organisation)
     Rdv.not_cancelled.future
-      .with_user_in(self_and_relatives)
+      .with_user(self_and_relatives)
       .where(organisation: organisation)
       .empty?
   end
@@ -147,7 +147,7 @@ class User < ApplicationRecord
   end
 
   def rdvs_for_organisation(organisation)
-    Rdv.where(organisation: organisation).with_user_in([self])
+    Rdv.where(organisation: organisation).with_user(self)
   end
 
   def email_tld
