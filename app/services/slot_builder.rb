@@ -6,7 +6,13 @@ module SlotBuilder
     def available_slots(motif, lieu, date_range, off_days, agents = [])
       datetime_range = ensure_date_range_with_time(date_range)
       plage_ouvertures = plage_ouvertures_for(motif, lieu, datetime_range, agents)
+
+      puts "--- id Plage ouvertures : #{plage_ouvertures.map(&:id)} ---"
+
       free_times_po = free_times_from(plage_ouvertures, datetime_range, off_days) # dépendance sur RDV et Absence
+
+      puts free_times_po.inspect
+
       slots_for(free_times_po, motif)
     end
 
@@ -37,9 +43,15 @@ module SlotBuilder
 
     def calculate_free_times(plage_ouverture, datetime_range, off_days)
       ranges = ranges_for(plage_ouverture, datetime_range)
+      puts ranges.inspect
       return [] if ranges.empty?
 
-      ranges.flat_map { |range| split_range_recursively(range, BusyTime.busy_times_for(range, plage_ouverture, off_days)) }
+      ranges.flat_map { |range|
+        busy_times = BusyTime.busy_times_for(range, plage_ouverture, off_days)
+        puts busy_times.inspect
+      
+        split_range_recursively(range, busy_times) 
+      }
     end
 
     def ranges_for(plage_ouverture, datetime_range)
@@ -137,9 +149,9 @@ module SlotBuilder
       end
 
       def busy_times_from_rdvs(range, plage_ouverture)
-        plage_ouverture_starts_in_range = plage_ouverture.agent.rdvs.not_cancelled.where(starts_at: range)
-        plage_ouverture_ends_in_range = plage_ouverture.agent.rdvs.not_cancelled.where(ends_at: range)
-        plage_ouverture_starts_in_range.or(plage_ouverture_ends_in_range).map do |rdv|
+        rdv_starts_in_range = plage_ouverture.agent.rdvs.not_cancelled.where(starts_at: range)
+        rdv_ends_in_range = plage_ouverture.agent.rdvs.not_cancelled.where(ends_at: range)
+        rdv_starts_in_range.or(rdv_ends_in_range).map do |rdv|
           BusyTime.new(rdv)
         end
       end
