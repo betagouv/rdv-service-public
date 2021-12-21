@@ -2,8 +2,6 @@
 
 class NextAvailabilityService
   def self.find(motif, lieu, from, agents)
-    return unless motif.reservable_online?
-
     available_creneau = nil
 
     from.step(from + 6.months, 7).find do |date|
