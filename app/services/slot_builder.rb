@@ -23,6 +23,7 @@ module SlotBuilder
         .merge(lieu.plage_ouvertures)
         .merge(motif.plage_ouvertures)
         .in_range(datetime_range)
+        .includes([:organisation, :agent])
         .where(({ agent: agents } if agents&.any?))
     end
 
