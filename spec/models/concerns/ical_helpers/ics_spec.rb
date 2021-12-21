@@ -37,20 +37,22 @@ describe IcalHelpers::Ics do
     end
 
     describe "status" do
+      let(:payload) { { starts_at: Time.zone.parse("20190704 15h00"), action: action } }
+
       context "create" do
-        let(:payload) { { action: :create } }
+        let(:action) { :create }
 
         it { expect(subject).to include "STATUS:CONFIRMED" }
       end
 
       context "update" do
-        let(:payload) { { action: :update } }
+        let(:action) { :update }
 
         it { expect(subject).to include "STATUS:CONFIRMED" }
       end
 
       context "destroy" do
-        let(:payload) { { action: :destroy } }
+        let(:action) { :destroy }
 
         it { expect(subject).to include "STATUS:CANCELLED" }
       end
