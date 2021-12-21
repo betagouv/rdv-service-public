@@ -2,7 +2,7 @@
 
 describe SlotBuilder::BusyTime, type: :service do
   let(:monday) { Time.zone.parse("20211025 10:00") }
-  let(:range) { Date.new(2021, 10, 26)..Date.new(2021, 10, 29) }
+  let(:range) { Time.zone.parse("2021-10-26 8:00")..Time.zone.parse("2021-10-29 12:00") }
   let(:plage_ouverture) { create(:plage_ouverture) }
 
   before { travel_to(monday) }
@@ -45,6 +45,14 @@ describe SlotBuilder::BusyTime, type: :service do
                        end_day: Date.new(2021, 10, 28), end_time: Tod::TimeOfDay.new(12))
       expect(described_class.busy_times_for(range, plage_ouverture).first.ends_at).to eq(Time.zone.parse("20211028 12"))
     end
+
+    it "dont return BusyTime if absence is out of range" do
+      range = Time.zone.parse("2021-10-26 9:00")..Time.zone.parse("2021-10-29 11:00")
+
+      create(:absence, agent: plage_ouverture.agent, organisation: plage_ouverture.organisation, first_day: Date.new(2021, 10, 29), start_time: Tod::TimeOfDay.new(14),
+                       end_day: Date.new(2021, 10, 29), end_time: Tod::TimeOfDay.new(15))
+      expect(described_class.busy_times_for(range, plage_ouverture)).to be_empty
+    end
   end
 
   context "with an absence with recurrence" do
@@ -69,6 +77,15 @@ describe SlotBuilder::BusyTime, type: :service do
              end_time: Tod::TimeOfDay.new(9, 45),
              recurrence: Montrose.every(:week, on: %w[tuesday friday], starts: Time.zone.parse("20211019 9:00"), until: nil))
       expect(described_class.busy_times_for(range, plage_ouverture).map(&:ends_at)).to eq([Time.zone.parse("20211026 9:45"), Time.zone.parse("20211029 9:45")])
+    end
+
+    it "dont return BusyTime if absence occurrence is out of range" do
+      range = Time.zone.parse("2021-10-29 9:00")..Time.zone.parse("2021-10-29 11:00")
+
+      create(:absence, agent: plage_ouverture.agent, organisation: plage_ouverture.organisation, first_day: Date.new(2021, 10, 22),
+                       start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(15),
+                       recurrence: Montrose.every(:week, on: %w[tuesday friday], starts: Date.new(2021, 10, 22), until: nil))
+      expect(described_class.busy_times_for(range, plage_ouverture)).to be_empty
     end
   end
 

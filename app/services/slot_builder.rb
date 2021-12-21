@@ -7,11 +7,7 @@ module SlotBuilder
       datetime_range = ensure_date_range_with_time(date_range)
       plage_ouvertures = plage_ouvertures_for(motif, lieu, datetime_range, agents)
 
-      puts "--- id Plage ouvertures : #{plage_ouvertures.map(&:id)} ---"
-
       free_times_po = free_times_from(plage_ouvertures, datetime_range, off_days) # dépendance sur RDV et Absence
-
-      puts free_times_po.inspect
 
       slots_for(free_times_po, motif)
     end
@@ -29,7 +25,7 @@ module SlotBuilder
         .merge(lieu.plage_ouvertures)
         .merge(motif.plage_ouvertures)
         .in_range(datetime_range)
-        .includes([:organisation, :agent])
+        .includes(%i[organisation agent])
         .where(({ agent: agents } if agents&.any?))
     end
 
@@ -43,15 +39,12 @@ module SlotBuilder
 
     def calculate_free_times(plage_ouverture, datetime_range, off_days)
       ranges = ranges_for(plage_ouverture, datetime_range)
-      puts ranges.inspect
       return [] if ranges.empty?
 
-      ranges.flat_map { |range|
+      ranges.flat_map do |range|
         busy_times = BusyTime.busy_times_for(range, plage_ouverture, off_days)
-        puts busy_times.inspect
-      
-        split_range_recursively(range, busy_times) 
-      }
+        split_range_recursively(range, busy_times)
+      end
     end
 
     def ranges_for(plage_ouverture, datetime_range)
@@ -143,7 +136,6 @@ module SlotBuilder
         busy_times = busy_times_from_rdvs(range, plage_ouverture)
         busy_times += busy_times_from_absences(range, plage_ouverture)
         busy_times += busy_times_from_off_days(off_days.select { |off_day| range.cover?(off_day) })
-
         # Le tri est nécessaire, surtout pour les surcharges.
         busy_times.sort_by(&:starts_at)
       end
@@ -165,13 +157,28 @@ module SlotBuilder
         absences.each do |absence|
           if absence.recurrence
             absence.occurrences_for(range).each do |absence_occurrence|
+              next if absence_out_of_range?(absence_occurrence, range)
+
               busy_times << BusyTime.new(absence_occurrence)
             end
           else
+            next if absence_out_of_range?(absence, range)
+
             busy_times << BusyTime.new(absence)
           end
         end
         busy_times
+      end
+
+      def absence_out_of_range?(absence, range)
+        if absence.is_a?(Recurrence::Occurrence)
+          start_date_time = absence.starts_at
+          end_date_time = absence.ends_at
+        else
+          start_date_time = absence.start_time.on(absence.first_day)
+          end_date_time = absence.end_time.on(absence.end_day)
+        end
+        end_date_time < range.begin || range.end < start_date_time
       end
 
       def busy_times_from_off_days(off_days)
