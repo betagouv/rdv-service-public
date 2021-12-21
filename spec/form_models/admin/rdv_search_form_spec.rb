@@ -30,27 +30,6 @@ describe Admin::RdvSearchForm do
   end
 
   describe "#rdvs" do
-    it "call Rdv.with_lieu with given lieu" do
-      lieu = create(:lieu)
-      agent_rdv_search_form = described_class.new(lieu_id: lieu.id)
-      expect(Rdv).to receive(:with_lieu).with(lieu)
-      agent_rdv_search_form.rdvs
-    end
-
-    it "call Rdv.with_agent with given agent" do
-      agent = create(:agent)
-      agent_rdv_search_form = described_class.new(agent_id: agent.id)
-      expect(Rdv).to receive(:with_agent).with(agent)
-      agent_rdv_search_form.rdvs
-    end
-
-    it "call Rdv.with_user with given user" do
-      user = create(:user)
-      agent_rdv_search_form = described_class.new(user_id: user.id)
-      expect(Rdv).to receive(:with_user).with(user)
-      agent_rdv_search_form.rdvs
-    end
-
     it "return rdvs that starts_at is in window" do
       now = Time.zone.parse("20/07/2019 15:00")
       travel_to(now)
