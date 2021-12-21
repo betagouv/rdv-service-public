@@ -55,6 +55,8 @@ describe UsersHelper, type: :helper do
   end
 
   describe "full_name_and_birthdate" do
+    before { travel_to Date.new(2021, 1, 1) }
+
     it "return only name when user without birthdate" do
       user = build(:user, birth_date: nil, first_name: "James", last_name: "BOND")
       expect(full_name_and_birthdate(user)).to eq("James BOND")
