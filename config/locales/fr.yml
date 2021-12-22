@@ -26,6 +26,14 @@ fr:
         index:
           edit_agents: Modification des équipes de l'agent
           territory_agents_title: Agents du territoire
+          reset: Reinitialiser
+          search_placeholder: "ex: martine@example.com"
+          search: Rechercher
+          last_name: Nom
+          first_name: Prénom
+          email: Email
+          teams: Équipes
+          actions: Actions
         edit:
           agent_title: Modifier un agent
       teams:

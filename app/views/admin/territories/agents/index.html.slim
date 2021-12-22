@@ -5,18 +5,18 @@
 
     .m-3.d-flex.justify-content-end
       - search = params[:search].blank? ? "d-none" : ""
-      div= link_to "Réinitialiser", admin_territory_agents_path(current_territory), class: "btn btn-link #{search}"
-      = f.input :search, placeholder: "ex. martine@example.com", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
-      = f.button :submit, "Rechercher"
+      div= link_to t(".reset"), admin_territory_agents_path(current_territory), class: "btn btn-link #{search}"
+      = f.input :search, placeholder: t(".search_placeholder"), label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
+      = f.button :submit, t(".search")
 
     table.table
       thead
         tr
-          th Nom
-          th Prénom
-          th Email
-          th Équipes
-          th Actions
+          th = t(".last_name")
+          th = t(".first_name")
+          th = t(".email")
+          th = t(".teams")
+          th = t(".actions")
       tbody
         - @agents.each do |agent|
           tr
