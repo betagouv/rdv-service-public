@@ -24,10 +24,6 @@ class AgentCreneauxSearchForm
     organisation.users.where(id: user_ids)
   end
 
-  def agents
-    (organisation.agents.where(id: agent_ids) + teams.flat_map(&:agents)).uniq
-  end
-
   def teams
     organisation.territory.teams.where(id: team_ids)
   end
