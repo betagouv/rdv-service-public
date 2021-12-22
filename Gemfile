@@ -96,6 +96,8 @@ group :development, :test do
   gem "slim_lint", require: false
   gem "axe-core-rspec"
   gem "selenium-webdriver"
+  gem "spring", require: false
+  gem "spring-commands-rspec"
 end
 
 group :development do

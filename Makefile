@@ -18,10 +18,10 @@ lint_brakeman: ## Security Checker
 test: test_unit test_features ## Run all tests
 
 test_unit:  ## Run unit tests in parallel
-	RAILS_ENV=test bundle exec rake parallel:spec['spec\/(?!features)']
+	RAILS_ENV=test bundle exec spring rake parallel:spec['spec\/(?!features)']
 
 test_features:  ## Run feature tests
-	bundle exec rspec spec/features
+	bundle exec spring rspec spec/features
 
 autocorrect: ## Fix autocorrectable lint issues
 	bundle exec rubocop --auto-correct-all
