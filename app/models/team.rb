@@ -5,8 +5,8 @@ class Team < ApplicationRecord
 
   pg_search_scope(:search_by_text,
                   against: :name,
-                  using: { tsearch: { prefix: true } },
-                  ignoring: :accents)
+                  using: { tsearch: { prefix: true, dictionary: "french" } }
+                  )
 
   auto_strip_attributes :name
 
