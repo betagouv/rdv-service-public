@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Notifications::Rdv::RdvCancelledService, type: :service do
+describe Notifiers::RdvCancelled, type: :service do
   subject { described_class.perform_with(rdv, author) }
 
   let(:agent1) { build(:agent) }

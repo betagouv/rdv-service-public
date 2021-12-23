@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-class Notifications::Rdv::RdvCancelledService < ::BaseService
-  include Notifications::Rdv::BaseServiceConcern
-
+class Notifiers::RdvCancelled < Notifiers::RdvBase
   protected
 
-  def notify_agent(agent)
-    Agents::RdvMailer.rdv_cancelled(@rdv.payload(:destroy, agent), agent, @author).deliver_later
+  def rdvs_users_to_notify
+    @rdv.rdvs_users.where(send_lifecycle_notifications: true)
   end
 
   def notify_user_by_mail(user)
@@ -30,5 +28,9 @@ class Notifications::Rdv::RdvCancelledService < ::BaseService
 
     Users::RdvSms.rdv_cancelled(@rdv, user).deliver_later
     @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: :cancelled_by_agent)
+  end
+
+  def notify_agent(agent)
+    Agents::RdvMailer.rdv_cancelled(@rdv.payload(:destroy, agent), agent, @author).deliver_later
   end
 end

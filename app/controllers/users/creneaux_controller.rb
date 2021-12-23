@@ -22,7 +22,7 @@ class Users::CreneauxController < UserAuthController
 
   def update
     @rdv.update(starts_at: @creneau.starts_at, ends_at: @creneau.starts_at + @rdv.duration_in_min.minutes, agent_ids: [@creneau.agent_id], created_by: :file_attente)
-    Notifications::Rdv::RdvDateUpdatedService.perform_with(@rdv, current_user)
+    Notifiers::RdvDateUpdated.perform_with(@rdv, current_user)
   end
 
   private

@@ -34,7 +34,7 @@ describe RdvUpdater, type: :service do
         agent = build :agent
         rdv = create(:rdv, agents: [agent], status: "waiting")
         rdv_params = { status: "excused" }
-        expect(Notifications::Rdv::RdvCancelledService).to receive(:perform_with).with(rdv, agent)
+        expect(Notifiers::RdvCancelled).to receive(:perform_with).with(rdv, agent)
         described_class.update(agent, rdv, rdv_params)
       end
 
@@ -42,7 +42,7 @@ describe RdvUpdater, type: :service do
         agent = build :agent
         rdv = create(:rdv, agents: [agent], status: "waiting")
         rdv_params = { status: "waiting" }
-        expect(Notifications::Rdv::RdvCancelledService).not_to receive(:perform_with)
+        expect(Notifiers::RdvCancelled).not_to receive(:perform_with)
         described_class.update(agent, rdv, rdv_params)
       end
 
@@ -50,7 +50,7 @@ describe RdvUpdater, type: :service do
         agent = build :agent
         rdv = create(:rdv, agents: [agent], status: "waiting")
         rdv_params = { starts_at: Time.zone.now + 1.day }
-        expect(Notifications::Rdv::RdvDateUpdatedService).to receive(:perform_with).with(rdv, agent)
+        expect(Notifiers::RdvDateUpdated).to receive(:perform_with).with(rdv, agent)
         described_class.update(agent, rdv, rdv_params)
       end
 
@@ -58,7 +58,7 @@ describe RdvUpdater, type: :service do
         agent = build :agent
         rdv = create(:rdv, agents: [agent], status: "waiting")
         rdv_params = { starts_at: rdv.starts_at }
-        expect(Notifications::Rdv::RdvDateUpdatedService).not_to receive(:perform_with)
+        expect(Notifiers::RdvDateUpdated).not_to receive(:perform_with)
         described_class.update(agent, rdv, rdv_params)
       end
 
@@ -66,8 +66,8 @@ describe RdvUpdater, type: :service do
         agent = build :agent
         rdv = create(:rdv, agents: [agent], status: "waiting")
         rdv_params = { context: "some context" }
-        expect(Notifications::Rdv::RdvCancelledService).not_to receive(:perform_with)
-        expect(Notifications::Rdv::RdvDateUpdatedService).not_to receive(:perform_with)
+        expect(Notifiers::RdvCancelled).not_to receive(:perform_with)
+        expect(Notifiers::RdvDateUpdated).not_to receive(:perform_with)
         described_class.update(agent, rdv, rdv_params)
       end
     end

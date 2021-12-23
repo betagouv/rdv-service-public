@@ -45,7 +45,7 @@ class CronJob < ApplicationJob
 
     def perform
       Rdv.not_cancelled.day_after_tomorrow.each do |rdv|
-        Notifications::Rdv::RdvUpcomingReminderService.perform_with(rdv, nil)
+        Notifiers::RdvUpcomingReminder.perform_with(rdv, nil)
       end
     end
   end

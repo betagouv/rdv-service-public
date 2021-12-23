@@ -19,11 +19,11 @@ module RdvUpdater
         if rdv.previous_changes["status"]&.last.in? %w[excused revoked noshow]
           # Also destroy the file_attentes
           rdv.file_attentes.destroy_all
-          Notifications::Rdv::RdvCancelledService.perform_with(rdv, author)
+          Notifiers::RdvCancelled.perform_with(rdv, author)
         end
 
         if rdv.previous_changes["starts_at"].present?
-          Notifications::Rdv::RdvDateUpdatedService.perform_with(rdv, author)
+          Notifiers::RdvDateUpdated.perform_with(rdv, author)
         end
       end
       result

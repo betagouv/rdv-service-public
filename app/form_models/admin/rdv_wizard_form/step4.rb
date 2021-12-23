@@ -6,7 +6,7 @@ class Admin::RdvWizardForm::Step4
 
   def save
     result = valid? && rdv.save
-    Notifications::Rdv::RdvCreatedService.perform_with(@rdv, @agent_author) if result
+    Notifiers::RdvCreated.perform_with(@rdv, @agent_author) if result
     result
   end
 

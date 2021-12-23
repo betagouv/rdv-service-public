@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
-class Notifications::Rdv::RdvUpcomingReminderService < ::BaseService
-  include Notifications::Rdv::BaseServiceConcern
-
+class Notifiers::RdvUpcomingReminder < Notifiers::RdvBase
   protected
+
+  def rdvs_users_to_notify
+    @rdv.rdvs_users.where(send_reminder_notification: true)
+  end
 
   def notify_user_by_mail(user)
     Users::RdvMailer.rdv_upcoming_reminder(@rdv.payload(nil, user), user).deliver_later

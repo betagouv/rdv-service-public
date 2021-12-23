@@ -573,7 +573,7 @@ results = Rdv.insert_all!(rdv_attributes, returning: "id") # [{"id"=>1}, {"id"=>
 rdv_ids = results.flat_map(&:values) # [1, 2, ...]
 agent_rdv_attributes = rdv_ids.map { |id| { agent_id: agent_org_paris_nord_pmi_martine.id, rdv_id: id } }
 AgentsRdv.insert_all!(agent_rdv_attributes)
-rdv_user_attributes = rdv_ids.map { |id| { user_id: user_org_paris_nord_josephine.id, rdv_id: id } }
+rdv_user_attributes = rdv_ids.map { |id| { user_id: user_org_paris_nord_josephine.id, rdv_id: id, send_lifecycle_notifications: true, send_reminder_notification: true } }
 RdvsUser.insert_all!(rdv_user_attributes)
 # rubocop:enable Rails/SkipsModelValidations
 

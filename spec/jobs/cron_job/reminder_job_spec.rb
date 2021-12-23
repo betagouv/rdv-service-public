@@ -14,7 +14,7 @@ RSpec.describe CronJob::ReminderJob, type: :job do
     let!(:rdv1) { create(:rdv, starts_at: 2.days.from_now) }
 
     it "calls notification service" do
-      expect(Notifications::Rdv::RdvUpcomingReminderService).to receive(:perform_with).with(rdv1, nil)
+      expect(Notifiers::RdvUpcomingReminder).to receive(:perform_with).with(rdv1, nil)
       subject
     end
   end
@@ -25,9 +25,9 @@ RSpec.describe CronJob::ReminderJob, type: :job do
     let!(:rdv3) { create(:rdv, starts_at: 1.day.from_now) }
 
     it "calls notification service" do
-      expect(Notifications::Rdv::RdvUpcomingReminderService).to receive(:perform_with).with(rdv1, nil)
-      expect(Notifications::Rdv::RdvUpcomingReminderService).to receive(:perform_with).with(rdv2, nil)
-      expect(Notifications::Rdv::RdvUpcomingReminderService).not_to receive(:perform_with).with(rdv3, nil)
+      expect(Notifiers::RdvUpcomingReminder).to receive(:perform_with).with(rdv1, nil)
+      expect(Notifiers::RdvUpcomingReminder).to receive(:perform_with).with(rdv2, nil)
+      expect(Notifiers::RdvUpcomingReminder).not_to receive(:perform_with).with(rdv3, nil)
       subject
     end
   end
@@ -36,7 +36,7 @@ RSpec.describe CronJob::ReminderJob, type: :job do
     let!(:rdv1) { create(:rdv, :excused, starts_at: 2.days.from_now) }
 
     it "calls notification service" do
-      expect(Notifications::Rdv::RdvUpcomingReminderService).not_to receive(:perform_with)
+      expect(Notifiers::RdvUpcomingReminder).not_to receive(:perform_with)
       subject
     end
   end
