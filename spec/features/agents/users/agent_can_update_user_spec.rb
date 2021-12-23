@@ -22,7 +22,7 @@ describe "Agent can update user" do
     # When the user has already a pwd, changing email send a confirmation email
     open_email("jeanne@reynolds.com")
     expect(current_email.subject).to eq I18n.t("devise.mailer.confirmation_instructions.subject")
-    expect_page_title("jeanne reynolds")
+    expect_page_title("jeanne REYNOLDS")
     expect(page).to have_content("En attente de confirmation pour jeanne@reynolds.com")
   end
 

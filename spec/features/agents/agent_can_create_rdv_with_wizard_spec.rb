@@ -59,7 +59,7 @@ describe "Agent can create a Rdv with wizard" do
     fill_in "Durée en minutes", with: "35"
     fill_in "Commence à", with: "11/10/2019 14:15"
     select("DIALO Alain", from: "rdv_agent_ids")
-    select("Martin Robert", from: "rdv_agent_ids")
+    select("MARTIN Robert", from: "rdv_agent_ids")
     click_button("Continuer")
 
     # Step 4
