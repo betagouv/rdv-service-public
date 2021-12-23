@@ -6,14 +6,12 @@ module SlotBuilder
     def available_slots(motif, lieu, date_range, off_days, agents = [])
       datetime_range = ensure_date_range_with_time(date_range)
       plage_ouvertures = plage_ouvertures_for(motif, lieu, datetime_range, agents)
-
       free_times_po = free_times_from(plage_ouvertures, datetime_range, off_days) # dépendance sur RDV et Absence
-
       slots_for(free_times_po, motif)
     end
 
     def ensure_date_range_with_time(date_range)
-      time_begin = date_range.begin.is_a?(Time) ? date_range.being : date_range.begin.beginning_of_day
+      time_begin = date_range.begin.is_a?(Time) ? date_range.begin : date_range.begin.beginning_of_day
       time_begin = Time.zone.now if time_begin < Time.zone.now
       time_end = date_range.end.is_a?(Time) ? date_range.end : date_range.end.beginning_of_day
 
@@ -143,7 +141,8 @@ module SlotBuilder
       def busy_times_from_rdvs(range, plage_ouverture)
         rdv_starts_in_range = plage_ouverture.agent.rdvs.not_cancelled.where(starts_at: range)
         rdv_ends_in_range = plage_ouverture.agent.rdvs.not_cancelled.where(ends_at: range)
-        rdv_starts_in_range.or(rdv_ends_in_range).map do |rdv|
+        rdv_over_range = plage_ouverture.agent.rdvs.not_cancelled.where("starts_at <= ?", range.begin).where("ends_at >= ?", range.end)
+        rdv_starts_in_range.or(rdv_ends_in_range).or(rdv_over_range).map do |rdv|
           BusyTime.new(rdv)
         end
       end

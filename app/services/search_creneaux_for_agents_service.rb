@@ -12,7 +12,7 @@ class SearchCreneauxForAgentsService < BaseService
   private
 
   def build_result(lieu)
-    next_availability = NextAvailabilityService.find(@form.motif, lieu, Time.zone.today, @form.agents)
+    next_availability = NextAvailabilityService.find(@form.motif, lieu, @form.date_range.begin, @form.agents)
     creneaux = SlotBuilder.available_slots(@form.motif, lieu, @form.date_range, OffDays.all_in_date_range(@form.date_range), @form.agents)
     return nil if creneaux.empty? && next_availability.nil?
 
