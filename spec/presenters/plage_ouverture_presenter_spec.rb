@@ -24,7 +24,7 @@ describe PlageOuverturePresenter, type: :presenter do
       end
       let(:presenter) { described_class.new(plage_ouverture, agent1_context) }
 
-      it { is_expected.to match %r{Jeanne Longo a <a href=.*>une plage d'ouverture</a> à MDS du coin mercredi 09 décembre 2020de 07:00 à 10:00} }
+      it { is_expected.to match %r{Jeanne LONGO a <a href=.*>une plage d'ouverture</a> à MDS du coin mercredi 09 décembre 2020de 07:00 à 10:00} }
     end
   end
 end
