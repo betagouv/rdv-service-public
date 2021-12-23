@@ -73,7 +73,7 @@ describe "api/v1/users requests", type: :request do
         user = User.find(response_parsed["user"]["id"])
         expect(user.organisations).to match_array([organisation])
         expect(user.first_name).to eq("Jean")
-        expect(user.last_name).to eq("JACQUES")
+        expect(user.last_name).to eq("Jacques")
       end
     end
 
@@ -107,8 +107,8 @@ describe "api/v1/users requests", type: :request do
         user = User.find(response_parsed["user"]["id"])
         expect(user.organisations).to match_array([organisation])
         expect(user.first_name).to eq("Jean")
-        expect(user.last_name).to eq("JACQUES")
-        expect(user.birth_name).to eq("FRIPOUILLE")
+        expect(user.last_name).to eq("Jacques")
+        expect(user.birth_name).to eq("Fripouille")
         expect(user.birth_date).to eq(Date.new(1976, 10, 1))
         expect(user.email).to eq("jean@jacques.fr")
         expect(user.address).to eq("10 rue du Havre, Paris")
@@ -144,7 +144,7 @@ describe "api/v1/users requests", type: :request do
         user = User.find(response_parsed["user"]["id"])
         expect(user.organisations).to match_array([organisation])
         expect(user.first_name).to eq("Jean")
-        expect(user.last_name).to eq("JACQUES")
+        expect(user.last_name).to eq("Jacques")
         expect(user.responsible).to eq(user_responsible)
       end
     end
@@ -459,7 +459,7 @@ describe "api/v1/users requests", type: :request do
         expect(response.status).to eq(200)
         user.reload
         expect(user.first_name).to eq("Alain")
-        expect(user.last_name).to eq("DELOIN")
+        expect(user.last_name).to eq("Deloin")
         response_parsed = JSON.parse(response.body)
         expect(response_parsed["user"]).to be_present
         expect(response_parsed["user"]["id"]).to be_present
@@ -489,8 +489,8 @@ describe "api/v1/users requests", type: :request do
         expect(response.status).to eq(200)
         user.reload
         expect(user.first_name).to eq("Alain")
-        expect(user.last_name).to eq("DELOIN")
-        expect(user.birth_name).to eq("BOURDON")
+        expect(user.last_name).to eq("Deloin")
+        expect(user.birth_name).to eq("Bourdon")
         expect(user.birth_date).to eq(Date.new(1976, 10, 1))
         user.reload
         expect(user.email).to eq("alain@deloin.fr")
@@ -525,7 +525,7 @@ describe "api/v1/users requests", type: :request do
         response_parsed = JSON.parse(response.body)
         expect(response_parsed["user"]).to be_present
         expect(user.first_name).to eq("Alain")
-        expect(user.last_name).to eq("DELOIN")
+        expect(user.last_name).to eq("Deloin")
         expect(user.responsible).to eq(user_responsible)
       end
     end

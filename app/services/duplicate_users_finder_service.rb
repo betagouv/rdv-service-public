@@ -30,11 +30,10 @@ class DuplicateUsersFinderService < BaseService
   def find_duplicate_based_on_identity
     return nil unless user.birth_date.present? && user.first_name.present? && user.last_name.present?
 
-    similar_user = users_in_scope.where(
-      first_name: user.first_name.capitalize,
-      last_name: user.last_name.upcase,
-      birth_date: user.birth_date
-    ).first
+    similar_user = users_in_scope
+      .where(birth_date: user.birth_date)
+      .where(User.arel_table[:first_name].matches(user.first_name))
+      .where(User.arel_table[:last_name].matches(user.last_name)).first
     return nil if similar_user.blank?
 
     OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: similar_user)

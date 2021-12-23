@@ -85,7 +85,7 @@ describe "User can search for rdvs" do
 
       # Step 5
       expect(page).to have_content("Vaccination")
-      expect(page).to have_content("Michel LAPIN (LAPINOU)")
+      expect(page).to have_content("Michel LAPIN (Lapinou)")
 
       # Add relative
       click_link("Ajouter un proche")

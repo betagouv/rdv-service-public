@@ -82,7 +82,7 @@ describe Payloads::Rdv, type: :service do
       let(:other_user) { build(:user, first_name: "Claire", last_name: "Flou") }
       let(:rdv) { build(:rdv, users: [user, other_user]) }
 
-      it { expect(rdv.payload[:users_full_names]).to eq("Claire Flou et Henri Frice") }
+      it { expect(rdv.payload[:users_full_names]).to eq("Claire FLOU et Henri FRICE") }
     end
 
     describe ":agents_short_names" do
@@ -90,7 +90,7 @@ describe Payloads::Rdv, type: :service do
       let(:other_agent) { build(:agent, first_name: "Béatrice", last_name: "Gonia") }
       let(:rdv) { build(:rdv, agents: [agent, other_agent]) }
 
-      it { expect(rdv.payload[:agents_short_names]).to eq("A. Némone et B. Gonia") }
+      it { expect(rdv.payload[:agents_short_names]).to eq("A. NÉMONE et B. GONIA") }
     end
 
     describe ":follow_up?" do

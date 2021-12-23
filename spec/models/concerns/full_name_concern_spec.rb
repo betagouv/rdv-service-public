@@ -10,13 +10,13 @@ describe FullNameConcern do
     context "with birth_name" do
       let(:person) { marie }
 
-      it { is_expected.to eq "Marie Curie (Skłodowska)" }
+      it { is_expected.to eq "Marie CURIE (Skłodowska)" }
     end
 
     context "without birth_name" do
       let(:person) { pierre }
 
-      it { is_expected.to eq "Pierre Curie" }
+      it { is_expected.to eq "Pierre CURIE" }
     end
   end
 
@@ -26,13 +26,13 @@ describe FullNameConcern do
     context "with birth_name" do
       let(:person) { marie }
 
-      it { is_expected.to eq "Curie (Skłodowska) Marie" }
+      it { is_expected.to eq "CURIE (Skłodowska) Marie" }
     end
 
     context "without birth_name" do
       let(:person) { pierre }
 
-      it { is_expected.to eq "Curie Pierre" }
+      it { is_expected.to eq "CURIE Pierre" }
     end
   end
 
@@ -42,13 +42,13 @@ describe FullNameConcern do
     context "with birth_name" do
       let(:person) { marie }
 
-      it { is_expected.to eq "M. Curie" }
+      it { is_expected.to eq "M. CURIE" }
     end
 
     context "without birth_name" do
       let(:person) { pierre }
 
-      it { is_expected.to eq "P. Curie" }
+      it { is_expected.to eq "P. CURIE" }
     end
   end
 end

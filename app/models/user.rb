@@ -4,7 +4,6 @@ class User < ApplicationRecord
   has_paper_trail
   include PgSearch::Model
   include FullNameConcern
-  include AccountNormalizerConcern
   include User::FranceconnectFrozenFieldsConcern
   include User::NotificableConcern
   include User::ImprovedUnicityErrorConcern
@@ -44,7 +43,6 @@ class User < ApplicationRecord
   has_many :file_attentes, dependent: :destroy
 
   before_save :set_email_to_null_if_blank
-  before_save :normalize_account
   after_update -> { rdvs.touch_all }
 
   enum caisse_affiliation: { aucune: 0, caf: 1, msa: 2 }
