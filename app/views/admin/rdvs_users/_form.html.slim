@@ -8,6 +8,8 @@ div id=element_id
   h6
     i.fa.fa-user-alt.mr-1
     = render "admin/users/identity", user: rdvs_user.user
+    - if rdvs_user.rdv.persisted?
+      = render "common/destroy_button", form: form, id: element_id
   .ml-3
     = render "admin/users/notifications_preferences", user: rdvs_user.user.user_to_notify
     h6= t("admin.rdvs_users.notifications_overrides")

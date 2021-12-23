@@ -27,6 +27,8 @@ import { SectorAttributionForm } from 'components/sector-attribution-form.js'
 import { ZoneForm } from 'components/zone-form.js'
 import { Select2Inputs } from 'components/select2-inputs';
 import { PlanningAgentSelect } from 'components/planning-agent-select';
+import { RdvUserSelect } from 'components/rdv-user-select';
+import { DestroyButton } from 'components/destroy-button';
 import 'components/calendar';
 import 'components/tooltip';
 import 'components/sentry';
@@ -95,4 +97,8 @@ $(document).on('turbolinks:load', function() {
   new ZoneForm();
 
   new PlanningAgentSelect();
+
+  new RdvUserSelect();
+
+  new DestroyButton();
 });

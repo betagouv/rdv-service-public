@@ -3,7 +3,7 @@
 class Admin::RdvsController < AgentAuthController
   respond_to :html, :json
 
-  before_action :set_rdv, :set_optional_agent, except: %i[index create]
+  before_action :set_rdv, :set_optional_agent, except: %i[index create new_participation]
 
   def index
     @form = Admin::RdvSearchForm.new(
@@ -28,6 +28,15 @@ class Admin::RdvsController < AgentAuthController
   def edit
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
     authorize(@rdv_form.rdv)
+  end
+
+  def new_participation
+    @rdv = Rdv.find(params[:rdv_id])
+    authorize(@rdv)
+
+    new_user_id = params[:user_id]
+    # user_to_add = User.find(new_user_id)
+    @rdv_user = @rdv.rdvs_users.build(user_id: new_user_id)
   end
 
   def update
@@ -85,7 +94,7 @@ class Admin::RdvsController < AgentAuthController
       .permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors,
               agent_ids: [],
               user_ids: [],
-              rdvs_users_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification])
+              rdvs_users_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy])
   end
 
   def status_params

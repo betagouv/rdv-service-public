@@ -21,7 +21,7 @@
   | Modifier le RDV
 
 .row.justify-content-center
-  .col-md-6
+  .col-md-8
     .card
       .card-body
         = simple_form_for([:admin, @rdv_form.organisation, @rdv]) do |f|
@@ -48,12 +48,26 @@
               input_html: { multiple: true, class: "select2-input",
                 data: { "select-options": { ajax: { url: search_admin_organisation_agents_path(current_organisation),
                                                           dataType: "json", delay: 250 } } } }
-            = f.association :users,
-              collection: @rdv_form.users,
-              label_method: lambda { |user| full_name_and_birthdate(user) },
-              input_html: { multiple: true, class: "select2-input",
-                data: { "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation),
-                                                    dataType: "json", delay: 250 } } } }
+
+            .form-group
+              = "Usagers :"
+              .rdv-participations
+              = f.fields_for :rdvs_users, @rdv.rdvs_users do |rdv_user_form|
+                = render "admin/rdvs_users/form", form: rdv_user_form
+
+            .form-group
+              - url_template = admin_organisation_rdv_new_participation_path(current_organisation, @rdv, user_id:"__USER__")
+              = select_tag :status,
+                      options_for_select([]),
+                      include_blank: "Ajouter un usager",
+                      required: false,
+                      class: "select2-input js-rdv-user-select",
+                      data: { \
+                width: "auto", \
+                "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.rdvs_users.map(&:user_id)), dataType: "json", delay: 250 } }, \
+                        "url-template": url_template\
+               }
+
             .text-right
               = link_to "Retour", admin_organisation_rdv_path(current_organisation, @rdv), class: "btn btn-link"
               = f.button :submit, "Enregistrer"
