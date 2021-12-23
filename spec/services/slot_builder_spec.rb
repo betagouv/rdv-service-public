@@ -313,6 +313,31 @@ describe SlotBuilder, type: :service do
     end
   end
 
+  describe "#ensure_date_range_with_time" do
+    it "returns range with given datetime_range" do
+      date_range = Time.zone.parse("2021-12-20 11:00")..Time.zone.parse("2021-12-21 18:00")
+      expected_range = Time.zone.parse("2021-12-20 11:00")..Time.zone.parse("2021-12-21 18:00")
+      datetime_range = described_class.ensure_date_range_with_time(date_range)
+      expect(datetime_range).to eq(expected_range)
+    end
+
+    it "returns range from beginning of day of range begin and end of day of range end wit date range" do
+      date_range = Date.new(2021, 12, 20)..Date.new(2021, 12, 21)
+      expected_range = Date.new(2021, 12, 20).beginning_of_day..(Date.new(2021, 12, 21).end_of_day)
+      datetime_range = described_class.ensure_date_range_with_time(date_range)
+      expect(datetime_range).to eq(expected_range)
+    end
+
+    it "returns range from now to end of given datetime range" do
+      date_range = Time.zone.parse("2021-12-20 11:00")..Time.zone.parse("2021-12-21 18:00")
+      expected_range = Time.zone.parse("2021-12-21 10:00")..Time.zone.parse("2021-12-21 18:00")
+      now = Time.zone.parse("2021-12-21 10:00")
+      travel_to(now)
+      datetime_range = described_class.ensure_date_range_with_time(date_range)
+      expect(datetime_range).to eq(expected_range)
+    end
+  end
+
   describe "#ranges_for" do
     context "without recurrence" do
       it "return empty when po is out of range" do

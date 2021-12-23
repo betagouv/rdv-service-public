@@ -13,7 +13,7 @@ module SlotBuilder
     def ensure_date_range_with_time(date_range)
       time_begin = date_range.begin.is_a?(Time) ? date_range.begin : date_range.begin.beginning_of_day
       time_begin = Time.zone.now if time_begin < Time.zone.now
-      time_end = date_range.end.is_a?(Time) ? date_range.end : date_range.end.beginning_of_day
+      time_end = date_range.end.is_a?(Time) ? date_range.end : date_range.end.end_of_day
 
       time_begin..time_end
     end
