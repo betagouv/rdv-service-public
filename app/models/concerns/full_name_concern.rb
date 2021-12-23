@@ -8,7 +8,7 @@ module FullNameConcern
   # Marie Curie (Skłodowska)
   def full_name
     names = [first_name,
-             last_name,
+             last_name.upcase,
              ("(#{birth_name})" if defined?(birth_name) && birth_name.present?)]
 
     names.compact.join(" ")
@@ -16,7 +16,7 @@ module FullNameConcern
 
   # Curie (Skłodowska) Marie
   def reverse_full_name
-    names = [last_name,
+    names = [last_name.upcase,
              ("(#{birth_name})" if defined?(birth_name) && birth_name.present?),
              first_name]
 
@@ -25,6 +25,6 @@ module FullNameConcern
 
   # M. Curie
   def short_name
-    "#{first_name.first.upcase}. #{last_name}"
+    "#{first_name.first.upcase}. #{last_name.upcase}"
   end
 end
