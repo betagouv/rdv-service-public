@@ -1,0 +1,14 @@
+fr:
+  admin:
+    users:
+      identity:
+        identity_html: "%{user}"
+        identity_with_responsible_html: "%{user} (responsable: %{responsible})"
+      notifications_preferences:
+        email_present_and_enabled: Reçoit les notifications par email
+        email_disabled: Notif. par email désactivées
+        email_absent: Email non renseigné
+        sms_present_valid_and_enabled: Reçoit les notifications par sms
+        sms_disabled: Notif. par sms désactivées
+        sms_invalid: Téléphone non mobile
+        sms_absent: Téléphone non renseigné

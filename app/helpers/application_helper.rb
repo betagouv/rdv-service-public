@@ -69,4 +69,19 @@ module ApplicationHelper
   def human_id(organisation_or_sector)
     tag.span(organisation_or_sector.human_id, class: "badge badge-light text-monospace")
   end
+
+  def boolean_attribute_tag(object, attribute_name, value = object.send(attribute_name))
+    img_class = value ? "fa fa-check mr-1" : "fa fa-exclamation-triangle text-warning mr-1"
+    tag.div do
+      tag.i(class: img_class) + object.class.human_attribute_name("#{attribute_name}.#{value}")
+    end
+  end
+
+  def admin_link_to_if_permitted(organisation, object, name = object.to_s)
+    if policy([:agent, object]).show?
+      link_to name, polymorphic_path([:admin, organisation, object])
+    else
+      name
+    end
+  end
 end

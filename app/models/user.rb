@@ -78,6 +78,10 @@ class User < ApplicationRecord
 
   include User::ResponsabilityConcern
 
+  def to_s
+    full_name
+  end
+
   def add_organisation(organisation)
     self_and_relatives_and_responsible.each do |u|
       u.organisations << organisation if u.organisation_ids.exclude?(organisation.id)

@@ -14,8 +14,8 @@
       - if @rdv.cancelled?
         span.badge.badge-danger
 
-.row
-  .col-md-12
+.row.justify-content-md-center
+  .col-md-8
     .card
       .card-header
         .d-flex.justify-content-between.flex-wrap
@@ -28,37 +28,26 @@
           = rdv_starts_at_and_duration(@rdv, :time_only)
           |&nbsp;
           = link_to "voir dans l'agenda", admin_organisation_agent_agenda_path(current_organisation, @rdv.agents.first, selected_event_id: @rdv.id, date: @rdv.starts_at.to_date)
-        = render "rdv_details", rdv: @rdv, display_links_to_users: true
+        = render "rdv_details", rdv: @rdv, show_users: false
+        p.card-text
+          strong> Usager(s) :
+          - @rdv.rdvs_users.each do |rdvs_user|
+            .ml-2
+              .rdv_user
+                = render rdvs_user
+              - notes = rdvs_user.user.notes_for(current_organisation)
+              - if notes.present?
+                .rdv_user_notes
+                  i.fa.fa-info-circle.mr-1
+                  = simple_format(notes, {}, wrapper_tag: :span)
+
       .card-footer
         .d-flex.justify-content-end
           .btn-group
             = link_to t(".update"), edit_admin_organisation_rdv_path(@rdv.organisation, @rdv, agent_id: @agent&.id), class: "btn btn-outline-primary"
             = link_to t(".duplicate"), admin_organisation_agent_searches_path(current_organisation, service_id: @rdv.motif.service_id, motif_id: @rdv.motif_id, from_date: @rdv.starts_at + 1.day, user_ids: @rdv.user_ids, context: @rdv.context, lieu_ids: [@rdv.lieu_id], commit: "commit"), class: "btn btn-outline-primary"
-.row
-  .col-md-12
-    - @rdv.users.each do |user|
-      .card
-        .card-header
-          h5.header
-            = "Notifications pour "
-            = user.full_name
-            = user_soft_deleted_from_current_organisation_tag(user)
-
-        .card-body
-          - displayable_user = DisplayableUserPresenter.new(user, current_organisation)
-          p.card-text
-            i.fa.fa-phone>
-            = displayable_user.phone_number_and_notification
-          p.card-text
-            i.fa.fa-fw.fa-envelope>
-            = displayable_user.email_and_notification
-
-          - if displayable_user.notes.present?
-            .d-flex title="Remarques"
-              div.mr-1
-                i.fa.fa-fw.fa-info-circle>
-              div= displayable_user.notes
-
+.row.justify-content-md-center
+  .col-md-8
     - @rdv.rdvs_users.each do |rdv_user|
       - user = rdv_user.user
       .card
@@ -69,6 +58,6 @@
           .card-footer
             = link_to \
               "Voir les #{rdv_user_presenter.previous_rdvs_count} RDVs précédents…", \
-              admin_organisation_rdvs_path(current_organisation, user_id: user.id, end: @rdv.starts_at)
+              admin_organisation_rdvs_path(current_organisation, user_id: rdv_user.user.id, end: @rdv.starts_at)
 
 = render "admin/versions/resource_versions_row", resource: @rdv, attributes_allowlist: ["user_ids", "agent_ids", "status", "starts_at", "ends_at", "lieu_id", "notes", "location", "context"]

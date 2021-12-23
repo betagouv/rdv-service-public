@@ -1,0 +1,14 @@
+fr:
+  activerecord:
+    models:
+      rdvs_user: Participation
+    attributes:
+      rdvs_user:
+        send_lifecycle_notifications: Notifications de création et modification
+        send_reminder_notification: Notification de rappel
+      rdvs_user/send_lifecycle_notifications:
+        true: Notifications de création et modification activées
+        false: Notifications de création et modification désactivées
+      rdvs_user/send_reminder_notification:
+        true: Notification de rappel activée
+        false: Notification de rappel désactivée
