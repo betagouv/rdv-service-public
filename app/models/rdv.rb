@@ -32,10 +32,12 @@ class Rdv < ApplicationRecord
 
   delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :follow_up?, :service, to: :motif
 
-  validates :users, :organisation, :motif, :starts_at, :ends_at, :agents, presence: true
+  validates :rdvs_users, :organisation, :motif, :starts_at, :ends_at, :agents, presence: true
   validates :lieu, presence: true, if: :public_office?
   validate :starts_at_is_plausible
   validate :duration_is_plausible
+
+  accepts_nested_attributes_for :rdvs_users
 
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
   scope :cancelled, -> { where(status: CANCELLED_STATUSES) }

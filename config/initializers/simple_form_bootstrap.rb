@@ -67,7 +67,7 @@ SimpleForm.setup do |config|
     b.use :html5
     b.optional :readonly
     b.wrapper :form_check_wrapper, tag: "div", class: "form-check" do |bb|
-      bb.use :input, class: "form-check-input", error_class: "is-invalid", valid_class: "is-valid"
+      bb.use :input, class: "form-check-input", error_class: "is-invalid"
       bb.use :label, class: "form-check-label"
       bb.use :full_error, wrap_with: { tag: "div", class: "invalid-feedback" }
       bb.use :hint, wrap_with: { tag: "small", class: "form-text text-muted" }

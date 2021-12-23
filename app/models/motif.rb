@@ -78,6 +78,11 @@ class Motif < ApplicationRecord
     joins(organisation: :territory)
       .where(organisations: { territories: { departement_number: departement_number } })
   }
+
+  def to_s
+    name
+  end
+
   def soft_delete
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
   end
