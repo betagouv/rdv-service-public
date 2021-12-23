@@ -27,7 +27,7 @@ describe Users::RdvSms, type: :service do
 
         content = described_class.rdv_created(rdv, user).content
 
-        expect(content).to include("J. BOND")
+        expect(content).to include("J. Bond")
       end
     end
   end

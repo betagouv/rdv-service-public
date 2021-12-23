@@ -25,7 +25,7 @@ describe DuplicateUsersFinderService, type: :service do
     end
 
     context "there is an homonym" do
-      let!(:homonym_user) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000" ) }
+      let!(:homonym_user) { create(:user, first_name: "Mathieu", last_name: "Lapin", birth_date: "21/10/2000") }
 
       it { is_expected.to include(OpenStruct.new(severity: :warning, attributes: %i[first_name last_name birth_date], user: homonym_user)) }
     end
