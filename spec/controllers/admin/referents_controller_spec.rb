@@ -70,7 +70,7 @@ describe Admin::ReferentsController, type: :controller do
   end
 
   describe "#delete" do
-    it "remove given agent from user's referents " do
+    it "remove given agent from user's referents" do
       organisation = create(:organisation)
       service = create(:service)
       referent = create(:agent, basic_role_in_organisations: [organisation], service: service)

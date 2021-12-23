@@ -10,7 +10,7 @@ describe Payloads::PlageOuverture do
     end
 
     describe ":action" do
-      it "return an hash with key action key and value " do
+      it "return an hash with key action key and value" do
         plage_ouverture = build(:plage_ouverture)
         expect(plage_ouverture.payload(:create)[:action]).to eq(:create)
       end

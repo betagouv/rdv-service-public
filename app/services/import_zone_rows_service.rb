@@ -61,7 +61,7 @@ class ImportZoneRowsService < BaseService
   end
 
   def validate_inner_conflicts_cities?
-    conflicts = value_counts(rows_cities.pluck("city_code")).to_a.filter { _2 > 1 }
+    conflicts = value_counts(rows_cities.pluck("city_code")).filter { |_city_code, count| count > 1 }
     return true if conflicts.empty?
 
     conflicts.each do |city_code, count|
@@ -71,7 +71,7 @@ class ImportZoneRowsService < BaseService
   end
 
   def validate_inner_conflicts_streets?
-    conflicts = value_counts(rows_streets.pluck("street_code")).to_a.filter { _2 > 1 }
+    conflicts = value_counts(rows_streets.pluck("street_code")).filter { |_street_ban_id, count| count > 1 }
     return true if conflicts.empty?
 
     conflicts.each do |street_ban_id, count|

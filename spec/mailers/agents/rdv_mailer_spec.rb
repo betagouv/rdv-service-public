@@ -9,8 +9,6 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
 
     before { travel_to(t) }
 
-    after { travel_back }
-
     it "renders the headers" do
       expect(mail.to).to eq([agent.email])
     end

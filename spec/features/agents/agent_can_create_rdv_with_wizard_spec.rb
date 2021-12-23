@@ -18,8 +18,6 @@ describe "Agent can create a Rdv with wizard" do
     visit new_admin_organisation_rdv_wizard_step_path(organisation_id: organisation.id)
   end
 
-  after { travel_back }
-
   it "default", js: true do
     expect_page_title("Nouveau RDV pour le 02/10/2019 à 00:00")
     expect(page).to have_selector(".card-title", text: "1. Motif")

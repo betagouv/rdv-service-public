@@ -10,3 +10,9 @@ fr:
         end_time: Termine à
         recurrence: Répéter
         lieu: Lieu
+    errors:
+      models:
+        plage_ouverture:
+          attributes:
+            end_time:
+              must_be_after_start_time: "doit être après l’heure de début."

@@ -10,7 +10,7 @@ describe Payloads::Absence do
     end
 
     describe ":action" do
-      it "return an hash with key action key and value " do
+      it "return an hash with key action key and value" do
         absence = build(:absence)
         expect(absence.payload(:create)[:action]).to eq(:create)
       end

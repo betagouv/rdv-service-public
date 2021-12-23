@@ -5,8 +5,6 @@ describe FindAvailabilityService, type: :service do
 
   before { travel_to(today) }
 
-  after { travel_back }
-
   describe "#perform" do
     subject { described_class.perform_with(motif.name, lieu, today, agent_ids: wanted_agents) }
 

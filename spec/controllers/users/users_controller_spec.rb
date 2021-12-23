@@ -11,8 +11,6 @@ RSpec.describe Users::UsersController, type: :controller do
     sign_in user
   end
 
-  after { travel_back }
-
   describe "GET #edit" do
     subject { get :edit }
 

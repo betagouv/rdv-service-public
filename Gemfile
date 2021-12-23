@@ -108,6 +108,6 @@ group :test do
   gem "capybara"
   gem "capybara-email"
   gem "capybara-screenshot"
-  gem "webdrivers"
+  gem "webdrivers", "~> 4.6.0"
   gem "database_cleaner"
 end

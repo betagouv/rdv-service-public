@@ -29,6 +29,6 @@ module BenignErrors
   end
 
   def errors_are_all_benign?
-    errors.keys == [:_benign]
+    errors.attribute_names == [:_benign]
   end
 end

@@ -28,8 +28,6 @@ RSpec.describe Users::RdvsController, type: :controller do
       subject
     end
 
-    after { travel_back }
-
     describe "when there is an available creneau" do
       let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let(:mock_creneau) do

@@ -95,7 +95,7 @@ class Api::V1::BaseController < ActionController::Base
       json: {
         success: false,
         errors: exception.record.errors.details,
-        error_messages: exception.record.errors.map { "#{_1} #{_2}" }
+        error_messages: exception.record.errors.map { "#{_1.attribute} #{_1.message}" }
       }
     )
   end

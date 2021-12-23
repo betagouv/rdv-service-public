@@ -2,9 +2,9 @@
 
 class Users::RdvMailer < ApplicationMailer
   include DateHelper
-  add_template_helper UsersHelper
-  add_template_helper RdvsHelper
-  add_template_helper DateHelper
+  helper UsersHelper
+  helper RdvsHelper
+  helper DateHelper
 
   def rdv_created(rdv_payload, user)
     @rdv = OpenStruct.new(rdv_payload)

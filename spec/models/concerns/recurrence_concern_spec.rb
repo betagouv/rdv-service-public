@@ -18,7 +18,7 @@ describe RecurrenceConcern do
             expect(first_entry_of_each_entries).to eq([object, second_object])
           end
 
-          it " returns starts_at from given first_day " do
+          it "returns starts_at from given first_day" do
             starts_at = Time.zone.parse("2019-08-15 10h00:00")
             create(element, first_day: starts_at.to_date, start_time: starts_at.to_time)
             period = Date.new(2019, 8, 12)..Date.new(2019, 8, 19)
