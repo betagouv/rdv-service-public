@@ -1,5 +1,12 @@
 ---
 fr:
+  layouts:
+    left_menu:
+      configuration: Configuration
+      account: Mon compte
+      organisations: Organisations
+      statistiques: Mes Statistiques
+      logout: Déconnexion
   admin:
     rdvs:
       show:

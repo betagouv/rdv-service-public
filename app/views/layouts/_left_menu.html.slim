@@ -31,15 +31,18 @@
           class=("show" if menu_top_level_item == "account")
         ]
           li.my-2
-            = link_to "Mon compte", edit_agent_registration_path
+            = link_to t(".account"), edit_agent_registration_path
           li.my-2
-            = link_to "Mes organisations", admin_organisations_path
+            = link_to t(".organisations"), admin_organisations_path
           li.my-2
-            = active_link_to "Mes statistiques", admin_organisation_agent_stats_path(current_organisation, current_agent)
+            = active_link_to t(".statistiques"), admin_organisation_agent_stats_path(current_organisation, current_agent)
+          - if current_agent.territorial_admin_in?(current_organisation.territory)
+            li.my-2
+              = link_to t(".configuration"), admin_territory_setup_checklist_path(current_organisation.territory)
           li.my-2
             = link_to destroy_agent_session_path, method: :delete do
               i.fa.fa-sign-out
-              span Me déconnecter
+              span = t(".logout")
 
       - if show_checklist?(current_organisation, current_agent)
         li.side-nav-item.mb-4.pl-3.pr-2
