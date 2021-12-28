@@ -5,7 +5,7 @@ fr:
       configuration: Configuration
       account: Mon compte
       organisations: Organisations
-      statistiques: Mes Statistiques
+      statistiques: Mes statistiques
       logout: Déconnexion
   admin:
     rdvs:
