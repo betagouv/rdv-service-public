@@ -15,6 +15,10 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require File.expand_path("../../config/environment", __FILE__)
+require 'rspec/rails'
+require 'axe-rspec'
+require 'webdrivers/chromedriver'
 require "database_cleaner"
 require "capybara/rspec"
 require "capybara/email/rspec"
@@ -27,6 +31,18 @@ require "simplecov"
 # TODO: SimpleCov.minimum_coverage 80
 SimpleCov.minimum_coverage 68
 SimpleCov.start
+
+Capybara.register_driver :chrome_headless do |app|
+  options = ::Selenium::WebDriver::Chrome::Options.new
+  options.add_argument('--headless')
+  options.add_argument('--no-sandbox')
+  options.add_argument('--disable-dev-shm-usage')
+  options.add_argument('--window-size=1400,1400')
+
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+end
+
+Capybara.javascript_driver = :chrome_headless
 
 Capybara.register_driver :selenium do |app|
   # these args seem to reduce test flakyness
