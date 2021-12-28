@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'spec_helper'
 
 RSpec.describe WelcomeController, type: :controller do
   render_views
@@ -12,6 +13,13 @@ RSpec.describe WelcomeController, type: :controller do
     let!(:motif) { create(:motif, service: service, reservable_online: true, organisation: organisation) }
     let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], organisation: organisation) }
 
+    feature 'welcome', js: true do
+      scenario 'index is accessible' do
+        visit root_path
+        expect(page).to be_axe_clean
+      end
+    end
+
     context "for the right departement" do
       before { get :welcome_departement, params: { departement: "72", where: "Arras" } }
 
@@ -23,6 +31,7 @@ RSpec.describe WelcomeController, type: :controller do
 
       it { is_expected.to include("La prise de rendez-vous n'est pas disponible pour ce département.") }
     end
+    
 
     context "with an invitation token" do
       it "stores the token in session" do
