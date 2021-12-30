@@ -76,16 +76,8 @@ class Rdv < ApplicationRecord
     ends_at < Time.zone.now
   end
 
-  def in_the_future?
-    starts_at > Time.zone.now
-  end
-
   def in_the_past?
     starts_at <= Time.zone.now
-  end
-
-  def in_next_hour?
-    starts_at <= 1.hour.from_now
   end
 
   def today?
@@ -181,6 +173,17 @@ class Rdv < ApplicationRecord
     return organisation.phone_number if organisation&.phone_number.present?
 
     ""
+  end
+
+  def self.search_for(agent, organisation, options)
+    rdvs = Agent::RdvPolicy::ScopeForOrganisations.new(agent, organisation, Rdv).resolve
+    rdvs = rdvs.joins(:lieu).where(lieux: { id: options[:lieu_id] }) if options[:lieu_id].present?
+    rdvs = rdvs.joins(:agents).where(agents: { id: options[:agent_id] }) if options[:agent_id].present?
+    rdvs = rdvs.joins(:rdvs_users).where(rdvs_users: { user_id: options[:user_id] }) if options[:user_id].present?
+    rdvs = rdvs.status(options[:status]) if options[:status].present?
+    rdvs = rdvs.where("DATE(starts_at) >= ?", Date.parse(options[:start])) if options[:start].present?
+    rdvs = rdvs.where("DATE(starts_at) <= ?", Date.parse(options[:end])) if options[:end].present?
+    rdvs
   end
 
   private
