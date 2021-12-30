@@ -110,5 +110,36 @@ describe Agent::RdvPolicy, type: :policy do
     end
   end
 
+  describe "ScopeForOrganisations" do
+    it "returns only same organisation and same service rdv with non admin agent" do
+      service = create(:service)
+      organisation = create(:organisation)
+      other_organisation = create(:organisation)
+      agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
+      other_agent = create(:agent, basic_role_in_organisations: [other_organisation], service: service)
+
+      motif = create(:motif, service: service, organisation: organisation)
+      other_motif = create(:motif, service: service, organisation: other_organisation)
+      rdv = create(:rdv, agents: [agent], motif: motif, organisation: organisation)
+      create(:rdv, agents: [other_agent], motif: other_motif, organisation: other_organisation)
+
+      expect(Agent::RdvPolicy::ScopeForOrganisations.new(agent, Rdv).resolve).to eq([rdv])
+    end
+
+    it "returns all organisation's rdv with admin agent" do
+      service = create(:service)
+      other_service = create(:service)
+      organisation = create(:organisation)
+      agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
+
+      motif = create(:motif, service: service, organisation: organisation)
+      rdv = create(:rdv, agents: [agent], motif: motif, organisation: organisation)
+      other_motif = create(:motif, service: other_service, organisation: organisation)
+      other_rdv = create(:rdv, agents: [agent], motif: other_motif, organisation: organisation)
+
+      expect(Agent::RdvPolicy::ScopeForOrganisations.new(agent, Rdv).resolve).to eq([rdv, other_rdv])
+    end
+  end
+
   # TODO: write cases for :new? and create? which
 end
