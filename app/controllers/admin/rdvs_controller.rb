@@ -3,21 +3,30 @@
 class Admin::RdvsController < AgentAuthController
   respond_to :html, :json
 
-  before_action :set_rdv, :set_optional_agent, except: %i[index create]
+  before_action :set_rdv, :set_optional_agent, except: %i[index create new_participation export]
 
   def index
-    @form = Admin::RdvSearchForm.new(
+    @rdvs = Rdv.search_for(current_agent, current_organisation, params)
+    @breadcrumb_page = params[:breadcrumb_page]
+
+    @rdvs = @rdvs.order(starts_at: :asc).page(params[:page])
+  end
+
+  def export
+    authorize(current_agent)
+    SendExportJob.perform_later(
+      current_agent.id,
+      current_organisation.id,
       start: parse_date_from_params(:start),
       end: parse_date_from_params(:end),
-      show_user_details: %w[1 true].include?(params[:show_user_details]),
-      **params.permit(:organisation_id, :agent_id, :user_id, :lieu_id, :status)
+      lieu_id: params[:lieu_id],
+      agent_id: params[:agent_id],
+      user_id: params[:user_id],
+      status: params[:status],
+      organisation_id: params[:organisation_id]
     )
-    @rdvs = policy_scope(Rdv).merge(@form.rdvs)
-    @breadcrumb_page = params[:breadcrumb_page]
-    respond_to do |format|
-      format.xls { send_data(RdvExporter.export(@rdvs.order(starts_at: :desc)), filename: "rdvs.xls", type: "application/xls") }
-      format.html { @rdvs = @rdvs.order(starts_at: :asc).page(params[:page]) }
-    end
+    flash[:notice] = I18n.t("layouts.flash.confirm_export_send_when_done", agent_email: current_agent.email)
+    redirect_to admin_organisation_rdvs_path(organisation_id: current_organisation.id)
   end
 
   def show
@@ -80,7 +89,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def set_rdv
-    @rdv = Rdv.find(params[:id])
+    @rdv = policy_scope(Rdv).find(params[:id])
   end
 
   def rdv_params

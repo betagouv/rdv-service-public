@@ -22,6 +22,7 @@ class Agent::AgentPolicy < ApplicationPolicy
   alias rdvs? current_agent_or_admin_in_record_organisation?
   alias reinvite? current_agent_or_admin_in_record_organisation?
   alias versions? current_agent_or_admin_in_record_organisation?
+  alias export? current_agent_or_admin_in_record_organisation?
 
   def destroy?
     # Even admins cannot destroy themselves
