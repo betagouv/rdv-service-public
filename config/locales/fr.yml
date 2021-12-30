@@ -62,6 +62,10 @@ fr:
           attributes:
             agents:
               not_from_same_territory: doivent être du même territoire
+  agents:
+    export_mailer:
+      rdv_export:
+        description: vous trouverez en pièce jointe l'export des RDV que vous avez demandé.
   date:
     helpers:
       tomorrow: demain
@@ -223,6 +227,9 @@ fr:
       create: Enregistrer
       submit: Enregistrer
       update: Enregistrer
+  layouts:
+    flash:
+      confirm_export_send_when_done: Le fichier Excel des RDV sera envoyé à %{agent_email}
   number:
     currency:
       format:

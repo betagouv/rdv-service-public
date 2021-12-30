@@ -83,4 +83,36 @@ describe Admin::RdvsController, type: :controller do
       end.to change(Rdv, :count).by(-1)
     end
   end
+
+  describe "#export" do
+    it "redirect to index" do
+      post :export, params: { organisation_id: organisation.id }
+      expect(response).to redirect_to(admin_organisation_rdvs_path)
+    end
+
+    it "enqueue a send rdv_export job" do
+      params = {
+        start: nil,
+        end: nil,
+        organisation_id: organisation.id.to_s,
+        agent_id: "",
+        user_id: "",
+        lieu_id: "",
+        status: ""
+      }
+
+      expect(SendExportJob).to receive(:perform_later).with(
+        agent.id,
+        organisation.id,
+        start: params[:start],
+        end: params[:end],
+        organisation_id: organisation.id.to_s,
+        agent_id: params[:agent_id],
+        user_id: params[:user_id],
+        lieu_id: params[:lieu_id],
+        status: params[:status]
+      )
+      post :export, params: { organisation_id: organisation.id }.merge(params)
+    end
+  end
 end
