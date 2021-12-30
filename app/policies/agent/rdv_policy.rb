@@ -9,6 +9,29 @@ class Agent::RdvPolicy < DefaultAgentPolicy
     same_agent_or_has_access?
   end
 
+  def new_participation?
+    update?
+  end
+
+  class ScopeForOrganisations < Scope
+    attr_reader :agent, :scope
+
+    def initialize(agent, organisation, scope)
+      @agent = agent
+      @organisation = organisation
+      @scope = scope
+      super([agent, organisation], scope)
+    end
+
+    def resolve
+      if @agent.roles.map(&:can_access_others_planning?).uniq == [true]
+        scope.where(organisation: @organisation)
+      else
+        scope.joins(:motif).where(organisation: @organisation, motifs: { service: @agent.service })
+      end
+    end
+  end
+
   class Scope < Scope
     def resolve
       if context.can_access_others_planning?
