@@ -94,9 +94,8 @@ group :development, :test do
   gem "parallel_tests"
   gem "simplecov", require: false
   gem "slim_lint", require: false
-  gem 'axe-core-rspec'
-  gem 'selenium-webdriver'
-
+  gem "axe-core-rspec"
+  gem "selenium-webdriver"
 end
 
 group :development do
