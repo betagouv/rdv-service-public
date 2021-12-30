@@ -3,9 +3,9 @@ html lang="fr"
   head
     = render "common/head"
   body class="#{agents_or_users_body_class}"
-    = render "layouts/rdv_solidarites_instance_name"
-    = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
-    .bg-primary
+    header.header.bg-primary
+      = render "layouts/rdv_solidarites_instance_name"
+      = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
       .container
         - if current_user.present?
           = render "common/header_user_logged"
@@ -23,7 +23,8 @@ html lang="fr"
 
       = yield :header
 
-    div class="#{ "container" if params[:controller].include?("users/") }"
+    main class="#{ "container" if params[:controller].include?("users/") }"
       = yield
     #modal-holder
-    = render "common/footer_users"
+    footer.main-footer
+      = render "common/footer_users"
