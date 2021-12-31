@@ -123,21 +123,29 @@ describe Agent::RdvPolicy, type: :policy do
       rdv = create(:rdv, agents: [agent], motif: motif, organisation: organisation)
       create(:rdv, agents: [other_agent], motif: other_motif, organisation: other_organisation)
 
-      expect(Agent::RdvPolicy::ScopeForOrganisations.new(agent, Rdv).resolve).to eq([rdv])
+      expect(Agent::RdvPolicy::ScopeForOrganisations.new(agent, organisation, Rdv).resolve).to eq([rdv])
     end
 
     it "returns all organisation's rdv with admin agent" do
       service = create(:service)
       other_service = create(:service)
       organisation = create(:organisation)
-      agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
+      agent = create(:agent, admin_role_in_organisations: [organisation], service: service)
 
       motif = create(:motif, service: service, organisation: organisation)
       rdv = create(:rdv, agents: [agent], motif: motif, organisation: organisation)
       other_motif = create(:motif, service: other_service, organisation: organisation)
       other_rdv = create(:rdv, agents: [agent], motif: other_motif, organisation: organisation)
 
-      expect(Agent::RdvPolicy::ScopeForOrganisations.new(agent, Rdv).resolve).to eq([rdv, other_rdv])
+      expect(Agent::RdvPolicy::ScopeForOrganisations.new(agent, organisation, Rdv).resolve).to eq([rdv, other_rdv])
+    end
+
+    it "returns an empty array when no RDV" do
+      service = create(:service)
+      organisation = create(:organisation)
+      agent = create(:agent, admin_role_in_organisations: [organisation], service: service)
+
+      expect(Agent::RdvPolicy::ScopeForOrganisations.new(agent, organisation, Rdv).resolve).to eq([])
     end
   end
 

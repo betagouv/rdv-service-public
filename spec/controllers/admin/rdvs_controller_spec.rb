@@ -1,37 +1,46 @@
 # frozen_string_literal: true
 
 describe Admin::RdvsController, type: :controller do
-  render_views
-
+  let(:now) { Time.zone.parse("19/07/2019 15:00") }
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }
   let(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
   let!(:user) { create(:user, first_name: "Marie", last_name: "Denis") }
   let!(:motif) { create(:motif, name: "Suivi", organisation: organisation, service: service, color: "#1010FF") }
-  let!(:rdv) { create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation) }
+
+  render_views
 
   before do
+    travel_to(now)
     sign_in agent
   end
 
   describe "GET index" do
     let(:lieu) { create(:lieu, organisation: organisation, name: "MDS Orgeval") }
 
-    it "respond success and assign RDVS" do
-      get(:index, params: {
-            organisation_id: organisation.id,
-            agent_id: agent.id,
-            start: Time.zone.parse("20/07/2019 08:00"),
-            end: Time.zone.parse("27/07/2019 09:00")
-          })
+    it "respond success" do
+      get(:index, params: { organisation_id: organisation.id, agent_id: agent.id, start: Time.zone.parse("20/07/2019 08:00"), end: Time.zone.parse("27/07/2019 09:00") })
 
       expect(response).to be_successful
-      expect(assigns(:rdvs)).to eq([])
+    end
+
+    it "assign RDVS" do
+      rdv = create(:rdv, organisation: organisation, motif: motif)
+      get(:index, params: { organisation_id: organisation.id })
+
+      expect(assigns(:rdvs)).to eq([rdv])
+    end
+
+    it "assign form" do
+      get(:index, params: { organisation_id: organisation.id, agent_id: agent.id, start: Time.zone.parse("20/07/2019 08:00"), end: Time.zone.parse("27/07/2019 09:00") })
+
+      expect(assigns(:form)).not_to be_nil
     end
   end
 
   describe "GET #edit" do
     it "returns a success response" do
+      rdv = create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation)
       get :edit, params: { organisation_id: organisation.id, id: rdv.to_param }
       expect(response).to be_successful
     end
@@ -51,6 +60,7 @@ describe Admin::RdvsController, type: :controller do
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'edit' template)" do
+        rdv = create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation)
         new_attributes = { duration_in_min: -10 }
         put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: new_attributes }
         expect(response).to be_successful
@@ -58,6 +68,7 @@ describe Admin::RdvsController, type: :controller do
       end
 
       it "does not change rdv" do
+        rdv = create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation)
         new_attributes = { duration_in_min: -10 }
         expect do
           put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: new_attributes }
@@ -78,6 +89,7 @@ describe Admin::RdvsController, type: :controller do
 
   describe "DELETE destroy" do
     it "cancel rdv" do
+      rdv = create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation)
       expect do
         delete :destroy, params: { organisation_id: organisation.id, id: rdv.id }
       end.to change(Rdv, :count).by(-1)
@@ -104,13 +116,13 @@ describe Admin::RdvsController, type: :controller do
       expect(SendExportJob).to receive(:perform_later).with(
         agent.id,
         organisation.id,
-        start: params[:start],
-        end: params[:end],
-        organisation_id: organisation.id.to_s,
-        agent_id: params[:agent_id],
-        user_id: params[:user_id],
-        lieu_id: params[:lieu_id],
-        status: params[:status]
+        "start" => params[:start],
+        "end" => params[:end],
+        "organisation_id" => organisation.id.to_s,
+        "agent_id" => params[:agent_id],
+        "user_id" => params[:user_id],
+        "lieu_id" => params[:lieu_id],
+        "status" => params[:status]
       )
       post :export, params: { organisation_id: organisation.id }.merge(params)
     end
