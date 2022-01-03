@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Organisation < ApplicationRecord
+  include WebhookDeliverable
+
   has_paper_trail
 
   auto_strip_attributes :email, :name
