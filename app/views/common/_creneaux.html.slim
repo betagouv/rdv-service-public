@@ -16,23 +16,22 @@ div id="creneaux-lieu-#{lieu.id}"
               strong= l(date, format: "%A")
               br
               = l(date, format: "%d %b")
-            - creneaux_for_date = creneaux.group_by { |c| c.starts_at.to_date }.select { |k, v| k == date }
-
+            - creneaux_for_date = extract_uniq_slots_for_date_and_time(creneaux, date)
             - if creneaux_for_date.any? && creneaux_for_date[date].first.respects_max_booking_delay?
               - creneaux_for_date.each do |date, creneaux|
                 - creneaux.sort_by(&:starts_at).each do |creneau|
                   - if creneau.motif.restriction_for_rdv.blank?
                     = link_to new_users_rdv_wizard_step_path(@query.merge(motif_id: creneau.motif.id, starts_at: creneau.starts_at)), "data-turbolinks": false, class: "btn btn-light mr-1 mb-1 w-100" do
                       = l(creneau.starts_at, format: "%H:%M")
-                      - if creneau.agent_name
+                      - if creneau.motif.follow_up?
                         br
-                        small= creneau.agent_name
+                        small= creneau.agent.short_name
                   - else
                     = link_to "#", "data-turbolinks": false, data: { toggle: "modal", target: "#js-rdv-restriction-motif#{creneau.starts_at.to_i}" }, class: "btn btn-light mr-1 mb-1 w-100" do
                       = l(creneau.starts_at, format: "%H:%M")
-                      - if creneau.agent_name
+                      - if creneau.agent.short_name
                         br
-                        small= creneau.agent_name
+                        small= creneau.agent.short_name
 
                     =  render "/common/modal", id: "js-rdv-restriction-motif#{creneau.starts_at.to_i}" , title: "À lire avant de prendre un rendez-vous", confirm_path: new_users_rdv_wizard_step_path(@query.merge(motif_id: creneau.motif.id, starts_at: creneau.starts_at)) do
                       = ActionController::Base.helpers.auto_link(simple_format(creneau.motif.restriction_for_rdv), html: { target: "_blank"})

@@ -15,6 +15,6 @@ module CreneauxHelper
     color-scheme-teal
   ].freeze
   def agent_color(color_index)
-    COLORS[color_index % COLORS.length]
+    COLORS[color_index || (0 % COLORS.length)]
   end
 end
