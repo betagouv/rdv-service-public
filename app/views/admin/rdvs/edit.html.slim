@@ -50,7 +50,7 @@
                                                           dataType: "json", delay: 250 } } } }
 
             .form-group
-              = "Usagers :"
+              = "#{User.model_name.human.pluralize} :"
               .rdv-participations
               = f.fields_for :rdvs_users, @rdv.rdvs_users do |rdv_user_form|
                 = render "admin/rdvs_users/form", form: rdv_user_form
@@ -69,5 +69,5 @@
                }
 
             .text-right
-              = link_to "Retour", admin_organisation_rdv_path(current_organisation, @rdv), class: "btn btn-link"
-              = f.button :submit, "Enregistrer"
+              = link_to t("helpers.back"), admin_organisation_rdv_path(current_organisation, @rdv), class: "btn btn-link"
+              = f.button :submit, t("helpers.submit.submit")
