@@ -178,6 +178,13 @@ class User < ApplicationRecord
     I18n.transliterate([last_name, email, birth_name, phone_number_formatted, first_name].compact.join(" "))
   end
 
+  # This method is called when calling #current_user on a controller action that is automatically generated
+  # by the devise_token_auth gem. It can happen since these actions inherits from ApplicationController (see PR #1933).
+  # We monkey-patch it for it not to raise.
+  def self.dta_find_by(_attrs = {})
+    nil
+  end
+
   protected
 
   def compute_invitation_due_at

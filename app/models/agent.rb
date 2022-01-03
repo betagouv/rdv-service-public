@@ -152,4 +152,11 @@ class Agent < ApplicationRecord
   def update_unknown_past_rdv_count!
     update_column(:unknown_past_rdv_count, rdvs.status(:unknown_past).count)
   end
+
+  # This method is called when calling #current_agent on a controller action that is automatically generated
+  # by the devise_token_auth gem. It can happen since these actions inherits from ApplicationController (see PR #1933).
+  # We monkey-patch it for it not to raise.
+  def self.dta_find_by(_attrs = {})
+    nil
+  end
 end

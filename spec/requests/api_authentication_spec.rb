@@ -73,4 +73,16 @@ describe "API auth", type: :request do
       expect(JSON.parse(response.body)["absences"].count).to eq(1)
     end
   end
+
+  describe "GET api/v1/auth/validate_token" do
+    subject { get api_v1_auth_validate_token_path, headers: api_auth_headers_for_agent(agent) }
+
+    let!(:agent) { create(:agent, email: "amine.dhobb@beta.gouv.fr") }
+
+    it "returns the agent credentials" do
+      subject
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)["data"]["email"]).to eq("amine.dhobb@beta.gouv.fr")
+    end
+  end
 end
