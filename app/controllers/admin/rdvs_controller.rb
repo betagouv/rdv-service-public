@@ -12,19 +12,6 @@ class Admin::RdvsController < AgentAuthController
     @rdvs = @rdvs.order(starts_at: :asc).page(params[:page])
   end
 
-  def parsed_params
-    params.permit(:organisation_id, :agent_id, :user_id, :lieu_id, :status, :show_user_details, :start, :end).to_hash.map do |param_name, param_value|
-      case param_name
-      when "start", "end"
-        [param_name, parse_date_from_params(param_value)]
-      when "show_user_details"
-        [param_name, %w[1 true].include?(param_value)]
-      else
-        [param_name, param_value]
-      end
-    end.to_h
-  end
-
   def export
     authorize(current_agent)
     SendExportJob.perform_later(
@@ -110,5 +97,18 @@ class Admin::RdvsController < AgentAuthController
 
   def status_params
     params.require(:rdv).permit(:status)
+  end
+
+  def parsed_params
+    params.permit(:organisation_id, :agent_id, :user_id, :lieu_id, :status, :show_user_details, :start, :end).to_hash.map do |param_name, param_value|
+      case param_name
+      when "start", "end"
+        [param_name, parse_date_from_params(param_value)]
+      when "show_user_details"
+        [param_name, %w[1 true].include?(param_value)]
+      else
+        [param_name, param_value]
+      end
+    end.to_h
   end
 end
