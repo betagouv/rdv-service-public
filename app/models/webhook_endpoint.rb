@@ -7,5 +7,5 @@ class WebhookEndpoint < ApplicationRecord
   validates :target_url, presence: true
   validates :secret, presence: true
 
-  ALL_SUBSCRIPTIONS = %w[rdv absence plage_ouverture user user_profile].freeze
+  ALL_SUBSCRIPTIONS = %w[rdv absence plage_ouverture user user_profile organisation].freeze
 end
