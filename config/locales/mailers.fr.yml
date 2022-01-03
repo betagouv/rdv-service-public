@@ -8,7 +8,7 @@ fr:
     common:
       hello: Bonjour,
       farewell: "Belle journée, L'équipe RDV-Solidarités"
-      farewell_html: "<p>Belle journée,<br>L'équipe RDV-Solidarités</p>"
+      farewell_html: "<p>À bientôt,<br>L’équipe RDV-Solidarités</p>"
 
   agents:
     absence_mailer:
