@@ -7,7 +7,6 @@ fr:
   mailers:
     common:
       hello: Bonjour,
-      farewell: "Belle journée, L'équipe RDV-Solidarités"
       farewell_html: "<p>À bientôt,<br>L’équipe RDV-Solidarités</p>"
 
   agents:
