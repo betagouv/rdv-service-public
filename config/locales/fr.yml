@@ -174,6 +174,7 @@ fr:
         other: 'Impossible d''enregistrer ce(tte) %{model} : %{count} erreurs'
   helpers:
     add: Ajouter
+    back: Retour
     clone: Dupliquer
     cancel: Annuler
     delete: Supprimer
