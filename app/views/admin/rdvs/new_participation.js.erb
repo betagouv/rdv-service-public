@@ -1,8 +1,0 @@
-<% form = form_for @rdv_user %>
-<% participation_html = escape_javascript(render partial:"admin/rdvs_users/form", form: form) %>
-(function() {
-  let element = document.getElementById('rdv-participations');
-  if(element) {
-    element.insertAdjacentHTML('beforeend', "<%= participation_html %>");
-  }
-})();

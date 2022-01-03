@@ -3,7 +3,7 @@
 class Admin::RdvsController < AgentAuthController
   respond_to :html, :json
 
-  before_action :set_rdv, :set_optional_agent, except: %i[index create new_participation]
+  before_action :set_rdv, :set_optional_agent, except: %i[index create]
 
   def index
     @form = Admin::RdvSearchForm.new(
@@ -26,16 +26,12 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def edit
+    add_user_ids = params[:add_user]
+    users_to_add = User.where(id: add_user_ids)
+    users_to_add.ids.each { @rdv.rdvs_users.build(user_id: _1) }
+
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
     authorize(@rdv_form.rdv)
-  end
-
-  def new_participation
-    @rdv = Rdv.find(params[:rdv_id])
-    authorize(@rdv)
-
-    new_user_id = params[:user_id]
-    @rdv_user = @rdv.rdvs_users.build(user_id: new_user_id)
   end
 
   def update
