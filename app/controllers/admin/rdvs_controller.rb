@@ -35,7 +35,6 @@ class Admin::RdvsController < AgentAuthController
     authorize(@rdv)
 
     new_user_id = params[:user_id]
-    # user_to_add = User.find(new_user_id)
     @rdv_user = @rdv.rdvs_users.build(user_id: new_user_id)
   end
 
