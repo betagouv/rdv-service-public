@@ -19,11 +19,16 @@ module Rdv::AddressConcern
     ""
   end
 
-  def address_complete_without_personnal_details
-    return "Par téléphone" if phone?
-    return "À domicile" if home?
+  def address_complete_without_personal_details
+    return address_complete if public_office?
 
-    address_complete
+    result = motif.human_attribute_value(:location_type)
+    if home? && user_for_home_rdv.present?
+      home_city = [user_for_home_rdv.post_code, user_for_home_rdv.city_name].compact.join(" ")
+      result.concat(" (#{home_city})") if home_city.present?
+    end
+
+    result
   end
 
   private

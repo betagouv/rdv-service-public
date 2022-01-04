@@ -115,22 +115,25 @@ describe Rdv, type: :model do
   describe "#adress_complete_without_personnal_details" do
     it "return nothing for a phone rdv" do
       rdv = build(:rdv, :by_phone)
-      expect(rdv.address_complete_without_personnal_details).to eq("Par téléphone")
+      expect(rdv.address_complete_without_personal_details).to eq("Par téléphone")
     end
 
     it "return mds address for a public_office rdv" do
       lieu = build(:lieu, address: "16 rue de l'adresse 12345 Ville", name: "PMI centre ville")
       rdv = build(:rdv, motif: build(:motif, :at_public_office), lieu: lieu)
-      expect(rdv.address_complete_without_personnal_details).to eq("PMI centre ville (16 rue de l'adresse 12345 Ville)")
+      expect(rdv.address_complete_without_personal_details).to eq("PMI centre ville (16 rue de l'adresse 12345 Ville)")
     end
 
-    # TODO: retourner la ville quand les adresses seront enregistrees plus proprement
-    it "return only city for a at_home rdv"
-
-    it "return nothing for a at_home rdv" do
-      user = build(:user, address: "3 rue de l'églie 75020 Paris")
+    it "return only city for a at_home rdv" do
+      user = build(:user, address: "3 rue de l'église 75020 Paris", post_code: "75020", city_name: "Paris")
       rdv = build(:rdv, motif: build(:motif, :at_home), users: [user])
-      expect(rdv.address_complete_without_personnal_details).to eq("À domicile")
+      expect(rdv.address_complete_without_personal_details).to eq("À domicile (75020 Paris)")
+    end
+
+    it "return nothing for a at_home rdv if city is blank" do
+      user = build(:user, address: "3 rue de l'église 75020 Paris")
+      rdv = build(:rdv, motif: build(:motif, :at_home), users: [user])
+      expect(rdv.address_complete_without_personal_details).to eq("À domicile")
     end
   end
 
