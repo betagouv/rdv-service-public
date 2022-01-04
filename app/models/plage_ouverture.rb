@@ -73,11 +73,11 @@ class PlageOuverture < ApplicationRecord
   end
 
   def covers_date?(date)
-    (
-      recurring? &&
-      recurrence_interval == 1 && # limited by https://github.com/rossta/montrose/pull/132
+    if recurring?
       recurrence.include?(date.in_time_zone)
-    ) || (exceptionnelle? && first_day == date)
+    else
+      first_day == date
+    end
   end
 
   private

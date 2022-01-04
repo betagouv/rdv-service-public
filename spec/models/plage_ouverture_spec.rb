@@ -110,7 +110,7 @@ describe PlageOuverture, type: :model do
       let(:plage_ouverture) do
         build(
           :plage_ouverture,
-          recurrence: Montrose.every(:week, starts: Date.new(2020, 11, 18), on: [:wednesday]).to_json,
+          recurrence: Montrose.every(:week, starts: Date.new(2020, 11, 18).in_time_zone, interval: 1, on: [:wednesday]).to_json,
           first_day: Date.new(2020, 11, 18), # a wednesday
           start_time: Tod::TimeOfDay.new(14),
           end_time: Tod::TimeOfDay.new(18)
@@ -170,7 +170,7 @@ describe PlageOuverture, type: :model do
       let(:plage_ouverture) do
         build(
           :plage_ouverture,
-          recurrence: Montrose.every(:week, starts: Date.new(2020, 11, 18), interval: 2, on: [:wednesday]).to_json,
+          recurrence: Montrose.every(:week, starts: Date.new(2020, 11, 18).in_time_zone, interval: 2, on: [:wednesday]).to_json,
           first_day: Date.new(2020, 11, 18), # a wednesday
           start_time: Tod::TimeOfDay.new(14),
           end_time: Tod::TimeOfDay.new(18)
@@ -183,8 +183,7 @@ describe PlageOuverture, type: :model do
         it { is_expected.to eq false }
       end
 
-      # TODO : pending before https://github.com/rossta/montrose/pull/132
-      context "for a wednesday 2 weeks later", pending: true do
+      context "for a wednesday 2 weeks later" do
         let(:date) { Date.new(2020, 12, 2) }
 
         it { is_expected.to eq true }
