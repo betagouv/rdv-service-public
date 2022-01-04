@@ -2,6 +2,12 @@
 
 describe Expiration, type: :concern do
   shared_examples "#expired?" do
+    def build(factory, params)
+      # Absence has a :end_day attribute, but not PlageOuverture
+      params.delete(:end_day) if described_class != Absence
+      super(factory, **params)
+    end
+
     it "is expired when end_day before today" do
       today = Time.zone.parse("20210323 13:45")
       travel_to(today)
