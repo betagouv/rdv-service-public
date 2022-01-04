@@ -49,8 +49,8 @@ describe PhoneNumberValidation do
     end
   end
 
-  describe "has phone number concern" do
-    shared_examples "has phone number concern" do |factory|
+  describe "HasPhoneNumber" do
+    shared_examples "HasPhoneNumber" do
       describe "validation hooks" do
         it "is invalid when number is wrong" do
           object = build(factory, phone_number: "invalid value")
@@ -92,6 +92,12 @@ describe PhoneNumberValidation do
       end
     end
 
-    it_behaves_like "has phone number concern", :user, :rdv
+    [User, Territory, Lieu].each do |klass|
+      describe(klass) do
+        let(:factory) { described_class.name.underscore }
+
+        include_examples "HasPhoneNumber"
+      end
+    end
   end
 end
