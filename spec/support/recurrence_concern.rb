@@ -24,16 +24,16 @@ shared_examples_for "recurrence" do
     end
 
     context "recurring without end date" do
-      let(:first_day) { Date.new(2019, 7, 22) }
+      let(:first_day) { Date.new(2019, 7, 22).in_time_zone }
       let(:model_instance) { create(model_symbol, first_day: first_day, end_time: Tod::TimeOfDay.new(12), recurrence: Montrose.every(:week, on: [:tuesday], starts: first_day)) }
 
       it { is_expected.to be_nil }
     end
 
     context "recurring with end date" do
-      let(:first_day) { Date.new(2019, 11, 17) }
+      let(:first_day) { Date.new(2019, 11, 17).in_time_zone }
       let(:model_instance) do
-        create(model_symbol, first_day: first_day, end_time: Tod::TimeOfDay.new(12), recurrence: Montrose.every(:week, on: [:tuesday], starts: first_day, until: Date.new(2020, 11, 25)))
+        create(model_symbol, first_day: first_day, end_time: Tod::TimeOfDay.new(12), recurrence: Montrose.every(:week, on: [:tuesday], starts: first_day, until: Date.new(2020, 11, 25).in_time_zone))
       end
 
       it { is_expected.to eq(Time.zone.local(2020, 11, 25, 12)) }

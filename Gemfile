@@ -74,7 +74,7 @@ gem "spreadsheet" # Excel export
 gem "wannabe_bool" # imports to_b method
 
 ## Time Management
-gem "montrose", "~> 0.11.2"
+gem "montrose"
 gem "tod", "~> 2.2"
 gem "icalendar", "~> 2.5"
 
