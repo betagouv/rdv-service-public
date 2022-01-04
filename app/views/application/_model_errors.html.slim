@@ -4,7 +4,7 @@
   .alert.alert-warning.show
     ul.m-0.pl-1
       - model.benign_errors.each do |msg|
-        li= msg.hml_safe
+        li= msg.html_safe
 
   - if local_assigns[:f]
     .collapse.show.js-collapse-warning-confirmation
