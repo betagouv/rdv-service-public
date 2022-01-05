@@ -34,7 +34,7 @@ describe Admin::Creneaux::AgentSearchesController, type: :controller do
       it "assigns available agents" do
         other_agent = create(:agent, basic_role_in_organisations: [organisation])
         get :index, params: { organisation_id: organisation.id }
-        expect(assigns(:agents).sort).to eq([agent, other_agent].sort)
+        expect(assigns(:agents)).to contain_exactly([agent, other_agent])
       end
 
       it "assigns available teams" do
