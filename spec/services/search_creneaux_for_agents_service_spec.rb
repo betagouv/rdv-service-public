@@ -16,7 +16,7 @@ describe SearchCreneauxForAgentsService, type: :service do
       organisation: organisation,
       motif: motif,
       service: motif.service,
-      agents: agents,
+      agent_ids: agents.map(&:id),
       lieu_ids: lieu_ids,
       date_range: Time.zone.today..(Time.zone.today + 6.days)
     )
@@ -38,7 +38,7 @@ describe SearchCreneauxForAgentsService, type: :service do
     end
 
     context "when filtering by agent" do
-      let(:agents) { [agent2.id] }
+      let(:agents) { [agent2] }
 
       it { expect(subject.map(&:lieu)).to contain_exactly(lieu2) }
 
