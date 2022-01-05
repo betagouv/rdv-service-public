@@ -9,7 +9,7 @@
     "@fullcalendar/list": "^4.4.2",
     "@fullcalendar/timegrid": "^4.4.2",
     "@rails/ujs": "^6.0.0",
-    "@rails/webpacker": "^5.1.1",
+    "@rails/webpacker": ">=5.1.1",
     "@sentry/browser": "^5.10.2",
     "autocomplete.js": "^0.37.1",
     "bootstrap": "^4.3.1",
@@ -25,13 +25,13 @@
     "minimist": "^1.2.3",
     "moment": "^2.24.0",
     "popper.js": "^1.15.0",
-    "rails-erb-loader": "^5.5.2",
+    "rails-erb-loader": ">=5.5.2",
     "select2": "^4.0.8",
     "select2-bootstrap4-theme": "^1.0.0",
     "turbolinks": "^5.2.0",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
-    "webpack-dev-server": "^3.3.1"
+    "webpack-dev-server": ">=3.3.1"
   }
 }
