@@ -4,9 +4,10 @@ class CreateTeams < ActiveRecord::Migration[6.0]
   def change
     create_table :teams do |t|
       t.belongs_to :territory
-      t.string :name
+      t.string :name, null: false, unique: true, :index
       t.timestamps
     end
+
 
     add_index :teams, "to_tsvector('simple'::regconfig, COALESCE(teams.name, ''::text))", using: :gin, name: "index_teams_name_vector"
 
