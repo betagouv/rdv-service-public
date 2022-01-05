@@ -53,4 +53,20 @@ RSpec.describe Admin::Territories::AgentsController, type: :controller do
       expect(agent.reload.teams).to eq([team])
     end
   end
+
+  describe "#search" do
+    it "successful" do
+      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
+      sign_in agent
+      get :search, params: { territory_id: territory.id, term: "bla", format: "json" }
+      expect(response).to be_successful
+    end
+
+    it "assigns agents" do
+      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory], last_name: "Bladubar")
+      sign_in agent
+      get :search, params: { territory_id: territory.id, term: "bla", format: "json" }
+      expect(assigns(:agents)).to eq([agent])
+    end
+  end
 end
