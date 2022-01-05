@@ -83,7 +83,7 @@ describe Agent, type: :model do
   describe "#to_s" do
     it "return Validay Martine" do
       agent = build(:agent, last_name: "Validay", first_name: "Martine")
-      expect(agent.to_s).to eq("Validay Martine")
+      expect(agent.to_s).to eq("Martine Validay")
     end
   end
 end
