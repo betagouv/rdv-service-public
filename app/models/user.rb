@@ -147,7 +147,7 @@ class User < ApplicationRecord
   end
 
   def rdvs_for_organisation(organisation)
-    Rdv.where(organisation: organisation).with_user(self)
+    rdvs.where(organisation: organisation)
   end
 
   def email_tld
