@@ -123,7 +123,7 @@ describe SearchContext, type: :service do
 
       context "when there are no geo search available motifs" do
         let!(:some_motif) { create(:motif, organisation: organisation, service: service) }
-        let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: []) }
+        let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.none) }
 
         before do
           allow(Motif).to receive(:available_with_plages_ouvertures)
