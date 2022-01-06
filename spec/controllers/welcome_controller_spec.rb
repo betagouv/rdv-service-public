@@ -32,4 +32,19 @@ RSpec.describe WelcomeController, type: :controller do
       end
     end
   end
+
+  describe "GET #search" do
+
+    it "redirect vers le welcome_departement" do
+      get :search, params: { search: {departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", where: "Paris, 75001, 75, Paris, Île-de-France"} }
+      expect(response).to redirect_to(welcome_departement_path(departement: "75", city_code: "75056", latitude: "48.859", longitude: "2.347", where: "Paris, 75001, 75, Paris, Île-de-France"))
+    end
+
+    it "redirect vers l'accueil" do
+      get :search, params: { search: {city_code: "75056", latitude: "48.859", longitude: "2.347", where: "Paris, 75001, 75, Paris, Île-de-France"} }
+      expect(response).to redirect_to(root_path)
+    end
+
+
+  end
 end
