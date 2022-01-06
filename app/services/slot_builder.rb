@@ -66,13 +66,13 @@ module SlotBuilder
     end
 
     def first_range(range, busy_time)
-      return [range.begin..busy_time.starts_at] if range.begin < busy_time.starts_at && range.include?(busy_time.range)
+      return [range.begin..busy_time.starts_at] if range.begin < busy_time.starts_at && range.cover?(busy_time.range)
 
       []
     end
 
     def remaining_range(range, busy_time)
-      return busy_time.ends_at..range.end if range.include?(busy_time.range)
+      return busy_time.ends_at..range.end if range.cover?(busy_time.range)
       return range.begin..busy_time.starts_at if range.cover?(busy_time.starts_at)
       return busy_time.ends_at..range.end if range.cover?(busy_time.ends_at)
     end
