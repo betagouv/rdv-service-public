@@ -37,10 +37,11 @@ recette_rebase_onto_production: ## Deployment: Rebase the recette branch and its
 	git checkout recette && git rebase --rebase-merges production
 
 recette_merge_in_production:    ## Deployment: Fast-forward the production branch to the recette branch
+	git checkout recette && git tag `date +%Y-%m-%d-%H-%M-%s`-deploy-recette-to-production
 	git checkout production && git merge recette --ff-only
 
 recette_deploy_to_production: recette_pull_all recette_rebase_onto_production recette_merge_in_production ## Deploy the current status of recette to production
-	git checkout production && git push origin production
+	git checkout production && git push origin production --tags
 
 clean: ## Clean temporary files (including weppacks) and logs
 	bundle exec rails log:clear tmp:clear
