@@ -14,6 +14,6 @@ module User::NotificableConcern
   def phone_number_mobile?
     return false if phone_number_formatted.blank?
 
-    Phonelib.parse(phone_number_formatted).types.include?(:mobile)
+    PhoneNumberValidation.number_is_mobile?(phone_number)
   end
 end
