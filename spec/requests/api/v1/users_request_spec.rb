@@ -443,6 +443,41 @@ describe "api/v1/users requests", type: :request do
     end
   end
 
+  describe "GET api/v1/:organisation_id/users/:user_id" do
+    let!(:user) { create(:user, organisations: [organisation]) }
+
+    context "when the user belongs to the org" do
+      it "works" do
+        get api_v1_organisation_user_path(organisation, user), headers: api_auth_headers_for_agent(agent)
+        expect(response.status).to eq(200)
+        response_parsed = JSON.parse(response.body)
+        expect(response_parsed["user"]["id"]).to eq(user.id)
+      end
+    end
+
+    context "when the user does not belong to the org" do
+      let!(:another_org) { create(:organisation) }
+      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation, another_org]) }
+      let!(:user) { create(:user, organisations: [another_org]) }
+
+      it "is not found" do
+        get api_v1_organisation_user_path(organisation, user), headers: api_auth_headers_for_agent(agent)
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when the agent does not belong to the org" do
+      let!(:another_org) { create(:organisation) }
+      let!(:agent) { create(:agent, basic_role_in_organisations: [another_org]) }
+      let!(:user) { create(:user, organisations: [organisation]) }
+
+      it "is not authorized" do
+        get api_v1_organisation_user_path(organisation, user), headers: api_auth_headers_for_agent(agent)
+        expect(response.status).to eq(403)
+      end
+    end
+  end
+
   describe "PATCH api/v1/users" do
     let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation]) }
 
