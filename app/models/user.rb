@@ -7,7 +7,7 @@ class User < ApplicationRecord
   include User::FranceconnectFrozenFieldsConcern
   include User::NotificableConcern
   include User::ImprovedUnicityErrorConcern
-  include HasPhoneNumberConcern
+  include PhoneNumberValidation::HasPhoneNumber
   include WebhookDeliverable
 
   ONGOING_MARGIN = 1.hour.freeze
