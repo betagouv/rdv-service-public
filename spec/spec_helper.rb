@@ -24,7 +24,7 @@ require "pundit/rspec"
 
 require "simplecov"
 
-# TODO SimpleCov.minimum_coverage 80
+# TODO: SimpleCov.minimum_coverage 80
 SimpleCov.minimum_coverage 68
 SimpleCov.start
 
