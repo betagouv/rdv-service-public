@@ -14,8 +14,6 @@ class Agent::RdvPolicy < DefaultAgentPolicy
   end
 
   class ScopeForOrganisations < Scope
-    attr_reader :agent, :scope
-
     def initialize(agent, organisation, scope)
       @agent = agent
       @organisation = organisation
@@ -24,11 +22,10 @@ class Agent::RdvPolicy < DefaultAgentPolicy
     end
 
     def resolve
-      if @agent.roles.map(&:can_access_others_planning?).uniq == [true]
-        scope.where(organisation: @organisation)
-      else
-        scope.joins(:motif).where(organisation: @organisation, motifs: { service: @agent.service })
+      unless @agent.role_in_organisation(@organisation).can_access_others_planning?
+        @scope = @scope.joins(:motif).where(motifs: { service: @agent.service })
       end
+      @scope.where(organisation: @organisation)
     end
   end
 
