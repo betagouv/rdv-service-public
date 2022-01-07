@@ -39,9 +39,35 @@
           = date_input(f, :from_date, label = "À partir du", required: true)
       .row
         .col-md-4
-          = f.input :team_ids, collection: @teams, label: t(".teams"), input_html: { multiple: true, class: "select2-input" }
+          = f.input :team_ids, collection: @teams, label: t(".teams"), label_method: :name, input_html: { \
+              multiple: true, \
+              class: "select2-input",\
+              data: {\
+                "select-options": {\
+                  ajax: {\
+                    url: search_admin_territory_teams_path(current_organisation.territory),
+                    dataType: "json",
+                    delay: 250\
+                  }\
+                }\
+              }\
+            }
+
         .col-md-4
-          = f.input :agent_ids, collection: @agents, label: t(".agents"), input_html: { multiple: true, class: "select2-input" }
+          = f.input :agent_ids, collection: @agents, label: t(".agents"), label_method: :reverse_full_name, input_html: { \
+              multiple: true, \
+              class: "select2-input",\
+              data: {\
+                "select-options": {\
+                  ajax: {\
+                    url: search_admin_organisation_agents_path(current_organisation),
+                    dataType: "json",
+                    delay: 250\
+                  }\
+                }\
+              }\
+            }
+
         .col-md-4
           = f.input :lieu_ids, collection: @lieux, label: "Lieu(x)", input_html: { multiple: true, class: "select2-input" }
       = f.submit "Afficher les créneaux", class: "btn btn-primary", data: { disable_with: "Récupération des créneaux..."}
