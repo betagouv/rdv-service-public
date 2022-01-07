@@ -176,7 +176,7 @@ class Rdv < ApplicationRecord
   end
 
   def self.search_for(agent, organisation, options)
-    rdvs = Agent::RdvPolicy::ScopedByOrganisations.new(agent, organisation, Rdv).resolve
+    rdvs = Agent::RdvPolicy::ScopeByOrganisation.new(agent, organisation, Rdv).resolve
     rdvs = rdvs.joins(:lieu).where(lieux: { id: options["lieu_id"] }) if options["lieu_id"].present?
     rdvs = rdvs.joins(:agents).where(agents: { id: options["agent_id"] }) if options["agent_id"].present?
     rdvs = rdvs.joins(:rdvs_users).where(rdvs_users: { user_id: options["user_id"] }) if options["user_id"].present?

@@ -110,7 +110,7 @@ describe Agent::RdvPolicy, type: :policy do
     end
   end
 
-  describe "ScopeForOrganisations" do
+  describe "ScopeByOrganisation" do
     it "returns only same organisation and same service rdv with non admin agent" do
       service = create(:service)
       organisation = create(:organisation)
@@ -123,7 +123,7 @@ describe Agent::RdvPolicy, type: :policy do
       rdv = create(:rdv, agents: [agent], motif: motif, organisation: organisation)
       create(:rdv, agents: [other_agent], motif: other_motif, organisation: other_organisation)
 
-      expect(Agent::RdvPolicy::ScopeForOrganisations.new(agent, organisation, Rdv).resolve).to eq([rdv])
+      expect(Agent::RdvPolicy::ScopeByOrganisation.new(agent, organisation, Rdv).resolve).to eq([rdv])
     end
 
     it "returns all organisations rdv with admin agent" do
@@ -137,7 +137,7 @@ describe Agent::RdvPolicy, type: :policy do
       other_motif = create(:motif, service: other_service, organisation: organisation)
       other_rdv = create(:rdv, agents: [agent], motif: other_motif, organisation: organisation)
 
-      expect(Agent::RdvPolicy::ScopeForOrganisations.new(agent, organisation, Rdv).resolve).to eq([rdv, other_rdv])
+      expect(Agent::RdvPolicy::ScopeByOrganisation.new(agent, organisation, Rdv).resolve).to eq([rdv, other_rdv])
     end
 
     it "returns an empty array when no RDV" do
@@ -145,7 +145,7 @@ describe Agent::RdvPolicy, type: :policy do
       organisation = create(:organisation)
       agent = create(:agent, admin_role_in_organisations: [organisation], service: service)
 
-      expect(Agent::RdvPolicy::ScopeForOrganisations.new(agent, organisation, Rdv).resolve).to eq([])
+      expect(Agent::RdvPolicy::ScopeByOrganisation.new(agent, organisation, Rdv).resolve).to eq([])
     end
   end
 
