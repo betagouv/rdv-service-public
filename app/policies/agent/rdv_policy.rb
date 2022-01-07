@@ -13,12 +13,11 @@ class Agent::RdvPolicy < DefaultAgentPolicy
     update?
   end
 
-  class ScopeForOrganisations < Scope
+  class ScopedByOrganisations
     def initialize(agent, organisation, scope)
       @agent = agent
       @organisation = organisation
       @scope = scope
-      super([agent, organisation], scope)
     end
 
     def resolve
