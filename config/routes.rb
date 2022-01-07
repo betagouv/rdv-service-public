@@ -113,7 +113,11 @@ Rails.application.routes.draw do
               get :search
             end
           end
-          resources :teams
+          resources :teams do
+            collection do
+              get :search
+            end
+          end
           resource :sms_configuration, only: %i[show edit update]
           resources :zone_imports, only: %i[new create]
           resources :zones, only: [:index] # exports only

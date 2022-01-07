@@ -104,4 +104,21 @@ RSpec.describe Admin::Territories::TeamsController, type: :controller do
       end.to change(Team, :count).by(-1)
     end
   end
+
+  describe "#search" do
+    it "successful" do
+      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
+      sign_in agent
+      get :search, params: { territory_id: territory.id, term: "bla", format: "json" }
+      expect(response).to be_successful
+    end
+
+    it "assigns teams" do
+      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
+      sign_in agent
+      team = create(:team, name: "bla", territory: organisation.territory)
+      get :search, params: { territory_id: territory.id, term: "bla", format: "json" }
+      expect(assigns(:teams)).to eq([team])
+    end
+  end
 end
