@@ -126,7 +126,7 @@ describe Agent::RdvPolicy, type: :policy do
       expect(Agent::RdvPolicy::ScopeForOrganisations.new(agent, organisation, Rdv).resolve).to eq([rdv])
     end
 
-    it "returns all organisation's rdv with admin agent" do
+    it "returns all organisations rdv with admin agent" do
       service = create(:service)
       other_service = create(:service)
       organisation = create(:organisation)
