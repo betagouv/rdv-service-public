@@ -43,24 +43,10 @@ class Admin::AgentsController < AgentAuthController
   private
 
   def index_params
-    @index_params ||= begin
-      index_params = params.permit(:search)
-      index_params[:search] = clean_search_term(index_params[:search])
-      index_params
-    end
+    @index_params ||= params.permit(:search)
   end
 
   def search_params
-    @search_params ||= begin
-      search_params = params.permit(:term)
-      search_params[:term] = clean_search_term(search_params[:term])
-      search_params
-    end
-  end
-
-  def clean_search_term(term)
-    return nil if term.blank?
-
-    I18n.transliterate(term)
+    @search_params ||= params.permit(:term)
   end
 end

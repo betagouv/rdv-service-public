@@ -56,23 +56,19 @@ module RdvExporter
       rdv.created_at.year,
       I18n.l(rdv.created_at.to_date),
       I18n.l(rdv.created_at, format: :time_only),
-      origine(rdv),
+      rdv.human_attribute_value(:created_by),
       I18n.l(rdv.starts_at.to_date),
       I18n.l(rdv.starts_at, format: :time_only),
       rdv.motif.service.name,
       rdv.motif.name,
       rdv.context,
       Rdv.human_attribute_value(:status, rdv.temporal_status, disable_cast: true),
-      rdv.address_complete_without_personnal_details,
+      rdv.address_complete_without_personal_details,
       rdv.agents.map(&:full_name).join(", "),
       rdv.users.map(&:full_name).join(", "),
       commune_premier_responsable(rdv),
       rdv.users.any?(&:minor?) ? "oui" : "non"
     ]
-  end
-
-  def self.origine(rdv)
-    rdv.created_by_user? ? "RDV Pris sur internet" : "Créé par un agent"
   end
 
   def self.commune_premier_responsable(rdv)
