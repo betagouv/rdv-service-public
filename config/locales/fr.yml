@@ -36,6 +36,7 @@ fr:
           actions: Actions
         edit:
           agent_title: Modifier un agent
+          teams: Équipes
       teams:
         index:
           edit_agent_teams_title: Modifier les équipes de %{agent_name}
@@ -46,8 +47,7 @@ fr:
           territory_teams_title: Créer une équipe
         edit:
           territory_teams_title: Modifier une équipe
-          
-          
+
   activerecord:
     errors:
       messages:

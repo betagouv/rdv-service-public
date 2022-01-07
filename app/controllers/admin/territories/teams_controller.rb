@@ -37,6 +37,27 @@ class Admin::Territories::TeamsController < Admin::Territories::BaseController
     redirect_to admin_territory_teams_path(current_territory)
   end
 
+  def search
+    teams = TeamPolicy::Scope.new(current_territory, Team).resolve.limit(10)
+    @teams = search_params[:term].present? ? teams.search_by_text(search_params[:term]) : teams.order(:name)
+  end
+
+  private
+
+  def search_params
+    @search_params ||= begin
+      search_params = params.permit(:term)
+      search_params[:term] = clean_search_term(search_params[:term])
+      search_params
+    end
+  end
+
+  def clean_search_term(term)
+    return nil if term.blank?
+
+    I18n.transliterate(term)
+  end
+
   def team_params
     params.require(:team).permit(:name, agent_ids: [])
   end
