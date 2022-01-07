@@ -102,7 +102,7 @@ describe Admin::RdvsController, type: :controller do
       expect(response).to redirect_to(admin_organisation_rdvs_path)
     end
 
-    it "enqueue a send rdv_export job" do
+    it "call Agents::ExportMailer" do
       params = {
         start: nil,
         end: nil,
@@ -113,7 +113,8 @@ describe Admin::RdvsController, type: :controller do
         status: ""
       }
 
-      expect(SendExportJob).to receive(:perform_later).with(
+      # rubocop:disable RSpec/StubbedMock
+      expect(Agents::ExportMailer).to receive(:rdv_export).with(
         agent.id,
         organisation.id,
         "start" => params[:start],
@@ -123,7 +124,9 @@ describe Admin::RdvsController, type: :controller do
         "user_id" => params[:user_id],
         "lieu_id" => params[:lieu_id],
         "status" => params[:status]
-      )
+      ).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
+      # rubocop:enable RSpec/StubbedMock
+
       post :export, params: { organisation_id: organisation.id }.merge(params)
     end
   end

@@ -14,11 +14,11 @@ class Admin::RdvsController < AgentAuthController
 
   def export
     skip_authorization # RDV will be scoped in SendExportJob
-    SendExportJob.perform_later(
+    Agents::ExportMailer.rdv_export(
       current_agent.id,
       current_organisation.id,
       parsed_params
-    )
+    ).deliver_later
     flash[:notice] = I18n.t("layouts.flash.confirm_export_send_when_done", agent_email: current_agent.email)
     redirect_to admin_organisation_rdvs_path(organisation_id: current_organisation.id)
   end
