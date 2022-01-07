@@ -6,11 +6,9 @@ class Agent < ApplicationRecord
   has_paper_trail
   include DeviseInvitable::Inviter
   include FullNameConcern
-  include PgSearch::Model
+  include TextSearch
 
-  pg_search_scope(:search_by_text,
-                  against: "search_terms",
-                  using: { tsearch: { prefix: true, any_word: true } })
+  def self.search_keys = %i[email last_name first_name]
 
   devise :invitable, :database_authenticatable,
          :recoverable, :rememberable, :validatable, :confirmable, :async, validate_on_invite: true
@@ -43,7 +41,6 @@ class Agent < ApplicationRecord
 
   has_and_belongs_to_many :users
 
-  before_save :refresh_search_terms
   after_update -> { rdvs.touch_all }
 
   # Note about validation and Devise:
@@ -139,14 +136,6 @@ class Agent < ApplicationRecord
 
   def territorial_role_in(territory)
     territorial_roles.find_by(territory: territory)
-  end
-
-  def refresh_search_terms
-    self.search_terms = combined_search_terms
-  end
-
-  def combined_search_terms
-    I18n.transliterate([last_name, email, first_name].compact.join(" "))
   end
 
   def update_unknown_past_rdv_count!

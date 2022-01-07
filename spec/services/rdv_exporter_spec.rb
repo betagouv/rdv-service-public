@@ -53,16 +53,19 @@ describe RdvExporter, type: :service do
 
     describe "origine" do
       it "return « Créé par un agent » when rdv created by an agent" do
-        rdv = build(:rdv)
+        rdv = build(:rdv, created_by: :agent)
         expect(described_class.row_array_from(rdv)[3]).to eq("Créé par un agent")
       end
 
       it "return « RDV pris sur internet » when rdv taken by user" do
-        rdv = build(:rdv, created_by: Rdv.created_bies[:user])
+        rdv = build(:rdv, created_by: :user)
         expect(described_class.row_array_from(rdv)[3]).to eq("RDV Pris sur internet")
       end
 
-      it "return « RDV en file d'attente? » when rdv created from file d'attente"
+      it "return « RDV en file d'attente? » when rdv created from file d'attente" do
+        rdv = build(:rdv, created_by: :file_attente)
+        expect(described_class.row_array_from(rdv)[3]).to eq("RDV en file d'attente")
+      end
     end
 
     describe "date" do

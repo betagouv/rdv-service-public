@@ -167,33 +167,11 @@ class Admin::UsersController < AgentAuthController
   end
 
   def index_params
-    @index_params ||= begin
-      index_params = params.permit(:organisation_id, :agent_id, :search)
-      index_params[:search] = clean_search_term(index_params[:search])
-      index_params
-    end
+    @index_params ||= params.permit(:organisation_id, :agent_id, :search)
   end
 
   def search_params
-    @search_params ||= begin
-      search_params = params.permit(:term)
-      search_params[:term] = clean_search_term(search_params[:term])
-      search_params
-    end
-  end
-
-  def clean_search_term(term)
-    return nil if term.blank?
-
-    if contains_phone_number_pattern?(term)
-      term.sub(/^0/, "+33").gsub(/\s/, "")
-    else
-      I18n.transliterate(term)
-    end
-  end
-
-  def contains_phone_number_pattern?(string)
-    /^(\+\d{2})?[\d ]{3,20}$/.match?(string)
+    @search_params ||= params.permit(:term)
   end
 
   def set_user
