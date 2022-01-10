@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 RSpec.describe WelcomeController, type: :controller do
   render_views
 
@@ -13,13 +11,6 @@ RSpec.describe WelcomeController, type: :controller do
     let(:service) { create(:service, name: "Joli service") }
     let!(:motif) { create(:motif, service: service, reservable_online: true, organisation: organisation) }
     let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], organisation: organisation) }
-
-    describe "welcome", js: true do
-      it "index is accessible" do
-        visit root_path
-        expect(page).to be_axe_clean
-      end
-    end
 
     context "for the right departement" do
       before { get :welcome_departement, params: { departement: "72", where: "Arras" } }
