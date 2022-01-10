@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 class Team < ApplicationRecord
-  include PgSearch::Model
+  include TextSearch
 
-  pg_search_scope(:search_by_text,
-                  against: :name,
-                  using: { tsearch: { prefix: true, any_word: true } })
+  def self.search_keys = %i[name]
 
   auto_strip_attributes :name
 
@@ -26,7 +24,7 @@ class Team < ApplicationRecord
   private
 
   def agent_from_same_territory
-    return if agents.flat_map(&:territories).uniq.count == 1
+    return if agents.flat_map(&:organisations).flat_map(&:territory).uniq.count == 1
 
     errors.add(:agents, :not_from_same_territory)
   end
