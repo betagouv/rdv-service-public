@@ -68,3 +68,10 @@ ul.horizontal-border-between-items {
 .no-transition {
   transition: none !important;
 }
+
+.flex-row-aligned {
+  display: flex;
+  flex-direction: row;
+  align-items: first baseline;
+  gap: 0.5em;
+}

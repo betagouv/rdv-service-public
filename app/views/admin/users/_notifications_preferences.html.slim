@@ -1,41 +1,33 @@
 / Component: display the user notification settings
   depending on :email :phone_number :notify_by_email and :notify_by_sms
 
-
-.d-flex.flex-row
-  - if user.email.present?
-    - if user.notify_by_email?
-      i.fa.fa-check.mt-1
-      .ml-1
-        code= user.email
-        div= t(".email_present_and_enabled")
-    - else
-      i.fa.fa-exclamation-triangle.text-warning
-      .ml-1
-        code= user.email
-        div= t(".email_disabled")
+- if user.email.present?
+  - if user.notify_by_email?
+    = boolean_tag(true) do
+      div= t(".email_present_and_enabled")
+      code= user.email
   - else
-    i.fa.fa-exclamation-triangle.text-warning
-    .ml-1= t(".email_absent")
+    = boolean_tag(false) do
+      div= t(".email_disabled")
+      code= user.email
+- else
+  = boolean_tag(false) do
+    = t(".email_absent")
 
-.d-flex.flex-row
-  - if user.phone_number.present?
-    - if user.phone_number_mobile?
-      - if user.notify_by_sms?
-        i.fa.fa-check.mt-1
-        .ml-1
-          code= user.phone_number
-          div= t(".sms_present_valid_and_enabled")
-      - else
-        i.fa.fa-exclamation-triangle.text-warning.mt-1
-        .ml-1
-          code= user.phone_number
-          div= t(".sms_disabled")
-    - else
-      i.fa.fa-exclamation-triangle.text-warning.mt-1
-      .ml-1
+- if user.phone_number.present?
+  - if user.phone_number_mobile?
+    - if user.notify_by_sms?
+      = boolean_tag(true) do
+        div= t(".sms_present_valid_and_enabled")
         code= user.phone_number
-        div= t(".sms_invalid")
+    - else
+      = boolean_tag(false) do
+        div= t(".sms_disabled")
+        code= user.phone_number
   - else
-    i.fa.fa-exclamation-triangle.text-warning.mt-1
-    .ml-1= t(".sms_absent")
+    = boolean_tag(false) do
+      div= t(".sms_invalid")
+      code= user.phone_number
+- else
+  = boolean_tag(false) do
+    = t(".sms_absent")

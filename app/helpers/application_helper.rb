@@ -70,11 +70,20 @@ module ApplicationHelper
     tag.span(organisation_or_sector.human_id, class: "badge badge-light text-monospace")
   end
 
-  def boolean_attribute_tag(object, attribute_name, value = object.send(attribute_name))
-    img_class = value ? "fa fa-check mr-1" : "fa fa-exclamation-triangle text-warning mr-1"
-    tag.div do
-      tag.i(class: img_class) + object.class.human_attribute_name("#{attribute_name}.#{value}")
+  def aligned_flex_row(fa_icon_name, &block)
+    tag.div(class: "flex-row-aligned") do
+      tag.i(class: class_names("fa", fa_icon_name)) + tag.div(&block)
     end
+  end
+
+  def boolean_tag(value, &block)
+    fa_icon_name = value ? "fa-check" : "fa-exclamation-triangle text-warning"
+    aligned_flex_row(fa_icon_name, &block)
+  end
+
+  def boolean_attribute_tag(object, attribute_name)
+    value = object.send(attribute_name)
+    boolean_tag(value) { object.class.human_attribute_name("#{attribute_name}.#{value}") }
   end
 
   def admin_link_to_if_permitted(organisation, object, name = object.to_s)
