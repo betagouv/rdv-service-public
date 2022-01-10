@@ -1,30 +1,41 @@
 / Component: display the user notification settings
   depending on :email :phone_number :notify_by_email and :notify_by_sms
 
-div
+
+.d-flex.flex-row
   - if user.email.present?
     - if user.notify_by_email?
-      i.fa.fa-check.mr-1
-      = t(".email_present_and_enabled")
+      i.fa.fa-check.mt-1
+      .ml-1
+        code= user.email
+        div= t(".email_present_and_enabled")
     - else
-      i.fa.fa-exclamation-triangle.text-warning.mr-1
-      = t(".email_disabled")
+      i.fa.fa-exclamation-triangle.text-warning
+      .ml-1
+        code= user.email
+        div= t(".email_disabled")
   - else
-    i.fa.fa-exclamation-triangle.text-warning.mr-1
-    = t(".email_absent")
+    i.fa.fa-exclamation-triangle.text-warning
+    .ml-1= t(".email_absent")
 
-div
+.d-flex.flex-row
   - if user.phone_number.present?
     - if user.phone_number_mobile?
       - if user.notify_by_sms?
-        i.fa.fa-check.mr-1
-        = t(".sms_present_valid_and_enabled")
+        i.fa.fa-check.mt-1
+        .ml-1
+          code= user.phone_number
+          div= t(".sms_present_valid_and_enabled")
       - else
-        i.fa.fa-exclamation-triangle.text-warning.mr-1
-        = t(".sms_disabled")
+        i.fa.fa-exclamation-triangle.text-warning.mt-1
+        .ml-1
+          code= user.phone_number
+          div= t(".sms_disabled")
     - else
-      i.fa.fa-exclamation-triangle.text-warning.mr-1
-      = t(".sms_invalid")
+      i.fa.fa-exclamation-triangle.text-warning.mt-1
+      .ml-1
+        code= user.phone_number
+        div= t(".sms_invalid")
   - else
-    i.fa.fa-exclamation-triangle.text-warning.mr-1
-    = t(".sms_absent")
+    i.fa.fa-exclamation-triangle.text-warning.mt-1
+    .ml-1= t(".sms_absent")
