@@ -17,6 +17,7 @@ fr:
         motif: Motif
         user_ids: Usagers
         users: Usagers
+        rdvs_users: Participations
         agents: Agents
         agent_ids: Agents
         location: Lieu

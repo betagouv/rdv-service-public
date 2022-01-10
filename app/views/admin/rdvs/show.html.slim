@@ -60,4 +60,4 @@
               "Voir les #{rdv_user_presenter.previous_rdvs_count} RDVs précédents…", \
               admin_organisation_rdvs_path(current_organisation, user_id: rdv_user.user.id, end: @rdv.starts_at)
 
-= render "admin/versions/resource_versions_row", resource: @rdv, attributes_allowlist: ["user_ids", "agent_ids", "status", "starts_at", "ends_at", "lieu_id", "notes", "location", "context"]
+= render "admin/versions/resource_versions_row", resource: @rdv, attributes_allowlist: ["user_ids", "agent_ids", "status", "starts_at", "ends_at", "lieu_id", "notes", "location", "context", "rdvs_users"]
