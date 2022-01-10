@@ -34,4 +34,17 @@ module PaperTrailHelper
   def paper_trail__service_id(value)
     ::Service.find_by(id: value)&.name
   end
+
+  def paper_trail__rdvs_users(values)
+    values.map do |value|
+      user = User.find_by(id: value["user_id"])
+      next if user.nil?
+
+      name = user.full_name
+      lifecycle = RdvsUser.human_attribute_value(:send_lifecycle_notifications, value["send_lifecycle_notifications"])
+      reminder = RdvsUser.human_attribute_value(:send_reminder_notification, value["send_reminder_notification"])
+
+      "#{name}: #{lifecycle}, #{reminder}"
+    end.compact.join("\n")
+  end
 end

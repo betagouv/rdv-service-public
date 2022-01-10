@@ -204,7 +204,13 @@ class Rdv < ApplicationRecord
   end
 
   def virtual_attributes_for_paper_trail
-    { user_ids: users&.pluck(:id), agent_ids: agents&.pluck(:id) }
+    {
+      user_ids: users.ids,
+      agent_ids: agents.ids,
+      rdvs_users: rdvs_users.map do |rdvs_user|
+        rdvs_user.slice(:user_id, :send_lifecycle_notifications, :send_reminder_notification)
+      end
+    }
   end
 
   def associate_users_with_organisation
