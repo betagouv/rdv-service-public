@@ -199,7 +199,6 @@ Rails.application.routes.draw do
   get "departement/:departement", to: "welcome#welcome_departement", as: "welcome_departement"
   post "departement/:departement" => "welcome#search_departement"
   get "departement/:departement/:service", to: "welcome#welcome_service", as: "welcome_service"
-  get "departement/:departement/:service/:motif", to: "welcome#welcome_motif", as: "welcome_motif"
   resources :lieux, only: %i[index show]
   get "health_checks/rdv_events_stats", to: "health_checks#rdv_events_stats"
   get "health_checks/raise_on_purpose", to: "health_checks#raise_on_purpose"
