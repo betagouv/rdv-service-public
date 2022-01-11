@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // Bootstrap Variables
 
 //
@@ -406,7 +408,7 @@ $list-group-active-bg:              $component-active-bg;
 
 // Breadcrumbs
 
-$breadcrumb-padding-y:              $spacer/1.5;
+$breadcrumb-padding-y:              math.div($spacer, 1.5);
 $breadcrumb-padding-x:              0;
 $breadcrumb-item-padding:           .5rem;
 
