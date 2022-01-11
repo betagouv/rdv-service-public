@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // Typography
 $base-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
   "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
@@ -14,7 +16,7 @@ $heading-line-height: 1.2 !default;
 // Other Sizes
 $base-border-radius: 4px !default;
 $base-spacing: $base-line-height * 1em !default;
-$small-spacing: $base-spacing / 2 !default;
+$small-spacing: math.div($base-spacing, 2) !default;
 
 // Colors
 $white: #fff !default;
