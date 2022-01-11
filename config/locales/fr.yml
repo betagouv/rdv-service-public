@@ -234,7 +234,7 @@ fr:
       update: Enregistrer
   layouts:
     flash:
-      confirm_export_send_when_done: Le fichier Excel des RDV sera envoyé à %{agent_email}
+      confirm_export_send_when_done: Le fichier Excel des RDV sera envoyé à %{agent_email}.
   number:
     currency:
       format:
