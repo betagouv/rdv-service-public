@@ -27,7 +27,8 @@ class Absence < ApplicationRecord
     return all if range.nil?
 
     not_recurring_start_in_range = where(recurrence: nil).where("first_day <= ?", range.end).where("end_day >= ?", range.begin)
-    recurring_in_range = where.not(recurrence: nil).where("tsrange(first_day, recurrence_ends_at, '[)') && tsrange(?, ?)", range.begin, range.end)
+    # This tsrange expression is indexed on absences
+    recurring_in_range = where.not(recurrence: nil).where("tsrange(first_day, recurrence_ends_at, '[]') && tsrange(?, ?)", range.begin, range.end)
 
     not_recurring_start_in_range.or(recurring_in_range)
   }

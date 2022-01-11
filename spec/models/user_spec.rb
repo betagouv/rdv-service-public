@@ -205,8 +205,6 @@ describe User, type: :model do
     end
 
     it "returns users that match with partial email" do
-      # TODO: clarifier ce cas
-      pending "Ne passe pas, pourquoi ?"
       create(:user, email: "jean@moustache.fr")
       patricia = create(:user, email: "patoche@duroy.fr")
       expect(described_class.search_by_text("patoche@dur")).to eq([patricia])

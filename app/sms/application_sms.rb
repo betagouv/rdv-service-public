@@ -48,7 +48,7 @@ class ApplicationSms
   # Enqueue a DelayedJob with the sms
   # Note: the stored parameter in the delayed_jobs table is the ApplicationSms instance.
   def deliver_later
-    raise InvalidMobilePhoneNumberError, "#{phone_number} is not a valid mobile phone number" unless Phonelib.parse(phone_number).types.include?(:mobile)
+    raise InvalidMobilePhoneNumberError, "#{phone_number} is not a valid mobile phone number" unless PhoneNumberValidation.number_is_mobile?(phone_number)
 
     SmsSender.delay(queue: :sms).perform_with(phone_number, content, tags, provider, key)
   end

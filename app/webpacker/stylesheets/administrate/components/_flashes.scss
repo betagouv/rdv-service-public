@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $base-spacing: 1.5em !default;
 $flashes: (
   "alert": #fff6bf,
@@ -11,8 +13,8 @@ $flashes: (
     background-color: $color;
     color: mix($black, $color, 60%);
     display: block;
-    margin-bottom: $base-spacing / 2;
-    padding: $base-spacing / 2;
+    margin-bottom: math.div($base-spacing, 2);
+    padding: math.div($base-spacing, 2);
     text-align: center;
 
     a {

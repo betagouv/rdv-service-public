@@ -66,13 +66,13 @@ module SlotBuilder
     end
 
     def first_range(range, busy_time)
-      return [range.begin..busy_time.starts_at] if range.begin < busy_time.starts_at && range.include?(busy_time.range)
+      return [range.begin..busy_time.starts_at] if range.begin < busy_time.starts_at && range.cover?(busy_time.range)
 
       []
     end
 
     def remaining_range(range, busy_time)
-      return busy_time.ends_at..range.end if range.include?(busy_time.range)
+      return busy_time.ends_at..range.end if range.cover?(busy_time.range)
       return range.begin..busy_time.starts_at if range.cover?(busy_time.starts_at)
       return busy_time.ends_at..range.end if range.cover?(busy_time.ends_at)
     end
@@ -133,7 +133,8 @@ module SlotBuilder
 
         busy_times = busy_times_from_rdvs(range, plage_ouverture)
         busy_times += busy_times_from_absences(range, plage_ouverture)
-        busy_times += busy_times_from_off_days(off_days.select { |off_day| range.cover?(off_day) })
+        date_range = range.begin.to_date..range.end.to_date # off_days are Date objects, we need to match on Dates
+        busy_times += busy_times_from_off_days(off_days.select { |off_day| date_range.cover?(off_day) })
         # Le tri est nécessaire, surtout pour les surcharges.
         busy_times.sort_by(&:starts_at)
       end

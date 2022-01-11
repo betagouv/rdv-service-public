@@ -3,5 +3,5 @@
 class OrganisationBlueprint < Blueprinter::Base
   identifier :id
 
-  fields :name
+  fields :name, :phone_number, :email
 end

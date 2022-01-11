@@ -25,7 +25,8 @@ class PlageOuverture < ApplicationRecord
     return all if range.nil?
 
     not_recurring_start_in_range = where(recurrence: nil).where(first_day: range)
-    recurring_in_range = where.not(recurrence: nil).where("tsrange(first_day, recurrence_ends_at, '[)') && tsrange(?, ?)", range.begin, range.end)
+    # This tsrange expression is indexed on plage_ouvertures
+    recurring_in_range = where.not(recurrence: nil).where("tsrange(first_day, recurrence_ends_at, '[]') && tsrange(?, ?)", range.begin, range.end)
 
     not_recurring_start_in_range.or(recurring_in_range)
   }
@@ -72,11 +73,11 @@ class PlageOuverture < ApplicationRecord
   end
 
   def covers_date?(date)
-    (
-      recurring? &&
-      recurrence_interval == 1 && # limited by https://github.com/rossta/montrose/pull/132
+    if recurring?
       recurrence.include?(date.in_time_zone)
-    ) || (exceptionnelle? && first_day == date)
+    else
+      first_day == date
+    end
   end
 
   private
