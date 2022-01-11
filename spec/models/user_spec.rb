@@ -197,7 +197,6 @@ describe User, type: :model do
     end
   end
 
-
   describe "#notes_for" do
     it "return notes for user and organisation" do
       organisation = create(:organisation)

@@ -72,5 +72,4 @@ describe TextSearch, type: :concern do
       expect(described_class.search_by_text("Louis Durand")).to eq([durand, dupont])
     end
   end
-
 end
