@@ -6,7 +6,7 @@ class Admin::RdvsController < AgentAuthController
   before_action :set_rdv, :set_optional_agent, except: %i[index create new_participation export]
 
   def index
-    @rdvs = Rdv.search_for(current_agent, current_organisation, parsed_params)
+    @rdvs = policy_scope(Rdv).search_for(current_agent, current_organisation, parsed_params)
     @breadcrumb_page = params[:breadcrumb_page]
     @form = Admin::RdvSearchForm.new(parsed_params)
     @rdvs = @rdvs.order(starts_at: :asc).page(params[:page])
