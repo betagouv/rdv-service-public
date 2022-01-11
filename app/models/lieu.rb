@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Lieu < ApplicationRecord
-  include HasPhoneNumberConcern
+  include PhoneNumberValidation::HasPhoneNumber
 
   auto_strip_attributes :name
 

@@ -29,7 +29,7 @@ div id="creneaux-lieu-#{lieu.id}"
                   - else
                     = link_to "#", "data-turbolinks": false, data: { toggle: "modal", target: "#js-rdv-restriction-motif#{creneau.starts_at.to_i}" }, class: "btn btn-light mr-1 mb-1 w-100" do
                       = l(creneau.starts_at, format: "%H:%M")
-                      - if creneau.agent.short_name
+                      - if creneau.motif.follow_up?
                         br
                         small= creneau.agent.short_name
 

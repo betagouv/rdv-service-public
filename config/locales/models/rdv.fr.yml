@@ -25,6 +25,10 @@ fr:
         ends_at: Termine à
         status: Statut
         context: Contexte
+      rdv/created_by:
+        agent: "Créé par un agent"
+        user: "RDV Pris sur internet"
+        file_attente: "RDV en file d'attente"
       rdv/statuses:
         unknown: État indéterminé
         waiting: En salle d’attente

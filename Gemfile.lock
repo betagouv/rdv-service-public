@@ -117,7 +117,7 @@ GEM
     bootstrap4-kaminari-views (1.0.1)
       kaminari (>= 0.13)
       rails (>= 3.1)
-    brakeman (5.1.2)
+    brakeman (5.2.0)
     builder (3.2.4)
     bullet (6.1.5)
       activesupport (>= 3.0.0)
@@ -287,8 +287,8 @@ GEM
     minitest (5.15.0)
     momentjs-rails (2.20.1)
       railties (>= 3.1)
-    montrose (0.11.2)
-      activesupport (>= 4.1, <= 7.0)
+    montrose (0.12.0)
+      activesupport (>= 5.2, <= 7.0)
     msgpack (1.4.2)
     multi_json (1.15.0)
     multi_xml (0.6.0)
@@ -570,7 +570,7 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.5.1)
+    zeitwerk (2.5.3)
 
 PLATFORMS
   ruby
@@ -614,7 +614,7 @@ DEPENDENCIES
   letter_opener_web
   listen
   meta_request
-  montrose (~> 0.11.2)
+  montrose
   omniauth-github
   omniauth-rails_csrf_protection
   omniauth_openid_connect

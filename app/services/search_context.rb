@@ -127,9 +127,8 @@ class SearchContext
   end
 
   def available_motifs_for_invitation
-    (geo_search.available_motifs.presence ||
-      Motif.available_with_plages_ouvertures)
-      .where(organisation: organisation, service: service)
+    geo_search.available_motifs.where(organisation: organisation, service: service).presence ||
+      Motif.available_with_plages_ouvertures.where(organisation: organisation, service: service)
   end
 
   def invited_user

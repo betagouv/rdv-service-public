@@ -20,16 +20,6 @@ class Admin::InvitationsController < AgentAuthController
   private
 
   def index_params
-    @index_params ||= begin
-      index_params = params.permit(:search)
-      index_params[:search] = clean_search_term(index_params[:search])
-      index_params
-    end
-  end
-
-  def clean_search_term(term)
-    return nil if term.blank?
-
-    I18n.transliterate(term)
+    @index_params ||= params.permit(:search)
   end
 end
