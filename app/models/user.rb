@@ -67,6 +67,10 @@ class User < ApplicationRecord
 
   include User::ResponsabilityConcern
 
+  def remember_me # Override from Devise::rememberable to enable it by default
+    super.nil? ? true : super
+  end
+
   def to_s
     full_name
   end
