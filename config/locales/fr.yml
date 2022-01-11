@@ -65,7 +65,7 @@ fr:
   agents:
     export_mailer:
       rdv_export:
-        description: vous trouverez en pièce jointe l'export des RDV que vous avez demandé.
+        description: Vous trouverez en pièce jointe l’export des RDV que vous avez demandé.
   mailers:
     agents:
       export_mailer:
