@@ -73,6 +73,10 @@ class Agent < ApplicationRecord
 
   ## -
 
+  def remember_me # Override from Devise::rememberable to enable it by default
+    super.nil? ? true : super
+  end
+
   def reverse_full_name_and_service
     service.present? ? "#{reverse_full_name} (#{service.short_name})" : full_name
   end
