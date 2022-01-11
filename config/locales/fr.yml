@@ -66,6 +66,11 @@ fr:
     export_mailer:
       rdv_export:
         description: vous trouverez en pièce jointe l'export des RDV que vous avez demandé.
+  mailers:
+    agents:
+      export_mailer:
+        rdv_export:
+          subject: Export RDV du %{date} pour l'organisation %{organisation_name}
   date:
     helpers:
       tomorrow: demain

@@ -15,7 +15,7 @@ class Agents::ExportMailer < ApplicationMailer
     mail(
       from: "secretariat-auto@rdv-solidarites.fr",
       to: agent.email,
-      subject: "Export RDV du #{now.strftime('%d/%m/%Y')}"
+      subject: I18n.t("mailers.agents.export_mailer.rdv_export.subject", organisation_name: organisation.name, date: I18n.l(now))
     )
   end
 end
