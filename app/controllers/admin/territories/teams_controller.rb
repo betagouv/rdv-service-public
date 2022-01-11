@@ -45,17 +45,7 @@ class Admin::Territories::TeamsController < Admin::Territories::BaseController
   private
 
   def search_params
-    @search_params ||= begin
-      search_params = params.permit(:term)
-      search_params[:term] = clean_search_term(search_params[:term])
-      search_params
-    end
-  end
-
-  def clean_search_term(term)
-    return nil if term.blank?
-
-    I18n.transliterate(term)
+    @search_params ||= params.permit(:term)
   end
 
   def team_params
