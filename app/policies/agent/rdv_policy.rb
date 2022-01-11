@@ -9,10 +9,6 @@ class Agent::RdvPolicy < DefaultAgentPolicy
     same_agent_or_has_access?
   end
 
-  def new_participation?
-    update?
-  end
-
   class ScopeByOrganisation
     def initialize(agent, organisation, scope)
       @agent = agent
