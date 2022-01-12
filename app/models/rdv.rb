@@ -176,6 +176,7 @@ class Rdv < ApplicationRecord
   end
 
   def self.search_for(agent, organisation, options)
+    # La portée de la politique filtrera TOUT les rdv de l'organisation selon les droits de l'agent dans cette organisation.
     rdvs = Agent::RdvPolicy::ScopeByOrganisation.new(agent, organisation, Rdv).resolve
     rdvs = rdvs.joins(:lieu).where(lieux: { id: options["lieu_id"] }) if options["lieu_id"].present?
     rdvs = rdvs.joins(:agents).where(agents: { id: options["agent_id"] }) if options["agent_id"].present?
