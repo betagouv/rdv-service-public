@@ -17,7 +17,7 @@ class Absence < ApplicationRecord
 
   before_validation :set_end_day
 
-  validates :agent, :organisation, :first_day, :title, presence: true
+  validates :first_day, :title, presence: true
   validate :ends_at_should_be_after_starts_at
 
   scope :by_starts_at, -> { order(first_day: :desc, start_time: :desc) }

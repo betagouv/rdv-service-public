@@ -39,12 +39,12 @@ class PaperTrailAugmentedVersion
   private
 
   def virtual_changes
-    virtual_changes_array.map do |property_name, new_value|
+    virtual_changes_array.to_h do |property_name, new_value|
       [
         property_name,
         [previous_version_virtual_attributes[property_name], new_value]
       ]
-    end.to_h
+    end
   end
 
   def virtual_changes_array
