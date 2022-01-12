@@ -7,6 +7,6 @@ class Agents::ExportMailerPreview < ActionMailer::Preview
       start: Date.today.in_time_zone - 4.years - 7.days,
       end: Date.today.in_time_zone - 4.years
     }
-    Agents::ExportMailer.rdv_export(agent.id, agent.organisations.first.id, options)
+    Agents::ExportMailer.rdv_export(agent, agent.organisations.first, options)
   end
 end
