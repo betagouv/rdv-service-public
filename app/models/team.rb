@@ -7,8 +7,6 @@ class Team < ApplicationRecord
 
   auto_strip_attributes :name
 
-  scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(teams.name))")) }
-
   belongs_to :territory
 
   has_many :agent_teams, dependent: :destroy
