@@ -8,13 +8,13 @@
     th{rowspan: =length }= version.whodunnit
     - property, change = changes.shift
     td= version.version.item.class.human_attribute_name(property)
-    td= paper_trail_change_value(property, change.first)
-    td= paper_trail_change_value(property, change.last)
+    td= simple_format(paper_trail_change_value(property, change.first))
+    td= simple_format(paper_trail_change_value(property, change.last))
 
   - changes.to_h.each do |attribute,change|
     tr
       td
       td
       td= version.version.item.class.human_attribute_name(attribute)
-      td= paper_trail_change_value(attribute, change.first)
-      td= paper_trail_change_value(attribute, change.last)
+      td= simple_format(paper_trail_change_value(attribute, change.first))
+      td= simple_format(paper_trail_change_value(attribute, change.last))
