@@ -3,7 +3,7 @@
 class Admin::Territories::TeamsController < Admin::Territories::BaseController
   def index
     @teams = current_territory.teams.page(params[:page])
-    @teams = params[:search].present? ? @teams.search_by_text(params[:search]) : @teams.ordered_by_name
+    @teams = params[:search].present? ? @teams.search_by_text(params[:search]) : @teams.ordered_by_search_terms
   end
 
   def new

@@ -27,6 +27,8 @@ module TextSearch
 
     pg_search_scope(:search_on_search_terms, against: :search_terms, using: { tsearch: { prefix: true, any_word: true } })
 
+    scope :ordered_by_search_terms, -> { order(:search_terms) }
+
     before_save :refresh_search_terms
   end
 
