@@ -31,7 +31,7 @@ module MotifsHelper
   end
 
   def min_max_delay_int_to_human(int_value)
-    min_max_delay_options.map { |arr| [arr[0], arr[1].to_i] }.to_h.invert[int_value]
+    min_max_delay_options.to_h { |arr| [arr[0], arr[1].to_i] }.invert[int_value]
   end
 
   def text_color(color)

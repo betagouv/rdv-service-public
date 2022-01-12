@@ -64,12 +64,12 @@ class Stat
       .map { |status| res.select { |key, _rdvs_count| key[0] == status.to_s } }
       .reduce(:merge)
     # normalize over 100 because chart.js does not support stacked: relative
-    res_ordered.map do |key, rdvs_count|
+    res_ordered.to_h do |key, rdvs_count|
       date_rdvs_count = rdvs_count_per_date[key[1]]
       [
         [::Rdv.human_attribute_value(:status, key[0]), key[1]],
         date_rdvs_count.zero? ? 0 : (rdvs_count.to_f * 100 / date_rdvs_count).round
       ]
-    end.to_h
+    end
   end
 end

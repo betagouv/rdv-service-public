@@ -153,7 +153,7 @@ ActiveRecord::Schema.define(version: 2022_01_18_161355) do
     t.string "uid", default: "", null: false
     t.text "tokens"
     t.boolean "allow_password_change", default: false
-    t.enum "rdv_notifications_level", default: "soon", enum_name: "agents_rdv_notifications_level"
+    t.enum "rdv_notifications_level", default: "soon", enum_type: "agents_rdv_notifications_level"
     t.text "search_terms"
     t.integer "unknown_past_rdv_count", default: 0
     t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_agents_search_terms", using: :gin
@@ -335,7 +335,7 @@ ActiveRecord::Schema.define(version: 2022_01_18_161355) do
     t.integer "created_by", default: 0
     t.text "context"
     t.bigint "lieu_id"
-    t.enum "status", default: "unknown", null: false, enum_name: "rdv_status"
+    t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
     t.datetime "ends_at", null: false
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist
     t.index ["created_by"], name: "index_rdvs_on_created_by"
@@ -403,7 +403,7 @@ ActiveRecord::Schema.define(version: 2022_01_18_161355) do
     t.string "phone_number_formatted"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.enum "sms_provider", enum_name: "sms_provider"
+    t.enum "sms_provider", enum_type: "sms_provider"
     t.json "sms_configuration"
     t.boolean "has_own_sms_provider", default: false
     t.string "api_options", default: [], null: false, array: true
@@ -465,8 +465,8 @@ ActiveRecord::Schema.define(version: 2022_01_18_161355) do
     t.string "city_code"
     t.string "post_code"
     t.string "city_name"
-    t.enum "invited_through", default: "unknown", enum_name: "user_invited_through"
-    t.enum "created_through", default: "unknown", enum_name: "user_created_through"
+    t.enum "invited_through", default: "unknown", enum_type: "user_invited_through"
+    t.enum "created_through", default: "unknown", enum_type: "user_created_through"
     t.text "search_terms"
     t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_users_search_terms", using: :gin
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true

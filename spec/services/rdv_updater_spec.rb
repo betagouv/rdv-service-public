@@ -49,7 +49,7 @@ describe RdvUpdater, type: :service do
       it "notifies when date changes" do
         agent = build :agent
         rdv = create(:rdv, agents: [agent], status: "waiting")
-        rdv_params = { starts_at: Time.zone.now + 1.day }
+        rdv_params = { starts_at: 1.day.from_now }
         expect(Notifiers::RdvDateUpdated).to receive(:perform_with).with(rdv, agent)
         described_class.update(agent, rdv, rdv_params)
       end

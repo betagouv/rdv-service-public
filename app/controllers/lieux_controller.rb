@@ -14,12 +14,12 @@ class LieuxController < ApplicationController
       .with_open_slots_for_motifs(@matching_motifs)
       .includes(:organisation)
       .sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f) }
-    @next_availability_by_lieux = @lieux.map do |lieu|
+    @next_availability_by_lieux = @lieux.to_h do |lieu|
       [
         lieu.id,
         creneaux_search_for(lieu, (1.week.ago.to_date..Time.zone.today)).next_availability
       ]
-    end.to_h
+    end
   end
 
   def show

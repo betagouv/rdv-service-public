@@ -11,7 +11,7 @@ FactoryBot.define do
     agents { [build(:agent, organisations: [organisation])] }
 
     duration_in_min { 45 }
-    starts_at { Time.zone.now + 3.days }
+    starts_at { 3.days.from_now }
 
     status { "unknown" }
 

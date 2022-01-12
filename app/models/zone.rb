@@ -8,7 +8,7 @@ class Zone < ApplicationRecord
   belongs_to :sector
 
   # common validations
-  validates :sector, :level, :city_name, :city_code, presence: true
+  validates :level, :city_name, :city_code, presence: true
   validates :level, inclusion: { in: LEVELS }
   validate :coherent_city_code_departement
   # level city validations
