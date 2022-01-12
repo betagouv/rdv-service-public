@@ -93,7 +93,7 @@ Rails.application.routes.draw do
       end
       resources :user_profiles, only: [:create]
       resources :organisations, only: %i[index] do
-        resources :users, only: %i[index]
+        resources :users, only: %i[index show]
         resources :motifs, only: %i[index]
         resources :rdvs, only: %i[index]
       end

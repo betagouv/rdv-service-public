@@ -42,7 +42,7 @@ class Api::V1::UsersController < Api::V1::BaseController
   private
 
   def retrieve_user
-    @user = User.find(params[:id])
+    @user = current_organisation.present? ? current_organisation.users.find(params[:id]) : User.find(params[:id])
     authorize(@user)
   end
 
