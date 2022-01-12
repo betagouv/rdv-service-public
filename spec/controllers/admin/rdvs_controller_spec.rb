@@ -113,8 +113,8 @@ describe Admin::RdvsController, type: :controller do
 
       # rubocop:disable RSpec/StubbedMock
       expect(Agents::ExportMailer).to receive(:rdv_export).with(
-        agent.id,
-        organisation.id,
+        agent,
+        organisation,
         "start" => params[:start],
         "end" => params[:end],
         "organisation_id" => organisation.id.to_s,

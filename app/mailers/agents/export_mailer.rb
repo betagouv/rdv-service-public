@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 class Agents::ExportMailer < ApplicationMailer
-  def rdv_export(agent_id, organisation_id, options)
+  def rdv_export(agent, organisation, options)
     now = Time.zone.now
-    agent = Agent.find(agent_id)
-    organisation = Organisation.find(organisation_id)
     rdvs = Rdv.search_for(agent, organisation, options)
 
     mail.attachments["export-rdv-#{now.strftime('%Y-%m-%d')}.xls"] = {
