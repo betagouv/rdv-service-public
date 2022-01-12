@@ -15,17 +15,14 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
-require File.expand_path("../config/environment", __dir__)
-require "rspec/rails"
+
 require "axe-rspec"
 require "webdrivers/chromedriver"
-require "database_cleaner"
 require "capybara/rspec"
 require "capybara/email/rspec"
 require "webdrivers"
 require "capybara-screenshot/rspec"
 require "pundit/rspec"
-
 require "simplecov"
 
 # TODO: SimpleCov.minimum_coverage 80
@@ -151,24 +148,6 @@ RSpec.configure do |config|
   #   # test failures related to randomization by passing the same `--seed` value
   #   # as the one that triggered the failure.
   #   Kernel.srand config.seed
-
-  config.before do
-    DatabaseCleaner.start
-  end
-
-  config.before(:each, js: true) do
-    DatabaseCleaner.strategy = :truncation
-  end
-
-  config.after do
-    DatabaseCleaner.clean
-    ActionMailer::Base.deliveries.clear
-  end
-
-  config.before(:suite) do
-    DatabaseCleaner.strategy = :deletion
-    DatabaseCleaner.clean_with(:truncation)
-  end
 
   config.after(:each, js: true) do |example|
     next unless example.exception # only write logs for failed tests
