@@ -100,7 +100,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def parsed_params
-    params.permit(:organisation_id, :agent_id, :user_id, :lieu_id, :status, :show_user_details, :start, :end).to_hash.map do |param_name, param_value|
+    params.permit(:organisation_id, :agent_id, :user_id, :lieu_id, :status, :show_user_details, :start, :end).to_hash.to_h do |param_name, param_value|
       case param_name
       when "start", "end"
         [param_name, parse_date_from_params(param_value)]
@@ -109,6 +109,6 @@ class Admin::RdvsController < AgentAuthController
       else
         [param_name, param_value]
       end
-    end.to_h
+    end
   end
 end
