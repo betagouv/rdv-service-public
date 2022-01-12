@@ -57,12 +57,12 @@ human_id_map = [
   { human_id: "1053", name: "MDS St Martin les Boulogne" },
   { human_id: "1054", name: "MDS St Omer" },
   { human_id: "1055", name: "MDS St Pol sur Ternoise" }
-].map do |attributes|
+].to_h do |attributes|
   organisation = Organisation.create!(phone_number: "0123456789", territory: territory62, human_id: attributes[:human_id], name: attributes[:name])
   sector = Sector.create!(name: "Secteur de #{attributes[:name][4..]}", human_id: attributes[:human_id], territory: territory62)
   sector.attributions.create!(organisation: organisation, level: SectorAttribution::LEVEL_ORGANISATION)
   [attributes[:human_id], { organisation: organisation, sector: sector }]
-end.to_h
+end
 
 # Bapaume is created without the organisation-level attribution
 org_bapaume = Organisation.create!(phone_number: "0123456789", territory: territory62, human_id: "1034-nord", name: "MDS Bapaume")

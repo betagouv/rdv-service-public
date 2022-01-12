@@ -32,7 +32,7 @@ class Rdv < ApplicationRecord
 
   delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :follow_up?, :service, to: :motif
 
-  validates :rdvs_users, :organisation, :motif, :starts_at, :ends_at, :agents, presence: true
+  validates :rdvs_users, :starts_at, :ends_at, :agents, presence: true
   validates :lieu, presence: true, if: :public_office?
   validate :starts_at_is_plausible
   validate :duration_is_plausible
@@ -87,7 +87,7 @@ class Rdv < ApplicationRecord
   end
 
   def in_next_hour?
-    starts_at <= Time.zone.now + 1.hour
+    starts_at <= 1.hour.from_now
   end
 
   def today?
@@ -190,7 +190,7 @@ class Rdv < ApplicationRecord
   def starts_at_is_plausible
     return unless will_save_change_to_attribute?("starts_at")
 
-    if starts_at < Time.zone.now - 2.days
+    if starts_at < 2.days.ago
       errors.add(:starts_at, :must_be_future)
     elsif starts_at > Time.zone.now + 2.years
       errors.add(:starts_at, :must_be_within_two_years)
