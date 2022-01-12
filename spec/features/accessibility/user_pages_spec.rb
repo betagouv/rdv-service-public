@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 describe "welcome", js: true do
   it "index is accessible" do
     visit root_path
