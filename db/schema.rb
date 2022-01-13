@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_10_132442) do
+ActiveRecord::Schema.define(version: 2022_01_10_222218) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -411,7 +411,6 @@ ActiveRecord::Schema.define(version: 2022_01_10_132442) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "search_terms"
-    t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_teams_name_vector", using: :gin
     t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_teams_search_terms", using: :gin
     t.index ["name"], name: "index_teams_on_name", unique: true
     t.index ["territory_id"], name: "index_teams_on_territory_id"
