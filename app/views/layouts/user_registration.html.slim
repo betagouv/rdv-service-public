@@ -3,13 +3,13 @@ html lang="fr"
   head
     = render "common/head"
   body class="user"
-    = render "layouts/rdv_solidarites_instance_name"
-    = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
-    .bg-primary
-      .container
-        = render "common/header"
-        = yield :header
-    .container
+    header.header.bg-primary
+      = render "layouts/rdv_solidarites_instance_name"
+      = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
+        .container
+          = render "common/header"
+          = yield :header
+    main.container
       .row
         .col-md-8.m-auto.pt-3
           - if content_for :title
@@ -18,4 +18,5 @@ html lang="fr"
           = yield
 
     #modal-holder
-    = render "common/footer_users"
+    footer.main-footer
+      = render "common/footer_users"
