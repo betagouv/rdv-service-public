@@ -411,7 +411,6 @@ ActiveRecord::Schema.define(version: 2022_01_18_161355) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "search_terms"
-    t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_teams_name_vector", using: :gin
     t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_teams_search_terms", using: :gin
     t.index ["name"], name: "index_teams_on_name", unique: true
     t.index ["territory_id"], name: "index_teams_on_territory_id"
