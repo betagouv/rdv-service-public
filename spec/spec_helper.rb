@@ -15,18 +15,31 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
-require "database_cleaner"
+
+require "axe-rspec"
+require "webdrivers/chromedriver"
 require "capybara/rspec"
 require "capybara/email/rspec"
 require "webdrivers"
 require "capybara-screenshot/rspec"
 require "pundit/rspec"
-
 require "simplecov"
 
 # TODO: SimpleCov.minimum_coverage 80
 SimpleCov.minimum_coverage 68
 SimpleCov.start
+
+Capybara.register_driver :chrome_headless do |app|
+  options = ::Selenium::WebDriver::Chrome::Options.new
+  options.add_argument("--headless")
+  options.add_argument("--no-sandbox")
+  options.add_argument("--disable-dev-shm-usage")
+  options.add_argument("--window-size=1400,1400")
+
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+end
+
+Capybara.javascript_driver = :chrome_headless
 
 Capybara.register_driver :selenium do |app|
   # these args seem to reduce test flakyness
@@ -135,24 +148,6 @@ RSpec.configure do |config|
   #   # test failures related to randomization by passing the same `--seed` value
   #   # as the one that triggered the failure.
   #   Kernel.srand config.seed
-
-  config.before do
-    DatabaseCleaner.start
-  end
-
-  config.before(:each, js: true) do
-    DatabaseCleaner.strategy = :truncation
-  end
-
-  config.after do
-    DatabaseCleaner.clean
-    ActionMailer::Base.deliveries.clear
-  end
-
-  config.before(:suite) do
-    DatabaseCleaner.strategy = :deletion
-    DatabaseCleaner.clean_with(:truncation)
-  end
 
   config.after(:each, js: true) do |example|
     next unless example.exception # only write logs for failed tests
