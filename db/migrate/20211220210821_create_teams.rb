@@ -9,7 +9,6 @@ class CreateTeams < ActiveRecord::Migration[6.0]
     end
 
     add_index :teams, :name, unique: true
-    add_index :teams, "to_tsvector('simple'::regconfig, COALESCE(teams.name, ''::text))", using: :gin, name: "index_teams_name_vector"
 
     create_table :agent_teams do |t|
       t.belongs_to :team
