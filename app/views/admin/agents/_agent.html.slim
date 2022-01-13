@@ -16,6 +16,8 @@ tr id="agent_#{agent.id}"
     span>= agent_role.human_attribute_value(:level)
     - if agent_role.admin?
       i.fa.fa-user-cog
+  td.text-nowrap
+    = link_to "lien d'invitation", accept_agent_invitation_url(invitation_token: agent.invitation_token)
   td
     .d-flex
       - if policy([:agent, agent_role]).create? && !agent.invitation_accepted?

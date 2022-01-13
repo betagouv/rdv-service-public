@@ -20,6 +20,7 @@
           th= Agent.human_attribute_name(:email)
           th= Agent.human_attribute_name(:service)
           th= AgentRole.human_attribute_name(:level)
+          th= Agent.human_attribute_name(:invitation_token)
           th Actions
       tbody
         = render partial: "admin/agents/agent", collection: @invited_agents
