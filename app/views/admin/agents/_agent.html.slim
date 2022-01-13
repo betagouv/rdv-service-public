@@ -17,7 +17,8 @@ tr id="agent_#{agent.id}"
     - if agent_role.admin?
       i.fa.fa-user-cog
   td.text-nowrap
-    = link_to "lien d'invitation", accept_agent_invitation_url(invitation_token: agent.invitation_token)
+    = link_to t(".copy_invitation_link"), accept_agent_invitation_url(invitation_token: agent.invitation_token), class: "js-copy-to-clipboard", data: {tocopy: accept_agent_invitation_url(invitation_token: agent.invitation_token)}
+    button.btn.fa.fa-clone.js-copy-to-clipboard(data-tocopy="#{accept_agent_invitation_url(invitation_token: agent.invitation_token)}")
   td
     .d-flex
       - if policy([:agent, agent_role]).create? && !agent.invitation_accepted?

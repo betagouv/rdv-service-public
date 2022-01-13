@@ -1,6 +1,9 @@
 ---
 fr:
   admin:
+    agents:
+      agent:
+        copy_invitation_link: Copie l'invitation
     rdvs:
       show:
         update: Modifier
