@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RdvStartCoherence
-  delegate :starts_at, :duration_in_min, :agents, to: :rdv
+  delegate :starts_at, :duration_in_min, to: :rdv
   attr_reader :rdv
 
   THRESHOLD = 1.minute
@@ -33,12 +33,15 @@ class RdvStartCoherence
   end
 
   def all_rdvs_ending_before
-    return Rdv.none if starts_at.blank? || duration_in_min.blank? || agents.blank?
+    return Rdv.none if starts_at.blank? || duration_in_min.blank?
+
+    agents = rdv.agents
+    agents = agents.to_a if rdv.new_record?
 
     @all_rdvs_ending_before ||= Rdv
       .not_cancelled
       .future
-      .with_agent_among(agents)
+      .with_agent(agents)
       .where(ends_at: (starts_at - 46.minutes)..starts_at)
       .order(:ends_at)
       .to_a
