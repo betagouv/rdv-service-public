@@ -9,21 +9,6 @@ class Agent::RdvPolicy < DefaultAgentPolicy
     same_agent_or_has_access?
   end
 
-  class ScopeByOrganisation
-    def initialize(agent, organisation, scope)
-      @agent = agent
-      @organisation = organisation
-      @scope = scope
-    end
-
-    def resolve
-      unless @agent.role_in_organisation(@organisation).can_access_others_planning?
-        @scope = @scope.joins(:motif).where(motifs: { service: @agent.service })
-      end
-      @scope.where(organisation: @organisation)
-    end
-  end
-
   class Scope < Scope
     def resolve
       if context.can_access_others_planning?
