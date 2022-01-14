@@ -2,7 +2,9 @@
 footer {
   color: $blue;
   text-decoration: none;
-
+  h2{
+    font-size: 1.125rem;
+  }
   .footer-links a {
     color: $gray-600;
     &:hover {

@@ -14,14 +14,14 @@
           li.mb-2
             = image_pack_tag "logos/republique-francaise-logo.svg", size: "105x90", alt:""
     .col-6.col-md
-      h4 À propos
+      h2 À propos
       ul.list-unstyled.text-small
         li.mb-1 = link_to "Contact", contact_path, class: "footer-links"
         li.mb-1 = link_to "Les solidarités dans votre département", mds_path
         li.mb-1 = link_to "Espace professionnel", accueil_mds_path
         li.mb-1 = link_to "Statistiques", stats_path
     .col-6.col-md
-      h4 Produit
+      h2 Produit
       ul.list-unstyled.text-small
         li.mb-1 = link_to "Accessibilité : non conforme", accessibility_path
         li.mb-1 = link_to "https://github.com/betagouv/rdv-solidarites.fr/commits/#{ENV['CONTAINER_VERSION']}", title: "Aller au code source de RDV-Solidarités" do
@@ -31,7 +31,7 @@
           span> Code Source sur GitHub
           i.fa.fa-external-link-alt
     .col-6.col-md
-      h4 Informations légales
+      h2 Informations légales
       ul.list-unstyled.text-small
         li.mb-1 = link_to "https://doc.rdv-solidarites.fr/informations-legales/mentions-legales" do
           span> Mentions Légales
