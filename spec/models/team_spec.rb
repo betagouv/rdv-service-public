@@ -6,9 +6,15 @@ describe Team, type: :model do
       expect(build(:team, name: "")).to be_invalid
     end
 
-    it "invalid with existing name" do
-      create(:team, name: "ubberTeam")
-      expect(build(:team, name: "ubberTeam")).to be_invalid
+    it "invalid with existing name in same territory" do
+      territory = create(:territory)
+      create(:team, name: "ubberTeam", territory: territory)
+      expect(build(:team, name: "ubberTeam", territory: territory)).to be_invalid
+    end
+
+    it "valid with existing name in other territory" do
+      create(:team, name: "ubberTeam", territory: create(:territory))
+      expect(build(:team, name: "ubberTeam", territory: create(:territory))).to be_valid
     end
 
     it "invalid when add agents from different territory" do

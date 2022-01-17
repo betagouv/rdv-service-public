@@ -12,7 +12,7 @@ class Team < ApplicationRecord
   has_many :agent_teams, dependent: :destroy
   has_many :agents, through: :agent_teams
 
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: { scope: :territory }
   validate :agent_from_same_territory, if: -> { agents.any? }
 
   def to_s

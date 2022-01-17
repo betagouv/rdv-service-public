@@ -4,11 +4,11 @@ class CreateTeams < ActiveRecord::Migration[6.0]
   def change
     create_table :teams do |t|
       t.belongs_to :territory
-      t.string :name, null: false, unique: true
+      t.string :name, null: false
       t.timestamps
     end
 
-    add_index :teams, :name, unique: true
+    add_index :teams, :name
 
     create_table :agent_teams do |t|
       t.belongs_to :team
