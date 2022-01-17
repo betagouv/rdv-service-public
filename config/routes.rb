@@ -97,6 +97,10 @@ Rails.application.routes.draw do
         resources :motifs, only: %i[index]
         resources :rdvs, only: %i[index]
       end
+
+      resources :invitations, param: "token", only: [] do
+        resource :user, only: %i[show]
+      end
     end
   end
 
