@@ -15,6 +15,10 @@ class Users::GeoSearch
     @departement_organisations ||= Organisation.joins(:territory).where(territories: { departement_number: @departement })
   end
 
+  def most_relevant_organisations
+    @most_relevant_organisations ||= Organisation.most_relevant_to_sectors(matching_sectors)
+  end
+
   def attributed_agents_by_organisation
     @attributed_agents_by_organisation ||= matching_sectors
       .map { |sector| sector.attributions.level_agent.includes(:agent).to_a }
