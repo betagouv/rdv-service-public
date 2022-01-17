@@ -39,6 +39,9 @@ class Agent < ApplicationRecord
   has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
   has_many :sector_attributions, dependent: :destroy
 
+  has_many :agent_teams, dependent: :destroy
+  has_many :teams, through: :agent_teams
+
   has_and_belongs_to_many :users
 
   after_update -> { rdvs.touch_all }
@@ -147,5 +150,9 @@ class Agent < ApplicationRecord
   # We monkey-patch it for it not to raise.
   def self.dta_find_by(_attrs = {})
     nil
+  end
+
+  def to_s
+    "#{first_name} #{last_name}"
   end
 end

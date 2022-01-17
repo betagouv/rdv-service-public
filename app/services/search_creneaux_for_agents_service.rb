@@ -12,8 +12,9 @@ class SearchCreneauxForAgentsService < BaseService
   private
 
   def build_result(lieu)
-    next_availability = NextAvailabilityService.find(@form.motif, lieu, @form.date_range.begin, @form.agents)
-    creneaux = SlotBuilder.available_slots(@form.motif, lieu, @form.date_range, OffDays.all_in_date_range(@form.date_range), @form.agents)
+    # utiliser les ids des agents pour ne pas faire de requêtes supplémentaire
+    next_availability = NextAvailabilityService.find(@form.motif, lieu, @form.date_range.begin, @form.agent_ids)
+    creneaux = SlotBuilder.available_slots(@form.motif, lieu, @form.date_range, OffDays.all_in_date_range(@form.date_range), @form.agent_ids)
     return nil if creneaux.empty? && next_availability.nil?
 
     OpenStruct.new(lieu: lieu, next_availability: next_availability, creneaux: creneaux)
@@ -32,7 +33,7 @@ class SearchCreneauxForAgentsService < BaseService
         @lieux.for_motif(@form.motif)
       end
 
-    @lieux = @lieux.where(id: PlageOuverture.where(agent_id: @form.agents).select(:lieu_id)) if @form.agents.present?
+    @lieux = @lieux.where(id: PlageOuverture.where(agent_id: @form.agent_ids).select(:lieu_id)) if @form.agent_ids.present?
     @lieux = @lieux.ordered_by_name
     @lieux
   end

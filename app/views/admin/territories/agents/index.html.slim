@@ -1,0 +1,34 @@
+= simple_form_for "", url: admin_territory_agents_path(current_territory), html: { method: :get, class: "form-inline js-search-and-filter-form" }, wrapper: :inline_form do |f|
+
+  .container-fluid.bg-white.rounded.m-2.p-2
+    h2.text-center = t(".territory_agents_title")
+
+    .m-3.d-flex.justify-content-end
+      - search = params[:search].blank? ? "d-none" : ""
+      div= link_to t(".reset"), admin_territory_agents_path(current_territory), class: "btn btn-link #{search}"
+      = f.input :search, placeholder: t(".search_placeholder"), label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
+      = f.button :submit, t(".search")
+
+    table.table
+      thead
+        tr
+          th = t(".last_name")
+          th = t(".first_name")
+          th = t(".email")
+          th = t(".teams")
+          th = t(".actions")
+      tbody
+        - @agents.each do |agent|
+          tr
+            td = agent.last_name
+            td = agent.first_name
+            td = agent.email
+            td = agent.teams.count
+
+            td
+              .d-flex
+                div.mr-3= link_to edit_admin_territory_agent_path(current_territory, agent),
+                        title: t(".edit_agents") do
+                  i.fa.fa-edit
+    .d-flex.justify-content-center
+      = paginate @agents, theme: "twitter-bootstrap-4"
