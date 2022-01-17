@@ -412,7 +412,7 @@ ActiveRecord::Schema.define(version: 2022_01_10_222218) do
     t.datetime "updated_at", precision: 6, null: false
     t.text "search_terms"
     t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_teams_search_terms", using: :gin
-    t.index ["name"], name: "index_teams_on_name"
+    t.index ["name", "territory_id"], name: "index_teams_on_name_and_territory_id", unique: true
     t.index ["territory_id"], name: "index_teams_on_territory_id"
   end
 
