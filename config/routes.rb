@@ -98,9 +98,7 @@ Rails.application.routes.draw do
         resources :rdvs, only: %i[index]
       end
 
-      resources :invitations, param: "token", only: [] do
-        resource :user, only: %i[show]
-      end
+      resources :invitations, param: "token", only: [:show]
     end
   end
 
