@@ -124,6 +124,45 @@ describe Users::GeoSearch, type: :service_model do
     end
   end
 
+  describe "#most_relevant_organisations" do
+    subject { described_class.new(departement: "64", city_code: "64110").most_relevant_organisations }
+
+    let!(:territory64) { create(:territory, departement_number: "64") }
+
+    context "no matching sectors" do
+      it { is_expected.to be_empty }
+    end
+
+    context "one sector attributed to multiple organisations" do
+      let!(:sector_pau) { create(:sector, territory: territory64, name: "Secteur entier Pau agglo") }
+      let!(:organisation1) { create(:organisation, territory: territory64, name: "Pau 1: Site de Jurancon") }
+      let!(:organisation2) { create(:organisation, territory: territory64, name: "Pau 2: Site de Bonnard") }
+      let!(:zone_jurancon_pau_agglo) { create(:zone, level: "city", city_code: "64110", city_name: "Jurancon", sector: sector_pau) }
+      let!(:attribution_organisation_pau1) { SectorAttribution.create(level: "organisation", sector: sector_pau, organisation: organisation1) }
+      let!(:attribution_organisation_pau2) { SectorAttribution.create(level: "organisation", sector: sector_pau, organisation: organisation2) }
+
+      it { is_expected.to contain_exactly(organisation1, organisation2) }
+    end
+
+    context "multiple sectors attributed to multiple organisations" do
+      let!(:sector_pau) { create(:sector, territory: territory64, name: "Secteur entier Pau agglo") }
+      let!(:organisation1) { create(:organisation, territory: territory64, name: "Pau 1: Site de Jurancon") }
+      let!(:organisation2) { create(:organisation, territory: territory64, name: "Pau 2: Site de Bonnard") }
+      let!(:zone_jurancon_pau_agglo) { create(:zone, level: "city", city_code: "64110", city_name: "Jurancon", sector: sector_pau) }
+      let!(:attribution_organisation_pau1) { SectorAttribution.create(level: "organisation", sector: sector_pau, organisation: organisation1) }
+      let!(:attribution_organisation_pau2) { SectorAttribution.create(level: "organisation", sector: sector_pau, organisation: organisation2) }
+      let!(:sector_jurancon) { create(:sector, territory: territory64, name: "Secteur Jurancon") }
+      let!(:zone_jurancon) { create(:zone, level: "city", city_code: "64110", city_name: "Jurancon", sector: sector_jurancon) }
+      let!(:attribution_organisation_jurancon) { SectorAttribution.create(level: "organisation", sector: sector_jurancon, organisation: organisation1) }
+      let!(:agent1) { create(:agent, basic_role_in_organisations: [organisation1]) }
+      let!(:agent2) { create(:agent, basic_role_in_organisations: [organisation1]) }
+      let!(:attribution_agent_jurancon1) { SectorAttribution.create(level: "agent", sector: sector_jurancon, organisation: organisation1, agent: agent1) }
+      let!(:attribution_agent_jurancon2) { SectorAttribution.create(level: "agent", sector: sector_jurancon, organisation: organisation1, agent: agent2) }
+
+      it { is_expected.to contain_exactly(organisation1) }
+    end
+  end
+
   describe "#attributed_agents_by_organisation" do
     subject { described_class.new(departement: "62", city_code: "62100").attributed_agents_by_organisation }
 

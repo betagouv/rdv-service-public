@@ -49,6 +49,17 @@ class Organisation < ApplicationRecord
         .select(:organisation_id)
     )
   }
+  scope :most_relevant_to_sectors, lambda { |sectors|
+    where(
+      id: SectorAttribution
+            .level_organisation
+            .where(sector_id: sectors.pluck(:id))
+            .group_by(&:sector_id)
+            .min_by(1) { |_sector_id, attributions| attributions.length }
+            .flat_map(&:last)
+            .pluck(:organisation_id)
+    )
+  }
   scope :order_by_name, -> { order(Arel.sql("LOWER(name)")) }
   scope :contactable, lambda {
     where.not(phone_number: ["", nil])
