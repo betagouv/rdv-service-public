@@ -117,6 +117,15 @@ ActiveRecord::Schema.define(version: 2022_01_18_161355) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "agent_teams", force: :cascade do |t|
+    t.bigint "team_id"
+    t.bigint "agent_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["agent_id"], name: "index_agent_teams_on_agent_id"
+    t.index ["team_id"], name: "index_agent_teams_on_team_id"
+  end
+
   create_table "agent_territorial_roles", force: :cascade do |t|
     t.bigint "agent_id"
     t.bigint "territory_id"
@@ -394,6 +403,17 @@ ActiveRecord::Schema.define(version: 2022_01_18_161355) do
     t.string "email", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "teams", force: :cascade do |t|
+    t.bigint "territory_id"
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.text "search_terms"
+    t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_teams_search_terms", using: :gin
+    t.index ["name", "territory_id"], name: "index_teams_on_name_and_territory_id", unique: true
+    t.index ["territory_id"], name: "index_teams_on_territory_id"
   end
 
   create_table "territories", force: :cascade do |t|

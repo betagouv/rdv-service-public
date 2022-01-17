@@ -13,12 +13,41 @@ fr:
     creneaux:
       agent_searches:
         index:
+          agents: Agents
+          teams: Équipes
           search_for_slots_title: Trouver un créneau
           search_for_slots_subtitle: pour %{users_fullname}
           available_places_with_slots:
             zero: Aucun lieu ne propose de disponibilité
             one: Un lieu propose des disponibilités
             other: "%{count} lieux proposent des disponibilités"
+    territories:
+      agents:
+        index:
+          edit_agents: Modification des équipes de l'agent
+          territory_agents_title: Agents du territoire
+          reset: Reinitialiser
+          search_placeholder: "ex: martine@example.com"
+          search: Rechercher
+          last_name: Nom
+          first_name: Prénom
+          email: Email
+          teams: Équipes
+          actions: Actions
+        edit:
+          agent_title: Modifier un agent
+          teams: Équipes
+      teams:
+        index:
+          edit_agent_teams_title: Modifier les équipes de %{agent_name}
+          back: Retour
+          create_team: Créer une équipe
+          teams_title: Liste des équipes
+        new:
+          territory_teams_title: Créer une équipe
+        edit:
+          territory_teams_title: Modifier une équipe
+
   activerecord:
     errors:
       messages:
@@ -28,6 +57,11 @@ fr:
             dépendant(e) existe
           has_many: Vous ne pouvez pas supprimer l'enregistrement parce que les %{record}
             dépendants existent
+      models:
+        team:
+          attributes:
+            agents:
+              not_from_same_territory: doivent être du même territoire
   date:
     helpers:
       tomorrow: demain

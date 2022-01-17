@@ -1,0 +1,21 @@
+.container-fluid.bg-white.rounded.m-2
+  h2.text-center = t(".agent_title")
+
+  = simple_form_for @agent, url: admin_territory_agent_path(current_territory, @agent) do |form|
+    = form.input :team_ids, collection: @agent.teams,
+          label: t(".teams"),
+          label_method: :name,
+          input_html: { \
+            multiple: true, \
+            class: "select2-input",\
+            data: {\
+              "select-options": {\
+                ajax: {\
+                  url: search_admin_territory_teams_path(current_territory),
+                  dataType: "json",
+                  delay: 250\
+                }\
+              }\
+            }\
+          }
+    = form.submit class: "btn btn-primary"
