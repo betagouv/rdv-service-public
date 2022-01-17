@@ -64,7 +64,7 @@ module RdvsHelper
     link_to admin_organisation_rdv_path(rdv.organisation, rdv, rdv: { status: status, ignore_benign_errors: true }, agent_id: agent&.id),
             method: :put,
             class: "dropdown-item",
-            data: { confirm: Rdv.human_attribute_value(:status, status, context: :confirm) },
+            data: { confirm: change_status_confirmation_message(rdv, status) },
             remote: remote do
       tag.span do
         tag.i(class: "fa fa-circle mr-1 rdv-status-#{status}") +
@@ -72,6 +72,30 @@ module RdvsHelper
           tag.div(Rdv.human_attribute_value(:status, status, context: :explanation), class: "text-wrap text-muted")
       end
     end
+  end
+
+  def change_status_confirmation_message(rdv, status)
+    if cancel_rdv_to_not_notify?(rdv, status)
+      I18n.t("admin.rdvs.message.confirm.simple_cancel")
+    elsif cancel_rdv_to_notify?(rdv, status)
+      I18n.t("admin.rdvs.message.confirm.cancel_with_notification")
+    elsif reset_futur_rdv?(rdv, status)
+      I18n.t("admin.rdvs.message.confirm.reinit_status")
+    else
+      ""
+    end
+  end
+
+  def cancel_rdv_to_not_notify?(rdv, status)
+    %w[revoked excused].include?(status) && rdv.rdvs_users.select(&:send_lifecycle_notifications?).empty?
+  end
+
+  def cancel_rdv_to_notify?(rdv, status)
+    %w[revoked excused].include?(status) && rdv.rdvs_users.select(&:send_lifecycle_notifications?).any?
+  end
+
+  def reset_futur_rdv?(rdv, status)
+    status == "unknown" && !rdv.past?
   end
 
   def rdv_status_delete_dropdown_item(rdv, agent)
