@@ -338,31 +338,6 @@ describe "api/v1/users requests", type: :request do
     end
   end
 
-  describe "GET api/v1/invitations/:invitation_token/user" do
-    let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }
-
-    context "when the token exists" do
-      let!(:invitation_token) do
-        user.invite! { |u| u.skip_invitation = true }
-        user.raw_invitation_token
-      end
-
-      it "returns the user" do
-        get api_v1_invitation_user_path(invitation_token: invitation_token), headers: api_auth_headers_for_agent(agent)
-        expect(response.status).to eq(200)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["user"]["id"]).to eq(user.id)
-      end
-    end
-
-    context "when the token does not exist" do
-      it "returns 404" do
-        get api_v1_invitation_user_path(invitation_token: "some-random-token"), headers: api_auth_headers_for_agent(agent)
-        expect(response.status).to eq(404)
-      end
-    end
-  end
-
   describe "GET api/v1/users/:id/invite" do
     context "Existing user with email" do
       let!(:user) { create(:user, first_name: "Jean", last_name: "JACQUES", organisations: [organisation], email: "jean@jacques.fr") }

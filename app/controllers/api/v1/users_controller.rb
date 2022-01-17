@@ -42,28 +42,8 @@ class Api::V1::UsersController < Api::V1::BaseController
   private
 
   def retrieve_user
-    @user = \
-      if params[:invitation_token].present?
-        retrieve_user_by_invitation_token
-      else
-        retrieve_user_by_id
-      end
+    @user = current_organisation.present? ? current_organisation.users.find(params[:id]) : User.find(params[:id])
     authorize(@user)
-  end
-
-  def retrieve_user_by_id
-    current_organisation.present? ? current_organisation.users.find(params[:id]) : User.find(params[:id])
-  end
-
-  def retrieve_user_by_invitation_token
-    # rubocop:disable Rails/DynamicFindBy
-    # find_by_invitation_token is a method added by the devise_invitable gem
-    user = User.find_by_invitation_token(params[:invitation_token], true)
-    # rubocop:enable Rails/DynamicFindBy
-
-    raise ActiveRecord::RecordNotFound unless user
-
-    user
   end
 
   def user_params
