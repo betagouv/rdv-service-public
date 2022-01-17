@@ -76,4 +76,69 @@ describe RdvsHelper do
       end
     end
   end
+
+  describe "#change_status_confirmation_message" do
+    let(:now) { Time.zone.parse("2022-01-10 10:00") }
+
+    before do
+      travel_to(now)
+    end
+
+    %i[waiting seen excused revoked noshow].each do |rdv_status|
+      context "with a today's RDV" do
+        let(:rdv) { build(:rdv, starts_at: now) }
+
+        it "returns empty string message for #{rdv_status}" do
+          expect(change_status_confirmation_message(rdv, rdv_status)).to eq("")
+        end
+      end
+
+      context "with a past's RDV" do
+        let(:now) { Time.zone.parse("2022-01-10 10:00") }
+        let(:rdv) { build(:rdv, starts_at: now - 2.days) }
+
+        before do
+          travel_to(now)
+        end
+
+        it "returns empty string message for #{rdv_status}" do
+          expect(change_status_confirmation_message(rdv, rdv_status)).to eq("")
+        end
+      end
+    end
+
+    context "with a today's RDV" do
+      it "returns reinit confirm message for unknown" do
+        rdv = build(:rdv, starts_at: now)
+        expect(change_status_confirmation_message(rdv, :unknown)).to eq("")
+      end
+    end
+
+    context "with a past's RDV" do
+      it "returns reinit confirm message for unknown" do
+        rdv = build(:rdv, starts_at: now - 2.days)
+        expect(change_status_confirmation_message(rdv, "unknown")).to eq("")
+      end
+    end
+
+    it "return reinit status message for a futur unknown RDV" do
+      rdv = build(:rdv, :future)
+      expected = I18n.t("admin.rdvs.message.confirm.reinit_status")
+      expect(change_status_confirmation_message(rdv, "unknown")).to eq(expected)
+    end
+
+    it "return simple confirm message for a revoked future RDV with invisible motif" do
+      motif = create(:motif, visibility_type: Motif::INVISIBLE)
+      rdv = create(:rdv, motif: motif)
+      expected = I18n.t("admin.rdvs.message.confirm.simple_cancel")
+      expect(change_status_confirmation_message(rdv, "revoked")).to eq(expected)
+    end
+
+    it "return simple confirm message for a revoked future RDV with visible and notified motif" do
+      motif = create(:motif, visibility_type: Motif::VISIBLE_AND_NOTIFIED)
+      rdv = create(:rdv, motif: motif)
+      expected = I18n.t("admin.rdvs.message.confirm.cancel_with_notification")
+      expect(change_status_confirmation_message(rdv, "revoked")).to eq(expected)
+    end
+  end
 end
