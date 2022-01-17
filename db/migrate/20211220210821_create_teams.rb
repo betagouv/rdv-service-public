@@ -8,7 +8,7 @@ class CreateTeams < ActiveRecord::Migration[6.0]
       t.timestamps
     end
 
-    add_index :teams, :name
+    add_index :teams, %i[name territory_id], unique: true
 
     create_table :agent_teams do |t|
       t.belongs_to :team
