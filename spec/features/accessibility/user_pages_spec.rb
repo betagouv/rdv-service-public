@@ -15,4 +15,9 @@ describe "welcome", js: true do
     visit accessibility_path
     expect(page).to be_axe_clean
   end
+
+  it "lieux_path page is accessible" do
+    visit lieux_path
+    expect(page).to be_axe_clean
+  end
 end
