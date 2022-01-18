@@ -128,8 +128,9 @@ class User < ApplicationRecord
   end
 
   def can_be_soft_deleted_from_organisation?(organisation)
-    Rdv.not_cancelled.future
-      .with_user(self_and_relatives)
+    Rdv.not_cancelled
+      .future
+      .joins(:users).where(users: self_and_relatives)
       .where(organisation: organisation)
       .empty?
   end

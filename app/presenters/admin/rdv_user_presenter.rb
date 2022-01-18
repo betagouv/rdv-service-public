@@ -25,8 +25,7 @@ class Admin::RdvUserPresenter
   private
 
   def previous_rdvs
-    Rdv
-      .with_user(user)
+    user.rdvs
       .where(organisation: organisation)
       .where("starts_at < ?", starts_at)
       .order(starts_at: :desc)
