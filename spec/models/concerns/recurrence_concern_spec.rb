@@ -136,6 +136,13 @@ describe RecurrenceConcern do
               expect(element_class.in_range(range)).to eq([object])
             end
 
+            it "returns element when first day of range at the until day" do
+              range = Time.zone.parse("2021-10-25 0:00")..Time.zone.parse("2021-10-29 23:59:59.99")
+              first_day = monday - 14.days
+              object = create(element, first_day: first_day, recurrence: Montrose.every(:week, on: ["monday"], starts: first_day, until: range.begin.to_date))
+              expect(element_class.in_range(range)).to eq([object])
+            end
+
             it "dont returns #{element} when end before range" do
               first_day = range.begin - 2.months
               create(element, first_day: first_day,
