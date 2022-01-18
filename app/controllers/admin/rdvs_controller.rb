@@ -3,21 +3,24 @@
 class Admin::RdvsController < AgentAuthController
   respond_to :html, :json
 
-  before_action :set_rdv, :set_optional_agent, except: %i[index create]
+  before_action :set_rdv, :set_optional_agent, except: %i[index create new_participation export]
 
   def index
-    @form = Admin::RdvSearchForm.new(
-      start: parse_date_from_params(:start),
-      end: parse_date_from_params(:end),
-      show_user_details: %w[1 true].include?(params[:show_user_details]),
-      **params.permit(:organisation_id, :agent_id, :user_id, :lieu_id, :status)
-    )
-    @rdvs = policy_scope(Rdv).merge(@form.rdvs)
+    @rdvs = policy_scope(Rdv).search_for(current_agent, current_organisation, parsed_params)
     @breadcrumb_page = params[:breadcrumb_page]
-    respond_to do |format|
-      format.xls { send_data(RdvExporter.export(@rdvs.order(starts_at: :desc)), filename: "rdvs.xls", type: "application/xls") }
-      format.html { @rdvs = @rdvs.order(starts_at: :asc).page(params[:page]) }
-    end
+    @form = Admin::RdvSearchForm.new(parsed_params)
+    @rdvs = @rdvs.order(starts_at: :asc).page(params[:page])
+  end
+
+  def export
+    skip_authorization # RDV will be scoped in SendExportJob
+    Agents::ExportMailer.rdv_export(
+      current_agent,
+      current_organisation,
+      parsed_params
+    ).deliver_later
+    flash[:notice] = I18n.t("layouts.flash.confirm_export_send_when_done", agent_email: current_agent.email)
+    redirect_to admin_organisation_rdvs_path(organisation_id: current_organisation.id)
   end
 
   def show
@@ -73,14 +76,14 @@ class Admin::RdvsController < AgentAuthController
     @agent = policy_scope(Agent).find(params[:agent_id]) if params[:agent_id].present?
   end
 
-  def parse_date_from_params(param_name)
-    return nil if params[param_name].blank? || params[param_name] == "__/__/____"
+  def parse_date_from_params(date_param)
+    return nil if date_param.blank? || date_param == "__/__/____"
 
-    Date.parse(params[param_name])
+    Date.parse(date_param)
   end
 
   def set_rdv
-    @rdv = Rdv.find(params[:id])
+    @rdv = policy_scope(Rdv).find(params[:id])
   end
 
   def rdv_params
@@ -94,5 +97,18 @@ class Admin::RdvsController < AgentAuthController
 
   def status_params
     params.require(:rdv).permit(:status)
+  end
+
+  def parsed_params
+    params.permit(:organisation_id, :agent_id, :user_id, :lieu_id, :status, :show_user_details, :start, :end).to_hash.to_h do |param_name, param_value|
+      case param_name
+      when "start", "end"
+        [param_name, parse_date_from_params(param_value)]
+      when "show_user_details"
+        [param_name, %w[1 true].include?(param_value)]
+      else
+        [param_name, param_value]
+      end
+    end
   end
 end
