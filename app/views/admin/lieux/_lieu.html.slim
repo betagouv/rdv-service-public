@@ -1,4 +1,4 @@
-- nb_rdv = policy_scope(Rdv).for_today.with_lieu(lieu).count
+- nb_rdv = policy_scope(Rdv).for_today.merge(lieu.rdvs).count
 tr id="lieu_#{lieu.id}"
   td
     = lieu.name

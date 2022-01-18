@@ -60,7 +60,6 @@ class Rdv < ApplicationRecord
   }
   scope :with_agent, ->(agents) { joins(:agents).where(agents: agents) }
   scope :with_user, ->(users) { joins(:users).where(users: users).distinct }
-  scope :with_lieu, ->(lieux) { joins(:lieu).where(lieux: lieux) }
   scope :visible, -> { joins(:motif).where(motifs: { visibility_type: [Motif::VISIBLE_AND_NOTIFIED, Motif::VISIBLE_AND_NOT_NOTIFIED] }) }
 
   after_save :associate_users_with_organisation
