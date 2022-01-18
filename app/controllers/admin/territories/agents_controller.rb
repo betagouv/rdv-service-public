@@ -7,7 +7,7 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
   end
 
   def search
-    agents = policy_scope_admin(Agent)
+    agents = policy_scope_admin(Agent).distinct
       .joins(:organisations).where(organisations: { id: current_territory.organisations.map(&:id) })
       .active.complete.limit(10)
     @agents = search_params[:term].present? ? agents.search_by_text(search_params[:term]) : agents.order_by_last_name
