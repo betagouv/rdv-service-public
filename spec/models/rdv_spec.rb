@@ -293,4 +293,85 @@ describe Rdv, type: :model do
       expect(build(:rdv, users: [create(:user, email: nil)])).to be_valid
     end
   end
+
+  describe "#search_for" do
+    it "returns allowed rdvs" do
+      organisation = create(:organisation)
+      other_organisation = create(:organisation)
+      admin = create(:agent, admin_role_in_organisations: [organisation, other_organisation])
+      rdv = create(:rdv, organisation: organisation)
+      create(:rdv, organisation: other_organisation)
+
+      options = {}
+      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+    end
+
+    it "returns rdv for lieu when given" do
+      organisation = create(:organisation)
+      admin = create(:agent, admin_role_in_organisations: [organisation])
+      lieu = create(:lieu, organisation: organisation)
+      rdv = create(:rdv, lieu: lieu, organisation: organisation)
+      create(:rdv, lieu: create(:lieu), organisation: organisation)
+
+      options = { "lieu_id" => lieu.id }
+      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+    end
+
+    it "returns rdv for given agent" do
+      organisation = create(:organisation)
+      admin = create(:agent, admin_role_in_organisations: [organisation])
+      other_admin = create(:agent, admin_role_in_organisations: [organisation])
+      rdv = create(:rdv, organisation: organisation, agents: [admin])
+      create(:rdv, organisation: organisation, agents: [other_admin])
+
+      options = { "agent_id" => admin.id }
+      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+    end
+
+    it "returns rdv for given user" do
+      organisation = create(:organisation)
+      admin = create(:agent, admin_role_in_organisations: [organisation])
+      user = create(:user, organisations: [organisation])
+      rdv = create(:rdv, organisation: organisation, agents: [admin], users: [user])
+      other_user = create(:user, organisations: [organisation])
+      create(:rdv, organisation: organisation, agents: [admin], users: [other_user])
+
+      options = { "user_id" => user.id }
+      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+    end
+
+    it "returns rdv with given status" do
+      organisation = create(:organisation)
+      admin = create(:agent, admin_role_in_organisations: [organisation])
+      rdv = create(:rdv, :past, organisation: organisation, agents: [admin], status: :seen)
+      create(:rdv, :past, organisation: organisation, agents: [admin], status: :excused)
+
+      options = { "status" => "seen" }
+      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+    end
+
+    it "returns rdv starting after that date" do
+      now = Time.zone.parse("20211227 11:00")
+      travel_to(now)
+      organisation = create(:organisation)
+      admin = create(:agent, admin_role_in_organisations: [organisation])
+      rdv = create(:rdv, starts_at: now + 3.days, organisation: organisation, agents: [admin])
+      create(:rdv, starts_at: now + 1.day, organisation: organisation, agents: [admin])
+
+      options = { "start" => (now + 2.days) }
+      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+    end
+
+    it "returns rdv starting before that date" do
+      now = Time.zone.parse("20211227 11:00")
+      travel_to(now)
+      organisation = create(:organisation)
+      admin = create(:agent, admin_role_in_organisations: [organisation])
+      rdv = create(:rdv, starts_at: now + 1.day, organisation: organisation, agents: [admin])
+      create(:rdv, starts_at: now + 3.days, organisation: organisation, agents: [admin])
+
+      options = { "end" => (now + 2.days) }
+      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+    end
+  end
 end
