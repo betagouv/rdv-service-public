@@ -41,24 +41,21 @@ class Organisation < ApplicationRecord
   accepts_nested_attributes_for :agent_roles
   accepts_nested_attributes_for :territory
 
-  scope :attributed_to_sectors, lambda { |sectors|
-    where(
-      id: SectorAttribution
-        .level_organisation
-        .where(sector_id: sectors.pluck(:id))
-        .select(:organisation_id)
-    )
-  }
-  scope :most_relevant_to_sectors, lambda { |sectors|
-    where(
-      id: SectorAttribution
-            .level_organisation
-            .where(sector_id: sectors.pluck(:id))
-            .group_by(&:sector_id)
-            .min_by(1) { |_sector_id, attributions| attributions.length }
-            .flat_map(&:last)
-            .pluck(:organisation_id)
-    )
+  scope :attributed_to_sectors, lambda { |sectors, most_pertinent = false|
+    attributions = SectorAttribution
+      .level_organisation
+      .where(sector_id: sectors.pluck(:id))
+
+    # if most pertinent we take the attributions from the sectors with the least
+    # attributed organisations
+    if most_pertinent
+      attributions = attributions
+        .group_by(&:sector_id)
+        .min_by(1) { |_sector_id, attrs| attrs.length }
+        .flat_map(&:last)
+    end
+
+    where(id: attributions.pluck(:organisation_id))
   }
   scope :order_by_name, -> { order(Arel.sql("LOWER(name)")) }
   scope :contactable, lambda {
