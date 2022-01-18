@@ -22,7 +22,7 @@ div id="creneaux-lieu-#{lieu.id}"
               - creneaux_for_date.each do |date, creneaux|
                 - creneaux.sort_by(&:starts_at).each do |creneau|
                   - if creneau.motif.restriction_for_rdv.blank?
-                    = link_to new_users_rdv_wizard_step_path(query.merge(starts_at: creneau.starts_at)), "data-turbolinks": false, class: "btn btn-light mr-1 mb-1 w-100" do
+                    = link_to new_users_rdv_wizard_step_path(query.merge(motif_id: creneau.motif.id, starts_at: creneau.starts_at)), "data-turbolinks": false, class: "btn btn-light mr-1 mb-1 w-100" do
                       = l(creneau.starts_at, format: "%H:%M")
                       - if creneau.motif.follow_up?
                         br
@@ -34,8 +34,8 @@ div id="creneaux-lieu-#{lieu.id}"
                         br
                         small= creneau.agent.short_name
 
-                    =  render "/common/modal", id: "js-rdv-restriction-motif#{creneau.starts_at.to_i}" , title: "À lire avant de prendre un rendez-vous", confirm_path: new_users_rdv_wizard_step_path(query.merge(starts_at: creneau.starts_at)) do
-                      = ActionController::Base.helpers.auto_link(simple_format(motif.restriction_for_rdv), html: { target: "_blank"})
+                    =  render "/common/modal", id: "js-rdv-restriction-motif#{creneau.starts_at.to_i}" , title: "À lire avant de prendre un rendez-vous", confirm_path: new_users_rdv_wizard_step_path(query.merge(motif_id: creneau.motif.id, starts_at: creneau.starts_at)) do
+                      = ActionController::Base.helpers.auto_link(simple_format(creneau.motif.restriction_for_rdv), html: { target: "_blank"})
             - elsif date >= (Time.now + max_booking_delay.seconds).to_date
               p.text-center.text-muted
                 | Date fermée à la reservation

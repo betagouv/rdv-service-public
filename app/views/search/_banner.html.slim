@@ -13,7 +13,5 @@ section#hero.hero.hero-home.py-2
           - if context.departement.present?
             | le &nbsp;
             span.text-secondary #{context.departement}
-      - if context.motif.present?
-        h3.text-white.mb-4 #{context.motif.name}
-      - elsif context.service.present?
-        h3.text-white.mb-4 en #{context.service.name}
+      - if context.selected_motif_name.present?
+        h3.text-white.mb-4 #{context.selected_motif_name}
