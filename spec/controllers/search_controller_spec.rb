@@ -15,17 +15,22 @@ RSpec.describe SearchController, type: :controller do
   let!(:user) { create(:user, organisations: [organisation]) }
 
   let!(:organisation) { create(:organisation) }
+  let!(:other_org) { create(:organisation) }
 
   let!(:service) { create(:service, name: "Joli service") }
   let(:now) { Date.new(2019, 7, 22) }
-  let!(:motif) { create(:motif, name: "Motif numéro 1", service: service, reservable_online: true, organisation: organisation) }
-  let!(:motif2) { create(:motif, name: "Motif numéro 2", service: service, reservable_online: true, organisation: organisation) }
+  let!(:motif) { create(:motif, name: "RSA orientation 1", reservable_online: true, organisation: organisation) }
+  let!(:motif2) { create(:motif, name: "RSA orientation 2", reservable_online: true, organisation: organisation) }
+  let!(:motif3) { create(:motif, name: "RSA orientation 3", reservable_online: true, organisation: other_org) }
+  let!(:motif4) { create(:motif, name: "Motif numéro 4", reservable_online: true, organisation: other_org) }
 
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, organisation: organisation) }
   let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], lieu: lieu2, organisation: organisation) }
+  let!(:plage_ouverture3) { create(:plage_ouverture, motifs: [motif3], lieu: lieu, organisation: other_org) }
+  let!(:plage_ouverture4) { create(:plage_ouverture, motifs: [motif4], lieu: lieu2, organisation: other_org) }
 
-  let!(:lieu) { create(:lieu, name: "Lieu numéro 1") }
-  let!(:lieu2) { create(:lieu, name: "Lieu numéro 2") }
+  let!(:lieu) { create(:lieu, name: "Lieu numéro 1", organisation: organisation) }
+  let!(:lieu2) { create(:lieu, name: "Lieu numéro 2", organisation: organisation) }
 
   let!(:creneaux_search) do
     instance_double(
@@ -34,7 +39,7 @@ RSpec.describe SearchController, type: :controller do
       next_availability: build(:creneau, starts_at: DateTime.parse("2019-08-05 08h00"))
     )
   end
-  let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: motif.id)) }
+  let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id])) }
 
   before do
     travel_to(now)
@@ -50,7 +55,7 @@ RSpec.describe SearchController, type: :controller do
 
         it "redirects with an error message" do
           get :search_rdv, params: {
-            organisation_id: organisation.id, service_id: service.id, address: address, departement: departement_number, city_code: city_code,
+            organisation_ids: [organisation.id], address: address, departement: departement_number, city_code: city_code,
             invitation_token: invitation_token
           }
           expect(response).to redirect_to(root_path)
@@ -67,62 +72,74 @@ RSpec.describe SearchController, type: :controller do
 
         it "redirects with an error message" do
           get :search_rdv, params: {
-            organisation_id: organisation.id, service_id: service.id, address: address, departement: departement_number, city_code: city_code,
+            organisation_ids: [organisation.id], address: address, departement: departement_number, city_code: city_code,
             invitation_token: invitation_token
           }
           expect(response).to redirect_to(root_path)
           expect(flash[:error]).to include("L’utilisateur connecté ne correspond pas à l’utilisateur invité. Déconnectez-vous et réessayez.")
         end
       end
-
-      context "when the user does not belong to the org" do
-        let!(:user) { create(:user, organisations: []) }
-
-        it "redirects with an error message" do
-          get :search_rdv, params: {
-            organisation_id: organisation.id, service_id: service.id, address: address, departement: departement_number, city_code: city_code,
-            invitation_token: invitation_token
-          }
-          expect(response).to redirect_to(root_path)
-          expect(flash[:error]).to include("L’utilisateur concerné n’appartient pas à cette organisation.")
-        end
-      end
     end
 
     describe "motif selection" do
+      let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
+
       it "lists the motifs retrieved by the geo search" do
         get :search_rdv, params: {
-          organisation_id: organisation.id, address: address, departement: departement_number, city_code: city_code
+          address: address, departement: departement_number, city_code: city_code
         }
-        expect(subject).to include("Motif numéro 1")
-        expect(subject).not_to include("Motif numéro 2")
+        expect(subject).to include("RSA orientation 1")
+        expect(subject).to include("RSA orientation 2")
+        expect(subject).not_to include("RSA orientation 3")
       end
 
       context "for an invitation" do
-        let!(:another_service) { create(:service) }
-        let!(:motif3) { create(:motif, name: "Motif numéro 3", service: service, reservable_online: true, organisation: organisation) }
-        let!(:motif4) { create(:motif, name: "Motif numéro 4", service: another_service, reservable_online: true, organisation: organisation) }
+        context "when the geo search retrieves available_motifs" do
+          let!(:geo_search) do
+            instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id, motif3.id, motif4.id]))
+          end
+
+          it "lists the available motifs that match the search terms" do
+            get :search_rdv, params: {
+              address: address, departement: departement_number, city_code: city_code,
+              invitation_token: invitation_token, motif_search_terms: "RSA orientation"
+            }
+            expect(subject).to include("RSA orientation 1")
+            expect(subject).to include("RSA orientation 2")
+            expect(subject).to include("RSA orientation 3")
+            expect(subject).not_to include("Motif numéro 4")
+          end
+
+          it "lists all the available motifs when there are no search terms" do
+            get :search_rdv, params: {
+              address: address, departement: departement_number, city_code: city_code,
+              invitation_token: invitation_token
+            }
+            expect(subject).to include("RSA orientation 1")
+            expect(subject).to include("RSA orientation 2")
+            expect(subject).to include("RSA orientation 3")
+            expect(subject).to include("Motif numéro 4")
+          end
+        end
 
         context "when the geo search does not retrieve available motifs" do
           let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.none) }
 
-          it "lists all the organisation motifs linked to the service available for reservation" do
+          it "lists motifs linked to the orgas" do
             get :search_rdv, params: {
-              organisation_id: organisation.id, service_id: service.id, address: address, departement: departement_number, city_code: city_code,
-              invitation_token: invitation_token
+              organisation_ids: [organisation.id], address: address, departement: departement_number, city_code: city_code,
+              invitation_token: invitation_token, motif_search_terms: "RSA orientation"
             }
-            expect(subject).to include("Motif numéro 1")
-            expect(subject).to include("Motif numéro 2")
-            expect(subject).not_to include("Motif numéro 3")
+            expect(subject).to include("RSA orientation 1")
+            expect(subject).to include("RSA orientation 2")
+            expect(subject).not_to include("RSA orientation 3")
             expect(subject).not_to include("Motif numéro 4")
           end
-        end
 
-        context "when no motifs are available for reservation" do
-          it "reveals a problem" do
+          it "reveals a problem when not motifs are available" do
             get :search_rdv, params: {
-              organisation_id: organisation.id, service_id: another_service.id, address: address, departement: departement_number, city_code: city_code,
-              invitation_token: invitation_token
+              organisation_ids: [other_org.id], address: address, departement: departement_number, city_code: city_code,
+              invitation_token: invitation_token, motif_search_terms: "something random"
             }
             expect(subject).to include("Nous sommes désolés, un problème semble s'être produit pour votre invitation.")
             expect(subject).to include("contact@rdv-solidarites.fr")
@@ -144,8 +161,7 @@ RSpec.describe SearchController, type: :controller do
 
       it "lists the the available lieux linked to the motifs" do
         get :search_rdv, params: {
-          address: address, motif_id: motif.id,
-          departement: departement_number, city_code: city_code
+          address: address, departement: departement_number, city_code: city_code
         }
         expect(subject).to include("Lieu numéro 1")
         expect(subject).not_to include("Lieu numéro 2")
@@ -153,7 +169,7 @@ RSpec.describe SearchController, type: :controller do
 
       it "shows the next availability" do
         get :search_rdv, params: {
-          address: address, motif_id: motif.id, departement: departement_number, city_code: city_code
+          address: address, departement: departement_number, city_code: city_code
         }
         expect(subject).to match(/Prochaine disponibilité le(.)*lundi 05 août 2019 à 08h00/)
       end
@@ -171,7 +187,7 @@ RSpec.describe SearchController, type: :controller do
       end
 
       context "creneaux are available soon" do
-        let(:creneaux_search) do
+        let!(:creneaux_search) do
           instance_double(
             Users::CreneauxSearch,
             creneaux: [build(:creneau, starts_at: DateTime.parse("2019-07-22 08h00"))]
@@ -180,14 +196,14 @@ RSpec.describe SearchController, type: :controller do
 
         it "returns a creneau" do
           get :search_rdv, params: {
-            lieu_id: lieu.id, motif_id: motif.id, address: address, departement: departement_number, city_code: city_code
+            lieu_id: lieu.id, address: address, departement: departement_number, city_code: city_code
           }
           expect(subject).to include("08:00")
         end
       end
 
       context "when first availability is in the future" do
-        let(:creneaux_search) do
+        let!(:creneaux_search) do
           instance_double(
             Users::CreneauxSearch,
             creneaux: [],
@@ -197,7 +213,7 @@ RSpec.describe SearchController, type: :controller do
 
         it "returns next availability" do
           get :search_rdv, params: {
-            lieu_id: lieu.id, motif_id: motif.id, address: address, departement: departement_number, city_code: city_code
+            lieu_id: lieu.id, address: address, departement: departement_number, city_code: city_code
           }
           expect(subject).to match(/Prochaine disponibilité le(.)*lundi 05 août 2019 à 08h00/)
         end
