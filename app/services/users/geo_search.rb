@@ -16,7 +16,7 @@ class Users::GeoSearch
   end
 
   def most_relevant_organisations
-    @most_relevant_organisations ||= Organisation.most_relevant_to_sectors(matching_sectors)
+    @most_relevant_organisations ||= Organisation.attributed_to_sectors(matching_sectors, true)
   end
 
   def attributed_agents_by_organisation
