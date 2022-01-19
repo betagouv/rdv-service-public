@@ -68,5 +68,12 @@ RSpec.describe Admin::Territories::AgentsController, type: :controller do
       get :search, params: { territory_id: territory.id, term: "bla", format: "json" }
       expect(assigns(:agents)).to eq([agent])
     end
+
+    it "assigns agents without duplicate" do
+      agent = create(:agent, admin_role_in_organisations: [organisation, create(:organisation, territory: territory)], role_in_territories: [territory], last_name: "Bladubar")
+      sign_in agent
+      get :search, params: { territory_id: territory.id, term: "bla", format: "json" }
+      expect(assigns(:agents)).to eq([agent])
+    end
   end
 end
