@@ -3,7 +3,7 @@
 class AgentCreneauxSearchForm
   include ActiveModel::Model
 
-  attr_accessor :organisation_id, :service_id, :motif_id, :team_ids, :user_ids, :lieu_ids, :context
+  attr_accessor :organisation_id, :service_id, :motif_id, :agent_ids, :team_ids, :user_ids, :lieu_ids, :context
   attr_writer :from_date
 
   validates :organisation_id, :motif_id, presence: true
