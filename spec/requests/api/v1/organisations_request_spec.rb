@@ -44,7 +44,7 @@ describe "api/v1/organisations requests", type: :request do
       let(:departement_number) { "26" }
       let!(:city_code) { "26323" }
       let(:geo_search) do
-        instance_double(Users::GeoSearch, attributed_organisations: Organisation.where(id: organisation2.id))
+        instance_double(Users::GeoSearch, most_relevant_organisations: Organisation.where(id: organisation2.id))
       end
 
       before do
