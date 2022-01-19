@@ -8,7 +8,7 @@ class Users::GeoSearch
   end
 
   def attributed_organisations
-    @attributed_organisations ||= Organisation.attributed_to_sectors(matching_sectors)
+    @attributed_organisations ||= Organisation.attributed_to_sectors(sectors: matching_sectors)
   end
 
   def departement_organisations
@@ -16,7 +16,7 @@ class Users::GeoSearch
   end
 
   def most_relevant_organisations
-    @most_relevant_organisations ||= Organisation.attributed_to_sectors(matching_sectors, true)
+    @most_relevant_organisations ||= Organisation.attributed_to_sectors(sectors: matching_sectors, most_relevant: true)
   end
 
   def attributed_agents_by_organisation
