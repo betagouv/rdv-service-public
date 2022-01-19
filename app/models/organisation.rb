@@ -41,14 +41,14 @@ class Organisation < ApplicationRecord
   accepts_nested_attributes_for :agent_roles
   accepts_nested_attributes_for :territory
 
-  scope :attributed_to_sectors, lambda { |sectors, most_pertinent = false|
+  scope :attributed_to_sectors, lambda { |sectors:, most_relevant: false|
     attributions = SectorAttribution
       .level_organisation
       .where(sector_id: sectors.pluck(:id))
 
-    # if most pertinent we take the attributions from the sectors with the least
+    # if most relevant we take the attributions from the sector with the least
     # attributed organisations
-    if most_pertinent
+    if most_relevant
       attributions = attributions
         .group_by(&:sector_id)
         .min_by(1) { |_sector_id, attrs| attrs.length }
