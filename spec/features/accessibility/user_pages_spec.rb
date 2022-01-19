@@ -25,4 +25,9 @@ describe "welcome", js: true do
     visit mds_path
     expect(page).to be_axe_clean
   end
+
+  it "contact_path page is accessible" do
+    visit contact_path
+    expect(page).to be_axe_clean
+  end
 end
