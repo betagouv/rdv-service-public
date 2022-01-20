@@ -16,7 +16,8 @@ class SearchController < ApplicationController
   def search_params
     params.permit(
       :latitude, :longitude, :address, :city_code, :departement, :street_ban_id,
-      :organisation_id, :service_id, :motif_id, :lieu_id, :date, :invitation_token
+      :service_id, :lieu_id, :date, :motif_search_terms, :motif_name_with_location_type,
+      :invitation_token, organisation_ids: []
     )
   end
 end
