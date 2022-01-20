@@ -134,6 +134,7 @@ class SearchContext
                else
                  available_motifs
                end
+      motifs = motifs.where(service: service) if service.present?
       motifs = motifs.where(organisation: lieu.organisation) if lieu.present?
       motifs
     end
