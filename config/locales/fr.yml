@@ -2,6 +2,11 @@
 fr:
   admin:
     rdvs:
+      message:
+        confirm:
+          simple_cancel: Annuler le rendez-vous ?
+          cancel_with_notification: Annuler le rendez-vous ? Les usagers seront informés de cette annulation.
+          reinit_status: Réinitialiser l’état du rendez-vous ?
       show:
         update: Modifier
         duplicate: Dupliquer…
