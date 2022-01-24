@@ -19,7 +19,7 @@ RSpec.describe Admin::Territories::AgentsController, type: :controller do
       create(:agent, last_name: "Blot", basic_role_in_organisations: [organisation])
       sign_in agent
 
-      get :index, params: { territory_id: territory.id, search: "zarg" }
+      get :index, params: { territory_id: territory.id, q: "zarg" }
       expect(assigns(:agents)).to eq([agent])
     end
   end
