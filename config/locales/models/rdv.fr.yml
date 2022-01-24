@@ -54,13 +54,6 @@ fr:
         excused: L’usager a pu prévenir de son absence. Une notification de confirmation lui sera envoyée.
         revoked: Le rendez-vous a du être annulé par le service, par exemple pour une raison administrative. Une notification sera envoyée à l’usager.
         noshow: L’usager ne s’est pas présenté a son rendez-vous.
-      rdv/statuses/confirm:
-        unknown: Réinitialiser l’état du rendez-vous ?
-        waiting: ""
-        seen: ""
-        excused: Annuler le rendez-vous ? Si le ou les usagers ont configuré leur email ou numéro de téléphone, une confirmation leur sera envoyée.
-        revoked: Annuler le rendez-vous ? Si le ou les usagers ont configuré leur email ou numéro de téléphone, une notification leur sera envoyée.
-        noshow: ""
   activemodel:
     warnings:
       models:
