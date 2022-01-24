@@ -13,5 +13,5 @@ section#hero.hero.hero-home.py-2
           - if context.departement.present?
             | le &nbsp;
             span.text-secondary #{context.departement}
-      - if context.selected_motif_name.present?
-        h3.text-white.mb-4 #{context.selected_motif_name}
+      - if context.selected_motif.present?
+        h3.text-white.mb-4 #{context.selected_motif.name} (#{I18n.t(context.selected_motif.location_type)})
