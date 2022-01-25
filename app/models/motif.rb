@@ -78,6 +78,9 @@ class Motif < ApplicationRecord
     joins(organisation: :territory)
       .where(organisations: { territories: { departement_number: departement_number } })
   }
+  scope :for_lieu, lambda { |lieu|
+    joins(:plage_ouvertures).where(plage_ouvertures: { lieu_id: lieu.id })
+  }
 
   def to_s
     name
