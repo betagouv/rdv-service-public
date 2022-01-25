@@ -22,5 +22,5 @@ section.bg-light.p-4
               .row
                 .col-md
                   h4.card-title.mb-3.mt-0.text-success.font-weight-bold= motif.name
-                  h6.card-subtitle.text-black-50.mb-2= "RDV #{I18n.t(motif.location_type)}."
+                  h5.card-subtitle.text-black-50.mb-2= motif.human_attribute_value(:location_type)
                   h6.card-subtitle.text-black-50.mb-2= motif.service.name
