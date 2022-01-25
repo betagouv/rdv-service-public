@@ -36,7 +36,7 @@ module SuperAdmins
 
     def invite
       requested_resource.invited_by = current_super_admin
-      requested_resource.invite!
+      requested_resource.invite!(nil, validate: false)
       redirect_to(
         [namespace, requested_resource],
         notice: "Invitation envoyée"
