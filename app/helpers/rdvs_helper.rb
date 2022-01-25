@@ -75,15 +75,12 @@ module RdvsHelper
   end
 
   def change_status_confirmation_message(rdv, status)
-    if cancel_rdv_to_not_notify?(rdv, status)
-      I18n.t("admin.rdvs.message.confirm.simple_cancel")
-    elsif cancel_rdv_to_notify?(rdv, status)
-      I18n.t("admin.rdvs.message.confirm.cancel_with_notification")
-    elsif reset_futur_rdv?(rdv, status)
-      I18n.t("admin.rdvs.message.confirm.reinit_status")
-    else
-      ""
-    end
+    return "" if rdv.past?
+    return I18n.t("admin.rdvs.message.confirm.simple_cancel") if cancel_rdv_to_not_notify?(rdv, status)
+    return I18n.t("admin.rdvs.message.confirm.cancel_with_notification") if cancel_rdv_to_notify?(rdv, status)
+    return I18n.t("admin.rdvs.message.confirm.reinit_status") if reset_futur_rdv?(rdv, status)
+
+    ""
   end
 
   def cancel_rdv_to_not_notify?(rdv, status)
