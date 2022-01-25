@@ -1,7 +1,10 @@
 Close #issue_number
 
-// Description de la fonctionnalité ou du bug
+AVANT LA REVUE
+- [ ] Préparer des captures de l’interface avant et après
+- [ ] Nettoyer les commits pour faciliter la relecture
+- [ ] Supprimer les éventuels logs de test et le code mort
 
-Checklist avant review:
-- [ ] reparcourir le code rapidement pour voir les problèmes évidents (fichiers touchés inutilement, debug logs qui trainent…).
-- [ ] Tester la fonctionnalité sur la review app
+REVUE
+- [ ] Relecture du code
+- [ ] Test sur la review app / en local
