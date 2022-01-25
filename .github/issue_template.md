@@ -1,25 +1,26 @@
 ---
 name: Nouveau ticket
-about: Création d'un ticket (bug ou nouvelle fonctionnalité)
+about: Rapport de bug ou nouvelle fonctionnalité
 title: ''
 labels: ''
 assignees: ''
-
 ---
+
+Soyez clair et concis :)
 
 ## Actuellement
 
-Une description claire et concise du comportement actuel.
+* Comportement actuel
+* Étapes pour reproduire cette situation
+* Captures d'écran si pertinent
 
-Une description des étapes pour reproduire cette situation, avec des copies d'écran quand c'est possible et justifié.
+## Objectif
 
-## Attendu
-
-Une description claire et concise de ce que l'on souhaite avoir comme comportement.
-
-Nous pouvons évoquer les différentes pistes possibles, celle retenue et pourquoi.
+* Comportement attendu
+* Options envisagées, le cas échéant
 
 ## Technique
 
-Des informations techniques (version de navigateur, de mobile, ou bien des références à une librairie, ...) pour aider l'équipe à la réalisation du ticket
-
+Informations techniques :
+* Environnement : version du navigateur / du téléphone…
+* Pistes d’investigation ou d’implémentation
