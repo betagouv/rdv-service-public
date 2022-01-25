@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_18_161355) do
+ActiveRecord::Schema.define(version: 2022_01_24_110241) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -191,6 +191,7 @@ ActiveRecord::Schema.define(version: 2022_01_18_161355) do
   create_table "agents_rdvs", force: :cascade do |t|
     t.bigint "agent_id"
     t.bigint "rdv_id"
+    t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["agent_id"], name: "index_agents_rdvs_on_agent_id"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
   end
@@ -362,6 +363,7 @@ ActiveRecord::Schema.define(version: 2022_01_18_161355) do
     t.bigint "user_id"
     t.boolean "send_lifecycle_notifications", null: false
     t.boolean "send_reminder_notification", null: false
+    t.index ["rdv_id", "user_id"], name: "index_rdvs_users_on_rdv_id_and_user_id", unique: true
     t.index ["rdv_id"], name: "index_rdvs_users_on_rdv_id"
     t.index ["user_id"], name: "index_rdvs_users_on_user_id"
   end

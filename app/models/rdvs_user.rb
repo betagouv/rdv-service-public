@@ -4,6 +4,10 @@ class RdvsUser < ApplicationRecord
   belongs_to :rdv, touch: true, inverse_of: :rdvs_users
   belongs_to :user
 
+  # Uniqueness validation doesn’t work with nested_attributes, see https://github.com/rails/rails/issues/4568
+  # We do have on a DB constraint.
+  validates :user_id, uniqueness: { scope: :rdv_id }
+
   after_initialize :set_default_notifications_flags
   before_validation :set_default_notifications_flags
 
