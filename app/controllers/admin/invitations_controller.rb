@@ -13,7 +13,7 @@ class Admin::InvitationsController < AgentAuthController
   def reinvite
     @agent = policy_scope(Agent).find(params[:id])
     authorize(@agent)
-    @agent.invite!
+    @agent.invite!(current_agent, validate: false)
     redirect_to admin_organisation_invitations_path(current_organisation), notice: "Une nouvelle invitation a été envoyée à l'agent #{@agent.email}."
   end
 
