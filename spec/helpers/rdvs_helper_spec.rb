@@ -115,9 +115,9 @@ describe RdvsHelper do
     end
 
     context "with a past's RDV" do
-      it "returns reinit confirm message for unknown" do
+      it "returns empty confirm message for unknown" do
         rdv = build(:rdv, starts_at: now - 2.days)
-        expect(change_status_confirmation_message(rdv, "unknown")).to eq("")
+        expect(change_status_confirmation_message(rdv, :unknown)).to eq("")
       end
     end
 
