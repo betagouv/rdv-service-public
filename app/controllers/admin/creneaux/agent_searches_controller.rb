@@ -15,7 +15,8 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
                                                 from_date: @form.from_date,
                                                 agent_ids: @form.agent_ids,
                                                 user_ids: @form.user_ids,
-                                                lieu_id: @search_results.first.lieu.id),
+                                                lieu_id: @search_results.first.lieu.id,
+                                                context: @form.context),
                   class: "d-block stretched-link"
     else
       @motifs = policy_scope(Motif).active.ordered_by_name
