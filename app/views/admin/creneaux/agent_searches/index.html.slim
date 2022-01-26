@@ -95,7 +95,14 @@
                       h6.card-subtitle.text-black-50= search_result.lieu.address
                     .col-md.align-self-center.pt-3.pt-md-0.position-static
                       - if next_availability
-                        = link_to admin_organisation_slots_path(current_organisation, service_id: @form.service_id, motif_id: @form.motif.id, from_date: @form.from_date, agent_ids: @form.agent_ids, lieu_id: search_result.lieu.id, user_ids: @form.user_ids), class: "d-block stretched-link" do
+                        = link_to admin_organisation_slots_path(current_organisation,
+                                service_id: @form.service_id,
+                                motif_id: @form.motif.id,
+                                from_date: @form.from_date,
+                                agent_ids: @form.agent_ids,
+                                team_ids: @form.team_ids,
+                                lieu_id: search_result.lieu.id,
+                                user_ids: @form.user_ids), class: "d-block stretched-link" do
                           .row
                             .col
                               | Prochaine disponibilité le

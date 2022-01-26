@@ -29,6 +29,7 @@ class Admin::SlotsController < AgentAuthController
       motif_id: params[:motif_id],
       from_date: params[:from_date],
       user_ids: params[:user_ids].presence || [],
+      team_ids: params[:team_ids].presence || [],
       context: params[:context].presence,
       agent_ids: params[:agent_ids]&.reject(&:blank?)&.presence,
       lieu_ids: [params[:lieu_id]] || []

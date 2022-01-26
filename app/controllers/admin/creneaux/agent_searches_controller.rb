@@ -14,6 +14,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
                                                 motif_id: @form.motif.id,
                                                 from_date: @form.from_date,
                                                 agent_ids: @form.agent_ids,
+                                                team_ids: @form.team_ids,
                                                 user_ids: @form.user_ids,
                                                 lieu_id: @search_results.first.lieu.id,
                                                 context: @form.context),
