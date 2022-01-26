@@ -57,7 +57,9 @@ class MergeUsersService < BaseService
   end
 
   def merge_file_attentes
-    @user_to_merge.file_attentes.for_organisation(@organisation).each do |file_attente_to_merge|
+    @user_to_merge.file_attentes
+      .joins(:rdv).where(rdvs: { organisation: @organisation })
+      .each do |file_attente_to_merge|
       file_attente_target = @user_target.file_attentes.find_by(rdv: file_attente_to_merge.rdv)
       if file_attente_target
         file_attente_to_merge.destroy
