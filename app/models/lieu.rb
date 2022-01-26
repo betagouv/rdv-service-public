@@ -3,14 +3,19 @@
 class Lieu < ApplicationRecord
   include PhoneNumberValidation::HasPhoneNumber
 
+  # Attributes
   auto_strip_attributes :name
 
+  # Relations
   belongs_to :organisation
   has_many :plage_ouvertures, dependent: :restrict_with_error
   has_many :motifs, through: :plage_ouvertures
   has_many :rdvs, dependent: :restrict_with_error
+
+  # Validations
   validates :name, :address, :latitude, :longitude, presence: true
 
+  # Scopes
   scope :enabled, -> { where(enabled: true) }
   scope :disabled, -> { where.not(enabled: true) }
 
@@ -37,6 +42,8 @@ class Lieu < ApplicationRecord
   }
 
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }
+
+  ## -
 
   def full_name
     "#{name} (#{address})"
