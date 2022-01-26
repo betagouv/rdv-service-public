@@ -41,7 +41,7 @@ class RdvStartCoherence
     @all_rdvs_ending_before ||= Rdv
       .not_cancelled
       .future
-      .with_agent(agents)
+      .joins(:agents).where(agents: agents)
       .where(ends_at: (starts_at - 46.minutes)..starts_at)
       .order(:ends_at)
       .to_a

@@ -8,7 +8,7 @@ class Admin::Agents::RdvsController < ApplicationController
     agent = Agent.find(params[:agent_id])
     @organisation = Organisation.find(params[:organisation_id])
     @rdvs = custom_policy
-      .with_agent(agent)
+      .merge(agent.rdvs)
       .includes(%i[organisation lieu motif users rdvs_users])
     @rdvs = @rdvs.where(starts_at: date_range_params) if date_range_params.present?
     @rdvs = @rdvs.where(status: params[:status]) if params[:status].present?

@@ -17,7 +17,7 @@ class RdvsOverlapping
     Rdv.where.not(id: @rdv.id)
       .not_cancelled
       .future
-      .with_agent(agents)
+      .joins(:agents).where(agents: agents)
       .where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", starts_at, ends_at)
       .order(:ends_at)
   end

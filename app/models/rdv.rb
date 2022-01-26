@@ -58,7 +58,6 @@ class Rdv < ApplicationRecord
       where(status: status)
     end
   }
-  scope :with_agent, ->(agents) { joins(:agents).where(agents: agents) }
   scope :visible, -> { joins(:motif).where(motifs: { visibility_type: [Motif::VISIBLE_AND_NOTIFIED, Motif::VISIBLE_AND_NOT_NOTIFIED] }) }
 
   after_save :associate_users_with_organisation
