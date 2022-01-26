@@ -12,6 +12,9 @@ class Lieu < ApplicationRecord
   has_many :motifs, through: :plage_ouvertures
   has_many :rdvs, dependent: :restrict_with_error
 
+  # Through relations
+  has_many :agents, through: :plage_ouvertures
+
   # Validations
   validates :name, :address, :latitude, :longitude, presence: true
 

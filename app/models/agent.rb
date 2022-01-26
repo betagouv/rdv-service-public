@@ -28,7 +28,6 @@ class Agent < ApplicationRecord
 
   # Relations
   belongs_to :service
-  has_many :lieux, through: :organisation
   has_many :plage_ouvertures, dependent: :destroy
   has_many :absences, dependent: :destroy
   has_many :agents_rdvs, dependent: :destroy
@@ -42,6 +41,7 @@ class Agent < ApplicationRecord
 
   # Through relations
   has_many :teams, through: :agent_teams
+  has_many :lieux, through: :plage_ouvertures
   has_many :motifs, through: :service
   has_many :rdvs, dependent: :destroy, through: :agents_rdvs
   has_many :organisations, through: :roles
