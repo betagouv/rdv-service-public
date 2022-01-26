@@ -16,14 +16,6 @@ describe Admin::UserSearchForm do
   end
 
   describe "#users" do
-    it "call User.with_referent" do
-      agent = create(:agent)
-      organisation = create(:organisation)
-      user_search_form = described_class.new(organisation_id: organisation.id, agent_id: agent.id)
-      expect(User).to receive(:with_referent).with(agent)
-      user_search_form.users
-    end
-
     it "call User.search_by_text when search params given" do
       organisation = create(:organisation)
       user_search_form = described_class.new(organisation_id: organisation.id, search: "henri")

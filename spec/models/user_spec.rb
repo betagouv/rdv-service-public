@@ -281,16 +281,6 @@ describe User, type: :model do
     end
   end
 
-  describe "#with_referent" do
-    it "returns users with given referent" do
-      organisation = create(:organisation)
-      agent = create(:agent, organisations: [organisation])
-      create(:user, agents: [], organisations: [organisation])
-      user_with_agent = create(:user, agents: [agent], organisations: [organisation])
-      expect(described_class.with_referent(agent)).to eq([user_with_agent])
-    end
-  end
-
   describe "#can_be_soft_deleted_from_organisation?" do
     let(:organisation) { create(:organisation) }
 

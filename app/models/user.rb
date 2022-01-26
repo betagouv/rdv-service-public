@@ -64,9 +64,6 @@ class User < ApplicationRecord
   scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
   scope :responsible, -> { where(responsible_id: nil) }
   scope :relative, -> { where.not(responsible_id: nil) }
-  scope :with_referent, lambda { |agent|
-    joins(:agents_users).where(agents_users: { agent_id: agent.id })
-  }
 
   include User::ResponsabilityConcern
 
