@@ -21,7 +21,6 @@ class Absence < ApplicationRecord
   validate :ends_at_should_be_after_starts_at
 
   scope :by_starts_at, -> { order(first_day: :desc, start_time: :desc) }
-  scope :with_agent, ->(agent) { where(agent_id: agent.id) }
 
   scope :in_range, lambda { |range|
     return all if range.nil?
