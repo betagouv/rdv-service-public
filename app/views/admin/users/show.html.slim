@@ -89,10 +89,10 @@
         .card-header Proches
         .card-body
           ul.list-unstyled.mb-2
-            - if @user.relatives.within_organisation(current_organisation).active.empty?
+            - if @user.relatives.merge(current_organisation.users).active.empty?
               li
                 em Aucun proche
-            - @user.relatives.within_organisation(current_organisation).active.order(:birth_date).each do |relative|
+            - @user.relatives.merge(current_organisation.users).active.order(:birth_date).each do |relative|
               li
                 => link_to relative.full_name, admin_organisation_user_path(current_organisation, relative)
                 = "(#{age(relative)})" if relative.birth_date
