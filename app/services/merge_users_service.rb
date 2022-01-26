@@ -68,11 +68,11 @@ class MergeUsersService < BaseService
   end
 
   def merge_agents
-    return unless @user_to_merge.agents.within_organisation(@organisation).any?
+    return unless @user_to_merge.agents.merge(@organisation.agents).any?
 
     agents = (
       @user_target.agents.to_a +
-      @user_to_merge.agents.within_organisation(@organisation).to_a
+      @user_to_merge.agents.merge(@organisation.agents).to_a
     ).uniq
     @user_target.update!(agents: agents)
   end
