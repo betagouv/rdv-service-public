@@ -60,9 +60,6 @@ class Agent < ApplicationRecord
   scope :can_perform_motif, lambda { |motif|
     motif.for_secretariat ? joins(:service).where(service: motif.service).or(secretariat) : where(service: motif.service)
   }
-  scope :with_territorial_role, lambda { |territory|
-    joins(:territories).where(territories: { id: territory.id })
-  }
   scope :available_referents_for, lambda { |user|
     where.not(id: [user.agents.map(&:id)])
   }
