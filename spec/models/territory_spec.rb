@@ -5,26 +5,6 @@ describe Territory, type: :model do
     expect(build(:territory)).to be_valid
   end
 
-  describe "Territory.with_agent" do
-    subject { described_class.with_agent(agent) }
-
-    context "agent has no territorial roles" do
-      let!(:agent) { create(:agent) }
-
-      it { is_expected.to be_empty }
-    end
-
-    context "agent has role in 2 territories" do
-      let!(:agent) { create(:agent) }
-      let!(:territory1) { create(:territory) }
-      let!(:territory2) { create(:territory) }
-      let!(:agent_territorial_role1) { create(:agent_territorial_role, territory: territory1, agent: agent) }
-      let!(:agent_territorial_role2) { create(:agent_territorial_role, territory: territory2, agent: agent) }
-
-      it { is_expected.to match_array([territory1, territory2]) }
-    end
-  end
-
   describe "departement_number uniqueness validation" do
     context "no collision" do
       let(:territory) { build(:territory, name: "Oise", departement_number: "60") }
