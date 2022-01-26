@@ -16,6 +16,7 @@ class Motif < ApplicationRecord
   belongs_to :service
   has_many :rdvs, dependent: :restrict_with_exception
   has_and_belongs_to_many :plage_ouvertures, -> { distinct }
+  has_many :lieux, through: :plage_ouvertures
 
   after_update -> { rdvs.touch_all }
 
@@ -77,9 +78,6 @@ class Motif < ApplicationRecord
   scope :in_departement, lambda { |departement_number|
     joins(organisation: :territory)
       .where(organisations: { territories: { departement_number: departement_number } })
-  }
-  scope :for_lieu, lambda { |lieu|
-    joins(:plage_ouvertures).where(plage_ouvertures: { lieu_id: lieu.id })
   }
 
   def to_s
