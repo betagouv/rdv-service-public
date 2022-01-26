@@ -26,7 +26,6 @@ class SearchContext
   # *** Method that outputs the next step for the user to complete its rdv journey ***
   # *** It is used in #to_partial_parth to render the matching partial view ***
   def current_step
-    # byebug
     if address.blank?
       :address_selection
     elsif !motif_selected?
@@ -58,8 +57,10 @@ class SearchContext
     @unique_motifs_by_name_and_location_type ||= matching_motifs.uniq { [_1.name, _1.location_type] }
   end
 
-  def selected_motif_name
-    motif_selected? ? unique_motifs_by_name_and_location_type.first.name : nil
+  def selected_motif
+    return unless motif_selected?
+
+    unique_motifs_by_name_and_location_type.first
   end
 
   def motif_selected?
