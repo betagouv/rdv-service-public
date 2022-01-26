@@ -7,6 +7,7 @@ class Territory < ApplicationRecord
 
   has_many :teams, dependent: :destroy
   has_many :organisations, dependent: :destroy
+  has_many :organisations_agents, through: :organisations, source: :agents
   has_many :roles, class_name: "AgentTerritorialRole", dependent: :delete_all
   has_many :agents, through: :roles
 
