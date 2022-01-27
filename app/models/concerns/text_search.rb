@@ -18,6 +18,9 @@ module TextSearch
   #   e.g. when searching "john.doe@example" should return the row containing "john.doe@example.com".
   #   That wouldn't work with PG text search because PG actually parses the text token, and a valid email is
   #   saved as one token ("john.doe@example.com”") while an invalid email is several tokens ("john.doe", "@", "example")
+  #   See https://www.postgresql.org/docs/current/textsearch-parsers.html
+  #   If the search term looks like an email, we search on email only.
+  #   We can't combine the query with search_on_search_terms as it would lose the text ranking.
   # 3. Special case phone number search by normalizing the phone number
   #   We store phone numbers in e164 form.
   #   When searching "01 23 45 67", we want to return the row containing "+33123456789".
@@ -35,10 +38,8 @@ module TextSearch
       term = clean_search_term(term)
       return none if term.blank?
 
-      # Search on email using the email column directly.
-      if search_keys.include? :email
-        where(id: unscoped.where("email LIKE ?", "#{term}%"))
-          .or(where(id: unscoped.search_on_search_terms(term)))
+      if search_keys.include?(:email) && looks_like_email(term)
+        where("email LIKE ?", "#{term}%")
       else
         search_on_search_terms(term)
       end
@@ -52,6 +53,10 @@ module TextSearch
       else
         I18n.transliterate(term)
       end
+    end
+
+    def looks_like_email(string)
+      /^.*@.*$/.match?(string)
     end
 
     def looks_like_phone_number(string)

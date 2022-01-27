@@ -67,9 +67,13 @@ describe TextSearch, type: :concern do
     end
 
     it "orders results by relevance" do
-      durand = create(:user, first_name: "Louis", last_name: "Durand")
-      dupont = create(:user, first_name: "Louis", last_name: "Dupont")
-      expect(described_class.search_by_text("Louis Durand")).to eq([durand, dupont])
+      create(:user, first_name: "Marie", last_name: "Petit")
+      create(:user, first_name: "Gabrielle", last_name: "Petit")
+      create(:user, first_name: "Pauline", last_name: "Martin")
+      create(:user, first_name: "Jeanne", last_name: "Durand")
+      jean_paul = create(:user, first_name: "Jean-Paul", last_name: "Petit")
+      expect(described_class.search_by_text("Jean Paul Petit").count).to eq(5)
+      expect(described_class.search_by_text("Jean Paul Petit").first).to eq(jean_paul)
     end
   end
 end
