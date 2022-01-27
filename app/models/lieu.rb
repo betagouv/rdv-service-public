@@ -7,6 +7,7 @@ class Lieu < ApplicationRecord
 
   belongs_to :organisation
   has_many :plage_ouvertures, dependent: :restrict_with_error
+  has_many :motifs, through: :plage_ouvertures
   has_many :rdvs, dependent: :restrict_with_error
   validates :name, :address, :latitude, :longitude, presence: true
 

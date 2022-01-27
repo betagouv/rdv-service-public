@@ -16,6 +16,7 @@ class Motif < ApplicationRecord
   belongs_to :service
   has_many :rdvs, dependent: :restrict_with_exception
   has_and_belongs_to_many :plage_ouvertures, -> { distinct }
+  has_many :lieux, through: :plage_ouvertures
 
   after_update -> { rdvs.touch_all }
 
