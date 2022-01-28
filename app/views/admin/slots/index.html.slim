@@ -6,13 +6,7 @@
         = t(".place_informations_html", place_name: @search_result.lieu.name, place_address: @search_result.lieu.address)
       span
         = link_to t(".place_index"), admin_organisation_agent_searches_path(current_organisation,
-            service_id: @form.service_id,
-            motif_id: @form.motif_id,
-            from_date: @form.from_date,
-            user_ids: @form.user_ids,
-            team_ids: @form.team_ids,
-            lieu_ids: @form.lieu_ids,
-            agent_ids: @form.agent_ids), class: "btn btn-outline-primary m-2"
+                creneaux_search_params(@form)), class: "btn btn-outline-primary m-2"
 
   .card-body
 
