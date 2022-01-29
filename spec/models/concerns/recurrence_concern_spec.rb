@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 describe RecurrenceConcern do
+  shared_examples "#set_recurrence_ends_at" do
+    it "set to ends of day of last occurrence" do
+      first_day = Date.new(2019, 8, 15)
+      recurrence = Montrose.every(:week, interval: 2, starts: first_day, until: first_day + 7.days)
+      object = build(factory, first_day: first_day, recurrence: recurrence)
+      object.save!
+      expect(object.reload.recurrence_ends_at).to be_within(1.second).of(Time.zone.parse("20190822 23:59:59"))
+    end
+  end
+
   shared_examples "#all_occurrences_for" do
     def expect_first_occurrence_to_match(occurrences, expected_boundaries)
       first_occurrence = occurrences.first.second
@@ -177,6 +187,7 @@ describe RecurrenceConcern do
       include_examples "#all_occurrences_for"
       include_examples "#in_range"
       include_examples "#recurrence_ends_after_first_day"
+      include_examples "#set_recurrence_ends_at"
     end
   end
 end

@@ -102,7 +102,7 @@ module RecurrenceConcern
   end
 
   def set_recurrence_ends_at
-    self.recurrence_ends_at = recurrence&.ends_at
+    self.recurrence_ends_at = recurrence&.ends_at&.end_of_day
   end
 
   def clear_empty_recurrence
