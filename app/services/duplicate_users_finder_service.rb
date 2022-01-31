@@ -53,7 +53,7 @@ class DuplicateUsersFinderService < BaseService
   def users_in_scope
     u = User.active.left_joins(:rdvs).group(:id).order("COUNT(rdvs.id) DESC")
     u = u.where.not(id: user.id) if user.persisted?
-    u = u.within_organisation(organisation) if organisation.present?
+    u = u.merge(organisation.users) if organisation.present?
     u
   end
 end

@@ -146,18 +146,6 @@ describe Rdv, type: :model do
     end
   end
 
-  describe "#with_lieu" do
-    it "return lieu's RDV only" do
-      organisation = create(:organisation)
-      lieu = create(:lieu, organisation: organisation)
-      other_lieu = create(:lieu, organisation: organisation)
-      rdv = create(:rdv, :future, lieu: lieu, organisation: organisation)
-      create(:rdv, :future, lieu: other_lieu, organisation: organisation)
-
-      expect(described_class.with_lieu(lieu).to_a).to eq([rdv])
-    end
-  end
-
   describe "#temporal_status" do
     it "return status when not unknown" do
       rdv = build(:rdv, status: "waiting")

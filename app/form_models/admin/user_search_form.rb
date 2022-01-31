@@ -16,8 +16,8 @@ class Admin::UserSearchForm
   def users
     return User.none if agent_id.blank? && search.blank?
 
-    users = User.within_organisation(organisation)
-    users = users.with_referent(agent) if agent.present?
+    users = organisation.users
+    users = users.merge(agent.users) if agent.present?
     users = users.search_by_text(search) if search.present?
     users
   end

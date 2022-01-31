@@ -64,12 +64,6 @@ class User < ApplicationRecord
   scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
   scope :responsible, -> { where(responsible_id: nil) }
   scope :relative, -> { where.not(responsible_id: nil) }
-  scope :within_organisation, lambda { |organisation|
-    joins(:organisations).where(organisations: { id: organisation.id })
-  }
-  scope :with_referent, lambda { |agent|
-    joins(:agents_users).where(agents_users: { agent_id: agent.id })
-  }
 
   include User::ResponsabilityConcern
 
@@ -128,8 +122,9 @@ class User < ApplicationRecord
   end
 
   def can_be_soft_deleted_from_organisation?(organisation)
-    Rdv.not_cancelled.future
-      .with_user(self_and_relatives)
+    Rdv.not_cancelled
+      .future
+      .joins(:users).where(users: self_and_relatives)
       .where(organisation: organisation)
       .empty?
   end
