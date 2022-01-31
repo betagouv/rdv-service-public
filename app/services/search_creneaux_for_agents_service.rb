@@ -9,16 +9,19 @@ class SearchCreneauxForAgentsService < BaseService
     lieux.map { build_result(_1) }.compact # NOTE: LOOP 1 over lieux.
   end
 
-  private
-
   def build_result(lieu)
     # utiliser les ids des agents pour ne pas faire de requêtes supplémentaire
     # Utilise le date_range.end + 1 pour chercher la date suivante du créneau affiché
-    next_availability = NextAvailabilityService.find(@form.motif, lieu, @form.date_range.end + 1.day, @form.agent_ids)
-    creneaux = SlotBuilder.available_slots(@form.motif, lieu, @form.date_range, OffDays.all_in_date_range(@form.date_range), @form.agent_ids)
+    next_availability = NextAvailabilityService.find(@form.motif, lieu, @form.date_range.end + 1.day, all_agents)
+    creneaux = SlotBuilder.available_slots(@form.motif, lieu, @form.date_range, OffDays.all_in_date_range(@form.date_range), all_agents)
     return nil if creneaux.empty? && next_availability.nil?
 
     OpenStruct.new(lieu: lieu, next_availability: next_availability, creneaux: creneaux)
+  end
+
+  def all_agents
+    Agent.where(id: @form.agent_ids)
+      .or(Agent.where(id: Agent.joins(:teams).where(teams: @form.team_ids)))
   end
 
   def lieux
@@ -34,7 +37,8 @@ class SearchCreneauxForAgentsService < BaseService
         @lieux.for_motif(@form.motif)
       end
 
-    @lieux = @lieux.where(id: PlageOuverture.where(agent_id: @form.agent_ids).select(:lieu_id)) if @form.agent_ids.present?
+    @lieux = @lieux.where(id: PlageOuverture.where(agent_id: all_agents).select(:lieu_id)) if all_agents.present?
+
     @lieux = @lieux.ordered_by_name
     @lieux
   end

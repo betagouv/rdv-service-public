@@ -16,6 +16,7 @@ class Agent < ApplicationRecord
   include DeviseTokenAuth::Concerns::ConfirmableSupport
   include DeviseTokenAuth::Concerns::UserOmniauthCallbacks
 
+  # Attributes
   auto_strip_attributes :email, :first_name, :last_name
 
   enum rdv_notifications_level: {
@@ -25,27 +26,32 @@ class Agent < ApplicationRecord
     none: "none"      # never send rdv notifications
   }, _prefix: true
 
+  # Relations
   belongs_to :service
-  has_many :lieux, through: :organisation
-  has_many :motifs, through: :service
   has_many :plage_ouvertures, dependent: :destroy
   has_many :absences, dependent: :destroy
   has_many :agents_rdvs, dependent: :destroy
-  has_many :rdvs, dependent: :destroy, through: :agents_rdvs
   has_many :roles, class_name: "AgentRole", dependent: :destroy
-  has_many :organisations, through: :roles
   has_many :territorial_roles, class_name: "AgentTerritorialRole", dependent: :destroy
-  has_many :territories, through: :territorial_roles
-  has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
   has_many :sector_attributions, dependent: :destroy
-
   has_many :agent_teams, dependent: :destroy
-  has_many :teams, through: :agent_teams
-
   has_and_belongs_to_many :users
 
+  accepts_nested_attributes_for :roles
+
+  # Through relations
+  has_many :teams, through: :agent_teams
+  has_many :lieux, through: :plage_ouvertures
+  has_many :motifs, through: :service
+  has_many :rdvs, dependent: :destroy, through: :agents_rdvs
+  has_many :organisations, through: :roles
+  has_many :territories, through: :territorial_roles
+  has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
+
+  # Hooks
   after_update -> { rdvs.touch_all }
 
+  # Validation
   # Note about validation and Devise:
   # * Invitable#invite! creates the Agent without validation, but validates manually in advance (because we set validate_on_invite to true)
   # * it validates :email (the invite_key) specifically with Devise.email_regexp.
@@ -53,6 +59,7 @@ class Agent < ApplicationRecord
   validates :last_name, :first_name, presence: true, on: :update
   validate :service_cannot_be_changed
 
+  # Scopes
   scope :complete, -> { where.not(first_name: nil).where.not(last_name: nil) }
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
@@ -64,7 +71,7 @@ class Agent < ApplicationRecord
     where.not(id: [user.agents.map(&:id)])
   }
 
-  accepts_nested_attributes_for :roles
+  ## -
 
   def reverse_full_name_and_service
     service.present? ? "#{reverse_full_name} (#{service.short_name})" : full_name
