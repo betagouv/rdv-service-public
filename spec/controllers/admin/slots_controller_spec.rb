@@ -26,7 +26,7 @@ describe Admin::SlotsController, type: :controller do
         lieu_id: lieu
       }
 
-      expect(assigns(:search_results)).not_to be_nil
+      expect(assigns(:search_result)).not_to be_nil
     end
   end
 end

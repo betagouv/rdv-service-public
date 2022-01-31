@@ -32,7 +32,7 @@ div id="creneaux-lieu-#{lieu.id}"
                     small.text-dark= creneau.agent.short_name
 
     - if next_availability
-      - if form.date_range.end < next_availability.starts_at.to_date
+      - if form.date_range.end < next_availability.starts_at.to_date && creneaux.empty?
         .position-absolute.h-100.w-100.bg-overlay.d-flex.align-items-center.justify-content-center
           = link_to admin_organisation_slots_path(from_date: next_availability.starts_at.to_date, **path_opts),
               class: "btn btn-light" do

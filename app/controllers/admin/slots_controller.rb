@@ -3,7 +3,13 @@
 class Admin::SlotsController < AgentAuthController
   def index
     @form = build_agent_creneaux_search_form
-    @search_results = SearchCreneauxForAgentsService.perform_with(@form)
+
+    # Dans ce cadre là, nous n'avons qu'un lieu, et donc une structure en résultat de l'appel à ce service.
+    # TODO reprendre le service pour le sortir du format `background_job` et proposer 2 méthodes publiques
+    # - une pour construire la liste des lieux
+    # - une pour le cas où nous avons déjà un lieu
+    # À terme, ça pourrait également être un calcul plus réduit. Dans le cas de la recherche sur plusieurs lieux, nous avons besoin de connaitre la prochaine dispo, pas TOUTES les dispo
+    @search_result = SearchCreneauxForAgentsService.perform_with(@form).first
 
     @motifs = policy_scope(Motif).active.ordered_by_name
     @services = policy_scope(Service)
