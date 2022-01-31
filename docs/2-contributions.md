@@ -10,6 +10,30 @@ Les pull requests sont bienvenues ! N’hésitez pas à [nous en parler à l’
 
 ## Style de code
 
+Au delà du style de syntaxe, nous essayons de suivre quelques principes. RDVS-S a déjà plusieurs années, et a été développé par plusieurs équipes successives. C’est pour cette raison qu’on peut trouver plusieurs façons de faire au sein du projet. Aujourd’hui, nous essayons d’aller dans cette direction:  
+
+1. Écrire moins de code, et du code plus simple
+  - Éviter de créer trop de classes auxiliaires, comme les presenters, form objects, services, etc.
+  - Éviter les concerns/modules qui ne servent qu’à un seul modèle ; réserver ça aux fonctionnalités communes.
+  - Préférer plutôt la proximité du code avec l’endroit où il est appelé.
+2. Plutôt du rails monolithique
+  - Minimiser le JS utilisant des API spécifiques
+  - à terme, on utilisera hotwire
+3. Moins de dépendances externes
+  - à terme, on retirera webpack. Peut-être lors la migration à Rails 7.
+4. Documenter le code
+  - Concrètement, dans les modèles, regrouper en tête de fichier, sous forme de sections:
+    - attributs,
+    - relations,
+    - validations et hooks
+    - scopes
+5. ActiveRecord
+  - utiliser les relation through autant que possible pour construire les queries
+6. Pour les tests, utiliser les helpers et rspec avec parcimonie
+  - Par exemple, les `let`, `subject`, etc, doivent rester proches de leur lieu d’utilisation, quitte à être répétés dans un autre `context`.
+        
+## Linters
+
 Dans l’ensemble, nous suivons les conventions de Ruby on Rails [Rails best practice](https://rails-bestpractices.com/) et [The rails Style Guide](https://github.com/rubocop-hq/rails-style-guide). Nous utilisons aussi largement rubocop; dans tous les cas, le linter alertera en cas de problèmes.
 
 - Faire tourner tous les linters :
