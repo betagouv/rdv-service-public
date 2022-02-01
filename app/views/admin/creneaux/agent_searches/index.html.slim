@@ -83,12 +83,12 @@
             h3.font-weight-bold Résultats de votre recherche
             p.font-weight-bold= t(".available_places_with_slots", count: @search_results.length)
             - @search_results.each do |search_result|
-              / Ici ce qui nous intéresse, c'est le « premier » prochain créneau disponible.
-              / next_availability du `@search_results` contient le premier créneau suivant la période analysé
-              / les creneaux sont ceux de la période analysé
-              / la période analysé est la semaine qui commence à la date saisi dans les filtres
-              - next_availability = search_result.creneaux.min_by(&:starts_at) || search_result.next_availability
-              .card.mb-3 class=("card-hoverable" if next_availability)
+              / On veut connaître le premier créneau, cette semaine ou plus tard.
+              / `search_results.next_availability` contient le premier créneau à partir de la semaine suivante
+              / `search_results.creneaux` contient les créneaux de la semaine courante
+              - first_availability_this_week = search_result.creneaux.min_by(&:starts_at)
+              - first_availability = first_availability_this_week || search_result.next_availability
+              .card.mb-3 class=("card-hoverable" if first_availability)
                 .card-body
                   .row
                     .col-md
@@ -96,14 +96,14 @@
                       h5.card-subtitle.text-black-50.mb-2 = @form.motif.service.name
                       h6.card-subtitle.text-black-50= search_result.lieu.address
                     .col-md.align-self-center.pt-3.pt-md-0.position-static
-                      - if next_availability
+                      - if first_availability
                         = link_to admin_organisation_slots_path(current_organisation,creneaux_search_params(@form).merge(lieu_ids: [search_result.lieu.id])),
                                 class: "d-block stretched-link" do
                           .row
                             .col
                               | Prochaine disponibilité le
                               br
-                              strong= l(next_availability.starts_at, format: :human)
+                              strong= l(first_availability.starts_at, format: :human)
                             .col-auto.align-self-center
                               i.fa.fa-chevron-right
                       - else
