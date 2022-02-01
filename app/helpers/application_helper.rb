@@ -83,7 +83,7 @@ module ApplicationHelper
 
   def boolean_attribute_tag(object, attribute_name)
     value = object.send(attribute_name)
-    boolean_tag(value) { object.class.human_attribute_name("#{attribute_name}.#{value}") }
+    boolean_tag(value) { object.class.human_attribute_value(attribute_name, value) }
   end
 
   def admin_link_to_if_permitted(organisation, object, name = object.to_s)
