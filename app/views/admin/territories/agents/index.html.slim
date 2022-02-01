@@ -4,7 +4,7 @@
     h2.text-center = t(".territory_agents_title")
 
     .m-3.d-flex.justify-content-end
-      - search = params[:search].blank? ? "d-none" : ""
+      - search = params[:q].blank? ? "d-none" : ""
       div= link_to t(".reset"), admin_territory_agents_path(current_territory), class: "btn btn-link #{search}"
       = f.input :q, placeholder: t(".search_placeholder"), label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:q] }, required: false
       = f.button :submit, t(".search")
