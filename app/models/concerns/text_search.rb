@@ -39,7 +39,7 @@ module TextSearch
       return none if term.blank?
 
       if search_keys.include?(:email) && looks_like_email(term)
-        where("email LIKE ?", "#{term}%")
+        where("\"#{table_name}\".\"email\" LIKE ?", "#{term}%")
       else
         search_on_search_terms(term)
       end
