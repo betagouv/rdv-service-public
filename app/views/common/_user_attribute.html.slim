@@ -1,3 +1,26 @@
+/ special cases for
+  - :logement (from user_profile, needs organisation)
+  - :notes (from user_profile, needs organisation)
+  - :email (uses responsible_email, clickable)
+  - :phone_number (uses responsible_phone_number, clickable)
+
+/ Called with
+  - first_name last_name birth_name birth_date address email
+  - notes
+  - caisse_affiliation affiliation_number family_situation number_of_children logement
+
+  - first_name last_name birth_date notes
+
+  - birth_date phone_number address email notes
+  - logement number_of_children family_situation affiliation_number caisse_affiliation
+
+/ just a key-value passthrough
+  - delegate:
+    - first_name, :last_name, :birth_name, :address, :affiliation_number, :number_of_children
+  - human_attribute_value:
+    - caisse_affiliation, family_situation
+
+
 - displayable_user = DisplayableUserPresenter.new(user, current_organisation)
 - value = DisplayableUserPresenter.new(user, current_organisation).send(attribute_name)
 - if value.present? || !local_assigns[:skip_empty]
