@@ -121,4 +121,12 @@ module UsersHelper
 
     :responsible
   end
+
+  def user_attribute_tag(user, attribute_name)
+    name = user.class.human_attribute_name(attribute_name)
+    value = user.human_attribute_value(attribute_name)
+
+    tag.strong(tag.span(name) + tag.span(" : ")) +
+      tag.span(value.presence || "N/A", class: class_names("text-muted": value.blank?))
+  end
 end

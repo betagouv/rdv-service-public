@@ -1,17 +1,77 @@
+- user_profile = user.profile_for(current_organisation)
 ul.list-unstyled.mb-5
-  - %i[first_name last_name birth_name birth_date address email notify_by_email phone_number notify_by_sms].each do |attr_name|
-    li.mb-2= render "common/user_attribute", user: user, attribute_name: attr_name
+  li.mb-2= user_attribute_tag(user, :first_name)
+  li.mb-2= user_attribute_tag(user, :last_name)
+  li.mb-2= user_attribute_tag(user, :birth_name)
+  li.mb-2
+    strong
+      = User.human_attribute_name(:birth_date)
+      span<>= ":"
+    = display_value_or_na_placeholder(birth_date_and_age(user))
+  li.mb-2= user_attribute_tag(user, :address)
+  li.mb-2
+    - email = user.responsible_email.present? ? mail_to(user.responsible_email) : nil
+    strong
+      = User.human_attribute_name(:email)
+      span<>= ":"
+    = display_value_or_na_placeholder(email)
+  li.mb-2
+    ruby:
+      notify_by_email = if user.responsible_email.blank?
+        "🔴 pas d'email renseigné"
+      elsif user.responsible_notify_by_email?
+        "🟢 Activées"
+      else
+        "🔴 Désactivées"
+      end
+    strong
+      = User.human_attribute_name(:notify_by_email)
+      span<>= ":"
+    = display_value_or_na_placeholder(notify_by_email)
+
+  li.mb-2
+    - phone_number = user.responsible_phone_number.present? ? link_to(user.responsible_phone_number, "tel:#{user.responsible_or_self.phone_number_formatted}") : nil
+    strong
+      = User.human_attribute_name(:phone_number)
+      span<>= ":"
+    = display_value_or_na_placeholder(phone_number)
+  li.mb-2
+    ruby:
+      notify_by_sms = if user.responsible_phone_number.blank?
+        "🔴 pas de numéro de téléphone renseigné"
+      elsif ! user.responsible_phone_number_mobile?
+        "🔴 le numéro de téléphone renseigné n'est pas un mobile"
+      elsif user.responsible_notify_by_sms?
+        "🟢 Activées"
+      else
+        "🔴 Désactivées"
+      end
+    strong
+      = User.human_attribute_name(:notify_by_sms)
+      span<>= ":"
+    = display_value_or_na_placeholder(notify_by_sms)
 
   - if user.pending_reconfirmation?
     .text-muted.mb-2
       | En attente de confirmation pour #{user.unconfirmed_email}
+  li.mb-2
+    - notes = user_profile.notes.present? ? simple_format(user_profile.notes) : nil
+    .d-flex
+      div.mr-1
+        strong
+          = UserProfile.human_attribute_name(:notes)
+          span<>= ":"
+      div
+        = display_value_or_na_placeholder(notes)
 
-  li.mb-2= render "common/user_attribute", user: user, attribute_name: :notes
 
 h4.card-title.mb-3 Informations sociales
 ul.list-unstyled.mb-5
-  - %i[caisse_affiliation affiliation_number family_situation number_of_children logement].each do |attr_name|
-    li.mb-2= render "common/user_attribute", user: user, attribute_name: attr_name
+  li.mb-2= user_attribute_tag(user, :caisse_affiliation)
+  li.mb-2= user_attribute_tag(user, :affiliation_number)
+  li.mb-2= user_attribute_tag(user, :family_situation)
+  li.mb-2= user_attribute_tag(user, :number_of_children)
+  li.mb-2= user_attribute_tag(user_profile, :logement)
 
 - unless user_path?(user)
   .text-right
