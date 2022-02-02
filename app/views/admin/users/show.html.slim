@@ -76,6 +76,8 @@
         .card-body
           h4.card-title.mb-3 Informations sur l'usager en charge
           = render "admin/users/responsible_information", user: @user.responsible
+          .text-right
+            = link_to "Voir", admin_organisation_user_path(current_organisation, @user.responsible), class: "btn btn-outline-primary"
 
       .card
         .card-header Agents référents du responsable

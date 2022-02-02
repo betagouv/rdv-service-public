@@ -21,7 +21,3 @@ ul.list-unstyled.mb-5
   li.mb-2= user_attribute_tag(user, :family_situation)
   li.mb-2= user_attribute_tag(user, :number_of_children)
   li.mb-2= user_attribute_tag(user_profile, :logement)
-
-- unless user_path?(user)
-  .text-right
-    = link_to "Voir", admin_organisation_user_path(current_organisation, user), class: "btn btn-outline-primary"
