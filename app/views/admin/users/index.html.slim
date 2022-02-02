@@ -46,7 +46,7 @@
             th Téléphone
             th Email
         tbody id="users-list"
-          = render @users
+          = render partial: "admin/users/user", collection: @users.includes(:responsible), cached: true
 
     - if @users.empty?
       .mb-4.p.text-center Aucun usager trouvé pour ces critères
