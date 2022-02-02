@@ -7,6 +7,7 @@ class Admin::ReferentsController < AgentAuthController
     @referents = policy_scope(@user.agents).distinct.order(:last_name)
     @agents = policy_scope(Agent)
     @agents = @agents.search_by_text(index_params[:search]) if index_params[:search].present?
+    @agents = @agents.page(params[:page])
   end
 
   def create
