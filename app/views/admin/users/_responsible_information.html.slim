@@ -7,7 +7,13 @@ ul.list-unstyled.mb-5
   li.mb-2= user_attribute_tag(user, :address)
   li.mb-2= user_attribute_tag(user, :email, clickable_user_email(user))
   li.mb-2= user_attribute_tag(user, :notify_by_email, notify_by_email_description(user))
-  li.mb-2= user_attribute_tag(user, :phone_number, clickable_user_phone_number(user))
+  li.mb-2
+    = user_attribute_tag(user, :phone_number, clickable_user_phone_number(user))
+    - if DuplicateUsersFinderService.perform_with(user, current_organisation).any? { _1.attributes == [:phone_number] }
+      .alert.alert-warning.mt-1
+        span> ⚠️ D'autres usagers utilisent ce numéro de téléphone.
+        = link_to "voir la liste", admin_organisation_users_path(current_organisation, "search": user.phone_number)
+
   li.mb-2= user_attribute_tag(user, :notify_by_sms, notify_by_sms_description(user))
   - if user.pending_reconfirmation?
     .text-muted.mb-2
