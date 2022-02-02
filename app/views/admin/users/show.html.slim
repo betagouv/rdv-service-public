@@ -45,21 +45,11 @@
             li= user_attribute_tag(@user, :first_name)
             li= user_attribute_tag(@user, :last_name)
             li= user_attribute_tag(@user, :birth_date)
-            li
-              strong
-                = User.human_attribute_name(:birth_date)
-                span<>= ":"
-              = display_value_or_na_placeholder(birth_date_and_age(@user))
+            li= user_attribute_tag(@user, :birth_date, birth_date_and_age(user))
             li
               - user_profile = @user.profile_for(current_organisation)
               - notes = user_profile.notes.present? ? simple_format(user_profile.notes) : nil
-              .d-flex
-                div.mr-1
-                  strong
-                    = UserProfile.human_attribute_name(:notes)
-                    span<>= ":"
-                div
-                  = display_value_or_na_placeholder(notes)
+              = user_attribute_tag(user_profile, :notes, notes)
 
         .row.mt-3
           .col.text-left

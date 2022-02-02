@@ -3,18 +3,11 @@ ul.list-unstyled.mb-5
   li.mb-2= user_attribute_tag(user, :first_name)
   li.mb-2= user_attribute_tag(user, :last_name)
   li.mb-2= user_attribute_tag(user, :birth_name)
-  li.mb-2
-    strong
-      = User.human_attribute_name(:birth_date)
-      span<>= ":"
-    = display_value_or_na_placeholder(birth_date_and_age(user))
+  li.mb-2= user_attribute_tag(user, :birth_date, birth_date_and_age(user))
   li.mb-2= user_attribute_tag(user, :address)
   li.mb-2
     - email = user.responsible_email.present? ? mail_to(user.responsible_email) : nil
-    strong
-      = User.human_attribute_name(:email)
-      span<>= ":"
-    = display_value_or_na_placeholder(email)
+    = user_attribute_tag(user, :email, email)
   li.mb-2
     ruby:
       notify_by_email = if user.responsible_email.blank?
@@ -24,17 +17,10 @@ ul.list-unstyled.mb-5
       else
         "🔴 Désactivées"
       end
-    strong
-      = User.human_attribute_name(:notify_by_email)
-      span<>= ":"
-    = display_value_or_na_placeholder(notify_by_email)
-
+    = user_attribute_tag(user, :notify_by_email, notify_by_email)
   li.mb-2
     - phone_number = user.responsible_phone_number.present? ? link_to(user.responsible_phone_number, "tel:#{user.responsible_or_self.phone_number_formatted}") : nil
-    strong
-      = User.human_attribute_name(:phone_number)
-      span<>= ":"
-    = display_value_or_na_placeholder(phone_number)
+    = user_attribute_tag(user, :phone_number, phone_number)
   li.mb-2
     ruby:
       notify_by_sms = if user.responsible_phone_number.blank?
@@ -46,24 +32,14 @@ ul.list-unstyled.mb-5
       else
         "🔴 Désactivées"
       end
-    strong
-      = User.human_attribute_name(:notify_by_sms)
-      span<>= ":"
-    = display_value_or_na_placeholder(notify_by_sms)
+    = user_attribute_tag(user, :notify_by_sms, notify_by_sms)
 
   - if user.pending_reconfirmation?
     .text-muted.mb-2
       | En attente de confirmation pour #{user.unconfirmed_email}
   li.mb-2
     - notes = user_profile.notes.present? ? simple_format(user_profile.notes) : nil
-    .d-flex
-      div.mr-1
-        strong
-          = UserProfile.human_attribute_name(:notes)
-          span<>= ":"
-      div
-        = display_value_or_na_placeholder(notes)
-
+    = user_attribute_tag(user_profile, :notes, notes)
 
 h4.card-title.mb-3 Informations sociales
 ul.list-unstyled.mb-5
