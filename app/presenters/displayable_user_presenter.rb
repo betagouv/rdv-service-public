@@ -40,40 +40,26 @@ class DisplayableUserPresenter
   end
 
   def logement
-    return nil if @user_profile.blank?
-
-    @user_profile.human_attribute_value(:logement)
+    @user_profile&.human_attribute_value(:logement)
   end
 
   def notes
-    return nil if @user_profile.nil? || @user_profile.notes.blank?
-
-    simple_format(@user_profile.notes)
+    formatted_user_notes(@user_profile)
   end
 
   def notify_by_sms
-    return "🔴 pas de numéro de téléphone renseigné" if @user.responsible_phone_number.blank?
-
-    return "🔴 le numéro de téléphone renseigné n'est pas un mobile" unless @user.responsible_phone_number_mobile?
-
-    @user.responsible_notify_by_sms? ? "🟢 Activées" : "🔴 Désactivées"
+    notify_by_sms_description(@user)
   end
 
   def notify_by_email
-    return "🔴 pas d'email renseigné" if @user.responsible_email.blank?
-
-    @user.responsible_notify_by_email? ? "🟢 Activées" : "🔴 Désactivées"
+    notify_by_email_description(@user)
   end
 
   def clickable_email
-    return "N/A" if email.blank?
-
-    mail_to(email)
+    clickable_user_email(@user)
   end
 
   def clickable_phone_number
-    return "N/A" if phone_number.blank?
-
-    link_to(phone_number, "tel:#{phone_number_formatted}")
+    clickable_user_phone_number(@user)
   end
 end

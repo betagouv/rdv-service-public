@@ -23,10 +23,17 @@
                   div= "proche de #{user_to_link(user.responsible)}".html_safe
                 div
                   ul.list-unstyled
-                    - %i[birth_date phone_number address email notes].each do |attr_name|
-                      li= render "common/user_attribute", user: user, attribute_name: attr_name
+                    - user_profile = user.profile_for(current_organisation)
+                    li= user_attribute_tag(user, :birth_date, birth_date_and_age(user))
+                    li= user_attribute_tag(user, :phone_number, clickable_user_phone_number(user))
+                    li= user_attribute_tag(user, :address)
+                    li= user_attribute_tag(user, :email, clickable_user_email(user))
+                    li= user_attribute_tag(user_profile, :notes, formatted_user_notes(user_profile))
                     - if rdv.service_social?
-                      - %i[logement number_of_children family_situation affiliation_number caisse_affiliation].each do |attr_name|
-                        li= render "common/user_attribute", user: user, attribute_name: attr_name, skip_empty: true
+                      li= user_attribute_tag(user_profile, :logement)
+                      li= user_attribute_tag(user, :number_of_children)
+                      li= user_attribute_tag(user, :family_situation)
+                      li= user_attribute_tag(user, :affiliation_number)
+                      li= user_attribute_tag(user, :caisse_affiliation)
     - else
       = render "admin/rdvs/rdv_details", rdv: rdv

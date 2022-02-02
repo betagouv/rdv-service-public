@@ -5,41 +5,14 @@ ul.list-unstyled.mb-5
   li.mb-2= user_attribute_tag(user, :birth_name)
   li.mb-2= user_attribute_tag(user, :birth_date, birth_date_and_age(user))
   li.mb-2= user_attribute_tag(user, :address)
-  li.mb-2
-    - email = user.responsible_email.present? ? mail_to(user.responsible_email) : nil
-    = user_attribute_tag(user, :email, email)
-  li.mb-2
-    ruby:
-      notify_by_email = if user.responsible_email.blank?
-        "🔴 pas d'email renseigné"
-      elsif user.responsible_notify_by_email?
-        "🟢 Activées"
-      else
-        "🔴 Désactivées"
-      end
-    = user_attribute_tag(user, :notify_by_email, notify_by_email)
-  li.mb-2
-    - phone_number = user.responsible_phone_number.present? ? link_to(user.responsible_phone_number, "tel:#{user.responsible_or_self.phone_number_formatted}") : nil
-    = user_attribute_tag(user, :phone_number, phone_number)
-  li.mb-2
-    ruby:
-      notify_by_sms = if user.responsible_phone_number.blank?
-        "🔴 pas de numéro de téléphone renseigné"
-      elsif ! user.responsible_phone_number_mobile?
-        "🔴 le numéro de téléphone renseigné n'est pas un mobile"
-      elsif user.responsible_notify_by_sms?
-        "🟢 Activées"
-      else
-        "🔴 Désactivées"
-      end
-    = user_attribute_tag(user, :notify_by_sms, notify_by_sms)
-
+  li.mb-2= user_attribute_tag(user, :email, clickable_user_email(user))
+  li.mb-2= user_attribute_tag(user, :notify_by_email, notify_by_email_description(user))
+  li.mb-2= user_attribute_tag(user, :phone_number, clickable_user_phone_number(user))
+  li.mb-2= user_attribute_tag(user, :notify_by_sms, notify_by_sms_description(user))
   - if user.pending_reconfirmation?
     .text-muted.mb-2
       | En attente de confirmation pour #{user.unconfirmed_email}
-  li.mb-2
-    - notes = user_profile.notes.present? ? simple_format(user_profile.notes) : nil
-    = user_attribute_tag(user_profile, :notes, notes)
+  li.mb-2= user_attribute_tag(user_profile, :notes, formatted_user_notes(user_profile))
 
 h4.card-title.mb-3 Informations sociales
 ul.list-unstyled.mb-5
