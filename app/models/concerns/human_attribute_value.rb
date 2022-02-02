@@ -29,11 +29,13 @@ module HumanAttributeValue
     # > Rdv.human_attribute_value(:status, :excused, count: 2)
     # => "Annulées (excusées)" # I18n.t('activerecord.attributes.rdv/statuses.excused.other')
     def human_attribute_value(enum_name, value, options = {})
-      return if value.nil?
+      return if value.blank?
 
+      options = { default: value }.merge(options) # make sure to return the value unchanged if not found
       unless options.delete(:disable_cast)
         value = attribute_types[enum_name.to_s].cast(value)
       end
+
       context = options.delete(:context)
       enum_i18n_scope = [enum_name.to_s.pluralize, context].compact.join("/")
       human_attribute_name("#{enum_i18n_scope}.#{value}", options)
