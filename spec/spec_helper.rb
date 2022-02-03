@@ -26,7 +26,7 @@ require "pundit/rspec"
 require "simplecov"
 
 # TODO: SimpleCov.minimum_coverage 80
-SimpleCov.minimum_coverage 68
+SimpleCov.minimum_coverage 80
 SimpleCov.start
 
 Capybara.register_driver :chrome_headless do |app|
