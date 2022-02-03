@@ -60,7 +60,7 @@ describe Stat, type: :model do
       travel_to(now)
       create(:user)
       stats = described_class.new(users: User.all)
-      expect(stats.users_group_by_week).to eq({ now.strftime("%d/%m/%Y") => 1 })
+      expect(stats.users_group_by_week).to eq({ "23/01/2022" => 1 })
     end
   end
 
