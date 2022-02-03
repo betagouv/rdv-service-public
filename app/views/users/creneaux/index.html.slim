@@ -1,18 +1,14 @@
-- content_for :title do
-  | Créneaux disponibles
-
-- content_for :breadcrumb do
-  = link_to "Voir vos prochains RDV", users_rdvs_path, class: "btn btn-outline-primary"
-
-p
-  | Voici les créneaux disponibles pour avancer votre rendez-vous du
-  b= " #{l(@rdv.starts_at, format: :human)}."
-- if @all_creneaux.any?
-  .card
-    .card-body
-      = render "creneaux", creneaux: @creneaux, date_range: @date_range, rdv: @rdv
-- else
-  .bg-info.text-white.p-2.mb-3 Malheureusement, tous les créneaux sont pris. Vous recevrez d'autres propositions si un créneau se libère. La date de votre RDV reste le #{I18n.l(@rdv.starts_at, format: :human)}.
-  .row.justify-content-md-center
-    .col-md-6
-      = render partial: "/users/rdvs/rdv", locals: { rdv: @rdv }
+.row.mt-3.justify-content-center
+  .container
+    h2.page-title.text-center Modifier horaire
+    p
+      | Voici les créneaux disponibles pour modifier votre rendez-vous du
+      b= " #{l(@rdv.starts_at, format: :human)}."
+    - if @all_creneaux.any?
+      .card
+        .card-body
+          = render "creneaux", creneaux: @creneaux, date_range: @date_range, rdv: @rdv
+    - else
+      .bg-info.text-white.p-2.mb-3 Malheureusement, tous les créneaux sont pris. Vous recevrez d'autres propositions si un créneau se libère. La date de votre RDV reste le #{I18n.l(@rdv.starts_at, format: :human)}.
+    .text-center
+      = link_to "Retour au RDV", users_rdv_path(@rdv), class: "btn btn-primary"

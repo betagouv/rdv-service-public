@@ -19,6 +19,14 @@ class UserAuthController < ApplicationController
     super([:user, record])
   end
 
+  def current_user
+    super || invited_user
+  end
+
+  def current_user_set?
+    current_user.present?
+  end
+
   def policy_scope(clasz)
     super([:user, clasz])
   end

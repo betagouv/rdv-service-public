@@ -2,6 +2,7 @@
 
 class ApplicationController < ActionController::Base
   include Pundit
+  include InvitableConcern
   protect_from_forgery
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :store_user_location!, if: :storable_location?
@@ -29,12 +30,6 @@ class ApplicationController < ActionController::Base
   end
 
   protected
-
-  def store_invitation_token_in_session_if_present
-    return if params[:invitation_token].blank?
-
-    session[:invitation_token] = params[:invitation_token]
-  end
 
   def set_sentry_context
     Sentry.set_user(sentry_user)

@@ -36,13 +36,19 @@ ul.list-group.list-group-flush
       = auto_link(simple_format(rdv.motif.instruction_for_rdv, class:"pl-3 pt-1"), html: { target: "_blank" })
   - unless defined?(hide_file_attente_infos) && hide_file_attente_infos
     = render "/users/rdvs/file_attente", rdv: rdv
-- unless defined?(hide_cancellation_infos) && hide_cancellation_infos
-  - if rdv.cancellable?
-    .text-right.mt-2
-      = link_to "Annuler le RDV", "#", data: { toggle: "modal", target: "#js-cancel-rdv-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
-  - elsif !rdv.past? && !rdv.cancelled?
-    p.font-italic
-      | Ce rendez-vous commence dans moins de 4 heures, il n'est plus annulable en ligne. Prenez contact avec le secrétariat.
+
+div.py-2.d-flex.justify-content-between.align-items-center
+  - unless rdv.cancelled?
+    .text-left.mt-2
+       = link_to "Modifier l'horaire du RDV", users_creneaux_index_path(rdv_id: rdv.id), class: "btn btn-outline-primary"
+
+  - unless defined?(hide_cancellation_infos) && hide_cancellation_infos
+    - if rdv.cancellable?
+      .text-right.mt-2
+        = link_to "Annuler le RDV", "#", data: { toggle: "modal", target: "#js-cancel-rdv-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
+    - elsif !rdv.past? && !rdv.cancelled?
+      p.font-italic
+        | Ce rendez-vous commence dans moins de 4 heures, il n'est plus annulable en ligne. Prenez contact avec le secrétariat.
 
 = render( \
   "common/modal_confirmation", \

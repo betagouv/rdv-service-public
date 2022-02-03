@@ -8,6 +8,7 @@ class User::RdvPolicy < ApplicationPolicy
   end
 
   alias new? rdv_belongs_to_user_or_relatives?
+  alias show? rdv_belongs_to_user_or_relatives?
   alias create? rdv_belongs_to_user_or_relatives?
 
   # three next are used in creneaux controller when coming from file attentes

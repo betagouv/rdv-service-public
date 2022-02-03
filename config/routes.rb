@@ -45,7 +45,7 @@ Rails.application.routes.draw do
 
   namespace :users do
     resource :rdv_wizard_step, only: %i[new create]
-    resources :rdvs, only: %i[index create] do
+    resources :rdvs, only: %i[index create show] do
       put :cancel
     end
     resources :creneaux, only: %i[index edit update], param: :rdv_id

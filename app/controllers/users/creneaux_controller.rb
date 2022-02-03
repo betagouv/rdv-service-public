@@ -3,11 +3,12 @@
 class Users::CreneauxController < UserAuthController
   before_action :set_creneau_params, only: %i[index edit update]
   before_action :build_creneau, :redirect_if_creneau_not_available, only: %i[edit update]
+  skip_before_action :authenticate_user!, if: -> { current_user_set? }
 
   def edit; end
 
   def index
-    @all_creneaux = @rdv.creneaux_available(Time.zone.today..@rdv.starts_at - 1.day)
+    @all_creneaux = @rdv.creneaux_available(Time.zone.today..@rdv.reschedule_max_date)
     return if @all_creneaux.empty?
 
     start_date = params[:date]&.to_date || @all_creneaux.first.starts_at.to_date
@@ -21,8 +22,14 @@ class Users::CreneauxController < UserAuthController
   end
 
   def update
-    @rdv.update(starts_at: @creneau.starts_at, ends_at: @creneau.starts_at + @rdv.duration_in_min.minutes, agent_ids: [@creneau.agent.id], created_by: :file_attente)
-    Notifiers::RdvDateUpdated.perform_with(@rdv, current_user)
+    if @rdv.update(starts_at: @creneau.starts_at, ends_at: @creneau.starts_at + @rdv.duration_in_min.minutes, agent_ids: [@creneau.agent.id], created_by: :file_attente)
+      Notifiers::RdvDateUpdated.perform_with(@rdv, current_user)
+      flash[:success] = "Votre RDV a bien été modifié"
+      redirect_to users_rdv_path(@rdv)
+    else
+      flash[:error] = "Le RDV n'a pas pu être modifié"
+      redirect_to users_creneaux_index_path(rdv_id: @rdv.id)
+    end
   end
 
   private

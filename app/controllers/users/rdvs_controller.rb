@@ -4,6 +4,7 @@ class Users::RdvsController < UserAuthController
   before_action :set_rdv, only: [:cancel]
   before_action :set_geo_search, only: [:create]
   after_action :allow_iframe
+  skip_before_action :authenticate_user!, if: -> { current_user_set? && action_name.in?(%w[show create]) }
 
   def index
     @rdvs = policy_scope(Rdv).includes(:motif, :rdvs_users, :users)
@@ -30,11 +31,16 @@ class Users::RdvsController < UserAuthController
     skip_authorization if @creneau.nil?
     if @save_succeeded
       Notifiers::RdvCreated.perform_with(@rdv, current_user)
-      redirect_to authenticated_user_root_path, notice: t(".rdv_confirmed")
+      redirect_to users_rdv_path(@rdv), notice: t(".rdv_confirmed")
     else
       query = { where: new_rdv_extra_params[:where], service: motif.service.id, motif_name_with_location_type: motif.name_with_location_type, departement: new_rdv_extra_params[:departement] }
       redirect_to lieux_path(search: query), flash: { error: t(".creneau_unavailable") }
     end
+  end
+
+  def show
+    @rdv = Rdv.find(params[:id])
+    authorize @rdv
   end
 
   def cancel
@@ -44,7 +50,7 @@ class Users::RdvsController < UserAuthController
     else
       flash[:error] = "Impossible d'annuler le RDV."
     end
-    redirect_to users_rdvs_path
+    redirect_to users_rdv_path(@rdv)
   end
 
   private

@@ -196,6 +196,10 @@ class Rdv < ApplicationRecord
     rdvs
   end
 
+  def reschedule_max_date
+    Time.zone.at(Time.zone.now.to_i + motif.max_booking_delay)
+  end
+
   private
 
   def starts_at_is_plausible
