@@ -115,7 +115,7 @@
 
     .card
       .card-header Prochains rendez-vous
-      - future_rdvs = policy_scope(Rdv).merge(@user.rdvs_future_without_ongoing(current_organisation)).order(starts_at: :asc)
+      - future_rdvs = policy_scope(Rdv).merge(@user.rdvs_future_without_ongoing(current_organisation)).order(starts_at: :asc).limit(10)
       = render "admin/rdvs/short_rdvs_list", user: @user, rdvs: future_rdvs
 
     .card
