@@ -24,16 +24,16 @@
                 div
                   ul.list-unstyled
                     - user_profile = user.profile_for(current_organisation)
-                    li= user_attribute_tag(user, :birth_date, birth_date_and_age(user))
-                    li= user_attribute_tag(user, :phone_number, clickable_user_phone_number(user))
-                    li= user_attribute_tag(user, :address)
-                    li= user_attribute_tag(user, :email, clickable_user_email(user))
-                    li= user_attribute_tag(user_profile, :notes, formatted_user_notes(user_profile))
+                    li= object_attribute_tag(user, :birth_date, birth_date_and_age(user))
+                    li= object_attribute_tag(user, :phone_number, clickable_user_phone_number(user))
+                    li= object_attribute_tag(user, :address)
+                    li= object_attribute_tag(user, :email, clickable_user_email(user))
+                    li= object_attribute_tag(user_profile, :notes, formatted_user_notes(user_profile))
                     - if rdv.service_social?
-                      li= user_attribute_tag(user_profile, :logement)
-                      li= user_attribute_tag(user, :number_of_children)
-                      li= user_attribute_tag(user, :family_situation)
-                      li= user_attribute_tag(user, :affiliation_number)
-                      li= user_attribute_tag(user, :caisse_affiliation)
+                      li= object_attribute_tag(user_profile, :logement)
+                      li= object_attribute_tag(user, :number_of_children)
+                      li= object_attribute_tag(user, :family_situation)
+                      li= object_attribute_tag(user, :affiliation_number)
+                      li= object_attribute_tag(user, :caisse_affiliation)
     - else
       = render "admin/rdvs/rdv_details", rdv: rdv

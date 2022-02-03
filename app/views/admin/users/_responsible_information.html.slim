@@ -1,29 +1,29 @@
 - user_profile = user.profile_for(current_organisation)
 ul.list-unstyled.mb-5
-  li.mb-2= user_attribute_tag(user, :first_name)
-  li.mb-2= user_attribute_tag(user, :last_name)
-  li.mb-2= user_attribute_tag(user, :birth_name)
-  li.mb-2= user_attribute_tag(user, :birth_date, birth_date_and_age(user))
-  li.mb-2= user_attribute_tag(user, :address)
-  li.mb-2= user_attribute_tag(user, :email, clickable_user_email(user))
-  li.mb-2= user_attribute_tag(user, :notify_by_email, notify_by_email_description(user))
+  li.mb-2= object_attribute_tag(user, :first_name)
+  li.mb-2= object_attribute_tag(user, :last_name)
+  li.mb-2= object_attribute_tag(user, :birth_name)
+  li.mb-2= object_attribute_tag(user, :birth_date, birth_date_and_age(user))
+  li.mb-2= object_attribute_tag(user, :address)
+  li.mb-2= object_attribute_tag(user, :email, clickable_user_email(user))
+  li.mb-2= object_attribute_tag(user, :notify_by_email, notify_by_email_description(user))
   li.mb-2
-    = user_attribute_tag(user, :phone_number, clickable_user_phone_number(user))
+    = object_attribute_tag(user, :phone_number, clickable_user_phone_number(user))
     - if user.phone_number.present? && DuplicateUsersFinderService.find_duplicate_based_on_phone_number(user, current_organisation).present?
       .alert.alert-warning.mt-1
         span> ⚠️ D'autres usagers utilisent ce numéro de téléphone.
         = link_to "voir la liste", admin_organisation_users_path(current_organisation, "search": user.phone_number)
 
-  li.mb-2= user_attribute_tag(user, :notify_by_sms, notify_by_sms_description(user))
+  li.mb-2= object_attribute_tag(user, :notify_by_sms, notify_by_sms_description(user))
   - if user.pending_reconfirmation?
     .text-muted.mb-2
       | En attente de confirmation pour #{user.unconfirmed_email}
-  li.mb-2= user_attribute_tag(user_profile, :notes, formatted_user_notes(user_profile))
+  li.mb-2= object_attribute_tag(user_profile, :notes, formatted_user_notes(user_profile))
 
 h4.card-title.mb-3 Informations sociales
 ul.list-unstyled.mb-5
-  li.mb-2= user_attribute_tag(user, :caisse_affiliation)
-  li.mb-2= user_attribute_tag(user, :affiliation_number)
-  li.mb-2= user_attribute_tag(user, :family_situation)
-  li.mb-2= user_attribute_tag(user, :number_of_children)
-  li.mb-2= user_attribute_tag(user_profile, :logement)
+  li.mb-2= object_attribute_tag(user, :caisse_affiliation)
+  li.mb-2= object_attribute_tag(user, :affiliation_number)
+  li.mb-2= object_attribute_tag(user, :family_situation)
+  li.mb-2= object_attribute_tag(user, :number_of_children)
+  li.mb-2= object_attribute_tag(user_profile, :logement)
