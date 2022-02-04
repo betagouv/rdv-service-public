@@ -185,14 +185,7 @@ class User < ApplicationRecord
   end
 
   def generate_invitation_token
-    if email.present?
-      super
-    else
-      generate_short_invitation_token # users without emails are invited to manually type it on rdv-solidarites.fr/invitation (Issue #1472)
-    end
-  end
-
-  def generate_short_invitation_token
+    # we generate short invitations token to allow paper mail invitation
     key = Devise.token_generator.send(:key_for, :invitation_token)
     loop do
       raw = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8)
