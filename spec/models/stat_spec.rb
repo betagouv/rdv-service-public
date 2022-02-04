@@ -53,4 +53,80 @@ describe Stat, type: :model do
       expect(stats.rdvs_group_by_type[["sur place", "05/04/2020"]]).to eq(1)
     end
   end
+
+  describe "#users_group_by_week" do
+    it "returns user count group by created at" do
+      now = Time.zone.parse("20220123 13:00")
+      travel_to(now)
+      create(:user)
+      stats = described_class.new(users: User.all)
+      expect(stats.users_group_by_week).to eq({ "23/01/2022" => 1 })
+    end
+  end
+
+  describe "#organisations_group_by_week" do
+    it "returns organisations count group by created at" do
+      now = Time.zone.parse("20220123 13:00")
+      travel_to(now)
+      create(:organisation)
+      stats = described_class.new(organisations: Organisation.all)
+      expect(stats.organisations_group_by_week).to eq({ "23/01/2022" => 1 })
+    end
+  end
+
+  describe "#agents_for_default_range" do
+    it "returns active agents only" do
+      now = Time.zone.parse("20220123 13:00")
+      travel_to(now)
+      active_agent = create(:agent)
+      create(:agent, deleted_at: now - 1.week)
+      stats = described_class.new(agents: Agent.all)
+      expect(stats.agents_for_default_range).to eq([active_agent])
+    end
+  end
+
+  describe "#agents_group_by_week" do
+    it "returns active agents count group by week" do
+      now = Time.zone.parse("20220123 13:00")
+      travel_to(now)
+      create(:agent)
+      create(:agent, deleted_at: now - 1.week)
+      stats = described_class.new(agents: Agent.all)
+      expect(stats.agents_group_by_week).to eq({ "23/01/2022" => 1 })
+    end
+  end
+
+  describe "#rdvs_group_by_departement" do
+    it "returns rdv group by département" do
+      now = Time.zone.parse("20220123 13:00")
+      travel_to(now)
+      home_motif = create(:motif, location_type: :home)
+      create(:rdv, motif: home_motif, created_at: now)
+      stats = described_class.new(rdvs: Rdv.all)
+      expect(stats.rdvs_group_by_departement).to eq({ ["2", "23/01/2022"] => 1 })
+    end
+  end
+
+  describe "#rdvs_group_by_service" do
+    it "returns rdv group by service" do
+      now = Time.zone.parse("20220123 13:00")
+      travel_to(now)
+      service = create(:service, name: "PMI")
+      home_motif = create(:motif, location_type: :home, service: service)
+      create(:rdv, motif: home_motif, created_at: now)
+      stats = described_class.new(rdvs: Rdv.all)
+      expect(stats.rdvs_group_by_service).to eq({ ["PMI", "23/01/2022"] => 1 })
+    end
+  end
+
+  describe "#rdvs_group_by_status" do
+    it "returns rdv group by status" do
+      now = Time.zone.parse("20220123 13:00")
+      travel_to(now - 1.week)
+      create(:rdv, starts_at: now - 1.week, status: :unknown)
+      travel_to(now)
+      stats = described_class.new(rdvs: Rdv.all)
+      expect(stats.rdvs_group_by_status).to eq({ ["État indéterminé", "16/01/2022"] => 100 })
+    end
+  end
 end
