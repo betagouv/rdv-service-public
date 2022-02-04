@@ -1,0 +1,86 @@
+fr:
+  admin:
+    territories:
+      nav:
+        configuration_title: Configuration
+      show:
+        title: Configuration
+      index:
+        configuration_title: Configuration
+      agent_territorial_roles:
+        index:
+          configuration_title: Configuration
+
+      sectorisation_tests:
+        search:
+          sectorization_title: Sectorisation
+          title: Test sectorisation
+      zone_imports:
+        new:
+          sectorization_title: Sectorisation
+          title: Importer un fichier
+      webhook_endpoints:
+        index:
+          configuration_title: Configuration
+          webhook_title: Webhooks
+          table-header:
+            organisation: Organisation
+            url: URL cible
+            actions: Actions
+          confirm_destroy: Voulez-vous vraiment supprimer ce endpoint ?
+        new:
+          webhook_title: Webhooks
+          title: Ajouter un webhook
+        edit:
+          webhook_title: Webhooks
+          title: Modifier le webhook
+      sms_configurations:
+        show:
+          title: Fournisseur d'envoi de SMS
+        edit:
+          show_sms_configuration: Fournisseur d'envoi de SMS
+          title: Modifier la configuration SMS
+      sectors:
+        update:
+          updated: Secteur mis à jour
+        create:
+          created: Secteur %{sector} créé
+        destroy:
+          deleted: Secteur supprimé
+        edit:
+          title: Modifier le secteur %{name}
+          sectorization_title: Sectorisation
+        show:
+          title: Secteur %{name}
+          sectorization_title: Sectorisation
+        index:
+          sectorization_title: Sectorisation
+          title: Secteurs
+        index_map:
+          sectorization_title: Sectorisation
+          title: Carte des secteurs
+      teams:
+        edit:
+          territory_teams_title: Équipes du territoire
+        index:
+          teams_title: Équipes du territoire
+          create_team: Ajouter une équipe
+          back: Retour
+        new:
+          territory_teams_title: Créer une équipe
+      agents:
+        edit:
+          agent_title: Modification agent %{name}
+          territory_agents_title: Agents du territoire
+          teams: Équipes
+        index:
+          territory_agents_title: Agents du territoire
+          reset: Retour
+          search_placeholder: "ex: martine@example.com"
+          search: Rechercher
+          last_name: Nom
+          first_name: Prénom
+          email: Courriel
+          teams: Équipes
+          actions: Actions
+          edit_agents: Modification des équipes de l'agent

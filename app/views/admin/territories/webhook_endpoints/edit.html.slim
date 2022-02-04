@@ -1,13 +1,10 @@
-- content_for(:menu_item) { "menu-organisation" }
-
-- content_for :title do
-  = t(".title")
+= render "admin/territories/nav", \
+  current_page_title: t(".title"), \
+  previous_path: [link_to(t(".webhook_title"), admin_territory_webhook_endpoints_path(current_territory))]
 
 .row.justify-content-center
   .col-md-8
     .card
-      .card-header
-        h5 = t(".card-title")
       .card-body
         = render "form", webhook: @webhook, url: admin_territory_webhook_endpoint_path(current_territory, @webhook)
 

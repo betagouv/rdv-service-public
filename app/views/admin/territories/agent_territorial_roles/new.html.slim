@@ -1,12 +1,6 @@
-- content_for(:menu_item) { "menu-departement-agents" }
-- content_for(:title) { "Ajouter un administrateur - #{current_territory}" }
-
-- content_for :breadcrumb do
-  ol.breadcrumb.m-0
-    li.breadcrumb-item
-      = link_to "Administrateurs", admin_territory_agent_territorial_roles_path(current_territory)
-    li.breadcrumb-item.active
-      | Ajouter un agent
+= render "admin/territories/nav", \
+  current_page_title: "Ajouter un agent", \
+  previous_path: [link_to("Administration #{current_territory}", admin_territory_agent_territorial_roles_path(current_territory))]
 
 .row.justify-content-center
   .col-md-6

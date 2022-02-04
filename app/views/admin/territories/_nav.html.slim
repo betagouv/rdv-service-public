@@ -1,0 +1,19 @@
+nav.border-bottom.configuration-title.border-bottom.pb-2.configuration-title.mb-2
+  ol.breadcrumb.m-0.p-0
+    li.breadcrumb-item
+      = link_to admin_territory_path(current_territory) do
+        i.fa.fa-cogs>
+        = t("admin.territories.nav.configuration_title")
+    - if defined?(previous_path)
+      - previous_path.each do |prev_path|
+        li.breadcrumb-item.active
+          = prev_path
+
+    - if defined?(current_page_title)
+      li.breadcrumb-item.active
+        = current_page_title
+
+/ Sample call
+/ = render "admin/territories/nav", \
+  current_page_title: "Ajouter un agent", \
+  previous_path: [link_to("Administration #{current_territory}", admin_territory_agent_territorial_roles_path(current_territory))]

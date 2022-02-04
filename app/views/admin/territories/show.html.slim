@@ -1,0 +1,73 @@
+= render "admin/territories/nav"
+
+.row.mb-3
+  .col.col-md-4.p-2.rounded.settings-box
+    = link_to admin_territory_agent_territorial_roles_path(current_territory) do
+      h3.fw-bold.mb-0
+        i.fa.fa-users>
+        | Administration
+      p Gérer l'accès à la configuration
+
+  .col.col-md-4.p-2.rounded.settings-box
+    = link_to admin_territory_agents_path(current_territory) do
+      h3.fw-bold.mb-0
+        i.fa.fa-users>
+        | Agents
+      p Inviter des agents, affecter à des équipes
+
+  .col.col-md-4.p-2.rounded.settings-box
+    = link_to admin_territory_teams_path(current_territory) do
+      h3.fw-bold.mb-0
+        i.fa.fa-users>
+        | Équipes
+      p Construire des équipes pour grouper des agents
+
+  .col.col-md-4.p-2.rounded.settings-box
+    = link_to admin_territory_webhook_endpoints_path(current_territory) do
+      h3.fw-bold.mb-0
+        i.fa.fa-network-wired>
+        | Webhook
+      p Les webhook servent à l'interconnexion avec vos systèmes
+
+  - if current_territory.has_own_sms_provider
+    .col.col-md-4.p-2.rounded.settings-box
+      = link_to admin_territory_sms_configuration_path(current_territory) do
+        h3.fw-bold.mb-0
+          i.fa.fa-mobile-alt>
+          | SMS
+        p Configuration du fournisseur d'envoie de SMS
+
+  .col.col-md-4.p-2.rounded.settings-box
+    = link_to admin_territory_sectors_path(current_territory, current_agent) do
+      h3.fw-bold.mb-0
+        i.fa.fa-table>
+        | Secteurs
+      p Découpage territoriale. Créé ici vos secteurs géographique
+
+  .col.col-md-4.p-2.rounded.settings-box
+    = link_to admin_territory_sectors_path(current_territory, view: "map") do
+      h3.fw-bold.mb-0
+        i.fa.fa-map>
+        | Carte
+      p Visualisé les secteurs du territoire
+
+  .col.col-md-4.p-2.rounded.settings-box
+    = link_to admin_territory_sectorisation_test_path(current_territory) do
+      h3.fw-bold.mb-0
+        i.fa.fa-check-square>
+        | Test
+      p Effectuer des tests de vérification des adresses et informations de code insee
+
+  .col.col-md-4.p-2.rounded.settings-box
+    = link_to new_admin_territory_zone_import_path(current_territory) do
+      h3.fw-bold.mb-0
+        i.fa.fa-download>
+        | Import
+      p Importer un fichier de sectorisation pour faciliter la création de votre découpage géographique
+
+  .col.col-md-4.p-2.rounded.settings-box
+    = link_to admin_organisations_path do
+      h3.fw-bold.mb-0
+        i.fa.fa-home>
+        | Organisations
+      p Voir la liste de mes organisations

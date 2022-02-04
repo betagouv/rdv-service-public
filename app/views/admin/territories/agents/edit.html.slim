@@ -1,5 +1,8 @@
+= render "admin/territories/nav", \
+  current_page_title: t(".agent_title", name: @agent.full_name), \
+  previous_path: [link_to(t(".territory_agents_title"), admin_territory_agents_path(current_territory))]
+
 .container-fluid.bg-white.rounded.m-2
-  h2.text-center = t(".agent_title")
 
   = simple_form_for @agent, url: admin_territory_agent_path(current_territory, @agent) do |form|
     = form.input :team_ids, collection: @agent.teams,

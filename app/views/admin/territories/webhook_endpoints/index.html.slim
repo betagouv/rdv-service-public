@@ -1,11 +1,9 @@
-- content_for(:menu_item) { "menu-departement-agents" }
-- content_for(:title) { "Administration #{current_territory}" }
+= render "admin/territories/nav", \
+  current_page_title: t(".webhook_title")
 
 .row.justify-content-center
-  .col-md-8
+  .col-md-10
     .card
-      .card-header
-        h5.card-title = t(".card-title")
       .card-body
         table.table
           thead

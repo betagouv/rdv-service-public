@@ -1,13 +1,12 @@
-- content_for(:menu_item) { "menu-organisation" }
-
-- content_for :title do
-  | Modifier l'organisation
+= render "admin/territories/nav", \
+  current_page_title: t(".title"), \
+  previous_path: [link_to(t(".show_sms_configuration"), admin_cterritory_sms_configuration_path(current_territory))]
 
 .row.justify-content-center
   .col-md-6
     .card
       .card-body
-        = simple_form_for current_territory, url: admin_territory_sms_configuration_path do |f|
+        = simple_form_for current_territory, url: admin_territory_sms_configuration_path(current_territory) do |f|
           = render "model_errors", model: current_territory
           = f.input :sms_provider, collection: Territory.sms_providers.keys, allow_blank: true
 

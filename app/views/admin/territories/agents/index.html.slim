@@ -1,8 +1,8 @@
+= render "admin/territories/nav", current_page_title: t(".territory_agents_title")
+
 = simple_form_for "", url: admin_territory_agents_path(current_territory), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
 
   .container-fluid.bg-white.rounded.m-2.p-2
-    h2.text-center = t(".territory_agents_title")
-
     .m-3.d-flex.justify-content-end
       - search = params[:q].blank? ? "d-none" : ""
       div= link_to t(".reset"), admin_territory_agents_path(current_territory), class: "btn btn-link #{search}"

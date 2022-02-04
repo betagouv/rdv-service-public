@@ -1,16 +1,6 @@
-- content_for(:menu_item) { "menu-departement-sectors" }
-
-- content_for :title do
-  | Nouvelle attribution pour le secteur #{@sector.name}
-
-- content_for :breadcrumb do
-  ol.breadcrumb.m-0
-    li.breadcrumb-item
-      = link_to "Secteurs", admin_territory_sectors_path(current_territory)
-    li.breadcrumb-item
-      = link_to truncate(@sector.name, length: 20), admin_territory_sector_path(current_territory, @sector)
-    li.breadcrumb-item.active
-      | Nouvelle attribution
+= render "admin/territories/nav", \
+  current_page_title: "Nouvelle attribution pour le secteur #{@sector.name}", \
+  previous_path: [link_to("Secteurs", admin_territory_sectors_path(current_territory))]
 
 .row.justify-content-center
   .col-md-6

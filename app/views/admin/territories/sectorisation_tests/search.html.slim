@@ -1,5 +1,5 @@
-- content_for(:menu_item) { "menu-departement-sectorisation-test" }
-- content_for(:title) { "Test sectorisation" }
+= render "admin/territories/nav", \
+  current_page_title: t(".title")
 
 = simple_form_for \
   @sectorisation_test_form, \

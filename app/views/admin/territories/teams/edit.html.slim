@@ -1,4 +1,6 @@
-.container-fluid.bg-white.rounded.m-2
-  h2.text-center = t(".territory_teams_title")
+= render "admin/territories/nav", \
+  current_page_title: "Modifier l'équipe #{@team.name}", \
+  previous_path: [link_to("Équipes", admin_territory_teams_path(current_territory))]
 
+.container-fluid.bg-white.rounded.m-2.p-2
   = render "form", team: @team, url: admin_territory_team_path(current_territory, @team)

@@ -1,20 +1,12 @@
-- content_for(:menu_item) { "menu-departement-sectors-map" }
-
 -content_for :html_head_prepend do
   / mapbox is hard to use with webpack because of
   / https://github.com/mapbox/mapbox-gl-js/issues/1649
   <script src="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.js"></script>
   <link href="https://api.mapbox.com/mapbox-gl-js/v1.11.0/mapbox-gl.css" rel="stylesheet" />
 
-- content_for :title do
- | Carte des secteurs du #{current_territory}
-
-- content_for :breadcrumb do
-  ol.breadcrumb.m-0
-    li.breadcrumb-item
-      = link_to "Secteurs", admin_territory_sectors_path(current_territory)
-    li.breadcrumb-item.active
-      | Carte
+= render "admin/territories/nav", \
+  current_page_title: t(".title"), \
+  previous_path: [link_to("Secteurs", admin_territory_sectors_path(current_territory))]
 
 .row
   .col-md-12

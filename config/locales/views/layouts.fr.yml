@@ -4,3 +4,5 @@ fr:
       unknown_past_rdv_count: Vous avez %{count} rendez-vous à renseigner.
       link_to_unknown_past_rdv: Voir ces RDV
       agent_organisations: Pensez à vérifier sur toutes vos organisations
+    application_configuration:
+      title: Configuration

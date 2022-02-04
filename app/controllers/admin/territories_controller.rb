@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
-class Admin::TerritoriesController < ApplicationController
-  include Admin::AuthenticatedControllerConcern
-
-  layout "application_agent_departement"
-
-  before_action :set_territory
+class Admin::TerritoriesController < Admin::Territories::BaseController
+  def show; end
 
   def update
     authorize_admin(@territory)
@@ -13,20 +9,7 @@ class Admin::TerritoriesController < ApplicationController
     render "admin/territories/agent_territorial_roles/index"
   end
 
-  def current_territory
-    @territory
-  end
-  helper_method :current_territory
-
-  def pundit_user
-    AgentContext.new(current_agent)
-  end
-
   private
-
-  def set_territory
-    @territory = Territory.find(params[:id])
-  end
 
   def territory_params
     params.require(:territory).permit(:name, :phone_number)

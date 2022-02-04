@@ -3,7 +3,7 @@
 class Admin::Territories::BaseController < ApplicationController
   include Admin::AuthenticatedControllerConcern
 
-  layout "application_agent_departement"
+  layout "application_configuration"
 
   before_action :set_territory
 
@@ -19,6 +19,10 @@ class Admin::Territories::BaseController < ApplicationController
   private
 
   def set_territory
-    @territory = Territory.find(params[:territory_id])
+    @territory = if params[:territory_id]
+                   Territory.find(params[:territory_id])
+                 else
+                   current_agent.territories.first
+                 end
   end
 end
