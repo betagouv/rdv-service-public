@@ -125,9 +125,6 @@
               = active_link_to "Vos invitations", admin_organisation_invitations_path(current_organisation)
             li.my-2
               = active_link_to "Vos motifs", admin_organisation_motifs_path(current_organisation)
-            - if current_agent_role.admin? && policy_scope(Organisation).count == 1
-              li.my-2
-                = active_link_to "Sectorisation #{current_organisation.territory}", admin_territory_setup_checklist_path(current_organisation.territory)
       li.side-nav-item.pl-3.pr-2
         = active_link_to admin_organisation_support_path(current_organisation)
           i.fa.fa-question-circle>
