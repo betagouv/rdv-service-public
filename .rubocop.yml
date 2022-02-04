@@ -158,7 +158,6 @@ Style/FrozenStringLiteralComment:
 
 Style/GuardClause:
   Exclude:
-    - 'app/controllers/admin/territories/sms_configurations_controller.rb'
     - 'db/migrate/20211215182150_add_service_name_to_active_storage_blobs.active_storage.rb'
 
 Style/IfUnlessModifier:

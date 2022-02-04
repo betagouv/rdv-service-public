@@ -15,10 +15,10 @@ class Admin::Territories::SmsConfigurationsController < Admin::Territories::Base
   private
 
   def check_allowed_departement
-    unless current_territory.has_own_sms_provider?
-      flash[:alert] = "Vous ne pouvez pas modifier la configuration d'envoi de SMS tant que votre département n’a pas de marché distinct."
-      redirect_to action: :show
-    end
+    return if current_territory.has_own_sms_provider?
+
+    flash[:alert] = "Vous ne pouvez pas modifier la configuration d'envoi de SMS tant que votre département n’a pas de marché distinct."
+    redirect_to action: :show
   end
 
   def sms_configuration_params
