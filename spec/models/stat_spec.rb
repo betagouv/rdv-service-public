@@ -70,7 +70,7 @@ describe Stat, type: :model do
       travel_to(now)
       create(:organisation)
       stats = described_class.new(organisations: Organisation.all)
-      expect(stats.organisations_group_by_week).to eq({ now.strftime("%d/%m/%Y") => 1 })
+      expect(stats.organisations_group_by_week).to eq({ "23/01/2022" => 1 })
     end
   end
 
@@ -92,7 +92,7 @@ describe Stat, type: :model do
       create(:agent)
       create(:agent, deleted_at: now - 1.week)
       stats = described_class.new(agents: Agent.all)
-      expect(stats.agents_group_by_week).to eq({ now.strftime("%d/%m/%Y") => 1 })
+      expect(stats.agents_group_by_week).to eq({ "23/01/2022" => 1 })
     end
   end
 
@@ -103,7 +103,7 @@ describe Stat, type: :model do
       home_motif = create(:motif, location_type: :home)
       create(:rdv, motif: home_motif, created_at: now)
       stats = described_class.new(rdvs: Rdv.all)
-      expect(stats.rdvs_group_by_departement).to eq({ ["2", now.strftime("%d/%m/%Y")] => 1 })
+      expect(stats.rdvs_group_by_departement).to eq({ ["2", "23/01/2022"] => 1 })
     end
   end
 
@@ -115,7 +115,7 @@ describe Stat, type: :model do
       home_motif = create(:motif, location_type: :home, service: service)
       create(:rdv, motif: home_motif, created_at: now)
       stats = described_class.new(rdvs: Rdv.all)
-      expect(stats.rdvs_group_by_service).to eq({ ["PMI", now.strftime("%d/%m/%Y")] => 1 })
+      expect(stats.rdvs_group_by_service).to eq({ ["PMI", "23/01/2022"] => 1 })
     end
   end
 
@@ -126,7 +126,7 @@ describe Stat, type: :model do
       create(:rdv, starts_at: now - 1.week, status: :unknown)
       travel_to(now)
       stats = described_class.new(rdvs: Rdv.all)
-      expect(stats.rdvs_group_by_status).to eq({ ["État indéterminé", (now - 1.week).strftime("%d/%m/%Y")] => 100 })
+      expect(stats.rdvs_group_by_status).to eq({ ["État indéterminé", "16/01/2022"] => 100 })
     end
   end
 end
