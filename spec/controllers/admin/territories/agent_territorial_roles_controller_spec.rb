@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::Territories::AgentTerritorialRolesController, type: :controller do
+describe Admin::Territories::AgentTerritorialRolesController, type: :controller do
   render_views
 
   let!(:territory) { create(:territory, departement_number: "62") }

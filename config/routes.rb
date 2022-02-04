@@ -106,7 +106,7 @@ Rails.application.routes.draw do
 
   authenticate :agent do
     namespace "admin" do
-      resources :territories, only: [:update] do
+      resources :territories, only: %i[update show] do
         scope module: "territories" do
           resources :agent_territorial_roles, only: %i[index new create destroy]
           resources :webhook_endpoints, except: %i[show]

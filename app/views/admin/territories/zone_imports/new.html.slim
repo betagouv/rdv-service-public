@@ -1,7 +1,5 @@
-- content_for(:menu_item) { "menu-departement-zone-imports" }
-
-- content_for :title do
-  | Sectorisation #{current_territory} - Importer un fichier
+= render "admin/territories/nav", \
+  current_page_title: t(".title")
 
 .row.justify-content-center
   .col-md-6

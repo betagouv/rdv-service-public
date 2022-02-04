@@ -1,7 +1,8 @@
+= render "admin/territories/nav", current_page_title: "Équipes"
+
 = simple_form_for "", url: admin_territory_teams_path(current_territory), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
 
   .container-fluid.bg-white.rounded.m-2.p-2
-    h2.text-center = t(".teams_title")
 
     .text-right
       = link_to t(".create_team"), new_admin_territory_team_path(current_territory), class:"btn btn-outline-primary"

@@ -1,12 +1,5 @@
-- content_for(:menu_item) { "menu-departement-sectors" }
-
-- content_for :title do
-  | Secteurs du #{current_territory}
-
-- content_for :breadcrumb do
-  = link_to new_admin_territory_sector_path(current_territory), class: "btn btn-outline-primary align-bottom" do
-    i.fa.fa-plus>
-    span> Nouveau secteur
+= render "admin/territories/nav", \
+  current_page_title: t(".title")
 
 .row.justify-content-center
   .col-md-10

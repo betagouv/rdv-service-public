@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::Territories::AgentsController, type: :controller do
+describe Admin::Territories::AgentsController, type: :controller do
   let(:territory) { create(:territory, departement_number: "62") }
   let(:organisation) { create(:organisation, territory: territory) }
 
