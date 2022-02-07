@@ -5,30 +5,31 @@
   section.bg-light.p-4
     .container
       - if @lieux.empty?
-          h3.font-weight-bold Nous n'avons pas trouvé de créneaux pour votre motif.
+          h2.font-weight-bold Nous n'avons pas trouvé de créneaux pour votre motif.
           p.font-weight-bold Voici les organisations disponibles dans votre département.
           = render @geo_search.attributed_organisations
       - else
-        h3.font-weight-bold Résultats de votre recherche
-        p.font-weight-bold= "#{@lieux.size.to_s} lieux sont disponibles"
-        - @lieux.each do |lieu|
-          - next_availability = @next_availability_by_lieux[lieu.id]
-          .card.mb-3 class=("card-hoverable" if next_availability)
-            .card-body
-              .row
-                .col-md
-                  h4.card-title.mb-3.mt-0.text-success.font-weight-bold= lieu.name
-                  h6.card-subtitle.text-black-50.mb-2= @service.name
-                  h6.card-subtitle.text-black-50= lieu.address
-                .col-md.align-self-center.pt-3.pt-md-0.position-static
-                  - if next_availability
-                    = link_to lieu_path(lieu, search: @query, date: next_availability&.starts_at), class: "d-block stretched-link" do
-                      .row
-                        .col
-                          | Prochaine disponibilité le
-                          br
-                          strong= l(next_availability.starts_at, format: :human)
-                        .col-auto.align-self-center
-                          i.fa.fa-chevron-right
-                  - else
-                    em Aucune disponibilité
+        .results-search
+          h1.results-search Résultats de votre recherche
+          p.font-weight-bold= "#{@lieux.size.to_s} lieux sont disponibles"
+          - @lieux.each do |lieu|
+            - next_availability = @next_availability_by_lieux[lieu.id]
+            .card.mb-3 class=("card-hoverable" if next_availability)
+              .card-body
+                .row
+                  .col-md
+                    h2.card-title.mb-3.mt-0.font-weight-bold= lieu.name
+                    h3.card-subtitle.text-black.mb-2= @service.name
+                    h3.card-subtitle.text-black= lieu.address
+                  .col-md.align-self-center.pt-3.pt-md-0.position-static
+                    - if next_availability
+                      = link_to lieu_path(lieu, search: @query, date: next_availability&.starts_at), class: "d-block stretched-link" do
+                        .row
+                          .col
+                            | Prochaine disponibilité le
+                            br
+                            strong= l(next_availability.starts_at, format: :human)
+                          .col-auto.align-self-center
+                            i.fa.fa-chevron-right
+                    - else
+                      em Aucune disponibilité

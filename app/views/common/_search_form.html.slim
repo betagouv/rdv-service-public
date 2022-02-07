@@ -8,21 +8,21 @@
     - if @where.present?
       .form-row.d-flex.justify-content-md-center.mb-2
         .col-lg-9
-          = f.input :where, label: false, readonly: true, input_html: { value: @where, class: "form-control-lg" }, wrapper_html: { class: "mb-1 mb-lg-0" }
-        .col-lg-3= link_to "Modifier l'adresse", root_path, class: "btn btn-light btn-lg w-100 text-center"
+          = f.input :where, label: t(".address"), readonly: true, input_html: { value: @where, class: "form-control-lg" }, wrapper_html: { class: "mb-1 mb-lg-0" }
+        .col-lg-3.align-self-end= link_to "Modifier l'adresse", root_path, class: "btn btn-light btn-lg w-100 text-center"
 
       - if @service.present? && @geo_search.available_motifs.any?
         .form-row.d-flex.justify-content-md-center.mb-2
           .col-lg-9
             = f.input :service, as: :hidden, input_html: { value: @service.id }, wrapper_html: { class: "d-none" }
 
-            = f.input :service, label: false, disabled: true, readonly: true, input_html: { value: @service.name, class: "form-control-lg" }, wrapper_html: { class: "mb-1 mb-lg-0" }
+            = f.input :service_name, label: t(".service"), disabled: true, readonly: true, input_html: { value: @service.name, class: "form-control-lg" }, wrapper_html: { class: "mb-1 mb-lg-0" }
           .col-lg-3.align-self-end= link_to "Modifier le service", welcome_departement_path(@departement, where: @where, latitude: @latitude, longitude: @longitude, city_code: @city_code, street_ban_id: @street_ban_id), class: "btn btn-light btn-lg w-100 text-center"
 
         .form-row.d-flex.mb-2
           .col-lg-9
             = f.input :motif_name_with_location_type, \
-              label: @motif_name_with_location_type.present? ? false : "Votre motif", \
+              label: t(".motif"), \
               collection: @unique_motifs_by_name_and_location_type, \
               value_method: :name_with_location_type,
               label_method: -> { motif_name_with_special_location_type(_1) },
@@ -42,7 +42,7 @@
           - if @services.any?
             .col-lg-9
               = f.input :service, \
-                label: "Votre service", \
+                label: t(".service"), \
                 collection: @services, \
                 label_method: :name, \
                 value_method: :id, \
@@ -66,7 +66,7 @@
               = render "common/contact", geo_search: @geo_search
     - else
       .form-row.d-flex.justify-content-md-center
-        .col-lg-9= f.input :where, label: @search_label.present? ? @search_label : "Votre adresse", placeholder: "ex : 21 rue Anatole France, Calais", input_html: { value: @where, class: "form-control-lg places-js-container" }, wrapper_html: { class: "mb-1 mb-lg-0" }
+        .col-lg-9= f.input :where, label: t(".address"), placeholder: "ex : 21 rue Anatole France, Calais", input_html: { value: @where, class: "form-control-lg places-js-container" }, wrapper_html: { class: "mb-1 mb-lg-0" }
         .col-lg-3.align-self-end
           = f.button :button, id: "search_submit", class: "btn-secondary btn-lg w-100 text-center", disabled: true do
             i.fa.fa-search>
