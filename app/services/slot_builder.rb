@@ -88,18 +88,35 @@ module SlotBuilder
     end
 
     def calculate_slots(free_time, motif, plage_ouverture)
+      possible_slot_start = earliest_possible_slot_start(free_time, motif)
+      last_possible_slot_start = free_time.end - motif.default_duration_in_min.minutes
+
       slots = []
-      possible_slot_time = free_time.begin..(free_time.begin + motif.default_duration_in_min.minutes)
-      while possible_slot_time.end <= free_time.end
+
+      while possible_slot_start <= last_possible_slot_start
         slots << Creneau.new(
-          starts_at: possible_slot_time.begin,
+          starts_at: possible_slot_start,
           motif: motif,
           lieu_id: plage_ouverture.lieu_id,
           agent: plage_ouverture.agent
         )
-        possible_slot_time = possible_slot_time.end..(possible_slot_time.end + motif.default_duration_in_min.minutes)
+        possible_slot_start += motif.default_duration_in_min.minutes
       end
       slots
+    end
+
+    def earliest_possible_slot_start(free_time, motif)
+      earliest_possible_start = Time.zone.now + motif.min_booking_delay
+
+      possible_slot_start = free_time.begin
+
+      if free_time.begin < earliest_possible_start
+        step_length = 5.minutes
+
+        possible_slot_start += step_length * ((earliest_possible_start - free_time.begin) / step_length).ceil
+      end
+
+      possible_slot_start
     end
   end
 

@@ -21,10 +21,39 @@ describe SlotBuilder, type: :service do
       expect(slots.map(&:starts_at).map(&:hour)).to eq([9, 10])
     end
 
-    it "return Crenaux object" do
+    it "return Creneaux object" do
       create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, lieu: lieu)
       slots = described_class.available_slots(motif, lieu, date_range, off_days)
       expect(slots.map(&:class).map(&:to_s).uniq).to eq(["Creneau"])
+    end
+
+    context "when asking for slots that may start right now" do
+      let(:motif) do
+        create(:motif, default_duration_in_min: 60, organisation: organisation, min_booking_delay: 45 * 60)
+      end
+
+      it "returns only slots that start in the future, and takes the minimum booking delay into account" do
+        create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(12) + 1.second, lieu: lieu)
+
+        # The plage_ouverture are not always sorted, so neither are the slots, so we can't just remove the first slots
+        create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(18), end_time: Tod::TimeOfDay.new(20) + 1.second, lieu: lieu)
+        create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(17) + 1.second, lieu: lieu)
+
+        travel_to(Time.zone.local(2021, 5, 3, 15, 3, 0))
+
+        slots = described_class.available_slots(motif, lieu, date_range, off_days)
+
+        # The current time is 15:03
+        # The available plages ouvertures are 9:00-12:00, 14:00-17:00, and 18:00-20:00
+        # The minimum delay before a rdv is 45mn, so we can't make a rdv before 15:48
+        # We round up the rdv time to the closest 5mn, so the first possible creneau is at 15:50.
+
+        expect(slots.map(&:starts_at)).to match_array([
+                                                        Time.zone.local(2021, 5, 3, 15, 50, 0),
+                                                        Time.zone.local(2021, 5, 3, 18, 0, 0),
+                                                        Time.zone.local(2021, 5, 3, 19, 0, 0)
+                                                      ])
+      end
     end
   end
 
