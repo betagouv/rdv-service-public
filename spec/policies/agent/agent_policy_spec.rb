@@ -85,6 +85,17 @@ describe Agent::AgentPolicy::Scope, type: :policy do
       end
     end
 
+    context "agent is in secrétariat" do
+      let!(:service_secretariat) { create(:service, :secretariat) }
+      let!(:other_service) { create :service }
+      let!(:services) { create_list(:service, 2) }
+      let!(:organisations) { create_list(:organisation, 2) }
+      let!(:agent) { create(:agent, basic_role_in_organisations: organisations, service: service_secretariat) }
+      let!(:other_agent_same_orgas) { create(:agent, basic_role_in_organisations: organisations, service: other_service) }
+
+      it { is_expected.to match_array([agent, other_agent_same_orgas]) }
+    end
+
     context "admin agent, misc state" do
       let!(:organisations) { create_list(:organisation, 4) }
       let!(:agent) do
