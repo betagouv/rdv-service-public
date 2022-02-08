@@ -86,6 +86,14 @@ module ApplicationHelper
     boolean_tag(value) { object.class.human_attribute_value(attribute_name, value) }
   end
 
+  def object_attribute_tag(object, attribute_name, value = nil)
+    name = object.class.human_attribute_name(attribute_name)
+    value ||= object.human_attribute_value(attribute_name)
+
+    tag.strong(tag.span(name) + tag.span(" : ")) +
+      tag.span(value.presence || "N/A", class: class_names("text-muted": value.blank?))
+  end
+
   def admin_link_to_if_permitted(organisation, object, name = object.to_s)
     if policy([:agent, object]).show?
       link_to name, polymorphic_path([:admin, organisation, object])

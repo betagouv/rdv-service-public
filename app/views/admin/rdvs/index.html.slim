@@ -50,7 +50,7 @@
       = render(partial: "admin/rdvs/rdv",
               collection: @rdvs.includes(:organisation, :users, :lieu, :motif, agents: :service),
               locals: {show_user_details: @form.show_user_details},
-              cached: ->(rdv) { [rdv, locale_cache_key] })
+              cached: ->(rdv) { [rdv, @form.show_user_details, locale_cache_key] })
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
     - else
       .card

@@ -42,8 +42,12 @@
         - else
           h4.card-title.mb-3 Informations de votre proche
           ul.list-unstyled
-            - %i[first_name last_name birth_date notes].each do |attr_name|
-              li= render "common/user_attribute", user: @user, attribute_name: attr_name
+            - user_profile = @user.profile_for(current_organisation)
+            li= object_attribute_tag(@user, :first_name)
+            li= object_attribute_tag(@user, :last_name)
+            li= object_attribute_tag(@user, :birth_date)
+            li= object_attribute_tag(@user, :birth_date, birth_date_and_age(@user))
+            li= object_attribute_tag(user_profile, :notes, formatted_user_notes(user_profile))
 
         .row.mt-3
           .col.text-left
@@ -72,6 +76,8 @@
         .card-body
           h4.card-title.mb-3 Informations sur l'usager en charge
           = render "admin/users/responsible_information", user: @user.responsible
+          .text-right
+            = link_to "Voir", admin_organisation_user_path(current_organisation, @user.responsible), class: "btn btn-outline-primary"
 
       .card
         .card-header Agents référents du responsable
@@ -109,7 +115,7 @@
 
     .card
       .card-header Prochains rendez-vous
-      - future_rdvs = policy_scope(Rdv).merge(@user.rdvs_future_without_ongoing(current_organisation)).order(starts_at: :asc)
+      - future_rdvs = policy_scope(Rdv).merge(@user.rdvs_future_without_ongoing(current_organisation)).order(starts_at: :asc).limit(10)
       = render "admin/rdvs/short_rdvs_list", user: @user, rdvs: future_rdvs
 
     .card

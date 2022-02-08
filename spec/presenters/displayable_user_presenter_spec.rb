@@ -158,11 +158,11 @@ describe DisplayableUserPresenter, type: :presenter do
   end
 
   describe "#clickable_email" do
-    it "returns N/A when no email in user" do
+    it "returns nil when no email in user" do
       organisation = build(:organisation)
       user = build(:user, organisations: [organisation], email: nil)
       displayable_user = described_class.new(user, organisation)
-      expect(displayable_user.clickable_email).to eq("N/A")
+      expect(displayable_user.clickable_email).to be_nil
     end
 
     it "returns clickable email with a user's email" do
@@ -174,11 +174,11 @@ describe DisplayableUserPresenter, type: :presenter do
   end
 
   describe "#clickable_phone_number" do
-    it "returns N/A when no phone in user" do
+    it "returns nil when no phone in user" do
       organisation = build(:organisation)
       user = build(:user, organisations: [organisation], phone_number: nil)
       displayable_user = described_class.new(user, organisation)
-      expect(displayable_user.clickable_phone_number).to eq("N/A")
+      expect(displayable_user.clickable_phone_number).to be_nil
     end
 
     it "returns clickable phone_number with a user's phone_number" do
