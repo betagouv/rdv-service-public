@@ -127,7 +127,6 @@ describe SlotBuilder, type: :service do
                                               recurrence: Montrose.every(:week, starts: first_day - 1.day))
 
       plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
-
       expect(plage_ouvertures.sort).to eq([matching_po, recurring_po].sort)
     end
 
@@ -403,6 +402,51 @@ describe SlotBuilder, type: :service do
         range = (friday + 3.days)..(friday + 10.days)
         expect(described_class.ranges_for(plage_ouverture, range)).to eq([(Time.zone.parse("20210507 9:00")..Time.zone.parse("20210507 11:00"))])
       end
+    end
+  end
+
+  describe "#motif_delay_and_range_union" do
+    it "return date range without motif's delay" do
+      date_range = friday..(friday + 7.days)
+      motif = build(:motif, min_booking_delay: 0, max_booking_delay: 0)
+      expected_range = friday..(friday + 7.days)
+      expect(described_class.motif_delay_and_range_union(motif, date_range)).to eq(expected_range)
+    end
+
+    it "return date range with now + min booking delay and range end" do
+      now = friday
+      travel_to(now)
+      date_range = friday..(friday + 7.days)
+      motif = build(:motif, min_booking_delay: (3 * 24 * 60), max_booking_delay: 0)
+      expected_range = friday + 3.days..(friday + 7.days)
+      expect(described_class.motif_delay_and_range_union(motif, date_range)).to eq(expected_range)
+    end
+
+    it "return date range with range being and now + max booking delay" do
+      now = friday
+      travel_to(now)
+      date_range = friday..(friday + 7.days)
+      motif = build(:motif, min_booking_delay: 0, max_booking_delay: (3 * 24 * 60))
+      expected_range = friday..(friday + 3.days)
+      expect(described_class.motif_delay_and_range_union(motif, date_range)).to eq(expected_range)
+    end
+
+    it "return max date between now + min_booking_delay and date_range.begin" do
+      now = friday
+      travel_to(now)
+      date_range = (friday + 10.days)..(friday + 17.days)
+      motif = build(:motif, min_booking_delay: (1 * 24 * 60), max_booking_delay: 0)
+      expected_range = (friday + 10.days)..(friday + 17.days)
+      expect(described_class.motif_delay_and_range_union(motif, date_range)).to eq(expected_range)
+    end
+
+    it "return min date between now + max_booking_delay and date_range.end" do
+      now = friday
+      travel_to(now)
+      date_range = (friday + 10.days)..(friday + 17.days)
+      motif = build(:motif, min_booking_delay: 0, max_booking_delay: (20 * 24 * 60))
+      expected_range = (friday + 10.days)..(friday + 17.days)
+      expect(described_class.motif_delay_and_range_union(motif, date_range)).to eq(expected_range)
     end
   end
 end
