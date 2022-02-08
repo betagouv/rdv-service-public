@@ -40,7 +40,7 @@ class PlageOuverture < ApplicationRecord
   end
 
   def time_shift_duration_in_min
-    time_shift.duration / 60
+    time_shift.duration.in_minutes
   end
 
   def available_motifs
