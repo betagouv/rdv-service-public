@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_24_110241) do
+ActiveRecord::Schema.define(version: 2022_02_08_221144) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -332,7 +332,6 @@ ActiveRecord::Schema.define(version: 2022_01_24_110241) do
   end
 
   create_table "rdvs", force: :cascade do |t|
-    t.integer "old_duration_in_min"
     t.datetime "starts_at", null: false
     t.bigint "organisation_id"
     t.datetime "created_at", null: false
@@ -471,7 +470,6 @@ ActiveRecord::Schema.define(version: 2022_01_24_110241) do
     t.string "affiliation_number"
     t.integer "family_situation"
     t.integer "number_of_children"
-    t.integer "old_logement"
     t.bigint "responsible_id"
     t.datetime "deleted_at"
     t.string "birth_name"
@@ -481,7 +479,6 @@ ActiveRecord::Schema.define(version: 2022_01_24_110241) do
     t.boolean "notify_by_email", default: true
     t.datetime "last_sign_in_at"
     t.string "franceconnect_openid_sub"
-    t.string "old_created_through"
     t.boolean "logged_once_with_franceconnect"
     t.integer "invite_for"
     t.string "city_code"
