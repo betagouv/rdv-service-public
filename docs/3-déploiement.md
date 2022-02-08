@@ -4,36 +4,32 @@ RDV-Solidarités est hébergé chez [Scalingo](https://scalingo.com/fr/datacente
 
 | Instance | domaine | branche | notes |
 | -------- | ------- | ------- | ----- |
-| production-rdv-solidarites | https://www.rdv-solidarites.fr | production | - |
+| production-rdv-solidarites | https://www.rdv-solidarites.fr | production | review apps activées |
 | demo-rdv-solidarites | https://demo.rdv-solidarites.fr | production | - |
-| recette-rdv-solidarites | https://recette.rdv-solidarites.fr | recette | review apps activées |
 
+Les Pull Requests sont mises en production automatiquement dès qu’elles sont mergées sur la branche `production`.
 
-Pour permettre aux personnes référentes 
-
-* d'être informer avant les mises en production ;
-* de pouvoir tester les changements apportés ;
-
-nous utilisons un mode de livraison hebdomadaire. Nous avons aussi une procédure d'urgence pour pouvoir apporter des modifications très rapidement en production. C'est une procédure exceptionnelle.
 
 ### Cas nominal
 
-* L'équipe réalise une modification du service sur une **branche spécifique**. Cette modification est déployée sur un environnement de test très simple \(_review app_\) pour permettre à l'équipe de vérifier le bon fonctionnement des changements.
-* Lorsque l'équipe pense que la modification du service correspond à ce qui a été défini, elle _merge_ les modifications dans une branche « recette ». Cette modification déployée sur l'environnement « recette » à l'adresse [https://recette.rdv-solidarites.fr](https://recette.rdv-solidarites.fr).
-* Le mardi présentation des nouveautés, sur l'environnement de recette. Cet environnement est accessible aux référentes. Avec des données fictives. Les configuration et cas de test pourront être préservé d'une livraison à l'autre, un peu comme pour l'environnement de démo.
-* Le jeudi, sauf demande particulière, nous faisons le « merge » la banche de recette sur la branche de production. Seul les éléments démontré le mardi seront mis en production. Nous allons utiliser un tag, le lundi soir ou mardi matin, avec la date pour signaler un point de livraison. La branche de production est automatiquement déployée sur l'environnement de production.
+Les changements qui ne demandent pas de démo ou de communication avec l’équipe des référentes sont mergées et mises en production directement. 
+C’est le cas en principe des bugfixes, des refactor sans changement visible, des ajustements visuels, des tests, de la documentation…
+⚠️ Dans les cas de refactor un peu importants, qui pourraient donc révéler des bugs en production, ou pour des migrations de données avec downtime, mieux vaut éviter de mettre en production en milieu de pic.
+Nos utilisateurs ont des horaires de bureau: tactiquement, 12:30 et 18:15 sont les bons créneaux pour ce genre de mise en production à surveiller.  
 
-### Cas exceptionnel \(livraison rapide\)
+### Démo aux référentes
 
-* Développement sur une branche spécifique, avec déploiement sur un environnement spécifique \(review app\)
-* Quand c'est ok, merge sur la branche « production » directement, déployé sur l'environnement « production »
-* On rebase recette sur production pour mettre à jour la branche recette \(attention à préserver les commits de merge\)
+Si la fonctionnalité est relativement importante, on peut faire une démo à l’équipe des référentes. Cet échange a deux buts:
+* valider que le changement va bien dans le bon sens
+* permettre aux référentes de prévenir les agents et d’ajuster les supports de formation.
+
+La discussion sur ces fonctionnalités se fait sur les _review apps_, et a lieu en principe le mardi lors de la réunion hebdomadaire avec les référentes.
 
 ### Notes
 
 Les environnements de démo et de production son identique. La démo est une plateforme servant à découvrir le service ou à faire de la formation ou tester des configurations et scénario d'usage particulier.
 
-La branche par défaut est « recette ».
+La branche par défaut est « production ».
 
 Nous tenons à jour [les dernières nouveautés sur la doc](https://doc.rdv-solidarites.fr/dernieres-nouveautes). C'est lié à un répo [Github/rdv-solidarites/rdv-solidarites-doc](https://github.com/rdv-solidarites/rdv-solidarites-doc).
 

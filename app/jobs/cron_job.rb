@@ -77,7 +77,7 @@ class CronJob < ApplicationJob
     self.cron_expression = "0 2 * * *"
 
     def perform
-      # Avoid restarting recette many times from review apps
+      # Avoid restarting production many times from review apps
       return if ENV["RDV_SOLIDARITES_IS_REVIEW_APP"] == "true"
       return if Rails.env.development?
 
