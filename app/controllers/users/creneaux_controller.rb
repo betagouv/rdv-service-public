@@ -2,8 +2,9 @@
 
 class Users::CreneauxController < UserAuthController
   before_action :set_creneau_params, only: %i[index edit update]
+  before_action :redirect_if_rdv_not_editable
   before_action :build_creneau, :redirect_if_creneau_not_available, only: %i[edit update]
-  skip_before_action :authenticate_user!, if: -> { current_user_set? }
+  skip_before_action :authenticate_user!, if: :current_user_set?
 
   def edit; end
 
@@ -48,6 +49,13 @@ class Users::CreneauxController < UserAuthController
       motif: @rdv.motif,
       lieu: Lieu.find(@lieu.id)
     )
+  end
+
+  def redirect_if_rdv_not_editable
+    return if @rdv.editable?
+
+    flash[:alert] = "Le RDV ne peut pas être modifié"
+    redirect_to users_rdv_path(@rdv)
   end
 
   def redirect_if_creneau_not_available

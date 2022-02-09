@@ -50,18 +50,7 @@ describe "User can be invited" do
       expect(page).to have_content(motif.restriction_for_rdv)
       click_link("Accepter")
 
-      # Invitation page
-      expect(page).to have_content("Inscription")
-      expect(page).to have_field("Prénom", with: user.first_name)
-      expect(page).to have_field("Nom d’usage", with: user.last_name)
-      expect(page).to have_field("Email", disabled: true, with: user.email)
-      expect(page).to have_field("Téléphone", with: user.phone_number)
-
-      fill_in(:password, with: "12345678")
-      click_button("Enregistrer")
-
       # Redirects to rdv informations
-      expect(page).to have_content("Votre mot de passe a correctement été enregistré. Vous êtes maintenant connecté.")
       expect(page).to have_content("Vos informations")
       expect(page).to have_field("Date de naissance", with: "20/12/1988")
       expect(page).to have_field("Adresse", with: user.address)
@@ -120,18 +109,7 @@ describe "User can be invited" do
       expect(page).to have_content(motif.restriction_for_rdv)
       click_link("Accepter")
 
-      # Invitation page
-      expect(page).to have_content("Inscription")
-      expect(page).to have_field("Prénom", with: user.first_name)
-      expect(page).to have_field("Nom d’usage", with: user.last_name)
-      expect(page).to have_field("Email", disabled: true, with: user.email)
-      expect(page).to have_field("Téléphone", with: user.phone_number)
-
-      fill_in(:password, with: "12345678")
-      click_button("Enregistrer")
-
       # Redirects to rdv informations
-      expect(page).to have_content("Votre mot de passe a correctement été enregistré. Vous êtes maintenant connecté.")
       expect(page).to have_content("Vos informations")
       expect(page).to have_field("Date de naissance", with: "20/12/1988")
       expect(page).to have_field("Adresse", with: user.address)
@@ -191,18 +169,7 @@ describe "User can be invited" do
       expect(page).to have_content(motif.restriction_for_rdv)
       click_link("Accepter")
 
-      # Invitation page
-      expect(page).to have_content("Inscription")
-      expect(page).to have_field("Prénom", with: user.first_name)
-      expect(page).to have_field("Nom d’usage", with: user.last_name)
-      expect(page).to have_field("Email", disabled: true, with: user.email)
-      expect(page).to have_field("Téléphone", with: user.phone_number)
-
-      fill_in(:password, with: "12345678")
-      click_button("Enregistrer")
-
       # Redirects to rdv informations
-      expect(page).to have_content("Votre mot de passe a correctement été enregistré. Vous êtes maintenant connecté.")
       expect(page).to have_content("Vos informations")
       expect(page).to have_field("Date de naissance", with: "20/12/1988")
       expect(page).to have_field("Adresse", with: user.address)

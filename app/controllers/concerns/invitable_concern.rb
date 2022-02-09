@@ -16,6 +16,7 @@ module InvitableConcern
   end
 
   def redirect_if_invalid_invitation
+    return if current_user.present? # we don't check the token if a user is logged in already
     return if invited_user.present?
 
     session.delete(:invitation_token)

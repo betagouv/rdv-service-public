@@ -13,7 +13,7 @@ describe Users::CreneauxController, type: :controller do
     let(:now) { "01/01/2019 10:00".to_datetime }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
     let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
-    let!(:motif) { create(:motif, organisation: organisation) }
+    let!(:motif) { create(:motif, organisation: organisation, max_booking_delay: 2.weeks.to_i) }
     let!(:user) { create(:user) }
     let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation) }
 
@@ -30,14 +30,25 @@ describe Users::CreneauxController, type: :controller do
     end
 
     context "creneaux available" do
-      let!(:plage_ouverture) { create(:plage_ouverture, first_day: now + 3.days, start_time: Tod::TimeOfDay.new(10), lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
+      let!(:plage_ouverture) do
+        create(:plage_ouverture, :daily, first_day: now + 3.days, start_time: Tod::TimeOfDay.new(10), lieu: lieu, agent: agent, motifs: [motif], organisation: organisation)
+      end
 
       before { subject }
 
-      it { expect(response.body).to include("Voici les créneaux disponibles pour avancer votre rendez-vous du") }
+      it { expect(response.body).to include("Voici les créneaux disponibles pour modifier votre rendez-vous du") }
       it { expect(response.body).to include(I18n.l(rdv.starts_at, format: :human).to_s) }
-      it { expect(assigns(:date_range)).to eq(3.days.from_now.to_date..3.days.from_now.to_date) }
+      it { expect(assigns(:date_range)).to eq(3.days.from_now.to_date..9.days.from_now.to_date) }
       it { expect(assigns(:creneaux)).not_to be_empty }
+    end
+
+    context "when the rdv cannot be edited" do
+      let(:rdv) { create(:rdv, users: [user], starts_at: 2.days.ago, lieu: lieu, motif: motif, organisation: organisation) }
+
+      before { subject }
+
+      it { expect(response).to redirect_to(users_rdv_path(rdv)) }
+      it { expect(flash[:alert]).to eq("Le RDV ne peut pas être modifié") }
     end
   end
 
@@ -105,10 +116,23 @@ describe Users::CreneauxController, type: :controller do
 
       it "respond success and update RDV" do
         put :update, params: { rdv_id: rdv.id, starts_at: starts_at, agent_id: agent.id }
-        expect(response).to be_successful
+        expect(response).to redirect_to(users_rdv_path(rdv))
+        expect(flash[:success]).to eq("Votre RDV a bien été modifié")
         expect(rdv.reload.starts_at).to eq(starts_at)
         expect(rdv.reload.agent_ids).to eq([agent.id])
         expect(rdv.reload.created_by).to eq("file_attente")
+      end
+
+      context "when it cannot be updated" do
+        before do
+          allow_any_instance_of(Rdv).to receive(:update).and_return(false)
+        end
+
+        it "redirects to creneaux index" do
+          put :update, params: { rdv_id: rdv.id, starts_at: starts_at, agent_id: agent.id }
+          expect(response).to redirect_to(users_creneaux_index_path(rdv_id: rdv.id))
+          expect(flash[:error]).to eq("Le RDV n'a pas pu être modifié")
+        end
       end
     end
 
@@ -118,7 +142,8 @@ describe Users::CreneauxController, type: :controller do
       it "redirect to index when not available" do
         put :update, params: { rdv_id: rdv.id, starts_at: starts_at, agent_id: agent.id }
 
-        expect(subject).to redirect_to(users_creneaux_index_path(rdv_id: rdv.id))
+        expect(response).to redirect_to(users_creneaux_index_path(rdv_id: rdv.id))
+        expect(flash[:alert]).to eq("Ce créneau n'est plus disponible")
       end
     end
   end

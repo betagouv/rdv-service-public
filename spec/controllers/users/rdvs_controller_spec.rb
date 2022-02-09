@@ -36,7 +36,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       it "creates rdv" do
         expect(Rdv.count).to eq(1)
-        expect(response).to redirect_to users_rdvs_path
+        expect(response).to redirect_to users_rdv_path(Rdv.last)
         expect(user.rdvs.last.created_by_user?).to be(true)
       end
     end
@@ -73,11 +73,11 @@ RSpec.describe Users::RdvsController, type: :controller do
         put :cancel, params: { rdv_id: rdv.id }
       end
 
-      it "redirects to rdvs" do
+      it "redirects to the rrdv" do
         rdv = create(:rdv, starts_at: 5.hours.from_now)
         sign_in rdv.users.first
         put :cancel, params: { rdv_id: rdv.id }
-        expect(response).to redirect_to users_rdvs_path
+        expect(response).to redirect_to users_rdv_path(rdv)
       end
 
       it "when rdv is not cancellable" do
@@ -98,6 +98,66 @@ RSpec.describe Users::RdvsController, type: :controller do
       expect do
         put :cancel, params: { rdv_id: rdv.id }
       end.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
+  describe "GET #show" do
+    let(:user) { create(:user) }
+    let(:rdv) { create(:rdv, users: [user], starts_at: starts_at) }
+    let(:starts_at) { DateTime.parse("2020-10-20 10h30") }
+
+    before do
+      travel_to("01/01/2019".to_datetime)
+      sign_in user
+    end
+
+    it "shows the rdv" do
+      get :show, params: { id: rdv.id }
+
+      expect(response).to be_successful
+      expect(response.body).to match(/Votre RDV/)
+      expect(response.body).to match(/Le mardi 20 octobre 2020/)
+      expect(response.body).to match(/Modifier l&#39;horaire du RDV/)
+    end
+
+    context "when the rdv is past" do
+      let!(:starts_at) { DateTime.parse("2018-12-31 10h30") }
+
+      it "does not link to edit" do
+        get :show, params: { id: rdv.id }
+
+        expect(response).to be_successful
+        expect(response.body).to match(/Votre RDV/)
+        expect(response.body).not_to match(/Modifier l&#39;horaire du RDV/)
+      end
+    end
+
+    context "when the user is not signed in" do
+      before do
+        sign_out user
+      end
+
+      it "redirects to sign in path" do
+        get :show, params: { id: rdv.id }
+
+        expect(response).to redirect_to(new_user_registration_path)
+      end
+
+      context "with a valid invitation token" do
+        let!(:invitation_token) do
+          user.invite! { |u| u.skip_invitation = true }
+          user.raw_invitation_token
+        end
+
+        it "shows the rdv" do
+          get :show, params: { id: rdv.id, invitation_token: invitation_token }
+
+          expect(response).to be_successful
+          expect(response.body).to match(/Votre RDV/)
+          expect(response.body).to match(/Le mardi 20 octobre 2020/)
+          expect(response.body).to match(/Modifier l&#39;horaire du RDV/)
+        end
+      end
     end
   end
 end
