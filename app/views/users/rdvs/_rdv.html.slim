@@ -38,7 +38,7 @@ ul.list-group.list-group-flush
     = render "/users/rdvs/file_attente", rdv: rdv
 
 div.py-2.d-flex.justify-content-between.align-items-center
-  - unless rdv.cancelled?
+  - if rdv.editable?
     .text-left.mt-2
        = link_to "Modifier l'horaire du RDV", users_creneaux_index_path(rdv_id: rdv.id), class: "btn btn-outline-primary"
 

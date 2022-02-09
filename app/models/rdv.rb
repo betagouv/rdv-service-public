@@ -140,6 +140,7 @@ class Rdv < ApplicationRecord
   def cancellable?
     !cancelled? && starts_at > 4.hours.from_now
   end
+  alias editable? cancellable?
 
   def available_to_file_attente?
     !cancelled? && starts_at > 7.days.from_now && !home?
