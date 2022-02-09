@@ -101,4 +101,8 @@ module ApplicationHelper
       name
     end
   end
+
+  def invitation?
+    @invited_user.present?
+  end
 end
