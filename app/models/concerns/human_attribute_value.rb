@@ -29,7 +29,7 @@ module HumanAttributeValue
     # > Rdv.human_attribute_value(:status, :excused, count: 2)
     # => "Annulées (excusées)" # I18n.t('activerecord.attributes.rdv/statuses.excused.other')
     def human_attribute_value(enum_name, value, options = {})
-      return if value.blank?
+      return if value.nil? || value == ""
 
       options = { default: value }.merge(options) # make sure to return the value unchanged if not found
       unless options.delete(:disable_cast)
