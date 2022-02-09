@@ -35,14 +35,6 @@ class PlageOuverture < ApplicationRecord
     "plage_ouverture_#{id}@#{BRAND}"
   end
 
-  def time_shift
-    Tod::Shift.new(start_time, end_time)
-  end
-
-  def time_shift_duration_in_min
-    time_shift.duration.in_minutes
-  end
-
   def available_motifs
     Motif.available_motifs_for_organisation_and_agent(organisation, agent)
   end
