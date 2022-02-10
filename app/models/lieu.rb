@@ -2,6 +2,7 @@
 
 class Lieu < ApplicationRecord
   # Mixins
+  has_paper_trail
   include PhoneNumberValidation::HasPhoneNumber
 
   # Attributes

@@ -13,4 +13,6 @@
   .col-md-6
     .card
       .card-body
-          = render "form", lieu: @lieu
+        = render "form", lieu: @lieu
+
+= render "admin/versions/resource_versions_row", resource: @lieu

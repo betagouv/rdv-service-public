@@ -2,6 +2,7 @@
 
 class Absence < ApplicationRecord
   # Mixins
+  has_paper_trail
   include WebhookDeliverable
   include RecurrenceConcern
   include IcalHelpers::Ics
