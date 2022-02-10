@@ -1,13 +1,18 @@
 # frozen_string_literal: true
 
 class Zone < ApplicationRecord
+  # Attributes
+  # TODO: make it an enum
   LEVEL_CITY = "city"
   LEVEL_STREET = "street"
   LEVELS = [LEVEL_CITY, LEVEL_STREET].freeze
 
+  attr_accessor :city_label, :street_label # used in zone form
+
+  # Relations
   belongs_to :sector
 
-  # common validations
+  # Validations
   validates :level, :city_name, :city_code, presence: true
   validates :level, inclusion: { in: LEVELS }
   validate :coherent_city_code_departement
@@ -20,11 +25,12 @@ class Zone < ApplicationRecord
   validate :coherent_street_ban_id, if: :level_street?
   validate :no_existing_city_zone?, if: :level_street?
 
+  # Scopes
   scope :cities, -> { where(level: LEVEL_CITY) }
   scope :streets, -> { where(level: LEVEL_STREET) }
   scope :in_territory, -> { joins(:sector).where(sectors: { territory_id: _1.id }) }
 
-  attr_accessor :city_label, :street_label # used in zone form
+  ## -
 
   def level_city?
     level == LEVEL_CITY

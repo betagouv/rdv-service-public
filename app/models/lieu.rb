@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Lieu < ApplicationRecord
+  # Mixins
   include PhoneNumberValidation::HasPhoneNumber
 
   # Attributes
@@ -9,10 +10,10 @@ class Lieu < ApplicationRecord
   # Relations
   belongs_to :organisation
   has_many :plage_ouvertures, dependent: :restrict_with_error
-  has_many :motifs, through: :plage_ouvertures
   has_many :rdvs, dependent: :restrict_with_error
 
   # Through relations
+  has_many :motifs, through: :plage_ouvertures
   has_many :agents, through: :plage_ouvertures
 
   # Validations

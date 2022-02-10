@@ -1,20 +1,27 @@
 # frozen_string_literal: true
 
 class SectorAttribution < ApplicationRecord
+  # Attributes
+  # TODO: make it an enum
   LEVEL_ORGANISATION = "organisation"
   LEVEL_AGENT = "agent"
   LEVELS = [LEVEL_ORGANISATION, LEVEL_AGENT].freeze
 
+  # Relations
   belongs_to :organisation
   belongs_to :sector
   belongs_to :agent, optional: true
 
+  # Validations
   validates :level, inclusion: { in: LEVELS }
   validates :level, presence: true
   validates :agent, presence: true, if: :level_agent?
 
+  # Scopes
   scope :level_agent, -> { where(level: LEVEL_AGENT) }
   scope :level_organisation, -> { where(level: LEVEL_ORGANISATION) }
+
+  ## -
 
   def level_agent?
     level == LEVEL_AGENT

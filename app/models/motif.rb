@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Motif < ApplicationRecord
+  # Mixins
   has_paper_trail
 
   include PgSearch::Model
@@ -10,21 +11,16 @@ class Motif < ApplicationRecord
                   using: { tsearch: { prefix: true } },
                   ignoring: :accents) # Motif text search is not indexed, but at least we can use PG unaccent. See #1772 and #1833
 
+  # Attributes
   auto_strip_attributes :name, :color
 
-  belongs_to :organisation
-  belongs_to :service
-  has_many :rdvs, dependent: :restrict_with_exception
-  has_and_belongs_to_many :plage_ouvertures, -> { distinct }
-  has_many :lieux, through: :plage_ouvertures
-
-  after_update -> { rdvs.touch_all }
-
+  # TODO: make it an enum
   VISIBLE_AND_NOTIFIED = "visible_and_notified"
   VISIBLE_AND_NOT_NOTIFIED = "visible_and_not_notified"
   INVISIBLE = "invisible"
   VISIBILITY_TYPES = [VISIBLE_AND_NOTIFIED, VISIBLE_AND_NOT_NOTIFIED, INVISIBLE].freeze
 
+  # TODO: make it an enum
   SECTORISATION_LEVEL_AGENT = "agent"
   SECTORISATION_LEVEL_ORGANISATION = "organisation"
   SECTORISATION_LEVEL_DEPARTEMENT = "departement"
@@ -32,12 +28,27 @@ class Motif < ApplicationRecord
 
   enum location_type: { public_office: 0, phone: 1, home: 2 }
 
+  # Relations
+  belongs_to :organisation
+  belongs_to :service
+  has_many :rdvs, dependent: :restrict_with_exception
+  has_and_belongs_to_many :plage_ouvertures, -> { distinct }
+
+  # Through relations
+  has_many :lieux, through: :plage_ouvertures
+
+  # Delegates
+  delegate :service_social?, to: :service
+  delegate :name, to: :service, prefix: true
+
+  # Hooks
+  after_update -> { rdvs.touch_all }
+
+  # Validation
   validates :visibility_type, inclusion: { in: VISIBILITY_TYPES }
   validates :sectorisation_level, inclusion: { in: SECTORISATION_TYPES }
   validates :name, presence: true, uniqueness: { scope: %i[organisation location_type service],
                                                  conditions: -> { where(deleted_at: nil) } }
-
-  delegate :service_social?, to: :service
 
   validates :color, :default_duration_in_min, :min_booking_delay, :max_booking_delay, presence: true
   validates :min_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }
@@ -46,6 +57,7 @@ class Motif < ApplicationRecord
   validate :not_associated_with_secretariat
   validates :color, css_hex_color: true
 
+  # Scopes
   scope :active, lambda { |active = true|
     active ? where(deleted_at: nil) : where.not(deleted_at: nil)
   }
@@ -80,6 +92,8 @@ class Motif < ApplicationRecord
       .where(organisations: { territories: { departement_number: departement_number } })
   }
 
+  ## -
+
   def to_s
     name
   end
@@ -87,8 +101,6 @@ class Motif < ApplicationRecord
   def soft_delete
     rdvs.any? ? update_attribute(:deleted_at, Time.zone.now) : destroy
   end
-
-  delegate :name, to: :service, prefix: true
 
   def authorized_agents
     Agent

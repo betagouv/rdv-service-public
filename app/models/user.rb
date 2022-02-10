@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  # Mixins
   has_paper_trail
   include PgSearch::Model
   include FullNameConcern
@@ -10,37 +11,14 @@ class User < ApplicationRecord
   include PhoneNumberValidation::HasPhoneNumber
   include WebhookDeliverable
   include TextSearch
-
   def self.search_keys = %i[last_name email birth_name phone_number_formatted first_name]
-
-  ONGOING_MARGIN = 1.hour.freeze
-
-  # HACK : add *_sign_in_ip to accessor to bypass recording IPs from Trackable Devise's module
-  # HACK : add sign_in_count and current_sign_in_at to accessor to bypass recording IPs from Trackable Devise's module
-  attr_accessor :current_sign_in_ip, :last_sign_in_ip, :sign_in_count, :current_sign_in_at
-
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async,
          :trackable
 
+  # Attributes
+  ONGOING_MARGIN = 1.hour.freeze
   auto_strip_attributes :email, :first_name, :last_name, :birth_name
-
-  has_many :user_profiles, dependent: :restrict_with_error
-
-  # we specify dependent: :destroy because by default user_profiles will be deleted (dependent: :delete)
-  # and we need to destroy to trigger the callbacks on user_profile
-  has_many :organisations, through: :user_profiles, dependent: :destroy
-  has_many :webhook_endpoints, through: :organisations
-
-  has_many :rdvs_users, dependent: :destroy
-  has_many :rdvs, through: :rdvs_users
-  has_and_belongs_to_many :agents
-  belongs_to :responsible, class_name: "User", optional: true
-  has_many :relatives, foreign_key: "responsible_id", class_name: "User", inverse_of: :responsible, dependent: :nullify
-  has_many :file_attentes, dependent: :destroy
-
-  before_save :set_email_to_null_if_blank
-  after_update -> { rdvs.touch_all }
 
   enum caisse_affiliation: { aucune: 0, caf: 1, msa: 2 }
   enum family_situation: { single: 0, in_a_relationship: 1, divorced: 2 }
@@ -49,18 +27,45 @@ class User < ApplicationRecord
                           unknown: "unknown", agent_creation_api: "agent_creation_api" }
   enum invited_through: { devise_email: "devise_email", external: "external" }
 
+  # HACK : add *_sign_in_ip to accessor to bypass recording IPs from Trackable Devise's module
+  # HACK : add sign_in_count and current_sign_in_at to accessor to bypass recording IPs from Trackable Devise's module
+  attr_accessor :current_sign_in_ip, :last_sign_in_ip, :sign_in_count, :current_sign_in_at
+
+  # Relations
+  has_many :user_profiles, dependent: :restrict_with_error
+  # we specify dependent: :destroy because by default user_profiles will be deleted (dependent: :delete)
+  # and we need to destroy to trigger the callbacks on user_profile
+  has_many :rdvs_users, dependent: :destroy
+  has_and_belongs_to_many :agents
+  belongs_to :responsible, class_name: "User", optional: true
+  has_many :relatives, foreign_key: "responsible_id", class_name: "User", inverse_of: :responsible, dependent: :nullify
+  has_many :file_attentes, dependent: :destroy
+
+  # Through relations
+  has_many :organisations, through: :user_profiles, dependent: :destroy
+  has_many :webhook_endpoints, through: :organisations
+  has_many :rdvs, through: :rdvs_users
+
+  accepts_nested_attributes_for :user_profiles
+
+  include User::ResponsabilityConcern # relies on belongs_to :responsible
+
+  # Validations
   validates :last_name, :first_name, :created_through, presence: true
   validates :number_of_children, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validate :birth_date_validity
 
-  accepts_nested_attributes_for :user_profiles
+  # Hooks
+  before_save :set_email_to_null_if_blank
+  after_update -> { rdvs.touch_all }
 
+  # Scopes
   scope :active, -> { where(deleted_at: nil) }
   scope :order_by_last_name, -> { order(Arel.sql("LOWER(last_name)")) }
   scope :responsible, -> { where(responsible_id: nil) }
   scope :relative, -> { where.not(responsible_id: nil) }
 
-  include User::ResponsabilityConcern
+  ## -
 
   def remember_me # Override from Devise::rememberable to enable it by default
     super.nil? ? true : super

@@ -1,44 +1,54 @@
 # frozen_string_literal: true
 
 class Rdv < ApplicationRecord
+  # Mixins
+  has_paper_trail(
+    meta: { virtual_attributes: :virtual_attributes_for_paper_trail }
+  )
   include WebhookDeliverable
   include Rdv::AddressConcern
   include IcalHelpers::Ics
   include Payloads::Rdv
 
-  has_paper_trail(
-    meta: { virtual_attributes: :virtual_attributes_for_paper_trail }
-  )
-  belongs_to :organisation
-  belongs_to :motif
-  belongs_to :lieu, optional: true
-  has_many :file_attentes, dependent: :destroy
-
-  has_many :agents_rdvs, inverse_of: :rdv, dependent: :destroy
-  has_many :agents, through: :agents_rdvs, dependent: :destroy
-  # https://stackoverflow.com/questions/30629680/rails-isnt-running-destroy-callbacks-for-has-many-through-join-model/30629704
-  # https://github.com/rails/rails/issues/7618
-
-  has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy
-  has_many :users, through: :rdvs_users, validate: false
-  has_many :events, class_name: "RdvEvent", dependent: :destroy
-
-  has_many :webhook_endpoints, through: :organisation
-
+  # Attributes
   enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
   NOT_CANCELLED_STATUSES = %w[unknown waiting seen].freeze
   CANCELLED_STATUSES = %w[excused revoked noshow].freeze
   enum created_by: { agent: 0, user: 1, file_attente: 2 }, _prefix: :created_by
 
+  # Relations
+  belongs_to :organisation
+  belongs_to :motif
+  belongs_to :lieu, optional: true
+  has_many :file_attentes, dependent: :destroy
+  has_many :agents_rdvs, inverse_of: :rdv, dependent: :destroy
+  # https://stackoverflow.com/questions/30629680/rails-isnt-running-destroy-callbacks-for-has-many-through-join-model/30629704
+  # https://github.com/rails/rails/issues/7618
+  has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy
+  has_many :events, class_name: "RdvEvent", dependent: :destroy
+
+  accepts_nested_attributes_for :rdvs_users, allow_destroy: true
+
+  # Through relations
+  has_many :agents, through: :agents_rdvs, dependent: :destroy
+  has_many :users, through: :rdvs_users, validate: false
+  has_many :webhook_endpoints, through: :organisation
+
+  # Delegates
   delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :follow_up?, :service, to: :motif
 
+  # Validations
   validates :rdvs_users, :starts_at, :ends_at, :agents, presence: true
   validates :lieu, presence: true, if: :public_office?
   validate :starts_at_is_plausible
   validate :duration_is_plausible
 
-  accepts_nested_attributes_for :rdvs_users, allow_destroy: true
+  # Hooks
+  after_save :associate_users_with_organisation
+  after_commit :update_agents_unknown_past_rdv_count, if: -> { past? }
+  after_commit :reload_uuid, on: :create
 
+  # Scopes
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
   scope :cancelled, -> { where(status: CANCELLED_STATUSES) }
   scope :past, -> { where("starts_at < ?", Time.zone.now) }
@@ -60,9 +70,7 @@ class Rdv < ApplicationRecord
   }
   scope :visible, -> { joins(:motif).where(motifs: { visibility_type: [Motif::VISIBLE_AND_NOTIFIED, Motif::VISIBLE_AND_NOT_NOTIFIED] }) }
 
-  after_save :associate_users_with_organisation
-  after_commit :update_agents_unknown_past_rdv_count, if: -> { past? }
-  after_commit :reload_uuid, on: :create
+  ## -
 
   def self.ongoing(time_margin: 0.minutes)
     where("starts_at <= ?", Time.zone.now + time_margin)

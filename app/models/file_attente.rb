@@ -1,14 +1,21 @@
 # frozen_string_literal: true
 
 class FileAttente < ApplicationRecord
-  belongs_to :rdv
-  belongs_to :user
-  validates :rdv, uniqueness: { scope: :user }
-
+  # Constants
   NO_MORE_NOTIFICATIONS = 7.days
   MAX_NOTIFICATIONS = 3
 
+  # Relations
+  belongs_to :rdv
+  belongs_to :user
+
+  # Validations
+  validates :rdv, uniqueness: { scope: :user }
+
+  # Scopes
   scope :with_upcoming_rdvs, -> { joins(:rdv).where("rdvs.starts_at > ?", NO_MORE_NOTIFICATIONS.from_now).order(created_at: :desc) }
+
+  ## -
 
   def self.send_notifications
     FileAttente.with_upcoming_rdvs.each do |fa|
