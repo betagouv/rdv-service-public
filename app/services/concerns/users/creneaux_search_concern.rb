@@ -4,10 +4,12 @@ module Users::CreneauxSearchConcern
   extend ActiveSupport::Concern
 
   def next_availability
+    date_range = Lapin::Range.reduce_range_to_delay(motif, date_range) # réduit le range en fonction du délay
     NextAvailabilityService.find(motif, @lieu, date_range.end, agents)
   end
 
   def creneaux
+    date_range = Lapin::Range.reduce_range_to_delay(motif, date_range) # réduit le range en fonction du délay
     SlotBuilder.available_slots(motif, @lieu, date_range, OffDays.all_in_date_range(date_range), agents)
   end
 
