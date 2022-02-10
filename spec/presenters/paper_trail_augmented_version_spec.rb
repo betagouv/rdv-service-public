@@ -13,11 +13,7 @@ describe PaperTrailAugmentedVersion do
 
       it "works with object_changes and virtual_attributes" do
         version = instance_double(PaperTrail::Version)
-        prepare_version_double(
-          version,
-          object_changes: { "title" => %w[foo bar] },
-          virtual_attributes: { "user_ids" => [1, 2] }
-        )
+        prepare_version_double(version, object_changes: { "title" => %w[foo bar] }, virtual_attributes: { "user_ids" => [1, 2] })
         expect(described_class.new(version, nil).changes).to eq(
           {
             "title" => %w[foo bar],
@@ -55,16 +51,23 @@ describe PaperTrailAugmentedVersion do
           }
         )
       end
+    end
+  end
 
-      it "filters optional whitelisted attributes" do
-        expect(
-          described_class.new(
-            version,
-            previous_version,
-            attributes_allowlist: ["user_ids"]
-          ).changes
-        ).to eq({ "user_ids" => [[1], [1, 2]] })
-      end
+  context "with filtered attributes" do
+    it "only includes wanted attributes" do
+      version = instance_double(PaperTrail::Version)
+
+      prepare_version_double(
+        version,
+        object_changes: { "title" => %w[foo bar] },
+        virtual_attributes: { "user_ids" => [1, 2], "agent_ids" => [3] },
+        only: "user_ids"
+      )
+
+      expect(
+        described_class.new(version, nil).changes
+      ).to eq({ "user_ids" => [nil, [1, 2]] })
     end
   end
 
@@ -94,10 +97,16 @@ describe PaperTrailAugmentedVersion do
     end
   end
 
-  def prepare_version_double(some_version, object_changes: {}, virtual_attributes: {})
+  def prepare_version_double(some_version, object_changes: {}, virtual_attributes: {}, only: nil)
+    only ||= object_changes.keys + virtual_attributes.keys
     changeset = double
     allow(some_version).to receive(:changeset).and_return(changeset)
     allow(changeset).to receive(:except).and_return(object_changes)
     allow(some_version).to receive(:virtual_attributes).and_return(virtual_attributes)
+    item = double
+    item_class = double
+    allow(some_version).to receive(:item).and_return(item)
+    allow(item).to receive(:class).and_return(item_class)
+    allow(item_class).to receive(:paper_trail_options).and_return({ only: only })
   end
 end

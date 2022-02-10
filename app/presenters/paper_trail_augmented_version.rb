@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 class PaperTrailAugmentedVersion
-  def self.for_resource(resource, **kwargs)
+  # PaperTrailAugmentedVersion is a presenter for PaperTrail::Version, that adds support for changes on additional “virtual attributes”.
+  # TODO: We probably should customize PaperTrail (see https://github.com/paper-trail-gem/paper_trail#6c-custom-object-changes) instead of this.
+  def self.for_resource(resource)
     # returns an array of augmented versions
     versions = resource.versions
     versions = versions.includes(:item) unless Rails.env.test? # versions is (a proxy to) an ActiveRecord::Relation, but in tests we mock it with a regular array
     versions.each_with_index.map do |version, idx|
       previous_version = idx >= 1 ? versions[idx - 1] : nil
-      PaperTrailAugmentedVersion.new(version, previous_version, **kwargs)
+      PaperTrailAugmentedVersion.new(version, previous_version)
     end
   end
 
@@ -15,10 +17,9 @@ class PaperTrailAugmentedVersion
 
   delegate :created_at, :whodunnit, to: :version
 
-  def initialize(version, previous_version, attributes_allowlist: nil)
+  def initialize(version, previous_version)
     @version = version
     @previous_version = previous_version
-    @attributes_allowlist = attributes_allowlist
   end
 
   IGNORED_ATTRIBUTES = %w[id updated_at encrypted_password].freeze
@@ -27,7 +28,8 @@ class PaperTrailAugmentedVersion
       c = @version.changeset.except(*IGNORED_ATTRIBUTES).to_h
       c = c.filter { |_attribute, change| change.first.present? || change.last.present? }
       c = c.merge(virtual_changes)
-      c = c.slice(*@attributes_allowlist) unless @attributes_allowlist.nil?
+      allowed_attributes = @version.item.class.paper_trail_options[:only]
+      c = c.slice(*allowed_attributes) if allowed_attributes.present?
       c
     end
   end

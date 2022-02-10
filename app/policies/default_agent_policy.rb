@@ -37,6 +37,10 @@ class DefaultAgentPolicy < ApplicationPolicy
     same_agent_or_has_access?
   end
 
+  def versions?
+    same_agent_or_has_access?
+  end
+
   def same_org?
     return false if current_organisation.nil?
 

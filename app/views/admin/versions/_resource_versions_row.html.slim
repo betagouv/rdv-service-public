@@ -9,7 +9,6 @@
               = t("admin.versions.title")
         .collapse.hide#history-collapse
           .card-body
-            - attributes_allowlist = local_assigns[:attributes_allowlist]
-            = cache [resource, attributes_allowlist] do
-              - versions = PaperTrailAugmentedVersion.for_resource(resource, attributes_allowlist: local_assigns[:attributes_allowlist])
+            = cache [resource, resource.class.paper_trail_options[:only]] do
+              - versions = PaperTrailAugmentedVersion.for_resource(resource)
               = render "admin/versions/versions", versions: versions.reverse
