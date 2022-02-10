@@ -4,6 +4,8 @@ class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
   has_paper_trail
+
+  # Mixins
   include DeviseInvitable::Inviter
   include FullNameConcern
   include TextSearch
@@ -48,9 +50,6 @@ class Agent < ApplicationRecord
   has_many :territories, through: :territorial_roles
   has_many :organisations_of_territorial_roles, source: :organisations, through: :territories
 
-  # Hooks
-  after_update -> { rdvs.touch_all }
-
   # Validation
   # Note about validation and Devise:
   # * Invitable#invite! creates the Agent without validation, but validates manually in advance (because we set validate_on_invite to true)
@@ -58,6 +57,9 @@ class Agent < ApplicationRecord
   validates :email, presence: true
   validates :last_name, :first_name, presence: true, on: :update
   validate :service_cannot_be_changed
+
+  # Hooks
+  after_update -> { rdvs.touch_all }
 
   # Scopes
   scope :complete, -> { where.not(first_name: nil).where.not(last_name: nil) }

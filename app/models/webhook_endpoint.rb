@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 class WebhookEndpoint < ApplicationRecord
+  # Mixins
   has_paper_trail
   belongs_to :organisation
 
+  # Validations
   validates :target_url, presence: true
   validates :secret, presence: true
 

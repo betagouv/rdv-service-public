@@ -1,15 +1,21 @@
 # frozen_string_literal: true
 
 class AgentRole < ApplicationRecord
+  self.table_name = "agents_organisations" # TODO: sync the model and table name
+
+  # Attributes
+  # TODO: make it an enum
   LEVEL_BASIC = "basic"
   LEVEL_ADMIN = "admin"
   LEVELS = [LEVEL_BASIC, LEVEL_ADMIN].freeze
 
-  self.table_name = "agents_organisations"
-
+  # Relations
   belongs_to :agent
   belongs_to :organisation
 
+  accepts_nested_attributes_for :agent
+
+  # Validation
   validates :level, inclusion: { in: LEVELS }
   validate :organisation_cannot_change
   validate :organisation_have_at_least_one_admin
@@ -27,12 +33,14 @@ class AgentRole < ApplicationRecord
   end
   validates :agent, uniqueness: { scope: :organisation }
 
+  # Hooks
   before_destroy :organisation_have_at_least_one_admin_before_destroy
 
+  # Scopes
   scope :level_basic, -> { where(level: LEVEL_BASIC) }
   scope :level_admin, -> { where(level: LEVEL_ADMIN) }
 
-  accepts_nested_attributes_for :agent
+  ## -
 
   def basic?
     level == LEVEL_BASIC

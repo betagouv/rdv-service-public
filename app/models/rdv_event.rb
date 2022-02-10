@@ -1,12 +1,18 @@
 # frozen_string_literal: true
 
 class RdvEvent < ApplicationRecord
+  # Attributes
+  # TODO: make it an enum
   TYPE_NOTIFICATION_SMS = "notification_sms"
   TYPE_NOTIFICATION_MAIL = "notification_mail"
 
+  # Relations
+  belongs_to :rdv
+
+  # Validations
   validates :event_type, inclusion: { in: [TYPE_NOTIFICATION_SMS, TYPE_NOTIFICATION_MAIL] }
 
-  belongs_to :rdv
+  ## -
 
   def self.date_stats(date = Time.zone.today)
     [TYPE_NOTIFICATION_SMS, TYPE_NOTIFICATION_MAIL].to_h do |event_type|

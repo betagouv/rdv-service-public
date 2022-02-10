@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 class Organisation < ApplicationRecord
+  # Mixins
+  has_paper_trail
   include WebhookDeliverable
 
-  has_paper_trail
-
+  # Attributes
   auto_strip_attributes :email, :name
 
+  # Relations
   belongs_to :territory
   has_many :lieux, dependent: :destroy
   has_many :motifs, dependent: :destroy
@@ -14,16 +16,22 @@ class Organisation < ApplicationRecord
   has_many :rdvs, dependent: :destroy
   has_many :webhook_endpoints, dependent: :destroy
   has_many :sector_attributions, dependent: :destroy
-  has_many :sectors, through: :sector_attributions
   has_many :plage_ouvertures, dependent: :destroy
   has_many :agent_roles, dependent: :delete_all # skips last admin validation
-  has_many :agents, through: :agent_roles
-
   has_many :user_profiles, dependent: :restrict_with_error
+
+  # Through relations
+  has_many :sectors, through: :sector_attributions
+  has_many :agents, through: :agent_roles
   has_many :users, through: :user_profiles
 
+  accepts_nested_attributes_for :agent_roles
+  accepts_nested_attributes_for :territory
+
+  # Delegates
   delegate :departement_number, to: :territory
 
+  # Validation
   validates :name, presence: true, uniqueness: { scope: :territory }
   validates :phone_number, phone: { allow_blank: true }
   validates(
@@ -36,11 +44,10 @@ class Organisation < ApplicationRecord
   )
   validates :human_id, uniqueness: { scope: :territory }, if: -> { human_id.present? }
 
+  # Hooks
   after_create :notify_admin_organisation_created
 
-  accepts_nested_attributes_for :agent_roles
-  accepts_nested_attributes_for :territory
-
+  # Scopes
   scope :attributed_to_sectors, lambda { |sectors:, most_relevant: false|
     attributions = SectorAttribution
       .level_organisation
@@ -66,6 +73,8 @@ class Organisation < ApplicationRecord
   scope :with_upcoming_rdvs, lambda {
     where(id: Rdv.future.distinct.select(:organisation_id))
   }
+
+  ## -
 
   def notify_admin_organisation_created
     return if agents.blank?

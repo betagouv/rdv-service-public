@@ -1,25 +1,11 @@
 # frozen_string_literal: true
 
 class Territory < ApplicationRecord
+  # Mixins
   include PhoneNumberValidation::HasPhoneNumber
 
+  # Attributes
   auto_strip_attributes :name
-
-  has_many :teams, dependent: :destroy
-  has_many :organisations, dependent: :destroy
-  has_many :organisations_agents, through: :organisations, source: :agents
-  has_many :roles, class_name: "AgentTerritorialRole", dependent: :delete_all
-  has_many :agents, through: :roles
-
-  validates :departement_number, length: { maximum: 3 }, if: -> { departement_number.present? }
-  validates :name, presence: true, if: -> { persisted? }
-  validates :departement_number, uniqueness: true, allow_blank: true
-
-  before_create :fill_name_for_departements
-
-  scope :with_upcoming_rdvs, lambda {
-    where(id: Organisation.with_upcoming_rdvs.distinct.select(:territory_id))
-  }
 
   enum sms_provider: {
     netsize: "netsize",
@@ -29,6 +15,30 @@ class Territory < ApplicationRecord
     clever_technologies: "clever_technologies",
     orange_contact_everyone: "orange_contact_everyone"
   }, _prefix: true
+
+  # Relations
+  has_many :teams, dependent: :destroy
+  has_many :organisations, dependent: :destroy
+  has_many :roles, class_name: "AgentTerritorialRole", dependent: :delete_all
+
+  # Through relations
+  has_many :organisations_agents, through: :organisations, source: :agents
+  has_many :agents, through: :roles
+
+  # Validations
+  validates :departement_number, length: { maximum: 3 }, if: -> { departement_number.present? }
+  validates :name, presence: true, if: -> { persisted? }
+  validates :departement_number, uniqueness: true, allow_blank: true
+
+  # Hooks
+  before_create :fill_name_for_departements
+
+  # Scopes
+  scope :with_upcoming_rdvs, lambda {
+    where(id: Organisation.with_upcoming_rdvs.distinct.select(:territory_id))
+  }
+
+  ## -
 
   def to_s
     "#{departement_number} - #{name}"

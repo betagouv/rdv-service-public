@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class PlageOuverture < ApplicationRecord
+  # Mixins
   include RecurrenceConcern
   include WebhookDeliverable
   include IcalHelpers::Ics
@@ -8,19 +9,24 @@ class PlageOuverture < ApplicationRecord
   include Payloads::PlageOuverture
   include Expiration
 
+  # Attributes
   auto_strip_attributes :title
 
+  # Relations
   belongs_to :organisation
   belongs_to :agent
   belongs_to :lieu
   has_and_belongs_to_many :motifs, -> { distinct }
 
+  # Through relations
+  has_many :webhook_endpoints, through: :organisation
+
+  # Validations
   validate :end_after_start
   validates :motifs, :title, presence: true
   validate :warn_overlapping_plage_ouvertures
 
-  has_many :webhook_endpoints, through: :organisation
-
+  # Scopes
   scope :in_range, lambda { |range|
     return all if range.nil?
 
@@ -30,6 +36,8 @@ class PlageOuverture < ApplicationRecord
 
     not_recurring_start_in_range.or(recurring_in_range)
   }
+
+  ## -
 
   def ical_uid
     "plage_ouverture_#{id}@#{BRAND}"
