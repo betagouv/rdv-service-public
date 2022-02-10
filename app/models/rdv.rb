@@ -98,7 +98,7 @@ class Rdv < ApplicationRecord
   def duration_in_min
     return @duration_in_min&.to_i if starts_at.nil? || ends_at.nil?
 
-    ((ends_at - starts_at) / 60).to_i # TODO: use (ends_at - starts_at).in_minutes once we use Rails 6.1
+    ActiveSupport::Duration.build(ends_at - starts_at).in_minutes.to_i
   end
 
   def set_ends_at
