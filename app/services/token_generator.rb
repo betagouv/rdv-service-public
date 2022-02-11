@@ -1,5 +1,6 @@
-class TokenGenerator < BaseService
+# frozen_string_literal: true
 
+class TokenGenerator < BaseService
   def initialize(key)
     @key = key
   end
@@ -13,6 +14,6 @@ class TokenGenerator < BaseService
   def generate_token
     raw = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8)
     enc = OpenSSL::HMAC.hexdigest("SHA256", @key, raw)
-    return [raw, enc]
+    [raw, enc]
   end
 end
