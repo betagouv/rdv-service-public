@@ -201,7 +201,7 @@ class User < ApplicationRecord
       raw, enc = TokenGenerator.perform_with(key)
       @raw_invitation_token = raw
       self.invitation_token = enc
-      break unless User.where(invitation_token: enc).size.positive?
+      break [raw, enc] unless User.where(invitation_token: enc).size.positive?
     end
   end
 
