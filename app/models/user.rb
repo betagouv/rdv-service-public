@@ -185,14 +185,12 @@ class User < ApplicationRecord
   end
 
   def generate_invitation_token
-    # we generate short invitations token to allow paper mail invitation
     key = Devise.token_generator.send(:key_for, :invitation_token)
     loop do
-      raw = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8)
-      enc = OpenSSL::HMAC.hexdigest("SHA256", key, raw)
+      raw, enc = TokenGenerator.perform_with(key)
       @raw_invitation_token = raw
       self.invitation_token = enc
-      break [raw, enc] unless User.where(invitation_token: enc).size.positive?
+      break unless User.where(invitation_token: enc).size.positive?
     end
   end
 
