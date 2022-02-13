@@ -25,4 +25,4 @@
   .alert.alert-danger.fade.show
     ul.m-0
       - errors_full_messages(model).each do |msg|
-        li= msg
+        li= msg.html_safe
