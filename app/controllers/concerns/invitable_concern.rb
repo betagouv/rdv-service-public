@@ -4,9 +4,10 @@ module InvitableConcern
   extend ActiveSupport::Concern
 
   included do
-    before_action :store_token_in_session, if: -> { params[:invitation_token].present? }
-    before_action :redirect_if_invalid_invitation, if: -> { params[:invitation_token].present? }
-    before_action :redirect_if_logged_in_user_is_not_invited_user, if: -> { params[:invitation_token].present? }
+    before_action(
+      :store_token_in_session, :redirect_if_invalid_invitation, :redirect_if_logged_in_user_is_not_invited_user,
+      if: -> { params[:invitation_token].present? }
+    )
   end
 
   private
@@ -19,17 +20,19 @@ module InvitableConcern
     return if current_user.present? # we don't check the token if a user is logged in already
     return if invited_user.present?
 
-    session.delete(:invitation_token)
-    flash[:error] = t("devise.invitations.invitation_token_invalid")
-    redirect_to root_path
+    delete_token_from_session_and_redirect(t("devise.invitations.invitation_token_invalid"))
   end
 
   def redirect_if_logged_in_user_is_not_invited_user
-    return if current_user.blank?
+    return if current_user.blank? || invited_user.blank?
     return if invited_user == current_user
 
+    delete_token_from_session_and_redirect(t("devise.invitations.current_user_mismatch"))
+  end
+
+  def delete_token_from_session_and_redirect(error_msg)
     session.delete(:invitation_token)
-    flash[:error] = t("devise.invitations.current_user_mismatch")
+    flash[:error] = error_msg
     redirect_to root_path
   end
 
