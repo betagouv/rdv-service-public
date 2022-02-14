@@ -68,7 +68,7 @@ describe "User can be invited" do
       click_link("Confirmer mon RDV")
 
       # RDV page
-      expect(page).to have_content("Vos rendez-vous")
+      expect(page).to have_content("Votre RDV")
       expect(page).to have_content(motif.name)
       expect(page).to have_content(lieu.address)
       expect(page).to have_content("11h00")
@@ -127,7 +127,7 @@ describe "User can be invited" do
       click_link("Confirmer mon RDV")
 
       # RDV page
-      expect(page).to have_content("Vos rendez-vous")
+      expect(page).to have_content("Votre RDV")
       expect(page).to have_content(motif.name)
       expect(page).to have_content(lieu.address)
       expect(page).to have_content("11h00")
@@ -187,7 +187,7 @@ describe "User can be invited" do
       click_link("Confirmer mon RDV")
 
       # RDV page
-      expect(page).to have_content("Vos rendez-vous")
+      expect(page).to have_content("Votre RDV")
       expect(page).to have_content(motif.name)
       expect(page).to have_content(lieu.address)
       expect(page).to have_content("11h00")
