@@ -37,11 +37,11 @@ describe "User can be invited" do
     end
 
     it "default", js: true do
-      # Step 4
+      # Lieu selection
       expect(page).to have_content(lieu.name)
       find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
 
-      # Step 5
+      # Creneau selection
       expect(page).to have_content(lieu.name)
       first(:link, "11:00").click
 
@@ -50,15 +50,12 @@ describe "User can be invited" do
       expect(page).to have_content(motif.restriction_for_rdv)
       click_link("Accepter")
 
-      # Redirects to rdv informations
+      # RDV informations
       expect(page).to have_content("Vos informations")
-      expect(page).to have_field("Date de naissance", with: "20/12/1988")
-      expect(page).to have_field("Adresse", with: user.address)
-      click_button("Continuer")
-
-      # Choix de l'usager
-      expect(page).to have_content("Choix de l'usager")
-      expect(page).to have_content(user.full_name)
+      expect(page).not_to have_field("Date de naissance")
+      expect(page).not_to have_field("Adresse")
+      expect(page).to have_field("Email", with: user.email, disabled: true)
+      expect(page).to have_field("Téléphone", with: user.phone_number)
       click_button("Continuer")
 
       # Confirmation
@@ -91,16 +88,16 @@ describe "User can be invited" do
     end
 
     it "default", js: true do
-      # Step 3
+      # Motif selection
       expect(page).to have_content(motif.name)
       expect(page).to have_content(motif2.name)
       find(".card-title", text: /#{motif.name}/).click
 
-      # Step 4
+      # Lieu selection
       expect(page).to have_content(lieu.name)
       find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
 
-      # Step 5
+      # Creneau selection
       expect(page).to have_content(lieu.name)
       first(:link, "11:00").click
 
@@ -109,15 +106,12 @@ describe "User can be invited" do
       expect(page).to have_content(motif.restriction_for_rdv)
       click_link("Accepter")
 
-      # Redirects to rdv informations
+      # RDV informations
       expect(page).to have_content("Vos informations")
-      expect(page).to have_field("Date de naissance", with: "20/12/1988")
-      expect(page).to have_field("Adresse", with: user.address)
-      click_button("Continuer")
-
-      # Choix de l'usager
-      expect(page).to have_content("Choix de l'usager")
-      expect(page).to have_content(user.full_name)
+      expect(page).not_to have_field("Date de naissance")
+      expect(page).not_to have_field("Adresse")
+      expect(page).to have_field("Email", with: user.email, disabled: true)
+      expect(page).to have_field("Téléphone", with: user.phone_number)
       click_button("Continuer")
 
       # Confirmation
@@ -151,16 +145,16 @@ describe "User can be invited" do
     end
 
     it "default", js: true do
-      # Step 3
+      # Motif selection
       expect(page).to have_content(motif.name)
       expect(page).to have_content(motif2.name)
       find(".card-title", text: /#{motif.name}/).click
 
-      # Step 4
+      # Lieu selection
       expect(page).to have_content(lieu.name)
       find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
 
-      # Step 5
+      # Crenenau selection
       expect(page).to have_content(lieu.name)
       first(:link, "11:00").click
 
@@ -169,15 +163,12 @@ describe "User can be invited" do
       expect(page).to have_content(motif.restriction_for_rdv)
       click_link("Accepter")
 
-      # Redirects to rdv informations
+      # RDV informations
       expect(page).to have_content("Vos informations")
-      expect(page).to have_field("Date de naissance", with: "20/12/1988")
-      expect(page).to have_field("Adresse", with: user.address)
-      click_button("Continuer")
-
-      # Choix de l'usager
-      expect(page).to have_content("Choix de l'usager")
-      expect(page).to have_content(user.full_name)
+      expect(page).not_to have_field("Date de naissance")
+      expect(page).not_to have_field("Adresse")
+      expect(page).to have_field("Email", with: user.email, disabled: true)
+      expect(page).to have_field("Téléphone", with: user.phone_number)
       click_button("Continuer")
 
       # Confirmation

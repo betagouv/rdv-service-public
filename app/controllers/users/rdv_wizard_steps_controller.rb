@@ -13,6 +13,7 @@ class Users::RdvWizardStepsController < UserAuthController
   def new
     @rdv_wizard = rdv_wizard_for(current_user, query_params)
     @rdv = @rdv_wizard.rdv
+    @step_titles = ["Identification", "Vos informations", invitation? ? nil : "Choix de l'usager", "Confirmation"].compact
     authorize(@rdv)
     if @rdv_wizard.creneau.present?
       render current_step
@@ -45,7 +46,13 @@ class Users::RdvWizardStepsController < UserAuthController
   end
 
   def next_step_index
-    UserRdvWizard::STEPS.index(current_step) + 2 # steps start at 1 + increment
+    idx = current_step_index + 2 # steps start at 1 + increment
+    idx += 1 if current_step_index.zero? && invitation? # we skip the step 2 in the context of an invitation
+    idx
+  end
+
+  def current_step_index
+    UserRdvWizard::STEPS.index(current_step)
   end
 
   def rdv_wizard_for(current_user, request_params)
@@ -68,6 +75,7 @@ class Users::RdvWizardStepsController < UserAuthController
                     :birth_name,
                     :phone_number,
                     :birth_date,
+                    :email,
                     :address,
                     :caisse_affiliation,
                     :affiliation_number,
