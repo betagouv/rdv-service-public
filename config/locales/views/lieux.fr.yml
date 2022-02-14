@@ -7,3 +7,13 @@ fr:
       address: "Votre adresse"
       service: "Votre service"
       motif: "Votre motif"
+      address_example: "ex : 21 rue Anatole France, Calais"
+      change_address: "Modifier l'adresse"
+      choose_service: "Choisissez un service"
+      choose_this_service: "Choisir ce service"
+      service_not_in_list: "Le service que vous cherchez n'est pas dans la liste ?"
+      change_service: "Modifier le service"
+      choose_pattern: "Choisissez un motif"
+      choose_this_pattern: "Choisir ce motif"
+      pattern_not_in_list: "Le motif que vous cherchez n'est pas dans la liste ?"
+
