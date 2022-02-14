@@ -5,10 +5,6 @@ class Agent::MotifPolicy < Agent::AdminPolicy
     admin_and_same_org? || same_agent_or_has_access?
   end
 
-  def versions?
-    admin_and_same_org?
-  end
-
   class Scope < Scope
     def resolve
       if context.can_access_others_planning?

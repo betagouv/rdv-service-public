@@ -2,6 +2,7 @@
 
 class PlageOuverture < ApplicationRecord
   # Mixins
+  has_paper_trail
   include RecurrenceConcern
   include WebhookDeliverable
   include IcalHelpers::Ics

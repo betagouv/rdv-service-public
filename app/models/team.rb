@@ -2,6 +2,7 @@
 
 class Team < ApplicationRecord
   # Mixins
+  has_paper_trail
   include TextSearch
   def self.search_keys = %i[name]
 

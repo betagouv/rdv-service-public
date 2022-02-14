@@ -18,6 +18,7 @@ class Agent::AbsencePolicy < ApplicationPolicy
   alias update? same_agent_or_has_access?
   alias edit? same_agent_or_has_access?
   alias destroy? same_agent_or_has_access?
+  alias versions? same_agent_or_has_access?
 
   private
 

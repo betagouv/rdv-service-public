@@ -3,9 +3,11 @@
 class SoftDeleteError < StandardError; end
 
 class Agent < ApplicationRecord
-  has_paper_trail
-
   # Mixins
+  has_paper_trail(
+    only: %w[email first_name last_name starts_at service_id invitation_sent_at invitation_accepted_at]
+  )
+
   include DeviseInvitable::Inviter
   include FullNameConcern
   include TextSearch

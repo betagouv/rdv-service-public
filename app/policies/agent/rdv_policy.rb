@@ -5,10 +5,6 @@ class Agent::RdvPolicy < DefaultAgentPolicy
     same_agent_or_has_access?
   end
 
-  def versions?
-    same_agent_or_has_access?
-  end
-
   class Scope < Scope
     def resolve
       if context.can_access_others_planning?
