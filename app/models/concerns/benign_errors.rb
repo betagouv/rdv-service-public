@@ -25,7 +25,7 @@ module BenignErrors
 
   def not_benign_errors
     # I would like to use ActiveModel::Errors#slice! here, but it relies on making a copy of the Errors.
-    errors.filter { |k, _| k != :_benign } # rubocop:disable Style/HashExcept
+    errors.filter { |k, _| k.attribute != :_benign }
   end
 
   def errors_are_all_benign?
