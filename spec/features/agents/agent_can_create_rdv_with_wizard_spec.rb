@@ -35,7 +35,7 @@ describe "Agent can create a Rdv with wizard" do
     # create user with mail
     fill_in :user_first_name, with: "Jean-Paul"
     fill_in :user_last_name, with: "Orvoir"
-    fill_in :user_email, with: "jporvoir@bidule.com"
+    expect(page).to have_selector(".user_email")
     click_button("Créer usager")
 
     # create user without email

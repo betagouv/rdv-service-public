@@ -17,7 +17,7 @@ class LieuxController < ApplicationController
     @next_availability_by_lieux = @lieux.to_h do |lieu|
       [
         lieu.id,
-        creneaux_search_for(lieu, (1.week.ago.to_date..Time.zone.today)).next_availability
+        creneaux_search_for(lieu, (Time.zone.today..Time.zone.today + 7.days)).next_availability
       ]
     end
   end
