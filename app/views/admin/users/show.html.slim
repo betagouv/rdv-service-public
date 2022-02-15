@@ -45,7 +45,6 @@
             - user_profile = @user.profile_for(current_organisation)
             li= object_attribute_tag(@user, :first_name)
             li= object_attribute_tag(@user, :last_name)
-            li= object_attribute_tag(@user, :birth_date)
             li= object_attribute_tag(@user, :birth_date, birth_date_and_age(@user))
             li= object_attribute_tag(user_profile, :notes, formatted_user_notes(user_profile))
 
