@@ -1,3 +1,5 @@
+@import "~bootstrap/scss/bootstrap";
+
 .lieux-search-results{
   h1, h2{
     color: $blue
@@ -29,4 +31,4 @@
     @extend .pt-md-0;
     @extend .position-static;
   }
-} 
+}
