@@ -35,6 +35,7 @@ class Users::RdvsController < UserAuthController
     skip_authorization if @creneau.nil?
     if @save_succeeded
       Notifiers::RdvCreated.perform_with(@rdv, current_user)
+      set_user_identity_verified
       redirect_to users_rdv_path(@rdv), notice: t(".rdv_confirmed")
     else
       query = { where: new_rdv_extra_params[:where], service: motif.service.id, motif_name_with_location_type: motif.name_with_location_type, departement: new_rdv_extra_params[:departement] }
