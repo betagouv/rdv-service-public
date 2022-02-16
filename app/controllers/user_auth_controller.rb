@@ -20,14 +20,14 @@ class UserAuthController < ApplicationController
   end
 
   def verify_user_identity
-    return if cookies.encrypted[:user_identity_verified] == true
+    return if cookies.encrypted[:"user_#{current_user.id}_verified"] == true
 
     session[:return_to_after_verification] = request.fullpath
     redirect_to new_users_identity_verification_path
   end
 
   def set_user_identity_verified
-    cookies.encrypted[:user_identity_verified] = {
+    cookies.encrypted[:"user_#{current_user.id}_verified"] = {
       value: true, expires: 10.minutes.from_now
     }
   end

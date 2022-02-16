@@ -149,13 +149,10 @@ RSpec.describe Users::RdvsController, type: :controller do
           user.raw_invitation_token
         end
 
-        it "shows the rdv" do
+        it "redirects to the identity verification form" do
           get :show, params: { id: rdv.id, invitation_token: invitation_token }
 
-          expect(response).to be_successful
-          expect(response.body).to match(/Votre RDV/)
-          expect(response.body).to match(/Le mardi 20 octobre 2020/)
-          expect(response.body).to match(/Modifier l&#39;horaire du RDV/)
+          expect(response).to redirect_to(new_users_identity_verification_path)
         end
       end
     end
