@@ -27,7 +27,7 @@
       h3.fw-bold.mb-0
         i.fa.fa-network-wired>
         | Webhook
-      p Les webhook servent à l'interconnexion avec vos systèmes
+      p Interconnecter RDV-Solidarités avec vos systèmes.
 
   - if current_territory.has_own_sms_provider
     .col.col-md-4.p-2.rounded.settings-box
@@ -35,14 +35,14 @@
         h3.fw-bold.mb-0
           i.fa.fa-mobile-alt>
           | SMS
-        p Configuration du fournisseur d'envoi de SMS
+        p Configurer votre fournisseur d'envoi de SMS.
 
   .col.col-md-4.p-2.rounded.settings-box
     = link_to admin_territory_sectors_path(current_territory, current_agent) do
       h3.fw-bold.mb-0
         i.fa.fa-table>
         | Secteurs
-      p Découpage territorial. Créer ici vos secteurs géographiques.
+      p Créer vos secteurs géographiques pour organiser votre sectorisation.
 
   .col.col-md-4.p-2.rounded.settings-box
     = link_to admin_territory_sectors_path(current_territory, view: "map") do
@@ -56,18 +56,18 @@
       h3.fw-bold.mb-0
         i.fa.fa-check-square>
         | Test
-      p Effectuer des tests de vérification des adresses et informations de code INSEE
+      p Effectuer des tests de vérification des adresses et informations de code INSEE.
 
   .col.col-md-4.p-2.rounded.settings-box
     = link_to new_admin_territory_zone_import_path(current_territory) do
       h3.fw-bold.mb-0
         i.fa.fa-download>
         | Import
-      p Importer un fichier de sectorisation pour faciliter la création de votre découpage géographique
+      p Importer un fichier de sectorisation pour faciliter la création de votre découpage géographique.
 
   .col.col-md-4.p-2.rounded.settings-box
     = link_to admin_organisations_path do
       h3.fw-bold.mb-0
         i.fa.fa-home>
         | Organisations
-      p Voir la liste de mes organisations
+      p Lister mes organisations.
