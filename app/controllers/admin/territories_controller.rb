@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 class Admin::TerritoriesController < Admin::Territories::BaseController
-  def show; end
+  skip_before_action :set_territory
+
+  def show
+    @territory = Territory.find(params[:id])
+  end
 
   def update
     authorize_admin(@territory)

@@ -19,10 +19,6 @@ class Admin::Territories::BaseController < ApplicationController
   private
 
   def set_territory
-    @territory = if params[:territory_id]
-                   Territory.find(params[:territory_id])
-                 else
-                   current_agent.territories.first
-                 end
+    @territory = Territory.find(params[:territory_id])
   end
 end
