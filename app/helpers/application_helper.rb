@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 module ApplicationHelper
-  def navigation(title = nil, previous_link = [])
-    render "admin/territories/nav", current_page_title: title, previous_path: previous_link
-  end
-
   def alert_class_for(alert)
     case alert
     when :success
@@ -37,10 +33,6 @@ module ApplicationHelper
       }.deep_merge(input_html),
       **kwargs
     )
-  end
-
-  def time_input(form, field)
-    form.input(field, as: :string, input_html: { value: form.object.send(field)&.strftime("%H:%M"), data: { behaviour: "timepicker" }, autocomplete: "off" })
   end
 
   def agents_or_users_body_class
