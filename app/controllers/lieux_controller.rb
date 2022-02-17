@@ -10,16 +10,14 @@ class LieuxController < ApplicationController
   after_action :allow_iframe
 
   def index
-   @lieux = Lieu
+    @lieux = Lieu
       .with_open_slots_for_motifs(@matching_motifs)
       .includes(:organisation)
       .sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f) }
     @next_availability_by_lieux = @lieux.to_h do |lieu|
       motif = @matching_motifs.where(organisation: lieu.organisation).first
-      [
-        lieu.id,
-        NextAvailabilityService.find(motif, lieu, (Time.zone.today + motif.min_booking_delay.seconds).to_date, [])
-      ]
+      next_availability = NextAvailabilityService.find(motif, lieu, (Time.zone.today + motif.min_booking_delay.seconds).to_date, [])
+      [lieu.id, next_availability]
     end
   end
 
