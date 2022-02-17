@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module ConfigurationHelper
-  def navigation(title = nil, previous_links = [])
+  def territory_navigation(title = nil, previous_links = [])
     tag.nav class: "border-bottom configuration-title border-bottom pb-2 configuration-title mb-2" do
       tag.ol class: "breadcrumb m-0 p-0" do
         concat(tag.li(class: "breadcrumb-item") do
