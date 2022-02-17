@@ -1,6 +1,4 @@
-= render "admin/territories/nav", \
-  current_page_title: "Ajouter un agent", \
-  previous_path: [link_to("Administration #{current_territory}", admin_territory_agent_territorial_roles_path(current_territory))]
+= navigation(t(".title"), [link_to("Administration #{current_territory}", admin_territory_agent_territorial_roles_path(current_territory))])
 
 .row.justify-content-center
   .col-md-6

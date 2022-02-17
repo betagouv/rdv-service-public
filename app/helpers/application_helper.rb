@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 module ApplicationHelper
+  def navigation(title = nil, previous_link = [])
+    render "admin/territories/nav", current_page_title: title, previous_path: previous_link
+  end
+
   def alert_class_for(alert)
     case alert
     when :success

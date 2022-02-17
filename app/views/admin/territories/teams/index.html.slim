@@ -1,4 +1,4 @@
-= render "admin/territories/nav", current_page_title: "Équipes"
+= navigation("Équipes")
 
 = simple_form_for "", url: admin_territory_teams_path(current_territory), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
 

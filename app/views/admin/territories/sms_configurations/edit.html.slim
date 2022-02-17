@@ -1,6 +1,4 @@
-= render "admin/territories/nav", \
-  current_page_title: t(".title"), \
-  previous_path: [link_to(t(".show_sms_configuration"), admin_cterritory_sms_configuration_path(current_territory))]
+= navigation(t(".title"), [link_to(t(".show_sms_configuration"), admin_cterritory_sms_configuration_path(current_territory))])
 
 .row.justify-content-center
   .col-md-6

@@ -11,6 +11,8 @@ fr:
       index:
         configuration_title: Configuration
       agent_territorial_roles:
+        new:
+          title: Ajouter un agent
         index:
           title: Administration %{name}
           configuration_title: Configuration
