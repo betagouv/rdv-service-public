@@ -1,6 +1,9 @@
 fr:
   admin:
     territories:
+      sector_attributions:
+        new:
+          title: Nouvelle attribution pour le secteur %{name}
       nav:
         configuration_title: Configuration
       show:
@@ -9,13 +12,19 @@ fr:
         configuration_title: Configuration
       agent_territorial_roles:
         index:
+          title: Administration %{name}
           configuration_title: Configuration
 
       sectorisation_tests:
         search:
           sectorization_title: Sectorisation
           title: Test sectorisation
+      zones:
+        new:
+          title: Ajouter une commune pour le secteur %{name}
       zone_imports:
+        create:
+          title: Sectorisation %{territoire}
         new:
           sectorization_title: Sectorisation
           title: Importer un fichier
@@ -41,6 +50,8 @@ fr:
           show_sms_configuration: Fournisseur d'envoi de SMS
           title: Modifier la configuration SMS
       sectors:
+        new:
+          title: Nouveau secteur
         update:
           updated: Secteur mis à jour
         create:
@@ -62,12 +73,14 @@ fr:
       teams:
         edit:
           territory_teams_title: Équipes du territoire
+          title: Modifier l'équipe %{name}
         index:
           teams_title: Équipes du territoire
           create_team: Ajouter une équipe
           back: Retour
         new:
           territory_teams_title: Créer une équipe
+          title: Ajouter une équipe
       agents:
         edit:
           agent_title: Modification agent %{name}

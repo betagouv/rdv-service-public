@@ -1,5 +1,5 @@
 = render "admin/territories/nav", \
-  current_page_title: "Nouvelle attribution pour le secteur #{@sector.name}", \
+  current_page_title: t(".title", name: @sector.name), \
   previous_path: [link_to("Secteurs", admin_territory_sectors_path(current_territory))]
 
 .row.justify-content-center
