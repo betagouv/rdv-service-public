@@ -116,4 +116,36 @@ describe RdvUpdater, type: :service do
       end
     end
   end
+
+  describe "for a rdv collectif" do
+    let(:rdv_params) do
+      {
+        rdvs_users_attributes: {
+          0 => { user_id: user_staying.id, send_lifecycle_notifications: 1, id: rdv.rdvs_users.find_by(user_id: user_staying.id).id, _destroy: false },
+          1 => { user_id: user_removed.id, send_lifecycle_notifications: 1, id: rdv.rdvs_users.find_by(user_id: user_removed.id).id, _destroy: true  },
+          2 => { user_id: user_added.id, send_lifecycle_notifications: 1 }
+        }
+      }
+    end
+    let(:rdv) { create(:rdv, agents: [agent], motif: motif, users: [user_staying, user_removed]) }
+    let(:agent) { create :agent }
+    let(:motif) { create(:motif, :collectif) }
+
+    let(:user_staying) { create(:user, first_name: "Stay") }
+    let(:user_added) { create(:user, first_name: "Add") }
+    let(:user_removed) { create(:user, first_name: "Remove") }
+    let(:rdv_payload_for_users) { rdv.payload(:create, user1) }
+
+    before do
+      allow(Users::RdvMailer).to receive(:rdv_created).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
+      allow(Users::RdvMailer).to receive(:rdv_cancelled).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
+    end
+
+    it "notifies the new participant, and the one that is removed" do
+      expect(Users::RdvMailer).to receive(:rdv_created).once.with(rdv.payload(:create, user_added), user_added)
+      expect(Users::RdvMailer).to receive(:rdv_cancelled).once.with(rdv.payload(:destroy, user_removed), user_removed)
+
+      described_class.update(agent, rdv, rdv_params)
+    end
+  end
 end

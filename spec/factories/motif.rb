@@ -36,6 +36,11 @@ FactoryBot.define do
       location_type { :phone }
     end
 
+    trait :collectif do
+      collectif { true }
+      reservable_online { false }
+    end
+
     trait :for_secretariat do
       for_secretariat { true }
     end

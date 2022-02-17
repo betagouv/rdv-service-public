@@ -7,4 +7,11 @@ module Select2SpecHelper
     find(".select2-results li.select2-results__option", text: user.reverse_full_name).click
     expect(page).to have_selector("a[title='Modifier']")
   end
+
+  def add_user(user)
+    find("span", text: "Ajouter un usager", match: :first).click
+    sleep 0.5
+    find("li", text: user.last_name).click
+    sleep 0.5
+  end
 end

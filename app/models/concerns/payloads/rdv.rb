@@ -48,7 +48,8 @@ module Payloads
           motif_service_id: motif.service.id,
           organisation_name: organisation.name,
           organisation_departement_number: organisation.departement_number,
-          motif_name_with_location_type: motif.name_with_location_type
+          motif_name_with_location_type: motif.name_with_location_type,
+          collectif?: collectif?
         }
       )
 
