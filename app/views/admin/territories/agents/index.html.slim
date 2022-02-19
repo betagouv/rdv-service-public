@@ -12,17 +12,19 @@
     table.table
       thead
         tr
-          th = t(".last_name")
-          th = t(".first_name")
-          th = t(".email")
+          th= Agent.human_attribute_name(:name)
+          th= Agent.human_attribute_name(:email)
+          th= Agent.human_attribute_name(:service)
           th = t(".teams")
           th = t(".actions")
       tbody
         - @agents.each do |agent|
           tr
-            td = agent.last_name
-            td = agent.first_name
+            td
+              = link_to agent.reverse_full_name, admin_territory_agent_path(current_territory, agent), class: "mr-2"
+              = me_tag(agent)
             td = agent.email
+            td = agent.service.name
             td = agent.teams.count
 
             td

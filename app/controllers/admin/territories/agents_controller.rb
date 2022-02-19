@@ -6,6 +6,11 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
       .page(params[:page])
   end
 
+  def show
+    skip_authorization
+    @agent = Agent.find(params[:id])
+  end
+
   def search
     skip_authorization
 

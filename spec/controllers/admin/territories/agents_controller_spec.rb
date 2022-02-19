@@ -76,4 +76,21 @@ describe Admin::Territories::AgentsController, type: :controller do
       expect(assigns(:agents)).to eq([agent])
     end
   end
+
+  describe "#show" do
+
+    it "respond successfull" do
+      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
+      sign_in agent
+      get :show, params: { territory_id: territory.id, id: agent.id }
+      expect(response).to be_successful
+    end
+
+    it "assigns agent" do
+      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
+      sign_in agent
+      get :show, params: { territory_id: territory.id, id: agent.id }
+      expect(assigns(:agent)).to eq(agent)
+    end
+  end
 end
