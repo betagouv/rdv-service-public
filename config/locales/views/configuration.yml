@@ -84,6 +84,8 @@ fr:
           territory_teams_title: Créer une équipe
           title: Ajouter une équipe
       agents:
+        show:
+          title: Agent %{name}
         edit:
           agent_title: Modification agent %{name}
           territory_agents_title: Agents du territoire
