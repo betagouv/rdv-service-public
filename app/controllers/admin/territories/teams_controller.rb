@@ -10,6 +10,10 @@ class Admin::Territories::TeamsController < Admin::Territories::BaseController
     @team = Team.new
   end
 
+  def show
+    @team = Team.find(params[:id])
+  end
+
   def create
     if (@team = Team.create(team_params.merge(territory: current_territory)))
       redirect_to admin_territory_teams_path(current_territory)
