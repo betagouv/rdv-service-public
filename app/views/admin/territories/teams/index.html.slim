@@ -21,7 +21,7 @@
       tbody
         - @teams.each do |team|
           tr id="team_#{team.id}"
-            td = team.name
+            td = link_to team.name, admin_territory_team_path(current_territory, team)
             td = team.agents.count
             td
               .d-flex

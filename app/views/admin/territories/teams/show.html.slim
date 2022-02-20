@@ -1,0 +1,22 @@
+= territory_navigation(t(".title", name: @team.name), [link_to("Équipes", admin_territory_teams_path(current_territory))])
+
+.container-fluid.bg-white.rounded.m-2
+  .card
+    .card-header
+      h2 = @team.name
+    .card-body
+      - if @team.agents.any?
+        .m-2
+          | Liste des agents de l'équipe
+          br
+          - @team.agents.each do |agent|
+            = link_to agent.name, admin_territory_agent_path(current_territory, agent)
+      - else
+        .m-2
+          | Aucun agent dans cette équipe
+
+    .card-footer
+      .d-flex.justify-content-end
+        div= link_to "Éditer", edit_admin_territory_team_path(current_territory, @team), class: "btn btn-primary w-100"
+
+

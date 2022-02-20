@@ -73,6 +73,8 @@ fr:
           sectorization_title: Sectorisation
           title: Carte des secteurs
       teams:
+        show:
+          title: Équipe %{name}
         edit:
           territory_teams_title: Équipes du territoire
           title: Modifier l'équipe %{name}
