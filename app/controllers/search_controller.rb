@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SearchController < ApplicationController
+  include TokenInvitable
+
   def search_rdv
     @context = SearchContext.new(current_user, search_params.to_h)
   end

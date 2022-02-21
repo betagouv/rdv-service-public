@@ -103,7 +103,7 @@ RSpec/AnyInstance:
   Exclude:
     - spec/controllers/admin/users_controller_spec.rb
     - spec/controllers/admin/referents_controller_spec.rb
-    - spec/controllers/users/creneaux_controller_spec.rb
+    - spec/controllers/users/rdvs_controller_spec.rb
 
 RSpec/ContextWording:
   Enabled: False

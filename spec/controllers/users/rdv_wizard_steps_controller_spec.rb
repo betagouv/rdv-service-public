@@ -15,8 +15,6 @@ describe Users::RdvWizardStepsController, type: :controller do
 
     context "logged in user" do
       before do
-        sign_in user
-
         allow(UserRdvWizard::Step2).to \
           receive(:new).with(
             user,
@@ -28,11 +26,29 @@ describe Users::RdvWizardStepsController, type: :controller do
           ).and_return(mock_user_rdv_wizard)
       end
 
-      it "return success" do
-        get :new, params: { step: 2, motif_id: motif.id, lieu_id: lieu.id, starts_at: starts_at }
-        expect(response).to have_http_status(:success)
-        expect(assigns(:rdv).users).to eq([user])
-        expect(response).to render_template("users/rdv_wizard_steps/step2")
+      context "when signed in" do
+        before { sign_in user }
+
+        it "return success" do
+          get :new, params: { step: 2, motif_id: motif.id, lieu_id: lieu.id, starts_at: starts_at }
+          expect(response).to have_http_status(:success)
+          expect(assigns(:rdv).users).to eq([user])
+          expect(response).to render_template("users/rdv_wizard_steps/step2")
+        end
+      end
+
+      context "with invitation token" do
+        let!(:invitation_token) do
+          user.invite! { |u| u.skip_invitation = true }
+          user.raw_invitation_token
+        end
+
+        it "return success" do
+          get :new, params: { step: 2, motif_id: motif.id, lieu_id: lieu.id, starts_at: starts_at, invitation_token: invitation_token }
+          expect(response).to have_http_status(:success)
+          expect(assigns(:rdv).users).to eq([user])
+          expect(response).to render_template("users/rdv_wizard_steps/step2")
+        end
       end
     end
 

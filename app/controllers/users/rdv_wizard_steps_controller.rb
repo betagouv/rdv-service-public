@@ -7,8 +7,8 @@ class Users::RdvWizardStepsController < UserAuthController
     :street_ban_id, :invitation_token, :address, :motif_search_terms, { organisation_ids: [] }
   ].freeze
   after_action :allow_iframe
-  # We allow an invited user (=current_user) to take a rdv without being logged in
-  skip_before_action :authenticate_user!, if: :current_user_set?
+
+  include TokenInvitable
 
   def new
     @rdv_wizard = rdv_wizard_for(current_user, query_params)

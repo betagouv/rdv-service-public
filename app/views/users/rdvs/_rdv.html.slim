@@ -40,22 +40,19 @@ ul.list-group.list-group-flush
 div.py-2.d-flex.justify-content-between.align-items-center
   - if rdv.editable?
     .text-left.mt-2
-       = link_to "Modifier l'horaire du RDV", users_creneaux_index_path(rdv_id: rdv.id), class: "btn btn-outline-primary"
-
-  - unless defined?(hide_cancellation_infos) && hide_cancellation_infos
-    - if rdv.cancellable?
-      .text-right.mt-2
-        = link_to "Annuler le RDV", "#", data: { toggle: "modal", target: "#js-cancel-rdv-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
-    - elsif !rdv.past? && !rdv.cancelled?
-      p.font-italic
-        | Ce rendez-vous commence dans moins de 4 heures, il n'est plus annulable en ligne. Prenez contact avec le secrétariat.
+       = link_to "Modifier l'horaire du RDV", creneaux_users_rdv_path(rdv), class: "btn btn-outline-primary"
+    .text-right.mt-2
+      = link_to "Annuler le RDV", "#", data: { toggle: "modal", target: "#js-cancel-rdv-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
+  - elsif !rdv.past? && !rdv.cancelled?
+    p.font-italic
+      | Ce rendez-vous commence dans moins de 4 heures, il n'est plus annulable en ligne. Prenez contact avec le secrétariat.
 
 = render( \
   "common/modal_confirmation", \
   id: "js-cancel-rdv-modal-#{rdv.id}", \
   body_message: rdv.motif.cancellation_warning, \
   cancel_message: "Non", \
-  confirm_path: users_rdv_cancel_path(rdv.id), \
+  confirm_path: cancel_users_rdv_path(rdv), \
   confirm_message: "Oui, annuler le RDV", \
   confirm_link_options: { class: "btn btn-danger", method: :put } \
 )

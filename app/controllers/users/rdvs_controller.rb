@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
 class Users::RdvsController < UserAuthController
-  before_action :set_rdv, only: [:cancel]
+  before_action :set_rdv, only: %i[show creneaux edit cancel update]
   before_action :set_geo_search, only: [:create]
+  before_action :set_lieu, only: %i[creneaux edit update]
+  before_action :build_creneau, :redirect_if_creneau_not_available, only: %i[edit update]
   after_action :allow_iframe
-  skip_before_action :authenticate_user!, if: -> { current_user_set? && action_name.in?(%w[show create cancel]) }
+
+  include TokenInvitable
 
   def index
+    authorize Rdv
     @rdvs = policy_scope(Rdv).includes(:motif, :rdvs_users, :users)
     @rdvs = params[:past].present? ? @rdvs.past : @rdvs.future
     @rdvs = @rdvs.order(starts_at: :desc).page(params[:page])
@@ -38,13 +42,22 @@ class Users::RdvsController < UserAuthController
     end
   end
 
-  def show
-    @rdv = Rdv.find(params[:id])
-    authorize @rdv
+  def edit; end
+
+  def show; end
+
+  def update
+    if @rdv.update(starts_at: @creneau.starts_at, ends_at: @creneau.starts_at + @rdv.duration_in_min.minutes, agent_ids: [@creneau.agent.id], created_by: :file_attente)
+      Notifiers::RdvDateUpdated.perform_with(@rdv, current_user)
+      flash[:success] = "Votre RDV a bien été modifié"
+      redirect_to users_rdv_path(@rdv)
+    else
+      flash[:error] = "Le RDV n'a pas pu être modifié"
+      redirect_to creneaux_users_rdv_path(@rdv)
+    end
   end
 
   def cancel
-    authorize(@rdv)
     if RdvUpdater.update(current_user, @rdv, { status: "excused" })
       flash[:notice] = "Le RDV a bien été annulé."
     else
@@ -53,10 +66,46 @@ class Users::RdvsController < UserAuthController
     redirect_to users_rdv_path(@rdv)
   end
 
+  def creneaux
+    @all_creneaux = @rdv.creneaux_available(Time.zone.today..@rdv.reschedule_max_date)
+    return if @all_creneaux.empty?
+
+    start_date = params[:date]&.to_date || @all_creneaux.first.starts_at.to_date
+    end_date = [start_date + 6.days, @all_creneaux.last.starts_at.to_date].min
+    @date_range = start_date..end_date
+    @creneaux = @rdv.creneaux_available(@date_range)
+    respond_to do |format|
+      format.html
+      format.js
+    end
+  end
+
   private
 
+  def build_creneau
+    @starts_at = Time.zone.parse(params[:starts_at])
+    @creneau = Users::CreneauSearch.creneau_for(
+      user: current_user,
+      starts_at: @starts_at,
+      motif: @rdv.motif,
+      lieu: Lieu.find(@lieu.id)
+    )
+  end
+
+  def set_lieu
+    @lieu = @rdv.lieu
+  end
+
   def set_rdv
-    @rdv = policy_scope(Rdv).find(params[:rdv_id])
+    @rdv = policy_scope(Rdv).find(params[:id])
+    authorize(@rdv)
+  end
+
+  def redirect_if_creneau_not_available
+    return if @creneau.present?
+
+    flash[:alert] = "Ce créneau n'est plus disponible"
+    redirect_to creneaux_users_rdv_path(@rdv)
   end
 
   def set_geo_search

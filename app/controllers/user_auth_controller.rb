@@ -19,14 +19,6 @@ class UserAuthController < ApplicationController
     super([:user, record])
   end
 
-  def current_user
-    super || invited_user
-  end
-
-  def current_user_set?
-    current_user.present?
-  end
-
   def policy_scope(clasz)
     super([:user, clasz])
   end
@@ -35,5 +27,9 @@ class UserAuthController < ApplicationController
     policy_name = exception.policy.class.to_s.underscore
     flash[:error] = t "#{policy_name}.#{exception.query}", scope: "pundit", default: :default
     redirect_to(request.referer || authenticated_user_root_path)
+  end
+
+  def authenticated_user_root_path
+    current_user.only_invited? ? root_path : super
   end
 end
