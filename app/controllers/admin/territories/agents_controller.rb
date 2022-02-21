@@ -2,20 +2,17 @@
 
 class Admin::Territories::AgentsController < Admin::Territories::BaseController
   def index
-    @agents = find_agents(params[:q])
-      .page(params[:page])
+    @agents = find_agents(params[:q]).page(params[:page])
   end
 
   def show
-    skip_authorization
     @agent = Agent.find(params[:id])
+    authorize @agent
   end
 
   def search
-    skip_authorization
-
-    @agents = find_agents(params[:q])
-      .limit(10)
+    @agents = find_agents(params[:q]).limit(10)
+    authorize @agent
   end
 
   def find_agents(search_term)
@@ -34,10 +31,12 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
 
   def edit
     @agent = Agent.find(params[:id])
+    authorize @agent
   end
 
   def update
     @agent = Agent.find(params[:id])
+    authorize @agent
     if @agent.update(agent_params)
       redirect_to admin_territory_agents_path(current_territory)
     else

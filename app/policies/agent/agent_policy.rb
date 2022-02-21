@@ -23,6 +23,10 @@ class Agent::AgentPolicy < ApplicationPolicy
   alias reinvite? current_agent_or_admin_in_record_organisation?
   alias versions? current_agent_or_admin_in_record_organisation?
 
+  def edit?
+    @agent.territorial_admin_in?(@territory)
+  end
+
   def destroy?
     # Even admins cannot destroy themselves
     admin_in_record_organisation? && record != current_agent

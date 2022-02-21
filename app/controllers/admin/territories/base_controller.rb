@@ -6,6 +6,8 @@ class Admin::Territories::BaseController < ApplicationController
   layout "application_configuration"
 
   before_action :set_territory
+  after_action :verify_authorized, except: :index
+  after_action :verify_policy_scoped, only: :index
 
   def current_territory
     @territory
@@ -13,7 +15,12 @@ class Admin::Territories::BaseController < ApplicationController
   helper_method :current_territory
 
   def pundit_user
-    AgentContext.new(current_agent)
+    AgentTerritorialContext.new(current_agent, current_territory)
+  end
+  helper_method :pundit_user
+
+  def authorize(record, *args)
+    super([:configuration, record], *args)
   end
 
   private
