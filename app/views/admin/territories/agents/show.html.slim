@@ -23,5 +23,6 @@
         - @agent.teams.each do |team|
           = link_to team.name, admin_territory_team_path(current_territory)
     .card-footer
-      .d-flex.justify-content-end
-        div= link_to "Modifier les équipes", edit_admin_territory_agent_path(current_territory, @agent), class: "btn btn-primary w-100"
+      - if policy([:configuration, current_territory]).allow_to_manage_access_right?
+        .d-flex.justify-content-end
+          div= link_to t(".update"), edit_admin_territory_agent_path(current_territory, @agent), class: "btn btn-primary w-100"

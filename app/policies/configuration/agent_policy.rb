@@ -12,7 +12,10 @@ class Configuration::AgentPolicy
   end
 
   alias edit? territorial_admin?
-  alias show? territorial_admin?
   alias update? territorial_admin?
 
+  def show?
+    @agent.organisations.flat_map(&:territory).include?(@context.territory) &&
+      (@agent.service == @context.agent.service || territorial_admin?)
+  end
 end

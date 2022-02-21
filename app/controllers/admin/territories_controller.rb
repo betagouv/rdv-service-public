@@ -5,7 +5,7 @@ class Admin::TerritoriesController < Admin::Territories::BaseController
 
   def show
     @territory = Territory.find(params[:id])
-    authorize @territory
+    skip_authorization
   end
 
   def update
