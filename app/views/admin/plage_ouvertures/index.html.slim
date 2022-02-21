@@ -3,55 +3,54 @@
 
 - content_for :title do
   - if current_agent == @agent
-    | Vos plages d'ouvertureeee
+    = t(".your_aperture_range")
   - else
-    | Plages d'ouverture de #{@agent.full_name_and_service}
+    = t(".aperture_range_of", full_name: @agent.full_name_and_service)
 
 - content_for :breadcrumb do
 
 .text-right
-  = link_to "Créer une plage d'ouverture", new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-primary align-bottom"
+  = link_to t(".create_aperture_range"), new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-primary align-bottom"
   .m-3.d-flex.justify-content-end
     - search = params[:search].blank? ? "d-none" : ""
-    div= link_to "Réinitialiser", admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: "btn btn-link"
+    div= link_to t(".reset"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: "btn btn-link"
     = simple_form_for "", url: admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
-      = f.input :search, placeholder: "ex. Puericultrice", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
-      = f.button :submit, "Rechercher"
-
+      = f.input :search, placeholder: "ex. PMI", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
+      = f.button :submit, t(".search")
 
 .card.pb-3
   - if @display_tabs
     ul.nav.nav-tabs.px-2.mt-2
       li.nav-item
-        = active_link_to "En cours", admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: "nav-link", active: :exact
+        = active_link_to t(".in_progress"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: "nav-link", active: :exact
       li.nav-item
-        = active_link_to "Passées", admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, current_tab: "expired"), class: "nav-link", active: :exact
+        = active_link_to t(".past"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, current_tab: "expired"), class: "nav-link", active: :exact
 
   - if @plage_ouvertures.any?
     table.table
       thead
         tr
-          th Description
-          th Motifs
-          th Lieu
-          th Dates
-          th Actions
+          th = t(".description")
+          th = t(".motifs")
+          th = t(".place")
+          th = t(".dates")
+          th = t(".actions")
       tbody
-        = render @plage_ouvertures
+        = render partial: 'plage_ouvertures', :collection => @plage_ouvertures
     .d-flex.justify-content-center
       = paginate @plage_ouvertures, theme: "twitter-bootstrap-4"
   - else
     .row.justify-content-md-center.p-2.mt-3
       .col-md-6.text-center.mb-2
         p.mb-2.lead
-          - if params[:search].present? 
-            | Il n'y a pas de résultat correspondant à votre recherche. 
-          - else 
+          - if params[:search].present?
+            = t(".no_results_for_your_search")
+          - else
             - if current_agent == @agent
-              | Vous n'avez pas encore créé de plage d'ouverture.
+              = t(".not_yet_created_opening_range")
             - else
-              | #{@agent.full_name} n'a pas encore créé de plage d'ouverture.
-            p Les plages d'ouvertures affichent votre disponibilité à la prise de RDV, qu'elle soit faite par l'usager lui même (en ligne) ou par un autre agent de votre organisation. Chaque agent a ses propres plages d'ouvertures et peut y associer des motifs et un lieu. Les plages peuvent être récurrentes.
+              =t(".this_agent_not_yet_created_opening_range", full_name: @agent.full_name_and_service)
+            p = t(".explanation_aperture_range")
             span.fa-stack.fa-4x
               i.fa.fa-circle.fa-stack-2x.text-primary
               i.far.fa-calendar.fa-stack-1x.text-white
@@ -59,6 +58,6 @@
   .text-center.py-2
     = link_to new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-primary" do
       - if current_agent == @agent
-        | Créer une plage d'ouverture
+        = t(".create_aperture_range")
       - else
-        | Créer une plage d'ouverture pour #{@agent.full_name}
+        = t(".aperture_range_of", full_name: @agent.full_name_and_service)
