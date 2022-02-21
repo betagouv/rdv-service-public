@@ -88,7 +88,7 @@ module SlotBuilder
     end
 
     def calculate_slots(free_time, motif, plage_ouverture)
-      possible_slot_start = earliest_possible_slot_start(free_time, motif)
+      possible_slot_start = earliest_possible_slot_start(free_time)
       last_possible_slot_start = free_time.end - motif.default_duration_in_min.minutes
 
       slots = []
@@ -105,8 +105,8 @@ module SlotBuilder
       slots
     end
 
-    def earliest_possible_slot_start(free_time, motif)
-      earliest_possible_start = Time.zone.now + motif.min_booking_delay
+    def earliest_possible_slot_start(free_time)
+      earliest_possible_start = Time.zone.now
 
       possible_slot_start = free_time.begin
 

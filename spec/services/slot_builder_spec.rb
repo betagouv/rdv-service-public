@@ -32,7 +32,7 @@ describe SlotBuilder, type: :service do
         create(:motif, default_duration_in_min: 60, organisation: organisation, min_booking_delay: 45 * 60)
       end
 
-      it "returns only slots that start in the future, and takes the minimum booking delay into account" do
+      it "returns only slots that start in the future, without minimum booking delay" do
         create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(12) + 1.second, lieu: lieu)
 
         # The plage_ouverture are not always sorted, so neither are the slots, so we can't just remove the first slots
@@ -45,11 +45,10 @@ describe SlotBuilder, type: :service do
 
         # The current time is 15:03
         # The available plages ouvertures are 9:00-12:00, 14:00-17:00, and 18:00-20:00
-        # The minimum delay before a rdv is 45mn, so we can't make a rdv before 15:48
-        # We round up the rdv time to the closest 5mn, so the first possible creneau is at 15:50.
+        # We round up the rdv time to the closest 5mn, so the first possible creneau is at 15:05.
 
         expect(slots.map(&:starts_at)).to match_array([
-                                                        Time.zone.local(2021, 5, 3, 15, 50, 0),
+                                                        Time.zone.local(2021, 5, 3, 15, 5, 0),
                                                         Time.zone.local(2021, 5, 3, 18, 0, 0),
                                                         Time.zone.local(2021, 5, 3, 19, 0, 0)
                                                       ])
