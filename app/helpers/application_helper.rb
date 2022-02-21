@@ -35,10 +35,6 @@ module ApplicationHelper
     )
   end
 
-  def time_input(form, field)
-    form.input(field, as: :string, input_html: { value: form.object.send(field)&.strftime("%H:%M"), data: { behaviour: "timepicker" }, autocomplete: "off" })
-  end
-
   def agents_or_users_body_class
     agent_path? ? "agents" : "users"
   end

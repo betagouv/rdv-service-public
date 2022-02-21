@@ -3,7 +3,7 @@
 class Admin::Territories::BaseController < ApplicationController
   include Admin::AuthenticatedControllerConcern
 
-  layout "application_agent_departement"
+  layout "application_configuration"
 
   before_action :set_territory
 

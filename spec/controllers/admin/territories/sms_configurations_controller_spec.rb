@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::Territories::SmsConfigurationsController, type: :controller do
+describe Admin::Territories::SmsConfigurationsController, type: :controller do
   let(:territory) { create(:territory, departement_number: "62") }
   let(:organisation) { create(:organisation, territory: territory) }
   let(:agent) { create(:agent, organisations: [organisation]) }
@@ -25,7 +25,7 @@ RSpec.describe Admin::Territories::SmsConfigurationsController, type: :controlle
     end
 
     it "redirected if departement not allowed" do
-      ENV["DEPARTEMENT_ALLOWED_TO_CONFIGURE_SMS"] = ""
+      territory = create(:territory, has_own_sms_provider: false)
       get :edit, params: { territory_id: territory.id }
       expect(response).to redirect_to(admin_territory_sms_configuration_path)
     end

@@ -1,6 +1,9 @@
 ---
 fr:
   admin:
+    organisations:
+      index:
+        configuration: Configuration
     rdvs:
       message:
         confirm:
