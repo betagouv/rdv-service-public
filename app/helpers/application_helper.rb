@@ -101,14 +101,4 @@ module ApplicationHelper
       name
     end
   end
-
-  def invitation?
-    session[:invitation_token].present? && invited_user == current_user
-  end
-
-  def invited_user
-    # rubocop:disable Rails/DynamicFindBy
-    @invited_user ||= User.find_by_invitation_token(session[:invitation_token], true)
-    # rubocop:enable Rails/DynamicFindBy
-  end
 end

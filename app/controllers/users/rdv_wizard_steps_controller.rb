@@ -47,12 +47,14 @@ class Users::RdvWizardStepsController < UserAuthController
 
   def next_step_index
     idx = current_step_index + 2 # steps start at 1 + increment
-    idx += 1 if current_step_index.zero? && invitation? # we skip the step 2 in the context of an invitation
+    idx += 1 if current_step_index.zero? && current_user.only_invited? # we skip the step 2 in the context of an invitation
     idx
   end
 
   def set_step_titles
-    @step_titles = ["Identification", "Vos informations", invitation? ? nil : "Choix de l'usager", "Confirmation"].compact
+    @step_titles = (0..3).map do |idx|
+      I18n.t("users.rdv_wizard_steps.step#{idx}.title") unless idx == 2 && current_user.only_invited?
+    end.compact
   end
 
   def current_step_index
