@@ -78,7 +78,6 @@ describe Admin::Territories::AgentsController, type: :controller do
   end
 
   describe "#show" do
-
     it "respond successfull" do
       agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
       sign_in agent
