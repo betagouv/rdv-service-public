@@ -5,7 +5,7 @@ class AddRdvsEndsAt < ActiveRecord::Migration[6.0]
     add_column :rdvs, :ends_at, :datetime
 
     up_only do
-      Rdv.update_all("ends_at = starts_at + duration_in_min * INTERVAL '1 minute'") # rubocop:disable Rails/SkipsModelValidations
+      Rdv.update_all("ends_at = starts_at + duration_in_min * INTERVAL '1 minute'")
     end
 
     add_index :rdvs, :ends_at

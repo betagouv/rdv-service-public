@@ -13,7 +13,7 @@ class CreateLocationTypeEnum < ActiveRecord::Migration[6.1]
     up_only do
       old_enum_values = { public_office: 0, phone: 1, home: 2 }
       old_enum_values.each do |name, int_value|
-        Motif.where(old_location_type: int_value).update_all(location_type: name) # rubocop:disable Rails/SkipsModelValidations
+        Motif.where(old_location_type: int_value).update_all(location_type: name)
       end
     end
 
