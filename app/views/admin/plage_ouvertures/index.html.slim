@@ -3,17 +3,16 @@
 
 - content_for :title do
   - if current_agent == @agent
-    = t(".your_aperture_range")
+    = t(".your_plage_ouverture")
   - else
-    = t(".aperture_range_of", full_name: @agent.full_name_and_service)
+    = t(".plage_ouverture_of", full_name: @agent.full_name_and_service)
 
 - content_for :breadcrumb do
 
 .text-right
-  = link_to t(".create_aperture_range"), new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-primary align-bottom"
+  = link_to t(".create_plage_ouverture"), new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-primary align-bottom"
   .m-3.d-flex.justify-content-end
-    - search = params[:search].blank? ? "d-none" : ""
-    div= link_to t(".reset"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: "btn btn-link"
+    div= link_to t("helpers.reset"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: class_names("btn", "btn-link", "d-none": params[:search].blank?)
     = simple_form_for "", url: admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
       = f.input :search, placeholder: "ex. PMI", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
       = f.button :submit, t(".search")
@@ -30,13 +29,13 @@
     table.table
       thead
         tr
-          th = t(".description")
+          th = PlageOuverture.human_attribute_name(:title)
           th = t(".motifs")
           th = t(".place")
           th = t(".dates")
-          th = t(".actions")
+          th = t("helpers.actions")
       tbody
-        = render partial: 'plage_ouvertures', :collection => @plage_ouvertures
+        = render @plage_ouvertures
     .d-flex.justify-content-center
       = paginate @plage_ouvertures, theme: "twitter-bootstrap-4"
   - else
@@ -47,10 +46,10 @@
             = t(".no_results_for_your_search")
           - else
             - if current_agent == @agent
-              = t(".not_yet_created_opening_range")
+              = t(".not_yet_created_plage_ouverture")
             - else
-              =t(".this_agent_not_yet_created_opening_range", full_name: @agent.full_name_and_service)
-            p = t(".explanation_aperture_range")
+              =t(".this_agent_not_yet_created_plage_ouverture", full_name: @agent.full_name)
+            p = t(".explanation_plage_ouverture")
             span.fa-stack.fa-4x
               i.fa.fa-circle.fa-stack-2x.text-primary
               i.far.fa-calendar.fa-stack-1x.text-white
@@ -58,6 +57,6 @@
   .text-center.py-2
     = link_to new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-primary" do
       - if current_agent == @agent
-        = t(".create_aperture_range")
+        = t(".create_plage_ouverture")
       - else
-        = t(".aperture_range_of", full_name: @agent.full_name_and_service)
+        = t(".create_plage_ouverture_for", full_name: @agent.full_name)
