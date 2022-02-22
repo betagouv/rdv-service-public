@@ -4,7 +4,11 @@ class Agent::AgentPolicy < ApplicationPolicy
   include CurrentAgentInPolicyConcern
 
   def current_agent_or_admin_in_record_organisation?
-    record == current_agent || admin_in_record_organisation?
+    current_agent? || admin_in_record_organisation?
+  end
+
+  def current_agent?
+    record == current_agent
   end
 
   def admin_in_record_organisation?
@@ -22,6 +26,7 @@ class Agent::AgentPolicy < ApplicationPolicy
   alias rdvs? current_agent_or_admin_in_record_organisation?
   alias reinvite? current_agent_or_admin_in_record_organisation?
   alias versions? current_agent_or_admin_in_record_organisation?
+  alias toggle_display_saturdays? current_agent?
 
   def destroy?
     # Even admins cannot destroy themselves
