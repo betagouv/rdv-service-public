@@ -137,7 +137,7 @@ class Rdv < ApplicationRecord
     status.in? CANCELLED_STATUSES
   end
 
-  def cancellable?
+  def editable?
     !cancelled? && starts_at > 4.hours.from_now
   end
 
@@ -194,6 +194,10 @@ class Rdv < ApplicationRecord
     rdvs = rdvs.where("DATE(starts_at) >= ?", options["start"]) if options["start"].present?
     rdvs = rdvs.where("DATE(starts_at) <= ?", options["end"]) if options["end"].present?
     rdvs
+  end
+
+  def reschedule_max_date
+    Time.zone.now + motif.max_booking_delay
   end
 
   private

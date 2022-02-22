@@ -28,4 +28,8 @@ class UserAuthController < ApplicationController
     flash[:error] = t "#{policy_name}.#{exception.query}", scope: "pundit", default: :default
     redirect_to(request.referer || authenticated_user_root_path)
   end
+
+  def authenticated_user_root_path
+    current_user.only_invited? ? root_path : users_rdvs_path
+  end
 end

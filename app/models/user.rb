@@ -180,6 +180,14 @@ class User < ApplicationRecord
     nil
   end
 
+  def only_invited!
+    @only_invited = true
+  end
+
+  def only_invited?
+    @only_invited == true
+  end
+
   protected
 
   def compute_invitation_due_at
@@ -220,6 +228,18 @@ class User < ApplicationRecord
 
   def email_required?
     false # users without passwords and emails can be created by agents
+  end
+
+  def confirmation_required?
+    return false if only_invited?
+
+    super
+  end
+
+  def reconfirmation_required?
+    return false if only_invited?
+
+    super
   end
 
   def set_email_to_null_if_blank

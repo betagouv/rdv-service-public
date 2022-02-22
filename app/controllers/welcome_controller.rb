@@ -6,7 +6,6 @@ class WelcomeController < ApplicationController
   ].freeze
 
   before_action :set_lieu_variables, only: %i[welcome_departement welcome_service]
-  before_action :store_invitation_token_in_session_if_present
   after_action :allow_iframe
 
   def index; end

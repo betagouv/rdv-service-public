@@ -20,7 +20,6 @@ class SearchContext
     @service_id = query[:service_id]
     @lieu_id = query[:lieu_id]
     @start_date = query[:date]
-    @errors = []
   end
 
   # *** Method that outputs the next step for the user to complete its rdv journey ***
@@ -43,10 +42,6 @@ class SearchContext
 
   def geo_search
     Users::GeoSearch.new(departement: @departement, city_code: @city_code, street_ban_id: @street_ban_id)
-  end
-
-  def valid?
-    invitation? ? invitation_valid? : true
   end
 
   def invitation?
@@ -120,7 +115,7 @@ class SearchContext
 
   def creneaux_search_for(lieu, date_range)
     Users::CreneauxSearch.new(
-      user: @current_user || invited_user,
+      user: @current_user,
       motif: matching_motifs.where(organisation: lieu.organisation).first,
       lieu: lieu,
       date_range: date_range,
@@ -161,31 +156,5 @@ class SearchContext
     motifs = Motif.available_with_plages_ouvertures.where(organisation_id: @organisation_ids)
     motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
     motifs
-  end
-
-  def invited_user
-    # rubocop:disable Rails/DynamicFindBy
-    # find_by_invitation_token is a method added by the devise_invitable gem
-    @invited_user ||= User.find_by_invitation_token(@invitation_token, true)
-    # rubocop:enable Rails/DynamicFindBy
-  end
-
-  def invitation_valid?
-    token_valid? && current_user_is_invited_user?
-  end
-
-  def token_valid?
-    return true if invited_user.present?
-
-    @errors << I18n.t("devise.invitations.invitation_token_invalid")
-    false
-  end
-
-  def current_user_is_invited_user?
-    return true if @current_user.blank?
-    return true if @current_user == invited_user
-
-    @errors << I18n.t("devise.invitations.current_user_mismatch")
-    false
   end
 end

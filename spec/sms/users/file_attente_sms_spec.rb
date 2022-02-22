@@ -4,7 +4,7 @@ describe Users::FileAttenteSms, type: :service do
   describe "#new_creneau_available" do
     subject { described_class.new_creneau_available(rdv, user).content }
 
-    let(:rdv) { build(:rdv) }
+    let(:rdv) { create(:rdv) }
     let(:user) { build(:user) }
 
     it do

@@ -36,8 +36,11 @@ ul.list-group.list-group-flush
       = auto_link(simple_format(rdv.motif.instruction_for_rdv, class:"pl-3 pt-1"), html: { target: "_blank" })
   - unless defined?(hide_file_attente_infos) && hide_file_attente_infos
     = render "/users/rdvs/file_attente", rdv: rdv
-- unless defined?(hide_cancellation_infos) && hide_cancellation_infos
-  - if rdv.cancellable?
+
+div.py-2.d-flex.justify-content-between.align-items-center
+  - if rdv.editable?
+    .text-left.mt-2
+       = link_to "Modifier l'horaire du RDV", creneaux_users_rdv_path(rdv), class: "btn btn-outline-primary"
     .text-right.mt-2
       = link_to "Annuler le RDV", "#", data: { toggle: "modal", target: "#js-cancel-rdv-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
   - elsif !rdv.past? && !rdv.cancelled?
@@ -49,7 +52,7 @@ ul.list-group.list-group-flush
   id: "js-cancel-rdv-modal-#{rdv.id}", \
   body_message: rdv.motif.cancellation_warning, \
   cancel_message: "Non", \
-  confirm_path: users_rdv_cancel_path(rdv.id), \
+  confirm_path: cancel_users_rdv_path(rdv), \
   confirm_message: "Oui, annuler le RDV", \
   confirm_link_options: { class: "btn btn-danger", method: :put } \
 )

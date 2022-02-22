@@ -2,8 +2,13 @@
 
 class Users::RdvWizardStepsController < UserAuthController
   RDV_PERMITTED_PARAMS = [:starts_at, :motif_id, :context, { user_ids: [] }].freeze
-  EXTRA_PERMITTED_PARAMS = %i[lieu_id departement where created_user_id latitude longitude city_code street_ban_id].freeze
+  EXTRA_PERMITTED_PARAMS = [
+    :lieu_id, :departement, :where, :created_user_id, :latitude, :longitude, :city_code,
+    :street_ban_id, :invitation_token, :address, :motif_search_terms, { organisation_ids: [] }
+  ].freeze
   after_action :allow_iframe
+
+  include TokenInvitable
 
   def new
     @rdv_wizard = rdv_wizard_for(current_user, query_params)

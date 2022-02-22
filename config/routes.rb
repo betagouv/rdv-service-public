@@ -45,10 +45,12 @@ Rails.application.routes.draw do
 
   namespace :users do
     resource :rdv_wizard_step, only: %i[new create]
-    resources :rdvs, only: %i[index create] do
-      put :cancel
+    resources :rdvs, only: %i[index create show edit update] do
+      member do
+        get :creneaux
+        put :cancel
+      end
     end
-    resources :creneaux, only: %i[index edit update], param: :rdv_id
     post "file_attente", to: "file_attentes#create_or_delete"
   end
   resources :stats, only: :index
@@ -64,7 +66,7 @@ Rails.application.routes.draw do
     resources :relatives, except: [:index], controller: "users/relatives"
   end
   authenticated :user do
-    get "/users/rdvs", to: "users/rdvs#index", as: :authenticated_user_root
+    get "/users/rdvs", to: "users/rdvs#index"
   end
 
   devise_for :agents, controllers: {

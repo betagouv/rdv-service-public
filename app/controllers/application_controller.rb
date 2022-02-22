@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
     if resource.instance_of?(Agent)
       authenticated_agent_root_path
     elsif resource.instance_of?(User)
-      stored_location_for(resource) || authenticated_user_root_path
+      stored_location_for(resource) || users_rdvs_path
     end
   end
 
@@ -29,12 +29,6 @@ class ApplicationController < ActionController::Base
   end
 
   protected
-
-  def store_invitation_token_in_session_if_present
-    return if params[:invitation_token].blank?
-
-    session[:invitation_token] = params[:invitation_token]
-  end
 
   def set_sentry_context
     Sentry.set_user(sentry_user)
