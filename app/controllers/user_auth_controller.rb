@@ -30,6 +30,6 @@ class UserAuthController < ApplicationController
   end
 
   def authenticated_user_root_path
-    current_user.only_invited? ? root_path : super
+    current_user.only_invited? ? root_path : users_rdvs_path
   end
 end

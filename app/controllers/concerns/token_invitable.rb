@@ -20,7 +20,7 @@ module TokenInvitable
 
     return if invited_user.blank?
 
-    invited_user.set_as_invited
+    invited_user.only_invited!
     sign_in(invited_user, store: false)
   end
 

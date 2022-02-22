@@ -5,7 +5,7 @@ describe Users::FileAttenteSms, type: :service do
     subject { described_class.new_creneau_available(rdv, user).content }
 
     let(:rdv) { create(:rdv) }
-    let(:user) { create(:user) }
+    let(:user) { build(:user) }
 
     it do
       expect(subject).to include("Des créneaux se sont libérés plus tot")

@@ -180,7 +180,7 @@ class User < ApplicationRecord
     nil
   end
 
-  def set_as_invited
+  def only_invited!
     @only_invited = true
   end
 
