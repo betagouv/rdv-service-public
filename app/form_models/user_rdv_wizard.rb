@@ -71,6 +71,7 @@ module UserRdvWizard
     end
 
     def save
+      @user.skip_reconfirmation!
       valid? && @user.update(@user_attributes)
     end
   end
