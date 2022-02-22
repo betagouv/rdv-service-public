@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
     if resource.instance_of?(Agent)
       authenticated_agent_root_path
     elsif resource.instance_of?(User)
-      stored_location_for(resource) || authenticated_user_root_path
+      stored_location_for(resource) || users_rdvs_path
     end
   end
 

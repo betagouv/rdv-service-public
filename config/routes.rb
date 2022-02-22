@@ -66,7 +66,7 @@ Rails.application.routes.draw do
     resources :relatives, except: [:index], controller: "users/relatives"
   end
   authenticated :user do
-    get "/users/rdvs", to: "users/rdvs#index", as: :authenticated_user_root
+    get "/users/rdvs", to: "users/rdvs#index"
   end
 
   devise_for :agents, controllers: {

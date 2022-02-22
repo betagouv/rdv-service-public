@@ -247,7 +247,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       before { subject }
 
-      it { expect(response).to redirect_to(authenticated_user_root_path) }
+      it { expect(response).to redirect_to(users_rdvs_path) }
       it { expect(flash[:error]).to eq("Vous ne pouvez pas effectuer cette action.") }
     end
   end
