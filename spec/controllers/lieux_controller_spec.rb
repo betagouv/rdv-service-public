@@ -172,76 +172,63 @@ RSpec.describe LieuxController, type: :controller do
   end
 
   describe "GET #index" do
-    subject do
-      get :index,
-          params: { search: { departement: "62", city_code: "62100", where: "useless 12345",
-                              service: motif.service_id,
-                              motif_name_with_location_type: motif.name_with_location_type,
-                              latitude: lieu.latitude, longitude: lieu.longitude } }
-    end
+    context "request closer of first lieu" do
+      it "returns a success response" do
+        create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: now + 4.days)
+        get :index, params: { search: {
+          departement: "62", city_code: "62100", where: "useless 12345",
+          service: motif.service_id,
+          motif_name_with_location_type: motif.name_with_location_type,
+          latitude: lieu.latitude, longitude: lieu.longitude
+        } }
+        expect(response).to be_successful
+      end
 
-    before do
-      allow(Lieu).to receive(:with_open_slots_for_motifs).and_return(Lieu.all)
-      allow(Users::CreneauxSearch).to \
-        receive(:new)
-        .with(
-          user: nil,
-          motif: motif,
-          lieu: lieu,
-          date_range: (Date.new(2019, 7, 15)..Date.new(2019, 7, 22)),
-          geo_search: mock_geo_search
-        )
-        .and_return(
-          instance_double(
-            Users::CreneauxSearch,
-            creneaux: [],
-            next_availability: build(:creneau, starts_at: DateTime.parse("2019-07-22 08h00"), motif: build(:motif, organisation: organisation))
-          )
-        )
+      it "returns 2 lieux" do
+        create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: now + 4.days)
+        create(:plage_ouverture, lieu: lieu2, motifs: [motif], first_day: now + 3.days)
+        get :index, params: { search: {
+          departement: "62", city_code: "62100", where: "useless 12345",
+          service: motif.service_id,
+          motif_name_with_location_type: motif.name_with_location_type,
+          latitude: lieu.latitude, longitude: lieu.longitude
+        } }
+        expect(assigns(:next_availability_by_lieux).count).to eq(2)
+      end
 
-      allow(Users::CreneauxSearch).to \
-        receive(:new)
-        .with(
-          user: nil,
-          motif: motif,
-          lieu: lieu2,
-          date_range: (Date.new(2019, 7, 15)..Date.new(2019, 7, 22)),
-          geo_search: mock_geo_search
-        )
-        .and_return(
-          instance_double(
-            Users::CreneauxSearch,
-            creneaux: [],
-            next_availability: build(:creneau, starts_at: DateTime.parse("2019-07-29 08h00", motif: build(:motif, organisation: organisation)))
-          )
-        )
+      it "returns lieu first" do
+        create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: now + 4.days)
+        create(:plage_ouverture, lieu: lieu2, motifs: [motif], first_day: now + 3.days)
+        get :index, params: { search: {
+          departement: "62", city_code: "62100", where: "useless 12345",
+          service: motif.service_id,
+          motif_name_with_location_type: motif.name_with_location_type,
+          latitude: lieu.latitude, longitude: lieu.longitude
+        } }
+        expect(assigns(:lieux).first).to eq(lieu)
+      end
 
-      subject
-    end
-
-    it "returns a success response" do
-      expect(response).to be_successful
-    end
-
-    it "returns 2 lieux" do
-      expect(response.body).to match(/#{lieu.name}(.)*Prochaine disponibilité le(.)*lundi 22 juillet 2019 à 08h00/)
-      expect(response.body).to match(/#{lieu2.name}(.)*Prochaine disponibilité le(.)*lundi 29 juillet 2019 à 08h00/)
-    end
-
-    it "returns lieu first" do
-      expect(assigns(:lieux).first).to eq(lieu)
+      it "returns next availability on 222 222 222" do
+        create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: now + 4.days)
+        create(:plage_ouverture, lieu: lieu2, motifs: [motif], first_day: now + 3.days)
+        get :index, params: { search: {
+          departement: "62", city_code: "62100", where: "useless 12345",
+          service: motif.service_id,
+          motif_name_with_location_type: motif.name_with_location_type,
+          latitude: lieu.latitude, longitude: lieu.longitude
+        } }
+        expect(assigns(:next_availability_by_lieux).first.last.starts_at).to eq(Time.zone.parse("20190726 8"))
+      end
     end
 
     context "request is closer to lieu_2" do
-      subject do
-        get :index,
-            params: { search: { departement: "62", city_code: "62100", where: "useless 12345",
-                                service: motif.service_id,
-                                motif_name_with_location_type: motif.name_with_location_type,
-                                latitude: lieu2.latitude, longitude: lieu2.longitude } }
-      end
-
       it "return lieu2 first" do
+        create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: now + 4.days)
+        create(:plage_ouverture, lieu: lieu2, motifs: [motif], first_day: now + 3.days)
+        get :index, params: { search: { departement: "62", city_code: "62100", where: "useless 12345",
+                                        service: motif.service_id,
+                                        motif_name_with_location_type: motif.name_with_location_type,
+                                        latitude: lieu2.latitude, longitude: lieu2.longitude } }
         expect(assigns(:lieux).first).to eq(lieu2)
       end
     end

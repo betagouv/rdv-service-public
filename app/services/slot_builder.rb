@@ -4,18 +4,10 @@ module SlotBuilder
   class << self
     # méthode publique
     def available_slots(motif, lieu, date_range, off_days, agents = [])
-      datetime_range = ensure_date_range_with_time(date_range)
+      datetime_range = Lapin::Range.ensure_date_range_with_time(date_range)
       plage_ouvertures = plage_ouvertures_for(motif, lieu, datetime_range, agents)
       free_times_po = free_times_from(plage_ouvertures, datetime_range, off_days) # dépendance sur RDV et Absence
       slots_for(free_times_po, motif)
-    end
-
-    def ensure_date_range_with_time(date_range)
-      time_begin = date_range.begin.is_a?(Time) ? date_range.begin : date_range.begin.beginning_of_day
-      time_begin = Time.zone.now if time_begin < Time.zone.now
-      time_end = date_range.end.is_a?(Time) ? date_range.end : date_range.end.end_of_day
-
-      time_begin..time_end
     end
 
     def plage_ouvertures_for(motif, lieu, datetime_range, agents)

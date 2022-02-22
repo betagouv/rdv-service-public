@@ -4,6 +4,11 @@ describe Users::CreneauxSearch, type: :service do
   let(:organisation) { create(:organisation) }
   let(:lieu) { create(:lieu, organisation: organisation) }
   let(:date_range) { (Date.parse("2020-10-20")..Date.parse("2020-10-23")) }
+  let(:now) { Time.zone.parse("2020-10-19 15:34") }
+
+  before do
+    travel_to(now)
+  end
 
   it "call builder without special options" do
     user = create(:user)

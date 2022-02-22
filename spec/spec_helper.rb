@@ -18,6 +18,7 @@
 
 require "axe-rspec"
 require "webdrivers/chromedriver"
+Webdrivers::Chromedriver.required_version = "97.0.4692.71"
 require "capybara/rspec"
 require "capybara/email/rspec"
 require "webdrivers"

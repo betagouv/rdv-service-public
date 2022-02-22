@@ -6,6 +6,7 @@ describe Users::CreneauSearch do
   let(:motif) { create(:motif, name: "Coucou", location_type: :home, organisation: organisation) }
   let(:lieu) { create(:lieu, organisation: organisation) }
   let(:starts_at) { DateTime.parse("2020-10-20 09h30") }
+  let(:now) { Time.zone.parse("2020-10-19 14:30") }
 
   describe ".creneau_for" do
     subject do
@@ -18,6 +19,7 @@ describe Users::CreneauSearch do
     end
 
     before do
+      travel_to(now)
       allow(SlotBuilder).to receive(:available_slots).and_return(mock_creneaux)
     end
 

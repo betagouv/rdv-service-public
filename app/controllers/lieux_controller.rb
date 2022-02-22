@@ -15,10 +15,9 @@ class LieuxController < ApplicationController
       .includes(:organisation)
       .sort_by { |lieu| lieu.distance(@latitude.to_f, @longitude.to_f) }
     @next_availability_by_lieux = @lieux.to_h do |lieu|
-      [
-        lieu.id,
-        creneaux_search_for(lieu, (1.week.ago.to_date..Time.zone.today)).next_availability
-      ]
+      motif = @matching_motifs.where(organisation: lieu.organisation).first
+      next_availability = NextAvailabilityService.find(motif, lieu, (Time.zone.today + motif.min_booking_delay.seconds).to_date, [])
+      [lieu.id, next_availability]
     end
   end
 
