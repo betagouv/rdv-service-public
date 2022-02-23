@@ -36,6 +36,20 @@
 
   .card
     .card-body
+      h5.card-title= Motif.human_attribute_name(:collectif)
+
+      = label_tag do
+        = f.radio_button(:collectif, false)
+        span.ml-1= Motif.human_attribute_value(:collectif, false)
+        p.text-muted.font-14= Motif.human_attribute_value(:collectif, false, context: :hint)
+
+      = label_tag do
+        = f.radio_button(:collectif, true)
+        span.ml-1=  Motif.human_attribute_value(:collectif, true)
+        p.text-muted.font-14= Motif.human_attribute_value(:collectif, true, context: :hint)
+
+  .card
+    .card-body
       h5.card-title= Motif.human_attribute_name("reservable_online_title")
       p.text-muted.font-14= Motif.human_attribute_name("reservable_online_hint")
       = f.input :reservable_online

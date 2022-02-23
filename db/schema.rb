@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_08_221144) do
+ActiveRecord::Schema.define(version: 2022_02_17_100251) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -267,6 +267,7 @@ ActiveRecord::Schema.define(version: 2022_02_08_221144) do
     t.string "visibility_type", default: "visible_and_notified", null: false
     t.string "sectorisation_level", default: "departement"
     t.text "custom_cancel_warning_message"
+    t.boolean "collectif", default: false
     t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_motifs_name_vector", using: :gin
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
     t.index ["location_type"], name: "index_motifs_on_location_type"

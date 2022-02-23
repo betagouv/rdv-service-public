@@ -6,8 +6,12 @@
     span.float-right= l(rdv.starts_at, format: (rdv.home? ? :human_approx : :human))
     .clear
   div.row-result
-    span.title Usager(s) :
-    span.float-right= rdv.users_full_names
+    - if rdv.collectif? && for_role == :user
+      span.title= "#{User.model_name.human} :"
+      span.float-right= @user.full_name
+    - else
+      span.title Usager(s) :
+      span.float-right= rdv.users_full_names
     .clear
   div.row-result
     span.title Motif :

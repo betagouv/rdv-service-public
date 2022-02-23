@@ -32,15 +32,10 @@ class Users::RdvSms < Users::BaseSms
     I18n.l(rdv.starts_at, format: rdv.home? ? :short_approx : :short)
   end
 
-  def rdv_footer(rdv, user) # rubocop:disable Metrics/PerceivedComplexity
-    message = if rdv.phone?
-                "RDV Téléphonique\n"
-              elsif rdv.home?
-                "RDV à domicile\n#{rdv.address}\n"
-              else
-                "#{rdv.address_complete}\n"
-              end
-    if user.relatives.present?
+  def rdv_footer(rdv, user)
+    message = rdv_location(rdv)
+
+    if user.relatives.present? && !rdv.collectif?
       users_full_names = rdv.users.map(&:full_name).sort.to_sentence
       message += " pour #{users_full_names}"
     end
@@ -51,5 +46,15 @@ class Users::RdvSms < Users::BaseSms
     message += "Infos et annulation: #{rdvs_shorten_url(host: ENV['HOST'])}"
     message += " / #{rdv.phone_number}" if rdv.phone_number.present?
     message
+  end
+
+  def rdv_location(rdv)
+    if rdv.phone?
+      "RDV Téléphonique\n"
+    elsif rdv.home?
+      "RDV à domicile\n#{rdv.address}\n"
+    else
+      "#{rdv.address_complete}\n"
+    end
   end
 end

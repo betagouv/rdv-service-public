@@ -1,7 +1,9 @@
 fr:
   activerecord:
     models:
-      user: Usager
+      user:
+        one: Usager
+        other: Usagers
     attributes:
       user:
         organisation: Organisation

@@ -14,7 +14,7 @@
           = render "admin/rdvs/rdv_details", rdv: rdv, show_users: false
         .col-md-6
           .card-text
-            strong> Usager(s) :
+            strong> #{User.model_name.human(count: rdv.users.count)} :
             .pl-2.pt-1
               - rdv.users.order_by_last_name.each do |user|
                 div

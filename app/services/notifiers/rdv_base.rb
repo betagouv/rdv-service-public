@@ -9,9 +9,12 @@ class Notifiers::RdvBase < ::BaseService
   # :notify_user_by_sms(user)
   # :notify_agent(agent)
 
-  def initialize(rdv, author)
+  # By default, notifications are sent to all the rdv users
+  # The optional `users` argument can be used to send notifications to them instead of rdv.users
+  def initialize(rdv, author, users = nil)
     @rdv = rdv
     @author = author
+    @users = users || rdvs_users_to_notify.map(&:user)
   end
 
   def perform
@@ -44,7 +47,7 @@ class Notifiers::RdvBase < ::BaseService
   end
 
   def users_to_notify
-    rdvs_users_to_notify.map(&:user).map(&:user_to_notify).uniq
+    @users.map(&:user_to_notify).uniq
   end
 
   ## Agents notifications
