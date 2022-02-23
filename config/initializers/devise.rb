@@ -128,7 +128,7 @@ Devise.setup do |config|
   # When invite_for is 0 (the default), the invitation won't expire.
   config.invite_for = 4.weeks
 
-  # replace the token generator normally instantiate here : https://github.com/heartcombo/devise/blob/88724e10adaf9ffd1d8dbfbaadda2b9d40de756a/lib/devise/rails.rb#L41
+  # replace the token generator normally instantiated here : https://github.com/heartcombo/devise/blob/88724e10adaf9ffd1d8dbfbaadda2b9d40de756a/lib/devise/rails.rb#L41
   Devise.token_generator =
     if (secret_key = Devise.secret_key)
       CustomDeviseTokenGenerator.new(
