@@ -129,7 +129,7 @@ Devise.setup do |config|
   config.invite_for = 4.weeks
 
   # replace the token generator normally instantiated here : https://github.com/heartcombo/devise/blob/88724e10adaf9ffd1d8dbfbaadda2b9d40de756a/lib/devise/rails.rb#L41
-  Devise.token_generator = CustomDeviseTokenGenerator.new(ActiveSupport::CachingKeyGenerator.new(ActiveSupport::KeyGenerator.new(Devise.secret_key))
+  Devise.token_generator = CustomDeviseTokenGenerator.new(ActiveSupport::CachingKeyGenerator.new(ActiveSupport::KeyGenerator.new(Devise.secret_key)))
   # Number of invitations users can send.
   # - If invitation_limit is nil, there is no limit for invitations, users can
   # send unlimited invitations, invitation_limit column is not used.
