@@ -10,10 +10,11 @@ module RdvsHelper
   end
 
   def rdv_title_for_agent(rdv)
-    (rdv.created_by_user? ? "@ " : "") +
-      rdv.users&.map(&:full_name)&.to_sentence +
-      (rdv.motif.home? ? " 🏠" : "") +
-      (rdv.motif.phone? ? " ☎️" : "")
+    if rdv.collectif?
+      rdv.motif.name
+    else
+      rdv_individuel_title_for_agent(rdv)
+    end
   end
 
   def rdv_status_tag(rdv)
@@ -103,5 +104,14 @@ module RdvsHelper
       tag.div(t("helpers.delete"), class: "text-danger") +
         tag.div(t("admin.rdvs.delete.details"), class: "text-wrap text-muted")
     end
+  end
+
+  private
+
+  def rdv_individuel_title_for_agent(rdv)
+    (rdv.created_by_user? ? "@ " : "") +
+      rdv.users&.map(&:full_name)&.to_sentence +
+      (rdv.motif.home? ? " 🏠" : "") +
+      (rdv.motif.phone? ? " ☎️" : "")
   end
 end
