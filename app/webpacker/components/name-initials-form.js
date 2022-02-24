@@ -1,6 +1,6 @@
-class IdentityVerificationForm {
+class NameInitialsForm {
   constructor() {
-    this.formElt = document.querySelector('.js-identity-verification-form');
+    this.formElt = document.querySelector('.js-name-initials-form');
     if (!this.formElt) return
 
     this.inputElts = this.formElt.querySelectorAll('input[type="text"]')
@@ -14,7 +14,7 @@ class IdentityVerificationForm {
     const inputElt = event.currentTarget
     inputElt.value = inputElt.value.toUpperCase()
     const idx = [...this.inputElts].indexOf(inputElt)
-    if (idx === 2) {
+    if (inputElt === this.inputElts[this.inputElts.length - 1]) {
       return this.formElt.submit()
     }
     if (inputElt.value !== "") {
@@ -35,4 +35,4 @@ class IdentityVerificationForm {
   }
 }
 
-export { IdentityVerificationForm };
+export { NameInitialsForm };

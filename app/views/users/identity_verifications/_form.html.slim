@@ -1,4 +1,4 @@
-= simple_form_for "", url: users_identity_verifications_path, html: { class: "js-identity-verification-form" } do |f|
+= simple_form_for "", url: users_identity_verifications_path, html: { class: "js-name-initials-form" } do |f|
   .form-inline.py-2.justify-content-center
     - (0..2).each do |idx|
       = f.input :"letter#{idx}", pattern: "[A-Z]", label: false, maxlength: 1, required: false, input_html: { class: "mx-md-2 py-4 text-center" }
