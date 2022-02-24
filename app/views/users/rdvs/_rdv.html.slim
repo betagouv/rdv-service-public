@@ -26,7 +26,7 @@ ul.list-group.list-group-flush
   li.list-group-item
     .fa.fa-user>
     = users_to_sentence(rdv.users)
-  - unless defined?(hide_motif_infos) && hide_motif_infos
+  - unless current_user.only_invited?
     li.list-group-item
       i.fa.fa-info-circle>
       = rdv.motif.name

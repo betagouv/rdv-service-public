@@ -318,7 +318,6 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(flash[:success]).to eq("Votre RDV a bien été modifié")
         expect(rdv.reload.starts_at).to eq(starts_at)
         expect(rdv.reload.agent_ids).to eq([agent.id])
-        expect(rdv.reload.created_by).to eq("file_attente")
       end
 
       context "when it cannot be updated" do

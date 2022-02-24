@@ -19,19 +19,6 @@ class UserAuthController < ApplicationController
     super([:user, record])
   end
 
-  def verify_user_identity
-    return if cookies.encrypted[:"user_#{current_user.id}_verified"] == true
-
-    session[:return_to_after_verification] = request.fullpath
-    redirect_to new_users_identity_verification_path
-  end
-
-  def set_user_identity_verified
-    cookies.encrypted[:"user_#{current_user.id}_verified"] = {
-      value: true, expires: 10.minutes.from_now
-    }
-  end
-
   def policy_scope(clasz)
     super([:user, clasz])
   end
@@ -44,5 +31,19 @@ class UserAuthController < ApplicationController
 
   def authenticated_user_root_path
     current_user.only_invited? ? root_path : users_rdvs_path
+  end
+
+  def verify_user_identity
+    return unless current_user.only_invited?
+    return if cookies.encrypted[:"user_#{current_user.id}_verified"] == true
+
+    session[:return_to_after_verification] = request.fullpath
+    redirect_to new_users_identity_verification_path
+  end
+
+  def set_user_identity_verified
+    cookies.encrypted[:"user_#{current_user.id}_verified"] = {
+      value: true, expires: 10.minutes.from_now
+    }
   end
 end

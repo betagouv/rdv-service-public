@@ -1,0 +1,8 @@
+fr:
+  users:
+    identity_verifications:
+      new:
+        examples:
+          first: "Sophie Dupont: DUP"
+          second: "Jean De La Fontaine: DEL"
+          third: "Edwige Xi: XI"

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Users::RdvsController < UserAuthController
-  before_action :set_rdv, only: %i[show creneaux edit cancel update]
+  before_action :verify_user_identity, :set_rdv, only: %i[show creneaux edit cancel update]
   before_action :set_geo_search, only: [:create]
   before_action :set_lieu, only: %i[creneaux edit update]
   before_action :build_creneau, :redirect_if_creneau_not_available, only: %i[edit update]
@@ -48,7 +48,7 @@ class Users::RdvsController < UserAuthController
   def show; end
 
   def update
-    if @rdv.update(starts_at: @creneau.starts_at, ends_at: @creneau.starts_at + @rdv.duration_in_min.minutes, agent_ids: [@creneau.agent.id], created_by: :file_attente)
+    if @rdv.update(starts_at: @creneau.starts_at, ends_at: @creneau.starts_at + @rdv.duration_in_min.minutes, agent_ids: [@creneau.agent.id])
       Notifiers::RdvDateUpdated.perform_with(@rdv, current_user)
       flash[:success] = "Votre RDV a bien été modifié"
       redirect_to users_rdv_path(@rdv)
