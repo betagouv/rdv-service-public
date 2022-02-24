@@ -2,6 +2,7 @@
 
 class Admin::Territories::SmsConfigurationsController < Admin::Territories::BaseController
   before_action :check_allowed_departement, only: %i[update edit]
+  before_action :authorize_current_territory
 
   def show; end
 
@@ -13,6 +14,10 @@ class Admin::Territories::SmsConfigurationsController < Admin::Territories::Base
   end
 
   private
+
+  def authorize_current_territory
+    authorize current_territory
+  end
 
   def check_allowed_departement
     return if current_territory.has_own_sms_provider?

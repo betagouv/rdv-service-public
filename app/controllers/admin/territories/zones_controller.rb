@@ -4,7 +4,7 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
   before_action :set_sector, except: [:index]
 
   def index
-    zones = policy_scope_admin(Zone)
+    zones = policy_scope(Zone)
       .in_territory(current_territory)
       .where(params[:sector_id].present? ? { sector: params[:sector_id] } : {})
     respond_to do |format|
@@ -21,12 +21,13 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
   def new
     zone_defaults = { level: Zone::LEVEL_CITY }
     @zone = Zone.new(**zone_defaults.merge(zone_params_get), sector: @sector)
-    authorize_admin(@zone)
+    @sectors = policy_scope(Sector)
+    authorize @zone
   end
 
   def create
     @zone = Zone.new(**zone_params, sector: @sector)
-    authorize_admin(@zone)
+    authorize @zone
     if @zone.save
       redirect_to admin_territory_sector_path(current_territory, @sector), flash: { success: "#{@zone.human_attribute_value(:level)} ajoutée au secteur" }
     else
@@ -36,7 +37,7 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
 
   def destroy
     zone = Zone.find(params[:id])
-    authorize_admin(zone)
+    authorize zone
     if zone.destroy
       redirect_to admin_territory_sector_path(current_territory, @sector), flash: { success: "#{zone.human_attribute_value(:level)} retirée du secteur" }
     else
@@ -46,7 +47,7 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
 
   def destroy_multiple
     zones = @sector.zones
-    zones = zones.filter { authorize_admin(_1, :destroy?) }
+    zones = zones.filter { |z| authorize(z, :destroy?) }
     count = zones.count
     if zones.map(&:destroy).all?
       flash[:success] = "Les #{count} communes et rues ont été retirées du secteur"
@@ -59,7 +60,7 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
   private
 
   def set_sector
-    @sector = policy_scope_admin(Sector).find(params[:sector_id])
+    @sector = policy_scope(Sector).find(params[:sector_id])
   end
 
   def zone_params_get

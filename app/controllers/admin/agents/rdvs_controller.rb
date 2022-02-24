@@ -18,7 +18,7 @@ class Admin::Agents::RdvsController < ApplicationController
 
   # TODO: custom policy waiting for policies refactoring
   def custom_policy
-    context = AgentContext.new(current_agent, @organisation)
+    context = AgentOrganisationContext.new(current_agent, @organisation)
     Agent::RdvPolicy::DepartementScope.new(context, Rdv)
       .resolve
   end

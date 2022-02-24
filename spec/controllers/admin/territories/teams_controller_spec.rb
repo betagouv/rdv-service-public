@@ -19,7 +19,7 @@ describe Admin::Territories::TeamsController, type: :controller do
       agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
       team = create(:team, territory: territory, name: "first team")
       create(:team, territory: territory, name: "second")
-      create(:team, territory: create(:territory))
+      create(:team, territory: create(:territory), name: "first group")
       sign_in agent
 
       get :index, params: { territory_id: territory.id, search: "first" }
@@ -116,7 +116,7 @@ describe Admin::Territories::TeamsController, type: :controller do
     it "assigns teams" do
       agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
       sign_in agent
-      team = create(:team, name: "bla", territory: organisation.territory)
+      team = create(:team, name: "bla", territory: territory)
       get :search, params: { territory_id: territory.id, term: "bla", format: "json" }
       expect(assigns(:teams)).to eq([team])
     end
