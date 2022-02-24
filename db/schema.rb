@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_17_140221) do
+ActiveRecord::Schema.define(version: 2022_02_17_100251) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -315,8 +315,6 @@ ActiveRecord::Schema.define(version: 2022_02_17_140221) do
     t.bigint "lieu_id"
     t.boolean "expired_cached", default: false
     t.datetime "recurrence_ends_at"
-    t.text "search_terms"
-    t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_plage_ouvertures_search_terms", using: :gin
     t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[]'::text)", name: "index_plage_ouvertures_on_tsrange_first_day_recurrence_ends_at", using: :gist
     t.index ["agent_id"], name: "index_plage_ouvertures_on_agent_id"
     t.index ["expired_cached"], name: "index_plage_ouvertures_on_expired_cached"

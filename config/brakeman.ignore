@@ -3,31 +3,31 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
-      "fingerprint": "2355405acc689e021f5b074103ed57c71e0b53346937c2a247ee732bb991ea03",
+      "fingerprint": "2a37520a17742f36733d65329212b92dfc9d72aee25ff04f6d5a74ebf09330cc",
       "check_name": "Render",
       "message": "Render path contains parameter value",
-      "file": "app/views/admin/plage_ouvertures/index.html.slim",
-      "line": 39,
+      "file": "app/views/admin/users/index.html.slim",
+      "line": 32,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(PlageOuverture).includes(:lieu, :organisation, :motifs, :agent).where(:agent_id => filter_params[:agent_id]).order(:updated_at => :desc).where(:expired_cached => (filter_params[:current_tab] == \"expired\")).page(filter_params[:page]).search_by_text(params[:search]), {})",
+      "code": "render(action => policy_scope(User).merge(Admin::UserSearchForm.new(**index_params).users).active.order_by_last_name.page(params[:page]), {})",
       "render_path": [
         {
           "type": "controller",
-          "class": "Admin::PlageOuverturesController",
+          "class": "Admin::UsersController",
           "method": "index",
-          "line": 24,
-          "file": "app/controllers/admin/plage_ouvertures_controller.rb",
+          "line": 26,
+          "file": "app/controllers/admin/users_controller.rb",
           "rendered": {
-            "name": "admin/plage_ouvertures/index",
-            "file": "app/views/admin/plage_ouvertures/index.html.slim"
+            "name": "admin/users/index",
+            "file": "app/views/admin/users/index.html.slim"
           }
         }
       ],
       "location": {
         "type": "template",
-        "template": "admin/plage_ouvertures/index"
+        "template": "admin/users/index"
       },
-      "user_input": "params[:search]",
+      "user_input": "params[:page]",
       "confidence": "Weak",
       "note": ""
     },
@@ -46,7 +46,7 @@
           "type": "controller",
           "class": "Admin::MotifsController",
           "method": "index",
-          "line": 19,
+          "line": 18,
           "file": "app/controllers/admin/motifs_controller.rb",
           "rendered": {
             "name": "admin/motifs/index",
@@ -77,7 +77,7 @@
           "type": "controller",
           "class": "Admin::MotifsController",
           "method": "index",
-          "line": 19,
+          "line": 18,
           "file": "app/controllers/admin/motifs_controller.rb",
           "rendered": {
             "name": "admin/motifs/index",
@@ -125,6 +125,6 @@
       "note": ""
     }
   ],
-  "updated": "2022-02-21 22:09:59 +0100",
-  "brakeman_version": "5.2.0"
+  "updated": "2021-10-28 18:42:02 +0200",
+  "brakeman_version": "5.1.1"
 }
