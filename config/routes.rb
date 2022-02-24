@@ -214,6 +214,7 @@ Rails.application.routes.draw do
   end
 
   get "r", to: redirect("users/rdvs", status: 301), as: "rdvs_shorten"
+  get "r/:id", to: redirect(path: "users/rdvs/%{id}", status: 301), as: "rdv_shorten"
   get "accueil_mds" => "welcome#welcome_agent"
   post "/" => "welcome#search"
   get "departement/:departement", to: "welcome#welcome_departement", as: "welcome_departement"

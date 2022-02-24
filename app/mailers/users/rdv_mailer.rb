@@ -6,9 +6,10 @@ class Users::RdvMailer < ApplicationMailer
   helper RdvsHelper
   helper DateHelper
 
-  def rdv_created(rdv_payload, user)
+  def rdv_created(rdv_payload, user, token)
     @rdv = OpenStruct.new(rdv_payload)
     @user = user
+    @token = token
 
     self.ics_payload = rdv_payload
     mail(
@@ -17,9 +18,10 @@ class Users::RdvMailer < ApplicationMailer
     )
   end
 
-  def rdv_date_updated(rdv_payload, user, old_starts_at)
+  def rdv_date_updated(rdv_payload, user, token, old_starts_at)
     @rdv = OpenStruct.new(rdv_payload)
     @user = user
+    @token = token
     @old_starts_at = old_starts_at
 
     self.ics_payload = rdv_payload
@@ -29,9 +31,10 @@ class Users::RdvMailer < ApplicationMailer
     )
   end
 
-  def rdv_upcoming_reminder(rdv_payload, user)
+  def rdv_upcoming_reminder(rdv_payload, user, token)
     @rdv = OpenStruct.new(rdv_payload)
     @user = user
+    @token = token
 
     self.ics_payload = rdv_payload
     mail(
@@ -40,9 +43,10 @@ class Users::RdvMailer < ApplicationMailer
     )
   end
 
-  def rdv_cancelled(rdv_payload, user)
+  def rdv_cancelled(rdv_payload, user, token)
     @rdv = OpenStruct.new(rdv_payload)
     @user = user
+    @token = token
 
     self.ics_payload = rdv_payload
     mail(

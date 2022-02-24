@@ -12,21 +12,21 @@ module RdvUpdater
         rdv_params[:cancelled_at] = rdv_params[:status].in?(%w[excused revoked noshow]) ? Time.zone.now : nil
       end
 
-      result = rdv.update(rdv_params)
+      success = rdv.update(rdv_params)
 
       # Send relevant notifications (cancellation and date update)
-      if result
+      if success
         if rdv.previous_changes["status"]&.last.in? %w[excused revoked noshow]
           # Also destroy the file_attentes
           rdv.file_attentes.destroy_all
-          Notifiers::RdvCancelled.perform_with(rdv, author)
+          notifier = Notifiers::RdvCancelled.perform_with(rdv, author)
         end
 
         if rdv.previous_changes["starts_at"].present?
-          Notifiers::RdvDateUpdated.perform_with(rdv, author)
+          notifier = Notifiers::RdvDateUpdated.perform_with(rdv, author)
         end
       end
-      result
+      OpenStruct.new(success?: success, notifier: notifier)
     end
   end
 end

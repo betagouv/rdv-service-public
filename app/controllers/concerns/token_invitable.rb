@@ -18,18 +18,22 @@ module TokenInvitable
     return delete_token_from_session_and_redirect(t("devise.invitations.current_user_mismatch")) \
       if current_user_mismatch?
 
-    return if invited_user.blank?
+    return if invited_user.blank? || current_user.present?
 
     invited_user.only_invited!
     sign_in(invited_user, store: false)
   end
 
   def invitation_token
-    params[:invitation_token] || session[:invitation_token]
+    invitation_token_param || session[:invitation_token]
+  end
+
+  def invitation_token_param
+    params[:invitation_token] || params[:tkn]
   end
 
   def store_token_in_session
-    session[:invitation_token] = params[:invitation_token] if params[:invitation_token].present?
+    session[:invitation_token] = invitation_token_param if invitation_token_param.present?
   end
 
   def current_user_mismatch?

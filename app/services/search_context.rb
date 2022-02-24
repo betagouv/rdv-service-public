@@ -7,7 +7,7 @@ class SearchContext
   def initialize(current_user, query = {})
     @current_user = current_user
     @query = query
-    @invitation_token = query[:invitation_token]
+    @invitation_token = query[:invitation_token] || query[:tkn]
     @latitude = query[:latitude]
     @longitude = query[:longitude]
     @address = query[:address]

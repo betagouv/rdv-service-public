@@ -17,9 +17,13 @@ class Notifiers::RdvBase < ::BaseService
   def perform
     return if @rdv.starts_at < Time.zone.now
 
+    generate_invitation_tokens
+
     notify_users_by_mail
     notify_users_by_sms
     notify_agents
+
+    OpenStruct.new(tokens_by_user_id: @tokens_by_user_id)
   end
 
   private
@@ -44,7 +48,7 @@ class Notifiers::RdvBase < ::BaseService
   end
 
   def users_to_notify
-    rdvs_users_to_notify.map(&:user).map(&:user_to_notify).uniq
+    @users_to_notify ||= rdvs_users_to_notify.map(&:user).map(&:user_to_notify).uniq
   end
 
   ## Agents notifications
@@ -69,5 +73,18 @@ class Notifiers::RdvBase < ::BaseService
     return false if level == "soon" && !soon_date?(@rdv.starts_at) && !soon_date?(@rdv.attribute_before_last_save(:starts_at))
 
     true
+  end
+
+  ## Compute invitation tokens sent in notifications links to change the rdv
+  #
+
+  def generate_invitation_tokens
+    @tokens_by_user_id = users_to_notify.to_h do |user|
+      user.invite! do |u|
+        u.skip_invitation = true
+        u.raw_invitation_token
+      end
+      [user.id, user.raw_invitation_token]
+    end
   end
 end

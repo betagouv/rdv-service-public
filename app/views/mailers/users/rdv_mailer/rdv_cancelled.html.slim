@@ -14,12 +14,13 @@ div
   - if @rdv.reservable_online?
     p= t(".reschedule_online")
     .btn-wrapper
-      = link_to t(".reschedule_button"), lieux_url(search: { \
+      = link_to t(".reschedule_button"), prendre_rdv_url(\
         departement: @rdv.organisation_departement_number, \
         motif_name_with_location_type: @rdv.motif_name_with_location_type, \
-        service: @rdv.motif_service_id, \
-        where: @rdv.address \
-      }), class:"btn btn-primary"
+        organisation_ids: [@rdv.organisation_id], \
+        address: @rdv.address, \
+        invitation_token: @token \
+      ), class:"btn btn-primary"
 
   br
   = t("mailers.common.farewell_html")
