@@ -2,19 +2,22 @@
 
 class Admin::Territories::TeamsController < Admin::Territories::BaseController
   def index
-    @teams = current_territory.teams.page(params[:page])
+    @teams = policy_scope(Team).page(params[:page])
     @teams = params[:search].present? ? @teams.search_by_text(params[:search]) : @teams.order(:name)
   end
 
   def new
     @team = Team.new
+    authorize Team
   end
 
   def show
     @team = Team.find(params[:id])
+    authorize @team
   end
 
   def create
+    authorize Team
     if (@team = Team.create(team_params.merge(territory: current_territory)))
       redirect_to admin_territory_teams_path(current_territory)
     else
@@ -24,10 +27,12 @@ class Admin::Territories::TeamsController < Admin::Territories::BaseController
 
   def edit
     @team = Team.find(params[:id])
+    authorize @team
   end
 
   def update
     @team = Team.find(params[:id])
+    authorize @team
     if @team.update(team_params)
       redirect_to admin_territory_teams_path(current_territory)
     else
@@ -37,6 +42,7 @@ class Admin::Territories::TeamsController < Admin::Territories::BaseController
 
   def destroy
     team = Team.find(params[:id])
+    authorize team
     team.destroy!
     redirect_to admin_territory_teams_path(current_territory)
   end

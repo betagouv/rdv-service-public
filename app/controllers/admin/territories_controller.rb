@@ -10,7 +10,7 @@ class Admin::TerritoriesController < Admin::Territories::BaseController
 
   def update
     @territory = Territory.find(params[:id])
-    authorize_admin(@territory)
+    authorize @territory
     flash[:success] = "Mise à jour réussie !" if @territory.update(territory_params)
     render "admin/territories/agent_territorial_roles/index"
   end

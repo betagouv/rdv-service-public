@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 describe Configuration::TerritoryPolicy, type: :policy do
-
   describe "show?" do
     it "returns false with agent without admin access to this territory" do
       territory = create(:territory)
@@ -17,7 +16,4 @@ describe Configuration::TerritoryPolicy, type: :policy do
       expect(described_class.new(agent_territorial_context, territory).show?).to be true
     end
   end
-
 end
-
-
