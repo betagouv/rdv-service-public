@@ -9,8 +9,6 @@ class PlageOuverture < ApplicationRecord
   include IcalHelpers::Rrule
   include Payloads::PlageOuverture
   include Expiration
-  include TextSearch
-  def self.search_keys = %i[title]
 
   # Attributes
   auto_strip_attributes :title
