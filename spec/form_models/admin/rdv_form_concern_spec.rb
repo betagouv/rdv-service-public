@@ -21,7 +21,7 @@ describe Admin::RdvFormConcern, type: :form do
 
   let(:now) { Time.zone.parse("2021-11-23 11:00") }
   let!(:agent_author) { create(:agent, first_name: "Poney", last_name: "FOU") }
-  let(:agent_context) { instance_double(AgentContext, agent: agent_author, organisation: build(:organisation)) }
+  let(:agent_context) { instance_double(AgentOrganisationContext, agent: agent_author, organisation: build(:organisation)) }
   let(:rdv_start_coherence) { instance_double(RdvStartCoherence) }
   let(:rdvs_overlapping) { instance_double(RdvsOverlapping) }
 

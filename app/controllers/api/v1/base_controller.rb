@@ -8,7 +8,7 @@ class Api::V1::BaseController < ActionController::Base
   before_action :authenticate_api_v1_agent_with_token_auth!
 
   def pundit_user
-    AgentContext.new(current_agent, current_organisation)
+    AgentOrganisationContext.new(current_agent, current_organisation)
   end
 
   def current_organisation
