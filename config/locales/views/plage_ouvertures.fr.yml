@@ -6,7 +6,6 @@ fr:
         plage_ouverture_of: Plages d'ouverture de %{full_name}
         create_plage_ouverture: Créer une plage d'ouverture
         create_plage_ouverture_for: Créer une plage d'ouverture pour %{full_name}
-        search: Rechercher
         in_progress: En cours
         past: "Passées"
         no_results_for_your_search: Il n'y a pas de résultat correspondant à votre recherche.
@@ -17,3 +16,4 @@ fr:
         motifs: Motifs
         place: Lieu
         dates: Dates
+        search_placeholder: "ex: permanence, consultation…"
