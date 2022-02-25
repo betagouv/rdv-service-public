@@ -106,6 +106,10 @@ RSpec/AnyInstance:
     - spec/controllers/users/rdvs_controller_spec.rb
     - spec/features/users/user_can_be_invited_spec.rb
 
+RSpec/DescribedClass:
+  Exclude:
+    - spec/controllers/concerns/token_invitable_spec.rb
+
 RSpec/ContextWording:
   Enabled: False
 
