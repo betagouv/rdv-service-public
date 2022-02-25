@@ -20,7 +20,7 @@ module TokenInvitable
 
     return if invited_user.blank? || current_user.present?
 
-    invited_user.only_invited!
+    invited_user.only_invited!(rdv: rdv_user_by_token&.rdv)
     sign_in(invited_user, store: false)
   end
 
@@ -47,9 +47,17 @@ module TokenInvitable
   end
 
   def invited_user
+    user_by_token || rdv_user_by_token&.user
+  end
+
+  def user_by_token
     # rubocop:disable Rails/DynamicFindBy
     # find_by_invitation_token is a method added by the devise_invitable gem
-    @invited_user ||= User.find_by_invitation_token(session[:invitation_token], true)
+    @user_by_token ||= User.find_by_invitation_token(session[:invitation_token], true)
+  end
+
+  def rdv_user_by_token
+    @rdv_user_by_token ||= RdvsUser.find_by_invitation_token(session[:invitation_token], true)
     # rubocop:enable Rails/DynamicFindBy
   end
 end

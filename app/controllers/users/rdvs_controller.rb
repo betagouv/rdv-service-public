@@ -36,13 +36,13 @@ class Users::RdvsController < UserAuthController
     if @save_succeeded
       notifier = Notifiers::RdvCreated.perform_with(@rdv, current_user)
       set_user_identity_verified
-      redirect_to users_rdv_path(@rdv, tkn: notifier.tokens_by_user_id[current_user.id]), notice: t(".rdv_confirmed")
+      redirect_to users_rdv_path(@rdv, tkn: notifier.rdv_tokens_by_user_id[current_user.id]), notice: t(".rdv_confirmed")
     else
       query = {
         address: (new_rdv_extra_params[:address] || new_rdv_extra_params[:where]),
         service: motif.service.id, motif_name_with_location_type: motif.name_with_location_type,
         departement: new_rdv_extra_params[:departement], organisation_ids:  new_rdv_extra_params[:organisation_ids],
-        tkn: notifier.tokens_by_user_id[current_user.id]
+        tkn: notifier.rdv_tokens_by_user_id[current_user.id]
       }
       redirect_to prendre_rdv_path(query), flash: { error: t(".creneau_unavailable") }
     end
@@ -56,10 +56,10 @@ class Users::RdvsController < UserAuthController
     if @rdv.update(starts_at: @creneau.starts_at, ends_at: @creneau.starts_at + @rdv.duration_in_min.minutes, agent_ids: [@creneau.agent.id])
       notifier = Notifiers::RdvDateUpdated.perform_with(@rdv, current_user)
       flash[:success] = "Votre RDV a bien été modifié"
-      redirect_to users_rdv_path(@rdv, tkn: notifier.tokens_by_user_id[current_user.id])
+      redirect_to users_rdv_path(@rdv, tkn: notifier.rdv_tokens_by_user_id[current_user.id])
     else
       flash[:error] = "Le RDV n'a pas pu être modifié"
-      redirect_to creneaux_users_rdv_path(@rdv, tkn: notifier.tokens_by_user_id[current_user.id])
+      redirect_to creneaux_users_rdv_path(@rdv, tkn: notifier.rdv_tokens_by_user_id[current_user.id])
     end
   end
 
@@ -70,7 +70,7 @@ class Users::RdvsController < UserAuthController
     else
       flash[:error] = "Impossible d'annuler le RDV."
     end
-    redirect_to users_rdv_path(@rdv, rdv_update.success? ? { tkn: rdv_update.notifier.tokens_by_user_id[current_user.id] } : {})
+    redirect_to users_rdv_path(@rdv, rdv_update.success? ? { tkn: rdv_update.notifier.rdv_tokens_by_user_id[current_user.id] } : {})
   end
 
   def creneaux
