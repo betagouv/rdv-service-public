@@ -23,7 +23,7 @@ class Notifiers::RdvBase < ::BaseService
     notify_users_by_sms
     notify_agents
 
-    OpenStruct.new(tokens_by_user_id: @tokens_by_user_id)
+    OpenStruct.new(success?: true, tokens_by_user_id: @tokens_by_user_id)
   end
 
   private
@@ -48,7 +48,7 @@ class Notifiers::RdvBase < ::BaseService
   end
 
   def users_to_notify
-    @users_to_notify ||= rdvs_users_to_notify.map(&:user).map(&:user_to_notify).uniq
+    rdvs_users_to_notify.map(&:user).map(&:user_to_notify).uniq
   end
 
   ## Agents notifications

@@ -15,10 +15,14 @@ class User::RdvPolicy < ApplicationPolicy
   alias show? rdv_belongs_to_user_or_relatives?
   alias create? rdv_belongs_to_user_or_relatives?
 
-  def edit?
+  def cancel?
     record.editable? && rdv_belongs_to_user_or_relatives?
   end
-  alias cancel? edit?
+
+  def edit?
+    cancel? && !record.created_by_agent?
+  end
+
   alias creneaux? edit?
   alias update? edit?
 
