@@ -14,7 +14,10 @@ describe "Agent can create a Rdv collectif" do
 
   let!(:lieu) { create(:lieu, organisation: organisation) }
 
+  let(:now) { Time.zone.parse("20220123 13:00") }
+
   before do
+    travel_to(now)
     login_as(agent, scope: :agent)
     visit admin_organisation_agent_agenda_path(organisation, agent)
   end
