@@ -2,3 +2,13 @@ fr:
   rdvs:
     title: "Le %{starts_at} (durée : %{duration} minutes)"
     title_time_only: "Aujourd’hui à %{starts_at} (durée : %{duration} minutes)"
+    available_seats:
+      one: 1 place disponible
+      other: "%{count} places disponibles"
+    seats:
+      one: 1 place
+      other: "%{count} places"
+    participants:
+      one: 1 participant
+      other: "%{count} participants"
+      zero: aucun participant

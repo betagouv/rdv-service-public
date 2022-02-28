@@ -50,6 +50,7 @@ class Rdv < ApplicationRecord
   validate :lieu_is_not_disabled_if_needed
   validate :starts_at_is_plausible
   validate :duration_is_plausible
+  validates :max_participants_count, numericality: { greater_than: 0, allow_nil: true }
 
   # Hooks
   after_save :associate_users_with_organisation
@@ -78,6 +79,7 @@ class Rdv < ApplicationRecord
   }
   scope :visible, -> { joins(:motif).merge(Motif.visible) }
   scope :collectif, -> { joins(:motif).merge(Motif.collectif) }
+  scope :with_remaining_seats, -> { where("users_count < max_participants_count OR max_participants_count IS NULL") }
 
   ## -
 
@@ -211,6 +213,24 @@ class Rdv < ApplicationRecord
 
   def participants_with_life_cycle_notification_ids
     rdvs_users.where(send_lifecycle_notifications: true).pluck(:user_id)
+  end
+
+  def remaining_seats?
+    return true unless max_participants_count
+
+    users_count < max_participants_count
+  end
+
+  def fully_booked?
+    return false unless max_participants_count
+
+    users_count == max_participants_count
+  end
+
+  def overbooked?
+    return false unless max_participants_count
+
+    users_count > max_participants_count
   end
 
   private

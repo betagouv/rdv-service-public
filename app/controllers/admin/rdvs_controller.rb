@@ -89,7 +89,7 @@ class Admin::RdvsController < AgentAuthController
   def rdv_params
     params
       .require(:rdv)
-      .permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors,
+      .permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors, :max_participants_count,
               agent_ids: [],
               user_ids: [],
               rdvs_users_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy])

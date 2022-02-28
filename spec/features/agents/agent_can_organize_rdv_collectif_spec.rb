@@ -10,7 +10,6 @@ describe "Agent can organize a rdv collectif", js: true do
 
   let!(:user1) { create(:user, organisations: [organisation]) }
   let!(:user2) { create(:user, organisations: [organisation]) }
-  let!(:user3) { create(:user, organisations: [organisation]) }
 
   specify do
     travel_to(Time.zone.local(2022, 3, 14))
@@ -29,7 +28,8 @@ describe "Agent can organize a rdv collectif", js: true do
 
     fill_in "Commence à", with: "17/3/2022 14:00"
     fill_in "Durée en minutes", with: "30"
-    fill_in "Contexte", with: "Traitement de texte"
+    fill_in "Nombre de places", with: 3
+    fill_in "Intitulé", with: "Traitement de texte"
 
     select("DIALO Alain", from: "rdv_agent_ids")
     select(lieu.name, from: "Lieu")
@@ -38,5 +38,20 @@ describe "Agent can organize a rdv collectif", js: true do
     expect(page).to have_content("Atelier participatif créé")
 
     expect(page).to have_content("Jeudi 17 mars à 14:00")
+    expect(page).to have_content("3 places disponibles")
+
+    click_link("Ajouter un participant")
+    add_user(user1)
+
+    add_new_user
+    click_button "Enregistrer"
+
+    expect(page).to have_content("1 place disponible")
+
+    click_link("Ajouter un participant")
+    add_user(user2)
+    click_button "Enregistrer"
+
+    expect(page).to have_content("Complet")
   end
 end

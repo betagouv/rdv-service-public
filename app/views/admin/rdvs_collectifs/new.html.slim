@@ -17,12 +17,12 @@
 
           .form-row
             .col-md-6= datetime_input(f, :starts_at)
-            .col-md-6= f.input :duration_in_min, as: :integer, label: "Durée en minutes"
+            .col-md-6= f.input :duration_in_min, as: :integer
           = f.association :agents, collection: @rdv.motif.authorized_agents.includes(:service), label_method: :reverse_full_name_and_service, input_html: { multiple: true, class: "select2-input" }
-          = f.input :name, label: "Intitulé", wrapper_html: { class: "mb-1" }
-          p.text-muted.font-14= "Cet intitulé apparaitra dans les notifications envoyées aux usagers."
+          = f.input :name, wrapper_html: { class: "mb-1" }
+          p.text-muted.font-14= I18n.t("activerecord.attributes.rdv/name.hint")
 
-          = f.input :context, label: "Contexte"
+          = f.input :context
           = f.hidden_field :motif_id, value: @rdv.motif_id
           = f.association :lieu, \
             collection: policy_scope(Lieu).enabled.ordered_by_name, \
@@ -31,6 +31,8 @@
             required: true,
             input_html: { class: "select2-input" }
 
+          = f.input :max_participants_count, input_html: { min: 1 }
+
           .d-flex.justify-content-end
             .btn-group
-              = f.button :submit, "Enregistrer"
+              = f.button :submit, t("helpers.submit.submit")
