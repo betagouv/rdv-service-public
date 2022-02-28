@@ -40,6 +40,22 @@ class Territory < ApplicationRecord
 
   ## -
 
+  SOCIAL_FIELD_TOGGLES = {
+    enable_caisse_affiliation_field: :caisse_affiliation,
+    enable_affiliation_number_field: :affiliation_number,
+    enable_family_situation_field: :family_situation,
+    enable_number_of_children_field: :number_of_children
+  }.freeze
+
+  OPTIONAL_FIELD_TOGGLES = {
+    enable_notes_field: :notes,
+    enable_logement_field: :logement
+  }.merge(SOCIAL_FIELD_TOGGLES).freeze
+
+  def any_social_field_enabled?
+    attributes.slice(SOCIAL_FIELD_TOGGLES.keys).values.any?
+  end
+
   def to_s
     "#{departement_number} - #{name}"
   end

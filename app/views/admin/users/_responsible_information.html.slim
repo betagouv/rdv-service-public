@@ -18,12 +18,15 @@ ul.list-unstyled.mb-5
   - if user.pending_reconfirmation?
     .text-muted.mb-2
       | En attente de confirmation pour #{user.unconfirmed_email}
-  li.mb-2= object_attribute_tag(user_profile, :notes, formatted_user_notes(user_profile))
 
-h4.card-title.mb-3 Informations sociales
+  - if current_territory.enable_notes_field?
+    li.mb-2= object_attribute_tag(user_profile, :notes, formatted_user_notes(user_profile))
+
+- if current_territory.any_social_field_enabled?
+  h4.card-title.mb-3 Informations sociales
 ul.list-unstyled.mb-5
-  li.mb-2= object_attribute_tag(user, :caisse_affiliation)
-  li.mb-2= object_attribute_tag(user, :affiliation_number)
-  li.mb-2= object_attribute_tag(user, :family_situation)
-  li.mb-2= object_attribute_tag(user, :number_of_children)
-  li.mb-2= object_attribute_tag(user_profile, :logement)
+  - Territory::SOCIAL_FIELD_TOGGLES.each do |toggle, field_name|
+    - if current_territory.attributes[toggle.to_s]
+      li.mb-2= object_attribute_tag(user, field_name)
+  - if current_territory.enable_logement_field
+    li.mb-2= object_attribute_tag(user_profile, :logement)
