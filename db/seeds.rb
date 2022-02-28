@@ -140,7 +140,7 @@ _motif_org_paris_nord_pmi_collectif = Motif.create!(
   color: "#1049F3",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
-  reservable_online: true,
+  collectif: true,
   location_type: :public_office
 )
 _motif_org_paris_nord_social_rappel = Motif.create!(
@@ -173,7 +173,7 @@ _motif_org_paris_nord_social_collectif = Motif.create!(
   color: "#113C65",
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
-  reservable_online: true,
+  collectif: true,
   location_type: :public_office
 )
 
