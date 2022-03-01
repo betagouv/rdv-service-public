@@ -24,4 +24,9 @@ class RdvsUser < ApplicationRecord
     self.send_lifecycle_notifications = rdv.motif.visible_and_notified? if send_lifecycle_notifications.nil?
     self.send_reminder_notification = rdv.motif.visible_and_notified? if send_reminder_notification.nil?
   end
+
+  def new_raw_invitation_token
+    invite! { |rdv_u| rdv_u.skip_invitation = true }
+    raw_invitation_token
+  end
 end

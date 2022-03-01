@@ -16,17 +16,20 @@ module RdvUpdater
 
       # Send relevant notifications (cancellation and date update)
       if success
-        if rdv.previous_changes["status"]&.last.in? %w[excused revoked noshow]
-          # Also destroy the file_attentes
-          rdv.file_attentes.destroy_all
-          notifier = Notifiers::RdvCancelled.perform_with(rdv, author)
-        end
+        rdv.file_attentes.destroy_all if rdv.previous_changes["status"]&.last.in? %w[excused revoked noshow]
+        # Also destroy the file_attentes
 
-        if rdv.previous_changes["starts_at"].present?
-          notifier = Notifiers::RdvDateUpdated.perform_with(rdv, author)
-        end
+        notifier = notifier_for_rdv(rdv)&.perform_with(rdv, author)
       end
-      OpenStruct.new(success?: success, notifier: notifier)
+      OpenStruct.new({ success?: success }.merge(success ? { notifier: notifier } : {}))
+    end
+
+    def notifier_for_rdv(rdv)
+      if rdv.previous_changes["status"]&.last.in? %w[excused revoked noshow]
+        Notifiers::RdvCancelled
+      elsif rdv.previous_changes["starts_at"].present?
+        Notifiers::RdvDateUpdated
+      end
     end
   end
 end

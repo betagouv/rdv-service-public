@@ -80,11 +80,7 @@ class Notifiers::RdvBase < ::BaseService
 
   def generate_invitation_tokens
     @rdv_tokens_by_user_id = rdvs_users_to_notify.to_h do |rdv_user|
-      rdv_user.invite! do |rdv_u|
-        rdv_u.skip_invitation = true
-        rdv_u.raw_invitation_token
-      end
-      [rdv_user.user.id, rdv_user.raw_invitation_token]
+      [rdv_user.user.id, rdv_user.new_raw_invitation_token]
     end
   end
 end

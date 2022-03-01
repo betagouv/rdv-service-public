@@ -40,9 +40,9 @@ class Users::RdvsController < UserAuthController
     else
       query = {
         address: (new_rdv_extra_params[:address] || new_rdv_extra_params[:where]),
+        city_code: new_rdv_extra_params[:city_code], street_ban_id: new_rdv_extra_params[:street_ban_id],
         service: motif.service.id, motif_name_with_location_type: motif.name_with_location_type,
-        departement: new_rdv_extra_params[:departement], organisation_ids:  new_rdv_extra_params[:organisation_ids],
-        tkn: notifier.rdv_tokens_by_user_id[current_user.id]
+        departement: new_rdv_extra_params[:departement], organisation_ids:  new_rdv_extra_params[:organisation_ids], invitation_token: invitation_token
       }
       redirect_to prendre_rdv_path(query), flash: { error: t(".creneau_unavailable") }
     end
@@ -59,7 +59,7 @@ class Users::RdvsController < UserAuthController
       redirect_to users_rdv_path(@rdv, tkn: notifier.rdv_tokens_by_user_id[current_user.id])
     else
       flash[:error] = "Le RDV n'a pas pu être modifié"
-      redirect_to creneaux_users_rdv_path(@rdv, tkn: notifier.rdv_tokens_by_user_id[current_user.id])
+      redirect_to creneaux_users_rdv_path(@rdv)
     end
   end
 
@@ -70,7 +70,7 @@ class Users::RdvsController < UserAuthController
     else
       flash[:error] = "Impossible d'annuler le RDV."
     end
-    redirect_to users_rdv_path(@rdv, rdv_update.success? ? { tkn: rdv_update.notifier.rdv_tokens_by_user_id[current_user.id] } : {})
+    redirect_to users_rdv_path(@rdv, tkn: (rdv_update.success? ? rdv_update.notifier.rdv_tokens_by_user_id[current_user.id] : nil))
   end
 
   def creneaux
@@ -145,7 +145,10 @@ class Users::RdvsController < UserAuthController
   end
 
   def new_rdv_extra_params
-    params.permit(:lieu_id, :motif_name_with_location_type, :departement, :where, :address, :organisation_ids, :invitation_token)
+    params.permit(
+      :lieu_id, :motif_name_with_location_type, :departement, :where, :address, :city_code, :street_ban_id,
+      :invitation_token, { organisation_ids: [] }
+    )
   end
 
   def rdv_params
