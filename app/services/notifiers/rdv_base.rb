@@ -23,7 +23,7 @@ class Notifiers::RdvBase < ::BaseService
     notify_users_by_sms
     notify_agents
 
-    OpenStruct.new(success?: true, rdv_tokens_by_user_id: @rdv_tokens_by_user_id)
+    OpenStruct.new(rdv_tokens_by_user_id: @rdv_tokens_by_user_id)
   end
 
   private
