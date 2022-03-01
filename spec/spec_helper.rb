@@ -167,3 +167,9 @@ RSpec.configure do |config|
     end
   end
 end
+
+def expect_page_to_be_axe_clean(path)
+  visit path
+  expect(page).to have_current_path(path)
+  expect(page).to be_axe_clean
+end

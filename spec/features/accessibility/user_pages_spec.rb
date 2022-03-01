@@ -1,11 +1,5 @@
 # frozen_string_literal: true
 
-def expect_page_to_be_axe_clean(path)
-  visit path
-  expect(page).to have_current_path(path)
-  expect(page).to be_axe_clean
-end
-
 describe "welcome", js: true do
   it "root path page is accessible" do
     expect_page_to_be_axe_clean(root_path)
