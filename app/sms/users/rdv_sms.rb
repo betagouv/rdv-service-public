@@ -33,7 +33,7 @@ class Users::RdvSms < Users::BaseSms
     I18n.l(rdv.starts_at, format: rdv.home? ? :short_approx : :short)
   end
 
-  def rdv_footer(rdv, user, token) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+  def rdv_footer(rdv, user, token) # rubocop:disable Metrics/PerceivedComplexity
     message = if rdv.phone?
                 "RDV Téléphonique\n"
               elsif rdv.home?
@@ -49,7 +49,7 @@ class Users::RdvSms < Users::BaseSms
     agents_short_names = rdv.agents.map(&:short_name).sort.to_sentence
     message += " avec #{agents_short_names} " if rdv.follow_up?
 
-    url = token.present? ? rdv_shorten_url(rdv, host: ENV["HOST"], tkn: token) : rdvs_shorten_url(host: ENV["HOST"])
+    url = rdv_shorten_url(rdv, host: ENV["HOST"], tkn: token)
     message += "Infos et annulation: #{url}"
 
     message += " / #{rdv.phone_number}" if rdv.phone_number.present?

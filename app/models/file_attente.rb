@@ -36,7 +36,7 @@ class FileAttente < ApplicationRecord
 
   def send_notification
     rdv.users.map(&:user_to_notify).uniq.each do |user|
-      invitation_token = RdvsUser.find_by(rdv: rdv, user: user).new_raw_invitation_token if user.notifiable_by_sms? || user.notifiable_by_email?
+      invitation_token = invitation_token_for(rdv, user) if user.notifiable_by_sms? || user.notifiable_by_email?
 
       if user.notifiable_by_sms?
         Users::FileAttenteSms.new_creneau_available(rdv, user, invitation_token).deliver_later
@@ -49,5 +49,9 @@ class FileAttente < ApplicationRecord
       update!(notifications_sent: notifications_sent + 1, last_creneau_sent_at: Time.zone.now)
       rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: :file_attente_creneaux_available)
     end
+  end
+
+  def invitation_token_for(rdv, user)
+    RdvsUser.find_by(rdv: rdv, user: user)&.new_raw_invitation_token
   end
 end
