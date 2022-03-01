@@ -234,6 +234,7 @@ fr:
     reset: Réinitialiser
     search: Rechercher
     show: Afficher
+    actions: Actions
     select:
       prompt: Veuillez sélectionner
     submit:
