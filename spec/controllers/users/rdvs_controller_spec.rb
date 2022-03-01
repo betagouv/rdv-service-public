@@ -5,7 +5,10 @@ RSpec.describe Users::RdvsController, type: :controller do
 
   describe "POST create" do
     subject do
-      post :create, params: { organisation_id: organisation.id, lieu_id: lieu.id, departement: "12", city_code: "12100", where: "1 rue de la, ville 12345", motif_id: motif.id, starts_at: starts_at }
+      post :create, params: {
+        organisation_id: organisation.id, lieu_id: lieu.id, departement: "12", city_code: "12100", where: "1 rue de la, ville 12345",
+        motif_id: motif.id, starts_at: starts_at, organisation_ids: [organisation.id], invitation_token: "44444"
+      }
     end
 
     let!(:organisation) { create(:organisation) }
@@ -14,6 +17,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:lieu) { create(:lieu, organisation: organisation) }
     let(:starts_at) { DateTime.parse("2020-10-20 10h30") }
     let(:mock_geo_search) { instance_double(Users::GeoSearch) }
+    let(:token) { "12345" }
 
     before do
       travel_to(Time.zone.local(2019, 7, 20))
@@ -25,6 +29,8 @@ RSpec.describe Users::RdvsController, type: :controller do
       allow(Users::CreneauSearch).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu, geo_search: mock_geo_search)
         .and_return(mock_creneau)
+      allow(Notifiers::RdvCreated).to receive(:perform_with)
+        .and_return(OpenStruct.new(rdv_tokens_by_user_id: { user.id => token }))
       subject
     end
 
@@ -36,7 +42,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       it "creates rdv" do
         expect(Rdv.count).to eq(1)
-        expect(response).to redirect_to users_rdv_path(Rdv.last)
+        expect(response).to redirect_to users_rdv_path(Rdv.last, tkn: token)
         expect(user.rdvs.last.created_by_user?).to be(true)
       end
     end
@@ -46,8 +52,11 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       it "creates rdv" do
         expect(Rdv.count).to eq(0)
-        expect(response).to redirect_to lieux_path(search: { departement: "12", service: motif.service_id, motif_name_with_location_type: motif.name_with_location_type,
-                                                             where: "1 rue de la, ville 12345" })
+        expect(response).to redirect_to prendre_rdv_path(
+          departement: "12", service: motif.service_id, motif_name_with_location_type: motif.name_with_location_type,
+          address: "1 rue de la, ville 12345", organisation_ids: [organisation.id], invitation_token: "44444",
+          city_code: "12100"
+        )
         expect(flash[:error]).to eq "Ce créneau n’est plus disponible. Veuillez en sélectionner un autre."
       end
     end
@@ -55,55 +64,57 @@ RSpec.describe Users::RdvsController, type: :controller do
 
   describe "PUT #cancel" do
     context "when user belongs to rdv" do
-      it "change cancelled_at" do
-        rdv = create(:rdv, starts_at: 5.hours.from_now)
-        now = "01/01/2019 14:20".to_datetime
+      let(:token) { "12345" }
+      let(:rdv) { create(:rdv, starts_at: 5.hours.from_now) }
 
-        travel_to(now)
-        sign_in rdv.users.first
-
-        put :cancel, params: { id: rdv.id }
-        expect(rdv.reload.cancelled_at).to be_within(5.seconds).of(now)
+      before do
+        allow(RdvUpdater).to receive(:update)
+          .and_return(OpenStruct.new(success?: true, notifier: OpenStruct.new(rdv_tokens_by_user_id: { rdv.users.first.id => token })))
       end
 
       it "call RdvUpdater.update function" do
-        rdv = create(:rdv, starts_at: 5.hours.from_now)
         sign_in rdv.users.first
         expect(RdvUpdater).to receive(:update).with(rdv.users.first, rdv, { status: "excused" })
         put :cancel, params: { id: rdv.id }
       end
 
       it "redirects to the rdv" do
-        rdv = create(:rdv, starts_at: 5.hours.from_now)
         sign_in rdv.users.first
         put :cancel, params: { id: rdv.id }
-        expect(response).to redirect_to users_rdv_path(rdv)
+        expect(response).to redirect_to users_rdv_path(rdv, tkn: token)
       end
 
-      it "when rdv is not cancellable" do
-        rdv = create(:rdv, starts_at: 3.hours.from_now)
-        sign_in rdv.users.first
-        expect do
+      context "when rdv is not cancellable" do
+        let(:rdv) { create(:rdv, starts_at: 3.hours.from_now) }
+
+        it "is not authorized" do
+          sign_in rdv.users.first
+
           put :cancel, params: { id: rdv.id }
-        end.not_to change(rdv, :cancelled_at)
+          expect(response).to redirect_to(users_rdvs_path)
+          expect(flash[:error]).to eq("Vous ne pouvez pas effectuer cette action.")
+        end
       end
     end
 
-    it "when user does not belongs to rdv" do
-      rdv = create(:rdv, starts_at: 5.hours.from_now)
-      other_user = create(:user)
+    context "when user does not belongs to rdv" do
+      let(:rdv) { create(:rdv, starts_at: 5.hours.from_now) }
 
-      sign_in other_user
+      it "raises an error" do
+        other_user = create(:user)
 
-      expect do
-        put :cancel, params: { id: rdv.id }
-      end.to raise_error(ActiveRecord::RecordNotFound)
+        sign_in other_user
+
+        expect do
+          put :cancel, params: { id: rdv.id }
+        end.to raise_error(ActiveRecord::RecordNotFound)
+      end
     end
   end
 
   describe "GET #show" do
     let(:user) { create(:user) }
-    let(:rdv) { create(:rdv, users: [user], starts_at: starts_at) }
+    let(:rdv) { create(:rdv, users: [user], starts_at: starts_at, created_by: "user") }
     let(:starts_at) { DateTime.parse("2020-10-20 10h30") }
 
     before do
@@ -122,6 +133,18 @@ RSpec.describe Users::RdvsController, type: :controller do
 
     context "when the rdv is past" do
       let!(:starts_at) { DateTime.parse("2018-12-31 10h30") }
+
+      it "does not link to edit" do
+        get :show, params: { id: rdv.id }
+
+        expect(response).to be_successful
+        expect(response.body).to match(/Votre RDV/)
+        expect(response.body).not_to match(/Modifier l&#39;horaire du RDV/)
+      end
+    end
+
+    context "when the rdv is created by an agent" do
+      let(:rdv) { create(:rdv, users: [user], starts_at: starts_at, created_by: "agent") }
 
       it "does not link to edit" do
         get :show, params: { id: rdv.id }
@@ -212,7 +235,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
     let!(:motif) { create(:motif, organisation: organisation, max_booking_delay: 2.weeks.to_i) }
     let!(:user) { create(:user) }
-    let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation) }
+    let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: "user") }
 
     before do
       travel_to(now)
@@ -262,7 +285,8 @@ RSpec.describe Users::RdvsController, type: :controller do
     let!(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
     let!(:motif) { create(:motif, organisation: organisation) }
     let!(:user) { create(:user) }
-    let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation) }
+    let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: "user") }
+    let(:returned_creneau) { Creneau.new }
 
     before do
       travel_to(now)
@@ -274,8 +298,6 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     context "creneau is available" do
-      let(:returned_creneau) { Creneau.new }
-
       before { subject }
 
       it { expect(response.body).to include("Modification du Rendez-vous") }
@@ -289,6 +311,16 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       it { expect(response).to redirect_to(creneaux_users_rdv_path(rdv)) }
     end
+
+    context "when the rdv is created by an agent" do
+      let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: "agent") }
+
+      it "is not authorized" do
+        subject
+        expect(response).to redirect_to(users_rdvs_path)
+        expect(flash[:error]).to eq("Vous ne pouvez pas effectuer cette action.")
+      end
+    end
   end
 
   describe "PUT #update" do
@@ -299,7 +331,8 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:motif) { create(:motif, organisation: organisation) }
     let(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
     let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-    let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation) }
+    let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: "user") }
+    let(:token) { "12345" }
 
     before do
       travel_to(now)
@@ -307,6 +340,8 @@ RSpec.describe Users::RdvsController, type: :controller do
       allow(Users::CreneauSearch).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
         .and_return(returned_creneau)
+      allow(Notifiers::RdvDateUpdated).to receive(:perform_with)
+        .and_return(OpenStruct.new(rdv_tokens_by_user_id: { user.id => token }))
     end
 
     context "with an available creneau" do
@@ -314,7 +349,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       it "respond success and update RDV" do
         put :update, params: { id: rdv.id, starts_at: starts_at, agent_id: agent.id }
-        expect(response).to redirect_to(users_rdv_path(rdv))
+        expect(response).to redirect_to(users_rdv_path(rdv, tkn: token))
         expect(flash[:success]).to eq("Votre RDV a bien été modifié")
         expect(rdv.reload.starts_at).to eq(starts_at)
         expect(rdv.reload.agent_ids).to eq([agent.id])

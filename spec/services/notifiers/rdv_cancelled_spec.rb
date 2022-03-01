@@ -6,15 +6,21 @@ describe Notifiers::RdvCancelled, type: :service do
   let(:agent1) { build(:agent) }
   let(:agent2) { build(:agent) }
   let(:user) { build(:user) }
-  let(:rdv) { build(:rdv, starts_at: starts_at, users: [user], agents: [agent1, agent2]) }
+  let(:rdv) { build(:rdv, starts_at: starts_at, agents: [agent1, agent2]) }
   let(:rdv_payload_for_users) { rdv.payload(:destroy, user) }
   let(:rdv_payload_for_agents) { rdv.payload(:destroy, agent1) }
+  let(:rdv_user) { create(:rdvs_user, user: user, rdv: rdv) }
+  let(:rdvs_users) { RdvsUser.where(id: rdv_user.id) }
+  let(:token) { "123456" }
 
   before do
     rdv.update!(status: new_status)
 
     allow(Agents::RdvMailer).to receive(:rdv_cancelled).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
     allow(Users::RdvMailer).to receive(:rdv_cancelled).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
+    allow(rdv).to receive(:rdvs_users).and_return(rdvs_users)
+    allow(rdvs_users).to receive(:where).and_return([rdv_user])
+    allow(rdv_user).to receive(:new_raw_invitation_token).and_return(token)
   end
 
   context "cancellation by agent" do
@@ -27,11 +33,15 @@ describe Notifiers::RdvCancelled, type: :service do
       it "only notifies the user" do
         expect(Agents::RdvMailer).not_to receive(:rdv_cancelled).with(rdv_payload_for_agents, agent1, agent1)
         expect(Agents::RdvMailer).not_to receive(:rdv_cancelled).with(rdv_payload_for_agents, agent2, agent1)
-        expect(Users::RdvMailer).to receive(:rdv_cancelled).with(rdv_payload_for_users, user)
+        expect(Users::RdvMailer).to receive(:rdv_cancelled).with(rdv_payload_for_users, user, token)
 
         subject
         expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "cancelled_by_agent").count).to eq 1
         expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: "cancelled_by_agent").count).to eq 1
+      end
+
+      it "outputs the tokens" do
+        expect(subject.rdv_tokens_by_user_id).to eq({ user.id => token })
       end
     end
 
@@ -41,7 +51,7 @@ describe Notifiers::RdvCancelled, type: :service do
       it "notifies the users and the other agents (not the author)" do
         expect(Agents::RdvMailer).not_to receive(:rdv_cancelled).with(rdv_payload_for_agents, agent1, agent1)
         expect(Agents::RdvMailer).to receive(:rdv_cancelled).with(rdv_payload_for_agents, agent2, agent1)
-        expect(Users::RdvMailer).to receive(:rdv_cancelled).with(rdv_payload_for_users, user)
+        expect(Users::RdvMailer).to receive(:rdv_cancelled).with(rdv_payload_for_users, user, token)
 
         subject
         expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "cancelled_by_agent").count).to eq 1
@@ -58,7 +68,7 @@ describe Notifiers::RdvCancelled, type: :service do
     it "notifies the user and the agents" do
       expect(Agents::RdvMailer).to receive(:rdv_cancelled).with(rdv_payload_for_agents, agent1, user)
       expect(Agents::RdvMailer).to receive(:rdv_cancelled).with(rdv_payload_for_agents, agent2, user)
-      expect(Users::RdvMailer).to receive(:rdv_cancelled).with(rdv_payload_for_users, user)
+      expect(Users::RdvMailer).to receive(:rdv_cancelled).with(rdv_payload_for_users, user, token)
 
       subject
       expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "cancelled_by_user").count).to eq 1
