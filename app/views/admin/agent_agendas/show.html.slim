@@ -20,8 +20,15 @@
       data-agent-id="#{@agent.id}"
       data-selected-event-id="#{@selected_event_id}"
       data-organisation-id="#{@organisation.id}"
+      data-display-saturdays="#{current_agent.display_saturdays}"
       data-event-sources-json="#{[admin_agent_rdvs_path(@agent, organisation_id: current_organisation.id, status: @status), admin_agent_absences_path(@agent, organisation_id: current_organisation.id), admin_agent_plage_ouvertures_path(@agent, organisation_id: current_organisation.id), admin_jours_feries_path].to_json}"
     ]
+    = simple_form_for [:admin, current_agent], url: toggle_display_saturdays_admin_organisation_agent_agenda_path(params.permit(:status, :selected_event_id, :date)), method: :put, html: { class: "mt-2 float-right" } do |f|
+       = f.hidden_field :display_saturdays, value: !current_agent.display_saturdays
+
+       / The fc-button fc-button-primary classes give the button the aspect of calendar buttons
+       = f.submit Agent.human_attribute_value(:display_saturdays, !current_agent.display_saturdays), class: "fc-button fc-button-primary", style: "text-transform: none;"
+
     .mt-3
       = link_to admin_organisation_rdvs_path(current_organisation, agent_id: @agent.id, start: @date, end: @date, show_user_details: true, breadcrumb_page: "agenda"), class: "js-link-print-rdvs" do
         - if current_agent == @agent
