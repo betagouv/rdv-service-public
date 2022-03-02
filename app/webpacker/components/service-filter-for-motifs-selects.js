@@ -9,6 +9,7 @@ class ServiceFilterForMotifsSelects {
   initFilter = () => {
     this.serviceSelect = document.querySelector(".js-service-filter")
     this.motifSelect = document.querySelector('.js-filtered-motifs')
+    console.log(this.motifSelect)
     if (!this.serviceSelect || !this.motifSelect) return
 
     this.initialGroupedOptions = this.getInitialGroupedOptions()
