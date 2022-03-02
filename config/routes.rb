@@ -146,6 +146,7 @@ Rails.application.routes.draw do
         resources :slots, only: :index
         resources :lieux, except: :show
         resources :motifs
+        resources :rdvs_collectifs, only: %i[index new]
         resources :rdvs, except: [:new] do
           post :new_participation
           collection do

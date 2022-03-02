@@ -73,6 +73,8 @@
             = active_link_to "Plages d'ouverture", admin_organisation_agent_plage_ouvertures_path(current_organisation, agent_for_left_menu)
           li.my-2
             = active_link_to t(".busy_times"), admin_organisation_agent_absences_path(current_organisation, agent_for_left_menu)
+          li.my-2
+            = active_link_to "RDV Collectifs", admin_organisation_rdvs_collectifs_path(current_organisation)
 
       li.side-nav-item.mb-4.pl-3.pr-2
         = active_link_to admin_organisation_users_path(current_organisation)

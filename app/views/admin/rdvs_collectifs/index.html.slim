@@ -1,0 +1,28 @@
+- content_for :title do
+  | RDV Collectifs
+
+- content_for(:menu_item) { "menu-rdvs-collectifs-list" }
+
+- content_for :breadcrumb do
+  .btn-group
+    = link_to "Programmer un nouveau RDV Collectif", new_admin_organisation_rdvs_collectif_path(current_organisation), class: "btn btn-outline-primary"
+
+.row.justify-content-center.pb-3
+  div class="col-md-6"
+    - if @rdvs.any?
+      .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
+      = render(partial: "admin/rdvs/rdv",
+              collection: @rdvs.includes(:organisation, :users, :lieu, :motif, agents: :service),
+              locals: {show_user_details: false},
+              cached: ->(rdv) { [rdv, false, locale_cache_key] })
+      .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
+    - else
+      .card
+        .card-body
+          .row.justify-content-md-center
+            .col-md-6.text-center.my-5
+              p.mb-2.lead
+                | Aucun RDV
+              span.fa-stack.fa-4x
+                i.fa.fa-circle.fa-stack-2x.text-primary
+                i.far.fa-calendar.fa-stack-1x.text-white
