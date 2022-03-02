@@ -7,12 +7,12 @@ nav.navbar.navbar-expand-lg.bg-transparent
       ul.navbar-nav.ml-auto.align-items-start.align-items-lg-center
         - if current_page?(accueil_mds_path)
           li.list-inline-item
-            = link_to "Espace usager", root_path, class: "btn btn-link text-white"
+            = link_to t("links.usager_space"), root_path, class: "btn btn-link text-white"
           li.list-inline-item
-            = link_to "Se connecter en tant qu'agent", new_agent_session_path, class: "btn btn-outline-white"
+            = link_to t("links.session_as_agent"), new_agent_session_path, class: "btn btn-outline-white"
 
         - else
           li.list-inline-item
-            = link_to "Espace agent", accueil_mds_path, class: "btn btn-link text-white"
+            = link_to t("links.agent_space"), accueil_mds_path, class: "btn btn-link text-white"
           li.list-inline-item
-            = link_to "Se connecter", new_user_session_path, class: "btn btn-white"
+            = link_to t("links.session"), new_user_session_path, class: "btn btn-outline-white"
