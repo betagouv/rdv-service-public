@@ -57,7 +57,7 @@ gem "typhoeus"
 
 # Form
 gem "simple_form", "~> 5.0"
-gem "image_processing", "~> 1.8"
+gem "image_processing", "~> 1.12"
 gem "phonelib"
 gem "auto_strip_attributes"
 
