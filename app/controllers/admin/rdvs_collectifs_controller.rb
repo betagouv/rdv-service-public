@@ -2,21 +2,16 @@
 
 class Admin::RdvsCollectifsController < AgentAuthController
   respond_to :html
-  skip_after_action :verify_authorized, only: :new
 
   def index
     @rdvs = policy_scope(Rdv).joins(:motif).where(motifs: { collectif: true }).where(organisation: current_organisation)
     @rdvs = @rdvs.order(starts_at: :asc).page(params[:page])
   end
 
-  def new_with_motif
+  def new
     motif = policy_scope(Motif).find(params[:motif_id])
     @rdv = Rdv.new(organisation: current_organisation, motif: motif, duration_in_min: motif.default_duration_in_min)
-    authorize(@rdv, :new?)
-  end
-
-  def new
-    @motifs = policy_scope(Motif).available_motifs_for_organisation_and_agent(current_organisation, current_agent).where(collectif: true)
+    authorize(@rdv)
   end
 
   def create

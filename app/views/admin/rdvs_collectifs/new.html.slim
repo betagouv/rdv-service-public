@@ -3,13 +3,25 @@
 .row.justify-content-md-center
   .col-md-8
     .card
+      .card-header
+        h3.text-center #{@rdv.motif.name} (#{@rdv.motif.service.short_name})
       .card-body.px-3
-        = form_tag(url: new_admin_organisation_rdvs_collectif_path(current_organisation), method: :get) do
-          = text_field :rdv, :motif, required: true, include_blank: true, collection: @motifs, \
-            data: { placeholder: "Sélectionnez un motif" }, class: "js-filtered-motifs"
+        = simple_form_for(@rdv, url: admin_organisation_rdvs_collectifs_path(current_organisation), method: :post) do |f|
+          = render "model_errors", model: @rdv
 
-          .row.align-items-center.mt-3
-            .col.text-left
-              = link_to "Revenir en arrière", admin_organisation_rdvs_collectifs_path(current_organisation), class: "btn btn-outline-primary"
-            .col.text-right
-              = button_tag "Continuer"
+          .form-row
+            .col-md-6= datetime_input(f, :starts_at)
+            .col-md-6= f.input :duration_in_min, as: :integer, label: "Durée en minutes"
+          = f.association :agents, collection: @rdv.motif.authorized_agents.includes(:service), label_method: :reverse_full_name_and_service, input_html: { multiple: true, class: "select2-input" }
+          = f.input :context, label: "Contexte"
+          = f.hidden_field :motif_id, value: @rdv.motif_id
+          = f.association :lieu, \
+            collection: policy_scope(Lieu).enabled.ordered_by_name, \
+            label_method: :full_name, \
+            include_blank: true,
+            required: true,
+            input_html: { class: "select2-input" }
+
+          = f.input :max_participants_count, label: "Nombre de places"
+
+          = f.button :submit, "Enregistrer"

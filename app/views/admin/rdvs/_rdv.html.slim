@@ -4,7 +4,7 @@
       .mt-1
         i.fa.fa-fw.fa-calendar>
         = link_to rdv_title(rdv), admin_organisation_rdv_path(rdv.organisation, rdv)
-      = render "rdv_status_dropdown", rdv: rdv, agent: nil, remote: true
+      = render "admin/rdvs/rdv_status_dropdown", rdv: rdv, agent: nil, remote: true
 
   .card-body
     p.card-text

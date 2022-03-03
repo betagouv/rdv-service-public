@@ -148,7 +148,7 @@ Rails.application.routes.draw do
         resources :motifs
         resources :rdvs_collectifs, only: %i[index new create] do
           collection do
-            get ':motif_id/new' => "rdvs_collectifs#new_with_motif"
+            resources :motifs, only: %i[index], as: :rdvs_collectif_motifs, controller: "rdvs_collectifs/motifs"
           end
         end
         resources :rdvs, except: [:new] do
