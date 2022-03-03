@@ -19,9 +19,10 @@ class Admin::RdvsCollectifsController < AgentAuthController
     authorize(@rdv, :new?)
 
     if @rdv.update(rdv_params)
-      redirect_to admin_organisation_rdv_path(current_organisation, @rdv)
+      flash[:notice] = "#{@rdv.motif.name} créé"
+      redirect_to admin_organisation_rdvs_collectifs_path(current_organisation)
     else
-      render :new_with_motif
+      render :new
     end
   end
 
