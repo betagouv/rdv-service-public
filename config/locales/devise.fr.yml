@@ -103,6 +103,9 @@ fr:
           invitation_instructions:
             accept_until_format: "%d %B"
   links:
+    session_as_agent: "Se connecter en tant qu'agent"
+    agent_space: "Espace agent"
+    usager_space: "Espace usager"
     session: "Se connecter"
     registration: "S'inscrire"
     password: "Mot de passe oublié ?"

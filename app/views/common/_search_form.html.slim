@@ -34,7 +34,7 @@
                 data: { "select-options": { "disableSearch": true } } \
               }, \
               wrapper_html: { class: "mb-1 mb-lg-0" }
-          .col-lg-3.align-self-end= f.button :submit, t(".choose_this_motif"), class: "btn btn-secondary btn-lg w-100 text-center"
+          .col-lg-3.align-self-end= f.button :submit, t(".choose_this_motif"), class: "btn btn-white btn-lg w-100 text-center"
           .col-lg-12= render "common/contact", geo_search: @geo_search, message: t(".motif_not_in_list")
 
       - else
@@ -53,7 +53,7 @@
                   data: { "select-options": { "disableSearch": true } } \
                 }, \
                 wrapper_html: { class: "mb-1 mb-lg-0" }
-            .col-lg-3.align-self-end= f.button :submit, t(".choose_this_service"), class: "btn btn-secondary btn-lg w-100 text-center"
+            .col-lg-3.align-self-end= f.button :submit, t(".choose_this_service"), class: "btn btn-white btn-lg w-100 text-center"
 
             .col-lg-12= render "common/contact", geo_search: @geo_search, message: t(".service_not_in_list")
 
@@ -68,6 +68,6 @@
       .form-row.d-flex.justify-content-md-center
         .col-lg-9= f.input :where, label: t(".address"), placeholder: t(".address_example"), input_html: { value: @where, class: "form-control-lg places-js-container" }, wrapper_html: { class: "mb-1 mb-lg-0" }
         .col-lg-3.align-self-end
-          = f.button :button, id: "search_submit", class: "btn-secondary btn-lg w-100 text-center", disabled: true do
+          = f.button :button, id: "search_submit", class:  "btn-white btn-lg w-100 text-center", disabled: true do
             i.fa.fa-search>
             =t("helpers.search")
