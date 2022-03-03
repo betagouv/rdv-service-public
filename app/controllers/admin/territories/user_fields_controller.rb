@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 class Admin::Territories::UserFieldsController < Admin::Territories::BaseController
-  def edit; end
+  def edit
+    authorize_admin(current_territory)
+  end
 
   def update
+    authorize_admin(current_territory)
     current_territory.update!(user_fields_params)
 
     flash[:alert] = "Configuration enregistrée"
