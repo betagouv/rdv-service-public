@@ -10,6 +10,7 @@ class Agent::TerritoryPolicy < ApplicationPolicy
 
   alias show? agent_has_role_in_record_territory?
   alias update? agent_has_role_in_record_territory?
+  alias edit? agent_has_role_in_record_territory?
 
   class Scope < Scope
     alias context pundit_user

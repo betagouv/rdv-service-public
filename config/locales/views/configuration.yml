@@ -99,3 +99,6 @@ fr:
           teams: Équipes
           actions: Actions
           edit_agents: Modification des équipes de l'agent
+      user_fields:
+        edit:
+          title: Champs de la fiche usager

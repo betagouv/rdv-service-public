@@ -66,6 +66,14 @@
       p Importer un fichier de sectorisation pour faciliter la création de votre découpage géographique.
 
   .col.col-md-4.p-2.rounded.settings-box
+    = link_to edit_admin_territory_user_fields_path(current_territory) do
+      h3.fw-bold.mb-0
+        i.fa.fa-users>
+        | Fiches usagers
+      p Gérer les informations enregistrées sur les usagers
+
+  / Ce lien est la manière principale de sortir de la configuration pour retourner à l'écran métier, donc on le garde à la fin de la liste
+  .col.col-md-4.p-2.rounded.settings-box
     = link_to admin_organisations_path do
       h3.fw-bold.mb-0
         i.fa.fa-home>

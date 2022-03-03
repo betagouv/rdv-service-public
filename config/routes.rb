@@ -120,6 +120,7 @@ Rails.application.routes.draw do
               get :search
             end
           end
+          resource :user_fields, only: %i[edit update]
           resource :sms_configuration, only: %i[show edit update]
           resources :zone_imports, only: %i[new create]
           resources :zones, only: [:index] # exports only
