@@ -1,0 +1,57 @@
+.card.rdv-card[id= "rdv-#{rdv.id}"]
+  .card-header
+    .d-flex.justify-content-between
+      .mt-1
+        = link_to rdv.motif.name, admin_organisation_rdv_path(rdv.organisation, rdv)
+      .d-flex
+        .mr-1= link_to "Modifier", edit_admin_organisation_rdv_path(current_organisation, rdv), class: "btn btn-outline-primary"
+        = link_to "Gérer les participants", edit_admin_organisation_rdvs_collectif_path(current_organisation, rdv), class: "btn btn-outline-primary"
+
+  .card-body
+    .d-flex.card-text.mb-2
+      div
+        - if rdv.context.blank?
+          .text-muted Pas de contexte renseigné
+        - else
+          .border-left.pl-2= simple_format(rdv.context)
+    .d-flex.card-text.mb-2
+      div.mr-1
+        i.fa.fa-fw.fa-calendar>
+      div = rdv_title(rdv)
+
+    .d-flex.card-text.mb-3
+      - if rdv.phone?
+          i.fa.fa-fw.fa-phone>
+          | RDV téléphonique
+      - else
+        div.mr-1
+          i.fa.fa-fw.fa-map-marker-alt>
+          - if rdv.home?
+            | RDV à domicile
+            = human_location(rdv)
+          - elsif rdv.public_office?
+            = human_location(rdv)
+
+    .d-flex.card-text.mb-2
+      div.mr-1
+        i.fa.fa-fw.fa-user>
+      div
+        strong> Animé par
+        = agents_to_sentence(rdv.agents)
+    .d-flex.card-text
+      div.mr-1
+        i.fa.fa-fw.fa-users>
+      div
+        - if rdv.users.none?
+          = "Aucun usager inscrit"
+        - else
+          = "#{'Usager'.pluralize(rdv.users.count)} :"
+          = users_inline_list_for_agents(rdv.users, display_links_to_users: local_assigns.fetch(:display_links_to_users, true))
+
+    - if rdv.public_office? && rdv.overlapping_plages_ouvertures?
+      div.my-3
+        .alert.alert-warning.mt-1.mb-0
+          | Conflit de lieu avec des plages d'ouvertures
+        .border-left.border-right.border-bottom.rounded.border-warning
+          ul.pl-3.py-2.mb-0
+            = render "admin/plage_ouvertures/overlapping_plage_ouvertures", model: rdv, display_agents: true

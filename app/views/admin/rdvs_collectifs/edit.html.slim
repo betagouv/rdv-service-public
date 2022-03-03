@@ -1,0 +1,31 @@
+- content_for(:title) { "Gestion des participants" }
+
+.row.justify-content-md-center
+  .col-md-8
+    = simple_form_for(@rdv, url: admin_organisation_rdvs_collectifs_path(current_organisation), method: :post) do |f|
+      .card
+        .card-header
+          h3.text-center #{@rdv.motif.name} (#{@rdv.motif.service.short_name})
+        .card-body.px-3
+          = render "model_errors", model: @rdv
+
+          .form-group
+            = "#{User.model_name.human.pluralize} :"
+            = f.fields_for :rdvs_users, @rdv.rdvs_users do |rdv_user_form|
+              = render "admin/rdvs_users/form", form: rdv_user_form
+
+          .form-group
+            = select_tag :status,
+                    options_for_select([]),
+                    include_blank: "Ajouter un usager",
+                    required: false,
+                    class: "select2-input js-rdv-user-select",
+                    data: { \
+              width: "auto", \
+              "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.rdvs_users.map(&:user_id)), dataType: "json", delay: 250 } } \
+             }
+
+
+      .text-right
+        = link_to t("helpers.back"), admin_organisation_rdv_path(current_organisation, @rdv), class: "btn btn-link"
+        = f.button :submit, t("helpers.submit.submit")

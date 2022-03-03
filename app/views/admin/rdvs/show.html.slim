@@ -42,9 +42,6 @@
                   = simple_format(notes, {}, wrapper_tag: :span)
 
       .card-footer
-        .d-flex
-          .btn-group
-            = link_to t(".update"), edit_admin_organisation_rdv_collectif_path(@rdv.organisation, @rdv), class: "btn btn-outline-primary"
         .d-flex.justify-content-end
           .btn-group
             = link_to t(".update"), edit_admin_organisation_rdv_path(@rdv.organisation, @rdv, agent_id: @agent&.id), class: "btn btn-outline-primary"

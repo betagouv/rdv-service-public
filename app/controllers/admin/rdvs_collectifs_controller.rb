@@ -26,6 +26,11 @@ class Admin::RdvsCollectifsController < AgentAuthController
     end
   end
 
+  def edit
+    @rdv = Rdv.find(params[:id])
+    authorize(@rdv)
+  end
+
   private
 
   def rdv_params
