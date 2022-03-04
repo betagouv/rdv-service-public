@@ -10,12 +10,6 @@ class Admin::RdvCollectifSearchForm
     organisation.motifs.find_by(id: motif_id)
   end
 
-  # def from_date
-  #   Date.parse(@from_date)
-  # rescue StandardError
-  #   Time.zone.today
-  # end
-
   def from_date=(date)
     @from_date = if date.is_a?(String)
                    DateTime.parse(date)
