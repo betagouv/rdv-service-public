@@ -43,6 +43,7 @@ class User < ApplicationRecord
   # we specify dependent: :destroy because by default user_profiles will be deleted (dependent: :delete)
   # and we need to destroy to trigger the callbacks on user_profile
   has_many :rdvs_users, dependent: :destroy
+
   has_and_belongs_to_many :agents
   belongs_to :responsible, class_name: "User", optional: true
   has_many :relatives, foreign_key: "responsible_id", class_name: "User", inverse_of: :responsible, dependent: :nullify

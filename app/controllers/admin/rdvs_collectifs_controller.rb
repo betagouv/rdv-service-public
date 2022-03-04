@@ -17,8 +17,8 @@ class Admin::RdvsCollectifsController < AgentAuthController
       @rdvs = @rdvs.where(motif_id: @form.motif_id)
     end
 
-    if @form.with_availabilities
-      @rdvs = @rdvs.includes(:rdvs_users).having("count(rdvs_users.id) < rdvs.max_participants_count")
+    if @form.with_availabilities.to_bool
+      @rdvs = @rdvs.where("rdv_collectif_users_count < max_participants_count OR max_participants_count IS NULL")
     end
 
     @rdvs = @rdvs.where("starts_at >= ?", @form.from_date)
