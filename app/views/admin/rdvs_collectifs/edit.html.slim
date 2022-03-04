@@ -2,7 +2,7 @@
 
 .row.justify-content-md-center
   .col-md-8
-    = simple_form_for(@rdv, url: admin_organisation_rdvs_collectifs_path(current_organisation), method: :put) do |f|
+    = simple_form_for(@rdv, url: admin_organisation_rdvs_collectifs_path(current_organisation), method: :pu) do |f|
       .card
         .card-header
           h3.text-center #{@rdv.motif.name} (#{@rdv.motif.service.short_name})
