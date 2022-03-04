@@ -27,20 +27,20 @@
   = f.input :city_name, as: :hidden
 
   - if local_assigns[:service].nil? || service.user_field_groups.include?(:social)
-    - territories = user.user_profiles.joins(organisation: :territory).to_a
+    - territories = Territory.joins(organisations: :user_profiles).where(user_profiles: { user_id: user.id }).to_a
     - if territories.map(&:enable_caisse_affiliation_field).any? || territories.map(&:enable_affiliation_number_field).any?
       .form-row
         - if territories.map(&:enable_caisse_affiliation_field).any?
-          .col-md-6= f.input :caisse_affiliation, collection: User.human_attribute_values(:caisse_affiliation), **input_opts
+          .col-md-6= f.input :caisse_affiliation, collection: User.human_attribute_values(:caisse_affiliation)
         - if territories.map(&:enable_affiliation_number_field).any?
-          .col-md-6= f.input :affiliation_number, **input_opts
+          .col-md-6= f.input :affiliation_number
 
     - if territories.map(&:enable_family_situation_field).any? || territories.map(&:enable_number_of_children_field).any?
       .form-row
         - if territories.map(&:enable_family_situation_field).any?
-          .col-md-6= f.input :family_situation, collection: User.human_attribute_values(:family_situation), **input_opts
+          .col-md-6= f.input :family_situation, collection: User.human_attribute_values(:family_situation)
         - if territories.map(&:enable_number_of_children_field).any?
-          .col-md-6= f.input :number_of_children, **{ input_html: { min: "0", max: "15", step: "any" } }.deep_merge(input_opts)
+          .col-md-6= f.input :number_of_children, input_html: { min: "0", max: "15", step: "any" }
 
     - if local_assigns[:rdv_wizard]
       ruby:
@@ -57,7 +57,7 @@
           = f.simple_fields_for :user_profiles, profile do |n|
             legend= profile.organisation.name
             = n.input :organisation_id, as: :hidden
-            - if current_territory.enable_logement_field
+            - if territories.map(&:enable_logement_field).any?
               = n.input :logement, collection: UserProfile.human_attribute_values(:logement)
 
   - if local_assigns[:rdv_wizard].present?
