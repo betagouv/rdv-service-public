@@ -5,9 +5,15 @@
         = link_to rdv.motif.name, admin_organisation_rdv_path(rdv.organisation, rdv)
       .d-flex
         .mr-1= link_to "Modifier", edit_admin_organisation_rdv_path(current_organisation, rdv), class: "btn btn-outline-primary"
-        = link_to "Gérer les participants", edit_admin_organisation_rdvs_collectif_path(current_organisation, rdv), class: "btn btn-outline-primary"
 
   .card-body
+    .d-flex.card-text.mb-2
+      div.mr-1
+        i.fa.fa-fw.fa-user>
+      div
+        strong> Animé par
+        = agents_to_sentence(rdv.agents)
+
     .d-flex.card-text.mb-2
       div
         - if rdv.context.blank?
@@ -32,21 +38,20 @@
           - elsif rdv.public_office?
             = human_location(rdv)
 
-    .d-flex.card-text.mb-2
-      div.mr-1
-        i.fa.fa-fw.fa-user>
-      div
-        strong> Animé par
-        = agents_to_sentence(rdv.agents)
     .d-flex.card-text
       div.mr-1
         i.fa.fa-fw.fa-users>
       div
-        - if rdv.users.none?
-          = "Aucun usager inscrit"
+        - if rdv.max_participants_count
+          - remaining_seats_left = rdv.max_participants_count - rdv.users.count
+          - if remaining_seats_left > 0
+            = "#{remaining_seats_left} places disponibles "
+            = link_to "Ajouter un participant", edit_admin_organisation_rdvs_collectif_path(current_organisation, rdv)
+          - else
+            = "Rdv complet"
         - else
-          = "#{'Usager'.pluralize(rdv.users.count)} :"
-          = users_inline_list_for_agents(rdv.users, display_links_to_users: local_assigns.fetch(:display_links_to_users, true))
+          | Places disponibles&nbsp
+          = link_to "Ajouter un participant", edit_admin_organisation_rdvs_collectif_path(current_organisation, rdv)
 
     - if rdv.public_office? && rdv.overlapping_plages_ouvertures?
       div.my-3

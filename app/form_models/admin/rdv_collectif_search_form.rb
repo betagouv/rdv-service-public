@@ -3,7 +3,7 @@
 class Admin::RdvCollectifSearchForm
   include ActiveModel::Model
 
-  attr_accessor :organisation_id, :motif_id, :from_date, :with_availability
+  attr_accessor :organisation_id, :motif_id, :from_date, :with_availabilities
   attr_writer :from_date
 
   def motif

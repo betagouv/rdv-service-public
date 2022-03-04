@@ -9,12 +9,16 @@ class Admin::RdvsCollectifsController < AgentAuthController
 
     @motifs = policy_scope(Motif).available_motifs_for_organisation_and_agent(current_organisation, current_agent).where(collectif: true)
 
-    @form = Admin::RdvCollectifSearchForm.new(params.permit(:motif_id, :organisation_id, :from_date, :with_availability))
+    @form = Admin::RdvCollectifSearchForm.new(params.permit(:motif_id, :organisation_id, :from_date, :with_availabilities))
 
     @form.from_date ||= Time.zone.now
 
     if @form.motif_id.present?
       @rdvs = @rdvs.where(motif_id: @form.motif_id)
+    end
+
+    if @form.with_availabilities
+      @rdvs = @rdvs.includes(:rdvs_users).having("count(rdvs_users.id) < rdvs.max_participants_count")
     end
 
     @rdvs = @rdvs.where("starts_at >= ?", @form.from_date)

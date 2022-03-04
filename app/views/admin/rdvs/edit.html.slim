@@ -49,6 +49,8 @@
                 data: { "select-options": { ajax: { url: search_admin_organisation_agents_path(current_organisation),
                                                           dataType: "json", delay: 250 } } } }
 
+            - if @rdv_form.motif.collectif?
+              = f.input :max_participants_count, label: "Nombre de places"
             .form-group
               = "#{User.model_name.human.pluralize} :"
               = f.fields_for :rdvs_users, @rdv.rdvs_users do |rdv_user_form|
