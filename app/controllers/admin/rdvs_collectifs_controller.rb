@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Admin::RdvsCollectifsController < AgentAuthController
-  respond_to :html
-
   def index
     @rdvs = policy_scope(Rdv).joins(:motif).where(motifs: { collectif: true }).where(organisation: current_organisation)
     @rdvs = @rdvs.order(starts_at: :asc).page(params[:page])
