@@ -9,7 +9,7 @@ class MergeUsersForm
     address
   ].freeze
 
-  attr_accessor :user1, :user2, :change_user1_id, :change_user2_id, *ATTRIBUTES
+  attr_accessor :user1, :user2, :change_user1_id, :change_user2_id, *ATTRIBUTES, *Territory::OPTIONAL_FIELD_TOGGLES.values
 
   validates_presence_of :user1, :user2
   validate :different_users?
