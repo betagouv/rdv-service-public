@@ -31,7 +31,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
   end
 
   def create
-    @rdv = Rdv.new(organisation: current_organisation)
+    @rdv = Rdv.new(organisation: current_organisation, rdv_collectif_users_count: 0)
     authorize(@rdv, :new?)
 
     if @rdv.update(create_rdv_params)
