@@ -36,6 +36,9 @@ class Rdv < ApplicationRecord
   has_many :users, through: :rdvs_users, validate: false
   has_many :webhook_endpoints, through: :organisation
 
+  # counter_cache for participants to rdv collectif
+  counter_culture :users_count, column_name: proc { |rdv| rdv.motif.collectif? ? "rdv_collectif_users_count" : nil }
+
   # Delegates
   delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :follow_up?, :service, :collectif?, to: :motif
 

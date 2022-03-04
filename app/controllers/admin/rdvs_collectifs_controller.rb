@@ -34,7 +34,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
     @rdv = Rdv.new(organisation: current_organisation)
     authorize(@rdv, :new?)
 
-    if @rdv.update(rdv_params)
+    if @rdv.update(create_rdv_params)
       flash[:notice] = "#{@rdv.motif.name} créé"
       redirect_to admin_organisation_rdvs_collectifs_path(current_organisation)
     else
@@ -44,12 +44,36 @@ class Admin::RdvsCollectifsController < AgentAuthController
 
   def edit
     @rdv = Rdv.find(params[:id])
+
+    add_user_ids = params[:add_user]
+    users_to_add = User.where(id: add_user_ids)
+    users_to_add.ids.each { @rdv.rdvs_users.build(user_id: _1) }
+
     authorize(@rdv)
+  end
+
+  def update
+    @rdv = Rdv.find(params[:id])
+    authorize(@rdv)
+
+    if @rdv.update(update_rdv_params)
+      flash[:notice] = "Participants mis à jour"
+      redirect_to admin_organisation_rdvs_collectifs_path(current_organisation)
+    else
+      render :edit
+    end
   end
 
   private
 
-  def rdv_params
+  def create_rdv_params
     params.require(:rdv).permit(:starts_at, :duration_in_min, :lieu_id, :max_participants_count, :motif_id, agent_ids: [])
+  end
+
+  def update_rdv_params
+    params.require(:rdv).permit(
+      user_ids: [],
+      rdvs_users_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy]
+    )
   end
 end

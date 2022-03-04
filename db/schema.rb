@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_02_154532) do
+ActiveRecord::Schema.define(version: 2022_03_04_123858) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -351,6 +351,7 @@ ActiveRecord::Schema.define(version: 2022_03_02_154532) do
     t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
     t.datetime "ends_at", null: false
     t.integer "max_participants_count"
+    t.integer "rdv_collectif_users_count"
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist
     t.index ["created_by"], name: "index_rdvs_on_created_by"
     t.index ["ends_at"], name: "index_rdvs_on_ends_at"
@@ -433,6 +434,12 @@ ActiveRecord::Schema.define(version: 2022_03_02_154532) do
     t.json "sms_configuration"
     t.boolean "has_own_sms_provider", default: false
     t.string "api_options", default: [], null: false, array: true
+    t.boolean "enable_notes_field", default: false
+    t.boolean "enable_caisse_affiliation_field", default: false
+    t.boolean "enable_affiliation_number_field", default: false
+    t.boolean "enable_family_situation_field", default: false
+    t.boolean "enable_number_of_children_field", default: false
+    t.boolean "enable_logement_field", default: false
     t.index ["departement_number"], name: "index_territories_on_departement_number", unique: true, where: "((departement_number)::text <> ''::text)"
   end
 
