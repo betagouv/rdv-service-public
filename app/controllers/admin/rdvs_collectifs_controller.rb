@@ -6,6 +6,18 @@ class Admin::RdvsCollectifsController < AgentAuthController
   def index
     @rdvs = policy_scope(Rdv).joins(:motif).where(motifs: { collectif: true }).where(organisation: current_organisation)
     @rdvs = @rdvs.order(starts_at: :asc).page(params[:page])
+
+    @motifs = policy_scope(Motif).available_motifs_for_organisation_and_agent(current_organisation, current_agent).where(collectif: true)
+
+    @form = Admin::RdvCollectifSearchForm.new(params.permit(:motif_id, :organisation_id, :from_date, :with_availability))
+
+    @form.from_date ||= Time.zone.now
+
+    if @form.motif_id.present?
+      @rdvs = @rdvs.where(motif_id: @form.motif_id)
+    end
+
+    @rdvs = @rdvs.where("starts_at >= ?", @form.from_date)
   end
 
   def new

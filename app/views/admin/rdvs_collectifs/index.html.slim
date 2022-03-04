@@ -7,6 +7,27 @@
   .btn-group
     = link_to "Nouveau RDV Collectif", admin_organisation_rdvs_collectif_motifs_path(current_organisation), class: "btn btn-primary"
 
+.card
+  .card-body
+    = simple_form_for(@form, as: "", url: admin_organisation_rdvs_collectifs_path(current_organisation), method: :get) do |f|
+      .row
+        .col-md-4
+          = date_input(f, :from_date, label = "À partir du", value: @form.from_date)
+        .col-md-4
+          = f.input :motif_id, \
+            include_blank: true, \
+            collection: @motifs, \
+            as: :select, \
+            label_method: -> { motif_name_with_location_type(_1) }, \
+            input_html: { \
+              data: { placeholder: "Sélectionnez un motif" }, \
+              class: "select2-input" \
+            }
+        .col-md-2
+          = f.input :with_availability, as: :boolean, label: "Avec des places disponibles"
+        .col-md-2
+          = f.submit "Filtrer", class: "btn btn-outline-primary"
+
 .row.justify-content-center.pb-3
   div class="col-md-6"
     - if @rdvs.any?
