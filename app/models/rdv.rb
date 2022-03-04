@@ -202,6 +202,12 @@ class Rdv < ApplicationRecord
     rdvs_users.where(send_lifecycle_notifications: true).pluck(:user_id)
   end
 
+  def availability?
+    return true unless max_participants_count
+
+    rdv_collectif_users_count < max_participants_count
+  end
+
   private
 
   def starts_at_is_plausible

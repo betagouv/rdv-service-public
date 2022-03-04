@@ -29,7 +29,7 @@
           = f.submit "Filtrer", class: "btn btn-outline-primary"
 
 .row.justify-content-center.pb-3
-  div class="col-md-6"
+  .col-md-8
     - if @rdvs.any?
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
       = render(partial: "admin/rdvs_collectifs/rdv",

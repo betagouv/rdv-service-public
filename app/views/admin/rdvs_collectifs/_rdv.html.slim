@@ -1,62 +1,52 @@
-.card.rdv-card[id= "rdv-#{rdv.id}"]
+.card
   .card-header
-    .d-flex.justify-content-between
-      .mt-1
-        = link_to rdv.motif.name, admin_organisation_rdv_path(rdv.organisation, rdv)
-      .d-flex
-        .mr-1= link_to "Modifier", edit_admin_organisation_rdv_path(current_organisation, rdv), class: "btn btn-outline-primary"
-
+    .row
+      .col-md-6
+        = link_to admin_organisation_rdv_path(rdv.organisation, rdv) do
+          h5= rdv.motif.name
+        = I18n.l(rdv.starts_at, format: "%A %d %B à %H:%M").capitalize
   .card-body
-    .d-flex.card-text.mb-2
-      div.mr-1
-        i.fa.fa-fw.fa-user>
-      div
-        strong> Animé par
-        = agents_to_sentence(rdv.agents)
-
-    .d-flex.card-text.mb-2
-      div
-        - if rdv.context.blank?
-          .text-muted Pas de contexte renseigné
+    .row
+      .col-md-6
+        - if rdv.availability?
+          = link_to edit_admin_organisation_rdvs_collectif_path(current_organisation, rdv), class: "d-flex card-text mb-2" do
+            div.mr-1
+              i.fa.fa-fw.fa-user-plus>
+            div
+              = "Ajouter un participant"
         - else
-          .border-left.pl-2= simple_format(rdv.context)
-    .d-flex.card-text.mb-2
-      div.mr-1
-        i.fa.fa-fw.fa-calendar>
-      div = rdv_title(rdv)
+          .d-flex.card-text.mb-2
+            div.mr-1
+              i.fa.fa-fw.fa-user-check>
+            div
+              = "Complet"
 
-    .d-flex.card-text.mb-3
-      - if rdv.phone?
-          i.fa.fa-fw.fa-phone>
-          | RDV téléphonique
-      - else
-        div.mr-1
-          i.fa.fa-fw.fa-map-marker-alt>
-          - if rdv.home?
-            | RDV à domicile
-            = human_location(rdv)
-          - elsif rdv.public_office?
-            = human_location(rdv)
+        .d-flex.card-text.mb-3
+          div.mr-1
+            i.fa.fa-fw.fa-users>
+          div
+            = "#{rdv.rdv_collectif_users_count} participants"
+            - if rdv.max_participants_count
+              - if rdv.availability?
+                = " (#{rdv.max_participants_count - rdv.rdv_collectif_users_count} places disponibles)"
 
-    .d-flex.card-text
-      div.mr-1
-        i.fa.fa-fw.fa-users>
-      div
-        - if rdv.max_participants_count
-          - remaining_seats_left = rdv.max_participants_count - rdv.users.count
-          - if remaining_seats_left > 0
-            = "#{remaining_seats_left} places disponibles "
-            = link_to "Ajouter un participant", edit_admin_organisation_rdvs_collectif_path(current_organisation, rdv)
+      .col-md-6
+        .d-flex.card-text.mb-2
+          - if rdv.phone?
+              i.fa.fa-fw.fa-phone>
+              | RDV téléphonique
           - else
-            = "Rdv complet"
-        - else
-          | Places disponibles&nbsp
-          = link_to "Ajouter un participant", edit_admin_organisation_rdvs_collectif_path(current_organisation, rdv)
+            div.mr-1
+              i.fa.fa-fw.fa-map-marker-alt>
+              - if rdv.home?
+                | RDV à domicile
+                = human_location(rdv)
+              - elsif rdv.public_office?
+                = rdv.lieu.name
 
-    - if rdv.public_office? && rdv.overlapping_plages_ouvertures?
-      div.my-3
-        .alert.alert-warning.mt-1.mb-0
-          | Conflit de lieu avec des plages d'ouvertures
-        .border-left.border-right.border-bottom.rounded.border-warning
-          ul.pl-3.py-2.mb-0
-            = render "admin/plage_ouvertures/overlapping_plage_ouvertures", model: rdv, display_agents: true
+        .d-flex.card-text
+          div.mr-1
+            i.fa.fa-fw.fa-user>
+          div
+            strong> Animé par
+            = agents_to_sentence(rdv.agents)
