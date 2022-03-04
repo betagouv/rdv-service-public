@@ -1,6 +1,6 @@
 .card
   .card-header
-    = link_to admin_organisation_rdv_path(rdv.organisation, rdv) do
+    = link_to edit_admin_organisation_rdv_path(rdv.organisation, rdv) do
       h5= rdv.motif.name
     = I18n.l(rdv.starts_at, format: "%A %d %B à %H:%M").capitalize
   .card-body
@@ -48,9 +48,15 @@
               - elsif rdv.public_office?
                 = rdv.lieu.name
 
-        .d-flex.card-text
+        .d-flex.card-text.mb-2
           div.mr-1
             i.fa.fa-fw.fa-user>
           div
             strong> Animé par
             = agents_to_sentence(rdv.agents)
+
+        .d-flex.card-text
+          div.mr-1
+            i.fa.fa-fw.fa-clock>
+          div
+            = "#{rdv.duration_in_min} minutes"

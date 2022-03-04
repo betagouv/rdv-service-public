@@ -1,4 +1,4 @@
-- content_for(:title) { "Gestion des participants" }
+- content_for(:title) { "Ajouter un participant" }
 
 .row.justify-content-md-center
   .col-md-8
@@ -10,13 +10,22 @@
           .row.mt-3
             .col-md-6
               .d-flex.card-text.mb-2
-                div.mr-3
+                div.mr-1
                   i.fa.fa-fw.fa-users>
                 div
                   - if @rdv.max_participants_count
                     = "#{@rdv.max_participants_count} places"
                   - else
                     = "Pas de limite de places"
+
+              .d-flex.card-text.mb-3
+                div.mr-1
+                  i.fa.fa-fw.fa-users>
+                div
+                  = "#{@rdv.rdv_collectif_users_count} participants :"
+                  ul
+                    - @rdv.users.each do |user|
+                      li= user.full_name
 
             .col-md-6
               .d-flex.card-text.mb-2
@@ -32,19 +41,25 @@
                     - elsif @rdv.public_office?
                       = @rdv.lieu.name
 
-              .d-flex.card-text
+              .d-flex.card-text.mb-2
                 div.mr-1
                   i.fa.fa-fw.fa-user>
                 div
                   strong> Animé par
                   = agents_to_sentence(@rdv.agents)
 
+              .d-flex.card-text
+                div.mr-1
+                  i.fa.fa-fw.fa-clock>
+                div
+                  = "#{@rdv.duration_in_min} minutes"
+
         .card-footer.px-3
           = render "model_errors", model: @rdv
 
           .form-group
-            = "#{User.model_name.human.pluralize} :"
-            = f.fields_for :rdvs_users, @rdv.rdvs_users do |rdv_user_form|
+            = "Usager à inscrire :"
+            = f.fields_for :rdvs_users, @rdv_users_to_add do |rdv_user_form|
               = render "admin/rdvs_users/form", form: rdv_user_form
 
           .form-group
@@ -58,7 +73,6 @@
               "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.rdvs_users.map(&:user_id)), dataType: "json", delay: 250 } } \
              }
 
-
           .text-right
-            = link_to t("helpers.back"), admin_organisation_rdv_path(current_organisation, @rdv), class: "btn btn-link"
+            = link_to t("helpers.back"), admin_organisation_rdvs_collectifs_path(current_organisation), class: "btn btn-link"
             = f.button :submit, t("helpers.submit.submit")

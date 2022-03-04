@@ -47,7 +47,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
 
     add_user_ids = params[:add_user]
     users_to_add = User.where(id: add_user_ids)
-    users_to_add.ids.each { @rdv.rdvs_users.build(user_id: _1) }
+    @rdv_users_to_add = users_to_add.ids.map { @rdv.rdvs_users.build(user_id: _1) }
 
     authorize(@rdv)
   end
