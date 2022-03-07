@@ -26,7 +26,7 @@ class Motif < ApplicationRecord
   SECTORISATION_LEVEL_DEPARTEMENT = "departement"
   SECTORISATION_TYPES = [SECTORISATION_LEVEL_AGENT, SECTORISATION_LEVEL_ORGANISATION, SECTORISATION_LEVEL_DEPARTEMENT].freeze
 
-  enum location_type: { public_office: 0, phone: 1, home: 2 }
+  enum location_type: { public_office: "public_office", phone: "phone", home: "home" }
 
   # Relations
   belongs_to :organisation
