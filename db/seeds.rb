@@ -136,7 +136,7 @@ motif_org_paris_nord_pmi_securite = Motif.create!(
   location_type: :home
 )
 _motif_org_paris_nord_pmi_collectif = Motif.create!(
-  name: "RDV Collectif",
+  name: "Atelier Collectif",
   color: "#1049F3",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
@@ -169,7 +169,7 @@ _motif_org_paris_nord_social_droits = Motif.create!(
   location_type: :public_office
 )
 _motif_org_paris_nord_social_collectif = Motif.create!(
-  name: "RDV Collectif",
+  name: "Forum Collectif",
   color: "#113C65",
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
