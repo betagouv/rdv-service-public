@@ -7,10 +7,10 @@
         = simple_form_for current_territory, url: admin_territory_user_fields_path(current_territory) do |f|
           = render "model_errors", model: current_territory
 
-          h5.card-title= "Champs optionnels pour les fiches usagers"
+          h5.card-title= t(".card_title")
 
-          p.text-muted.font-14= "Vous pouvez activer ou désactiver les champs suivants sur les fiches usagers."
-          p.text-muted.font-14= "Les champs seront simplement masqués dans l’interface: les données préexistantes ne seront pas supprimées."
+          p.text-muted.font-14= t(".hint_1")
+          p.text-muted.font-14= t(".hint_2")
           - Territory::OPTIONAL_FIELD_TOGGLES.each do |toggle, field_name|
             = f.input toggle, label: User.human_attribute_name(field_name)
 
