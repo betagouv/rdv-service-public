@@ -5,7 +5,7 @@ class Admin::ReferentsController < AgentAuthController
     @user = policy_scope(User).find(index_params[:user_id])
     authorize(@user, :update?)
     @referents = policy_scope(@user.agents).distinct.order(:last_name)
-    @agents = policy_scope(Agent).joins(:organisations).where("organisations.id": current_organisation.id)
+    @agents = policy_scope(Agent).merge(current_organisation.agents)
     @agents = @agents.search_by_text(index_params[:search]) if index_params[:search].present?
     @agents = @agents.page(params[:page])
   end
