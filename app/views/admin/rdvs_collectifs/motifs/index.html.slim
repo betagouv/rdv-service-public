@@ -11,8 +11,8 @@
 
       .card-body
         - @motifs.each do |motif|
-          ul
-            li= link_to new_admin_organisation_rdvs_collectif_path(current_organisation, { motif_id: motif.id }), class: "d-block stretched-link" do
+          = link_to new_admin_organisation_rdvs_collectif_path(current_organisation, { motif_id: motif.id }) do
+            .mb-3
               = motif.name
               br
               = "#{motif.default_duration_in_min} minutes"
