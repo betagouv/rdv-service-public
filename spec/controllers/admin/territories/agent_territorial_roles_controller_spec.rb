@@ -2,15 +2,14 @@
 
 describe Admin::Territories::AgentTerritorialRolesController, type: :controller do
   render_views
-
-  let!(:territory) { create(:territory, departement_number: "62") }
-  let!(:organisation) { create(:organisation, territory: territory) }
-
-  before do
-    sign_in agent
-  end
-
   describe "#index" do
+    let!(:territory) { create(:territory, departement_number: "62") }
+    let!(:organisation) { create(:organisation, territory: territory) }
+
+    before do
+      sign_in agent
+    end
+
     context "with a few other agents" do
       let!(:territory2) { create(:territory, departement_number: "64") }
       let!(:agent) do
@@ -78,6 +77,13 @@ describe Admin::Territories::AgentTerritorialRolesController, type: :controller 
   end
 
   describe "#new" do
+    let!(:territory) { create(:territory, departement_number: "62") }
+    let!(:organisation) { create(:organisation, territory: territory) }
+
+    before do
+      sign_in agent
+    end
+
     context "territorial admin agent signed in" do
       let!(:agent) do
         create(
@@ -137,6 +143,7 @@ describe Admin::Territories::AgentTerritorialRolesController, type: :controller 
       delete :destroy, params: { territory_id: territory.id, id: target_agent_territorial_role.id }
     end
 
+    let!(:territory) { create(:territory, departement_number: "62") }
     let!(:target_agent) do
       create(
         :agent,
@@ -147,6 +154,11 @@ describe Admin::Territories::AgentTerritorialRolesController, type: :controller 
     end
     let!(:target_agent_territorial_role) do
       create(:agent_territorial_role, agent: target_agent, territory: territory)
+    end
+    let!(:organisation) { create(:organisation, territory: territory) }
+
+    before do
+      sign_in agent
     end
 
     context "territorial admin agent signed in" do
@@ -182,6 +194,26 @@ describe Admin::Territories::AgentTerritorialRolesController, type: :controller 
         expect(response).not_to be_successful
         expect(target_agent.reload.territorial_roles).not_to be_empty
       end
+    end
+  end
+
+  describe "#update" do
+    it "redirect to admin_territory_agents_path" do
+      territory = create(:territory)
+      agent = create(:agent, role_in_territories: [territory])
+      sign_in agent
+      post :update, params: { territory_id: territory.id, id: agent.territorial_roles.first.id, agent_territorial_role: { allow_to_invite_agents: true } }
+      expect(response).to redirect_to(admin_territory_agents_path(territory))
+    end
+
+    it "updates territorial_roles informations" do
+      territory = create(:territory)
+      agent = create(:agent, role_in_territories: [territory])
+      sign_in agent
+
+      expect do
+        post :update, params: { territory_id: territory.id, id: agent.territorial_roles.first.id, agent_territorial_role: { allow_to_invite_agents: true } }
+      end.to change { agent.territorial_roles.first.reload.allow_to_invite_agents }.from(false).to(true)
     end
   end
 end

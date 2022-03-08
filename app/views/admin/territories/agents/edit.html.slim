@@ -20,3 +20,17 @@
             }\
           }
     = form.submit class: "btn btn-primary"
+
+  p.mt-4 Droits d'accès
+  = simple_form_for @agent.territorial_role_in(current_territory), url: admin_territory_agent_territorial_role_path(current_territory, @agent.territorial_role_in(current_territory)) do |form|
+    = form.input :allow_to_invite_agents, as: :boolean
+    = form.input :allow_to_agents_access_right, as: :boolean
+    = form.input :allow_to_manage_sectorization, as: :boolean
+    = form.input :allow_to_manage_organisation, as: :boolean
+    = form.input :allow_to_manage_webhook, as: :boolean
+    = form.input :allow_to_manage_sms_provider, as: :boolean
+    = form.input :allow_to_manage_teams, as: :boolean
+    = form.input :allow_to_change_display_preferences, as: :boolean
+    = form.input :allow_to_update_entity_informations, as: :boolean
+
+    = form.submit class: "btn btn-primary"

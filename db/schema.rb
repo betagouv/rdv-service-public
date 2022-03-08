@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_05_160339) do
+ActiveRecord::Schema.define(version: 2022_03_08_204223) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -135,6 +135,15 @@ ActiveRecord::Schema.define(version: 2022_03_05_160339) do
   create_table "agent_territorial_roles", force: :cascade do |t|
     t.bigint "agent_id"
     t.bigint "territory_id"
+    t.boolean "allow_to_invite_agents", default: false
+    t.boolean "allow_to_agents_access_right", default: false
+    t.boolean "allow_to_manage_sectorization", default: false
+    t.boolean "allow_to_manage_organisation", default: false
+    t.boolean "allow_to_manage_webhook", default: false
+    t.boolean "allow_to_manage_sms_provider", default: false
+    t.boolean "allow_to_manage_teams", default: false
+    t.boolean "allow_to_change_display_preferences", default: false
+    t.boolean "allow_to_update_entity_informations", default: false
     t.index ["agent_id"], name: "index_agent_territorial_roles_on_agent_id"
     t.index ["territory_id"], name: "index_agent_territorial_roles_on_territory_id"
   end

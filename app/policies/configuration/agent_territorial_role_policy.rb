@@ -12,6 +12,7 @@ class Configuration::AgentTerritorialRolePolicy
 
   alias new? territorial_admin?
   alias create? territorial_admin?
+  alias update? territorial_admin?
   alias destroy? territorial_admin?
 
   class Scope
