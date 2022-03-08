@@ -92,6 +92,19 @@ class Admin::RdvsCollectifsController < AgentAuthController
     end
   end
 
+  def destroy
+    @rdv = Rdv.find(params[:id])
+    authorize(@rdv)
+
+    if @rdv.destroy
+      flash[:notice] = "Le rendez-vous a été supprimé."
+    else
+      flash[:error] = "Une erreur s’est produite, le rendez-vous n’a pas pu être supprimé."
+      Sentry.capture_exception(Exception.new("Deletion failed for rdv : #{@rdv.id}"))
+    end
+    redirect_to admin_organisation_rdvs_collectifs_path(current_organisation)
+  end
+
   private
 
   def create_params

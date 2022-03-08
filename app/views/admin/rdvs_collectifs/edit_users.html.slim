@@ -72,6 +72,7 @@
                     class: "select2-input js-rdv-user-select",
                     data: { \
               width: "auto", \
+              "scroll-to-bottom": @rdv_users_to_add.present?, \
               "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.rdvs_users.map(&:user_id)), dataType: "json", delay: 250 } } \
              }
 

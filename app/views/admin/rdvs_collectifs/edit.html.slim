@@ -62,6 +62,8 @@
                 "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.rdvs_users.map(&:user_id)), dataType: "json", delay: 250 } } \
                }
 
-            .text-right
-              = link_to t("helpers.back"), admin_organisation_rdv_path(current_organisation, @rdv), class: "btn btn-link"
+            .d-flex.justify-content-between
+              = link_to t("helpers.back"), admin_organisation_rdvs_collectifs_path(current_organisation), class: "btn btn-link"
+
               = f.button :submit, t("helpers.submit.submit")
+    = link_to "Supprimer ce RDV", admin_organisation_rdvs_collectif_path(current_organisation, @rdv), method: :delete, data: { confirm: t("admin.rdvs.delete.confirm") }, class: "btn btn-outline-danger mb-4"

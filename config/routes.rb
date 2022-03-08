@@ -146,7 +146,7 @@ Rails.application.routes.draw do
         resources :slots, only: :index
         resources :lieux, except: :show
         resources :motifs
-        resources :rdvs_collectifs, only: %i[index new create edit update] do
+        resources :rdvs_collectifs do
           member do
             get :edit_users
             put :update_users
