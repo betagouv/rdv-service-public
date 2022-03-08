@@ -51,7 +51,7 @@ Rails.application.routes.draw do
         put :cancel
       end
     end
-    resources :identity_verifications, only: %i[new create]
+    resource :user_name_initials_verification, only: %i[new create], controller: "user_name_initials_verification"
     post "file_attente", to: "file_attentes#create_or_delete"
   end
   resources :stats, only: :index

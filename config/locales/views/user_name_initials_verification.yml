@@ -1,6 +1,6 @@
 fr:
   users:
-    identity_verifications:
+    user_name_initials_verification:
       new:
         title: Entrez les 3 premières lettres de votre nom de famille
         examples:

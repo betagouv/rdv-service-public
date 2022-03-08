@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Users::RdvsController < UserAuthController
-  before_action :verify_user_identity, :set_rdv, only: %i[show creneaux edit cancel update]
+  before_action :verify_user_name_initials, :set_rdv, :set_can_see_rdv_motif, only: %i[show creneaux edit cancel update]
+  before_action :set_can_see_rdv_motif, only: %i[show edit index]
   before_action :set_geo_search, only: [:create]
   before_action :set_lieu, only: %i[creneaux edit update]
   before_action :build_creneau, :redirect_if_creneau_not_available, only: %i[edit update]
@@ -35,7 +36,7 @@ class Users::RdvsController < UserAuthController
     skip_authorization if @creneau.nil?
     if @save_succeeded
       Notifiers::RdvCreated.perform_with(@rdv, current_user)
-      set_user_identity_verified
+      set_user_name_initials_verified
       redirect_to users_rdv_path(@rdv), notice: t(".rdv_confirmed")
     else
       query = { where: new_rdv_extra_params[:where], service: motif.service.id, motif_name_with_location_type: motif.name_with_location_type, departement: new_rdv_extra_params[:departement] }
@@ -100,6 +101,10 @@ class Users::RdvsController < UserAuthController
   def set_rdv
     @rdv = policy_scope(Rdv).find(params[:id])
     authorize(@rdv)
+  end
+
+  def set_can_see_rdv_motif
+    @can_see_rdv_motif = current_user.through_sign_in_form?
   end
 
   def redirect_if_creneau_not_available
