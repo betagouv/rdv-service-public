@@ -14,7 +14,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
                                                 helpers.creneaux_search_params(@form).merge(lieu_ids: [@search_results.first.lieu.id])),
                   class: "d-block stretched-link"
     else
-      @motifs = policy_scope(Motif).active.ordered_by_name
+      @motifs = policy_scope(Motif).active.ordered_by_name.where(collectif: false)
       @services = policy_scope(Service)
         .where(id: @motifs.pluck(:service_id).uniq)
         .ordered_by_name
