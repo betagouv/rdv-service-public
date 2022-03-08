@@ -1,80 +1,67 @@
-- content_for(:title) { "Ajouter un participant" }
+- content_for(:menu_item) { @agent ? "menu-agendas" : "menu-rdvs-list" }
 
-.row.justify-content-md-center
+- content_for :breadcrumb do
+  ol.breadcrumb.m-0.p-0
+    li.breadcrumb-item.p-0.ml-2
+      | RDV
+      |&nbsp;
+      = rdv_title_for_agent(@rdv)
+      - if @rdv.cancelled?
+        span.badge.badge-danger
+    li.breadcrumb-item.p-0.ml-2
+      | Modifier
+
+- content_for :title do
+  | Modifier le RDV
+
+.row.justify-content-center
   .col-md-8
-    = simple_form_for(@rdv, url: admin_organisation_rdvs_collectif_path(current_organisation), method: :put) do |f|
-      .card
-        .card-header
-          h3.text-center #{@rdv.motif.name} (#{@rdv.motif.service.short_name})
-        .card-body.px-3
-          .row.mt-3
-            .col-md-6
-              .d-flex.card-text.mb-2
-                div.mr-1
-                  i.fa.fa-fw.fa-users>
-                div
-                  - if @rdv.max_participants_count
-                    = "#{@rdv.max_participants_count} places"
-                  - else
-                    = "Pas de limite de places"
+    .card
+      .card-body
+        = simple_form_for(@rdv, url: admin_organisation_rdvs_collectif_path(@rdv_form.organisation, @rdv)) do |f|
+          = render "model_errors", model: @rdv_form, f: f
+          = collapsible_form_fields_for_warnings(@rdv_form) do
+            = hidden_field_tag :agent_id, @agent&.id
+            = f.association :motif, disabled: true
+            = f.input :context, input_html: { rows: 3 }
+            .form-row
+              .col-md-6= datetime_input(f, :starts_at)
+              .col-md-6= f.input :duration_in_min
+            - if @rdv_form.motif.public_office?
+              = f.association :lieu, \
+                collection: policy_scope(Lieu).enabled, \
+                label_method: :full_name, \
+                include_blank: true, \
+                required: true,
+                input_html: { class: "select2-input" }
+            - elsif @rdv_form.motif.home?
+              = f.input :address, label: "Lieu (RDV à domicile)", disabled: true
+            = f.association :agents,
+              collection: @rdv_form.agents,
+              label_method: :full_name_and_service,
+              input_html: { multiple: true, class: "select2-input",
+                data: { "select-options": { ajax: { url: search_admin_organisation_agents_path(current_organisation),
+                                                          dataType: "json", delay: 250 } } } }
 
-              .d-flex.card-text.mb-3
-                div.mr-1
-                  i.fa.fa-fw.fa-users>
-                div
-                  = "#{@rdv.rdv_collectif_users_count} participants :"
-                  ul
-                    - @rdv.users.each do |user|
-                      li= user.full_name
+            - if @rdv_form.motif.collectif?
+              = f.input :max_participants_count, label: "Nombre de places", input_html: { min: 1 }
+            .form-group
+              = "#{User.model_name.human.pluralize} :"
+              = f.fields_for :rdvs_users, @rdv.rdvs_users do |rdv_user_form|
+                = render "admin/rdvs_users/form", form: rdv_user_form
 
-            .col-md-6
-              .d-flex.card-text.mb-2
-                - if @rdv.phone?
-                    i.fa.fa-fw.fa-phone>
-                    | RDV téléphonique
-                - else
-                  div.mr-1
-                    i.fa.fa-fw.fa-map-marker-alt>
-                    - if @rdv.home?
-                      | RDV à domicile
-                      = human_location(@rdv)
-                    - elsif @rdv.public_office?
-                      = @rdv.lieu.name
+            .form-group
+              = render "admin/rdvs/max_users_warning", { rdv: @rdv, potential_participants_count: @rdv.rdvs_users.to_a.count }
+              = select_tag :status,
+                      options_for_select([]),
+                      include_blank: "Ajouter un usager",
+                      required: false,
+                      class: "select2-input js-rdv-user-select",
+                      data: { \
+                width: "auto", \
+                "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.rdvs_users.map(&:user_id)), dataType: "json", delay: 250 } } \
+               }
 
-              .d-flex.card-text.mb-2
-                div.mr-1
-                  i.fa.fa-fw.fa-user>
-                div
-                  strong> Animé par
-                  = agents_to_sentence(@rdv.agents)
-
-              .d-flex.card-text
-                div.mr-1
-                  i.fa.fa-fw.fa-clock>
-                div
-                  = "#{@rdv.duration_in_min} minutes"
-
-        .card-footer.px-3
-          = render "model_errors", model: @rdv
-
-          .form-group
-            = "Usager à inscrire :"
-            = f.fields_for :rdvs_users, @rdv_users_to_add do |rdv_user_form|
-              = render "admin/rdvs_users/form", form: rdv_user_form
-
-          .form-group
-            - potential_participants_count = @rdv.users.count + @rdv_users_to_add.count
-            = render "admin/rdvs/max_users_warning", { rdv: @rdv, potential_participants_count: potential_participants_count }
-            = select_tag :status,
-                    options_for_select([]),
-                    include_blank: "Ajouter un usager",
-                    required: false,
-                    class: "select2-input js-rdv-user-select",
-                    data: { \
-              width: "auto", \
-              "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.rdvs_users.map(&:user_id)), dataType: "json", delay: 250 } } \
-             }
-
-          .text-right
-            = link_to t("helpers.back"), admin_organisation_rdvs_collectifs_path(current_organisation), class: "btn btn-link"
-            = f.button :submit, t("helpers.submit.submit")
+            .text-right
+              = link_to t("helpers.back"), admin_organisation_rdv_path(current_organisation, @rdv), class: "btn btn-link"
+              = f.button :submit, t("helpers.submit.submit")

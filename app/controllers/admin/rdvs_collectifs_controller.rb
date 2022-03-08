@@ -32,7 +32,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
     @rdv = Rdv.new(organisation: current_organisation, rdv_collectif_users_count: 0)
     authorize(@rdv, :new?)
 
-    if @rdv.update(create_rdv_params)
+    if @rdv.update(create_params)
       flash[:notice] = "#{@rdv.motif.name} créé"
       redirect_to admin_organisation_rdvs_collectifs_path(current_organisation)
     else
@@ -45,16 +45,46 @@ class Admin::RdvsCollectifsController < AgentAuthController
 
     add_user_ids = params[:add_user]
     users_to_add = User.where(id: add_user_ids)
-    @rdv_users_to_add = users_to_add.ids.map { @rdv.rdvs_users.build(user_id: _1) }
+    users_to_add.ids.each { @rdv.rdvs_users.build(user_id: _1) }
 
+    @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
     authorize(@rdv)
   end
 
   def update
     @rdv = Rdv.find(params[:id])
-    authorize(@rdv)
 
-    if @rdv.update(update_rdv_params)
+    authorize(@rdv)
+    @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
+    success = @rdv_form.update(**update_params.to_h.symbolize_keys)
+
+    if success
+      flash[:notice] = if update_params[:status].in? %w[excused revoked]
+                         "Le rendez-vous a été annulé."
+                       else
+                         "Le rendez-vous a été modifié."
+                       end
+      redirect_to admin_organisation_rdvs_collectifs_path(current_organisation)
+    else
+      render :edit
+    end
+  end
+
+  def edit_users
+    @rdv = Rdv.find(params[:id])
+
+    add_user_ids = params[:add_user]
+    users_to_add = User.where(id: add_user_ids)
+    @rdv_users_to_add = users_to_add.ids.map { @rdv.rdvs_users.build(user_id: _1) }
+
+    authorize(@rdv, :edit?)
+  end
+
+  def update_users
+    @rdv = Rdv.find(params[:id])
+    authorize(@rdv, :update?)
+
+    if @rdv.update(update_users_params)
       flash[:notice] = "Participants mis à jour"
       redirect_to admin_organisation_rdvs_collectifs_path(current_organisation)
     else
@@ -64,14 +94,23 @@ class Admin::RdvsCollectifsController < AgentAuthController
 
   private
 
-  def create_rdv_params
-    params.require(:rdv).permit(:starts_at, :duration_in_min, :lieu_id, :max_participants_count, :motif_id, agent_ids: [])
+  def create_params
+    params.require(:rdv).permit(:starts_at, :duration_in_min, :lieu_id, :max_participants_count, :context, :motif_id, agent_ids: [])
   end
 
-  def update_rdv_params
+  def update_users_params
     params.require(:rdv).permit(
       user_ids: [],
       rdvs_users_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy]
     )
+  end
+
+  def update_params
+    params
+      .require(:rdv)
+      .permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors, :max_participants_count,
+              agent_ids: [],
+              user_ids: [],
+              rdvs_users_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy])
   end
 end

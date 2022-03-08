@@ -1,0 +1,80 @@
+- content_for(:title) { "Ajouter un participant" }
+
+.row.justify-content-md-center
+  .col-md-8
+    = simple_form_for(@rdv, url: update_users_admin_organisation_rdvs_collectif_path(current_organisation), method: :put) do |f|
+      .card
+        .card-header
+          h3.text-center #{@rdv.motif.name} (#{@rdv.motif.service.short_name})
+        .card-body.px-3
+          .row.mt-3
+            .col-md-6
+              .d-flex.card-text.mb-2
+                div.mr-1
+                  i.fa.fa-fw.fa-users>
+                div
+                  - if @rdv.max_participants_count
+                    = "#{@rdv.max_participants_count} places"
+                  - else
+                    = "Pas de limite de places"
+
+              .d-flex.card-text.mb-3
+                div.mr-1
+                  i.fa.fa-fw.fa-users>
+                div
+                  = "#{@rdv.rdv_collectif_users_count} participants :"
+                  ul
+                    - @rdv.users.each do |user|
+                      li= user.full_name
+
+            .col-md-6
+              .d-flex.card-text.mb-2
+                - if @rdv.phone?
+                    i.fa.fa-fw.fa-phone>
+                    | RDV téléphonique
+                - else
+                  div.mr-1
+                    i.fa.fa-fw.fa-map-marker-alt>
+                    - if @rdv.home?
+                      | RDV à domicile
+                      = human_location(@rdv)
+                    - elsif @rdv.public_office?
+                      = @rdv.lieu.name
+
+              .d-flex.card-text.mb-2
+                div.mr-1
+                  i.fa.fa-fw.fa-user>
+                div
+                  strong> Animé par
+                  = agents_to_sentence(@rdv.agents)
+
+              .d-flex.card-text
+                div.mr-1
+                  i.fa.fa-fw.fa-clock>
+                div
+                  = "#{@rdv.duration_in_min} minutes"
+
+        .card-footer.px-3
+          = render "model_errors", model: @rdv
+
+          .form-group
+            = "Usager à inscrire :"
+            = f.fields_for :rdvs_users, @rdv_users_to_add do |rdv_user_form|
+              = render "admin/rdvs_users/form", form: rdv_user_form
+
+          .form-group
+            - potential_participants_count = @rdv.users.count + @rdv_users_to_add.count
+            = render "admin/rdvs/max_users_warning", { rdv: @rdv, potential_participants_count: potential_participants_count }
+            = select_tag :status,
+                    options_for_select([]),
+                    include_blank: "Ajouter un usager",
+                    required: false,
+                    class: "select2-input js-rdv-user-select",
+                    data: { \
+              width: "auto", \
+              "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.rdvs_users.map(&:user_id)), dataType: "json", delay: 250 } } \
+             }
+
+          .text-right
+            = link_to t("helpers.back"), admin_organisation_rdvs_collectifs_path(current_organisation), class: "btn btn-link"
+            = f.button :submit, t("helpers.submit.submit")

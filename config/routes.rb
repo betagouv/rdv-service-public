@@ -147,8 +147,12 @@ Rails.application.routes.draw do
         resources :lieux, except: :show
         resources :motifs
         resources :rdvs_collectifs, only: %i[index new create edit update] do
+          member do
+            get :edit_users
+            put :update_users
+          end
           collection do
-            resources :motifs, only: %i[index], as: :rdvs_collectif_motifs, controller: "rdvs_collectifs/motifs"
+            resources :motifs, only: [:index], as: :rdvs_collectif_motifs, controller: "rdvs_collectifs/motifs"
           end
         end
         resources :rdvs, except: [:new] do

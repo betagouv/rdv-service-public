@@ -1,13 +1,17 @@
 .card
   .card-header
-    = link_to edit_admin_organisation_rdv_path(rdv.organisation, rdv) do
-      h5= rdv.motif.name
+    = link_to edit_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv) do
+      h5
+        = rdv.motif.name
+        - if rdv.context.present?
+          = " : "
+          = rdv.context.split("\n").first[0, 80]
     = I18n.l(rdv.starts_at, format: "%A %d %B à %H:%M").capitalize
   .card-body
     .row
       .col-md-6
         - if rdv.availability?
-          = link_to edit_admin_organisation_rdvs_collectif_path(current_organisation, rdv), class: "d-flex card-text mb-2" do
+          = link_to edit_users_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv), class: "d-flex card-text mb-2" do
             div.mr-1
               i.fa.fa-fw.fa-user-plus>
             div
