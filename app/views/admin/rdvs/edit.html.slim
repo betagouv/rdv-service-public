@@ -50,7 +50,7 @@
                                                           dataType: "json", delay: 250 } } } }
 
             - if @rdv_form.motif.collectif?
-              = f.input :max_participants_count, label: "Nombre de places"
+              = f.input :max_participants_count, label: "Nombre de places", input_html: { min: 1 }
             .form-group
               = "#{User.model_name.human.pluralize} :"
               = f.fields_for :rdvs_users, @rdv.rdvs_users do |rdv_user_form|

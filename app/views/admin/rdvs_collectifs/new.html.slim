@@ -22,7 +22,7 @@
             required: true,
             input_html: { class: "select2-input" }
 
-          = f.input :max_participants_count, label: "Nombre de places"
+          = f.input :max_participants_count, label: "Nombre de places", input_html: { min: 1 }
 
           .d-flex.justify-content-end
             .btn-group

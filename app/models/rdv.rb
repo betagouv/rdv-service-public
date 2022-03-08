@@ -45,6 +45,7 @@ class Rdv < ApplicationRecord
   validates :lieu, presence: true, if: :public_office?
   validate :starts_at_is_plausible
   validate :duration_is_plausible
+  validates :max_participants_count, numericality: { greater_than: 0, allow_nil: true }
 
   # Hooks
   after_save :associate_users_with_organisation
