@@ -29,38 +29,26 @@
           .d-flex.card-text.mb-2
             div.mr-1
               i.fa.fa-fw.fa-user-check>
-            div
               = "Complet"
 
         .d-flex.card-text.mb-3
           div.mr-1
             i.fa.fa-fw.fa-users>
-          div
             = "#{rdv.rdv_collectif_users_count} participants"
 
       .col-md-6
         .d-flex.card-text.mb-2
-          - if rdv.phone?
-              i.fa.fa-fw.fa-phone>
-              | RDV téléphonique
-          - else
-            div.mr-1
-              i.fa.fa-fw.fa-map-marker-alt>
-              - if rdv.home?
-                | RDV à domicile
-                = human_location(rdv)
-              - elsif rdv.public_office?
-                = rdv.lieu.name
+          div.mr-1
+            i.fa.fa-fw.fa-map-marker-alt>
+            = rdv.lieu.name
 
         .d-flex.card-text.mb-2
           div.mr-1
             i.fa.fa-fw.fa-user>
-          div
             strong> Animé par
             = agents_to_sentence(rdv.agents)
 
         .d-flex.card-text
           div.mr-1
             i.fa.fa-fw.fa-clock>
-          div
             = "#{rdv.duration_in_min} minutes"
