@@ -216,7 +216,7 @@ class Rdv < ApplicationRecord
   end
 
   def overbooked?
-    return true unless max_participants_count
+    return false unless max_participants_count
 
     rdv_collectif_users_count > max_participants_count
   end
