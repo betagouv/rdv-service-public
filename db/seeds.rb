@@ -23,6 +23,13 @@ territory62 = Territory.create!(
   sms_configuration: { api_url: "an_url", user_pwd: "pwd" }
 )
 
+territory_cnfs = Territory.create!(
+  departement_number: "CN",
+  name: "Conseillers Numériques",
+  sms_provider: "netsize",
+  sms_configuration: { api_url: "an_url", user_pwd: "pwd" }
+)
+
 # ORGANISATIONS & SECTORS
 
 Organisation.skip_callback(:create, :after, :notify_admin_organisation_created)
@@ -31,6 +38,12 @@ org_paris_nord = Organisation.create!(
   phone_number: "0123456789",
   human_id: "paris-nord",
   territory: territory75
+)
+org_cnfs = Organisation.create!(
+  name: "Mediathèque Paris Nord",
+  phone_number: "0123456789",
+  human_id: "mediatheque-paris-nord",
+  territory: territory_cnfs
 )
 human_id_map = [
   { human_id: "1030", name: "MDS Arques" },
@@ -83,6 +96,7 @@ service_pmi = Service.create!(name: "PMI (Protection Maternelle Infantile)", sho
 service_social = Service.create!(name: "Service social", short_name: "Service Social")
 _service_secretariat = Service.create!(name: "Secrétariat", short_name: "Secrétariat")
 _service_nouveau = Service.create!(name: "Médico-social", short_name: "Médico-social")
+service_cnfs = Service.create!(name: "Conseiller Numérique", short_name: "Conseiller Numérique")
 
 # MOTIFS org_paris_nord
 
@@ -405,6 +419,19 @@ agent_org_bapaume_pmi_gina = Agent.new(
 )
 agent_org_bapaume_pmi_gina.skip_confirmation!
 agent_org_bapaume_pmi_gina.save!
+
+agent_cnfs = Agent.new(
+  email: "camille-clavier@demo.rdv-solidarites.fr",
+  uid: "camille-clavier@demo.rdv-solidarites.fr",
+  first_name: "Camille",
+  last_name: "Clavier",
+  password: "123456",
+  service_id: service_cnfs.id,
+  invitation_accepted_at: 1.day.ago,
+  roles_attributes: [{ organisation: org_cnfs, level: AgentRole::LEVEL_ADMIN }]
+)
+agent_cnfs.skip_confirmation!
+agent_cnfs.save!
 
 # Insert a lot of agents and add them to the paris_nord organisation
 # rubocop:disable Rails/SkipsModelValidations
