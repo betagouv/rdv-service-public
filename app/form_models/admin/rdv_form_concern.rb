@@ -68,12 +68,6 @@ module Admin::RdvFormConcern
     end.each { add_benign_error(_1.warning_message) }
   end
 
-  def warn_too_many_participants
-    return if ignore_benign_errors
-
-    return unless max_participants_count
-  end
-
   def rdv_agent_pairs_ending_shortly_before_grouped_by_agent
     rdvs_ending_shortly_before
       .flat_map do |rdv_before|
