@@ -85,7 +85,7 @@ describe "User can be invited" do
       expect(current_email).to have_content(lieu.address)
       expect(current_email).to have_content(motif.name)
       expect(current_email).to have_content("11h00")
-      current_email.click_link("Modifier le rendez-vous")
+      current_email.click_link("Annuler ou modifier le rendez-vous")
 
       # Identity verification
       expect(page).to have_content("Entrez les 3 premières lettres de votre nom de famille")

@@ -41,7 +41,7 @@ describe Notifiers::RdvCancelled, type: :service do
       end
 
       it "outputs the tokens" do
-        expect(subject.rdv_tokens_by_user_id).to eq({ user.id => token })
+        expect(subject).to eq({ user.id => token })
       end
     end
 

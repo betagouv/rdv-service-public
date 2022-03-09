@@ -9,7 +9,7 @@ describe TokenInvitable, type: :controller do
     end
   end
 
-  subject { get :fake_action, params: { tkn: token } }
+  subject { get :fake_action, params: { invitation_token: token } }
 
   before do
     routes.draw { get "fake_action" => "anonymous#fake_action" }

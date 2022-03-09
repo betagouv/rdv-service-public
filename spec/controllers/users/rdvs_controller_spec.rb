@@ -30,7 +30,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu, geo_search: mock_geo_search)
         .and_return(mock_creneau)
       allow(Notifiers::RdvCreated).to receive(:perform_with)
-        .and_return(OpenStruct.new(rdv_tokens_by_user_id: { user.id => token }))
+        .and_return({ user.id => token })
       subject
     end
 
@@ -42,7 +42,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       it "creates rdv" do
         expect(Rdv.count).to eq(1)
-        expect(response).to redirect_to users_rdv_path(Rdv.last, tkn: token)
+        expect(response).to redirect_to users_rdv_path(Rdv.last, invitation_token: token)
         expect(user.rdvs.last.created_by_user?).to be(true)
       end
     end
@@ -69,7 +69,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       before do
         allow(RdvUpdater).to receive(:update)
-          .and_return(OpenStruct.new(success?: true, notifier: OpenStruct.new(rdv_tokens_by_user_id: { rdv.users.first.id => token })))
+          .and_return(OpenStruct.new(success?: true, rdv_users_tokens_by_user_id: { rdv.users.first.id => token }))
       end
 
       it "call RdvUpdater.update function" do
@@ -81,7 +81,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       it "redirects to the rdv" do
         sign_in rdv.users.first
         put :cancel, params: { id: rdv.id }
-        expect(response).to redirect_to users_rdv_path(rdv, tkn: token)
+        expect(response).to redirect_to users_rdv_path(rdv, invitation_token: token)
       end
 
       context "when rdv is not cancellable" do
@@ -129,29 +129,46 @@ RSpec.describe Users::RdvsController, type: :controller do
       expect(response.body).to match(/Votre RDV/)
       expect(response.body).to match(/Le mardi 20 octobre 2020/)
       expect(response.body).to match(/Modifier l&#39;horaire du RDV/)
+      expect(response.body).to match(/Annuler le RDV/)
     end
 
     context "when the rdv is past" do
       let!(:starts_at) { DateTime.parse("2018-12-31 10h30") }
 
-      it "does not link to edit" do
+      it "does show links to edit and cancel" do
         get :show, params: { id: rdv.id }
 
         expect(response).to be_successful
         expect(response.body).to match(/Votre RDV/)
         expect(response.body).not_to match(/Modifier l&#39;horaire du RDV/)
+        expect(response.body).not_to match(/Annuler le RDV/)
       end
     end
 
     context "when the rdv is created by an agent" do
       let(:rdv) { create(:rdv, users: [user], starts_at: starts_at, created_by: "agent") }
 
-      it "does not link to edit" do
+      it "does show link to edit" do
         get :show, params: { id: rdv.id }
 
         expect(response).to be_successful
         expect(response.body).to match(/Votre RDV/)
         expect(response.body).not_to match(/Modifier l&#39;horaire du RDV/)
+        expect(response.body).to match(/Annuler le RDV/)
+      end
+    end
+
+    context "when the rdv motif is not reservable_online" do
+      let(:motif) { build(:motif, reservable_online: false) }
+      let(:rdv) { create(:rdv, motif: motif, users: [user], starts_at: starts_at, created_by: "agent") }
+
+      it "does show link to edit" do
+        get :show, params: { id: rdv.id }
+
+        expect(response).to be_successful
+        expect(response.body).to match(/Votre RDV/)
+        expect(response.body).not_to match(/Modifier l&#39;horaire du RDV/)
+        expect(response.body).to match(/Annuler le RDV/)
       end
     end
 
@@ -341,7 +358,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
         .and_return(returned_creneau)
       allow(Notifiers::RdvDateUpdated).to receive(:perform_with)
-        .and_return(OpenStruct.new(rdv_tokens_by_user_id: { user.id => token }))
+        .and_return({ user.id => token })
     end
 
     context "with an available creneau" do
@@ -349,7 +366,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       it "respond success and update RDV" do
         put :update, params: { id: rdv.id, starts_at: starts_at, agent_id: agent.id }
-        expect(response).to redirect_to(users_rdv_path(rdv, tkn: token))
+        expect(response).to redirect_to(users_rdv_path(rdv, invitation_token: token))
         expect(flash[:success]).to eq("Votre RDV a bien été modifié")
         expect(rdv.reload.starts_at).to eq(starts_at)
         expect(rdv.reload.agent_ids).to eq([agent.id])

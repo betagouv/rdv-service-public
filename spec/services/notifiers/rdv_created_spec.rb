@@ -40,7 +40,7 @@ describe Notifiers::RdvCreated, type: :service do
     end
 
     it "outputs the tokens" do
-      expect(subject.rdv_tokens_by_user_id).to eq({ user1.id => token1, user2.id => token2 })
+      expect(subject).to eq({ user1.id => token1, user2.id => token2 })
     end
   end
 

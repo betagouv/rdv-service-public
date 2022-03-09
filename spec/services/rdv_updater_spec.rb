@@ -7,7 +7,7 @@ describe RdvUpdater, type: :service do
         agent = build :agent
         rdv = create(:rdv, agents: [agent])
         rdv_params = {}
-        expect(described_class.update(agent, rdv, rdv_params)).to eq(OpenStruct.new(success?: true, notifier: nil))
+        expect(described_class.update(agent, rdv, rdv_params)).to eq(OpenStruct.new(success?: true, rdv_users_tokens_by_user_id: nil))
       end
 
       it "return false when update fail" do
