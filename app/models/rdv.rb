@@ -203,10 +203,22 @@ class Rdv < ApplicationRecord
     rdvs_users.where(send_lifecycle_notifications: true).pluck(:user_id)
   end
 
-  def availability?
+  def remaining_seats?
     return true unless max_participants_count
 
     rdv_collectif_users_count < max_participants_count
+  end
+
+  def fully_booked?
+    return false unless max_participants_count
+
+    rdv_collectif_users_count == max_participants_count
+  end
+
+  def overbooked?
+    return true unless max_participants_count
+
+    rdv_collectif_users_count > max_participants_count
   end
 
   private

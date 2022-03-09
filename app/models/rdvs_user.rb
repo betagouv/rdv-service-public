@@ -2,8 +2,7 @@
 
 class RdvsUser < ApplicationRecord
   # Relations
-  belongs_to :rdv, touch: true, inverse_of: :rdvs_users
-  counter_cache :rdv, column_name: "rdv_collectif_users_count"
+  belongs_to :rdv, touch: true, inverse_of: :rdvs_users, counter_cache: :rdv_collectif_users_count
   belongs_to :user
 
   # Validations
