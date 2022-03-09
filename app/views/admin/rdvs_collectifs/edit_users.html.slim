@@ -63,8 +63,6 @@
               = render "admin/rdvs_users/form", form: rdv_user_form
 
           .form-group
-            - potential_participants_count = @rdv.users.count + @rdv_users_to_add.count
-            = render "admin/rdvs/max_users_warning", { rdv: @rdv, potential_participants_count: potential_participants_count }
             = select_tag :status,
                     options_for_select([]),
                     include_blank: "Ajouter un usager",

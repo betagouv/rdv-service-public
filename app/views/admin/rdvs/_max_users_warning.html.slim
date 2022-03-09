@@ -1,6 +1,0 @@
-- if rdv.max_participants_count && potential_participants_count > rdv.max_participants_count
-  .alert.alert-warning.show.mb-2.pl-1
-    = "Attention : ce RDV est complet."
-    br
-    = "Vous pouvez enregistrer des participants supplémentaires, mais vous serez au-dessus de la limite pour ce RDV "
-    = "(#{potential_participants_count} personnes pour #{rdv.max_participants_count} places)"
