@@ -29,7 +29,7 @@ module TokenInvitable
   end
 
   def invitation_token_param
-    params[:invitation_token] || params[:tkn]
+    params[:invitation_token]
   end
 
   def store_token_in_session

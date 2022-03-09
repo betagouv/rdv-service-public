@@ -23,7 +23,7 @@ class Notifiers::RdvBase < ::BaseService
     notify_users_by_sms
     notify_agents
 
-    OpenStruct.new(rdv_tokens_by_user_id: @rdv_tokens_by_user_id)
+    @rdv_users_tokens_by_user_id
   end
 
   private
@@ -79,7 +79,7 @@ class Notifiers::RdvBase < ::BaseService
   #
 
   def generate_invitation_tokens
-    @rdv_tokens_by_user_id = rdvs_users_to_notify.to_h do |rdv_user|
+    @rdv_users_tokens_by_user_id = rdvs_users_to_notify.to_h do |rdv_user|
       [rdv_user.user.id, rdv_user.new_raw_invitation_token]
     end
   end

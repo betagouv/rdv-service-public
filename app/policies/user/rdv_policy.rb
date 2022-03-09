@@ -19,11 +19,11 @@ class User::RdvPolicy < ApplicationPolicy
   end
 
   def cancel?
-    show? && record.editable?
+    show? && record.cancellable?
   end
 
   def edit?
-    cancel? && !record.created_by_agent?
+    show? && record.editable_by_user?
   end
 
   alias creneaux? edit?

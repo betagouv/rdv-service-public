@@ -34,9 +34,9 @@ class Users::RdvsController < UserAuthController
     end
     skip_authorization if @creneau.nil?
     if @save_succeeded
-      notifier = Notifiers::RdvCreated.perform_with(@rdv, current_user)
+      rdv_users_tokens_by_user_id = Notifiers::RdvCreated.perform_with(@rdv, current_user)
       set_user_identity_verified
-      redirect_to users_rdv_path(@rdv, tkn: notifier.rdv_tokens_by_user_id[current_user.id]), notice: t(".rdv_confirmed")
+      redirect_to users_rdv_path(@rdv, invitation_token: rdv_users_tokens_by_user_id[current_user.id]), notice: t(".rdv_confirmed")
     else
       query = {
         address: (new_rdv_extra_params[:address] || new_rdv_extra_params[:where]),
@@ -54,9 +54,9 @@ class Users::RdvsController < UserAuthController
 
   def update
     if @rdv.update(starts_at: @creneau.starts_at, ends_at: @creneau.starts_at + @rdv.duration_in_min.minutes, agent_ids: [@creneau.agent.id])
-      notifier = Notifiers::RdvDateUpdated.perform_with(@rdv, current_user)
+      rdv_users_tokens_by_user_id = Notifiers::RdvDateUpdated.perform_with(@rdv, current_user)
       flash[:success] = "Votre RDV a bien été modifié"
-      redirect_to users_rdv_path(@rdv, tkn: notifier.rdv_tokens_by_user_id[current_user.id])
+      redirect_to users_rdv_path(@rdv, invitation_token: rdv_users_tokens_by_user_id[current_user.id])
     else
       flash[:error] = "Le RDV n'a pas pu être modifié"
       redirect_to creneaux_users_rdv_path(@rdv)
@@ -70,7 +70,7 @@ class Users::RdvsController < UserAuthController
     else
       flash[:error] = "Impossible d'annuler le RDV."
     end
-    redirect_to users_rdv_path(@rdv, tkn: (rdv_update.success? ? rdv_update.notifier.rdv_tokens_by_user_id[current_user.id] : nil))
+    redirect_to users_rdv_path(@rdv, invitation_token: rdv_update.rdv_users_tokens_by_user_id&.fetch(current_user.id, nil))
   end
 
   def creneaux

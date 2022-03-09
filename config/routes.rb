@@ -213,10 +213,34 @@ Rails.application.routes.draw do
     get v => "static_pages##{k}"
   end
 
+  ## Shorten urls for SMS
+
   get "r", to: redirect("users/rdvs", status: 301), as: "rdvs_shorten"
-  # rubocop:disable Style/FormatStringToken
-  get "r/:id", to: redirect(path: "users/rdvs/%{id}", status: 301), as: "rdv_shorten"
-  # rubocop:enable Style/FormatStringToken
+
+  get "r/:id", to: (redirect do |path_params, req|
+    params = format_redirect_params(req.params)
+    "users/rdvs/#{path_params[:id]}#{params.values.any? ? "?#{params.to_query}" : ''}"
+  end), as: "rdv_shorten"
+
+  get "prdv", to: (redirect do |_path_params, req|
+    params = format_redirect_params(req.params)
+    "prendre_rdv#{params.values.any? ? "?#{params.to_query}" : ''}"
+  end), as: "prendre_rdv_shorten"
+
+  get "r/:id/cr", to: (redirect do |path_params, req|
+    params = format_redirect_params(req.params)
+    "users/rdvs/#{path_params[:id]}/creneaux#{params.values.any? ? "?#{params.to_query}" : ''}"
+  end), as: "creneaux_users_rdv_shorten"
+
+  def format_redirect_params(params)
+    # we rename the short parameter tkn
+    params[:invitation_token] ||= params.delete(:tkn) if params[:tkn]
+    params.delete(:id) # id is passed through path_params
+    params
+  end
+
+  ##
+
   get "accueil_mds" => "welcome#welcome_agent"
   post "/" => "welcome#search"
   get "departement/:departement", to: "welcome#welcome_departement", as: "welcome_departement"
