@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_04_123858) do
+ActiveRecord::Schema.define(version: 2022_03_05_160339) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,12 @@ ActiveRecord::Schema.define(version: 2022_03_04_123858) do
     "others",
     "soon",
     "none",
+  ], force: :cascade
+
+  create_enum :location_type, [
+    "public_office",
+    "home",
+    "phone",
   ], force: :cascade
 
   create_enum :rdv_status, [
@@ -263,12 +269,13 @@ ActiveRecord::Schema.define(version: 2022_03_04_123858) do
     t.text "restriction_for_rdv"
     t.text "instruction_for_rdv"
     t.boolean "for_secretariat", default: false
-    t.integer "location_type", default: 0, null: false
+    t.integer "old_location_type", default: 0, null: false
     t.boolean "follow_up", default: false
     t.string "visibility_type", default: "visible_and_notified", null: false
     t.string "sectorisation_level", default: "departement"
     t.text "custom_cancel_warning_message"
     t.boolean "collectif", default: false
+    t.enum "location_type", default: "public_office", null: false, enum_type: "location_type"
     t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_motifs_name_vector", using: :gin
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
     t.index ["location_type"], name: "index_motifs_on_location_type"
@@ -344,7 +351,7 @@ ActiveRecord::Schema.define(version: 2022_03_04_123858) do
     t.bigint "motif_id"
     t.integer "sequence", default: 0, null: false
     t.uuid "uuid", default: -> { "uuid_generate_v4()" }, null: false
-    t.string "location"
+    t.string "old_location"
     t.integer "created_by", default: 0
     t.text "context"
     t.bigint "lieu_id"

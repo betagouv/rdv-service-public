@@ -27,12 +27,20 @@
   = f.input :city_name, as: :hidden
 
   - if local_assigns[:service].nil? || service.user_field_groups.include?(:social)
-    .form-row
-      .col-md-6= f.input :caisse_affiliation, collection: User.human_attribute_values(:caisse_affiliation)
-      .col-md-6= f.input :affiliation_number
-    .form-row
-      .col-md-6= f.input :family_situation, collection: User.human_attribute_values(:family_situation)
-      .col-md-6= f.input :number_of_children, input_html: { min: "0", max: "15", step: "any" }
+    - territories = Territory.joins(organisations: :user_profiles).where(user_profiles: { user_id: user.id }).to_a
+    - if territories.map(&:enable_caisse_affiliation_field).any? || territories.map(&:enable_affiliation_number_field).any?
+      .form-row
+        - if territories.map(&:enable_caisse_affiliation_field).any?
+          .col-md-6= f.input :caisse_affiliation, collection: User.human_attribute_values(:caisse_affiliation)
+        - if territories.map(&:enable_affiliation_number_field).any?
+          .col-md-6= f.input :affiliation_number
+
+    - if territories.map(&:enable_family_situation_field).any? || territories.map(&:enable_number_of_children_field).any?
+      .form-row
+        - if territories.map(&:enable_family_situation_field).any?
+          .col-md-6= f.input :family_situation, collection: User.human_attribute_values(:family_situation)
+        - if territories.map(&:enable_number_of_children_field).any?
+          .col-md-6= f.input :number_of_children, input_html: { min: "0", max: "15", step: "any" }
 
     - if local_assigns[:rdv_wizard]
       ruby:
@@ -41,14 +49,16 @@
         profile ||= user.user_profiles.build(organisation: current_organisation)
       = f.simple_fields_for :user_profiles, profile do |n|
         = n.input :organisation_id, as: :hidden
-        = n.input :logement, collection: UserProfile.human_attribute_values(:logement)
+        - if current_organisation.territory.enable_logement_field
+          = n.input :logement, collection: UserProfile.human_attribute_values(:logement)
     - else
       - user.user_profiles.each do |profile|
         fieldset
           = f.simple_fields_for :user_profiles, profile do |n|
             legend= profile.organisation.name
             = n.input :organisation_id, as: :hidden
-            = n.input :logement, collection: UserProfile.human_attribute_values(:logement)
+            - if territories.map(&:enable_logement_field).any?
+              = n.input :logement, collection: UserProfile.human_attribute_values(:logement)
 
   - if local_assigns[:rdv_wizard].present?
     - rdv_wizard.to_query.each do |wizard_key, wizard_value|

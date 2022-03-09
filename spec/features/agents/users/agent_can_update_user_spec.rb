@@ -26,10 +26,29 @@ describe "Agent can update user" do
     expect(page).to have_content("En attente de confirmation pour jeanne@reynolds.com")
   end
 
-  it "update user notes" do
-    fill_in "Remarques", with: "Pas très sympa"
-    click_button "Enregistrer"
-    expect(page).to have_content("Pas très sympa")
+  describe "optional fields" do
+    let!(:organisation) { create(:organisation, territory: territory) }
+
+    context "when they are disabled" do
+      let(:territory) { create(:territory, enable_notes_field: false, enable_caisse_affiliation_field: false) }
+
+      it "doesn't show them them" do
+        expect(page).not_to have_content("Remarques")
+        expect(page).not_to have_content("Caisse d'affiliation")
+      end
+    end
+
+    context "when they are enabled" do
+      let(:territory) { create(:territory, enable_notes_field: true, enable_caisse_affiliation_field: true) }
+
+      it "update user notes" do
+        fill_in "Remarques", with: "souhaite participer au prochain atelier collectif"
+        select "MSA", from: "Caisse d'affiliation"
+        click_button "Enregistrer"
+        expect(user.reload.user_profiles.first.notes).to eq "souhaite participer au prochain atelier collectif"
+        expect(user.reload.caisse_affiliation).to eq "msa"
+      end
+    end
   end
 
   context "unregistered user" do

@@ -10,8 +10,9 @@ module Select2SpecHelper
 
   def add_user(user)
     find("span", text: "Ajouter un usager", match: :first).click
-    sleep 0.5
     find("li", text: user.last_name).click
-    sleep 0.5
+
+    # This is to make sure we wait for the user to be added before doing the next action
+    expect(page).to have_content("#{user.first_name} #{user.last_name}")
   end
 end
