@@ -34,6 +34,13 @@ describe "welcome", js: true do
     expect_page_to_be_axe_clean(path)
   end
 
+  it "users_rdvs_path page is accessible" do
+    user = create(:user, email: "toto@example.com")
+    login_as user
+    visit users_rdvs_path
+    expect(page).to be_axe_clean
+  end
+
   it "mds_path page is accessible" do
     visit mds_path
     expect(page).to be_axe_clean
