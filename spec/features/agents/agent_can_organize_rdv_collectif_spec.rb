@@ -14,14 +14,18 @@ describe "Agent can organize a rdv collectif", js: true do
   # Enlever la limite de places
   # Vérifier affichage
   # Supprimer le rdv
-  let!(:motif) { create(:motif, :collectif, name: "Atelier participatif") }
+  let!(:motif) do
+    create(:motif, :collectif, name: "Atelier participatif", organisation: organisation, service: service)
+  end
+  let(:organisation) { create(:organisation) }
+  let!(:service) { create(:service) }
 
   specify do
-    agent = create(:agent, basic_role_in_organisations: [create(:organisation)])
+    agent = create(:agent, basic_role_in_organisations: [organisation], service: service)
     login_as(agent, scope: :agent)
 
+    # Creating a new RDV Collectif
     visit authenticated_agent_root_path
-    click_link "Planning"
     click_link "RDV Collectifs"
     expect(page).to have_content("Aucun RDV")
 
