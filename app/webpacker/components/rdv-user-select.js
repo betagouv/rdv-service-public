@@ -6,10 +6,11 @@ class RdvUserSelect {
 
     this.$select.on("change", this.userSelected)
 
-    // console.log(this.$select.dataset)
-    // if (this.$select.dataset.scrollToBottom === "true") {
-    //   document.body.scrollTop = document.body.scrollHeight;
-    // }
+    const userSelector = document.querySelector(".js-rdv-user-select")
+
+    if (userSelector && userSelector.dataset.scrollToBottom === "true") {
+      window.scrollTo(0,document.body.scrollHeight);
+    }
   }
 
   userSelected = (event) => {
