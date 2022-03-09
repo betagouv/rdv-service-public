@@ -3,9 +3,7 @@
 class RdvsUser < ApplicationRecord
   # Relations
   belongs_to :rdv, touch: true, inverse_of: :rdvs_users
-  # counter_cache for participants to rdv collectif
-  # counter_culture :rdv, column_name: proc { |rdv| rdv.motif.collectif? ? "rdv_collectif_users_count" : nil }
-  counter_culture :rdv, column_name: "rdv_collectif_users_count"
+  counter_cache :rdv, column_name: "rdv_collectif_users_count"
   belongs_to :user
 
   # Validations

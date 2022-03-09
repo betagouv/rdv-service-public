@@ -33,7 +33,6 @@ gem "paper_trail"
 gem "activerecord-postgres_enum"
 gem "redis"
 gem "hiredis"
-gem "counter_culture"
 
 # Devise / auth
 gem "devise"
