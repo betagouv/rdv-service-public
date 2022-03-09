@@ -47,7 +47,7 @@ class PlageOuverture < ApplicationRecord
   end
 
   def available_motifs
-    Motif.available_motifs_for_organisation_and_agent(organisation, agent).where(collectif: false)
+    Motif.available_motifs_for_organisation_and_agent(organisation, agent)
   end
 
   def overlaps?(other)
