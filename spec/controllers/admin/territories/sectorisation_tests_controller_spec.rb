@@ -11,14 +11,14 @@ describe Admin::Territories::SectorisationTestsController, type: :controller do
 
   describe "#search" do
     context "without params" do
-      xit "returns success" do
+      it "returns success" do
         get :search, params: { territory_id: territory.id }
         expect(response).to be_successful
       end
     end
 
     context "with adresse parameters" do
-      xit "returns success" do
+      it "returns success" do
         get :search, params: {
           territory_id: territory.id,
           address: "21 Chemin de la Marion, Le Faouët, 5632, 56, Morbihan, Bretagne",
