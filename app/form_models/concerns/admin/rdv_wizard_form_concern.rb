@@ -11,7 +11,9 @@ module Admin::RdvWizardFormConcern
     attr_reader :agent_author
 
     # delegates all getters and setters to rdv
-    delegate(*::Rdv.attribute_names, to: :rdv)
+    delegate(*%i[id starts_at organisation_id created_at updated_at cancelled_at motif_id sequence
+                 uuid old_location created_by context lieu_id status ends_at max_participants_count
+                 rdv_collectif_users_count], to: :rdv)
     delegate :duration_in_min, to: :rdv
     delegate :motif, :organisation, :agents, :users, to: :rdv
 
