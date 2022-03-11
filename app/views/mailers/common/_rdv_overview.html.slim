@@ -13,10 +13,11 @@
       span.title Usager(s) :
       span.float-right= rdv.users_full_names
     .clear
-  div.row-result
-    span.title Motif :
-    span.float-right= rdv.motif_name
-    .clear
+  - if rdv.motif_name.present?
+    div.row-result
+      span.title Motif :
+      span.float-right= rdv.motif_name
+      .clear
   div.row-result
     span.title Service :
     span.float-right= rdv.motif_service_name

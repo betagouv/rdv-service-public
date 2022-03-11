@@ -105,3 +105,8 @@ fr:
           card_title: Champs optionnels pour les fiches usagers
           hint_1: Vous pouvez activer ou désactiver les champs suivants sur les fiches usagers.
           hint_2: "Les champs seront simplement masqués dans l’interface : les données préexistantes ne seront pas supprimées."
+      notification_settings:
+        edit:
+          title: Configuration du contenu des notificaitons
+          card_title: Information optionnelle
+          hint_1: Dans certains cas, le motif est considéré comme une donnée de santé, ou une donnée très caractérisé et trop personnel. Dans ce genre de situation, il est préférable de ne pas l'envoyer dans les notifications.

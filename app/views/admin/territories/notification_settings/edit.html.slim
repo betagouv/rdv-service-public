@@ -1,0 +1,16 @@
+= territory_navigation(t(".title"))
+
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-body
+        = simple_form_for current_territory, url: admin_territory_notification_settings_path(current_territory) do |f|
+          = render "model_errors", model: current_territory
+
+          h5.card-title= t(".card_title")
+
+          p.text-muted.font-14= t(".hint_1")
+          = f.input :show_rdv_motif, as: :boolean
+
+          .text-right
+            = f.button :submit

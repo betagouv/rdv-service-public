@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_05_160339) do
+ActiveRecord::Schema.define(version: 2022_03_11_194904) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -445,6 +445,7 @@ ActiveRecord::Schema.define(version: 2022_03_05_160339) do
     t.boolean "enable_family_situation_field", default: false
     t.boolean "enable_number_of_children_field", default: false
     t.boolean "enable_logement_field", default: false
+    t.boolean "show_rdv_motif", default: false
     t.index ["departement_number"], name: "index_territories_on_departement_number", unique: true, where: "((departement_number)::text <> ''::text)"
   end
 
