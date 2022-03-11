@@ -2,12 +2,13 @@
 
 class Configuration::ZonePolicy
   def initialize(context, agent)
-    @context = context
+    @current_agent = context.agent
+    @current_territory = context.territory
     @agent = agent
   end
 
   def territorial_admin?
-    @context.agent.territorial_admin_in?(@context.territory)
+    @current_agent.territorial_admin_in?(@current_territory)
   end
 
   alias new? territorial_admin?

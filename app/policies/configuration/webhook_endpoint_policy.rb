@@ -2,12 +2,13 @@
 
 class Configuration::WebhookEndpointPolicy
   def initialize(context, agent)
-    @context = context
+    @current_agent = context.agent
+    @current_territory = context.territory
     @agent = agent
   end
 
   def territorial_admin?
-    @context.agent.territorial_admin_in?(@context.territory)
+    @current_agent.territorial_admin_in?(@current_territory)
   end
 
   alias new? territorial_admin?
@@ -18,11 +19,11 @@ class Configuration::WebhookEndpointPolicy
 
   class Scope
     def initialize(context, _scope)
-      @context = context
+      @current_territory = context.territory
     end
 
     def resolve
-      WebhookEndpoint.where(organisation: @context.territory.organisations)
+      WebhookEndpoint.where(organisation: @current_territory.organisations)
     end
   end
 end

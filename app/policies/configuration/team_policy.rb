@@ -2,12 +2,13 @@
 
 class Configuration::TeamPolicy
   def initialize(context, team)
-    @context = context
+    @current_agent = context.agent
+    @current_territory = context.territory
     @team = team
   end
 
   def territorial_admin?
-    @context.agent.territorial_admin_in?(@context.territory)
+    @current_agent.territorial_admin_in?(@current_territory)
   end
 
   alias new? territorial_admin?
@@ -18,11 +19,11 @@ class Configuration::TeamPolicy
 
   class Scope
     def initialize(context, _scope)
-      @context = context
+      @current_territory = context.territory
     end
 
     def resolve
-      @context.territory.teams
+      @current_territory.teams
     end
   end
 end

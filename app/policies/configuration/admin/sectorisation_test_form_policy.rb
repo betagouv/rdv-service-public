@@ -2,8 +2,7 @@
 
 class Configuration::Admin::SectorisationTestFormPolicy
   class Scope
-    def initialize(context, scope)
-      @context = context
+    def initialize(_context, scope)
       @scope = scope
     end
 

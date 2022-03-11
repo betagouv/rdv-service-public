@@ -2,12 +2,13 @@
 
 class Configuration::SectorPolicy
   def initialize(context, agent)
-    @context = context
+    @current_agent = context.agent
+    @current_territory = context.territory
     @agent = agent
   end
 
   def territorial_admin?
-    @context.agent.territorial_admin_in?(@context.territory)
+    @current_agent.territorial_admin_in?(@current_territory)
   end
 
   alias new? territorial_admin?
@@ -19,11 +20,11 @@ class Configuration::SectorPolicy
 
   class Scope
     def initialize(context, _scope)
-      @context = context
+      @current_territory = context.territory
     end
 
     def resolve
-      Sector.where(territory: @context.territory)
+      Sector.where(territory: @current_territory)
     end
   end
 end

@@ -2,12 +2,13 @@
 
 class Configuration::TerritoryPolicy
   def initialize(context, territory)
-    @context = context
+    @current_agent = context.agent
+    @current_territory = context.territory
     @territory = territory
   end
 
   def territorial_admin?
-    @context.agent.territorial_admin_in?(@context.territory)
+    @current_agent.territorial_admin_in?(@current_territory)
   end
 
   alias show? territorial_admin?

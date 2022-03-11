@@ -2,12 +2,13 @@
 
 class Configuration::AgentTerritorialRolePolicy
   def initialize(context, role)
-    @context = context
+    @current_agent = context.agent
+    @current_territory = context.territory
     @role = role
   end
 
   def territorial_admin?
-    @context.agent.territorial_admin_in?(@context.territory)
+    @current_agent.territorial_admin_in?(@current_territory)
   end
 
   alias new? territorial_admin?
@@ -16,11 +17,11 @@ class Configuration::AgentTerritorialRolePolicy
 
   class Scope
     def initialize(context, _scope)
-      @context = context
+      @current_territory = context.territory
     end
 
     def resolve
-      AgentTerritorialRole.where(territory: @context.territory)
+      AgentTerritorialRole.where(territory: @current_territory)
     end
   end
 end
