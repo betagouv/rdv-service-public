@@ -8,20 +8,21 @@ html lang="fr"
       = render "layouts/rdv_solidarites_instance_name"
       = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_AGENTS"]
       = render "layouts/left_menu"
-      .content-page
-        .content
-          = render "layouts/rdv_a_renseigner", agent: current_agent, organisation: defined?(current_organisation) ? current_organisation : nil
-          .container-fluid
-            - if content_for :title
-              .row.justify-content-md-center
-                div.col-md-12
-                  .page-title-box
-                    - if content_for :breadcrumb
-                      .page-title-right
-                        = yield :breadcrumb
-                    h3.page-title= yield :title
-            = render "layouts/flash"
-            = yield
+      main
+        .content-page
+          .content
+            = render "layouts/rdv_a_renseigner", agent: current_agent, organisation: defined?(current_organisation) ? current_organisation : nil
+            .container-fluid
+              - if content_for :title
+                .row.justify-content-md-center
+                  div.col-md-12
+                    .page-title-box
+                      - if content_for :breadcrumb
+                        .page-title-right
+                          = yield :breadcrumb
+                      h3.page-title= yield :title
+              = render "layouts/flash"
+              = yield
 
     #modal-holder
     footer.footer
