@@ -20,7 +20,7 @@
     }
   },
   "scripts": {
-    "first-deploy": "bundle exec rake db:schema:load db:seed"
+    "first-deploy": "bundle exec rake db:schema:load db:seed; rails runner \"ENV[\"APP\"], ENV[\"SCALINGO_RESTARTER_API_TOKEN\"]\""
   },
   "formation": {
     "web": {
