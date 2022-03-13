@@ -159,15 +159,19 @@ class Rdv < ApplicationRecord
   def overlapping_plages_ouvertures
     return [] if starts_at.blank? || ends_at.blank? || lieu.blank? || past? || errors.present?
 
-    @overlapping_plages_ouvertures ||= PlageOuverture.where(agent: agents).where.not(lieu: lieu).overlapping_with_time_slot(to_time_slot)
+    rdv_range = starts_at..ends_at
+    @overlapping_plages_ouvertures ||= PlageOuverture.where(agent: agents.map(&:id)).where.not(lieu: lieu).in_range(rdv_range)
+    overlapping_occurrences_of(@overlapping_plages_ouvertures, rdv_range)
+  end
+
+  def overlapping_occurrences_of(plages_ouvertures, rdv_range)
+    @overlapping_occurrences_of ||= plages_ouvertures.map do |po|
+      po.occurrences_for(rdv_range).select { |o| (o.starts_at..o.ends_at).cover?(rdv_range) || rdv_range.cover?(o.starts_at..o.ends_at) }
+    end.flatten
   end
 
   def overlapping_plages_ouvertures?
     overlapping_plages_ouvertures.any?
-  end
-
-  def to_time_slot
-    TimeSlot.new(starts_at, ends_at)
   end
 
   def phone_number
@@ -217,7 +221,7 @@ class Rdv < ApplicationRecord
   def duration_is_plausible
     return if starts_at.nil? || ends_at.nil?
 
-    errors.add(:duration_in_min, :must_be_positive) if starts_at > ends_at
+    errors.add(:duration_in_min, :must_be_positive) if starts_at >= ends_at
   end
 
   def virtual_attributes_for_paper_trail
