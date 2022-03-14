@@ -1,4 +1,5 @@
-- if organisation.present? && agent && agent.unknown_past_rdv_count > 0
+- if organisation.present? && agent && agent.unknown_past_rdv_count > 0 \
+    && !agent.conseiller_numerique? # See https://github.com/betagouv/rdv-solidarites.fr/issues/2245
   = link_to admin_organisation_rdvs_path(organisation, status: "unknown_past", agent_id: agent.id)
     .navbar.alert-warning.p-2
       div
