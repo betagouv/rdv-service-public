@@ -13,7 +13,6 @@ agent_ids_by_organisation_id = {
   351 => [5974], # France Services Thenon
   352 => [5981] # Tremblay-en-France
 }
-
 class MotifsPlageOuverture < ApplicationRecord
 end
 
