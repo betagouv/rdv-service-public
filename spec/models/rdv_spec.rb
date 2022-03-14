@@ -32,6 +32,37 @@ describe Rdv, type: :model do
     end
   end
 
+  describe "#duration_is_plausible" do
+    let(:now) { Time.zone.parse("2021-05-03 14h00") }
+
+    before { travel_to now }
+
+    it "valid with starts_at < ends_at" do
+      rdv = build(:rdv, starts_at: now + 5.hours, ends_at: now + 5.hours + 30.minutes)
+      expect(rdv).to be_valid
+    end
+
+    it "invalid with starts_at nil" do
+      rdv = build(:rdv, starts_at: nil, ends_at: now + 5.hours + 30.minutes)
+      expect(rdv).to be_invalid
+    end
+
+    it "invalid with ends_at nil" do
+      rdv = build(:rdv, starts_at: now + 5.hours, ends_at: nil)
+      expect(rdv).to be_invalid
+    end
+
+    it "invalid with starts_at == ends_at" do
+      rdv = build(:rdv, starts_at: now + 5.hours, ends_at: now + 5.hours)
+      expect(rdv).to be_invalid
+    end
+
+    it "invalid with starts_at > ends_at" do
+      rdv = build(:rdv, starts_at: now + 5.hours, ends_at: now + 4.hours)
+      expect(rdv).to be_invalid
+    end
+  end
+
   describe "#cancellable?" do
     let(:now) { Time.zone.parse("2021-05-03 14h00") }
 
@@ -360,6 +391,76 @@ describe Rdv, type: :model do
 
       options = { "end" => (now + 2.days) }
       expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+    end
+  end
+
+  describe "#overlapping_plages_ouvertures?" do
+    let(:now) { Time.zone.parse("2022-12-27 11:00") }
+
+    before { travel_to(now) }
+
+    it "return false when starts_at blank" do
+      rdv = build(:rdv, starts_at: "")
+      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+    end
+
+    it "return false when ends_at blank" do
+      rdv = build(:rdv, starts_at: now + 1.week, ends_at: nil)
+      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+    end
+
+    it "return false when lieu blank" do
+      rdv = build(:rdv, starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
+      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+    end
+
+    it "return false with past RDV" do
+      rdv = build(:rdv, starts_at: now - 1.week, ends_at: now - 1.week + 30.minutes)
+      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+    end
+
+    it "return false when RDV's error" do
+      rdv = build(:rdv, starts_at: now - 1.week, ends_at: now - 1.week)
+      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+    end
+
+    it "return true with po overlapping RDV on an other lieu" do
+      agent = create(:agent)
+      rdv = build(:rdv, agents: [agent], starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
+      create(:plage_ouverture, agent: agent, first_day: (now + 1.week).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45), lieu: create(:lieu))
+      expect(rdv.overlapping_plages_ouvertures?).to eq(true)
+    end
+
+    it "return false with po overlapping RDV on an same lieu" do
+      agent = create(:agent)
+      rdv = build(:rdv, agents: [agent], starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
+      create(:plage_ouverture, agent: agent, first_day: (now + 1.week).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45), lieu: rdv.lieu)
+      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+    end
+
+    it "return false with po overlapping RDV with an other agent" do
+      agent = create(:agent)
+      rdv = build(:rdv, agents: [agent], starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
+      create(:plage_ouverture, agent: create(:agent), first_day: (now + 1.week).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45), lieu: rdv.lieu)
+      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+    end
+
+    it "return false with recurring po overlapping RDV" do
+      agent = create(:agent)
+      rdv = build(:rdv, agents: [agent], starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
+      create(:plage_ouverture, agent: agent, first_day: (now - 2.weeks).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45), lieu: create(:lieu),
+                               recurrence: Montrose.every(:week, on: ["tuesday"], starts: (now - 2.weeks).to_date))
+      expect(rdv.overlapping_plages_ouvertures?).to eq(true)
+    end
+
+    it "return false with recurring po overlapping RDV outside zone" do
+      now = Time.zone.parse("2022-12-27 11:00")
+      travel_to(now)
+      agent = create(:agent)
+      rdv = build(:rdv, agents: [agent], starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
+      create(:plage_ouverture, agent: agent, first_day: (now - 1.week).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45), lieu: create(:lieu),
+                               recurrence: Montrose.every(:month, day: { Tuesday: [2] }, starts: (now - 1.week).to_date))
+      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
     end
   end
 end
