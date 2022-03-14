@@ -13,7 +13,7 @@ class AgentAuthController < ApplicationController
   private
 
   def pundit_user
-    AgentContext.new(current_agent, current_organisation)
+    AgentOrganisationContext.new(current_agent, current_organisation)
   end
   helper_method :pundit_user
 

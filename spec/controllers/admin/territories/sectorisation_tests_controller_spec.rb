@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 describe Admin::Territories::SectorisationTestsController, type: :controller do
-  render_views
-
   let(:territory) { create(:territory, departement_number: "62") }
   let(:organisation) { create(:organisation, territory: territory) }
   let(:agent) { create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory]) }
@@ -21,7 +19,6 @@ describe Admin::Territories::SectorisationTestsController, type: :controller do
 
     context "with adresse parameters" do
       it "returns success" do
-        pending "error with not gening_errors en attente depuis un moment. Page à supprimer ?"
         get :search, params: {
           territory_id: territory.id,
           address: "21 Chemin de la Marion, Le Faouët, 5632, 56, Morbihan, Bretagne",

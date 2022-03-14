@@ -11,7 +11,7 @@
             th Agent
             th Actions
         tbody
-          - policy_scope_admin(AgentTerritorialRole).where(territory: current_territory).each do |role|
+          - @roles.each do |role|
             tr
               td
                 div

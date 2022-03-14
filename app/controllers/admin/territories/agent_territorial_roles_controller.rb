@@ -2,23 +2,22 @@
 
 class Admin::Territories::AgentTerritorialRolesController < Admin::Territories::BaseController
   def index
-    @roles = policy_scope_admin(AgentTerritorialRole)
-      .where(territory: current_territory)
+    @roles = policy_scope(AgentTerritorialRole).where(territory: current_territory)
     @territory = current_territory
   end
 
   def new
     @role = AgentTerritorialRole.new(territory: current_territory)
-    @possible_agents = policy_scope_admin(Agent)
+    @possible_agents = policy_scope(Agent)
       .includes(:territories)
       .to_a
       .reject { _1.territorial_admin_in?(current_territory) }
-    authorize_admin(@role)
+    authorize @role
   end
 
   def create
     @role = AgentTerritorialRole.new(agent_territorial_role_params)
-    authorize_admin(@role)
+    authorize @role
     if @role.save
       redirect_to(
         admin_territory_agent_territorial_roles_path(current_territory),
@@ -31,7 +30,7 @@ class Admin::Territories::AgentTerritorialRolesController < Admin::Territories::
 
   def destroy
     role = AgentTerritorialRole.find(params[:id])
-    authorize_admin(role)
+    authorize role
     if role.destroy
       flash[:success] = "#{role.agent.full_name} n'a plus le rôle d'administrateur du #{current_territory}"
     else
