@@ -11,7 +11,7 @@ fr:
               missing_for_phone_motif: "Aucun usager n’a de numéro de téléphone renseigné alors que le rendez-vous est téléphonique."
               format: "%{message}"
             duration_in_min:
-              must_be_positive: La durée doit être supérieur à 0
+              must_be_positive: doit être supérieur à 0
     models:
       rdv: Rendez-vous
     attributes:
