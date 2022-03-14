@@ -3,7 +3,7 @@
 describe Admin::EditRdvForm, type: :form do
   let(:organisation) { create(:organisation) }
   let(:agent) { create(:agent) }
-  let(:agent_context) { instance_double(AgentContext, agent: agent, organisation: organisation) }
+  let(:agent_context) { instance_double(AgentOrganisationContext, agent: agent, organisation: organisation) }
 
   describe "#update" do
     it "updates rdv's lieu" do

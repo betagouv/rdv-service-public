@@ -37,7 +37,7 @@ describe Agent::RdvPolicy, type: :policy do
     let(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service) }
     let(:motif) { create(:motif, organisation: organisation, service: service) }
     let(:rdv) { create(:rdv, organisation: organisation, agents: [agent], motif: motif) }
-    let(:pundit_context) { AgentContext.new(agent, organisation) }
+    let(:pundit_context) { AgentOrganisationContext.new(agent, organisation) }
 
     it_behaves_like "permit actions", :show?, :edit?, :update?, :destroy?
     it_behaves_like "included in scope"
@@ -50,7 +50,7 @@ describe Agent::RdvPolicy, type: :policy do
     let(:motif) { create(:motif, organisation: organisation, service: service_rdv) }
     let(:rdv) { create(:rdv, motif: motif, organisation: organisation) }
     let(:agent) { create(:agent, basic_role_in_organisations: [organisation], service: service_agent) }
-    let(:pundit_context) { AgentContext.new(agent, organisation) }
+    let(:pundit_context) { AgentOrganisationContext.new(agent, organisation) }
 
     it_behaves_like "not permit actions", :show?, :edit?, :update?, :destroy?
     it_behaves_like "not included in scope"
@@ -76,7 +76,7 @@ describe Agent::RdvPolicy, type: :policy do
     let(:agents) { create_list(:agent, 2, organisations: [organisation], service: service) }
     let(:motif) { create(:motif, organisation: organisation, service: service) }
     let(:rdv) { create(:rdv, agents: [agents[0]], motif: motif, organisation: organisation) }
-    let(:pundit_context) { AgentContext.new(agents[1], organisation) }
+    let(:pundit_context) { AgentOrganisationContext.new(agents[1], organisation) }
 
     it_behaves_like "permit actions", :show?, :edit?, :update?, :destroy?
     it_behaves_like "included in scope"
@@ -90,7 +90,7 @@ describe Agent::RdvPolicy, type: :policy do
     let(:agent2) { create(:agent, basic_role_in_organisations: [organisation2], service: service) }
     let(:motif1) { create(:motif, organisation: organisation1, service: service) }
     let(:rdv) { create(:rdv, agents: [agent1], motif: motif1, organisation: organisation1) }
-    let(:pundit_context) { AgentContext.new(agent2, organisation2) }
+    let(:pundit_context) { AgentOrganisationContext.new(agent2, organisation2) }
 
     it_behaves_like "not permit actions", :show?, :edit?, :update?, :destroy?
     it_behaves_like "not included in scope"

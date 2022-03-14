@@ -17,7 +17,7 @@ class Admin::Agents::PlageOuverturesController < ApplicationController
 
   # TODO: custom policy waiting for policies refactoring
   def custom_policy
-    context = AgentContext.new(current_agent, @organisation)
+    context = AgentOrganisationContext.new(current_agent, @organisation)
     Agent::PlageOuverturePolicy::DepartementScope.new(context, PlageOuverture)
       .resolve
   end

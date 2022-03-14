@@ -11,6 +11,6 @@ class Admin::RdvWizardForm::Step3
   protected
 
   def agent_context
-    AgentContext.new(@agent_author, @organisation)
+    AgentOrganisationContext.new(@agent_author, @organisation)
   end
 end
