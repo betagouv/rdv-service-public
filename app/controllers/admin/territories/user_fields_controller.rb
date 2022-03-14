@@ -2,11 +2,11 @@
 
 class Admin::Territories::UserFieldsController < Admin::Territories::BaseController
   def edit
-    authorize_admin(current_territory)
+    authorize current_territory
   end
 
   def update
-    authorize_admin(current_territory)
+    authorize current_territory
     current_territory.update!(user_fields_params)
 
     flash[:alert] = "Configuration enregistrée"

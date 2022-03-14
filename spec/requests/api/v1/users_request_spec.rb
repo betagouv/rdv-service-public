@@ -149,48 +149,6 @@ describe "api/v1/users requests", type: :request do
       end
     end
 
-    context "invalid: forbidden orga" do
-      let!(:other_orga) { create(:organisation) }
-
-      it "does not work" do
-        user_count_before = User.count
-        post(
-          api_v1_users_path,
-          params: {
-            organisation_ids: [other_orga.id],
-            first_name: "Jean",
-            last_name: "Jacques"
-          },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(403)
-        expect(User.count).to eq(user_count_before)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).not_to be_empty
-      end
-    end
-
-    context "invalid: empty orgas" do
-      let!(:other_orga) { create(:organisation) }
-
-      it "does not work" do
-        user_count_before = User.count
-        post(
-          api_v1_users_path,
-          params: {
-            organisation_ids: [],
-            first_name: "Jean",
-            last_name: "Jacques"
-          },
-          headers: api_auth_headers_for_agent(agent)
-        )
-        expect(response.status).to eq(403)
-        expect(User.count).to eq(user_count_before)
-        response_parsed = JSON.parse(response.body)
-        expect(response_parsed["errors"]).not_to be_empty
-      end
-    end
-
     context "invalid: missing orgas" do
       let!(:other_orga) { create(:organisation) }
 

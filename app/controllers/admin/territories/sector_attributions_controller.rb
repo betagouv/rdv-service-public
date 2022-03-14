@@ -6,12 +6,12 @@ class Admin::Territories::SectorAttributionsController < Admin::Territories::Bas
   def new
     @sector_attribution = SectorAttribution.new(**sector_attribution_params_get, sector: @sector)
     prepare_available_organisations_and_agents
-    authorize_admin(@sector_attribution)
+    authorize @sector_attribution
   end
 
   def create
     @sector_attribution = SectorAttribution.new(**sector_attribution_params, sector: @sector)
-    authorize_admin(@sector_attribution)
+    authorize @sector_attribution
     if @sector_attribution.save
       redirect_to admin_territory_sector_path(current_territory, @sector), flash: { success: "Attribution ajoutée" }
     else
@@ -22,7 +22,7 @@ class Admin::Territories::SectorAttributionsController < Admin::Territories::Bas
 
   def destroy
     sector_attribution = SectorAttribution.find(params[:id])
-    authorize_admin(sector_attribution)
+    authorize sector_attribution
     if sector_attribution.destroy
       redirect_to admin_territory_sector_path(current_territory, @sector), flash: { success: "Attribution retirée" }
     else
@@ -33,7 +33,7 @@ class Admin::Territories::SectorAttributionsController < Admin::Territories::Bas
   private
 
   def prepare_available_organisations_and_agents
-    @available_organisations = policy_scope_admin(Organisation)
+    @available_organisations = Organisation
       .where(territory: current_territory)
       .where.not(id: excluded_organisation_ids)
       .order_by_name
@@ -43,7 +43,7 @@ class Admin::Territories::SectorAttributionsController < Admin::Territories::Bas
       .attributions
       .level_agent
       .where(organisation: @sector_attribution.organisation)
-    @available_agents = policy_scope_admin(Agent)
+    @available_agents = policy_scope(Agent)
       .merge(@sector_attribution.organisation.agents)
       .where.not(id: existing_agent_attributions.pluck(:agent_id))
   end
@@ -57,7 +57,7 @@ class Admin::Territories::SectorAttributionsController < Admin::Territories::Bas
   end
 
   def set_sector
-    @sector = policy_scope_admin(Sector).find(params[:sector_id])
+    @sector = policy_scope(Sector).find(params[:sector_id])
   end
 
   def sector_attribution_params

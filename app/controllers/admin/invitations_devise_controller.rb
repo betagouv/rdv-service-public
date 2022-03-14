@@ -42,7 +42,7 @@ class Admin::InvitationsDeviseController < Devise::InvitationsController
   protected
 
   def pundit_user
-    AgentContext.new(current_agent, current_organisation)
+    AgentOrganisationContext.new(current_agent, current_organisation)
   end
 
   def current_organisation

@@ -21,7 +21,7 @@
       | Seule la rue désignée dans la commune sera couverte par le secteur
 
   = f.input :sector_id, \
-    collection: policy_scope_admin(Sector).where(territory: current_territory), \
+    collection: @available_sectors, \
     disabled: true, \
     include_blank: false
 
