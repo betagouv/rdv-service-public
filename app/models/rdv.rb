@@ -164,12 +164,6 @@ class Rdv < ApplicationRecord
     overlapping_occurrences_of(@overlapping_plages_ouvertures, rdv_range)
   end
 
-  def overlapping_occurrences_of(plages_ouvertures, rdv_range)
-    @overlapping_occurrences_of ||= plages_ouvertures.map do |po|
-      po.occurrences_for(rdv_range).select { |o| (o.starts_at..o.ends_at).cover?(rdv_range) || rdv_range.cover?(o.starts_at..o.ends_at) }
-    end.flatten
-  end
-
   def overlapping_plages_ouvertures?
     overlapping_plages_ouvertures.any?
   end
@@ -207,6 +201,12 @@ class Rdv < ApplicationRecord
   end
 
   private
+
+  def overlapping_occurrences_of(plages_ouvertures, rdv_range)
+    @overlapping_occurrences_of ||= plages_ouvertures.map do |po|
+      po.occurrences_for(rdv_range).select { |o| (o.starts_at..o.ends_at).cover?(rdv_range) || rdv_range.cover?(o.starts_at..o.ends_at) }
+    end.flatten
+  end
 
   def starts_at_is_plausible
     return unless will_save_change_to_attribute?("starts_at")
