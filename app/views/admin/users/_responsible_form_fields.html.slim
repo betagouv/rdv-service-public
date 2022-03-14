@@ -50,6 +50,12 @@ label Préférences de notifications
 = f.input :post_code, as: :hidden, **input_opts
 = f.input :city_name, as: :hidden, **input_opts
 
+- if current_territory.enable_address_details
+  = f.input :address_details, **input_opts
+
+- if current_territory.enable_case_number
+  = f.input :case_number, **input_opts
+
 - if current_territory.enable_notes_field
   = f_user_profile.input :notes, **input_opts.deep_merge(input_html: { rows: 6 })
 
