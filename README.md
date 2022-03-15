@@ -1,5 +1,4 @@
 # RDV-Solidarités
-
 [![View performance data on Skylight](https://badges.skylight.io/status/RgR7i58P67xN.svg)](https://oss.skylight.io/app/applications/RgR7i58P67xN)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
@@ -27,4 +26,4 @@ Ce logiciel et son code source sont distribués sous [licence AGPL](https://www.
 
 - Documentation par l’équipe sur [doc.rdv-solidarites.fr](https://doc.rdv-solidarites.fr/)
 - La fiche du service sur [beta.gouv.fr](https://beta.gouv.fr/startups/lapins.html).
-- Documentation de développement [ici-même](docs/0-docs.md). 
+- Documentation de développement [ici-même](docs/0-docs.md).
