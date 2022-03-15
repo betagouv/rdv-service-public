@@ -42,7 +42,7 @@ module Payloads
           motif_instruction: motif.instruction_for_rdv,
           motif_service_name: motif.service.name,
           duration_in_min: duration_in_min,
-          address_complete: address_complete,
+          address_complete: address_complete_without_personal_details,
           phone_number: phone_number,
           organisation_id: organisation.id,
           motif_service_id: motif.service.id,
