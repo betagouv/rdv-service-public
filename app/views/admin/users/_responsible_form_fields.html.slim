@@ -15,6 +15,8 @@
   .col-md-6= f.input :birth_name, **input_opts.deep_merge(frozen_fields_opts)
   .col-md-6= date_input(f, :birth_date, **input_opts.deep_merge(frozen_fields_opts))
 
+= f.input :phone_number, as: :tel, **input_opts
+
 = f.input(:email, as: :email, **input_opts)
 - if user.new_record?
   label
@@ -23,8 +25,6 @@
       false, \
       class:"align-items-baseline ml-0"
     |&nbsp; Inviter l'utilisateur à se créer un compte sur RDV-solidarites.
-
-= f.input :phone_number, as: :tel, **input_opts
 
 label Préférences de notifications
 .mb-2
