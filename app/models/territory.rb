@@ -44,7 +44,9 @@ class Territory < ApplicationRecord
     enable_caisse_affiliation_field: :caisse_affiliation,
     enable_affiliation_number_field: :affiliation_number,
     enable_family_situation_field: :family_situation,
-    enable_number_of_children_field: :number_of_children
+    enable_number_of_children_field: :number_of_children,
+    enable_case_number: :case_number,
+    enable_address_details: :address_details
   }.freeze
 
   OPTIONAL_FIELD_TOGGLES = {
