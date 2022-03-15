@@ -22,6 +22,14 @@ describe RdvsHelper do
         it "shows the motif of the rdv rather than the list of users" do
           expect(subject).to eq "Atelier collectif"
         end
+
+        context "with a rdv name" do
+          before { rdv.name = "Traitement de texte" }
+
+          it "shows the rdv name as well, since the motif only would be too vague" do
+            expect(subject).to eq "Atelier collectif : Traitement de texte"
+          end
+        end
       end
     end
 

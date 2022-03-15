@@ -1,0 +1,21 @@
+- content_for(:title) { "Nouveau RDV Collectif" }
+
+- content_for :breadcrumb do
+  ol.breadcrumb.m-0
+    li.breadcrumb-item
+      = link_to "RDV Collectifs", admin_organisation_rdvs_collectifs_path(current_organisation)
+    li.breadcrumb-item.active Nouveau RDV Collectif
+
+.row.justify-content-md-center
+  .col-md-8
+    .card
+      .card-header
+        h3.text-center Choisissez un motif
+
+      .card-body
+        - @motifs.each do |motif|
+          = link_to new_admin_organisation_rdvs_collectif_path(current_organisation, { motif_id: motif.id }) do
+            .mb-3
+              = motif.name
+              br
+              = "#{motif.default_duration_in_min} minutes"

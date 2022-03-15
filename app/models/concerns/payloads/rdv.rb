@@ -53,6 +53,7 @@ module Payloads
         }
       )
 
+      payload[:name] = name if name.present?
       payload[:action] = action if action.present?
 
       payload
