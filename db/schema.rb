@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_05_160339) do
+ActiveRecord::Schema.define(version: 2022_03_14_205349) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -445,6 +445,8 @@ ActiveRecord::Schema.define(version: 2022_03_05_160339) do
     t.boolean "enable_family_situation_field", default: false
     t.boolean "enable_number_of_children_field", default: false
     t.boolean "enable_logement_field", default: false
+    t.boolean "enable_case_number", default: false
+    t.boolean "enable_address_details", default: false
     t.index ["departement_number"], name: "index_territories_on_departement_number", unique: true, where: "((departement_number)::text <> ''::text)"
   end
 
@@ -504,6 +506,8 @@ ActiveRecord::Schema.define(version: 2022_03_05_160339) do
     t.enum "invited_through", default: "unknown", enum_type: "user_invited_through"
     t.enum "created_through", default: "unknown", enum_type: "user_created_through"
     t.text "search_terms"
+    t.string "case_number"
+    t.string "address_details"
     t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_users_search_terms", using: :gin
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"

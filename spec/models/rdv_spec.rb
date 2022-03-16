@@ -463,4 +463,42 @@ describe Rdv, type: :model do
       expect(rdv.overlapping_plages_ouvertures?).to eq(false)
     end
   end
+
+  describe "#available_to_file_attente?" do
+    it "returns true with a 9 days later public office RDV" do
+      now = Time.zone.parse("20220221 10:34")
+      travel_to(now)
+      rdv = build(:rdv, :at_public_office, starts_at: now + 9.days)
+      expect(rdv.available_to_file_attente?).to eq(true)
+    end
+
+    it "returns false with a tomorrow RDV" do
+      now = Time.zone.parse("20220221 10:34")
+      travel_to(now)
+      rdv = build(:rdv, :at_public_office, starts_at: now + 1.day)
+      expect(rdv.available_to_file_attente?).to eq(false)
+    end
+
+    it "returns false with a home RDV" do
+      now = Time.zone.parse("20220221 10:34")
+      travel_to(now)
+      rdv = build(:rdv, :at_home, starts_at: now + 9.days)
+      expect(rdv.available_to_file_attente?).to eq(false)
+    end
+
+    it "returns false with a cancelled RDV" do
+      now = Time.zone.parse("20220221 10:34")
+      travel_to(now)
+      rdv = build(:rdv, :at_home, starts_at: now + 9.days, cancelled_at: now - 1.day)
+      expect(rdv.available_to_file_attente?).to eq(false)
+    end
+
+    it "returns false with a not allowed online reservation motif" do
+      now = Time.zone.parse("20220221 10:34")
+      travel_to(now)
+      motif = build(:motif, reservable_online: false)
+      rdv = build(:rdv, :at_home, starts_at: now + 9.days, motif: motif)
+      expect(rdv.available_to_file_attente?).to eq(false)
+    end
+  end
 end

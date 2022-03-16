@@ -52,7 +52,7 @@ class Users::RdvSms < Users::BaseSms
     if rdv.phone?
       "RDV Téléphonique\n"
     elsif rdv.home?
-      "RDV à domicile\n#{rdv.address}\n"
+      "RDV à votre domicile\n"
     else
       "#{rdv.address_complete}\n"
     end
