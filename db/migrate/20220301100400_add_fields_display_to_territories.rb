@@ -10,7 +10,6 @@ class AddFieldsDisplayToTerritories < ActiveRecord::Migration[6.1]
     add_column :territories, :enable_logement_field, :boolean, default: false
 
     up_only do
-      # rubocop:disable Rails/SkipsModelValidations
       Territory.update_all(
         enable_notes_field: true,
         enable_caisse_affiliation_field: true,
@@ -19,7 +18,6 @@ class AddFieldsDisplayToTerritories < ActiveRecord::Migration[6.1]
         enable_number_of_children_field: true,
         enable_logement_field: true
       )
-      # rubocop:enable Rails/SkipsModelValidations
     end
   end
 end

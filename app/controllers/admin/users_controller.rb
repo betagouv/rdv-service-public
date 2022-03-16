@@ -13,6 +13,7 @@ class Admin::UsersController < AgentAuthController
     address post_code city_code city_name
     family_situation number_of_children
     notify_by_sms notify_by_email
+    case_number address_details
   ].freeze
 
   PERMITTED_NESTED_ATTRIBUTES = {
