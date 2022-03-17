@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_15_134640) do
+ActiveRecord::Schema.define(version: 2022_03_17_141436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -448,6 +448,7 @@ ActiveRecord::Schema.define(version: 2022_03_15_134640) do
     t.boolean "enable_logement_field", default: false
     t.boolean "enable_case_number", default: false
     t.boolean "enable_address_details", default: false
+    t.boolean "enable_context_field", default: false
     t.index ["departement_number"], name: "index_territories_on_departement_number", unique: true, where: "((departement_number)::text <> ''::text)"
   end
 

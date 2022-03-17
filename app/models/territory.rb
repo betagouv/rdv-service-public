@@ -40,6 +40,11 @@ class Territory < ApplicationRecord
 
   ## -
 
+  OPTIONAL_RDV_FIELD_TOGGLES = {
+    enable_context_field: :context,
+  }.freeze
+
+
   SOCIAL_FIELD_TOGGLES = {
     enable_caisse_affiliation_field: :caisse_affiliation,
     enable_affiliation_number_field: :affiliation_number,

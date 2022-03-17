@@ -72,6 +72,15 @@
         | Fiches usagers
       p Gérer les informations enregistrées sur les usagers
 
+  - if policy([:configuration, current_territory]).display_rdv_fields_configuration?
+    .col.col-md-4.p-2.rounded.settings-box
+      = link_to edit_admin_territory_rdv_fields_path(current_territory) do
+        h3.fw-bold.mb-0
+          i.fa.fa-calendar>
+          | Fiches RDV
+        p Gérer les informations enregistrées sur les rendez-vous
+
+
   / Ce lien est la manière principale de sortir de la configuration pour retourner à l'écran métier, donc on le garde à la fin de la liste
   .col.col-md-4.p-2.rounded.settings-box
     = link_to admin_organisations_path do
