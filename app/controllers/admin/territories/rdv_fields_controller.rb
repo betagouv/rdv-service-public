@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 class Admin::Territories::RdvFieldsController < Admin::Territories::BaseController
-
   def edit
     authorize current_territory
-  end 
+  end
 
   def update
     authorize current_territory
     current_territory.update(rdv_fields_params)
-    redirect_to edit_admin_territory_rdv_fields_path(current_territory)
+    flash[:alert] = "Configuration enregistrée"
+    redirect_to action: :edit
   end
 
   private

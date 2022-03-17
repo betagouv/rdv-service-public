@@ -5,9 +5,8 @@ describe Admin::Territories::RdvFieldsController, type: :controller do
     it "responds success" do
       territory = create(:territory)
       agent = create(:agent, role_in_territories: [territory])
-      create(:agent_territorial_access_right, agent: agent, territory: territory)
       sign_in agent
-      get :edit, params: {territory_id: territory.id}
+      get :edit, params: { territory_id: territory.id }
       expect(response).to be_successful
     end
   end
@@ -16,24 +15,19 @@ describe Admin::Territories::RdvFieldsController, type: :controller do
     it "responds redirect" do
       territory = create(:territory)
       agent = create(:agent, role_in_territories: [territory])
-      create(:agent_territorial_access_right, agent: agent, territory: territory)
       sign_in agent
-      post :update, params: {territory_id: territory.id, territory: { enable_context_field: false }}
+      post :update, params: { territory_id: territory.id, territory: { enable_context_field: false } }
       expect(response).to redirect_to(edit_admin_territory_rdv_fields_path(territory))
     end
 
     it "update territory" do
       territory = create(:territory, enable_context_field: true)
       agent = create(:agent, role_in_territories: [territory])
-      create(:agent_territorial_access_right, agent: agent, territory: territory)
       sign_in agent
 
-      expect {
-        post :update, params: {territory_id: territory.id, territory: { enable_context_field: false }}
-      }.to change{ territory.reload.enable_context_field }.to(false)
+      expect do
+        post :update, params: { territory_id: territory.id, territory: { enable_context_field: false } }
+      end.to change { territory.reload.enable_context_field }.to(false)
     end
-
   end
-
 end
-
