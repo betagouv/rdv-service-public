@@ -464,6 +464,19 @@ describe Rdv, type: :model do
     end
   end
 
+  describe "#overlapping_plages_ouvertures" do
+    let(:now) { Time.zone.parse("2022-12-27 11:00") }
+
+    before { travel_to(now) }
+
+    it "return plage_ouvertures" do
+      agent = create(:agent)
+      rdv = build(:rdv, agents: [agent], starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
+      create(:plage_ouverture, agent: agent, first_day: (now + 1.week).to_date, start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(14))
+      expect(rdv.overlapping_plages_ouvertures.first).to be_a_kind_of(PlageOuverture)
+    end
+  end
+
   describe "#available_to_file_attente?" do
     it "returns true with a 9 days later public office RDV" do
       now = Time.zone.parse("20220221 10:34")

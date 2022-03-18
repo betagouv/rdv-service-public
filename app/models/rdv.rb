@@ -156,12 +156,19 @@ class Rdv < ApplicationRecord
     [responsibles, users].flatten.select(&:address).first || users.first
   end
 
+  # Ces plages d'ouvertures sont utilisé pour afficher des infos
+  # s'il y a un chevauchement avec le RDV.
+  #
+  # Il y a une vérification de scope dans l'appelant (pourquoi ?)
+  # et utilisation du nom et du lieu
+  #
   def overlapping_plages_ouvertures
     return [] if starts_at.blank? || ends_at.blank? || lieu.blank? || past? || errors.present?
 
-    rdv_range = starts_at..ends_at
-    @overlapping_plages_ouvertures ||= PlageOuverture.where(agent: agents.map(&:id)).where.not(lieu: lieu).in_range(rdv_range)
-    overlapping_occurrences_of(@overlapping_plages_ouvertures, rdv_range)
+    @overlapping_plages_ouvertures ||= PlageOuverture \
+      .where(agent: agents.map(&:id)) \
+      .where.not(lieu: lieu) \
+      .overlapping_range(starts_at..ends_at)
   end
 
   def overlapping_plages_ouvertures?
@@ -201,12 +208,6 @@ class Rdv < ApplicationRecord
   end
 
   private
-
-  def overlapping_occurrences_of(plages_ouvertures, rdv_range)
-    @overlapping_occurrences_of ||= plages_ouvertures.map do |po|
-      po.occurrences_for(rdv_range).select { |o| (o.starts_at..o.ends_at).cover?(rdv_range) || rdv_range.cover?(o.starts_at..o.ends_at) }
-    end.flatten
-  end
 
   def starts_at_is_plausible
     return unless will_save_change_to_attribute?("starts_at")
