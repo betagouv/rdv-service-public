@@ -93,6 +93,7 @@ class Motif < ApplicationRecord
     joins(organisation: :territory)
       .where(organisations: { territories: { departement_number: departement_number } })
   }
+  scope :collectif, -> { where(collectif: true) }
 
   ## -
 
