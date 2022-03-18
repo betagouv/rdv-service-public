@@ -36,11 +36,11 @@
           .row.bg-info.text-white.p-2.mb-3 Cet usager s'est déjà connecté via FranceConnect
 
         - if @user.responsible?
-          h4.card-title.mb-3 Informations générales
+          h2.card-title.mb-3 Informations générales
           = render "responsible_information", user: @user
 
         - else
-          h4.card-title.mb-3 Informations de votre proche
+          h2.card-title.mb-3 Informations de votre proche
           ul.list-unstyled
             - user_profile = @user.profile_for(current_organisation)
             li= object_attribute_tag(@user, :first_name)
@@ -65,7 +65,7 @@
             - policy_scope(@user.agents).includes([:service]).distinct.each do |agent|
               li.mb-2 = agent.full_name_and_service
             - if policy_scope(@user.agents).empty?
-              .font-italic aucun référent
+              li.font-italic Aucun référent
 
           .text-right
             = link_to "Modifier", admin_organisation_user_referents_path(current_organisation, @user), class: "btn btn-outline-primary"
@@ -73,7 +73,7 @@
     - if @user.relative?
       .card#spec-secondary-user-card
         .card-body
-          h4.card-title.mb-3 Informations sur l'usager en charge
+          h2.card-title.mb-3 Informations sur l'usager en charge
           = render "admin/users/responsible_information", user: @user.responsible
           .text-right
             = link_to "Voir", admin_organisation_user_path(current_organisation, @user.responsible), class: "btn btn-outline-primary"
@@ -87,7 +87,7 @@
               | #{agent.full_name_and_service}
             - if @user.responsible.agents.empty?
               li.mb-2
-                .font-italic aucun référent
+                .font-italic Aucun référent
 
     - if @user.responsible?
       .card
