@@ -104,6 +104,24 @@ describe DisplayableUserPresenter, type: :presenter do
     end
   end
 
+  describe "#address_details" do
+    it "return user's address details" do
+      organisation = create(:organisation)
+      user = create(:user, organisations: [organisation], address_details: "Appartement 2334")
+      displayable_user = described_class.new(user, organisation)
+      expect(displayable_user.address_details).to eq("Appartement 2334")
+    end
+  end
+
+  describe "#case_number" do
+    it "return user's case number" do
+      organisation = create(:organisation)
+      user = create(:user, organisations: [organisation], case_number: "1234567")
+      displayable_user = described_class.new(user, organisation)
+      expect(displayable_user.case_number).to eq("1234567")
+    end
+  end
+
   describe "#notify_by_sms" do
     it "returns no phone number when user dont have phone number" do
       organisation = build(:organisation)
