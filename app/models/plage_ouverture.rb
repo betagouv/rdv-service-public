@@ -39,6 +39,16 @@ class PlageOuverture < ApplicationRecord
 
     not_recurring_start_in_range.or(recurring_in_range)
   }
+  scope :overlapping_range, lambda { |range|
+    in_range(range).select do |plage_ouverture|
+      plage_ouverture.occurrences_for(range).select do |o|
+        range.cover?(o.starts_at) ||
+          range.cover?(o.ends_at) ||
+          (o.starts_at..o.ends_at).cover?(range) ||
+          range.cover?(o.starts_at..o.ends_at)
+      end.any?
+    end
+  }
 
   ## -
 
