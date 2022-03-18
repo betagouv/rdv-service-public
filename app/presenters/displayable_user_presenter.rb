@@ -27,6 +27,14 @@ class DisplayableUserPresenter
     @user.human_attribute_value(:family_situation)
   end
 
+  def address_details
+    @user.human_attribute_value(:address_details)
+  end
+
+  def case_number
+    @user.human_attribute_value(:case_number)
+  end
+
   def phone_number
     @user.responsible_phone_number
   end
