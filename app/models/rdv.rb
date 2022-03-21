@@ -167,8 +167,8 @@ class Rdv < ApplicationRecord
     return [] if starts_at.blank? || ends_at.blank? || lieu.blank? || past? || errors.present?
 
     @overlapping_plages_ouvertures ||= PlageOuverture \
-      .where(agent: agents.map(&:id)) \
-      .where.not(lieu: lieu) \
+      .where(agent: agents)
+      .where.not(lieu: lieu)
       .overlapping_range(starts_at..ends_at)
   end
 
