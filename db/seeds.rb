@@ -269,7 +269,7 @@ user_org_paris_nord_patricia = User.new(
   birth_date: Date.parse("20/06/1975"),
   password: "123456",
   phone_number: "0101010101",
-  organisation_ids: [org_paris_nord.id],
+  organisation_ids: [org_paris_nord.id, org_arques.id],
   created_through: "user_sign_up"
 )
 
@@ -309,7 +309,7 @@ user_org_paris_nord_jean = User.new(
   birth_date: Date.parse("10/01/1973"),
   password: "123456",
   phone_number: "0101010103",
-  organisation_ids: [org_paris_nord.id],
+  organisation_ids: [org_paris_nord.id, org_bapaume.id, org_arques.id],
   created_through: "user_sign_up"
 )
 
