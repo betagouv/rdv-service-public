@@ -3,7 +3,8 @@
 describe "Agent can create a Rdv with wizard" do
   include UsersHelper
 
-  let(:organisation) { create(:organisation) }
+  let(:territory) { create(:territory, enable_context_field: true) }
+  let(:organisation) { create(:organisation, territory: territory) }
   let(:service) { create(:service) }
   let!(:agent) { create(:agent, first_name: "Alain", last_name: "DIALO", service: service, basic_role_in_organisations: [organisation]) }
   let!(:agent2) { create(:agent, first_name: "Robert", last_name: "Martin", service: service, basic_role_in_organisations: [organisation]) }

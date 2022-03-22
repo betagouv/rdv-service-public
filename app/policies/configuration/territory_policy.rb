@@ -14,4 +14,5 @@ class Configuration::TerritoryPolicy
   alias show? territorial_admin?
   alias update? territorial_admin?
   alias edit? territorial_admin?
+  alias display_rdv_fields_configuration? territorial_admin?
 end

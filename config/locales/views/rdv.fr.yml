@@ -1,0 +1,6 @@
+fr:
+  admin:
+    rdvs:
+      rdv_details:
+        empty_context: Pas de contexte renseigné 
+

@@ -99,6 +99,12 @@ fr:
           teams: Équipes
           actions: Actions
           edit_agents: Modification des équipes de l'agent
+      rdv_fields:
+        edit:
+          title: Champs de la fiche RDV
+          card_title: Champs optionnels pour la fiche RDV
+          hint_1: Vous pouvez activer ou désactiver les champs suivants sur la fiche RDV.
+          hint_2: "Les champs seront simplement masqués dans l’interface : les données préexistantes ne seront pas supprimées."
       user_fields:
         edit:
           title: Champs de la fiche usager
