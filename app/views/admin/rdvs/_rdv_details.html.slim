@@ -11,7 +11,7 @@
     - if current_organisation.territory.enable_context_field
       div
         - if rdv.context.blank?
-          .text-muted Pas de contexte renseigné
+          .text-muted = t(".empty_context")
         - else
           .text-muted Contexte :
           .border-left.pl-2= simple_format(rdv.context)
