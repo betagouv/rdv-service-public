@@ -32,6 +32,7 @@ class Agent < ApplicationRecord
 
   # Relations
   belongs_to :service
+  has_many :agent_territorial_access_rights, dependent: :destroy
   has_many :plage_ouvertures, dependent: :destroy
   has_many :absences, dependent: :destroy
   has_many :agents_rdvs, dependent: :destroy
@@ -41,7 +42,7 @@ class Agent < ApplicationRecord
   has_many :agent_teams, dependent: :destroy
   has_and_belongs_to_many :users
 
-  accepts_nested_attributes_for :roles
+  accepts_nested_attributes_for :roles, :agent_territorial_access_rights
 
   # Through relations
   has_many :teams, through: :agent_teams
@@ -148,6 +149,10 @@ class Agent < ApplicationRecord
 
   def territorial_role_in(territory)
     territorial_roles.find_by(territory: territory)
+  end
+
+  def access_rights_for_territory(territory)
+    agent_territorial_access_rights.find_by(territory: territory)
   end
 
   def update_unknown_past_rdv_count!
