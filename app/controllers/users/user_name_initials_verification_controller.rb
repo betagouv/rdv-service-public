@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Users::IdentityVerificationsController < UserAuthController
+class Users::UserNameInitialsVerificationController < UserAuthController
   skip_after_action :verify_authorized
 
   include TokenInvitable
@@ -9,10 +9,10 @@ class Users::IdentityVerificationsController < UserAuthController
 
   def create
     if first_three_letters_matching?
-      set_user_identity_verified
+      set_user_name_initials_verified
       redirect_to session.delete(:return_to_after_verification)
     else
-      flash.now[:error] = "Les 3 lettres ne correspondent pas au nom de famille."
+      flash.now[:error] = I18n.t("users.user_name_initials_mismatch")
       render :new
     end
   end
@@ -28,6 +28,10 @@ class Users::IdentityVerificationsController < UserAuthController
   end
 
   def first_three_letters_matching?
-    current_user.last_name.gsub(/\s+/, "").first(3).upcase == first_three_letters.upcase
+    user_name_initials.upcase == first_three_letters.upcase
+  end
+
+  def user_name_initials
+    current_user.last_name.gsub(/\s+/, "").first(3)
   end
 end

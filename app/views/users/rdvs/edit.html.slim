@@ -2,8 +2,7 @@
   h3.page-title Modification du Rendez-vous
 .card
   .card-body.text-center
-    p
-      | Vous allez modifier votre RDV #{current_user.only_invited? ? "" : "#{@rdv.motif.name} - #{@rdv.motif.service.name}"} qui a lieu le #{I18n.l(@rdv.starts_at, format: :human)}..
+    p= t(".recap_message", motif_name_and_service: (@can_see_rdv_motif ? motif_name_and_service(@rdv.motif) : nil), rdv_human_date: I18n.l(@rdv.starts_at, format: :human))
     .my-5
       h4 Nouveau créneau selectionné
 

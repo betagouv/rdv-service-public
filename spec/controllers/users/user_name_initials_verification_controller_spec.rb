@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Users::IdentityVerificationsController, type: :controller do
+describe Users::UserNameInitialsVerificationController, type: :controller do
   render_views
   let!(:user) { create(:user, last_name: "Dylan") }
 
@@ -23,7 +23,7 @@ describe Users::IdentityVerificationsController, type: :controller do
         post :create, params: { letter0: "D", letter1: "Y", letter2: "L" }
 
         jar = ActionDispatch::Cookies::CookieJar.build(request, cookies.to_hash)
-        expect(jar.encrypted[:"user_#{user.id}_verified"]).to eq(true)
+        expect(jar.encrypted[:"user_name_initials_verified_#{user.id}"]).to eq(true)
       end
 
       it "redirect to the path stored in session" do
@@ -39,7 +39,7 @@ describe Users::IdentityVerificationsController, type: :controller do
           post :create, params: { letter0: "B", letter1: "O", letter2: "" }
 
           jar = ActionDispatch::Cookies::CookieJar.build(request, cookies.to_hash)
-          expect(jar.encrypted[:"user_#{user.id}_verified"]).to eq(true)
+          expect(jar.encrypted[:"user_name_initials_verified_#{user.id}"]).to eq(true)
           expect(response).to redirect_to(redirect_path)
         end
       end
@@ -51,7 +51,7 @@ describe Users::IdentityVerificationsController, type: :controller do
           post :create, params: { letter0: "D", letter1: "E", letter2: "L" }
 
           jar = ActionDispatch::Cookies::CookieJar.build(request, cookies.to_hash)
-          expect(jar.encrypted[:"user_#{user.id}_verified"]).to eq(true)
+          expect(jar.encrypted[:"user_name_initials_verified_#{user.id}"]).to eq(true)
           expect(response).to redirect_to(redirect_path)
         end
       end
@@ -62,7 +62,7 @@ describe Users::IdentityVerificationsController, type: :controller do
         post :create, params: { letter0: "D", letter1: "Y", letter2: "O" }
 
         jar = ActionDispatch::Cookies::CookieJar.build(request, cookies.to_hash)
-        expect(jar.encrypted[:"user_#{user.id}_verified"]).to be_nil
+        expect(jar.encrypted[:"user_name_initials_verified_#{user.id}"]).to be_nil
       end
 
       it "renders new with an error message" do

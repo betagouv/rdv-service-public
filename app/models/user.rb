@@ -192,6 +192,10 @@ class User < ApplicationRecord
   def invited_for_rdv?(rdv)
     rdv.id == @invitation_rdv&.id
   end
+    
+  def through_sign_in_form?
+    !only_invited?
+  end
 
   protected
 
