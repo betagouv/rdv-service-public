@@ -71,8 +71,8 @@ class Rdv < ApplicationRecord
       where(status: status)
     end
   }
-  scope :visible, -> { joins(:motif).where(motifs: { visibility_type: [Motif::VISIBLE_AND_NOTIFIED, Motif::VISIBLE_AND_NOT_NOTIFIED] }) }
-  scope :collectif, -> { joins(:motif).where(motifs: { collectif: true }) }
+  scope :visible, -> { joins(:motif).merge(Motif.visible) }
+  scope :collectif, -> { joins(:motif).merge(Motif.collectif) }
 
   ## -
 

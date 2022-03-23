@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_17_141436) do
+ActiveRecord::Schema.define(version: 2022_03_21_181557) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -277,6 +277,7 @@ ActiveRecord::Schema.define(version: 2022_03_17_141436) do
     t.boolean "collectif", default: false
     t.enum "location_type", default: "public_office", null: false, enum_type: "location_type"
     t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_motifs_name_vector", using: :gin
+    t.index ["collectif"], name: "index_motifs_on_collectif"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
     t.index ["location_type"], name: "index_motifs_on_location_type"
     t.index ["name", "organisation_id", "location_type", "service_id"], name: "index_motifs_on_name_scoped", unique: true, where: "(deleted_at IS NULL)"
@@ -284,6 +285,7 @@ ActiveRecord::Schema.define(version: 2022_03_17_141436) do
     t.index ["organisation_id"], name: "index_motifs_on_organisation_id"
     t.index ["reservable_online"], name: "index_motifs_on_reservable_online"
     t.index ["service_id"], name: "index_motifs_on_service_id"
+    t.index ["visibility_type"], name: "index_motifs_on_visibility_type"
   end
 
   create_table "motifs_plage_ouvertures", id: false, force: :cascade do |t|
