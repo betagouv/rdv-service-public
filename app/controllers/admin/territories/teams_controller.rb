@@ -9,7 +9,7 @@ class Admin::Territories::TeamsController < Admin::Territories::BaseController
   end
 
   def new
-    @team = Team.new
+    @team = Team.new(territory: current_territory)
     authorize @team
   end
 

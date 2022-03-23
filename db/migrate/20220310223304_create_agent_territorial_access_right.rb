@@ -21,7 +21,6 @@ class CreateAgentTerritorialAccessRight < ActiveRecord::Migration[6.1]
           updated_at: Time.zone.now
         }
       end
-      #AgentTerritorialAccessRight.create(territory: agent.organisations.first.territory, agent: agent)
     end
 
     AgentTerritorialAccessRight.insert_all(data_to_insert)
