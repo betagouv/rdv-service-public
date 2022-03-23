@@ -70,6 +70,7 @@ describe "Agent can create a Rdv with wizard", js: true do
       expect(page).to have_select("rdv_lieu_id", with_options: [lieu.full_name])
     else
       click_link("Choisir un lieu ponctuel.")
+      fill_in "Nom", with: "Café de la gare"
       fill_in "Adresse", with: "3 Place de la Gare, Strasbourg, 67000, 67, Bas-Rhin, Grand Est"
       page.execute_script("document.querySelector('input#rdv_lieu_attributes_latitude').value = '48.583844'")
       page.execute_script("document.querySelector('input#rdv_lieu_attributes_longitude').value = 7.735253")

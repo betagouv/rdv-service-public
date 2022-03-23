@@ -10,13 +10,10 @@
 - if is_new_form || is_edit_form
   = render "model_errors", model: f.object
 
-/ Don’t ask for the name and phone_number in the nested form in RdvWizardSteps#step3
-- if is_new_form || is_edit_form
-  = f.input :name, required: true
-  = f.input :phone_number
-
 / All forms
-- options = is_nested_form ? { label: false } : {}
+= f.input :name, required: true
+- unless is_nested_form
+  = f.input :phone_number
 = f.input :address, input_html: { class: "places-js-container" }
 = f.hidden_field :latitude
 = f.hidden_field :longitude

@@ -20,8 +20,7 @@ class Lieu < ApplicationRecord
   has_many :agents, through: :plage_ouvertures
 
   # Validations
-  validates :address, :availability, :latitude, :longitude, presence: true
-  validates :name, presence: true, unless: -> { single_use? }
+  validates :name, :address, :availability, :latitude, :longitude, presence: true
   validate :cant_change_availibility_single_use
 
   # Scopes

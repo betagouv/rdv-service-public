@@ -8,33 +8,6 @@ describe Lieu, type: :model do
   describe "validation" do
     subject { lieu.errors }
 
-    describe "name presence" do
-      let(:lieu) { build :lieu, name: name, availability: availability }
-
-      before { lieu.validate }
-
-      context "named, enabled lieu is valid" do
-        let(:name) { "some_name" }
-        let(:availability) { :enabled }
-
-        it { is_expected.to be_empty }
-      end
-
-      context "unnamed, enabled lieu is invalid" do
-        let(:name) { "" }
-        let(:availability) { :enabled }
-
-        it { is_expected.to be_of_kind(:name, :blank) }
-      end
-
-      context "unnamed, single_use lieu is valid" do
-        let(:name) { "" }
-        let(:availability) { :single_use }
-
-        it { is_expected.to be_empty }
-      end
-    end
-
     describe "availability changes" do
       let(:lieu) { create :lieu, availability: initial_value }
 

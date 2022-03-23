@@ -14,8 +14,9 @@ class AddLieuSingleUse < ActiveRecord::Migration[6.1]
     remove_index :lieux, :enabled
     rename_column :lieux, :enabled, :old_enabled
 
-    # Also make existing Lieu#organisation_id and address nonnull (there is already a validation in Rails)
+    # Also make existing Lieu#organisation_id, name and address nonnull (there is already a validation in Rails)
     change_column_null :lieux, :organisation_id, false
+    change_column_null :lieux, :name, false
     change_column_null :lieux, :address, false
   end
 end

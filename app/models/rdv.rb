@@ -31,7 +31,7 @@ class Rdv < ApplicationRecord
 
   accepts_nested_attributes_for :rdvs_users, allow_destroy: true
   accepts_nested_attributes_for :lieu
-  ACCEPTED_NESTED_LIEU_ATTRIBUTES = %w[address latitude longitude].freeze
+  ACCEPTED_NESTED_LIEU_ATTRIBUTES = %w[name address latitude longitude].freeze
   def nested_lieu_attributes
     lieu&.attributes&.slice(*ACCEPTED_NESTED_LIEU_ATTRIBUTES)
   end
