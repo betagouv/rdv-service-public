@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 describe "User can be invited" do
+  # needed for encrypted cookies
+  before do
+    allow_any_instance_of(ActionDispatch::Request).to receive(:cookie_jar).and_return(page.cookies)
+    allow_any_instance_of(ActionDispatch::Request).to receive(:cookies).and_return(page.cookies)
+  end
+
   let(:now) { Time.zone.parse("2021-12-13 10:30") }
   let!(:user) do
     create(:user, first_name: "john", last_name: "doe", email: "johndoe@gmail.com",
@@ -66,7 +72,6 @@ describe "User can be invited" do
 
       # RDV page
       expect(page).to have_content("Votre RDV")
-      expect(page).to have_content(motif.name)
       expect(page).to have_content(lieu.address)
       expect(page).to have_content("11h00")
     end
@@ -122,7 +127,6 @@ describe "User can be invited" do
 
       # RDV page
       expect(page).to have_content("Votre RDV")
-      expect(page).to have_content(motif.name)
       expect(page).to have_content(lieu.address)
       expect(page).to have_content("11h00")
     end
@@ -179,7 +183,6 @@ describe "User can be invited" do
 
       # RDV page
       expect(page).to have_content("Votre RDV")
-      expect(page).to have_content(motif.name)
       expect(page).to have_content(lieu.address)
       expect(page).to have_content("11h00")
     end

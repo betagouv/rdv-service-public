@@ -1,0 +1,6 @@
+= simple_form_for "", url: users_user_name_initials_verification_path, html: { class: "js-name-initials-form" } do |f|
+  .form-inline.py-2.justify-content-center
+    - (0..2).each do |idx|
+      = f.input :"letter#{idx}", pattern: "[A-Z]", label: false, maxlength: 1, required: false, input_html: { class: "mx-md-2 py-4 text-center" }
+  .form-inline.py-2.justify-content-center
+    = f.button :submit, t("helpers.ok")

@@ -149,13 +149,10 @@ RSpec.describe Users::RdvsController, type: :controller do
           user.raw_invitation_token
         end
 
-        it "shows the rdv" do
+        it "redirects to the identity verification form" do
           get :show, params: { id: rdv.id, invitation_token: invitation_token }
 
-          expect(response).to be_successful
-          expect(response.body).to match(/Votre RDV/)
-          expect(response.body).to match(/Le mardi 20 octobre 2020/)
-          expect(response.body).to match(/Modifier l&#39;horaire du RDV/)
+          expect(response).to redirect_to(new_users_user_name_initials_verification_path)
         end
       end
     end
@@ -321,7 +318,6 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(flash[:success]).to eq("Votre RDV a bien été modifié")
         expect(rdv.reload.starts_at).to eq(starts_at)
         expect(rdv.reload.agent_ids).to eq([agent.id])
-        expect(rdv.reload.created_by).to eq("file_attente")
       end
 
       context "when it cannot be updated" do

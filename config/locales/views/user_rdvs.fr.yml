@@ -4,3 +4,5 @@ fr:
       create:
         rdv_confirmed: Votre rendez vous a été confirmé.
         creneau_unavailable: Ce créneau n’est plus disponible. Veuillez en sélectionner un autre.
+      edit:
+        recap_message: Vous allez modifier votre RDV %{motif_name_and_service} qui a lieu le %{rdv_human_date}

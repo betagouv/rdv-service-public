@@ -9,6 +9,7 @@ import { PlacesInputs } from 'components/places-inputs.js'
 import 'components/analytic.js';
 import { Modal } from 'components/modal';
 import { ShowHidePassword } from 'components/show-hide-password.js';
+import { NameInitialsForm } from 'components/name-initials-form';
 import 'components/browser-detection';
 import 'select2/dist/js/select2.min.js';
 import 'select2/dist/js/i18n/fr.js';
@@ -28,6 +29,7 @@ $(document).on('turbolinks:load', function() {
   new ShowHidePassword();
   new Datetimepicker();
   new PlacesInputs();
+  new NameInitialsForm();
 
   const whereInput = document.querySelector('#search_where');
   const submitButton = document.querySelector('#search_submit');

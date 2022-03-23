@@ -188,6 +188,10 @@ class User < ApplicationRecord
     @only_invited == true
   end
 
+  def through_sign_in_form?
+    !only_invited?
+  end
+
   protected
 
   def compute_invitation_due_at

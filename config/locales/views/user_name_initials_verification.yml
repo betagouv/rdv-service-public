@@ -1,0 +1,9 @@
+fr:
+  users:
+    user_name_initials_verification:
+      new:
+        title: Entrez les 3 premières lettres de votre nom de famille
+        examples:
+          first: "Sophie Dupont: DUP"
+          second: "Jean De La Fontaine: DEL"
+          third: "Edwige Xi: XI"
