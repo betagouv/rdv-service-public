@@ -9,6 +9,8 @@ fr:
         service: Service
         rdv_notifications_level: Notifications de RDV
         display_saturdays: Affichage des samedis sur le calendrier
+      agent_territorial_access_right:
+        allow_to_manage_teams: Autorisé à créer, supprimer, modifier des équipes
       agent/rdv_notifications_levels:
         all: À chaque modification
         others: Uniquement les modifications faites par un usager (ou par un autre agent)
