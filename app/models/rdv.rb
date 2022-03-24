@@ -71,8 +71,8 @@ class Rdv < ApplicationRecord
       where(status: status)
     end
   }
-  scope :visible, -> { joins(:motif).where(motifs: { visibility_type: [Motif::VISIBLE_AND_NOTIFIED, Motif::VISIBLE_AND_NOT_NOTIFIED] }) }
-  scope :collectif, -> { joins(:motif).where(motifs: { collectif: true }) }
+  scope :visible, -> { joins(:motif).merge(Motif.visible) }
+  scope :collectif, -> { joins(:motif).merge(Motif.collectif) }
 
   ## -
 
@@ -166,9 +166,9 @@ class Rdv < ApplicationRecord
   def overlapping_plages_ouvertures
     return [] if starts_at.blank? || ends_at.blank? || lieu.blank? || past? || errors.present?
 
-    @overlapping_plages_ouvertures ||= PlageOuverture \
-      .where(agent: agents.map(&:id)) \
-      .where.not(lieu: lieu) \
+    @overlapping_plages_ouvertures ||= PlageOuverture
+      .where(agent: agent_ids)
+      .where.not(lieu: lieu)
       .overlapping_range(starts_at..ends_at)
   end
 

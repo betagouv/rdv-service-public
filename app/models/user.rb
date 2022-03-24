@@ -121,7 +121,9 @@ class User < ApplicationRecord
   end
 
   def profile_for(organisation)
-    user_profiles.find_by(organisation: organisation)
+    # Hash memoization: the block is called when a profile isn’t found in @profiles
+    @profiles ||= Hash.new { |h, org| h[org] = user_profiles.find_by(organisation: org) }
+    @profiles[organisation]
   end
 
   def deleted_email

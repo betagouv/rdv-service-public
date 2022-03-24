@@ -124,10 +124,10 @@ describe MergeUsersService, type: :service do
       subject
       expect(UserProfile.count).to eq 2
       expect(user_target.user_profiles.count).to eq 1
-      expect(user_target.profile_for(organisation).logement).to eq "locataire"
-      expect(user_target.profile_for(organisation2)).to be_nil
-      expect(user_to_merge.profile_for(organisation)).to be_nil
-      expect(user_to_merge.profile_for(organisation2)).not_to be_nil
+      expect(user_target.user_profiles.find_by(organisation: organisation).logement).to eq "locataire"
+      expect(user_target.user_profiles.find_by(organisation: organisation2)).to be_nil
+      expect(user_to_merge.user_profiles.find_by(organisation: organisation)).to be_nil
+      expect(user_to_merge.user_profiles.find_by(organisation: organisation2)).not_to be_nil
     end
   end
 

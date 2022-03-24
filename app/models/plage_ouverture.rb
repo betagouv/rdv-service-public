@@ -41,12 +41,7 @@ class PlageOuverture < ApplicationRecord
   }
   scope :overlapping_range, lambda { |range|
     in_range(range).select do |plage_ouverture|
-      plage_ouverture.occurrences_for(range).select do |o|
-        range.cover?(o.starts_at) ||
-          range.cover?(o.ends_at) ||
-          (o.starts_at..o.ends_at).cover?(range) ||
-          range.cover?(o.starts_at..o.ends_at)
-      end.any?
+      plage_ouverture.occurrences_for(range).any? { range.overlaps?(_1.starts_at.._1.ends_at) }
     end
   }
 

@@ -30,11 +30,11 @@ class AgentAuthController < ApplicationController
   end
 
   def current_organisation
-    current_agent.organisations.find(params[:organisation_id])
+    @current_organisation ||= current_agent.organisations.find(params[:organisation_id])
   end
 
   def current_territory
-    current_organisation.territory
+    @current_territory ||= current_organisation.territory
   end
 
   def from_modal?
