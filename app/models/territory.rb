@@ -19,11 +19,13 @@ class Territory < ApplicationRecord
   # Relations
   has_many :teams, dependent: :destroy
   has_many :organisations, dependent: :destroy
+  has_many :sectors, dependent: :destroy
   has_many :roles, class_name: "AgentTerritorialRole", dependent: :delete_all
 
   # Through relations
   has_many :organisations_agents, through: :organisations, source: :agents
   has_many :agents, through: :roles
+  has_many :zones, through: :sectors
 
   # Validations
   validates :departement_number, length: { maximum: 3 }, if: -> { departement_number.present? }

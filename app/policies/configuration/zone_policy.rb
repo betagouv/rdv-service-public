@@ -21,8 +21,7 @@ class Configuration::ZonePolicy
     end
 
     def resolve
-      Zone.in_territory(@current_territory)
+      @current_territory.zones
     end
   end
-
 end
