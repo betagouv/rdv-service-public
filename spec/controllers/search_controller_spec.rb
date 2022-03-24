@@ -171,7 +171,7 @@ RSpec.describe SearchController, type: :controller do
         get :search_rdv, params: {
           address: address, departement: departement_number, city_code: city_code
         }
-        expect(subject).to match(/Prochaine disponibilité le(.)*lundi 05 août 2019 à 08h00/)
+        expect(subject).to match(/Aucune disponibilité/)
       end
     end
 
