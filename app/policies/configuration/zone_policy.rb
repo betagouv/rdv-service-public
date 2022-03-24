@@ -14,4 +14,14 @@ class Configuration::ZonePolicy
   alias new? territorial_admin?
   alias create? territorial_admin?
   alias destroy? territorial_admin?
+
+  class Scope
+    def initialize(context, _scope)
+      @current_territory = context.territory
+    end
+
+    def resolve
+      @current_territory.zones
+    end
+  end
 end

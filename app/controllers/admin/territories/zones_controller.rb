@@ -5,7 +5,6 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
 
   def index
     zones = policy_scope(Zone)
-      .in_territory(current_territory)
       .where(params[:sector_id].present? ? { sector: params[:sector_id] } : {})
     respond_to do |format|
       format.xls do

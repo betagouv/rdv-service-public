@@ -28,7 +28,6 @@ class Zone < ApplicationRecord
   # Scopes
   scope :cities, -> { where(level: LEVEL_CITY) }
   scope :streets, -> { where(level: LEVEL_STREET) }
-  scope :in_territory, -> { joins(:sector).where(sectors: { territory_id: _1.id }) }
 
   ## -
 

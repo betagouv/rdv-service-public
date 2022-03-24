@@ -2,7 +2,7 @@
 
 describe ExportZonesService, type: :service do
   describe "#perform" do
-    subject { described_class.new(Zone.in_territory(territory)).perform }
+    subject { described_class.new(territory.zones).perform }
 
     let!(:territory) { create(:territory, name: "Yvelines", departement_number: "78") }
     let!(:sector1) { create(:sector, name: "Yvelines Sud", human_id: "78-sud", territory: territory) }
