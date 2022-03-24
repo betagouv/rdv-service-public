@@ -194,6 +194,8 @@ class CalendarRdvSolidarites {
       }
       if (extendedProps.lieu) {
         title += `<br><strong>Lieu:</strong> ${extendedProps.lieu}`;
+        // In the details, why only indicate an overlap warning if lieu is present?
+        // In the event title, we add the warning even if lieu is nil.
         if (extendedProps.overlappingPlagesOuvertures) {
           title += " ⚠️";
         }
