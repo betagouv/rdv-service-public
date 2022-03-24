@@ -2,12 +2,12 @@
   .col-md-6
     .card
       .card-body
-        h4.card-title.mb-4  Mes informations
+        h1.card-title Mes informations
         = render "form", user: @user
   .col-md-6
     .card
       .card-body
-        h4.card-title.mb-4 Mes proches
+        h2.card-title Mes proches
         ul.list-group.mb-2
           - if @user.relatives.active.empty?
             li.list-group-item
