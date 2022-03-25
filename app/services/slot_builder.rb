@@ -149,10 +149,7 @@ module SlotBuilder
       end
 
       def busy_times_from_rdvs(range, plage_ouverture)
-        rdv_starts_in_range = plage_ouverture.agent.rdvs.not_cancelled.where(starts_at: range)
-        rdv_ends_in_range = plage_ouverture.agent.rdvs.not_cancelled.where(ends_at: range)
-        rdv_over_range = plage_ouverture.agent.rdvs.not_cancelled.where("starts_at <= ?", range.begin).where("ends_at >= ?", range.end)
-        rdv_starts_in_range.or(rdv_ends_in_range).or(rdv_over_range).map do |rdv|
+        plage_ouverture.agent.rdvs.not_cancelled.where("starts_at < ?", range.end).where("ends_at > ?", range.begin).map do |rdv|
           BusyTime.new(rdv)
         end
       end
