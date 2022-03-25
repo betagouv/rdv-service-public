@@ -1,0 +1,6 @@
+fr:
+  admin:
+    creneaux:
+      agent_searches:
+        index:
+          no_slot_available: Aucun créneaux n'est disoponible pour le motif %{motif_name} et les critères sélectionnés
