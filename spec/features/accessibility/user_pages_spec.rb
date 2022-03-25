@@ -50,4 +50,11 @@ describe "welcome", js: true do
     visit contact_path
     expect(page).to be_axe_clean
   end
+
+  it "users_informations_path is accessible" do
+    user = create(:user, email: "toto@example.com")
+    login_as user
+    visit users_informations_path
+    expect(page).to be_axe_clean
+  end
 end

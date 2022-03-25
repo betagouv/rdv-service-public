@@ -4,3 +4,9 @@ fr:
       create:
         rdv_confirmed: Votre rendez vous a été confirmé.
         creneau_unavailable: Ce créneau n’est plus disponible. Veuillez en sélectionner un autre.
+    users:
+      edit:
+        my_informations: Mes informations
+        my_relatives: Mes proches
+        no_relatives: Aucun proche
+        add_relative: Ajouter un proche
