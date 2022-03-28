@@ -128,7 +128,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       expect(response).to be_successful
       expect(response.body).to match(/Votre RDV/)
       expect(response.body).to match(/Le mardi 20 octobre 2020/)
-      expect(response.body).to match(/Modifier l&#39;horaire du RDV/)
+      expect(response.body).to match(/Déplacer le RDV/)
       expect(response.body).to match(/Annuler le RDV/)
     end
 
@@ -140,7 +140,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
         expect(response).to be_successful
         expect(response.body).to match(/Votre RDV/)
-        expect(response.body).not_to match(/Modifier l&#39;horaire du RDV/)
+        expect(response.body).not_to match(/Déplacer le RDV/)
         expect(response.body).not_to match(/Annuler le RDV/)
       end
     end
@@ -153,7 +153,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
         expect(response).to be_successful
         expect(response.body).to match(/Votre RDV/)
-        expect(response.body).not_to match(/Modifier l&#39;horaire du RDV/)
+        expect(response.body).not_to match(/Déplacer le RDV/)
         expect(response.body).to match(/Annuler le RDV/)
       end
     end
@@ -167,7 +167,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
         expect(response).to be_successful
         expect(response.body).to match(/Votre RDV/)
-        expect(response.body).not_to match(/Modifier l&#39;horaire du RDV/)
+        expect(response.body).not_to match(/Déplacer le RDV/)
         expect(response.body).to match(/Annuler le RDV/)
       end
     end
