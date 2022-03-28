@@ -30,6 +30,38 @@ describe PlageOuverture, type: :model do
     end
   end
 
+  describe "lieu_is_enabled" do
+    subject { plage_ouverture.errors }
+
+    let(:plage_ouverture) { build :plage_ouverture, lieu: lieu }
+
+    before { plage_ouverture.validate }
+
+    context "invalid if lieu is nil" do
+      let(:lieu) { nil }
+
+      it { is_expected.to be_of_kind(:lieu, :blank) }
+    end
+
+    context "invalid if lieu is disabled" do
+      let(:lieu) { build :lieu, availability: :disabled }
+
+      it { is_expected.to be_of_kind(:lieu, :must_be_enabled) }
+    end
+
+    context "invalid if lieu is single_use" do
+      let(:lieu) { build :lieu, availability: :single_use }
+
+      it { is_expected.to be_of_kind(:lieu, :must_be_enabled) }
+    end
+
+    context "valid if lieu is enabled" do
+      let(:lieu) { build :lieu, availability: :enabled }
+
+      it { is_expected.to be_empty }
+    end
+  end
+
   it_behaves_like "recurrence"
 
   describe "#expired?" do

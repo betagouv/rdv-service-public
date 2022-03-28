@@ -24,6 +24,12 @@ ActiveRecord::Schema.define(version: 2022_03_21_181557) do
     "none",
   ], force: :cascade
 
+  create_enum :lieu_availability, [
+    "enabled",
+    "disabled",
+    "single_use",
+  ], force: :cascade
+
   create_enum :location_type, [
     "public_office",
     "home",
@@ -239,17 +245,18 @@ ActiveRecord::Schema.define(version: 2022_03_21_181557) do
   end
 
   create_table "lieux", force: :cascade do |t|
-    t.string "name"
-    t.bigint "organisation_id"
+    t.string "name", null: false
+    t.bigint "organisation_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "address"
+    t.string "address", null: false
     t.float "latitude"
     t.float "longitude"
     t.string "phone_number"
     t.string "phone_number_formatted"
-    t.boolean "enabled", default: true, null: false
-    t.index ["enabled"], name: "index_lieux_on_enabled"
+    t.boolean "old_enabled", default: true, null: false
+    t.enum "availability", null: false, enum_type: "lieu_availability"
+    t.index ["availability"], name: "index_lieux_on_availability"
     t.index ["name"], name: "index_lieux_on_name"
     t.index ["organisation_id"], name: "index_lieux_on_organisation_id"
   end

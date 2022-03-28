@@ -34,10 +34,9 @@ module Admin::RdvWizardFormConcern
     end
   end
 
-  def to_query
-    {
+  def to_query # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    hash = {
       motif_id: rdv.motif&.id,
-      lieu_id: rdv.lieu_id,
       duration_in_min: rdv.duration_in_min,
       starts_at: rdv.starts_at&.to_s,
       user_ids: rdv.rdvs_users&.map(&:user_id),
@@ -45,6 +44,16 @@ module Admin::RdvWizardFormConcern
       context: rdv.context,
       service_id: service_id
     }
+
+    if rdv.lieu.present?
+      if rdv.lieu.persisted?
+        hash[:lieu_id] = rdv.lieu_id
+      else
+        hash[:lieu_attributes] = rdv.nested_lieu_attributes
+      end
+    end
+
+    hash
   end
 
   def step_number

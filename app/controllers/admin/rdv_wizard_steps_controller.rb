@@ -6,11 +6,12 @@ class Admin::RdvWizardStepsController < AgentAuthController
   PERMITTED_PARAMS = [
     :motif_id, :duration_in_min, :starts_at, :lieu_id, :context, :service_id,
     :organisation_id, :ignore_benign_errors,
-    { agent_ids: [], user_ids: [], rdvs_users_attributes: {} }
+    { agent_ids: [], user_ids: [], rdvs_users_attributes: {}, lieu_attributes: Rdv::ACCEPTED_NESTED_LIEU_ATTRIBUTES }
   ].freeze
 
   def new
     @rdv_wizard = rdv_wizard_for(query_params)
+
     @rdv = @rdv_wizard.rdv
     set_services_and_motifs if current_step == "step1"
     authorize(@rdv_wizard.rdv, :new?)
@@ -22,6 +23,14 @@ class Admin::RdvWizardStepsController < AgentAuthController
     @rdv = @rdv_wizard.rdv
     set_services_and_motifs if current_step == "step1"
     authorize(@rdv_wizard.rdv, :create?)
+
+    if @rdv.lieu&.new_record?
+      # We’re creating a new Lieu along the new Rdv. That means this is a single-use Lieu.
+      # Otherwise (if the lieu isn't a new record being created), it's a regular, enabled Lieu.
+      @rdv.lieu.organisation = @rdv.organisation
+      @rdv.lieu.availability = :single_use
+    end
+
     if @rdv_wizard.save
       redirect_to @rdv_wizard.success_path, @rdv_wizard.success_flash
     else
@@ -56,7 +65,14 @@ class Admin::RdvWizardStepsController < AgentAuthController
   end
 
   def rdv_params
-    params.require(:rdv).permit(PERMITTED_PARAMS)
+    rdv_params = params.require(:rdv).permit(PERMITTED_PARAMS)
+    if rdv_params[:lieu_id].present?
+      # Prevent editing an existing enabled lieu, if both lieu_id and lieu_attributes are passed.
+      # This is not supposed to happen in the frontend,
+      #   cf rdv_lieu.js: the irrelevant fields are disabled.
+      rdv_params.delete(:lieu_attributes)
+    end
+    rdv_params
   end
 
   def query_params

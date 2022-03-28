@@ -4,12 +4,27 @@ fr:
       lieu: Lieu
     attributes:
       lieu:
+        availability: Ouverture
         enabled: Ouvert
         latitude: Latitude
         longitude: Longitude
+      lieu/availabilities:
+        enabled: Ouvert
+        disabled: Fermé
+        single_use: Ponctuel
+    errors:
+      models:
+        lieu:
+          attributes:
+            availability:
+              cant_change_from_or_to_single_use: Les lieux ponctuels ne peuvent pas être transformés en lieux permanents, et réciproquement.
+              format: "%{message}"
   simple_form:
     hints:
       lieu:
+        address: L’adresse apparaîtra dans les notifications mails et SMS aux usagers.
         enabled: |
           Si le lieu est ouvert, de nouveaux rendez-vous et plages d’ouvertures peuvent y être posés.
           Fermez un lieu pour ne plus le voir dans les menus.
+        name: Le nom apparaîtra dans les notifications par email et SMS aux usagers.
+        phone_number: Ce numéro sera affiché coté usager pour leurs permettre de vous contacter. Faites en sorte que les personnes qui répondront au téléphone puissent avoir accès à RDV-Solidarités.

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Agent can create a Rdv with wizard" do
+describe "Agent can create a Rdv with wizard", js: true do
   include UsersHelper
 
   let(:territory) { create(:territory, enable_context_field: true) }
@@ -19,13 +19,15 @@ describe "Agent can create a Rdv with wizard" do
     visit new_admin_organisation_rdv_wizard_step_path(organisation_id: organisation.id)
   end
 
-  it "default", js: true do
+  def step1
     expect_page_title("Nouveau RDV pour le 02/10/2019 à 00:00")
     expect(page).to have_selector(".card-title", text: "1. Motif")
+
     select(motif.name, from: "rdv_motif_id")
     click_button("Continuer")
+  end
 
-    # Step 2
+  def step2
     expect(page).to have_selector(".card-title", text: "2. Usager(s)")
     expect(page).to have_selector(".list-group-item", text: /Motif/)
     select_user(user)
@@ -48,40 +50,88 @@ describe "Agent can create a Rdv with wizard" do
     sleep(1) # wait for modal to hide completely
     fill_in :rdv_context, with: "RDV très spécial"
     click_button("Continuer")
+  end
 
-    # Step 3
+  def step3(lieu_availability)
     expect(page).to have_selector(".card-title", text: "3. Agent(s), horaires & lieu")
     expect(page).to have_selector(".list-group-item", text: /Motif/)
     expect(page).to have_selector(".list-group-item", text: /Usager\(s\)/)
     expect(page).to have_selector("input#rdv_duration_in_min[value='#{motif.default_duration_in_min}']")
-    expect(page).to have_select("rdv_lieu_id", with_options: [lieu.full_name])
-    expect(page).not_to have_select("rdv_lieu_id", with_options: [disabled_lieu.full_name])
-    select(lieu.full_name, from: "rdv_lieu_id")
+
+    if lieu_availability == :enabled
+      expect(page).to have_select("rdv_lieu_id", with_options: [lieu.full_name])
+      expect(page).not_to have_select("rdv_lieu_id", with_options: [disabled_lieu.full_name])
+      select(lieu.full_name, from: "rdv_lieu_id")
+
+      click_link("Choisir un lieu ponctuel.")
+      expect(page).to have_selector("select#rdv_lieu_id:disabled")
+      click_link("Choisir un lieu existant.")
+      expect(page).to have_selector("select#rdv_lieu_id:enabled")
+      expect(page).to have_select("rdv_lieu_id", with_options: [lieu.full_name])
+    else
+      click_link("Choisir un lieu ponctuel.")
+      fill_in "Nom", with: "Café de la gare"
+      fill_in "Adresse", with: "3 Place de la Gare, Strasbourg, 67000, 67, Bas-Rhin, Grand Est"
+      page.execute_script("document.querySelector('input#rdv_lieu_attributes_latitude').value = '48.583844'")
+      page.execute_script("document.querySelector('input#rdv_lieu_attributes_longitude').value = 7.735253")
+    end
+
     fill_in "Durée en minutes", with: "35"
     fill_in "Commence à", with: "11/10/2019 14:15"
     select("DIALO Alain", from: "rdv_agent_ids")
     select("MARTIN Robert", from: "rdv_agent_ids")
     click_button("Continuer")
+  end
 
-    # Step 4
+  def step4
     expect(page).to have_selector(".card-title", text: "4. Notifications")
     expect(page).to have_selector(".list-group-item", text: /Motif/)
     expect(page).to have_selector(".list-group-item", text: /Usager\(s\)/)
     expect(page).to have_selector(".list-group-item", text: /Agent\(s\), horaires & lieu/)
-    # TODO
+
     click_button("Créer RDV")
+  end
 
-    expect(user.rdvs.count).to eq(1)
-    rdv = user.rdvs.first
-    expect(rdv.users.count).to eq(3)
-    expect(rdv.motif).to eq(motif)
-    expect(rdv.duration_in_min).to eq(35)
-    expect(rdv.starts_at).to eq(Time.zone.local(2019, 10, 11, 14, 15))
-    expect(rdv.created_by_agent?).to be(true)
-    expect(rdv.context).to eq("RDV très spécial")
+  context "create a RDV with an existing lieu" do
+    it do
+      step1
+      step2
+      step3(:enabled)
+      step4
 
-    expect(page).to have_current_path(admin_organisation_agent_agenda_path(organisation, agent, date: rdv.starts_at.to_date, selected_event_id: rdv.id))
-    expect(page).to have_content("Le rendez-vous a été créé.")
-    sleep(0.5) # wait for ajax request
+      expect(user.rdvs.count).to eq(1)
+      rdv = user.rdvs.first
+      expect(rdv.users.count).to eq(3)
+      expect(rdv.motif).to eq(motif)
+      expect(rdv.duration_in_min).to eq(35)
+      expect(rdv.starts_at).to eq(Time.zone.local(2019, 10, 11, 14, 15))
+      expect(rdv.created_by_agent?).to be(true)
+      expect(rdv.context).to eq("RDV très spécial")
+
+      expect(page).to have_current_path(admin_organisation_agent_agenda_path(organisation, agent, date: rdv.starts_at.to_date, selected_event_id: rdv.id))
+      expect(page).to have_content("Le rendez-vous a été créé.")
+    end
+  end
+
+  context "create a RDV with a single_use lieu" do
+    it do
+      step1
+      step2
+      step3(:single_use)
+      step4
+
+      expect(user.rdvs.count).to eq(1)
+      rdv = user.rdvs.first
+      expect(rdv.users.count).to eq(3)
+      expect(rdv.motif).to eq(motif)
+      expect(rdv.lieu.availability).to eq("single_use")
+      expect(rdv.duration_in_min).to eq(35)
+      expect(rdv.starts_at).to eq(Time.zone.local(2019, 10, 11, 14, 15))
+      expect(rdv.created_by_agent?).to be(true)
+      expect(rdv.context).to eq("RDV très spécial")
+
+      expect(page).to have_current_path(admin_organisation_agent_agenda_path(organisation, agent, date: rdv.starts_at.to_date, selected_event_id: rdv.id))
+      expect(page).to have_content("Le rendez-vous a été créé.")
+    end
   end
 end

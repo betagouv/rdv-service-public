@@ -313,6 +313,50 @@ describe Rdv, type: :model do
     end
   end
 
+  describe "lieu_is_not_disabled_if_needed" do
+    subject { rdv.errors }
+
+    let(:rdv) { build :rdv, motif: motif, lieu: lieu }
+    let(:motif) { build :motif, location_type: location_type }
+
+    before { rdv.validate }
+
+    context "does not require a lieu if location_type is not public_office?" do
+      let(:location_type) { :phone }
+      let(:lieu) { nil }
+
+      it { is_expected.to be_empty }
+    end
+
+    context "requires a lieu if location_type is not public_office" do
+      let(:location_type) { :public_office }
+      let(:lieu) { nil }
+
+      it { is_expected.to be_of_kind(:lieu, :blank) }
+    end
+
+    context "is invalid if lieu is disabled" do
+      let(:location_type) { :public_office }
+      let(:lieu) { build :lieu, availability: :disabled }
+
+      it { is_expected.to be_of_kind(:lieu, :must_not_be_disabled) }
+    end
+
+    context "is valid if lieu is enabled" do
+      let(:location_type) { :public_office }
+      let(:lieu) { build :lieu, availability: :enabled }
+
+      it { is_expected.to be_empty }
+    end
+
+    context "is valid if lieu is single_use" do
+      let(:location_type) { :public_office }
+      let(:lieu) { build :lieu, availability: :single_use }
+
+      it { is_expected.to be_empty }
+    end
+  end
+
   describe "#search_for" do
     it "returns allowed rdvs" do
       organisation = create(:organisation)

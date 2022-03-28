@@ -7,6 +7,8 @@ class Lieu < ApplicationRecord
 
   # Attributes
   auto_strip_attributes :name
+  enum availability: { enabled: "enabled", disabled: "disabled", single_use: "single_use" }
+  attribute :enabled, :boolean
 
   # Relations
   belongs_to :organisation
@@ -18,12 +20,10 @@ class Lieu < ApplicationRecord
   has_many :agents, through: :plage_ouvertures
 
   # Validations
-  validates :name, :address, :latitude, :longitude, presence: true
+  validates :name, :address, :availability, :latitude, :longitude, presence: true
+  validate :cant_change_availibility_single_use
 
   # Scopes
-  scope :enabled, -> { where(enabled: true) }
-  scope :disabled, -> { where.not(enabled: true) }
-
   scope :for_motif, lambda { |motif|
     lieux_ids = PlageOuverture
       .where.not("recurrence IS ? AND first_day < ?", nil, Time.zone.today)
@@ -49,6 +49,10 @@ class Lieu < ApplicationRecord
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }
 
   ## -
+  alias enabled enabled?
+  def enabled=(value)
+    self.availability = value.to_bool ? :enabled : :disabled
+  end
 
   def full_name
     "#{name} (#{address})"
@@ -73,5 +77,14 @@ class Lieu < ApplicationRecord
 
     # Distance in meter
     earth_radius * c
+  end
+
+  private
+
+  def cant_change_availibility_single_use
+    return if new_record?
+    return unless changes[:availability]&.include?("single_use")
+
+    errors.add(:availability, :cant_change_from_or_to_single_use)
   end
 end

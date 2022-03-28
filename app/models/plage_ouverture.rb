@@ -26,6 +26,7 @@ class PlageOuverture < ApplicationRecord
 
   # Validations
   validate :end_after_start
+  validate :lieu_is_enabled
   validates :motifs, :title, presence: true
   validate :warn_overlapping_plage_ouvertures
 
@@ -96,6 +97,10 @@ class PlageOuverture < ApplicationRecord
     return if end_time.blank? || start_time.blank?
 
     errors.add(:end_time, :must_be_after_start_time) if end_time <= start_time
+  end
+
+  def lieu_is_enabled
+    errors.add(:lieu, :must_be_enabled) unless lieu&.enabled?
   end
 
   def warn_overlapping_plage_ouvertures

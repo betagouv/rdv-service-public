@@ -1,0 +1,9 @@
+fr:
+  admin:
+    lieux:
+      lieu_fields:
+        confirm_delete: "Confirmez-vous la suppression de ce lieu ?"
+        referenced_lieu: "Ce lieu ne peut pas être supprimé."
+        referenced_in_plage_ouvertures: "Des plages d’ouvertures sont programmées à ce lieu. Déplacez-les pour pouvoir le supprimer."
+        referenced_in_rdvs_1: "Des RDVs sont associés à ce lieu."
+        referenced_in_rdvs_2: "Supprimez-les avant de pouvoir supprimer ce lieu."

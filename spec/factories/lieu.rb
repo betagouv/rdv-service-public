@@ -11,5 +11,6 @@ FactoryBot.define do
     address { generate(:address) }
     latitude { 38.8951 }
     longitude { -77.0364 }
+    availability { :enabled }
   end
 end
