@@ -149,7 +149,7 @@ module SlotBuilder
       end
 
       def busy_times_from_rdvs(range, plage_ouverture)
-        plage_ouverture.agent.rdvs.not_cancelled.where("starts_at < ?", range.end).where("ends_at > ?", range.begin).map do |rdv|
+        plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end).map do |rdv|
           BusyTime.new(rdv)
         end
       end
