@@ -27,7 +27,7 @@ class Users::RdvMailer < ApplicationMailer
     self.ics_payload = rdv_payload
     mail(
       to: user.email,
-      subject: "RDV #{relative_date old_starts_at} reporté à plus tard"
+      subject: "RDV #{relative_date old_starts_at} déplacé"
     )
   end
 

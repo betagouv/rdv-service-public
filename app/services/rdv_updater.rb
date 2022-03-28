@@ -19,21 +19,31 @@ module RdvUpdater
         rdv.file_attentes.destroy_all if rdv.previous_changes["status"]&.last.in? %w[excused revoked noshow]
         # Also destroy the file_attentes
 
-        rdv_users_tokens_by_user_id = notifier_for_rdv(rdv)&.perform_with(rdv, author)
+        rdv_users_tokens_by_user_id = notifier_for_changes(rdv)&.perform_with(rdv, author)
       end
 
-      OpenStruct.new(
-        { success?: success }
-        .merge(success ? { rdv_users_tokens_by_user_id: rdv_users_tokens_by_user_id } : {})
+      Result.new(
+        success: success,
+        rdv_users_tokens_by_user_id: success ? rdv_users_tokens_by_user_id : {}
       )
     end
 
-    def notifier_for_rdv(rdv)
+    def notifier_for_changes(rdv)
       if rdv.previous_changes["status"]&.last.in? %w[excused revoked noshow]
         Notifiers::RdvCancelled
       elsif rdv.previous_changes["starts_at"].present?
         Notifiers::RdvDateUpdated
       end
+    end
+  end
+
+  class Result
+    attr_reader :success, :rdv_users_tokens_by_user_id
+    alias success? success
+
+    def initialize(success:, rdv_users_tokens_by_user_id: {})
+      @success = success
+      @rdv_users_tokens_by_user_id = rdv_users_tokens_by_user_id
     end
   end
 end

@@ -41,7 +41,7 @@ ul.list-group.list-group-flush
 div.py-2.d-flex.justify-content-between.align-items-center
   - if policy([:user, rdv]).edit?
     .text-left.mt-2
-       = link_to "Modifier l'horaire du RDV", creneaux_users_rdv_path(rdv), class: "btn btn-outline-primary"
+       = link_to "Déplacer le RDV", creneaux_users_rdv_path(rdv), class: "btn btn-outline-primary"
   - if policy([:user, rdv]).cancel?
     .text-right.mt-2
       = link_to "Annuler le RDV", "#", data: { toggle: "modal", target: "#js-cancel-rdv-modal-#{rdv.id}" }, class: "btn btn-outline-danger"

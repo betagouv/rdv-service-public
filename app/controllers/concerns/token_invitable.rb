@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# This concern allows to sign in users when a valid invitation token is passed through url params.
+# The user will be identified through the token. If the token is linked to a RdvsUser, it will also be
+# linked to a rdv.
 module TokenInvitable
   extend ActiveSupport::Concern
 
@@ -54,9 +57,11 @@ module TokenInvitable
     # rubocop:disable Rails/DynamicFindBy
     # find_by_invitation_token is a method added by the devise_invitable gem
     @user_by_token ||= User.find_by_invitation_token(session[:invitation_token], true)
+    # rubocop:enable Rails/DynamicFindBy
   end
 
   def rdv_user_by_token
+    # rubocop:disable Rails/DynamicFindBy
     @rdv_user_by_token ||= RdvsUser.find_by_invitation_token(session[:invitation_token], true)
     # rubocop:enable Rails/DynamicFindBy
   end
