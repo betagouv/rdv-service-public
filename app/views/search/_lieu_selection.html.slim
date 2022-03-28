@@ -1,10 +1,7 @@
 section.bg-light.p-4
   .container
-    h3.font-weight-bold Sélectionnez un lieu de RDV:
-    - if context.lieux.size > 1
-        p.font-weight-bold= "#{@lieux.size.to_s} lieux sont disponibles"
-    - else
-        p.font-weight-bold= "1 lieu est disponible"
+    h3.font-weight-bold = t(".select_lieu")
+    p = t(".lieu_available", count: context.lieux.size)
     - context.lieux.each do |lieu|
       - next_availability = context.next_availability_by_lieux[lieu.id]
       .card.mb-3 class=("card-hoverable" if next_availability)
@@ -19,10 +16,10 @@ section.bg-light.p-4
                 = link_to prendre_rdv_path(context.query.merge(lieu_id: lieu.id)), class: "d-block stretched-link" do
                   .row
                     .col
-                      | Prochaine disponibilité le
+                      = t(".next_availability")
                       br
                       strong= l(next_availability.starts_at, format: :human)
                     .col-auto.align-self-center
                       i.fa.fa-chevron-right
               - else
-                em Aucune disponibilité
+                em = t(".no_availability")
