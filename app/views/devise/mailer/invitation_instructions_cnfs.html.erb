@@ -1,0 +1,44 @@
+<p><%= t("devise.mailer.invitation_instructions_cnfs.hello") %></p>
+
+<p>
+  <%= t("devise.mailer.invitation_instructions_cnfs.create_account",
+         link: link_to("créer votre compte", accept_invitation_url(@resource, invitation_token: @token, user: @user_params))).html_safe %>
+</p>
+
+
+<p><%= t("devise.mailer.invitation_instructions_cnfs.intro1") %></p>
+<p><%= t("devise.mailer.invitation_instructions_cnfs.intro2") %></p>
+<br/>
+<p><%= t("devise.mailer.invitation_instructions_cnfs.intro3") %></p>
+<p><%= t("devise.mailer.invitation_instructions_cnfs.intro4") %></p>
+
+<br>
+<h1><%= t("devise.mailer.invitation_instructions_cnfs.title1") %></h1>
+
+<p><%= t("devise.mailer.invitation_instructions_cnfs.recap") %></p>
+<ul>
+  <li><%= t("devise.mailer.invitation_instructions_cnfs.recap_item1") %></li>
+  <li><%= t("devise.mailer.invitation_instructions_cnfs.recap_item2") %></li>
+  <li><%= t("devise.mailer.invitation_instructions_cnfs.recap_item3") %></li>
+</ul>
+
+<br>
+
+<h1><%= t("devise.mailer.invitation_instructions_cnfs.title2") %></h1>
+
+<p><%= t("devise.mailer.invitation_instructions_cnfs.video_text", link: link_to("vidéo de présentation de l’outil", "https://peertube.ethibox.fr/w/sLqvuTvx4vgsjmKXpz9awH"), target: "_blank").html_safe %></p>
+
+<p><%= t("devise.mailer.invitation_instructions_cnfs.first_steps_info") %></p>
+
+<br>
+<h1><%= t("devise.mailer.invitation_instructions_cnfs.title3") %></h1>
+
+<p>
+  <%= t("devise.mailer.invitation_instructions_cnfs.help_info",
+        mattermost: link_to("Aide RDV Solidarités", "https://discussion.conseiller-numerique.gouv.fr/cnum/channels/aide-rdv-solidarites"),
+        support_email: link_to("contact@rdv-solidarités.fr", "mailto:contact@rdv-solidarités.fr")
+       ).html_safe %>
+</p>
+
+<p><%= t("devise.mailer.invitation_instructions_cnfs.sign_off") %></p>
+<p><%= t("devise.mailer.invitation_instructions_cnfs.signature") %></p>
