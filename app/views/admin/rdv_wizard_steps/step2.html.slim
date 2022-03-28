@@ -10,7 +10,8 @@ ruby:
     = render "model_errors", model: @rdv_wizard
     = render "hidden_fields", f: f, step: 2, \
       fields: %i[motif_id starts_at lieu_id service_id], \
-      agent_ids: @rdv.agent_ids
+      agent_ids: @rdv.agent_ids,
+      lieu_attributes: @rdv.nested_lieu_attributes
 
     - @rdv.users.each do |user|
       / https://stackoverflow.com/questions/2327621/creating-a-has-many-association-in-a-hidden-field

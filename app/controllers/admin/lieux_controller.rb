@@ -4,7 +4,7 @@ class Admin::LieuxController < AgentAuthController
   respond_to :html, :json
 
   def index
-    @lieux = policy_scope(Lieu).ordered_by_name.page(params[:page])
+    @lieux = policy_scope(Lieu).not_single_use.ordered_by_name.page(params[:page])
   end
 
   def new
@@ -15,6 +15,8 @@ class Admin::LieuxController < AgentAuthController
   def create
     @lieu = Lieu.new(organisation_id: current_organisation.id)
     @lieu.assign_attributes(lieu_params)
+    @lieu.availability = :enabled # Always enable new Lieux
+
     authorize(@lieu)
     if @lieu.save
       flash.notice = "Le lieu a été créé."
@@ -33,7 +35,7 @@ class Admin::LieuxController < AgentAuthController
     @lieu = Lieu.find(params[:id])
     authorize(@lieu)
     if @lieu.update(lieu_params)
-      flash[:notice] = "Lieu a été modifié."
+      flash[:notice] = "Le lieu a été modifié."
       redirect_to admin_organisation_lieux_path(@lieu.organisation)
     else
       render :edit

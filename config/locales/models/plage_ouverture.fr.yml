@@ -16,3 +16,5 @@ fr:
           attributes:
             end_time:
               must_be_after_start_time: "doit être après l’heure de début."
+            lieu:
+              must_be_enabled: "doit être ouvert."

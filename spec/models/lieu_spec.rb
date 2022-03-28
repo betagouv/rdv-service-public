@@ -5,6 +5,67 @@ describe Lieu, type: :model do
   let!(:organisation) { create(:organisation, territory: territory) }
   let!(:user) { create(:user) }
 
+  describe "validation" do
+    subject { lieu.errors }
+
+    describe "name presence" do
+      let(:lieu) { build :lieu, name: name, availability: availability }
+
+      before { lieu.validate }
+
+      context "named, enabled lieu is valid" do
+        let(:name) { "some_name" }
+        let(:availability) { :enabled }
+
+        it { is_expected.to be_empty }
+      end
+
+      context "unnamed, enabled lieu is invalid" do
+        let(:name) { "" }
+        let(:availability) { :enabled }
+
+        it { is_expected.to be_of_kind(:name, :blank) }
+      end
+
+      context "unnamed, single_use lieu is valid" do
+        let(:name) { "" }
+        let(:availability) { :single_use }
+
+        it { is_expected.to be_empty }
+      end
+    end
+
+    describe "availability changes" do
+      let(:lieu) { create :lieu, availability: initial_value }
+
+      before do
+        lieu.availability = new_value
+        lieu.validate
+      end
+
+      context "cannot change from single_use" do
+        let(:initial_value) { :single_use }
+        let(:new_value) { :enabled }
+
+        it { is_expected.to be_of_kind(:availability, :cant_change_from_or_to_single_use) }
+      end
+
+      context "cannot change to single_use" do
+        let(:initial_value) { :enabled }
+        let(:new_value) { :single_use }
+
+        it { is_expected.to be_of_kind(:availability, :cant_change_from_or_to_single_use) }
+      end
+
+      context "can change between enabled and disabled" do
+        let(:initial_value) { :enabled }
+        let(:new_value) { :disabled }
+
+        it { is_expected.to be_empty }
+      end
+    end
+  end
+
   context "with motif" do
     let!(:motif) { create(:motif, name: "Vaccination", reservable_online: reservable_online, organisation: organisation) }
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, motifs: [motif], lieu: lieu, organisation: organisation) }
@@ -102,20 +163,17 @@ describe Lieu, type: :model do
     end
   end
 
-  describe "enabled" do
-    it "returns only enabled lieu" do
-      enabled_lieu = create(:lieu, enabled: true)
-      create(:lieu, enabled: false)
-      expect(described_class.count).to eq(2)
-      expect(described_class.enabled).to eq([enabled_lieu])
+  describe "#enabled=" do
+    it "enable a disabled lieu" do
+      lieu = build :lieu, availability: :disabled
+      lieu.enabled = true
+      expect(lieu.availability).to eq "enabled"
     end
-  end
 
-  describe "disabled" do
-    it "returns only disabled lieu" do
-      create(:lieu, enabled: true)
-      disabled_lieu = create(:lieu, enabled: false)
-      expect(described_class.disabled).to eq([disabled_lieu])
+    it "disable an enabled lieu" do
+      lieu = build :lieu, availability: :enabled
+      lieu.enabled = false
+      expect(lieu.availability).to eq "disabled"
     end
   end
 end

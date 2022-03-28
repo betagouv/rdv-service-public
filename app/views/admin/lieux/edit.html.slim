@@ -10,9 +10,10 @@
     li.breadcrumb-item.active= @lieu.name
 
 .row.justify-content-center
-  .col-md-6
+  .col-md-8
     .card
       .card-body
-        = render "form", lieu: @lieu
+        = simple_form_for [:admin, @lieu.organisation, @lieu] do |f|
+          = render "lieu_fields", f: f
 
 = render "admin/versions/resource_versions_row", resource: @lieu

@@ -6,7 +6,9 @@
     = render "model_errors", model: @rdv_wizard
     = render "hidden_fields", f: f, step: 1, \
       fields: %i[starts_at lieu_id context service_id], \
-      user_ids: @rdv.user_ids, agent_ids: @rdv.agent_ids
+      user_ids: @rdv.user_ids, agent_ids: @rdv.agent_ids,
+      lieu_attributes: @rdv.nested_lieu_attributes
+
     = f.input :service_id, \
       collection: @services.ordered_by_name, \
       input_html: { \

@@ -30,6 +30,11 @@ class Rdv < ApplicationRecord
   has_many :events, class_name: "RdvEvent", dependent: :destroy
 
   accepts_nested_attributes_for :rdvs_users, allow_destroy: true
+  accepts_nested_attributes_for :lieu
+  ACCEPTED_NESTED_LIEU_ATTRIBUTES = %w[address latitude longitude].freeze
+  def nested_lieu_attributes
+    lieu&.attributes&.slice(*ACCEPTED_NESTED_LIEU_ATTRIBUTES)
+  end
 
   # Through relations
   has_many :agents, through: :agents_rdvs, dependent: :destroy
@@ -42,7 +47,7 @@ class Rdv < ApplicationRecord
   # Validations
   validates :starts_at, :ends_at, :agents, presence: true
   validates :rdvs_users, presence: true, unless: :collectif?
-  validates :lieu, presence: true, if: :public_office?
+  validate :lieu_is_not_disabled_if_needed
   validate :starts_at_is_plausible
   validate :duration_is_plausible
 
@@ -224,6 +229,13 @@ class Rdv < ApplicationRecord
     return if starts_at.nil? || ends_at.nil?
 
     errors.add(:duration_in_min, :must_be_positive) if starts_at >= ends_at
+  end
+
+  def lieu_is_not_disabled_if_needed
+    return unless motif.public_office?
+
+    errors.add(:lieu, :blank) if lieu.nil?
+    errors.add(:lieu, :must_not_be_disabled) if lieu&.disabled?
   end
 
   def virtual_attributes_for_paper_trail
