@@ -174,7 +174,7 @@ RSpec.describe SearchController, type: :controller do
           lieu_id: plage_ouverture.lieu_id,
           agent: plage_ouverture.agent
         )
-        expect(NextAvailabilityService).to receive(:find).and_return(slot)
+        allow(NextAvailabilityService).to receive(:find).and_return(slot)
         get :search_rdv, params: {
           address: address, departement: departement_number, city_code: city_code
         }
