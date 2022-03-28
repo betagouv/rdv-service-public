@@ -10,19 +10,20 @@ class CreateAgentTerritorialAccessRight < ActiveRecord::Migration[6.1]
       t.timestamps
     end
 
-    data_to_insert = []
-    Agent.all.each do |agent|
-      agent.organisations.flat_map(&:territory).uniq.each do |territory|
-        data_to_insert << {
-          agent_id: agent.id,
-          territory_id: territory.id,
-          allow_to_manage_teams: AgentTerritorialRole.exists?(territory: territory, agent: agent),
-          created_at: Time.zone.now,
-          updated_at: Time.zone.now
-        }
+    up_only do
+      data_to_insert = []
+      Agent.includes([:organisations, :territories]).all.find_each do |agent|
+        agent.organisations.flat_map(&:territory).uniq.each do |territory|
+          data_to_insert << {
+            agent_id: agent.id,
+            territory_id: territory.id,
+            allow_to_manage_teams: AgentTerritorialRole.exists?(territory: territory, agent: agent),
+            created_at: Time.zone.now,
+            updated_at: Time.zone.now
+          }
+        end
       end
+      AgentTerritorialAccessRight.insert_all!(data_to_insert)
     end
-
-    AgentTerritorialAccessRight.insert_all(data_to_insert)
   end
 end
