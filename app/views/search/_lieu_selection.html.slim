@@ -1,7 +1,10 @@
 section.bg-light.p-4
   .container
     h3.font-weight-bold Sélectionnez un lieu de RDV:
-    p.font-weight-bold= "#{context.lieux.size.to_s} lieux sont disponibles"
+    - if context.lieux.size > 1
+        p.font-weight-bold= "#{@lieux.size.to_s} lieux sont disponibles"
+    - else
+        p.font-weight-bold= "1 lieu est disponible"
     - context.lieux.each do |lieu|
       - next_availability = context.next_availability_by_lieux[lieu.id]
       .card.mb-3 class=("card-hoverable" if next_availability)
