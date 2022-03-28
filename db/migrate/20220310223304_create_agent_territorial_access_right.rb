@@ -12,7 +12,7 @@ class CreateAgentTerritorialAccessRight < ActiveRecord::Migration[6.1]
 
     up_only do
       data_to_insert = []
-      Agent.includes([:organisations, :territories]).all.find_each do |agent|
+      Agent.includes(%i[organisations territories]).all.find_each do |agent|
         agent.organisations.flat_map(&:territory).uniq.each do |territory|
           data_to_insert << {
             agent_id: agent.id,
