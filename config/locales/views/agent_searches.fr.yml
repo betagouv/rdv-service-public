@@ -3,4 +3,4 @@ fr:
     creneaux:
       agent_searches:
         index:
-          no_slot_available: Aucun créneaux n'est disoponible pour le motif %{motif_name} et les critères sélectionnés
+          no_slot_available: Aucun créneau n’est disponible pour le motif « %{motif_name} » selon les critères sélectionnés.
