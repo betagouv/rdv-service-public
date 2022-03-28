@@ -14,7 +14,7 @@ section.bg-light.p-4
           - else
             h4.font-weight-bold La prise de rendez-vous n'est pas disponible pour ce département.
     - else
-      h4.font-weight-bold Sélectionnez le motif de votre RDV:
+      h3.font-weight-bold Sélectionnez le motif de votre RDV :
       - context.unique_motifs_by_name_and_location_type.each do |motif|
         .card.mb-3
           = link_to prendre_rdv_path(context.query.merge(motif_name_with_location_type: motif.name_with_location_type))
@@ -22,5 +22,5 @@ section.bg-light.p-4
               .row
                 .col-md
                   h4.card-title.mb-3.mt-0.text-success.font-weight-bold= motif.name
-                  h5.card-subtitle.text-black-50.mb-2= motif.human_attribute_value(:location_type)
-                  h6.card-subtitle.text-black-50.mb-2= motif.service.name
+                  h5.card-subtitle.mb-2= motif.human_attribute_value(:location_type)
+                  h6.card-subtitle.mb-2= motif.service.name
