@@ -194,9 +194,6 @@ class CalendarRdvSolidarites {
       }
       if (extendedProps.lieu) {
         title += `<br><strong>Lieu:</strong> ${extendedProps.lieu}`;
-        if (extendedProps.overlappingPlagesOuvertures) {
-          title += " ⚠️";
-        }
       }
       if (extendedProps.readableStatus) {
         title += `<br><strong>Statut:</strong> ${extendedProps.readableStatus}`;
