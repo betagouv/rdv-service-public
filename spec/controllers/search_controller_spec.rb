@@ -168,10 +168,17 @@ RSpec.describe SearchController, type: :controller do
       end
 
       it "shows the next availability" do
+        slot = Creneau.new(
+          starts_at: Time.zone.parse("20190805 8:00"),
+          motif: motif,
+          lieu_id: plage_ouverture.lieu_id,
+          agent: plage_ouverture.agent
+        )
+        expect(NextAvailabilityService).to receive(:find).and_return(slot)
         get :search_rdv, params: {
           address: address, departement: departement_number, city_code: city_code
         }
-        expect(subject).to match(/Aucune disponibilité/)
+        expect(subject).to match(/Prochaine disponibilité le(.)*lundi 05 août 2019 à 08h00/)
       end
     end
 

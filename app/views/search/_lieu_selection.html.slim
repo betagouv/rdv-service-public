@@ -13,7 +13,7 @@ section.bg-light.p-4
               h6.card-subtitle= context.selected_motif.service.name
             .col-md.align-self-center.pt-3.pt-md-0.position-static
               - if next_availability
-                = link_to prendre_rdv_path(context.query.merge(lieu_id: lieu.id, date: next_availability&.starts_at)), class: "d-block stretched-link" do
+                = link_to prendre_rdv_path(context.query.merge(lieu_id: lieu.id, date: next_availability.starts_at)), class: "d-block stretched-link" do
                   .row
                     .col
                       = t(".next_availability")
