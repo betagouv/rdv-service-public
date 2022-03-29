@@ -57,4 +57,9 @@ describe "welcome", js: true do
     visit users_informations_path
     expect(page).to be_axe_clean
   end
+
+  it "users_pending_registration_path is accessible" do
+    visit users_pending_registration_path
+    expect(page).to be_axe_clean
+  end
 end
