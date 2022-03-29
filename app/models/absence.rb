@@ -60,7 +60,7 @@ class Absence < ApplicationRecord
     errors.add(:ends_time, "doit être après le début.") if starts_at >= ends_at
   end
 
-  def no_recurrence_for_absnece_for_several_days
+  def no_recurrence_for_absence_for_several_days
     return if recurrence.blank? || end_day.blank? || first_day == end_day
 
     errors.add(:recurrence, "pas possible avec une absence de plusieurs jours")
