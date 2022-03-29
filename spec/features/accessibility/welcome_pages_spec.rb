@@ -58,4 +58,8 @@ describe "welcome pages", js: true do
                       })
     expect_page_to_be_axe_clean(path)
   end
+  
+  it "new_organisation is accessible" do
+    expect_page_to_be_axe_clean(new_organisation_path)
+  end
 end
