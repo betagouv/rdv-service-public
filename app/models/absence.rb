@@ -23,6 +23,7 @@ class Absence < ApplicationRecord
   # Validation
   validates :first_day, :title, presence: true
   validate :ends_at_should_be_after_starts_at
+  validate :no_recurrence_for_absence_for_several_days
 
   # Hooks
   before_validation :set_end_day
@@ -57,5 +58,11 @@ class Absence < ApplicationRecord
     return if starts_at.blank? || ends_at.blank?
 
     errors.add(:ends_time, "doit être après le début.") if starts_at >= ends_at
+  end
+
+  def no_recurrence_for_absence_for_several_days
+    return if recurrence.blank? || end_day.blank? || first_day == end_day
+
+    errors.add(:recurrence, "pas possible avec une absence de plusieurs jours")
   end
 end

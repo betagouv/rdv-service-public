@@ -13,6 +13,16 @@ describe Absence, type: :model do
     end
   end
 
+  describe "no reccurence for absence for several days" do
+    it "invalid with recurrence and absence on more than one day" do
+      expect(build(:absence, :weekly, first_day: Date.new(2019, 7, 20), end_day: Date.new(2019, 7, 23))).to be_invalid
+    end
+
+    it "valid without recurrence and absence on more than one day" do
+      expect(build(:absence, first_day: Date.new(2019, 7, 20), end_day: Date.new(2019, 7, 23))).to be_valid
+    end
+  end
+
   describe "#occurrences_for" do
     subject { absence.occurrences_for(date_range) }
 
