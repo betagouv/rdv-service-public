@@ -35,9 +35,11 @@ fr:
         submit_button: "Enregistrer"
       reinvite: "Renvoyer l’invitation"
       invitation:
+        open_app_mail: "Ouvrir l'app Mail"
         title: "Inscription"
         invitation_token: "Code d’invitation"
         submit_button: "Créer son compte"
+        click_on_link_sent: "Veuillez cliquer sur le lien dans l'email qui vient de vous être envoyé"
     mailer:
       invitation_instructions_for_agents:
         subject: "Vous avez été invité sur RDV-Solidarités."
