@@ -180,12 +180,17 @@ class User < ApplicationRecord
     nil
   end
 
-  def only_invited!
+  def only_invited!(rdv: nil)
     @only_invited = true
+    @invitation_rdv = rdv
   end
 
   def only_invited?
     @only_invited == true
+  end
+
+  def invited_for_rdv?(rdv)
+    rdv.id == @invitation_rdv&.id
   end
 
   def through_sign_in_form?

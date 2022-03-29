@@ -106,6 +106,7 @@ describe "User can search for rdvs" do
       # Step 7
       expect(page).to have_content("Vos rendez-vous")
       expect(page).to have_content(lieu.address)
+      expect(page).to have_content(motif.name)
       expect(page).to have_content("11h00")
     end
   end

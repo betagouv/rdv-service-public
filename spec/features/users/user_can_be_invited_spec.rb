@@ -40,6 +40,8 @@ describe "User can be invited" do
         departement: departement_number, city_code: city_code, invitation_token: invitation_token,
         address: "16 rue de la résistance", motif_search_terms: "RSA orientation"
       )
+      allow_any_instance_of(ActionDispatch::Request).to receive(:cookie_jar).and_return(page.cookies)
+      allow_any_instance_of(ActionDispatch::Request).to receive(:cookies).and_return(page.cookies)
     end
 
     it "default", js: true do
@@ -69,6 +71,32 @@ describe "User can be invited" do
       expect(page).to have_content("johndoe@gmail.com")
       expect(page).to have_content("0682605955")
       click_link("Confirmer mon RDV")
+
+      # RDV page
+      expect(page).to have_content("Votre RDV")
+      expect(page).to have_content(lieu.address)
+      expect(page).to have_content("11h00")
+
+      # Clearing Cookies
+      page.cookies.clear
+
+      # Mail with
+      open_email("johndoe@gmail.com")
+      expect(current_email).to have_content(lieu.address)
+      expect(current_email).to have_content(motif.name)
+      expect(current_email).to have_content("11h00")
+      current_email.click_link("Annuler ou modifier le rendez-vous")
+
+      # Identity verification
+      expect(page).to have_content("Entrez les 3 premières lettres de votre nom de famille")
+      fill_in(:letter0, with: "A")
+      fill_in(:letter1, with: "B")
+      fill_in(:letter2, with: "C")
+
+      expect(page).to have_content("Les 3 lettres ne correspondent pas au nom de famille.")
+      fill_in(:letter0, with: "D")
+      fill_in(:letter1, with: "O")
+      fill_in(:letter2, with: "E")
 
       # RDV page
       expect(page).to have_content("Votre RDV")

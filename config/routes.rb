@@ -213,7 +213,34 @@ Rails.application.routes.draw do
     get v => "static_pages##{k}"
   end
 
-  get "r", to: redirect("users/rdvs", status: 301), as: "rdvs_shorten"
+  ## Shorten urls for SMS
+
+  get "r", to: redirect("users/rdvs", status: 301), as: "rdvs_short"
+
+  get "r/:id", to: (redirect do |path_params, req|
+    query_params = format_redirect_params(req.params)
+    "users/rdvs/#{path_params[:id]}#{query_params}"
+  end), as: "rdv_short"
+
+  get "prdv", to: (redirect do |_path_params, req|
+    query_params = format_redirect_params(req.params)
+    "prendre_rdv#{query_params}"
+  end), as: "prendre_rdv_short"
+
+  get "r/:id/cr", to: (redirect do |path_params, req|
+    query_params = format_redirect_params(req.params)
+    "users/rdvs/#{path_params[:id]}/creneaux#{query_params}"
+  end), as: "creneaux_users_rdv_short"
+
+  def format_redirect_params(params)
+    # we rename the short parameter tkn
+    params[:invitation_token] ||= params.delete(:tkn) if params[:tkn]
+    params.delete(:id) # id is passed through path_params
+    params.values.any? ? "?#{params.to_query}" : ''
+  end
+
+  ##
+
   get "accueil_mds" => "welcome#welcome_agent"
   post "/" => "welcome#search"
   get "departement/:departement", to: "welcome#welcome_departement", as: "welcome_departement"

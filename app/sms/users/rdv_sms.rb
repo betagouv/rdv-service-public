@@ -3,21 +3,22 @@
 class Users::RdvSms < Users::BaseSms
   include Rails.application.routes.url_helpers
 
-  def rdv_created(rdv, user)
-    @content = "RDV #{rdv.motif&.service&.short_name} #{starts_at(rdv)}.\n #{rdv_footer(rdv, user)}"
+  def rdv_created(rdv, user, token)
+    @content = "RDV #{rdv.motif&.service&.short_name} #{starts_at(rdv)}.\n #{rdv_footer(rdv, user, token)}"
   end
 
-  def rdv_date_updated(rdv, user)
-    @content = "RDV modifié: #{rdv.motif.service.short_name} #{starts_at(rdv)}\n#{rdv_footer(rdv, user)}"
+  def rdv_date_updated(rdv, user, token)
+    @content = "RDV modifié: #{rdv.motif.service.short_name} #{starts_at(rdv)}\n#{rdv_footer(rdv, user, token)}"
   end
 
-  def rdv_upcoming_reminder(rdv, user)
-    @content = "Rappel RDV #{rdv.motif.service.short_name} le #{starts_at(rdv)}.\n#{rdv_footer(rdv, user)}"
+  def rdv_upcoming_reminder(rdv, user, token)
+    @content = "Rappel RDV #{rdv.motif.service.short_name} le #{starts_at(rdv)}.\n#{rdv_footer(rdv, user, token)}"
   end
 
-  def rdv_cancelled(rdv, _user)
+  def rdv_cancelled(rdv, _user, token)
     base_message = "RDV #{rdv.motif.service.short_name} #{I18n.l(rdv.starts_at, format: :short)} a été annulé"
-    url = "https://rdv-solidarites.fr"
+    url = prendre_rdv_short_url(host: ENV["HOST"], tkn: rdv.show_token_in_sms? ? token : nil)
+
     footer = if rdv.phone_number.present?
                "Appelez le #{rdv.phone_number} ou allez sur #{url} pour reprendre RDV."
              else
@@ -32,7 +33,7 @@ class Users::RdvSms < Users::BaseSms
     I18n.l(rdv.starts_at, format: rdv.home? ? :short_approx : :short)
   end
 
-  def rdv_footer(rdv, user) # rubocop:disable Metrics/PerceivedComplexity
+  def rdv_footer(rdv, user, token) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     message = if rdv.phone?
                 "RDV Téléphonique\n"
               elsif rdv.home?
@@ -47,8 +48,9 @@ class Users::RdvSms < Users::BaseSms
 
     agents_short_names = rdv.agents.map(&:short_name).sort.to_sentence
     message += " avec #{agents_short_names} " if rdv.follow_up?
+    url = rdv_short_url(rdv, host: ENV["HOST"], tkn: rdv.show_token_in_sms? ? token : nil)
+    message += "Infos et annulation: #{url}"
 
-    message += "Infos et annulation: #{rdvs_shorten_url(host: ENV['HOST'])}"
     message += " / #{rdv.phone_number}" if rdv.phone_number.present?
     message
   end

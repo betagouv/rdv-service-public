@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# This concern allows to sign in users when a valid invitation token is passed through url params.
+# The user will be identified through the token. If the token is linked to a RdvsUser, it will also be
+# linked to a rdv.
 module TokenInvitable
   extend ActiveSupport::Concern
 
@@ -18,18 +21,22 @@ module TokenInvitable
     return delete_token_from_session_and_redirect(t("devise.invitations.current_user_mismatch")) \
       if current_user_mismatch?
 
-    return if invited_user.blank?
+    return if invited_user.blank? || current_user.present?
 
-    invited_user.only_invited!
+    invited_user.only_invited!(rdv: rdv_user_by_token&.rdv)
     sign_in(invited_user, store: false)
   end
 
   def invitation_token
-    params[:invitation_token] || session[:invitation_token]
+    invitation_token_param || session[:invitation_token]
+  end
+
+  def invitation_token_param
+    params[:invitation_token]
   end
 
   def store_token_in_session
-    session[:invitation_token] = params[:invitation_token] if params[:invitation_token].present?
+    session[:invitation_token] = invitation_token_param if invitation_token_param.present?
   end
 
   def current_user_mismatch?
@@ -43,9 +50,15 @@ module TokenInvitable
   end
 
   def invited_user
-    # rubocop:disable Rails/DynamicFindBy
+    user_by_token || rdv_user_by_token&.user
+  end
+
+  def user_by_token
     # find_by_invitation_token is a method added by the devise_invitable gem
-    @invited_user ||= User.find_by_invitation_token(session[:invitation_token], true)
-    # rubocop:enable Rails/DynamicFindBy
+    @user_by_token ||= User.find_by_invitation_token(session[:invitation_token], true) # rubocop:disable Rails/DynamicFindBy
+  end
+
+  def rdv_user_by_token
+    @rdv_user_by_token ||= RdvsUser.find_by_invitation_token(session[:invitation_token], true) # rubocop:disable Rails/DynamicFindBy
   end
 end

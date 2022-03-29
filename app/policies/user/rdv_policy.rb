@@ -12,13 +12,20 @@ class User::RdvPolicy < ApplicationPolicy
   end
 
   alias new? rdv_belongs_to_user_or_relatives?
-  alias show? rdv_belongs_to_user_or_relatives?
   alias create? rdv_belongs_to_user_or_relatives?
 
-  def edit?
-    record.editable? && rdv_belongs_to_user_or_relatives?
+  def show?
+    rdv_belongs_to_user_or_relatives? && (!current_user.only_invited? || current_user.invited_for_rdv?(record))
   end
-  alias cancel? edit?
+
+  def cancel?
+    show? && record.cancellable?
+  end
+
+  def edit?
+    show? && record.editable_by_user?
+  end
+
   alias creneaux? edit?
   alias update? edit?
 

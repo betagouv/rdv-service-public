@@ -12,21 +12,38 @@ module RdvUpdater
         rdv_params[:cancelled_at] = rdv_params[:status].in?(%w[excused revoked noshow]) ? Time.zone.now : nil
       end
 
-      result = rdv.update(rdv_params)
+      success = rdv.update(rdv_params)
 
       # Send relevant notifications (cancellation and date update)
-      if result
-        if rdv.previous_changes["status"]&.last.in? %w[excused revoked noshow]
-          # Also destroy the file_attentes
-          rdv.file_attentes.destroy_all
-          Notifiers::RdvCancelled.perform_with(rdv, author)
-        end
+      if success
+        rdv.file_attentes.destroy_all if rdv.previous_changes["status"]&.last.in? %w[excused revoked noshow]
+        # Also destroy the file_attentes
 
-        if rdv.previous_changes["starts_at"].present?
-          Notifiers::RdvDateUpdated.perform_with(rdv, author)
-        end
+        rdv_users_tokens_by_user_id = notifier_for_changes(rdv)&.perform_with(rdv, author)
       end
-      result
+
+      Result.new(
+        success: success,
+        rdv_users_tokens_by_user_id: success ? rdv_users_tokens_by_user_id : {}
+      )
+    end
+
+    def notifier_for_changes(rdv)
+      if rdv.previous_changes["status"]&.last.in? %w[excused revoked noshow]
+        Notifiers::RdvCancelled
+      elsif rdv.previous_changes["starts_at"].present?
+        Notifiers::RdvDateUpdated
+      end
+    end
+  end
+
+  class Result
+    attr_reader :success, :rdv_users_tokens_by_user_id
+    alias success? success
+
+    def initialize(success:, rdv_users_tokens_by_user_id: {})
+      @success = success
+      @rdv_users_tokens_by_user_id = rdv_users_tokens_by_user_id
     end
   end
 end

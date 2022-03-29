@@ -38,6 +38,7 @@ class Rdv < ApplicationRecord
 
   # Delegates
   delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :follow_up?, :service, to: :motif
+  delegate :show_token_in_sms?, to: :organisation
 
   # Validations
   validates :rdvs_users, :starts_at, :ends_at, :agents, presence: true
@@ -137,8 +138,12 @@ class Rdv < ApplicationRecord
     status.in? CANCELLED_STATUSES
   end
 
-  def editable?
+  def cancellable?
     !cancelled? && starts_at > 4.hours.from_now
+  end
+
+  def editable_by_user?
+    cancellable? && motif.reservable_online && !created_by_agent?
   end
 
   def available_to_file_attente?

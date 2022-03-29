@@ -17,9 +17,13 @@ class Notifiers::RdvBase < ::BaseService
   def perform
     return if @rdv.starts_at < Time.zone.now
 
+    generate_invitation_tokens
+
     notify_users_by_mail
     notify_users_by_sms
     notify_agents
+
+    @rdv_users_tokens_by_user_id
   end
 
   private
@@ -69,5 +73,14 @@ class Notifiers::RdvBase < ::BaseService
     return false if level == "soon" && !soon_date?(@rdv.starts_at) && !soon_date?(@rdv.attribute_before_last_save(:starts_at))
 
     true
+  end
+
+  ## Compute invitation tokens sent in notifications links to change the rdv
+  #
+
+  def generate_invitation_tokens
+    @rdv_users_tokens_by_user_id = rdvs_users_to_notify.to_h do |rdv_user|
+      [rdv_user.user.id, rdv_user.new_raw_invitation_token]
+    end
   end
 end

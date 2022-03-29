@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class RdvsUser < ApplicationRecord
+  devise :invitable
+
   # Relations
   belongs_to :rdv, touch: true, inverse_of: :rdvs_users
   belongs_to :user
@@ -21,5 +23,10 @@ class RdvsUser < ApplicationRecord
 
     self.send_lifecycle_notifications = rdv.motif.visible_and_notified? if send_lifecycle_notifications.nil?
     self.send_reminder_notification = rdv.motif.visible_and_notified? if send_reminder_notification.nil?
+  end
+
+  def new_raw_invitation_token
+    invite! { |rdv_u| rdv_u.skip_invitation = true }
+    raw_invitation_token
   end
 end

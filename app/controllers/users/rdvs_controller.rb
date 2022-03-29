@@ -35,12 +35,17 @@ class Users::RdvsController < UserAuthController
     end
     skip_authorization if @creneau.nil?
     if @save_succeeded
-      Notifiers::RdvCreated.perform_with(@rdv, current_user)
+      rdv_users_tokens_by_user_id = Notifiers::RdvCreated.perform_with(@rdv, current_user)
       set_user_name_initials_verified
-      redirect_to users_rdv_path(@rdv), notice: t(".rdv_confirmed")
+      redirect_to users_rdv_path(@rdv, invitation_token: rdv_users_tokens_by_user_id[current_user.id]), notice: t(".rdv_confirmed")
     else
-      query = { where: new_rdv_extra_params[:where], service: motif.service.id, motif_name_with_location_type: motif.name_with_location_type, departement: new_rdv_extra_params[:departement] }
-      redirect_to lieux_path(search: query), flash: { error: t(".creneau_unavailable") }
+      query = {
+        address: (new_rdv_extra_params[:address] || new_rdv_extra_params[:where]),
+        city_code: new_rdv_extra_params[:city_code], street_ban_id: new_rdv_extra_params[:street_ban_id],
+        service: motif.service.id, motif_name_with_location_type: motif.name_with_location_type,
+        departement: new_rdv_extra_params[:departement], organisation_ids:  new_rdv_extra_params[:organisation_ids], invitation_token: invitation_token
+      }
+      redirect_to prendre_rdv_path(query), flash: { error: t(".creneau_unavailable") }
     end
   end
 
@@ -50,9 +55,9 @@ class Users::RdvsController < UserAuthController
 
   def update
     if @rdv.update(starts_at: @creneau.starts_at, ends_at: @creneau.starts_at + @rdv.duration_in_min.minutes, agent_ids: [@creneau.agent.id])
-      Notifiers::RdvDateUpdated.perform_with(@rdv, current_user)
+      rdv_users_tokens_by_user_id = Notifiers::RdvDateUpdated.perform_with(@rdv, current_user)
       flash[:success] = "Votre RDV a bien été modifié"
-      redirect_to users_rdv_path(@rdv)
+      redirect_to users_rdv_path(@rdv, invitation_token: rdv_users_tokens_by_user_id[current_user.id])
     else
       flash[:error] = "Le RDV n'a pas pu être modifié"
       redirect_to creneaux_users_rdv_path(@rdv)
@@ -60,12 +65,13 @@ class Users::RdvsController < UserAuthController
   end
 
   def cancel
-    if RdvUpdater.update(current_user, @rdv, { status: "excused" })
+    rdv_update = RdvUpdater.update(current_user, @rdv, { status: "excused" })
+    if rdv_update.success?
       flash[:notice] = "Le RDV a bien été annulé."
     else
       flash[:error] = "Impossible d'annuler le RDV."
     end
-    redirect_to users_rdv_path(@rdv)
+    redirect_to users_rdv_path(@rdv, invitation_token: rdv_update.rdv_users_tokens_by_user_id&.fetch(current_user.id, nil))
   end
 
   def creneaux
@@ -144,7 +150,10 @@ class Users::RdvsController < UserAuthController
   end
 
   def new_rdv_extra_params
-    params.permit(:lieu_id, :motif_name_with_location_type, :departement, :where)
+    params.permit(
+      :lieu_id, :motif_name_with_location_type, :departement, :where, :address, :city_code, :street_ban_id,
+      :invitation_token, { organisation_ids: [] }
+    )
   end
 
   def rdv_params

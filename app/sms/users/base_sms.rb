@@ -2,7 +2,7 @@
 
 # Base class for all Sms sent to Users
 class Users::BaseSms < ApplicationSms
-  def initialize(rdv, user)
+  def initialize(rdv, user, token)
     super
 
     @phone_number = user.phone_number_formatted
