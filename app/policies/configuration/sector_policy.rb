@@ -11,6 +11,7 @@ class Configuration::SectorPolicy
     @current_agent.territorial_admin_in?(@current_territory)
   end
 
+  alias display? territorial_admin?
   alias new? territorial_admin?
   alias create? territorial_admin?
   alias show? territorial_admin?

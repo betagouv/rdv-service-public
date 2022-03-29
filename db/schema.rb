@@ -138,6 +138,16 @@ ActiveRecord::Schema.define(version: 2022_03_21_181557) do
     t.index ["team_id"], name: "index_agent_teams_on_team_id"
   end
 
+  create_table "agent_territorial_access_rights", force: :cascade do |t|
+    t.bigint "agent_id", null: false
+    t.bigint "territory_id", null: false
+    t.boolean "allow_to_manage_teams", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["agent_id"], name: "index_agent_territorial_access_rights_on_agent_id"
+    t.index ["territory_id"], name: "index_agent_territorial_access_rights_on_territory_id"
+  end
+
   create_table "agent_territorial_roles", force: :cascade do |t|
     t.bigint "agent_id"
     t.bigint "territory_id"
@@ -571,6 +581,8 @@ ActiveRecord::Schema.define(version: 2022_03_21_181557) do
   add_foreign_key "absences", "organisations"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "agent_territorial_access_rights", "agents"
+  add_foreign_key "agent_territorial_access_rights", "territories"
   add_foreign_key "agents", "services"
   add_foreign_key "file_attentes", "rdvs"
   add_foreign_key "file_attentes", "users"

@@ -11,6 +11,7 @@ class Configuration::AgentTerritorialRolePolicy
     @current_agent.territorial_admin_in?(@current_territory)
   end
 
+  alias display? territorial_admin?
   alias new? territorial_admin?
   alias create? territorial_admin?
   alias destroy? territorial_admin?

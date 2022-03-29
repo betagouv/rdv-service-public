@@ -354,7 +354,8 @@ agent_org_paris_nord_pmi_martine = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_ADMIN }]
+  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_ADMIN }],
+  agent_territorial_access_rights_attributes: [{ territory: territory75, allow_to_manage_teams: true }]
 )
 agent_org_paris_nord_pmi_martine.skip_confirmation!
 agent_org_paris_nord_pmi_martine.save!
@@ -368,7 +369,8 @@ agent_org_paris_nord_pmi_marco = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_BASIC }]
+  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_BASIC }],
+  agent_territorial_access_rights_attributes: [{ territory: territory75, allow_to_manage_teams: false }]
 )
 agent_org_paris_nord_pmi_marco.skip_confirmation!
 agent_org_paris_nord_pmi_marco.save!
@@ -381,7 +383,8 @@ agent_org_paris_nord_social_polo = Agent.new(
   password: "123456",
   service_id: service_social.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_BASIC }]
+  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_BASIC }],
+  agent_territorial_access_rights_attributes: [{ territory: territory75, allow_to_manage_teams: false }]
 )
 agent_org_paris_nord_social_polo.skip_confirmation!
 agent_org_paris_nord_social_polo.save!
@@ -394,7 +397,8 @@ org_arques_pmi_maya = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: Organisation.where(territory: territory62).pluck(:id).map { { organisation_id: _1, level: AgentRole::LEVEL_ADMIN } }
+  roles_attributes: Organisation.where(territory: territory62).pluck(:id).map { { organisation_id: _1, level: AgentRole::LEVEL_ADMIN } },
+  agent_territorial_access_rights_attributes: [{ territory: territory62, allow_to_manage_teams: true }]
 )
 org_arques_pmi_maya.skip_confirmation!
 org_arques_pmi_maya.save!
@@ -407,7 +411,8 @@ agent_org_bapaume_pmi_bruno = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: [{ organisation: org_bapaume, level: AgentRole::LEVEL_ADMIN }]
+  roles_attributes: [{ organisation: org_bapaume, level: AgentRole::LEVEL_ADMIN }],
+  agent_territorial_access_rights_attributes: [{ territory: territory62, allow_to_manage_teams: false }]
 )
 agent_org_bapaume_pmi_bruno.skip_confirmation!
 agent_org_bapaume_pmi_bruno.save!
@@ -421,7 +426,8 @@ agent_org_bapaume_pmi_gina = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: [{ organisation: org_bapaume, level: AgentRole::LEVEL_ADMIN }]
+  roles_attributes: [{ organisation: org_bapaume, level: AgentRole::LEVEL_ADMIN }],
+  agent_territorial_access_rights_attributes: [{ territory: territory62, allow_to_manage_teams: false }]
 )
 agent_org_bapaume_pmi_gina.skip_confirmation!
 agent_org_bapaume_pmi_gina.save!
@@ -434,7 +440,8 @@ agent_cnfs = Agent.new(
   password: "123456",
   service_id: service_cnfs.id,
   invitation_accepted_at: 1.day.ago,
-  roles_attributes: [{ organisation: org_cnfs, level: AgentRole::LEVEL_ADMIN }]
+  roles_attributes: [{ organisation: org_cnfs, level: AgentRole::LEVEL_ADMIN }],
+  agent_territorial_access_rights_attributes: [{ territory: territory62, allow_to_manage_teams: false }]
 )
 agent_cnfs.skip_confirmation!
 agent_cnfs.save!
@@ -458,6 +465,9 @@ results = Agent.insert_all!(agents_attributes, returning: "id") # [{"id"=>1}, {"
 agent_ids = results.flat_map(&:values) # [1, 2, ...]
 agent_role_attributes = agent_ids.map { |id| { agent_id: id, organisation_id: org_paris_nord.id } }
 AgentRole.insert_all!(agent_role_attributes)
+
+agent_territorial_access_rights_attributes = agent_ids.map { |id| { agent_id: id, territory_id: territory75.id, created_at: Time.zone.now, updated_at: Time.zone.now } }
+AgentTerritorialAccessRight.insert_all!(agent_territorial_access_rights_attributes)
 # rubocop:enable Rails/SkipsModelValidations
 
 # SECTOR ATTRIBUTIONS - AGENT LEVEL

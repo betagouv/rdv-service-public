@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Configuration::AgentPolicy, type: :policy do
-  %i[edit? update?].each do |action|
+  %i[display? edit? update?].each do |action|
     describe "##{action}" do
       it "returns false with agent without admin access to this territory" do
         territory = create(:territory)

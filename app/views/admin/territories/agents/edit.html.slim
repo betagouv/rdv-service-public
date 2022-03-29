@@ -20,3 +20,8 @@
             }\
           }
     = form.submit class: "btn btn-primary"
+
+  h3.mt-3 Droit d'accès
+  = simple_form_for @agent.agent_territorial_access_rights.find_by(territory: current_territory), url: admin_territory_agent_territorial_access_right_path do |f|
+    = f.input :allow_to_manage_teams, as: :boolean
+    = f.submit class: "btn btn-primary"

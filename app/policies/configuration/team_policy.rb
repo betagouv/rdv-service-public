@@ -7,15 +7,21 @@ class Configuration::TeamPolicy
     @team = team
   end
 
-  def territorial_admin?
-    @current_agent.territorial_admin_in?(@current_territory)
+  def team_of_territory_and_allowed_to_manage_teams?
+    @team.territory == @current_territory && allowed_to_manage_teams?
   end
 
-  alias new? territorial_admin?
-  alias create? territorial_admin?
-  alias destroy? territorial_admin?
-  alias edit? territorial_admin?
-  alias update? territorial_admin?
+  def allowed_to_manage_teams?
+    @current_agent.access_rights_for_territory(@current_territory)&.allow_to_manage_teams? || false
+  end
+
+  alias new? team_of_territory_and_allowed_to_manage_teams?
+  alias destroy? team_of_territory_and_allowed_to_manage_teams?
+  alias edit? team_of_territory_and_allowed_to_manage_teams?
+  alias update? team_of_territory_and_allowed_to_manage_teams?
+
+  alias create? allowed_to_manage_teams?
+  alias display? allowed_to_manage_teams?
 
   class Scope
     def initialize(context, _scope)

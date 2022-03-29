@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Configuration::SectorPolicy, type: :policy do
-  %i[edit? show? update?].each do |action|
+  %i[display? edit? show? update?].each do |action|
     describe "##{action}" do
       it "returns false with agent without admin access to this territory" do
         territory = create(:territory)

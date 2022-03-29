@@ -86,4 +86,19 @@ describe Agent, type: :model do
       expect(agent.to_s).to eq("Martine Validay")
     end
   end
+
+  describe "#access_rights_for_territory" do
+    it "returns nil when no access_rights founed" do
+      territory = create(:territory)
+      agent = create(:agent, organisations: [create(:organisation, territory: territory)])
+      expect(agent.access_rights_for_territory(territory)).to be_nil
+    end
+
+    it "returns agent's agent_territorial_access_rights for given territorial" do
+      territory = create(:territory)
+      agent = create(:agent, organisations: [create(:organisation, territory: territory)])
+      access_right = create(:agent_territorial_access_right, allow_to_manage_teams: true, agent: agent, territory: territory)
+      expect(agent.access_rights_for_territory(territory)).to eq(access_right)
+    end
+  end
 end
