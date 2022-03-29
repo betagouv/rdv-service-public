@@ -4,6 +4,7 @@ fr:
     organisations:
       index:
         configuration: Configuration
+        create: Créer
     rdvs:
       message:
         confirm:
