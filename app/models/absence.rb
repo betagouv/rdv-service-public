@@ -23,7 +23,7 @@ class Absence < ApplicationRecord
   # Validation
   validates :first_day, :title, presence: true
   validate :ends_at_should_be_after_starts_at
-  validate :no_recurrence_for_absnece_for_several_days
+  validate :no_recurrence_for_absence_for_several_days
 
   # Hooks
   before_validation :set_end_day
