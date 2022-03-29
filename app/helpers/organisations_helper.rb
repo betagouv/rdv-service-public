@@ -2,7 +2,15 @@
 
 module OrganisationsHelper
   def show_checklist?(organisation, agent)
-    1.week.ago < organisation.created_at && agent.admin_in_organisation?(organisation)
+    return false unless agent.admin_in_organisation?(organisation)
+    return false unless agent.invitation_accepted_at # This shouldn't happen, but we'd rather be safe
+
+    # The invitation_accepted_at column is a good indicator of how long the agent has been using the application
+    if agent.conseiller_numerique?
+      agent.invitation_accepted_at > 2.weeks.ago && agent.rdvs.count < 2
+    else
+      agent.invitation_accepted_at > 1.week.ago
+    end
   end
 
   def organisation_home_path(organisation, agent)
