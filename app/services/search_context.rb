@@ -85,9 +85,10 @@ class SearchContext
 
   def next_availability_by_lieux
     @next_availability_by_lieux ||= lieux.to_h do |lieu|
+      motif = matching_motifs.where(organisation: lieu.organisation).first
       [
         lieu.id,
-        creneaux_search_for(lieu, (Time.zone.today..(Time.zone.today + 7.days))).next_availability
+        NextAvailabilityService.find(motif, lieu, (Time.zone.today + motif.min_booking_delay.seconds).to_date, [])
       ]
     end
   end
