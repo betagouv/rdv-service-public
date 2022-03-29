@@ -54,15 +54,11 @@ module TokenInvitable
   end
 
   def user_by_token
-    # rubocop:disable Rails/DynamicFindBy
     # find_by_invitation_token is a method added by the devise_invitable gem
-    @user_by_token ||= User.find_by_invitation_token(session[:invitation_token], true)
-    # rubocop:enable Rails/DynamicFindBy
+    @user_by_token ||= User.find_by_invitation_token(session[:invitation_token], true) # rubocop:disable Rails/DynamicFindBy
   end
 
   def rdv_user_by_token
-    # rubocop:disable Rails/DynamicFindBy
-    @rdv_user_by_token ||= RdvsUser.find_by_invitation_token(session[:invitation_token], true)
-    # rubocop:enable Rails/DynamicFindBy
+    @rdv_user_by_token ||= RdvsUser.find_by_invitation_token(session[:invitation_token], true) # rubocop:disable Rails/DynamicFindBy
   end
 end
