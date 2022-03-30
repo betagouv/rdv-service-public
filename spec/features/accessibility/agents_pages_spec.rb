@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+<<<<<<< HEAD:spec/features/accessibility/agents_pages_spec.rb
 describe "agents page", js: true do
+=======
+describe "accueil_mds", js: true do
+>>>>>>> renommage des fichiers de spec:spec/features/accessibility/accueil_mds_spec.rb
   it "agent agenda path page is accessible" do
     territory = create(:territory, departement_number: "75")
     organisation = create(:organisation, territory: territory)
