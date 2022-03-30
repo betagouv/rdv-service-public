@@ -172,3 +172,18 @@ def expect_page_to_be_axe_clean(path)
   expect(page).to have_current_path(path)
   expect(page).to be_axe_clean
 end
+
+def agents_connexion
+  territory = create(:territory, departement_number: "75")
+  organisation = create(:organisation, territory: territory)
+  agent = create(:agent, email: "totoagent@example.com", basic_role_in_organisations: [organisation])
+  login_as agent
+end
+
+def agents_with_user_connexion
+  territory = create(:territory, departement_number: "75")
+  organisation = create(:organisation, territory: territory)
+  user = create(:user, email: "testuser@test.net", agents: [], organisations: [organisation])
+  agent = create(:agent, email: "totoagent@example.com", basic_role_in_organisations: [organisation])
+  login_as agent
+end
