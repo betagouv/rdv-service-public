@@ -11,6 +11,7 @@ class Receipt < ApplicationRecord
 
   # Scopes
   scope :old, -> { joins(:rdv).where(rdv: { starts_at: ..2.months.ago }) }
+  scope :most_recent_first, -> { order(created_at: :desc) }
 
   ## -
 

@@ -310,6 +310,7 @@ fr:
       human: "%A %d %B %Y à %Hh%M"
       human_approx: "%A %d %B %Y vers %Hh%M"
       dense: "%d/%m/%Y à %H:%M"
+      dense_html: "%d/%m/%Y&nbsp;à&nbsp;%H:%M"
       time_only: "%Hh%M"
     pm: pm
   public_office: "sur place"
