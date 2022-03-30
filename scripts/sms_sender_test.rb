@@ -16,4 +16,4 @@
 #
 # DEFAULT_SMS_PROVIDER=contact_experience DEFAULT_SMS_PROVIDER_KEY=<dev_code> TEST_PHONE_NUMBER=<0639981234> rails runner scripts/sms_sender_test.rb
 
-SmsSender.perform_with(ENV["TEST_PHONE_NUMBER"], "this is test " * 3, ["test"], nil, nil)
+SmsSender.perform_with(ENV["TEST_PHONE_NUMBER"], "this is a test " * 20, ["test"], nil, nil, {})

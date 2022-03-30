@@ -4,7 +4,7 @@ describe SmsSender, type: :service do
   describe "#content" do
     subject { test_sms.content }
 
-    let(:test_sms) { described_class.new("0612345678", content, [], nil, nil) }
+    let(:test_sms) { described_class.new("0612345678", content, [], nil, nil, nil) }
 
     context "remove accents and weird chars" do
       let(:content) { "àáäâãèéëẽêìíïîĩòóöôõùúüûũñçÀÁÄÂÃÈÉËẼÊÌÍÏÎĨÒÓÖÔÕÙÚÜÛŨÑÇ" }
