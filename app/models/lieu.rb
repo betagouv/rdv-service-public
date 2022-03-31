@@ -80,6 +80,17 @@ class Lieu < ApplicationRecord
     earth_radius * c
   end
 
+  # ce script permet de nettoyer toutes les adresses déjà existances de RDV-S. ref de l'issue: #2293
+  def self.cleaned_old_address(old_address)
+    components = old_address.split(",")
+    # cette regex permet de tester les numéros des départements
+    if components.count == 6 && components[3].squish =~ /^\d[\dabAB]$/
+      components[0..2].join(",")
+    else
+      old_address
+    end
+  end
+
   private
 
   def longitude_and_latitude_must_be_present
