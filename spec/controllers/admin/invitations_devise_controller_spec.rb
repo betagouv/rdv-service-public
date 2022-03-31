@@ -17,6 +17,20 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
     Devise.mailer.deliveries.clear
   end
 
+  describe "GET #new" do
+    context "for a cnfs" do
+      let!(:agent) do
+        create(:agent, admin_role_in_organisations: [organisation],
+                       invitation_accepted_at: nil, service: create(:service, name: "Conseiller Numérique"))
+      end
+
+      it "only allows inviting agents for the secretariat" do
+        get :new, params: { organisation_id: organisation.id }
+        expect(response).not_to have_content("Admin")
+      end
+    end
+  end
+
   describe "POST #create" do
     subject { post :create, params: params }
 
@@ -101,6 +115,33 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
 
       it "ignores the organisation param" do
         expect(Agent.last.organisations).to eq [organisation]
+      end
+    end
+
+    context "when trying to invite an admin as a conseiller numerique" do
+      let(:service_id) { create(:service, name: Service::SECRETARIAT).id }
+      let(:params) do
+        {
+          organisation_id: organisation.id,
+          agent: {
+            email: "michel@lapin.com",
+            service_id: service_id,
+            roles_attributes: {
+              "0" => {
+                level: "admin"
+              }
+            }
+          }
+        }
+      end
+
+      before do
+        agent.service.update!(name: "Conseiller Numérique")
+      end
+
+      it "creates a new basic agent instead of an admin" do
+        expect { subject }.to change(Agent, :count).by(1)
+        expect(AgentRole.last).to have_attributes(level: AgentRole::LEVEL_BASIC)
       end
     end
 
