@@ -3,11 +3,15 @@
 class Admin::RdvCollectifSearchForm
   include ActiveModel::Model
 
-  attr_accessor :organisation_id, :motif_id
+  attr_accessor :organisation_id, :motif_id, :with_remaining_seats
 
   def filter(rdvs)
     if motif_id.present?
       rdvs = rdvs.where(motif_id: motif_id)
+    end
+
+    if with_remaining_seats.to_bool
+      rdvs = rdvs.with_remaining_seats
     end
 
     rdvs.where("starts_at >= ?", from_date)

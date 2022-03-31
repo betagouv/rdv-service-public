@@ -23,7 +23,8 @@
               data: { placeholder: "Sélectionnez un motif", "allow-clear": true }, \
               class: "select2-input" \
             }
-        .col-md-3
+        .col-md-3.mt-4
+          = f.input :with_remaining_seats, as: :boolean, label: "Avec des places disponibles"
         .col-md-1.d-flex-justify-content-end.mt-3
           = f.submit "Filtrer", class: "btn btn-outline-primary"
 

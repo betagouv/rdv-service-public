@@ -377,15 +377,19 @@ ActiveRecord::Schema.define(version: 2022_03_21_181557) do
     t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
     t.datetime "ends_at", null: false
     t.string "name"
+    t.integer "max_participants_count"
+    t.integer "users_count"
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist
     t.index ["created_by"], name: "index_rdvs_on_created_by"
     t.index ["ends_at"], name: "index_rdvs_on_ends_at"
     t.index ["lieu_id"], name: "index_rdvs_on_lieu_id"
+    t.index ["max_participants_count"], name: "index_rdvs_on_max_participants_count"
     t.index ["motif_id"], name: "index_rdvs_on_motif_id"
     t.index ["organisation_id"], name: "index_rdvs_on_organisation_id"
     t.index ["starts_at"], name: "index_rdvs_on_starts_at"
     t.index ["status"], name: "index_rdvs_on_status"
     t.index ["updated_at"], name: "index_rdvs_on_updated_at"
+    t.index ["users_count"], name: "index_rdvs_on_users_count"
   end
 
   create_table "rdvs_users", force: :cascade do |t|

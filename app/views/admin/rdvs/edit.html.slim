@@ -49,6 +49,11 @@
                 data: { "select-options": { ajax: { url: search_admin_organisation_agents_path(current_organisation),
                                                           dataType: "json", delay: 250 } } } }
 
+            - if @rdv_form.motif.collectif?
+              = f.input :name, wrapper_html: { class: "mb-1" }
+              p.text-muted.font-14= I18n.t("activerecord.attributes.rdv/name.hint")
+
+              = f.input :max_participants_count, input_html: { min: 1 }
             .form-group
               = "#{User.model_name.human.pluralize} :"
               = f.fields_for :rdvs_users, @rdv.rdvs_users do |rdv_user_form|

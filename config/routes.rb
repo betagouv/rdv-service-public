@@ -149,7 +149,7 @@ Rails.application.routes.draw do
         resources :slots, only: :index
         resources :lieux, except: :show
         resources :motifs
-        resources :rdvs_collectifs, only: %i[index new create] do
+        resources :rdvs_collectifs, only: %i[index new create edit update] do
           collection do
             resources :motifs, only: [:index], as: :rdvs_collectif_motifs, controller: "rdvs_collectifs/motifs"
           end
