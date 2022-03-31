@@ -4,7 +4,7 @@ describe "welcome pages", js: true do
   it "contact_path page is accessible" do
     expect_page_to_be_axe_clean(contact_path)
   end
-  
+
   it "accueil_mds_path page is accessible" do
     expect_page_to_be_axe_clean(accueil_mds_path)
   end
@@ -37,7 +37,7 @@ describe "welcome pages", js: true do
   it "root path page is accessible" do
     expect_page_to_be_axe_clean(root_path)
   end
-  
+
   it "lieux_path page is accessible" do
     territory = create(:territory, departement_number: "75")
     organisation = create(:organisation, territory: territory)

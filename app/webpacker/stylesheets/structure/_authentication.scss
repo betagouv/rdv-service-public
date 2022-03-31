@@ -4,6 +4,10 @@ body.authentication-bg {
   background: linear-gradient(to right, lighten($primary, 30%), lighten($secondary, 30%));
 }
 
+.agent-name{
+  font-size: 1.5rem;
+}
+
 .logout-icon {
   width: 140px;
 }
@@ -33,9 +37,13 @@ body.authentication-bg {
     color: $white;
     background-color: $primary;
 
+    a {
+      color: $white;
+    }
+
     body.agents & {
-      background-color: $turquoise;
-      color: $primary;
+      background-color: $blue;
+      color: $white;
       .agent-profile {
         border: 3px solid $white;
         border-radius: 100%;
