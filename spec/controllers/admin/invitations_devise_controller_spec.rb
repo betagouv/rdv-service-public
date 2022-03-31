@@ -17,6 +17,20 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
     Devise.mailer.deliveries.clear
   end
 
+  describe "GET #new" do
+    context "for a cnfs" do
+      let!(:agent) do
+        create(:agent, admin_role_in_organisations: [organisation],
+                       invitation_accepted_at: nil, service: create(:service, name: "Conseiller Numérique"))
+      end
+
+      it "only allows inviting agents for the secretariat" do
+        get :new
+        expect(response).not_to have_content("Admin")
+      end
+    end
+  end
+
   describe "POST #create" do
     subject { post :create, params: params }
 

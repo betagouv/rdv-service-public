@@ -4,12 +4,16 @@ class Admin::InvitationsDeviseController < Devise::InvitationsController
   def new
     self.resource = resource_class.new(organisations: [current_organisation])
     authorize(resource)
+
+    @services = Agent::ServicePolicy::AdminScope.new(pundit_user, Service).resolve
+    @roles = current_agent.conseiller_numerique? ? [AgentRole::LEVEL_BASIC] : AgentRole::LEVELS
+
     render :new, layout: "application_agent"
   end
 
   def create
     agent = Agent.find_by(email: invite_params[:email].downcase)
-    service = Service.find(invite_params[:service_id])
+    service = policy_scope(Service).find(invite_params[:service_id])
     if agent.nil?
       # Authorize against a dummy Agent
       authorize(Agent.new(invite_params))
@@ -68,6 +72,10 @@ class Admin::InvitationsDeviseController < Devise::InvitationsController
 
     # Only ever invite to the current organisation
     params[:roles_attributes]["0"][:organisation] = current_organisation
+
+    if current_agent.conseiller_numerique?
+      params[:roles_attributes]["0"][:level] = AgentRole::LEVEL_BASIC
+    end
 
     # The omniauth uid _is_ the email, always. Note: this may be better suited in a hook in Agent.rb
     params[:uid] = params[:email]
