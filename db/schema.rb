@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_21_181557) do
+ActiveRecord::Schema.define(version: 2022_03_31_071123) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -188,6 +188,7 @@ ActiveRecord::Schema.define(version: 2022_03_21_181557) do
     t.text "search_terms"
     t.integer "unknown_past_rdv_count", default: 0
     t.boolean "display_saturdays", default: false
+    t.boolean "display_cancelled_rdv", default: true
     t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_agents_search_terms", using: :gin
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true

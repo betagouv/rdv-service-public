@@ -182,7 +182,7 @@ Rails.application.routes.draw do
         resources :absences, except: %i[index show new]
         resources :agent_roles, only: %i[edit update]
         resources :agent_agendas, only: %i[show] do
-          put :toggle_display_saturdays, on: :member
+          put :toggle_displays, on: :member
         end
         resources :agents, only: %i[index destroy] do
           collection do
