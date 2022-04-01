@@ -9,52 +9,53 @@ html lang="fr"
     = render "common/env"
     = stylesheet_pack_tag    "application", media: "all", "data-turbolinks-track": "reload"
     = javascript_pack_tag "application", "data-turbolinks-track": "reload"
-  body.auth-fluid-pages.pb-0 class="#{agents_or_users_body_class}"
-    = render "layouts/rdv_solidarites_instance_name"
-    .auth-fluid
-      .auth-fluid-left.text-center
-        .p-2
-          = link_logo
-        .align-items-center.d-flex.mt-lg-4
-          .p-lg-3.flex-grow-1
-            .d-none.d-lg-block= image_pack_tag "welcome/agent.svg", class: "agent-profile mx-auto mb-4", alt: ""
-            - if agent_path? && current_agent.nil?
-              h4.mb-3 Terminé l'agenda papier, moins de temps perdu.
-            - elsif agent_path? && current_agent.present?
-              h4
-                i.far.fa-id-card>
-                = current_agent.full_name_and_service
-              .d-flex.flex-row.justify-content-center
-                ul.list-unstyled.text-left
-                  li
-                    h5= link_to "Mon compte", edit_agent_registration_path
-                  li
-                    h5= link_to t("agents.preferences.show.title"), agents_preferences_path
-                  li
-                    h5= link_to "Mes organisations", admin_organisations_path
-                  li
-                    h5= link_to "Me déconnecter", destroy_agent_session_path, method: :delete
-            - else
-              h4.mb-3 Prenez RDV en ligne avec votre département !
+  main
+    body.auth-fluid-pages.pb-0 class="#{agents_or_users_body_class}"
+      = render "layouts/rdv_solidarites_instance_name"
+      .auth-fluid
+        .auth-fluid-left.text-center
+          .p-2
+            = link_logo
+          .align-items-center.d-flex.mt-lg-4
+            .p-lg-3.flex-grow-1
+              .d-none.d-lg-block= image_pack_tag "welcome/agent.svg", class: "agent-profile mx-auto mb-4", alt: ""
+              - if agent_path? && current_agent.nil?
+                p.lead.mb-3 Terminé l'agenda papier, moins de temps perdu.
+              - elsif agent_path? && current_agent.present?
+                p.agent-name
+                  i.far.fa-id-card>
+                  = current_agent.full_name_and_service
+                .d-flex.flex-row.justify-content-center
+                  ul.list-unstyled.text-left.text-white
+                    li
+                      h5= link_to "Mon compte", edit_agent_registration_path
+                    li
+                      h5= link_to t("agents.preferences.show.title"), agents_preferences_path
+                    li
+                      h5= link_to "Mes organisations", admin_organisations_path
+                    li
+                      h5= link_to "Me déconnecter", destroy_agent_session_path, method: :delete
+              - else
+                h4.mb-3 Prenez RDV en ligne avec votre département !
 
-      .auth-fluid-form-box
-        .align-items-center.d-flex.h-100
-          .p-3.flex-grow-1
-            = render "layouts/flash"
-            .row
-              .col-md-6.offset-md-3
-                - if agent_path? && current_agent&.nil?
-                  .mb-4.text-center
-                    h3 Espace reservé aux agents
-                    p
-                      | Vous êtes un particulier ?
-                      = link_to "Cliquez-ici", request.path.gsub("agents", "users")
-                - if content_for :title
-                  .text-center.m-auto
-                    h4.text-dark-50.text-center.mt-0.font-weight-bold.mb-4
-                      = content_for :title
+        .auth-fluid-form-box
+          .align-items-center.d-flex.h-100
+            .p-3.flex-grow-1
+              = render "layouts/flash"
+              .row
+                .col-md-6.offset-md-3
+                  - if agent_path? && current_agent&.nil?
+                    .mb-4.text-center
+                      h3 Espace reservé aux agents
+                      p
+                        | Vous êtes un particulier ?
+                        = link_to "Cliquez-ici", request.path.gsub("agents", "users")
+                  - if content_for :title
+                    .text-center.m-auto
+                      h1.card-title.text-dark-50.text-center.mt-0.font-weight-bold.mb-4
+                        = content_for :title
 
-                = yield
-                - if content_for :footer
-                .mt-3.text-center
-                  = yield :footer
+                  = yield
+                  - if content_for :footer
+                  .mt-3.text-center
+                    = yield :footer
