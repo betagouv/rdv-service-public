@@ -4,10 +4,10 @@ module Lapin
   module Range
     class << self
       def reduce_range_to_delay(motif, date_range)
-        return nil if date_range.end < (Time.zone.now + motif.min_booking_delay.seconds)
+        return nil if !motif.booking_delay_range.cover?(date_range.end) && !motif.booking_delay_range.cover?(date_range.begin)
 
-        start_range = [(Time.zone.now + motif.min_booking_delay.seconds), date_range.begin].max
-        end_range = [(Time.zone.now + motif.max_booking_delay.seconds), date_range.end].min
+        start_range = [motif.start_booking_delay, date_range.begin].max
+        end_range = [motif.end_booking_delay, date_range.end].min
         start_range..end_range
       end
 
