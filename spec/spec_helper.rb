@@ -23,6 +23,7 @@ require "capybara/email/rspec"
 require "webdrivers"
 require "capybara-screenshot/rspec"
 require "pundit/rspec"
+require "webmock/rspec"
 require "simplecov"
 
 # TODO: SimpleCov.minimum_coverage 80

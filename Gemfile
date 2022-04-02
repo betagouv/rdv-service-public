@@ -113,4 +113,5 @@ group :test do
   gem "capybara-screenshot"
   gem "webdrivers", "~> 4.6.0"
   gem "database_cleaner"
+  gem "webmock"
 end
