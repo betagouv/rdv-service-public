@@ -23,7 +23,7 @@
             = "#{rdv.duration_in_min} minutes"
 
       .col-md-6
-        = render "participants_info", rdv: rdv
+        = render "admin/rdvs_collectifs/participants_info", rdv: rdv
         - if rdv.remaining_seats?
           = link_to edit_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv), class: "d-flex card-text mb-2" do
             div.mr-1
