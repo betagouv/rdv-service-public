@@ -11,6 +11,7 @@ describe RdvBlueprint do
 
     it do
       expect(json.dig("rdv", "status")).to eq "revoked"
+      expect(json.dig("rdv", "motif", "category")).to eq Motif.categories.first.first
     end
   end
 

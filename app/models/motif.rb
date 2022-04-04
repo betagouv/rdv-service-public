@@ -27,6 +27,9 @@ class Motif < ApplicationRecord
   SECTORISATION_TYPES = [SECTORISATION_LEVEL_AGENT, SECTORISATION_LEVEL_ORGANISATION, SECTORISATION_LEVEL_DEPARTEMENT].freeze
 
   enum location_type: { public_office: "public_office", phone: "phone", home: "home" }
+  enum category: { rsa_orientation: "rsa_orientation",
+                   rsa_accompagnement: "rsa_accompagnement",
+                   rsa_orientation_phone_platform: "rsa_orientation_phone_platform" }
 
   # Relations
   belongs_to :organisation

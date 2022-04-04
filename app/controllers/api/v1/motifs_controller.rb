@@ -9,6 +9,8 @@ class Api::V1::MotifsController < Api::V1::BaseController
 
     motifs = motifs.where(service_id: params[:service_id]) if params[:service_id].present?
 
+    motifs = motifs.where(category: params[:category]) if params[:category].present?
+
     render_collection(motifs.order(:id))
   end
 end

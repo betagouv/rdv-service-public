@@ -9,6 +9,9 @@
         .col-md-6
           = f.association :service, collection: @available_services
         .col-md-6
+          = f.input :category, collection: Motif.human_attribute_values(:categories), prompt: "", input_html: { class: "select2-input" }
+      .form-row
+        .col-md-12
           = f.input :name
       .form-row
         .col-md-4= f.input :default_duration_in_min

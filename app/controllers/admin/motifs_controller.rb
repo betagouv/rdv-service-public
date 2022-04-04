@@ -88,7 +88,7 @@ class Admin::MotifsController < AgentAuthController
   def motif_params
     params.require(:motif)
       .permit(:name, :service_id,
-              :color,
+              :color, :category,
               :default_duration_in_min,
               :reservable_online,
               :location_type,

@@ -8,6 +8,7 @@ fr:
         service: Service
         collectif: Nombre de participants
         color: Couleur
+        category: Catégorie
         reservable_online_title: Prise de RDV en ligne par les usagers
         reservable_online: Réservable en ligne
         reservable_online_hint: Ce motif sera disponible à la réservation en ligne par les usagers
@@ -41,6 +42,10 @@ fr:
         instruction_for_rdv: Indications affichées après la confirmation du rendez-vous
         instruction_for_rdv_hint: Indications affichées après la confirmation du rendez-vous
         instruction_for_rdv_short: Indications après
+      motif/categories:
+        rsa_orientation: RSA - Orientation
+        rsa_accompagnement: RSA - Accompagnement
+        rsa_orientation_phone_platform: RSA - Orientation sur une plateforme téléphonique
       motif/collectifs:
         true: RDV collectif
         false: RDV individuel
