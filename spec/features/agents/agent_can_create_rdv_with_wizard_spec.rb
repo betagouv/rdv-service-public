@@ -63,13 +63,13 @@ describe "Agent can create a Rdv with wizard", js: true do
       expect(page).not_to have_select("rdv_lieu_id", with_options: [disabled_lieu.full_name])
       select(lieu.full_name, from: "rdv_lieu_id")
 
-      click_link("Choisir un lieu ponctuel.")
+      click_link("Définir un lieu ponctuel.")
       expect(page).to have_selector("select#rdv_lieu_id:disabled")
       click_link("Choisir un lieu existant.")
       expect(page).to have_selector("select#rdv_lieu_id:enabled")
       expect(page).to have_select("rdv_lieu_id", with_options: [lieu.full_name])
     else
-      click_link("Choisir un lieu ponctuel.")
+      click_link("Définir un lieu ponctuel.")
       fill_in "Nom", with: "Café de la gare"
       fill_in "Adresse", with: "3 Place de la Gare, Strasbourg, 67000, 67, Bas-Rhin, Grand Est"
       page.execute_script("document.querySelector('input#rdv_lieu_attributes_latitude').value = '48.583844'")
