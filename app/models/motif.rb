@@ -95,6 +95,7 @@ class Motif < ApplicationRecord
   }
   scope :visible, -> { where(visibility_type: [Motif::VISIBLE_AND_NOTIFIED, Motif::VISIBLE_AND_NOT_NOTIFIED]) }
   scope :collectif, -> { where(collectif: true) }
+  scope :individuel, -> { where(collectif: false) }
 
   ## -
 
@@ -146,6 +147,10 @@ class Motif < ApplicationRecord
 
   def cancellation_warning
     custom_cancel_warning_message || Motif.human_attribute_name("default_cancel_warning_message")
+  end
+
+  def individuel?
+    !collectif?
   end
 
   private

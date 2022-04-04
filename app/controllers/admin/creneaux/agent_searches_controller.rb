@@ -5,9 +5,9 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
 
   def index
     @form = helpers.build_agent_creneaux_search_form(current_organisation, params)
-    @search_results = SearchCreneauxForAgentsService.perform_with(@form) if (params[:commit].present? || request.format.js?) && @form.valid?
+    @search_results = search_results
 
-    if @search_results&.count == 1
+    if @search_results&.count == 1 && @form.motif.individuel?
       skip_policy_scope # TODO: improve pundit checks for creneaux
 
       redirect_to admin_organisation_slots_path(current_organisation,
@@ -24,6 +24,18 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
         .joins(:organisations).where(organisations: { id: current_organisation.id })
         .complete.active.order_by_last_name
       @lieux = policy_scope(Lieu).enabled.ordered_by_name
+    end
+  end
+
+  private
+
+  def search_results
+    return nil unless (params[:commit].present? || request.format.js?) && @form.valid?
+
+    if @form.motif.individuel?
+      SearchCreneauxForAgentsService.perform_with(@form)
+    else
+      SearchRdvCollectifForAgentsService.perform_with(@form)
     end
   end
 end
