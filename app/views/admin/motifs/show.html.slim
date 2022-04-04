@@ -9,8 +9,9 @@
       .card-body
         = motif_attribute_row(Motif.human_attribute_name(:name), @motif.name)
         = motif_attribute_row(Motif.human_attribute_name(:service), @motif.service.name)
+        = motif_attribute_row(Motif.human_attribute_name(:category), Motif.human_attribute_value(:category, @motif.category))
         = motif_attribute_row \
-          Motif.human_attribute_name(:default_duration_in_min_short),  \
+          Motif.human_attribute_name(:default_duration_in_min_short), \
           "#{@motif.default_duration_in_min} minutes"
         = motif_attribute_row(Motif.human_attribute_name(:color)) do
           span.motif-color-badge>[style="background-color: #{@motif.color};"]
