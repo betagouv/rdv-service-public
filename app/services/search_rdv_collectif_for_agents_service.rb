@@ -6,9 +6,18 @@ class SearchRdvCollectifForAgentsService < BaseService
   end
 
   def perform
-    Rdv.where(organisation: @form.organisation).collectif
+    rdvs = Rdv.where(organisation: @form.organisation).collectif
       .where(motif: @form.motif).with_remaining_seats
       .where("starts_at > ?", @form.from_date)
-      .order("starts_at asc")
+
+    if @form.lieu_ids.present?
+      rdvs = rdvs.where(lieu_id: @form.lieu_ids)
+    end
+
+    if @form.agent_ids.present?
+      rdvs = rdvs.joins(:agents_rdvs).where(agents_rdvs: { agent_id: @form.agent_ids })
+    end
+
+    rdvs.distinct.order("starts_at asc")
   end
 end

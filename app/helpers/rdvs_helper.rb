@@ -11,10 +11,12 @@ module RdvsHelper
 
   def rdv_title_for_agent(rdv)
     if rdv.collectif?
-      if rdv.name.present?
-        "#{rdv.motif.name} : #{rdv.name}"
+      title = rdv.motif.name
+      title += " : #{rdv.name}" if rdv.name.present?
+      if rdv.max_participants_count
+        "#{title} (#{rdv.users_count} / #{rdv.max_participants_count})"
       else
-        rdv.motif.name
+        "#{title} (#{rdv.users_count})"
       end
     else
       rdv_individuel_title_for_agent(rdv)
