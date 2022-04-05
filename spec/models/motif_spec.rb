@@ -187,8 +187,8 @@ describe Motif, type: :model do
     it "return now + 7 days (in minutes) when min_booking_delay is set to one week" do
       now = Time.zone.parse("20220123 14:54")
       travel_to(now)
-      motif = build(:motif, min_booking_delay: 604_800)
-      expect(motif.start_booking_delay).to eq(now + 604_800.seconds)
+      motif = build(:motif, min_booking_delay: 1.week)
+      expect(motif.start_booking_delay).to eq(now + 1.week)
     end
   end
 
