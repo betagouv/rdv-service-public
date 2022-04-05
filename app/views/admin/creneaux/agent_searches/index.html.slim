@@ -71,9 +71,8 @@
 
         .col-md-4
           = f.input :lieu_ids, collection: @lieux, label: "Lieu(x)", input_html: { multiple: true, class: "select2-input" }
-      .row.d-flex.justify-content-between
+      .text-right
         = f.submit "Afficher les créneaux", class: "btn btn-primary", data: { disable_with: "Récupération des créneaux..."}
-        = link_to "Prendre un RDV hors plage d'ouverture", new_admin_organisation_rdv_wizard_step_path(current_organisation), class: "btn btn-outline-primary"
 
 #creneaux
   .text-center
