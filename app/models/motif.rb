@@ -148,6 +148,18 @@ class Motif < ApplicationRecord
     custom_cancel_warning_message || Motif.human_attribute_name("default_cancel_warning_message")
   end
 
+  def start_booking_delay
+    Time.zone.now + min_booking_delay.seconds
+  end
+
+  def end_booking_delay
+    Time.zone.now + max_booking_delay.seconds
+  end
+
+  def booking_delay_range
+    start_booking_delay..end_booking_delay
+  end
+
   private
 
   def booking_delay_validation
