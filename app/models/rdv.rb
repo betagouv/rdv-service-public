@@ -42,7 +42,7 @@ class Rdv < ApplicationRecord
   has_many :webhook_endpoints, through: :organisation
 
   # Delegates
-  delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :follow_up?, :service, :collectif?, :individuel?, to: :motif
+  delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, to: :motif
 
   # Validations
   validates :starts_at, :ends_at, :agents, presence: true
