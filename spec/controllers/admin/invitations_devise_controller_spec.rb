@@ -143,6 +143,29 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
         expect { subject }.to change(Agent, :count).by(1)
         expect(AgentRole.last).to have_attributes(level: AgentRole::LEVEL_BASIC)
       end
+
+      context "when the agent already exists" do
+        let!(:agent2) do
+          create(:agent, basic_role_in_organisations: [organisation2], service: secretariat)
+        end
+        let(:secretariat) { create(:service, name: Service::SECRETARIAT) }
+
+        let(:params) do
+          {
+            organisation_id: organisation.id,
+            agent: {
+              email: agent2.email,
+              service_id: agent2.service_id,
+              roles_attributes: { "0" => { level: "basic" } }
+            }
+          }
+        end
+
+        it "invites the agent" do
+          expect { subject }.to change { organisation.agents.count }.by(1)
+          expect(AgentRole.last).to have_attributes(level: AgentRole::LEVEL_BASIC)
+        end
+      end
     end
 
     context "when email is correct and no invitation has been sent" do

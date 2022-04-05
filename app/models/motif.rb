@@ -117,7 +117,7 @@ class Motif < ApplicationRecord
   end
 
   def authorized_services
-    for_secretariat ? [service, Service.secretariat] : [service]
+    for_secretariat ? [service, Service.secretariat.first] : [service]
   end
 
   def secretariat?
