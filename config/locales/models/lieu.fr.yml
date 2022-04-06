@@ -19,6 +19,8 @@ fr:
             availability:
               cant_change_from_or_to_single_use: Les lieux ponctuels ne peuvent pas être transformés en lieux permanents, et réciproquement.
               format: "%{message}"
+            address:
+              must_be_valid: doit être valide
   simple_form:
     hints:
       lieu:

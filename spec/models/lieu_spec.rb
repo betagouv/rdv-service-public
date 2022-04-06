@@ -8,6 +8,22 @@ describe Lieu, type: :model do
   describe "validation" do
     subject { lieu.errors }
 
+    it "invalid without latitude" do
+      lieu = build(:lieu, latitude: nil)
+      expect(lieu).to be_invalid
+    end
+
+    it "invalid without longitude" do
+      lieu = build(:lieu, longitude: nil)
+      expect(lieu).to be_invalid
+    end
+
+    it "return errror message about address" do
+      lieu = build(:lieu, longitude: nil, latitude: nil)
+      lieu.valid?
+      expect(lieu.errors.full_messages).to eq(["Adresse doit être valide"])
+    end
+
     describe "availability changes" do
       let(:lieu) { create :lieu, availability: initial_value }
 

@@ -20,7 +20,8 @@ class Lieu < ApplicationRecord
   has_many :agents, through: :plage_ouvertures
 
   # Validations
-  validates :name, :address, :availability, :latitude, :longitude, presence: true
+  validates :name, :address, :availability, presence: true
+  validate :longitude_and_latitude_must_be_present
   validate :cant_change_availibility_single_use
 
   # Scopes
@@ -80,6 +81,12 @@ class Lieu < ApplicationRecord
   end
 
   private
+
+  def longitude_and_latitude_must_be_present
+    return if latitude.present? && longitude.present?
+
+    errors.add(:address, :must_be_valid)
+  end
 
   def cant_change_availibility_single_use
     return if new_record?
