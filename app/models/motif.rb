@@ -160,6 +160,10 @@ class Motif < ApplicationRecord
     start_booking_delay..end_booking_delay
   end
 
+  def individuel?
+    !collectif?
+  end
+
   private
 
   def booking_delay_validation

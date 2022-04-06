@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 json.array! @rdvs do |rdv|
-  json.title rdv_title_for_agent(rdv)
+  json.title rdv_title_in_agenda(rdv)
   json.id rdv.id
   json.extendedProps do
     json.organisationName rdv.organisation&.name
