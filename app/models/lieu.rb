@@ -24,6 +24,8 @@ class Lieu < ApplicationRecord
   validate :longitude_and_latitude_must_be_present
   validate :cant_change_availibility_single_use
 
+  before_save { self.cleaned_address = address if cleaned_address.blank? } # see issue #2293
+
   # Scopes
   scope :for_motif, lambda { |motif|
     lieux_ids = PlageOuverture
@@ -78,6 +80,17 @@ class Lieu < ApplicationRecord
 
     # Distance in meter
     earth_radius * c
+  end
+
+  # Cf scripts/clean_lieux_address.rb & issue: #2293
+  def self.cleaned_old_address(old_address)
+    components = old_address.split(",")
+    # cette regex permet de tester les numéros des départements
+    if components.count == 6 && components[3].squish =~ /^\d[\dabAB]$/
+      components[0..2].join(",")
+    else
+      old_address
+    end
   end
 
   private

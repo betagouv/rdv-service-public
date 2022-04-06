@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_31_071123) do
+ActiveRecord::Schema.define(version: 2022_03_31_074949) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -267,6 +267,7 @@ ActiveRecord::Schema.define(version: 2022_03_31_071123) do
     t.string "phone_number_formatted"
     t.boolean "old_enabled", default: true, null: false
     t.enum "availability", null: false, enum_type: "lieu_availability"
+    t.string "cleaned_address"
     t.index ["availability"], name: "index_lieux_on_availability"
     t.index ["name"], name: "index_lieux_on_name"
     t.index ["organisation_id"], name: "index_lieux_on_organisation_id"
