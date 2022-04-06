@@ -24,6 +24,8 @@ class Lieu < ApplicationRecord
   validate :longitude_and_latitude_must_be_present
   validate :cant_change_availibility_single_use
 
+  before_save { self.cleaned_address = address if cleaned_address.blank? } # see issue #2293
+
   # Scopes
   scope :for_motif, lambda { |motif|
     lieux_ids = PlageOuverture
@@ -80,7 +82,7 @@ class Lieu < ApplicationRecord
     earth_radius * c
   end
 
-  # ce script permet de nettoyer toutes les adresses déjà existances de RDV-S. ref de l'issue: #2293
+  # Cf scripts/clean_lieux_address.rb & issue: #2293
   def self.cleaned_old_address(old_address)
     components = old_address.split(",")
     # cette regex permet de tester les numéros des départements
