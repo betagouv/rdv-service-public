@@ -1,0 +1,21 @@
+.d-flex.card-text.mb-2
+    div.mr-1
+      i.fa.fa-fw.fa-users>
+    = I18n.t("rdvs.participants", count: rdv.users_count)
+
+.d-flex.card-text.mb-3
+  - if rdv.remaining_seats?
+      div.mr-3
+      div
+        - if rdv.max_participants_count
+          = I18n.t("rdvs.available_seats", count: rdv.max_participants_count - rdv.users_count)
+        - else
+          = "Pas de limite de places"
+  - elsif rdv.fully_booked?
+      div.mr-1
+        i.fa.fa-fw.fa-user-check>
+        = "Complet"
+  - elsif rdv.overbooked?
+    div.mr-1
+      i.fa.fa-fw.fa-user-times>
+      = "Trop de participants (#{rdv.users_count} personnes pour #{I18n.t('rdvs.seats', count: rdv.max_participants_count)})"

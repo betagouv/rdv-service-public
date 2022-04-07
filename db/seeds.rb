@@ -149,7 +149,7 @@ motif_org_paris_nord_pmi_securite = Motif.create!(
   reservable_online: true,
   location_type: :home
 )
-_motif_org_paris_nord_pmi_collectif = Motif.create!(
+motif_org_paris_nord_pmi_collectif = Motif.create!(
   name: "Atelier Collectif",
   color: "#1049F3",
   organisation_id: org_paris_nord.id,
@@ -215,6 +215,26 @@ motifs = {}
     location_type: :public_office
   )
 end
+
+# MOTIFS Conseiller Numérique
+Motif.create!(
+  name: "Accompagnement individuel",
+  color: "#99CC99",
+  default_duration_in_min: 60,
+  location_type: :public_office,
+  organisation: org_cnfs,
+  service: service_cnfs
+)
+
+Motif.create!(
+  name: "Atelier collectif",
+  color: "#4A86E8",
+  default_duration_in_min: 120,
+  location_type: :public_office,
+  collectif: true,
+  organisation: org_cnfs,
+  service: service_cnfs
+)
 
 # LIEUX
 
@@ -598,6 +618,41 @@ Rdv.create(
   user_ids: [user_org_paris_nord_josephine.id],
   context: "Visite à domicile"
 )
+
+Rdv.create(
+  starts_at: Time.zone.today + 5.days + 11.hours,
+  duration_in_min: 30,
+  motif_id: motif_org_paris_nord_pmi_securite.id,
+  lieu: lieu_org_paris_nord_bd_aubervilliers,
+  organisation_id: org_paris_nord.id,
+  agent_ids: [agent_org_paris_nord_pmi_martine.id],
+  user_ids: [user_org_paris_nord_josephine.id],
+  context: "Visite à domicile"
+)
+
+10.times do |i|
+  Rdv.create(
+    starts_at: Time.zone.today + 17.hours + i.weeks,
+    duration_in_min: 60,
+    motif_id: motif_org_paris_nord_pmi_collectif.id,
+    lieu: lieu_org_paris_nord_bd_aubervilliers,
+    organisation_id: org_paris_nord.id,
+    agent_ids: [agent_org_paris_nord_pmi_marco.id],
+    users_count: 1,
+    user_ids: []
+  )
+
+  Rdv.create(
+    starts_at: Time.zone.today + 2.days + 16.hours + i.weeks,
+    duration_in_min: 60,
+    motif_id: motif_org_paris_nord_pmi_collectif.id,
+    lieu: lieu_org_paris_nord_bolivar,
+    organisation_id: org_paris_nord.id,
+    agent_ids: [agent_org_paris_nord_social_polo.id],
+    users_count: 1,
+    user_ids: []
+  )
+end
 
 # Insert a lot of rdvs in the past 2 years
 # rubocop:disable Rails/SkipsModelValidations
