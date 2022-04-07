@@ -1,0 +1,6 @@
+fr:
+  admin:
+    users:
+      show:
+        find_rdv: Trouver un RDV
+
