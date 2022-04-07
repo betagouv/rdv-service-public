@@ -60,6 +60,15 @@ class CronJob < ApplicationJob
     end
   end
 
+  class DestroyOldReceiptsJob < CronJob
+    # At 1:00 every day
+    self.cron_expression = "0 4 * * *"
+
+    def perform
+      Receipt.destroy_old!
+    end
+  end
+
   class SendRdvEventsStatsMailJob < CronJob
     # At 12:00 every day
     self.cron_expression = "0 12 * * *"
