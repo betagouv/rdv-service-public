@@ -9,13 +9,19 @@
         .col-md-6
           = f.association :service, collection: @available_services
         .col-md-6
-          = f.input :category, collection: Motif.human_attribute_values(:categories), prompt: "", input_html: { class: "select2-input" }
-      .form-row
-        .col-md-12
           = f.input :name
       .form-row
         .col-md-4= f.input :default_duration_in_min
         .col-md-4= f.input :color, as: "color"
+
+  - if current_organisation.territory.enable_motif_categories_field
+    .card
+      .card-body
+        h5.card-title= Motif.human_attribute_name("category")
+        p.text-muted.font-14= Motif.human_attribute_name("category_hint")
+        .form-row
+          .col-md-12
+              = f.input :category, collection: Motif.human_attribute_values(:categories), prompt: "", input_html: { class: "select2-input" }, label: false
 
   .card
     .card-body

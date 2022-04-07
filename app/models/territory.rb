@@ -46,6 +46,10 @@ class Territory < ApplicationRecord
     enable_context_field: :context
   }.freeze
 
+  OPTIONAL_MOTIF_FIELD_TOGGLES = {
+    enable_motif_categories_field: :category
+  }.freeze
+
   SOCIAL_FIELD_TOGGLES = {
     enable_caisse_affiliation_field: :caisse_affiliation,
     enable_affiliation_number_field: :affiliation_number,

@@ -2,8 +2,15 @@
 
 class AddCategoryToMotifs < ActiveRecord::Migration[6.1]
   def change
-    create_enum :motif_category, %i[rsa_orientation rsa_accompagnement rsa_orientation_phone_platform]
+    create_enum :motif_category, %i[rsa_orientation rsa_accompagnement rsa_orientation_on_phone_platform]
     add_column :motifs, :category, :motif_category
     add_index :motifs, :category
+
+    add_column :territories, :enable_motif_categories_field, :boolean, default: false
+
+    Territory.find_each do |territory|
+      territory.enable_motif_categories_field = false
+      territory.save
+    end
   end
 end
