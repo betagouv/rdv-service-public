@@ -10,14 +10,24 @@ module RdvsHelper
   end
 
   def rdv_title_for_agent(rdv)
-    if rdv.collectif?
-      if rdv.name.present?
-        "#{rdv.motif.name} : #{rdv.name}"
-      else
-        rdv.motif.name
-      end
+    return rdv_individuel_title_for_agent(rdv) if rdv.individuel?
+
+    if rdv.name.present?
+      "#{rdv.motif.name} : #{rdv.name}"
     else
-      rdv_individuel_title_for_agent(rdv)
+      rdv.motif.name
+    end
+  end
+
+  def rdv_title_in_agenda(rdv)
+    title = rdv_title_for_agent(rdv)
+
+    return title if rdv.individuel?
+
+    if rdv.max_participants_count
+      "#{title} (#{rdv.users_count}/#{rdv.max_participants_count})"
+    else
+      "#{title} (#{rdv.users_count})"
     end
   end
 
@@ -61,20 +71,6 @@ module RdvsHelper
     tag.div(data: { toggle: "dropdown" },
             class: "dropdown-toggle btn rdv-status-#{rdv.temporal_status}") do
       Rdv.human_attribute_value(:status, rdv.temporal_status, disable_cast: true)
-    end
-  end
-
-  def rdv_status_dropdown_item(rdv, agent, status, remote)
-    link_to admin_organisation_rdv_path(rdv.organisation, rdv, rdv: { status: status, ignore_benign_errors: true }, agent_id: agent&.id),
-            method: :put,
-            class: "dropdown-item",
-            data: { confirm: change_status_confirmation_message(rdv, status) },
-            remote: remote do
-      tag.span do
-        tag.i(class: "fa fa-circle mr-1 rdv-status-#{status}") +
-          Rdv.human_attribute_value(:status, status, context: :action) +
-          tag.div(Rdv.human_attribute_value(:status, status, context: :explanation), class: "text-wrap text-muted")
-      end
     end
   end
 

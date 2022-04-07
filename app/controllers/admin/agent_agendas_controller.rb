@@ -10,7 +10,7 @@ class Admin::AgentAgendasController < AgentAuthController
     @date = params[:date].present? ? Date.parse(params[:date]) : nil
   end
 
-  def toggle_display_saturdays
+  def toggle_displays
     @agent = current_agent
     authorize(@agent)
     @agent.update!(agent_role_params)
@@ -20,6 +20,6 @@ class Admin::AgentAgendasController < AgentAuthController
   private
 
   def agent_role_params
-    params.require(:agent).permit(:display_saturdays)
+    params.require(:agent).permit(:display_saturdays, :display_cancelled_rdv)
   end
 end

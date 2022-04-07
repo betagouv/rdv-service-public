@@ -10,7 +10,11 @@ nav
     - if content_for? :side_nav_menu
       = yield :side_nav_menu
     - else
+
       ul.side-nav.list-unstyled#menu-agent.pb-3.mb-0
+        li.side-nav-item.mb-2.ml-3.pr-2
+          .d-flex.justify-content-center
+            = link_to "Trouver un RDV", search_rdv_slot_url_with(@user), class: "btn bg-white align-bottom text-dark"
         li.side-nav-item.connected-agent.mb-3.pl-3.pr-2.py-2
           a[
             data-toggle="collapse"

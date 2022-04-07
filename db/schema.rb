@@ -194,6 +194,7 @@ ActiveRecord::Schema.define(version: 2022_04_01_150352) do
     t.text "search_terms"
     t.integer "unknown_past_rdv_count", default: 0
     t.boolean "display_saturdays", default: false
+    t.boolean "display_cancelled_rdv", default: true
     t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_agents_search_terms", using: :gin
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true
@@ -272,6 +273,7 @@ ActiveRecord::Schema.define(version: 2022_04_01_150352) do
     t.string "phone_number_formatted"
     t.boolean "old_enabled", default: true, null: false
     t.enum "availability", null: false, enum_type: "lieu_availability"
+    t.string "cleaned_address"
     t.index ["availability"], name: "index_lieux_on_availability"
     t.index ["name"], name: "index_lieux_on_name"
     t.index ["organisation_id"], name: "index_lieux_on_organisation_id"

@@ -8,6 +8,22 @@ describe Lieu, type: :model do
   describe "validation" do
     subject { lieu.errors }
 
+    it "invalid without latitude" do
+      lieu = build(:lieu, latitude: nil)
+      expect(lieu).to be_invalid
+    end
+
+    it "invalid without longitude" do
+      lieu = build(:lieu, longitude: nil)
+      expect(lieu).to be_invalid
+    end
+
+    it "return errror message about address" do
+      lieu = build(:lieu, longitude: nil, latitude: nil)
+      lieu.valid?
+      expect(lieu.errors.full_messages).to eq(["Adresse doit être valide"])
+    end
+
     describe "availability changes" do
       let(:lieu) { create :lieu, availability: initial_value }
 
@@ -147,6 +163,19 @@ describe Lieu, type: :model do
       lieu = build :lieu, availability: :enabled
       lieu.enabled = false
       expect(lieu.availability).to eq "disabled"
+    end
+  end
+
+  describe "#cleaned_old_address" do
+    it "address is cleaned" do
+      # test une adresse avec le context entier
+      expect(described_class.cleaned_old_address("15 Allee Nelson Mandela, Tremblay-en-France, 93290, 93, Seine-Saint-Denis, Île-de-France")).to eq "15 Allee Nelson Mandela, Tremblay-en-France, 93290"
+      # test une adresse déjà au bon format
+      expect(described_class.cleaned_old_address("14 Boulevard Gambetta, Narbonne, 11100")).to eq "14 Boulevard Gambetta, Narbonne, 11100"
+      # test une adresse en Corse
+      expect(described_class.cleaned_old_address("Cours Napoléon, Ajaccio, 20090, 2A, Corse-du-Sud, Corse")).to eq "Cours Napoléon, Ajaccio, 20090"
+      # test une adresse avec un arrondissement
+      expect(described_class.cleaned_old_address("83 RUE DE SEVRES  75006 PARIS 6")).to eq "83 RUE DE SEVRES  75006 PARIS 6"
     end
   end
 end

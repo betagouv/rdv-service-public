@@ -17,7 +17,7 @@ class Service < ApplicationRecord
 
   # Scopes
   scope :with_motifs, -> { where.not(name: SECRETARIAT) }
-  scope :secretariat, -> { find_by(name: SECRETARIAT) }
+  scope :secretariat, -> { where(name: SECRETARIAT) }
   scope :ordered_by_name, -> { order(Arel.sql("unaccent(LOWER(name))")) }
 
   ## -
