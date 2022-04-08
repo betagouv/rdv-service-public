@@ -7,10 +7,5 @@ class AddCategoryToMotifs < ActiveRecord::Migration[6.1]
     add_index :motifs, :category
 
     add_column :territories, :enable_motif_categories_field, :boolean, default: false
-
-    Territory.find_each do |territory|
-      territory.enable_motif_categories_field = false
-      territory.save
-    end
   end
 end

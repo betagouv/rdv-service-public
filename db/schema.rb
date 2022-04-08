@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 2022_04_01_150352) do
   create_enum :motif_category, [
     "rsa_orientation",
     "rsa_accompagnement",
-    "rsa_orientation_phone_platform",
+    "rsa_orientation_on_phone_platform",
   ], force: :cascade
 
   create_enum :rdv_status, [
@@ -482,6 +482,7 @@ ActiveRecord::Schema.define(version: 2022_04_01_150352) do
     t.boolean "enable_case_number", default: false
     t.boolean "enable_address_details", default: false
     t.boolean "enable_context_field", default: false
+    t.boolean "enable_motif_categories_field", default: false
     t.index ["departement_number"], name: "index_territories_on_departement_number", unique: true, where: "((departement_number)::text <> ''::text)"
   end
 
