@@ -23,14 +23,10 @@ require "capybara/email/rspec"
 require "webdrivers"
 require "capybara-screenshot/rspec"
 require "pundit/rspec"
-require "webmock/rspec"
 require "simplecov"
 
 SimpleCov.minimum_coverage 80
 SimpleCov.start
-
-# Autorise Chromedrive storage pour l'execution de la CI
-WebMock.disable_net_connect!(allow: ["127.0.0.1", "localhost", "chromedriver.storage.googleapis.com"])
 
 Capybara.register_driver :chrome_headless do |app|
   options = ::Selenium::WebDriver::Chrome::Options.new
