@@ -26,38 +26,22 @@ describe WebhookJob, type: :job do
         expect(YAML.safe_load(e.message)["Webhook-Failure"]["body"]).to eq("ERROR")
       end
     end
+  end
 
-    it "doesnt throw exception when drome serveur can't update appointment" do
-      payload = "{}"
-      webhook_endpoint = create(:webhook_endpoint, secret: "bla", target_url: "https://example.com/rdv-s-endpoint")
-
-      stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 500, body: "{\"message\": \"Can't update appointment.\"}" })
-
-      expect do
-        described_class.perform_now(payload, webhook_endpoint.id)
-      end.not_to raise_error
+  describe ".false_negative_from_drome?" do
+    it "return false when..." do
+      body = "ERROR"
+      expect(described_class.false_negative_from_drome?(body)).to eq(false)
     end
 
-    it "doesnt throw exception when appointment id doesn't exist" do
-      payload = "{}"
-      webhook_endpoint = create(:webhook_endpoint, secret: "bla", target_url: "https://example.com/rdv-s-endpoint")
-
-      stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 500, body: "{\"message\": \"Appointment id doesn't exist.\"}" })
-
-      expect do
-        described_class.perform_now(payload, webhook_endpoint.id)
-      end.not_to raise_error
-    end
-
-    it "doesnt throw exception when appointment already deleted" do
-      payload = "{}"
-      webhook_endpoint = create(:webhook_endpoint, secret: "bla", target_url: "https://example.com/rdv-s-endpoint")
-
-      stub_request(:post, "https://example.com/rdv-s-endpoint").and_return({ status: 500, body: "{\"message\": \"Appointment already deleted.\"}" })
-
-      expect do
-        described_class.perform_now(payload, webhook_endpoint.id)
-      end.not_to raise_error
+    [
+      "{\"message\": \"Can't update appointment.\"}",
+      "{\"message\": \"Appointment id doesn't exist.\"}",
+      "{\"message\": \"Appointment already deleted.\"}"
+    ].each do |returned_message|
+      it "return true when message is `#{returned_message}`" do
+        expect(described_class.false_negative_from_drome?(returned_message)).to eq(true)
+      end
     end
   end
 end
