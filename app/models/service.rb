@@ -7,6 +7,7 @@ class Service < ApplicationRecord
   SECRETARIAT = "Secrétariat"
   SERVICE_SOCIAL = "Service social"
   PMI = "PMI (Protection Maternelle Infantile)"
+  CONSEILLER_NUMERIQUE = "Conseiller Numérique"
 
   # Relations
   has_many :agents, dependent: :nullify
@@ -40,5 +41,12 @@ class Service < ApplicationRecord
 
   def related_to_social?
     service_social? || name.parameterize.include?("social")
+  end
+
+  # This is the main toggle to enable or disable features for Conseillers Numériques (cnfs)
+  # TODO: As the usage of this toggle grows, we might need to rethink it, and see if these changes
+  # should be done via configuration, or something else
+  def conseiller_numerique?
+    name == CONSEILLER_NUMERIQUE
   end
 end

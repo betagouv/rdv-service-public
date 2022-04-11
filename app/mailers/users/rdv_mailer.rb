@@ -9,6 +9,7 @@ class Users::RdvMailer < ApplicationMailer
   def rdv_created(rdv_payload, user)
     @rdv = OpenStruct.new(rdv_payload)
     @user = user
+    @conseiller_numerique_email = conseiller_numerique?(@rdv)
 
     self.ics_payload = rdv_payload
     mail(
@@ -20,6 +21,7 @@ class Users::RdvMailer < ApplicationMailer
   def rdv_date_updated(rdv_payload, user, old_starts_at)
     @rdv = OpenStruct.new(rdv_payload)
     @user = user
+    @conseiller_numerique_email = conseiller_numerique?(@rdv)
     @old_starts_at = old_starts_at
 
     self.ics_payload = rdv_payload
@@ -32,6 +34,7 @@ class Users::RdvMailer < ApplicationMailer
   def rdv_upcoming_reminder(rdv_payload, user)
     @rdv = OpenStruct.new(rdv_payload)
     @user = user
+    @conseiller_numerique_email = conseiller_numerique?(@rdv)
 
     self.ics_payload = rdv_payload
     mail(
@@ -43,11 +46,18 @@ class Users::RdvMailer < ApplicationMailer
   def rdv_cancelled(rdv_payload, user)
     @rdv = OpenStruct.new(rdv_payload)
     @user = user
+    @conseiller_numerique_email = conseiller_numerique?(@rdv)
 
     self.ics_payload = rdv_payload
     mail(
       to: user.email,
       subject: "RDV annulé le #{l(@rdv.starts_at, format: :human)} avec #{@rdv.organisation_name}"
     )
+  end
+
+  private
+
+  def conseiller_numerique?(rdv)
+    Service.find(rdv.motif_service_id).conseiller_numerique?
   end
 end
