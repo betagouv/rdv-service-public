@@ -22,18 +22,18 @@ class WebhookJob < ApplicationJob
     )
 
     request.on_complete do |response|
-      message = "Webhook-Failure:\n"
-      message += "  url: #{webhook_endpoint.target_url}\n"
-      message += "  org: #{webhook_endpoint.organisation.name}\n"
-      message += "  response: #{response.code}\n"
-      message += "  body: #{response.body.force_encoding('UTF-8')[0...1000]}\n"
-      raise OutgoingWebhookError, message if !response.success? && !false_negative_from_drome?(response.body)
+      if !response.success? && !WebhookJob.false_negative_from_drome?(response.body)
+        message = "Webhook-Failure:\n"
+        message += "  url: #{webhook_endpoint.target_url}\n"
+        message += "  org: #{webhook_endpoint.organisation.name}\n"
+        message += "  response: #{response.code}\n"
+        message += "  body: #{response.body.force_encoding('UTF-8')[0...1000]}\n"
+        raise OutgoingWebhookError, message
+      end
     end
 
     request.run
   end
-
-  private
 
   # La réponse de la Drôme est en JSON
   # mais leur serveur nous renvoie des erreurs
@@ -44,7 +44,7 @@ class WebhookJob < ApplicationJob
   #
   # Ce petit paliatif est là en attendant qu'ils
   # fassent évoluer leur système.
-  def false_negative_from_drome?(body)
+  def self.false_negative_from_drome?(body)
     body = JSON.parse(body)
     body["message"] && (body["message"] == "Can't update appointment." || body["message"] == "Appointment already deleted." || body["message"] == "Appointment id doesn't exist.")
   rescue StandardError
