@@ -7,14 +7,13 @@ class SmsSender < BaseService
 
   class ApiError < StandardError; end
 
-  SENDER_NAME = "RdvSoli"
-
   attr_reader :phone_number, :content, :tags, :provider, :key
 
-  def initialize(phone_number, content, tags, provider, key) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def initialize(phone_number, content, tags, provider, key, sender_name) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/ParameterLists,
     @phone_number = phone_number
     @content = formatted_content(content)
     @tags = tags
+    @sender_name = sender_name
 
     if Rails.env.test?
       @provider = :debug_logger
@@ -59,7 +58,7 @@ class SmsSender < BaseService
     begin
       SibApiV3Sdk::TransactionalSMSApi.new(api_client).send_transac_sms(
         SibApiV3Sdk::SendTransacSms.new(
-          sender: SENDER_NAME,
+          sender: @sender_name,
           recipient: @phone_number,
           content: @content,
           tag: @tags.join(" ")
@@ -82,7 +81,7 @@ class SmsSender < BaseService
       body: {
         destinationAddress: @phone_number,
         messageText: @content,
-        originatingAddress: SENDER_NAME,
+        originatingAddress: @sender_name,
         originatorTON: 1,
         campaignName: @tags.join(" ").truncate(49),
         maxConcatenatedMessages: 10
