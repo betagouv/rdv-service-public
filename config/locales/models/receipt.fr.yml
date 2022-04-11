@@ -1,0 +1,31 @@
+fr:
+  activerecord:
+    models:
+      receipt: Notifications envoyées
+    attributes:
+      receipt:
+        created_at: Date
+        channel: Canal
+        event: Évènement
+        result: Résultat
+        error_message: Message d’erreur
+        sms_count: Nombre de SMS
+        sms_provider: Fournisseur
+        sms_content: Contenu
+        sms_phone_number: Numéro
+        user: Destinataire
+      receipt/events:
+        rdv_created: Création
+        rdv_date_updated: Modification de date
+        rdv_upcoming_reminder: Rappel
+        rdv_cancelled: Annulation
+      receipt/results:
+        processed: Traité
+        sent: Envoyé
+        delivered: Livré
+        failure: Échec
+      receipt/results/explanation:
+        processed: Le message a été transmis au fournisseur, mais nous ne savons pas s’il a été envoyé.
+        sent: Le message a bien été envoyé. Nous ne pouvons pas avoir la certitude qu’il a bien été reçu.
+        delivered: Selon nos informations, le message a bien été reçu.
+        failure: Le message n’a pas pu être transmis.
