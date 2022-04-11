@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_06_140258) do
+ActiveRecord::Schema.define(version: 2022_04_11_085428) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -536,9 +536,11 @@ ActiveRecord::Schema.define(version: 2022_04_06_140258) do
     t.string "case_number"
     t.string "address_details"
     t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_users_search_terms", using: :gin
+    t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"
     t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
+    t.index ["first_name"], name: "index_users_on_first_name"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_users_on_invitations_count"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
