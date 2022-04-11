@@ -38,4 +38,25 @@ describe SmsSender, type: :service do
       end
     end
   end
+
+  describe "receipt creation" do
+    let(:rdv) { create(:rdv) }
+    let(:user) { create(:user) }
+
+    before do
+      described_class.perform_with("0612345678", "content", [], nil, nil, { event: "rdv_created", rdv: rdv, user: user })
+    end
+
+    it do
+      receipt = Receipt.last
+      expect(receipt).not_to be_nil
+      expect(receipt).to have_attributes(
+        event: "rdv_created",
+        rdv: rdv,
+        user: user,
+        sms_content: "content",
+        sms_provider: "debug_logger"
+      )
+    end
+  end
 end
