@@ -9,7 +9,7 @@ class Admin::SlotsController < AgentAuthController
     # - une pour construire la liste des lieux
     # - une pour le cas où nous avons déjà un lieu
     # À terme, ça pourrait également être un calcul plus réduit. Dans le cas de la recherche sur plusieurs lieux, nous avons besoin de connaitre la prochaine dispo, pas TOUTES les dispo
-    @search_result = SearchCreneauxForAgentsService.perform_with(@form).first
+    @search_result = search_result
 
     @motifs = policy_scope(Motif).active.ordered_by_name
     @services = policy_scope(Service)
@@ -20,5 +20,15 @@ class Admin::SlotsController < AgentAuthController
       .joins(:organisations).where(organisations: { id: current_organisation.id })
       .complete.active.order_by_last_name
     @lieux = policy_scope(Lieu).enabled.ordered_by_name
+  end
+
+  private
+
+  def search_result
+    if @form.motif.individuel?
+      SearchCreneauxForAgentsService.perform_with(@form).first
+    else
+      SearchRdvCollectifForAgentsService.new(@form).slot_search
+    end
   end
 end
