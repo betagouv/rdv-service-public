@@ -45,6 +45,19 @@ ActiveRecord::Schema.define(version: 2022_04_11_085428) do
     "noshow",
   ], force: :cascade
 
+  create_enum :receipts_channel, [
+    "sms",
+    "mail",
+    "webhook",
+  ], force: :cascade
+
+  create_enum :receipts_result, [
+    "processed",
+    "sent",
+    "delivered",
+    "failure",
+  ], force: :cascade
+
   create_enum :sms_provider, [
     "netsize",
     "send_in_blue",
@@ -402,6 +415,27 @@ ActiveRecord::Schema.define(version: 2022_04_11_085428) do
     t.index ["rdv_id", "user_id"], name: "index_rdvs_users_on_rdv_id_and_user_id", unique: true
     t.index ["rdv_id"], name: "index_rdvs_users_on_rdv_id"
     t.index ["user_id"], name: "index_rdvs_users_on_user_id"
+  end
+
+  create_table "receipts", force: :cascade do |t|
+    t.bigint "rdv_id"
+    t.bigint "user_id"
+    t.string "event", null: false
+    t.enum "channel", null: false, enum_type: "receipts_channel"
+    t.enum "result", null: false, enum_type: "receipts_result"
+    t.string "error_message"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "sms_provider"
+    t.integer "sms_count"
+    t.string "sms_content"
+    t.string "sms_phone_number"
+    t.index ["channel"], name: "index_receipts_on_channel"
+    t.index ["created_at"], name: "index_receipts_on_created_at"
+    t.index ["event"], name: "index_receipts_on_event"
+    t.index ["rdv_id"], name: "index_receipts_on_rdv_id"
+    t.index ["result"], name: "index_receipts_on_result"
+    t.index ["user_id"], name: "index_receipts_on_user_id"
   end
 
   create_table "sector_attributions", force: :cascade do |t|

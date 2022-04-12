@@ -51,7 +51,8 @@ Rails.application.configure do
   end
   config.action_mailer.asset_host = ENV["HOST"]
 
-  config.active_job.queue_adapter = :delayed_job
+  config.active_job.queue_adapter = :inline
+  Delayed::Worker.delay_jobs = false
 
   config.action_mailer.perform_caching = false
 
