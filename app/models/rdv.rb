@@ -28,6 +28,7 @@ class Rdv < ApplicationRecord
   # https://github.com/rails/rails/issues/7618
   has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy
   has_many :events, class_name: "RdvEvent", dependent: :destroy
+  has_many :receipts, dependent: :destroy
 
   accepts_nested_attributes_for :rdvs_users, allow_destroy: true
   accepts_nested_attributes_for :lieu
