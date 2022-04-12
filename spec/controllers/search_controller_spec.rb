@@ -19,8 +19,8 @@ RSpec.describe SearchController, type: :controller do
 
   let!(:service) { create(:service, name: "Joli service") }
   let(:now) { Date.new(2019, 7, 22) }
-  let!(:motif) { create(:motif, name: "RSA orientation 1", reservable_online: true, organisation: organisation) }
-  let!(:motif2) { create(:motif, name: "RSA orientation 2", reservable_online: true, organisation: organisation) }
+  let!(:motif) { create(:motif, name: "RSA orientation 1", category: "rsa_orientation", reservable_online: true, organisation: organisation) }
+  let!(:motif2) { create(:motif, name: "RSA orientation 2", category: "rsa_orientation_on_phone_platform", reservable_online: true, organisation: organisation) }
   let!(:motif3) { create(:motif, name: "RSA orientation 3", reservable_online: true, organisation: other_org) }
   let!(:motif4) { create(:motif, name: "Motif numéro 4", reservable_online: true, organisation: other_org) }
 
@@ -93,13 +93,40 @@ RSpec.describe SearchController, type: :controller do
         expect(subject).not_to include("RSA orientation 3")
       end
 
+      context "when a motif category is passed" do
+        it "retrieves motifs from the selected category" do
+          get :search_rdv, params: {
+            address: address, departement: departement_number, city_code: city_code, motif_category: "rsa_orientation"
+          }
+          expect(subject).to include("RSA orientation 1")
+          expect(subject).not_to include("RSA orientation 2")
+        end
+      end
+
+      context "when there are seach terms" do
+        let!(:geo_search) do
+          instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id, motif3.id, motif4.id]))
+        end
+
+        it "lists the available motifs that match the search terms" do
+          get :search_rdv, params: {
+            address: address, departement: departement_number, city_code: city_code,
+            invitation_token: invitation_token, motif_search_terms: "RSA orientation"
+          }
+          expect(subject).to include("RSA orientation 1")
+          expect(subject).to include("RSA orientation 2")
+          expect(subject).to include("RSA orientation 3")
+          expect(subject).not_to include("Motif numéro 4")
+        end
+      end
+
       context "for an invitation" do
         context "when the geo search retrieves available_motifs" do
           let!(:geo_search) do
-            instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id, motif3.id, motif4.id]))
+            instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id, motif3.id]))
           end
 
-          it "lists the available motifs that match the search terms" do
+          it "lists the available motifs" do
             get :search_rdv, params: {
               address: address, departement: departement_number, city_code: city_code,
               invitation_token: invitation_token, motif_search_terms: "RSA orientation"
@@ -108,17 +135,6 @@ RSpec.describe SearchController, type: :controller do
             expect(subject).to include("RSA orientation 2")
             expect(subject).to include("RSA orientation 3")
             expect(subject).not_to include("Motif numéro 4")
-          end
-
-          it "lists all the available motifs when there are no search terms" do
-            get :search_rdv, params: {
-              address: address, departement: departement_number, city_code: city_code,
-              invitation_token: invitation_token
-            }
-            expect(subject).to include("RSA orientation 1")
-            expect(subject).to include("RSA orientation 2")
-            expect(subject).to include("RSA orientation 3")
-            expect(subject).to include("Motif numéro 4")
           end
         end
 
@@ -136,7 +152,7 @@ RSpec.describe SearchController, type: :controller do
             expect(subject).not_to include("Motif numéro 4")
           end
 
-          it "reveals a problem when not motifs are available" do
+          it "reveals a problem when no motifs are available" do
             get :search_rdv, params: {
               organisation_ids: [other_org.id], address: address, departement: departement_number, city_code: city_code,
               invitation_token: invitation_token, motif_search_terms: "something random"

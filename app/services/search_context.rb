@@ -16,6 +16,7 @@ class SearchContext
     @street_ban_id = query[:street_ban_id]
     @organisation_ids = query[:organisation_ids]
     @motif_search_terms = query[:motif_search_terms]
+    @motif_category = query[:motif_category]
     @motif_name_with_location_type = query[:motif_name_with_location_type]
     @service_id = query[:service_id]
     @lieu_id = query[:lieu_id]
@@ -138,6 +139,8 @@ class SearchContext
                end
       motifs = motifs.where(service: service) if service.present?
       motifs = motifs.joins(:lieux).where(lieux: lieu) if lieu.present?
+      motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
+      motifs = motifs.where(category: @motif_category) if @motif_category.present?
       motifs
     end
   end
@@ -149,19 +152,7 @@ class SearchContext
   def available_motifs_for_invitation
     # we retrieve the geolocalised available motifs, if there are none we fallback
     # on the availabe motifs for the organisations passed in the query
-    invitation_geo_search_motifs.presence || invitation_organisations_motifs
-  end
-
-  def invitation_geo_search_motifs
-    motifs = geo_search.available_motifs
-    motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
-    motifs
-  end
-
-  def invitation_organisations_motifs
-    motifs = Motif.available_with_plages_ouvertures.where(organisation_id: @organisation_ids)
-    motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
-    motifs
+    geo_search.available_motifs.presence || Motif.available_with_plages_ouvertures.where(organisation_id: @organisation_ids)
   end
 
   def invited_user
