@@ -99,6 +99,12 @@ fr:
           teams: Équipes
           actions: Actions
           edit_agents: Modification des équipes de l'agent
+      motif_fields:
+        edit:
+          title: Champs des motifs
+          card_title: Champs optionnels pour les motifs
+          hint_1: Vous pouvez activer ou désactiver les champs suivants pour les motifs.
+          hint_2: "Les champs seront simplement masqués dans l’interface : les données préexistantes ne seront pas supprimées."
       rdv_fields:
         edit:
           title: Champs de la fiche RDV

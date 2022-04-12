@@ -36,6 +36,12 @@ ActiveRecord::Schema.define(version: 2022_04_11_085428) do
     "phone",
   ], force: :cascade
 
+  create_enum :motif_category, [
+    "rsa_orientation",
+    "rsa_accompagnement",
+    "rsa_orientation_on_phone_platform",
+  ], force: :cascade
+
   create_enum :rdv_status, [
     "unknown",
     "waiting",
@@ -308,7 +314,9 @@ ActiveRecord::Schema.define(version: 2022_04_11_085428) do
     t.text "custom_cancel_warning_message"
     t.boolean "collectif", default: false
     t.enum "location_type", default: "public_office", null: false, enum_type: "location_type"
+    t.enum "category", enum_type: "motif_category"
     t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_motifs_name_vector", using: :gin
+    t.index ["category"], name: "index_motifs_on_category"
     t.index ["collectif"], name: "index_motifs_on_collectif"
     t.index ["deleted_at"], name: "index_motifs_on_deleted_at"
     t.index ["location_type"], name: "index_motifs_on_location_type"
@@ -508,7 +516,13 @@ ActiveRecord::Schema.define(version: 2022_04_11_085428) do
     t.boolean "enable_case_number", default: false
     t.boolean "enable_address_details", default: false
     t.boolean "enable_context_field", default: false
+    t.boolean "enable_motif_categories_field", default: false
     t.index ["departement_number"], name: "index_territories_on_departement_number", unique: true, where: "((departement_number)::text <> ''::text)"
+  end
+
+  create_table "tokens", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "user_profiles", force: :cascade do |t|
