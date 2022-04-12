@@ -82,10 +82,15 @@ class PlageOuverture < ApplicationRecord
   def overlapping_plages_ouvertures_candidates
     return [] unless valid_date_and_times?
 
-    candidate_pos = PlageOuverture.where(agent: agent).where.not(id: id)
-      .where("recurrence IS NOT NULL or first_day >= ?", first_day)
+    candidate_pos = agent.plage_ouvertures
+      .not_expired
+      .where.not(id: id)
+
+    # The next two lines mean:
+    # if self is exceptionnelle, we want to inspect recurring POs that start before self and exceptionnelle POs on the same day
+    # if self is recurring, we want to inspect all recurring POs and exceptionnelle that start after self
+    candidate_pos = candidate_pos.where("recurrence IS NOT NULL or first_day >= ?", first_day)
     candidate_pos = candidate_pos.where("first_day <= ?", first_day) if exceptionnelle?
-    # we could further restrict this query if perfs are an issue
     candidate_pos
   end
 

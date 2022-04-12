@@ -574,17 +574,20 @@ _plage_ouverture_org_bapaume_bruno_classique = PlageOuverture.create!(
   end_time: Tod::TimeOfDay.new(15),
   recurrence: Montrose.every(:week, interval: 1, starts: Date.tomorrow)
 )
-_plage_ouverture_org_bapaume_gina_classique = PlageOuverture.create!(
-  title: "Perm. prenatale",
-  organisation_id: org_bapaume.id,
-  agent_id: agent_org_bapaume_pmi_gina.id,
-  lieu_id: lieu_bapaume_est.id,
-  motif_ids: [motifs[:bapaume][:pmi_prenatale].id],
-  first_day: Date.tomorrow,
-  start_time: Tod::TimeOfDay.new(11),
-  end_time: Tod::TimeOfDay.new(18),
-  recurrence: Montrose.every(:week, interval: 1, starts: Date.tomorrow)
-)
+
+[1, 2, 4, 5].each do |weekday|
+  PlageOuverture.create(
+    title: "Permamence jour #{weekday}",
+    organisation_id: org_bapaume.id,
+    agent_id: agent_org_bapaume_pmi_gina.id,
+    lieu_id: lieu_bapaume_est.id,
+    motif_ids: [motifs[:bapaume][:pmi_prenatale].id],
+    first_day: Date.tomorrow,
+    start_time: Tod::TimeOfDay.new(11),
+    end_time: Tod::TimeOfDay.new(18),
+    recurrence: Montrose.every(:week, interval: 1, starts: Date.tomorrow, day: [weekday])
+  )
+end
 
 # RDVs
 
