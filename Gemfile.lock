@@ -156,6 +156,8 @@ GEM
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
     concurrent-ruby (1.1.9)
+    crack (0.4.5)
+      rexml
     crass (1.0.6)
     css_parser (1.11.0)
       addressable
@@ -242,6 +244,7 @@ GEM
       activesupport (>= 5.0)
     groupdate (4.3.0)
       activesupport (>= 5)
+    hashdiff (1.0.1)
     hashie (5.0.0)
     hiredis (0.6.3)
     htmlentities (4.3.4)
@@ -585,6 +588,10 @@ GEM
     webfinger (1.2.0)
       activesupport
       httpclient (>= 2.4)
+    webmock (3.14.0)
+      addressable (>= 2.8.0)
+      crack (>= 0.3.2)
+      hashdiff (>= 0.4.0, < 2.0.0)
     webpacker (5.4.3)
       activesupport (>= 5.2)
       rack-proxy (>= 0.6.1)
@@ -680,6 +687,7 @@ DEPENDENCIES
   typhoeus
   wannabe_bool
   webdrivers (~> 4.6.0)
+  webmock
   webpacker
 
 RUBY VERSION

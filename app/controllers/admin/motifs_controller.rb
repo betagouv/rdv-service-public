@@ -4,7 +4,7 @@ class Admin::MotifsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: %i[new create]
-  before_action :set_available_services, only: %i[new edit]
+  before_action :set_available_services, only: %i[new edit index]
   before_action :set_motif, only: %i[show edit update destroy]
 
   def index

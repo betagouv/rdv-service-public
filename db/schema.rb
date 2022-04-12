@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_08_142133) do
+ActiveRecord::Schema.define(version: 2022_04_11_085428) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -266,14 +266,14 @@ ActiveRecord::Schema.define(version: 2022_04_08_142133) do
     t.bigint "organisation_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "address", null: false
+    t.string "old_address"
     t.float "latitude"
     t.float "longitude"
     t.string "phone_number"
     t.string "phone_number_formatted"
     t.boolean "old_enabled", default: true, null: false
     t.enum "availability", null: false, enum_type: "lieu_availability"
-    t.string "cleaned_address"
+    t.string "address", null: false
     t.index ["availability"], name: "index_lieux_on_availability"
     t.index ["name"], name: "index_lieux_on_name"
     t.index ["organisation_id"], name: "index_lieux_on_organisation_id"
@@ -550,9 +550,11 @@ ActiveRecord::Schema.define(version: 2022_04_08_142133) do
     t.string "case_number"
     t.string "address_details"
     t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_users_search_terms", using: :gin
+    t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"
     t.index ["email"], name: "index_users_on_email", unique: true, where: "(email IS NOT NULL)"
+    t.index ["first_name"], name: "index_users_on_first_name"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_users_on_invitations_count"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
