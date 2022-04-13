@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_11_085428) do
+ActiveRecord::Schema.define(version: 2022_04_13_081821) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -401,7 +401,7 @@ ActiveRecord::Schema.define(version: 2022_04_11_085428) do
     t.datetime "ends_at", null: false
     t.string "name"
     t.integer "max_participants_count"
-    t.integer "users_count"
+    t.integer "users_count", default: 0
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist
     t.index ["created_by"], name: "index_rdvs_on_created_by"
     t.index ["ends_at"], name: "index_rdvs_on_ends_at"

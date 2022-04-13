@@ -16,7 +16,7 @@ describe "Agent can find a creneau for a rdv collectif", js: true do
 
   specify do
     visit admin_organisation_agent_agenda_path(organisation, agent)
-    click_link "Trouver un RDV"
+    click_link "Trouver un RDV", match: :first
 
     select "Atelier participatif", from: "Motif"
     click_button "Afficher les créneaux"
