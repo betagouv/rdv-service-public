@@ -42,6 +42,7 @@ fr:
         click_on_link_sent: "Veuillez cliquer sur le lien dans l'email qui vient de vous être envoyé"
     mailer:
       invitation_instructions_cnfs:
+        subject: "Vous avez été invité sur RDV-Solidarités"
         hello: "Hello 👋"
         create_account: "Nous vous contactons pour %{link} RDV-Solidarités. "
         intro1: "✅ RDV-Solidarités est un outil de gestion des rendez-vous."
