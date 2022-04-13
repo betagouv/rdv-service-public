@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_11_085428) do
+ActiveRecord::Schema.define(version: 2022_04_13_081821) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -401,7 +401,7 @@ ActiveRecord::Schema.define(version: 2022_04_11_085428) do
     t.datetime "ends_at", null: false
     t.string "name"
     t.integer "max_participants_count"
-    t.integer "users_count"
+    t.integer "users_count", default: 0
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist
     t.index ["created_by"], name: "index_rdvs_on_created_by"
     t.index ["ends_at"], name: "index_rdvs_on_ends_at"
@@ -518,11 +518,6 @@ ActiveRecord::Schema.define(version: 2022_04_11_085428) do
     t.boolean "enable_context_field", default: false
     t.boolean "enable_motif_categories_field", default: false
     t.index ["departement_number"], name: "index_territories_on_departement_number", unique: true, where: "((departement_number)::text <> ''::text)"
-  end
-
-  create_table "tokens", force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "user_profiles", force: :cascade do |t|

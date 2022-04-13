@@ -8,10 +8,15 @@
         = link_to t(".place_index"), admin_organisation_agent_searches_path(current_organisation,
                 creneaux_search_params(@form)), class: "btn btn-outline-primary m-2"
 
-  .card-body
-
-    = render "/admin/slots/slots", \
-      lieu: @search_result.lieu, \
-      creneaux: @search_result.creneaux, \
-      form: @form, \
-      next_availability: @search_result.next_availability
+  - if @form.motif.individuel?
+    .card-body
+      = render "/admin/slots/slots", \
+        lieu: @search_result.lieu, \
+        creneaux: @search_result.creneaux, \
+        form: @form, \
+        next_availability: @search_result.next_availability
+- if @form.motif.collectif?
+  .row.justify-content-center.pb-3
+    .col-md-8
+      - @search_result.creneaux.each do |search_result|
+        = render "admin/rdvs_collectifs/rdv", rdv: search_result

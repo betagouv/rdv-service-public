@@ -6,36 +6,6 @@
   .card-body
     .row
       .col-md-6
-        - if rdv.remaining_seats?
-          = link_to edit_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv), class: "d-flex card-text mb-2" do
-            div.mr-1
-              i.fa.fa-fw.fa-user-plus>
-            div
-              = "Ajouter un participant"
-
-        .d-flex.card-text.mb-2
-          - if rdv.remaining_seats?
-              div.mr-3
-              div
-                - if rdv.max_participants_count
-                  = I18n.t("rdvs.available_seats", count: rdv.max_participants_count - rdv.users_count)
-                - else
-                  = "Pas de limite de places"
-          - elsif rdv.fully_booked?
-              div.mr-1
-                i.fa.fa-fw.fa-user-check>
-                = "Complet"
-          - elsif rdv.overbooked?
-            div.mr-1
-              i.fa.fa-fw.fa-user-times>
-              = "Trop de participants (#{rdv.users_count} personnes pour #{I18n.t('rdvs.seats', count: rdv.max_participants_count)})"
-
-        .d-flex.card-text.mb-3
-          div.mr-1
-            i.fa.fa-fw.fa-users>
-            = I18n.t("rdvs.participants", count: rdv.users_count)
-
-      .col-md-6
         .d-flex.card-text.mb-2
           div.mr-1
             i.fa.fa-fw.fa-map-marker-alt>
@@ -51,3 +21,12 @@
           div.mr-1
             i.fa.fa-fw.fa-clock>
             = "#{rdv.duration_in_min} minutes"
+
+      .col-md-6
+        = render "admin/rdvs_collectifs/participants_info", rdv: rdv
+        - if rdv.remaining_seats?
+          = link_to edit_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv), class: "d-flex card-text mb-2" do
+            div.mr-1
+              i.fa.fa-fw.fa-user-plus>
+            div
+              = "Ajouter un participant"
