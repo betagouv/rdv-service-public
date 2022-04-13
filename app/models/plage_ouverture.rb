@@ -86,12 +86,13 @@ class PlageOuverture < ApplicationRecord
       .not_expired
       .where.not(id: id)
 
-    # The next two lines mean:
-    # if self is exceptionnelle, we want to inspect recurring POs that start before self and exceptionnelle POs on the same day
-    # if self is recurring, we want to inspect all recurring POs and exceptionnelle that start after self
-    candidate_pos = candidate_pos.where("recurrence IS NOT NULL or first_day >= ?", first_day)
-    candidate_pos = candidate_pos.where("first_day <= ?", first_day) if exceptionnelle?
-    candidate_pos
+    if exceptionnelle?
+      candidate_pos.regulieres.where(first_day: ..first_day)
+        .or(candidate_pos.exceptionnelles.where(first_day: first_day))
+    else
+      candidate_pos.regulieres
+        .or(candidate_pos.exceptionnelles.where(first_day: first_day..))
+    end
   end
 
   def valid_date_and_times?
