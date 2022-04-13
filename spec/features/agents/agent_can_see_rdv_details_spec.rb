@@ -8,7 +8,7 @@ describe "Agent can see RDV details", js: true do
     let(:service) { create(:service) }
     let(:motif) { create(:motif, service: service, name: "Renseignements") }
     let!(:rdv) { create(:rdv, agents: [agent], motif: motif, organisation: organisation, starts_at: Time.zone.local(2022, 4, 7).at_noon) }
-    let!(:receipt) { create(:receipt, rdv: rdv, result: :sent, sms_content: "Vous avez rendez-vous!") }
+    let!(:receipt) { create(:receipt, rdv: rdv, result: :sent, content: "Vous avez rendez-vous!") }
     let(:agent) { create(:agent, first_name: "Bruce", last_name: "Wayne", service: service, basic_role_in_organisations: [organisation]) }
 
     before do

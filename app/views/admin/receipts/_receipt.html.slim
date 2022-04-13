@@ -6,7 +6,7 @@ tr
     - title = "#{receipt.channel} (#{receipt.sms_provider})"
     div[title=title]= receipt.sms_phone_number
   td
-    blockquote.border-left.border-light.pl-1= receipt.sms_content
+    blockquote.border-left.border-light.pl-1= receipt.content
   td
     span.text-nowrap[title= receipt.human_attribute_value(:result, context: :explanation)]
       span.text-bold= receipt.human_attribute_value(:result)

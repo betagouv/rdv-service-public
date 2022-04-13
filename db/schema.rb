@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_13_081821) do
+ActiveRecord::Schema.define(version: 2022_04_13_145216) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -436,8 +436,9 @@ ActiveRecord::Schema.define(version: 2022_04_13_081821) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "sms_provider"
     t.integer "sms_count"
-    t.string "sms_content"
+    t.string "content"
     t.string "sms_phone_number"
+    t.string "email_address"
     t.index ["channel"], name: "index_receipts_on_channel"
     t.index ["created_at"], name: "index_receipts_on_created_at"
     t.index ["event"], name: "index_receipts_on_event"

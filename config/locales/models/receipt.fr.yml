@@ -11,7 +11,7 @@ fr:
         error_message: Message d’erreur
         sms_count: Nombre de SMS
         sms_provider: Fournisseur
-        sms_content: Contenu
+        content: Contenu
         sms_phone_number: Numéro
         user: Destinataire
       receipt/events:
