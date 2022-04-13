@@ -520,11 +520,6 @@ ActiveRecord::Schema.define(version: 2022_04_13_081821) do
     t.index ["departement_number"], name: "index_territories_on_departement_number", unique: true, where: "((departement_number)::text <> ''::text)"
   end
 
-  create_table "tokens", force: :cascade do |t|
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
   create_table "user_profiles", force: :cascade do |t|
     t.bigint "organisation_id"
     t.bigint "user_id"
