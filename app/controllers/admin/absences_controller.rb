@@ -45,7 +45,7 @@ class Admin::AbsencesController < AgentAuthController
     @absence.organisation = current_organisation
     authorize(@absence)
     if @absence.save
-      Agents::AbsenceMailer.with(absence: @absence).absence_created.deliver_later
+      absence_mailer.absence_created.deliver_later
       flash[:notice] = t(".busy_time_created")
       redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
     else
@@ -56,7 +56,7 @@ class Admin::AbsencesController < AgentAuthController
   def update
     authorize(@absence)
     if @absence.update(absence_params)
-      Agents::AbsenceMailer.with(absence: @absence).absence_updated.deliver_later
+      absence_mailer.absence_updated.deliver_later
       flash[:notice] = t(".busy_time_updated")
       redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
     else
@@ -67,7 +67,8 @@ class Admin::AbsencesController < AgentAuthController
   def destroy
     authorize(@absence)
     if @absence.destroy
-      Agents::AbsenceMailer.with(absence: @absence).absence_destroyed.deliver_later
+      # NOTE: the destruction email is sent synchronously (not in a job) to ensure @absence still exists.
+      absence_mailer.absence_destroyed.deliver_now
       flash[:notice] = t(".busy_time_deleted")
       redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
     else
@@ -97,5 +98,9 @@ class Admin::AbsencesController < AgentAuthController
 
   def filter_params
     params.permit(:start, :end, :organisation_id, :agent_id, :page, :current_tab)
+  end
+
+  def absence_mailer
+    Agents::AbsenceMailer.with(absence: @absence)
   end
 end
