@@ -44,6 +44,7 @@ class PlageOuvertureOverlap
     options1 = po1.recurrence.default_options
     options2 = po2.recurrence.default_options
     return false unless options1.every == :week && options2.every == :week
+    return false if options1.day.nil? || options2.day.nil?
 
     # but are on different days
     # for monthly recurrences, day is [3] for the third day of the week
@@ -57,9 +58,10 @@ class PlageOuvertureOverlap
     options1 = po1.recurrence.default_options
     options2 = po2.recurrence.default_options
     return false unless options1.every == :month && options2.every == :month
+    return false if options1.day.nil? || options2.day.nil?
 
     # … but but are on different weeks
-    # for monthly recurrences, day is {2=>[3]} for the third day of the second week of the month
+    # for monthly recurrences, day is {2=>[3]} for the second day of the third week of the month
     return true if options1.day.keys.intersection(options2.day.keys).empty?
 
     # … but are on the same week of the month but on different days
