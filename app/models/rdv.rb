@@ -234,6 +234,11 @@ class Rdv < ApplicationRecord
     users_count > max_participants_count
   end
 
+  # FIXME: we should either rename the column, or avoid the ambiguity in rdv_payload
+  def title
+    name
+  end
+
   private
 
   def starts_at_is_plausible

@@ -15,8 +15,8 @@
   div.row-result
     span.title Motif :
     span.float-right
-      - if rdv.collectif? && rdv.name.present?
-        = "#{rdv.motif_name} : #{rdv.name}"
+      - if rdv.collectif? && rdv.title.present?
+        = "#{rdv.motif_name} : #{rdv.title}"
       - else
         = rdv.motif_name
     .clear

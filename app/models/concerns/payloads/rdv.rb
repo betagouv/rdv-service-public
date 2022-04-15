@@ -49,7 +49,8 @@ module Payloads
           organisation_name: organisation.name,
           organisation_departement_number: organisation.departement_number,
           motif_name_with_location_type: motif.name_with_location_type,
-          collectif?: collectif?
+          collectif?: collectif?,
+          title: title
         }
       )
 
