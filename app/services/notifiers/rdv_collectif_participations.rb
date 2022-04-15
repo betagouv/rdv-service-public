@@ -8,8 +8,16 @@ class Notifiers::RdvCollectifParticipations < ::BaseService
   end
 
   def perform
-    Notifiers::RdvCreated.perform_with(@rdv, @author, new_participants)
-    Notifiers::RdvCancelled.perform_with(@rdv, @author, deleted_participants)
+    return if @rdv.starts_at < Time.zone.now
+
+    # FIXME: this is not ideal but it's the simplest workaround to avoid notifying the agent
+    rdv_created = Notifiers::RdvCreated.new(@rdv, @author, new_participants)
+    rdv_created.notify_users_by_mail
+    rdv_created.notify_users_by_sms
+
+    rdv_cancelled = Notifiers::RdvCancelled.new(@rdv, @author, deleted_participants)
+    rdv_cancelled.notify_users_by_mail
+    rdv_cancelled.notify_users_by_sms
   end
 
   private
