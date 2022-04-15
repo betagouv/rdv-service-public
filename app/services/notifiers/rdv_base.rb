@@ -25,8 +25,6 @@ class Notifiers::RdvBase < ::BaseService
     notify_agents
   end
 
-  private
-
   ## Users notifications
   #
 
@@ -45,6 +43,8 @@ class Notifiers::RdvBase < ::BaseService
       .select(&:notifiable_by_sms?)
       .each { notify_user_by_sms(_1) }
   end
+
+  private
 
   def users_to_notify
     @users.map(&:user_to_notify).uniq
