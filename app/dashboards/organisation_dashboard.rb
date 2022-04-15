@@ -17,6 +17,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     horaires: Field::String,
     phone_number: Field::String,
     human_id: Field::String,
+    territory: Field::BelongsTo,
     created_at: Field::DateTime,
     updated_at: Field::DateTime
   }.freeze
@@ -53,6 +54,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     horaires
     phone_number
     human_id
+    territory
   ].freeze
 
   # Overwrite this method to customize how super admins are displayed
