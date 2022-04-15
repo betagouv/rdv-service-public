@@ -14,8 +14,8 @@ class Rdv < ApplicationRecord
 
   # Attributes
   enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
-  NOT_CANCELLED_STATUSES = %w[unknown waiting seen].freeze
-  CANCELLED_STATUSES = %w[excused revoked noshow].freeze
+  NOT_CANCELLED_STATUSES = %w[unknown waiting seen noshow].freeze
+  CANCELLED_STATUSES = %w[excused revoked].freeze
   enum created_by: { agent: 0, user: 1, file_attente: 2 }, _prefix: :created_by
 
   # Relations
