@@ -3,6 +3,8 @@ p = t("mailers.common.hello")
 p= t(".description_1")
 p= t(".description_2")
 
+= render "plage_ouverture_overview", plage_ouverture: @plage_ouverture
+
 .btn-wrapper= link_to t("mailers.common.see_on_rdvs"), admin_organisation_plage_ouverture_url(@plage_ouverture.organisation, @plage_ouverture), class:"btn btn-primary"
 
 = t("mailers.common.farewell_html")
