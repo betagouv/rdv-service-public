@@ -1,6 +1,8 @@
-p Bonjour,
+p = t("mailers.common.hello")
 
-p Une de vos plages d'ouvertures a été modifiée.
-p Vous pouvez synchroniser cette plage sur votre calendrier en ouvrant la pièce-jointe de cet email.
+p= t(".description_1")
+p= t(".description_2")
+
+.btn-wrapper= link_to t("mailers.common.see_on_rdvs"), admin_organisation_plage_ouverture_url(@plage_ouverture.organisation, @plage_ouverture), class:"btn btn-primary"
 
 = t("mailers.common.farewell_html")
