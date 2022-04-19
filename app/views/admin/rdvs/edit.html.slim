@@ -26,7 +26,7 @@
           = render "model_errors", model: @rdv_form, f: f
           = collapsible_form_fields_for_warnings(@rdv_form) do
             = hidden_field_tag :agent_id, @agent&.id
-            = f.association :motif, disabled: true
+            = f.association :motif, collection: [@rdv_form.motif], disabled: true
             = f.input :context, input_html: { rows: 3 }
             .form-row
               .col-md-6= datetime_input(f, :starts_at)
