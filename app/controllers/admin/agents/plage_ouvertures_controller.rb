@@ -7,10 +7,12 @@ class Admin::Agents::PlageOuverturesController < ApplicationController
   def index
     agent = Agent.find(params[:agent_id])
     @organisation = Organisation.find(params[:organisation_id])
-    @plage_ouverture_occurrences = custom_policy
-      .includes(:lieu, :organisation)
-      .where(agent: agent)
-      .all_occurrences_for(date_range_params)
+
+    plage_ouvertures = custom_policy.includes(:lieu, :organisation).where(agent: agent)
+    # Cache occurrences for this relation
+    @plage_ouverture_occurrences = cache([plage_ouvertures, :all_occurrences_for, date_range_params]) do
+      plage_ouvertures.all_occurrences_for(date_range_params)
+    end
   end
 
   private
