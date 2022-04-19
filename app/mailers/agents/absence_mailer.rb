@@ -1,27 +1,27 @@
 # frozen_string_literal: true
 
 class Agents::AbsenceMailer < ApplicationMailer
-  def absence_created(absence_payload)
-    send_mail(absence_payload)
+  helper PlageOuverturesHelper
+
+  before_action do
+    @absence = params[:absence]
   end
 
-  def absence_updated(absence_payload)
-    send_mail(absence_payload)
+  default from: "secretariat-auto@rdv-solidarites.fr",
+          to: -> { @absence.agent.email }
+
+  def absence_created
+    self.ics_payload = @absence.payload(:created)
+    mail(subject: t("agents.absence_mailer.absence_created.title", title: @absence.title))
   end
 
-  def absence_destroyed(absence_payload)
-    send_mail(absence_payload)
+  def absence_updated
+    self.ics_payload = @absence.payload(:updated)
+    mail(subject: t("agents.absence_mailer.absence_updated.title", title: @absence.title))
   end
 
-  private
-
-  def send_mail(absence_payload)
-    self.ics_payload = absence_payload
-
-    mail(
-      from: "secretariat-auto@rdv-solidarites.fr",
-      to: absence_payload[:agent_email],
-      subject: "#{BRAND} - #{absence_payload[:title]}"
-    )
+  def absence_destroyed
+    self.ics_payload = @absence.payload(:destroyed)
+    mail(subject: t("agents.absence_mailer.absence_destroyed.title", title: @absence.title))
   end
 end

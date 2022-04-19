@@ -12,22 +12,28 @@ fr:
   agents:
     absence_mailer:
       absence_created:
+        title: RDV Solidarités - Indisponibilité créée - %{title}
         description_1: Vous venez de créer une indisponibilité sur votre planning de RDV Solidarités.
         description_2: Vous pouvez synchroniser cette indisponibilité sur votre calendrier en ouvrant la pièce jointe de cet email.
       absence_updated:
+        title: RDV Solidarités - Indisponibilité modifiée - %{title}
         description_1: Une de vos indisponibilités a été modifiée.
         description_2: Vous pouvez synchroniser cette indisponibilité sur votre calendrier en ouvrant la pièce jointe de cet email.
       absence_destroyed:
+        title: RDV Solidarités - Indisponibilité supprimée - %{title}
         description_1: Une de vos indisponibilités a été supprimée.
         description_2: Vous pouvez supprimer l’évènement correspondant de votre logiciel de calendrier en ouvrant la pièce jointe de cet email.
     plage_ouverture_mailer:
       plage_ouverture_created:
+        title: RDV Solidarités - Plage d’ouverture créée - %{title}
         description_1: Vous venez de créer une plage d’ouverture sur votre planning de RDV Solidarités.
         description_2: Vous pouvez synchroniser l’évènement sur votre logiciel de calendrier en ouvrant la pièce jointe de cet email.
       plage_ouverture_updated:
+        title: RDV Solidarités - Plage d’ouverture modifiée - %{title}
         description_1: Une de vos plages d’ouvertures a été modifiée.
         description_2: Vous pouvez synchroniser l’évènement sur votre logiciel de calendrier en ouvrant la pièce jointe de cet email.
       plage_ouverture_destroyed:
+        title: RDV Solidarités - Plage d’ouverture supprimée - %{title}
         description_1: Une de vos plages d’ouvertures a été supprimée.
         description_2: Vous pouvez supprimer l’évènement de votre logiciel de calendrier en ouvrant la pièce jointe de cet email.
     rdv_mailer:
