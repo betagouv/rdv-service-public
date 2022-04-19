@@ -3,7 +3,7 @@ table.table.table-sm
     tr
       th= Receipt.human_attribute_name(:event)
       th= Receipt.human_attribute_name(:user)
-      th= Receipt.human_attribute_name(:sms_content)
+      th= Receipt.human_attribute_name(:content)
       th= Receipt.human_attribute_name(:result)
   tbody
     = render partial: "admin/receipts/receipt", collection: receipts, cached: true

@@ -3,5 +3,5 @@ fr:
     rdvs:
       rdv_details:
         empty_context: Pas de contexte renseigné
-    receipts_beta_warning: Le suivi des notifications envoyées est une fonctionnalité expérimentale. Pour l’instant, seuls les envois de SMS sont indiqués.
+    receipts_beta_warning: Le suivi des notifications envoyées est une fonctionnalité expérimentale. Notamment, le détail des email envoyés n’est pas disponible.
 

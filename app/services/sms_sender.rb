@@ -50,7 +50,7 @@ class SmsSender < BaseService
   end
 
   def save_receipt(**args)
-    params = @receipt_params.merge({ channel: :sms, sms_provider: @provider, sms_phone_number: @phone_number, sms_content: @content }, args)
+    params = @receipt_params.merge({ channel: :sms, sms_provider: @provider, sms_phone_number: @phone_number, content: @content }, args)
     receipt = Receipt.create!(params)
     raise SmsSenderFailure if receipt.failure?
   end

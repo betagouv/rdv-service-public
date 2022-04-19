@@ -11,10 +11,11 @@ fr:
         error_message: Message d’erreur
         sms_count: Nombre de SMS
         sms_provider: Fournisseur
-        sms_content: Contenu
+        content: Contenu
         sms_phone_number: Numéro
         user: Destinataire
       receipt/events:
+        new_creneau_available: Créneau disponible
         rdv_created: Création
         rdv_date_updated: Modification de date
         rdv_upcoming_reminder: Rappel
