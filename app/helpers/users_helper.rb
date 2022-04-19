@@ -88,10 +88,6 @@ module UsersHelper # rubocop:disable Metrics/ModuleLength
     user.responsible_phone_number.present? ? link_to(user.responsible_phone_number, "tel:#{user.responsible_or_self.phone_number_formatted}") : nil
   end
 
-  def formatted_user_notes(user_profile)
-    user_profile.notes.present? ? simple_format(user_profile.notes) : nil
-  end
-
   def user_soft_delete_confirm_message(user)
     relatives = user.relatives.merge(current_organisation.users).active
     [

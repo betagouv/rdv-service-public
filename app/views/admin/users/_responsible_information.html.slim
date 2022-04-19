@@ -19,14 +19,9 @@ ul.list-unstyled.mb-5
     .text-muted.mb-2
       | En attente de confirmation pour #{user.unconfirmed_email}
 
-  - if current_territory.enable_notes_field?
-    li.mb-2= object_attribute_tag(user_profile, :notes, formatted_user_notes(user_profile))
-
 - if current_territory.any_social_field_enabled?
   h4.card-title.mb-3 Informations sociales
 ul.list-unstyled.mb-5
   - Territory::SOCIAL_FIELD_TOGGLES.each do |toggle, field_name|
     - if current_territory.attributes[toggle.to_s]
       li.mb-2= object_attribute_tag(user, field_name)
-  - if current_territory.enable_logement_field
-    li.mb-2= object_attribute_tag(user_profile, :logement)

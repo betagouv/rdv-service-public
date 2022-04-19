@@ -101,7 +101,7 @@ class MergeUsersForm
   end
 
   def values_for(attribute)
-    if %i[logement notes].include?(attribute)
+    if %i[notes].include?(attribute)
       [user1_profile&.send(attribute), user2_profile&.send(attribute)]
     else
       [user1&.send(attribute), user2&.send(attribute)]

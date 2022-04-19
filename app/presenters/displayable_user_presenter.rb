@@ -48,11 +48,11 @@ class DisplayableUserPresenter
   end
 
   def logement
-    @user_profile&.human_attribute_value(:logement)
+    @user.human_attribute_value(:logement)
   end
 
   def notes
-    formatted_user_notes(@user_profile)
+    user.notes.present ? simple_format(user.notes) : nil
   end
 
   def notify_by_sms

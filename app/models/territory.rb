@@ -56,13 +56,10 @@ class Territory < ApplicationRecord
     enable_family_situation_field: :family_situation,
     enable_number_of_children_field: :number_of_children,
     enable_case_number: :case_number,
-    enable_address_details: :address_details
-  }.freeze
-
-  OPTIONAL_FIELD_TOGGLES = {
+    enable_address_details: :address_details,
     enable_notes_field: :notes,
     enable_logement_field: :logement
-  }.merge(SOCIAL_FIELD_TOGGLES).freeze
+  }.freeze
 
   def any_social_field_enabled?
     attributes.slice(SOCIAL_FIELD_TOGGLES.keys).values.any?

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_13_081821) do
+ActiveRecord::Schema.define(version: 2022_04_18_204321) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -163,6 +163,7 @@ ActiveRecord::Schema.define(version: 2022_04_13_081821) do
     t.boolean "allow_to_manage_teams", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "allow_to_manage_access_rights", default: false
     t.index ["agent_id"], name: "index_agent_territorial_access_rights_on_agent_id"
     t.index ["territory_id"], name: "index_agent_territorial_access_rights_on_territory_id"
   end
@@ -578,6 +579,8 @@ ActiveRecord::Schema.define(version: 2022_04_13_081821) do
     t.text "search_terms"
     t.string "case_number"
     t.string "address_details"
+    t.text "notes"
+    t.integer "logement"
     t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_users_search_terms", using: :gin
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true

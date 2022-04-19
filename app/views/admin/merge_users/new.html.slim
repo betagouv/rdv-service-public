@@ -27,7 +27,7 @@
         td= render "user_selection", user: @merge_users_form.user2, attribute: "user2_id", f: f, other_user_id: @merge_users_form.user1&.id
       - @merge_users_form.available_attributes.each do |attribute|
         tr class=@merge_users_form.attribute_comparison(attribute)
-          - if %i[logement notes].include?(attribute)
+          - if %i[notes].include?(attribute)
             td= UserProfile.human_attribute_name(attribute)
           - else
             td= User.human_attribute_name(attribute)

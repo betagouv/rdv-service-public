@@ -33,6 +33,7 @@ class User < ApplicationRecord
                           franceconnect_sign_up: "franceconnect_sign_up", user_relative_creation: "user_relative_creation",
                           unknown: "unknown", agent_creation_api: "agent_creation_api" }
   enum invited_through: { devise_email: "devise_email", external: "external" }
+  enum logement: { sdf: 0, heberge: 1, en_accession_propriete: 2, proprietaire: 3, autre: 4, locataire: 5 }
 
   # HACK : add *_sign_in_ip to accessor to bypass recording IPs from Trackable Devise's module
   # HACK : add sign_in_count and current_sign_in_at to accessor to bypass recording IPs from Trackable Devise's module

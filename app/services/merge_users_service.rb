@@ -80,10 +80,10 @@ class MergeUsersService < BaseService
   end
 
   def user_attributes_to_merge
-    @attributes_to_merge.without(:logement, :notes)
+    @attributes_to_merge.without(:notes)
   end
 
   def user_profile_attributes_to_merge
-    @attributes_to_merge.select{ %i[logement notes].include?(_1) }
+    @attributes_to_merge.select{ %i[notes].include?(_1) }
   end
 end
