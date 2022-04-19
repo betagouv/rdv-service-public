@@ -7,10 +7,12 @@ class Admin::Agents::AbsencesController < ApplicationController
   def index
     agent = Agent.find(params[:agent_id])
     @organisation = Organisation.find(params[:organisation_id])
-    @absence_occurrences = policy_scope_admin(Absence)
-      .includes(:organisation)
-      .where(agent: agent)
-      .all_occurrences_for(date_range_params)
+
+    absences = policy_scope_admin(Absence).includes(:organisation).where(agent: agent)
+    # Cache occurrences for this relation
+    @absence_occurrences = cache([absences, :all_occurrences_for, date_range_params]) do
+      absences.all_occurrences_for(date_range_params)
+    end
   end
 
   private
