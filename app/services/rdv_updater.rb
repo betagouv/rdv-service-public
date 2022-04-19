@@ -12,28 +12,34 @@ module RdvUpdater
         rdv_params[:cancelled_at] = rdv_params[:status].in?(%w[excused revoked noshow]) ? Time.zone.now : nil
       end
 
+      previous_participant_ids = rdv.participants_with_life_cycle_notification_ids
+
       success = rdv.update(rdv_params)
+
+      rdv_users_tokens_by_user_id = {}
 
       # Send relevant notifications (cancellation and date update)
       if success
-        rdv.file_attentes.destroy_all if rdv.previous_changes["status"]&.last.in? %w[excused revoked noshow]
-        # Also destroy the file_attentes
+        if rdv.previous_changes["status"]&.last.in? %w[excused revoked noshow]
+          # Also destroy the file_attentes
+          rdv.file_attentes.destroy_all
 
-        rdv_users_tokens_by_user_id = notifier_for_changes(rdv)&.perform_with(rdv, author)
+          rdv_users_tokens_by_user_id = Notifiers::RdvCancelled.perform_with(rdv, author)
+        end
+
+        if rdv.previous_changes["starts_at"].present?
+          rdv_users_tokens_by_user_id = Notifiers::RdvDateUpdated.perform_with(rdv, author)
+        end
+
+        if rdv.collectif?
+          rdv_users_tokens_by_user_id = Notifiers::RdvCollectifParticipations.perform_with(rdv, author, previous_participant_ids)
+        end
       end
 
       Result.new(
         success: success,
-        rdv_users_tokens_by_user_id: success ? rdv_users_tokens_by_user_id : {}
+        rdv_users_tokens_by_user_id: rdv_users_tokens_by_user_id
       )
-    end
-
-    def notifier_for_changes(rdv)
-      if rdv.previous_changes["status"]&.last.in? %w[excused revoked noshow]
-        Notifiers::RdvCancelled
-      elsif rdv.previous_changes["starts_at"].present?
-        Notifiers::RdvDateUpdated
-      end
     end
   end
 

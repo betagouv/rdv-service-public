@@ -42,16 +42,19 @@ module Payloads
           motif_instruction: motif.instruction_for_rdv,
           motif_service_name: motif.service.name,
           duration_in_min: duration_in_min,
-          address_complete: address_complete,
+          address_complete: address_complete_without_personal_details,
           phone_number: phone_number,
           organisation_id: organisation.id,
           motif_service_id: motif.service.id,
           organisation_name: organisation.name,
           organisation_departement_number: organisation.departement_number,
-          motif_name_with_location_type: motif.name_with_location_type
+          motif_name_with_location_type: motif.name_with_location_type,
+          collectif?: collectif?,
+          title: title
         }
       )
 
+      payload[:name] = name if name.present?
       payload[:action] = action if action.present?
 
       payload

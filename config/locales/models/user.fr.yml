@@ -1,7 +1,9 @@
 fr:
   activerecord:
     models:
-      user: Usager
+      user:
+        one: Usager
+        other: Usagers
     attributes:
       user:
         organisation: Organisation
@@ -9,6 +11,8 @@ fr:
         affiliation_number: Numéro d'allocataire
         family_situation: Situation familiale
         number_of_children: Nombre d'enfants
+        address_details: Complément d'adresse
+        case_number: Numéro de dossier
         responsability_type: Type d'usager
         notify_by_sms: "Accepte les notifications par SMS"
         notify_by_email: "Accepte les notifications par email"

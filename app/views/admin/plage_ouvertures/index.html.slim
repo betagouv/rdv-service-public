@@ -3,30 +3,37 @@
 
 - content_for :title do
   - if current_agent == @agent
-    | Vos plages d'ouverture
+    = t(".your_plage_ouverture")
   - else
-    | Plages d'ouverture de #{@agent.full_name_and_service}
+    = t(".plage_ouverture_of", full_name: @agent.full_name_and_service)
 
 - content_for :breadcrumb do
-  = link_to "Créer une plage d'ouverture", new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-primary align-bottom"
+
+.text-right
+  = link_to t(".create_plage_ouverture"), new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-primary align-bottom"
+  .m-3.d-flex.justify-content-end
+    div= link_to t("helpers.reset"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: class_names("btn", "btn-link", "d-none": params[:search].blank?)
+    = simple_form_for "", url: admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
+      = f.input :search, placeholder: t(".search_placeholder"), label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
+      = f.button :submit, t("helpers.search")
 
 .card.pb-3
   - if @display_tabs
     ul.nav.nav-tabs.px-2.mt-2
       li.nav-item
-        = active_link_to "En cours", admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: "nav-link", active: :exact
+        = active_link_to t(".in_progress"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: "nav-link", active: :exact
       li.nav-item
-        = active_link_to "Passées", admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, current_tab: "expired"), class: "nav-link", active: :exact
+        = active_link_to t(".past"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, current_tab: "expired"), class: "nav-link", active: :exact
 
   - if @plage_ouvertures.any?
     table.table
       thead
         tr
-          th Description
-          th Motifs
-          th Lieu
-          th Dates
-          th Actions
+          th = PlageOuverture.human_attribute_name(:title)
+          th = t(".motifs")
+          th = t(".place")
+          th = t(".dates")
+          th = t("helpers.actions")
       tbody
         = render @plage_ouvertures
     .d-flex.justify-content-center
@@ -35,18 +42,21 @@
     .row.justify-content-md-center.p-2.mt-3
       .col-md-6.text-center.mb-2
         p.mb-2.lead
-          - if current_agent == @agent
-            | Vous n'avez pas encore créé de plage d'ouverture.
+          - if params[:search].present?
+            = t(".no_results_for_your_search")
           - else
-            | #{@agent.full_name} n'a pas encore créé de plage d'ouverture.
-        p Les plages d'ouvertures affichent votre disponibilité à la prise de RDV, qu'elle soit faite par l'usager lui même (en ligne) ou par un autre agent de votre organisation. Chaque agent a ses propres plages d'ouvertures et peut y associer des motifs et un lieu. Les plages peuvent être récurrentes.
-        span.fa-stack.fa-4x
-          i.fa.fa-circle.fa-stack-2x.text-primary
-          i.far.fa-calendar.fa-stack-1x.text-white
+            - if current_agent == @agent
+              = t(".not_yet_created_plage_ouverture")
+            - else
+              =t(".this_agent_not_yet_created_plage_ouverture", full_name: @agent.full_name)
+            p = t(".explanation_plage_ouverture")
+            span.fa-stack.fa-4x
+              i.fa.fa-circle.fa-stack-2x.text-primary
+              i.far.fa-calendar.fa-stack-1x.text-white
 
   .text-center.py-2
     = link_to new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-primary" do
       - if current_agent == @agent
-        | Créer une plage d'ouverture
+        = t(".create_plage_ouverture")
       - else
-        | Créer une plage d'ouverture pour #{@agent.full_name}
+        = t(".create_plage_ouverture_for", full_name: @agent.full_name)

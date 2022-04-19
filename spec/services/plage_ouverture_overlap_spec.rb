@@ -257,4 +257,25 @@ describe PlageOuvertureOverlap do
 
     it_behaves_like "plage ouvertures do not overlap"
   end
+
+  context "po1 and po2 recurring monthly, same time and day but different week" do
+    let(:po1) { build_po(monday, 10, 12, Montrose.every(:month, day: { 1 => 1 })) }
+    let(:po2) { build_po(monday, 10, 12, Montrose.every(:month, day: { 1 => 2 })) }
+
+    it_behaves_like "plage ouvertures do not overlap"
+  end
+
+  context "po1 and po2 recurring monthly, same time and week but different days" do
+    let(:po1) { build_po(monday, 10, 12, Montrose.every(:month, day: { 1 => 1 })) }
+    let(:po2) { build_po(monday, 10, 12, Montrose.every(:month, day: { 2 => 2 })) }
+
+    it_behaves_like "plage ouvertures do not overlap"
+  end
+
+  context "po1 is set to recurring but days are not set" do
+    let(:po1) { build_po(monday, 10, 12, Montrose.every(:week, day: nil)) }
+    let(:po2) { build_po(monday, 10, 12, Montrose.every(:week, day: { 2 => 2 })) }
+
+    it_behaves_like "plage ouvertures do not overlap"
+  end
 end

@@ -4,32 +4,33 @@
   .dropdown-menu
     - case rdv.temporal_status
       - when "unknown_future"
-        = rdv_status_dropdown_item(rdv, agent, "excused", remote)
-        = rdv_status_dropdown_item(rdv, agent, "revoked", remote)
+        = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "excused", remote: remote
+        = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "revoked", remote: remote
 
       - when "unknown_today"
-        = rdv_status_dropdown_item(rdv, agent, "waiting", remote)
-        = rdv_status_dropdown_item(rdv, agent, "seen", remote)
+        = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "waiting", remote: remote
+        = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "seen", remote: remote
         - if rdv.in_the_past? # See issue #1642, I’d rather get rid of `temporal_status` than adding more variants.
-          = rdv_status_dropdown_item(rdv, agent, "noshow", remote)
+          = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "noshow", remote: remote
         .dropdown-divider
-        = rdv_status_dropdown_item(rdv, agent, "excused", remote)
-        = rdv_status_dropdown_item(rdv, agent, "revoked", remote)
+        = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "excused", remote: remote
+        = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "revoked", remote: remote
 
       - when "unknown_past"
-        = rdv_status_dropdown_item(rdv, agent, "seen", remote)
-        = rdv_status_dropdown_item(rdv, agent, "noshow", remote)
+        = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "seen", remote: remote
+        = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "noshow", remote: remote
         .dropdown-divider
-        = rdv_status_dropdown_item(rdv, agent, "excused", remote)
-        = rdv_status_dropdown_item(rdv, agent, "revoked", remote)
+        = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "excused", remote: remote
+        .dropdown-divider
+        = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "revoked", remote: remote
 
       - when "waiting"
-        = rdv_status_dropdown_item(rdv, agent, "seen", remote)
+        = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "seen", remote: remote
         .dropdown-divider
-        = rdv_status_dropdown_item(rdv, agent, "unknown", remote)
+        = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "unknown", remote: remote
 
       - else
-        = rdv_status_dropdown_item(rdv, agent, "unknown", remote)
+        = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "unknown", remote: remote
 
     - if current_agent.role_in_organisation(current_organisation).admin?
       .dropdown-divider

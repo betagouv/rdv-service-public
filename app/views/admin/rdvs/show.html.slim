@@ -11,8 +11,6 @@
     li.breadcrumb-item.p-0.ml-2
       span> RDV
       span>= rdv_title_for_agent(@rdv)
-      - if @rdv.cancelled?
-        span.badge.badge-danger
 
 .row.justify-content-md-center
   .col-md-8
@@ -29,6 +27,8 @@
           |&nbsp;
           = link_to "voir dans l'agenda", admin_organisation_agent_agenda_path(current_organisation, @rdv.agents.first, selected_event_id: @rdv.id, date: @rdv.starts_at.to_date)
         = render "rdv_details", rdv: @rdv, show_users: false
+        - if @rdv.collectif?
+          = render "admin/rdvs_collectifs/participants_info", rdv: @rdv
         p.card-text
           strong> Usager(s) :
           - @rdv.rdvs_users.each do |rdvs_user|
@@ -46,18 +46,7 @@
           .btn-group
             = link_to t(".update"), edit_admin_organisation_rdv_path(@rdv.organisation, @rdv, agent_id: @agent&.id), class: "btn btn-outline-primary"
             = link_to t(".duplicate"), admin_organisation_agent_searches_path(current_organisation, service_id: @rdv.motif.service_id, motif_id: @rdv.motif_id, from_date: @rdv.starts_at + 1.day, user_ids: @rdv.user_ids, context: @rdv.context, lieu_ids: [@rdv.lieu_id], commit: "commit"), class: "btn btn-outline-primary"
-.row.justify-content-md-center
-  .col-md-8
-    - @rdv.rdvs_users.each do |rdv_user|
-      - user = rdv_user.user
-      .card
-        - rdv_user_presenter = Admin::RdvUserPresenter.new(@rdv, user)
-        .card-header.h5= "Rendez-vous précédents pour #{user.full_name}"
-        = render "admin/rdvs/short_rdvs_list", user: user, rdvs: rdv_user_presenter.previous_rdvs_truncated
-        - if rdv_user_presenter.previous_rdvs_more?
-          .card-footer
-            = link_to \
-              "Voir les #{rdv_user_presenter.previous_rdvs_count} RDVs précédents…", \
-              admin_organisation_rdvs_path(current_organisation, user_id: rdv_user.user.id, end: @rdv.starts_at)
+
+= render "admin/receipts/resource_receipts_row", resource: @rdv
 
 = render "admin/versions/resource_versions_row", resource: @rdv

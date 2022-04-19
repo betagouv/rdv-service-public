@@ -1,5 +1,6 @@
+= territory_navigation(t(".agent_title", name: @agent.full_name), [link_to(t(".territory_agents_title"), admin_territory_agents_path(current_territory))])
+
 .container-fluid.bg-white.rounded.m-2
-  h2.text-center = t(".agent_title")
 
   = simple_form_for @agent, url: admin_territory_agent_path(current_territory, @agent) do |form|
     = form.input :team_ids, collection: @agent.teams,
@@ -19,3 +20,8 @@
             }\
           }
     = form.submit class: "btn btn-primary"
+
+  h3.mt-3 Droit d'accès
+  = simple_form_for @agent.agent_territorial_access_rights.find_by(territory: current_territory), url: admin_territory_agent_territorial_access_right_path do |f|
+    = f.input :allow_to_manage_teams, as: :boolean
+    = f.submit class: "btn btn-primary"

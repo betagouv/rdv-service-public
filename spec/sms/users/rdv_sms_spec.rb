@@ -186,8 +186,7 @@ describe Users::RdvSms, type: :service do
         let(:motif) { build(:motif, :at_home) }
 
         it do
-          expect(subject).to include("RDV à domicile")
-          expect(subject).to include(rdv.address)
+          expect(subject).to include("RDV à votre domicile")
         end
       end
 

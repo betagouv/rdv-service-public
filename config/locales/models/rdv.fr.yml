@@ -10,6 +10,10 @@ fr:
             phone_number:
               missing_for_phone_motif: "Aucun usager n’a de numéro de téléphone renseigné alors que le rendez-vous est téléphonique."
               format: "%{message}"
+            duration_in_min:
+              must_be_positive: doit être supérieur à 0
+            lieu:
+              must_not_be_disabled: "doit être un lieu ouvert de l’organisation, ou un lieu ponctuel."
     models:
       rdv: Rendez-vous
     attributes:
@@ -23,9 +27,11 @@ fr:
         location: Lieu
         starts_at: Commence à
         duration_in_min: Durée en minutes
+        max_participants_count: Nombre de places
         ends_at: Termine à
         status: Statut
         context: Contexte
+        name: Intitulé
       rdv/created_by:
         agent: "Créé par un agent"
         user: "RDV Pris sur internet"
@@ -54,6 +60,9 @@ fr:
         excused: L’usager a pu prévenir de son absence. Une notification de confirmation lui sera envoyée.
         revoked: Le rendez-vous a du être annulé par le service, par exemple pour une raison administrative. Une notification sera envoyée à l’usager.
         noshow: L’usager ne s’est pas présenté a son rendez-vous.
+      rdv/name:
+        hint: "Cet intitulé apparaitra dans les notifications envoyées aux usagers."
+
   activemodel:
     warnings:
       models:

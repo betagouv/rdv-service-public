@@ -9,6 +9,8 @@ class PlageOuverture < ApplicationRecord
   include IcalHelpers::Rrule
   include Payloads::PlageOuverture
   include Expiration
+  include TextSearch
+  def self.search_keys = %i[title]
 
   # Attributes
   auto_strip_attributes :title
@@ -24,6 +26,7 @@ class PlageOuverture < ApplicationRecord
 
   # Validations
   validate :end_after_start
+  validate :lieu_is_enabled
   validates :motifs, :title, presence: true
   validate :warn_overlapping_plage_ouvertures
 
@@ -37,6 +40,11 @@ class PlageOuverture < ApplicationRecord
 
     not_recurring_start_in_range.or(recurring_in_range)
   }
+  scope :overlapping_range, lambda { |range|
+    in_range(range).select do |plage_ouverture|
+      plage_ouverture.occurrences_for(range).any? { range.overlaps?(_1.starts_at.._1.ends_at) }
+    end
+  }
 
   ## -
 
@@ -45,7 +53,7 @@ class PlageOuverture < ApplicationRecord
   end
 
   def available_motifs
-    Motif.available_motifs_for_organisation_and_agent(organisation, agent)
+    Motif.available_motifs_for_organisation_and_agent(organisation, agent).individuel
   end
 
   def overlaps?(other)
@@ -61,18 +69,6 @@ class PlageOuverture < ApplicationRecord
       .select { overlaps?(_1) }
   end
 
-  def self.overlapping_with_time_slot(time_slot)
-    regulieres.where("first_day <= ?", time_slot.to_date)
-      .or(exceptionnelles.where(first_day: time_slot.to_date))
-      .to_a
-      .select { _1.overlaps_with_time_slot?(time_slot) }
-  end
-
-  def overlaps_with_time_slot?(time_slot)
-    covers_date?(time_slot.to_date) &&
-      time_slot_for_date(time_slot.to_date).intersects?(time_slot)
-  end
-
   def covers_date?(date)
     if recurring?
       recurrence.include?(date.in_time_zone)
@@ -83,18 +79,20 @@ class PlageOuverture < ApplicationRecord
 
   private
 
-  def time_slot_for_date(date)
-    TimeSlot.new(start_time.on(date), end_time.on(date))
-  end
-
   def overlapping_plages_ouvertures_candidates
     return [] unless valid_date_and_times?
 
-    candidate_pos = PlageOuverture.where(agent: agent).where.not(id: id)
-      .where("recurrence IS NOT NULL or first_day >= ?", first_day)
-    candidate_pos = candidate_pos.where("first_day <= ?", first_day) if exceptionnelle?
-    # we could further restrict this query if perfs are an issue
-    candidate_pos
+    candidate_pos = agent.plage_ouvertures
+      .not_expired
+      .where.not(id: id)
+
+    if exceptionnelle?
+      candidate_pos.regulieres.where(first_day: ..first_day)
+        .or(candidate_pos.exceptionnelles.where(first_day: first_day))
+    else
+      candidate_pos.regulieres
+        .or(candidate_pos.exceptionnelles.where(first_day: first_day..))
+    end
   end
 
   def valid_date_and_times?
@@ -105,6 +103,10 @@ class PlageOuverture < ApplicationRecord
     return if end_time.blank? || start_time.blank?
 
     errors.add(:end_time, :must_be_after_start_time) if end_time <= start_time
+  end
+
+  def lieu_is_enabled
+    errors.add(:lieu, :must_be_enabled) unless lieu&.enabled?
   end
 
   def warn_overlapping_plage_ouvertures

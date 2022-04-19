@@ -12,8 +12,6 @@
       | RDV
       |&nbsp;
       = rdv_title_for_agent(@rdv)
-      - if @rdv.cancelled?
-        span.badge.badge-danger
     li.breadcrumb-item.p-0.ml-2
       | Modifier
 
@@ -28,7 +26,7 @@
           = render "model_errors", model: @rdv_form, f: f
           = collapsible_form_fields_for_warnings(@rdv_form) do
             = hidden_field_tag :agent_id, @agent&.id
-            = f.association :motif, disabled: true
+            = f.association :motif, collection: [@rdv_form.motif], disabled: true
             = f.input :context, input_html: { rows: 3 }
             .form-row
               .col-md-6= datetime_input(f, :starts_at)
@@ -49,6 +47,11 @@
                 data: { "select-options": { ajax: { url: search_admin_organisation_agents_path(current_organisation),
                                                           dataType: "json", delay: 250 } } } }
 
+            - if @rdv_form.motif.collectif?
+              = f.input :name, wrapper_html: { class: "mb-1" }
+              p.text-muted.font-14= I18n.t("activerecord.attributes.rdv/name.hint")
+
+              = f.input :max_participants_count, input_html: { min: 1 }
             .form-group
               = "#{User.model_name.human.pluralize} :"
               = f.fields_for :rdvs_users, @rdv.rdvs_users do |rdv_user_form|
@@ -62,6 +65,7 @@
                       class: "select2-input js-rdv-user-select",
                       data: { \
                 width: "auto", \
+                "scroll-to-bottom": params[:add_user].present?, \
                 "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.rdvs_users.map(&:user_id)), dataType: "json", delay: 250 } } \
                }
 

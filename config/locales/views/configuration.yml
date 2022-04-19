@@ -1,0 +1,119 @@
+fr:
+  admin:
+    territories:
+      sector_attributions:
+        new:
+          title: Nouvelle attribution pour le secteur %{name}
+      nav:
+        configuration_title: Configuration
+      show:
+        title: Configuration
+      index:
+        configuration_title: Configuration
+      agent_territorial_roles:
+        new:
+          title: Ajouter un agent
+        index:
+          title: Administration %{name}
+          configuration_title: Configuration
+
+      sectorisation_tests:
+        search:
+          sectorization_title: Sectorisation
+          title: Test sectorisation
+      zones:
+        new:
+          title: Ajouter une commune pour le secteur %{name}
+      zone_imports:
+        create:
+          title: Sectorisation %{territoire}
+        new:
+          sectorization_title: Sectorisation
+          title: Importer un fichier
+      webhook_endpoints:
+        index:
+          configuration_title: Configuration
+          webhook_title: Webhooks
+          table-header:
+            organisation: Organisation
+            url: URL cible
+            actions: Actions
+          confirm_destroy: Voulez-vous vraiment supprimer ce endpoint ?
+        new:
+          webhook_title: Webhooks
+          title: Ajouter un webhook
+        edit:
+          webhook_title: Webhooks
+          title: Modifier le webhook
+      sms_configurations:
+        show:
+          title: Fournisseur d'envoi de SMS
+        edit:
+          show_sms_configuration: Fournisseur d'envoi de SMS
+          title: Modifier la configuration SMS
+      sectors:
+        new:
+          title: Nouveau secteur
+        update:
+          updated: Secteur mis à jour
+        create:
+          created: Secteur %{sector} créé
+        destroy:
+          deleted: Secteur supprimé
+        edit:
+          title: Modifier le secteur %{name}
+          sectorization_title: Sectorisation
+        show:
+          title: Secteur %{name}
+          sectorization_title: Sectorisation
+        index:
+          sectorization_title: Sectorisation
+          title: Secteurs
+        index_map:
+          sectorization_title: Sectorisation
+          title: Carte des secteurs
+      teams:
+        edit:
+          territory_teams_title: Équipes du territoire
+          title: Modifier l'équipe %{name}
+        index:
+          teams_title: Équipes du territoire
+          create_team: Ajouter une équipe
+          back: Retour
+        new:
+          territory_teams_title: Créer une équipe
+          title: Ajouter une équipe
+      agents:
+        edit:
+          agent_title: Modification agent %{name}
+          territory_agents_title: Agents du territoire
+          teams: Équipes
+        index:
+          territory_agents_title: Agents du territoire
+          reset: Retour
+          search_placeholder: "ex: martine@example.com"
+          search: Rechercher
+          last_name: Nom
+          first_name: Prénom
+          email: Courriel
+          teams: Équipes
+          actions: Actions
+          edit_agents: Modification des équipes de l'agent
+      motif_fields:
+        edit:
+          title: Champs des motifs
+          card_title: Champs optionnels pour les motifs
+          hint_1: Vous pouvez activer ou désactiver les champs suivants pour les motifs.
+          hint_2: "Les champs seront simplement masqués dans l’interface : les données préexistantes ne seront pas supprimées."
+      rdv_fields:
+        edit:
+          title: Champs de la fiche RDV
+          card_title: Champs optionnels pour la fiche RDV
+          hint_1: Vous pouvez activer ou désactiver les champs suivants sur la fiche RDV.
+          hint_2: "Les champs seront simplement masqués dans l’interface : les données préexistantes ne seront pas supprimées."
+      user_fields:
+        edit:
+          title: Champs de la fiche usager
+          card_title: Champs optionnels pour les fiches usagers
+          hint_1: Vous pouvez activer ou désactiver les champs suivants sur les fiches usagers.
+          hint_2: "Les champs seront simplement masqués dans l’interface : les données préexistantes ne seront pas supprimées."

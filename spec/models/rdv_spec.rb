@@ -32,6 +32,37 @@ describe Rdv, type: :model do
     end
   end
 
+  describe "#duration_is_plausible" do
+    let(:now) { Time.zone.parse("2021-05-03 14h00") }
+
+    before { travel_to now }
+
+    it "valid with starts_at < ends_at" do
+      rdv = build(:rdv, starts_at: now + 5.hours, ends_at: now + 5.hours + 30.minutes)
+      expect(rdv).to be_valid
+    end
+
+    it "invalid with starts_at nil" do
+      rdv = build(:rdv, starts_at: nil, ends_at: now + 5.hours + 30.minutes)
+      expect(rdv).to be_invalid
+    end
+
+    it "invalid with ends_at nil" do
+      rdv = build(:rdv, starts_at: now + 5.hours, ends_at: nil)
+      expect(rdv).to be_invalid
+    end
+
+    it "invalid with starts_at == ends_at" do
+      rdv = build(:rdv, starts_at: now + 5.hours, ends_at: now + 5.hours)
+      expect(rdv).to be_invalid
+    end
+
+    it "invalid with starts_at > ends_at" do
+      rdv = build(:rdv, starts_at: now + 5.hours, ends_at: now + 4.hours)
+      expect(rdv).to be_invalid
+    end
+  end
+
   describe "#cancellable?" do
     let(:now) { Time.zone.parse("2021-05-03 14h00") }
 
@@ -282,6 +313,50 @@ describe Rdv, type: :model do
     end
   end
 
+  describe "lieu_is_not_disabled_if_needed" do
+    subject { rdv.errors }
+
+    let(:rdv) { build :rdv, motif: motif, lieu: lieu }
+    let(:motif) { build :motif, location_type: location_type }
+
+    before { rdv.validate }
+
+    context "does not require a lieu if location_type is not public_office?" do
+      let(:location_type) { :phone }
+      let(:lieu) { nil }
+
+      it { is_expected.to be_empty }
+    end
+
+    context "requires a lieu if location_type is not public_office" do
+      let(:location_type) { :public_office }
+      let(:lieu) { nil }
+
+      it { is_expected.to be_of_kind(:lieu, :blank) }
+    end
+
+    context "is invalid if lieu is disabled" do
+      let(:location_type) { :public_office }
+      let(:lieu) { build :lieu, availability: :disabled }
+
+      it { is_expected.to be_of_kind(:lieu, :must_not_be_disabled) }
+    end
+
+    context "is valid if lieu is enabled" do
+      let(:location_type) { :public_office }
+      let(:lieu) { build :lieu, availability: :enabled }
+
+      it { is_expected.to be_empty }
+    end
+
+    context "is valid if lieu is single_use" do
+      let(:location_type) { :public_office }
+      let(:lieu) { build :lieu, availability: :single_use }
+
+      it { is_expected.to be_empty }
+    end
+  end
+
   describe "#search_for" do
     it "returns allowed rdvs" do
       organisation = create(:organisation)
@@ -360,6 +435,127 @@ describe Rdv, type: :model do
 
       options = { "end" => (now + 2.days) }
       expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+    end
+  end
+
+  describe "#overlapping_plages_ouvertures?" do
+    let(:now) { Time.zone.parse("2022-12-27 11:00") }
+
+    before { travel_to(now) }
+
+    it "return false when starts_at blank" do
+      rdv = build(:rdv, starts_at: "")
+      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+    end
+
+    it "return false when ends_at blank" do
+      rdv = build(:rdv, starts_at: now + 1.week, ends_at: nil)
+      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+    end
+
+    it "return false when lieu blank" do
+      rdv = build(:rdv, starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
+      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+    end
+
+    it "return false with past RDV" do
+      rdv = build(:rdv, starts_at: now - 1.week, ends_at: now - 1.week + 30.minutes)
+      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+    end
+
+    it "return false when RDV's error" do
+      rdv = build(:rdv, starts_at: now - 1.week, ends_at: now - 1.week)
+      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+    end
+
+    it "return true with po overlapping RDV on an other lieu" do
+      agent = create(:agent)
+      rdv = build(:rdv, agents: [agent], starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
+      create(:plage_ouverture, agent: agent, first_day: (now + 1.week).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45), lieu: create(:lieu))
+      expect(rdv.overlapping_plages_ouvertures?).to eq(true)
+    end
+
+    it "return false with po overlapping RDV on an same lieu" do
+      agent = create(:agent)
+      rdv = build(:rdv, agents: [agent], starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
+      create(:plage_ouverture, agent: agent, first_day: (now + 1.week).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45), lieu: rdv.lieu)
+      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+    end
+
+    it "return false with po overlapping RDV with an other agent" do
+      agent = create(:agent)
+      rdv = build(:rdv, agents: [agent], starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
+      create(:plage_ouverture, agent: create(:agent), first_day: (now + 1.week).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45), lieu: rdv.lieu)
+      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+    end
+
+    it "return false with recurring po overlapping RDV" do
+      agent = create(:agent)
+      rdv = build(:rdv, agents: [agent], starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
+      create(:plage_ouverture, agent: agent, first_day: (now - 2.weeks).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45), lieu: create(:lieu),
+                               recurrence: Montrose.every(:week, on: ["tuesday"], starts: (now - 2.weeks).to_date))
+      expect(rdv.overlapping_plages_ouvertures?).to eq(true)
+    end
+
+    it "return false with recurring po overlapping RDV outside zone" do
+      now = Time.zone.parse("2022-12-27 11:00")
+      travel_to(now)
+      agent = create(:agent)
+      rdv = build(:rdv, agents: [agent], starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
+      create(:plage_ouverture, agent: agent, first_day: (now - 1.week).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45), lieu: create(:lieu),
+                               recurrence: Montrose.every(:month, day: { Tuesday: [2] }, starts: (now - 1.week).to_date))
+      expect(rdv.overlapping_plages_ouvertures?).to eq(false)
+    end
+  end
+
+  describe "#overlapping_plages_ouvertures" do
+    let(:now) { Time.zone.parse("2022-12-27 11:00") }
+
+    before { travel_to(now) }
+
+    it "return plage_ouvertures" do
+      agent = create(:agent)
+      rdv = build(:rdv, agents: [agent], starts_at: now + 1.week, ends_at: now + 1.week + 30.minutes)
+      create(:plage_ouverture, agent: agent, first_day: (now + 1.week).to_date, start_time: Tod::TimeOfDay.new(8), end_time: Tod::TimeOfDay.new(14))
+      expect(rdv.overlapping_plages_ouvertures.first).to be_a_kind_of(PlageOuverture)
+    end
+  end
+
+  describe "#available_to_file_attente?" do
+    it "returns true with a 9 days later public office RDV" do
+      now = Time.zone.parse("20220221 10:34")
+      travel_to(now)
+      rdv = build(:rdv, :at_public_office, starts_at: now + 9.days)
+      expect(rdv.available_to_file_attente?).to eq(true)
+    end
+
+    it "returns false with a tomorrow RDV" do
+      now = Time.zone.parse("20220221 10:34")
+      travel_to(now)
+      rdv = build(:rdv, :at_public_office, starts_at: now + 1.day)
+      expect(rdv.available_to_file_attente?).to eq(false)
+    end
+
+    it "returns false with a home RDV" do
+      now = Time.zone.parse("20220221 10:34")
+      travel_to(now)
+      rdv = build(:rdv, :at_home, starts_at: now + 9.days)
+      expect(rdv.available_to_file_attente?).to eq(false)
+    end
+
+    it "returns false with a cancelled RDV" do
+      now = Time.zone.parse("20220221 10:34")
+      travel_to(now)
+      rdv = build(:rdv, :at_home, starts_at: now + 9.days, cancelled_at: now - 1.day)
+      expect(rdv.available_to_file_attente?).to eq(false)
+    end
+
+    it "returns false with a not allowed online reservation motif" do
+      now = Time.zone.parse("20220221 10:34")
+      travel_to(now)
+      motif = build(:motif, reservable_online: false)
+      rdv = build(:rdv, :at_home, starts_at: now + 9.days, motif: motif)
+      expect(rdv.available_to_file_attente?).to eq(false)
     end
   end
 end

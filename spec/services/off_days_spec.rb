@@ -39,5 +39,11 @@ describe OffDays, type: :service do
 
       it { is_expected.to match_array([Date.new(2022, 1, 1)]) } if Time.zone.now > Date.new(2021, 1, 1)
     end
+
+    context "it works with datetime" do
+      let(:range) { Time.zone.parse("20220101 16:00")..Time.zone.parse("20220107 18:00") }
+
+      it { is_expected.to match_array([Date.new(2022, 1, 1)]) } if Time.zone.now > Date.new(2021, 1, 1)
+    end
   end
 end

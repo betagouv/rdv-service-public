@@ -4,18 +4,10 @@ module SlotBuilder
   class << self
     # méthode publique
     def available_slots(motif, lieu, date_range, off_days, agents = [])
-      datetime_range = ensure_date_range_with_time(date_range)
+      datetime_range = Lapin::Range.ensure_date_range_with_time(date_range)
       plage_ouvertures = plage_ouvertures_for(motif, lieu, datetime_range, agents)
       free_times_po = free_times_from(plage_ouvertures, datetime_range, off_days) # dépendance sur RDV et Absence
       slots_for(free_times_po, motif)
-    end
-
-    def ensure_date_range_with_time(date_range)
-      time_begin = date_range.begin.is_a?(Time) ? date_range.begin : date_range.begin.beginning_of_day
-      time_begin = Time.zone.now if time_begin < Time.zone.now
-      time_end = date_range.end.is_a?(Time) ? date_range.end : date_range.end.end_of_day
-
-      time_begin..time_end
     end
 
     def plage_ouvertures_for(motif, lieu, datetime_range, agents)
@@ -88,18 +80,35 @@ module SlotBuilder
     end
 
     def calculate_slots(free_time, motif, plage_ouverture)
+      possible_slot_start = earliest_possible_slot_start(free_time)
+      last_possible_slot_start = free_time.end - motif.default_duration_in_min.minutes
+
       slots = []
-      possible_slot_time = free_time.begin..(free_time.begin + motif.default_duration_in_min.minutes)
-      while possible_slot_time.end <= free_time.end
+
+      while possible_slot_start <= last_possible_slot_start
         slots << Creneau.new(
-          starts_at: possible_slot_time.begin,
+          starts_at: possible_slot_start,
           motif: motif,
           lieu_id: plage_ouverture.lieu_id,
           agent: plage_ouverture.agent
         )
-        possible_slot_time = possible_slot_time.end..(possible_slot_time.end + motif.default_duration_in_min.minutes)
+        possible_slot_start += motif.default_duration_in_min.minutes
       end
       slots
+    end
+
+    def earliest_possible_slot_start(free_time)
+      earliest_possible_start = Time.zone.now
+
+      possible_slot_start = free_time.begin
+
+      if free_time.begin < earliest_possible_start
+        step_length = 5.minutes
+
+        possible_slot_start += step_length * ((earliest_possible_start - free_time.begin) / step_length).ceil
+      end
+
+      possible_slot_start
     end
   end
 
@@ -140,10 +149,7 @@ module SlotBuilder
       end
 
       def busy_times_from_rdvs(range, plage_ouverture)
-        rdv_starts_in_range = plage_ouverture.agent.rdvs.not_cancelled.where(starts_at: range)
-        rdv_ends_in_range = plage_ouverture.agent.rdvs.not_cancelled.where(ends_at: range)
-        rdv_over_range = plage_ouverture.agent.rdvs.not_cancelled.where("starts_at <= ?", range.begin).where("ends_at >= ?", range.end)
-        rdv_starts_in_range.or(rdv_ends_in_range).or(rdv_over_range).map do |rdv|
+        plage_ouverture.agent.rdvs.not_cancelled.where("tsrange(starts_at, ends_at, '[)') && tsrange(?, ?)", range.begin, range.end).map do |rdv|
           BusyTime.new(rdv)
         end
       end

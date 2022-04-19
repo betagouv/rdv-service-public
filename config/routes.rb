@@ -109,9 +109,10 @@ Rails.application.routes.draw do
 
   authenticate :agent do
     namespace "admin" do
-      resources :territories, only: [:update] do
+      resources :territories, only: %i[update show] do
         scope module: "territories" do
           resources :agent_territorial_roles, only: %i[index new create destroy]
+          resources :agent_territorial_access_rights, only: %i[update]
           resources :webhook_endpoints, except: %i[show]
           resources :agents do
             collection do
@@ -123,6 +124,9 @@ Rails.application.routes.draw do
               get :search
             end
           end
+          resource :user_fields, only: %i[edit update]
+          resource :rdv_fields, only: %i[edit update]
+          resource :motif_fields, only: %i[edit update]
           resource :sms_configuration, only: %i[show edit update]
           resources :zone_imports, only: %i[new create]
           resources :zones, only: [:index] # exports only
@@ -131,7 +135,6 @@ Rails.application.routes.draw do
             resources :sector_attributions, only: %i[new create destroy], as: :attributions
             delete "/zones" => "zones#destroy_multiple"
           end
-          resource :setup_checklist, only: [:show]
           get "sectorisation_test" => "sectorisation_tests#search"
         end
       end
@@ -150,6 +153,11 @@ Rails.application.routes.draw do
         resources :slots, only: :index
         resources :lieux, except: :show
         resources :motifs
+        resources :rdvs_collectifs, only: %i[index new create edit update] do
+          collection do
+            resources :motifs, only: [:index], as: :rdvs_collectif_motifs, controller: "rdvs_collectifs/motifs"
+          end
+        end
         resources :rdvs, except: [:new] do
           post :new_participation
           collection do
@@ -177,7 +185,9 @@ Rails.application.routes.draw do
         end
         resources :absences, except: %i[index show new]
         resources :agent_roles, only: %i[edit update]
-        resources :agent_agendas, only: [:show]
+        resources :agent_agendas, only: %i[show] do
+          put :toggle_displays, on: :member
+        end
         resources :agents, only: %i[index destroy] do
           collection do
             get :search

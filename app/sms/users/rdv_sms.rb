@@ -33,25 +33,31 @@ class Users::RdvSms < Users::BaseSms
     I18n.l(rdv.starts_at, format: rdv.home? ? :short_approx : :short)
   end
 
-  def rdv_footer(rdv, user, token) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
-    message = if rdv.phone?
-                "RDV Téléphonique\n"
-              elsif rdv.home?
-                "RDV à domicile\n#{rdv.address}\n"
-              else
-                "#{rdv.address_complete}\n"
-              end
-    if user.relatives.present?
+  def rdv_footer(rdv, user, token)
+    message = rdv_location(rdv)
+
+    if user.relatives.present? && !rdv.collectif?
       users_full_names = rdv.users.map(&:full_name).sort.to_sentence
       message += " pour #{users_full_names}"
     end
 
     agents_short_names = rdv.agents.map(&:short_name).sort.to_sentence
     message += " avec #{agents_short_names} " if rdv.follow_up?
+
     url = rdv_short_url(rdv, host: ENV["HOST"], tkn: rdv.show_token_in_sms? ? token : nil)
     message += "Infos et annulation: #{url}"
 
     message += " / #{rdv.phone_number}" if rdv.phone_number.present?
     message
+  end
+
+  def rdv_location(rdv)
+    if rdv.phone?
+      "RDV Téléphonique\n"
+    elsif rdv.home?
+      "RDV à votre domicile\n"
+    else
+      "#{rdv.address_complete}\n"
+    end
   end
 end

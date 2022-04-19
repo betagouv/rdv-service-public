@@ -5,10 +5,13 @@
     .card-header
       .d-flex.justify-content-between.align-items-center
         h5= territory
-        - if current_agent.territorial_admin_in?(territory)
-          = link_to admin_territory_setup_checklist_path(territory), class: "float-right" do
+        / N'utilise pas la forme `policy([:configuration, territory]).show?` car ici, la policy qui sera utilisé est
+        / construite avec un `AgentOrganisationContext`, il n'y a aucune accès au territoire.
+        / Cette page à vocation à disparaitre.
+        - if Configuration::TerritoryPolicy.new(AgentContext.new(current_agent), territory).show?
+          = link_to admin_territory_path(territory), class: "float-right" do
             i.fa.fa-cog>
-            | Configuration
+            = t(".configuration")
     .card-body
       ul.list-group.list-group-flush
         - agent_roles.each do |agent_role|

@@ -60,6 +60,15 @@ class CronJob < ApplicationJob
     end
   end
 
+  class DestroyOldReceiptsJob < CronJob
+    # At 1:00 every day
+    self.cron_expression = "0 4 * * *"
+
+    def perform
+      Receipt.destroy_old!
+    end
+  end
+
   class SendRdvEventsStatsMailJob < CronJob
     # At 12:00 every day
     self.cron_expression = "0 12 * * *"
@@ -77,7 +86,7 @@ class CronJob < ApplicationJob
     self.cron_expression = "0 2 * * *"
 
     def perform
-      # Avoid restarting recette many times from review apps
+      # Avoid restarting production many times from review apps
       return if ENV["RDV_SOLIDARITES_IS_REVIEW_APP"] == "true"
       return if Rails.env.development?
 

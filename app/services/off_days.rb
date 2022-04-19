@@ -46,6 +46,7 @@ class OffDays
   ].freeze
 
   def self.all_in_date_range(date_range)
+    date_range = date_range.begin.to_date..date_range.end.to_date unless date_range.begin.is_a?(Date)
     date_range.select do |d|
       case d.year
       when 2020

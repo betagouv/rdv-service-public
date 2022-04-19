@@ -13,7 +13,7 @@ class AddInvitedThroughToUsersChangeCreatedThroughToEnumAndAddIndex < ActiveReco
     up_only do
       created_through_values = %w[unknown agent_creation user_sign_up franceconnect_sign_up user_relative_creation agent_creation_api]
       created_through_values.each do |created_through_value|
-        User.where(old_created_through: created_through_value).update_all(created_through: created_through_value) # rubocop:disable Rails/SkipsModelValidations
+        User.where(old_created_through: created_through_value).update_all(created_through: created_through_value)
       end
     end
 

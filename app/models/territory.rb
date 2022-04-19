@@ -19,11 +19,13 @@ class Territory < ApplicationRecord
   # Relations
   has_many :teams, dependent: :destroy
   has_many :organisations, dependent: :destroy
+  has_many :sectors, dependent: :destroy
   has_many :roles, class_name: "AgentTerritorialRole", dependent: :delete_all
 
   # Through relations
   has_many :organisations_agents, through: :organisations, source: :agents
   has_many :agents, through: :roles
+  has_many :zones, through: :sectors
 
   # Validations
   validates :departement_number, length: { maximum: 3 }, if: -> { departement_number.present? }
@@ -39,6 +41,32 @@ class Territory < ApplicationRecord
   }
 
   ## -
+
+  OPTIONAL_RDV_FIELD_TOGGLES = {
+    enable_context_field: :context
+  }.freeze
+
+  OPTIONAL_MOTIF_FIELD_TOGGLES = {
+    enable_motif_categories_field: :category
+  }.freeze
+
+  SOCIAL_FIELD_TOGGLES = {
+    enable_caisse_affiliation_field: :caisse_affiliation,
+    enable_affiliation_number_field: :affiliation_number,
+    enable_family_situation_field: :family_situation,
+    enable_number_of_children_field: :number_of_children,
+    enable_case_number: :case_number,
+    enable_address_details: :address_details
+  }.freeze
+
+  OPTIONAL_FIELD_TOGGLES = {
+    enable_notes_field: :notes,
+    enable_logement_field: :logement
+  }.merge(SOCIAL_FIELD_TOGGLES).freeze
+
+  def any_social_field_enabled?
+    attributes.slice(SOCIAL_FIELD_TOGGLES.keys).values.any?
+  end
 
   def to_s
     "#{departement_number} - #{name}"

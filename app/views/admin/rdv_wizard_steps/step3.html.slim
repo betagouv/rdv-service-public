@@ -9,14 +9,27 @@ ruby:
       = render "hidden_fields", f: f, step: 3, fields: %i[motif_id context], user_ids: @rdv.user_ids
       .form-row
         .col-md-6= datetime_input(f, :starts_at)
-        .col-md-6= f.input :duration_in_min, as: :integer, label: "Durée en minutes"
+        .col-md-6= f.input :duration_in_min, as: :integer
       - if @rdv.public_office?
-        = f.association :lieu, \
-          collection: policy_scope(Lieu).enabled.ordered_by_name, \
-          label_method: :full_name, \
-          include_blank: true,
-          required: true,
-          input_html: { class: "select2-input" }
+        - new_lieu_record = @rdv.lieu&.new_record?
+        - controller_data = { "controller": "rdv-lieu",
+                "initial-state": (new_lieu_record ? "single_use" : "existing"),
+                "select-placeholder-single-use-lieu": t(".select_placeholder_single_use_lieu"),
+                "select-placeholder-existing-lieu": t(".select_placeholder_existing_lieu") }
+        .form-group data=controller_data
+          = f.label :lieu, required: true
+          fieldset
+            = f.association :lieu, collection: policy_scope(Lieu).enabled.ordered_by_name, label_method: :full_name,
+              label: false,  include_blank: true,  required: false,
+              input_html: { class: "select2-input", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: ""} }
+            small.form-text.text-muted data={"rdv-lieu-target": "new_lieu_link"}
+              = t(".single_use_lieu_hint_html")
+          fieldset data={ "rdv-lieu-target": "new_lieu_fieldset" }
+            .border.p-2.bg-light
+              = f.fields_for :lieu, (new_lieu_record ? @rdv.lieu : Lieu.new) do |f2|
+                = render "admin/lieux/lieu_fields", f: f2
+            small.form-text.text-muted data={"rdv-lieu-target": "select_lieu_link"}
+              = t(".existing_lieu_hint_html")
       - elsif @rdv.home?
         = f.input :address, label: "Lieu (RDV à domicile)",  disabled: true, hint: "L'adresse utilisée est celle de #{@rdv.user_for_home_rdv.full_name}"
       = f.association :agents, collection: @rdv.motif.authorized_agents.includes(:service), label_method: :reverse_full_name_and_service, input_html: { multiple: true, class: "select2-input" }

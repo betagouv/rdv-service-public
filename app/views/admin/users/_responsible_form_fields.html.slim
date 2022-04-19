@@ -15,6 +15,8 @@
   .col-md-6= f.input :birth_name, **input_opts.deep_merge(frozen_fields_opts)
   .col-md-6= date_input(f, :birth_date, **input_opts.deep_merge(frozen_fields_opts))
 
+= f.input :phone_number, as: :tel, **input_opts
+
 = f.input(:email, as: :email, **input_opts)
 - if user.new_record?
   label
@@ -23,8 +25,6 @@
       false, \
       class:"align-items-baseline ml-0"
     |&nbsp; Inviter l'utilisateur à se créer un compte sur RDV-solidarites.
-
-= f.input :phone_number, as: :tel, **input_opts
 
 label Préférences de notifications
 .mb-2
@@ -50,14 +50,28 @@ label Préférences de notifications
 = f.input :post_code, as: :hidden, **input_opts
 = f.input :city_name, as: :hidden, **input_opts
 
-= f_user_profile.input :notes, **input_opts.deep_merge(input_html: { rows: 6 })
+- if current_territory.enable_address_details
+  = f.input :address_details, **input_opts
 
-.form-row
-  .col-md-6= f.input :caisse_affiliation, collection: User.human_attribute_values(:caisse_affiliation), **input_opts
-  .col-md-6= f.input :affiliation_number, **input_opts
+- if current_territory.enable_case_number
+  = f.input :case_number, **input_opts
 
-.form-row
-  .col-md-6= f.input :family_situation, collection: User.human_attribute_values(:family_situation), **input_opts
-  .col-md-6= f.input :number_of_children, **{ input_html: { min: "0", max: "15", step: "any" } }.deep_merge(input_opts)
+- if current_territory.enable_notes_field
+  = f_user_profile.input :notes, **input_opts.deep_merge(input_html: { rows: 6 })
 
-= f_user_profile.input :logement, collection: UserProfile.human_attribute_values(:logement), **input_opts
+- if current_territory.enable_caisse_affiliation_field || current_territory.enable_affiliation_number_field
+  .form-row
+    - if current_territory.enable_caisse_affiliation_field
+      .col-md-6= f.input :caisse_affiliation, collection: User.human_attribute_values(:caisse_affiliation), **input_opts
+    - if current_territory.enable_affiliation_number_field
+      .col-md-6= f.input :affiliation_number, **input_opts
+
+- if current_territory.enable_family_situation_field || current_territory.enable_number_of_children_field
+  .form-row
+    - if current_territory.enable_family_situation_field
+      .col-md-6= f.input :family_situation, collection: User.human_attribute_values(:family_situation), **input_opts
+    - if current_territory.enable_number_of_children_field
+      .col-md-6= f.input :number_of_children, **{ input_html: { min: "0", max: "15", step: "any" } }.deep_merge(input_opts)
+
+- if current_territory.enable_logement_field
+  = f_user_profile.input :logement, collection: UserProfile.human_attribute_values(:logement), **input_opts

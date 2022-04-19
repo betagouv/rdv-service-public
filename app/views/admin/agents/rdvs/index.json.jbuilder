@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 json.array! @rdvs do |rdv|
-  json.title rdv_title_for_agent(rdv) + (rdv.overlapping_plages_ouvertures? ? " ⚠️" : "")
+  json.title rdv_title_in_agenda(rdv)
   json.id rdv.id
   json.extendedProps do
     json.organisationName rdv.organisation&.name
@@ -11,7 +11,6 @@ json.array! @rdvs do |rdv|
     json.lieu rdv.public_office? && rdv.lieu&.name
     json.past rdv.past?
     json.duration rdv.duration_in_min
-    json.overlappingPlagesOuvertures rdv.overlapping_plages_ouvertures?
   end
   json.start rdv.starts_at.as_json
   json.end rdv.ends_at.as_json

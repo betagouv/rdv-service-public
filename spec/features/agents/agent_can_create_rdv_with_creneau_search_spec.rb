@@ -23,7 +23,7 @@ describe "Agent can create a Rdv with creneau search" do
   end
 
   it "default", js: true do
-    expect(page).to have_content("Trouver un créneau")
+    expect(page).to have_content("Trouver un RDV")
     select(motif.name, from: "motif_id")
     click_button("Afficher les créneaux")
 

@@ -9,4 +9,17 @@ class Admin::AgentAgendasController < AgentAuthController
     @selected_event_id = params[:selected_event_id]
     @date = params[:date].present? ? Date.parse(params[:date]) : nil
   end
+
+  def toggle_displays
+    @agent = current_agent
+    authorize(@agent)
+    @agent.update!(agent_role_params)
+    redirect_to admin_organisation_agent_agenda_path(params.permit(:status, :selected_event_id, :date))
+  end
+
+  private
+
+  def agent_role_params
+    params.require(:agent).permit(:display_saturdays, :display_cancelled_rdv)
+  end
 end

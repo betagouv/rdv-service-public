@@ -1,6 +1,10 @@
 ---
 fr:
   admin:
+    organisations:
+      index:
+        configuration: Configuration
+        create: Créer
     rdvs:
       message:
         confirm:
@@ -20,7 +24,7 @@ fr:
         index:
           agents: Agents
           teams: Équipes
-          search_for_slots_title: Trouver un créneau
+          search_for_slots_title: Trouver un RDV
           search_for_slots_subtitle: pour %{users_fullname}
           available_places_with_slots:
             zero: Aucun lieu ne propose de disponibilité
@@ -232,6 +236,7 @@ fr:
     search: Rechercher
     show: Afficher
     ok: OK
+    actions: Actions
     select:
       prompt: Veuillez sélectionner
     submit:
@@ -306,6 +311,7 @@ fr:
       human: "%A %d %B %Y à %Hh%M"
       human_approx: "%A %d %B %Y vers %Hh%M"
       dense: "%d/%m/%Y à %H:%M"
+      dense_html: "%d/%m/%Y&nbsp;à&nbsp;%H:%M"
       time_only: "%Hh%M"
     pm: pm
   public_office: "sur place"

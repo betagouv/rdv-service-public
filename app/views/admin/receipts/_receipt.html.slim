@@ -1,0 +1,21 @@
+tr
+  td
+    .text-bold= receipt.human_attribute_value(:event)
+    p.small= l(receipt.created_at, format: :dense_html).html_safe
+  td
+    - if receipt.channel_sms?
+      - title = "#{receipt.channel} (#{receipt.sms_provider})"
+      div[title=title]= receipt.sms_phone_number
+    - if receipt.channel_mail?
+      - title = "#{receipt.channel}"
+      div[title=title]= receipt.email_address
+  td
+    blockquote.border-left.border-light.pl-1= receipt.content
+  td
+    span.text-nowrap[title= receipt.human_attribute_value(:result, context: :explanation)]
+      span.text-bold= receipt.human_attribute_value(:result)
+      i.m-1.fa.fa-question-circle.small
+    - if (receipt.sent? || receipt.delivered?) && !receipt.sms_count.nil?
+      p.small= "#{Receipt.human_attribute_name(:sms_count)}: #{receipt.sms_count}"
+    - elsif receipt.error_message.present?
+      p.small= receipt.error_message

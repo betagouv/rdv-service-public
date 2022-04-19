@@ -4,7 +4,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
   render_views
 
   let!(:organisation) { create(:organisation) }
-  let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+  let!(:agent) { create(:agent, admin_role_in_organisations: [organisation], invitation_accepted_at: nil) }
   let!(:organisation2) { create(:organisation) }
   let(:service_id) { agent.service.id }
 
@@ -15,6 +15,20 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
 
   after do
     Devise.mailer.deliveries.clear
+  end
+
+  describe "GET #new" do
+    context "for a cnfs" do
+      let!(:agent) do
+        create(:agent, admin_role_in_organisations: [organisation],
+                       invitation_accepted_at: nil, service: create(:service, name: "Conseiller Numérique"))
+      end
+
+      it "only allows inviting agents for the secretariat" do
+        get :new, params: { organisation_id: organisation.id }
+        expect(response).not_to have_content("Admin")
+      end
+    end
   end
 
   describe "POST #create" do
@@ -104,6 +118,56 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
       end
     end
 
+    context "when trying to invite an admin as a conseiller numerique" do
+      let(:service_id) { create(:service, name: Service::SECRETARIAT).id }
+      let(:params) do
+        {
+          organisation_id: organisation.id,
+          agent: {
+            email: "michel@lapin.com",
+            service_id: service_id,
+            roles_attributes: {
+              "0" => {
+                level: "admin"
+              }
+            }
+          }
+        }
+      end
+
+      before do
+        agent.service.update!(name: "Conseiller Numérique")
+      end
+
+      it "creates a new basic agent instead of an admin" do
+        expect { subject }.to change(Agent, :count).by(1)
+        expect(AgentRole.last).to have_attributes(level: AgentRole::LEVEL_BASIC)
+      end
+
+      context "when the agent already exists" do
+        let!(:agent2) do
+          create(:agent, basic_role_in_organisations: [organisation2], service: secretariat)
+        end
+        let(:secretariat) { create(:service, name: Service::SECRETARIAT) }
+
+        let(:params) do
+          {
+            organisation_id: organisation.id,
+            agent: {
+              email: agent2.email,
+              service_id: agent2.service_id,
+              roles_attributes: { "0" => { level: "basic" } }
+            }
+          }
+        end
+
+        it "invites the agent" do
+          expect { subject }.to change { organisation.agents.count }.by(1)
+          expect(AgentRole.last).to have_attributes(level: AgentRole::LEVEL_BASIC)
+        end
+      end
+    end
+
     context "when email is correct and no invitation has been sent" do
       let(:params) do
         {
@@ -183,7 +247,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
       end
 
       context "when agent is in another organisation" do
-        let!(:existing_agent) { create(:agent, basic_role_in_organisations: [organisation2]) }
+        let!(:existing_agent) { create(:agent, basic_role_in_organisations: [organisation2], invitation_accepted_at: nil) }
 
         it_behaves_like "existing agent is added to organization"
 
@@ -195,7 +259,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
 
       context "when agent already exists but has a different service" do
         let(:other_service) { build(:service) }
-        let!(:existing_agent) { create(:agent, basic_role_in_organisations: [organisation2], service: other_service) }
+        let!(:existing_agent) { create(:agent, basic_role_in_organisations: [organisation2], service: other_service, invitation_accepted_at: nil) }
 
         it_behaves_like "existing agent is added to organization"
 
@@ -206,19 +270,25 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
       end
 
       context "when agent has been invited by another organisation" do
-        let!(:existing_agent) { create(:agent, :not_confirmed, basic_role_in_organisations: [organisation2]) }
+        let!(:existing_agent) do
+          create(:agent, :not_confirmed, basic_role_in_organisations: [organisation2], invitation_accepted_at: nil)
+        end
 
         it_behaves_like "existing agent is added to organization"
       end
 
       context "when agent is already in this organisation" do
-        let!(:existing_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+        let!(:existing_agent) do
+          create(:agent, basic_role_in_organisations: [organisation], invitation_accepted_at: nil)
+        end
 
         it { expect { subject }.not_to change(Agent, :count) }
       end
 
       context "when agent has been invited by this organisation" do
-        let!(:existing_agent) { create(:agent, :not_confirmed, basic_role_in_organisations: [organisation]) }
+        let!(:existing_agent) do
+          create(:agent, :not_confirmed, basic_role_in_organisations: [organisation], invitation_accepted_at: nil)
+        end
 
         it { expect { subject }.not_to change(Agent, :count) }
       end
@@ -239,7 +309,9 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
           }
         }
       end
-      let!(:existing_agent) { create(:agent, email: "marco@demo.rdv-solidarites.fr", basic_role_in_organisations: [organisation2]) }
+      let!(:existing_agent) do
+        create(:agent, email: "marco@demo.rdv-solidarites.fr", basic_role_in_organisations: [organisation2], invitation_accepted_at: nil)
+      end
 
       it_behaves_like "existing agent is added to organization"
     end

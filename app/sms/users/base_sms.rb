@@ -16,5 +16,8 @@ class Users::BaseSms < ApplicationSms
       "org-#{rdv.organisation&.id}",
       self.class.name.demodulize.underscore
     ].compact
+
+    @receipt_params[:rdv] = rdv
+    @receipt_params[:user] = user
   end
 end

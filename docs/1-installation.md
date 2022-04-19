@@ -28,7 +28,7 @@ make run      ## appelle foreman s -f Procfile.dev
 
 ## Commandes
 
-Un [Makefile](Makefile) est disponible, qui sert de point d’entrée aux différents outils :
+Un [Makefile](https://github.com/betagouv/rdv-solidarites.fr/blob/production/Makefile) est disponible, qui sert de point d’entrée aux différents outils :
 
 ```bash
 > make help

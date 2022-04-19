@@ -1,4 +1,3 @@
-- map_url = rdv.adress.present? && "https://maps.google.com?q=#{rdv.address.split(/,?\s/).join('+')}"
 .overview
   h3.aligncenter Récapitulatif
   div.row-result
@@ -6,12 +5,20 @@
     span.float-right= l(rdv.starts_at, format: (rdv.home? ? :human_approx : :human))
     .clear
   div.row-result
-    span.title Usager(s) :
-    span.float-right= rdv.users_full_names
+    - if rdv.collectif? && for_role == :user
+      span.title= "#{User.model_name.human} :"
+      span.float-right= @user.full_name
+    - else
+      span.title Usager(s) :
+      span.float-right= rdv.users_full_names
     .clear
   div.row-result
     span.title Motif :
-    span.float-right= rdv.motif_name
+    span.float-right
+      - if rdv.collectif? && rdv.title.present?
+        = "#{rdv.motif_name} : #{rdv.title}"
+      - else
+        = rdv.motif_name
     .clear
   div.row-result
     span.title Service :
@@ -33,14 +40,12 @@
     div.row-result
       span.title Ceci est un rendez-vous à domicile à l'adresse :
       div.alignright
-        a href="#{map_url}" target="_blank"
-          = rdv.address_complete
+        = rdv.address_complete
   - else
     div.row-result
       span.title Adresse :
       span.float-right
-        a href="#{map_url}" target="_blank"
-          = rdv.address_complete
+        = rdv.address_complete
       .clear
   - if rdv.motif_instruction.present? && for_role == :user
     .div.row-result.no-border

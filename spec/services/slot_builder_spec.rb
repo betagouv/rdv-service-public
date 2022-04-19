@@ -21,10 +21,38 @@ describe SlotBuilder, type: :service do
       expect(slots.map(&:starts_at).map(&:hour)).to eq([9, 10])
     end
 
-    it "return Crenaux object" do
+    it "return Creneaux object" do
       create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes, lieu: lieu)
       slots = described_class.available_slots(motif, lieu, date_range, off_days)
       expect(slots.map(&:class).map(&:to_s).uniq).to eq(["Creneau"])
+    end
+
+    context "when asking for slots that may start right now" do
+      let(:motif) do
+        create(:motif, default_duration_in_min: 60, organisation: organisation, min_booking_delay: 45 * 60)
+      end
+
+      it "returns only slots that start in the future, without minimum booking delay" do
+        create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(12) + 1.second, lieu: lieu)
+
+        # The plage_ouverture are not always sorted, so neither are the slots, so we can't just remove the first slots
+        create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(18), end_time: Tod::TimeOfDay.new(20) + 1.second, lieu: lieu)
+        create(:plage_ouverture, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(17) + 1.second, lieu: lieu)
+
+        travel_to(Time.zone.local(2021, 5, 3, 15, 3, 0))
+
+        slots = described_class.available_slots(motif, lieu, date_range, off_days)
+
+        # The current time is 15:03
+        # The available plages ouvertures are 9:00-12:00, 14:00-17:00, and 18:00-20:00
+        # We round up the rdv time to the closest 5mn, so the first possible creneau is at 15:05.
+
+        expect(slots.map(&:starts_at)).to match_array([
+                                                        Time.zone.local(2021, 5, 3, 15, 5, 0),
+                                                        Time.zone.local(2021, 5, 3, 18, 0, 0),
+                                                        Time.zone.local(2021, 5, 3, 19, 0, 0)
+                                                      ])
+      end
     end
   end
 
@@ -99,7 +127,6 @@ describe SlotBuilder, type: :service do
                                               recurrence: Montrose.every(:week, starts: first_day - 1.day))
 
       plage_ouvertures = described_class.plage_ouvertures_for(motif, lieu, date_range, [])
-
       expect(plage_ouvertures.sort).to eq([matching_po, recurring_po].sort)
     end
 
@@ -310,31 +337,6 @@ describe SlotBuilder, type: :service do
 
       slots = described_class.calculate_slots(free_time, motif, plage_ouverture) { |s| Creneau.new(starts_at: s) }
       expect(slots.map(&:starts_at).map(&:hour)).to eq([9])
-    end
-  end
-
-  describe "#ensure_date_range_with_time" do
-    it "returns range with given datetime_range" do
-      date_range = Time.zone.parse("2021-12-20 11:00")..Time.zone.parse("2021-12-21 18:00")
-      expected_range = Time.zone.parse("2021-12-20 11:00")..Time.zone.parse("2021-12-21 18:00")
-      datetime_range = described_class.ensure_date_range_with_time(date_range)
-      expect(datetime_range).to eq(expected_range)
-    end
-
-    it "returns range from beginning of day of range begin and end of day of range end wit date range" do
-      date_range = Date.new(2021, 12, 20)..Date.new(2021, 12, 21)
-      expected_range = Date.new(2021, 12, 20).beginning_of_day..(Date.new(2021, 12, 21).end_of_day)
-      datetime_range = described_class.ensure_date_range_with_time(date_range)
-      expect(datetime_range).to eq(expected_range)
-    end
-
-    it "returns range from now to end of given datetime range" do
-      date_range = Time.zone.parse("2021-12-20 11:00")..Time.zone.parse("2021-12-21 18:00")
-      expected_range = Time.zone.parse("2021-12-21 10:00")..Time.zone.parse("2021-12-21 18:00")
-      now = Time.zone.parse("2021-12-21 10:00")
-      travel_to(now)
-      datetime_range = described_class.ensure_date_range_with_time(date_range)
-      expect(datetime_range).to eq(expected_range)
     end
   end
 

@@ -30,6 +30,38 @@ describe PlageOuverture, type: :model do
     end
   end
 
+  describe "lieu_is_enabled" do
+    subject { plage_ouverture.errors }
+
+    let(:plage_ouverture) { build :plage_ouverture, lieu: lieu }
+
+    before { plage_ouverture.validate }
+
+    context "invalid if lieu is nil" do
+      let(:lieu) { nil }
+
+      it { is_expected.to be_of_kind(:lieu, :blank) }
+    end
+
+    context "invalid if lieu is disabled" do
+      let(:lieu) { build :lieu, availability: :disabled }
+
+      it { is_expected.to be_of_kind(:lieu, :must_be_enabled) }
+    end
+
+    context "invalid if lieu is single_use" do
+      let(:lieu) { build :lieu, availability: :single_use }
+
+      it { is_expected.to be_of_kind(:lieu, :must_be_enabled) }
+    end
+
+    context "valid if lieu is enabled" do
+      let(:lieu) { build :lieu, availability: :enabled }
+
+      it { is_expected.to be_empty }
+    end
+  end
+
   it_behaves_like "recurrence"
 
   describe "#expired?" do
@@ -215,55 +247,46 @@ describe PlageOuverture, type: :model do
     end
   end
 
-  describe "#overlaps_with_time_slot?" do
-    subject { plage_ouverture.overlaps_with_time_slot?(time_slot) }
+  describe "#overlapping_range" do
+    let(:now) { Time.zone.parse("2022-12-27 11:00") }
 
-    describe "plage ouverture 14h-18h" do
-      let(:plage_ouverture) do
-        build(:plage_ouverture, start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(18))
-      end
-      let!(:time_slot) { TimeSlot.new(Time.zone.parse("2020-12-2 16:00"), Time.zone.parse("2020-12-2 17:00")) }
+    before { travel_to(now) }
 
-      before do
-        allow(plage_ouverture).to receive(:covers_date?)
-          .with(Date.new(2020, 12, 2))
-          .and_return(date_is_covered)
-        plage_ouverture_time_slot = instance_double(TimeSlot)
-        allow(TimeSlot).to receive(:new)
-          .with(Time.zone.parse("2020-12-2 14:00"), Time.zone.parse("2020-12-2 18:00"))
-          .and_return(plage_ouverture_time_slot)
-        allow(plage_ouverture_time_slot).to receive(:intersects?)
-          .with(time_slot)
-          .and_return(time_slots_intersect)
-      end
+    it "return empty when PlageOuverture outside range" do
+      range = (now)..(now + 30.minutes)
+      create(:plage_ouverture, first_day: now.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(10))
+      create(:plage_ouverture, first_day: now.to_date, start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(17))
+      expect(described_class.overlapping_range(range)).to be_empty
+    end
 
-      context "date is covered & time slots intersect" do
-        let(:date_is_covered) { true }
-        let(:time_slots_intersect) { true }
+    it "return plage_ouverture when ends in range" do
+      range = (now + 1.week)..(now + 1.week + 30.minutes)
+      plage_ouverture = create(:plage_ouverture, first_day: (now + 1.week).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45))
+      expect(described_class.overlapping_range(range)).to eq([plage_ouverture])
+    end
 
-        it { is_expected.to eq true }
-      end
+    it "return plage_ouverture when starts in range" do
+      range = now..(now + 30.minutes)
+      plage_ouverture = create(:plage_ouverture, first_day: now.to_date, start_time: Tod::TimeOfDay.new(11, 15), end_time: Tod::TimeOfDay.new(12, 15))
+      expect(described_class.overlapping_range(range)).to eq([plage_ouverture])
+    end
 
-      context "date is not covered but time slots intersect" do
-        let(:date_is_covered) { false }
-        let(:time_slots_intersect) { true }
+    it "return plage_ouverture when one occurrence overlapping range" do
+      range = now..(now + 30.minutes)
+      plage_ouverture = create(:plage_ouverture, first_day: (now - 2.weeks).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45),
+                                                 recurrence: Montrose.every(:week, on: ["tuesday"], starts: (now - 2.weeks).to_date))
+      expect(described_class.overlapping_range(range)).to eq([plage_ouverture])
+    end
 
-        it { is_expected.to eq false }
-      end
-
-      context "date not covered but time slots do not intersect" do
-        let(:date_is_covered) { true }
-        let(:time_slots_intersect) { false }
-
-        it { is_expected.to eq false }
-      end
-
-      context "date is not covered and time slots do not intersect" do
-        let(:date_is_covered) { false }
-        let(:time_slots_intersect) { false }
-
-        it { is_expected.to eq false }
-      end
+    it "return empty when plage_ouverture occurrence doesnt overlapping range" do
+      now = Time.zone.parse("2022-12-27 11:00")
+      travel_to(now)
+      range = (now + 1.week)..(now + 1.week + 30.minutes)
+      create(:plage_ouverture, first_day: (now - 1.week).to_date, \
+                               start_time: Tod::TimeOfDay.new(10, 45), \
+                               end_time: Tod::TimeOfDay.new(11, 45), \
+                               recurrence: Montrose.every(:month, day: { Tuesday: [2] }, starts: (now - 1.week).to_date))
+      expect(described_class.overlapping_range(range)).to be_empty
     end
   end
 end

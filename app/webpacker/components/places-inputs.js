@@ -92,8 +92,10 @@ class PlacesInput {
     `
   }
 
-  getDetails = ({ name, city, postcode, district, context }) => {
-    let attributes = [postcode, district, context]
+  // exemple de name : 52 Avenue Jean Jaurès, city : Paris, postcode : 75019. 
+  // District et context ont été supprimé afin de récupérer des adresses plus courtes. Exemple district: Paris 19e Arrondissement, context: 75, Paris, Île-de-France
+  getDetails = ({ name, city, postcode }) => {
+    let attributes = [postcode]
     if (name !== city) // could also check for type !== 'municipality'
       attributes.unshift(city)
     return attributes.filter(e => e)

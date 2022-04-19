@@ -26,7 +26,10 @@ class Motif < ApplicationRecord
   SECTORISATION_LEVEL_DEPARTEMENT = "departement"
   SECTORISATION_TYPES = [SECTORISATION_LEVEL_AGENT, SECTORISATION_LEVEL_ORGANISATION, SECTORISATION_LEVEL_DEPARTEMENT].freeze
 
-  enum location_type: { public_office: 0, phone: 1, home: 2 }
+  enum location_type: { public_office: "public_office", phone: "phone", home: "home" }
+  enum category: { rsa_orientation: "rsa_orientation",
+                   rsa_accompagnement: "rsa_accompagnement",
+                   rsa_orientation_on_phone_platform: "rsa_orientation_on_phone_platform" }
 
   # Relations
   belongs_to :organisation
@@ -56,6 +59,8 @@ class Motif < ApplicationRecord
   validate :booking_delay_validation
   validate :not_associated_with_secretariat
   validates :color, css_hex_color: true
+  validate :not_reservable_online_if_collectif
+  validate :not_at_home_if_collectif
 
   # Scopes
   scope :active, lambda { |active = true|
@@ -91,6 +96,9 @@ class Motif < ApplicationRecord
     joins(organisation: :territory)
       .where(organisations: { territories: { departement_number: departement_number } })
   }
+  scope :visible, -> { where(visibility_type: [Motif::VISIBLE_AND_NOTIFIED, Motif::VISIBLE_AND_NOT_NOTIFIED]) }
+  scope :collectif, -> { where(collectif: true) }
+  scope :individuel, -> { where(collectif: false) }
 
   ## -
 
@@ -113,7 +121,7 @@ class Motif < ApplicationRecord
   end
 
   def authorized_services
-    for_secretariat ? [service, Service.secretariat] : [service]
+    for_secretariat ? [service, Service.secretariat.first] : [service]
   end
 
   def secretariat?
@@ -144,6 +152,22 @@ class Motif < ApplicationRecord
     custom_cancel_warning_message || Motif.human_attribute_name("default_cancel_warning_message")
   end
 
+  def start_booking_delay
+    Time.zone.now + min_booking_delay.seconds
+  end
+
+  def end_booking_delay
+    Time.zone.now + max_booking_delay.seconds
+  end
+
+  def booking_delay_range
+    start_booking_delay..end_booking_delay
+  end
+
+  def individuel?
+    !collectif?
+  end
+
   private
 
   def booking_delay_validation
@@ -156,5 +180,17 @@ class Motif < ApplicationRecord
     return if service_id.nil?
 
     errors.add(:service_id, "ne peut être le secrétariat") if service.secretariat?
+  end
+
+  def not_reservable_online_if_collectif
+    return unless collectif? && reservable_online
+
+    errors.add(:base, :not_reservable_online_if_collectif)
+  end
+
+  def not_at_home_if_collectif
+    return unless collectif? && !public_office?
+
+    errors.add(:base, :not_at_home_if_collectif)
   end
 end

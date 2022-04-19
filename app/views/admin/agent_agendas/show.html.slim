@@ -8,10 +8,7 @@
     | Agenda de #{@agent.full_name_and_service}
 
 - content_for :breadcrumb do
-  = form_tag(admin_organisation_agent_agenda_path(current_organisation, @agent), method: "get", class: "d-inline-flex mr-2") do
-    - options = { "Tous les rdvs" => "" }.merge(Rdv.human_attribute_values(:statuses))
-    = select_tag :status, options_for_select(options, rdv_status_value(@status)), class:"select2-input", onchange: "this.form.submit()"
-  = link_to "Trouver un créneau", admin_organisation_agent_searches_path(@organisation), class: "btn btn-outline-primary align-bottom"
+  = link_to "Trouver un RDV", admin_organisation_agent_searches_path(@organisation), class: "btn btn-outline-primary align-bottom"
 
 .card
   .card-body.pt-0
@@ -20,9 +17,22 @@
       data-agent-id="#{@agent.id}"
       data-selected-event-id="#{@selected_event_id}"
       data-organisation-id="#{@organisation.id}"
-      data-event-sources-json="#{[admin_agent_rdvs_path(@agent, organisation_id: current_organisation.id, status: @status), admin_agent_absences_path(@agent, organisation_id: current_organisation.id), admin_agent_plage_ouvertures_path(@agent, organisation_id: current_organisation.id), admin_jours_feries_path].to_json}"
+      data-display-saturdays="#{current_agent.display_saturdays}"
+      data-event-sources-json="#{[admin_agent_rdvs_path(@agent, organisation_id: current_organisation.id), admin_agent_absences_path(@agent, organisation_id: current_organisation.id), admin_agent_plage_ouvertures_path(@agent, organisation_id: current_organisation.id), admin_jours_feries_path].to_json}"
     ]
-    .mt-3
+    .mt-3.flex-grow-1.text-right
+      .m-2
+        = simple_form_for [:admin, current_agent], url: toggle_displays_admin_organisation_agent_agenda_path(params.permit(:selected_event_id, :date)), method: :put, html: {id: "edit_agent_#{current_agent.id}_cancelled_rdv_preferences"} do |f|
+           = f.hidden_field :display_cancelled_rdv, value: !current_agent.display_cancelled_rdv
+           / The fc-button fc-button-primary classes give the button the aspect of calendar buttons
+           = f.submit Agent.human_attribute_value(:display_cancelled_rdv, !current_agent.display_cancelled_rdv), class: "fc-button fc-button-primary", style: "text-transform: none;"
+      .m-2
+        = simple_form_for [:admin, current_agent], url: toggle_displays_admin_organisation_agent_agenda_path(params.permit(:selected_event_id, :date)), method: :put, html: {id: "edit_agent_#{current_agent.id}_saturday_preferences"} do |f|
+           = f.hidden_field :display_saturdays, value: !current_agent.display_saturdays
+           / The fc-button fc-button-primary classes give the button the aspect of calendar buttons
+           = f.submit Agent.human_attribute_value(:display_saturdays, !current_agent.display_saturdays), class: "fc-button fc-button-primary", style: "text-transform: none;"
+
+    .mt-2
       = link_to admin_organisation_rdvs_path(current_organisation, agent_id: @agent.id, start: @date, end: @date, show_user_details: true, breadcrumb_page: "agenda"), class: "js-link-print-rdvs" do
         - if current_agent == @agent
           ' 🖨 Liste détaillée des RDVs du

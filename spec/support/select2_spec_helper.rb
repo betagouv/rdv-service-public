@@ -7,4 +7,25 @@ module Select2SpecHelper
     find(".select2-results li.select2-results__option", text: user.reverse_full_name).click
     expect(page).to have_selector("a[title='Modifier']")
   end
+
+  def add_user(user)
+    find("span", text: "Ajouter un usager", match: :first).click
+    find("li", text: user.last_name).click
+
+    # This is to make sure we wait for the user to be added before doing the next action
+    expect(page).to have_content("#{user.first_name} #{user.last_name}")
+  end
+
+  def add_new_user
+    click_link("Créer un usager")
+    first_name = Faker::Name.first_name
+    last_name = Faker::Name.last_name.upcase
+
+    fill_in("Prénom", with: first_name)
+    fill_in("Nom d’usage", with: last_name)
+    click_button("Créer usager")
+
+    # Wait for the user to be added before doing the next action
+    expect(page).to have_content("#{first_name} #{last_name}")
+  end
 end

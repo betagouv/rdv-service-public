@@ -14,7 +14,7 @@
           = render "admin/rdvs/rdv_details", rdv: rdv, show_users: false
         .col-md-6
           .card-text
-            strong> Usager(s) :
+            strong> #{User.model_name.human(count: rdv.users.count)} :
             .pl-2.pt-1
               - rdv.users.order_by_last_name.each do |user|
                 div
@@ -28,12 +28,12 @@
                     li= object_attribute_tag(user, :phone_number, clickable_user_phone_number(user))
                     li= object_attribute_tag(user, :address)
                     li= object_attribute_tag(user, :email, clickable_user_email(user))
-                    li= object_attribute_tag(user_profile, :notes, formatted_user_notes(user_profile))
-                    - if rdv.service_social?
+                    - if current_territory.enable_notes_field
+                      li= object_attribute_tag(user_profile, :notes, formatted_user_notes(user_profile))
+                    - if current_territory.enable_logement_field
                       li= object_attribute_tag(user_profile, :logement)
-                      li= object_attribute_tag(user, :number_of_children)
-                      li= object_attribute_tag(user, :family_situation)
-                      li= object_attribute_tag(user, :affiliation_number)
-                      li= object_attribute_tag(user, :caisse_affiliation)
+                    - Territory::SOCIAL_FIELD_TOGGLES.each do |toggle, field_name|
+                      - if current_territory.attributes.with_indifferent_access[toggle]
+                        li= object_attribute_tag(user, field_name)
     - else
       = render "admin/rdvs/rdv_details", rdv: rdv

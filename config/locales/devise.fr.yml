@@ -35,10 +35,32 @@ fr:
         submit_button: "Enregistrer"
       reinvite: "Renvoyer l’invitation"
       invitation:
+        open_app_mail: "Ouvrir l'app Mail"
         title: "Inscription"
         invitation_token: "Code d’invitation"
         submit_button: "Créer son compte"
+        click_on_link_sent: "Veuillez cliquer sur le lien dans l'email qui vient de vous être envoyé"
     mailer:
+      invitation_instructions_cnfs:
+        subject: "Vous avez été invité sur RDV-Solidarités"
+        hello: "Hello 👋"
+        create_account: "Nous vous contactons pour %{link} RDV-Solidarités. "
+        intro1: "✅ RDV-Solidarités est un outil de gestion des rendez-vous."
+        intro2: "✅ RDV-Solidarités est en phase de généralisation à tous les Conseillers Numérique France Services."
+        intro3: Chaque semaine, nous lançons l’embarquement d’un nouveau groupe de Conseillers Numérique.
+        intro4: Vous faites partie  d’un embarquement et vous disposez  alors d’un droit d’accès à RDV-Solidarités.
+        title1: RDV-Solidarités c’est ?
+        recap: "Un outil,  qui vous permet de :"
+        recap_item1: planifier des rendez-vous individuels et collectifs,
+        recap_item2: envoyer des rappels (sms & mail) automatiques aux  usagers
+        recap_item3: permettre à vos collègues de planifier des rendez-vous selon vos disponibilités.
+        title2: Comment ça marche  ?
+        video_text: "Pour mieux comprendre, nous vous proposons de regarder la %{link}"
+        first_steps_info: Vous trouverez  également un guide “premiers pas” dans l’interface de l’outil.
+        title3: Besoin d’aide ?
+        help_info: "Vous pouvez  nous contacter sur le Mattermost dans le canal : %{mattermost}  ou bien par mail à %{support_email}"
+        sign_off: En vous souhaitant un bon embarquement !
+        signature: L'équipe RDV-Solidarités
       invitation_instructions_for_agents:
         subject: "Vous avez été invité sur RDV-Solidarités."
         hello: "Bonjour %{email}"
@@ -103,6 +125,9 @@ fr:
           invitation_instructions:
             accept_until_format: "%d %B"
   links:
+    session_as_agent: "Se connecter en tant qu'agent"
+    agent_space: "Espace agent"
+    usager_space: "Espace usager"
     session: "Se connecter"
     registration: "S'inscrire"
     password: "Mot de passe oublié ?"

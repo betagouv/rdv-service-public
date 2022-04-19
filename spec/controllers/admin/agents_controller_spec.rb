@@ -5,12 +5,9 @@ RSpec.describe Admin::AgentsController, type: :controller do
 
   let!(:organisation) { create(:organisation) }
   let!(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-  let!(:agent1) { create(:agent, admin_role_in_organisations: [organisation]) }
-  let(:agent_invitee) { create(:agent, confirmed_at: nil, first_name: nil, last_name: nil, basic_role_in_organisations: [organisation]) }
+  let!(:agent1) { create(:agent, admin_role_in_organisations: [organisation], invitation_accepted_at: nil) }
 
-  before do
-    sign_in agent
-  end
+  before { sign_in agent }
 
   describe "GET #index" do
     it "returns a success response" do

@@ -9,9 +9,12 @@ class Notifiers::RdvBase < ::BaseService
   # :notify_user_by_sms(user)
   # :notify_agent(agent)
 
-  def initialize(rdv, author)
+  # By default, notifications are sent to all the rdv users
+  # The optional `users` argument can be used to send notifications to them instead of rdv.users
+  def initialize(rdv, author, users = nil)
     @rdv = rdv
     @author = author
+    @users = users || rdvs_users_to_notify.map(&:user)
   end
 
   def perform
@@ -26,8 +29,6 @@ class Notifiers::RdvBase < ::BaseService
     @rdv_users_tokens_by_user_id
   end
 
-  private
-
   ## Users notifications
   #
 
@@ -36,7 +37,22 @@ class Notifiers::RdvBase < ::BaseService
 
     users_to_notify
       .select(&:notifiable_by_email?)
-      .each { notify_user_by_mail(_1) }
+      .each do |user|
+        notify_user_by_mail(user)
+        create_mail_receipt(user)
+      end
+  end
+
+  def create_mail_receipt(user)
+    params = {
+      rdv: @rdv,
+      user: user,
+      event: self.class.name.demodulize.underscore,
+      channel: :mail,
+      result: :processed,
+      email_address: user.email
+    }
+    Receipt.create!(params)
   end
 
   def notify_users_by_sms
@@ -47,8 +63,16 @@ class Notifiers::RdvBase < ::BaseService
       .each { notify_user_by_sms(_1) }
   end
 
+  def generate_invitation_tokens
+    @rdv_users_tokens_by_user_id = rdvs_users_to_notify.to_h do |rdv_user|
+      [rdv_user.user.id, rdv_user.new_raw_invitation_token]
+    end
+  end
+
+  private
+
   def users_to_notify
-    rdvs_users_to_notify.map(&:user).map(&:user_to_notify).uniq
+    @users.map(&:user_to_notify).uniq
   end
 
   ## Agents notifications

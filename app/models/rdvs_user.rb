@@ -4,7 +4,7 @@ class RdvsUser < ApplicationRecord
   devise :invitable
 
   # Relations
-  belongs_to :rdv, touch: true, inverse_of: :rdvs_users
+  belongs_to :rdv, touch: true, inverse_of: :rdvs_users, counter_cache: :users_count
   belongs_to :user
 
   # Validations

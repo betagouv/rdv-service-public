@@ -1,0 +1,48 @@
+/ This partial is used for the form in Lieu#new and Lieu#edit, as well as and RdvWizardSteps#step3 (as a nested form)
+  TODO: We might want to allow admins to create a new Lieu for a Rdv, and immediately save it in the organisation lieu.
+  In this scenario, having this common partial (instead of a separate partial for the nested form) will be useful.
+
+- is_new_form = f.object_name == "lieu" && f.object.new_record?
+- is_edit_form = f.object_name == "lieu" && f.object.persisted?
+- is_nested_form = f.object_name != "lieu"
+
+/ New and Edit
+- if is_new_form || is_edit_form
+  = render "model_errors", model: f.object
+
+/ All forms
+= f.input :name, required: true
+- unless is_nested_form
+  = f.input :phone_number
+= f.input :address, input_html: { class: "places-js-container" }
+= f.hidden_field :latitude
+= f.hidden_field :longitude
+
+/ Edit only
+- if is_edit_form
+  = f.input :enabled
+
+/ New and Edit
+- if is_new_form || is_edit_form
+  - lieu_is_referenced = @lieu.plage_ouvertures.any? || @lieu.rdvs.any?
+  .row
+    - if is_edit_form
+      .col.text-left
+        - if lieu_is_referenced
+          = button_tag t("helpers.delete"), type: "button", disabled: true, class: "btn btn-outline-danger"
+        - else
+          = link_to t("helpers.delete"), admin_organisation_lieu_path(@lieu.organisation, @lieu), method: :delete, class: "btn btn-outline-danger", data: { confirm: t(".confirm_delete") }
+    .col.text-right
+      = link_to t("helpers.cancel"), admin_organisation_lieux_path(@lieu.organisation), class: "btn btn-link"
+      = f.button :submit
+  .row.mt-3
+    .col
+      - if lieu_is_referenced
+        .alert.alert-info
+          h5.alert-heading =t(".referenced_lieu")
+          - if @lieu.plage_ouvertures.any?
+            p= t(".referenced_in_plage_ouvertures")
+          - if @lieu.rdvs.any?
+            p
+              = link_to t(".referenced_in_rdvs_1"), admin_organisation_rdvs_path(current_organisation, lieu_id: @lieu.id)
+              =< t(".referenced_in_rdvs_2")

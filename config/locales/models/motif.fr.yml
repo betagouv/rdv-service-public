@@ -6,7 +6,10 @@ fr:
       motif:
         organisation: Organisation
         service: Service
+        collectif: Nombre de participants
         color: Couleur
+        category: Catégorie
+        category_hint: La catégorie n'est pas visible par les usagers. Elle peut-être utile pour filtrer les motifs proposés dans certains contextes, ou pour permettre de récupérer des motifs via l'API.
         reservable_online_title: Prise de RDV en ligne par les usagers
         reservable_online: Réservable en ligne
         reservable_online_hint: Ce motif sera disponible à la réservation en ligne par les usagers
@@ -40,6 +43,16 @@ fr:
         instruction_for_rdv: Indications affichées après la confirmation du rendez-vous
         instruction_for_rdv_hint: Indications affichées après la confirmation du rendez-vous
         instruction_for_rdv_short: Indications après
+      motif/categories:
+        rsa_orientation: RSA - Orientation
+        rsa_accompagnement: RSA - Accompagnement
+        rsa_orientation_on_phone_platform: RSA - Orientation sur une plateforme téléphonique dédiée
+      motif/collectifs:
+        true: RDV collectif
+        false: RDV individuel
+      motif/collectifs/hint:
+        true: "Plusieurs personnes assisteront au même RDV, par exemple pour un atelier en groupe. Les participants seront notifiés individuellement."
+        false: "Le RDV est pour une personne en particulier. Des accompagnants peuvent être ajoutés au RDV, comme par exemple les parents de l'enfant pour qui le RDV a lieu."
       motif/visibility_types:
         visible_and_notified: Visible et notifié
         visible_and_not_notified: Visible et non notifié
@@ -68,5 +81,8 @@ fr:
       models:
         motif:
           attributes:
+            base:
+              not_reservable_online_if_collectif: La réservation en ligne n'est pas possible pour les RDV collectifs.
+              not_at_home_if_collectif: Les RDV collectifs doivent avoir lieu sur place.
             name:
               taken: est déjà utilisé pour un motif avec le même type de RDV.

@@ -8,8 +8,9 @@ do
     = render("model_errors", model: @rdv_wizard, f: f)
     = collapsible_form_fields_for_warnings(@rdv_wizard) do
       = render "hidden_fields", f: f, step: 4, \
-        fields: %i[motif_id lieu_id context starts_at duration_in_min address ignore_benign_errors], \
-        agent_ids: @rdv.agent_ids
+        fields: %i[motif_id lieu_id context starts_at duration_in_min ignore_benign_errors], \
+        agent_ids: @rdv.agent_ids,
+        lieu_attributes: @rdv.nested_lieu_attributes
 
       = render "admin/motifs/visibility", motif: @rdv.motif
 

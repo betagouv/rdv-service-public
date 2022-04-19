@@ -67,4 +67,12 @@ En attendant, voici comment procéder.
 - NGROK propose une interface web où nous pouvons trouver la liste des fichiers servi. Copier l'url du fichier à charger
 - lancer le script sur scalingo en lui passant l'ID de l'organisation où charger les absences et l'URL du fichier. ex: `scalingo --app monApp run rails r scripts/load_absences_csv.rb 285 http://97b6-92-167-177-12.ngrok.io/mon_fichier`
 
+## Tester les invitations
+
+Pour le moment, il y a un système d'invitation avancé qui est utilisé par RDV-Insertion et qui n'est pas encore intégré dans RDV-Solidarités. Pour tester le cheminement coté RDV-Solidarités, voici comment faire :
+
+- créer un rdv pour un nouvel utilisateur créé à la volée,
+- inviter cet utilisateur
+- récupérer le token dans le mail d‘invitation de letter_opener
+- aller sur l’url du rdv en rajoutant le token en paramètre, ça donne quelque chose comme http://localhost:5000/users/rdvs/1234?invitation_token=MON_TOKEN
 

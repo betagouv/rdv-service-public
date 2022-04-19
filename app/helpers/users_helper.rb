@@ -96,7 +96,7 @@ module UsersHelper # rubocop:disable Metrics/ModuleLength
     relatives = user.relatives.merge(current_organisation.users).active
     [
       "Confirmez-vous la suppression de cet usager ?",
-      (I18n.t("users.soft_delete_confirm_message.relatives", count: relatives.count) if relatives.any?)
+      (I18n.t("users.soft_delete_confirm_message.relatives", count: relatives.size) if relatives.any?)
     ].select(&:present?).join("\n\n")
   end
 

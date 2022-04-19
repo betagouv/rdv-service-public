@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::Territories::TeamsController, type: :controller do
+describe Admin::Territories::TeamsController, type: :controller do
   let(:territory) { create(:territory, departement_number: "62") }
   let(:organisation) { create(:organisation, territory: territory) }
 
@@ -19,7 +19,7 @@ RSpec.describe Admin::Territories::TeamsController, type: :controller do
       agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
       team = create(:team, territory: territory, name: "first team")
       create(:team, territory: territory, name: "second")
-      create(:team, territory: create(:territory))
+      create(:team, territory: create(:territory), name: "first group")
       sign_in agent
 
       get :index, params: { territory_id: territory.id, search: "first" }
@@ -39,7 +39,8 @@ RSpec.describe Admin::Territories::TeamsController, type: :controller do
 
   describe "#create" do
     it "create a team" do
-      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
+      agent = create(:agent)
+      create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_teams: true)
       sign_in agent
       expect do
         post :create, params: { territory_id: territory.id, team: { name: "UbberTeam" } }
@@ -47,7 +48,8 @@ RSpec.describe Admin::Territories::TeamsController, type: :controller do
     end
 
     it "redirect to teams index" do
-      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
+      agent = create(:agent)
+      create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_teams: true)
       sign_in agent
       post :create, params: { territory_id: territory.id, team: { name: "UbberTeam" } }
       expect(response).to redirect_to(admin_territory_teams_path)
@@ -67,7 +69,8 @@ RSpec.describe Admin::Territories::TeamsController, type: :controller do
 
   describe "#update" do
     it "redirect to teams index" do
-      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
+      agent = create(:agent)
+      create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_teams: true)
       team = create(:team, territory: territory)
       sign_in agent
 
@@ -76,7 +79,8 @@ RSpec.describe Admin::Territories::TeamsController, type: :controller do
     end
 
     it "update team" do
-      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
+      agent = create(:agent)
+      create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_teams: true)
       team = create(:team, territory: territory)
       sign_in agent
 
@@ -87,7 +91,8 @@ RSpec.describe Admin::Territories::TeamsController, type: :controller do
 
   describe "#destroy" do
     it "redirect to teams index" do
-      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
+      agent = create(:agent)
+      create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_teams: true)
       team = create(:team, territory: territory)
       sign_in agent
 
@@ -96,7 +101,8 @@ RSpec.describe Admin::Territories::TeamsController, type: :controller do
     end
 
     it "destroy team" do
-      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
+      agent = create(:agent)
+      create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_teams: true)
       team = create(:team, territory: territory)
       sign_in agent
       expect  do
@@ -107,16 +113,18 @@ RSpec.describe Admin::Territories::TeamsController, type: :controller do
 
   describe "#search" do
     it "successful" do
-      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
+      agent = create(:agent)
+      create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_teams: true)
       sign_in agent
       get :search, params: { territory_id: territory.id, term: "bla", format: "json" }
       expect(response).to be_successful
     end
 
     it "assigns teams" do
-      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory])
+      agent = create(:agent)
+      create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_teams: true)
       sign_in agent
-      team = create(:team, name: "bla", territory: organisation.territory)
+      team = create(:team, name: "bla", territory: territory)
       get :search, params: { territory_id: territory.id, term: "bla", format: "json" }
       expect(assigns(:teams)).to eq([team])
     end

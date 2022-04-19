@@ -1,134 +1,142 @@
-.left-side-menu
-  .d-flex.logo-and-hamburger.align-items-center.px-2.py-3
-    = link_logo
-    div.d-md-none
-      a.d-flex.align-items-center data-toggle="collapse" href="#menu-agent"
-        span> Menu
-        span.h3.ml-1
-          i.fa.fa-bars
-  - if content_for? :side_nav_menu
-    = yield :side_nav_menu
-  - else
-    ul.side-nav.list-unstyled#menu-agent.pb-3.mb-0
-      li.side-nav-item.connected-agent.mb-3.pl-3.pr-2.py-2
-        a[
-          data-toggle="collapse"
-          href=".left-submenu-account"
-          aria-expanded=(menu_top_level_item == "account" ? "true" : "false")
-        ]
-          .d-flex.justify-content-between.w-100
-            div.d-flex.align-items-center
-              div.mr-2.small
-                / small hack because this icon is wider than the others
-                i.far.fa-id-card
-              div.d-flex.flex-column
-                span.h5.mb-1= current_agent.first_name&.capitalize
-                span= current_agent.service&.short_name
-                span= current_organisation.name
-            div.d-flex.align-items-center
-              i.fa.fa-angle-right.menu-arrow.mt-1
-        ul.list-unstyled.ml-3.left-submenu-account.collapse[
-          class=("show" if menu_top_level_item == "account")
-        ]
-          li.my-2
-            = link_to "Mon compte", edit_agent_registration_path
-          li.my-2
-            = link_to "Mes organisations", admin_organisations_path
-          li.my-2
-            = active_link_to "Mes statistiques", admin_organisation_agent_stats_path(current_organisation, current_agent)
-          li.my-2
-            = link_to destroy_agent_session_path, method: :delete do
-              i.fa.fa-sign-out
-              span Me déconnecter
+nav
+  .left-side-menu
+    .d-flex.logo-and-hamburger.align-items-center.px-2.py-3
+      = link_logo
+      div.d-md-none
+        a.d-flex.align-items-center data-toggle="collapse" href="#menu-agent"
+          span> Menu
+          span.h3.ml-1
+            i.fa.fa-bars
+    - if content_for? :side_nav_menu
+      = yield :side_nav_menu
+    - else
 
-      - if show_checklist?(current_organisation, current_agent)
-        li.side-nav-item.mb-4.pl-3.pr-2
-          = active_link_to admin_organisation_setup_checklist_path(current_organisation)
-            i.far.fa-calendar>
-            span.ml-1 Premiers pas
+      ul.side-nav.list-unstyled#menu-agent.pb-3.mb-0
+        li.side-nav-item.mb-2.ml-3.pr-2
+          .d-flex.justify-content-center
+            = link_to "Trouver un RDV", search_rdv_slot_url_with(@user), class: "btn bg-white align-bottom text-dark"
+        li.side-nav-item.connected-agent.mb-3.pl-3.pr-2.py-2
+          a[
+            data-toggle="collapse"
+            href=".left-submenu-account"
+            aria-expanded=(menu_top_level_item == "account" ? "true" : "false")
+          ]
+            .d-flex.justify-content-between.w-100
+              div.d-flex.align-items-center
+                div.mr-2.small
+                  / small hack because this icon is wider than the others
+                  i.far.fa-id-card
+                div.d-flex.flex-column
+                  span.h5.mb-1= current_agent.first_name&.capitalize
+                  span= current_agent.service&.short_name
+                  span= current_organisation.name
+              div.d-flex.align-items-center
+                i.fa.fa-angle-right.menu-arrow.mt-1
+          ul.list-unstyled.ml-3.left-submenu-account.collapse[
+            class=("show" if menu_top_level_item == "account")
+          ]
+            li.my-2
+              = link_to "Mon compte", edit_agent_registration_path
+            li.my-2
+              = link_to "Mes organisations", admin_organisations_path
+            li.my-2
+              = active_link_to "Mes statistiques", admin_organisation_agent_stats_path(current_organisation, current_agent)
+            li.my-2
+              = link_to destroy_agent_session_path, method: :delete do
+                i.fa.fa-sign-out
+                span Me déconnecter
 
-      li.side-nav-item.mb-4.pl-3.pr-2
-        a[
-          data-toggle="collapse"
-          href=".left-submenu-planning"
-          aria-expanded=(menu_top_level_item == "planning" ? "true" : "false")
-        ]
-          .d-flex.justify-content-between
-            div
-              i.far.fa-clock>
-              span.ml-1 Planning
-            div
-              i.fa.fa-angle-right.menu-arrow.mt-1
-        ul.list-unstyled.ml-3.left-submenu-planning.collapse[
-          class=("show" if menu_top_level_item == "planning")
-        ]
-          - agent_for_left_menu = @agent&.persisted? ? @agent : current_agent
-          - path_helper_name = content_for(:menu_agent_select_path_helper_name) || :admin_organisation_agent_agenda_path
-          li
-            form.my-2
-              = planning_agent_select(agent_for_left_menu, path_helper_name)
-          li.my-2
-            = active_link_to "Agenda", admin_organisation_agent_agenda_path(current_organisation, agent_for_left_menu)
-          li.my-2
-            = active_link_to "Plages d'ouverture", admin_organisation_agent_plage_ouvertures_path(current_organisation, agent_for_left_menu)
-          li.my-2
-            = active_link_to t(".busy_times"), admin_organisation_agent_absences_path(current_organisation, agent_for_left_menu)
+        - if show_checklist?(current_organisation, current_agent)
+          li.side-nav-item.mb-4.pl-3.pr-2
+            = active_link_to admin_organisation_setup_checklist_path(current_organisation)
+              i.far.fa-calendar>
+              span.ml-1 Premiers pas
 
-      li.side-nav-item.mb-4.pl-3.pr-2
-        = active_link_to admin_organisation_users_path(current_organisation)
-          i.fa.fa-user>
-          span.ml-1 Usagers
-
-      li.side-nav-item.mb-4.pl-3.pr-2
-        = active_link_to admin_organisation_rdvs_path(current_organisation)
-          i.fa.fa-list>
-          span.ml-1 Liste des RDV
-
-      li.side-nav-item.mb-4.pl-3.pr-2
-        = active_link_to admin_organisation_stats_path(current_organisation)
-          i.fa.fa-chart-bar>
-          span.ml-1 Statistiques
-
-      - unless current_agent_role.admin?
-        li.side-nav-item.mb-4.pl-3.pr-2
-          = active_link_to admin_organisation_lieux_path(current_organisation)
-            i.fa.fa-building>
-            span.ml-1 Lieux
-        li.side-nav-item.mb-4.pl-3.pr-2
-          = active_link_to admin_organisation_motifs_path(current_organisation)
-            i.fa.fa-paste>
-            span.ml-1 Motifs
-
-      - if current_agent_role.admin?
         li.side-nav-item.mb-4.pl-3.pr-2
           a[
             data-toggle="collapse"
-            href=".left-submenu-settings"
-            aria-expanded=(menu_top_level_item == "settings" ? "true" : "false")
+            href=".left-submenu-planning"
+            aria-expanded=(menu_top_level_item == "planning" ? "true" : "false")
           ]
             .d-flex.justify-content-between
               div
-                i.fa.fa-cog>
-                span.ml-1 Paramètres
+                i.far.fa-clock>
+                span.ml-1 Planning
               div
                 i.fa.fa-angle-right.menu-arrow.mt-1
-          ul.list-unstyled.ml-3.left-submenu-settings.collapse[
-            class=("show" if menu_top_level_item == "settings")
+          ul.list-unstyled.ml-3.left-submenu-planning.collapse[
+            class=("show" if menu_top_level_item == "planning")
           ]
+            - agent_for_left_menu = @agent&.persisted? ? @agent : current_agent
+            - path_helper_name = content_for(:menu_agent_select_path_helper_name) || :admin_organisation_agent_agenda_path
+            li
+              form.my-2
+                = planning_agent_select(agent_for_left_menu, path_helper_name)
             li.my-2
-              = active_link_to "Votre organisation", admin_organisation_path(current_organisation), active: :exact
+              = active_link_to "Agenda", admin_organisation_agent_agenda_path(current_organisation, agent_for_left_menu)
             li.my-2
-              = active_link_to "Vos lieux", admin_organisation_lieux_path(current_organisation)
+              = active_link_to "Plages d'ouverture", admin_organisation_agent_plage_ouvertures_path(current_organisation, agent_for_left_menu)
             li.my-2
-              = active_link_to "Vos agents", admin_organisation_agents_path(current_organisation)
+              = active_link_to t(".busy_times"), admin_organisation_agent_absences_path(current_organisation, agent_for_left_menu)
             li.my-2
-              = active_link_to "Vos invitations", admin_organisation_invitations_path(current_organisation)
-            li.my-2
-              = active_link_to "Vos motifs", admin_organisation_motifs_path(current_organisation)
-            - if current_agent_role.admin? && policy_scope(Organisation).count == 1
+              = active_link_to "RDV collectifs", admin_organisation_rdvs_collectifs_path(current_organisation)
+
+        li.side-nav-item.mb-4.pl-3.pr-2
+          = active_link_to admin_organisation_users_path(current_organisation)
+            i.fa.fa-user>
+            span.ml-1 Usagers
+
+        li.side-nav-item.mb-4.pl-3.pr-2
+          = active_link_to admin_organisation_rdvs_path(current_organisation)
+            i.fa.fa-list>
+            span.ml-1 Liste des RDV
+
+        li.side-nav-item.mb-4.pl-3.pr-2
+          = active_link_to admin_organisation_stats_path(current_organisation)
+            i.fa.fa-chart-bar>
+            span.ml-1 Statistiques
+
+        - unless current_agent_role.admin?
+          li.side-nav-item.mb-4.pl-3.pr-2
+            = active_link_to admin_organisation_lieux_path(current_organisation)
+              i.fa.fa-building>
+              span.ml-1 Lieux
+          li.side-nav-item.mb-4.pl-3.pr-2
+            = active_link_to admin_organisation_motifs_path(current_organisation)
+              i.fa.fa-paste>
+              span.ml-1 Motifs
+
+        - if current_agent_role.admin?
+          li.side-nav-item.mb-4.pl-3.pr-2
+            a[
+              data-toggle="collapse"
+              href=".left-submenu-settings"
+              aria-expanded=(menu_top_level_item == "settings" ? "true" : "false")
+            ]
+              .d-flex.justify-content-between
+                div
+                  i.fa.fa-cog>
+                  span.ml-1 Paramètres
+                div
+                  i.fa.fa-angle-right.menu-arrow.mt-1
+            ul.list-unstyled.ml-3.left-submenu-settings.collapse[
+              class=("show" if menu_top_level_item == "settings")
+            ]
               li.my-2
-                = active_link_to "Sectorisation #{current_organisation.territory}", admin_territory_setup_checklist_path(current_organisation.territory)
-      li.side-nav-item.pl-3.pr-2
-        = active_link_to admin_organisation_support_path(current_organisation)
-          i.fa.fa-question-circle>
-          span.ml-1 Support
+                = active_link_to "Votre organisation", admin_organisation_path(current_organisation), active: :exact
+              li.my-2
+                = active_link_to "Vos lieux", admin_organisation_lieux_path(current_organisation)
+              li.my-2
+                = active_link_to "Vos agents", admin_organisation_agents_path(current_organisation)
+              li.my-2
+                = active_link_to "Vos invitations", admin_organisation_invitations_path(current_organisation)
+              li.my-2
+                = active_link_to "Vos motifs", admin_organisation_motifs_path(current_organisation)
+              - if current_agent.territorial_admin_in?(current_organisation.territory)
+                = link_to admin_territory_path(current_organisation.territory) do
+                  i.fa.fa-cog>
+                  = t(".configuration")
+        li.side-nav-item.pl-3.pr-2
+          = active_link_to admin_organisation_support_path(current_organisation)
+            i.fa.fa-question-circle>
+            span.ml-1 Support

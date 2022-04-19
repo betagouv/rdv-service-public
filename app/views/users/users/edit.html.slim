@@ -2,16 +2,16 @@
   .col-md-6
     .card
       .card-body
-        h4.card-title.mb-4  Mes informations
+        h1.card-title = t(".my_informations")
         = render "form", user: @user
   .col-md-6
     .card
       .card-body
-        h4.card-title.mb-4 Mes proches
+        h2.card-title = t(".my_relatives")
         ul.list-group.mb-2
           - if @user.relatives.active.empty?
             li.list-group-item
-              em Aucun proche
+              em = t(".no_relatives")
           - @user.relatives.active.order(:birth_date).each do |relative|
             li.list-group-item
               .row
@@ -19,6 +19,6 @@
                   => relative.full_name
                   = "(#{age(relative)})" if relative.birth_date
                 .col-auto.text-right
-                  = link_to "modifier", edit_relative_path(relative)
+                  = link_to t("admin.rdvs.show.update"), edit_relative_path(relative)
         .text-right
-          = link_to "Ajouter un proche", new_relative_path, class: "btn btn-outline-primary", data: { modal: true }
+          = link_to t(".add_relative"), new_relative_path, class: "btn btn-outline-primary", data: { modal: true }

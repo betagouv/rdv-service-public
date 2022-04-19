@@ -6,14 +6,10 @@ class Agent::UserPolicy < DefaultAgentPolicy
   end
 
   def create?
-    # for the creation we want to make sure that all organisation IDs are
-    # authorized for the current context (orga or agent)
-    return false if @record.user_profiles.empty?
-
-    (
-      @record.user_profiles.map(&:organisation_id) -
-      (current_organisation.present? ? [current_organisation.id] : current_agent.organisation_ids)
-    ).empty?
+    # Un agent est toujours authorisé à créer un usager.
+    # Il y a des contraintes sur l'association à une organisation,c'est sur le `user_profile`,
+    # lié au système d'erreur et de contrainte `ActiveRecord`, et non aux authorisation.
+    true
   end
 
   def invite?

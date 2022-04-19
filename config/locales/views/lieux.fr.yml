@@ -1,4 +1,28 @@
 fr:
+  search:
+    lieu_selection:
+      lieu_available:
+        zero: Nous n'avons pas trouvé de créneaux pour votre motif.
+        one: 1 lieu est disponible
+        other: "%{count} lieux sont disponibles"
+      select_lieu: "Sélectionnez un lieu de RDV :"
+      next_availability: Prochaine disponibilité le
+      no_availability: Aucune disponibilité
   lieux:
     show:
       referent_missing: Vous ne semblez pas bénéficier d’un accompagnement ou d’un suivi, merci de choisir un autre motif ou de contacter votre département au %{phone_number}.
+  common:
+    search_form:
+      address: "Votre adresse"
+      service: "Votre service"
+      motif: "Votre motif"
+      address_example: "ex : 21 rue Anatole France, Calais"
+      change_address: "Modifier l'adresse"
+      choose_service: "Choisissez un service"
+      choose_this_service: "Choisir ce service"
+      service_not_in_list: "Le service que vous cherchez n'est pas dans la liste ?"
+      change_service: "Modifier le service"
+      choose_motif: "Choisissez un motif"
+      choose_this_motif: "Choisir ce motif"
+      motif_not_in_list: "Le motif que vous cherchez n'est pas dans la liste ?"
+

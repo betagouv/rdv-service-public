@@ -6,12 +6,10 @@ class MergeUsersForm
   ATTRIBUTES = %i[
     email
     first_name last_name birth_name birth_date phone_number
-    address caisse_affiliation affiliation_number family_situation
-    number_of_children
-    logement notes
+    address
   ].freeze
 
-  attr_accessor :user1, :user2, :change_user1_id, :change_user2_id, *ATTRIBUTES
+  attr_accessor :user1, :user2, :change_user1_id, :change_user2_id, *ATTRIBUTES, *Territory::OPTIONAL_FIELD_TOGGLES.values
 
   validates_presence_of :user1, :user2
   validate :different_users?
@@ -38,7 +36,7 @@ class MergeUsersForm
   def available_attributes
     return %i[first_name last_name birth_date] if user1&.relative? || user2&.relative?
 
-    ATTRIBUTES
+    ATTRIBUTES + optional_attributes
   end
 
   def attribute_comparison(attribute)
@@ -57,6 +55,14 @@ class MergeUsersForm
   end
 
   protected
+
+  def optional_attributes
+    Territory::OPTIONAL_FIELD_TOGGLES.map do |toggle, field_name|
+      if @organisation.territory.attributes[toggle.to_s]
+        field_name
+      end
+    end.compact
+  end
 
   def number_to_user(number)
     { "1" => user1, "2" => user2 }[number]

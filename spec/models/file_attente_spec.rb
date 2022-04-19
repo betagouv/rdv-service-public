@@ -30,7 +30,7 @@ describe FileAttente, type: :model do
     end
 
     context "with availabilities before rdv" do
-      let!(:plage_ouverture2) { create(:plage_ouverture, first_day: 1.day.from_now, start_time: Tod::TimeOfDay.new(9), lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
+      let!(:plage_ouverture2) { create(:plage_ouverture, first_day: 8.days.from_now, start_time: Tod::TimeOfDay.new(9), lieu: lieu, agent: agent, motifs: [motif], organisation: organisation) }
 
       it "increments notifications_sent" do
         expect { subject }.to change(file_attente, :notifications_sent).from(0).to(1)

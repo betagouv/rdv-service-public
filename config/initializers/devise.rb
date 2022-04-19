@@ -8,7 +8,7 @@ Devise.setup do |config|
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  # config.secret_key = '7a78050d9112acc13dc4eda9141128bd0a5006a8b88f866a495c716d8a1e2b672a0c37f84f7a2aa57851a57338392f6fb731f257459e5938c0e82be3d55e812b'
+  Devise.secret_key = Rails.application.secret_key_base
 
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
@@ -127,6 +127,12 @@ Devise.setup do |config|
   # After this period, the invited resource won't be able to accept the invitation.
   # When invite_for is 0 (the default), the invitation won't expire.
   config.invite_for = 4.weeks
+
+  Rails.application.reloader.to_prepare do
+    # Replace the token generator normally instantiated here : https://github.com/heartcombo/devise/blob/88724e10adaf9ffd1d8dbfbaadda2b9d40de756a/lib/devise/rails.rb#L41
+    # Do it in a to_prepare block so that Zeitwerk autoreloads the CustomDeviseTokenGenerator class correctly.
+    Devise.token_generator = CustomDeviseTokenGenerator.new(ActiveSupport::CachingKeyGenerator.new(ActiveSupport::KeyGenerator.new(Devise.secret_key)))
+  end
 
   # Number of invitations users can send.
   # - If invitation_limit is nil, there is no limit for invitations, users can

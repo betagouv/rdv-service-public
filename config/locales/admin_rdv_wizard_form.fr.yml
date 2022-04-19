@@ -13,8 +13,8 @@ fr:
       step4:
         page_title: Nouveau RDV pour le %{starts_at}
         step_title: 4. Notifications
-
-  admin_rdv_wizard_form:
-    step4:
-      responsible_will_be_notified: L'usager responsable %{responsible} sera notifié
-      no_notifications: 🔴 Aucune notification ne sera envoyée
+      card:
+        single_use_lieu_hint_html: Ce rendez-vous aura lieu à un adresse inhabituelle ? <a href>Définir un lieu ponctuel.</a>
+        existing_lieu_hint_html: Ce rendez-vous aura lieu à une adresse habituelle ? <a href>Choisir un lieu existant.</a>
+        select_placeholder_existing_lieu: Choisir un lieu existant
+        select_placeholder_single_use_lieu: Lieu ponctuel

@@ -9,9 +9,10 @@ FactoryBot.define do
 
     name { generate(:motif_name) }
     default_duration_in_min { 45 }
-    min_booking_delay { 30.minutes }
-    max_booking_delay { 6.months }
+    min_booking_delay { 30.minutes.seconds }
+    max_booking_delay { 6.months.seconds }
     color { "##{SecureRandom.hex(3)}" }
+    category { Motif.categories.first.first }
     instruction_for_rdv { "Intruction pour le RDV" }
     restriction_for_rdv { "Consigne pour le RDV" }
     reservable_online { true }
@@ -34,6 +35,11 @@ FactoryBot.define do
 
     trait :by_phone do
       location_type { :phone }
+    end
+
+    trait :collectif do
+      collectif { true }
+      reservable_online { false }
     end
 
     trait :for_secretariat do

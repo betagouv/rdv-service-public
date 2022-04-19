@@ -57,7 +57,6 @@ gem "typhoeus"
 
 # Form
 gem "simple_form", "~> 5.0"
-gem "image_processing", "~> 1.8"
 gem "phonelib"
 gem "auto_strip_attributes"
 
@@ -114,4 +113,5 @@ group :test do
   gem "capybara-screenshot"
   gem "webdrivers", "~> 4.6.0"
   gem "database_cleaner"
+  gem "webmock"
 end

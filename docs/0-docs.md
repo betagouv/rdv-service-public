@@ -12,12 +12,6 @@
 - Le code source [https://github.com/betagouv/rdv-solidarites.fr/]
 - Déploiement sur [Scalingo](https://scalingo.com/fr) dont voici [la page de status](https://scalingostatus.com/)
 
-## Dernières nouveautés
-
-Le Changelog est visible sur [doc.rdv-solidarites.fr/dernieres-nouveautes](https://doc.rdv-solidarites.fr/dernieres-nouveautes)
-
-Il est aussi éditable sur GitHub directement [github.com/rdv-solidarites/rdv-solidarites-doc/blob/master/dernieres-nouveautes.md](https://github.com/rdv-solidarites/rdv-solidarites-doc/blob/master/dernieres-nouveautes.md)
-
 ## Monitoring
 
 - [Dashlord](https://dashlord.incubateur.net/#/url/https%3A%2F%2Fwww.rdv-solidarites.fr)

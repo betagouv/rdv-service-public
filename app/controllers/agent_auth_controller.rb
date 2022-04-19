@@ -8,12 +8,12 @@ class AgentAuthController < ApplicationController
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
-  helper_method :current_organisation, :policy_scope, :from_modal?
+  helper_method :current_organisation, :current_territory, :policy_scope, :from_modal?
 
   private
 
   def pundit_user
-    AgentContext.new(current_agent, current_organisation)
+    AgentOrganisationContext.new(current_agent, current_organisation)
   end
   helper_method :pundit_user
 
@@ -30,7 +30,11 @@ class AgentAuthController < ApplicationController
   end
 
   def current_organisation
-    current_agent.organisations.find(params[:organisation_id])
+    @current_organisation ||= current_agent.organisations.find(params[:organisation_id])
+  end
+
+  def current_territory
+    @current_territory ||= current_organisation.territory
   end
 
   def from_modal?

@@ -11,14 +11,14 @@ class Admin::Agents::RdvsController < ApplicationController
       .merge(agent.rdvs)
       .includes(%i[organisation lieu motif users rdvs_users])
     @rdvs = @rdvs.where(starts_at: date_range_params) if date_range_params.present?
-    @rdvs = @rdvs.where(status: params[:status]) if params[:status].present?
+    @rdvs = @rdvs.where(status: Rdv::NOT_CANCELLED_STATUSES) unless current_agent.display_cancelled_rdv
   end
 
   private
 
   # TODO: custom policy waiting for policies refactoring
   def custom_policy
-    context = AgentContext.new(current_agent, @organisation)
+    context = AgentOrganisationContext.new(current_agent, @organisation)
     Agent::RdvPolicy::DepartementScope.new(context, Rdv)
       .resolve
   end

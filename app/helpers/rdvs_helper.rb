@@ -10,10 +10,25 @@ module RdvsHelper
   end
 
   def rdv_title_for_agent(rdv)
-    (rdv.created_by_user? ? "@ " : "") +
-      rdv.users&.map(&:full_name)&.to_sentence +
-      (rdv.motif.home? ? " 🏠" : "") +
-      (rdv.motif.phone? ? " ☎️" : "")
+    return rdv_individuel_title_for_agent(rdv) if rdv.individuel?
+
+    if rdv.title.present?
+      "#{rdv.motif.name} : #{rdv.title}"
+    else
+      rdv.motif.name
+    end
+  end
+
+  def rdv_title_in_agenda(rdv)
+    title = rdv_title_for_agent(rdv)
+
+    return title if rdv.individuel?
+
+    if rdv.max_participants_count
+      "#{title} (#{rdv.users_count}/#{rdv.max_participants_count})"
+    else
+      "#{title} (#{rdv.users_count})"
+    end
   end
 
   def rdv_status_tag(rdv)
@@ -29,8 +44,7 @@ module RdvsHelper
   def human_location(rdv)
     text = rdv.address_complete
     text = safe_join([text, "Adresse non renseignée"], " - ") if rdv.address.blank?
-    text = safe_join([text, tag.span("Fermé", class: "badge badge-danger")]) if rdv.lieu.present? && !rdv.lieu.enabled?
-    text
+    safe_join([text, unavailability_tag(rdv.lieu)])
   end
 
   def rdv_tag(rdv)
@@ -57,20 +71,6 @@ module RdvsHelper
     tag.div(data: { toggle: "dropdown" },
             class: "dropdown-toggle btn rdv-status-#{rdv.temporal_status}") do
       Rdv.human_attribute_value(:status, rdv.temporal_status, disable_cast: true)
-    end
-  end
-
-  def rdv_status_dropdown_item(rdv, agent, status, remote)
-    link_to admin_organisation_rdv_path(rdv.organisation, rdv, rdv: { status: status, ignore_benign_errors: true }, agent_id: agent&.id),
-            method: :put,
-            class: "dropdown-item",
-            data: { confirm: change_status_confirmation_message(rdv, status) },
-            remote: remote do
-      tag.span do
-        tag.i(class: "fa fa-circle mr-1 rdv-status-#{status}") +
-          Rdv.human_attribute_value(:status, status, context: :action) +
-          tag.div(Rdv.human_attribute_value(:status, status, context: :explanation), class: "text-wrap text-muted")
-      end
     end
   end
 
@@ -103,5 +103,14 @@ module RdvsHelper
       tag.div(t("helpers.delete"), class: "text-danger") +
         tag.div(t("admin.rdvs.delete.details"), class: "text-wrap text-muted")
     end
+  end
+
+  private
+
+  def rdv_individuel_title_for_agent(rdv)
+    (rdv.created_by_user? ? "@ " : "") +
+      rdv.users&.map(&:full_name)&.to_sentence +
+      (rdv.motif.home? ? " 🏠" : "") +
+      (rdv.motif.phone? ? " ☎️" : "")
   end
 end

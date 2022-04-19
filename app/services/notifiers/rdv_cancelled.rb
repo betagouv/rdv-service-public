@@ -1,15 +1,9 @@
 # frozen_string_literal: true
 
 class Notifiers::RdvCancelled < Notifiers::RdvBase
-  protected
-
-  def rdvs_users_to_notify
-    @rdv.rdvs_users.where(send_lifecycle_notifications: true)
-  end
-
   def notify_user_by_mail(user)
     # Only send sms for excused cancellations (not for no-show)
-    return unless @rdv.status.in? %w[excused revoked]
+    return unless @rdv.status.in?(%w[excused revoked]) || @rdv.collectif?
 
     Users::RdvMailer.rdv_cancelled(@rdv.payload(:destroy, user), user, @rdv_users_tokens_by_user_id[user.id]).deliver_later
 
@@ -28,6 +22,12 @@ class Notifiers::RdvCancelled < Notifiers::RdvBase
 
     Users::RdvSms.rdv_cancelled(@rdv, user, @rdv_users_tokens_by_user_id[user.id]).deliver_later
     @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: :cancelled_by_agent)
+  end
+
+  protected
+
+  def rdvs_users_to_notify
+    @rdv.rdvs_users.where(send_lifecycle_notifications: true)
   end
 
   def notify_agent(agent)

@@ -10,10 +10,6 @@ Ce service est soutenu par un consortium de plusieurs départements et l'[incuba
 - En production sur [rdv-solidarites.fr/](https://www.rdv-solidarites.fr/).
 - En démo sur [demo.rdv-solidarites.fr/](https://demo.rdv-solidarites.fr/).
 
-## Communauté
-
-Le forum [forum.rdv-solidarites.fr](https://forum.rdv-solidarites.fr/) accueille toutes les personnes utilisant RDV-Solidarités.
-
 ## Statistiques
 
 - [Statistiques de RDV](https://www.rdv-solidarites.fr/stats)

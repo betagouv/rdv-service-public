@@ -14,13 +14,20 @@ territory75 = Territory.create!(
   departement_number: "75",
   name: "Paris",
   sms_provider: "netsize",
-  sms_configuration: { api_url: "an_url", user_pwd: "pwd" }
+  sms_configuration: "login:pwd"
 )
 territory62 = Territory.create!(
   departement_number: "62",
   name: "Pas-de-Calais",
   sms_provider: "netsize",
-  sms_configuration: { api_url: "an_url", user_pwd: "pwd" }
+  sms_configuration: "login:pwd"
+)
+
+territory_cnfs = Territory.create!(
+  departement_number: "CN",
+  name: "Conseillers Numériques",
+  sms_provider: "netsize",
+  sms_configuration: "login:pwd"
 )
 
 # ORGANISATIONS & SECTORS
@@ -31,6 +38,12 @@ org_paris_nord = Organisation.create!(
   phone_number: "0123456789",
   human_id: "paris-nord",
   territory: territory75
+)
+org_cnfs = Organisation.create!(
+  name: "Mediathèque Paris Nord",
+  phone_number: "0123456789",
+  human_id: "mediatheque-paris-nord",
+  territory: territory_cnfs
 )
 human_id_map = [
   { human_id: "1030", name: "MDS Arques" },
@@ -81,8 +94,9 @@ Organisation.set_callback(:create, :after, :notify_admin_organisation_created)
 
 service_pmi = Service.create!(name: "PMI (Protection Maternelle Infantile)", short_name: "PMI")
 service_social = Service.create!(name: "Service social", short_name: "Service Social")
-_service_secretariat = Service.create!(name: "Secrétariat", short_name: "Secrétariat")
+service_secretariat = Service.create!(name: "Secrétariat", short_name: "Secrétariat")
 _service_nouveau = Service.create!(name: "Médico-social", short_name: "Médico-social")
+service_cnfs = Service.create!(name: "Conseiller Numérique", short_name: "Conseiller Numérique")
 
 # MOTIFS org_paris_nord
 
@@ -135,12 +149,13 @@ motif_org_paris_nord_pmi_securite = Motif.create!(
   reservable_online: true,
   location_type: :home
 )
-_motif_org_paris_nord_pmi_collectif = Motif.create!(
-  name: "RDV Collectif",
+motif_org_paris_nord_pmi_collectif = Motif.create!(
+  name: "Atelier Collectif",
   color: "#1049F3",
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
-  reservable_online: true,
+  collectif: true,
+  default_duration_in_min: 60,
   location_type: :public_office
 )
 _motif_org_paris_nord_social_rappel = Motif.create!(
@@ -169,11 +184,12 @@ _motif_org_paris_nord_social_droits = Motif.create!(
   location_type: :public_office
 )
 _motif_org_paris_nord_social_collectif = Motif.create!(
-  name: "RDV Collectif",
+  name: "Forum",
   color: "#113C65",
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
-  reservable_online: true,
+  collectif: true,
+  default_duration_in_min: 120,
   location_type: :public_office
 )
 
@@ -200,11 +216,47 @@ motifs = {}
   )
 end
 
+# MOTIFS Conseiller Numérique
+Motif.create!(
+  name: "Accompagnement individuel",
+  color: "#99CC99",
+  default_duration_in_min: 60,
+  location_type: :public_office,
+  organisation: org_cnfs,
+  service: service_cnfs
+)
+
+Motif.create!(
+  name: "Atelier collectif",
+  color: "#4A86E8",
+  default_duration_in_min: 120,
+  location_type: :public_office,
+  collectif: true,
+  organisation: org_cnfs,
+  service: service_cnfs
+)
+
+now = Time.zone.now
+motifs_attributes = 1000.times.map do |i|
+  {
+    created_at: now,
+    updated_at: now,
+    name: "motif_#{i}",
+    color: "#000000",
+    organisation_id: org_arques.id,
+    service_id: service_secretariat.id,
+    reservable_online: true,
+    location_type: :public_office
+  }
+end
+Motif.insert_all!(motifs_attributes) # rubocop:disable Rails/SkipsModelValidations
+
 # LIEUX
 
 lieu_org_paris_nord_bolivar = Lieu.create!(
   name: "MDS Bolivar",
   organisation: org_paris_nord,
+  availability: :enabled,
   address: "126 Avenue Simon Bolivar, 75019, Paris",
   latitude: 48.8809263,
   longitude: 2.3739077
@@ -212,6 +264,7 @@ lieu_org_paris_nord_bolivar = Lieu.create!(
 lieu_org_paris_nord_bd_aubervilliers = Lieu.create!(
   name: "MDS Bd Aubervilliers",
   organisation: org_paris_nord,
+  availability: :enabled,
   address: "18 Boulevard d'Aubervilliers, 75019 Paris",
   latitude: 48.8882196,
   longitude: 2.3650464
@@ -219,6 +272,7 @@ lieu_org_paris_nord_bd_aubervilliers = Lieu.create!(
 lieu_arques_nord = Lieu.create!(
   name: "Maison Arques Nord",
   organisation: org_arques,
+  availability: :enabled,
   address: "10 rue du marechal leclerc, 62410 Arques",
   latitude: 50.7406,
   longitude: 2.3103
@@ -226,10 +280,26 @@ lieu_arques_nord = Lieu.create!(
 lieu_bapaume_est = Lieu.create!(
   name: "MJC Bapaume Est",
   organisation: org_bapaume,
+  availability: :enabled,
   address: "10 rue emile delot, 62450 Arques",
   latitude: 50.1026,
   longitude: 2.8486
 )
+
+now = Time.zone.now
+lieux_attributes = 100.times.map do |i|
+  {
+    created_at: now,
+    updated_at: now,
+    name: "lieu_#{i}",
+    organisation_id: org_bapaume.id,
+    availability: :enabled,
+    address: "Adresse #{i}",
+    latitude: 45 + (i.to_f / 100.0),
+    longitude: 2 + (i.to_f / 100.0)
+  }
+end
+Lieu.insert_all!(lieux_attributes) # rubocop:disable Rails/SkipsModelValidations
 
 ## ZONES
 zones_csv_path = Rails.root.join("db/seeds/zones_62.csv")
@@ -253,7 +323,7 @@ user_org_paris_nord_patricia = User.new(
   birth_date: Date.parse("20/06/1975"),
   password: "123456",
   phone_number: "0101010101",
-  organisation_ids: [org_paris_nord.id],
+  organisation_ids: [org_paris_nord.id, org_arques.id],
   created_through: "user_sign_up"
 )
 
@@ -293,7 +363,7 @@ user_org_paris_nord_jean = User.new(
   birth_date: Date.parse("10/01/1973"),
   password: "123456",
   phone_number: "0101010103",
-  organisation_ids: [org_paris_nord.id],
+  organisation_ids: [org_paris_nord.id, org_bapaume.id, org_arques.id],
   created_through: "user_sign_up"
 )
 
@@ -334,7 +404,8 @@ agent_org_paris_nord_pmi_martine = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_ADMIN }]
+  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_ADMIN }],
+  agent_territorial_access_rights_attributes: [{ territory: territory75, allow_to_manage_teams: true }]
 )
 agent_org_paris_nord_pmi_martine.skip_confirmation!
 agent_org_paris_nord_pmi_martine.save!
@@ -348,7 +419,8 @@ agent_org_paris_nord_pmi_marco = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_BASIC }]
+  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_BASIC }],
+  agent_territorial_access_rights_attributes: [{ territory: territory75, allow_to_manage_teams: false }]
 )
 agent_org_paris_nord_pmi_marco.skip_confirmation!
 agent_org_paris_nord_pmi_marco.save!
@@ -361,7 +433,8 @@ agent_org_paris_nord_social_polo = Agent.new(
   password: "123456",
   service_id: service_social.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_BASIC }]
+  roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_BASIC }],
+  agent_territorial_access_rights_attributes: [{ territory: territory75, allow_to_manage_teams: false }]
 )
 agent_org_paris_nord_social_polo.skip_confirmation!
 agent_org_paris_nord_social_polo.save!
@@ -374,7 +447,8 @@ org_arques_pmi_maya = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: Organisation.where(territory: territory62).pluck(:id).map { { organisation_id: _1, level: AgentRole::LEVEL_ADMIN } }
+  roles_attributes: Organisation.where(territory: territory62).pluck(:id).map { { organisation_id: _1, level: AgentRole::LEVEL_ADMIN } },
+  agent_territorial_access_rights_attributes: [{ territory: territory62, allow_to_manage_teams: true }]
 )
 org_arques_pmi_maya.skip_confirmation!
 org_arques_pmi_maya.save!
@@ -387,7 +461,8 @@ agent_org_bapaume_pmi_bruno = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: [{ organisation: org_bapaume, level: AgentRole::LEVEL_ADMIN }]
+  roles_attributes: [{ organisation: org_bapaume, level: AgentRole::LEVEL_ADMIN }],
+  agent_territorial_access_rights_attributes: [{ territory: territory62, allow_to_manage_teams: false }]
 )
 agent_org_bapaume_pmi_bruno.skip_confirmation!
 agent_org_bapaume_pmi_bruno.save!
@@ -401,10 +476,25 @@ agent_org_bapaume_pmi_gina = Agent.new(
   password: "123456",
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
-  roles_attributes: [{ organisation: org_bapaume, level: AgentRole::LEVEL_ADMIN }]
+  roles_attributes: [{ organisation: org_bapaume, level: AgentRole::LEVEL_ADMIN }],
+  agent_territorial_access_rights_attributes: [{ territory: territory62, allow_to_manage_teams: false }]
 )
 agent_org_bapaume_pmi_gina.skip_confirmation!
 agent_org_bapaume_pmi_gina.save!
+
+agent_cnfs = Agent.new(
+  email: "camille-clavier@demo.rdv-solidarites.fr",
+  uid: "camille-clavier@demo.rdv-solidarites.fr",
+  first_name: "Camille",
+  last_name: "Clavier",
+  password: "123456",
+  service_id: service_cnfs.id,
+  invitation_accepted_at: 1.day.ago,
+  roles_attributes: [{ organisation: org_cnfs, level: AgentRole::LEVEL_ADMIN }],
+  agent_territorial_access_rights_attributes: [{ territory: territory62, allow_to_manage_teams: false }]
+)
+agent_cnfs.skip_confirmation!
+agent_cnfs.save!
 
 # Insert a lot of agents and add them to the paris_nord organisation
 # rubocop:disable Rails/SkipsModelValidations
@@ -425,6 +515,9 @@ results = Agent.insert_all!(agents_attributes, returning: "id") # [{"id"=>1}, {"
 agent_ids = results.flat_map(&:values) # [1, 2, ...]
 agent_role_attributes = agent_ids.map { |id| { agent_id: id, organisation_id: org_paris_nord.id } }
 AgentRole.insert_all!(agent_role_attributes)
+
+agent_territorial_access_rights_attributes = agent_ids.map { |id| { agent_id: id, territory_id: territory75.id, created_at: Time.zone.now, updated_at: Time.zone.now } }
+AgentTerritorialAccessRight.insert_all!(agent_territorial_access_rights_attributes)
 # rubocop:enable Rails/SkipsModelValidations
 
 # SECTOR ATTRIBUTIONS - AGENT LEVEL
@@ -511,17 +604,20 @@ _plage_ouverture_org_bapaume_bruno_classique = PlageOuverture.create!(
   end_time: Tod::TimeOfDay.new(15),
   recurrence: Montrose.every(:week, interval: 1, starts: Date.tomorrow)
 )
-_plage_ouverture_org_bapaume_gina_classique = PlageOuverture.create!(
-  title: "Perm. prenatale",
-  organisation_id: org_bapaume.id,
-  agent_id: agent_org_bapaume_pmi_gina.id,
-  lieu_id: lieu_bapaume_est.id,
-  motif_ids: [motifs[:bapaume][:pmi_prenatale].id],
-  first_day: Date.tomorrow,
-  start_time: Tod::TimeOfDay.new(11),
-  end_time: Tod::TimeOfDay.new(18),
-  recurrence: Montrose.every(:week, interval: 1, starts: Date.tomorrow)
-)
+
+[1, 2, 4, 5].each do |weekday|
+  PlageOuverture.create(
+    title: "Permamence jour #{weekday}",
+    organisation_id: org_bapaume.id,
+    agent_id: agent_org_bapaume_pmi_gina.id,
+    lieu_id: lieu_bapaume_est.id,
+    motif_ids: [motifs[:bapaume][:pmi_prenatale].id],
+    first_day: Date.tomorrow,
+    start_time: Tod::TimeOfDay.new(11),
+    end_time: Tod::TimeOfDay.new(18),
+    recurrence: Montrose.every(:week, interval: 1, starts: Date.tomorrow, day: [weekday])
+  )
+end
 
 # RDVs
 
@@ -555,6 +651,41 @@ Rdv.create(
   user_ids: [user_org_paris_nord_josephine.id],
   context: "Visite à domicile"
 )
+
+Rdv.create(
+  starts_at: Time.zone.today + 5.days + 11.hours,
+  duration_in_min: 30,
+  motif_id: motif_org_paris_nord_pmi_securite.id,
+  lieu: lieu_org_paris_nord_bd_aubervilliers,
+  organisation_id: org_paris_nord.id,
+  agent_ids: [agent_org_paris_nord_pmi_martine.id],
+  user_ids: [user_org_paris_nord_josephine.id],
+  context: "Visite à domicile"
+)
+
+10.times do |i|
+  Rdv.create(
+    starts_at: Time.zone.today + 17.hours + i.weeks,
+    duration_in_min: 60,
+    motif_id: motif_org_paris_nord_pmi_collectif.id,
+    lieu: lieu_org_paris_nord_bd_aubervilliers,
+    organisation_id: org_paris_nord.id,
+    agent_ids: [agent_org_paris_nord_pmi_marco.id],
+    users_count: 1,
+    user_ids: []
+  )
+
+  Rdv.create(
+    starts_at: Time.zone.today + 2.days + 16.hours + i.weeks,
+    duration_in_min: 60,
+    motif_id: motif_org_paris_nord_pmi_collectif.id,
+    lieu: lieu_org_paris_nord_bolivar,
+    organisation_id: org_paris_nord.id,
+    agent_ids: [agent_org_paris_nord_social_polo.id],
+    users_count: 1,
+    user_ids: []
+  )
+end
 
 # Insert a lot of rdvs in the past 2 years
 # rubocop:disable Rails/SkipsModelValidations

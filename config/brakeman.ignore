@@ -3,29 +3,60 @@
     {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
-      "fingerprint": "2a37520a17742f36733d65329212b92dfc9d72aee25ff04f6d5a74ebf09330cc",
+      "fingerprint": "2355405acc689e021f5b074103ed57c71e0b53346937c2a247ee732bb991ea03",
       "check_name": "Render",
       "message": "Render path contains parameter value",
-      "file": "app/views/admin/users/index.html.slim",
-      "line": 32,
+      "file": "app/views/admin/plage_ouvertures/index.html.slim",
+      "line": 38,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(User).merge(Admin::UserSearchForm.new(**index_params).users).active.order_by_last_name.page(params[:page]), {})",
+      "code": "render(action => policy_scope(PlageOuverture).includes(:lieu, :organisation, :motifs, :agent).where(:agent_id => filter_params[:agent_id]).order(:updated_at => :desc).where(:expired_cached => (filter_params[:current_tab] == \"expired\")).page(filter_params[:page]).search_by_text(params[:search]), {})",
       "render_path": [
         {
           "type": "controller",
-          "class": "Admin::UsersController",
+          "class": "Admin::PlageOuverturesController",
           "method": "index",
-          "line": 26,
-          "file": "app/controllers/admin/users_controller.rb",
+          "line": 24,
+          "file": "app/controllers/admin/plage_ouvertures_controller.rb",
           "rendered": {
-            "name": "admin/users/index",
-            "file": "app/views/admin/users/index.html.slim"
+            "name": "admin/plage_ouvertures/index",
+            "file": "app/views/admin/plage_ouvertures/index.html.slim"
           }
         }
       ],
       "location": {
         "type": "template",
-        "template": "admin/users/index"
+        "template": "admin/plage_ouvertures/index"
+      },
+      "user_input": "params[:search]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "253fb23796f450035d59f12ca8151252ff031720911399d551baf7b0bdbc52fe",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/admin/lieux/index.html.slim",
+      "line": 22,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => policy_scope(Lieu).not_single_use.ordered_by_name.page(params[:page]), {})",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::LieuxController",
+          "method": "index",
+          "line": 8,
+          "file": "app/controllers/admin/lieux_controller.rb",
+          "rendered": {
+            "name": "admin/lieux/index",
+            "file": "app/views/admin/lieux/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "admin/lieux/index"
       },
       "user_input": "params[:page]",
       "confidence": "Weak",
@@ -46,7 +77,7 @@
           "type": "controller",
           "class": "Admin::MotifsController",
           "method": "index",
-          "line": 18,
+          "line": 19,
           "file": "app/controllers/admin/motifs_controller.rb",
           "rendered": {
             "name": "admin/motifs/index",
@@ -77,7 +108,7 @@
           "type": "controller",
           "class": "Admin::MotifsController",
           "method": "index",
-          "line": 18,
+          "line": 19,
           "file": "app/controllers/admin/motifs_controller.rb",
           "rendered": {
             "name": "admin/motifs/index",
@@ -92,39 +123,8 @@
       "user_input": "params[:page]",
       "confidence": "Weak",
       "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "f97be0c83ee950efda2108d8fa8c03cbbd84de2b31e724f6fd9948a63ef3c7d9",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/admin/lieux/index.html.slim",
-      "line": 22,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => policy_scope(Lieu).ordered_by_name.page(params[:page]), {})",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "Admin::LieuxController",
-          "method": "index",
-          "line": 8,
-          "file": "app/controllers/admin/lieux_controller.rb",
-          "rendered": {
-            "name": "admin/lieux/index",
-            "file": "app/views/admin/lieux/index.html.slim"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "admin/lieux/index"
-      },
-      "user_input": "params[:page]",
-      "confidence": "Weak",
-      "note": ""
     }
   ],
-  "updated": "2021-10-28 18:42:02 +0200",
-  "brakeman_version": "5.1.1"
+  "updated": "2022-03-10 15:17:14 +0100",
+  "brakeman_version": "5.2.0"
 }

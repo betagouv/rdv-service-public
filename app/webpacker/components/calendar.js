@@ -66,7 +66,7 @@ class CalendarRdvSolidarites {
       viewSkeletonRender: function (info) {
         localStorage.setItem("calendarDefaultView", info.view.type);
       },
-      weekends: false,
+      hiddenDays: this.data.displaySaturdays === "true" ? [0] : [6, 0],
       height: "auto",
       selectable: true,
       select: this.selectEvent,
@@ -82,7 +82,7 @@ class CalendarRdvSolidarites {
       },
       businessHours: {
         // days of week. an array of zero-based day of week integers (0=Sunday)
-        daysOfWeek: [1, 2, 3, 4, 5],
+        daysOfWeek: [1, 2, 3, 4, 5, 6],
         startTime: '07:00',
         endTime: '19:00',
       },
@@ -194,9 +194,6 @@ class CalendarRdvSolidarites {
       }
       if (extendedProps.lieu) {
         title += `<br><strong>Lieu:</strong> ${extendedProps.lieu}`;
-        if (extendedProps.overlappingPlagesOuvertures) {
-          title += " ⚠️";
-        }
       }
       if (extendedProps.readableStatus) {
         title += `<br><strong>Statut:</strong> ${extendedProps.readableStatus}`;

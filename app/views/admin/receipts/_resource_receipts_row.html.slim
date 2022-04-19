@@ -1,0 +1,14 @@
+.row.justify-content-center
+  .col-md-8
+    .card
+      .card-header
+        button.btn.btn-link data-toggle="collapse" data-target="#receipts-collapse"
+          h5.header
+            i.fa.fa-comment-dots.mr-1
+            = Receipt.model_name.human(count: 2)
+      .collapse.hide#receipts-collapse
+        .card-body
+          .alert.alert-info
+            i.fa.fa-exclamation-triangle.mr-1
+            = t("admin.receipts_beta_warning")
+          = render "admin/receipts/receipts", receipts: resource.receipts.most_recent_first

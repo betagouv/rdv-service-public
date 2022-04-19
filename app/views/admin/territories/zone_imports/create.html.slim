@@ -1,7 +1,4 @@
-- content_for(:menu_item) { "menu-departement-zone-imports" }
-
-- content_for :title do
-  | Sectorisation #{current_territory} - Résultat Import
+= territory_navigation(t(".title", territoire: @current_territory))
 
 .row.justify-content-center
   .col-md-6

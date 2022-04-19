@@ -3,7 +3,7 @@
 class Rdv < ApplicationRecord
   # Mixins
   has_paper_trail(
-    only: %w[user_ids agent_ids status starts_at ends_at lieu_id notes location context rdvs_users],
+    only: %w[user_ids agent_ids status starts_at ends_at lieu_id notes context rdvs_users],
     meta: { virtual_attributes: :virtual_attributes_for_paper_trail }
   )
 
@@ -14,8 +14,8 @@ class Rdv < ApplicationRecord
 
   # Attributes
   enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
-  NOT_CANCELLED_STATUSES = %w[unknown waiting seen].freeze
-  CANCELLED_STATUSES = %w[excused revoked noshow].freeze
+  NOT_CANCELLED_STATUSES = %w[unknown waiting seen noshow].freeze
+  CANCELLED_STATUSES = %w[excused revoked].freeze
   enum created_by: { agent: 0, user: 1, file_attente: 2 }, _prefix: :created_by
 
   # Relations
@@ -28,8 +28,14 @@ class Rdv < ApplicationRecord
   # https://github.com/rails/rails/issues/7618
   has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy
   has_many :events, class_name: "RdvEvent", dependent: :destroy
+  has_many :receipts, dependent: :destroy
 
   accepts_nested_attributes_for :rdvs_users, allow_destroy: true
+  accepts_nested_attributes_for :lieu
+  ACCEPTED_NESTED_LIEU_ATTRIBUTES = %w[name address latitude longitude].freeze
+  def nested_lieu_attributes
+    lieu&.attributes&.slice(*ACCEPTED_NESTED_LIEU_ATTRIBUTES)
+  end
 
   # Through relations
   has_many :agents, through: :agents_rdvs, dependent: :destroy
@@ -37,14 +43,16 @@ class Rdv < ApplicationRecord
   has_many :webhook_endpoints, through: :organisation
 
   # Delegates
-  delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :follow_up?, :service, to: :motif
+  delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, to: :motif
   delegate :show_token_in_sms?, to: :organisation
 
   # Validations
-  validates :rdvs_users, :starts_at, :ends_at, :agents, presence: true
-  validates :lieu, presence: true, if: :public_office?
+  validates :starts_at, :ends_at, :agents, presence: true
+  validates :rdvs_users, presence: true, unless: :collectif?
+  validate :lieu_is_not_disabled_if_needed
   validate :starts_at_is_plausible
   validate :duration_is_plausible
+  validates :max_participants_count, numericality: { greater_than: 0, allow_nil: true }
 
   # Hooks
   after_save :associate_users_with_organisation
@@ -71,7 +79,9 @@ class Rdv < ApplicationRecord
       where(status: status)
     end
   }
-  scope :visible, -> { joins(:motif).where(motifs: { visibility_type: [Motif::VISIBLE_AND_NOTIFIED, Motif::VISIBLE_AND_NOT_NOTIFIED] }) }
+  scope :visible, -> { joins(:motif).merge(Motif.visible) }
+  scope :collectif, -> { joins(:motif).merge(Motif.collectif) }
+  scope :with_remaining_seats, -> { where("users_count < max_participants_count OR max_participants_count IS NULL") }
 
   ## -
 
@@ -143,14 +153,15 @@ class Rdv < ApplicationRecord
   end
 
   def editable_by_user?
-    cancellable? && motif.reservable_online && !created_by_agent?
+    cancellable? && motif.reservable_online && !created_by_agent? && !collectif?
   end
 
   def available_to_file_attente?
-    !cancelled? && starts_at > 7.days.from_now && !home?
+    motif.reservable_online? && !cancelled? && starts_at > 7.days.from_now && !home?
   end
 
   def creneaux_available(date_range)
+    date_range = Lapin::Range.reduce_range_to_delay(motif, date_range) # réduit le range en fonction du délay
     lieu.present? ? SlotBuilder.available_slots(motif, lieu, date_range, OffDays.all_in_date_range(date_range)) : []
   end
 
@@ -159,18 +170,23 @@ class Rdv < ApplicationRecord
     [responsibles, users].flatten.select(&:address).first || users.first
   end
 
+  # Ces plages d'ouvertures sont utilisé pour afficher des infos
+  # s'il y a un chevauchement avec le RDV.
+  #
+  # Il y a une vérification de scope dans l'appelant (pourquoi ?)
+  # et utilisation du nom et du lieu
+  #
   def overlapping_plages_ouvertures
     return [] if starts_at.blank? || ends_at.blank? || lieu.blank? || past? || errors.present?
 
-    @overlapping_plages_ouvertures ||= PlageOuverture.where(agent: agents).where.not(lieu: lieu).overlapping_with_time_slot(to_time_slot)
+    @overlapping_plages_ouvertures ||= PlageOuverture
+      .where(agent: agent_ids)
+      .where.not(lieu: lieu)
+      .overlapping_range(starts_at..ends_at)
   end
 
   def overlapping_plages_ouvertures?
     overlapping_plages_ouvertures.any?
-  end
-
-  def to_time_slot
-    TimeSlot.new(starts_at, ends_at)
   end
 
   def phone_number
@@ -205,6 +221,33 @@ class Rdv < ApplicationRecord
     Time.zone.now + motif.max_booking_delay
   end
 
+  def participants_with_life_cycle_notification_ids
+    rdvs_users.where(send_lifecycle_notifications: true).pluck(:user_id)
+  end
+
+  def remaining_seats?
+    return true unless max_participants_count
+
+    users_count < max_participants_count
+  end
+
+  def fully_booked?
+    return false unless max_participants_count
+
+    users_count == max_participants_count
+  end
+
+  def overbooked?
+    return false unless max_participants_count
+
+    users_count > max_participants_count
+  end
+
+  # FIXME: we should either rename the column, or avoid the ambiguity in rdv_payload
+  def title
+    name
+  end
+
   private
 
   def starts_at_is_plausible
@@ -220,7 +263,14 @@ class Rdv < ApplicationRecord
   def duration_is_plausible
     return if starts_at.nil? || ends_at.nil?
 
-    errors.add(:duration_in_min, :must_be_positive) if starts_at > ends_at
+    errors.add(:duration_in_min, :must_be_positive) if starts_at >= ends_at
+  end
+
+  def lieu_is_not_disabled_if_needed
+    return unless motif.public_office?
+
+    errors.add(:lieu, :blank) if lieu.nil?
+    errors.add(:lieu, :must_not_be_disabled) if lieu&.disabled?
   end
 
   def virtual_attributes_for_paper_trail

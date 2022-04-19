@@ -2,6 +2,7 @@
 
 class Admin::Territories::SmsConfigurationsController < Admin::Territories::BaseController
   before_action :check_allowed_departement, only: %i[update edit]
+  before_action :authorize_current_territory
 
   def show; end
 
@@ -14,11 +15,15 @@ class Admin::Territories::SmsConfigurationsController < Admin::Territories::Base
 
   private
 
+  def authorize_current_territory
+    authorize current_territory
+  end
+
   def check_allowed_departement
-    unless current_territory.has_own_sms_provider?
-      flash[:alert] = "Vous ne pouvez pas modifier la configuration d'envoi de SMS tant que votre département n’a pas de marché distinct."
-      redirect_to action: :show
-    end
+    return if current_territory.has_own_sms_provider?
+
+    flash[:alert] = "Vous ne pouvez pas modifier la configuration d'envoi de SMS tant que votre département n’a pas de marché distinct."
+    redirect_to action: :show
   end
 
   def sms_configuration_params

@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 describe "Agent can delete user" do
-  let!(:organisation) { create(:organisation) }
+  let!(:organisation) { create(:organisation, territory: territory) }
+  let!(:territory) { create(:territory, enable_logement_field: true) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
   let!(:user1) do
     create(
@@ -10,9 +11,11 @@ describe "Agent can delete user" do
       first_name: "Aalyah",
       last_name: "SWAN",
       birth_date: nil,
-      phone_number: "01 02 03 04 05",
-      organisations: [organisation]
+      phone_number: "01 02 03 04 05"
     )
+  end
+  let!(:user_profile1) do
+    create(:user_profile, user: user1, organisation: organisation, logement: :locataire)
   end
   let!(:user2) do
     create(
@@ -41,6 +44,9 @@ describe "Agent can delete user" do
     find(".select2-results__option") { _1.text == "SWAN Anna" }.click
     choose "aalyah@damn.com"
     choose "Anna"
+
+    find("label", text: "Locataire").click
+
     # forget to check phone number
     find("input[type=submit]").click
     page.driver.browser.switch_to.alert.accept

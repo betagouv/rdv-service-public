@@ -163,4 +163,50 @@ describe Motif, type: :model do
       it { is_expected.to be_empty }
     end
   end
+
+  describe "motif de rdv collectif" do
+    subject(:motif) { build(:motif, collectif: true, reservable_online: true, location_type: :home) }
+
+    it "validates that a rdv collectif can't be reserved online and can't be at the user's home" do
+      expect(motif).not_to be_valid
+      expect(subject.errors.full_messages).to eq [
+        "La réservation en ligne n'est pas possible pour les RDV collectifs.",
+        "Les RDV collectifs doivent avoir lieu sur place."
+      ]
+    end
+  end
+
+  describe "#start_booking_delay" do
+    it "return now + 30 minutes when min_booking_delay is at default value" do
+      now = Time.zone.parse("20220123 14:54")
+      travel_to(now)
+      motif = build(:motif, min_booking_delay: 1800)
+      expect(motif.start_booking_delay).to eq(now + 1800.seconds)
+    end
+
+    it "return now + 7 days (in minutes) when min_booking_delay is set to one week" do
+      now = Time.zone.parse("20220123 14:54")
+      travel_to(now)
+      motif = build(:motif, min_booking_delay: 1.week)
+      expect(motif.start_booking_delay).to eq(now + 1.week)
+    end
+  end
+
+  describe "#end_booking_delay" do
+    it "return now + 3 months when max_booking_delay default value" do
+      now = Time.zone.parse("20220123 14:54")
+      travel_to(now)
+      motif = build(:motif, min_booking_delay: 3.months.in_seconds)
+      expect(motif.start_booking_delay).to eq(now + 3.months.in_seconds.seconds)
+    end
+  end
+
+  describe "#booking_delay_range" do
+    it "returns (now + min_booking_delay)..(now + max_booking_delay)" do
+      now = Time.zone.parse("20220123 14:54")
+      travel_to(now)
+      motif = build(:motif, min_booking_delay: 30.minutes.in_seconds, max_booking_delay: 3.months.in_seconds)
+      expect(motif.booking_delay_range).to eq((now + 30.minutes.in_seconds.seconds)..(now + 3.months.in_seconds.seconds))
+    end
+  end
 end

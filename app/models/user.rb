@@ -47,6 +47,7 @@ class User < ApplicationRecord
   belongs_to :responsible, class_name: "User", optional: true
   has_many :relatives, foreign_key: "responsible_id", class_name: "User", inverse_of: :responsible, dependent: :nullify
   has_many :file_attentes, dependent: :destroy
+  has_many :receipts, dependent: :destroy
 
   # Through relations
   has_many :organisations, through: :user_profiles, dependent: :destroy
@@ -121,7 +122,9 @@ class User < ApplicationRecord
   end
 
   def profile_for(organisation)
-    user_profiles.find_by(organisation: organisation)
+    # Hash memoization: the block is called when a profile isn’t found in @profiles
+    @profiles ||= Hash.new { |h, org| h[org] = user_profiles.find_by(organisation: org) }
+    @profiles[organisation]
   end
 
   def deleted_email
@@ -210,25 +213,6 @@ class User < ApplicationRecord
     return (time && (time.utc <= invitation_due_at)) unless invite_for.nil?
 
     super
-  end
-
-  def generate_invitation_token
-    if email.present?
-      super
-    else
-      generate_short_invitation_token # users without emails are invited to manually type it on rdv-solidarites.fr/invitation (Issue #1472)
-    end
-  end
-
-  def generate_short_invitation_token
-    key = Devise.token_generator.send(:key_for, :invitation_token)
-    loop do
-      raw = SecureRandom.send(:choose, [*"A".."Z", *"0".."9"], 8)
-      enc = OpenSSL::HMAC.hexdigest("SHA256", key, raw)
-      @raw_invitation_token = raw
-      self.invitation_token = enc
-      break [raw, enc] unless User.where(invitation_token: enc).size.positive?
-    end
   end
 
   def password_required?
