@@ -94,7 +94,7 @@ Organisation.set_callback(:create, :after, :notify_admin_organisation_created)
 
 service_pmi = Service.create!(name: "PMI (Protection Maternelle Infantile)", short_name: "PMI")
 service_social = Service.create!(name: "Service social", short_name: "Service Social")
-_service_secretariat = Service.create!(name: "Secrétariat", short_name: "Secrétariat")
+service_secretariat = Service.create!(name: "Secrétariat", short_name: "Secrétariat")
 _service_nouveau = Service.create!(name: "Médico-social", short_name: "Médico-social")
 service_cnfs = Service.create!(name: "Conseiller Numérique", short_name: "Conseiller Numérique")
 
@@ -236,6 +236,21 @@ Motif.create!(
   service: service_cnfs
 )
 
+now = Time.zone.now
+motifs_attributes = 1000.times.map do |i|
+  {
+    created_at: now,
+    updated_at: now,
+    name: "motif_#{i}",
+    color: "#000000",
+    organisation_id: org_arques.id,
+    service_id: service_secretariat.id,
+    reservable_online: true,
+    location_type: :public_office
+  }
+end
+Motif.insert_all!(motifs_attributes) # rubocop:disable Rails/SkipsModelValidations
+
 # LIEUX
 
 lieu_org_paris_nord_bolivar = Lieu.create!(
@@ -270,6 +285,21 @@ lieu_bapaume_est = Lieu.create!(
   latitude: 50.1026,
   longitude: 2.8486
 )
+
+now = Time.zone.now
+lieux_attributes = 100.times.map do |i|
+  {
+    created_at: now,
+    updated_at: now,
+    name: "lieu_#{i}",
+    organisation_id: org_bapaume.id,
+    availability: :enabled,
+    address: "Adresse #{i}",
+    latitude: 45 + (i.to_f / 100.0),
+    longitude: 2 + (i.to_f / 100.0)
+  }
+end
+Lieu.insert_all!(lieux_attributes) # rubocop:disable Rails/SkipsModelValidations
 
 ## ZONES
 zones_csv_path = Rails.root.join("db/seeds/zones_62.csv")
