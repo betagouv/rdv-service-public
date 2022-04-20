@@ -398,7 +398,7 @@ lieu_org_drome1_valence = Lieu.create!(
   availability: :enabled,
   phone_number: "04.75.79.69.91",
   phone_number_formatted: "+33475796991",
-  address: "114 Rue de la Forêt, Valence, 26000",
+  address: "114 Rue de la Forêt, Valence, 26000"
 )
 lieu_org_yonne = Lieu.create!(
   name: "PE Avallon",
@@ -407,7 +407,7 @@ lieu_org_yonne = Lieu.create!(
   latitude: 47.796413,
   longitude: 3.572016,
   availability: :enabled,
-  address: "3 Rue Joubert, Auxerre, 89000",
+  address: "3 Rue Joubert, Auxerre, 89000"
 )
 
 now = Time.zone.now
