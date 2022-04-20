@@ -10,8 +10,8 @@ describe SearchContext, type: :service do
   end
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }
-  let!(:motif) { create(:motif, name: "RSA orientation sur site", organisation: organisation) }
-  let!(:motif2) { create(:motif, name: "RSA orientation téléphonique", organisation: organisation) }
+  let!(:motif) { create(:motif, name: "RSA orientation sur site", category: "rsa_orientation", organisation: organisation) }
+  let!(:motif2) { create(:motif, name: "RSA orientation sur plateforme téléphonique", category: "rsa_orientation_on_phone_platform", organisation: organisation) }
   let!(:departement_number) { "75" }
   let!(:address) { "20 avenue de Ségur 75007 Paris" }
   let!(:city_code) { "75007" }
@@ -59,33 +59,33 @@ describe SearchContext, type: :service do
     end
   end
 
-  describe "#available_motifs" do
-    it "is the geo search available motifs" do
-      expect(subject.send(:available_motifs)).to eq([motif])
+  describe "#matching_motifs" do
+    it "is the geo search matching motifs" do
+      expect(subject.send(:matching_motifs)).to eq([motif])
     end
 
     context "for an invitation" do
       before do
         search_query[:invitation_token] = invitation_token
-        search_query[:motif_search_terms] = "RSA orientation"
+        search_query[:motif_category] = "rsa_orientation"
       end
 
-      context "when there are geo search available motifs for the org and service" do
-        it "is the geo available_motifs" do
-          expect(subject.send(:available_motifs)).to eq([motif])
+      context "when there are matching motifs for the geo search" do
+        it "is the geo maching motif" do
+          expect(subject.send(:matching_motifs)).to eq([motif])
         end
       end
 
-      context "when there are no geo search available motifs" do
-        let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.none) }
-
+      context "when there are no matching motifs for the geo search" do
         before do
           allow(Motif).to receive(:available_with_plages_ouvertures)
             .and_return(Motif.where(id: motif2.id))
+          search_query[:invitation_token] = invitation_token
+          search_query[:motif_category] = "rsa_orientation_on_phone_platform"
         end
 
-        it "is the organisation available motif" do
-          expect(subject.send(:available_motifs)).to eq([motif2])
+        it "is the organisation matching motif" do
+          expect(subject.send(:matching_motifs)).to eq([motif2])
         end
       end
     end

@@ -5,7 +5,7 @@ section.bg-light.p-4
         .card-body
           - if context.invitation?
             h4.font-weight-bold Nous sommes désolés, un problème semble s'être produit pour votre invitation.
-            = mail_to "contact@rdv-solidarites.fr",
+            = mail_to "support@rdv-solidarites.fr",
               subject: "[Problème Invitation]",
               class: "btn btn-primary" do
               span>
