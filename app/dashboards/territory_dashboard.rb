@@ -2,7 +2,7 @@
 
 require "administrate/base_dashboard"
 
-class OrganisationDashboard < Administrate::BaseDashboard
+class TerritoryDashboard < Administrate::BaseDashboard
   # ATTRIBUTE_TYPES
   # a hash that describes the type of each of the model's fields.
   #
@@ -11,13 +11,8 @@ class OrganisationDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     id: Field::Number,
+    departement_number: Field::String,
     name: Field::String,
-    agents: Field::HasMany,
-    motifs: Field::HasMany,
-    horaires: Field::String,
-    phone_number: Field::String,
-    human_id: Field::String,
-    territory: Field::BelongsTo,
     created_at: Field::DateTime,
     updated_at: Field::DateTime
   }.freeze
@@ -29,6 +24,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = %i[
     id
+    departement_number
     name
   ].freeze
 
@@ -37,11 +33,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = %i[
     id
     name
-    horaires
-    phone_number
-    agents
-    motifs
-    human_id
+    departement_number
     created_at
     updated_at
   ].freeze
@@ -51,16 +43,10 @@ class OrganisationDashboard < Administrate::BaseDashboard
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = %i[
     name
-    horaires
-    phone_number
-    human_id
-    territory
+    departement_number
   ].freeze
 
-  # Overwrite this method to customize how super admins are displayed
-  # across all pages of the super_admin dashboard.
-  #
-  def display_resource(organisation)
-    "Organisation ##{organisation.id} - #{organisation.name}"
+  def display_resource(territory)
+    "Territory ##{territory.id} - #{territory.name} (#{territory.departement_number})"
   end
 end
