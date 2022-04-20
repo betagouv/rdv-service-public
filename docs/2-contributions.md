@@ -2,7 +2,7 @@
 
 ## Signaler un problème
 
-Si vous rencontrez un problème, [contactez-nous par email](mailto:contact@rdv-solidarites.fr).
+Si vous rencontrez un problème, [contactez-nous par email](mailto:support@rdv-solidarites.fr).
 
 ## Soumettre une modification
 
@@ -10,7 +10,7 @@ Les pull requests sont bienvenues ! N’hésitez pas à [nous en parler à l’
 
 ## Style de code
 
-Au delà du style de syntaxe, nous essayons de suivre quelques principes. RDVS-S a déjà plusieurs années, et a été développé par plusieurs équipes successives. C’est pour cette raison qu’on peut trouver plusieurs façons de faire au sein du projet. Aujourd’hui, nous essayons d’aller dans cette direction:  
+Au delà du style de syntaxe, nous essayons de suivre quelques principes. RDVS-S a déjà plusieurs années, et a été développé par plusieurs équipes successives. C’est pour cette raison qu’on peut trouver plusieurs façons de faire au sein du projet. Aujourd’hui, nous essayons d’aller dans cette direction:
 
 1. Écrire moins de code, et du code plus simple
   - Éviter de créer trop de classes auxiliaires, comme les presenters, form objects, services, etc.
@@ -31,7 +31,7 @@ Au delà du style de syntaxe, nous essayons de suivre quelques principes. RDVS-S
   - utiliser les relation through autant que possible pour construire les queries
 6. Pour les tests, utiliser les helpers et rspec avec parcimonie
   - Par exemple, les `let`, `subject`, etc, doivent rester proches de leur lieu d’utilisation, quitte à être répétés dans un autre `context`.
-        
+
 ## Linters
 
 Dans l’ensemble, nous suivons les conventions de Ruby on Rails [Rails best practice](https://rails-bestpractices.com/) et [The rails Style Guide](https://github.com/rubocop-hq/rails-style-guide). Nous utilisons aussi largement rubocop; dans tous les cas, le linter alertera en cas de problèmes.

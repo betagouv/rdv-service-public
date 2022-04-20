@@ -156,7 +156,7 @@ RSpec.describe SearchController, type: :controller do
               invitation_token: invitation_token, motif_search_terms: "something random"
             }
             expect(subject).to include("Nous sommes désolés, un problème semble s'être produit pour votre invitation.")
-            expect(subject).to include("contact@rdv-solidarites.fr")
+            expect(subject).to include("support@rdv-solidarites.fr")
           end
         end
       end
