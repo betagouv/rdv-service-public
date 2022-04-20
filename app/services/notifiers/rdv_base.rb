@@ -15,6 +15,7 @@ class Notifiers::RdvBase < ::BaseService
     @rdv = rdv
     @author = author
     @users = users || rdvs_users_to_notify.map(&:user)
+    @rdv_users_tokens_by_user_id = {}
   end
 
   def perform
@@ -64,8 +65,8 @@ class Notifiers::RdvBase < ::BaseService
   end
 
   def generate_invitation_tokens
-    @rdv_users_tokens_by_user_id = rdvs_users_to_notify.to_h do |rdv_user|
-      [rdv_user.user.id, rdv_user.new_raw_invitation_token]
+    rdv_users_with_token_needed.each do |rdv_user|
+      @rdv_users_tokens_by_user_id[rdv_user.user_id] = rdv_user.new_raw_invitation_token
     end
   end
 
@@ -73,6 +74,13 @@ class Notifiers::RdvBase < ::BaseService
 
   def users_to_notify
     @users.map(&:user_to_notify).uniq
+  end
+
+  # we generate the tokens for the rdv_users to notify linked to the users we send a notif to
+  def rdv_users_with_token_needed
+    rdvs_users_to_notify.select do |rdv_user|
+      rdv_user.user_id.in?(users_to_notify.map(&:id))
+    end
   end
 
   ## Agents notifications
@@ -97,14 +105,5 @@ class Notifiers::RdvBase < ::BaseService
     return false if level == "soon" && !soon_date?(@rdv.starts_at) && !soon_date?(@rdv.attribute_before_last_save(:starts_at))
 
     true
-  end
-
-  ## Compute invitation tokens sent in notifications links to change the rdv
-  #
-
-  def generate_invitation_tokens
-    @rdv_users_tokens_by_user_id = rdvs_users_to_notify.to_h do |rdv_user|
-      [rdv_user.user.id, rdv_user.new_raw_invitation_token]
-    end
   end
 end

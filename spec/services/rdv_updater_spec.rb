@@ -7,7 +7,7 @@ describe RdvUpdater, type: :service do
         agent = build :agent
         rdv = create(:rdv, agents: [agent])
         rdv_params = {}
-        expect(RdvUpdater::Result).to receive(:new).with(success: true, rdv_users_tokens_by_user_id: nil)
+        expect(RdvUpdater::Result).to receive(:new).with(success: true, rdv_users_tokens_by_user_id: {})
         described_class.update(agent, rdv, rdv_params)
       end
 
@@ -138,14 +138,17 @@ describe RdvUpdater, type: :service do
     let(:user_removed) { create(:user, first_name: "Remove") }
     let(:rdv_payload_for_users) { rdv.payload(:create, user1) }
 
+    let(:token) { "some-token" }
+
     before do
       allow(Users::RdvMailer).to receive(:rdv_created).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
       allow(Users::RdvMailer).to receive(:rdv_cancelled).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
+      allow_any_instance_of(RdvsUser).to receive(:new_raw_invitation_token).and_return(token) # rubocop:disable RSpec/AnyInstance
     end
 
     it "notifies the new participant, and the one that is removed" do
-      expect(Users::RdvMailer).to receive(:rdv_created).once.with(rdv.payload(:create, user_added), user_added)
-      expect(Users::RdvMailer).to receive(:rdv_cancelled).once.with(rdv.payload(:destroy, user_removed), user_removed)
+      expect(Users::RdvMailer).to receive(:rdv_created).once.with(rdv.payload(:create, user_added), user_added, token)
+      expect(Users::RdvMailer).to receive(:rdv_cancelled).once.with(rdv.payload(:destroy, user_removed), user_removed, nil)
 
       described_class.update(agent, rdv, rdv_params)
     end

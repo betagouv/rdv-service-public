@@ -71,7 +71,8 @@ module UserRdvWizard
     end
 
     def save
-      @user.skip_reconfirmation!
+      # we make sure the email can be updated only if it is blank
+      @user.skip_reconfirmation! if @user.email_was.blank?
       valid? && @user.update(@user_attributes)
     end
   end

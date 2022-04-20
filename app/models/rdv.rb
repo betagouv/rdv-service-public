@@ -149,11 +149,11 @@ class Rdv < ApplicationRecord
   end
 
   def cancellable?
-    !cancelled? && starts_at > 4.hours.from_now
+    !cancelled? && starts_at > 4.hours.from_now && !collectif?
   end
 
   def editable_by_user?
-    cancellable? && motif.reservable_online && !created_by_agent? && !collectif?
+    cancellable? && starts_at > 2.days.from_now && motif.reservable_online && !created_by_agent?
   end
 
   def available_to_file_attente?
