@@ -4,7 +4,7 @@ require "openssl"
 
 class CustomDeviseTokenGenerator < Devise::TokenGenerator
   def generate(klass, column)
-    klass == User && column == :invitation_token ? generate_short_token : super
+    klass.in?([User, RdvsUser]) && column == :invitation_token ? generate_short_token : super
   end
 
   def generate_short_token
