@@ -131,28 +131,29 @@ class SearchContext
   end
 
   def matching_motifs
-    @matching_motifs ||= begin
-      motifs = if @motif_name_with_location_type.present?
-                 available_motifs.search_by_name_with_location_type(@motif_name_with_location_type)
-               else
-                 available_motifs
-               end
-      motifs = motifs.where(service: service) if service.present?
-      motifs = motifs.joins(:lieux).where(lieux: lieu) if lieu.present?
-      motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
-      motifs = motifs.where(category: @motif_category) if @motif_category.present?
-      motifs
-    end
+    @matching_motifs ||= \
+      if invitation?
+        # we retrieve the geolocalised matching motifs, if there are none we fallback
+        # on the matching motifs for the organisations passed in the query
+        filter_motifs(geo_search.available_motifs).presence || filter_motifs(
+          Motif.available_with_plages_ouvertures.where(organisation_id: @organisation_ids)
+        )
+      else
+        filter_motifs(geo_search.available_motifs)
+      end
   end
 
-  def available_motifs
-    invitation? ? available_motifs_for_invitation : geo_search.available_motifs
-  end
-
-  def available_motifs_for_invitation
-    # we retrieve the geolocalised available motifs, if there are none we fallback
-    # on the availabe motifs for the organisations passed in the query
-    geo_search.available_motifs.presence || Motif.available_with_plages_ouvertures.where(organisation_id: @organisation_ids)
+  def filter_motifs(available_motifs)
+    motifs = if @motif_name_with_location_type.present?
+               available_motifs.search_by_name_with_location_type(@motif_name_with_location_type)
+             else
+               available_motifs
+             end
+    motifs = motifs.where(service: service) if service.present?
+    motifs = motifs.joins(:lieux).where(lieux: lieu) if lieu.present?
+    motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
+    motifs = motifs.where(category: @motif_category) if @motif_category.present?
+    motifs
   end
 
   def invited_user
