@@ -4,7 +4,7 @@
 
 - Déploiement:
   - Ruby 3.0 (nous conseillons l’utilisation de [rbenv](https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts))
-  - PostgreSQL >= 12, l’utilisateur doit avoir les droits `superuser`.
+  - PostgreSQL >= 12, l’utilisateur doit avoir les droits `superuser`. C'est nécessaire pour pouvoir activer les extensions utilisés.
 - Développement
   - [Yarn](https://yarnpkg.com/en/docs/install)
   - [Foreman](https://github.com/ddollar/foreman)
