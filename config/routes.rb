@@ -116,11 +116,7 @@ Rails.application.routes.draw do
           resources :agent_territorial_roles, only: %i[index new create destroy]
           resources :agent_territorial_access_rights, only: %i[update]
           resources :webhook_endpoints, except: %i[show]
-          resources :agents do
-            collection do
-              get :search
-            end
-          end
+          resources :agents
           resources :teams do
             collection do
               get :search
@@ -191,9 +187,6 @@ Rails.application.routes.draw do
           put :toggle_displays, on: :member
         end
         resources :agents, only: %i[index destroy] do
-          collection do
-            get :search
-          end
           resources :absences, only: %i[index new]
           resources :plage_ouvertures, only: %i[index new]
           resources :stats, only: :index do

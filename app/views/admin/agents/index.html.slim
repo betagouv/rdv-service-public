@@ -22,14 +22,14 @@
           th= AgentRole.human_attribute_name(:level)
           th Actions
       tbody
-        = render partial: "agent", collection: @complete_agents
-    - if @complete_agents.empty?
+        = render partial: "agent", collection: @agents
+    - if @agents.empty?
       .mb-4.p.text-center Aucun agent trouvé
-    - elsif @complete_agents.total_pages > 1
+    - elsif @agents.total_pages > 1
       .m-3
         .d-flex.justify-content-center
-          = paginate @complete_agents, theme: "twitter-bootstrap-4"
-        .text-center= page_entries_info @complete_agents
+          = paginate @agents, theme: "twitter-bootstrap-4"
+        .text-center= page_entries_info @agents
 
     - if current_agent_can?(:create, Agent)
       .m-3.d-flex.justify-content-center
