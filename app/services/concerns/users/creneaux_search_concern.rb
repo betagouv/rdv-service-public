@@ -4,10 +4,7 @@ module Users::CreneauxSearchConcern
   extend ActiveSupport::Concern
 
   def next_availability
-    reduced_date_range = Lapin::Range.reduce_range_to_delay(motif, date_range)
-    return if reduced_date_range.blank?
-
-    NextAvailabilityService.find(motif, @lieu, reduced_date_range.end, agents)
+    NextAvailabilityService.find(motif, @lieu, motif.start_booking_delay, agents)
   end
 
   def creneaux
