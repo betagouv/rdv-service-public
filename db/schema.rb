@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_13_145216) do
+ActiveRecord::Schema.define(version: 2022_04_19_093944) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,6 +108,7 @@ ActiveRecord::Schema.define(version: 2022_04_13_145216) do
     t.index ["first_day"], name: "index_absences_on_first_day"
     t.index ["organisation_id"], name: "index_absences_on_organisation_id"
     t.index ["recurrence"], name: "index_absences_on_recurrence", where: "(recurrence IS NOT NULL)"
+    t.index ["updated_at"], name: "index_absences_on_updated_at"
   end
 
   create_table "action_text_rich_texts", force: :cascade do |t|
@@ -374,6 +375,7 @@ ActiveRecord::Schema.define(version: 2022_04_13_145216) do
     t.index ["lieu_id"], name: "index_plage_ouvertures_on_lieu_id"
     t.index ["organisation_id"], name: "index_plage_ouvertures_on_organisation_id"
     t.index ["recurrence"], name: "index_plage_ouvertures_on_recurrence", where: "(recurrence IS NOT NULL)"
+    t.index ["updated_at"], name: "index_plage_ouvertures_on_updated_at"
   end
 
   create_table "rdv_events", force: :cascade do |t|

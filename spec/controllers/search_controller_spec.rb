@@ -121,33 +121,31 @@ RSpec.describe SearchController, type: :controller do
       end
 
       context "for an invitation" do
-        context "when the geo search retrieves available_motifs" do
-          let!(:geo_search) do
-            instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id, motif3.id]))
-          end
+        let!(:geo_search) do
+          instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif2.id]))
+        end
 
+        context "when there are matching motifs for the geo search available_motifs" do
           it "lists the available motifs" do
             get :search_rdv, params: {
               address: address, departement: departement_number, city_code: city_code,
-              invitation_token: invitation_token, motif_search_terms: "RSA orientation"
+              invitation_token: invitation_token
             }
-            expect(subject).to include("RSA orientation 1")
             expect(subject).to include("RSA orientation 2")
-            expect(subject).to include("RSA orientation 3")
+            expect(subject).not_to include("RSA orientation 1")
+            expect(subject).not_to include("RSA orientation 3")
             expect(subject).not_to include("Motif numéro 4")
           end
         end
 
-        context "when the geo search does not retrieve available motifs" do
-          let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.none) }
-
-          it "lists motifs linked to the orgas" do
+        context "when there are no matching motifs for the geo search available_motifs after filtering" do
+          it "lists the matching motifs linked to the orgas passed in the url" do
             get :search_rdv, params: {
               organisation_ids: [organisation.id], address: address, departement: departement_number, city_code: city_code,
-              invitation_token: invitation_token, motif_search_terms: "RSA orientation"
+              invitation_token: invitation_token, motif_category: "rsa_orientation"
             }
             expect(subject).to include("RSA orientation 1")
-            expect(subject).to include("RSA orientation 2")
+            expect(subject).not_to include("RSA orientation 2")
             expect(subject).not_to include("RSA orientation 3")
             expect(subject).not_to include("Motif numéro 4")
           end
@@ -158,7 +156,7 @@ RSpec.describe SearchController, type: :controller do
               invitation_token: invitation_token, motif_search_terms: "something random"
             }
             expect(subject).to include("Nous sommes désolés, un problème semble s'être produit pour votre invitation.")
-            expect(subject).to include("contact@rdv-solidarites.fr")
+            expect(subject).to include("support@rdv-solidarites.fr")
           end
         end
       end

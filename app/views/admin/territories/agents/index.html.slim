@@ -15,7 +15,6 @@
           th = t(".last_name")
           th = t(".first_name")
           th = t(".email")
-          th = t(".teams")
           th = t(".actions")
       tbody
         - @agents.each do |agent|
@@ -23,7 +22,6 @@
             td = agent.last_name
             td = agent.first_name
             td = agent.email
-            td = agent.teams.count
 
             td
               .d-flex
