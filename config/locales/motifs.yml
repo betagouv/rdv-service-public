@@ -1,6 +1,7 @@
 fr:
   motifs:
     badges:
+      collectif: "Collectif"
       reservable_online: "En ligne"
       phone: "Par tél."
       home: "À domicile"
