@@ -18,7 +18,6 @@ class AgentRole < ApplicationRecord
   # Validation
   validates :level, inclusion: { in: LEVELS }
   validate :organisation_cannot_change
-  validate :organisation_have_at_least_one_admin
   # Customize the uniqueness error message. This class needs to be declared before the validates :agent, uniqueness: line.
   class UniquenessValidator < ActiveRecord::Validations::UniquenessValidator
     def validate_each(record, attribute, value)
@@ -34,7 +33,6 @@ class AgentRole < ApplicationRecord
   validates :agent, uniqueness: { scope: :organisation }
 
   # Hooks
-  before_destroy :organisation_have_at_least_one_admin_before_destroy
 
   # Scopes
   scope :level_basic, -> { where(level: LEVEL_BASIC) }
@@ -60,18 +58,5 @@ class AgentRole < ApplicationRecord
     return if !organisation_id_changed? || new_record?
 
     errors.add(:organisation_id, "Vous ne pouvez pas changer ce rôle d'organisation")
-  end
-
-  def organisation_have_at_least_one_admin
-    return if new_record? || level == LEVEL_ADMIN || organisation.agent_roles.where.not(id: id).any?(&:admin?)
-
-    errors.add(:base, "Il doit toujours y avoir au moins un agent Admin par organisation")
-  end
-
-  def organisation_have_at_least_one_admin_before_destroy
-    return if organisation.agent_roles.where.not(id: id).any?(&:admin?)
-
-    errors.add(:base, "Il doit toujours y avoir au moins un agent Admin par organisation")
-    throw :abort
   end
 end

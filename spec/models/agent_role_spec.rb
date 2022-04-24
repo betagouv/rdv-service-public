@@ -55,44 +55,6 @@ describe AgentRole, type: :model do
         expect(agent_role1.reload.level).to eq(AgentRole::LEVEL_BASIC)
       end
     end
-
-    context "there are no other admins" do
-      let!(:organisation) { create(:organisation) }
-      let!(:agent_role1) { create(:agent_role, level: AgentRole::LEVEL_ADMIN, organisation: organisation) }
-      let!(:agent_role2) { create(:agent_role, level: AgentRole::LEVEL_BASIC, organisation: organisation) }
-
-      it "forbids downgrading admin" do
-        result = agent_role1.update(level: AgentRole::LEVEL_BASIC)
-        expect(result).to be_falsey
-        expect(agent_role1.errors).not_to be_empty
-        expect(agent_role1.reload.level).to eq(AgentRole::LEVEL_ADMIN)
-      end
-    end
-  end
-
-  describe "#organisation_have_at_least_one_admin_before_destroy" do
-    context "there is another admin" do
-      let!(:organisation) { create(:organisation) }
-      let!(:agent_role1) { create(:agent_role, level: AgentRole::LEVEL_ADMIN, organisation: organisation) }
-      let!(:agent_role2) { create(:agent_role, level: AgentRole::LEVEL_ADMIN, organisation: organisation) }
-
-      it "allows destroying one agent" do
-        agent_role1.destroy
-        expect(organisation.agent_roles.count).to eq 1
-      end
-    end
-
-    context "there are no other admins" do
-      let!(:organisation) { create(:organisation) }
-      let!(:agent_role1) { create(:agent_role, level: AgentRole::LEVEL_ADMIN, organisation: organisation) }
-      let!(:agent_role2) { create(:agent_role, level: AgentRole::LEVEL_BASIC, organisation: organisation) }
-
-      it "forbids destroying admin" do
-        agent_role1.destroy
-        expect(agent_role1.errors).not_to be_empty
-        expect(organisation.agent_roles.count).to eq 2
-      end
-    end
   end
 
   describe "uniqueness error differ if the agent has not accepted the invitation yet" do
