@@ -35,9 +35,9 @@ describe WebhookJob, type: :job do
     end
 
     [
-      "{\"message\": \"Can't update appointment.\"}",
-      "{\"message\": \"Appointment id doesn't exist.\"}",
-      "{\"message\": \"Appointment already deleted.\"}"
+      "{\"message\": \"Can't update appointment\"}",
+      "{\"message\": \"Appointment id doesn't exist\"}",
+      "{\"message\": \"Appointment already deleted\"}"
     ].each do |returned_message|
       it "return true when message is `#{returned_message}`" do
         expect(described_class.false_negative_from_drome?(returned_message)).to eq(true)
