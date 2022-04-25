@@ -16,6 +16,7 @@ class Users::RdvMailer < ApplicationMailer
       to: user.email,
       subject: "RDV confirmé le #{l(@rdv.starts_at, format: :human)}"
     )
+    save_receipt(:rdv_created)
   end
 
   def rdv_date_updated(rdv, user, token, old_starts_at)
@@ -29,6 +30,7 @@ class Users::RdvMailer < ApplicationMailer
       to: user.email,
       subject: "RDV #{relative_date old_starts_at} déplacé"
     )
+    save_receipt(:rdv_date_updated)
   end
 
   def rdv_upcoming_reminder(rdv, user, token)
@@ -41,6 +43,7 @@ class Users::RdvMailer < ApplicationMailer
       to: user.email,
       subject: "[Rappel] RDV le #{l(@rdv.starts_at, format: :human)}"
     )
+    save_receipt(:rdv_upcoming_reminder)
   end
 
   def rdv_cancelled(rdv, user, token)
@@ -53,5 +56,18 @@ class Users::RdvMailer < ApplicationMailer
       to: user.email,
       subject: "RDV annulé le #{l(@rdv.starts_at, format: :human)} avec #{@rdv.organisation.name}"
     )
+    save_receipt(:rdv_cancelled)
+  end
+
+  def save_receipt(event)
+    params = {
+      rdv: @rdv,
+      user: @user,
+      event: event,
+      channel: :mail,
+      result: :processed,
+      email_address: @user.email
+    }
+    Receipt.create!(params)
   end
 end
