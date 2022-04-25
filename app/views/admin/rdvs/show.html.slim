@@ -31,7 +31,7 @@
           = render "admin/rdvs_collectifs/participants_info", rdv: @rdv
         p.card-text
           strong> Usager(s) :
-          - @rdv.rdvs_users.each do |rdvs_user|
+          - @rdv.rdvs_users.includes(user: %i[responsible organisations]).each do |rdvs_user|
             .ml-2
               .rdv_user
                 = render rdvs_user
