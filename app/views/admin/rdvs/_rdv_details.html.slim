@@ -8,6 +8,7 @@
     i.fa.fa-fw.fa-info-circle>
   div
     = rdv.motif.name
+    = motif_badges(rdv.motif)
     - if current_organisation.territory.enable_context_field
       div
         - if rdv.context.blank?
@@ -15,7 +16,7 @@
         - else
           .text-muted Contexte :
           .border-left.pl-2= simple_format(rdv.context)
-
+   
 - if rdv.phone?
   p.card-text
     i.fa.fa-fw.fa-phone>
