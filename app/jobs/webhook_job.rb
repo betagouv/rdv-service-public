@@ -46,7 +46,12 @@ class WebhookJob < ApplicationJob
   # fassent évoluer leur système.
   def self.false_negative_from_drome?(body)
     body = JSON.parse(body)
-    body["message"] && (body["message"] == "Can't update appointment." || body["message"] == "Appointment already deleted." || body["message"] == "Appointment id doesn't exist.")
+    error_messages_from_drome = [
+      "Can't update appointment",
+      "Appointment already deleted",
+      "Appointment id doesn't exist"
+    ]
+    body["message"]&.in?(error_messages_from_drome)
   rescue StandardError
     false
   end
