@@ -45,7 +45,7 @@ div.py-2.d-flex.justify-content-between.align-items-center
   - if policy([:user, rdv]).cancel?
     .text-right.mt-2
       = link_to "Annuler le RDV", "#", data: { toggle: "modal", target: "#js-cancel-rdv-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
-  - elsif !rdv.past? && !rdv.cancelled?
+  - elsif !rdv.past? && !rdv.cancelled? && !rdv.collectif?
     p.font-italic
       | Ce rendez-vous commence dans moins de 4 heures, il n'est plus annulable en ligne. Prenez contact avec le secrétariat.
 

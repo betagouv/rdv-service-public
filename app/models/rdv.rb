@@ -148,12 +148,12 @@ class Rdv < ApplicationRecord
     status.in? CANCELLED_STATUSES
   end
 
-  def cancellable?
+  def cancellable_by_user?
     !cancelled? && starts_at > 4.hours.from_now && !collectif?
   end
 
   def editable_by_user?
-    cancellable? && starts_at > 2.days.from_now && motif.reservable_online && !created_by_agent?
+    cancellable_by_user? && starts_at > 2.days.from_now && motif.reservable_online && !created_by_agent?
   end
 
   def available_to_file_attente?

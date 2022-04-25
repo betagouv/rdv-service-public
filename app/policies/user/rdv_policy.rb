@@ -19,7 +19,7 @@ class User::RdvPolicy < ApplicationPolicy
   end
 
   def cancel?
-    show? && record.cancellable?
+    show? && record.cancellable_by_user?
   end
 
   def edit?
