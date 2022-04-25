@@ -39,7 +39,8 @@ describe Agent::RdvPolicy, type: :policy do
     let(:rdv) { create(:rdv, organisation: organisation, agents: [agent], motif: motif) }
     let(:pundit_context) { AgentOrganisationContext.new(agent, organisation) }
 
-    it_behaves_like "permit actions", :show?, :edit?, :update?, :destroy?
+    it_behaves_like "permit actions", :show?, :edit?, :update?
+    it_behaves_like "not permit actions", :destroy?
     it_behaves_like "included in scope"
   end
 
@@ -58,7 +59,8 @@ describe Agent::RdvPolicy, type: :policy do
     context "for secretariat" do
       let(:service_agent) { build(:service, :secretariat) }
 
-      it_behaves_like "permit actions", :show?, :edit?, :update?, :destroy?
+      it_behaves_like "permit actions", :show?, :edit?, :update?
+      it_behaves_like "not permit actions", :destroy?
       it_behaves_like "included in scope"
     end
 
@@ -78,7 +80,8 @@ describe Agent::RdvPolicy, type: :policy do
     let(:rdv) { create(:rdv, agents: [agents[0]], motif: motif, organisation: organisation) }
     let(:pundit_context) { AgentOrganisationContext.new(agents[1], organisation) }
 
-    it_behaves_like "permit actions", :show?, :edit?, :update?, :destroy?
+    it_behaves_like "permit actions", :show?, :edit?, :update?
+    it_behaves_like "not permit actions", :destroy?
     it_behaves_like "included in scope"
   end
 

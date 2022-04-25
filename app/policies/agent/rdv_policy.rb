@@ -9,6 +9,10 @@ class Agent::RdvPolicy < DefaultAgentPolicy
     true
   end
 
+  def destroy?
+    admin_and_same_org?
+  end
+
   class Scope < Scope
     def resolve
       if context.can_access_others_planning?
