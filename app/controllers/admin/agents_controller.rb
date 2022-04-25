@@ -9,7 +9,7 @@ class Admin::AgentsController < AgentAuthController
       .includes(:service, :roles, :organisations)
       .active.order_by_last_name
     @invited_agents = @agents.invitation_not_accepted.created_by_invite.order_by_last_name
-    @agents = index_params[:search].present? ? @agents.search_by_text(index_params[:search]) : @agents.order_by_last_name
+    @agents = index_params[:term].present? ? @agents.search_by_text(index_params[:term]) : @agents.order_by_last_name
     @agents = @agents.complete.page(params[:page])
   end
 
@@ -34,6 +34,6 @@ class Admin::AgentsController < AgentAuthController
   private
 
   def index_params
-    @index_params ||= params.permit(:search)
+    @index_params ||= params.permit(:term)
   end
 end

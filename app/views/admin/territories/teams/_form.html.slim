@@ -1,4 +1,4 @@
- simple_form_for team, url: url do |form|
+ = simple_form_for team, url: url do |form|
   = form.input :name
   = form.input :agent_ids, collection: team.agents,
           label: "Agents",
