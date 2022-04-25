@@ -28,6 +28,7 @@ class Rdv < ApplicationRecord
   # https://github.com/rails/rails/issues/7618
   has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy
   has_many :events, class_name: "RdvEvent", dependent: :destroy
+  before_destroy :cant_destroy_if_receipts_exist # must be declared before has_many :receipts
   has_many :receipts, dependent: :destroy
 
   accepts_nested_attributes_for :rdvs_users, allow_destroy: true
@@ -296,5 +297,13 @@ class Rdv < ApplicationRecord
   def reload_uuid
     # https://github.com/rails/rails/issues/17605
     self[:uuid] = self.class.where(id: id).pick(:uuid) if attributes.key? "uuid"
+  end
+
+  def cant_destroy_if_receipts_exist
+    # This is similar to using :restrict_with_errors on the has_many :receipts relation, but we want a custom error
+    return if receipts.empty?
+
+    errors.add(:base, :cant_destroy_if_receipts_exist)
+    throw :abort
   end
 end
