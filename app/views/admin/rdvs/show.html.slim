@@ -45,7 +45,10 @@
         .d-flex.justify-content-end
           .btn-group
             = link_to t(".update"), edit_admin_organisation_rdv_path(@rdv.organisation, @rdv, agent_id: @agent&.id), class: "btn btn-outline-primary"
-            = link_to t(".duplicate"), admin_organisation_agent_searches_path(current_organisation, service_id: @rdv.motif.service_id, motif_id: @rdv.motif_id, from_date: @rdv.starts_at + 1.day, user_ids: @rdv.user_ids, context: @rdv.context, lieu_ids: [@rdv.lieu_id], commit: "commit"), class: "btn btn-outline-primary"
+            - if @rdv.individuel?
+              = link_to t(".duplicate"), admin_organisation_agent_searches_path(current_organisation, service_id: @rdv.motif.service_id, motif_id: @rdv.motif_id, from_date: @rdv.starts_at + 1.day, user_ids: @rdv.user_ids, context: @rdv.context, lieu_ids: [@rdv.lieu_id], commit: "commit"), class: "btn btn-outline-primary"
+            - else
+              = link_to t(".duplicate"), new_admin_organisation_rdvs_collectif_path(current_organisation, motif_id: @rdv.motif_id, duplicated_rdv_id: @rdv.id), class: "btn btn-outline-primary"
 
 = render "admin/receipts/resource_receipts_row", resource: @rdv
 
