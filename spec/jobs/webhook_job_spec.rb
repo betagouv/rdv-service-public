@@ -29,13 +29,18 @@ describe WebhookJob, type: :job do
   end
 
   describe ".false_negative_from_drome?" do
-    it "return false when..." do
+    it "return false when the body is 'ERROR'" do
       body = "ERROR"
       expect(described_class.false_negative_from_drome?(body)).to eq(false)
     end
 
+    it "return false when the message is 'Another error message'" do
+      body = "{\"message\": \"Another error message\"}"
+      expect(described_class.false_negative_from_drome?(body)).to eq(false)
+    end
+
     [
-      "{\"message\": \"Can't update appointment\"}",
+      "{\"message\": \"Can't update appointment.\"}",
       "{\"message\": \"Appointment id doesn't exist\"}",
       "{\"message\": \"Appointment already deleted\"}"
     ].each do |returned_message|
