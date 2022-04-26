@@ -26,7 +26,7 @@ FileUtils.chdir APP_ROOT do
     FileUtils.cp 'config/database.yml.sample', 'config/database.yml'
   end
   unless File.exist?('.env')
-    cp '.env.sample', '.env'
+    FileUtils.cp '.env.sample', '.env'
   end
 
   puts "\n== Preparing database =="
