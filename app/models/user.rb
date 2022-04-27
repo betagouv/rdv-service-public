@@ -106,7 +106,11 @@ class User < ApplicationRecord
   end
 
   def invitable?
-    invitation_accepted_at.nil? && encrypted_password.blank? && email.present? && !relative? && invited_through != "external"
+    invitation_accepted_at.nil? &&
+      encrypted_password.blank? &&
+      email.present? && !relative? &&
+      invited_through != "external" &&
+      !logged_once_with_franceconnect?
   end
 
   def active_for_authentication?
