@@ -60,9 +60,18 @@ class CronJob < ApplicationJob
     end
   end
 
+  class DestroyOldRdvsJob < CronJob
+    # At 2:00 every day
+    self.cron_expression = "0 2 * * *"
+
+    def perform
+      Rdv.where(starts_at: ..2.years.ago).destroy_all
+    end
+  end
+
   class DestroyOldReceiptsJob < CronJob
-    # At 1:00 every day
-    self.cron_expression = "0 4 * * *"
+    # At 3:00 every day
+    self.cron_expression = "0 3 * * *"
 
     def perform
       Receipt.destroy_old!
