@@ -17,6 +17,6 @@ describe "User resets his password spec" do
     fill_in "password", with: "correct horse battery staple"
     expect { click_on "Enregistrer" }.to change { user.reload.encrypted_password }
     expect(page).to have_content("Votre mot de passe a été édité avec succès")
-    expect(page.current_path).to eq("/users/rdvs")
+    expect(page).to have_current_path("/users/rdvs")
   end
 end
