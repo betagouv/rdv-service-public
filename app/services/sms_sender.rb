@@ -118,7 +118,7 @@ class SmsSender < BaseService
       if parsed_response["responseCode"].zero?
         save_receipt(result: :delivered, sms_count: parsed_response["messageIds"]&.count)
       else
-        save_receipt(result: :failure, error_message: parsed_res["responseMessage"])
+        save_receipt(result: :failure, error_message: parsed_response["responseMessage"])
       end
     end
   end
@@ -194,15 +194,15 @@ class SmsSender < BaseService
     elsif response.failure? || response.code == :http_returned_error
       save_receipt(result: :failure, error_message: "HTTP error: #{response.code}")
     else
-      parsed_res = JSON.parse(response.body)
+      parsed_response = JSON.parse(response.body)
       if response.code == 201
         # 201 Created on success
         # parsed_response contains a hash under the "push" key. Relevant keys are:
         # :nb_sms, :error
-        save_receipt(result: :sent, sms_count: parsed_res.dig("push", "nb_sms"))
+        save_receipt(result: :sent, sms_count: parsed_response.dig("push", "nb_sms"))
       else
         # 401 (Unauthorized) 402 (Payment Required) 430 (Account expired)
-        save_receipt(result: :failure, error_message: parsed_res["errors"]&.values&.join("\n"))
+        save_receipt(result: :failure, error_message: parsed_response["errors"]&.values&.join("\n"))
       end
     end
   end
