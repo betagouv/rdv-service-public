@@ -3,7 +3,7 @@
 class CustomDeviseFailure < Devise::FailureApp
   # redirect to registration
   def route(scope)
-    scope == :user ? :new_user_registration_url : super
+    scope == :user ? :new_user_session_url : super
   end
 
   # https://github.com/heartcombo/devise/wiki/How-To:-Redirect-to-a-specific-page-when-the-user-can-not-be-authenticated
