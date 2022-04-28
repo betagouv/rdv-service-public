@@ -8,6 +8,7 @@
     i.fa.fa-fw.fa-info-circle>
   div
     = rdv.motif.name
+    = motif_badges(rdv.motif)
     - if current_organisation.territory.enable_context_field
       div
         - if rdv.context.blank?
