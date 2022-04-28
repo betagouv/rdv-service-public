@@ -15,6 +15,14 @@ class Admin::RdvsCollectifsController < AgentAuthController
   def new
     motif = policy_scope(Motif).find(params[:motif_id])
     @rdv = Rdv.new(organisation: current_organisation, motif: motif, duration_in_min: motif.default_duration_in_min)
+
+    if params[:duplicated_rdv_id]
+      duplicated_rdv = policy_scope(Rdv).find(params[:duplicated_rdv_id])
+
+      new_rdv_attributes = duplicated_rdv.attributes.symbolize_keys.slice(*create_attribute_names)
+      @rdv.assign_attributes(new_rdv_attributes)
+      @rdv.agents = duplicated_rdv.agents
+    end
     authorize(@rdv)
   end
 
@@ -58,8 +66,12 @@ class Admin::RdvsCollectifsController < AgentAuthController
 
   private
 
+  def create_attribute_names
+    %i[starts_at duration_in_min lieu_id name max_participants_count context motif_id]
+  end
+
   def create_params
-    params.require(:rdv).permit(:starts_at, :duration_in_min, :lieu_id, :name, :max_participants_count, :context, :motif_id, agent_ids: [])
+    params.require(:rdv).permit(*create_attribute_names, agent_ids: [])
   end
 
   def update_users_params
