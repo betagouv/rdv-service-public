@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CustomDeviseFailure < Devise::FailureApp
-  # redirect to registration
+  # redirection
   def route(scope)
     scope == :user ? :new_user_session_url : super
   end
