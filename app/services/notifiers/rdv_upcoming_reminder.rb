@@ -8,7 +8,7 @@ class Notifiers::RdvUpcomingReminder < Notifiers::RdvBase
   end
 
   def notify_user_by_mail(user)
-    Users::RdvMailer.rdv_upcoming_reminder(@rdv, user, @rdv_users_tokens_by_user_id[user.id]).deliver_later(queue: :mailers_low)
+    user_mailer(user).rdv_upcoming_reminder.deliver_later(queue: :mailers_low)
     @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: :upcoming_reminder)
   end
 

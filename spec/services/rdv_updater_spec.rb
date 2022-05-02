@@ -140,14 +140,14 @@ describe RdvUpdater, type: :service do
     let(:token) { "some-token" }
 
     before do
-      allow(Users::RdvMailer).to receive(:rdv_created).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
-      allow(Users::RdvMailer).to receive(:rdv_cancelled).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
+      allow(Users::RdvMailer).to receive(:with).and_call_original
+      allow(Users::RdvMailer).to receive(:with).and_call_original
       allow_any_instance_of(RdvsUser).to receive(:new_raw_invitation_token).and_return(token) # rubocop:disable RSpec/AnyInstance
     end
 
     it "notifies the new participant, and the one that is removed" do
-      expect(Users::RdvMailer).to receive(:rdv_created).once.with(rdv, user_added, token)
-      expect(Users::RdvMailer).to receive(:rdv_cancelled).once.with(rdv, user_removed, nil)
+      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user_added, token: token })
+      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user_removed, token: nil })
 
       described_class.update(agent, rdv, rdv_params)
     end

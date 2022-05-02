@@ -18,13 +18,25 @@ fr:
       absence_updated:
         description_html: <p>Une de vos indisponibilités a été modifiée.</p><p>Vous pouvez synchroniser cette indisponibilité sur votre calendrier en ouvrant la pièce-jointe de cet email.</p>
     rdv_mailer:
+      rdv_created:
+        title: Nouveau RDV ajouté sur votre agenda rdv-solidarités pour %{date}
+      rdv_date_updated:
+        title: RDV %{date} reporté à plus tard
       rdv_cancelled:
+        title: RDV annulé %{date}
         revoked_at_date_by_agent: Un RDV qui devait avoir lieu %{date} vient d’être annulé par %{author} pour raison administrative.
         cancelled_at_date_by_agent: Un RDV qui devait avoir lieu %{date} vient d’être annulé par %{author} à la demande de l’usager.
         cancelled_at_date_by_user: Un RDV qui devait avoir lieu %{date} vient d’être annulé par l’usager %{author}.
   users:
     rdv_mailer:
+      rdv_created:
+        title: RDV confirmé le %{date}
+      rdv_date_updated:
+        title: RDV %{date} reporté à plus tard
+      rdv_upcoming_reminder:
+        title: "[Rappel] RDV le %{date}"
       rdv_cancelled:
+        title: RDV annulé le %{date} avec %{organisation}
         revoked_for_motif_at_date: Votre RDV %{motif} du %{date} a été annulé pour raison administrative.
         cancelled_for_motif_at_date: Votre RDV %{motif} du %{date} a bien été annulé à votre demande.
         reschedule_by_phone: Vous pouvez reprendre un rendez-vous en appelant au %{telephone_link}.
