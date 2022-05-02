@@ -180,7 +180,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       it "redirects to sign in path" do
         get :show, params: { id: rdv.id }
 
-        expect(response).to redirect_to(new_user_registration_path)
+        expect(response).to redirect_to(new_user_session_path)
       end
 
       context "with a valid invitation token" do
@@ -221,7 +221,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       it "redirects to sign in path" do
         subject
 
-        expect(response).to redirect_to(new_user_registration_path)
+        expect(response).to redirect_to(new_user_session_path)
       end
 
       context "with a valid invitation token" do
