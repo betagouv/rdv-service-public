@@ -5,7 +5,7 @@ class Notifiers::RdvCancelled < Notifiers::RdvBase
     # Only send sms for excused cancellations (not for no-show)
     return unless @rdv.status.in?(%w[excused revoked]) || @rdv.collectif?
 
-    Users::RdvMailer.rdv_cancelled(@rdv, user, @rdv_users_tokens_by_user_id[user.id]).deliver_later
+    user_mailer(user).rdv_cancelled.deliver_later
 
     status_to_event_name = {
       "excused" => :cancelled_by_user,
@@ -31,6 +31,6 @@ class Notifiers::RdvCancelled < Notifiers::RdvBase
   end
 
   def notify_agent(agent)
-    Agents::RdvMailer.rdv_cancelled(@rdv, agent, @author).deliver_later
+    agent_mailer(agent).rdv_cancelled.deliver_later
   end
 end

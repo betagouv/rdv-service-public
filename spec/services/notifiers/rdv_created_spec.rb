@@ -16,8 +16,8 @@ describe Notifiers::RdvCreated, type: :service do
   let(:token2) { "56789" }
 
   before do
-    allow(Users::RdvMailer).to receive(:rdv_created).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
-    allow(Agents::RdvMailer).to receive(:rdv_created).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
+    allow(Users::RdvMailer).to receive(:with).and_call_original
+    allow(Agents::RdvMailer).to receive(:with).and_call_original
     allow(rdv).to receive(:rdvs_users).and_return(rdvs_users_relation)
     allow(rdvs_users_relation).to receive(:where).with(send_lifecycle_notifications: true)
       .and_return(rdvs_users_array.select(&:send_lifecycle_notifications))
@@ -30,9 +30,9 @@ describe Notifiers::RdvCreated, type: :service do
     let(:motif) { build(:motif) }
 
     it "triggers sending mail to users but not to agents" do
-      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv, user1, token1)
-      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv, user2, token2)
-      expect(Agents::RdvMailer).not_to receive(:rdv_created)
+      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user1, token: token1 })
+      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user2, token: token2 })
+      expect(Agents::RdvMailer).not_to receive(:with)
       subject
       expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "created").count).to eq 2
     end
@@ -47,10 +47,10 @@ describe Notifiers::RdvCreated, type: :service do
     let(:motif) { build(:motif) }
 
     it "triggers sending mails to both user and agents" do
-      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv, user1, token1)
-      expect(Users::RdvMailer).to receive(:rdv_created).with(rdv, user2, token2)
-      expect(Agents::RdvMailer).to receive(:rdv_created).with(rdv, agent1)
-      expect(Agents::RdvMailer).to receive(:rdv_created).with(rdv, agent2)
+      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user1, token: token1 })
+      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user2, token: token2 })
+      expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent1, author: user1 })
+      expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent2, author: user1 })
       subject
     end
   end
@@ -60,7 +60,7 @@ describe Notifiers::RdvCreated, type: :service do
     let(:motif) { build(:motif, :visible_and_not_notified) }
 
     it "does not send emails to users" do
-      expect(Users::RdvMailer).not_to receive(:rdv_created)
+      expect(Users::RdvMailer).not_to receive(:with)
       subject
     end
   end

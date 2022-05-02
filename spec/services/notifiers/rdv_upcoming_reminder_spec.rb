@@ -10,7 +10,7 @@ describe Notifiers::RdvUpcomingReminder, type: :service do
   let(:token) { "123456" }
 
   before do
-    allow(Users::RdvMailer).to receive(:rdv_upcoming_reminder).and_call_original
+    allow(Users::RdvMailer).to receive(:with).and_call_original
     allow(Users::RdvSms).to receive(:rdv_upcoming_reminder).and_call_original
     allow(rdv).to receive(:rdvs_users).and_return(rdvs_users)
     allow(rdvs_users).to receive(:where).and_return([rdv_user])
@@ -18,7 +18,7 @@ describe Notifiers::RdvUpcomingReminder, type: :service do
   end
 
   it "sends an sms and an email" do
-    expect(Users::RdvMailer).to receive(:rdv_upcoming_reminder).with(rdv, user1, token)
+    expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user1, token: token })
     expect(Users::RdvSms).to receive(:rdv_upcoming_reminder).with(rdv, user1, token)
     subject
     expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "upcoming_reminder").count).to eq 1
