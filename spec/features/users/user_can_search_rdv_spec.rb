@@ -54,6 +54,7 @@ describe "User can search for rdvs" do
 
       # Login page
       expect(page).to have_content("Se connecter")
+      click_link("Je m'inscris")
 
       # Sign up page
       expect(page).to have_content("Inscription")
