@@ -32,6 +32,6 @@
       - else
         = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "unknown", remote: remote
 
-    - if current_agent.role_in_organisation(current_organisation).admin?
+    - if policy([:agent, rdv]).destroy?
       .dropdown-divider
       = rdv_status_delete_dropdown_item(rdv, agent)

@@ -62,12 +62,11 @@ class Admin::RdvsController < AgentAuthController
     authorize(@rdv)
     if @rdv.destroy
       flash[:notice] = "Le rendez-vous a été supprimé."
+      redirect_to admin_organisation_rdvs_path(current_organisation)
     else
-      flash[:error] = "Une erreur s’est produite, le rendez-vous n’a pas pu être supprimé."
-      Sentry.capture_exception(Exception.new("Deletion failed for rdv : #{@rdv.id}"))
+      flash[:error] = @rdv.errors.full_messages.to_sentence
+      redirect_to admin_organisation_rdv_path(current_organisation, @rdv)
     end
-    # TODO : redirection makes no sense when coming from a users#show
-    redirect_to admin_organisation_agent_agenda_path(current_organisation, @agent || current_agent)
   end
 
   private

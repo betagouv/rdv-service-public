@@ -86,11 +86,37 @@ describe Admin::RdvsController, type: :controller do
   end
 
   describe "DELETE destroy" do
-    it "cancel rdv" do
-      rdv = create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation)
-      expect do
+    context "regular agent" do
+      it "does not destroy rdv" do
+        rdv = create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation)
+
         delete :destroy, params: { organisation_id: organisation.id, id: rdv.id }
-      end.to change(Rdv, :count).by(-1)
+        expect(response).not_to be_successful
+      end
+    end
+
+    context "admin agent" do
+      let(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
+
+      it "destroy rdv" do
+        rdv = create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation)
+
+        expect do
+          delete :destroy, params: { organisation_id: organisation.id, id: rdv.id }
+        end.to change(Rdv, :count).by(-1)
+      end
+    end
+
+    context "existing receipts" do
+      let(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
+
+      it "does not destroy rdv" do
+        rdv = create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation)
+        create(:receipt, rdv: rdv)
+
+        delete :destroy, params: { organisation_id: organisation.id, id: rdv.id }
+        expect(response).not_to be_successful
+      end
     end
   end
 
