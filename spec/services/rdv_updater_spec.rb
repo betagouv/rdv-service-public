@@ -136,7 +136,6 @@ describe RdvUpdater, type: :service do
     let(:user_staying) { create(:user, first_name: "Stay") }
     let(:user_added) { create(:user, first_name: "Add") }
     let(:user_removed) { create(:user, first_name: "Remove") }
-    let(:rdv_payload_for_users) { rdv.payload(:create, user1) }
 
     let(:token) { "some-token" }
 
@@ -147,8 +146,8 @@ describe RdvUpdater, type: :service do
     end
 
     it "notifies the new participant, and the one that is removed" do
-      expect(Users::RdvMailer).to receive(:rdv_created).once.with(rdv.payload(:create, user_added), user_added, token)
-      expect(Users::RdvMailer).to receive(:rdv_cancelled).once.with(rdv.payload(:destroy, user_removed), user_removed, nil)
+      expect(Users::RdvMailer).to receive(:rdv_created).once.with(rdv, user_added, token)
+      expect(Users::RdvMailer).to receive(:rdv_cancelled).once.with(rdv, user_removed, nil)
 
       described_class.update(agent, rdv, rdv_params)
     end

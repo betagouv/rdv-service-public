@@ -6,58 +6,58 @@ class Users::RdvMailerPreview < ActionMailer::Preview
   # it's pretty hacky but avoids overriding rails email templates
 
   def rdv_created
-    rdv = Rdv.not_cancelled.last
-    Users::RdvMailer.rdv_created(rdv.payload(:create), rdv.users.first)
+    rdv = Rdv.joins(:users).not_cancelled.last
+    Users::RdvMailer.rdv_created(rdv, rdv.users.first)
   end
 
   def rdv_created_CONTEXT_visite_a_domicile
-    rdv = Rdv.not_cancelled.joins(:motif).where(motifs: { location_type: :home }).last
+    rdv = Rdv.joins(:users).not_cancelled.joins(:motif).where(motifs: { location_type: :home }).last
     raise ActiveRecord::RecordNotFound unless rdv
 
-    Users::RdvMailer.rdv_created(rdv.payload(:create), rdv.users.first)
+    Users::RdvMailer.rdv_created(rdv, rdv.users.first)
   end
 
   def rdv_created_CONTEXT_phone
-    rdv = Rdv.not_cancelled.joins(:motif).where(motifs: { location_type: :phone }).last
+    rdv = Rdv.joins(:users).not_cancelled.joins(:motif).where(motifs: { location_type: :phone }).last
     raise ActiveRecord::RecordNotFound unless rdv
 
-    Users::RdvMailer.rdv_created(rdv.payload(:create), rdv.users.first)
+    Users::RdvMailer.rdv_created(rdv, rdv.users.first)
   end
 
   def rdv_created_CONTEXT_public_office
-    rdv = Rdv.not_cancelled.joins(:motif).where(motifs: { location_type: :public_office }).last
+    rdv = Rdv.joins(:users).not_cancelled.joins(:motif).where(motifs: { location_type: :public_office }).last
     raise ActiveRecord::RecordNotFound unless rdv
 
-    Users::RdvMailer.rdv_created(rdv.payload(:create), rdv.users.first)
+    Users::RdvMailer.rdv_created(rdv, rdv.users.first)
   end
 
   def rdv_date_updated
-    rdv = Rdv.not_cancelled.last
+    rdv = Rdv.joins(:users).not_cancelled.last
     rdv.starts_at = Time.zone.today + 10.days + 10.hours
     Users::RdvMailer.rdv_date_updated(
-      rdv.payload(:update),
+      rdv,
       rdv.agents.first,
       2.hours.from_now
     )
   end
 
   def rdv_cancelled
-    rdv = Rdv.last
+    rdv = Rdv.joins(:users).last
     rdv.status = "excused"
 
-    Users::RdvMailer.rdv_cancelled(rdv.payload(:destroy), rdv.users.first)
+    Users::RdvMailer.rdv_cancelled(rdv, rdv.users.first)
   end
 
   def rdv_revoked
-    rdv = Rdv.last
+    rdv = Rdv.joins(:users).last
     rdv.status = "revoked"
 
-    Users::RdvMailer.rdv_cancelled(rdv.payload(:destroy), rdv.users.first)
+    Users::RdvMailer.rdv_cancelled(rdv, rdv.users.first)
   end
 
   def rdv_upcoming_reminder
-    rdv = Rdv.not_cancelled.last
-    Users::RdvMailer.rdv_upcoming_reminder(rdv.payload, rdv.users.first)
+    rdv = Rdv.joins(:users).not_cancelled.last
+    Users::RdvMailer.rdv_upcoming_reminder(rdv, rdv.users.first)
   end
 
   # rubocop:enable Naming/MethodName
