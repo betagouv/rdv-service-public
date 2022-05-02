@@ -59,45 +59,6 @@ describe SearchContext, type: :service do
     end
   end
 
-  describe "#valid?" do
-    it "is valid" do
-      expect(subject.valid?).to eq(true)
-    end
-
-    context "for an invitation" do
-      let!(:search_query) do
-        { invitation_token: invitation_token, organisation_id: organisation.id, service: service.id }
-      end
-
-      it "is valid" do
-        expect(subject.valid?).to eq(true)
-      end
-
-      context "when token is invalid" do
-        let!(:search_query) { { invitation_token: "random token" } }
-
-        it "is not valid" do
-          expect(subject.valid?).to eq(false)
-          expect(subject.errors).to eq(["Votre invitation n'est pas valide."])
-        end
-      end
-
-      context "when current user is not invited user" do
-        let!(:another_user) { create(:user) }
-        let!(:another_token) do
-          another_user.invite! { |u| u.skip_invitation = true }
-          another_user.raw_invitation_token
-        end
-        let!(:search_query) { { invitation_token: another_token } }
-
-        it "is not valid" do
-          expect(subject.valid?).to eq(false)
-          expect(subject.errors).to eq(["L’utilisateur connecté ne correspond pas à l’utilisateur invité. Déconnectez-vous et réessayez."])
-        end
-      end
-    end
-  end
-
   describe "#matching_motifs" do
     it "is the geo search matching motifs" do
       expect(subject.send(:matching_motifs)).to eq([motif])

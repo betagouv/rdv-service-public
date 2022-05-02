@@ -183,6 +183,23 @@ class User < ApplicationRecord
     nil
   end
 
+  def only_invited!(rdv: nil)
+    @only_invited = true
+    @invitation_rdv = rdv
+  end
+
+  def only_invited?
+    @only_invited == true
+  end
+
+  def invited_for_rdv?(rdv)
+    rdv.id == @invitation_rdv&.id
+  end
+
+  def through_sign_in_form?
+    !only_invited?
+  end
+
   protected
 
   def compute_invitation_due_at
@@ -204,6 +221,18 @@ class User < ApplicationRecord
 
   def email_required?
     false # users without passwords and emails can be created by agents
+  end
+
+  def confirmation_required?
+    return false if only_invited?
+
+    super
+  end
+
+  def reconfirmation_required?
+    return false if only_invited?
+
+    super
   end
 
   def set_email_to_null_if_blank

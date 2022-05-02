@@ -347,6 +347,7 @@ ActiveRecord::Schema.define(version: 2022_04_19_093944) do
     t.string "website"
     t.string "email"
     t.bigint "territory_id", null: false
+    t.boolean "show_token_in_sms", default: false
     t.index ["human_id", "territory_id"], name: "index_organisations_on_human_id_and_territory_id", unique: true, where: "((human_id)::text <> ''::text)"
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["name"], name: "index_organisations_on_name"
@@ -422,6 +423,17 @@ ActiveRecord::Schema.define(version: 2022_04_19_093944) do
     t.bigint "user_id"
     t.boolean "send_lifecycle_notifications", null: false
     t.boolean "send_reminder_notification", null: false
+    t.string "invitation_token"
+    t.datetime "invitation_created_at"
+    t.datetime "invitation_sent_at"
+    t.datetime "invitation_accepted_at"
+    t.integer "invitation_limit"
+    t.string "invited_by_type"
+    t.bigint "invited_by_id"
+    t.integer "invitations_count", default: 0
+    t.index ["invitation_token"], name: "index_rdvs_users_on_invitation_token", unique: true
+    t.index ["invited_by_id"], name: "index_rdvs_users_on_invited_by_id"
+    t.index ["invited_by_type", "invited_by_id"], name: "index_rdvs_users_on_invited_by"
     t.index ["rdv_id", "user_id"], name: "index_rdvs_users_on_rdv_id_and_user_id", unique: true
     t.index ["rdv_id"], name: "index_rdvs_users_on_rdv_id"
     t.index ["user_id"], name: "index_rdvs_users_on_user_id"

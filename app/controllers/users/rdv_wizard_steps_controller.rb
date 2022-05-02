@@ -2,8 +2,14 @@
 
 class Users::RdvWizardStepsController < UserAuthController
   RDV_PERMITTED_PARAMS = [:starts_at, :motif_id, :context, { user_ids: [] }].freeze
-  EXTRA_PERMITTED_PARAMS = %i[lieu_id departement where created_user_id latitude longitude city_code street_ban_id].freeze
+  EXTRA_PERMITTED_PARAMS = [
+    :lieu_id, :departement, :where, :created_user_id, :latitude, :longitude, :city_code,
+    :street_ban_id, :invitation_token, :address, :motif_search_terms, { organisation_ids: [] }
+  ].freeze
   after_action :allow_iframe
+  before_action :set_step_titles
+
+  include TokenInvitable
 
   def new
     @rdv_wizard = rdv_wizard_for(current_user, query_params)
@@ -13,7 +19,7 @@ class Users::RdvWizardStepsController < UserAuthController
       render current_step
     else
       flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
-      redirect_to lieux_path(search: @rdv_wizard.to_query)
+      redirect_to(current_user.only_invited? ? prendre_rdv_path(@rdv_wizard.to_query) : lieux_path(search: @rdv_wizard.to_query))
     end
   end
 
@@ -40,7 +46,19 @@ class Users::RdvWizardStepsController < UserAuthController
   end
 
   def next_step_index
-    UserRdvWizard::STEPS.index(current_step) + 2 # steps start at 1 + increment
+    idx = current_step_index + 2 # steps start at 1 + increment
+    idx += 1 if current_step_index.zero? && current_user.only_invited? # we skip the step 2 in the context of an invitation
+    idx
+  end
+
+  def set_step_titles
+    @step_titles = (0..3).map do |idx|
+      I18n.t("users.rdv_wizard_steps.step#{idx}.title") unless idx == 2 && current_user.only_invited?
+    end.compact
+  end
+
+  def current_step_index
+    UserRdvWizard::STEPS.index(current_step)
   end
 
   def rdv_wizard_for(current_user, request_params)
@@ -63,6 +81,7 @@ class Users::RdvWizardStepsController < UserAuthController
                     :birth_name,
                     :phone_number,
                     :birth_date,
+                    :email,
                     :address,
                     :caisse_affiliation,
                     :affiliation_number,

@@ -46,10 +46,13 @@ Rails.application.routes.draw do
 
   namespace :users do
     resource :rdv_wizard_step, only: %i[new create]
-    resources :rdvs, only: %i[index create] do
-      put :cancel
+    resources :rdvs, only: %i[index create show edit update] do
+      member do
+        get :creneaux
+        put :cancel
+      end
     end
-    resources :creneaux, only: %i[index edit update], param: :rdv_id
+    resource :user_name_initials_verification, only: %i[new create], controller: "user_name_initials_verification"
     post "file_attente", to: "file_attentes#create_or_delete"
   end
   resources :stats, only: :index
@@ -65,7 +68,7 @@ Rails.application.routes.draw do
     resources :relatives, except: [:index], controller: "users/relatives"
   end
   authenticated :user do
-    get "/users/rdvs", to: "users/rdvs#index", as: :authenticated_user_root
+    get "/users/rdvs", to: "users/rdvs#index"
   end
 
   devise_for :agents, controllers: {
@@ -221,7 +224,34 @@ Rails.application.routes.draw do
     get v => "static_pages##{k}"
   end
 
-  get "r", to: redirect("users/rdvs", status: 301), as: "rdvs_shorten"
+  ## Shorten urls for SMS
+
+  get "r", to: redirect("users/rdvs", status: 301), as: "rdvs_short"
+
+  get "r/:id", to: (redirect do |path_params, req|
+    query_params = format_redirect_params(req.params)
+    "users/rdvs/#{path_params[:id]}#{query_params}"
+  end), as: "rdv_short"
+
+  get "prdv", to: (redirect do |_path_params, req|
+    query_params = format_redirect_params(req.params)
+    "prendre_rdv#{query_params}"
+  end), as: "prendre_rdv_short"
+
+  get "r/:id/cr", to: (redirect do |path_params, req|
+    query_params = format_redirect_params(req.params)
+    "users/rdvs/#{path_params[:id]}/creneaux#{query_params}"
+  end), as: "creneaux_users_rdv_short"
+
+  def format_redirect_params(params)
+    # we rename the short parameter tkn
+    params[:invitation_token] ||= params.delete(:tkn) if params[:tkn]
+    params.delete(:id) # id is passed through path_params
+    params.values.any? ? "?#{params.to_query}" : ''
+  end
+
+  ##
+
   get "accueil_mds" => "welcome#welcome_agent"
   post "/" => "welcome#search"
   get "departement/:departement", to: "welcome#welcome_departement", as: "welcome_departement"

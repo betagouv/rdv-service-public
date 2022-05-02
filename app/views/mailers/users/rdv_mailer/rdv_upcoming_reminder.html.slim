@@ -7,5 +7,5 @@ div
       | Nous vous rappellons que vous avez un RDV prévu le #{l(@rdv.starts_at, format: :human)}.
 
   = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :user
-  = render "mailers/common/rdv_cancellable", rdv: @rdv
+  = render "mailers/common/rdv_cancellable", rdv: @rdv, token: @token
   = t("mailers.common.farewell_html")

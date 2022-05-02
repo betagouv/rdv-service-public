@@ -12,12 +12,16 @@ class Notifiers::RdvCollectifParticipations < ::BaseService
 
     # FIXME: this is not ideal but it's the simplest workaround to avoid notifying the agent
     rdv_created = Notifiers::RdvCreated.new(@rdv, @author, new_participants)
+    rdv_created_invitation_tokens = rdv_created.generate_invitation_tokens
     rdv_created.notify_users_by_mail
     rdv_created.notify_users_by_sms
 
     rdv_cancelled = Notifiers::RdvCancelled.new(@rdv, @author, deleted_participants)
+    # we don't generate token in this case since the user won't be linked to the rdv
     rdv_cancelled.notify_users_by_mail
     rdv_cancelled.notify_users_by_sms
+
+    rdv_created_invitation_tokens
   end
 
   private

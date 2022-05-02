@@ -1,0 +1,11 @@
+fr:
+  users:
+    rdv_wizard_steps:
+      step0:
+        title: Identification
+      step1:
+        title: Vos informations
+      step2:
+        title: Choix de l'usager
+      step3:
+        title: Confirmation

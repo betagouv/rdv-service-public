@@ -26,9 +26,10 @@ ul.list-group.list-group-flush
   li.list-group-item
     .fa.fa-user>
     = users_to_sentence(rdv.users)
-  li.list-group-item
-    i.fa.fa-info-circle>
-    = rdv.motif.name
+  - if @can_see_rdv_motif
+    li.list-group-item
+      i.fa.fa-info-circle>
+      = rdv.motif.name
   - if rdv.motif.instruction_for_rdv.present?
     li.list-group-item
       i.fa.fa-exclamation-triangle>
@@ -36,11 +37,15 @@ ul.list-group.list-group-flush
       = auto_link(simple_format(rdv.motif.instruction_for_rdv, class:"pl-3 pt-1"), html: { target: "_blank" })
   - unless defined?(hide_file_attente_infos) && hide_file_attente_infos
     = render "/users/rdvs/file_attente", rdv: rdv
-- unless defined?(hide_cancellation_infos) && hide_cancellation_infos
-  - if rdv.cancellable?
+
+div.py-2.d-flex.justify-content-between.align-items-center
+  - if policy([:user, rdv]).edit?
+    .text-left.mt-2
+       = link_to "Déplacer le RDV", creneaux_users_rdv_path(rdv), class: "btn btn-outline-primary"
+  - if policy([:user, rdv]).cancel?
     .text-right.mt-2
       = link_to "Annuler le RDV", "#", data: { toggle: "modal", target: "#js-cancel-rdv-modal-#{rdv.id}" }, class: "btn btn-outline-danger"
-  - elsif !rdv.past? && !rdv.cancelled?
+  - elsif !rdv.past? && !rdv.cancelled? && !rdv.collectif?
     p.font-italic
       | Ce rendez-vous commence dans moins de 4 heures, il n'est plus annulable en ligne. Prenez contact avec le secrétariat.
 
@@ -49,7 +54,7 @@ ul.list-group.list-group-flush
   id: "js-cancel-rdv-modal-#{rdv.id}", \
   body_message: rdv.motif.cancellation_warning, \
   cancel_message: "Non", \
-  confirm_path: users_rdv_cancel_path(rdv.id), \
+  confirm_path: cancel_users_rdv_path(rdv), \
   confirm_message: "Oui, annuler le RDV", \
   confirm_link_options: { class: "btn btn-danger", method: :put } \
 )

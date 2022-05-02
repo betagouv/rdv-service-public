@@ -23,14 +23,6 @@ RSpec.describe WelcomeController, type: :controller do
 
       it { is_expected.to include("La prise de rendez-vous n'est pas disponible pour ce département.") }
     end
-
-    context "with an invitation token" do
-      it "stores the token in session" do
-        get :welcome_departement, params: { departement: "42", where: "Arras", invitation_token: "123456" }
-        expect(response).to be_successful
-        expect(request.session[:invitation_token]).to eq("123456")
-      end
-    end
   end
 
   describe "GET #search" do

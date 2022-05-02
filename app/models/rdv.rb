@@ -44,6 +44,7 @@ class Rdv < ApplicationRecord
 
   # Delegates
   delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, to: :motif
+  delegate :show_token_in_sms?, to: :organisation
 
   # Validations
   validates :starts_at, :ends_at, :agents, presence: true
@@ -147,8 +148,12 @@ class Rdv < ApplicationRecord
     status.in? CANCELLED_STATUSES
   end
 
-  def cancellable?
-    !cancelled? && starts_at > 4.hours.from_now
+  def cancellable_by_user?
+    !cancelled? && starts_at > 4.hours.from_now && !collectif?
+  end
+
+  def editable_by_user?
+    cancellable_by_user? && starts_at > 2.days.from_now && motif.reservable_online && !created_by_agent?
   end
 
   def available_to_file_attente?
@@ -210,6 +215,10 @@ class Rdv < ApplicationRecord
     rdvs = rdvs.where("DATE(starts_at) >= ?", options["start"]) if options["start"].present?
     rdvs = rdvs.where("DATE(starts_at) <= ?", options["end"]) if options["end"].present?
     rdvs
+  end
+
+  def reschedule_max_date
+    Time.zone.now + motif.max_booking_delay
   end
 
   def participants_with_life_cycle_notification_ids

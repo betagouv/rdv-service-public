@@ -40,7 +40,7 @@ class Admin::RdvsController < AgentAuthController
   def update
     authorize(@rdv)
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
-    success = @rdv_form.update(**rdv_params.to_h.symbolize_keys)
+    success = @rdv_form.update(**rdv_params.to_h.symbolize_keys).success?
     respond_to do |format|
       format.js
       format.html do

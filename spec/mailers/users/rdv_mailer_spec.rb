@@ -4,7 +4,8 @@ RSpec.describe Users::RdvMailer, type: :mailer do
   describe "#rdv_created" do
     let(:rdv) { create(:rdv) }
     let(:user) { rdv.users.first }
-    let(:mail) { described_class.rdv_created(rdv.payload(:create), user) }
+    let(:token) { "12345" }
+    let(:mail) { described_class.rdv_created(rdv.payload(:create), user, token) }
 
     it "renders the headers" do
       expect(mail.to).to eq([user.email])
@@ -23,15 +24,21 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       expect(cal.decoded).to match("UID:#{rdv.uuid}")
       expect(cal.decoded).to match("STATUS:CANCELLED") if rdv.cancelled?
     end
+
+    it "contains the link to the rdv" do
+      expect(mail.html_part.body.raw_source).to include("/users/rdvs/#{rdv.id}?invitation_token=12345")
+    end
   end
 
   describe "#rdv_cancelled" do
     before { travel_to Time.zone.parse("2020-06-10 12:30") }
 
+    let(:token) { "12345" }
+
     it "send mail to user" do
       rdv = create(:rdv)
       user = rdv.users.first
-      mail = described_class.rdv_cancelled(rdv.payload(:destroy), user)
+      mail = described_class.rdv_cancelled(rdv.payload(:destroy), user, token)
 
       expect(mail.to).to eq([user.email])
     end
@@ -40,7 +47,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       organisation = build(:organisation, name: "Orga du coin")
       user = build(:user)
       rdv = create(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
-      mail = described_class.rdv_cancelled(rdv.payload(:destroy), user)
+      mail = described_class.rdv_cancelled(rdv.payload(:destroy), user, token)
 
       expect(mail.subject).to eq("RDV annulé le lundi 15 juin 2020 à 12h30 avec Orga du coin")
     end
@@ -49,7 +56,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       organisation = build(:organisation, name: "Orga du coin")
       user = build(:user)
       rdv = create(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
-      mail = described_class.rdv_cancelled(rdv.payload(:destroy), user)
+      mail = described_class.rdv_cancelled(rdv.payload(:destroy), user, token)
 
       expect(mail.html_part.body).to match("lundi 15 juin 2020 à 12h30")
     end
@@ -58,7 +65,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       organisation = build(:organisation, name: "Orga du coin")
       user = build(:user)
       rdv = create(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
-      mail = described_class.rdv_cancelled(rdv.payload(:destroy), user)
+      mail = described_class.rdv_cancelled(rdv.payload(:destroy), user, token)
 
       expect(mail.html_part.body).to match(rdv.motif.service_name)
     end
@@ -67,26 +74,31 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       organisation = build(:organisation, name: "Orga du coin")
       user = build(:user)
       rdv = create(:rdv, starts_at: Time.zone.parse("2020-06-15 12:30"), organisation: organisation, users: [user])
-      mail = described_class.rdv_cancelled(rdv.payload(:destroy), user)
+      mail = described_class.rdv_cancelled(rdv.payload(:destroy), user, token)
+      rdv_payload = OpenStruct.new(rdv.payload(:destroy))
 
-      expected_url = lieux_url(search: { \
-                                 departement: rdv.organisation.departement_number, \
-                                 motif_name_with_location_type: rdv.motif.name_with_location_type, \
-                                 service: rdv.motif.service.id, \
-                                 where: rdv.address \
-                               })
+      expected_url = prendre_rdv_url(\
+        departement: rdv_payload.organisation_departement_number, \
+        motif_name_with_location_type: rdv_payload.motif_name_with_location_type, \
+        organisation_ids: [rdv_payload.organisation_id], \
+        address: rdv_payload.address, \
+        invitation_token: token \
+      )
 
       expect(mail.html_part.body).to have_link("Reprendre RDV", href: expected_url)
     end
   end
 
   describe "#rdv_upcoming_reminder" do
+    let(:token) { "12345" }
+    let!(:rdv) { create(:rdv, users: [user]) }
+    let!(:user) { create(:user) }
+
     it "send mail to user" do
-      rdv = create(:rdv)
-      user = rdv.users.first
-      mail = described_class.rdv_upcoming_reminder(rdv.payload, user)
+      mail = described_class.rdv_upcoming_reminder(rdv.payload, user, token)
       expect(mail.to).to eq([user.email])
       expect(mail.html_part.body).to include("Nous vous rappellons que vous avez un RDV prévu")
+      expect(mail.html_part.body.raw_source).to include("/users/rdvs/#{rdv.id}?invitation_token=12345")
     end
   end
 end

@@ -15,14 +15,19 @@ class Notifiers::RdvBase < ::BaseService
     @rdv = rdv
     @author = author
     @users = users || rdvs_users_to_notify.map(&:user)
+    @rdv_users_tokens_by_user_id = {}
   end
 
   def perform
     return if @rdv.starts_at < Time.zone.now
 
+    generate_invitation_tokens
+
     notify_users_by_mail
     notify_users_by_sms
     notify_agents
+
+    @rdv_users_tokens_by_user_id
   end
 
   ## Users notifications
@@ -59,10 +64,23 @@ class Notifiers::RdvBase < ::BaseService
       .each { notify_user_by_sms(_1) }
   end
 
+  def generate_invitation_tokens
+    rdv_users_with_token_needed.each do |rdv_user|
+      @rdv_users_tokens_by_user_id[rdv_user.user_id] = rdv_user.new_raw_invitation_token
+    end
+  end
+
   private
 
   def users_to_notify
     @users.map(&:user_to_notify).uniq
+  end
+
+  # we generate the tokens for the rdv_users to notify linked to the users we send a notif to
+  def rdv_users_with_token_needed
+    rdvs_users_to_notify.select do |rdv_user|
+      rdv_user.user_id.in?(users_to_notify.map(&:id))
+    end
   end
 
   ## Agents notifications

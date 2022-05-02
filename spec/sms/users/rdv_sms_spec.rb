@@ -3,18 +3,30 @@
 describe Users::RdvSms, type: :service do
   describe "#rdv_created" do
     context "with a basic rdv" do
-      subject { described_class.rdv_created(rdv, user).content }
+      subject { described_class.rdv_created(rdv, user, token).content }
 
+      let(:organisation) { build(:organisation, show_token_in_sms: true) }
       let(:pmi) { build(:service, short_name: "PMI") }
       let(:motif) { build(:motif, service: pmi) }
       let(:lieu) { build(:lieu, name: "MDS Centre", address: "10 rue d'ici") }
-      let(:rdv) { build(:rdv, motif: motif, lieu: lieu, starts_at: Time.zone.local(2021, 12, 10, 13, 10)) }
+      let(:rdv) { build(:rdv, motif: motif, organisation: organisation, lieu: lieu, starts_at: Time.zone.local(2021, 12, 10, 13, 10), id: 123) }
       let(:user) { build(:user) }
+      let(:token) { "12345" }
 
       it do
         expect(subject).to include("RDV PMI vendredi 10/12 à 13h10")
         expect(subject).to include("MDS Centre (10 rue d'ici)")
         expect(subject).to include("Infos et annulation")
+        expect(subject).to include("#{ENV['HOST']}/r/123?tkn=12345")
+      end
+
+      context "when the organisation does not show the token in sms" do
+        let!(:organisation) { build(:organisation, show_token_in_sms: false) }
+
+        it "does not include the token in the sms" do
+          expect(subject).to include("#{ENV['HOST']}/r/123")
+          expect(subject).not_to include("tkn")
+        end
       end
     end
 
@@ -24,8 +36,9 @@ describe Users::RdvSms, type: :service do
         user = create(:user, agents: [agent])
         motif = create(:motif, follow_up: true)
         rdv = create(:rdv, motif: motif, users: [user], agents: [agent])
+        token = "12345"
 
-        content = described_class.rdv_created(rdv, user).content
+        content = described_class.rdv_created(rdv, user, token).content
 
         expect(content).to include("J. BOND")
       end
@@ -33,99 +46,135 @@ describe Users::RdvSms, type: :service do
   end
 
   describe "#rdv_date_updated" do
-    subject { described_class.rdv_date_updated(rdv, user).content }
+    subject { described_class.rdv_date_updated(rdv, user, token).content }
 
     let(:pmi) { build(:service, short_name: "PMI") }
     let(:motif) { build(:motif, service: pmi) }
+    let(:organisation) { build(:organisation, show_token_in_sms: true) }
     let(:lieu) { build(:lieu, name: "MDS Centre", address: "10 rue d'ici") }
-    let(:rdv) { build(:rdv, motif: motif, lieu: lieu, starts_at: Time.zone.local(2021, 12, 10, 13, 10)) }
+    let(:rdv) { build(:rdv, motif: motif, organisation: organisation, lieu: lieu, starts_at: Time.zone.local(2021, 12, 10, 13, 10), id: 124) }
+    let(:token) { "2345" }
     let(:user) { build(:user) }
 
     it do
       expect(subject).to include("RDV modifié: PMI vendredi 10/12 à 13h10")
       expect(subject).to include("MDS Centre (10 rue d'ici)")
       expect(subject).to include("Infos et annulation")
+      expect(subject).to include("#{ENV['HOST']}/r/124?tkn=2345")
+    end
+
+    context "when the organisation does not show the token in sms" do
+      let!(:organisation) { build(:organisation, show_token_in_sms: false) }
+
+      it "does not include the token in the sms" do
+        expect(subject).to include("#{ENV['HOST']}/r/124")
+        expect(subject).not_to include("tkn")
+      end
     end
   end
 
   describe "#rdv_cancelled" do
-    subject { described_class.rdv_cancelled(rdv, user).content }
+    subject { described_class.rdv_cancelled(rdv, user, token).content }
 
     let(:pmi) { build(:service, short_name: "PMI") }
     let(:motif) { build(:motif, service: pmi) }
+    let(:lieu) { nil }
     let(:rdv) { build(:rdv, motif: motif, organisation: organisation, lieu: lieu, starts_at: Time.zone.local(2021, 12, 10, 13, 10)) }
     let(:user) { build(:user) }
+    let(:token) { "393939" }
 
     context "with lieu phone number" do
       let(:lieu) { build(:lieu, phone_number: "0123456789") }
-      let(:organisation) { create(:organisation, phone_number: "0100000000") }
+      let(:organisation) { create(:organisation, phone_number: "0100000000", show_token_in_sms: true) }
 
       it "contains cancelled RDV's infos and lieu's phone number" do
         expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé\n"
         expected_content += "Appelez le 0123456789 "
-        expected_content += "ou allez sur https://rdv-solidarites.fr pour reprendre RDV."
+        expected_content += "ou allez sur #{ENV['HOST']}/prdv?tkn=393939 pour reprendre RDV."
         expect(subject).to eq(expected_content)
       end
     end
 
     context "with only organisation number" do
       let(:lieu) { build(:lieu, phone_number: nil) }
-      let(:organisation) { create(:organisation, phone_number: "0100000000") }
+      let(:organisation) { create(:organisation, phone_number: "0100000000", show_token_in_sms: true) }
 
       it "contains cancelled RDV's infos" do
         expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé\n"
         expected_content += "Appelez le 0100000000 "
-        expected_content += "ou allez sur https://rdv-solidarites.fr pour reprendre RDV."
+        expected_content += "ou allez sur #{ENV['HOST']}/prdv?tkn=393939 pour reprendre RDV."
         expect(subject).to eq(expected_content)
       end
     end
 
     context "with no phone number" do
       let(:lieu) { build(:lieu, phone_number: nil) }
-      let(:organisation) { create(:organisation, phone_number: nil) }
+      let(:organisation) { create(:organisation, phone_number: nil, show_token_in_sms: true) }
 
       it "contains cancelled RDV's infos" do
         expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé\n"
-        expected_content += "Allez sur https://rdv-solidarites.fr pour reprendre RDV."
+        expected_content += "Allez sur #{ENV['HOST']}/prdv?tkn=393939 pour reprendre RDV."
         expect(subject).to eq(expected_content)
       end
     end
 
     context "without lieu and no organisation number" do
       let(:lieu) { nil }
-      let(:organisation) { create(:organisation, phone_number: nil) }
+      let(:organisation) { create(:organisation, phone_number: nil, show_token_in_sms: true) }
 
       it "contains cancelled RDV's infos" do
         expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé\n"
-        expected_content += "Allez sur https://rdv-solidarites.fr pour reprendre RDV."
+        expected_content += "Allez sur #{ENV['HOST']}/prdv?tkn=393939 pour reprendre RDV."
         expect(subject).to eq(expected_content)
+      end
+    end
+
+    context "when the organisation does not show the token in sms" do
+      let(:organisation) { build(:organisation, show_token_in_sms: false) }
+
+      it "does not include the token in the sms" do
+        expect(subject).to include("#{ENV['HOST']}/prdv")
+        expect(subject).not_to include("tkn")
       end
     end
   end
 
   describe "#rdv_upcoming_reminder" do
-    subject { described_class.rdv_upcoming_reminder(rdv, user).content }
+    subject { described_class.rdv_upcoming_reminder(rdv, user, token).content }
 
     let(:pmi) { build(:service, short_name: "PMI") }
     let(:motif) { build(:motif, service: pmi) }
     let(:lieu) { build(:lieu, name: "MDS Centre", address: "10 rue d'ici") }
-    let(:rdv) { build(:rdv, motif: motif, lieu: lieu, starts_at: Time.zone.local(2021, 12, 10, 13, 10)) }
+    let(:organisation) { build(:organisation, show_token_in_sms: true) }
+    let(:rdv) { build(:rdv, motif: motif, organisation: organisation, lieu: lieu, starts_at: Time.zone.local(2021, 12, 10, 13, 10), id: 140) }
     let(:user) { build(:user) }
+    let(:token) { "7777" }
 
     it do
       expect(subject).to include("Rappel RDV PMI le vendredi 10/12 à 13h10")
       expect(subject).to include("MDS Centre (10 rue d'ici)")
       expect(subject).to include("Infos et annulation")
+      expect(subject).to include("#{ENV['HOST']}/r/140?tkn=7777")
+    end
+
+    context "when the organisation does not show the token in sms" do
+      let!(:organisation) { build(:organisation, show_token_in_sms: false) }
+
+      it "does not include the token in the sms" do
+        expect(subject).to include("#{ENV['HOST']}/r/140")
+        expect(subject).not_to include("tkn")
+      end
     end
   end
 
   describe "rdv footer" do
-    subject { described_class.rdv_created(rdv, user).content }
+    subject { described_class.rdv_created(rdv, user, token).content }
 
     let(:user) { build(:user, address: "10 rue de Toulon, Lille") }
+    let(:token) { "12345" }
 
     describe "depending on motif" do
-      let(:rdv) { build(:rdv, motif: motif, users: [user], starts_at: 5.days.from_now) }
+      let(:rdv) { build(:rdv, motif: motif, users: [user], starts_at: 5.days.from_now, id: 140) }
 
       context "when regular Rdv" do
         let(:motif) { build(:motif, :at_public_office) }
@@ -152,7 +201,7 @@ describe Users::RdvSms, type: :service do
     end
 
     describe "depending on phone" do
-      let(:rdv) { build(:rdv, lieu: lieu, organisation: organisation, users: [user], starts_at: 5.days.from_now) }
+      let(:rdv) { build(:rdv, lieu: lieu, organisation: organisation, users: [user], starts_at: 5.days.from_now, id: 140) }
       let(:lieu) { build(:lieu, phone_number: lieu_phone_number) }
       let(:organisation) { create(:organisation, phone_number: organisation_phone_number) }
 

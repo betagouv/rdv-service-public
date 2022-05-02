@@ -28,4 +28,32 @@ class UserAuthController < ApplicationController
     flash[:error] = t "#{policy_name}.#{exception.query}", scope: "pundit", default: :default
     redirect_to(request.referer || authenticated_user_root_path)
   end
+
+  def authenticated_user_root_path
+    current_user.only_invited? ? root_path : users_rdvs_path
+  end
+
+  def should_verify_user_name_initials?
+    return false if current_user.through_sign_in_form?
+    return false if cookies.encrypted[user_name_initials_cookie_name] == true
+
+    true
+  end
+
+  def verify_user_name_initials
+    return unless should_verify_user_name_initials?
+
+    session[:return_to_after_verification] = request.fullpath
+    redirect_to new_users_user_name_initials_verification_path
+  end
+
+  def set_user_name_initials_verified
+    cookies.encrypted[user_name_initials_cookie_name] = {
+      value: true, expires: 10.minutes.from_now
+    }
+  end
+
+  def user_name_initials_cookie_name
+    :"user_name_initials_verified_#{current_user.id}"
+  end
 end

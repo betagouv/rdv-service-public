@@ -63,7 +63,7 @@ describe Rdv, type: :model do
     end
   end
 
-  describe "#cancellable?" do
+  describe "#cancellable_by_user?" do
     let(:now) { Time.zone.parse("2021-05-03 14h00") }
 
     before { travel_to(now) }
@@ -71,19 +71,19 @@ describe Rdv, type: :model do
     context "when Rdv starts in 5 hours" do
       let(:rdv) { create(:rdv, starts_at: now + 5.hours) }
 
-      it { expect(rdv.cancellable?).to eq(true) }
+      it { expect(rdv.cancellable_by_user?).to eq(true) }
 
       context "but is already cancelled" do
         let(:rdv) { create(:rdv, status: "excused", starts_at: now + 5.hours) }
 
-        it { expect(rdv.cancellable?).to eq(false) }
+        it { expect(rdv.cancellable_by_user?).to eq(false) }
       end
     end
 
     context "when Rdv starts in 4 hours" do
       let(:rdv) { create(:rdv, starts_at: now + 4.hours) }
 
-      it { expect(rdv.cancellable?).to eq(false) }
+      it { expect(rdv.cancellable_by_user?).to eq(false) }
     end
   end
 

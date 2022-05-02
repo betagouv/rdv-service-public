@@ -2,7 +2,7 @@
   .col-lg-7.col-md-10.col-sm-11
     .horizontal-steps.mt-4.mb-4.pb-3
       .horizontal-steps-content
-        - ["Identification", "Vos informations", "Choix de l'usager", "Confirmation"].each_with_index do |val, index|
-            .step-item class="#{"current" if step == index}"
+        - @step_titles.each_with_index do |val, idx|
+            .step-item class="#{"current" if step_title == val}"
                 span= val
-      .process-line style=("width: #{100*step/3}%;")
+      .process-line style=("width: #{100*@step_titles.index(step_title)/(@step_titles.length - 1)}%;")

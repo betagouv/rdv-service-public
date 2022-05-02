@@ -235,6 +235,7 @@ fr:
     reset: Réinitialiser
     search: Rechercher
     show: Afficher
+    ok: OK
     actions: Actions
     select:
       prompt: Veuillez sélectionner

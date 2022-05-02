@@ -44,7 +44,7 @@ module UserRdvWizard
 
     def to_query
       { motif_id: rdv.motif.id, starts_at: rdv.starts_at.to_s, user_ids: rdv.users&.map(&:id) }
-        .merge(@attributes.slice(:where, :departement, :lieu_id, :latitude, :longitude, :city_code, :street_ban_id))
+        .merge(@attributes.slice(:where, :departement, :lieu_id, :latitude, :longitude, :city_code, :street_ban_id, :invitation_token, :address, :organisation_ids, :motif_search_terms))
     end
 
     def to_search_query
@@ -71,6 +71,8 @@ module UserRdvWizard
     end
 
     def save
+      # we make sure the email can be updated only if it is blank
+      @user.skip_reconfirmation! if @user.email_was.blank?
       valid? && @user.update(@user_attributes)
     end
   end

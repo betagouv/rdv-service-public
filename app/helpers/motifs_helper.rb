@@ -7,6 +7,10 @@ module MotifsHelper
     "#{motif.name} (#{motif.human_attribute_value(:location_type)})"
   end
 
+  def motif_name_and_service(motif)
+    "#{motif.name} - #{motif.service.name}"
+  end
+
   def motif_name_with_special_location_type(motif)
     motif.public_office? ? motif.name : motif_name_with_location_type(motif)
   end
