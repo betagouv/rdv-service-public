@@ -10,24 +10,24 @@
       span.float-right= @user.full_name
     - else
       span.title Usager(s) :
-      span.float-right= rdv.users_full_names
+      span.float-right= rdv.users.map(&:full_name).sort.to_sentence
     .clear
   div.row-result
     span.title Motif :
     span.float-right
-      - if rdv.collectif? && rdv.title.present?
-        = "#{rdv.motif_name} : #{rdv.title}"
+      - if rdv.collectif? && rdv.name.present?
+        = "#{rdv.motif.name} : #{rdv.name}"
       - else
-        = rdv.motif_name
+        = rdv.motif.name
     .clear
   div.row-result
     span.title Service :
-    span.float-right= rdv.motif_service_name
+    span.float-right= rdv.motif.service.name
     .clear
   - if rdv.follow_up?
     div.row-result
       span.title Travailleur médico-social :
-      span.float-right= rdv.agents_short_names
+      span.float-right= rdv.agents.map(&:short_name).sort.to_sentence
       .clear
   div.row-result
     span.title Durée :
@@ -47,7 +47,7 @@
       span.float-right
         = rdv.address_complete
       .clear
-  - if rdv.motif_instruction.present? && for_role == :user
+  - if rdv.motif.instruction_for_rdv.present? && for_role == :user
     .div.row-result.no-border
       span.title Informations supplémentaires :
-      = auto_link(simple_format(rdv.motif_instruction), html: { target: "_blank" })
+      = auto_link(simple_format(rdv.motif.instruction_for_rdv), html: { target: "_blank" })

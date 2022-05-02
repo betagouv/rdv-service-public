@@ -38,22 +38,7 @@ class Notifiers::RdvBase < ::BaseService
 
     users_to_notify
       .select(&:notifiable_by_email?)
-      .each do |user|
-        notify_user_by_mail(user)
-        create_mail_receipt(user)
-      end
-  end
-
-  def create_mail_receipt(user)
-    params = {
-      rdv: @rdv,
-      user: user,
-      event: self.class.name.demodulize.underscore,
-      channel: :mail,
-      result: :processed,
-      email_address: user.email
-    }
-    Receipt.create!(params)
+      .each { notify_user_by_mail(_1) }
   end
 
   def notify_users_by_sms
