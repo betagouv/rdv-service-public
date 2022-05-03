@@ -2,7 +2,7 @@
 
 class Stat
   include ActiveModel::Model
-  attr_accessor :agents, :organisations, :users, :rdvs
+  attr_accessor :agents, :organisations, :users, :rdvs, :receipts
 
   DEFAULT_FORMAT = "%d/%m/%Y"
 
@@ -71,5 +71,13 @@ class Stat
         date_rdvs_count.zero? ? 0 : (rdvs_count.to_f * 100 / date_rdvs_count).round
       ]
     end
+  end
+
+  def receipts_group_by(attribute)
+    receipts
+      .group(attribute)
+      .group_by_day(:created_at)
+      .count
+      .transform_keys { |key| [Receipt.human_attribute_value(attribute, key[0]), key[1]] }
   end
 end

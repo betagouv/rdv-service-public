@@ -60,6 +60,7 @@ Rails.application.routes.draw do
   get "stats/organisations", to: "stats#organisations", as: "organisations_stats"
   get "stats/rdvs", to: "stats#rdvs", as: "rdvs_stats"
   get "stats/users", to: "stats#users", as: "users_stats"
+  get "stats/receipts", to: "stats#receipts", as: "receipts_stats"
   get "stats/:departement", to: "stats#index", as: "departement_stats"
 
   authenticate :user do
