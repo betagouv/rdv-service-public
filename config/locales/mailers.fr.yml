@@ -47,6 +47,9 @@ fr:
         cancelled_at_date_by_agent: Un RDV qui devait avoir lieu %{date} vient d’être annulé par %{author} à la demande de l’usager.
         cancelled_at_date_by_user: Un RDV qui devait avoir lieu %{date} vient d’être annulé par l’usager %{author}.
   users:
+    file_attente_mailer:
+      new_creneau_available:
+        title: Un créneau vient de se liberer !
     rdv_mailer:
       rdv_created:
         title: RDV confirmé le %{date}

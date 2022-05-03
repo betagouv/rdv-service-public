@@ -48,8 +48,8 @@ describe FileAttente, type: :model do
       end
 
       it "sends an email" do
-        allow(Users::FileAttenteMailer).to receive(:new_creneau_available).with(rdv, user, token).and_call_original
-        expect(Users::FileAttenteMailer).to receive(:new_creneau_available).with(rdv, user, token)
+        allow(Users::FileAttenteMailer).to receive(:with).and_call_original
+        expect(Users::FileAttenteMailer).to receive(:with).with({ rdv: rdv, user: user, token: token })
         subject
         expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "file_attente_creneaux_available").count).to eq 1
       end
@@ -61,7 +61,7 @@ describe FileAttente, type: :model do
       it "does not send notification" do
         subject
         expect(Users::FileAttenteSms).not_to receive(:new_creneau_available)
-        expect(Users::FileAttenteMailer).not_to receive(:new_creneau_available)
+        expect(Users::FileAttenteMailer).not_to receive(:with)
         expect(rdv_user).not_to receive(:new_raw_invitation_token)
       end
     end
@@ -74,7 +74,7 @@ describe FileAttente, type: :model do
         file_attente.reload
         subject
         expect(Users::FileAttenteSms).not_to receive(:new_creneau_available)
-        expect(Users::FileAttenteMailer).not_to receive(:new_creneau_available)
+        expect(Users::FileAttenteMailer).not_to receive(:with)
         expect(rdv_user).not_to receive(:new_raw_invitation_token)
       end
     end
