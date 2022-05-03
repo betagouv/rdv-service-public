@@ -1,9 +1,4 @@
 fr:
-  admins:
-    system_mailer:
-      rdv_events_stats:
-        title: Notifications de RDV - %{date}
-        view_on_server: Page de monitoring
   mailers:
     common:
       hello: Bonjour,
