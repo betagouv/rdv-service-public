@@ -2,7 +2,7 @@
 
 describe Payloads::Absence do
   describe "#payload" do
-    %i[name agent_email starts_at recurrence ical_uid title ends_at].each do |key|
+    %i[name starts_at recurrence ical_uid ends_at].each do |key|
       it "return an hash with key #{key}" do
         absence = build(:absence)
         expect(absence.payload).to have_key(key)
@@ -22,12 +22,6 @@ describe Payloads::Absence do
       it { expect(absence.payload[:name]).to eq("absence-something-2020-11-13-12-30-00-0100.ics") }
     end
 
-    describe ":agent_email" do
-      let(:absence) { build(:absence, agent: build(:agent, email: "polo@demo.rdv-solidarites.fr")) }
-
-      it { expect(absence.payload[:agent_email]).to eq("polo@demo.rdv-solidarites.fr") }
-    end
-
     describe ":starts_at" do
       let(:starts_at) { Time.zone.parse("20201009 11h45") }
       let(:absence) { build(:absence, start_time: starts_at, first_day: starts_at.to_date) }
@@ -45,12 +39,6 @@ describe Payloads::Absence do
       let(:absence) { create(:absence) }
 
       it { expect(absence.payload[:ical_uid]).to eq("absence_#{absence.id}@#{BRAND}") }
-    end
-
-    describe ":title" do
-      let(:absence) { build(:absence, title: "Permanence") }
-
-      it { expect(absence.payload[:title]).to eq("Permanence") }
     end
 
     describe ":ends_at" do

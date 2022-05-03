@@ -52,7 +52,7 @@ class Admin::PlageOuverturesController < AgentAuthController
     authorize(@plage_ouverture)
     if @plage_ouverture.save
 
-      Agents::PlageOuvertureMailer.plage_ouverture_created(@plage_ouverture.payload(:create)).deliver_later
+      plage_ouverture_mailer.plage_ouverture_created.deliver_later
       flash[:notice] = "Plage d'ouverture créée"
       redirect_to admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture)
     else
@@ -63,7 +63,7 @@ class Admin::PlageOuverturesController < AgentAuthController
   def update
     authorize(@plage_ouverture)
     if @plage_ouverture.update(plage_ouverture_params)
-      Agents::PlageOuvertureMailer.plage_ouverture_updated(@plage_ouverture.payload(:update)).deliver_later
+      plage_ouverture_mailer.plage_ouverture_updated.deliver_later
       redirect_to admin_organisation_plage_ouverture_path(@plage_ouverture.organisation, @plage_ouverture), notice: "La plage d'ouverture a été modifiée."
     else
       render :edit
@@ -72,8 +72,9 @@ class Admin::PlageOuverturesController < AgentAuthController
 
   def destroy
     authorize(@plage_ouverture)
-    if @plage_ouverture.destroy
-      Agents::PlageOuvertureMailer.plage_ouverture_destroyed(@plage_ouverture.payload(:destroy)).deliver_later
+    # NOTE: the destruction email is sent synchronously (not in a job) to ensure @absence still exists.
+    if @plage_ouverture.delay.destroy
+      plage_ouverture_mailer.plage_ouverture_destroyed.deliver_now
       redirect_to admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent), notice: "La plage d'ouverture a été supprimée."
     else
       render :edit
@@ -100,5 +101,9 @@ class Admin::PlageOuverturesController < AgentAuthController
 
   def filter_params
     params.permit(:start, :end, :organisation_id, :agent_id, :page, :current_tab)
+  end
+
+  def plage_ouverture_mailer
+    Agents::PlageOuvertureMailer.with(plage_ouverture: @plage_ouverture)
   end
 end

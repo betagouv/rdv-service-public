@@ -1,18 +1,11 @@
 # frozen_string_literal: true
 
 class Agents::AbsenceMailerPreview < ActionMailer::Preview
-  def absence_created
-    absence = Absence.last
-    Agents::AbsenceMailer.absence_created(absence.payload(:create))
-  end
+  delegate :absence_created, :absence_updated, :absence_destroyed, to: :absence_mailer
 
-  def absence_updated
-    absence = Absence.last
-    Agents::AbsenceMailer.absence_updated(absence.payload(:update))
-  end
+  private
 
-  def absence_destroyed
-    absence = Absence.last
-    Agents::AbsenceMailer.absence_destroyed(absence.payload(:destroy))
+  def absence_mailer
+    Agents::AbsenceMailer.with(absence: Absence.last)
   end
 end

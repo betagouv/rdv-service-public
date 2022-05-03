@@ -8,15 +8,34 @@ fr:
     common:
       hello: Bonjour,
       farewell_html: "<p>À bientôt,<br>L’équipe RDV-Solidarités</p>"
-
+      see_on_rdvs: Voir sur RDV-Solidarités
   agents:
     absence_mailer:
       absence_created:
-        description_html: <p>Vous venez de créer une indisponibilité sur votre planning de RDV Solidarités.</p><p> Vous pouvez synchroniser cette indisponibilité sur votre calendrier en ouvrant la pièce-jointe de cet email.</p>
-      absence_destroyed:
-        description_html: <p>Une de vos indisponibilités a été supprimée.</p><p>Vous pouvez supprimer l'événement correspondant de votre logiciel de calendrier externe (Outlook, Zimbra, Thunderbird etc) en ouvrant la pièce jointe</p>
+        title: RDV Solidarités - Indisponibilité créée - %{title}
+        description_1: Vous venez de créer une indisponibilité sur votre planning de RDV Solidarités.
+        description_2: Vous pouvez synchroniser cette indisponibilité sur votre calendrier en ouvrant la pièce jointe de cet email.
       absence_updated:
-        description_html: <p>Une de vos indisponibilités a été modifiée.</p><p>Vous pouvez synchroniser cette indisponibilité sur votre calendrier en ouvrant la pièce-jointe de cet email.</p>
+        title: RDV Solidarités - Indisponibilité modifiée - %{title}
+        description_1: Une de vos indisponibilités a été modifiée.
+        description_2: Vous pouvez synchroniser cette indisponibilité sur votre calendrier en ouvrant la pièce jointe de cet email.
+      absence_destroyed:
+        title: RDV Solidarités - Indisponibilité supprimée - %{title}
+        description_1: Une de vos indisponibilités a été supprimée.
+        description_2: Vous pouvez supprimer l’évènement correspondant de votre logiciel de calendrier en ouvrant la pièce jointe de cet email.
+    plage_ouverture_mailer:
+      plage_ouverture_created:
+        title: RDV Solidarités - Plage d’ouverture créée - %{title}
+        description_1: Vous venez de créer une plage d’ouverture sur votre planning de RDV Solidarités.
+        description_2: Vous pouvez synchroniser l’évènement sur votre logiciel de calendrier en ouvrant la pièce jointe de cet email.
+      plage_ouverture_updated:
+        title: RDV Solidarités - Plage d’ouverture modifiée - %{title}
+        description_1: Une de vos plages d’ouvertures a été modifiée.
+        description_2: Vous pouvez synchroniser l’évènement sur votre logiciel de calendrier en ouvrant la pièce jointe de cet email.
+      plage_ouverture_destroyed:
+        title: RDV Solidarités - Plage d’ouverture supprimée - %{title}
+        description_1: Une de vos plages d’ouvertures a été supprimée.
+        description_2: Vous pouvez supprimer l’évènement de votre logiciel de calendrier en ouvrant la pièce jointe de cet email.
     rdv_mailer:
       rdv_created:
         title: Nouveau RDV ajouté sur votre agenda rdv-solidarités pour %{date}

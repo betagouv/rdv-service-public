@@ -1,0 +1,22 @@
+.overview
+  h3.aligncenter Absence ##{@absence.id}
+  div.row-result
+    span.title Description :
+    span.float-right= @absence.title
+    .clear
+  div.row-result
+    span.title Professionnel :
+    span.float-right= @absence.agent.full_name
+    .clear
+  div.row-result
+    span.title Répétition :
+    span.float-right= @absence.recurring? ? "Récurrente" : po_exceptionnelle_tag(@absence)
+    .clear
+  div.row-result.no-border
+    span.title Dates :
+    span.float-right
+      - if @absence.recurring?
+        = sanitize(display_recurrence(@absence).join(" "))
+      - else
+        | Le #{l(@absence.first_day, format: :human)} #{display_time_range(@absence)}
+    .clear

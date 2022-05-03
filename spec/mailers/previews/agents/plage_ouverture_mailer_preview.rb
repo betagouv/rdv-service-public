@@ -1,19 +1,11 @@
 # frozen_string_literal: true
 
 class Agents::PlageOuvertureMailerPreview < ActionMailer::Preview
-  def plage_ouverture_created
-    plage_ouverture = PlageOuverture.last
+  delegate :plage_ouverture_created, :plage_ouverture_updated, :plage_ouverture_destroyed, to: :plage_ouverture_mailer
 
-    Agents::PlageOuvertureMailer.plage_ouverture_created(plage_ouverture.payload(:create))
-  end
+  private
 
-  def plage_ouverture_updated
-    plage_ouverture = PlageOuverture.last
-    Agents::PlageOuvertureMailer.plage_ouverture_updated(plage_ouverture.payload(:update))
-  end
-
-  def plage_ouverture_destroyed
-    plage_ouverture = PlageOuverture.last
-    Agents::PlageOuvertureMailer.plage_ouverture_destroyed(plage_ouverture.payload(:destroy))
+  def plage_ouverture_mailer
+    Agents::PlageOuvertureMailer.with(plage_ouverture: PlageOuverture.last)
   end
 end

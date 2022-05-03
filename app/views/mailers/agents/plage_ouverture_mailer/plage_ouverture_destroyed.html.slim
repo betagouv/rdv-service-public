@@ -1,6 +1,8 @@
-p Bonjour,
+p = t("mailers.common.hello")
 
-p Une de vos plages d'ouvertures a été supprimée.
-p Vous pouvez supprimer l'événement correspondant de votre logiciel de calendrier externe (Outlook, Zimbra, Thunderbird etc) en ouvrant la pièce jointe
+p= t(".description_1")
+p= t(".description_2")
+
+= render "plage_ouverture_overview", plage_ouverture: @plage_ouverture
 
 = t("mailers.common.farewell_html")
