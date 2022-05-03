@@ -21,8 +21,6 @@ describe Notifiers::RdvUpcomingReminder, type: :service do
     expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user1, token: token })
     expect(Users::RdvSms).to receive(:rdv_upcoming_reminder).with(rdv, user1, token)
     subject
-    expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "upcoming_reminder").count).to eq 1
-    expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: "upcoming_reminder").count).to eq 1
   end
 
   it "outputs the tokens" do

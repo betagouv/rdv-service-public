@@ -40,14 +40,12 @@ class FileAttente < ApplicationRecord
 
       if user.notifiable_by_sms?
         Users::FileAttenteSms.new_creneau_available(rdv, user, invitation_token).deliver_later
-        rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: :file_attente_creneaux_available)
       end
 
       next unless user.notifiable_by_email?
 
       Users::FileAttenteMailer.new_creneau_available(rdv, user, invitation_token).deliver_later
       update!(notifications_sent: notifications_sent + 1, last_creneau_sent_at: Time.zone.now)
-      rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: :file_attente_creneaux_available)
 
       params = {
         rdv: rdv,

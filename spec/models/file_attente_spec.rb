@@ -44,14 +44,12 @@ describe FileAttente, type: :model do
         allow(Users::FileAttenteSms).to receive(:new_creneau_available).and_call_original
         expect(Users::FileAttenteSms).to receive(:new_creneau_available).with(rdv, user, token)
         subject
-        expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: "file_attente_creneaux_available").count).to eq 1
       end
 
       it "sends an email" do
         allow(Users::FileAttenteMailer).to receive(:new_creneau_available).with(rdv, user, token).and_call_original
         expect(Users::FileAttenteMailer).to receive(:new_creneau_available).with(rdv, user, token)
         subject
-        expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "file_attente_creneaux_available").count).to eq 1
       end
     end
 

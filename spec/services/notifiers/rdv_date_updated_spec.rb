@@ -35,7 +35,6 @@ describe Notifiers::RdvDateUpdated, type: :service do
       expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user2, token: token2 })
       expect(Agents::RdvMailer).not_to receive(:with)
       subject
-      expect(rdv.events.where(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: "updated").count).to eq 2
     end
 
     it "outputs the tokens" do
