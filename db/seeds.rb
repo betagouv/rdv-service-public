@@ -891,19 +891,19 @@ RdvsUser.insert_all!(rdv_user_attributes)
 
 # WEBHOOKS
 WebhookEndpoint.create!(
-  target_url: "https://localhost:8000/rdv_solidarites_webhooks",
+  target_url: "http://localhost:8000/rdv_solidarites_webhooks",
   secret: "rdv-solidarites",
   organisation_id: org_drome1.id,
   subscriptions: %w[rdv user user_profile organisation]
 )
 WebhookEndpoint.create!(
-  target_url: "https://localhost:8000/rdv_solidarites_webhooks",
+  target_url: "http://localhost:8000/rdv_solidarites_webhooks",
   secret: "rdv-solidarites",
   organisation_id: org_drome2.id,
   subscriptions: %w[rdv user user_profile organisation]
 )
 WebhookEndpoint.create!(
-  target_url: "https://localhost:8000/rdv_solidarites_webhooks",
+  target_url: "http://localhost:8000/rdv_solidarites_webhooks",
   secret: "rdv-solidarites",
   organisation_id: org_yonne.id,
   subscriptions: %w[rdv user user_profile organisation]
