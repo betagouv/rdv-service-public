@@ -1,0 +1,7 @@
+= territory_navigation(t(".title"), [link_to("Agents", admin_territory_agents_path(current_territory))])
+
+.container-fluid.bg-white.rounded.m-2.p-2
+    - if current_agent.conseiller_numerique?
+      = render "invitation_conseiller_numerique"
+    - else
+      = render partial: "invitation", locals: {services: @services}

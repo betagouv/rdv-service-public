@@ -529,7 +529,11 @@ agent_org_paris_nord_pmi_martine = Agent.new(
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_ADMIN }],
-  agent_territorial_access_rights_attributes: [{ territory: territory75, allow_to_manage_teams: true }]
+  agent_territorial_access_rights_attributes: [{
+    territory: territory75,
+    allow_to_manage_teams: true,
+    allow_to_manage_access_rights: true,
+  }]
 )
 agent_org_paris_nord_pmi_martine.skip_confirmation!
 agent_org_paris_nord_pmi_martine.save!
@@ -544,7 +548,11 @@ agent_org_paris_nord_pmi_marco = Agent.new(
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_BASIC }],
-  agent_territorial_access_rights_attributes: [{ territory: territory75, allow_to_manage_teams: false }]
+  agent_territorial_access_rights_attributes: [{
+    territory: territory75,
+    allow_to_manage_teams: false,
+    allow_to_manage_access_rights: false,
+  }]
 )
 agent_org_paris_nord_pmi_marco.skip_confirmation!
 agent_org_paris_nord_pmi_marco.save!
@@ -558,7 +566,11 @@ agent_org_paris_nord_social_polo = Agent.new(
   service_id: service_social.id,
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [{ organisation: org_paris_nord, level: AgentRole::LEVEL_BASIC }],
-  agent_territorial_access_rights_attributes: [{ territory: territory75, allow_to_manage_teams: false }]
+  agent_territorial_access_rights_attributes: [{
+    territory: territory75,
+    allow_to_manage_teams: false,
+    allow_to_manage_access_rights: false,
+  }]
 )
 agent_org_paris_nord_social_polo.skip_confirmation!
 agent_org_paris_nord_social_polo.save!
@@ -572,7 +584,11 @@ org_arques_pmi_maya = Agent.new(
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
   roles_attributes: Organisation.where(territory: territory62).pluck(:id).map { { organisation_id: _1, level: AgentRole::LEVEL_ADMIN } },
-  agent_territorial_access_rights_attributes: [{ territory: territory62, allow_to_manage_teams: true }]
+  agent_territorial_access_rights_attributes: [{
+    territory: territory62,
+    allow_to_manage_teams: true,
+    allow_to_manage_access_rights: true,
+  }]
 )
 org_arques_pmi_maya.skip_confirmation!
 org_arques_pmi_maya.save!
@@ -586,7 +602,11 @@ agent_org_bapaume_pmi_bruno = Agent.new(
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [{ organisation: org_bapaume, level: AgentRole::LEVEL_ADMIN }],
-  agent_territorial_access_rights_attributes: [{ territory: territory62, allow_to_manage_teams: false }]
+  agent_territorial_access_rights_attributes: [{
+    territory: territory62,
+    allow_to_manage_teams: false,
+    allow_to_manage_access_rights: false,
+  }]
 )
 agent_org_bapaume_pmi_bruno.skip_confirmation!
 agent_org_bapaume_pmi_bruno.save!
@@ -601,7 +621,11 @@ agent_org_bapaume_pmi_gina = Agent.new(
   service_id: service_pmi.id,
   invitation_accepted_at: 10.days.ago,
   roles_attributes: [{ organisation: org_bapaume, level: AgentRole::LEVEL_ADMIN }],
-  agent_territorial_access_rights_attributes: [{ territory: territory62, allow_to_manage_teams: false }]
+  agent_territorial_access_rights_attributes: [{
+    territory: territory62,
+    allow_to_manage_teams: false,
+    allow_to_manage_access_rights: false,
+  }]
 )
 agent_org_bapaume_pmi_gina.skip_confirmation!
 agent_org_bapaume_pmi_gina.save!
@@ -615,7 +639,11 @@ agent_cnfs = Agent.new(
   service_id: service_cnfs.id,
   invitation_accepted_at: 1.day.ago,
   roles_attributes: [{ organisation: org_cnfs, level: AgentRole::LEVEL_ADMIN }],
-  agent_territorial_access_rights_attributes: [{ territory: territory62, allow_to_manage_teams: false }]
+  agent_territorial_access_rights_attributes: [{
+    territory: territory62,
+    allow_to_manage_teams: false,
+    allow_to_manage_access_rights: false,
+  }]
 )
 agent_cnfs.skip_confirmation!
 agent_cnfs.save!

@@ -1,0 +1,23 @@
+= simple_form_for [:admin, resource], as: resource_name, url: admin_agent_territory_invitation_path(current_territory, resource), html: { method: :post } do |f|
+  = render "devise/shared/error_messages", resource: resource
+  = f.input :email, placeholder: "jean.dupond@departement.fr", input_html: { autocomplete: "off"}
+  = f.input :service_id, as: :hidden, input_html: {value: Service.secretariat.first.id}
+
+  .card-group
+    - current_agent.organisations.each_with_index do |organisation, index|
+      .card.m-1 *{ "style" => "min-width:17rem;" }
+        .card-header
+          = organisation.name
+          = hidden_field_tag "admin_agent[roles_attributes][#{index}][organisation_id]", organisation.id
+        .card-body
+          .mt-0
+            label
+              => radio_button_tag "admin_agent[roles_attributes][#{index}][level]", "none", selected: true
+              | inaccessible
+          .mt-0
+            label
+              => radio_button_tag "admin_agent[roles_attributes][#{index}][level]", "basic"
+              | access basic
+
+  .text-right
+    = f.button :submit, t("devise.invitations.new.submit_button")

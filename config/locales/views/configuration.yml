@@ -88,6 +88,13 @@ fr:
           agent_title: Modification agent %{name}
           territory_agents_title: Agents du territoire
           teams: Équipes
+          agent_teams_legend: Affecter/retirer des équipes à l'agent
+          submit: Enregistrer
+          agent_access_rights_legend: Droits d'accès
+          organisations_legend: Organisations
+          no_other_organisation: Aucune autre organisation.
+          create_organisation: Créer une organisation
+          empty_agent_organisations: Aucune organisation affectée
         index:
           territory_agents_title: Agents du territoire
           reset: Retour

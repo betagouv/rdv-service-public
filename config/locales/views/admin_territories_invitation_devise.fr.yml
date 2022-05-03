@@ -1,0 +1,8 @@
+fr:
+  admin:
+    territories:
+      invitations_devise:
+        new:
+          title: Inviter un agent
+          header: "Envoyer une invitation"
+          submit_button: "Envoyer une invitation"
