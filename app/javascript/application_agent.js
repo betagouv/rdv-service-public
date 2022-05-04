@@ -12,7 +12,7 @@ import { Datetimepicker } from './components/datetimepicker';
 import { Menu } from './components/menu';
 import { Modal } from './components/modal';
 import { ServiceFilterForMotifsSelects } from './components/service-filter-for-motifs-selects';
-import { MotifFilters } from './components/motif-filters';
+import { SubmitOnChange } from './components/submit-on-change';
 import './components/analytic.js';
 import { PlacesInputs } from './components/places-inputs.js';
 import { RdvWizardStep2 } from './components/rdv_wizard_step2.js';
@@ -76,7 +76,7 @@ $(document).on('turbolinks:load', function() {
 
   new MotifForm();
 
-  new MotifFilters();
+  new SubmitOnChange();
 
   new RdvWizardStep2();
 
