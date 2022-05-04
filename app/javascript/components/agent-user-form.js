@@ -1,4 +1,4 @@
-import { Select2Inputs } from "components/select2-inputs"
+import { Select2Inputs } from "./select2-inputs"
 import 'custom-event-polyfill'
 
 class AgentUserForm {

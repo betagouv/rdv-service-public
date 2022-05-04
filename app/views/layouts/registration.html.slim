@@ -7,8 +7,8 @@ html lang="fr"
     = csrf_meta_tags
     = csp_meta_tag
     = render "common/env"
-    = stylesheet_pack_tag    "application", media: "all", "data-turbolinks-track": "reload"
-    = javascript_pack_tag "application", "data-turbolinks-track": "reload"
+    = stylesheet_link_tag    "application", media: "all", "data-turbolinks-track": "reload"
+    = javascript_include_tag "application", "data-turbolinks-track": "reload"
   main
     body.auth-fluid-pages.pb-0 class="#{agents_or_users_body_class}"
       = render "layouts/rdv_solidarites_instance_name"
@@ -18,7 +18,7 @@ html lang="fr"
             = link_logo
           .align-items-center.d-flex.mt-lg-4
             .p-lg-3.flex-grow-1
-              .d-none.d-lg-block= image_pack_tag "welcome/agent.svg", class: "agent-profile mx-auto mb-4", alt: ""
+              / .d-none.d-lg-block= image_tag "welcome/agent.svg", class: "agent-profile mx-auto mb-4", alt: ""
               - if agent_path? && current_agent.nil?
                 p.lead.mb-3 Terminé l'agenda papier, moins de temps perdu.
               - elsif agent_path? && current_agent.present?

@@ -1,5 +1,10 @@
+require("@rails/ujs").start()
+require("turbolinks").start()
+
+import "./stylesheets/administrate/application";
+
 import 'select2/dist/js/select2.min.js';
-import { PlacesInputs } from '../components/places-inputs.js';
+import { PlacesInputs } from './components/places-inputs.js';
 
 $(document).on('turbolinks:load', function() {
   new PlacesInputs();
