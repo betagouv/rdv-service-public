@@ -46,6 +46,29 @@ describe WebhookDeliverable, type: :concern do
       end
     end
 
+    context "when the webhook endpoint is triggered by the model changes but webhook callbacks are disabled explcitly" do
+      context "on creation" do
+        let!(:rdv) { build(:rdv, organisation: organisation) }
+
+        it "notifies the creation" do
+          expect(WebhookJob).not_to receive(:perform_later)
+          rdv.skip_webhooks = true
+          rdv.save
+        end
+      end
+
+      it "notifies on update" do
+        expect(WebhookJob).not_to receive(:perform_later)
+        rdv.update(status: :excused, skip_webhooks: true)
+      end
+
+      it "notifies on deletion" do
+        expect(WebhookJob).not_to receive(:perform_later)
+        rdv.skip_webhooks = true
+        rdv.destroy
+      end
+    end
+
     context "when the webhook endpoint is not triggered by the changes" do
       let!(:webhook_endpoint) do
         create(
