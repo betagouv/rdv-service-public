@@ -9,7 +9,7 @@
     "@fullcalendar/list": "^4.4.2",
     "@fullcalendar/timegrid": "^4.4.2",
     "@rails/ujs": "^6.0.0",
-    "@rails/webpacker": ">=5.1.1",
+    "@rails/webpacker": "^5.4.3",
     "@sentry/browser": "^5.10.2",
     "autocomplete.js": "^0.37.1",
     "bootstrap": "^4.3.1",
