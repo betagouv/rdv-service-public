@@ -35,6 +35,6 @@
       .m-3.d-flex.justify-content-center
         = link_to "Inviter un agent", new_admin_agent_organisation_invitation_path(current_organisation), class: "btn btn-primary"
         - if @invited_agents.any?
-          = link_to "Voir les #{@invited_agents.count} invitations en attente", admin_organisation_invitations_path(current_organisation), class: "btn btn-link"
+          = link_to "Voir les #{@invited_agents_count} invitations en attente", admin_organisation_invitations_path(current_organisation), class: "btn btn-link"
         - else
           .m-2 Aucune invitation en attente
