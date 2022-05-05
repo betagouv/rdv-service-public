@@ -42,6 +42,7 @@ class Rdv < ApplicationRecord
   has_many :agents, through: :agents_rdvs, dependent: :destroy
   has_many :users, through: :rdvs_users, validate: false
   has_many :webhook_endpoints, through: :organisation
+  has_one :territory, through: :organisation
 
   # Delegates
   delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, to: :motif
