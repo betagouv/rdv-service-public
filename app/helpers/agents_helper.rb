@@ -66,7 +66,7 @@ module AgentsHelper
       data: {
         "select-options": {
           ajax: {
-            url: search_admin_organisation_agents_path(current_organisation),
+            url: admin_organisation_agents_path(current_organisation),
             dataType: "json",
             delay: 250
           }

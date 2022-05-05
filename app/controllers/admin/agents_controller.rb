@@ -4,22 +4,13 @@ class Admin::AgentsController < AgentAuthController
   respond_to :html, :json
 
   def index
-    agents = policy_scope(Agent)
+    @agents = policy_scope(Agent)
       .joins(:organisations).where(organisations: { id: current_organisation.id })
-      .active.order_by_last_name
-    @invited_agents = agents.invitation_not_accepted.created_by_invite.order_by_last_name
-    @complete_agents = index_params[:search].present? ? agents.search_by_text(index_params[:search]) : agents.order_by_last_name
-    @complete_agents = @complete_agents.complete
       .includes(:service, :roles, :organisations)
-      .page(params[:page])
-  end
-
-  def search
-    agents = policy_scope(Agent)
-      .joins(:organisations).where(organisations: { id: current_organisation.id })
-      .active.complete.limit(10)
-    @agents = search_params[:term].present? ? agents.search_by_text(search_params[:term]) : agents.order_by_last_name
-    skip_authorization
+      .active
+    @invited_agents_count = @agents.invitation_not_accepted.created_by_invite.count
+    @agents = index_params[:term].present? ? @agents.search_by_text(index_params[:term]) : @agents.order_by_last_name
+    @agents = @agents.complete.page(params[:page])
   end
 
   def destroy
@@ -43,10 +34,6 @@ class Admin::AgentsController < AgentAuthController
   private
 
   def index_params
-    @index_params ||= params.permit(:search)
-  end
-
-  def search_params
-    @search_params ||= params.permit(:term)
+    @index_params ||= params.permit(:term)
   end
 end
