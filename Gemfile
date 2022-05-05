@@ -11,7 +11,7 @@ gem "dotenv-rails" # dotenv should always be loaded before rails
 gem "rails", "~> 6.0"
 gem "sprockets-rails"
 gem "puma"
-gem "webpacker"
+gem "jsbundling-rails"
 gem "turbolinks", "~> 5"
 
 gem "bootsnap", require: false # Reduces boot times through caching; required in config/boot.rb

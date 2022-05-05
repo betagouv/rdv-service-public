@@ -1,2 +1,2 @@
-// TODO: delete this file, currently it throws ManifestNeededError if I do
-// for some reason
+//= link_tree ../images
+//= link_tree ../builds
