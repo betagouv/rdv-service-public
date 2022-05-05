@@ -86,9 +86,12 @@ class CronJob < ApplicationJob
     self.cron_expression = "0 1 * * *"
 
     def perform
-      po_exceptionnelle_closed_since_1_month = PlageOuverture.where(recurrence: nil).where(first_day: ..1.month.ago)
-      po_reccurent_closed_since_1_month = PlageOuverture.where(recurrence_ends_at: ..1.month.ago)
-      po_exceptionnelle_closed_since_1_month.or(po_reccurent_closed_since_1_month).destroy_all
+      po_exceptionnelle_closed_since_1_year = PlageOuverture.where(recurrence: nil).where(first_day: ..1.year.ago)
+      po_reccurent_closed_since_1_year = PlageOuverture.where(recurrence_ends_at: ..1.year.ago)
+      po_exceptionnelle_closed_since_1_year.or(po_reccurent_closed_since_1_year).each do |po|
+        po.skip_webhooks = true
+        po.destroy
+      end
     end
   end
 
