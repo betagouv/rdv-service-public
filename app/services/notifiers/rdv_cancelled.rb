@@ -6,13 +6,6 @@ class Notifiers::RdvCancelled < Notifiers::RdvBase
     return unless @rdv.status.in?(%w[excused revoked]) || @rdv.collectif?
 
     user_mailer(user).rdv_cancelled.deliver_later
-
-    status_to_event_name = {
-      "excused" => :cancelled_by_user,
-      "revoked" => :cancelled_by_agent
-    }
-    event_name = status_to_event_name[@rdv.status]
-    @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_MAIL, event_name: event_name)
   end
 
   def notify_user_by_sms(user)
@@ -21,7 +14,6 @@ class Notifiers::RdvCancelled < Notifiers::RdvBase
     return unless @rdv.status.in? %w[excused revoked]
 
     Users::RdvSms.rdv_cancelled(@rdv, user, @rdv_users_tokens_by_user_id[user.id]).deliver_later
-    @rdv.events.create!(event_type: RdvEvent::TYPE_NOTIFICATION_SMS, event_name: :cancelled_by_agent)
   end
 
   protected

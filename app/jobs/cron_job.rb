@@ -92,18 +92,6 @@ class CronJob < ApplicationJob
     end
   end
 
-  class SendRdvEventsStatsMailJob < CronJob
-    # At 12:00 every day
-    self.cron_expression = "0 12 * * *"
-
-    def perform
-      # Avoid sending (numerous) monitoring emails for review apps.
-      return if ENV["RDV_SOLIDARITES_IS_REVIEW_APP"] == "true"
-
-      Admins::SystemMailer.rdv_events_stats.deliver_later
-    end
-  end
-
   class ScalingoAppRestarterJob < CronJob
     # At 2:00 every day
     self.cron_expression = "0 2 * * *"
