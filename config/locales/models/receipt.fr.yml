@@ -14,6 +14,9 @@ fr:
         content: Contenu
         sms_phone_number: Numéro
         user: Destinataire
+      receipt/channels:
+        mail: Email
+        sms: SMS
       receipt/events:
         new_creneau_available: Créneau disponible
         rdv_created: Création

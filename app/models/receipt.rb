@@ -9,6 +9,9 @@ class Receipt < ApplicationRecord
   belongs_to :rdv  # We could reference a RdvsUser directly (aka a “Participation”) but this would not work for responsible users of relatives.
   belongs_to :user # Moreover, if we remove a user for a Rdv (deleting the RdvsUser), we still want to keep the receipt.
 
+  has_one :organisation, through: :rdv
+  has_one :territory, through: :organisation
+
   # Scopes
   scope :old, -> { joins(:rdv).where(rdv: { starts_at: ..2.months.ago }) }
   scope :most_recent_first, -> { order(created_at: :desc) }

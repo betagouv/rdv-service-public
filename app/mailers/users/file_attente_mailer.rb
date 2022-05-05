@@ -1,9 +1,23 @@
 # frozen_string_literal: true
 
 class Users::FileAttenteMailer < ApplicationMailer
-  def new_creneau_available(rdv, user, token)
-    @rdv = rdv
-    @token = token
-    mail(to: user.email, subject: "Un créneau vient de se liberer !")
+  before_action do
+    @rdv = params[:rdv]
+    @user = params[:user]
+    @token = params[:token]
+  end
+
+  default to: -> { @user.email }
+
+  def new_creneau_available
+    subject = t("users.file_attente_mailer.new_creneau_available.title")
+    mail(subject: subject)
+    save_receipt(subject)
+  end
+
+  private
+
+  def save_receipt(subject)
+    Receipt.create!(rdv: @rdv, user: @user, event: action_name, channel: :mail, result: :processed, email_address: @user.email, content: subject)
   end
 end
