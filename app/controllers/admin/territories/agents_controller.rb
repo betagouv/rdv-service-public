@@ -8,10 +8,6 @@ class Admin::Territories::AgentsController < Admin::Territories::BaseController
     @agents = find_agents(params[:q]).page(params[:page])
   end
 
-  def search
-    @agents = find_agents(params[:q]).limit(10)
-  end
-
   def find_agents(search_term)
     organisation_agents = policy_scope(Agent)
       .merge(current_territory.organisations_agents)
