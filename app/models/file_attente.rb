@@ -44,7 +44,7 @@ class FileAttente < ApplicationRecord
 
       next unless user.notifiable_by_email?
 
-      Users::FileAttenteMailer.new_creneau_available(rdv, user, invitation_token).deliver_later
+      Users::FileAttenteMailer.with(rdv: rdv, user: user, token: invitation_token).new_creneau_available.deliver_later
       update!(notifications_sent: notifications_sent + 1, last_creneau_sent_at: Time.zone.now)
 
       params = {

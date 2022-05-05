@@ -25,6 +25,7 @@ class Organisation < ApplicationRecord
   has_many :sectors, through: :sector_attributions
   has_many :agents, through: :agent_roles
   has_many :users, through: :user_profiles
+  has_many :receipts, through: :rdvs
 
   accepts_nested_attributes_for :agent_roles
   accepts_nested_attributes_for :territory

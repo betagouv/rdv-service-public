@@ -2,7 +2,7 @@
 
 .row.justify-content-center
   .col-md-10
-    .card
+    = simple_form_for "", url: admin_territory_sectors_path(current_territory), html: { method: :get, class: "card js-search-and-filter-form" } do |f|
       .p-2.d-grid.grid-three-columns.grid-first-column-empty.grid-align-center
         .text-center= page_entries_info @sectors
         div.text-right
@@ -16,7 +16,9 @@
             th Nom
             th Identifiant
             th Géographie
-            th Attributions
+            th.d-flex.flex-wrap.align-items-end
+              div.mr-2 Attributions
+              div = select_tag(:organisation_id, options_from_collection_for_select(current_agent.organisations, :id, :name, params[:organisation_id]), include_blank: "Toutes", class: "js-motif-filters select2-input")
             th Actions
         tbody
           - @sectors.each do |sector|

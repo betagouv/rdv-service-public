@@ -1,4 +1,4 @@
-= simple_form_for team, url: url do |form|
+ = simple_form_for team, url: url do |form|
   = form.input :name
   = form.input :agent_ids, collection: team.agents,
           label: "Agents",
@@ -9,7 +9,7 @@
             data: {\
               "select-options": {\
                 ajax: {\
-                  url: search_admin_territory_agents_path(current_territory),
+                  url: admin_territory_agents_path(current_territory),
                   dataType: "json",
                   delay: 250\
                 }\

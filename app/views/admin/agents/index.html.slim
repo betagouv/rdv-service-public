@@ -9,9 +9,9 @@
 = simple_form_for "", url: admin_organisation_agents_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
   .container-fluid.bg-white.rounded
     .m-3.d-flex.justify-content-end
-      - search = params[:search].blank? && "d-none"
+      - search = params[:term].blank? && "d-none"
       div= link_to t("helpers.reset"), admin_organisation_agents_path(current_organisation), class: "btn btn-link #{search}"
-      = f.input :search, placeholder: "Prénom, Nom, Email", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
+      = f.input :term, placeholder: "Prénom, Nom, Email", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:term] }, required: false
       = f.button :submit, t("helpers.search")
     table.table
       thead
@@ -22,19 +22,19 @@
           th= AgentRole.human_attribute_name(:level)
           th Actions
       tbody
-        = render partial: "agent", collection: @complete_agents
-    - if @complete_agents.empty?
+        = render partial: "agent", collection: @agents
+    - if @agents.empty?
       .mb-4.p.text-center Aucun agent trouvé
-    - elsif @complete_agents.total_pages > 1
+    - elsif @agents.total_pages > 1
       .m-3
         .d-flex.justify-content-center
-          = paginate @complete_agents, theme: "twitter-bootstrap-4"
-        .text-center= page_entries_info @complete_agents
+          = paginate @agents, theme: "twitter-bootstrap-4"
+        .text-center= page_entries_info @agents
 
     - if current_agent_can?(:create, Agent)
       .m-3.d-flex.justify-content-center
         = link_to "Inviter un agent", new_admin_agent_organisation_invitation_path(current_organisation), class: "btn btn-primary"
-        - if @invited_agents.any?
-          = link_to "Voir les #{@invited_agents.count} invitations en attente", admin_organisation_invitations_path(current_organisation), class: "btn btn-link"
+        - if @invited_agents_count > 0
+          = link_to "Voir les #{@invited_agents_count} invitations en attente", admin_organisation_invitations_path(current_organisation), class: "btn btn-link"
         - else
           .m-2 Aucune invitation en attente

@@ -26,6 +26,8 @@ class Territory < ApplicationRecord
   has_many :organisations_agents, through: :organisations, source: :agents
   has_many :agents, through: :roles
   has_many :zones, through: :sectors
+  has_many :rdvs, through: :organisations
+  has_many :receipts, through: :rdvs
 
   # Validations
   validates :departement_number, length: { maximum: 3 }, if: -> { departement_number.present? }

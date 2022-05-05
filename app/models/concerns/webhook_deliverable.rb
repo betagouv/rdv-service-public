@@ -37,14 +37,18 @@ module WebhookDeliverable
   end
 
   included do
-    after_commit on: :create do
+    # this attribute is used in some cases to explicitly disable webhooks callbacks
+    # See: https://stackoverflow.com/a/38998807/2864020
+    attr_accessor :skip_webhooks
+
+    after_commit on: :create, unless: :skip_webhooks do
       generate_payload_and_send_webhook(:created)
     end
 
-    after_commit on: :update do
+    after_commit on: :update, unless: :skip_webhooks do
       generate_payload_and_send_webhook(:updated)
     end
 
-    around_destroy :generate_payload_and_send_webhook_for_destroy
+    around_destroy :generate_payload_and_send_webhook_for_destroy, unless: :skip_webhooks
   end
 end

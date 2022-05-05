@@ -60,12 +60,35 @@ class CronJob < ApplicationJob
     end
   end
 
+  class DestroyOldRdvsJob < CronJob
+    # At 2:00 every day
+    self.cron_expression = "0 2 * * *"
+
+    def perform
+      Rdv.where(starts_at: ..2.years.ago).each do |rdv|
+        rdv.skip_webhooks = true
+        rdv.destroy
+      end
+    end
+  end
+
   class DestroyOldReceiptsJob < CronJob
-    # At 1:00 every day
-    self.cron_expression = "0 4 * * *"
+    # At 3:00 every day
+    self.cron_expression = "0 3 * * *"
 
     def perform
       Receipt.destroy_old!
+    end
+  end
+
+  class DestroyOldPlageOuvertureJob < CronJob
+    # At 01:00 every day
+    self.cron_expression = "0 1 * * *"
+
+    def perform
+      po_exceptionnelle_closed_since_1_month = PlageOuverture.where(recurrence: nil).where(first_day: ..1.month.ago)
+      po_reccurent_closed_since_1_month = PlageOuverture.where(recurrence_ends_at: ..1.month.ago)
+      po_exceptionnelle_closed_since_1_month.or(po_reccurent_closed_since_1_month).destroy_all
     end
   end
 
