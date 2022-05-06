@@ -69,11 +69,15 @@ class Admin::RdvsCollectifsController < AgentAuthController
     %i[starts_at duration_in_min lieu_id name max_participants_count context motif_id]
   end
 
+  def create_attributes_rdvs
+    [agent_ids: [], lieu_attributes: %i[name address latitude longitude]]
+  end
+
   def create_params
     if params[:rdv][:lieu_id].present?  
-      params.require(:rdv).permit(*create_attribute_names, agent_ids: [], lieu_attributes: %i[name address latitude longitude])
+      params.require(:rdv).permit(*create_attribute_names, *create_attributes_rdvs)
     else
-      params.require(:rdv).permit(*create_attribute_names, agent_ids: [], lieu_attributes: %i[name address latitude longitude]).to_h.deep_merge(lieu_attributes: {organisation: current_organisation, availability: :single_use})
+      params.require(:rdv).permit(*create_attribute_names, *create_attributes_rdvs).to_h.deep_merge(lieu_attributes: {organisation: current_organisation, availability: :single_use})
     end
   end
 
