@@ -14,6 +14,12 @@ fr:
       show:
         update: Modifier
         duplicate: Dupliquer…
+    rdvs_collectifs:
+      new:
+        single_use_lieu_hint_html: Ce rendez-vous aura lieu à un adresse inhabituelle ? <a href>Définir un lieu ponctuel.</a>
+        existing_lieu_hint_html: Ce rendez-vous aura lieu à une adresse habituelle ? <a href>Choisir un lieu existant.</a>
+        select_placeholder_existing_lieu: Choisir un lieu existant
+        select_placeholder_single_use_lieu: Lieu ponctuel
     slots:
       index:
         place_index: Revenir aux filtres

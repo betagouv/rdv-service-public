@@ -29,7 +29,6 @@ class Admin::RdvsCollectifsController < AgentAuthController
   def create
     @rdv = Rdv.new(organisation: current_organisation, users_count: 0)
     authorize(@rdv, :new?)
-
     if @rdv.update(create_params)
       Notifiers::RdvCreated.perform_with(@rdv, current_agent)
       flash[:notice] = "#{@rdv.motif.name} créé"
@@ -71,7 +70,11 @@ class Admin::RdvsCollectifsController < AgentAuthController
   end
 
   def create_params
-    params.require(:rdv).permit(*create_attribute_names, agent_ids: [])
+    if params[:rdv][:lieu_id].present?  
+      params.require(:rdv).permit(*create_attribute_names, agent_ids: [], lieu_attributes: %i[name address latitude longitude])
+    else
+      params.require(:rdv).permit(*create_attribute_names, agent_ids: [], lieu_attributes: %i[name address latitude longitude]).to_h.deep_merge(lieu_attributes: {organisation: current_organisation, availability: :single_use})
+    end
   end
 
   def update_users_params

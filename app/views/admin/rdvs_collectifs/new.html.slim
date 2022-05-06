@@ -24,12 +24,26 @@
 
           = f.input :context
           = f.hidden_field :motif_id, value: @rdv.motif_id
-          = f.association :lieu, \
-            collection: policy_scope(Lieu).enabled.ordered_by_name, \
-            label_method: :full_name, \
-            include_blank: true,
-            required: true,
-            input_html: { class: "select2-input" }
+         
+          - new_lieu_record = @rdv.lieu&.new_record?
+          - controller_data = { "controller": "rdv-lieu",
+                  "initial-state": (new_lieu_record ? "single_use" : "existing"),
+                  "select-placeholder-single-use-lieu": t(".select_placeholder_single_use_lieu"),
+                  "select-placeholder-existing-lieu": t(".select_placeholder_existing_lieu") }
+          .form-group data=controller_data
+            = f.label :lieu, required: true
+            fieldset
+              = f.association :lieu, collection: policy_scope(Lieu).enabled.ordered_by_name, label_method: :full_name,
+                label: false,  include_blank: true,  required: false,
+                input_html: { class: "select2-input", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: ""} }
+              small.form-text.text-muted data={"rdv-lieu-target": "new_lieu_link"}
+                = t(".single_use_lieu_hint_html")
+            fieldset data={ "rdv-lieu-target": "new_lieu_fieldset" }
+              .border.p-2.bg-light
+                = f.fields_for :lieu, (new_lieu_record ? @rdv.lieu : Lieu.new) do |f2|
+                  = render "admin/lieux/lieu_fields", f: f2
+              small.form-text.text-muted data={"rdv-lieu-target": "select_lieu_link"}
+                = t(".existing_lieu_hint_html")
 
           = f.input :max_participants_count, input_html: { min: 1 }
 
