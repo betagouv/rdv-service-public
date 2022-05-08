@@ -1,10 +1,10 @@
 - content_for(:title) do
-  | Ajouter un proche
+  h1 Ajouter un proche
 
 = simple_form_for @user, url: relatives_path, remote: true, data: { modal: true } do |f|
   = render "model_errors", model: @user
   = render "form_fields", f: f
   .row
     .col.text-right
-      button.btn.btn-link aria-hidden="true" data-dismiss="modal" type="button" Annuler
+      button.btn.btn-link data-dismiss="modal" type="button" Annuler
       = f.button :submit
