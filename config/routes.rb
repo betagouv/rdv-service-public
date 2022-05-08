@@ -66,7 +66,7 @@ Rails.application.routes.draw do
   authenticate :user do
     get "/users/informations", to: "users/users#edit"
     patch "users/informations", to: "users/users#update"
-    resources :relatives, except: [:index, :show], controller: "users/relatives"
+    resources :relatives, except: %i[index show], controller: "users/relatives"
   end
   authenticated :user do
     get "/users/rdvs", to: "users/rdvs#index"

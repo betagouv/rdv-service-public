@@ -32,5 +32,4 @@ describe "users pages", js: true do
     login_as user
     expect_page_to_be_axe_clean(edit_relative_path(user))
   end
-
 end

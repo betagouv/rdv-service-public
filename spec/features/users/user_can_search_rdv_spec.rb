@@ -90,7 +90,7 @@ describe "User can search for rdvs" do
 
       # Add relative
       click_link("Ajouter un proche")
-      expect(page).to have_selector("h4", text: "Ajouter un proche")
+      expect(page).to have_selector("h1", text: "Ajouter un proche")
       fill_in("Prénom", with: "Mathieu")
       fill_in("Nom", with: "Lapin")
       fill_in("Date de naissance", with: Date.yesterday)
