@@ -59,7 +59,7 @@
           .card-header
             h2 RDV créés par département(#{@stats.rdvs.count})
           .card-body
-            = column_chart rdvs_stats_path(by_departement: true, departement: @departement), stacked: true
+            = column_chart rdvs_stats_path(by_departement: true), stacked: true
 
       .card.mb-5
         .card-header
