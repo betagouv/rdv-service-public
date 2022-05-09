@@ -9,5 +9,6 @@
 
 .card.mb-5
   .card-body
-    h4.card-title#rdvs RDV créés (#{@stats.rdvs.count})
+    = self_anchor "rdvs"
+      h4.card-title RDV créés (#{@stats.rdvs.count})
     = column_chart rdvs_admin_organisation_agent_stats_path(current_organisation, current_agent), stacked: true

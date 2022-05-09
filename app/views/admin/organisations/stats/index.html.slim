@@ -11,25 +11,30 @@
 .card.mb-5
   .card-body
     = link_to "stats", rdvs_admin_organisation_stats_path(@organisation, departement: @departement, format: :json)
-    h4.card-title#rdvs RDV créés (#{@stats.rdvs.count})
+    = self_anchor "rdvs"
+      h4.card-title RDV créés (#{@stats.rdvs.count})
     = column_chart rdvs_admin_organisation_stats_path(@organisation, departement: @departement), stacked: true
 
 .card.mb-5
   .card-body
-    h4.card-title#rdvs-service RDV créés par service (#{@stats.rdvs.count})
+    = self_anchor "rdvs-service"
+      h4.card-title RDV créés par service (#{@stats.rdvs.count})
     = column_chart rdvs_admin_organisation_stats_path(@organisation, by_service: true, departement: @departement), stacked: true
 
 .card.mb-5
   .card-body
-    h4.card-title#rdvs-type RDV par type (#{@stats.rdvs.count})
+    = self_anchor "rdvs-type"
+      h4.card-title RDV par type (#{@stats.rdvs.count})
     = column_chart rdvs_admin_organisation_stats_path(@organisation, by_location_type: true, departement: @departement), stacked: true
 
 .card.mb-5
   .card-body
-    h4.card-title#usagers Usagers créés (#{@stats.users_active.count})
+    = self_anchor "usagers"
+      h4.card-title Usagers créés (#{@stats.users_active.count})
     = column_chart users_admin_organisation_stats_path(@organisation, departement: @departement)
 
 .card.mb-5
   .card-body
-    h4.card-title#agents Agents créés (#{@stats.agents_for_default_range.count})
+    = self_anchor "agents"
+      h4.card-title Agents créés (#{@stats.agents_for_default_range.count})
     = column_chart agents_stats_path(departement: @departement)

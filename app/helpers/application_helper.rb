@@ -97,4 +97,8 @@ module ApplicationHelper
       name
     end
   end
+
+  def self_anchor(identifier, &block)
+    tag.a(id: identifier, href: "##{identifier}", data: { turbolinks: false }, &block)
+  end
 end
