@@ -52,26 +52,26 @@
         .card-header
           h2 RDV créés (#{@stats.rdvs.count})
         .card-body
-          = column_chart add_query_string_params_to_url(rdvs_stats_path, departement: @departement), stacked: true
+          = column_chart rdvs_stats_path(departement: @departement), stacked: true
 
       - unless @departement.present?
         .card.mb-5
           .card-header
             h2 RDV créés par département(#{@stats.rdvs.count})
           .card-body
-            = column_chart add_query_string_params_to_url(rdvs_stats_path, by_departement: true, departement: @departement), stacked: true
+            = column_chart rdvs_stats_path(by_departement: true, departement: @departement), stacked: true
 
       .card.mb-5
         .card-header
           h2 RDV créés par service (#{@stats.rdvs.count})
         .card-body
-          = column_chart add_query_string_params_to_url(rdvs_stats_path, by_service: true, departement: @departement), stacked: true
+          = column_chart rdvs_stats_path(by_service: true, departement: @departement), stacked: true
 
       .card.mb-5
         .card-header
           h2 RDV par type (#{@stats.rdvs.count})
         .card-body
-          = column_chart add_query_string_params_to_url(rdvs_stats_path, by_location_type: true, departement: @departement), stacked: true
+          = column_chart rdvs_stats_path(by_location_type: true, departement: @departement), stacked: true
 
       .card.mb-5
         .card-header
@@ -88,7 +88,7 @@
               "revoked": $teal, #02a8b5
               "noshow": $danger, #fa5c7c
           - colors = %w[#fa5c7c #02a8b5 #39afd1 #0acf97 #ffbc00]
-          = column_chart add_query_string_params_to_url(rdvs_stats_path, by_status: true, departement: @departement), stacked: :percent, max: 100, suffix: "%", colors: colors
+          = column_chart rdvs_stats_path(by_status: true, departement: @departement), stacked: :percent, max: 100, suffix: "%", colors: colors
 
       .card.mb-5
         .card-header
@@ -102,16 +102,16 @@
         .card-header
           h2 Usagers créés (#{@stats.users_active.count})
         .card-body
-          = column_chart add_query_string_params_to_url(users_stats_path, departement: @departement)
+          = column_chart users_stats_path(departement: @departement)
 
       .card.mb-5
         .card-header
           h2 Agents créés (#{@stats.agents_for_default_range.count})
         .card-body
-          = column_chart add_query_string_params_to_url(agents_stats_path, departement: @departement)
+          = column_chart agents_stats_path(departement: @departement)
 
   .card.mb-5
     .card-header
       h2 Organisations créées (#{@stats.organisations.count})
     .card-body
-      = column_chart add_query_string_params_to_url(organisations_stats_path, departement: @departement)
+      = column_chart organisations_stats_path(departement: @departement)
