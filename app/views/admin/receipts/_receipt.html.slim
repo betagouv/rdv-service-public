@@ -3,6 +3,9 @@ tr
     .text-bold= receipt.human_attribute_value(:event)
     p.small= l(receipt.created_at, format: :dense_html).html_safe
   td
+    - if receipt.email_address.nil? && receipt.sms_phone_number.nil?
+      / Receipts created from recycled RdvEvents lack details
+      div= receipt.channel
     - if receipt.channel_sms?
       - title = "#{receipt.channel} (#{receipt.sms_provider})"
       div[title=title]= receipt.sms_phone_number
