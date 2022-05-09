@@ -32,7 +32,7 @@ describe "Agent can organize a rdv collectif", js: true do
     fill_in "Intitulé", with: "Traitement de texte"
 
     select("DIALO Alain", from: "rdv_agent_ids")
-    select(lieu.name, from: "Lieu")
+    select(lieu.name, from: "rdv_lieu_id")
     click_button "Enregistrer"
 
     expect(page).to have_content("Atelier participatif créé")
