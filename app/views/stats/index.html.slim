@@ -20,9 +20,8 @@
     h3 Ce departement n'utilise pas RDV-Solidarités.
   - else
       .card.mb-5
-        .card-header
-          h2 Nombre de RDV par statut
         .card-body
+          h2.card-title Nombre de RDV par statut
           .row
             .col-lg-4
               .px-1
@@ -49,34 +48,29 @@
                   count: @stats.rdvs.count
 
       .card.mb-5
-        .card-header
-          h2 RDV créés (#{@stats.rdvs.count})
         .card-body
+          h2.card-title#rdvs RDV créés (#{@stats.rdvs.count})
           = column_chart rdvs_stats_path(departement: @departement), stacked: true
 
       - unless @departement.present?
         .card.mb-5
-          .card-header
-            h2 RDV créés par département(#{@stats.rdvs.count})
           .card-body
+            h2.card-title#rdvs-departement RDV créés par département(#{@stats.rdvs.count})
             = column_chart rdvs_stats_path(by_departement: true), stacked: true
 
       .card.mb-5
-        .card-header
-          h2 RDV créés par service (#{@stats.rdvs.count})
         .card-body
+          h2.card-title#rdvs-service RDV créés par service (#{@stats.rdvs.count})
           = column_chart rdvs_stats_path(by_service: true, departement: @departement), stacked: true
 
       .card.mb-5
-        .card-header
-          h2 RDV par type (#{@stats.rdvs.count})
         .card-body
+          h2.card-title#rdvs-type RDV par type (#{@stats.rdvs.count})
           = column_chart rdvs_stats_path(by_location_type: true, departement: @departement), stacked: true
 
       .card.mb-5
-        .card-header
-          h2 RDV par statut
         .card-body
+          h2.card-title#rdvs-status RDV par statut
           /
             Note: colors are synced manually with the status css and the order of the stats.
             From stat.rb, Stat#rdvs_group_by_status:
@@ -91,27 +85,23 @@
           = column_chart rdvs_stats_path(by_status: true, departement: @departement), stacked: :percent, max: 100, suffix: "%", colors: colors
 
       .card.mb-5
-        .card-header
-          h2= "#{Receipt.model_name.human(count: 2)} (#{@stats.receipts.count})"
         .card-body
+          h2.card-title#notifications = "#{Receipt.model_name.human(count: 2)} (#{@stats.receipts.count})"
           - %i[event channel result].each do |attribute|
-            h3 Par #{Receipt.human_attribute_name(attribute).downcase}
+            h3.card-subtitle{id= "notifications-#{attribute}"} Par #{Receipt.human_attribute_name(attribute).downcase}
             = column_chart receipts_stats_path(group_by: attribute, departement: @departement), stacked: true
 
       .card.mb-5
-        .card-header
-          h2 Usagers créés (#{@stats.users_active.count})
         .card-body
+          h2.card-title#usagers Usagers créés (#{@stats.users_active.count})
           = column_chart users_stats_path(departement: @departement)
 
       .card.mb-5
-        .card-header
-          h2 Agents créés (#{@stats.agents_for_default_range.count})
         .card-body
+          h2.card-title#agents Agents créés (#{@stats.agents_for_default_range.count})
           = column_chart agents_stats_path(departement: @departement)
 
   .card.mb-5
-    .card-header
-      h2 Organisations créées (#{@stats.organisations.count})
     .card-body
+      h2.card-title#organisations Organisations créées (#{@stats.organisations.count})
       = column_chart organisations_stats_path(departement: @departement)
