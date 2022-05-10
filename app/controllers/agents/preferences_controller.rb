@@ -26,6 +26,6 @@ class Agents::PreferencesController < AgentAuthController
   end
 
   def update_params
-    params.require(:agent).permit(:rdv_notifications_level)
+    params.require(:agent).permit(:rdv_notifications_level, :plage_ouverture_notification_level, :absence_notification_level)
   end
 end

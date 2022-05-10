@@ -10,12 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_19_093944) do
+ActiveRecord::Schema.define(version: 2022_05_11_082705) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "unaccent"
   enable_extension "uuid-ossp"
+
+  create_enum :agents_absence_notification_level, [
+    "all",
+    "none",
+  ], force: :cascade
+
+  create_enum :agents_plage_ouverture_notification_level, [
+    "all",
+    "none",
+  ], force: :cascade
 
   create_enum :agents_rdv_notifications_level, [
     "all",
@@ -209,6 +219,8 @@ ActiveRecord::Schema.define(version: 2022_04_19_093944) do
     t.integer "unknown_past_rdv_count", default: 0
     t.boolean "display_saturdays", default: false
     t.boolean "display_cancelled_rdv", default: true
+    t.enum "plage_ouverture_notification_level", default: "all", enum_type: "agents_plage_ouverture_notification_level"
+    t.enum "absence_notification_level", default: "all", enum_type: "agents_absence_notification_level"
     t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_agents_search_terms", using: :gin
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true

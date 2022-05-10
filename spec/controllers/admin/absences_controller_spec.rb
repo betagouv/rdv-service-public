@@ -68,8 +68,19 @@ describe Admin::AbsencesController, type: :controller do
         end
 
         it "send notification after create" do
-          allow(Agents::AbsenceMailer).to receive(:absence_created).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
-          post :create, params: { organisation_id: organisation.id, absence: valid_attributes }
+          expect do
+            post :create, params: { organisation_id: organisation.id, absence: valid_attributes }
+          end.to change { ActionMailer::Base.deliveries.size }.by(1)
+
+          expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Solidarités - Indisponibilité créée")
+        end
+
+        it "skips notification after create when agent has disabled it" do
+          agent.update!(absence_notification_level: "none")
+
+          expect do
+            post :create, params: { organisation_id: organisation.id, absence: valid_attributes }
+          end.not_to change { ActionMailer::Base.deliveries.size }
         end
       end
 
@@ -118,8 +129,18 @@ describe Admin::AbsencesController, type: :controller do
         end
 
         it "send notification after update" do
-          allow(Agents::AbsenceMailer).to receive(:absence_updated).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
-          put :update, params: { organisation_id: organisation.id, id: absence.to_param, absence: new_attributes }
+          expect do
+            put :update, params: { organisation_id: organisation.id, id: absence.to_param, absence: new_attributes }
+          end.to change { ActionMailer::Base.deliveries.size }.by(1)
+          expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Solidarités - Indisponibilité modifiée - Le nouveau nom")
+        end
+
+        it "skips notification after update when agent has disabled it" do
+          agent.update!(absence_notification_level: "none")
+
+          expect do
+            put :update, params: { organisation_id: organisation.id, id: absence.to_param, absence: new_attributes }
+          end.not_to change { ActionMailer::Base.deliveries.size }
         end
       end
 
@@ -160,8 +181,18 @@ describe Admin::AbsencesController, type: :controller do
       end
 
       it "send notification after delete" do
-        allow(Agents::AbsenceMailer).to receive(:absence_destroyed).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
-        delete :destroy, params: { organisation_id: organisation.id, id: absence.to_param }
+        expect do
+          delete :destroy, params: { organisation_id: organisation.id, id: absence.to_param }
+        end.to change { ActionMailer::Base.deliveries.size }.by(1)
+        expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Solidarités - Indisponibilité supprimée")
+      end
+
+      it "skips notification after delete when agent has disabled it" do
+        agent.update!(absence_notification_level: "none")
+
+        expect do
+          delete :destroy, params: { organisation_id: organisation.id, id: absence.to_param }
+        end.not_to change { ActionMailer::Base.deliveries.size }
       end
     end
   end
