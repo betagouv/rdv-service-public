@@ -13,12 +13,5 @@ class Receipt < ApplicationRecord
   has_one :territory, through: :organisation
 
   # Scopes
-  scope :old, -> { joins(:rdv).where(rdv: { starts_at: ..2.months.ago }) }
   scope :most_recent_first, -> { order(created_at: :desc) }
-
-  ## -
-
-  def self.destroy_old!
-    old.destroy_all
-  end
 end
