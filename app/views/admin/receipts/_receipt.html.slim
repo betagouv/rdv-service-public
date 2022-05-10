@@ -3,6 +3,8 @@ tr
     .text-bold= receipt.human_attribute_value(:event)
     p.small= l(receipt.created_at, format: :dense_html).html_safe
   td
+    / Note: we could link to receipt.user from here, but it seems redundant with other links in the page.
+      Additionally, paths to users are currently scoped to the organisation. This would require us to handle this in caching.
     - if receipt.email_address.nil? && receipt.sms_phone_number.nil?
       / Receipts created from recycled RdvEvents lack details
       div= receipt.channel
