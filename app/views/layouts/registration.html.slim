@@ -18,7 +18,7 @@ html lang="fr"
             = link_logo
           .align-items-center.d-flex.mt-lg-4
             .p-lg-3.flex-grow-1
-              / .d-none.d-lg-block= image_tag "welcome/agent.svg", class: "agent-profile mx-auto mb-4", alt: ""
+              .d-none.d-lg-block= image_tag "welcome/agent.svg", class: "agent-profile mx-auto mb-4", alt: ""
               - if agent_path? && current_agent.nil?
                 p.lead.mb-3 Terminé l'agenda papier, moins de temps perdu.
               - elsif agent_path? && current_agent.present?
