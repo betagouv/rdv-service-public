@@ -45,7 +45,7 @@ class Admin::AbsencesController < AgentAuthController
     @absence.organisation = current_organisation
     authorize(@absence)
     if @absence.save
-      absence_mailer.absence_created.deliver_later
+      absence_mailer.absence_created.deliver_later if @agent.absence_notification_level == "all"
       flash[:notice] = t(".busy_time_created")
       redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
     else
@@ -56,7 +56,7 @@ class Admin::AbsencesController < AgentAuthController
   def update
     authorize(@absence)
     if @absence.update(absence_params)
-      absence_mailer.absence_updated.deliver_later
+      absence_mailer.absence_updated.deliver_later if @agent.absence_notification_level == "all"
       flash[:notice] = t(".busy_time_updated")
       redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
     else
@@ -68,7 +68,7 @@ class Admin::AbsencesController < AgentAuthController
     authorize(@absence)
     if @absence.destroy
       # NOTE: the destruction email is sent synchronously (not in a job) to ensure @absence still exists.
-      absence_mailer.absence_destroyed.deliver_now
+      absence_mailer.absence_destroyed.deliver_now if @agent.absence_notification_level == "all"
       flash[:notice] = t(".busy_time_deleted")
       redirect_to admin_organisation_agent_absences_path(@absence.organisation_id, @absence.agent_id)
     else

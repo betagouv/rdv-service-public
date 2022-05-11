@@ -2,12 +2,32 @@
 
 = simple_form_for(@agent, url: agents_preferences_path) do |f|
   = render "devise/shared/error_messages", resource: @agent
-  p.lead.font-weight-bold= t(".help_1")
+
+  p.lead.font-weight-bold= t(".rdv_notifications_header")
   = f.collection_radio_buttons :rdv_notifications_level, Agent.human_attribute_values(:rdv_notifications_level), :last, :first do |b|
     .form-check
       = b.radio_button class: "form-check-input"
       = b.label class: "form-check-label"
+
+  hr
+
+  p.lead.font-weight-bold= t(".plage_ouverture_notifications_header")
+  = f.collection_radio_buttons :plage_ouverture_notification_level, Agent.human_attribute_values(:plage_ouverture_notification_level), :last, :first do |b|
+    .form-check
+      = b.radio_button class: "form-check-input"
+      = b.label class: "form-check-label"
+
+  hr
+
+  p.lead.font-weight-bold= t(".absence_notifications_header")
+  = f.collection_radio_buttons :absence_notification_level, Agent.human_attribute_values(:absence_notification_level), :last, :first do |b|
+    .form-check
+      = b.radio_button class: "form-check-input"
+      = b.label class: "form-check-label"
+
+  hr
+
   .alert.alert-info
-    = t(".help_2")
+    = t(".technical_email_explanation")
 
   .text-right= f.submit t("helpers.submit.submit"), class: "btn btn-primary"

@@ -17,6 +17,12 @@ fr:
         others: Uniquement les modifications faites par un usager (ou par un autre agent)
         soon: Uniquement les modifications (faites par un usager ou un autre agent) moins de 24 heures à l’avance
         none: Jamais
+      agent/plage_ouverture_notification_levels:
+        all: À chaque modification
+        none: Jamais
+      agent/absence_notification_levels:
+        all: À chaque modification
+        none: Jamais
       agent/display_cancelled_rdvs:
         true: "Afficher les RDV annulés"
         false: "Ne pas afficher les RDV annulés"

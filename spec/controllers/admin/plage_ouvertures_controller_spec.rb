@@ -104,45 +104,36 @@ describe Admin::PlageOuverturesController, type: :controller do
       end
 
       context "with valid params for non-overlapping exceptional PO" do
-        it "creates it and redirects to the index" do
-          post(
-            :create,
-            params: {
+        let(:valid_params) do
+          {
+            organisation_id: organisation.id,
+            plage_ouverture: {
+              title: "Permanence ecole",
+              motif_ids: [motif.id],
+              lieu_id: lieu1.id,
               organisation_id: organisation.id,
-              plage_ouverture: {
-                title: "Permanence ecole",
-                motif_ids: [motif.id],
-                lieu_id: lieu1.id,
-                organisation_id: organisation.id,
-                agent_id: agent.id,
-                first_day: "17/11/2020",
-                start_time: "09:00",
-                end_time: "12:00"
-              }
+              agent_id: agent.id,
+              first_day: "17/11/2020",
+              start_time: "09:00",
+              end_time: "12:00"
             }
-          )
+          }
+        end
+
+        it "creates it and redirects to the index" do
+          post(:create, params: valid_params)
           expect(response).to redirect_to(admin_organisation_plage_ouverture_path(organisation, PlageOuverture.last))
           expect(agent.plage_ouvertures.count).to eq 2
         end
 
         it "send notification after create" do
-          allow(Agents::PlageOuvertureMailer).to receive(:plage_ouverture_created).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
-          post(
-            :create,
-            params: {
-              organisation_id: organisation.id,
-              plage_ouverture: {
-                title: "Permanence ecole",
-                motif_ids: [motif.id],
-                lieu_id: lieu1.id,
-                organisation_id: organisation.id,
-                agent_id: agent.id,
-                first_day: "17/11/2020",
-                start_time: "09:00",
-                end_time: "12:00"
-              }
-            }
-          )
+          expect { post(:create, params: valid_params) }.to change { ActionMailer::Base.deliveries.size }.by(1)
+          expect(ActionMailer::Base.deliveries.last.subject).to eq("RDV Solidarités - Plage d’ouverture créée - Permanence ecole")
+        end
+
+        it "skips notification after create when agent has disabled it" do
+          agent.update!(plage_ouverture_notification_level: "none")
+          expect { post(:create, params: valid_params) }.not_to change { ActionMailer::Base.deliveries.size }
         end
       end
 
@@ -188,9 +179,18 @@ describe Admin::PlageOuverturesController, type: :controller do
           expect(response).to redirect_to(admin_organisation_plage_ouverture_path(organisation, plage_ouverture))
         end
 
-        it "send notification after create" do
-          allow(Agents::PlageOuvertureMailer).to receive(:plage_ouverture_updated).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
+        it "send notification after update" do
+          ActionMailer::Base.deliveries.clear
           put :update, params: { organisation_id: organisation.id, id: plage_ouverture.to_param, plage_ouverture: { title: "Le nouveau nom" } }
+          expect(ActionMailer::Base.deliveries.size).to eq(1)
+          expect(ActionMailer::Base.deliveries.last.subject).to eq("RDV Solidarités - Plage d’ouverture modifiée - Le nouveau nom")
+        end
+
+        it "skips notification after update when agent has disabled it" do
+          ActionMailer::Base.deliveries.clear
+          agent.update!(plage_ouverture_notification_level: "none")
+          put :update, params: { organisation_id: organisation.id, id: plage_ouverture.to_param, plage_ouverture: { title: "Le nouveau nom" } }
+          expect(ActionMailer::Base.deliveries.size).to eq(0)
         end
       end
 
@@ -226,8 +226,17 @@ describe Admin::PlageOuverturesController, type: :controller do
       end
 
       it "send notification after destroy" do
-        allow(Agents::PlageOuvertureMailer).to receive(:plage_ouverture_destroyed).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
+        ActionMailer::Base.deliveries.clear
         delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.id }
+        expect(ActionMailer::Base.deliveries.size).to eq(1)
+        expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Solidarités - Plage d’ouverture supprimée")
+      end
+
+      it "skips notification after destroy when agent has disabled it" do
+        agent.update!(plage_ouverture_notification_level: "none")
+        ActionMailer::Base.deliveries.clear
+        delete :destroy, params: { organisation_id: organisation.id, id: plage_ouverture.id }
+        expect(ActionMailer::Base.deliveries.size).to eq(0)
       end
     end
   end
