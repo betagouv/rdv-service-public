@@ -2,16 +2,16 @@
 
 class Agent::UserProfilePolicy < DefaultAgentPolicy
   def create?
-    same_org?
+    same_territory?
   end
 
   protected
 
-  def same_org?
+  def same_territory?
     if current_organisation.present?
-      @record.organisation_id == current_organisation.id
+      @record.territory_id == current_organisation.territory_id
     else
-      current_agent.organisation_ids.include?(@record.organisation_id)
+      current_agent.organisations.map(&:territory_id).include?(@record.territory_id)
     end
   end
 

@@ -16,4 +16,7 @@ class UserProfile < ApplicationRecord
 
   # Validations
   validates :user_id, uniqueness: { scope: :organisation }
+
+  # Delegations
+  delegate :territory, :territory_id, to: :organisation, allow_nil: true
 end
