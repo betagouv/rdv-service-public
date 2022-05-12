@@ -13,7 +13,7 @@ describe "api/v1/user_profiles requests", type: :request do
           api_v1_user_profiles_path,
           params: {
             organisation_id: organisation.id,
-            user_id: user.id
+            user_id: user.id,
           },
           headers: api_auth_headers_for_agent(agent)
         )
@@ -36,7 +36,7 @@ describe "api/v1/user_profiles requests", type: :request do
             organisation_id: organisation.id,
             user_id: user.id,
             logement: "heberge",
-            notes: "Très pressé, vite vite"
+            notes: "Très pressé, vite vite",
           },
           headers: api_auth_headers_for_agent(agent)
         )
@@ -91,7 +91,7 @@ describe "api/v1/user_profiles requests", type: :request do
           api_v1_user_profiles_path,
           params: {
             user_id: user.id,
-            organisation_id: unauthorized_orga.id
+            organisation_id: unauthorized_orga.id,
           },
           headers: api_auth_headers_for_agent(agent)
         )
@@ -111,7 +111,7 @@ describe "api/v1/user_profiles requests", type: :request do
           api_v1_user_profiles_path,
           params: {
             user_id: user.id,
-            organisation_id: organisation.id
+            organisation_id: organisation.id,
           },
           headers: api_auth_headers_for_agent(agent)
         )

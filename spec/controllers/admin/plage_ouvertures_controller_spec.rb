@@ -115,8 +115,8 @@ describe Admin::PlageOuverturesController, type: :controller do
               agent_id: agent.id,
               first_day: "17/11/2020",
               start_time: "09:00",
-              end_time: "12:00"
-            }
+              end_time: "12:00",
+            },
           }
         end
 
@@ -147,9 +147,9 @@ describe Admin::PlageOuverturesController, type: :controller do
                 motif_ids: [motif.id],
                 lieu_id: lieu1.id,
                 organisation_id: organisation.id,
-                agent_id: agent.id
+                agent_id: agent.id,
                 # missing fields
-              }
+              },
             }
           )
           expect(response).to be_successful

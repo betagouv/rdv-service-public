@@ -43,9 +43,18 @@
             = f.association :agents,
               collection: @rdv_form.agents,
               label_method: :full_name_and_service,
-              input_html: { multiple: true, class: "select2-input",
-                data: { "select-options": { ajax: { url: admin_organisation_agents_path(current_organisation),
-                                                          dataType: "json", delay: 250 } } } }
+                    input_html: { \
+                      multiple: true,
+                      class: "select2-input",
+                      data: { \
+                        "select-options": { \
+                          ajax: { \
+                            url: admin_organisation_agents_path(current_organisation),
+                            dataType: "json", delay: 250, \
+                          }, \
+                        }, \
+                      }, \
+                    }
 
             - if @rdv_form.motif.collectif?
               = f.input :name, wrapper_html: { class: "mb-1" }
@@ -66,7 +75,7 @@
                       data: { \
                 width: "auto", \
                 "scroll-to-bottom": params[:add_user].present?, \
-                "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.rdvs_users.map(&:user_id)), dataType: "json", delay: 250 } } \
+                "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.rdvs_users.map(&:user_id)), dataType: "json", delay: 250 } }, \
                }
 
             .text-right

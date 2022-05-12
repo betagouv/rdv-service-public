@@ -27,7 +27,7 @@ module CreneauxHelper
       team_ids: form.team_ids,
       user_ids: form.user_ids,
       lieu_ids: form.lieu_ids,
-      context: form.context
+      context: form.context,
     }
   end
 

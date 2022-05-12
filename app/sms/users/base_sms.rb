@@ -14,7 +14,7 @@ class Users::BaseSms < ApplicationSms
       ENV["APP"]&.gsub("-rdv-solidarites", ""), # shorter names
       "dpt-#{rdv.organisation&.departement_number}",
       "org-#{rdv.organisation&.id}",
-      self.class.name.demodulize.underscore
+      self.class.name.demodulize.underscore,
     ].compact
 
     @receipt_params[:rdv] = rdv

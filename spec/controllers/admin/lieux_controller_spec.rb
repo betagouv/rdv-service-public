@@ -53,7 +53,7 @@ describe Admin::LieuxController, type: :controller do
     context "with invalid params" do
       let(:invalid_attributes) do
         {
-          name: "test"
+          name: "test",
         }
       end
 
@@ -78,7 +78,7 @@ describe Admin::LieuxController, type: :controller do
     context "with valid params" do
       let(:new_attributes) do
         {
-          name: "Le nouveau nom"
+          name: "Le nouveau nom",
         }
       end
 
@@ -95,7 +95,7 @@ describe Admin::LieuxController, type: :controller do
     context "with invalid params" do
       let(:new_attributes) do
         {
-          name: ""
+          name: "",
         }
       end
 

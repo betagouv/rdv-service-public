@@ -34,7 +34,7 @@ RSpec.describe Admin::UsersController, type: :controller do
         {
           first_name: "Michel",
           last_name: "Lapin",
-          user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } }
+          user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } },
         }
       end
 
@@ -59,7 +59,7 @@ RSpec.describe Admin::UsersController, type: :controller do
           first_name: "Michel",
           last_name: "Lapin",
           email: user.email,
-          user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } }
+          user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } },
         }
       end
 
@@ -71,7 +71,7 @@ RSpec.describe Admin::UsersController, type: :controller do
       let(:attributes) do
         {
           first_name: "Michel",
-          user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } }
+          user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } },
         }
       end
       let(:format) { :html }
@@ -95,7 +95,7 @@ RSpec.describe Admin::UsersController, type: :controller do
             first_name: "Michel",
             last_name: "Lapin",
             email: "michel@lapin.com",
-            user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } }
+            user_profiles_attributes: { "0" => { "organisation_id" => organisation.id.to_s } },
           }
         end
         let(:format) { format }

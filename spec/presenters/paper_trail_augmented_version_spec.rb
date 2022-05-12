@@ -17,7 +17,7 @@ describe PaperTrailAugmentedVersion do
         expect(described_class.new(version, nil).changes).to eq(
           {
             "title" => %w[foo bar],
-            "user_ids" => [nil, [1, 2]]
+            "user_ids" => [nil, [1, 2]],
           }
         )
       end
@@ -46,7 +46,7 @@ describe PaperTrailAugmentedVersion do
         ).to eq(
           {
             "title" => %w[foo bar],
-            "user_ids" => [[1], [1, 2]]
+            "user_ids" => [[1], [1, 2]],
             # agent_ids has not changed so it does not appear here
           }
         )

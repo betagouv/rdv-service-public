@@ -21,7 +21,7 @@
             label_method: -> { motif_name_with_location_type(_1) }, \
             input_html: { \
               data: { placeholder: "Sélectionnez un motif", "allow-clear": true }, \
-              class: "select2-input" \
+              class: "select2-input", \
             }
         .col-md-3.mt-4
           = f.input :with_remaining_seats, as: :boolean, label: "Avec des places disponibles"

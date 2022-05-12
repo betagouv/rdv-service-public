@@ -54,7 +54,7 @@ describe "welcome pages", js: true do
                         motif_name_with_location_type: motif.name_with_location_type,
                         service: service.id,
                         street_ban_id: "75119_4903",
-                        where: "152 Avenue Jean Jaurès Paris 75019 Paris 19e Arrondissement 75 Paris Île-de-France"
+                        where: "152 Avenue Jean Jaurès Paris 75019 Paris 19e Arrondissement 75 Paris Île-de-France",
                       })
     expect_page_to_be_axe_clean(path)
   end

@@ -27,7 +27,7 @@ class MotifDashboard < Administrate::BaseDashboard
     max_booking_delay: Field::Number,
     deleted_at: Field::DateTime,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime
+    updated_at: Field::DateTime,
   }.freeze
 
   # COLLECTION_ATTRIBUTES

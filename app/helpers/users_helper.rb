@@ -96,7 +96,7 @@ module UsersHelper # rubocop:disable Metrics/ModuleLength
     relatives = user.relatives.merge(current_organisation.users).active
     [
       "Confirmez-vous la suppression de cet usager ?",
-      (I18n.t("users.soft_delete_confirm_message.relatives", count: relatives.size) if relatives.any?)
+      (I18n.t("users.soft_delete_confirm_message.relatives", count: relatives.size) if relatives.any?),
     ].select(&:present?).join("\n\n")
   end
 
@@ -145,7 +145,7 @@ module UsersHelper # rubocop:disable Metrics/ModuleLength
       "yahoo.fr" => { url: "https://fr.mail.yahoo.com", name: "Yahoo Mail" },
       "yahoo.com" => { url: "https://mail.yahoo.com", name: "Yahoo Mail" },
       "sfr.fr" => { url: "https://webmail.sfr.fr", name: "SFR Mail" },
-      "free.fr" => { url: "https://webmail.free.fr/", name: "Free Webmail" }
+      "free.fr" => { url: "https://webmail.free.fr/", name: "Free Webmail" },
     }[email_tld]
   end
 

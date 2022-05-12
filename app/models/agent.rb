@@ -27,17 +27,17 @@ class Agent < ApplicationRecord
     all: "all",       # notify of all rdv changes
     others: "others", # notify of changes made by other agents or users
     soon: "soon",     # notify of change (made by others) less than a day before the rdv
-    none: "none"      # never send rdv notifications
+    none: "none", # never send rdv notifications
   }, _prefix: true
 
   enum plage_ouverture_notification_level: {
     all: "all", # notify of all changes
-    none: "none" # never send plage_ouverture notifications
+    none: "none", # never send plage_ouverture notifications
   }, _prefix: true
 
   enum absence_notification_level: {
     all: "all", # notify of all changes
-    none: "none" # never send absence notifications
+    none: "none", # never send absence notifications
   }, _prefix: true
 
   # Relations

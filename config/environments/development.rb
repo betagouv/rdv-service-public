@@ -22,7 +22,7 @@ Rails.application.configure do
 
     config.cache_store = :memory_store
     config.public_file_server.headers = {
-      'Cache-Control' => "public, max-age=#{2.days.to_i}"
+      'Cache-Control' => "public, max-age=#{2.days.to_i}",
     }
   else
     config.action_controller.perform_caching = false
@@ -44,7 +44,7 @@ Rails.application.configure do
       address: ENV["DEVELOPMENT_SMTP_HOST"],
       domain: ENV["DEVELOPMENT_SMTP_DOMAIN"],
       port: ENV["DEVELOPMENT_SMTP_PORT"],
-      authentication: :cram_md5
+      authentication: :cram_md5,
     }
   else
     config.action_mailer.delivery_method = :letter_opener_web

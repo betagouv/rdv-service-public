@@ -9,7 +9,7 @@ module Payloads
         ends_at: first_occurrence_ends_at,
         ical_uid: ical_uid,
         summary: "#{BRAND} #{title}",
-        recurrence: rrule
+        recurrence: rrule,
       }
 
       payload[:action] = action if action.present?

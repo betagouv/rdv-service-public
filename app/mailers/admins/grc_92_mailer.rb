@@ -11,7 +11,7 @@ class Admins::Grc92Mailer < ApplicationMailer
       password: ENV["ALTERNATE_SMTP_PASSWORD"],
       address: ENV["ALTERNATE_SMTP_ADDRESS"],
       port: ENV["ALTERNATE_SMTP_PORT"],
-      authentication: ENV["ALTERNATE_SMTP_AUTHENTIFICATION"]
+      authentication: ENV["ALTERNATE_SMTP_AUTHENTIFICATION"],
     }
 
     mail(to: recipient, subject: phone_number, delivery_method_options: delivery_options) do |format|

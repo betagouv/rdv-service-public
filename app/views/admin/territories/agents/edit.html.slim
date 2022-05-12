@@ -8,16 +8,16 @@
           label_method: :name,
           input_html: { \
             multiple: true, \
-            class: "select2-input",\
-            data: {\
-              "select-options": {\
-                ajax: {\
+            class: "select2-input", \
+            data: { \
+              "select-options": { \
+                ajax: { \
                   url: search_admin_territory_teams_path(current_territory),
                   dataType: "json",
-                  delay: 250\
-                }\
-              }\
-            }\
+                  delay: 250, \
+                }, \
+              }, \
+            }, \
           }
     = form.submit class: "btn btn-primary"
 

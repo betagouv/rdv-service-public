@@ -23,7 +23,7 @@ describe Admin::RdvSearchForm do
         lieu_id: lieu.id,
         show_user_details: nil,
         status: nil,
-        user_id: nil
+        user_id: nil,
       }
       expect(agent_rdv_search_form.to_query).to eq(expected_query)
     end

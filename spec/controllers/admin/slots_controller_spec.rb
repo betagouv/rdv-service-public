@@ -23,7 +23,7 @@ describe Admin::SlotsController, type: :controller do
         motif_id: motif.id,
         from_date: from_date,
         agent_ids: agent_ids,
-        lieu_id: lieu
+        lieu_id: lieu,
       }
 
       expect(assigns(:search_result)).not_to be_nil

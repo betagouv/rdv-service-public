@@ -12,7 +12,7 @@ class DuplicateUsersFinderService < BaseService
     [
       self.class.find_duplicate_based_on_email(@user, @organisation),
       self.class.find_duplicate_based_on_identity(@user, @organisation),
-      self.class.find_duplicate_based_on_phone_number(@user, @organisation)
+      self.class.find_duplicate_based_on_phone_number(@user, @organisation),
     ].compact
   end
 

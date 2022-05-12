@@ -23,7 +23,7 @@ module Admin::RdvWizardFormConcern
       rdv_defaults = {
         agent_ids: [agent_author.id],
         organisation_id: organisation.id,
-        starts_at: Time.zone.now
+        starts_at: Time.zone.now,
       }
       @organisation = organisation
       @agent_author = agent_author
@@ -42,7 +42,7 @@ module Admin::RdvWizardFormConcern
       user_ids: rdv.rdvs_users&.map(&:user_id),
       agent_ids: rdv.agents&.map(&:id),
       context: rdv.context,
-      service_id: service_id
+      service_id: service_id,
     }
 
     if rdv.lieu.present?

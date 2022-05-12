@@ -7,7 +7,7 @@ class DemoThing
   def self.attribute_types
     {
       "some_str" => ActiveModel::Type::String.new,
-      "some_bool" => ActiveModel::Type::Boolean.new
+      "some_bool" => ActiveModel::Type::Boolean.new,
     }
   end
 
@@ -16,7 +16,7 @@ class DemoThing
       "some_strs.value_one" => "My string value",
       "some_strs/specific_context.value_one" => "My string value in context",
       "some_bools.true" => "My bool is true",
-      "some_bools.false" => "My bool is false"
+      "some_bools.false" => "My bool is false",
     }
     i18n[key]
   end

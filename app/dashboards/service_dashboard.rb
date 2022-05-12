@@ -16,7 +16,7 @@ class ServiceDashboard < Administrate::BaseDashboard
     agents: Field::HasMany,
     motifs: Field::HasMany,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime
+    updated_at: Field::DateTime,
   }.freeze
 
   # COLLECTION_ATTRIBUTES

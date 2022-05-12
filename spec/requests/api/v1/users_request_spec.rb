@@ -61,7 +61,7 @@ describe "api/v1/users requests", type: :request do
           params: {
             organisation_ids: [organisation.id],
             first_name: "Jean",
-            last_name: "Jacques"
+            last_name: "Jacques",
           },
           headers: api_auth_headers_for_agent(agent)
         )
@@ -95,7 +95,7 @@ describe "api/v1/users requests", type: :request do
             family_situation: "single",
             number_of_children: 3,
             notify_by_sms: false,
-            notify_by_email: false
+            notify_by_email: false,
           },
           headers: api_auth_headers_for_agent(agent)
         )
@@ -132,7 +132,7 @@ describe "api/v1/users requests", type: :request do
             organisation_ids: [organisation.id],
             first_name: "Jean",
             last_name: "Jacques",
-            responsible_id: user_responsible.id
+            responsible_id: user_responsible.id,
           },
           headers: api_auth_headers_for_agent(agent)
         )
@@ -175,7 +175,7 @@ describe "api/v1/users requests", type: :request do
           api_v1_users_path,
           params: {
             organisation_ids: [organisation.id],
-            first_name: "Jean" # missing last_name
+            first_name: "Jean", # missing last_name
           },
           headers: api_auth_headers_for_agent(agent)
         )
@@ -197,7 +197,7 @@ describe "api/v1/users requests", type: :request do
             organisation_ids: [organisation.id],
             first_name: "Jean",
             last_name: "Jacques",
-            phone_number: "blah blah"
+            phone_number: "blah blah",
           },
           headers: api_auth_headers_for_agent(agent)
         )
@@ -220,7 +220,7 @@ describe "api/v1/users requests", type: :request do
             organisation_ids: [organisation.id],
             first_name: "Jean",
             last_name: "Jacques",
-            email: "jean@jacques.fr"
+            email: "jean@jacques.fr",
           },
           headers: api_auth_headers_for_agent(agent)
         )
@@ -376,7 +376,7 @@ describe "api/v1/users requests", type: :request do
           invite_api_v1_user_path(user),
           headers: api_auth_headers_for_agent(agent),
           params: {
-            invite_for: 86_400 # invite_for en secondes (86400 = 1 jour),
+            invite_for: 86_400, # invite_for en secondes (86400 = 1 jour),
           },
           as: :json
         )
@@ -445,7 +445,7 @@ describe "api/v1/users requests", type: :request do
           api_v1_user_path(user),
           params: {
             first_name: "Alain",
-            last_name: "Deloin"
+            last_name: "Deloin",
           },
           headers: api_auth_headers_for_agent(agent)
         )
@@ -475,7 +475,7 @@ describe "api/v1/users requests", type: :request do
             family_situation: "single",
             number_of_children: 3,
             notify_by_sms: false,
-            notify_by_email: false
+            notify_by_email: false,
           },
           headers: api_auth_headers_for_agent(agent)
         )
@@ -509,7 +509,7 @@ describe "api/v1/users requests", type: :request do
           params: {
             first_name: "Alain",
             last_name: "Deloin",
-            responsible_id: user_responsible.id
+            responsible_id: user_responsible.id,
           },
           headers: api_auth_headers_for_agent(agent)
         )
@@ -530,7 +530,7 @@ describe "api/v1/users requests", type: :request do
           params: {
             first_name: "Jean",
             last_name: "Jacques",
-            phone_number: "blah blah"
+            phone_number: "blah blah",
           },
           headers: api_auth_headers_for_agent(agent)
         )
@@ -549,7 +549,7 @@ describe "api/v1/users requests", type: :request do
           params: {
             first_name: "Jean",
             last_name: "Jacques",
-            email: "jean@jacques.fr"
+            email: "jean@jacques.fr",
           },
           headers: api_auth_headers_for_agent(agent)
         )

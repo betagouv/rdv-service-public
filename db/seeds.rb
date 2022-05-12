@@ -102,7 +102,7 @@ human_id_map = [
   { human_id: "1051", name: "MDS Noeux les Mines" },
   { human_id: "1053", name: "MDS St Martin les Boulogne" },
   { human_id: "1054", name: "MDS St Omer" },
-  { human_id: "1055", name: "MDS St Pol sur Ternoise" }
+  { human_id: "1055", name: "MDS St Pol sur Ternoise" },
 ].to_h do |attributes|
   organisation = Organisation.create!(phone_number: "0123456789", territory: territory62, human_id: attributes[:human_id], name: attributes[:name])
   sector = Sector.create!(name: "Secteur de #{attributes[:name][4..]}", human_id: attributes[:human_id], territory: territory62)
@@ -341,7 +341,7 @@ motifs_attributes = 1000.times.map do |i|
     organisation_id: org_arques.id,
     service_id: service_secretariat.id,
     reservable_online: true,
-    location_type: :public_office
+    location_type: :public_office,
   }
 end
 Motif.insert_all!(motifs_attributes) # rubocop:disable Rails/SkipsModelValidations
@@ -420,7 +420,7 @@ lieux_attributes = 100.times.map do |i|
     availability: :enabled,
     address: "Adresse #{i}",
     latitude: 45 + (i.to_f / 100.0),
-    longitude: 2 + (i.to_f / 100.0)
+    longitude: 2 + (i.to_f / 100.0),
   }
 end
 Lieu.insert_all!(lieux_attributes) # rubocop:disable Rails/SkipsModelValidations
@@ -507,7 +507,7 @@ users_attributes = 10_000.times.map do |i|
     email: "email_#{i}@test.com",
     phone_number: (format "+336%08d", i),
     phone_number_formatted: (format "+336%08d", i),
-    created_through: "user_sign_up"
+    created_through: "user_sign_up",
   }
   search_terms = attrs.slice(*User.search_keys).values.compact.join(" ")
   attrs.merge(search_terms: search_terms)
@@ -631,7 +631,7 @@ agent_orgs_rdv_insertion = Agent.new(
   roles_attributes: [
     { organisation: org_drome1, level: AgentRole::LEVEL_ADMIN },
     { organisation: org_drome2, level: AgentRole::LEVEL_ADMIN },
-    { organisation: org_yonne, level: AgentRole::LEVEL_ADMIN }
+    { organisation: org_yonne, level: AgentRole::LEVEL_ADMIN },
   ],
   agent_territorial_access_rights_attributes: [{ territory: territory_drome, allow_to_manage_teams: true }, { territory: territory_yonne, allow_to_manage_teams: true }]
 )
@@ -650,7 +650,7 @@ agents_attributes = 1_000.times.map do |i|
     last_name: "last_name_#{i}",
     email: "email_#{i}@test.com",
     uid: "email_#{i}@test.com",
-    service_id: service_social.id
+    service_id: service_social.id,
   }
   search_terms = attrs.slice(*Agent.search_keys).values.compact.join(" ")
   attrs.merge(search_terms: search_terms)
@@ -720,7 +720,7 @@ _plage_ouverture_org_paris_nord_marco_perm = PlageOuverture.create!(
   agent_id: agent_org_paris_nord_pmi_marco.id,
   lieu_id: lieu_org_paris_nord_bd_aubervilliers.id,
   motif_ids: [motif_org_paris_nord_pmi_rappel.id, motif_org_paris_nord_pmi_gyneco.id, motif_org_paris_nord_pmi_prenatale.id, motif_org_paris_nord_pmi_suivi.id, motif_org_paris_nord_pmi_securite.id,
-              motif_org_paris_nord_pmi_prenatale_phone.id],
+              motif_org_paris_nord_pmi_prenatale_phone.id,],
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(14),
   end_time: Tod::TimeOfDay.new(16),
@@ -877,7 +877,7 @@ rdv_attributes = 1000.times.flat_map do |i|
       motif_id: motif_org_paris_nord_pmi_securite.id,
       lieu_id: lieu_org_paris_nord_bd_aubervilliers.id,
       organisation_id: org_paris_nord.id,
-      context: "Context #{day} #{hour}"
+      context: "Context #{day} #{hour}",
     }
   end
 end

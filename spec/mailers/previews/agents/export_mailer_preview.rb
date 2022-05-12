@@ -5,7 +5,7 @@ class Agents::ExportMailerPreview < ActionMailer::Preview
     agent = Agent.first
     options = {
       start: Time.zone.today - 4.years - 7.days,
-      end: Time.zone.today - 4.years
+      end: Time.zone.today - 4.years,
     }
     Agents::ExportMailer.rdv_export(agent, agent.organisations.first, options)
   end

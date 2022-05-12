@@ -44,7 +44,7 @@ class Stat
     new_keys = {
       agent: "Agent (#{rdvs.created_by_agent.count})",
       user: "Usager (#{rdvs.created_by_user.count})",
-      file_attente: "File d'attente (#{rdvs.created_by_file_attente.count})"
+      file_attente: "File d'attente (#{rdvs.created_by_file_attente.count})",
     }
     rdvs_group_by_week.transform_keys { |key| [new_keys[key[0].to_sym], key[1]] }
   end
@@ -68,7 +68,7 @@ class Stat
       date_rdvs_count = rdvs_count_per_date[key[1]]
       [
         [::Rdv.human_attribute_value(:status, key[0]), key[1]],
-        date_rdvs_count.zero? ? 0 : (rdvs_count.to_f * 100 / date_rdvs_count).round
+        date_rdvs_count.zero? ? 0 : (rdvs_count.to_f * 100 / date_rdvs_count).round,
       ]
     end
   end

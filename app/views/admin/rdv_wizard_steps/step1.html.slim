@@ -15,8 +15,8 @@
         class: "select2-input js-service-filter", \
         data: { \
           placeholder: "Sélectionnez un service pour filtrer les motifs", \
-          "select-options": { disableSearch: true } \
-        } \
+          "select-options": { disableSearch: true }, \
+        }, \
       }
     = f.input :motif_id, \
       required: true, \
@@ -27,7 +27,7 @@
       label_method: -> { motif_name_with_location_type(_1) }, \
       input_html: { \
         data: { placeholder: "Sélectionnez un motif" },
-        class: "js-filtered-motifs" \
+        class: "js-filtered-motifs", \
       }
 
     = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f

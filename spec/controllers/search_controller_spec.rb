@@ -56,7 +56,7 @@ RSpec.describe SearchController, type: :controller do
         it "redirects with an error message" do
           get :search_rdv, params: {
             organisation_ids: [organisation.id], address: address, departement: departement_number, city_code: city_code,
-            invitation_token: invitation_token
+            invitation_token: invitation_token,
           }
           expect(response).to redirect_to(root_path)
           expect(flash[:error]).to include("Votre invitation n'est pas valide.")
@@ -73,7 +73,7 @@ RSpec.describe SearchController, type: :controller do
         it "redirects with an error message" do
           get :search_rdv, params: {
             organisation_ids: [organisation.id], address: address, departement: departement_number, city_code: city_code,
-            invitation_token: invitation_token
+            invitation_token: invitation_token,
           }
           expect(response).to redirect_to(root_path)
           expect(flash[:error]).to include("L’utilisateur connecté ne correspond pas à l’utilisateur invité. Déconnectez-vous et réessayez.")
@@ -86,7 +86,7 @@ RSpec.describe SearchController, type: :controller do
 
       it "lists the motifs retrieved by the geo search" do
         get :search_rdv, params: {
-          address: address, departement: departement_number, city_code: city_code
+          address: address, departement: departement_number, city_code: city_code,
         }
         expect(subject).to include("RSA orientation 1")
         expect(subject).to include("RSA orientation 2")
@@ -96,7 +96,7 @@ RSpec.describe SearchController, type: :controller do
       context "when a motif category is passed" do
         it "retrieves motifs from the selected category" do
           get :search_rdv, params: {
-            address: address, departement: departement_number, city_code: city_code, motif_category: "rsa_orientation"
+            address: address, departement: departement_number, city_code: city_code, motif_category: "rsa_orientation",
           }
           expect(subject).to include("RSA orientation 1")
           expect(subject).not_to include("RSA orientation 2")
@@ -111,7 +111,7 @@ RSpec.describe SearchController, type: :controller do
         it "lists the available motifs that match the search terms" do
           get :search_rdv, params: {
             address: address, departement: departement_number, city_code: city_code,
-            invitation_token: invitation_token, motif_search_terms: "RSA orientation"
+            invitation_token: invitation_token, motif_search_terms: "RSA orientation",
           }
           expect(subject).to include("RSA orientation 1")
           expect(subject).to include("RSA orientation 2")
@@ -129,7 +129,7 @@ RSpec.describe SearchController, type: :controller do
           it "lists the available motifs" do
             get :search_rdv, params: {
               address: address, departement: departement_number, city_code: city_code,
-              invitation_token: invitation_token
+              invitation_token: invitation_token,
             }
             expect(subject).to include("RSA orientation 2")
             expect(subject).not_to include("RSA orientation 1")
@@ -142,7 +142,7 @@ RSpec.describe SearchController, type: :controller do
           it "lists the matching motifs linked to the orgas passed in the url" do
             get :search_rdv, params: {
               organisation_ids: [organisation.id], address: address, departement: departement_number, city_code: city_code,
-              invitation_token: invitation_token, motif_category: "rsa_orientation"
+              invitation_token: invitation_token, motif_category: "rsa_orientation",
             }
             expect(subject).to include("RSA orientation 1")
             expect(subject).not_to include("RSA orientation 2")
@@ -153,7 +153,7 @@ RSpec.describe SearchController, type: :controller do
           it "reveals a problem when no motifs are available" do
             get :search_rdv, params: {
               organisation_ids: [other_org.id], address: address, departement: departement_number, city_code: city_code,
-              invitation_token: invitation_token, motif_search_terms: "something random"
+              invitation_token: invitation_token, motif_search_terms: "something random",
             }
             expect(subject).to include("Nous sommes désolés, un problème semble s'être produit pour votre invitation.")
             expect(subject).to include("support@rdv-solidarites.fr")
@@ -175,7 +175,7 @@ RSpec.describe SearchController, type: :controller do
 
       it "lists the the available lieux linked to the motifs" do
         get :search_rdv, params: {
-          address: address, departement: departement_number, city_code: city_code
+          address: address, departement: departement_number, city_code: city_code,
         }
         expect(subject).to include("Lieu numéro 1")
         expect(subject).not_to include("Lieu numéro 2")
@@ -190,7 +190,7 @@ RSpec.describe SearchController, type: :controller do
         )
         allow(NextAvailabilityService).to receive(:find).and_return(slot)
         get :search_rdv, params: {
-          address: address, departement: departement_number, city_code: city_code
+          address: address, departement: departement_number, city_code: city_code,
         }
         expect(subject).to match(/Prochaine disponibilité le(.)*lundi 05 août 2019 à 08h00/)
       end
@@ -217,7 +217,7 @@ RSpec.describe SearchController, type: :controller do
 
         it "returns a creneau" do
           get :search_rdv, params: {
-            lieu_id: lieu.id, address: address, departement: departement_number, city_code: city_code
+            lieu_id: lieu.id, address: address, departement: departement_number, city_code: city_code,
           }
           expect(subject).to include("08:00")
         end
@@ -234,7 +234,7 @@ RSpec.describe SearchController, type: :controller do
 
         it "returns next availability" do
           get :search_rdv, params: {
-            lieu_id: lieu.id, address: address, departement: departement_number, city_code: city_code
+            lieu_id: lieu.id, address: address, departement: departement_number, city_code: city_code,
           }
           expect(subject).to match(/Prochaine disponibilité le(.)*lundi 05 août 2019 à 08h00/)
         end

@@ -60,7 +60,7 @@ describe "api/v1/absences requests", type: :request do
         first_day: "2020-11-20",
         start_time: "08:00",
         end_day: "2020-11-20",
-        end_time: "18:30"
+        end_time: "18:30",
       }
     end
 

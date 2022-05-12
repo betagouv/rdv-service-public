@@ -134,7 +134,7 @@ describe Admin::RdvsController, type: :controller do
         agent_id: "",
         user_id: "",
         lieu_id: "",
-        status: ""
+        status: "",
       }
 
       # rubocop:disable RSpec/StubbedMock
