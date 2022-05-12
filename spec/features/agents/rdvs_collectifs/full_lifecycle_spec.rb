@@ -35,14 +35,16 @@ describe "Agent can organize a rdv collectif", js: true do
 
     if lieu_availability == :enabled
       select(lieu.name, from: "rdv_lieu_id")
-      click_button "Enregistrer"
+      
     else
       click_link("Définir un lieu ponctuel.")
-      fill_in "Nom", with: "Café de la gare"
+      fill_in :rdv_lieu_attributes_name, with: "Café de la gare"
       fill_in "Adresse", with: "3 Place de la Gare, Strasbourg, 67000, 67, Bas-Rhin, Grand Est"
       page.execute_script("document.querySelector('input#rdv_lieu_attributes_latitude').value = '48.583844'")
       page.execute_script("document.querySelector('input#rdv_lieu_attributes_longitude').value = 7.735253")
     end
+
+    click_button "Enregistrer"
     expect(page).to have_content("Atelier participatif créé")
 
     expect(page).to have_content("Jeudi 17 mars à 14:00")
