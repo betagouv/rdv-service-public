@@ -17,6 +17,9 @@
     },
     "RDV_SOLIDARITES_IS_REVIEW_APP": {
       "value": "true"
+    },
+    "SENTRY_CURRENT_ENV": {
+      "value": "review_app"
     }
   },
   "scripts": {
