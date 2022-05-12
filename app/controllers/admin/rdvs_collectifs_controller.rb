@@ -77,7 +77,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
     if params[:rdv][:lieu_id].present?
       params.require(:rdv).permit(*create_attribute_names, *create_attributes_rdvs)
     else
-      params.require(:rdv).permit(*create_attribute_names, *create_attributes_rdvs).to_h.deep_merge(lieu_attributes: {organisation: current_organisation, availability: :single_use})
+      params.require(:rdv).permit(*create_attribute_names, *create_attributes_rdvs).to_h.deep_merge(lieu_attributes: { organisation: current_organisation, availability: :single_use })
     end
   end
 
