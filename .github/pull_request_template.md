@@ -1,10 +1,12 @@
-Close #issue_number
+Closes #issue_number
 
-AVANT LA REVUE
+# Checklist
+
+Avant la revue :
 - [ ] Préparer des captures de l’interface avant et après
 - [ ] Nettoyer les commits pour faciliter la relecture
 - [ ] Supprimer les éventuels logs de test et le code mort
 
-REVUE
+Revue :
 - [ ] Relecture du code
 - [ ] Test sur la review app / en local

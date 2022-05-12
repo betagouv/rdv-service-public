@@ -30,6 +30,16 @@ class Agent < ApplicationRecord
     none: "none"      # never send rdv notifications
   }, _prefix: true
 
+  enum plage_ouverture_notification_level: {
+    all: "all", # notify of all changes
+    none: "none" # never send plage_ouverture notifications
+  }, _prefix: true
+
+  enum absence_notification_level: {
+    all: "all", # notify of all changes
+    none: "none" # never send absence notifications
+  }, _prefix: true
+
   # Relations
   belongs_to :service
   has_many :agent_territorial_access_rights, dependent: :destroy
