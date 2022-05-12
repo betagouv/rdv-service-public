@@ -8,16 +8,16 @@ describe OrganisationsController, type: :controller do
         organisation: {
           name: "Ma nouvelle orga",
           territory_attributes: {
-            departement_number: "56"
+            departement_number: "56",
           },
           agent_roles_attributes: [{
             level: "admin",
             agent_attributes: {
               email: "me@myself.hi",
-              service_id: service.id
-            }
-          }]
-        }
+              service_id: service.id,
+            },
+          }],
+        },
       }
 
       expect(Territory.count).to eq 0
@@ -38,16 +38,16 @@ describe OrganisationsController, type: :controller do
         organisation: {
           name: "Ma nouvelle orga",
           territory_attributes: {
-            departement_number: "56"
+            departement_number: "56",
           },
           agent_roles_attributes: [{
             level: "admin",
             agent_attributes: {
               email: "me@myself.hi",
-              service_id: "unknow" # this is the error
-            }
-          }]
-        }
+              service_id: "unknow", # this is the error
+            },
+          }],
+        },
       }
 
       post :create, params: params

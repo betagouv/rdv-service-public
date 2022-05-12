@@ -3,7 +3,7 @@
   url: zone.new_record? ? admin_territory_sector_zones_path(current_territory, sector) : admin_territory_sector_zone_path(current_territory, sector, zone), \
   html: { \
     class: "js-zone-form", \
-    data: { "canonical-path": new_admin_territory_sector_zone_path(current_territory, sector)} \
+    data: { "canonical-path": new_admin_territory_sector_zone_path(current_territory, sector)}, \
   } \
 ) do |f|
   = f.input_field :level, \
@@ -30,14 +30,14 @@
       label: "Rechercher une commune", \
       input_html: { \
         class: "places-js-container", \
-        data: { "address-type": "municipality" } \
+        data: { "address-type": "municipality" }, \
       }
   - elsif zone.level_street?
     = f.input :street_label, \
       label: "Rechercher une rue", \
       input_html: { \
         class: "places-js-container", \
-        data: { "address-type": "street" } \
+        data: { "address-type": "street" }, \
       }
   .row
     .col-6

@@ -54,7 +54,7 @@ module IcsMultipartAttached
       message.attachments[ics_payload[:name]] = {
         mime_type: "application/ics",
         content: Base64.encode64(cal.to_ical),
-        encoding: "base64"
+        encoding: "base64",
       }
     end
 

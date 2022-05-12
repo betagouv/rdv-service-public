@@ -46,7 +46,7 @@ class UpsertUserForFranceconnectService < BaseService
       birth_date: omniauth_info.birthdate,
       franceconnect_openid_sub: omniauth_info.sub,
       last_name: omniauth_info.preferred_username.presence || omniauth_info.family_name, # nom d'usage (optionnel),
-      logged_once_with_franceconnect: true
+      logged_once_with_franceconnect: true,
     }.compact # do not fill with missing values
   end
 end

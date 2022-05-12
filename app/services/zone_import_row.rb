@@ -5,7 +5,7 @@ class ZoneImportRow
 
   REQUIRED_FIELDS = {
     Zone::LEVEL_CITY => %w[sector_id city_name city_code],
-    Zone::LEVEL_STREET => %w[sector_id city_name city_code street_name street_code]
+    Zone::LEVEL_STREET => %w[sector_id city_name city_code street_name street_code],
   }.freeze
 
   def initialize(row, agent:, dry_run:, sectors_by_human_id:)
@@ -62,7 +62,7 @@ class ZoneImportRow
 
     @errors << {
       key: "invalid_zone_#{zone.errors.attribute_names.first}".to_sym,
-      message: zone.errors.full_messages.join(", ")
+      message: zone.errors.full_messages.join(", "),
     }
     false
   end
@@ -75,7 +75,7 @@ class ZoneImportRow
 
     @errors << {
       key: :unauthorized_zone,
-      message: "Pas les droits nécessaires pour ajouter une commune ou une rue au secteur #{zone.sector_id}"
+      message: "Pas les droits nécessaires pour ajouter une commune ou une rue au secteur #{zone.sector_id}",
     }
     false
   end
@@ -92,7 +92,7 @@ class ZoneImportRow
     unique_attributes = {
       level: zone_level,
       city_code: @row["city_code"],
-      sector: @sectors_by_human_id[@row["sector_id"]]
+      sector: @sectors_by_human_id[@row["sector_id"]],
     }
     unique_attributes[:street_ban_id] = @row["street_code"] if zone_level == Zone::LEVEL_STREET
     extra_attributes = { city_name: @row["city_name"], street_name: @row["street_name"] }

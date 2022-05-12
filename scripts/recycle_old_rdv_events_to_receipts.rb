@@ -16,7 +16,7 @@ event_name_to_event = {
   file_attente_creneaux_available: :new_creneau_available,
   created: :rdv_created,
   updated: :rdv_date_updated,
-  upcoming_reminder: :rdv_upcoming_reminder
+  upcoming_reminder: :rdv_upcoming_reminder,
 }
 
 # Do everything in a large transaction; errors raised will cancel it all.
@@ -32,7 +32,7 @@ Receipt.transaction do
         channel: type_to_channel[event.event_type.to_sym],
         result: :processed,
         created_at: event.created_at,
-        updated_at: event.created_at
+        updated_at: event.created_at,
       }
       # We don’t have a user_id; RdvEvent used to be sent to all users;
       # We also don’t have content, sms_phone_number or email_address,

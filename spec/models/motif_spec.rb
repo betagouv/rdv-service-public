@@ -171,7 +171,7 @@ describe Motif, type: :model do
       expect(motif).not_to be_valid
       expect(subject.errors.full_messages).to eq [
         "La réservation en ligne n'est pas possible pour les RDV collectifs.",
-        "Les RDV collectifs doivent avoir lieu sur place."
+        "Les RDV collectifs doivent avoir lieu sur place.",
       ]
     end
   end

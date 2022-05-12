@@ -14,7 +14,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
       identifier: ENV["FRANCECONNECT_APP_ID"],
       secret: ENV["FRANCECONNECT_APP_SECRET"],
       redirect_uri: "#{ENV['HOST']}/omniauth/franceconnect/callback",
-      host: ENV["FRANCECONNECT_HOST"]
+      host: ENV["FRANCECONNECT_HOST"],
     }
   )
 

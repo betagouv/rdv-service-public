@@ -7,7 +7,7 @@ class Agents::ExportMailer < ApplicationMailer
 
     mail.attachments["export-rdv-#{now.strftime('%Y-%m-%d')}.xls"] = {
       mime_type: "application/vnd.ms-excel",
-      content: RdvExporter.export(rdvs.order(starts_at: :desc))
+      content: RdvExporter.export(rdvs.order(starts_at: :desc)),
     }
 
     mail(

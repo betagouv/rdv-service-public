@@ -54,7 +54,7 @@ class Admin::UserForm
       locals: {
         user: duplicate_result.user,
         attributes: duplicate_result.attributes,
-        **@view_locals
+        **@view_locals,
       }
     )
   end

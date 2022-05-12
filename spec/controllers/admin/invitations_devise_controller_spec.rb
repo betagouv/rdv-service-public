@@ -61,10 +61,10 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic"
-              }
-            }
-          }
+                level: "basic",
+              },
+            },
+          },
         }
       end
 
@@ -83,10 +83,10 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic"
-              }
-            }
-          }
+                level: "basic",
+              },
+            },
+          },
         }
       end
 
@@ -106,10 +106,10 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             roles_attributes: {
               "0" => {
                 level: "basic",
-                organisation_id: organisation2.id
-              }
-            }
-          }
+                organisation_id: organisation2.id,
+              },
+            },
+          },
         }
       end
 
@@ -128,10 +128,10 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "admin"
-              }
-            }
-          }
+                level: "admin",
+              },
+            },
+          },
         }
       end
 
@@ -156,8 +156,8 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             agent: {
               email: agent2.email,
               service_id: agent2.service_id,
-              roles_attributes: { "0" => { level: "basic" } }
-            }
+              roles_attributes: { "0" => { level: "basic" } },
+            },
           }
         end
 
@@ -177,10 +177,10 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic"
-              }
-            }
-          }
+                level: "basic",
+              },
+            },
+          },
         }
       end
 
@@ -208,10 +208,10 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic"
-              }
-            }
-          }
+                level: "basic",
+              },
+            },
+          },
         }
       end
 
@@ -239,10 +239,10 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic"
-              }
-            }
-          }
+                level: "basic",
+              },
+            },
+          },
         }
       end
 
@@ -303,10 +303,10 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
             service_id: service_id,
             roles_attributes: {
               "0" => {
-                level: "basic"
-              }
-            }
-          }
+                level: "basic",
+              },
+            },
+          },
         }
       end
       let!(:existing_agent) do

@@ -40,7 +40,7 @@ class RdvEndingShortlyBeforePresenter
     {
       agent_name: agent.full_name,
       ends_at_time: I18n.l(rdv.ends_at, format: :time_only),
-      gap_duration_in_min: ((rdv_context.starts_at - rdv.ends_at) / 1.minute).round
+      gap_duration_in_min: ((rdv_context.starts_at - rdv.ends_at) / 1.minute).round,
     }
   end
 
@@ -49,7 +49,7 @@ class RdvEndingShortlyBeforePresenter
 
     {
       user_names: rdv.users.map(&:full_name).to_sentence,
-      path: admin_organisation_rdv_path(rdv.organisation, rdv)
+      path: admin_organisation_rdv_path(rdv.organisation, rdv),
     }
   end
 end

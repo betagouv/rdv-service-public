@@ -11,7 +11,7 @@ class CreateTerritories < ActiveRecord::Migration[6.0]
     "77" => "0164147777",
     "80" => "0322718080",
     "92" => "0806000092",
-    "95" => "0134253030"
+    "95" => "0134253030",
   }.freeze
 
   def up

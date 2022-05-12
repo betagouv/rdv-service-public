@@ -18,7 +18,7 @@ class Admin::UsersController < AgentAuthController
 
   PERMITTED_NESTED_ATTRIBUTES = {
     agent_ids: [],
-    user_profiles_attributes: %i[notes logement id organisation_id]
+    user_profiles_attributes: %i[notes logement id organisation_id],
   }.freeze
 
   def index
@@ -162,7 +162,7 @@ class Admin::UsersController < AgentAuthController
       view_locals: {
         current_organisation: current_organisation,
         from_modal: from_modal?,
-        return_location: params[:return_location]
+        return_location: params[:return_location],
       }
     )
   end

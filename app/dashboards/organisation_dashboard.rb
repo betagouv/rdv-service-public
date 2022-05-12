@@ -19,7 +19,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     human_id: Field::String,
     territory: Field::BelongsTo,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime
+    updated_at: Field::DateTime,
   }.freeze
 
   # COLLECTION_ATTRIBUTES

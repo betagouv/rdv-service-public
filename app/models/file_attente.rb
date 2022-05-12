@@ -53,7 +53,7 @@ class FileAttente < ApplicationRecord
         event: :new_creneau_available,
         channel: :mail,
         result: :processed,
-        email_address: user.email
+        email_address: user.email,
       }
       Receipt.create!(params)
     end

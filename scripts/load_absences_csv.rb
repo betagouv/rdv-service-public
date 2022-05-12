@@ -33,7 +33,7 @@ csv.each do |row|
       first_day: Date.parse(row[0]),
       start_time: Time.zone.parse(row[1]).to_time,
       end_day: Date.parse(row[2]),
-      end_time: Time.zone.parse(row[3]).to_time
+      end_time: Time.zone.parse(row[3]).to_time,
     }
   rescue StandardError
     puts "#{ligne} - erreur d'analyse de la ligne"

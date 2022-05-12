@@ -30,7 +30,7 @@ class SmsSender < BaseService
   def formatted_content(content)
     [
       ApplicationController.helpers.rdv_solidarites_instance_name,
-      content
+      content,
     ].compact
       .join("\n")
       .tr("áâãëẽêíïîĩóôõúûũçÀÁÂÃÈËẼÊÌÍÏÎĨÒÓÔÕÙÚÛŨ", "aaaeeeiiiiooouuucAAAAEEEEIIIIIOOOOUUUU")
@@ -99,7 +99,7 @@ class SmsSender < BaseService
         originatingAddress: SENDER_NAME,
         originatorTON: 1,
         campaignName: @tags.join(" ").truncate(49),
-        maxConcatenatedMessages: 10
+        maxConcatenatedMessages: 10,
       }
     ).run
 
@@ -135,7 +135,7 @@ class SmsSender < BaseService
         number: @phone_number,
         msg: @content,
         devCode: @key,
-        emetteur: replies_email # The parameter is called “emetteur” but it is actually an email where we can receive replies to the sms.
+        emetteur: replies_email, # The parameter is called “emetteur” but it is actually an email where we can receive replies to the sms.
       }
     ).run
 
@@ -184,8 +184,8 @@ class SmsSender < BaseService
         datas: {
           text: @content,
           number_list: @phone_number,
-          encodage: 3
-        }
+          encodage: 3,
+        },
       }.to_json
     ).run
 
@@ -220,7 +220,7 @@ class SmsSender < BaseService
       body: {
         token: @key,
         to: @phone_number,
-        msg: @content
+        msg: @content,
       }
     ).run
 

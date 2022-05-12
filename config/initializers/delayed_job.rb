@@ -12,5 +12,5 @@
 # :sms_low
 Delayed::Worker.queue_attributes = {
   mailers_low: { priority: 10 }, # Higher numbers have lower priority.
-  sms_low: { priority: 10 }
+  sms_low: { priority: 10 },
 }

@@ -22,7 +22,7 @@ describe RdvBlueprint do
                                      "created_by" => "agent",
                                      "duration_in_min" => 45,
                                      "max_participants_count" => nil,
-                                     "name" => nil
+                                     "name" => nil,
                                    })
   end
 end

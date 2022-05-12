@@ -49,7 +49,7 @@ class UserAuthController < ApplicationController
 
   def set_user_name_initials_verified
     cookies.encrypted[user_name_initials_cookie_name] = {
-      value: true, expires: 10.minutes.from_now
+      value: true, expires: 10.minutes.from_now,
     }
   end
 

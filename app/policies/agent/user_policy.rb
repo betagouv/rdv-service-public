@@ -34,7 +34,7 @@ class Agent::UserPolicy < DefaultAgentPolicy
         .joins(:organisations)
         .where(
           organisations: {
-            id: current_organisation&.id || current_agent.organisation_ids
+            id: current_organisation&.id || current_agent.organisation_ids,
           }
         )
     end

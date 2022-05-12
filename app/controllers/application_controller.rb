@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
     {
       id: user&.id,
       role: user&.class&.name || "Guest",
-      email: user&.email
+      email: user&.email,
     }.compact
   end
 

@@ -19,7 +19,7 @@ class CreateAgentTerritorialAccessRight < ActiveRecord::Migration[6.1]
             territory_id: territory.id,
             allow_to_manage_teams: AgentTerritorialRole.exists?(territory: territory, agent: agent),
             created_at: Time.zone.now,
-            updated_at: Time.zone.now
+            updated_at: Time.zone.now,
           }
         end
       end

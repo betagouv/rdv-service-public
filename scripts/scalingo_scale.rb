@@ -9,7 +9,7 @@ require "dotenv/load"
 
 HEADERS = {
   "Accept" => "application/json",
-  "Content-Type" => "application/json"
+  "Content-Type" => "application/json",
 }.freeze
 
 options = {}
@@ -53,8 +53,8 @@ res = JSON.parse(
       containers: [
         {
           name: options[:containers_name],
-          amount: options[:containers_amount]
-        }
+          amount: options[:containers_amount],
+        },
       ]
     )
   ).body

@@ -42,7 +42,7 @@ class SectorAttribution < ApplicationRecord
         {
           sectors_count: attributions.pluck(:sector_id).uniq.count,
           agents_count: attributions.pluck(:agent_id).uniq.count,
-          attributions: attributions
+          attributions: attributions,
         }
       end
   end

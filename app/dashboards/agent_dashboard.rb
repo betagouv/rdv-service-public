@@ -19,7 +19,7 @@ class AgentDashboard < Administrate::BaseDashboard
     invitation_sent_at: Field::DateTime,
     deleted_at: Field::DateTime,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime
+    updated_at: Field::DateTime,
   }.freeze
 
   # COLLECTION_ATTRIBUTES

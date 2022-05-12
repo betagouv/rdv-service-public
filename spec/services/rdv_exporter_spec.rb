@@ -24,7 +24,7 @@ describe RdvExporter, type: :service do
       it "return an header" do
         sheet = described_class.build_excel_workbook_from(Rdv.none).worksheet(0)
         expect(sheet.row(0)).to eq(["année", "date prise rdv", "heure prise rdv", "origine", "date rdv", "heure rdv", "service", "motif", "contexte", "statut", "lieu", "professionnel.le(s)",
-                                    "usager(s)", "commune du premier responsable", "au moins un usager mineur ?"])
+                                    "usager(s)", "commune du premier responsable", "au moins un usager mineur ?",])
       end
     end
   end

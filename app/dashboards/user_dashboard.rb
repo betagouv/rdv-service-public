@@ -27,7 +27,7 @@ class UserDashboard < Administrate::BaseDashboard
     birth_date: Field::DateTime,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
-    deleted_at: Field::DateTime
+    deleted_at: Field::DateTime,
   }.freeze
 
   # COLLECTION_ATTRIBUTES

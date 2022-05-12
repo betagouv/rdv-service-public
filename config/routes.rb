@@ -75,7 +75,7 @@ Rails.application.routes.draw do
   devise_for :agents, controllers: {
     invitations: "admin/invitations_devise", # only using the accept route here
     sessions: "agents/sessions",
-    passwords: "agents/passwords"
+    passwords: "agents/passwords",
   }
 
   devise_scope :agent do

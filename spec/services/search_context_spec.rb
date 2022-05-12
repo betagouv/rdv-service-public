@@ -20,7 +20,7 @@ describe SearchContext, type: :service do
   let!(:search_query) do
     {
       organisation_ids: [organisation.id], departement: departement_number, city_code: city_code,
-      latitude: latitude, longitude: longitude
+      latitude: latitude, longitude: longitude,
     }
   end
 

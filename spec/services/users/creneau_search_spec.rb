@@ -28,7 +28,7 @@ describe Users::CreneauSearch do
         [
           build(:creneau, starts_at: DateTime.parse("2020-10-20 09h30")),
           build(:creneau, starts_at: DateTime.parse("2020-10-20 10h00")),
-          build(:creneau, starts_at: DateTime.parse("2020-10-20 10h30"))
+          build(:creneau, starts_at: DateTime.parse("2020-10-20 10h30")),
         ]
       end
 
@@ -40,7 +40,7 @@ describe Users::CreneauSearch do
         [
           build(:creneau, starts_at: DateTime.parse("2020-10-20 10h00")),
           build(:creneau, starts_at: DateTime.parse("2020-10-20 10h30")),
-          build(:creneau, starts_at: DateTime.parse("2020-10-20 11h30"))
+          build(:creneau, starts_at: DateTime.parse("2020-10-20 11h30")),
         ]
       end
 

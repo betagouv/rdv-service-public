@@ -17,7 +17,7 @@ describe UserRdvWizard do
       lieu_id: lieu.id,
       user_ids: [user_for_rdv.id],
       departement: "62",
-      city_code: "62100"
+      city_code: "62100",
     }
   end
 
@@ -52,10 +52,10 @@ describe UserRdvWizard do
         user: {
           first_name: "Léa",
           last_name: "Boubakar",
-          phone_number: nil
+          phone_number: nil,
         },
         departement: "62",
-        city_code: "62100"
+        city_code: "62100",
       }
       rdv_wizard = UserRdvWizard::Step1.new(user, attributes)
       expect(rdv_wizard.save).to be true
@@ -71,10 +71,10 @@ describe UserRdvWizard do
         user: {
           first_name: "Léa",
           last_name: "Boubakar",
-          phone_number: nil
+          phone_number: nil,
         },
         departement: "62",
-        city_code: "62100"
+        city_code: "62100",
       }
       rdv_wizard = UserRdvWizard::Step1.new(user, attributes)
       expect(rdv_wizard.save).to be false

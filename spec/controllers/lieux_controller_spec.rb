@@ -83,8 +83,8 @@ RSpec.describe LieuxController, type: :controller do
             city_code: "62100",
             where: "useless 12345",
             service: motif.service_id,
-            motif_name_with_location_type: motif.name_with_location_type
-          }
+            motif_name_with_location_type: motif.name_with_location_type,
+          },
         }
       end
 
@@ -123,7 +123,7 @@ RSpec.describe LieuxController, type: :controller do
               Users::CreneauxSearch,
               creneaux: [
                 build(:creneau, starts_at: DateTime.parse("2019-07-22 08h00"), agent: create(:agent)),
-                build(:creneau, starts_at: DateTime.parse("2019-07-22 09h00"), agent: create(:agent))
+                build(:creneau, starts_at: DateTime.parse("2019-07-22 09h00"), agent: create(:agent)),
               ]
             )
           end
@@ -179,7 +179,7 @@ RSpec.describe LieuxController, type: :controller do
           departement: "62", city_code: "62100", where: "useless 12345",
           service: motif.service_id,
           motif_name_with_location_type: motif.name_with_location_type,
-          latitude: lieu.latitude, longitude: lieu.longitude
+          latitude: lieu.latitude, longitude: lieu.longitude,
         } }
         expect(response).to be_successful
       end
@@ -191,7 +191,7 @@ RSpec.describe LieuxController, type: :controller do
           departement: "62", city_code: "62100", where: "useless 12345",
           service: motif.service_id,
           motif_name_with_location_type: motif.name_with_location_type,
-          latitude: lieu.latitude, longitude: lieu.longitude
+          latitude: lieu.latitude, longitude: lieu.longitude,
         } }
         expect(assigns(:next_availability_by_lieux).count).to eq(2)
       end
@@ -203,7 +203,7 @@ RSpec.describe LieuxController, type: :controller do
           departement: "62", city_code: "62100", where: "useless 12345",
           service: motif.service_id,
           motif_name_with_location_type: motif.name_with_location_type,
-          latitude: lieu.latitude, longitude: lieu.longitude
+          latitude: lieu.latitude, longitude: lieu.longitude,
         } }
         expect(assigns(:lieux).first).to eq(lieu)
       end
@@ -215,7 +215,7 @@ RSpec.describe LieuxController, type: :controller do
           departement: "62", city_code: "62100", where: "useless 12345",
           service: motif.service_id,
           motif_name_with_location_type: motif.name_with_location_type,
-          latitude: lieu.latitude, longitude: lieu.longitude
+          latitude: lieu.latitude, longitude: lieu.longitude,
         } }
         expect(assigns(:next_availability_by_lieux).first.last.starts_at).to eq(Time.zone.parse("20190726 8"))
       end
@@ -228,7 +228,7 @@ RSpec.describe LieuxController, type: :controller do
         get :index, params: { search: { departement: "62", city_code: "62100", where: "useless 12345",
                                         service: motif.service_id,
                                         motif_name_with_location_type: motif.name_with_location_type,
-                                        latitude: lieu2.latitude, longitude: lieu2.longitude } }
+                                        latitude: lieu2.latitude, longitude: lieu2.longitude, } }
         expect(assigns(:lieux).first).to eq(lieu2)
       end
     end

@@ -34,7 +34,7 @@ class ExportZonesService
         zone.city_code,
         zone.city_name,
         zone.street_name,
-        zone.street_ban_id
+        zone.street_ban_id,
       ]
     )
   end
