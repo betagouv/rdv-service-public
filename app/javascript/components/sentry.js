@@ -4,7 +4,7 @@ function initSentry() {
   if (ENV.SENTRY_DSN_RAILS) {
     Sentry.init({
       dsn: ENV.SENTRY_DSN_RAILS,
-      environment: ENV.ENV,
+      environment: ENV.SENTRY_CURRENT_ENV,
     });
   }
 }
