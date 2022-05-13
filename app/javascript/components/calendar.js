@@ -71,7 +71,7 @@ class CalendarRdvSolidarites {
       selectable: true,
       select: this.selectEvent,
       header: {
-        center: 'dayGridMonth,timeGridWeek,timeGridOneDay'
+        center: 'dayGridMonth,timeGridWeek,timeGridOneDay,listWeek'
       },
       views: {
         timeGridOneDay: {
