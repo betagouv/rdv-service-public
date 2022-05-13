@@ -11,7 +11,7 @@ describe "Agent can organize a rdv collectif", js: true do
   let!(:user1) { create(:user, organisations: [organisation]) }
   let!(:user2) { create(:user, organisations: [organisation]) }
 
-  def createRDVCollectif(lieu_availability)
+  def create_rdv_collectif(lieu_availability)
     travel_to(Time.zone.local(2022, 3, 14))
     agent = create(:agent, basic_role_in_organisations: [organisation], service: service, first_name: "Alain", last_name: "DIALO")
     login_as(agent, scope: :agent)
@@ -64,4 +64,17 @@ describe "Agent can organize a rdv collectif", js: true do
 
     expect(page).to have_content("Complet")
   end
+
+  context "create a RDV collectif an existing lieu" do
+    it do
+      create_rdv_collectif(:enabled)      
+    end
+  end
+
+  context "create a RDV collectif an single_use lieu" do
+    it do
+      create_rdv_collectif(:single_use)      
+    end
+  end
+
 end
