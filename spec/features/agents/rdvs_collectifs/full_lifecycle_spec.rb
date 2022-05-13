@@ -35,7 +35,7 @@ describe "Agent can organize a rdv collectif", js: true do
 
     if lieu_availability == :enabled
       select(lieu.name, from: "rdv_lieu_id")
-      
+
     else
       click_link("Définir un lieu ponctuel.")
       fill_in :rdv_lieu_attributes_name, with: "Café de la gare"
@@ -67,14 +67,13 @@ describe "Agent can organize a rdv collectif", js: true do
 
   context "create a RDV collectif an existing lieu" do
     it do
-      create_rdv_collectif(:enabled)      
+      create_rdv_collectif(:enabled)
     end
   end
 
   context "create a RDV collectif an single_use lieu" do
     it do
-      create_rdv_collectif(:single_use)      
+      create_rdv_collectif(:single_use)
     end
   end
-
 end

@@ -24,12 +24,11 @@
 
           = f.input :context
           = f.hidden_field :motif_id, value: @rdv.motif_id
-         
           - new_lieu_record = @rdv.lieu&.new_record?
           - controller_data = { "controller": "rdv-lieu",
                   "initial-state": (new_lieu_record ? "single_use" : "existing"),
                   "select-placeholder-single-use-lieu": t(".select_placeholder_single_use_lieu"),
-                  "select-placeholder-existing-lieu": t(".select_placeholder_existing_lieu") }
+                  "select-placeholder-existing-lieu": t(".select_placeholder_existing_lieu"), }
           .form-group data=controller_data
             = f.label :lieu, required: true
             fieldset
