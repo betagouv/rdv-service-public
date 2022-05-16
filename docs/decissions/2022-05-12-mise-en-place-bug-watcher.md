@@ -4,7 +4,7 @@ title: Mise en place d'un bug watcher
 
 ## Contexte
 
-Nous avons accumulé beaucoup de ticket dans Sentry ;
+Nous avons accumulé beaucoup de tickets dans Sentry ;
 Nous avons régulièrement des problèmes de perfs (certains ne sont d'ailleurs toujours pas résolu) ;
 Nous recevons 3 ou 4 mails d'agents par jour.
 
