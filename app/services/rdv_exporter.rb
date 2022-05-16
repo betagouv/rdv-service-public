@@ -14,6 +14,7 @@ module RdvExporter
     "motif",
     "contexte",
     "statut",
+    "résultat des notifications",
     "lieu",
     "professionnel.le(s)",
     "usager(s)",
@@ -37,7 +38,7 @@ module RdvExporter
     sheet = book.create_worksheet
     sheet.row(0).concat(HEADER)
 
-    rdvs = rdvs.includes(:motif, :agents, :users)
+    rdvs = rdvs.includes(:motif, :agents, :users, :receipts)
 
     rdvs.each_with_index do |rdv, index|
       row = sheet.row(index + 1)
@@ -63,6 +64,7 @@ module RdvExporter
       rdv.motif.name,
       rdv.context,
       Rdv.human_attribute_value(:status, rdv.temporal_status, disable_cast: true),
+      Receipt.human_attribute_value(:result, rdv.synthesized_receipts_result),
       rdv.address_complete_without_personal_details,
       rdv.agents.map(&:full_name).join(", "),
       rdv.users.map(&:full_name).join(", "),
