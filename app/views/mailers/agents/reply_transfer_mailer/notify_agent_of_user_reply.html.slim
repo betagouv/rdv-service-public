@@ -1,0 +1,13 @@
+div
+  p = t("mailers.common.hello")
+  p = t(".intro", date: @date, author: @author)
+  blockquote
+    h4 = @reply_subject
+    div = simple_format(@reply_body)
+
+  p = auto_link t("agents.reply_transfer_mailer.shared.attachments", attachment_names: @attachment_names) if @attachment_names.present?
+
+  p = t(".instructions")
+
+  .btn-wrapper
+    = link_to "Voir le RDV", admin_organisation_rdv_url(@rdv.organisation_id, @rdv.id),  class: "btn btn-primary"
