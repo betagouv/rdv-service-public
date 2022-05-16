@@ -558,4 +558,24 @@ describe Rdv, type: :model do
       expect(rdv.available_to_file_attente?).to eq(false)
     end
   end
+
+  describe "#synthesized_receipts_result" do
+    it "sets nil if no receipt" do
+      rdv = create(:rdv, receipts: [])
+
+      expect(rdv.synthesized_receipts_result).to be_nil
+    end
+
+    it "sets failure if failed receipts" do
+      rdv = create(:rdv, receipts: build_list(:receipt, 2, result: :failure))
+
+      expect(rdv.synthesized_receipts_result).to eq("failure")
+    end
+
+    it "sets processed if receipts are present" do
+      rdv = create(:rdv, receipts: build_list(:receipt, 2, result: :sent))
+
+      expect(rdv.synthesized_receipts_result).to eq("processed")
+    end
+  end
 end

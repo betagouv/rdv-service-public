@@ -250,6 +250,14 @@ class Rdv < ApplicationRecord
     name
   end
 
+  def synthesized_receipts_result
+    results = receipts.pluck(:result).uniq
+
+    return if results.empty?
+
+    results.exclude?("failure") ? "processed" : "failure"
+  end
+
   private
 
   def starts_at_is_plausible
