@@ -27,7 +27,7 @@ describe Admin::Territories::SectorisationTestsController, type: :controller do
           street_ban_id: 560_570_882,
           latitude: 48.039837,
           longitude: -3.498531,
-          commit: "Tester la sectorisation de cette adresse"
+          commit: "Tester la sectorisation de cette adresse",
         }
         expect(response).to be_successful
       end

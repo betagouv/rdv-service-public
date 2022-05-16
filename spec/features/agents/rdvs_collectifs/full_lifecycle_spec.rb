@@ -11,7 +11,7 @@ describe "Agent can organize a rdv collectif", js: true do
   let!(:user1) { create(:user, organisations: [organisation]) }
   let!(:user2) { create(:user, organisations: [organisation]) }
 
-  specify do
+  def create_rdv_collectif(lieu_availability)
     travel_to(Time.zone.local(2022, 3, 14))
     agent = create(:agent, basic_role_in_organisations: [organisation], service: service, first_name: "Alain", last_name: "DIALO")
     login_as(agent, scope: :agent)
@@ -32,9 +32,19 @@ describe "Agent can organize a rdv collectif", js: true do
     fill_in "Intitulé", with: "Traitement de texte"
 
     select("DIALO Alain", from: "rdv_agent_ids")
-    select(lieu.name, from: "Lieu")
-    click_button "Enregistrer"
 
+    if lieu_availability == :enabled
+      select(lieu.name, from: "rdv_lieu_id")
+
+    else
+      click_link("Définir un lieu ponctuel.")
+      fill_in :rdv_lieu_attributes_name, with: "Café de la gare"
+      fill_in "Adresse", with: "3 Place de la Gare, Strasbourg, 67000, 67, Bas-Rhin, Grand Est"
+      page.execute_script("document.querySelector('input#rdv_lieu_attributes_latitude').value = '48.583844'")
+      page.execute_script("document.querySelector('input#rdv_lieu_attributes_longitude').value = 7.735253")
+    end
+
+    click_button "Enregistrer"
     expect(page).to have_content("Atelier participatif créé")
 
     expect(page).to have_content("Jeudi 17 mars à 14:00")
@@ -53,5 +63,17 @@ describe "Agent can organize a rdv collectif", js: true do
     click_button "Enregistrer"
 
     expect(page).to have_content("Complet")
+  end
+
+  context "create a RDV collectif an existing lieu" do
+    it do
+      create_rdv_collectif(:enabled)
+    end
+  end
+
+  context "create a RDV collectif an single_use lieu" do
+    it do
+      create_rdv_collectif(:single_use)
+    end
   end
 end

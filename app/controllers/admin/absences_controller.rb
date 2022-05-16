@@ -28,7 +28,7 @@ class Admin::AbsencesController < AgentAuthController
       defaults = {
         first_day: Time.zone.tomorrow,
         start_time: Tod::TimeOfDay.new(9),
-        end_time: Tod::TimeOfDay.new(18)
+        end_time: Tod::TimeOfDay.new(18),
       }
     end
 

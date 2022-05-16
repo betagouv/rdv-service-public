@@ -15,7 +15,7 @@ class WebhookJob < ApplicationJob
       method: :post,
       headers: {
         "Content-Type" => "application/json; charset=utf-8",
-        "X-Lapin-Signature" => OpenSSL::HMAC.hexdigest("SHA256", webhook_endpoint.secret, payload)
+        "X-Lapin-Signature" => OpenSSL::HMAC.hexdigest("SHA256", webhook_endpoint.secret, payload),
       },
       body: payload,
       timeout: TIMEOUT
@@ -49,7 +49,7 @@ class WebhookJob < ApplicationJob
     error_messages_from_drome = [
       /^Can't update appointment/,
       /^Appointment already deleted/,
-      /^Appointment id doesn't exist/
+      /^Appointment id doesn't exist/,
     ]
     body["message"]&.match?(Regexp.union(error_messages_from_drome))
   rescue StandardError

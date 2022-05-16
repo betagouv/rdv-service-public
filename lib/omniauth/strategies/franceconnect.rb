@@ -13,7 +13,7 @@ module OmniAuth
         scheme: "https",
         authorization_endpoint: "/api/v1/authorize?acr_values=eidas1",
         token_endpoint: "/api/v1/token",
-        userinfo_endpoint: "/api/v1/userinfo"
+        userinfo_endpoint: "/api/v1/userinfo",
       }
       info do
         {
@@ -21,7 +21,7 @@ module OmniAuth
           given_name: user_info.given_name,
           family_name: user_info.family_name,
           birthdate: user_info.birthdate.presence && Date.parse(user_info.birthdate),
-          email: user_info.email
+          email: user_info.email,
         }
       end
     end

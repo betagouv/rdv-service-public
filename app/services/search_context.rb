@@ -83,7 +83,7 @@ class SearchContext
     @next_availability_by_lieux ||= lieux.to_h do |lieu|
       [
         lieu.id,
-        creneaux_search_for(lieu, date_range).next_availability
+        creneaux_search_for(lieu, date_range).next_availability,
       ]
     end
   end

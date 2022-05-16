@@ -45,7 +45,7 @@ describe "API auth", type: :request do
         headers: {
           "access-token": "blah",
           client: "blah",
-          uid: "jean@fun.fr"
+          uid: "jean@fun.fr",
         }
       )
       expect(response.status).to eq(401)
@@ -66,7 +66,7 @@ describe "API auth", type: :request do
         headers: {
           "access-token": response.headers["access-token"],
           client: response.headers["client"],
-          uid: response.headers["uid"]
+          uid: response.headers["uid"],
         }
       )
       expect(response.status).to eq(200)

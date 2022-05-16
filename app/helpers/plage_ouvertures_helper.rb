@@ -83,7 +83,7 @@ module PlageOuverturesHelper
       "thursday" => "jeudi",
       "friday" => "vendredi",
       "saturday" => "samedi",
-      "sunday" => "dimanche"
+      "sunday" => "dimanche",
     }
     weekdays[weekday]
   end

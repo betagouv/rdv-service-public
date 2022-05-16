@@ -11,7 +11,7 @@ agent_ids_by_organisation_id = {
   349 => [5976, 5977, 5978], # Grand Cognac
   350 => [5982], # Espace de la porte St Jacques, Troyes
   351 => [5974], # France Services Thenon
-  352 => [5981] # Tremblay-en-France
+  352 => [5981], # Tremblay-en-France
 }
 
 class MotifsPlageOuverture < ApplicationRecord

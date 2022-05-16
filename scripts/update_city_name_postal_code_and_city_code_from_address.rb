@@ -22,7 +22,7 @@ def geocode(file)
     method: :post,
     body: {
       data: File.new(file),
-      result_columns: "id,result_city,result_postcode,result_citycode"
+      result_columns: "id,result_city,result_postcode,result_citycode",
     }
   )
   CSV.parse(response.body, headers: true).map(&:to_h)

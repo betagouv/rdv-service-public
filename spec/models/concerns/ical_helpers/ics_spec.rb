@@ -14,7 +14,7 @@ describe IcalHelpers::Ics do
         description: "Infos et annulation:",
         address: "10 rue de la Ferronerie 44100 Nantes",
         ical_uid: "rdv_15@RDV Solidarités",
-        recurrence: "FREQ=WEEKLY;"
+        recurrence: "FREQ=WEEKLY;",
       }
     end
 

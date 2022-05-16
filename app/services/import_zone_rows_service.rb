@@ -5,7 +5,7 @@ class ImportZoneRowsService < BaseService
 
   REQUIRED_FIELDS = {
     Zone::LEVEL_CITY => %w[sector_id city_name city_code],
-    Zone::LEVEL_STREET => %w[sector_id city_name city_code street_name street_code]
+    Zone::LEVEL_STREET => %w[sector_id city_name city_code street_name street_code],
   }.freeze
 
   def initialize(rows, territory, agent, **options)
@@ -24,8 +24,8 @@ class ImportZoneRowsService < BaseService
         imported: Hash.new(0),
         imported_new: Hash.new(0),
         imported_override: Hash.new(0),
-        errors: Hash.new(0)
-      }
+        errors: Hash.new(0),
+      },
     }
     @result[:valid] = valid?
     @rows.each { import_row(_1) } if valid?

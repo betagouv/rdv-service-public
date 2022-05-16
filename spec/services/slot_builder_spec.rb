@@ -50,7 +50,7 @@ describe SlotBuilder, type: :service do
         expect(slots.map(&:starts_at)).to match_array([
                                                         Time.zone.local(2021, 5, 3, 15, 5, 0),
                                                         Time.zone.local(2021, 5, 3, 18, 0, 0),
-                                                        Time.zone.local(2021, 5, 3, 19, 0, 0)
+                                                        Time.zone.local(2021, 5, 3, 19, 0, 0),
                                                       ])
       end
     end
@@ -239,7 +239,7 @@ describe SlotBuilder, type: :service do
       expected_ranges = [
         (Time.zone.parse("2021-10-26 9:00")..Time.zone.parse("2021-10-26 11:00")),
         (Time.zone.parse("2021-10-28 9:00")..Time.zone.parse("2021-10-28 11:00")),
-        (Time.zone.parse("2021-10-29 9:00")..Time.zone.parse("2021-10-29 11:00"))
+        (Time.zone.parse("2021-10-29 9:00")..Time.zone.parse("2021-10-29 11:00")),
       ]
       expect(described_class.calculate_free_times(plage_ouverture, range, [])).to eq(expected_ranges)
     end

@@ -9,7 +9,7 @@ module FullNameConcern
   def full_name
     names = [first_name,
              last_name&.upcase,
-             ("(#{birth_name})" if defined?(birth_name) && birth_name.present?)]
+             ("(#{birth_name})" if defined?(birth_name) && birth_name.present?),]
 
     names.compact.join(" ")
   end
@@ -18,7 +18,7 @@ module FullNameConcern
   def reverse_full_name
     names = [last_name&.upcase,
              ("(#{birth_name})" if defined?(birth_name) && birth_name.present?),
-             first_name]
+             first_name,]
 
     names.compact.join(" ")
   end

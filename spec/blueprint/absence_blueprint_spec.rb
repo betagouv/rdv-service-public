@@ -9,7 +9,7 @@ describe AbsenceBlueprint do
                                                          "email" => "bob@example.com",
                                                          "first_name" => "Bob",
                                                          "last_name" => "Henri",
-                                                         "id" => nil
+                                                         "id" => nil,
                                                        })
     end
 

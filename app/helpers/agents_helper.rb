@@ -43,7 +43,7 @@ module AgentsHelper
       "men-department-sectors" => "",
       "men-department-zones" => "",
       "men-department-setup-checklist" => "",
-      "men-department-zone-imports" => ""
+      "men-department-zone-imports" => "",
     }[content_for(:menu_item)]
   end
 
@@ -55,8 +55,8 @@ module AgentsHelper
       agent.reverse_full_name,
       agent.id,
       {
-        "data-url": send(path_helper_name, current_organisation, agent)
-      }
+        "data-url": send(path_helper_name, current_organisation, agent),
+      },
     ]
     select_tag(
       :planning_agent_select,
@@ -68,10 +68,10 @@ module AgentsHelper
           ajax: {
             url: admin_organisation_agents_path(current_organisation),
             dataType: "json",
-            delay: 250
-          }
+            delay: 250,
+          },
         },
-        "url-template": url_template
+        "url-template": url_template,
       }
     )
   end

@@ -182,4 +182,8 @@ Style/StringLiterals:
   Exclude:
     - "config/**/*"
 
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: consistent_comma
 
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma

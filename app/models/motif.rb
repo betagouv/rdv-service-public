@@ -29,7 +29,7 @@ class Motif < ApplicationRecord
   enum location_type: { public_office: "public_office", phone: "phone", home: "home" }
   enum category: { rsa_orientation: "rsa_orientation",
                    rsa_accompagnement: "rsa_accompagnement",
-                   rsa_orientation_on_phone_platform: "rsa_orientation_on_phone_platform" }
+                   rsa_orientation_on_phone_platform: "rsa_orientation_on_phone_platform", }
 
   # Relations
   belongs_to :organisation
@@ -51,7 +51,7 @@ class Motif < ApplicationRecord
   validates :visibility_type, inclusion: { in: VISIBILITY_TYPES }
   validates :sectorisation_level, inclusion: { in: SECTORISATION_TYPES }
   validates :name, presence: true, uniqueness: { scope: %i[organisation location_type service],
-                                                 conditions: -> { where(deleted_at: nil) } }
+                                                 conditions: -> { where(deleted_at: nil) }, }
 
   validates :color, :default_duration_in_min, :min_booking_delay, :max_booking_delay, presence: true
   validates :min_booking_delay, numericality: { greater_than_or_equal_to: 30.minutes, less_than_or_equal_to: 1.year.minutes }

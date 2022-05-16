@@ -13,7 +13,7 @@ RSpec.describe Zone, type: :model do
           sector: sector,
           level: "city",
           city_name: "Paris XXe",
-          city_code: "75120"
+          city_code: "75120",
         }
       end
 

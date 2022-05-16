@@ -7,7 +7,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     subject do
       post :create, params: {
         organisation_id: organisation.id, lieu_id: lieu.id, departement: "12", city_code: "12100", where: "1 rue de la, ville 12345",
-        motif_id: motif.id, starts_at: starts_at, organisation_ids: [organisation.id], invitation_token: "44444"
+        motif_id: motif.id, starts_at: starts_at, organisation_ids: [organisation.id], invitation_token: "44444",
       }
     end
 

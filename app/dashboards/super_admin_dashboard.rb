@@ -13,7 +13,7 @@ class SuperAdminDashboard < Administrate::BaseDashboard
     id: Field::Number,
     email: Field::String,
     created_at: Field::DateTime,
-    updated_at: Field::DateTime
+    updated_at: Field::DateTime,
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -41,7 +41,7 @@ class SuperAdminDashboard < Administrate::BaseDashboard
   # an array of attributes that will be displayed
   # on the model's form (`new` and `edit`) pages.
   FORM_ATTRIBUTES = [
-    :email
+    :email,
   ].freeze
 
   # Overwrite this method to customize how super admins are displayed

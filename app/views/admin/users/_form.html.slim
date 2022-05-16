@@ -26,7 +26,7 @@
         wrapper: :vertical_collection_inline, \
         input_html: { \
           autocomplete: "off", \
-          class: "js-responsability-type" \
+          class: "js-responsability-type", \
         }, \
         label_html: { class: "mb-0" } \
       )
@@ -81,7 +81,7 @@
                   label: false, \
                   **{input_html: { \
                     class: "select2-input",\
-                    data: { "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation), dataType: "json", delay: 250 }} } \
+                    data: { "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation), dataType: "json", delay: 250 }} }, \
                    }}.deep_merge(input_opts[:relative_existing]), \
                   required: true\
                 )

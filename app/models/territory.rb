@@ -13,7 +13,7 @@ class Territory < ApplicationRecord
     contact_experience: "contact_experience",
     sfr_mail2sms: "sfr_mail2sms",
     clever_technologies: "clever_technologies",
-    orange_contact_everyone: "orange_contact_everyone"
+    orange_contact_everyone: "orange_contact_everyone",
   }, _prefix: true
 
   # Relations
@@ -45,11 +45,11 @@ class Territory < ApplicationRecord
   ## -
 
   OPTIONAL_RDV_FIELD_TOGGLES = {
-    enable_context_field: :context
+    enable_context_field: :context,
   }.freeze
 
   OPTIONAL_MOTIF_FIELD_TOGGLES = {
-    enable_motif_categories_field: :category
+    enable_motif_categories_field: :category,
   }.freeze
 
   SOCIAL_FIELD_TOGGLES = {
@@ -58,12 +58,12 @@ class Territory < ApplicationRecord
     enable_family_situation_field: :family_situation,
     enable_number_of_children_field: :number_of_children,
     enable_case_number: :case_number,
-    enable_address_details: :address_details
+    enable_address_details: :address_details,
   }.freeze
 
   OPTIONAL_FIELD_TOGGLES = {
     enable_notes_field: :notes,
-    enable_logement_field: :logement
+    enable_logement_field: :logement,
   }.merge(SOCIAL_FIELD_TOGGLES).freeze
 
   def any_social_field_enabled?

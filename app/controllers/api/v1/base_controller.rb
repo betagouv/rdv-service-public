@@ -50,7 +50,7 @@ class Api::V1::BaseController < ActionController::Base
       next_page: objects.next_page,
       prev_page: objects.prev_page,
       total_pages: objects.total_pages,
-      total_count: objects.total_count
+      total_count: objects.total_count,
     }
 
     objects_klass = objects.klass
@@ -73,7 +73,7 @@ class Api::V1::BaseController < ActionController::Base
       status: :forbidden,
       json: {
         errors: [{ base: :forbidden }],
-        error_messages: [t("#{policy_name}.#{exception.query}", scope: "pundit", default: :default)]
+        error_messages: [t("#{policy_name}.#{exception.query}", scope: "pundit", default: :default)],
       }
     )
   end
@@ -95,7 +95,7 @@ class Api::V1::BaseController < ActionController::Base
       json: {
         success: false,
         errors: exception.record.errors.details,
-        error_messages: exception.record.errors.map { "#{_1.attribute} #{_1.message}" }
+        error_messages: exception.record.errors.map { "#{_1.attribute} #{_1.message}" },
       }
     )
   end

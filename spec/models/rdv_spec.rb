@@ -273,7 +273,7 @@ describe Rdv, type: :model do
         expected_rdvs = [
           rdv_finished_shortly_before,
           rdv_starting_shortly_after,
-          rdv_that_ongoing
+          rdv_that_ongoing,
         ]
 
         expect(described_class.ongoing(time_margin: 1.hour).sort).to eq(expected_rdvs.sort)

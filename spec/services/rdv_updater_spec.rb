@@ -125,8 +125,8 @@ describe RdvUpdater, type: :service do
         rdvs_users_attributes: {
           0 => { user_id: user_staying.id, send_lifecycle_notifications: 1, id: rdv.rdvs_users.find_by(user_id: user_staying.id).id, _destroy: false },
           1 => { user_id: user_removed.id, send_lifecycle_notifications: 1, id: rdv.rdvs_users.find_by(user_id: user_removed.id).id, _destroy: true  },
-          2 => { user_id: user_added.id, send_lifecycle_notifications: 1 }
-        }
+          2 => { user_id: user_added.id, send_lifecycle_notifications: 1 },
+        },
       }
     end
     let(:rdv) { create(:rdv, agents: [agent], motif: motif, users: [user_staying, user_removed]) }
