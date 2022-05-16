@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 describe "api/v1/user_profiles requests", type: :request do
-  let!(:organisation) { create(:organisation) }
+  let!(:territory) { create(:territory) }
+  let!(:organisation) { create(:organisation, territory: territory) }
   let!(:user) { create(:user) }
   let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
 
@@ -83,7 +84,8 @@ describe "api/v1/user_profiles requests", type: :request do
     end
 
     context "invalid params: unauthorized orga" do
-      let!(:unauthorized_orga) { create(:organisation) }
+      let!(:another_territory) { create(:territory) }
+      let!(:unauthorized_orga) { create(:organisation, territory: another_territory) }
 
       it "works" do
         count_before = UserProfile.count
