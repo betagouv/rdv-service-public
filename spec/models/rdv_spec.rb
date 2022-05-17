@@ -170,7 +170,6 @@ describe Rdv, type: :model do
 
   describe "#destroy" do
     let!(:rdv) { create(:rdv) }
-    let!(:rdv_event) { create(:rdv_event, rdv: rdv) }
 
     it "works" do
       expect { rdv.destroy }.to change(described_class, :count).by(-1)

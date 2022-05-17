@@ -887,11 +887,9 @@ agent_rdv_attributes = rdv_ids.map { |id| { agent_id: agent_org_paris_nord_pmi_m
 AgentsRdv.insert_all!(agent_rdv_attributes)
 rdv_user_attributes = rdv_ids.map { |id| { user_id: user_org_paris_nord_josephine.id, rdv_id: id, send_lifecycle_notifications: true, send_reminder_notification: true } }
 RdvsUser.insert_all!(rdv_user_attributes)
-# Create RdvEvents: this is mostly to test recycle_old_rdv_events_to_receipts
-event_types = %w[notification_sms notification_mail]
-event_names = %w[cancelled_by_user cancelled_by_agent file_attente_creneaux_available created updated upcoming_reminder]
-rdv_event_attributes = rdv_ids.map { |id| { rdv_id: id, event_type: event_types.sample, event_name: event_names.sample, created_at: now } }
-RdvEvent.insert_all!(rdv_event_attributes)
+events = %w[new_creneau_available rdv_cancelled rdv_created rdv_date_updated rdv_upcoming_reminder]
+receipts_attributes = rdv_ids.map { |id| { rdv_id: id, event: events.sample, channel: Receipt.channels.values.sample, result: Receipt.results.values.sample, created_at: now, updated_at: now } }
+Receipt.insert_all!(receipts_attributes)
 # rubocop:enable Rails/SkipsModelValidations
 
 # WEBHOOKS
