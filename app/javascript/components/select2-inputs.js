@@ -34,6 +34,10 @@ class Select2Inputs {
     if (modal !== undefined)
       options.dropdownParent = modal
 
+    // Custom message for empty selects
+    options.minimumInputLength = 1
+    options.language = { inputTooShort: () => "Commencez à taper pour rechercher" } // Overrides select2/i18n/fr.js
+
     return options
   }
 
