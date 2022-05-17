@@ -3,6 +3,5 @@
 class LieuBlueprint < Blueprinter::Base
   identifier :id
 
-  fields :name
-  fields :address
+  fields :name, :address, :single_use?
 end
