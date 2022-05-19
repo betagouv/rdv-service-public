@@ -34,9 +34,16 @@ class Select2Inputs {
     if (modal !== undefined)
       options.dropdownParent = modal
 
-    // Custom message for empty selects
-    options.minimumInputLength = 1
-    options.language = { inputTooShort: () => "Commencez à taper pour rechercher" } // Overrides select2/i18n/fr.js
+    // Lorsque le select est configuré en AJAX **et** qu'aucune option n'est pré-injectée dans le HTML,
+    // l'utilisateur⋅ice voit seulement un champ de recherche et une mention "Aucun résultat trouvé".
+    // Afin d'indiquer clairement qu'il est attendu de commencer à saisir quelque-chose, ce code fait en
+    // sorte que la mention soit plutot "Commencez à taper pour rechercher".
+    const isAjax = elt.dataset.selectOptions?.includes("ajax");
+    const hasAnyOption = Array.from(elt.options).some(opt => opt.value); // we rule out options without value, they are usually placeholders
+    if (isAjax && !hasAnyOption) {
+      options.minimumInputLength = 1
+      options.language = { inputTooShort: () => "Commencez à taper pour rechercher" } // Overrides select2/i18n/fr.js
+    }
 
     return options
   }
