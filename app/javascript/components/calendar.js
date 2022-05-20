@@ -58,7 +58,7 @@ class CalendarRdvSolidarites {
       locale: frLocale,
       eventSources: JSON.parse(this.data.eventSourcesJson),
       eventSourceFailure: function (errorObj) {
-        Sentry.captureException(errorObj)
+        Sentry.captureException(new Error(`XHR request failed with error code ${errorObj.xhr.status}`), { extra: errorObj.xhr })
         alert("Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-solidarites.fr.");
       },
       defaultDate: this.getDefaultDate(),

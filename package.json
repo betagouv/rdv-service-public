@@ -12,7 +12,7 @@
     "@fullcalendar/list": "^4.4.2",
     "@fullcalendar/timegrid": "^4.4.2",
     "@rails/ujs": "^6.0.0",
-    "@sentry/browser": "^5.10.2",
+    "@sentry/browser": "^6.19.7",
     "autocomplete.js": "^0.37.1",
     "bootstrap": "^4.3.1",
     "bowser": "^2.7.0",
