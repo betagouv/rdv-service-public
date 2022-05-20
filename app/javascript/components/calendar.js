@@ -60,8 +60,8 @@ class CalendarRdvSolidarites {
       eventSourceFailure: function (errorObj) {
         const requestPath = new URL(errorObj.xhr.responseURL).pathname;
         Sentry.captureException(
-          new Error(`XHR request to ${requestPath } failed with error code ${errorObj.xhr.status}`),
-          { extra: errorObj.xhr }
+          new Error(`XHR request to ${ requestPath } failed with error code ${errorObj.xhr.status}`),
+          { extra: { xhr: errorObj.xhr, responseBody: errorObj.xhr.response } }
         )
         alert("Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-solidarites.fr.");
       },
