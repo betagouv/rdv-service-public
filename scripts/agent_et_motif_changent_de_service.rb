@@ -1,29 +1,48 @@
 # frozen_string_literal: true
 
-# rails runner scripts/agent_et_motif_changent_de_service.rb ID_ORGA ID_SERVICE_SOURCE ID_DESTINATION
+require "optparse"
 
-ID_ORGANISATION = ARGV[0]
-ID_SERVICE_SOURCE = ARGV[1]
-ID_SERVICE_DESTINATION = ARGV[2]
-dry_run = ARGV[3].blank?
+params = { dry_run: true }
+OptionParser.new do |opt|
+  opt.on("-o", "--organisation ORGANISATION_ID") { |o| params[:organisation_id] = o }
+  opt.on("-s", "--service-source SERVICE_SOURCE_ID") { |o| params[:service_source_id] = o }
+  opt.on("-d", "--service-destination SERVICE_DESTINATION_ID") { |o| params[:service_destination_id] = o }
+  opt.on("-a", "--agent AGENT_ID") { |o| params[:agent_id] = o }
+  opt.on("-e", "--execute") { |_o| params[:dry_run] = false }
+end.parse!
 
-service_source = Service.find(ID_SERVICE_SOURCE)
-service_destination = Service.find(ID_SERVICE_DESTINATION)
-organisation = Organisation.find(ID_ORGANISATION)
+unless (%i[organisation_id service_source_id service_destination_id] - params.keys).empty?
+  puts "Le paramètre de l'organisation, du service source et celui du service destination sont obligatoire"
+  exit(-1)
+end
+
+# Ces recherches sont surtout un moyen de vérifier si les paramètres
+# données sont correct.
+service_source = Service.find(params[:service_source_id])
+service_destination = Service.find(params[:service_destination_id])
+organisation = Organisation.find(params[:organisation_id])
+agent = Agent.find(params[:agent_id]) if params[:agent_id].present?
 
 puts "Hello !"
-puts "Running in dry run!" if dry_run
-puts "Déplace les agents et les motifs du service #{service_source.name} vers le service #{service_destination.name}"
+puts "Running in dry run!" if params[:dry_run]
+msg = "Déplace"
+msg += if agent
+         " l'agents #{agent.full_name}"
+       else
+         " les agents"
+       end
+msg += " et les motifs du service #{service_source.name} vers le service #{service_destination.name}"
+puts msg
 
 Agent.transaction do
   puts "Déplacement des motifs:"
-  Motif.where(organisation_id: ID_ORGANISATION, service: service_source).each do |motif|
+  Motif.where(organisation_id: params[:organiation_id], service: service_source).each do |motif|
     puts motif.name.to_s
     new_motif = motif.dup
-    new_motif.organisation_id = ID_ORGANISATION
-    new_motif.service_id = ID_SERVICE_DESTINATION
+    new_motif.organisation_id = params[:organisation_id]
+    new_motif.service_id = params[:service_destination_id]
 
-    next if dry_run
+    next if params[:dry_run]
 
     unless new_motif.save
       puts "Erreur: #{new_motif.errors.full_messages.to_sentence}. Essayons en changeant le nom."
@@ -47,11 +66,15 @@ Agent.transaction do
   end
 
   puts "Déplacement des agents:"
-  organisation.agents.where(service: service_source).each do |agent|
+  agents = organisation.agents.where(service: service_source)
+  if params[:agent_id].present?
+    agents = agents.where(id: params[:agent_id])
+  end
+  agents.each do |agent|
     puts agent.full_name.to_s
-    next if dry_run
+    next if params[:dry_run]
 
-    agent.update_column(:service_id, ID_SERVICE_DESTINATION)
+    agent.update_column(:service_id, params[:service_destination_id])
   end
   puts "Terminé"
 end
