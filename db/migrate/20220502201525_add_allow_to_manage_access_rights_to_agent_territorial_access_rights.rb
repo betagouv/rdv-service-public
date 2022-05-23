@@ -26,7 +26,7 @@ class AddAllowToManageAccessRightsToAgentTerritorialAccessRights < ActiveRecord:
     # le droit d'inviter des agents.
     # Ils seront limité aux organisations auxquelles
     # ils accèdent
-    AgentRole.where(leve: "admin").each do |agent_role|
+    AgentRole.where(level: "admin").each do |agent_role|
       AgentTerritorialAccessRight.where(
         agent: agent_role.agent,
         territory: agent_role.organisation.territory
