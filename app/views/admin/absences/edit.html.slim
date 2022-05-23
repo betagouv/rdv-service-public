@@ -23,4 +23,4 @@
       .card-body
         = render "form", absence: @absence, agent: @agent
 
-= render "admin/versions/resource_versions_row", resource: @absence
+= render "admin/versions/resource_versions_row", policy_scope: :agent, resource: @absence

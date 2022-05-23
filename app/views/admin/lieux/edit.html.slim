@@ -16,4 +16,4 @@
         = simple_form_for [:admin, @lieu.organisation, @lieu] do |f|
           = render "lieu_fields", f: f
 
-= render "admin/versions/resource_versions_row", resource: @lieu
+= render "admin/versions/resource_versions_row", policy_scope: :agent, resource: @lieu
