@@ -1,6 +1,6 @@
 = simple_form_for [:admin, resource], as: resource_name, url: admin_agent_territory_invitation_path(current_territory, resource), html: { method: :post } do |f|
   = render "devise/shared/error_messages", resource: resource
-  = f.input :email, placeholder: "jean.dupond@departement.fr", input_html: { autocomplete: "off"}
+  = f.input :email, placeholder: "camille.dupond@departement.fr", input_html: { autocomplete: "off"}
   = f.input :service_id, as: :hidden, input_html: {value: Service.secretariat.first.id}
 
   .card-group
