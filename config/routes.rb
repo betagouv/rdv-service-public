@@ -157,7 +157,6 @@ Rails.application.routes.draw do
           end
         end
         resources :rdvs, except: [:new] do
-          post :new_participation
           collection do
             post :export
           end

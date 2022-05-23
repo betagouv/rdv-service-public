@@ -3,7 +3,7 @@
 class Admin::RdvsController < AgentAuthController
   respond_to :html, :json
 
-  before_action :set_rdv, :set_optional_agent, except: %i[index create new_participation export]
+  before_action :set_rdv, :set_optional_agent, except: %i[index create export]
 
   def index
     @rdvs = policy_scope(Rdv).search_for(current_agent, current_organisation, parsed_params)
