@@ -6,26 +6,27 @@ class AddAllowToManageAccessRightsToAgentTerritorialAccessRights < ActiveRecord:
     add_column :agent_territorial_access_rights, :allow_to_invite_agents, :boolean, default: false, null: false
 
     # Tous les agents qui ont été créé depuis la dernière migration n'ont pas
-    # été associés à un territoire via la table des droits d'accès
+    # été associés à un territoire via la table des droits d'accès.
     # Soit presque l'ensemble des conseillers numériques
     # plus quelques autres agents créés entre temps.
     #
-    # Ici, on reconstruit ce lien pour les agents qui ne sont pas présent
-    # dans la table `AgentTerritorialAccessRights`
-    Agent.where.not(id: AgentTerritorialAccessRight.all.pluck(:agent_id)).each do |agent|
-      agent.organisations.flat_map(&:territory).each do |territory|
-        AgentTerritorialAccessRight.create!(agent: agent, territory: territory)
+    # Pour n'oublier personne, nous faisons le tour de tous
+    # les agents de chaque organisations. Il y aura
+    # sans doute des doublons, d'où l'utilisation du
+    # `fin_or_create_by!`
+    Organisation.all.each do |organisation|
+      territory = organisation.territory
+      organisation.agents.all.each do |agent|
+        AgentTerritorialAccessRight.find_or_create_by!(agent: agent, territory: territory)
       end
     end
 
     # Nous avons besoin de retrouver l'agent et le territoire
     # pour lequel donner les droits d'accès.
-    # Difficile de passer par un `update_all`
     #
     # Les admin d'organisation ont automatiquement
     # le droit d'inviter des agents.
-    # Ils seront limité aux organisations auxquelles
-    # ils accèdent
+    # Ils seront limités a leurs organisations.
     AgentRole.where(level: "admin").each do |agent_role|
       AgentTerritorialAccessRight.where(
         agent: agent_role.agent,
@@ -35,7 +36,6 @@ class AddAllowToManageAccessRightsToAgentTerritorialAccessRights < ActiveRecord:
 
     # Nous avons besoin de retrouver l'agent et le territoire
     # pour lequel donner les droits d'accès.
-    # Difficile de passer par un `update_all`
     #
     # Les admin de territoire ont automatiquement le droit de
     # - gérer les droits d'accès

@@ -174,8 +174,8 @@ ActiveRecord::Schema.define(version: 2022_05_23_140836) do
     t.boolean "allow_to_manage_teams", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.boolean "allow_to_manage_access_rights", default: false
-    t.boolean "allow_to_invite_agents", default: false
+    t.boolean "allow_to_manage_access_rights", default: false, null: false
+    t.boolean "allow_to_invite_agents", default: false, null: false
     t.index ["agent_id"], name: "index_agent_territorial_access_rights_on_agent_id"
     t.index ["territory_id"], name: "index_agent_territorial_access_rights_on_territory_id"
   end
