@@ -1,0 +1,7 @@
+fr:
+  activerecord:
+    models:
+      team: Équipe
+    attributes:
+      team:
+        agent_ids: Agents
