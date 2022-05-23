@@ -2,7 +2,11 @@
 
 class Team < ApplicationRecord
   # Mixins
-  has_paper_trail
+  has_paper_trail(
+    only: %i[name agent_ids],
+    meta: { virtual_attributes: :virtual_attributes_for_paper_trail }
+  )
+
   include TextSearch
   def self.search_keys = %i[name]
 
@@ -24,6 +28,12 @@ class Team < ApplicationRecord
 
   def to_s
     name
+  end
+
+  def virtual_attributes_for_paper_trail
+    {
+      agent_ids: agents.ids,
+    }
   end
 
   private
