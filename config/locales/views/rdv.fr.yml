@@ -3,3 +3,6 @@ fr:
     rdvs:
       rdv_details:
         empty_context: Pas de contexte renseigné
+    receipts:
+      send_reminder_manually: Envoyer maintenant une nouvelle notification
+      reminder_manually_sent: Notification envoyée.

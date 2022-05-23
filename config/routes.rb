@@ -157,6 +157,9 @@ Rails.application.routes.draw do
           end
         end
         resources :rdvs, except: [:new] do
+          member do
+            post :send_reminder_manually
+          end
           collection do
             post :export
           end
