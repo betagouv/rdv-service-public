@@ -17,7 +17,7 @@ class Users::RdvSms < Users::BaseSms
 
   def rdv_cancelled(rdv, _user, token)
     base_message = "RDV #{rdv.motif.service.short_name} #{I18n.l(rdv.starts_at, format: :short)} a été annulé"
-    url = prendre_rdv_short_url(host: ENV["HOST"], tkn: rdv.show_token_in_sms? ? token : nil)
+    url = prendre_rdv_short_url(host: ENV["HOST"], tkn: token)
 
     footer = if rdv.phone_number.present?
                "Appelez le #{rdv.phone_number} ou allez sur #{url} pour reprendre RDV."
@@ -44,7 +44,7 @@ class Users::RdvSms < Users::BaseSms
     agents_short_names = rdv.agents.map(&:short_name).sort.to_sentence
     message += " avec #{agents_short_names} " if rdv.follow_up?
 
-    url = rdv_short_url(rdv, host: ENV["HOST"], tkn: rdv.show_token_in_sms? ? token : nil)
+    url = rdv_short_url(rdv, host: ENV["HOST"], tkn: token)
     message += "Infos et annulation: #{url}"
 
     message += " / #{rdv.phone_number}" if rdv.phone_number.present?

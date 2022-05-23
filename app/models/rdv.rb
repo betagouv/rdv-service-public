@@ -45,7 +45,6 @@ class Rdv < ApplicationRecord
 
   # Delegates
   delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, to: :motif
-  delegate :show_token_in_sms?, to: :organisation
 
   # Validations
   validates :starts_at, :ends_at, :agents, presence: true
