@@ -55,6 +55,31 @@ describe Users::UserNameInitialsVerificationController, type: :controller do
           expect(response).to redirect_to(redirect_path)
         end
       end
+
+      context "when the redirect path is not specified in the session" do
+        before { request.session[:return_to_after_verification] = nil }
+
+        it "redirects to root_path" do
+          post :create, params: { letter0: "D", letter1: "Y", letter2: "L" }
+
+          expect(response).to redirect_to(root_path)
+        end
+
+        context "when a rdv can be found through the invitation token" do
+          let!(:rdv) { create(:rdv) }
+          let!(:rdv_user) { create(:rdvs_user, rdv: rdv) }
+
+          before do
+            allow(RdvsUser).to receive(:find_by_invitation_token).and_return(rdv_user)
+          end
+
+          it "redirects to the rdv path" do
+            post :create, params: { letter0: "D", letter1: "Y", letter2: "L" }
+
+            expect(response).to redirect_to(users_rdv_path(rdv))
+          end
+        end
+      end
     end
 
     context "when the letters don't match" do
