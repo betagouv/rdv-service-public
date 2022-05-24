@@ -3,7 +3,7 @@
 class Admin::RdvsController < AgentAuthController
   respond_to :html, :json
 
-  before_action :set_rdv, :set_optional_agent, except: %i[index create new_participation export]
+  before_action :set_rdv, :set_optional_agent, except: %i[index create export]
 
   def index
     @rdvs = policy_scope(Rdv).search_for(current_agent, current_organisation, parsed_params)
@@ -56,6 +56,14 @@ class Admin::RdvsController < AgentAuthController
         end
       end
     end
+  end
+
+  def send_reminder_manually
+    authorize(@rdv, :update?)
+
+    Notifiers::RdvUpcomingReminder.perform_with(@rdv, nil)
+
+    redirect_to admin_organisation_rdv_path, flash: { notice: I18n.t("admin.receipts.reminder_manually_sent") }
   end
 
   def destroy

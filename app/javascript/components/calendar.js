@@ -57,10 +57,7 @@ class CalendarRdvSolidarites {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       locale: frLocale,
       eventSources: JSON.parse(this.data.eventSourcesJson),
-      eventSourceFailure: function (errorObj) {
-        Sentry.captureException(errorObj)
-        alert("Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-solidarites.fr.");
-      },
+      eventSourceFailure: this.handleAjaxError,
       defaultDate: this.getDefaultDate(),
       defaultView: this.getDefaultView(),
       viewSkeletonRender: function (info) {
@@ -209,6 +206,22 @@ class CalendarRdvSolidarites {
   isTodayVisible = ({ activeStart, activeEnd }) => {
     const now = new Date()
     return now >= activeStart && now <= activeEnd;
+  }
+
+  handleAjaxError = (errorObj) => {
+    Sentry.captureMessage(
+      'FullCalendar AJAX call failed',
+      {
+        extra: {
+          xhr: errorObj.xhr,
+          responseHeaders: errorObj.xhr.getAllResponseHeaders(),
+          responseBody: errorObj.xhr.response,
+        },
+        fingerprint: ["fullcalendar_xhr_error"], // group all FullCalendar errors under the same Sentry issue
+        level: Sentry.Severity.Error,
+      }
+    )
+    alert("Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-solidarites.fr.");
   }
 }
 

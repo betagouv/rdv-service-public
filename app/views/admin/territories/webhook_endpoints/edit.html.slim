@@ -6,4 +6,4 @@
       .card-body
         = render "form", webhook: @webhook, url: admin_territory_webhook_endpoint_path(current_territory, @webhook)
 
-= render "admin/versions/resource_versions_row", resource: @webhook
+= render "admin/versions/resource_versions_row", policy_scope: :agent, resource: @webhook

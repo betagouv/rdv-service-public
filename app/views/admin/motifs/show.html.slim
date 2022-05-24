@@ -84,4 +84,4 @@
             - if motif_policy.edit?
               div= link_to "Éditer", edit_admin_organisation_motif_path(current_organisation, @motif), class: "btn btn-primary w-100"
 
-= render "admin/versions/resource_versions_row", resource: @motif
+= render "admin/versions/resource_versions_row", policy_scope: :agent, resource: @motif

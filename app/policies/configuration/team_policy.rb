@@ -19,6 +19,7 @@ class Configuration::TeamPolicy
   alias destroy? team_of_territory_and_allowed_to_manage_teams?
   alias edit? team_of_territory_and_allowed_to_manage_teams?
   alias update? team_of_territory_and_allowed_to_manage_teams?
+  alias versions? team_of_territory_and_allowed_to_manage_teams?
 
   alias create? allowed_to_manage_teams?
   alias display? allowed_to_manage_teams?

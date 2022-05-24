@@ -157,7 +157,9 @@ Rails.application.routes.draw do
           end
         end
         resources :rdvs, except: [:new] do
-          post :new_participation
+          member do
+            post :send_reminder_manually
+          end
           collection do
             post :export
           end
@@ -214,8 +216,8 @@ Rails.application.routes.draw do
     root to: "admin/organisations#index", as: :authenticated_agent_root, defaults: { follow_unique: "1" }
   end
 
-  { contact: "contact", mds: "mds", accessibility: "accessibility" }.each do |k, v|
-    get v => "static_pages##{k}"
+  %w[contact mds accessibility mentions_legales cgu politique_de_confidentialite].each do |page_name|
+    get page_name => "static_pages##{page_name}"
   end
 
   ## Shorten urls for SMS
