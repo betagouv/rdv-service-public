@@ -97,13 +97,14 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def rdv_params
-    params
-      .require(:rdv)
-      .permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors, :max_participants_count, :name,
-              agent_ids: [],
-              user_ids: [],
-              rdvs_users_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy],
-              lieu_attributes: %i[name address latitude longitude])
+    allowed_params = params.require(:rdv).permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors, :max_participants_count, :name,
+                                                 agent_ids: [],
+                                                 user_ids: [],
+                                                 rdvs_users_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy],
+                                                 lieu_attributes: %i[name address latitude longitude])
+    return allowed_params if params[:rdv][:lieu_id].present?
+
+    allowed_params.to_h.deep_merge(lieu_attributes: { organisation: current_organisation, availability: :single_use })
   end
 
   def status_params
