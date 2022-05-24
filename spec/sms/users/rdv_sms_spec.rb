@@ -70,7 +70,7 @@ describe Users::RdvSms, type: :service do
       let(:organisation) { create(:organisation, phone_number: "0100000000") }
 
       it "contains cancelled RDV's infos and lieu's phone number" do
-        expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé\n"
+        expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé.\n"
         expected_content += "Appelez le 0123456789 "
         expected_content += "ou allez sur #{ENV['HOST']}/prdv?tkn=393939 pour reprendre RDV."
         expect(subject).to eq(expected_content)
@@ -82,7 +82,7 @@ describe Users::RdvSms, type: :service do
       let(:organisation) { create(:organisation, phone_number: "0100000000") }
 
       it "contains cancelled RDV's infos" do
-        expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé\n"
+        expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé.\n"
         expected_content += "Appelez le 0100000000 "
         expected_content += "ou allez sur #{ENV['HOST']}/prdv?tkn=393939 pour reprendre RDV."
         expect(subject).to eq(expected_content)
@@ -94,7 +94,7 @@ describe Users::RdvSms, type: :service do
       let(:organisation) { create(:organisation, phone_number: nil) }
 
       it "contains cancelled RDV's infos" do
-        expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé\n"
+        expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé.\n"
         expected_content += "Allez sur #{ENV['HOST']}/prdv?tkn=393939 pour reprendre RDV."
         expect(subject).to eq(expected_content)
       end
@@ -105,7 +105,7 @@ describe Users::RdvSms, type: :service do
       let(:organisation) { create(:organisation, phone_number: nil) }
 
       it "contains cancelled RDV's infos" do
-        expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé\n"
+        expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé.\n"
         expected_content += "Allez sur #{ENV['HOST']}/prdv?tkn=393939 pour reprendre RDV."
         expect(subject).to eq(expected_content)
       end
@@ -158,7 +158,7 @@ describe Users::RdvSms, type: :service do
         let(:motif) { build(:motif, :by_phone) }
 
         it do
-          expect(subject).to include("RDV Téléphonique")
+          expect(subject).to include("RDV téléphonique")
           expect(subject).to include(rdv.address)
         end
       end
