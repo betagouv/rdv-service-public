@@ -114,8 +114,9 @@ RSpec.describe Users::RdvsController, type: :controller do
 
   describe "GET #show" do
     let(:user) { create(:user) }
-    let(:rdv) { create(:rdv, users: [user], starts_at: starts_at, created_by: "user") }
+    let(:rdv) { create(:rdv, users: [user], motif: motif, starts_at: starts_at, created_by: "user") }
     let(:starts_at) { DateTime.parse("2020-10-20 10h30") }
+    let(:motif) { build(:motif, reservable_online: true, rdvs_editable_by_user: true, rdvs_cancellable_by_user: true) }
 
     before do
       travel_to("01/01/2019".to_datetime)
@@ -146,7 +147,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     context "when the rdv is created by an agent" do
-      let(:rdv) { create(:rdv, users: [user], starts_at: starts_at, created_by: "agent") }
+      let(:rdv) { create(:rdv, users: [user], motif: motif, starts_at: starts_at, created_by: "agent") }
 
       it "does show link to edit" do
         get :show, params: { id: rdv.id }
@@ -159,8 +160,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     context "when the rdv motif is not reservable_online" do
-      let(:motif) { build(:motif, reservable_online: false) }
-      let(:rdv) { create(:rdv, motif: motif, users: [user], starts_at: starts_at, created_by: "agent") }
+      let(:motif) { build(:motif, reservable_online: false, rdvs_editable_by_user: true, rdvs_cancellable_by_user: true) }
 
       it "does show link to edit" do
         get :show, params: { id: rdv.id }
@@ -169,6 +169,33 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(response.body).to match(/Votre RDV/)
         expect(response.body).not_to match(/Déplacer le RDV/)
         expect(response.body).to match(/Annuler le RDV/)
+      end
+    end
+
+    context "when the rdv is set as not editable" do
+      let(:motif) { build(:motif, reservable_online: true, rdvs_editable_by_user: false, rdvs_cancellable_by_user: true) }
+
+      it "does show link to edit" do
+        get :show, params: { id: rdv.id }
+
+        expect(response).to be_successful
+        expect(response.body).to match(/Votre RDV/)
+        expect(response.body).not_to match(/Déplacer le RDV/)
+        expect(response.body).to match(/Annuler le RDV/)
+      end
+    end
+
+    context "when the rdv is set as not cancellable" do
+      let(:motif) { build(:motif, reservable_online: true, rdvs_editable_by_user: true, rdvs_cancellable_by_user: false) }
+
+      it "does show link to edit" do
+        get :show, params: { id: rdv.id }
+
+        expect(response).to be_successful
+        expect(response.body).to match(/Votre RDV/)
+        expect(response.body).to match(/Déplacer le RDV/)
+        expect(response.body).not_to match(/Annuler le RDV/)
+        expect(response.body).to match(/Ce rendez-vous n'est pas annulable en ligne/)
       end
     end
 
