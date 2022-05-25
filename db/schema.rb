@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_23_140836) do
+ActiveRecord::Schema.define(version: 2022_05_24_141757) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -330,6 +330,8 @@ ActiveRecord::Schema.define(version: 2022_05_23_140836) do
     t.boolean "collectif", default: false
     t.enum "location_type", default: "public_office", null: false, enum_type: "location_type"
     t.enum "category", enum_type: "motif_category"
+    t.boolean "rdvs_editable_by_user", default: true
+    t.boolean "rdvs_cancellable_by_user", default: true
     t.index "to_tsvector('simple'::regconfig, (COALESCE(name, (''::text)::character varying))::text)", name: "index_motifs_name_vector", using: :gin
     t.index ["category"], name: "index_motifs_on_category"
     t.index ["collectif"], name: "index_motifs_on_collectif"

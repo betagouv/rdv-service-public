@@ -101,7 +101,9 @@ class Admin::MotifsController < AgentAuthController
               :for_secretariat,
               :follow_up,
               :collectif,
-              :sectorisation_level)
+              :sectorisation_level,
+              :rdvs_cancellable_by_user,
+              :rdvs_editable_by_user)
   end
 
   def set_available_services
