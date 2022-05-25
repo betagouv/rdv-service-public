@@ -1,0 +1,9 @@
+<script>
+  const ENV = {
+    MATOMO_APP_ID: "<%= ENV["MATOMO_APP_ID"] %>",
+    SENTRY_DSN_RAILS: "<%= ENV["SENTRY_DSN_RAILS"] %>",
+    ENV: "<%= Rails.env %>",
+    SENTRY_CURRENT_ENV: "<%= ENV["SENTRY_CURRENT_ENV"] %>",
+    SENTRY_USER_CONTEXT: <%= raw @sentry_user.to_json %>,
+  };
+</script>
