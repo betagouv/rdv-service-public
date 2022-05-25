@@ -35,11 +35,11 @@ class ApplicationController < ActionController::Base
   end
 
   def sentry_user
-    user = current_agent || current_user
-    {
-      id: user&.id,
-      role: user&.class&.name || "Guest",
-      email: user&.email,
+    user_or_agent = current_agent || current_user
+    @sentry_user = {
+      id: user_or_agent&.id,
+      role: user_or_agent&.class&.name || "Guest",
+      email: user_or_agent&.email,
     }.compact
   end
 
