@@ -14,6 +14,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     name: Field::String,
     agents: Field::HasMany,
     motifs: Field::HasMany,
+    lieux: Field::HasMany,
     horaires: Field::String,
     phone_number: Field::String,
     human_id: Field::String,
@@ -41,6 +42,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     phone_number
     agents
     motifs
+    lieux
     human_id
     created_at
     updated_at

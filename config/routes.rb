@@ -23,6 +23,7 @@ Rails.application.routes.draw do
     resources :organisations
     resources :services
     resources :motifs
+    resources :lieux
     resources :territories
     resources :users do
       get "sign_in_as", on: :member
