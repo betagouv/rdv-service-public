@@ -10,7 +10,7 @@ class Users::UserNameInitialsVerificationController < UserAuthController
   def create
     if first_three_letters_matching?
       set_user_name_initials_verified
-      redirect_to session.delete(:return_to_after_verification)
+      redirect_to after_success_redirect_path
     else
       flash.now[:error] = I18n.t("users.user_name_initials_mismatch")
       render :new
@@ -21,6 +21,13 @@ class Users::UserNameInitialsVerificationController < UserAuthController
 
   def letter_params
     params.permit(:letter0, :letter1, :letter2)
+  end
+
+  def after_success_redirect_path
+    return session.delete(:return_to_after_verification) if session[:return_to_after_verification]
+    return users_rdv_path(rdv_by_token) if rdv_by_token
+
+    root_path
   end
 
   def first_three_letters
