@@ -1,3 +1,5 @@
+import 'moment/locale/fr.js';
+
 class RecurrenceForm {
   constructor() {
     this.element = document.querySelector('.js-recurrence-container')

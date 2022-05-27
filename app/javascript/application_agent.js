@@ -3,8 +3,6 @@ require("turbolinks").start()
 require("chartkick")
 require("chart.js")
 import 'bootstrap';
-import 'moment/moment.js';
-import 'moment/locale/fr.js';
 import 'holderjs/holder.min';
 import 'select2/dist/js/select2.full.min.js';
 import 'select2/dist/js/i18n/fr.js';

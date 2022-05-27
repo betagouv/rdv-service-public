@@ -21,7 +21,8 @@ module Lapin
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
-    config.time_zone = "Paris"
+    config.time_zone = "Paris" # The timezone is also set on the client side for the FullCalendar plugin.
+    # You will need to change it there too if you change it here.
 
     config.i18n.available_locales = %i[fr]
     config.i18n.default_locale = :fr

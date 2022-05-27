@@ -28,6 +28,7 @@
     "mini-css-extract-plugin": "^2.6.0",
     "minimist": "^1.2.6",
     "moment": "^2.29.2",
+    "moment-timezone": "^0.5.34",
     "popper.js": "^1.15.0",
     "rails-erb-loader": ">=5.5.2",
     "sass": "^1.51.0",
