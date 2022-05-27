@@ -21,7 +21,7 @@ jobs:
 
     - name: Get Hash
       id: hash
-      run: echo "git_hash=$(git rev-parse --short "$GITHUB_SHA")" > "${GITHUB_HASH}"
+      run: export GITHUB_HASH=$(git rev-parse --short "$GITHUB_SHA")
 
     - name: Check Hash
       run: echo "${{ env.hash }}"
