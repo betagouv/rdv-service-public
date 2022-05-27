@@ -48,16 +48,8 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
   def invite_params
     params = devise_parameter_sanitizer.sanitize(:invite)
 
-    # remove not accessible organisation
-    params[:roles_attributes].delete_if do |role_attributes|
-      params[:roles_attributes][role_attributes]["level"] == "none"
-    end
-
-    # Organisation's admin is allowed to invite agents
-    allow_to_invite_agents = params[:roles_attributes].any? { |t| t[1]["level"] == "admin" }
-
-    # only ever invite to the current territory
-    params.merge!({ agent_territorial_access_rights_attributes: [{ territory_id: current_territory.id, allow_to_invite_agents: allow_to_invite_agents }] })
+    # Only ever invite to the current territory
+    params.merge!(agent_territorial_access_rights_attributes: { "0": { territory: current_territory } })
 
     # the omniauth uid _is_ the email, always. note: this may be better suited in a hook in agent.rb
     params[:uid] = params[:email]
