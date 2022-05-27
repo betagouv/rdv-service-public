@@ -36,13 +36,9 @@ RUN gem install foreman --conservative
 
 RUN bundle install -j4
 
-RUN bundle exec rake assets:precompile
-
 RUN webpack --config webpack.config.js
 
 RUN yarn install
-
-RUN bundle exec rake assets:clean
 
 ENTRYPOINT ["/bin/bash", "./bin/start_web_server"]
 
