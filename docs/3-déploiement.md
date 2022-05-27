@@ -31,7 +31,3 @@ Les environnements de démo et de production son identique. La démo est une pla
 
 La branche par défaut est « production ».
 
-Nous tenons à jour [les dernières nouveautés sur la doc](https://doc.rdv-solidarites.fr/dernieres-nouveautes). C'est lié à un répo [Github/rdv-solidarites/rdv-solidarites-doc](https://github.com/rdv-solidarites/rdv-solidarites-doc).
-
-Les tickets de la colonne « En production » du [tableau de suivi des développements](https://github.com/betagouv/rdv-solidarites.fr/projects/8?fullscreen=true) après les avoir inscrit dans les dernières nouveautés.
-
