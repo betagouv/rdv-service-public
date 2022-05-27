@@ -18,30 +18,27 @@ jobs:
     environment: lapin-beta-gouv
     steps:
     - uses: actions/checkout@v2 # first action : checkout source code
-    - name: Get Branch
-      id: branch
-      run: echo "git_branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_BRANCH
-
-    - name: Check Branch
-      run: echo "${{ env.branch }}"
 
     - name: Get Hash
       id: hash
-      run: echo "git_hash=$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_HASH
+      run: echo "git_hash=$(git rev-parse --short "$GITHUB_SHA")" > $GITHUB_HASH
 
     - name: Check Hash
       run: echo "${{ env.hash }}"
+
     - name: docker login
       run: | # log into docker hub account
-        docker login $DOCKER_REPO_NAME -u $DOCKER_USER -p $DOCKER_PASSWORD  
+        docker login $DOCKER_REPO_NAME -u $DOCKER_USER -p $DOCKER_PASSWORD
+        
     - name: Get current date # get the date of the build
       id: date
       run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
-    - name: Build the Webapp Docker image # push The image to the docker hub
-      run: docker build . --file $WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:${{ env.branch }}-${{ env.hash }}-${{ steps.date.outputs.date }}
+
+    - name: Build the Webapp Docker image
+      run: docker build . --file $WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-${{ env.hash }}-${{ steps.date.outputs.date }}
     - name: Docker Push Webapp image
-      run: docker push $DOCKER_REPO_NAME/webapp:${{ env.branch }}-${{ env.hash }}-${{ steps.date.outputs.date }}
-    - name: Build the Job Docker image # push The image to the docker hub
-      run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:${{ env.branch }}-${{ env.hash }}-${{ steps.date.outputs.date }}
+      run: docker push $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-${{ env.hash }}-${{ steps.date.outputs.date }}
+    - name: Build the Job Docker image
+      run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-${{ env.hash }}-${{ steps.date.outputs.date }}
     - name: Docker Push Job image
-      run: docker push $DOCKER_REPO_NAME/jobs:${{ env.branch }}-${{ env.hash }}-${{ steps.date.outputs.date }} s
+      run: docker push $DOCKER_REPO_NAME/jobs:$GITHUB_REF_NAME-${{ env.hash }}-${{ steps.date.outputs.date }} s
