@@ -87,7 +87,18 @@ class CalendarRdvSolidarites {
       maxTime: '20:00:00',
       datesRender: this.datesRender,
       eventRender: this.eventRender,
-      eventMouseLeave: (info) => $(info.el).tooltip('hide') // extra security
+      eventMouseLeave: (info) => $(info.el).tooltip('hide'), // extra security
+      timeZone: "Europe/Paris" // This is a hack to make sure that the events will be shown at the proper time in the calendar.
+      // If this is removed, there is a bug that causes the events in the calendar to be show at the wrong
+      // time for agents that are not in the Paris timezone.
+      // The proper fix for this would be to make sure we store all rdvs with the right timezone, but that's a much bigger project.
+      // The timezone is forced to paris on the server side, so if we make sure that we also force it to the same timezone here,
+      // we always have a consistent result.
+      // We're always assuming that people are interested in their local time.
+      //
+      // There is one case for which this fix would fail: if the local time of the user and the agent is not the same (for example the agent is
+      // in the métropole and the user is at la réunion), they will not see the same time
+      // see the same time for the rdv. This seems unlikely for now.
     });
   }
 
