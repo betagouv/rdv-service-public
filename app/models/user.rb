@@ -48,11 +48,13 @@ class User < ApplicationRecord
   has_many :relatives, foreign_key: "responsible_id", class_name: "User", inverse_of: :responsible, dependent: :nullify
   has_many :file_attentes, dependent: :destroy
   has_many :receipts, dependent: :destroy
+  has_many :user_territories, dependent: :destroy
 
   # Through relations
   has_many :organisations, through: :user_profiles, dependent: :destroy
   has_many :webhook_endpoints, through: :organisations
   has_many :rdvs, through: :rdvs_users
+  has_many :territories, through: :user_territories
 
   accepts_nested_attributes_for :user_profiles
 
@@ -86,6 +88,7 @@ class User < ApplicationRecord
   def add_organisation(organisation)
     self_and_relatives_and_responsible.each do |u|
       u.organisations << organisation if u.organisation_ids.exclude?(organisation.id)
+      u.territories << organisation.territory if u.territory_ids.exclude?(organisation.territory.id)
     end
   end
 

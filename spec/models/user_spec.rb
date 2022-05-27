@@ -40,6 +40,14 @@ describe User, type: :model do
       expect(user.reload.organisations).to eq([organisation])
     end
 
+    it "set territory too" do
+      territory = create(:territory)
+      organisation = create(:organisation, territory: territory)
+      user = create(:user, organisations: [], territories: [])
+      user.add_organisation(organisation)
+      expect(user.reload.territories).to eq([territory])
+    end
+
   end
 
   describe "#set_organisations_from_responsible" do
