@@ -41,4 +41,4 @@ jobs:
     - name: Build the Job Docker image
       run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-${{ env.hash }}-${{ steps.date.outputs.date }}
     - name: Docker Push Job image
-      run: docker push $DOCKER_REPO_NAME/jobs:$GITHUB_REF_NAME-${{ env.hash }}-${{ steps.date.outputs.date }} s
+      run: docker push $DOCKER_REPO_NAME/jobs:$GITHUB_REF_NAME-${{ env.hash }}-${{ steps.date.outputs.date }}
