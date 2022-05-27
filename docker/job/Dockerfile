@@ -2,6 +2,8 @@ FROM ruby:3.0.3
 
 RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
 
+WORKDIR /myapp/rdv-solidarites.fr
+
 ENV NODE_VERSION=16.13.0
 ENV BUNDLE_WITHOUT='development:test'
 ENV BUNDLE_PATH=vendor/bundle
@@ -25,8 +27,6 @@ RUN npm version && npm install --global yarn
 
 RUN npm install webpack -g
 RUN npm install webpack-cli -g
-
-WORKDIR /myapp/rdv-solidarites.fr
 
 COPY . .
 
