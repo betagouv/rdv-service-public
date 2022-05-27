@@ -1,0 +1,34 @@
+name: Push docker image 
+on: 
+  push: 
+    branches:
+      - develop
+      - 2490-Dockerfile-web # When pushing to any branch then run this action
+# Env variable
+env:
+  DOCKER_USER: ${{secrets.DOCKER_USER}}
+  DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+  DOCKER_REPO_NAME: ${{secrets.DOCKER_REPO_NAME}}
+  WEBAPP_DOCKERFILE: ./docker/web/Dockerfile
+  JOB_DOCKERFILE: ./docker/job/Dockerfile
+  git_hash: $(git rev-parse --short "$GITHUB_SHA")
+  git_branch: ${GITHUB_REF#refs/heads/}
+jobs:
+  push-image:  # job name
+    runs-on: ubuntu-latest  # runner name : (ubuntu latest version) 
+    steps:
+    - uses: actions/checkout@v2 # first action : checkout source code
+    - name: docker login
+      run: | # log into docker hub account
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD  
+    - name: Get current date # get the date of the build
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
+    - name: Build the Webapp Docker image # push The image to the docker hub
+      run: docker build . --file WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:${git_branch}${git_hash}${{ steps.date.outputs.date }}
+    - name: Docker Push Webapp image
+      run: docker push $DOCKER_REPO_NAME/webapp:${git_branch}${git_hash}${{ steps.date.outputs.date }}
+    - name: Build the Job Docker image # push The image to the docker hub
+      run: docker build . --file JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:${git_branch}${git_hash}${{ steps.date.outputs.date }}
+    - name: Docker Push Job image
+      run: docker push $DOCKER_REPO_NAME/jobs:${git_branch}${git_hash}${{ steps.date.outputs.date }} 
