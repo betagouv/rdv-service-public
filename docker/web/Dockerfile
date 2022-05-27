@@ -3,7 +3,7 @@ FROM ruby:3.0.3
 RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
 
 ENV NODE_VERSION=16.13.0
-#ENV BUNDLE_WITHOUT='development:test'
+ENV BUNDLE_WITHOUT='development:test'
 ENV BUNDLE_PATH=vendor/bundle
 ENV BUNDLE_BIN=vendor/bundle/bin
 ENV BUNDLE_DEPLOYMENT=1
