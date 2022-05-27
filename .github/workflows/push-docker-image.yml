@@ -15,7 +15,8 @@ env:
   git_branch: ${GITHUB_REF#refs/heads/}
 jobs:
   push-image:  # job name
-    runs-on: ubuntu-latest  # runner name : (ubuntu latest version) 
+    runs-on: ubuntu-latest  # runner name : (ubuntu latest version)
+    environment: lapin-beta-gouv
     steps:
     - uses: actions/checkout@v2 # first action : checkout source code
     - name: docker login
