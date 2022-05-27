@@ -47,7 +47,6 @@ describe User, type: :model do
       user.add_organisation(organisation)
       expect(user.reload.territories).to eq([territory])
     end
-
   end
 
   describe "#set_organisations_from_responsible" do

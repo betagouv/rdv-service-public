@@ -18,6 +18,7 @@ class Admin::UsersController < AgentAuthController
 
   PERMITTED_NESTED_ATTRIBUTES = {
     agent_ids: [],
+    territory_ids: [],
     user_profiles_attributes: %i[notes logement id organisation_id],
   }.freeze
 
@@ -152,7 +153,7 @@ class Admin::UsersController < AgentAuthController
       :responsible_id,
       **PERMITTED_NESTED_ATTRIBUTES,
       responsible_attributes: [PERMITTED_ATTRIBUTES, { **PERMITTED_NESTED_ATTRIBUTES }]
-    )
+    ).merge!({ territory_ids: [current_organisation.territory.id] })
   end
 
   def user_form_object

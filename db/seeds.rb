@@ -448,6 +448,7 @@ user_org_paris_nord_patricia = User.new(
   password: "123456",
   phone_number: "0101010101",
   organisation_ids: [org_paris_nord.id, org_arques.id],
+  territory_ids: [territory75.id, territory62.id],
   created_through: "user_sign_up"
 )
 
@@ -461,6 +462,7 @@ user_org_paris_nord_josephine = User.new(
   birth_date: Date.parse("01/03/2018"),
   responsible: user_org_paris_nord_patricia,
   organisation_ids: [org_paris_nord.id],
+  territory_ids: [territory75.id],
   created_through: "user_sign_up"
 )
 user_org_paris_nord_josephine.save!
@@ -473,6 +475,7 @@ user_org_paris_nord_lea = User.new(
   password: "123456",
   phone_number: "0101010102",
   organisation_ids: [org_paris_nord.id],
+  territory_ids: [territory75.id],
   created_through: "user_sign_up"
 )
 
@@ -488,6 +491,7 @@ user_org_paris_nord_jean = User.new(
   password: "123456",
   phone_number: "0101010103",
   organisation_ids: [org_paris_nord.id, org_bapaume.id, org_arques.id],
+  territory_ids: [territory75.id, territory62.id],
   created_through: "user_sign_up"
 )
 
@@ -516,6 +520,8 @@ results = User.insert_all!(users_attributes, returning: "id") # [{"id"=>1}, {"id
 user_ids = results.flat_map(&:values) # [1, 2, ...]
 user_organisation_attributes = user_ids.map { |id| { user_id: id, organisation_id: org_paris_nord.id } }
 UserProfile.insert_all!(user_organisation_attributes)
+user_territory_attributes = user_ids.map { |id| { user_id: id, territory_id: territory75.id } }
+UserTerritory.insert_all!(user_territory_attributes)
 # rubocop:enable Rails/SkipsModelValidations
 
 # AGENTS
