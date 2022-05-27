@@ -2,22 +2,26 @@
 
 module SuperAdmins
   class LieuxController < SuperAdmins::ApplicationController
-    # To customize the behavior of this controller,
-    # you can overwrite any of the RESTful actions. For example:
-    #
-    # def index
-    #   super
-    #   @resources = Agent.
-    #     page(params[:page]).
-    #     per(10)
-    # end
+    # On modifie cette action pour pouvoir mettre une valeur par défaut en availability
+    def create
+      resource = resource_class.new(resource_params)
+      authorize_resource(resource)
 
-    # Define a custom finder by overriding the `find_resource` method:
-    # def find_resource(param)
-    #   Agent.find_by!(slug: param)
-    # end
+      lieu = Lieu.new(resource_params)
+      lieu.availability = :enabled
 
-    # See https://administrate-prototype.herokuapp.com/customizing_controller_actions
-    # for more information
+      lieu.save
+
+      if lieu.errors.any?
+        render :new, locals: {
+          page: Administrate::Page::Form.new(dashboard, resource),
+        }
+      else
+        redirect_to(
+          [namespace, resource],
+          notice: translate_with_resource("create.success")
+        )
+      end
+    end
   end
 end
