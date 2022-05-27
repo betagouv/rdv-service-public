@@ -26,10 +26,10 @@ jobs:
       id: date
       run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
     - name: Build the Webapp Docker image # push The image to the docker hub
-      run: docker build . --file WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:${git_branch}${git_hash}${{ steps.date.outputs.date }}
+      run: docker build . --file $WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:${git_branch}${git_hash}${{ steps.date.outputs.date }}
     - name: Docker Push Webapp image
       run: docker push $DOCKER_REPO_NAME/webapp:${git_branch}${git_hash}${{ steps.date.outputs.date }}
     - name: Build the Job Docker image # push The image to the docker hub
-      run: docker build . --file JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:${git_branch}${git_hash}${{ steps.date.outputs.date }}
+      run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:${git_branch}${git_hash}${{ steps.date.outputs.date }}
     - name: Docker Push Job image
       run: docker push $DOCKER_REPO_NAME/jobs:${git_branch}${git_hash}${{ steps.date.outputs.date }} 
