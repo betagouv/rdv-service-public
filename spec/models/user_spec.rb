@@ -1,57 +1,45 @@
 # frozen_string_literal: true
 
 describe User, type: :model do
-  describe "#add_organisation" do
-    subject do
+  describe "new #add_organisation" do
+    it "add new organisation to none" do
+      organisation = create(:organisation)
+      user = create(:user)
       user.add_organisation(organisation)
-      user.reload
-      relative.reload if defined?(relative)
-      responsible.reload if defined?(responsible)
+      expect(user.reload.organisations).to eq([organisation])
     end
 
-    let(:user) { create(:user, organisations: organisations) }
-    let(:organisation) { create(:organisation) }
-
-    describe "when organisation is not associated" do
-      let(:organisations) { [] }
-
-      it { expect { subject }.to change(user, :organisation_ids).from([]).to([organisation.id]) }
+    it "add new organisation to existing one" do
+      organisation = create(:organisation)
+      existing_organisation = create(:organisation)
+      user = create(:user, organisations: [existing_organisation])
+      user.add_organisation(organisation)
+      expect(user.organisations).to match_array([organisation, existing_organisation])
     end
 
-    describe "when organisation is associated" do
-      let(:organisations) { [organisation] }
-
-      it { expect { subject }.not_to change(user, :organisation_ids) }
-
-      describe "with many organisations" do
-        let(:organisations) { [organisation, create(:organisation)] }
-
-        it "does not change organisations" do
-          subject
-          expect(organisations).to match_array(user.organisations)
-        end
-      end
+    it "do not change nothing if organisation already set" do
+      organisation = create(:organisation)
+      user = create(:user, organisations: [organisation])
+      user.add_organisation(organisation)
+      expect(user.reload.organisations).to eq([organisation])
     end
 
-    describe "when responsible has relative" do
-      let(:organisations) { [organisation] }
-
-      describe "add organisation to responsible" do
-        let!(:user) { create(:user, organisations: []) }
-        let!(:relative) { create(:user, organisations: [], responsible_id: user.id) }
-
-        it { expect { subject }.to change(user, :organisation_ids).from([]).to([organisation.id]) }
-        it { expect { subject }.to change(relative, :organisation_ids).from([]).to([organisation.id]) }
-      end
-
-      describe "add organisation to relative" do
-        let!(:responsible) { create(:user, organisations: []) }
-        let!(:user) { create(:user, organisations: [], responsible_id: responsible.id) }
-
-        it { expect { subject }.to change(user, :organisation_ids).from([]).to([organisation.id]) }
-        it { expect { subject }.to change(responsible, :organisation_ids).from([]).to([organisation.id]) }
-      end
+    it "set organisation to relatives" do
+      organisation = create(:organisation)
+      user = create(:user, organisations: [])
+      relative = create(:user, organisations: [], responsible: user)
+      user.add_organisation(organisation)
+      expect(relative.reload.organisations).to eq([organisation])
     end
+
+    it "set organisation to responsible" do
+      organisation = create(:organisation)
+      user = create(:user, organisations: [])
+      relative = create(:user, organisations: [], responsible: user)
+      relative.add_organisation(organisation)
+      expect(user.reload.organisations).to eq([organisation])
+    end
+
   end
 
   describe "#set_organisations_from_responsible" do
