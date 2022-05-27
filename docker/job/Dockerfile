@@ -25,9 +25,6 @@ RUN npm --version
 
 RUN npm version && npm install --global yarn
 
-RUN npm install webpack -g
-RUN npm install webpack-cli -g
-
 COPY . .
 
 RUN gem install bundler --conservative
