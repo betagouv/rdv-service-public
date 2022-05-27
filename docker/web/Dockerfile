@@ -9,9 +9,6 @@ ENV BUNDLE_WITHOUT='development:test'
 ENV BUNDLE_PATH=vendor/bundle
 ENV BUNDLE_BIN=vendor/bundle/bin
 ENV BUNDLE_DEPLOYMENT=1
-ENV RAILS_ENV=production
-ENV RACK_ENV=production
-ENV HOST="https://www.rdv-solidarites.fr"
 
 RUN apt-get install -y curl
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
