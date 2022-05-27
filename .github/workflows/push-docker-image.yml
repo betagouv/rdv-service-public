@@ -11,7 +11,7 @@ env:
   DOCKER_REPO_NAME: ${{secrets.DOCKER_REPO_NAME}}
   WEBAPP_DOCKERFILE: ./docker/web/Dockerfile
   JOB_DOCKERFILE: ./docker/job/Dockerfile
-  git_hash: $(git rev-parse --short "$GITHUB_SHA")
+  git_hash: $(git rev-parse --short $GITHUB_SHA)
 jobs:
   push-image:  # job name
     runs-on: ubuntu-latest  # runner name : (ubuntu latest version)
@@ -19,12 +19,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2 # first action : checkout source code
 
-    - name: Get Hash
-      id: hash
-      run: echo $GITHUB_SHA && echo $(git rev-parse --short $GITHUB_SHA) && GITHUB_HASH=$(git rev-parse --short $GITHUB_SHA)
-
     - name: Check Hash
-      run: echo $GITHUB_HASH
+      run: echo $git_hash
 
     - name: docker login
       run: | # log into docker hub account
@@ -35,10 +31,10 @@ jobs:
       run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
 
     - name: Build the Webapp Docker image
-      run: docker build . --file $WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-${{ env.hash }}-${{ steps.date.outputs.date }}
+      run: docker build . --file $WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-$git_hash-${{ steps.date.outputs.date }}
     - name: Docker Push Webapp image
-      run: docker push $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-${{ env.hash }}-${{ steps.date.outputs.date }}
+      run: docker push $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-$git_hash-${{ steps.date.outputs.date }}
     - name: Build the Job Docker image
-      run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-${{ env.hash }}-${{ steps.date.outputs.date }}
+      run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-$git_hash-${{ steps.date.outputs.date }}
     - name: Docker Push Job image
-      run: docker push $DOCKER_REPO_NAME/jobs:$GITHUB_REF_NAME-${{ env.hash }}-${{ steps.date.outputs.date }}
+      run: docker push $DOCKER_REPO_NAME/jobs:$GITHUB_REF_NAME-$git_hash-${{ steps.date.outputs.date }}
