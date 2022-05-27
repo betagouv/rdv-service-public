@@ -24,7 +24,7 @@ jobs:
       run: export GITHUB_HASH=$(git rev-parse --short "$GITHUB_SHA")
 
     - name: Check Hash
-      run: echo "${{ env.hash }}"
+      run: echo $GITHUB_HASH
 
     - name: docker login
       run: | # log into docker hub account
@@ -35,10 +35,10 @@ jobs:
       run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
 
     - name: Build the Webapp Docker image
-      run: docker build . --file $WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-${{ env.hash }}-${{ steps.date.outputs.date }}
+      run: docker build . --file $WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-$GITHUB_HASH-${{ steps.date.outputs.date }}
     - name: Docker Push Webapp image
-      run: docker push $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-${{ env.hash }}-${{ steps.date.outputs.date }}
+      run: docker push $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-$GITHUB_HASH-${{ steps.date.outputs.date }}
     - name: Build the Job Docker image
-      run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-${{ env.hash }}-${{ steps.date.outputs.date }}
+      run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-$GITHUB_HASH-${{ steps.date.outputs.date }}
     - name: Docker Push Job image
-      run: docker push $DOCKER_REPO_NAME/jobs:$GITHUB_REF_NAME-${{ env.hash }}-${{ steps.date.outputs.date }}
+      run: docker push $DOCKER_REPO_NAME/jobs:$GITHUB_REF_NAME-$GITHUB_HASH-${{ steps.date.outputs.date }}
