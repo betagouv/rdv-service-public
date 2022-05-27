@@ -25,6 +25,8 @@ RUN npm version && npm install --global yarn
 
 RUN npm install webpack -g
 RUN npm install webpack-cli -g
+RUN npm link webpack
+RUN npm link webpack-cli
 
 WORKDIR /myapp/rdv-solidarites.fr
 
