@@ -20,7 +20,7 @@ jobs:
     - uses: actions/checkout@v2 # first action : checkout source code
 
     - name: Check Hash
-      run: echo $git_hash
+      run: echo ${GITHUB_SHA::6}
 
     - name: docker login
       run: | # log into docker hub account
@@ -31,10 +31,10 @@ jobs:
       run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
 
     - name: Build the Webapp Docker image
-      run: docker build . --file $WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-$git_hash-${{ steps.date.outputs.date }}
+      run: docker build . --file $WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-${GITHUB_SHA::6}-${{ steps.date.outputs.date }}
     - name: Docker Push Webapp image
-      run: docker push $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-$git_hash-${{ steps.date.outputs.date }}
+      run: docker push $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-${GITHUB_SHA::6}-${{ steps.date.outputs.date }}
     - name: Build the Job Docker image
-      run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-$git_hash-${{ steps.date.outputs.date }}
+      run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-${GITHUB_SHA::6}-${{ steps.date.outputs.date }}
     - name: Docker Push Job image
-      run: docker push $DOCKER_REPO_NAME/jobs:$GITHUB_REF_NAME-$git_hash-${{ steps.date.outputs.date }}
+      run: docker push $DOCKER_REPO_NAME/jobs:$GITHUB_REF_NAME-${GITHUB_SHA::6}-${{ steps.date.outputs.date }}
