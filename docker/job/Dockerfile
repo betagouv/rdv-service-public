@@ -1,15 +1,13 @@
 FROM ruby:3.0.3
 
-RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
+RUN apt-get update -qq && apt-get install -y nodejs postgresql-client graphviz graphviz-dev
 
 WORKDIR /myapp/rdv-solidarites.fr
 
 ENV NODE_VERSION=16.13.0
-ENV BUNDLE_WITHOUT='development:test'
 ENV BUNDLE_PATH=vendor/bundle
 ENV BUNDLE_BIN=vendor/bundle/bin
 ENV BUNDLE_DEPLOYMENT=1
-
 
 RUN apt-get install -y curl
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
@@ -29,8 +27,14 @@ RUN gem install bundler --conservative
 
 RUN gem install foreman --conservative
 
+RUN gem install ruby-graphviz
+
 RUN bundle install -j4
 
+RUN bundle exec rake assets:precompile
+
 RUN yarn install
+
+RUN bundle exec rake assets:clean
 
 ENTRYPOINT ["bundle", "exec", "bin/delayed_job", "run"]
