@@ -12,6 +12,11 @@ env:
   WEBAPP_DOCKERFILE: ./docker/web/Dockerfile
   JOB_DOCKERFILE: ./docker/job/Dockerfile
   git_hash: $(git rev-parse --short $GITHUB_SHA)
+  HOST: http://localhost:3000
+  RAILS_ENV: development
+  RACK_ENV: development 
+  RAILS_SERVE_STATIC_FILES: enabled
+  RAILS_LOG_TO_STDOUT: enabled
 jobs:
   push-image:  # job name
     runs-on: ubuntu-latest  # runner name : (ubuntu latest version)
