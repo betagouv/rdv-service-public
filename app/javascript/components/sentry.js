@@ -6,6 +6,7 @@ function initSentry() {
       dsn: ENV.SENTRY_DSN_RAILS,
       environment: ENV.SENTRY_CURRENT_ENV,
     });
+    Sentry.setUser(ENV.SENTRY_USER_CONTEXT);
   }
 }
 

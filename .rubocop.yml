@@ -98,6 +98,9 @@ Rails/LexicallyScopedActionFilter:
     - 'app/controllers/agents/sessions_controller.rb'
     - 'app/controllers/agent_auth_controller.rb'
 
+Rails/ActiveRecordCallbacksOrder:
+  Enabled: false
+
 # This allows the standard syntax for the `change` matcher, see:
 # https://relishapp.com/rspec/rspec-expectations/docs/built-in-matchers/change-matcher
 Lint/AmbiguousBlockAssociation:
@@ -149,6 +152,7 @@ RSpec/NestedGroups:
 RSpec/DescribeClass:
   Exclude:
     - "spec/features/**/*"
+    - "spec/requests/**/*"
 
 Style/AsciiComments:
   Enabled: false

@@ -8,9 +8,10 @@ describe PlageOuverturesHelper do
   end
 
   describe "#time_collections_for_plage_ouverture" do
-    it "return 156 entries" do
-      expect(time_collections_for_plage_ouverture.count).to eq(156)
+    it "goes from 7:00 to 20:00, so that it's possible to create a plage_ouverture that allows booking a rdv at 19:00" do
+      expect(time_collections_for_plage_ouverture.count).to eq(157)
       expect(time_collections_for_plage_ouverture.first).to eq("07:00")
+      expect(time_collections_for_plage_ouverture.last).to eq("20:00")
     end
   end
 
@@ -18,6 +19,7 @@ describe PlageOuverturesHelper do
     it "return 288 entries" do
       expect(time_collections_for_absence.count).to eq(288)
       expect(time_collections_for_absence.first).to eq("00:00")
+      expect(time_collections_for_absence.last).to eq("23:55")
     end
   end
 

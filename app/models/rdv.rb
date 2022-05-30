@@ -45,7 +45,6 @@ class Rdv < ApplicationRecord
 
   # Delegates
   delegate :home?, :phone?, :public_office?, :reservable_online?, :service_social?, :follow_up?, :service, :collectif?, :collectif, :individuel?, to: :motif
-  delegate :show_token_in_sms?, to: :organisation
 
   # Validations
   validates :starts_at, :ends_at, :agents, presence: true
@@ -58,7 +57,7 @@ class Rdv < ApplicationRecord
   # Hooks
   after_save :associate_users_with_organisation
   after_commit :update_agents_unknown_past_rdv_count, if: -> { past? }
-  after_commit :reload_uuid, on: :create
+  before_validation { self.uuid ||= SecureRandom.uuid }
 
   # Scopes
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
@@ -300,11 +299,6 @@ class Rdv < ApplicationRecord
 
   def update_agents_unknown_past_rdv_count
     agents.each(&:update_unknown_past_rdv_count!)
-  end
-
-  def reload_uuid
-    # https://github.com/rails/rails/issues/17605
-    self[:uuid] = self.class.where(id: id).pick(:uuid) if attributes.key? "uuid"
   end
 
   def cant_destroy_if_receipts_exist

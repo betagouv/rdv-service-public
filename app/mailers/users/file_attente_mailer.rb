@@ -7,7 +7,7 @@ class Users::FileAttenteMailer < ApplicationMailer
     @token = params[:token]
   end
 
-  default to: -> { @user.email }
+  default to: -> { @user.email }, reply_to: -> { TransferEmailReplyJob.reply_address_for_rdv(@rdv) }
 
   def new_creneau_available
     subject = t("users.file_attente_mailer.new_creneau_available.title")
