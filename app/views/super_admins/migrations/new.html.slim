@@ -1,0 +1,12 @@
+section.main-content__body
+  h1 Migration de #{@agent.full_name} vers une nouvelle organisation
+
+  p Tous les rdvs et usagers de l’agent seront déplacés dans la nouvelle organisation.
+
+  p L’agent sera supprimé de l'ancienne organisation.
+
+  = simple_form_for("", url: super_admins_agent_migrations_path(agent_id: @agent.id)) do |f|
+
+    = f.input :old_organisation_id, collection: @agent.organisations, label: "Ancienne organisation", include_blank: false
+    = f.input :new_organisation_id, type: :number, label: "ID de la nouvelle organisation"
+    = f.submit "Migrer"

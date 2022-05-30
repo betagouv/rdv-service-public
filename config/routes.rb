@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     resources :agents do
       get "sign_in_as", on: :member
       post :invite, on: :member
+      resources :migrations, only: %i[new create]
     end
     resources :super_admins
     resources :organisations
