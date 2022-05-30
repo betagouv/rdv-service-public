@@ -28,7 +28,7 @@ module Rdv::AddressConcern
     result || ""
   end
 
-  def address_complete_without_personal_details
+  def address_for_export
     result = case motif.location_type.to_sym
              when :public_office
                lieu&.full_name
