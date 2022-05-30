@@ -38,5 +38,3 @@ jobs:
       run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/jobs:$GITHUB_REF_NAME-${GITHUB_SHA::8}-${{ steps.date.outputs.date }}
     - name: Docker Push Job image
       run: docker push $DOCKER_REPO_NAME/jobs:$GITHUB_REF_NAME-${GITHUB_SHA::8}-${{ steps.date.outputs.date }}
-
-s
