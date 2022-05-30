@@ -27,14 +27,10 @@ RUN gem install bundler --conservative
 
 RUN gem install foreman --conservative
 
-RUN gem install ruby-graphviz
-
 RUN bundle install -j4
-
-RUN bundle exec rake assets:precompile
 
 RUN yarn install
 
-RUN bundle exec rake assets:clean
+RUN yarn run build
 
 ENTRYPOINT ["bundle", "exec", "bin/delayed_job", "run"]
