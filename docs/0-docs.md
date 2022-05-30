@@ -5,7 +5,6 @@
 - [2-contributions.md](2-contributions.md)
 - [3-déploiement.md](3-déploiement.md)
 - [4-notes-techniques.md](4-notes-techniques.md)
-- [5-decisions-techniques.md](5-decisions-techniques.md)
 
 ## Outils
 
@@ -32,6 +31,6 @@ Please [contact us](mailto:contact@rdv-solidarites.fr) to report any vulnerabili
 
 ## Développement
 
-[Installation](1-installation.md)
-[Contribuer](2.contributions.md)
+- [Installation](1-installation.md)
+- [Contribuer](2-contributions.md)
 

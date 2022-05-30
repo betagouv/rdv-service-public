@@ -1,0 +1,10 @@
+div
+  p = t("mailers.common.hello")
+  p = t(".intro", author: @author)
+  blockquote
+    h4 = @reply_subject
+    div = simple_format(@reply_body)
+
+  p = t("agents.reply_transfer_mailer.shared.attachments", attachment_names: @attachment_names) if @attachment_names.present?
+
+  p = t(".instructions")

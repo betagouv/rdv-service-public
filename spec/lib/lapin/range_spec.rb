@@ -2,33 +2,49 @@
 
 describe Lapin::Range do
   describe "#ensure_date_range_with_time" do
-    it "returns range with given datetime_range" do
-      friday = Time.zone.parse("20210430 8:00")
-      travel_to(friday)
-      date_range = Time.zone.parse("2021-12-20 11:00")..Time.zone.parse("2021-12-21 18:00")
-      expected_range = Time.zone.parse("2021-12-20 11:00")..Time.zone.parse("2021-12-21 18:00")
-      datetime_range = described_class.ensure_date_range_with_time(date_range)
-      expect(datetime_range).to eq(expected_range)
+    subject { described_class.ensure_date_range_with_time(date_range) }
+
+    let!(:date_range) { lower_bound..higher_bound }
+    let!(:now) { "2021-12-10 10:00".to_time }
+
+    before { travel_to(now) }
+
+    context "when given datetime bounds" do
+      let!(:lower_bound) { "2021-12-20 11:00".to_datetime }
+      let!(:higher_bound) { "2021-12-21 18:00".to_datetime }
+
+      it "returns range with same datetime bounds" do
+        expect(subject).to eq(date_range)
+      end
     end
 
-    it "returns range from beginning of day of range begin and end of day of range end wit date range" do
-      friday = Time.zone.parse("20210430 8:00")
-      travel_to(friday)
-      date_range = Date.new(2021, 12, 20)..Date.new(2021, 12, 21)
-      expected_range = Date.new(2021, 12, 20).beginning_of_day..(Date.new(2021, 12, 21).end_of_day)
-      datetime_range = described_class.ensure_date_range_with_time(date_range)
-      expect(datetime_range).to eq(expected_range)
+    context "when given time bounds" do
+      let!(:lower_bound) { "2021-12-20 11:00".to_time }
+      let!(:higher_bound) { "2021-12-21 18:00".to_time }
+
+      it "returns range with same time bounds" do
+        expect(subject).to eq(date_range)
+      end
     end
 
-    it "returns range from now to end of given datetime range" do
-      friday = Time.zone.parse("20210430 8:00")
-      travel_to(friday)
-      date_range = Time.zone.parse("2021-12-20 11:00")..Time.zone.parse("2021-12-21 18:00")
-      expected_range = Time.zone.parse("2021-12-21 10:00")..Time.zone.parse("2021-12-21 18:00")
-      now = Time.zone.parse("2021-12-21 10:00")
-      travel_to(now)
-      datetime_range = described_class.ensure_date_range_with_time(date_range)
-      expect(datetime_range).to eq(expected_range)
+    context "when given date bounds" do
+      let!(:lower_bound) { Date.new(2021, 12, 20) }
+      let!(:higher_bound) { Date.new(2021, 12, 23) }
+
+      it "returns bounds rounded to beginning and end of day" do
+        expected_range = (lower_bound.beginning_of_day)..(higher_bound.end_of_day)
+        expect(subject).to eq(expected_range)
+      end
+    end
+
+    context "when the lower bound is before now" do
+      let!(:lower_bound) { "2021-12-09 11:00".to_datetime }
+      let!(:higher_bound) { "2021-12-21 18:00".to_datetime }
+
+      it "takes now as a lower_bound" do
+        expected_range = now..higher_bound
+        expect(subject).to eq(expected_range)
+      end
     end
   end
 
