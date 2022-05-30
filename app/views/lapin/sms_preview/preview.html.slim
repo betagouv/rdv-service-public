@@ -1,0 +1,13 @@
+.container.mt-3
+  .row.justify-content-center
+    .col-md-8
+      .card
+        .card-header
+          = link_to t("helpers.back"), lapin_sms_preview_index_path
+        .card-body
+          h5.card-title= @title
+          p= @sms.phone_number
+          .bg-light.p-1
+            code= @sms.content
+        .card-footer
+          p="#{@sms.content.length} caractères"

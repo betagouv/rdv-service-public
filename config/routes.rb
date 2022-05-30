@@ -267,6 +267,14 @@ Rails.application.routes.draw do
   get "admin/organisations/:organisation_id/agents/:agent_id", to: redirect("/admin/organisations/%{organisation_id}/agent_agendas/%{agent_id}")
   # rubocop:enable Style/FormatStringToken
 
-  # LetterOpener
-  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
+  if Rails.env.development?
+    namespace :lapin do
+      resources :sms_preview, only: %i[index] do
+        get ":action_name", to: "sms_preview#preview", as: "preview"
+      end
+    end
+
+    # LetterOpener
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
 end

@@ -4,7 +4,7 @@ class Users::RdvSms < Users::BaseSms
   include Rails.application.routes.url_helpers
 
   def rdv_created(rdv, user, token)
-    @content = "RDV #{rdv.motif&.service&.short_name} #{starts_at(rdv)}.\n #{rdv_footer(rdv, user, token)}"
+    @content = "RDV #{rdv.motif&.service&.short_name} #{starts_at(rdv)}.\n#{rdv_footer(rdv, user, token)}"
   end
 
   def rdv_date_updated(rdv, user, token)
@@ -16,7 +16,7 @@ class Users::RdvSms < Users::BaseSms
   end
 
   def rdv_cancelled(rdv, _user, token)
-    base_message = "RDV #{rdv.motif.service.short_name} #{I18n.l(rdv.starts_at, format: :short)} a été annulé"
+    base_message = "RDV #{rdv.motif.service.short_name} #{I18n.l(rdv.starts_at, format: :short)} a été annulé."
     url = prendre_rdv_short_url(host: ENV["HOST"], tkn: token)
 
     footer = if rdv.phone_number.present?
@@ -34,30 +34,33 @@ class Users::RdvSms < Users::BaseSms
   end
 
   def rdv_footer(rdv, user, token)
-    message = rdv_location(rdv)
+    details = rdv_location(rdv)
 
     if user.relatives.present? && !rdv.collectif?
       users_full_names = rdv.users.map(&:full_name).sort.to_sentence
-      message += " pour #{users_full_names}"
+      details += " pour #{users_full_names}"
     end
 
     agents_short_names = rdv.agents.map(&:short_name).sort.to_sentence
-    message += " avec #{agents_short_names} " if rdv.follow_up?
+    details += " avec #{agents_short_names}" if rdv.follow_up?
+
+    details += ".\n"
 
     url = rdv_short_url(rdv, host: ENV["HOST"], tkn: token)
-    message += "Infos et annulation: #{url}"
+    links = "Infos et annulation: #{url}"
 
-    message += " / #{rdv.phone_number}" if rdv.phone_number.present?
-    message
+    links += " / #{rdv.phone_number}" if rdv.phone_number.present?
+
+    details + links
   end
 
   def rdv_location(rdv)
     if rdv.phone?
-      "RDV Téléphonique\n"
+      "RDV téléphonique"
     elsif rdv.home?
-      "RDV à votre domicile\n"
+      "RDV à votre domicile"
     else
-      "#{rdv.address_complete}\n"
+      rdv.address_complete
     end
   end
 end
