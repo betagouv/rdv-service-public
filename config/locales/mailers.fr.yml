@@ -41,6 +41,17 @@ fr:
         revoked_at_date_by_agent: Un RDV qui devait avoir lieu %{date} vient d’être annulé par %{author} pour raison administrative.
         cancelled_at_date_by_agent: Un RDV qui devait avoir lieu %{date} vient d’être annulé par %{author} à la demande de l’usager.
         cancelled_at_date_by_user: Un RDV qui devait avoir lieu %{date} vient d’être annulé par l’usager %{author}.
+    reply_transfer_mailer:
+      notify_agent_of_user_reply:
+        title: Message d'usager⋅e au sujet de votre RDV %{date}
+        intro: "Dans le cadre du RDV du %{date}, l'usager⋅e %{author} a envoyé la réponse suivante par e-mail :"
+        instructions: Merci de ne pas répondre à cet e-mail. Vous pouvez contacter l'usager⋅e à l'aide des informations inclues dans le RDV. Vous trouverez en pièce jointe l'email original.
+      forward_to_default_mailbox:
+        title: Message d'usager⋅e en réponse à un e-mail de notification
+        intro: "L'usager⋅e %{author} a répondu à un e-mail de notification :"
+        instructions: Merci de ne pas répondre à cet e-mail. Vous trouverez en pièce jointe l'email original.
+      shared:
+        attachments: Le mail de l'usager⋅e avait en pièce jointe "%{attachment_names}". Il nous est impossible de vous transmettre ce fichier. Vous pouvez contacter l'usager⋅e pour qu'iel l'envoie à votre adresse.
   users:
     file_attente_mailer:
       new_creneau_available:

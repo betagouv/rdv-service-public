@@ -12,7 +12,7 @@ class Users::RdvMailer < ApplicationMailer
     @token = params[:token]
   end
 
-  default to: -> { @user.email }
+  default to: -> { @user.email }, reply_to: -> { TransferEmailReplyJob.reply_address_for_rdv(@rdv) }
 
   def rdv_created
     self.ics_payload = @rdv.payload(:create, @user)

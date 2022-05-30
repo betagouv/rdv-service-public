@@ -251,3 +251,9 @@ html,
     margin: 0 !important;
   }
 }
+
+blockquote {
+  background-color: $light;
+  padding: $padding;
+  margin: 15px;
+}

@@ -267,6 +267,8 @@ Rails.application.routes.draw do
   get "admin/organisations/:organisation_id/agents/:agent_id", to: redirect("/admin/organisations/%{organisation_id}/agent_agendas/%{agent_id}")
   # rubocop:enable Style/FormatStringToken
 
+  post "/inbound_emails/sendinblue", controller: :inbound_emails, action: :sendinblue
+
   if Rails.env.development?
     namespace :lapin do
       resources :sms_preview, only: %i[index] do
