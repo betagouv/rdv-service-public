@@ -155,6 +155,12 @@ describe Rdv, type: :model do
       expect(rdv.address_for_export).to eq("PMI centre ville (16 rue de l'adresse 12345 Ville)")
     end
 
+    it "indicates a lieu is single_use" do
+      lieu = build(:lieu, address: "16 rue de l'adresse 12345 Ville", name: "Café de la gare", availability: :single_use)
+      rdv = build(:rdv, motif: build(:motif, :at_public_office), lieu: lieu)
+      expect(rdv.address_for_export).to eq("Café de la gare (16 rue de l'adresse 12345 Ville) (Ponctuel)")
+    end
+
     it "return only city for a at_home rdv" do
       user = build(:user, address: "3 rue de l'église 75020 Paris", post_code: "75020", city_name: "Paris")
       rdv = build(:rdv, motif: build(:motif, :at_home), users: [user])

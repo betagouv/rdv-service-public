@@ -31,7 +31,12 @@ module Rdv::AddressConcern
   def address_for_export
     result = case motif.location_type.to_sym
              when :public_office
-               lieu&.full_name
+               lieu_full_name = lieu.full_name
+               if lieu.single_use?
+                 "#{lieu_full_name} (#{Lieu.human_attribute_value(:availability, :single_use)})"
+               else
+                 lieu_full_name
+               end
              when :home
                user_for_home = user_for_home_rdv
                home_city = [user_for_home.post_code, user_for_home.city_name].compact.join(" ") if user_for_home.present?
