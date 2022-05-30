@@ -4,28 +4,46 @@ module Rdv::AddressConcern
   extend ActiveSupport::Concern
 
   def address
-    return user_for_home_rdv.address.to_s if home? && user_for_home_rdv.present?
-    return lieu.address if public_office? && lieu.present?
+    result = case motif.location_type.to_sym
+             when :public_office
+               lieu&.address
+             when :home
+               user_for_home_rdv&.address
+             end
 
-    ""
+    result || ""
   end
 
   def address_complete
-    return "Adresse de #{user_for_home_rdv.full_name} - #{user_for_home_rdv.responsible_address}" if home? && user_for_home_rdv.present?
-    return lieu.full_name if public_office? && lieu.present?
+    result = case motif.location_type.to_sym
+             when :public_office
+               lieu&.full_name
+             when :home
+               user_for_home = user_for_home_rdv
+               if user_for_home.present?
+                 "Adresse de #{user_for_home.full_name} - #{user_for_home.responsible_address}"
+               end
+             end
 
-    ""
+    result || ""
   end
 
   def address_complete_without_personal_details
-    return address_complete if public_office?
+    result = case motif.location_type.to_sym
+             when :public_office
+               lieu&.full_name
+             when :home
+               user_for_home = user_for_home_rdv
+               home_city = [user_for_home.post_code, user_for_home.city_name].compact.join(" ") if user_for_home.present?
+               if home_city.present?
+                 "#{Motif.human_attribute_value(:location_type, :home)} (#{home_city})"
+               else
+                 Motif.human_attribute_value(:location_type, :home)
+               end
+             when :phone
+               Motif.human_attribute_value(:location_type, :phone)
+             end
 
-    result = motif.human_attribute_value(:location_type)
-    if home? && user_for_home_rdv.present?
-      home_city = [user_for_home_rdv.post_code, user_for_home_rdv.city_name].compact.join(" ")
-      result.concat(" (#{home_city})") if home_city.present?
-    end
-
-    result
+    result || ""
   end
 end
