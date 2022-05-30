@@ -101,6 +101,30 @@ describe NextAvailabilityService, type: :service do
       end
     end
 
+    describe "when the day at min booking delay is the same day as the plage ouverture" do
+      let!(:motif) do
+        create(:motif,
+               name: "Vaccination", default_duration_in_min: 30, organisation: organisation,
+               min_booking_delay: 1.week.from_now, max_booking_delay: 7.months.from_now)
+      end
+
+      let!(:plage_ouverture) do
+        create(:plage_ouverture,
+               motifs: [motif], lieu: lieu, agent: agent, organisation: organisation,
+               first_day: today + 1.week, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
+               recurrence: Montrose.every(:week, starts: 1.week.from_now))
+      end
+
+      context "when now is later than the plage d'ouverture" do
+        let!(:now) { Time.zone.parse("20210318 17:00") }
+
+        it "returns a next creneau the week after the first occurrence" do
+          next_creneau = described_class.find(motif, lieu, [], from: Time.zone.at(motif.min_booking_delay))
+          expect(next_creneau.starts_at).to eq(today.in_time_zone + 2.weeks + 9.hours)
+        end
+      end
+    end
+
     describe "with several agents" do
       let(:other_agent) { create(:agent, basic_role_in_organisations: [organisation]) }
       let(:other_agent_start_day) { today + 7.days }
