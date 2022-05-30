@@ -1,39 +1,36 @@
 <%= t("devise.mailer.invitation_instructions_cnfs.hello") %>
 
-<%= t("devise.mailer.invitation_instructions_cnfs.create_account", link: "créer votre compte", ) %>
 
-<%= accept_invitation_url(@resource, invitation_token: @token, user: @user_params) %>
+<%= t("devise.mailer.invitation_instructions_cnfs.create_account") %>
 
-<%= t("devise.mailer.invitation_instructions_cnfs.intro1") %>
-<%= t("devise.mailer.invitation_instructions_cnfs.intro2") %>
 
-<%= t("devise.mailer.invitation_instructions_cnfs.intro3") %>
-<%= t("devise.mailer.invitation_instructions_cnfs.intro4") %>
+Activer mon compte: <%= accept_invitation_url(@resource, invitation_token: @token, user: @user_params) %>
 
 <%= t("devise.mailer.invitation_instructions_cnfs.title1") %>
 
-<%= t("devise.mailer.invitation_instructions_cnfs.recap") %>
-- <%= t("devise.mailer.invitation_instructions_cnfs.recap_item1") %>
-- <%= t("devise.mailer.invitation_instructions_cnfs.recap_item2") %>
-- <%= t("devise.mailer.invitation_instructions_cnfs.recap_item3") %>
+<%= t("devise.mailer.invitation_instructions_cnfs.paragraph1") %>
+
+<%= t("devise.mailer.invitation_instructions_cnfs.use1") %>
+
+<%= t("devise.mailer.invitation_instructions_cnfs.use2") %>
+
+<%= t("devise.mailer.invitation_instructions_cnfs.use3") %>
 
 
 <%= t("devise.mailer.invitation_instructions_cnfs.title2") %>
 
-<%= t("devise.mailer.invitation_instructions_cnfs.video_text", link: "vidéo de présentation de l’outil") %>
-
-https://peertube.ethibox.fr/w/sLqvuTvx4vgsjmKXpz9awH
-
+<%= t("devise.mailer.invitation_instructions_cnfs.paragraph2", video_link: "https://peertube.ethibox.fr/w/f5Pd9h7uuor7xDNEKQRkqV") %>
 <%= t("devise.mailer.invitation_instructions_cnfs.first_steps_info") %>
+
 
 <%= t("devise.mailer.invitation_instructions_cnfs.title3") %>
 
 
 <%= t("devise.mailer.invitation_instructions_cnfs.help_info",
-      mattermost: "Aide RDV Solidarités",
-      support_email: "support@rdv-solidarités.fr") %>
+      mattermost: "Aide RDV Solidarités: https://discussion.conseiller-numerique.gouv.fr/cnum/channels/aide-rdv-solidarites",
+      support_email: "support@rdv-solidarités.fr"
+     ).html_safe %>
 
-https://discussion.conseiller-numerique.gouv.fr/cnum/channels/aide-rdv-solidarites
 
 <%= t("devise.mailer.invitation_instructions_cnfs.sign_off") %>
 <%= t("devise.mailer.invitation_instructions_cnfs.signature") %>
