@@ -30,8 +30,6 @@ Rails.application.configure do
     config.cache_store = :null_store
   end
 
-  config.default_url_options = { host: ENV["HOST"].sub(%r{^https?://}, "") }
-
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
