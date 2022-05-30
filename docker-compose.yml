@@ -26,9 +26,7 @@ services:
     build: 
       context: "./"
       dockerfile: "./docker/web/Dockerfile"
-    #image: "rgv1tgx4.gra7.container-registry.ovh.net/rdv-solidarite/webapp:2490-Dockerfile-web-ba0187b5-2022-05-28-03-12"
     links:
-      # - rdv-base
       - database
     ports:
       - '3000:3000'
@@ -51,7 +49,22 @@ services:
     build: 
       context: "./"
       dockerfile: "./docker/job/Dockerfile"
-    #image: "rgv1tgx4.gra7.container-registry.ovh.net/rdv-solidarite/jobs:2490-Dockerfile-web-ba0187b5-2022-05-28-03-12"
+    links:
+      - rdv
+      - database
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@database:5432/lapin_development
+      RAILS_ENV: development
+      RACK_ENV: development
+      RAILS_SERVE_STATIC_FILES: enabled
+      RAILS_LOG_TO_STDOUT: enabled
+      REDIS_URL: redis://:eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81@cache:6379
+    networks:
+      - net
+  script:
+    build: 
+      context: "./"
+      dockerfile: "./docker/script/Dockerfile"
     links:
       - rdv
       - database
