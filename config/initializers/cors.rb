@@ -20,4 +20,9 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
     origins "*"
     resource "/api/v1/*", headers: :any, methods: %i[get post patch put], expose: %w[client uid access-token]
   end
+
+  allow do
+    origins "*"
+    resource "/prendre_rdv", headers: :any, methods: %i[get]
+  end
 end
