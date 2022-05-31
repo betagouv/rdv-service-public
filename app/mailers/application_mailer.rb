@@ -5,7 +5,7 @@ class ApplicationMailer < ActionMailer::Base
 
   prepend IcsMultipartAttached
 
-  default from: "contact@rdv-solidarites.fr", reply_to: "support@rdv-solidarites.fr"
+  default from: SUPPORT_EMAIL
   append_view_path Rails.root.join("app/views/mailers")
   layout "mailer"
   helper RdvSolidaritesInstanceNameHelper

@@ -41,8 +41,7 @@ RSpec.describe TransferEmailReplyJob do
       expect { perform_job }.to change { ActionMailer::Base.deliveries.size }.by(1)
       transferred_email = ActionMailer::Base.deliveries.last
       expect(transferred_email.to).to eq(["je_suis_un_agent@departement.fr"])
-      expect(transferred_email.from).to eq(["contact@rdv-solidarites.fr"])
-      expect(transferred_email.reply_to).to eq(["support@rdv-solidarites.fr"])
+      expect(transferred_email.from).to eq(["support@rdv-solidarites.fr"])
       expect(transferred_email.html_part.body.to_s).to include("Dans le cadre du RDV du 20 mai, l'usager⋅e Bénédicte FICIAIRE a envoyé")
       expect(transferred_email.html_part.body.to_s).to include("Je souhaite annuler mon RDV") # reply content
       expect(transferred_email.html_part.body.to_s).to include(%(href="http://#{ApplicationMailer.default_url_options[:host]}/admin/organisations/#{rdv.organisation_id}/rdvs/#{rdv.id}))
@@ -56,8 +55,7 @@ RSpec.describe TransferEmailReplyJob do
       expect { perform_job }.to change { ActionMailer::Base.deliveries.size }.by(1)
       transferred_email = ActionMailer::Base.deliveries.last
       expect(transferred_email.to).to eq(["support@rdv-solidarites.fr"])
-      expect(transferred_email.from).to eq(["contact@rdv-solidarites.fr"])
-      expect(transferred_email.reply_to).to eq(["support@rdv-solidarites.fr"])
+      expect(transferred_email.from).to eq(["support@rdv-solidarites.fr"])
       expect(transferred_email.html_part.body.to_s).to include(%(L'usager⋅e "Bénédicte Ficiaire" &lt;bene_ficiaire@lapin.fr&gt; a répondu))
       expect(transferred_email.html_part.body.to_s).to include("Je souhaite annuler mon RDV") # reply content
     end

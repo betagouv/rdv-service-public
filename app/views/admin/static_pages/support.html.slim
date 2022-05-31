@@ -32,7 +32,7 @@
           span> Contacter l'équipe technique
           i.fa.fa-question-circle
       .card-body
-        = mail_to "support@rdv-solidarites.fr",
+        = mail_to SUPPORT_EMAIL,
           subject: "[Problème Agent]",
           body: t(".contact-email-body"), class: "btn btn-primary" do
           span>

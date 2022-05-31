@@ -27,6 +27,6 @@ class Agents::ReplyTransferMailer < ApplicationMailer
     @reply_body = reply_body
     @attachment_names = source_mail.attachments.map(&:filename).join(", ")
 
-    mail(to: "support@rdv-solidarites.fr", subject: t(".title"))
+    mail(to: SUPPORT_EMAIL, subject: t(".title"))
   end
 end
