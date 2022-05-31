@@ -45,6 +45,7 @@ rails runner scripts/export_sectors.rb 64
 
 - http://localhost:3000/letter_opener
 - http://localhost:3000/rails/mailers
+- http://localhost:3000/lapin/sms_preview
 - http://localhost:3000/rails/info/routes
 - http://localhost:3000/rails/info/properties
 
