@@ -15,9 +15,15 @@
             span> doc.rdv-solidarites.fr
             i.fa.fa-external-link-alt>
         p
-          span> Une page y recense les évolutions et correctifs déployés récemment :
-          = link_to "https://doc.rdv-solidarites.fr/dernieres-nouveautes" do
-            span> Dernières nouveautés
+          span> Vous pouvez aussi consulter les
+          ruby:
+            faq_url = if current_agent.conseiller_numerique?
+                        "https://rdv-solidarites-cnfs.notion.site/rdv-solidarites-cnfs/F-A-Q-Conseillers-num-riques-d9104d70ab9d4a6695ef96b1d9ea7f29"
+                      else
+                        "https://rdv-solidarites.notion.site/F-A-Q-M-dico-social-aaf94709c0ea448b8eb9d93f548acdb9"
+                      end
+          = link_to faq_url do
+            span> Questions fréquentes
             i.fa.fa-external-link-alt
 
     .card
