@@ -6,7 +6,7 @@ class CustomDeviseMailer < Devise::Mailer
   include Devise::Controllers::UrlHelpers # Optional. eg. `confirmation_url`
 
   helper :application
-  default template_path: "devise/mailer", reply_to: "support@rdv-solidarites.fr"
+  default template_path: "devise/mailer"
   layout "mailer"
   helper RdvSolidaritesInstanceNameHelper
 
@@ -26,6 +26,6 @@ class CustomDeviseMailer < Devise::Mailer
   def reply_to(record)
     return unless record.is_a? Agent
 
-    record.invited_by&.email || "support@rdv-solidarites.fr"
+    record.invited_by&.email || SUPPORT_EMAIL
   end
 end

@@ -127,7 +127,7 @@ class SmsSender < BaseService
   # /!\ does not report routing errors for wrong numbers
   #
   def send_with_contact_experience
-    replies_email = CONTACT_EMAIL
+    replies_email = SUPPORT_EMAIL
 
     response = Typhoeus::Request.new(
       "https://contact-experience.com/ccv/webServicesCCV/SMS/sendSms.php",
