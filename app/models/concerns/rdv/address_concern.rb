@@ -29,26 +29,30 @@ module Rdv::AddressConcern
   end
 
   def address_for_export
-    result = case motif.location_type.to_sym
-             when :public_office
-               lieu_full_name = lieu.full_name
-               if lieu.single_use?
-                 "#{lieu_full_name} (#{Lieu.human_attribute_value(:availability, :single_use)})"
-               else
-                 lieu_full_name
-               end
-             when :home
-               user_for_home = user_for_home_rdv
-               home_city = [user_for_home.post_code, user_for_home.city_name].compact.join(" ") if user_for_home.present?
-               if home_city.present?
-                 "#{Motif.human_attribute_value(:location_type, :home)} (#{home_city})"
-               else
-                 Motif.human_attribute_value(:location_type, :home)
-               end
-             when :phone
-               Motif.human_attribute_value(:location_type, :phone)
-             end
+    case motif.location_type.to_sym
+    when :public_office
+      # Sometimes lieu_id is nil, because the RDV was taken with
+      # a motif of location_type="phone" or location_type="home",
+      # and then then someone changed it to location_type="public_office".
+      # In this cas we have no way of knowing the actual location, so we'll leave the export blank.
+      return "" unless lieu
 
-    result || ""
+      lieu_full_name = lieu.full_name
+      if lieu.single_use?
+        "#{lieu_full_name} (#{Lieu.human_attribute_value(:availability, :single_use)})"
+      else
+        lieu_full_name
+      end
+    when :home
+      user_for_home = user_for_home_rdv
+      home_city = [user_for_home.post_code, user_for_home.city_name].compact.join(" ") if user_for_home.present?
+      if home_city.present?
+        "#{Motif.human_attribute_value(:location_type, :home)} (#{home_city})"
+      else
+        Motif.human_attribute_value(:location_type, :home)
+      end
+    when :phone
+      Motif.human_attribute_value(:location_type, :phone)
+    end
   end
 end

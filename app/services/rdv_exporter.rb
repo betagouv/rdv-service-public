@@ -65,7 +65,7 @@ module RdvExporter
       rdv.context,
       Rdv.human_attribute_value(:status, rdv.temporal_status, disable_cast: true),
       Receipt.human_attribute_value(:result, rdv.synthesized_receipts_result),
-      rdv.address_for_export,
+      rdv.address_for_export || "",
       rdv.agents.map(&:full_name).join(", "),
       rdv.users.map(&:full_name).join(", "),
       commune_premier_responsable(rdv),

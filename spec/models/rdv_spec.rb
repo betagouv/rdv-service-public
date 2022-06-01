@@ -143,7 +143,7 @@ describe Rdv, type: :model do
     end
   end
 
-  describe "#adress_complete_without_personnal_details" do
+  describe "#address_for_export" do
     it "return nothing for a phone rdv" do
       rdv = build(:rdv, :by_phone)
       expect(rdv.address_for_export).to eq("Par téléphone")
