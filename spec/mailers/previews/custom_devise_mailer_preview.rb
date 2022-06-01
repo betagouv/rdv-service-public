@@ -13,6 +13,10 @@ class CustomDeviseMailerPreview < ActionMailer::Preview
     CustomDeviseMailer.invitation_instructions(Agent.last, "faketoken")
   end
 
+  def invitation_instructions_cnfs
+    CustomDeviseMailer.invitation_instructions(Agent.joins(:service).where(service: { name: "Conseiller Numérique" }, invited_by: nil).last, "faketoken")
+  end
+
   def invitation_instructions
     CustomDeviseMailer.invitation_instructions(User.last, "faketoken")
   end

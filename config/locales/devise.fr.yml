@@ -44,18 +44,14 @@ fr:
       invitation_instructions_cnfs:
         subject: "Vous avez été invité sur RDV-Solidarités"
         hello: "Hello 👋"
-        create_account: "Nous vous contactons pour %{link} RDV-Solidarités. "
-        intro1: "✅ RDV-Solidarités est un outil de gestion des rendez-vous."
-        intro2: "✅ RDV-Solidarités est en phase de généralisation à tous les Conseillers Numérique France Services."
-        intro3: Chaque semaine, nous lançons l’embarquement d’un nouveau groupe de Conseillers Numérique.
-        intro4: Vous faites partie  d’un embarquement et vous disposez  alors d’un droit d’accès à RDV-Solidarités.
-        title1: RDV-Solidarités c’est ?
-        recap: "Un outil,  qui vous permet de :"
-        recap_item1: planifier des rendez-vous individuels et collectifs,
-        recap_item2: envoyer des rappels (sms & mail) automatiques aux  usagers
-        recap_item3: permettre à vos collègues de planifier des rendez-vous selon vos disponibilités.
-        title2: Comment ça marche  ?
-        video_text: "Pour mieux comprendre, nous vous proposons de regarder la %{link}"
+        create_account: "Vos missions de Conseiller•ère Numérique vous donnent accès à RDV Solidarités, un outil fourni par l'ANCT."
+        title1: A quoi ça sert ?
+        paragraph1: "RDV Solidarités est un outil de gestion des RDV qui vous permet de :"
+        use1: "✅ gérer vos RDV individuels et collectifs"
+        use2: "✅ envoyer des rappels SMS et mail aux usagers."
+        use3: "✅ partager vos créneaux disponibles à une personne tiers."
+        title2: Comment ça marche ?
+        paragraph2: Pour mieux comprendre, nous vous proposons de regarder la vidéo de présentation de l’outil %{video_link}.
         first_steps_info: Vous trouverez  également un guide “premiers pas” dans l’interface de l’outil.
         title3: Besoin d’aide ?
         help_info: "Vous pouvez  nous contacter sur le Mattermost dans le canal : %{mattermost}  ou bien par mail à %{support_email}"
