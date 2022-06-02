@@ -2,7 +2,7 @@ name: Push docker image from branch
 on: 
   push: 
     branches:
-      - develop
+      - recette
 # Env variable
 env:
   DOCKER_USER: ${{secrets.DOCKER_USER}}
