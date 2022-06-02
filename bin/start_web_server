@@ -3,5 +3,3 @@ if [[ -z "${CONTAINER_VERSION}" ]]; then
   export CONTAINER_VERSION=`git rev-parse HEAD`
 fi
 bundle exec puma
-
-bundle exec rake db:migrate

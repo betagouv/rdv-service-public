@@ -3,7 +3,6 @@ on:
   push: 
     branches:
       - develop
-      - 2490-Dockerfile-web
 # Env variable
 env:
   DOCKER_USER: ${{secrets.DOCKER_USER}}

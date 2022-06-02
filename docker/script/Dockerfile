@@ -1,6 +1,6 @@
 FROM ruby:3.0.3
 
-RUN apt-get update -qq && apt-get install -y nodejs postgresql-client graphviz graphviz-dev
+RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
 
 WORKDIR /myapp/rdv-solidarites.fr
 
