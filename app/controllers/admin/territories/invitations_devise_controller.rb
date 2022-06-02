@@ -44,7 +44,7 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
     super([:configuration, *args], **kwargs)
   end
 
-  # invite_params is called by devise::invitationscontroller#invite_resource
+  # invite_params is called by Devise::InvitationsController#invite_resource
   def invite_params
     params = devise_parameter_sanitizer.sanitize(:invite)
 
