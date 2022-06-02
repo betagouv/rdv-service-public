@@ -19,7 +19,7 @@ ul.list-unstyled.mb-5
     .text-muted.mb-2
       | En attente de confirmation pour #{user.unconfirmed_email}
 
-  - if current_territory.enable_notes_field?
+  - if current_territory.enable_notes_field? && user_profile
     li.mb-2= object_attribute_tag(user_profile, :notes, formatted_user_notes(user_profile))
 
 - if current_territory.any_social_field_enabled?
