@@ -46,14 +46,12 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
 
   # invite_params is called by Devise::InvitationsController#invite_resource
   def invite_params
-    params = devise_parameter_sanitizer.sanitize(:invite)
+    super.merge(
+      # Only ever invite to the current territory
+      agent_territorial_access_rights_attributes: { "0": { territory: current_territory } },
 
-    # Only ever invite to the current territory
-    params.merge!(agent_territorial_access_rights_attributes: { "0": { territory: current_territory } })
-
-    # the omniauth uid _is_ the email, always. note: this may be better suited in a hook in agent.rb
-    params[:uid] = params[:email]
-
-    params
+      # the omniauth uid _is_ the email, always. note: this may be better suited in a hook in agent.rb
+      uid: params[:email]
+    )
   end
 end
