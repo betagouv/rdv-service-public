@@ -29,3 +29,7 @@ jobs:
       run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/jobs:$GITHUB_REF_NAME
     - name: Docker Push Job image
       run: docker push $DOCKER_REPO_NAME/jobs:$GITHUB_REF_NAME
+    - name: Build the Script Docker image
+      run: docker build . --file $SCRIPT_DOCKERFILE --tag $DOCKER_REPO_NAME/script:$GITHUB_REF_NAME
+    - name: Docker Push Script image
+      run: docker push $DOCKER_REPO_NAME/script:$GITHUB_REF_NAME
