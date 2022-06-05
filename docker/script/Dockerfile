@@ -1,16 +1,16 @@
 FROM ruby:3.1.1
 
-RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
+RUN apt-get update -qq && apt-get install -y nodejs postgresql-client graphviz graphviz-dev
 
 WORKDIR /myapp/rdv-solidarites.fr
 
 ENV NODE_VERSION=16.13.0
 ENV BUNDLE_PATH=vendor/bundle
 ENV BUNDLE_BIN=vendor/bundle/bin
-ENV BUNDLE_DEPLOYMENT=1
+ENV BUNDLE_DEPLOYMENT=1<
 
 RUN apt-get install -y curl
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/n<vm/v0.39.0/install.sh | bash
 ENV NVM_DIR=/root/.nvm
 RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
 RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
