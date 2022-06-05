@@ -10,6 +10,7 @@ env:
   DOCKER_REPO_NAME: ${{secrets.DOCKER_REPO_NAME}}
   WEBAPP_DOCKERFILE: ./docker/web/Dockerfile
   JOB_DOCKERFILE: ./docker/job/Dockerfile
+  SCRIPT_DOCKERFILE: ./docker/script/Dockerfile
   git_hash: $(git rev-parse --short $GITHUB_SHA)
 jobs:
   push-image:  # job name
@@ -37,3 +38,7 @@ jobs:
       run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/jobs:$GITHUB_REF_NAME-${GITHUB_SHA::8}-${{ steps.date.outputs.date }}
     - name: Docker Push Job image
       run: docker push $DOCKER_REPO_NAME/jobs:$GITHUB_REF_NAME-${GITHUB_SHA::8}-${{ steps.date.outputs.date }}
+    - name: Build the Script Docker image
+      run: docker build . --file $SCRIPT_DOCKERFILE --tag $DOCKER_REPO_NAME/script:$GITHUB_REF_NAME-${GITHUB_SHA::8}-${{ steps.date.outputs.date }}
+    - name: Docker Push Script image
+      run: docker push $DOCKER_REPO_NAME/script:$GITHUB_REF_NAME-${GITHUB_SHA::8}-${{ steps.date.outputs.date }}

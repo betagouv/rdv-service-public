@@ -33,4 +33,4 @@ RUN yarn install
 
 RUN yarn run build
 
-ENTRYPOINT ["bundle", "exec", "rake db:migrate" ]
+RUN ["/bin/bash", "-c", "echo I am now using bash!"]

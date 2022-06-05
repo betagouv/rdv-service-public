@@ -65,6 +65,7 @@ services:
     build: 
       context: "./"
       dockerfile: "./docker/script/Dockerfile"
+    command: "bin/rails db:migrate RAILS_ENV=$RAILS_ENV"
     links:
       - rdv
       - database
