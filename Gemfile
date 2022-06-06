@@ -13,9 +13,14 @@ gem "sprockets-rails"
 gem "puma"
 gem "jsbundling-rails"
 gem "turbolinks", "~> 5"
-
 gem "bootsnap", require: false # Reduces boot times through caching; required in config/boot.rb
 gem "rack-cors" # CORS management
+
+# Temporarily fixed versions
+# sassc 2.4.0 requires g++ on recent ruby versions, so let's stick to 2.1.0 (https://github.com/docker-library/ruby/issues/331)
+gem "sassc", "2.1.0"
+# This RC version supports Ruby 3.1 ()https://github.com/mikel/mail/commit/d9d8dcc)
+gem "mail", "2.8.0.rc1"
 
 # Ops
 gem "sentry-ruby"
