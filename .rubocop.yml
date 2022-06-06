@@ -181,6 +181,12 @@ Style/IfUnlessModifier:
 Style/OpenStructUse:
   Enabled: false
 
+Style/HashSyntax:
+  Enabled: false
+
+Naming/BlockForwarding:
+  Enabled: false
+
 Style/StringLiterals:
   EnforcedStyle: double_quotes
   Exclude:
