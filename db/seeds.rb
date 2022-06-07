@@ -533,6 +533,7 @@ agent_org_paris_nord_pmi_martine = Agent.new(
     territory: territory75,
     allow_to_manage_teams: true,
     allow_to_manage_access_rights: true,
+    allow_to_invite_agents: true,
   }]
 )
 agent_org_paris_nord_pmi_martine.skip_confirmation!
@@ -552,6 +553,7 @@ agent_org_paris_nord_pmi_marco = Agent.new(
     territory: territory75,
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
+    allow_to_invite_agents: false,
   }]
 )
 agent_org_paris_nord_pmi_marco.skip_confirmation!
@@ -570,6 +572,7 @@ agent_org_paris_nord_social_polo = Agent.new(
     territory: territory75,
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
+    allow_to_invite_agents: false,
   }]
 )
 agent_org_paris_nord_social_polo.skip_confirmation!
@@ -588,6 +591,7 @@ org_arques_pmi_maya = Agent.new(
     territory: territory62,
     allow_to_manage_teams: true,
     allow_to_manage_access_rights: true,
+    allow_to_invite_agents: true,
   }]
 )
 org_arques_pmi_maya.skip_confirmation!
@@ -606,6 +610,7 @@ agent_org_bapaume_pmi_bruno = Agent.new(
     territory: territory62,
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
+    allow_to_invite_agents: false,
   }]
 )
 agent_org_bapaume_pmi_bruno.skip_confirmation!
@@ -625,6 +630,7 @@ agent_org_bapaume_pmi_gina = Agent.new(
     territory: territory62,
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
+    allow_to_invite_agents: false,
   }]
 )
 agent_org_bapaume_pmi_gina.skip_confirmation!
@@ -643,6 +649,7 @@ agent_cnfs = Agent.new(
     territory: territory_cnfs,
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
+    allow_to_invite_agents: false,
   }]
 )
 agent_cnfs.skip_confirmation!
