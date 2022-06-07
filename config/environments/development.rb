@@ -59,7 +59,7 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
-  config.log_level = :info
+  config.log_level = ENV["LOG_LEVEL"]
   # config.log_level = :debug # debug logs all the SQL queries made by ActiveRecord
 
   # allows to see debug logs when running with foreman / overmind
