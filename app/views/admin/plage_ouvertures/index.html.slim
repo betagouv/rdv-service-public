@@ -7,8 +7,6 @@
   - else
     = t(".plage_ouverture_of", full_name: @agent.full_name_and_service)
 
-- content_for :breadcrumb do
-
 .text-right
   = link_to t(".create_plage_ouverture"), new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-primary align-bottom"
   .m-3.d-flex.justify-content-end
@@ -60,3 +58,4 @@
         = t(".create_plage_ouverture")
       - else
         = t(".create_plage_ouverture_for", full_name: @agent.full_name)
+    .mt-2.text-muted = t(".hint_delete_old")
