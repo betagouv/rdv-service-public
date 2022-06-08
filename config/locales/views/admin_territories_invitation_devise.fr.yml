@@ -1,0 +1,11 @@
+fr:
+  admin:
+    territories:
+      invitations_devise:
+        new:
+          title: Inviter un agent
+          header: Envoyer une invitation
+          submit_button: Envoyer une invitation
+          services_hint: Attention, le service d'un agent est définitif, il ne pourra pas changer de service par la suite. Si un agent appartient à deux services il faut pour l'instant lui créer deux comptes avec deux emails différents.
+          email_placeholder: camille.dupond@departement.fr
+          organisations: Organisations

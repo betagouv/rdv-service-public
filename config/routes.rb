@@ -75,7 +75,7 @@ Rails.application.routes.draw do
   end
 
   devise_for :agents, controllers: {
-    invitations: "admin/invitations_devise", # only using the accept route here
+    invitations: "admin/territories/invitations_devise", # only using the accept route here
     sessions: "agents/sessions",
     passwords: "agents/passwords",
   }
@@ -116,9 +116,10 @@ Rails.application.routes.draw do
       resources :territories, only: %i[update show] do
         scope module: "territories" do
           resources :agent_territorial_roles, only: %i[index new create destroy]
+          resources :agent_roles, only: %i[edit update create destroy]
           resources :agent_territorial_access_rights, only: %i[update]
           resources :webhook_endpoints, except: %i[show]
-          resources :agents
+          resources :agents, only: %i[index update edit]
           resources :teams do
             collection do
               get :search
@@ -136,12 +137,14 @@ Rails.application.routes.draw do
             delete "/zones" => "zones#destroy_multiple"
           end
           get "sectorisation_test" => "sectorisation_tests#search"
+
+          devise_for :agents, controllers: { invitations: "admin/territories/invitations_devise" }, only: :invitations
         end
       end
 
       # Routes pour les ressources du calendrier.
       # TODO trouver un meilleur nom pour éviter la nécessité de ce commentaire :)
-      resources :agents, only: [], module: :agents do
+      resources :agents, only: %i[], module: :agents do
         resources :plage_ouvertures, only: [:index]
         resources :rdvs, only: [:index]
         resources :absences, only: [:index]
@@ -186,11 +189,10 @@ Rails.application.routes.draw do
           resources :referents, only: %i[index create destroy]
         end
         resources :absences, except: %i[index show new]
-        resources :agent_roles, only: %i[edit update]
         resources :agent_agendas, only: %i[show] do
           put :toggle_displays, on: :member
         end
-        resources :agents, only: %i[index destroy] do
+        resources :agents, only: %i[index] do
           resources :absences, only: %i[index new]
           resources :plage_ouvertures, only: %i[index new]
           resources :stats, only: :index do

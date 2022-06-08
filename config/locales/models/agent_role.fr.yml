@@ -6,6 +6,7 @@ fr:
       agent_role:
         level: Niveau de permissions
       agent_role/levels:
+        none: Inaccessible
         basic: Agent
         admin: Admin
       agent_role/levels/explanation:

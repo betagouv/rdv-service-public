@@ -4,6 +4,7 @@ class Configuration::TerritoryPolicy
   def initialize(context, territory)
     @current_agent = context.agent
     @territory = territory
+    @access_rights = @current_agent.access_rights_for_territory(@territory)
   end
 
   def territorial_admin?
@@ -12,11 +13,25 @@ class Configuration::TerritoryPolicy
 
   def show?
     territorial_admin? ||
-      (@current_agent.access_rights_for_territory(@territory)&.allow_to_manage_teams? || false)
+      @access_rights.allow_to_manage_teams? ||
+      @access_rights.allow_to_manage_access_rights? ||
+      @access_rights.allow_to_invite_agents?
   end
 
   def display_sms_configuration?
     @territory.has_own_sms_provider? && territorial_admin?
+  end
+
+  def allow_to_manage_access_rights?
+    @access_rights.allow_to_manage_access_rights?
+  end
+
+  def allow_to_invite_agents?
+    @access_rights.allow_to_invite_agents?
+  end
+
+  def allow_to_manage_teams?
+    @access_rights.allow_to_manage_teams?
   end
 
   alias display_user_fields_configuration? territorial_admin?

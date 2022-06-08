@@ -60,35 +60,6 @@ describe "Admin can configure the organisation" do
     end
   end
 
-  it "CRUD on agents" do
-    click_link "Vos agents"
-    expect_page_title("Agents de Organisation n°1")
-
-    click_link "PATRICK Tony"
-    expect_page_title("Modifier le rôle de l'agent Tony PATRICK")
-    choose :agent_role_level_admin
-    click_button("Enregistrer")
-
-    expect_page_title("Agents de Organisation n°1")
-    expect(page).to have_content("Admin", count: 2)
-
-    click_link "PATRICK Tony"
-    click_link("Supprimer le compte")
-
-    expect_page_title("Invitations en cours pour Organisation n°1")
-    expect(page).to have_no_content("Tony PATRICK")
-
-    click_link "Inviter un agent", match: :first
-    fill_in "Email", with: "jean@paul.com"
-    click_button "Envoyer une invitation"
-
-    expect_page_title("Invitations en cours pour Organisation n°1")
-    expect(page).to have_content("jean@paul.com")
-
-    open_email("jean@paul.com")
-    expect(current_email.subject).to eq I18n.t("devise.mailer.invitation_instructions.subject")
-  end
-
   it "Update organisation" do
     click_link "Votre organisation"
     click_link "Modifier"

@@ -106,6 +106,10 @@ describe Admin::Territories::AgentTerritorialRolesController, type: :controller 
         )
       end
 
+      let!(:other_not_yet_access_right) { create(:agent_territorial_access_right, agent: other_agent_not_yet_territorial_admin, territory: territory) }
+      let!(:other_already_access_right) { create(:agent_territorial_access_right, agent: other_agent_already_territorial_admin, territory: territory) }
+      let!(:agent_access_right) { create(:agent_territorial_access_right, agent: agent, territory: territory) }
+
       it "displays form only with agents who are not yet territorial admins" do
         get :new, params: { territory_id: territory.id }
         expect(response).to be_successful

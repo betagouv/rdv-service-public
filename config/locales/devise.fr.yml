@@ -27,9 +27,6 @@ fr:
       invitation_removed: "Votre invitation a été annulée."
       current_user_mismatch: "L’utilisateur connecté ne correspond pas à l’utilisateur invité. Déconnectez-vous et réessayez."
       organisation_mismatch: "L’utilisateur concerné n’appartient pas à cette organisation."
-      new:
-        header: "Envoyer une invitation"
-        submit_button: "Envoyer une invitation"
       edit:
         header: "Choisir son mot de passe"
         submit_button: "Enregistrer"

@@ -1,58 +1,120 @@
 # frozen_string_literal: true
 
 describe Configuration::TerritoryPolicy, type: :policy do
-  describe "show?" do
-    it "returns false with agent without admin access to this territory" do
-      territory = create(:territory)
-      agent = create(:agent, role_in_territories: [])
-      agent_territorial_context = AgentTerritorialContext.new(agent, territory)
-      expect(described_class.new(agent_territorial_context, territory).show?).to be false
-    end
+  subject { described_class }
 
-    it "returns true with agent with admin access to this territory" do
-      territory = create(:territory)
-      agent = create(:agent, role_in_territories: [territory])
-      agent_territorial_context = AgentTerritorialContext.new(agent, territory)
-      expect(described_class.new(agent_territorial_context, territory).show?).to be true
+  let(:territory) { create(:territory) }
+  let(:agent_territorial_context) { AgentTerritorialContext.new(agent, territory) }
+
+  shared_examples "permit actions" do |*actions|
+    actions.each do |action|
+      permissions action do
+        it { is_expected.to permit(agent_territorial_context, territory) }
+      end
     end
   end
 
-  describe "display_sms_configuration?" do
-    it "returns false with agent without admin access to this territory" do
-      territory = create(:territory, has_own_sms_provider: true)
-      agent = create(:agent, role_in_territories: [])
-      agent_territorial_context = AgentTerritorialContext.new(agent, territory)
-      expect(described_class.new(agent_territorial_context, territory).display_sms_configuration?).to be false
-    end
-
-    it "returns false when territory hasnt own sms provider" do
-      territory = create(:territory, has_own_sms_provider: false)
-      agent = create(:agent, role_in_territories: [])
-      agent_territorial_context = AgentTerritorialContext.new(agent, territory)
-      expect(described_class.new(agent_territorial_context, territory).display_sms_configuration?).to be false
-    end
-
-    it "returns true with agent with admin access to this territory" do
-      territory = create(:territory, has_own_sms_provider: true)
-      agent = create(:agent, role_in_territories: [territory])
-      agent_territorial_context = AgentTerritorialContext.new(agent, territory)
-      expect(described_class.new(agent_territorial_context, territory).display_sms_configuration?).to be true
+  shared_examples "not permit actions" do |*actions|
+    actions.each do |action|
+      permissions action do
+        it { is_expected.not_to permit(agent_territorial_context, territory) }
+      end
     end
   end
 
-  describe "display_user_fields_configuration?" do
-    it "returns false with agent without admin access to this territory" do
-      territory = create(:territory)
-      agent = create(:agent, role_in_territories: [])
-      agent_territorial_context = AgentTerritorialContext.new(agent, territory)
-      expect(described_class.new(agent_territorial_context, territory).display_user_fields_configuration?).to be false
+  describe "agent with" do
+    context "no admin access to this territory and no access_rights" do
+      let(:agent) { create(:agent, role_in_territories: []) }
+      let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory) }
+
+      it_behaves_like "not permit actions",
+                      :show?,
+                      :update?,
+                      :edit?,
+                      :display_sms_configuration?,
+                      :allow_to_manage_access_rights?,
+                      :allow_to_invite_agents?,
+                      :allow_to_manage_teams?,
+                      :display_user_fields_configuration?,
+                      :display_rdv_fields_configuration?,
+                      :display_motif_fields_configuration?
     end
 
-    it "returns true with agent with admin access to this territory" do
-      territory = create(:territory)
-      agent = create(:agent, role_in_territories: [territory])
-      agent_territorial_context = AgentTerritorialContext.new(agent, territory)
-      expect(described_class.new(agent_territorial_context, territory).display_user_fields_configuration?).to be true
+    context "admin access to this territory" do
+      let(:territory) { create(:territory, has_own_sms_provider: true) }
+      let(:agent) { create(:agent, role_in_territories: [territory]) }
+      let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory) }
+
+      it_behaves_like "permit actions",
+                      :show?,
+                      :update?,
+                      :edit?,
+                      :display_sms_configuration?,
+                      :display_user_fields_configuration?,
+                      :display_rdv_fields_configuration?,
+                      :display_motif_fields_configuration?
+
+      it_behaves_like "not permit actions",
+                      :allow_to_manage_access_rights?,
+                      :allow_to_invite_agents?,
+                      :allow_to_manage_teams?
+    end
+
+    context "allowed to manage teams access right" do
+      let(:agent) { create(:agent, role_in_territories: []) }
+      let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_teams: true) }
+
+      it_behaves_like "permit actions",
+                      :show?,
+                      :allow_to_manage_teams?
+
+      it_behaves_like "not permit actions",
+                      :update?,
+                      :edit?,
+                      :display_sms_configuration?,
+                      :allow_to_manage_access_rights?,
+                      :allow_to_invite_agents?,
+                      :display_user_fields_configuration?,
+                      :display_rdv_fields_configuration?,
+                      :display_motif_fields_configuration?
+    end
+
+    context "allowed to manage access rights access right" do
+      let(:agent) { create(:agent, role_in_territories: []) }
+      let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_manage_access_rights: true) }
+
+      it_behaves_like "permit actions",
+                      :show?,
+                      :allow_to_manage_access_rights?
+
+      it_behaves_like "not permit actions",
+                      :update?,
+                      :edit?,
+                      :display_sms_configuration?,
+                      :allow_to_manage_teams?,
+                      :allow_to_invite_agents?,
+                      :display_user_fields_configuration?,
+                      :display_rdv_fields_configuration?,
+                      :display_motif_fields_configuration?
+    end
+
+    context "allowed to invite agents access right" do
+      let(:agent) { create(:agent, role_in_territories: []) }
+      let!(:access_rights) { create(:agent_territorial_access_right, agent: agent, territory: territory, allow_to_invite_agents: true) }
+
+      it_behaves_like "permit actions",
+                      :show?,
+                      :allow_to_invite_agents?
+
+      it_behaves_like "not permit actions",
+                      :update?,
+                      :edit?,
+                      :display_sms_configuration?,
+                      :allow_to_manage_access_rights?,
+                      :allow_to_manage_teams?,
+                      :display_user_fields_configuration?,
+                      :display_rdv_fields_configuration?,
+                      :display_motif_fields_configuration?
     end
   end
 end

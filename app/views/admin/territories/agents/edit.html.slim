@@ -1,27 +1,82 @@
 = territory_navigation(t(".agent_title", name: @agent.full_name), [link_to(t(".territory_agents_title"), admin_territory_agents_path(current_territory))])
 
-.container-fluid.bg-white.rounded.m-2
+.container-fluid
+  - if policy([:configuration, current_territory]).allow_to_manage_access_rights?
+    .card.m-2.rounded
+      h2.card-header
+        = t(".agent_access_rights_legend")
+      = simple_form_for @agent.agent_territorial_access_rights.find_by(territory: current_territory), url: admin_territory_agent_territorial_access_right_path do |f|
+        .card-body
+          = f.input :allow_to_manage_teams, as: :boolean, hint: t(".hint_allow_to_manage_teams")
+          = f.input :allow_to_manage_access_rights, as: :boolean, hint: t(".hint_allow_to_manage_access_rights")
+          = f.input :allow_to_invite_agents, as: :boolean, hint: t(".hint_allow_to_invite_agents")
+        .card-footer
+          .row
+            .col.text-right
+              = f.submit class: "btn btn-primary"
 
-  = simple_form_for @agent, url: admin_territory_agent_path(current_territory, @agent) do |form|
-    = form.input :team_ids, collection: @agent.teams,
-          label: t(".teams"),
-          label_method: :name,
-          input_html: { \
-            multiple: true, \
-            class: "select2-input", \
-            data: { \
-              "select-options": { \
-                ajax: { \
-                  url: search_admin_territory_teams_path(current_territory),
-                  dataType: "json",
-                  delay: 250, \
-                }, \
-              }, \
-            }, \
-          }
-    = form.submit class: "btn btn-primary"
+  - if policy([:configuration, current_territory]).allow_to_manage_teams?
+    .card.m-2.rounded
+      h2.card-header
+        = t(".agent_teams_legend")
+      = simple_form_for @agent, url: admin_territory_agent_path(current_territory, @agent) do |f|
+        .card-body
+          = f.input :team_ids, collection: @agent.teams,
+                label: t(".teams"),
+                label_method: :name,
+                input_html: { \
+                  multiple: true, \
+                  class: "select2-input",\
+                  data: {\
+                    "select-options": {\
+                      ajax: {\
+                        url: search_admin_territory_teams_path(current_territory),
+                        dataType: "json",
+                        delay: 250,\
+                      },\
+                    },\
+                  },\
+                }
+        .card-footer
+          .row
+            .col.text-right
+              = f.submit class: "btn btn-primary"
 
-  h3.mt-3 Droit d'accès
-  = simple_form_for @agent.agent_territorial_access_rights.find_by(territory: current_territory), url: admin_territory_agent_territorial_access_right_path do |f|
-    = f.input :allow_to_manage_teams, as: :boolean
-    = f.submit class: "btn btn-primary"
+  .card.m-2.rounded
+    h2.card-header
+      = t(".organisations_legend")
+    .card-body
+      .card-group
+        - if @agent.organisations.empty?
+          = t(".empty_agent_organisations")
+        - @agent.organisations.each_with_index do |organisation, index|
+          .card.m-1 *{ "style" => "min-width:17rem;" }
+            - role = @agent.role_in_organisation(organisation)
+            = simple_form_for role, namespace: role.id, url: admin_territory_agent_role_path(current_territory, role) do |f|
+              .card-header
+                = organisation.name
+              - if policy([:configuration, current_territory]).allow_to_invite_agents?
+                .card-body
+                  = f.input :organisation_id, as: :hidden, input_html: { value: organisation.id }
+                  = f.input :agent_id, as: :hidden, input_html: { value: @agent.id }
+                  = f.input :level, as: :radio_buttons, collection: AgentRole::LEVELS, label_method: -> { AgentRole.human_attribute_value(:level, _1) }, checked: role&.level || "none"
+                .card-footer
+                  .row
+                    .col.text-left
+                      = link_to t(".delete_agent_role"), admin_territory_agent_role_path(current_territory, role), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Vous confirmez retirer l'agent #{@agent.full_name} de l'organisation #{role.organisation.name} ?"}
+                    .col.text-right
+                      = f.button :submit, t(".submit")
+
+    .card-footer
+      - available_other_organisations = (current_agent.organisations - @agent.organisations)
+      - if policy([:configuration, current_territory]).allow_to_invite_agents? && available_other_organisations.any?
+        = simple_form_for AgentRole.new, url: admin_territory_agent_roles_path(current_territory) do |f|
+          = f.input :agent_id, as: :hidden, input_html: { value: @agent.id }
+          = f.input :level, as: :hidden, input_html: { value: AgentRole::LEVEL_BASIC }
+          = f.input :organisation_id, collection: available_other_organisations, include_blank: "-- sélectionner une organisation --",
+                  required: false,
+                  label: false
+          = f.submit "Affecter cette organisation", class: "btn btn-outline-primary"
+      - elsif policy([:configuration, current_territory]).allow_to_manage_access_rights?
+        => t(".no_other_organisation")
+        = link_to t(".create_organisation"), new_admin_organisation_path(territory_id: current_territory.id)
