@@ -9,7 +9,7 @@ AllCops:
     - "node_modules/**/*"
     - 'db/schema.rb'
   NewCops: enable
-  TargetRubyVersion: 3.0.3
+  TargetRubyVersion: 3.1.1
 
 Bundler/OrderedGems:
   Exclude:
@@ -179,6 +179,12 @@ Style/IfUnlessModifier:
   Enabled: false
 
 Style/OpenStructUse:
+  Enabled: false
+
+Style/HashSyntax:
+  Enabled: false
+
+Naming/BlockForwarding:
   Enabled: false
 
 Style/StringLiterals:
