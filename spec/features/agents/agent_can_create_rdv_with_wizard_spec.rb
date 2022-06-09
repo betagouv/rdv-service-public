@@ -110,6 +110,7 @@ describe "Agent can create a Rdv with wizard", js: true do
 
       expect(page).to have_current_path(admin_organisation_agent_agenda_path(organisation, agent, date: rdv.starts_at.to_date, selected_event_id: rdv.id))
       expect(page).to have_content("Le rendez-vous a été créé.")
+      expect(page).to have_css("*", text: "14:15", visible: :all)
     end
   end
 

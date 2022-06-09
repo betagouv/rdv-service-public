@@ -4,6 +4,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import frLocale from '@fullcalendar/core/locales/fr';
 import interactionPlugin from '@fullcalendar/interaction';
+import moment from 'moment-timezone';
 import * as Sentry from '@sentry/browser';
 
 import Bowser from "bowser";
@@ -87,7 +88,18 @@ class CalendarRdvSolidarites {
       maxTime: '20:00:00',
       datesRender: this.datesRender,
       eventRender: this.eventRender,
-      eventMouseLeave: (info) => $(info.el).tooltip('hide') // extra security
+      eventMouseLeave: (info) => $(info.el).tooltip('hide'), // extra security
+      timeZone: "Europe/Paris" // This is a hack to make sure that the events will be shown at the proper time in the calendar.
+      // If this is removed, there is a bug that causes the events in the calendar to be show at the wrong
+      // time for agents that are not in the Paris timezone.
+      // The proper fix for this would be to make sure we store all rdvs with the right timezone, but that's a much bigger project.
+      // The timezone is forced to paris on the server side, so if we make sure that we also force it to the same timezone here,
+      // we always have a consistent result.
+      // We're always assuming that people are interested in their local time.
+      //
+      // There is one case for which this fix would fail: if the local time of the user and the agent is not the same (for example the agent is
+      // in the métropole and the user is at la réunion), they will not see the same time
+      // see the same time for the rdv. This seems unlikely for now.
     });
   }
 
@@ -106,7 +118,9 @@ class CalendarRdvSolidarites {
   }
 
   selectEvent = (info) => {
-    let startDate = moment(info.start);
+    // We use UTC because it's what makes the event display at the right time in the calendar.
+    // It's not entirely clear why utc is the right choice, we suspect it's because the fullcalendar and back-end timezones are the same.
+    let startDate = moment(info.start).utc();
     const urlSearchParams = new URLSearchParams({
       starts_at: info.startStr,
       "agent_ids[]": this.data.agentId,
@@ -142,7 +156,7 @@ class CalendarRdvSolidarites {
     if (info.view.type != "timeGridOneDay") return
 
     const url = new URL(printLinkElt.href)
-    const date = moment(info.view.currentStart)
+    const date = moment(info.view.currentStart).utc()
     printLinkElt.querySelector(".js-date").innerHTML = date.format("DD/MM/YYYY")
     url.searchParams.set("start", date.format("YYYY-MM-DD"))
     url.searchParams.set("end", date.format("YYYY-MM-DD"))
@@ -169,7 +183,7 @@ class CalendarRdvSolidarites {
       return
     }
 
-    let title = `${moment(info.event.start).format('H:mm')} - ${moment(info.event.end).format('H:mm')}`;
+    let title = `${moment(info.event.start).utc().format('H:mm')} - ${moment(info.event.end).utc().format('H:mm')}`;
 
     if (info.event.rendering == 'background') {
       $el.append("<div class=\"fc-title\" style=\"color: white; padding: 2px 4px; font-size: 12px; font-weight: bold;\">" + info.event.title + "</div>");
