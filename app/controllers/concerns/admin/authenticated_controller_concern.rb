@@ -8,7 +8,6 @@ module Admin::AuthenticatedControllerConcern
 
     before_action :authenticate_agent!
     before_action :set_paper_trail_whodunnit
-    before_action :log_params_to_sentry
     helper_method :authorize_admin
     helper_method :policy_scope_admin
   end
@@ -22,19 +21,6 @@ module Admin::AuthenticatedControllerConcern
   end
 
   protected
-
-  # By default, Sentry does not log request URL and params because the could
-  # contain personal information. See documentation for `config.send_default_pii` :
-  # https://docs.sentry.io/platforms/ruby/guides/rack/migration/#removed-processors
-  # For agents, however, it seems reasonable to log the URL and params,
-  # because they are much less likely to contain personal information.
-  def log_params_to_sentry
-    # The Sentry scope only lives for the current request (it uses threads)
-    Sentry.configure_scope do |scope|
-      scope.set_context("params", params.to_unsafe_h)
-      scope.set_context("url", { "request.original_url" => request.original_url })
-    end
-  end
 
   def user_for_paper_trail
     current_agent.name_for_paper_trail

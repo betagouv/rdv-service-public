@@ -5,6 +5,9 @@ class Admin::RdvsController < AgentAuthController
 
   before_action :set_rdv, :set_optional_agent, except: %i[index create export]
 
+  # TODO: remove when this is fixed: https://sentry.io/organizations/rdv-solidarites/issues/3268196907
+  before_action :log_params_to_sentry, only: %i[index export]
+
   def index
     @rdvs = policy_scope(Rdv).search_for(current_agent, current_organisation, parsed_params)
     @breadcrumb_page = params[:breadcrumb_page]
