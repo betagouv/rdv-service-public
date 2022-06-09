@@ -102,7 +102,6 @@ class Admin::MotifsController < AgentAuthController
               :follow_up,
               :collectif,
               :sectorisation_level,
-              :rdvs_cancellable_by_user,
               :rdvs_editable_by_user)
   end
 

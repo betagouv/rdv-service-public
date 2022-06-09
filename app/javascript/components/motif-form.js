@@ -34,9 +34,9 @@ class MotifForm {
     this.sectorisationEnabled = enabled
   }
 
-  toggleRdvsEditableAndCancellable() {
+  toggleRdvsEditable() {
     const enabled = !!document.querySelector("#motif_reservable_online:checked")
-    document.querySelector(".js-rdvs-editable-and-cancellable").classList.toggle('translucent', !enabled)
+    document.querySelector(".js-rdvs-editable").classList.toggle('translucent', !enabled)
   }
 
   constructor() {
@@ -55,7 +55,7 @@ class MotifForm {
 
     this.toggleSecretariat()
     this.toggleSectorisation()
-    this.toggleRdvsEditableAndCancellable()
+    this.toggleRdvsEditable()
   }
 
 }

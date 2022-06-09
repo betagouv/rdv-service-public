@@ -68,9 +68,7 @@
           .col-md-4= f.input :min_booking_delay, collection: min_max_delay_options
           .col-md-4= f.input :max_booking_delay, collection: min_max_delay_options
 
-        .js-rdvs-editable-and-cancellable
-          = f.input(:rdvs_cancellable_by_user)
-          p.text-muted.font-14= Motif.human_attribute_name("rdvs_cancellable_by_user_hint")
+        .js-rdvs-editable
           = f.input(:rdvs_editable_by_user)
           p.text-muted.font-14= Motif.human_attribute_name("rdvs_editable_by_user_hint")
 

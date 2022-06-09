@@ -43,8 +43,6 @@ fr:
         instruction_for_rdv: Indications affichées après la confirmation du rendez-vous
         instruction_for_rdv_hint: Indications affichées après la confirmation du rendez-vous
         instruction_for_rdv_short: Indications après
-        rdvs_cancellable_by_user: RDVs annulables
-        rdvs_cancellable_by_user_hint: Les RDVs peuvent être annulés par l'usager au plus tard 4 heures avant le début du RDV
         rdvs_editable_by_user: RDVs modifiables
         rdvs_editable_by_user_hint: L'horaire du RDV peut être changé par l'usager au plus tard 2 jours avant le début du RDV
       motif/categories:

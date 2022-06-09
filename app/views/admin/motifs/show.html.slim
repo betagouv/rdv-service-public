@@ -49,9 +49,6 @@
             min_max_delay_int_to_human(@motif.max_booking_delay), \
           hint: Motif.human_attribute_name(:max_booking_delay_hint)
         = motif_attribute_row \
-          Motif.human_attribute_name(:rdvs_cancellable_by_user), \
-          motif_option_value(@motif, :rdvs_cancellable_by_user)
-        = motif_attribute_row \
           Motif.human_attribute_name(:rdvs_editable_by_user), \
            motif_option_value(@motif, :rdvs_editable_by_user)
 
