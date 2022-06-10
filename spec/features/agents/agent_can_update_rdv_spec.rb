@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 describe "Agent can update a RDV", js: true do
-
-  let!(:organisation) { create(:organisation)}
+  let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }
   let!(:agent) { create(:agent, first_name: "Alain", last_name: "Tiptop", service: service, basic_role_in_organisations: [organisation]) }
 
@@ -43,6 +42,4 @@ describe "Agent can update a RDV", js: true do
     expect(page).to have_content(lieu.full_name)
     expect(page).not_to have_selector(".badge-info", text: /Ponctuel/)
   end
-
-
 end
