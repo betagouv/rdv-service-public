@@ -9,7 +9,7 @@
     - else
       = f.association :service, collection: @services, include_blank: false, hint: t(".services_hint")
 
-    = f.association :organisations, as: :check_boxes, collection: current_agent.organisations, label: t(".organisations"), include_hidden: false
+    = f.association :organisations, as: :check_boxes, collection: current_agent.organisations.where(territory: current_territory), label: t(".organisations"), include_hidden: false
 
     .text-right
       = f.button :submit, t("devise.invitations.new.submit_button")
