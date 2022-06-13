@@ -3,6 +3,9 @@
 class Admin::Creneaux::AgentSearchesController < AgentAuthController
   respond_to :html, :js
 
+  # TODO: remove when this is fixed: https://sentry.io/organizations/rdv-solidarites/issues/3270502722
+  before_action :log_params_to_sentry, only: %i[index]
+
   def index
     @form = helpers.build_agent_creneaux_search_form(current_organisation, params)
     @search_results = search_results

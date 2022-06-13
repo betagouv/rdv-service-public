@@ -43,6 +43,19 @@ class ApplicationController < ActionController::Base
     }.compact
   end
 
+  # By default, Sentry does not log request URL and params because they could
+  # contain personal information. See documentation for `config.send_default_pii` :
+  # https://docs.sentry.io/platforms/ruby/guides/rack/migration/#removed-processors
+  # This method is meant to be used to debug specific actions for which we have
+  # Sentry entries, and thus need more context to debug.
+  def log_params_to_sentry
+    # The Sentry scope only lives for the current request (it uses threads)
+    Sentry.configure_scope do |scope|
+      scope.set_context("params", params.to_unsafe_h)
+      scope.set_context("url", { "request.original_url" => request.original_url })
+    end
+  end
+
   def authenticate_inviter!
     authenticate_agent!(force: true)
   end
