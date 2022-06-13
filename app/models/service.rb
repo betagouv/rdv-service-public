@@ -22,6 +22,10 @@ class Service < ApplicationRecord
 
   ## -
 
+  def self.all_for_territory(territory)
+    where(agents: Agent.joins(:organisations).merge(territory.organisations))
+  end
+
   def secretariat?
     name == SECRETARIAT
   end
