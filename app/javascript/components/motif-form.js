@@ -50,7 +50,7 @@ class MotifForm {
     )
     this.reservableOnlineCheckbox.addEventListener('change', e => {
       this.toggleSectorisation()
-      this.toggleRdvsEditableAndCancellable()
+      this.toggleRdvsEditable()
     })
 
     this.toggleSecretariat()
