@@ -4,7 +4,7 @@
   - if policy([:configuration, AgentTerritorialRole]).display?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to admin_territory_agent_territorial_roles_path(current_territory) do
-        h3.fw-bold.mb-0
+        h2.fw-bold.mb-0
           i.fa.fa-users>
           | Administration
         p Gérer l'accès à la configuration
@@ -12,7 +12,7 @@
   - if policy([:configuration, Agent]).display?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to admin_territory_agents_path(current_territory) do
-        h3.fw-bold.mb-0
+        h2.fw-bold.mb-0
           i.fa.fa-users>
           | Agents
         p Inviter des agents, affecter à des équipes
@@ -20,7 +20,7 @@
   - if policy([:configuration, Team]).display?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to admin_territory_teams_path(current_territory) do
-        h3.fw-bold.mb-0
+        h2.fw-bold.mb-0
           i.fa.fa-users>
           | Équipes
         p Construire des équipes pour grouper des agents
@@ -28,7 +28,7 @@
   - if policy([:configuration, WebhookEndpoint]).display?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to admin_territory_webhook_endpoints_path(current_territory) do
-        h3.fw-bold.mb-0
+        h2.fw-bold.mb-0
           i.fa.fa-network-wired>
           | Webhook
         p Interconnecter RDV-Solidarités avec vos systèmes.
@@ -36,7 +36,7 @@
   - if policy([:configuration, current_territory]).display_sms_configuration?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to admin_territory_sms_configuration_path(current_territory) do
-        h3.fw-bold.mb-0
+        h2.fw-bold.mb-0
           i.fa.fa-mobile-alt>
           | SMS
         p Configurer votre fournisseur d'envoi de SMS.
@@ -44,7 +44,7 @@
   - if policy([:configuration, Sector]).display?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to admin_territory_sectors_path(current_territory, current_agent) do
-        h3.fw-bold.mb-0
+        h2.fw-bold.mb-0
           i.fa.fa-table>
           | Secteurs
         p Créer vos secteurs géographiques pour organiser votre sectorisation.
@@ -52,7 +52,7 @@
   - if policy([:configuration, Sector]).display?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to admin_territory_sectors_path(current_territory, view: "map") do
-        h3.fw-bold.mb-0
+        h2.fw-bold.mb-0
           i.fa.fa-map>
           | Carte
         p Visualiser les secteurs du territoire.
@@ -60,7 +60,7 @@
   - if policy([:configuration, Sector]).display?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to admin_territory_sectorisation_test_path(current_territory) do
-        h3.fw-bold.mb-0
+        h2.fw-bold.mb-0
           i.fa.fa-check-square>
           | Test
         p Effectuer des tests de vérification des adresses et informations de code INSEE.
@@ -68,7 +68,7 @@
   - if policy([:configuration, Sector]).display?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to new_admin_territory_zone_import_path(current_territory) do
-        h3.fw-bold.mb-0
+        h2.fw-bold.mb-0
           i.fa.fa-download>
           | Import
         p Importer un fichier de sectorisation pour faciliter la création de votre découpage géographique.
@@ -76,7 +76,7 @@
   - if policy([:configuration, current_territory]).display_user_fields_configuration?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to edit_admin_territory_user_fields_path(current_territory) do
-        h3.fw-bold.mb-0
+        h2.fw-bold.mb-0
           i.fa.fa-users>
           | Fiches usagers
         p Gérer les informations enregistrées sur les usagers
@@ -84,7 +84,7 @@
   - if policy([:configuration, current_territory]).display_rdv_fields_configuration?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to edit_admin_territory_rdv_fields_path(current_territory) do
-        h3.fw-bold.mb-0
+        h2.fw-bold.mb-0
           i.fa.fa-calendar>
           | Fiches RDV
         p Gérer les informations enregistrées sur les rendez-vous
@@ -92,7 +92,7 @@
   - if policy([:configuration, current_territory]).display_motif_fields_configuration?
     .col.col-md-4.p-2.rounded.settings-box
       = link_to edit_admin_territory_motif_fields_path(current_territory) do
-        h3.fw-bold.mb-0
+        h2.fw-bold.mb-0
           i.fa.fa-calendar>
           | Motifs
         p Gérer les options de configuration des motifs
@@ -100,7 +100,7 @@
   / Ce lien est la manière principale de sortir de la configuration pour retourner à l'écran métier, donc on le garde à la fin de la liste
   .col.col-md-4.p-2.rounded.settings-box
     = link_to admin_organisations_path do
-      h3.fw-bold.mb-0
+      h2.fw-bold.mb-0
         i.fa.fa-home>
         | Organisations
       p Lister mes organisations.
