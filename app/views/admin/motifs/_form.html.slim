@@ -7,7 +7,7 @@
       h5.card-title Configuration générale
       .form-row
         .col-md-6
-          = f.association :service, collection: @available_services
+          = f.association :service, collection: Service.all_for_territory(current_territory)
         .col-md-6
           = f.input :name
       .form-row

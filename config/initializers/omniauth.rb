@@ -20,6 +20,6 @@ Rails.application.config.middleware.use OmniAuth::Builder do
 
   on_failure do |env|
     env["devise.mapping"] = Devise.mappings[:user]
-    SuperAdmins::OmniauthCallbacksController.action(:failure).call(env)
+    OmniauthCallbacksController.action(:failure).call(env)
   end
 end

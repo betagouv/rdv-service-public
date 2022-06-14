@@ -4,7 +4,6 @@ class Admin::MotifsController < AgentAuthController
   respond_to :html, :json
 
   before_action :set_organisation, only: %i[new create]
-  before_action :set_available_services, only: %i[new edit index]
   before_action :set_motif, only: %i[show edit update destroy]
 
   def index
@@ -49,7 +48,6 @@ class Admin::MotifsController < AgentAuthController
       flash[:notice] = "Le motif a été modifié."
       redirect_to admin_organisation_motif_path(@motif.organisation, @motif)
     else
-      set_available_services
       render :edit
     end
   end
@@ -103,9 +101,5 @@ class Admin::MotifsController < AgentAuthController
               :collectif,
               :sectorisation_level,
               :rdvs_editable_by_user)
-  end
-
-  def set_available_services
-    @available_services = Service.where(agents: Agent.joins(:organisations).merge(current_organisation.territory.organisations))
   end
 end
