@@ -47,9 +47,10 @@
       = t(".organisations_legend")
     .card-body
       .card-group
-        - if @agent.organisations.empty?
+        - agent_organisations_of_current_territory = @agent.organisations.where(territory: current_territory)
+        - if agent_organisations_of_current_territory.empty?
           = t(".empty_agent_organisations")
-        - @agent.organisations.each_with_index do |organisation, index|
+        - agent_organisations_of_current_territory.each_with_index do |organisation, index|
           .card.m-1 *{ "style" => "min-width:17rem;" }
             - role = @agent.role_in_organisation(organisation)
             = simple_form_for role, namespace: role.id, url: admin_territory_agent_role_path(current_territory, role) do |f|
@@ -68,7 +69,7 @@
                       = f.button :submit, t(".submit")
 
     .card-footer
-      - available_other_organisations = (current_agent.organisations - @agent.organisations)
+      - available_other_organisations = (current_agent.organisations.where(territory: current_territory) - agent_organisations_of_current_territory)
       - if policy([:configuration, current_territory]).allow_to_invite_agents? && available_other_organisations.any?
         = simple_form_for AgentRole.new, url: admin_territory_agent_roles_path(current_territory) do |f|
           = f.input :agent_id, as: :hidden, input_html: { value: @agent.id }
