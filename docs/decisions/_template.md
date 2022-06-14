@@ -8,4 +8,4 @@ status: (approuvée|rejetée|en discussion|proposition)
 
 ## Objectif
 
-## Decision
+## Décision
