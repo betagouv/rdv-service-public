@@ -34,6 +34,11 @@ class MotifForm {
     this.sectorisationEnabled = enabled
   }
 
+  toggleRdvsEditable() {
+    const enabled = !!document.querySelector("#motif_reservable_online:checked")
+    document.querySelector(".js-rdvs-editable").classList.toggle('translucent', !enabled)
+  }
+
   constructor() {
     this.secretariatCheckbox = document.querySelector('#motif_for_secretariat')
     this.reservableOnlineCheckbox = document.querySelector('#motif_reservable_online')
@@ -43,10 +48,14 @@ class MotifForm {
     document.querySelectorAll(noSecretariatInputs).forEach(input =>
       input.addEventListener('change', e => this.toggleSecretariat())
     )
-    this.reservableOnlineCheckbox.addEventListener('change', e => this.toggleSectorisation())
+    this.reservableOnlineCheckbox.addEventListener('change', e => {
+      this.toggleSectorisation()
+      this.toggleRdvsEditable()
+    })
 
     this.toggleSecretariat()
     this.toggleSectorisation()
+    this.toggleRdvsEditable()
   }
 
 }

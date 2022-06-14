@@ -65,25 +65,87 @@ describe Rdv, type: :model do
 
   describe "#cancellable_by_user?" do
     let(:now) { Time.zone.parse("2021-05-03 14h00") }
+    let(:rdv) { build :rdv, starts_at: starts_at, motif: motif }
+    let(:starts_at) { now + 5.hours }
+    let(:motif) { build(:motif, rdvs_cancellable_by_user: true) }
 
     before { travel_to(now) }
 
-    context "when Rdv starts in 5 hours" do
-      let(:rdv) { create(:rdv, starts_at: now + 5.hours) }
-
+    context "when Rdv starts in more than 4 hours" do
       it { expect(rdv.cancellable_by_user?).to eq(true) }
-
-      context "but is already cancelled" do
-        let(:rdv) { create(:rdv, status: "excused", starts_at: now + 5.hours) }
-
-        it { expect(rdv.cancellable_by_user?).to eq(false) }
-      end
     end
 
-    context "when Rdv starts in 4 hours" do
-      let(:rdv) { create(:rdv, starts_at: now + 4.hours) }
+    context "when Rdv starts in 4 hours or less" do
+      let(:starts_at) { now + 4.hours }
 
       it { expect(rdv.cancellable_by_user?).to eq(false) }
+    end
+
+    context "when it is already cancelled" do
+      let(:rdv) { build(:rdv, status: "excused", starts_at: starts_at, motif: motif) }
+
+      it { expect(rdv.cancellable_by_user?).to eq(false) }
+    end
+
+    context "when it is collectif" do
+      let(:motif) { build(:motif, collectif: true) }
+
+      it { expect(rdv.cancellable_by_user?).to eq(false) }
+    end
+
+    context "when the rdvs are set as not cancellable by the user in the motif" do
+      let(:motif) { build(:motif, rdvs_cancellable_by_user: false) }
+
+      it { expect(rdv.cancellable_by_user?).to eq(false) }
+    end
+  end
+
+  describe "#editable_by_user?" do
+    let(:now) { Time.zone.parse("2021-05-03 14h00") }
+    let(:rdv) { build :rdv, starts_at: starts_at, motif: motif, created_by: "user" }
+    let(:starts_at) { now + 3.days }
+    let(:motif) { build(:motif, rdvs_editable_by_user: true, reservable_online: true) }
+
+    before { travel_to(now) }
+
+    context "when Rdv starts in more than 2 days" do
+      it { expect(rdv.editable_by_user?).to eq(true) }
+    end
+
+    context "when Rdv starts in 2 days or less" do
+      let(:starts_at) { now + 2.days }
+
+      it { expect(rdv.editable_by_user?).to eq(false) }
+    end
+
+    context "when it is already cancelled" do
+      let(:rdv) { build(:rdv, status: "excused", starts_at: starts_at, motif: motif, created_by: "user") }
+
+      it { expect(rdv.editable_by_user?).to eq(false) }
+    end
+
+    context "when it is collectif" do
+      let(:motif) { build(:motif, collectif: true) }
+
+      it { expect(rdv.editable_by_user?).to eq(false) }
+    end
+
+    context "when the rdvs are set as not cancellable by the user in the motif" do
+      let(:motif) { build(:motif, rdvs_editable_by_user: false) }
+
+      it { expect(rdv.editable_by_user?).to eq(false) }
+    end
+
+    context "when the motif is not reservable online" do
+      let(:motif) { build(:motif, reservable_online: false) }
+
+      it { expect(rdv.editable_by_user?).to eq(false) }
+    end
+
+    context "when the rdv is created by an agent" do
+      let(:rdv) { build(:rdv, created_by: "agent", starts_at: starts_at, motif: motif) }
+
+      it { expect(rdv.editable_by_user?).to eq(false) }
     end
   end
 

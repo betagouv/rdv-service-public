@@ -99,6 +99,7 @@ class Admin::MotifsController < AgentAuthController
               :for_secretariat,
               :follow_up,
               :collectif,
-              :sectorisation_level)
+              :sectorisation_level,
+              :rdvs_editable_by_user)
   end
 end

@@ -48,6 +48,10 @@
           @motif.reservable_online? && \
             min_max_delay_int_to_human(@motif.max_booking_delay), \
           hint: Motif.human_attribute_name(:max_booking_delay_hint)
+        = motif_attribute_row \
+          Motif.human_attribute_name(:rdvs_editable_by_user), \
+           motif_option_value(@motif, :rdvs_editable_by_user)
+
         - unless current_agent.conseiller_numerique?
           = motif_attribute_row("Sectorisation") do
             - if @motif.reservable_online?

@@ -27,7 +27,7 @@ describe "User can manage their rdvs" do
     it "default", js: true do
       expect(page).to have_content(rdv.motif.name)
       expect(page).not_to have_selector("li", text: "Annuler le RDV")
-      expect(page).to have_selector("p.font-italic", text: "Ce rendez-vous commence dans moins de 4 heures, il n'est plus annulable en ligne.")
+      expect(page).to have_content("Ce rendez-vous n'est pas annulable en ligne. Prenez contact avec le secrétariat.")
     end
   end
 
