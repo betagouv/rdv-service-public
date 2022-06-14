@@ -258,6 +258,40 @@ describe User, type: :model do
     end
   end
 
+  describe "#invitation_period_valid?" do
+    subject { user.send(:invitation_period_valid?) }
+
+    let(:now) { Time.zone.parse("2022-04-05 13:45") }
+    let(:invitation_created_at) { Time.zone.parse("2022-04-05 13:00") }
+    let(:user) { create(:user, invitation_created_at: invitation_created_at, invite_for: invite_for) }
+
+    before { travel_to(now) }
+
+    context "when no invitation period is precised" do
+      let(:invite_for) { nil }
+
+      it "is valid" do
+        expect(subject).to eq(true)
+      end
+    end
+
+    context "when invitation was created less than invitation period ago" do
+      let(:invite_for) { 1.hour.to_i }
+
+      it "is valid" do
+        expect(subject).to eq(true)
+      end
+    end
+
+    context "when invitation was created more than invitation period ago" do
+      let(:invite_for) { 30.minutes.to_i }
+
+      it "is not valid" do
+        expect(subject).to eq(false)
+      end
+    end
+  end
+
   describe "#minor?" do
     it "return true when user birth in 2016 and we are un 2020" do
       now = Time.zone.parse("2020-4-3 13:45")
