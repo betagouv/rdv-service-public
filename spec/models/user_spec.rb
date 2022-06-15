@@ -261,11 +261,10 @@ describe User, type: :model do
   describe "#invitation_period_valid?" do
     subject { user.send(:invitation_period_valid?) }
 
-    let(:now) { Time.zone.parse("2022-04-05 13:45") }
     let(:invitation_created_at) { Time.zone.parse("2022-04-05 13:00") }
     let(:user) { create(:user, invitation_created_at: invitation_created_at, invite_for: invite_for) }
 
-    before { travel_to(now) }
+    before { travel_to(Time.zone.parse("2022-04-05 13:45")) }
 
     context "when no invitation period is precised" do
       let(:invite_for) { nil }
