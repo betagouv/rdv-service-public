@@ -207,16 +207,12 @@ class User < ApplicationRecord
   protected
 
   def compute_invitation_due_at
-    time = invitation_created_at || invitation_sent_at
-    time + invite_for
+    (invitation_created_at || invitation_sent_at) + invite_for
   end
 
   # overriding Devise to allow custom invitation validity duration (PR #1484)
   def invitation_period_valid?
-    time = invitation_created_at || invitation_sent_at
-    return (time && (time.utc <= invitation_due_at)) unless invite_for.nil?
-
-    super
+    invite_for.present? ? (Time.zone.now <= invitation_due_at) : super
   end
 
   def password_required?
