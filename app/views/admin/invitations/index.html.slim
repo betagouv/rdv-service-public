@@ -1,0 +1,36 @@
+- content_for(:menu_item) { "menu-invitations" }
+
+- content_for(:title, "Invitations en cours pour #{current_organisation.name}")
+
+- if current_agent_can?(:create, Agent)
+  - content_for :breadcrumb do
+    = link_to "Inviter un agent", new_admin_agent_organisation_invitation_path(current_organisation), class:"btn btn-outline-primary"
+
+= simple_form_for "", url: admin_organisation_invitations_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
+  .container-fluid.bg-white.rounded
+    .m-3.d-flex.justify-content-end
+      - search = params[:search].blank? ? "d-none" : ""
+      div= link_to t("helpers.reset"), admin_organisation_invitations_path(current_organisation), class: "btn btn-link #{search}"
+      = f.input :search, placeholder: "Email", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:search] }, required: false
+      = f.button :submit, t("helpers.search")
+    table.table
+      thead
+        tr
+          th= Agent.human_attribute_name(:name)
+          th= Agent.human_attribute_name(:email)
+          th= Agent.human_attribute_name(:service)
+          th= AgentRole.human_attribute_name(:level)
+          th Actions
+      tbody
+        = render partial: "admin/agents/agent", collection: @invited_agents
+    - if @invited_agents.empty?
+      .mb-4.p.text-center Aucune invitation en attente
+    - elsif @invited_agents.total_pages > 1
+      .m-3
+        .d-flex.justify-content-center
+          = paginate @invited_agents, theme: "twitter-bootstrap-4"
+        .text-center= page_entries_info @invited_agents
+
+    - if current_agent_can?(:create, Agent)
+      .m-3.d-flex.justify-content-center
+        = link_to "Inviter un agent", new_admin_agent_organisation_invitation_path(current_organisation), class: "btn btn-primary"

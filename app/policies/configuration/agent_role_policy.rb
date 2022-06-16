@@ -9,7 +9,7 @@ class Configuration::AgentRolePolicy
 
   def territorial_admin?
     @current_agent.territorial_admin_in?(@current_territory) ||
-      @access_rights.allow_to_invite_agents?
+      @access_rights&.allow_to_invite_agents?
   end
 
   alias update? territorial_admin?

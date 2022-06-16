@@ -1,0 +1,40 @@
+- content_for(:menu_item) { "menu-agents" }
+
+- content_for(:title, "Agents de #{current_organisation.name}")
+
+- if current_agent_can?(:create, Agent)
+  - content_for :breadcrumb do
+    = link_to "Inviter un agent", new_admin_agent_organisation_invitation_path(current_organisation), class:"btn btn-outline-primary"
+
+= simple_form_for "", url: admin_organisation_agents_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
+  .container-fluid.bg-white.rounded
+    .m-3.d-flex.justify-content-end
+      - search = params[:term].blank? && "d-none"
+      div= link_to t("helpers.reset"), admin_organisation_agents_path(current_organisation), class: "btn btn-link #{search}"
+      = f.input :term, placeholder: "Prénom, Nom, Email", label: false, input_html: { autocomplete: "off", class: "search-form-control", value: params[:term] }, required: false
+      = f.button :submit, t("helpers.search")
+    table.table
+      thead
+        tr
+          th= Agent.human_attribute_name(:name)
+          th= Agent.human_attribute_name(:email)
+          th= Agent.human_attribute_name(:service)
+          th= AgentRole.human_attribute_name(:level)
+          th Actions
+      tbody
+        = render partial: "agent", collection: @agents
+    - if @agents.empty?
+      .mb-4.p.text-center Aucun agent trouvé
+    - elsif @agents.total_pages > 1
+      .m-3
+        .d-flex.justify-content-center
+          = paginate @agents, theme: "twitter-bootstrap-4"
+        .text-center= page_entries_info @agents
+
+    - if current_agent_can?(:create, Agent)
+      .m-3.d-flex.justify-content-center
+        = link_to "Inviter un agent", new_admin_agent_organisation_invitation_path(current_organisation), class: "btn btn-primary"
+        - if @invited_agents_count > 0
+          = link_to "Voir les #{@invited_agents_count} invitations en attente", admin_organisation_invitations_path(current_organisation), class: "btn btn-link"
+        - else
+          .m-2 Aucune invitation en attente
