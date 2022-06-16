@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_24_141757) do
+ActiveRecord::Schema.define(version: 2022_06_16_145020) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -223,9 +223,11 @@ ActiveRecord::Schema.define(version: 2022_05_24_141757) do
     t.boolean "display_cancelled_rdv", default: true
     t.enum "plage_ouverture_notification_level", default: "all", enum_type: "agents_plage_ouverture_notification_level"
     t.enum "absence_notification_level", default: "all", enum_type: "agents_absence_notification_level"
+    t.string "external_id", comment: "The agent's unique and immutable id in the system managing them and adding them to our application"
     t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_agents_search_terms", using: :gin
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true
+    t.index ["external_id"], name: "index_agents_on_external_id"
     t.index ["invitation_token"], name: "index_agents_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_agents_on_invitations_count"
     t.index ["invited_by_id"], name: "index_agents_on_invited_by_id"
@@ -363,6 +365,8 @@ ActiveRecord::Schema.define(version: 2022_05_24_141757) do
     t.string "website"
     t.string "email"
     t.bigint "territory_id", null: false
+    t.string "external_id", comment: "The organisation's unique and immutable id in the system managing them and adding them to our application"
+    t.index ["external_id"], name: "index_organisations_on_external_id"
     t.index ["human_id", "territory_id"], name: "index_organisations_on_human_id_and_territory_id", unique: true, where: "((human_id)::text <> ''::text)"
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["name"], name: "index_organisations_on_name"
