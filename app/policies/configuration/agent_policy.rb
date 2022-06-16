@@ -14,16 +14,16 @@ class Configuration::AgentPolicy
 
   def territorial_admin_or_allowed_to_manage_agent_part?
     territorial_admin? ||
-      @access_rights.allow_to_manage_access_rights? ||
-      @access_rights.allow_to_manage_teams? ||
-      @access_rights.allow_to_invite_agents?
+      @access_rights&.allow_to_manage_access_rights? ||
+      @access_rights&.allow_to_manage_teams? ||
+      @access_rights&.allow_to_invite_agents?
   end
 
   alias display? territorial_admin_or_allowed_to_manage_agent_part?
   alias edit? territorial_admin_or_allowed_to_manage_agent_part?
 
   def create?
-    territorial_admin? || @access_rights.allow_to_invite_agents?
+    territorial_admin? || @access_rights&.allow_to_invite_agents?
   end
 
   class Scope

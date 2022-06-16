@@ -1,0 +1,21 @@
+- content_for(:menu_item) { "menu-agents" }
+
+- content_for :title do
+  = t "devise.invitations.new.header"
+
+.row.justify-content-center
+  .col-md-6
+    .card
+      .card-body
+        = simple_form_for [:admin, resource], as: resource_name, url: admin_agent_organisation_invitation_path(current_organisation, resource), html: { method: :post } do |f|
+          = render "devise/shared/error_messages", resource: resource
+          = f.input :email, placeholder: "jean.dupond@departement.fr", input_html: { autocomplete: "off"}
+          = f.association :service, collection: @services, include_blank: false, hint: "Attention, le service d'un agent est définitif, il ne pourra pas changer de service par la suite. Si un agent appartient à deux services il faut pour l'instant lui créer deux comptes avec deux emails différents."
+          = f.simple_fields_for :roles do |ff|
+            = ff.input :level, \
+              collection: @roles, \
+              label_method: -> { AgentRole.human_attribute_value(:level, _1, context: :explanation).html_safe }, \
+              hint: "Les agents peuvent avoir des permissions différentes sur chaque organisation.", \
+              as: :radio_buttons
+          .text-right
+            = f.button :submit, t("devise.invitations.new.submit_button")
