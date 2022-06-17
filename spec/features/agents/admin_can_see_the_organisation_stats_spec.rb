@@ -9,6 +9,5 @@ describe "Admin can configure the organisation" do
     click_link "Statistiques"
     expect(page).to have_content("Statistiques")
     expect(page).to have_content("RDV créés")
-    expect(page).to have_content("Usagers créés")
   end
 end

@@ -23,18 +23,6 @@ class StatsController < ApplicationController
     render json: stats.chart_json
   end
 
-  def agents
-    render json: Stat.new(agents: @agents).agents_group_by_week
-  end
-
-  def organisations
-    render json: Stat.new(organisations: @organisations).organisations_group_by_week
-  end
-
-  def users
-    render json: Stat.new(users: @users).users_group_by_week
-  end
-
   def receipts
     attribute = params[:group_by]&.to_sym
     attribute = :channel unless attribute.in?(%i[event channel result])

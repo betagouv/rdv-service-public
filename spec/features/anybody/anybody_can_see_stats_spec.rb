@@ -6,6 +6,5 @@ describe "Anybody can see stats" do
     click_link "Statistiques"
     expect(page).to have_content("Statistiques")
     expect(page).to have_content("RDV créés")
-    expect(page).to have_content("Usagers créés")
   end
 end

@@ -8,20 +8,8 @@ class Stat
 
   delegate :active, to: :users, prefix: true
 
-  def users_group_by_week
-    users.active.group_by_week("users.created_at", format: DEFAULT_FORMAT).count
-  end
-
-  def organisations_group_by_week
-    organisations.group_by_week("organisations.created_at", format: DEFAULT_FORMAT).count
-  end
-
   def agents_for_default_range
     agents.active
-  end
-
-  def agents_group_by_week
-    agents.active.group_by_week("agents.created_at", format: DEFAULT_FORMAT).count
   end
 
   def rdvs_group_by_week
