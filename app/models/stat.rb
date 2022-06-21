@@ -20,8 +20,8 @@ class Stat
     rdvs.joins(:motif).group("motifs.location_type").group_by_week("rdvs.created_at", format: DEFAULT_FORMAT).count.transform_keys { |key| [I18n.t(Motif.location_types.invert[key[0]]), key[1]] }
   end
 
-  def rdvs_group_by_departement
-    rdvs.joins(organisation: :territory).order("territories.departement_number").group("territories.departement_number").group_by_week("rdvs.created_at", format: DEFAULT_FORMAT).count
+  def rdvs_group_by_territory_name
+    rdvs.joins(organisation: :territory).order("territories.name").group("territories.name").group_by_week("rdvs.created_at", format: DEFAULT_FORMAT).count
   end
 
   def rdvs_group_by_service

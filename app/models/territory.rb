@@ -75,6 +75,10 @@ class Territory < ApplicationRecord
     "#{departement_number} - #{name}"
   end
 
+  def full_name
+    departement_number.present? ? to_s : name
+  end
+
   private
 
   def fill_name_for_departements

@@ -81,4 +81,16 @@ describe Territory, type: :model do
       it { is_expected.to eq nil }
     end
   end
+
+  describe "#full_name" do
+    it "returns only territory.name without departement" do
+      territory = build(:territory, departement_number: nil, name: "Paris")
+      expect(territory.full_name).to eq("Paris")
+    end
+
+    it "returns territory.departement_number - territory.name with departement" do
+      territory = build(:territory, departement_number: "75", name: "Paris")
+      expect(territory.full_name).to eq("75 - Paris")
+    end
+  end
 end
