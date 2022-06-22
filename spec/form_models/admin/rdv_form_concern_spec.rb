@@ -1,23 +1,25 @@
 # frozen_string_literal: true
 
-class DummyForm
-  include ActiveModel::Model
-  include Admin::RdvFormConcern
-
-  def initialize(rdv, agent)
-    @rdv = rdv
-    @agent = agent
-  end
-
-  def save
-    valid? && rdv.save
-  end
-
-  attr_accessor :agent_context
-end
-
 describe Admin::RdvFormConcern, type: :form do
-  subject { DummyForm.new(rdv, agent_author) }
+  subject { dummy_form_class.new(rdv, agent_author) }
+
+  let(:dummy_form_class) do
+    Class.new do
+      include ActiveModel::Model
+      include Admin::RdvFormConcern
+
+      def initialize(rdv, agent)
+        @rdv = rdv
+        @agent = agent
+      end
+
+      def save
+        valid? && rdv.save
+      end
+
+      attr_accessor :agent_context
+    end
+  end
 
   let(:now) { Time.zone.parse("2021-11-23 11:00") }
   let!(:agent_author) { create(:agent, first_name: "Poney", last_name: "FOU") }
