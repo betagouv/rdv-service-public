@@ -59,6 +59,6 @@ describe Configuration::AgentPolicy::Scope, type: :policy do
     agent_from_other_orga = create(:agent, organisations: [other_organisation])
     create(:agent_territorial_access_right, agent: agent_from_other_orga, territory: territory)
 
-    expect(described_class.new(AgentTerritorialContext.new(agent, territory), Agent).resolve).to eq([agent, agent_from_other_service, agent_from_other_orga])
+    expect(described_class.new(AgentTerritorialContext.new(agent, territory), Agent).resolve).to match_array([agent, agent_from_other_service, agent_from_other_orga])
   end
 end
