@@ -48,7 +48,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
     return Admin::RdvWizardForm::STEPS.first if params[:step].blank?
 
     step = "step#{params[:step]}"
-    raise InvalidStep unless step.in?(Admin::RdvWizardForm::STEPS)
+    raise "Invalid step: #{step.inspect}" unless step.in?(Admin::RdvWizardForm::STEPS)
 
     step
   end

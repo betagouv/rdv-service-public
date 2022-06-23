@@ -40,7 +40,7 @@ class Users::RdvWizardStepsController < UserAuthController
     return UserRdvWizard::STEPS.first if params[:step].blank?
 
     step = "step#{params[:step]}"
-    raise InvalidStep unless step.in?(UserRdvWizard::STEPS)
+    raise "Invalid step: #{step.inspect}" unless step.in?(UserRdvWizard::STEPS)
 
     step
   end
