@@ -8,7 +8,7 @@ describe "PaperTrail::Version" do
       expect(user.versions.last.changeset).to eq({ "first_name" => %w[Frédérique Frédéric] })
     end
 
-    it "cant read changes" do
+    it "can read changes with Time" do
       now = Time.zone.parse("2022-04-21 12h30")
       travel_to(now - 1.day)
       user = create(:user)
