@@ -54,12 +54,27 @@ class AddConseillerNumerique
   def create_organisation
     organisation = Organisation.create!(
       external_id: @structure.external_id,
-      name: @structure.name,
+      name: next_available_organisation_name,
       territory: territory
     )
     create_motifs(organisation)
     create_lieu(organisation)
     organisation
+  end
+
+  def next_available_organisation_name
+    return @structure.name if available?(@structure.name)
+
+    name_with_city = "#{@structure.name} - #{city_name}"
+    return name_with_city if available?(name_with_city)
+
+    number_of_similar_structures = territory.organisations.where("name like ?", "%#{name_with_city}%").count
+
+    "name_with_city (#{number_of_similar_structures + 1})"
+  end
+
+  def available?(name)
+    territory.organisations.where(name: name).none?
   end
 
   def create_motifs(organisation)
@@ -84,9 +99,7 @@ class AddConseillerNumerique
   end
 
   def create_lieu(organisation)
-    zipcode_regex = /\d{5}/
-    zipcode = @structure.address[zipcode_regex]
-    longitude, latitude = geocode(@structure.address, zipcode)
+    longitude, latitude = coordinates
 
     Lieu.create!(
       name: @structure.name,
@@ -98,14 +111,24 @@ class AddConseillerNumerique
     )
   end
 
-  def geocode(street_address, zipcode)
-    response = Faraday.get(
+  def coordinates
+    adresse_api_response.dig("features", 0, "geometry", "coordinates")
+  end
+
+  def city_name
+    adresse_api_response.dig("features", 0, "properties", "city")
+  end
+
+  def adresse_api_response
+    zipcode_regex = /\d{5}/
+    zipcode = @structure.address[zipcode_regex]
+
+    @adresse_api_response ||= Faraday.get(
       "https://api-adresse.data.gouv.fr/search/",
-      q: street_address,
+      q: @structure.address,
       postcode: zipcode
     )
-    response_hash = JSON.parse(response.body)
-    response_hash.dig("features", 0, "geometry", "coordinates")
+    JSON.parse(@adresse_api_response.body)
   end
 
   def territory
