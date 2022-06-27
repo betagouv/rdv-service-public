@@ -20,9 +20,11 @@ L’accès à /super_admins se fait:
 
 ## Restore production
 
-Pour tester les migrations avec les données de prod, il faut parfois récupérer un backup de la prod localement. Ça permet aussi de tester que nous arrivons bien à récupérer un backup valable de la production.
+Pour tester les migrations avec les données de prod, il faut récupérer un backup de la prod localement. Ça permet aussi de tester que nous arrivons bien à récupérer un backup valable de la production.
 
-L’option la plus simple est d'appeler le script `scripts/scalingo_dump.sh`. Vous aurez besoin d’avoir la cli scalingo installée et configurée. Cela revient à la même chose que télécharger un backup depuis l’interface web, puis de faire un `pg_restore -d development <fichier.pgsql>` manuellement.
+- `tar -xvzf <fichier-backup.tgz>` pour obtenir le fichier `.psql` ;
+- `bundle exec rails db:drop db:create` ;
+- `pg_restore -d development <fichier.pgsql>` ;
 
 Il est recommandé de lancer le serveur local sans le worker sinon il y aura beaucoup de jobs de reminders et de simulations d'envois de mails :
 
