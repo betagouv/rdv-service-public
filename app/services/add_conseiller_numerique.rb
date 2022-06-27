@@ -31,6 +31,10 @@ class AddConseillerNumerique
     end
   end
 
+  def find_or_create_organisation
+    Organisation.find_by(external_id: @structure.external_id) || create_organisation
+  end
+
   private
 
   def find_or_invite_agent(organisation)
@@ -45,10 +49,6 @@ class AddConseillerNumerique
       password: SecureRandom.hex,
       roles_attributes: [{ organisation: organisation, level: AgentRole::LEVEL_ADMIN }]
     )
-  end
-
-  def find_or_create_organisation
-    Organisation.find_by(external_id: @structure.external_id) || create_organisation
   end
 
   def create_organisation

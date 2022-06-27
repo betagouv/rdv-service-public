@@ -24,6 +24,9 @@ conseillers_numeriques.each do |conseiller_numerique|
   next unless organisation || organisation&.external_id
   next if organisation.territory_id != 31 # This is the territory_id for the CNFS territory
 
-  organisation.update!(external_id: structure_id)
-  puts "Backfill done for #{structure_name}"
+  # Only set the external_id if it really matches the current agent
+  if organisation.agents.find_by(external_id: conseiller_numerique["Email @conseiller-numerique.fr"])
+    organisation.update!(external_id: structure_id)
+    puts "Backfill done for #{structure_name}"
+  end
 end
