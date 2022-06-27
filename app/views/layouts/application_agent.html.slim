@@ -34,12 +34,12 @@ html lang="fr"
               = link_to "https://github.com/betagouv/rdv-solidarites.fr/commits/#{ENV['CONTAINER_VERSION']}", title: "Aller au code source de RDV-Solidarités" do
                 span>= ENV["RDV_SOLIDARITES_VERSION"]
                 i.fa.fa-external-link-alt
-              = link_to "https://doc.rdv-solidarites.fr/mentions-legales" do
+              = link_to mentions_legales_path do
                 span> Mentions Légales
                 i.fa.fa-external-link-alt
-              = link_to "https://doc.rdv-solidarites.fr/conditions-dutilisation-de-la-plateforme-rdv-solidarites" do
+              = link_to cgu_path do
                 span> C.G.U.
                 i.fa.fa-external-link-alt
-              = link_to "https://doc.rdv-solidarites.fr/politique-de-confidentialite" do
+              = link_to politique_de_confidentialite_path do
                 span> Politique de confidentialité
                 i.fa.fa-external-link-alt
