@@ -4,8 +4,6 @@ module RecurrenceConcern
   extend ActiveSupport::Concern
 
   included do
-    require "montrose"
-
     serialize :recurrence, Montrose::Recurrence
     serialize :start_time, Tod::TimeOfDay
     serialize :end_time, Tod::TimeOfDay
@@ -60,11 +58,22 @@ module RecurrenceConcern
     recurrence.present?
   end
 
-  def occurrences_for(inclusive_date_range)
+  def occurrences_for(inclusive_date_range, only_future: false)
     return [] if inclusive_date_range.nil?
 
-    occurrence_start_at_list_for(inclusive_date_range)
+    occurrence_start_at_list_for(inclusive_date_range, only_future: only_future)
       .map { |o| Recurrence::Occurrence.new(starts_at: o, ends_at: o + duration) }
+  end
+
+  # @return [ActiveSupport::TimeWithZone, nil] the earliest future occurrence at the time of computation
+  def earliest_future_occurrence_time(refresh: false)
+    return unless recurring?
+
+    cache_key = "earliest_future_occurrence_#{self.class.table_name}_#{id}_#{updated_at}"
+
+    Rails.cache.fetch(cache_key, force: refresh, expires_in: 1.week) do
+      recurrence.starting(starts_at).until(recurrence_ends_at).lazy.select(&:future?).first
+    end
   end
 
   def recurrence_interval
@@ -85,11 +94,19 @@ module RecurrenceConcern
 
   private
 
-  def occurrence_start_at_list_for(inclusive_date_range)
+  # The `only_future` param was introduced to circumvent performance
+  # issues with Montrose's occurrence generation.
+  # It uses a cached value of the next occurrence as a starting point
+  # when computing future occurrences, which is faster
+  # than starting form the very first occurrence.
+  # Warning: using `only_future: true` will only yield future occurrences, not past ones.
+  def occurrence_start_at_list_for(inclusive_date_range, only_future:)
     min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
     inclusive_datetime_range = (inclusive_date_range.begin)..(inclusive_date_range.end.end_of_day)
+
     if recurring?
-      recurrence.starting(starts_at).until(min_until).lazy.select do |occurrence_starts_at|
+      min_from = only_future ? (earliest_future_occurrence_time || starts_at) : starts_at
+      recurrence.starting(min_from).until(min_until).lazy.select do |occurrence_starts_at|
         event_in_range?(occurrence_starts_at, occurrence_starts_at + duration, inclusive_datetime_range)
       end.to_a
     else

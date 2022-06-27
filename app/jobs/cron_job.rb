@@ -55,8 +55,22 @@ class CronJob < ApplicationJob
     self.cron_expression = "0 1 * * *"
 
     def perform
-      PlageOuverture.not_expired.find_in_batches { |batch| batch.each(&:refresh_expired_cached) }
-      Absence.not_expired.find_in_batches { |batch| batch.each(&:refresh_expired_cached) }
+      [PlageOuverture, Absence].each do |klass|
+        klass.not_expired.find_each(&:refresh_expired_cached)
+      end
+    end
+  end
+
+  class WarmUpOccurrencesCache < CronJob
+    # At 23:00 every day
+    self.cron_expression = "0 23 * * *"
+
+    def perform
+      [PlageOuverture, Absence].each do |klass|
+        klass.regulieres.not_expired.find_each do |model|
+          model.earliest_future_occurrence_time(refresh: true)
+        end
+      end
     end
   end
 
