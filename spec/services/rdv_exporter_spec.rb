@@ -25,7 +25,7 @@ describe RdvExporter, type: :service do
         sheet = described_class.build_excel_workbook_from(Rdv.none).worksheet(0)
         expect(sheet.row(0)).to eq(["année", "date prise rdv", "heure prise rdv", "origine", "date rdv", "heure rdv", "service", "motif", "contexte",
                                     "statut", "résultat des notifications", "lieu", "professionnel.le(s)",
-                                    "usager(s)", "commune du premier responsable", "au moins un usager mineur ?",])
+                                    "usager(s)", "commune du premier responsable", "au moins un usager mineur ?", "Organisation",])
       end
     end
   end
@@ -193,6 +193,14 @@ describe RdvExporter, type: :service do
         rdv = build(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor, major])
         expect(described_class.row_array_from(rdv)[15]).to eq("oui")
       end
+    end
+  end
+
+  describe "contient l'organisation courante" do
+    it "return organisation name" do
+      organisation = build(:organisation, name: "CMS du Brusc")
+      rdv = build(:rdv, organisation: organisation)
+      expect(described_class.row_array_from(rdv)[16]).to eq("CMS du Brusc")
     end
   end
 end
