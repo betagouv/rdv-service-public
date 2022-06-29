@@ -61,12 +61,10 @@ class Rdv < ApplicationRecord
 
   # Scopes
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
-  scope :cancelled, -> { where(status: CANCELLED_STATUSES) }
   scope :past, -> { where("starts_at < ?", Time.zone.now) }
   scope :future, -> { where("starts_at > ?", Time.zone.now) }
   scope :start_after, ->(time) { where("starts_at > ?", time) }
   scope :on_day, ->(day) { where(starts_at: day.beginning_of_day...day.end_of_day) }
-  scope :tomorrow, -> { on_day(Time.zone.tomorrow) }
   scope :day_after_tomorrow, -> { on_day(Time.zone.tomorrow + 1.day) }
   scope :for_today, -> { on_day(Time.zone.today) }
   scope :user_with_relatives, ->(responsible_id) { joins(:users).includes(:rdvs_users, :users).where(users: { id: [responsible_id, User.find(responsible_id).relatives.pluck(:id)].flatten }) }
@@ -97,10 +95,6 @@ class Rdv < ApplicationRecord
 
   def in_the_past?
     starts_at <= Time.zone.now
-  end
-
-  def today?
-    Time.zone.today == starts_at.to_date
   end
 
   def temporal_status
