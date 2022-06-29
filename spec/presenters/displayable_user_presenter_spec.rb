@@ -87,8 +87,9 @@ describe DisplayableUserPresenter, type: :presenter do
   describe "#logement" do
     it "return user's logement from profile" do
       organisation = create(:organisation)
-      user_profile = create(:user_profile, organisation: organisation, logement: 1)
-      user = create(:user, organisations: [organisation], user_profiles: [user_profile])
+      user = create(:user)
+      # Set user's organisation through her profile
+      create(:user_profile, organisation: organisation, user: user, logement: 1)
       displayable_user = described_class.new(user, organisation)
       expect(displayable_user.logement).to eq("Hébergé")
     end
@@ -97,8 +98,9 @@ describe DisplayableUserPresenter, type: :presenter do
   describe "#notes" do
     it "return user's profile notes" do
       organisation = create(:organisation)
-      user_profile = create(:user_profile, organisation: organisation, notes: "Quelques notes")
-      user = create(:user, organisations: [organisation], user_profiles: [user_profile])
+      user = create(:user)
+      # Set user's organisation through her profile
+      create(:user_profile, organisation: organisation, user: user, notes: "Quelques notes")
       displayable_user = described_class.new(user, organisation)
       expect(displayable_user.notes).to eq("<p>Quelques notes</p>")
     end
