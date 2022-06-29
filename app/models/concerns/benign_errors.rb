@@ -12,7 +12,7 @@ module BenignErrors
   # * The form can be submitted again, with ignore_benign_errors: true to ignore those errors.
   # * The custom validations in models check its value to bypass the validation.
   #
-  # See also /app/view/applications/_model_errors.html.slim
+  # See also /app/views/application/_model_errors.html.slim
   attr_accessor :ignore_benign_errors
 
   def add_benign_error(message)

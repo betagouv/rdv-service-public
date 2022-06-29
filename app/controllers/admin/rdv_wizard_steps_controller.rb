@@ -48,14 +48,20 @@ class Admin::RdvWizardStepsController < AgentAuthController
     return Admin::RdvWizardForm::STEPS.first if params[:step].blank?
 
     step = "step#{params[:step]}"
-    raise InvalidStep unless step.in?(Admin::RdvWizardForm::STEPS)
+    raise "Invalid step: #{step.inspect}" unless step.in?(Admin::RdvWizardForm::STEPS)
 
     step
   end
 
   def rdv_wizard_for(request_params)
-    klass = "Admin::RdvWizardForm::#{current_step.camelize}".constantize
-    klass.new(current_agent, current_organisation, request_params)
+    wizard_class = {
+      step1: Admin::RdvWizardForm::Step1,
+      step2: Admin::RdvWizardForm::Step2,
+      step3: Admin::RdvWizardForm::Step3,
+      step4: Admin::RdvWizardForm::Step4,
+    }.fetch(current_step.to_sym)
+
+    wizard_class.new(current_agent, current_organisation, request_params)
   end
 
   def set_services_and_motifs
