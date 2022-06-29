@@ -102,7 +102,13 @@ class Admin::RdvsController < AgentAuthController
                                                  user_ids: [],
                                                  rdvs_users_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy],
                                                  lieu_attributes: %i[name address latitude longitude])
-    return allowed_params.to_h.deep_merge(lieu_attributes: { organisation: current_organisation, availability: :single_use }) if params["rdv"]["lieu_attributes"].present?
+
+    # Quand un lieu ponctuel est saisi, il faut faire en sorte qu'il soit créé dans l'organisation courante.
+    # Nous le faisons ici, côté serveur pour empêcher de spécifier une valeur arbitraire.
+    if allowed_params[:lieu_attributes].present?
+      allowed_params[:lieu_attributes][:organisation] = current_organisation
+      allowed_params[:lieu_attributes][:availability] = :single_use
+    end
 
     allowed_params
   end
