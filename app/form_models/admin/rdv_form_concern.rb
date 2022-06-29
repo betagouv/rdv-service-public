@@ -15,6 +15,7 @@ module Admin::RdvFormConcern
     delegate :errors, to: :rdv
 
     validate :validate_rdv
+    validate :check_duplicates
 
     delegate :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :rdv
     validate :warn_overlapping_plage_ouverture
@@ -27,6 +28,20 @@ module Admin::RdvFormConcern
 
   def validate_rdv
     rdv.validate
+  end
+
+  def check_duplicates
+    suspicious_rdvs = Rdv.where(
+      organisation: rdv.organisation,
+      lieu: rdv.lieu,
+      starts_at: rdv.starts_at,
+      ends_at: rdv.ends_at,
+      motif: rdv.motif
+    ).select do |existing_rdv|
+      existing_rdv.users.sort == rdv.users.sort && existing_rdv.agents.sort == rdv.agents.sort
+    end
+
+    errors.add(:base, :duplicate) if suspicious_rdvs.any?
   end
 
   def warn_overlapping_plage_ouverture
