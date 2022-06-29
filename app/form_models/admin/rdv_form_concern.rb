@@ -38,6 +38,7 @@ module Admin::RdvFormConcern
       ends_at: rdv.ends_at,
       motif: rdv.motif
     ).select do |existing_rdv|
+      # Use #sort to compare arrays ignoring order
       existing_rdv.users.sort == rdv.users.sort && existing_rdv.agents.sort == rdv.agents.sort
     end
 
@@ -92,7 +93,6 @@ module Admin::RdvFormConcern
         .on_day(rdv.starts_at)
         .with_user(user)
         .where(motif: motif)
-        .to_a
 
       if suspicious_rdvs.any?
         user_path = admin_organisation_user_path(rdv.organisation, user)
