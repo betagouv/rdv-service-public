@@ -20,6 +20,7 @@ module Admin::RdvFormConcern
     validate :warn_overlapping_plage_ouverture
     validate :warn_rdvs_ending_shortly_before
     validate :warn_rdvs_overlapping_rdv
+    validate :warn_rdv_duplicate_suspected
   end
 
   private
@@ -66,6 +67,22 @@ module Admin::RdvFormConcern
         agent_context: agent_context
       )
     end.each { add_benign_error(_1.warning_message) }
+  end
+
+  def warn_rdv_duplicate_suspected
+    return if ignore_benign_errors
+
+    rdv.users.each do |user|
+      suspicious_rdvs = Rdv.joins(:users).on_day(rdv.starts_at).where(
+        motif: motif,
+        rdvs_users: { user_id: user.id }
+      ).to_a
+
+      if suspicious_rdvs.any?
+        user_path = admin_organisation_user_path(rdv.organisation, user)
+        add_benign_error(I18n.t("activemodel.warnings.models.rdv.attributes.base.rdv_duplicate_suspected", user_path: user_path, user_name: user.full_name))
+      end
+    end
   end
 
   def rdv_agent_pairs_ending_shortly_before_grouped_by_agent
