@@ -64,7 +64,7 @@ class Rdv < ApplicationRecord
   scope :past, -> { where("starts_at < ?", Time.zone.now) }
   scope :future, -> { where("starts_at > ?", Time.zone.now) }
   scope :start_after, ->(time) { where("starts_at > ?", time) }
-  scope :on_day, ->(day) { where(starts_at: day.beginning_of_day...day.end_of_day) }
+  scope :on_day, ->(day) { where(starts_at: day.beginning_of_day..day.end_of_day) }
   scope :day_after_tomorrow, -> { on_day(Time.zone.tomorrow + 1.day) }
   scope :for_today, -> { on_day(Time.zone.today) }
   scope :user_with_relatives, ->(responsible_id) { joins(:users).includes(:rdvs_users, :users).where(users: { id: [responsible_id, User.find(responsible_id).relatives.pluck(:id)].flatten }) }
