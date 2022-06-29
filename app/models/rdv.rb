@@ -68,6 +68,7 @@ class Rdv < ApplicationRecord
   scope :day_after_tomorrow, -> { on_day(Time.zone.tomorrow + 1.day) }
   scope :for_today, -> { on_day(Time.zone.today) }
   scope :user_with_relatives, ->(responsible_id) { joins(:users).includes(:rdvs_users, :users).where(users: { id: [responsible_id, User.find(responsible_id).relatives.pluck(:id)].flatten }) }
+  scope :with_user, ->(user) { joins(:users).where(rdvs_users: { user_id: user.id }) }
   scope :status, lambda { |status|
     case status.to_s
     when "unknown_past"

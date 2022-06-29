@@ -73,10 +73,11 @@ module Admin::RdvFormConcern
     return if ignore_benign_errors
 
     rdv.users.each do |user|
-      suspicious_rdvs = Rdv.joins(:users).on_day(rdv.starts_at).where(
-        motif: motif,
-        rdvs_users: { user_id: user.id }
-      ).to_a
+      suspicious_rdvs = Rdv
+        .on_day(rdv.starts_at)
+        .with_user(user)
+        .where(motif: motif)
+        .to_a
 
       if suspicious_rdvs.any?
         user_path = admin_organisation_user_path(rdv.organisation, user)
