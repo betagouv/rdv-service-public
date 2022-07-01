@@ -3,6 +3,9 @@
 class SearchController < ApplicationController
   include TokenInvitable
 
+  # utilisé par le Pas-de-Calais pour prendre rdv depuis leur site : https://www.pasdecalais.fr/Solidarite-Sante/Enfance-et-famille/La-Protection-Maternelle-et-Infantile/Prendre-rendez-vous-en-ligne-en-MDS-PMI-ou-service-social
+  after_action :allow_iframe
+
   def search_rdv
     @context = SearchContext.new(current_user, search_params.to_h)
   end
