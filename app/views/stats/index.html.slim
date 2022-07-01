@@ -96,3 +96,36 @@
         - %i[event channel result].each do |attribute|
           h3.card-subtitle Par #{Receipt.human_attribute_name(attribute).downcase}
           = column_chart receipts_stats_path(group_by: attribute, departement: @departement), stacked: true
+    .card.mb-5
+      .card-body
+        = self_anchor "activations"
+          h2.card-title Activité des agents
+        - active_agents = @agents.active
+
+        h5 Aujourd'hui
+
+        p #{active_agents.count} agents ont été invités
+
+        - accepted_count = active_agents.where.not(invitation_accepted_at: nil).count
+        p #{percent(accepted_count, active_agents.count)} ont accepté l'invitation (#{accepted_count})
+
+        - first_rdv_count = active_agents.joins(:rdvs).distinct.count
+        p #{percent(first_rdv_count, active_agents.count)} ont créé au moins un rdv (#{first_rdv_count})
+
+        - active_count = active_agents.joins(:rdvs).where("rdvs.updated_at > ?", 30.days.ago).distinct.count
+        p #{percent(active_count, active_agents.count)} ont été actifs les 30 derniers jours (ont créé ou modifié un rdv) (#{active_count})
+
+        h5 Il y a 30 jours
+
+        - active_agents = active_agents.where("invitation_sent_at < ?", 30.days.ago)
+        p #{active_agents.count} agents avaient été invités
+
+        - accepted_count = active_agents.where.not(invitation_accepted_at: nil).where("invitation_accepted_at < ?", 30.days.ago).count
+        p #{percent(accepted_count, active_agents.count)} avaient accepté l'invitation (#{accepted_count})
+
+        - first_rdv_count = active_agents.joins(:rdvs).where("rdvs.created_at < ?", 30.days.ago).distinct.count
+        p #{percent(first_rdv_count, active_agents.count)} avaient créé au moins un rdv (#{first_rdv_count})
+
+        - active_count = active_agents.joins(:rdvs).where(rdvs: {updated_at: 60.days.ago..30.days.ago}).distinct.count
+        p #{percent(active_count, active_agents.count)} avaient été actifs les 30 derniers jours (#{active_count})
+
