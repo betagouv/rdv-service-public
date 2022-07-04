@@ -35,6 +35,11 @@ class Organisation < ApplicationRecord
 
   # Validation
   validates :name, presence: true, uniqueness: { scope: :territory }
+  # Rubocop doesn't seem to see the index that exists for this column, so we have to ignore the warning here
+  # This could be fixed by upgrading rubocop to at least 2.11.3 (see https://github.com/rubocop/rubocop-rails/pull/517)
+  # rubocop:disable Rails/UniqueValidationWithoutIndex
+  validates :external_id, uniqueness: { scope: :territory, allow_nil: true }
+  # rubocop:enable Rails/UniqueValidationWithoutIndex
   validates :phone_number, phone: { allow_blank: true }
   validates(
     :human_id,
