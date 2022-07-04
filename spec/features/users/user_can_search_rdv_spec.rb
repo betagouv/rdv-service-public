@@ -33,7 +33,7 @@ describe "User can search for rdvs" do
       # Step 3
       expect_page_h1("Prenez rendez-vous en ligne\navec votre département le 92")
       expect(page).to have_content("Sélectionnez le motif de votre RDV")
-      find("h4", text: motif.name).click
+      find("h3", text: motif.name).click
 
       # Step 4
       expect(page).to have_content(lieu.name)

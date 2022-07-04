@@ -11,7 +11,11 @@ describe "User can search for creneaux" do
 
   context "when the next creneau is after the max booking delay" do
     let!(:motif) { create(:motif, name: "Vaccination", reservable_online: true, organisation: organisation, max_booking_delay: 7.days) }
+    # Avec un seul motif on passe par le choix d'un lieu.
+    # Avec deux motifs, on affiche directement la disponibilité.
+    let!(:autre_motif) { create(:motif, reservable_online: true, organisation: organisation, max_booking_delay: 7.days) }
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 8.days, motifs: [motif], lieu: lieu, organisation: organisation) }
+    let!(:autre_plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 8.days, motifs: [autre_motif], lieu: lieu, organisation: organisation) }
 
     it "doesn't show a next availability date", js: true do
       visit root_path
@@ -23,11 +27,7 @@ describe "User can search for creneaux" do
 
       click_button("Rechercher")
 
-      select(motif.service.name, from: "search_service")
-      click_button("Choisir ce service")
-
-      select(motif.name, from: "search_motif_name_with_location_type")
-      click_button("Choisir ce motif")
+      find("h3", text: motif.name).click
 
       expect(page).to have_content("Aucune disponibilité")
     end
