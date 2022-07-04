@@ -1,5 +1,5 @@
 #search_form
-  = simple_form_for :search, url: prendre_rdv_path, method: :get do |f|
+  = simple_form_for :search, url: root_path, method: :get do |f|
     = f.input :departement, as: :hidden, input_html: { name: "departement", value: context.departement }
     = f.input :city_code,  as: :hidden, input_html: { name: "city_code", value: context.city_code }
     = f.input :street_ban_id, as: :hidden, input_html: { name: "street_ban_id", value: context.street_ban_id }

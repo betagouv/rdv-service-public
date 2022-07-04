@@ -4,7 +4,7 @@ section.bg-light.p-4
       .card
         .card-body
           - if context.invitation?
-            h4.font-weight-bold Nous sommes désolés, un problème semble s'être produit pour votre invitation.
+            .font-weight-bold Nous sommes désolés, un problème semble s'être produit pour votre invitation.
             = mail_to SUPPORT_EMAIL,
               subject: "[Problème Invitation]",
               class: "btn btn-primary" do
@@ -12,15 +12,15 @@ section.bg-light.p-4
                 i.fa.fa-envelope
               | Envoyer une demande à l'équipe technique
           - else
-            h4.font-weight-bold La prise de rendez-vous n'est pas disponible pour ce département.
+            .font-weight-bold La prise de rendez-vous n'est pas disponible pour ce département.
     - else
-      h3.font-weight-bold Sélectionnez le motif de votre RDV :
+      h2.font-weight-bold Sélectionnez le motif de votre RDV :
       - context.unique_motifs_by_name_and_location_type.each do |motif|
         .card.mb-3
-          = link_to prendre_rdv_path(context.query.merge(motif_name_with_location_type: motif.name_with_location_type))
+          = link_to root_path(context.query.merge(motif_name_with_location_type: motif.name_with_location_type))
             .card-body
               .row
                 .col-md
-                  h4.card-title.mb-3.mt-0.text-success.font-weight-bold= motif.name
-                  h5.card-subtitle.mb-2= motif.human_attribute_value(:location_type)
-                  h6.card-subtitle.mb-2= motif.service.name
+                  h3.card-title.mb-3.mt-0.text-success.font-weight-bold= motif.name
+                  .card-subtitle= motif.human_attribute_value(:location_type)
+                  .card-subtitle= motif.service.name
