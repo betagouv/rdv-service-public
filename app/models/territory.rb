@@ -72,11 +72,7 @@ class Territory < ApplicationRecord
   end
 
   def to_s
-    "#{departement_number} - #{name}"
-  end
-
-  def full_name
-    departement_number.present? ? to_s : name
+    [departement_number.presence, name].compact.join(" - ")
   end
 
   private
