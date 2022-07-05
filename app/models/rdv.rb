@@ -61,14 +61,14 @@ class Rdv < ApplicationRecord
 
   # Scopes
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
-  scope :cancelled, -> { where(status: CANCELLED_STATUSES) }
   scope :past, -> { where("starts_at < ?", Time.zone.now) }
   scope :future, -> { where("starts_at > ?", Time.zone.now) }
   scope :start_after, ->(time) { where("starts_at > ?", time) }
-  scope :tomorrow, -> { where(starts_at: DateTime.tomorrow...DateTime.tomorrow + 1.day) }
-  scope :day_after_tomorrow, -> { where(starts_at: DateTime.tomorrow + 1.day...DateTime.tomorrow + 2.days) }
-  scope :for_today, -> { where(starts_at: Time.zone.now.beginning_of_day...Time.zone.now.end_of_day) }
+  scope :on_day, ->(day) { where(starts_at: day.all_day) }
+  scope :day_after_tomorrow, -> { on_day(Time.zone.tomorrow + 1.day) }
+  scope :for_today, -> { on_day(Time.zone.today) }
   scope :user_with_relatives, ->(responsible_id) { joins(:users).includes(:rdvs_users, :users).where(users: { id: [responsible_id, User.find(responsible_id).relatives.pluck(:id)].flatten }) }
+  scope :with_user, ->(user) { joins(:users).where(rdvs_users: { user_id: user.id }) }
   scope :status, lambda { |status|
     case status.to_s
     when "unknown_past"
@@ -96,10 +96,6 @@ class Rdv < ApplicationRecord
 
   def in_the_past?
     starts_at <= Time.zone.now
-  end
-
-  def today?
-    Time.zone.today == starts_at.to_date
   end
 
   def temporal_status
