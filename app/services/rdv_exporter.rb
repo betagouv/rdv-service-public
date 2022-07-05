@@ -20,6 +20,7 @@ module RdvExporter
     "usager(s)",
     "commune du premier responsable",
     "au moins un usager mineur ?",
+    "Organisation",
   ].freeze
 
   def self.export(rdvs)
@@ -70,6 +71,7 @@ module RdvExporter
       rdv.users.map(&:full_name).join(", "),
       commune_premier_responsable(rdv),
       rdv.users.any?(&:minor?) ? "oui" : "non",
+      rdv.organisation.name,
     ]
   end
 
