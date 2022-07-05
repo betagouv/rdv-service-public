@@ -18,7 +18,7 @@ class User < ApplicationRecord
   include PhoneNumberValidation::HasPhoneNumber
   include WebhookDeliverable
   include TextSearch
-  def self.search_keys = %i[last_name first_name email birth_name phone_number_formatted]
+  def self.search_keys = %i[last_name email birth_name phone_number_formatted first_name]
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async,
          :trackable

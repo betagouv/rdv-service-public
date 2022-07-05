@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe TextSearch, type: :concern do
-  # Tester les methods du concerns sans un objet des modèles...
+  # Tester les methods du concerns sans un objet des modles...
   # Peut-être difficile sans activerecord ?
 
   shared_examples ".search_by_text" do
@@ -74,12 +74,6 @@ describe TextSearch, type: :concern do
       jean_paul = create(:user, first_name: "Jean-Paul", last_name: "Petit")
       expect(described_class.search_by_text("Jean Paul Petit").count).to eq(5)
       expect(described_class.search_by_text("Jean Paul Petit").first).to eq(jean_paul)
-    end
-
-    it "orders results by search terms" do
-      marie = create(:user, first_name: "Marie", last_name: "Petit")
-      frederic = create(:user, first_name: "Frédéric", last_name: "Petit")
-      expect(described_class.search_by_text("Pet")).to eq([frederic, marie])
     end
   end
 end
