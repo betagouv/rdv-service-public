@@ -15,17 +15,34 @@ module Admin::RdvFormConcern
     delegate :errors, to: :rdv
 
     validate :validate_rdv
+    validate :check_duplicates
 
     delegate :ignore_benign_errors, :ignore_benign_errors=, :add_benign_error, :benign_errors, :not_benign_errors, :errors_are_all_benign?, to: :rdv
     validate :warn_overlapping_plage_ouverture
     validate :warn_rdvs_ending_shortly_before
     validate :warn_rdvs_overlapping_rdv
+    validate :warn_rdv_duplicate_suspected
   end
 
   private
 
   def validate_rdv
     rdv.validate
+  end
+
+  def check_duplicates
+    suspicious_rdvs = Rdv.where(
+      organisation: rdv.organisation,
+      lieu: rdv.lieu,
+      starts_at: rdv.starts_at,
+      ends_at: rdv.ends_at,
+      motif: rdv.motif
+    ).select do |existing_rdv|
+      # Use #sort to compare arrays ignoring order
+      existing_rdv.users.sort == rdv.users.sort && existing_rdv.agents.sort == rdv.agents.sort
+    end
+
+    errors.add(:base, :duplicate) if suspicious_rdvs.any?
   end
 
   def warn_overlapping_plage_ouverture
@@ -66,6 +83,22 @@ module Admin::RdvFormConcern
         agent_context: agent_context
       )
     end.each { add_benign_error(_1.warning_message) }
+  end
+
+  def warn_rdv_duplicate_suspected
+    return if ignore_benign_errors
+
+    rdv.users.each do |user|
+      suspicious_rdvs = Rdv
+        .on_day(rdv.starts_at)
+        .with_user(user)
+        .where(motif: motif)
+
+      if suspicious_rdvs.any?
+        user_path = admin_organisation_user_path(rdv.organisation, user)
+        add_benign_error(I18n.t("activemodel.warnings.models.rdv.attributes.base.rdv_duplicate_suspected", user_path: user_path, user_name: user.full_name))
+      end
+    end
   end
 
   def rdv_agent_pairs_ending_shortly_before_grouped_by_agent
