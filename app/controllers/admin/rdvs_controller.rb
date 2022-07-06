@@ -97,12 +97,20 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def rdv_params
-    params
-      .require(:rdv)
-      .permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors, :max_participants_count, :name,
-              agent_ids: [],
-              user_ids: [],
-              rdvs_users_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy])
+    allowed_params = params.require(:rdv).permit(:motif_id, :status, :lieu_id, :duration_in_min, :starts_at, :context, :ignore_benign_errors, :max_participants_count, :name,
+                                                 agent_ids: [],
+                                                 user_ids: [],
+                                                 rdvs_users_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy],
+                                                 lieu_attributes: %i[name address latitude longitude])
+
+    # Quand un lieu ponctuel est saisi, il faut faire en sorte qu'il soit créé dans l'organisation courante.
+    # Nous le faisons ici, côté serveur pour empêcher de spécifier une valeur arbitraire.
+    if allowed_params[:lieu_attributes].present?
+      allowed_params[:lieu_attributes][:organisation] = current_organisation
+      allowed_params[:lieu_attributes][:availability] = :single_use
+    end
+
+    allowed_params
   end
 
   def status_params
@@ -110,7 +118,8 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def parsed_params
-    params.permit(:organisation_id, :agent_id, :user_id, :lieu_id, :status, :show_user_details, :start, :end).to_hash.to_h do |param_name, param_value|
+    params.permit(:organisation_id, :agent_id, :user_id, :lieu_id, :status, :show_user_details, :start, :end,
+                  lieu_attributes: %i[name address latitude longitude]).to_hash.to_h do |param_name, param_value|
       case param_name
       when "start", "end"
         [param_name, parse_date_from_params(param_value)]
