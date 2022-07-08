@@ -3,7 +3,7 @@
 class Admin::RdvSearchForm
   include ActiveModel::Model
 
-  attr_accessor :organisation_id, :start, :end, :agent_id, :user_id, :lieu_id, :status, :show_user_details
+  attr_accessor :organisation_id, :start, :end, :agent_id, :user_id, :lieu_id, :status, :show_user_details, :motif_id
 
   def organisation
     @organisation ||= Organisation.find(organisation_id) if organisation_id.present?
@@ -19,6 +19,10 @@ class Admin::RdvSearchForm
 
   def lieu
     @lieu ||= Lieu.find(lieu_id) if lieu_id.present?
+  end
+
+  def motif
+    @motif ||= Motif.find(motif_id) if motif_id.present
   end
 
   def to_query
