@@ -44,6 +44,7 @@
               label: "Statut", wrapper: "horizontal_form", input_html: { class: "select2-input" }
       = date_input(f, :start, label = "Période - Début", wrapper: "horizontal_form")
       = date_input(f, :end, label = "Période - Fin", wrapper: "horizontal_form")
-  input.btn.btn-primary.d-print-none type="submit" value="Rafraîchir la liste" name="search"
-  - search = params[:search].blank? ? "d-none" : ""
-  = link_to "Réinitialiser", admin_organisation_rdvs_path(current_organisation), class: "btn btn-link #{search}"
+  .d-flex.justify-content-end
+    - search = params[:search].blank? ? "d-none" : ""
+    = link_to "Réinitialiser", admin_organisation_rdvs_path(current_organisation), class: "btn btn-link #{search}"
+    input.btn.btn-primary.d-print-none type="submit" value="Rafraîchir la liste" name="search"
