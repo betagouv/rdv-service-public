@@ -83,8 +83,11 @@ Rails.application.routes.draw do
     delete "agents" => "agents/registrations#destroy", as: "delete_agent_registration"
     namespace :agents do
       resource :preferences, only: %i[show update]
+      resource :calendar_sync, only: %i[show update], controller: :calendar_sync
     end
   end
+
+  get "/calendrier/:id", controller: :ics_calendar, action: :show, as: :ics_calendar
 
   namespace :api do
     namespace :v1 do

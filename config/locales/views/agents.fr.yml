@@ -1,5 +1,8 @@
 fr:
   agents:
+    calendar_sync:
+      show:
+        title: Synchronisation avec un calendrier externe
     preferences:
       show:
         title: Préférences de notifications
