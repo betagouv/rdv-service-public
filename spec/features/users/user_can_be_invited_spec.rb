@@ -25,7 +25,9 @@ describe "User can be invited" do
   let!(:organisation) { create(:organisation, territory: territory26) }
   let!(:motif) { create(:motif, name: "RSA orientation sur site", reservable_online: true, organisation: organisation) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
+  let!(:autre_lieu) { create(:lieu, organisation: organisation) }
   let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now - 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
+  let!(:autre_plage_ouverture) { create(:plage_ouverture, :daily, first_day: now - 1.month, motifs: [motif], lieu: autre_lieu, organisation: organisation) }
 
   let!(:organisation2) { create(:organisation) }
 
@@ -52,11 +54,6 @@ describe "User can be invited" do
       # Creneau selection
       expect(page).to have_content(lieu.name)
       first(:link, "11:00").click
-
-      # Restriction Page
-      expect(page).to have_content("À lire avant de prendre un rendez-vous")
-      expect(page).to have_content(motif.restriction_for_rdv)
-      click_link("Accepter")
 
       # RDV informations
       expect(page).to have_content("Vos informations")
@@ -126,6 +123,11 @@ describe "User can be invited" do
       expect(page).to have_content(motif2.name)
       find(".card-title", text: /#{motif.name}/).click
 
+      # Restriction Page
+      expect(page).to have_content("À lire avant de prendre un rendez-vous")
+      expect(page).to have_content(motif.restriction_for_rdv)
+      click_link("Accepter")
+
       # Lieu selection
       expect(page).to have_content(lieu.name)
       find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
@@ -133,11 +135,6 @@ describe "User can be invited" do
       # Creneau selection
       expect(page).to have_content(lieu.name)
       first(:link, "11:00").click
-
-      # Restriction Page
-      expect(page).to have_content("À lire avant de prendre un rendez-vous")
-      expect(page).to have_content(motif.restriction_for_rdv)
-      click_link("Accepter")
 
       # RDV informations
       expect(page).to have_content("Vos informations")
@@ -182,6 +179,11 @@ describe "User can be invited" do
       expect(page).to have_content(motif2.name)
       find(".card-title", text: /#{motif.name}/).click
 
+      # Restriction Page
+      expect(page).to have_content("À lire avant de prendre un rendez-vous")
+      expect(page).to have_content(motif.restriction_for_rdv)
+      click_link("Accepter")
+
       # Lieu selection
       expect(page).to have_content(lieu.name)
       find(".card-title", text: /#{lieu.name}/).ancestor(".card").find("a.stretched-link").click
@@ -189,11 +191,6 @@ describe "User can be invited" do
       # Crenenau selection
       expect(page).to have_content(lieu.name)
       first(:link, "11:00").click
-
-      # Restriction Page
-      expect(page).to have_content("À lire avant de prendre un rendez-vous")
-      expect(page).to have_content(motif.restriction_for_rdv)
-      click_link("Accepter")
 
       # RDV informations
       expect(page).to have_content("Vos informations")

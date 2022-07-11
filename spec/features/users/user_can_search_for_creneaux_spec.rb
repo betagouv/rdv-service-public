@@ -10,7 +10,7 @@ describe "User can search for creneaux" do
   before { travel_to(now) }
 
   context "when the next creneau is after the max booking delay" do
-    let!(:motif) { create(:motif, name: "Vaccination", reservable_online: true, organisation: organisation, max_booking_delay: 7.days) }
+    let!(:motif) { create(:motif, name: "Vaccination", reservable_online: true, organisation: organisation, max_booking_delay: 7.days, restriction_for_rdv: nil) }
     # Avec un seul motif on passe par le choix d'un lieu.
     # Avec deux motifs, on affiche directement la disponibilité.
     let!(:autre_motif) { create(:motif, reservable_online: true, organisation: organisation, max_booking_delay: 7.days) }
