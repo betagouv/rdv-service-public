@@ -85,7 +85,7 @@ describe Territory, type: :model do
   describe "#to_s" do
     it "returns name and departement number if exist" do
       territory = build(:territory, departement_number: "93", name: "Seine Saint-Denis")
-      expect(territory.to_s).to eq("93 - Seine Saint-Denis")
+      expect(territory.to_s).to eq("Seine Saint-Denis - 93")
     end
 
     it "returns name" do
