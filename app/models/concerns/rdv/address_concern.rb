@@ -28,7 +28,7 @@ module Rdv::AddressConcern
     result || ""
   end
 
-  def address_for_export
+  def address_without_personal_information
     case motif.location_type.to_sym
     when :public_office
       # Sometimes lieu_id is nil, because the RDV was taken with
