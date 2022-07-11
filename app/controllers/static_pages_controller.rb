@@ -6,4 +6,6 @@ class StaticPagesController < ApplicationController
   def accessibility; end
 
   def contact; end
+
+  def budget; end
 end
