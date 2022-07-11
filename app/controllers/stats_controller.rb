@@ -1,16 +1,17 @@
 # frozen_string_literal: true
 
 class StatsController < ApplicationController
-  before_action :scope_rdv_to_departement
+  before_action :scope_rdv_to_territory
 
   def index
+    @territories = Territory.all
     @stats = Stat.new(agents: @agents, organisations: @organisations, rdvs: @rdvs, users: @users, receipts: @receipts)
   end
 
   def rdvs
     stats = Stat.new(rdvs: @rdvs)
-    stats = if params[:by_departement].present?
-              stats.rdvs_group_by_departement
+    stats = if params[:by_territory].present?
+              stats.rdvs_group_by_territory_name
             elsif params[:by_service].present?
               stats.rdvs_group_by_service
             elsif params[:by_location_type].present?
@@ -29,18 +30,18 @@ class StatsController < ApplicationController
     render json: Stat.new(receipts: @receipts).receipts_group_by(attribute).chart_json
   end
 
-  def scope_rdv_to_departement
-    @departement = params[:departement]
-    if @departement.present?
+  def scope_rdv_to_territory
+    if params[:territory].present?
+      @territory = Territory.find(params[:territory])
       @rdvs = Rdv.joins(organisation: :territory)
-        .where(organisations: { territories: { departement_number: @departement } })
+        .where(organisations: { territories: [@territory] })
       @users = User.joins(organisations: :territory)
-        .where(organisations: { territories: { departement_number: @departement } })
+        .where(organisations: { territories: [@territory] })
       @agents = Agent.joins(organisations: :territory)
-        .where(organisations: { territories: { departement_number: @departement } })
+        .where(organisations: { territories: [@territory] })
       @organisations = Organisation.joins(:territory)
-        .where(territories: { departement_number: @departement })
-      @receipts = Territory.find_by(departement_number: @departement).receipts
+        .where(territories: { departement_number: [@territory] })
+      @receipts = @territory.receipts
     else
       @rdvs = Rdv.all
       @users = User.all
@@ -48,10 +49,5 @@ class StatsController < ApplicationController
       @organisations = Organisation.all
       @receipts = Receipt.all
     end
-
-    @departements = Territory
-      .order(:departement_number)
-      .distinct(:departement_number)
-      .pluck(:departement_number)
   end
 end

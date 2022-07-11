@@ -72,7 +72,7 @@ class Territory < ApplicationRecord
   end
 
   def to_s
-    "#{departement_number} - #{name}"
+    [departement_number.presence, name].compact.join(" - ")
   end
 
   private

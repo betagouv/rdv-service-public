@@ -65,14 +65,14 @@ describe Stat, type: :model do
     end
   end
 
-  describe "#rdvs_group_by_departement" do
+  describe "#rdvs_group_by_territory_name" do
     it "returns rdv group by département" do
       now = Time.zone.parse("20220123 13:00")
       travel_to(now)
       home_motif = create(:motif, location_type: :home)
       create(:rdv, motif: home_motif, created_at: now)
       stats = described_class.new(rdvs: Rdv.all)
-      expect(stats.rdvs_group_by_departement).to eq({ ["2", "23/01/2022"] => 1 })
+      expect(stats.rdvs_group_by_territory_name).to eq({ ["Territoire n°2", "23/01/2022"] => 1 })
     end
   end
 

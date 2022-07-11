@@ -1,23 +1,11 @@
 - content_for :title do
   h1
     | Statistiques
-    = " pour le #{@departement}" if @departement.present?
+    = " pour le #{@territory}" if @territory.present?
 
 .container.mt-3
-  .card
-    .card-body
-      p.mb-0
-        span> Afficher les statistiques par département :
-        - @departements.each do |d|
-          span>
-            = link_to d, departement_stats_path(departement: d)
-            | &nbsp;|
-      - if @departement.present?
-        = link_to "Retour aux statistiques de la plateforme", stats_path
-
-.container.mt-3
-  - if @departement.present? && Organisation.joins(:territory).where(territories: { departement_number: @departement }).empty?
-    h3 Ce departement n'utilise pas RDV-Solidarités.
+  - if @territory.present? && Organisation.joins(:territory).where(territories: [@territory]).empty?
+    h3 Cette structure n'utilise pas RDV-Solidarités.
   - else
     .card.mb-5
       .card-body
@@ -51,26 +39,26 @@
       .card-body
         = self_anchor "rdvs"
          h2.card-title RDV créés (#{@stats.rdvs.count})
-        = column_chart rdvs_stats_path(departement: @departement), stacked: true
+        = column_chart rdvs_stats_path(territory: @territory), stacked: true
 
-    - unless @departement.present?
+    - unless @territory.present?
       .card.mb-5
         .card-body
-          = self_anchor "rdvs-departement"
-            h2.card-title RDV créés par département(#{@stats.rdvs.count})
-          = column_chart rdvs_stats_path(by_departement: true), stacked: true
+          = self_anchor "rdvs-territory"
+            h2.card-title RDV créés par structure (#{@stats.rdvs.count})
+          = column_chart rdvs_stats_path(by_territory: true), stacked: true
 
     .card.mb-5
       .card-body
         = self_anchor "rdvs-service"
           h2.card-title RDV créés par service (#{@stats.rdvs.count})
-        = column_chart rdvs_stats_path(by_service: true, departement: @departement), stacked: true
+        = column_chart rdvs_stats_path(by_service: true, territory: @territory), stacked: true
 
     .card.mb-5
       .card-body
         = self_anchor "rdvs-type"
           h2.card-title RDV par type (#{@stats.rdvs.count})
-        = column_chart rdvs_stats_path(by_location_type: true, departement: @departement), stacked: true
+        = column_chart rdvs_stats_path(by_location_type: true, territory: @territory), stacked: true
 
     .card.mb-5
       .card-body
@@ -87,7 +75,7 @@
             "revoked": $teal, #02a8b5
             "noshow": $danger, #fa5c7c
         - colors = %w[#fa5c7c #02a8b5 #39afd1 #0acf97 #ffbc00]
-        = column_chart rdvs_stats_path(by_status: true, departement: @departement), stacked: :percent, max: 100, suffix: "%", colors: colors
+        = column_chart rdvs_stats_path(by_status: true, territory: @territory), stacked: :percent, max: 100, suffix: "%", colors: colors
 
     .card.mb-5
       .card-body
@@ -96,6 +84,7 @@
         - %i[event channel result].each do |attribute|
           h3.card-subtitle Par #{Receipt.human_attribute_name(attribute).downcase}
           = column_chart receipts_stats_path(group_by: attribute, departement: @departement), stacked: true
+
     .card.mb-5
       .card-body
         = self_anchor "activations"
@@ -128,3 +117,12 @@
 
         - active_count = active_agents.joins(:rdvs).where(rdvs: {created_at: 60.days.ago..30.days.ago}).distinct.count
         p #{percent(active_count, active_agents.count)} avaient créé un rdv les 30 derniers jours précédents (#{active_count})
+
+    .card.mb-5
+      .card-header
+        = "#{@territories.count} structures utilisent RDV-Solidarités"
+      .card-body
+        ul
+          - @territories.each do |territory|
+            li = link_to territory, stats_path(territory: territory)
+        .m-3 = link_to "Retour aux statistiques de la plateforme", stats_path
