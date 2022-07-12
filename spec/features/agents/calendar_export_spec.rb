@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 describe "Agents can export their calendar to other tools, such as Outlook or Google calendar" do
-  it "allows resetting the link" do
+  it "allows resetting the link and shows the agent's name in the link to make it clear that it's their info" do
     uid = "37b24280-7015-4a8a-b752-907e33171106"
     allow(SecureRandom).to receive(:uuid).and_return(uid)
     organisation = create(:organisation)
-    agent = create(:agent, basic_role_in_organisations: [organisation])
+    agent = create(:agent, basic_role_in_organisations: [organisation], first_name: "Rémi", last_name: "NOM D'AGENT")
     login_as(agent, scope: :agent)
 
     visit agents_calendar_sync_path
 
-    webcal_url = "webcal://#{Capybara.server_host}:#{Capybara.server_port}/calendrier/#{uid}.ics"
+    webcal_url = "webcal://#{Capybara.server_host}:#{Capybara.server_port}/calendrier/remi-nom-d-agent-#{uid}.ics"
 
     expect(page).to have_link(webcal_url)
 
