@@ -1,17 +1,26 @@
 ul.list-group.list-group-flush
   li.list-group-item
-    i.fa.fa-check.fa-fw.mr-1.text-success
-    | Motif :&nbsp;
-    = rdv_wizard.motif.name
+    .row
+      .col
+        i.fa.fa-check.fa-fw.mr-1.text-success
+        | Motif :&nbsp;
+        = rdv_wizard.motif.name
+      .col-auto
+        = puts "rdv_wizard.motif #{rdv_wizard.inspect}"
+        = link_to "modifier", root_path(rdv_wizard.search_motif_context_query)
   - if rdv_wizard.motif.phone?
     li.list-group-item
       i.fa.fa-check.fa-fw.mr-1.text-success
       | RDV téléphonique
   - else
     li.list-group-item
-      i.fa.fa-check.fa-fw.mr-1.text-success
-      | Lieu :&nbsp;
-      = rdv_wizard.lieu_full_name
+      .row
+        .col
+          i.fa.fa-check.fa-fw.mr-1.text-success
+          | Lieu :&nbsp;
+          = rdv_wizard.lieu_full_name
+        .col-auto
+          = link_to "modifier", root_path(rdv_wizard.search_lieu_context_query)
   li.list-group-item
     .row
       .col
@@ -19,7 +28,7 @@ ul.list-group.list-group-flush
         | Date du rendez-vous :&nbsp;
         = rdv_starts_at_and_duration(rdv_wizard.rdv, :human)
       .col-auto
-        = link_to "modifier", root_path(rdv_wizard.search_context_query.merge(motif_name_with_location_type: rdv_wizard.motif.name_with_location_type))
+        = link_to "modifier", root_path(rdv_wizard.search_slot_context_query)
   - if rdv_wizard.is_a?(UserRdvWizard::Step3)
     li.list-group-item
       .row

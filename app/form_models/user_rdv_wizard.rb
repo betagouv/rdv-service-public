@@ -47,10 +47,20 @@ module UserRdvWizard
         .merge(@attributes.slice(:where, :departement, :lieu_id, :latitude, :longitude, :city_code, :street_ban_id, :invitation_token, :address, :organisation_ids, :motif_search_terms))
     end
 
-    def search_context_query
-      # Utilisé pour construire l'url de retour au choix des lieux
-      @attributes.slice(:departement, :city_code, :longitude, :latitude, :street_ban_id, :address)
+    def search_motif_context_query
+       # Utilisé pour construire l'url de retour au choix des motifs
+       @attributes.slice(:departement, :city_code, :longitude, :latitude, :street_ban_id, :address)
     end
+
+    def search_lieu_context_query
+      # Utilisé pour construire l'url de retour au choix des lieux
+      @attributes.slice(:departement, :city_code, :longitude, :latitude, :street_ban_id, :address, :motif_name_with_location_type)
+    end
+
+   def search_slot_context_query
+    # Utilisé pour construire l'url de retour au choix des créneaux
+    @attributes.slice(:departement, :city_code, :longitude, :latitude, :street_ban_id, :address, :motif_name_with_location_type, :lieu_id)
+   end
 
     def to_search_query
       @attributes
