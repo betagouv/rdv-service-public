@@ -24,6 +24,6 @@ class Agents::CalendarSyncController < AgentAuthController
   private
 
   def new_calendar_uid(agent)
-    "#{agent.full_name.parameterize}#{SecureRandom.uuid}"
+    "#{agent.full_name.parameterize}-#{SecureRandom.uuid}"
   end
 end

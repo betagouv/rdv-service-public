@@ -10,7 +10,7 @@ describe "Agents can export their calendar to other tools, such as Outlook or Go
 
     visit agents_calendar_sync_path
 
-    webcal_url = "webcal://#{Capybara.server_host}:#{Capybara.server_port}/calendrier/remi-nom-d-agent#{uid}.ics"
+    webcal_url = "webcal://#{Capybara.server_host}:#{Capybara.server_port}/calendrier/remi-nom-d-agent-#{uid}.ics"
 
     expect(page).to have_link(webcal_url)
 
