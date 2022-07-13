@@ -6,7 +6,6 @@ ul.list-group.list-group-flush
         | Motif :&nbsp;
         = rdv_wizard.motif.name
       .col-auto
-        = puts "rdv_wizard.motif #{rdv_wizard.inspect}"
         = link_to "modifier", root_path(rdv_wizard.search_motif_context_query)
   - if rdv_wizard.motif.phone?
     li.list-group-item

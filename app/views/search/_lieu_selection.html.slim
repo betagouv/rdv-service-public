@@ -1,6 +1,8 @@
 section.bg-light.p-4
   .container
-    h2.font-weight-bold = t(".select_lieu")
+    h2.font-weight-bold.mb-4 #{motif_name_with_location_type(context.selected_motif)}
+    = link_to root_path(context.query.slice(departement: departement, city_code: city_code, longitude: longitude, latitude: latitude, street_ban_id: street_ban_id, adress: address )), class: "d-block stretched-link"
+    h3.font-weight-bold = t(".select_lieu")
     p = t(".lieu_available", count: context.lieux.size)
     - context.lieux.each do |lieu|
       - next_availability = context.next_availability_by_lieux[lieu.id]
@@ -8,7 +10,7 @@ section.bg-light.p-4
         .card-body
           .row
             .col-md
-              h3.card-title.mb-3.mt-0.text-success.font-weight-bold= lieu.name
+              h4.card-title.mb-3.mt-0.text-success.font-weight-bold= lieu.name
               .card-subtitle= lieu.address
               .card-subtitle= context.selected_motif.service.name
             .col-md.align-self-center.pt-3.pt-md-0.position-static

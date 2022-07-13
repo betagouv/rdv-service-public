@@ -48,8 +48,8 @@ module UserRdvWizard
     end
 
     def search_motif_context_query
-       # Utilisé pour construire l'url de retour au choix des motifs
-       @attributes.slice(:departement, :city_code, :longitude, :latitude, :street_ban_id, :address)
+      # Utilisé pour construire l'url de retour au choix des motifs
+      @attributes.slice(:departement, :city_code, :longitude, :latitude, :street_ban_id, :address)
     end
 
     def search_lieu_context_query
@@ -57,10 +57,10 @@ module UserRdvWizard
       @attributes.slice(:departement, :city_code, :longitude, :latitude, :street_ban_id, :address, :motif_name_with_location_type)
     end
 
-   def search_slot_context_query
-    # Utilisé pour construire l'url de retour au choix des créneaux
-    @attributes.slice(:departement, :city_code, :longitude, :latitude, :street_ban_id, :address, :motif_name_with_location_type, :lieu_id)
-   end
+    def search_slot_context_query
+      # Utilisé pour construire l'url de retour au choix des créneaux
+      @attributes.slice(:departement, :city_code, :longitude, :latitude, :street_ban_id, :address, :motif_name_with_location_type, :lieu_id)
+    end
 
     def to_search_query
       @attributes

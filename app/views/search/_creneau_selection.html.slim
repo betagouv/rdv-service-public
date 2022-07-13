@@ -1,8 +1,9 @@
 section.bg-light.p-4
   .container
+    h2.font-weight-bold.mb-4 #{motif_name_with_location_type(context.selected_motif)}
     .card.mb-3
       .card-body
-        h2.card-title= context.lieu.name
+        h3.card-title= context.lieu.name
         .card-subtitle= context.lieu.address
         - if context.unique_motifs_by_name_and_location_type.present?
           = render "creneaux", lieu: context.lieu, creneaux: context.creneaux, date_range: context.date_range, departement: context.departement, address: context.address, max_booking_delay: context.max_booking_delay, city_code: context.city_code, next_availability: context.next_availability, query: context.query
