@@ -47,12 +47,9 @@
           i.fa.fa-file-alt
       .card-body
         ul
-          li= link_to "https://doc.rdv-solidarites.fr/mentions-legales" do
+          li= link_to mentions_legales_path do
             span> Mentions Légales
-            i.fa.fa-external-link-alt
-          li= link_to "https://doc.rdv-solidarites.fr/conditions-dutilisation-de-la-plateforme-rdv-solidarites" do
+          li= link_to cgu_path do
             span> C.G.U.
-            i.fa.fa-external-link-alt
-          li= link_to "https://doc.rdv-solidarites.fr/politique-de-confidentialite" do
+          li= link_to politique_de_confidentialite_path do
             span> Politique de confidentialité
-            i.fa.fa-external-link-alt
