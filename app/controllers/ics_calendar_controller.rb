@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'icalendar/tzinfo'
 
 # rubocop:disable Rails/ApplicationController
 class IcsCalendarController < ActionController::Base
@@ -15,6 +16,11 @@ class IcsCalendarController < ActionController::Base
       format.ics do
         cal = Icalendar::Calendar.new
         cal.x_wr_calname = "#{@agent.full_name} sur RDV Solidarités"
+
+        tz = TZInfo::Timezone.get(Time.zone_default.tzinfo.identifier)
+        timezone = tz.ical_timezone(rdvs.last.starts_at)
+        cal.add_timezone(timezone)
+
         add_events(cal)
         cal.publish
         render plain: cal.to_ical
@@ -24,8 +30,12 @@ class IcsCalendarController < ActionController::Base
 
   private
 
+  def rdvs
+    @agent.rdvs.order("starts_at desc").limit(500)
+  end
+
   def add_events(cal)
-    @agent.rdvs.order("starts_at desc").limit(500).each do |rdv|
+    rdvs.each do |rdv|
       cal.event do |event|
         dtstart = Icalendar::Values::DateTime.new(
           rdv.starts_at,
