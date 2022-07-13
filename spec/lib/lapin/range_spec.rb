@@ -36,16 +36,6 @@ describe Lapin::Range do
         expect(subject).to eq(expected_range)
       end
     end
-
-    context "when the lower bound is before now" do
-      let!(:lower_bound) { "2021-12-09 11:00".to_datetime }
-      let!(:higher_bound) { "2021-12-21 18:00".to_datetime }
-
-      it "takes now as a lower_bound" do
-        expected_range = now..higher_bound
-        expect(subject).to eq(expected_range)
-      end
-    end
   end
 
   describe "#reduce_range_to_delay" do
