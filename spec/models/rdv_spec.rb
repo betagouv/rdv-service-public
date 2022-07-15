@@ -447,6 +447,18 @@ describe Rdv, type: :model do
       expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
     end
 
+    it "returns rdv for motif when given" do
+      organisation = create(:organisation)
+      admin = create(:agent, admin_role_in_organisations: [organisation])
+      motif = create(:motif, organisation: organisation, service: admin.service)
+      autre_motif = create(:motif, organisation: organisation, service: admin.service)
+      rdv = create(:rdv, motif: motif, organisation: organisation)
+      create(:rdv, motif: autre_motif, organisation: organisation)
+
+      options = { "motif_id" => motif.id }
+      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+    end
+
     it "returns rdv for given agent" do
       organisation = create(:organisation)
       admin = create(:agent, admin_role_in_organisations: [organisation])
