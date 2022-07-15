@@ -117,6 +117,14 @@ describe RdvUpdater, type: :service do
         expect(rdv.reload.cancelled_at).to be_within(3.seconds).of now
       end
     end
+
+    it "call Notifiers::RdvCreated when reloaded status from cancelled status" do
+      agent = build(:agent)
+      rdv = create(:rdv, agents: [agent], status: "excused", cancelled_at: Time.zone.parse("12/1/2020 12:56"))
+
+      expect(Notifiers::RdvCreated).to receive(:perform_with)
+      described_class.update(agent, rdv, { status: "unknown" })
+    end
   end
 
   describe "for a rdv collectif" do
@@ -150,6 +158,25 @@ describe RdvUpdater, type: :service do
       expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user_removed, token: nil })
 
       described_class.update(agent, rdv, rdv_params)
+    end
+  end
+
+  describe "#rdv_status_reloaded_from_cancelled?" do
+    Rdv::CANCELLED_STATUSES.each do |cancelled_status|
+      it "true when rdv status from #{cancelled_status} to unknown" do
+        rdv = create(:rdv, status: cancelled_status)
+        rdv.update!(status: "unknown")
+        expect(described_class.rdv_status_reloaded_from_cancelled?(rdv)).to eq(true)
+      end
+    end
+
+    Rdv::NOT_CANCELLED_STATUSES.each do |not_cancelled_status|
+      # From unknown to unkown permet de tester le cas où il n'y a pas de changement sur le status
+      it "false when rdv status from #{not_cancelled_status} to unknown" do
+        rdv = create(:rdv, status: not_cancelled_status)
+        rdv.update!(status: "unknown")
+        expect(described_class.rdv_status_reloaded_from_cancelled?(rdv)).to eq(false)
+      end
     end
   end
 end
