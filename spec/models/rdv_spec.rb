@@ -425,6 +425,17 @@ describe Rdv, type: :model do
   end
 
   describe "#search_for" do
+    it "returns allowed rdvs even with blank option" do
+      organisation = create(:organisation)
+      other_organisation = create(:organisation)
+      admin = create(:agent, admin_role_in_organisations: [organisation, other_organisation])
+      rdv = create(:rdv, organisation: organisation)
+      create(:rdv, organisation: other_organisation)
+
+      options = { lieu_id: "" }
+      expect(described_class.search_for(admin, organisation, options)).to eq([rdv])
+    end
+
     it "returns allowed rdvs" do
       organisation = create(:organisation)
       other_organisation = create(:organisation)

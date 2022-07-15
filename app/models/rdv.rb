@@ -68,7 +68,8 @@ class Rdv < ApplicationRecord
   scope :day_after_tomorrow, -> { on_day(Time.zone.tomorrow + 1.day) }
   scope :for_today, -> { on_day(Time.zone.today) }
   scope :user_with_relatives, ->(responsible_id) { joins(:users).includes(:rdvs_users, :users).where(users: { id: [responsible_id, User.find(responsible_id).relatives.pluck(:id)].flatten }) }
-  scope :with_user, ->(user) { joins(:users).where(rdvs_users: { user_id: user.id }) }
+  scope :with_user, ->(user) { with_user_id(user.id) }
+  scope :with_user_id, ->(user_id) { joins(:users).where(rdvs_users: { user_id: user_id }) }
   scope :status, lambda { |status|
     case status.to_s
     when "unknown_past"
@@ -205,14 +206,40 @@ class Rdv < ApplicationRecord
     unless agent.role_in_organisation(organisation).can_access_others_planning?
       rdvs = rdvs.joins(:motif).where(motifs: { service: agent.service })
     end
-    rdvs = rdvs.joins(:lieu).where(lieux: { id: options["lieu_id"] }) if options["lieu_id"].present?
-    rdvs = rdvs.joins(:motif).where(motifs: { id: options["motif_id"] }) if options["motif_id"].present?
-    rdvs = rdvs.joins(:agents).where(agents: { id: options["agent_id"] }) if options["agent_id"].present?
-    rdvs = rdvs.joins(:rdvs_users).where(rdvs_users: { user_id: options["user_id"] }) if options["user_id"].present?
-    rdvs = rdvs.status(options["status"]) if options["status"].present?
-    rdvs = rdvs.where("DATE(starts_at) >= ?", options["start"]) if options["start"].present?
-    rdvs = rdvs.where("DATE(starts_at) <= ?", options["end"]) if options["end"].present?
+    options.each do |key, value|
+      next if value.blank?
+
+      rdvs = send("search_for_#{key}", rdvs, value) if respond_to?("search_for_#{key}")
+    end
     rdvs
+  end
+
+  def self.search_for_lieu_id(rdvs, lieu_id)
+    rdvs.joins(:lieu).where(lieux: { id: lieu_id })
+  end
+
+  def self.search_for_motif_id(rdvs, motif_id)
+    rdvs.joins(:motif).where(motifs: { id: motif_id })
+  end
+
+  def self.search_for_agent_id(rdvs, agent_id)
+    rdvs.joins(:agents).where(agents: { id: agent_id })
+  end
+
+  def self.search_for_user_id(rdvs, user_id)
+    rdvs.with_user_id(user_id)
+  end
+
+  def self.search_for_status(rdvs, status)
+    rdvs.status(status)
+  end
+
+  def self.search_for_start(rdvs, start_at)
+    rdvs.where("DATE(starts_at) >= ?", start_at)
+  end
+
+  def self.search_for_end(rdvs, end_at)
+    rdvs.where("DATE(starts_at) <= ?", end_at)
   end
 
   def reschedule_max_date
