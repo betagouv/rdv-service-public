@@ -9,9 +9,20 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
   end
 
   def create
-    # invite_resource creates the new Agent in DB and sends the invitation.
-    if (agent = invite_resource)
+    agent = Agent.find_by(email: invite_params[:email].downcase)
+    if agent.nil?
+      # Authorize against a dummy Agent
       authorize(Agent.new(invite_params))
+      agent = invite_resource # invite_resource creates the new Agent in DB and sends the invitation.
+    else
+      agent.save(context: :invite) # Specify a different validation context to bypass last_name/first_name presence
+      # Warn if the service isn’t the one that was requested
+      service = Service.find(invite_params[:service_id])
+      flash[:error] = I18n.t "activerecord.warnings.models.agent_role.different_service", service: service.name, agent_service: agent.service.name if agent.service != service
+    end
+
+    if agent.errors.empty?
+      AgentTerritorialAccessRight.find_or_create_by!(agent: agent, territory: current_territory)
       flash[:notice] = if agent.invitation_accepted?
                          I18n.t "activerecord.notice.models.agent_role.existing", email: agent.email
                        else
@@ -47,9 +58,6 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
   # invite_params is called by Devise::InvitationsController#invite_resource
   def invite_params
     super.merge(
-      # Only ever invite to the current territory
-      agent_territorial_access_rights_attributes: { "0": { territory: current_territory } },
-
       # the omniauth uid _is_ the email, always. note: this may be better suited in a hook in agent.rb
       uid: params[:email]
     )
