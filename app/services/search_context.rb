@@ -116,6 +116,21 @@ class SearchContext
     @next_availability ||= creneaux.empty? ? creneaux_search.next_availability : nil
   end
 
+  def search_motif_context_query
+    # Utilisé pour construire l'url de retour au choix des motifs
+    @query.slice(:departement, :city_code, :longitude, :latitude, :street_ban_id, :address)
+  end
+
+  def search_lieu_context_query
+    # Utilisé pour construire l'url de retour au choix des lieux
+    @query.slice(:departement, :city_code, :longitude, :latitude, :street_ban_id, :address, :motif_name_with_location_type)
+  end
+
+  def search_slot_context_query
+    # Utilisé pour construire l'url de retour au choix des créneaux
+    @query.slice(:departement, :city_code, :longitude, :latitude, :street_ban_id, :address, :motif_name_with_location_type, :lieu_id)
+  end
+
   private
 
   def creneaux_search_for(lieu, date_range)

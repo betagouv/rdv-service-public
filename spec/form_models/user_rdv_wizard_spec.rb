@@ -82,21 +82,81 @@ describe UserRdvWizard do
     end
   end
 
-  describe "#search_context_query" do
-    {
-      departement: "62",
-      address: "Calais 62100",
-      city_code: "62100",
-      latitude: 50.951,
-      longitude: 1.869,
-      street_ban_id: nil,
-    }.each do |attribute, value|
-      it "contains #{attribute}" do
-        attributes = { attribute => value }
-        rdv_wizard = UserRdvWizard::Step1.new(user, attributes)
-        expect(rdv_wizard.search_context_query.keys).to include(attribute)
-        expect(rdv_wizard.search_context_query[attribute]).to eq(value)
-      end
+  describe "#search lieu context query" do
+    it "returns lieu context query" do
+      attributes = {
+        departement: "62",
+        address: "Calais 62100",
+        city_code: "62100",
+        latitude: 50.951,
+        longitude: 1.869,
+        street_ban_id: nil,
+        motif_name_with_location_type: "consultation (téléphonique)",
+        lieu_id: 8,
+      }
+      rdv_wizard = UserRdvWizard::Step1.new(user, attributes)
+      expected_context = {
+        departement: "62",
+        address: "Calais 62100",
+        city_code: "62100",
+        latitude: 50.951,
+        longitude: 1.869,
+        street_ban_id: nil,
+        motif_name_with_location_type: "consultation (téléphonique)",
+      }
+      expect(rdv_wizard.search_lieu_context_query).to eq(expected_context)
+    end
+  end
+
+  describe "#search motif context query" do
+    it "returns motif context query" do
+      attributes = {
+        departement: "62",
+        address: "Calais 62100",
+        city_code: "62100",
+        latitude: 50.951,
+        longitude: 1.869,
+        street_ban_id: nil,
+        motif_name_with_location_type: "consultation (téléphonique)",
+        lieu_id: 8,
+      }
+      rdv_wizard = UserRdvWizard::Step1.new(user, attributes)
+      expected_context = {
+        departement: "62",
+        address: "Calais 62100",
+        city_code: "62100",
+        latitude: 50.951,
+        longitude: 1.869,
+        street_ban_id: nil,
+      }
+      expect(rdv_wizard.search_motif_context_query).to eq(expected_context)
+    end
+  end
+
+  describe "#search slot context query" do
+    it "returns slot context query" do
+      attributes = {
+        departement: "62",
+        address: "Calais 62100",
+        city_code: "62100",
+        latitude: 50.951,
+        longitude: 1.869,
+        street_ban_id: nil,
+        motif_name_with_location_type: "consultation (téléphonique)",
+        lieu_id: 8,
+      }
+      rdv_wizard = UserRdvWizard::Step1.new(user, attributes)
+      expected_context = {
+        departement: "62",
+        address: "Calais 62100",
+        city_code: "62100",
+        latitude: 50.951,
+        longitude: 1.869,
+        street_ban_id: nil,
+        motif_name_with_location_type: "consultation (téléphonique)",
+        lieu_id: 8,
+      }
+      expect(rdv_wizard.search_slot_context_query).to eq(expected_context)
     end
   end
 end
