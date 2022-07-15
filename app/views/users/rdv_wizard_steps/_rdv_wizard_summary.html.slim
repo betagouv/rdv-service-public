@@ -19,7 +19,7 @@ ul.list-group.list-group-flush
         | Date du rendez-vous :&nbsp;
         = rdv_starts_at_and_duration(rdv_wizard.rdv, :human)
       .col-auto
-        = link_to "modifier", lieux_path(search: rdv_wizard.to_search_query)
+        = link_to "modifier", root_path(rdv_wizard.search_context_query.merge(motif_name_with_location_type: rdv_wizard.motif.name_with_location_type))
   - if rdv_wizard.is_a?(UserRdvWizard::Step3)
     li.list-group-item
       .row

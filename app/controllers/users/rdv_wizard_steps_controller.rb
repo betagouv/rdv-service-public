@@ -19,7 +19,7 @@ class Users::RdvWizardStepsController < UserAuthController
       render current_step
     else
       flash[:error] = "Ce créneau n'est plus disponible. Veuillez en sélectionner un autre."
-      redirect_to(current_user.only_invited? ? prendre_rdv_path(@rdv_wizard.to_query) : lieux_path(search: @rdv_wizard.to_query))
+      redirect_to(root_path(@rdv_wizard.to_query))
     end
   end
 

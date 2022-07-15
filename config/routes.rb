@@ -234,6 +234,7 @@ Rails.application.routes.draw do
     "users/rdvs/#{path_params[:id]}#{query_params}"
   end), as: "rdv_short"
 
+  # TODO: remplacer `prendre_rdv` par le root_path
   get "prdv", to: (redirect do |_path_params, req|
     query_params = format_redirect_params(req.params)
     "prendre_rdv#{query_params}"
@@ -254,13 +255,11 @@ Rails.application.routes.draw do
   ##
 
   get "accueil_mds" => "welcome#welcome_agent"
-  post "/" => "welcome#search"
-  get "departement/:departement", to: "welcome#welcome_departement", as: "welcome_departement"
-  post "departement/:departement" => "welcome#search_departement"
-  get "departement/:departement/:service", to: "welcome#welcome_service", as: "welcome_service"
-  resources :lieux, only: %i[index show]
-  root "welcome#index"
 
+  resources :lieux, only: %i[index show]
+  root "search#search_rdv"
+
+  # TODO: remplacer `prendre_rdv` par le root_path
   get "/prendre_rdv", to: "search#search_rdv"
 
   # rubocop:disable Style/FormatStringToken

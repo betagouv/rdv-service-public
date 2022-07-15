@@ -8,4 +8,4 @@
       .card-body
         = render "users/users/form", user: current_user, rdv_wizard: @rdv_wizard, service: @rdv_wizard.service
         .col
-          = link_to "Revenir en arrière", current_user.only_invited? ? prendre_rdv_path(@rdv_wizard.to_query) : lieux_path(search: @rdv_wizard.to_search_query), class: "btn btn-link"
+          = link_to "Revenir en arrière", root_path(@rdv_wizard.to_query), class: "btn btn-link"
