@@ -6,6 +6,17 @@ METHOD:PUBLISH
 X-WR-CALNAME:Marceau COLIN sur RDV Solidarités
 BEGIN:VEVENT
 DTSTAMP:20220707T220000Z
+UID:abb701a5-381a-4fae-9157-129b5843834c
+DTSTART;TZID=Europe/Paris:20220711T000000
+DTEND;TZID=Europe/Paris:20220711T004500
+DESCRIPTION:plus d'infos dans RDV Solidarités: http://localhost:9887/admin
+ /organisations/123000/rdvs/123123
+LOCATION:Lieu n°3 (3 rue de l'adresse 12345 Ville)
+STATUS:CONFIRMED
+SUMMARY:Atelier collectif (1/5)
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20220707T220000Z
 UID:749336ce-eaca-40a3-8c28-246ed8d18849
 DTSTART;TZID=Europe/Paris:20220710T000000
 DTEND;TZID=Europe/Paris:20220710T004500
@@ -13,7 +24,7 @@ DESCRIPTION:plus d'infos dans RDV Solidarités: http://localhost:9887/admin
  /organisations/123000/rdvs/789000
 LOCATION:Lieu n°2 (2 rue de l'adresse 12345 Ville)
 STATUS:CANCELLED
-SUMMARY:RDV via RDV Solidarités
+SUMMARY:Accompagnement individuel
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20220707T220000Z
@@ -24,6 +35,6 @@ DESCRIPTION:plus d'infos dans RDV Solidarités: http://localhost:9887/admin
  /organisations/123000/rdvs/456000
 LOCATION:Lieu n°1 (1 rue de l'adresse 12345 Ville)
 STATUS:CONFIRMED
-SUMMARY:RDV via RDV Solidarités
+SUMMARY:Accompagnement individuel
 END:VEVENT
 END:VCALENDAR

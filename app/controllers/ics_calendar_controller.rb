@@ -41,7 +41,7 @@ class IcsCalendarController < ActionController::Base
         event.status = rdv.cancelled? ? "CANCELLED" : "CONFIRMED"
 
         event.uid = rdv.uuid
-        event.summary = "RDV via RDV Solidarités"
+        event.summary = rdv.collectif? ? rdv_title_in_agenda(rdv) : rdv.motif.name
         event.description = "plus d'infos dans RDV Solidarités: #{admin_organisation_rdv_url(rdv.organisation, rdv.id)}"
       end
     end
