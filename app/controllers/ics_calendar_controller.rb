@@ -2,6 +2,8 @@
 
 # rubocop:disable Rails/ApplicationController
 class IcsCalendarController < ActionController::Base
+  include RdvsHelper
+
   def show
     @agent = Agent.find_by(calendar_uid: params[:id])
 
