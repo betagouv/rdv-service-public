@@ -98,9 +98,9 @@ ActiveRecord::Schema.define(version: 2022_07_05_132435) do
   ], force: :cascade
 
   create_table "absences", force: :cascade do |t|
-    t.bigint "agent_id"
+    t.bigint "agent_id", null: false
     t.string "title", null: false
-    t.bigint "organisation_id"
+    t.bigint "organisation_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "recurrence"
@@ -159,8 +159,8 @@ ActiveRecord::Schema.define(version: 2022_07_05_132435) do
   end
 
   create_table "agent_teams", force: :cascade do |t|
-    t.bigint "team_id"
-    t.bigint "agent_id"
+    t.bigint "team_id", null: false
+    t.bigint "agent_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["agent_id"], name: "index_agent_teams_on_agent_id"
@@ -180,7 +180,7 @@ ActiveRecord::Schema.define(version: 2022_07_05_132435) do
   end
 
   create_table "agent_territorial_roles", force: :cascade do |t|
-    t.bigint "agent_id"
+    t.bigint "agent_id", null: false
     t.bigint "territory_id"
     t.index ["agent_id"], name: "index_agent_territorial_roles_on_agent_id"
     t.index ["territory_id"], name: "index_agent_territorial_roles_on_territory_id"
@@ -209,7 +209,7 @@ ActiveRecord::Schema.define(version: 2022_07_05_132435) do
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.datetime "deleted_at"
-    t.bigint "service_id"
+    t.bigint "service_id", null: false
     t.string "email_original"
     t.string "provider", default: "email", null: false
     t.string "uid", default: "", null: false
@@ -240,8 +240,8 @@ ActiveRecord::Schema.define(version: 2022_07_05_132435) do
   end
 
   create_table "agents_organisations", force: :cascade do |t|
-    t.bigint "agent_id"
-    t.bigint "organisation_id"
+    t.bigint "agent_id", null: false
+    t.bigint "organisation_id", null: false
     t.string "level", default: "basic", null: false
     t.index ["agent_id"], name: "index_agents_organisations_on_agent_id"
     t.index ["level"], name: "index_agents_organisations_on_level"
@@ -250,16 +250,16 @@ ActiveRecord::Schema.define(version: 2022_07_05_132435) do
   end
 
   create_table "agents_rdvs", force: :cascade do |t|
-    t.bigint "agent_id"
-    t.bigint "rdv_id"
+    t.bigint "agent_id", null: false
+    t.bigint "rdv_id", null: false
     t.index ["agent_id", "rdv_id"], name: "index_agents_rdvs_on_agent_id_and_rdv_id", unique: true
     t.index ["agent_id"], name: "index_agents_rdvs_on_agent_id"
     t.index ["rdv_id"], name: "index_agents_rdvs_on_rdv_id"
   end
 
   create_table "agents_users", force: :cascade do |t|
-    t.bigint "user_id"
-    t.bigint "agent_id"
+    t.bigint "user_id", null: false
+    t.bigint "agent_id", null: false
     t.index ["agent_id"], name: "index_agents_users_on_agent_id"
     t.index ["user_id"], name: "index_agents_users_on_user_id"
   end
@@ -316,12 +316,12 @@ ActiveRecord::Schema.define(version: 2022_07_05_132435) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "default_duration_in_min", default: 30, null: false
-    t.bigint "organisation_id"
+    t.bigint "organisation_id", null: false
     t.boolean "reservable_online", default: false, null: false
     t.integer "min_booking_delay", default: 1800
     t.integer "max_booking_delay", default: 7889238
     t.datetime "deleted_at"
-    t.bigint "service_id"
+    t.bigint "service_id", null: false
     t.text "restriction_for_rdv"
     t.text "instruction_for_rdv"
     t.boolean "for_secretariat", default: false
@@ -349,8 +349,8 @@ ActiveRecord::Schema.define(version: 2022_07_05_132435) do
   end
 
   create_table "motifs_plage_ouvertures", id: false, force: :cascade do |t|
-    t.bigint "motif_id"
-    t.bigint "plage_ouverture_id"
+    t.bigint "motif_id", null: false
+    t.bigint "plage_ouverture_id", null: false
     t.index ["motif_id"], name: "index_motifs_plage_ouvertures_on_motif_id"
     t.index ["plage_ouverture_id"], name: "index_motifs_plage_ouvertures_on_plage_ouverture_id"
   end
@@ -375,16 +375,16 @@ ActiveRecord::Schema.define(version: 2022_07_05_132435) do
   end
 
   create_table "plage_ouvertures", force: :cascade do |t|
-    t.bigint "agent_id"
+    t.bigint "agent_id", null: false
     t.string "title"
-    t.bigint "organisation_id"
+    t.bigint "organisation_id", null: false
     t.date "first_day", null: false
     t.time "start_time", null: false
     t.time "end_time", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "recurrence"
-    t.bigint "lieu_id"
+    t.bigint "lieu_id", null: false
     t.boolean "expired_cached", default: false
     t.datetime "recurrence_ends_at"
     t.text "search_terms"
@@ -401,11 +401,11 @@ ActiveRecord::Schema.define(version: 2022_07_05_132435) do
 
   create_table "rdvs", force: :cascade do |t|
     t.datetime "starts_at", null: false
-    t.bigint "organisation_id"
+    t.bigint "organisation_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "cancelled_at"
-    t.bigint "motif_id"
+    t.bigint "motif_id", null: false
     t.integer "sequence", default: 0, null: false
     t.uuid "uuid", default: -> { "uuid_generate_v4()" }, null: false
     t.string "old_location"
@@ -431,8 +431,8 @@ ActiveRecord::Schema.define(version: 2022_07_05_132435) do
   end
 
   create_table "rdvs_users", force: :cascade do |t|
-    t.bigint "rdv_id"
-    t.bigint "user_id"
+    t.bigint "rdv_id", null: false
+    t.bigint "user_id", null: false
     t.boolean "send_lifecycle_notifications", null: false
     t.boolean "send_reminder_notification", null: false
     t.string "invitation_token"
@@ -452,7 +452,7 @@ ActiveRecord::Schema.define(version: 2022_07_05_132435) do
   end
 
   create_table "receipts", force: :cascade do |t|
-    t.bigint "rdv_id"
+    t.bigint "rdv_id", null: false
     t.bigint "user_id"
     t.string "event", null: false
     t.enum "channel", null: false, enum_type: "receipts_channel"
@@ -513,7 +513,7 @@ ActiveRecord::Schema.define(version: 2022_07_05_132435) do
   end
 
   create_table "teams", force: :cascade do |t|
-    t.bigint "territory_id"
+    t.bigint "territory_id", null: false
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -548,8 +548,8 @@ ActiveRecord::Schema.define(version: 2022_07_05_132435) do
   end
 
   create_table "user_profiles", force: :cascade do |t|
-    t.bigint "organisation_id"
-    t.bigint "user_id"
+    t.bigint "organisation_id", null: false
+    t.bigint "user_id", null: false
     t.integer "logement"
     t.text "notes"
     t.index ["organisation_id", "user_id"], name: "index_user_profiles_on_organisation_id_and_user_id", unique: true
