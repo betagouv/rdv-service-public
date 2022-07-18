@@ -27,6 +27,39 @@ describe SlotBuilder, type: :service do
       expect(slots.map(&:class).map(&:to_s).uniq).to eq(["Creneau"])
     end
 
+    context "when date range starts before today" do
+      let(:today) { Date.new(2022, 7, 13) }
+      let(:yesterday) { today - 1.day }
+      let(:two_days_ago) { today - 2.days }
+      let(:seven_days_from_now) { today + 7.days }
+
+      before do
+        travel_to(today)
+
+        # create plage ouvertures in the 3 last days
+        create(:plage_ouverture, motifs: [motif], first_day: two_days_ago,  start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), lieu: lieu)
+        create(:plage_ouverture, motifs: [motif], first_day: yesterday,     start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), lieu: lieu)
+        create(:plage_ouverture, motifs: [motif], first_day: today,         start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), lieu: lieu)
+      end
+
+      it "only returns slots in the future" do
+        slots = described_class.available_slots(motif, lieu, two_days_ago..seven_days_from_now, off_days)
+
+        # Only today's slots are returned, not the ones from the past, even though they are included in the range
+        expect(slots.map(&:starts_at)).to eq([Time.zone.parse("2022-07-13 09:00:00"), Time.zone.parse("2022-07-13 10:00:00")])
+      end
+
+      context "when date range also ends before today" do
+        it "returns no result" do
+          date_range_in_the_past = (today - 10.days)..(today - 3.days)
+          slots = described_class.available_slots(motif, lieu, date_range_in_the_past, off_days)
+
+          # No slot is returned since all slots are in the past
+          expect(slots).to be_empty
+        end
+      end
+    end
+
     context "when asking for slots that may start right now" do
       let(:motif) do
         create(:motif, default_duration_in_min: 60, organisation: organisation, min_booking_delay: 45 * 60)

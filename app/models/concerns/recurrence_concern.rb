@@ -96,9 +96,10 @@ module RecurrenceConcern
 
   # The `only_future` param was introduced to circumvent performance
   # issues with Montrose's occurrence generation.
-  # It uses a cached value of the next occurrence as a starting point
+  # It uses a recent occurrence as a starting point
   # when computing future occurrences, which is faster
   # than starting form the very first occurrence.
+  # The value of a recent occurrence is computed and cached in #earliest_future_occurrence_time.
   # Warning: using `only_future: true` will only yield future occurrences, not past ones.
   def occurrence_start_at_list_for(inclusive_date_range, only_future:)
     min_until = [inclusive_date_range.end, recurrence_ends_at].compact.min.end_of_day
