@@ -68,4 +68,8 @@ class Stat
       .count
       .transform_keys { |key| [Receipt.human_attribute_value(attribute, key[0]), key[1]] }
   end
+
+  def active_agents_group_by_month
+    rdvs.joins(:agents_rdvs).where("rdvs.starts_at < ?", Time.zone.now).group_by_month("rdvs.starts_at").count("distinct agents_rdvs.agent_id")
+  end
 end

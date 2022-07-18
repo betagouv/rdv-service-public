@@ -59,6 +59,7 @@ Rails.application.routes.draw do
   end
   resources :stats, only: :index
   get "stats/rdvs", to: "stats#rdvs", as: "rdvs_stats"
+  get "stats/active_agents", to: "stats#active_agents", as: "active_agents_stats"
   get "stats/receipts", to: "stats#receipts", as: "receipts_stats"
 
   authenticate :user do
