@@ -28,6 +28,7 @@ class Admin::InvitationsDeviseController < Devise::InvitationsController
     end
 
     if agent.errors.empty?
+      AgentTerritorialAccessRight.find_or_create_by!(agent: agent, territory: current_organisation.territory)
       if agent.invitation_accepted?
         flash[:notice] = I18n.t "activerecord.notice.models.agent_role.existing", email: agent.email
         redirect_to admin_organisation_agents_path(current_organisation)
