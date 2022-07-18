@@ -315,5 +315,34 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
 
       it_behaves_like "existing agent is added to organization"
     end
+
+    describe "initialize access rights for invited agent" do
+      it "creates new access rights with none exist" do
+        params = { organisation_id: organisation.id,
+                   agent: {
+                     email: "hacker@renard.com",
+                     service_id: service_id,
+                     roles_attributes: { "0" => { level: "basic" } },
+                   }, }
+        expect do
+          post :create, params: params
+        end.to change(AgentTerritorialAccessRight, :count)
+      end
+
+      it "do nothing if already exist for this territory" do
+        other_organisation_on_same_territory = create(:organisation, territory: organisation.territory)
+        existing_agent = create(:agent, organisations: [other_organisation_on_same_territory], email: "hacker@renard.com")
+        create(:agent_territorial_access_right, agent: existing_agent, territory: organisation.territory)
+        params = { organisation_id: organisation.id,
+                   agent: {
+                     email: "hacker@renard.com",
+                     service_id: service_id,
+                     roles_attributes: { "0" => { level: "basic" } },
+                   }, }
+        expect do
+          post :create, params: params
+        end.not_to change(AgentTerritorialAccessRight, :count)
+      end
+    end
   end
 end
