@@ -8,7 +8,8 @@ module WebhookDeliverable
 
   def generate_webhook_payload(action, api_options)
     # Reload attributes and associations from DB to ensure they are up to date.
-    # We dont use #reload on self because some other behaviour depends on the object's state.
+    # We dont use #reload on self because some other parts
+    # of the code rely on the state of the current object.
     model = self.class.find(id)
 
     meta = {

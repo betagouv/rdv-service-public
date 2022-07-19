@@ -31,15 +31,18 @@ module Admin::RdvFormConcern
   end
 
   def check_duplicates
-    suspicious_rdvs = Rdv.where(
+    suspicious_rdvs = Rdv.includes(:users, :agents).where(
       organisation: rdv.organisation,
       lieu: rdv.lieu,
       starts_at: rdv.starts_at,
       ends_at: rdv.ends_at,
       motif: rdv.motif
     ).select do |existing_rdv|
-      # Use #sort to compare arrays ignoring order
-      existing_rdv.users.sort == rdv.users.sort && existing_rdv.agents.sort == rdv.agents.sort
+      participants_of_existing_rdv = Set.new(existing_rdv.users + existing_rdv.agents)
+      # Not using `rdv.users` because it does a db call, which returns an empty array because `rdv` is not persisted.
+      # Using rdv_users/agents_rdvs is safe because they are built from the nested attributes.
+      participants_of_current_rdv = Set.new(rdv.rdvs_users.map(&:user) + rdv.agents_rdvs.map(&:agent))
+      participants_of_existing_rdv == participants_of_current_rdv
     end
 
     errors.add(:base, :duplicate) if suspicious_rdvs.any?
@@ -88,7 +91,7 @@ module Admin::RdvFormConcern
   def warn_rdv_duplicate_suspected
     return if ignore_benign_errors
 
-    rdv.users.each do |user|
+    rdv.rdvs_users.map(&:user).each do |user|
       suspicious_rdvs = Rdv
         .on_day(rdv.starts_at)
         .with_user(user)
