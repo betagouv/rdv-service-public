@@ -90,4 +90,16 @@ describe SearchContext, type: :service do
       end
     end
   end
+
+  describe "#services" do
+    it "returns services sort by name" do
+      service_a = create(:service, name: "A")
+      service_b = create(:service, name: "B")
+      motif_a = create(:motif, service: service_a)
+      motif_b = create(:motif, service: service_b)
+      search_context = described_class.new(nil, motif_name_with_location_type: [])
+      allow(search_context).to receive(:matching_motifs).and_return([motif_b, motif_a])
+      expect(search_context.services).to eq([service_a, service_b])
+    end
+  end
 end
