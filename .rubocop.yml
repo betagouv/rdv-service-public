@@ -51,6 +51,10 @@ Metrics/ClassLength:
     - 'app/models/rdv.rb'
     - 'app/models/user.rb'
 
+Metrics/ModuleLength:
+  Max: 150
+  CountAsOne: ['array', 'hash', 'heredoc']
+
 Metrics/MethodLength:
   CountAsOne: ['array', 'hash', 'heredoc']
   Max: 20
