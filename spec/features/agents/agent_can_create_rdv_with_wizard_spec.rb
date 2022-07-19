@@ -144,8 +144,7 @@ describe "Agent can create a Rdv with wizard" do
 
         stub_request(:post, "https://example.com/")
         click_button("Créer RDV")
-        # TODO: Investigate why 2 webhooks calls are sent
-        expect(WebMock).to(have_requested(:post, "https://example.com/").times(2).with do |req|
+        expect(WebMock).to(have_requested(:post, "https://example.com/").with do |req|
           JSON.parse(req.body)["data"]["users"].map { |user| user["id"] } == [user.id]
         end)
       end

@@ -50,6 +50,11 @@ class Notifiers::RdvBase < ::BaseService
   end
 
   def generate_invitation_tokens
+    # Prevent token generation to trigger a webhook notification,
+    # because generating the RdvsUser tokens does not change any of the
+    # attributes or associations of the Rdv.
+    @rdv.skip_webhooks = true
+
     rdv_users_with_token_needed.each do |rdv_user|
       @rdv_users_tokens_by_user_id[rdv_user.user_id] = rdv_user.new_raw_invitation_token
     end
