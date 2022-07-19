@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module UsersHelper # rubocop:disable Metrics/ModuleLength
+module UsersHelper
   def birth_date_and_age(user)
     return unless user.birth_date
 
