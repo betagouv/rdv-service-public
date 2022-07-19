@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Agent can create a Rdv with wizard", js: true do
+describe "Agent can create a Rdv with wizard" do
   include UsersHelper
 
   let(:territory) { create(:territory, enable_context_field: true) }
@@ -92,8 +92,8 @@ describe "Agent can create a Rdv with wizard", js: true do
     click_button("Créer RDV")
   end
 
-  context "create a RDV with an existing lieu" do
-    it do
+  describe "create a RDV with an existing lieu" do
+    it "works", js: true do
       step1
       step2
       step3(:enabled)
@@ -112,10 +112,48 @@ describe "Agent can create a Rdv with wizard", js: true do
       expect(page).to have_content("Le rendez-vous a été créé.")
       expect(page).to have_css("*", text: "14:15", visible: :all)
     end
+
+    describe "sending webhook upon creation" do
+      let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: organisation, target_url: "https://example.com") }
+
+      def visit_step4
+        query = {
+          motif_id: motif.id,
+          duration_in_min: 35,
+          starts_at: "2019-10-11 14:15:00 +0200",
+          user_ids: [user.id],
+          agent_ids: [agent.id],
+          context: "RDV très spécial",
+          service_id: nil,
+          lieu_id: lieu.id,
+        }
+        visit new_admin_organisation_rdv_wizard_step_path(organisation, step: 4, **query)
+      end
+
+      before do
+        # Creating a duplicate RDV with same attributes but different user / agent
+        create(:rdv, organisation: organisation, users: [create(:user)], agents: [create(:agent)], motif: motif,
+                     lieu: lieu, starts_at: Time.zone.parse("2019-10-11 14:15:00"), duration_in_min: 35, skip_webhooks: true)
+      end
+
+      # There was a bug that caused the Rdv payload's "users" to
+      # be empty, so this regression test was added.
+      # Feel free to move it somewhere else if this file becomes too long.
+      it "includes the users list in the payload" do
+        visit_step4
+
+        stub_request(:post, "https://example.com/")
+        click_button("Créer RDV")
+        # TODO: Investigate why 2 webhooks calls are sent
+        expect(WebMock).to(have_requested(:post, "https://example.com/").times(2).with do |req|
+          JSON.parse(req.body)["data"]["users"].map { |user| user["id"] } == [user.id]
+        end)
+      end
+    end
   end
 
-  context "create a RDV with a single_use lieu" do
-    it do
+  describe "create a RDV with a single_use lieu" do
+    it "works", js: true do
       step1
       step2
       step3(:single_use)

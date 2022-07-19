@@ -7,13 +7,17 @@ module WebhookDeliverable
   extend ActiveSupport::Concern
 
   def generate_webhook_payload(action, api_options)
+    # Reload attributes and associations from DB to ensure they are up to date.
+    # We dont use #reload on self because some other behaviour depends on the object's state.
+    model = self.class.find(id)
+
     meta = {
       model: self.class.name,
       event: action,
       timestamp: Time.zone.now,
     }
     blueprint_class = "#{self.class.name}Blueprint".constantize
-    blueprint_class.render(self, root: :data, meta: meta, api_options: api_options)
+    blueprint_class.render(model, root: :data, meta: meta, api_options: api_options)
   end
 
   def generate_payload_and_send_webhook(action)
