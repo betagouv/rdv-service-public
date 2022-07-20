@@ -225,8 +225,9 @@ Rails.application.routes.draw do
     get page_name => "static_pages##{page_name}"
   end
 
-  ## Shorten urls for SMS
+  get "/budget", to: redirect("https://pad.incubateur.net/3hxhbOuaSyapxRUg_PnA5g#ANCT-L%E2%80%99Incubateur-des-Territoires", status: 302)
 
+  ## Shorten urls for SMS
   get "r", to: redirect("users/rdvs", status: 301), as: "rdvs_short"
 
   get "r/:id", to: (redirect do |path_params, req|
