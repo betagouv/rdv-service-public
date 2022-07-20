@@ -2,7 +2,7 @@ fr:
   agents:
     calendar_sync:
       show:
-        title: Synchronisation avec un agenda externe
+        title: Export vers un agenda externe
     preferences:
       show:
         title: Préférences de notifications

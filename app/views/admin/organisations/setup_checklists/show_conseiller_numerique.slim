@@ -45,6 +45,16 @@
             span>= setup_checklist_item(current_agent.rdvs.any?)
             span>= link_to "Ajouter un RDV dans votre agenda", admin_organisation_agent_agenda_path(@organisation, current_agent.id)
 
+        h5.mb-2 Synchroniser votre agenda externe
+        p Si vous utilisez déjà un agenda comme Outlook ou Google Calendar, vous pouvez synchroniser votre agenda RDV Solidarité vers votre agenda externe, pour que vos rendez-vous y soient visibles aussi.
+        ul.mb-4.list-unstyled
+          li.mb-2
+            span>= setup_checklist_item(current_agent.calendar_uid.present?)
+            span>= link_to "Si vous utilisez Outlook, nous vous conseillons d'utiliser un lien de synchronisation", agents_calendar_sync_path
+          li.mb-2
+            span>= setup_checklist_item(current_agent.rdv_notifications_level_all?)
+            span>= link_to "Si vous utilisez Google Calendar, nous vous conseillons d'activer les notifications pour chaque modification de rdv", agents_preferences_path
+
         h5 Recherche de créneaux
         p Lorsque vous avez plusieurs rendez-vous de prévus, vous pouvez définir des plages d’ouverture pour trouver le prochain créneau disponible plus facilement.
         p Cela permettra aussi à vos collègues de savoir quand ils peuvent vous prévoir des rendez-vous.
