@@ -1,7 +1,5 @@
 require("@rails/ujs").start()
 require("turbolinks").start()
-require("chartkick")
-require("chart.js")
 import { Datetimepicker } from './components/datetimepicker';
 import { PlacesInputs } from './components/places-inputs.js'
 import './components/analytic.js';

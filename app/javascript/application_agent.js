@@ -1,7 +1,5 @@
 require("@rails/ujs").start()
 require("turbolinks").start()
-require("chartkick")
-require("chart.js")
 import 'bootstrap';
 import 'holderjs/holder.min';
 import 'select2/dist/js/select2.full.min.js';

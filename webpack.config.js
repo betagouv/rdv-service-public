@@ -10,6 +10,7 @@ module.exports = {
     administrate: "./app/javascript/administrate",
     application: "./app/javascript/application",
     application_agent: "./app/javascript/application_agent",
+    charts: "./app/javascript/charts",
     mail: "./app/javascript/mail",
   },
   output: {
