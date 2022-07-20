@@ -232,7 +232,7 @@ class CalendarRdvSolidarites {
           responseBody: errorObj.xhr.response,
         },
         fingerprint: ["fullcalendar_xhr_error"], // group all FullCalendar errors under the same Sentry issue
-        level: Sentry.Severity.Error,
+        level: "error",
       }
     )
     alert("Le chargement du calendrier a échoué; un rapport d’erreur a été transmis à l’équipe.\nRechargez la page, et si ce problème persiste, contactez-nous à support@rdv-solidarites.fr.");
