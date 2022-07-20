@@ -38,10 +38,14 @@
       = f.input :lieu_id, collection: policy_scope(Lieu).enabled.order(:name), label: "Lieu", label_method: :name, input_html: { class: "select2-input" }, wrapper: "horizontal_form"
       = f.input :show_user_details, as: :boolean, wrapper: "horizontal_form", label: "Détails usagers"
     .col-md-6
+      = f.input :motif_id, collection: policy_scope(Motif), label: "Motifs", label_method: :name, input_html: { class: "select2-input" }, wrapper: "horizontal_form"
       - temporal_statuses = Rdv.statuses.keys - ["unknown"] + ["unknown_past", "unknown_future"]
       = f.input :status, collection: temporal_statuses,
               label_method: -> { ::Rdv.human_attribute_value(:status, _1, disable_cast: true) },
               label: "Statut", wrapper: "horizontal_form", input_html: { class: "select2-input" }
       = date_input(f, :start, label = "Période - Début", wrapper: "horizontal_form")
       = date_input(f, :end, label = "Période - Fin", wrapper: "horizontal_form")
-  input.btn.btn-primary.d-print-none type="submit" value="Rafraîchir la liste"
+  .d-flex.justify-content-end
+    - search = params[:search].blank? ? "d-none" : ""
+    = link_to "Réinitialiser", admin_organisation_rdvs_path(current_organisation), class: "btn btn-link #{search}"
+    input.btn.btn-primary.d-print-none type="submit" value="Rafraîchir la liste" name="search"

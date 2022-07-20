@@ -118,7 +118,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def parsed_params
-    params.permit(:organisation_id, :agent_id, :user_id, :lieu_id, :status, :show_user_details, :start, :end,
+    params.permit(:organisation_id, :agent_id, :user_id, :lieu_id, :motif_id, :status, :show_user_details, :start, :end,
                   lieu_attributes: %i[name address latitude longitude]).to_hash.to_h do |param_name, param_value|
       case param_name
       when "start", "end"

@@ -13,14 +13,17 @@ describe Admin::RdvSearchForm do
     it "return query with lieu" do
       organisation = create(:organisation)
       lieu = create(:lieu, organisation: organisation)
+      motif = create(:motif, organisation: organisation)
 
-      agent_rdv_search_form = described_class.new(organisation_id: organisation.id, lieu_id: lieu.id)
+      agent_rdv_search_form = described_class.new(organisation_id: organisation.id, lieu_id: lieu.id, motif_id: motif.id)
+
       expected_query = {
         agent_id: nil,
         start: nil,
         end: nil,
         organisation_id: organisation.id,
         lieu_id: lieu.id,
+        motif_id: motif.id,
         show_user_details: nil,
         status: nil,
         user_id: nil,
