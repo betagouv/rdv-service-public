@@ -1,4 +1,5 @@
-= javascript_include_tag "charts", "data-turbolinks-track": "reload"
+/ Include the charts pack in the <head> section
+- content_for(:charts_script) { javascript_include_tag "charts", "data-turbolinks-track": "reload" }
 
 - content_for :title do
   h1
