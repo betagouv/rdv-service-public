@@ -54,8 +54,9 @@ describe AgentRemoval, type: :service do
       now = Time.zone.parse("2021-2-13 13h00")
       travel_to(now - 2.weeks)
       organisation = create(:organisation)
-      agent = create(:agent, basic_role_in_organisations: [organisation])
-      create(:rdv, agents: [agent], organisation: organisation, starts_at: now.prev_week(:monday) + 10.hours)
+      motif = create(:motif)
+      agent = create(:agent, service: motif.service, basic_role_in_organisations: [organisation])
+      create(:rdv, agents: [agent], motif: motif, organisation: organisation, starts_at: now.prev_week(:monday) + 10.hours)
       travel_to(now)
 
       expect(agent).to receive(:soft_delete)

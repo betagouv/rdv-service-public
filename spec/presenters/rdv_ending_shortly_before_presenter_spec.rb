@@ -15,9 +15,10 @@ describe RdvEndingShortlyBeforePresenter, type: :presenter do
       let(:in_scope_mock_value) { true }
       let!(:organisation) { create(:organisation) }
       let(:agent_context) { instance_double(AgentOrganisationContext, agent: agent, organisation: organisation) }
-      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+      let(:motif) { create(:motif)}
+      let!(:agent) { create(:agent, service: motif.service, basic_role_in_organisations: [organisation]) }
       let!(:user) { create(:user, first_name: "Milos", last_name: "FORMAN") }
-      let!(:rdv_context) { create(:rdv, organisation: organisation, agents: [agent], starts_at: Time.zone.today.next_week(:monday).in_time_zone + 9.hours) }
+      let!(:rdv_context) { create(:rdv, organisation: organisation, agents: [agent], motif: motif, starts_at: Time.zone.today.next_week(:monday).in_time_zone + 9.hours) }
       let!(:rdv) { create(:rdv, organisation: organisation, agents: [agent], users: [user], starts_at: rdv_context.starts_at - 1.hour, duration_in_min: 30) }
 
       it { is_expected.to match(%r{Vous avez <a .*>un RDV</a> finissant à 08h30 avec Milos FORMAN, vous allez laisser un trou de 30 minutes dans votre agenda}) }

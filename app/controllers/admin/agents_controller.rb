@@ -9,6 +9,7 @@ class Admin::AgentsController < AgentAuthController
       .includes(:service, :roles, :organisations)
       .active
     @invited_agents_count = @agents.invitation_not_accepted.created_by_invite.count
+    @agents = @agents.joins(:motifs).where(motifs: {id: index_params[:motif]}) if index_params[:motif]
     @agents = index_params[:term].present? ? @agents.search_by_text(index_params[:term]) : @agents.order_by_last_name
     @agents = @agents.complete.page(params[:page])
   end
@@ -34,6 +35,6 @@ class Admin::AgentsController < AgentAuthController
   private
 
   def index_params
-    @index_params ||= params.permit(:term)
+    @index_params ||= params.permit(:term, :motif)
   end
 end
