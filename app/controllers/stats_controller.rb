@@ -30,6 +30,11 @@ class StatsController < ApplicationController
     render json: Stat.new(receipts: @receipts).receipts_group_by(attribute).chart_json
   end
 
+  def active_agents
+    stats = Stat.new(rdvs: @rdvs).active_agents_group_by_month
+    render json: stats.chart_json
+  end
+
   def scope_rdv_to_territory
     if params[:territory].present?
       @territory = Territory.find(params[:territory])
