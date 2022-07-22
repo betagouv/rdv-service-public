@@ -36,8 +36,8 @@ describe Users::RdvSms, type: :service do
     end
   end
 
-  describe "#rdv_date_updated" do
-    subject { described_class.rdv_date_updated(rdv, user, token).content }
+  describe "#rdv_updated" do
+    subject { described_class.rdv_updated(rdv, user, token).content }
 
     let(:pmi) { build(:service, short_name: "PMI") }
     let(:motif) { build(:motif, service: pmi) }
