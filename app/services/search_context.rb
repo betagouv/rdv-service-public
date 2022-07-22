@@ -49,6 +49,10 @@ class SearchContext
     @invitation_token.present?
   end
 
+  def services
+    unique_motifs_by_name_and_location_type.map(&:service).uniq.sort_by(&:name)
+  end
+
   def unique_motifs_by_name_and_location_type
     @unique_motifs_by_name_and_location_type ||= matching_motifs.uniq { [_1.name, _1.location_type] }
   end
