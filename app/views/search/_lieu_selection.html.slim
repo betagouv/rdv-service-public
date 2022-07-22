@@ -2,7 +2,7 @@ section.bg-light.p-4
   .container
     .card.card-hoverable
       .card-body
-        = link_to root_path(context.search_motif_context_query), class: "d-block stretched-link" do
+        = link_to path_to_motif_selection(params), class: "d-block stretched-link" do
           .row
             .col-auto.align-self-center
               i.fa.fa-chevron-left
