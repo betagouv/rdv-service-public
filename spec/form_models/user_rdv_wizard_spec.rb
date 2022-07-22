@@ -81,22 +81,4 @@ describe UserRdvWizard do
       expect(rdv_wizard.errors.full_messages.join(", ")).to eq("Aucun usager n’a de numéro de téléphone renseigné alors que le rendez-vous est téléphonique.")
     end
   end
-
-  describe "#search_context_query" do
-    {
-      departement: "62",
-      address: "Calais 62100",
-      city_code: "62100",
-      latitude: 50.951,
-      longitude: 1.869,
-      street_ban_id: nil,
-    }.each do |attribute, value|
-      it "contains #{attribute}" do
-        attributes = { attribute => value }
-        rdv_wizard = UserRdvWizard::Step1.new(user, attributes)
-        expect(rdv_wizard.search_context_query.keys).to include(attribute)
-        expect(rdv_wizard.search_context_query[attribute]).to eq(value)
-      end
-    end
-  end
 end
