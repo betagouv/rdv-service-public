@@ -1,8 +1,0 @@
-<% creneaux_html = render 'common/creneaux', lieu: @lieu, creneaux: @creneaux, date_range: @date_range, motif: @motif_name_with_location_type, departement: @departement, where: @where, max_booking_delay: @max_booking_delay %>
-(function(){
-  let element = document.querySelector("#creneaux-lieu-<%= @lieu.id %>");
-  if(element) {
-    element.innerHTML = "<%= escape_javascript creneaux_html %>";
-  }
-})();
-
