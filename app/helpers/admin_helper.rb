@@ -31,4 +31,12 @@ module AdminHelper
     end
     policy([:agent, mock]).send("#{action}?")
   end
+
+  def faq_url
+    if current_agent.conseiller_numerique?
+      "https://rdv-solidarites.notion.site/F-A-Q-Conseillers-num-riques-d5ab1db8e311467eb2f3b317cb4c059f"
+    else
+      "https://rdv-solidarites.notion.site/F-A-Q-M-dico-social-aaf94709c0ea448b8eb9d93f548acdb9"
+    end
+  end
 end

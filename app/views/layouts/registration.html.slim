@@ -32,6 +32,8 @@ html lang="fr"
                     li
                       h5= link_to t("agents.preferences.show.title"), agents_preferences_path
                     li
+                      h5= link_to "Synchronisation d'agenda", agents_calendar_sync_path
+                    li
                       h5= link_to "Mes organisations", admin_organisations_path
                     li
                       h5= link_to "Me déconnecter", destroy_agent_session_path, method: :delete
