@@ -28,7 +28,7 @@ section.bg-light.p-4
       h2.font-weight-bold Vous souhaitez prendre un RDV avec le service :
       - context.services.each do |service|
         .card.mb-3
-          = link_to(root_path(context.search_motif_context_query.merge(service_id: service.id))) do
+          = link_to path_to_motif_selection(params.merge(service_id: service.id)) do
             .card-body
               .row
                 .col-md
