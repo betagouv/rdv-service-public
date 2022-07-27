@@ -328,7 +328,7 @@ class Rdv < ApplicationRecord
 
   def cant_destroy_if_receipts_exist
     # This is similar to using :restrict_with_errors on the has_many :receipts relation, but we want a custom error
-    return if receipts.empty?
+    return if receipts.empty? || cancelled?
 
     errors.add(:base, :cant_destroy_if_receipts_exist)
     throw :abort

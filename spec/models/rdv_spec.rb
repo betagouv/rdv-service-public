@@ -668,4 +668,30 @@ describe Rdv, type: :model do
       expect(rdv.synthesized_receipts_result).to eq("processed")
     end
   end
+
+  describe "destroy" do
+    it "works without receipts" do
+      rdv = create(:rdv, receipts: [])
+      rdv.destroy
+      expect(rdv.errors.full_messages).to be_empty
+    end
+
+    it "raise error with receipts" do
+      rdv = create(:rdv, receipts: [create(:receipt, result: :sent)], status: :unknown)
+      rdv.destroy
+      expect(rdv.errors.full_messages).to eq(["Il n’est pas possible de supprimer un rendez-vous une fois que des notifications ont été envoyées à des usagers."])
+    end
+
+    it "works if rdv's status is excused" do
+      rdv = create(:rdv, receipts: create_list(:receipt, 3), status: :excused)
+      rdv.destroy
+      expect(rdv.errors.full_messages).to be_empty
+    end
+
+    it "works if rdv's status is revoked" do
+      rdv = create(:rdv, receipts: create_list(:receipt, 3), status: :revoked)
+      rdv.destroy
+      expect(rdv.errors.full_messages).to be_empty
+    end
+  end
 end
