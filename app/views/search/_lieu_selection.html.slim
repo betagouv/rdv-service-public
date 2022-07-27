@@ -1,14 +1,15 @@
 section.bg-light.p-4
   .container
-    .card.card-hoverable
-      .card-body
-        = link_to path_to_motif_selection(params), class: "d-block stretched-link" do
-          .row
-            .col-auto.align-self-center
-              i.fa.fa-chevron-left
-            .col
-              h2.pb-1.mb-1
-                = motif_name_with_location_type(context.selected_motif)
+    - unless context.invitation?
+      .card.card-hoverable
+        .card-body
+          = link_to path_to_motif_selection(params), class: "d-block stretched-link" do
+            .row
+              .col-auto.align-self-center
+                i.fa.fa-chevron-left
+              .col
+                h2.pb-1.mb-1
+                  = motif_name_with_location_type(context.selected_motif)
     h3.font-weight-bold = t(".select_lieu")
     p = t(".lieu_available", count: context.lieux.size)
     - context.lieux.each do |lieu|

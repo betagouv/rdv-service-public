@@ -5,8 +5,10 @@ ul.list-group.list-group-flush
         i.fa.fa-check.fa-fw.mr-1.text-success
         | Motif :&nbsp;
         = rdv_wizard.motif.name
-      .col-auto
-        = link_to "modifier", path_to_motif_selection(rdv_wizard.params_to_selections)
+    
+      - unless rdv_wizard.invitation? 
+        .col-auto
+          = link_to "modifier", path_to_motif_selection(rdv_wizard.params_to_selections)
   - if rdv_wizard.motif.phone?
     li.list-group-item
       i.fa.fa-check.fa-fw.mr-1.text-success
@@ -18,15 +20,17 @@ ul.list-group.list-group-flush
           i.fa.fa-check.fa-fw.mr-1.text-success
           | Lieu :&nbsp;
           = rdv_wizard.lieu_full_name
-        .col-auto
-          = link_to "modifier", path_to_lieu_selection(rdv_wizard.params_to_selections)
+        - unless rdv_wizard.invitation? 
+          .col-auto
+            = link_to "modifier", path_to_lieu_selection(rdv_wizard.params_to_selections)
   li.list-group-item
     .row
       .col
         i.fa.fa-check.fa-fw.mr-1.text-success
         | Date du rendez-vous :&nbsp;
         = rdv_starts_at_and_duration(rdv_wizard.rdv, :human)
-      .col-auto
+      - unless rdv_wizard.invitation? 
+        .col-auto
         = link_to "modifier", path_to_creneau_selection(rdv_wizard.params_to_selections)
   - if rdv_wizard.is_a?(UserRdvWizard::Step3)
     li.list-group-item
@@ -35,8 +39,9 @@ ul.list-group.list-group-flush
           i.fa.fa-check.fa-fw.mr-1.text-success
           | Usager :&nbsp;
           = users_to_sentence(rdv_wizard.users)
-        .col-auto
-          = link_to "modifier", new_users_rdv_wizard_step_path(step: 2, **@rdv_wizard.to_query)
+        - unless rdv_wizard.invitation?
+          .col-auto
+            = link_to "modifier", new_users_rdv_wizard_step_path(step: 2, **@rdv_wizard.to_query)
     li.list-group-item
       .row
         .col

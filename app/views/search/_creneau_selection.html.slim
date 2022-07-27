@@ -1,23 +1,24 @@
 section.bg-light.p-4
   .container
-    .card.card-hoverable
-      .card-body
-        = link_to path_to_motif_selection(params), class: "d-block stretched-link" do
-          .row
-            .col-auto.align-self-center
-              i.fa.fa-chevron-left
-            .col
-              h2.pb-1.mb-1
-                = motif_name_with_location_type(context.selected_motif)
-    .card.card-hoverable
-      .card-body
-        = link_to path_to_lieu_selection(params), class: "d-block stretched-link" do
-          .row
-            .col-auto.align-self-center
-              i.fa.fa-chevron-left
-            .col
-              h2.pb-1.mb-1.card-title= context.lieu.name
-              .card-subtitle= context.lieu.address
+    - unless context.invitation?
+      .card.card-hoverable
+        .card-body
+          = link_to path_to_motif_selection(params), class: "d-block stretched-link" do
+            .row
+              .col-auto.align-self-center
+                i.fa.fa-chevron-left
+              .col
+                h2.pb-1.mb-1
+                  = motif_name_with_location_type(context.selected_motif)
+      .card.card-hoverable
+        .card-body
+          = link_to path_to_lieu_selection(params), class: "d-block stretched-link" do
+            .row
+              .col-auto.align-self-center
+                i.fa.fa-chevron-left
+              .col
+                h2.pb-1.mb-1.card-title= context.lieu.name
+                .card-subtitle= context.lieu.address
     h3.font-weight-bold = "Sélectionnez un créneau :"
     .card.mb-3
       .card-body
