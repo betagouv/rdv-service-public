@@ -1,25 +1,26 @@
 # frozen_string_literal: true
 
-class Domain
-  attr_reader :dns_domain_name, :default
-
-  def initialize(dns_domain_name:, default: false)
-    @default = default
-    @dns_domain_name = dns_domain_name
-  end
-
+class Domain < OpenStruct
   ALL = [
     RDV_SOLIDARITES = new(
       default: true,
       dns_domain_name: "rdv-solidarites.fr",
-      logo_path: "/logo.png",
+      logo_path: "logos/logo.svg",
+      public_logo_path: "/logo.png",
       name: "RDV Solidarités"
     ),
 
     RDV_CNFS = new(
       dns_domain_name: "rdv-conseiller-numerique.fr",
-      logo_path: "/logo-conseiller-numerique.svg",
+      logo_path: "logos/logo-cnfs.svg",
+      public_logo_path: "/logo-cnfs.svg",
       name: "RDV Conseiller Numérique"
     ),
   ].freeze
+
+  def self.find_matching(domain_name)
+    ALL.find do |domain|
+      domain_name[domain.dns_domain_name].present?
+    end || RDV_SOLIDARITES
+  end
 end

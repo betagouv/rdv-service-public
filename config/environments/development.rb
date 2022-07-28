@@ -110,4 +110,7 @@ Rails.application.configure do
   config.active_record.time_zone_aware_types = [:datetime]
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
+
+  config.hosts << "localhost.rdv-solidarites.fr"
+  config.hosts << "localhost.rdv-conseiller-numerique.fr"
 end

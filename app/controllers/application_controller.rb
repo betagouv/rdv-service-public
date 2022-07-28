@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :store_user_location!, if: :storable_location?
   before_action :set_sentry_context
+  before_action :set_domain
 
   def after_sign_in_path_for(resource)
     if resource.instance_of?(Agent)
@@ -29,6 +30,14 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+
+  def set_domain
+    @current_domain = Domain.find_matching(request.domain)
+  end
+
+  attr_reader :current_domain
+
+  helper_method :current_domain
 
   def set_sentry_context
     Sentry.set_user(sentry_user)

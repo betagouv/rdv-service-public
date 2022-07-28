@@ -5,7 +5,10 @@
         = link_to image_tag("logos/logo_sombre.svg", size: "250x80", alt:"RDV-Solidarites.fr"), root_path, title: "aller à l'accueil RDV-Solidarités"
         ul.list-unstyled.text-small
           li.mb-2
-            span> Un service fourni par
+            - if current_domain.default?
+              span> Un service fourni par
+            - else
+              span> #{current_domain.name} est géré par RDV Solidarités, un service fourni par
             = link_to "l'ANCT et un consortium de départements", "https://doc.rdv-solidarites.fr/organisation-dequipe/gouvernance"
           li.mb-2
             = link_to image_tag("logos/logo-incub-territoire.svg", size: "80x70", alt:"incubateur.anct.gouv.fr"), "https://incubateur.anct.gouv.fr/", title: "Aller sur le site de l'incubateur des territoires"
@@ -17,7 +20,8 @@
       h2 À propos
       ul.list-unstyled.text-small
         li.mb-1 = link_to "Contact", contact_path, class: "footer-links"
-        li.mb-1 = link_to "Les solidarités dans votre département", mds_path
+        - if current_domain.default?
+          li.mb-1 = link_to "Les solidarités dans votre département", mds_path
         li.mb-1 = link_to "Espace professionnel", accueil_mds_path
         li.mb-1 = link_to "Statistiques", stats_path
         li.mb-1 = link_to "Budget", budget_path

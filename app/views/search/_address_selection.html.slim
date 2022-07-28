@@ -42,12 +42,13 @@ section
             = image_tag "welcome/creneau.svg", class: "img-circle mb-3", alt: "et quatrièmement"
           span.text-primary.mt-3 Choisir un créneau
 
-section.bg-lightturquoise.p-5
-  .container
-    .row
-      .col-md-3.align-items-center
-        = image_tag "welcome/agent.svg", class: "mx-auto d-block", alt: ""
-      .col-md-9
-        h3.mb-2.text-primary Vous êtes un agent ?
-        p.lead Nous nous engageons à réduire le nombre de rendez-vous manqués dans les services sociaux départementaux.
-        = link_to "En savoir plus", accueil_mds_path, class: "btn btn-tertiary"
+- if current_domain.default?
+  section.bg-lightturquoise.p-5
+    .container
+      .row
+        .col-md-3.align-items-center
+          = image_tag "welcome/agent.svg", class: "mx-auto d-block", alt: ""
+        .col-md-9
+          h3.mb-2.text-primary Vous êtes un agent ?
+          p.lead Nous nous engageons à réduire le nombre de rendez-vous manqués dans les services sociaux départementaux.
+          = link_to "En savoir plus", accueil_mds_path, class: "btn btn-tertiary"
