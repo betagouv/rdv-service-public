@@ -101,7 +101,7 @@ class Admin::RdvsController < AgentAuthController
                                                  agent_ids: [],
                                                  user_ids: [],
                                                  rdvs_users_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy],
-                                                 lieu_attributes: %i[name address latitude longitude])
+                                                 lieu_attributes: %i[name address latitude longitude id])
 
     # Quand un lieu ponctuel est saisi, il faut faire en sorte qu'il soit créé dans l'organisation courante.
     # Nous le faisons ici, côté serveur pour empêcher de spécifier une valeur arbitraire.

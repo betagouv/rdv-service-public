@@ -73,6 +73,18 @@ describe Admin::RdvsController, type: :controller do
         end.not_to change(rdv, :duration_in_min)
       end
     end
+
+    context "with single_use lieu" do
+      it "does not create a new lieu" do
+        lieu = create(:lieu, availability: :single_use)
+        rdv = create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation, lieu: lieu)
+        new_lieu_attributes = { name: lieu.name, address: lieu.address, latitude: lieu.latitude, longitude: lieu.longitude, id: lieu.id }
+        new_attributes = { context: "RDV avec un changement de contexte", lieu_attributes: new_lieu_attributes }
+        expect do
+          put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: new_attributes }
+        end.not_to change(Lieu, :count)
+      end
+    end
   end
 
   describe "GET #show" do
