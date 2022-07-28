@@ -109,10 +109,10 @@
 
         h5 Il y a 30 jours
 
-        - active_agents = active_agents.where("invitation_sent_at < ?", 30.days.ago)
+        - active_agents = active_agents.where("agents.created_at < ?", 30.days.ago)
         p #{active_agents.count} agents avaient été invités
 
-        - accepted_count = active_agents.where.not(invitation_accepted_at: nil).where("invitation_accepted_at < ?", 30.days.ago).count
+        - accepted_count = active_agents.where.not(invitation_accepted_at: nil).where("agents.created_at < ?", 30.days.ago).count
         p #{percent(accepted_count, active_agents.count)} avaient accepté l'invitation (#{accepted_count})
 
         - first_rdv_count = active_agents.joins(:rdvs).where("rdvs.created_at < ?", 30.days.ago).distinct.count
