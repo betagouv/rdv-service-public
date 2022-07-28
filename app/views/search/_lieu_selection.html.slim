@@ -1,6 +1,11 @@
 section.bg-light.p-4
   .container
-    - unless context.invitation?
+    - if context.invitation?
+      .card
+        .card-body
+          h2.pb-1.mb-1
+            = motif_name_with_location_type(context.selected_motif)
+    - else
       .card.card-hoverable
         .card-body
           = link_to path_to_motif_selection(params), class: "d-block stretched-link" do
