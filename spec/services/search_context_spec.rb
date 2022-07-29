@@ -11,7 +11,7 @@ describe SearchContext, type: :service do
   let!(:organisation) { create(:organisation) }
   let!(:service) { create(:service) }
   let!(:motif) { create(:motif, name: "RSA orientation sur site", category: "rsa_orientation", organisation: organisation) }
-  let!(:motif2) { create(:motif, name: "RSA orientation sur plateforme téléphonique", category: "rsa_orientation_on_phone_platform", organisation: organisation) }
+  let!(:motif2) { create(:motif, name: "RSA orientation sur plateforme téléphonique", category: "rsa_orientation_on_phone_platform", organisation: organisation, service: motif.service) }
   let!(:departement_number) { "75" }
   let!(:address) { "20 avenue de Ségur 75007 Paris" }
   let!(:city_code) { "75007" }
@@ -41,7 +41,7 @@ describe SearchContext, type: :service do
       end
     end
 
-    context "with an address but several motifs available" do
+    context "with an address but several motifs available on same service" do
       let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id, motif2.id])) }
       let!(:search_query) { { address: address, departement: departement_number, city_code: city_code } }
 
@@ -100,6 +100,43 @@ describe SearchContext, type: :service do
       search_context = described_class.new(nil, motif_name_with_location_type: [])
       allow(search_context).to receive(:matching_motifs).and_return([motif_b, motif_a])
       expect(search_context.services).to eq([service_a, service_b])
+    end
+  end
+
+  describe "#service" do
+    it "returns serice from service_id params when given" do
+      service = create(:service)
+      search_context = described_class.new(nil, { service_id: service.id })
+      expect(search_context.service).to eq(service)
+    end
+
+    it "returns service from selected motif" do
+      motif = create(:motif)
+      search_context = described_class.new(nil, {})
+      allow(search_context).to receive(:matching_motifs).and_return([motif])
+      expect(search_context.service).to eq(motif.service)
+    end
+
+    it "returns service from same service motifs" do
+      motif = create(:motif)
+      autre_motif = create(:motif, service: motif.service)
+      search_context = described_class.new(nil, {})
+      allow(search_context).to receive(:matching_motifs).and_return([motif, autre_motif])
+      expect(search_context.service).to eq(motif.service)
+    end
+
+    it "returns nil without motifs or service_id" do
+      search_context = described_class.new(nil, {})
+      allow(search_context).to receive(:matching_motifs).and_return([])
+      expect(search_context.service).to be_nil
+    end
+
+    it "returns nil with multiple service from motifs" do
+      motif = create(:motif)
+      autre_motif = create(:motif)
+      search_context = described_class.new(nil, {})
+      allow(search_context).to receive(:matching_motifs).and_return([motif, autre_motif])
+      expect(search_context.service).to be_nil
     end
   end
 end

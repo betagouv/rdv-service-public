@@ -28,6 +28,8 @@ class SearchContext
   def current_step
     if address.blank?
       :address_selection
+    elsif !service_selected?
+      :service_selection
     elsif !motif_selected?
       :motif_selection
     elsif lieu.nil?
@@ -49,6 +51,16 @@ class SearchContext
     @invitation_token.present?
   end
 
+  def service
+    @service ||= if @service_id.present?
+                   Service.find(@service_id)
+                 elsif motif_selected?
+                   selected_motif.service
+                 elsif services.count == 1
+                   services.first
+                 end
+  end
+
   def services
     unique_motifs_by_name_and_location_type.map(&:service).uniq.sort_by(&:name)
   end
@@ -67,8 +79,8 @@ class SearchContext
     unique_motifs_by_name_and_location_type.length == 1
   end
 
-  def service
-    @service ||= @service_id.blank? ? nil : Service.find(@service_id)
+  def service_selected?
+    service.present?
   end
 
   def lieu
@@ -147,7 +159,7 @@ class SearchContext
              else
                available_motifs
              end
-    motifs = motifs.where(service: service) if service.present?
+    motifs = motifs.where(service_id: @service_id) if @service_id.present?
     motifs = motifs.joins(:lieux).where(lieux: lieu) if lieu.present?
     motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
     motifs = motifs.where(category: @motif_category) if @motif_category.present?

@@ -1,0 +1,13 @@
+/ TODO redirect to this page directly from controler
+.card
+  .card-body
+    - if context.invitation?
+      .font-weight-bold Nous sommes désolés, un problème semble s'être produit pour votre invitation.
+      = mail_to SUPPORT_EMAIL,
+        subject: "[Problème Invitation]",
+        class: "btn btn-primary" do
+        span>
+          i.fa.fa-envelope
+        | Envoyer une demande à l'équipe technique
+    - else
+      .font-weight-bold La prise de rendez-vous n'est pas disponible pour ce département.
