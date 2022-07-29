@@ -50,7 +50,7 @@ module RdvUpdater
     end
 
     def lieu_change?(rdv)
-      rdv.previous_changes["lieu_id"].present?
+      rdv.previous_changes["lieu_id"].present? || rdv.lieu.previous_changes.keys.include?("name") || rdv.lieu.previous_changes.keys.include?("address")
     end
 
     private
