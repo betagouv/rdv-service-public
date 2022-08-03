@@ -45,5 +45,11 @@ describe OffDays, type: :service do
 
       it { is_expected.to match_array([Date.new(2022, 1, 1)]) } if Time.zone.now > Date.new(2021, 1, 1)
     end
+
+    context "with a nil date_range given" do
+      it "returns empty array" do
+        expect(described_class.all_in_date_range(nil)).to be_empty
+      end
+    end
   end
 end
