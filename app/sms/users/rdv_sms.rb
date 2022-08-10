@@ -7,7 +7,7 @@ class Users::RdvSms < Users::BaseSms
     @content = "RDV #{rdv.motif&.service&.short_name} #{starts_at(rdv)}.\n#{rdv_footer(rdv, user, token)}"
   end
 
-  def rdv_date_updated(rdv, user, token)
+  def rdv_updated(rdv, user, token)
     @content = "RDV modifié: #{rdv.motif.service.short_name} #{starts_at(rdv)}\n#{rdv_footer(rdv, user, token)}"
   end
 
