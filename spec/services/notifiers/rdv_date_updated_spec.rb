@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Notifiers::RdvUpdated, type: :service do
+describe Notifiers::RdvDateUpdated, type: :service do
   subject { described_class.perform_with(rdv, agent1) }
 
   let(:user1) { build(:user) }

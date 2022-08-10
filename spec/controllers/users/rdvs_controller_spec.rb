@@ -384,7 +384,7 @@ RSpec.describe Users::RdvsController, type: :controller do
       allow(Users::CreneauSearch).to receive(:creneau_for)
         .with(user: user, starts_at: starts_at, motif: motif, lieu: lieu)
         .and_return(returned_creneau)
-      allow(Notifiers::RdvUpdated).to receive(:perform_with)
+      allow(Notifiers::RdvDateUpdated).to receive(:perform_with)
         .and_return({ user.id => token })
     end
 
