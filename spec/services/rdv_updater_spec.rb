@@ -206,7 +206,7 @@ describe RdvUpdater, type: :service do
         rdv = create(:rdv, lieu: lieu)
         rdv.reload
         rdv.update(lieu_attributes: { name: "autre nom", id: lieu.id })
-        expect(described_class).to be_lieu_change(rdv)
+        expect(described_class.lieu_change?(rdv)).to be(true)
       end
 
       it "returns true when single_use lieu adress is updated" do
@@ -214,7 +214,7 @@ describe RdvUpdater, type: :service do
         rdv = create(:rdv, lieu: lieu)
         rdv.reload
         rdv.update(lieu_attributes: { address: "derrière l'arbre", id: lieu.id })
-        expect(described_class).to be_lieu_change(rdv)
+        expect(described_class.lieu_change?(rdv)).to be(true)
       end
     end
 
@@ -225,7 +225,7 @@ describe RdvUpdater, type: :service do
         rdv = create(:rdv, lieu: lieu)
         rdv.reload
         rdv.update(lieu: autre_lieu)
-        expect(described_class).to be_lieu_change(rdv)
+        expect(described_class.lieu_change?(rdv)).to be(true)
       end
 
       it "returns false when lieu doesnt change" do
@@ -233,7 +233,7 @@ describe RdvUpdater, type: :service do
         rdv = create(:rdv, lieu: lieu)
         rdv.reload
         rdv.update(context: "context")
-        expect(described_class).not_to be_lieu_change(rdv)
+        expect(described_class.lieu_change?(rdv)).to be(false)
       end
     end
 
@@ -243,7 +243,7 @@ describe RdvUpdater, type: :service do
       rdv = create(:rdv, lieu: lieu)
       rdv.reload
       rdv.update(lieu: autre_lieu)
-      expect(described_class).to be_lieu_change(rdv)
+      expect(described_class.lieu_change?(rdv)).to be(true)
     end
 
     it "returns false when lieu is nil" do
