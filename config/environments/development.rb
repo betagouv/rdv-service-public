@@ -112,5 +112,5 @@ Rails.application.configure do
   # config.action_cable.disable_request_forgery_protection = true
 
   config.hosts << "localhost.rdv-solidarites.fr"
-  config.hosts << "localhost.rdv-conseiller-numerique.fr"
+  config.hosts << "localhost.rdv-inclusion-numerique.fr"
 end

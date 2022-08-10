@@ -8,7 +8,8 @@ class Domain < OpenStruct
       logo_path: "logos/logo.svg",
       public_logo_path: "/logo.png",
       name: "RDV Solidarités",
-      sms_sender_name: "RdvSoli"
+      sms_sender_name: "RdvSoli",
+      slug: "rdv_solidarites"
     ),
 
     RDV_INCLUSION_NUMERIQUE = new(
@@ -16,7 +17,8 @@ class Domain < OpenStruct
       logo_path: "logos/logo-cnfs.svg",
       public_logo_path: "/logo-cnfs.svg",
       name: "RDV Inclusion Numérique",
-      sms_sender_name: "Rdv Num"
+      sms_sender_name: "Rdv Num",
+      slug: "rdv_inclusion_numerique"
     ),
   ].freeze
 
