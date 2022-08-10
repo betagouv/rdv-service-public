@@ -1,6 +1,6 @@
 - content_for :title, t(".title")
 
-p Vous pouvez synchroniser votre agenda de RDV Solidarités avec un agenda externe, comme Outlook ou Google Calendar.
+p Vous pouvez synchroniser votre agenda de #{current_domain.name} avec un agenda externe, comme Outlook ou Google Calendar.
 
 p
   | Pour cela, allez dans votre agenda externe et ajoutez un nouveau calendrier avec cette URL :
@@ -8,7 +8,7 @@ p
   - calendar_url = ics_calendar_url(@agent.calendar_uid, protocol: :webcal, format: :ics)
   =  link_to(calendar_url, calendar_url, class: "mb-1")
 
-p Tous vos rendez-vous de RDV Solidarités seront copiés automatiquement au fur et à mesure de leur création (ou modification).
+p Tous vos rendez-vous de #{current_domain.name} seront copiés automatiquement au fur et à mesure de leur création (ou modification).
 p Pour plus d'informations sur cette fonctionnalité, #{link_to("consultez la FAQ", faq_url, target: :blank)}.
 
 p Si jamais votre lien de synchronisation a été partagé par erreur et qu’il y a un risque que quelqu’un d’autre accède à votre liste de rendez-vous, vous pouvez le réinitialiser immédiatement.

@@ -7,6 +7,7 @@ class Domain < OpenStruct
       dns_domain_name: "rdv-solidarites.fr",
       logo_path: "logos/logo.svg",
       public_logo_path: "/logo.png",
+      dark_logo_path: "logos/logo_sombre.svg",
       name: "RDV Solidarités",
       sms_sender_name: "RdvSoli",
       slug: "rdv_solidarites"
@@ -14,8 +15,9 @@ class Domain < OpenStruct
 
     RDV_INCLUSION_NUMERIQUE = new(
       dns_domain_name: "rdv-inclusion-numerique.fr",
-      logo_path: "logos/logo-cnfs.svg",
-      public_logo_path: "/logo-cnfs.svg",
+      logo_path: "logos/logo-cnfs.svg", # TODO: make a new logo
+      public_logo_path: "/logo-cnfs.svg", # TODO: make a new logo
+      dark_logo_path: "logos/logo-cnfs_sombre.svg", # TODO: make a new logo
       name: "RDV Inclusion Numérique",
       sms_sender_name: "Rdv Num",
       slug: "rdv_inclusion_numerique"

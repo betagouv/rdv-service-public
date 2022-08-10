@@ -2,7 +2,7 @@
   .row
     .col-12.col-md
       div
-        = link_to image_tag("logos/logo_sombre.svg", size: "250x80", alt:"RDV-Solidarites.fr"), root_path, title: "aller à l'accueil RDV-Solidarités"
+        = link_to image_tag(current_domain.dark_logo_path, size: "250x80", alt:"RDV-Solidarites.fr"), root_path, title: "aller à l'accueil RDV-Solidarités"
         ul.list-unstyled.text-small
           li.mb-2
             - if current_domain.default
