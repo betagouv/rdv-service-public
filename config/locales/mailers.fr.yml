@@ -34,8 +34,8 @@ fr:
     rdv_mailer:
       rdv_created:
         title: Nouveau RDV ajouté sur votre agenda rdv-solidarités pour %{date}
-      rdv_updated:
-        title: RDV du %{date} modifié
+      rdv_date_updated:
+        title: RDV %{date} reporté à plus tard
       rdv_cancelled:
         title: RDV annulé %{date}
         revoked_at_date_by_agent: Un RDV qui devait avoir lieu %{date} vient d’être annulé par %{author} pour raison administrative.
@@ -59,8 +59,8 @@ fr:
     rdv_mailer:
       rdv_created:
         title: RDV confirmé le %{date}
-      rdv_updated:
-        title: RDV du %{date} modifié
+      rdv_date_updated:
+        title: RDV %{date} reporté à plus tard
       rdv_upcoming_reminder:
         title: "[Rappel] RDV le %{date}"
       rdv_cancelled:
