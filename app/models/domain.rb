@@ -11,12 +11,12 @@ class Domain < OpenStruct
       sms_sender_name: "RdvSoli"
     ),
 
-    RDV_CNFS = new(
-      dns_domain_name: "rdv-conseiller-numerique.fr",
+    RDV_INCLUSION_NUMERIQUE = new(
+      dns_domain_name: "rdv-inclusion-numerique.fr",
       logo_path: "logos/logo-cnfs.svg",
       public_logo_path: "/logo-cnfs.svg",
-      name: "RDV Conseiller Numérique",
-      sms_sender_name: "RdvConseilNum"
+      name: "RDV Inclusion Numérique",
+      sms_sender_name: "Rdv Num"
     ),
   ].freeze
 

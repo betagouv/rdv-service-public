@@ -48,7 +48,7 @@ class Service < ApplicationRecord
 
   def domain
     if name == "Conseiller Numérique"
-      Domain::RDV_CNFS
+      Domain::RDV_INCLUSION_NUMERIQUE
     else
       Domain::RDV_SOLIDARITES
     end
