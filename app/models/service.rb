@@ -45,4 +45,11 @@ class Service < ApplicationRecord
   def related_to_social?
     service_social? || name.parameterize.include?("social")
   end
+
+  def domain
+    if name == "Conseiller Numérique"
+      Domain::RDV_CNFS
+    else
+      Domain::RDV_SOLIDARITES
+  end
 end

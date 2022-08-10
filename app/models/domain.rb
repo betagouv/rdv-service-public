@@ -7,14 +7,16 @@ class Domain < OpenStruct
       dns_domain_name: "rdv-solidarites.fr",
       logo_path: "logos/logo.svg",
       public_logo_path: "/logo.png",
-      name: "RDV Solidarités"
+      name: "RDV Solidarités",
+      sms_sender_name: "RdvSoli"
     ),
 
     RDV_CNFS = new(
       dns_domain_name: "rdv-conseiller-numerique.fr",
       logo_path: "logos/logo-cnfs.svg",
       public_logo_path: "/logo-cnfs.svg",
-      name: "RDV Conseiller Numérique"
+      name: "RDV Conseiller Numérique",
+      sms_sender_name: "RdvConseilNum"
     ),
   ].freeze
 
