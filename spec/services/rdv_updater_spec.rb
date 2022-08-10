@@ -245,5 +245,11 @@ describe RdvUpdater, type: :service do
       rdv.update(lieu: autre_lieu)
       expect(described_class).to be_lieu_change(rdv)
     end
+
+    it "returns false when lieu is nil" do
+      rdv = create(:rdv, :by_phone, lieu: nil)
+      rdv.reload
+      expect(described_class.lieu_change?(rdv)).to be(false)
+    end
   end
 end

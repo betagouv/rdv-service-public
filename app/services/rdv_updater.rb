@@ -50,6 +50,11 @@ module RdvUpdater
     end
 
     def lieu_change?(rdv)
+      # Rappel :
+      # - si le motif du RDV est de type `public_office`, le lieu est forcément renseigné, sinon il est forcément nil
+      # - il est impossible de changer le motif d'un RDV
+      return false unless rdv.lieu
+
       rdv.previous_changes["lieu_id"].present? || rdv.lieu.previous_changes.keys.include?("name") || rdv.lieu.previous_changes.keys.include?("address")
     end
 
