@@ -51,5 +51,6 @@ class Service < ApplicationRecord
       Domain::RDV_CNFS
     else
       Domain::RDV_SOLIDARITES
+    end
   end
 end
