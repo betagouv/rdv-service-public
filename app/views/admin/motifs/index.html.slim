@@ -5,7 +5,7 @@
 
 - if current_agent_can?(:create, Motif)
   - content_for :breadcrumb do
-    = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class:"btn btn-outline-primary"
+    = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class: "btn btn-outline-primary"
 
 = simple_form_for "", url: admin_organisation_motifs_path(current_organisation), html: { method: :get, class: "form-inline" }, wrapper: :inline_form do |f|
 
@@ -40,7 +40,7 @@
             div
               = Motif.human_attribute_name("location_type")
             div
-              - options = options_for_select(Motif.location_types.map{|l| [Motif.human_attribute_value(:location_type, l[0]), l[1]] }, params[:location_type_filter])
+              - options = options_for_select(Motif.location_types.map { |l| [Motif.human_attribute_value(:location_type, l[0]), l[1]] }, params[:location_type_filter])
               = select_tag("location_type_filter", options, include_blank: "Tous", class: "js-submit-on-change select2-input")
           th= Motif.human_attribute_name(:default_duration)
           - if current_agent_can?(:edit, Motif) || current_agent_can?(:destroy, Motif)

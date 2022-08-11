@@ -148,6 +148,6 @@
         ul.list-unstyled
           li.mb-1[
             data-color=sector_zone_color(@sector)
-            data-city-codes-json={colors: @sector.zones.pluck(:city_code)}.to_json
+            data-city-codes-json={ colors: @sector.zones.pluck(:city_code) }.to_json
             class="js-legend-organisation"
           ]

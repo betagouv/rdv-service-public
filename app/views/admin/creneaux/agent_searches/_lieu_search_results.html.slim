@@ -12,7 +12,7 @@
         h6.card-subtitle.text-black-50= search_result.lieu.address
       .col-md.align-self-center.pt-3.pt-md-0.position-static
         - if first_availability
-          = link_to admin_organisation_slots_path(current_organisation,creneaux_search_params(@form).merge(lieu_ids: [search_result.lieu.id])),
+          = link_to admin_organisation_slots_path(current_organisation, creneaux_search_params(@form).merge(lieu_ids: [search_result.lieu.id])),
                   class: "d-block stretched-link" do
             .row
               .col

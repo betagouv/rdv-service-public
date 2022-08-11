@@ -33,7 +33,7 @@
               .col-md-6= f.input :duration_in_min
             - if @rdv_form.motif.public_office?
 
-              - controller_data = { "controller": "rdv-lieu",
+              - controller_data = { controller: "rdv-lieu",
                       "initial-state": @rdv.lieu.availability,
                       "select-placeholder-single-use-lieu": t(".select_placeholder_single_use_lieu"),
                       "select-placeholder-existing-lieu": t(".select_placeholder_existing_lieu"), }
@@ -41,15 +41,15 @@
                 = f.label :lieu, required: true
                 fieldset
                   = f.association :lieu, collection: policy_scope(Lieu).enabled.ordered_by_name, label_method: :full_name,
-                    label: false,  include_blank: true,  required: false,
-                    input_html: { class: "select2-input", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: ""} }
-                  small.form-text.text-muted data={"rdv-lieu-target": "new_lieu_link"}
+                    label: false, include_blank: true, required: false,
+                    input_html: { class: "select2-input", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: "" } }
+                  small.form-text.text-muted data={ "rdv-lieu-target": "new_lieu_link" }
                     = t(".single_use_lieu_hint_html")
                 fieldset data={ "rdv-lieu-target": "new_lieu_fieldset" }
                   .border.p-2.bg-light
-                    = f.fields_for :lieu, (@rdv.lieu.availability == "enabled" ? Lieu.new : @rdv.lieu ) do |f2|
+                    = f.fields_for :lieu, (@rdv.lieu.availability == "enabled" ? Lieu.new : @rdv.lieu) do |f2|
                       = render "admin/lieux/lieu_fields", f: f2
-                  small.form-text.text-muted data={"rdv-lieu-target": "select_lieu_link"}
+                  small.form-text.text-muted data={ "rdv-lieu-target": "select_lieu_link" }
                     = t(".existing_lieu_hint_html")
 
             - elsif @rdv_form.motif.home?

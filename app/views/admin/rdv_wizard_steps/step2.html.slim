@@ -49,7 +49,7 @@ ruby:
       class: "select2-input js-new-rdv-users-select",
       data: { \
         width: "auto", \
-        "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.users.map(&:id)), dataType: "json", delay: 250 }}, \
+        "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.users.map(&:id)), dataType: "json", delay: 250 } }, \
       }
 
       span.small.text-muted

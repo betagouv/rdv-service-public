@@ -1,10 +1,10 @@
 #search_form
-  = simple_form_for :search, url: @action_url.present? ? @action_url : root_path do |f|
+  = simple_form_for :search, url: @action_url.presence || root_path do |f|
     = f.input :departement, as: :hidden, input_html: { value: @departement }
     = f.input :city_code, as: :hidden, input_html: { value: @city_code }
     = f.input :street_ban_id, as: :hidden, input_html: { value: @street_ban_id }
-    = f.input :latitude, as: :hidden, input_html: {value: @latitude}
-    = f.input :longitude, as: :hidden, input_html: {value: @longitude}
+    = f.input :latitude, as: :hidden, input_html: { value: @latitude }
+    = f.input :longitude, as: :hidden, input_html: { value: @longitude }
     - if @where.present?
       .form-row.d-flex.justify-content-md-center.mb-2
         .col-lg-9
@@ -31,7 +31,7 @@
               include_blank: t(".choose_motif"), \
               input_html: { \
                 class: "select2-input", \
-                data: { "select-options": { "disableSearch": true } }, \
+                data: { "select-options": { disableSearch: true } }, \
               }, \
               wrapper_html: { class: "mb-1 mb-lg-0" }
           .col-lg-3.align-self-end= f.button :submit, t(".choose_this_motif"), class: "btn btn-white btn-lg w-100 text-center"
@@ -49,6 +49,6 @@
       .form-row.d-flex.justify-content-md-center
         .col-lg-9= f.input :where, label: t(".address"), placeholder: t(".address_example"), input_html: { value: @where, class: "form-control-lg places-js-container" }, wrapper_html: { class: "mb-1 mb-lg-0" }
         .col-lg-3.align-self-end
-          = f.button :button, id: "search_submit", class:  "btn-white btn-lg w-100 text-center", disabled: true do
+          = f.button :button, id: "search_submit", class: "btn-white btn-lg w-100 text-center", disabled: true do
             i.fa.fa-search>
             =t("helpers.search")

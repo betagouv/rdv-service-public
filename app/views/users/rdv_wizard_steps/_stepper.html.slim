@@ -5,4 +5,4 @@
         - @step_titles.each_with_index do |val, idx|
             .step-item class="#{"current" if step_title == val}"
                 span= val
-      .process-line style=("width: #{100*@step_titles.index(step_title)/(@step_titles.length - 1)}%;")
+      .process-line style="width: #{100 * @step_titles.index(step_title) / (@step_titles.length - 1)}%;"

@@ -9,7 +9,7 @@
 
     = f.input attribute, as: :hidden, input_html: { id: attribute }, wrapper: false
 
-  .collapse class="collapse-#{attribute}" class=("show" unless user.present?)
+  .collapse class="collapse-#{attribute}" class=("show" if user.blank?)
     - url_opts = local_assigns[:other_user_id].present? ? { exclude_ids: [other_user_id] } : {}
     = f.input "change_#{attribute}", \
       as: :select, \

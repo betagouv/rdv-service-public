@@ -1,10 +1,10 @@
-- if organisation.present? && agent && agent.unknown_past_rdv_count > 0 \
+- if organisation.present? && agent && agent.unknown_past_rdv_count.positive? \
     && !agent.conseiller_numerique? # See https://github.com/betagouv/rdv-solidarites.fr/issues/2245
   = link_to admin_organisation_rdvs_path(organisation, status: "unknown_past", agent_id: agent.id)
     .navbar.alert-warning.p-2
       div
         .fa.fa-exclamation-triangle.alert-link>
-        span.ml-1.alert-link = t(".unknown_past_rdv_count", count: agent.unknown_past_rdv_count )
+        span.ml-1.alert-link = t(".unknown_past_rdv_count", count: agent.unknown_past_rdv_count)
         - if agent.organisations.size > 1
           span.ml-1.alert-link = t(".agent_organisations")
       button.btn.rdv-status-unknown_past.float-right = t(".link_to_unknown_past_rdv")

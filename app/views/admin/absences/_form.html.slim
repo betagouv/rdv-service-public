@@ -1,7 +1,7 @@
 = simple_form_for [:admin, absence.organisation, absence] do |f|
   = render "model_errors", model: absence
   = f.hidden_field :agent_id
-  = f.input :title, hint:"Uniquement visible en interne", placeholder: t(".busy_time_example")
+  = f.input :title, hint: "Uniquement visible en interne", placeholder: t(".busy_time_example")
 
   hr
   = render partial: "common/recurrence", locals: { f: f, model: absence }
@@ -9,6 +9,6 @@
   .row
     - if absence.persisted?
       .col.text-left
-        = link_to "Supprimer", admin_organisation_absence_path(absence.organisation, absence), method: :delete, class: "btn btn-outline-danger", data: { confirm: t(".confirm_delete_busy_time")}
+        = link_to "Supprimer", admin_organisation_absence_path(absence.organisation, absence), method: :delete, class: "btn btn-outline-danger", data: { confirm: t(".confirm_delete_busy_time") }
     .col.text-right
       = f.button :submit

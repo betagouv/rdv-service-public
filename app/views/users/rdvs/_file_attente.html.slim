@@ -7,5 +7,5 @@
       = f.input :id, as: :hidden
       = f.input :rdv_id, as: :hidden
       = f.input :user_id, as: :hidden
-      = check_box "active", "0", { checked: (fa.id.nil? ? false : true), onchange: "this.form.submit()" }
+      = check_box "active", "0", { checked: !fa.id.nil?, onchange: "this.form.submit()" }
       = label_tag "active[0]", "Je souhaite être prévenu si un créneau se libère.", class: "pl-1"

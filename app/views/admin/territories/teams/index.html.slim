@@ -5,7 +5,7 @@
   .container-fluid.bg-white.rounded.m-2.p-2
 
     .text-right
-      = link_to t(".create_team"), new_admin_territory_team_path(current_territory), class:"btn btn-outline-primary"
+      = link_to t(".create_team"), new_admin_territory_team_path(current_territory), class: "btn btn-outline-primary"
     .m-3.d-flex.justify-content-end
       - search = params[:search].blank? ? "d-none" : ""
       div= link_to "Réinitialiser", admin_territory_teams_path(current_territory), class: "btn btn-link #{search}"
@@ -28,10 +28,10 @@
                 div.mr-3= link_to edit_admin_territory_team_path(current_territory, team),
                         title: t("helpers.edit") do
                   i.fa.fa-edit
-                div.mr-3= link_to( admin_territory_team_path(current_territory, team),
+                div.mr-3= link_to(admin_territory_team_path(current_territory, team),
                         method: :delete,
                         title: t("helpers.delete"),
-                        data: { confirm: "Confirmez-vous la suppression de cette équipe ?"} ) do
+                        data: { confirm: "Confirmez-vous la suppression de cette équipe ?" }) do
                   i.fa.fa-trash-alt
     .d-flex.justify-content-center
       = paginate @teams, theme: "twitter-bootstrap-4"

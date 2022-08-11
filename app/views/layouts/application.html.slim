@@ -23,7 +23,7 @@ html lang="fr"
 
       = yield :header
 
-    main class="#{ "container" if params[:controller].include?("users/") }"
+    main class="#{"container" if params[:controller].include?("users/") }"
       = yield
     #modal-holder
     footer.main-footer

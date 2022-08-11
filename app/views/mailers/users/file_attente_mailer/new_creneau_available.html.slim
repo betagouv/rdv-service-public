@@ -4,6 +4,6 @@ div
     | Des créneaux pour votre RDV #{@rdv.motif.service.name} qui a lieu le #{I18n.l(@rdv.starts_at, format: :human)} se sont libérés.
   p Vous pouvez avancer la date de votre RDV en cliquant sur le lien ci-dessous.
   .btn-wrapper
-    = link_to "Vérifier la disponibilité", creneaux_users_rdv_url(@rdv, invitation_token: @token), class:"btn btn-primary"
+    = link_to "Vérifier la disponibilité", creneaux_users_rdv_url(@rdv, invitation_token: @token), class: "btn btn-primary"
 
   = t("mailers.common.farewell_html")

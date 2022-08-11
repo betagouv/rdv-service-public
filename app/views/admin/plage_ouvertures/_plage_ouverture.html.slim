@@ -30,8 +30,8 @@ tr
       div.mr-3= link_to new_admin_organisation_agent_plage_ouverture_path(organisation, plage_ouverture.agent, duplicate_plage_ouverture_id: plage_ouverture),
                 title: t("helpers.clone") do
         i.fa.fa-clone
-      div.mr-3= link_to( admin_organisation_plage_ouverture_path(organisation, plage_ouverture),
+      div.mr-3= link_to(admin_organisation_plage_ouverture_path(organisation, plage_ouverture),
               method: :delete,
               title: t("helpers.delete"),
-              data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?"} ) do
+              data: { confirm: "Confirmez-vous la suppression de cette plage d'ouverture ?" }) do
         i.fa.fa-trash-alt

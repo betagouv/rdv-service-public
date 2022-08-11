@@ -34,7 +34,7 @@ ul.list-group.list-group-flush
     li.list-group-item
       i.fa.fa-exclamation-triangle>
       strong Informations supplémentaires :
-      = auto_link(simple_format(rdv.motif.instruction_for_rdv, class:"pl-3 pt-1"), html: { target: "_blank" })
+      = auto_link(simple_format(rdv.motif.instruction_for_rdv, class: "pl-3 pt-1"), html: { target: "_blank" })
   - unless defined?(hide_file_attente_infos) && hide_file_attente_infos
     = render "/users/rdvs/file_attente", rdv: rdv
 

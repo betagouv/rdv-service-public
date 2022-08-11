@@ -23,7 +23,7 @@
     = check_box_tag :invite_on_create, \
       1, \
       false, \
-      class:"align-items-baseline ml-0"
+      class: "align-items-baseline ml-0"
     |&nbsp; Inviter l'utilisateur à se créer un compte sur RDV-solidarites.
 
 .label Préférences de notifications
@@ -44,7 +44,7 @@
   .mt-1.text-muted
     | L'usager ayant validé son compte, vous ne pouvez plus modifier ses préférences
 
-= f.input :address, **(input_opts.deep_merge(input_html: { class: "places-js-container" }))
+= f.input :address, **input_opts.deep_merge(input_html: { class: "places-js-container" })
 
 = f.input :city_code, as: :hidden, **input_opts
 = f.input :post_code, as: :hidden, **input_opts

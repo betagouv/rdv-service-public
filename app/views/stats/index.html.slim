@@ -118,7 +118,7 @@
         - first_rdv_count = active_agents.joins(:rdvs).where("rdvs.created_at < ?", 30.days.ago).distinct.count
         p #{percent(first_rdv_count, active_agents.count)} avaient participé à au moins un rdv (#{first_rdv_count})
 
-        - active_count = active_agents.joins(:rdvs).where(rdvs: {created_at: 60.days.ago..30.days.ago}).distinct.count
+        - active_count = active_agents.joins(:rdvs).where(rdvs: { created_at: 60.days.ago..30.days.ago }).distinct.count
         p #{percent(active_count, active_agents.count)} avaient participé à un rdv créé un rdv les 30 derniers jours précédents (#{active_count})
 
         = self_anchor "active_agents"

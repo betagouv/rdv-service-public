@@ -22,12 +22,12 @@
     ]
     .mt-3.flex-grow-1.text-right
       .m-2
-        = simple_form_for [:admin, current_agent], url: toggle_displays_admin_organisation_agent_agenda_path(params.permit(:selected_event_id, :date)), method: :put, html: {id: "edit_agent_#{current_agent.id}_cancelled_rdv_preferences"} do |f|
+        = simple_form_for [:admin, current_agent], url: toggle_displays_admin_organisation_agent_agenda_path(params.permit(:selected_event_id, :date)), method: :put, html: { id: "edit_agent_#{current_agent.id}_cancelled_rdv_preferences" } do |f|
            = f.hidden_field :display_cancelled_rdv, value: !current_agent.display_cancelled_rdv
            / The fc-button fc-button-primary classes give the button the aspect of calendar buttons
            = f.submit Agent.human_attribute_value(:display_cancelled_rdv, !current_agent.display_cancelled_rdv), class: "fc-button fc-button-primary", style: "text-transform: none;"
       .m-2
-        = simple_form_for [:admin, current_agent], url: toggle_displays_admin_organisation_agent_agenda_path(params.permit(:selected_event_id, :date)), method: :put, html: {id: "edit_agent_#{current_agent.id}_saturday_preferences"} do |f|
+        = simple_form_for [:admin, current_agent], url: toggle_displays_admin_organisation_agent_agenda_path(params.permit(:selected_event_id, :date)), method: :put, html: { id: "edit_agent_#{current_agent.id}_saturday_preferences" } do |f|
            = f.hidden_field :display_saturdays, value: !current_agent.display_saturdays
            / The fc-button fc-button-primary classes give the button the aspect of calendar buttons
            = f.submit Agent.human_attribute_value(:display_saturdays, !current_agent.display_saturdays), class: "fc-button fc-button-primary", style: "text-transform: none;"

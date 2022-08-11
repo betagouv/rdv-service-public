@@ -12,7 +12,7 @@ ul.list-unstyled.mb-5
     - if user.phone_number.present? && DuplicateUsersFinderService.find_duplicate_based_on_phone_number(user, current_organisation).present?
       .alert.alert-warning.mt-1
         span> ⚠️ D'autres usagers utilisent ce numéro de téléphone.
-        = link_to "voir la liste", admin_organisation_users_path(current_organisation, "search": user.phone_number)
+        = link_to "voir la liste", admin_organisation_users_path(current_organisation, search: user.phone_number)
 
   li.mb-2= object_attribute_tag(user, :notify_by_sms, notify_by_sms_description(user))
   - if user.pending_reconfirmation?

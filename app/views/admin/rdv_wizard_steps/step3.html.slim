@@ -2,7 +2,7 @@ ruby:
   content_for(:menu_item) { "menu-agendas" }
   content_for(:title) { t(".page_title", starts_at: l(@rdv.starts_at, format: :dense)) }
 
-= render "card", rdv_wizard_form: @rdv_wizard, previous_steps: [ { step: 1, value: motif_name_with_location_type(@rdv.motif) }, { step: 2, value: users_inline_list_for_agents(@rdv.users) } ], next_steps: [{step: 4}], step_title: t(".step_title") do
+= render "card", rdv_wizard_form: @rdv_wizard, previous_steps: [{ step: 1, value: motif_name_with_location_type(@rdv.motif) }, { step: 2, value: users_inline_list_for_agents(@rdv.users) }], next_steps: [{ step: 4 }], step_title: t(".step_title") do
   = simple_form_for(@rdv, url: admin_organisation_rdv_wizard_step_path(current_organisation), method: :get) do |f|
     = render "model_errors", model: @rdv_wizard, f: f
     = collapsible_form_fields_for_warnings(@rdv_wizard) do
@@ -12,7 +12,7 @@ ruby:
         .col-md-6= f.input :duration_in_min, as: :integer
       - if @rdv.public_office?
         - new_lieu_record = @rdv.lieu&.new_record?
-        - controller_data = { "controller": "rdv-lieu",
+        - controller_data = { controller: "rdv-lieu",
                 "initial-state": (new_lieu_record ? "single_use" : "existing"),
                 "select-placeholder-single-use-lieu": t(".select_placeholder_single_use_lieu"),
                 "select-placeholder-existing-lieu": t(".select_placeholder_existing_lieu"), }
@@ -20,17 +20,17 @@ ruby:
           = f.label :lieu, required: true
           fieldset
             = f.association :lieu, collection: policy_scope(Lieu).enabled.ordered_by_name, label_method: :full_name,
-              label: false,  include_blank: true,  required: false,
-              input_html: { class: "select2-input", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: ""} }
-            small.form-text.text-muted data={"rdv-lieu-target": "new_lieu_link"}
+              label: false, include_blank: true, required: false,
+              input_html: { class: "select2-input", data: { "rdv-lieu-target": "existing_lieu_select", placeholder: "" } }
+            small.form-text.text-muted data={ "rdv-lieu-target": "new_lieu_link" }
               = t(".single_use_lieu_hint_html")
           fieldset data={ "rdv-lieu-target": "new_lieu_fieldset" }
             .border.p-2.bg-light
               = f.fields_for :lieu, (new_lieu_record ? @rdv.lieu : Lieu.new) do |f2|
                 = render "admin/lieux/lieu_fields", f: f2
-            small.form-text.text-muted data={"rdv-lieu-target": "select_lieu_link"}
+            small.form-text.text-muted data={ "rdv-lieu-target": "select_lieu_link" }
               = t(".existing_lieu_hint_html")
       - elsif @rdv.home?
-        = f.input :address, label: "Lieu (RDV à domicile)",  disabled: true, hint: "L'adresse utilisée est celle de #{@rdv.user_for_home_rdv.full_name}"
+        = f.input :address, label: "Lieu (RDV à domicile)", disabled: true, hint: "L'adresse utilisée est celle de #{@rdv.user_for_home_rdv.full_name}"
       = f.association :agents, collection: @rdv.motif.authorized_agents.includes(:service), label_method: :reverse_full_name_and_service, input_html: { multiple: true, class: "select2-input" }
       = render "actions", rdv_wizard_form: @rdv_wizard, submit_value: "Continuer", f: f

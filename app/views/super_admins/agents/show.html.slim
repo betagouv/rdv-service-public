@@ -13,6 +13,6 @@ section.main-content__body
   dl
     - page.attributes.each do |attribute|
       dt.attribute-label id="#{attribute.name}"
-        = t( "helpers.label.#{resource_name}.#{attribute.name}", default: attribute.name.titleize)
-      dd class=("attribute-data attribute-data--#{attribute.html_class}") = render_field attribute,page: page
-  = render partial: "super_admins/history", locals: {resource: page.resource}
+        = t("helpers.label.#{resource_name}.#{attribute.name}", default: attribute.name.titleize)
+      dd class="attribute-data attribute-data--#{attribute.html_class}" = render_field attribute, page: page
+  = render partial: "super_admins/history", locals: { resource: page.resource }

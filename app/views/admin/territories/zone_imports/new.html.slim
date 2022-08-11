@@ -73,7 +73,7 @@
     ul
       li
         span> ⚠️ Utilisez les
-        = link_to "https://fr.wikipedia.org/wiki/Code_officiel_g%C3%A9ographique#Code_commune", target: "_blank" do
+        = link_to "https://fr.wikipedia.org/wiki/Code_officiel_g%C3%A9ographique#Code_commune", target: "_blank", rel: "noopener" do
           span> codes communes INSEE
           i.fa.fa-external-link-alt>
         | et non les codes postaux
@@ -90,8 +90,8 @@
         =link_to("identifiants de secteurs existants", admin_territory_sectors_path(current_territory))
       li
         span> Les codes rue à utiliser sont ceux de la
-        span>= link_to "Base Adresse Nationale", "https://adresse.data.gouv.fr/", target: "_blank"
+        span>= link_to "Base Adresse Nationale", "https://adresse.data.gouv.fr/", target: "_blank", rel: "noopener"
         span>et sont obligatoires. Ils sont au format `69323_4344` où la première partie est le code commune et la deuxième désigne la rue spécifique. Pour rajouter ces codes dans votre fichier, vous pouvez utiliser
-        span>= link_to "https://adresse.data.gouv.fr/csv", target: "_blank" do
+        span>= link_to "https://adresse.data.gouv.fr/csv", target: "_blank", rel: "noopener" do
           span> cet outil web
           i.fa.fa-external-link-alt>

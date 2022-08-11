@@ -3,7 +3,7 @@
   url: zone.new_record? ? admin_territory_sector_zones_path(current_territory, sector) : admin_territory_sector_zone_path(current_territory, sector, zone), \
   html: { \
     class: "js-zone-form", \
-    data: { "canonical-path": new_admin_territory_sector_zone_path(current_territory, sector)}, \
+    data: { "canonical-path": new_admin_territory_sector_zone_path(current_territory, sector) }, \
   } \
 ) do |f|
   = f.input_field :level, \

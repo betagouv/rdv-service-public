@@ -2,7 +2,7 @@
 / The first table row has the change date and author spanning over the following rows.
 - changes = version.changes
 - length = version.changes.length
-- if length > 0
+- if length.positive?
   tr.border-top
     th{rowspan: =length }= l(version.created_at, format: :dense)
     th{rowspan: =length }= version.whodunnit

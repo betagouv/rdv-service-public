@@ -26,10 +26,10 @@
   div= f.input :notify_by_sms
   - unless current_user.only_invited?
     - address_value = local_assigns[:rdv_wizard].present? && user.address.nil? ? rdv_wizard.to_query[:where] : user.address
-    = f.input :address, input_html: {value: address_value, class: "places-js-container" }
+    = f.input :address, input_html: { value: address_value, class: "places-js-container" }
 
   - if territories.map(&:enable_address_details).any?
-    = f.input :address_details, input_html: {class: "places-js-container" }
+    = f.input :address_details, input_html: { class: "places-js-container" }
 
   = f.input :city_code, as: :hidden
   = f.input :post_code, as: :hidden

@@ -39,7 +39,7 @@
       = f.input :show_user_details, as: :boolean, wrapper: "horizontal_form", label: "Détails usagers"
     .col-md-6
       = f.input :motif_id, collection: policy_scope(Motif), label: "Motifs", label_method: :name, input_html: { class: "select2-input" }, wrapper: "horizontal_form"
-      - temporal_statuses = Rdv.statuses.keys - ["unknown"] + ["unknown_past", "unknown_future"]
+      - temporal_statuses = Rdv.statuses.keys - ["unknown"] + %w[unknown_past unknown_future]
       = f.input :status, collection: temporal_statuses,
               label_method: -> { ::Rdv.human_attribute_value(:status, _1, disable_cast: true) },
               label: "Statut", wrapper: "horizontal_form", input_html: { class: "select2-input" }

@@ -8,7 +8,7 @@
       .mb-3= render "common/franceconnect_button"
       = render "devise/shared/error_messages", resource: resource
       - if resource.errors[:email]&.include?(I18n.t("errors.messages.taken"))
-        .mb-3= link_to "Mot de passe oublié ?", new_password_path(resource_name, "email": resource.email)
+        .mb-3= link_to "Mot de passe oublié ?", new_password_path(resource_name, email: resource.email)
       .form-row
         .col-6= f.input :first_name, required: true
         .col-6= f.input :last_name, required: true

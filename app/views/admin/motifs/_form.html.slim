@@ -93,7 +93,7 @@
           = f.radio_button(:sectorisation_level, Motif::SECTORISATION_LEVEL_AGENT)
           span.ml-1= Motif.human_attribute_value(:sectorisation_level, Motif::SECTORISATION_LEVEL_AGENT, context: :hint)
           - if motif.service.present?
-            - attributions_group = SectorAttribution.level_agent_grouped_by_service(current_organisation).fetch(motif.service_id, {agents_count: 0, attributions: []})
+            - attributions_group = SectorAttribution.level_agent_grouped_by_service(current_organisation).fetch(motif.service_id, { agents_count: 0, attributions: [] })
             .text-muted.font-14.my-1.ml-3
               = t( \
                 "motifs.form.sectorisation_level.sectors_attributed_to_agents", \
@@ -118,18 +118,18 @@
       .card-body
         h5 Instructions
         p.text-muted.font-14 Ces instructions sont affichées à l'usager avant et après sa prise de RDV. Laissez ces champs vides si vous ne souhaitez pas donner d'instructions.
-        = f.input :restriction_for_rdv, input_html: {rows: 6}
-        = f.input :instruction_for_rdv, input_html: {rows: 6}
+        = f.input :restriction_for_rdv, input_html: { rows: 6 }
+        = f.input :instruction_for_rdv, input_html: { rows: 6 }
 
   .card
     .card-body
       h5.card-title= Motif.human_attribute_name("custom_cancel_warning_message")
       p.text-muted.font-14= Motif.human_attribute_name("custom_cancel_warning_message_hint")
-      = f.input :custom_cancel_warning_message, input_html: {rows: 6}, label: false
+      = f.input :custom_cancel_warning_message, input_html: { rows: 6 }, label: false
 
   .row.mb-5
     - if motif.persisted?
       .col.text-left
-        = link_to "Supprimer", admin_organisation_motif_path(motif.organisation, motif), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce motif ?"}
+        = link_to "Supprimer", admin_organisation_motif_path(motif.organisation, motif), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Confirmez-vous la suppression de ce motif ?" }
     .col.text-right
       = f.button :submit

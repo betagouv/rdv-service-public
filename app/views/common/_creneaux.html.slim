@@ -33,9 +33,9 @@ div id="creneaux-lieu-#{lieu.id}"
                         br
                         small= creneau.agent.short_name
 
-                    =  render "/common/modal", id: "js-rdv-restriction-motif#{creneau.starts_at.to_i}" , title: "À lire avant de prendre un rendez-vous", confirm_path: new_users_rdv_wizard_step_path(@query.merge(motif_id: creneau.motif.id, starts_at: creneau.starts_at)) do
-                      = ActionController::Base.helpers.auto_link(simple_format(creneau.motif.restriction_for_rdv), html: { target: "_blank"})
-            - elsif date >= (Time.now + max_booking_delay.seconds).to_date
+                    =  render "/common/modal", id: "js-rdv-restriction-motif#{creneau.starts_at.to_i}", title: "À lire avant de prendre un rendez-vous", confirm_path: new_users_rdv_wizard_step_path(@query.merge(motif_id: creneau.motif.id, starts_at: creneau.starts_at)) do
+                      = ActionController::Base.helpers.auto_link(simple_format(creneau.motif.restriction_for_rdv), html: { target: "_blank" })
+            - elsif date >= (Time.zone.now + max_booking_delay.seconds).to_date
               p.text-center.text-muted
                 | Date fermée à la reservation
             - elsif creneaux.any?
@@ -52,7 +52,7 @@ div id="creneaux-lieu-#{lieu.id}"
                   strong= l(@next_availability.starts_at, format: :human)
                 .ml-2
                   i.fa.fa-chevron-right
-    - if !params[:date].present? || (params[:date].to_date + 6.days) < (Time.now + max_booking_delay.seconds).to_date
+    - if params[:date].blank? || (params[:date].to_date + 6.days) < (Time.zone.now + max_booking_delay.seconds).to_date
       .col-12.col-md-auto.mt-2.mt-md-0.d-flex.align-items-center.justify-content-center
         = link_to lieu_path(lieu, search: @query, date: date_range.end + 1.day), remote: true, class: "btn btn-primary", data: { disable_with: "..." } do
           span.d-md-none.mr-1

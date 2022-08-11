@@ -19,8 +19,8 @@ tr
       div.mr-3= link_to new_admin_organisation_agent_absence_path(organisation, absence.agent, duplicate_absence_id: absence),
               title: t("helpers.clone") do
         i.fa.fa-clone
-      div.mr-3= link_to( admin_organisation_absence_path(organisation, absence),
+      div.mr-3= link_to(admin_organisation_absence_path(organisation, absence),
               method: :delete,
               title: t("helpers.delete"),
-              data: { confirm: t(".confirm_delete_busy_time")} ) do
+              data: { confirm: t(".confirm_delete_busy_time") }) do
         i.fa.fa-trash-alt

@@ -24,8 +24,8 @@
           - if organisation.email.present?
             div
               i.fa.fa-envelope>
-              = mail_to organisation.email, "#{organisation.email}", class: "text-white"
+              = mail_to organisation.email, organisation.email.to_s, class: "text-white"
           - if organisation.website.present?
             div
               i.fa.fa-file-o>
-              = link_to organisation.website, "#{organisation.website}", class: "text-white"
+              = link_to organisation.website, organisation.website.to_s, class: "text-white"

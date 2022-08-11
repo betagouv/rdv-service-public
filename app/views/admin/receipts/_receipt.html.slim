@@ -12,7 +12,7 @@ tr
       - title = "#{receipt.channel} (#{receipt.sms_provider})"
       div[title=title]= receipt.sms_phone_number
     - if receipt.channel_mail?
-      - title = "#{receipt.channel}"
+      - title = receipt.channel.to_s
       div[title=title]= receipt.email_address
   td
     blockquote.border-left.border-light.pl-1= receipt.content
