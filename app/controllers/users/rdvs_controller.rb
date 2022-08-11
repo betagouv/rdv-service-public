@@ -58,7 +58,7 @@ class Users::RdvsController < UserAuthController
 
   def update
     if @rdv.update(starts_at: @creneau.starts_at, ends_at: @creneau.starts_at + @rdv.duration_in_min.minutes, agent_ids: [@creneau.agent.id])
-      rdv_users_tokens_by_user_id = Notifiers::RdvDateUpdated.perform_with(@rdv, current_user)
+      rdv_users_tokens_by_user_id = Notifiers::RdvUpdated.perform_with(@rdv, current_user)
       flash[:success] = "Votre RDV a bien été modifié"
       redirect_to users_rdv_path(@rdv, invitation_token: rdv_users_tokens_by_user_id[current_user.id])
     else
