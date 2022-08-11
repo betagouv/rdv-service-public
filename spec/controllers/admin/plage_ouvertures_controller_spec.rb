@@ -21,7 +21,7 @@ describe Admin::PlageOuverturesController, type: :controller do
           motifs: [motif],
           lieu: lieu1,
           organisation: organisation,
-          agent: agent
+          agent: agent,
         )
       end
 
@@ -99,7 +99,7 @@ describe Admin::PlageOuverturesController, type: :controller do
           motifs: [motif],
           lieu: lieu1,
           organisation: organisation,
-          agent: agent
+          agent: agent,
         )
       end
 
@@ -150,7 +150,7 @@ describe Admin::PlageOuverturesController, type: :controller do
                 agent_id: agent.id,
                 # missing fields
               },
-            }
+            },
           )
           expect(response).to be_successful
           expect(response).to render_template(:new)
@@ -169,7 +169,7 @@ describe Admin::PlageOuverturesController, type: :controller do
           motifs: [motif],
           lieu: lieu1,
           organisation: organisation,
-          agent: agent
+          agent: agent,
         )
       end
 
@@ -215,7 +215,7 @@ describe Admin::PlageOuverturesController, type: :controller do
           motifs: [motif],
           lieu: lieu1,
           organisation: organisation,
-          agent: agent
+          agent: agent,
         )
       end
 

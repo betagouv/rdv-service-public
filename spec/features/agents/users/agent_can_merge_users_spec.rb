@@ -11,7 +11,7 @@ describe "Agent can delete user" do
       first_name: "Aalyah",
       last_name: "SWAN",
       birth_date: nil,
-      phone_number: "01 02 03 04 05"
+      phone_number: "01 02 03 04 05",
     )
   end
   let!(:user_profile1) do
@@ -25,7 +25,7 @@ describe "Agent can delete user" do
       last_name: "SWAN",
       birth_date: nil,
       phone_number: "01 09 09 09 09",
-      organisations: [organisation]
+      organisations: [organisation],
     )
   end
 

@@ -83,7 +83,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
   def update_users_params
     params.require(:rdv).permit(
       user_ids: [],
-      rdvs_users_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy]
+      rdvs_users_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy],
     )
   end
 end

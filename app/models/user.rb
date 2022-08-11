@@ -7,7 +7,7 @@ class User < ApplicationRecord
       email first_name last_name birth_name created_at confirmed_at invitation_accepted_at invited_through
       created_through address phone_number birth_date caisse_affiliation affiliation_number family_situation
       number_of_children notify_by_sms notify_by_email city_code post_code city_name
-    ]
+    ],
   )
 
   include PgSearch::Model

@@ -6,7 +6,7 @@ describe AddConseillerNumerique do
     create(:service, name: "Conseiller Numérique")
     stub_request(
       :get,
-      "https://api-adresse.data.gouv.fr/search/?postcode=75019&q=16%20quai%20de%20la%20Loire,%2075019%20Paris"
+      "https://api-adresse.data.gouv.fr/search/?postcode=75019&q=16%20quai%20de%20la%20Loire,%2075019%20Paris",
     ).to_return(status: 200, body: File.read(Rails.root.join("spec/support/geocode_result.json")), headers: {})
   end
 
@@ -32,17 +32,17 @@ describe AddConseillerNumerique do
         external_id: "exemple@conseiller-numerique.fr",
         email: "exemple@conseiller-numerique.fr",
         first_name: "Camille",
-        last_name: "Clavier"
+        last_name: "Clavier",
       )
 
       expect(Organisation.last).to have_attributes(
         external_id: "123456",
-        name: "France Service 19e"
+        name: "France Service 19e",
       )
 
       expect(Agent.last.roles.last).to have_attributes(
         level: "admin",
-        organisation_id: Organisation.last.id
+        organisation_id: Organisation.last.id,
       )
     end
   end
@@ -67,7 +67,7 @@ describe AddConseillerNumerique do
             external_id: "exemple@conseiller-numerique.fr",
             email: "exemple@conseiller-numerique.fr",
             first_name: "Camille",
-            last_name: "Clavier"
+            last_name: "Clavier",
           )
 
           expect(Agent.last.roles.count).to eq 1

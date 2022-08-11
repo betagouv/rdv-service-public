@@ -59,14 +59,14 @@ class CreateTerritories < ActiveRecord::Migration[6.0]
       territory_id: Territory.find_or_create_by!(
         departement_number: organisation.departement,
         name: Departements::NAMES.fetch(organisation.departement, "N/A"),
-        phone_number: DEPARTEMENT_PHONE_NUMBERS.fetch(organisation.departement, nil)
-      ).id
+        phone_number: DEPARTEMENT_PHONE_NUMBERS.fetch(organisation.departement, nil),
+      ).id,
     )
   end
 
   def attach_sector!(sector)
     sector.update_columns(
-      territory_id: Territory.find_by!(departement_number: sector.departement).id
+      territory_id: Territory.find_by!(departement_number: sector.departement).id,
     )
   end
 
@@ -75,7 +75,7 @@ class CreateTerritories < ActiveRecord::Migration[6.0]
 
     CSV.parse(
       Typhoeus.get(ENV["MIGRATION_AGENT_TERRITORIAL_ROLES_CSV_URL"]).body,
-      headers: :first_row
+      headers: :first_row,
     ).each do |csv_row|
       agent = Agent.find_by(email: csv_row["agent_email"])
       if agent.nil?
@@ -84,7 +84,7 @@ class CreateTerritories < ActiveRecord::Migration[6.0]
       end
       AgentTerritorialRole.create!(
         territory: Territory.find_by!(departement_number: csv_row["departement"]),
-        agent: agent
+        agent: agent,
       )
     end
   end
@@ -98,7 +98,7 @@ class CreateTerritories < ActiveRecord::Migration[6.0]
           id: AgentRole
             .joins(:organisation)
             .where(organisations: { territory_id: territory.id }, level: :admin)
-            .select(:agent_id)
+            .select(:agent_id),
         )
         .each { AgentTerritorialRole.create!(territory: territory, agent: _1) }
     end

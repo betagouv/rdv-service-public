@@ -145,7 +145,7 @@ describe PlageOuverture, type: :model do
           recurrence: Montrose.every(:week, starts: Date.new(2020, 11, 18).in_time_zone, interval: 1, on: [:wednesday]).to_json,
           first_day: Date.new(2020, 11, 18), # a wednesday
           start_time: Tod::TimeOfDay.new(14),
-          end_time: Tod::TimeOfDay.new(18)
+          end_time: Tod::TimeOfDay.new(18),
         )
       end
 
@@ -175,7 +175,7 @@ describe PlageOuverture, type: :model do
           recurrence: Montrose.every(:week, on: [:wednesday], starts: Date.new(2020, 11, 18).in_time_zone, until: Date.new(2020, 12, 9).in_time_zone).to_json,
           first_day: Date.new(2020, 11, 18), # a wednesday
           start_time: Tod::TimeOfDay.new(14),
-          end_time: Tod::TimeOfDay.new(18)
+          end_time: Tod::TimeOfDay.new(18),
         )
       end
 
@@ -205,7 +205,7 @@ describe PlageOuverture, type: :model do
           recurrence: Montrose.every(:week, starts: Date.new(2020, 11, 18).in_time_zone, interval: 2, on: [:wednesday]).to_json,
           first_day: Date.new(2020, 11, 18), # a wednesday
           start_time: Tod::TimeOfDay.new(14),
-          end_time: Tod::TimeOfDay.new(18)
+          end_time: Tod::TimeOfDay.new(18),
         )
       end
 
@@ -229,7 +229,7 @@ describe PlageOuverture, type: :model do
           recurrence: nil,
           first_day: Date.new(2020, 11, 18), # a wednesday
           start_time: Tod::TimeOfDay.new(14),
-          end_time: Tod::TimeOfDay.new(18)
+          end_time: Tod::TimeOfDay.new(18),
         )
       end
 
@@ -274,7 +274,7 @@ describe PlageOuverture, type: :model do
     it "return plage_ouverture when one occurrence overlapping range" do
       range = now..(now + 30.minutes)
       plage_ouverture = create(:plage_ouverture, first_day: (now - 2.weeks).to_date, start_time: Tod::TimeOfDay.new(10, 45), end_time: Tod::TimeOfDay.new(11, 45),
-                                                 recurrence: Montrose.every(:week, on: ["tuesday"], starts: (now - 2.weeks).to_date))
+                                                 recurrence: Montrose.every(:week, on: ["tuesday"], starts: (now - 2.weeks).to_date),)
       expect(described_class.overlapping_range(range)).to eq([plage_ouverture])
     end
 
@@ -285,7 +285,7 @@ describe PlageOuverture, type: :model do
       create(:plage_ouverture, first_day: (now - 1.week).to_date, \
                                start_time: Tod::TimeOfDay.new(10, 45), \
                                end_time: Tod::TimeOfDay.new(11, 45), \
-                               recurrence: Montrose.every(:month, day: { Tuesday: [2] }, starts: (now - 1.week).to_date))
+                               recurrence: Montrose.every(:month, day: { Tuesday: [2] }, starts: (now - 1.week).to_date),)
       expect(described_class.overlapping_range(range)).to be_empty
     end
   end

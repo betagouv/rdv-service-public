@@ -36,7 +36,7 @@ class OrganisationsController < ApplicationController
       .permit(
         :name,
         agent_roles_attributes: [:level, { agent_attributes: %i[email service_id] }],
-        territory_attributes: [:departement_number]
+        territory_attributes: [:departement_number],
       )
   end
 end

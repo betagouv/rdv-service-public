@@ -33,7 +33,7 @@ describe UserRdvWizard do
         motif: motif,
         lieu: lieu,
         starts_at: DateTime.parse("2020-10-20 09h30"),
-        geo_search: mock_geo_search
+        geo_search: mock_geo_search,
       ).and_return(returned_creneau)
       rdv_wizard = UserRdvWizard::Step1.new(user, attributes)
       expect(rdv_wizard.rdv.user_ids).to eq [user_for_rdv.id]

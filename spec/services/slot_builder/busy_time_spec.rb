@@ -36,13 +36,13 @@ describe SlotBuilder::BusyTime, type: :service do
 
     it "returns BusyTime ends_at as absence first_day and end_time when end_day is nil" do
       create(:absence, agent: plage_ouverture.agent, organisation: plage_ouverture.organisation, first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_day: nil,
-                       end_time: Tod::TimeOfDay.new(9, 40))
+                       end_time: Tod::TimeOfDay.new(9, 40),)
       expect(described_class.busy_times_for(range, plage_ouverture).first.ends_at).to eq(Time.zone.parse("20211027 9:40"))
     end
 
     it "returns BusyTime ends_at as absence end_day and end_time" do
       create(:absence, agent: plage_ouverture.agent, organisation: plage_ouverture.organisation, first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9),
-                       end_day: Date.new(2021, 10, 28), end_time: Tod::TimeOfDay.new(12))
+                       end_day: Date.new(2021, 10, 28), end_time: Tod::TimeOfDay.new(12),)
       expect(described_class.busy_times_for(range, plage_ouverture).first.ends_at).to eq(Time.zone.parse("20211028 12"))
     end
 
@@ -50,7 +50,7 @@ describe SlotBuilder::BusyTime, type: :service do
       range = Time.zone.parse("2021-10-26 9:00")..Time.zone.parse("2021-10-29 11:00")
 
       create(:absence, agent: plage_ouverture.agent, organisation: plage_ouverture.organisation, first_day: Date.new(2021, 10, 29), start_time: Tod::TimeOfDay.new(14),
-                       end_day: Date.new(2021, 10, 29), end_time: Tod::TimeOfDay.new(15))
+                       end_day: Date.new(2021, 10, 29), end_time: Tod::TimeOfDay.new(15),)
       expect(described_class.busy_times_for(range, plage_ouverture)).to be_empty
     end
   end
@@ -58,13 +58,13 @@ describe SlotBuilder::BusyTime, type: :service do
   context "with an absence with recurrence" do
     it "returns starts_at first occurrence in range" do
       create(:absence, agent: plage_ouverture.agent, organisation: plage_ouverture.organisation, first_day: Date.new(2021, 10, 19), start_time: Tod::TimeOfDay.new(9),
-                       recurrence: Montrose.every(:week, on: ["tuesday"], starts: Time.zone.parse("20211019 9:00"), until: nil))
+                       recurrence: Montrose.every(:week, on: ["tuesday"], starts: Time.zone.parse("20211019 9:00"), until: nil),)
       expect(described_class.busy_times_for(range, plage_ouverture).first.starts_at).to eq(Time.zone.parse("20211026 9:00"))
     end
 
     it "returns ends_at occurrence in range" do
       create(:absence, agent: plage_ouverture.agent, organisation: plage_ouverture.organisation, first_day: Date.new(2021, 10, 19), start_time: Tod::TimeOfDay.new(9),
-                       end_time: Tod::TimeOfDay.new(9, 45), recurrence: Montrose.every(:week, on: ["tuesday"], starts: Time.zone.parse("20211019 9:00"), until: nil))
+                       end_time: Tod::TimeOfDay.new(9, 45), recurrence: Montrose.every(:week, on: ["tuesday"], starts: Time.zone.parse("20211019 9:00"), until: nil),)
       expect(described_class.busy_times_for(range, plage_ouverture).first.ends_at).to eq(Time.zone.parse("20211026 9:45"))
     end
 
@@ -75,7 +75,7 @@ describe SlotBuilder::BusyTime, type: :service do
              first_day: Date.new(2021, 10, 19),
              start_time: Tod::TimeOfDay.new(9),
              end_time: Tod::TimeOfDay.new(9, 45),
-             recurrence: Montrose.every(:week, on: %w[tuesday friday], starts: Time.zone.parse("20211019 9:00"), until: nil))
+             recurrence: Montrose.every(:week, on: %w[tuesday friday], starts: Time.zone.parse("20211019 9:00"), until: nil),)
       expect(described_class.busy_times_for(range, plage_ouverture).map(&:ends_at)).to eq([Time.zone.parse("20211026 9:45"), Time.zone.parse("20211029 9:45")])
     end
 
@@ -84,7 +84,7 @@ describe SlotBuilder::BusyTime, type: :service do
 
       create(:absence, agent: plage_ouverture.agent, organisation: plage_ouverture.organisation, first_day: Date.new(2021, 10, 22),
                        start_time: Tod::TimeOfDay.new(14), end_time: Tod::TimeOfDay.new(15),
-                       recurrence: Montrose.every(:week, on: %w[tuesday friday], starts: Date.new(2021, 10, 22), until: nil))
+                       recurrence: Montrose.every(:week, on: %w[tuesday friday], starts: Date.new(2021, 10, 22), until: nil),)
       expect(described_class.busy_times_for(range, plage_ouverture)).to be_empty
     end
   end

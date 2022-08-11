@@ -21,8 +21,8 @@ describe Users::RdvWizardStepsController, type: :controller do
             hash_including(
               "motif_id" => motif.id.to_s,
               "lieu_id" => lieu.id.to_s,
-              "starts_at" => starts_at.to_s
-            )
+              "starts_at" => starts_at.to_s,
+            ),
           ).and_return(mock_user_rdv_wizard)
       end
 

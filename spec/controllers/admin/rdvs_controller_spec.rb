@@ -159,7 +159,7 @@ describe Admin::RdvsController, type: :controller do
         "agent_id" => params[:agent_id],
         "user_id" => params[:user_id],
         "lieu_id" => params[:lieu_id],
-        "status" => params[:status]
+        "status" => params[:status],
       ).and_return(instance_double(ActionMailer::MessageDelivery, deliver_later: nil))
       # rubocop:enable RSpec/StubbedMock
 

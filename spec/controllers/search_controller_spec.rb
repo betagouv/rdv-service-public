@@ -36,7 +36,7 @@ RSpec.describe SearchController, type: :controller do
     instance_double(
       Users::CreneauxSearch,
       creneaux: [],
-      next_availability: build(:creneau, starts_at: DateTime.parse("2019-08-05 08h00"))
+      next_availability: build(:creneau, starts_at: DateTime.parse("2019-08-05 08h00")),
     )
   end
   let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: [motif.id])) }
@@ -169,7 +169,7 @@ RSpec.describe SearchController, type: :controller do
           motif: motif,
           lieu: lieu,
           date_range: (Date.new(2019, 7, 22)..Date.new(2019, 7, 29)),
-          geo_search: geo_search
+          geo_search: geo_search,
         ).and_return(creneaux_search)
       end
 
@@ -186,7 +186,7 @@ RSpec.describe SearchController, type: :controller do
           starts_at: Time.zone.parse("20190805 8:00"),
           motif: motif,
           lieu_id: plage_ouverture.lieu_id,
-          agent: plage_ouverture.agent
+          agent: plage_ouverture.agent,
         )
         allow(NextAvailabilityService).to receive(:find).and_return(slot)
         get :search_rdv, params: {
@@ -203,7 +203,7 @@ RSpec.describe SearchController, type: :controller do
           motif: motif,
           lieu: lieu,
           date_range: (Date.new(2019, 7, 22)..Date.new(2019, 7, 28)),
-          geo_search: geo_search
+          geo_search: geo_search,
         ).and_return(creneaux_search)
       end
 
@@ -211,7 +211,7 @@ RSpec.describe SearchController, type: :controller do
         let!(:creneaux_search) do
           instance_double(
             Users::CreneauxSearch,
-            creneaux: [build(:creneau, starts_at: DateTime.parse("2019-07-22 08h00"))]
+            creneaux: [build(:creneau, starts_at: DateTime.parse("2019-07-22 08h00"))],
           )
         end
 
@@ -228,7 +228,7 @@ RSpec.describe SearchController, type: :controller do
           instance_double(
             Users::CreneauxSearch,
             creneaux: [],
-            next_availability: build(:creneau, starts_at: DateTime.parse("2019-08-05 08h00"))
+            next_availability: build(:creneau, starts_at: DateTime.parse("2019-08-05 08h00")),
           )
         end
 

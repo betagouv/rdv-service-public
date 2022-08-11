@@ -19,7 +19,7 @@ describe PlageOuverturePresenter, type: :presenter do
           lieu: lieu,
           start_time: Tod::TimeOfDay.new(7),
           end_time: Tod::TimeOfDay.new(10),
-          first_day: Date.new(2020, 12, 9)
+          first_day: Date.new(2020, 12, 9),
         )
       end
       let(:presenter) { described_class.new(plage_ouverture, agent1_context) }

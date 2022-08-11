@@ -38,7 +38,7 @@ class Admin::PlageOuverturesController < AgentAuthController
     @plage_ouverture = PlageOuverture.new(
       organisation: current_organisation,
       agent: @agent,
-      **defaults
+      **defaults,
     )
     authorize(@plage_ouverture)
   end

@@ -29,7 +29,7 @@ RSpec.describe Zone, type: :model do
           sector: sector,
           level: "city",
           city_name: "Paris 20e",
-          city_code: "75120"
+          city_code: "75120",
         )
         expect(duplicate_zone.valid?).to eq false
         expect(duplicate_zone.errors).to include(:city_code)
@@ -41,7 +41,7 @@ RSpec.describe Zone, type: :model do
           sector: create(:sector, territory: territory75),
           level: "city",
           city_name: "Paris 20e",
-          city_code: "75120"
+          city_code: "75120",
         )
         expect(duplicate_zone.errors).to be_empty
         expect(duplicate_zone.valid?).to eq true
@@ -55,7 +55,7 @@ RSpec.describe Zone, type: :model do
         sector: sector,
         level: "city",
         city_name: "Paris XXe",
-        city_code: "62120"
+        city_code: "62120",
       )
       expect(zone.valid?).to eq false
       expect(zone.errors.attribute_names).to eq([:base])

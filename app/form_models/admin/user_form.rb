@@ -55,7 +55,7 @@ class Admin::UserForm
         user: duplicate_result.user,
         attributes: duplicate_result.attributes,
         **@view_locals,
-      }
+      },
     )
   end
 end

@@ -30,7 +30,7 @@ class AddAllowToManageAccessRightsToAgentTerritorialAccessRights < ActiveRecord:
     AgentRole.where(level: "admin").each do |agent_role|
       AgentTerritorialAccessRight.where(
         agent: agent_role.agent,
-        territory: agent_role.organisation.territory
+        territory: agent_role.organisation.territory,
       ).update(allow_to_invite_agents: true)
     end
 
@@ -43,10 +43,10 @@ class AddAllowToManageAccessRightsToAgentTerritorialAccessRights < ActiveRecord:
     AgentTerritorialRole.all.each do |territorial_role|
       AgentTerritorialAccessRight.where(
         agent: territorial_role.agent,
-        territory: territorial_role.territory
+        territory: territorial_role.territory,
       ).update(
         allow_to_invite_agents: true,
-        allow_to_manage_access_rights: true
+        allow_to_manage_access_rights: true,
       )
     end
   end

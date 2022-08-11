@@ -14,7 +14,7 @@ describe Users::CreneauSearch do
         user: user,
         motif: motif,
         lieu: lieu,
-        starts_at: starts_at
+        starts_at: starts_at,
       )
     end
 

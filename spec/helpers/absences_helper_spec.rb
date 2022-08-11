@@ -15,7 +15,7 @@ describe AbsencesHelper do
       absence = create(:absence,
                        first_day: today.beginning_of_day - 1.week,
                        end_day: today.end_of_day - 1.week,
-                       recurrence: Montrose.every(:week, until: today + 1.month, starts: today.beginning_of_day - 1.week))
+                       recurrence: Montrose.every(:week, until: today + 1.month, starts: today.beginning_of_day - 1.week),)
 
       expect(absence_tag(absence)).to eq("<span class=\"badge badge-info\">En cours</span>")
     end
@@ -25,7 +25,7 @@ describe AbsencesHelper do
       travel_to(today)
       absence = build(:absence,
                       first_day: today.beginning_of_day + 2.days,
-                      end_day: today.end_of_day + 2.days)
+                      end_day: today.end_of_day + 2.days,)
       expect(absence_tag(absence)).to be_nil
     end
 

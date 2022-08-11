@@ -10,7 +10,7 @@ class AddRdvsMaxParticipantsCountAndUsersCount < ActiveRecord::Migration[6.1]
     add_index :rdvs, :users_count
 
     up_only do
-      execute(<<-SQL.squish
+      execute(<<-SQL.squish,
         UPDATE rdvs SET users_count = (SELECT count(1) FROM rdvs_users WHERE rdvs_users.rdv_id = rdvs.id)
       SQL
              )

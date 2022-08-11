@@ -151,7 +151,7 @@ class Admin::UsersController < AgentAuthController
       *PERMITTED_ATTRIBUTES,
       :responsible_id,
       **PERMITTED_NESTED_ATTRIBUTES,
-      responsible_attributes: [PERMITTED_ATTRIBUTES, { **PERMITTED_NESTED_ATTRIBUTES }]
+      responsible_attributes: [PERMITTED_ATTRIBUTES, { **PERMITTED_NESTED_ATTRIBUTES }],
     )
   end
 
@@ -163,7 +163,7 @@ class Admin::UsersController < AgentAuthController
         current_organisation: current_organisation,
         from_modal: from_modal?,
         return_location: params[:return_location],
-      }
+      },
     )
   end
 

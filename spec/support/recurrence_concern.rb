@@ -123,7 +123,7 @@ shared_examples_for "recurrence" do
                             start_time: Tod::TimeOfDay.new(8),
                             end_time: Tod::TimeOfDay.new(12),
                             recurrence: Montrose.every(:day, starts: first_day, until: Date.new(2019, 8, 5)).to_json,
-                            recurrence_ends_at: Date.new(2019, 8, 5))
+                            recurrence_ends_at: Date.new(2019, 8, 5),)
       end
       let(:date_range) { Date.new(2019, 8, 5)..Date.new(2019, 8, 11) }
 
@@ -154,8 +154,8 @@ shared_examples_for "recurrence" do
                 :week,
                 on: [:wednesday],
                 interval: 1,
-                starts: first_day
-              ).to_json)
+                starts: first_day,
+              ).to_json,)
       end
       let(:date_range) { Date.new(2022, 6, 1)..Date.new(2022, 6, 30) }
 

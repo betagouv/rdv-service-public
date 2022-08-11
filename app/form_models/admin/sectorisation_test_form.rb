@@ -16,7 +16,7 @@ class Admin::SectorisationTestForm
     :available_motifs_from_attributed_agent,
     :available_motifs_from_departement_organisations,
     to: :geo_search,
-    allow_nil: true
+    allow_nil: true,
   )
 
   def available_motifs_unique_names_and_location_types_by_service
@@ -41,7 +41,7 @@ class Admin::SectorisationTestForm
     @geo_search ||= Users::GeoSearch.new(
       departement: departement,
       city_code: city_code,
-      **(street_ban_id.present? ? { street_ban_id: street_ban_id } : {})
+      **(street_ban_id.present? ? { street_ban_id: street_ban_id } : {}),
     )
   end
 end

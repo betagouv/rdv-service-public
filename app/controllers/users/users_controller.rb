@@ -37,7 +37,7 @@ class Users::UsersController < UserAuthController
       :notify_by_email,
       :notify_by_sms,
       :address_details,
-      user_profiles_attributes: %i[logement id organisation_id]
+      user_profiles_attributes: %i[logement id organisation_id],
     )
   end
 end

@@ -14,7 +14,7 @@ class Admin::Territories::ZoneImportsController < Admin::Territories::BaseContro
         CsvOrXlsReader::Importer.new(@form.zones_file).rows,
         current_territory,
         current_agent,
-        dry_run: @form.dry_run
+        dry_run: @form.dry_run,
       )
     else
       render :new

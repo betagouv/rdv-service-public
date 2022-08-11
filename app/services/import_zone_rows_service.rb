@@ -115,7 +115,7 @@ class ImportZoneRowsService < BaseService
       row,
       agent: @agent,
       dry_run: @dry_run,
-      sectors_by_human_id: sectors_by_human_id
+      sectors_by_human_id: sectors_by_human_id,
     )
   end
 

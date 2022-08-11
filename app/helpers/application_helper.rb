@@ -31,7 +31,7 @@ module ApplicationHelper
         autocomplete: "off",
         placeholder: "__/__/___",
       }.deep_merge(input_html),
-      **kwargs
+      **kwargs,
     )
   end
 

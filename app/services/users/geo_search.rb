@@ -112,7 +112,7 @@ class Users::GeoSearch
       .sectorisation_level_agent
       .where(
         organisations: { id: organisation.id },
-        plage_ouvertures: { agent_id: agent.id }
+        plage_ouvertures: { agent_id: agent.id },
       )
   end
 

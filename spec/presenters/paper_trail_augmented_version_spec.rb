@@ -7,7 +7,7 @@ describe PaperTrailAugmentedVersion do
         version = instance_double(PaperTrail::Version)
         prepare_version_double(version, object_changes: { "title" => %w[foo bar] })
         expect(described_class.new(version, nil).changes).to eq(
-          { "title" => %w[foo bar] }
+          { "title" => %w[foo bar] },
         )
       end
 
@@ -18,7 +18,7 @@ describe PaperTrailAugmentedVersion do
           {
             "title" => %w[foo bar],
             "user_ids" => [nil, [1, 2]],
-          }
+          },
         )
       end
     end
@@ -31,24 +31,24 @@ describe PaperTrailAugmentedVersion do
         prepare_version_double(
           version,
           object_changes: { "title" => %w[foo bar] },
-          virtual_attributes: { "user_ids" => [1, 2], "agent_ids" => [3] }
+          virtual_attributes: { "user_ids" => [1, 2], "agent_ids" => [3] },
         )
         prepare_version_double(
           previous_version,
           object_changes: { "title" => %w[baz foo] },
-          virtual_attributes: { "user_ids" => [1], "agent_ids" => [3] }
+          virtual_attributes: { "user_ids" => [1], "agent_ids" => [3] },
         )
       end
 
       it "computes virtual attributes changes from both versions" do
         expect(
-          described_class.new(version, previous_version).changes
+          described_class.new(version, previous_version).changes,
         ).to eq(
           {
             "title" => %w[foo bar],
             "user_ids" => [[1], [1, 2]],
             # agent_ids has not changed so it does not appear here
-          }
+          },
         )
       end
     end
@@ -62,11 +62,11 @@ describe PaperTrailAugmentedVersion do
         version,
         object_changes: { "title" => %w[foo bar] },
         virtual_attributes: { "user_ids" => [1, 2], "agent_ids" => [3] },
-        only: "user_ids"
+        only: "user_ids",
       )
 
       expect(
-        described_class.new(version, nil).changes
+        described_class.new(version, nil).changes,
       ).to eq({ "user_ids" => [nil, [1, 2]] })
     end
   end
@@ -92,7 +92,7 @@ describe PaperTrailAugmentedVersion do
         .and_return(augmented_versions[3])
 
       expect(described_class.for_resource(resource)).to eq(
-        augmented_versions
+        augmented_versions,
       )
     end
   end

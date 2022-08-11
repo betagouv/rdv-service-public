@@ -31,8 +31,8 @@ class UpsertUserForFranceconnectService < BaseService
       user_attribute_values_from_fc.merge(
         email: omniauth_info.email,
         confirmed_at: Time.zone.now,
-        created_through: "franceconnect_sign_up"
-      )
+        created_through: "franceconnect_sign_up",
+      ),
     )
     @user.skip_confirmation!
     @user.save!

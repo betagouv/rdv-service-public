@@ -59,7 +59,7 @@ class Admin::Territories::InvitationsDeviseController < Devise::InvitationsContr
   def invite_params
     super.merge(
       # the omniauth uid _is_ the email, always. note: this may be better suited in a hook in agent.rb
-      uid: params[:email]
+      uid: params[:email],
     )
   end
 end

@@ -18,7 +18,7 @@ module RdvUpdater
 
       Result.new(
         success: success,
-        rdv_users_tokens_by_user_id: success ? notify!(author, rdv, previous_participant_ids) : {}
+        rdv_users_tokens_by_user_id: success ? notify!(author, rdv, previous_participant_ids) : {},
       )
     end
 

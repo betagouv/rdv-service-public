@@ -52,12 +52,12 @@ Capybara.register_driver :selenium do |app|
   chrome_options[:binary] = chrome_bin if chrome_bin
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
     chromeOptions: chrome_options,
-    "goog:loggingPrefs" => { browser: "ALL" }
+    "goog:loggingPrefs" => { browser: "ALL" },
   )
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    desired_capabilities: capabilities
+    desired_capabilities: capabilities,
   )
 end
 

@@ -8,7 +8,7 @@ describe WebhookDeliverable, type: :concern do
     create(
       :webhook_endpoint,
       organisation: organisation,
-      subscriptions: %w[rdv absence plage_ouverture]
+      subscriptions: %w[rdv absence plage_ouverture],
     )
   end
   let!(:rdv) { create(:rdv, organisation: organisation) }
@@ -74,7 +74,7 @@ describe WebhookDeliverable, type: :concern do
         create(
           :webhook_endpoint,
           organisation: organisation,
-          subscriptions: %w[absence plage_ouverture]
+          subscriptions: %w[absence plage_ouverture],
         )
       end
 

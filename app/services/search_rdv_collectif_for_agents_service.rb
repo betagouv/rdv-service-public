@@ -14,7 +14,7 @@ class SearchRdvCollectifForAgentsService
   def slot_search
     OpenStruct.new(
       lieu: @form.organisation.lieux.find(@form.lieu_ids.first),
-      creneaux: rdvs
+      creneaux: rdvs,
     )
   end
 

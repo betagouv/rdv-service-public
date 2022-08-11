@@ -36,7 +36,7 @@ module Admin::RdvFormConcern
       lieu: rdv.lieu,
       starts_at: rdv.starts_at,
       ends_at: rdv.ends_at,
-      motif: rdv.motif
+      motif: rdv.motif,
     ).select do |existing_rdv|
       participants_of_existing_rdv = Set.new(existing_rdv.users + existing_rdv.agents)
       # Not using `rdv.users` because it does a db call, which returns an empty array because `rdv` is not persisted.
@@ -68,7 +68,7 @@ module Admin::RdvFormConcern
         rdv: pair.rdv,
         agent: pair.agent,
         rdv_context: rdv,
-        agent_context: agent_context
+        agent_context: agent_context,
       )
     end.each { add_benign_error(_1.warning_message) }
   end
@@ -83,7 +83,7 @@ module Admin::RdvFormConcern
         rdv: pair.rdv,
         agent: pair.agent,
         rdv_context: rdv,
-        agent_context: agent_context
+        agent_context: agent_context,
       )
     end.each { add_benign_error(_1.warning_message) }
   end

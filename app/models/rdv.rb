@@ -4,7 +4,7 @@ class Rdv < ApplicationRecord
   # Mixins
   has_paper_trail(
     only: %w[user_ids agent_ids status starts_at ends_at lieu_id notes context rdvs_users],
-    meta: { virtual_attributes: :virtual_attributes_for_paper_trail }
+    meta: { virtual_attributes: :virtual_attributes_for_paper_trail },
   )
 
   include WebhookDeliverable

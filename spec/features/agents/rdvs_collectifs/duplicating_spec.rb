@@ -28,7 +28,7 @@ describe "Agent can duplicate a Rdv collectif" do
       name: original_rdv.name,
       max_participants_count: original_rdv.max_participants_count,
       context: original_rdv.context,
-      motif_id: original_rdv.motif_id
+      motif_id: original_rdv.motif_id,
     )
   end
 

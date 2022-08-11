@@ -24,7 +24,7 @@ describe "Agent can see rdvs in their calendar", js: true do
         name: "Traitement de texte",
         users: create_list(:user, 2),
         max_participants_count: 3,
-        starts_at: starts_at
+        starts_at: starts_at,
       )
 
       visit admin_organisation_agent_agenda_path(organisation, agent)

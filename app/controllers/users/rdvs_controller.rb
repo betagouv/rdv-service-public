@@ -28,7 +28,7 @@ class Users::RdvsController < UserAuthController
         starts_at: DateTime.parse(rdv_params[:starts_at]),
         motif: motif,
         lieu: Lieu.find(new_rdv_extra_params[:lieu_id]),
-        geo_search: @geo_search
+        geo_search: @geo_search,
       )
       if @creneau.present?
         @rdv = build_rdv_from_creneau(@creneau)
@@ -99,7 +99,7 @@ class Users::RdvsController < UserAuthController
       user: current_user,
       starts_at: @starts_at,
       motif: @rdv.motif,
-      lieu: Lieu.find(@lieu.id)
+      lieu: Lieu.find(@lieu.id),
     )
   end
 
@@ -127,7 +127,7 @@ class Users::RdvsController < UserAuthController
     @geo_search = Users::GeoSearch.new(
       departement: params[:departement],
       city_code: params[:city_code],
-      street_ban_id: params[:street_ban_id].presence
+      street_ban_id: params[:street_ban_id].presence,
     )
   end
 
@@ -140,7 +140,7 @@ class Users::RdvsController < UserAuthController
       motif: creneau.motif,
       lieu_id: creneau.lieu.id,
       users: [user_for_rdv],
-      created_by: :user
+      created_by: :user,
     )
   end
 
@@ -155,7 +155,7 @@ class Users::RdvsController < UserAuthController
   def new_rdv_extra_params
     params.permit(
       :lieu_id, :motif_name_with_location_type, :departement, :where, :address, :city_code, :street_ban_id,
-      :invitation_token, { organisation_ids: [] }
+      :invitation_token, { organisation_ids: [] },
     )
   end
 

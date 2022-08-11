@@ -63,7 +63,7 @@ describe "api/v1/users requests", type: :request do
             first_name: "Jean",
             last_name: "Jacques",
           },
-          headers: api_auth_headers_for_agent(agent)
+          headers: api_auth_headers_for_agent(agent),
         )
         expect(response.status).to eq(200)
         expect(User.count).to eq(user_count_before + 1)
@@ -97,7 +97,7 @@ describe "api/v1/users requests", type: :request do
             notify_by_sms: false,
             notify_by_email: false,
           },
-          headers: api_auth_headers_for_agent(agent)
+          headers: api_auth_headers_for_agent(agent),
         )
         expect(response.status).to eq(200)
         expect(User.count).to eq(user_count_before + 1)
@@ -134,7 +134,7 @@ describe "api/v1/users requests", type: :request do
             last_name: "Jacques",
             responsible_id: user_responsible.id,
           },
-          headers: api_auth_headers_for_agent(agent)
+          headers: api_auth_headers_for_agent(agent),
         )
         expect(response.status).to eq(200)
         expect(User.count).to eq(user_count_before + 1)
@@ -157,7 +157,7 @@ describe "api/v1/users requests", type: :request do
         post(
           api_v1_users_path,
           params: { first_name: "Jean", last_name: "Jacques" },
-          headers: api_auth_headers_for_agent(agent)
+          headers: api_auth_headers_for_agent(agent),
         )
         expect(response.status).to eq(422)
         expect(User.count).to eq(user_count_before)
@@ -177,7 +177,7 @@ describe "api/v1/users requests", type: :request do
             organisation_ids: [organisation.id],
             first_name: "Jean", # missing last_name
           },
-          headers: api_auth_headers_for_agent(agent)
+          headers: api_auth_headers_for_agent(agent),
         )
         expect(response.status).to eq(422)
         expect(User.count).to eq(user_count_before)
@@ -199,7 +199,7 @@ describe "api/v1/users requests", type: :request do
             last_name: "Jacques",
             phone_number: "blah blah",
           },
-          headers: api_auth_headers_for_agent(agent)
+          headers: api_auth_headers_for_agent(agent),
         )
         expect(response.status).to eq(422)
         expect(User.count).to eq(user_count_before)
@@ -222,7 +222,7 @@ describe "api/v1/users requests", type: :request do
             last_name: "Jacques",
             email: "jean@jacques.fr",
           },
-          headers: api_auth_headers_for_agent(agent)
+          headers: api_auth_headers_for_agent(agent),
         )
         expect(response.status).to eq(422)
         expect(User.count).to eq(user_count_before)
@@ -259,7 +259,7 @@ describe "api/v1/users requests", type: :request do
         get(
           api_v1_users_path,
           params: { ids: [user1.id] },
-          headers: api_auth_headers_for_agent(agent)
+          headers: api_auth_headers_for_agent(agent),
         )
         expect(response.status).to eq(200)
         response_parsed = JSON.parse(response.body)
@@ -378,7 +378,7 @@ describe "api/v1/users requests", type: :request do
           params: {
             invite_for: 86_400, # invite_for en secondes (86400 = 1 jour),
           },
-          as: :json
+          as: :json,
         )
         expect(response.status).to eq(200)
         response_parsed = JSON.parse(response.body)
@@ -447,7 +447,7 @@ describe "api/v1/users requests", type: :request do
             first_name: "Alain",
             last_name: "Deloin",
           },
-          headers: api_auth_headers_for_agent(agent)
+          headers: api_auth_headers_for_agent(agent),
         )
         expect(response.status).to eq(200)
         user.reload
@@ -477,7 +477,7 @@ describe "api/v1/users requests", type: :request do
             notify_by_sms: false,
             notify_by_email: false,
           },
-          headers: api_auth_headers_for_agent(agent)
+          headers: api_auth_headers_for_agent(agent),
         )
         expect(response.status).to eq(200)
         user.reload
@@ -511,7 +511,7 @@ describe "api/v1/users requests", type: :request do
             last_name: "Deloin",
             responsible_id: user_responsible.id,
           },
-          headers: api_auth_headers_for_agent(agent)
+          headers: api_auth_headers_for_agent(agent),
         )
         expect(response.status).to eq(200)
         user.reload
@@ -532,7 +532,7 @@ describe "api/v1/users requests", type: :request do
             last_name: "Jacques",
             phone_number: "blah blah",
           },
-          headers: api_auth_headers_for_agent(agent)
+          headers: api_auth_headers_for_agent(agent),
         )
         expect(response.status).to eq(422)
         response_parsed = JSON.parse(response.body)
@@ -551,7 +551,7 @@ describe "api/v1/users requests", type: :request do
             last_name: "Jacques",
             email: "jean@jacques.fr",
           },
-          headers: api_auth_headers_for_agent(agent)
+          headers: api_auth_headers_for_agent(agent),
         )
         expect(response.status).to eq(422)
         response_parsed = JSON.parse(response.body)

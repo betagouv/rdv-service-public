@@ -8,7 +8,7 @@ module SearchContextHelper
       longitude: params[:longitude],
       latitude: params[:latitude],
       street_ban_id: params[:street_ban_id],
-      address: params[:address]
+      address: params[:address],
     )
   end
 
@@ -20,7 +20,7 @@ module SearchContextHelper
       latitude: params[:latitude],
       street_ban_id: params[:street_ban_id],
       address: params[:address],
-      motif_name_with_location_type: params[:motif_name_with_location_type]
+      motif_name_with_location_type: params[:motif_name_with_location_type],
     )
   end
 
@@ -33,7 +33,7 @@ module SearchContextHelper
       street_ban_id: params[:street_ban_id],
       address: params[:address],
       motif_name_with_location_type: params[:motif_name_with_location_type],
-      lieu_id: params[:lieu_id]
+      lieu_id: params[:lieu_id],
     )
   end
 end

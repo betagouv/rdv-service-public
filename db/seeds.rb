@@ -16,33 +16,33 @@ territory75 = Territory.create!(
   departement_number: "75",
   name: "Paris",
   sms_provider: "netsize",
-  sms_configuration: "login:pwd"
+  sms_configuration: "login:pwd",
 )
 territory62 = Territory.create!(
   departement_number: "62",
   name: "Pas-de-Calais",
   sms_provider: "netsize",
-  sms_configuration: "login:pwd"
+  sms_configuration: "login:pwd",
 )
 
 territory_cnfs = Territory.create!(
   departement_number: "CN",
   name: "Conseillers Numériques",
   sms_provider: "netsize",
-  sms_configuration: "login:pwd"
+  sms_configuration: "login:pwd",
 )
 
 territory_drome = Territory.create!(
   departement_number: "26",
   name: "Drôme",
   sms_provider: "netsize",
-  sms_configuration: "login:pwd"
+  sms_configuration: "login:pwd",
 )
 territory_yonne = Territory.create!(
   departement_number: "89",
   name: "Yonne",
   sms_provider: "netsize",
-  sms_configuration: "login:pwd"
+  sms_configuration: "login:pwd",
 )
 
 # ORGANISATIONS & SECTORS
@@ -52,31 +52,31 @@ org_paris_nord = Organisation.create!(
   name: "MDS Paris Nord",
   phone_number: "0123456789",
   human_id: "paris-nord",
-  territory: territory75
+  territory: territory75,
 )
 org_cnfs = Organisation.create!(
   name: "Mediathèque Paris Nord",
   phone_number: "0123456789",
   human_id: "mediatheque-paris-nord",
-  territory: territory_cnfs
+  territory: territory_cnfs,
 )
 org_drome1 = Organisation.create!(
   name: "Plateforme mutualisée d'orientation",
   phone_number: "0475796991",
   human_id: "plateforme-mutualisee-orientation-drome",
-  territory: territory_drome
+  territory: territory_drome,
 )
 org_drome2 = Organisation.create!(
   name: "PLIE Valence",
   phone_number: "0101010102",
   human_id: "plie-valence",
-  territory: territory_drome
+  territory: territory_drome,
 )
 org_yonne = Organisation.create!(
   name: "UT Avallon",
   phone_number: "0303030303",
   human_id: "ut-avallon",
-  territory: territory_yonne
+  territory: territory_yonne,
 )
 human_id_map = [
   { human_id: "1030", name: "MDS Arques" },
@@ -139,7 +139,7 @@ motif_org_paris_nord_pmi_rappel = Motif.create!(
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
   reservable_online: true,
-  location_type: :phone
+  location_type: :phone,
 )
 motif_org_paris_nord_pmi_gyneco = Motif.create!(
   name: "Consultation gynécologie / contraception",
@@ -147,7 +147,7 @@ motif_org_paris_nord_pmi_gyneco = Motif.create!(
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
   reservable_online: false,
-  location_type: :phone
+  location_type: :phone,
 )
 motif_org_paris_nord_pmi_prenatale = Motif.create!(
   name: "Consultation prénatale",
@@ -155,7 +155,7 @@ motif_org_paris_nord_pmi_prenatale = Motif.create!(
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
   reservable_online: true,
-  location_type: :public_office
+  location_type: :public_office,
 )
 motif_org_paris_nord_pmi_prenatale_phone = Motif.create!(
   name: "Consultation prénatale",
@@ -163,7 +163,7 @@ motif_org_paris_nord_pmi_prenatale_phone = Motif.create!(
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
   reservable_online: true,
-  location_type: :phone
+  location_type: :phone,
 )
 motif_org_paris_nord_pmi_suivi = Motif.create!(
   name: "Suivi après naissance",
@@ -172,7 +172,7 @@ motif_org_paris_nord_pmi_suivi = Motif.create!(
   service_id: service_pmi.id,
   reservable_online: true,
   location_type: :public_office,
-  follow_up: true
+  follow_up: true,
 )
 motif_org_paris_nord_pmi_securite = Motif.create!(
   name: "Sécurité du domicile",
@@ -180,7 +180,7 @@ motif_org_paris_nord_pmi_securite = Motif.create!(
   organisation_id: org_paris_nord.id,
   service_id: service_pmi.id,
   reservable_online: true,
-  location_type: :home
+  location_type: :home,
 )
 motif_org_paris_nord_pmi_collectif = Motif.create!(
   name: "Atelier Collectif",
@@ -189,7 +189,7 @@ motif_org_paris_nord_pmi_collectif = Motif.create!(
   service_id: service_pmi.id,
   collectif: true,
   default_duration_in_min: 60,
-  location_type: :public_office
+  location_type: :public_office,
 )
 _motif_org_paris_nord_social_rappel = Motif.create!(
   name: "Être rappelé par la MDS",
@@ -197,7 +197,7 @@ _motif_org_paris_nord_social_rappel = Motif.create!(
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
   reservable_online: true,
-  location_type: :phone
+  location_type: :phone,
 )
 _motif_org_paris_nord_social_suivi = Motif.create!(
   name: "Suivi RSA",
@@ -206,7 +206,7 @@ _motif_org_paris_nord_social_suivi = Motif.create!(
   service_id: service_social.id,
   reservable_online: true,
   location_type: :public_office,
-  follow_up: true
+  follow_up: true,
 )
 _motif_org_paris_nord_social_droits = Motif.create!(
   name: "Droits sociaux",
@@ -214,7 +214,7 @@ _motif_org_paris_nord_social_droits = Motif.create!(
   organisation_id: org_paris_nord.id,
   service_id: service_social.id,
   reservable_online: true,
-  location_type: :public_office
+  location_type: :public_office,
 )
 _motif_org_paris_nord_social_collectif = Motif.create!(
   name: "Forum",
@@ -223,7 +223,7 @@ _motif_org_paris_nord_social_collectif = Motif.create!(
   service_id: service_social.id,
   collectif: true,
   default_duration_in_min: 120,
-  location_type: :public_office
+  location_type: :public_office,
 )
 
 # MOTIFS organisations du 62
@@ -237,7 +237,7 @@ motifs = {}
     organisation_id: org.id,
     service_id: service_pmi.id,
     reservable_online: true,
-    location_type: :phone
+    location_type: :phone,
   )
   motifs[seed_id][:pmi_prenatale] = Motif.create!(
     name: "Consultation prénatale",
@@ -245,7 +245,7 @@ motifs = {}
     organisation_id: org.id,
     service_id: service_pmi.id,
     reservable_online: true,
-    location_type: :public_office
+    location_type: :public_office,
   )
 end
 
@@ -256,7 +256,7 @@ Motif.create!(
   default_duration_in_min: 60,
   location_type: :public_office,
   organisation: org_cnfs,
-  service: service_cnfs
+  service: service_cnfs,
 )
 
 Motif.create!(
@@ -266,7 +266,7 @@ Motif.create!(
   location_type: :public_office,
   collectif: true,
   organisation: org_cnfs,
-  service: service_cnfs
+  service: service_cnfs,
 )
 
 # MOTIFS Drome
@@ -284,7 +284,7 @@ motif1_drome1 = Motif.create!(
    "Avant le RDV  :\r\n- pensez à vous munir d'un masque \r\n- apporter votre CV à jour ainsi que vos documents justifiant de votre inscription à Pôle Emploi",
   for_secretariat: true,
   custom_cancel_warning_message: "Ce RDV est obligatoire",
-  category: "rsa_orientation"
+  category: "rsa_orientation",
 )
 motif2_drome1 = Motif.create!(
   name: "RSA accompagnement",
@@ -295,7 +295,7 @@ motif2_drome1 = Motif.create!(
   service: service_social,
   custom_cancel_warning_message: "",
   collectif: false,
-  category: "rsa_accompagnement"
+  category: "rsa_accompagnement",
 )
 motif_drome2 = Motif.create!(
   name: "RSA - Orientation : rdv sur site",
@@ -307,7 +307,7 @@ motif_drome2 = Motif.create!(
   service: service_social,
   for_secretariat: true,
   custom_cancel_warning_message: "Ce RDV est obligatoire",
-  category: "rsa_orientation"
+  category: "rsa_orientation",
 )
 
 # MOTIFS Yonne
@@ -318,7 +318,7 @@ motif_yonne_physique = Motif.create!(
   organisation: org_yonne,
   service: service_social,
   for_secretariat: true,
-  category: "rsa_orientation"
+  category: "rsa_orientation",
 )
 motif_yonne_telephone = Motif.create!(
   name: "RSA - Orientation : rdv téléphonique",
@@ -328,7 +328,7 @@ motif_yonne_telephone = Motif.create!(
   service: service_social,
   for_secretariat: true,
   location_type: "phone",
-  category: "rsa_orientation"
+  category: "rsa_orientation",
 )
 
 now = Time.zone.now
@@ -354,7 +354,7 @@ lieu_org_paris_nord_bolivar = Lieu.create!(
   availability: :enabled,
   address: "126 Avenue Simon Bolivar, 75019, Paris",
   latitude: 48.8809263,
-  longitude: 2.3739077
+  longitude: 2.3739077,
 )
 lieu_org_paris_nord_bd_aubervilliers = Lieu.create!(
   name: "MDS Bd Aubervilliers",
@@ -362,7 +362,7 @@ lieu_org_paris_nord_bd_aubervilliers = Lieu.create!(
   availability: :enabled,
   address: "18 Boulevard d'Aubervilliers, 75019 Paris",
   latitude: 48.8882196,
-  longitude: 2.3650464
+  longitude: 2.3650464,
 )
 lieu_arques_nord = Lieu.create!(
   name: "Maison Arques Nord",
@@ -370,7 +370,7 @@ lieu_arques_nord = Lieu.create!(
   availability: :enabled,
   address: "10 rue du marechal leclerc, 62410 Arques",
   latitude: 50.7406,
-  longitude: 2.3103
+  longitude: 2.3103,
 )
 lieu_bapaume_est = Lieu.create!(
   name: "MJC Bapaume Est",
@@ -378,7 +378,7 @@ lieu_bapaume_est = Lieu.create!(
   availability: :enabled,
   address: "10 rue emile delot, 62450 Arques",
   latitude: 50.1026,
-  longitude: 2.8486
+  longitude: 2.8486,
 )
 lieu_org_drome1_crest = Lieu.create!(
   name: "AIRE - Plate-forme mutualisée d'orientation - Département de la Drôme",
@@ -388,7 +388,7 @@ lieu_org_drome1_crest = Lieu.create!(
   availability: :enabled,
   phone_number: "04.75.79.69.91",
   phone_number_formatted: "+33475796991",
-  address: "Rue a Combattants Outre Mer, Crest, 26400"
+  address: "Rue a Combattants Outre Mer, Crest, 26400",
 )
 lieu_org_drome1_valence = Lieu.create!(
   name: "Le 114 - Plate -forme mutualisée d'orientation - Département de la Drôme",
@@ -398,7 +398,7 @@ lieu_org_drome1_valence = Lieu.create!(
   availability: :enabled,
   phone_number: "04.75.79.69.91",
   phone_number_formatted: "+33475796991",
-  address: "114 Rue de la Forêt, Valence, 26000"
+  address: "114 Rue de la Forêt, Valence, 26000",
 )
 lieu_org_yonne = Lieu.create!(
   name: "PE Avallon",
@@ -407,7 +407,7 @@ lieu_org_yonne = Lieu.create!(
   latitude: 47.796413,
   longitude: 3.572016,
   availability: :enabled,
-  address: "3 Rue Joubert, Auxerre, 89000"
+  address: "3 Rue Joubert, Auxerre, 89000",
 )
 
 now = Time.zone.now
@@ -434,7 +434,7 @@ CSV.read(zones_csv_path, headers: :first_row).each do |row|
     city_code: row["city_code"],
     city_name: row["city_name"],
     street_name: row["street_name"],
-    street_ban_id: row["street_ban_id"]
+    street_ban_id: row["street_ban_id"],
   )
 end
 
@@ -448,7 +448,7 @@ user_org_paris_nord_patricia = User.new(
   password: "123456",
   phone_number: "0101010101",
   organisation_ids: [org_paris_nord.id, org_arques.id],
-  created_through: "user_sign_up"
+  created_through: "user_sign_up",
 )
 
 user_org_paris_nord_patricia.skip_confirmation!
@@ -461,7 +461,7 @@ user_org_paris_nord_josephine = User.new(
   birth_date: Date.parse("01/03/2018"),
   responsible: user_org_paris_nord_patricia,
   organisation_ids: [org_paris_nord.id],
-  created_through: "user_sign_up"
+  created_through: "user_sign_up",
 )
 user_org_paris_nord_josephine.save!
 
@@ -473,7 +473,7 @@ user_org_paris_nord_lea = User.new(
   password: "123456",
   phone_number: "0101010102",
   organisation_ids: [org_paris_nord.id],
-  created_through: "user_sign_up"
+  created_through: "user_sign_up",
 )
 
 user_org_paris_nord_lea.skip_confirmation!
@@ -488,7 +488,7 @@ user_org_paris_nord_jean = User.new(
   password: "123456",
   phone_number: "0101010103",
   organisation_ids: [org_paris_nord.id, org_bapaume.id, org_arques.id],
-  created_through: "user_sign_up"
+  created_through: "user_sign_up",
 )
 
 user_org_paris_nord_jean.skip_confirmation!
@@ -534,7 +534,7 @@ agent_org_paris_nord_pmi_martine = Agent.new(
     allow_to_manage_teams: true,
     allow_to_manage_access_rights: true,
     allow_to_invite_agents: true,
-  }]
+  }],
 )
 agent_org_paris_nord_pmi_martine.skip_confirmation!
 agent_org_paris_nord_pmi_martine.save!
@@ -554,7 +554,7 @@ agent_org_paris_nord_pmi_marco = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
-  }]
+  }],
 )
 agent_org_paris_nord_pmi_marco.skip_confirmation!
 agent_org_paris_nord_pmi_marco.save!
@@ -573,7 +573,7 @@ agent_org_paris_nord_social_polo = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
-  }]
+  }],
 )
 agent_org_paris_nord_social_polo.skip_confirmation!
 agent_org_paris_nord_social_polo.save!
@@ -592,7 +592,7 @@ org_arques_pmi_maya = Agent.new(
     allow_to_manage_teams: true,
     allow_to_manage_access_rights: true,
     allow_to_invite_agents: true,
-  }]
+  }],
 )
 org_arques_pmi_maya.skip_confirmation!
 org_arques_pmi_maya.save!
@@ -611,7 +611,7 @@ agent_org_bapaume_pmi_bruno = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
-  }]
+  }],
 )
 agent_org_bapaume_pmi_bruno.skip_confirmation!
 agent_org_bapaume_pmi_bruno.save!
@@ -631,7 +631,7 @@ agent_org_bapaume_pmi_gina = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
-  }]
+  }],
 )
 agent_org_bapaume_pmi_gina.skip_confirmation!
 agent_org_bapaume_pmi_gina.save!
@@ -650,7 +650,7 @@ agent_cnfs = Agent.new(
     allow_to_manage_teams: false,
     allow_to_manage_access_rights: false,
     allow_to_invite_agents: false,
-  }]
+  }],
 )
 agent_cnfs.skip_confirmation!
 agent_cnfs.save!
@@ -668,7 +668,7 @@ agent_orgs_rdv_insertion = Agent.new(
     { organisation: org_drome2, level: AgentRole::LEVEL_ADMIN },
     { organisation: org_yonne, level: AgentRole::LEVEL_ADMIN },
   ],
-  agent_territorial_access_rights_attributes: [{ territory: territory_drome, allow_to_manage_teams: true }, { territory: territory_yonne, allow_to_manage_teams: true }]
+  agent_territorial_access_rights_attributes: [{ territory: territory_drome, allow_to_manage_teams: true }, { territory: territory_yonne, allow_to_manage_teams: true }],
 )
 agent_orgs_rdv_insertion.skip_confirmation!
 agent_orgs_rdv_insertion.save!
@@ -705,14 +705,14 @@ SectorAttribution.create!(
   sector: sector_bapaume_nord,
   organisation: org_bapaume,
   agent: agent_org_bapaume_pmi_bruno,
-  level: SectorAttribution::LEVEL_AGENT
+  level: SectorAttribution::LEVEL_AGENT,
 )
 
 SectorAttribution.create!(
   sector: sector_bapaume_sud,
   organisation: org_bapaume,
   agent: agent_org_bapaume_pmi_gina,
-  level: SectorAttribution::LEVEL_AGENT
+  level: SectorAttribution::LEVEL_AGENT,
 )
 
 # PLAGES OUVERTURES
@@ -726,7 +726,7 @@ _plage_ouverture_org_paris_nord_martine_classique = PlageOuverture.create!(
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(8),
   end_time: Tod::TimeOfDay.new(12),
-  recurrence: Montrose.every(:week, day: [1, 2, 3, 4, 5], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday thursday friday])
+  recurrence: Montrose.every(:week, day: [1, 2, 3, 4, 5], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday thursday friday]),
 )
 _plage_ouverture_org_paris_nord_martine_mercredi = PlageOuverture.create!(
   title: "Permanence enfant",
@@ -737,7 +737,7 @@ _plage_ouverture_org_paris_nord_martine_mercredi = PlageOuverture.create!(
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(8),
   end_time: Tod::TimeOfDay.new(12),
-  recurrence: Montrose.every(:week, on: [:wednesday], interval: 1, starts: Date.tomorrow)
+  recurrence: Montrose.every(:week, on: [:wednesday], interval: 1, starts: Date.tomorrow),
 )
 _plage_ouverture_org_paris_nord_martine_exceptionnelle = PlageOuverture.create!(
   title: "Aprem PMI exptn",
@@ -747,7 +747,7 @@ _plage_ouverture_org_paris_nord_martine_exceptionnelle = PlageOuverture.create!(
   motif_ids: [motif_org_paris_nord_pmi_rappel.id, motif_org_paris_nord_pmi_prenatale.id, motif_org_paris_nord_pmi_suivi.id, motif_org_paris_nord_pmi_securite.id],
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(14),
-  end_time: Tod::TimeOfDay.new(18)
+  end_time: Tod::TimeOfDay.new(18),
 )
 _plage_ouverture_org_paris_nord_marco_perm = PlageOuverture.create!(
   title: "Perm.",
@@ -759,7 +759,7 @@ _plage_ouverture_org_paris_nord_marco_perm = PlageOuverture.create!(
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(14),
   end_time: Tod::TimeOfDay.new(16),
-  recurrence: Montrose.every(:week, on: [:tuesday], interval: 1, starts: Date.tomorrow)
+  recurrence: Montrose.every(:week, on: [:tuesday], interval: 1, starts: Date.tomorrow),
 )
 _plage_ouverture_org_arques_maya_tradi = PlageOuverture.create!(
   title: "Perm. tradi",
@@ -770,7 +770,7 @@ _plage_ouverture_org_arques_maya_tradi = PlageOuverture.create!(
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(9),
   end_time: Tod::TimeOfDay.new(15),
-  recurrence: Montrose.every(:week, interval: 1, starts: Date.tomorrow)
+  recurrence: Montrose.every(:week, interval: 1, starts: Date.tomorrow),
 )
 _plage_ouverture_org_bapaume_bruno_classique = PlageOuverture.create!(
   title: "Perm. classique",
@@ -781,7 +781,7 @@ _plage_ouverture_org_bapaume_bruno_classique = PlageOuverture.create!(
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(9),
   end_time: Tod::TimeOfDay.new(15),
-  recurrence: Montrose.every(:week, interval: 1, starts: Date.tomorrow)
+  recurrence: Montrose.every(:week, interval: 1, starts: Date.tomorrow),
 )
 _plage_ouverture_org_drome_lieu1_alain_classique = PlageOuverture.create!(
   title: "Permanence classique",
@@ -792,7 +792,7 @@ _plage_ouverture_org_drome_lieu1_alain_classique = PlageOuverture.create!(
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(8),
   end_time: Tod::TimeOfDay.new(12),
-  recurrence: Montrose.every(:week, day: [1, 2], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday])
+  recurrence: Montrose.every(:week, day: [1, 2], interval: 1, starts: Date.tomorrow, on: %i[monday tuesday]),
 )
 _plage_ouverture_org_drome_lieu2_alain_classique = PlageOuverture.create!(
   title: "Permanence classique",
@@ -803,7 +803,7 @@ _plage_ouverture_org_drome_lieu2_alain_classique = PlageOuverture.create!(
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(8),
   end_time: Tod::TimeOfDay.new(12),
-  recurrence: Montrose.every(:week, day: [3, 4], interval: 1, starts: Date.tomorrow, on: %i[wednesday thursday])
+  recurrence: Montrose.every(:week, day: [3, 4], interval: 1, starts: Date.tomorrow, on: %i[wednesday thursday]),
 )
 _plage_ouverture_org_yonne_alain_classique = PlageOuverture.create!(
   title: "Permanence classique",
@@ -814,7 +814,7 @@ _plage_ouverture_org_yonne_alain_classique = PlageOuverture.create!(
   first_day: Date.tomorrow,
   start_time: Tod::TimeOfDay.new(8),
   end_time: Tod::TimeOfDay.new(12),
-  recurrence: Montrose.every(:week, day: [5], interval: 1, starts: Date.tomorrow, on: %i[friday])
+  recurrence: Montrose.every(:week, day: [5], interval: 1, starts: Date.tomorrow, on: %i[friday]),
 )
 
 [1, 2, 4, 5].each do |weekday|
@@ -827,7 +827,7 @@ _plage_ouverture_org_yonne_alain_classique = PlageOuverture.create!(
     first_day: Date.tomorrow,
     start_time: Tod::TimeOfDay.new(11),
     end_time: Tod::TimeOfDay.new(18),
-    recurrence: Montrose.every(:week, interval: 1, starts: Date.tomorrow, day: [weekday])
+    recurrence: Montrose.every(:week, interval: 1, starts: Date.tomorrow, day: [weekday]),
   )
 end
 
@@ -841,7 +841,7 @@ Rdv.create!(
   organisation_id: org_paris_nord.id,
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_patricia.id],
-  context: "Visite de courtoisie"
+  context: "Visite de courtoisie",
 )
 Rdv.create(
   starts_at: Time.zone.today + 4.days + 15.hours,
@@ -851,7 +851,7 @@ Rdv.create(
   organisation_id: org_paris_nord.id,
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
-  context: "Suivi vaccins"
+  context: "Suivi vaccins",
 )
 Rdv.create(
   starts_at: Time.zone.today + 5.days + 11.hours,
@@ -861,7 +861,7 @@ Rdv.create(
   organisation_id: org_paris_nord.id,
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
-  context: "Visite à domicile"
+  context: "Visite à domicile",
 )
 
 Rdv.create(
@@ -872,7 +872,7 @@ Rdv.create(
   organisation_id: org_paris_nord.id,
   agent_ids: [agent_org_paris_nord_pmi_martine.id],
   user_ids: [user_org_paris_nord_josephine.id],
-  context: "Visite à domicile"
+  context: "Visite à domicile",
 )
 
 10.times do |i|
@@ -884,7 +884,7 @@ Rdv.create(
     organisation_id: org_paris_nord.id,
     agent_ids: [agent_org_paris_nord_pmi_marco.id],
     users_count: 1,
-    user_ids: []
+    user_ids: [],
   )
 
   Rdv.create(
@@ -895,7 +895,7 @@ Rdv.create(
     organisation_id: org_paris_nord.id,
     agent_ids: [agent_org_paris_nord_social_polo.id],
     users_count: 1,
-    user_ids: []
+    user_ids: [],
   )
 end
 
@@ -932,19 +932,19 @@ WebhookEndpoint.create!(
   target_url: "http://localhost:8000/rdv_solidarites_webhooks",
   secret: "rdv-solidarites",
   organisation_id: org_drome1.id,
-  subscriptions: %w[rdv user user_profile organisation]
+  subscriptions: %w[rdv user user_profile organisation],
 )
 WebhookEndpoint.create!(
   target_url: "http://localhost:8000/rdv_solidarites_webhooks",
   secret: "rdv-solidarites",
   organisation_id: org_drome2.id,
-  subscriptions: %w[rdv user user_profile organisation]
+  subscriptions: %w[rdv user user_profile organisation],
 )
 WebhookEndpoint.create!(
   target_url: "http://localhost:8000/rdv_solidarites_webhooks",
   secret: "rdv-solidarites",
   organisation_id: org_yonne.id,
-  subscriptions: %w[rdv user user_profile organisation]
+  subscriptions: %w[rdv user user_profile organisation],
 )
 
 # Sync rdv counter cache
@@ -954,4 +954,4 @@ unknown_rdv_count_by_agent.each do |agent_id, unknown_past_rdv_count|
 end
 
 Absence.create(title: "Formation", agent: agent_org_paris_nord_pmi_martine, organisation: org_paris_nord, first_day: 1.week.from_now, start_time: Tod::TimeOfDay.new(8),
-               end_time: Tod::TimeOfDay.new(18))
+               end_time: Tod::TimeOfDay.new(18),)

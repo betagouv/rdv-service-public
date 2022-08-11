@@ -11,7 +11,7 @@ def update_user_city_name_from(geocoded_addresses)
     User.find(city_data["id"]).update_columns(
       post_code: city_data["result_postcode"],
       city_code: city_data["result_citycode"],
-      city_name: city_data["result_cityname"]
+      city_name: city_data["result_cityname"],
     )
   end
 end
@@ -23,7 +23,7 @@ def geocode(file)
     body: {
       data: File.new(file),
       result_columns: "id,result_city,result_postcode,result_citycode",
-    }
+    },
   )
   CSV.parse(response.body, headers: true).map(&:to_h)
 end

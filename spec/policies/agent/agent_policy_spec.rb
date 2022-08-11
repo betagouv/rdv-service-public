@@ -102,7 +102,7 @@ describe Agent::AgentPolicy::Scope, type: :policy do
         create(
           :agent,
           basic_role_in_organisations: [organisations[0]],
-          admin_role_in_organisations: [organisations[1], organisations[2]]
+          admin_role_in_organisations: [organisations[1], organisations[2]],
         )
       end
       let!(:other_agent1) { create(:agent, basic_role_in_organisations: [organisations[0]]) }
@@ -129,7 +129,7 @@ describe Agent::AgentPolicy::Scope, type: :policy do
           :agent,
           basic_role_in_organisations: [same_territory_organisations[0], other_territory_organisations[0]],
           admin_role_in_organisations: [same_territory_organisations[1], other_territory_organisations[1]],
-          role_in_territories: [territories[0]]
+          role_in_territories: [territories[0]],
         )
       end
       let!(:other_agent_same_territory1) { create(:agent, basic_role_in_organisations: [same_territory_organisations[0]]) }

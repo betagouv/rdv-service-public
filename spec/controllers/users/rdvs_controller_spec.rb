@@ -55,7 +55,7 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(response).to redirect_to prendre_rdv_path(
           departement: "12", service: motif.service_id, motif_name_with_location_type: motif.name_with_location_type,
           address: "1 rue de la, ville 12345", organisation_ids: [organisation.id], invitation_token: "44444",
-          city_code: "12100"
+          city_code: "12100",
         )
         expect(flash[:error]).to eq "Ce créneau n’est plus disponible. Veuillez en sélectionner un autre."
       end

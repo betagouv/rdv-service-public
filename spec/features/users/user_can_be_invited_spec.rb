@@ -12,7 +12,7 @@ describe "User can be invited" do
     create(:user, first_name: "john", last_name: "doe", email: "johndoe@gmail.com",
                   phone_number: "0682605955", address: "26 avenue de la resistance",
                   birth_date: Date.new(1988, 12, 20),
-                  organisations: [organisation])
+                  organisations: [organisation],)
   end
   let!(:invitation_token) do
     user.invite! { |u| u.skip_invitation = true }
@@ -40,7 +40,7 @@ describe "User can be invited" do
 
       visit prendre_rdv_path(
         departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-        address: "16 rue de la résistance", motif_search_terms: "RSA orientation"
+        address: "16 rue de la résistance", motif_search_terms: "RSA orientation",
       )
       allow_any_instance_of(ActionDispatch::Request).to receive(:cookie_jar).and_return(page.cookies)
       allow_any_instance_of(ActionDispatch::Request).to receive(:cookies).and_return(page.cookies)
@@ -113,7 +113,7 @@ describe "User can be invited" do
 
       visit prendre_rdv_path(
         departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-        address: "16 rue de la résistance", motif_search_terms: "RSA orientation"
+        address: "16 rue de la résistance", motif_search_terms: "RSA orientation",
       )
     end
 
@@ -169,7 +169,7 @@ describe "User can be invited" do
       visit prendre_rdv_path(
         departement: departement_number, city_code: city_code, invitation_token: invitation_token,
         address: "16 rue de la résistance", motif_search_terms: "RSA orientation",
-        organisation_ids: [organisation.id, organisation2.id]
+        organisation_ids: [organisation.id, organisation2.id],
       )
     end
 

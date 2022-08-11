@@ -14,7 +14,7 @@ describe Admin::OrganisationsController, type: :controller do
         create(
           :agent,
           admin_role_in_organisations: [organisation],
-          role_in_territories: [territory]
+          role_in_territories: [territory],
         )
       end
 
@@ -36,7 +36,7 @@ describe Admin::OrganisationsController, type: :controller do
         create(
           :agent,
           admin_role_in_organisations: [organisation],
-          role_in_territories: [territory]
+          role_in_territories: [territory],
         )
       end
       let(:organisation_params) { { name: "MDS Test", territory_id: territory.id } }
@@ -51,7 +51,7 @@ describe Admin::OrganisationsController, type: :controller do
         create(
           :agent,
           admin_role_in_organisations: [organisation],
-          role_in_territories: [territory]
+          role_in_territories: [territory],
         )
       end
       let!(:territory2) { create(:territory) }

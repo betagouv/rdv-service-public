@@ -13,7 +13,7 @@ describe SearchCreneauxForAgentsService, type: :service do
         agent_ids: agents.map(&:id),
         team_ids: teams.map(&:id),
         lieu_ids: lieux.map(&:id),
-        date_range: Time.zone.today..(Time.zone.today + 6.days)
+        date_range: Time.zone.today..(Time.zone.today + 6.days),
       )
     end
 
@@ -69,7 +69,7 @@ describe SearchCreneauxForAgentsService, type: :service do
         agent_ids: agents.map(&:id),
         team_ids: teams.map(&:id),
         lieu_ids: lieux.map(&:id),
-        date_range: Time.zone.today..(Time.zone.today + 6.days)
+        date_range: Time.zone.today..(Time.zone.today + 6.days),
       )
     end
 

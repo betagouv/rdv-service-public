@@ -20,7 +20,7 @@ class Admin::RdvsController < AgentAuthController
     Agents::ExportMailer.rdv_export(
       current_agent,
       current_organisation,
-      parsed_params
+      parsed_params,
     ).deliver_later
     flash[:notice] = I18n.t("layouts.flash.confirm_export_send_when_done", agent_email: current_agent.email)
     redirect_to admin_organisation_rdvs_path(organisation_id: current_organisation.id)
@@ -101,7 +101,7 @@ class Admin::RdvsController < AgentAuthController
                                                  agent_ids: [],
                                                  user_ids: [],
                                                  rdvs_users_attributes: %i[user_id send_lifecycle_notifications send_reminder_notification id _destroy],
-                                                 lieu_attributes: %i[name address latitude longitude id])
+                                                 lieu_attributes: %i[name address latitude longitude id],)
 
     # Quand un lieu ponctuel est saisi, il faut faire en sorte qu'il soit créé dans l'organisation courante.
     # Nous le faisons ici, côté serveur pour empêcher de spécifier une valeur arbitraire.
@@ -119,7 +119,7 @@ class Admin::RdvsController < AgentAuthController
 
   def parsed_params
     params.permit(:organisation_id, :agent_id, :user_id, :lieu_id, :motif_id, :status, :show_user_details, :start, :end,
-                  lieu_attributes: %i[name address latitude longitude]).to_hash.to_h do |param_name, param_value|
+                  lieu_attributes: %i[name address latitude longitude],).to_hash.to_h do |param_name, param_value|
       case param_name
       when "start", "end"
         [param_name, parse_date_from_params(param_value)]

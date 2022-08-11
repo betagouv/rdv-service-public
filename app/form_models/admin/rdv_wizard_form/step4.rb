@@ -15,7 +15,7 @@ class Admin::RdvWizardForm::Step4
       rdv.organisation,
       agents.include?(@agent_author) ? @agent_author : agents.first,
       selected_event_id: rdv.id,
-      date: starts_at.to_date
+      date: starts_at.to_date,
     )
   end
 

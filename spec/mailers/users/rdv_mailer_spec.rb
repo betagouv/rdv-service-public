@@ -83,7 +83,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
         motif_name_with_location_type: rdv.motif.name_with_location_type, \
         organisation_ids: [rdv.organisation_id], \
         address: rdv.address, \
-        invitation_token: token \
+        invitation_token: token, \
       )
 
       expect(mail.html_part.body).to have_link("Reprendre RDV", href: expected_url)

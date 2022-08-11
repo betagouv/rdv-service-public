@@ -41,8 +41,8 @@ bearer_token = JSON.parse(
   Typhoeus.post(
     "https://auth.scalingo.com/v1/tokens/exchange",
     headers: HEADERS,
-    userpwd: ":#{ENV['SCALINGO_API_TOKEN']}"
-  ).body
+    userpwd: ":#{ENV['SCALINGO_API_TOKEN']}",
+  ).body,
 )["token"]
 
 res = JSON.parse(
@@ -55,9 +55,9 @@ res = JSON.parse(
           name: options[:containers_name],
           amount: options[:containers_amount],
         },
-      ]
-    )
-  ).body
+      ],
+    ),
+  ).body,
 )
 error_string = \
   if res["error"]

@@ -55,7 +55,7 @@ describe SmsSender, type: :service do
         rdv: rdv,
         user: user,
         content: "content",
-        sms_provider: "debug_logger"
+        sms_provider: "debug_logger",
       )
     end
   end

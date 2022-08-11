@@ -19,7 +19,7 @@ module SuperAdmins
       else
         redirect_to(
           [namespace, resource],
-          notice: translate_with_resource("create.success")
+          notice: translate_with_resource("create.success"),
         )
       end
     end

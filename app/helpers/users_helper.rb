@@ -111,7 +111,7 @@ module UsersHelper
       else
         tag.span(user.full_name) + relative_tag(user)
       end
-    end, ", ")
+    end, ", ",)
   end
 
   def users_to_sentence(users)

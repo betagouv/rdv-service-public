@@ -6,7 +6,7 @@ describe "User can update their information" do
 
   let(:territory) do
     create(:territory, enable_caisse_affiliation_field: true,
-                       enable_affiliation_number_field: true, enable_number_of_children_field: false)
+                       enable_affiliation_number_field: true, enable_number_of_children_field: false,)
   end
 
   before do

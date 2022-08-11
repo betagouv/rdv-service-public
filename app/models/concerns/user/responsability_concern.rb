@@ -14,7 +14,7 @@ module User::ResponsabilityConcern
     :notify_by_email, :notify_by_email?, :notify_by_sms, :notify_by_sms?,
     :phone_number_mobile?,
     to: :responsible_or_self,
-    prefix: :responsible
+    prefix: :responsible,
   )
 
   def responsability_type

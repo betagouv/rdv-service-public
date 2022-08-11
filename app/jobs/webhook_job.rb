@@ -18,7 +18,7 @@ class WebhookJob < ApplicationJob
         "X-Lapin-Signature" => OpenSSL::HMAC.hexdigest("SHA256", webhook_endpoint.secret, payload),
       },
       body: payload,
-      timeout: TIMEOUT
+      timeout: TIMEOUT,
     )
 
     request.on_complete do |response|

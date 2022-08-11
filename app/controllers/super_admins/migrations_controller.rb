@@ -75,11 +75,11 @@ module SuperAdmins
     def rdvs_with_other_agents(agent, old_organisation)
       AgentsRdv.joins(:rdv).where(
         agent_id: agent.id,
-        rdvs: { organisation_id: old_organisation.id }
+        rdvs: { organisation_id: old_organisation.id },
       ).joins(
         "JOIN agents_rdvs AS other_agents_rdvs
          ON agents_rdvs.rdv_id = other_agents_rdvs.rdv_id
-           AND agents_rdvs.agent_id != other_agents_rdvs.agent_id"
+           AND agents_rdvs.agent_id != other_agents_rdvs.agent_id",
       )
     end
   end

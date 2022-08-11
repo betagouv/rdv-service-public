@@ -90,7 +90,7 @@ module SlotBuilder
           starts_at: possible_slot_start,
           motif: motif,
           lieu_id: plage_ouverture.lieu_id,
-          agent: plage_ouverture.agent
+          agent: plage_ouverture.agent,
         )
         possible_slot_start += motif.default_duration_in_min.minutes
       end

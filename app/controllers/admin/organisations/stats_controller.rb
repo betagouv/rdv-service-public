@@ -8,7 +8,7 @@ class Admin::Organisations::StatsController < AgentAuthController
       rdvs: policy_scope(Rdv),
       agents: policy_scope(Agent)
         .joins(:organisations).where(organisations: { id: current_organisation.id }),
-      users: policy_scope(User)
+      users: policy_scope(User),
     )
   end
 

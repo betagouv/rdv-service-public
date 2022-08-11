@@ -21,7 +21,7 @@ class Admin::Territories::AgentTerritorialRolesController < Admin::Territories::
     if @role.save
       redirect_to(
         admin_territory_agent_territorial_roles_path(current_territory),
-        flash: { success: "#{@role.agent.full_name} a été ajouté(e) en tant qu'administrateur du #{current_territory}" }
+        flash: { success: "#{@role.agent.full_name} a été ajouté(e) en tant qu'administrateur du #{current_territory}" },
       )
     else
       render :new

@@ -11,7 +11,7 @@ class Admin::Territories::ZonesController < Admin::Territories::BaseController
         send_data(
           ExportZonesService.new(zones).perform,
           filename: "zones_territory_#{current_territory.departement_number}.xls",
-          type: "application/xls"
+          type: "application/xls",
         )
       end
     end

@@ -61,7 +61,7 @@ module AgentsHelper
     select_tag(
       :planning_agent_select,
       options_for_select([preselected_option],
-                         selected: agent.id),
+                         selected: agent.id,),
       class: "select2-input form-control js-planning-agent-select",
       data: {
         "select-options": {
@@ -72,7 +72,7 @@ module AgentsHelper
           },
         },
         "url-template": url_template,
-      }
+      },
     )
   end
 end

@@ -55,7 +55,7 @@ describe Agent::AbsencePolicy::Scope, type: :policy do
           :agent,
           basic_role_in_organisations: [organisations[0], organisations[1]],
           admin_role_in_organisations: [organisations[2]],
-          service: services[0]
+          service: services[0],
         )
       end
       let!(:absence1) { create(:absence, agent: agent, organisation: organisations[0]) }

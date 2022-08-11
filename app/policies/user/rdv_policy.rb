@@ -39,7 +39,7 @@ class User::RdvPolicy < ApplicationPolicy
         .or(
           User
             .joins(:users)
-            .where(users: { responsible_id: current_user.id })
+            .where(users: { responsible_id: current_user.id }),
         )
         .visible
     end

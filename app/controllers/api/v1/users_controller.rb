@@ -50,6 +50,6 @@ class Api::V1::UsersController < Api::V1::BaseController
     params.permit(:first_name, :birth_name, :last_name, :email, :address, :phone_number,
                   :birth_date, :responsible_id, :caisse_affiliation, :affiliation_number,
                   :family_situation, :number_of_children, :notify_by_sms, :notify_by_email,
-                  organisation_ids: [])
+                  organisation_ids: [],)
   end
 end

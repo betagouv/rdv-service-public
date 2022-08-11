@@ -4,7 +4,7 @@ class Team < ApplicationRecord
   # Mixins
   has_paper_trail(
     only: %i[name agent_ids],
-    meta: { virtual_attributes: :virtual_attributes_for_paper_trail }
+    meta: { virtual_attributes: :virtual_attributes_for_paper_trail },
   )
 
   include TextSearch

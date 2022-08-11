@@ -16,7 +16,7 @@ class AddFieldsDisplayToTerritories < ActiveRecord::Migration[6.1]
         enable_affiliation_number_field: true,
         enable_family_situation_field: true,
         enable_number_of_children_field: true,
-        enable_logement_field: true
+        enable_logement_field: true,
       )
     end
   end

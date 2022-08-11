@@ -39,12 +39,12 @@ module IcalHelpers
       end
       if payload[:starts_at].present?
         dtstart = Icalendar::Values::DateTime.new(payload[:starts_at],
-                                                  "tzid" => Time.zone_default.tzinfo.identifier)
+                                                  "tzid" => Time.zone_default.tzinfo.identifier,)
         event.dtstart = dtstart
       end
       if payload[:ends_at].present?
         dtend = Icalendar::Values::DateTime.new(payload[:ends_at],
-                                                "tzid" => Time.zone_default.tzinfo.identifier)
+                                                "tzid" => Time.zone_default.tzinfo.identifier,)
         event.dtend = dtend
       end
       if payload[:attendees].present?

@@ -6,7 +6,7 @@ describe "Agent can configure their preferences" do
       :agent,
       rdv_notifications_level: "soon",
       plage_ouverture_notification_level: "all",
-      absence_notification_level: "all"
+      absence_notification_level: "all",
     )
   end
 

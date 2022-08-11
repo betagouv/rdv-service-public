@@ -19,7 +19,7 @@ describe Admin::Territories::AgentTerritorialRolesController, type: :controller 
           first_name: "Johnny",
           last_name: "LILOU",
           basic_role_in_organisations: [organisation],
-          role_in_territories: [territory, territory2]
+          role_in_territories: [territory, territory2],
         )
       end
       let!(:agent2) do
@@ -28,7 +28,7 @@ describe Admin::Territories::AgentTerritorialRolesController, type: :controller 
           first_name: "Lisa",
           last_name: "SOULAY",
           basic_role_in_organisations: [organisation],
-          role_in_territories: [territory, territory2]
+          role_in_territories: [territory, territory2],
         )
       end
       let!(:agent_not_territorial_admin) do
@@ -36,7 +36,7 @@ describe Admin::Territories::AgentTerritorialRolesController, type: :controller 
           :agent,
           first_name: "Gina",
           last_name: "RICCIOTI",
-          admin_role_in_organisations: [organisation]
+          admin_role_in_organisations: [organisation],
         )
       end
       let!(:agent_in_other_territory) do
@@ -45,7 +45,7 @@ describe Admin::Territories::AgentTerritorialRolesController, type: :controller 
           first_name: "Doctor",
           last_name: "JOHN",
           admin_role_in_organisations: [organisation],
-          role_in_territories: [territory2]
+          role_in_territories: [territory2],
         )
       end
 
@@ -65,7 +65,7 @@ describe Admin::Territories::AgentTerritorialRolesController, type: :controller 
           :agent,
           first_name: "Johnny",
           last_name: "LILOU",
-          basic_role_in_organisations: [organisation]
+          basic_role_in_organisations: [organisation],
         )
       end
 
@@ -85,7 +85,7 @@ describe Admin::Territories::AgentTerritorialRolesController, type: :controller 
           first_name: "Johnny",
           last_name: "LILOU",
           basic_role_in_organisations: [organisation],
-          role_in_territories: [territory]
+          role_in_territories: [territory],
         )
       end
       let!(:other_agent_already_territorial_admin) do
@@ -94,7 +94,7 @@ describe Admin::Territories::AgentTerritorialRolesController, type: :controller 
           first_name: "Gino",
           last_name: "FINOL",
           basic_role_in_organisations: [organisation],
-          role_in_territories: [territory]
+          role_in_territories: [territory],
         )
       end
       let!(:other_agent_not_yet_territorial_admin) do
@@ -102,7 +102,7 @@ describe Admin::Territories::AgentTerritorialRolesController, type: :controller 
           :agent,
           first_name: "Rizlane",
           last_name: "TERRY",
-          basic_role_in_organisations: [organisation]
+          basic_role_in_organisations: [organisation],
         )
       end
 
@@ -125,7 +125,7 @@ describe Admin::Territories::AgentTerritorialRolesController, type: :controller 
           :agent,
           first_name: "Johnny",
           last_name: "LILOU",
-          basic_role_in_organisations: [organisation]
+          basic_role_in_organisations: [organisation],
         )
       end
 
@@ -146,7 +146,7 @@ describe Admin::Territories::AgentTerritorialRolesController, type: :controller 
         :agent,
         first_name: "Gino",
         last_name: "FINOL",
-        basic_role_in_organisations: [organisation]
+        basic_role_in_organisations: [organisation],
       )
     end
     let!(:target_agent_territorial_role) do
@@ -160,7 +160,7 @@ describe Admin::Territories::AgentTerritorialRolesController, type: :controller 
           first_name: "Johnny",
           last_name: "LILOU",
           basic_role_in_organisations: [organisation],
-          role_in_territories: [territory]
+          role_in_territories: [territory],
         )
       end
 
@@ -177,7 +177,7 @@ describe Admin::Territories::AgentTerritorialRolesController, type: :controller 
           :agent,
           first_name: "Johnny",
           last_name: "LILOU",
-          basic_role_in_organisations: [organisation]
+          basic_role_in_organisations: [organisation],
         )
       end
 

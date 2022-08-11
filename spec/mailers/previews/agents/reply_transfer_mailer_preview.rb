@@ -26,7 +26,7 @@ class Agents::ReplyTransferMailerPreview < ActionMailer::Preview
       author: rdv.users.first,
       agents: rdv.agents,
       reply_body: body,
-      source_mail: source_mail
+      source_mail: source_mail,
     )
   end
 end

@@ -9,6 +9,6 @@ module LieuxHelper
     tag.span(lieu.human_attribute_value(:availability),
              class: class_names("badge",
                                 "badge-danger" => lieu.disabled?,
-                                "badge-info" => lieu.single_use?))
+                                "badge-info" => lieu.single_use?,),)
   end
 end

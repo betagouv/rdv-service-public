@@ -41,7 +41,7 @@ module CreneauxHelper
       user_ids: params.fetch(:user_ids, []).compact_blank,
       team_ids: params.fetch(:team_ids, []).compact_blank,
       agent_ids: params.fetch(:agent_ids, []).compact_blank,
-      lieu_ids: params.fetch(:lieu_ids, []).compact_blank
+      lieu_ids: params.fetch(:lieu_ids, []).compact_blank,
     )
   end
 end

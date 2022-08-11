@@ -19,7 +19,7 @@ module UserRdvWizard
       rdv_defaults = { user_ids: [user&.id] }
       @rdv = Rdv.new(
         rdv_defaults
-          .merge(@attributes.slice(:starts_at, :user_ids, :motif_id))
+          .merge(@attributes.slice(:starts_at, :user_ids, :motif_id)),
       )
       @rdv.duration_in_min ||= @rdv.motif.default_duration_in_min if @rdv.motif.present?
     end
@@ -42,7 +42,7 @@ module UserRdvWizard
         motif: @rdv.motif,
         lieu: Lieu.find(@attributes[:lieu_id]),
         starts_at: @rdv.starts_at,
-        geo_search: geo_search
+        geo_search: geo_search,
       )
     end
 

@@ -47,7 +47,7 @@ class AddConseillerNumerique
       external_id: @conseiller_numerique.external_id,
       service: service,
       password: SecureRandom.hex,
-      roles_attributes: [{ organisation: organisation, level: AgentRole::LEVEL_ADMIN }]
+      roles_attributes: [{ organisation: organisation, level: AgentRole::LEVEL_ADMIN }],
     )
   end
 
@@ -55,7 +55,7 @@ class AddConseillerNumerique
     organisation = Organisation.create!(
       external_id: @structure.external_id,
       name: next_available_organisation_name,
-      territory: territory
+      territory: territory,
     )
     create_motifs(organisation)
     create_lieu(organisation)
@@ -84,7 +84,7 @@ class AddConseillerNumerique
       default_duration_in_min: 60,
       location_type: :public_office,
       organisation: organisation,
-      service: service
+      service: service,
     )
 
     Motif.create!(
@@ -94,7 +94,7 @@ class AddConseillerNumerique
       location_type: :public_office,
       collectif: true,
       organisation: organisation,
-      service: service
+      service: service,
     )
   end
 
@@ -107,7 +107,7 @@ class AddConseillerNumerique
       latitude: latitude,
       longitude: longitude,
       address: @structure.address,
-      availability: :enabled
+      availability: :enabled,
     )
   end
 
@@ -126,7 +126,7 @@ class AddConseillerNumerique
     @adresse_api_response ||= Faraday.get(
       "https://api-adresse.data.gouv.fr/search/",
       q: @structure.address,
-      postcode: zipcode
+      postcode: zipcode,
     )
     JSON.parse(@adresse_api_response.body)
   end

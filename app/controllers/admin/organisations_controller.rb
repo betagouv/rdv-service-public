@@ -45,7 +45,7 @@ class Admin::OrganisationsController < AgentAuthController
   def create
     @organisation = Organisation.new(
       agent_roles_attributes: [{ agent: current_agent, level: AgentRole::LEVEL_ADMIN }],
-      **new_organisation_params
+      **new_organisation_params,
     )
     authorize(@organisation)
     if @organisation.save

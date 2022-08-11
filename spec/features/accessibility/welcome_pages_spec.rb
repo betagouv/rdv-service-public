@@ -26,7 +26,7 @@ describe "welcome pages", js: true do
                             latitude: "48.887148",
                             longitude: "2.38748",
                             street_ban_id: "75119_4903",
-                            address: "152 Avenue Jean Jaurès Paris 75019 Paris")
+                            address: "152 Avenue Jean Jaurès Paris 75019 Paris",)
     expect_page_to_be_axe_clean(path)
   end
 
@@ -58,7 +58,7 @@ describe "welcome pages", js: true do
         street_ban_id: nil,
         latitude: 48.859,
         longitude: 2.347,
-        address: "Paris 75001"
+        address: "Paris 75001",
       )
       visit path
       expect(page).to have_content("Sélectionnez le motif de votre RDV")
@@ -74,7 +74,7 @@ describe "welcome pages", js: true do
         departement: 75,
         latitude: 48.859,
         longitude: 2.347,
-        street_ban_id: nil
+        street_ban_id: nil,
       )
       visit path
       expect(page).to have_content("Sélectionnez un lieu de RDV")
@@ -92,7 +92,7 @@ describe "welcome pages", js: true do
         longitude: 2.347,
         street_ban_id: nil,
         lieu_id: lieu.id,
-        date: Time.zone.now
+        date: Time.zone.now,
       )
 
       visit path

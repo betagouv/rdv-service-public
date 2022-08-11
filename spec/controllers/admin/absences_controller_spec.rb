@@ -22,13 +22,13 @@ describe Admin::AbsencesController, type: :controller do
         absence_juin = create(:absence,
                               agent: agent,
                               organisation: organisation,
-                              first_day: today + 2.days)
+                              first_day: today + 2.days,)
 
         absence_juillet = create(:absence,
                                  agent: agent,
                                  organisation: organisation,
                                  first_day: today + 1.month,
-                                 end_day: today + 1.month + 3.days)
+                                 end_day: today + 1.month + 3.days,)
 
         get :index, params: { organisation_id: organisation.id, agent_id: agent.id }
         expect(assigns(:absences).sort).to eq([absence_juin, absence_juillet].sort)

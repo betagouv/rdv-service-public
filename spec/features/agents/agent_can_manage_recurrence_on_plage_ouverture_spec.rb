@@ -39,7 +39,7 @@ describe "Agent can manage recurrence on plage d'ouverture" do
       interval: 1,
       on: %w[monday tuesday wednesday thursday friday saturday],
       until: Time.zone.local(2019, 12, 30),
-      starts: Time.zone.local(2019, 12, 3)
+      starts: Time.zone.local(2019, 12, 3),
     )
 
     # reload page to check if form is filled correctly
@@ -71,7 +71,7 @@ describe "Agent can manage recurrence on plage d'ouverture" do
       every: :month,
       interval: 1,
       until: Time.zone.local(2019, 12, 30),
-      starts: Time.zone.local(2019, 12, 11)
+      starts: Time.zone.local(2019, 12, 11),
     )
 
     # reload page to check if form is filled correctly

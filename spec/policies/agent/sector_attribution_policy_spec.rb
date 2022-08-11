@@ -45,28 +45,28 @@ describe Agent::SectorAttributionPolicy::Scope, type: :policy do
         create(
           :sector_attribution,
           sector: create(:sector, territory: territory1),
-          organisation: build(:organisation, territory: territory1)
+          organisation: build(:organisation, territory: territory1),
         )
       end
       let!(:attribution1bis) do
         create(
           :sector_attribution,
           sector: create(:sector, territory: territory1),
-          organisation: build(:organisation, territory: territory1)
+          organisation: build(:organisation, territory: territory1),
         )
       end
       let!(:attribution2) do
         create(
           :sector_attribution,
           sector: create(:sector, territory: territory2),
-          organisation: build(:organisation, territory: territory2)
+          organisation: build(:organisation, territory: territory2),
         )
       end
       let!(:attribution3) do
         create(
           :sector_attribution,
           sector: create(:sector, territory: territory3),
-          organisation: build(:organisation, territory: territory3)
+          organisation: build(:organisation, territory: territory3),
         )
       end
 

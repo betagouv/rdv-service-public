@@ -139,7 +139,7 @@ class SearchContext
       motif: matching_motifs.where(organisation: lieu.organisation).first,
       lieu: lieu,
       date_range: date_range,
-      geo_search: geo_search
+      geo_search: geo_search,
     )
   end
 
@@ -149,7 +149,7 @@ class SearchContext
         # we retrieve the geolocalised matching motifs, if there are none we fallback
         # on the matching motifs for the organisations passed in the query
         filter_motifs(geo_search.available_motifs).presence || filter_motifs(
-          Motif.available_with_plages_ouvertures.where(organisation_id: @organisation_ids)
+          Motif.available_with_plages_ouvertures.where(organisation_id: @organisation_ids),
         )
       else
         filter_motifs(geo_search.available_motifs)

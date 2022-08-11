@@ -12,7 +12,7 @@ describe "API auth", type: :request do
       post(
         api_v1_agent_with_token_auth_session_path,
         params: { email: agent.email, password: "blahblah" }.to_json,
-        headers: { CONTENT_TYPE: "application/json", ACCEPT: "application/json" }
+        headers: { CONTENT_TYPE: "application/json", ACCEPT: "application/json" },
       )
       expect(response.status).to eq(401)
       expect(response.has_header?("access-token")).to eq(false)
@@ -24,7 +24,7 @@ describe "API auth", type: :request do
       post(
         api_v1_agent_with_token_auth_session_path,
         params: { email: "blah@demo.rdv-sol.fr", password: "123456" }.to_json,
-        headers: { CONTENT_TYPE: "application/json", ACCEPT: "application/json" }
+        headers: { CONTENT_TYPE: "application/json", ACCEPT: "application/json" },
       )
       expect(response.status).to eq(401)
       expect(response.has_header?("access-token")).to eq(false)
@@ -46,7 +46,7 @@ describe "API auth", type: :request do
           "access-token": "blah",
           client: "blah",
           uid: "jean@fun.fr",
-        }
+        },
       )
       expect(response.status).to eq(401)
     end
@@ -57,7 +57,7 @@ describe "API auth", type: :request do
       post(
         api_v1_agent_with_token_auth_session_path,
         params: { email: agent.email, password: "123456" }.to_json,
-        headers: { CONTENT_TYPE: "application/json", ACCEPT: "application/json" }
+        headers: { CONTENT_TYPE: "application/json", ACCEPT: "application/json" },
       )
       expect(response.status).to eq(200)
       expect(response.has_header?("access-token")).to eq(true)
@@ -67,7 +67,7 @@ describe "API auth", type: :request do
           "access-token": response.headers["access-token"],
           client: response.headers["client"],
           uid: response.headers["uid"],
-        }
+        },
       )
       expect(response.status).to eq(200)
       expect(JSON.parse(response.body)["absences"].count).to eq(1)

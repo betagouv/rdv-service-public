@@ -7,7 +7,7 @@ RSpec.describe Admins::Grc92Mailer do
     it "sends the email correctly" do
       expect(mail).to have_attributes(
         from: ["ne-pas-repondre-grc@hauts-de-seine.fr"],
-        reply_to: nil
+        reply_to: nil,
       )
     end
   end

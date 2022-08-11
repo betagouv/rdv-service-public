@@ -76,6 +76,6 @@ module MotifsHelper
     value = block.present? ? capture(&block) : display_value_or_na_placeholder(arg_value)
     value += tag.div(hint, class: "text-muted") if arg_value.present? && hint.present?
     tag.div(tag.div(legend, class: "col-md-4 text-right") +
-        tag.div(value, class: "col-md-8 text-bold"), class: "row")
+        tag.div(value, class: "col-md-8 text-bold"), class: "row",)
   end
 end

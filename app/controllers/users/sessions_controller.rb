@@ -32,7 +32,7 @@ class Users::SessionsController < Devise::SessionsController
 
     redirect_to(
       root_path,
-      flash: { error: "Déconnectez-vous d'abord de votre compte agent pour vous connecter en tant qu'utilisateur" }
+      flash: { error: "Déconnectez-vous d'abord de votre compte agent pour vous connecter en tant qu'utilisateur" },
     )
   end
 end

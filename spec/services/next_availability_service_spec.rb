@@ -16,7 +16,7 @@ describe NextAvailabilityService, type: :service do
       it "works" do
         create(:plage_ouverture,
                motifs: [motif], lieu: lieu, agent: agent, organisation: organisation,
-               first_day: today + 8.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+               first_day: today + 8.days, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),)
         next_available = described_class.find(motif, lieu, [], from: today)
         expect(next_available.starts_at).to eq((today + 8.days).in_time_zone + 9.hours)
       end
@@ -26,10 +26,10 @@ describe NextAvailabilityService, type: :service do
       it "planned" do
         create(:plage_ouverture,
                motifs: [motif], lieu: lieu, agent: agent, organisation: organisation,
-               first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+               first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),)
         create(:absence,
                agent: agent, organisation: organisation,
-               first_day: today, start_time: Tod::TimeOfDay.new(9), end_day: today, end_time: Tod::TimeOfDay.new(12, 0))
+               first_day: today, start_time: Tod::TimeOfDay.new(9), end_day: today, end_time: Tod::TimeOfDay.new(12, 0),)
 
         next_available = described_class.find(motif, lieu, [], from: today)
         expect(next_available).to be_nil
@@ -40,10 +40,10 @@ describe NextAvailabilityService, type: :service do
         create(:plage_ouverture,
                motifs: [motif], lieu: lieu, agent: agent, organisation: organisation,
                first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-               recurrence: recurrence)
+               recurrence: recurrence,)
         create(:absence,
                agent: agent, organisation: organisation,
-               first_day: today, start_time: Tod::TimeOfDay.new(9), end_day: today, end_time: Tod::TimeOfDay.new(12, 0))
+               first_day: today, start_time: Tod::TimeOfDay.new(9), end_day: today, end_time: Tod::TimeOfDay.new(12, 0),)
 
         next_available = described_class.find(motif, lieu, [], from: today)
         expect(next_available.starts_at).to eq(today.in_time_zone + 1.month + 9.hours)
@@ -54,14 +54,14 @@ describe NextAvailabilityService, type: :service do
       it "look at future's RDV an cancel creneau" do
         create(:plage_ouverture,
                motifs: [motif], lieu: lieu, agent: agent, organisation: organisation,
-               first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+               first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),)
         create(:rdv,
                agents: [agent],
                organisation: organisation,
                lieu: lieu,
                motif: motif,
                starts_at: today.in_time_zone + 9.hours, duration_in_min: 120,
-               status: "unknown")
+               status: "unknown",)
         next_creneau = described_class.find(motif, lieu, [], from: today)
         expect(next_creneau).to be_nil
       end
@@ -69,14 +69,14 @@ describe NextAvailabilityService, type: :service do
       it "doesnt look a cancelled's RDV" do
         create(:plage_ouverture,
                motifs: [motif], lieu: lieu, agent: agent, organisation: organisation,
-               first_day: (today + 8.days), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
+               first_day: (today + 8.days), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),)
         create(:rdv,
                agents: [agent],
                organisation: organisation,
                lieu: lieu,
                motif: motif,
                starts_at: (today + 8.days).in_time_zone + 9.hours, duration_in_min: 120,
-               status: "revoked")
+               status: "revoked",)
 
         next_creneau = described_class.find(motif, lieu, [], from: today)
         expect(next_creneau.starts_at).to eq((today + 8.days).in_time_zone + 9.hours)
@@ -89,12 +89,12 @@ describe NextAvailabilityService, type: :service do
                lieu: lieu,
                motif: motif,
                starts_at: today.in_time_zone + 9.hours, duration_in_min: 120,
-               status: "unknown")
+               status: "unknown",)
 
         create(:plage_ouverture,
                motifs: [motif], lieu: lieu, agent: agent, organisation: organisation,
                first_day: today, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-               recurrence: Montrose.every(:month, starts: today))
+               recurrence: Montrose.every(:month, starts: today),)
 
         next_creneau = described_class.find(motif, lieu, [], from: today)
         expect(next_creneau.starts_at).to eq(today.in_time_zone + 1.month + 9.hours)
@@ -105,14 +105,14 @@ describe NextAvailabilityService, type: :service do
       let!(:motif) do
         create(:motif,
                name: "Vaccination", default_duration_in_min: 30, organisation: organisation,
-               min_booking_delay: 1.week.from_now, max_booking_delay: 7.months.from_now)
+               min_booking_delay: 1.week.from_now, max_booking_delay: 7.months.from_now,)
       end
 
       let!(:plage_ouverture) do
         create(:plage_ouverture,
                motifs: [motif], lieu: lieu, agent: agent, organisation: organisation,
                first_day: today + 1.week, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-               recurrence: Montrose.every(:week, starts: 1.week.from_now))
+               recurrence: Montrose.every(:week, starts: 1.week.from_now),)
       end
 
       context "when now is later than the plage d'ouverture" do
@@ -133,7 +133,7 @@ describe NextAvailabilityService, type: :service do
         create(:plage_ouverture,
                motifs: [motif], lieu: lieu,
                first_day: other_agent_start_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-               agent: other_agent, organisation: organisation)
+               agent: other_agent, organisation: organisation,)
         wanted_agents = [agent.id, other_agent.id]
         next_creneau = described_class.find(motif, lieu, wanted_agents, from: today)
         expect(next_creneau.starts_at).to eq(today + 7.days + 9.hours)
@@ -143,7 +143,7 @@ describe NextAvailabilityService, type: :service do
         create(:plage_ouverture,
                motifs: [motif], lieu: lieu,
                first_day: other_agent_start_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11),
-               agent: other_agent, organisation: organisation)
+               agent: other_agent, organisation: organisation,)
         wanted_agents = [other_agent.id]
         next_creneau = described_class.find(motif, lieu, wanted_agents, from: today)
         expect(next_creneau.starts_at).to eq(other_agent_start_day + 9.hours)

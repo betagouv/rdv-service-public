@@ -17,7 +17,7 @@ class ScalingoAppRestarter < BaseService
       "https://auth.scalingo.com/v1/tokens/exchange",
       userpwd: ":#{@api_token}",
       headers: { "Content-Type": "application/json",
-                 Accept: "application/json", }
+                 Accept: "application/json", },
     )
 
     raise ApiError, "Token request failed: #{token_response.code}" unless token_response.success?
@@ -31,7 +31,7 @@ class ScalingoAppRestarter < BaseService
       "https://#{api_host}/v1/apps/#{@app_id}/restart",
       headers: { "Content-Type": "application/json",
                  Accept: "application/json",
-                 Authorization: "Bearer #{bearer_token}", }
+                 Authorization: "Bearer #{bearer_token}", },
     )
 
     raise ApiError, "Restart request failed: #{restart_response.code}" unless restart_response.success?

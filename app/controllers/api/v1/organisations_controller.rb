@@ -13,7 +13,7 @@ class Api::V1::OrganisationsController < Api::V1::BaseController
     Users::GeoSearch.new(
       departement: params[:departement_number],
       city_code: params[:city_code],
-      street_ban_id: params[:street_ban_id]
+      street_ban_id: params[:street_ban_id],
     ).most_relevant_organisations
   end
 

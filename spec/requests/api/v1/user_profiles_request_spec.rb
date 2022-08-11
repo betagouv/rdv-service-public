@@ -16,7 +16,7 @@ describe "api/v1/user_profiles requests", type: :request do
             organisation_id: organisation.id,
             user_id: user.id,
           },
-          headers: api_auth_headers_for_agent(agent)
+          headers: api_auth_headers_for_agent(agent),
         )
         expect(response.status).to eq(200)
         expect(UserProfile.count).to eq(count_before + 1)
@@ -39,7 +39,7 @@ describe "api/v1/user_profiles requests", type: :request do
             logement: "heberge",
             notes: "Très pressé, vite vite",
           },
-          headers: api_auth_headers_for_agent(agent)
+          headers: api_auth_headers_for_agent(agent),
         )
         expect(response.status).to eq(200)
         expect(UserProfile.count).to eq(count_before + 1)
@@ -59,7 +59,7 @@ describe "api/v1/user_profiles requests", type: :request do
         post(
           api_v1_user_profiles_path,
           params: { user_id: user.id },
-          headers: api_auth_headers_for_agent(agent)
+          headers: api_auth_headers_for_agent(agent),
         )
         expect(response.status).to eq(403)
         expect(UserProfile.count).to eq(count_before)
@@ -74,7 +74,7 @@ describe "api/v1/user_profiles requests", type: :request do
         post(
           api_v1_user_profiles_path,
           params: { organisation_id: organisation.id },
-          headers: api_auth_headers_for_agent(agent)
+          headers: api_auth_headers_for_agent(agent),
         )
         expect(response.status).to eq(422)
         expect(UserProfile.count).to eq(count_before)
@@ -95,7 +95,7 @@ describe "api/v1/user_profiles requests", type: :request do
             user_id: user.id,
             organisation_id: unauthorized_orga.id,
           },
-          headers: api_auth_headers_for_agent(agent)
+          headers: api_auth_headers_for_agent(agent),
         )
         expect(response.status).to eq(403)
         expect(UserProfile.count).to eq(count_before)
@@ -115,7 +115,7 @@ describe "api/v1/user_profiles requests", type: :request do
             user_id: user.id,
             organisation_id: organisation.id,
           },
-          headers: api_auth_headers_for_agent(agent)
+          headers: api_auth_headers_for_agent(agent),
         )
         expect(response.status).to eq(422)
         expect(UserProfile.count).to eq(count_before)

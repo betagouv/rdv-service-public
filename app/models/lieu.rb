@@ -45,7 +45,7 @@ class Lieu < ApplicationRecord
         .joins(:motifs)
         .where(motifs: { id: motifs.pluck(:id) })
         .map(&:lieu_id)
-        .uniq
+        .uniq,
     )
   }
 

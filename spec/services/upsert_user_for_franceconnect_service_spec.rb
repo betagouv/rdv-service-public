@@ -7,7 +7,7 @@ describe UpsertUserForFranceconnectService, type: :service do
                    family_name: "longo",
                    preferred_username: "DUPONT",
                    birthdate: Date.parse("1971-06-20"),
-                   sub: "hvdiuds4357")
+                   sub: "hvdiuds4357",)
   end
 
   context "no pre-existing user" do
@@ -34,7 +34,7 @@ describe UpsertUserForFranceconnectService, type: :service do
         logged_once_with_franceconnect: true,
         first_name: "Jeannine",
         birth_name: "LONGINO",
-        birth_date: Date.parse("1970-02-15")
+        birth_date: Date.parse("1970-02-15"),
       )
     end
 
@@ -59,7 +59,7 @@ describe UpsertUserForFranceconnectService, type: :service do
         first_name: "Jeannine",
         last_name: "LONGINO",
         birth_name: nil,
-        birth_date: Date.parse("1970-02-15")
+        birth_date: Date.parse("1970-02-15"),
       )
     end
 
@@ -82,7 +82,7 @@ describe UpsertUserForFranceconnectService, type: :service do
       create(
         :user,
         email: "jeanne@longo.fr",
-        birth_date: nil
+        birth_date: nil,
       )
     end
 

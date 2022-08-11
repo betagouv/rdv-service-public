@@ -43,7 +43,7 @@ describe "api/v1/motifs requests", type: :request do
           get(
             api_v1_organisation_motifs_path(organisation),
             headers: api_auth_headers_for_agent(agent),
-            params: { active: true }
+            params: { active: true },
           )
           expect(response.status).to eq(200)
           response_parsed = JSON.parse(response.body)
@@ -56,7 +56,7 @@ describe "api/v1/motifs requests", type: :request do
           get(
             api_v1_organisation_motifs_path(organisation),
             headers: api_auth_headers_for_agent(agent),
-            params: { active: false }
+            params: { active: false },
           )
           expect(response.status).to eq(200)
           response_parsed = JSON.parse(response.body)
@@ -75,7 +75,7 @@ describe "api/v1/motifs requests", type: :request do
           get(
             api_v1_organisation_motifs_path(organisation),
             headers: api_auth_headers_for_agent(agent),
-            params: { reservable_online: true }
+            params: { reservable_online: true },
           )
           expect(response.status).to eq(200)
           response_parsed = JSON.parse(response.body)
@@ -88,7 +88,7 @@ describe "api/v1/motifs requests", type: :request do
           get(
             api_v1_organisation_motifs_path(organisation),
             headers: api_auth_headers_for_agent(agent),
-            params: { reservable_online: false }
+            params: { reservable_online: false },
           )
           expect(response.status).to eq(200)
           response_parsed = JSON.parse(response.body)
@@ -109,7 +109,7 @@ describe "api/v1/motifs requests", type: :request do
         get(
           api_v1_organisation_motifs_path(organisation),
           headers: api_auth_headers_for_agent(agent),
-          params: { service_id: service.id }
+          params: { service_id: service.id },
         )
         expect(response.status).to eq(200)
         response_parsed = JSON.parse(response.body)

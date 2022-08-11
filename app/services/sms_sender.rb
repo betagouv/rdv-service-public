@@ -69,8 +69,8 @@ class SmsSender < BaseService
           sender: SENDER_NAME,
           recipient: @phone_number,
           content: @content,
-          tag: @tags.join(" ")
-        )
+          tag: @tags.join(" "),
+        ),
       )
       # response is a SibApiV3Sdk.SendSms
       # attributes of interest are :message_id, :sms_count, :used_credits, :remaining_credits
@@ -100,7 +100,7 @@ class SmsSender < BaseService
         originatorTON: 1,
         campaignName: @tags.join(" ").truncate(49),
         maxConcatenatedMessages: 10,
-      }
+      },
     ).run
 
     if response.timed_out?
@@ -136,7 +136,7 @@ class SmsSender < BaseService
         msg: @content,
         devCode: @key,
         emetteur: replies_email, # The parameter is called “emetteur” but it is actually an email where we can receive replies to the sms.
-      }
+      },
     ).run
 
     if response.timed_out?
@@ -186,7 +186,7 @@ class SmsSender < BaseService
           number_list: @phone_number,
           encodage: 3,
         },
-      }.to_json
+      }.to_json,
     ).run
 
     if response.timed_out?
@@ -221,7 +221,7 @@ class SmsSender < BaseService
         token: @key,
         to: @phone_number,
         msg: @content,
-      }
+      },
     ).run
 
     if response.timed_out?

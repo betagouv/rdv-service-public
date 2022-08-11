@@ -28,14 +28,14 @@ class TransferEmailReplyJob < ApplicationJob
       author: user || source_mail.header[:from],
       agents: rdv.agents,
       reply_body: extracted_response,
-      source_mail: source_mail
+      source_mail: source_mail,
     ).deliver_now
   end
 
   def forward_to_default_mailbox
     Agents::ReplyTransferMailer.forward_to_default_mailbox(
       reply_body: extracted_response,
-      source_mail: source_mail
+      source_mail: source_mail,
     ).deliver_now
   end
 

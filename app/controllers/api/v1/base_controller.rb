@@ -74,14 +74,14 @@ class Api::V1::BaseController < ActionController::Base
       json: {
         errors: [{ base: :forbidden }],
         error_messages: [t("#{policy_name}.#{exception.query}", scope: "pundit", default: :default)],
-      }
+      },
     )
   end
 
   def parameter_missing(exception)
     render(
       status: :unprocessable_entity,
-      json: { success: false, errors: [exception.to_s] }
+      json: { success: false, errors: [exception.to_s] },
     )
   end
 
@@ -96,7 +96,7 @@ class Api::V1::BaseController < ActionController::Base
         success: false,
         errors: exception.record.errors.details,
         error_messages: exception.record.errors.map { "#{_1.attribute} #{_1.message}" },
-      }
+      },
     )
   end
 end

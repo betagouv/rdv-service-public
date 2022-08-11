@@ -66,7 +66,7 @@ module IcsMultipartAttached
           content_type "text/calendar; method=#{cal.ip_method}; charset=utf-8"
           body Base64.encode64(cal.to_ical)
           content_transfer_encoding "base64"
-        end
+        end,
       )
     end
 

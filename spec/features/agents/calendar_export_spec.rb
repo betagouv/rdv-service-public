@@ -44,7 +44,7 @@ describe "Agents can export their calendar to other tools, such as Outlook or Go
     create(:rdv, motif: motif, agents: [agent], status: "revoked", starts_at: 2.days.from_now, uuid: "749336ce-eaca-40a3-8c28-246ed8d18849", organisation: org, id: 789_000)
     motif_collectif = create(:motif, :collectif, name: "Atelier collectif", organisation: org)
     create(:rdv, motif: motif_collectif, agents: [agent], status: "unknown", starts_at: 3.days.from_now, uuid: "abb701a5-381a-4fae-9157-129b5843834c", organisation: org, id: 123_123,
-                 max_participants_count: 5)
+                 max_participants_count: 5,)
 
     visit ics_calendar_path(agent.calendar_uid, format: :ics)
 
