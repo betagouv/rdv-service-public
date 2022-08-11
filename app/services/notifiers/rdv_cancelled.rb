@@ -3,6 +3,7 @@
 class Notifiers::RdvCancelled < Notifiers::RdvBase
   def notify_user_by_mail(user)
     # Only send sms for excused cancellations (not for no-show)
+    # if the rdv is collectif, there can still be cancellation notification if a participant is removed (regardless of the rdv status)
     return unless @rdv.status.in?(%w[excused revoked]) || @rdv.collectif?
 
     user_mailer(user).rdv_cancelled.deliver_later
