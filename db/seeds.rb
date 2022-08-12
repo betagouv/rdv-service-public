@@ -129,7 +129,7 @@ service_pmi = Service.create!(name: "PMI (Protection Maternelle Infantile)", sho
 service_social = Service.create!(name: "Service social", short_name: "Service Social")
 service_secretariat = Service.create!(name: "Secrétariat", short_name: "Secrétariat")
 _service_nouveau = Service.create!(name: "Médico-social", short_name: "Médico-social")
-service_cnfs = Service.create!(name: "Conseiller Numérique", short_name: "Conseiller Numérique")
+service_cnfs = Service.create!(name: Service::CONSEILLER_NUMERIQUE, short_name: Service::CONSEILLER_NUMERIQUE)
 
 # MOTIFS org_paris_nord
 
