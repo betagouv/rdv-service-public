@@ -14,7 +14,7 @@ class Agents::RdvMailer < ApplicationMailer
 
   def rdv_created
     self.ics_payload = @rdv.payload(:create, @agent)
-    subject = t("agents.rdv_mailer.rdv_created.title", date: relative_date(@rdv.starts_at))
+    subject = t("agents.rdv_mailer.rdv_created.title", domain_name: domain.name, date: relative_date(@rdv.starts_at))
     mail(subject: subject)
   end
 

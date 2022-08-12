@@ -28,5 +28,27 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
         expect(mail.subject).to eq("Nouveau RDV ajouté sur votre agenda rdv-solidarités pour demain")
       end
     end
+
+    describe "using the agent domain's branding" do
+      context "when agent's service is not conseiller_numerique" do
+        let(:agent) { build(:agent, service: build(:service, :social)) }
+
+        it "works" do
+          expect(mail.html_part.body.to_s).to include(%(src="/assets/logos/logo-))
+          expect(mail.html_part.body.to_s).to include("Voir sur RDV Solidarités")
+          expect(mail.html_part.body.to_s).to include(%(href="http://rdv-solidarites.fr))
+        end
+      end
+
+      context "when agent's service is conseiller_numerique" do
+        let(:agent) { build(:agent, service: build(:service, :conseiller_numerique)) }
+
+        it "works" do
+          expect(mail.html_part.body.to_s).to include(%(src="/assets/logos/logo-cnfs-))
+          expect(mail.html_part.body.to_s).to include("Voir sur RDV Inclusion Numérique")
+          expect(mail.html_part.body.to_s).to include(%(href="http://rdv-inclusion-numerique.fr/))
+        end
+      end
+    end
   end
 end

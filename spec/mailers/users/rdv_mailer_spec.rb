@@ -83,9 +83,11 @@ RSpec.describe Users::RdvMailer, type: :mailer do
         motif_name_with_location_type: rdv.motif.name_with_location_type, \
         organisation_ids: [rdv.organisation_id], \
         address: rdv.address, \
-        invitation_token: token \
+        invitation_token: token, \
+        host: Domain::RDV_SOLIDARITES.dns_domain_name
       )
 
+      puts mail.html_part.body.to_s
       expect(mail.html_part.body).to have_link("Reprendre RDV", href: expected_url)
     end
   end
@@ -101,6 +103,32 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       expect(mail.reply_to).to eq(["rdv+#{rdv.uuid}@reply.rdv-solidarites.fr"])
       expect(mail.html_part.body).to include("Nous vous rappellons que vous avez un RDV prévu")
       expect(mail.html_part.body.raw_source).to include("/users/rdvs/#{rdv.id}?invitation_token=12345")
+    end
+  end
+
+  %i[rdv_created rdv_upcoming_reminder rdv_cancelled].each do |action|
+    describe "using the agent domain's branding" do
+      let(:rdv) { create(:rdv, motif: motif) }
+
+      context "when motif's service is not conseiller_numerique" do
+        let(:motif) { create(:motif, service: create(:service, :social)) }
+
+        it "works" do
+          mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
+          expect(mail.html_part.body.to_s).to include(%(src="/assets/logos/logo-))
+          expect(mail.html_part.body.to_s).to include(%(href="http://rdv-solidarites.fr))
+        end
+      end
+
+      context "when motif's service is conseiller_numerique" do
+        let(:motif) { create(:motif, service: create(:service, :conseiller_numerique)) }
+
+        it "works" do
+          mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
+          expect(mail.html_part.body.to_s).to include(%(src="/assets/logos/logo-cnfs-))
+          expect(mail.html_part.body.to_s).to include(%(href="http://rdv-inclusion-numerique.fr))
+        end
+      end
     end
   end
 end
