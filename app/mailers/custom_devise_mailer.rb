@@ -4,6 +4,8 @@ class CustomDeviseMailer < Devise::Mailer
   self.deliver_later_queue_name = :devise
 
   include Devise::Controllers::UrlHelpers # Optional. eg. `confirmation_url`
+  include DomainConcern
+  helper_method :domain
 
   helper :application
   default template_path: "devise/mailer"
