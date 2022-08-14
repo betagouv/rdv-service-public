@@ -42,11 +42,11 @@ fr:
         click_on_link_sent: "Veuillez cliquer sur le lien dans l'email qui vient de vous être envoyé"
     mailer:
       invitation_instructions_cnfs:
-        subject: "Vous avez été invité sur RDV-Solidarités"
+        subject: "Vous avez été invité sur RDV Inclusion Numérique"
         hello: "Hello 👋"
-        create_account: "Vos missions de Conseiller•ère Numérique vous donnent accès à RDV Solidarités, un outil fourni par l'ANCT."
+        create_account: "Vos missions de Conseiller•ère Numérique vous donnent accès à RDV Inclusion Numérique, un outil fourni par l'ANCT."
         title1: A quoi ça sert ?
-        paragraph1: "RDV Solidarités est un outil de gestion des RDV qui vous permet de :"
+        paragraph1: "RDV Inclusion Numérique est un outil de gestion des RDV qui vous permet de :"
         use1: "✅ gérer vos RDV individuels et collectifs"
         use2: "✅ envoyer des rappels SMS et mail aux usagers."
         use3: "✅ partager vos créneaux disponibles à une personne tiers."
@@ -56,7 +56,7 @@ fr:
         title3: Besoin d’aide ?
         help_info: "Vous pouvez  nous contacter sur le Mattermost dans le canal : %{mattermost}  ou bien par mail à %{support_email}"
         sign_off: En vous souhaitant un bon embarquement !
-        signature: L'équipe RDV-Solidarités
+        signature: L'équipe RDV Inclusion Numérique
       invitation_instructions_for_agents:
         subject: "Vous avez été invité sur RDV-Solidarités."
         hello: "Bonjour %{email}"
