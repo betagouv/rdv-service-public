@@ -282,7 +282,7 @@ class Rdv < ApplicationRecord
   end
 
   def domain
-    beta_test_organisation_ids = [123, 456]
+    # beta_test_organisation_ids = [123, 456]
 
     # return Domain::RDV_SOLIDARITES unless organisation_id.in?(beta_test_organisation_ids)
 

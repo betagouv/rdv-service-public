@@ -3,9 +3,8 @@
 class WelcomeController < ApplicationController
   # TODO: déplacer ces action dans `StaticPagesController`
   def welcome_agent
-    unless current_domain.default?
-      redirect_to agent_session_path
-    end
+    # La page de bienvenue MDS est seulement à afficher pour RDV-S, pas RDV-IN
+    redirect_to agent_session_path unless current_domain.default?
   end
 
   def super_admin; end
