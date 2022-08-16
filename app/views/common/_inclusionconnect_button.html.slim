@@ -2,6 +2,7 @@
   .text-center.mb-3
     p Inclusion Connect est service d'authentification qui permet à un utilisateur d'utiliser les mêmes informations d'identification (email et mot de passe) pour accéder à plusieurs applications.
 
+    / https://emplois.inclusion.beta.gouv.fr/inclusion_connect/authorize
     = link_to "/omniauth/inclusionconnect", class: "inclusion-connect-link", method: :post do
       .normal = image_tag("inclusionconnect-bouton.svg")
     .inclusion-connect-details

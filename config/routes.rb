@@ -4,6 +4,10 @@ Rails.application.routes.draw do
     get "omniauth/franceconnect/callback" => "omniauth_callbacks#franceconnect"
   end
 
+  devise_scope :agent do
+    post "omniauth/inclusionconnect" => "omniauth_callbacks#inclusionconnect"
+  end
+
   devise_for :super_admins # necessary for helpers like super_admin_signed_in?
   devise_scope :super_admin do
     get "omniauth/github/callback" => "omniauth_callbacks#github"
@@ -44,7 +48,7 @@ Rails.application.routes.draw do
 
   ## APP ##
   devise_for :users,
-             controllers: { registrations: "users/registrations", sessions: "users/sessions", passwords: "users/passwords", confirmations: "users/confirmations", invitations: "users/invitations" }
+    controllers: { registrations: "users/registrations", sessions: "users/sessions", passwords: "users/passwords", confirmations: "users/confirmations", invitations: "users/invitations" }
 
   namespace :users do
     resource :rdv_wizard_step, only: %i[new create]

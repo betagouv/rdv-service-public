@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
+  def inclusionconnect
+    redirect_to "https://emplois.inclusion.beta.gouv.fr/inclusion_connect/authorize?user_kind=prescriber&previous_url=https://demo.rdv-solidarites.fr"
+  end
+
   def franceconnect
     upsert_service = UpsertUserForFranceconnectService
       .perform_with(request.env["omniauth.auth"]["info"])
