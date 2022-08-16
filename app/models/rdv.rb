@@ -281,6 +281,7 @@ class Rdv < ApplicationRecord
     results.exclude?("failure") ? "processed" : "failure"
   end
 
+  # rubocop:disable Rails/Delegate
   def domain
     # beta_test_organisation_ids = [123, 456]
 
@@ -288,6 +289,7 @@ class Rdv < ApplicationRecord
 
     service.domain
   end
+  # rubocop:enable Rails/Delegate
 
   private
 
