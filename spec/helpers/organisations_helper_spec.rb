@@ -28,6 +28,7 @@ describe OrganisationsHelper do
 
     context "for a conseiller numérique" do
       let(:service_cnfs) { create(:service, name: "Conseiller Numérique") }
+      let(:motif) { create(:motif, service: service_cnfs) }
 
       it "returns true with a 21 days old organisation and 13 days old agent, until the agent has 2 rdvs" do
         agent = create(:agent, admin_role_in_organisations: [organisation],
@@ -36,7 +37,7 @@ describe OrganisationsHelper do
 
         expect(show_checklist?(organisation, agent)).to be_truthy
 
-        create_list(:rdv, 2, agents: [agent])
+        create_list(:rdv, 2, motif: motif, agents: [agent])
 
         expect(show_checklist?(organisation, agent)).to be_falsey
       end

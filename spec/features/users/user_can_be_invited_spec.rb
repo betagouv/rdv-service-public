@@ -26,8 +26,8 @@ describe "User can be invited" do
   let!(:motif) { create(:motif, name: "RSA orientation sur site", reservable_online: true, organisation: organisation) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:autre_lieu) { create(:lieu, organisation: organisation) }
-  let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now - 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
-  let!(:autre_plage_ouverture) { create(:plage_ouverture, :daily, first_day: now - 1.month, motifs: [motif], lieu: autre_lieu, organisation: organisation) }
+  let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now - 31.days, motifs: [motif], lieu: lieu, organisation: organisation) }
+  let!(:autre_plage_ouverture) { create(:plage_ouverture, :daily, first_day: now - 31.days, motifs: [motif], lieu: autre_lieu, organisation: organisation) }
 
   let!(:organisation2) { create(:organisation) }
 

@@ -302,7 +302,6 @@ class Rdv < ApplicationRecord
 
   def motif_available_to_agents
     return if agents.all? { |agent| agent.service == motif.service }
-
     errors.add(:agents, :motif_not_available)
   end
 

@@ -2,14 +2,15 @@
 
 describe Admin::EditRdvForm, type: :form do
   let(:organisation) { create(:organisation) }
-  let(:agent) { create(:agent) }
+  let(:motif) { create(:motif) }
+  let(:agent) { create(:agent, service: motif.service) }
   let(:agent_context) { instance_double(AgentOrganisationContext, agent: agent, organisation: organisation) }
 
   describe "#update" do
     it "updates rdv's lieu" do
       now = Time.zone.parse("2020-12-12 13h50")
       travel_to(now)
-      rdv = create(:rdv, agents: [agent], organisation: organisation, lieu: create(:lieu, organisation: organisation))
+      rdv = create(:rdv, motif: motif, agents: [agent], organisation: organisation, lieu: create(:lieu, organisation: organisation))
       new_lieu = create(:lieu, organisation: organisation)
 
       edit_rdv_form = described_class.new(rdv, agent_context)
@@ -21,7 +22,7 @@ describe Admin::EditRdvForm, type: :form do
     it "updates the requested rdv status" do
       now = Time.zone.parse("2020-12-12 13h50")
       travel_to(now)
-      rdv = create(:rdv, agents: [agent], organisation: organisation, lieu: create(:lieu, organisation: organisation))
+      rdv = create(:rdv, motif: motif, agents: [agent], organisation: organisation, lieu: create(:lieu, organisation: organisation))
 
       edit_rdv_form = described_class.new(rdv, agent_context)
       edit_rdv_form.update(status: "waiting")
@@ -33,7 +34,7 @@ describe Admin::EditRdvForm, type: :form do
       now = Time.zone.parse("2020-08-03 9h00")
 
       travel_to(now - 2.days)
-      rdv = create(:rdv, cancelled_at: now - 1.day, status: "excused", starts_at: now - 2.days, agents: [agent], organisation: organisation)
+      rdv = create(:rdv, motif: motif, cancelled_at: now - 1.day, status: "excused", starts_at: now - 2.days, agents: [agent], organisation: organisation)
 
       travel_to(now)
 
@@ -48,7 +49,7 @@ describe Admin::EditRdvForm, type: :form do
     it "when status is excused, cancelled_at should not be nil" do
       now = Time.zone.parse("2020-08-03 9h00")
       travel_to(now - 3.days)
-      rdv = create(:rdv, starts_at: now - 2.days, agents: [agent], organisation: organisation)
+      rdv = create(:rdv, motif: motif, starts_at: now - 2.days, agents: [agent], organisation: organisation)
       travel_to(now)
 
       edit_rdv_form = described_class.new(rdv, agent_context)
@@ -62,7 +63,7 @@ describe Admin::EditRdvForm, type: :form do
     it "when status is excused, changing status should reset cancelled_at" do
       now = Time.zone.parse("2020-08-03 9h00")
       travel_to(now - 4.days)
-      rdv = create(:rdv, cancelled_at: 2.days.ago, starts_at: now - 2.days, agents: [agent], organisation: organisation, status: "excused")
+      rdv = create(:rdv, motif: motif, cancelled_at: 2.days.ago, starts_at: now - 2.days, agents: [agent], organisation: organisation, status: "excused")
       travel_to(now)
 
       edit_rdv_form = described_class.new(rdv, agent_context)
