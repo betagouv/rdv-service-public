@@ -4,8 +4,6 @@ class CustomDeviseMailer < Devise::Mailer
   self.deliver_later_queue_name = :devise
 
   include Devise::Controllers::UrlHelpers # Optional. eg. `confirmation_url`
-  include DomainConcern
-  helper_method :domain
 
   helper :application
   default template_path: "devise/mailer"
@@ -13,6 +11,7 @@ class CustomDeviseMailer < Devise::Mailer
   helper RdvSolidaritesInstanceNameHelper
 
   def invitation_instructions(record, token, opts = {})
+    @record = record
     @token = token
     @user_params = opts[:user_params] || {}
     opts[:reply_to] = reply_to(record)
@@ -29,5 +28,23 @@ class CustomDeviseMailer < Devise::Mailer
     return unless record.is_a? Agent
 
     record.invited_by&.email || SUPPORT_EMAIL
+  end
+
+  def domain
+    if @record.is_a?(Agent)
+      @record.domain
+    else
+      # TODO: discuter de cette approche heuristique
+      domains_of_user_rdvs = @record.rdv.map { |rdv| rdv.motif.service.domain }.uniq
+      if domains_of_user_rdvs == [Domain::RDV_INCLUSION_NUMERIQUE]
+        Domain::RDV_INCLUSION_NUMERIQUE
+      else
+        Domain::RDV_SOLIDARITES
+      end
+    end
+  end
+
+  def default_url_options
+    super.merge(host: domain.dns_domain_name)
   end
 end

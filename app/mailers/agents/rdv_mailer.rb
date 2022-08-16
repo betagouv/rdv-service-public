@@ -31,4 +31,10 @@ class Agents::RdvMailer < ApplicationMailer
     subject = t("agents.rdv_mailer.rdv_date_updated.title", date: relative_date(@old_starts_at))
     mail(subject: subject)
   end
+
+  private
+
+  def domain
+    @agent.domain
+  end
 end

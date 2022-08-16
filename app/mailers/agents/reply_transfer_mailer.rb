@@ -29,4 +29,10 @@ class Agents::ReplyTransferMailer < ApplicationMailer
 
     mail(to: SUPPORT_EMAIL, subject: t(".title"))
   end
+
+  private
+
+  def domain
+    @rdv.motif.service.domain
+  end
 end

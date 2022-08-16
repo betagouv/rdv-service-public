@@ -25,4 +25,10 @@ class Agents::PlageOuvertureMailer < ApplicationMailer
     self.ics_payload = @plage_ouverture.payload(:destroy)
     mail(subject: t("agents.plage_ouverture_mailer.plage_ouverture_destroyed.title", domain_name: domain.name, title: @plage_ouverture.title))
   end
+
+  private
+
+  def domain
+    @plage_ouverture.agent.domain
+  end
 end

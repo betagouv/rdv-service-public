@@ -24,4 +24,10 @@ class Agents::AbsenceMailer < ApplicationMailer
     self.ics_payload = @absence.payload(:destroyed)
     mail(subject: t("agents.absence_mailer.absence_destroyed.title", domain_name: domain.name, title: @absence.title))
   end
+
+  private
+
+  def domain
+    @absence.agent.domain
+  end
 end
