@@ -31,7 +31,7 @@ describe Agents::PlageOuvertureMailer, type: :mailer do
             expect(mail.subject).to start_with("RDV Solidarités - Plage d’ouverture")
             expect(mail.html_part.body.to_s).to include(%(src="/assets/logos/logo-))
             expect(mail.html_part.body.to_s).to include("Voir sur RDV Solidarités") unless action == :destroyed
-            expect(mail.html_part.body.to_s).to include(%(href="http://rdv-solidarites.fr/))
+            expect(mail.html_part.body.to_s).to include(%(href="http://rdv-solidarites-test.localhost/))
           end
         end
 
@@ -43,7 +43,7 @@ describe Agents::PlageOuvertureMailer, type: :mailer do
             expect(mail.subject).to start_with("RDV Inclusion Numérique - Plage d’ouverture")
             expect(mail.html_part.body.to_s).to include(%(src="/assets/logos/logo-cnfs-))
             expect(mail.html_part.body.to_s).to include("Voir sur RDV Inclusion Numérique") unless action == :destroyed
-            expect(mail.html_part.body.to_s).to include(%(href="http://rdv-inclusion-numerique.fr/))
+            expect(mail.html_part.body.to_s).to include(%(href="http://rdv-inclusion-numerique-test.localhost/))
           end
         end
       end

@@ -70,6 +70,10 @@ Capybara.configure do |config|
   config.javascript_driver = :selenium
   config.server = :puma, { Silent: true }
   config.disable_animation = true
+
+  # This is necessary when using Selenium + custom .localhost domain.
+  # See: https://stackoverflow.com/a/63973323/2864020
+  config.always_include_port = true
 end
 
 RSpec.configure do |config|
