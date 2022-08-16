@@ -6,7 +6,7 @@ describe NextAvailabilityService, type: :service do
 
   let(:organisation) { create(:organisation) }
   let(:lieu) { create(:lieu, organisation: organisation) }
-  let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+  let(:agent) { create(:agent, service: motif.service, basic_role_in_organisations: [organisation]) }
   let(:motif) { create(:motif, name: "Vaccination", default_duration_in_min: 30, organisation: organisation) }
 
   before { travel_to(now) }
