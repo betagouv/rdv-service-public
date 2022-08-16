@@ -23,9 +23,9 @@ describe Users::RdvSms, type: :service do
 
     context "with a follow_up rdv" do
       it "contains referent name" do
-        agent = create(:agent, first_name: "James", last_name: "Bond")
-        user = create(:user, agents: [agent])
         motif = create(:motif, follow_up: true)
+        agent = create(:agent, service: motif.service, first_name: "James", last_name: "Bond")
+        user = create(:user, agents: [agent])
         rdv = create(:rdv, motif: motif, users: [user], agents: [agent])
         token = "12345"
 

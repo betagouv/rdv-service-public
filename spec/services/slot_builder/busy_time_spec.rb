@@ -3,7 +3,8 @@
 describe SlotBuilder::BusyTime, type: :service do
   let(:monday) { Time.zone.parse("20211025 10:00") }
   let(:range) { Time.zone.parse("2021-10-26 8:00")..Time.zone.parse("2021-10-29 12:00") }
-  let(:plage_ouverture) { create(:plage_ouverture) }
+  let(:motif) { create(:motif) }
+  let(:plage_ouverture) { create(:plage_ouverture, motifs: [motif]) }
 
   before { travel_to(monday) }
 
@@ -13,17 +14,17 @@ describe SlotBuilder::BusyTime, type: :service do
 
   context "with a RDV" do
     it "returns BusyTime object in array with a RDV" do
-      create(:rdv, agents: [plage_ouverture.agent], starts_at: Time.zone.parse("20211027 9:00"))
+      create(:rdv, motif: motif, agents: [plage_ouverture.agent], starts_at: Time.zone.parse("20211027 9:00"))
       expect(described_class.busy_times_for(range, plage_ouverture).first).to be_a(described_class)
     end
 
     it "returns BusyTime that starts_at as RDV starts_at" do
-      create(:rdv, agents: [plage_ouverture.agent], starts_at: Time.zone.parse("20211027 9:00"))
+      create(:rdv, motif: motif, agents: [plage_ouverture.agent], starts_at: Time.zone.parse("20211027 9:00"))
       expect(described_class.busy_times_for(range, plage_ouverture).first.starts_at).to eq(Time.zone.parse("20211027 9:00"))
     end
 
     it "returns BusyTime that ends_at as RDV ends_at" do
-      create(:rdv, agents: [plage_ouverture.agent], starts_at: Time.zone.parse("20211027 9:00"), ends_at: Time.zone.parse("20211027 9:40"))
+      create(:rdv, motif: motif, agents: [plage_ouverture.agent], starts_at: Time.zone.parse("20211027 9:00"), ends_at: Time.zone.parse("20211027 9:40"))
       expect(described_class.busy_times_for(range, plage_ouverture).first.ends_at).to eq(Time.zone.parse("20211027 9:40"))
     end
   end

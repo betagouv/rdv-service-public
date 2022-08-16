@@ -201,7 +201,7 @@ describe SlotBuilder, type: :service do
 
   describe "#calculate_free_times" do
     let(:motif) { create(:motif, default_duration_in_min: 60, organisation: organisation) }
-    let(:agent) { create(:agent, organisations: [organisation]) }
+    let(:agent) { create(:agent, service: motif.service, organisations: [organisation]) }
 
     it "return one free time from plage ouverture date range" do
       plage_ouverture = build(:plage_ouverture, first_day: Date.new(2021, 10, 27), start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
@@ -305,9 +305,9 @@ describe SlotBuilder, type: :service do
     it "return range without only range of multi RDV on same range with same duration" do
       starts_at = Time.zone.parse("20211027 9:00")
       ends_at = Time.zone.parse("20211027 11:00")
-      create(:rdv, starts_at: starts_at + 45.minutes, agents: [agent])
-      prev_rdv = create(:rdv, starts_at: starts_at - 30.minutes, agents: [agent])
-      rdv = create(:rdv, starts_at: starts_at + 45.minutes, agents: [agent])
+      create(:rdv, motif: motif, starts_at: starts_at + 45.minutes, agents: [agent])
+      prev_rdv = create(:rdv, motif: motif, starts_at: starts_at - 30.minutes, agents: [agent])
+      rdv = create(:rdv, motif: motif, starts_at: starts_at + 45.minutes, agents: [agent])
       plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent)
       range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
 
@@ -318,9 +318,9 @@ describe SlotBuilder, type: :service do
     it "return range without only range of longer overlapped RDV on same range with same duration" do
       starts_at = Time.zone.parse("20211027 9:00")
       ends_at = Time.zone.parse("20211027 11:00")
-      create(:rdv, motif: create(:motif, organisation: organisation, default_duration_in_min: 30), starts_at: starts_at + 45.minutes, agents: [agent])
-      prev_rdv = create(:rdv, starts_at: starts_at - 30.minutes, agents: [agent])
-      rdv = create(:rdv, motif: create(:motif, organisation: organisation, default_duration_in_min: 30), starts_at: starts_at + 45.minutes, agents: [agent])
+      create(:rdv, motif: create(:motif, service: agent.service, organisation: organisation, default_duration_in_min: 30), starts_at: starts_at + 45.minutes, agents: [agent])
+      prev_rdv = create(:rdv, motif: motif, starts_at: starts_at - 30.minutes, agents: [agent])
+      rdv = create(:rdv, motif: create(:motif, service: agent.service, organisation: organisation, default_duration_in_min: 30), starts_at: starts_at + 45.minutes, agents: [agent])
       plage_ouverture = build(:plage_ouverture, first_day: starts_at.to_date, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11), agent: agent)
       range = Date.new(2021, 10, 26)..Date.new(2021, 10, 29)
 
