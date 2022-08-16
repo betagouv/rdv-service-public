@@ -674,4 +674,19 @@ describe Rdv, type: :model do
       expect(rdv.synthesized_receipts_result).to eq("processed")
     end
   end
+
+  describe "rdv motif's service must share the service of agents" do
+    let(:motif) { create(:motif) }
+    let(:agent1) { create(:agent, service: motif.service) }
+    let(:agent2) { create(:agent, service: motif.service) }
+    let(:agent_other) { create(:agent) }
+
+    it "is valid if all agents share the service" do
+      expect(build(:rdv, motif: motif, agents: [agent1, agent2])).to be_valid
+    end
+
+    it "is not valid if one agent doesn't share the service" do
+      expect(build(:rdv, motif: motif, agents: [agent1, agent_other])).to_not be_valid
+    end
+  end
 end
