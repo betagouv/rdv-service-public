@@ -7,11 +7,11 @@ RSpec.describe TransferEmailReplyJob do
     # Set a fixed date so we can assert on dates within email body
     travel_to(Time.zone.parse("2022-05-17 16:00:00"))
   end
-
+  let(:motif) { create(:motif) }
   let!(:user) { create(:user, email: "bene_ficiaire@lapin.fr", first_name: "Bénédicte", last_name: "Ficiaire") }
-  let!(:agent) { create(:agent, email: "je_suis_un_agent@departement.fr") }
+  let!(:agent) { create(:agent, service: motif.service, email: "je_suis_un_agent@departement.fr") }
   let(:rdv_uuid) { "8fae4d5f-4d63-4f60-b343-854d939881a3" }
-  let!(:rdv) { create(:rdv, users: [user], agents: [agent], uuid: rdv_uuid) }
+  let!(:rdv) { create(:rdv, motif: motif, users: [user], agents: [agent], uuid: rdv_uuid) }
 
   let(:sendinblue_valid_payload) do
     # The usual payload has more info, but I removed non-essential fields for readability.
