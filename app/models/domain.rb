@@ -54,6 +54,10 @@ class Domain < OpenStruct
     end
   end
 
+  def default?
+    !!default
+  end
+
   def self.find_matching(domain_name)
     ALL.find do |domain|
       domain_name[domain.dns_domain_name].present?
