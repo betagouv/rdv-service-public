@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class Notifiers::RdvCollectifParticipations < ::BaseService
-  def initialize(rdv, author, previous_participant_ids)
+  def initialize(rdv, author, previous_participations)
     @rdv = rdv
     @author = author
-    @previous_participant_ids = previous_participant_ids
+    @previous_participations = previous_participations
   end
 
   def perform
@@ -16,7 +16,7 @@ class Notifiers::RdvCollectifParticipations < ::BaseService
     rdv_created.notify_users_by_mail
     rdv_created.notify_users_by_sms
 
-    rdv_cancelled = Notifiers::RdvCancelled.new(@rdv, @author, deleted_participants)
+    rdv_cancelled = Notifiers::RdvCancelled.new(@rdv, @author, removed_participants_with_lifecycle_notifications)
     # we don't generate token in this case since the user won't be linked to the rdv
     rdv_cancelled.notify_users_by_mail
     rdv_cancelled.notify_users_by_sms
@@ -27,14 +27,14 @@ class Notifiers::RdvCollectifParticipations < ::BaseService
   private
 
   def new_participants
-    @new_participants ||= User.where(id: (current_participant_ids - @previous_participant_ids))
+    User.where(id: current_participations.select(&:send_lifecycle_notifications).map(&:user_id) - @previous_participations.map(&:user_id))
   end
 
-  def deleted_participants
-    @deleted_participants ||= User.where(id: (@previous_participant_ids - current_participant_ids))
+  def removed_participants_with_lifecycle_notifications
+    User.where(id: @previous_participations.select(&:send_lifecycle_notifications).map(&:user_id) - current_participations.map(&:user_id))
   end
 
-  def current_participant_ids
-    @rdv.participants_with_life_cycle_notification_ids
+  def current_participations
+    @rdv.rdvs_users
   end
 end

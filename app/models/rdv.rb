@@ -246,10 +246,6 @@ class Rdv < ApplicationRecord
     Time.zone.now + motif.max_booking_delay
   end
 
-  def participants_with_life_cycle_notification_ids
-    rdvs_users.where(send_lifecycle_notifications: true).pluck(:user_id)
-  end
-
   def remaining_seats?
     return true unless max_participants_count
 

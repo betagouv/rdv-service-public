@@ -29,6 +29,6 @@ describe "Agent can edit a Rdv collectif" do
       expect(page).to have_content("Atelier Collectif") # to wait for the request to complete before checking sent emails
     end.not_to change { ActionMailer::Base.deliveries.size }
 
-    expect(rdv.reload.rdvs_users.first.send_lifecycle_notifications).to be_false
+    expect(rdv.reload.rdvs_users.first.send_lifecycle_notifications).to be_falsey
   end
 end

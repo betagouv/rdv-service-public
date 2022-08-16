@@ -143,7 +143,8 @@ describe RdvUpdater, type: :service do
         },
       }
     end
-    let(:rdv) { create(:rdv, agents: [agent], motif: motif, users: [user_staying, user_removed]) }
+    # The reload makes sure we have the proper .previous_changes
+    let(:rdv) { create(:rdv, agents: [agent], motif: motif, users: [user_staying, user_removed]).reload }
     let(:agent) { create :agent }
     let(:motif) { create(:motif, :collectif) }
 
@@ -153,17 +154,15 @@ describe RdvUpdater, type: :service do
 
     let(:token) { "some-token" }
 
-    before do
-      allow(Users::RdvMailer).to receive(:with).and_call_original
-      allow(Users::RdvMailer).to receive(:with).and_call_original
-      allow_any_instance_of(RdvsUser).to receive(:new_raw_invitation_token).and_return(token) # rubocop:disable RSpec/AnyInstance
-    end
-
     it "notifies the new participant, and the one that is removed" do
-      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user_added, token: token })
-      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user_removed, token: nil })
-
       described_class.update(agent, rdv, rdv_params)
+      expect(ActionMailer::Base.deliveries.count).to eq 2
+
+      added_email = ActionMailer::Base.deliveries.first
+      expect(added_email.subject).to include "RDV confirmé"
+
+      removed_email = ActionMailer::Base.deliveries.last
+      expect(removed_email.subject).to include "RDV annulé"
     end
   end
 
