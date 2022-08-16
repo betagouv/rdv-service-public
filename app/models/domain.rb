@@ -26,7 +26,13 @@ class Domain < OpenStruct
     case Rails.env.to_sym
     when :production
       if ENV["RDV_SOLIDARITES_IS_REVIEW_APP"] == "true"
-        URI.parse(ENV["HOST"]).host # use review app's domain
+        # use review app's host for both RDV Solidarité and RDV Inclusion Numérique
+        URI.parse(ENV["HOST"]).host
+      elsif ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
+        {
+          RDV_SOLIDARITES => "demo.rdv-solidarites.fr",
+          RDV_INCLUSION_NUMERIQUE => "demo.rdv-inclusion-numerique.fr",
+        }.fetch(self)
       else
         {
           RDV_SOLIDARITES => "rdv-solidarites.fr",
