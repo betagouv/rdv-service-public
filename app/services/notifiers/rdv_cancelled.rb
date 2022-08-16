@@ -12,7 +12,7 @@ class Notifiers::RdvCancelled < Notifiers::RdvBase
   def notify_user_by_sms(user)
     # Only send sms for excused cancellations by an Agent (not for no-show, not for self-cancellation)
     return unless @author.is_a? Agent
-    return unless @rdv.status.in? %w[excused revoked]
+    return unless @rdv.status.in?(%w[excused revoked]) || @rdv.collectif?
 
     Users::RdvSms.rdv_cancelled(@rdv, user, @rdv_users_tokens_by_user_id[user.id]).deliver_later
   end

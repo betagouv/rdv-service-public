@@ -153,8 +153,11 @@ describe RdvUpdater, type: :service do
     let(:user_removed) { create(:user, first_name: "Remove") }
 
     let(:token) { "some-token" }
+    let(:sms_sender_double) { instance_double(SmsSender) }
 
     it "notifies the new participant, and the one that is removed" do
+      expect(SmsSender).to receive(:new).and_return(sms_sender_double).twice
+      expect(sms_sender_double).to receive(:perform).twice
       described_class.update(agent, rdv, rdv_params)
       expect(ActionMailer::Base.deliveries.count).to eq 2
 
