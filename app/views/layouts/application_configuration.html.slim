@@ -8,7 +8,7 @@ html lang="fr"
     = render "layouts/degraded_service", message: ENV["DEGRADED_SERVICE_MESSAGE_USERS"]
 
     header.container.px-8.mb-2.mt-1.text-center
-        h1.m-2 RDV Solidarités - #{current_territory.name}
+        h1.m-2 #{current_domain.name} - #{current_territory.name}
 
     main.container-fluid
 

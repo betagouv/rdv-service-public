@@ -30,7 +30,7 @@
       h2 Produit
       ul.list-unstyled.text-small
         li.mb-1 = link_to "Accessibilité : non conforme", accessibility_path
-        li.mb-1 = link_to "https://github.com/betagouv/rdv-solidarites.fr/commits/#{ENV['CONTAINER_VERSION']}", title: "Aller au code source de RDV-Solidarités" do
+        li.mb-1 = link_to "https://github.com/betagouv/rdv-solidarites.fr/commits/#{ENV['CONTAINER_VERSION']}", title: "Aller au code source de #{current_domain.name}" do
           span>= ENV["RDV_SOLIDARITES_VERSION"]
           i.fa.fa-external-link-alt
         li.mb-1 = link_to "https://github.com/betagouv/rdv-solidarites.fr/" do
