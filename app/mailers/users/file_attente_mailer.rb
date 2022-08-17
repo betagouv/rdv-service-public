@@ -20,4 +20,8 @@ class Users::FileAttenteMailer < ApplicationMailer
   def save_receipt(subject)
     Receipt.create!(rdv: @rdv, user: @user, event: action_name, channel: :mail, result: :processed, email_address: @user.email, content: subject)
   end
+
+  def domain
+    @rdv.domain
+  end
 end

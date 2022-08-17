@@ -44,7 +44,7 @@ RSpec.describe TransferEmailReplyJob do
       expect(transferred_email.from).to eq(["support@rdv-solidarites.fr"])
       expect(transferred_email.html_part.body.to_s).to include("Dans le cadre du RDV du 20 mai, l'usager⋅e Bénédicte FICIAIRE a envoyé")
       expect(transferred_email.html_part.body.to_s).to include("Je souhaite annuler mon RDV") # reply content
-      expect(transferred_email.html_part.body.to_s).to include(%(href="http://#{ApplicationMailer.default_url_options[:host]}/admin/organisations/#{rdv.organisation_id}/rdvs/#{rdv.id}))
+      expect(transferred_email.html_part.body.to_s).to include(%(href="http://rdv-solidarites-test.localhost/admin/organisations/#{rdv.organisation_id}/rdvs/#{rdv.id}))
     end
   end
 

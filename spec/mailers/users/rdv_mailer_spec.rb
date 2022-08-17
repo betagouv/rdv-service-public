@@ -83,7 +83,8 @@ RSpec.describe Users::RdvMailer, type: :mailer do
         motif_name_with_location_type: rdv.motif.name_with_location_type, \
         organisation_ids: [rdv.organisation_id], \
         address: rdv.address, \
-        invitation_token: token \
+        invitation_token: token, \
+        host: Domain::RDV_SOLIDARITES.dns_domain_name
       )
 
       expect(mail.html_part.body).to have_link("Reprendre RDV", href: expected_url)
@@ -101,6 +102,33 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       expect(mail.reply_to).to eq(["rdv+#{rdv.uuid}@reply.rdv-solidarites.fr"])
       expect(mail.html_part.body).to include("Nous vous rappellons que vous avez un RDV prévu")
       expect(mail.html_part.body.raw_source).to include("/users/rdvs/#{rdv.id}?invitation_token=12345")
+    end
+  end
+
+  %i[rdv_created rdv_upcoming_reminder rdv_cancelled].each do |action|
+    describe "using the agent domain's branding" do
+      let(:rdv) { create(:rdv, motif: motif) }
+
+      context "when motif's service is not conseiller_numerique" do
+        let(:motif) { create(:motif, service: create(:service, :social)) }
+
+        it "works" do
+          mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
+          expect(mail.html_part.body.to_s).to include(%(src="/logo.png))
+          expect(mail.html_part.body.to_s).to include(%(href="http://rdv-solidarites-test.localhost))
+        end
+      end
+
+      context "when motif's service is conseiller_numerique" do
+        let(:motif) { create(:motif, service: create(:service, :conseiller_numerique)) }
+
+        # TODO: #rdv-inclusion-numerique-v1
+        xit "works" do
+          mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
+          expect(mail.html_part.body.to_s).to include(%(src="/logo_inclusion_numerique.png))
+          expect(mail.html_part.body.to_s).to include(%(href="http://rdv-inclusion-numerique-test.localhost))
+        end
+      end
     end
   end
 end

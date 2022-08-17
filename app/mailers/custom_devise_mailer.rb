@@ -9,6 +9,7 @@ class CustomDeviseMailer < Devise::Mailer
   default template_path: "devise/mailer"
   layout "mailer"
   helper RdvSolidaritesInstanceNameHelper
+  helper_method :domain
 
   def invitation_instructions(record, token, opts = {})
     @token = token
@@ -27,5 +28,18 @@ class CustomDeviseMailer < Devise::Mailer
     return unless record.is_a? Agent
 
     record.invited_by&.email || SUPPORT_EMAIL
+  end
+
+  def domain
+    if @resource.is_a?(Agent)
+      @resource.domain
+    else
+      # TODO: #rdv-inclusion-numerique-v1 trouver un moyen de mettre le bon domaine
+      Domain::RDV_SOLIDARITES
+    end
+  end
+
+  def default_url_options
+    super.merge(host: domain.dns_domain_name)
   end
 end
