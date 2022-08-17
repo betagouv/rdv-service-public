@@ -18,4 +18,8 @@ class Admins::Grc92Mailer < ApplicationMailer
       format.text { render plain: "#{message}\n-- RDV-Solidarités" }
     end
   end
+
+  def domain
+    Domain::RDV_SOLIDARITES
+  end
 end

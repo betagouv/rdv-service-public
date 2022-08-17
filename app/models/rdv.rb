@@ -277,6 +277,8 @@ class Rdv < ApplicationRecord
     results.exclude?("failure") ? "processed" : "failure"
   end
 
+  delegate :domain, to: :service
+
   private
 
   def starts_at_is_plausible

@@ -186,4 +186,6 @@ class Agent < ApplicationRecord
   def conseiller_numerique?
     service.name == "Conseiller Numérique"
   end
+
+  delegate :domain, to: :service
 end

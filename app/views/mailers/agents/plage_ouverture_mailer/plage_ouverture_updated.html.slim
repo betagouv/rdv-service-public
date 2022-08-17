@@ -5,6 +5,6 @@ p= t(".description_2")
 
 = render "plage_ouverture_overview", plage_ouverture: @plage_ouverture
 
-.btn-wrapper= link_to t("mailers.common.see_on_rdvs"), admin_organisation_plage_ouverture_url(@plage_ouverture.organisation, @plage_ouverture), class:"btn btn-primary"
+.btn-wrapper= link_to "Voir sur #{domain.name}", admin_organisation_plage_ouverture_url(@plage_ouverture.organisation, @plage_ouverture), class:"btn btn-primary"
 
 = t("mailers.common.farewell_html")

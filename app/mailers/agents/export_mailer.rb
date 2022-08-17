@@ -2,6 +2,7 @@
 
 class Agents::ExportMailer < ApplicationMailer
   def rdv_export(agent, organisation, options)
+    @agent = agent
     now = Time.zone.now
     rdvs = Rdv.search_for(agent, organisation, options)
 
@@ -15,5 +16,9 @@ class Agents::ExportMailer < ApplicationMailer
       to: agent.email,
       subject: I18n.t("mailers.agents.export_mailer.rdv_export.subject", organisation_name: organisation.name, date: I18n.l(now))
     )
+  end
+
+  def domain
+    @agent.domain
   end
 end
