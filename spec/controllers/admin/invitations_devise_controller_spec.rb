@@ -21,7 +21,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
     context "for a cnfs" do
       let!(:agent) do
         create(:agent, admin_role_in_organisations: [organisation],
-                       invitation_accepted_at: nil, service: create(:service, name: "Conseiller Numérique"))
+                       invitation_accepted_at: nil, service: create(:service, :conseiller_numerique))
       end
 
       it "only allows inviting agents for the secretariat" do
@@ -136,7 +136,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
       end
 
       before do
-        agent.service.update!(name: "Conseiller Numérique")
+        agent.service.update!(name: Service::CONSEILLER_NUMERIQUE)
       end
 
       it "creates a new basic agent instead of an admin" do
