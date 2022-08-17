@@ -44,7 +44,7 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
         let(:agent) { build(:agent, service: build(:service, :conseiller_numerique)) }
 
         it "works" do
-          expect(mail.html_part.body.to_s).to include(%(src="/assets/logos/logo-cnfs-))
+          expect(mail.html_part.body.to_s).to include(%(src="/assets/logos/logo_inclusion_numerique-))
           expect(mail.html_part.body.to_s).to include("Voir sur RDV Inclusion Numérique")
           expect(mail.html_part.body.to_s).to include(%(href="http://rdv-inclusion-numerique-test.localhost/))
         end

@@ -125,7 +125,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
 
         it "works" do
           mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
-          expect(mail.html_part.body.to_s).to include(%(src="/assets/logos/logo-cnfs-))
+          expect(mail.html_part.body.to_s).to include(%(src="/assets/logos/logo_inclusion_numerique-))
           expect(mail.html_part.body.to_s).to include(%(href="http://rdv-inclusion-numerique-test.localhost))
         end
       end

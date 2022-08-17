@@ -5,7 +5,6 @@ class Domain < OpenStruct
     RDV_SOLIDARITES = new(
       default: true,
       logo_path: "logos/logo.svg",
-      public_logo_path: "/logo.png",
       dark_logo_path: "logos/logo_sombre.svg",
       name: "RDV Solidarités",
       sms_sender_name: "RdvSoli",
@@ -13,9 +12,8 @@ class Domain < OpenStruct
     ),
 
     RDV_INCLUSION_NUMERIQUE = new(
-      logo_path: "logos/logo-cnfs.svg", # TODO: make a new logo
-      public_logo_path: "/logo-cnfs.svg", # TODO: make a new logo
-      dark_logo_path: "logos/logo-cnfs_sombre.svg", # TODO: make a new logo
+      logo_path: "logos/logo_inclusion_numerique.svg",
+      dark_logo_path: "logos/logo_sombre_inclusion_numerique.svg",
       name: "RDV Inclusion Numérique",
       sms_sender_name: "Rdv Num",
       slug: "rdv_inclusion_numerique"

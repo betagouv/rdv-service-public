@@ -41,7 +41,7 @@ describe Agents::PlageOuvertureMailer, type: :mailer do
           it "works" do
             mail = described_class.with(plage_ouverture: plage_ouverture).send("plage_ouverture_#{action}")
             expect(mail.subject).to start_with("RDV Inclusion Numérique - Plage d’ouverture")
-            expect(mail.html_part.body.to_s).to include(%(src="/assets/logos/logo-cnfs-))
+            expect(mail.html_part.body.to_s).to include(%(src="/assets/logos/logo_inclusion_numerique-))
             expect(mail.html_part.body.to_s).to include("Voir sur RDV Inclusion Numérique") unless action == :destroyed
             expect(mail.html_part.body.to_s).to include(%(href="http://rdv-inclusion-numerique-test.localhost/))
           end
