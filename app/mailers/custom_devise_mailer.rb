@@ -9,9 +9,9 @@ class CustomDeviseMailer < Devise::Mailer
   default template_path: "devise/mailer"
   layout "mailer"
   helper RdvSolidaritesInstanceNameHelper
+  helper_method :domain
 
   def invitation_instructions(record, token, opts = {})
-    @record = record
     @token = token
     @user_params = opts[:user_params] || {}
     opts[:reply_to] = reply_to(record)
@@ -31,11 +31,11 @@ class CustomDeviseMailer < Devise::Mailer
   end
 
   def domain
-    if @record.is_a?(Agent)
-      @record.domain
+    if @resource.is_a?(Agent)
+      @resource.domain
     else
       # TODO: discuter de cette approche heuristique
-      domains_of_user_rdvs = @record.rdv.map { |rdv| rdv.motif.service.domain }.uniq
+      domains_of_user_rdvs = @resource.rdv.map { |rdv| rdv.motif.service.domain }.uniq
       if domains_of_user_rdvs == [Domain::RDV_INCLUSION_NUMERIQUE]
         Domain::RDV_INCLUSION_NUMERIQUE
       else
