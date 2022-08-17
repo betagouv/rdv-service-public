@@ -8,7 +8,7 @@
 
 .container.mt-3
   - if @territory.present? && Organisation.joins(:territory).where(territories: [@territory]).empty?
-    h3 Cette structure n'utilise pas RDV-Solidarités.
+    h3 Cette structure n'utilise pas #{current_domain.name}.
   - else
     .card.mb-5
       .card-body
@@ -127,7 +127,9 @@
         = column_chart active_agents_stats_path(territory: @territory)
     .card.mb-5
       .card-header
-        = "#{@territories.count} structures utilisent RDV-Solidarités"
+        p
+          | Les chiffres sur cette page incluent l'activité sur #{Domain::RDV_SOLIDARITES.name} et #{Domain::RDV_INCLUSION_NUMERIQUE.name}
+        p = "#{@territories.count} structures utilisent #{Domain::RDV_SOLIDARITES.name} ou #{Domain::RDV_INCLUSION_NUMERIQUE.name}"
       .card-body
         ul
           - @territories.order(:name).each do |territory|
