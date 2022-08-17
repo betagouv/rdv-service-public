@@ -15,7 +15,7 @@ class Users::RdvsController < UserAuthController
 
   def index
     authorize Rdv
-    @rdvs = policy_scope(Rdv).includes(:motif, :rdvs_users, :users)
+    @rdvs = policy_scope(Rdv).includes(:motif, :rdvs_users, :users).for_domain(current_domain)
     @rdvs = params[:past].present? ? @rdvs.past : @rdvs.future
     @rdvs = @rdvs.order(starts_at: :desc).page(params[:page])
   end

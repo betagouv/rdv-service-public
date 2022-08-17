@@ -242,6 +242,20 @@ RSpec.describe Users::RdvsController, type: :controller do
         expect(response.body).to include(I18n.l(rdv1.starts_at, format: :human).to_s)
         expect(response.body).to include(I18n.l(rdv2.starts_at, format: :human).to_s)
       end
+
+      context "when looking at rdvs on a different domain name" do
+        before do
+          controller.request.host = Domain::RDV_INCLUSION_NUMERIQUE.dns_domain_name
+        end
+
+        it "only shows the rdvs of the domain" do
+          subject
+
+          expect(response).to be_successful
+          expect(response.body).not_to include(I18n.l(rdv1.starts_at, format: :human).to_s)
+          expect(response.body).to include("pas de RDV à venir")
+        end
+      end
     end
 
     context "when not signed in" do
