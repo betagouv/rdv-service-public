@@ -16,7 +16,7 @@ describe "Agent can create a Rdv with creneau search" do
     let!(:agent) { create(:agent, first_name: "Alain", last_name: "Tiptop", service: service, basic_role_in_organisations: [organisation]) }
     let!(:motif) { create(:motif, name: "MOTIFAVAILABLE", reservable_online: true, service: service, organisation: organisation) }
     let!(:motif2) { create(:motif, name: "OTHERMOTIF", reservable_online: true, organisation: organisation) }
-    let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: Date.new(2019, 7, 22), motifs: [motif1, motif2, motif3], lieu: lieu, agent: agent, organisation: organisation) }
+    let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: Date.new(2019, 7, 22), motifs: [motif, motif2], lieu: lieu, agent: agent, organisation: organisation) }
 
     it "can only see motifs of service", js: true do
       visit admin_organisation_agent_searches_path(organisation)
