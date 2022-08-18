@@ -682,11 +682,15 @@ describe Rdv, type: :model do
     let(:agent_other) { create(:agent) }
 
     it "is valid if all agents share the service" do
-      expect(build(:rdv, motif: motif, agents: [agent1, agent2])).to be_valid
+      expect(build(:rdv, motif: motif, agents: [agent1, agent2], created_at: Date.new(2022, 8, 18))).to be_valid
     end
 
     it "is not valid if one agent doesn't share the service" do
-      expect(build(:rdv, motif: motif, agents: [agent1, agent_other])).to_not be_valid
+      expect(build(:rdv, motif: motif, agents: [agent1, agent_other], created_at: Date.new(2022, 8, 18))).to_not be_valid
+    end
+
+    it "is valid if it's an old rdv" do
+      expect(build(:rdv, motif: motif, agents: [agent1, agent_other], created_at: Date.new(2020, 8, 18))).to be_valid
     end
   end
 end
