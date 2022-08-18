@@ -1,22 +1,22 @@
 # frozen_string_literal: true
 
 class Notifiers::RdvCollectifParticipations < ::BaseService
-  def initialize(rdv, author, previous_participant_ids)
+  def initialize(rdv, author, previous_participations)
     @rdv = rdv
     @author = author
-    @previous_participant_ids = previous_participant_ids
+    @previous_participations = previous_participations
   end
 
   def perform
     return if @rdv.starts_at < Time.zone.now
 
     # FIXME: this is not ideal but it's the simplest workaround to avoid notifying the agent
-    rdv_created = Notifiers::RdvCreated.new(@rdv, @author, new_participants)
+    rdv_created = Notifiers::RdvCreated.new(@rdv, @author, new_participants_to_notify)
     rdv_created_invitation_tokens = rdv_created.generate_invitation_tokens
     rdv_created.notify_users_by_mail
     rdv_created.notify_users_by_sms
 
-    rdv_cancelled = Notifiers::RdvCancelled.new(@rdv, @author, deleted_participants)
+    rdv_cancelled = Notifiers::RdvCancelled.new(@rdv, @author, removed_participants_to_notify)
     # we don't generate token in this case since the user won't be linked to the rdv
     rdv_cancelled.notify_users_by_mail
     rdv_cancelled.notify_users_by_sms
@@ -26,15 +26,25 @@ class Notifiers::RdvCollectifParticipations < ::BaseService
 
   private
 
-  def new_participants
-    @new_participants ||= User.where(id: (current_participant_ids - @previous_participant_ids))
+  def new_participations
+    current_participations.where.not(user_id: @previous_participations.map(&:user_id))
   end
 
-  def deleted_participants
-    @deleted_participants ||= User.where(id: (@previous_participant_ids - current_participant_ids))
+  def new_participants_to_notify
+    new_participations.select(&:send_lifecycle_notifications).map(&:user)
   end
 
-  def current_participant_ids
-    @rdv.participants_with_life_cycle_notification_ids
+  def removed_participations
+    # Using the in-memory records instead of using SQL because
+    # the previous participations have been removed from the DB
+    @previous_participations.select { |p| !p.user_id.in?(current_participations.map(&:user_id)) } # rubocop:disable Style/InverseMethods
+  end
+
+  def removed_participants_to_notify
+    removed_participations.select(&:send_lifecycle_notifications).map(&:user)
+  end
+
+  def current_participations
+    @rdv.rdvs_users
   end
 end
