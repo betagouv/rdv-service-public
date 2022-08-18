@@ -21,9 +21,9 @@ describe "Agent can create a Rdv with creneau search" do
     it "can only see motifs of service", js: true do
       visit admin_organisation_agent_searches_path(organisation)
       expect(page).to have_content("Trouver un RDV")
-      
+
       expect(page).to have_content("MOTIFAVAILABLE")
-      expect(page).to_not have_content("OTHERMOTIF")
+      expect(page).not_to have_content("OTHERMOTIF")
       select(motif.name, from: "motif_id")
       click_button("Afficher les créneaux")
 

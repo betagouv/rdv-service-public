@@ -15,7 +15,7 @@ describe RdvEndingShortlyBeforePresenter, type: :presenter do
       let(:in_scope_mock_value) { true }
       let!(:organisation) { create(:organisation) }
       let(:agent_context) { instance_double(AgentOrganisationContext, agent: agent, organisation: organisation) }
-      let(:motif) { create(:motif)}
+      let(:motif) { create(:motif) }
       let!(:agent) { create(:agent, service: motif.service, basic_role_in_organisations: [organisation]) }
       let!(:user) { create(:user, first_name: "Milos", last_name: "FORMAN") }
       let!(:rdv_context) { create(:rdv, organisation: organisation, agents: [agent], motif: motif, starts_at: Time.zone.today.next_week(:monday).in_time_zone + 9.hours) }
@@ -27,7 +27,7 @@ describe RdvEndingShortlyBeforePresenter, type: :presenter do
     context "rdv from other agent but still in scope" do
       let(:in_scope_mock_value) { true }
       let!(:organisation) { create(:organisation) }
-      let(:motif) { create(:motif)}
+      let(:motif) { create(:motif) }
       let(:agent_context) { instance_double(AgentOrganisationContext, agent: build(:agent, service: motif.service), organisation: organisation) }
       let!(:user) { create(:user, first_name: "Milos", last_name: "FORMAN") }
       let!(:rdv_context) { create(:rdv, motif: motif, organisation: organisation, starts_at: Time.zone.today.next_week(:monday).in_time_zone + 9.hours) }
@@ -40,7 +40,7 @@ describe RdvEndingShortlyBeforePresenter, type: :presenter do
     context "rdv from other agent and not in scope" do
       let(:in_scope_mock_value) { false }
       let!(:organisation) { create(:organisation) }
-      let(:motif) { create(:motif)}
+      let(:motif) { create(:motif) }
       let(:agent_context) { instance_double(AgentOrganisationContext, agent: build(:agent, service: motif.service), organisation: organisation) }
       let!(:user) { create(:user, first_name: "Milos", last_name: "FORMAN") }
       let!(:rdv_context) { create(:rdv, motif: motif, organisation: organisation, starts_at: Time.zone.today.next_week(:monday).in_time_zone + 9.hours) }

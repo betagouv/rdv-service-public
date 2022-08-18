@@ -686,7 +686,7 @@ describe Rdv, type: :model do
     end
 
     it "is not valid if one agent doesn't share the service" do
-      expect(build(:rdv, motif: motif, agents: [agent1, agent_other], created_at: Date.new(2022, 8, 18))).to_not be_valid
+      expect(build(:rdv, motif: motif, agents: [agent1, agent_other], created_at: Date.new(2022, 8, 18))).not_to be_valid
     end
 
     it "is valid if it's an old rdv" do

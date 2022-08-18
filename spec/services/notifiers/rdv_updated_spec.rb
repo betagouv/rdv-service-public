@@ -2,6 +2,7 @@
 
 describe Notifiers::RdvUpdated, type: :service do
   subject { described_class.perform_with(rdv, agent1) }
+
   let(:motif) { build(:motif) }
   let(:user1) { build(:user) }
   let(:user2) { build(:user) }

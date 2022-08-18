@@ -38,7 +38,7 @@ describe AgentRemoval, type: :service do
 
   context "agent has upcoming RDVs" do
     let!(:organisation) { create(:organisation) }
-    let(:motif) { create(:motif)}
+    let(:motif) { create(:motif) }
     let!(:agent) { create(:agent, service: motif.service, basic_role_in_organisations: [organisation]) }
     let!(:rdv) { create(:rdv, motif: motif, agents: [agent], organisation: organisation, starts_at: Time.zone.today.next_week(:monday) + 10.hours) }
 

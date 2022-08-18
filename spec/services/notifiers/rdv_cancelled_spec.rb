@@ -2,6 +2,7 @@
 
 describe Notifiers::RdvCancelled, type: :service do
   subject { described_class.perform_with(rdv, author) }
+
   let(:motif) { build(:motif) }
   let(:agent1) { build(:agent, service: motif.service) }
   let(:agent2) { build(:agent, service: motif.service) }

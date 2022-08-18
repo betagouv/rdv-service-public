@@ -53,7 +53,7 @@ class Rdv < ApplicationRecord
   validate :starts_at_is_plausible
   validate :duration_is_plausible
   validates :max_participants_count, numericality: { greater_than: 0, allow_nil: true }
-  validate :motif_available_to_agents, if: Proc.new { |rdv| rdv.created_at > Date.new(2022, 8, 17) } # Remove condition in august 2024
+  validate :motif_available_to_agents, if: proc { |rdv| rdv.created_at > Date.new(2022, 8, 17) } # Remove condition in august 2024
 
   # Hooks
   after_save :associate_users_with_organisation
@@ -298,6 +298,7 @@ class Rdv < ApplicationRecord
 
   def motif_available_to_agents
     return if agents.all? { |agent| agent.service == motif.service }
+
     errors.add(:agents, :motif_not_available)
   end
 

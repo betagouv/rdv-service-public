@@ -7,6 +7,7 @@ RSpec.describe TransferEmailReplyJob do
     # Set a fixed date so we can assert on dates within email body
     travel_to(Time.zone.parse("2022-05-17 16:00:00"))
   end
+
   let(:motif) { create(:motif) }
   let!(:user) { create(:user, email: "bene_ficiaire@lapin.fr", first_name: "Bénédicte", last_name: "Ficiaire") }
   let!(:agent) { create(:agent, service: motif.service, email: "je_suis_un_agent@departement.fr") }
