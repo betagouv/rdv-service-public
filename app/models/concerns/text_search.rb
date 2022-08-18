@@ -28,7 +28,7 @@ module TextSearch
   included do
     include PgSearch::Model
 
-    pg_search_scope(:search_on_search_terms, against: :search_terms, using: { tsearch: { prefix: true, any_word: true } }, order_within_rank: "search_terms asc")
+    pg_search_scope(:search_on_search_terms, against: :search_terms, using: { tsearch: { prefix: true, any_word: true } }, order_within_rank: "#{table_name}.search_terms asc")
 
     before_save :refresh_search_terms
   end
