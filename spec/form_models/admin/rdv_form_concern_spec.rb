@@ -65,9 +65,10 @@ describe Admin::RdvFormConcern, type: :form do
     end
 
     context "rdv is valid but there is another rdv ending shortly before" do
-      let!(:agent_new_rdv) { create(:agent) }
-      let(:rdv) { build(:rdv, agents: [agent_new_rdv]) }
-      let!(:rdv2) { create(:rdv, agents: [agent_new_rdv]) }
+      let(:motif) { create(:motif) }
+      let!(:agent_new_rdv) { create(:agent, service: motif.service) }
+      let(:rdv) { build(:rdv, motif: motif, agents: [agent_new_rdv]) }
+      let!(:rdv2) { create(:rdv, motif: motif, agents: [agent_new_rdv]) }
 
       before do
         allow(rdv).to receive(:valid?).and_return(true)
@@ -94,11 +95,12 @@ describe Admin::RdvFormConcern, type: :form do
 
     context "rdv is valid but there are multiple other RDVs ending shortly before" do
       let(:now) { Time.zone.parse("2021-12-13 10:45") }
-      let!(:agent_giono) { build(:agent, first_name: "Jean", last_name: "GIONO") }
-      let!(:agent_maceo) { build(:agent, first_name: "Maceo", last_name: "PARKER") }
-      let(:rdv) { build(:rdv, agents: [agent_giono, agent_maceo], starts_at: now + 1.week) }
-      let!(:rdvs_giono) { build_list(:rdv, 2, agents: [agent_giono]) }
-      let!(:rdvs_maceo) { build_list(:rdv, 2, agents: [agent_maceo]) }
+      let(:motif) { create(:motif) }
+      let!(:agent_giono) { build(:agent, service: motif.service, first_name: "Jean", last_name: "GIONO") }
+      let!(:agent_maceo) { build(:agent, service: motif.service, first_name: "Maceo", last_name: "PARKER") }
+      let(:rdv) { build(:rdv, motif: motif, agents: [agent_giono, agent_maceo], starts_at: now + 1.week) }
+      let!(:rdvs_giono) { build_list(:rdv, 2, motif: motif, agents: [agent_giono]) }
+      let!(:rdvs_maceo) { build_list(:rdv, 2, motif: motif, agents: [agent_maceo]) }
 
       before do
         travel_to(now)
@@ -129,9 +131,10 @@ describe Admin::RdvFormConcern, type: :form do
     end
 
     context "rdv is valid but there are an other RDV that start before this ending" do
-      let!(:agent_new_rdv) { create(:agent) }
-      let(:rdv) { build(:rdv, agents: [agent_new_rdv]) }
-      let!(:rdv2) { create(:rdv, agents: [agent_new_rdv]) }
+      let(:motif) { create(:motif) }
+      let!(:agent_new_rdv) { create(:agent, service: motif.service) }
+      let(:rdv) { build(:rdv, motif: motif, agents: [agent_new_rdv]) }
+      let!(:rdv2) { create(:rdv, motif: motif, agents: [agent_new_rdv]) }
 
       before do
         allow(rdv).to receive(:valid?).and_return(true)

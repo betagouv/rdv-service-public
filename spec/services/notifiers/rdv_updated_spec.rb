@@ -2,12 +2,12 @@
 
 describe Notifiers::RdvUpdated, type: :service do
   subject { described_class.perform_with(rdv, agent1) }
-
+  let(:motif) { build(:motif) }
   let(:user1) { build(:user) }
   let(:user2) { build(:user) }
-  let(:agent1) { build(:agent, first_name: "Sean", last_name: "PAUL") }
-  let(:agent2) { build(:agent) }
-  let(:rdv) { create(:rdv, starts_at: starts_at_initial, agents: [agent1, agent2]) }
+  let(:agent1) { build(:agent, service: motif.service, first_name: "Sean", last_name: "PAUL") }
+  let(:agent2) { build(:agent, service: motif.service) }
+  let(:rdv) { create(:rdv, starts_at: starts_at_initial, motif: motif, agents: [agent1, agent2]) }
   let(:rdv_user1) { create(:rdvs_user, user: user1, rdv: rdv) }
   let(:rdv_user2) { create(:rdvs_user, user: user2, rdv: rdv) }
   let(:rdvs_users_relation) { RdvsUser.where(id: [rdv_user1.id, rdv_user2.id]) }

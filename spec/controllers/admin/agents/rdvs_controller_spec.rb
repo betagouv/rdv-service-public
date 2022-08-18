@@ -5,7 +5,8 @@ describe Admin::Agents::RdvsController, type: :controller do
     context "with a signed in agent" do
       let(:organisation) { create(:organisation) }
       let(:other_organisation) { create(:organisation) }
-      let(:agent) { create(:agent, admin_role_in_organisations: [organisation, other_organisation]) }
+      let(:motif) { create(:motif) }
+      let(:agent) { create(:agent, service: motif.service, admin_role_in_organisations: [organisation, other_organisation]) }
 
       before { sign_in agent }
 
@@ -18,9 +19,9 @@ describe Admin::Agents::RdvsController, type: :controller do
         now = Time.zone.parse("2020-12-23 15h00")
         travel_to(now)
         given_agent = create(:agent, basic_role_in_organisations: [organisation], service: agent.service)
-        create(:rdv, agents: [agent])
-        rdv = create(:rdv, agents: [given_agent], organisation: organisation, starts_at: now + 3.days)
-        rdv_from_other_organisation = create(:rdv, agents: [given_agent], organisation: other_organisation, starts_at: now + 4.days)
+        create(:rdv, motif: motif, agents: [agent])
+        rdv = create(:rdv, motif: motif, agents: [given_agent], organisation: organisation, starts_at: now + 3.days)
+        rdv_from_other_organisation = create(:rdv, motif: motif, agents: [given_agent], organisation: other_organisation, starts_at: now + 4.days)
         get :index, params: { agent_id: given_agent.id, organisation_id: organisation.id, format: :json }
         expect(assigns(:rdvs).sort).to eq([rdv, rdv_from_other_organisation].sort)
         travel_back
@@ -30,9 +31,9 @@ describe Admin::Agents::RdvsController, type: :controller do
         now = Time.zone.parse("2021-01-23 10h00")
 
         travel_to(now - 2.days)
-        create(:rdv, agents: [agent], organisation: organisation, starts_at: now - 1.day)
-        rdv = create(:rdv, agents: [agent], organisation: organisation, starts_at: now + 2.days)
-        create(:rdv, agents: [agent], organisation: organisation, starts_at: now + 8.days)
+        create(:rdv, motif: motif, agents: [agent], organisation: organisation, starts_at: now - 1.day)
+        rdv = create(:rdv, motif: motif, agents: [agent], organisation: organisation, starts_at: now + 2.days)
+        create(:rdv, motif: motif, agents: [agent], organisation: organisation, starts_at: now + 8.days)
         travel_to(now)
 
         get :index, params: { agent_id: agent.id, organisation_id: organisation.id, start: now, end: now + 7.days, format: :json }

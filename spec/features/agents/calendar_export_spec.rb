@@ -38,11 +38,11 @@ describe "Agents can export their calendar to other tools, such as Outlook or Go
   it "displays rdvs in the proper format for calendars, without including personal information" do
     travel_to(Time.zone.local(2022, 7, 8))
     org = create(:organisation, id: 123_000)
-    agent = create(:agent, calendar_uid: SecureRandom.uuid, first_name: "Marceau", last_name: "COLIN")
     motif = create(:motif, name: "Accompagnement individuel")
+    agent = create(:agent, service: motif.service, calendar_uid: SecureRandom.uuid, first_name: "Marceau", last_name: "COLIN")
     create(:rdv, motif: motif, agents: [agent], status: "unknown", starts_at: 1.day.from_now, uuid: "e0a8dbac-d06c-4d18-98c6-a48f47fddd4c", organisation: org, id: 456_000)
     create(:rdv, motif: motif, agents: [agent], status: "revoked", starts_at: 2.days.from_now, uuid: "749336ce-eaca-40a3-8c28-246ed8d18849", organisation: org, id: 789_000)
-    motif_collectif = create(:motif, :collectif, name: "Atelier collectif", organisation: org)
+    motif_collectif = create(:motif, :collectif, service: motif.service, name: "Atelier collectif", organisation: org)
     create(:rdv, motif: motif_collectif, agents: [agent], status: "unknown", starts_at: 3.days.from_now, uuid: "abb701a5-381a-4fae-9157-129b5843834c", organisation: org, id: 123_123,
                  max_participants_count: 5)
 

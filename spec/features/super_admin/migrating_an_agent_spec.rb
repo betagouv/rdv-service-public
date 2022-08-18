@@ -4,9 +4,10 @@ describe "Migrating an agent from one organisation to another" do
   let(:super_admin) { create :super_admin }
   let!(:old_organisation) { create :organisation }
   let!(:new_organisation) { create :organisation, territory: old_organisation.territory }
-  let(:agent) { create :agent, admin_role_in_organisations: [old_organisation] }
+  let(:motif) { create :motif }
+  let(:agent) { create :agent, service: motif.service, admin_role_in_organisations: [old_organisation] }
 
-  let!(:rdv) { create :rdv, organisation: old_organisation, agents: [agent] }
+  let!(:rdv) { create :rdv, motif: motif, organisation: old_organisation, agents: [agent] }
 
   before do
     login_as(super_admin, scope: :super_admin)
@@ -28,8 +29,8 @@ describe "Migrating an agent from one organisation to another" do
   end
 
   context "when the agent has a rdv with another agent that is not being migrated" do
-    let!(:rdv) { create :rdv, organisation: old_organisation, agents: [agent, other_agent] }
-    let(:other_agent) { create(:agent, admin_role_in_organisations: [old_organisation]) }
+    let!(:rdv) { create :rdv, motif: motif, organisation: old_organisation, agents: [agent, other_agent] }
+    let(:other_agent) { create(:agent, service: motif.service, admin_role_in_organisations: [old_organisation]) }
 
     it "doesn't migrate the records and shows an error" do
       click_button "Migrer"

@@ -105,7 +105,7 @@ describe Notifiers::RdvBase, type: :service do
   describe "agent notifications" do
     context "motif is not_notified" do
       let(:author) { build(:agent) }
-      let(:agent) { build(:agent) }
+      let(:agent) { build(:agent, service: motif.service) }
       let(:motif) { build(:motif, :visible_and_not_notified) }
       let(:rdv) { create(:rdv, starts_at: 1.day.from_now, agents: [agent], motif: motif) }
 
@@ -116,9 +116,10 @@ describe Notifiers::RdvBase, type: :service do
     end
 
     describe "agents_rdv_notifications_level" do
-      let(:agent) { build(:agent, rdv_notifications_level: rdv_notifications_level) }
+      let(:motif) { build(:motif) }
+      let(:agent) { build(:agent, service: motif.service, rdv_notifications_level: rdv_notifications_level) }
       let(:user) { build(:user) }
-      let(:rdv) { create(:rdv, starts_at: rdv_date, agents: [agent], users: [user]) }
+      let(:rdv) { create(:rdv, motif: motif, starts_at: rdv_date, agents: [agent], users: [user]) }
 
       context "level is all" do
         let(:author) { agent }

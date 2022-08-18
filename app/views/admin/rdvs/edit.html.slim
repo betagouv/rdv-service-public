@@ -63,7 +63,7 @@
                       data: { \
                         "select-options": { \
                           ajax: { \
-                            url: admin_organisation_agents_path(current_organisation),
+                            url: admin_organisation_agents_path(current_organisation, motif: @rdv_form.motif.id), \
                             dataType: "json", delay: 250, \
                           }, \
                         }, \

@@ -2,10 +2,11 @@
 
 RSpec.describe Agents::RdvMailer, type: :mailer do
   describe "#rdv_created" do
-    let(:agent) { build(:agent) }
+    let(:motif) { build(:motif) }
+    let(:agent) { build(:agent, service: motif.service) }
     let(:t) { DateTime.parse("2020-03-01 10:20") }
     let(:mail) { described_class.with(rdv: rdv, agent: agent).rdv_created }
-    let(:rdv) { create(:rdv, starts_at: t + 2.hours, agents: [agent]) }
+    let(:rdv) { create(:rdv, starts_at: t + 2.hours, motif: motif, agents: [agent]) }
 
     before { travel_to(t) }
 
@@ -14,7 +15,7 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
     end
 
     context "in 2 hours" do
-      let(:rdv) { create(:rdv, starts_at: t + 10.minutes, agents: [agent]) }
+      let(:rdv) { create(:rdv, starts_at: t + 10.minutes, motif: motif, agents: [agent]) }
 
       it "has a correct subject" do
         expect(mail.subject).to eq("Nouveau RDV ajouté sur votre agenda rdv-solidarités pour aujourd’hui")
@@ -22,7 +23,7 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
     end
 
     context "tomorrow" do
-      let(:rdv) { create(:rdv, starts_at: t + 1.day, agents: [agent]) }
+      let(:rdv) { create(:rdv, starts_at: t + 1.day, motif: motif, agents: [agent]) }
 
       it "has a correct subject" do
         expect(mail.subject).to eq("Nouveau RDV ajouté sur votre agenda rdv-solidarités pour demain")

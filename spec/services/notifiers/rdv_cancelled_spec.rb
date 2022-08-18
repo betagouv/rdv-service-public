@@ -2,11 +2,11 @@
 
 describe Notifiers::RdvCancelled, type: :service do
   subject { described_class.perform_with(rdv, author) }
-
-  let(:agent1) { build(:agent) }
-  let(:agent2) { build(:agent) }
+  let(:motif) { build(:motif) }
+  let(:agent1) { build(:agent, service: motif.service) }
+  let(:agent2) { build(:agent, service: motif.service) }
   let(:user) { build(:user) }
-  let(:rdv) { build(:rdv, starts_at: starts_at, agents: [agent1, agent2]) }
+  let(:rdv) { build(:rdv, motif: motif, starts_at: starts_at, agents: [agent1, agent2]) }
   let(:rdv_user) { create(:rdvs_user, user: user, rdv: rdv) }
   let(:rdvs_users) { RdvsUser.where(id: rdv_user.id) }
   let(:token) { "123456" }

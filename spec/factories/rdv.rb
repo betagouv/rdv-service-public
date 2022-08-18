@@ -8,7 +8,7 @@ FactoryBot.define do
     lieu { build(:lieu, organisation: organisation) }
     motif { build(:motif, organisation: organisation) }
     users { [build(:user, organisations: [organisation])] }
-    agents { [build(:agent, organisations: [organisation])] }
+    agents { [build(:agent, service: motif.service, organisations: [organisation])] }
 
     duration_in_min { 45 }
     starts_at { 3.days.from_now }

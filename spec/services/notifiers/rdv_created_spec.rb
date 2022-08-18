@@ -2,11 +2,11 @@
 
 describe Notifiers::RdvCreated, type: :service do
   subject { described_class.perform_with(rdv, user1) }
-
+  let(:motif) { build(:motif) }
   let(:user1) { build(:user) }
   let(:user2) { build(:user) }
-  let(:agent1) { build(:agent) }
-  let(:agent2) { build(:agent) }
+  let(:agent1) { build(:agent, service: motif.service) }
+  let(:agent2) { build(:agent, service: motif.service) }
   let(:rdv) { create(:rdv, starts_at: starts_at, motif: motif, agents: [agent1, agent2]) }
   let(:rdv_user1) { create(:rdvs_user, user: user1, rdv: rdv) }
   let(:rdv_user2) { create(:rdvs_user, user: user2, rdv: rdv) }

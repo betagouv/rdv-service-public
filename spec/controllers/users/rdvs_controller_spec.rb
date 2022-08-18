@@ -35,7 +35,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     end
 
     describe "when there is an available creneau" do
-      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+      let!(:agent) { create(:agent, service: motif.service, basic_role_in_organisations: [organisation]) }
       let(:mock_creneau) do
         instance_double(Creneau, agent: agent, motif: motif, lieu: lieu, starts_at: starts_at, duration_in_min: 30)
       end
@@ -374,7 +374,7 @@ RSpec.describe Users::RdvsController, type: :controller do
     let(:user) { create(:user) }
     let(:motif) { create(:motif, organisation: organisation) }
     let(:lieu) { create(:lieu, address: "10 rue de la Ferronerie 44100 Nantes", organisation: organisation) }
-    let!(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+    let!(:agent) { create(:agent, service: motif.service, basic_role_in_organisations: [organisation]) }
     let(:rdv) { create(:rdv, users: [user], starts_at: 5.days.from_now, lieu: lieu, motif: motif, organisation: organisation, created_by: "user") }
     let(:token) { "12345" }
 

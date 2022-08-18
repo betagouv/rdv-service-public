@@ -21,22 +21,25 @@ describe Agent, type: :model do
     end
 
     it "keep old mail in an `email_original` attribute" do
-      agent = create(:agent, email: "karim@le64.fr", organisations: [])
-      create(:rdv, agents: [agent])
+      motif = create(:motif)
+      agent = create(:agent, service: motif.service, email: "karim@le64.fr", organisations: [])
+      create(:rdv, motif: motif, agents: [agent])
       agent.soft_delete
       expect(agent.email_original).to eq("karim@le64.fr")
     end
 
     it "update mail with a unique value" do
-      agent = create(:agent, basic_role_in_organisations: [])
-      create(:rdv, agents: [agent])
+      motif = create(:motif)
+      agent = create(:agent, service: motif.service, basic_role_in_organisations: [])
+      create(:rdv, motif: motif, agents: [agent])
       agent.soft_delete
       expect(agent.email).to eq("agent_#{agent.id}@deleted.rdv-solidarites.fr")
     end
 
     it "update UID with a unique value" do
-      agent = create(:agent, basic_role_in_organisations: [])
-      create(:rdv, agents: [agent])
+      motif = create(:motif)
+      agent = create(:agent, service: motif.service, basic_role_in_organisations: [])
+      create(:rdv, motif: motif, agents: [agent])
       agent.soft_delete
       expect(agent.uid).to eq("agent_#{agent.id}@deleted.rdv-solidarites.fr")
     end
@@ -73,8 +76,9 @@ describe Agent, type: :model do
     it "update with 1 with one past RDV" do
       now = Time.zone.parse("20211123 10:45")
       travel_to(now)
-      agent = create(:agent)
-      create(:rdv, starts_at: now - 1.day, status: :unknown, agents: [agent])
+      motif = create(:motif)
+      agent = create(:agent, service: motif.service)
+      create(:rdv, starts_at: now - 1.day, status: :unknown, motif: motif, agents: [agent])
       agent.update_unknown_past_rdv_count!
       expect(agent.reload.unknown_past_rdv_count).to eq(1)
     end
