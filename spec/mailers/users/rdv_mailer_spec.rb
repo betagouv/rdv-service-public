@@ -119,11 +119,14 @@ RSpec.describe Users::RdvMailer, type: :mailer do
         end
       end
 
-      context "when motif's service is conseiller_numerique" do
+      context "when motif is on a different domain" do
         let(:motif) { create(:motif, service: create(:service, :conseiller_numerique)) }
 
-        # TODO: #rdv-inclusion-numerique-v1
-        xit "works" do
+        before do
+          allow(motif.service).to receive(:domain).and_return(Domain::RDV_INCLUSION_NUMERIQUE)
+        end
+
+        it "works" do
           mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
           expect(mail.html_part.body.to_s).to include(%(src="/logo_inclusion_numerique.png))
           expect(mail.html_part.body.to_s).to include(%(href="http://rdv-inclusion-numerique-test.localhost))
