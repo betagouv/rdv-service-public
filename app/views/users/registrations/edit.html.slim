@@ -7,7 +7,7 @@
           .alert.alert-info.d-flex.align-items-center
             .mr-3
               .fa.fa-info
-            div Vous pouvez ici changer l'email et le mot de passe de votre compte RDV-Solidarités, et pas ceux de FranceConnect
+            div Vous pouvez ici changer l'email et le mot de passe de votre compte #{current_domain.name}, et pas ceux de FranceConnect
         = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), remote: request.xhr?, html: { method: :put }) do |f|
           = render "devise/shared/error_messages", resource: resource
           = f.input :email, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), placeholder: "nom.prenom@email.com"
