@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def current_domain
-    @current_domain ||= Domain.find_matching(request.domain)
+    @current_domain ||= Domain.find_matching(URI.parse(request.url).host)
   end
   helper_method :current_domain
 
