@@ -36,7 +36,7 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
         it "works" do
           expect(mail.html_part.body.to_s).to include(%(src="/logo.png))
           expect(mail.html_part.body.to_s).to include("Voir sur RDV Solidarités")
-          expect(mail.html_part.body.to_s).to include(%(href="http://rdv-solidarites-test.localhost))
+          expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost))
         end
       end
 
@@ -50,7 +50,7 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
         it "works" do
           expect(mail.html_part.body.to_s).to include(%(src="/logo_inclusion_numerique.png))
           expect(mail.html_part.body.to_s).to include("Voir sur RDV Inclusion Numérique")
-          expect(mail.html_part.body.to_s).to include(%(href="http://rdv-inclusion-numerique-test.localhost/))
+          expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-inclusion-numerique-test.localhost/))
         end
       end
     end

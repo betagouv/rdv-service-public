@@ -32,7 +32,7 @@ SimpleCov.start
 WebMock.disable_net_connect!(allow: [
                                "127.0.0.1",
                                "localhost",
-                               "rdv-solidarites-test.localhost",
+                               "www.rdv-solidarites-test.localhost",
                                "chromedriver.storage.googleapis.com", # Autorise Chromedrive storage pour l'execution de la CI
                              ])
 
@@ -67,9 +67,9 @@ end
 
 Capybara.configure do |config|
   port = 9887 + ENV["TEST_ENV_NUMBER"].to_i
-  config.app_host = "http://rdv-solidarites-test.localhost:#{port}"
+  config.app_host = "http://www.rdv-solidarites-test.localhost:#{port}"
   # config.asset_host = "http://localhost:#{port}"  # for screenshots
-  config.server_host = "rdv-solidarites-test.localhost"
+  config.server_host = "www.rdv-solidarites-test.localhost"
   config.server_port = port
   config.javascript_driver = :selenium
   config.server = :puma, { Silent: true }
