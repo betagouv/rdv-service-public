@@ -1,6 +1,19 @@
 # frozen_string_literal: true
 
-class Domain < OpenStruct
+class Domain
+  # rubocop:disable Metrics/ParameterLists
+  def initialize(logo_path:, public_logo_path:, dark_logo_path:, name:, sms_sender_name:, default: false)
+    @default = default
+    @logo_path = logo_path
+    @public_logo_path = public_logo_path
+    @dark_logo_path = dark_logo_path
+    @name = name
+    @sms_sender_name = sms_sender_name
+  end
+  # rubocop:enable Metrics/ParameterLists
+
+  attr_reader :default, :logo_path, :public_logo_path, :dark_logo_path, :name, :sms_sender_name
+
   ALL = [
     RDV_SOLIDARITES = new(
       default: true,
@@ -34,19 +47,19 @@ class Domain < OpenStruct
         }.fetch(self)
       else
         {
-          RDV_SOLIDARITES => "rdv-solidarites.fr",
-          RDV_INCLUSION_NUMERIQUE => "rdv-inclusion-numerique.fr",
+          RDV_SOLIDARITES => "www.rdv-solidarites.fr",
+          RDV_INCLUSION_NUMERIQUE => "www.rdv-inclusion-numerique.fr",
         }.fetch(self)
       end
     when :development
       {
-        RDV_SOLIDARITES => "rdv-solidarites.localhost",
-        RDV_INCLUSION_NUMERIQUE => "rdv-inclusion-numerique.localhost",
+        RDV_SOLIDARITES => "www.rdv-solidarites.localhost",
+        RDV_INCLUSION_NUMERIQUE => "www.rdv-inclusion-numerique.localhost",
       }.fetch(self)
     when :test
       {
-        RDV_SOLIDARITES => "rdv-solidarites-test.localhost",
-        RDV_INCLUSION_NUMERIQUE => "rdv-inclusion-numerique-test.localhost",
+        RDV_SOLIDARITES => "www.rdv-solidarites-test.localhost",
+        RDV_INCLUSION_NUMERIQUE => "www.rdv-inclusion-numerique-test.localhost",
       }.fetch(self)
     else
       raise "Rails.env not recognized: #{Rails.env.inspect}"
@@ -57,9 +70,9 @@ class Domain < OpenStruct
     !!default
   end
 
+  ALL_BY_URL = ALL.index_by(&:dns_domain_name)
+
   def self.find_matching(domain_name)
-    ALL.find do |domain|
-      domain.dns_domain_name == domain_name
-    end || RDV_SOLIDARITES
+    ALL_BY_URL.fetch(domain_name) { RDV_SOLIDARITES }
   end
 end
