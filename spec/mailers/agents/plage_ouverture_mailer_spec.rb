@@ -35,11 +35,14 @@ describe Agents::PlageOuvertureMailer, type: :mailer do
           end
         end
 
-        context "when agent's service is conseiller_numerique" do
+        context "when agent is on a different domain" do
           let(:agent) { build(:agent, service: build(:service, :conseiller_numerique)) }
 
-          # TODO: #rdv-inclusion-numerique-v1
-          xit "works" do
+          before do
+            allow(agent).to receive(:domain).and_return(Domain::RDV_INCLUSION_NUMERIQUE)
+          end
+
+          it "works" do
             mail = described_class.with(plage_ouverture: plage_ouverture).send("plage_ouverture_#{action}")
             expect(mail.subject).to start_with("RDV Inclusion Numérique - Plage d’ouverture")
             expect(mail.html_part.body.to_s).to include(%(src="/logo_inclusion_numerique.png))
