@@ -11,7 +11,7 @@ RSpec.describe "some fields that are specific to a certain domain can be disable
 
   before do
     login_as(agent, scope: :agent)
-    user.update(affiliation_number: "numero_affiliation_123")
+    user.update(affiliation_number: "numero_affiliation_123") # Pour créer une version Papertail
   end
 
   it "shows the restricted fields only if they are enabled", js: true do

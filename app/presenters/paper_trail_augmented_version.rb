@@ -49,7 +49,7 @@ class PaperTrailAugmentedVersion
   def enabled_field?(attribute_name, territory)
     toggle_name = Territory::SOCIAL_FIELD_TOGGLES.key(attribute_name.to_sym)
 
-    # Fields that don't have toggles are enabled
+    # Les champs qui n'ont pas de toggle sont enabled
     return true unless toggle_name
 
     territory[toggle_name]
