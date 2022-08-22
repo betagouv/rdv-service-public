@@ -3,16 +3,16 @@
 class Domain
   # rubocop:disable Metrics/ParameterLists
   def initialize(logo_path:, public_logo_path:, dark_logo_path:, name:, sms_sender_name:, default: false)
-    @default = default
     @logo_path = logo_path
     @public_logo_path = public_logo_path
     @dark_logo_path = dark_logo_path
     @name = name
     @sms_sender_name = sms_sender_name
+    @default = default
   end
   # rubocop:enable Metrics/ParameterLists
 
-  attr_reader :default, :logo_path, :public_logo_path, :dark_logo_path, :name, :sms_sender_name
+  attr_reader :logo_path, :public_logo_path, :dark_logo_path, :name, :sms_sender_name, :default
 
   ALL = [
     RDV_SOLIDARITES = new(
