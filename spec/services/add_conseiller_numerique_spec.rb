@@ -3,7 +3,7 @@
 describe AddConseillerNumerique do
   before do
     create(:territory, name: "Conseillers Numériques")
-    create(:service, name: "Conseiller Numérique")
+    create(:service, :conseiller_numerique)
     stub_request(
       :get,
       "https://api-adresse.data.gouv.fr/search/?postcode=75019&q=16%20quai%20de%20la%20Loire,%2075019%20Paris"

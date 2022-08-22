@@ -17,7 +17,7 @@ describe Users::RdvSms, type: :service do
         expect(subject).to include("RDV PMI vendredi 10/12 à 13h10")
         expect(subject).to include("MDS Centre (10 rue d'ici)")
         expect(subject).to include("Infos et annulation")
-        expect(subject).to include("#{ENV['HOST']}/r/123?tkn=12345")
+        expect(subject).to include("http://www.rdv-solidarites-test.localhost/r/123?tkn=12345")
       end
     end
 
@@ -51,7 +51,7 @@ describe Users::RdvSms, type: :service do
       expect(subject).to include("RDV modifié: PMI vendredi 10/12 à 13h10")
       expect(subject).to include("MDS Centre (10 rue d'ici)")
       expect(subject).to include("Infos et annulation")
-      expect(subject).to include("#{ENV['HOST']}/r/124?tkn=2345")
+      expect(subject).to include("http://www.rdv-solidarites-test.localhost/r/124?tkn=2345")
     end
   end
 
@@ -72,7 +72,7 @@ describe Users::RdvSms, type: :service do
       it "contains cancelled RDV's infos and lieu's phone number" do
         expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé.\n"
         expected_content += "Appelez le 0123456789 "
-        expected_content += "ou allez sur #{ENV['HOST']}/prdv?tkn=393939 pour reprendre RDV."
+        expected_content += "ou allez sur http://www.rdv-solidarites-test.localhost/prdv?tkn=393939 pour reprendre RDV."
         expect(subject).to eq(expected_content)
       end
     end
@@ -84,7 +84,7 @@ describe Users::RdvSms, type: :service do
       it "contains cancelled RDV's infos" do
         expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé.\n"
         expected_content += "Appelez le 0100000000 "
-        expected_content += "ou allez sur #{ENV['HOST']}/prdv?tkn=393939 pour reprendre RDV."
+        expected_content += "ou allez sur http://www.rdv-solidarites-test.localhost/prdv?tkn=393939 pour reprendre RDV."
         expect(subject).to eq(expected_content)
       end
     end
@@ -95,7 +95,7 @@ describe Users::RdvSms, type: :service do
 
       it "contains cancelled RDV's infos" do
         expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé.\n"
-        expected_content += "Allez sur #{ENV['HOST']}/prdv?tkn=393939 pour reprendre RDV."
+        expected_content += "Allez sur http://www.rdv-solidarites-test.localhost/prdv?tkn=393939 pour reprendre RDV."
         expect(subject).to eq(expected_content)
       end
     end
@@ -106,7 +106,7 @@ describe Users::RdvSms, type: :service do
 
       it "contains cancelled RDV's infos" do
         expected_content = "RDV PMI vendredi 10/12 à 13h10 a été annulé.\n"
-        expected_content += "Allez sur #{ENV['HOST']}/prdv?tkn=393939 pour reprendre RDV."
+        expected_content += "Allez sur http://www.rdv-solidarites-test.localhost/prdv?tkn=393939 pour reprendre RDV."
         expect(subject).to eq(expected_content)
       end
     end
@@ -127,7 +127,7 @@ describe Users::RdvSms, type: :service do
       expect(subject).to include("Rappel RDV PMI le vendredi 10/12 à 13h10")
       expect(subject).to include("MDS Centre (10 rue d'ici)")
       expect(subject).to include("Infos et annulation")
-      expect(subject).to include("#{ENV['HOST']}/r/140?tkn=7777")
+      expect(subject).to include("http://www.rdv-solidarites-test.localhost/r/140?tkn=7777")
     end
   end
 

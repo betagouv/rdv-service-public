@@ -1,0 +1,20 @@
+- content_for :title do
+  h1 RDV Solidarités et RDV Inclusion Numérique
+
+.container.mt-3
+  .row.align-items-center.mb-4.content
+    .col-lg-8
+      p Le site RDV Inclusion Numérique a été créé par l’équipe de RDV Solidarités pour permettre la prise de rendez-vous avec les Conseillers Numériques France Service et d’autres acteurs de l’inclusion numérique. C’est le même logiciel que RDV Solidarités, sous un autre nom afin d’être plus compréhensible par les usagers.
+
+  .row.align-items-center.mb-4.content
+    .col-lg-8
+      p Les usagers qui ont un compte sur #{Domain::RDV_SOLIDARITES.name} peuvent s’en servir pour se connecter à #{Domain::RDV_INCLUSION_NUMERIQUE.name}, et vice-versa. Leurs rendez-vous avec les services médico-sociaux sont visibles uniquement sur RDV Solidarités, et leurs rendez-vous liés à l’inclusion numérique sont visibles uniquement sur RDV Inclusion Numérique
+
+  .row
+    .col-lg-8
+      - Domain::ALL.each do |domain|
+        p> #{domain.name} est accessible à l'adresse #{link_to(domain.dns_domain_name, "https://#{domain.dns_domain_name}")}
+
+  .row.align-items-center.mb-4.content
+    .col-lg-8
+      p Les agents peuvent accéder à leur compte et toutes leur données indiféremment sur les deux sites.

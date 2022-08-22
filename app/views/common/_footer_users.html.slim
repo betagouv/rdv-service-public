@@ -2,11 +2,15 @@
   .row
     .col-12.col-md
       div
-        = link_to image_tag("logos/logo_sombre.svg", size: "250x80", alt:"RDV-Solidarites.fr"), root_path, title: "aller à l'accueil RDV-Solidarités"
+        = link_to image_tag(current_domain.dark_logo_path, size: "250x80", alt: current_domain.name), root_path, title: "aller à l'accueil #{current_domain.name}"
         ul.list-unstyled.text-small
           li.mb-2
-            span> Un service fourni par
-            = link_to "l'ANCT et un consortium de départements", "https://doc.rdv-solidarites.fr/organisation-dequipe/gouvernance"
+            - if current_domain.default?
+              span> Un service fourni par
+              = link_to "l'ANCT et un consortium de départements", "https://doc.rdv-solidarites.fr/organisation-dequipe/gouvernance"
+            - else
+              span> #{current_domain.name} est géré par #{Domain::RDV_SOLIDARITES.name}, un service fourni par l'ANCT.
+              = link_to "En savoir plus", domaines_path
           li.mb-2
             = link_to image_tag("logos/logo-incub-territoire.svg", size: "80x70", alt:"incubateur.anct.gouv.fr"), "https://incubateur.anct.gouv.fr/", title: "Aller sur le site de l'incubateur des territoires"
           li.mb-2
@@ -17,7 +21,8 @@
       h2 À propos
       ul.list-unstyled.text-small
         li.mb-1 = link_to "Contact", contact_path, class: "footer-links"
-        li.mb-1 = link_to "Les solidarités dans votre département", mds_path
+        - if current_domain == Domain::RDV_SOLIDARITES
+          li.mb-1 = link_to "Les solidarités dans votre département", mds_path
         li.mb-1 = link_to "Espace professionnel", accueil_mds_path
         li.mb-1 = link_to "Statistiques", stats_path
         li.mb-1 = link_to "Budget", budget_path
@@ -25,7 +30,7 @@
       h2 Produit
       ul.list-unstyled.text-small
         li.mb-1 = link_to "Accessibilité : non conforme", accessibility_path
-        li.mb-1 = link_to "https://github.com/betagouv/rdv-solidarites.fr/commits/#{ENV['CONTAINER_VERSION']}", title: "Aller au code source de RDV-Solidarités" do
+        li.mb-1 = link_to "https://github.com/betagouv/rdv-solidarites.fr/commits/#{ENV['CONTAINER_VERSION']}", title: "Aller au code source de #{current_domain.name}" do
           span>= ENV["RDV_SOLIDARITES_VERSION"]
           i.fa.fa-external-link-alt
         li.mb-1 = link_to "https://github.com/betagouv/rdv-solidarites.fr/" do

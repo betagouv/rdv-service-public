@@ -43,7 +43,7 @@ class Absence < ApplicationRecord
   ## -
 
   def ical_uid
-    "absence_#{id}@#{BRAND}"
+    "absence_#{id}@#{IcalHelpers::ICS_UID_SUFFIX}"
   end
 
   private

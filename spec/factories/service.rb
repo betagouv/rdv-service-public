@@ -21,5 +21,9 @@ FactoryBot.define do
     trait :pmi do
       name { Service::PMI }
     end
+
+    trait :conseiller_numerique do
+      name { Service::CONSEILLER_NUMERIQUE }
+    end
   end
 end

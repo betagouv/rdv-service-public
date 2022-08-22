@@ -4,20 +4,24 @@ class Users::RdvSms < Users::BaseSms
   include Rails.application.routes.url_helpers
 
   def rdv_created(rdv, user, token)
+    @sender_name = rdv.domain.sms_sender_name
     @content = "RDV #{rdv.motif&.service&.short_name} #{starts_at(rdv)}.\n#{rdv_footer(rdv, user, token)}"
   end
 
   def rdv_updated(rdv, user, token)
+    @sender_name = rdv.domain.sms_sender_name
     @content = "RDV modifié: #{rdv.motif.service.short_name} #{starts_at(rdv)}\n#{rdv_footer(rdv, user, token)}"
   end
 
   def rdv_upcoming_reminder(rdv, user, token)
+    @sender_name = rdv.domain.sms_sender_name
     @content = "Rappel RDV #{rdv.motif.service.short_name} le #{starts_at(rdv)}.\n#{rdv_footer(rdv, user, token)}"
   end
 
   def rdv_cancelled(rdv, _user, token)
+    @sender_name = rdv.domain.sms_sender_name
     base_message = "RDV #{rdv.motif.service.short_name} #{I18n.l(rdv.starts_at, format: :short)} a été annulé."
-    url = prendre_rdv_short_url(host: ENV["HOST"], tkn: token)
+    url = prendre_rdv_short_url(host: domain_host, tkn: token)
 
     footer = if rdv.phone_number.present?
                "Appelez le #{rdv.phone_number} ou allez sur #{url} pour reprendre RDV."
@@ -46,7 +50,7 @@ class Users::RdvSms < Users::BaseSms
 
     details += ".\n"
 
-    url = rdv_short_url(rdv, host: ENV["HOST"], tkn: token)
+    url = rdv_short_url(rdv, host: domain_host, tkn: token)
     links = "Infos et annulation: #{url}"
 
     links += " / #{rdv.phone_number}" if rdv.phone_number.present?

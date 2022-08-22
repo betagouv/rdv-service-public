@@ -12,7 +12,7 @@ describe Users::FileAttenteSms, type: :service do
     it do
       expect(subject).to include("RDV Service 1: des créneaux se sont libérés")
       expect(subject).to include("Pour voir les disponibilités")
-      expect(subject).to include("#{ENV['HOST']}/r/82/cr?tkn=12324")
+      expect(subject).to include("http://www.rdv-solidarites-test.localhost/r/82/cr?tkn=12324")
     end
   end
 end
