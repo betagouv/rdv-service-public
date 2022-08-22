@@ -7,9 +7,9 @@
   .col-md-6
     .card
       .card-body
-        h4.card-title.mb-3 Bienvenue sur RDV Solidarités !
+        h4.card-title.mb-3 Bienvenue sur #{current_domain.name} !
         p Vous allez pouvoir planifier vos rendez-vous, envoyer des rappels automatiques a vos usagers, partager votre calendrier avec vos collègues et organiser des ateliers collectifs.
-        p Pour le moment RDV Solidarités ne permet pas à vos usagers de prendre rendez-vous directement.
+        p Pour le moment #{current_domain.name} ne permet pas à vos usagers de prendre rendez-vous directement.
         p.mb-4 Pour démarrer du bon pied, nous vous recommandons de faire les actions suivantes :
 
         / Agents for the second beta test need to setup lieu and motif
@@ -46,7 +46,7 @@
             span>= link_to "Ajouter un RDV dans votre agenda", admin_organisation_agent_agenda_path(@organisation, current_agent.id)
 
         h5.mb-2 Synchroniser votre agenda externe
-        p Si vous utilisez déjà un agenda comme Outlook ou Google Calendar, vous pouvez synchroniser votre agenda RDV Solidarité vers votre agenda externe, pour que vos rendez-vous y soient visibles aussi.
+        p Si vous utilisez déjà un agenda comme Outlook ou Google Calendar, vous pouvez synchroniser votre agenda #{current_domain.name} vers votre agenda externe, pour que vos rendez-vous y soient visibles aussi.
         ul.mb-4.list-unstyled
           li.mb-2
             span>= setup_checklist_item(current_agent.calendar_uid.present?)

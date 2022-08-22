@@ -8,7 +8,7 @@ module Payloads
         starts_at: starts_at,
         ends_at: first_occurrence_ends_at,
         ical_uid: ical_uid,
-        summary: "#{BRAND} #{title}",
+        summary: "#{IcalHelpers::ICS_UID_SUFFIX} #{title}",
         recurrence: rrule,
       }
 

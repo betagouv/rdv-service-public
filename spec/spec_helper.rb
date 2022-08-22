@@ -29,8 +29,12 @@ require "simplecov"
 SimpleCov.minimum_coverage 80
 SimpleCov.start
 
-# Autorise Chromedrive storage pour l'execution de la CI
-WebMock.disable_net_connect!(allow: ["127.0.0.1", "localhost", "chromedriver.storage.googleapis.com"])
+WebMock.disable_net_connect!(allow: [
+                               "127.0.0.1",
+                               "localhost",
+                               "www.rdv-solidarites-test.localhost",
+                               "chromedriver.storage.googleapis.com", # Autorise Chromedrive storage pour l'execution de la CI
+                             ])
 
 Capybara.register_driver :chrome_headless do |app|
   options = ::Selenium::WebDriver::Chrome::Options.new
@@ -63,13 +67,17 @@ end
 
 Capybara.configure do |config|
   port = 9887 + ENV["TEST_ENV_NUMBER"].to_i
-  config.app_host = "http://localhost:#{port}"
+  config.app_host = "http://www.rdv-solidarites-test.localhost:#{port}"
   # config.asset_host = "http://localhost:#{port}"  # for screenshots
-  config.server_host = "localhost"
+  config.server_host = "www.rdv-solidarites-test.localhost"
   config.server_port = port
   config.javascript_driver = :selenium
   config.server = :puma, { Silent: true }
   config.disable_animation = true
+
+  # This is necessary when using Selenium + custom .localhost domain.
+  # See: https://stackoverflow.com/a/63973323/2864020
+  config.always_include_port = true
 end
 
 RSpec.configure do |config|

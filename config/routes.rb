@@ -221,7 +221,7 @@ Rails.application.routes.draw do
     root to: "admin/organisations#index", as: :authenticated_agent_root, defaults: { follow_unique: "1" }
   end
 
-  %w[contact mds accessibility mentions_legales cgu politique_de_confidentialite].each do |page_name|
+  %w[contact mds accessibility mentions_legales cgu politique_de_confidentialite domaines].each do |page_name|
     get page_name => "static_pages##{page_name}"
   end
 
@@ -255,7 +255,7 @@ Rails.application.routes.draw do
 
   ##
 
-  get "accueil_mds" => "welcome#welcome_agent"
+  get "accueil_mds" => "static_pages#rdv_solidarites_presentation_for_agents"
 
   resources :lieux, only: %i[index show]
   root "search#search_rdv"

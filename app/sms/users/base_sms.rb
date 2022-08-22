@@ -7,6 +7,7 @@ class Users::BaseSms < ApplicationSms
 
     @phone_number = user.phone_number_formatted
 
+    @rdv = rdv
     @provider = rdv.organisation&.territory&.sms_provider
     @key = rdv.organisation&.territory&.sms_configuration
 
@@ -19,5 +20,9 @@ class Users::BaseSms < ApplicationSms
 
     @receipt_params[:rdv] = rdv
     @receipt_params[:user] = user
+  end
+
+  def domain_host
+    @rdv.domain.dns_domain_name
   end
 end

@@ -13,16 +13,22 @@ class Agents::PlageOuvertureMailer < ApplicationMailer
 
   def plage_ouverture_created
     self.ics_payload = @plage_ouverture.payload(:create)
-    mail(subject: t("agents.plage_ouverture_mailer.plage_ouverture_created.title", title: @plage_ouverture.title))
+    mail(subject: t("agents.plage_ouverture_mailer.plage_ouverture_created.title", domain_name: domain.name, title: @plage_ouverture.title))
   end
 
   def plage_ouverture_updated
     self.ics_payload = @plage_ouverture.payload(:update)
-    mail(subject: t("agents.plage_ouverture_mailer.plage_ouverture_updated.title", title: @plage_ouverture.title))
+    mail(subject: t("agents.plage_ouverture_mailer.plage_ouverture_updated.title", domain_name: domain.name, title: @plage_ouverture.title))
   end
 
   def plage_ouverture_destroyed
     self.ics_payload = @plage_ouverture.payload(:destroy)
-    mail(subject: t("agents.plage_ouverture_mailer.plage_ouverture_destroyed.title", title: @plage_ouverture.title))
+    mail(subject: t("agents.plage_ouverture_mailer.plage_ouverture_destroyed.title", domain_name: domain.name, title: @plage_ouverture.title))
+  end
+
+  private
+
+  def domain
+    @plage_ouverture.agent.domain
   end
 end
