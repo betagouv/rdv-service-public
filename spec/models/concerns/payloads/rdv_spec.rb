@@ -42,19 +42,9 @@ describe Payloads::Rdv, type: :service do
 
     describe ":description" do
       let(:user) { build(:user) }
-      let(:agent) { build(:agent) }
-      let(:rdv) { create(:rdv, users: [user], agents: [agent]) }
+      let(:rdv) { build(:rdv, users: [user]) }
 
-      it "provides a link to the RDV index for users" do
-        expect(rdv.payload[:description]).to eq("Infos et annulation: http://www.rdv-solidarites-test.localhost/r")
-      end
-
-      context "when sending to an agent" do
-        it "provides a link to the RDV in the agent interface" do
-          description = "Voir sur RDV Solidarités: http://www.rdv-solidarites-test.localhost/admin/organisations/#{rdv.organisation_id}/rdvs/#{rdv.id}"
-          expect(rdv.payload(nil, agent)[:description]).to eq(description)
-        end
-      end
+      it { expect(rdv.payload[:description]).to eq("Infos et annulation: #{ENV['HOST']}/r") }
     end
 
     describe ":address" do
