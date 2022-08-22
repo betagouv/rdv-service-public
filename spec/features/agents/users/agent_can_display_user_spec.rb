@@ -13,7 +13,7 @@ describe "Agent can display user" do
     let!(:user) { create(:user, :unconfirmed, :unregistered, organisations: [organisation]) }
 
     it "prompts the agent to invite the user" do
-      expect(page).to have_content("Cet usager ne s'est pas encore créé de compte RDV-Solidarités.")
+      expect(page).to have_content("Cet usager ne s'est pas encore créé de compte RDV Solidarités.")
       expect(page).to have_link("Inviter", href: invite_admin_organisation_user_path(id: user.id, organisation_id: organisation.id))
     end
   end
@@ -24,7 +24,7 @@ describe "Agent can display user" do
     it "displays a message to inform of FranceConnect binding, and hides the invitation prompt" do
       expect(page).to have_content("Cet usager s'est déjà connecté via FranceConnect.")
       # There is no need to invite the user since FranceConnect binding is in place
-      expect(page).not_to have_content("Cet usager ne s'est pas encore créé de compte RDV-Solidarités")
+      expect(page).not_to have_content("Cet usager ne s'est pas encore créé de compte")
     end
   end
 end
