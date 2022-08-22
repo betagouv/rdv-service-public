@@ -38,7 +38,7 @@ describe Payloads::PlageOuverture do
     describe ":ical_uid" do
       let(:plage_ouverture) { create(:plage_ouverture) }
 
-      it { expect(plage_ouverture.payload[:ical_uid]).to eq("plage_ouverture_#{plage_ouverture.id}@#{BRAND}") }
+      it { expect(plage_ouverture.payload[:ical_uid]).to eq("plage_ouverture_#{plage_ouverture.id}@RDV Solidarités") }
     end
 
     describe ":ends_at" do
