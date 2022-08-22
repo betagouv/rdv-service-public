@@ -27,4 +27,12 @@ describe "Agent can display user" do
       expect(page).not_to have_content("Cet usager ne s'est pas encore créé de compte")
     end
   end
+
+  context "when user was invited by an external service but did not yet accept the invite" do
+    let!(:user) { create(:user, :unconfirmed, :unregistered, invited_through: "external", organisations: [organisation]) }
+
+    it "displays a message to inform the agent" do
+      expect(page).to have_content("Cet usager a reçu une invitation via un partenaire de RDV Solidarités, mais il ne l’a pas encore acceptée")
+    end
+  end
 end
