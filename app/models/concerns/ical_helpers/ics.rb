@@ -3,12 +3,6 @@
 require "icalendar/tzinfo"
 
 module IcalHelpers
-  # Cette constante est ajoutée aux UIDs des événements ICS afin
-  # d'empêcher la collision (certes improbable) avec des événements
-  # d'autres plateformes. Il est important de ne pas modifier cette
-  # constante car cel ferait changer les UIDs (et un ID ne doit pas changer).
-  ICS_UID_SUFFIX = "RDV Solidarités"
-
   module Ics
     def to_ical(*args)
       IcalHelpers::Ics.from_payload(payload(*args)).to_ical
@@ -26,7 +20,7 @@ module IcalHelpers
       cal = Icalendar::Calendar.new
 
       cal.add_timezone Time.zone_default.tzinfo.ical_timezone payload[:starts_at]
-      cal.prodid = ICS_UID_SUFFIX
+      cal.prodid = BRAND
       cal.event { |event| populate_event(event, payload) }
       cal.ip_method = if payload[:action] == :destroy
                         "CANCEL"

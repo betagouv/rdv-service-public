@@ -38,7 +38,7 @@ describe Payloads::Absence do
     describe ":ical_uid" do
       let(:absence) { create(:absence) }
 
-      it { expect(absence.payload[:ical_uid]).to eq("absence_#{absence.id}@RDV Solidarités") }
+      it { expect(absence.payload[:ical_uid]).to eq("absence_#{absence.id}@#{BRAND}") }
     end
 
     describe ":ends_at" do

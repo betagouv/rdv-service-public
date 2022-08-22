@@ -49,7 +49,7 @@ class PlageOuverture < ApplicationRecord
   ## -
 
   def ical_uid
-    "plage_ouverture_#{id}@#{IcalHelpers::ICS_UID_SUFFIX}"
+    "plage_ouverture_#{id}@#{BRAND}"
   end
 
   def available_motifs
