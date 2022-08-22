@@ -30,7 +30,7 @@
         - if @user.invited_through == "external" && @user.invitation_accepted_at.nil?
           .row.bg-info.text-white.p-2.mb-3
             .col-md-8
-              | Cet usager a reçu une invitation via un partenaire de RDV-Solidarités, mais il ne l’a pas encore acceptée.
+              | Cet usager a reçu une invitation via un partenaire de #{domain.name}, mais il ne l’a pas encore acceptée.
 
         - if @user.logged_once_with_franceconnect?
           .row.bg-info.text-white.p-2.mb-3 Cet usager s'est déjà connecté via FranceConnect.
