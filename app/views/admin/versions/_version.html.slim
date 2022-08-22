@@ -1,6 +1,6 @@
 / We’re spanning multiple table rows, one for each attribute.
 / The first table row has the change date and author spanning over the following rows.
-- changes = version.changes
+- changes = version.changes(current_territory)
 - length = version.changes.length
 - if length > 0
   tr.border-top
