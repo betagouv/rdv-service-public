@@ -16,6 +16,8 @@ describe Notifiers::RdvCreated, type: :service do
   let(:token2) { "56789" }
 
   before do
+    stub_netsize_ok
+
     allow(Users::RdvMailer).to receive(:with).and_call_original
     allow(Agents::RdvMailer).to receive(:with).and_call_original
     allow(rdv).to receive(:rdvs_users).and_return(rdvs_users_relation)

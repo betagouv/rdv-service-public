@@ -10,6 +10,8 @@ describe Notifiers::RdvUpcomingReminder, type: :service do
   let(:token) { "123456" }
 
   before do
+    stub_netsize_ok
+
     allow(Users::RdvMailer).to receive(:with).and_call_original
     allow(Users::RdvSms).to receive(:rdv_upcoming_reminder).and_call_original
     allow(rdv).to receive(:rdvs_users).and_return(rdvs_users)

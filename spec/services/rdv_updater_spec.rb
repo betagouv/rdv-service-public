@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 describe RdvUpdater, type: :service do
+  before do
+    stub_netsize_ok
+  end
+
   describe "#update" do
     describe "return value" do
       it "true when everything is ok" do

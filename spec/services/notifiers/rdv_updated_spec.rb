@@ -16,6 +16,8 @@ describe Notifiers::RdvUpdated, type: :service do
   let(:token2) { "56789" }
 
   before do
+    stub_netsize_ok
+
     rdv.update!(starts_at: 4.days.from_now)
 
     allow(Users::RdvMailer).to receive(:with).and_call_original
