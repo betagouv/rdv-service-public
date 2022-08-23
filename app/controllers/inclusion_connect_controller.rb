@@ -4,13 +4,14 @@ require "net/http"
 
 class InclusionConnectController < ApplicationController
   def auth
+    session[:ic_state] = Digest::SHA1.hexdigest("InclusionConnect - #{SecureRandom.hex(13)}")
     auth_url = "#{ENV['INCLUSION_CONNECT_BASE_URL']}/auth"
     auth_query = {
       response_type: "code",
       client_id: ENV["INCLUSION_CONNECT_CLIENT_ID"],
       redirect_uri: inclusion_connect_callback_url,
       scope: "openid email",
-      state: Digest::SHA1.hexdigest("un state qui doit changer ?"),
+      state: session[:ic_state],
       nonce: Digest::SHA1.hexdigest("Something to check when it come back ?"),
       from: "community",
     }
@@ -19,8 +20,10 @@ class InclusionConnectController < ApplicationController
   end
 
   def callback
-    # TODO: manage errors
-    # TODO check state & session-state
+    if params[:state] != session[:ic_state] 
+      flash[:error] = "Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste."
+      redirect_to new_agent_session_path and return
+    end
 
     token_url = "#{ENV['INCLUSION_CONNECT_BASE_URL']}/token"
     data = {
@@ -34,13 +37,18 @@ class InclusionConnectController < ApplicationController
     uri = URI(token_url)
 
     res = Net::HTTP.post_form(uri, data)
-    res_body = JSON.parse(res.body) if res.is_a?(Net::HTTPSuccess)
 
-    # TODO: gestion du cas où il y a un problème ou pas de token
-
-    token = res_body["access_token"]
-    expires_in = res_body["expires_in"]
-    scopes = res_body["scopes"]
+    if res.is_a?(Net::HTTPSuccess)
+      res_body = JSON.parse(res.body)
+      token = res_body["access_token"]
+      if token.blank?
+        flash[:error] = "Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste."
+        redirect_to new_agent_session_path and return
+      end
+    else
+      flash[:error] = "Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste."
+      redirect_to new_agent_session_path and return
+    end
 
     #
     # UserINFO
@@ -59,13 +67,20 @@ class InclusionConnectController < ApplicationController
       http.request(req)
     end
 
+    unless res.is_a?(Net::HTTPSuccess)
+      flash[:error] = "Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste."
+      redirect_to new_agent_session_path and return
+    end
+
     body = JSON.parse(res.body)
 
-    Rails.logger.debug { "body : #{body.inspect}" }
+    unless body["email_verified"]
+      flash[:error] = "Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste."
+      redirect_to new_agent_session_path and return
+    end
+
     email = body["email"]
     agent = Agent.find_by(email: email)
-    # TODO: Check if email is verified
-    # email_verified = body["email_verified"]
 
     agent.update(first_name: body["given_name"], last_name: body["family_name"], confirmed_at: Time.zone.now)
 
@@ -73,7 +88,6 @@ class InclusionConnectController < ApplicationController
       bypass_sign_in agent, scope: :agent
       session[:connected_with_inclusionconnect] = true
     else
-      # TODO: faire un lien clickable
       flash[:error] = "Nous n'avons pas trouvé d'affectation pour votre email de connexion, veuillez nous contacter par email support@rdv-solidarites.fr"
     end
     redirect_to root_path
