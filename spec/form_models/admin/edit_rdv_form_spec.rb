@@ -5,6 +5,8 @@ describe Admin::EditRdvForm, type: :form do
   let(:agent) { create(:agent) }
   let(:agent_context) { instance_double(AgentOrganisationContext, agent: agent, organisation: organisation) }
 
+  before { stub_netsize_ok }
+
   describe "#update" do
     it "updates rdv's lieu" do
       now = Time.zone.parse("2020-12-12 13h50")

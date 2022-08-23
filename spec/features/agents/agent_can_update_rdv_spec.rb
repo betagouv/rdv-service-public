@@ -6,6 +6,7 @@ describe "Agent can update a RDV", js: true do
   let!(:agent) { create(:agent, first_name: "Alain", last_name: "Tiptop", service: service, basic_role_in_organisations: [organisation]) }
 
   before do
+    stub_netsize_ok
     login_as(agent, scope: :agent)
   end
 

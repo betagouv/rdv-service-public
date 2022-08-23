@@ -158,6 +158,7 @@ RSpec/DescribeClass:
   Exclude:
     - "spec/features/**/*"
     - "spec/requests/**/*"
+    - "spec/sms/**/*"
 
 Style/AsciiComments:
   Enabled: false

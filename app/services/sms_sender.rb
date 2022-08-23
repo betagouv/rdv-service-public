@@ -7,16 +7,14 @@ class SmsSender < BaseService
 
   attr_reader :phone_number, :content, :tags, :provider, :key
 
-  def initialize(phone_number, content, tags, provider, key, receipt_params)
+  def initialize(sender_name, phone_number, content, tags, provider, key, receipt_params)
+    @sender_name = sender_name
     @phone_number = phone_number
     @content = formatted_content(content)
     @tags = tags
     @receipt_params = receipt_params
 
-    if Rails.env.test?
-      @provider = :debug_logger
-      @key = nil
-    elsif Rails.env.development?
+    if Rails.env.development?
       @provider = ENV["DEVELOPMENT_FORCE_SMS_PROVIDER"].presence || provider || ENV["DEFAULT_SMS_PROVIDER"].presence || :debug_logger
       @key = ENV["DEVELOPMENT_FORCE_SMS_PROVIDER_KEY"].presence || key || ENV["DEFAULT_SMS_PROVIDER_KEY"]
     else

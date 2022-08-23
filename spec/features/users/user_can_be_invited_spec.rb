@@ -3,6 +3,7 @@
 describe "User can be invited" do
   # needed for encrypted cookies
   before do
+    stub_netsize_ok
     allow_any_instance_of(ActionDispatch::Request).to receive(:cookie_jar).and_return(page.cookies)
     allow_any_instance_of(ActionDispatch::Request).to receive(:cookies).and_return(page.cookies)
   end

@@ -12,6 +12,8 @@ describe Notifiers::RdvCancelled, type: :service do
   let(:token) { "123456" }
 
   before do
+    stub_netsize_ok
+
     rdv.update!(status: new_status)
 
     allow(Agents::RdvMailer).to receive(:with).and_call_original
