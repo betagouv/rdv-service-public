@@ -46,6 +46,8 @@ describe Admin::RdvsController, type: :controller do
 
   describe "PUT #update" do
     context "with valid params" do
+      before { stub_netsize_ok }
+
       it "redirects to the rdv" do
         now = Time.zone.parse("2020-11-23 14h00")
         travel_to(now)
