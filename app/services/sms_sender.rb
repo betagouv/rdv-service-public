@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SmsSender < BaseService
-  # rubocop:disable Metrics/ParameterLists, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
   class SmsSenderFailure < StandardError; end
 
@@ -242,5 +242,5 @@ class SmsSender < BaseService
     save_receipt(result: :processed)
   end
 
-  # rubocop:enable Metrics/ParameterLists, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 end

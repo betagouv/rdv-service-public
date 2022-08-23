@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Domain
-  # rubocop:disable Metrics/ParameterLists
   def initialize(logo_path:, public_logo_path:, dark_logo_path:, name:, sms_sender_name:, default: false)
     @logo_path = logo_path
     @public_logo_path = public_logo_path
@@ -10,8 +9,6 @@ class Domain
     @sms_sender_name = sms_sender_name
     @default = default
   end
-  # rubocop:enable Metrics/ParameterLists
-
   attr_reader :logo_path, :public_logo_path, :dark_logo_path, :name, :sms_sender_name, :default
 
   ALL = [
