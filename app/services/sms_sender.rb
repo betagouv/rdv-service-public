@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SmsSender < BaseService
-  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
 
   class SmsSenderFailure < StandardError; end
 
@@ -12,15 +12,9 @@ class SmsSender < BaseService
     @phone_number = phone_number
     @content = formatted_content(content)
     @tags = tags
+    @provider = provider
+    @key = key
     @receipt_params = receipt_params
-
-    if Rails.env.development?
-      @provider = ENV["DEVELOPMENT_FORCE_SMS_PROVIDER"].presence || provider || ENV["DEFAULT_SMS_PROVIDER"].presence || :debug_logger
-      @key = ENV["DEVELOPMENT_FORCE_SMS_PROVIDER_KEY"].presence || key || ENV["DEFAULT_SMS_PROVIDER_KEY"]
-    else
-      @provider = provider || ENV["DEFAULT_SMS_PROVIDER"].presence || :debug_logger
-      @key = key || ENV["DEFAULT_SMS_PROVIDER_KEY"]
-    end
   end
 
   def formatted_content(content)
@@ -34,6 +28,7 @@ class SmsSender < BaseService
   end
 
   def perform
+    Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Calling SMS provider #{@provider.inspect}"))
     send("send_with_#{@provider}")
   end
 
@@ -74,6 +69,7 @@ class SmsSender < BaseService
     rescue SibApiV3Sdk::ApiError => e
       # 401 Unauthorized
       # 400 Invalid telephone number
+      add_sib_error_to_breadcrumbs(e)
       save_receipt(result: :failure, error_message: "#{e.message} (#{e.code})")
     end
   end
@@ -99,10 +95,12 @@ class SmsSender < BaseService
       }
     ).run
 
+    add_response_to_breadcrumbs(response)
+
     if response.timed_out?
-      save_receipt(error: :failure, error_message: "Timeout")
+      save_receipt(result: :failure, error_message: "Timeout")
     elsif response.failure?
-      save_receipt(error: :failure, error_message: "HTTP error: #{response.code}")
+      save_receipt(result: :failure, error_message: "HTTP error: #{response.code}")
     else
       parsed_response = JSON.parse(response.body)
       # parsed_response is a hash. Relevant keys are:
@@ -135,10 +133,12 @@ class SmsSender < BaseService
       }
     ).run
 
+    add_response_to_breadcrumbs(response)
+
     if response.timed_out?
-      save_receipt(error: :failure, error_message: "Timeout")
+      save_receipt(result: :failure, error_message: "Timeout")
     elsif response.failure?
-      save_receipt(error: :failure, error_message: "HTTP error: #{response.code}")
+      save_receipt(result: :failure, error_message: "HTTP error: #{response.code}")
     else
       parsed_response = JSON.parse(response.body)
       # parsed_response is a hash. Relevant keys are:
@@ -184,6 +184,8 @@ class SmsSender < BaseService
         },
       }.to_json
     ).run
+
+    add_response_to_breadcrumbs(response)
 
     if response.timed_out?
       save_receipt(result: :failure, error_message: "Timeout")
@@ -242,5 +244,23 @@ class SmsSender < BaseService
     save_receipt(result: :processed)
   end
 
-  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  # @param [Typhoeus::Response] response
+  def add_response_to_breadcrumbs(response)
+    crumb = Sentry::Breadcrumb.new(
+      message: "#{@provider} HTTP response",
+      data: { code: response.code, headers: response.headers, body: response.body }
+    )
+    Sentry.add_breadcrumb(crumb)
+  end
+
+  # @param [SibApiV3Sdk::ApiError] sib_error
+  def add_sib_error_to_breadcrumbs(sib_error)
+    crumb = Sentry::Breadcrumb.new(
+      message: "SendInBlue returned HTTP error",
+      data: { code: sib_error.code, headers: sib_error.response_headers, body: sib_error.response_body }
+    )
+    Sentry.add_breadcrumb(crumb)
+  end
+
+  # rubocop:enable Metrics/PerceivedComplexity
 end
