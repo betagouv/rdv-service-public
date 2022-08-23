@@ -104,14 +104,6 @@ class Agent < ApplicationRecord
     first_name.present? && last_name.present?
   end
 
-  def from_safe_domain?
-    return false if ENV["SAFE_DOMAIN_LIST"].blank?
-
-    pattern = "@(#{ENV['SAFE_DOMAIN_LIST'].split&.join('|')})$"
-    regex = Regexp.new(pattern)
-    regex.match? email
-  end
-
   def soft_delete
     raise SoftDeleteError, "agent still has attached resources" if organisations.any? || plage_ouvertures.any? || absences.any?
 

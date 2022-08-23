@@ -23,12 +23,7 @@ class OrganisationsController < ApplicationController
       @organisation.territory.roles.build(agent: agent_role.agent)
     end
 
-    if @organisation.save
-      agent = @organisation.agents.first
-      agent.deliver_invitation if agent.from_safe_domain?
-    else
-      render :new
-    end
+    render :new unless @organisation.save
   end
 
   def organisation_params
