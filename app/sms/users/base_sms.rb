@@ -8,8 +8,11 @@ class Users::BaseSms < ApplicationSms
     @phone_number = user.phone_number_formatted
 
     @rdv = rdv
+
     @provider = rdv.organisation&.territory&.sms_provider
     @key = rdv.organisation&.territory&.sms_configuration
+
+    @sender_name = rdv.domain.sms_sender_name
 
     @tags = [
       ENV["APP"]&.gsub("-rdv-solidarites", ""), # shorter names

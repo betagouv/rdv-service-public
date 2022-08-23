@@ -1,19 +1,15 @@
 # frozen_string_literal: true
 
 describe "using netsize to send an SMS" do
+  before do
+    stub_netsize_ok
+  end
+
   it "calls netsize API" do
     territory = create(:territory, sms_provider: "netsize")
     organisation = create(:organisation, territory: territory)
     user = create(:user, phone_number: "+33601020304")
     rdv = create(:rdv, organisation: organisation, users: [user])
-
-    stubbed_body = {
-      responseCode: 0,
-      messageIds: [123, 456],
-    }.to_json
-
-    stub_request(:post, "https://europe.ipx.com/restapi/v1/sms/send")
-      .to_return(status: 200, body: stubbed_body, headers: {})
 
     Users::RdvSms.rdv_created(rdv, rdv.users.first, "t0k3n").deliver_later
 
