@@ -53,7 +53,7 @@ class ApplicationSms
   def deliver_later(queue: :sms)
     raise InvalidMobilePhoneNumberError, "#{phone_number} is not a valid mobile phone number" unless PhoneNumberValidation.number_is_mobile?(phone_number)
 
-    SmsSender.delay(queue: queue).perform_with(phone_number, content, tags, provider, key, receipt_params)
+    SmsSender.delay(queue: queue).perform_with(@sender_name, phone_number, content, tags, provider, key, receipt_params)
   end
 
   private
