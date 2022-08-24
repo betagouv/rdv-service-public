@@ -1,6 +1,9 @@
 div
   p Bonjour,
-  p Votre RDV qui devait avoir lieu le #{relative_date @starts_at} à #{l(@starts_at, format: "%H:%M")} à l'adresse #{@address_name} a été modifié.
+  p
+    | Votre RDV qui devait avoir lieu le #{relative_date @starts_at} à #{l(@starts_at, format: "%H:%M")}
+    = " à l'adresse #{@address_name}" if @address_name
+    |  a été modifié.
   p Veuillez prendre note des nouvelles informations.
 
   = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :user
