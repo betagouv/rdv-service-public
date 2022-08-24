@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddNewDomainToOrganisationsForBeta < ActiveRecord::Migration[6.1]
   def change
     add_column :organisations, :new_domain_beta, :boolean, default: false, null: false,

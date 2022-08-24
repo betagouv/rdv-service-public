@@ -152,11 +152,12 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       end
 
       context "when motif is on a different domain" do
-        let(:motif) { create(:motif, service: create(:service, :conseiller_numerique)) }
-
-        before do
-          allow(motif.service).to receive(:domain).and_return(Domain::RDV_AIDE_NUMERIQUE)
+        let(:organisation) { create(:organisation, new_domain_beta: true) }
+        let(:motif) do
+          create(:motif, service: create(:service, :conseiller_numerique), organisation: organisation)
         end
+
+        before { rdv.update!(organisation: organisation) }
 
         it "works" do
           mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
