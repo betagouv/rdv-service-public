@@ -86,6 +86,7 @@ class Rdv < ApplicationRecord
   scope :for_domain, lambda { |domain|
     if domain == Domain::RDV_AIDE_NUMERIQUE
       joins(motif: :service).where(service: { name: Service::CONSEILLER_NUMERIQUE })
+        .joins(:organisations).where(organisations: { new_domain_beta: true })
     else
       # TODO: #rdv-aide-numerique-v1 afficher uniquement les rdv du médico-social
       all
@@ -285,7 +286,13 @@ class Rdv < ApplicationRecord
     results.exclude?("failure") ? "processed" : "failure"
   end
 
-  delegate :domain, to: :service
+  def domain
+    if service.conseiller_numerique? && organisation.new_domain_beta
+      Domain::RDV_AIDE_NUMERIQUE
+    else
+      Domain::RDV_SOLIDARITES
+    end
+  end
 
   private
 

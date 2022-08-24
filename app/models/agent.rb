@@ -185,5 +185,11 @@ class Agent < ApplicationRecord
   # should be done via configuration, or something else
   delegate :conseiller_numerique?, to: :service
 
-  delegate :domain, to: :service
+  def domain
+    if conseiller_numerique? && organisations.where(new_domain_beta: true).any?
+      Domain::RDV_AIDE_NUMERIQUE
+    else
+      Domain::RDV_SOLIDARITES
+    end
+  end
 end

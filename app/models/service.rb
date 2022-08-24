@@ -50,14 +50,4 @@ class Service < ApplicationRecord
   def related_to_social?
     service_social? || name.parameterize.include?("social")
   end
-
-  def domain
-    # TODO: #rdv-aide-numerique-v1 mettre une logique du genre :
-    # if conseiller_numerique?
-    #   Domain::RDV_AIDE_NUMERIQUE
-    # else
-    #   Domain::RDV_SOLIDARITES
-    # end
-    Domain::RDV_SOLIDARITES
-  end
 end
