@@ -8,7 +8,7 @@ describe SmsJob do
       content: "test",
       tags: [],
       provider: "netsize",
-      key: "fake_key",
+      api_key: "fake_key",
       receipt_params: {}
     )
   end

@@ -5,15 +5,15 @@ class SmsSender < BaseService
 
   class SmsSenderFailure < StandardError; end
 
-  attr_reader :phone_number, :content, :tags, :provider, :key
+  attr_reader :phone_number, :content, :tags, :provider, :api_key
 
-  def initialize(sender_name, phone_number, content, tags, provider, key, receipt_params) # rubocop:disable Metrics/ParameterLists
+  def initialize(sender_name, phone_number, content, tags, provider, api_key, receipt_params) # rubocop:disable Metrics/ParameterLists
     @sender_name = sender_name
     @phone_number = phone_number
     @content = formatted_content(content)
     @tags = tags
     @provider = provider
-    @key = key
+    @api_key = api_key
     @receipt_params = receipt_params
   end
 
@@ -35,7 +35,7 @@ class SmsSender < BaseService
   private
 
   def to_s
-    conf = "provider : #{@provider}\nkey : #{@key}"
+    conf = "provider : #{@provider}\napi_key : #{@api_key}"
     message = "content: #{@content}\nphone_number: #{@phone_number}\ntags: #{@tags.join(',')}"
     "#{conf}\n#{message}"
   end
@@ -52,7 +52,7 @@ class SmsSender < BaseService
   #
   def send_with_send_in_blue
     config = SibApiV3Sdk::Configuration.new
-    config.api_key["api-key"] = @key
+    config.api_key["api-key"] = @api_key
     api_client = SibApiV3Sdk::ApiClient.new(config)
     begin
       response = SibApiV3Sdk::TransactionalSMSApi.new(api_client).send_transac_sms(
@@ -82,7 +82,7 @@ class SmsSender < BaseService
     response = Typhoeus::Request.new(
       "https://europe.ipx.com/restapi/v1/sms/send",
       method: :post,
-      userpwd: @key,
+      userpwd: @api_key,
       headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
       timeout: 5,
       body: {
@@ -128,7 +128,7 @@ class SmsSender < BaseService
       params: {
         number: @phone_number,
         msg: @content,
-        devCode: @key,
+        devCode: @api_key,
         emetteur: replies_email, # The parameter is called “emetteur” but it is actually an email where we can receive replies to the sms.
       }
     ).run
@@ -161,7 +161,7 @@ class SmsSender < BaseService
   # /!\ does not report errors at all
   #
   def send_with_sfr_mail2sms
-    Admins::Grc92Mailer.send_sms(@key, @phone_number, @content).deliver_now
+    Admins::Grc92Mailer.send_sms(@api_key, @phone_number, @content).deliver_now
 
     save_receipt(result: :processed)
   end
@@ -174,7 +174,7 @@ class SmsSender < BaseService
     response = Typhoeus::Request.new(
       "http://webservicesmultimedias.clever-is.fr/api/pushs",
       method: :post,
-      headers: { "Content-Type": "application/json; charset=UTF-8", Authorization: "Basic #{Base64.encode64(@key).chomp}" },
+      headers: { "Content-Type": "application/json; charset=UTF-8", Authorization: "Basic #{Base64.encode64(@api_key).chomp}" },
       timeout: 5,
       body: {
         datas: {
@@ -216,7 +216,7 @@ class SmsSender < BaseService
       headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
       timeout: 5,
       body: {
-        token: @key,
+        token: @api_key,
         to: @phone_number,
         msg: @content,
       }

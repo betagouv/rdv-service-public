@@ -23,7 +23,7 @@ class Users::BaseSms < ApplicationSms
       content: content,
       tags: tags,
       provider: provider,
-      key: key,
+      api_key: api_key,
       receipt_params: @receipt_params
     )
   end
@@ -47,7 +47,7 @@ class Users::BaseSms < ApplicationSms
     @rdv.organisation&.territory&.sms_provider || ENV["DEFAULT_SMS_PROVIDER"].presence || :debug_logger
   end
 
-  def key
+  def api_key
     if Rails.env.development? && ENV["DEVELOPMENT_FORCE_SMS_PROVIDER_KEY"].present?
       return ENV["DEVELOPMENT_FORCE_SMS_PROVIDER_KEY"]
     end
