@@ -34,7 +34,7 @@ class CustomDeviseMailer < Devise::Mailer
     if @resource.is_a?(Agent)
       @resource.domain
     else
-      # TODO: #rdv-inclusion-numerique-v1 trouver un moyen de mettre le bon domaine
+      # TODO: #rdv-aide-numerique-v1 trouver un moyen de mettre le bon domaine
       Domain::RDV_SOLIDARITES
     end
   end

@@ -44,13 +44,13 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
         let(:agent) { build(:agent, service: build(:service, :conseiller_numerique)) }
 
         before do
-          allow(agent).to receive(:domain).and_return(Domain::RDV_INCLUSION_NUMERIQUE)
+          allow(agent).to receive(:domain).and_return(Domain::RDV_AIDE_NUMERIQUE)
         end
 
         it "works" do
-          expect(mail.html_part.body.to_s).to include(%(src="/logo_inclusion_numerique.png))
-          expect(mail.html_part.body.to_s).to include("Voir sur RDV Inclusion Numérique")
-          expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-inclusion-numerique-test.localhost/))
+          expect(mail.html_part.body.to_s).to include(%(src="/logo_aide_numerique.png))
+          expect(mail.html_part.body.to_s).to include("Voir sur RDV Aide Numérique")
+          expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-aide-numerique-test.localhost/))
         end
       end
     end

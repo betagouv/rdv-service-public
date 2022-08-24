@@ -21,11 +21,11 @@ class Domain
       sms_sender_name: "RdvSoli"
     ),
 
-    RDV_INCLUSION_NUMERIQUE = new(
-      logo_path: "logos/logo_inclusion_numerique.svg",
-      public_logo_path: "/logo_inclusion_numerique.png",
-      dark_logo_path: "logos/logo_sombre_inclusion_numerique.svg",
-      name: "RDV Inclusion Numérique",
+    RDV_AIDE_NUMERIQUE = new(
+      logo_path: "logos/logo_aide_numerique.svg",
+      public_logo_path: "/logo_aide_numerique.png",
+      dark_logo_path: "logos/logo_sombre_aide_numerique.svg",
+      name: "RDV Aide Numérique",
       sms_sender_name: "Rdv Num"
     ),
   ].freeze
@@ -40,23 +40,23 @@ class Domain
       elsif ENV["RDV_SOLIDARITES_INSTANCE_NAME"] == "DEMO"
         {
           RDV_SOLIDARITES => "demo.rdv-solidarites.fr",
-          RDV_INCLUSION_NUMERIQUE => "demo.rdv-inclusion-numerique.fr",
+          RDV_AIDE_NUMERIQUE => "demo.rdv-aide-numerique.fr",
         }.fetch(self)
       else
         {
           RDV_SOLIDARITES => "www.rdv-solidarites.fr",
-          RDV_INCLUSION_NUMERIQUE => "www.rdv-inclusion-numerique.fr",
+          RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique.fr",
         }.fetch(self)
       end
     when :development
       {
         RDV_SOLIDARITES => "www.rdv-solidarites.localhost",
-        RDV_INCLUSION_NUMERIQUE => "www.rdv-inclusion-numerique.localhost",
+        RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique.localhost",
       }.fetch(self)
     when :test
       {
         RDV_SOLIDARITES => "www.rdv-solidarites-test.localhost",
-        RDV_INCLUSION_NUMERIQUE => "www.rdv-inclusion-numerique-test.localhost",
+        RDV_AIDE_NUMERIQUE => "www.rdv-aide-numerique-test.localhost",
       }.fetch(self)
     else
       raise "Rails.env not recognized: #{Rails.env.inspect}"

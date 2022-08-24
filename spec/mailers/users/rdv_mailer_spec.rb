@@ -155,13 +155,13 @@ RSpec.describe Users::RdvMailer, type: :mailer do
         let(:motif) { create(:motif, service: create(:service, :conseiller_numerique)) }
 
         before do
-          allow(motif.service).to receive(:domain).and_return(Domain::RDV_INCLUSION_NUMERIQUE)
+          allow(motif.service).to receive(:domain).and_return(Domain::RDV_AIDE_NUMERIQUE)
         end
 
         it "works" do
           mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
-          expect(mail.html_part.body.to_s).to include(%(src="/logo_inclusion_numerique.png))
-          expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-inclusion-numerique-test.localhost))
+          expect(mail.html_part.body.to_s).to include(%(src="/logo_aide_numerique.png))
+          expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-aide-numerique-test.localhost))
         end
       end
     end

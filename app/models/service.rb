@@ -52,9 +52,9 @@ class Service < ApplicationRecord
   end
 
   def domain
-    # TODO: #rdv-inclusion-numerique-v1 mettre une logique du genre :
+    # TODO: #rdv-aide-numerique-v1 mettre une logique du genre :
     # if conseiller_numerique?
-    #   Domain::RDV_INCLUSION_NUMERIQUE
+    #   Domain::RDV_AIDE_NUMERIQUE
     # else
     #   Domain::RDV_SOLIDARITES
     # end

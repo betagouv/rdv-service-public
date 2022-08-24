@@ -39,15 +39,15 @@ describe Agents::PlageOuvertureMailer, type: :mailer do
           let(:agent) { build(:agent, service: build(:service, :conseiller_numerique)) }
 
           before do
-            allow(agent).to receive(:domain).and_return(Domain::RDV_INCLUSION_NUMERIQUE)
+            allow(agent).to receive(:domain).and_return(Domain::RDV_AIDE_NUMERIQUE)
           end
 
           it "works" do
             mail = described_class.with(plage_ouverture: plage_ouverture).send("plage_ouverture_#{action}")
-            expect(mail.subject).to start_with("RDV Inclusion Numérique - Plage d’ouverture")
-            expect(mail.html_part.body.to_s).to include(%(src="/logo_inclusion_numerique.png))
-            expect(mail.html_part.body.to_s).to include("Voir sur RDV Inclusion Numérique") unless action == :destroyed
-            expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-inclusion-numerique-test.localhost/))
+            expect(mail.subject).to start_with("RDV Aide Numérique - Plage d’ouverture")
+            expect(mail.html_part.body.to_s).to include(%(src="/logo_aid_numerique.png))
+            expect(mail.html_part.body.to_s).to include("Voir sur RDV Aide Numérique") unless action == :destroyed
+            expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-aide-numerique-test.localhost/))
           end
         end
       end

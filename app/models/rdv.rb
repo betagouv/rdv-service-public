@@ -84,10 +84,10 @@ class Rdv < ApplicationRecord
   scope :collectif, -> { joins(:motif).merge(Motif.collectif) }
   scope :with_remaining_seats, -> { where("users_count < max_participants_count OR max_participants_count IS NULL") }
   scope :for_domain, lambda { |domain|
-    if domain == Domain::RDV_INCLUSION_NUMERIQUE
+    if domain == Domain::RDV_AIDE_NUMERIQUE
       joins(motif: :service).where(service: { name: Service::CONSEILLER_NUMERIQUE })
     else
-      # TODO: #rdv-inclusion-numerique-v1 afficher uniquement les rdv du médico-social
+      # TODO: #rdv-aide-numerique-v1 afficher uniquement les rdv du médico-social
       all
     end
   }
