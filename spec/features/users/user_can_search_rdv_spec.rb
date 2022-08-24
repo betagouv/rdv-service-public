@@ -5,11 +5,14 @@ describe "User can search for rdvs" do
 
   let!(:territory92) { create(:territory, departement_number: "92") }
   let!(:organisation) { create(:organisation, territory: territory92) }
-  let!(:motif) { create(:motif, name: "Vaccination", reservable_online: true, organisation: organisation, restriction_for_rdv: nil) }
-  let!(:autre_motif) { create(:motif, name: "Consultation", reservable_online: true, organisation: organisation, restriction_for_rdv: nil) }
+  let(:service) { create(:service) }
+  let!(:motif) { create(:motif, name: "Vaccination", reservable_online: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
+  let!(:autre_motif) { create(:motif, name: "Consultation", reservable_online: true, organisation: organisation, restriction_for_rdv: nil, service: service) }
+  let!(:motif_autre_service) { create(:motif, name: "Autre consultation", reservable_online: true, organisation: organisation, restriction_for_rdv: nil, service: create(:service)) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu, organisation: organisation) }
   let!(:autre_plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [autre_motif], lieu: lieu, organisation: organisation) }
+  let!(:plage_ouverture_autre_service) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif_autre_service], lieu: lieu, organisation: organisation) }
   let!(:lieu2) { create(:lieu, organisation: organisation) }
   let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
 
@@ -32,6 +35,9 @@ describe "User can search for rdvs" do
 
       # Step 3
       expect_page_h1("Prenez rendez-vous en ligne\navec votre département le 92")
+      expect(page).to have_content("Vous souhaitez prendre un RDV avec le service :")
+      find("h3", text: motif.service.name).click
+
       expect(page).to have_content("Sélectionnez le motif de votre RDV")
       find("h3", text: motif.name).click
 

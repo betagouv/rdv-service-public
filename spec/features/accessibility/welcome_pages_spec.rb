@@ -42,10 +42,12 @@ describe "welcome pages", js: true do
     let(:lieu) { create(:lieu, organisation: organisation) }
     # Double motif pour s'assurer de passer par la page de choix des motifs
     let(:motif) { create(:motif, organisation: organisation, name: "Consultation prénatale") }
-    let(:autre_motif) { create(:motif, organisation: organisation) }
+    let(:autre_motif) { create(:motif, organisation: organisation, service: motif.service) }
+    let(:autre_service_motif) { create(:motif, organisation: organisation, service: create(:service)) }
 
     let!(:po_pour_motif) { create(:plage_ouverture, motifs: [motif], lieu: lieu) }
     let!(:po_pour_autre_motif) { create(:plage_ouverture, motifs: [autre_motif], lieu: lieu) }
+    let!(:po_pour_autre_service_motif) { create(:plage_ouverture, motifs: [autre_service_motif], lieu: lieu) }
 
     it "root path page is accessible" do
       expect_page_to_be_axe_clean(root_path)
@@ -59,6 +61,22 @@ describe "welcome pages", js: true do
         latitude: 48.859,
         longitude: 2.347,
         address: "Paris 75001"
+      )
+      visit path
+      expect(page).to have_content("Vous souhaitez prendre un RDV avec le service")
+
+      expect_page_to_be_axe_clean(path)
+    end
+
+    it "root path with a city_code and a service page is accessible" do
+      path = root_path(
+        departement: 75,
+        city_code: 75_056,
+        street_ban_id: nil,
+        latitude: 48.859,
+        longitude: 2.347,
+        address: "Paris 75001",
+        service_id: motif.service_id
       )
       visit path
       expect(page).to have_content("Sélectionnez le motif de votre RDV")

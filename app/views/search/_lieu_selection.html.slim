@@ -15,6 +15,7 @@ section.bg-light.p-4
               .col
                 h2.pb-1.mb-1
                   = motif_name_with_location_type(context.selected_motif)
+                = context.selected_motif.service.name
     h3.font-weight-bold = t(".select_lieu")
     p = t(".lieu_available", count: context.lieux.size)
     - context.lieux.each do |lieu|

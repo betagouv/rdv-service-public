@@ -6,14 +6,15 @@ describe "User can search for creneaux" do
   let!(:territory92) { create(:territory, departement_number: "92") }
   let!(:organisation) { create(:organisation, territory: territory92) }
   let!(:lieu) { create(:lieu, organisation: organisation) }
+  let(:service) { create(:service) }
 
   before { travel_to(now) }
 
   context "when the next creneau is after the max booking delay" do
-    let!(:motif) { create(:motif, name: "Vaccination", reservable_online: true, organisation: organisation, max_booking_delay: 7.days, restriction_for_rdv: nil) }
+    let!(:motif) { create(:motif, name: "Vaccination", reservable_online: true, organisation: organisation, max_booking_delay: 7.days, restriction_for_rdv: nil, service: service) }
     # Avec un seul motif on passe par le choix d'un lieu.
     # Avec deux motifs, on affiche directement la disponibilité.
-    let!(:autre_motif) { create(:motif, reservable_online: true, organisation: organisation, max_booking_delay: 7.days) }
+    let!(:autre_motif) { create(:motif, reservable_online: true, organisation: organisation, max_booking_delay: 7.days, service: service) }
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 8.days, motifs: [motif], lieu: lieu, organisation: organisation) }
     let!(:autre_plage_ouverture) { create(:plage_ouverture, :daily, first_day: now + 8.days, motifs: [autre_motif], lieu: lieu, organisation: organisation) }
 
