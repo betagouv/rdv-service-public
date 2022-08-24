@@ -44,7 +44,8 @@ describe SmsSender, type: :service do
     let(:user) { create(:user) }
 
     before do
-      described_class.perform_with("RdvSoli", "0612345678", "content", [], nil, nil, { event: "rdv_created", rdv: rdv, user: user })
+      stub_netsize_ok
+      described_class.perform_with("RdvSoli", "0612345678", "content", [], "netsize", "key", { event: "rdv_created", rdv: rdv, user: user })
     end
 
     it do
@@ -55,7 +56,7 @@ describe SmsSender, type: :service do
         rdv: rdv,
         user: user,
         content: "content",
-        sms_provider: "debug_logger"
+        sms_provider: "netsize"
       )
     end
   end
