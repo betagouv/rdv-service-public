@@ -32,9 +32,6 @@ Lint/AssignmentInCondition:
 Metrics/AbcSize:
   Enabled: false
 
-Metrics/ParameterLists:
-  Enabled: false
-
 Metrics/BlockLength:
   Exclude:
     - "Guardfile"

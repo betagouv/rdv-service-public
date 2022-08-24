@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Domain
-  def initialize(logo_path:, public_logo_path:, dark_logo_path:, name:, sms_sender_name:, default: false)
+  def initialize(logo_path:, public_logo_path:, dark_logo_path:, name:, sms_sender_name:, default: false) # rubocop:disable Metrics/ParameterLists
     @logo_path = logo_path
     @public_logo_path = public_logo_path
     @dark_logo_path = dark_logo_path
