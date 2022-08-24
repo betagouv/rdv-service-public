@@ -7,6 +7,7 @@ class Service < ApplicationRecord
   SECRETARIAT = "Secrétariat"
   SERVICE_SOCIAL = "Service social"
   PMI = "PMI (Protection Maternelle Infantile)"
+  CONSEILLER_NUMERIQUE = "Conseiller Numérique"
 
   # Relations
   has_many :agents, dependent: :nullify
@@ -38,11 +39,25 @@ class Service < ApplicationRecord
     name == PMI
   end
 
+  def conseiller_numerique?
+    name == CONSEILLER_NUMERIQUE
+  end
+
   def user_field_groups
     related_to_social? ? [:social] : []
   end
 
   def related_to_social?
     service_social? || name.parameterize.include?("social")
+  end
+
+  def domain
+    # TODO: #rdv-inclusion-numerique-v1 mettre une logique du genre :
+    # if conseiller_numerique?
+    #   Domain::RDV_INCLUSION_NUMERIQUE
+    # else
+    #   Domain::RDV_SOLIDARITES
+    # end
+    Domain::RDV_SOLIDARITES
   end
 end

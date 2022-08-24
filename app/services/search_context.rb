@@ -24,7 +24,7 @@ class SearchContext
   end
 
   # *** Method that outputs the next step for the user to complete its rdv journey ***
-  # *** It is used in #to_partial_parth to render the matching partial view ***
+  # *** It is used in #to_partial_path to render the matching partial view ***
   def current_step
     if address.blank?
       :address_selection
@@ -159,10 +159,14 @@ class SearchContext
              else
                available_motifs
              end
-    motifs = motifs.where(service_id: @service_id) if @service_id.present?
-    motifs = motifs.joins(:lieux).where(lieux: lieu) if lieu.present?
+    motifs = motifs.where(service: service) if @service_id.present?
     motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
     motifs = motifs.where(category: @motif_category) if @motif_category.present?
+
+    # filtrer sur le `lieu_id` dans la table des plages d'ouverture permet de limiter de combiner et construire trop d'objet
+    # voir https://github.com/betagouv/rdv-solidarites.fr/issues/2686
+    motifs = motifs.joins(:plage_ouvertures).where(plage_ouvertures: { lieu_id: @lieu_id }) if @lieu_id.present?
+
     motifs
   end
 end

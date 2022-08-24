@@ -4,7 +4,7 @@ describe SmsSender, type: :service do
   describe "#content" do
     subject { test_sms.content }
 
-    let(:test_sms) { described_class.new("0612345678", content, [], nil, nil, nil) }
+    let(:test_sms) { described_class.new("RdvSoli", "0612345678", content, [], nil, nil, nil) }
 
     context "remove accents and weird chars" do
       let(:content) { "àáäâãèéëẽêìíïîĩòóöôõùúüûũñçÀÁÄÂÃÈÉËẼÊÌÍÏÎĨÒÓÖÔÕÙÚÜÛŨÑÇ" }
@@ -44,7 +44,7 @@ describe SmsSender, type: :service do
     let(:user) { create(:user) }
 
     before do
-      described_class.perform_with("0612345678", "content", [], nil, nil, { event: "rdv_created", rdv: rdv, user: user })
+      described_class.perform_with("RdvSoli", "0612345678", "content", [], nil, nil, { event: "rdv_created", rdv: rdv, user: user })
     end
 
     it do

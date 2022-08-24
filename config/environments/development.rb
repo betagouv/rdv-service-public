@@ -110,4 +110,9 @@ Rails.application.configure do
   config.active_record.time_zone_aware_types = [:datetime]
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
+
+  # Ces domaines peuvent être utilisés en local sans modification du /etc/hosts.
+  # En effet, Firefox et Chrome font pointer le TLD .localhost vers 127.0.0.1.
+  config.hosts << "www.rdv-solidarites.localhost"         # http://rdv-solidarites.localhost:3000/
+  config.hosts << "www.rdv-inclusion-numerique.localhost" # http://rdv-inclusion-numerique.localhost:3000/
 end

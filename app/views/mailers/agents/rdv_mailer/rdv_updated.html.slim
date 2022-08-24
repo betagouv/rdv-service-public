@@ -1,0 +1,15 @@
+div
+  p Bonjour,
+  p
+    | Un de vos RDV qui devait avoir lieu le #{relative_date @starts_at} à #{l(@starts_at, format: "%H:%M")}
+    = " à l'adresse #{@address_name}" if @address_name
+    |  a été modifié par #{@author.full_name}.
+  p Veuillez prendre note des nouvelles informations.
+
+  = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :agent, token: @token
+
+  p.aligncenter
+    = link_to "Voir sur #{domain.name}", admin_organisation_rdv_url(@rdv.organisation_id , @rdv.id),  class: "btn btn-primary"
+
+  br
+  = t("mailers.common.farewell_html")

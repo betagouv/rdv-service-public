@@ -9,7 +9,7 @@ RSpec.describe Admin::Territories::InvitationsDeviseController, type: :controlle
         create(:service, name: "Secrétariat")
         territory = create(:territory)
         request.env["devise.mapping"] = Devise.mappings[:agent]
-        agent = create(:agent, invitation_accepted_at: nil, service: create(:service, name: "Conseiller Numérique"))
+        agent = create(:agent, invitation_accepted_at: nil, service: create(:service, :conseiller_numerique))
         create(:agent_territorial_access_right, territory: territory, agent: agent)
         sign_in agent
         get :new, params: { territory_id: territory.id }

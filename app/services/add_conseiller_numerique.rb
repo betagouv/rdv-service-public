@@ -136,6 +136,6 @@ class AddConseillerNumerique
   end
 
   def service
-    @service ||= Service.find_by(name: "Conseiller Numérique")
+    @service ||= Service.find_by(name: Service::CONSEILLER_NUMERIQUE)
   end
 end

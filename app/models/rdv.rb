@@ -83,6 +83,14 @@ class Rdv < ApplicationRecord
   scope :visible, -> { joins(:motif).merge(Motif.visible) }
   scope :collectif, -> { joins(:motif).merge(Motif.collectif) }
   scope :with_remaining_seats, -> { where("users_count < max_participants_count OR max_participants_count IS NULL") }
+  scope :for_domain, lambda { |domain|
+    if domain == Domain::RDV_INCLUSION_NUMERIQUE
+      joins(motif: :service).where(service: { name: Service::CONSEILLER_NUMERIQUE })
+    else
+      # TODO: #rdv-inclusion-numerique-v1 afficher uniquement les rdv du médico-social
+      all
+    end
+  }
 
   ## -
 
@@ -246,10 +254,6 @@ class Rdv < ApplicationRecord
     Time.zone.now + motif.max_booking_delay
   end
 
-  def participants_with_life_cycle_notification_ids
-    rdvs_users.where(send_lifecycle_notifications: true).pluck(:user_id)
-  end
-
   def remaining_seats?
     return true unless max_participants_count
 
@@ -280,6 +284,8 @@ class Rdv < ApplicationRecord
 
     results.exclude?("failure") ? "processed" : "failure"
   end
+
+  delegate :domain, to: :service
 
   private
 

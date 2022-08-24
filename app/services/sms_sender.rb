@@ -5,20 +5,16 @@ class SmsSender < BaseService
 
   class SmsSenderFailure < StandardError; end
 
-  SENDER_NAME = "RdvSoli"
-
   attr_reader :phone_number, :content, :tags, :provider, :key
 
-  def initialize(phone_number, content, tags, provider, key, receipt_params)
+  def initialize(sender_name, phone_number, content, tags, provider, key, receipt_params)
+    @sender_name = sender_name
     @phone_number = phone_number
     @content = formatted_content(content)
     @tags = tags
     @receipt_params = receipt_params
 
-    if Rails.env.test?
-      @provider = :debug_logger
-      @key = nil
-    elsif Rails.env.development?
+    if Rails.env.development?
       @provider = ENV["DEVELOPMENT_FORCE_SMS_PROVIDER"].presence || provider || ENV["DEFAULT_SMS_PROVIDER"].presence || :debug_logger
       @key = ENV["DEVELOPMENT_FORCE_SMS_PROVIDER_KEY"].presence || key || ENV["DEFAULT_SMS_PROVIDER_KEY"]
     else
@@ -66,7 +62,7 @@ class SmsSender < BaseService
     begin
       response = SibApiV3Sdk::TransactionalSMSApi.new(api_client).send_transac_sms(
         SibApiV3Sdk::SendTransacSms.new(
-          sender: SENDER_NAME,
+          sender: @sender_name,
           recipient: @phone_number,
           content: @content,
           tag: @tags.join(" ")
@@ -96,7 +92,7 @@ class SmsSender < BaseService
       body: {
         destinationAddress: @phone_number,
         messageText: @content,
-        originatingAddress: SENDER_NAME,
+        originatingAddress: @sender_name,
         originatorTON: 1,
         campaignName: @tags.join(" ").truncate(49),
         maxConcatenatedMessages: 10,

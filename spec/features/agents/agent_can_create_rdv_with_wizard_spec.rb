@@ -14,6 +14,7 @@ describe "Agent can create a Rdv with wizard" do
   let!(:user) { create(:user, organisations: [organisation]) }
 
   before do
+    stub_netsize_ok
     travel_to(Time.zone.local(2019, 10, 2))
     login_as(agent, scope: :agent)
     visit new_admin_organisation_rdv_wizard_step_path(organisation_id: organisation.id)

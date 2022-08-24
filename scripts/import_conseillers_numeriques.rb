@@ -6,7 +6,7 @@ conseillers_numeriques = CSV.read("/tmp/uploads/export-cnfs.csv", headers: true,
 
 conseillers_numeriques.each do |conseiller_numerique|
   agent = AddConseillerNumerique.process!({
-    external_id: conseiller_numerique["Email @conseiller-numerique.fr"],
+    external_id: conseiller_numerique["Id du conseiller"],
     email: conseiller_numerique["Email @conseiller-numerique.fr"],
     first_name: conseiller_numerique["Prénom"],
     last_name: conseiller_numerique["Nom"],

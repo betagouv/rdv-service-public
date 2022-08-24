@@ -20,7 +20,7 @@ fr:
       receipt/events:
         new_creneau_available: Créneau disponible
         rdv_created: Création
-        rdv_date_updated: Modification de date
+        rdv_updated: Modification
         rdv_upcoming_reminder: Rappel
         rdv_cancelled: Annulation
       receipt/results:

@@ -1,11 +1,17 @@
 # frozen_string_literal: true
 
 describe RdvUpdater, type: :service do
+  before do
+    stub_netsize_ok
+  end
+
   describe "#update" do
     describe "return value" do
       it "true when everything is ok" do
-        agent = build :agent
-        rdv = create(:rdv, agents: [agent])
+        agent = create(:agent)
+        lieu = create(:lieu)
+        rdv = create(:rdv, lieu: lieu, agents: [agent], status: "waiting")
+        rdv.reload
         rdv_params = {}
         expect(RdvUpdater::Result).to receive(:new).with(success: true, rdv_users_tokens_by_user_id: {})
         described_class.update(agent, rdv, rdv_params)
@@ -52,24 +58,28 @@ describe RdvUpdater, type: :service do
         agent = build :agent
         rdv = create(:rdv, agents: [agent], status: "waiting")
         rdv_params = { starts_at: 1.day.from_now }
-        expect(Notifiers::RdvDateUpdated).to receive(:perform_with).with(rdv, agent)
+        expect(Notifiers::RdvUpdated).to receive(:perform_with).with(rdv, agent)
         described_class.update(agent, rdv, rdv_params)
       end
 
       it "does not notify when date does not change" do
-        agent = build :agent
-        rdv = create(:rdv, agents: [agent], status: "waiting")
+        agent = create(:agent)
+        lieu = create(:lieu)
+        rdv = create(:rdv, lieu: lieu, agents: [agent], status: "waiting")
+        rdv.reload
         rdv_params = { starts_at: rdv.starts_at }
-        expect(Notifiers::RdvDateUpdated).not_to receive(:perform_with)
+        expect(Notifiers::RdvUpdated).not_to receive(:perform_with)
         described_class.update(agent, rdv, rdv_params)
       end
 
       it "does not notify when other attributes change" do
-        agent = build :agent
-        rdv = create(:rdv, agents: [agent], status: "waiting")
+        agent = create(:agent)
+        lieu = create(:lieu)
+        rdv = create(:rdv, lieu: lieu, agents: [agent], status: "waiting")
+        rdv.reload
         rdv_params = { context: "some context" }
         expect(Notifiers::RdvCancelled).not_to receive(:perform_with)
-        expect(Notifiers::RdvDateUpdated).not_to receive(:perform_with)
+        expect(Notifiers::RdvUpdated).not_to receive(:perform_with)
         described_class.update(agent, rdv, rdv_params)
       end
     end
@@ -137,7 +147,8 @@ describe RdvUpdater, type: :service do
         },
       }
     end
-    let(:rdv) { create(:rdv, agents: [agent], motif: motif, users: [user_staying, user_removed]) }
+    # The reload makes sure we have the proper .previous_changes
+    let(:rdv) { create(:rdv, agents: [agent], motif: motif, users: [user_staying, user_removed]).reload }
     let(:agent) { create :agent }
     let(:motif) { create(:motif, :collectif) }
 
@@ -146,18 +157,19 @@ describe RdvUpdater, type: :service do
     let(:user_removed) { create(:user, first_name: "Remove") }
 
     let(:token) { "some-token" }
-
-    before do
-      allow(Users::RdvMailer).to receive(:with).and_call_original
-      allow(Users::RdvMailer).to receive(:with).and_call_original
-      allow_any_instance_of(RdvsUser).to receive(:new_raw_invitation_token).and_return(token) # rubocop:disable RSpec/AnyInstance
-    end
+    let(:sms_sender_double) { instance_double(SmsSender) }
 
     it "notifies the new participant, and the one that is removed" do
-      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user_added, token: token })
-      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user_removed, token: nil })
-
+      expect(SmsSender).to receive(:new).and_return(sms_sender_double).twice
+      expect(sms_sender_double).to receive(:perform).twice
       described_class.update(agent, rdv, rdv_params)
+      expect(ActionMailer::Base.deliveries.count).to eq 2
+
+      added_email = ActionMailer::Base.deliveries.first
+      expect(added_email.subject).to include "RDV confirmé"
+
+      removed_email = ActionMailer::Base.deliveries.last
+      expect(removed_email.subject).to include "RDV annulé"
     end
   end
 
@@ -177,6 +189,73 @@ describe RdvUpdater, type: :service do
         rdv.update!(status: "unknown")
         expect(described_class.rdv_status_reloaded_from_cancelled?(rdv)).to eq(false)
       end
+    end
+  end
+
+  describe "#notify!" do
+    it "calls lieu_updated_notifier with lieu changes" do
+      author = create(:agent)
+      lieu = create(:lieu, availability: "enabled")
+      autre_lieu = create(:lieu, availability: "enabled")
+      rdv = create(:rdv, lieu: lieu)
+      rdv.reload
+      rdv.update(lieu: autre_lieu)
+      expect(Notifiers::RdvUpdated).to receive(:perform_with)
+      described_class.notify!(author, rdv, [])
+    end
+  end
+
+  describe "#lieu_change?" do
+    context "with single_use lieu" do
+      it "returns true when single_use lieu name is updated" do
+        lieu = create(:lieu, availability: "single_use", name: "nom")
+        rdv = create(:rdv, lieu: lieu)
+        rdv.reload
+        rdv.update(lieu_attributes: { name: "autre nom", id: lieu.id })
+        expect(described_class.lieu_change?(rdv)).to be(true)
+      end
+
+      it "returns true when single_use lieu adress is updated" do
+        lieu = create(:lieu, availability: "single_use", address: "2 place de la gare")
+        rdv = create(:rdv, lieu: lieu)
+        rdv.reload
+        rdv.update(lieu_attributes: { address: "derrière l'arbre", id: lieu.id })
+        expect(described_class.lieu_change?(rdv)).to be(true)
+      end
+    end
+
+    context "with enabled lieu" do
+      it "returns true when lieu changes to lieu" do
+        lieu = create(:lieu, availability: "enabled")
+        autre_lieu = create(:lieu, availability: "enabled")
+        rdv = create(:rdv, lieu: lieu)
+        rdv.reload
+        rdv.update(lieu: autre_lieu)
+        expect(described_class.lieu_change?(rdv)).to be(true)
+      end
+
+      it "returns false when lieu doesnt change" do
+        lieu = create(:lieu, availability: "enabled")
+        rdv = create(:rdv, lieu: lieu)
+        rdv.reload
+        rdv.update(context: "context")
+        expect(described_class.lieu_change?(rdv)).to be(false)
+      end
+    end
+
+    it "returns true when lieu changes to single_use lieu" do
+      lieu = create(:lieu, availability: "enabled")
+      autre_lieu = create(:lieu, availability: "single_use")
+      rdv = create(:rdv, lieu: lieu)
+      rdv.reload
+      rdv.update(lieu: autre_lieu)
+      expect(described_class.lieu_change?(rdv)).to be(true)
+    end
+
+    it "returns false when lieu is nil" do
+      rdv = create(:rdv, :by_phone, lieu: nil)
+      rdv.reload
+      expect(described_class.lieu_change?(rdv)).to be(false)
     end
   end
 end

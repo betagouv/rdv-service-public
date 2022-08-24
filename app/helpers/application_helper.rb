@@ -41,12 +41,13 @@ module ApplicationHelper
 
   def link_logo
     link_to root_path do
-      image_tag "logos/logo.svg", height: 40, alt: "RDV Solidarités", class: "d-inline logo"
+      image_tag current_domain.logo_path, height: 40, alt: current_domain.name, class: "d-inline logo"
     end
   end
 
   def errors_full_messages(object)
-    object.not_benign_errors.map do |error|
+    errors = object.respond_to?(:not_benign_errors) ? object.not_benign_errors : object.errors
+    errors.map do |error|
       if error.attribute.to_s.starts_with?("responsible.")
         att = error.attribute.to_s.sub(/^responsible./, "")
         "Responsable: #{object.errors.full_message(att, error.message)}"

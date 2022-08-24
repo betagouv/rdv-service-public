@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Notifiers::RdvDateUpdated, type: :service do
+describe Notifiers::RdvUpdated, type: :service do
   subject { described_class.perform_with(rdv, agent1) }
 
   let(:user1) { build(:user) }
@@ -16,6 +16,8 @@ describe Notifiers::RdvDateUpdated, type: :service do
   let(:token2) { "56789" }
 
   before do
+    stub_netsize_ok
+
     rdv.update!(starts_at: 4.days.from_now)
 
     allow(Users::RdvMailer).to receive(:with).and_call_original

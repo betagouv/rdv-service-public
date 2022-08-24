@@ -40,6 +40,10 @@ module UsersHelper
     user.relative? ? tag.span("Proche", class: "badge badge-info") : nil
   end
 
+  def user_logged_franceconnect_tag(user)
+    user.logged_once_with_franceconnect? ? tag.span("FranceConnect", class: "badge badge-info") : nil
+  end
+
   def user_soft_deleted_tag(organisation, user)
     user.organisations.include?(organisation) ? nil : tag.span("Supprimé", class: "badge badge-danger")
   end

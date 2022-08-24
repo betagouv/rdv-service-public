@@ -183,7 +183,7 @@ class Agent < ApplicationRecord
   # This is the main toggle to enable or disable features for Conseillers Numériques (cnfs)
   # TODO: As the usage of this toggle grows, we might need to rethink it, and see if these changes
   # should be done via configuration, or something else
-  def conseiller_numerique?
-    service.name == "Conseiller Numérique"
-  end
+  delegate :conseiller_numerique?, to: :service
+
+  delegate :domain, to: :service
 end

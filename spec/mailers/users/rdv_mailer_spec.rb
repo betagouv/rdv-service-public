@@ -31,6 +31,38 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     end
   end
 
+  describe "#rdv_updated" do
+    let(:previous_starting_time) { 2.days.from_now }
+    let(:new_starting_time) { 3.days.from_now }
+    let(:new_lieu) { create(:lieu, name: "Stade de France", address: "rue du Stade") }
+    let(:previous_lieu) { create(:lieu, name: "MJC Aix", address: "rue du Previous") }
+    let(:rdv) { create(:rdv, lieu: new_lieu, starts_at: new_starting_time) }
+    let(:user) { rdv.users.first }
+    let(:token) { "12345" }
+
+    before { travel_to(Time.zone.parse("2022-08-24 09:00:00")) }
+
+    it "indicates the previous and current values" do
+      mail = described_class.with(rdv: rdv, user: user, token: token)
+        .rdv_updated(starts_at: previous_starting_time, lieu_id: previous_lieu.id)
+
+      previous_details = "Votre RDV qui devait avoir lieu le 26 août à 09:00 à l&#39;adresse MJC Aix (rue du Previous) a été modifié"
+      expect(mail.html_part.body.to_s).to include(previous_details)
+
+      # new details
+      expect(mail.html_part.body.to_s).to include("samedi 27 août 2022 à 09h00")
+      expect(mail.html_part.body.to_s).to include("Stade de France (rue du Stade)")
+    end
+
+    it "works when no lieu_id is passed" do
+      mail = described_class.with(rdv: rdv, user: user, token: token)
+        .rdv_updated(starts_at: previous_starting_time, lieu_id: nil)
+
+      previous_details = "Votre RDV qui devait avoir lieu le 26 août à 09:00 a été modifié"
+      expect(mail.html_part.body.to_s).to include(previous_details)
+    end
+  end
+
   describe "#rdv_cancelled" do
     before { travel_to Time.zone.parse("2020-06-10 12:30") }
 
@@ -83,7 +115,8 @@ RSpec.describe Users::RdvMailer, type: :mailer do
         motif_name_with_location_type: rdv.motif.name_with_location_type, \
         organisation_ids: [rdv.organisation_id], \
         address: rdv.address, \
-        invitation_token: token \
+        invitation_token: token, \
+        host: Domain::RDV_SOLIDARITES.dns_domain_name
       )
 
       expect(mail.html_part.body).to have_link("Reprendre RDV", href: expected_url)
@@ -101,6 +134,36 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       expect(mail.reply_to).to eq(["rdv+#{rdv.uuid}@reply.rdv-solidarites.fr"])
       expect(mail.html_part.body).to include("Nous vous rappellons que vous avez un RDV prévu")
       expect(mail.html_part.body.raw_source).to include("/users/rdvs/#{rdv.id}?invitation_token=12345")
+    end
+  end
+
+  %i[rdv_created rdv_upcoming_reminder rdv_cancelled].each do |action|
+    describe "using the agent domain's branding" do
+      let(:rdv) { create(:rdv, motif: motif) }
+
+      context "when motif's service is not conseiller_numerique" do
+        let(:motif) { create(:motif, service: create(:service, :social)) }
+
+        it "works" do
+          mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
+          expect(mail.html_part.body.to_s).to include(%(src="/logo.png))
+          expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost))
+        end
+      end
+
+      context "when motif is on a different domain" do
+        let(:motif) { create(:motif, service: create(:service, :conseiller_numerique)) }
+
+        before do
+          allow(motif.service).to receive(:domain).and_return(Domain::RDV_INCLUSION_NUMERIQUE)
+        end
+
+        it "works" do
+          mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
+          expect(mail.html_part.body.to_s).to include(%(src="/logo_inclusion_numerique.png))
+          expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-inclusion-numerique-test.localhost))
+        end
+      end
     end
   end
 end

@@ -4,6 +4,7 @@
       div
         b>= user.reverse_full_name
         span>= relative_tag(user)
+        span>= user_logged_franceconnect_tag(user)
         = link_to "changer...", ".collapse-#{attribute}", data: { toggle: "collapse" }
 
     = f.input attribute, as: :hidden, input_html: { id: attribute }, wrapper: false

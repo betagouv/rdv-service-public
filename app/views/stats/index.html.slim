@@ -8,7 +8,7 @@
 
 .container.mt-3
   - if @territory.present? && Organisation.joins(:territory).where(territories: [@territory]).empty?
-    h3 Cette structure n'utilise pas RDV-Solidarités.
+    h3 Cette structure n'utilise pas #{current_domain.name}.
   - else
     .card.mb-5
       .card-body
