@@ -31,11 +31,11 @@ class Users::RdvMailerPreview < ActionMailer::Preview
     rdv_mailer(rdv).rdv_created
   end
 
-  def rdv_date_updated
+  def rdv_updated
     rdv = Rdv.joins(:users).not_cancelled.last
     rdv.starts_at = Time.zone.today + 10.days + 10.hours
 
-    rdv_mailer(rdv).rdv_date_updated(2.hours.from_now)
+    rdv_mailer(rdv).rdv_updated(starts_at: 2.hours.from_now, lieu_id: nil)
   end
 
   def rdv_cancelled

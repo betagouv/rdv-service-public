@@ -23,7 +23,7 @@ class Users::RdvMailer < ApplicationMailer
 
   def rdv_updated(starts_at:, lieu_id:)
     @starts_at = starts_at
-    @address_name = Lieu.find(lieu_id).full_name
+    @address_name = Lieu.find(lieu_id).full_name if lieu_id
 
     self.ics_payload = @rdv.payload(:update, @user)
     subject = t("users.rdv_mailer.rdv_updated.title", date: l(@rdv.starts_at, format: :human))

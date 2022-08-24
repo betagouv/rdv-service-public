@@ -55,4 +55,36 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
       end
     end
   end
+
+  describe "#rdv_updated" do
+    let(:previous_starting_time) { 2.days.from_now }
+    let(:new_starting_time) { 3.days.from_now }
+    let(:new_lieu) { create(:lieu, name: "Stade de France", address: "rue du Stade") }
+    let(:previous_lieu) { create(:lieu, name: "MJC Aix", address: "rue du Previous") }
+    let(:rdv) { create(:rdv, lieu: new_lieu, starts_at: new_starting_time) }
+    let(:agent) { rdv.agents.first }
+    let(:token) { "12345" }
+
+    before { travel_to(Time.zone.parse("2022-08-24 09:00:00")) }
+
+    it "indicates the previous and current values" do
+      mail = described_class.with(rdv: rdv, agent: agent, author: agent)
+        .rdv_updated(starts_at: previous_starting_time, lieu_id: previous_lieu.id)
+
+      previous_details = "Un de vos RDV qui devait avoir lieu le 26 août à 09:00 à l&#39;adresse MJC Aix (rue du Previous) a été modifié"
+      expect(mail.html_part.body.to_s).to include(previous_details)
+
+      # new details
+      expect(mail.html_part.body.to_s).to include("samedi 27 août 2022 à 09h00")
+      expect(mail.html_part.body.to_s).to include("Stade de France (rue du Stade)")
+    end
+
+    it "works when no lieu_id is passed" do
+      mail = described_class.with(rdv: rdv, agent: agent, author: agent)
+        .rdv_updated(starts_at: previous_starting_time, lieu_id: nil)
+
+      previous_details = "Un de vos RDV qui devait avoir lieu le 26 août à 09:00 a été modifié"
+      expect(mail.html_part.body.to_s).to include(previous_details)
+    end
+  end
 end
