@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# TODO: move those tests to fatures tests
 RSpec.describe SearchController, type: :controller do
   render_views
   subject { response.body }
@@ -19,10 +20,10 @@ RSpec.describe SearchController, type: :controller do
 
   let!(:service) { create(:service, name: "Joli service") }
   let(:now) { Date.new(2019, 7, 22) }
-  let!(:motif) { create(:motif, name: "RSA orientation 1", category: "rsa_orientation", reservable_online: true, organisation: organisation) }
-  let!(:motif2) { create(:motif, name: "RSA orientation 2", category: "rsa_orientation_on_phone_platform", reservable_online: true, organisation: organisation) }
-  let!(:motif3) { create(:motif, name: "RSA orientation 3", reservable_online: true, organisation: other_org) }
-  let!(:motif4) { create(:motif, name: "Motif numéro 4", reservable_online: true, organisation: other_org) }
+  let!(:motif) { create(:motif, name: "RSA orientation 1", service: service, category: "rsa_orientation", reservable_online: true, organisation: organisation) }
+  let!(:motif2) { create(:motif, name: "RSA orientation 2", service: service, category: "rsa_orientation_on_phone_platform", reservable_online: true, organisation: organisation) }
+  let!(:motif3) { create(:motif, name: "RSA orientation 3", service: service, reservable_online: true, organisation: other_org) }
+  let!(:motif4) { create(:motif, name: "Motif numéro 4", service: service, reservable_online: true, organisation: other_org) }
 
   let!(:plage_ouverture) { create(:plage_ouverture, motifs: [motif], lieu: lieu, organisation: organisation) }
   let!(:plage_ouverture2) { create(:plage_ouverture, motifs: [motif2], lieu: lieu2, organisation: organisation) }
