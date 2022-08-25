@@ -8,6 +8,7 @@ ENV NODE_VERSION=16.13.0
 ENV BUNDLE_PATH=vendor/bundle
 ENV BUNDLE_BIN=vendor/bundle/bin
 ENV BUNDLE_DEPLOYMENT=1
+ENV HOST=http://localhost:3000
 
 RUN apt-get install -y curl
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
