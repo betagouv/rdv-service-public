@@ -139,10 +139,13 @@ RSpec.describe Users::RdvMailer, type: :mailer do
 
   %i[rdv_created rdv_upcoming_reminder rdv_cancelled].each do |action|
     describe "using the agent domain's branding" do
-      let(:rdv) { create(:rdv, motif: motif) }
+      let(:rdv) { create(:rdv, motif: motif, organisation_organisation) }
+      let(:motif) do
+        create(:motif, service: create(:service, :conseiller_numerique), organisation: organisation)
+      end
 
-      context "when motif's service is not conseiller_numerique" do
-        let(:motif) { create(:motif, service: create(:service, :social)) }
+      context "when the organisation uses the default domain name" do
+        let(:organisation) { create(:organisation, new_domain_beta: false) }
 
         it "works" do
           mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
@@ -151,13 +154,8 @@ RSpec.describe Users::RdvMailer, type: :mailer do
         end
       end
 
-      context "when motif is on a different domain" do
+      context "when the organisation is part of the beta" do
         let(:organisation) { create(:organisation, new_domain_beta: true) }
-        let(:motif) do
-          create(:motif, service: create(:service, :conseiller_numerique), organisation: organisation)
-        end
-
-        before { rdv.update!(organisation: organisation) }
 
         it "works" do
           mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
