@@ -139,7 +139,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
 
   %i[rdv_created rdv_upcoming_reminder rdv_cancelled].each do |action|
     describe "using the agent domain's branding" do
-      let(:rdv) { create(:rdv, motif: motif, organisation_organisation) }
+      let(:rdv) { create(:rdv, motif: motif, organisation: organisation) }
       let(:motif) do
         create(:motif, service: create(:service, :conseiller_numerique), organisation: organisation)
       end
