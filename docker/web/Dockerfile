@@ -33,6 +33,8 @@ RUN yarn install
 
 RUN yarn run build
 
+RUN rake assets:precompile
+
 ENTRYPOINT ["/bin/bash", "./bin/start_web_server"]
 
 EXPOSE 3000
