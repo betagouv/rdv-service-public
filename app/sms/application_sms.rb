@@ -16,11 +16,6 @@
 # Usage:
 # SomeSmsSubclass.some_message(arg, other_arg).deliver_later
 class ApplicationSms
-  class InvalidMobilePhoneNumberError < StandardError; end
-
-  # SMS attributes need to be set by the subclass, either in initialize or in the message method.
-  attr_accessor :phone_number, :content, :tags, :provider, :key
-
   attr_accessor :receipt_params
 
   class << self
@@ -48,12 +43,8 @@ class ApplicationSms
     end
   end
 
-  # Enqueue a DelayedJob with the sms
-  # Note: the stored parameter in the delayed_jobs table is the ApplicationSms instance.
   def deliver_later(queue: :sms)
-    raise InvalidMobilePhoneNumberError, "#{phone_number} is not a valid mobile phone number" unless PhoneNumberValidation.number_is_mobile?(phone_number)
-
-    SmsSender.delay(queue: queue).perform_with(@sender_name, phone_number, content, tags, provider, key, receipt_params)
+    raise NotImplementedError
   end
 
   private
