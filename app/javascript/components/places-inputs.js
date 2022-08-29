@@ -17,7 +17,7 @@ class PlacesInput {
       { hint: false },
       [{
         source: this.getSuggestions,
-        debounce: 100,
+        debounce: 800,
         templates: { suggestion: this.suggestionTemplate }
       }]
     ).on('autocomplete:selected', (_event, suggestion, _dataset, _context) =>
