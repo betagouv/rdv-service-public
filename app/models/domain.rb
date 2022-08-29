@@ -26,7 +26,7 @@ class Domain
       public_logo_path: "/logo_aide_numerique.png",
       dark_logo_path: "logos/logo_sombre_aide_numerique.svg",
       name: "RDV Aide Numérique",
-      sms_sender_name: "Rdv Num"
+      sms_sender_name: "RdvAideNum"
     ),
   ].freeze
 
