@@ -10,6 +10,8 @@ describe "using netsize to send an SMS" do
     stub_netsize_ok
   end
 
+  stub_sentry_events
+
   it "calls netsize API" do
     Users::RdvSms.rdv_created(rdv, rdv.users.first, "t0k3n").deliver_later
 
@@ -28,13 +30,11 @@ describe "using netsize to send an SMS" do
   end
 
   def expect_error_to_be_logged
-    expect(Sentry).to receive(:add_breadcrumb).twice
-
     expect do
       expect do
         Users::RdvSms.rdv_created(rdv, rdv.users.first, "t0k3n").deliver_later
       end.to raise_error(SmsSender::SmsSenderFailure)
-    end.to change(Receipt, :count).by(1)
+    end.to(change(Receipt, :count).by(1).and(change(sentry_events, :size).by(1)))
   end
 
   it "warns Sentry when netsize has a timeout" do
@@ -42,6 +42,10 @@ describe "using netsize to send an SMS" do
       .to_timeout
 
     expect_error_to_be_logged
+
+    breadcrumbs = sentry_events.last.breadcrumbs.compact
+    expect(breadcrumbs[0]).to have_attributes(message: 'Calling SMS provider "netsize"')
+    expect(breadcrumbs[1]).to have_attributes(message: "netsize HTTP response", data: { body: "", code: 0, headers: {} })
   end
 
   it "warns Sentry when netsize responds with an HTTP error" do
@@ -49,17 +53,25 @@ describe "using netsize to send an SMS" do
       .to_return(status: 500, body: "", headers: {})
 
     expect_error_to_be_logged
+
+    breadcrumbs = sentry_events.last.breadcrumbs.compact
+    expect(breadcrumbs[0]).to have_attributes(message: 'Calling SMS provider "netsize"')
+    expect(breadcrumbs[1]).to have_attributes(message: "netsize HTTP response", data: { body: "", code: 500, headers: {} })
   end
 
   it "warns Sentry when netsize responds with a business error" do
     stubbed_body = {
       "responseCode" => 100,
-      "responseMessage" => "“Invalid destination address”",
+      "responseMessage" => "Invalid destination address",
     }.to_json
 
     stub_request(:post, "https://europe.ipx.com/restapi/v1/sms/send")
       .to_return(status: 200, body: stubbed_body, headers: {})
 
     expect_error_to_be_logged
+
+    breadcrumbs = sentry_events.last.breadcrumbs.compact
+    expect(breadcrumbs[0]).to have_attributes(message: 'Calling SMS provider "netsize"')
+    expect(breadcrumbs[1]).to have_attributes(message: "netsize HTTP response", data: { body: stubbed_body, code: 200, headers: {} })
   end
 end

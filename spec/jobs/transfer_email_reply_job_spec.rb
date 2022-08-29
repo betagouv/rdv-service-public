@@ -51,6 +51,8 @@ RSpec.describe TransferEmailReplyJob do
   context "when reply token does not match any in DB" do
     let(:rdv_uuid) { "6df62597-632e-4be1-a273-708ab58e4765" }
 
+    stub_sentry_events
+
     it "sends a notification email to the default mailbox, containing the user reply" do
       expect { perform_job }.to change { ActionMailer::Base.deliveries.size }.by(1)
       transferred_email = ActionMailer::Base.deliveries.last
@@ -61,8 +63,8 @@ RSpec.describe TransferEmailReplyJob do
     end
 
     it "warns Sentry" do
-      expect(Sentry).to receive(:capture_message).with("Reply email could not be forwarded to agent, it was sent to default mailbox")
-      perform_job
+      expect { perform_job }.to change(sentry_events, :size).by(1)
+      expect(sentry_events.last.message).to eq("Reply email could not be forwarded to agent, it was sent to default mailbox")
     end
   end
 
