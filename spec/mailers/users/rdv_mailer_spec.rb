@@ -151,6 +151,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
           mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
           expect(mail.html_part.body.to_s).to include(%(src="/logo.png))
           expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost))
+          expect(mail.html_part.body.to_s).to include(%(L’équipe RDV Solidarités))
         end
       end
 
@@ -161,6 +162,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
           mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
           expect(mail.html_part.body.to_s).to include(%(src="/logo_aide_numerique.png))
           expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-aide-numerique-test.localhost))
+          expect(mail.html_part.body.to_s).to include(%(L’équipe RDV Aide Numérique))
         end
       end
     end

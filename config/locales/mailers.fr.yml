@@ -2,7 +2,7 @@ fr:
   mailers:
     common:
       hello: Bonjour,
-      farewell_html: "<p>À bientôt,<br>L’équipe RDV-Solidarités</p>"
+      farewell_html: "<p>À bientôt,<br>L’équipe %{domain_name}</p>"
   agents:
     absence_mailer:
       absence_created:

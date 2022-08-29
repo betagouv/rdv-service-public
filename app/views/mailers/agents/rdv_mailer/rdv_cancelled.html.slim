@@ -16,4 +16,4 @@ div
     = link_to "Voir sur #{domain.name}", admin_organisation_rdv_url(@rdv.organisation_id, @rdv.id),  class: "btn btn-primary"
 
   br
-  = t("mailers.common.farewell_html")
+  = t("mailers.common.farewell_html", domain_name: domain.name)

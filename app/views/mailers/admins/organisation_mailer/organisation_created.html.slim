@@ -15,4 +15,4 @@ p
   = link_to "la fiche agent", super_admins_agent_url(@agent)
   |  de l'interface d'administration pour envoyer une invitation ou bien prenez contact avec la personne pour avoir plus d'informations.
 
-= t("mailers.common.farewell_html")
+= t("mailers.common.farewell_html", domain_name: domain.name)
