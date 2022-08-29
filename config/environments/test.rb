@@ -57,8 +57,9 @@ Rails.application.configure do
 
   # https://github.com/JackC/tod/#activemodel-serializable-attribute-support
   config.active_record.time_zone_aware_types = [:datetime]
+
   # Raises error for missing translations.
-  # config.i18n.raise_on_missing_translations = true
+  config.i18n.raise_on_missing_translations = true
 
   # Faker fails for certains attributes if :en isn't available
   config.i18n.available_locales = %i[fr en]
