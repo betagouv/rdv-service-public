@@ -6,4 +6,4 @@ div
   .btn-wrapper
     = link_to "Vérifier la disponibilité", creneaux_users_rdv_url(@rdv, invitation_token: @token), class:"btn btn-primary"
 
-  = t("mailers.common.farewell_html")
+  = t("mailers.common.farewell_html", domain_name: domain.name)

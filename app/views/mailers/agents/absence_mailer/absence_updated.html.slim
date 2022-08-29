@@ -7,4 +7,4 @@ p= t(".description_2")
 
 .btn-wrapper= link_to "Voir sur #{domain.name}", edit_admin_organisation_absence_url(@absence.organisation, @absence), class:"btn btn-primary"
 
-= t("mailers.common.farewell_html")
+= t("mailers.common.farewell_html", domain_name: domain.name)

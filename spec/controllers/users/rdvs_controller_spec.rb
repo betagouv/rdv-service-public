@@ -245,7 +245,7 @@ RSpec.describe Users::RdvsController, type: :controller do
 
       context "when looking at rdvs on a different domain name" do
         before do
-          controller.request.host = Domain::RDV_INCLUSION_NUMERIQUE.dns_domain_name
+          controller.request.host = Domain::RDV_AIDE_NUMERIQUE.dns_domain_name
         end
 
         it "only shows the rdvs of the domain" do

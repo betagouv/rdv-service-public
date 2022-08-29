@@ -84,10 +84,11 @@ class Rdv < ApplicationRecord
   scope :collectif, -> { joins(:motif).merge(Motif.collectif) }
   scope :with_remaining_seats, -> { where("users_count < max_participants_count OR max_participants_count IS NULL") }
   scope :for_domain, lambda { |domain|
-    if domain == Domain::RDV_INCLUSION_NUMERIQUE
+    if domain == Domain::RDV_AIDE_NUMERIQUE
       joins(motif: :service).where(service: { name: Service::CONSEILLER_NUMERIQUE })
+        .joins(:organisation).where(organisations: { new_domain_beta: true })
     else
-      # TODO: #rdv-inclusion-numerique-v1 afficher uniquement les rdv du médico-social
+      # TODO: #rdv-aide-numerique-v1 afficher uniquement les rdv du médico-social
       all
     end
   }
@@ -285,7 +286,13 @@ class Rdv < ApplicationRecord
     results.exclude?("failure") ? "processed" : "failure"
   end
 
-  delegate :domain, to: :service
+  def domain
+    if service.conseiller_numerique? && organisation.new_domain_beta
+      Domain::RDV_AIDE_NUMERIQUE
+    else
+      Domain::RDV_SOLIDARITES
+    end
+  end
 
   private
 

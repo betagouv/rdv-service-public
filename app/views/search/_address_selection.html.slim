@@ -1,4 +1,4 @@
-- if current_domain == Domain::RDV_INCLUSION_NUMERIQUE
-  = render("search/address_selection/rdv_inclusion_numerique", context: context)
+- if current_domain == Domain::RDV_AIDE_NUMERIQUE
+  = render("search/address_selection/rdv_aide_numerique", context: context)
 - else
   = render("search/address_selection/rdv_solidarites", context: context)

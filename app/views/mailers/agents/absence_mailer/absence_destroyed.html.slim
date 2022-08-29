@@ -5,4 +5,4 @@ p= t(".description_2")
 
 = render "absence_overview", absence: @absence
 
-= t("mailers.common.farewell_html")
+= t("mailers.common.farewell_html", domain_name: domain.name)

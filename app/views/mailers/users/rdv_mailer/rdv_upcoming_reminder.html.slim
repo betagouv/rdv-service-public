@@ -8,4 +8,4 @@ div
 
   = render "mailers/common/rdv_overview", rdv: @rdv, for_role: :user
   = render "mailers/common/rdv_cancellable", rdv: @rdv, token: @token
-  = t("mailers.common.farewell_html")
+  = t("mailers.common.farewell_html", domain_name: domain.name)

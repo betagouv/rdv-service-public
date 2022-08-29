@@ -19,6 +19,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     phone_number: Field::String,
     human_id: Field::String,
     territory: Field::BelongsTo,
+    new_domain_beta: Field::Boolean,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
   }.freeze
@@ -44,6 +45,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     motifs
     lieux
     human_id
+    new_domain_beta
     created_at
     updated_at
   ].freeze
@@ -55,6 +57,7 @@ class OrganisationDashboard < Administrate::BaseDashboard
     name
     horaires
     phone_number
+    new_domain_beta
     human_id
     territory
   ].freeze

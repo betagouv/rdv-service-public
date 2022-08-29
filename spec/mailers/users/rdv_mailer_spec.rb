@@ -139,29 +139,30 @@ RSpec.describe Users::RdvMailer, type: :mailer do
 
   %i[rdv_created rdv_upcoming_reminder rdv_cancelled].each do |action|
     describe "using the agent domain's branding" do
-      let(:rdv) { create(:rdv, motif: motif) }
+      let(:rdv) { create(:rdv, motif: motif, organisation: organisation) }
+      let(:motif) do
+        create(:motif, service: create(:service, :conseiller_numerique), organisation: organisation)
+      end
 
-      context "when motif's service is not conseiller_numerique" do
-        let(:motif) { create(:motif, service: create(:service, :social)) }
+      context "when the organisation uses the default domain name" do
+        let(:organisation) { create(:organisation, new_domain_beta: false) }
 
         it "works" do
           mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
           expect(mail.html_part.body.to_s).to include(%(src="/logo.png))
           expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost))
+          expect(mail.html_part.body.to_s).to include(%(L’équipe RDV Solidarités))
         end
       end
 
-      context "when motif is on a different domain" do
-        let(:motif) { create(:motif, service: create(:service, :conseiller_numerique)) }
-
-        before do
-          allow(motif.service).to receive(:domain).and_return(Domain::RDV_INCLUSION_NUMERIQUE)
-        end
+      context "when the organisation is part of the beta" do
+        let(:organisation) { create(:organisation, new_domain_beta: true) }
 
         it "works" do
           mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
-          expect(mail.html_part.body.to_s).to include(%(src="/logo_inclusion_numerique.png))
-          expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-inclusion-numerique-test.localhost))
+          expect(mail.html_part.body.to_s).to include(%(src="/logo_aide_numerique.png))
+          expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-aide-numerique-test.localhost))
+          expect(mail.html_part.body.to_s).to include(%(L’équipe RDV Aide Numérique))
         end
       end
     end

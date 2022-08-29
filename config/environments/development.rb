@@ -113,6 +113,6 @@ Rails.application.configure do
 
   # Ces domaines peuvent être utilisés en local sans modification du /etc/hosts.
   # En effet, Firefox et Chrome font pointer le TLD .localhost vers 127.0.0.1.
-  config.hosts << "www.rdv-solidarites.localhost"         # http://rdv-solidarites.localhost:3000/
-  config.hosts << "www.rdv-inclusion-numerique.localhost" # http://rdv-inclusion-numerique.localhost:3000/
+  config.hosts << "www.rdv-solidarites.localhost" # http://rdv-solidarites.localhost:3000/
+  config.hosts << "www.rdv-aide-numerique.localhost" # http://rdv-aide-numerique.localhost:3000/
 end
