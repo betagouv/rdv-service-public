@@ -31,12 +31,8 @@ class CustomDeviseMailer < Devise::Mailer
   end
 
   def domain
-    if @resource.is_a?(Agent)
-      @resource.domain
-    else
-      # TODO: #rdv-aide-numerique-beta trouver un moyen de mettre le bon domaine
-      Domain::RDV_SOLIDARITES
-    end
+    # delegate to User#domain ot Agent#domain
+    resource.domain
   end
 
   def default_url_options
