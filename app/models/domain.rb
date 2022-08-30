@@ -72,4 +72,8 @@ class Domain
   def self.find_matching(domain_name)
     ALL_BY_URL.fetch(domain_name) { RDV_SOLIDARITES }
   end
+
+  def to_s
+    name
+  end
 end
