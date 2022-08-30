@@ -5,7 +5,7 @@ class Admin::InvitationsDeviseController < Devise::InvitationsController
     self.resource = resource_class.new(organisations: [current_organisation])
     authorize(resource)
 
-    @services = services
+    @services = services.order(:name)
     @roles = current_agent.conseiller_numerique? ? [AgentRole::LEVEL_BASIC] : AgentRole::LEVELS
 
     render :new, layout: "application_agent"
