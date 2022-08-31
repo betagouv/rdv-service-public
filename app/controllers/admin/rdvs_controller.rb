@@ -80,6 +80,10 @@ class Admin::RdvsController < AgentAuthController
     end
   end
 
+  def edit_motif
+    authorize(@rdv, :edit?)
+  end
+
   private
 
   def set_optional_agent

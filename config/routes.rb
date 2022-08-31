@@ -164,6 +164,7 @@ Rails.application.routes.draw do
         resources :rdvs, except: [:new] do
           member do
             post :send_reminder_manually
+            get :edit_motif
           end
           collection do
             post :export

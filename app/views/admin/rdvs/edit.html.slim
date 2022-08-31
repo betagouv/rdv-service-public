@@ -27,6 +27,7 @@
           = collapsible_form_fields_for_warnings(@rdv_form) do
             = hidden_field_tag :agent_id, @agent&.id
             = f.association :motif, collection: [@rdv_form.motif], disabled: true
+            = link_to "modifier le motif", edit_motif_admin_organisation_rdv_path(current_organisation, @rdv), class: "btn btn-link"
             = f.input :context, input_html: { rows: 3 }
             .form-row
               .col-md-6= datetime_input(f, :starts_at)
