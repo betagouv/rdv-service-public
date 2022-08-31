@@ -6,13 +6,11 @@ describe "using netsize to send an SMS" do
   let(:user) { create(:user, phone_number: "+33601020304") }
   let(:rdv) { create(:rdv, organisation: organisation, users: [user]) }
 
-  before do
-    stub_netsize_ok
-  end
-
   stub_sentry_events
 
   it "calls netsize API" do
+    stub_netsize_ok
+
     Users::RdvSms.rdv_created(rdv, rdv.users.first, "t0k3n").deliver_later
 
     valid_request = lambda do |req|
