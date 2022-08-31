@@ -34,7 +34,7 @@ RSpec.describe Agents::RdvMailer, type: :mailer do
         let(:agent) { build(:agent, service: build(:service, :social)) }
 
         it "works" do
-          expect(mail.html_part.body.to_s).to include(%(src="/logo.png))
+          expect(mail.html_part.body.to_s).to include(%(src="/logo_solidarites.png))
           expect(mail.html_part.body.to_s).to include("Voir sur RDV Solidarités")
           expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost))
         end

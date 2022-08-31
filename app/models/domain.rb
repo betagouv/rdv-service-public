@@ -14,9 +14,9 @@ class Domain
   ALL = [
     RDV_SOLIDARITES = new(
       default: true,
-      logo_path: "logos/logo.svg",
-      public_logo_path: "/logo.png",
-      dark_logo_path: "logos/logo_sombre.svg",
+      logo_path: "logos/logo_solidarites.svg",
+      public_logo_path: "/logo_solidarites.png",
+      dark_logo_path: "logos/logo_sombre_solidarites.svg",
       name: "RDV Solidarités",
       sms_sender_name: "RdvSoli"
     ),
