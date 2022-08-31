@@ -19,4 +19,25 @@ describe "User resets his password spec" do
     expect(page).to have_content("Votre mot de passe a été édité avec succès")
     expect(page).to have_current_path("/users/rdvs")
   end
+
+  # Ce test constitue un test d'intégration du cas normal.
+  # Les tests unitaires des variations sont fait dans une spec de mailer.
+  describe "using the user's domain" do
+    context "when the user only has RDVs for motif Conseiller Numérique" do
+      let(:user) do
+        organisation = create(:organisation, new_domain_beta: true)
+        motif_numerique = create(:motif, service: create(:service, :conseiller_numerique))
+        create(:user, rdvs: create_list(:rdv, 2, organisation: organisation, motif: motif_numerique))
+      end
+
+      it "uses the default domain" do
+        # Le domaine visité n'a pas d'importance. Voir la doc de User#domain.
+        visit new_user_password_url(host: Domain::RDV_SOLIDARITES.dns_domain_name)
+        fill_in "user_email", with: user.email
+        click_on "Envoyer"
+        open_email(user.email)
+        expect(current_email.html_part.body.to_s).to include('<a href="http://www.rdv-aide-numerique-test.localhost/users/password/edit?reset_password_token=')
+      end
+    end
+  end
 end
