@@ -21,7 +21,7 @@ describe "User resets his password spec" do
   end
 
   # Ce test constitue un test d'intégration du cas normal.
-  # Les tests unitaires des variations sur User#domain sont faits dans domain_concern_spec.rb.
+  # Les tests unitaires des variations sont fait dans une spec de mailer.
   describe "using the user's domain" do
     context "when the user only has RDVs for motif Conseiller Numérique" do
       let(:user) do

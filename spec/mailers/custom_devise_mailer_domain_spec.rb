@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-describe User::DomainConcern do
-  subject(:user_domain) { user.domain }
+describe CustomDeviseMailer, "#domain" do
+  subject(:user_domain) { described_class.reset_password_instructions(user, "t0k3n").body }
 
   let(:motif_solidarites) { create(:motif, service: create(:service, :social)) }
   let(:motif_numerique) { create(:motif, service: create(:service, :conseiller_numerique)) }
@@ -9,28 +9,28 @@ describe User::DomainConcern do
   context "when user has no RDV" do
     let(:user) { create(:user, rdvs: []) }
 
-    it { is_expected.to eq(Domain::RDV_SOLIDARITES) }
+    it { is_expected.to include(Domain::RDV_SOLIDARITES.dns_domain_name) }
   end
 
   context "when user only RDV Solidarité RDVs" do
     let!(:organisation) { create(:organisation, new_domain_beta: true) }
     let(:user) { create(:user, rdvs: create_list(:rdv, 2, organisation: organisation, motif: motif_solidarites)) }
 
-    it { is_expected.to eq(Domain::RDV_SOLIDARITES) }
+    it { is_expected.to include(Domain::RDV_SOLIDARITES.dns_domain_name) }
   end
 
   context "when user only RDV Aide Numérique RDVs but organisation not in beta program" do
     let!(:organisation) { create(:organisation, new_domain_beta: false) }
     let(:user) { create(:user, rdvs: create_list(:rdv, 2, organisation: organisation, motif: motif_numerique)) }
 
-    it { is_expected.to eq(Domain::RDV_SOLIDARITES) }
+    it { is_expected.to include(Domain::RDV_SOLIDARITES.dns_domain_name) }
   end
 
   context "when user only RDV Aide Numérique RDVs and organisation is in beta program" do
     let!(:organisation) { create(:organisation, new_domain_beta: true) }
     let(:user) { create(:user, rdvs: create_list(:rdv, 2, organisation: organisation, motif: motif_numerique)) }
 
-    it { is_expected.to eq(Domain::RDV_AIDE_NUMERIQUE) }
+    it { is_expected.to include(Domain::RDV_AIDE_NUMERIQUE.dns_domain_name) }
   end
 
   context "when user has mixed RDV domains (and organisation is in beta program)" do
@@ -45,6 +45,6 @@ describe User::DomainConcern do
       create(:user, rdvs: mixed_rdvs)
     end
 
-    it { is_expected.to eq(Domain::RDV_AIDE_NUMERIQUE) }
+    it { is_expected.to include(Domain::RDV_AIDE_NUMERIQUE.dns_domain_name) }
   end
 end

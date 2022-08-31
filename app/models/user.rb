@@ -15,7 +15,6 @@ class User < ApplicationRecord
   include User::FranceconnectFrozenFieldsConcern
   include User::NotificableConcern
   include User::ImprovedUnicityErrorConcern
-  include User::DomainConcern
   include PhoneNumberValidation::HasPhoneNumber
   include WebhookDeliverable
   include TextSearch
