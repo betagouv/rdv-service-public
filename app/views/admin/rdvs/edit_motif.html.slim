@@ -1,2 +1,21 @@
-li.card-body.py-2
-  | ici
+
+- content_for :title do
+  | Modifier le motif du RDV
+
+
+.row.justify-content-center
+  .col-md-8
+    .card
+      .card-body
+        - puts "rdv => #{@rdv.inspect}"
+        = simple_form_for([:admin, @rdv.organisation, @rdv]) do |f|
+          = render "model_errors", model: @rdv, f: f
+          = collapsible_form_fields_for_warnings(@rdv) do
+            = hidden_field_tag :agent_id, @agent&.id
+            = f.association :motif, collection: policy_scope(Motif)
+
+          .text-right
+            = f.button :submit, t("helpers.submit.submit")
+
+
+
