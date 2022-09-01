@@ -11,6 +11,8 @@ class CustomDeviseMailer < Devise::Mailer
   helper RdvSolidaritesInstanceNameHelper
   helper_method :domain
 
+  after_action { mail.from %("#{domain.name}" <#{SUPPORT_EMAIL}>) }
+
   def invitation_instructions(record, token, opts = {})
     @token = token
     @user_params = opts[:user_params] || {}

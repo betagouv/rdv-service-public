@@ -8,6 +8,7 @@ describe Agents::PlageOuvertureMailer, type: :mailer do
 
       it "mail to plage ouverture's agent" do
         mail = described_class.with(plage_ouverture: plage_ouverture).send("plage_ouverture_#{action}")
+        expect(mail[:from].to_s).to eq(%("RDV Solidarités" <support@rdv-solidarites.fr>))
         expect(mail.to).to eq(["bob@demo.rdv-solidarites.fr"])
       end
 
@@ -44,6 +45,7 @@ describe Agents::PlageOuvertureMailer, type: :mailer do
 
           it "works" do
             mail = described_class.with(plage_ouverture: plage_ouverture).send("plage_ouverture_#{action}")
+            expect(mail[:from].to_s).to eq(%("RDV Aide Numérique" <support@rdv-solidarites.fr>))
             expect(mail.subject).to start_with("RDV Aide Numérique - Plage d’ouverture")
             expect(mail.html_part.body.to_s).to include(%(src="/logo_aide_numerique.png))
             expect(mail.html_part.body.to_s).to include("Voir sur RDV Aide Numérique") unless action == :destroyed
