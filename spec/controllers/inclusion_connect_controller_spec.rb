@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-BASE_URL = "https://test.inclusion.connect.fr/"
-
 describe InclusionConnectController, type: :controller do
+  let(:base_url) { "https://test.inclusion.connect.fr/" }
+
   describe "#callback" do
     it "update first_name and last_name of agent" do
       now = Time.zone.parse("2022-08-22 11h34")
@@ -11,11 +11,11 @@ describe InclusionConnectController, type: :controller do
 
       ENV["INCLUSION_CONNECT_CLIENT_ID"] = "truc"
       ENV["INCLUSION_CONNECT_CLIENT_SECRET"] = "truc secret"
-      ENV["INCLUSION_CONNECT_BASE_URL"] = BASE_URL
+      ENV["INCLUSION_CONNECT_BASE_URL"] = base_url
 
       stub_token_request.to_return(status: 200, body: { access_token: "zekfjzeklfjl", expires_in: now + 1.week, scopes: "openid" }.to_json, headers: {})
 
-      stub_request(:get, "#{BASE_URL}/userinfo?schema=openid").with(
+      stub_request(:get, "#{base_url}/userinfo?schema=openid").with(
         headers: {
           "Accept" => "*/*",
           "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
@@ -46,7 +46,7 @@ describe InclusionConnectController, type: :controller do
     it "returns an error if token request error" do
       ENV["INCLUSION_CONNECT_CLIENT_ID"] = "truc"
       ENV["INCLUSION_CONNECT_CLIENT_SECRET"] = "truc secret"
-      ENV["INCLUSION_CONNECT_BASE_URL"] = BASE_URL
+      ENV["INCLUSION_CONNECT_BASE_URL"] = base_url
 
       stub_token_request.to_return(status: 500, body: { error: "an error occurs" }.to_json, headers: {})
 
@@ -59,7 +59,7 @@ describe InclusionConnectController, type: :controller do
     it "returns an error if token request doesn't contains token" do
       ENV["INCLUSION_CONNECT_CLIENT_ID"] = "truc"
       ENV["INCLUSION_CONNECT_CLIENT_SECRET"] = "truc secret"
-      ENV["INCLUSION_CONNECT_BASE_URL"] = BASE_URL
+      ENV["INCLUSION_CONNECT_BASE_URL"] = base_url
 
       stub_token_request.to_return(status: 200, body: {}.to_json, headers: {})
 
@@ -73,11 +73,11 @@ describe InclusionConnectController, type: :controller do
     it "returns an error if userinfo request doesnt work" do
       ENV["INCLUSION_CONNECT_CLIENT_ID"] = "truc"
       ENV["INCLUSION_CONNECT_CLIENT_SECRET"] = "truc secret"
-      ENV["INCLUSION_CONNECT_BASE_URL"] = BASE_URL
+      ENV["INCLUSION_CONNECT_BASE_URL"] = base_url
 
       stub_token_request.to_return(status: 200, body: { access_token: "zekfjzeklfjl", expires_in: "", scopes: "openid" }.to_json, headers: {})
 
-      stub_request(:get, "#{BASE_URL}/userinfo?schema=openid").with(
+      stub_request(:get, "#{base_url}/userinfo?schema=openid").with(
         headers: {
           "Accept" => "*/*",
           "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
@@ -97,11 +97,11 @@ describe InclusionConnectController, type: :controller do
     it "returns an error if userinfo's email checked is false" do
       ENV["INCLUSION_CONNECT_CLIENT_ID"] = "truc"
       ENV["INCLUSION_CONNECT_CLIENT_SECRET"] = "truc secret"
-      ENV["INCLUSION_CONNECT_BASE_URL"] = BASE_URL
+      ENV["INCLUSION_CONNECT_BASE_URL"] = base_url
 
       stub_token_request.to_return(status: 200, body: { access_token: "zekfjzeklfjl", expires_in: "", scopes: "openid" }.to_json, headers: {})
 
-      stub_request(:get, "#{BASE_URL}/userinfo?schema=openid").with(
+      stub_request(:get, "#{base_url}/userinfo?schema=openid").with(
         headers: {
           "Accept" => "*/*",
           "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
@@ -117,10 +117,23 @@ describe InclusionConnectController, type: :controller do
       expect(response).to redirect_to(new_agent_session_path)
       expect(flash[:error]).to eq("Nous n'avons pas pu vous authentifier. Contacter le support à l'adresse <support@rdv-solidarites.fr> si le problème persiste.")
     end
+
+    it "call sentry about authentification failure" do
+      ENV["INCLUSION_CONNECT_CLIENT_ID"] = "truc"
+      ENV["INCLUSION_CONNECT_CLIENT_SECRET"] = "truc secret"
+      ENV["INCLUSION_CONNECT_BASE_URL"] = base_url
+
+      stub_token_request.to_return(status: 500, body: { error: "an error occurs" }.to_json, headers: {})
+
+      session[:ic_state] = "a state"
+
+      expect(Sentry).to receive(:capture_message).with("Failed to authentify agent with inclusionConnect")
+      get :callback, params: { state: "a state", session_state: "a state", code: "klzefklzejlf" }
+    end
   end
 
   def stub_token_request
-    stub_request(:post, "#{BASE_URL}/token").with(
+    stub_request(:post, "#{base_url}/token").with(
       body: {
         "client_id" => "truc",
         "client_secret" => "truc secret",
