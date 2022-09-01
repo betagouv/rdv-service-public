@@ -7,7 +7,7 @@ describe AddConseillerNumerique do
     stub_request(
       :get,
       "https://api-adresse.data.gouv.fr/search/?postcode=75019&q=16%20quai%20de%20la%20Loire,%2075019%20Paris"
-    ).to_return(status: 200, body: File.read(Rails.root.join("spec/support/geocode_result.json")), headers: {})
+    ).to_return(status: 200, body: file_fixture("geocode_result.json").read, headers: {})
   end
 
   let(:params) do
