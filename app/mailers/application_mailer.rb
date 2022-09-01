@@ -10,9 +10,15 @@ class ApplicationMailer < ActionMailer::Base
   helper RdvSolidaritesInstanceNameHelper
   helper_method :domain
 
-  after_action { mail.from %("#{domain.name}" <#{SUPPORT_EMAIL}>) }
+  after_action { mail.from %("#{domain.name}" <#{default_from}>) }
 
   def default_url_options
     super.merge(host: domain.dns_domain_name)
+  end
+
+  private
+
+  def default_from
+    SUPPORT_EMAIL
   end
 end

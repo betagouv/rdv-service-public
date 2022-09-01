@@ -11,7 +11,7 @@ class CustomDeviseMailer < Devise::Mailer
   helper RdvSolidaritesInstanceNameHelper
   helper_method :domain
 
-  after_action { mail.from %("#{domain.name}" <#{SUPPORT_EMAIL}>) }
+  after_action { mail.from %("#{domain.name}" <#{default_from}>) }
 
   def invitation_instructions(record, token, opts = {})
     @token = token
@@ -58,6 +58,10 @@ class CustomDeviseMailer < Devise::Mailer
     else
       Domain::RDV_SOLIDARITES
     end
+  end
+
+  def default_from
+    SUPPORT_EMAIL
   end
 
   def default_url_options
