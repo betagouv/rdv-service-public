@@ -40,24 +40,4 @@ jobs:
       run: docker build . --file $SCRIPT_DOCKERFILE --tag $DOCKER_REPO_NAME/script:$GITHUB_REF_NAME
     - name: Docker Push Script image
       run: docker push $DOCKER_REPO_NAME/script:$GITHUB_REF_NAME
-  # argocd_reviewapp:
-  #   runs-on: ubuntu-latest  # runner name : (ubuntu latest version)
-  #   environment: lapin-beta-gouv
-  #   steps:
-  #   - uses: clowdhaus/argo-cd-action/@main
-  #     env:
-  #       # Only required for first step in job where API is called
-  #       # All subsequent setps in a job will not re-download the CLI
-  #       GITHUB_TOKEN: ${{ secrets.ARGOCD_GITHUB_TOKEN }}
-  #     with:
-  #       command: version
-  #       options: --client
-  #   - uses: clowdhaus/argo-cd-action/@main
-  #     # CLI has already been downloaded in prior step, no call to GitHub API
-  #     with:
-  #       command: version
-  #       options: --client
-
-  #   - name: Check Hash
-  #     run: echo ${GITHUB_SHA}
 
