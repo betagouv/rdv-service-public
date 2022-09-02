@@ -40,4 +40,15 @@ jobs:
       run: docker build . --file $SCRIPT_DOCKERFILE --tag $DOCKER_REPO_NAME/script:$GITHUB_REF_NAME
     - name: Docker Push Script image
       run: docker push $DOCKER_REPO_NAME/script:$GITHUB_REF_NAME
+      run: docker build . --file $WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-${GITHUB_SHA}}
+    - name: Docker Push Webapp image
+      run: docker push $DOCKER_REPO_NAME/webapp:$GITHUB_REF_NAME-${GITHUB_SHA}}
+    - name: Build the Job Docker image
+      run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/jobs:$GITHUB_REF_NAME-${GITHUB_SHA}}
+    - name: Docker Push Job image
+      run: docker push $DOCKER_REPO_NAME/jobs:$GITHUB_REF_NAME-${GITHUB_SHA}}
+    - name: Build the Script Docker image
+      run: docker build . --file $SCRIPT_DOCKERFILE --tag $DOCKER_REPO_NAME/script:$GITHUB_REF_NAME-${GITHUB_SHA}}
+    - name: Docker Push Script image
+      run: docker push $DOCKER_REPO_NAME/script:$GITHUB_REF_NAME-${GITHUB_SHA}}
 

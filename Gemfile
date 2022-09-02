@@ -21,6 +21,7 @@ gem "rack-cors" # CORS management
 gem "mail", "2.8.0.rc1"
 
 # Ops
+gem "health_check"
 gem "sentry-ruby"
 gem "sentry-rails"
 gem "skylight"
