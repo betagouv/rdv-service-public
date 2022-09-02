@@ -12,6 +12,13 @@ div id=element_id
       = render "common/destroy_button", form: form, id: element_id
   .ml-3
     = render "admin/users/notifications_preferences", user: rdvs_user.user.user_to_notify
-    h6= t("admin.rdvs_users.notifications_overrides")
-    = form.input :send_lifecycle_notifications, wrapper: false
-    = form.input :send_reminder_notification, wrapper: false
+    - if rdvs_user.user.user_to_notify.email.blank? && rdvs_user.user.user_to_notify.phone_number.blank?
+      .alert.alert-warning.d-flex.align-items-center.my-2
+        i.fa.fa-exclamation-triangle
+        .ml-3
+          b> Notification impossible :
+          span> cet usager ne possède pas de numéro de téléphone ou d'email.
+    - else
+      h6= t("admin.rdvs_users.notifications_overrides")
+      = form.input :send_lifecycle_notifications, wrapper: false
+      = form.input :send_reminder_notification, wrapper: false
