@@ -140,5 +140,10 @@
                 temporal_status: temporal_status, \
                 count: @rdvs.status(temporal_status).count,
                 path: admin_organisation_rdvs_path(current_organisation, status: temporal_status, user_id: @user.id, breadcrumb_page: "user")
+      .card-footer
+        .alert.alert-info.d-flex.align-items-center
+          .mr-3
+            i.fa.fa-info
+          | Les RDV sont supprimés au bout de 2 ans.
 
 = render "admin/versions/resource_versions_row", policy_scope: :agent, resource: @user
