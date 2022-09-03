@@ -66,7 +66,7 @@ class CalendarRdvSolidarites {
       },
       hiddenDays: this.data.displaySaturdays === "true" ? [0] : [6, 0],
       height: "auto",
-      selectable: true,
+      selectable: false,
       select: this.selectEvent,
       header: {
         center: 'dayGridMonth,timeGridWeek,timeGridOneDay,listWeek'
@@ -185,7 +185,7 @@ class CalendarRdvSolidarites {
 
     let title = `${moment(info.event.start).utc().format('H:mm')} - ${moment(info.event.end).utc().format('H:mm')}`;
 
-    if (info.event.rendering == 'background') {
+    if (info.display == 'background') {
       $el.append("<div class=\"fc-title\" style=\"color: white; padding: 2px 4px; font-size: 12px; font-weight: bold;\">" + info.event.title + "</div>");
 
       if(extendedProps.organisationName) {
