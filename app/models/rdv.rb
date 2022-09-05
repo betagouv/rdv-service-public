@@ -287,11 +287,7 @@ class Rdv < ApplicationRecord
   end
 
   def domain
-    if service.conseiller_numerique? && organisation.new_domain_beta
-      Domain::RDV_AIDE_NUMERIQUE
-    else
-      Domain::RDV_SOLIDARITES
-    end
+    organisation.new_domain_beta ? Domain::RDV_AIDE_NUMERIQUE : Domain::RDV_SOLIDARITES
   end
 
   private
