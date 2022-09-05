@@ -8,6 +8,9 @@ describe CustomDeviseMailer, "#domain" do
 
   def expect_to_use_domain(domain)
     expect(sent_email.body).to include(domain.dns_domain_name)
+    # L'adresse support@rdv-solidarites.fr est utilisée comme adresse de support
+    # à la fois sur le domaine RDV Solidarité et le domaine RDV Aide Numérique.
+    # En revanche on adapte le nom affiché pour que ce soit dans l'inbox du destinataire.
     expect(sent_email[:from].to_s).to eq(%("#{domain.name}" <support@rdv-solidarites.fr>))
   end
 
