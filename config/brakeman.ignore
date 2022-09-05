@@ -1,26 +1,6 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "10112e021e73eda7078e59a3f6829945a1e001e587e729a0ca7f028e06ffe380",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/mailers/custom_devise_mailer.rb",
-      "line": 14,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "mail.from(\"\\\"#{domain.name}\\\" <#{default_from}>\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "CustomDeviseMailer",
-        "method": null
-      },
-      "user_input": "domain.name",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
       "fingerprint": "2355405acc689e021f5b074103ed57c71e0b53346937c2a247ee732bb991ea03",
@@ -85,18 +65,18 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "a11853eedf49dbc6bafea7075b2392c9dc7f44929311c3900ab4f7bfb6c8f4a9",
+      "fingerprint": "787302e7f4a074407ad77b97c161fca6cb5746c2e24e60ff5f331f1b66608995",
       "check_name": "SQL",
       "message": "Possible SQL injection",
-      "file": "app/mailers/application_mailer.rb",
-      "line": 13,
+      "file": "app/mailers/concerns/common_mailer.rb",
+      "line": 24,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "mail.from(\"\\\"#{domain.name}\\\" <#{default_from}>\")",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "ApplicationMailer",
-        "method": null
+        "class": "CommonMailer",
+        "method": "set_default_from_with_display_name"
       },
       "user_input": "domain.name",
       "confidence": "Weak",
@@ -165,6 +145,6 @@
       "note": ""
     }
   ],
-  "updated": "2022-09-05 10:01:23 +0200",
+  "updated": "2022-09-05 14:47:19 +0200",
   "brakeman_version": "5.2.0"
 }

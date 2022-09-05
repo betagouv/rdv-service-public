@@ -11,13 +11,17 @@ module CommonMailer
     helper RdvSolidaritesInstanceNameHelper
     helper_method :domain
 
-    after_action { mail.from %("#{domain.name}" <#{default_from}>) }
+    after_action :set_default_from_with_display_name
   end
 
   private
 
   def default_url_options
     super.merge(host: domain.dns_domain_name)
+  end
+
+  def set_default_from_with_display_name
+    mail.from %("#{domain.name}" <#{default_from}>) if mail.from.blank?
   end
 
   def default_from
