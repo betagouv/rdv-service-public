@@ -30,35 +30,19 @@ describe PlageOuverture, type: :model do
     end
   end
 
-  describe "lieu_is_enabled" do
-    subject { plage_ouverture.errors }
+  describe "validations :" do
 
-    let(:plage_ouverture) { build :plage_ouverture, lieu: lieu }
-
-    before { plage_ouverture.validate }
-
-    context "invalid if lieu is nil" do
-      let(:lieu) { nil }
-
-      it { is_expected.to be_of_kind(:lieu, :blank) }
+    it "valid without lieu and motif « by phone » or « at home »" do
+      by_phone_motif = create(:motif, :by_phone)
+      at_home_motif = create(:motif, :at_home)
+      plage_ouverture = build(:plage_ouverture, lieu: nil, motifs: [by_phone_motif, at_home_motif])
+      expect(plage_ouverture).to be_valid
     end
 
-    context "invalid if lieu is disabled" do
-      let(:lieu) { build :lieu, availability: :disabled }
-
-      it { is_expected.to be_of_kind(:lieu, :must_be_enabled) }
-    end
-
-    context "invalid if lieu is single_use" do
-      let(:lieu) { build :lieu, availability: :single_use }
-
-      it { is_expected.to be_of_kind(:lieu, :must_be_enabled) }
-    end
-
-    context "valid if lieu is enabled" do
-      let(:lieu) { build :lieu, availability: :enabled }
-
-      it { is_expected.to be_empty }
+    it "invalid without lieu if selected motif « sur place »" do
+      motif = create(:motif, :at_public_office)
+      plage_ouverture = build(:plage_ouverture, lieu: nil, motifs: [motif])
+      expect(plage_ouverture).to be_invalid
     end
   end
 

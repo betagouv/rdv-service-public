@@ -18,7 +18,7 @@ class PlageOuverture < ApplicationRecord
   # Relations
   belongs_to :organisation
   belongs_to :agent
-  belongs_to :lieu
+  belongs_to :lieu, optional: true
   has_and_belongs_to_many :motifs, -> { distinct }
 
   # Through relations
@@ -26,9 +26,9 @@ class PlageOuverture < ApplicationRecord
 
   # Validations
   validate :end_after_start
-  validate :lieu_is_enabled
   validates :motifs, :title, presence: true
   validate :warn_overlapping_plage_ouvertures
+  validate :lieu_presence_with_a_public_office_motif
 
   # Scopes
   scope :in_range, lambda { |range|
@@ -105,10 +105,6 @@ class PlageOuverture < ApplicationRecord
     errors.add(:end_time, :must_be_after_start_time) if end_time <= start_time
   end
 
-  def lieu_is_enabled
-    errors.add(:lieu, :must_be_enabled) unless lieu&.enabled?
-  end
-
   def warn_overlapping_plage_ouvertures
     return if ignore_benign_errors
 
@@ -117,5 +113,12 @@ class PlageOuverture < ApplicationRecord
     add_benign_error("Conflit de dates et d'horaires avec d'autres plages d'ouvertures")
     # TODO: display richer warning messages by rendering the partial
     # overlapping_plage_ouvertures (implies passing view locals which may be tricky)
+  end
+
+  def lieu_presence_with_a_public_office_motif
+    public_office_motifs = motifs.select{|m| m.public_office? }
+    return if public_office_motifs.empty?
+
+    errors.add(:lieu, :must_be_present) if lieu.blank?
   end
 end
