@@ -20,6 +20,7 @@ module RdvExporter
     "usager(s)",
     "date naissance",
     "commune du premier responsable",
+    "code postal du premier responsable",
     "au moins un usager mineur ?",
     "Organisation",
   ].freeze
@@ -72,6 +73,7 @@ module RdvExporter
       rdv.users.map(&:full_name).join(", "),
       rdv.users.map(&:birth_date).compact.map { |date| I18n.l(date) }.join(", "),
       commune_premier_responsable(rdv),
+      code_postal_premier_responsable(rdv),
       rdv.users.any?(&:minor?) ? "oui" : "non",
       rdv.organisation.name,
     ]
@@ -79,5 +81,17 @@ module RdvExporter
 
   def self.commune_premier_responsable(rdv)
     rdv.users.map(&:user_to_notify).pluck(:city_name).compact.first
+  end
+
+  def self.code_postal_premier_responsable(rdv)
+    address = rdv.users.map(&:user_to_notify).pluck(:address).compact.first
+    extract_postal_code_from(address) if address.present?
+  end
+
+  def self.extract_postal_code_from(address)
+    postal_code = address.match(/.*([0-9]{5}).*/)
+    return "" if postal_code.blank? || postal_code.captures.empty?
+
+    postal_code.captures.first
   end
 end

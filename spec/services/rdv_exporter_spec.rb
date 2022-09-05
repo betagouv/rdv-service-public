@@ -41,6 +41,7 @@ describe RdvExporter, type: :service do
             "usager(s)",
             "date naissance",
             "commune du premier responsable",
+            "code postal du premier responsable",
             "au moins un usager mineur ?",
             "Organisation",
           ]
@@ -186,7 +187,7 @@ describe RdvExporter, type: :service do
     end
 
     describe "commune du premier responsable" do
-      it "return 92320 (Chatillon's postal code) when first responsable leave there" do
+      it "return Châtillon when first responsable leave there" do
         first_major = create(:user, birth_date: Date.new(2002, 3, 12), city_name: "Châtillon")
         minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: first_major.id)
         other_major = create(:user, birth_date: Date.new(2002, 3, 12))
@@ -195,7 +196,7 @@ describe RdvExporter, type: :service do
         expect(described_class.row_array_from(rdv)[15]).to eq("Châtillon")
       end
 
-      it "return responsible's address for relative" do
+      it "return responsible's commune for relative" do
         first_major = create(:user, birth_date: Date.new(2002, 3, 12), city_name: "Châtillon")
         minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: first_major.id)
         rdv = create(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor])
@@ -212,6 +213,33 @@ describe RdvExporter, type: :service do
       end
     end
 
+    describe "code postal du premier responsable" do
+      it "return 92320 (Chatillon's postal code) when first responsable leave there" do
+        first_major = create(:user, birth_date: Date.new(2002, 3, 12), address: "Rue Jean Jaurès, 92320 Châtillon")
+        minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: first_major.id)
+        other_major = create(:user, birth_date: Date.new(2002, 3, 12))
+        other_minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: other_major.id)
+        rdv = create(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor, other_minor, first_major, other_major])
+        expect(described_class.row_array_from(rdv)[16]).to eq("92320")
+      end
+
+      it "return responsible's postal code for relative" do
+        first_major = create(:user, birth_date: Date.new(2002, 3, 12), address: "Rue Jean Jaurès, 92320 Châtillon")
+        minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: first_major.id)
+        rdv = create(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor])
+        expect(described_class.row_array_from(rdv)[16]).to eq("92320")
+      end
+
+      it "return second responsible postal code when first does not have one" do
+        major = create(:user, birth_date: Date.new(2002, 3, 12), address: nil)
+        minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: major.id)
+        other_major = create(:user, birth_date: Date.new(2002, 3, 12), address: "Rue Jean Jaurès, 92320 Châtillon")
+        other_minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: other_major.id)
+        rdv = create(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor, other_minor, major, other_major])
+        expect(described_class.row_array_from(rdv)[16]).to eq("92320")
+      end
+    end
+
     describe "un usager mineur ?" do
       it "return oui when one minor user" do
         now = Time.zone.parse("2020-4-3 13:45")
@@ -219,7 +247,7 @@ describe RdvExporter, type: :service do
         major = build(:user, birth_date: Date.new(2002, 3, 12))
         minor = build(:user, birth_date: Date.new(2016, 5, 30))
         rdv = build(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor, major])
-        expect(described_class.row_array_from(rdv)[16]).to eq("oui")
+        expect(described_class.row_array_from(rdv)[17]).to eq("oui")
       end
     end
   end
@@ -228,7 +256,7 @@ describe RdvExporter, type: :service do
     it "return organisation name" do
       organisation = build(:organisation, name: "CMS du Brusc")
       rdv = build(:rdv, organisation: organisation)
-      expect(described_class.row_array_from(rdv)[17]).to eq("CMS du Brusc")
+      expect(described_class.row_array_from(rdv)[18]).to eq("CMS du Brusc")
     end
   end
 end
