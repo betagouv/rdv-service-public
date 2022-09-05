@@ -42,14 +42,23 @@ describe Admin::RdvWizardStepsController, type: :controller do
         expect(response).to render_template("admin/rdv_wizard_steps/step4")
       end
 
-      context "when the user has no email nor phone_number" do
-        let!(:user) { create(:user, :with_no_email, :with_no_phone_number) }
-
-        it "shows a warning message" do
+      context "when the user has an email or a phone number" do
+        it "shows the notification preferences" do
           get :new, params: params
 
           expect(response).to have_http_status(:success)
-          expect(response.body).to include("cet usager ne possède pas de numéro de téléphone ou d'email")
+          expect(response.body).to include("Notifications de création et modification")
+        end
+      end
+
+      context "when the user has no email nor phone_number" do
+        let!(:user) { create(:user, :with_no_email, :with_no_phone_number) }
+
+        it "doesn't show the notification preferences" do
+          get :new, params: params
+
+          expect(response).to have_http_status(:success)
+          expect(response.body).not_to include("Notifications de création et modification")
         end
       end
     end
