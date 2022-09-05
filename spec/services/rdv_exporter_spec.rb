@@ -23,9 +23,28 @@ describe RdvExporter, type: :service do
 
       it "return an header" do
         sheet = described_class.build_excel_workbook_from(Rdv.none).worksheet(0)
-        expect(sheet.row(0)).to eq(["année", "date prise rdv", "heure prise rdv", "origine", "date rdv", "heure rdv", "service", "motif", "contexte",
-                                    "statut", "résultat des notifications", "lieu", "professionnel.le(s)",
-                                    "usager(s)", "commune du premier responsable", "au moins un usager mineur ?", "Organisation",])
+        expect(sheet.row(0)).to eq(
+          [
+            "année",
+            "date prise rdv",
+            "heure prise rdv",
+            "origine",
+            "date rdv",
+            "heure rdv",
+            "service",
+            "motif",
+            "contexte",
+            "statut",
+            "résultat des notifications",
+            "lieu",
+            "professionnel.le(s)",
+            "usager(s)",
+            "date naissance",
+            "commune du premier responsable",
+            "au moins un usager mineur ?",
+            "Organisation",
+          ]
+        )
       end
     end
   end
@@ -156,6 +175,16 @@ describe RdvExporter, type: :service do
       end
     end
 
+    describe "date naissance" do
+      it "return all user's birth dates" do
+        ayoub = build(:user, first_name: "Ayoub", last_name: "PAUL")
+        veronique = build(:user, first_name: "Véronique", last_name: "DIALO")
+        rdv = build(:rdv, users: [veronique, ayoub])
+        birth_dates = [veronique, ayoub].map(&:birth_date).map { |date| I18n.l(date) }.join(", ")
+        expect(described_class.row_array_from(rdv)[14]).to eq(birth_dates)
+      end
+    end
+
     describe "commune du premier responsable" do
       it "return 92320 (Chatillon's postal code) when first responsable leave there" do
         first_major = create(:user, birth_date: Date.new(2002, 3, 12), city_name: "Châtillon")
@@ -163,15 +192,14 @@ describe RdvExporter, type: :service do
         other_major = create(:user, birth_date: Date.new(2002, 3, 12))
         other_minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: other_major.id)
         rdv = create(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor, other_minor, first_major, other_major])
-
-        expect(described_class.row_array_from(rdv)[14]).to eq("Châtillon")
+        expect(described_class.row_array_from(rdv)[15]).to eq("Châtillon")
       end
 
       it "return responsible's address for relative" do
         first_major = create(:user, birth_date: Date.new(2002, 3, 12), city_name: "Châtillon")
         minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: first_major.id)
         rdv = create(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor])
-        expect(described_class.row_array_from(rdv)[14]).to eq("Châtillon")
+        expect(described_class.row_array_from(rdv)[15]).to eq("Châtillon")
       end
 
       it "return second responsible commune when first does not have one" do
@@ -180,7 +208,7 @@ describe RdvExporter, type: :service do
         other_major = create(:user, birth_date: Date.new(2002, 3, 12), city_name: "Châtillon")
         other_minor = create(:user, birth_date: Date.new(2016, 5, 30), responsible_id: other_major.id)
         rdv = create(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor, other_minor, major, other_major])
-        expect(described_class.row_array_from(rdv)[14]).to eq("Châtillon")
+        expect(described_class.row_array_from(rdv)[15]).to eq("Châtillon")
       end
     end
 
@@ -191,7 +219,7 @@ describe RdvExporter, type: :service do
         major = build(:user, birth_date: Date.new(2002, 3, 12))
         minor = build(:user, birth_date: Date.new(2016, 5, 30))
         rdv = build(:rdv, created_at: Time.zone.local(2020, 3, 23, 9, 54, 33), users: [minor, major])
-        expect(described_class.row_array_from(rdv)[15]).to eq("oui")
+        expect(described_class.row_array_from(rdv)[16]).to eq("oui")
       end
     end
   end
@@ -200,7 +228,7 @@ describe RdvExporter, type: :service do
     it "return organisation name" do
       organisation = build(:organisation, name: "CMS du Brusc")
       rdv = build(:rdv, organisation: organisation)
-      expect(described_class.row_array_from(rdv)[16]).to eq("CMS du Brusc")
+      expect(described_class.row_array_from(rdv)[17]).to eq("CMS du Brusc")
     end
   end
 end
