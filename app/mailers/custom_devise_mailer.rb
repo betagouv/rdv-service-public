@@ -3,15 +3,11 @@
 class CustomDeviseMailer < Devise::Mailer
   self.deliver_later_queue_name = :devise
 
+  include CommonMailer
   include Devise::Controllers::UrlHelpers # Optional. eg. `confirmation_url`
 
   helper :application
   default template_path: "devise/mailer"
-  layout "mailer"
-  helper RdvSolidaritesInstanceNameHelper
-  helper_method :domain
-
-  after_action { mail.from %("#{domain.name}" <#{default_from}>) }
 
   def invitation_instructions(record, token, opts = {})
     @token = token
@@ -58,13 +54,5 @@ class CustomDeviseMailer < Devise::Mailer
     else
       Domain::RDV_SOLIDARITES
     end
-  end
-
-  def default_from
-    SUPPORT_EMAIL
-  end
-
-  def default_url_options
-    super.merge(host: domain.dns_domain_name)
   end
 end
