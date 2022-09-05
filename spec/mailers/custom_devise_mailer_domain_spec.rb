@@ -12,21 +12,21 @@ describe CustomDeviseMailer, "#domain" do
     it { is_expected.to include(Domain::RDV_SOLIDARITES.dns_domain_name) }
   end
 
-  context "when user only RDV Solidarité RDVs" do
+  context "when user only has RDV Solidarité RDVs but the organisation uses the new domain name" do
     let!(:organisation) { create(:organisation, new_domain_beta: true) }
     let(:user) { create(:user, rdvs: create_list(:rdv, 2, organisation: organisation, motif: motif_solidarites)) }
 
-    it { is_expected.to include(Domain::RDV_SOLIDARITES.dns_domain_name) }
+    it { is_expected.to include(Domain::RDV_AIDE_NUMERIQUE.dns_domain_name) }
   end
 
-  context "when user only RDV Aide Numérique RDVs but organisation not in beta program" do
+  context "when user only has RDV Aide Numérique RDVs but organisation not in beta program" do
     let!(:organisation) { create(:organisation, new_domain_beta: false) }
     let(:user) { create(:user, rdvs: create_list(:rdv, 2, organisation: organisation, motif: motif_numerique)) }
 
     it { is_expected.to include(Domain::RDV_SOLIDARITES.dns_domain_name) }
   end
 
-  context "when user only RDV Aide Numérique RDVs and organisation is in beta program" do
+  context "when user only has RDV Aide Numérique RDVs and organisation is in beta program" do
     let!(:organisation) { create(:organisation, new_domain_beta: true) }
     let(:user) { create(:user, rdvs: create_list(:rdv, 2, organisation: organisation, motif: motif_numerique)) }
 

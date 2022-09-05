@@ -86,7 +86,22 @@ describe "Admin can configure the organisation" do
     expect(page).to have_content("jean@paul.com")
 
     open_email("jean@paul.com")
-    expect(current_email.subject).to eq I18n.t("devise.mailer.invitation_instructions.subject")
+    expect(current_email.subject).to eq "Vous avez été invité sur RDV Solidarités."
+  end
+
+  context "when the organisation is not using the default domain" do
+    let!(:organisation) { create(:organisation, new_domain_beta: true) }
+
+    it "allows inviting agents on the correct domain" do
+      click_link "Vos agents"
+      click_link "Inviter un agent", match: :first
+      fill_in "Email", with: "jean@paul.com"
+      click_button "Envoyer une invitation"
+
+      open_email("jean@paul.com")
+      expect(current_email.subject).to eq "Vous avez été invité sur RDV Aide Numérique."
+      expect(current_email.body).to include "rejoindre RDV Aide Numérique"
+    end
   end
 
   it "Update organisation" do

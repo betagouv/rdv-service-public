@@ -56,12 +56,12 @@ describe "Agent can update user" do
       create(:user, :unregistered, first_name: "Jean", last_name: "LEGENDE", email: nil, organisations: [organisation])
     end
 
-    it "add email to existing user", js: true do
+    it "add email to existing user" do
       fill_in "Email", with: "jean@legende.com"
       click_button "Enregistrer"
       click_link "Inviter"
       open_email("jean@legende.com")
-      expect(current_email.subject).to eq I18n.t("devise.mailer.invitation_instructions.subject")
+      expect(current_email.subject).to eq "Vous avez été invité sur RDV Solidarités"
     end
   end
 end

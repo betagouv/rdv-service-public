@@ -1,14 +1,14 @@
 <%= t("devise.mailer.invitation_instructions_cnfs.hello") %>
 
 
-<%= t("devise.mailer.invitation_instructions_cnfs.create_account") %>
+<%= t("devise.mailer.invitation_instructions_cnfs.create_account", domain_name: domain.name) %>
 
 
 Activer mon compte: <%= accept_invitation_url(@resource, invitation_token: @token, user: @user_params) %>
 
 <%= t("devise.mailer.invitation_instructions_cnfs.title1") %>
 
-<%= t("devise.mailer.invitation_instructions_cnfs.paragraph1") %>
+<%= t("devise.mailer.invitation_instructions_cnfs.paragraph1", domain_name: domain.name) %>
 
 <%= t("devise.mailer.invitation_instructions_cnfs.use1") %>
 
@@ -33,4 +33,4 @@ Activer mon compte: <%= accept_invitation_url(@resource, invitation_token: @toke
 
 
 <%= t("devise.mailer.invitation_instructions_cnfs.sign_off") %>
-<%= t("devise.mailer.invitation_instructions_cnfs.signature") %>
+<%= t("devise.mailer.invitation_instructions_cnfs.signature", domain_name: domain.name) %>
