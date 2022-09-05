@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Admins::Grc92Mailer < ApplicationMailer
-  default from: "ne-pas-repondre-grc@hauts-de-seine.fr", reply_to: nil
+  default reply_to: nil
 
   def send_sms(recipient, phone_number, message)
     headers["Content-Type"] = "text/plain"
@@ -21,5 +21,11 @@ class Admins::Grc92Mailer < ApplicationMailer
 
   def domain
     Domain::RDV_SOLIDARITES
+  end
+
+  private
+
+  def default_from
+    "ne-pas-repondre-grc@hauts-de-seine.fr"
   end
 end

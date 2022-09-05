@@ -1,13 +1,33 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "10112e021e73eda7078e59a3f6829945a1e001e587e729a0ca7f028e06ffe380",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/mailers/custom_devise_mailer.rb",
+      "line": 14,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "mail.from(\"\\\"#{domain.name}\\\" <#{default_from}>\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "CustomDeviseMailer",
+        "method": null
+      },
+      "user_input": "domain.name",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
       "fingerprint": "2355405acc689e021f5b074103ed57c71e0b53346937c2a247ee732bb991ea03",
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/plage_ouvertures/index.html.slim",
-      "line": 38,
+      "line": 36,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => policy_scope(PlageOuverture).includes(:lieu, :organisation, :motifs, :agent).where(:agent_id => filter_params[:agent_id]).order(:updated_at => :desc).where(:expired_cached => (filter_params[:current_tab] == \"expired\")).page(filter_params[:page]).search_by_text(params[:search]), {})",
       "render_path": [
@@ -63,13 +83,33 @@
       "note": ""
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "a11853eedf49dbc6bafea7075b2392c9dc7f44929311c3900ab4f7bfb6c8f4a9",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/mailers/application_mailer.rb",
+      "line": 13,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "mail.from(\"\\\"#{domain.name}\\\" <#{default_from}>\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ApplicationMailer",
+        "method": null
+      },
+      "user_input": "domain.name",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
       "fingerprint": "d8dbbc60b51eb0beb5bc2f943b01142aad77a449260029dedf5a293e96f074a8",
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/motifs/index.html.slim",
-      "line": 46,
+      "line": 50,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => filtered((policy_scope(Motif).active.search_by_text(params[:search]) or policy_scope(Motif).active.ordered_by_name), params).includes(:organisation).includes(:service).page(params[:page]), {})",
       "render_path": [
@@ -77,7 +117,7 @@
           "type": "controller",
           "class": "Admin::MotifsController",
           "method": "index",
-          "line": 19,
+          "line": 18,
           "file": "app/controllers/admin/motifs_controller.rb",
           "rendered": {
             "name": "admin/motifs/index",
@@ -100,7 +140,7 @@
       "check_name": "Render",
       "message": "Render path contains parameter value",
       "file": "app/views/admin/motifs/index.html.slim",
-      "line": 72,
+      "line": 76,
       "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
       "code": "render(action => filtered((policy_scope(Motif).active.search_by_text(params[:search]) or policy_scope(Motif).active.ordered_by_name), params).includes(:organisation).includes(:service).page(params[:page]), {})",
       "render_path": [
@@ -108,7 +148,7 @@
           "type": "controller",
           "class": "Admin::MotifsController",
           "method": "index",
-          "line": 19,
+          "line": 18,
           "file": "app/controllers/admin/motifs_controller.rb",
           "rendered": {
             "name": "admin/motifs/index",
@@ -125,6 +165,6 @@
       "note": ""
     }
   ],
-  "updated": "2022-03-10 15:17:14 +0100",
+  "updated": "2022-09-05 10:01:23 +0200",
   "brakeman_version": "5.2.0"
 }
