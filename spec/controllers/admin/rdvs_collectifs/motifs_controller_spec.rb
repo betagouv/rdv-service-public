@@ -20,7 +20,7 @@ describe Admin::RdvsCollectifs::MotifsController, type: :controller do
         it "shows a message indicating that there is no collective Motif" do
           get :index, params: { organisation_id: organisation.id }
 
-          expect(response.body).to include("Il n'existe aucun motif collectif")
+          expect(response.body).to include("Il n'existe aucun motif de RDV collectif")
         end
 
         context "when the current agent can create a Motif" do

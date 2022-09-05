@@ -15,11 +15,11 @@
       .card-body
         - if @motifs.empty?
           - if current_agent_can?(:create, Motif)
-            div Il n'existe aucun motif collectif. Veuillez en créer un pour continuer.
+            div Il n'existe aucun motif de RDV collectif. Veuillez en créer un pour continuer.
             .d-flex.justify-content-center.my-2
               = link_to "Créer un motif", new_admin_organisation_motif_path(current_organisation), class:"btn btn-outline-primary"
           - else
-            div Il n'existe aucun motif collectif et vous ne pouvez pas en créer un. Demandez à un administrateur ou une administratrice.
+            div Il n'existe aucun motif de RDV collectif et vous ne pouvez pas en créer un. Demandez à un administrateur ou une administratrice.
         - else
           - @motifs.each do |motif|
             = link_to new_admin_organisation_rdvs_collectif_path(current_organisation, { motif_id: motif.id }) do
