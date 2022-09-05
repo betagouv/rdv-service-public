@@ -29,7 +29,7 @@ class Rdv < ApplicationRecord
   # https://stackoverflow.com/questions/30629680/rails-isnt-running-destroy-callbacks-for-has-many-through-join-model/30629704
   # https://github.com/rails/rails/issues/7618
   has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy
-  before_destroy :cant_destroy_if_receipts_exist # must be declared before has_many :receipts
+  # before_destroy :cant_destroy_if_receipts_exist # must be declared before has_many :receipts
   has_many :receipts, dependent: :destroy
 
   accepts_nested_attributes_for :rdvs_users, allow_destroy: true
@@ -289,6 +289,10 @@ class Rdv < ApplicationRecord
   end
 
   delegate :domain, to: :organisation
+
+  def soft_delete
+    update_attribute(:deleted_at, Time.zone.now)
+  end
 
   private
 
