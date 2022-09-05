@@ -18,11 +18,8 @@ RSpec.describe "Agent can't create duplicate RDV" do
     let!(:existing_rdv_same_day)        { create(:rdv, organisation: organisation, users: [marie], motif: motif, starts_at: tuesday_of_next_week) }
     let!(:existing_rdv_the_day_after)   { create(:rdv, organisation: organisation, users: [marie], motif: motif, starts_at: wednesday_of_next_week) }
 
-    it "warns of existing RDV with a benign error" do
-      login_as(agent, scope: :agent)
-
-      # Try to create a new RDV on tuesday at 14:00
-      route_params = {
+    let(:route_params) do
+      {
         step: 3,
         rdv: {
           starts_at: tuesday_of_next_week.change(hour: 14),
@@ -33,11 +30,31 @@ RSpec.describe "Agent can't create duplicate RDV" do
           user_ids: [marie.id],
         },
       }
+    end
 
+    before { login_as(agent, scope: :agent) }
+
+    it "warns of existing RDV with a benign error" do
+      # Try to create a new RDV on tuesday at 14:00
       visit admin_organisation_rdv_wizard_step_path(organisation, route_params)
 
       user_path = "/admin/organisations/#{organisation.id}/users/#{marie.id}"
       expect(page.html).to include(%(L'usager⋅e <a href="#{user_path}">Marie CURIE</a> a un autre RDV pour le même motif le même jour))
+    end
+
+    context "when the duplicate rdv has been cancelled" do
+      let!(:existing_rdv_same_day) do
+        create(:rdv, organisation: organisation, users: [marie], motif: motif, starts_at: tuesday_of_next_week,
+                     status: Rdv::CANCELLED_STATUSES.first)
+      end
+
+      it "doesn't show a warning" do
+        # Try to create a new RDV on tuesday at 14:00
+        visit admin_organisation_rdv_wizard_step_path(organisation, route_params)
+
+        user_path = "/admin/organisations/#{organisation.id}/users/#{marie.id}"
+        expect(page.html).not_to include(%(L'usager⋅e <a href="#{user_path}">Marie CURIE</a> a un autre RDV pour le même motif le même jour))
+      end
     end
   end
 
