@@ -31,23 +31,20 @@ module Admin::RdvFormConcern
   end
 
   def check_duplicates
-    suspicious_rdvs = Rdv
-      .includes(:users, :agents)
-      .where(
-        organisation: rdv.organisation,
-        lieu: rdv.lieu,
-        starts_at: rdv.starts_at,
-        ends_at: rdv.ends_at,
-        motif: rdv.motif,
-        status: Rdv::NOT_CANCELLED_STATUSES
-      )
-      .select do |existing_rdv|
-        participants_of_existing_rdv = Set.new(existing_rdv.users + existing_rdv.agents)
-        # Not using `rdv.users` because it does a db call, which returns an empty array because `rdv` is not persisted.
-        # Using rdv_users/agents_rdvs is safe because they are built from the nested attributes.
-        participants_of_current_rdv = Set.new(rdv.rdvs_users.map(&:user) + rdv.agents_rdvs.map(&:agent))
-        participants_of_existing_rdv == participants_of_current_rdv
-      end
+    suspicious_rdvs = Rdv.includes(:users, :agents).where(
+      organisation: rdv.organisation,
+      lieu: rdv.lieu,
+      starts_at: rdv.starts_at,
+      ends_at: rdv.ends_at,
+      motif: rdv.motif,
+      status: Rdv::NOT_CANCELLED_STATUSES
+    ).select do |existing_rdv|
+      participants_of_existing_rdv = Set.new(existing_rdv.users + existing_rdv.agents)
+      # Not using `rdv.users` because it does a db call, which returns an empty array because `rdv` is not persisted.
+      # Using rdv_users/agents_rdvs is safe because they are built from the nested attributes.
+      participants_of_current_rdv = Set.new(rdv.rdvs_users.map(&:user) + rdv.agents_rdvs.map(&:agent))
+      participants_of_existing_rdv == participants_of_current_rdv
+    end
 
     errors.add(:base, :duplicate) if suspicious_rdvs.any?
   end
