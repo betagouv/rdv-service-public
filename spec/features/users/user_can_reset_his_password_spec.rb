@@ -36,6 +36,7 @@ describe "User resets his password spec" do
         fill_in "user_email", with: user.email
         click_on "Envoyer"
         open_email(user.email)
+        expect(current_email.base.email[:from].to_s).to eq(%("RDV Aide Numérique" <support@rdv-solidarites.fr>))
         expect(current_email.html_part.body.to_s).to include('<a href="http://www.rdv-aide-numerique-test.localhost/users/password/edit?reset_password_token=')
       end
     end
