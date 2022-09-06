@@ -8,6 +8,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     let(:mail) { described_class.with(rdv: rdv, user: user, token: token).rdv_created }
 
     it "renders the headers" do
+      expect(mail[:from].to_s).to eq(%("RDV Solidarités" <support@rdv-solidarites.fr>))
       expect(mail.to).to eq([user.email])
       expect(mail.reply_to).to eq(["rdv+#{rdv.uuid}@reply.rdv-solidarites.fr"])
     end
@@ -42,6 +43,13 @@ RSpec.describe Users::RdvMailer, type: :mailer do
 
     before { travel_to(Time.zone.parse("2022-08-24 09:00:00")) }
 
+    it "renders the headers" do
+      mail = described_class.with(rdv: rdv, user: user, token: token).rdv_updated(starts_at: previous_starting_time, lieu_id: nil)
+      expect(mail[:from].to_s).to eq(%("RDV Solidarités" <support@rdv-solidarites.fr>))
+      expect(mail.to).to eq([user.email])
+      expect(mail.reply_to).to eq(["rdv+#{rdv.uuid}@reply.rdv-solidarites.fr"])
+    end
+
     it "indicates the previous and current values" do
       mail = described_class.with(rdv: rdv, user: user, token: token)
         .rdv_updated(starts_at: previous_starting_time, lieu_id: previous_lieu.id)
@@ -73,6 +81,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
       user = rdv.users.first
       mail = described_class.with(rdv: rdv, user: user, token: token).rdv_cancelled
 
+      expect(mail[:from].to_s).to eq(%("RDV Solidarités" <support@rdv-solidarites.fr>))
       expect(mail.to).to eq([user.email])
       expect(mail.reply_to).to eq(["rdv+#{rdv.uuid}@reply.rdv-solidarites.fr"])
     end
@@ -130,6 +139,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
 
     it "send mail to user" do
       mail = described_class.with(rdv: rdv, user: user, token: token).rdv_upcoming_reminder
+      expect(mail[:from].to_s).to eq(%("RDV Solidarités" <support@rdv-solidarites.fr>))
       expect(mail.to).to eq([user.email])
       expect(mail.reply_to).to eq(["rdv+#{rdv.uuid}@reply.rdv-solidarites.fr"])
       expect(mail.html_part.body).to include("Nous vous rappellons que vous avez un RDV prévu")
@@ -149,6 +159,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
 
         it "works" do
           mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
+          expect(mail[:from].to_s).to eq(%("RDV Solidarités" <support@rdv-solidarites.fr>))
           expect(mail.html_part.body.to_s).to include(%(src="/logo_solidarites.png))
           expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-solidarites-test.localhost))
           expect(mail.html_part.body.to_s).to include(%(L’équipe RDV Solidarités))
@@ -160,6 +171,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
 
         it "works" do
           mail = described_class.with(rdv: rdv, user: rdv.users.first, token: "12345").send(action)
+          expect(mail[:from].to_s).to eq(%("RDV Aide Numérique" <support@rdv-solidarites.fr>))
           expect(mail.html_part.body.to_s).to include(%(src="/logo_aide_numerique.png))
           expect(mail.html_part.body.to_s).to include(%(href="http://www.rdv-aide-numerique-test.localhost))
           expect(mail.html_part.body.to_s).to include(%(L’équipe RDV Aide Numérique))
