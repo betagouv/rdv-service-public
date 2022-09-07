@@ -31,11 +31,11 @@ jobs:
       run: echo "::set-output name=date::$(date +'%Y%m%d%H%M')"
 
     - name: Build the Webapp Docker image
-      run: docker build . --file $WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$GITHUB_HEAD_REF
+      run: docker build . --file $WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:${{ steps.extract_branch.outputs.branch }}
     - name: Docker Push Webapp image
-      run: docker push $DOCKER_REPO_NAME/webapp:$GITHUB_HEAD_REF
+      run: docker push $DOCKER_REPO_NAME/webapp:${{ steps.extract_branch.outputs.branch }}
     - name: Build the Job Docker image
-      run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/jobs:$GITHUB_HEAD_REF
+      run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/jobs:${{ steps.extract_branch.outputs.branch }}
     - name: Docker Push Job image
-      run: docker push $DOCKER_REPO_NAME/jobs:$GITHUB_HEAD_REF
+      run: docker push $DOCKER_REPO_NAME/jobs:${{ steps.extract_branch.outputs.branch }}
 
