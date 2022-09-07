@@ -15,9 +15,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2 # first action : checkout source code
 
-    - name: Check Branch Name
-      run: echo ${GITHUB_BASE_REF} && echo "$DOCKER_REPO_NAME/webapp:${GITHUB_BASE_REF}"
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
 
+    - name: Check Branch Name
+      run: echo $DOCKER_REPO_NAME/webapp:${{ steps.extract_branch.outputs.branch }}
     - name: docker login
       run: | # log into docker registry account
         docker login $DOCKER_REPO_NAME -u $DOCKER_USER -p $DOCKER_PASSWORD
