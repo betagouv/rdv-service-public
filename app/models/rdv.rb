@@ -9,6 +9,7 @@ class Rdv < ApplicationRecord
 
   include WebhookDeliverable
   include Rdv::AddressConcern
+  include Rdv::AuthoredConcern
   include IcalHelpers::Ics
   include Payloads::Rdv
 
