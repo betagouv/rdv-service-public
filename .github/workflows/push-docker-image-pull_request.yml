@@ -13,26 +13,10 @@ jobs:
     runs-on: ubuntu-latest  # runner name : (ubuntu latest version)
     environment: lapin-beta-gouv
     steps:
-    # extract branch name
-    - name: Extract branch name
-      if: github.event_name != 'pull_request'
-      shell: bash
-      run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/})"
-      id: extract_branch
-
-    # extract branch name on pull request
-    - name: Print branch name
-      if: github.event_name == 'pull_request'
-      run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_HEAD_REF})"
-
-    # print branch name
-    - name: Get branch name
-      run: echo 'The branch name is $BRANCH_NAME'
-
     - uses: actions/checkout@v2 # first action : checkout source code
 
     - name: Check Branch Name
-      run: echo $DOCKER_REPO_NAME/webapp:$BRANCH_NAME
+      run: echo $DOCKER_REPO_NAME/webapp:$(echo ${GITHUB_HEAD_REF})
 
     - name: docker login
       run: | # log into docker registry account
@@ -43,11 +27,11 @@ jobs:
       run: echo "::set-output name=date::$(date +'%Y%m%d%H%M')"
 
     - name: Build the Webapp Docker image
-      run: docker build . --file $WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$BRANCH_NAME
+      run: docker build . --file $WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$(echo ${GITHUB_HEAD_REF})
     - name: Docker Push Webapp image
-      run: docker push $DOCKER_REPO_NAME/webapp:$BRANCH_NAME
+      run: docker push $DOCKER_REPO_NAME/webapp:$(echo ${GITHUB_HEAD_REF})
     - name: Build the Job Docker image
-      run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/jobs:$BRANCH_NAME
+      run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/jobs:$(echo ${GITHUB_HEAD_REF})
     - name: Docker Push Job image
-      run: docker push $DOCKER_REPO_NAME/jobs:$BRANCH_NAME
+      run: docker push $DOCKER_REPO_NAME/jobs:$(echo ${GITHUB_HEAD_REF})
 
