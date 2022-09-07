@@ -15,8 +15,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2 # first action : checkout source code
 
-    - name: Check Hash
-      run: echo $DOCKER_REPO_NAME/webapp:$GITHUB_HEAD_REF
+    - name: Step that prints name of pull request's base branch
+      if: github.event_name == 'pull_request'
+      run: echo "Pull request's base branch is ${BASE_BRANCH}"
+      env:
+         BASE_BRANCH: ${{ github.base_ref }}
+
+    - name: Check Branch Name
+      run: echo $DOCKER_REPO_NAME/webapp:$BASE_BRANCH
 
     - name: docker login
       run: | # log into docker registry account
@@ -27,11 +33,11 @@ jobs:
       run: echo "::set-output name=date::$(date +'%Y%m%d%H%M')"
 
     - name: Build the Webapp Docker image
-      run: docker build . --file $WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$GITHUB_HEAD_REF
+      run: docker build . --file $WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$BASE_BRANCH
     - name: Docker Push Webapp image
-      run: docker push $DOCKER_REPO_NAME/webapp:$GITHUB_HEAD_REF
+      run: docker push $DOCKER_REPO_NAME/webapp:$BASE_BRANCH
     - name: Build the Job Docker image
-      run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/jobs:$GITHUB_HEAD_REF
+      run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/jobs:$BASE_BRANCH
     - name: Docker Push Job image
-      run: docker push $DOCKER_REPO_NAME/jobs:$GITHUB_HEAD_REF
+      run: docker push $DOCKER_REPO_NAME/jobs:$BASE_BRANCH
 
