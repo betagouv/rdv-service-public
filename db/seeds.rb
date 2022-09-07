@@ -256,6 +256,7 @@ Motif.create!(
   color: "#99CC99",
   default_duration_in_min: 60,
   location_type: :public_office,
+  reservable_online: true,
   organisation: org_cnfs,
   service: service_cnfs
 )
