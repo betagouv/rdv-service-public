@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v2 # first action : checkout source code
 
     - name: Check Branch Name
-      run: echo $DOCKER_REPO_NAME/webapp:$(echo ${GITHUB_HEAD_REF})
+      run: echo $DOCKER_REPO_NAME/webapp:${GITHUB_HEAD_REF}
 
     - name: docker login
       run: | # log into docker registry account
@@ -27,11 +27,11 @@ jobs:
       run: echo "::set-output name=date::$(date +'%Y%m%d%H%M')"
 
     - name: Build the Webapp Docker image
-      run: docker build . --file $WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:$(echo ${GITHUB_HEAD_REF})
+      run: docker build . --file $WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:${GITHUB_HEAD_REF}
     - name: Docker Push Webapp image
-      run: docker push $DOCKER_REPO_NAME/webapp:$(echo ${GITHUB_HEAD_REF})
+      run: docker push $DOCKER_REPO_NAME/webapp:${GITHUB_HEAD_REF}
     - name: Build the Job Docker image
-      run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/jobs:$(echo ${GITHUB_HEAD_REF})
+      run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/jobs:${GITHUB_HEAD_REF}
     - name: Docker Push Job image
-      run: docker push $DOCKER_REPO_NAME/jobs:$(echo ${GITHUB_HEAD_REF})
+      run: docker push $DOCKER_REPO_NAME/jobs:${GITHUB_HEAD_REF}
 
