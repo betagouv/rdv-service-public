@@ -17,7 +17,7 @@ jobs:
 
     - name: Extract branch name
       shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${github.event.pull_request.head.ref})"
+      run: echo "##[set-output name=branch;]$(echo ${{contains(github.event.pull_request.head.ref]})"
       id: extract_branch
 
     - name: Check Branch Name
