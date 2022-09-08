@@ -21,7 +21,7 @@ jobs:
       id: extract_prnumber
 
     - name: Check prnumber Name
-      run: echo }$DOCKER_REPO_NAME/webapp:${{ steps.extract_prnumber.outputs.prnumber }
+      run: echo $DOCKER_REPO_NAME/webapp:${{ steps.extract_prnumber.outputs.prnumber }}
     - name: docker login
       run: | # log into docker registry account
         docker login $DOCKER_REPO_NAME -u $DOCKER_USER -p $DOCKER_PASSWORD
