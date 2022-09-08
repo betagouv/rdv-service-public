@@ -63,6 +63,7 @@ module InclusionConnect
 
     def get_and_update_agent(user_info)
       agent = Agent.find_by(email: user_info["email"])
+      return if agent.blank?
 
       agent.update!(
         first_name: user_info["given_name"],

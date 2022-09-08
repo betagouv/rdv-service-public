@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "net/http"
-
 class InclusionConnectController < ApplicationController
   def auth
     session[:ic_state] = Digest::SHA1.hexdigest("InclusionConnect - #{SecureRandom.hex(13)}")
