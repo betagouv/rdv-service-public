@@ -17,7 +17,7 @@ jobs:
 
     - name: Extract prnumber name
       shell: bash
-      run: echo "##[set-output name=prnumber;]$(echo $(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH"))"
+      run: echo "##[set-output name=prnumber;]$(echo pr-$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH"))"
       id: extract_prnumber
 
     - name: Check prnumber Name
