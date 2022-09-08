@@ -11,8 +11,14 @@ class Agent < ApplicationRecord
   include DeviseInvitable::Inviter
   include FullNameConcern
   include TextSearch
-
-  def self.search_keys = %i[last_name first_name email]
+  def self.search_against
+    {
+      last_name: "A",
+      first_name: "B",
+      email: "D",
+      id: "D",
+    }
+  end
 
   devise :invitable, :database_authenticatable,
          :recoverable, :rememberable, :validatable, :confirmable, :async, validate_on_invite: true

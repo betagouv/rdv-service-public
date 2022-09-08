@@ -76,6 +76,25 @@ describe TextSearch, type: :concern do
       expect(described_class.search_by_text("Jean Paul Petit").first).to eq(jean_paul)
     end
 
+    # Ce test a été introduit au moment de la mise en place de
+    # la pondération des colonnes lors de la recherche textuelle.
+    # Avant la pondération, les résultats pour "durand clem" étaient :
+    #   1. clement_berut_avec_email
+    #   2. clementine_dupond_ne_durand
+    #   3. clementine_durand
+    # ce qui est l'inverse de ce que l'on peut considérer comme pertinent.
+    it "orders results by relevance, weighing last name and first name above birth name and email" do
+      clementine_dupond_ne_durand = create(:user, first_name: "Clémentine", last_name: "DUPOND", birth_name: "DURAND")
+      clement_berut_avec_email = create(:user, first_name: "Clément", last_name: "BERUT", email: "clem.berut@example.com")
+      clementine_durand = create(:user, first_name: "Clémentine", last_name: "DURAND")
+      expected_order = [
+        clementine_durand,
+        clementine_dupond_ne_durand,
+        clement_berut_avec_email,
+      ]
+      expect(described_class.search_by_text("durand clem").to_a).to eq(expected_order)
+    end
+
     it "orders results by search terms" do
       marie = create(:user, first_name: "Marie", last_name: "Petit")
       frederic = create(:user, first_name: "Frédéric", last_name: "Petit")

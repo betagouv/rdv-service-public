@@ -2,7 +2,7 @@
 
 class PlageOuverture < ApplicationRecord
   # Mixins
-  has_paper_trail(ignore: :search_terms)
+  has_paper_trail
   include RecurrenceConcern
   include WebhookDeliverable
   include IcalHelpers::Ics
@@ -10,7 +10,12 @@ class PlageOuverture < ApplicationRecord
   include Payloads::PlageOuverture
   include Expiration
   include TextSearch
-  def self.search_keys = %i[title]
+  def self.search_against
+    {
+      title: "A",
+      id: "D",
+    }
+  end
 
   # Attributes
   auto_strip_attributes :title
