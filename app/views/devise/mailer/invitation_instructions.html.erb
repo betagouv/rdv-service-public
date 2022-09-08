@@ -1,6 +1,6 @@
 <p><%= t("devise.mailer.invitation_instructions.hello", email: @resource.email) %></p>
 
-<p><%= t("devise.mailer.invitation_instructions.someone_invited_you", url: root_url) %></p>
+<p><%= t("devise.mailer.invitation_instructions.someone_invited_you", url: root_url, domain_name: domain.name) %></p>
 
 <!-- Prefill params from the sign_up form to the invitation accept form -->
 <p><%= link_to t("devise.mailer.invitation_instructions.accept"), accept_invitation_url(@resource, invitation_token: @token, user: @user_params) %></p>

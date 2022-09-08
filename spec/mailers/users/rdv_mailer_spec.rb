@@ -151,7 +151,7 @@ RSpec.describe Users::RdvMailer, type: :mailer do
     describe "using the agent domain's branding" do
       let(:rdv) { create(:rdv, motif: motif, organisation: organisation) }
       let(:motif) do
-        create(:motif, service: create(:service, :conseiller_numerique), organisation: organisation)
+        create(:motif, service: create(:service), organisation: organisation)
       end
 
       context "when the organisation uses the default domain name" do
