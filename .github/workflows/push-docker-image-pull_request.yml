@@ -15,13 +15,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2 # first action : checkout source code
 
-    - name: Extract branch name
+    - name: Extract prnumber name
       shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${{contains(github.event.pull_request.head.ref]})"
-      id: extract_branch
+      run: echo "##[set-output name=prnumber;]$(echo $(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH"))"
+      id: extract_prnumber
 
-    - name: Check Branch Name
-      run: echo $DOCKER_REPO_NAME/webapp:${{ steps.extract_branch.outputs.branch }}
+    - name: Check prnumber Name
+      run: echo }$DOCKER_REPO_NAME/webapp:${{ steps.extract_prnumber.outputs.prnumber }
     - name: docker login
       run: | # log into docker registry account
         docker login $DOCKER_REPO_NAME -u $DOCKER_USER -p $DOCKER_PASSWORD
@@ -31,11 +31,11 @@ jobs:
       run: echo "::set-output name=date::$(date +'%Y%m%d%H%M')"
 
     - name: Build the Webapp Docker image
-      run: docker build . --file $WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:${{ steps.extract_branch.outputs.branch }}
+      run: docker build . --file $WEBAPP_DOCKERFILE --tag $DOCKER_REPO_NAME/webapp:${{ steps.extract_prnumber.outputs.prnumber }}
     - name: Docker Push Webapp image
-      run: docker push $DOCKER_REPO_NAME/webapp:${{ steps.extract_branch.outputs.branch }}
+      run: docker push $DOCKER_REPO_NAME/webapp:${{ steps.extract_prnumber.outputs.prnumber }}
     - name: Build the Job Docker image
-      run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/jobs:${{ steps.extract_branch.outputs.branch }}
+      run: docker build . --file $JOB_DOCKERFILE --tag $DOCKER_REPO_NAME/jobs:${{ steps.extract_prnumber.outputs.prnumber }}
     - name: Docker Push Job image
-      run: docker push $DOCKER_REPO_NAME/jobs:${{ steps.extract_branch.outputs.branch }}
+      run: docker push $DOCKER_REPO_NAME/jobs:${{ steps.extract_prnumber.outputs.prnumber }}
 
