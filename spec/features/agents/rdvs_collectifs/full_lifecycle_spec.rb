@@ -63,7 +63,7 @@ describe "Agent can organize a rdv collectif", js: true do
 
     click_link("Ajouter un participant")
     add_user(user2)
-    add_new_user({with_phone: true})
+    add_new_user({ with_phone: true })
     click_button "Enregistrer"
 
     expect(Receipt.all).to include(Receipt.where(user_id: user2.id, channel: "sms", result: "delivered").first)
