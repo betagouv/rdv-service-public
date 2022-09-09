@@ -19,13 +19,15 @@ module Select2SpecHelper
     expect(page).to have_content("#{user.first_name} #{user.last_name}")
   end
 
-  def add_new_user
+  def add_new_user(options = {})
     click_link("Créer un usager")
     first_name = Faker::Name.first_name
     last_name = Faker::Name.last_name.upcase
+    phone_number = Faker::PhoneNumber.cell_phone
 
     fill_in("Prénom", with: first_name)
     fill_in("Nom d’usage", with: last_name)
+    fill_in("Téléphone", with: phone_number) if options[:with_phone]
     click_button("Créer usager")
 
     # Wait for the user to be added before doing the next action

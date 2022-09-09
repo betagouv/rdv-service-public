@@ -52,6 +52,8 @@ make autocorrect          Fix autocorrectable lint issues
 ## Tests
 
 Nous utilisons [RSpec](https://rspec.info/) pour écrire nos tests. En principe, la base de données de tests est créée automatiquement. Les feature tests utilisent Capybara et ont besoin de Chrome (et de chromedriver) pour s’exécuter.
+Il faut modifier son fichier host pour pouvoir faire tourner les tests en local :
+`127.0.0.1 www.rdv-solidarites-test.localhost`
 
 - Lancer tous les tests
 
