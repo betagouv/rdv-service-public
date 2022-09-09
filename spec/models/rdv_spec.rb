@@ -655,12 +655,9 @@ describe Rdv, type: :model do
       now = Time.zone.parse("2022-08-30 11:45:00")
       rdv = create(:rdv)
       travel_to(now)
-      expect {
+      expect do
         rdv.soft_delete
-    }.to change(rdv, :deleted_at).from(nil).to(now)
-
+      end.to change(rdv, :deleted_at).from(nil).to(now)
     end
-
   end
-
 end
