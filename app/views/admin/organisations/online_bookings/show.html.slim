@@ -1,10 +1,18 @@
-- content_for(:menu_item) { "menu-setup-checklist" }
+- content_for(:menu_item) { "menu-online-booking" }
 
 - content_for :title do
   | Réservation en ligne
-.row.justify-content-center
-  .col-md-6
-    .card
-      .card-body
-        h4.card-title.mb-3 Installation pas à pas
-        p L'objectif de cette page est de regrouper les actions nécessaires pour permettre la prise de RDV (en ligne ou en interne) au sein de votre organisation puis de permettre cette prise de RDV en ligne.
+.card
+  .card-body
+    p = "Pour le moment, vos usagers ne peuvent pas prendre rendez-vous en ligne avec votre organisation."
+    p = "Vous pouvez permettre à vos usager de prendre rendez-vous en configurant vos motifs et vos plages d'ouverture."
+    = link_to "En savoir plus sur la réservation en ligne", "#"
+
+    h3 Motifs
+    p = "Aucun de vos motifs n'est ouvert à la réservation en ligne"
+    p = "Vous pouvez aller sur la page de modification d'un motif, puis sélectionner l'option Réservable en ligne"
+    = link_to "Gérer mes motifs", admin_organisation_motifs_path(current_organisation)
+
+    h3 Plages d'ouverture
+    p = "Pour permettre à vos usagers de prendre rdv en ligne, il vous devez ouvrir un motif à la réservation en ligne, puis ajouter des plages d'ouverture."
+
