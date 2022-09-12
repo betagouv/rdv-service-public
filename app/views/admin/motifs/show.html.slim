@@ -34,10 +34,9 @@
           motif_option_value(@motif, :for_secretariat)
         hr
 
-        - unless current_agent.conseiller_numerique?
-          = motif_attribute_row \
-            Motif.human_attribute_name(:reservable_online), \
-            motif_option_value(@motif, :reservable_online)
+        = motif_attribute_row \
+          Motif.human_attribute_name(:reservable_online), \
+          motif_option_value(@motif, :reservable_online)
         = motif_attribute_row \
           Motif.human_attribute_name(:min_booking_delay_short), \
           @motif.reservable_online? && \
@@ -52,13 +51,12 @@
           Motif.human_attribute_name(:rdvs_editable_by_user), \
            motif_option_value(@motif, :rdvs_editable_by_user)
 
-        - unless current_agent.conseiller_numerique?
-          = motif_attribute_row("Sectorisation") do
-            - if @motif.reservable_online?
-              div= @motif.human_attribute_value(:sectorisation_level)
-              div.text-muted= @motif.human_attribute_value(:sectorisation_level, context: :hint)
-            - else
-              span.text-muted N/A
+        = motif_attribute_row("Sectorisation") do
+          - if @motif.reservable_online?
+            div= @motif.human_attribute_value(:sectorisation_level)
+            div.text-muted= @motif.human_attribute_value(:sectorisation_level, context: :hint)
+          - else
+            span.text-muted N/A
         hr
 
         = motif_attribute_row(Motif.human_attribute_name(:visibility_type)) do
