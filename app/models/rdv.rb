@@ -287,9 +287,7 @@ class Rdv < ApplicationRecord
     results.exclude?("failure") ? "processed" : "failure"
   end
 
-  def domain
-    organisation.new_domain_beta ? Domain::RDV_AIDE_NUMERIQUE : Domain::RDV_SOLIDARITES
-  end
+  delegate :domain, to: :organisation
 
   private
 
