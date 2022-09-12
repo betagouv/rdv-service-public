@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_05_165057) do
+ActiveRecord::Schema.define(version: 2022_09_12_123327) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -368,7 +368,7 @@ ActiveRecord::Schema.define(version: 2022_09_05_165057) do
     t.bigint "territory_id", null: false
     t.string "external_id", comment: "The organisation's unique and immutable id in the system managing them and adding them to our application"
     t.boolean "new_domain_beta", default: false, null: false, comment: "en mettant ce boolean a true, on active l'utilisation du nouveau domaine pour les conseillers numeriques de cette organisation"
-    t.index ["external_id"], name: "index_organisations_on_external_id", unique: true
+    t.index ["external_id", "territory_id"], name: "index_organisations_on_external_id_and_territory_id", unique: true
     t.index ["human_id", "territory_id"], name: "index_organisations_on_human_id_and_territory_id", unique: true, where: "((human_id)::text <> ''::text)"
     t.index ["name", "territory_id"], name: "index_organisations_on_name_and_territory_id", unique: true
     t.index ["name"], name: "index_organisations_on_name"

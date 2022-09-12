@@ -32,7 +32,7 @@ class AddConseillerNumerique
   end
 
   def find_or_create_organisation
-    Organisation.find_by(external_id: @structure.external_id) || create_organisation
+    Organisation.find_by(territory: territory, external_id: @structure.external_id) || create_organisation
   end
 
   private
