@@ -1,0 +1,43 @@
+- content_for(:menu_item) { "menu-online-booking" }
+
+- content_for :title do
+  | Réservation en ligne
+.card
+  .card-body
+    p Permettez à vos usagers de prendre rendez-vous en suivant un lien que vous leur partagez.
+    dl
+      dt 1️⃣ Motifs
+      dd D'abord, vous devez ouvrir au moins un motif à la réservation en ligne.
+      dt 2️⃣ Plages d'ouverture
+      dd Ensuite, ajoutez les plages d'ouverture liées aux motifs ouverts à la réservation en ligne.
+      dt 3️⃣ Lien à partager
+      dd Votre lien est prêt ! Partagez-le avec vos usagers et invitez-les à prendre réserver en ligne.
+.card
+  .card-header
+    h4 Motifs
+  .card-body
+    p
+      | Pour l'instant, aucun motif n'est ouvert à la réservation en ligne. Allez sur la création ou la modification d'un motif, puis sélectionnez l'option
+      strong  Réservable en ligne
+      |.
+  .card-footer
+    = link_to "Gérer mes motifs", admin_organisation_motifs_path(current_organisation)
+.card
+  .card-header
+    h4 Plages d'ouverture
+  .card-body
+    p Commencez par ouvrir au moins un motif à la réservation en ligne. Vous pourrez alors ajouter des plages d'ouverture.
+.card
+  .card-header
+    h4 Lien à partager
+  .card-body
+    p Dès que les motifs et les plages d'ouverture seront paramétrés pour la réservation en ligne, vous pourrez copier le et partager ce lien pour permettre à vos usagers de réserver un rendez-vous en ligne.
+    form
+      = text_field_tag :link_to_share, "https://todo.replace.me", readonly: true
+      = button_tag disabled: true, class: "ml-2 btn btn-primary"
+        i.fa.fa-copy.mr-1
+        | Copier
+  .card-footer
+    = link_to "#"
+      i.fa.fa-arrow-up-right-from-square.mr-1
+      | Tester la vue usager de prise de rendez-vous en ligne
