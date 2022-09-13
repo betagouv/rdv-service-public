@@ -53,21 +53,25 @@ describe "Agent can organize a rdv collectif", js: true do
 
     click_link("Ajouter un participant")
     add_user(user1)
-
     add_new_user
     click_button "Enregistrer"
 
-    expect(Receipt.all).to include(Receipt.where(user_id: user1.id, channel: "sms", result: "delivered").first)
-    expect(Receipt.all).not_to include(Receipt.where(user_id: User.last.id, channel: "sms", result: "delivered").first)
+    expect(Receipt.where(user_id: user1.id, channel: "sms", result: "delivered").count).to eq 1
+    expect(Receipt.where(user_id: user1.id, channel: "mail", result: "processed").count).to eq 1
+
     expect(page).to have_content("2 places disponible")
 
     click_link("Ajouter un participant")
     add_user(user2)
     add_new_user({ with_phone: true })
     click_button "Enregistrer"
+    user3 = User.last
 
-    expect(Receipt.all).to include(Receipt.where(user_id: user2.id, channel: "sms", result: "delivered").first)
-    expect(Receipt.all).to include(Receipt.where(user_id: User.last.id, channel: "sms", result: "delivered").first)
+    expect(user3).not_to eq user2
+    expect(Receipt.where(user_id: user2.id, channel: "sms", result: "delivered").count).to eq 1
+    expect(Receipt.where(user_id: user2.id, channel: "mail", result: "processed").count).to eq 1
+    expect(Receipt.where(user_id: user3.id, channel: "sms", result: "delivered").count).to eq 1
+
     expect(page).to have_content("Complet")
   end
 

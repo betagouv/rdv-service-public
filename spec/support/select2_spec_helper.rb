@@ -23,7 +23,7 @@ module Select2SpecHelper
     click_link("Créer un usager")
     first_name = Faker::Name.first_name
     last_name = Faker::Name.last_name.upcase
-    phone_number = Faker::PhoneNumber.cell_phone
+    phone_number = Faker::PhoneNumber.cell_phone until Phonelib.parse(phone_number, "FR").valid?
 
     fill_in("Prénom", with: first_name)
     fill_in("Nom d’usage", with: last_name)
