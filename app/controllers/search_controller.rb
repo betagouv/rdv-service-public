@@ -25,7 +25,7 @@ class SearchController < ApplicationController
 
   def redirect_to_organisation_search(organisation)
     if organisation
-      redirect_to root_path(address: "1", organisation_id: organisation.id, departement: organisation.territory.departement_number)
+      redirect_to root_path(organisation_id: organisation.id, departement: organisation.territory.departement_number)
     else
       flash[:alert] = "Organisation non trouvée"
       redirect_to root_path
