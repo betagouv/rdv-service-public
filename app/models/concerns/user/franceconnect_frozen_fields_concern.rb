@@ -9,7 +9,7 @@ module User::FranceconnectFrozenFieldsConcern
     validate :prevent_frozen_fields_from_changing
   end
 
-  def concerned_by_franceconnect?(attribute)
+  def frozen_by_franceconnect?(attribute)
     logged_once_with_franceconnect? && FROZEN_FIELDS.include?(attribute)
   end
 

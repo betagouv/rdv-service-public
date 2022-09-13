@@ -42,9 +42,9 @@
               div.pr-2
                 label.d-flex.justify-content-end for="merge_users_form_#{attribute}_1"
                   - value = user1_presenter.send(attribute)
-                  - if @merge_users_form.user1.concerned_by_franceconnect?(attribute)
+                  - if @merge_users_form.user1.frozen_by_franceconnect?(attribute)
                     div = value
-                  - elsif @merge_users_form.user2.present? && @merge_users_form.user2.concerned_by_franceconnect?(attribute)
+                  - elsif @merge_users_form.user2.present? && @merge_users_form.user2.frozen_by_franceconnect?(attribute)
                     del = value
                   - else
                     - if value&.present?
@@ -59,9 +59,9 @@
               div.pr-2
                 label.d-flex.justify-content-start for="merge_users_form_#{attribute}_2"
                   - value = user2_presenter.send(attribute)
-                  - if @merge_users_form.user2.concerned_by_franceconnect?(attribute)
+                  - if @merge_users_form.user2.frozen_by_franceconnect?(attribute)
                     div = value
-                  - elsif @merge_users_form.user1.present? && @merge_users_form.user1.concerned_by_franceconnect?(attribute)
+                  - elsif @merge_users_form.user1.present? && @merge_users_form.user1.frozen_by_franceconnect?(attribute)
                     del = value
 
                   - else
