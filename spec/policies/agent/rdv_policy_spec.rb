@@ -42,6 +42,23 @@ describe Agent::RdvPolicy, type: :policy do
     it_behaves_like "permit actions", :show?, :edit?, :update?
     it_behaves_like "not permit actions", :destroy?
     it_behaves_like "included in scope"
+
+    context "when the rdv starts long ago" do
+      before do
+        rdv.starts_at = 49.hours.ago
+        rdv.save(validation: false)
+      end
+
+      context "when the agent is admin of the organisation" do
+        let(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
+
+        it_behaves_like "permit actions", :update?
+      end
+
+      context "when the agent is not admin of the organisation" do
+        it_behaves_like "not permit actions", :update?
+      end
+    end
   end
 
   context "existing RDV from other agent from other service" do

@@ -64,9 +64,8 @@ describe Admin::RdvsController, type: :controller do
       end
 
       context "when the current agent isn't admin" do
-        it "redirects to show with an error message" do
-          expect(flash[:error]).to match(/Ce rendez-vous ne peut pas être modifié/)
-          expect(response).to redirect_to(admin_organisation_rdv_path(rdv.organisation, rdv))
+        it "redirects" do
+          expect(response).to redirect_to(root_path)
         end
       end
     end
@@ -105,10 +104,9 @@ describe Admin::RdvsController, type: :controller do
         end
 
         context "when the current agent isn't admin" do
-          it "redirects to show with an error message" do
-            update_request
-            expect(flash[:error]).to match(/Ce rendez-vous ne peut pas être modifié/)
-            expect(response).to redirect_to(admin_organisation_rdv_path(rdv.organisation, rdv))
+          it "doesn't update and redirects" do
+            expect { update_request }.not_to change { rdv.reload.lieu }
+            expect(response).to redirect_to(root_path)
           end
         end
       end

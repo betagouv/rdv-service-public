@@ -1,39 +1,17 @@
 # frozen_string_literal: true
 
 describe Rdv, type: :model do
-  describe "#updatable?" do
-    let(:organisation) { create(:organisation) }
-
+  describe "#starts_long_ago?" do
     context "when the rdv starts less than two days ago" do
       let(:rdv) { build :rdv, starts_at: 47.hours.ago }
 
-      context "when the agent role is admin" do
-        let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-
-        it { expect(rdv.updatable?(agent, organisation)).to eq true }
-      end
-
-      context "when the agent role is not admin" do
-        let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-
-        it { expect(rdv.updatable?(agent, organisation)).to eq true }
-      end
+      it { expect(rdv.starts_long_ago?).to eq false }
     end
 
     context "when the rdv starts more than two days ago" do
       let(:rdv) { build :rdv, starts_at: 49.hours.ago }
 
-      context "when the agent role is admin" do
-        let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
-
-        it { expect(rdv.updatable?(agent, organisation)).to eq true }
-      end
-
-      context "when the agent role is not admin" do
-        let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
-
-        it { expect(rdv.updatable?(agent, organisation)).to eq false }
-      end
+      it { expect(rdv.starts_long_ago?).to eq true }
     end
   end
 

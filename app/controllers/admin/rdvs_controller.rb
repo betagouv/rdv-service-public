@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
 class Admin::RdvsController < AgentAuthController
-  include AdminHelper
-
   respond_to :html, :json
 
   before_action :set_rdv, :set_optional_agent, except: %i[index create export]
-  before_action :check_rdv_updatable, only: %i[edit update]
 
   # TODO: remove when this is fixed: https://sentry.io/organizations/rdv-solidarites/issues/3268196907
   before_action :log_params_to_sentry, only: %i[index export]
@@ -97,13 +94,6 @@ class Admin::RdvsController < AgentAuthController
 
   def set_rdv
     @rdv = policy_scope(Rdv).find(params[:id])
-  end
-
-  def check_rdv_updatable
-    return if @rdv.updatable?(current_agent, current_organisation)
-
-    flash[:error] = "Ce rendez-vous ne peut pas être modifié."
-    redirect_to admin_organisation_rdv_path(current_organisation, @rdv, agent_id: params[:agent_id])
   end
 
   def rdv_params

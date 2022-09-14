@@ -9,6 +9,10 @@ class Agent::RdvPolicy < DefaultAgentPolicy
     true
   end
 
+  def update?
+    super && (current_agent.admin_in_organisation?(current_organisation) || !@record.starts_long_ago?)
+  end
+
   def destroy?
     admin_and_same_org?
   end

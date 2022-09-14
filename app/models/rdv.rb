@@ -289,20 +289,16 @@ class Rdv < ApplicationRecord
 
   delegate :domain, to: :organisation
 
-  def updatable?(agent, organisation)
-    agent.admin_in_organisation?(organisation) || !starts_too_long_ago?
+  def starts_long_ago?
+    starts_at < 2.days.ago
   end
 
   private
 
-  def starts_too_long_ago?
-    starts_at < 2.days.ago
-  end
-
   def starts_at_is_plausible
     return unless will_save_change_to_attribute?("starts_at")
 
-    if starts_too_long_ago?
+    if starts_long_ago?
       errors.add(:starts_at, :must_be_future)
     elsif starts_at > Time.zone.now + 2.years
       errors.add(:starts_at, :must_be_within_two_years)
