@@ -6,7 +6,7 @@ class Agents::ExportMailer < ApplicationMailer
     now = Time.zone.now
     rdvs = Rdv.search_for(agent, organisation, options)
 
-    mail.attachments["export-rdv-#{now.strftime('%Y-%m-%d')}.xls"] = {
+    mail.attachments["export-rdv-org-#{organisation.id}-#{now.strftime('%Y-%m-%d')}.xls"] = {
       mime_type: "application/vnd.ms-excel",
       content: RdvExporter.export(rdvs.order(starts_at: :desc)),
     }
