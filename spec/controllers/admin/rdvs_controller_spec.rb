@@ -92,19 +92,21 @@ describe Admin::RdvsController, type: :controller do
   describe "GET #show" do
     render_views
 
+    subject(:show_request) { get :show, params: { organisation_id: organisation.id, id: rdv.id } }
+
     let!(:now) { Time.zone.parse("2020-11-23 14h00") }
     let!(:rdv) { create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation) }
 
     before { travel_to(now) }
 
     it "returns a success response" do
-      get :show, params: { organisation_id: organisation.id, id: rdv.id }
+      show_request
       expect(response).to be_successful
     end
 
     context "when the user has an email or a phone number" do
       it "shows the notification preferences" do
-        get :show, params: { organisation_id: organisation.id, id: rdv.id }
+        show_request
         expect(response).to be_successful
         expect(response.body).to include("Pour ce RDV")
       end
@@ -114,9 +116,39 @@ describe Admin::RdvsController, type: :controller do
       let!(:user) { create(:user, :with_no_email, :with_no_phone_number) }
 
       it "doesn't show the notification preferences" do
-        get :show, params: { organisation_id: organisation.id, id: rdv.id }
+        show_request
         expect(response).to be_successful
         expect(response.body).not_to include("Pour ce RDV")
+      end
+    end
+
+    context "when the rdv is updatable" do
+      it "shows the update button" do
+        show_request
+        expect(response.body).to include(I18n.t("admin.rdvs.show.update"))
+      end
+    end
+
+    context "when the rdv isn't updatable" do
+      before do
+        rdv.starts_at = 49.hours.ago
+        rdv.save(validate: false)
+      end
+
+      context "when the current agent is admin" do
+        let(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
+
+        it "shows the update button" do
+          show_request
+          expect(response.body).to include(I18n.t("admin.rdvs.show.update"))
+        end
+      end
+
+      context "when the current agent isn't admin" do
+        it "doesn't show the update button" do
+          show_request
+          expect(response.body).not_to include(I18n.t("admin.rdvs.show.update"))
+        end
       end
     end
   end

@@ -1,6 +1,22 @@
 # frozen_string_literal: true
 
 describe Rdv, type: :model do
+  describe "#updatable?" do
+    context "when the rdv starts more than two days ago" do
+      it "returns false" do
+        rdv = build :rdv, starts_at: 49.hours.ago
+        expect(rdv.updatable?).to eq false
+      end
+    end
+
+    context "when the rdv starts less than two days ago" do
+      it "returns true" do
+        rdv = build :rdv, starts_at: 47.hours.ago
+        expect(rdv.updatable?).to eq true
+      end
+    end
+  end
+
   describe "#starts_at_is_plausible" do
     let(:now) { Time.zone.parse("2021-05-03 14h00") }
     let(:rdv) { build :rdv, starts_at: starts_at }

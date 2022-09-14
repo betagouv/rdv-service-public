@@ -289,6 +289,10 @@ class Rdv < ApplicationRecord
 
   delegate :domain, to: :organisation
 
+  def updatable?
+    starts_at >= 2.days.ago
+  end
+
   private
 
   def starts_at_is_plausible
