@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# Service to restart scalingo app
+# call only when deploying on scalingo
 class ScalingoAppRestarter < BaseService
   class ApiError < StandardError; end
 

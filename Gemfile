@@ -107,7 +107,7 @@ group :development do
   gem "better_errors" # Better error page than the Rails default
   gem "binding_of_caller" # Enable the REPL in better_errors
   gem "letter_opener_web" # Saves sent emails and serves them on /letter_opener
-  gem "rails-erd" # Keeps docs/domain_model.png up-to-date. See .erdconfig
+  gem "rails-erd" # Keeps docs/domain_model.svg up-to-date. See .erdconfig
 end
 
 group :test do

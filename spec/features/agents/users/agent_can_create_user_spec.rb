@@ -26,7 +26,7 @@ describe "Agent can create user" do
     click_button "Enregistrer"
     click_link "Inviter"
     open_email("marco@lebreton.bzh")
-    expect(current_email.subject).to eq I18n.t("devise.mailer.invitation_instructions.subject")
+    expect(current_email.subject).to eq "Vous avez été invité sur RDV Solidarités"
   end
 
   context "user already exists in other organisation" do

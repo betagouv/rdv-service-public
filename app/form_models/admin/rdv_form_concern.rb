@@ -36,7 +36,8 @@ module Admin::RdvFormConcern
       lieu: rdv.lieu,
       starts_at: rdv.starts_at,
       ends_at: rdv.ends_at,
-      motif: rdv.motif
+      motif: rdv.motif,
+      status: Rdv::NOT_CANCELLED_STATUSES
     ).select do |existing_rdv|
       participants_of_existing_rdv = Set.new(existing_rdv.users + existing_rdv.agents)
       # Not using `rdv.users` because it does a db call, which returns an empty array because `rdv` is not persisted.
@@ -95,7 +96,7 @@ module Admin::RdvFormConcern
       suspicious_rdvs = Rdv
         .on_day(rdv.starts_at)
         .with_user(user)
-        .where(motif: motif)
+        .where(motif: motif, status: Rdv::NOT_CANCELLED_STATUSES)
 
       if suspicious_rdvs.any?
         user_path = admin_organisation_user_path(rdv.organisation, user)

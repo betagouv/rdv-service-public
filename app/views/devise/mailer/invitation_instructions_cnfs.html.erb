@@ -1,7 +1,9 @@
+<% message.subject = I18n.t("devise.mailer.invitation_instructions_cnfs.subject", domain_name: domain.name) %>
+
 <p><%= t("devise.mailer.invitation_instructions_cnfs.hello") %></p>
 
 <p>
-  <%= t("devise.mailer.invitation_instructions_cnfs.create_account") %>
+  <%= t("devise.mailer.invitation_instructions_cnfs.create_account", domain_name: domain.name) %>
 </p>
 
 <div class="btn-wrapper">
@@ -10,7 +12,7 @@
 
 <h1><%= t("devise.mailer.invitation_instructions_cnfs.title1") %></h1>
 
-<p><%= t("devise.mailer.invitation_instructions_cnfs.paragraph1") %></p>
+<p><%= t("devise.mailer.invitation_instructions_cnfs.paragraph1", domain_name: domain.name) %></p>
 
 <%= t("devise.mailer.invitation_instructions_cnfs.use1") %>
 <br>
@@ -32,10 +34,10 @@
 
 <p>
   <%= t("devise.mailer.invitation_instructions_cnfs.help_info",
-        mattermost: link_to("Aide RDV Solidarités", "https://discussion.conseiller-numerique.gouv.fr/cnum/channels/aide-rdv-solidarites"),
-        support_email: link_to("support@rdv-solidarités.fr", "mailto:support@rdv-solidarités.fr")
+        mattermost: link_to("RDV Aide Numérique", "https://discussion.conseiller-numerique.gouv.fr/cnum/channels/rdv-aide-numerique"),
+        support_email: link_to("support@rdv-solidarites.fr", "mailto:support@rdv-solidarites.fr")
        ).html_safe %>
 </p>
 
 <p><%= t("devise.mailer.invitation_instructions_cnfs.sign_off") %></p>
-<p><%= t("devise.mailer.invitation_instructions_cnfs.signature") %></p>
+<p><%= t("devise.mailer.invitation_instructions_cnfs.signature", domain_name: domain.name) %></p>

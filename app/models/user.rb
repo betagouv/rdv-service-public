@@ -18,7 +18,21 @@ class User < ApplicationRecord
   include PhoneNumberValidation::HasPhoneNumber
   include WebhookDeliverable
   include TextSearch
-  def self.search_keys = %i[last_name first_name email birth_name phone_number_formatted]
+
+  def self.search_against
+    {
+      last_name: "A",
+      first_name: "B",
+      birth_name: "C",
+
+      # Ces champs sont moins pondérés car on ne veut leur
+      # donner de l'importance que si le match est très proche ou exact.
+      email: "D",
+      phone_number_formatted: "D",
+      id: "D",
+    }
+  end
+
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable, :async,
          :trackable

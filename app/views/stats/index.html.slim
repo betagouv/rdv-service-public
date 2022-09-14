@@ -133,3 +133,7 @@
           - @territories.order(:name).each do |territory|
             li = link_to territory, stats_path(territory: territory)
         .m-3 = link_to "Retour aux statistiques de la plateforme", stats_path
+        .alert.alert-info.d-flex.align-items-center
+          .mr-3
+            i.fa.fa-info
+          = "Les chiffres donnés sur cette page englobent les plateformes #{Domain::ALL.map(&:name).join(' et ')} indifféremment."

@@ -7,8 +7,7 @@ class Agents::AbsenceMailer < ApplicationMailer
     @absence = params[:absence]
   end
 
-  default from: "secretariat-auto@rdv-solidarites.fr",
-          to: -> { @absence.agent.email }
+  default to: -> { @absence.agent.email }
 
   def absence_created
     self.ics_payload = @absence.payload(:created)
@@ -29,5 +28,9 @@ class Agents::AbsenceMailer < ApplicationMailer
 
   def domain
     @absence.agent.domain
+  end
+
+  def default_from
+    SECRETARIAT_EMAIL
   end
 end
