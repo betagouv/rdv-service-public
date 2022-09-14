@@ -2,17 +2,37 @@
 
 describe Rdv, type: :model do
   describe "#updatable?" do
-    context "when the rdv starts more than two days ago" do
-      it "returns false" do
-        rdv = build :rdv, starts_at: 49.hours.ago
-        expect(rdv.updatable?).to eq false
+    let(:organisation) { create(:organisation) }
+
+    context "when the rdv starts less than two days ago" do
+      let(:rdv) { build :rdv, starts_at: 47.hours.ago }
+
+      context "when the agent role is admin" do
+        let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+
+        it { expect(rdv.updatable?(agent, organisation)).to eq true }
+      end
+
+      context "when the agent role is not admin" do
+        let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+
+        it { expect(rdv.updatable?(agent, organisation)).to eq true }
       end
     end
 
-    context "when the rdv starts less than two days ago" do
-      it "returns true" do
-        rdv = build :rdv, starts_at: 47.hours.ago
-        expect(rdv.updatable?).to eq true
+    context "when the rdv starts more than two days ago" do
+      let(:rdv) { build :rdv, starts_at: 49.hours.ago }
+
+      context "when the agent role is admin" do
+        let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
+
+        it { expect(rdv.updatable?(agent, organisation)).to eq true }
+      end
+
+      context "when the agent role is not admin" do
+        let(:agent) { create(:agent, basic_role_in_organisations: [organisation]) }
+
+        it { expect(rdv.updatable?(agent, organisation)).to eq false }
       end
     end
   end

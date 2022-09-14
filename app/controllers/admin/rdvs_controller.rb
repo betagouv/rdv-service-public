@@ -100,7 +100,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def check_rdv_updatable
-    return if current_agent_role.admin? || @rdv.updatable?
+    return if @rdv.updatable?(current_agent, current_organisation)
 
     flash[:error] = "Ce rendez-vous ne peut pas être modifié."
     redirect_to admin_organisation_rdv_path(current_organisation, @rdv, agent_id: params[:agent_id])
