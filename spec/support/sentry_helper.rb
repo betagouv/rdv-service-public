@@ -7,5 +7,6 @@ def stub_sentry_events
     setup_sentry_test
     example.run
     teardown_sentry_test
+    Sentry.get_current_scope.clear_breadcrumbs
   end
 end

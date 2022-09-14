@@ -88,4 +88,8 @@ class Organisation < ApplicationRecord
 
     Admins::OrganisationMailer.organisation_created(agents.first, self).deliver_later
   end
+
+  def domain
+    new_domain_beta? ? Domain::RDV_AIDE_NUMERIQUE : Domain::RDV_SOLIDARITES
+  end
 end
