@@ -27,7 +27,7 @@ describe RdvExporter, type: :service do
         # Les lettres sont les noms de colonnes Excel.
         # Il est important de toujours ajouter les nouvelles colonnes
         # à la fin pour ne pas gêner les SI des départements,
-        # qui se basent parfois sur la position et nom le libellé.
+        # qui se basent parfois sur la position et non le libellé.
         expect(sheet.row(0)).to eq(
           [
             "année", # A

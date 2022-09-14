@@ -7,7 +7,7 @@ describe Agents::ExportMailer do
     let(:organisation) { create(:organisation) }
     let(:agent) { create(:agent, admin_role_in_organisations: [organisation]) }
 
-    it "has an attachment which contains the current dante and org ID" do
+    it "has an attachment which contains the current date and org ID" do
       travel_to(Time.zone.parse("2022-09-14 09:00:00"))
       expect(rdv_export.attachments.first.filename).to eq("export-rdv-org-#{organisation.id}-2022-09-14.xls")
     end
