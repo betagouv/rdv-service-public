@@ -58,7 +58,8 @@ org_cnfs = Organisation.create!(
   name: "Mediathèque Paris Nord",
   phone_number: "0123456789",
   human_id: "mediatheque-paris-nord",
-  territory: territory_cnfs
+  territory: territory_cnfs,
+  new_domain_beta: true
 )
 org_drome1 = Organisation.create!(
   name: "Plateforme mutualisée d'orientation",

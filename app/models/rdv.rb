@@ -9,6 +9,7 @@ class Rdv < ApplicationRecord
 
   include WebhookDeliverable
   include Rdv::AddressConcern
+  include Rdv::AuthoredConcern
   include IcalHelpers::Ics
   include Payloads::Rdv
 
@@ -286,13 +287,7 @@ class Rdv < ApplicationRecord
     results.exclude?("failure") ? "processed" : "failure"
   end
 
-  def domain
-    if service.conseiller_numerique? && organisation.new_domain_beta
-      Domain::RDV_AIDE_NUMERIQUE
-    else
-      Domain::RDV_SOLIDARITES
-    end
-  end
+  delegate :domain, to: :organisation
 
   private
 

@@ -1,6 +1,8 @@
+<% message.subject = I18n.t("devise.mailer.invitation_instructions_cnfs.subject", domain_name: domain.name) %>
+
 <%= t("devise.mailer.invitation_instructions.hello", email: @resource.email) %>
 
-<%= t("devise.mailer.invitation_instructions.someone_invited_you", url: root_url) %>
+<%= t("devise.mailer.invitation_instructions.someone_invited_you", url: root_url, domain_name: domain.name) %>
 
 <%= accept_invitation_url(@resource, :invitation_token => @token) %>
 

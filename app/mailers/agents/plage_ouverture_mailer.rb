@@ -8,8 +8,7 @@ class Agents::PlageOuvertureMailer < ApplicationMailer
     @plage_ouverture = params[:plage_ouverture]
   end
 
-  default from: "secretariat-auto@rdv-solidarites.fr",
-          to: -> { @plage_ouverture.agent.email }
+  default to: -> { @plage_ouverture.agent.email }
 
   def plage_ouverture_created
     self.ics_payload = @plage_ouverture.payload(:create)
@@ -30,5 +29,9 @@ class Agents::PlageOuvertureMailer < ApplicationMailer
 
   def domain
     @plage_ouverture.agent.domain
+  end
+
+  def default_from
+    SECRETARIAT_EMAIL
   end
 end

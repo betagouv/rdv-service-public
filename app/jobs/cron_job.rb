@@ -107,6 +107,7 @@ class CronJob < ApplicationJob
     def perform
       # Avoid restarting production many times from review apps
       return if ENV["RDV_SOLIDARITES_IS_REVIEW_APP"] == "true"
+      return if ENV["SCALINGO_RESTARTER_APP_ID"].blank?
       return if Rails.env.development?
 
       ScalingoAppRestarter.perform_with(ENV["SCALINGO_RESTARTER_APP_ID"], ENV["SCALINGO_RESTARTER_API_TOKEN"])
