@@ -7,6 +7,10 @@ module MotifsHelper
     "#{motif.name} (#{motif.human_attribute_value(:location_type)})"
   end
 
+  def motif_name_with_location_and_group_type(motif)
+    "#{motif.name} (#{motif.human_attribute_value(:location_type)} - #{human_group_type_value(motif)})"
+  end
+
   def motif_name_and_service(motif)
     "#{motif.name} - #{motif.service.name}"
   end
@@ -77,5 +81,9 @@ module MotifsHelper
     value += tag.div(hint, class: "text-muted") if arg_value.present? && hint.present?
     tag.div(tag.div(legend, class: "col-md-4 text-right") +
         tag.div(value, class: "col-md-8 text-bold"), class: "row")
+  end
+
+  def human_group_type_value(motif)
+    t("activerecord.attributes.motif/collectifs.#{motif.collectif?}")
   end
 end
