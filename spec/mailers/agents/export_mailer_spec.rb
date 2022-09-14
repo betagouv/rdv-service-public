@@ -9,7 +9,7 @@ describe Agents::ExportMailer do
 
     it "has an attachment which contains the current date and org ID" do
       travel_to(Time.zone.parse("2022-09-14 09:00:00"))
-      expect(rdv_export.attachments.first.filename).to eq("export-rdv-org-#{organisation.id}-2022-09-14.xls")
+      expect(rdv_export.attachments.first.filename).to eq("export-rdv-2022-09-14-org-#{organisation.id}.xls")
     end
   end
 end
