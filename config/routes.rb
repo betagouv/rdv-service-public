@@ -257,8 +257,8 @@ Rails.application.routes.draw do
   end
 
   # short public link
-  get "p/:organisation_id(/:org_slug)" => "search#public_link_with_internal_organisation_id"
-  get "e/:territory_slug/:organisation_external_id(/:org_slug)" => "search#public_link_with_external_organisation_id"
+  get "p/:organisation_id(/:org_slug)" => "search#public_link_with_internal_organisation_id", as: :public_link_to_org
+  get "e/:territory_slug/:organisation_external_id(/:org_slug)" => "search#public_link_with_external_organisation_id", as: :public_link_to_external_org
 
   ##
 
