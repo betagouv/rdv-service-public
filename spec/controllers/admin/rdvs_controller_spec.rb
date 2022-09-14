@@ -90,12 +90,34 @@ describe Admin::RdvsController, type: :controller do
   end
 
   describe "GET #show" do
+    render_views
+
+    let!(:now) { Time.zone.parse("2020-11-23 14h00") }
+    let!(:rdv) { create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation) }
+
+    before { travel_to(now) }
+
     it "returns a success response" do
-      now = Time.zone.parse("2020-11-23 14h00")
-      travel_to(now)
-      rdv = create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation)
       get :show, params: { organisation_id: organisation.id, id: rdv.id }
       expect(response).to be_successful
+    end
+
+    context "when the user has an email or a phone number" do
+      it "shows the notification preferences" do
+        get :show, params: { organisation_id: organisation.id, id: rdv.id }
+        expect(response).to be_successful
+        expect(response.body).to include("Pour ce RDV")
+      end
+    end
+
+    context "when the user has no email nor phone_number" do
+      let!(:user) { create(:user, :with_no_email, :with_no_phone_number) }
+
+      it "doesn't show the notification preferences" do
+        get :show, params: { organisation_id: organisation.id, id: rdv.id }
+        expect(response).to be_successful
+        expect(response.body).not_to include("Pour ce RDV")
+      end
     end
   end
 
