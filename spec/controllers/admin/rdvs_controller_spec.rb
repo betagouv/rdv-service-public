@@ -37,24 +37,80 @@ describe Admin::RdvsController, type: :controller do
   end
 
   describe "GET #edit" do
-    it "returns a success response" do
-      rdv = create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation)
-      get :edit, params: { organisation_id: organisation.id, id: rdv.to_param }
+    subject(:edit_request) { get :edit, params: { organisation_id: organisation.id, id: rdv.to_param } }
+
+    let(:rdv) { create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation) }
+
+    it "successfully renders the edit template" do
+      edit_request
       expect(response).to be_successful
+      expect(response).to render_template(:edit)
+    end
+
+    context "when the rdv isn't updatable" do
+      before do
+        rdv.starts_at = 49.hours.ago
+        rdv.save(validate: false)
+
+        edit_request
+      end
+
+      context "when the current agent is admin" do
+        let(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
+
+        it "successfully renders the edit template" do
+          expect(response).to render_template(:edit)
+        end
+      end
+
+      context "when the current agent isn't admin" do
+        it "redirects to show with an error message" do
+          expect(flash[:error]).to match(/Ce rendez-vous ne peut pas être modifié/)
+          expect(response).to redirect_to(admin_organisation_rdv_path(rdv.organisation, rdv))
+        end
+      end
     end
   end
 
   describe "PUT #update" do
     context "with valid params" do
-      before { stub_netsize_ok }
+      subject(:update_request) { put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { lieu_id: lieu.id } } }
 
-      it "redirects to the rdv" do
-        now = Time.zone.parse("2020-11-23 14h00")
-        travel_to(now)
-        rdv = create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation)
-        lieu = create(:lieu, organisation: organisation)
-        put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { lieu_id: lieu.id } }
+      let(:rdv) { create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation) }
+      let(:lieu) { create(:lieu, organisation: organisation)  }
+
+      before do
+        stub_netsize_ok
+        travel_to(Time.zone.parse("2020-11-23 14h00"))
+      end
+
+      it "updates the rdv and redirects to it" do
+        expect { update_request }.to change { rdv.reload.lieu }.to(lieu)
         expect(response).to redirect_to(admin_organisation_rdv_path(organisation, rdv))
+      end
+
+      context "when the rdv isn't updatable" do
+        before do
+          rdv.starts_at = 49.hours.ago
+          rdv.save(validate: false)
+        end
+
+        context "when the current agent is admin" do
+          let(:agent) { create(:agent, admin_role_in_organisations: [organisation], service: service) }
+
+          it "updates the rdv and redirects to it" do
+            expect { update_request }.to change { rdv.reload.lieu }.to(lieu)
+            expect(response).to redirect_to(admin_organisation_rdv_path(organisation, rdv))
+          end
+        end
+
+        context "when the current agent isn't admin" do
+          it "redirects to show with an error message" do
+            update_request
+            expect(flash[:error]).to match(/Ce rendez-vous ne peut pas être modifié/)
+            expect(response).to redirect_to(admin_organisation_rdv_path(rdv.organisation, rdv))
+          end
+        end
       end
     end
 
