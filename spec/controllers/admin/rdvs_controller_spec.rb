@@ -46,15 +46,19 @@ describe Admin::RdvsController, type: :controller do
 
   describe "PUT #update" do
     context "with valid params" do
+      subject(:update_request) { put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { lieu_id: lieu.id } } }
+
+      let(:rdv) { create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation) }
+      let(:lieu) { create(:lieu, organisation: organisation) }
+
       before { stub_netsize_ok }
 
+      it "updates the rdv" do
+        expect { update_request }.to change { rdv.reload.lieu }.to(lieu)
+      end
+
       it "redirects to the rdv" do
-        now = Time.zone.parse("2020-11-23 14h00")
-        travel_to(now)
-        rdv = create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation)
-        lieu = create(:lieu, organisation: organisation)
-        put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { lieu_id: lieu.id } }
-        expect(response).to redirect_to(admin_organisation_rdv_path(organisation, rdv))
+        expect(update_request).to redirect_to(admin_organisation_rdv_path(organisation, rdv))
       end
     end
 
