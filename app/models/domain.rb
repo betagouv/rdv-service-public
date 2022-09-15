@@ -33,7 +33,7 @@ class Domain
   def dns_domain_name
     case Rails.env.to_sym
     when :production
-      if ENV["RDV_SOLIDARITES_IS_REVIEW_APP"] == "true"
+      if ENV["IS_REVIEW_APP"] == "true"
         # Les review apps utilisent un domaine de Scalingo, elles
         # ne permettent donc pas d'utiliser plusieurs domaines.
         URI.parse(ENV["HOST"]).host
@@ -72,7 +72,7 @@ class Domain
   def self.find_matching(domain_name)
     # Les review apps utilisent un domaine de Scalingo, elles
     # ne permettent donc pas d'utiliser plusieurs domaines.
-    return RDV_SOLIDARITES if ENV["RDV_SOLIDARITES_IS_REVIEW_APP"] == "true"
+    return RDV_SOLIDARITES if ENV["IS_REVIEW_APP"] == "true"
 
     ALL_BY_URL.fetch(domain_name) { RDV_SOLIDARITES }
   end

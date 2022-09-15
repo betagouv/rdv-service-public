@@ -15,7 +15,7 @@
       "generator": "template",
       "template": "PR %PR_NUMBER%"
     },
-    "RDV_SOLIDARITES_IS_REVIEW_APP": {
+    "IS_REVIEW_APP": {
       "value": "true"
     },
     "SENTRY_CURRENT_ENV": {
