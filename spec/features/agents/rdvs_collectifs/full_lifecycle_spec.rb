@@ -11,6 +11,8 @@ describe "Agent can organize a rdv collectif", js: true do
   let!(:user1) { create(:user, organisations: [organisation]) }
   let!(:user2) { create(:user, organisations: [organisation]) }
 
+  before { stub_netsize_ok }
+
   def create_rdv_collectif(lieu_availability)
     travel_to(Time.zone.local(2022, 3, 14))
     agent = create(:agent, basic_role_in_organisations: [organisation], service: service, first_name: "Alain", last_name: "DIALO")
@@ -28,7 +30,7 @@ describe "Agent can organize a rdv collectif", js: true do
 
     fill_in "Commence à", with: "17/3/2022 14:00"
     fill_in "Durée en minutes", with: "30"
-    fill_in "Nombre de places", with: 3
+    fill_in "Nombre de places", with: 4
     fill_in "Intitulé", with: "Traitement de texte"
 
     select("DIALO Alain", from: "rdv_agent_ids")
@@ -46,21 +48,29 @@ describe "Agent can organize a rdv collectif", js: true do
 
     click_button "Enregistrer"
     expect(page).to have_content("Atelier participatif créé")
-
     expect(page).to have_content("Jeudi 17 mars à 14:00")
-    expect(page).to have_content("3 places disponibles")
+    expect(page).to have_content("4 places disponibles")
 
     click_link("Ajouter un participant")
     add_user(user1)
-
     add_new_user
     click_button "Enregistrer"
 
-    expect(page).to have_content("1 place disponible")
+    expect(Receipt.where(user_id: user1.id, channel: "sms", result: "delivered").count).to eq 1
+    expect(Receipt.where(user_id: user1.id, channel: "mail", result: "processed").count).to eq 1
+
+    expect(page).to have_content("2 places disponible")
 
     click_link("Ajouter un participant")
     add_user(user2)
+    add_new_user({ with_phone: true })
     click_button "Enregistrer"
+    user3 = User.last
+
+    expect(user3).not_to eq user2
+    expect(Receipt.where(user_id: user2.id, channel: "sms", result: "delivered").count).to eq 1
+    expect(Receipt.where(user_id: user2.id, channel: "mail", result: "processed").count).to eq 1
+    expect(Receipt.where(user_id: user3.id, channel: "sms", result: "delivered").count).to eq 1
 
     expect(page).to have_content("Complet")
   end
