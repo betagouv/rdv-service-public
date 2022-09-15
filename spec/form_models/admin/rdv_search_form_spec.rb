@@ -24,7 +24,6 @@ describe Admin::RdvSearchForm do
         organisation_id: organisation.id,
         lieu_id: lieu.id,
         motif_id: motif.id,
-        show_user_details: nil,
         status: nil,
         user_id: nil,
       }
