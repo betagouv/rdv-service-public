@@ -24,6 +24,7 @@ module RdvExporter
     "date naissance",
     "code postal du premier responsable",
     "créé par",
+    "email(s) professionnel.le(s)",
   ].freeze
 
   def self.export(rdvs)
@@ -56,6 +57,8 @@ module RdvExporter
     book
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
   def self.row_array_from(rdv)
     [
       rdv.created_at.year,
@@ -78,8 +81,11 @@ module RdvExporter
       rdv.users.map(&:birth_date).compact.map { |date| I18n.l(date) }.join(", "),
       code_postal_premier_responsable(rdv),
       rdv.author,
+      rdv.agents.map(&:email).join(", "),
     ]
   end
+  # rubocop:enable Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def self.commune_premier_responsable(rdv)
     rdv.users.map(&:user_to_notify).pluck(:city_name).compact.first

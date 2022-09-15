@@ -50,6 +50,7 @@ describe RdvExporter, type: :service do
             "date naissance", # R
             "code postal du premier responsable", # S
             "créé par", # T
+            "email(s) professionnel.le(s)", # U
           ]
         )
       end
@@ -271,6 +272,15 @@ describe RdvExporter, type: :service do
       rdv = create(:rdv, created_by: :agent)
       rdv.versions.first.update!(whodunnit: "agent 008")
       expect(described_class.row_array_from(rdv)[19]).to eq("agent 008")
+    end
+  end
+
+  describe "email(s) professionnel.le(s)" do
+    it "return all agent's emails" do
+      caro = build(:agent, email: "caro@gemelle.com")
+      karima = build(:agent, email: "karima@autremail.fr")
+      rdv = build(:rdv, agents: [karima, caro])
+      expect(described_class.row_array_from(rdv)[20]).to eq("karima@autremail.fr, caro@gemelle.com")
     end
   end
 end
