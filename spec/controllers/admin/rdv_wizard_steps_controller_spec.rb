@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
 describe Admin::RdvWizardStepsController, type: :controller do
-  describe "GET index html format" do
-    let(:motif) { create(:motif) }
-    let(:organisation) { motif.organisation }
+  let(:motif) { create(:motif) }
+  let(:organisation) { motif.organisation }
+  let(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
+  let(:user) { create(:user) }
+
+  before { sign_in agent }
+
+  describe "GET new" do
     let(:common_params) do
       {
         organisation_id: organisation.id,
@@ -16,10 +21,6 @@ describe Admin::RdvWizardStepsController, type: :controller do
     end
 
     let(:params) { common_params.merge(step: 2) }
-    let!(:agent) { create(:agent, :secretaire, basic_role_in_organisations: [organisation]) }
-    let!(:user) { create(:user) }
-
-    before { sign_in agent }
 
     it "returns success" do
       get :new, params: params
@@ -61,6 +62,30 @@ describe Admin::RdvWizardStepsController, type: :controller do
           expect(response.body).not_to include("Notifications de création et modification")
         end
       end
+    end
+  end
+
+  describe "POST create" do
+    subject(:create_request) { post :create, params: params }
+
+    let(:lieu) { create(:lieu, organisation: organisation) }
+    let(:params) do
+      {
+        organisation_id: organisation.id,
+        step: 4,
+        rdv: {
+          motif_id: motif.id,
+          lieu_id: lieu.id,
+          starts_at: DateTime.new(2020, 4, 20, 8, 0, 0),
+          duration_in_min: 30,
+          agent_ids: [agent.id],
+          user_ids: [user.id],
+        },
+      }
+    end
+
+    it "creates the rdv" do
+      expect { create_request }.to change(Rdv, :count).by(1)
     end
   end
 end
