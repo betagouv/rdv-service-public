@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module RdvsHelper
+  include ActionView::Helpers::DateHelper
+
   def rdv_title(rdv)
     if rdv.starts_at.to_date.today?
       I18n.t("rdvs.title_time_only", starts_at: l(rdv.starts_at, format: :time_only), duration: rdv.duration_in_min)
@@ -102,6 +104,20 @@ module RdvsHelper
             data: { confirm: t("admin.rdvs.delete.confirm") } do
       tag.div(t("helpers.delete"), class: "text-danger") +
         tag.div(t("admin.rdvs.delete.details"), class: "text-wrap text-muted")
+    end
+  end
+
+  def rdv_success_flash(rdv, what:)
+    case what
+    when :update
+      if rdv.starts_at < Time.zone.now
+        distance = distance_of_time_in_words_to_now(rdv.starts_at)
+        { alert: "Le rendez-vous a été modifié, mais sa date est située dans le passé (il y a #{distance}). Si cette date est incorrecte, merci de modifier le rendez-vous." }
+      else
+        { notice: "Le rendez-vous a été modifié." }
+      end
+    when :cancel
+      { notice: "Le rendez-vous a été annulé." }
     end
   end
 

@@ -46,19 +46,38 @@ describe Admin::RdvsController, type: :controller do
 
   describe "PUT #update" do
     context "with valid params" do
-      subject(:update_request) { put :update, params: { organisation_id: organisation.id, id: rdv.to_param, rdv: { lieu_id: lieu.id } } }
+      subject(:update_request) { put :update, params: params }
 
       let(:rdv) { create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation) }
       let(:lieu) { create(:lieu, organisation: organisation) }
+      let(:starts_at) { 1.week.since }
+      let(:params) do
+        {
+          organisation_id: organisation.id,
+          id: rdv.to_param,
+          rdv: {
+            lieu_id: lieu.id,
+            starts_at: starts_at,
+            duration_in_min: 30,
+          },
+        }
+      end
 
       before { stub_netsize_ok }
 
-      it "updates the rdv" do
+      it "updates the rdv and redirects to it" do
         expect { update_request }.to change { rdv.reload.lieu }.to(lieu)
+        expect(update_request).to redirect_to(admin_organisation_rdv_path(organisation, rdv))
       end
 
-      it "redirects to the rdv" do
-        expect(update_request).to redirect_to(admin_organisation_rdv_path(organisation, rdv))
+      context "when the rdv is in the past" do
+        let(:starts_at) { 1.week.ago }
+
+        it "still updates the rdv but flashes a warning message" do
+          expect { update_request }.to change { rdv.reload.lieu }.to(lieu)
+          expect(update_request).to redirect_to(admin_organisation_rdv_path(organisation, rdv))
+          expect(flash[:alert]).to match(/Le rendez-vous a été modifié, mais sa date est située dans le passé/)
+        end
       end
     end
 

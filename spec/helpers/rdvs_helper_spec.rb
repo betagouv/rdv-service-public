@@ -157,4 +157,28 @@ describe RdvsHelper do
       expect(change_status_confirmation_message(rdv, "revoked")).to eq(expected)
     end
   end
+
+  describe "#rdv_success_flash" do
+    context "when we flash for update" do
+      context "when the rdv starts in the past" do
+        it "flashes success with an alert about the starting date" do
+          rdv.starts_at = 1.week.ago
+          expected_alert_message = "Le rendez-vous a été modifié, mais sa date est située dans le passé (il y a 7 jours). Si cette date est incorrecte, merci de modifier le rendez-vous."
+          expect(rdv_success_flash(rdv, what: :update)).to eq({ alert: expected_alert_message })
+        end
+      end
+
+      context "when the rdv starts in the future" do
+        it "flashes success" do
+          expect(rdv_success_flash(rdv, what: :update)).to eq({ notice: "Le rendez-vous a été modifié." })
+        end
+      end
+    end
+
+    context "when we flash for cancellation" do
+      it "flashes cancellation" do
+        expect(rdv_success_flash(rdv, what: :cancel)).to eq({ notice: "Le rendez-vous a été annulé." })
+      end
+    end
+  end
 end
