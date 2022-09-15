@@ -8,7 +8,12 @@ class Team < ApplicationRecord
   )
 
   include TextSearch
-  def self.search_keys = %i[name]
+  def self.search_against
+    {
+      name: "A",
+      id: "D",
+    }
+  end
 
   # Attributes
   auto_strip_attributes :name

@@ -110,7 +110,7 @@ jobs:
       - name: Precompile assets
         run: RAILS_ENV=test bundle exec rake assets:precompile
       - name: Setup tests
-        run: bundle exec rake db:setup RAILS_ENV=test
+        run: RAILS_ENV=test bundle exec rake db:create db:test:prepare
         env:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432

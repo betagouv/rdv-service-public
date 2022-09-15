@@ -34,6 +34,9 @@ FactoryBot.define do
     trait :with_no_email do
       email { nil }
     end
+    trait :with_no_phone_number do
+      phone_number { nil }
+    end
     trait :unregistered do
       confirmed_at { nil }
       password { nil }

@@ -1,0 +1,11 @@
+- if organisation.present? && organisation.domain != current_domain && organisation.new_domain_beta
+  .navbar.alert-warning.p-2
+    div
+      .fa.fa-exclamation-circle.alert-link>
+      span.ml-1.alert-link
+        = "RDV Solidarités devient RDV Aide Numérique ! "
+        = "Vos usagers reçoivent maintenant des notifications de la part de RDV Aide Numérique, et vous pouvez vous connecter sur "
+        = link_to("https://#{organisation.domain.dns_domain_name}", "https://#{organisation.domain.dns_domain_name}")
+        = " pour planifier vos rendez-vous."
+      = link_to(domaines_path)
+        button.btn.mt-3.rdv-status-unknown_past.float-right = "En savoir plus"

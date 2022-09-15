@@ -183,7 +183,19 @@ class CalendarRdvSolidarites {
       return
     }
 
-    let title = `${moment(info.event.start).utc().format('H:mm')} - ${moment(info.event.end).utc().format('H:mm')}`;
+    let title = ``;
+    const start = moment(info.event.start).utc().format('H:mm');
+    const end = moment(info.event.end).utc().format('H:mm');
+
+    if(info.isStart && info.isEnd) {
+      title += `${start} - ${end}`;
+    } else if(info.isStart) {
+      title += `À partir de ${start}`;
+    } else if(info.isEnd) {
+      title += `Jusqu'à ${end}`;
+    } else {
+      title += `Toute la journée`;
+    }
 
     if (info.event.rendering == 'background') {
       $el.append("<div class=\"fc-title\" style=\"color: white; padding: 2px 4px; font-size: 12px; font-weight: bold;\">" + info.event.title + "</div>");

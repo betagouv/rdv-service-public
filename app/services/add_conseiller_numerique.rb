@@ -55,7 +55,8 @@ class AddConseillerNumerique
     organisation = Organisation.create!(
       external_id: @structure.external_id,
       name: next_available_organisation_name,
-      territory: territory
+      territory: territory,
+      new_domain_beta: true
     )
     create_motifs(organisation)
     create_lieu(organisation)
