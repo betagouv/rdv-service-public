@@ -109,6 +109,13 @@ module RdvsHelper
 
   def rdv_success_flash(rdv, what:)
     case what
+    when :create
+      if rdv.starts_at < Time.zone.now
+        distance = distance_of_time_in_words_to_now(rdv.starts_at)
+        { alert: "Le rendez-vous a été créé, mais sa date est située dans le passé (il y a #{distance}). Si cette date est incorrecte, merci de modifier le rendez-vous." }
+      else
+        { notice: "Le rendez-vous a été créé." }
+      end
     when :update
       if rdv.starts_at < Time.zone.now
         distance = distance_of_time_in_words_to_now(rdv.starts_at)

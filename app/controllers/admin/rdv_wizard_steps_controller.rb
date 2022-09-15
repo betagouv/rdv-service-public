@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Admin::RdvWizardStepsController < AgentAuthController
+  include RdvsHelper
+
   before_action :set_agent
 
   PERMITTED_PARAMS = [
@@ -32,7 +34,7 @@ class Admin::RdvWizardStepsController < AgentAuthController
     end
 
     if @rdv_wizard.save
-      redirect_to @rdv_wizard.success_path, @rdv_wizard.success_flash
+      redirect_to @rdv_wizard.success_path, rdv_success_flash(@rdv, what: :create)
     else
       render current_step
     end
