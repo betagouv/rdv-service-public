@@ -1,34 +1,33 @@
 - content_for :title do
-  h1 Conditions d’utilisation de la plateforme RDV-Solidarités
-  / TODO: #rdv-aide-numerique-v1 mettre à jour les cgus pour le nouveau nom de domaine ?
+  h1 Conditions d’utilisation de la plateforme #{current_domain.name}
 
 .container.mt-3
   .row.align-items-center.mb-4.content
     .col-lg-8
 
-      p Les présentes conditions générales d’utilisation (dites « CGU ») encadrent les différents usages de la Plateforme "RDV-Solidarités" et définissent les conditions d’accès et d’utilisation des services par l’Utilisateur.
+      p Les présentes conditions générales d’utilisation (dites « CGU ») encadrent les différents usages de la Plateforme "#{current_domain.name}" et définissent les conditions d’accès et d’utilisation des services par l’Utilisateur.
 
       h2 Article 1 - Champ d'application
 
-      p La plateforme "RDV-Solidarités " est à l'initiative de l’ Agence Nationale de la Cohésion des Territoires (ANCT).
+      p La plateforme "#{current_domain.name} " est à l'initiative de l’ Agence Nationale de la Cohésion des Territoires (ANCT).
       p Cette plateforme inclut le site principal RDV Solidarités, disponible à l'adresse www.rdv-solidarites.fr, ainsi que le site RDV Aide Numérique, disponible à l'adresse www.rdv-aide-numerique.fr.
       h2 Article 2 - Objet
 
-      p RDV-Solidarités est un outil permettant d'organiser et de fluidifier la prise de rendez-vous médico-sociaux ou de formation numérique pour les services publics.
+      p #{current_domain.name} est un outil permettant d'organiser et de fluidifier la prise de rendez-vous médico-sociaux ou de formation numérique pour les services publics.
 
       h2 Article 3 - Définitions
 
       ul
-        li « L'Utilisateur » est toute personne utilisant la plateforme "RDV-Solidarités".
-        li « L'Usager » est tout administré utilisant la plateforme "RDV-Solidarités".
-        li « L'Agent » est tout agent public utilisant la plateforme "RDV-Solidarités".
+        li « L'Utilisateur » est toute personne utilisant la plateforme "#{current_domain.name}".
+        li « L'Usager » est tout administré utilisant la plateforme "#{current_domain.name}".
+        li « L'Agent » est tout agent public utilisant la plateforme "#{current_domain.name}".
         li Les « Services » sont les fonctionnalités offertes par la plateforme.
 
       h2 Article 4 - Fonctionnalités
 
       h3 4.1 Fonctionnalités ouvertes aux Usagers
 
-      p RDV-Solidarités permet à tout Usager qui le souhaite de :
+      p #{current_domain.name} permet à tout Usager qui le souhaite de :
       ul
         li
           p se créer un compte lui permettant de prendre un rendez-vous avec un service public.
@@ -40,11 +39,11 @@
 
         li
           p renseigner des informations relatives à un "Proche".
-          p A cet effet, il pourra remplir une "fiche" pour simplifier les démarches futures d'un proche. Il lui revient d'informer le proche par tous moyens et dans un délai d'1 mois, de la transmission de ces informations à la Plateforme RDV-Solidarités.
+          p A cet effet, il pourra remplir une "fiche" pour simplifier les démarches futures d'un proche. Il lui revient d'informer le proche par tous moyens et dans un délai d'1 mois, de la transmission de ces informations à la Plateforme #{current_domain.name}.
 
       h3 4.2 Fonctionnalités ouvertes aux Agents
 
-      p RDV-Solidarités permet à tout agent réalisant une mission de service public de :
+      p #{current_domain.name} permet à tout agent réalisant une mission de service public de :
       ul
         li Regrouper les actions relatives à la prise de rendez-vous en ligne ;
         li Organiser directement la configuration générale de la prise de rendez-vous ;
@@ -89,7 +88,7 @@
 
       h4 D) Créer une fiche "Nouvel Usager"
 
-      p Cette fonctionnalité est ouverte aux Agents, qui peuvent créer une fiche pour un usager ou pour un proche de l'usager. Cette fonctionnalité permet une meilleure visibilité et organisation aux structures. Ainsi, il est possible de remplir une fiche d'Usager et de proposer à l'usager de se créer un compte RDV-Solidarités. Lorsque l'usager est un "proche", alors l'Agent devra remplir la fiche du Nouvel usager "Responsable", c'est-à-dire celui avec lequel il est en relation directe. Il reviendra à l'Usager d'informer le proche par tous moyens et dans un délai d'1 mois, de la transmission de ces informations à la Plateforme RDV-Solidarités.
+      p Cette fonctionnalité est ouverte aux Agents, qui peuvent créer une fiche pour un usager ou pour un proche de l'usager. Cette fonctionnalité permet une meilleure visibilité et organisation aux structures. Ainsi, il est possible de remplir une fiche d'Usager et de proposer à l'usager de se créer un compte #{current_domain.name}. Lorsque l'usager est un "proche", alors l'Agent devra remplir la fiche du Nouvel usager "Responsable", c'est-à-dire celui avec lequel il est en relation directe. Il reviendra à l'Usager d'informer le proche par tous moyens et dans un délai d'1 mois, de la transmission de ces informations à la Plateforme #{current_domain.name}.
 
       h4 E) Gérer les statistiques de la structure.
 
@@ -103,7 +102,7 @@
 
       h2 Article 5 – Responsabilités
 
-      h3 5.1 L’éditeur de la « Plateforme RDV-Solidarités »
+      h3 5.1 L’éditeur de la « Plateforme #{current_domain.name} »
 
       p Les sources des informations diffusées sur la Plateforme sont réputées fiables mais le site ne garantit pas qu’il soit exempt de défauts, d’erreurs ou d’omissions.
 
