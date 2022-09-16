@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_14_164205) do
+ActiveRecord::Schema.define(version: 2022_09_16_084456) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -226,6 +226,11 @@ ActiveRecord::Schema.define(version: 2022_09_14_164205) do
     t.enum "absence_notification_level", default: "all", enum_type: "agents_absence_notification_level"
     t.string "external_id", comment: "The agent's unique and immutable id in the system managing them and adding them to our application"
     t.string "calendar_uid", comment: "the uid used for the url of the agent's ics calendar"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
     t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_agents_search_terms", using: :gin
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
@@ -420,8 +425,10 @@ ActiveRecord::Schema.define(version: 2022_09_14_164205) do
     t.string "name"
     t.integer "max_participants_count"
     t.integer "users_count", default: 0
+    t.datetime "deleted_at"
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist
     t.index ["created_by"], name: "index_rdvs_on_created_by"
+    t.index ["deleted_at"], name: "index_rdvs_on_deleted_at"
     t.index ["ends_at"], name: "index_rdvs_on_ends_at"
     t.index ["lieu_id"], name: "index_rdvs_on_lieu_id"
     t.index ["max_participants_count"], name: "index_rdvs_on_max_participants_count"
