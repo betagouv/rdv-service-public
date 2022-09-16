@@ -11,6 +11,7 @@ describe Admin::RdvsCollectifsController, type: :controller do
     subject(:create_request) { post :create, params: params }
 
     let(:lieu) { create(:lieu, organisation: organisation) }
+    let(:starts_at) { 1.week.since }
     let(:params) do
       {
         organisation_id: organisation.id,
@@ -19,7 +20,7 @@ describe Admin::RdvsCollectifsController, type: :controller do
           lieu_id: lieu.id,
           duration_in_min: 30,
           agent_ids: [agent.id],
-          starts_at: DateTime.new(2020, 4, 20, 8, 0, 0),
+          starts_at: starts_at,
         },
       }
     end
@@ -28,7 +29,16 @@ describe Admin::RdvsCollectifsController, type: :controller do
 
     it "creates the rdv and flashes success" do
       expect { create_request }.to change(Rdv, :count).by(1)
-      expect(flash[:notice]).to match(/créé/)
+      expect(flash[:notice]).to match(/Le rendez-vous a été créé/)
+    end
+
+    context "when the rdv is in the past" do
+      let(:starts_at) { 1.week.ago }
+
+      it "still creates the rdv but flashes a warning message" do
+        expect { create_request }.to change(Rdv, :count).by(1)
+        expect(flash[:alert]).to match(/Le rendez-vous a été créé, mais sa date est située dans le passé/)
+      end
     end
   end
 end

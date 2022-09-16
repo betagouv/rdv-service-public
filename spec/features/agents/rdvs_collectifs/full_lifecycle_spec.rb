@@ -47,7 +47,7 @@ describe "Agent can organize a rdv collectif", js: true do
     end
 
     click_button "Enregistrer"
-    expect(page).to have_content("Atelier participatif créé")
+    expect(page).to have_content("Le rendez-vous a été créé")
     expect(page).to have_content("Jeudi 17 mars à 14:00")
     expect(page).to have_content("4 places disponibles")
 

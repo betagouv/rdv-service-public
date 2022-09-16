@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Admin::RdvsCollectifsController < AgentAuthController
+  include RdvsHelper
+
   def index
     @motifs = policy_scope(Motif).available_motifs_for_organisation_and_agent(current_organisation, current_agent).collectif
 
@@ -31,8 +33,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
     authorize(@rdv, :new?)
     if @rdv.update(create_params)
       Notifiers::RdvCreated.perform_with(@rdv, current_agent)
-      flash[:notice] = "#{@rdv.motif.name} créé"
-      redirect_to admin_organisation_rdvs_collectifs_path(current_organisation)
+      redirect_to admin_organisation_rdvs_collectifs_path(current_organisation), rdv_success_flash(@rdv, what: :create)
     else
       render :new
     end

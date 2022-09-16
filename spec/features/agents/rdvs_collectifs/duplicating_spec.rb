@@ -17,7 +17,7 @@ describe "Agent can duplicate a Rdv collectif" do
     click_link("Dupliquer")
 
     click_button "Enregistrer"
-    expect(page).to have_content("Atelier Collectif créé")
+    expect(page).to have_content("Le rendez-vous a été créé")
 
     new_rdv = Rdv.last
 
