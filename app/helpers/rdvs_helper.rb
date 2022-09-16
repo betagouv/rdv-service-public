@@ -111,20 +111,18 @@ module RdvsHelper
     case what
     when :create
       if rdv.starts_at < Time.zone.now
-        distance = distance_of_time_in_words_to_now(rdv.starts_at)
-        { alert: "Le rendez-vous a été créé, mais sa date est située dans le passé (il y a #{distance}). Si cette date est incorrecte, merci de modifier le rendez-vous." }
+        { alert: I18n.t("admin.rdvs.message.success.create.date_alert", distance: distance_of_time_in_words_to_now(rdv.starts_at)) }
       else
-        { notice: "Le rendez-vous a été créé." }
+        { notice: I18n.t("admin.rdvs.message.success.create.no_date_alert") }
       end
     when :update
       if rdv.starts_at < Time.zone.now
-        distance = distance_of_time_in_words_to_now(rdv.starts_at)
-        { alert: "Le rendez-vous a été modifié, mais sa date est située dans le passé (il y a #{distance}). Si cette date est incorrecte, merci de modifier le rendez-vous." }
+        { alert: I18n.t("admin.rdvs.message.success.update.date_alert", distance: distance_of_time_in_words_to_now(rdv.starts_at)) }
       else
-        { notice: "Le rendez-vous a été modifié." }
+        { notice: I18n.t("admin.rdvs.message.success.update.no_date_alert") }
       end
     when :cancel
-      { notice: "Le rendez-vous a été annulé." }
+      { notice: I18n.t("admin.rdvs.message.success.cancel") }
     end
   end
 
