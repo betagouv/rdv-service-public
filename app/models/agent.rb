@@ -20,7 +20,7 @@ class Agent < ApplicationRecord
     }
   end
 
-  devise :invitable, :database_authenticatable,
+  devise :invitable, :database_authenticatable, :trackable,
          :recoverable, :rememberable, :validatable, :confirmable, :async, validate_on_invite: true
 
   include DeviseTokenAuth::Concerns::ConfirmableSupport
