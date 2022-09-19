@@ -16,20 +16,45 @@ RSpec.describe "Admin::Organisations::OnlineBookings", type: :request do
 
     it { expect(show_request).to render_template(:show) }
 
-    context "when there is at least one motif that can be booked online" do
-      let!(:motif) { create(:motif, organisation: organisation, service: agent.service, reservable_online: true) }
+    describe "motifs" do
+      context "when there is at least one motif that can be booked online" do
+        let!(:motif) { create(:motif, organisation: organisation, service: agent.service, reservable_online: true) }
 
-      it "shows the motif" do
-        show_request
-        expect(response.body).to include("conserver au moins un motif ouvert à la réservation en ligne")
-        expect(response.body).to include(motif.name)
+        it "shows the motif" do
+          show_request
+          expect(response.body).to include("conserver au moins un motif ouvert à la réservation en ligne")
+          expect(response.body).to include(motif.name)
+        end
+      end
+
+      context "when there is no motifs that can be booked online" do
+        it "shows a message about how to create motifs" do
+          show_request
+          expect(response.body).to include("aucun n'est ouvert à la réservation en ligne")
+        end
       end
     end
 
-    context "when there is no motifs that can be booked online" do
-      it "shows a message to create motifs" do
-        show_request
-        expect(response.body).to include("aucun n'est ouvert à la réservation en ligne")
+    describe "plages d'ouverture" do
+      let(:motif) { create(:motif, organisation: organisation, service: agent.service, reservable_online: true) }
+
+      context "when there is at least one plage d'ouverture that is links to an online bookable motif" do
+        before { motif.plage_ouvertures << create(:plage_ouverture, organisation: organisation, agent: agent) }
+
+        let(:plage_ouverture) { motif.plage_ouvertures.last }
+
+        it "shows the plage d'ouverture" do
+          show_request
+          expect(response.body).to include("conserver au moins une plage d'ouverture liée à un motif ouvert à la réservation en ligne")
+          expect(response.body).to include(plage_ouverture.title)
+        end
+      end
+
+      context "when there is no plage d'ouverture linked to an online bookable motif" do
+        it "shows a message about how to create a plage d'ouverture" do
+          show_request
+          expect(response.body).to include("aucune n'est liée à un motif")
+        end
       end
     end
 
