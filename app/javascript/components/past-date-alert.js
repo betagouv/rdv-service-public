@@ -19,16 +19,7 @@ class PastDateAlertController {
   }
 
   showAlertWhenDatePast(inputValue) {
-    // inputValue has the following format: 12/09/2022 07:00
-    const date = inputValue.split(" ")[0] // 12/09/2022
-    const day = date.split("/")[0]
-    const month = date.split("/")[1] - 1 // month goes from 0 to 11
-    const year = date.split("/")[2]
-    const time = inputValue.split(" ")[1] // 07:00
-    const hours = time.split(":")[0]
-    const minutes = time.split(":")[1]
-
-    if (new Date(year, month, day, hours, minutes) < new Date()) {
+    if (moment().isAfter(moment(inputValue, 'DD/MM/YYYY h:mm'))) {
       this.showAlertMessage()
     } else {
       this.hideAlertMessage()
