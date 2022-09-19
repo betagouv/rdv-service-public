@@ -45,7 +45,7 @@ describe "Agent can search plage ouverture" do
     expect(page).to have_content(expired_perm_scolaire.title).once
   end
 
-  it "preserve the tab after search" do
+  it "preserves the tab after search" do
     click_link("Passées")
     fill_in :search, with: "sco"
     click_button "Rechercher"
