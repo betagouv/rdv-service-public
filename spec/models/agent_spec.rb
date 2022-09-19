@@ -85,7 +85,7 @@ describe Agent, type: :model do
       agent = build(:agent, last_name: "Validay", first_name: "Martine")
       expect(agent.to_s).to eq("Martine Validay")
     end
-  end
+  end-
 
   describe "#access_rights_for_territory" do
     it "returns nil when no access_rights founed" do
@@ -99,6 +99,16 @@ describe Agent, type: :model do
       agent = create(:agent, organisations: [create(:organisation, territory: territory)])
       access_right = create(:agent_territorial_access_right, allow_to_manage_teams: true, agent: agent, territory: territory)
       expect(agent.access_rights_for_territory(territory)).to eq(access_right)
+    end
+  end
+
+  describe "#last_sign_in_at" do
+    it "set last_sign_in_at with current time" do
+      now = Time.zone.now.parse("2022-08-30 11:45:00")
+      agent = create(:agent)
+      expect do
+          # TODO!
+      end
     end
   end
 end
