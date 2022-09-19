@@ -165,13 +165,17 @@ describe RdvsHelper do
       context "when the rdv starts in the past" do
         it "flashes success with an alert about the starting date" do
           rdv.starts_at = 1.week.ago
-          expect(rdv_success_flash(rdv, what: :create)).to eq({ alert: I18n.t("admin.rdvs.message.success.create.date_alert", distance: distance_of_time_in_words_to_now(rdv.starts_at)) })
+          expect(
+            rdv_success_flash(rdv, what: :create)
+          ).to eq({ alert: "Le rendez-vous a été créé, mais sa date est située dans le passé (il y a 7 jours). Si cette date est incorrecte, merci de modifier le rendez-vous." })
         end
       end
 
       context "when the rdv starts in the future" do
         it "flashes success" do
-          expect(rdv_success_flash(rdv, what: :create)).to eq({ notice: I18n.t("admin.rdvs.message.success.create.no_date_alert") })
+          expect(
+            rdv_success_flash(rdv, what: :create)
+          ).to eq({ notice: "Le rendez-vous a été créé." })
         end
       end
     end
@@ -180,20 +184,26 @@ describe RdvsHelper do
       context "when the rdv starts in the past" do
         it "flashes success with an alert about the starting date" do
           rdv.starts_at = 1.week.ago
-          expect(rdv_success_flash(rdv, what: :update)).to eq({ alert: I18n.t("admin.rdvs.message.success.update.date_alert", distance: distance_of_time_in_words_to_now(rdv.starts_at)) })
+          expect(
+            rdv_success_flash(rdv, what: :update)
+          ).to eq({ alert: "Le rendez-vous a été modifié, mais sa date est située dans le passé (il y a 7 jours). Si cette date est incorrecte, merci de modifier le rendez-vous." })
         end
       end
 
       context "when the rdv starts in the future" do
         it "flashes success" do
-          expect(rdv_success_flash(rdv, what: :update)).to eq({ notice: I18n.t("admin.rdvs.message.success.update.no_date_alert") })
+          expect(
+            rdv_success_flash(rdv, what: :update)
+          ).to eq({ notice: "Le rendez-vous a été modifié." })
         end
       end
     end
 
     context "when we flash for cancellation" do
       it "flashes cancellation" do
-        expect(rdv_success_flash(rdv, what: :cancel)).to eq({ notice: I18n.t("admin.rdvs.message.success.cancel") })
+        expect(
+          rdv_success_flash(rdv, what: :cancel)
+        ).to eq({ notice: "Le rendez-vous a été annulé." })
       end
     end
   end
