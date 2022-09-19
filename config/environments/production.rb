@@ -52,7 +52,7 @@ Rails.application.configure do
 
   # Include generic and useful information about system operation, but avoid logging too much
   # information to avoid inadvertent exposure of personally identifiable information (PII).
-  config.log_level = ENV["LOG_LEVEL"]
+  config.log_level = ENV["LOG_LEVEL"].presence || :info
 
   # Prepend all log lines with the following tags.
   config.log_tags = [:request_id]
