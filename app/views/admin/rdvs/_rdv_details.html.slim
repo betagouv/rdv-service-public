@@ -1,11 +1,11 @@
 - if rdv.created_by_user?
   p.card-text
-    i.fa.fa-fw.fa-at>
+    i.fa.fa-fw.fa-at.text-primary-blue>
     | RDV pris sur Internet
 
-.d-flex.card-text.mb-2
+.d-flex.card-text.mb-1
   div.mr-1
-    i.fa.fa-fw.fa-info-circle>
+    i.fa.fa-fw.fa-info-circle.text-primary-blue>
   div
     = rdv.motif.name
     = motif_badges(rdv.motif)
@@ -15,28 +15,35 @@
           .text-muted = t(".empty_context")
         - else
           .text-muted Contexte :
-          .border-left.pl-2= simple_format(rdv.context)
+          .border-left.pl-2.mb-1= simple_format(rdv.context, {}, wrapper_tag: :span)
 
 - if rdv.phone?
   p.card-text
-    i.fa.fa-fw.fa-phone>
+    i.fa.fa-fw.fa-phone.text-primary-blue>
     | RDV téléphonique
 - else
-  p.card-text
-    strong> Lieu :
-    - if rdv.home?
-      | RDV à domicile
-      = human_location(rdv)
-    - elsif rdv.public_office?
-      = human_location(rdv)
+  .d-flex.card-text.mb-1
+    div.mr-1
+      i.fa.fa-fw.fa-map-marker.text-primary-blue>
+    p.card-text
+      - if rdv.home?
+        | RDV à domicile : 
+        = human_location(rdv)
+      - elsif rdv.public_office?
+        = human_location(rdv)
 
-p.card-text
-  strong> Professionnel(s) :
-  = agents_to_sentence(rdv.agents)
-- if local_assigns.fetch(:show_users, true)
-  p.card-text
-    strong> Usager(s) :
-    = users_inline_list_for_agents(rdv.users, display_links_to_users: local_assigns.fetch(:display_links_to_users, true))
+.d-flex.card-text
+  div.mr-1
+    i.fa.fa-fw.fa-user.text-primary-blue>
+  div
+    strong> Professionnel(s) :
+    = agents_to_sentence(rdv.agents)
+
+/ Useless ? show_users seems to be impossible to be set to true
+/ - if local_assigns.fetch(:show_users, true)
+/   p.card-text
+/     strong> Usager(s) :
+/     = users_inline_list_for_agents(rdv.users, display_links_to_users: local_assigns.fetch(:display_links_to_users, true))
 
 - if rdv.public_office? && rdv.overlapping_plages_ouvertures?
   div.my-3
