@@ -1,0 +1,14 @@
+li.list-group-item
+  .row
+    .col-4
+      = link_to plage_ouverture.title, admin_organisation_plage_ouverture_path(plage_ouverture.organisation, plage_ouverture)
+      = po_exceptionnelle_tag(plage_ouverture)
+      br
+      small
+        | modifiée le #{l(plage_ouverture.updated_at, format: :short)}
+    .col-8
+      ul.pl-0
+        - plage_ouverture.motifs.each do |motif|
+          li
+            = motif.name
+            = motif_badges(motif, only: %i[secretariat follow_up collectif])
