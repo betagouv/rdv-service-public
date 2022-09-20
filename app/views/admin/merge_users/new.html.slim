@@ -25,6 +25,11 @@
         td
         td= render "user_selection", user: @merge_users_form.user1, attribute: "user1_id", f: f, other_user_id: @merge_users_form.user2&.id
         td= render "user_selection", user: @merge_users_form.user2, attribute: "user2_id", f: f, other_user_id: @merge_users_form.user1&.id
+      -if @merge_users_form.user1.present?
+        - user1_presenter = DisplayableUserPresenter.new(@merge_users_form.user1, current_organisation)
+      -if @merge_users_form.user2.present?
+        - user2_presenter = DisplayableUserPresenter.new(@merge_users_form.user2, current_organisation)
+
       - @merge_users_form.available_attributes.each do |attribute|
         tr class=@merge_users_form.attribute_comparison(attribute)
           - if %i[logement notes].include?(attribute)
@@ -36,23 +41,36 @@
             - if @merge_users_form.user1
               div.pr-2
                 label.d-flex.justify-content-end for="merge_users_form_#{attribute}_1"
-                  - value = DisplayableUserPresenter.new(@merge_users_form.user1, current_organisation).send(attribute)
-                  - if value&.present?
-                    div= value
+                  - value = user1_presenter.send(attribute)
+                  - if @merge_users_form.user1.frozen_by_franceconnect?(attribute)
+                    div = value
+                  - elsif @merge_users_form.user2.present? && @merge_users_form.user2.frozen_by_franceconnect?(attribute)
+                    del = value
                   - else
-                    i.text-muted N/A
-                  - if @merge_users_form.attribute_comparison(attribute) == :different
-                    span.ml-2= f.radio_button attribute, "1", required: true
+                    - if value&.present?
+                      div= value
+                    - else
+                      i.text-muted N/A
+                    - if @merge_users_form.attribute_comparison(attribute) == :different
+                      span.ml-2= f.radio_button attribute, "1", required: true
+
           td.text-left.pl-3
             - if @merge_users_form.user2
-              label for="merge_users_form_#{attribute}_2"
-                - if @merge_users_form.attribute_comparison(attribute) == :different
-                  span.mr-2= f.radio_button attribute, "2", required: true
-                - value = DisplayableUserPresenter.new(@merge_users_form.user2, current_organisation).send(attribute)
-                - if value&.present?
-                  = value
-                - else
-                  i.text-muted N/A
+              div.pr-2
+                label.d-flex.justify-content-start for="merge_users_form_#{attribute}_2"
+                  - value = user2_presenter.send(attribute)
+                  - if @merge_users_form.user2.frozen_by_franceconnect?(attribute)
+                    div = value
+                  - elsif @merge_users_form.user1.present? && @merge_users_form.user1.frozen_by_franceconnect?(attribute)
+                    del = value
+
+                  - else
+                    - if @merge_users_form.attribute_comparison(attribute) == :different
+                      span.mr-2= f.radio_button attribute, "2", required: true
+                    - if value&.present?
+                      div= value
+                    - else
+                      i.text-muted N/A
       tr
         td= "🔒 RDVs"
         td.text-right= render "user_rdvs", user: @merge_users_form.user1
