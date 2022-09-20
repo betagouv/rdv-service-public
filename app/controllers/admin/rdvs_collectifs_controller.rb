@@ -16,7 +16,8 @@ class Admin::RdvsCollectifsController < AgentAuthController
 
   def new
     motif = policy_scope(Motif).find(params[:motif_id])
-    @rdv = Rdv.new(organisation: current_organisation, motif: motif, duration_in_min: motif.default_duration_in_min)
+    @rdv_form = Admin::NewRdvForm.new(pundit_user, organisation: current_organisation, motif: motif, duration_in_min: motif.default_duration_in_min)
+    @rdv = @rdv_form.rdv
 
     if params[:duplicated_rdv_id]
       duplicated_rdv = policy_scope(Rdv).find(params[:duplicated_rdv_id])
@@ -29,11 +30,13 @@ class Admin::RdvsCollectifsController < AgentAuthController
   end
 
   def create
-    @rdv = Rdv.new(organisation: current_organisation, users_count: 0)
+    @rdv_form = Admin::NewRdvForm.new(pundit_user, create_params.merge(organisation: current_organisation))
+    @rdv = @rdv_form.rdv
+
     authorize(@rdv, :new?)
-    if @rdv.update(create_params)
+    if @rdv_form.save
       Notifiers::RdvCreated.perform_with(@rdv, current_agent)
-      redirect_to admin_organisation_rdvs_collectifs_path(current_organisation), rdv_success_flash(@rdv, what: :create)
+      redirect_to admin_organisation_rdvs_collectifs_path(current_organisation), notice: I18n.t("admin.rdvs.message.success.create")
     else
       render :new
     end
@@ -66,7 +69,7 @@ class Admin::RdvsCollectifsController < AgentAuthController
   private
 
   def create_attribute_names
-    %i[starts_at duration_in_min lieu_id name max_participants_count context motif_id]
+    %i[starts_at duration_in_min lieu_id name max_participants_count context motif_id ignore_benign_errors]
   end
 
   def create_attributes_rdvs

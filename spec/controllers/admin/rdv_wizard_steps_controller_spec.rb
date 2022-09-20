@@ -66,6 +66,8 @@ describe Admin::RdvWizardStepsController, type: :controller do
   end
 
   describe "POST create" do
+    render_views
+
     subject(:create_request) { post :create, params: params }
 
     let(:lieu) { create(:lieu, organisation: organisation) }
@@ -95,9 +97,9 @@ describe Admin::RdvWizardStepsController, type: :controller do
     context "when the rdv is in the past" do
       let(:starts_at) { 1.week.ago }
 
-      it "still creates the rdv but flashes a warning message" do
-        expect { create_request }.to change(Rdv, :count).by(1)
-        expect(flash[:alert]).to match(/Le rendez-vous a été créé, mais sa date est située dans le passé/)
+      it "shows a benign error" do
+        expect { create_request }.not_to change(Rdv, :count)
+        expect(response.body).to include("Ce rendez-vous a une date située dans le passé")
       end
     end
   end

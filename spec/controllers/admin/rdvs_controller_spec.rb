@@ -46,6 +46,8 @@ describe Admin::RdvsController, type: :controller do
 
   describe "PUT #update" do
     context "with valid params" do
+      render_views
+
       subject(:update_request) { put :update, params: params }
 
       let(:rdv) { create(:rdv, motif: motif, agents: [agent], users: [user], organisation: organisation) }
@@ -73,10 +75,9 @@ describe Admin::RdvsController, type: :controller do
       context "when the rdv is in the past" do
         let(:starts_at) { 1.week.ago }
 
-        it "still updates the rdv but flashes a warning message" do
-          expect { update_request }.to change { rdv.reload.lieu }.to(lieu)
-          expect(update_request).to redirect_to(admin_organisation_rdv_path(organisation, rdv))
-          expect(flash[:alert]).to match(/Le rendez-vous a été modifié, mais sa date est située dans le passé/)
+        it "shows a benign error" do
+          expect { update_request }.not_to change { rdv.reload.lieu }
+          expect(response.body).to include("Ce rendez-vous a une date située dans le passé")
         end
       end
     end

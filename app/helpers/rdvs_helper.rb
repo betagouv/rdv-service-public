@@ -107,25 +107,6 @@ module RdvsHelper
     end
   end
 
-  def rdv_success_flash(rdv, what:)
-    case what
-    when :create
-      if rdv.starts_at < Time.zone.now
-        { alert: I18n.t("admin.rdvs.message.success.create.date_alert", distance: distance_of_time_in_words_to_now(rdv.starts_at)) }
-      else
-        { notice: I18n.t("admin.rdvs.message.success.create.no_date_alert") }
-      end
-    when :update
-      if rdv.starts_at < Time.zone.now
-        { alert: I18n.t("admin.rdvs.message.success.update.date_alert", distance: distance_of_time_in_words_to_now(rdv.starts_at)) }
-      else
-        { notice: I18n.t("admin.rdvs.message.success.update.no_date_alert") }
-      end
-    when :cancel
-      { notice: I18n.t("admin.rdvs.message.success.cancel") }
-    end
-  end
-
   private
 
   def rdv_individuel_title_for_agent(rdv)
