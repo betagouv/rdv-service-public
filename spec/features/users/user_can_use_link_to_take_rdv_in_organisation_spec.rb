@@ -19,7 +19,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
   describe "scoping the results to the provided organisation" do
     context "when providing the internal organisation id" do
       it "scopes the motifs to the organisation" do
-        visit "/p/#{organisation_a.id}"
+        visit "/org/#{organisation_a.id}"
         expect(page).to have_content("Motif A")
         expect(page).not_to have_content("Motif B")
       end
@@ -27,7 +27,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
 
     context "when providing the external organisation id + territory slug" do
       it "scopes the motifs to the organisation" do
-        visit "/e/#{territory.departement_number}/#{organisation_a.external_id}"
+        visit "/org/ext/#{territory.departement_number}/#{organisation_a.external_id}"
         expect(page).to have_content("Motif A")
         expect(page).not_to have_content("Motif B")
       end
@@ -36,7 +36,7 @@ RSpec.describe "user can use a link that points to RDV search scoped to an organ
 
   describe "the complete process of taking a RDV from a public link" do
     it "works" do
-      visit "/e/#{territory.departement_number}/#{organisation_a.external_id}"
+      visit "/org/ext/#{territory.departement_number}/#{organisation_a.external_id}"
       expect(page).to have_content("1 lieu est disponible")
       expect(page).to have_content(lieu_a.name)
       expect(page).to have_content(motif_a.service.name)
