@@ -6,8 +6,13 @@
       "description": "HOST",
       "generator": "url"
     },
+
     "ADMIN_BASIC_AUTH_PASSWORD": {
       "description": "Basic auth password for review apps super admin",
+      "generator": "secret"
+    },
+    "SECRET_KEY_BASE": {
+      "description": "See: https://guides.rubyonrails.org/security.html#custom-credentials",
       "generator": "secret"
     },
     "RDV_SOLIDARITES_INSTANCE_NAME": {
@@ -15,11 +20,38 @@
       "generator": "template",
       "template": "PR %PR_NUMBER%"
     },
-    "RDV_SOLIDARITES_IS_REVIEW_APP": {
+    "IS_REVIEW_APP": {
       "value": "true"
     },
     "SENTRY_CURRENT_ENV": {
       "value": "review_app"
+    },
+
+    "DISABLE_SENDING_EMAILS": {
+      "description": "Delete that variable (and setup Sendinblue password) to enable sending email in a review app",
+      "value": "true"
+    },
+    "SENDINBLUE_PASSWORD": {
+      "description": "Password pour Sendinblue",
+      "value": "change_me_if_needed"
+    },
+
+    "ALTERNATE_SMTP_USERNAME": {
+      "description": "Config SMTP du système SFR with mail2SMS - seulement utilisée par le 92",
+      "value": "change_me_if_needed"
+    },
+    "ALTERNATE_SMTP_PASSWORD": {
+      "description": "Config SMTP du système SFR with mail2SMS - seulement utilisée par le 92",
+      "value": "change_me_if_needed"
+    },
+
+    "DEFAULT_SMS_PROVIDER": {
+      "description": "Système d'envoi des SMS par défaut : cette valeur ne fait que logger l'envoi mais n'envoie rien",
+      "value": "debug_logger"
+    },
+    "DEFAULT_SMS_PROVIDER_KEY": {
+      "description": "Credentials des SMS par défaut : définir cette valeur si l'on veut tester un système d'envoi",
+      "value": "change_me_if_needed"
     }
   },
   "scripts": {
