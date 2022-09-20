@@ -4,6 +4,8 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
   before_action :set_organisation
   before_action :check_conseiller_numerique
 
+  helper_method :shareable_link?, :link_to_share
+
   def show
     authorize(@organisation)
 
@@ -20,5 +22,17 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
 
   def check_conseiller_numerique
     redirect_to authenticated_agent_root_path unless current_agent.conseiller_numerique?
+  end
+
+  def shareable_link?
+    @motifs.any? && @plage_ouvertures.any?
+  end
+
+  def link_to_share
+    if current_organisation.external_id.present?
+      public_link_to_external_org_url(current_organisation.territory.departement_number, current_organisation.external_id)
+    else
+      public_link_to_org_url(organisation_id: current_organisation.id)
+    end
   end
 end
