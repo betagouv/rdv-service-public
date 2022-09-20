@@ -50,7 +50,7 @@ class Admin::RdvsController < AgentAuthController
       format.js
       format.html do
         if success
-          redirect_to admin_organisation_rdv_path(current_organisation, @rdv, agent_id: params[:agent_id]), rdv_success_flash(@rdv, what: rdv_action)
+          redirect_to admin_organisation_rdv_path(current_organisation, @rdv, agent_id: params[:agent_id]), rdv_success_flash
         else
           render :edit
         end
@@ -126,11 +126,13 @@ class Admin::RdvsController < AgentAuthController
     end
   end
 
-  def rdv_action
-    if rdv_params[:status].in?(%w[excused revoked])
-      :cancel
-    else
-      :update
-    end
+  def rdv_success_flash
+    {
+      notice: if rdv_params[:status].in?(%w[excused revoked])
+                I18n.t("admin.rdvs.message.success.cancel")
+              else
+                I18n.t("admin.rdvs.message.success.update")
+              end,
+    }
   end
 end

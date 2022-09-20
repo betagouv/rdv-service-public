@@ -5,7 +5,7 @@ describe RdvUpdater, type: :service do
     stub_netsize_ok
   end
 
-  describe "#update" do
+  describe "#perform!" do
     describe "return value" do
       it "true when everything is ok" do
         agent = create(:agent)
@@ -14,7 +14,8 @@ describe RdvUpdater, type: :service do
         rdv.reload
         rdv_params = {}
         expect(RdvUpdater::Result).to receive(:new).with(success: true, rdv_users_tokens_by_user_id: {})
-        described_class.update(agent, rdv, rdv_params)
+        rdv.assign_attributes(rdv_params)
+        described_class.perform!(agent, rdv)
       end
 
       it "return false when update fail" do
@@ -22,7 +23,8 @@ describe RdvUpdater, type: :service do
         rdv = create(:rdv, agents: [agent])
         rdv_params = { agents: [] }
         expect(RdvUpdater::Result).to receive(:new).with(success: false, rdv_users_tokens_by_user_id: {})
-        described_class.update(agent, rdv, rdv_params)
+        rdv.assign_attributes(rdv_params)
+        described_class.perform!(agent, rdv)
       end
     end
 
@@ -32,7 +34,8 @@ describe RdvUpdater, type: :service do
         rdv = create(:rdv, agents: [agent])
         create(:file_attente, rdv: rdv)
         rdv_params = { status: "excused" }
-        described_class.update(agent, rdv, rdv_params)
+        rdv.assign_attributes(rdv_params)
+        described_class.perform!(agent, rdv)
         expect(rdv.reload.file_attentes).to be_empty
       end
     end
@@ -43,7 +46,8 @@ describe RdvUpdater, type: :service do
         rdv = create(:rdv, agents: [agent], status: "waiting")
         rdv_params = { status: "excused" }
         expect(Notifiers::RdvCancelled).to receive(:perform_with).with(rdv, agent)
-        described_class.update(agent, rdv, rdv_params)
+        rdv.assign_attributes(rdv_params)
+        described_class.perform!(agent, rdv)
       end
 
       it "does not notify when status does not change" do
@@ -51,7 +55,8 @@ describe RdvUpdater, type: :service do
         rdv = create(:rdv, agents: [agent], status: "waiting")
         rdv_params = { status: "waiting" }
         expect(Notifiers::RdvCancelled).not_to receive(:perform_with)
-        described_class.update(agent, rdv, rdv_params)
+        rdv.assign_attributes(rdv_params)
+        described_class.perform!(agent, rdv)
       end
 
       it "notifies when date changes" do
@@ -59,7 +64,8 @@ describe RdvUpdater, type: :service do
         rdv = create(:rdv, agents: [agent], status: "waiting")
         rdv_params = { starts_at: 1.day.from_now }
         expect(Notifiers::RdvUpdated).to receive(:perform_with).with(rdv, agent)
-        described_class.update(agent, rdv, rdv_params)
+        rdv.assign_attributes(rdv_params)
+        described_class.perform!(agent, rdv)
       end
 
       it "does not notify when date does not change" do
@@ -69,7 +75,8 @@ describe RdvUpdater, type: :service do
         rdv.reload
         rdv_params = { starts_at: rdv.starts_at }
         expect(Notifiers::RdvUpdated).not_to receive(:perform_with)
-        described_class.update(agent, rdv, rdv_params)
+        rdv.assign_attributes(rdv_params)
+        described_class.perform!(agent, rdv)
       end
 
       it "does not notify when other attributes change" do
@@ -80,7 +87,8 @@ describe RdvUpdater, type: :service do
         rdv_params = { context: "some context" }
         expect(Notifiers::RdvCancelled).not_to receive(:perform_with)
         expect(Notifiers::RdvUpdated).not_to receive(:perform_with)
-        described_class.update(agent, rdv, rdv_params)
+        rdv.assign_attributes(rdv_params)
+        described_class.perform!(agent, rdv)
       end
     end
 
@@ -93,7 +101,8 @@ describe RdvUpdater, type: :service do
         agent = build :agent
         rdv = create(:rdv, agents: [agent], updated_at: previous_date, context: "")
         rdv_params = { context: "un nouveau context" }
-        described_class.update(agent, rdv, rdv_params)
+        rdv.assign_attributes(rdv_params)
+        described_class.perform!(agent, rdv)
         expect(rdv.reload.updated_at).to be_within(3.seconds).of now
         travel_back
       end
@@ -105,7 +114,8 @@ describe RdvUpdater, type: :service do
         agent = build :agent
         rdv = create(:rdv, agents: [agent], status: "noshow", cancelled_at: cancelled_at)
         rdv_params = { status: "waiting" }
-        described_class.update(agent, rdv, rdv_params)
+        rdv.assign_attributes(rdv_params)
+        described_class.perform!(agent, rdv)
         expect(rdv.reload.cancelled_at).to eq(nil)
       end
 
@@ -114,7 +124,8 @@ describe RdvUpdater, type: :service do
         agent = build :agent
         rdv = create(:rdv, agents: [agent], status: "excused", cancelled_at: cancelled_at, context: "")
         rdv_params = { context: "something new" }
-        described_class.update(agent, rdv, rdv_params)
+        rdv.assign_attributes(rdv_params)
+        described_class.perform!(agent, rdv)
         expect(rdv.reload.cancelled_at).to be_within(3.seconds).of cancelled_at
       end
 
@@ -123,7 +134,9 @@ describe RdvUpdater, type: :service do
         travel_to(now)
         agent = build :agent
         rdv = create(:rdv, agents: [agent], status: "excused", cancelled_at: Time.zone.parse("12/1/2020 12:56"))
-        described_class.update(agent, rdv, { status: "noshow" })
+        rdv_params = { status: "noshow" }
+        rdv.assign_attributes(rdv_params)
+        described_class.perform!(agent, rdv)
         expect(rdv.reload.cancelled_at).to be_within(3.seconds).of now
       end
     end
@@ -133,7 +146,9 @@ describe RdvUpdater, type: :service do
       rdv = create(:rdv, agents: [agent], status: "excused", cancelled_at: Time.zone.parse("12/1/2020 12:56"))
 
       expect(Notifiers::RdvCreated).to receive(:perform_with)
-      described_class.update(agent, rdv, { status: "unknown" })
+      rdv_params = { status: "unknown" }
+      rdv.assign_attributes(rdv_params)
+      described_class.perform!(agent, rdv)
     end
   end
 
@@ -162,7 +177,8 @@ describe RdvUpdater, type: :service do
     it "notifies the new participant, and the one that is removed" do
       expect(SmsSender).to receive(:new).and_return(sms_sender_double).twice
       expect(sms_sender_double).to receive(:perform).twice
-      described_class.update(agent, rdv, rdv_params)
+      rdv.assign_attributes(rdv_params)
+      described_class.perform!(agent, rdv)
       expect(ActionMailer::Base.deliveries.count).to eq 2
 
       added_email = ActionMailer::Base.deliveries.first

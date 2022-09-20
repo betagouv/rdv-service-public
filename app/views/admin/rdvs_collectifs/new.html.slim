@@ -13,7 +13,7 @@
         .card-header
           h3.text-center #{@rdv.motif.name} (#{@rdv.motif.service.short_name})
         .card-body.px-3
-          = render "model_errors", model: @rdv
+          = render "model_errors", model: @rdv, f: f
 
           .form-row
             .col-md-6 data={ "controller": "past-date-alert" }

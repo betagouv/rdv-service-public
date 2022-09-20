@@ -121,7 +121,7 @@ describe "Agent can create a Rdv with wizard" do
         query = {
           motif_id: motif.id,
           duration_in_min: 35,
-          starts_at: "2019-10-11 14:15:00 +0200",
+          starts_at: 1.week.since,
           user_ids: [user.id],
           agent_ids: [agent.id],
           context: "RDV très spécial",

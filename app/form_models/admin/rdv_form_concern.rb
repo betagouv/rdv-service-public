@@ -2,6 +2,8 @@
 
 module Admin::RdvFormConcern
   extend ActiveSupport::Concern
+  include ActionView::Helpers::DateHelper
+  include Rails.application.routes.url_helpers
 
   included do
     attr_accessor :rdv
@@ -22,6 +24,7 @@ module Admin::RdvFormConcern
     validate :warn_rdvs_ending_shortly_before
     validate :warn_rdvs_overlapping_rdv
     validate :warn_rdv_duplicate_suspected
+    validate :warn_starts_in_the_past
   end
 
   private
@@ -38,7 +41,10 @@ module Admin::RdvFormConcern
       ends_at: rdv.ends_at,
       motif: rdv.motif,
       status: Rdv::NOT_CANCELLED_STATUSES
-    ).select do |existing_rdv|
+    )
+    suspicious_rdvs = suspicious_rdvs.where.not(id: rdv.id) if rdv.persisted?
+
+    suspicious_rdvs.select do |existing_rdv|
       participants_of_existing_rdv = Set.new(existing_rdv.users + existing_rdv.agents)
       # Not using `rdv.users` because it does a db call, which returns an empty array because `rdv` is not persisted.
       # Using rdv_users/agents_rdvs is safe because they are built from the nested attributes.
@@ -97,12 +103,20 @@ module Admin::RdvFormConcern
         .on_day(rdv.starts_at)
         .with_user(user)
         .where(motif: motif, status: Rdv::NOT_CANCELLED_STATUSES)
+      suspicious_rdvs = suspicious_rdvs.where.not(id: rdv.id) if rdv.persisted?
 
       if suspicious_rdvs.any?
         user_path = admin_organisation_user_path(rdv.organisation, user)
         add_benign_error(I18n.t("activemodel.warnings.models.rdv.attributes.base.rdv_duplicate_suspected", user_path: user_path, user_name: user.full_name))
       end
     end
+  end
+
+  def warn_starts_in_the_past
+    return if ignore_benign_errors
+    return if rdv.starts_at >= Time.zone.now
+
+    add_benign_error(I18n.t("activemodel.warnings.models.rdv.attributes.starts_at.in_the_past", distance: distance_of_time_in_words_to_now(rdv.starts_at)))
   end
 
   def rdv_agent_pairs_ending_shortly_before_grouped_by_agent

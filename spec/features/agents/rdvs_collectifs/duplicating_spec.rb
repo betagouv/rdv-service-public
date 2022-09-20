@@ -16,6 +16,8 @@ describe "Agent can duplicate a Rdv collectif" do
 
     click_link("Dupliquer")
 
+    fill_in "Commence à", with: I18n.l(1.week.since, format: :datetimepicker)
+
     click_button "Enregistrer"
     expect(page).to have_content("Le rendez-vous a été créé")
 
