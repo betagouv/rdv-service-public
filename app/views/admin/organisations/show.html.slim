@@ -26,13 +26,13 @@
             | #{display_value_or_na_placeholder(@organisation.horaires)}
         .text-right= link_to "Modifier", edit_admin_organisation_path(@organisation), class: "btn btn-primary"
 
-
-.row.justify-content-center
-  .col-md-8
-    .card
-      h4.card-header Lien public
-      .card-body
-        label.form-control-label for="public_link" Ce lien permet aux usagers de prendre RDV auprès de votre organisation
-        input.form-control id="public_link" readonly=true value=public_link_to_org_url(organisation_id: @organisation.id)
+- if current_agent.conseiller_numerique?
+  .row.justify-content-center
+    .col-md-8
+      .card
+        h4.card-header Lien public
+        .card-body
+          label.form-control-label for="public_link" Ce lien permet aux usagers de prendre RDV auprès de votre organisation
+          input.form-control id="public_link" readonly=true value=public_link_to_org_url(organisation_id: @organisation.id)
 
 = render "admin/versions/resource_versions_row", policy_scope: :agent, resource: @organisation
