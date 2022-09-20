@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Admin::Organisations::OnlineBookings", type: :request do
+  include Rails.application.routes.url_helpers
+
   let(:organisation) { create(:organisation) }
   let(:agent) { create(:agent, :cnfs, admin_role_in_organisations: [organisation]) }
 
@@ -54,6 +56,43 @@ RSpec.describe "Admin::Organisations::OnlineBookings", type: :request do
         it "shows a message about how to create a plage d'ouverture" do
           show_request
           expect(response.body).to include("aucune n'est liée à un motif")
+        end
+      end
+    end
+
+    describe "shareable link" do
+      context "when online bookable motifs and related plage d'ouverture are missing" do
+        it "shows a message about the link that is inaccessible" do
+          show_request
+          expect(response.body).to include("Dès que les motifs et les plages d'ouverture seront paramétrés pour la réservation en ligne")
+        end
+      end
+
+      context "when there is at least one online bookable motif and a linked plage d'ouverture" do
+        before do
+          motif = create(:motif, organisation: organisation, service: agent.service, reservable_online: true)
+          motif.plage_ouvertures << create(:plage_ouverture, organisation: organisation, agent: agent)
+        end
+
+        it "shows a message about the link that can be used" do
+          show_request
+          expect(response.body).to include("Copiez et partagez ce lien à vos usagers pour leur permettre de réserver en ligne.")
+        end
+
+        context "when the current organisation has an external id" do
+          before { organisation.update!(external_id: "external") }
+
+          it "shows the link to share with the external id" do
+            show_request
+            expect(response.body).to include(public_link_to_external_org_url(organisation.territory.departement_number, organisation.external_id))
+          end
+        end
+
+        context "when the current organisation doesn't have an external id" do
+          it "shows the link to share without the external id" do
+            show_request
+            expect(response.body).to include(public_link_to_org_url(organisation_id: organisation.id))
+          end
         end
       end
     end
