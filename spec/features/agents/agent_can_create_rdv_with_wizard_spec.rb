@@ -8,7 +8,7 @@ describe "Agent can create a Rdv with wizard" do
   let(:service) { create(:service) }
   let!(:agent) { create(:agent, first_name: "Alain", last_name: "DIALO", service: service, basic_role_in_organisations: [organisation]) }
   let!(:agent2) { create(:agent, first_name: "Robert", last_name: "Martin", service: service, basic_role_in_organisations: [organisation]) }
-  let!(:motif) { create(:motif, service: service, organisation: organisation) }
+  let!(:motif) { create(:motif, :collectif, :at_public_office, service: service, organisation: organisation, name: "Super Motif") }
   let!(:lieu) { create(:lieu, organisation: organisation) }
   let!(:disabled_lieu) { create(:lieu, organisation: organisation, enabled: false) }
   let!(:user) { create(:user, organisations: [organisation]) }
@@ -23,8 +23,8 @@ describe "Agent can create a Rdv with wizard" do
   def step1
     expect_page_title("Nouveau RDV pour le 02/10/2019 à 00:00")
     expect(page).to have_selector(".card-title", text: "1. Motif")
-
     select(motif.name, from: "rdv_motif_id")
+    expect(page).to have_select("rdv_motif_id", text: "Super Motif (Sur place - RDV collectif)", exact: true)
     click_button("Continuer")
   end
 

@@ -23,11 +23,10 @@ class WebhookJob < ApplicationJob
 
     request.on_complete do |response|
       if !response.success? && !WebhookJob.false_negative_from_drome?(response.body)
-        message = "Webhook-Failure:\n"
+        message = "Webhook-Failure (#{response.body.force_encoding('UTF-8')[0...1000]}):\n"
         message += "  url: #{webhook_endpoint.target_url}\n"
         message += "  org: #{webhook_endpoint.organisation.name}\n"
-        message += "  response: #{response.code}\n"
-        message += "  body: #{response.body.force_encoding('UTF-8')[0...1000]}\n"
+        message += "  response: #{response.code}"
         raise OutgoingWebhookError, message
       end
     end
@@ -50,6 +49,7 @@ class WebhookJob < ApplicationJob
       /^Can't update appointment/,
       /^Appointment already deleted/,
       /^Appointment id doesn't exist/,
+      /^Can't create appointment/,
     ]
     body["message"]&.match?(Regexp.union(error_messages_from_drome))
   rescue StandardError
