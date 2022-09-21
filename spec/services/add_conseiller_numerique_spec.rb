@@ -85,7 +85,7 @@ describe AddConseillerNumerique do
 
   describe "special cases for organisations" do
     context "when there is already an organisation with this external id" do
-      before { create(:organisation, external_id: "123456") }
+      before { create(:organisation, external_id: "123456", territory: Territory.find_by!(name: "Conseillers Numériques")) }
 
       it "does nothing" do
         expect { described_class.process!(params) }.not_to change(Organisation, :count)
