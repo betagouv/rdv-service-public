@@ -23,7 +23,7 @@
           strong = t("admin.users.notifications_preferences.email_absent")
       - if user.user_to_notify.phone_number.present?
         - if user.user_to_notify.notify_by_sms?
-          div.mr-1
+          div.mr-1.text-nowrap
             i.fa.fa-mobile-alt.text-primary-blue.mr-2
             strong = user.user_to_notify.phone_number
         - else
