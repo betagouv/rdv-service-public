@@ -33,7 +33,7 @@
            = f.submit Agent.human_attribute_value(:display_saturdays, !current_agent.display_saturdays), class: "fc-button fc-button-primary", style: "text-transform: none;"
 
     .mt-2
-      = link_to admin_organisation_rdvs_path(current_organisation, agent_id: @agent.id, start: @date, end: @date, show_user_details: true, breadcrumb_page: "agenda"), class: "js-link-print-rdvs" do
+      = link_to admin_organisation_rdvs_path(current_organisation, agent_id: @agent.id, start: @date, end: @date, breadcrumb_page: "agenda"), class: "js-link-print-rdvs" do
         - if current_agent == @agent
           ' 🖨 Liste détaillée des RDVs du
           span.js-date
