@@ -1,0 +1,11 @@
+.table-responsive.users-table
+  table.table.light-gray-table
+    thead
+      tr
+        th Participant
+        th Notifications
+        th
+        th
+        / th Participation Todo next
+    tbody id="rdv-users-list"
+      = render partial: "admin/rdvs/user_row", collection: @rdv.users, as: :user
