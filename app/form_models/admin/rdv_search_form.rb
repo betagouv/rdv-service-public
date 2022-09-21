@@ -3,7 +3,7 @@
 class Admin::RdvSearchForm
   include ActiveModel::Model
 
-  attr_accessor :organisation_id, :start, :end, :agent_id, :user_id, :lieu_id, :status, :show_user_details, :motif_id
+  attr_accessor :organisation_id, :start, :end, :agent_id, :user_id, :lieu_id, :status, :motif_id
 
   def organisation
     @organisation ||= Organisation.find(organisation_id) if organisation_id.present?
@@ -22,7 +22,7 @@ class Admin::RdvSearchForm
   end
 
   def to_query
-    %i[organisation_id start end agent_id user_id status show_user_details lieu_id motif_id]
+    %i[organisation_id start end agent_id user_id status lieu_id motif_id]
       .map { [_1, send(_1)] }.to_h
   end
 end

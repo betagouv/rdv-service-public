@@ -7,8 +7,10 @@ module IcsMultipartAttached
 
   attr_accessor :ics_payload
 
-  def mail(*args)
-    cal = ics_payload.present? ? IcalHelpers::Ics.from_payload(ics_payload) : nil
+  def mail(...)
+    return super(...) if ics_payload.blank? || ics_payload_already_added?(message)
+
+    cal = IcalHelpers::Ics.from_payload(ics_payload)
 
     # Specs
     # iCalendar: https://datatracker.ietf.org/doc/html/rfc5545#section-3.6.1
@@ -50,26 +52,28 @@ module IcsMultipartAttached
     # Google calendar puts the text/calendar inside the multipart/alternative part.
     # We might want to try that too.
 
-    if cal.present?
-      message.attachments[ics_payload[:name]] = {
-        mime_type: "application/ics",
-        content: Base64.encode64(cal.to_ical),
-        encoding: "base64",
-      }
+    message.attachments[ics_payload[:name]] = {
+      mime_type: "application/ics",
+      content: Base64.encode64(cal.to_ical),
+      encoding: "base64",
+    }
+
+    super(...)
+
+    message.add_part(
+      Mail::Part.new do
+        content_type "text/calendar; method=#{cal.ip_method}; charset=utf-8"
+        body Base64.encode64(cal.to_ical)
+        content_transfer_encoding "base64"
+      end
+    )
+  end
+
+  private
+
+  def ics_payload_already_added?(message)
+    message.parts.any? do |part|
+      part.content_type.include?("application/ics") || part.content_type.include?("text/calendar")
     end
-
-    message = super
-
-    if cal.present?
-      message.add_part(
-        Mail::Part.new do
-          content_type "text/calendar; method=#{cal.ip_method}; charset=utf-8"
-          body Base64.encode64(cal.to_ical)
-          content_transfer_encoding "base64"
-        end
-      )
-    end
-
-    message
   end
 end

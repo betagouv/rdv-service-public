@@ -256,6 +256,10 @@ Rails.application.routes.draw do
     params.values.any? ? "?#{params.to_query}" : ''
   end
 
+  # short public link
+  get "org/:organisation_id(/:org_slug)" => "search#public_link_with_internal_organisation_id", as: :public_link_to_org
+  get "org/ext/:territory_slug/:organisation_external_id(/:org_slug)" => "search#public_link_with_external_organisation_id", as: :public_link_to_external_org
+
   ##
 
   get "accueil_mds" => "static_pages#rdv_solidarites_presentation_for_agents"

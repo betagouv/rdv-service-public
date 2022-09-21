@@ -33,7 +33,6 @@
     - if @rdvs.any?
       = render(partial: "admin/rdvs_collectifs/rdv",
               collection: @rdvs.includes(:organisation, :users, :lieu, :motif, agents: :service),
-              locals: {show_user_details: false},
               cached: ->(rdv) { [rdv, false, locale_cache_key] })
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
     - else

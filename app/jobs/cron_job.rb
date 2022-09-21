@@ -99,18 +99,4 @@ class CronJob < ApplicationJob
       end
     end
   end
-
-  class ScalingoAppRestarterJob < CronJob
-    # At 2:00 every day
-    self.cron_expression = "0 2 * * *"
-
-    def perform
-      # Avoid restarting production many times from review apps
-      return if ENV["RDV_SOLIDARITES_IS_REVIEW_APP"] == "true"
-      return if ENV["SCALINGO_RESTARTER_APP_ID"].blank?
-      return if Rails.env.development?
-
-      ScalingoAppRestarter.perform_with(ENV["SCALINGO_RESTARTER_APP_ID"], ENV["SCALINGO_RESTARTER_API_TOKEN"])
-    end
-  end
 end

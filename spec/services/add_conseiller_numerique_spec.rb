@@ -14,6 +14,7 @@ describe AddConseillerNumerique do
     {
       external_id: "exemple@conseiller-numerique.fr",
       email: "exemple@conseiller-numerique.fr",
+      alternate_email: "exemple@ccas-paris.fr",
       first_name: "Camille",
       last_name: "Clavier",
       structure: {
@@ -25,7 +26,7 @@ describe AddConseillerNumerique do
   end
 
   context "when the conseiller numerique and their structure have never been imported before" do
-    it "creates the agent for the conseiller numerique" do
+    it "creates the agent for the conseiller numerique and notifies them on both email addresses" do
       described_class.process!(params)
       expect(Agent.count).to eq 1
       expect(Agent.last).to have_attributes(
@@ -43,6 +44,12 @@ describe AddConseillerNumerique do
       expect(Agent.last.roles.last).to have_attributes(
         level: "admin",
         organisation_id: Organisation.last.id
+      )
+      invitation_email = ActionMailer::Base.deliveries.last
+
+      expect(invitation_email).to have_attributes(
+        to: ["exemple@conseiller-numerique.fr"],
+        cc: ["exemple@ccas-paris.fr"]
       )
     end
   end
@@ -78,7 +85,7 @@ describe AddConseillerNumerique do
 
   describe "special cases for organisations" do
     context "when there is already an organisation with this external id" do
-      before { create(:organisation, external_id: "123456") }
+      before { create(:organisation, external_id: "123456", territory: Territory.find_by!(name: "Conseillers Numériques")) }
 
       it "does nothing" do
         expect { described_class.process!(params) }.not_to change(Organisation, :count)
