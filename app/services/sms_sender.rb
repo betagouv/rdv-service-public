@@ -42,8 +42,17 @@ class SmsSender < BaseService
 
   def save_receipt(**args)
     params = @receipt_params.merge({ channel: :sms, sms_provider: @provider, sms_phone_number: @phone_number, content: @content }, args)
-    receipt = Receipt.create!(params)
-    raise SmsSenderFailure if receipt.failure?
+    Receipt.create!(params)
+  end
+
+  def handle_failure(error_message:, retry_job: true)
+    save_receipt(result: :failure, error_message: error_message)
+
+    if retry_job
+      raise SmsSenderFailure, error_message
+    else
+      Sentry.capture_message(error_message)
+    end
   end
 
   # SendInBlue
@@ -70,9 +79,17 @@ class SmsSender < BaseService
       # 401 Unauthorized
       # 400 Invalid telephone number
       add_sib_error_to_breadcrumbs(e)
-      save_receipt(result: :failure, error_message: "#{e.message} (#{e.code})")
+      handle_failure(error_message: "SendInBlue error: #{e.message} (#{e.code})")
     end
   end
+
+  # These errors should not trigger a retry, because it would only fail again
+  NETSIZE_PERMANENT_ERRORS = [
+    15, # Message concatenation limit exceeded
+    16, # Unable to route message.
+    103, # Invalid account name
+    117, # Invalid campaign name
+  ].freeze
 
   # NetSize
   # `Netsize Implementation Guide, REST API - SMS.pdf`
@@ -98,9 +115,9 @@ class SmsSender < BaseService
     add_response_to_breadcrumbs(response)
 
     if response.timed_out?
-      save_receipt(result: :failure, error_message: "Timeout")
+      handle_failure(error_message: "NetSize timeout")
     elsif response.failure?
-      save_receipt(result: :failure, error_message: "HTTP error: #{response.code}")
+      handle_failure(error_message: "NetSize HTTP error: #{response.code}")
     else
       parsed_response = JSON.parse(response.body)
       # parsed_response is a hash. Relevant keys are:
@@ -112,7 +129,8 @@ class SmsSender < BaseService
       if parsed_response["responseCode"].zero?
         save_receipt(result: :delivered, sms_count: parsed_response["messageIds"]&.count)
       else
-        save_receipt(result: :failure, error_message: parsed_response["responseMessage"])
+        retry_job = !parsed_response["responseCode"].in?(NETSIZE_PERMANENT_ERRORS)
+        handle_failure(error_message: "NetSize error: #{parsed_response['responseMessage']}", retry_job: retry_job)
       end
     end
   end
@@ -136,9 +154,9 @@ class SmsSender < BaseService
     add_response_to_breadcrumbs(response)
 
     if response.timed_out?
-      save_receipt(result: :failure, error_message: "Timeout")
+      handle_failure(error_message: "Contact Experience error: Timeout")
     elsif response.failure?
-      save_receipt(result: :failure, error_message: "HTTP error: #{response.code}")
+      handle_failure(error_message: "Contact Experience HTTP error: #{response.code}")
     else
       parsed_response = JSON.parse(response.body)
       # parsed_response is a hash. Relevant keys are:
@@ -152,7 +170,7 @@ class SmsSender < BaseService
       else
         # ex: {"status"=>"KO", "message"=>"BAD DEV CODE "}
         # ex: {"status"=>"KO", "message"=>"Invalid number "}
-        save_receipt(result: :failure, error_message: parsed_response["message"])
+        handle_failure(error_message: "Contact Experience error: #{parsed_response['message']}")
       end
     end
   end
@@ -188,9 +206,9 @@ class SmsSender < BaseService
     add_response_to_breadcrumbs(response)
 
     if response.timed_out?
-      save_receipt(result: :failure, error_message: "Timeout")
+      handle_failure(error_message: "Clever Technologies error: Timeout")
     elsif response.failure? || response.code == :http_returned_error
-      save_receipt(result: :failure, error_message: "HTTP error: #{response.code}")
+      handle_failure(error_message: "Clever Technologies HTTP error: #{response.code}")
     else
       parsed_response = JSON.parse(response.body)
       if response.code == 201
@@ -200,7 +218,8 @@ class SmsSender < BaseService
         save_receipt(result: :sent, sms_count: parsed_response.dig("push", "nb_sms"))
       else
         # 401 (Unauthorized) 402 (Payment Required) 430 (Account expired)
-        save_receipt(result: :failure, error_message: parsed_response["errors"]&.values&.join("\n"))
+        errors = parsed_response["errors"]&.values&.join("\n")
+        handle_failure(error_message: "Clever Technologies HTTP error: #{errors}")
       end
     end
   end
@@ -223,14 +242,14 @@ class SmsSender < BaseService
     ).run
 
     if response.timed_out?
-      save_receipt(result: :failure, error_message: "Timeout")
+      handle_failure(error_message: "Orange Contact Everyone error: Timeout")
     elsif response.failure? || response.code == :http_returned_error
-      save_receipt(result: :failure, error_message: "HTTP error: #{response.code}")
+      handle_failure(error_message: "Orange Contact Everyone HTTP error: #{response.code}")
     elsif response.code == 200
       save_receipt(result: :sent)
     else
       parsed_response = JSON.parse(response.body)
-      save_receipt(result: :failure, error_message: parsed_response["message"])
+      handle_failure(error_message: "Orange Contact Everyone HTTP error: #{parsed_response['message']}")
     end
   end
 

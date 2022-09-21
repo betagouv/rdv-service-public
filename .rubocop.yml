@@ -178,8 +178,7 @@ Style/FrozenStringLiteralComment:
     - "config.ru"
 
 Style/GuardClause:
-  Exclude:
-    - 'db/migrate/20211215182150_add_service_name_to_active_storage_blobs.active_storage.rb'
+  Enabled: false
 
 Style/IfUnlessModifier:
   Enabled: false
