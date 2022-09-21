@@ -659,5 +659,6 @@ describe Rdv, type: :model do
         rdv.soft_delete
       end.to change(rdv, :deleted_at).from(nil).to(now)
     end
+    it "shows only"
   end
 end
