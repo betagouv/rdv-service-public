@@ -38,14 +38,10 @@ class StatsController < ApplicationController
   def scope_rdv_to_territory
     if params[:territory].present?
       @territory = Territory.find(params[:territory])
-      @rdvs = Rdv.joins(organisation: :territory)
-        .where(organisations: { territories: [@territory] })
-      @users = User.joins(organisations: :territory)
-        .where(organisations: { territories: [@territory] })
-      @agents = Agent.joins(organisations: :territory)
-        .where(organisations: { territories: [@territory] })
-      @organisations = Organisation.joins(:territory)
-        .where(territories: { departement_number: [@territory] })
+      @rdvs = @territory.rdvs
+      @users = @territory.users
+      @agents = @territory.organisations_agents
+      @organisations = @territory.organisations
       @receipts = @territory.receipts
     else
       @rdvs = Rdv.all
