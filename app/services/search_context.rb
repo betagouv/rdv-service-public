@@ -14,7 +14,8 @@ class SearchContext
     @city_code = query[:city_code]
     @departement = query[:departement]
     @street_ban_id = query[:street_ban_id]
-    @organisation_ids = query[:organisation_ids]
+    @organisation_id = query[:organisation_id]
+    @fallback_organisation_ids = query[:organisation_ids]
     @motif_search_terms = query[:motif_search_terms]
     @motif_category = query[:motif_category]
     @motif_name_with_location_type = query[:motif_name_with_location_type]
@@ -26,7 +27,7 @@ class SearchContext
   # *** Method that outputs the next step for the user to complete its rdv journey ***
   # *** It is used in #to_partial_path to render the matching partial view ***
   def current_step
-    if address.blank?
+    if address.blank? && @organisation_id.blank?
       :address_selection
     elsif !service_selected?
       :service_selection
@@ -146,7 +147,7 @@ class SearchContext
         # we retrieve the geolocalised matching motifs, if there are none we fallback
         # on the matching motifs for the organisations passed in the query
         filter_motifs(geo_search.available_motifs).presence || filter_motifs(
-          Motif.available_with_plages_ouvertures.where(organisation_id: @organisation_ids)
+          Motif.available_with_plages_ouvertures.where(organisation_id: @fallback_organisation_ids)
         )
       else
         filter_motifs(geo_search.available_motifs)
@@ -162,6 +163,7 @@ class SearchContext
     motifs = motifs.where(service: service) if @service_id.present?
     motifs = motifs.search_by_text(@motif_search_terms) if @motif_search_terms.present?
     motifs = motifs.where(category: @motif_category) if @motif_category.present?
+    motifs = motifs.where(organisations: { id: @organisation_id }) if @organisation_id.present?
 
     # filtrer sur le `lieu_id` dans la table des plages d'ouverture permet de limiter de combiner et construire trop d'objet
     # voir https://github.com/betagouv/rdv-solidarites.fr/issues/2686
