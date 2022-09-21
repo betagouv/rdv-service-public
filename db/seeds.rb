@@ -884,7 +884,7 @@ Rdv.create(
     lieu: lieu_org_paris_nord_bd_aubervilliers,
     organisation_id: org_paris_nord.id,
     agent_ids: [agent_org_paris_nord_pmi_marco.id],
-    users_count: 1,
+    users_count: 0,
     user_ids: []
   )
 
@@ -895,7 +895,7 @@ Rdv.create(
     lieu: lieu_org_paris_nord_bolivar,
     organisation_id: org_paris_nord.id,
     agent_ids: [agent_org_paris_nord_social_polo.id],
-    users_count: 1,
+    users_count: 0,
     user_ids: []
   )
 end
