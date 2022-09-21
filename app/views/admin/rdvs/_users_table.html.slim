@@ -2,10 +2,11 @@
   table.table.light-gray-table
     thead
       tr
-        th Participant
+        / Fixed width because of user profile notes field that could messed up the table. 
+        th style="width: 30%" Participant
         th Notifications
         th
         th
-        / th Participation Todo next
+        / th Participation Todo next :
     tbody id="rdv-users-list"
       = render partial: "admin/rdvs/user_row", collection: @rdv.users, as: :user

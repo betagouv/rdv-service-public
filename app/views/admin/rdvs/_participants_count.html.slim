@@ -8,7 +8,7 @@ span.mr-1
   - if rdv.fully_booked?
     = "(Complet)"
   - elsif rdv.overbooked?
-    = "(Trop de participants (#{rdv.users_count} personnes pour #{I18n.t('rdvs.seats', count: rdv.max_participants_count)}))"
+    = "(Trop de participants : #{rdv.users_count} personnes pour #{I18n.t('rdvs.seats', count: rdv.max_participants_count)})"
   - else
     = "(#{(I18n.t("rdvs.available_seats", count: rdv.max_participants_count - rdv.users_count))})"
 - else
