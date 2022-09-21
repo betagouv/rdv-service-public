@@ -25,11 +25,16 @@ tr
         strong = t("admin.users.notifications_preferences.email_absent")
 
   - if user.user_to_notify.phone_number.present?
-    - if user.user_to_notify.notify_by_sms?
+    - if user.user_to_notify.notifiable_by_sms?
       td
         div.mr-1.text-nowrap
           i.fa.fa-mobile-alt.text-primary-blue.mr-2
           strong = user.user_to_notify.phone_number
+    - elsif !user.user_to_notify.phone_number_mobile?
+      td
+        div.mr-1
+          i.fa.fa-times.text-primary-blue.mr-2
+          strong = t("admin.users.notifications_preferences.sms_invalid")
     - else
       td
         div.mr-1
