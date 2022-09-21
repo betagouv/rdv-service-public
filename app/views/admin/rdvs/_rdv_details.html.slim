@@ -27,7 +27,7 @@
       i.fa.fa-fw.fa-map-marker.text-primary-blue>
     p.card-text
       - if rdv.home?
-        | RDV à domicile : 
+        | RDV à domicile :
         = human_location(rdv)
       - elsif rdv.public_office?
         = human_location(rdv)
