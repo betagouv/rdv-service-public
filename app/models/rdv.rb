@@ -335,12 +335,4 @@ class Rdv < ApplicationRecord
   def update_agents_unknown_past_rdv_count
     agents.each(&:update_unknown_past_rdv_count!)
   end
-
-  def cant_destroy_if_receipts_exist
-    # This is similar to using :restrict_with_errors on the has_many :receipts relation, but we want a custom error
-    return if receipts.empty?
-
-    errors.add(:base, :cant_destroy_if_receipts_exist)
-    throw :abort
-  end
 end
