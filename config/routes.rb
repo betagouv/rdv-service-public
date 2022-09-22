@@ -263,6 +263,7 @@ Rails.application.routes.draw do
   ##
 
   get "accueil_mds" => "static_pages#rdv_solidarites_presentation_for_agents"
+  get "accueil_cnfs" => "static_pages#presentation_for_cnfs"
 
   resources :lieux, only: %i[index show]
   root "search#search_rdv"
