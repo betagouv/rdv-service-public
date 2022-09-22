@@ -80,6 +80,8 @@ class ApplicationController < ActionController::Base
   end
 
   def storable_location?
+    return false if current_agent || current_user
+
     request.get? && is_navigational_format? && !devise_controller? && !request.xhr? && request.fullpath != root_path
   end
 
