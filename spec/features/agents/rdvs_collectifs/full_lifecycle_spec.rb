@@ -61,6 +61,11 @@ describe "Agent can organize a rdv collectif", js: true do
 
     expect(page).to have_content("2 places disponible")
 
+    # Test Show
+    click_link("Traitement de texte")
+    expect(page).to have_content("Ajouter un participant")
+    page.go_back
+
     click_link("Ajouter un participant")
     add_user(user2)
     add_new_user({ with_phone: true })
@@ -73,6 +78,11 @@ describe "Agent can organize a rdv collectif", js: true do
     expect(Receipt.where(user_id: user3.id, channel: "sms", result: "delivered").count).to eq 1
 
     expect(page).to have_content("Complet")
+    expect(page).not_to have_content("Ajouter un participant")
+
+    # Test Show
+    click_link("Traitement de texte")
+    expect(page).not_to have_content("Ajouter un participant")
   end
 
   context "create a RDV collectif an existing lieu" do
