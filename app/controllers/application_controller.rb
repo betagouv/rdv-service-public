@@ -8,8 +8,13 @@ class ApplicationController < ActionController::Base
   before_action :set_sentry_context
 
   def after_sign_in_path_for(resource)
-    home_page_when_logged = resource.is_a?(Agent) ? authenticated_agent_root_path : users_rdvs_path
-    stored_location_for(resource) || home_page_when_logged
+    if resource.instance_of?(Agent)
+      agent = resource
+      agent.update(last_sign_in_at: Time.zone.now)
+      authenticated_agent_root_path
+    elsif resource.instance_of?(User)
+      stored_location_for(resource) || users_rdvs_path
+    end
   end
 
   def after_sign_out_path_for(resource)
