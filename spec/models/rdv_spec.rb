@@ -663,14 +663,13 @@ describe Rdv, type: :model do
     it "hide soft_deleted rdv" do
       rdv = create(:rdv)
       rdv.soft_delete
-      expect(Rdv.all).to be_empty
+      expect(described_class.all).to be_empty
     end
 
     it "retrouver unscoped soft_deleted rdv" do
       rdv = create(:rdv)
       rdv.soft_delete
-      expect(Rdv.unscoped.all).to eq([rdv])
+      expect(described_class.unscoped.all).to eq([rdv])
     end
-
   end
 end
