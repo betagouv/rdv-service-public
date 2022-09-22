@@ -254,12 +254,9 @@ Rails.application.routes.draw do
   end
 
   ##
+  get "accueil_mds" => "static_pages#rdv_solidarites_presentation_for_agents"
+
   get '.well-known/acme-challenge/:challenge' => 'acme_plugin/application#index'
-  get "accueil_mds" => "welcome#welcome_agent"
-  post "/" => "welcome#search"
-  get "departement/:departement", to: "welcome#welcome_departement", as: "welcome_departement"
-  post "departement/:departement" => "welcome#search_departement"
-  get "departement/:departement/:service", to: "welcome#welcome_service", as: "welcome_service"
   resources :lieux, only: %i[index show]
   root "search#search_rdv"
 
