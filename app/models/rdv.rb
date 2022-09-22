@@ -291,7 +291,7 @@ class Rdv < ApplicationRecord
   delegate :domain, to: :organisation
 
   def soft_delete
-    update(:deleted_at, Time.zone.now)
+    update(deleted_at: Time.zone.now)
   end
 
   private
