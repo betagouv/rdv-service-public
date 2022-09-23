@@ -8,11 +8,8 @@ class ApplicationController < ActionController::Base
   before_action :set_sentry_context
 
   def after_sign_in_path_for(resource)
-    if resource.instance_of?(Agent)
-      authenticated_agent_root_path
-    elsif resource.instance_of?(User)
-      stored_location_for(resource) || users_rdvs_path
-    end
+    home_page_when_logged = resource.is_a?(Agent) ? authenticated_agent_root_path : users_rdvs_path
+    stored_location_for(resource) || home_page_when_logged
   end
 
   def after_sign_out_path_for(resource)
@@ -80,6 +77,8 @@ class ApplicationController < ActionController::Base
   end
 
   def storable_location?
+    return false if current_agent || current_user
+
     request.get? && is_navigational_format? && !devise_controller? && !request.xhr? && request.fullpath != root_path
   end
 
