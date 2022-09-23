@@ -48,7 +48,8 @@
           .d-none.d-sm-block
             = render "admin/rdvs/users_table", rdv: @rdv
           .d-md-none
-            = render partial: "admin/rdvs/user_card", collection: @rdv.users, as: :user
+            - @rdv.rdvs_users.includes(user: %i[responsible organisations]).each do |rdvs_user|
+              = render "admin/rdvs_users/user_card", rdvs_user: rdvs_user
         - else
           p Il n'y a pas encore de participant pour ce RDV
 

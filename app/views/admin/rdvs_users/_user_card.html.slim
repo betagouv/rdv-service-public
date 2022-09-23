@@ -1,0 +1,56 @@
+.col-12
+  .card.light-gray-card
+    .card-body.p-2
+      .mb-1
+        = render "admin/users/identity", user: rdvs_user.user
+      - notes = rdvs_user.user.notes_for(current_organisation)
+      - if notes.present?
+        .rdv_user_notes
+          i.fa.fa-info-circle.text-primary-blue.mr-2
+          = simple_format(notes, {}, wrapper_tag: :span)
+      - if rdvs_user.user.user_to_notify.email.present?
+        - if rdvs_user.user.user_to_notify.notify_by_email?
+          div.mr-1
+            i.fa.fa-envelope.text-primary-blue.mr-2
+            strong.word-break-all = rdvs_user.user.user_to_notify.email
+        - else
+          div.mr-1
+            i.fa.fa-times.text-primary-blue.mr-2
+            strong = t("admin.users.notifications_preferences.email_disabled")
+      - else
+        div.mr-1
+          i.fa.fa-times-circle.text-primary-blue.mr-2
+          strong = t("admin.users.notifications_preferences.email_absent")
+      - if rdvs_user.user.user_to_notify.phone_number.present?
+        - if rdvs_user.user.user_to_notify.notifiable_by_sms?
+          div.mr-1.text-nowrap
+            i.fa.fa-mobile-alt.text-primary-blue.mr-2
+            strong = rdvs_user.user.user_to_notify.phone_number
+        - elsif !rdvs_user.user.user_to_notify.phone_number_mobile?
+          div.mr-1
+            i.fa.fa-times.text-primary-blue.mr-2
+            strong = t("admin.users.notifications_preferences.sms_invalid")
+        - else
+          div.mr-1
+            i.fa.fa-times.text-primary-blue.mr-2
+            strong = t("admin.users.notifications_preferences.sms_disabled")
+      - else
+        div.mr-1
+          i.fa.fa-times-circle.text-primary-blue.mr-2
+          strong = t("admin.users.notifications_preferences.sms_absent")
+
+      - user_to_notify = rdvs_user.user.user_to_notify
+      - any_notifs = (user_to_notify.notifiable_by_email? || user_to_notify.notifiable_by_sms?)
+      - if any_notifs
+        - if !rdvs_user.send_lifecycle_notifications && !rdvs_user.send_reminder_notification
+          div.mr-1
+            i.fa.fa-times-circle.text-danger.mr-2
+            strong = t("admin.rdvs_users.notifications_summary.none")
+        - elsif !rdvs_user.send_lifecycle_notifications
+          div.mr-1
+            i.fa.fa-times-circle.text-danger.mr-2
+            strong = t("admin.rdvs_users.notifications_summary.lifecycle_off")
+        - elsif !rdvs_user.send_reminder_notification
+          div.mr-1
+            i.fa.fa-times-circle.text-danger.mr-2
+            strong = t("admin.rdvs_users.notifications_summary.reminder_off")

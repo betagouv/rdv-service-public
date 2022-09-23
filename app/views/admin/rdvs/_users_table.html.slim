@@ -7,6 +7,8 @@
         th Notifications
         th
         th
+        th
         / th Participation Todo next :
     tbody id="rdv-users-list"
-      = render partial: "admin/rdvs/user_row", collection: @rdv.users, as: :user
+      - rdv.rdvs_users.includes(user: %i[responsible organisations]).each do |rdvs_user|
+        = render "admin/rdvs_users/user_row", rdvs_user: rdvs_user
