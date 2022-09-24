@@ -1,0 +1,13 @@
+- if rdvs_user.user.user_to_notify.email.present?
+  - if rdvs_user.user.user_to_notify.notify_by_email?
+    span.mr-1
+      i.fa.fa-envelope.text-primary-blue.mr-2
+      strong.word-break-all = rdvs_user.user.user_to_notify.email
+  - else
+    span.mr-1
+      i.fa.fa-times.text-primary-blue.mr-2
+      strong = t("admin.users.notifications_preferences.email_disabled")
+- else
+  span.mr-1
+    i.fa.fa-times-circle.text-primary-blue.mr-2
+    strong = t("admin.users.notifications_preferences.email_absent")

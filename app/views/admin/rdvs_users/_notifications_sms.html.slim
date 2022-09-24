@@ -1,0 +1,17 @@
+- if rdvs_user.user.user_to_notify.phone_number.present?
+  - if rdvs_user.user.user_to_notify.notifiable_by_sms?
+    span.mr-1.text-nowrap
+      i.fa.fa-mobile-alt.text-primary-blue.mr-2
+      strong = rdvs_user.user.user_to_notify.phone_number
+  - elsif !rdvs_user.user.user_to_notify.phone_number_mobile?
+    span.mr-1
+      i.fa.fa-times.text-primary-blue.mr-2
+      strong = t("admin.users.notifications_preferences.sms_invalid")
+  - else
+    span.mr-1
+      i.fa.fa-times.text-primary-blue.mr-2
+      strong = t("admin.users.notifications_preferences.sms_disabled")
+- else
+  span.mr-1
+    i.fa.fa-times-circle.text-primary-blue.mr-2
+    strong = t("admin.users.notifications_preferences.sms_absent")
