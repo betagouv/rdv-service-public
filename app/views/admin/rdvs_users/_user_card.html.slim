@@ -8,7 +8,7 @@
         .rdv_user_notes
           i.fa.fa-info-circle.text-primary-blue.mr-2
           = simple_format(notes, {}, wrapper_tag: :span)
-      div 
+      div
         = render "admin/rdvs_users/notifications_email", rdvs_user: rdvs_user
       div
         = render "admin/rdvs_users/notifications_sms", rdvs_user: rdvs_user
