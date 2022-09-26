@@ -3,6 +3,8 @@
 RSpec.describe "user can use a link that points to RDV search scoped to an organisation" do
   before { travel_to(Time.zone.parse("2022-09-12 15:00:00")) }
 
+  around { |example| perform_enqueued_jobs { example.run } }
+
   let!(:territory) { create(:territory, departement_number: "CN") }
   let!(:organisation_a) { create(:organisation, territory: territory, external_id: "123") }
   let!(:organisation_b) { create(:organisation, territory: territory, external_id: "456") }

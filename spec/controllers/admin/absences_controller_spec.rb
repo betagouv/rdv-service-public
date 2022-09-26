@@ -68,9 +68,11 @@ describe Admin::AbsencesController, type: :controller do
         end
 
         it "send notification after create" do
-          expect do
-            post :create, params: { organisation_id: organisation.id, absence: valid_attributes }
-          end.to change { ActionMailer::Base.deliveries.size }.by(1)
+          perform_enqueued_jobs do
+            expect do
+              post :create, params: { organisation_id: organisation.id, absence: valid_attributes }
+            end.to change { ActionMailer::Base.deliveries.size }.by(1)
+          end
 
           expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Solidarités - Indisponibilité créée")
         end
@@ -129,9 +131,11 @@ describe Admin::AbsencesController, type: :controller do
         end
 
         it "send notification after update" do
-          expect do
-            put :update, params: { organisation_id: organisation.id, id: absence.to_param, absence: new_attributes }
-          end.to change { ActionMailer::Base.deliveries.size }.by(1)
+          perform_enqueued_jobs do
+            expect do
+              put :update, params: { organisation_id: organisation.id, id: absence.to_param, absence: new_attributes }
+            end.to change { ActionMailer::Base.deliveries.size }.by(1)
+          end
           expect(ActionMailer::Base.deliveries.last.subject).to include("RDV Solidarités - Indisponibilité modifiée - Le nouveau nom")
         end
 

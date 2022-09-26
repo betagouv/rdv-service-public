@@ -13,6 +13,8 @@ describe "Agent can create a Rdv with wizard" do
   let!(:disabled_lieu) { create(:lieu, organisation: organisation, enabled: false) }
   let!(:user) { create(:user, organisations: [organisation]) }
 
+  around { |example| perform_enqueued_jobs { example.run } }
+
   before do
     stub_netsize_ok
     travel_to(Time.zone.local(2019, 10, 2))
