@@ -34,8 +34,6 @@ module TextSearch
         query: query,
       }
     }
-
-    before_save :refresh_search_terms
   end
 
   class_methods do
@@ -65,21 +63,5 @@ module TextSearch
     def looks_like_phone_number(string)
       /^(\+\d{2})?[\d ]{3,20}$/.match?(string)
     end
-
-    def search_keys
-      search_against.keys - [:id]
-    end
-  end
-
-  # TODO: Delete "search_term" mechanism if we notice no
-  #       issue with weighted text search within a month.
-  def refresh_search_terms
-    self.search_terms = combined_search_terms
-  end
-
-  def combined_search_terms
-    keys = self.class.search_keys.map(&:to_s)
-    terms = attributes.slice(*keys).values
-    I18n.transliterate(terms.compact.join(" "))
   end
 end
