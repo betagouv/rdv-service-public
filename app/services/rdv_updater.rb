@@ -2,19 +2,19 @@
 
 module RdvUpdater
   class << self
-    def update(author, rdv, rdv_params)
+    def perform!(author, rdv)
       # Explicitly touch the Rdv to make sure a new Version is saved on paper_trail
       # This may be needed when changing associations, when adding/removing an agent or a user.
       rdv.updated_at = Time.zone.now
 
       # Set/reset cancelled_at when the status changes
-      if rdv_params[:status].present?
-        rdv_params[:cancelled_at] = rdv_params[:status].in?(%w[excused revoked noshow]) ? Time.zone.now : nil
+      if rdv.status_changed?
+        rdv.cancelled_at = rdv.status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
       end
 
-      previous_participations = rdv.rdvs_users.to_a
+      previous_participations = rdv.rdvs_users.select(&:persisted?)
 
-      success = rdv.update(rdv_params)
+      success = rdv.save
 
       Result.new(
         success: success,
