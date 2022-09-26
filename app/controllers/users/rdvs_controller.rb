@@ -68,8 +68,7 @@ class Users::RdvsController < UserAuthController
   end
 
   def cancel
-    @rdv.status = "excused"
-    rdv_update = RdvUpdater.perform!(current_user, @rdv)
+    rdv_update = @rdv.update_with_notifs(current_user, status: "excused")
     if rdv_update.success?
       flash[:notice] = "Le RDV a bien été annulé."
     else
