@@ -25,7 +25,7 @@ class Territory < ApplicationRecord
 
   # Through relations
   has_many :organisations_agents, -> { distinct }, through: :organisations, source: :agents
-  has_many :agents, through: :roles
+  has_many :admin_agents, through: :roles
   has_many :zones, through: :sectors
   has_many :rdvs, through: :organisations
   has_many :receipts, through: :rdvs
