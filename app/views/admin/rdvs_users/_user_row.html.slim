@@ -6,12 +6,9 @@ tr
       .rdv_user_notes
         i.fa.fa-info-circle.mr-1
         = simple_format(notes, {}, wrapper_tag: :span)
-
   td
     = render "admin/rdvs_users/notifications_email", rdvs_user: rdvs_user
-
   td
     = render "admin/rdvs_users/notifications_sms", rdvs_user: rdvs_user
-
   td
     = render "admin/rdvs_users/notifications_lifecycle", rdvs_user: rdvs_user

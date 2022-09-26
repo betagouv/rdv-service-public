@@ -39,12 +39,6 @@
     strong> Professionnel(s) :
     = agents_to_sentence(rdv.agents)
 
-/ Useless ? show_users seems to be impossible to be set to true
-/ - if local_assigns.fetch(:show_users, true)
-/   p.card-text
-/     strong> Usager(s) :
-/     = users_inline_list_for_agents(rdv.users, display_links_to_users: local_assigns.fetch(:display_links_to_users, true))
-
 - if rdv.public_office? && rdv.overlapping_plages_ouvertures?
   div.my-3
     .alert.alert-warning.mt-1.mb-0

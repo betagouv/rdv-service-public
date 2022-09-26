@@ -101,26 +101,6 @@ describe Admin::RdvsController, type: :controller do
       get :show, params: { organisation_id: organisation.id, id: rdv.id }
       expect(response).to be_successful
     end
-
-    # Ne fonctionnera plus de cette facon dans la nouvelle interface :
-    # Discussions en cours avec les référentes pour savoir si on garde cette option dans la show, je modifierai le test en conséquence
-    # context "when the user has an email or a phone number" do
-    #   it "shows the notification preferences" do
-    #     get :show, params: { organisation_id: organisation.id, id: rdv.id }
-    #     expect(response).to be_successful
-    #     expect(response.body).to include("Pour ce RDV")
-    #   end
-    # end
-
-    # context "when the user has no email nor phone_number" do
-    #   let!(:user) { create(:user, :with_no_email, :with_no_phone_number) }
-
-    #   it "doesn't show the notification preferences" do
-    #     get :show, params: { organisation_id: organisation.id, id: rdv.id }
-    #     expect(response).to be_successful
-    #     expect(response.body).not_to include("Pour ce RDV")
-    #   end
-    # end
   end
 
   describe "DELETE destroy" do
