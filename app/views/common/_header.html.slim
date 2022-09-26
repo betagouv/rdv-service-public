@@ -13,7 +13,6 @@ nav.navbar.navbar-expand-lg.bg-transparent
 
         - else
           li.list-inline-item
-            - presentation_path = current_domain == Domain::RDV_AIDE_NUMERIQUE ? accueil_cnfs_path : accueil_mds_path
-            = link_to t("links.agent_space"), presentation_path, class: "btn btn-link text-white"
+            = link_to t("links.agent_space"), presentation_agent_path, class: "btn btn-link text-white"
           li.list-inline-item
             = link_to t("links.session"), new_user_session_path, class: "btn btn-outline-white"

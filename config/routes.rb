@@ -262,8 +262,8 @@ Rails.application.routes.draw do
 
   ##
 
-  get "accueil_mds" => "static_pages#rdv_solidarites_presentation_for_agents"
-  get "accueil_cnfs" => "static_pages#presentation_for_cnfs"
+  get "accueil_mds", to: redirect("presentation_agent", status: 307)
+  get "presentation_agent" => "static_pages#presentation_for_agents"
 
   resources :lieux, only: %i[index show]
   root "search#search_rdv"

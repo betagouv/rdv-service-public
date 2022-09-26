@@ -1,15 +1,27 @@
 # frozen_string_literal: true
 
 class Domain
-  def initialize(logo_path:, public_logo_path:, dark_logo_path:, name:, sms_sender_name:, default: false) # rubocop:disable Metrics/ParameterLists
+  # rubocop:disable Metrics/ParameterLists
+  def initialize(
+    logo_path:,
+    public_logo_path:,
+    dark_logo_path:,
+    name:,
+    presentation_for_agents_template_name:,
+    sms_sender_name:,
+    default: false
+  )
     @logo_path = logo_path
     @public_logo_path = public_logo_path
     @dark_logo_path = dark_logo_path
     @name = name
+    @presentation_for_agents_template_name = presentation_for_agents_template_name
     @sms_sender_name = sms_sender_name
     @default = default
   end
-  attr_reader :logo_path, :public_logo_path, :dark_logo_path, :name, :sms_sender_name, :default
+  # rubocop:enable Metrics/ParameterLists
+
+  attr_reader :logo_path, :public_logo_path, :dark_logo_path, :name, :presentation_for_agents_template_name, :sms_sender_name, :default
 
   ALL = [
     RDV_SOLIDARITES = new(
@@ -18,6 +30,7 @@ class Domain
       public_logo_path: "/logo_solidarites.png",
       dark_logo_path: "logos/logo_sombre_solidarites.svg",
       name: "RDV Solidarités",
+      presentation_for_agents_template_name: "rdv_solidarites_presentation_for_agents",
       sms_sender_name: "RdvSoli"
     ),
 
@@ -26,6 +39,7 @@ class Domain
       public_logo_path: "/logo_aide_numerique.png",
       dark_logo_path: "logos/logo_sombre_aide_numerique.svg",
       name: "RDV Aide Numérique",
+      presentation_for_agents_template_name: "presentation_for_cnfs",
       sms_sender_name: "RdvAideNum"
     ),
   ].freeze

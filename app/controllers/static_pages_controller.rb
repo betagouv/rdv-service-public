@@ -15,11 +15,7 @@ class StaticPagesController < ApplicationController
     Territory.count # check connection to DB is working
   end
 
-  def rdv_solidarites_presentation_for_agents
-    redirect_to root_path unless current_domain == Domain::RDV_SOLIDARITES
-  end
-
-  def presentation_for_cnfs
-    redirect_to root_path unless current_domain == Domain::RDV_AIDE_NUMERIQUE
+  def presentation_for_agents
+    render current_domain.presentation_for_agents_template_name
   end
 end

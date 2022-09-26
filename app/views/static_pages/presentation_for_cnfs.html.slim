@@ -94,6 +94,11 @@ section.bg-lightturquoise.py-5
           = link_to "Connectez-vous", new_agent_session_path, class: "btn btn-primary"
     .row.mt-4
       p.m-auto
+        ' Si vous n'avez jamais utilisé votre compte, vous pouvez réinitialiser votre mot de passe en indiquant votre adresse
+        em
+          | ___@conseiller-numerique.fr
+        | .
+      p.m-auto
         | Des questions ?
         =< link_to("Contactez-nous", "mailto:#{SUPPORT_EMAIL}", target: "_blank")
         | .
