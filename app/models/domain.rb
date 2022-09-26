@@ -86,14 +86,13 @@ class Domain
   def self.find_matching(domain_name)
     # Les review apps utilisent un domaine de Scalingo, elles
     # ne permettent donc pas d'utiliser plusieurs domaines.
-    return default_domain if ENV["IS_REVIEW_APP"] == "true"
+    return review_app_domain if ENV["IS_REVIEW_APP"] == "true"
 
-    ALL_BY_URL.fetch(domain_name) { default_domain }
+    ALL_BY_URL.fetch(domain_name) { RDV_SOLIDARITES }
   end
 
-  def self.default_domain
-    # This is meant to be used in review apps, which can't determine domain from URL
-    if ENV["DEFAULT_DOMAIN"] == "RDV_AIDE_NUMERIQUE"
+  def self.review_app_domain
+    if ENV["REVIEW_APP_DOMAIN"] == "RDV_AIDE_NUMERIQUE"
       RDV_AIDE_NUMERIQUE
     else
       RDV_SOLIDARITES
