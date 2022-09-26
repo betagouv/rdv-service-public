@@ -18,13 +18,17 @@ class MotifForm {
       !document.querySelector("#motif_follow_up:checked")
   }
 
+  // This method enables and initializes the sectorisation section when
+  // motif_reservable_online is checked or unchecked.
   toggleSectorisation = () => {
     const enabled = !!document.querySelector("#motif_reservable_online:checked")
     if (enabled == this.sectorisationEnabled) return;
 
+    const sectorisationCard = document.querySelector(".js-sectorisation-card")
+    if (!sectorisationCard) return; // not all domains have sectorisation config enabled
+
     if (!enabled) {
-      document.querySelector('#motif_sectorisation_level_agent').checked = false
-      document.querySelector('#motif_sectorisation_level_organisation').checked = false
+      // reset radio button to default value
       document.querySelector('#motif_sectorisation_level_departement').checked = true
     }
     document.
