@@ -127,7 +127,9 @@ describe Admin::PlageOuverturesController, type: :controller do
         end
 
         it "send notification after create" do
-          expect { post(:create, params: valid_params) }.to change { ActionMailer::Base.deliveries.size }.by(1)
+          perform_enqueued_jobs do
+            expect { post(:create, params: valid_params) }.to change { ActionMailer::Base.deliveries.size }.by(1)
+          end
           expect(ActionMailer::Base.deliveries.last.subject).to eq("RDV Solidarités - Plage d’ouverture créée - Permanence ecole")
         end
 
@@ -182,6 +184,7 @@ describe Admin::PlageOuverturesController, type: :controller do
         it "send notification after update" do
           ActionMailer::Base.deliveries.clear
           put :update, params: { organisation_id: organisation.id, id: plage_ouverture.to_param, plage_ouverture: { title: "Le nouveau nom" } }
+          perform_enqueued_jobs
           expect(ActionMailer::Base.deliveries.size).to eq(1)
           expect(ActionMailer::Base.deliveries.last.subject).to eq("RDV Solidarités - Plage d’ouverture modifiée - Le nouveau nom")
         end

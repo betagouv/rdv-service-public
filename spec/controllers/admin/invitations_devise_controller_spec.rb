@@ -195,6 +195,7 @@ RSpec.describe Admin::InvitationsDeviseController, type: :controller do
 
       it "sends an email" do
         subject
+        perform_enqueued_jobs
         expect(Devise.mailer.deliveries.count).to eq(1)
       end
     end
