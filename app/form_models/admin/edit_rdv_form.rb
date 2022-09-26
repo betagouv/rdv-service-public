@@ -15,9 +15,9 @@ class Admin::EditRdvForm
     @rdv.assign_attributes(rdv_attributes)
 
     if valid?
-      RdvUpdater.perform!(agent_context.agent, rdv)
+      @rdv.update_with_notifs(agent_context.agent, rdv_attributes)
     else
-      RdvUpdater::Result.new(success: false)
+      Rdv::Updatable::Result.new(success: false)
     end
   end
 
