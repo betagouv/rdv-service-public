@@ -2,16 +2,26 @@
 
 - content_for :title do
   | Réservation en ligne
+
 .card
   .card-body
-    p Permettez à vos usagers de prendre rendez-vous en suivant un lien que vous leur partagez.
-    dl
-      dt 1️⃣ Motifs
-      dd D'abord, vous devez ouvrir au moins un motif à la réservation en ligne.
-      dt 2️⃣ Plages d'ouverture
-      dd Ensuite, ajoutez les plages d'ouverture liées aux motifs ouverts à la réservation en ligne.
-      dt 3️⃣ Lien de réservation
-      dd Votre lien de réservation est prêt ! Partagez-le avec vos usagers et invitez-les à prendre réserver en ligne.
+    p Permettez à vos usagers de prendre rendez-vous grâce à un lien de réservation que vous leur partagez. Suivez les étapes ci-dessous pour permettre la réservation en ligne.
+    
+    h5.mt-4 Motifs ouverts à la réservation en ligne
+    p D'abord, vous devez ouvrir au moins un motif à la réservation en ligne.
+    div
+      = setup_checklist_item(@motifs.any?)
+      =< link_to "Ajouter un motif ouvert à la réservation en ligne", admin_organisation_motifs_path(current_organisation)
+
+    h5.mt-4 Plages d'ouverture
+    p Ensuite, ajoutez les plages d'ouverture liées aux motifs ouverts à la réservation en ligne.
+    div
+      = setup_checklist_item(@plage_ouvertures.any?)
+      =< link_to "Ajouter une plage d'ouverture dans votre agenda", admin_organisation_agent_plage_ouvertures_path(current_organisation, current_agent)
+    
+    h5.mt-4 Lien de réservation
+    p Une fois le paramétrage terminé, votre lien de réservation est prêt ! Partagez-le avec vos usagers et invitez-les à prendre rendez-vous en ligne.
+
 .card
   .card-header
     h4 Motifs
@@ -19,7 +29,7 @@
     - if @motifs.any?
       p
         | Sur tous vos motifs (#{@total_motifs_count} au total), voici ceux qui sont
-        strong  réservables en ligne
+        strong< réservables en ligne
         |. Ils sont nécessaires à votre partage de lien. Veillez à conserver au moins un motif ouvert à la réservation en ligne.
       p Toutes les plages d'ouverture pour ces motifs seront réservables en ligne.
       ul.list-group.my-1
@@ -30,7 +40,7 @@
     - else
       p
         | Pour l'instant, sur tous vos motifs (#{@total_motifs_count} au total), aucun n'est ouvert à la réservation en ligne. Allez sur la création ou la modification d'un motif, puis sélectionnez l'option
-        strong  Réservable en ligne
+        strong< Réservable en ligne
         |.
   .card-footer
     = link_to "Gérer mes motifs", admin_organisation_motifs_path(current_organisation)
@@ -41,7 +51,7 @@
     - if @plage_ouvertures.any?
       p
         | Sur toutes vos plages d'ouverture (#{@total_plage_ouvertures} au total), voici celles qui sont liées à des motifs
-        strong  réservables en ligne
+        strong< réservables en ligne
         |. Elles sont nécessaires au partage de votre lien de réservation. Veillez à conserver au moins une plage d'ouverture liée à un motif ouvert à la réservation en ligne.
         p Pour ajouter une plage d'ouverture, allez dans le planning, puis sélectionnez un agent, et enfin rendez-vous sur Plages d'ouverture.
       ul.list-group.my-1
@@ -52,7 +62,7 @@
     - else
       p
         | Sur toutes vos plages d'ouverture (#{@total_plage_ouvertures} au total), aucune n'est liée à un motif
-        strong  réservable en ligne
+        strong< réservable en ligne
         |. Commencez par ajouter au moins un motif ouvert à la réservation en ligne. Vous pourrez alors ajouter des plages d'ouverture.
       p Pour ajouter une plage d'ouverture, allez dans le planning, puis sélectionnez un agent, et enfin rendez-vous sur Plages d'ouverture.
   .card-footer
@@ -65,7 +75,7 @@
       p Copiez et partagez ce lien de réservation à vos usagers pour leur permettre de réserver en ligne.
       p
         | Si vous souhaitez tester la réservation en ligne en tant qu'usager, ouvrez une nouvelle fenêtre de navigation
-        strong  privée
+        strong< privée
         |  et collez-y le lien ci-dessous.
     - else
       p Dès que les motifs et les plages d'ouverture seront paramétrés pour la réservation en ligne, vous pourrez copier et partager ce lien pour permettre à vos usagers de réserver un rendez-vous en ligne.
