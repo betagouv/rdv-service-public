@@ -11,7 +11,10 @@ module Rdv::Updatable
   def save_and_notify(author)
     Rdv.transaction do
       self.updated_at = Time.zone.now
-      self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil if status_changed?
+
+      if status_changed?
+        self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
+      end
 
       previous_participations = rdvs_users.select(&:persisted?)
 
