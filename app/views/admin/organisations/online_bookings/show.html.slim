@@ -30,7 +30,7 @@
       p
         | Vous avez #{@motifs.count}
         =<> "motif".pluralize(@motifs.count)
-        | de rendez-vous 
+        | de rendez-vous
         =<> "ouvert".pluralize(@motifs.count)
         | à la
         strong< réservation en ligne
@@ -70,7 +70,7 @@
         |. Commencez par ajouter au moins un motif ouvert à la réservation en ligne. Vous pourrez alors ajouter des plages d'ouverture.
       p Pour ajouter une plage d'ouverture, allez dans le planning, puis sélectionnez un agent, et enfin rendez-vous sur Plages d'ouverture.
   .card-footer
-    = link_to "Gérer mes propres plages d'ouverture", admin_organisation_agent_plage_ouvertures_path(current_organisation, current_agent)
+    = link_to "Gérer mes plages d'ouverture", admin_organisation_agent_plage_ouvertures_path(current_organisation, current_agent)
 .card
   .card-header
     h4 Lien de réservation
