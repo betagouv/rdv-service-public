@@ -12,7 +12,7 @@ describe "CNFS agent can configure online booking" do
   end
 
   context "when there is no bookable motifs" do
-    it "can't copy the shareable link", js: true do
+    it "can't copy the booking link", js: true do
       expect(page).to have_css('[data-clipboard-target="copy-button"][disabled]')
     end
   end
@@ -21,7 +21,7 @@ describe "CNFS agent can configure online booking" do
     let!(:motif) { create(:motif, organisation: organisation, service: agent.service, reservable_online: true) }
 
     context "when there is no related plage d'ouverture" do
-      it "can't copy the shareable link", js: true do
+      it "can't copy the booking link", js: true do
         expect(page).to have_css('[data-clipboard-target="copy-button"][disabled]')
       end
     end
@@ -29,7 +29,7 @@ describe "CNFS agent can configure online booking" do
     context "when there is a related plage d'ouverture" do
       before { motif.plage_ouvertures << create(:plage_ouverture, organisation: organisation, agent: agent) }
 
-      it "can copy the shareable link", js: true do
+      it "can copy the booking link", js: true do
         expect(page).not_to have_css('[data-clipboard-target="copy-button"][disabled]')
         accept_alert do
           click_button "copier"

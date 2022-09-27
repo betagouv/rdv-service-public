@@ -10,8 +10,8 @@
       dd D'abord, vous devez ouvrir au moins un motif à la réservation en ligne.
       dt 2️⃣ Plages d'ouverture
       dd Ensuite, ajoutez les plages d'ouverture liées aux motifs ouverts à la réservation en ligne.
-      dt 3️⃣ Lien à partager
-      dd Votre lien est prêt ! Partagez-le avec vos usagers et invitez-les à prendre réserver en ligne.
+      dt 3️⃣ Lien de réservation
+      dd Votre lien de réservation est prêt ! Partagez-le avec vos usagers et invitez-les à prendre réserver en ligne.
 .card
   .card-header
     h4 Motifs
@@ -42,7 +42,7 @@
       p
         | Sur toutes vos plages d'ouverture (#{@total_plage_ouvertures} au total), voici celles qui sont liées à des motifs
         strong  réservables en ligne
-        |. Elles sont nécessaires à votre partage de lien. Veillez à conserver au moins une plage d'ouverture liée à un motif ouvert à la réservation en ligne.
+        |. Elles sont nécessaires au partage de votre lien de réservation. Veillez à conserver au moins une plage d'ouverture liée à un motif ouvert à la réservation en ligne.
         p Pour ajouter une plage d'ouverture, allez dans le planning, puis sélectionnez un agent, et enfin rendez-vous sur Plages d'ouverture.
       ul.list-group.my-1
         = render partial: "plage_ouverture", collection: @plage_ouvertures.limit(10)
@@ -59,21 +59,21 @@
     = link_to "Gérer mes propres plages d'ouverture", admin_organisation_agent_plage_ouvertures_path(current_organisation, current_agent)
 .card
   .card-header
-    h4 Lien à partager
+    h4 Lien de réservation
   .card-body
-    - if shareable_link?
-      p Copiez et partagez ce lien à vos usagers pour leur permettre de réserver en ligne.
+    - if shareable_booking_link?
+      p Copiez et partagez ce lien de réservation à vos usagers pour leur permettre de réserver en ligne.
       p
         | Si vous souhaitez tester la réservation en ligne en tant qu'usager, ouvrez une nouvelle fenêtre de navigation
         strong  privée
         |  et collez-y le lien ci-dessous.
     - else
       p Dès que les motifs et les plages d'ouverture seront paramétrés pour la réservation en ligne, vous pourrez copier et partager ce lien pour permettre à vos usagers de réserver un rendez-vous en ligne.
-    form data={ "controller": "clipboard", "clipboard-to-copy-value": link_to_share }
+    form data={ "controller": "clipboard", "clipboard-to-copy-value": booking_link }
       .form-row
         .col-8
-          = text_field_tag :link_to_share, link_to_share, disabled: !shareable_link?, readonly: true, class: "form-control"
+          = text_field_tag :booking_link, booking_link, disabled: !shareable_booking_link?, readonly: true, class: "form-control"
         .col-4
-          = button_tag disabled: !shareable_link?, class: "ml-2 btn btn-primary", data: { "clipboard-target": "copy-button" }
+          = button_tag disabled: !shareable_booking_link?, class: "ml-2 btn btn-primary", data: { "clipboard-target": "copy-button" }
             i.fa.fa-copy.mr-1
             | copier
