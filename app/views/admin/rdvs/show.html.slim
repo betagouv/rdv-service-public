@@ -15,7 +15,7 @@
 .row.justify-content-md-center
   .col-md-8
     .card
-      .card-header[style="border-bottom-color: white;"]
+      .card-header.border-white
         .d-flex.justify-content-between.flex-wrap
           div
             h5.header.mb-1
@@ -43,7 +43,7 @@
               = link_to t(".duplicate"), new_admin_organisation_rdvs_collectif_path(current_organisation, motif_id: @rdv.motif_id, duplicated_rdv_id: @rdv.id), class: "btn btn-outline-primary-blue btn-sm"
 
       hr.my-0.mx-3
-      .card-footer[style="border-top-color: white;"]
+      .card-footer.border-white
         - if @rdv.users.any?
           .d-none.d-sm-block
             = render "admin/rdvs/users_table", rdv: @rdv
