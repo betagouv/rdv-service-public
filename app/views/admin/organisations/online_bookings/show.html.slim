@@ -5,8 +5,8 @@
 
 .card
   .card-body
-    p Permettez à vos usagers de prendre rendez-vous grâce à un lien de réservation que vous leur partagez. Suivez les étapes ci-dessous pour permettre la réservation en ligne.
-    
+    p Permettez à vos usagers de prendre rendez-vous en ligne, sur les créneaux qui vous conviennent, grâce à un lien de réservation que vous leur partagez. Suivez les étapes ci-dessous pour configurer la réservation en ligne.
+
     h5.mt-4 Motifs ouverts à la réservation en ligne
     p D'abord, vous devez ouvrir au moins un motif à la réservation en ligne.
     div
@@ -18,7 +18,7 @@
     div
       = setup_checklist_item(@plage_ouvertures.any?)
       =< link_to "Ajouter une plage d'ouverture dans votre agenda", admin_organisation_agent_plage_ouvertures_path(current_organisation, current_agent)
-    
+
     h5.mt-4 Lien de réservation
     p Une fois le paramétrage terminé, votre lien de réservation est prêt ! Partagez-le avec vos usagers et invitez-les à prendre rendez-vous en ligne.
 
