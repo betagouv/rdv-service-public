@@ -49,12 +49,12 @@ class MotifForm {
       input.addEventListener('change', e => this.toggleSecretariat())
     )
     this.reservableOnlineCheckbox.addEventListener('change', e => {
-      this.toggleSectorisation()
+      if (document.querySelector(".js-sectorisation-card") !== null) { this.toggleSectorisation() }
       this.toggleRdvsEditable()
     })
 
     this.toggleSecretariat()
-    this.toggleSectorisation()
+    if (document.querySelector(".js-sectorisation-card") !== null) { this.toggleSectorisation() }
     this.toggleRdvsEditable()
   }
 
