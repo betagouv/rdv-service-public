@@ -9,8 +9,6 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(resource)
     if resource.instance_of?(Agent)
-      agent = resource
-      agent.update(last_sign_in_at: Time.zone.now)
       authenticated_agent_root_path
     elsif resource.instance_of?(User)
       stored_location_for(resource) || users_rdvs_path
@@ -82,8 +80,6 @@ class ApplicationController < ActionController::Base
   end
 
   def storable_location?
-    return false if current_agent || current_user
-
     request.get? && is_navigational_format? && !devise_controller? && !request.xhr? && request.fullpath != root_path
   end
 

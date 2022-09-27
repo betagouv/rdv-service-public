@@ -20,8 +20,6 @@ class Agent < ApplicationRecord
     }
   end
 
-  # Tout les champs demandé par le module "trackable" ont été ajouté à la table "agents",
-  # seulement last_sign_in_at sera implémenté
   devise :invitable, :database_authenticatable, :trackable,
          :recoverable, :rememberable, :validatable, :confirmable, :async, validate_on_invite: true
 
