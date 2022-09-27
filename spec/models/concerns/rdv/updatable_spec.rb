@@ -16,7 +16,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
     end
 
     it "returns a success" do
-      expect(rdv.update_and_notify(agent, status: "noshow")).to be_success
+      expect(rdv.update_and_notify(agent, status: "noshow")).to eq(true)
     end
 
     %w[excused revoked noshow].each do |status|
@@ -38,7 +38,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
     end
 
     it "returns a failure when the Rdv can't be updated" do
-      expect(rdv.update_and_notify(agent, ends_at: nil)).not_to be_success
+      expect(rdv.update_and_notify(agent, ends_at: nil)).to eq(false)
     end
 
     describe "clear the file_attentes" do

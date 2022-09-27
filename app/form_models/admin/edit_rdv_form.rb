@@ -17,7 +17,7 @@ class Admin::EditRdvForm
     if valid?
       @rdv.save_and_notify(agent_context.agent)
     else
-      Rdv::Updatable::Result.new(success: false)
+      false
     end
   end
 

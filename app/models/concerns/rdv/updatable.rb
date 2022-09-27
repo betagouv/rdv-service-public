@@ -3,6 +3,10 @@
 module Rdv::Updatable
   extend ActiveSupport::Concern
 
+  included do
+    attr_reader :rdv_users_tokens_by_user_id
+  end
+
   def update_and_notify(author, attributes)
     assign_attributes(attributes)
     save_and_notify(author)
@@ -19,10 +23,10 @@ module Rdv::Updatable
       previous_participations = rdvs_users.select(&:persisted?)
 
       if save
-        rdv_users_tokens_by_user_id = notify!(author, previous_participations)
-        Result.new(success: true, rdv_users_tokens_by_user_id: rdv_users_tokens_by_user_id)
+        @rdv_users_tokens_by_user_id = notify!(author, previous_participations)
+        true
       else
-        Result.new(success: false)
+        false
       end
     end
   end
@@ -68,15 +72,5 @@ module Rdv::Updatable
 
   def starts_at_changed?
     previous_changes["starts_at"].present?
-  end
-
-  class Result
-    attr_reader :success, :rdv_users_tokens_by_user_id
-    alias success? success
-
-    def initialize(success:, rdv_users_tokens_by_user_id: {})
-      @success = success
-      @rdv_users_tokens_by_user_id = rdv_users_tokens_by_user_id
-    end
   end
 end
