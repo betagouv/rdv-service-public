@@ -6,23 +6,23 @@ RSpec.describe Rdv::Updatable, type: :concern do
   let(:agent) { create(:agent) }
   let!(:rdv) { create(:rdv, agents: [agent]) }
 
-  describe "#update_with_notifs" do
+  describe "#update_with_notifications" do
     it "updates the Rdv" do
-      expect { rdv.update_with_notifs(agent, status: "noshow") }.to change { rdv.reload.status }.to("noshow")
+      expect { rdv.update_with_notifications(agent, status: "noshow") }.to change { rdv.reload.status }.to("noshow")
     end
 
     it "updates the updated_at attribute" do
-      expect { rdv.update_with_notifs(agent, status: "noshow") }.to change { rdv.reload.updated_at }
+      expect { rdv.update_with_notifications(agent, status: "noshow") }.to change { rdv.reload.updated_at }
     end
 
     it "returns a success" do
-      expect(rdv.update_with_notifs(agent, status: "noshow")).to be_success
+      expect(rdv.update_with_notifications(agent, status: "noshow")).to be_success
     end
 
     %w[excused revoked noshow].each do |status|
       context "when the status changed and is now #{status}" do
         it "updates the cancelled_at attribute" do
-          expect { rdv.update_with_notifs(agent, status: status) }.to change { rdv.reload.cancelled_at }.from(nil)
+          expect { rdv.update_with_notifications(agent, status: status) }.to change { rdv.reload.cancelled_at }.from(nil)
         end
       end
     end
@@ -32,57 +32,57 @@ RSpec.describe Rdv::Updatable, type: :concern do
         before { rdv.update!(cancelled_at: 1.day.ago, status: "noshow") }
 
         it "sets the cancelled_at attribute to nil" do
-          expect { rdv.update_with_notifs(agent, status: status) }.to change { rdv.reload.cancelled_at }.to(nil)
+          expect { rdv.update_with_notifications(agent, status: status) }.to change { rdv.reload.cancelled_at }.to(nil)
         end
       end
     end
 
     it "returns a failure when the Rdv can't be updated" do
-      expect(rdv.update_with_notifs(agent, ends_at: nil)).not_to be_success
+      expect(rdv.update_with_notifications(agent, ends_at: nil)).not_to be_success
     end
 
     describe "clear the file_attentes" do
       it "destroy all file_attentes" do
         create(:file_attente, rdv: rdv)
-        expect { rdv.update_with_notifs(agent, status: "excused") }.to change { rdv.reload.file_attentes }.to([])
+        expect { rdv.update_with_notifications(agent, status: "excused") }.to change { rdv.reload.file_attentes }.to([])
       end
     end
 
     describe "sends relevant notifications" do
       it "notifies when rdv cancelled" do
         expect(Notifiers::RdvCancelled).to receive(:perform_with).with(rdv, agent)
-        rdv.update_with_notifs(agent, status: "excused")
+        rdv.update_with_notifications(agent, status: "excused")
       end
 
       it "does not notify when status does not change" do
         rdv.update!(status: "waiting")
         expect(Notifiers::RdvCancelled).not_to receive(:perform_with)
-        rdv.update_with_notifs(agent, status: "waiting")
+        rdv.update_with_notifications(agent, status: "waiting")
       end
 
       it "notifies when date changes" do
         expect(Notifiers::RdvUpdated).to receive(:perform_with).with(rdv, agent)
-        rdv.update_with_notifs(agent, starts_at: 1.day.from_now)
+        rdv.update_with_notifications(agent, starts_at: 1.day.from_now)
       end
 
       it "does not notify when date does not change" do
         rdv.reload
         expect(Notifiers::RdvUpdated).not_to receive(:perform_with)
-        rdv.update_with_notifs(agent, starts_at: rdv.starts_at)
+        rdv.update_with_notifications(agent, starts_at: rdv.starts_at)
       end
 
       it "does not notify when other attributes change" do
         rdv.reload
         expect(Notifiers::RdvCancelled).not_to receive(:perform_with)
         expect(Notifiers::RdvUpdated).not_to receive(:perform_with)
-        rdv.update_with_notifs(agent, context: "some context")
+        rdv.update_with_notifications(agent, context: "some context")
       end
     end
 
     it "call Notifiers::RdvCreated when reloaded status from cancelled status" do
       rdv.update!(status: "excused", cancelled_at: Time.zone.parse("12/1/2020 12:56"))
       expect(Notifiers::RdvCreated).to receive(:perform_with)
-      rdv.update_with_notifs(agent, status: "unknown")
+      rdv.update_with_notifications(agent, status: "unknown")
     end
 
     describe "for a rdv collectif" do
@@ -107,7 +107,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
         expect(SmsSender).to receive(:new).and_return(sms_sender_double).twice
         expect(sms_sender_double).to receive(:perform).twice
 
-        rdv.update_with_notifs(agent, attributes)
+        rdv.update_with_notifications(agent, attributes)
         perform_enqueued_jobs
         expect(ActionMailer::Base.deliveries.count).to eq 2
 

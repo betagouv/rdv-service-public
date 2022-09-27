@@ -3,12 +3,12 @@
 module Rdv::Updatable
   extend ActiveSupport::Concern
 
-  def update_with_notifs(author, attributes)
+  def update_with_notifications(author, attributes)
     assign_attributes(attributes)
-    save_with_notifs(author)
+    save_with_notifications(author)
   end
 
-  def save_with_notifs(author)
+  def save_with_notifications(author)
     Rdv.transaction do
       self.updated_at = Time.zone.now
       self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil if status_changed?
