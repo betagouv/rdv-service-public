@@ -18,7 +18,7 @@ describe CronJob::DestroyOldRdvsJob do
     described_class.new.perform
   end
 
-  it "delete" do
+  it "actually deletes RDVs that were soft_deleted" do
     now = Time.zone.parse("2022-08-30 11:45:00")
     travel_to(now)
     create(:rdv, starts_at: now - 1.day, deleted_at: now)

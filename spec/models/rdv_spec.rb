@@ -666,7 +666,7 @@ describe Rdv, type: :model do
       expect(described_class.all).to be_empty
     end
 
-    it "retrouver unscoped soft_deleted rdv" do
+    it "allows finding soft_deleted rdv using `unscoped`" do
       rdv = create(:rdv)
       rdv.soft_delete
       expect(described_class.unscoped.all).to eq([rdv])
