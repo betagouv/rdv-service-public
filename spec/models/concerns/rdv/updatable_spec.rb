@@ -151,14 +151,14 @@ RSpec.describe Rdv::Updatable, type: :concern do
     end
   end
 
-  describe "#lieu_change?" do
+  describe "#lieu_changed?" do
     context "with single_use lieu" do
       it "returns true when single_use lieu name is updated" do
         lieu = create(:lieu, availability: "single_use", name: "nom")
         rdv.update!(lieu: lieu)
         rdv.reload
         rdv.update(lieu_attributes: { name: "autre nom", id: lieu.id })
-        expect(rdv.lieu_change?).to be(true)
+        expect(rdv.lieu_changed?).to be(true)
       end
 
       it "returns true when single_use lieu adress is updated" do
@@ -166,7 +166,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
         rdv.update!(lieu: lieu)
         rdv.reload
         rdv.update(lieu_attributes: { address: "derrière l'arbre", id: lieu.id })
-        expect(rdv.lieu_change?).to be(true)
+        expect(rdv.lieu_changed?).to be(true)
       end
     end
 
@@ -177,7 +177,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
         rdv.update!(lieu: lieu)
         rdv.reload
         rdv.update(lieu: autre_lieu)
-        expect(rdv.lieu_change?).to be(true)
+        expect(rdv.lieu_changed?).to be(true)
       end
 
       it "returns false when lieu doesnt change" do
@@ -185,7 +185,7 @@ RSpec.describe Rdv::Updatable, type: :concern do
         rdv.update!(lieu: lieu)
         rdv.reload
         rdv.update(context: "context")
-        expect(rdv.lieu_change?).to be(false)
+        expect(rdv.lieu_changed?).to be(false)
       end
     end
 
@@ -195,13 +195,13 @@ RSpec.describe Rdv::Updatable, type: :concern do
       rdv.update!(lieu: lieu)
       rdv.reload
       rdv.update(lieu: autre_lieu)
-      expect(rdv.lieu_change?).to be(true)
+      expect(rdv.lieu_changed?).to be(true)
     end
 
     it "returns false when lieu is nil" do
       rdv = create(:rdv, :by_phone, lieu: nil)
       rdv.reload
-      expect(rdv.lieu_change?).to be(false)
+      expect(rdv.lieu_changed?).to be(false)
     end
   end
 end

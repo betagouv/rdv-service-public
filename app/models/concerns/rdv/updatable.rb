@@ -38,7 +38,7 @@ module Rdv::Updatable
       rdv_users_tokens_by_user_id = Notifiers::RdvCreated.perform_with(self, author)
     end
 
-    if starts_at_change? || lieu_change?
+    if starts_at_changed? || lieu_changed?
       rdv_users_tokens_by_user_id = Notifiers::RdvUpdated.perform_with(self, author)
     end
 
@@ -53,7 +53,7 @@ module Rdv::Updatable
     status_previously_was.in?(%w[revoked excused]) && status == "unknown"
   end
 
-  def lieu_change?
+  def lieu_changed?
     # Rappel :
     # - si le motif du RDV est de type `public_office`, le lieu est forcément renseigné, sinon il est forcément nil
     # - il est impossible de changer le motif d'un RDV
@@ -66,7 +66,7 @@ module Rdv::Updatable
     previous_changes["status"]&.last.in? %w[excused revoked noshow]
   end
 
-  def starts_at_change?
+  def starts_at_changed?
     previous_changes["starts_at"].present?
   end
 
