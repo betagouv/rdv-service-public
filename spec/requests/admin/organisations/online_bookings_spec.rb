@@ -60,7 +60,7 @@ RSpec.describe "Admin::Organisations::OnlineBookings", type: :request do
       end
     end
 
-    describe "shareable link" do
+    describe "booking link" do
       context "when online bookable motifs and related plage d'ouverture are missing" do
         it "shows a message about the link that is inaccessible" do
           show_request
@@ -76,7 +76,7 @@ RSpec.describe "Admin::Organisations::OnlineBookings", type: :request do
 
         it "shows a message about the link that can be used" do
           show_request
-          expect(response.body).to include("Copiez et partagez ce lien à vos usagers pour leur permettre de réserver en ligne.")
+          expect(response.body).to include("Copiez et partagez ce lien de réservation à vos usagers pour leur permettre de réserver en ligne.")
         end
 
         context "when the current organisation has an external id" do
