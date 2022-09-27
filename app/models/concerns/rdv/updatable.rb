@@ -3,10 +3,6 @@
 module Rdv::Updatable
   extend ActiveSupport::Concern
 
-  included do
-    attr_reader :rdv_users_tokens_by_user_id
-  end
-
   def update_and_notify(author, attributes)
     assign_attributes(attributes)
     save_and_notify(author)
@@ -23,7 +19,7 @@ module Rdv::Updatable
       previous_participations = rdvs_users.select(&:persisted?)
 
       if save
-        @rdv_users_tokens_by_user_id = notify!(author, previous_participations)
+        notify!(author, previous_participations)
         true
       else
         false
@@ -31,26 +27,28 @@ module Rdv::Updatable
     end
   end
 
+  def rdv_user_token(user_id)
+    @rdv_users_tokens_by_user_id&.fetch(user_id, nil)
+  end
+
   def notify!(author, previous_participations)
-    rdv_users_tokens_by_user_id = {}
+    @rdv_users_tokens_by_user_id = {}
     if rdv_cancelled?
       file_attentes.destroy_all
-      rdv_users_tokens_by_user_id = Notifiers::RdvCancelled.perform_with(self, author)
+      @rdv_users_tokens_by_user_id = Notifiers::RdvCancelled.perform_with(self, author)
     end
 
     if rdv_status_reloaded_from_cancelled?
-      rdv_users_tokens_by_user_id = Notifiers::RdvCreated.perform_with(self, author)
+      @rdv_users_tokens_by_user_id = Notifiers::RdvCreated.perform_with(self, author)
     end
 
     if starts_at_changed? || lieu_changed?
-      rdv_users_tokens_by_user_id = Notifiers::RdvUpdated.perform_with(self, author)
+      @rdv_users_tokens_by_user_id = Notifiers::RdvUpdated.perform_with(self, author)
     end
 
     if collectif?
-      rdv_users_tokens_by_user_id = Notifiers::RdvCollectifParticipations.perform_with(self, author, previous_participations)
+      @rdv_users_tokens_by_user_id = Notifiers::RdvCollectifParticipations.perform_with(self, author, previous_participations)
     end
-
-    rdv_users_tokens_by_user_id
   end
 
   def rdv_status_reloaded_from_cancelled?

@@ -73,7 +73,7 @@ class Users::RdvsController < UserAuthController
     else
       flash[:error] = "Impossible d'annuler le RDV."
     end
-    redirect_to users_rdv_path(@rdv, invitation_token: @rdv.rdv_users_tokens_by_user_id&.fetch(current_user.id, nil))
+    redirect_to users_rdv_path(@rdv, invitation_token: @rdv.rdv_user_token(current_user.id))
   end
 
   def creneaux
