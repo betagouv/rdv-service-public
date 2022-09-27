@@ -23,6 +23,8 @@ class RdvsUser < ApplicationRecord
   ## -
 
   def set_status
+    return if rdv&.status.nil?
+
     self.status = rdv.status
   end
 
