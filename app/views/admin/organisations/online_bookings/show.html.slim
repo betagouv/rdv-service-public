@@ -28,9 +28,13 @@
   .card-body
     - if @motifs.any?
       p
-        | Sur tous vos motifs (#{@total_motifs_count} au total), voici ceux qui sont
-        strong< réservables en ligne
-        |. Ils sont nécessaires à votre partage de lien. Veillez à conserver au moins un motif ouvert à la réservation en ligne.
+        | Vous avez #{@motifs.count}
+        =<> "motif".pluralize(@motifs.count)
+        | de rendez-vous 
+        =<> "ouvert".pluralize(@motifs.count)
+        | à la
+        strong< réservation en ligne
+        |. Les motifs ouverts à la réservation en ligne sont nécessaires à votre partage de lien. Veillez à en conserver au moins un.
       p Toutes les plages d'ouverture pour ces motifs seront réservables en ligne.
       ul.list-group.my-1
         = render partial: "motif", collection: @motifs.limit(10)
