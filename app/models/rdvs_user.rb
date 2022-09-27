@@ -4,8 +4,6 @@ class RdvsUser < ApplicationRecord
   devise :invitable
   # Attributes
   enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
-  NOT_CANCELLED_STATUSES = %w[unknown waiting seen noshow].freeze
-  CANCELLED_STATUSES = %w[excused revoked].freeze
 
   # Relations
   belongs_to :rdv, touch: true, inverse_of: :rdvs_users, counter_cache: :users_count
@@ -22,7 +20,6 @@ class RdvsUser < ApplicationRecord
 
   # Temporary Hooks for Participation feature
   after_initialize :set_status
-  before_validation :set_status
   ## -
 
   def set_status
