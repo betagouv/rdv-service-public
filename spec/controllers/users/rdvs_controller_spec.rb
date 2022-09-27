@@ -68,14 +68,14 @@ RSpec.describe Users::RdvsController, type: :controller do
       let(:rdv) { create(:rdv, starts_at: 5.hours.from_now) }
 
       before do
-        allow_any_instance_of(Rdv).to receive(:update_with_notifications).and_return(
+        allow_any_instance_of(Rdv).to receive(:update_and_notify).and_return(
           Rdv::Updatable::Result.new(success: true, rdv_users_tokens_by_user_id: { rdv.users.first.id => token })
         )
       end
 
-      it "calls update_with_notifications function" do
+      it "calls update_and_notify function" do
         sign_in rdv.users.first
-        expect_any_instance_of(Rdv).to receive(:update_with_notifications).with(rdv.users.first, status: "excused")
+        expect_any_instance_of(Rdv).to receive(:update_and_notify).with(rdv.users.first, status: "excused")
         put :cancel, params: { id: rdv.id }
       end
 
