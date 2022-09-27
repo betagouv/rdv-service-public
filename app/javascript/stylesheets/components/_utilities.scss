@@ -36,6 +36,10 @@ a[disabled] {
   gap: 0 1em;
 }
 
+.flex-v-gap-1em {
+  gap: 1em 0;
+}
+
 ul.horizontal-border-between-items {
   li {
     border-bottom: 1px solid #eee;

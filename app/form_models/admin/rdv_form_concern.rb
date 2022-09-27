@@ -27,12 +27,6 @@ module Admin::RdvFormConcern
     validate :warn_starts_in_the_past
   end
 
-  private
-
-  def validate_rdv
-    rdv.validate
-  end
-
   def check_duplicates
     suspicious_rdvs = Rdv.includes(:users, :agents).where(
       organisation: rdv.organisation,
@@ -44,15 +38,20 @@ module Admin::RdvFormConcern
     )
     suspicious_rdvs = suspicious_rdvs.where.not(id: rdv.id) if rdv.persisted?
 
-    suspicious_rdvs.select do |existing_rdv|
+    suspicious_rdvs = suspicious_rdvs.select do |existing_rdv|
       participants_of_existing_rdv = Set.new(existing_rdv.users + existing_rdv.agents)
       # Not using `rdv.users` because it does a db call, which returns an empty array because `rdv` is not persisted.
       # Using rdv_users/agents_rdvs is safe because they are built from the nested attributes.
       participants_of_current_rdv = Set.new(rdv.rdvs_users.map(&:user) + rdv.agents_rdvs.map(&:agent))
       participants_of_existing_rdv == participants_of_current_rdv
     end
-
     errors.add(:base, :duplicate) if suspicious_rdvs.any?
+  end
+
+  private
+
+  def validate_rdv
+    rdv.validate
   end
 
   def warn_overlapping_plage_ouverture

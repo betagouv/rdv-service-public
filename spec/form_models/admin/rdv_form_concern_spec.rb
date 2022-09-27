@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Admin::RdvFormConcern, type: :form do
-  subject { dummy_form_class.new(rdv, agent_author) }
+  subject(:form) { dummy_form_class.new(rdv, agent_author) }
 
   let(:dummy_form_class) do
     Class.new do
@@ -29,7 +29,7 @@ describe Admin::RdvFormConcern, type: :form do
 
   before do
     travel_to(now)
-    subject.agent_context = agent_context
+    form.agent_context = agent_context
     allow(RdvStartCoherence).to receive(:new).with(rdv).and_return(rdv_start_coherence)
     allow(RdvsOverlapping).to receive(:new).with(rdv).and_return(rdvs_overlapping)
   end
@@ -45,8 +45,8 @@ describe Admin::RdvFormConcern, type: :form do
       end
 
       it "is not valid" do
-        expect(subject.valid?).to eq false
-        expect(subject.errors[:base]).to include "not cool"
+        expect(form.valid?).to eq false
+        expect(form.errors[:base]).to include "not cool"
       end
     end
 
@@ -60,7 +60,7 @@ describe Admin::RdvFormConcern, type: :form do
       end
 
       it "is valid" do
-        expect(subject.valid?).to eq true
+        expect(form.valid?).to eq true
       end
     end
 
@@ -80,15 +80,15 @@ describe Admin::RdvFormConcern, type: :form do
       end
 
       it "is not valid" do
-        expect(subject.valid?).to eq false
-        expect(subject.errors).not_to be_empty
+        expect(form.valid?).to eq false
+        expect(form.errors).not_to be_empty
       end
 
       it "includes warnings" do
-        subject.valid?
-        expect(subject.errors_are_all_benign?).to eq true
-        expect(subject.benign_errors).not_to be_empty
-        expect(subject.benign_errors).to include("alerte RDV proche !")
+        form.valid?
+        expect(form.errors_are_all_benign?).to eq true
+        expect(form.benign_errors).not_to be_empty
+        expect(form.benign_errors).to include("alerte RDV proche !")
       end
     end
 
@@ -116,15 +116,15 @@ describe Admin::RdvFormConcern, type: :form do
       end
 
       it "is not valid" do
-        expect(subject.valid?).to eq false
-        expect(subject.errors).not_to be_empty
+        expect(form.valid?).to eq false
+        expect(form.errors).not_to be_empty
       end
 
       it "includes warnings" do
-        subject.valid?
-        expect(subject.errors_are_all_benign?).to eq true
-        expect(subject.benign_errors).not_to be_empty
-        expect(subject.benign_errors).to match_array(["alerte RDV Giono !", "alerte RDV Maceo !"])
+        form.valid?
+        expect(form.errors_are_all_benign?).to eq true
+        expect(form.benign_errors).not_to be_empty
+        expect(form.benign_errors).to match_array(["alerte RDV Giono !", "alerte RDV Maceo !"])
       end
     end
 
@@ -144,16 +144,53 @@ describe Admin::RdvFormConcern, type: :form do
       end
 
       it "is not valid" do
-        expect(subject.valid?).to eq false
-        expect(subject.errors).not_to be_empty
+        expect(form.valid?).to eq false
+        expect(form.errors).not_to be_empty
       end
 
       it "includes warnings" do
-        subject.valid?
-        expect(subject.errors_are_all_benign?).to eq true
-        expect(subject.benign_errors).not_to be_empty
-        expect(subject.benign_errors).to include("alerte RDV se chevauchant !")
+        form.valid?
+        expect(form.errors_are_all_benign?).to eq true
+        expect(form.benign_errors).not_to be_empty
+        expect(form.benign_errors).to include("alerte RDV se chevauchant !")
       end
+    end
+  end
+
+  describe "#check_duplicates" do
+    let(:rdv) { build(:rdv) }
+
+    it "do nothing when no other RDV" do
+      form.check_duplicates
+      expect(rdv.errors).to be_empty
+    end
+
+    it "add an error if RDV already exist with same motif, user and agent" do
+      create(:rdv,
+             motif: rdv.motif,
+             users: rdv.users,
+             agents: rdv.agents,
+             organisation: rdv.organisation,
+             lieu: rdv.lieu,
+             starts_at: rdv.starts_at,
+             ends_at: rdv.ends_at)
+
+      form.check_duplicates
+      expect(rdv.errors.full_messages).to eq(["Il existe déjà un RDV au même moment, au même lieu, pour le même motif, avec les mêmes participant⋅es"])
+    end
+
+    it "return nothing if existing RDV is for an other users and other agents" do
+      create(:rdv,
+             motif: rdv.motif,
+             users: [create(:user)],
+             agents: [create(:agent, organisations: [rdv.organisation])],
+             organisation: rdv.organisation,
+             lieu: rdv.lieu,
+             starts_at: rdv.starts_at,
+             ends_at: rdv.ends_at)
+
+      form.check_duplicates
+      expect(rdv.errors).to be_empty
     end
   end
 end
