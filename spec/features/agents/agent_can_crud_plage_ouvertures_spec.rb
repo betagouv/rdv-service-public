@@ -42,6 +42,7 @@ describe "Agent can CRUD plage d'ouverture" do
       expect_page_title("Nouvelle plage d'ouverture")
 
       fill_in "Description", with: "Accueil"
+      select(lieu.full_name, from: "plage_ouverture_lieu_id")
       check "Suivi bonjour"
       click_button "Enregistrer"
 
@@ -104,6 +105,7 @@ describe "Agent can CRUD plage d'ouverture" do
 
       expect_page_title("Nouvelle plage d'ouverture")
       fill_in "Description", with: "Accueil"
+      select(lieu.full_name, from: "plage_ouverture_lieu_id")
       check "Suivi bonjour"
       click_button "Enregistrer"
 
