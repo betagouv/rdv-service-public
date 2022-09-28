@@ -28,7 +28,6 @@ class SmsSender < BaseService
   end
 
   def perform
-    Sentry.add_breadcrumb(Sentry::Breadcrumb.new(message: "Calling SMS provider #{@provider.inspect}"))
     send("send_with_#{@provider}")
   end
 
@@ -78,7 +77,6 @@ class SmsSender < BaseService
     rescue SibApiV3Sdk::ApiError => e
       # 401 Unauthorized
       # 400 Invalid telephone number
-      add_sib_error_to_breadcrumbs(e)
       handle_failure(error_message: "SendInBlue error: #{e.message} (#{e.code})")
     end
   end
@@ -111,8 +109,6 @@ class SmsSender < BaseService
         maxConcatenatedMessages: 10,
       }
     ).run
-
-    add_response_to_breadcrumbs(response)
 
     if response.timed_out?
       handle_failure(error_message: "NetSize timeout")
@@ -150,8 +146,6 @@ class SmsSender < BaseService
         emetteur: replies_email, # The parameter is called “emetteur” but it is actually an email where we can receive replies to the sms.
       }
     ).run
-
-    add_response_to_breadcrumbs(response)
 
     if response.timed_out?
       handle_failure(error_message: "Contact Experience error: Timeout")
@@ -202,8 +196,6 @@ class SmsSender < BaseService
         },
       }.to_json
     ).run
-
-    add_response_to_breadcrumbs(response)
 
     if response.timed_out?
       handle_failure(error_message: "Clever Technologies error: Timeout")
@@ -261,24 +253,6 @@ class SmsSender < BaseService
     Rails.logger.info("provider : #{@provider} configuration : #{@configuration}")
 
     save_receipt(result: :processed)
-  end
-
-  # @param [Typhoeus::Response] response
-  def add_response_to_breadcrumbs(response)
-    crumb = Sentry::Breadcrumb.new(
-      message: "#{@provider} HTTP response",
-      data: { code: response.code, headers: response.headers, body: response.body }
-    )
-    Sentry.add_breadcrumb(crumb)
-  end
-
-  # @param [SibApiV3Sdk::ApiError] sib_error
-  def add_sib_error_to_breadcrumbs(sib_error)
-    crumb = Sentry::Breadcrumb.new(
-      message: "SendInBlue returned HTTP error",
-      data: { code: sib_error.code, headers: sib_error.response_headers, body: sib_error.response_body }
-    )
-    Sentry.add_breadcrumb(crumb)
   end
 
   # rubocop:enable Metrics/PerceivedComplexity
