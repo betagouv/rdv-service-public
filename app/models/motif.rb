@@ -173,6 +173,10 @@ class Motif < ApplicationRecord
     !collectif?
   end
 
+  def phone?
+    location_type == Motif.location_types[:phone]
+  end
+
   private
 
   def booking_delay_validation

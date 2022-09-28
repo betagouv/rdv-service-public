@@ -209,4 +209,15 @@ describe Motif, type: :model do
       expect(motif.booking_delay_range).to eq((now + 30.minutes.in_seconds.seconds)..(now + 3.months.in_seconds.seconds))
     end
   end
+
+  describe "#phone?" do
+    it "returns true if the location_type is phone" do
+      expect(build(:motif, :by_phone).phone?).to eq(true)
+    end
+
+    it "returns false if the location_type is not phone" do
+      expect(build(:motif, :at_public_office).phone?).to eq(false)
+      expect(build(:motif, :at_home).phone?).to eq(false)
+    end
+  end
 end

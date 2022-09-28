@@ -86,6 +86,10 @@ fr:
           attributes:
             agents:
               not_from_same_territory: doivent être du même territoire
+        plage_ouverture:
+          attributes:
+            lieu:
+              blank: est obligatoire pour les motifs sur place ou à domicile
   agents:
     export_mailer:
       rdv_export:
