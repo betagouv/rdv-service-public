@@ -1,14 +1,12 @@
-.card
+.card[id= "rdv-#{rdv.id}"]
   .card-header.border-white
     .d-flex.justify-content-between.flex-wrap
       - if thin
         div
           h5.header.mb-1
             span
-              = l(rdv.starts_at, format: :human).capitalize
-              span.text-muted
-                =< "(#{rdv.duration_in_min} minutes)"
-            span.ml-2
+              = link_to rdv_title(rdv), admin_organisation_rdv_path(rdv.organisation, rdv)
+            span.ml-4
               = link_to "Voir dans l'agenda  >", admin_organisation_agent_agenda_path(current_organisation, rdv.agents.first, selected_event_id: rdv.id, date: rdv.starts_at.to_date)
       - else
         div
@@ -39,7 +37,7 @@
           - else
             = link_to t("admin.rdvs.show.duplicate"), new_admin_organisation_rdvs_collectif_path(current_organisation, motif_id: rdv.motif_id, duplicated_rdv_id: rdv.id), class: "btn btn-outline-primary-blue btn-sm"
 
-  div class=(show_users ? "users-list" : "users-list collapse")
+  div class=(show_users ? "users-list" : "users-list collapse show")
     hr.my-0.mx-3
     .card-footer.border-white
       - if rdv.users.any?

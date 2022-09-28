@@ -115,7 +115,7 @@ describe "Agent can see RDV details correctly" do
       rdv.save
       visit admin_organisation_rdv_path(organisation, rdv)
       expect(page).to have_content("Ajouter un participant")
-      expect(page).to have_content("places disponibles")
+      expect(page).to have_content("places restantes")
     end
 
     it "Rdv has no participants limit" do
