@@ -57,7 +57,7 @@
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
       = render(partial: "rdv",
               collection: @rdvs.includes(:organisation, :lieu, :motif, agents: :service, users: %i[responsible organisations]),
-              locals: { thin: true, show_users: false },
+              locals: { thin: true, collapse_users: true },
               cached: ->(rdv) { [rdv, locale_cache_key] } \
               )
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
