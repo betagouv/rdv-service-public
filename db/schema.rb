@@ -443,11 +443,13 @@ ActiveRecord::Schema.define(version: 2022_09_27_160954) do
     t.string "invited_by_type"
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
+    t.enum "status", default: "unknown", null: false, enum_type: "rdv_status"
     t.index ["invitation_token"], name: "index_rdvs_users_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_rdvs_users_on_invited_by_id"
     t.index ["invited_by_type", "invited_by_id"], name: "index_rdvs_users_on_invited_by"
     t.index ["rdv_id", "user_id"], name: "index_rdvs_users_on_rdv_id_and_user_id", unique: true
     t.index ["rdv_id"], name: "index_rdvs_users_on_rdv_id"
+    t.index ["status"], name: "index_rdvs_users_on_status"
     t.index ["user_id"], name: "index_rdvs_users_on_user_id"
   end
 
