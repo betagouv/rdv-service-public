@@ -242,4 +242,34 @@ RSpec.describe SearchController, type: :controller do
       end
     end
   end
+
+  describe "#public_link_with_service_id" do
+    context "when the territory is not found" do
+      it "redirects to the root path with an alert" do
+        get :public_link_with_service_id, params: { territory_slug: "yo", service_id: "lo" }
+        expect(response).to redirect_to(root_path)
+        expect(flash[:alert]).to match(/Territoire non trouvé/)
+      end
+    end
+
+    context "when the service is not found" do
+      before { create(:territory, departement_number: departement_number) }
+
+      it "redirects to the root path with an alert" do
+        get :public_link_with_service_id, params: { territory_slug: departement_number, service_id: "lo" }
+        expect(response).to redirect_to(root_path)
+        expect(flash[:alert]).to match(/Service non trouvé/)
+      end
+    end
+
+    context "when both the territory and the service exist" do
+      before { create(:territory, departement_number: departement_number) }
+
+      it "redirects to the root path with the departement_number and the service_id" do
+        get :public_link_with_service_id, params: { territory_slug: departement_number, service_id: service.id }
+        expect(response).to redirect_to(root_path(departement: departement_number, service_id: service.id))
+        expect(flash[:alert]).to be_blank
+      end
+    end
+  end
 end

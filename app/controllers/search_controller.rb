@@ -21,6 +21,18 @@ class SearchController < ApplicationController
     redirect_to_organisation_search(organisation)
   end
 
+  def public_link_with_service_id
+    territory = Territory.find_by(departement_number: params[:territory_slug])
+    service = Service.find_by(id: params[:service_id])
+    if territory.nil?
+      redirect_to root_path, alert: "Territoire non trouvé"
+    elsif service.nil?
+      redirect_to root_path, alert: "Service non trouvé"
+    else
+      redirect_to root_path(departement: territory.departement_number, service_id: service.id)
+    end
+  end
+
   private
 
   def redirect_to_organisation_search(organisation)
