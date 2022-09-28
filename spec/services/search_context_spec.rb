@@ -26,11 +26,7 @@ describe SearchContext, type: :service do
 
   let!(:geo_search) { instance_double(Users::GeoSearch, available_motifs: Motif.where(id: motif.id)) }
 
-  before do
-    allow(Users::GeoSearch).to receive(:new)
-      .with(departement: departement_number, city_code: city_code, street_ban_id: nil)
-      .and_return(geo_search)
-  end
+  before { allow(Users::GeoSearch).to receive(:new).and_return(geo_search) }
 
   describe "#current_step" do
     context "when nothing is passed" do
@@ -55,6 +51,14 @@ describe SearchContext, type: :service do
 
       it "current step is lieu selection" do
         expect(subject.current_step).to eq(:lieu_selection)
+      end
+    end
+
+    context "when a service and a departement are passed" do
+      let!(:search_query) { { departement: departement_number, service_id: service.id } }
+
+      it "current step is motif selection" do
+        expect(subject.current_step).to eq(:motif_selection)
       end
     end
   end
