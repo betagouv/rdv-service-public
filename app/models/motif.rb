@@ -33,7 +33,8 @@ class Motif < ApplicationRecord
                    rsa_accompagnement: "rsa_accompagnement",
                    rsa_orientation_on_phone_platform: "rsa_orientation_on_phone_platform",
                    rsa_cer_signature: "rsa_cer_signature",
-                   rsa_insertion_offer: "rsa_insertion_offer", }
+                   rsa_insertion_offer: "rsa_insertion_offer",
+                   rsa_follow_up: "rsa_follow_up", }
 
   # Relations
   belongs_to :organisation
