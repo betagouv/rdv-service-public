@@ -7,6 +7,8 @@ describe "Agent can create user" do
     create(:user, first_name: "Jean", last_name: "LEGENDE", email: "jean@legende.com", organisations: [organisation])
   end
 
+  around { |example| perform_enqueued_jobs { example.run } }
+
   before do
     login_as(agent, scope: :agent)
     visit authenticated_agent_root_path

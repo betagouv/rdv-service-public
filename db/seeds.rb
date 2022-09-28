@@ -501,7 +501,7 @@ user_org_paris_nord_jean.profile_for(org_paris_nord).update!(logement: 2)
 # rubocop:disable Rails/SkipsModelValidations
 now = Time.zone.now
 users_attributes = 10_000.times.map do |i|
-  attrs = {
+  {
     created_at: now,
     updated_at: now,
     first_name: "first_name_#{i}",
@@ -511,8 +511,6 @@ users_attributes = 10_000.times.map do |i|
     phone_number_formatted: (format "+336%08d", i),
     created_through: "user_sign_up",
   }
-  search_terms = attrs.slice(*User.search_keys).values.compact.join(" ")
-  attrs.merge(search_terms: search_terms)
 end
 results = User.insert_all!(users_attributes, returning: "id") # [{"id"=>1}, {"id"=>2}, ...]
 user_ids = results.flat_map(&:values) # [1, 2, ...]
@@ -680,7 +678,7 @@ agent_orgs_rdv_insertion.territorial_roles.create!(territory: territory_yonne)
 # Insert a lot of agents and add them to the paris_nord organisation
 # rubocop:disable Rails/SkipsModelValidations
 agents_attributes = 1_000.times.map do |i|
-  attrs = {
+  {
     created_at: now,
     updated_at: now,
     first_name: "first_name_#{i}",
@@ -689,8 +687,6 @@ agents_attributes = 1_000.times.map do |i|
     uid: "email_#{i}@test.com",
     service_id: service_social.id,
   }
-  search_terms = attrs.slice(*Agent.search_keys).values.compact.join(" ")
-  attrs.merge(search_terms: search_terms)
 end
 results = Agent.insert_all!(agents_attributes, returning: "id") # [{"id"=>1}, {"id"=>2}, ...]
 agent_ids = results.flat_map(&:values) # [1, 2, ...]

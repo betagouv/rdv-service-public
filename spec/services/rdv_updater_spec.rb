@@ -177,8 +177,11 @@ describe RdvUpdater, type: :service do
     it "notifies the new participant, and the one that is removed" do
       expect(SmsSender).to receive(:new).and_return(sms_sender_double).twice
       expect(sms_sender_double).to receive(:perform).twice
+
       rdv.assign_attributes(rdv_params)
       described_class.perform!(agent, rdv)
+      perform_enqueued_jobs
+
       expect(ActionMailer::Base.deliveries.count).to eq 2
 
       added_email = ActionMailer::Base.deliveries.first

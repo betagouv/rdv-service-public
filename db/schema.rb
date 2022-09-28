@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_26_143044) do
+ActiveRecord::Schema.define(version: 2022_09_27_160954) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 2022_09_26_143044) do
     "rsa_orientation_on_phone_platform",
     "rsa_cer_signature",
     "rsa_insertion_offer",
+    "rsa_follow_up",
   ], force: :cascade
 
   create_enum :rdv_status, [
@@ -218,7 +219,6 @@ ActiveRecord::Schema.define(version: 2022_09_26_143044) do
     t.text "tokens"
     t.boolean "allow_password_change", default: false
     t.enum "rdv_notifications_level", default: "soon", enum_type: "agents_rdv_notifications_level"
-    t.text "search_terms"
     t.integer "unknown_past_rdv_count", default: 0
     t.boolean "display_saturdays", default: false
     t.boolean "display_cancelled_rdv", default: true
@@ -226,7 +226,6 @@ ActiveRecord::Schema.define(version: 2022_09_26_143044) do
     t.enum "absence_notification_level", default: "all", enum_type: "agents_absence_notification_level"
     t.string "external_id", comment: "The agent's unique and immutable id in the system managing them and adding them to our application"
     t.string "calendar_uid", comment: "the uid used for the url of the agent's ics calendar"
-    t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_agents_search_terms", using: :gin
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true
@@ -390,8 +389,6 @@ ActiveRecord::Schema.define(version: 2022_09_26_143044) do
     t.bigint "lieu_id", null: false
     t.boolean "expired_cached", default: false
     t.datetime "recurrence_ends_at"
-    t.text "search_terms"
-    t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_plage_ouvertures_search_terms", using: :gin
     t.index "tsrange((first_day)::timestamp without time zone, recurrence_ends_at, '[]'::text)", name: "index_plage_ouvertures_on_tsrange_first_day_recurrence_ends_at", using: :gist
     t.index ["agent_id"], name: "index_plage_ouvertures_on_agent_id"
     t.index ["expired_cached"], name: "index_plage_ouvertures_on_expired_cached"
@@ -522,8 +519,6 @@ ActiveRecord::Schema.define(version: 2022_09_26_143044) do
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.text "search_terms"
-    t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_teams_search_terms", using: :gin
     t.index ["name", "territory_id"], name: "index_teams_on_name_and_territory_id", unique: true
     t.index ["territory_id"], name: "index_teams_on_territory_id"
   end
@@ -607,10 +602,8 @@ ActiveRecord::Schema.define(version: 2022_09_26_143044) do
     t.string "city_name"
     t.enum "invited_through", default: "devise_email", enum_type: "user_invited_through"
     t.enum "created_through", default: "unknown", enum_type: "user_created_through"
-    t.text "search_terms"
     t.string "case_number"
     t.string "address_details"
-    t.index "to_tsvector('simple'::regconfig, COALESCE(search_terms, ''::text))", name: "index_users_search_terms", using: :gin
     t.index ["birth_date"], name: "index_users_on_birth_date"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_through"], name: "index_users_on_created_through"

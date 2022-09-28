@@ -73,8 +73,9 @@ class Admin::PlageOuverturesController < AgentAuthController
   def destroy
     authorize(@plage_ouverture)
     # NOTE: the destruction email is sent synchronously (not in a job) to ensure @absence still exists.
-    if @plage_ouverture.delay.destroy
-      plage_ouverture_mailer.plage_ouverture_destroyed.deliver_now if @agent.plage_ouverture_notification_level == "all"
+    mail = plage_ouverture_mailer.plage_ouverture_destroyed
+    if @plage_ouverture.destroy
+      mail.deliver_now if @agent.plage_ouverture_notification_level == "all"
       redirect_to admin_organisation_agent_plage_ouvertures_path(@plage_ouverture.organisation, @plage_ouverture.agent), notice: "La plage d'ouverture a été supprimée."
     else
       render :edit
