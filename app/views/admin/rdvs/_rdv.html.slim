@@ -41,9 +41,9 @@
     hr.my-0.mx-3
     .card-footer.border-white
       - if rdv.users.any?
-        .d-none.d-sm-block.users-list
+        .d-none.d-sm-block
           = render "admin/rdvs/users_table", rdv: rdv
-        .d-md-none.users-list
+        .d-md-none
           - rdv.rdvs_users.includes(user: %i[responsible organisations]).each do |rdvs_user|
             = render "admin/rdvs_users/user_card", rdvs_user: rdvs_user
       - else
