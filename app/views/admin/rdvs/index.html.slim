@@ -32,7 +32,9 @@
         li.breadcrumb-item.active RDVs #{ Rdv.human_attribute_value(:status, @form.status, disable_cast: true)&.downcase }
 
 .card.border-info
-  .card-header ⚙️ Filtres et options
+  .card-header.border-white
+    h5.mb-0
+      strong> Filtrer les rendez-vous
   .card-body
     = render "rdv_search_form", form: @form
   - if @rdvs.any?
@@ -43,15 +45,25 @@
           i.fa.fa-download>
         input.btn.btn-small.btn-link.d-print-none type="submit" value="Imprimer 🖨" onclick="window.print();return false;"
 
-.row.justify-content-center.pb-3
-  .col-md-6
-    - if @rdvs.any?
+- if @rdvs.any?
+  .mb-2
+    h4>= "#{@rdvs.total_count} rendez-vous"
+    .custom-control.custom-switch
+      input.custom-control-input[type="checkbox" id="show-users-switch" data-toggle="collapse" data-target=".users-list"]
+      label.custom-control-label for="show-users-switch" Afficher la liste des participants
+
+  .row.justify-content-center.pb-3
+    .col-md-8
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
-      = render(partial: "admin/rdvs/rdv",
+      = render(partial: "rdv",
               collection: @rdvs.includes(:organisation, :lieu, :motif, agents: :service, users: %i[responsible organisations]),
-              cached: ->(rdv) { [rdv, locale_cache_key] })
+              locals: { thin: true, show_users: false },
+              cached: ->(rdv) { [rdv, locale_cache_key] } \
+              )
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
-    - else
+- else
+  .row.justify-content-center.pb-3
+    .col-md-8
       .card
         .card-body
           .row.justify-content-md-center
