@@ -10,9 +10,8 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
     if @search_results&.count == 1
       skip_policy_scope # TODO: improve pundit checks for creneaux
 
-      redirect_to admin_organisation_slots_path(current_organisation,
-                                                helpers.creneaux_search_params(@form).merge(lieu_ids: [@search_results.first.lieu.id])),
-                  class: "d-block stretched-link"
+      path_params = helpers.creneaux_search_params(@form).merge(lieu_ids: [@search_results.first.lieu.id])
+      redirect_to admin_organisation_slots_path(current_organisation, path_params)
     else
       @motifs = policy_scope(Motif).active.ordered_by_name
       @services = policy_scope(Service)
