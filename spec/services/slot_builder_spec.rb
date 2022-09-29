@@ -108,6 +108,17 @@ describe SlotBuilder, type: :service do
       expect(plage_ouvertures).to eq([matching_po])
     end
 
+    it "return plage_ouverture that match without a lieu" do
+      motif = create(:motif, :by_phone, default_duration_in_min: 60, organisation: organisation)
+      matching_po = create(:plage_ouverture, lieu: nil, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
+      unmatching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
+
+      plage_ouvertures = described_class.plage_ouvertures_for(motif, nil, date_range, [])
+
+      expect(plage_ouvertures).to include(matching_po)
+      expect(plage_ouvertures).not_to include(unmatching_po)
+    end
+
     it "returns all plage_ouverture for the range" do
       matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
       other_matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
@@ -117,7 +128,7 @@ describe SlotBuilder, type: :service do
       expect(plage_ouvertures).to eq([matching_po, other_matching_po])
     end
 
-    it "returns only without reccurrence PO where first_day is in range" do
+    it "returns only without recurrence PO where first_day is in range" do
       matching_po = create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11) + 20.minutes)
       create(:plage_ouverture, lieu: lieu, motifs: [motif], first_day: first_day + 1.month, start_time: Tod::TimeOfDay.new(9), end_time: Tod::TimeOfDay.new(11))
 

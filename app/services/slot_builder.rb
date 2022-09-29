@@ -11,12 +11,16 @@ module SlotBuilder
     end
 
     def plage_ouvertures_for(motif, lieu, datetime_range, agents)
-      PlageOuverture.not_expired
-        .merge(lieu.plage_ouvertures)
+      scope = PlageOuverture.not_expired
         .merge(motif.plage_ouvertures)
         .in_range(datetime_range)
         .includes(%i[organisation agent])
         .where(({ agent: agents } if agents&.any?))
+      if lieu
+        scope.merge(lieu.plage_ouvertures)
+      else
+        scope.where(lieu: nil)
+      end
     end
 
     def free_times_from(plage_ouvertures, datetime_range, off_days)

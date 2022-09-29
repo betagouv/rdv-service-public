@@ -139,4 +139,40 @@ describe SearchContext, type: :service do
       expect(search_context.service).to be_nil
     end
   end
+
+  describe "#creneaux_search" do
+    context "when lieu is present" do
+      it "returns a Users::CreneauxSearch using the lieu and the first matching motif" do
+        plage_ouverture = create(:plage_ouverture, motifs: [motif, motif2], organisation: organisation)
+        lieu = plage_ouverture.lieu
+        search_context = described_class.new(user, search_query.merge(lieu_id: lieu.id))
+
+        expect(Users::CreneauxSearch).to receive(:new).with(
+          user: user,
+          motif: motif,
+          lieu: lieu,
+          date_range: search_context.date_range,
+          geo_search: geo_search
+        )
+        search_context.creneaux_search
+      end
+    end
+
+    context "when lieu is nil" do
+      it "returns a Users::CreneauxSearch using no lieu and the selected motif" do
+        motif = create(:motif, :by_phone, organisation: organisation)
+        create(:plage_ouverture, lieu: nil, motifs: [motif], organisation: organisation)
+        search_context = described_class.new(user, search_query)
+
+        expect(Users::CreneauxSearch).to receive(:new).with(
+          user: user,
+          motif: search_context.selected_motif,
+          lieu: nil,
+          date_range: search_context.date_range,
+          geo_search: geo_search
+        )
+        search_context.creneaux_search
+      end
+    end
+  end
 end

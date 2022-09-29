@@ -35,7 +35,15 @@ FactoryBot.define do
     end
 
     after(:build) do |plage_ouverture|
-      plage_ouverture.motifs << create(:motif, organisation: plage_ouverture.organisation) if plage_ouverture.motifs.empty?
+      if plage_ouverture.motifs.empty?
+        plage_ouverture.motifs << (
+          if plage_ouverture.lieu
+            create(:motif, organisation: plage_ouverture.organisation)
+          else
+            create(:motif, :by_phone, organisation: plage_ouverture.organisation)
+          end
+        )
+      end
     end
 
     trait :expired do
