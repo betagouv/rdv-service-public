@@ -26,14 +26,10 @@
         |  et collez-y le lien ci-dessous.
     - else
       p Dès que les motifs et les plages d'ouverture seront paramétrés pour la réservation en ligne, vous pourrez copier et partager ce lien pour permettre à vos usagers de réserver un rendez-vous en ligne.
-    form data={ "controller": "clipboard", "clipboard-to-copy-value": booking_link }
+    form
       .form-row
         .col-8
           = text_field_tag :booking_link, booking_link, disabled: !shareable_booking_link?, readonly: true, class: "form-control"
-        .col-4
-          = button_tag disabled: !shareable_booking_link?, class: "ml-2 btn btn-primary", data: { "clipboard-target": "copy-button" }
-            i.fa.fa-copy.mr-1
-            | copier
 
 .card
   .card-header
