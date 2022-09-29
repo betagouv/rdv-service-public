@@ -74,7 +74,7 @@ RSpec.describe "Admin::Organisations::OnlineBookings", type: :request do
 
         it "shows a message about the link that can be used" do
           show_request
-          expect(response.body).to include("Copiez et partagez ce lien de réservation à vos usagers pour leur permettre de réserver en ligne.")
+          expect(response.body).to include("Copiez et partagez-le à vos usagers pour leur permettre de réserver en ligne.")
         end
 
         context "when the current organisation has an external id" do
