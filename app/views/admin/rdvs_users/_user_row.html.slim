@@ -1,6 +1,9 @@
 tr
   td
     = render "admin/users/identity", user: rdvs_user.user
+    - if rdvs_user.user.birth_date
+        span.d-none.d-print-block
+          = "Né(e) le #{I18n.l(rdvs_user.user.birth_date)}"
     - notes = rdvs_user.user.notes_for(current_organisation)
     - if notes.present?
       .rdv_user_notes
