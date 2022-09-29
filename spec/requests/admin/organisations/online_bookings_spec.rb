@@ -24,7 +24,6 @@ RSpec.describe "Admin::Organisations::OnlineBookings", type: :request do
 
         it "shows the motif" do
           show_request
-          expect(response.body).to include("Les motifs ouverts à la réservation en ligne sont nécessaires à votre partage de lien")
           expect(response.body).to include(motif.name)
         end
       end
@@ -47,7 +46,6 @@ RSpec.describe "Admin::Organisations::OnlineBookings", type: :request do
 
         it "shows the plage d'ouverture" do
           show_request
-          expect(response.body).to include("conserver au moins une plage d'ouverture liée à un motif ouvert à la réservation en ligne")
           expect(response.body).to include(plage_ouverture.title)
         end
       end

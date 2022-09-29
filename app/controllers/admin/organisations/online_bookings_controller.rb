@@ -9,13 +9,15 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
   def show
     authorize(@organisation)
 
-    all_motifs = policy_scope(Motif).available_motifs_for_organisation_and_agent(current_organisation, current_agent)
-    @total_motifs_count = all_motifs.count
-    @motifs = all_motifs.reservable_online.includes(:organisation).includes(:service)
+    @motifs = policy_scope(Motif)
+      .available_motifs_for_organisation_and_agent(current_organisation, current_agent)
+      .reservable_online
+      .includes(:organisation)
+      .includes(:service)
 
-    all_plage_ouvertures = policy_scope(PlageOuverture)
-    @total_plage_ouvertures = all_plage_ouvertures.count
-    @plage_ouvertures = all_plage_ouvertures.reservable_online.includes(:lieu, :organisation, :motifs, :agent)
+    @plage_ouvertures = policy_scope(PlageOuverture)
+      .reservable_online
+      .includes(:lieu, :organisation, :motifs, :agent)
   end
 
   private
