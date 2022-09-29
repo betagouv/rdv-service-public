@@ -31,6 +31,8 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
   end
 
   def booking_link
+    return [root_url, "..."].join unless shareable_booking_link?
+
     if current_organisation.external_id.present?
       public_link_to_external_org_url(current_organisation.territory.departement_number, current_organisation.external_id)
     else
