@@ -22,8 +22,7 @@
         = motif_attribute_row("Type de RDV") do
           div
             = "#{@motif.human_attribute_value(:collectif)} #{@motif.human_attribute_value(:location_type).downcase}"
-          div.text-muted
-            = @motif.human_attribute_value(:location_type, context: :hint)
+            = motif_info_tooltip(@motif.human_attribute_value(:location_type, context: :hint))
         hr
 
         = motif_attribute_row \
@@ -39,46 +38,47 @@
           motif_option_value(@motif, :reservable_online)
         - if @motif.reservable_online
           = motif_attribute_row \
-            Motif.human_attribute_name(:min_booking_delay_short), \
+          Motif.human_attribute_name(:min_booking_delay_short), \
             @motif.reservable_online? && \
               min_max_delay_int_to_human(@motif.min_booking_delay), \
-            hint: Motif.human_attribute_name(:min_booking_delay_hint)
+              tooltip: Motif.human_attribute_name(:min_booking_delay_hint)
           = motif_attribute_row \
             Motif.human_attribute_name(:max_booking_delay_short), \
             @motif.reservable_online? && \
               min_max_delay_int_to_human(@motif.max_booking_delay), \
-            hint: Motif.human_attribute_name(:max_booking_delay_hint)
+              tooltip: Motif.human_attribute_name(:max_booking_delay_hint)
           = motif_attribute_row \
             Motif.human_attribute_name(:rdvs_editable_by_user), \
             motif_option_value(@motif, :rdvs_editable_by_user)
 
-        - unless current_agent.conseiller_numerique?
-          = motif_attribute_row("Sectorisation") do
-            - if @motif.reservable_online?
-              div= @motif.human_attribute_value(:sectorisation_level)
-              div.text-muted= @motif.human_attribute_value(:sectorisation_level, context: :hint)
-            - else
-              span.text-muted N/A
+          - unless current_agent.conseiller_numerique?
+            = motif_attribute_row("Sectorisation") do
+              - if @motif.reservable_online?
+                div
+                  = @motif.human_attribute_value(:sectorisation_level)
+                  = motif_info_tooltip(@motif.human_attribute_value(:sectorisation_level, context: :hint))
+              - else
+                span.text-muted N/A
         hr
 
         = motif_attribute_row(Motif.human_attribute_name(:visibility_type)) do
-          div= @motif.human_attribute_value(:visibility_type)
-          div.text-muted
-            = @motif.human_attribute_value(:visibility_type, context: :hint)
+          div
+            = @motif.human_attribute_value(:visibility_type)
+            = motif_info_tooltip(@motif.human_attribute_value(:visibility_type, context: :hint))
         hr
 
         = motif_attribute_row \
           Motif.human_attribute_name(:restriction_for_rdv_short), \
           @motif.restriction_for_rdv, \
-          hint: Motif.human_attribute_name(:restriction_for_rdv_hint)
+          tooltip: Motif.human_attribute_name(:restriction_for_rdv_hint)
         = motif_attribute_row \
           Motif.human_attribute_name(:instruction_for_rdv_short), \
           @motif.instruction_for_rdv, \
-          hint: Motif.human_attribute_name(:instruction_for_rdv_hint)
+          tooltip: Motif.human_attribute_name(:instruction_for_rdv_hint)
         = motif_attribute_row \
           Motif.human_attribute_name(:custom_cancel_warning_message), \
           @motif.custom_cancel_warning_message, \
-          hint: Motif.human_attribute_name(:custom_cancel_warning_message_hint)
+          tooltip: Motif.human_attribute_name(:custom_cancel_warning_message_hint)
 
       - if motif_policy.edit? || motif_policy.destroy?
         .card-footer
