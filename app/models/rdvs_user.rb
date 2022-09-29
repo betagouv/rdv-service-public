@@ -22,6 +22,20 @@ class RdvsUser < ApplicationRecord
   after_initialize :set_status
   ## -
 
+  # Scopes
+  scope :past, -> { where("rdvs.starts_at < ?", Time.zone.now) }
+  scope :future, -> { where("rdvs.starts_at > ?", Time.zone.now) }
+  scope :status, lambda { |status|
+    case status.to_s
+    when "unknown_past"
+      past.where(status: %w[unknown waiting])
+    when "unknown_future"
+      future.where(status: %w[unknown waiting])
+    else
+      where(status: status)
+    end
+  }
+
   def set_status
     return if rdv&.status.nil?
 
