@@ -8,19 +8,32 @@
     p Permettez à vos usagers de prendre rendez-vous en ligne, sur les créneaux qui vous conviennent, grâce à un lien de réservation que vous leur partagez. Suivez les étapes ci-dessous pour configurer la réservation en ligne.
 
     h5.mt-4 Motifs ouverts à la réservation en ligne
-    p D'abord, vous devez ouvrir au moins un motif à la réservation en ligne.
     div
       = setup_checklist_item(@motifs.any?)
-      =< link_to "Ajouter un motif ouvert à la réservation en ligne", admin_organisation_motifs_path(current_organisation)
+      =< link_to motifs_checkbox_text(@motifs), admin_organisation_motifs_path(current_organisation)
 
     h5.mt-4 Plages d'ouverture
-    p Ensuite, ajoutez les plages d'ouverture liées aux motifs ouverts à la réservation en ligne.
     div
       = setup_checklist_item(@plage_ouvertures.any?)
-      =< link_to "Ajouter une plage d'ouverture dans votre agenda", admin_organisation_agent_plage_ouvertures_path(current_organisation, current_agent)
+      =< link_to plage_ouvertures_checkbox_text(@plage_ouvertures), admin_organisation_agent_plage_ouvertures_path(current_organisation, current_agent)
 
     h5.mt-4 Lien de réservation
-    p Une fois le paramétrage terminé, votre lien de réservation est prêt ! Partagez-le avec vos usagers et invitez-les à prendre rendez-vous en ligne.
+    - if shareable_booking_link?
+      p Votre lien de réservation est prêt ! Copiez et partagez-le à vos usagers pour leur permettre de réserver en ligne.
+      p
+        | Si vous souhaitez tester la réservation en ligne en tant qu'usager, ouvrez une nouvelle fenêtre de navigation
+        strong< privée
+        |  et collez-y le lien ci-dessous.
+    - else
+      p Dès que les motifs et les plages d'ouverture seront paramétrés pour la réservation en ligne, vous pourrez copier et partager ce lien pour permettre à vos usagers de réserver un rendez-vous en ligne.
+    form data={ "controller": "clipboard", "clipboard-to-copy-value": booking_link }
+      .form-row
+        .col-8
+          = text_field_tag :booking_link, booking_link, disabled: !shareable_booking_link?, readonly: true, class: "form-control"
+        .col-4
+          = button_tag disabled: !shareable_booking_link?, class: "ml-2 btn btn-primary", data: { "clipboard-target": "copy-button" }
+            i.fa.fa-copy.mr-1
+            | copier
 
 .card
   .card-header
@@ -73,23 +86,3 @@
         |. Commencez par ajouter au moins un motif ouvert à la réservation en ligne. Vous pourrez alors ajouter des plages d'ouverture.
   .card-footer
     = link_to "Gérer mes plages d'ouverture", admin_organisation_agent_plage_ouvertures_path(current_organisation, current_agent)
-.card
-  .card-header
-    h4 Lien de réservation
-  .card-body
-    - if shareable_booking_link?
-      p Copiez et partagez ce lien de réservation à vos usagers pour leur permettre de réserver en ligne.
-      p
-        | Si vous souhaitez tester la réservation en ligne en tant qu'usager, ouvrez une nouvelle fenêtre de navigation
-        strong< privée
-        |  et collez-y le lien ci-dessous.
-    - else
-      p Dès que les motifs et les plages d'ouverture seront paramétrés pour la réservation en ligne, vous pourrez copier et partager ce lien pour permettre à vos usagers de réserver un rendez-vous en ligne.
-    form data={ "controller": "clipboard", "clipboard-to-copy-value": booking_link }
-      .form-row
-        .col-8
-          = text_field_tag :booking_link, booking_link, disabled: !shareable_booking_link?, readonly: true, class: "form-control"
-        .col-4
-          = button_tag disabled: !shareable_booking_link?, class: "ml-2 btn btn-primary", data: { "clipboard-target": "copy-button" }
-            i.fa.fa-copy.mr-1
-            | copier
