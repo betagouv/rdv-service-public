@@ -267,4 +267,24 @@ describe MergeUsersService, type: :service do
       end
     end
   end
+
+  context "one user is connected by FranceConnect" do
+    it "keep FranceConnect attributes when merged user logged once with franceconnect" do
+      user_to_merge = create(:user, logged_once_with_franceconnect: true, franceconnect_openid_sub: "unechainedecharacteres", organisations: [organisation])
+      user_target = create(:user, organisations: [organisation])
+      described_class.perform_with(user_target, user_to_merge, attributes_to_merge, organisation)
+      user_target.reload
+      expect(user_target.logged_once_with_franceconnect).to be_truthy
+      expect(user_target.franceconnect_openid_sub).to eq("unechainedecharacteres")
+    end
+
+    it "keep FranceConnect attributes when user target logged once with franceconnect" do
+      user_to_merge = create(:user, organisations: [organisation])
+      user_target = create(:user, logged_once_with_franceconnect: true, franceconnect_openid_sub: "unechainedecharacteres", organisations: [organisation])
+      described_class.perform_with(user_target, user_to_merge, attributes_to_merge, organisation)
+      user_target.reload
+      expect(user_target.logged_once_with_franceconnect).to be_truthy
+      expect(user_target.franceconnect_openid_sub).to eq("unechainedecharacteres")
+    end
+  end
 end

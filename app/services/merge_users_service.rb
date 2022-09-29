@@ -26,6 +26,8 @@ class MergeUsersService < BaseService
     user_attributes_to_merge.each do |attribute|
       @user_target.send("#{attribute}=", @user_to_merge.send(attribute))
     end
+    # Si le user_target s'est déjà connecté avec FranceConnect,
+    # les attributs ne sont pas écrasés lors de la fusion
     if @user_to_merge.logged_once_with_franceconnect?
       @user_target.logged_once_with_franceconnect = true
       @user_target.franceconnect_openid_sub = @user_to_merge.franceconnect_openid_sub
