@@ -268,7 +268,7 @@ describe MergeUsersService, type: :service do
     end
   end
 
-  context "one user is connected by FranceConnect" do
+  context "when one user is connected by FranceConnect" do
     it "keep FranceConnect attributes when merged user logged once with franceconnect" do
       user_to_merge = create(:user, logged_once_with_franceconnect: true, franceconnect_openid_sub: "unechainedecharacteres", organisations: [organisation])
       user_target = create(:user, organisations: [organisation])
