@@ -226,6 +226,11 @@ ActiveRecord::Schema.define(version: 2022_09_27_160954) do
     t.enum "absence_notification_level", default: "all", enum_type: "agents_absence_notification_level"
     t.string "external_id", comment: "The agent's unique and immutable id in the system managing them and adding them to our application"
     t.string "calendar_uid", comment: "the uid used for the url of the agent's ics calendar"
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
     t.index ["calendar_uid"], name: "index_agents_on_calendar_uid", unique: true
     t.index ["confirmation_token"], name: "index_agents_on_confirmation_token", unique: true
     t.index ["email"], name: "index_agents_on_email", unique: true
