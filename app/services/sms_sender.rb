@@ -84,7 +84,6 @@ class SmsSender < BaseService
   # These errors should not trigger a retry, because it would only fail again
   NETSIZE_PERMANENT_ERRORS = [
     15, # Message concatenation limit exceeded
-    16, # Unable to route message.
     103, # Invalid account name
     117, # Invalid campaign name
   ].freeze
