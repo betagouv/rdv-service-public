@@ -58,8 +58,6 @@
       = date_input(f, :start, label = "Période - Début", wrapper: "horizontal_form")
       = date_input(f, :end, label = "Période - Fin", wrapper: "horizontal_form")
   .d-flex.justify-content-end
-    / Y a t'il une raison particuliére pour ne pas laisser le bouton Reinitialiser constamment ?
-    / En terme d'UX je trouve ca étrange, obligé de faire une recherche pour pouvoir afficher le bouton de reinit du formulaire ?
     - search = params[:search].blank? ? "d-none" : ""
     = link_to "Réinitialiser", admin_organisation_rdvs_path(current_organisation), class: "btn btn-link #{search}"
     input.btn.btn-primary.d-print-none type="submit" value="Rafraîchir la liste" name="search"

@@ -14,7 +14,8 @@
 
 .row.justify-content-md-center
   .col-md-8
-    = render partial: "rdv", collection: [@rdv], agent: @agent, locals: { thin: false, collapse_users: false }
+    / @agent is only used for links in breadcrumb and redirecting if update
+    = render partial: "rdv", collection: [@rdv], locals: { agent: @agent, thin: false, collapse_users: false }
 
 = render "admin/receipts/resource_receipts_row", resource: @rdv
 
