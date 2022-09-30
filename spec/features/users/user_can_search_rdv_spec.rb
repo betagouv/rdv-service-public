@@ -73,7 +73,7 @@ describe "User can search for rdvs" do
 
       # Step 4
       expect(page).to have_content("Vos informations")
-      fill_in("Date de naissance", with: DateTime.yesterday.strftime("%d/%m/%Y"))
+      fill_in("Date de naissance", with: Time.zone.yesterday.strftime("%d/%m/%Y"))
       fill_in("Nom de naissance", with: "Lapinou")
       click_button("Continuer")
 

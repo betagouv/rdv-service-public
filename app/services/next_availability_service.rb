@@ -3,8 +3,9 @@
 class NextAvailabilityService
   def self.find(motif, lieu, agents, from:, to: nil)
     available_creneau = nil
-    from = from.to_datetime
-    to = to&.to_datetime || (from + 6.months)
+    from = from.beginning_of_day if from.is_a?(Date)
+    to = to.beginning_of_day if to.is_a?(Date)
+    to ||= from + 6.months
 
     from.step(to, 7).find do |date|
       # NOTE: LOOP 2 loop here for ~ 27 weeks

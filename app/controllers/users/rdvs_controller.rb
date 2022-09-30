@@ -25,7 +25,7 @@ class Users::RdvsController < UserAuthController
     ActiveRecord::Base.transaction do
       @creneau = Users::CreneauSearch.creneau_for(
         user: current_user,
-        starts_at: DateTime.parse(rdv_params[:starts_at]),
+        starts_at: Time.zone.parse(rdv_params[:starts_at]),
         motif: motif,
         lieu: Lieu.find(new_rdv_extra_params[:lieu_id]),
         geo_search: @geo_search
