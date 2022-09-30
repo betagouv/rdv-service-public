@@ -16,6 +16,7 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
       .includes(:service)
 
     @plage_ouvertures = policy_scope(PlageOuverture)
+      .where(organisation: current_organisation)
       .reservable_online
       .includes(:lieu, :organisation, :motifs, :agent)
   end
