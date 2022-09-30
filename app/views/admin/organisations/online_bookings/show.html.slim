@@ -47,9 +47,8 @@
       p Toutes les plages d'ouverture pour ces motifs seront réservables en ligne.
       ul.list-group.my-1
         = render partial: "motif", collection: @motifs.limit(10)
-      - if @motifs.count > 10
-        .mt-2  ...
-        .text-muted Suivez le lien ci-dessous pour voir la liste complète de vos motifs.
+        - if @motifs.count > 10
+          li.list-group-item ...
     - else
       p
         | Aucun de vos motifs n'est ouvert à la réservation en ligne. Allez sur la création ou la modification d'un motif, puis sélectionnez l'option
@@ -72,9 +71,8 @@
         |.
       ul.list-group.my-1
         = render partial: "plage_ouverture", collection: @plage_ouvertures.limit(10)
-      - if @plage_ouvertures.count > 10
-        .mt-2  ...
-        .text-muted Suivez le lien ci-dessous pour voir la liste complète de vos plages d'ouverture.
+        - if @plage_ouvertures.count > 10
+          li.list-group-item ...
     - else
       p
         | Pour l'instant, sur toutes vos plages d'ouverture, aucune n'est liée à un motif

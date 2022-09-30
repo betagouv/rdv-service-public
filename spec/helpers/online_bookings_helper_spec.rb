@@ -3,7 +3,7 @@
 describe OnlineBookingsHelper do
   describe "#motifs_checkbox_text" do
     context "when there is no motifs" do
-      it { expect(motifs_checkbox_text([])).to match(/Ouvrir au moins un motif à la réservation en ligne/) }
+      it { expect(motifs_checkbox_text([])).to match(/Ouvrir un motif à la réservation en ligne/) }
     end
 
     context "when there is one motif" do
@@ -17,7 +17,7 @@ describe OnlineBookingsHelper do
 
   describe "#plage_ouvertures_checkbox_text" do
     context "when there is no plages d'ouverture" do
-      it { expect(plage_ouvertures_checkbox_text([])).to match(/Ajouter les plages d'ouverture liées aux motifs ouverts à la réservation en ligne/) }
+      it { expect(plage_ouvertures_checkbox_text([])).to match(/Ajouter des plages d'ouverture pour les motifs ouverts à la réservation en ligne/) }
     end
 
     context "when there is one plage d'ouverture" do
