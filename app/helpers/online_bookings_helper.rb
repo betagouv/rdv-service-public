@@ -13,7 +13,7 @@ module OnlineBookingsHelper
     if plage_ouvertures.any?
       "Vous avez #{plage_ouvertures.count} #{'plage'.pluralize(plage_ouvertures.count)} d'ouverture #{'liée'.pluralize(plage_ouvertures.count)} à des motifs réservables en ligne"
     else
-      "Ajouter les plages d'ouverture liées aux motifs ouverts à la réservation en ligne"
+      "Ajouter des plages d'ouverture pour les motifs ouverts à la réservation en ligne"
     end
   end
 end
