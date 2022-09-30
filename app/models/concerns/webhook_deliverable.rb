@@ -28,9 +28,11 @@ module WebhookDeliverable
   end
 
   def generate_payload_and_send_webhook_for_destroy
+    # Prépare les données à envoyer, avant de supprimer l'objet
     payloads = subscribed_webhook_endpoints.index_with do |endpoint|
       generate_webhook_payload(:destroyed, endpoint.organisation.territory.api_options)
     end
+    # Execute la suppression, après avoir construit les données à envoyer
     yield
     payloads.each do |endpoint, payload|
       WebhookJob.perform_later(payload, endpoint.id)

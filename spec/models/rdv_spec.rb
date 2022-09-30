@@ -671,5 +671,17 @@ describe Rdv, type: :model do
       rdv.soft_delete
       expect(described_class.unscoped.all).to eq([rdv])
     end
+
+    it "dont call update webhook" do
+      rdv = create(:rdv)
+      expect(rdv).not_to receive(:generate_payload_and_send_webhook)
+      expect(rdv.soft_delete).to eq(true)
+    end
+
+    it "calls destroy webhook" do
+      rdv = create(:rdv)
+      expect(rdv).to receive(:generate_payload_and_send_webhook_for_destroy)
+      rdv.soft_delete
+    end
   end
 end

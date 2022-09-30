@@ -291,7 +291,12 @@ class Rdv < ApplicationRecord
   delegate :domain, to: :organisation
 
   def soft_delete
-    update(deleted_at: Time.zone.now)
+    self.skip_webhooks = true
+    was_updated = false
+    generate_payload_and_send_webhook_for_destroy do
+      was_updated = update(deleted_at: Time.zone.now)
+    end
+    was_updated
   end
 
   private
