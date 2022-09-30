@@ -12,6 +12,7 @@
 
 ActiveSupport::Inflector.inflections do |inflect|
   inflect.irregular "lieu", "lieux"
+  inflect.irregular "creneau", "creneaux"
   inflect.uncountable "created_by"
 end
 
