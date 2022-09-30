@@ -14,7 +14,7 @@ class Creneau
   end
 
   def lieu
-    Lieu.find(lieu_id)
+    Lieu.find(lieu_id) if lieu_id.present?
   end
 
   def duration_in_min

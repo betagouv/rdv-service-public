@@ -40,7 +40,7 @@ module UserRdvWizard
       @creneau ||= Users::CreneauSearch.creneau_for(
         user: @user,
         motif: @rdv.motif,
-        lieu: Lieu.find(@attributes[:lieu_id]),
+        lieu: lieu,
         starts_at: @rdv.starts_at,
         geo_search: geo_search
       )
@@ -67,6 +67,12 @@ module UserRdvWizard
 
     def save
       true
+    end
+
+    private
+
+    def lieu
+      @lieu ||= @attributes[:lieu_id].present? ? Lieu.find(@attributes[:lieu_id]) : nil
     end
   end
 
