@@ -5,7 +5,7 @@ module OnlineBookingsHelper
     if motifs.any?
       "Vous avez #{motifs.count} #{'motif'.pluralize(motifs.count)} #{'ouvert'.pluralize(motifs.count)} à la réservation en ligne"
     else
-      "Ouvrir au moins un motif à la réservation en ligne"
+      "Ouvrir un motif à la réservation en ligne"
     end
   end
 
