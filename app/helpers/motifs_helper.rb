@@ -23,12 +23,6 @@ module MotifsHelper
     tag.span(motif_name_with_location_type(motif)) + motif_badges(motif)
   end
 
-  def motif_info_tooltip(value)
-    tag.span data: { toggle: "tooltip" }, title: value, class: "text-muted" do
-      tag.i class: "ml-1 fa fa-circle-info"
-    end
-  end
-
   def motif_badges(motif, only: %i[reservable_online secretariat follow_up collectif])
     safe_join(only.select { motif.send("#{_1}?") }.map { build_badge_tag_for(_1) })
   end
@@ -76,15 +70,14 @@ module MotifsHelper
 
   def motif_option_value(motif, option_name)
     if motif.send("#{option_name}?")
-      tag.span("Oui") + motif_info_tooltip(Motif.human_attribute_name("#{option_name}_hint"))
+      tag.span("☑️ ") + tag.span(Motif.human_attribute_name("#{option_name}_hint"))
     else
       tag.span("désactivée", class: "text-muted")
     end
   end
 
-  def motif_attribute_row(legend, arg_value = nil, hint: nil, tooltip: nil, &block)
+  def motif_attribute_row(legend, arg_value = nil, hint: nil, &block)
     value = block.present? ? capture(&block) : display_value_or_na_placeholder(arg_value)
-    value += motif_info_tooltip(tooltip) if arg_value.present? && tooltip.present?
     value += tag.div(hint, class: "text-muted") if arg_value.present? && hint.present?
     tag.div(tag.div(legend, class: "col-md-4 text-right") +
         tag.div(value, class: "col-md-8 text-bold"), class: "row")

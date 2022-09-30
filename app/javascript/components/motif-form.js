@@ -30,7 +30,7 @@ class MotifForm {
     document.
       querySelectorAll('input[name="motif[sectorisation_level]"]').
       forEach(i => i.disabled = !enabled)
-    document.querySelector(".js-sectorisation-card").classList.toggle('hidden', !enabled)
+    document.querySelector(".js-sectorisation-card").classList.toggle('translucent', !enabled)
     this.sectorisationEnabled = enabled
   }
 
