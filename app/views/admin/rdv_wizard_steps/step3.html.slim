@@ -8,7 +8,8 @@ ruby:
     = collapsible_form_fields_for_warnings(@rdv_wizard) do
       = render "hidden_fields", f: f, step: 3, fields: %i[motif_id context], user_ids: @rdv.user_ids
       .form-row
-        .col-md-6= datetime_input(f, :starts_at)
+        .col-md-6 data={ "controller": "past-date-alert" }
+          = datetime_input(f, :starts_at, input_html: { data: { "past-date-alert-target": "date-input" } })
         .col-md-6= f.input :duration_in_min, as: :integer
       - if @rdv.public_office?
         - new_lieu_record = @rdv.lieu&.new_record?

@@ -1,0 +1,146 @@
+- content_for :header
+  section.pb-0.py-5
+    .container
+      .row
+        .col-md-9.m-auto
+          h1.mb-3.text-white Faciliter la gestion des rendez-vous avec vos apprenants
+          .mt-4= link_to "Connectez-vous", new_agent_session_path, class: "btn btn-outline-white"
+          p.text-white.mt-4
+            | RDV Aide Numérique est un outil de prise de rendez-vous en ligne,
+              simplifiant votre organisation et rappelant aux usagers leurs rendez-vous.
+
+section.bg-white.py-5
+  .container
+    .text-center.m-auto
+      h2.mb-4 RDV Aide Numérique offre des fonctionnalités adaptées à vos besoins&nbsp;:
+    .divider
+    .row
+      .col-md-4
+        .w-50.p-3.m-auto
+          = image_tag "welcome/illu-prise-rdv.svg", alt: ""
+        h3 Définir vos plages de disponibilités
+        p
+          | Informez vos apprenants et vos collègues
+            des créneaux disponibles.
+
+      .col-md-4
+        .w-50.p-3.m-auto
+          = image_tag "welcome/illu-rappel-rdv.svg", alt: ""
+        h3 Envoyer une notification de rappel
+        p
+          | Vos apprenants recevront un SMS et/ou un
+            e-mail de rappel de RDV. Ils pourront
+            également modifier ou annuler le RDV.
+
+      .col-md-4
+        .w-50.p-3.m-auto
+          = image_tag "welcome/illu-gestion.svg", alt: ""
+        h3 Importer vos RDVs sur votre agenda
+        p
+          | Synchronisez RDV Aide Numérique et votre
+            agenda du quotidien.
+
+section.bg-lightturquoise.py-5
+  .container.col-6.mx-auto
+    .row
+      h2.mb-3 Qui sommes-nous&nbsp;?
+    .row.m-auto
+      p
+        | Les produits RDV Solidarités et RDV Aide Numérique sont portés par l’une des équipes de
+        =< link_to("l’Incubateur des Territoires qui", "https://incubateur.anct.gouv.fr/", target: "_blank")
+        |  suit une approche
+        =< link_to("beta.gouv.fr", "https://beta.gouv.fr", target: "_blank")
+        | . L’équipe développe une solution numérique de gestion des RDVs qui répond au mieux aux
+          besoins des utilisateurs.
+      p
+        | Initialement déployée auprès des services médico-sociaux, la solution numérique s’est élargie auprès des conseillers
+          numériques France Service. Aujourd’hui, le produit est en phase de généralisation auprès d’autres acteurs publics.
+          Découvrez
+        =< link_to("notre histoire", "https://beta.gouv.fr/startups/lapins.html", target: "_blank")
+        | .
+
+section.bg-white.py-5
+  .container.col-6.mx-auto
+    .row
+      h2.mb-3 Pourquoi choisir RDV Aide Numérique&nbsp;?
+    .row.m-auto
+      h3 ✅ Un outil souple
+      p
+        | Créez les motifs selon vos ateliers, invitez votre hiérarchie à consulter votre
+          planning ou permettez au service d’accueil de poser des RDVs selon vos disponibilités.
+
+      h3 ✅ Un outil libre
+      p
+        | Faites vos retours en direct à l’équipe en charge de RDV Aide Numérique et
+          participez ainsi au développement d’un commun numérique.
+
+      h3 ✅ Un outil souverain et sécurisé
+      p
+        | Soutenez un éco-système public qui développe des solutions
+          numériques souveraines et protégez les données de vos apprenants. Celles-ci sont hébergées en France et
+        =< link_to("certifiées HDS", "https://esante.gouv.fr/labels-certifications/hds/certification-des-hebergeurs-de-donnees-de-sante", target: "_blank")
+        | .
+
+section.bg-lightturquoise.py-5
+  .container
+    .row
+      .text-center.m-auto
+        h2.mb-2 Ça vous intéresse&nbsp;?
+    .row
+      p.m-auto Vous souhaitez intégrer RDV Aide Numérique dans votre quotidien et simplifier le parcours des usagers&nbsp;?
+    .row.mt-4
+      .col-md-9.m-auto
+        .d-flex.justify-content-around
+          = link_to "Connectez-vous", new_agent_session_path, class: "btn btn-primary"
+    .row.mt-4
+      p.m-auto
+        ' Si vous n'avez jamais utilisé votre compte, vous pouvez réinitialiser votre mot de passe en indiquant votre adresse
+        em
+          | @conseiller-numerique.fr
+        | .
+      p.m-auto
+        | Des questions ?
+        =< link_to("Contactez-nous", "mailto:#{SUPPORT_EMAIL}", target: "_blank")
+        | .
+
+section.bg-white.py-5
+  .container
+    .row
+      .text-center.m-auto
+        h2.mb-2 Aide Numérique en quelques chiffres c’est :
+    .row.mt-4.d-flex.justify-content-around.flex-sm-column.flex-md-row.flex-md-nowrap
+      .d-flex.flex-column.align-items-center.flex-v-gap-1em
+        .bubble.bg-lightturquoise.text-primary
+          | 78
+          span.small %
+        .text-center des conseillers numériques qui utilisent l’outil le recommande
+      .d-flex.flex-column.align-items-center.flex-v-gap-1em
+        .bubble.bg-lightturquoise.text-primary
+          | 27018
+        .text-center RDVs créés par des conseillers numériques
+      .d-flex.flex-column.align-items-center.flex-v-gap-1em
+        .bubble.bg-lightturquoise.text-primary
+          | 47
+          span.small %
+        .text-center de conseillers numériques ont intégrés l’outil dans le quotidien
+
+section.bg-lightturquoise.py-5
+  .container
+    .row
+      h2.mb-2 Les conseillers numériques en parlent
+    .row.mt-3
+      .col-md-9.mx-auto
+        blockquote.blockquote
+          | J'ai réduit de 30% mes lapins grâce à l'outil RDV.S c'est un outil vraiment top !
+          .blockquote-footer Une conseillère numérique France service de la Nièvre
+        blockquote.blockquote
+          | J'ai cherché pendant longtemps un outil qui permettait de prendre des rendez-vous selon
+            des plages horaires définies avec un temps donné. RDV Solidarités, une solution qui m'a
+            permis une meilleure gestion des rendez-vous et de travailler en équipe.
+          .blockquote-footer Un conseiller numérique, Ville du Mans
+        blockquote.blockquote
+          | Les médiateur⋅rices numériques que je connais qui utilisent RDV Aide
+            Numérique et moi-même sommes ravis de cette plateforme.
+          .blockquote-footer Témoignage recueilli via sondage
+      .col-3.text-center.d-none.d-lg-flex
+        = image_tag "static_pages/social.svg", class: "img-fluid p-3", alt: "Une agente travaille sur son ordinateur"

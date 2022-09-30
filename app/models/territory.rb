@@ -24,11 +24,13 @@ class Territory < ApplicationRecord
   has_many :agent_territorial_access_rights, dependent: :destroy
 
   # Through relations
-  has_many :organisations_agents, through: :organisations, source: :agents
-  has_many :agents, through: :roles
+  has_many :organisations_agents, -> { distinct }, through: :organisations, source: :agents
+  has_many :admin_agents, through: :roles
   has_many :zones, through: :sectors
   has_many :rdvs, through: :organisations
   has_many :receipts, through: :rdvs
+  has_many :user_profiles, through: :organisations
+  has_many :users, -> { distinct }, through: :user_profiles
 
   # Validations
   validates :departement_number, length: { maximum: 3 }, if: -> { departement_number.present? }

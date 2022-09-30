@@ -13,10 +13,11 @@
         .card-header
           h3.text-center #{@rdv.motif.name} (#{@rdv.motif.service.short_name})
         .card-body.px-3
-          = render "model_errors", model: @rdv
+          = render "model_errors", model: @rdv, f: f
 
           .form-row
-            .col-md-6= datetime_input(f, :starts_at)
+            .col-md-6 data={ "controller": "past-date-alert" }
+              = datetime_input(f, :starts_at, input_html: { data: { "past-date-alert-target": "date-input" } })
             .col-md-6= f.input :duration_in_min, as: :integer
           = f.association :agents, collection: @rdv.motif.authorized_agents.includes(:service), label_method: :reverse_full_name_and_service, input_html: { multiple: true, class: "select2-input" }
           = f.input :name, wrapper_html: { class: "mb-1" }

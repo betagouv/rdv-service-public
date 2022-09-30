@@ -64,10 +64,6 @@ module Admin::RdvWizardFormConcern
     valid?
   end
 
-  def success_flash
-    {}
-  end
-
   def previous_step_path
     if step_number <= 1
       admin_organisation_agent_agenda_path(organisation, agent_author)

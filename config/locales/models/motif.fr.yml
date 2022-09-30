@@ -51,6 +51,7 @@ fr:
         rsa_orientation_on_phone_platform: RSA - Orientation sur une plateforme téléphonique dédiée
         rsa_cer_signature: RSA - Signature de CER
         rsa_insertion_offer: RSA - Offre d'insertion professionnelle
+        rsa_follow_up: RSA - Suivi
       motif/collectifs:
         true: RDV collectif
         false: RDV individuel

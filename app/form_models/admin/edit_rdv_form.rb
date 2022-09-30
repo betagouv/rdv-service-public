@@ -12,7 +12,13 @@ class Admin::EditRdvForm
   end
 
   def update(**rdv_attributes)
-    RdvUpdater.update(agent_context.agent, rdv, rdv_attributes)
+    @rdv.assign_attributes(rdv_attributes)
+
+    if valid?
+      RdvUpdater.perform!(agent_context.agent, rdv)
+    else
+      RdvUpdater::Result.new(success: false)
+    end
   end
 
   def save

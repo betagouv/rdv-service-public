@@ -13,6 +13,8 @@ describe "Agent can create a Rdv with wizard" do
   let!(:disabled_lieu) { create(:lieu, organisation: organisation, enabled: false) }
   let!(:user) { create(:user, organisations: [organisation]) }
 
+  around { |example| perform_enqueued_jobs { example.run } }
+
   before do
     stub_netsize_ok
     travel_to(Time.zone.local(2019, 10, 2))
@@ -121,7 +123,7 @@ describe "Agent can create a Rdv with wizard" do
         query = {
           motif_id: motif.id,
           duration_in_min: 35,
-          starts_at: "2019-10-11 14:15:00 +0200",
+          starts_at: 1.week.since,
           user_ids: [user.id],
           agent_ids: [agent.id],
           context: "RDV très spécial",

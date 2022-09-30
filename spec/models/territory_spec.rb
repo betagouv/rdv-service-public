@@ -5,6 +5,17 @@ describe Territory, type: :model do
     expect(build(:territory)).to be_valid
   end
 
+  describe "#organisations_agents request don't include duplicates" do
+    context "when an agent is attached to 2 organisations" do
+      let(:territory) { create(:territory) }
+      let(:organisation1) { create(:organisation, territory: territory) }
+      let(:organisation2) { create(:organisation, territory: territory) }
+      let!(:agent) { create(:agent, basic_role_in_organisations: [organisation1, organisation2]) }
+
+      it { expect(territory.organisations_agents.count).to eq(1) }
+    end
+  end
+
   describe "departement_number uniqueness validation" do
     context "no collision" do
       let(:territory) { build(:territory, name: "Oise", departement_number: "60") }

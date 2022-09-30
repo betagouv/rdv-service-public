@@ -13,6 +13,8 @@ describe "Agent can organize a rdv collectif", js: true do
 
   before { stub_netsize_ok }
 
+  around { |example| perform_enqueued_jobs { example.run } }
+
   def create_rdv_collectif(lieu_availability)
     travel_to(Time.zone.local(2022, 3, 14))
     agent = create(:agent, basic_role_in_organisations: [organisation], service: service, first_name: "Alain", last_name: "DIALO")
@@ -47,7 +49,7 @@ describe "Agent can organize a rdv collectif", js: true do
     end
 
     click_button "Enregistrer"
-    expect(page).to have_content("Atelier participatif créé")
+    expect(page).to have_content("Le rendez-vous a été créé")
     expect(page).to have_content("Jeudi 17 mars à 14:00")
     expect(page).to have_content("4 places disponibles")
 

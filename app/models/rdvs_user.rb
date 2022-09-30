@@ -2,6 +2,8 @@
 
 class RdvsUser < ApplicationRecord
   devise :invitable
+  # Attributes
+  enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
 
   # Relations
   belongs_to :rdv, touch: true, inverse_of: :rdvs_users, counter_cache: :users_count
@@ -16,7 +18,15 @@ class RdvsUser < ApplicationRecord
   after_initialize :set_default_notifications_flags
   before_validation :set_default_notifications_flags
 
+  # Temporary Hooks for Participation feature
+  after_initialize :set_status
   ## -
+
+  def set_status
+    return if rdv&.status.nil?
+
+    self.status = rdv.status
+  end
 
   def set_default_notifications_flags
     return if rdv&.motif.nil?

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Admin::RdvsController < AgentAuthController
+  include RdvsHelper
+
   respond_to :html, :json
 
   before_action :set_rdv, :set_optional_agent, except: %i[index create export]
@@ -48,12 +50,7 @@ class Admin::RdvsController < AgentAuthController
       format.js
       format.html do
         if success
-          flash[:notice] = if rdv_params[:status].in? %w[excused revoked]
-                             "Le rendez-vous a été annulé."
-                           else
-                             "Le rendez-vous a été modifié."
-                           end
-          redirect_to admin_organisation_rdv_path(current_organisation, @rdv, agent_id: params[:agent_id])
+          redirect_to admin_organisation_rdv_path(current_organisation, @rdv, agent_id: params[:agent_id]), rdv_success_flash
         else
           render :edit
         end
@@ -127,5 +124,15 @@ class Admin::RdvsController < AgentAuthController
         [param_name, param_value]
       end
     end
+  end
+
+  def rdv_success_flash
+    {
+      notice: if rdv_params[:status].in?(%w[excused revoked])
+                I18n.t("admin.rdvs.message.success.cancel")
+              else
+                I18n.t("admin.rdvs.message.success.update")
+              end,
+    }
   end
 end

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe RdvsHelper do
+  include ActionView::Helpers::DateHelper
+
   let(:motif) { build(:motif, name: "Consultation normale") }
   let(:user) { build(:user, first_name: "Marie", last_name: "DENIS") }
   let(:rdv) { build(:rdv, users: [user], motif: motif) }

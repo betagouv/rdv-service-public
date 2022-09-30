@@ -13,15 +13,6 @@ describe Rdv, type: :model do
       it { expect(rdv).to be_valid }
     end
 
-    describe "last month" do
-      let(:starts_at) { now - 1.month }
-
-      it do
-        expect(rdv).not_to be_valid
-        expect(rdv.errors.details.dig(:starts_at, 0, :error)).to eq :must_be_future
-      end
-    end
-
     describe "ten years from now week" do
       let(:starts_at) { now + 10.years }
 
@@ -355,16 +346,6 @@ describe Rdv, type: :model do
 
     it "a une fabrique valide" do
       expect(build(:rdv)).to be_valid
-    end
-
-    it "returns invalid with past starts_at" do
-      expect(build(:rdv, starts_at: now - 2.days - 1.hour)).to be_invalid
-    end
-
-    it "returns invalid when postpone by more than two days" do
-      rdv = create(:rdv, starts_at: now + 1.hour)
-      rdv.starts_at = now - 2.days - 1.hour
-      expect(rdv).to be_invalid
     end
 
     it "returns valid with starts_at is less than two days in past" do

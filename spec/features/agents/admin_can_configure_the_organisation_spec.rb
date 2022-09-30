@@ -14,6 +14,8 @@ describe "Admin can configure the organisation" do
   let(:le_nouveau_motif) { build(:motif, name: "Motif 2", service: pmi, organisation: organisation) }
   let(:la_nouvelle_org) { build(:organisation) }
 
+  around { |example| perform_enqueued_jobs { example.run } }
+
   before do
     login_as(agent_admin, scope: :agent)
     visit authenticated_agent_root_path

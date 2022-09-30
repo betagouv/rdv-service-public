@@ -3,6 +3,8 @@
 describe "Agent resets his password spec" do
   let!(:agent) { create(:agent) }
 
+  around { |example| perform_enqueued_jobs { example.run } }
+
   it "works by sending a reset email" do
     visit new_agent_password_path
     expect(page).to have_content("Mot de passe oublié ?")
