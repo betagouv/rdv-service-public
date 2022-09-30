@@ -45,6 +45,8 @@ describe AddConseillerNumerique do
         level: "admin",
         organisation_id: Organisation.last.id
       )
+
+      perform_enqueued_jobs
       invitation_email = ActionMailer::Base.deliveries.last
 
       expect(invitation_email).to have_attributes(

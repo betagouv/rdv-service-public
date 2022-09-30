@@ -18,8 +18,4 @@ class Admin::RdvWizardForm::Step4
       date: starts_at.to_date
     )
   end
-
-  def success_flash
-    { notice: "Le rendez-vous a été créé." }
-  end
 end

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "User signs up and signs in" do
+  around { |example| perform_enqueued_jobs { example.run } }
+
   context "through home page" do
     before { visit root_path }
 

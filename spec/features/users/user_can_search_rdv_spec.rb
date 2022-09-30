@@ -16,9 +16,9 @@ describe "User can search for rdvs" do
   let!(:lieu2) { create(:lieu, organisation: organisation) }
   let!(:plage_ouverture2) { create(:plage_ouverture, :daily, first_day: now + 1.month, motifs: [motif], lieu: lieu2, organisation: organisation) }
 
-  before do
-    travel_to(now)
-  end
+  around { |example| perform_enqueued_jobs { example.run } }
+
+  before { travel_to(now) }
 
   describe "default" do
     it "default", js: true do

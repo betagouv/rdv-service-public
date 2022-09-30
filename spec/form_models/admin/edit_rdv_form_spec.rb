@@ -15,7 +15,7 @@ describe Admin::EditRdvForm, type: :form do
       new_lieu = create(:lieu, organisation: organisation)
 
       edit_rdv_form = described_class.new(rdv, agent_context)
-      edit_rdv_form.update(lieu: new_lieu)
+      edit_rdv_form.update(lieu: new_lieu, ignore_benign_errors: "1")
 
       expect(rdv.reload.lieu).to eq(new_lieu)
     end
@@ -26,7 +26,7 @@ describe Admin::EditRdvForm, type: :form do
       rdv = create(:rdv, agents: [agent], organisation: organisation, lieu: create(:lieu, organisation: organisation))
 
       edit_rdv_form = described_class.new(rdv, agent_context)
-      edit_rdv_form.update(status: "waiting")
+      edit_rdv_form.update(status: "waiting", ignore_benign_errors: "1")
 
       expect(rdv.reload.status).to eq("waiting")
     end
@@ -40,7 +40,7 @@ describe Admin::EditRdvForm, type: :form do
       travel_to(now)
 
       edit_rdv_form = described_class.new(rdv, agent_context)
-      edit_rdv_form.update(status: "waiting")
+      edit_rdv_form.update(status: "waiting", ignore_benign_errors: "1")
 
       rdv.reload
       expect(rdv.cancelled_at).to eq(nil)
@@ -54,7 +54,7 @@ describe Admin::EditRdvForm, type: :form do
       travel_to(now)
 
       edit_rdv_form = described_class.new(rdv, agent_context)
-      edit_rdv_form.update(status: "excused")
+      edit_rdv_form.update(status: "excused", ignore_benign_errors: "1")
 
       rdv.reload
       expect(rdv.cancelled_at).to eq(now)
@@ -68,7 +68,7 @@ describe Admin::EditRdvForm, type: :form do
       travel_to(now)
 
       edit_rdv_form = described_class.new(rdv, agent_context)
-      edit_rdv_form.update(status: "unknown")
+      edit_rdv_form.update(status: "unknown", ignore_benign_errors: "1")
 
       rdv.reload
       expect(rdv.cancelled_at).to eq(nil)

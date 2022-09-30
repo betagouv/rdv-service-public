@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module RdvsHelper
+  include ActionView::Helpers::DateHelper
+
   def rdv_title(rdv)
     if rdv.starts_at.to_date.today?
       I18n.t("rdvs.title_time_only", starts_at: l(rdv.starts_at, format: :time_only), duration: rdv.duration_in_min)

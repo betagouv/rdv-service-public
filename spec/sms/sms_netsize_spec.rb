@@ -6,6 +6,8 @@ describe "using netsize to send an SMS" do
   let(:user) { create(:user, phone_number: "+33601020304") }
   let(:rdv) { create(:rdv, organisation: organisation, users: [user]) }
 
+  around { |example| perform_enqueued_jobs { example.run } }
+
   stub_sentry_events
 
   it "calls netsize API" do
@@ -42,8 +44,8 @@ describe "using netsize to send an SMS" do
     expect_error_to_be_logged
 
     breadcrumbs = sentry_events.last.breadcrumbs.compact
-    expect(breadcrumbs[0]).to have_attributes(message: 'Calling SMS provider "netsize"')
-    expect(breadcrumbs[1]).to have_attributes(message: "netsize HTTP response", data: { body: "", code: 0, headers: {} })
+    expect(breadcrumbs[0]).to have_attributes(message: "HTTP request")
+    expect(breadcrumbs[1]).to have_attributes(message: "HTTP response", data: { body: "", code: 0, headers: {} })
   end
 
   it "warns Sentry when netsize responds with an HTTP error" do
@@ -53,8 +55,8 @@ describe "using netsize to send an SMS" do
     expect_error_to_be_logged
 
     breadcrumbs = sentry_events.last.breadcrumbs.compact
-    expect(breadcrumbs[0]).to have_attributes(message: 'Calling SMS provider "netsize"')
-    expect(breadcrumbs[1]).to have_attributes(message: "netsize HTTP response", data: { body: "", code: 500, headers: {} })
+    expect(breadcrumbs[0]).to have_attributes(message: "HTTP request")
+    expect(breadcrumbs[1]).to have_attributes(message: "HTTP response", data: { body: "", code: 500, headers: {} })
   end
 
   it "warns Sentry when netsize responds with a business error" do
@@ -69,7 +71,7 @@ describe "using netsize to send an SMS" do
     expect_error_to_be_logged
 
     breadcrumbs = sentry_events.last.breadcrumbs.compact
-    expect(breadcrumbs[0]).to have_attributes(message: 'Calling SMS provider "netsize"')
-    expect(breadcrumbs[1]).to have_attributes(message: "netsize HTTP response", data: { body: stubbed_body, code: 200, headers: {} })
+    expect(breadcrumbs[0]).to have_attributes(message: "HTTP request")
+    expect(breadcrumbs[1]).to have_attributes(message: "HTTP response", data: { body: stubbed_body, code: 200, headers: {} })
   end
 end

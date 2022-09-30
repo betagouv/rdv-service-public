@@ -4,6 +4,8 @@ class Motif < ApplicationRecord
   # Mixins
   has_paper_trail
 
+  include WebhookDeliverable
+
   include PgSearch::Model
 
   pg_search_scope(:search_by_text,
@@ -31,7 +33,8 @@ class Motif < ApplicationRecord
                    rsa_accompagnement: "rsa_accompagnement",
                    rsa_orientation_on_phone_platform: "rsa_orientation_on_phone_platform",
                    rsa_cer_signature: "rsa_cer_signature",
-                   rsa_insertion_offer: "rsa_insertion_offer", }
+                   rsa_insertion_offer: "rsa_insertion_offer",
+                   rsa_follow_up: "rsa_follow_up", }
 
   # Relations
   belongs_to :organisation
@@ -41,6 +44,7 @@ class Motif < ApplicationRecord
 
   # Through relations
   has_many :lieux, through: :plage_ouvertures
+  has_many :webhook_endpoints, through: :organisation
 
   # Delegates
   delegate :service_social?, to: :service

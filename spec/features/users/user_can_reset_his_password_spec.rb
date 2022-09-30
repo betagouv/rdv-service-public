@@ -3,6 +3,8 @@
 describe "User resets his password spec" do
   let!(:user) { create(:user) }
 
+  around { |example| perform_enqueued_jobs { example.run } }
+
   it "works by sending a reset email" do
     visit new_user_password_path
     expect(page).to have_content("Mot de passe oublié ?")

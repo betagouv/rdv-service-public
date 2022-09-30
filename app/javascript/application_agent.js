@@ -13,6 +13,7 @@ import './components/analytic.js';
 import { PlacesInputs } from './components/places-inputs.js';
 import { RdvWizardStep2 } from './components/rdv_wizard_step2.js';
 import { RdvLieu } from './components/rdv_lieu.js';
+import { PastDateAlert } from './components/past-date-alert.js';
 import { MotifForm } from './components/motif-form.js';
 import { ZonesMap } from './components/zones-map.js';
 import { AgentUserForm } from './components/agent-user-form.js'
@@ -77,6 +78,8 @@ $(document).on('turbolinks:load', function() {
   new RdvWizardStep2();
 
   new RdvLieu();
+
+  new PastDateAlert();
 
   new ZonesMap();
 
