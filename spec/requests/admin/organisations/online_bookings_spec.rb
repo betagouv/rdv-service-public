@@ -40,7 +40,7 @@ RSpec.describe "Admin::Organisations::OnlineBookings", type: :request do
       let(:motif) { create(:motif, organisation: organisation, service: agent.service, reservable_online: true) }
 
       context "when there is at least one plage d'ouverture that is related to an online bookable motif" do
-        let!(:matching_plage_ouverture) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif])}
+        let!(:matching_plage_ouverture) { create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif]) }
 
         it "shows the plage d'ouverture" do
           show_request
@@ -52,6 +52,14 @@ RSpec.describe "Admin::Organisations::OnlineBookings", type: :request do
           other_motif = create(:motif, organisation: other_organisation, service: agent.service, reservable_online: true)
           agent = create(:agent, :cnfs, admin_role_in_organisations: [organisation, other_organisation])
           unmatching_plage_ouverture = create(:plage_ouverture, agent: agent, motifs: [motif, other_motif], organisation: other_organisation)
+
+          show_request
+          expect(response.body).to include(matching_plage_ouverture.title)
+          expect(response.body).not_to include(unmatching_plage_ouverture.title)
+        end
+
+        it "filters out the plage d'ouverture in the past" do
+          unmatching_plage_ouverture = create(:plage_ouverture, organisation: organisation, agent: agent, motifs: [motif], first_day: 1.day.ago)
 
           show_request
           expect(response.body).to include(matching_plage_ouverture.title)
