@@ -19,7 +19,7 @@ class MotifForm {
   }
 
   toggleSectorisation = () => {
-    const enabled = !!document.querySelector("#motif_reservable_online:checked")
+    const enabled = this.reservableOnlineCheckbox.checked
     if (enabled == this.sectorisationEnabled) return;
 
     if (!enabled) {
@@ -30,14 +30,23 @@ class MotifForm {
     document.
       querySelectorAll('input[name="motif[sectorisation_level]"]').
       forEach(i => i.disabled = !enabled)
-    document.querySelector(".js-sectorisation-card").classList.toggle('translucent', !enabled)
+    document.querySelector(".js-sectorisation-card").classList.toggle('hidden', !enabled)
     this.sectorisationEnabled = enabled
   }
 
-  toggleRdvsEditable() {
-    const enabled = !!document.querySelector("#motif_reservable_online:checked")
-    document.querySelector(".js-rdvs-editable").classList.toggle('translucent', !enabled)
+
+  toggleOnlineSubFields() {
+    const enabled = this.reservableOnlineCheckbox.checked
+    document.querySelectorAll(".js-rdvs-editable").forEach(rdvEditableElement =>
+      rdvEditableElement.classList.toggle('hidden', !enabled)
+    )
   }
+
+  toggleRdvsEditable() {
+    const enabled = this.reservableOnlineCheckbox.checked
+    document.querySelector("#motif_rdvs_editable_by_user").checked = enabled
+  }
+
 
   constructor() {
     this.secretariatCheckbox = document.querySelector('#motif_for_secretariat')
@@ -50,12 +59,13 @@ class MotifForm {
     )
     this.reservableOnlineCheckbox.addEventListener('change', e => {
       if (document.querySelector(".js-sectorisation-card") !== null) { this.toggleSectorisation() }
+      this.toggleOnlineSubFields()
       this.toggleRdvsEditable()
     })
 
     this.toggleSecretariat()
     if (document.querySelector(".js-sectorisation-card") !== null) { this.toggleSectorisation() }
-    this.toggleRdvsEditable()
+    this.toggleOnlineSubFields()
   }
 
 }
