@@ -31,7 +31,7 @@ RSpec.describe "Admin::Organisations::OnlineBookings", type: :request do
       context "when there is no motifs that can be booked online" do
         it "shows a message about how to create motifs" do
           show_request
-          expect(response.body).to include("aucun n'est ouvert à la réservation en ligne")
+          expect(response.body).to include("Aucun de vos motifs n'est ouvert à la réservation en ligne")
         end
       end
     end
