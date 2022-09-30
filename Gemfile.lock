@@ -458,6 +458,9 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     redis (4.5.1)
+    redis-session-store (0.11.4)
+      actionpack (>= 3, < 8)
+      redis (>= 3, < 5)
     regexp_parser (2.2.0)
     request_store (1.5.1)
       rack (>= 1.4)
@@ -675,6 +678,7 @@ DEPENDENCIES
   rails-erd
   rails_autolink
   redis
+  redis-session-store
   rspec-rails
   rspec_junit_formatter
   rubocop
