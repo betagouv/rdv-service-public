@@ -9,6 +9,7 @@ class RdvBlueprint < Blueprinter::Base
   association :organisation, blueprint: OrganisationBlueprint
   association :motif, blueprint: MotifBlueprint
   association :users, blueprint: UserBlueprint
+  association :rdvs_users, blueprint: RdvsUsersBlueprint
   association :agents, blueprint: AgentBlueprint
   association :lieu, blueprint: LieuBlueprint
 end
