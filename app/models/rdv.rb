@@ -291,6 +291,7 @@ class Rdv < ApplicationRecord
   delegate :domain, to: :organisation
 
   def soft_delete
+    # disable the :updated webhook because we want to manually trigger a :destroyed webhook
     self.skip_webhooks = true
     was_updated = false
     generate_payload_and_send_webhook_for_destroy do
