@@ -21,11 +21,32 @@ class RdvsUser < ApplicationRecord
   # Temporary Hooks for Participation feature
   after_initialize :set_status
   ## -
+  # TODORDV-C Hook on change status : notifiers
 
   def set_status
-    return if rdv&.status.nil?
+    # TODORDV-C rdv.status behavior on participations
+    # return if rdv&.status.nil?
 
-    self.status = rdv.status
+    # self.status = rdv.status
+  end
+
+  def temporal_status
+    RdvsUser.temporal_status(status, rdv.starts_at)
+  end
+
+  def self.temporal_status(status, starts_at)
+    if status == "unknown"
+      rdv_date = starts_at.to_date
+      if rdv_date > Time.zone.today # future
+        "unknown_future"
+      elsif rdv_date == Time.zone.today # today
+        "unknown_today"
+      else # past
+        "unknown_past"
+      end
+    else
+      status
+    end
   end
 
   def set_default_notifications_flags

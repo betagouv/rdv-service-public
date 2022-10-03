@@ -1,0 +1,38 @@
+.dropdown[id= "rdv-status-#{rdvs_user.id}", class="mt-1 mb-auto"]
+  = participation_status_dropdown_toggle(rdvs_user)
+  - remote = local_assigns.fetch(:remote, false)
+  .dropdown-menu
+    - case rdvs_user.rdv.temporal_status
+      - when "unknown_future"
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "excused", remote: remote
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "revoked", remote: remote
+
+      - when "unknown_today"
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "waiting", remote: remote
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "seen", remote: remote
+        - if rdvs_user.rdv.in_the_past?
+          = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "noshow", remote: remote
+        .dropdown-divider
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "excused", remote: remote
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "revoked", remote: remote
+
+      - when "unknown_past"
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "seen", remote: remote
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "noshow", remote: remote
+        .dropdown-divider
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "excused", remote: remote
+        .dropdown-divider
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "revoked", remote: remote
+
+      - when "waiting"
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "seen", remote: remote
+        .dropdown-divider
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "unknown", remote: remote
+
+      - else
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "unknown", remote: remote
+
+    / - if policy([:agent, rdvs_user]).destroy?
+    - if policy([:agent, rdvs_user.rdv]).destroy?
+      .dropdown-divider
+      = participation_delete_dropdown_item(rdvs_user, agent)

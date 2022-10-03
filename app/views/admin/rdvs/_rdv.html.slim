@@ -41,10 +41,10 @@
     .card-footer.border-white
       - if rdv.users.any?
         .d-none.d-sm-block
-          = render "admin/rdvs/users_table", rdv: rdv
+          = render "admin/rdvs/users_table", rdv: rdv, agent: local_assigns[:agent]
         .d-md-none.d-print-none
           - rdv.rdvs_users.includes(user: %i[responsible organisations]).each do |rdvs_user|
-            = render "admin/rdvs_users/user_card", rdvs_user: rdvs_user
+            = render "admin/rdvs_users/user_card", rdvs_user: rdvs_user, agent: local_assigns[:agent]
       - else
         p Il n'y a pas encore de participant pour ce RDV
 
