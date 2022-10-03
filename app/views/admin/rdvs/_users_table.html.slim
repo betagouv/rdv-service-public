@@ -1,3 +1,5 @@
+/ .table-responsive.users-table[style="overflow: inherit"]
+/ TDORDV-C Fix dropdown z-index
 .table-responsive.users-table[style="overflow: inherit"]
   table.table.light-gray-table
     thead
@@ -7,7 +9,7 @@
         th Notifications
         th
         th
-        th Participation
+        th.text-right Participation
     tbody id="rdv-users-list"
       - rdv.rdvs_users.includes(user: %i[responsible organisations]).each do |rdvs_user|
         = render "admin/rdvs_users/user_row", rdvs_user: rdvs_user, agent: agent

@@ -24,6 +24,9 @@ class RdvsUser < ApplicationRecord
   # TODORDV-C Hook on change status : notifiers
 
   def set_status
+    # if rdv revoked,
+    # revoked toutes les participations (check notifs)
+    
     # TODORDV-C rdv.status behavior on participations
     # return if rdv&.status.nil?
 

@@ -10,11 +10,10 @@ class Admin::ParticipationsController < AgentAuthController
     if @rdvs_user.update(rdvs_user_params)
       flash[:notice] = "Status de participation pour #{@rdvs_user.user.full_name} mis à jour"
       # TODORDV-C Notifs
-      redirect_to admin_organisation_rdv_path(current_organisation, @rdv)
     else
       flash[:error] = @rdv.errors.full_messages.to_sentence
-      redirect_to admin_organisation_rdv_path(current_organisation, @rdv)
     end
+      redirect_to admin_organisation_rdv_path(current_organisation, @rdv)
   end
 
   def destroy
@@ -22,11 +21,10 @@ class Admin::ParticipationsController < AgentAuthController
     authorize(@rdv)
     if @rdvs_user.destroy
       flash[:notice] = "La participation de l'usager au rdv a été supprimée."
-      redirect_to admin_organisation_rdv_path(current_organisation, @rdv)
     else
       flash[:error] = @rdv.errors.full_messages.to_sentence
-      redirect_to admin_organisation_rdv_path(current_organisation, @rdv)
     end
+      redirect_to admin_organisation_rdv_path(current_organisation, @rdv)
   end
 
   private
