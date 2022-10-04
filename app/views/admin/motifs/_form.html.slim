@@ -21,7 +21,7 @@
         p.text-muted.font-14= Motif.human_attribute_name("category_hint")
         .form-row
           .col-md-12
-              = f.input :category, collection: Motif.human_attribute_values(:categories), prompt: "", input_html: { class: "select2-input" }, label: false
+              = f.input :category, collection: Motif.human_attribute_values(:categories), include_blank: "", input_html: { class: "select2-input" }, label: false
 
   .card
     .card-body
