@@ -6,25 +6,20 @@ class PublicApi::PublicLinksController < ActionController::Base
     org_ext_ids = params.require(:external_ids).compact_blank
 
     territory = Territory.find_by!(departement_number: departement)
-    organisations = territory.organisations.where(external_id: org_ext_ids)
 
-    organisations
-      .joins("LEFT OUTER JOIN plage_ouvertures")
+    plage_ouvertures = PlageOuverture.where(organisations: { external_id: org_ext_ids, territory_id: territory.id })
+      .not_expired
+      .in_range((Time.zone.now..))
+      .reservable_online
+      .joins(:organisation)
+      .distinct(:organisation_id)
 
-
-    results = organisations.map do |organisation|
-      plages = PlageOuverture
-        .where(organisation: organisation)
-        .not_expired
-        .in_range((Time.zone.now..))
-        .reservable_online
-
-      {
-        organisation_external_id: organisation.external_id,
-        reservation_disponible: plages.any?,
-        public_url: public_link_to_org_url(organisation_id: organisation.id, host: organisation.domain.dns_domain_name),
-      }
-    end
+    results = plage_ouvertures.map do |plage_ouverture|
+      [
+        plage_ouverture.organisation.external_id,
+        public_link_to_org_url(organisation_id: plage_ouverture.organisation.id, host: plage_ouverture.organisation.domain.dns_domain_name),
+      ]
+    end.to_h
 
     render json: results.to_json
   end
