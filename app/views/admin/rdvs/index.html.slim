@@ -49,15 +49,15 @@
   .mb-2
     h4>= "#{@rdvs.total_count} rendez-vous"
     .custom-control.custom-switch
-      input.custom-control-input[type="checkbox" id="show-users-switch" data-toggle="collapse" data-target=".users-list" checked="checked"]
-      label.custom-control-label for="show-users-switch" Afficher la liste des participants
+      input.custom-control-input[type="checkbox" id="show-users-details-switch" data-toggle="collapse" data-target=".users-details"]
+      label.custom-control-label for="show-users-details-switch" Afficher plus de détails usagers
 
   .row.justify-content-center.pb-3
     .col-md-8
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
       = render(partial: "rdv",
               collection: @rdvs.includes(:organisation, :lieu, :motif, agents: :service, users: %i[responsible organisations]),
-              locals: { agent: nil, thin: true, collapse_users: true },
+              locals: { agent: nil, thin: true },
               cached: ->(rdv) { [rdv, locale_cache_key] } \
               )
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"

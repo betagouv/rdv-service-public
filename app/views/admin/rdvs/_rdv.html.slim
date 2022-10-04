@@ -36,14 +36,25 @@
           - else
             = link_to t("admin.rdvs.show.duplicate"), new_admin_organisation_rdvs_collectif_path(current_organisation, motif_id: rdv.motif_id, duplicated_rdv_id: rdv.id), class: "btn btn-outline-primary btn-sm"
 
-  div class=(local_assigns[:collapse_users] ? "users-list collapse show" : "users-list")
+  - if rdv.users.any?
+    div class=("users-details collapse p-3 pt-0")
+      h5.text-center.strong.mb-3> Participants :
+      .row
+        - rdv.rdvs_users.order_by_user_last_name.each do |rdvs_user|
+          .col-4
+            .card.light-gray-card
+              .card-body.p-2
+                .mb-1
+                  = render "admin/rdvs_users/user_details", user: rdvs_user.user
+
+  div class=("users-details collapse show")
     hr.my-0.mx-3
     .card-footer.border-white
       - if rdv.users.any?
         .d-none.d-sm-block
           = render "admin/rdvs/users_table", rdv: rdv
         .d-md-none.d-print-none
-          - rdv.rdvs_users.includes(user: %i[responsible organisations]).each do |rdvs_user|
+          - rdv.rdvs_users.order_by_user_last_name.each do |rdvs_user|
             = render "admin/rdvs_users/user_card", rdvs_user: rdvs_user
       - else
         p Il n'y a pas encore de participant pour ce RDV

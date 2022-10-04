@@ -22,6 +22,9 @@ class RdvsUser < ApplicationRecord
   after_initialize :set_status
   ## -
 
+  # Scopes
+  scope :order_by_user_last_name, -> { includes(:user).order("users.last_name ASC") }
+
   def set_status
     return if rdv&.status.nil?
 
