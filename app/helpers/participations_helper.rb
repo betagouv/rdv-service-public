@@ -2,7 +2,7 @@ module ParticipationsHelper
 
   def participation_status_dropdown_toggle(rdvs_user)
     tag.div(data: { toggle: "dropdown" },
-            class: "dropdown-toggle btn btn-outline-rdv-status-#{rdvs_user.temporal_status}") do
+            class: "dropdown-toggle btn rdv-status-#{rdvs_user.temporal_status}") do
       RdvsUser.human_attribute_value(:status, rdvs_user.temporal_status, disable_cast: true)
     end
   end

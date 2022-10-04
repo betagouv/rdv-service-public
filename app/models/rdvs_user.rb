@@ -4,6 +4,8 @@ class RdvsUser < ApplicationRecord
   devise :invitable
   # Attributes
   enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
+  NOT_CANCELLED_STATUSES = %w[unknown waiting seen noshow].freeze
+  CANCELLED_STATUSES = %w[excused revoked].freeze
 
   # Relations
   belongs_to :rdv, touch: true, inverse_of: :rdvs_users, counter_cache: :users_count
@@ -25,6 +27,7 @@ class RdvsUser < ApplicationRecord
 
   # Scopes
   scope :order_by_user_last_name, -> { includes(:user).order("users.last_name ASC") }
+  scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
 
   def set_status
     # if rdv revoked,
