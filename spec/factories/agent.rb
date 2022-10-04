@@ -47,7 +47,10 @@ FactoryBot.define do
       confirmed_at { nil }
     end
     trait :secretaire do
-      service { Service.find_by(name: "Secrétariat") || create(:service, :secretariat) }
+      service { Service.find_by(name: Service::SECRETARIAT) || create(:service, :secretariat) }
+    end
+    trait :cnfs do
+      service { Service.find_by(name: Service::CONSEILLER_NUMERIQUE) || create(:service, :conseiller_numerique) }
     end
   end
 end
