@@ -10,7 +10,7 @@ module WebhookDeliverable
     # Reload attributes and associations from DB to ensure they are up to date.
     # We dont use #reload on self because some other parts
     # of the code rely on the state of the current object.
-    record = self.class.find(id)
+    record = self.class.unscoped.find(id)
 
     meta = {
       model: self.class.name,
