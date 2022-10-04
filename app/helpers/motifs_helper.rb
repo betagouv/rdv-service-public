@@ -76,9 +76,17 @@ module MotifsHelper
     end
   end
 
+  def motif_option_activated(motif, option_name)
+    if motif.send("#{option_name}?")
+      tag.span("Oui")
+    else
+      tag.span("désactivée", class: "text-muted")
+    end
+  end
+
   def motif_attribute_row(legend, arg_value = nil, hint: nil, &block)
     value = block.present? ? capture(&block) : display_value_or_na_placeholder(arg_value)
-    value += tag.div(hint, class: "text-muted") if arg_value.present? && hint.present?
+    value += tag.div(hint, class: "text-muted") if arg_value.present? && arg_value.exclude?("text-muted") && hint.present?
     tag.div(tag.div(legend, class: "col-md-4 text-right") +
         tag.div(value, class: "col-md-8 text-bold"), class: "row")
   end
