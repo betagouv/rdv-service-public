@@ -51,7 +51,7 @@ describe "Agent can organize a rdv collectif", js: true do
     click_button "Enregistrer"
     expect(page).to have_content("Le rendez-vous a été créé")
     expect(page).to have_content("Jeudi 17 mars à 14:00")
-    expect(page).to have_content("4 places disponibles")
+    expect(page).to have_content("4 places restantes")
 
     click_link("Ajouter un participant")
     add_user(user1)
@@ -61,7 +61,7 @@ describe "Agent can organize a rdv collectif", js: true do
     expect(Receipt.where(user_id: user1.id, channel: "sms", result: "delivered").count).to eq 1
     expect(Receipt.where(user_id: user1.id, channel: "mail", result: "processed").count).to eq 1
 
-    expect(page).to have_content("2 places disponible")
+    expect(page).to have_content("2 places restantes")
 
     click_link("Ajouter un participant")
     add_user(user2)

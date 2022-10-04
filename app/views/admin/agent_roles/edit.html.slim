@@ -37,4 +37,6 @@
             .col.text-right
               = f.button :submit
 
-= render "admin/versions/resource_versions_row", policy_scope: :agent, resource: @agent_role.agent
+.row.justify-content-center
+  .col-md-8
+    = render "admin/versions/resource_versions_row", policy_scope: :agent, resource: @agent_role.agent
