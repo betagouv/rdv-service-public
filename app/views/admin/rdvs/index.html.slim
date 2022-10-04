@@ -33,8 +33,7 @@
 
 .card.border-info
   .card-header.border-white
-    h5.mb-0
-      strong> Filtrer les rendez-vous
+    h2.mb-0 Filtrer les rendez-vous
   .card-body
     = render "rdv_search_form", form: @form
   - if @rdvs.any?
