@@ -63,7 +63,7 @@
       p.text-muted.font-14= Motif.human_attribute_name("reservable_online_hint")
       = f.input :reservable_online
 
-      .form-row
+      .form-row.js-rdvs-editable
         .col-md-4= f.input :min_booking_delay, collection: min_max_delay_options
         .col-md-4= f.input :max_booking_delay, collection: min_max_delay_options
 
