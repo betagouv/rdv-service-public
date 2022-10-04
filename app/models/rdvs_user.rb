@@ -23,6 +23,9 @@ class RdvsUser < ApplicationRecord
   ## -
   # TODORDV-C Hook on change status : notifiers
 
+  # Scopes
+  scope :order_by_user_last_name, -> { includes(:user).order("users.last_name ASC") }
+
   def set_status
     # if rdv revoked,
     # revoked toutes les participations (check notifs)
