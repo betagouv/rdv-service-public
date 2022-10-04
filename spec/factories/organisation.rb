@@ -6,5 +6,7 @@ FactoryBot.define do
   factory :organisation do
     name { generate(:orga_name) }
     territory
+
+    external_id { SecureRandom.uuid }
   end
 end
