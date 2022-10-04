@@ -293,11 +293,10 @@ class Rdv < ApplicationRecord
   def soft_delete
     # disable the :updated webhook because we want to manually trigger a :destroyed webhook
     self.skip_webhooks = true
-    was_updated = false
-    generate_payload_and_send_webhook_for_destroy do
-      was_updated = update(deleted_at: Time.zone.now)
-    end
-    was_updated
+    return false unless update(deleted_at: Time.zone.now)
+
+    generate_payload_and_send_webhook_for_destroy
+    true
   end
 
   private

@@ -33,7 +33,7 @@ module WebhookDeliverable
       generate_webhook_payload(:destroyed, endpoint.organisation.territory.api_options)
     end
     # Execute la suppression, après avoir construit les données à envoyer
-    yield
+    yield if block_given?
     payloads.each do |endpoint, payload|
       WebhookJob.perform_later(payload, endpoint.id)
     end
