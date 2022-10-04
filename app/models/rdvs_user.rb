@@ -4,9 +4,11 @@ class RdvsUser < ApplicationRecord
   devise :invitable
   # Attributes
   enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
+  NOT_CANCELLED_STATUSES = %w[unknown waiting seen noshow].freeze
+  CANCELLED_STATUSES = %w[excused revoked].freeze
 
   # Relations
-  belongs_to :rdv, touch: true, inverse_of: :rdvs_users, counter_cache: :users_count
+  belongs_to :rdv, touch: true, inverse_of: :rdvs_users
   belongs_to :user
 
   # Validations
@@ -18,9 +20,20 @@ class RdvsUser < ApplicationRecord
   after_initialize :set_default_notifications_flags
   before_validation :set_default_notifications_flags
 
+  # Scopes
+  scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
+
   # Temporary Hooks for Participation feature
   after_initialize :set_status
   ## -
+
+  after_save :update_users_count
+  after_destroy :update_users_count
+
+  def update_users_count
+    rdv.users_count = rdv.rdvs_users.not_cancelled.count
+    rdv.save
+  end
 
   def set_status
     return if rdv&.status.nil?
