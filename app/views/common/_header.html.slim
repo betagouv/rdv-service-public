@@ -5,7 +5,7 @@ nav.navbar.navbar-expand-lg.bg-transparent
       i.fa.fa-bars.text-white
     #navbarSupportedContent.collapse.navbar-collapse
       ul.navbar-nav.ml-auto.align-items-start.align-items-lg-center
-        - if current_page?(accueil_mds_path)
+        - if current_page?(presentation_agent_path)
           li.list-inline-item
             = link_to t("links.usager_space"), root_path, class: "btn btn-link text-white"
           li.list-inline-item
