@@ -3,5 +3,5 @@
 class RdvsUsersBlueprint < Blueprinter::Base
   fields :status, :send_lifecycle_notifications, :send_reminder_notification
 
-  association :users, blueprint: UserBlueprint
+  association :user, blueprint: UserBlueprint
 end
