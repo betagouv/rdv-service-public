@@ -18,7 +18,8 @@ class Agent::RdvPolicy < DefaultAgentPolicy
       if context.can_access_others_planning?
         scope.where(organisation: current_organisation)
       else
-        scope.joins(:motif).where(organisation: current_organisation, motifs: { service: current_agent.service })
+        scope.joins(%i[motif agents_rdvs]).where(organisation: current_organisation, motifs: { service: current_agent.service })
+          .or(Rdv.where("agents_rdvs.agent_id": current_agent.id))
       end
     end
   end
@@ -28,9 +29,10 @@ class Agent::RdvPolicy < DefaultAgentPolicy
       if context.can_access_others_planning?
         scope.where(organisation: current_agent.organisations)
       else
-        scope.joins(:motif)
+        scope.joins(%i[motif agents_rdvs])
           .where(organisation: current_agent.organisations)
           .where(motifs: { service: current_agent.service })
+          .or(Rdv.where("agents_rdvs.agent_id": current_agent.id))
       end
     end
   end
