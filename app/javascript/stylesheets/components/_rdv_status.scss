@@ -28,44 +28,6 @@ $status_colors: (
   }
 }
 
-$new_ux_temp_status_colors: (
-  "unknown": $gray-600,
-  "unknown_future": $gray-600,
-  "unknown_today": $warning,
-  "unknown_past": $warning,
-  "waiting": $tertiary,
-  "seen": $success,
-  "revoked": $teal,
-  "excused": $info,
-  "noshow": $danger,
-);
-
-@each $status, $color in $new_ux_temp_status_colors {
-  .btn-outline-rdv-status-#{$status} {
-    border-color: $color;
-    color: $color;
-    background-color: white;
-    &:hover {
-      background-color: $color;
-      color: white;
-    }
-    &:after {
-      vertical-align: middle;
-      margin-left: 8px;
-    }
-  }
-}
-
 .text-primary-blue {
-  color: #000091;
-}
-
-.btn-outline-primary-blue {
-  border-color: #000091;
-  color: #000091;
-  background-color: white;
-  &:hover {
-    background-color: #000091;
-    color: white;
-  }
+  color: $blue;
 }

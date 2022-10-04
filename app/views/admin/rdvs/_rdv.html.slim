@@ -30,11 +30,11 @@
     - unless local_assigns[:thin]
       .col-md-6.col-sm-12
         div.d-flex.justify-content-end.mt-1
-          = link_to t("admin.rdvs.show.update"), edit_admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: local_assigns[:agent]&.id), class: "btn btn-outline-primary-blue btn-sm mr-2"
+          = link_to t("admin.rdvs.show.update"), edit_admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: local_assigns[:agent]&.id), class: "btn btn-outline-primary btn-sm mr-2"
           - if rdv.individuel?
-            = link_to t("admin.rdvs.show.duplicate"), admin_organisation_agent_searches_path(current_organisation, service_id: rdv.motif.service_id, motif_id: rdv.motif_id, from_date: rdv.starts_at + 1.day, user_ids: rdv.user_ids, context: rdv.context, lieu_ids: [rdv.lieu_id], commit: "commit"), class: "btn btn-outline-primary-blue btn-sm"
+            = link_to t("admin.rdvs.show.duplicate"), admin_organisation_agent_searches_path(current_organisation, service_id: rdv.motif.service_id, motif_id: rdv.motif_id, from_date: rdv.starts_at + 1.day, user_ids: rdv.user_ids, context: rdv.context, lieu_ids: [rdv.lieu_id], commit: "commit"), class: "btn btn-outline-primary btn-sm"
           - else
-            = link_to t("admin.rdvs.show.duplicate"), new_admin_organisation_rdvs_collectif_path(current_organisation, motif_id: rdv.motif_id, duplicated_rdv_id: rdv.id), class: "btn btn-outline-primary-blue btn-sm"
+            = link_to t("admin.rdvs.show.duplicate"), new_admin_organisation_rdvs_collectif_path(current_organisation, motif_id: rdv.motif_id, duplicated_rdv_id: rdv.id), class: "btn btn-outline-primary btn-sm"
 
   div class=(local_assigns[:collapse_users] ? "users-list collapse show" : "users-list")
     hr.my-0.mx-3
@@ -51,7 +51,7 @@
       - if rdv.collectif?
         .d-flex.justify-content-start.mb-2
           - if rdv.remaining_seats? && !local_assigns[:thin]
-            = link_to edit_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv), class: "btn btn-outline-primary-blue btn-sm" do
+            = link_to edit_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv), class: "btn btn-outline-primary btn-sm" do
               span
                 = "Ajouter un participant"
               span.ml-1

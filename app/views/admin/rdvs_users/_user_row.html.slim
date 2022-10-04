@@ -5,11 +5,6 @@ tr
         .rdv_user_birthdate.small
           i.fas.fa-calendar-day.mr-1
           = "Né(e) le #{I18n.l(rdvs_user.user.birth_date)}"
-    - notes = rdvs_user.user.notes_for(current_organisation)
-    - if notes.present?
-      .rdv_user_notes.small
-        i.fa.fa-info-circle.mr-1
-        = simple_format(notes, {}, wrapper_tag: :span)
   td
     = render "admin/rdvs_users/notifications_email", rdvs_user: rdvs_user
   td

@@ -23,4 +23,6 @@
       .card-body
         = render "form", absence: @absence, agent: @agent
 
-= render "admin/versions/resource_versions_row", policy_scope: :agent, resource: @absence
+.row.justify-content-center
+  .col-md-8
+    = render "admin/versions/resource_versions_row", policy_scope: :agent, resource: @absence
