@@ -50,6 +50,7 @@ class PlageOuverture < ApplicationRecord
       plage_ouverture.occurrences_for(range).any? { range.overlaps?(_1.starts_at.._1.ends_at) }
     end
   }
+  scope :reservable_online, -> { joins(:motifs).where(motifs: { reservable_online: true }) }
 
   ## -
 
