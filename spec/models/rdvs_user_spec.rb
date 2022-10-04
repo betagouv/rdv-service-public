@@ -8,18 +8,19 @@ describe RdvsUser, type: :model do
         let(:user) { create :user }
         let(:rdv) { create :rdv, starts_at: Time.zone.tomorrow, users: [user], motif: motif }
 
-        describe "when rdv is created with user" do
-          it do
-            expect(rdv.status).to eq(rdv.rdvs_users.first.status)
-          end
-        end
+        # TODORDV-C Cases :
+        # describe "when rdv is created with user" do
+        #   it do
+        #     expect(rdv.status).to eq(rdv.rdvs_users.first.status)
+        #   end
+        # end
 
-        describe "when rdv is updated" do
-          it do
-            rdv.update(status: "seen")
-            expect(rdv.reload.rdvs_users.first.status).to eq("seen")
-          end
-        end
+        # describe "when rdv is updated" do
+        #   it do
+        #     rdv.update(status: "seen")
+        #     expect(rdv.reload.rdvs_users.first.status).to eq("seen")
+        #   end
+        # end
       end
     end
   end
