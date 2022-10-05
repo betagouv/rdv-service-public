@@ -27,8 +27,7 @@ class RdvsUser < ApplicationRecord
   after_initialize :set_status
   ## -
 
-  after_save :update_users_count
-  after_destroy :update_users_count
+  after_commit :update_users_count
 
   def update_users_count
     rdv.users_count = rdv.rdvs_users.not_cancelled.count
