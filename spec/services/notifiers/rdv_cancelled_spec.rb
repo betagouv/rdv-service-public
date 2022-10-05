@@ -19,6 +19,8 @@ describe Notifiers::RdvCancelled, type: :service do
     allow(Agents::RdvMailer).to receive(:with).and_call_original
     allow(Users::RdvMailer).to receive(:with).and_call_original
     allow(rdv).to receive(:rdvs_users).and_return(rdvs_users)
+    # Je ne comprend pas l'interet de ca : Comment authoriser le scope .not_excused ?
+    # Active record ne fonctionne pas dans les rspec de service ?
     allow(rdvs_users).to receive(:where).and_return([rdv_user])
     allow(rdv_user).to receive(:new_raw_invitation_token).and_return(token)
   end
@@ -34,7 +36,6 @@ describe Notifiers::RdvCancelled, type: :service do
         expect(Agents::RdvMailer).not_to receive(:with).with({ rdv: rdv, agent: agent1, author: agent1 })
         expect(Agents::RdvMailer).not_to receive(:with).with({ rdv: rdv, agent: agent2, author: agent1 })
         expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user, token: token })
-
         subject
       end
 

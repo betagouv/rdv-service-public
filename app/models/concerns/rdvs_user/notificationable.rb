@@ -6,6 +6,7 @@ module RdvsUser::Notificationable
   def update_and_notify(author, attributes)
     assign_attributes(attributes)
     return unless status_changed?
+
     @rdv = rdv
     save_and_notify(author)
   end
@@ -22,7 +23,7 @@ module RdvsUser::Notificationable
   end
 
   def notify!(author)
-    if status == 'excused'
+    if status == "excused"
       Notifiers::RdvCancelled.perform_with(@rdv, author, [user])
     end
   end

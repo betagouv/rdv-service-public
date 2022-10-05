@@ -29,7 +29,7 @@ class RdvsUser < ApplicationRecord
   scope :order_by_user_last_name, -> { includes(:user).order("users.last_name ASC") }
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
   # For scoping notifications exceptions
-  scope :not_excused, -> { where.not(status: 'excused') }
+  scope :not_excused, -> { where.not(status: "excused") }
 
   def set_status_from_rdv
     return if rdv&.status.nil?

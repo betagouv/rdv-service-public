@@ -326,18 +326,15 @@ class Rdv < ApplicationRecord
   def update_participations_statuses
     # Brouillon pour être ok sur la logique et l'impact RDV.status => RDV.rdvs_users.statuses
     if status_before_last_save != "unknown" && status == "unknown"
-      rdvs_users.update_all(status: "unknown")
+      rdvs_users.update(status: "unknown")
     end
 
     if !collectif? && status == "excused"
-      rdvs_users.not_cancelled.update_all(status: "excused")
-    elsif status == "revoked"
-      rdvs_users.not_cancelled.update_all(status: "revoked")
-    elsif status == "seen"
-      rdvs_users.not_cancelled.where(status: "unknown").update_all(status: "seen")
-    elsif status == "noshow"
-      rdvs_users.not_cancelled.where(status: "unknown").update_all(status: "noshow")
+      rdvs_users.not_cancelled.update(status: "excused")
     end
+    rdvs_users.not_cancelled.update(status: "revoked") if status == "revoked"
+    rdvs_users.not_cancelled.where(status: "unknown").update(status: "seen") if status == "seen"
+    rdvs_users.not_cancelled.where(status: "unknown").update(status: "noshow") if status == "noshow"
   end
 
   def associate_users_with_organisation
