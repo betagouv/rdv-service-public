@@ -40,7 +40,7 @@
     div class=("users-details collapse p-3 pt-0")
       h5.text-center.strong.mb-3> Participants :
       .row
-        - rdv.rdvs_users.order_by_user_last_name.each do |rdvs_user|
+        - rdv.rdvs_users.includes(user: %i[responsible organisations user_profiles]).order_by_user_last_name.each do |rdvs_user|
           .col-4
             .card.light-gray-card
               .card-body.p-2
@@ -54,7 +54,7 @@
         .d-none.d-sm-block
           = render "admin/rdvs/users_table", rdv: rdv, agent: local_assigns[:agent]
         .d-md-none.d-print-none
-          - rdv.rdvs_users.includes(user: %i[responsible organisations]).order_by_user_last_name.each do |rdvs_user|
+          - rdv.rdvs_users.includes(user: %i[responsible organisations user_profiles]).order_by_user_last_name.each do |rdvs_user|
             = render "admin/rdvs_users/user_card", rdvs_user: rdvs_user, agent: local_assigns[:agent]
       - else
         p Il n'y a pas encore de participant pour ce RDV
