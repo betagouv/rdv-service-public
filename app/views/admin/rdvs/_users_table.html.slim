@@ -9,7 +9,8 @@
         th Notifications
         th
         th
-        th.text-right Participation
+        - if rdv.collectif?
+          th.text-right Participation
     tbody id="rdv-users-list"
       - rdv.rdvs_users.includes(user: %i[responsible organisations user_profiles]).order_by_user_last_name.each do |rdvs_user|
         = render "admin/rdvs_users/user_row", rdvs_user: rdvs_user, agent: agent
