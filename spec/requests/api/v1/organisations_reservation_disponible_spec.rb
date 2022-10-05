@@ -11,7 +11,7 @@ describe "public_api/public_links requests", type: :request do
   context "when plages are defined" do
     let(:params) do
       {
-        external_ids: %w[ext_id_A ext_id_B ext_id_C ext_id_D ext_id_E, ext_id_F],
+        external_ids: %w[ext_id_A ext_id_B ext_id_C ext_id_D ext_id_E ext_id_F],
         departement: "CN",
       }
     end
