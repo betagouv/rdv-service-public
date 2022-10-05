@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 class RdvsUser < ApplicationRecord
+  # Mixins
   devise :invitable
+
+  include RdvsUser::Notificationable
+
   # Attributes
   enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
   NOT_CANCELLED_STATUSES = %w[unknown waiting seen noshow].freeze
@@ -19,24 +23,18 @@ class RdvsUser < ApplicationRecord
   # Hooks
   after_initialize :set_default_notifications_flags
   before_validation :set_default_notifications_flags
-
-  # Temporary Hooks for Participation feature
-  after_initialize :set_status
-  ## -
-  # TODORDV-C Hook on change status : notifiers
+  before_create :set_status_from_rdv
 
   # Scopes
   scope :order_by_user_last_name, -> { includes(:user).order("users.last_name ASC") }
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
+  # For scoping notifications exceptions
+  scope :not_excused, -> { where.not(status: 'excused') }
 
-  def set_status
-    # if rdv revoked,
-    # revoked toutes les participations (check notifs)
-    
-    # TODORDV-C rdv.status behavior on participations
-    # return if rdv&.status.nil?
+  def set_status_from_rdv
+    return if rdv&.status.nil?
 
-    # self.status = rdv.status
+    self.status = rdv.status
   end
 
   def temporal_status

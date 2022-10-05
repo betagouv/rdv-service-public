@@ -26,7 +26,7 @@ class Notifiers::RdvCancelled < Notifiers::RdvBase
   end
 
   def rdvs_users_to_notify
-    @rdv.rdvs_users.where(send_lifecycle_notifications: true)
+    @rdv.rdvs_users.not_excused.where(send_lifecycle_notifications: true)
   end
 
   def notify_agent(agent)
