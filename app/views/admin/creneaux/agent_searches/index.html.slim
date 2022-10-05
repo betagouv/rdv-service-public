@@ -83,5 +83,17 @@
         p.font-weight-bold= t(".available_places_with_slots", count: @search_results.length)
         - @search_results.each do |search_result|
           = render "lieu_search_results", search_result: search_result
-    - elsif @form.motif.present?
+
+    - if @search_results_without_lieu&.creneaux&.any?
+      .container
+        p.font-weight-bold= t(".available_slots_without_lieu")
+        .card
+          .card-body
+            = render "/admin/slots/slots", \
+              lieu: nil, \
+              creneaux: @search_results_without_lieu.creneaux, \
+              form: @form, \
+              next_availability: @search_results_without_lieu.next_availability
+
+    - if @form.motif.present? && !@search_results&.any? && !@search_results_without_lieu&.creneaux&.any?
       = t(".no_slot_available", motif_name: @form.motif.name)

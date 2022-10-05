@@ -6,8 +6,9 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
   def index
     @form = helpers.build_agent_creneaux_search_form(current_organisation, params)
     @search_results = search_results
+    @search_results_without_lieu = search_results_without_lieu
 
-    if @search_results&.count == 1
+    if only_one_lieu? && !creneaux_without_lieu?
       skip_policy_scope # TODO: improve pundit checks for creneaux
 
       redirect_to admin_organisation_slots_path(current_organisation,
@@ -37,5 +38,25 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
     else
       SearchRdvCollectifForAgentsService.new(@form).lieu_search
     end
+  end
+
+  def search_results_without_lieu
+    return nil unless (params[:commit].present? || request.format.js?) && @form.valid?
+    return nil unless @form.motif&.phone?
+
+    # Les motifs par téléphone sont nécessairement individuels
+    SearchCreneauxWithoutLieuForAgentsService.perform_with(@form)
+  end
+
+  def only_one_lieu?
+    return false unless @search_results
+
+    @search_results.count == 1
+  end
+
+  def creneaux_without_lieu?
+    return false unless @search_results_without_lieu
+
+    @search_results_without_lieu.creneaux.any?
   end
 end
