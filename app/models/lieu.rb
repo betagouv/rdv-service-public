@@ -4,6 +4,7 @@ class Lieu < ApplicationRecord
   # Mixins
   has_paper_trail
   include PhoneNumberValidation::HasPhoneNumber
+  include WebhookDeliverable
 
   # Attributes
   auto_strip_attributes :name
@@ -16,6 +17,7 @@ class Lieu < ApplicationRecord
   belongs_to :organisation
   has_many :plage_ouvertures, dependent: :restrict_with_error
   has_many :rdvs, dependent: :restrict_with_error
+  has_many :webhook_endpoints, through: :organisation
 
   # Through relations
   has_many :motifs, through: :plage_ouvertures
