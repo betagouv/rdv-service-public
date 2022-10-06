@@ -28,11 +28,19 @@ describe "public_api/public_links requests", type: :request do
       # Organisation D has no plage
       # Organisation E is not in provided territory
       # Organisation F does not exist
-      expected_response = {
-        "ext_id_A" => "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_a.id}",
-        "ext_id_B" => "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_b.id}",
+      expected_body = {
+        "public_links" => [
+          {
+            "external_id" => "ext_id_A",
+            "public_link" => "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_a.id}",
+          },
+          {
+            "external_id" => "ext_id_B",
+            "public_link" => "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_b.id}",
+          },
+        ],
       }
-      expect(JSON.parse(response.body)).to match_array(expected_response)
+      expect(JSON.parse(response.body)).to match_array(expected_body)
     end
   end
 end

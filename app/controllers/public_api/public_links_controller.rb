@@ -13,13 +13,13 @@ class PublicApi::PublicLinksController < ActionController::Base # rubocop:disabl
       .joins(:organisation)
       .distinct(:organisation_id)
 
-    results = plage_ouvertures.to_h do |plage_ouverture|
-      [
-        plage_ouverture.organisation.external_id,
-        public_link_to_org_url(organisation_id: plage_ouverture.organisation.id, host: plage_ouverture.organisation.domain.dns_domain_name),
-      ]
+    results = plage_ouvertures.map do |plage_ouverture|
+      {
+        external_id: plage_ouverture.organisation.external_id,
+        public_link: public_link_to_org_url(organisation_id: plage_ouverture.organisation.id, host: plage_ouverture.organisation.domain.dns_domain_name),
+      }
     end
 
-    render json: results.to_json
+    render json: { public_links: results }.to_json
   end
 end
