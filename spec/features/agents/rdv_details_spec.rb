@@ -107,7 +107,7 @@ describe "Agent can see RDV details correctly" do
     it "Rdv is full" do
       visit admin_organisation_rdv_path(organisation, rdv)
       expect(page).not_to have_content("Ajouter un participant")
-      expect(page).to have_content("Complet")
+      expect(page).to have_content("3/3(Complet)")
     end
 
     it "Rdv is not full" do
@@ -115,7 +115,7 @@ describe "Agent can see RDV details correctly" do
       rdv.save
       visit admin_organisation_rdv_path(organisation, rdv)
       expect(page).to have_content("Ajouter un participant")
-      expect(page).to have_content("places restantes")
+      expect(page).to have_content("3/5(2 places restantes)")
     end
 
     it "Rdv has no participants limit" do
@@ -123,7 +123,7 @@ describe "Agent can see RDV details correctly" do
       rdv.save
       visit admin_organisation_rdv_path(organisation, rdv)
       expect(page).to have_content("Ajouter un participant")
-      expect(page).to have_content("Pas de limite de places")
+      expect(page).to have_content("3/X(Pas de limite de places)")
     end
   end
 end

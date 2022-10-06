@@ -1,0 +1,10 @@
+li.list-group-item
+  .row
+    .col-4
+      span.badge.badge-pill.ml-0.mr-2 style="background: #{motif.color};" &nbsp;
+      = link_to motif.name, admin_organisation_motif_path(motif.organisation, motif)
+      = motif_badges(motif, only: %i[secretariat follow_up collectif])
+    .col-2
+      = motif.human_attribute_value(:location_type)
+    .col-2
+      = "#{motif.default_duration_in_min} min."

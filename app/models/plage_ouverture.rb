@@ -34,6 +34,7 @@ class PlageOuverture < ApplicationRecord
   validate :lieu_is_enabled
   validates :motifs, :title, presence: true
   validate :warn_overlapping_plage_ouvertures
+  validate :warn_overflow_motifs_duration
 
   # Scopes
   scope :in_range, lambda { |range|
@@ -50,6 +51,7 @@ class PlageOuverture < ApplicationRecord
       plage_ouverture.occurrences_for(range).any? { range.overlaps?(_1.starts_at.._1.ends_at) }
     end
   }
+  scope :reservable_online, -> { joins(:motifs).where(motifs: { reservable_online: true }) }
 
   ## -
 
@@ -80,6 +82,20 @@ class PlageOuverture < ApplicationRecord
     else
       first_day == date
     end
+  end
+
+  def daily_max_duration
+    Tod::Shift.new(start_time, end_time).duration.seconds
+  end
+
+  def overflow_motifs_duration?
+    overflow_motifs_duration.any?
+  end
+
+  def overflow_motifs_duration
+    return Motif.none unless valid_date_and_times?
+
+    motifs.where("default_duration_in_min > ?", daily_max_duration.in_minutes)
   end
 
   private
@@ -122,5 +138,13 @@ class PlageOuverture < ApplicationRecord
     add_benign_error("Conflit de dates et d'horaires avec d'autres plages d'ouvertures")
     # TODO: display richer warning messages by rendering the partial
     # overlapping_plage_ouvertures (implies passing view locals which may be tricky)
+  end
+
+  def warn_overflow_motifs_duration
+    return if ignore_benign_errors
+
+    return unless overflow_motifs_duration?
+
+    add_benign_error("Certains motifs ont une durée supérieure à la plage d'ouverture prévue")
   end
 end

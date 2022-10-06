@@ -10,7 +10,8 @@ describe "public pages", js: true do
   end
 
   it "accueil_mds_path page is accessible" do
-    visit "http://www.rdv-solidarites-test.localhost/presentation_agent"
+    visit "http://www.rdv-solidarites-test.localhost/accueil_mds"
+    # This path now redirects to the generic /presentation_agent page
     expect(page).to have_current_path("/presentation_agent")
     expect(page).to be_axe_clean
   end
