@@ -1,0 +1,19 @@
+span.mr-1
+  = rdv.users_count
+- if rdv.max_participants_count
+  span.mr-1
+    = "/"
+  span.mr-1
+    = rdv.max_participants_count
+  - if rdv.fully_booked?
+    = "(Complet)"
+  - elsif rdv.overbooked?
+    = "(Trop de participants : #{rdv.users_count} personnes pour #{I18n.t('rdvs.seats', count: rdv.max_participants_count)})"
+  - else
+    = "(#{(I18n.t('rdvs.available_seats', count: rdv.max_participants_count - rdv.users_count))})"
+- else
+  span.mr-1
+    = "/"
+  span.mr-1
+    = "X"
+  = "(Pas de limite de places)"

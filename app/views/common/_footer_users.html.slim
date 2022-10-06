@@ -3,7 +3,7 @@
     .col-12.col-md
       div
         = link_to image_tag(current_domain.dark_logo_path, size: "250x80", alt: current_domain.name), root_path, title: "aller à l'accueil #{current_domain.name}"
-        ul.list-unstyled.text-small
+        ul.list-unstyled
           li.mb-2
             - if current_domain.default?
               span> Un service fourni par
@@ -23,16 +23,16 @@
             = image_tag "logos/republique-francaise-logo.svg", size: "105x90", alt:""
     .col-6.col-md
       h2 À propos
-      ul.list-unstyled.text-small
+      ul.list-unstyled
         li.mb-1 = link_to "Contact", contact_path, class: "footer-links"
         - if current_domain == Domain::RDV_SOLIDARITES
           li.mb-1 = link_to "Les solidarités dans votre département", mds_path
-        li.mb-1 = link_to "Espace professionnel", accueil_mds_path
+        li.mb-1 = link_to "Espace professionnel", presentation_agent_path
         li.mb-1 = link_to "Statistiques", stats_path
         li.mb-1 = link_to "Budget", budget_path
     .col-6.col-md
       h2 Produit
-      ul.list-unstyled.text-small
+      ul.list-unstyled
         li.mb-1 = link_to "Accessibilité : non conforme", accessibility_path
         li.mb-1 = link_to "https://github.com/betagouv/rdv-solidarites.fr/commits/#{ENV['CONTAINER_VERSION']}", title: "Aller au code source de #{current_domain.name}" do
           span>= ENV["RDV_SOLIDARITES_VERSION"]
@@ -42,7 +42,7 @@
           i.fa.fa-external-link-alt
     .col-6.col-md
       h2 Informations légales
-      ul.list-unstyled.text-small
+      ul.list-unstyled
         li.mb-1 = link_to mentions_legales_path do
           span> Mentions Légales
         li.mb-1 = link_to cgu_path do

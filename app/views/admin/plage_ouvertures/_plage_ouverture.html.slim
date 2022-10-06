@@ -22,6 +22,8 @@ tr
       | Le #{l(plage_ouverture.first_day, format: :human)} #{display_time_range(plage_ouverture)}
     - if plage_ouverture.overlapping_plages_ouvertures?
       .alert.alert-warning.py-1.px-2.mt-1 ⚠️ Conflit de dates
+    - if plage_ouverture.overflow_motifs_duration?
+      .alert.alert-warning.py-1.px-2.mt-1 ⚠️ Certains motifs débordent sur la durée de la plage
   td
     .d-flex
       div.mr-3= link_to edit_admin_organisation_plage_ouverture_path(organisation, plage_ouverture),

@@ -24,7 +24,7 @@ describe "Agent can find a creneau for a rdv collectif" do
     # The rdv collectif appears in the search results
     expect(page).to have_content("Créneaux disponibles pour atelier participatif")
     expect(page).to have_content("1 participant")
-    expect(page).to have_content("4 places disponibles")
+    expect(page).to have_content("4 places restantes")
 
     click_link "Ajouter un participant"
 

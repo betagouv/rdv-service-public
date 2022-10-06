@@ -1,0 +1,4 @@
+- model.overflow_motifs_duration.each do |motif|
+  li.mb-1
+    span>= link_to("#{motif.name}", edit_admin_organisation_motif_path(model.organisation, motif))
+    span> déborde de #{overflow_motif_duration(model, motif)} minutes. Il ne sera pas possible de prendre rendez-vous pour ce motif en l'état.

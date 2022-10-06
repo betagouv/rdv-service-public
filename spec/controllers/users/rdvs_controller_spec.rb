@@ -67,14 +67,11 @@ RSpec.describe Users::RdvsController, type: :controller do
       let(:token) { "12345" }
       let(:rdv) { create(:rdv, starts_at: 5.hours.from_now) }
 
-      before do
-        allow(RdvUpdater).to receive(:perform!)
-          .and_return(OpenStruct.new(success?: true, rdv_users_tokens_by_user_id: { rdv.users.first.id => token }))
-      end
+      before { allow_any_instance_of(RdvsUser).to receive(:new_raw_invitation_token).and_return(token) }
 
-      it "call RdvUpdater.perform! function" do
+      it "calls update_and_notify function" do
         sign_in rdv.users.first
-        expect(RdvUpdater).to receive(:perform!).with(rdv.users.first, rdv)
+        expect_any_instance_of(Rdv).to receive(:update_and_notify).with(rdv.users.first, status: "excused").and_call_original
         put :cancel, params: { id: rdv.id }
       end
 
