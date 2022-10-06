@@ -8,6 +8,14 @@
     = t(".plage_ouverture_of", full_name: @agent.full_name_and_service)
 
 .text-right
+  - if params[:view_mode] == "calendar"
+    = link_to admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, search: params[:search], current_tab: params[:current_tab]), class: "btn btn-outline-primary align-bottom mr-3" do
+      span.mr-1= t(".list_view")
+      i.fa.fa-calendar-alt
+  - else
+    = link_to admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, view_mode: "calendar", search: params[:search], current_tab: params[:current_tab]), class: "btn btn-outline-primary align-bottom mr-3" do
+      span.mr-1= t(".calendar_view")
+      i.fa.fa-calendar-alt
   = link_to t(".create_plage_ouverture"), new_admin_organisation_agent_plage_ouverture_path(current_organisation, @agent.id), class: "btn btn-outline-primary align-bottom"
   .m-3.d-flex.justify-content-end
     div= link_to t("helpers.reset"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id), class: class_names("btn", "btn-link", "d-none": params[:search].blank?)
@@ -20,23 +28,31 @@
   - if @display_tabs
     ul.nav.nav-tabs.px-2.mt-2
       li.nav-item
-        = active_link_to t(".in_progress"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, search: params[:search]), class: "nav-link", active: params[:current_tab] != "expired"
+        = active_link_to t(".in_progress"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, search: params[:search], view_mode: params[:view_mode]), class: "nav-link", active: params[:current_tab] != "expired"
       li.nav-item
-        = active_link_to t(".past"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, current_tab: "expired", search: params[:search]), class: "nav-link", active: { current_tab: "expired" }
+        = active_link_to t(".past"), admin_organisation_agent_plage_ouvertures_path(current_organisation, @agent.id, current_tab: "expired", search: params[:search], view_mode: params[:view_mode]), class: "nav-link", active: { current_tab: "expired" }
 
   - if @plage_ouvertures.any?
-    table.table
-      thead
-        tr
-          th = PlageOuverture.human_attribute_name(:title)
-          th = t(".motifs")
-          th = t(".place")
-          th = t(".dates")
-          th = t("helpers.actions")
-      tbody
-        = render @plage_ouvertures
-    .d-flex.justify-content-center
-      = paginate @plage_ouvertures, theme: "twitter-bootstrap-4"
+    - if params[:view_mode] == "calendar"
+      #calendar.mx-5.my-2 [
+        data-agent-id="#{@agent.id}"
+        data-organisation-id="#{@current_organisation.id}"
+        data-display-saturdays="#{current_agent.display_saturdays}"
+        data-event-sources-json="#{[admin_agent_plage_ouvertures_path(@agent, organisation_id: current_organisation.id, plages_ids: @plage_ouvertures.pluck(:id)), admin_jours_feries_path].to_json}"
+      ]
+    - else
+      table.table
+        thead
+          tr
+            th = PlageOuverture.human_attribute_name(:title)
+            th = t(".motifs")
+            th = t(".place")
+            th = t(".dates")
+            th = t("helpers.actions")
+        tbody
+          = render @plage_ouvertures
+      .d-flex.justify-content-center
+        = paginate @plage_ouvertures, theme: "twitter-bootstrap-4"
   - else
     .row.justify-content-md-center.p-2.mt-3
       .col-md-6.text-center.mb-2
