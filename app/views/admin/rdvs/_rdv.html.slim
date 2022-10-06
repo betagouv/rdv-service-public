@@ -1,40 +1,29 @@
 .card.rdv-card[id= "rdv-#{rdv.id}"]
   .card-header.border-white
     .d-flex.justify-content-between.flex-wrap
-      - if local_assigns[:thin]
-        div
-          h5.header.mb-1
-            span
-              = link_to rdv_title(rdv), admin_organisation_rdv_path(rdv.organisation, rdv)
-            span.ml-4
-              = link_to "Voir dans l'agenda  >", admin_organisation_agent_agenda_path(current_organisation, rdv.agents.first, selected_event_id: rdv.id, date: rdv.starts_at.to_date)
-      - else
-        div
-          h5.header.mb-1
-            = l(rdv.starts_at.to_date, format: :human).capitalize
-          .text-muted
-            = rdv_starts_at_and_duration(rdv, :time_only)
-      = render "rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent]
+      div
+        h5.header.mb-1
+          span
+            = link_to rdv_title(rdv), admin_organisation_rdv_path(rdv.organisation, rdv)
+      = render "rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent], remote: true
   hr.my-0.mx-3
   .card-body.py-3.row
     .col-md-6.col-sm-12
-      - unless local_assigns[:thin]
-        .d-flex.justify-content-between.flex-wrap.mb-1
-          p.card-text
-            i.fa.fa-fw.fa-calendar.mr-1.text-primary-blue
-            = rdv_starts_at_and_duration(rdv, :time_only)
-            |&nbsp;
-            = link_to "voir dans l'agenda", admin_organisation_agent_agenda_path(current_organisation, rdv.agents.first, selected_event_id: rdv.id, date: rdv.starts_at.to_date)
+      .d-flex.justify-content-between.flex-wrap.mb-1
+        p.card-text
+          i.fa.fa-fw.fa-calendar.mr-1.text-primary-blue
+          = rdv_starts_at_and_duration(rdv, :time_only)
+          |&nbsp;
+          = link_to "voir dans l'agenda", admin_organisation_agent_agenda_path(current_organisation, rdv.agents.first, selected_event_id: rdv.id, date: rdv.starts_at.to_date)
       = render "rdv_details", rdv: rdv
 
-    - unless local_assigns[:thin]
-      .col-md-6.col-sm-12
-        div.d-flex.justify-content-end.mt-1
-          = link_to t("admin.rdvs.show.update"), edit_admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: local_assigns[:agent]&.id), class: "btn btn-outline-primary btn-sm mr-2"
-          - if rdv.individuel?
-            = link_to t("admin.rdvs.show.duplicate"), admin_organisation_agent_searches_path(current_organisation, service_id: rdv.motif.service_id, motif_id: rdv.motif_id, from_date: rdv.starts_at + 1.day, user_ids: rdv.user_ids, context: rdv.context, lieu_ids: [rdv.lieu_id], commit: "commit"), class: "btn btn-outline-primary btn-sm"
-          - else
-            = link_to t("admin.rdvs.show.duplicate"), new_admin_organisation_rdvs_collectif_path(current_organisation, motif_id: rdv.motif_id, duplicated_rdv_id: rdv.id), class: "btn btn-outline-primary btn-sm"
+    .col-md-6.col-sm-12
+      div.d-flex.justify-content-end.mt-1
+        = link_to t("admin.rdvs.show.update"), edit_admin_organisation_rdv_path(rdv.organisation, rdv, agent_id: local_assigns[:agent]&.id), class: "btn btn-outline-primary btn-sm mr-2"
+        - if rdv.individuel?
+          = link_to t("admin.rdvs.show.duplicate"), admin_organisation_agent_searches_path(current_organisation, service_id: rdv.motif.service_id, motif_id: rdv.motif_id, from_date: rdv.starts_at + 1.day, user_ids: rdv.user_ids, context: rdv.context, lieu_ids: [rdv.lieu_id], commit: "commit"), class: "btn btn-outline-primary btn-sm"
+        - else
+          = link_to t("admin.rdvs.show.duplicate"), new_admin_organisation_rdvs_collectif_path(current_organisation, motif_id: rdv.motif_id, duplicated_rdv_id: rdv.id), class: "btn btn-outline-primary btn-sm"
 
   - if rdv.users.any?
     div class=("users-details collapse p-3 pt-0")
@@ -61,7 +50,7 @@
 
       - if rdv.collectif?
         .d-flex.justify-content-start.mb-2
-          - if rdv.remaining_seats? && !local_assigns[:thin]
+          - if rdv.remaining_seats?
             = link_to edit_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv), class: "btn btn-outline-primary btn-sm" do
               span
                 = "Ajouter un participant"

@@ -91,6 +91,7 @@ describe "Agent can see RDV details correctly" do
         find(".btn", text: "À renseigner").click
         expect do
           find("span", text: "Rendez-vous honoré").click
+          sleep 1
         end.to change { rdv.reload.status }.to("seen")
       end
     end
