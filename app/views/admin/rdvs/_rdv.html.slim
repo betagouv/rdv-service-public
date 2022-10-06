@@ -40,12 +40,12 @@
     div class=("users-details collapse p-3 pt-0")
       h5.text-center.strong.mb-3> Participants :
       .row
-        - rdv.rdvs_users.includes(user: %i[responsible organisations user_profiles]).order_by_user_last_name.each do |rdvs_user|
+        - rdv.users.includes(%i[responsible organisations user_profiles]).order_by_last_name.each do |user|
           .col-4
             .card.light-gray-card
               .card-body.p-2
                 .mb-1
-                  = render "admin/rdvs_users/user_details", user: rdvs_user.user
+                  = render "admin/rdvs_users/user_details", user: user
 
   div class=("users-details collapse show")
     hr.my-0.mx-3

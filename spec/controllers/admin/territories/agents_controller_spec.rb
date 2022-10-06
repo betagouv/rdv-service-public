@@ -37,4 +37,24 @@ describe Admin::Territories::AgentsController, type: :controller do
       expect(assigns(:agent)).to eq(agent)
     end
   end
+
+  describe "#update" do
+    it "redirect to agents index" do
+      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory], teams: [])
+      team = create(:team, territory: territory)
+      sign_in agent
+
+      post :update, params: { territory_id: territory.id, id: agent.id, agent: { team_ids: [team.id] } }
+      expect(response).to redirect_to(admin_territory_agents_path)
+    end
+
+    it "update agent's teams" do
+      agent = create(:agent, admin_role_in_organisations: [organisation], role_in_territories: [territory], teams: [])
+      team = create(:team, territory: territory)
+      sign_in agent
+
+      post :update, params: { territory_id: territory.id, id: agent.id, agent: { team_ids: [team.id] } }
+      expect(agent.reload.teams).to eq([team])
+    end
+  end
 end
