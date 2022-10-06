@@ -8,13 +8,18 @@ class Admin::ParticipationsController < AgentAuthController
 
   def update
     authorize(@rdv, :update?)
-    # TODORDV-C Remote xhr
-    if @rdvs_user.update_and_notify(current_agent, rdvs_user_params)
-      flash[:notice] = "Status de participation pour #{@rdvs_user.user.full_name} mis à jour"
-    else
-      flash[:error] = @rdv.errors.full_messages.to_sentence
+    success = @rdvs_user.update_and_notify(current_agent, rdvs_user_params)
+    respond_to do |format|
+      format.js { render "admin/rdvs_users/update" }
+      format.html do
+        if success
+          flash[:notice] = "Status de participation pour #{@rdvs_user.user.full_name} mis à jour"
+        else
+          flash[:error] = @rdv.errors.full_messages.to_sentence
+        end
+        redirect_to admin_organisation_rdv_path(current_organisation, @rdv)
+      end
     end
-    redirect_to admin_organisation_rdv_path(current_organisation, @rdv)
   end
 
   def destroy

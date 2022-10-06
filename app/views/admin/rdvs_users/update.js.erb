@@ -1,0 +1,7 @@
+<% participation_dropdown_html = render "admin/rdvs_users/participation_status_dropdown", rdvs_user: @rdvs_user, agent: @agent %>
+(function() {
+  let element = document.getElementById('participation-dropdown-<%= @rdvs_user.id %>');
+  if(element) {
+    element.outerHTML = "<%= escape_javascript participation_dropdown_html %>";
+  }
+})();
