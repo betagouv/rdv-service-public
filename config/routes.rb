@@ -165,6 +165,7 @@ Rails.application.routes.draw do
           end
         end
         resources :rdvs, except: [:new] do
+          resources :participations, only: %i[update destroy]
           member do
             post :send_reminder_manually
           end
