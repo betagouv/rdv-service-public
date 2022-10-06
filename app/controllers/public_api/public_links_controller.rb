@@ -1,5 +1,20 @@
 # frozen_string_literal: true
 
+#
+# Cette API a été introduite dans une démarche exploratoire décrit ici :
+# https://github.com/betagouv/rdv-solidarites.fr/issues/2874
+#
+# Ce code n'est pas sacré, au contraire, il a été conçu pour être jetable.
+# Il pourra donc :
+# - soit être jeté parce qu'il n'est plus utilisé
+# - soit être adapté / déplacé dans une API plus propre si
+#   le besoin auquel il répond se généralise.
+#
+# Les utilisateurs de cette API sont :
+# - l'équipe carto CNFS,
+# - l'équipe carto ANCT,
+# - Rés'In (métropole de Lyon)
+#
 class PublicApi::PublicLinksController < ActionController::Base # rubocop:disable Rails/ApplicationController
   def index
     departement_number = params.require(:territory).presence
