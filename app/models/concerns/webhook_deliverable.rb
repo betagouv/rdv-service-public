@@ -28,7 +28,7 @@ module WebhookDeliverable
   end
 
   def generate_payload_and_send_webhook_for_destroy
-    payloads = subscribed_webhook_endpoints.index_with do |endpoint|
+    payloads = subscribed_webhook_endpoints.index_with do |_endpoint|
       generate_webhook_payload(:destroyed)
     end
     yield
