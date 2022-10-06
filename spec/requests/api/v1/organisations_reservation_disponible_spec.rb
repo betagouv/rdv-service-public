@@ -10,19 +10,18 @@ describe "public_api/public_links requests", type: :request do
 
   context "when plages are defined" do
     let(:params) do
-      {
-        departement: "CN",
-      }
+      { territory: "CN" }
     end
 
     it "returns any organisation that has any open plage ouverture" do
+      create(:plage_ouverture, organisation: organisation_a)
       create(:plage_ouverture, organisation: organisation_a)
       create(:plage_ouverture, :no_recurrence, organisation: organisation_b, first_day: Time.zone.today + 5.days)
       create(:plage_ouverture, :expired, organisation: organisation_c)
 
       get "/public_api/public_links", params: params, headers: {}
 
-      # Organisation A has a normal recurring plage
+      # Organisation A has two recurring plages
       # Organisation B has a plage in 5 days
       # Organisation C has a plage that expired
       # Organisation D has no plage
