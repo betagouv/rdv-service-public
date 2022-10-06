@@ -50,7 +50,7 @@ class Admin::RdvsController < AgentAuthController
       format.js
       format.html do
         if success
-          redirect_to admin_organisation_rdv_path(current_organisation, @rdv, agent_id: params[:agent_id]), rdv_success_flash
+          redirect_to admin_organisation_rdvs_path(current_organisation, agent_id: params[:agent_id]), rdv_success_flash
         else
           render :edit
         end

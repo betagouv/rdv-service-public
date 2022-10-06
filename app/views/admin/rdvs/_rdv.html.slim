@@ -14,7 +14,7 @@
             = l(rdv.starts_at.to_date, format: :human).capitalize
           .text-muted
             = rdv_starts_at_and_duration(rdv, :time_only)
-      = render "rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent]
+      = render "rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent], remote: true
   hr.my-0.mx-3
   .card-body.py-3.row
     .col-md-6.col-sm-12
