@@ -44,17 +44,4 @@ describe "Agent can search plage ouverture" do
     expect(page).not_to have_content(expired_perm_enfance.title)
     expect(page).to have_content(expired_perm_scolaire.title).once
   end
-
-  it "preserves the tab after search" do
-    click_link("Passées")
-    fill_in :search, with: "sco"
-    click_button "Rechercher"
-
-    expect(find_link("En cours")[:class]).not_to include("active")
-    expect(find_link("Passées")[:class]).to include("active")
-    expect(page).not_to have_content(perm_enfance.title)
-    expect(page).not_to have_content(perm_scolaire.title)
-    expect(page).not_to have_content(expired_perm_enfance.title)
-    expect(page).to have_content(expired_perm_scolaire.title).once
-  end
 end

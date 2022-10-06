@@ -152,15 +152,18 @@ class CalendarRdvSolidarites {
 
     sessionStorage.setItem("calendarStartDate", JSON.stringify(info.view.currentStart))
     const printLinkElt = document.querySelector(".js-link-print-rdvs")
-    printLinkElt.classList.toggle("d-none", info.view.type != "timeGridOneDay")
-    if (info.view.type != "timeGridOneDay") return
 
-    const url = new URL(printLinkElt.href)
-    const date = moment(info.view.currentStart).utc()
-    printLinkElt.querySelector(".js-date").innerHTML = date.format("DD/MM/YYYY")
-    url.searchParams.set("start", date.format("YYYY-MM-DD"))
-    url.searchParams.set("end", date.format("YYYY-MM-DD"))
-    printLinkElt.href = url.toString()
+    if (printLinkElt) {
+      printLinkElt.classList.toggle("d-none", info.view.type != "timeGridOneDay")
+      if (info.view.type != "timeGridOneDay") return
+
+      const url = new URL(printLinkElt.href)
+      const date = moment(info.view.currentStart).utc()
+      printLinkElt.querySelector(".js-date").innerHTML = date.format("DD/MM/YYYY")
+      url.searchParams.set("start", date.format("YYYY-MM-DD"))
+      url.searchParams.set("end", date.format("YYYY-MM-DD"))
+      printLinkElt.href = url.toString()
+    }
   }
 
   eventRender = (info) => {
