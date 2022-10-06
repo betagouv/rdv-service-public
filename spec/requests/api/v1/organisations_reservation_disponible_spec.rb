@@ -31,11 +31,11 @@ describe "public_api/public_links requests", type: :request do
         "public_links" => [
           {
             "external_id" => "ext_id_A",
-            "public_link" => "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_a.id}",
+            "public_link" => "http://www.rdv-aide-numerique-test.localhost/org/ext/CN/ext_id_A",
           },
           {
             "external_id" => "ext_id_B",
-            "public_link" => "http://www.rdv-aide-numerique-test.localhost/org/#{organisation_b.id}",
+            "public_link" => "http://www.rdv-aide-numerique-test.localhost/org/ext/CN/ext_id_B",
           },
         ],
       }
