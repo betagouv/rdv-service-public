@@ -15,12 +15,12 @@ class Agent::RdvPolicy < DefaultAgentPolicy
 
   class Scope < Scope
     def resolve
-      if context.can_access_others_planning?
-        scope.where(organisation: current_organisation)
-      else
-        scope.joins(%i[motif agents_rdvs]).where(organisation: current_organisation, motifs: { service: current_agent.service })
+      organisation_scope = scope.where(organisation: current_organisation)
+      unless context.can_access_others_planning?
+        organisation_scope = organisation_scope.joins(%i[motif agents_rdvs]).where(motifs: { service: current_agent.service })
           .or(Rdv.where("agents_rdvs.agent_id": current_agent.id))
       end
+      organisation_scope
     end
   end
 
