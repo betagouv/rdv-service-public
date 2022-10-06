@@ -14,3 +14,6 @@
         = render "admin/rdvs_users/notifications_sms", rdvs_user: rdvs_user
       div
       = render "admin/rdvs_users/notifications_lifecycle", rdvs_user: rdvs_user
+      - if rdvs_user.rdv.collectif?
+        div
+        = render "admin/rdvs_users/participation_status_dropdown", rdvs_user: rdvs_user, agent: agent

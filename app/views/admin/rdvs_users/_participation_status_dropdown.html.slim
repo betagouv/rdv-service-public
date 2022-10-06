@@ -1,0 +1,37 @@
+.dropdown[id= "rdv-status-#{rdvs_user.id}", class="text-right"]
+  - if rdvs_user.rdv.temporal_status == "revoked"
+    / Avoid users participations change as long as rdv is revoked TODORDV-C rspec on this
+    button.btn.btn-outline-primary[disabled]
+      span> Annulé (par le service)
+  - else
+    = participation_status_dropdown_toggle(rdvs_user)
+    .dropdown-menu
+      - case rdvs_user.temporal_status
+      - when "unknown_future"
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "excused"
+
+      - when "unknown_today"
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "waiting"
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "seen"
+        - if rdvs_user.rdv.in_the_past?
+          = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "noshow"
+        .dropdown-divider
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "excused"
+
+      - when "unknown_past"
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "seen"
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "noshow"
+        .dropdown-divider
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "excused"
+
+      - when "waiting"
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "seen"
+        .dropdown-divider
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "unknown"
+
+      - else
+        = render "admin/rdvs_users/participation_status_dropdown_item", rdvs_user: rdvs_user, agent: agent, status: "unknown"
+
+      - if policy([:agent, rdvs_user.rdv]).destroy?
+        .dropdown-divider
+        = participation_delete_dropdown_item(rdvs_user, agent)
