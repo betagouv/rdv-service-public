@@ -11,12 +11,11 @@ describe "public_api/public_links requests", type: :request do
   context "when plages are defined" do
     let(:params) do
       {
-        external_ids: %w[ext_id_A ext_id_B ext_id_C ext_id_D ext_id_E ext_id_F],
         departement: "CN",
       }
     end
 
-    it "returns the list of organisations" do
+    it "returns any organisation that has any open plage ouverture" do
       create(:plage_ouverture, organisation: organisation_a)
       create(:plage_ouverture, :no_recurrence, organisation: organisation_b, first_day: Time.zone.today + 5.days)
       create(:plage_ouverture, :expired, organisation: organisation_c)
