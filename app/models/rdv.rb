@@ -57,6 +57,7 @@ class Rdv < ApplicationRecord
   validates :max_participants_count, numericality: { greater_than: 0, allow_nil: true }
 
   # Hooks
+  after_save :update_participations_statuses, if: :saved_change_to_status?
   after_save :associate_users_with_organisation
   after_commit :update_agents_unknown_past_rdv_count, if: -> { past? }
   before_validation { self.uuid ||= SecureRandom.uuid }
@@ -320,6 +321,20 @@ class Rdv < ApplicationRecord
         rdvs_user.slice(:user_id, :send_lifecycle_notifications, :send_reminder_notification)
       end,
     }
+  end
+
+  def update_participations_statuses
+    # A refacto, Brouillon pour être ok sur la logique et l'impact RDV.status => RDV.rdvs_users.statuses
+    if status_before_last_save != "unknown" && status == "unknown"
+      rdvs_users.update(status: "unknown")
+    end
+
+    if !collectif? && status == "excused"
+      rdvs_users.not_cancelled.update(status: "excused")
+    end
+    rdvs_users.not_cancelled.update(status: "revoked") if status == "revoked"
+    rdvs_users.not_cancelled.where(status: "unknown").update(status: "seen") if status == "seen"
+    rdvs_users.not_cancelled.where(status: "unknown").update(status: "noshow") if status == "noshow"
   end
 
   def associate_users_with_organisation

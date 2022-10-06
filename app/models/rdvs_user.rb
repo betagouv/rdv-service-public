@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 
 class RdvsUser < ApplicationRecord
+  # Mixins
   devise :invitable
+
+  include RdvsUser::Notificationable
+
   # Attributes
   enum status: { unknown: "unknown", waiting: "waiting", seen: "seen", excused: "excused", revoked: "revoked", noshow: "noshow" }
+  NOT_CANCELLED_STATUSES = %w[unknown waiting seen noshow].freeze
+  CANCELLED_STATUSES = %w[excused revoked].freeze
 
   # Relations
   belongs_to :rdv, touch: true, inverse_of: :rdvs_users, counter_cache: :users_count
@@ -17,18 +23,37 @@ class RdvsUser < ApplicationRecord
   # Hooks
   after_initialize :set_default_notifications_flags
   before_validation :set_default_notifications_flags
-
-  # Temporary Hooks for Participation feature
-  after_initialize :set_status
-  ## -
+  before_create :set_status_from_rdv
 
   # Scopes
   scope :order_by_user_last_name, -> { includes(:user).order("users.last_name ASC") }
+  scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
+  # For scoping notifications exceptions
+  scope :not_excused, -> { where.not(status: "excused") }
 
-  def set_status
+  def set_status_from_rdv
     return if rdv&.status.nil?
 
     self.status = rdv.status
+  end
+
+  def temporal_status
+    RdvsUser.temporal_status(status, rdv.starts_at)
+  end
+
+  def self.temporal_status(status, starts_at)
+    if status == "unknown"
+      rdv_date = starts_at.to_date
+      if rdv_date > Time.zone.today # future
+        "unknown_future"
+      elsif rdv_date == Time.zone.today # today
+        "unknown_today"
+      else # past
+        "unknown_past"
+      end
+    else
+      status
+    end
   end
 
   def set_default_notifications_flags
