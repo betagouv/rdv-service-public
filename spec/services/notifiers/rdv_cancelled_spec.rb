@@ -19,7 +19,8 @@ describe Notifiers::RdvCancelled, type: :service do
     allow(Agents::RdvMailer).to receive(:with).and_call_original
     allow(Users::RdvMailer).to receive(:with).and_call_original
     allow(rdv).to receive(:rdvs_users).and_return(rdvs_users)
-    allow(rdvs_users).to receive(:where).and_return([rdv_user])
+    # TODORDV-c Bad receive_message_chain : How to ?
+    allow(rdvs_users).to receive_message_chain(:where, :not, :where).and_return([rdv_user])
     allow(rdv_user).to receive(:new_raw_invitation_token).and_return(token)
   end
 
