@@ -31,10 +31,7 @@ describe "CNFS agent can configure online booking" do
 
       it "can copy the booking link", js: true do
         expect(page).not_to have_css('[data-clipboard-target="copy-button"][disabled]')
-        accept_alert do
-          click_button "copier"
-          expect(page.driver.browser.switch_to.alert.text).to eq("Lien copié dans le presse-papiers !")
-        end
+        expect(page).to have_css('[data-clipboard-target="copy-button"]')
       end
     end
   end
