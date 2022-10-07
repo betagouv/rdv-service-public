@@ -49,6 +49,9 @@ module Rdv::Updatable
     if collectif?
       @rdv_users_tokens_by_user_id = Notifiers::RdvCollectifParticipations.perform_with(self, author, previous_participations)
     end
+
+    # we re-enable the webhooks that we deactivated during the notification process
+    self.skip_webhooks = false
   end
 
   def rdv_status_reloaded_from_cancelled?
