@@ -1,30 +1,20 @@
 # frozen_string_literal: true
 
-module RdvsUser::Notificationable
+module RdvsUser::StatusChangeable
   extend ActiveSupport::Concern
 
-  def update_and_notify(author, attributes)
-    assign_attributes(attributes)
-    return unless status_changed?
+  def change_status(author, status:)
+    return if self.status == status
 
-    @rdv = rdv
-    save_and_notify(author)
-  end
-
-  def save_and_notify(author)
     RdvsUser.transaction do
-      if save
-        notify!(author)
-        true
-      else
-        false
-      end
+      notify!(author) if update(status: status)
     end
   end
 
   def notify!(author)
     if status == "excused"
-      Notifiers::RdvCancelled.perform_with(@rdv, author, [user])
+      Notifiers::RdvCancelled.perform_with(rdv, author, [user])
     end
+    # TODO cases...
   end
 end

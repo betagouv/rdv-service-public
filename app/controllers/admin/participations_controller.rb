@@ -8,7 +8,7 @@ class Admin::ParticipationsController < AgentAuthController
 
   def update
     authorize(@rdv, :update?)
-    success = @rdvs_user.update_and_notify(current_agent, rdvs_user_params)
+    success = @rdvs_user.change_status(current_agent, rdvs_user_params)
     respond_to do |format|
       format.js { render "admin/rdvs_users/update" }
       format.html do

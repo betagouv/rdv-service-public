@@ -12,7 +12,7 @@ module Rdv::Updatable
     Rdv.transaction do
       self.updated_at = Time.zone.now
 
-      if status_changed?
+      if status_changed? # TODO: Romain should be removed
         self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
       end
 
@@ -33,12 +33,12 @@ module Rdv::Updatable
 
   def notify!(author, previous_participations)
     @rdv_users_tokens_by_user_id = {}
-    if rdv_cancelled?
-      file_attentes.destroy_all
+    if rdv_cancelled? # TODO: Romain should be removed?
+      file_attentes.destroy_all # TODO: Romain move into StatusChangeable
       @rdv_users_tokens_by_user_id = Notifiers::RdvCancelled.perform_with(self, author)
     end
 
-    if rdv_status_reloaded_from_cancelled?
+    if rdv_status_reloaded_from_cancelled? # TODO: Romain should be removed?
       @rdv_users_tokens_by_user_id = Notifiers::RdvCreated.perform_with(self, author)
     end
 
@@ -46,7 +46,7 @@ module Rdv::Updatable
       @rdv_users_tokens_by_user_id = Notifiers::RdvUpdated.perform_with(self, author)
     end
 
-    if collectif?
+    if collectif? # TODO: Romain should be removed?
       @rdv_users_tokens_by_user_id = Notifiers::RdvCollectifParticipations.perform_with(self, author, previous_participations)
     end
   end
