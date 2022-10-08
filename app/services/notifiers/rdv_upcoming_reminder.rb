@@ -4,7 +4,8 @@ class Notifiers::RdvUpcomingReminder < Notifiers::RdvBase
   protected
 
   def rdvs_users_to_notify
-    @rdv.rdvs_users.where(send_reminder_notification: true)
+    # Todo : test this not_excused
+    @rdv.rdvs_users.not_excused.where(send_reminder_notification: true)
   end
 
   def notify_user_by_mail(user)

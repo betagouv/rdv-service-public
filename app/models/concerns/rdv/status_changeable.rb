@@ -6,7 +6,7 @@ module Rdv::StatusChangeable
   def change_status(author, status)
     Rdv.transaction do
       # Consequences on participations with RDV.status changes :
-      if update(status:)
+      if update(status: status)
         case status
         when "unknown"
           # Setting to unknown means resetting the rdv status by agents and reset ALL participants statuses
