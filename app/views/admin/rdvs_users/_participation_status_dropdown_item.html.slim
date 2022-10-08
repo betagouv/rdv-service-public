@@ -1,4 +1,4 @@
-= link_to admin_organisation_rdv_participation_path(rdvs_user.rdv.organisation, rdvs_user.rdv, rdvs_user, rdvs_user: { status: status, ignore_benign_errors: true }, agent_id: agent&.id),
+= link_to admin_organisation_rdv_participation_path(rdvs_user.rdv.organisation, rdvs_user.rdv, rdvs_user, rdvs_user: { status: status }, agent_id: agent&.id),
   method: :put, class: "dropdown-item", data: { confirm: change_status_confirmation_message(rdvs_user.rdv, status) }, remote: remote do
   span
     i class=("fa fa-circle mr-1 rdv-status-#{status}")

@@ -8,14 +8,14 @@ class Admin::ParticipationsController < AgentAuthController
 
   def update
     authorize(@rdv, :update?)
-    success = @rdvs_user.change_status(current_agent, rdvs_user_params)
+    success = @rdvs_user.change_status(current_agent, rdvs_user_params[:status])
     respond_to do |format|
       format.js { render "admin/rdvs_users/update" }
       format.html do
         if success
           flash[:notice] = "Status de participation pour #{@rdvs_user.user.full_name} mis à jour"
         else
-          flash[:error] = @rdv.errors.full_messages.to_sentence
+          flash[:error] = @rdvs_user.errors.full_messages.to_sentence
         end
         redirect_to admin_organisation_rdv_path(current_organisation, @rdv)
       end
@@ -27,7 +27,7 @@ class Admin::ParticipationsController < AgentAuthController
     if @rdvs_user.destroy
       flash[:notice] = "La participation de l'usager au rdv a été supprimée."
     else
-      flash[:error] = @rdv.errors.full_messages.to_sentence
+      flash[:error] = @rdvs_user.errors.full_messages.to_sentence
     end
     redirect_to admin_organisation_rdv_path(current_organisation, @rdv)
   end

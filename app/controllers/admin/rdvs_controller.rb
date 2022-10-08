@@ -110,10 +110,6 @@ class Admin::RdvsController < AgentAuthController
     allowed_params
   end
 
-  def status_params
-    params.require(:rdv).permit(:status)
-  end
-
   def parsed_params
     params.permit(:organisation_id, :agent_id, :user_id, :lieu_id, :motif_id, :status, :start, :end,
                   lieu_attributes: %i[name address latitude longitude]).to_hash.to_h do |param_name, param_value|
@@ -127,6 +123,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def rdv_success_flash
+    # Todo change this when status will be migrated in rdvs_status controllers
     {
       notice: if rdv_params[:status].in?(%w[excused revoked])
                 I18n.t("admin.rdvs.message.success.cancel")

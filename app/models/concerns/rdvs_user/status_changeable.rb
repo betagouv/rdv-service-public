@@ -3,11 +3,11 @@
 module RdvsUser::StatusChangeable
   extend ActiveSupport::Concern
 
-  def change_status(author, status:)
+  def change_status(author, status)
     return if self.status == status
 
     RdvsUser.transaction do
-      notify!(author) if update(status: status)
+      notify!(author) if update(status:)
     end
   end
 
