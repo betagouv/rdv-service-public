@@ -24,7 +24,7 @@
 
       .col-md-6
         = render "admin/rdvs_collectifs/participants_info", rdv: rdv
-        - if rdv.remaining_seats?
+        - if rdv.remaining_seats? && rdv.not_cancelled?
           = link_to edit_admin_organisation_rdvs_collectif_path(rdv.organisation, rdv), class: "d-flex card-text mb-2" do
             div.mr-1
               i.fa.fa-fw.fa-user-plus>

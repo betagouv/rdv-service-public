@@ -157,6 +157,10 @@ class Rdv < ApplicationRecord
     status.in? CANCELLED_STATUSES
   end
 
+  def not_cancelled?
+    status.in? NOT_CANCELLED_STATUSES
+  end
+
   def cancellable_by_user?
     !cancelled? && !collectif? && motif.rdvs_cancellable_by_user? && starts_at > 4.hours.from_now
   end
