@@ -1,4 +1,5 @@
 .card.rdv-card[id= "rdv-#{rdv.id}"]
+  .mx-3[id= "rdv-status-flash-message-#{rdv.id}"]
   .card-header.border-white
     .d-flex.justify-content-between.flex-wrap
       div
@@ -25,6 +26,7 @@
         - else
           = link_to t("admin.rdvs.show.duplicate"), new_admin_organisation_rdvs_collectif_path(current_organisation, motif_id: rdv.motif_id, duplicated_rdv_id: rdv.id), class: "btn btn-outline-primary btn-sm"
 
+  .mx-3[id= "participation-flash-message-#{rdv.id}"]
   - if rdv.users.any?
     div class=("users-details collapse p-3 pt-0")
       h5.text-center.strong.mb-3> Participants :

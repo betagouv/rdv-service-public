@@ -7,7 +7,12 @@ module RdvsUser::StatusChangeable
     return if self.status == status
 
     RdvsUser.transaction do
-      notify!(author) if update(status:)
+      if update(status:)
+        notify!(author)
+        true
+      else
+        false
+      end
     end
   end
 

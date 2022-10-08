@@ -4,4 +4,5 @@
   if(element) {
     element.outerHTML = "<%= escape_javascript participation_dropdown_html %>";
   }
+  $("#participation-flash-message-<%= @rdvs_user.rdv.id %>").html('<%= j render partial: "layouts/flash" %>');
 })();

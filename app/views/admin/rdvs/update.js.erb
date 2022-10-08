@@ -4,4 +4,5 @@
   if(element) {
     element.outerHTML = "<%= escape_javascript rdv_html %>";
   }
+  $("#rdv-status-flash-message-<%= @rdv.id %>").html('<%= j render partial: "layouts/flash" %>');
 })();

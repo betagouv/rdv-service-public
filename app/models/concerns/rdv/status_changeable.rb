@@ -24,6 +24,9 @@ module Rdv::StatusChangeable
           # When rdv status is seen or noshow, all unknown statuses are changed
           rdvs_users.not_cancelled.where(status: "unknown").map { _1.change_status(author, status) }
         end
+        true
+      else
+        false
       end
     end
   end

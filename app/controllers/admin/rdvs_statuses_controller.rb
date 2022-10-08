@@ -8,7 +8,15 @@ class Admin::RdvsStatusesController < AgentAuthController
     authorize(@rdv, :update?)
     success = @rdv.change_status(current_agent, rdv_status_params[:status])
     respond_to do |format|
-      format.js { render "admin/rdvs/update" }
+      format.js do
+        if success
+          flash.now[:notice] = "Status du rendez vous mis à jour"
+          render "admin/rdvs/update"
+        else
+          flash.now[:error] = @rdv.errors.full_messages.to_sentence
+        end
+      end
+      # keep html rendering ?
       format.html do
         if success
           flash[:notice] = "Status de participation mis à jour"

@@ -10,7 +10,15 @@ class Admin::ParticipationsController < AgentAuthController
     authorize(@rdv, :update?)
     success = @rdvs_user.change_status(current_agent, rdvs_user_params[:status])
     respond_to do |format|
-      format.js { render "admin/rdvs_users/update" }
+      format.js do
+        if success
+          flash.now[:notice] = "Status de participation pour #{@rdvs_user.user.full_name} mis à jour"
+          render "admin/rdvs_users/update"
+        else
+          flash.now[:error] = @rdvs_user.errors.full_messages.to_sentence
+        end
+      end
+      # keep html rendering ?
       format.html do
         if success
           flash[:notice] = "Status de participation pour #{@rdvs_user.user.full_name} mis à jour"
