@@ -327,7 +327,6 @@ class Rdv < ApplicationRecord
     }
   end
 
-
   def associate_users_with_organisation
     users.each do |u|
       u.add_organisation(organisation)

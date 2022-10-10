@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class Admin::RdvsStatusesController < AgentAuthController
-
   before_action :set_rdv
 
   def update

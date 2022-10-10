@@ -21,7 +21,7 @@ describe Notifiers::RdvCreated, type: :service do
     allow(Users::RdvMailer).to receive(:with).and_call_original
     allow(Agents::RdvMailer).to receive(:with).and_call_original
     allow(rdv).to receive(:rdvs_users).and_return(rdvs_users_relation)
-    allow(rdvs_users_relation).to receive(:where).with(send_lifecycle_notifications: true)
+    allow(rdvs_users_relation).to receive_message_chain(:where, :not, :where).with(send_lifecycle_notifications: true)
       .and_return(rdvs_users_array.select(&:send_lifecycle_notifications))
     allow(rdv_user1).to receive(:new_raw_invitation_token).and_return(token1)
     allow(rdv_user2).to receive(:new_raw_invitation_token).and_return(token2)

@@ -10,20 +10,20 @@ module Rdv::StatusChangeable
         case status
         when "unknown"
           # Setting to unknown means resetting the rdv status by agents and reset ALL participants statuses
-          notify!(author)
+          notify_changed_status!(author)
           rdvs_users.update(status: status)
         when "excused"
           # Collective rdv cannot be globally excused (todordvc test)
-          return if collectif?
-
-          # On non collectives rdv all participants are excused
-          notify!(author)
-          rdvs_users.not_cancelled.update(status: status)
+          unless collectif?
+            # On non collectives rdv all participants are excused
+            notify_changed_status!(author)
+            rdvs_users.not_cancelled.update(status: status)
+          end
         when "revoked"
           # When rdv status is revoked, all participants are revoked
-          notify!(author)
+          notify_changed_status!(author)
           rdvs_users.not_cancelled.update(status: status)
-        when "seen", "noswhow"
+        when "seen", "noshow"
           # When rdv status is seen or noshow, all unknown statuses are changed
           rdvs_users.not_cancelled.where(status: "unknown").update(status: status)
         end
@@ -34,7 +34,7 @@ module Rdv::StatusChangeable
     end
   end
 
-  def notify!(author)
+  def notify_changed_status!(author)
     if rdv_cancelled?
       @rdv_users_tokens_by_user_id = Notifiers::RdvCancelled.perform_with(self, author)
     end
