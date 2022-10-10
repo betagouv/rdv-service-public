@@ -19,7 +19,7 @@ RSpec.describe "Participations", type: :request do
     it "returns http redirect and notif" do
       put(
         admin_organisation_rdv_participation_path(rdv.organisation, rdv, rdv.rdvs_users.first),
-        params: { rdvs_user: { ignore_benign_errors: true, status: "seen" } }
+        params: { rdvs_user: { status: "seen" } }
       )
       expect(response).to have_http_status(:redirect)
       expect(flash[:notice]).to eq("Status de participation pour #{rdv.rdvs_users.first.user.full_name} mis à jour")
