@@ -52,6 +52,12 @@ describe "Agent can CRUD plage d'ouverture" do
 
   context "for an agent" do
     it_behaves_like "can crud own plage ouvertures"
+
+    it "can access a calendar view in the index" do
+      expect(page).not_to have_css("#calendar")
+      click_link("Vue calendrier")
+      expect(page).to have_css("#calendar")
+    end
   end
 
   context "for a secretaire" do

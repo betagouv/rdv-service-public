@@ -9,7 +9,10 @@ json.array! @plage_ouverture_occurrences do |plage_ouverture, occurrence|
   else
     json.backgroundColor "grey"
   end
-  json.rendering "background"
+  json.textColor "#313131"
+  json.rendering "background" if params[:in_background]
+
+  json.url admin_organisation_plage_ouverture_path(@organisation, plage_ouverture)
   json.extendedProps do
     json.organisationName plage_ouverture.organisation.name
     json.location plage_ouverture.lieu.address
