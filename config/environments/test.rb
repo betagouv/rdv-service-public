@@ -24,7 +24,19 @@ Rails.application.configure do
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
-  config.cache_store = :null_store
+
+  # Test env has the same config as the global one (defined in application.rb)
+  # except we separate Redis keys in each parallel test using TEST_ENV_NUMBER.
+  config.cache_store = :redis_cache_store, {
+    url: "redis://localhost:6379",
+    namespace: "test:cache#{ENV['TEST_ENV_NUMBER']}",
+  }
+  config.session_store :redis_session_store,
+                       key: "_lapin_session_id", # cookie name
+                       redis: {
+                         key_prefix: "test:session#{ENV['TEST_ENV_NUMBER']}:",
+                         url: "redis://localhost:6379",
+                       }
 
   # Raise exceptions instead of rendering exception templates.
   config.action_dispatch.show_exceptions = false
