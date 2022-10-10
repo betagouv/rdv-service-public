@@ -37,6 +37,7 @@ class PlageOuverture < ApplicationRecord
   validate :warn_overflow_motifs_duration
 
   # Scopes
+  scope :reservable_online, -> { joins(:motifs).where(motifs: { reservable_online: true }) }
   scope :in_range, lambda { |range|
     return all if range.nil?
 

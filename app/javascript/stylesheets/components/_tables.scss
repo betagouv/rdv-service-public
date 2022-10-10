@@ -48,3 +48,13 @@ tr.tr-danger {
 .w-10 {
   width: 10% !important;
 }
+
+// Custom Table For RDVs
+
+table.light-gray-table > thead > tr > th {
+  border-bottom: 2px solid black;
+}
+
+table.light-gray-table {
+  background-color: #F6F6F6;
+}

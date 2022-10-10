@@ -1,0 +1,13 @@
+.table-responsive.users-table
+  table.table.light-gray-table
+    thead
+      tr
+        / Fixed width because of user profile notes field that could messed up the table.
+        th style="max-width: 30%" Participant
+        th Notifications
+        th
+        th
+        / th Participation
+    tbody id="rdv-users-list"
+      - rdv.rdvs_users.includes(user: %i[responsible organisations]).order_by_user_last_name.each do |rdvs_user|
+        = render "admin/rdvs_users/user_row", rdvs_user: rdvs_user
