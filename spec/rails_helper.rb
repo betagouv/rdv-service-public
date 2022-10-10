@@ -86,6 +86,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
     ActionMailer::Base.deliveries.clear
     FactoryBot.rewind_sequences
+    Rails.cache.clear
   end
 
   config.before(:suite) do
