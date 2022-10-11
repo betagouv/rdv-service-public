@@ -649,4 +649,39 @@ describe Rdv, type: :model do
       expect(rdv.synthesized_receipts_result).to eq("processed")
     end
   end
+
+  describe "#soft_delete" do
+    it "set deleted_at with current time" do
+      now = Time.zone.parse("2022-08-30 11:45:00")
+      rdv = create(:rdv)
+      travel_to(now)
+      expect do
+        rdv.soft_delete
+      end.to change(rdv, :deleted_at).from(nil).to(now)
+    end
+
+    it "hide soft_deleted rdv" do
+      rdv = create(:rdv)
+      rdv.soft_delete
+      expect(described_class.all).to be_empty
+    end
+
+    it "allows finding soft_deleted rdv using `unscoped`" do
+      rdv = create(:rdv)
+      rdv.soft_delete
+      expect(described_class.unscoped.all).to eq([rdv])
+    end
+
+    it "dont call update webhook" do
+      rdv = create(:rdv)
+      expect(rdv).not_to receive(:generate_payload_and_send_webhook)
+      expect(rdv.soft_delete).to eq(true)
+    end
+
+    it "calls destroy webhook" do
+      rdv = create(:rdv)
+      expect(rdv).to receive(:generate_payload_and_send_webhook_for_destroy)
+      rdv.soft_delete
+    end
+  end
 end

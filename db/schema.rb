@@ -422,8 +422,10 @@ ActiveRecord::Schema.define(version: 2022_09_27_160954) do
     t.string "name"
     t.integer "max_participants_count"
     t.integer "users_count", default: 0
+    t.datetime "deleted_at"
     t.index "tsrange(starts_at, ends_at, '[)'::text)", name: "index_rdvs_on_tsrange_starts_at_ends_at", using: :gist
     t.index ["created_by"], name: "index_rdvs_on_created_by"
+    t.index ["deleted_at"], name: "index_rdvs_on_deleted_at"
     t.index ["ends_at"], name: "index_rdvs_on_ends_at"
     t.index ["lieu_id"], name: "index_rdvs_on_lieu_id"
     t.index ["max_participants_count"], name: "index_rdvs_on_max_participants_count"

@@ -29,7 +29,6 @@ class Rdv < ApplicationRecord
   # https://stackoverflow.com/questions/30629680/rails-isnt-running-destroy-callbacks-for-has-many-through-join-model/30629704
   # https://github.com/rails/rails/issues/7618
   has_many :rdvs_users, validate: false, inverse_of: :rdv, dependent: :destroy
-  before_destroy :cant_destroy_if_receipts_exist # must be declared before has_many :receipts
   has_many :receipts, dependent: :destroy
 
   accepts_nested_attributes_for :rdvs_users, allow_destroy: true
@@ -62,6 +61,7 @@ class Rdv < ApplicationRecord
   before_validation { self.uuid ||= SecureRandom.uuid }
 
   # Scopes
+  default_scope { where(deleted_at: nil) }
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
   scope :past, -> { where("starts_at < ?", Time.zone.now) }
   scope :future, -> { where("starts_at > ?", Time.zone.now) }
@@ -290,6 +290,15 @@ class Rdv < ApplicationRecord
 
   delegate :domain, to: :organisation
 
+  def soft_delete
+    # disable the :updated webhook because we want to manually trigger a :destroyed webhook
+    self.skip_webhooks = true
+    return false unless update(deleted_at: Time.zone.now)
+
+    generate_payload_and_send_webhook_for_destroy
+    true
+  end
+
   private
 
   def starts_at_is_plausible
@@ -330,13 +339,5 @@ class Rdv < ApplicationRecord
 
   def update_agents_unknown_past_rdv_count
     agents.each(&:update_unknown_past_rdv_count!)
-  end
-
-  def cant_destroy_if_receipts_exist
-    # This is similar to using :restrict_with_errors on the has_many :receipts relation, but we want a custom error
-    return if receipts.empty?
-
-    errors.add(:base, :cant_destroy_if_receipts_exist)
-    throw :abort
   end
 end
