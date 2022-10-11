@@ -54,8 +54,11 @@
   .row.justify-content-center.pb-3
     .col-md-8
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
-      - @rdvs.includes(:organisation, :lieu, :motif, agents: :service, users: %i[responsible organisations]).each do |rdv|
-        = render(partial: "rdv", object: rdv, locals: { agent: nil })
+      = render(partial: "rdv",
+              collection: @rdvs,
+              locals: { agent: nil },
+              cached: ->(rdv) { [rdv, locale_cache_key] } \
+              )
       .d-flex.justify-content-center= paginate @rdvs, theme: "twitter-bootstrap-4"
 - else
   .row.justify-content-center.pb-3

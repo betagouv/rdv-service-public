@@ -3,10 +3,14 @@
 class Admin::RdvSearchForm
   include ActiveModel::Model
 
-  attr_accessor :organisation_id, :start, :end, :agent_id, :user_id, :lieu_id, :status, :motif_id
+  attr_accessor :organisation_id, :start, :end, :agent_id, :user_id, :lieu_id, :status, :motif_id, :scoped_organisation_id
 
   def organisation
-    @organisation ||= Organisation.find(organisation_id) if organisation_id.present?
+    if scoped_organisation_id.present?
+      @organisation ||= Organisation.find(scoped_organisation_id)
+    elsif organisation_id.present?
+      @organisation ||= Organisation.find(organisation_id)
+    end
   end
 
   def agent

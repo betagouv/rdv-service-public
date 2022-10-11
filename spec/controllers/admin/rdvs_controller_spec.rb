@@ -23,7 +23,7 @@ describe Admin::RdvsController, type: :controller do
     end
 
     it "assign RDVS" do
-      rdv = create(:rdv, organisation: organisation, motif: motif)
+      rdv = create(:rdv, agents: [agent], organisation: organisation, motif: motif)
       get(:index, params: { organisation_id: organisation.id })
 
       expect(assigns(:rdvs)).to eq([rdv])
