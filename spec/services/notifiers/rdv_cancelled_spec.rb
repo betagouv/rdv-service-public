@@ -9,7 +9,6 @@ describe Notifiers::RdvCancelled, type: :service do
   let(:rdv) { build(:rdv, starts_at: starts_at, agents: [agent1, agent2]) }
   let(:rdv_user) { create(:rdvs_user, user: user, rdv: rdv) }
   let(:rdvs_users) { RdvsUser.where(id: rdv_user.id) }
-  let(:token) { "123456" }
 
   before do
     stub_netsize_ok
@@ -19,9 +18,6 @@ describe Notifiers::RdvCancelled, type: :service do
     allow(Agents::RdvMailer).to receive(:with).and_call_original
     allow(Users::RdvMailer).to receive(:with).and_call_original
     allow(rdv).to receive(:rdvs_users).and_return(rdvs_users)
-    # TODORDV-c Bad receive_message_chain : How to ?
-    allow(rdvs_users).to receive_message_chain(:where, :not, :where).and_return([rdv_user])
-    allow(rdv_user).to receive(:new_raw_invitation_token).and_return(token)
   end
 
   context "cancellation by agent" do
@@ -34,13 +30,13 @@ describe Notifiers::RdvCancelled, type: :service do
       it "only notifies the user" do
         expect(Agents::RdvMailer).not_to receive(:with).with({ rdv: rdv, agent: agent1, author: agent1 })
         expect(Agents::RdvMailer).not_to receive(:with).with({ rdv: rdv, agent: agent2, author: agent1 })
-        expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user, token: token })
+        expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user, token: /^[A-Z0-9]{8}$/ })
 
         subject
       end
 
       it "outputs the tokens" do
-        expect(subject).to eq({ user.id => token })
+        expect(subject).to match(user.id => /^[A-Z0-9]{8}$/)
       end
     end
 
@@ -50,7 +46,7 @@ describe Notifiers::RdvCancelled, type: :service do
       it "notifies the users and the other agents (not the author)" do
         expect(Agents::RdvMailer).not_to receive(:with).with({ rdv: rdv, agent: agent1, author: agent1 })
         expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent2, author: agent1 })
-        expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user, token: token })
+        expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user, token: /^[A-Z0-9]{8}$/ })
 
         subject
       end
@@ -65,7 +61,7 @@ describe Notifiers::RdvCancelled, type: :service do
     it "notifies the user and the agents" do
       expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent1, author: user })
       expect(Agents::RdvMailer).to receive(:with).with({ rdv: rdv, agent: agent2, author: user })
-      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user, token: token })
+      expect(Users::RdvMailer).to receive(:with).with({ rdv: rdv, user: user, token: /^[A-Z0-9]{8}$/ })
 
       subject
     end
