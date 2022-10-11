@@ -85,6 +85,17 @@ RSpec.describe Rdv::Updatable, type: :concern do
       rdv.update_and_notify(agent, status: "unknown")
     end
 
+    describe "triggers webhook" do
+      let!(:webhook_endpoint) { create(:webhook_endpoint, organisation: organisation, subscriptions: ["rdv"]) }
+      let!(:organisation) { create(:organisation, rdvs: [rdv]) }
+
+      it "sends a webhook" do
+        rdv.reload
+        expect(WebhookJob).to receive(:perform_later)
+        rdv.update_and_notify(agent, status: "noshow")
+      end
+    end
+
     describe "for a rdv collectif" do
       let(:attributes) do
         {

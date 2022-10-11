@@ -16,7 +16,7 @@ class SearchController < ApplicationController
   end
 
   def public_link_with_external_organisation_id
-    territory = Territory.find_by!(departement_number: params[:territory_slug])
+    territory = Territory.find_by!(departement_number: params[:territory])
     organisation = territory.organisations.find_by!(external_id: params[:organisation_external_id])
     redirect_to_organisation_search(organisation)
   end
