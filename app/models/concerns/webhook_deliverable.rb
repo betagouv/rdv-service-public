@@ -10,7 +10,7 @@ module WebhookDeliverable
     # Reload attributes and associations from DB to ensure they are up to date.
     # We dont use #reload on self because some other parts
     # of the code rely on the state of the current object.
-    record = self.class.find(id)
+    record = self.class.unscoped.find(id)
 
     meta = {
       model: self.class.name,
@@ -28,10 +28,12 @@ module WebhookDeliverable
   end
 
   def generate_payload_and_send_webhook_for_destroy
+    # Prépare les données à envoyer, avant de supprimer l'objet
     payloads = subscribed_webhook_endpoints.index_with do |_endpoint|
       generate_webhook_payload(:destroyed)
     end
-    yield
+    # Execute la suppression, après avoir construit les données à envoyer
+    yield if block_given?
     payloads.each do |endpoint, payload|
       WebhookJob.perform_later(payload, endpoint.id)
     end

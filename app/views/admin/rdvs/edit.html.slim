@@ -92,6 +92,14 @@
                 "scroll-to-bottom": params[:add_user].present?, \
                 "select-options": { ajax: { url: search_admin_organisation_users_path(current_organisation, exclude_ids: @rdv.rdvs_users.map(&:user_id)), dataType: "json", delay: 250 } }, \
                }
+              span.small.text-muted
+              | L'usager n'existe pas ?&nbsp;
+              = link_to \
+                "Créer un usager", \
+                new_admin_organisation_user_path( \
+                  current_organisation, modal: true, return_location: request.url, role: default_service_selection_from(@rdv.motif.service) \
+                    ), \
+                data: { modal: true }
 
             .text-right
               = link_to t("helpers.back"), admin_organisation_rdv_path(current_organisation, @rdv), class: "btn btn-link"

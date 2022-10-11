@@ -59,6 +59,7 @@ org_cnfs = Organisation.create!(
   phone_number: "0123456789",
   human_id: "mediatheque-paris-nord",
   territory: territory_cnfs,
+  external_id: "666",
   new_domain_beta: true
 )
 org_drome1 = Organisation.create!(
