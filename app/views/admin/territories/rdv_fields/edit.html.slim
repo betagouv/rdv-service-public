@@ -14,5 +14,10 @@
           - Territory::OPTIONAL_RDV_FIELD_TOGGLES.each do |toggle, field_name|
             = f.input toggle, label: Rdv.human_attribute_name(field_name)
 
+          p.text-bold.font-20= t(".hint_3")
+          p.text-muted.font-14= t(".hint_4")
+          - Territory::OPTIONAL_RDV_WAITING_ROOM_FIELD_TOGGLES.each do |toggle, field_name|
+            = f.input toggle, label: Rdv.human_attribute_name(field_name)
+
           .text-right
             = f.button :submit

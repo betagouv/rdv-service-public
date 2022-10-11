@@ -6,6 +6,7 @@
         h5.header.mb-1
           span
             = link_to rdv_title(rdv), admin_organisation_rdv_path(rdv.organisation, rdv)
+      = render "admin/rdvs/waiting_room", rdv: rdv, remote: true
       = render "admin/rdvs/rdv_status_dropdown", rdv: rdv, agent: local_assigns[:agent], remote: true
   hr.my-0.mx-3
   .card-body.py-3.row

@@ -9,7 +9,6 @@
         = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "revoked", remote: remote
 
       - when "unknown_today"
-        = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "waiting", remote: remote
         = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "seen", remote: remote
         - if rdv.in_the_past? # See issue #1642, I’d rather get rid of `temporal_status` than adding more variants.
           = render "admin/rdvs/rdv_status_dropdown_item", rdv: rdv, agent: agent, status: "noshow", remote: remote

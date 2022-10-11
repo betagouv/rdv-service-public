@@ -181,6 +181,10 @@ class CalendarRdvSolidarites {
 
     $el.addClass("fc-event-"+ extendedProps.status);
 
+    if (extendedProps.userInWaitingRoom == true)  {
+      $el.addClass("fc-event-waiting");
+    }
+
     if (extendedProps.jour_feries == true) {
       return
     }

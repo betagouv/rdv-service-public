@@ -4,6 +4,13 @@ fr:
       hello: Bonjour,
       farewell_html: "<p>À bientôt,<br>L’équipe %{domain_name}</p>"
   agents:
+    waiting_room_mailer:
+      title: Un usager en salle d'attente
+      user_in_waiting_room:
+        description:
+          zero: "votre rdv va bientôt démarrer"
+          one: "%{users_name} vous attend pour son RDV"
+          other: "%{users_name} vous attendent pour leur RDV"
     absence_mailer:
       absence_created:
         title: "%{domain_name} - Indisponibilité créée - %{title}"

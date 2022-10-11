@@ -11,6 +11,7 @@ class Rdv < ApplicationRecord
   include Rdv::AddressConcern
   include Rdv::AuthoredConcern
   include Rdv::Updatable
+  include Rdv::UsingWaitingRoom
   include IcalHelpers::Ics
   include Payloads::Rdv
 
