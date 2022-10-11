@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_27_160954) do
+ActiveRecord::Schema.define(version: 2022_10_06_081447) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -540,7 +540,6 @@ ActiveRecord::Schema.define(version: 2022_09_27_160954) do
     t.enum "sms_provider", enum_type: "sms_provider"
     t.json "sms_configuration"
     t.boolean "has_own_sms_provider", default: false
-    t.string "api_options", default: [], null: false, array: true
     t.boolean "enable_notes_field", default: false
     t.boolean "enable_caisse_affiliation_field", default: false
     t.boolean "enable_affiliation_number_field", default: false
