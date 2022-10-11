@@ -37,7 +37,12 @@ class PublicApi::PublicLinksController < ActionController::Base # rubocop:disabl
       .in_range((Time.zone.now..))
       .reservable_online
 
-    organisations = Organisation.where(territory: territory).joins(:plage_ouvertures).merge(plage_ouvertures_scope).distinct
+    organisations = Organisation
+      .where(territory: territory)
+      .where.not(external_id: nil)
+      .joins(:plage_ouvertures)
+      .merge(plage_ouvertures_scope)
+      .distinct
 
     organisations.map do |organisation|
       {
