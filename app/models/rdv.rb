@@ -52,6 +52,7 @@ class Rdv < ApplicationRecord
   # Validations
   validates :starts_at, :ends_at, :agents, presence: true
   validates :rdvs_users, presence: true, unless: :collectif?
+  validate :collective_rdv_cannot_be_excused, if: :collectif?
   validate :lieu_is_not_disabled_if_needed
   validate :starts_at_is_plausible
   validate :duration_is_plausible
@@ -296,6 +297,10 @@ class Rdv < ApplicationRecord
   delegate :domain, to: :organisation
 
   private
+
+  def collective_rdv_cannot_be_excused
+    errors.add(:status, :collective_rdv_cannot_be_excused) if status == "excused"
+  end
 
   def starts_at_is_plausible
     return unless will_save_change_to_attribute?("starts_at")
