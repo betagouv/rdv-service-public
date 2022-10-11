@@ -13,8 +13,9 @@ describe CronJob::DestroyOldRdvsJob do
   end
 
   it "does not call any webhook" do
-    expect(WebhookJob).not_to receive(:perform_later)
     travel_to(25.months.ago) { create(:rdv, starts_at: Time.zone.today.change(hour: 16)) }
-    described_class.new.perform
+    expect do
+      described_class.new.perform
+    end.not_to have_enqueued_job
   end
 end
