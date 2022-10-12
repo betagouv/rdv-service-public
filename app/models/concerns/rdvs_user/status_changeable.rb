@@ -24,6 +24,9 @@ module RdvsUser::StatusChangeable
     if rdv_status_reloaded_from_cancelled? && user_valid_for_lifecycle_notifications?
       @rdvs_user_token = Notifiers::RdvCreated.perform_with(rdv, author, [user])
     end
+
+    # Amine Fix on updatable, reminder for opening to public and setting up webhooks for rdv-insertion
+    # self.skip_webhooks = false
   end
 
   def rdv_user_cancelled?
