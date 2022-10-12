@@ -3,9 +3,12 @@ section.bg-light.p-4
     - if context.invitation?
       .card
         .card-body
-          h2.pb-1.mb-1
+          h3.py-1.my-1
+            i.fa.fa-info-circle>
             = motif_name_with_location_type(context.selected_motif)
-            .card-subtitle= context.lieu.address
+            .card-subtitle.my-2.
+              i.fa.fa-map-marker-alt>
+              = context.lieu.address
 
     - else
       .card.card-hoverable
