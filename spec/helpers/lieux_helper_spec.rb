@@ -3,9 +3,7 @@
 describe LieuxHelper do
   describe ".lieu_tag" do
     context "when the lieu is nil" do
-      it "returns N/A" do
-        expect(lieu_tag(nil)).to eq(content_tag(:span, "N/A", class: "text-muted"))
-      end
+      it { expect(lieu_tag(nil)).to be_nil }
     end
 
     context "when the lieu is present" do

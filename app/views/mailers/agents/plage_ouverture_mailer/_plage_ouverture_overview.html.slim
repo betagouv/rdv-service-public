@@ -15,8 +15,6 @@
         = plage_ouverture.lieu.name
         = tag.span("Fermé", class: "badge badge-danger") unless plage_ouverture.lieu.enabled?
         = " (#{plage_ouverture.lieu.address})"
-      -else
-        | N/A
     .clear
   div.row-result
     span.title Motifs :

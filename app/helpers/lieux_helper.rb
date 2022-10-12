@@ -13,15 +13,13 @@ module LieuxHelper
   end
 
   def lieu_tag(lieu)
-    if lieu.nil?
-      content_tag(:span, "N/A", class: "text-muted")
-    else
-      content_tag(:span) do
-        concat lieu.name
-        concat unavailability_tag(lieu)
-        concat tag.br
-        concat content_tag(:small, lieu.address)
-      end
+    return if lieu.nil?
+
+    content_tag(:span) do
+      concat lieu.name
+      concat unavailability_tag(lieu)
+      concat tag.br
+      concat content_tag(:small, lieu.address)
     end
   end
 end
