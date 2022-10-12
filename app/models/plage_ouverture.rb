@@ -31,7 +31,7 @@ class PlageOuverture < ApplicationRecord
 
   # Validations
   validate :end_after_start
-  validates :lieu, presence: true, unless: -> { phone_motifs_only? }
+  validates :lieu, presence: true, if: -> { requires_lieu? }
   validate :lieu_is_enabled
   validates :motifs, :title, presence: true
   validate :warn_overlapping_plage_ouvertures
@@ -154,7 +154,7 @@ class PlageOuverture < ApplicationRecord
     add_benign_error("Certains motifs ont une durée supérieure à la plage d'ouverture prévue")
   end
 
-  def phone_motifs_only?
-    motifs.all?(&:phone?)
+  def requires_lieu?
+    motifs.any?(&:requires_lieu?)
   end
 end

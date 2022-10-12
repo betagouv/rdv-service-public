@@ -31,16 +31,16 @@ describe PlageOuverture, type: :model do
   end
 
   describe "lieu presence" do
-    context "when the motifs are only by phone" do
+    context "when no motif requires a lieu" do
       it "is valid without a lieu" do
-        plage_ouverture = build(:plage_ouverture, lieu: nil, motifs: [create(:motif, :by_phone), create(:motif, :by_phone)])
+        plage_ouverture = build(:plage_ouverture, lieu: nil, motifs: [create(:motif, :by_phone), create(:motif, :at_home)])
         expect(plage_ouverture).to be_valid
       end
     end
 
-    context "when at least one motif is not by phone" do
+    context "when at least one motif requires a lieu" do
       it "is invalid without a lieu" do
-        plage_ouverture = build(:plage_ouverture, lieu: nil, motifs: [create(:motif, :by_phone), create(:motif, :at_home)])
+        plage_ouverture = build(:plage_ouverture, lieu: nil, motifs: [create(:motif, :by_phone), create(:motif, :at_public_office)])
         expect(plage_ouverture).not_to be_valid
       end
     end

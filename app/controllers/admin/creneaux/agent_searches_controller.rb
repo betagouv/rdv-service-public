@@ -48,7 +48,7 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
 
   def set_search_results_without_lieu
     return unless (params[:commit].present? || request.format.js?) && @form.valid?
-    return unless @form.motif&.phone?
+    return if @form.motif&.requires_lieu?
 
     # Les motifs par téléphone sont nécessairement individuels
     @search_results_without_lieu = SearchCreneauxWithoutLieuForAgentsService.perform_with(@form)

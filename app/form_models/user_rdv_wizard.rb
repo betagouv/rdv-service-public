@@ -51,7 +51,7 @@ module UserRdvWizard
     end
 
     def lieu_full_name
-      creneau.lieu.full_name
+      creneau.lieu&.full_name
     end
 
     def to_query

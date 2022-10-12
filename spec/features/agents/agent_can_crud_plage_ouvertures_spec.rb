@@ -42,7 +42,7 @@ describe "Agent can CRUD plage d'ouverture" do
       expect_page_title("Nouvelle plage d'ouverture")
 
       fill_in "Description", with: "Accueil"
-      select(lieu.full_name, from: "plage_ouverture_lieu_id")
+      select(lieu.full_name, from: "plage_ouverture_lieu_id") if lieu
       check "Suivi bonjour"
       click_button "Enregistrer"
 
@@ -58,6 +58,13 @@ describe "Agent can CRUD plage d'ouverture" do
       expect(page).not_to have_css("#calendar")
       click_link("Vue calendrier")
       expect(page).to have_css("#calendar")
+    end
+
+    context "when the motif doesn't require a lieu" do
+      let!(:motif) { create(:motif, :at_home, name: "Suivi bonjour", service: service, organisation: organisation) }
+      let!(:lieu) { nil }
+
+      it_behaves_like "can crud own plage ouvertures"
     end
   end
 
@@ -75,6 +82,13 @@ describe "Agent can CRUD plage d'ouverture" do
       let!(:plage_ouverture) { create(:plage_ouverture, lieu: lieu, agent: agent, motifs: [motif], organisation: organisation, title: "Permanence") }
 
       it_behaves_like "can crud own plage ouvertures"
+
+      context "when the motif doesn't require a lieu" do
+        let!(:motif) { create(:motif, :at_home, :for_secretariat, name: "Suivi bonjour", service: service, organisation: organisation) }
+        let!(:lieu) { nil }
+
+        it_behaves_like "can crud own plage ouvertures"
+      end
     end
   end
 
@@ -111,6 +125,41 @@ describe "Agent can CRUD plage d'ouverture" do
 
       expect_page_title("Accueil")
       click_link "Modifier"
+    end
+
+    context "when the motif doesn't require a lieu" do
+      let!(:motif) { create(:motif, :at_home, name: "Suivi bonjour", service: service, organisation: organisation) }
+      let!(:lieu) { nil }
+
+      it "still can crud a plage_ouverture" do
+        visit admin_organisation_agent_plage_ouvertures_path(organisation, other_agent.id)
+
+        expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
+        click_link "Permanence"
+
+        expect_page_title("Permanence")
+        click_link "Modifier"
+
+        expect_page_title("Modifier la plage d'ouverture de Jane FAROU")
+        fill_in "Description", with: "La belle plage"
+        click_button("Enregistrer")
+
+        expect_page_title("La belle plage")
+        click_link("Supprimer")
+
+        expect_page_title("Plages d'ouverture de Jane FAROU (PMI)")
+        expect(page).to have_content("Jane FAROU n'a pas encore créé de plage d'ouverture")
+
+        click_link "Créer une plage d'ouverture pour Jane FAROU", match: :first
+
+        expect_page_title("Nouvelle plage d'ouverture")
+        fill_in "Description", with: "Accueil"
+        check "Suivi bonjour"
+        click_button "Enregistrer"
+
+        expect_page_title("Accueil")
+        click_link "Modifier"
+      end
     end
   end
 end

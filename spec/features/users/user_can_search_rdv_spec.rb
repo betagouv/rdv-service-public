@@ -37,17 +37,33 @@ describe "User can search for rdvs" do
       confirm_rdv(motif, lieu)
     end
 
-    it "can take a RDV when there are creneaux without lieu", js: true do
-      create(:plage_ouverture, lieu: nil, motifs: [motif_autre_service], organisation: organisation, first_day: 1.day.since)
+    context "when the motif doesn't require a lieu" do
+      before { create(:plage_ouverture, lieu: nil, motifs: [motif_autre_service], organisation: organisation, first_day: 1.day.since) }
 
-      visit root_path
-      execute_search
-      choose_service(motif_autre_service.service)
-      choose_creneau
-      sign_up
-      continue_to_rdv(motif_autre_service)
-      add_relative
-      confirm_rdv(motif_autre_service)
+      shared_examples "take a rdv without lieu" do
+        it "can take a RDV when there are creneaux without lieu", js: true do
+          visit root_path
+          execute_search
+          choose_service(motif_autre_service.service)
+          choose_creneau
+          sign_up
+          continue_to_rdv(motif_autre_service)
+          add_relative
+          confirm_rdv(motif_autre_service)
+        end
+      end
+
+      context "when the motif is by phone" do
+        let!(:motif_autre_service) { create(:motif, :by_phone, name: "Télé consultation", reservable_online: true, organisation: organisation, restriction_for_rdv: nil, service: create(:service)) }
+
+        it_behaves_like "take a rdv without lieu"
+      end
+
+      context "when the motif is at home" do
+        let!(:motif_autre_service) { create(:motif, :at_home, name: "À domicile", reservable_online: true, organisation: organisation, restriction_for_rdv: nil, service: create(:service)) }
+
+        it_behaves_like "take a rdv without lieu"
+      end
     end
   end
 

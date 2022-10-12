@@ -173,8 +173,8 @@ class Motif < ApplicationRecord
     !collectif?
   end
 
-  def phone?
-    location_type == Motif.location_types[:phone]
+  def requires_lieu?
+    public_office?
   end
 
   private

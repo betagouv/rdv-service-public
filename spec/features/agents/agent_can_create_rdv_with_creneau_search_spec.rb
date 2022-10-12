@@ -49,25 +49,38 @@ describe "Agent can create a Rdv with creneau search" do
     end
   end
 
-  context "when the motif is by phone and there is a plage d'ouverture without lieu" do
-    let!(:motif) { create(:motif, :by_phone, reservable_online: true, service: agent.service, organisation: organisation) }
+  context "when the motif doesn't require a lieu" do
     let!(:plage_ouverture) { create(:plage_ouverture, :daily, first_day: Time.zone.today, motifs: [motif], agent: agent, organisation: organisation) }
     let!(:plage_ouverture_without_lieu) { create(:plage_ouverture, motifs: [motif], lieu: nil, organisation: organisation) }
 
-    it "stills allows the agent to book a rdv", js: true do
-      visit admin_organisation_agent_searches_path(organisation)
-      expect(page).to have_content("Trouver un RDV")
-      select(motif.name, from: "motif_id")
-      click_button("Afficher les créneaux")
+    shared_examples "book a rdv without a lieu" do
+      it "allows the agent to book a rdv", js: true do
+        visit admin_organisation_agent_searches_path(organisation)
+        expect(page).to have_content("Trouver un RDV")
+        select(motif.name, from: "motif_id")
+        click_button("Afficher les créneaux")
 
-      # Display plage d'ouvertures with lieu
-      expect(page).to have_content(plage_ouverture.lieu_address)
+        # Display plage d'ouvertures with lieu
+        expect(page).to have_content(plage_ouverture.lieu_address)
 
-      # Display plage d'ouvertures without lieu
-      expect(page).to have_content("Ces créneaux sont disponibles sans lieu")
+        # Display plage d'ouvertures without lieu
+        expect(page).to have_content("Ces créneaux sont disponibles sans lieu")
 
-      find(".creneau", match: :first).click
-      expect(page).to have_content("Nouveau RDV pour le #{I18n.l(plage_ouverture_without_lieu.first_day, format: :default)} à 08:00")
+        find(".creneau", match: :first).click
+        expect(page).to have_content("Nouveau RDV pour le #{I18n.l(plage_ouverture_without_lieu.first_day, format: :default)} à 08:00")
+      end
+    end
+
+    context "when the motif is by phone and there is a plage d'ouverture without lieu" do
+      let!(:motif) { create(:motif, :by_phone, reservable_online: true, service: agent.service, organisation: organisation) }
+
+      it_behaves_like "book a rdv without a lieu"
+    end
+
+    context "when the motif is at home and there is a plage d'ouverture without lieu" do
+      let!(:motif) { create(:motif, :at_home, reservable_online: true, service: agent.service, organisation: organisation) }
+
+      it_behaves_like "book a rdv without a lieu"
     end
   end
 end

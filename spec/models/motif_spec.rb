@@ -210,14 +210,14 @@ describe Motif, type: :model do
     end
   end
 
-  describe "#phone?" do
-    it "returns true if the location_type is phone" do
-      expect(build(:motif, :by_phone).phone?).to eq(true)
+  describe "#requires_lieu?" do
+    it "returns false if the location_type doesn't require a lieu" do
+      expect(build(:motif, :by_phone).requires_lieu?).to eq(false)
+      expect(build(:motif, :at_home).requires_lieu?).to eq(false)
     end
 
-    it "returns false if the location_type is not phone" do
-      expect(build(:motif, :at_public_office).phone?).to eq(false)
-      expect(build(:motif, :at_home).phone?).to eq(false)
+    it "returns true if the location_type requires a lieu" do
+      expect(build(:motif, :at_public_office).requires_lieu?).to eq(true)
     end
   end
 end
