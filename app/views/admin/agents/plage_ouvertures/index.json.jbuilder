@@ -15,7 +15,7 @@ json.array! @plage_ouverture_occurrences do |plage_ouverture, occurrence|
   json.url admin_organisation_plage_ouverture_path(@organisation, plage_ouverture)
   json.extendedProps do
     json.organisationName plage_ouverture.organisation.name
-    json.location plage_ouverture.lieu&.address&.presence
-    json.lieu plage_ouverture.lieu&.name&.presence
+    json.location plage_ouverture.lieu_address
+    json.lieu plage_ouverture.lieu_name
   end
 end

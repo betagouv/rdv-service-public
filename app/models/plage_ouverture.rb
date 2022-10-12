@@ -54,6 +54,9 @@ class PlageOuverture < ApplicationRecord
   }
   scope :reservable_online, -> { joins(:motifs).where(motifs: { reservable_online: true }) }
 
+  # Delegations
+  delegate :name, :address, :enabled?, to: :lieu, prefix: true, allow_nil: true
+
   ## -
 
   def ical_uid

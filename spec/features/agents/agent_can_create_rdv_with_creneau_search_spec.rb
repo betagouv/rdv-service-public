@@ -20,14 +20,14 @@ describe "Agent can create a Rdv with creneau search" do
       click_button("Afficher les créneaux")
 
       # Display results for both lieux
-      expect(page).to have_content(plage_ouverture.lieu.address)
-      expect(page).to have_content(plage_ouverture2.lieu.address)
+      expect(page).to have_content(plage_ouverture.lieu_address)
+      expect(page).to have_content(plage_ouverture2.lieu_address)
 
       # Add a filter on lieu
-      select(plage_ouverture.lieu.name, from: "lieu_ids")
+      select(plage_ouverture.lieu_name, from: "lieu_ids")
       click_button("Afficher les créneaux")
-      expect(page).to have_content(plage_ouverture.lieu.address)
-      expect(page).not_to have_content(plage_ouverture2.lieu.address)
+      expect(page).to have_content(plage_ouverture.lieu_address)
+      expect(page).not_to have_content(plage_ouverture2.lieu_address)
 
       # TODO : refaire un parcours jusqu'à l'enregistrement du RDV
     end
@@ -44,7 +44,7 @@ describe "Agent can create a Rdv with creneau search" do
       click_button("Afficher les créneaux")
 
       # Display results
-      expect(page).to have_content(plage_ouverture.lieu.address)
+      expect(page).to have_content(plage_ouverture.lieu_address)
       expect(page).to have_content("Créneaux disponibles")
     end
   end
@@ -61,7 +61,7 @@ describe "Agent can create a Rdv with creneau search" do
       click_button("Afficher les créneaux")
 
       # Display plage d'ouvertures with lieu
-      expect(page).to have_content(plage_ouverture.lieu.address)
+      expect(page).to have_content(plage_ouverture.lieu_address)
 
       # Display plage d'ouvertures without lieu
       expect(page).to have_content("Ces créneaux sont disponibles sans lieu")
