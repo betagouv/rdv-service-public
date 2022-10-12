@@ -2,9 +2,12 @@
 
 class Admin::Creneaux::AgentSearchesController < AgentAuthController
   respond_to :html, :js
+
   before_action :set_form
   before_action :set_search_results
   before_action :set_search_results_without_lieu
+
+  helper_method :creneaux_without_lieu?
 
   def index
     if only_one_lieu? && !creneaux_without_lieu?

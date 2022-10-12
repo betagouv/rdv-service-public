@@ -84,7 +84,7 @@
         - @search_results.each do |search_result|
           = render "lieu_search_results", search_result: search_result
 
-    - if @search_results_without_lieu&.creneaux&.any?
+    - if creneaux_without_lieu?
       .container
         p.font-weight-bold= t(".available_slots_without_lieu")
         .card
@@ -95,5 +95,5 @@
               form: @form, \
               next_availability: @search_results_without_lieu.next_availability
 
-    - if @form.motif.present? && !@search_results&.any? && !@search_results_without_lieu&.creneaux&.any?
+    - if @form.motif.present? && !@search_results&.any? && !creneaux_without_lieu?
       = t(".no_slot_available", motif_name: @form.motif.name)
