@@ -15,39 +15,6 @@ describe RdvsUser, type: :model do
             expect(rdv.rdvs_users.map(&:status)).to all(include("unknown"))
           end
         end
-
-        describe "when rdv is globally revoked" do
-          it do
-            rdv.change_status(agent, "revoked")
-            expect(rdv.rdvs_users.reload.map(&:status)).to all(include("revoked"))
-          end
-        end
-
-        describe "when rdv is globally seen" do
-          it do
-            rdv.change_status(agent, "seen")
-            expect(rdv.rdvs_users.reload.map(&:status)).to all(include("seen"))
-          end
-        end
-
-        describe "when rdv is globally noshow" do
-          it do
-            rdv.change_status(agent, "noshow")
-            expect(rdv.rdvs_users.reload.map(&:status)).to all(include("noshow"))
-          end
-        end
-
-        describe "when rdv is globally excused" do
-          it do
-            rdv.change_status(agent, "excused")
-            if rdv_type == "collectif"
-              # Collective rdv cannot be set as excused in frontend (TODO validation in backend), this is individual behavior only
-              expect(rdv.rdvs_users.reload.map(&:status)).to all(include("unknown"))
-            else
-              expect(rdv.rdvs_users.reload.map(&:status)).to all(include("excused"))
-            end
-          end
-        end
       end
     end
   end

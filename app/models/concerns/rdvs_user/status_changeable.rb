@@ -14,23 +14,24 @@ module RdvsUser::StatusChangeable
         false
       end
     end
+    @rdvs_user_token
   end
 
   def notify!(author)
-    if rdv_cancelled? && user_valid_for_lifecycle_notifications?
-      Notifiers::RdvCancelled.perform_with(rdv, author, [user])
+    if rdv_user_cancelled? && user_valid_for_lifecycle_notifications?
+      @rdvs_user_token = Notifiers::RdvCancelled.perform_with(rdv, author, [user])
     end
     if rdv_status_reloaded_from_cancelled? && user_valid_for_lifecycle_notifications?
-      Notifiers::RdvCreated.perform_with(rdv, author, [user])
+      @rdvs_user_token = Notifiers::RdvCreated.perform_with(rdv, author, [user])
     end
   end
 
-  def rdv_cancelled?
-    previous_changes["status"]&.last.in? %w[excused revoked]
+  def rdv_user_cancelled?
+    (status.in? %w[excused revoked]) && !status_previously_was.in?(%w[excused revoked])
   end
 
   def rdv_status_reloaded_from_cancelled?
-    status_previously_was.in?(%w[revoked excused]) && status == "unknown"
+    status_previously_was.in?(%w[excused revoked]) && status == "unknown"
   end
 
   def user_valid_for_lifecycle_notifications?

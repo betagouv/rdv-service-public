@@ -341,6 +341,7 @@ describe Rdv, type: :model do
 
   describe "validations" do
     let(:now) { Time.zone.parse("2020-12-28 14h00") }
+    let(:motif) { build(:motif, collectif: true) }
 
     before { travel_to(now) }
 
@@ -358,6 +359,11 @@ describe Rdv, type: :model do
 
     it "valid with a user without email" do
       expect(build(:rdv, users: [create(:user, email: nil)])).to be_valid
+    end
+
+    it "invalid if collectif and excused" do
+      expect(build(:rdv, motif: motif, status: "excused")).to be_invalid
+      expect(build(:rdv, motif: motif, status: "noshow")).to be_valid
     end
   end
 
