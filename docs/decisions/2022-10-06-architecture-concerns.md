@@ -23,7 +23,7 @@ Une piste possible est l'ajout de capacité par les concerns, plutôt que par le
 Cette approche consiste à donner une capacité (donc un comportement) à un modèle en définissant un concern qui lui est propre, et qui ne sera (a priori) pas partagé avec un autre modèle.
 
 Par exemple, si je souhaite rendre un rendez-vous annulable, alors je vais créer le concern `Rdv::Cancellable`, et l'inclure dans le modèle `Rdv`.
-Ce concern possède une méthode `cancel` et prend en paramètre ce qui est utile dans ce contexte, si possible de manière précise :
+Ce concern possède une méthode `cancel!` et prend en paramètre ce qui est utile dans ce contexte, si possible de manière précise :
 
 ```rb
 def cancel!(author, status:)
