@@ -94,20 +94,9 @@ RSpec.describe "Admin::Organisations::OnlineBookings", type: :request do
           expect(response.body).to include("Copiez et partagez-le à vos usagers pour leur permettre de réserver en ligne.")
         end
 
-        context "when the current organisation has an external id" do
-          before { organisation.update!(external_id: "external") }
-
-          it "shows the link to share with the external id" do
-            show_request
-            expect(response.body).to include(public_link_to_external_org_url(organisation.territory.departement_number, organisation.external_id))
-          end
-        end
-
-        context "when the current organisation doesn't have an external id" do
-          it "shows the link to share without the external id" do
-            show_request
-            expect(response.body).to include(public_link_to_org_url(organisation_id: organisation.id))
-          end
+        it "shows the public link to share" do
+          show_request
+          expect(response.body).to include(public_link_to_org_url(organisation_id: organisation.id))
         end
       end
     end
