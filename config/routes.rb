@@ -164,7 +164,6 @@ Rails.application.routes.draw do
             resources :motifs, only: [:index], as: :rdvs_collectif_motifs, controller: "rdvs_collectifs/motifs"
           end
         end
-        resources :rdvs_statuses, only: %i[update]
         resources :rdvs, except: [:new] do
           resources :participations, only: %i[update destroy]
           member do

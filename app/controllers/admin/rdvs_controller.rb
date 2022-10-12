@@ -45,11 +45,18 @@ class Admin::RdvsController < AgentAuthController
   def update
     authorize(@rdv)
     @rdv_form = Admin::EditRdvForm.new(@rdv, pundit_user)
-    success = @rdv_form.update(**rdv_params.to_h.symbolize_keys)
+    @success = @rdv_form.update(**rdv_params.to_h.symbolize_keys)
     respond_to do |format|
-      format.js
+      format.js do
+        if @success
+          flash.now[:notice] = "Rendez vous mis à jour"
+        else
+          flash.now[:error] = @rdv.errors.full_messages.to_sentence
+        end
+        render "admin/rdvs/update"
+      end
       format.html do
-        if success
+        if @success
           redirect_to admin_organisation_rdv_path(current_organisation, @rdv, agent_id: params[:agent_id]), rdv_success_flash
         else
           render :edit
@@ -123,7 +130,6 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def rdv_success_flash
-    # Todo change this when status will be migrated in rdvs_status controllers
     {
       notice: if rdv_params[:status].in?(%w[excused revoked])
                 I18n.t("admin.rdvs.message.success.cancel")

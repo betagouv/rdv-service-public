@@ -12,8 +12,9 @@ module Rdv::Updatable
     Rdv.transaction do
       self.updated_at = Time.zone.now
 
-      if status_changed? # TODO: Romain should be removed
+      if status_changed?
         self.cancelled_at = status.in?(%w[excused revoked noshow]) ? Time.zone.now : nil
+        change_participation_statuses(status)
       end
 
       previous_participations = rdvs_users.select(&:persisted?)
@@ -27,18 +28,39 @@ module Rdv::Updatable
     end
   end
 
+  def change_participation_statuses(status)
+    # Consequences on participations with RDV.status changes :
+    case status
+    when "unknown"
+      # Setting to unknown means resetting the rdv status by agents and reset ALL participants statuses
+      rdvs_users.update(status: status)
+    when "excused"
+      # Collective rdv cannot be globally excused
+      unless collectif?
+        # On non collectives rdv all participants are excused
+        rdvs_users.not_cancelled.update(status: status)
+      end
+    when "revoked"
+      # When rdv status is revoked, all participants are revoked
+      rdvs_users.not_cancelled.update(status: status)
+    when "seen", "noshow"
+      # When rdv status is seen or noshow, all unknown statuses are changed
+      rdvs_users.not_cancelled.where(status: "unknown").update(status: status)
+    end
+  end
+
   def rdv_user_token(user_id)
     @rdv_users_tokens_by_user_id&.fetch(user_id, nil)
   end
 
   def notify!(author, previous_participations)
     @rdv_users_tokens_by_user_id = {}
-    if rdv_cancelled? # TODO: Romain should be removed?
-      file_attentes.destroy_all # TODO: Romain move into StatusChangeable
+    if rdv_cancelled?
+      file_attentes.destroy_all
       @rdv_users_tokens_by_user_id = Notifiers::RdvCancelled.perform_with(self, author)
     end
 
-    if rdv_status_reloaded_from_cancelled? # TODO: Romain should be removed?
+    if rdv_status_reloaded_from_cancelled?
       @rdv_users_tokens_by_user_id = Notifiers::RdvCreated.perform_with(self, author)
     end
 
@@ -46,7 +68,7 @@ module Rdv::Updatable
       @rdv_users_tokens_by_user_id = Notifiers::RdvUpdated.perform_with(self, author)
     end
 
-    if collectif? # TODO: Romain should be removed?
+    if collectif?
       @rdv_users_tokens_by_user_id = Notifiers::RdvCollectifParticipations.perform_with(self, author, previous_participations)
     end
   end
@@ -65,7 +87,7 @@ module Rdv::Updatable
   end
 
   def rdv_cancelled?
-    previous_changes["status"]&.last.in? %w[excused revoked noshow]
+    previous_changes["status"]&.last.in? %w[excused revoked]
   end
 
   def starts_at_changed?
