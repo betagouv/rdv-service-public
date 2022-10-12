@@ -2,7 +2,7 @@
 
 require "csv"
 
-conseillers_numeriques = CSV.read("/tmp/uploads/export-cnfs.csv", headers: true, col_sep: ";")
+conseillers_numeriques = CSV.read("/tmp/uploads/export-cnfs.csv", headers: true, col_sep: ";", liberal_parsing: true)
 
 conseillers_numeriques.each do |conseiller_numerique|
   next if conseiller_numerique["Email @conseiller-numerique.fr"].blank?
