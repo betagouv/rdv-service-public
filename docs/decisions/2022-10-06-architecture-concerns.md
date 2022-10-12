@@ -75,7 +75,7 @@ module Rdv::Cancellable
     Rdv.transaction do
       self.cancelled_at = Time.zone.now
       self.status = status
-      if save(context: cancellation)
+      if save(context: :cancellation)
         notify_participants(author)
       end
     end
