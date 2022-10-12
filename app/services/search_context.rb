@@ -22,6 +22,7 @@ class SearchContext
     @service_id = query[:service_id]
     @lieu_id = query[:lieu_id]
     @start_date = query[:date]
+    @show_available_lieux_only = query[:show_available_lieux_only].to_b
   end
 
   # *** Method that outputs the next step for the user to complete its rdv journey ***
@@ -97,12 +98,17 @@ class SearchContext
   end
 
   def next_availability_by_lieux
-    @next_availability_by_lieux ||= lieux.to_h do |lieu|
-      [
-        lieu.id,
-        creneaux_search_for(lieu, date_range).next_availability,
-      ]
+    @next_availability_by_lieux ||= begin
+      next_availability_by_lieux = lieux.index_with do |lieu|
+        creneaux_search_for(lieu, date_range).next_availability
+      end
+      next_availability_by_lieux.compact! if @show_available_lieux_only
+      next_availability_by_lieux
     end
+  end
+
+  def shown_lieux
+    next_availability_by_lieux.keys
   end
 
   def start_date

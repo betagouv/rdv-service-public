@@ -18,9 +18,8 @@ section.bg-light.p-4
                   = motif_name_with_location_type(context.selected_motif)
                 = context.selected_motif.service.name
     h3.font-weight-bold = t(".select_lieu")
-    p = t(".lieu_available", count: context.lieux.size)
-    - context.lieux.each do |lieu|
-      - next_availability = context.next_availability_by_lieux[lieu.id]
+    p = t(".lieu_available", count: context.shown_lieux.count)
+    - context.next_availability_by_lieux.each do |lieu, next_availability|
       .card.mb-3 class=("card-hoverable" if next_availability)
         .card-body
           .row
