@@ -47,11 +47,7 @@ class PublicApi::PublicLinksController < ActionController::Base # rubocop:disabl
     organisations.map do |organisation|
       {
         external_id: organisation.external_id,
-        public_link: public_link_to_external_org_url(
-          organisation_external_id: organisation.external_id,
-          territory: territory.departement_number,
-          host: organisation.domain.dns_domain_name
-        ),
+        public_link: public_link_to_org_url(organisation_id: organisation, host: organisation.domain.dns_domain_name),
       }
     end
   end
