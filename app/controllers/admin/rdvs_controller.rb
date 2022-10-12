@@ -34,7 +34,7 @@ class Admin::RdvsController < AgentAuthController
   end
 
   def edit
-    add_user_ids = params[:add_user]
+    add_user_ids = params[:add_user].to_a + params[:user_ids].to_a
     users_to_add = User.where(id: add_user_ids)
     users_to_add.ids.each { @rdv.rdvs_users.build(user_id: _1) }
 
@@ -75,7 +75,7 @@ class Admin::RdvsController < AgentAuthController
 
   def destroy
     authorize(@rdv)
-    if @rdv.destroy
+    if @rdv.soft_delete
       flash[:notice] = "Le rendez-vous a été supprimé."
       redirect_to admin_organisation_rdvs_path(current_organisation)
     else

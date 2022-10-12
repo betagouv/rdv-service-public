@@ -8,12 +8,8 @@ describe "Agent can see rdvs in their calendar", js: true do
       agent = create(:agent, basic_role_in_organisations: [organisation], display_saturdays: true)
       login_as(agent, scope: :agent)
 
-      # Use today because it not really easy to stub browser time
-      today = Time.zone.today
-      # force hour to be in visible agenda range
-      starts_at = Time.zone.parse("#{today.strftime('%F')} 14:00")
-      # move back one day ago one sunday
-      starts_at = 1.day.ago if today.strftime("%w").to_i > 6
+      # Create a RDV this week, monday at 14:00, so that it will show on the calendar
+      starts_at = Time.zone.now.beginning_of_week.change({ hour: 14 })
 
       motif = create(:motif, :collectif, organisation: organisation, service: agent.service, name: "Atelier collectif")
       create(

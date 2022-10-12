@@ -2,7 +2,7 @@
 
 require "csv"
 
-conseillers_numeriques = CSV.read("/tmp/uploads/export-cnfs.csv", headers: true, col_sep: ";")
+conseillers_numeriques = CSV.read("/tmp/uploads/export-cnfs.csv", headers: true, col_sep: ";", liberal_parsing: true)
 
 conseillers_numeriques.each do |conseiller_numerique|
   next if conseiller_numerique["Email @conseiller-numerique.fr"].blank?
@@ -19,7 +19,7 @@ conseillers_numeriques.each do |conseiller_numerique|
     first_name: conseiller_numerique["Prénom"],
     last_name: conseiller_numerique["Nom"],
     structure: {
-      external_id: conseiller_numerique["Id de la structure"],
+      external_id: conseiller_numerique["Id long de la structure"],
       name: conseiller_numerique["Nom de la structure"],
       address: conseiller_numerique["Adresse de la structure"],
     },
