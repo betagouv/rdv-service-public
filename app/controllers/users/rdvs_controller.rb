@@ -95,12 +95,11 @@ class Users::RdvsController < UserAuthController
 
   def build_creneau
     @starts_at = Time.zone.parse(params[:starts_at])
-    lieu = @lieu.present? ? Lieu.find(@lieu.id) : nil
     @creneau = Users::CreneauSearch.creneau_for(
       user: current_user,
       starts_at: @starts_at,
       motif: @rdv.motif,
-      lieu: lieu
+      lieu: @lieu
     )
   end
 
