@@ -14,8 +14,8 @@
 
 .row.justify-content-md-center
   .col-md-11
-    / @agent is only used for links in breadcrumb and redirecting if update, also used in delete rights in dropdown ?
-    = render "rdv", rdv: @rdv, locals: { agent: @agent }
+    / @agent is only used for links in breadcrumb and redirecting if update
+    = render partial: "rdv", collection: [@rdv], locals: { agent: @agent }
 
 .row.justify-content-center
   .col-md-11

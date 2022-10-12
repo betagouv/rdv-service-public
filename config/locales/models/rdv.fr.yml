@@ -18,6 +18,10 @@ fr:
               must_not_be_disabled: "doit être un lieu ouvert de l’organisation, ou un lieu ponctuel."
             status:
               collective_rdv_cannot_be_excused: "'Annulé à l'initiative de l'usager' n'est pas autorisé pour les rendez vous collectifs"
+        rdvs_user:
+          attributes:
+            status:
+              status_cannot_be_changed_if_rdv_status_is_revoked: "ne peut être modifié si le rendez vous est annulé par le service"
     models:
       rdv: Rendez-vous
     attributes:

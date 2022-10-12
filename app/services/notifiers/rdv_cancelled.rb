@@ -26,7 +26,10 @@ class Notifiers::RdvCancelled < Notifiers::RdvBase
   end
 
   def rdvs_users_to_notify
-    @rdv.rdvs_users.not_excused.where(send_lifecycle_notifications: true)
+    # Do not notify users for cancel statuses for already cancelled rdvs
+    @rdv.rdvs_users.where(send_lifecycle_notifications: true).each do |rdv_user|
+      return rdv_user if rdv_user.previous_changes["status"]&.first.in? %w[excused revoked]
+    end
   end
 
   def notify_agent(agent)
