@@ -28,14 +28,11 @@ section.bg-light.p-4
               .card-subtitle= lieu.address
               .card-subtitle= context.selected_motif.service.name
             .col-md.align-self-center.pt-3.pt-md-0.position-static
-              - if next_availability
-                = link_to root_path(context.query.merge(lieu_id: lieu.id, date: next_availability.starts_at)), class: "d-block stretched-link" do
-                  .row
-                    .col
-                      = t(".next_availability")
-                      br
-                      strong= l(next_availability.starts_at, format: :human)
-                    .col-auto.align-self-center
+              = link_to root_path(context.query.merge(lieu_id: lieu.id, date: next_availability.starts_at)), class: "d-block stretched-link" do
+                .row
+                  .col
+                    = t(".next_availability")
+                    br
+                    strong= l(next_availability.starts_at, format: :human)
+                  .col-auto.align-self-center
                       i.fa.fa-chevron-right
-              - else
-                em = t(".no_availability")

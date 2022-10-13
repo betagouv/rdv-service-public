@@ -115,27 +115,15 @@ describe "User can be invited" do
         create(:motif, name: "RSA orientation sur site", max_booking_delay: 7.days, reservable_online: true, organisation: organisation, service: agent.service)
       end
 
-      it "shows the lieux with no availability" do
+      it "does not show the lieux" do
         visit prendre_rdv_path(
           departement: departement_number, city_code: city_code, invitation_token: invitation_token,
           address: "16 rue de la résistance", motif_search_terms: "RSA orientation"
         )
-        expect(page).to have_content(lieu.name)
-        expect(page).to have_content(lieu2.name)
-        expect(page).to have_content("Aucune disponibilité")
-      end
 
-      context "when we show the available lieux only" do
-        it "does not show the lieux" do
-          visit prendre_rdv_path(
-            departement: departement_number, city_code: city_code, invitation_token: invitation_token,
-            address: "16 rue de la résistance", motif_search_terms: "RSA orientation", show_available_lieux_only: true
-          )
-
-          expect(page).not_to have_content(lieu.name)
-          expect(page).not_to have_content(lieu2.name)
-          expect(page).to have_content("Nous n'avons pas trouvé de créneaux pour votre motif.")
-        end
+        expect(page).not_to have_content(lieu.name)
+        expect(page).not_to have_content(lieu2.name)
+        expect(page).to have_content("Nous n'avons pas trouvé de créneaux pour votre motif.")
       end
     end
   end
