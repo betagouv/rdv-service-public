@@ -60,14 +60,8 @@ describe "Agent can create a Rdv with creneau search" do
         select(motif.name, from: "motif_id")
         click_button("Afficher les créneaux")
 
-        # Display plage d'ouvertures with lieu
-        expect(page).to have_content(plage_ouverture.lieu_address)
-
-        # Display plage d'ouvertures without lieu
-        expect(page).to have_content("Ces créneaux sont disponibles sans lieu")
-
         find(".creneau", match: :first).click
-        expect(page).to have_content("Nouveau RDV pour le #{I18n.l(plage_ouverture_without_lieu.first_day, format: :default)} à 08:00")
+        expect(page).to have_content("Nouveau RDV")
       end
     end
 

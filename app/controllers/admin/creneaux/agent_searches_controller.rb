@@ -5,17 +5,13 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
 
   before_action :set_form
   before_action :set_search_results
-  before_action :set_search_results_without_lieu
 
-  helper_method :creneaux_without_lieu?
+  helper_method :motif_selected?
 
   def index
-    if only_one_lieu? && !creneaux_without_lieu?
+    if motif_selected? && (!requires_lieu? || only_one_lieu?)
       skip_policy_scope # TODO: improve pundit checks for creneaux
-
-      redirect_to admin_organisation_slots_path(current_organisation,
-                                                helpers.creneaux_search_params(@form).merge(lieu_ids: [@search_results.first.lieu.id])),
-                  class: "d-block stretched-link"
+      redirect_to admin_organisation_slots_path(current_organisation, creneaux_search_params), class: "d-block stretched-link"
     else
       @motifs = policy_scope(Motif).active.ordered_by_name
       @services = policy_scope(Service)
@@ -32,6 +28,18 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
 
   private
 
+  def motif_selected?
+    @form.motif.present?
+  end
+
+  def only_one_lieu?
+    @search_results&.count == 1
+  end
+
+  def requires_lieu?
+    @form.motif&.requires_lieu?
+  end
+
   def set_form
     @form = helpers.build_agent_creneaux_search_form(current_organisation, params)
   end
@@ -46,23 +54,12 @@ class Admin::Creneaux::AgentSearchesController < AgentAuthController
                       end
   end
 
-  def set_search_results_without_lieu
-    return unless (params[:commit].present? || request.format.js?) && @form.valid?
-    return if @form.motif&.requires_lieu?
-
-    # Les motifs par téléphone sont nécessairement individuels
-    @search_results_without_lieu = SearchCreneauxWithoutLieuForAgentsService.perform_with(@form)
-  end
-
-  def only_one_lieu?
-    return false unless @search_results
-
-    @search_results.count == 1
-  end
-
-  def creneaux_without_lieu?
-    return false unless @search_results_without_lieu
-
-    @search_results_without_lieu.creneaux.any?
+  def creneaux_search_params
+    p = helpers.creneaux_search_params(@form)
+    if only_one_lieu?
+      p.merge(lieu_ids: [@search_results.first.lieu.id])
+    else
+      p
+    end
   end
 end

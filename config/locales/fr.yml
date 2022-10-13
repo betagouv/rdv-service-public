@@ -45,7 +45,6 @@ fr:
             zero: Aucun lieu ne propose de disponibilité
             one: "Un lieu propose des disponibilités :"
             other: "%{count} lieux proposent des disponibilités :"
-          available_slots_without_lieu: "Ces créneaux sont disponibles sans lieu :"
     territories:
       agents:
         index:
