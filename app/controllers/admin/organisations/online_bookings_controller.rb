@@ -33,10 +33,6 @@ class Admin::Organisations::OnlineBookingsController < AgentAuthController
   end
 
   def booking_link
-    if current_organisation.external_id.present?
-      public_link_to_external_org_url(current_organisation.territory.departement_number, current_organisation.external_id)
-    else
-      public_link_to_org_url(organisation_id: current_organisation.id)
-    end
+    public_link_to_org_url(organisation_id: current_organisation.id)
   end
 end
