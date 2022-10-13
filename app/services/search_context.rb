@@ -33,7 +33,7 @@ class SearchContext
       :service_selection
     elsif !motif_selected?
       :motif_selection
-    elsif lieu.nil?
+    elsif selected_motif.requires_lieu? && lieu.nil?
       :lieu_selection
     else
       :creneau_selection
