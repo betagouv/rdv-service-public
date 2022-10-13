@@ -17,24 +17,21 @@ class RdvsUser < ApplicationRecord
   validates :user_id, uniqueness: { scope: :rdv_id }
 
   # Hooks
+  before_create :set_status_from_rdv
   after_initialize :set_default_notifications_flags
   before_validation :set_default_notifications_flags
   after_commit :update_users_count
-  
+
   # Scopes
   scope :not_cancelled, -> { where(status: NOT_CANCELLED_STATUSES) }
   scope :order_by_user_last_name, -> { includes(:user).order("users.last_name ASC") }
-
-  # Temporary Hooks for Participation feature
-  after_initialize :set_status
-  ## -
 
   def update_users_count
     rdv.users_count = rdv.rdvs_users.not_cancelled.count
     rdv.save
   end
 
-  def set_status
+  def set_status_from_rdv
     return if rdv&.status.nil?
 
     self.status = rdv.status
